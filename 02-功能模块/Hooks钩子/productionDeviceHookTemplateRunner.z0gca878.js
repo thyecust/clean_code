@@ -1,0 +1,502 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import "../../00-第三方库/lodash/lodash.207999qb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import "../权限系统/chunk-e4pfvp7x.js";
+import { _4e, O3, v9t, R9t, s_n, GMe, ng } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import "../../00-第三方库/zod/zod.3g334xwq.js";
+import "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
+import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import "../Git-Worktree/chunk-9ys1bnqr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import "../Teammates团队/chunk-qe04h4c5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
+import "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import "../工具Bash-Shell/chunk-4pap8y5n.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-svk2cp17.js";
+import "../Skills技能/chunk-sapykxw7.js";
+import "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
+import "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import "../权限系统/chunk-ynkf3yy4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import "../Teammates团队/chunk-811z9z0t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import "../../00-第三方库/axios/axios.t0fczzmz.js";
+import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1bqqnyc1.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
+import "../Git-Worktree/chunk-bk9696gx.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import "./chunk-9em0d4k5.js";
+import { jJ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { $d } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { cye, uit } from "./chunk-y7gz94r8.js";
+import "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import "../Teammates团队/chunk-enjekn9t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
+import "../Bedrock-Vertex/chunk-p991cddr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { spawn as L } from "child_process";
+import { createHash as F } from "crypto";
+import { constants as R } from "fs";
+import { lstat as E, mkdir as H, open as J, realpath as j } from "fs/promises";
+import { homedir as B } from "os";
+import { join as x } from "path";
+var U = ["/usr/bin/python3", "/usr/local/bin/python3", "/bin/python3"],
+  I = 86,
+  V = () =>
+    [
+      "import hashlib,os,sys",
+      "p,d,n=sys.argv[1],sys.argv[2],int(sys.argv[3])",
+      `fail=lambda m:(sys.stderr.write('device hook template integrity check failed: '+m+'\\n'),sys.exit(${I}))`,
+      "os.path.isfile(p) or fail('not a regular file')",
+      "os.path.getsize(p)<=n or fail('too large')",
+      "b=None",
+      'try: b=open(p,"rb").read()',
+      "except OSError as e: fail(type(e).__name__)",
+      "hashlib.sha256(b).hexdigest()==d or fail('digest mismatch')",
+      "sys.argv=[p]",
+      "exec(compile(b,p,'exec'),{'__name__':'__main__','__file__':p})",
+    ].join(`
+`),
+  Y = V();
+async function G(o) {
+  for (let r of U) {
+    let e = await o.vet(r);
+    if (e !== null) return e;
+  }
+  return null;
+}
+async function W(o, r, e) {
+  await e.mkdir(e.templateDir, 448);
+  let t = x(e.templateDir, `${o}.py`);
+  return (await e.writeFileAtomic(t, r, 384), t);
+}
+function K(o, r, e, t = 262144) {
+  return [o, "-I", "-S", "-c", Y, r, e, String(t)];
+}
+var X = /^(?:LD_|DYLD_|GCONV_PATH$|PYTHON)/;
+function q(o) {
+  let r = { ...o };
+  for (let e of Object.keys(r)) if (X.test(e)) delete r[e];
+  return r;
+}
+var S = 65536;
+async function Q(o, r, e) {
+  let t = await C(r.cwd, o, r, e);
+  return t.status === null &&
+    t.signal === void 0 &&
+    !t.timedOut &&
+    /ENOENT|spawn .* cwd|uv_cwd|not a directory/i.test(t.stderr)
+    ? C(B(), o, r, e)
+    : t;
+}
+function C(o, r, e, t) {
+  return new Promise((s) => {
+    let [l, ...a] = r;
+    if (l === void 0) {
+      s({ stdout: "", stderr: "no command", status: null, timedOut: !1 });
+      return;
+    }
+    let p = !1,
+      k = (d) => {
+        if (!p) ((p = !0), s(d));
+      },
+      c;
+    try {
+      c = L(l, a, {
+        cwd: o,
+        env: { ...q(t.env ?? Hi()), CLAUDE_PROJECT_DIR: t.projectDir },
+        stdio: ["pipe", "pipe", "pipe"],
+        detached: !0,
+        windowsHide: !0,
+        ..._4e(e.hook_event_name),
+      });
+    } catch (d) {
+      k({
+        stdout: "",
+        stderr: d instanceof Error ? d.message : "spawn failed",
+        status: null,
+        timedOut: !1,
+      });
+      return;
+    }
+    let f = () => {
+        try {
+          if (c.pid !== void 0) process.kill(-c.pid, "SIGKILL");
+        } catch {
+          c.kill("SIGKILL");
+        }
+      },
+      m = "",
+      y = "",
+      w = !1,
+      g = !1,
+      h = !1,
+      D = setTimeout(
+        (d) => {
+          ((w = !0), d());
+        },
+        t.timeoutMs,
+        f,
+      ),
+      T = () => f();
+    if (t.signal !== void 0)
+      if (t.signal.aborted) T();
+      else t.signal.addEventListener("abort", T, { once: !0 });
+    let _ = (d, v, M) => {
+      if (d.length + v.length > S) M();
+      return d.length >= S ? d : (d + v).slice(0, S);
+    };
+    (c.stdout?.setEncoding("utf8"),
+      c.stderr?.setEncoding("utf8"),
+      c.stdout?.on("data", (d) => (m = _(m, d, () => (g = !0)))),
+      c.stderr?.on("data", (d) => (y = _(y, d, () => (h = !0)))),
+      c.stdin?.on("error", () => {}));
+    let P = (d, v) => {
+      (clearTimeout(D),
+        t.signal?.removeEventListener("abort", T),
+        k({
+          stdout: m,
+          stderr: y,
+          status: d,
+          ...(v !== void 0 && { signal: v }),
+          timedOut: w,
+          ...(g && { stdoutTruncated: g }),
+          ...(h && { stderrTruncated: h }),
+        }));
+    };
+    (c.on("error", (d) => {
+      ((y = y || d.message), P(null));
+    }),
+      c.on("close", (d, v) => P(d, v ?? void 0)));
+    let O;
+    try {
+      O = b(e);
+    } catch {
+      O = "";
+    }
+    c.stdin?.end(O);
+  });
+}
+function N(o) {
+  let r = o.stdout.trim();
+  if (o.stdoutTruncated === !0) return { kind: "unreadable" };
+  if (!r.startsWith("{"))
+    return r === "" ? { kind: "silent" } : { kind: "unreadable" };
+  try {
+    let e = O3().safeParse(z(r));
+    if (!e.success) return { kind: "unreadable" };
+    let t = e.data;
+    return "async" in t
+      ? { kind: "unreadable" }
+      : { kind: "answer", answer: t };
+  } catch {
+    return { kind: "unreadable" };
+  }
+}
+function Z(o) {
+  if (o.status === 2)
+    return {
+      decision: "block",
+      reason: o.stderr.trim() || "blocked by a device hook template",
+    };
+  if (o.status !== 0) return {};
+  let r = N(o);
+  if (r.kind !== "answer") return {};
+  let e = r.answer,
+    t = {
+      ...(e.continue === !1 && {
+        continue: !1,
+        ...(e.stopReason !== void 0 && { stopReason: e.stopReason }),
+      }),
+      ...(e.decision === "block" && {
+        decision: "block",
+        ...(e.reason !== void 0 && { reason: e.reason }),
+      }),
+      ...(e.systemMessage !== void 0 && { systemMessage: e.systemMessage }),
+    },
+    s = e.hookSpecificOutput;
+  if (s?.hookEventName === "PreToolUse") {
+    let l =
+      s.permissionDecision === "deny" || s.permissionDecision === "ask"
+        ? s.permissionDecision
+        : void 0;
+    return {
+      ...t,
+      hookSpecificOutput: {
+        hookEventName: "PreToolUse",
+        ...(l !== void 0 && { permissionDecision: l }),
+        ...(l !== void 0 &&
+          s.permissionDecisionReason !== void 0 && {
+            permissionDecisionReason: s.permissionDecisionReason,
+          }),
+        ...(s.additionalContext !== void 0 && {
+          additionalContext: s.additionalContext,
+        }),
+      },
+    };
+  }
+  if (s?.hookEventName === "PostToolUse" && s.additionalContext !== void 0)
+    return {
+      ...t,
+      hookSpecificOutput: {
+        hookEventName: "PostToolUse",
+        additionalContext: s.additionalContext,
+      },
+    };
+  return t;
+}
+function ee(o, r) {
+  if (r) return "aborted";
+  if (o.timedOut) return "timeout";
+  if (o.signal !== void 0) return "killed";
+  if (o.status === null) return "spawn_failed";
+  if (o.status === I) return "integrity_failed";
+  if (o.status === 0) return N(o).kind === "unreadable" ? "error" : "ok";
+  return o.status === 2 ? "blocked" : "error";
+}
+var te = {
+  integrity_failed: "its file no longer matched what was verified",
+  error: "it exited with an error or an unreadable answer",
+  spawn_failed: "it could not be started",
+  killed: "it was killed before it answered",
+  interpreter_untrusted: "its interpreter can no longer be trusted",
+  timeout: "it took too long",
+};
+function ne(o, r, e, t, s, l) {
+  return async (a, p, k) => {
+    let c = Date.now(),
+      f = await s(),
+      m = f
+        ? await Q(o, a, {
+            timeoutMs: Math.max(1000, r * 1000 - 2000),
+            projectDir: l(),
+            ...(k !== void 0 && { signal: k }),
+          })
+        : {
+            stdout: "",
+            stderr: "interpreter no longer trusted",
+            status: null,
+            timedOut: !1,
+          },
+      y = Z({ ...m, stderr: s_n(m.stderr, 2000).text }),
+      { answer: w, report: g } = GMe(y, e.event),
+      h = f ? ee(m, k?.aborted === !0) : "interpreter_untrusted",
+      D = h === "ok" && ng(w) ? "blocked" : h;
+    if (
+      (t({
+        outcome: D,
+        durationMs: Date.now() - c,
+        fieldsDropped: g.dropped.length > 0 || g.truncated.length > 0,
+      }),
+      D === "aborted")
+    )
+      return e.failClosed
+        ? {
+            decision: "block",
+            reason: `cloud template ${e.id} was interrupted before it could answer`,
+          }
+        : {};
+    let T = te[D];
+    if (T !== void 0) {
+      let _ = `cloud template ${e.id} did not run cleanly: ${T}`;
+      return e.failClosed
+        ? { decision: "block", reason: _, systemMessage: _ }
+        : { ...w, systemMessage: _ };
+    }
+    return w;
+  };
+}
+function re(o) {
+  return {
+    vet: async (r) => {
+      try {
+        let e =
+            typeof process.getuid === "function" ? process.getuid() : void 0,
+          t = (p) => e !== void 0 && e !== 0 && p === e,
+          s = async (p) => {
+            let k = p.split("/").filter(Boolean);
+            for (let c = 0; c < k.length; c += 1) {
+              let f = await E("/" + k.slice(0, c).join("/"));
+              if (!f.isDirectory() || (f.mode & 18) !== 0 || t(f.uid))
+                return !1;
+            }
+            return !0;
+          };
+        if (!(await s(r))) return null;
+        let l = await j(r);
+        if (!(await s(l))) return null;
+        let a = await E(l);
+        return a.isFile() &&
+          (a.mode & 73) !== 0 &&
+          (a.mode & 18) === 0 &&
+          !t(a.uid)
+          ? l
+          : null;
+      } catch {
+        return null;
+      }
+    },
+    mkdir: async (r, e) => {
+      try {
+        await H(r, { mode: e });
+      } catch (l) {
+        if (A(l) !== "EEXIST") throw l;
+      }
+      let t = await E(r),
+        s = typeof process.getuid === "function" ? process.getuid() : void 0;
+      if (
+        !t.isDirectory() ||
+        (s !== void 0 && t.uid !== s) ||
+        (t.mode & 63) !== 0
+      )
+        throw Error("unsafe device-hook template directory");
+    },
+    writeFileAtomic: (r, e, t) => On(r, e, t),
+    templateDir: o,
+  };
+}
+function Re(o) {
+  let r = $d(),
+    e = re(x(r, "device-hook-templates", String(process.pid))),
+    t,
+    s = () => (
+      (t ??= G(e).then((a) => {
+        if (a === null) t = void 0;
+        return a;
+      })),
+      t
+    ),
+    l = new Map();
+  return {
+    resolveInterpreter: s,
+    async prepare(a, p, k, c) {
+      let f = await s();
+      if (f === null)
+        throw Error("no absolute python3 for a device hook template");
+      (await H(r, { recursive: !0, mode: 448 }), jJ(r));
+      let m = l.get(p);
+      if (m !== void 0 && !(await oe(await m.catch(() => null), p, a.maxBytes)))
+        (l.delete(p), (m = void 0));
+      if (m === void 0)
+        ((m = (async () => (
+          await e.mkdir(x(r, "device-hook-templates"), 448),
+          W(p, k, e)
+        ))()),
+          l.set(p, m),
+          m.catch(() => l.delete(p)));
+      let y = await m,
+        w = uit(a);
+      return ne(
+        K(f, y, p, a.maxBytes),
+        c,
+        { id: a.id, event: a.event, failClosed: w },
+        (g) => {
+          if (
+            (i("tengu_device_hook_template_run", {
+              template: u(ie(a.id)),
+              outcome: u(g.outcome),
+              duration_ms: g.durationMs,
+              fields_dropped: g.fieldsDropped,
+            }),
+            g.outcome === "integrity_failed")
+          )
+            n(
+              `Device hook template ${a.id} refused at run time: integrity check failed (${y})`,
+              { level: "warn" },
+            );
+          else if (g.outcome === "interpreter_untrusted")
+            n(
+              `Device hook template ${a.id} refused at run time: ${f} no longer vets as a trusted interpreter`,
+              { level: "warn" },
+            );
+        },
+        async () => {
+          let g = (await e.vet(f)) === f;
+          if (!g) t = void 0;
+          return g;
+        },
+        o,
+      );
+    },
+    install: (a, p, k) => v9t(a, p, "templates", k),
+    remove: (a) => R9t(a, "templates"),
+  };
+}
+async function oe(o, r, e) {
+  if (o === null) return !1;
+  let t;
+  try {
+    t = await J(o, R.O_RDONLY | R.O_NONBLOCK | R.O_NOFOLLOW);
+    let s = await t.stat();
+    if (!s.isFile() || s.size > e) return !1;
+    let l = Buffer.alloc(s.size),
+      { bytesRead: a } = await t.read(l, 0, s.size, 0);
+    return a === s.size && F("sha256").update(l).digest("hex") === r;
+  } catch {
+    return !1;
+  } finally {
+    await t?.close().catch(() => {});
+  }
+}
+function ie(o) {
+  return cye(o)?.id ?? "unknown";
+}
+export { Re as productionDeviceHookTemplateRunner, ie as telemetryTemplateId };

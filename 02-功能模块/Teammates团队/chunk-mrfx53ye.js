@@ -1,0 +1,469 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { Pw } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
+import { _l } from "../后台任务-Shell管理/chunk-x3txegas.js";
+function xs(e) {
+  return e === "completed" || e === "failed" || e === "killed";
+}
+import { randomBytes as m } from "crypto";
+var w = new Set([
+  "local_agent",
+  "remote_agent",
+  "in_process_teammate",
+  "local_workflow",
+]);
+function MI(e) {
+  return Object.values(e).some(n3t);
+}
+function n3t(e) {
+  return (
+    w.has(e.type) &&
+    !xs(e.status) &&
+    !(e.type === "in_process_teammate" && e.isIdle) &&
+    !(e.type === "remote_agent" && e.isLongRunning)
+  );
+}
+function X_n(e) {
+  return Object.values(e).some(r3t);
+}
+function r3t(e) {
+  return e.type === "local_bash" && !xs(e.status);
+}
+var k = {
+    local_bash: "b",
+    local_agent: "a",
+    remote_agent: "r",
+    in_process_teammate: "t",
+    local_workflow: "w",
+    monitor_mcp: "m",
+    monitor_ws: "s",
+    mcp_task: "k",
+    dream: "d",
+    auto_mode_scan: "e",
+  },
+  d = "0123456789abcdefghijklmnopqrstuvwxyz";
+function Dh(e) {
+  let t = k[e] ?? "x",
+    o = m(8),
+    i = t;
+  for (let n = 0; n < 8; n++) i += d[o[n] % d.length];
+  return i;
+}
+function Md(e, t, o, i) {
+  return {
+    id: e,
+    type: t,
+    status: "pending",
+    description: o,
+    toolUseId: i,
+    startTime: Date.now(),
+    outputFile: _l(e),
+    outputOffset: 0,
+    notified: !1,
+  };
+}
+import u from "process";
+function a() {
+  let { env: e } = u,
+    { TERM: t, TERM_PROGRAM: o } = e;
+  if (u.platform !== "win32") return t !== "linux";
+  return (
+    Boolean(e.WT_SESSION) ||
+    Boolean(e.TERMINUS_SUBLIME) ||
+    e.ConEmuTask === "{cmd::Cmder}" ||
+    o === "Terminus-Sublime" ||
+    o === "vscode" ||
+    t === "xterm-256color" ||
+    t === "alacritty" ||
+    t === "rxvt-unicode" ||
+    t === "rxvt-unicode-256color" ||
+    e.TERMINAL_EMULATOR === "JetBrains-JediTerm"
+  );
+}
+var c = {
+    circleQuestionMark: "(?)",
+    questionMarkPrefix: "(?)",
+    square: "\u2588",
+    squareDarkShade: "\u2593",
+    squareMediumShade: "\u2592",
+    squareLightShade: "\u2591",
+    squareTop: "\u2580",
+    squareBottom: "\u2584",
+    squareLeft: "\u258C",
+    squareRight: "\u2590",
+    squareCenter: "\u25A0",
+    bullet: "\u25CF",
+    dot: "\u2024",
+    ellipsis: "\u2026",
+    pointerSmall: "\u203A",
+    triangleUp: "\u25B2",
+    triangleUpSmall: "\u25B4",
+    triangleDown: "\u25BC",
+    triangleDownSmall: "\u25BE",
+    triangleLeftSmall: "\u25C2",
+    triangleRightSmall: "\u25B8",
+    home: "\u2302",
+    heart: "\u2665",
+    musicNote: "\u266A",
+    musicNoteBeamed: "\u266B",
+    arrowUp: "\u2191",
+    arrowDown: "\u2193",
+    arrowLeft: "\u2190",
+    arrowRight: "\u2192",
+    arrowLeftRight: "\u2194",
+    arrowUpDown: "\u2195",
+    almostEqual: "\u2248",
+    notEqual: "\u2260",
+    lessOrEqual: "\u2264",
+    greaterOrEqual: "\u2265",
+    identical: "\u2261",
+    infinity: "\u221E",
+    subscriptZero: "\u2080",
+    subscriptOne: "\u2081",
+    subscriptTwo: "\u2082",
+    subscriptThree: "\u2083",
+    subscriptFour: "\u2084",
+    subscriptFive: "\u2085",
+    subscriptSix: "\u2086",
+    subscriptSeven: "\u2087",
+    subscriptEight: "\u2088",
+    subscriptNine: "\u2089",
+    oneHalf: "\xBD",
+    oneThird: "\u2153",
+    oneQuarter: "\xBC",
+    oneFifth: "\u2155",
+    oneSixth: "\u2159",
+    oneEighth: "\u215B",
+    twoThirds: "\u2154",
+    twoFifths: "\u2156",
+    threeQuarters: "\xBE",
+    threeFifths: "\u2157",
+    threeEighths: "\u215C",
+    fourFifths: "\u2158",
+    fiveSixths: "\u215A",
+    fiveEighths: "\u215D",
+    sevenEighths: "\u215E",
+    line: "\u2500",
+    lineBold: "\u2501",
+    lineDouble: "\u2550",
+    lineDashed0: "\u2504",
+    lineDashed1: "\u2505",
+    lineDashed2: "\u2508",
+    lineDashed3: "\u2509",
+    lineDashed4: "\u254C",
+    lineDashed5: "\u254D",
+    lineDashed6: "\u2574",
+    lineDashed7: "\u2576",
+    lineDashed8: "\u2578",
+    lineDashed9: "\u257A",
+    lineDashed10: "\u257C",
+    lineDashed11: "\u257E",
+    lineDashed12: "\u2212",
+    lineDashed13: "\u2013",
+    lineDashed14: "\u2010",
+    lineDashed15: "\u2043",
+    lineVertical: "\u2502",
+    lineVerticalBold: "\u2503",
+    lineVerticalDouble: "\u2551",
+    lineVerticalDashed0: "\u2506",
+    lineVerticalDashed1: "\u2507",
+    lineVerticalDashed2: "\u250A",
+    lineVerticalDashed3: "\u250B",
+    lineVerticalDashed4: "\u254E",
+    lineVerticalDashed5: "\u254F",
+    lineVerticalDashed6: "\u2575",
+    lineVerticalDashed7: "\u2577",
+    lineVerticalDashed8: "\u2579",
+    lineVerticalDashed9: "\u257B",
+    lineVerticalDashed10: "\u257D",
+    lineVerticalDashed11: "\u257F",
+    lineDownLeft: "\u2510",
+    lineDownLeftArc: "\u256E",
+    lineDownBoldLeftBold: "\u2513",
+    lineDownBoldLeft: "\u2512",
+    lineDownLeftBold: "\u2511",
+    lineDownDoubleLeftDouble: "\u2557",
+    lineDownDoubleLeft: "\u2556",
+    lineDownLeftDouble: "\u2555",
+    lineDownRight: "\u250C",
+    lineDownRightArc: "\u256D",
+    lineDownBoldRightBold: "\u250F",
+    lineDownBoldRight: "\u250E",
+    lineDownRightBold: "\u250D",
+    lineDownDoubleRightDouble: "\u2554",
+    lineDownDoubleRight: "\u2553",
+    lineDownRightDouble: "\u2552",
+    lineUpLeft: "\u2518",
+    lineUpLeftArc: "\u256F",
+    lineUpBoldLeftBold: "\u251B",
+    lineUpBoldLeft: "\u251A",
+    lineUpLeftBold: "\u2519",
+    lineUpDoubleLeftDouble: "\u255D",
+    lineUpDoubleLeft: "\u255C",
+    lineUpLeftDouble: "\u255B",
+    lineUpRight: "\u2514",
+    lineUpRightArc: "\u2570",
+    lineUpBoldRightBold: "\u2517",
+    lineUpBoldRight: "\u2516",
+    lineUpRightBold: "\u2515",
+    lineUpDoubleRightDouble: "\u255A",
+    lineUpDoubleRight: "\u2559",
+    lineUpRightDouble: "\u2558",
+    lineUpDownLeft: "\u2524",
+    lineUpBoldDownBoldLeftBold: "\u252B",
+    lineUpBoldDownBoldLeft: "\u2528",
+    lineUpDownLeftBold: "\u2525",
+    lineUpBoldDownLeftBold: "\u2529",
+    lineUpDownBoldLeftBold: "\u252A",
+    lineUpDownBoldLeft: "\u2527",
+    lineUpBoldDownLeft: "\u2526",
+    lineUpDoubleDownDoubleLeftDouble: "\u2563",
+    lineUpDoubleDownDoubleLeft: "\u2562",
+    lineUpDownLeftDouble: "\u2561",
+    lineUpDownRight: "\u251C",
+    lineUpBoldDownBoldRightBold: "\u2523",
+    lineUpBoldDownBoldRight: "\u2520",
+    lineUpDownRightBold: "\u251D",
+    lineUpBoldDownRightBold: "\u2521",
+    lineUpDownBoldRightBold: "\u2522",
+    lineUpDownBoldRight: "\u251F",
+    lineUpBoldDownRight: "\u251E",
+    lineUpDoubleDownDoubleRightDouble: "\u2560",
+    lineUpDoubleDownDoubleRight: "\u255F",
+    lineUpDownRightDouble: "\u255E",
+    lineDownLeftRight: "\u252C",
+    lineDownBoldLeftBoldRightBold: "\u2533",
+    lineDownLeftBoldRightBold: "\u252F",
+    lineDownBoldLeftRight: "\u2530",
+    lineDownBoldLeftBoldRight: "\u2531",
+    lineDownBoldLeftRightBold: "\u2532",
+    lineDownLeftRightBold: "\u252E",
+    lineDownLeftBoldRight: "\u252D",
+    lineDownDoubleLeftDoubleRightDouble: "\u2566",
+    lineDownDoubleLeftRight: "\u2565",
+    lineDownLeftDoubleRightDouble: "\u2564",
+    lineUpLeftRight: "\u2534",
+    lineUpBoldLeftBoldRightBold: "\u253B",
+    lineUpLeftBoldRightBold: "\u2537",
+    lineUpBoldLeftRight: "\u2538",
+    lineUpBoldLeftBoldRight: "\u2539",
+    lineUpBoldLeftRightBold: "\u253A",
+    lineUpLeftRightBold: "\u2536",
+    lineUpLeftBoldRight: "\u2535",
+    lineUpDoubleLeftDoubleRightDouble: "\u2569",
+    lineUpDoubleLeftRight: "\u2568",
+    lineUpLeftDoubleRightDouble: "\u2567",
+    lineUpDownLeftRight: "\u253C",
+    lineUpBoldDownBoldLeftBoldRightBold: "\u254B",
+    lineUpDownBoldLeftBoldRightBold: "\u2548",
+    lineUpBoldDownLeftBoldRightBold: "\u2547",
+    lineUpBoldDownBoldLeftRightBold: "\u254A",
+    lineUpBoldDownBoldLeftBoldRight: "\u2549",
+    lineUpBoldDownLeftRight: "\u2540",
+    lineUpDownBoldLeftRight: "\u2541",
+    lineUpDownLeftBoldRight: "\u253D",
+    lineUpDownLeftRightBold: "\u253E",
+    lineUpBoldDownBoldLeftRight: "\u2542",
+    lineUpDownLeftBoldRightBold: "\u253F",
+    lineUpBoldDownLeftBoldRight: "\u2543",
+    lineUpBoldDownLeftRightBold: "\u2544",
+    lineUpDownBoldLeftBoldRight: "\u2545",
+    lineUpDownBoldLeftRightBold: "\u2546",
+    lineUpDoubleDownDoubleLeftDoubleRightDouble: "\u256C",
+    lineUpDoubleDownDoubleLeftRight: "\u256B",
+    lineUpDownLeftDoubleRightDouble: "\u256A",
+    lineCross: "\u2573",
+    lineBackslash: "\u2572",
+    lineSlash: "\u2571",
+  },
+  p = {
+    tick: "\u2714",
+    info: "\u2139",
+    warning: "\u26A0",
+    cross: "\u2718",
+    squareSmall: "\u25FB",
+    squareSmallFilled: "\u25FC",
+    circle: "\u25EF",
+    circleFilled: "\u25C9",
+    circleDotted: "\u25CC",
+    circleDouble: "\u25CE",
+    circleCircle: "\u24DE",
+    circleCross: "\u24E7",
+    circlePipe: "\u24BE",
+    radioOn: "\u25C9",
+    radioOff: "\u25EF",
+    checkboxOn: "\u2612",
+    checkboxOff: "\u2610",
+    checkboxCircleOn: "\u24E7",
+    checkboxCircleOff: "\u24BE",
+    pointer: "\u276F",
+    triangleUpOutline: "\u25B3",
+    triangleLeft: "\u25C0",
+    triangleRight: "\u25B6",
+    lozenge: "\u25C6",
+    lozengeOutline: "\u25C7",
+    hamburger: "\u2630",
+    smiley: "\u32E1",
+    mustache: "\u0DF4",
+    star: "\u2605",
+    play: "\u25B6",
+    nodejs: "\u2B22",
+    oneSeventh: "\u2150",
+    oneNinth: "\u2151",
+    oneTenth: "\u2152",
+  },
+  S = {
+    tick: "\u221A",
+    info: "i",
+    warning: "\u203C",
+    cross: "\xD7",
+    squareSmall: "\u25A1",
+    squareSmallFilled: "\u25A0",
+    circle: "( )",
+    circleFilled: "(*)",
+    circleDotted: "( )",
+    circleDouble: "( )",
+    circleCircle: "(\u25CB)",
+    circleCross: "(\xD7)",
+    circlePipe: "(\u2502)",
+    radioOn: "(*)",
+    radioOff: "( )",
+    checkboxOn: "[\xD7]",
+    checkboxOff: "[ ]",
+    checkboxCircleOn: "(\xD7)",
+    checkboxCircleOff: "( )",
+    pointer: ">",
+    triangleUpOutline: "\u2206",
+    triangleLeft: "\u25C4",
+    triangleRight: "\u25BA",
+    lozenge: "\u2666",
+    lozengeOutline: "\u25CA",
+    hamburger: "\u2261",
+    smiley: "\u263A",
+    mustache: "\u250C\u2500\u2510",
+    star: "\u2736",
+    play: "\u25BA",
+    nodejs: "\u2666",
+    oneSeventh: "1/7",
+    oneNinth: "1/9",
+    oneTenth: "1/10",
+  },
+  b = { ...c, ...p },
+  B = { ...c, ...S },
+  R = a(),
+  U = R ? b : B,
+  L = U,
+  I = Object.entries(p);
+function fw(e) {
+  let t = e.replace(/[^A-Za-z0-9._:/@[\]-]/g, "");
+  if (t.length === 0) return "(unrecognized model name)";
+  return t.length > 128 ? `${t.slice(0, 128)}\u2026` : t;
+}
+function Lh(e, t) {
+  return `Model "${fw(e)}" is restricted by your organization's settings. Using ${fw(t)} instead.`;
+}
+var Y_n = ["unrestricted", "small", "medium", "large"],
+  f = "medium";
+function bSt(e) {
+  return Y_n.find((t) => t === e);
+}
+var l = { small: 5, medium: 15, large: 50 };
+function T(e) {
+  let t = e === "small" || e === "medium" || e === "large" ? l[e] : void 0;
+  return t === void 0 ? e : `${e} (aim for <${t} agents)`;
+}
+function J_n(e, t) {
+  return t && e !== "unrestricted" ? `${e} (default)` : T(e);
+}
+function eYn(e) {
+  return e === "small" || e === "medium" || e === "large" ? l[e] : void 0;
+}
+function g(e) {
+  if (!(e in l)) return e;
+  return `${e} \u2014 keep workflows under ${l[e]} agents`;
+}
+function h() {
+  return "This is a guideline, not a hard limit \u2014 follow it unless the user's prompt calls for a different scale.";
+}
+function D(e, t) {
+  let o = t
+      ? "This session has the default workflow size guideline:"
+      : "A workflow size guideline is configured for this session:",
+    i = t
+      ? ' The user can raise or remove it with "Dynamic workflow size" in /config.'
+      : "";
+  return `${o} ${g(e)}. ${h()}${i}`;
+}
+function tYn(e) {
+  if (e === "unrestricted")
+    return "Workflow size is now unrestricted \u2014 no size guideline applies.";
+  return `The workflow size guideline for this session changed: ${g(e)}. ${h()}`;
+}
+function dAe() {
+  return Pw()?.settings.workflowSizeGuideline !== void 0;
+}
+function Tre(e) {
+  let t = bSt(Pw()?.settings.workflowSizeGuideline) ?? bSt(e);
+  return t === void 0 ? { size: f, isDefault: !0 } : { size: t, isDefault: !1 };
+}
+function wSt(e) {
+  let t = Ei();
+  return (
+    (t.sessionStartWorkflowSizeGuideline ??= Tre(e)),
+    t.sessionStartWorkflowSizeGuideline
+  );
+}
+function Q_n(e) {
+  let { size: t, isDefault: o } = wSt(e);
+  if (t === "unrestricted") return "";
+  return `
+
+${D(t, o)}`;
+}
+function nYn(e, t) {
+  let o = Tre(t).size,
+    i;
+  for (let r = e.length - 1; r >= 0; r--) {
+    let s = e[r];
+    if (
+      s?.type === "attachment" &&
+      s.attachment.type === "workflow_size_guideline_change"
+    ) {
+      i = s.attachment.size;
+      break;
+    }
+  }
+  let n = i ?? wSt(t).size;
+  if (o !== n) return [{ type: "workflow_size_guideline_change", size: o }];
+  return [];
+}
+export {
+  xs,
+  MI,
+  n3t,
+  X_n,
+  r3t,
+  Dh,
+  Md,
+  L,
+  fw,
+  Lh,
+  Y_n,
+  bSt,
+  J_n,
+  eYn,
+  tYn,
+  dAe,
+  Tre,
+  wSt,
+  Q_n,
+  nYn,
+};

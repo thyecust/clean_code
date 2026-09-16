@@ -1,0 +1,1328 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { zn, _Z } from "../../00-第三方库/lodash/lodash.207999qb.js";
+import { be, Kur } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { tje } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { gz } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { EL } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
+import { Ohe } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import { randomUUID as ce } from "crypto";
+import { once as C } from "events";
+import { constants as P, createWriteStream as ue } from "fs";
+import {
+  lstat as J,
+  open as B,
+  lstat as x,
+  readdir as b,
+  realpath as z,
+  rename as fe,
+  stat as de,
+} from "fs/promises";
+import { basename as E, dirname as F, isAbsolute as le, join as S } from "path";
+import { createInterface as pe } from "readline";
+import { execFile as ae } from "child_process";
+import { promisify as oe } from "util";
+var se = oe(ae);
+async function B2e(e) {
+  let n = EL("git");
+  if (n === null) return [];
+  try {
+    let { stdout: r } = await se(
+      n,
+      [
+        "-c",
+        "core.hooksPath=/dev/null",
+        "-c",
+        "core.fsmonitor=",
+        "worktree",
+        "list",
+        "--porcelain",
+      ],
+      { cwd: e, timeout: 5000, windowsHide: !0 },
+    );
+    if (!r) return [];
+    return r
+      .split(
+        `
+`,
+      )
+      .filter((t) => t.startsWith("worktree "))
+      .map((t) => zn(t.slice(9)));
+  } catch {
+    return [];
+  }
+}
+var Mm = 65536,
+  Cnt = new Set(["sdk-cli", "sdk-ts", "sdk-py"]);
+function Sbr(e, n) {
+  let r = KQ(e, "entrypoint") ?? wL(n, "entrypoint");
+  if (r && Cnt.has(r)) return !0;
+  let t =
+      e
+        .split(
+          `
+`,
+        )
+        .find((i) => i.includes('"parentUuid":')) ?? e,
+    a = KQ(t, "sessionKind");
+  return a === "daemon" || a === "daemon-worker";
+}
+var ye = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function bL(e) {
+  if (typeof e !== "string") return null;
+  return ye.test(e) ? e : null;
+}
+function Y(e) {
+  if (!e.includes("\\")) return e;
+  try {
+    return JSON.parse(`"${e}"`);
+  } catch {
+    return e;
+  }
+}
+function KQ(e, n) {
+  let r = [`"${n}":"`, `"${n}": "`];
+  for (let t of r) {
+    let a = e.indexOf(t);
+    if (a < 0) continue;
+    let i = a + t.length,
+      o = i;
+    while (o < e.length) {
+      if (e[o] === "\\") {
+        o += 2;
+        continue;
+      }
+      if (e[o] === '"') return Y(e.slice(i, o));
+      o++;
+    }
+  }
+  return;
+}
+function wL(e, n) {
+  let r = [`"${n}":"`, `"${n}": "`],
+    t,
+    a = -1;
+  for (let i of r) {
+    let o = 0;
+    while (!0) {
+      let c = e.indexOf(i, o);
+      if (c < 0) break;
+      let u = c + i.length,
+        s = u;
+      while (s < e.length) {
+        if (e[s] === "\\") {
+          s += 2;
+          continue;
+        }
+        if (e[s] === '"') {
+          if (c > a) ((t = Y(e.slice(u, s))), (a = c));
+          break;
+        }
+        s++;
+      }
+      o = s + 1;
+    }
+  }
+  return t;
+}
+function vnt(e, n, r) {
+  return G(e, r, n);
+}
+function G(e, n, r) {
+  let t = r === void 0 ? void 0 : `"type":"${r}"`,
+    a = `"${n}":`,
+    i = e.length;
+  while (i > 0) {
+    let o = e.lastIndexOf(
+        `
+`,
+        i - 1,
+      ),
+      c = e.slice(o + 1, i);
+    if (((i = o), c.includes(a) && (t === void 0 || c.includes(t))))
+      try {
+        let u = JSON.parse(c);
+        if (
+          typeof u === "object" &&
+          u !== null &&
+          (r === void 0 || u.type === r)
+        ) {
+          let s = u[n];
+          if (typeof s === "string") return s;
+        }
+      } catch {}
+    if (o < 0) break;
+  }
+  return;
+}
+function qke(e, n) {
+  let r = `"${n}":`,
+    t = 0;
+  while (t < e.length) {
+    let a = e.indexOf(
+        `
+`,
+        t,
+      ),
+      i = a < 0 ? e.slice(t) : e.slice(t, a);
+    if (((t = a < 0 ? e.length : a + 1), i.includes(r)))
+      try {
+        let o = JSON.parse(i);
+        if (typeof o === "object" && o !== null) {
+          let c = o[n];
+          if (typeof c === "string") return c;
+        }
+      } catch {}
+  }
+  return;
+}
+function V7t(e, n) {
+  return G(e, n);
+}
+function Fcr(e, n) {
+  return e?.realWorkspacePath === void 0
+    ? void 0
+    : { hoverRestOn: n, realPath: e.realWorkspacePath };
+}
+async function Wie(e, n, r) {
+  return q(e, n, "w", r);
+}
+async function iPn(e, n, r) {
+  return q(e, n, "a", r);
+}
+async function q(e, n, r, t) {
+  if (t !== void 0 && t.hoverRestOn && (r === "w" || n.length > 0))
+    return me(t.source, n, r);
+  let a = ue(e, { mode: 384, flags: r });
+  try {
+    for (let i of n)
+      if (
+        !a.write(
+          JSON.stringify(i) +
+            `
+`,
+        )
+      )
+        await C(a, "drain");
+    (a.end(), await C(a, "finish"));
+  } catch (i) {
+    throw (a.destroy(), i);
+  }
+}
+async function me(e, n, r) {
+  let { backend: t, key: a } = e,
+    i = n.map((c) => ({
+      data:
+        JSON.stringify(c) +
+        `
+`,
+    }));
+  if (r === "w") {
+    let c = await t.replaceRecords(a, i, {
+      publishDiscipline: "inPlace",
+      mode: 384,
+    });
+    if (!c.ok)
+      throw Error("transcript stream replace failed", { cause: c.error });
+    return;
+  }
+  let o = await t.append(a, i);
+  if (!o.ok) throw Error("transcript stream append failed", { cause: o.error });
+}
+function bbr(e) {
+  let n = 0,
+    r = { commandFallback: "" };
+  while (n < e.length) {
+    let t = e.indexOf(
+        `
+`,
+        n,
+      ),
+      a = t >= 0 ? e.slice(n, t) : e.slice(n);
+    if (
+      ((n = t >= 0 ? t + 1 : e.length),
+      !a.includes('"type":"user"') && !a.includes('"type": "user"'))
+    )
+      continue;
+    if (a.includes('"tool_result"')) continue;
+    if (a.includes('"isMeta":true') || a.includes('"isMeta": true')) continue;
+    if (
+      a.includes('"isCompactSummary":true') ||
+      a.includes('"isCompactSummary": true')
+    )
+      continue;
+    try {
+      let i = JSON.parse(a),
+        o = Ohe(i, r);
+      if (o !== void 0) return o;
+    } catch {
+      continue;
+    }
+  }
+  return r.commandFallback;
+}
+function wbr(e) {
+  let n = { commandFallback: "" };
+  for (let r of e) {
+    if (typeof r !== "object" || r === null) continue;
+    let t = Ohe(r, n);
+    if (t !== void 0) return t;
+  }
+  return n.commandFallback;
+}
+var T = P.O_RDONLY | P.O_NOFOLLOW | P.O_NONBLOCK;
+async function Rnt(e, n, r, t) {
+  if (t !== void 0 && t.hoverRestOn) return ge(t.source);
+  try {
+    if (T === P.O_RDONLY) {
+      if (!(await J(e)).isFile()) return { head: "", tail: "" };
+    }
+    let a = await B(e, T);
+    try {
+      if (!(await a.stat()).isFile()) return { head: "", tail: "" };
+      let i = await a.read(r, 0, Mm, 0);
+      if (i.bytesRead === 0) return { head: "", tail: "" };
+      let o = r.toString("utf8", 0, i.bytesRead),
+        c = Math.max(0, n - Mm),
+        u = o;
+      if (c > 0) {
+        let s = await a.read(r, 0, Mm, c);
+        u = r.toString("utf8", 0, s.bytesRead);
+      }
+      return { head: o, tail: u };
+    } finally {
+      await a.close();
+    }
+  } catch {
+    return { head: "", tail: "" };
+  }
+}
+async function ge(e) {
+  let n = await Z(e);
+  return n === null ? { head: "", tail: "" } : { head: n.head, tail: n.tail };
+}
+function aPn(e) {
+  let n = e.indexOf(`
+`);
+  return n >= 0 ? e.slice(n + 1) : "";
+}
+async function Z(e) {
+  let { backend: n, key: r } = e;
+  try {
+    let t = await n.read([
+      { key: r, offset: 0, length: Mm },
+      { key: r, tail: Mm },
+    ]);
+    if (!t.ok) return null;
+    let [a, i] = t.value.items;
+    if (!a.found || a.value.length === 0) return null;
+    let o = _(a.value),
+      c = i.found && i.value.length > 0 ? _(i.value) : o;
+    return { head: o, tail: c, mtimeMs: a.mtimeMs, totalBytes: a.totalBytes };
+  } catch {
+    return null;
+  }
+}
+function _(e) {
+  return Buffer.from(e.buffer, e.byteOffset, e.byteLength).toString("utf8");
+}
+async function H(e, n) {
+  return (await j(e, n)) !== "none";
+}
+async function j(e, n) {
+  if (n !== void 0 && n.hoverRestOn) return K(n.source);
+  try {
+    if (!(await x(e)).isFile()) return "none";
+  } catch (t) {
+    return R(t) ? "none" : "unknown";
+  }
+  let r;
+  try {
+    r = await B(e, "r");
+  } catch (t) {
+    return R(t) ? "none" : "unknown";
+  }
+  try {
+    let t = pe({ input: r.createReadStream() });
+    for await (let a of t)
+      if (a.includes('"type":"user"') || a.includes('"type":"assistant"'))
+        return (t.close(), "has");
+    return "none";
+  } catch {
+    return "unknown";
+  } finally {
+    await r.close().catch(() => {});
+  }
+}
+var Se = 65536,
+  he = 4194304,
+  we = Buffer.from('"type":"user"'),
+  ke = Buffer.from('"type":"assistant"'),
+  K7t = 1e4;
+function Y5(e, n) {
+  if (
+    e.kind !== "scope" ||
+    e.scope.namespace !== "transcript" ||
+    e.scope.projectKey === void 0 ||
+    e.scope.sessionId !== void 0 ||
+    !n(e.scope.projectKey)
+  )
+    return;
+  return e.scope.projectKey;
+}
+async function K(e) {
+  let { backend: n, key: r } = e,
+    t,
+    a = !1,
+    i = 0,
+    o = 0;
+  try {
+    for (;;) {
+      if (++o > K7t) return "unknown";
+      let c = await n.readRecords(r, {
+        order: "forward",
+        maxBytes: t === void 0 ? Se : he,
+        ...(t !== void 0 && { fromSeq: t }),
+      });
+      if (!c.ok) return c.error.code === "NotFound" ? "none" : "unknown";
+      i += c.value.items.length;
+      for (let s of c.value.items) {
+        let p = Buffer.from(
+          s.data.buffer,
+          s.data.byteOffset,
+          s.data.byteLength,
+        );
+        if (p.includes(we) || p.includes(ke)) return "has";
+        if (s.truncated === !0) a = !0;
+      }
+      let u = c.value.nextSeq;
+      if (u === void 0) {
+        if (a) return "unknown";
+        if (c.value.items.length === 0 && t !== void 0) return "unknown";
+        let s = await n.statStream(r);
+        if (!s.ok) return s.error.code === "NotFound" ? "none" : "unknown";
+        return s.value.recordCount > i ? "unknown" : "none";
+      }
+      if (t !== void 0 && u <= t) return "unknown";
+      t = u;
+    }
+  } catch {
+    return "unknown";
+  }
+}
+async function Gie(e, n) {
+  let r = `orphaned-${Date.now()}-${ce().slice(0, 8)}`,
+    t = n !== void 0 && n.hoverRestOn ? n.source : void 0,
+    a = t !== void 0 && e.endsWith(".jsonl") ? X(e, E(e, ".jsonl"), t) : void 0;
+  if (a !== void 0 && t !== void 0) {
+    let { key: o } = a;
+    if (o.namespace !== "transcript") return !1;
+    try {
+      return (
+        await a.backend.move(
+          o,
+          t.transcriptKey(o.projectKey, `${o.sessionId}.${r}`),
+        )
+      ).ok;
+    } catch {
+      return !1;
+    }
+  }
+  let i = `${e.endsWith(".jsonl") ? e.slice(0, -6) : e}.${r}.jsonl`;
+  try {
+    return (await fe(e, i), !0);
+  } catch {
+    return !1;
+  }
+}
+function XQ(e) {
+  return le(e) && e.endsWith(".jsonl");
+}
+async function iz(e, n, r, t, a) {
+  let i = await Vu(n, Fcr(a?.source, a?.hoverRestOn === !0));
+  if (bL(e) === null)
+    return {
+      path: S(Mp(i), "invalid-resume-id.jsonl"),
+      hasMessages: !1,
+      via: "computed",
+    };
+  let o = S(Mp(i), `${e}.jsonl`),
+    c = [];
+  if (r !== void 0)
+    c.push(
+      r.endsWith(`${e}.jsonl`)
+        ? { path: r, via: "linkScanPath" }
+        : { path: S(F(r), `${e}.jsonl`), via: "linkScanDir" },
+    );
+  let u =
+    a !== void 0 && a.hoverRestOn ? { ...a, source: Q(a.source) } : void 0;
+  for (let f of await J5(i, u))
+    c.push({ path: S(f, `${e}.jsonl`), via: "projectDir" });
+  c.push({ path: o, via: "computed" });
+  let s = new Set(),
+    p = (f) => Pe(f, e, u),
+    l;
+  for (let f of c) {
+    if (s.has(f.path)) continue;
+    s.add(f.path);
+    let d = await p(f.path);
+    if (d === "has") return { ...f, hasMessages: !0 };
+    if (d === "unverifiable" && l === void 0) l = f;
+  }
+  if (t?.crossWorktree !== !1)
+    for (let { projectDir: f } of await te(i, u)) {
+      let d = S(f, `${e}.jsonl`);
+      if (u !== void 0) {
+        if (s.has(d)) continue;
+        s.add(d);
+      }
+      let y = await p(d);
+      if (y === "has")
+        return { path: d, via: "worktreeProjectDir", hasMessages: !0 };
+      if (y === "unverifiable" && l === void 0)
+        l = { path: d, via: "worktreeProjectDir" };
+    }
+  if (t?.crossWorktree !== !1) {
+    let f = await X7t(e, s, u);
+    if (f !== null) return { path: f, via: "projectsScan", hasMessages: !0 };
+  }
+  if (l !== void 0) return { ...l, hasMessages: !0, unverifiable: !0 };
+  return { ...c[0], hasMessages: !1 };
+}
+function X(e, n, r) {
+  let t = lPn(F(e), r.isKeySegment);
+  if (t === void 0 || E(e) !== `${n}.jsonl` || !r.isKeySegment(n)) return;
+  return { backend: r.backend, key: r.transcriptKey(t, n) };
+}
+async function Pe(e, n, r) {
+  let t = r !== void 0 && r.hoverRestOn ? X(e, n, r.source) : void 0;
+  if (t === void 0) return (await H(e)) ? "has" : "none";
+  let a = await K(t);
+  if (a === "has") return "has";
+  try {
+    if (!(await x(e)).isFile()) return "none";
+  } catch (i) {
+    if (!R(i)) return "has";
+    return a === "unknown" ? "unverifiable" : "none";
+  }
+  return (await H(e)) ? "has" : "none";
+}
+function R(e) {
+  return (
+    e !== null && typeof e === "object" && "code" in e && e.code === "ENOENT"
+  );
+}
+function M(e) {
+  return {
+    skipScopeStats: !0,
+    skipKeyStats: !0,
+    ...(e !== void 0 && { cursor: e }),
+  };
+}
+function Q(e) {
+  let n = new Map(),
+    r = new Proxy(e.backend, {
+      get(t, a, i) {
+        let o = Reflect.get(t, a, i);
+        if (a !== "listEntries") return typeof o === "function" ? o.bind(t) : o;
+        return (u, s) => {
+          if (!(
+            u.namespace === "transcript" &&
+            !("projectKey" in u) &&
+            Object.keys(s ?? {}).every(
+              (d) =>
+                d === "cursor" ||
+                d === "skipScopeStats" ||
+                d === "skipKeyStats",
+            )
+          ))
+            return t.listEntries(u, s);
+          let l = [s?.cursor ?? "", s?.skipScopeStats, s?.skipKeyStats]
+              .map(String)
+              .join("\x00"),
+            f = n.get(l);
+          if (f === void 0) {
+            ((f = t.listEntries(u, s)), n.set(l, f));
+            let d = () => {
+              n.delete(l);
+            };
+            f.then((y) => {
+              if (!y.ok) d();
+            }, d);
+          }
+          return f;
+        };
+      },
+    });
+  return { ...e, backend: r };
+}
+async function X7t(e, n = new Set(), r) {
+  if (bL(e) === null) return null;
+  if (r !== void 0 && r.hoverRestOn && r.source.isKeySegment(e))
+    return ve(e, n, r.source);
+  let t = Sc(),
+    a = null;
+  try {
+    for (let i of await b(t, { withFileTypes: !0 })) {
+      if (!i.isDirectory()) continue;
+      let o = S(t, i.name, `${e}.jsonl`);
+      if (n.has(o)) continue;
+      if ((await j(o)) !== "has") continue;
+      if (a !== null) return null;
+      a = o;
+    }
+  } catch {
+    return null;
+  }
+  return a;
+}
+async function ve(e, n, r) {
+  let { backend: t, transcriptKey: a, isKeySegment: i } = r,
+    o = Sc(),
+    c = null,
+    u = !1,
+    s = new Set();
+  try {
+    let p = await Qo(
+      (l) => t.listEntries({ namespace: "transcript" }, M(l)),
+      async (l) => {
+        for (let f of l) {
+          let d = Y5(f, i);
+          if (d === void 0) continue;
+          let y = S(o, d, `${e}.jsonl`);
+          if (s.has(y) || n.has(y)) continue;
+          s.add(y);
+          let m = await K({ backend: t, key: a(d, e) });
+          if (m === "unknown")
+            try {
+              m = (await x(y)).isFile() ? await j(y) : "none";
+            } catch {}
+          if (m !== "has") continue;
+          if (c !== null) {
+            u = !0;
+            return;
+          }
+          c = y;
+        }
+      },
+      { until: () => u },
+    );
+    if (u || p.status !== "done") return null;
+  } catch {
+    return null;
+  }
+  return c;
+}
+async function dxt(e, n) {
+  if (n !== void 0 && n.hoverRestOn) return ee(n.source);
+  try {
+    if (T === P.O_RDONLY) {
+      if (!(await J(e)).isFile()) return null;
+    }
+    let r = await B(e, T);
+    try {
+      let t = await r.stat();
+      if (!t.isFile()) return null;
+      let a = Buffer.allocUnsafe(Mm),
+        i = await r.read(a, 0, Mm, 0);
+      if (i.bytesRead === 0) return null;
+      let o = a.toString("utf8", 0, i.bytesRead),
+        c = Math.max(0, t.size - Mm),
+        u = o;
+      if (c > 0) {
+        let s = await r.read(a, 0, Mm, c);
+        u = a.toString("utf8", 0, s.bytesRead);
+      }
+      return { mtime: t.mtime.getTime(), size: t.size, head: o, tail: u };
+    } finally {
+      await r.close();
+    }
+  } catch {
+    return null;
+  }
+}
+async function ee(e) {
+  let n = await Z(e);
+  if (n === null) return null;
+  return {
+    mtime: Math.trunc(n.mtimeMs),
+    size: n.totalBytes,
+    head: n.head,
+    tail: n.tail,
+  };
+}
+var az = 200;
+function Te(e) {
+  return Math.abs(gz(e)).toString(36);
+}
+function k(e) {
+  return e.replace(/[^a-zA-Z0-9]/g, "-");
+}
+function RA(e) {
+  let n = k(e);
+  if (n.length <= az) return n;
+  return `${n.slice(0, az)}-${Te(e)}`;
+}
+function j2e(e, n) {
+  let r = e.replaceAll("\\", "/");
+  return n ? r.toLowerCase() : r;
+}
+function N(e, n, r) {
+  let t = zn(e),
+    a = zn(n),
+    i = (o) => (r ? o.toLowerCase() : o);
+  if (i(k(t)) !== i(k(a))) return !1;
+  return j2e(t, r) !== j2e(a, r);
+}
+async function Y7t(e, n, r, t, a) {
+  if (!N(e, n, r)) return !1;
+  if (_Z(e) || _Z(n)) return !1;
+  if ((await t(e)) || (await t(n))) return !1;
+  let i;
+  try {
+    if (a !== void 0 && a.hoverRestOn) {
+      let c = await a.realPath(e);
+      if (!c.ok || !c.value.found) return !1;
+      i = zn(c.value.path);
+    } else i = zn(await z(e));
+  } catch {
+    return !1;
+  }
+  let o = await Vu(n, a);
+  return N(i, o, r);
+}
+function J7t(e, n, r) {
+  if (n === void 0) return !1;
+  let t = j2e(zn(e), r);
+  return n.some((a) => {
+    let i = j2e(zn(a), r);
+    return t === i || t.startsWith(i.endsWith("/") ? i : i + "/");
+  });
+}
+function knt() {
+  return !0;
+}
+function Sc() {
+  return S(be(), "projects");
+}
+function yh(e) {
+  return Kur() ?? RA(e);
+}
+function xnt(e) {
+  let n = RA(e);
+  return n === yh(e) ? void 0 : n;
+}
+function Mp(e) {
+  return S(Sc(), yh(e));
+}
+function lPn(e, n) {
+  let r = E(e);
+  return F(e) === Sc() && n(r) ? r : void 0;
+}
+async function Vu(e, n) {
+  try {
+    if (n !== void 0 && n.hoverRestOn) {
+      let r = await n.realPath(e);
+      return zn(r.ok && r.value.found ? r.value.path : e);
+    }
+    return zn(await z(e));
+  } catch {
+    return zn(e);
+  }
+}
+async function Hnt(e, n, r, t) {
+  let a = t !== void 0 && t.hoverRestOn ? t.source : void 0,
+    i = a === void 0 ? void 0 : lPn(e, a.isKeySegment);
+  if (a !== void 0 && i !== void 0) {
+    let u = await Le(i, n, r, a);
+    if (u !== void 0) return u;
+  }
+  let o = k(n),
+    c;
+  try {
+    c = await b(e, { withFileTypes: !0 });
+  } catch {
+    return !1;
+  }
+  for (let u of c) {
+    if (!u.isFile() || !u.name.endsWith(".jsonl")) continue;
+    let s = await dxt(S(e, u.name));
+    if (s === null) continue;
+    if (ne(s, o, r)) return !0;
+  }
+  return !1;
+}
+function ne(e, n, r) {
+  let t = vnt(e.tail, "relocated", "relocatedCwd") ?? qke(e.head, "cwd");
+  if (t === void 0) return !1;
+  let a = k(zn(t));
+  return r ? a.toLowerCase() === n.toLowerCase() : a === n;
+}
+async function Le(e, n, r, t) {
+  let { backend: a, transcriptKey: i, isKeySegment: o } = t,
+    c = k(n),
+    u = !1,
+    s = new Set();
+  try {
+    let p = await Qo(
+      (l) => a.listEntries({ namespace: "transcript", projectKey: e }, M(l)),
+      async (l) => {
+        for (let f of l) {
+          if (
+            f.kind !== "key" ||
+            f.key.namespace !== "transcript" ||
+            f.key.projectKey !== e ||
+            f.key.agentId !== void 0 ||
+            !o(f.key.sessionId) ||
+            s.has(f.key.sessionId)
+          )
+            continue;
+          let d = f.key.sessionId,
+            y = await ee({ backend: a, key: i(e, d) });
+          if (y === null) continue;
+          if ((s.add(d), ne(y, c, r))) {
+            u = !0;
+            return;
+          }
+        }
+      },
+      { until: () => u },
+    );
+    if (u) return !0;
+    if (p.status !== "done") return;
+  } catch {
+    return;
+  }
+  return !1;
+}
+async function J5(e, n) {
+  if (n !== void 0 && n.hoverRestOn) return Oe(e, n);
+  let r = Mp(e),
+    t = [];
+  try {
+    (await b(r), t.push(r));
+  } catch {}
+  let a = xnt(e);
+  if (a !== void 0) {
+    let l = S(Sc(), a);
+    try {
+      (await b(l), t.push(l));
+    } catch {}
+    return t;
+  }
+  let i = RA(e);
+  if (i.length <= az) return t;
+  let o = Sc(),
+    c = !1,
+    u = (l) => (c ? l.toLowerCase() : l),
+    s = u(i.slice(0, az) + "-"),
+    p = u(r);
+  try {
+    for (let l of await b(o, { withFileTypes: !0 })) {
+      if (!l.isDirectory() || !u(l.name).startsWith(s)) continue;
+      let f = S(o, l.name);
+      if (u(f) !== p && (await Hnt(f, e, c))) t.push(f);
+    }
+  } catch {}
+  return t;
+}
+async function Oe(e, n) {
+  let r = await Emr(n.source);
+  if (r === null) {
+    let t = xnt(e);
+    return [Mp(e), ...(t !== void 0 ? [S(Sc(), t)] : [])];
+  }
+  return Amr(e, r, !1, n);
+}
+async function Emr(e) {
+  let { backend: n, isKeySegment: r } = e,
+    t = [],
+    a = new Set(),
+    i = 0;
+  try {
+    if (
+      (
+        await Qo(
+          (c) => n.listEntries({ namespace: "transcript" }, M(c)),
+          (c) => {
+            for (let u of c) {
+              let s = Y5(u, r);
+              if (s !== void 0 && !a.has(s)) (a.add(s), t.push(s));
+            }
+            i++;
+          },
+        )
+      ).status === "error"
+    )
+      return i === 0 ? null : t;
+  } catch {
+    return i === 0 ? null : t;
+  }
+  return t;
+}
+async function Amr(e, n, r, t) {
+  let a = yh(e),
+    i = Mp(e),
+    o = xnt(e),
+    c = o === void 0 && a.length > az ? a.slice(0, az) + "-" : void 0,
+    u = Sc(),
+    s = (g) => (r ? g.toLowerCase() : g),
+    p = c !== void 0 ? s(c) : void 0,
+    l = s(a),
+    f = !1,
+    d,
+    y = [],
+    m = new Set();
+  for (let g of n)
+    if (g === a) f = !0;
+    else if (o !== void 0) {
+      if (d === void 0 && s(g) === s(o)) d = S(u, g);
+    } else if (p !== void 0 && s(g).startsWith(p) && s(g) !== l && !m.has(s(g)))
+      (m.add(s(g)), y.push(g));
+  let h = [];
+  for (let g of y) {
+    let I = S(u, g);
+    if (await Hnt(I, e, r, t)) h.push(I);
+  }
+  return [...(f ? [i] : []), ...(d !== void 0 ? [d] : []), ...h];
+}
+async function cPn(e, n) {
+  return (await J5(e, n))[0];
+}
+async function te(e, n) {
+  let r = [];
+  for (let t of await B2e(e)) {
+    if (t === e) continue;
+    let a = await J5(t, n);
+    if (n !== void 0 && n.hoverRestOn) {
+      let i = Mp(t);
+      if (!a.includes(i)) a.push(i);
+    }
+    for (let i of a) r.push({ worktreePath: t, projectDir: i });
+  }
+  return r;
+}
+async function Tbr(e, n, r, t) {
+  let a = `${e}.jsonl`,
+    i = t && r !== void 0 && r.isKeySegment(e) ? Q(r) : void 0,
+    o = i === void 0 ? void 0 : { source: i, hoverRestOn: t };
+  async function c(p, l) {
+    let f = S(p, a);
+    if (i) {
+      let d = lPn(p, i.isKeySegment);
+      if (d !== void 0) {
+        try {
+          let y = await i.backend.stat(i.transcriptKey(d, e));
+          if (y.ok) {
+            let m = y.value.storedBytes ?? y.value.size;
+            if (m > 0) return { filePath: f, projectPath: l, fileSize: m };
+          }
+        } catch {}
+        return;
+      }
+    }
+    try {
+      let d = await de(f);
+      if (d.size > 0) return { filePath: f, projectPath: l, fileSize: d.size };
+    } catch {}
+    return;
+  }
+  if (n) {
+    let p = await Vu(n, Fcr(r, t));
+    for (let l of await J5(p, o)) {
+      let f = await c(l, p);
+      if (f) return f;
+    }
+    for (let { worktreePath: l, projectDir: f } of await te(p, o)) {
+      let d = await c(f, l);
+      if (d) return d;
+    }
+    return;
+  }
+  let u = Sc();
+  if (i) {
+    let p = new Map();
+    try {
+      if (
+        (
+          await Qo(
+            (d) =>
+              i.backend.listEntries(
+                { namespace: "transcript" },
+                d !== void 0 ? { cursor: d } : void 0,
+              ),
+            (d) => {
+              for (let y of d) {
+                let m = Y5(y, i.isKeySegment);
+                if (m === void 0) continue;
+                let h =
+                    y.kind === "scope" && y.mtimeMs !== void 0
+                      ? y.mtimeMs
+                      : Number.NEGATIVE_INFINITY,
+                  g = p.get(m);
+                if (g === void 0) p.set(m, { projectKey: m, mtimeMs: h });
+                else if (h > g.mtimeMs) g.mtimeMs = h;
+              }
+            },
+          )
+        ).status === "error"
+      )
+        return;
+    } catch {
+      return;
+    }
+    let l = [...p.values()];
+    l.sort((f, d) =>
+      f.mtimeMs !== d.mtimeMs
+        ? d.mtimeMs - f.mtimeMs
+        : f.projectKey < d.projectKey
+          ? -1
+          : f.projectKey > d.projectKey
+            ? 1
+            : 0,
+    );
+    for (let { projectKey: f } of l) {
+      let d = await c(S(u, f), void 0);
+      if (d) return d;
+    }
+    return;
+  }
+  let s;
+  try {
+    s = await b(u);
+  } catch {
+    return;
+  }
+  for (let p of s) {
+    let l = await c(S(u, p), void 0);
+    if (l) return l;
+  }
+  return;
+}
+var re = 1048576,
+  qie = 5242880,
+  Be = Buffer.from('"compact_boundary"');
+function ie(e) {
+  try {
+    let n = JSON.parse(e);
+    if (n.type !== "system" || n.subtype !== "compact_boundary") return null;
+    return {
+      hasPreservedSegment: Boolean(
+        n.compactMetadata?.preservedSegment ||
+        n.compactMetadata?.preservedMessages,
+      ),
+    };
+  } catch {
+    return null;
+  }
+}
+function w(e, n, r, t) {
+  let a = t - r;
+  if (a <= 0) return;
+  if (e.len + a > e.buf.length) {
+    let i = Buffer.allocUnsafe(
+      Math.min(Math.max(e.buf.length * 2, e.len + a), e.cap),
+    );
+    (e.buf.copy(i, 0, 0, e.len), (e.buf = i));
+  }
+  (n.copy(e.buf, e.len, r, t), (e.len += a));
+}
+function L(e, n, r, t) {
+  return t - r >= n.length && e.compare(n, 0, n.length, r, r + n.length) === 0;
+}
+var O = Buffer.from('{"type":"attribution-snapshot"'),
+  Re = Buffer.from('{"type":"system"'),
+  v = 10,
+  xe = Buffer.from([v]),
+  Ee = 256;
+function D(e, n, r) {
+  if (
+    ((e.straddleSnapCarryLen = 0),
+    (e.straddleSnapTailEnd = 0),
+    e.carryLen === 0)
+  )
+    return 0;
+  let t = e.carryBuf,
+    a = n.indexOf(v);
+  if (a === -1 || a >= r) return 0;
+  let i = a + 1;
+  if (L(t, O, 0, e.carryLen))
+    ((e.straddleSnapCarryLen = e.carryLen),
+      (e.straddleSnapTailEnd = i),
+      (e.lastSnapSrc = null));
+  else if (e.carryLen < O.length) return 0;
+  else {
+    if (L(t, Re, 0, e.carryLen)) {
+      let o = ie(
+        t.toString("utf-8", 0, e.carryLen) + n.toString("utf-8", 0, a),
+      );
+      if (o?.hasPreservedSegment) e.hasPreservedSegment = !0;
+      else if (o)
+        ((e.out.len = 0),
+          (e.boundaryStartOffset = e.bufFileOff),
+          (e.hasPreservedSegment = !1),
+          (e.lastSnapSrc = null));
+    }
+    (w(e.out, t, 0, e.carryLen), w(e.out, n, 0, i));
+  }
+  return ((e.bufFileOff += e.carryLen + i), (e.carryLen = 0), i);
+}
+function A(e, n, r) {
+  let t = n.indexOf(r),
+    a = 0,
+    i = 0,
+    o = -1,
+    c = -1,
+    u = n.indexOf(v);
+  while (u !== -1) {
+    let s = u + 1;
+    if (t !== -1 && t < i) t = n.indexOf(r, i);
+    if (L(n, O, i, s)) (w(e.out, n, a, i), (o = i), (c = s), (a = s));
+    else if (t >= i && t < Math.min(i + Ee, s)) {
+      let p = ie(n.toString("utf-8", i, u));
+      if (p?.hasPreservedSegment) e.hasPreservedSegment = !0;
+      else if (p)
+        ((e.out.len = 0),
+          (e.boundaryStartOffset = e.bufFileOff + i),
+          (e.hasPreservedSegment = !1),
+          (e.lastSnapSrc = null),
+          (o = -1),
+          (e.straddleSnapCarryLen = 0),
+          (a = i));
+      t = n.indexOf(r, t + r.length);
+    }
+    ((i = s), (u = n.indexOf(v, i)));
+  }
+  return (
+    w(e.out, n, a, i),
+    { lastSnapStart: o, lastSnapEnd: c, trailStart: i }
+  );
+}
+function W(e, n, r, t, a) {
+  if (t !== -1) {
+    if (
+      ((e.lastSnapLen = a - t),
+      e.lastSnapBuf === void 0 || e.lastSnapLen > e.lastSnapBuf.length)
+    )
+      e.lastSnapBuf = Buffer.allocUnsafe(e.lastSnapLen);
+    (n.copy(e.lastSnapBuf, 0, t, a), (e.lastSnapSrc = e.lastSnapBuf));
+  } else if (e.straddleSnapCarryLen > 0) {
+    if (
+      ((e.lastSnapLen = e.straddleSnapCarryLen + e.straddleSnapTailEnd),
+      e.lastSnapBuf === void 0 || e.lastSnapLen > e.lastSnapBuf.length)
+    )
+      e.lastSnapBuf = Buffer.allocUnsafe(e.lastSnapLen);
+    (e.carryBuf.copy(e.lastSnapBuf, 0, 0, e.straddleSnapCarryLen),
+      r.copy(e.lastSnapBuf, e.straddleSnapCarryLen, 0, e.straddleSnapTailEnd),
+      (e.lastSnapSrc = e.lastSnapBuf));
+  }
+}
+function U(e, n, r) {
+  if (((e.carryLen = n.length - r), e.carryLen > 0)) {
+    if (e.carryBuf === void 0 || e.carryLen > e.carryBuf.length)
+      e.carryBuf = Buffer.allocUnsafe(e.carryLen);
+    n.copy(e.carryBuf, 0, r, n.length);
+  }
+}
+function V(e) {
+  if (e.carryLen > 0) {
+    let n = e.carryBuf;
+    if (L(n, O, 0, e.carryLen))
+      ((e.lastSnapSrc = n), (e.lastSnapLen = e.carryLen));
+    else w(e.out, n, 0, e.carryLen);
+  }
+  if (e.lastSnapSrc) {
+    if (e.out.len > 0 && e.out.buf[e.out.len - 1] !== v) w(e.out, xe, 0, 1);
+    w(e.out, e.lastSnapSrc, 0, e.lastSnapLen);
+  }
+}
+async function Fe(e, n, r, t) {
+  let a = 0,
+    i;
+  while (a < r) {
+    let o = await e.readRecords(n, {
+      order: "forward",
+      maxBytes: re,
+      ...(i !== void 0 && { fromSeq: i }),
+    });
+    if (!o.ok)
+      throw Error("transcript record page failed during load", {
+        cause: o.error,
+      });
+    let c = [],
+      u = 0;
+    for (let p of o.value.items) {
+      if (a + u + p.data.byteLength > r) break;
+      (c.push(p.data), (u += p.data.byteLength));
+    }
+    if (u > 0) (t(Buffer.concat(c, u)), (a += u));
+    let s = o.value.nextSeq;
+    if (s === void 0 || c.length < o.value.items.length) return;
+    if (i !== void 0 && s <= i)
+      throw Error("transcript record cursor did not advance during load");
+    i = s;
+  }
+}
+async function uPn(e, n, r) {
+  let t = Be,
+    a = re,
+    i = {
+      out: {
+        buf: Buffer.allocUnsafe(Math.min(n, 8388608)),
+        len: 0,
+        cap: n + 1,
+      },
+      boundaryStartOffset: 0,
+      hasPreservedSegment: !1,
+      lastSnapSrc: null,
+      lastSnapLen: 0,
+      lastSnapBuf: void 0,
+      bufFileOff: 0,
+      carryLen: 0,
+      carryBuf: void 0,
+      straddleSnapCarryLen: 0,
+      straddleSnapTailEnd: 0,
+    };
+  if (r !== void 0 && r.hoverRestOn) {
+    let { backend: u, key: s } = r.source,
+      p = 0,
+      l = (f) => {
+        let d = f.length;
+        p += d;
+        let y = D(i, f, d),
+          m;
+        if (i.carryLen > 0) {
+          let g = i.carryLen + (d - y);
+          ((m = Buffer.allocUnsafe(g)),
+            i.carryBuf.copy(m, 0, 0, i.carryLen),
+            f.copy(m, i.carryLen, y, d));
+        } else m = f.subarray(y, d);
+        let h = A(i, m, t);
+        (W(i, m, f, h.lastSnapStart, h.lastSnapEnd),
+          U(i, m, h.trailStart),
+          (i.bufFileOff += h.trailStart));
+      };
+    while (p < n) {
+      let f = await u.read([{ key: s, offset: p, length: Math.min(a, n - p) }]);
+      if (!f.ok) {
+        if (p === 0 && tje(f.error)) {
+          await Fe(u, s, n, l);
+          break;
+        }
+        throw Error("transcript ranged read failed", { cause: f.error });
+      }
+      let [d] = f.value.items;
+      if (!d.found) throw Error("transcript stream absent during load");
+      if (d.value.length === 0) break;
+      l(Buffer.from(d.value.buffer, d.value.byteOffset, d.value.length));
+    }
+    return (
+      V(i),
+      {
+        boundaryStartOffset: i.boundaryStartOffset,
+        postBoundaryBuf: i.out.buf.subarray(0, i.out.len),
+        hasPreservedSegment: i.hasPreservedSegment,
+      }
+    );
+  }
+  let o = Buffer.allocUnsafe(a),
+    c = await B(e, "r");
+  try {
+    let u = 0;
+    while (u < n) {
+      let { bytesRead: s } = await c.read(o, 0, Math.min(a, n - u), u);
+      if (s === 0) break;
+      u += s;
+      let p = D(i, o, s),
+        l;
+      if (i.carryLen > 0) {
+        let d = i.carryLen + (s - p);
+        ((l = Buffer.allocUnsafe(d)),
+          i.carryBuf.copy(l, 0, 0, i.carryLen),
+          o.copy(l, i.carryLen, p, s));
+      } else l = o.subarray(p, s);
+      let f = A(i, l, t);
+      (W(i, l, o, f.lastSnapStart, f.lastSnapEnd),
+        U(i, l, f.trailStart),
+        (i.bufFileOff += f.trailStart));
+    }
+    V(i);
+  } finally {
+    await c.close();
+  }
+  return {
+    boundaryStartOffset: i.boundaryStartOffset,
+    postBoundaryBuf: i.out.buf.subarray(0, i.out.len),
+    hasPreservedSegment: i.hasPreservedSegment,
+  };
+}
+var W2e = /^[0-9a-f]{16}(?:[0-9a-f]{48})?@v\d+$/;
+function zke(e) {
+  return bL(e) !== null;
+}
+function Phe(e, n, r) {
+  return {
+    type: "history-suppression",
+    sessionId: e,
+    cause: n,
+    ...(r && { vetoedAgainstAccountUuid: r }),
+    ts: new Date().toISOString(),
+  };
+}
+export {
+  B2e,
+  Mm,
+  Cnt,
+  Sbr,
+  bL,
+  KQ,
+  wL,
+  vnt,
+  qke,
+  V7t,
+  Fcr,
+  Wie,
+  iPn,
+  bbr,
+  wbr,
+  Rnt,
+  aPn,
+  K7t,
+  Y5,
+  Gie,
+  XQ,
+  iz,
+  X7t,
+  dxt,
+  az,
+  RA,
+  j2e,
+  Y7t,
+  J7t,
+  knt,
+  Sc,
+  yh,
+  xnt,
+  Mp,
+  lPn,
+  Vu,
+  Hnt,
+  J5,
+  Emr,
+  Amr,
+  cPn,
+  Tbr,
+  qie,
+  uPn,
+  W2e,
+  zke,
+  Phe,
+};

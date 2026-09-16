@@ -1,0 +1,499 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { RYt } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { oe, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { Rh } from "../后台任务-Shell管理/chunk-5jv5fvbn.js";
+import { uR } from "../状态栏-主题/chunk-dqyc6kge.js";
+import {
+  Lve,
+  cA,
+  wCn,
+  WC,
+  Zc,
+  cl,
+  kp,
+  wZe,
+  f0,
+  gt,
+  vn,
+  pQ,
+} from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Zar, ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { No } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { Rar, ye, Hxn, Pet, Dxn, dS, Mxn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { JT, Die, Lie } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { yA, Pe, GRe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { vvt, qZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { iDe, pmt, TV, Ppn, Ng, m8e, Ny, g8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { Pc, YE, Gk } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import { W4 } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
+import { Mbe } from "../自动更新-安装/chunk-brx72pf1.js";
+import { Bce } from "../自动更新-安装/chunk-2g5h49pk.js";
+import { Ept } from "../会话-历史-恢复/chunk-szqky9sa.js";
+import { M_e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { pat, fat, LUn } from "../Bridge-RemoteControl/chunk-k2f69v5t.js";
+import { Sle, NUn, mat } from "../../01-核心基础设施/共享小工具-未细化/chunk-ga0qgvpz.js";
+import { r } from "../../00-第三方库/react/react.kwtapczy.js";
+import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+function BWe(s) {
+  let e = s.map((l) => l.filter((i) => !i.antOnly));
+  return (e.push(s.flatMap((l) => l.filter((i) => i.antOnly))), e);
+}
+function tUn() {
+  return [];
+}
+function nUn() {
+  return [];
+}
+function rUn(s, e = null, l) {
+  let i = s?.find((o) => o.name === "ide");
+  if (e) {
+    let o = Ng(e.ideType),
+      n = TV(e.ideType) ? "plugin" : "extension";
+    if (e.error)
+      return [
+        {
+          label: "IDE",
+          value: r(t, {
+            children: [
+              ut("error", l)(L.cross),
+              " Error installing ",
+              o,
+              " ",
+              n,
+              ": ",
+              e.error,
+              `
+`,
+              "Please restart your IDE and try again.",
+            ],
+          }),
+        },
+      ];
+    if (e.installed)
+      if (i && i.type === "connected")
+        if (e.installedVersion !== i.serverInfo?.version)
+          return [
+            {
+              label: "IDE",
+              value: `Connected to ${o} ${n} version ${e.installedVersion} (server version: ${i.serverInfo?.version})`,
+            },
+          ];
+        else
+          return [
+            {
+              label: "IDE",
+              value: `Connected to ${o} ${n} version ${e.installedVersion}`,
+            },
+          ];
+      else return [{ label: "IDE", value: `Installed ${o} ${n}` }];
+  } else if (i) {
+    let o = Ppn(i) ?? "IDE";
+    if (i.type === "connected")
+      return [{ label: "IDE", value: `Connected to ${o} extension` }];
+    else
+      return [
+        {
+          label: "IDE",
+          value: `${ut("error", l)(L.cross)} Not connected to ${o}`,
+        },
+      ];
+  }
+  return [];
+}
+function oUn(s = [], e) {
+  let l = s.filter((n) => n.name !== "ide");
+  if (!l.length) return [];
+  let i = {
+    connected: 0,
+    cached: 0,
+    pending: 0,
+    needsAuth: 0,
+    disabled: 0,
+    failed: 0,
+  };
+  for (let n of l)
+    switch (n.type) {
+      case "connected":
+        i.connected++;
+        break;
+      case "cached":
+        i.cached++;
+        break;
+      case "pending":
+        i.pending++;
+        break;
+      case "needs-auth":
+        i.needsAuth++;
+        break;
+      case "disabled":
+        i.disabled++;
+        break;
+      case "failed":
+        i.failed++;
+        break;
+      default:
+    }
+  let o = [];
+  if (i.connected) o.push(ut("success", e)(`${i.connected} connected`));
+  if (i.cached) o.push(ut("inactive", e)(`${i.cached} cached`));
+  if (i.needsAuth) o.push(ut("warning", e)(`${i.needsAuth} need auth`));
+  if (i.pending) o.push(ut("inactive", e)(`${i.pending} pending`));
+  if (i.disabled) o.push(ut("inactive", e)(`${i.disabled} disabled`));
+  if (i.failed) o.push(ut("error", e)(`${i.failed} failed`));
+  return [
+    {
+      label: "MCP servers",
+      value: `${o.join(", ")} ${ut("inactive", e)("\xB7 /mcp")}`,
+    },
+  ];
+}
+async function sUn(s, e, l) {
+  if (uR()) return [];
+  let i = await Ny(s, !1, e, l),
+    o = g8e(i),
+    n = [],
+    u = m8e();
+  return (
+    o.forEach((p) => {
+      let c = Ao(p.path);
+      n.push(
+        `Large ${c} will impact performance (${No(p.content.length)} chars > ${No(u)})`,
+      );
+    }),
+    n
+  );
+}
+function S(s = "remote") {
+  let e = Pet();
+  if (!e) return null;
+  return `Enterprise managed settings (${e.map((i) => (i === "remote" ? s : g(i))).join(" + ")}, merged)`;
+}
+function iUn() {
+  let s = ms(),
+    e = Hxn(),
+    o = [
+      {
+        label: "Setting sources",
+        value: s
+          .filter((c) => {
+            if (c === "policySettings" && e.composes !== "none") return !0;
+            let d = ye(c);
+            return d !== null && Object.keys(d).length > 0;
+          })
+          .map((c) => {
+            if (c === "policySettings") {
+              if (e.composes !== "none") {
+                let f = Rar(),
+                  m = f
+                    ? "default settings payload"
+                    : e.composes === "tier"
+                      ? "helper"
+                      : "remote helper",
+                  h = e.mergedOver ? `${m} merged over ${g(e.mergedOver)}` : m;
+                return (
+                  (e.composes === "remoteSlot" && !f ? S(h) : null) ??
+                  `Enterprise managed settings (${h})`
+                );
+              }
+              let d = dS();
+              if (d === null) return null;
+              return S() ?? v(d);
+            }
+            return Zar(c);
+          })
+          .filter((c) => c !== null),
+      },
+    ],
+    n = Mxn();
+  if (n.length > 0) o.push({ label: "Skipped sources", value: n.map(v) });
+  let u = Sle();
+  if (u && NUn(u))
+    o.push({ label: "Managed settings (remote)", value: mat(u) });
+  let p = pat();
+  if (LUn(p)) o.push({ label: "Organization policy", value: fat(p) });
+  return o;
+}
+function g(s) {
+  switch (s) {
+    case "helper":
+    case "remote":
+    case "plist":
+      return s;
+    case "hklm":
+      return "HKLM";
+    case "file": {
+      let { hasBase: e, hasDropIns: l } = Dxn();
+      if (e && l) return "file + drop-ins";
+      return l ? "drop-ins" : "file";
+    }
+    case "parent":
+      return "parent process";
+    case "hkcu":
+      return "HKCU";
+  }
+}
+function v(s) {
+  return `Enterprise managed settings (${g(s)})`;
+}
+async function aUn() {
+  return (await Bce()).filter((e) => e.type !== "error").map((e) => e.message);
+}
+async function lUn(s) {
+  let e = Gk(),
+    l = Pc();
+  if (!e && !l) return [];
+  let i = [];
+  if (l)
+    return (
+      i.push(
+        `${l} \u2014 nothing will run unwrapped: new background sessions are refused unless a background service that validated an earlier value is still serving them (\`claude daemon status\` shows it)`,
+      ),
+      i
+    );
+  let o = rd();
+  if (
+    (i.push(
+      `Self-exec: \`${[o.cmd, ...o.prefixArgs].join(" ")}\` (CLAUDE_CODE_PROCESS_WRAPPER)`,
+    ),
+    !(await YE()))
+  )
+    i.push(
+      `The launcher \`${o.cmd}\` cannot run right now (deleted or not executable) \u2014 new background sessions are refused until it is restored; a background service that validated it earlier keeps serving its existing sessions (\`claude daemon status\`)`,
+    );
+  let n = await Rh(1, s).catch(() => null);
+  if (!n) return i;
+  let [{ controlRequest: u }, { BG_PROTO: p }] = await Promise.all([
+      import("./openDaemonLease.tz89gp3g.js"),
+      import("./HOST_DIED_ATTACH_MESSAGE.qcgc4k5d.js"),
+    ]),
+    c = await u({ proto: p, op: "nudge" }).catch(() => null),
+    d =
+      c?.ok && c.op === "nudge"
+        ? (c.processWrapper ?? "")
+        : (n.processWrapper ?? ""),
+    f = oe(To(pt(d)), 200);
+  if (n.origin === "service")
+    i.push(
+      `The installed background service predates launcher support and runs outside \`${o.cmd}\`; its sessions are covered, the service process itself is not \u2014 a launcher-aware \`claude daemon install\` will close this`,
+    );
+  if (d !== e)
+    i.push(
+      `The running background service launches sessions via \`${f || "(no launcher)"}\`, but this session resolves \`${e}\` \u2014 restart it (and your running claude sessions) to converge`,
+    );
+  return i;
+}
+async function cUn(s) {
+  let e = await Mbe({ storageV5: s }),
+    l = [],
+    { statusNotices: i, invalidEntries: o } = M_e(W4().errors);
+  if (o.length > 0) {
+    let u = Y(o.map((c) => c.file)).join(", ");
+    l.push(`Found invalid entries in: ${u}.`);
+    let p = await Ept(s);
+    if (p === "settings_unknowable" || p === "settings_invalid_key_set")
+      l.push(
+        "Transcript retention cleanup is paused until the settings errors above are fixed (cleanupPeriodDays cannot be determined reliably).",
+      );
+  }
+  for (let n of i) l.push(n.message);
+  if (
+    (e.warnings.forEach((n) => {
+      l.push(n.issue);
+    }),
+    e.hasUpdatePermissions === !1)
+  )
+    l.push("No write permissions for auto-updates");
+  return l;
+}
+function jWe(s) {
+  if (!(M() && s !== void 0)) return;
+  return (async () => ({ refreshKnownDead: cl() && (await f0(s)) }))().catch(
+    () => ({ refreshKnownDead: !1 }),
+  );
+}
+function Oit(s) {
+  let e = pQ();
+  if (!e) return [];
+  let l = [];
+  if (s !== void 0 && M() ? s.refreshKnownDead : cl() && wZe()) {
+    l.push({ label: "Login", value: "Expired \u2014 log in again" });
+    let n = vn();
+    if (n?.organizationName && !a.IS_DEMO)
+      l.push({ label: "Organization", value: n.organizationName });
+    if (n?.emailAddress && !a.IS_DEMO)
+      l.push({ label: "Email", value: n.emailAddress });
+    return l;
+  }
+  if (e.subscription)
+    l.push({ label: "Login method", value: `${e.subscription} account` });
+  let i = " \xB7 not in use",
+    o = gt();
+  if (e.tokenSource) {
+    let n =
+      e.tokenSource === "claude.ai" ||
+      e.tokenSource === "CLAUDE_CODE_OAUTH_TOKEN" ||
+      e.tokenSource === "CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR" ||
+      e.tokenSource === "CCR_OAUTH_TOKEN_FILE";
+    l.push({
+      label: "Auth token",
+      value: n && e.apiKeySource && !o ? `${e.tokenSource}${i}` : e.tokenSource,
+    });
+  }
+  if (e.apiKeySource)
+    l.push({
+      label: "API key",
+      value: o ? `${e.apiKeySource}${i}` : e.apiKeySource,
+    });
+  if (Zc()) l.push({ label: "Profile", value: qZe() });
+  if (Zc() && kp({ skipRetrievingKeyFromApiKeyHelper: !0 }).key === null) {
+    let n = vvt();
+    if (!a.IS_DEMO) {
+      if (n?.organizationName || n?.organizationUuid)
+        l.push({
+          label: "Organization",
+          value: [n.organizationName, n.organizationUuid]
+            .filter(Boolean)
+            .join(" \xB7 "),
+        });
+      if (n?.accountEmail) l.push({ label: "Email", value: n.accountEmail });
+    }
+  }
+  if (e.organization && !a.IS_DEMO)
+    l.push({ label: "Organization", value: e.organization });
+  if (e.email && !a.IS_DEMO) l.push({ label: "Email", value: e.email });
+  return l;
+}
+function Dit() {
+  let s = Pe(),
+    e = [];
+  if (s !== "firstParty") {
+    let o = GRe(),
+      n = o ? `${yA[s]} + ${yA[o]}` : yA[s];
+    e.push({ label: "API provider", value: n });
+  }
+  if (s === "firstParty") {
+    let o = a.ANTHROPIC_BASE_URL;
+    if (o) e.push({ label: "Anthropic base URL", value: o });
+  } else if (s === "bedrock") {
+    let o = a.ANTHROPIC_BEDROCK_BASE_URL;
+    if (o) e.push({ label: "Bedrock base URL", value: o });
+    e.push({ label: "AWS region", value: b() });
+    let n = a.ANTHROPIC_BEDROCK_SERVICE_TIER;
+    if (n) e.push({ label: "Bedrock service tier", value: n });
+    if (a.CLAUDE_CODE_SKIP_BEDROCK_AUTH) e.push({ value: "AWS auth skipped" });
+  } else if (s === "vertex") {
+    let o = a.ANTHROPIC_VERTEX_BASE_URL;
+    if (o) e.push({ label: "Vertex base URL", value: o });
+    let n = a.ANTHROPIC_VERTEX_PROJECT_ID;
+    if (n) e.push({ label: "GCP project", value: n });
+    if (
+      (e.push({ label: "Default region", value: RYt() }),
+      a.CLAUDE_CODE_SKIP_VERTEX_AUTH)
+    )
+      e.push({ value: "GCP auth skipped" });
+  } else if (s === "foundry") {
+    let o = a.ANTHROPIC_FOUNDRY_BASE_URL;
+    if (o) e.push({ label: "Microsoft Foundry base URL", value: o });
+    let n = a.ANTHROPIC_FOUNDRY_RESOURCE;
+    if (n) e.push({ label: "Microsoft Foundry resource", value: n });
+    if (a.CLAUDE_CODE_SKIP_FOUNDRY_AUTH)
+      e.push({ value: "Microsoft Foundry auth skipped" });
+  } else if (s === "anthropicAws") {
+    let o = a.ANTHROPIC_AWS_BASE_URL;
+    if (o) e.push({ label: "Claude Platform on AWS base URL", value: o });
+    let n = a.ANTHROPIC_AWS_WORKSPACE_ID;
+    if (n) e.push({ label: "Workspace ID", value: n });
+    if (
+      (e.push({ label: "AWS region", value: Lve() }),
+      a.CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH)
+    )
+      e.push({ value: "Claude Platform on AWS auth skipped" });
+  } else if (s === "anthropicGoogleCloud") {
+    let o = a.ANTHROPIC_GOOGLE_CLOUD_BASE_URL;
+    if (o)
+      e.push({ label: "Claude Platform on Google Cloud base URL", value: o });
+    let n = a.ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID;
+    if (n) e.push({ label: "Workspace ID", value: n });
+    let u = a.ANTHROPIC_GOOGLE_CLOUD_PROJECT || a.GOOGLE_CLOUD_PROJECT;
+    if (u) e.push({ label: "GCP project", value: u });
+    if (
+      (e.push({
+        label: "GCP location",
+        value: a.ANTHROPIC_GOOGLE_CLOUD_LOCATION || "global",
+      }),
+      a.CLAUDE_CODE_SKIP_ANTHROPIC_GOOGLE_CLOUD_AUTH)
+    )
+      e.push({ value: "Claude Platform on Google Cloud auth skipped" });
+  } else if (s === "gateway") {
+    let o = ns();
+    if (o) e.push({ label: "Gateway URL", value: o.url });
+  }
+  if (s === "mantle" || GRe() === "mantle") {
+    let o = a.ANTHROPIC_BEDROCK_MANTLE_BASE_URL;
+    if (o) e.push({ label: "Amazon Bedrock (Mantle) base URL", value: o });
+    if (s === "mantle") e.push({ label: "AWS region", value: b() });
+    if (a.CLAUDE_CODE_SKIP_MANTLE_AUTH)
+      e.push({ value: "Amazon Bedrock (Mantle) auth skipped" });
+  }
+  let l = Die();
+  if (l)
+    e.push({
+      label: "Proxy",
+      value: Lie(l)
+        ? l
+        : `${l.replace(/\p{Cc}/gu, "")} (invalid \u2014 ignored; fix or unset the proxy env var)`,
+    });
+  let i = JT();
+  if (a.NODE_EXTRA_CA_CERTS)
+    e.push({ label: "Additional CA cert(s)", value: a.NODE_EXTRA_CA_CERTS });
+  if (i) {
+    if (i.cert && a.CLAUDE_CODE_CLIENT_CERT)
+      e.push({ label: "mTLS client cert", value: a.CLAUDE_CODE_CLIENT_CERT });
+    if (i.key && a.CLAUDE_CODE_CLIENT_KEY)
+      e.push({ label: "mTLS client key", value: a.CLAUDE_CODE_CLIENT_KEY });
+  }
+  return e;
+}
+function b() {
+  let { region: s, source: e } = wCn();
+  switch (e) {
+    case "env":
+      return s;
+    case "shared-config":
+      return `${s} (from AWS config)`;
+    case "env-invalid":
+    case "default":
+      return (
+        cA(),
+        e === "env-invalid"
+          ? `${s} (default \u2014 region env var invalid, ignored; fix or unset AWS_REGION / AWS_DEFAULT_REGION)`
+          : `${s} (default \u2014 set AWS_REGION or add a region to your AWS config)`
+      );
+  }
+}
+function uUn(s) {
+  let e = WC(s);
+  {
+    let l = iDe();
+    if (l !== void 0) return `${e} (${pmt(WC(l.previousModel))})`;
+  }
+  return e;
+}
+export { BWe, tUn, nUn, rUn, oUn, sUn, iUn, aUn, lUn, cUn, jWe, Oit, Dit, uUn };

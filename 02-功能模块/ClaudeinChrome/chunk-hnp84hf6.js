@@ -1,0 +1,543 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { ja, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { Fe, Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { vd } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { readdir as V, stat as R } from "fs/promises";
+import { homedir as T, platform as N, userInfo as z } from "os";
+import { join as l } from "path";
+import { spawn as k } from "child_process";
+import { lstat as D } from "fs/promises";
+import { dirname as O, win32 as _ } from "path";
+var I = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths",
+  v = 1e4,
+  L = 5000;
+function K() {
+  if (!a.LOCALAPPDATA) return;
+  let e = a.LOCALAPPDATA.replace(/[\\/]+$/, "");
+  return _.normalize(`${e}\\Microsoft\\WindowsApps\\`).toLowerCase();
+}
+function h() {
+  return a.SYSTEMROOT || a.SystemRoot || "C:\\Windows";
+}
+function F(e) {
+  for (let s of e.split(/\r?\n/)) {
+    let r = s.match(/^\s+.+?\s+REG_(?:EXPAND_)?SZ\s+(.+)$/i);
+    if (r && r[1]) {
+      let o = r[1].trim();
+      if (o.length >= 2 && o.startsWith('"') && o.endsWith('"'))
+        o = o.slice(1, -1);
+      return o;
+    }
+  }
+  return null;
+}
+function W(e, s = process.env) {
+  let r = new Map();
+  for (let [o, t] of Object.entries(s))
+    if (t !== void 0) r.set(o.toLowerCase(), t);
+  return e.replace(/%([^%]+)%/g, (o, t) => r.get(t.toLowerCase()) ?? o);
+}
+async function x(e, s = L) {
+  let r = h(),
+    o = `${r}\\System32\\reg.exe`;
+  for (let t of ["HKCU", "HKLM"]) {
+    let c = await Be(o, ["query", `${t}\\${I}\\${e}`, "/ve"], {
+      timeout: v,
+      cwd: r,
+    });
+    if (c.code !== 0) {
+      if (c.exitCode === void 0)
+        n(
+          `[Claude in Chrome] ${t} App Paths query for ${e} did not run to completion: ${c.error ?? `killed at the ${v}ms bound, or reg.exe failed to spawn`}`,
+        );
+      continue;
+    }
+    let i = F(c.stdout);
+    if (!i) {
+      n(
+        `[Claude in Chrome] ${t} App Paths value for ${e} had no parseable string default; skipping`,
+      );
+      continue;
+    }
+    let p = W(i);
+    if (!/^(?:[a-zA-Z]:[\\/]|\\\\)/.test(p)) {
+      n(
+        `[Claude in Chrome] Skipping ${t} App Paths candidate for ${e}: not a fully qualified path`,
+      );
+      continue;
+    }
+    try {
+      let m = D(p);
+      m.catch(() => {});
+      let d = await kt(m, s);
+      if (d === void 0) {
+        n(
+          `[Claude in Chrome] Skipping ${t} App Paths candidate for ${e}: existence check exceeded ${s}ms`,
+        );
+        continue;
+      }
+      if (!d.isDirectory())
+        return (n(`[Claude in Chrome] Resolved ${e} via ${t} App Paths`), p);
+      n(
+        `[Claude in Chrome] Skipping ${t} App Paths candidate for ${e}: resolves to a directory`,
+      );
+    } catch (m) {
+      let d = A(m),
+        b = K();
+      if (
+        b !== void 0 &&
+        _.normalize(p).toLowerCase().startsWith(b) &&
+        d !== "ENOENT" &&
+        d !== "ENOTDIR"
+      )
+        return (
+          n(
+            `[Claude in Chrome] Resolved ${e} via ${t} App Paths (stat-odd: ${d ?? String(m)})`,
+          ),
+          p
+        );
+      n(
+        `[Claude in Chrome] Skipping ${t} App Paths candidate for ${e}: ${d ?? String(m)}`,
+      );
+    }
+  }
+  return null;
+}
+function M(e, s) {
+  return new Promise((r) => {
+    let o;
+    try {
+      o = k(e, s, {
+        cwd: O(e),
+        detached: !0,
+        stdio: "ignore",
+        windowsHide: !1,
+      });
+    } catch (t) {
+      (n(
+        `[Claude in Chrome] Detached launch of ${e} failed: ${A(t) ?? String(t)}`,
+        { level: "error" },
+      ),
+        r(!1));
+      return;
+    }
+    (o.once("spawn", () => r(!0)),
+      o.once("error", (t) => {
+        (n(
+          `[Claude in Chrome] Detached launch of ${e} failed: ${A(t) ?? t.message}`,
+          { level: "error" },
+        ),
+          r(!1));
+      }),
+      o.unref());
+  });
+}
+class E {
+  bridgeBinding = void 0;
+  resolvedHostByToolUseId = new Map();
+  shouldAutoEnable = void 0;
+  wiredThisSession = !1;
+  installUpsellResolution = void 0;
+  installUpsellBypassSuppressionCounted = !1;
+  trackedTabIds = new Set();
+  tabGroupCleanupRegistered = !1;
+  unsubscribeSessionSwitch = void 0;
+  unregisterExitCleanup = void 0;
+  closesInFlight = new Map();
+  lastExecutedTabUrlByScope = new Map();
+  resolvedUrlByToolUseId = new Map();
+  reset() {
+    ((this.bridgeBinding = void 0),
+      (this.resolvedHostByToolUseId = new Map()),
+      (this.shouldAutoEnable = void 0),
+      (this.wiredThisSession = !1),
+      (this.installUpsellResolution = void 0),
+      (this.installUpsellBypassSuppressionCounted = !1),
+      (this.trackedTabIds = new Set()),
+      (this.tabGroupCleanupRegistered = !1),
+      this.unsubscribeSessionSwitch?.(),
+      (this.unsubscribeSessionSwitch = void 0),
+      this.unregisterExitCleanup?.(),
+      (this.unregisterExitCleanup = void 0),
+      (this.closesInFlight = new Map()),
+      (this.lastExecutedTabUrlByScope = new Map()),
+      (this.resolvedUrlByToolUseId = new Map()));
+  }
+}
+var G = new j(() => new E());
+function yd() {
+  return G.of(B().host);
+}
+var BI = `mcp__${vd}__`,
+  Nre = "ClaudeInChromeDomain",
+  g = {
+    chrome: {
+      name: "Google Chrome",
+      macos: {
+        appName: "Google Chrome",
+        nativeMessagingPath: [
+          "Library",
+          "Application Support",
+          "Google",
+          "Chrome",
+          "NativeMessagingHosts",
+        ],
+      },
+      linux: {
+        binaries: ["google-chrome", "google-chrome-stable"],
+        nativeMessagingPath: [
+          ".config",
+          "google-chrome",
+          "NativeMessagingHosts",
+        ],
+      },
+      windows: {
+        dataPath: ["Google", "Chrome", "User Data"],
+        registryKey: "HKCU\\Software\\Google\\Chrome\\NativeMessagingHosts",
+        appPathsExe: "chrome.exe",
+      },
+    },
+    brave: {
+      name: "Brave",
+      macos: {
+        appName: "Brave Browser",
+        nativeMessagingPath: [
+          "Library",
+          "Application Support",
+          "BraveSoftware",
+          "Brave-Browser",
+          "NativeMessagingHosts",
+        ],
+      },
+      linux: {
+        binaries: ["brave-browser", "brave"],
+        nativeMessagingPath: [
+          ".config",
+          "BraveSoftware",
+          "Brave-Browser",
+          "NativeMessagingHosts",
+        ],
+      },
+      windows: {
+        dataPath: ["BraveSoftware", "Brave-Browser", "User Data"],
+        registryKey:
+          "HKCU\\Software\\BraveSoftware\\Brave-Browser\\NativeMessagingHosts",
+        appPathsExe: "brave.exe",
+      },
+    },
+    arc: {
+      name: "Arc",
+      macos: {
+        appName: "Arc",
+        nativeMessagingPath: [
+          "Library",
+          "Application Support",
+          "Arc",
+          "User Data",
+          "NativeMessagingHosts",
+        ],
+      },
+      linux: { binaries: [], nativeMessagingPath: [] },
+      windows: {
+        dataPath: ["Arc", "User Data"],
+        registryKey: "HKCU\\Software\\ArcBrowser\\Arc\\NativeMessagingHosts",
+      },
+    },
+    chromium: {
+      name: "Chromium",
+      macos: {
+        appName: "Chromium",
+        nativeMessagingPath: [
+          "Library",
+          "Application Support",
+          "Chromium",
+          "NativeMessagingHosts",
+        ],
+      },
+      linux: {
+        binaries: ["chromium", "chromium-browser"],
+        nativeMessagingPath: [".config", "chromium", "NativeMessagingHosts"],
+      },
+      windows: {
+        dataPath: ["Chromium", "User Data"],
+        registryKey: "HKCU\\Software\\Chromium\\NativeMessagingHosts",
+      },
+    },
+    edge: {
+      name: "Microsoft Edge",
+      macos: {
+        appName: "Microsoft Edge",
+        nativeMessagingPath: [
+          "Library",
+          "Application Support",
+          "Microsoft Edge",
+          "NativeMessagingHosts",
+        ],
+      },
+      linux: {
+        binaries: ["microsoft-edge", "microsoft-edge-stable"],
+        nativeMessagingPath: [
+          ".config",
+          "microsoft-edge",
+          "NativeMessagingHosts",
+        ],
+      },
+      windows: {
+        dataPath: ["Microsoft", "Edge", "User Data"],
+        registryKey: "HKCU\\Software\\Microsoft\\Edge\\NativeMessagingHosts",
+        appPathsExe: "msedge.exe",
+      },
+    },
+    vivaldi: {
+      name: "Vivaldi",
+      macos: {
+        appName: "Vivaldi",
+        nativeMessagingPath: [
+          "Library",
+          "Application Support",
+          "Vivaldi",
+          "NativeMessagingHosts",
+        ],
+      },
+      linux: {
+        binaries: ["vivaldi", "vivaldi-stable"],
+        nativeMessagingPath: [".config", "vivaldi", "NativeMessagingHosts"],
+      },
+      windows: {
+        dataPath: ["Vivaldi", "User Data"],
+        registryKey: "HKCU\\Software\\Vivaldi\\NativeMessagingHosts",
+        appPathsExe: "vivaldi.exe",
+      },
+    },
+    opera: {
+      name: "Opera",
+      macos: {
+        appName: "Opera",
+        nativeMessagingPath: [
+          "Library",
+          "Application Support",
+          "com.operasoftware.Opera",
+          "NativeMessagingHosts",
+        ],
+      },
+      linux: {
+        binaries: ["opera"],
+        nativeMessagingPath: [".config", "opera", "NativeMessagingHosts"],
+      },
+      windows: {
+        dataPath: ["Opera Software", "Opera Stable"],
+        registryKey:
+          "HKCU\\Software\\Opera Software\\Opera Stable\\NativeMessagingHosts",
+        useRoaming: !0,
+        appPathsExe: "opera.exe",
+      },
+    },
+  },
+  C = ["chrome", "brave", "arc", "edge", "chromium", "vivaldi", "opera"];
+function qyn() {
+  let e = P(),
+    s = T(),
+    r = [];
+  for (let o of C) {
+    let t = g[o];
+    switch (e) {
+      case "macos":
+        if (t.macos.nativeMessagingPath.length > 0)
+          r.push({ browser: o, path: l(s, ...t.macos.nativeMessagingPath) });
+        break;
+      case "linux":
+      case "wsl":
+        if (t.linux.nativeMessagingPath.length > 0)
+          r.push({ browser: o, path: l(s, ...t.linux.nativeMessagingPath) });
+        break;
+      case "windows":
+        break;
+    }
+  }
+  return r;
+}
+function zyn() {
+  let e = [];
+  for (let s of C) {
+    let r = g[s];
+    if (r.windows.registryKey)
+      e.push({ browser: s, key: r.windows.registryKey });
+  }
+  return e;
+}
+async function x3t() {
+  let e = P();
+  for (let s of C) {
+    let r = g[s];
+    switch (e) {
+      case "macos": {
+        let o = `/Applications/${r.macos.appName}.app`;
+        try {
+          if ((await R(o)).isDirectory())
+            return (n(`[Claude in Chrome] Detected browser: ${r.name}`), s);
+        } catch (t) {
+          if (!Rt(t)) throw t;
+        }
+        break;
+      }
+      case "wsl":
+      case "linux": {
+        for (let o of r.linux.binaries)
+          if (await ja(o).catch(() => null))
+            return (n(`[Claude in Chrome] Detected browser: ${r.name}`), s);
+        break;
+      }
+      case "windows": {
+        let o = T();
+        if (r.windows.dataPath.length > 0) {
+          let t = r.windows.useRoaming
+              ? l(o, "AppData", "Roaming")
+              : l(o, "AppData", "Local"),
+            c = l(t, ...r.windows.dataPath);
+          try {
+            if ((await R(c)).isDirectory())
+              return (n(`[Claude in Chrome] Detected browser: ${r.name}`), s);
+          } catch (i) {
+            if (!Rt(i)) throw i;
+          }
+        }
+        break;
+      }
+    }
+  }
+  return null;
+}
+var q = 200;
+function Vyn(e) {
+  let s = yd().trackedTabIds;
+  if (s.size >= q && !s.has(e)) s.clear();
+  s.add(e);
+}
+function Kyn(e) {
+  return yd().trackedTabIds.has(e);
+}
+function w(e) {
+  return {
+    exec_exit_code: e.code,
+    exec_failure_kind:
+      e.exitCode !== void 0
+        ? S("nonzero_exit")
+        : e.code === 127
+          ? S("not_found")
+          : S("spawn_failed_or_killed"),
+  };
+}
+async function WY(e) {
+  if (!/^https?:\/\//i.test(e))
+    return (f("chrome_open_url", "invalid_url"), !1);
+  let s = P(),
+    r = await x3t();
+  if (!r)
+    return (
+      n("[Claude in Chrome] No compatible browser found"),
+      f("chrome_open_url", "no_browser"),
+      !1
+    );
+  let o = g[r];
+  switch (s) {
+    case "macos": {
+      let t = await Fe("open", ["-a", o.macos.appName, e]);
+      if (t.code === 0) return (y("chrome_open_url"), !0);
+      return (f("chrome_open_url", "exec_failed", w(t)), !1);
+    }
+    case "windows": {
+      let t = o.windows.appPathsExe,
+        c = !1;
+      if (t) {
+        let p = await x(t);
+        if (p) {
+          if (await M(p, [e]))
+            return (
+              y("chrome_open_url", {
+                open_method: S("app_paths"),
+                browser: u(r),
+              }),
+              !0
+            );
+          c = !0;
+        }
+      }
+      let i = await Be("rundll32", ["url,OpenURL", e], { cwd: h() });
+      if (i.code === 0)
+        return (
+          y("chrome_open_url", {
+            open_method: c
+              ? S("rundll32_after_spawn_fail")
+              : t
+                ? S("rundll32")
+                : S("rundll32_no_app_paths_support"),
+            browser: u(r),
+          }),
+          !0
+        );
+      return (
+        f("chrome_open_url", "exec_failed", {
+          ...w(i),
+          ...(c && { app_paths_spawn_failed: !0 }),
+          browser: u(r),
+        }),
+        !1
+      );
+    }
+    case "wsl":
+    case "linux": {
+      let t;
+      for (let c of o.linux.binaries) {
+        let i = await Fe(c, [e], { useCwd: !0, useToolMemoryCgroup: !1 });
+        if (i.code === 0) return (y("chrome_open_url"), !0);
+        if (t?.exitCode === void 0 || i.exitCode !== void 0) t = i;
+      }
+      return (f("chrome_open_url", "exec_failed", t ? w(t) : void 0), !1);
+    }
+    default:
+      return (f("chrome_open_url", "exec_failed"), !1);
+  }
+}
+function Q8e() {
+  return `/tmp/claude-mcp-browser-bridge-${U()}`;
+}
+function Z8e() {
+  if (N() === "win32") return `\\\\.\\pipe\\${H()}`;
+  return l(Q8e(), `${process.pid}.sock`);
+}
+async function Xyn() {
+  if (N() === "win32") return [`\\\\.\\pipe\\${H()}`];
+  let e = [],
+    s = Q8e();
+  try {
+    let r = await V(s);
+    for (let o of r) if (o.endsWith(".sock")) e.push(l(s, o));
+  } catch {}
+  return e;
+}
+function H() {
+  return `claude-mcp-browser-bridge-${U()}`;
+}
+function U() {
+  try {
+    return z().username || "default";
+  } catch {
+    return a.USER || a.USERNAME || "default";
+  }
+}
+export { yd, BI, Nre, qyn, zyn, x3t, Vyn, Kyn, WY, Q8e, Z8e, Xyn };

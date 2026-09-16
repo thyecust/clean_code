@@ -1,0 +1,4148 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import {
+  j,
+  B,
+  he,
+  G1,
+  q1,
+  MA,
+  d8,
+  RL,
+  sLn,
+  gae,
+  Irt,
+} from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { Le, yZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
+import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { kt } from "../共享小工具-未细化/chunk-510m1t2d.js";
+import { oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { S, u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
+import {
+  b0,
+  C_,
+  kRt,
+  da,
+  Za,
+  ms,
+  Ow,
+  Tb,
+  Dq,
+  glr,
+  vHn,
+  ptt,
+  RHn,
+  kHn,
+  xHn,
+  HHn,
+  IHn,
+  PHn,
+  w8t,
+  OHn,
+  hlr,
+  Uq,
+  Kge,
+  XT,
+  XRt,
+  mtt,
+  MHn,
+  jR,
+  Yge,
+  $Hn,
+  wie,
+  rv,
+  v8t,
+  R8t,
+  wke,
+  XHn,
+  QBe,
+  ZBe,
+  rkt,
+  YHn,
+  WU,
+  Tke,
+  e2e,
+  Bq,
+  btt,
+  wtt,
+  n_,
+  Slr,
+  Eke,
+  I8t,
+  Ake,
+  Eie,
+  okt,
+  skt,
+  JHn,
+  blr,
+  jq,
+  ehe,
+  T0,
+  Aie,
+  QHn,
+  wlr,
+  Tlr,
+  Elr,
+  O8t,
+  Alr,
+  ZHn,
+  Clr,
+  lL,
+  e0n,
+  Wq,
+  vlr,
+  Rlr,
+  klr,
+  xlr,
+  Hlr,
+  D8t,
+  Ilr,
+  Ttt,
+  GU,
+  Plr,
+  E0,
+} from "../设置-配置/设置-配置.aqbb35ee.js";
+import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { SXt, fxe, wc, b, Ru, Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { y8 } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
+import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { rL, wb } from "./chunk-fx8qr1md.js";
+import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
+import { Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { $r, KIn } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
+import { mn } from "../共享小工具-未细化/chunk-z5tdbda7.js";
+import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
+import { Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { _Rt, yRt, Met, _x, xBe } from "../共享小工具-未细化/chunk-24x3spwe.js";
+import { hRt, qxn } from "./chunk-svk2cp17.js";
+import { ohe, Ex, gS } from "../共享小工具-未细化/chunk-a7cfts2d.js";
+import { Dm } from "../共享小工具-未细化/chunk-17typpec.js";
+import { s, se, v, c, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+import { lz } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
+import { mXt, gXt, P } from "./chunk-13kdp2ag.js";
+import { me } from "../共享小工具-未细化/chunk-6rcgxa93.js";
+import { G, Y } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+class at {
+  drains = new Set();
+  register(e) {
+    this.drains.add(e);
+  }
+  async drainAll() {
+    await Promise.all([...this.drains].map((e) => e().catch(() => {})));
+  }
+}
+var lt = new at();
+function cie(e) {
+  lt.register(e);
+}
+function y0() {
+  return lt.drainAll();
+}
+import { basename as Vi, dirname as pe, join as fe, resolve as wn } from "path";
+import {
+  appendFile as jn,
+  mkdir as zn,
+  readFile as Vn,
+  writeFile as Yn,
+} from "fs/promises";
+import { homedir as ct } from "os";
+import { dirname as Jn, isAbsolute as ut, join as Me } from "path";
+async function L5t(e, t) {
+  let { code: r } = await Be("git", ["check-ignore", "--", e], {
+    preserveOutputOnError: !1,
+    cwd: t,
+  });
+  return r === 0;
+}
+async function Xn(e) {
+  let { stdout: t, code: r } = await Be(
+      "git",
+      ["config", "--global", "--get", "core.excludesfile"],
+      { preserveOutputOnError: !1, cwd: e },
+    ),
+    o = r === 0 ? t.trim() : "";
+  if (o) {
+    if (o === "~" || o.startsWith("~/")) return Me(ct(), o.slice(2));
+    if (ut(o)) return o;
+  }
+  let d = a.XDG_CONFIG_HOME;
+  if (d && ut(d)) return Me(d, "git", "ignore");
+  return Me(ct(), ".config", "git", "ignore");
+}
+async function M5t(e, t = Q()) {
+  try {
+    if (!(await KIn(t))) return { written: !1, effective: !1 };
+    let r = e.replaceAll("\\", "/"),
+      o = `**/${r}`,
+      d = r.endsWith("/") ? `${r}sample-file.txt` : r;
+    if (await L5t(d, t)) return { written: !1, effective: !0 };
+    let _ = await Xn(t),
+      p = Jn(_);
+    await zn(p, { recursive: !0 });
+    try {
+      if ((await Vn(_, { encoding: "utf-8" })).includes(o)) {
+        let I = (await dt(d, t)) ? "already_tracked" : "excludesfile_not_read";
+        return (
+          n(
+            `[gitignore] '${o}' already present in ${_} but git check-ignore reports not-ignored \u2014 ${gt(I, d)}`,
+            { level: "warn" },
+          ),
+          { written: !1, effective: !1, reason: I }
+        );
+      }
+      await jn(
+        _,
+        `
+${o}
+`,
+      );
+    } catch (O) {
+      if (A(O) === "ENOENT")
+        await Yn(
+          _,
+          `${o}
+`,
+          "utf-8",
+        );
+      else throw O;
+    }
+    if (!(await L5t(d, t))) {
+      let O = (await dt(d, t)) ? "already_tracked" : "excludesfile_not_read";
+      return (
+        n(
+          `[gitignore] wrote '${o}' to ${_} but git check-ignore still reports not-ignored \u2014 ${gt(O, d)}`,
+          { level: "warn" },
+        ),
+        { written: !0, effective: !1, reason: O }
+      );
+    }
+    return { written: !0, effective: !0 };
+  } catch (r) {
+    return (
+      n(
+        `Failed to add gitignore entry to global gitignore: ${r instanceof Error ? r.message : String(r)}`,
+        { level: "error" },
+      ),
+      { written: !1, effective: !1 }
+    );
+  }
+}
+async function dt(e, t) {
+  let { code: r } = await Be("git", ["ls-files", "--error-unmatch", "--", e], {
+    preserveOutputOnError: !1,
+    cwd: t,
+  });
+  return r === 0;
+}
+function gt(e, t) {
+  return e === "already_tracked"
+    ? `'${t}' is tracked in the index; gitignore rules do not apply to tracked files`
+    : "core.excludesfile may point elsewhere";
+}
+var Cet = 5000;
+function tRt(e) {
+  da().internalWrites.set(e, Date.now());
+}
+function nRt(e, t) {
+  let r = da().internalWrites,
+    o = r.get(e);
+  if (o !== void 0 && Date.now() - o < t) return (r.delete(e), !0);
+  return !1;
+}
+function uar() {
+  da().internalWrites.clear();
+}
+import { join as J } from "path";
+var Z = Object.freeze({ settings: {}, errors: [] });
+class mt {
+  mdm = null;
+  hkcu = null;
+  wslInherits = !1;
+  loadPromise = null;
+  startLoad(e) {
+    if (this.loadPromise) return;
+    this.loadPromise = (async () => {
+      let t = Date.now(),
+        o = await (qxn() ?? hRt()),
+        { mdm: d, hkcu: _, wslInherits: p } = await ht(o, e);
+      this.replace(d, _, p);
+      let E = Date.now() - t;
+      n(`MDM settings load completed in ${E}ms`);
+      try {
+        i("tengu_managed_settings_os_read", ir(o, E));
+      } catch {}
+      if (Object.keys(d.settings).length > 0) {
+        n(`MDM settings found: ${Object.keys(d.settings).join(", ")}`);
+        try {
+          q("info", "mdm_settings_loaded", {
+            duration_ms: E,
+            key_count: Object.keys(d.settings).length,
+            error_count: d.errors.length,
+          });
+        } catch {}
+      }
+    })();
+  }
+  replace(e, t, r) {
+    ((this.mdm = e), (this.hkcu = t), (this.wslInherits = r));
+  }
+  reset() {
+    ((this.mdm = null),
+      (this.hkcu = null),
+      (this.wslInherits = !1),
+      (this.loadPromise = null));
+  }
+}
+var Zn = new j(() => new mt());
+function te() {
+  return Zn.of(B().host);
+}
+function Qn(e) {
+  te().startLoad(e);
+}
+async function rRt() {
+  let e = te();
+  if (!e.loadPromise) Qn();
+  await e.loadPromise;
+}
+function PU() {
+  return te().mdm ?? Z;
+}
+function Rge() {
+  return te().hkcu ?? Z;
+}
+function S0() {
+  return te().wslInherits;
+}
+function vet(e, t, r) {
+  te().replace(e, t, r);
+}
+async function oRt(e) {
+  let t = await hRt();
+  return ht(t, e);
+}
+function $e(e, t, { userWritable: r = !1 } = {}) {
+  let o = xt(e, !1);
+  if (!me(o)) return { settings: {}, errors: [I8t(t, { userWritable: r })] };
+  let d = [],
+    _ = o;
+  if (r && "managedMcpServers" in o) {
+    if (((_ = { ...o }), delete _.managedMcpServers, !e2e("managedMcpServers")))
+      d.push({
+        file: t,
+        path: "managedMcpServers",
+        message: `"managedMcpServers" is only honored from administrator-controlled managed settings and was ignored in ${t}, which the user account can write.`,
+        severity: "warning",
+        statusOnly: !0,
+      });
+  }
+  let { settings: p, errors: E } = Tke(_, t),
+    O = [...d, ...E];
+  return {
+    settings: p ?? {},
+    errors: r
+      ? O.map((I) =>
+          I.severity === "warning" && !I.startupFatal
+            ? I
+            : { ...qn(I), severity: "warning", statusOnly: !0 },
+        )
+      : O,
+  };
+}
+function qn({ startupFatal: e, ...t }) {
+  return t;
+}
+function _t(e, t, r) {
+  return {
+    file: e,
+    path: "",
+    message: `Managed settings document (${e}) could not be read: ${t}; none of its settings are in effect.`,
+    severity: r ? "warning" : "fatal",
+    statusOnly: !0,
+  };
+}
+function pt(e, t = "Settings") {
+  let r = t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+    o = new RegExp(
+      `^[ \\t]+${r}[ \\t]+REG_(?:EXPAND_)?SZ[ \\t]+([\\s\\S]*)`,
+      "im",
+    ),
+    d = e.match(o)?.[1]?.trimEnd();
+  return d ? d : null;
+}
+var er = new Map([
+    ["ENOENT", S("ENOENT")],
+    ["EACCES", S("EACCES")],
+    ["EPERM", S("EPERM")],
+    ["ENOEXEC", S("ENOEXEC")],
+    ["EAGAIN", S("EAGAIN")],
+    ["EMFILE", S("EMFILE")],
+    ["ENOMEM", S("ENOMEM")],
+    ["ETIMEDOUT", S("ETIMEDOUT")],
+    [
+      "ERR_CHILD_PROCESS_STDIO_MAXBUFFER",
+      S("ERR_CHILD_PROCESS_STDIO_MAXBUFFER"),
+    ],
+  ]),
+  tr = new Map([
+    ["SIGTERM", S("SIGTERM")],
+    ["SIGKILL", S("SIGKILL")],
+    ["SIGINT", S("SIGINT")],
+  ]);
+function nr(e) {
+  if (!e) return;
+  return er.get(e) ?? S("other");
+}
+function rr(e) {
+  if (!e) return;
+  return tr.get(e) ?? S("other");
+}
+function ft(e, t) {
+  if (!t) return {};
+  return {
+    [`${e}_status`]: u(t.status),
+    [`${e}_exit_code`]: t.exitCode ?? void 0,
+    [`${e}_errno`]: nr(t.errno),
+    [`${e}_signal`]: rr(t.signal),
+    [`${e}_duration_ms`]: t.durationMs,
+  };
+}
+function ir(e, t) {
+  return {
+    is_wsl: xBe(),
+    await_ms: t,
+    ...ft("hklm", e.outcomes.hklm),
+    ...ft("hkcu", e.outcomes.hkcu),
+  };
+}
+async function ht(e, t) {
+  let r = [];
+  for (let O of e.plistStdouts ?? []) {
+    let { label: I, userWritable: N } = O;
+    if (O.stdout === null) {
+      r.push(_t(I, O.unreadReason, N));
+      continue;
+    }
+    let L = $e(O.stdout, I, { userWritable: N });
+    if (lL(L.settings))
+      return {
+        mdm: {
+          settings: L.settings,
+          errors: [...r, ...L.errors],
+          ...(N && { userWritable: N }),
+        },
+        hkcu: Z,
+        wslInherits: !1,
+      };
+    r.push(...L.errors);
+  }
+  let o = `Registry: ${_Rt}\\${Met}`,
+    d = null;
+  if (e.hklmStdout !== null) d = $e(pt(e.hklmStdout) ?? "", o);
+  else if (e.hklmUnreadReason !== void 0) r.push(_t(o, e.hklmUnreadReason, !1));
+  if (d) r.push(...d.errors);
+  let _ = xBe(),
+    p = !1;
+  if (_) {
+    if (((p = d?.settings.wslInheritsWindowsSettings === !0), !p)) {
+      let O = await sr(t);
+      if (((p = O.flag), !p)) r.push(...O.records);
+    }
+  }
+  let E = r.length > 0 ? { settings: {}, errors: r } : Z;
+  if (_ && !p) return { mdm: E, hkcu: Z, wslInherits: !1 };
+  if (d) {
+    if (lL(d.settings)) return { mdm: d, hkcu: Z, wslInherits: p };
+  }
+  if (await or(p, t)) return { mdm: E, hkcu: Z, wslInherits: p };
+  if (e.hkcuStdout !== null) {
+    let O = $e(pt(e.hkcuStdout) ?? "", `Registry: ${yRt}\\${Met}`, {
+      userWritable: !0,
+    });
+    if (!_ || O.settings.wslInheritsWindowsSettings === !0) {
+      let {
+        wslInheritsWindowsSettings: I,
+        managedSourcesBehavior: N,
+        ...L
+      } = O.settings;
+      return {
+        mdm: E,
+        hkcu: { settings: L, errors: O.errors },
+        wslInherits: p,
+      };
+    }
+    if (O.errors.length > 0)
+      return {
+        mdm: E,
+        hkcu: { settings: {}, errors: O.errors },
+        wslInherits: p,
+      };
+  }
+  return { mdm: E, hkcu: Z, wslInherits: p };
+}
+async function Se(e, t) {
+  if (M() && t !== void 0) return (await gS(e, n_)).content;
+  return Ex(e, n_);
+}
+async function ke(e, t) {
+  if (M() && t !== void 0) return await ae().readdir(e);
+  return ae().readdirSync(e);
+}
+async function or(e, t) {
+  if (e && (await Et(_x, t))) return !0;
+  return Et(Tb(), t);
+}
+async function St(e, t) {
+  let r = Ru(xt(await Se(e, t), !1));
+  if (!r || typeof r !== "object") return !1;
+  return (wke(r, e, { skipMcpServerEntryFilter: !0, policySource: !0 }), lL(r));
+}
+async function lxn(e) {
+  if (!xBe() || !te().wslInherits) return "";
+  let t = [];
+  try {
+    t.push(await Se(J(_x, "managed-settings.json"), e));
+  } catch (r) {
+    t.push(Ue(r));
+  }
+  try {
+    let r = J(_x, "managed-settings.d"),
+      o = (await ke(r, e))
+        .filter(
+          (d) =>
+            (d.isFile() || d.isSymbolicLink()) &&
+            d.name.endsWith(".json") &&
+            !d.name.startsWith("."),
+        )
+        .map((d) => d.name)
+        .sort();
+    for (let d of o)
+      try {
+        t.push(`${d}\x00${await Se(J(r, d), e)}`);
+      } catch (_) {
+        t.push(`${d}\x00${Ue(_)}`);
+      }
+  } catch (r) {
+    let o = Ue(r);
+    if (o !== "") t.push(o);
+  }
+  return t.join("\x01");
+}
+function Ue(e) {
+  return xe(e) ? "" : "\x00unreadable";
+}
+function xe(e) {
+  let t = A(e);
+  return t === "ENOENT" || t === "ENOTDIR";
+}
+async function sr(e) {
+  let t = [];
+  async function r(_) {
+    let p;
+    try {
+      p = await Se(_, e);
+    } catch (O) {
+      if (!xe(O)) t.push(okt(_, O));
+      return !1;
+    }
+    if (p.trim() === "") return !1;
+    let E = xt(p, !1);
+    if (!me(E)) return (t.push(I8t(_)), !1);
+    return E.wslInheritsWindowsSettings === !0;
+  }
+  if (await r(J(_x, "managed-settings.json"))) return { flag: !0, records: t };
+  let o = J(_x, "managed-settings.d"),
+    d;
+  try {
+    d = await ke(o, e);
+  } catch (_) {
+    if (!xe(_)) t.push(okt(o, _, "directory"));
+    return { flag: !1, records: t };
+  }
+  for (let _ of d)
+    if (
+      (_.isFile() || _.isSymbolicLink()) &&
+      _.name.endsWith(".json") &&
+      !_.name.startsWith(".") &&
+      (await r(J(o, _.name)))
+    )
+      return { flag: !0, records: t };
+  return { flag: !1, records: t };
+}
+async function Et(e, t) {
+  try {
+    if (await St(J(e, "managed-settings.json"), t)) return !0;
+  } catch {}
+  try {
+    let r = J(e, "managed-settings.d"),
+      o = await ke(r, t);
+    for (let d of o) {
+      if (
+        !(d.isFile() || d.isSymbolicLink()) ||
+        !d.name.endsWith(".json") ||
+        d.name.startsWith(".")
+      )
+        continue;
+      try {
+        if (await St(J(r, d.name), t)) return !0;
+      } catch {}
+    }
+  } catch {}
+  return !1;
+}
+import { posix as dn, win32 as gn } from "path";
+import { win32 as yt } from "path";
+var Pt = ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass"],
+  Ot = "C:\\Windows",
+  Ee = "C:\\Program Files",
+  Pe = `${Ot}\\System32`,
+  We = `${Pe}\\WindowsPowerShell\\v1.0`,
+  ar = `${Pe}\\cmd.exe`,
+  lr = [
+    `${Ee}\\PowerShell\\7\\pwsh.exe`,
+    `${Ee}\\PowerShell\\7-preview\\pwsh.exe`,
+    `${We}\\powershell.exe`,
+  ];
+function cr() {
+  if (P() !== "windows") return null;
+  for (let e of lr) {
+    let t = yZ(e);
+    if (t === null) {
+      if (ae().existsSync(e)) return null;
+      continue;
+    }
+    if (t.toLowerCase() === e.toLowerCase()) return e;
+  }
+  return null;
+}
+var ur =
+    "PowerShell not found at any of its stock install locations on C: (fixed absolute candidates only; PATH is never consulted)",
+  Ke = "CLAUDE_CODE_POLICY_HELPER_PSMODULEPATH",
+  je = "CLAUDE_CODE_POLICY_HELPER_PS1_PATH",
+  dr = `$env:PSModulePath = $env:${Ke}; `,
+  gr =
+    "if ($ExecutionContext.SessionState.LanguageMode -eq 'FullLanguage') { try { [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new() } catch {} }; ";
+function Tt(e) {
+  return `${dr}${gr}$LASTEXITCODE = 0; try { ${e} } catch { Write-Error $_; exit 1 }; exit $LASTEXITCODE`;
+}
+var _r = Tt(`& ($env:${je})`),
+  pr = Tt("Invoke-Expression (@($input) -join [char]10)");
+function fr(e) {
+  return Y([
+    `${e}\\Modules`,
+    `${Ee}\\PowerShell\\Modules`,
+    `${Ee}\\WindowsPowerShell\\Modules`,
+    `${We}\\Modules`,
+  ]).join(";");
+}
+function Sr(e) {
+  return Y([e, Pe, Ot, `${Pe}\\Wbem`, We]).join(";");
+}
+var Er = ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC",
+  mr = ["DOTNET_", "COMPLUS_", "COR_", "CORECLR_", "APPDOMAIN_MANAGER_"],
+  hr = new Set([
+    "DEVPATH",
+    "__PSLOCKDOWNPOLICY",
+    "PSMODULEANALYSISCACHEPATH",
+    "PSMODULEPATH",
+    "PATH",
+    "PATHEXT",
+    "COMSPEC",
+    "TERM",
+    Ke,
+    je,
+  ]),
+  Pr = ["LD_", "DYLD_", "BASH_FUNC_", "__BASH_FUNC<", "LC_"],
+  Rr = new Set([
+    "ENV",
+    "BASH_ENV",
+    "SHELLOPTS",
+    "PS4",
+    "GCONV_PATH",
+    "IFS",
+    "PWD",
+    "CDPATH",
+    "OLDPWD",
+    "TMOUT",
+    "POSIXLY_CORRECT",
+    "BASHOPTS",
+    "BASH_COMPAT",
+    "EXECIGNORE",
+    "BASH_LOADABLES_PATH",
+    "GLOBIGNORE",
+    "GLOBSORT",
+    "LOCPATH",
+    "PATH_LOCALE",
+    "NLSPATH",
+    "LANG",
+    "TMPDIR",
+    "TMP",
+    "TEMP",
+  ]),
+  Ar = "/usr/bin:/bin:/usr/sbin:/sbin";
+function Rt(e, t, r, o) {
+  for (let d of Object.keys(e)) {
+    let _ = o(d);
+    if (t.has(_) || r.some((p) => _.startsWith(p))) delete e[d];
+  }
+}
+function It(e, t) {
+  let r = { ...e };
+  switch (t.routedInterpreter) {
+    case void 0:
+      return r;
+    case "sh":
+      return (Rt(r, Rr, Pr, (o) => o), (r.PATH = Ar), (r.LC_ALL = "C"), r);
+    case "pwsh": {
+      Rt(r, hr, mr, (d) => d.toUpperCase());
+      let o = yt.dirname(t.file);
+      if (
+        ((r.PSModulePath = fr(o)),
+        (r[Ke] = r.PSModulePath),
+        (r.PATH = Sr(o)),
+        (r.PATHEXT = Er),
+        (r.COMSPEC = ar),
+        (r.TERM = "dumb"),
+        t.ps1Path !== void 0)
+      )
+        r[je] = t.ps1Path;
+      return r;
+    }
+  }
+}
+function Nt(e) {
+  return P() === "windows" ? yt.dirname(e.file) : "/";
+}
+function Ct(e) {
+  if (e.script != null) {
+    if (e.interpreter === "sh")
+      return {
+        plan: {
+          file: "/bin/sh",
+          args: ["-s"],
+          input: e.script,
+          routedInterpreter: "sh",
+        },
+      };
+    return At({ args: [...Pt, "-Command", pr], input: e.script });
+  }
+  let { path: t } = e;
+  if (t == null)
+    return { error: "no path or script configured", code: "bad_path" };
+  if (P() !== "windows" || !HHn(t)) return { plan: { file: t, args: [] } };
+  return At({ args: [...Pt, "-Command", _r], ps1Path: t });
+}
+function At(e) {
+  let t = cr();
+  if (t === null) return { error: ur, code: "interpreter_unavailable" };
+  return { plan: { file: t, routedInterpreter: "pwsh", ...e } };
+}
+async function bt(e, t, r) {
+  if (e.routedInterpreter !== void 0) return null;
+  let o;
+  try {
+    o = await kt(yr(e.file, r), t);
+  } catch (d) {
+    return `cannot stat path (${A(d) ?? "unknown error"}): ${e.file}`;
+  }
+  if (o === void 0) return ze(e.file, t);
+  return o.isFile() ? null : `path is not a regular file: ${e.file}`;
+}
+function yr(e, t) {
+  let r = t.get(e);
+  if (r === void 0) {
+    ((r = ae().stat(e)), t.set(e, r));
+    let o = () => t.delete(e);
+    r.then(o, o);
+  }
+  return r;
+}
+function ze(e, t) {
+  return `cannot stat path (timed out after ${t} ms): ${e}`;
+}
+var Or = [
+    "ANTHROPIC_API_KEY",
+    "CLAUDE_CODE_OAUTH_TOKEN",
+    "CLAUDE_CODE_ARTIFACTS_API_TOKEN",
+    "CLAUDE_CODE_MEMORY_API_TOKEN",
+    "CLAUDE_CODE_SLACK_TAG_TOKEN",
+    "ANTHROPIC_AUTH_TOKEN",
+    "ANTHROPIC_FOUNDRY_API_KEY",
+    "ANTHROPIC_FOUNDRY_AUTH_TOKEN",
+    "ANTHROPIC_AWS_API_KEY",
+    "ANTHROPIC_CUSTOM_HEADERS",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_SESSION_TOKEN",
+    "AWS_BEARER_TOKEN_BEDROCK",
+    "GOOGLE_APPLICATION_CREDENTIALS",
+    "GOOGLE_GHA_CREDS_PATH",
+    "AZURE_CLIENT_SECRET",
+    "IDENTITY_HEADER",
+    "MSI_SECRET",
+    "AZURE_CLIENT_CERTIFICATE_PATH",
+    "AZURE_CLIENT_CERTIFICATE_PASSWORD",
+    "AZURE_PASSWORD",
+    "AZURE_FEDERATED_TOKEN_FILE",
+    "AWS_WEB_IDENTITY_TOKEN_FILE",
+    "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI",
+    "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+    "AWS_CONTAINER_AUTHORIZATION_TOKEN",
+    "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
+    "CLOUDSDK_AUTH_ACCESS_TOKEN",
+    "GOOGLE_OAUTH_ACCESS_TOKEN",
+    "CLAUDE_CODE_OAUTH_REFRESH_TOKEN",
+    "HF_TOKEN",
+    "HUGGING_FACE_HUB_TOKEN",
+    "HUGGINGFACEHUB_API_TOKEN",
+    "NODE_AUTH_TOKEN",
+    "NUGET_AUTH_TOKEN",
+    "CARGO_REGISTRY_TOKEN",
+    "TWINE_PASSWORD",
+    "TWINE_USERNAME",
+    "PYPI_TOKEN",
+    "PYPI_API_TOKEN",
+    "UV_PUBLISH_TOKEN",
+    "UV_PUBLISH_PASSWORD",
+    "UV_PUBLISH_USERNAME",
+    "FLIT_PASSWORD",
+    "FLIT_USERNAME",
+    "HATCH_INDEX_AUTH",
+    "HATCH_INDEX_USER",
+    "GEM_HOST_API_KEY",
+    "MATURIN_PYPI_TOKEN",
+    "MATURIN_PASSWORD",
+    "MATURIN_USERNAME",
+    "CONAN_LOGIN_USERNAME",
+    "CONAN_PASSWORD",
+    "ANACONDA_API_TOKEN",
+    "BINSTAR_API_TOKEN",
+    "VAULT_TOKEN",
+    "VAULT_AUTH_TOKEN",
+    "VAULT_ROLE_ID",
+    "VAULT_SECRET_ID",
+    "CONSUL_HTTP_TOKEN",
+    "CONSUL_HTTP_AUTH",
+    "NOMAD_TOKEN",
+    "NOMAD_HTTP_AUTH",
+    "CI_REGISTRY_USER",
+    "CI_DEPLOY_USER",
+    "JF_USER",
+    "FASTLANE_SESSION",
+    "MATCH_GIT_BASIC_AUTHORIZATION",
+    "SONAR_TOKEN",
+    "SONARQUBE_SCANNER_PARAMS",
+    "SONAR_SCANNER_JSON_PARAMS",
+    "SLACK_WEBHOOK_URL",
+    "SLACK_WEBHOOK",
+    "DISCORD_WEBHOOK",
+    "DISCORD_WEBHOOK_URL",
+    "TEAMS_WEBHOOK_URL",
+    "MS_TEAMS_WEBHOOK_URI",
+    "ANTHROPIC_IDENTITY_TOKEN",
+    "ANTHROPIC_IDENTITY_TOKEN_FILE",
+    "CLOUDSDK_AUTH_ACCESS_TOKEN_FILE",
+    "CLOUDSDK_AUTH_AUTHORIZATION_TOKEN_FILE",
+    "AZURE_AUTH_LOCATION",
+    "ACTIONS_ID_TOKEN_REQUEST_TOKEN",
+    "ACTIONS_ID_TOKEN_REQUEST_URL",
+    "ACTIONS_RUNTIME_TOKEN",
+    "ACTIONS_RUNTIME_URL",
+    "ALL_INPUTS",
+    "VSS_NUGET_EXTERNAL_FEED_ENDPOINTS",
+    "ARTIFACTS_CREDENTIALPROVIDER_EXTERNAL_FEED_ENDPOINTS",
+    "VSS_NUGET_ACCESSTOKEN",
+    "ARTIFACTS_CREDENTIALPROVIDER_ACCESSTOKEN",
+    "COMPOSER_AUTH",
+    "OVERRIDE_GITHUB_TOKEN",
+    "DEFAULT_WORKFLOW_TOKEN",
+    "SSH_SIGNING_KEY",
+  ],
+  Tr = [
+    "AWS_SHARED_CREDENTIALS_FILE",
+    "AWS_CONFIG_FILE",
+    "CLOUDSDK_CONFIG",
+    "AZURE_CONFIG_DIR",
+    "KUBECONFIG",
+    "NETRC",
+    "PGPASSFILE",
+    "PGSERVICEFILE",
+    "DOCKER_CONFIG",
+    "GH_CONFIG_DIR",
+    "GNUPGHOME",
+    "NPM_CONFIG_USERCONFIG",
+    "NPM_CONFIG_GLOBALCONFIG",
+    "SSH_AUTH_SOCK",
+    "GIT_SSH_COMMAND",
+    "GIT_SSH",
+    "GIT_ASKPASS",
+    "SSH_ASKPASS",
+    "SSH_AGENT_PID",
+    "TF_CLI_CONFIG_FILE",
+    "WGETRC",
+    "PIP_CONFIG_FILE",
+    "UV_CONFIG_FILE",
+    "RCLONE_CONFIG",
+    "BOTO_CONFIG",
+    "BOTO_PATH",
+    "S3CMD_CONFIG",
+    "SOPS_AGE_KEY_FILE",
+    "ANSIBLE_VAULT_PASSWORD_FILE",
+    "ANSIBLE_VAULT_IDENTITY_LIST",
+    "ANSIBLE_CONFIG",
+    "GOAUTH",
+    "SBT_CREDENTIALS",
+    "COURSIER_CREDENTIALS",
+    "CONSUL_HTTP_TOKEN_FILE",
+    "SYSTEM_WGETRC",
+    "CLOUDSDK_ROOT_DIR",
+    "M2_HOME",
+    "MAVEN_HOME",
+    "LEIN_HOME",
+    "SSLKEYLOGFILE",
+    "GIT_CONFIG_GLOBAL",
+    "GIT_CONFIG_SYSTEM",
+    "XDG_CONFIG_HOME",
+    "XDG_CONFIG_DIRS",
+    "XDG_CACHE_HOME",
+    "XDG_DATA_HOME",
+    "XDG_STATE_HOME",
+    "XDG_RUNTIME_DIR",
+    "HELM_REGISTRY_CONFIG",
+    "HELM_REPOSITORY_CONFIG",
+    "HELM_CONFIG_HOME",
+    "REGISTRY_AUTH_FILE",
+    "DOCKER_CERT_PATH",
+    "SSL_CLIENT_CERT",
+    "GIT_SSL_CERT",
+    "GIT_SSL_KEY",
+    "PIP_CLIENT_CERT",
+    "PGSSLKEY",
+    "VAULT_CLIENT_KEY",
+    "VAULT_CLIENT_CERT",
+    "CONSUL_CLIENT_KEY",
+    "CONSUL_CLIENT_CERT",
+    "NOMAD_CLIENT_KEY",
+    "NOMAD_CLIENT_CERT",
+    "PGSSLCERT",
+    "PGSYSCONFDIR",
+    "CURL_HOME",
+    "CARGO_HOME",
+    "COMPOSER_HOME",
+    "GRADLE_USER_HOME",
+    "BUNDLE_CONFIG",
+    "BUNDLE_USER_CONFIG",
+    "BUNDLE_USER_HOME",
+    "BUNDLE_APP_CONFIG",
+    "POETRY_CONFIG_DIR",
+    "COURSIER_CONFIG_DIR",
+    "HEX_HOME",
+    "HF_HOME",
+    "HF_TOKEN_PATH",
+    "HF_STORED_TOKENS_PATH",
+    "CONDARC",
+    "BUN_CONFIG_FILE",
+    "GOENV",
+    "NPM_CONFIG_PREFIX",
+    "CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE",
+    "CLAUDE_CONFIG_DIR",
+    "ANTHROPIC_CONFIG_DIR",
+    "ANTHROPIC_PROFILE",
+    "CLAUDE_CODE_FEDERATION_CACHE_DIR",
+    "CLAUDE_SECURESTORAGE_CONFIG_DIR",
+  ],
+  Mt = [
+    "PIP_INDEX_URL",
+    "PIP_EXTRA_INDEX_URL",
+    "PIP_FIND_LINKS",
+    "UV_INDEX_URL",
+    "UV_EXTRA_INDEX_URL",
+    "UV_DEFAULT_INDEX",
+    "UV_INDEX",
+    "UV_FIND_LINKS",
+    "UV_PUBLISH_URL",
+    "TWINE_REPOSITORY_URL",
+    "FLIT_INDEX_URL",
+    "HATCH_INDEX_REPO",
+    "NPM_CONFIG_REGISTRY",
+    "YARN_REGISTRY",
+    "YARN_NPM_REGISTRY_SERVER",
+    "YARN_NPM_PUBLISH_REGISTRY",
+    "COREPACK_NPM_REGISTRY",
+    "BUN_CONFIG_REGISTRY",
+    "GOPROXY",
+  ],
+  Ir = new Set(Mt),
+  Nr =
+    /^(?:CARGO_REGISTRIES_[A-Z0-9_]+_INDEX|POETRY_REPOSITORIES_[A-Z0-9_]+_URL|NPM_CONFIG_@[^:]+:REGISTRY)$/i;
+function JRe(e) {
+  let t = e
+    .toUpperCase()
+    .replace(/-/g, "_")
+    .replace(/^INPUT_/, "");
+  return Ir.has(t) || Nr.test(t);
+}
+function $t(e) {
+  return Ut[
+    e
+      .toUpperCase()
+      .replace(/-/g, "_")
+      .replace(/^INPUT_/, "")
+  ];
+}
+var Ut = {
+    PIP_EXTRA_INDEX_URL: "PIP_INDEX_URL",
+    PIP_FIND_LINKS: "PIP_INDEX_URL",
+    UV_EXTRA_INDEX_URL: "UV_DEFAULT_INDEX",
+    UV_INDEX: "UV_DEFAULT_INDEX",
+    UV_FIND_LINKS: "UV_DEFAULT_INDEX",
+  },
+  uie = "http://index.invalid/",
+  Gt = { UV_DEFAULT_INDEX: ["UV_INDEX_URL"] };
+function cxn(e, t) {
+  return [t, ...(Gt[t] ?? [])].some((r) => (e[r] ?? "") !== "");
+}
+var Cr = /^[a-z][a-z0-9+.-]*:\/\//i;
+function br(e) {
+  let t = e.startsWith("//"),
+    r;
+  try {
+    r = new URL(t ? `https:${e}` : e);
+  } catch {
+    let E = e.replace(/^([a-z][a-z0-9+.-]*:)?\/\/[^/?#]*@/i, "$1//");
+    return uS(E)
+      ? { text: uie, cut: !0 }
+      : { text: E, cut: !1, stripped: E !== e };
+  }
+  let o =
+      r.password !== "" ||
+      (r.username !== "" && /(^|\+)https?:$/i.test(r.protocol)),
+    d = o;
+  if (o) ((r.username = ""), (r.password = ""));
+  let _ = !1;
+  if (uS(Lr(r.search))) ((r.search = ""), (r.hash = ""), (_ = !0));
+  let p = r.href;
+  return { text: t ? p.replace(/^https:/, "") : p, cut: _, stripped: d };
+}
+function Lr(e) {
+  try {
+    return decodeURIComponent(e);
+  } catch {
+    return e;
+  }
+}
+function Ret(e, t) {
+  if (t.trim() === "") return { value: t, cut: !1, stripped: !1 };
+  let r = /^(?:INPUT_)?GOPROXY$/i.test(e),
+    o = !/^INPUT_/i.test(e) && $t(e) !== void 0,
+    d = !1,
+    _ = !1,
+    p = !1,
+    E = r ? /(\s*[,|]\s*|\s+)/ : o ? /(\s+)/ : null,
+    N = (E === null ? [t] : t.split(E))
+      .flatMap((L) => {
+        if (p) return [];
+        let U = /^([A-Za-z0-9_.-]+=)(?=[a-z][a-z0-9+.-]*:\/\/|\/\/)/i.exec(L),
+          x = U ? U[1] : "",
+          w = L.slice(x.length);
+        if (!w.startsWith("//") && !Cr.test(w)) {
+          if (L.trim() !== "" && uS(L))
+            return ((d = !0), (_ = !0), [r ? "off" : uie]);
+          return [L];
+        }
+        let C = br(w);
+        if (
+          ((_ ||= C.cut || C.stripped === !0),
+          C.cut || (C.stripped && (r || o)))
+        ) {
+          if (((d = !0), r)) return ((p = !0), ["off"]);
+        }
+        return [x + C.text];
+      })
+      .join("");
+  if (r) N = N.replace(/[,|\s]+$/, "");
+  if (N !== "" && uS(N))
+    return { value: r ? "off" : uie, cut: !0, stripped: !0 };
+  return { value: N === "" ? uie : N, cut: d, stripped: _ };
+}
+function dar(e) {
+  return Wt(e).respelled;
+}
+function die(e) {
+  let t = Wt(e);
+  for (let [r, o] of Object.entries(e)) {
+    if (o === void 0) continue;
+    let d = typeof o === "string" ? o : String(o),
+      _ = ket(r, d);
+    if (_ !== void 0 && _ !== d)
+      ((t.respelled[r] = _), t.lostCredential.push(r));
+  }
+  return t;
+}
+function Wt(e) {
+  let t = {},
+    r = [];
+  for (let [o, d] of Object.entries(e)) {
+    if (d === void 0 || !JRe(o)) continue;
+    let _ = typeof d === "string" ? d : String(d),
+      p = Ret(o, _);
+    if (p.value !== _) {
+      if (((t[o] = p.value), p.cut || p.stripped)) r.push(o);
+    }
+    if (p.cut) {
+      let E = uxn(o, p.value);
+      if (E !== void 0 && !cxn(e, E.name) && t[E.name] === void 0)
+        t[E.name] = E.value;
+    }
+  }
+  return { respelled: t, lostCredential: r };
+}
+function uxn(e, t) {
+  let r = /^INPUT_/i.test(e) ? void 0 : $t(e);
+  if (r === void 0) return;
+  let o = t
+      .split(/\s+|,|\|/)
+      .map((_) =>
+        _.replace(/^[A-Za-z0-9_.-]+=(?=[a-z][a-z0-9+.-]*:\/\/|\/\/)/i, ""),
+      )
+      .find((_) => _.startsWith("//") || /^https?:\/\//i.test(_)),
+    d = uie;
+  if (o !== void 0)
+    try {
+      let _ = new URL(o.startsWith("//") ? `https:${o}` : o).origin;
+      d = _ === "null" ? uie : `${_}/`;
+    } catch {
+      d = uie;
+    }
+  return { name: r, value: d };
+}
+function QRe() {
+  return (
+    N5t(),
+    de
+      ? Tr.flatMap((e) => [
+          e,
+          `INPUT_${e}`,
+          ...(e.startsWith("NPM_CONFIG_") ? [e.toLowerCase()] : []),
+        ])
+      : []
+  );
+}
+function N5t() {
+  let e = process.env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB;
+  de ??= Lt(e) || (Lt(process.env.GITHUB_ACTIONS) && !Dr(e));
+}
+var de;
+function par() {
+  de = void 0;
+}
+function Dr(e) {
+  return e !== void 0 && /^(?:0|false|no|off)$/i.test(String(e).trim());
+}
+function Lt(e) {
+  let t = e === void 0 ? void 0 : String(e).trim().toLowerCase();
+  return t === "1" || t === "true" || t === "yes" || t === "on";
+}
+var kge = Or.flatMap((e) => [e, `INPUT_${e}`]),
+  Ve = /CONN(ECT(ION)?)?_?STR(ING)?S?(?=$|[_0-9])/i;
+function dxn(e) {
+  return Ve.test(e) || Ve.test(Kt(e));
+}
+var Bt = ["OAuth", "NextAuth"];
+function Kt(e) {
+  return Bt.reduce(
+    (t, r) => t.replaceAll(r, r[0] + r.slice(1).toLowerCase()),
+    e,
+  )
+    .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
+    .replace(/([A-Z])([A-Z][a-z])/g, "$1_$2");
+}
+var Hr = ["CONN", "CONNECT", "CONNECTION"].flatMap((e) =>
+    ["", "_"].flatMap((t) =>
+      ["STR", "STRING", "STRS", "STRINGS"].flatMap((r) => {
+        let o = `*${k(`${e}${t}${r}`)}`;
+        return [o, `${o}_*`, `${o}[0-9]*`];
+      }),
+    ),
+  ),
+  jt = [
+    "TOKEN",
+    "SECRET",
+    "PASSWORD",
+    "PASSWD",
+    "PASSPHRASE",
+    "KEY",
+    "AUTH",
+    "COOKIE",
+    "PAT",
+    "DSN",
+    "WEBHOOK",
+    "CREDENTIAL",
+    "CREDENTIALS",
+    "CREDS",
+    "APIKEY",
+    "ACCESSKEY",
+    "SECRETKEY",
+    "ACCOUNTKEY",
+    "PRIVATEKEY",
+    "AUTHKEY",
+    "SSHKEY",
+    "SIGNINGKEY",
+    "MASTERKEY",
+    "DEPLOYKEY",
+    "ENCRYPTIONKEY",
+    "PGPASSWORD",
+    "SSHPASS",
+  ],
+  zt = ["PWD", "PASS", "JWT"],
+  Vt = ["TOKEN", "SECRET", "PASSWORD", "PASSWD", "PASSPHRASE"],
+  Yt = ["KEY", "SECRET", "PASSWORD", "CREDENTIAL"],
+  Dt = new RegExp(
+    `((^|_)(${jt.join("|")}|(${Yt.join("|")})S)|_(${zt.join("|")})|(${Vt.join("|")}))(?=$|[_0-9])`,
+    "i",
+  ),
+  wr = ["CLOUDSDK_PROXY_PASSWORD", "GIT_CONFIG_KEY_[0-9]*"],
+  vr = /^GIT_CONFIG_KEY_[0-9][A-Za-z0-9_]*$/;
+function Fr(e) {
+  return /^GIT_CONFIG_(?:COUNT|PARAMETERS|(?:KEY|VALUE)_[0-9]+)$/.test(e);
+}
+function EBe(e) {
+  return Fr(e) || Mr.test(e);
+}
+var Mr =
+  /^(?:(?:https?|ftp|all|no)_proxy|npm_config_(?:https?_)?proxy|npm_config_noproxy|yarn_proxy|(?:yarn|global_agent|docker|claude_code)_(?:https?|no)_proxy|cloudsdk_proxy_[a-z]+|electron_get_use_proxy)$/i;
+function pxn(e, t) {
+  let r = ket(e, t);
+  return r === void 0 ? uS(t) : r !== t;
+}
+function ket(e, t) {
+  if (iRt(e) === "GOFLAGS") return t.length > Ae ? "" : mi(t);
+  if (!qt.has(iRt(e))) return;
+  let r = t.length > Ae ? null : ZRe(t);
+  if (r === null) return "";
+  N5t();
+  let o = r.map((p, E) => {
+    let O =
+      E > 0 && /^(?:-D|--define)$/.test(xge(r[E - 1])) ? `-D${p}` : tn(xge(p));
+    return { raw: p, word: O, residual: en.test(O), goes: !1 };
+  });
+  for (let p = 0; p < o.length; p++) {
+    let E = o[p];
+    if (E.residual) continue;
+    let O = p > 0 ? o[p - 1].word : null,
+      I = o[p + 1];
+    if (
+      ((E.goes =
+        E.goes ||
+        jr(E.word, O) ||
+        (I !== void 0 &&
+          !I.residual &&
+          !ge(I.word) &&
+          Ye.test(E.word) &&
+          uS(`${E.word} ${I.word}`))),
+      E.goes && I !== void 0 && !ge(I.word) && Ye.test(E.word))
+    )
+      I.goes = !0;
+  }
+  for (let p = 1; p < o.length; p++) {
+    if (Gr.test(o[p - 1].word)) o[p].goes = !0;
+    if (o[p].goes && !xge(o[p].raw).startsWith("-") && xr(o[p - 1].word))
+      o[p - 1].goes = !0;
+  }
+  let d = o.filter((p) => !p.goes);
+  e: while (sRt(d.filter((p) => !p.residual).flatMap(Ht))) {
+    let p = d.filter((E) => !E.residual);
+    for (let E = 2; E <= 4; E++)
+      for (let O = 0; O + E <= p.length; O++) {
+        let I = p.slice(O, O + E);
+        if (sRt(I.flatMap(Ht))) {
+          for (let N of I) N.goes = !0;
+          d = d.filter((N) => !N.goes);
+          continue e;
+        }
+      }
+    for (let E of p) E.goes = !0;
+    d = d.filter((E) => !E.goes);
+  }
+  if (d.length === o.length) return t;
+  let _ = Jr.has(iRt(e)) ? Ur : Xt;
+  return d.every((p) => _.test(p.raw)) ? d.map((p) => p.raw).join(" ") : "";
+}
+var Xt = /^[A-Za-z0-9_.,:=\/@+~*?-]+$/,
+  Ur = /^[A-Za-z0-9_.,:=\/@+~|*?-]+$/,
+  Ye =
+    /(?:\b(?:Bearer|Basic|token)|authorization\s*[:=]\s*["']?(?:[a-z][a-z0-9_-]*)?|-token\s*[:=])\s*["']?$/i;
+function xr(e) {
+  return gxn(e) === "" || hxn(e) === "" || kr.test(e) || Qt.test(e);
+}
+var kr =
+    /^(?:-D|--define|-f|--file|-pl|--projects|-rf|--resume-from|-l|--log-file|-t|--toolchains|-gt|--global-toolchains|-itr|--install-toolchains|-P|--activate-profiles|-b|--builder|-T|--threads|-emp|--encrypt-master-password|-ep|--encrypt-password)$/,
+  Gr = /^(?:-emp|--encrypt-master-password|-ep|--encrypt-password)$/,
+  Wr = /^(?:-emp|--encrypt-master-password|-ep|--encrypt-password)=./s;
+function ge(e) {
+  return (
+    /^-D[A-Za-z_][\w.-]*=.+$/s.test(e) ||
+    /^-D[A-Za-z_]\w*(?:\.\w+)+=$/.test(e) ||
+    /^-D[A-Za-z_][A-Za-z_.]*$/.test(e) ||
+    (e.startsWith("-J-") && ge(e.slice(2))) ||
+    /^--[a-z][a-z0-9-]*(?:=.*)?$/s.test(e) ||
+    Kr.test(e) ||
+    /^(?:@|-[A-Za-z]{1,4}\d{0,2}$)/.test(e)
+  );
+}
+var Kr =
+  /^-(?:X(?:mx|ms|ss|mn|rs|int|comp|mixed|batch|diag|debug|future|prof|noclassgc|internalversion|check:jni|share:(?:on|off|auto|dump)|verify(?::[a-z]+)?|log(?::.*)?|loggc:.+|bootclasspath(?:\/[ap])?:.+|runjdwp:.+|dock:.+|startOnFirstThread|showSettings(?::[a-z]+)?)[0-9kKmMgGtT]*$|XX:[+-]?[A-Za-z]\w*(?:=.*)?$|(?:javaagent|agentlib|agentpath):.|verbose(?::[a-z]+)?$|[ed](?:s?a)(?::[a-z][\w$]*(?:\.[\w$]+)*(?:\.\.\.)?)?$|(?:server|client|d64|showversion)$|-(?:add-opens|add-exports|add-reads|add-modules|limit-modules|patch-module|module-path|upgrade-module-path|class-path|enable-native-access|illegal-access|enable-preview|source|release)(?:=.*)?$|(?:cp|classpath|p)$)/s;
+function sRt(e) {
+  return uS(
+    e
+      .map((t) =>
+        ge(t) ? `; ${t.includes("=") ? t.replace(/^[^=]*=/, "") : ""}` : t,
+      )
+      .join(" "),
+  );
+}
+function jr(e, t) {
+  let r = Zt(e);
+  if (r === null) return wt(e, t);
+  let o = /^-D([^=]+)=/.exec(e)[1];
+  return (
+    zr(e) ||
+    nn(o, e.slice(o.length + 3)) ||
+    sRt(r) ||
+    r.some(
+      (d, _) =>
+        wt(d, _ > 0 ? r[_ - 1] : null) ||
+        (_ + 1 < r.length &&
+          !ge(r[_ + 1]) &&
+          Ye.test(d) &&
+          uS(`${d} ${r[_ + 1]}`)),
+    )
+  );
+}
+function Ht(e) {
+  return Zt(e.word) ?? [e.word];
+}
+function Zt(e) {
+  let t = /^-D[^=]+=\s*(-.*)$/s.exec(e);
+  if (t === null) return null;
+  return (ZRe(t[1]) ?? []).map(xge).filter((r) => !en.test(r));
+}
+function zr(e) {
+  let t = /^-D[^=]+=\s*(-.*)$/s.exec(e);
+  return t !== null && ZRe(t[1]) === null;
+}
+function wt(e, t) {
+  if (Wr.test(e)) return !0;
+  let r = /^-D([^=]+)=(.+)$/s.exec(e);
+  if (r !== null) {
+    let [, o, d] = r;
+    if (nn(o, d) || uS(d)) return !0;
+    if (de === !0)
+      return (
+        mxn.test(o) ||
+        e.includes("\\") ||
+        (!Yr.test(o) &&
+          !(
+            /^sonar\./i.test(o) &&
+            !F5t(o) &&
+            !/key.?store|cert|pkcs|p12|pfx|\.pem$/i.test(o)
+          ) &&
+          vt(d))
+      );
+    return !1;
+  }
+  if (uS(e)) return !0;
+  if (de === !0) return !Vr.test(e) && !(t !== null && Qt.test(t)) && vt(e);
+  return !1;
+}
+function vt(e) {
+  return /[\\/]|^[@~]/.test(e);
+}
+var Vr =
+    /^-(?:X|XX:|javaagent:|agentlib:|agentpath:|verbose|ea\b|da\b|esa$|dsa$|server$|client$|d64$|showversion$|-(?:add-opens|add-exports|add-reads|add-modules|limit-modules|patch-module|module-path|upgrade-module-path|class-path|enable-native-access|illegal-access|enable-preview|source|release)\b|(?:cp|classpath|p)$)/,
+  Qt =
+    /^-(?:-(?:add-opens|add-exports|add-reads|add-modules|limit-modules|patch-module|module-path|upgrade-module-path|class-path|enable-native-access|source|release)|cp|classpath|p)$/,
+  Yr =
+    /^(?:javax\.net\.ssl\.trustStore|java\.io\.tmpdir|java\.security\.egd|java\.library\.path|jna\.library\.path|java\.class\.path|(?:https?|ftp)\.nonProxyHosts|socksNonProxyHosts|jna\.tmpdir|java\.util\.logging\.config\.file|log4j2?\.configurationFile|logback\.configurationFile|logging\.config|user\.dir|file\.encoding|maven\.multiModuleProjectDirectory|library\.jansi\.path|jansi\.tmpdir)$/i,
+  fxn = [
+    "JAVA_TOOL_OPTIONS",
+    "JDK_JAVA_OPTIONS",
+    "_JAVA_OPTIONS",
+    "IBM_JAVA_OPTIONS",
+    "OPENJ9_JAVA_OPTIONS",
+    "MAVEN_OPTS",
+    "GRADLE_OPTS",
+    "MAVEN_ARGS",
+    "MAVEN_CONFIG",
+    "ANT_OPTS",
+    "ANT_ARGS",
+    "JAVA_OPTS",
+    "SBT_OPTS",
+    "JVM_OPTS",
+    "LEIN_JVM_OPTS",
+    "ES_JAVA_OPTS",
+    "SONAR_SCANNER_OPTS",
+    "SONAR_SCANNER_JAVA_OPTS",
+  ];
+function iRt(e) {
+  return e
+    .toUpperCase()
+    .replace(/^INPUT_/, "")
+    .replace(/-/g, "_");
+}
+var Jr = new Set([
+    "JAVA_TOOL_OPTIONS",
+    "JDK_JAVA_OPTIONS",
+    "_JAVA_OPTIONS",
+    "IBM_JAVA_OPTIONS",
+    "OPENJ9_JAVA_OPTIONS",
+  ]),
+  qt = new Set(fxn),
+  en =
+    /^-D(?:(?:(?:https?|ftp)\.proxy(?:User|Password)|socksProxy(?:User|Password)|java\.net\.socks\.(?:username|password))=\S*$|[\w.-]*trust-?store-?password=changeit$)/i;
+function ZRe(e) {
+  let t = [],
+    r = "",
+    o = !1,
+    d = 0;
+  while (d < e.length) {
+    let _ = e[d];
+    if (
+      _ === " " ||
+      _ === "\t" ||
+      _ ===
+        `
+` ||
+      _ === "\r"
+    ) {
+      if (o) (t.push(r), (r = ""), (o = !1));
+      d++;
+      continue;
+    }
+    if (_ === "'" || _ === '"') {
+      let p = e.indexOf(_, d + 1);
+      if (p === -1) return null;
+      ((r += e.slice(d + 1, p)), (o = !0), (d = p + 1));
+      continue;
+    }
+    ((r += _), (o = !0), d++);
+  }
+  if (o) t.push(r);
+  return t;
+}
+function Re(e) {
+  return e
+    .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
+    .replace(/([A-Z])([A-Z][a-z])/g, "$1_$2");
+}
+var mxn =
+  /^(?:maven\.(?:user\.settings|global\.settings|installation\.settings|project\.settings|settings\.security|repo\.local|home)|settings\.security|gradle\.user\.home|sbt\.(?:boot\.credentials|repository\.config|global\.base|ivy\.home|boot\.directory)|user\.home)$/i;
+function gxn(e) {
+  if (/^-(?:show-version|strict-checksums)$/.test(e)) return null;
+  let t =
+    /^(?:--?settings|--?global-settings|--?install-settings|--?project-settings|-gs|-is|-ps|-s)(?:=(.+))?$/.exec(
+      e,
+    ) ?? /^-g?s=?(.+)$/.exec(e);
+  return t === null ? null : (t[1] ?? "");
+}
+function hxn(e) {
+  let t = /^-{1,2}(?:ivy|sbt-dir|sbt-boot)(?:=(.+))?$/.exec(e);
+  return t === null ? null : (t[1] ?? "");
+}
+function xge(e) {
+  return e.replace(/^-J(?=-)/, "");
+}
+function tn(e) {
+  return e.replace(/^--define=/, "-D");
+}
+function aRt(e) {
+  let t = [];
+  for (let r = 0; r < e.length; r++) {
+    let o = e[r];
+    if (/^(?:-D|--define)$/.test(o) && r + 1 < e.length)
+      ((r += 1), t.push(`-D${e[r]}`));
+    else t.push(tn(o));
+  }
+  return t;
+}
+function nn(e, t) {
+  return rn(e, t) && !/^(?:[\\/~]|[a-z]:[\\/]|file:)/i.test(t);
+}
+function rn(e, t) {
+  let r = e.split(".").at(-1) ?? "";
+  return (
+    F5t(e) &&
+    (Xr.test(Re(e)) ||
+      !/(?:user(?:name)?|id|store|file|path|dir|location|url|host|port|alias|type)$/i.test(
+        r,
+      )) &&
+    !_xn(e, t)
+  );
+}
+var Xr = /(?:PASSWORD|PASSWD|SECRET)S?[._-]ID$/i,
+  Zr = new Set(["sonar.login", "sonar.token", "sonar.password"]),
+  Qr = /^(?:projectKey|moduleKey|componentKey|ruleKey|resourceKey)$/,
+  qr = new Set(["sonar.pullrequest.key"]);
+function _xn(e, t) {
+  let r = e.split(".").at(-1) ?? "";
+  return (
+    /^(?:\d+[a-z]{0,2}|true|false)$/i.test(t) &&
+    !kq(r.replace(/-/g, "_")) &&
+    !Je(e)
+  );
+}
+function F5t(e) {
+  if (Zr.has(e.toLowerCase())) return !0;
+  let t = e.split(".").at(-1) ?? "",
+    r = Re(t)
+      .split(/[_-]+/)
+      .filter(Boolean)
+      .map((d) => d.toUpperCase().replace(/\d+$/, ""))
+      .filter(Boolean),
+    o = r.at(-1);
+  if (!o) return !1;
+  if (/^sonar\./i.test(e)) {
+    if (o === "SECURED") return !0;
+    if ((Qr.test(t) || qr.has(e.toLowerCase())) && !Je(e)) return !1;
+  }
+  if (kq(t.replace(/-/g, "_")) || Je(e) || Ve.test(Re(e).replace(/[.-]/g, "_")))
+    return !0;
+  return o === "USERNAME" || (o === "USER" && r.length > 1);
+}
+function Je(e) {
+  let t = Re(e)
+      .toUpperCase()
+      .split(/[._-]+/)
+      .filter(Boolean),
+    r = t.at(-1) ?? "",
+    o = t.at(-2) ?? "";
+  return (
+    t.slice(0, -1).some((d) => ei.test(d)) &&
+    (!ti.test(r) ||
+      (/^IDS?$/.test(r) && /^(?:PASSWORDS?|PASSWD|SECRETS?)$/.test(o)))
+  );
+}
+var ei =
+    /^(?:PASSWORDS?|PASSWD|PASSPHRASE|SECRETS?|TOKENS?|KEYS?|APIKEY|CREDENTIALS?)$/,
+  ti =
+    /^(?:USER(?:NAME)?|ID|IDS|STORE|FILE|FILES|PATH|PATHS|DIR|DIRECTORY|LOCATION|URL|URI|HOST|PORT|ALIAS|TYPE|PREFERENCE|SCHEMES?|ENABLED?|DISABLED?|MODE|CLASS|PROVIDER|ALGORITHM|FORMAT|LENGTH|SIZE|BITS|TIMEOUT|TTL|HEADER|NAME|NAMES|PREFIX|SUFFIX|VERSION|ENCODING|POLICY|COUNT|CACHE|SERVICE|ENDPOINT|REGION|SCOPE|SCOPES|AUDIENCE|ISSUER|EXPIRY|EXPIRATION|ROTATION|REQUIRED|OPTIONAL|SECONDS?|SECS?|MS|MILLIS(?:ECONDS)?|MINUTES?|MINS?|HOURS?|DAYS?|AGE|CAPACITY|RATE|INTERVAL|DELAY|PERIOD|DURATION|VALIDITY|LIFETIME|WINDOW|MAX|MIN|LIMIT|THRESHOLD|BUDGET|RETRY|RETRIES|ATTEMPTS)$/;
+function kq(e) {
+  let t = e.replace(ni, "").replace(/-/g, "_");
+  return (Dt.test(t) || Dt.test(Kt(t)) || dxn(t) || xet.test(t)) && !vr.test(e);
+}
+var ni = /^AUTH0_/i,
+  ri = "[Aa][Uu][Tt][Hh]0_*",
+  on = [
+    "BUILD",
+    "LOCAL",
+    "MIRROR",
+    "PATH",
+    "WITH",
+    "WITHOUT",
+    "CACHE",
+    "DISABLE",
+    "IGNORE",
+    "ONLY",
+  ],
+  ii = "(?:[A-Za-z0-9]+(?:___[A-Za-z0-9]+)*__)+[A-Za-z]{2,}",
+  xet = new RegExp(
+    `^(?:INPUT_)?BUNDLE_(?!(?:${on.join("|")})__(?!${ii}$))\\w*__`,
+    "i",
+  ),
+  oi =
+    "[Bb][Uu][Nn][Dd][Ll][Ee]_*__*|[Ii][Nn][Pp][Uu][Tt]_[Bb][Uu][Nn][Dd][Ll][Ee]_*__*",
+  si = on
+    .flatMap((e) => [
+      `[Bb][Uu][Nn][Dd][Ll][Ee]_${k(e)}__*`,
+      `[Ii][Nn][Pp][Uu][Tt]_[Bb][Uu][Nn][Dd][Ll][Ee]_${k(e)}__*`,
+    ])
+    .join("|"),
+  ai = new Set([
+    "CLAUDE_CODE_CLIENT_KEY",
+    "CLAUDE_CODE_API_KEY_HELPER_TTL_MS",
+    "CLAUDE_CODE_PROXY_AUTH_HELPER_TTL_MS",
+    "CLAUDE_CODE_ENABLE_PROXY_AUTH_HELPER",
+    "CLAUDE_CODE_AUTH_FAIL_EXIT_MS",
+    "CLAUDE_CODE_ENABLE_TOKEN_USAGE_ATTACHMENT",
+    "CLAUDE_CODE_IDLE_TOKEN_THRESHOLD",
+    "CLAUDE_CODE_RESUME_TOKEN_THRESHOLD",
+    "CLAUDE_CODE_ARG_KEY_SHAPE",
+  ]),
+  li = /^CLAUDE_CODE_SKIP_[A-Z0-9_]+_AUTH$/;
+function lRt(e) {
+  return ai.has(e) || li.test(e);
+}
+var far = new Set([
+    "GITHUB_TOKEN",
+    "GH_TOKEN",
+    "GH_ENTERPRISE_TOKEN",
+    "GITHUB_ENTERPRISE_TOKEN",
+  ]),
+  sn = [
+    "INPUT_",
+    "ORG_GRADLE_PROJECT_",
+    "POETRY_PYPI_TOKEN_",
+    "POETRY_HTTP_BASIC_",
+    "CARGO_REGISTRIES_",
+    "CONAN_LOGIN_USERNAME_",
+    "CONAN_PASSWORD_",
+  ],
+  Xe = ["POETRY_HTTP_BASIC_", "CONAN_LOGIN_USERNAME_"],
+  ci = new RegExp(`^(?:${sn.join("|")})`, "i"),
+  ui = new RegExp(`^(?:INPUT_)?(?:${Xe.join("|")})`, "i");
+function Het(e) {
+  let t = e.replace(/-/g, "_");
+  return (
+    ci.test(t) && (ui.test(t) || /USER(?:_?NAME)?_?[0-9]*$/i.test(t) || kq(t))
+  );
+}
+var di = Xe.flatMap((e) => [
+    `${k(e)}*`,
+    `${k(`INPUT_${e}`)}*`,
+    `${k(`INPUT_${e.replace(/_/g, "-")}`).replace(/^INPUT-/, "INPUT_")}*`,
+  ])
+    .concat(
+      sn
+        .filter((e) => !Xe.includes(e))
+        .flatMap((e) =>
+          ["USER", "USERNAME", "USER_NAME", "USER-NAME"].flatMap((t) =>
+            ["", "[0-9]", "[0-9][0-9]", "[_-][0-9]", "[_-][0-9][0-9]"].map(
+              (r) => `${k(e)}*${k(t)}${r}`,
+            ),
+          ),
+        ),
+    )
+    .join("|"),
+  ue = "__CLAUDE_CC_KEEP_";
+function mar(e, t = {}) {
+  let r = new Set((t.denied ?? []).map((_) => _.toUpperCase())),
+    o = new Set((t.masked ?? []).map((_) => _.toUpperCase())),
+    d = {};
+  for (let [_, p] of Object.entries(e)) {
+    if (r.has(_.toUpperCase())) continue;
+    if (o.has(_.toUpperCase())) continue;
+    if (
+      p !== void 0 &&
+      p.trim() !== "" &&
+      /^[A-Za-z_][A-Za-z0-9_]*$/.test(_) &&
+      (JRe(_) || ket(_, "") !== void 0)
+    )
+      d[`${ue}${_}`] = p;
+  }
+  return d;
+}
+function gar({ sandboxMasked: e = [] } = {}) {
+  let t = e.filter((H) => /^[A-Za-z_][A-Za-z0-9_]*$/.test(H)),
+    o = `case "$__cc_name" in (${t.length > 0 ? t.join("|") : "''__cc_none__"}) \\builtin true;; (*) \\builtin false;; esac`,
+    d = jt
+      .map(k)
+      .concat(Yt.map((H) => k(`${H}S`)))
+      .flatMap((H) => [H, `${H}[_0-9]*`, `*_${H}`, `*_${H}[_0-9]*`])
+      .concat(
+        Vt.map(k).flatMap((H) => [`*${H}`, `*${H}[_0-9]*`]),
+        zt.map(k).flatMap((H) => [`*_${H}`, `*_${H}[_0-9]*`]),
+      )
+      .concat(Hr)
+      .join("|"),
+    _ = [...kge, ...QRe(), "GITHUB_TOKEN", "GH_TOKEN"],
+    p = _.join(" "),
+    E = _.map((H) => H.toUpperCase()).join(" "),
+    O = `__cc_uc=; ( LC_ALL=C \\builtin eval ': "\${__cc_uc^^}"' ) 2>/dev/null && __cc_uc=b; \\builtin test -n "$__cc_uc" || { ( LC_ALL=C \\builtin eval ': "\${(U)__cc_uc}"' ) 2>/dev/null && __cc_uc=z; } || \\builtin true`,
+    I = `__cc_upper="$__cc_name"; case "$__cc_uc" in b) LC_ALL=C \\builtin eval '__cc_upper="\${__cc_name^^}"';; z) LC_ALL=C \\builtin eval '__cc_upper="\${(U)__cc_name}"';; esac`,
+    N = `{ ! ${o} && (\\builtin unset -v "$__cc_name") && \\builtin unset -v "$__cc_name"; }`,
+    L =
+      '\\builtin eval "__cc_set=\\${$__cc_name+x}"; \\builtin test -n "$__cc_set"',
+    U = "{ \\builtin compgen -v || \\builtin set; }",
+    x = Bt.map(
+      (H) =>
+        `__cc_fold="\${__cc_fold//${H}/${H[0] + H.slice(1).toLowerCase()}}"`,
+    ).join("; "),
+    w = (H, ee = "__cc_fold") =>
+      `__cc_fold="\${${H}}"; ${x}; __cc_split=; __cc_prev=; __cc_i=0; while \\builtin test "$__cc_i" -lt "\${#${ee}}"; do __cc_c="\${${ee}:$__cc_i:1}"; case "$__cc_prev$__cc_c" in [[:lower:][:digit:]][[:upper:]]) __cc_split="\${__cc_split}_";; [[:upper:]][[:upper:]]) case "\${${ee}:$((__cc_i+1)):1}" in [[:lower:]]) __cc_split="\${__cc_split}_";; esac;; esac; __cc_split="$__cc_split$__cc_c"; __cc_prev="$__cc_c"; __cc_i=$((__cc_i+1)); done; case "$__cc_split" in ''|${d}) ${N};; esac`,
+    C = w("__cc_name"),
+    F =
+      "__cc_ncm=; \\builtin shopt -q nocasematch && __cc_ncm=1; \\builtin shopt -u nocasematch || \\builtin true",
+    K =
+      '\\builtin test -z "$__cc_ncm" || \\builtin shopt -s nocasematch || \\builtin true',
+    ce =
+      '{ (\\builtin unset -v "$__cc_name") && \\builtin eval "$__cc_name=\\$__cc_r; \\builtin export $__cc_name"; }',
+    st =
+      '{ (\\builtin unset -v "$__cc_name") && \\builtin unset -v "$__cc_name"; }',
+    re = Mt.join(" "),
+    ie = [...qt, "GOFLAGS"].join(" "),
+    X = ((H) => `'${H.replace(/'/g, "'\\''")}'`)(uie),
+    le = Object.entries(
+      Object.entries(Ut).reduce(
+        (H, [ee, Fe]) => ((H[Fe] ??= []).push(ee), H),
+        {},
+      ),
+    )
+      .map(([H, ee]) => {
+        let Fe = [H, ...(Gt[H] ?? [])].map((Kn) => `\\\${${Kn}:+x}`).join("");
+        return `for __cc_name in ${ee.join(" ")}; do \\builtin eval "__cc_val=\\\${$__cc_name-}"; \\builtin test "$__cc_val" = ${X} || \\builtin continue; \\builtin eval "__cc_set=${Fe}"; \\builtin test -n "$__cc_set" || { __cc_name=${H}; __cc_r=${X}; { (\\builtin unset -v "$__cc_name") && \\builtin eval "$__cc_name=\\$__cc_r; \\builtin export $__cc_name"; }; }; \\builtin break; done`;
+      })
+      .join("; "),
+    V =
+      "CARGO_REGISTRIES_*_INDEX|POETRY_REPOSITORIES_*_URL|[Cc]argo_[Rr]egistries_*_[Ii]ndex|npm_config_registry|[Nn][Pp][Mm]_[Cc][Oo][Nn][Ff][Ii][Gg]_[Rr][Ee][Gg][Ii][Ss][Tt][Rr][Yy]",
+    Gn = `\\builtin eval "$({ \\builtin compgen -v || \\builtin set; } 2>/dev/null | while \\builtin read -r __cc_line; do __cc_v="\${__cc_line%%=*}"; __cc_v="\${__cc_v#${ue}}"; case "$__cc_v" in (''|[0-9]*|*[!A-Za-z0-9_]*) ;; (CARGO_REGISTRIES_*_INDEX|POETRY_REPOSITORIES_*_URL|[Cc]argo_[Rr]egistries_*_[Ii]ndex|npm_config_registry|[Nn][Pp][Mm]_[Cc][Oo][Nn][Ff][Ii][Gg]_[Rr][Ee][Gg][Ii][Ss][Tt][Rr][Yy]) \\builtin printf '__cc_visit %s\\n' "$__cc_v";; esac; done)"`,
+    Wn = `\\builtin eval "$({ \\builtin compgen -v || \\builtin set; } 2>/dev/null | while \\builtin read -r __cc_line; do __cc_v="\${__cc_line%%=*}"; case "$__cc_v" in (*[!A-Za-z0-9_]*) ;; (${ue}*) \\builtin printf '\\\\builtin unset -v %s\\n' "$__cc_v";; esac; done)"`,
+    Bn = `__cc_visit() { ${`__cc_name=$1; case "$__cc_name" in ''|[0-9]*|*[!A-Za-z0-9_]*) return 0;; esac; ! ${o} || return 0; \\builtin eval "__cc_k=\\\${${ue}$__cc_name+x}; __cc_r=\\\${${ue}$__cc_name-}; __cc_val=\\\${$__cc_name-}; __cc_has=\\\${$__cc_name+x}"; if \\builtin test -n "$__cc_k"; then \\builtin test "$__cc_has$__cc_val" = "x$__cc_r" || { (\\builtin unset -v "$__cc_name") && \\builtin eval "$__cc_name=\\$__cc_r; \\builtin export $__cc_name"; }; else \\builtin test -n "$__cc_val" || return 0; case " ${ie} " in *" $__cc_name "*) { (\\builtin unset -v "$__cc_name") && \\builtin unset -v "$__cc_name"; };; *) __cc_r=${X}; { (\\builtin unset -v "$__cc_name") && \\builtin eval "$__cc_name=\\$__cc_r; \\builtin export $__cc_name"; };; esac; fi; return 0`}; }; for __cc_n in ${re} ${ie}; do __cc_visit "$__cc_n"; done; ${Gn}; ${le}; ${Wn}; \\builtin unset -f __cc_visit`;
+  return `{ __cc_ncm=; \\builtin shopt -q nocasematch && __cc_ncm=1; \\builtin shopt -u nocasematch || \\builtin true; __cc_uc=; ( LC_ALL=C \\builtin eval ': "\${__cc_uc^^}"' ) 2>/dev/null && __cc_uc=b; \\builtin test -n "$__cc_uc" || { ( LC_ALL=C \\builtin eval ': "\${(U)__cc_uc}"' ) 2>/dev/null && __cc_uc=z; } || \\builtin true; while \\builtin read -r __cc_line; do __cc_name="\${__cc_line%%=*}"; case "$__cc_name" in ''|[0-9]*|*[!A-Za-z0-9_]*) \\builtin continue;; esac; __cc_upper="$__cc_name"; case "$__cc_uc" in b) LC_ALL=C \\builtin eval '__cc_upper="\${__cc_name^^}"';; z) LC_ALL=C \\builtin eval '__cc_upper="\${(U)__cc_name}"';; esac; case " ${E} " in *" $__cc_upper "*) ${N}; \\builtin continue;; esac; case "$__cc_name" in ${di}) ${N}; \\builtin continue;; esac; case "$__cc_name" in ${wr.join("|")}) ;; ${ri}) __cc_rest="\${__cc_name#*_}"; case "$__cc_rest" in ${d}) ${N};; *[[:lower:][:digit:]][[:upper:]]*|*[[:upper:]][[:upper:]][[:lower:]]*) ${w("__cc_rest")};; esac;; ${d}) ${N};; ${si}) __cc_rest="\${__cc_name#*__}"; __cc_rest="\${__cc_rest//___/-}"; case "$__cc_rest" in *__*[A-Za-z][A-Za-z]) ${N};; *) case "$__cc_name" in *[[:lower:][:digit:]][[:upper:]]*|*[[:upper:]][[:upper:]][[:lower:]]*) ${C};; esac;; esac;; ${oi}) ${N};; *[[:lower:][:digit:]][[:upper:]]*|*[[:upper:]][[:upper:]][[:lower:]]*) ${C};; esac; done < <({ \\builtin compgen -v || \\builtin set; }); for __cc_name in ${p}; do \\builtin eval "__cc_set=\\\${$__cc_name+x}"; \\builtin test -n "$__cc_set" && ${N}; done; ${Bn}; \\builtin test -z "$__cc_ncm" || \\builtin shopt -s nocasematch || \\builtin true; \\builtin unset -v __cc_line __cc_name __cc_rest __cc_set __cc_val __cc_r __cc_v __cc_k __cc_has __cc_n __cc_split __cc_fold __cc_prev __cc_i __cc_c __cc_ncm __cc_uc __cc_upper; \\builtin true; } 2>/dev/null`;
+}
+function Hge(e = {}) {
+  let t = { ...process.env, ...e },
+    r = new Set(yxn(t));
+  for (let [o, d] of Object.entries(t))
+    if (
+      d !== void 0 &&
+      !EBe(o) &&
+      !JRe(o) &&
+      ket(o, "") === void 0 &&
+      pxn(o, typeof d === "string" ? d : String(d))
+    )
+      r.add(o);
+  return [...r];
+}
+function yxn(e) {
+  let t = new Set([...kge, ...QRe(), "GITHUB_TOKEN", "GH_TOKEN"]);
+  for (let r of Object.keys(e)) if (kq(r) || Het(r)) t.add(r);
+  return [...t];
+}
+function k(e) {
+  return [...e]
+    .map((t) => (t.toLowerCase() === t ? t : `[${t}${t.toLowerCase()}]`))
+    .join("");
+}
+function uS(e) {
+  let t = e.length > Ae ? e.slice(0, Ae) : e,
+    r = (d) => {
+      let _ = d.search(/\s/),
+        p = _ === -1 ? d : d.slice(0, _),
+        E = p.lastIndexOf("@");
+      if (E === -1) return !1;
+      let O = p.slice(0, E);
+      if (Ft(O, p.slice(E + 1))) return !1;
+      return O.includes(":") || (!/[/?#]/.test(O) && gi(O));
+    },
+    o = t.indexOf("://");
+  while (o !== -1) {
+    if (o > 0 && /[a-z0-9+.-]/i.test(t[o - 1] ?? "")) {
+      if (r(t.slice(o + 3))) return !0;
+    }
+    o = t.indexOf("://", o + 3);
+  }
+  if (t.startsWith("//") && r(t.slice(2))) return !0;
+  return (
+    (/^[^\s/@:]+:(?!\/\/)(?![\\/])[^\s@]*@[^\s/@]+/.test(t) &&
+      !/^[a-z]:[\\/]/i.test(t) &&
+      !_i.test(t) &&
+      !Ft(
+        t.slice(0, t.lastIndexOf("@", t.search(/\s|$/))),
+        t.slice(t.lastIndexOf("@", t.search(/\s|$/)) + 1),
+      ) &&
+      !/^(?:mailto|sips?|xmpp|im|acct):/i.test(t)) ||
+    Ei.test(t) ||
+    Si.test(t) ||
+    /["']?sonar\.login["']?\s*[:=]\s*["']?[^\s"',}]{8,}/.test(t) ||
+    Sxn.test(t) ||
+    /\bauthorization\s*[:=]\s*["']?[a-z][a-z0-9_-]*\s+[A-Za-z0-9._~+\/=-]{8,}/i.test(
+      t,
+    ) ||
+    /\b(?:[Tt]oken|TOKEN)\s+(?=[A-Za-z0-9_~+=-]*[0-9])(?=[A-Za-z0-9_~+=-]*[A-Z])(?=([A-Za-z0-9_~+=-]{20,}))\1(?![\/.])/.test(
+      t,
+    ) ||
+    /\b(?:Bearer|Basic)\s+(?=[A-Za-z._~+\/=-]*[0-9]|(?:[A-Za-z0-9._~+\/=-]*?[a-z][A-Z](?![a-z])){2}|[A-Za-z0-9.-]*[_~+\/=])[A-Za-z0-9._~+\/=-]{8,}/.test(
+      t,
+    )
+  );
+}
+var Ae = 8192;
+function gi(e) {
+  return (
+    /^(?:gh[opusr]_|github_pat_|glpat-|xox[abpr]-|sk-|pk-|AKIA|eyJ|ya29\.|npm_)/.test(
+      e,
+    ) ||
+    (e.length >= 20 && /[0-9]/.test(e) && /[a-z]/i.test(e))
+  );
+}
+function Ft(e, t) {
+  let r = /^([a-z0-9_-]+(?:\.[a-z0-9_-]+)*):\d+([/?#].*)$/is.exec(e);
+  if (!r) return !1;
+  if (/[?#&]/.test(r[2])) return !0;
+  if (pi.test(t)) return !1;
+  if (e.endsWith("/")) return !0;
+  if (/^(?:v?\d|sha\d*:)/i.test(t)) return !0;
+  return !fi.test(t);
+}
+var _i =
+    /^(?:[\w.-]+(?::[\w.-]+)?@sha(?:256|384|512):[0-9a-f]{32,}|npm:(?:@[\w.-]+\/)?[\w.-]+@[\w.^~<>=*|+-]*|[a-z_][\w.-]*:[\w.-]+:v?\d[\w.+\[\](),-]*@(?:jar|war|ear|aar|apk|aab|pom|zip|tar|tgz|module|klib|exe|dll|so|dylib)?)$/i,
+  pi =
+    /^(?:localhost|[a-z0-9_-]+(?:\.[a-z0-9_-]+)*\.(?=[a-z0-9-]*[a-z])[a-z0-9-]+|[a-z0-9_.-]+(?=:\d+(?:[/?#]|$))|\d{1,3}(?:\.\d{1,3}){3}|\[[0-9a-f:.]+\])(?::\d+)?(?:[/?#]|$)/i,
+  fi =
+    /^(?:(?=[a-z0-9._-]*[a-z])[a-z0-9._-]+|\d{1,3}(?:\.\d{1,3}){3}|\[[0-9a-f:.]+\])(?::\d+)?(?:[/?#]|$)/i,
+  Sxn = /-----BEGIN [A-Z ]*PRIVATE KEY(?: BLOCK)?-----/,
+  Si =
+    /https:\/\/(?:hooks\.slack\.com\/(?:services|workflows|triggers)\/|(?:ptb\.|canary\.)?discord(?:app)?\.com\/api\/webhooks\/\d+\/|[\w.-]+\.webhook\.office\.com\/webhookb2\/)[\w\/@.~-]{16,}/i,
+  Ei =
+    /(?:(?:^|[;&?#,{]|\/:)\s*|\s)["']?(?!-*jobserver-auth\s*[=:])(?:[a-z0-9_.-]{0,64}(?:password|passwd|pwd|secret|token|(?:account|access|api|private|subscription)[-_]?key|signature|sig|credential)|[a-z0-9_.-]{0,63}[_.-]auth)["']?\s*[=:]\s*["']?(?!(?:true|false|none|null|yes|no|on|off|enabled|disabled|required|optional)(?:$|[;&,\s"']))[^;&,\s"']+/i;
+function mi(e) {
+  let t = e.split(/\s+/).filter(Boolean),
+    r = !1,
+    o = t.map((E) => {
+      let O = E.replace(/["']/g, ""),
+        I = O.replace(/^--?[\w-]+=/, ""),
+        N = /(?:^|[=\s])--?X[= ]?([^\s=]+)=(.*)$/.exec(O),
+        L = N ?? (r ? /^()([^\s=-][^\s=]*)=(.*)$/.exec(O) : null);
+      if (((r = /(?:^|=)--?X$/.test(O)), L === null))
+        return {
+          bare: O,
+          contribution: I,
+          goes:
+            (/(?:^|[=\s])--?X\b/.test(O) && !/(?:^|=)--?X$/.test(O)) || uS(I),
+        };
+      let U = L.at(-2) ?? "",
+        x = U.split("/").at(-1) ?? "",
+        w = L.at(-1) ?? "",
+        C = N === null ? "" : O.slice(0, N.index);
+      return {
+        bare: O,
+        contribution: I,
+        goes: rn(x, w) || uS(w) || uS(U) || (C !== "" && uS(C)),
+      };
+    });
+  for (let E = 0; E < o.length; E++)
+    for (let O = 2; O <= 4 && E + O <= o.length; O++) {
+      let I = o.slice(E, E + O);
+      if (
+        I.some((N) => N.goes) ||
+        I.slice(1).some((N) => N.bare.startsWith("-"))
+      )
+        break;
+      if (uS(I.map((N) => N.contribution).join(" "))) {
+        for (let N of I) N.goes = !0;
+        break;
+      }
+    }
+  o.forEach((E, O) => {
+    if (!/(?:^|=)--?X$/.test(E.bare)) return;
+    let I = o[O + 1],
+      N = I === void 0 || I.goes || E.goes;
+    if (((E.goes = N), I !== void 0)) I.goes = N;
+  });
+  let d = t.map(() => -1),
+    _ = -1,
+    p = "";
+  if (
+    (t.forEach((E, O) => {
+      if (_ === -1) {
+        let I = E[0];
+        if ((I === '"' || I === "'") && !(E.length > 1 && E.endsWith(I)))
+          ((_ = O), (p = I), (d[O] = _));
+        return;
+      }
+      if (((d[O] = _), E.endsWith(p))) _ = -1;
+    }),
+    _ !== -1)
+  )
+    o.forEach((E, O) => {
+      if (d[O] === _) E.goes = !0;
+    });
+  if (
+    (o.forEach((E, O) => {
+      if (E.goes && d[O] !== -1)
+        o.forEach((I, N) => {
+          if (d[N] === d[O]) I.goes = !0;
+        });
+    }),
+    o.every((E) => !E.goes))
+  )
+    return e;
+  return t
+    .filter((E, O) => !o[O].goes && (d[O] !== -1 || Xt.test(E)))
+    .join(" ");
+}
+var hi = [
+    "LD_",
+    "DYLD_",
+    "BASH_FUNC_",
+    "__BASH_FUNC<",
+    "PYTHON",
+    "PERL5",
+    "RUBY",
+    "LUA_",
+    "DOTNET_",
+    "COMPLUS_",
+    "COR_",
+    "CORECLR_",
+    "APPDOMAIN_MANAGER_",
+    "GIT_",
+  ],
+  Pi = new Set([
+    "NODE_OPTIONS",
+    "NODE_PATH",
+    "BASH_ENV",
+    "ENV",
+    "SHELLOPTS",
+    "BASHOPTS",
+    "PS4",
+    "PERLLIB",
+    "GEM_PATH",
+    "GEM_HOME",
+    "JAVA_TOOL_OPTIONS",
+    "_JAVA_OPTIONS",
+    "JDK_JAVA_OPTIONS",
+    "IBM_JAVA_OPTIONS",
+    "OPENJ9_JAVA_OPTIONS",
+    "CLASSPATH",
+    "BUN_OPTIONS",
+    "MONO_PATH",
+    "R_PROFILE_USER",
+    "DEVPATH",
+    "GCONV_PATH",
+    "OPENSSL_CONF",
+    "OPENSSL_MODULES",
+    "OPENSSL_ENGINES",
+    "KRB5_CONFIG",
+    "GTK_PATH",
+    "QT_PLUGIN_PATH",
+    "GIO_MODULE_DIR",
+    "FPATH",
+    "IFS",
+    "CDPATH",
+    "SSH_ASKPASS",
+    "SSH_ASKPASS_REQUIRE",
+    "SASL_PATH",
+    "PHPRC",
+    "PHP_INI_SCAN_DIR",
+    "PATH",
+    "COMSPEC",
+    "ZDOTDIR",
+    "XDG_CONFIG_HOME",
+    "PSMODULEPATH",
+    "SYSTEMROOT",
+    "WINDIR",
+    "SYSTEMDRIVE",
+    "PATHEXT",
+  ]),
+  Ri = "/usr/bin:/bin:/usr/sbin:/sbin",
+  Ai =
+    "C:\\Windows\\System32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0",
+  yi = "C:\\Windows\\System32\\cmd.exe",
+  Oi =
+    "C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\Modules",
+  Ti = ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC",
+  Oe = "/var/empty/claude-code-policy-helper",
+  Ni = "C:\\Windows\\claude-code-policy-helper";
+function Ci(e) {
+  let t = e.toUpperCase();
+  return Pi.has(t) || hi.some((r) => t.startsWith(r));
+}
+function an(e, t) {
+  let r = { ...e },
+    o = new Set(Hge(e).map((d) => d.toUpperCase()));
+  for (let d of Object.keys(r))
+    if (Ci(d) || o.has(d.toUpperCase())) delete r[d];
+  if (
+    (Object.assign(r, die(r).respelled),
+    (r.PYTHONNOUSERSITE = "1"),
+    (r.GIT_CONFIG_NOSYSTEM = "1"),
+    t === "win32")
+  )
+    ((r.GIT_CONFIG_GLOBAL = Ni),
+      (r.PATH = Ai),
+      (r.COMSPEC = yi),
+      (r.PSModulePath = Oi),
+      (r.PATHEXT = Ti),
+      (r.SystemRoot = "C:\\Windows"),
+      (r.windir = "C:\\Windows"),
+      (r.SystemDrive = "C:"));
+  else
+    ((r.GIT_CONFIG_GLOBAL = Oe),
+      (r.PATH = Ri),
+      (r.ZDOTDIR = Oe),
+      (r.XDG_CONFIG_HOME = Oe),
+      (r.PSModulePath = Oe));
+  return r;
+}
+var Li = 1e4,
+  Te = 1048576,
+  Di = m(() =>
+    it({
+      managedSettings: se().optional(),
+      claudeMd: s().optional(),
+      appendSystemPrompt: s().optional(),
+    }),
+  ),
+  bxn = "<policyHelper>";
+function ne() {
+  let e = da();
+  if (M() && e.primer !== void 0) e.invalidatePolicyLayer();
+  else Za();
+}
+class _n {
+  state = null;
+  selectionWarnings = [];
+  initializeAttempted = !1;
+  structuralRefusalLogged = !1;
+  noEntrySadLogged = !1;
+  defaultFallback = null;
+  payloadRefusalError = null;
+  refreshTimer = null;
+  refreshInFlight = !1;
+  midSessionArmingEnabled = !1;
+  osAdminArming = null;
+  decidedOrigin = null;
+  pendingStats = new Map();
+  remoteArmGeneration = 0;
+  remoteArmingConfig = null;
+  remoteFailedConfig = null;
+  releaseLatchWhenTickSettles = !1;
+  readRemotePayload = null;
+  armedFromUserWritableBase = !1;
+  retiredHelperPaths = new Set();
+  remoteNoticeSubject = null;
+  refreshed = Le();
+  claimInitialize() {
+    if (this.initializeAttempted) return !1;
+    return ((this.initializeAttempted = !0), !0);
+  }
+  apply(e) {
+    if (((this.state = e), (this.remoteFailedConfig = null), ne(), e.config))
+      this.startRefreshTimer(e.config, e.fromPerOs, e.armedFromRemote);
+    else this.stopRefreshTimer();
+  }
+  retireState() {
+    let e = this.state?.config?.path;
+    if (e !== void 0) this.retiredHelperPaths.add(e);
+    this.state = null;
+  }
+  reset() {
+    (this.remoteArmGeneration++,
+      (this.remoteArmingConfig = null),
+      (this.armedFromUserWritableBase = !1),
+      (this.remoteNoticeSubject = null),
+      (this.state = null),
+      this.retiredHelperPaths.clear(),
+      (this.selectionWarnings = []),
+      (this.initializeAttempted = !1),
+      (this.structuralRefusalLogged = !1),
+      (this.noEntrySadLogged = !1),
+      (this.defaultFallback = null),
+      (this.payloadRefusalError = null),
+      (this.refreshInFlight = !1),
+      (this.midSessionArmingEnabled = !1),
+      (this.osAdminArming = null),
+      (this.decidedOrigin = null),
+      (this.remoteFailedConfig = null),
+      (this.releaseLatchWhenTickSettles = !1),
+      (this.readRemotePayload = null),
+      this.stopRefreshTimer(),
+      ne());
+  }
+  announceTierChange() {
+    ne();
+    try {
+      (da().changed.emit("policySettings"), this.refreshed.emit());
+    } catch (e) {
+      h(e);
+    }
+  }
+  stopRefreshTimer() {
+    if (this.refreshTimer)
+      (clearInterval(this.refreshTimer), (this.refreshTimer = null));
+  }
+  holdRemoteFailure({ config: e, fromPerOs: t }, r) {
+    if (((this.remoteFailedConfig = e), !r)) return;
+    if (e.path !== void 0) this.retiredHelperPaths.add(e.path);
+    this.startRefreshTimer(e, t, !0);
+  }
+  retireRemoteFailure() {
+    if (this.remoteFailedConfig === null) return;
+    ((this.remoteFailedConfig = null),
+      this.stopRefreshTimer(),
+      this.releaseLatch());
+  }
+  releaseLatch() {
+    if (this.refreshInFlight) this.releaseLatchWhenTickSettles = !0;
+    else this.initializeAttempted = !1;
+  }
+  settleRefreshExec() {
+    if (((this.refreshInFlight = !1), this.releaseLatchWhenTickSettles))
+      ((this.releaseLatchWhenTickSettles = !1),
+        this.releaseLatchAfterTornDownExec());
+  }
+  releaseLatchAfterTornDownExec() {
+    if (((this.initializeAttempted = !1), this.readRemotePayload !== null))
+      U5t(this.readRemotePayload);
+  }
+  startRefreshTimer(e, t, r) {
+    this.stopRefreshTimer();
+    let o = e.refreshIntervalMs ?? 0;
+    if (o <= 0) return;
+    ((this.refreshTimer = setInterval(
+      (d, _, p) => {
+        if (this.refreshInFlight) return;
+        if (((this.refreshInFlight = !0), p && this.state === null)) {
+          Fi(d, _).finally(() => this.settleRefreshExec());
+          return;
+        }
+        let E = this.state;
+        rt(d, _, p)
+          .then((O) => {
+            if (this.state === null || this.state !== E) return;
+            if ("error" in O) {
+              if (this.defaultFallback) {
+                let I = `the static ${this.defaultFallback.sourceField} settings payload governs`;
+                if (this.state.serving === "default") {
+                  (n(
+                    `policyHelper refresh: helper still failing (${O.error}); the static default settings payload continues to govern`,
+                    { level: "debug" },
+                  ),
+                    Qe(O.error, I, _));
+                  return;
+                }
+                (n(
+                  `policyHelper refresh failed (${O.error}); applying the static ${this.defaultFallback.sourceField} settings payload`,
+                  { level: "warn" },
+                ),
+                  Qe(O.error, I, _),
+                  g(
+                    "settings_policy_helpers_per_os",
+                    "refresh_fell_back_to_default",
+                  ),
+                  (this.state.serving = "default"),
+                  (this.state.mergesOutput = Rn(d, this.defaultFallback)),
+                  (this.state.output = {
+                    managedSettings: this.defaultFallback.settings,
+                  }),
+                  (this.state.warnings = this.defaultFallback.warnings),
+                  this.announceTierChange());
+                return;
+              }
+              (n(
+                `policyHelper refresh failed (retaining current policy): ${O.error}`,
+                { level: "warn" },
+              ),
+                Qe(
+                  O.error,
+                  "the last successful helper output still governs",
+                  _,
+                ),
+                g("settings_policy_helper", "refresh_failed"));
+              return;
+            }
+            if ((et(), this.state.serving === "default"))
+              (n(
+                "policyHelper refresh: helper recovered; its output replaces the static default settings payload",
+                { level: "info" },
+              ),
+                y("settings_policy_helpers_per_os"));
+            ((this.state.serving = "helper"),
+              (this.state.mergesOutput = d.outputBehavior === "merge"),
+              (this.state.output = O.output),
+              (this.state.warnings = O.warnings),
+              this.announceTierChange());
+          })
+          .catch((O) => {
+            h(O);
+          })
+          .finally(() => this.settleRefreshExec());
+      },
+      Math.min(o, w8t),
+      e,
+      t,
+      r,
+    )),
+      this.refreshTimer.unref?.());
+  }
+}
+var T = new _n(),
+  Ss = lz({ clear: Ui }),
+  har = T.refreshed,
+  pn = new Set(["plist", "hklm", "file"]);
+async function ABe(e, t, r) {
+  let o = r.find(
+    (L) =>
+      L.startupFatal &&
+      (L.path === "" ||
+        L.path === "policyHelpers" ||
+        L.path.startsWith("policyHelpers.")),
+  );
+  if (o) {
+    if (!T.structuralRefusalLogged)
+      ((T.structuralRefusalLogged = !0),
+        f(
+          "settings_policy_helpers_per_os",
+          o.path === ""
+            ? "document_invalid"
+            : o.path === "policyHelpers"
+              ? "structural_invalid"
+              : "default_payload_invalid",
+        ));
+    return `${o.file ?? "managed settings"}: ${o.message}`;
+  }
+  if (T.payloadRefusalError !== null) return T.payloadRefusalError;
+  if (!T.claimInitialize()) return null;
+  ((T.decidedOrigin = t), De(), tt(hn));
+  let d = e?.policyHelpers,
+    _ = t === "remote" ? _e(e) : void 0,
+    p = _ !== void 0,
+    E = p ? void 0 : e?.policyHelper;
+  if (!d && !E) {
+    if (wie() === !0 && !rv())
+      n(
+        "policyHelper: no helper configuration present at helper-pass time (remote managed settings eligible, no payload in cache); a payload landing later arms one only through a fetch cycle after preAction",
+        { level: "debug" },
+      );
+    return ((T.initializeAttempted = !1), null);
+  }
+  if (p) {
+    if (!Yge()) {
+      if (((T.initializeAttempted = !1), jR()))
+        (Ze("not yet approved in the managed-settings dialog", _),
+          g("settings_policy_helpers_per_os", "remote_consent_missing"));
+      else Ze("remote settings not verified this session", _);
+      return null;
+    }
+    T.defaultFallback = null;
+  } else if (t === "remote" && d)
+    return (
+      n("remote policyHelpers names no binary this platform can arm", {
+        level: "debug",
+      }),
+      (T.initializeAttempted = !1),
+      null
+    );
+  else if (t === null || !pn.has(t)) {
+    if (
+      (n(
+        `policyHelper ignored: delivered via non-admin source '${t ?? "unknown"}'`,
+        { level: "warn" },
+      ),
+      t === "remote")
+    )
+      T.initializeAttempted = !1;
+    return null;
+  }
+  T.armedFromUserWritableBase = t === "plist" && PU().userWritable === !0;
+  let O = d ? nt() : null,
+    I = p ? null : Hi(d, O?.chain ?? []);
+  if (I) return ((T.payloadRefusalError = I), I);
+  let N = vi(d, E, O, p);
+  if (!N) return ((T.initializeAttempted = !1), null);
+  if (N.kind === "default")
+    return (ln(null, T.defaultFallback?.mergesOutput === !0), null);
+  try {
+    if (N.fromPerOs && T.defaultFallback)
+      (await qe(N, { suppressExecEvents: !0 }),
+        y("settings_policy_helpers_per_os"));
+    else if (N.fromPerOs) {
+      let L;
+      try {
+        L = await qe(N, { armedFromRemote: p, suppressExecEvents: p });
+      } catch (U) {
+        throw (
+          f(
+            "settings_policy_helpers_per_os",
+            U instanceof Ne ? U.code : "error",
+          ),
+          U
+        );
+      }
+      if (L === "applied") y("settings_policy_helpers_per_os");
+    } else await qe(N);
+  } catch (L) {
+    if (L instanceof Ne) {
+      if (T.defaultFallback)
+        return (
+          n(
+            `${L.message}; applying the static ${T.defaultFallback.sourceField} settings payload instead`,
+            { level: "warn" },
+          ),
+          g(
+            "settings_policy_helpers_per_os",
+            "fell_back_to_default_on_failure",
+          ),
+          ln(L.code === "bad_path" ? null : N, Rn(N.config, T.defaultFallback)),
+          null
+        );
+      if (p)
+        return (
+          Ze(L.message, _),
+          T.holdRemoteFailure(N, L.code !== "bad_path"),
+          null
+        );
+      return L.message;
+    }
+    throw L;
+  }
+  return null;
+}
+var fn = "remote policyHelpers entry not run: ",
+  Sn = 512;
+function En(e, t = Sn) {
+  return e.length > t ? `${e.slice(0, t - 1)}\u2026` : e;
+}
+function Ze(e, t) {
+  let r = MHn(t),
+    o = mtt(e.replace(/\s+/gu, " ")),
+    d = En(`${fn}${r ? `${r}: ` : ""}${o}`);
+  ((T.remoteNoticeSubject = t),
+    T.selectionWarnings.push({
+      file: "policyHelper",
+      path: "policyHelpers",
+      message: d,
+      severity: "warning",
+      statusOnly: !0,
+    }),
+    ne(),
+    n(d, { level: "warn" }));
+}
+function De() {
+  ((T.remoteNoticeSubject = null), tt(fn), T.retireRemoteFailure());
+}
+var Ie = "policyHelper refresh failing: ";
+function Qe(e, t, r) {
+  let o = `; ${t}`,
+    d = En(mtt(e.replace(/\s+/gu, " ")), Sn - Ie.length - o.length),
+    _ = `${Ie}${d}${o}`;
+  if (T.selectionWarnings.some((O) => O.message === _)) return;
+  let p = T.selectionWarnings.filter((O) => !O.message.startsWith(Ie)),
+    E = p.length !== T.selectionWarnings.length;
+  if (
+    ((T.selectionWarnings = [
+      ...p,
+      {
+        file: "policyHelper",
+        path: r ? "policyHelpers" : "policyHelper",
+        message: _,
+        severity: "warning",
+        statusOnly: !0,
+      },
+    ]),
+    !E)
+  )
+    ne();
+}
+function et() {
+  tt(Ie);
+}
+var hn = "policyHelpers is configured but has no entry for platform ";
+function tt(e) {
+  let t = T.selectionWarnings.filter((r) => !r.message.startsWith(e));
+  if (t.length === T.selectionWarnings.length) return;
+  ((T.selectionWarnings = t), ne());
+}
+function Pn(e, t) {
+  let r = R8t(e, t);
+  for (let o of r.strippedKeys)
+    n(`${t}: stripped ${o} from the settings payload (no recursion)`, {
+      level: "warn",
+    });
+  for (let o of r.warnings) n(`${t}: ${o.message}`, { level: "warn" });
+  return r;
+}
+function Hi(e, t) {
+  if (((T.defaultFallback = null), !e)) return null;
+  let r = [];
+  for (let d of t) {
+    let _ = e[d],
+      p = _?.defaultSettings;
+    if (p !== void 0 && p !== null)
+      r.push({
+        field: `policyHelpers.${d}.defaultSettings`,
+        raw: p,
+        onChain: !0,
+        mergesOutput: _?.outputBehavior === "merge",
+      });
+  }
+  for (let d of Uq) {
+    let _ = e[d]?.defaultSettings;
+    if (_ !== void 0 && _ !== null && !t.includes(d))
+      r.push({
+        field: `policyHelpers.${d}.defaultSettings`,
+        raw: _,
+        onChain: !1,
+        mergesOutput: !1,
+      });
+  }
+  if (e.default !== void 0 && e.default !== null)
+    r.push({
+      field: "policyHelpers.default",
+      raw: e.default,
+      onChain: !0,
+      mergesOutput: !1,
+    });
+  let o = null;
+  for (let d of r) {
+    if (d.raw !== null && typeof d.raw === "object" && !Array.isArray(d.raw)) {
+      let { policyHelper: p, policyHelpers: E, ...O } = d.raw,
+        I = Kge().safeParse(O);
+      if (!I.success)
+        return (
+          f("settings_policy_helpers_per_os", "default_payload_invalid"),
+          `${d.field} is not a valid static settings payload (${I.error.issues[0]?.message ?? "failed validation"}); Claude Code will not start until it is fixed`
+        );
+    }
+    let _ = d.onChain && !o ? Pn(d.raw, d.field) : R8t(d.raw, d.field);
+    if ("error" in _)
+      return (
+        f("settings_policy_helpers_per_os", "default_payload_invalid"),
+        `${d.field} is not a valid static settings payload (${_.error}); Claude Code will not start until it is fixed`
+      );
+    if (d.onChain && !o)
+      o = {
+        settings: _.settings,
+        warnings: _.warnings.map((p) => ({ ...p, statusOnly: !0 })),
+        sourceField: d.field,
+        mergesOutput: d.mergesOutput,
+      };
+  }
+  return ((T.defaultFallback = o), null);
+}
+function Rn(e, t) {
+  return e.outputBehavior === "merge" || t?.mergesOutput === !0;
+}
+function ln(e, t) {
+  let r = T.defaultFallback;
+  if (!r) return;
+  (T.apply({
+    config: e?.config ?? null,
+    fromPerOs: e?.fromPerOs ?? !1,
+    serving: "default",
+    armedFromRemote: !1,
+    mergesOutput: t,
+    output: { managedSettings: r.settings },
+    warnings: r.warnings,
+  }),
+    n(
+      `${r.sourceField} static settings payload applied (keys: ${Object.keys(r.settings).join(",")})`,
+      { level: "debug" },
+    ));
+}
+function wi() {
+  let e = mXt();
+  return e !== void 0 && gXt(e);
+}
+function nt() {
+  let e = P(),
+    t = e === "wsl" && !wi() ? "linux" : e;
+  switch (t) {
+    case "wsl":
+      return { platform: t, chain: ["wsl", "linux"] };
+    case "unknown":
+      return { platform: t, chain: [] };
+    default:
+      return { platform: t, chain: [t] };
+  }
+}
+function _ar(e) {
+  return _e(e) !== void 0;
+}
+function An(e, t, r) {
+  for (let o of t) {
+    let d = e[o];
+    if (d == null) continue;
+    if (r ? XRt(d) !== void 0 : d.path != null || d.script != null) {
+      let { defaultSettings: p, ...E } = d;
+      return E;
+    }
+  }
+  return null;
+}
+function _e(e) {
+  let t = e?.policyHelpers;
+  return t ? XRt(An(t, nt().chain, !0)) : void 0;
+}
+function vi(e, t, r, o) {
+  if (!e || !r) return t ? { kind: "helper", config: t, fromPerOs: !1 } : null;
+  let { platform: d, chain: _ } = r,
+    p = An(e, _, o);
+  if (p) return { kind: "helper", config: p, fromPerOs: !0 };
+  if (T.defaultFallback)
+    return (
+      g("settings_policy_helpers_per_os", "fell_back_to_default"),
+      n(
+        `policyHelper: no policyHelpers helper entry for platform "${d}"; applying the static ${T.defaultFallback.sourceField} settings payload`,
+        { level: "info" },
+      ),
+      { kind: "default" }
+    );
+  if (t)
+    return (
+      g("settings_policy_helpers_per_os", "fell_back_to_singular"),
+      { kind: "helper", config: t, fromPerOs: !1 }
+    );
+  let E = `${hn}"${d}", no default settings payload, and no policyHelper fallback; no policy helper will run`;
+  if (
+    (T.selectionWarnings.push({
+      file: "policyHelper",
+      path: "policyHelpers",
+      message: E,
+      severity: "warning",
+      statusOnly: !0,
+    }),
+    ne(),
+    n(E, { level: "warn" }),
+    !T.noEntrySadLogged)
+  )
+    ((T.noEntrySadLogged = !0),
+      g("settings_policy_helpers_per_os", "no_entry_for_platform"));
+  return null;
+}
+class Ne extends Error {
+  code;
+  constructor(e, t) {
+    super(t);
+    this.code = e;
+  }
+}
+async function qe({ config: e, fromPerOs: t }, r) {
+  let o = r?.armedFromRemote === !0,
+    d = T.remoteArmGeneration;
+  if (o) T.remoteArmingConfig = e;
+  let _;
+  try {
+    _ = await rt(e, t, o);
+  } finally {
+    if (T.remoteArmingConfig === e) T.remoteArmingConfig = null;
+  }
+  if (o && T.remoteArmGeneration !== d) {
+    if (e.path !== void 0 && !("error" in _ && _.code === "bad_path"))
+      T.retiredHelperPaths.add(e.path);
+    return (
+      n("policyHelper: remote arming revoked during exec; discarding output", {
+        level: "warn",
+      }),
+      g("settings_policy_helpers_per_os", "deactivated_during_exec"),
+      T.releaseLatchAfterTornDownExec(),
+      "dropped"
+    );
+  }
+  if ("error" in _) {
+    if (!r?.suppressExecEvents) f("settings_policy_helper", _.code);
+    throw new Ne(_.code, `policyHelper failed: ${_.error}`);
+  }
+  if (
+    (T.apply({
+      config: e,
+      fromPerOs: t,
+      serving: "helper",
+      armedFromRemote: o,
+      mergesOutput: e.outputBehavior === "merge",
+      output: _.output,
+      warnings: _.warnings,
+    }),
+    n(`policyHelper applied (keys: ${Object.keys(_.output).join(",")})`, {
+      level: "debug",
+    }),
+    !r?.suppressExecEvents)
+  )
+    y("settings_policy_helper");
+  return "applied";
+}
+function yn() {
+  return T.state?.output.managedSettings ?? null;
+}
+function On() {
+  let e = T.state;
+  return e && !e.armedFromRemote ? e.output : void 0;
+}
+function cRt() {
+  return On()?.claudeMd ?? null;
+}
+function yar() {
+  return On()?.appendSystemPrompt ?? null;
+}
+function uRt() {
+  return T.state !== null;
+}
+function Sar() {
+  return T.initializeAttempted;
+}
+function Tn() {
+  return T.state?.armedFromRemote === !0;
+}
+function $5t() {
+  return T.state !== null && T.armedFromUserWritableBase;
+}
+function In() {
+  return T.state?.mergesOutput === !0;
+}
+function bar(e) {
+  if (
+    e !== "remote" ||
+    !T.initializeAttempted ||
+    T.state?.armedFromRemote === !0
+  )
+    return;
+  (et(), T.stopRefreshTimer());
+  let t = T.state !== null;
+  if (
+    (T.retireState(),
+    (T.defaultFallback = null),
+    (T.payloadRefusalError = null),
+    (T.remoteFailedConfig = null),
+    (T.initializeAttempted = !1),
+    !t)
+  )
+    return;
+  (n(
+    "policyHelper: OS-admin helper pass retired; the remote payload that landed shadows the MDM/file policy it was read from",
+    { level: "info" },
+  ),
+    g("settings_policy_helper", "retired_shadowed_by_remote"),
+    T.announceTierChange());
+}
+function be() {
+  if ((T.remoteArmGeneration++, De(), T.state?.armedFromRemote !== !0)) return;
+  (et(),
+    T.stopRefreshTimer(),
+    T.retireState(),
+    T.releaseLatch(),
+    n("policyHelper: remote-armed helper deactivated", { level: "info" }),
+    T.announceTierChange());
+}
+$Hn(be);
+function cn(e) {
+  let t = T.readRemotePayload;
+  return t !== null && Yge() && _e(t()) === XRt(e);
+}
+async function Fi(e, t) {
+  try {
+    if (!cn(e)) {
+      (n(
+        "policyHelper: remote retry stopped; the payload in force no longer authorizes the entry",
+        { level: "info" },
+      ),
+        be());
+      return;
+    }
+    let r = T.remoteArmGeneration;
+    T.remoteArmingConfig = e;
+    let o;
+    try {
+      o = await rt(e, t, !0);
+    } finally {
+      if (T.remoteArmingConfig === e) T.remoteArmingConfig = null;
+    }
+    let d = T.remoteArmGeneration !== r;
+    if (d || !cn(e)) {
+      if (!d) be();
+      (n("policyHelper: remote retry revoked during exec; discarding output", {
+        level: "warn",
+      }),
+        g("settings_policy_helpers_per_os", "deactivated_during_exec"));
+      return;
+    }
+    if ("error" in o) {
+      (n(
+        `policyHelper retry failed (remote entry still not armed): ${o.error}`,
+        { level: "warn" },
+      ),
+        g("settings_policy_helper", "refresh_failed"));
+      return;
+    }
+    (T.apply({
+      config: e,
+      fromPerOs: t,
+      serving: "helper",
+      armedFromRemote: !0,
+      mergesOutput: e.outputBehavior === "merge",
+      output: o.output,
+      warnings: o.warnings,
+    }),
+      De(),
+      n("policyHelper: remote entry armed by a retry tick", { level: "info" }),
+      y("settings_policy_helpers_per_os"),
+      T.announceTierChange());
+  } catch (r) {
+    h(r);
+  }
+}
+function war(e) {
+  ((T.midSessionArmingEnabled = !0), (T.osAdminArming = e ?? null));
+}
+function U5t(e) {
+  ($i(e), Mi());
+}
+function Mi() {
+  let e = T.osAdminArming;
+  if (
+    e === null ||
+    !T.midSessionArmingEnabled ||
+    T.initializeAttempted ||
+    !e.baseSettled()
+  )
+    return;
+  let { settings: t, origin: r, loadErrors: o } = e.readBase();
+  if (r === null || !pn.has(r) || r === T.decidedOrigin) return;
+  ABe(t, r, o)
+    .then((d) => {
+      if (d !== null) {
+        (n(
+          `policyHelper: the ${r} source became the base mid-session and its pass refused; exiting as the launch would have: ${d}`,
+          { level: "error" },
+        ),
+          e.refuse(d),
+          (T.decidedOrigin = r));
+        return;
+      }
+      if (T.state === null) return;
+      (n(
+        `policyHelper: armed from the ${r} source, which became the base mid-session`,
+        { level: "info" },
+      ),
+        T.announceTierChange());
+    })
+    .catch((d) => {
+      h(d);
+    });
+}
+function $i(e) {
+  if (
+    ((T.readRemotePayload = e),
+    !T.midSessionArmingEnabled || T.initializeAttempted || !Yge())
+  )
+    return;
+  let t = e();
+  if (_e(t) === void 0) return;
+  let r = T.retiredHelperPaths.size;
+  ABe(t, "remote", [])
+    .catch((o) => {
+      h(o);
+    })
+    .finally(() => {
+      let o = T.state?.armedFromRemote === !0;
+      if (o)
+        n("policyHelper: remote entry armed mid-session", { level: "info" });
+      if (o || T.retiredHelperPaths.size > r) T.announceTierChange();
+    });
+}
+function Tar(e) {
+  let t = T.state?.armedFromRemote
+      ? T.state.config
+      : (T.remoteArmingConfig ?? T.remoteFailedConfig),
+    r = T.remoteNoticeSubject;
+  if (!t && r === null) return;
+  let o = e(),
+    d = _e(o);
+  if (t) {
+    if (!Yge() || d !== XRt(t)) be();
+  } else if (d !== r) De();
+}
+function Ear() {
+  return T.state?.config?.path ?? null;
+}
+function Aar() {
+  return [...T.retiredHelperPaths];
+}
+function Car(e) {
+  let t = e?.policyHelpers,
+    r = t
+      ? nt()
+          .chain.map((_) => t[_])
+          .filter((_) => _ != null)
+          .map((_) => ({ config: _, fromPerOs: !0 }))
+      : [];
+  if (e?.policyHelper != null)
+    r.push({ config: e.policyHelper, fromPerOs: !1 });
+  let o = Ln(),
+    d = [];
+  for (let { config: _, fromPerOs: p } of r)
+    if (typeof _.path === "string" && Dn(_, o, p, !1) === null) d.push(_.path);
+  return d;
+}
+function Rar() {
+  return T.state?.serving === "default";
+}
+function Nn() {
+  return [...T.selectionWarnings, ...(T.state?.warnings ?? [])];
+}
+function Ui() {
+  T.reset();
+}
+var Cn = null;
+function kar(e) {
+  Cn = e;
+}
+var un = 2048;
+function xi(e) {
+  let t = E0(e);
+  if (t.length <= un) return t;
+  let r = oe(t, un);
+  return `${r}\u2026 (+${t.length - r.length} chars not shown; the full output is in the debug log)`;
+}
+async function rt(e, t, r) {
+  let o = await ki(e, t, r);
+  return "error" in o ? { ...o, error: xi(o.error) } : o;
+}
+async function ki(e, t, r) {
+  let o = Ln(),
+    d = Dn(e, o, t, r);
+  if (d) return { error: d, code: "bad_path" };
+  let _ = Ct(e);
+  if ("error" in _) return _;
+  let { plan: p } = _,
+    E = Math.min(e.timeoutMs ?? Li, w8t),
+    O = performance.now(),
+    I = await bt(p, E, T.pendingStats);
+  if (I) return { error: I, code: "not_a_file" };
+  let N = Math.ceil(E - (performance.now() - O));
+  if (N <= 0) return { error: ze(p.file, E), code: "not_a_file" };
+  let L;
+  if (!r || p.input !== void 0) L = Nt(p);
+  else if (e.path === void 0)
+    return { error: "remote-armed helper has no path", code: "bad_path" };
+  else L = (o === "win32" ? gn : dn).dirname(e.path);
+  let U = process.env,
+    x = r ? an(Cn?.() ?? U, o) : U,
+    {
+      stdout: w,
+      stderr: C,
+      code: F,
+      error: K,
+      maxBufferExceeded: ce,
+      timedOut: st,
+    } = await Be(p.file, p.args, {
+      timeout: N,
+      cwd: L,
+      useToolMemoryCgroup: !1,
+      maxBuffer: Te + 1,
+      env: {
+        ...It(x, p),
+        CLAUDE_CODE_VERSION: {
+          ISSUES_EXPLAINER:
+            "report the issue at https://github.com/anthropics/claude-code/issues",
+          PACKAGE_URL: "@anthropic-ai/claude-code",
+          README_URL: "https://code.claude.com/docs/en/overview",
+          VERSION: "2.1.263",
+          FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues",
+          BUILD_TIME: "2026-09-06T01:08:56Z",
+          GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6",
+          HOOKS_WORKER_URL:
+            "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
+          DD_SOURCEMAP_GROUP: "darwin",
+        }.VERSION,
+      },
+      extendEnv: !1,
+      stdin: p.input === void 0 ? "ignore" : "pipe",
+      input: p.input,
+    });
+  if (C) n(`policyHelper stderr: ${C}`, { level: "debug" });
+  if (ce)
+    return {
+      error: `${C.length > w.length ? "stderr" : "stdout"} exceeded ${Te} bytes`,
+      code: "oversize",
+    };
+  if (st) return { error: `timed out after ${E}ms`, code: "timed_out" };
+  let re = (V) => {
+    if (w) n(`policyHelper stdout: ${w}`, { level: "debug" });
+    return V;
+  };
+  if (F !== 0)
+    return re({
+      error: `exited with code ${F}: ${C || w || K || ""}`,
+      code: "exit_nonzero",
+    });
+  if (Buffer.byteLength(w, "utf8") > Te)
+    return { error: `stdout exceeded ${Te} bytes`, code: "oversize" };
+  let ie = xt(w, !1);
+  if (ie === null || typeof ie !== "object")
+    return re({ error: "stdout is not a JSON object", code: "parse_failed" });
+  let z = Di().safeParse(ie);
+  if (!z.success)
+    return re({
+      error: `invalid envelope: ${z.error.message}`,
+      code: "envelope_invalid",
+    });
+  let X = {},
+    le = [];
+  if (z.data.managedSettings !== void 0) {
+    let V = Pn(z.data.managedSettings, "policyHelper");
+    if ("error" in V) return re({ error: V.error, code: "schema_rejected" });
+    if (((le = V.warnings), r)) ((le = v8t(le)), delete V.settings.claudeMd);
+    X.managedSettings = V.settings;
+  }
+  if (z.data.claudeMd !== void 0) X.claudeMd = z.data.claudeMd;
+  if (z.data.appendSystemPrompt !== void 0)
+    X.appendSystemPrompt = z.data.appendSystemPrompt;
+  return { output: X, warnings: le };
+}
+function Ln() {
+  return P() === "windows" ? "win32" : "posix";
+}
+function Dn(e, t, r, o) {
+  if (e.script == null && e.interpreter == null) return Gi(e.path, t, r, o);
+  if (!r)
+    return "inline scripts are not supported on the singular policyHelper key";
+  if (e.path != null) return OHn;
+  return hlr(e, t === "win32" ? "windows" : "linux");
+}
+function Gi(e, t, r, o) {
+  let d = t === "win32" ? gn : dn;
+  if (typeof e !== "string") return "path must be a string";
+  if (!d.isAbsolute(e)) return `path must be absolute: ${e}`;
+  if (t === "win32") {
+    if (r && !xHn.test(e))
+      return `path must end in .exe or .ps1 on Windows: ${e}`;
+    if (!r && !e.toLowerCase().endsWith(".exe"))
+      return `path must end in .exe on Windows: ${e}`;
+    if (IHn(e)) return `${PHn}: ${e}`;
+  }
+  if (o && (t === "win32" ? vHn(e) : ptt(e) || RHn(e)))
+    return `path must not be a UNC, network-automount (/net, /Network/Servers) or kernel magic-link (/proc, /dev/fd) path when delivered via remote managed settings: ${e}`;
+  if (!kHn(e, t, { rejectDriveRelative: t === "win32" }))
+    return t === "win32"
+      ? `path must be a drive-qualified (C:\\...) or UNC path in normalized form (no "." or ".." segments, no doubled or trailing separators, no ":" or trailing "."/space in a component, no device-namespace prefix): ${e}`
+      : `path must be in normalized form (no "." or ".." segments, no doubled or trailing separators): ${e}`;
+  return null;
+}
+async function B5t(e, t, r) {
+  let o = await e.read([{ key: Ce.userSettings(), offset: 0, length: n_ + 1 }]);
+  if (!o.ok)
+    return {
+      kind: "failing",
+      code: o.error.code,
+      failureClass: "failureClass" in o.error ? o.error.failureClass : void 0,
+    };
+  let d = o.value.items[0];
+  if (!d.found) return Wi(e.hostFiles, t);
+  if (d.totalBytes > n_) return { kind: "oversize" };
+  let _ = mn(d.value),
+    p = r !== void 0 && r.contentHash === _ ? r.parsed : Eke(ohe(d.value), t);
+  return { kind: "seeded", contentHash: _, size: d.totalBytes, parsed: p };
+}
+async function Wi(e, t) {
+  let r;
+  try {
+    r = await e.stat(wc.home(t));
+  } catch (o) {
+    return { kind: "failing", code: l(o) };
+  }
+  if (r.ok)
+    return r.value.kind === "absent"
+      ? { kind: "absent" }
+      : { kind: "failing", code: r.value.kind };
+  return fxe(r.error) ? { kind: "absent" } : He(r.error);
+}
+async function wxn(e, t) {
+  if (!M()) return;
+  let r = e.epoch;
+  try {
+    let o = await t.read(),
+      d =
+        o.kind === "seeded"
+          ? o.parsed
+          : o.kind === "absent" && t.whenAbsent === "seedAbsence"
+            ? Eie()
+            : void 0;
+    if (d === void 0) {
+      n(`settings: ${t.label} not re-seeded (${dRt(o)}); the file read serves`);
+      return;
+    }
+    if (t.source !== "userSettings" && e.walkReadDiffers(t.path, d)) {
+      n(
+        `settings: ${t.label} not re-seeded (the file read already saw different content this generation); the file read serves`,
+      );
+      return;
+    }
+    if (o.kind === "absent") Ake(t.path);
+    return e.seedParsedFile(t.path, t.source, d, r)
+      ? e.retainLayer(t.path, d)
+      : void 0;
+  } catch (o) {
+    n(`settings: ${t.label} not re-seeded: ${l(o)}; the file read serves`, {
+      level: "warn",
+    });
+    return;
+  }
+}
+function Txn(e, t) {
+  return {
+    source: "userSettings",
+    path: t,
+    read: () => B5t(e, t),
+    label: "user settings",
+    whenAbsent: "seedAbsence",
+  };
+}
+async function Bi(e, t) {
+  if (!e.serves("userNamed")) return { kind: "failing", code: SXt };
+  return ji(e, wc.userNamed(t), t, !1);
+}
+async function Ki(e, t, r) {
+  let o = await Hn(e, wc.system(t));
+  if (o.kind !== "bytes") return o;
+  return {
+    kind: "seeded",
+    contentHash: o.contentHash,
+    size: o.size,
+    parsed:
+      r !== void 0 && r.contentHash === o.contentHash
+        ? r.parsed
+        : Eke(ohe(o.bytes), t, !0),
+  };
+}
+async function ji(e, t, r, o) {
+  let d = await Hn(e, t);
+  if (d.kind !== "bytes") return d;
+  return {
+    kind: "seeded",
+    contentHash: d.contentHash,
+    size: d.size,
+    parsed: Eke(ohe(d.bytes), r, o),
+  };
+}
+async function Hn(e, t) {
+  let r = await e.stat(t);
+  if (!r.ok) return He(r.error);
+  if (r.value.kind === "absent") return { kind: "absent" };
+  if (r.value.kind !== "file") return { kind: "failing", code: r.value.kind };
+  if (r.value.size > n_) return { kind: "oversize" };
+  let o = await e.readBytes(t);
+  if (!o.ok) return He(o.error);
+  if (!o.value.found) return { kind: "absent" };
+  if (o.value.bytes > n_) return { kind: "oversize" };
+  return {
+    kind: "bytes",
+    bytes: o.value.value,
+    contentHash: mn(o.value.value),
+    size: o.value.bytes,
+  };
+}
+async function xar(e, t) {
+  let r = await e.listFolder(wc.system(t));
+  if (!r.ok) {
+    if (r.error.code === "Failed" && r.error.telemetryCode === "ENOTDIR")
+      return { kind: "listed", names: [] };
+    return He(r.error);
+  }
+  if (!r.value.found) return { kind: "listed", names: [] };
+  return {
+    kind: "listed",
+    names: r.value.entries
+      .filter((o) => (o.kind === "file" || o.kind === "link") && rkt(o.name))
+      .map((o) => o.name)
+      .sort(),
+  };
+}
+function dRt(e) {
+  if (e.kind !== "failing") return e.kind;
+  return e.code === SXt
+    ? "the backend does not serve this space"
+    : `backend read failed: ${e.code}`;
+}
+function He(e) {
+  return {
+    kind: "failing",
+    code: e.telemetryCode ?? e.code,
+    failureClass: e.failureClass,
+  };
+}
+function Exn(e, t, r, o) {
+  return {
+    source: t,
+    path: r,
+    read: () => Bi(e.hostFiles, r),
+    label: o,
+    whenAbsent: "seedAbsence",
+  };
+}
+function Axn(e, t, r, o) {
+  return {
+    source: "policySettings",
+    path: t,
+    read: () => Ki(e.hostFiles, t, o.managedFileReads.get(t)),
+    label: r,
+    whenAbsent: "fileServes",
+  };
+}
+async function j5t(e, t, r) {
+  return wxn(t, Txn(e, r));
+}
+class $n {
+  firedSites = new Set();
+  fire(e) {
+    if (this.firedSites.has(e)) return;
+    (this.firedSites.add(e),
+      i("tengu_dead_probe_legacy_local_settings", { site: u(e) }));
+  }
+  reset() {
+    this.firedSites.clear();
+  }
+}
+var umr = new j(() => new $n());
+function qT(e, t, r) {
+  return WU(e, da(), t, r);
+}
+function D() {
+  let e = {
+    store: da(),
+    cwd: he(),
+    allowedSources: gae(),
+    onLegacyLocalSettingsRead: (t) => umr.of(B().host).fire(t),
+    parentManaged: sLn(),
+    hostManagedProvider: a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST,
+    flagInline: RL(),
+    flagPath: q1(),
+    flagExpectedContent: MA() ?? d8(),
+    coworkPlugins: Irt(),
+    canonicalGitRoot: $r,
+    mdm: () => PU(),
+    hkcu: () => Rge(),
+    helper: () => yn(),
+    helperArmedFromRemote: () => Tn(),
+    helperMergesOutput: () => In(),
+    helperWarnings: () => Nn(),
+    wslInherits: () => S0(),
+  };
+  return ((e.file = () => QBe(e)), e);
+}
+function obr(e) {
+  return skt(e, D());
+}
+function Cxn() {
+  let e = D(),
+    t = JHn(e.cwd, e.canonicalGitRoot);
+  return t.decided === void 0 ? t.root : void 0;
+}
+function ho(e) {
+  return ehe(e, D());
+}
+function pRt(e) {
+  return Ilr(e, D());
+}
+function CBe(e) {
+  return blr(e, D());
+}
+function IP() {
+  return Aie(D());
+}
+function zT() {
+  let e = ho("projectSettings"),
+    t = ho("userSettings");
+  return !!e && !!t && wn(e) === wn(t);
+}
+function Iet() {
+  let e = ho("localSettings");
+  if (!e) return [];
+  return qT(e).errors;
+}
+function sbr() {
+  return Bq(D());
+}
+function fRt() {
+  return QBe(D());
+}
+function ye(e) {
+  if (G1() && Ow.has(e)) return null;
+  return QHn(e, D());
+}
+function N5() {
+  return wlr(D());
+}
+function vxn() {
+  return Tlr(D());
+}
+function Rxn() {
+  return Elr(D());
+}
+function F5(e) {
+  return D8t(e, D(), { includeLegacyLocalSettings: !1 });
+}
+var dmr = new j(() => new Map());
+function kxn(e) {
+  let t = D(),
+    r = [ehe(e, t), ...(e === "localSettings" ? [Aie(t)] : [])].filter(
+      (E) => E !== void 0,
+    ),
+    o = dmr.of(B().host),
+    d = r.map((E) => Slr(E, o));
+  if (
+    d.some(
+      ({ settings: E, errors: O }) =>
+        E === null && O.some((I) => I.severity !== "warning"),
+    )
+  )
+    return "unreadable";
+  let [_, p] = d.map(({ settings: E }) => E);
+  return {
+    settings: p === null || p === void 0 ? (_ ?? null) : b0({}, p, _ ?? {}, GU),
+  };
+}
+function ibr() {
+  let e = D();
+  if (!me(e.flagInline)) return !1;
+  if (!we(e.flagInline)) return !1;
+  return wtt(e).settings === null;
+}
+function xxn(e) {
+  let t = D();
+  if (!me(t.flagInline) || !(e in t.flagInline)) return !1;
+  return wtt(t).settings === null;
+}
+function Ige() {
+  return Rlr(D());
+}
+function Hxn() {
+  return Wq(D());
+}
+function Pet() {
+  return e0n(D());
+}
+function we(e) {
+  if (!me(e)) return !1;
+  let t = e.attribution;
+  return (
+    "includeCoAuthoredBy" in e ||
+    (me(t) && ("commitTrailers" in t || "commit" in t || "pr" in t))
+  );
+}
+function abr() {
+  let e = D(),
+    t = ehe("flagSettings", e);
+  if (!t) return !1;
+  if (WU(t, e.store, e.flagExpectedContent).settings !== null) return !1;
+  if (e.flagExpectedContent !== void 0) {
+    let r = xt(e.flagExpectedContent, !1);
+    if (!me(r)) return !0;
+    return we(r);
+  }
+  return ot(t);
+}
+function ot(e) {
+  let t;
+  try {
+    let { resolvedPath: r } = Ro(ae(), e);
+    t = xt(Ex(r, n_), !1);
+  } catch (r) {
+    if (W(r)) return !1;
+    return !0;
+  }
+  if (!me(t)) return !0;
+  return we(t);
+}
+async function lbr(e, t) {
+  let r = D(),
+    o = ehe(e, r);
+  if (!o) return !1;
+  let d = WU(o, r.store);
+  if (d.settings !== null) return !1;
+  if (d.errors.length === 0) return !1;
+  if (M() && t !== void 0 && ve(e, o)) {
+    let _;
+    try {
+      _ = await Un(t);
+    } catch {
+      return !0;
+    }
+    switch (_.kind) {
+      case "absent":
+        return !1;
+      case "object":
+        return we(_.raw);
+      default:
+        return !0;
+    }
+  }
+  return ot(o);
+}
+function ve(e, t) {
+  return e === "userSettings" && Vi(t) === jq.default;
+}
+async function Un(e) {
+  let t = await e.read([Ce.userSettings()]);
+  if (!t.ok) return { kind: "unreadable", code: t.error.code };
+  let r = t.value.items[0];
+  if (!r.found) return { kind: "absent" };
+  if (r.totalBytes > n_) return { kind: "oversize" };
+  let o = ohe(r.value);
+  if (!o.trim()) return { kind: "empty" };
+  let d = xt(o, !1);
+  if (!me(d)) return { kind: "non-object" };
+  return { kind: "object", raw: d };
+}
+function cbr() {
+  let e = D(),
+    t = Aie(e);
+  if (!t) return !1;
+  let r = WU(t, e.store);
+  if (r.settings !== null) return !1;
+  if (r.errors.length === 0) return !1;
+  return ot(t);
+}
+function W5t() {
+  let e = D(),
+    t = Aie(e);
+  if (!t) return null;
+  return WU(t, e.store).settings ?? null;
+}
+function Rd() {
+  return O8t(D());
+}
+function Ixn() {
+  return vlr(D());
+}
+function vBe(e) {
+  return Hlr(D(), e);
+}
+function Pxn() {
+  return da().lastPolicyEnvComposition;
+}
+function pie() {
+  return xlr(D());
+}
+function Ge() {
+  return bb().settings || {};
+}
+var bn = Ge;
+function Oxn() {
+  Za();
+  let e = [];
+  for (let t of ms()) {
+    let r = ye(t);
+    if (r && Object.keys(r).length > 0) e.push({ source: t, settings: r });
+  }
+  return { effective: Ge(), sources: e };
+}
+function VT(e) {
+  let t = ms();
+  for (let r = t.length - 1; r >= 0; r--) {
+    let o = t[r];
+    if (ye(o)?.[e] !== void 0) return o;
+  }
+  return null;
+}
+function bb() {
+  let e = da(),
+    t = e.mergedSettings;
+  if (t !== null) return t;
+  Br("loadSettingsFromDisk_start");
+  let r = Plr(D());
+  return (Br("loadSettingsFromDisk_end"), (e.mergedSettings = r), r);
+}
+function Dxn() {
+  for (let e of ZBe(S0())) {
+    let { settings: t } = qT(fe(e, "managed-settings.json"), void 0, !0),
+      r = t !== null && lL(t),
+      o = !1;
+    try {
+      let d = fe(e, "managed-settings.d"),
+        _ = (E) => {
+          let { settings: O } = qT(fe(d, E), void 0, !0);
+          return O !== null && lL(O);
+        },
+        p = da().primedFolderListing(d);
+      if (p !== void 0) o = p.some(_);
+      else
+        o = ae()
+          .readdirSync(d)
+          .some((E) => {
+            if (!(E.isFile() || E.isSymbolicLink()) || !rkt(E.name)) return !1;
+            return _(E.name);
+          });
+    } catch {}
+    if (r || o) return { hasBase: r, hasDropIns: o };
+  }
+  return { hasBase: !1, hasDropIns: !1 };
+}
+function Yi() {
+  let e = PU();
+  return {
+    settings: Object.keys(e.settings).length > 0 ? e.settings : null,
+    errors: e.errors,
+  };
+}
+function CQ() {
+  let e = D(),
+    { settings: t } = Bq(e);
+  if (t && lL(t)) return t;
+  let { settings: r } = Yi();
+  if (r && lL(r)) return r;
+  let { settings: o } = fRt();
+  if (o && lL(o)) return o;
+  let { settings: d } = btt(e);
+  if (d) return d;
+  let _ = Rge();
+  return Object.keys(_.settings).length > 0 ? _.settings : null;
+}
+function vQ() {
+  let e = ZHn({ ...D(), helper: void 0 });
+  return e === "helper" ? null : e;
+}
+function mRt() {
+  return klr(D());
+}
+function dS() {
+  let e = da(),
+    t = e.policy.origin;
+  if (t !== void 0) return t.value;
+  let r = ZHn(D());
+  return ((e.policy.origin = { value: r }), r);
+}
+function Lxn() {
+  let e = da(),
+    t = e.policy.hostForceLoginMethod;
+  if (t !== void 0) return t.value;
+  let r = Alr(D());
+  return ((e.policy.hostForceLoginMethod = { value: r }), r);
+}
+function Mxn() {
+  return Clr(D());
+}
+function Nxn() {
+  let e = da(),
+    t = e.policy.adminRetentionGoverned;
+  if (t !== void 0) return t;
+  let o = [Bq(D()).settings, PU().settings, QBe(D()).settings].some(
+    (d) => d?.cleanupPeriodDays !== void 0,
+  );
+  return ((e.policy.adminRetentionGoverned = o), o);
+}
+function xq() {
+  let e = da(),
+    t = e.policy.loadErrors;
+  if (t !== void 0) return t;
+  let r = [];
+  return (
+    r.push(...Bq(D()).errors),
+    r.push(...PU().errors),
+    r.push(...fRt().errors),
+    r.push(...btt(D()).errors),
+    r.push(...Rge().errors),
+    (e.policy.loadErrors = r),
+    r
+  );
+}
+function RBe() {
+  return [...PU().errors, ...fRt().errors];
+}
+function Ji() {
+  let e = da(),
+    t = e.policy.adminLoadErrors;
+  if (t !== void 0) return t;
+  let r = [];
+  return (
+    r.push(...Bq(D()).errors),
+    r.push(...PU().errors),
+    r.push(...fRt().errors),
+    (e.policy.adminLoadErrors = r),
+    r
+  );
+}
+function fie() {
+  return mie(Ji());
+}
+function mie(e) {
+  return e.filter((t) => t.severity !== "warning");
+}
+function pmr() {
+  let e = da(),
+    t = e.policy.adminSurvivor;
+  if (t !== void 0) return t;
+  let r = (E) => E != null && lL(E),
+    o = D(),
+    d = Wq(o),
+    _ = PU(),
+    p =
+      (d.composes === "tier" && !$5t() && !_.userWritable) ||
+      r(Bq(o).settings) ||
+      (!_.userWritable && r(_.settings)) ||
+      r(fRt().settings);
+  return ((e.policy.adminSurvivor = p), p);
+}
+function B6() {
+  return !pmr() && fie().length > 0;
+}
+function Fxn() {
+  let e = xq();
+  if (e.length === 0) return;
+  let t = e.some((d) => d.severity !== "warning"),
+    r = t
+      ? "Managed settings failed to load; policies from the failed source are NOT in effect:"
+      : "Managed settings contain invalid entries (remaining valid policies are still enforced):",
+    o = e.map(
+      (d) =>
+        `  ${d.file ?? "managed settings"}${d.path ? ` (${d.path})` : ""}: ${d.message}`,
+    );
+  (process.stderr.write(`${r}
+${o.join(`
+`)}
+`),
+    i("tengu_managed_settings_validation_errors", {
+      error_count: e.length,
+      remote_error_count: G(e, (d) => d.file === "remote managed settings"),
+      fatal: t,
+    }));
+}
+function Jt(e, t, r, o) {
+  return Ii(e, () => t, r, o);
+}
+function Ii(e, t, r, o) {
+  if (e === "policySettings" || e === "flagSettings")
+    return Promise.resolve({ error: null });
+  let d = ho(e);
+  if (!d) return Promise.resolve({ error: null });
+  return xn.run(d, () => Xi(e, t, d, r, o));
+}
+var xn = Dm();
+function fmr() {
+  return xn.drain();
+}
+cie(fmr);
+async function Xi(e, t, r, o, d) {
+  let _ = M() && d !== void 0 && ve(e, r),
+    p = o?.legacyRevocation === "skip",
+    E = null,
+    O;
+  using I = { [Symbol.dispose]: () => O?.() };
+  try {
+    let N = D8t(e, D(), { includeLegacyLocalSettings: !1 }),
+      L = N !== null && WU(r, D().store).errors.some((C) => C.preserveOnWrite);
+    if (L) N = null;
+    if (!N) {
+      let C = null;
+      try {
+        C = (await gS(r)).content;
+      } catch (F) {
+        if (!W(F)) throw F;
+      }
+      if (C !== null && C.trim() !== "") {
+        let F = xt(C, !1);
+        if (F === null)
+          return (
+            n(
+              `updateSettingsForSource: invalid JSON in settings file at ${r}`,
+              { level: "error" },
+            ),
+            { error: Error(`Invalid JSON syntax in settings file at ${r}`) }
+          );
+        if (F && typeof F === "object") {
+          let K = Ru(F);
+          (Dq(K, r),
+            (N = K),
+            n(
+              L
+                ? `Using raw settings from ${r} so entries this build does not recognize survive the write`
+                : `Using raw settings from ${r} due to validation failure`,
+            ));
+        }
+      }
+    }
+    let U = t(N ?? null);
+    if (U === null) {
+      if (e === "localSettings" && !p) {
+        let C = await Mn(t);
+        if (C.error) return { error: C.error };
+        if (C.changed) {
+          if (M() && d !== void 0) O = await vn(d, r);
+          try {
+            bb();
+          } catch (F) {
+            h(F);
+          }
+          Fn(e);
+        }
+      }
+      return { error: null };
+    }
+    await ae().mkdir(pe(r));
+    let x = b0(N || {}, U, (C, F, K, ce) => {
+      if (F === void 0 && ce && typeof K === "string") {
+        delete ce[K];
+        return;
+      }
+      if (Array.isArray(F)) return F;
+      if (K === "extraKnownMarketplaces" && me(C) && me(F)) return Ttt(C, F);
+      return;
+    });
+    tRt(r);
+    let w =
+      b(x, null, 2) +
+      `
+`;
+    if (_) {
+      let C = await d.write(Ce.userSettings(), w, {
+        publishDiscipline: "followAtomic",
+      });
+      if (!C.ok)
+        throw new R(
+          `settings storageV5 write failed: ${C.error.code}${"failureClass" in C.error ? ` (${C.error.failureClass})` : ""}`,
+          "settings storageV5 write failed",
+        );
+    } else {
+      let C = y8(pe(r));
+      await wb(r, w, {
+        encoding: "utf-8",
+        allowSymlink: e === "userSettings" || C,
+        checkParentDir:
+          (e === "projectSettings" || e === "localSettings") && !C,
+        stagingDir: fe(pe(r), rL),
+      });
+    }
+    if ((Za(), _)) O = Zi(r, w);
+    if (e === "localSettings" && !p) {
+      let C = await Mn(t);
+      if (C.error && C.phase !== void 0 && !kn(U))
+        n(
+          `localSettings: legacy settings.local.json could not be evaluated (${C.phase} failure) but this write contains no removals \u2014 canonical write succeeded, ignoring: ${C.error.message}`,
+          { level: "warn" },
+        );
+      else E = C.error;
+    }
+    if (e === "localSettings")
+      M5t(T0("localSettings"), he()).then((C) => {
+        if (!C.written) return;
+        if (C.effective) y("gitignore_global_rule");
+        else if (C.reason === "already_tracked")
+          g("gitignore_global_rule", C.reason);
+        else f("gitignore_global_rule", C.reason ?? "write_ineffective");
+      });
+  } catch (N) {
+    let L = Error(`Failed to read raw settings from ${r}: ${N}`);
+    return (n(L.message, { level: "error" }), { error: L });
+  }
+  if (M() && d !== void 0 && !_) O = await vn(d, r);
+  try {
+    bb();
+  } catch (N) {
+    h(N);
+  }
+  return (Fn(e), { error: E });
+}
+async function vn(e, t) {
+  let r = ho("userSettings");
+  if (r === void 0 || r === t || !ve("userSettings", r)) return;
+  return j5t(e, da(), r);
+}
+function Zi(e, t) {
+  if (Buffer.byteLength(t) > n_) return;
+  let r;
+  try {
+    r = Eke(t, e);
+  } catch (d) {
+    n(`updateSettingsForSource: written settings not seeded: ${l(d)}`);
+    return;
+  }
+  let o = da();
+  return (o.seedParsedFile(e, "userSettings", r, o.epoch), o.retainLayer(e, r));
+}
+function kn(e) {
+  if (e === void 0 || Array.isArray(e)) return !0;
+  if (e === null || typeof e !== "object") return !1;
+  return Object.values(e).some(kn);
+}
+function Fn(e) {
+  try {
+    da().changed.emit(e);
+  } catch (t) {
+    for (let r of t instanceof AggregateError ? t.errors : [t]) h(r);
+  }
+}
+async function Mn(e) {
+  let t = Aie(D());
+  if (!t) return { changed: !1, error: null };
+  let r;
+  try {
+    r = (await gS(t, n_)).content;
+  } catch (I) {
+    if (W(I)) return { changed: !1, error: null };
+    let N = new R(
+      `Failed to read legacy settings.local.json at ${t}: ${I}`,
+      "Failed to read legacy settings.local.json",
+    );
+    return (
+      n(N.message, { level: "error" }),
+      { changed: !1, error: N, phase: "read" }
+    );
+  }
+  let o = xt(r, !1);
+  if (!o || typeof o !== "object" || Array.isArray(o))
+    return { changed: !1, error: null };
+  let d = Ru(o);
+  Dq(d, t);
+  let _ = d,
+    p;
+  try {
+    p = e(Ru(_));
+  } catch (I) {
+    let N = new R(
+      `Transform failed against legacy settings.local.json at ${t} (malformed legacy content?): ${I}`,
+      "Transform failed against legacy settings.local.json",
+    );
+    return (
+      n(N.message, { level: "error" }),
+      { changed: !1, error: N, phase: "transform" }
+    );
+  }
+  if (p === null) return { changed: !1, error: null };
+  let E = b0(Ru(_), p, (I, N, L, U) => {
+      if (N === void 0 && U && typeof L === "string") {
+        delete U[L];
+        return;
+      }
+      if (Array.isArray(N)) return N;
+      return;
+    }),
+    O = Har(_, E);
+  if (b(O) === b(_)) return { changed: !1, error: null };
+  try {
+    tRt(t);
+    let I = y8(pe(t));
+    return (
+      await wb(
+        t,
+        b(O, null, 2) +
+          `
+`,
+        {
+          encoding: "utf-8",
+          allowSymlink: I,
+          checkParentDir: !I,
+          stagingDir: fe(pe(t), rL),
+        },
+      ),
+      Za(),
+      { changed: !0, error: null }
+    );
+  } catch (I) {
+    let N = new R(
+      `Failed to revoke from legacy settings.local.json at ${t}: ${I}`,
+      "Failed to revoke from legacy settings.local.json",
+    );
+    return (n(N.message, { level: "error" }), { changed: !1, error: N });
+  }
+}
+function Har(e, t) {
+  if (Array.isArray(e) && Array.isArray(t)) {
+    let r = new Set(t.map((o) => b(o)));
+    return e.filter((o) => r.has(b(o)));
+  }
+  if (me(e) && me(t)) {
+    let r = {};
+    for (let o of Object.keys(e)) {
+      if (!(o in t) || t[o] === void 0) continue;
+      r[o] = Har(e[o], t[o]);
+    }
+    return r;
+  }
+  return e;
+}
+function $xn(e) {
+  let t = XT().strip().parse(e),
+    r = ["permissions", "sandbox", "hooks"],
+    o = [],
+    d = {
+      permissions: new Set(Object.keys(glr().shape)),
+      sandbox: new Set(Object.keys(kRt().shape)),
+      hooks: new Set(C_),
+    };
+  for (let _ of Object.keys(t))
+    if (r.includes(_) && t[_] && typeof t[_] === "object") {
+      let p = t[_],
+        E = d[_];
+      if (E) {
+        for (let O of Object.keys(p)) if (E.has(O)) o.push(`${_}.${O}`);
+      }
+    } else o.push(_);
+  return o.sort();
+}
+function Oet(e) {
+  if (!da().pluginBaseLoaded)
+    i("tengu_plugin_settings_premature_read", { key: u(e) });
+  let { settings: t } = bb();
+  return (t || {})[e];
+}
+function hx(e) {
+  return Hq(e).map((t) => t.value);
+}
+var mmr = ["policySettings", "flagSettings", "userSettings"];
+function Hq(e) {
+  let t = [];
+  for (let r of mmr) {
+    let o = ye(r)?.[e];
+    if (o !== void 0) t.push({ source: r, value: o });
+  }
+  return t;
+}
+function eL() {
+  return !!(
+    ye("userSettings")?.skipDangerousModePermissionPrompt ||
+    ye("localSettings")?.skipDangerousModePermissionPrompt ||
+    ye("flagSettings")?.skipDangerousModePermissionPrompt ||
+    ye("policySettings")?.skipDangerousModePermissionPrompt
+  );
+}
+function Det() {
+  return !!(
+    ye("policySettings")?.skipDangerousModePermissionPrompt ||
+    ye("userSettings")?.skipDangerousModePermissionPrompt
+  );
+}
+function G5t() {
+  return !!(
+    ye("userSettings")?.skipWorkflowUsageWarning ||
+    ye("localSettings")?.skipWorkflowUsageWarning ||
+    ye("flagSettings")?.skipWorkflowUsageWarning ||
+    ye("policySettings")?.skipWorkflowUsageWarning
+  );
+}
+function gie() {
+  return ms().some((e) => ye(e)?.isolatePeerMachines === !0);
+}
+function RQ() {
+  return ms().some((e) => ye(e)?.disableClaudeAiConnectors === !0);
+}
+function Uxn() {
+  return !0;
+}
+function gRt(e) {
+  return ![
+    ...Rd(),
+    ...pie(),
+    ye("policySettings"),
+    ye("flagSettings"),
+    ye("userSettings"),
+    ye("localSettings"),
+    W5t(),
+  ].some((t) => t?.[e] === !1);
+}
+function Bxn() {
+  return gRt("useAutoModeDuringPlan");
+}
+function eke() {
+  return hx("askUserQuestionTimeout")[0];
+}
+function Let() {
+  return hx("dialogExpiry")[0];
+}
+function tke() {
+  return hx("modelProposedGoals")[0] ?? "auto";
+}
+async function jxn(e) {
+  let t = hx("modelProposedGoals")[0];
+  if (t !== void 0) return t;
+  if ((await kBe("modelProposedGoals", e)) !== "absent") return "alwaysAsk";
+  return "auto";
+}
+var OU = m(() =>
+    c({
+      allow: v(s()).optional(),
+      soft_deny: v(s()).optional(),
+      hard_deny: v(s()).optional(),
+      deny: v(s()).optional(),
+      environment: v(s()).optional(),
+    }),
+  ),
+  hie = ["userSettings", "flagSettings", "policySettings"];
+function tL() {
+  let e = OU(),
+    t = da();
+  if (!t.autoModeUntrustedSourceWarned)
+    for (let E of ["projectSettings", "localSettings"]) {
+      if (E === "projectSettings" && zT()) continue;
+      let O = ye(E)?.autoMode;
+      if (O && e.safeParse(O).success)
+        ((t.autoModeUntrustedSourceWarned = !0),
+          n(
+            `settings autoMode in ${E} ignored \u2014 only user/flag/managed settings may set classifier rules (projectSettings and localSettings are repo-controllable)`,
+            { level: "warn" },
+          ),
+          i("tengu_settings_auto_mode_rules_untrusted_source_ignored", {
+            source: u(E),
+          }));
+    }
+  let r = [],
+    o = [],
+    d = [],
+    _ = [],
+    p = !1;
+  for (let E of hie) {
+    let O = ye(E);
+    if (!O) continue;
+    let I = e.safeParse(O.autoMode);
+    if (I.success) {
+      if (I.data.allow) r.push(...I.data.allow);
+      if (I.data.soft_deny) o.push(...I.data.soft_deny);
+      if (I.data.hard_deny) d.push(...I.data.hard_deny);
+      if (I.data.environment) _.push(...I.data.environment);
+    }
+  }
+  if (r.length > 0 || o.length > 0 || d.length > 0 || _.length > 0 || p)
+    return {
+      ...(r.length > 0 && { allow: r }),
+      ...(o.length > 0 && { soft_deny: o }),
+      ...(d.length > 0 && { hard_deny: d }),
+      ...(_.length > 0 && { environment: _ }),
+      ...{},
+    };
+  return;
+}
+function Wxn() {
+  for (let e of hie) if (ye(e)?.autoMode?.classifyAllShell === !0) return !0;
+  return !1;
+}
+async function kBe(e, t, r) {
+  let o = D(),
+    d = XHn(o),
+    _ = !1,
+    p = !1;
+  for (let E of d) {
+    let O =
+      E !== "policySettings" &&
+      (r?.presenceSources === void 0 || r.presenceSources.includes(E));
+    if (
+      O &&
+      E === "flagSettings" &&
+      me(o.flagInline) &&
+      e in o.flagInline &&
+      e !== "attribution" &&
+      e !== "includeCoAuthoredBy"
+    )
+      _ = !0;
+    if (E === "flagSettings" && o.flagExpectedContent !== void 0) {
+      if (!o.flagExpectedContent.trim()) continue;
+      let x = xt(o.flagExpectedContent, !1);
+      if (x === null || typeof x !== "object" || Array.isArray(x)) p = !0;
+      else if (
+        O &&
+        e in x &&
+        e !== "attribution" &&
+        e !== "includeCoAuthoredBy"
+      )
+        _ = !0;
+      continue;
+    }
+    let I = ehe(E, o);
+    if (!I) continue;
+    if (
+      M() &&
+      t !== void 0 &&
+      E === "projectSettings" &&
+      d.includes("userSettings") &&
+      zT()
+    )
+      continue;
+    let N = E === "localSettings" ? Aie(o) : void 0,
+      L = N ? [I, N] : [I],
+      U = M() && t !== void 0 && ve(E, I);
+    for (let x of L) {
+      if (U) {
+        let w = await Un(t);
+        switch (w.kind) {
+          case "unreadable":
+            (n(
+              `rawSettingsKeyPresence: v5 user-settings read failed: ${w.code}`,
+            ),
+              (p = !0));
+            break;
+          case "oversize":
+          case "non-object":
+            p = !0;
+            break;
+          case "object":
+            if (
+              O &&
+              e in w.raw &&
+              !(e === "attribution" || e === "includeCoAuthoredBy")
+            )
+              _ = !0;
+            break;
+          case "absent":
+          case "empty":
+            break;
+        }
+        continue;
+      }
+      try {
+        let { resolvedPath: w } = Ro(ae(), x),
+          C = Ex(w, n_);
+        if (!C.trim()) continue;
+        let F = xt(C, !1);
+        if (F === null || typeof F !== "object" || Array.isArray(F)) p = !0;
+        else if (
+          O &&
+          e in F &&
+          !(e === "attribution" || e === "includeCoAuthoredBy")
+        )
+          _ = !0;
+      } catch (w) {
+        if ((YHn(w, x), !W(w))) p = !0;
+      }
+    }
+  }
+  if (p) return "unknowable";
+  return _ ? "present" : "absent";
+}
+export {
+  L5t,
+  M5t,
+  cie,
+  y0,
+  Cet,
+  tRt,
+  nRt,
+  uar,
+  rRt,
+  PU,
+  Rge,
+  S0,
+  vet,
+  oRt,
+  lxn,
+  JRe,
+  uie,
+  cxn,
+  Ret,
+  dar,
+  die,
+  uxn,
+  QRe,
+  N5t,
+  par,
+  kge,
+  dxn,
+  EBe,
+  pxn,
+  ket,
+  sRt,
+  fxn,
+  iRt,
+  ZRe,
+  mxn,
+  gxn,
+  hxn,
+  xge,
+  aRt,
+  _xn,
+  F5t,
+  kq,
+  xet,
+  lRt,
+  far,
+  Het,
+  mar,
+  gar,
+  Hge,
+  yxn,
+  uS,
+  Sxn,
+  bxn,
+  har,
+  ABe,
+  _ar,
+  cRt,
+  yar,
+  uRt,
+  Sar,
+  $5t,
+  bar,
+  war,
+  U5t,
+  Tar,
+  Ear,
+  Aar,
+  Car,
+  Rar,
+  kar,
+  B5t,
+  wxn,
+  Txn,
+  xar,
+  dRt,
+  Exn,
+  Axn,
+  j5t,
+  umr,
+  qT,
+  obr,
+  Cxn,
+  ho,
+  pRt,
+  CBe,
+  IP,
+  zT,
+  Iet,
+  sbr,
+  fRt,
+  ye,
+  N5,
+  vxn,
+  Rxn,
+  F5,
+  dmr,
+  kxn,
+  ibr,
+  xxn,
+  Ige,
+  Hxn,
+  Pet,
+  abr,
+  lbr,
+  cbr,
+  W5t,
+  Rd,
+  Ixn,
+  vBe,
+  Pxn,
+  pie,
+  Ge,
+  bn,
+  Oxn,
+  VT,
+  bb,
+  Dxn,
+  CQ,
+  vQ,
+  mRt,
+  dS,
+  Lxn,
+  Mxn,
+  Nxn,
+  xq,
+  RBe,
+  fie,
+  mie,
+  pmr,
+  B6,
+  Fxn,
+  Jt,
+  Ii,
+  fmr,
+  Har,
+  $xn,
+  Oet,
+  hx,
+  mmr,
+  Hq,
+  eL,
+  Det,
+  G5t,
+  gie,
+  RQ,
+  Uxn,
+  gRt,
+  Bxn,
+  eke,
+  Let,
+  tke,
+  jxn,
+  OU,
+  hie,
+  tL,
+  Wxn,
+  kBe,
+};

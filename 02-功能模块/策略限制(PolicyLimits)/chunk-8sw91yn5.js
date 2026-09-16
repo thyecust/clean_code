@@ -1,0 +1,1178 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { po, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
+import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { be, uo } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { py } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { oe, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import {
+  cU,
+  fVt,
+  gU,
+  DR,
+  Aor,
+  KC,
+  Zc,
+  cl,
+  d0,
+  kp,
+  qg,
+  bg,
+  Yt,
+  qD,
+} from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { te, Xe, or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
+import { ZU, up } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { Pe, fo, ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { nar, mx, rar } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import { MRe, lBe, Qse, cBe, xir, Hir, Iir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { Hve } from "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
+import { qse, l1, lkn } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+import { s, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
+import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { readFileSync as Ke } from "fs";
+import { join as We } from "path";
+function D4t(e, t, r, o, i) {
+  let l = Pe();
+  if (
+    !(
+      i?.ignoreEnvOptOut === !0 &&
+      l === "firstParty" &&
+      ev() &&
+      !a.ANTHROPIC_UNIX_SOCKET
+    ) &&
+    po(process.env.CLAUDE_CODE_ATTRIBUTION_HEADER)
+  )
+    return "";
+  let p = `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}.${e}`,
+    f = process.env.CLAUDE_CODE_ENTRYPOINT ?? "unknown",
+    d = (l === "firstParty" && fo()) || l === "vertex" ? " cch=00000;" : "",
+    h = fVt(),
+    _ = h ? ` cc_workload=${h};` : "",
+    S = KC(t) && !t.isMainSession ? " cc_is_subagent=true;" : "",
+    E =
+      r !== void 0 &&
+      /^req_[A-Za-z0-9_-]{1,36}$/.test(r) &&
+      l === "firstParty" &&
+      fo()
+        ? ` cc_prev_req=${r};`
+        : "",
+    w =
+      o !== void 0 &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        o,
+      ) &&
+      l === "firstParty" &&
+      fo()
+        ? ` cc_prompt_id=${o};`
+        : "",
+    U = `x-anthropic-billing-header: cc_version=${p}; cc_entrypoint=${f};${d}${_}${S}${E}${w}`;
+  return (n(`attribution header ${U}`), U);
+}
+function L4t(e) {
+  return e.anthropicAuthEnabled && Boolean(e.oauthScopes?.includes(py));
+}
+class H {
+  notice = null;
+  changed = Le();
+  replaceNotice(e) {
+    if (this.notice === e) return;
+    if (
+      this.notice &&
+      e &&
+      this.notice.text === e.text &&
+      this.notice.url === e.url
+    )
+      return;
+    ((this.notice = e), this.changed.emit(this.notice));
+  }
+}
+var me = new j(() => new H());
+function R() {
+  return me.of(B().host);
+}
+function K(e) {
+  R().replaceNotice(e);
+}
+function O$e() {
+  return R().notice;
+}
+function Knr(e) {
+  return R().changed.subscribe(e);
+}
+var eCn = { subscribe: (e) => R().changed.subscribe(e), getSnapshot: O$e };
+function X(e) {
+  if (e === 9 || e === 10) return !1;
+  return e < 32 || (e >= 127 && e <= 159);
+}
+function q(e) {
+  return e === 1564 || (e >= 8234 && e <= 8238) || (e >= 8294 && e <= 8297);
+}
+function he(e) {
+  return e === 65038 || e === 65039;
+}
+function _e(e) {
+  return e >= 55296 && e <= 57343;
+}
+function Z(e) {
+  let t = e.codePointAt(0);
+  if (e.length === 1) {
+    if (t <= 31) return 0;
+    if (q(t)) return 1;
+  }
+  let r = te(e);
+  return r === 0 ? 0 : r === 1 ? 1 : r;
+}
+var x = 4096,
+  YJe = /\u2026 \[\+\d+ graphemes\]/,
+  ye = 4064,
+  xe = 256;
+function Q(e) {
+  if (e.length <= x) return e;
+  return e
+    .split(
+      `
+`,
+    )
+    .map((t) => {
+      if (t.length <= x) return t;
+      let r = [],
+        o = "";
+      for (let { segment: i } of Xs().segment(t))
+        if (o.length > 0 && o.length + i.length > xe) (r.push(o), (o = i));
+        else o += i;
+      if (o.length > 0) r.push(o);
+      return r.join(`
+`);
+    }).join(`
+`);
+}
+function W(e) {
+  let t = "",
+    r = 0;
+  for (let { segment: o } of Xs().segment(e)) {
+    t += o;
+    let i = te(t),
+      l = i - r;
+    if (((r = i), l !== Z(o))) return !1;
+  }
+  return !0;
+}
+function Ce(e) {
+  let t = "",
+    r = "",
+    o = 0;
+  for (let { segment: i } of Xs().segment(e)) {
+    r += i;
+    let l = te(r),
+      u = l - o;
+    ((o = l), (t += u === Z(i) ? i : "\uFFFD"));
+  }
+  return t;
+}
+function V(e) {
+  let t = e;
+  for (let r = 0; r < 16; r++) {
+    if (W(t)) return t;
+    let o = Ce(t);
+    if (o === t) break;
+    t = o;
+  }
+  if (W(t)) return t;
+  return [...Xs().segment(t)].map(() => "\uFFFD").join("");
+}
+function Ae(e, t) {
+  let r = "";
+  for (let { segment: o } of Xs().segment(e)) {
+    if (r.length + o.length > t) break;
+    r += o;
+  }
+  return r;
+}
+function Se(e) {
+  return J(e, ye);
+}
+function J(e, t) {
+  let r = Ae(e, t);
+  if (r.length > 0) return r;
+  let o = Math.min(t, e.length),
+    i = e.charCodeAt(o - 1);
+  if (i >= 55296 && i <= 56319) o -= 1;
+  return e.slice(0, o);
+}
+var Ee = 4 * x * x,
+  N = 1024,
+  we = 64 * N * N;
+function Re(e) {
+  let t = Ee,
+    r = we,
+    o = (i) => [...Xs().segment(i)].length;
+  return e
+    .split(
+      `
+`,
+    )
+    .map((i) => {
+      if (i === "") return i;
+      if (/^\u2026 \[\+\d+ graphemes\]$/.test(i)) return i;
+      let l = i.match(/\u2026 \[\+\d+ graphemes\]$/),
+        u = l ? l[0] : "",
+        p = l ? i.slice(0, i.length - u.length) : i,
+        f = p.length > x,
+        d = f ? Se(p) : p,
+        h = f ? `\u2026 [+${o(p.slice(d.length))} graphemes]` : "",
+        _ = d.length + h.length + u.length,
+        S = _ * _;
+      if (S <= t) return ((t -= S), V(d) + h + u);
+      let y = J(p, N),
+        E =
+          y.length < p.length
+            ? `\u2026 [+${o(p.slice(y.length))} graphemes]`
+            : "",
+        T = y.length + E.length + u.length,
+        w = T * T;
+      if (y.length > 0 && w <= r) return ((r -= w), V(y) + E + u);
+      return `\u2026 [+${o(p)} graphemes]` + u;
+    }).join(`
+`);
+}
+function rU(e) {
+  for (let t = 0; t < e.length; t++) if (X(e.charCodeAt(t))) return !1;
+  return !0;
+}
+function ps(e) {
+  return ee(e, !0);
+}
+function ee(e, t) {
+  let r = "";
+  for (let i of e) {
+    let l = i.codePointAt(0);
+    if (he(l)) continue;
+    r += X(l) || q(l) || _e(l) ? "\uFFFD" : i;
+  }
+  let o = Hve(r);
+  return t ? Re(o) : o;
+}
+var ke = /\p{DI}/gu;
+function JJe(e) {
+  return e.replace(ke, "");
+}
+function t5(e) {
+  return ee(JJe(up(e)), !1);
+}
+var Te = /\p{Default_Ignorable_Code_Point}/u,
+  Ne = /\p{Cf}/u;
+function Oe(e) {
+  return (
+    (e >= 8204 && e <= 8207) ||
+    e === 1564 ||
+    (e >= 65024 && e <= 65039) ||
+    (e >= 6155 && e <= 6159) ||
+    e === 10240
+  );
+}
+function P(e, t) {
+  return (
+    Te.test(e) ||
+    e === "\u2028" ||
+    e === "\u2029" ||
+    e === "\u2800" ||
+    (t >= 55296 && t <= 57343) ||
+    Ne.test(e)
+  );
+}
+function oU(e) {
+  for (let t of e) if (P(t, t.codePointAt(0) ?? 0)) return !0;
+  return !1;
+}
+function Ie(e, t) {
+  return P(e, t) && !Oe(t);
+}
+function ne(e, t) {
+  let r = "";
+  for (let o of e) r += t(o, o.codePointAt(0) ?? 0) ? "\uFFFD" : o;
+  return r;
+}
+function De(e, t) {
+  let r = Array.from(e),
+    o = "";
+  for (let i = 0; i < r.length; i++) {
+    let l = r[i] ?? "";
+    o += t(
+      l,
+      l.codePointAt(0) ?? 0,
+      r[i - 1]?.codePointAt(0) ?? Number.NaN,
+      r[i + 1]?.codePointAt(0) ?? Number.NaN,
+    )
+      ? "\uFFFD"
+      : l;
+  }
+  return o;
+}
+function _i(e) {
+  return ps(ne(e, Ie));
+}
+function Tme(e) {
+  return F(re(e));
+}
+function re(e) {
+  return ps(ne(e, P));
+}
+var vve = 2000,
+  Me = 253;
+function lAt(e) {
+  return Me + (e.endsWith(".") && !e.endsWith("..") ? 1 : 0);
+}
+var Rm = 200000;
+function Fe(e, t = vve) {
+  return oe(e, t) === e;
+}
+function aA(e) {
+  return (
+    e.includes(`
+`) || te(e) > 80
+  );
+}
+function tCn(e) {
+  let t = oe(e, vve),
+    r = t.replace(/\t/g, " ");
+  return t === e ? r : `${r}\u2026`;
+}
+function A(e) {
+  return te(e.replace(/[\uFE0E\uFE0F\u180B-\u180F\u2800]/gu, "").trim()) > 0;
+}
+function L(e) {
+  return Array.from(e)
+    .filter((t) => ie(t))
+    .join("");
+}
+function ie(e) {
+  return te(e.replace(/[\uFE0E\uFE0F\u180B-\u180F]/gu, "")) > 0;
+}
+var ve = 8;
+function jd(e) {
+  let t = "",
+    r = 0,
+    o = !1;
+  for (let i of e) {
+    if (
+      i ===
+      `
+`
+    ) {
+      if (o) ((t += "\uFFFD"), (o = !1));
+      ((t += i), (r = 0));
+      continue;
+    }
+    if (ie(i)) {
+      if (o) ((t += "\uFFFD"), (o = !1));
+      ((t += i), (r = 0));
+      continue;
+    }
+    if (r < ve) {
+      ((t += i), r++);
+      continue;
+    }
+    o = !0;
+  }
+  return o ? `${t}\uFFFD` : t;
+}
+function F(e) {
+  return ps(jd(e));
+}
+function ze(e) {
+  let t = Array.from(e),
+    r = 0,
+    o = t.length;
+  while (r < o && !A(t[r] ?? "")) r++;
+  while (o > r && !A(t[o - 1] ?? "")) o--;
+  return t.slice(r, o).join("");
+}
+function I(e, t) {
+  let r = Array.from(ze(e));
+  return t === "end" ? r.at(-1) : r[0];
+}
+function le(e) {
+  return I(e, "end") === "\u2026";
+}
+function Xnr(e) {
+  let t = Array.from(e),
+    r = t.length;
+  for (;;) {
+    let o = r;
+    while (o > 0 && !A(t[o - 1] ?? "")) o--;
+    if (o > 0 && t[o - 1] === "\u2026") {
+      r = o - 1;
+      continue;
+    }
+    break;
+  }
+  return t.slice(0, r).join("");
+}
+function YG(e) {
+  let t = [],
+    r = !1;
+  for (let o of Array.from(e)) {
+    if (
+      o !==
+        `
+` &&
+      !A(o)
+    ) {
+      r = !0;
+      continue;
+    }
+    if (o === "\uFFFD" && r) {
+      r = !1;
+      continue;
+    }
+    ((r = !1), t.push(o));
+  }
+  return A(t.join(""));
+}
+function Ue(e) {
+  return /^[A-Za-z_$][\w$]*$/.test(e);
+}
+function cse(e) {
+  return Tme(e);
+}
+function k(e) {
+  return F(
+    ps(
+      De(e, (t, r, o, i) => {
+        if (r === 65038 || r === 65039) return !(o > 127 || i === 8419);
+        if (r === 8204 || r === 8205) return !(o > 127 && i > 127);
+        if (r >= 6155 && r <= 6159) return !(o > 127);
+        return P(t, r);
+      }),
+    ),
+  );
+}
+function d6(e) {
+  if (e === void 0) return !1;
+  let t = Tme(e)
+    .replace(/\uFFFD/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return t !== "" && te(t) > 0;
+}
+var Eme = 48,
+  BC = 256;
+function M4t(e) {
+  let t = cse(oe(e, BC)),
+    r = t.replace(/\s+/g, " ").trim();
+  return Xe(cAt(r, t, e.length > BC), Eme);
+}
+function cAt(e, t, r = !1) {
+  let o = I(e, "start") === '"' || I(e, "end") === '"' || le(e);
+  return e === t && !o && !r ? e : b(t);
+}
+function ae(e) {
+  let t = cse(oe(e, BC)),
+    r = t.replace(/\s+/g, " ").trim();
+  return cAt(r, t, e.length > BC);
+}
+function n5(e) {
+  return oe(e, BC) === e;
+}
+function D$e(e, t) {
+  let r = new Map(),
+    o = (u) => t(u).normalize("NFC");
+  for (let u of e) {
+    let p = o(u),
+      f = r.get(p) ?? new Set();
+    (f.add(u), r.set(p, f));
+  }
+  let i = (u) =>
+      b(oe(u, vve)).replace(
+        /[\u007f-\uffff]/g,
+        (p) => `\\u${p.charCodeAt(0).toString(16).padStart(4, "0")}`,
+      ) + (u.length > vve ? "\u2026" : ""),
+    l = new Map();
+  return e.map((u) => {
+    let p = o(u);
+    if ((r.get(p)?.size ?? 0) <= 1) return t(u);
+    let f = i(u),
+      d = l.get(f) ?? new Map();
+    l.set(f, d);
+    let h = d.get(u) ?? d.size + 1;
+    return (d.set(u, h), h > 1 ? `${f} (#${h})` : f);
+  });
+}
+function QJe(e) {
+  let t = new Map();
+  for (let l of e) t.set(l, Ue(l) ? l : b(Tme(l)));
+  let r = new Map();
+  for (let l of t.values()) r.set(l, (r.get(l) ?? 0) + 1);
+  let o = Be(e),
+    i = new Map();
+  for (let l of e) {
+    let u = t.get(l) ?? "",
+      p = (r.get(u) ?? 0) > 1 || o.has(l.normalize("NFC"));
+    i.set(
+      l,
+      p
+        ? b(l).replace(
+            /[\u007f-\uffff]/g,
+            (f) => `\\u${f.charCodeAt(0).toString(16).padStart(4, "0")}`,
+          )
+        : u,
+    );
+  }
+  return i;
+}
+function Be(e) {
+  let t = new Map(),
+    r = new Set();
+  for (let o of e) {
+    let i = o.normalize("NFC"),
+      l = t.get(i);
+    if (l !== void 0 && l !== o) r.add(i);
+    else t.set(i, o);
+  }
+  return r;
+}
+function Gg(e) {
+  return typeof e === "string" && Rve(e) ? "" : String(JG(e));
+}
+function JG(e) {
+  let t = typeof e === "string" && !Rve(e) ? e : qse;
+  return l1(M4t(t));
+}
+function Rve(e) {
+  return e === "" || te(oe(e, BC)) === 0;
+}
+function He(e) {
+  return e
+    .replace(/_+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (t) => t.toUpperCase());
+}
+function Ynr(e) {
+  let t = oe((e.scope === "claudeai" ? e.displayName : void 0) ?? "", BC),
+    r = oe(e.title ?? "", BC),
+    o = k(oe(e.serverName, BC)),
+    i = d6(t) ? k(t) : YG(o) ? o : "(unnamed server)",
+    l = oe(e.toolName, BC),
+    u = cse(He(l)),
+    p = cse(l),
+    f = d6(r) ? k(r) : YG(u) ? u : YG(p) ? p : "(unnamed tool)";
+  return l1(Xe(`${i} \u2014 ${f}`.replace(/\s+/g, " ").trim(), Eme));
+}
+function uAt(e) {
+  return l1(YH(e, "(unnamed tool)"));
+}
+function YH(e, t) {
+  let r = M4t(e);
+  return YG(r) ? r : t;
+}
+function Us(e) {
+  if (typeof e !== "string") return { text: l1(""), needsGutter: !1 };
+  let t = F(_i(tCn(e)));
+  return { text: l1(t), needsGutter: aA(t) };
+}
+function OD(e) {
+  if (typeof e !== "string") return null;
+  if (!n5(e) || e.trim() === "" || te(e) === 0) return null;
+  if (jd(e) !== e) return null;
+  return { display: l1(ae(e)) };
+}
+var C =
+    "(value cannot be shown in full \u2014 approval withheld; one-time options only)",
+  $e = 1e4,
+  je = 64;
+function D(e, t, r = 0) {
+  if (typeof e === "string") {
+    if (e.length + 2 > t.unitsRemaining)
+      throw Error("payload exceeds the serialization budget");
+    let l = b(e);
+    if (((t.unitsRemaining -= l.length), t.unitsRemaining < 0))
+      throw Error("payload exceeds the serialization budget");
+    return l;
+  }
+  if (typeof e === "number") {
+    let l = Number.isFinite(e) ? String(e) : "null";
+    if (((t.unitsRemaining -= l.length), t.unitsRemaining < 0))
+      throw Error("payload exceeds the serialization budget");
+    return l;
+  }
+  if (typeof e === "boolean" || e === null) {
+    if (((t.unitsRemaining -= String(e).length), t.unitsRemaining < 0))
+      throw Error("payload exceeds the serialization budget");
+    return String(e);
+  }
+  if (typeof e === "bigint") throw Error("bigint payload cannot be serialized");
+  if (typeof e !== "object") return;
+  if (r >= je) throw Error("payload exceeds the serialization depth wall");
+  if (Array.isArray(e)) {
+    let l = e.length;
+    if (typeof l !== "number" || !Number.isSafeInteger(l) || l < 0)
+      throw Error("payload length is not an honest array length");
+    if (((t.elementsRemaining -= l), t.elementsRemaining < 0))
+      throw Error("payload exceeds the element serialization wall");
+    if (((t.unitsRemaining -= 2 + (l > 0 ? l - 1 : 0)), t.unitsRemaining < 0))
+      throw Error("payload exceeds the serialization budget");
+    let u = [];
+    for (let p = 0; p < l; p++) {
+      let f = D(e[p], t, r + 1);
+      if (f === void 0) {
+        if (((t.unitsRemaining -= 4), t.unitsRemaining < 0))
+          throw Error("payload exceeds the serialization budget");
+        u.push("null");
+      } else u.push(f);
+    }
+    return `[${u.join(",")}]`;
+  }
+  let o = Object.entries(e);
+  if (((t.elementsRemaining -= o.length), t.elementsRemaining < 0))
+    throw Error("payload exceeds the element serialization wall");
+  if (((t.unitsRemaining -= 2), t.unitsRemaining < 0))
+    throw Error("payload exceeds the serialization budget");
+  let i = [];
+  for (let [l, u] of o) {
+    let p = D(u, t, r + 1);
+    if (p === void 0) continue;
+    if (l.length + 2 > t.unitsRemaining)
+      throw Error("payload exceeds the serialization budget");
+    let f = b(l);
+    if (
+      ((t.unitsRemaining -= f.length + 1 + (i.length > 0 ? 1 : 0)),
+      t.unitsRemaining < 0)
+    )
+      throw Error("payload exceeds the serialization budget");
+    i.push(`${f}:${p}`);
+  }
+  return `{${i.join(",")}}`;
+}
+function km(e, t) {
+  let r;
+  if (typeof e === "string") r = e;
+  else
+    try {
+      let u = D(e, {
+        unitsRemaining: t?.maxUnits ?? vve,
+        elementsRemaining: $e,
+      });
+      if (u === void 0) return { kind: "withheld", marker: l1(C) };
+      r = u;
+    } catch {
+      return { kind: "withheld", marker: l1(C) };
+    }
+  if (!Fe(r, t?.maxUnits)) return { kind: "withheld", marker: l1(C) };
+  let o = t?.softWrap ? Q(r) : r,
+    i = (t?.scrub === "key" ? re(o) : _i(o)).replace(/\t/g, " "),
+    l = t?.softWrap
+      ? i.replaceAll(
+          `
+`,
+          "",
+        )
+      : i;
+  if (YJe.test(l)) return { kind: "withheld", marker: l1(C) };
+  if (jd(i) !== i) return { kind: "withheld", marker: l1(C) };
+  return { kind: "full", text: l1(i), needsGutter: aA(i) };
+}
+function Jk(e) {
+  let t = _i(e);
+  return YJe.test(t) || ce(t);
+}
+function Jnr(e) {
+  return ce(_i(e));
+}
+function ce(e) {
+  return jd(e) !== e;
+}
+function N4t(e) {
+  let t = cse(oe(e, BC)),
+    r = t.replace(/\s+/g, " ").trim();
+  return cAt(
+    r,
+    t,
+    r.includes(",") ||
+      r.includes(";") ||
+      L(r).includes(" and ") ||
+      L(r).startsWith("and ") ||
+      L(r).endsWith(" and") ||
+      e.length > BC ||
+      jd(oe(e, BC)) !== oe(e, BC),
+  );
+}
+function Qk(e, t = ae) {
+  return D$e(e, t).map((r) => l1(r));
+}
+function Oo(e) {
+  return e.replace(/[\n\r\u2028\u2029]/g, "\uFFFD");
+}
+function ZJe(e, t) {
+  let r = e.map((d) => km(d, t)),
+    o = new Map();
+  e.forEach((d, h) => {
+    let _ = r[h];
+    if (_.kind === "full" && !o.has(d))
+      o.set(d, Oo(_.text).replace(/\s+/g, " ").trim());
+  });
+  let i = e.filter((d, h) => r[h].kind === "full"),
+    l = Qk(i, (d) => o.get(d) ?? ""),
+    u = [],
+    p = 0,
+    f = 0;
+  for (let d of r)
+    if (d.kind === "full") u.push({ text: String(l[p++]), withheld: !1 });
+    else ((f += 1), u.push({ text: `${d.marker} (#${f})`, withheld: !0 }));
+  return u;
+}
+function dAt(e) {
+  if (typeof e !== "string") return lkn("");
+  return lkn(_i(e));
+}
+function QG(e) {
+  if (typeof e !== "string") return null;
+  let t = k(oe(e, BC)).replace(/\t/g, " ");
+  if (!YG(kr(t))) return null;
+  if (le(kr(t))) return null;
+  return l1(or(t, 24, !0));
+}
+function Qnr(e, ...t) {
+  let r = e[0] ?? "";
+  for (let o = 0; o < t.length; o++) ((r += t[o] ?? ""), (r += e[o + 1] ?? ""));
+  return l1(r);
+}
+function Ame(e) {
+  return /[\u0000-\u001f\u007f-\u009f]/.test(e) || oU(e);
+}
+function z(e) {
+  let t = oe(ZU(e, "").toLowerCase(), 64).trim();
+  return /^[a-z0-9_-]+$/.test(t) ? t : "";
+}
+var eQe = 16;
+function nCn(e) {
+  let t =
+    typeof e === "object" && e !== null && "compliance_taints" in e
+      ? e.compliance_taints
+      : void 0;
+  if (!Array.isArray(t)) return 0;
+  let r = G(t, (i) => typeof i !== "string" || z(i) === ""),
+    o = Y(
+      t
+        .filter((i) => typeof i === "string")
+        .map(z)
+        .filter((i) => i.length > 0),
+    );
+  return r + Math.max(0, o.length - eQe);
+}
+var ue = m(() =>
+    c({
+      restrictions: fe(s(), c({ allowed: O() })),
+      compliance_taints: v(se())
+        .default([])
+        .transform((e, t) => {
+          let r = Y(
+            e
+              .filter((o) => typeof o === "string")
+              .map(z)
+              .filter((o) => o.length > 0),
+          ).slice(0, eQe);
+          if (e.length > 0 && r.length === 0)
+            t.addIssue({
+              code: "custom",
+              message:
+                "compliance_taints had entries but none were well-formed regime names",
+            });
+          return r;
+        }),
+      monitoring_notice: c({
+        text: s()
+          .max(500)
+          .transform((e) => ZU(e, "", { keepEmojiJoiners: !0 })),
+        url: s()
+          .max(2048)
+          .url()
+          .startsWith("https://")
+          .refine((e) => !Ame(e))
+          .nullish()
+          .catch(null),
+      })
+        .nullable()
+        .default(null)
+        .catch(null),
+      defaults: fe(s(), se()).default({}).catch({}),
+    }),
+  ),
+  L$e = {
+    restrictions: {},
+    compliance_taints: [],
+    monitoring_notice: null,
+    defaults: {},
+  },
+  Znr = [
+    "invalid_request_error",
+    "authentication_error",
+    "permission_error",
+    "not_found_error",
+    "rate_limit_error",
+  ],
+  err = [
+    "ip_not_in_allowed_range",
+    "claude_code_key_creator_not_member",
+    "organization_disabled",
+    "restricted_regime_endpoint",
+    "oauth_not_allowed_for_organization",
+  ];
+var Ve = "policy-limits.json";
+class trr {
+  sessionCache = null;
+  lastFetchOutcome = null;
+  diskAdoptionSuppressed = !1;
+  diskAdoptionEpoch = 0;
+  storageV5 = void 0;
+  cacheRevision = 0;
+  replaceSessionCache(e) {
+    let t = this.sessionCache?.compliance_taints ?? [],
+      r = e?.compliance_taints ?? [];
+    if (
+      ((this.sessionCache = e),
+      this.cacheRevision++,
+      nar(r),
+      K(e?.monitoring_notice ?? null),
+      t.length !== r.length || r.some((o) => !t.includes(o)))
+    )
+      gU();
+  }
+}
+var kfr = new j(() => new trr());
+function g() {
+  return kfr.of(B().host);
+}
+function use(e) {
+  g().replaceSessionCache(e);
+}
+function F4t(e) {
+  let t = g();
+  ((t.lastFetchOutcome = e), t.cacheRevision++);
+}
+function kve() {
+  return g().lastFetchOutcome;
+}
+function rCn() {
+  g().storageV5 = void 0;
+}
+function sU() {
+  return g().sessionCache;
+}
+function $4t() {
+  let e = g();
+  ((e.diskAdoptionSuppressed = !0), e.diskAdoptionEpoch++);
+}
+function tQe() {
+  return g().diskAdoptionEpoch;
+}
+function U4t() {
+  g().diskAdoptionSuppressed = !1;
+}
+function B4t() {
+  return g().diskAdoptionSuppressed;
+}
+function oCn() {
+  return g().cacheRevision;
+}
+function iU() {
+  return We(be(), Ve);
+}
+function lA() {
+  return KJ() === void 0;
+}
+function KJ(e = {}) {
+  if (Pe() !== "firstParty") return "third_party_provider";
+  if (!e.skipBaseUrlCheck && !fo()) return "custom_base_url";
+  try {
+    let { key: r } = qg({ skipRetrievingKeyFromApiKeyHelper: !0 });
+    if (r) return;
+  } catch {}
+  if (Zc()) return;
+  let t = Yt();
+  if (!t?.accessToken) return "no_auth";
+  if (!t.scopes?.includes(py)) return "oauth_no_inference_scope";
+  if (t.subscriptionType == null) return;
+  if (t.subscriptionType !== "enterprise" && t.subscriptionType !== "team")
+    return "prosumer_oauth";
+  return;
+}
+function nQe() {
+  let e = g();
+  if (M() && e.storageV5 !== void 0 && e.sessionCache) return e.sessionCache;
+  try {
+    let t = Ke(iU(), "utf-8");
+    return j4t(t);
+  } catch {
+    return null;
+  }
+}
+function j4t(e) {
+  let t = pAt(xt(e, !1));
+  return t.success ? t.data : null;
+}
+var de = new WeakMap();
+function pAt(e) {
+  let t = ue().safeParse(e);
+  if (t.success) de.set(t.data, e);
+  return t;
+}
+function rQe(e) {
+  return de.get(e) ?? e;
+}
+function W4t(e, t) {
+  let r = g();
+  if (
+    ((r.storageV5 = e),
+    t !== null && r.sessionCache === null && !r.diskAdoptionSuppressed)
+  )
+    r.replaceSessionCache(t);
+}
+var Ge = [
+    ["hipaa", "allow_web_fetch"],
+    ["hipaa", "allow_memory_sync"],
+    ["zdr", "allow_memory_sync"],
+    ["hipaa", "allow_design_sync"],
+    ["hipaa", "allow_projects_tool"],
+    ["hipaa", "allow_claude_browser_extension"],
+    ["hipaa", "allow_remote_sessions"],
+    ["hipaa", "allow_remote_control"],
+    ["hipaa", "allow_cobalt_plinth"],
+    ["zdr", "allow_cobalt_plinth"],
+    ["hipaa", "allow_team_onboarding"],
+    ["hipaa", "allow_error_reporting"],
+    ["hipaa", "allow_auto_mode_sibling_docs"],
+    ["zdr", "allow_error_reporting"],
+    ["hipaa", "allow_send_file"],
+    ["zdr", "allow_send_file"],
+    ["hipaa", "allow_plugin_skill_search"],
+    ["hipaa", "allow_account_skills_sync"],
+    ["hipaa", "allow_account_plugins_sync"],
+    ["hipaa", "allow_usage_transcript_scan"],
+    ["hipaa", "allow_skill_doctor_transcript_scan"],
+    ["hipaa", "allow_model_catalog"],
+    ["hipaa", "allow_heap_dump"],
+    ["zdr", "allow_heap_dump"],
+    ["hipaa", "allow_local_checkpoint_commit"],
+    ["zdr", "allow_local_checkpoint_commit"],
+    ["hipaa", "allow_mycelium"],
+    ["zdr", "allow_mycelium"],
+    ...[],
+    ...[],
+  ],
+  Ye = new Set([
+    "allow_product_feedback",
+    "allow_remote_sessions",
+    "allow_remote_control",
+    "allow_cobalt_plinth",
+    "allow_error_reporting",
+    "allow_auto_mode_sibling_docs",
+    "allow_plugin_skill_search",
+    "allow_account_skills_sync",
+    "allow_account_plugins_sync",
+    "allow_send_file",
+    "allow_heap_dump",
+    "allow_local_checkpoint_commit",
+    ...[],
+    "allow_usage_transcript_scan",
+    "allow_skill_doctor_transcript_scan",
+  ]),
+  qe = new Set(["allow_product_feedback"]);
+function Mt(e) {
+  let t = ge();
+  if (!t) {
+    if (Ye.has(e)) {
+      if (lA()) return !1;
+      if (qe.has(e) && St() && !(e === "allow_product_feedback" && cU()))
+        return !1;
+    }
+    return !0;
+  }
+  return G4t(
+    { restrictions: t, compliance_taints: ch()?.compliance_taints ?? [] },
+    e,
+  );
+}
+function G4t(e, t) {
+  let r = e.restrictions[t];
+  if (r) return r.allowed;
+  for (let [o, i] of Ge)
+    if (i === t && e.compliance_taints.includes(o)) return !1;
+  return !0;
+}
+rar({
+  isPolicyAllowed: (e) => Mt(e),
+  policyDenyKind: (e) => DD(e),
+  policyDeniedReason: (e, t, r) => op(e, t, r),
+  complianceTaintsSettled: () => q4t(),
+});
+function Cme() {
+  if (!lA() || ch() !== null) return !1;
+  let e = g().lastFetchOutcome;
+  return e !== null && !e.success && e.httpStatus === 404;
+}
+function op(e, t, r, o) {
+  if (Mt(e)) return null;
+  if (Cme()) return cBe(t);
+  if (o !== void 0 && !xve()) return o;
+  if (ch() === null) return Qse(t);
+  return lBe(t, r, mx());
+}
+function xve() {
+  return MRe(mx()).length > 0;
+}
+function DD(e) {
+  if (Mt(e)) return null;
+  if (ch() !== null) return "org_denied";
+  return Cme() ? "route_missing" : "cache_miss";
+}
+function sCn(e, t) {
+  let r = DD(e);
+  if (r === null) return null;
+  if (r === "route_missing") return Iir();
+  if (t !== void 0 && !xve()) return t;
+  return r === "cache_miss" ? Hir() : xir(mx());
+}
+function q4t() {
+  if (
+    DR() ||
+    Aor() ||
+    !ev() ||
+    Pe() !== "firstParty" ||
+    a.ANTHROPIC_UNIX_SOCKET !== void 0 ||
+    bg() !== void 0 ||
+    (d0() !== void 0 &&
+      !L4t({ anthropicAuthEnabled: cl(), oauthScopes: Yt()?.scopes }))
+  )
+    return !1;
+  if (ch() !== null) return !0;
+  let e = Yt();
+  return (
+    (e?.subscriptionType === "pro" || e?.subscriptionType === "max") &&
+    e.scopes?.includes(py) === !0 &&
+    qD() === "store" &&
+    !uo() &&
+    !kp({ skipRetrievingKeyFromApiKeyHelper: !0 }).key &&
+    !Zc()
+  );
+}
+function iCn(e) {
+  return ge()?.[e]?.allowed === !0;
+}
+function aCn(e) {
+  let t = ch()?.defaults[e];
+  return typeof t === "boolean" ? t : void 0;
+}
+function ch() {
+  if (!lA()) return null;
+  let e = g();
+  if (e.sessionCache) return e.sessionCache;
+  if (e.diskAdoptionSuppressed) return null;
+  let t = nQe();
+  if (t) return (e.replaceSessionCache(t), t);
+  return null;
+}
+function ge() {
+  return ch()?.restrictions ?? null;
+}
+export {
+  D4t,
+  L4t,
+  O$e,
+  Knr,
+  eCn,
+  YJe,
+  rU,
+  ps,
+  JJe,
+  t5,
+  oU,
+  _i,
+  Tme,
+  vve,
+  lAt,
+  Rm,
+  aA,
+  tCn,
+  jd,
+  Xnr,
+  YG,
+  cse,
+  d6,
+  Eme,
+  BC,
+  M4t,
+  cAt,
+  n5,
+  D$e,
+  QJe,
+  Gg,
+  JG,
+  Rve,
+  Ynr,
+  uAt,
+  YH,
+  Us,
+  OD,
+  km,
+  Jk,
+  Jnr,
+  N4t,
+  Qk,
+  Oo,
+  ZJe,
+  dAt,
+  QG,
+  Qnr,
+  Ame,
+  eQe,
+  nCn,
+  L$e,
+  Znr,
+  err,
+  trr,
+  kfr,
+  use,
+  F4t,
+  kve,
+  rCn,
+  sU,
+  $4t,
+  tQe,
+  U4t,
+  B4t,
+  oCn,
+  iU,
+  lA,
+  KJ,
+  nQe,
+  j4t,
+  pAt,
+  rQe,
+  W4t,
+  Mt,
+  G4t,
+  Cme,
+  op,
+  xve,
+  DD,
+  sCn,
+  q4t,
+  iCn,
+  aCn,
+  ch,
+};

@@ -1,0 +1,448 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { vg, yz, n_e, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { Qt, De, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+var { floor: k, random: x } = Math;
+function P(e, i) {
+  return e + k(x() * (i - e + 1));
+}
+var v = P;
+function z(e) {
+  var i = e.length;
+  return i ? e[v(0, i - 1)] : void 0;
+}
+var d = z;
+function w(e, i) {
+  return n_e(i, function (o) {
+    return e[o];
+  });
+}
+var C = w;
+function B(e) {
+  return e == null ? [] : C(e, yz(e));
+}
+var b = B;
+function V(e) {
+  return d(b(e));
+}
+var y = V;
+function A(e) {
+  var i = vg(e) ? d : y;
+  return i(e);
+}
+var Tv = A;
+F();
+function O0e() {
+  let i = Ge().spinnerVerbs;
+  if (!i) return h;
+  if (i.mode === "replace") return i.verbs.length > 0 ? i.verbs : h;
+  return [...h, ...i.verbs];
+}
+var h = [
+  "Accomplishing",
+  "Actioning",
+  "Actualizing",
+  "Architecting",
+  "Baking",
+  "Beaming",
+  "Beboppin'",
+  "Befuddling",
+  "Billowing",
+  "Blanching",
+  "Bloviating",
+  "Boogieing",
+  "Boondoggling",
+  "Booping",
+  "Bootstrapping",
+  "Brewing",
+  "Bunning",
+  "Burrowing",
+  "Calculating",
+  "Canoodling",
+  "Caramelizing",
+  "Cascading",
+  "Catapulting",
+  "Cerebrating",
+  "Channeling",
+  "Channelling",
+  "Choreographing",
+  "Churning",
+  "Clauding",
+  "Coalescing",
+  "Cogitating",
+  "Combobulating",
+  "Composing",
+  "Computing",
+  "Concocting",
+  "Considering",
+  "Contemplating",
+  "Cooking",
+  "Crafting",
+  "Creating",
+  "Crunching",
+  "Crystallizing",
+  "Cultivating",
+  "Deciphering",
+  "Deliberating",
+  "Determining",
+  "Dilly-dallying",
+  "Discombobulating",
+  "Doing",
+  "Doodling",
+  "Drizzling",
+  "Ebbing",
+  "Effecting",
+  "Elucidating",
+  "Embellishing",
+  "Enchanting",
+  "Envisioning",
+  "Fermenting",
+  "Fiddle-faddling",
+  "Finagling",
+  "Flamb\xE9ing",
+  "Flibbertigibbeting",
+  "Flowing",
+  "Flummoxing",
+  "Fluttering",
+  "Forging",
+  "Forming",
+  "Frolicking",
+  "Frosting",
+  "Gallivanting",
+  "Galloping",
+  "Garnishing",
+  "Generating",
+  "Gesticulating",
+  "Germinating",
+  "Gitifying",
+  "Grooving",
+  "Gusting",
+  "Harmonizing",
+  "Hashing",
+  "Hatching",
+  "Herding",
+  "Honking",
+  "Hullaballooing",
+  "Hyperspacing",
+  "Ideating",
+  "Imagining",
+  "Improvising",
+  "Incubating",
+  "Inferring",
+  "Infusing",
+  "Ionizing",
+  "Jitterbugging",
+  "Julienning",
+  "Kneading",
+  "Leavening",
+  "Levitating",
+  "Lollygagging",
+  "Manifesting",
+  "Marinating",
+  "Meandering",
+  "Metamorphosing",
+  "Misting",
+  "Moonwalking",
+  "Moseying",
+  "Mulling",
+  "Mustering",
+  "Musing",
+  "Nebulizing",
+  "Nesting",
+  "Newspapering",
+  "Noodling",
+  "Nucleating",
+  "Orbiting",
+  "Orchestrating",
+  "Osmosing",
+  "Perambulating",
+  "Percolating",
+  "Perusing",
+  "Philosophising",
+  "Photosynthesizing",
+  "Pollinating",
+  "Pondering",
+  "Pontificating",
+  "Pouncing",
+  "Precipitating",
+  "Prestidigitating",
+  "Processing",
+  "Proofing",
+  "Propagating",
+  "Puttering",
+  "Puzzling",
+  "Quantumizing",
+  "Razzle-dazzling",
+  "Razzmatazzing",
+  "Recombobulating",
+  "Reticulating",
+  "Roosting",
+  "Ruminating",
+  "Saut\xE9ing",
+  "Scampering",
+  "Schlepping",
+  "Scurrying",
+  "Seasoning",
+  "Shenaniganing",
+  "Shimmying",
+  "Simmering",
+  "Skedaddling",
+  "Sketching",
+  "Slithering",
+  "Smooshing",
+  "Sock-hopping",
+  "Spelunking",
+  "Spinning",
+  "Sprouting",
+  "Stewing",
+  "Sublimating",
+  "Swirling",
+  "Swooping",
+  "Symbioting",
+  "Synthesizing",
+  "Tempering",
+  "Thinking",
+  "Thundering",
+  "Tinkering",
+  "Tomfoolering",
+  "Topsy-turvying",
+  "Transfiguring",
+  "Transmuting",
+  "Twisting",
+  "Undulating",
+  "Unfurling",
+  "Unravelling",
+  "Vibing",
+  "Waddling",
+  "Wandering",
+  "Warping",
+  "Whatchamacalliting",
+  "Whirlpooling",
+  "Whirring",
+  "Whisking",
+  "Wibbling",
+  "Working",
+  "Wrangling",
+  "Zesting",
+  "Zigzagging",
+];
+var m = Object.freeze({
+  mode: "responding",
+  overrideMessage: null,
+  overrideColor: null,
+  overrideShimmerColor: null,
+  isCompacting: !1,
+  compactingHintText: null,
+  compactingStartTime: null,
+  turnEffort: null,
+  turnModel: null,
+  retryStatus: null,
+  thinkingStartedAt: null,
+  defaultVerb: "",
+});
+function ctn() {
+  let e = Xa({});
+  function i(n, g, { materialize: s = !0 } = {}) {
+    e.setState((l) => {
+      let c = n in l;
+      if (!c && !s) return l;
+      let S = l[n] ?? { ...m, defaultVerb: Tv(O0e()) ?? "" },
+        u = g(S);
+      if (u === S && c) return l;
+      return { ...l, [n]: u };
+    });
+  }
+  function o(n) {
+    function g(t) {
+      let r = Date.now();
+      i(n, (a) =>
+        a.mode === t
+          ? a
+          : { ...a, mode: t, thinkingStartedAt: t === "thinking" ? r : null },
+      );
+    }
+    function s(t) {
+      i(n, (r) => (r.overrideMessage === t ? r : { ...r, overrideMessage: t }));
+    }
+    function l(t, r) {
+      i(n, (a) =>
+        a.overrideColor === t && a.overrideShimmerColor === r
+          ? a
+          : { ...a, overrideColor: t, overrideShimmerColor: r },
+      );
+    }
+    function c(t, r = null) {
+      i(
+        n,
+        (a) =>
+          a.turnEffort === t && a.turnModel === r
+            ? a
+            : { ...a, turnEffort: t, turnModel: r },
+        { materialize: t !== null || r !== null },
+      );
+    }
+    function S(t) {
+      i(n, (r) => (r.retryStatus === t ? r : { ...r, retryStatus: t }));
+    }
+    function u(t, r = null) {
+      let a = Date.now();
+      i(n, (p) => {
+        if (p.isCompacting === t && p.compactingHintText === r) return p;
+        let R = t ? (p.compactingStartTime ?? a) : null;
+        return {
+          ...p,
+          isCompacting: t,
+          compactingHintText: r,
+          compactingStartTime: R,
+        };
+      });
+    }
+    function T() {
+      i(n, (t) =>
+        t.overrideMessage === null &&
+        t.overrideColor === null &&
+        t.overrideShimmerColor === null &&
+        !t.isCompacting &&
+        t.compactingHintText === null &&
+        t.compactingStartTime === null
+          ? t
+          : {
+              ...t,
+              overrideMessage: null,
+              overrideColor: null,
+              overrideShimmerColor: null,
+              isCompacting: !1,
+              compactingHintText: null,
+              compactingStartTime: null,
+            },
+      );
+    }
+    function M() {
+      let t = Tv(O0e()) ?? "";
+      i(n, (r) => ({
+        ...r,
+        overrideMessage: null,
+        overrideColor: null,
+        overrideShimmerColor: null,
+        isCompacting: !1,
+        compactingHintText: null,
+        compactingStartTime: null,
+        turnEffort: null,
+        turnModel: null,
+        retryStatus: null,
+        defaultVerb: t,
+      }));
+    }
+    function E(t) {
+      switch (t.type) {
+        case "hooks_start":
+          (l(
+            "claudeBlue_FOR_SYSTEM_SPINNER",
+            "claudeBlueShimmer_FOR_SYSTEM_SPINNER",
+          ),
+            s(
+              t.hookType === "pre_compact"
+                ? "Running PreCompact hooks\u2026"
+                : t.hookType === "post_compact"
+                  ? "Running PostCompact hooks\u2026"
+                  : "Running SessionStart hooks\u2026",
+            ));
+          return;
+        case "compact_start":
+          (s("Compacting conversation"), u(!0, t.hintText ?? null));
+          return;
+        case "compact_end":
+          T();
+          return;
+      }
+    }
+    return {
+      setMode: g,
+      setMessage: s,
+      setColors: l,
+      setTurnEffort: c,
+      setRetryStatus: S,
+      setCompacting: u,
+      resetOverrides: M,
+      applyCompactProgress: E,
+    };
+  }
+  let f = {
+    setMode: (n) => o(ze()).setMode(n),
+    setMessage: (n) => o(ze()).setMessage(n),
+    setColors: (n, g) => o(ze()).setColors(n, g),
+    setTurnEffort: (n, g) => o(ze()).setTurnEffort(n, g),
+    setRetryStatus: (n) => o(ze()).setRetryStatus(n),
+    setCompacting: (n, g) => o(ze()).setCompacting(n, g),
+    resetOverrides: () => o(ze()).resetOverrides(),
+    applyCompactProgress: (n) => o(ze()).applyCompactProgress(n),
+  };
+  return {
+    getState: e.getState,
+    setState: e.setState,
+    subscribe: e.subscribe,
+    get(n) {
+      return e.getState()[n ?? ze()] ?? m;
+    },
+    bind: o,
+    main: f,
+    evict(n) {
+      e.setState((g) => {
+        if (!(n in g)) return g;
+        let { [n]: s, ...l } = g;
+        return l;
+      });
+    },
+    applyEvent(n) {
+      switch (n.kind) {
+        case "agent-mode":
+          o(n.agentId).setMode(n.mode);
+          return;
+        case "agent-retry-status":
+          o(n.agentId).setRetryStatus(n.retryStatus);
+          return;
+        case "agent-turn-effort":
+          o(n.agentId).setTurnEffort(n.turnEffort, n.turnModel);
+          return;
+        case "main-message":
+          f.setMessage(n.message);
+          return;
+        case "main-colors":
+          f.setColors(n.color, n.shimmerColor);
+          return;
+      }
+    },
+  };
+}
+var jOt = Qt(null);
+function a4() {
+  let e = De(jOt);
+  if (!e)
+    throw ReferenceError(
+      "useSpinnerStore cannot be called outside of a SpinnerStoreContext provider (mounted by <AppStateProvider />)",
+    );
+  return e;
+}
+function utn(e) {
+  let i = a4(),
+    o = e ?? ze();
+  return At(i.subscribe, () => i.getState()[o] ?? m);
+}
+function dtn(e) {
+  let i = a4();
+  return At(i.subscribe, () => (i.getState()[e] ?? m).thinkingStartedAt);
+}
+function ptn(e) {
+  let i = a4();
+  return At(i.subscribe, () => (i.getState()[e] ?? m).retryStatus);
+}
+export { Tv, O0e, ctn, jOt, a4, utn, dtn, ptn };

@@ -1,0 +1,443 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import {
+  Fc,
+  nvt,
+  Lfr,
+  pZe,
+  v6,
+  fZe,
+  Mfr,
+  UKt,
+  Zc,
+  mq,
+  NUe,
+  mZe,
+  gZe,
+  cl,
+  E5,
+  d0,
+  Gl,
+  A5,
+  gb,
+  hRn,
+  kp,
+  Fse,
+  Ssr,
+  MR,
+  hZe,
+  _Ze,
+  bsr,
+  _Rn,
+  BKt,
+  rvt,
+  qg,
+  yZe,
+  bg,
+  C5,
+  sge,
+  wsr,
+  Nfr,
+  SZe,
+  jKt,
+  Tsr,
+  ige,
+  WKt,
+  ovt,
+  hRe,
+  yRn,
+  SRn,
+  Esr,
+  svt,
+  AU,
+  $se,
+  Asr,
+  p0,
+  FUe,
+  R6,
+  bRn,
+  _Re,
+  bZe,
+  ivt,
+  $Ue,
+  Ffr,
+  wRn,
+  TRn,
+  $fr,
+  Csr,
+  yRe,
+  SRe,
+  GKt,
+  avt,
+  Ufr,
+  qKt,
+  vsr,
+  ERn,
+  UUe,
+  zKt,
+  ARn,
+  VKt,
+  bRe,
+  Byr,
+  BUe,
+  wZe,
+  f0,
+  age,
+  Yt,
+  Use,
+  qD,
+  $T,
+  Hw,
+  CRn,
+  jyr,
+  lvt,
+  cm,
+  Bfr,
+  Rsr,
+  cvt,
+  uvt,
+  Qi,
+  dQ,
+  dvt,
+  vRn,
+  wg,
+  v5,
+  RRn,
+  lge,
+  ksr,
+  TZe,
+  Ss,
+  jUe,
+  jfr,
+  gt,
+  kRn,
+  Wyr,
+  EZe,
+  lp,
+  wu,
+  gq,
+  KKt,
+  XKt,
+  WUe,
+  xRn,
+  cge,
+  vn,
+  zD,
+  mh,
+  Wfr,
+  hb,
+  Gyr,
+  qn,
+  HRn,
+  wRe,
+  qyr,
+  pvt,
+  uge,
+  AZe,
+  Bse,
+  UT,
+  Gfr,
+  YKt,
+  k6,
+  qfr,
+  IRn,
+  PRn,
+  zyr,
+  ORn,
+  x6,
+  pQ,
+  CZe,
+  zfr,
+  JKt,
+  Vyr,
+  QKt,
+  Kyr,
+  ZKt,
+  e5t,
+  jse,
+  Xyr,
+  Yyr,
+  t5t,
+  Jyr,
+  dge,
+  Qyr,
+  Vfr,
+  Kfr,
+  Zyr,
+  eSr,
+  tSr,
+  nSr,
+  rSr,
+  oSr,
+  Xfr,
+  sSr,
+  iSr,
+  cx,
+  R5,
+  vZe,
+  RZe,
+  DRn,
+  Wse,
+} from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
+import "../ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import "../共享小工具-未细化/chunk-a5errgr8.js";
+import "../共享小工具-未细化/chunk-035vf5et.js";
+import "../核心工具-进程与信号/chunk-qja3ebvp.js";
+import "../核心工具-进程与信号/chunk-qjqntsq2.js";
+import "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import "../核心工具-其他/核心工具-其他.myj0fw5d.js";
+import "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
+import "../共享小工具-未细化/chunk-q599wyee.js";
+import "../../02-功能模块/Hooks钩子/chunk-9em0d4k5.js";
+import "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
+import "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import "../共享小工具-未细化/chunk-0ypv8gq2.js";
+import "../核心工具-字符串与文本/chunk-3kbr3k57.js";
+import "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
+import "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import "../核心工具-路径与平台/chunk-svk2cp17.js";
+import "../共享小工具-未细化/chunk-24x3spwe.js";
+import "../核心工具-路径与平台/chunk-fx8qr1md.js";
+import "../../02-功能模块/认证-OAuth登录/chunk-y7b7kf5n.js";
+import "../共享小工具-未细化/chunk-1bqqnyc1.js";
+import "../共享小工具-未细化/chunk-h3avap4w.js";
+import "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
+import "./设置-配置.aqbb35ee.js";
+import "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
+import "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import "../共享小工具-未细化/chunk-a7cfts2d.js";
+import "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import "../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import "../共享小工具-未细化/chunk-jjr7hzzf.js";
+import "../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
+import "../共享小工具-未细化/chunk-kkf7jbwd.js";
+import "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import "../核心工具-字符串与文本/chunk-01cse5zg.js";
+import "../共享小工具-未细化/chunk-7beprh8k.js";
+import "../共享小工具-未细化/chunk-km6n9zrg.js";
+import "../共享小工具-未细化/chunk-862jyk0r.js";
+import "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
+import "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import "../安全文件系统(FS加固)/chunk-h64ek850.js";
+import "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
+import "../共享小工具-未细化/chunk-qng0dgw4.js";
+import "../共享小工具-未细化/chunk-z5tdbda7.js";
+import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
+import "../共享小工具-未细化/chunk-rsr7cnyv.js";
+import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import "../共享小工具-未细化/chunk-twnwwsbr.js";
+import "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import "../共享小工具-未细化/chunk-yz7dtpc3.js";
+import "../共享小工具-未细化/chunk-jj2wxn4x.js";
+import "../../00-第三方库/axios/axios.t0fczzmz.js";
+import "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
+import "../共享小工具-未细化/chunk-an83zrbx.js";
+import "../共享小工具-未细化/chunk-0d0nn4ae.js";
+import "./chunk-zqr5ctyf.js";
+import "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import "../核心工具-路径与平台/chunk-13kdp2ag.js";
+import "../../00-第三方库/zod/zod.3g334xwq.js";
+import "../共享小工具-未细化/chunk-78nzsrc6.js";
+import "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import "../../00-第三方库/lodash/lodash.207999qb.js";
+import "../共享小工具-未细化/chunk-510m1t2d.js";
+import "../共享小工具-未细化/chunk-h62vxw7j.js";
+import "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import "../共享小工具-未细化/chunk-w76kejwn.js";
+import "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+export {
+  $se as AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS,
+  lge as OAuthRefreshLockContendedError,
+  mZe as SDK_OAUTH_REFRESH_ENTRYPOINTS,
+  Byr as __resetKnownDeadRefreshTokensForTest,
+  jyr as _resetCredentialsChangeCheckForTesting,
+  ksr as acquireOAuthRefreshLock,
+  RZe as adminPolicyUnreadable,
+  SZe as apiKeyHelperStates,
+  Rsr as authFailureClocks,
+  Esr as awsAuthRefreshStates,
+  pZe as awsCredentialMemos,
+  Nfr as calculateApiKeyHelperTTL,
+  KKt as canAuthenticateChromeBridge,
+  Ss as checkAndRefreshOAuthTokenIfNeeded,
+  jUe as checkAndRefreshOAuthTokenIfNeededWithOutcome,
+  Ffr as checkGcpCredentialsValid,
+  hRe as clearApiKeyHelperCache,
+  R6 as clearAwsCredentialsCache,
+  bRn as clearAwsHelperCredentialsCache,
+  SRe as clearGcpCredentialsCache,
+  Hw as clearOAuthTokenCache,
+  Use as clearOAuthTokenMemos,
+  zyr as clearOtelHeadersCache,
+  E5 as describeHowToDisableAuthTokenSource,
+  d0 as effectiveAuthTokenEnv,
+  vZe as gatewaySignInScreenConfigured,
+  wRn as gcpCredentialRejections,
+  Csr as gcpRefreshMemos,
+  pQ as getAccountInformation,
+  iSr as getAccountInformationAsync,
+  MR as getAdditionalModelOptionsCache,
+  A5 as getAnthropicApiKey,
+  Vyr as getAnthropicApiKeyAsync,
+  gb as getAnthropicApiKeySafe,
+  qg as getAnthropicApiKeyWithSource,
+  JKt as getAnthropicApiKeyWithSourceAsync,
+  QKt as getAnthropicApiKeyWithSourceAsyncSafe,
+  kp as getAnthropicApiKeyWithSourceSafe,
+  ige as getApiKeyFromApiKeyHelper,
+  WKt as getApiKeyFromApiKeyHelperCached,
+  qKt as getApiKeyFromConfigOrMacOSKeychain,
+  zfr as getApiKeyFromConfigOrMacOSKeychainAsync,
+  jKt as getApiKeyHelperElapsedMs,
+  ovt as getApiKeyHelperLastFailure,
+  _Rn as getApiKeyPrefixBucket,
+  hRn as getApiKeySourceSafe,
+  Gl as getAuthTokenSource,
+  e5t as getAuthTokenSourceAsync,
+  zD as getAuthenticatedAccountInfo,
+  qD as getClaudeAIOAuthTokenOrigin,
+  $T as getClaudeAIOAuthTokenOriginAsync,
+  Yt as getClaudeAIOAuthTokens,
+  Qi as getClaudeAIOAuthTokensAsync,
+  Tsr as getColdApiKeyHelperRun,
+  bg as getConfiguredApiKeyHelper,
+  C5 as getConfiguredAwsAuthRefresh,
+  bZe as getConfiguredGcpAuthRefresh,
+  $Ue as getConfiguredVertexProjectId,
+  p0 as getDefaultAwsProviderChain,
+  R5 as getForcedLoginMethod,
+  hZe as getModelAccessCache,
+  bRe as getOAuthAccountOnHold,
+  vn as getOauthAccountInfo,
+  t5t as getOauthAccountInfoAsync,
+  _Ze as getOrgModelDefaultCache,
+  ORn as getOtelHeadersFromHelper,
+  PRn as getOtelHeadersHelperLastFailure,
+  UT as getRateLimitTier,
+  Vfr as getRateLimitTierAsync,
+  Gfr as getSeatTier,
+  Kfr as getSeatTierAsync,
+  WUe as getStoredOAuthSubscriptionType,
+  XKt as getStoredOAuthTokenExpiresAt,
+  mh as getStoredOauthAccountInfo,
+  YKt as getSubscriptionName,
+  Xfr as getSubscriptionNameAsync,
+  qn as getSubscriptionType,
+  dge as getSubscriptionTypeAsync,
+  yZe as getUnapprovedCustomApiKey,
+  cm as handleOAuth401Error,
+  rvt as hasAnthropicApiKey,
+  BKt as hasAnthropicApiKeyAuth,
+  Kyr as hasAnthropicApiKeyAuthAsync,
+  bsr as hasAnthropicDirectApiKey,
+  ARn as hasAttemptedScopeExpansion,
+  Ssr as hasBootstrapModelOptions,
+  gq as hasOAuthScope,
+  Gyr as hasOpusAccess,
+  Qyr as hasOpusAccessAsync,
+  lp as hasProfileScope,
+  Xyr as hasProfileScopeAsync,
+  xRn as hasStoredOAuthRefreshToken,
+  wu as hasStoredOAuthToken,
+  Wyr as hasStoredUsableClaudeAILogin,
+  kRn as hasUsableClaudeAILogin,
+  Lfr as hostManagedAwsProviderChain,
+  v6 as hostManagedAwsSdkCredentials,
+  nvt as hostManagedNoCredsError,
+  FUe as invalidateDefaultAwsProviderChainDebounced,
+  cge as is1PApiCustomer,
+  Yyr as is1PApiCustomerAsync,
+  cl as isAnthropicAuthEnabled,
+  ZKt as isAnthropicAuthEnabledAsync,
+  yRn as isApiKeyHelperSafeToInvoke,
+  Fse as isApiKeyHelperTheActiveCredential,
+  sge as isAwsAuthRefreshFromProjectSettings,
+  wsr as isAwsCredentialExportFromProjectSettings,
+  gt as isClaudeAISubscriber,
+  jse as isClaudeAISubscriberAsync,
+  x6 as isConsumerSubscriber,
+  sSr as isConsumerSubscriberAsync,
+  AZe as isEnterprisePAYGSubscriber,
+  rSr as isEnterprisePAYGSubscriberAsync,
+  uge as isEnterpriseSubscriber,
+  nSr as isEnterpriseSubscriberAsync,
+  jfr as isExpectedOAuthRefreshError,
+  hb as isExtraUsageAllowed,
+  fZe as isFirstPartyManagedOAuthContext,
+  ivt as isGcpAuthRefreshFromProjectSettings,
+  Fc as isHostManagedProviderAuth,
+  wRe as isMaxSubscriber,
+  Zyr as isMaxSubscriberAsync,
+  wZe as isOAuthRefreshKnownDead,
+  f0 as isOAuthRefreshKnownDeadAsync,
+  qfr as isOtelHeadersHelperFromProjectOrLocalSettings,
+  Wfr as isOverageProvisioningAllowed,
+  Jyr as isOverageProvisioningAllowedAsync,
+  Bse as isProSubscriber,
+  oSr as isProSubscriberAsync,
+  UKt as isProfileAuthShadowed,
+  NUe as isProfileRemoteSettingsCredential,
+  pvt as isTeamPremiumSubscriber,
+  tSr as isTeamPremiumSubscriberAsync,
+  qyr as isTeamSubscriber,
+  eSr as isTeamSubscriberAsync,
+  EZe as isUsableClaudeAILoginRecord,
+  k6 as isUsing3PServices,
+  mq as isWIFDispatchAuth,
+  Ufr as loginManagedKeyMemos,
+  TRn as markGcpCredentialsRejected,
+  BUe as markRefreshTokenDeadAfterInvalidGrant,
+  cvt as noteAuthRecoveryOutcome,
+  RRn as oauthRefreshLockOptions,
+  age as oauthTokenReadMemos,
+  IRn as otelHeadersHelperStates,
+  HRn as ownStoredLoginPlanAttributes,
+  DRn as policyUnreadableForEnforcement,
+  SRn as prefetchApiKeyFromApiKeyHelperIfSafe,
+  avt as prefetchAwsCredentialsAndBedRockInfoIfSafe,
+  GKt as prefetchGcpCredentialsIfSafe,
+  lvt as primeStoredLogin,
+  vRn as primeStoredLoginCopy,
+  dQ as readFreshOAuthAccessToken,
+  v5 as readFreshOAuthCredentialSnapshot,
+  VKt as recordScopeExpansionAttempt,
+  AU as refreshAndGetAwsCredentials,
+  svt as refreshAwsAuth,
+  $fr as refreshGcpAuth,
+  yRe as refreshGcpCredentialsIfNeeded,
+  ERn as removeApiKey,
+  uvt as resetAuthFailureTracking,
+  _Re as resetAwsAuthRefreshCooldown,
+  CRn as resetEnvDerivedAuthCaches,
+  Asr as resolveWithStallGuard,
+  gZe as restoreGatewayAuth,
+  wg as sameOwnerAccount,
+  vsr as saveApiKey,
+  zKt as saveOAuthTokensIfNeeded,
+  UUe as saveRefreshedOAuthTokensRespectingLock,
+  Zc as shouldUseWIFAuth,
+  dvt as startupReadsStoredLogin,
+  CZe as toAccountInfo,
+  Wse as validateForceLoginMethod,
+  cx as validateForceLoginOrg,
+  Bfr as waitForRotatedEnvToken,
+  Mfr as wifAuthDebugNotices,
+  TZe as withOAuthRefreshLock,
+};

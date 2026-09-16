@@ -1,0 +1,598 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { K, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { y8 } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import "../../00-第三方库/zod/zod.3g334xwq.js";
+import "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
+import { fn, Fo, Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import { Pt, tr, lt, Zq, Rhe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import "../Teammates团队/chunk-qe04h4c5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import "../Teammates团队/chunk-811z9z0t.js";
+import { X_, zE, RC } from "../Teammates团队/chunk-g6nvp9mm.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
+import "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import "../权限系统/chunk-e4pfvp7x.js";
+import "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import "../工具Bash-Shell/chunk-4pap8y5n.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-svk2cp17.js";
+import "../../00-第三方库/axios/axios.t0fczzmz.js";
+import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import "../Hooks钩子/chunk-9em0d4k5.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
+import "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import "../Git-Worktree/chunk-bk9696gx.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
+import "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1bqqnyc1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import "../权限系统/chunk-ynkf3yy4.js";
+import "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { BFt, O3n, Tln } from "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
+import "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import "../Teammates团队/chunk-enjekn9t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
+import "../Bedrock-Vertex/chunk-p991cddr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import {
+  appendFile as mt,
+  lstat as _,
+  mkdir as et,
+  readFile as it,
+  readdir as ft,
+  rm as pt,
+} from "fs/promises";
+import { homedir as ht } from "os";
+import { isAbsolute as ot, join as s, relative as gt } from "path";
+var v = ".claude/RESUME.md",
+  O = "refs/claude/checkpoint-",
+  h = 30000,
+  _t = 25000,
+  wt = 2147483648,
+  tt = 500;
+function b(o) {
+  let e = o.replace(
+    /[\x00-\x1f\x7f-\x9f\u061c\u200b-\u200f\u2028-\u202e\u2066-\u2069\ufeff]+/g,
+    " ",
+  );
+  return e.length > tt ? `${oe(e, tt)}\u2026` : e;
+}
+var Rt = 1209600;
+async function ie(o) {
+  let e = O3n();
+  if (e !== null) return e;
+  BFt(null);
+  let r = (async () => {
+    let a = o.todos;
+    if (a.length === 0 && X_())
+      try {
+        a = (await RC(zE())).map((l) => ({
+          content: l.subject,
+          status: l.status,
+          activeForm: l.activeForm ?? l.subject,
+        }));
+      } catch {}
+    return kt({ todos: a, trigger: o.trigger });
+  })();
+  Tln(r);
+  let n;
+  try {
+    n = await r;
+  } finally {
+    Tln(null);
+  }
+  if ((BFt(n), n.committed))
+    (y("usage_limit_checkpoint_commit", { trigger: u(o.trigger) }),
+      i("tengu_rl_checkpoint_a1_shown", {}));
+  else
+    g("usage_limit_checkpoint_commit", n.skipReason, { trigger: u(o.trigger) });
+  return n;
+}
+function S(o, e) {
+  if (o === e) return !0;
+  let r = gt(e, o);
+  return r !== "" && !r.startsWith("..") && !ot(r);
+}
+async function kt(o) {
+  if (ke()) return { committed: !1, skipReason: "non_interactive" };
+  if (Pt()) return { committed: !1, skipReason: "remote_workspace" };
+  if (!Mt("allow_local_checkpoint_commit"))
+    return { committed: !1, skipReason: "policy" };
+  let e = tr(Q());
+  if (e === null) return { committed: !1, skipReason: "not_git" };
+  if (Rhe() !== !1) return { committed: !1, skipReason: "bare_repo" };
+  let r = RS(e),
+    n = RS(ht());
+  if (r === null || n === null || S(n, r))
+    return { committed: !1, skipReason: "gitroot_uncontained" };
+  let a = K(),
+    d = a.slice(0, 8),
+    l = `${O}${d}`,
+    c = [...fn],
+    f;
+  try {
+    let m = await Zq(e);
+    if (m === null) return { committed: !1, skipReason: "not_git" };
+    let A = RS(m);
+    if (A === null || !S(A, r))
+      return { committed: !1, skipReason: "gitdir_uncontained" };
+    if (
+      (await _(s(m, "commondir")).catch((t) => {
+        if (t.code === "ENOENT") return null;
+        throw t;
+      })) !== null
+    )
+      return { committed: !1, skipReason: "gitdir_uncontained" };
+    for (let t of [
+      "objects",
+      "refs",
+      s("refs", "claude"),
+      "logs",
+      s("logs", "refs"),
+      s("logs", "refs", "claude"),
+      "packed-refs",
+      "reftable",
+    ]) {
+      let p = await _(s(m, t)).catch((R) => {
+        if (R.code === "ENOENT") return null;
+        throw R;
+      });
+      if (p !== null && p.isSymbolicLink())
+        return { committed: !1, skipReason: "gitdir_uncontained" };
+    }
+    let rt = await ft(s(m, "objects"), { withFileTypes: !0 }).catch((t) => {
+      if (t.code === "ENOENT") return [];
+      throw t;
+    });
+    for (let t of rt)
+      if (t.isSymbolicLink())
+        return { committed: !1, skipReason: "gitdir_uncontained" };
+    let w = Fo({
+      GIT_COMMON_DIR: m,
+      GIT_WORK_TREE: e,
+      GIT_ALLOW_PROTOCOL: "none",
+      GIT_NO_LAZY_FETCH: "1",
+      GIT_NO_REPLACE_OBJECTS: "1",
+      GIT_TERMINAL_PROMPT: "0",
+    });
+    if (
+      (await _(s(m, "info", "sparse-checkout")).catch((t) => {
+        if (t.code === "ENOENT") return null;
+        throw t;
+      })) !== null
+    ) {
+      let t = await Be(
+        lt(),
+        [...c, "config", "--type=bool", "--get", "core.sparseCheckout"],
+        { cwd: e, env: w, timeout: h },
+      );
+      if (t.code === 0 && t.stdout.trim() === "true")
+        return { committed: !1, skipReason: "sparse_checkout" };
+    }
+    let nt = await _(s(m, "lfs")).catch((t) => {
+        if (t.code === "ENOENT") return null;
+        throw t;
+      }),
+      F = s(e, ".gitattributes"),
+      T = await _(F).catch((t) => {
+        if (t.code === "ENOENT") return null;
+        throw t;
+      }),
+      st =
+        T !== null && T.isFile() && T.size <= 65536
+          ? await it(F, "utf-8").catch(() => "")
+          : "";
+    if (nt !== null || /\bfilter\s*=\s*lfs\b/.test(st))
+      return { committed: !1, skipReason: "content_filters" };
+    if (await Et(m))
+      return { committed: !1, skipReason: "sequencer_in_progress" };
+    let G = await Be(lt(), [...c, "rev-parse", "--verify", "HEAD"], {
+      cwd: e,
+      env: w,
+      timeout: h,
+    });
+    if (G.code !== 0) return { committed: !1, skipReason: "no_head" };
+    let L = G.stdout.trim(),
+      D = (t, p) =>
+        Be(lt(), [...fn, ...t], {
+          cwd: p.cwd,
+          env: w,
+          input: p.input,
+          timeout: h,
+        });
+    f = s(m, `claude-checkpoint-index.${process.pid}`);
+    let k = { ...w, GIT_INDEX_FILE: f };
+    if (
+      (await Be(lt(), [...c, "read-tree", L], { cwd: e, env: k, timeout: h }))
+        .code !== 0
+    )
+      return { committed: !1, skipReason: "git_error" };
+    let [M, H] = await Promise.all([
+      Be(lt(), [...c, "ls-files", "-z", "--cached"], {
+        cwd: e,
+        env: k,
+        maxBuffer: 33554432,
+        timeout: h,
+      }),
+      Be(lt(), [...c, "ls-files", "-z", "-o", "--exclude-standard"], {
+        cwd: e,
+        env: k,
+        maxBuffer: 33554432,
+        timeout: h,
+      }),
+    ]);
+    if (M.code !== 0 || H.code !== 0)
+      return { committed: !1, skipReason: "git_error" };
+    let j = M.stdout.split("\x00").filter((t) => t.length > 0),
+      B = H.stdout.split("\x00").filter((t) => t.length > 0);
+    if (j.length + B.length > _t)
+      return { committed: !1, skipReason: "too_large" };
+    let I = [],
+      E = [],
+      z = 0,
+      J = async (t, p) => {
+        if (
+          t.includes(`
+`) ||
+          t.includes("\r") ||
+          t.includes('"') ||
+          t.includes("\\")
+        )
+          return;
+        if (t.split("/").some((C) => C === "." || C === "..")) return;
+        let R;
+        try {
+          R = await _(s(e, t));
+        } catch (C) {
+          if (p && W(C)) I.push(t);
+          return;
+        }
+        if (!R.isFile()) return;
+        let Z = RS(s(e, t));
+        if (Z === null || !S(Z, r)) return;
+        z += R.size;
+        let dt = (R.mode & 64) !== 0 ? "100755" : "100644";
+        E.push({ path: t, mode: dt });
+      };
+    if (
+      (await Promise.all([
+        ...j.map((t) => J(t, !0)),
+        ...B.map((t) => J(t, !1)),
+      ]),
+      z > wt)
+    )
+      return { committed: !1, skipReason: "too_large" };
+    let N = s(e, ".claude"),
+      P = !y8(N),
+      U = yt({ sessionId: a, ref: l, trigger: o.trigger, todos: o.todos });
+    try {
+      if (P) await nke(e, N);
+      (await et(N, { recursive: !0 }),
+        await wb(s(e, ".claude", "RESUME.md"), U, {
+          encoding: "utf-8",
+          allowSymlink: !P,
+          checkParentDir: P,
+        }));
+    } catch {
+      return { committed: !1, skipReason: "resume_write_refused" };
+    }
+    let X = await Be(lt(), [...c, "hash-object", "-w", "--stdin"], {
+      cwd: e,
+      env: w,
+      input: U,
+      timeout: h,
+    });
+    if (X.code !== 0) return { committed: !1, skipReason: "git_error" };
+    let at = X.stdout.trim(),
+      x = [];
+    if (E.length > 0) {
+      let t = await Be(
+        lt(),
+        [...c, "hash-object", "-w", "--no-filters", "--stdin-paths"],
+        {
+          cwd: e,
+          env: w,
+          input:
+            E.map((p) => p.path).join(`
+`) +
+            `
+`,
+          maxBuffer: 8388608,
+          timeout: 4 * h,
+        },
+      );
+      if (t.code !== 0) return { committed: !1, skipReason: "git_error" };
+      if (
+        ((x = t.stdout
+          .split(
+            `
+`,
+          )
+          .filter((p) => p.length > 0)),
+        x.length !== E.length)
+      )
+        return { committed: !1, skipReason: "git_error" };
+    }
+    let ct = [
+      ...E.map((t, p) => `${t.mode} ${x[p]}	${t.path}`),
+      `100644 ${at}	${v}`,
+    ].join(`
+`);
+    if (
+      (
+        await Be(lt(), [...c, "update-index", "--add", "--index-info"], {
+          cwd: e,
+          env: k,
+          input:
+            ct +
+            `
+`,
+          timeout: h,
+        })
+      ).code !== 0
+    )
+      return { committed: !1, skipReason: "git_error" };
+    if (I.length > 0) {
+      if (
+        (
+          await Be(
+            lt(),
+            [...c, "update-index", "--force-remove", "-z", "--stdin"],
+            { cwd: e, env: k, input: I.join("\x00"), timeout: h },
+          )
+        ).code !== 0
+      )
+        return { committed: !1, skipReason: "git_error" };
+    }
+    let Y = await Be(lt(), [...c, "write-tree"], {
+      cwd: e,
+      env: k,
+      timeout: h,
+    });
+    if (Y.code !== 0) return { committed: !1, skipReason: "git_error" };
+    let ut = Y.stdout.trim(),
+      q = await Be(
+        lt(),
+        [
+          ...c,
+          "-c",
+          "user.name=Claude Code",
+          "-c",
+          "user.email=noreply@anthropic.com",
+          "-c",
+          "commit.gpgsign=false",
+          "commit-tree",
+          ut,
+          "-p",
+          L,
+          "-m",
+          `WIP: Claude Code rate-limit checkpoint (${d})`,
+        ],
+        { cwd: e, env: w, timeout: h },
+      );
+    if (q.code !== 0) return { committed: !1, skipReason: "git_error" };
+    let V = q.stdout.trim();
+    if (
+      (await _(s(m, "commondir")).catch((t) => {
+        if (t.code === "ENOENT") return null;
+        throw t;
+      })) !== null
+    )
+      return { committed: !1, skipReason: "gitdir_uncontained" };
+    if (
+      (
+        await Be(
+          lt(),
+          [
+            ...c,
+            "-c",
+            "core.logAllRefUpdates=false",
+            "update-ref",
+            "--no-deref",
+            l,
+            V,
+          ],
+          { cwd: e, env: w, timeout: h },
+        )
+      ).code !== 0
+    )
+      return { committed: !1, skipReason: "git_error" };
+    return (
+      await Ct(e, D),
+      await Tt(e, l, D).catch(() => {}),
+      { committed: !0, ref: l, resumePath: v, commitSha: V }
+    );
+  } catch {
+    return { committed: !1, skipReason: "git_error" };
+  } finally {
+    if (f !== void 0) await pt(f, { force: !0 }).catch(() => {});
+  }
+}
+async function Et(o) {
+  return (
+    await Promise.all(
+      [
+        "MERGE_HEAD",
+        "CHERRY_PICK_HEAD",
+        "REVERT_HEAD",
+        "BISECT_LOG",
+        "rebase-merge",
+        "rebase-apply",
+      ].map((r) =>
+        _(s(o, r)).then(
+          () => !0,
+          () => !1,
+        ),
+      ),
+    )
+  ).includes(!0);
+}
+async function Ct(o, e) {
+  let r = await e(["rev-parse", "--git-path", "info/exclude"], { cwd: o });
+  if (r.code !== 0) return;
+  let n = ot(r.stdout.trim()) ? r.stdout.trim() : s(o, r.stdout.trim());
+  for (let c of [s(n, ".."), n])
+    try {
+      let f = await _(c);
+      if (f.isSymbolicLink()) return;
+      if (!f.isFile() && !f.isDirectory()) return;
+      if (c === n && f.isFile() && f.size > 65536) return;
+    } catch {}
+  let a = await it(n, "utf-8").catch(() => ""),
+    d = `/${v}`;
+  if (a.split(/\r?\n/).includes(d)) return;
+  await et(s(n, ".."), { recursive: !0 }).catch(() => {});
+  let l =
+    a.length > 0 &&
+    !a.endsWith(`
+`)
+      ? `
+`
+      : "";
+  await mt(
+    n,
+    `${l}${d}
+`,
+    "utf-8",
+  ).catch(() => {});
+}
+async function Tt(o, e, r) {
+  let n = await r(
+    [
+      "for-each-ref",
+      "--format=%(refname)%00%(committerdate:unix)%00%(symref)",
+      `${O}*`,
+    ],
+    { cwd: o },
+  );
+  if (n.code !== 0) return;
+  let a = Math.floor(Date.now() / 1000);
+  for (let d of n.stdout.split(`
+`)) {
+    let [l, c, f] = d.split("\x00");
+    if (
+      l === void 0 ||
+      l === e ||
+      !l.startsWith(O) ||
+      (f !== void 0 && f.length > 0)
+    )
+      continue;
+    let m = a - Number(c);
+    if (!Number.isFinite(m) || m < Rt) continue;
+    await r(["update-ref", "--no-deref", "-d", l], { cwd: o });
+  }
+}
+function yt(o) {
+  let e = [
+    "# Claude Code \u2014 resume checkpoint",
+    "",
+    `Session: ${o.sessionId}`,
+    `Written: ${new Date().toISOString()}`,
+    `Trigger: ${o.trigger === "near_limit" ? "near-limit" : "rate-limited"}`,
+    `Ref with your in-progress files: ${o.ref}`,
+    "",
+    "## To resume",
+    "",
+    `    claude --resume ${o.sessionId}`,
+    "",
+    "(or open Claude Code in this directory and run /resume)",
+    "",
+    "## Plan (from TodoWrite state)",
+    "",
+  ];
+  if (o.todos.length === 0)
+    e.push(
+      "No task list was active; see transcript via the resume command above.",
+    );
+  else {
+    let r, n;
+    for (let a of o.todos)
+      if (a.status === "completed") e.push(`- [x] ${b(a.content)}`);
+      else if (a.status === "in_progress") {
+        let d = b(a.activeForm);
+        (e.push(`- [>] ${d}    \u2190 current step`), (n ??= d));
+      } else {
+        let d = b(a.content);
+        (e.push(`- [ ] ${d}`), (r ??= d));
+      }
+    (e.push("", "## What's next", ""),
+      e.push(
+        r !== void 0
+          ? r
+          : n !== void 0
+            ? `finish: ${n}`
+            : "All tasks completed.",
+      ));
+  }
+  return (
+    e.push(
+      "",
+      "---",
+      "",
+      "Don't want these changes? Resume this session (above), then run",
+      "`/rewind` to roll back the turn's tool edits (bash-made changes",
+      `excluded). ${o.ref} holds a full snapshot until this session's`,
+      "next checkpoint, or for up to ~2 weeks.",
+      "",
+    ),
+    e.join(`
+`)
+  );
+}
+export { ie as performRateLimitCheckpoint };

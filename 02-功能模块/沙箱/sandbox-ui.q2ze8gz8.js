@@ -1,0 +1,1383 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { Bw } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import "../../00-第三方库/lodash/lodash.207999qb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import "../../00-第三方库/zod/zod.3g334xwq.js";
+import "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
+import "../状态栏-主题/chunk-jz6b76hr.js";
+import "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import "../文件监听-Watch/文件监听-Watch.3efypmps.js";
+import "../Teammates团队/chunk-qe04h4c5.js";
+import "../状态栏-主题/chunk-dqyc6kge.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import "../状态栏-主题/chunk-q7ekqy5h.js";
+import "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import "../Git-Worktree/chunk-9ys1bnqr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import { jn, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
+import "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { ho, bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import "../权限系统/chunk-e4pfvp7x.js";
+import "../工具Bash-Shell/chunk-4pap8y5n.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-svk2cp17.js";
+import "../../00-第三方库/axios/axios.t0fczzmz.js";
+import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
+import "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import "../Git-Worktree/chunk-bk9696gx.js";
+import "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1bqqnyc1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import "../权限系统/chunk-ynkf3yy4.js";
+import "../Teammates团队/chunk-811z9z0t.js";
+import "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import "../Hooks钩子/chunk-9em0d4k5.js";
+import "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import "../认证-OAuth登录/chunk-s51acx6w.js";
+import "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
+import "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-kk7p3hsm.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ewa397cg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
+import "../键位绑定(Keybindings)/chunk-qy43nqgh.js";
+import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import {
+  Y4e,
+  r3,
+  xDe,
+  L2,
+  gX,
+  Fue,
+  kBt,
+  ene,
+  eTe,
+  tpn,
+  st,
+} from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import "../插件系统/chunk-7s6mt1vg.js";
+import "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import "../Teammates团队/chunk-thxapyam.js";
+import "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import "../MCP客户端/chunk-3kmsshb6.js";
+import "../图表-Mermaid/chunk-743atbtj.js";
+import "../Skills技能/chunk-sapykxw7.js";
+import "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
+import "../权限系统/chunk-t3b7pg2x.js";
+import "../权限系统/chunk-fjrcf22x.js";
+import "../权限系统/chunk-qdy0h5k2.js";
+import "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import "../后台任务-Shell管理/chunk-x3txegas.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
+import "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-sdk55p8n.js";
+import "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
+import "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
+import { nit } from "./chunk-ky2g1mjv.js";
+import { Sf } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { Gp } from "../../01-核心基础设施/共享小工具-未细化/chunk-c8g7bday.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
+import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-37xdmryq.js";
+import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-tw8akhx1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-951vj555.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-xc85bfby.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7jfz2w01.js";
+import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-fgegxt0m.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-j4vveza5.js";
+import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-j3qyvdwg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
+import { Dn, kn, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
+import "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
+import "../工具ToolSearch/chunk-1m51pqtd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
+import "../权限系统/chunk-pcxn6gwz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
+import "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import "../Teammates团队/chunk-enjekn9t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
+import "../Bedrock-Vertex/chunk-p991cddr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
+import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { relative as Wn } from "path";
+function ce(Un, Fn) {
+  return e(t, { dimColor: !0, children: Un }, Fn);
+}
+function G() {
+  let Ao = _(3),
+    Bn = st.isSandboxingEnabled(),
+    ie;
+  if (Ao[0] === p) {
+    let le = st.checkDependencies();
+    ie =
+      le.warnings.length > 0
+        ? e(o, {
+            marginTop: 1,
+            flexDirection: "column",
+            children: le.warnings.map(ce),
+          })
+        : null;
+    Ao[0] = ie;
+  } else ie = Ao[0];
+  let ae = ie;
+  if (!Bn) {
+    let j;
+    if (Ao[1] === p)
+      ((j = r(o, {
+        flexDirection: "column",
+        children: [
+          e(t, { color: "subtle", children: "Sandbox is not enabled" }),
+          ae,
+        ],
+      })),
+        (Ao[1] = j));
+    else j = Ao[1];
+    return j;
+  }
+  let j;
+  if (Ao[2] === p) {
+    let M = st.getFsReadConfig();
+    let Z = st.getFsWriteConfig();
+    let S = st.getNetworkRestrictionConfig();
+    let Eo = st.getAllowUnixSockets();
+    let de = st.getExcludedCommands();
+    let oo = st.getLinuxGlobPatternWarnings();
+    j = r(o, {
+      flexDirection: "column",
+      children: [
+        r(o, {
+          flexDirection: "column",
+          children: [
+            e(t, {
+              bold: !0,
+              color: "permission",
+              children: "Excluded Commands:",
+            }),
+            e(t, {
+              dimColor: !0,
+              children: de.length > 0 ? de.join(", ") : "None",
+            }),
+          ],
+        }),
+        M.denyOnly.length > 0 &&
+          r(o, {
+            marginTop: 1,
+            flexDirection: "column",
+            children: [
+              e(t, {
+                bold: !0,
+                color: "permission",
+                children: "Filesystem Read Restrictions:",
+              }),
+              r(t, {
+                dimColor: !0,
+                children: ["Denied: ", M.denyOnly.join(", ")],
+              }),
+              M.allowWithinDeny &&
+                M.allowWithinDeny.length > 0 &&
+                r(t, {
+                  dimColor: !0,
+                  children: [
+                    "Allowed within denied: ",
+                    M.allowWithinDeny.join(", "),
+                  ],
+                }),
+            ],
+          }),
+        Z.allowOnly.length > 0 &&
+          r(o, {
+            marginTop: 1,
+            flexDirection: "column",
+            children: [
+              e(t, {
+                bold: !0,
+                color: "permission",
+                children: "Filesystem Write Restrictions:",
+              }),
+              r(t, {
+                dimColor: !0,
+                children: ["Allowed: ", Z.allowOnly.join(", ")],
+              }),
+              Z.denyWithinAllow.length > 0 &&
+                r(t, {
+                  dimColor: !0,
+                  children: [
+                    "Denied within allowed: ",
+                    Z.denyWithinAllow.join(", "),
+                  ],
+                }),
+            ],
+          }),
+        ((S.allowedHosts && S.allowedHosts.length > 0) ||
+          (S.deniedHosts && S.deniedHosts.length > 0)) &&
+          r(o, {
+            marginTop: 1,
+            flexDirection: "column",
+            children: [
+              r(t, {
+                bold: !0,
+                color: "permission",
+                children: [
+                  "Network Restrictions",
+                  ene() ? " (Managed)" : "",
+                  ":",
+                ],
+              }),
+              S.allowedHosts &&
+                S.allowedHosts.length > 0 &&
+                r(t, {
+                  dimColor: !0,
+                  children: ["Allowed: ", S.allowedHosts.join(", ")],
+                }),
+              S.deniedHosts &&
+                S.deniedHosts.length > 0 &&
+                r(t, {
+                  dimColor: !0,
+                  children: ["Denied: ", S.deniedHosts.join(", ")],
+                }),
+            ],
+          }),
+        Eo &&
+          Eo.length > 0 &&
+          r(o, {
+            marginTop: 1,
+            flexDirection: "column",
+            children: [
+              e(t, {
+                bold: !0,
+                color: "permission",
+                children: "Allowed Unix Sockets:",
+              }),
+              e(t, { dimColor: !0, children: Eo.join(", ") }),
+            ],
+          }),
+        oo.length > 0 &&
+          r(o, {
+            marginTop: 1,
+            flexDirection: "column",
+            children: [
+              e(t, {
+                bold: !0,
+                color: "warning",
+                children:
+                  "\u26A0 Warning: Glob patterns not fully supported on Linux",
+              }),
+              r(t, {
+                dimColor: !0,
+                children: [
+                  "The following patterns will be ignored:",
+                  " ",
+                  oo.slice(0, 3).join(", "),
+                  oo.length > 3 && ` (${oo.length - 3} more)`,
+                ],
+              }),
+            ],
+          }),
+        ae,
+      ],
+    });
+    Ao[2] = j;
+  } else j = Ao[2];
+  return j;
+}
+F();
+function We(Qn) {
+  return Qn.includes("ripgrep");
+}
+function Ae(Xn) {
+  return Xn.includes("bwrap");
+}
+function Ee(Yn) {
+  return Yn.includes("socat");
+}
+function Ne(Bo) {
+  return (
+    !Bo.includes("ripgrep") && !Bo.includes("bwrap") && !Bo.includes("socat")
+  );
+}
+function Be(we) {
+  return e(t, { color: "error", children: we }, we);
+}
+function Fe(Ho) {
+  let ke = null;
+  let Re = !0;
+  if (Fue())
+    ((ke = Ho.user.caCertThumb !== void 0 && kBt(Ho.user.caCertThumb)),
+      (Re = gX().source === "managed"));
+  return { ...Ho, caTrusted: ke, caManaged: Re };
+}
+function He(ot) {
+  return { probeError: L2(l(ot), { omitCcRemedy: !0 }) };
+}
+function Ue() {
+  return Y4e({ srtWin: xDe() }).then(Fe).catch(He);
+}
+function Ie(Te) {
+  return (
+    !Te.startsWith("Sandbox user is not provisioned") &&
+    !Te.startsWith("WFP filters not installed")
+  );
+}
+function Oe(tt) {
+  return L2(tt);
+}
+function Le(Pe) {
+  return e(t, { color: "error", children: Pe }, Pe);
+}
+function E(_n) {
+  let k = _(26),
+    { depCheck: h } = _n,
+    me;
+  if (k[0] === p) ((me = P()), (k[0] = me));
+  else me = k[0];
+  let ue = me,
+    No = ue === "macos";
+  if (ue === "windows") {
+    let q;
+    if (k[1] !== h) ((q = e(ao, { depCheck: h })), (k[1] = h), (k[2] = q));
+    else q = k[2];
+    return q;
+  }
+  let q;
+  if (k[3] !== h.errors)
+    ((q = h.errors.some(We)), (k[3] = h.errors), (k[4] = q));
+  else q = k[4];
+  let B = q,
+    pe;
+  if (k[5] !== h.errors)
+    ((pe = h.errors.some(Ae)), (k[5] = h.errors), (k[6] = pe));
+  else pe = k[6];
+  let U = pe,
+    be;
+  if (k[7] !== h.errors)
+    ((be = h.errors.some(Ee)), (k[7] = h.errors), (k[8] = be));
+  else be = k[8];
+  let H = be,
+    A = h.warnings.length > 0,
+    fe;
+  if (
+    k[9] !== U ||
+    k[10] !== h.errors ||
+    k[11] !== B ||
+    k[12] !== A ||
+    k[13] !== H
+  ) {
+    let zn = h.errors.filter(Ne);
+    let Jn = No ? "brew install ripgrep" : "apt install ripgrep";
+    let ge;
+    if (k[15] === p)
+      ((ge =
+        No &&
+        e(o, {
+          flexDirection: "column",
+          children: r(t, {
+            children: [
+              "seatbelt: ",
+              e(t, { color: "success", children: "built-in (macOS)" }),
+            ],
+          }),
+        })),
+        (k[15] = ge));
+    else ge = k[15];
+    let eo, no;
+    if (k[16] !== B)
+      ((eo = r(t, {
+        children: [
+          "ripgrep (rg):",
+          " ",
+          B
+            ? e(t, { color: "error", children: "not found" })
+            : e(t, { color: "success", children: "found" }),
+        ],
+      })),
+        (no = B && r(t, { dimColor: !0, children: ["  ", "\xB7 ", Jn] })),
+        (k[16] = B),
+        (k[17] = eo),
+        (k[18] = no));
+    else ((eo = k[17]), (no = k[18]));
+    let xe;
+    if (k[19] !== eo || k[20] !== no)
+      ((xe = r(o, { flexDirection: "column", children: [eo, no] })),
+        (k[19] = eo),
+        (k[20] = no),
+        (k[21] = xe));
+    else xe = k[21];
+    let he;
+    if (k[22] !== U || k[23] !== A || k[24] !== H)
+      ((he =
+        !No &&
+        r(N, {
+          children: [
+            r(o, {
+              flexDirection: "column",
+              children: [
+                r(t, {
+                  children: [
+                    "bubblewrap (bwrap):",
+                    " ",
+                    U
+                      ? e(t, { color: "error", children: "not installed" })
+                      : e(t, { color: "success", children: "installed" }),
+                  ],
+                }),
+                U &&
+                  r(t, {
+                    dimColor: !0,
+                    children: ["  ", "\xB7 apt install bubblewrap"],
+                  }),
+              ],
+            }),
+            r(o, {
+              flexDirection: "column",
+              children: [
+                r(t, {
+                  children: [
+                    "socat:",
+                    " ",
+                    H
+                      ? e(t, { color: "error", children: "not installed" })
+                      : e(t, { color: "success", children: "installed" }),
+                  ],
+                }),
+                H &&
+                  r(t, {
+                    dimColor: !0,
+                    children: ["  ", "\xB7 apt install socat"],
+                  }),
+              ],
+            }),
+            r(o, {
+              flexDirection: "column",
+              children: [
+                r(t, {
+                  children: [
+                    "seccomp filter:",
+                    " ",
+                    A
+                      ? e(t, { color: "warning", children: "not installed" })
+                      : e(t, { color: "success", children: "installed" }),
+                    A &&
+                      e(t, {
+                        dimColor: !0,
+                        children: " (required to block unix domain sockets)",
+                      }),
+                  ],
+                }),
+                A &&
+                  r(o, {
+                    flexDirection: "column",
+                    children: [
+                      r(t, {
+                        dimColor: !0,
+                        children: [
+                          "  ",
+                          "\xB7 npm install -g @anthropic-ai/sandbox-runtime",
+                        ],
+                      }),
+                      r(t, {
+                        dimColor: !0,
+                        children: [
+                          "  ",
+                          "\xB7 or copy vendor/seccomp/* from sandbox-runtime and set",
+                        ],
+                      }),
+                      r(t, {
+                        dimColor: !0,
+                        children: [
+                          "    ",
+                          "sandbox.seccomp.bpfPath and applyPath in settings.json",
+                        ],
+                      }),
+                    ],
+                  }),
+              ],
+            }),
+          ],
+        })),
+        (k[22] = U),
+        (k[23] = A),
+        (k[24] = H),
+        (k[25] = he));
+    else he = k[25];
+    fe = r(o, {
+      flexDirection: "column",
+      gap: 1,
+      children: [ge, xe, he, zn.map(Be)],
+    });
+    ((k[9] = U),
+      (k[10] = h.errors),
+      (k[11] = B),
+      (k[12] = A),
+      (k[13] = H),
+      (k[14] = fe));
+  } else fe = k[14];
+  return fe;
+}
+function ao(Zn) {
+  let ye = _(4),
+    { depCheck: Uo } = Zn,
+    [Fo] = d(Ue),
+    Ce;
+  if (ye[0] === p)
+    ((Ce = e(t, {
+      dimColor: !0,
+      children: "Checking Windows sandbox status\u2026",
+    })),
+      (ye[0] = Ce));
+  else Ce = ye[0];
+  let Se;
+  if (ye[1] !== Uo || ye[2] !== Fo)
+    ((Se = e(Dn, {
+      fallback: Ce,
+      children: e(co, { statusPromise: Fo, depCheck: Uo }),
+    })),
+      (ye[1] = Uo),
+      (ye[2] = Fo),
+      (ye[3] = Se));
+  else Se = ye[3];
+  return Se;
+}
+function co(et) {
+  let so = _(10),
+    { statusPromise: nt, depCheck: to } = et,
+    f = kn(nt),
+    ro;
+  if (so[0] !== f)
+    ((ro =
+      "probeError" in f
+        ? r(o, {
+            flexDirection: "column",
+            children: [
+              r(t, {
+                color: "error",
+                children: ["could not check sandbox status: ", f.probeError],
+              }),
+              r(t, {
+                dimColor: !0,
+                children: [
+                  "  ",
+                  "\xB7 ask your administrator to install the network filters, or see https://code.claude.com/docs/en/sandboxing",
+                ],
+              }),
+            ],
+          })
+        : r(o, {
+            flexDirection: "column",
+            children: [
+              r(t, {
+                children: [
+                  "sandbox user:",
+                  " ",
+                  f.user.provisioned && f.user.credPresent
+                    ? e(t, { color: "success", children: "provisioned" })
+                    : f.user.provisioned
+                      ? e(t, {
+                          color: "warning",
+                          children:
+                            "provisioned \u2014 credential not readable",
+                        })
+                      : e(t, { color: "error", children: "not installed" }),
+                ],
+              }),
+              r(t, {
+                children: [
+                  "network filters (WFP):",
+                  " ",
+                  f.wfp.state === "installed"
+                    ? e(t, { color: "success", children: "installed" })
+                    : f.wfp.state === "cannot-read"
+                      ? e(t, {
+                          color: "warning",
+                          children: "cannot read (run elevated to check)",
+                        })
+                      : e(t, { color: "error", children: "not installed" }),
+                ],
+              }),
+              f.caTrusted !== null &&
+                r(t, {
+                  children: [
+                    "TLS inspection CA:",
+                    " ",
+                    f.caTrusted
+                      ? e(t, { color: "success", children: "trusted" })
+                      : e(t, { color: "error", children: "not trusted" }),
+                  ],
+                }),
+              (!f.user.provisioned ||
+                !f.user.credPresent ||
+                f.wfp.state === "absent" ||
+                (f.caTrusted === !1 && f.caManaged)) &&
+                r(t, {
+                  dimColor: !0,
+                  children: ["  ", "\xB7 run /sandbox install"],
+                }),
+              f.caTrusted === !1 &&
+                !f.caManaged &&
+                r(t, {
+                  dimColor: !0,
+                  children: [
+                    "  ",
+                    "\xB7 ask your administrator to trust the configured sandbox CA \u2014 see https://code.claude.com/docs/en/sandboxing",
+                  ],
+                }),
+            ],
+          })),
+      (so[0] = f),
+      (so[1] = ro));
+  else ro = so[1];
+  let io;
+  if (so[2] !== to.errors || so[3] !== f)
+    ((io = "probeError" in f ? to.errors : to.errors.filter(Ie)),
+      (so[2] = to.errors),
+      (so[3] = f),
+      (so[4] = io));
+  else io = so[4];
+  let lo;
+  if (so[5] !== io) ((lo = io.map(Oe).map(Le)), (so[5] = io), (so[6] = lo));
+  else lo = so[6];
+  let De;
+  if (so[7] !== ro || so[8] !== lo)
+    ((De = r(o, { flexDirection: "column", gap: 1, children: [ro, lo] })),
+      (so[7] = ro),
+      (so[8] = lo),
+      (so[9] = De));
+  else De = so[9];
+  return De;
+}
+function K(gt) {
+  let mo = _(5),
+    { onComplete: Io } = gt,
+    xt = st.isSandboxingEnabled(),
+    ht =
+      st.areSandboxSettingsLockedByPolicy() ||
+      st.areUnsandboxedCommandsForbiddenByPolicy(),
+    je = st.areUnsandboxedCommandsAllowed();
+  if (!xt) {
+    let W;
+    if (mo[0] === p)
+      ((W = e(o, {
+        flexDirection: "column",
+        children: e(t, {
+          color: "subtle",
+          children:
+            "Sandbox is not enabled. Enable sandbox to configure override settings.",
+        }),
+      })),
+        (mo[0] = W));
+    else W = mo[0];
+    return W;
+  }
+  if (ht) {
+    let W;
+    if (mo[1] === p)
+      ((W = e(t, {
+        color: "subtle",
+        children:
+          "Override settings are managed by a higher-priority configuration and cannot be changed locally.",
+      })),
+        (mo[1] = W));
+    else W = mo[1];
+    let Me;
+    if (mo[2] === p)
+      ((Me = r(o, {
+        flexDirection: "column",
+        children: [
+          W,
+          e(o, {
+            marginTop: 1,
+            children: r(t, {
+              dimColor: !0,
+              children: [
+                "Current setting:",
+                " ",
+                je ? "Allow unsandboxed fallback" : "Strict sandbox mode",
+              ],
+            }),
+          }),
+        ],
+      })),
+        (mo[2] = Me));
+    else Me = mo[2];
+    return Me;
+  }
+  let W;
+  if (mo[3] !== Io)
+    ((W = e(go, { onComplete: Io, currentMode: je ? "open" : "closed" })),
+      (mo[3] = Io),
+      (mo[4] = W));
+  else W = mo[4];
+  return W;
+}
+function go(wt) {
+  let C = _(24),
+    { onComplete: I, currentMode: $e } = wt,
+    [Oo] = cn(),
+    { headerFocused: Lo, focusHeader: jo } = Jd(),
+    Ge;
+  if (C[0] !== Oo)
+    ((Ge = ut("success", Oo)("(current)")), (C[0] = Oo), (C[1] = Ge));
+  else Ge = C[1];
+  let qe = Ge;
+  const Mo =
+    $e === "open"
+      ? `Allow unsandboxed fallback ${qe}`
+      : "Allow unsandboxed fallback";
+  let uo;
+  if (C[2] !== Mo)
+    ((uo = { label: Mo, value: "open" }), (C[2] = Mo), (C[3] = uo));
+  else uo = C[3];
+  const $o =
+    $e === "closed" ? `Strict sandbox mode ${qe}` : "Strict sandbox mode";
+  let po;
+  if (C[4] !== $o)
+    ((po = { label: $o, value: "closed" }), (C[4] = $o), (C[5] = po));
+  else po = C[5];
+  let Ve;
+  if (C[6] !== uo || C[7] !== po)
+    ((Ve = [uo, po]), (C[6] = uo), (C[7] = po), (C[8] = Ve));
+  else Ve = C[8];
+  let Go = Ve,
+    Ke;
+  if (C[9] !== I)
+    ((Ke = async function V(yt) {
+      let _e = yt;
+      (await st.setSandboxSettings({ allowUnsandboxedCommands: _e === "open" }),
+        I(
+          _e === "open"
+            ? "\u2713 Unsandboxed fallback allowed - commands can run outside sandbox when necessary"
+            : "\u2713 Strict sandbox mode - all commands must run in sandbox or be excluded via the `excludedCommands` option",
+        ));
+    }),
+      (C[9] = I),
+      (C[10] = Ke));
+  else Ke = C[10];
+  let V = Ke,
+    ze;
+  if (C[11] === p)
+    ((ze = e(o, {
+      marginBottom: 1,
+      children: e(t, { bold: !0, children: "Configure overrides" }),
+    })),
+      (C[11] = ze));
+  else ze = C[11];
+  let bo;
+  if (C[12] !== I)
+    ((bo = () => I(void 0, { display: "skip" })), (C[12] = I), (C[13] = bo));
+  else bo = C[13];
+  let fo;
+  if (
+    C[14] !== jo ||
+    C[15] !== V ||
+    C[16] !== Lo ||
+    C[17] !== Go ||
+    C[18] !== bo
+  )
+    ((fo = e(ve, {
+      options: Go,
+      onChange: V,
+      onCancel: bo,
+      onUpFromFirstItem: jo,
+      isDisabled: Lo,
+    })),
+      (C[14] = jo),
+      (C[15] = V),
+      (C[16] = Lo),
+      (C[17] = Go),
+      (C[18] = bo),
+      (C[19] = fo));
+  else fo = C[19];
+  let Je;
+  if (C[20] === p)
+    ((Je = r(t, {
+      dimColor: !0,
+      wrap: "wrap-trim",
+      children: [
+        e(t, {
+          bold: !0,
+          dimColor: !0,
+          children: "Allow unsandboxed fallback:",
+        }),
+        " ",
+        "When a command fails due to sandbox restrictions, Claude can retry with dangerouslyDisableSandbox to run outside the sandbox (falling back to default permissions).",
+      ],
+    })),
+      (C[20] = Je));
+  else Je = C[20];
+  let Qe;
+  if (C[21] === p)
+    ((Qe = r(o, {
+      flexDirection: "column",
+      marginTop: 1,
+      gap: 1,
+      children: [
+        Je,
+        r(t, {
+          dimColor: !0,
+          wrap: "wrap-trim",
+          children: [
+            e(t, { bold: !0, dimColor: !0, children: "Strict sandbox mode:" }),
+            " ",
+            "All bash commands invoked by the model must run in the sandbox unless they are explicitly listed in excludedCommands.",
+          ],
+        }),
+        e(Gp, {
+          url: "https://code.claude.com/docs/en/sandboxing#configure-sandboxing",
+        }),
+      ],
+    })),
+      (C[21] = Qe));
+  else Qe = C[21];
+  let Xe;
+  if (C[22] !== fo)
+    ((Xe = r(o, { flexDirection: "column", children: [ze, fo, Qe] })),
+      (C[22] = fo),
+      (C[23] = Xe));
+  else Xe = C[23];
+  return Xe;
+}
+function Pn(Yt) {
+  return Yt.value === "auto-allow";
+}
+function vo(Mt) {
+  let x = _(32),
+    { onComplete: y, depCheck: O } = Mt,
+    Ye;
+  if (x[0] === p) ((Ye = st.isSandboxingEnabled()), (x[0] = Ye));
+  else Ye = x[0];
+  let $t = Ye,
+    on;
+  if (x[1] === p) ((on = st.isAutoAllowBashIfSandboxedEnabled()), (x[1] = on));
+  else on = x[1];
+  let Gt = on,
+    xo = O.warnings.length > 0,
+    en;
+  if (x[2] === p) ((en = bn()), (x[2] = en));
+  else en = x[2];
+  let qt = en.sandbox?.network?.allowAllUnixSockets,
+    qo = xo && !qt,
+    nn;
+  if (x[3] === p)
+    ((nn = () => {
+      if (!$t) {
+        return "disabled";
+      }
+      if (Gt) {
+        return "auto-allow";
+      }
+      return "regular";
+    }),
+      (x[3] = nn));
+  else nn = x[3];
+  let Vt = nn,
+    tn;
+  if (x[4] === p) ((tn = eTe()), (x[4] = tn));
+  else tn = x[4];
+  let sn = tn,
+    rn = Vt(),
+    Kt = sn && rn === "disabled" ? "regular" : rn,
+    ln;
+  if (x[5] === p) ((ln = st.isAutoAllowSupported()), (x[5] = ln));
+  else ln = x[5];
+  let z = ln,
+    an;
+  if (x[6] === p)
+    ((an = z
+      ? [{ label: "Sandbox BashTool, with auto-allow", value: "auto-allow" }]
+      : []),
+      (x[6] = an));
+  else an = x[6];
+  let dn;
+  if (x[7] === p)
+    ((dn = [
+      ...an,
+      {
+        label: z
+          ? "Sandbox BashTool, with regular permissions"
+          : "Sandbox BashTool",
+        value: "regular",
+      },
+      ...(sn ? [] : [{ label: "No Sandbox", value: "disabled" }]),
+    ]),
+      (x[7] = dn));
+  else dn = x[7];
+  let _t = dn,
+    zt,
+    mn;
+  if (x[8] !== y)
+    ((mn = async function J(Jt) {
+      bb41: switch (Jt) {
+        case "auto-allow": {
+          (await st.setSandboxSettings({
+            enabled: !0,
+            autoAllowBashIfSandboxed: !0,
+          }),
+            y("\u2713 Sandbox enabled with auto-allow for bash commands"));
+          break bb41;
+        }
+        case "regular": {
+          (await st.setSandboxSettings({
+            enabled: !0,
+            ...(z && { autoAllowBashIfSandboxed: !1 }),
+          }),
+            y(
+              z
+                ? "\u2713 Sandbox enabled with regular bash permissions"
+                : "\u2713 Sandbox enabled",
+            ));
+          break bb41;
+        }
+        case "disabled": {
+          (await st.setSandboxSettings({
+            enabled: !1,
+            ...(z && { autoAllowBashIfSandboxed: !1 }),
+          }),
+            y("\u25CB Sandbox disabled"));
+        }
+      }
+    }),
+      (x[8] = y),
+      (x[9] = mn));
+  else mn = x[9];
+  let J = mn,
+    un;
+  if (x[10] !== y)
+    ((un = { "confirm:no": () => y(void 0, { display: "skip" }) }),
+      (x[10] = y),
+      (x[11] = un));
+  else un = x[11];
+  let pn;
+  if (x[12] === p) ((pn = { context: "Settings" }), (x[12] = pn));
+  else pn = x[12];
+  Ze(un, pn);
+  let fn;
+  if (x[13] !== J || x[14] !== y || x[15] !== qo)
+    ((fn = e(
+      ss,
+      {
+        title: "Mode",
+        children: e(Wo, {
+          showSocketWarning: qo,
+          options: _t,
+          currentMode: Kt,
+          noSandboxHint: zt,
+          onSelect: J,
+          onComplete: y,
+        }),
+      },
+      "mode",
+    )),
+      (x[13] = J),
+      (x[14] = y),
+      (x[15] = qo),
+      (x[16] = fn));
+  else fn = x[16];
+  let Vo = fn,
+    gn;
+  if (x[17] !== y)
+    ((gn = e(
+      ss,
+      { title: "Overrides", children: e(K, { onComplete: y }) },
+      "overrides",
+    )),
+      (x[17] = y),
+      (x[18] = gn));
+  else gn = x[18];
+  let Ko = gn,
+    xn;
+  if (x[19] === p)
+    ((xn = e(ss, { title: "Config", children: e(G, {}) }, "config")),
+      (x[19] = xn));
+  else xn = x[19];
+  let Qt = xn,
+    _o = O.errors.length > 0,
+    hn;
+  if (
+    x[20] !== O ||
+    x[21] !== _o ||
+    x[22] !== xo ||
+    x[23] !== Vo ||
+    x[24] !== Ko
+  )
+    ((hn = _o
+      ? [
+          e(
+            ss,
+            { title: "Dependencies", children: e(E, { depCheck: O }) },
+            "dependencies",
+          ),
+        ]
+      : [
+          Vo,
+          ...(xo
+            ? [
+                e(
+                  ss,
+                  { title: "Dependencies", children: e(E, { depCheck: O }) },
+                  "dependencies",
+                ),
+              ]
+            : []),
+          Ko,
+          Qt,
+        ]),
+      (x[20] = O),
+      (x[21] = _o),
+      (x[22] = xo),
+      (x[23] = Vo),
+      (x[24] = Ko),
+      (x[25] = hn));
+  else hn = x[25];
+  let zo = hn,
+    wn;
+  if (x[26] === p)
+    ((wn = Pt()
+      ? e(o, {
+          marginTop: 1,
+          children: e(t, {
+            dimColor: !0,
+            wrap: "wrap-trim",
+            children:
+              jn()?.sessionId !== void 0
+                ? "Commands Claude runs on this computer use this sandbox; the cloud session's own sandbox, in its container, isn't shown or changed here."
+                : "Commands Claude runs on this computer use this sandbox; the remote session's own sandbox isn't shown or changed here.",
+          }),
+        })
+      : void 0),
+      (x[26] = wn));
+  else wn = x[26];
+  let wo;
+  if (x[27] !== zo)
+    ((wo = e(qp, {
+      title: "Sandbox",
+      color: "permission",
+      defaultTab: "Mode",
+      banner: wn,
+      children: zo,
+    })),
+      (x[27] = zo),
+      (x[28] = wo));
+  else wo = x[28];
+  let yn;
+  if (x[29] === p)
+    ((yn = e(o, {
+      marginTop: 1,
+      children: e(ci, {
+        children:
+          "\u2190/\u2192 to switch \xB7 \u2191/\u2193 to navigate \xB7 Enter to select \xB7 Esc to close",
+      }),
+    })),
+      (x[29] = yn));
+  else yn = x[29];
+  let Cn;
+  if (x[30] !== wo)
+    ((Cn = r(Qr, { color: "permission", children: [wo, yn] })),
+      (x[30] = wo),
+      (x[31] = Cn));
+  else Cn = x[31];
+  return Cn;
+}
+function Wo(Xt) {
+  let D = _(24),
+    {
+      showSocketWarning: Jo,
+      options: L,
+      currentMode: yo,
+      noSandboxHint: Co,
+      onSelect: Qo,
+      onComplete: Xo,
+    } = Xt,
+    { headerFocused: Yo, focusHeader: Zo } = Jd(),
+    So;
+  if (D[0] !== Jo)
+    ((So =
+      Jo &&
+      e(o, {
+        marginBottom: 1,
+        children: e(Sf, {
+          status: "warning",
+          children: "Cannot block unix domain sockets (see Dependencies tab)",
+        }),
+      })),
+      (D[0] = Jo),
+      (D[1] = So));
+  else So = D[1];
+  let Sn;
+  if (D[2] === p)
+    ((Sn = e(o, {
+      marginBottom: 1,
+      children: e(t, { bold: !0, children: "Configure mode" }),
+    })),
+      (D[2] = Sn));
+  else Sn = D[2];
+  let ko;
+  if (D[3] !== Xo)
+    ((ko = () => Xo(void 0, { display: "skip" })), (D[3] = Xo), (D[4] = ko));
+  else ko = D[4];
+  let Ro;
+  if (
+    D[5] !== yo ||
+    D[6] !== Zo ||
+    D[7] !== Yo ||
+    D[8] !== Qo ||
+    D[9] !== L ||
+    D[10] !== ko
+  )
+    ((Ro = e(ve, {
+      options: L,
+      defaultValue: yo,
+      defaultFocusValue: yo,
+      onChange: Qo,
+      onCancel: ko,
+      onUpFromFirstItem: Zo,
+      isDisabled: Yo,
+    })),
+      (D[5] = yo),
+      (D[6] = Zo),
+      (D[7] = Yo),
+      (D[8] = Qo),
+      (D[9] = L),
+      (D[10] = ko),
+      (D[11] = Ro));
+  else Ro = D[11];
+  let Do;
+  if (D[12] !== Co)
+    ((Do =
+      Co &&
+      e(o, { marginTop: 1, children: e(t, { dimColor: !0, children: Co }) })),
+      (D[12] = Co),
+      (D[13] = Do));
+  else Do = D[13];
+  let To;
+  if (D[14] !== L)
+    ((To =
+      L.some(Pn) &&
+      r(t, {
+        dimColor: !0,
+        children: [
+          e(t, { bold: !0, dimColor: !0, children: "Auto-allow mode:" }),
+          " ",
+          "Commands will try to run in the sandbox automatically, and attempts to run outside of the sandbox fallback to regular permissions. Explicit ask/deny rules are always respected.",
+        ],
+      })),
+      (D[14] = L),
+      (D[15] = To));
+  else To = D[15];
+  let Rn;
+  if (D[16] === p)
+    ((Rn = e(Gp, { url: "https://code.claude.com/docs/en/sandboxing" })),
+      (D[16] = Rn));
+  else Rn = D[16];
+  let Po;
+  if (D[17] !== To)
+    ((Po = r(o, {
+      flexDirection: "column",
+      marginTop: 1,
+      gap: 1,
+      children: [To, Rn],
+    })),
+      (D[17] = To),
+      (D[18] = Po));
+  else Po = D[18];
+  let Tn;
+  if (D[19] !== So || D[20] !== Ro || D[21] !== Do || D[22] !== Po)
+    ((Tn = r(o, { flexDirection: "column", children: [So, Sn, Ro, Do, Po] })),
+      (D[19] = So),
+      (D[20] = Ro),
+      (D[21] = Do),
+      (D[22] = Po),
+      (D[23] = Tn));
+  else Tn = D[23];
+  return Tn;
+}
+async function ps(s, u, n) {
+  let c = bn().theme || "light",
+    b = P();
+  if (!st.isSupportedPlatform()) {
+    let a =
+        b === "wsl"
+          ? "Error: Sandboxing requires WSL2. WSL1 is not supported."
+          : "Error: Sandboxing is currently only supported on macOS, Linux, and WSL2.",
+      m = ut("error", c)(a);
+    return (s(m), null);
+  }
+  if (!st.isPlatformInEnabledList()) {
+    let a = ut(
+      "error",
+      c,
+    )(
+      `Error: Sandboxing is disabled for this platform (${b}) via the enabledPlatforms setting.`,
+    );
+    return (s(a), null);
+  }
+  if (st.areSandboxSettingsLockedByPolicy()) {
+    let a = ut(
+      "error",
+      c,
+    )(
+      "Error: Sandbox settings are overridden by a higher-priority configuration and cannot be changed locally.",
+    );
+    return (s(a), null);
+  }
+  let g = n?.trim() || "",
+    w = ft(g, " ");
+  if (w === "install" && b === "windows" && r3()) {
+    if (g !== "install")
+      return (
+        s(
+          ut(
+            "error",
+            c,
+          )("install takes no arguments. Run /sandbox install by itself."),
+        ),
+        null
+      );
+    let a = await nit(u.session.host);
+    return (
+      s(
+        ut(
+          {
+            ok: "success",
+            cancelled: "warning",
+            partial: "warning",
+            error: "error",
+          }[a.status],
+          c,
+        )(a.message),
+      ),
+      null
+    );
+  }
+  if (!g) {
+    let a = st.checkDependencies();
+    return e(vo, { onComplete: s, depCheck: a });
+  }
+  if (g)
+    if (w === "exclude") {
+      let a = g.slice(8).trim();
+      if (!a) {
+        let Y = ut(
+          "error",
+          c,
+        )(
+          'Error: Please provide a command pattern to exclude (e.g., /sandbox exclude "npm run test:*")',
+        );
+        return (s(Y), null);
+      }
+      let m = a.replace(/^["']|["']$/g, ""),
+        { settingsSource: T } = tpn(m),
+        v = ho(T),
+        R = v ? Wn(Bw(), v) : ".claude/settings.local.json",
+        Q = v && R.startsWith("..") ? v : R,
+        X = ut("success", c)(`Added "${m}" to excluded commands in ${Q}`);
+      return (s(X), null);
+    } else {
+      let a = ut(
+        "error",
+        c,
+      )(
+        `Error: Unknown subcommand "${w}". Available: ${b === "windows" && r3() ? "install, exclude" : "exclude"}`,
+      );
+      return (s(a), null);
+    }
+  return null;
+}
+export { ps as call };

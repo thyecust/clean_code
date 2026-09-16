@@ -1,0 +1,1636 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import "../../00-第三方库/lodash/lodash.207999qb.js";
+import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import "../../00-第三方库/zod/zod.3g334xwq.js";
+import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { R, l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { We, z, nje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { eje, St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import {
+  si,
+  GD,
+  bRe,
+  wZe,
+  qD,
+  cm,
+  dQ,
+  wg,
+  v5,
+  Ss,
+  XKt,
+  xRn,
+  mh,
+  Te,
+  ee,
+  sy,
+} from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { Sc, qie } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import "../Git-Worktree/chunk-9ys1bnqr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import { kd, XIn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import { _n, Uw, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
+import "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import "../权限系统/chunk-e4pfvp7x.js";
+import "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import "../工具Bash-Shell/chunk-4pap8y5n.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-svk2cp17.js";
+import "../../00-第三方库/axios/axios.t0fczzmz.js";
+import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import "../Hooks钩子/chunk-9em0d4k5.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
+import "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import "../Git-Worktree/chunk-bk9696gx.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
+import { hc, yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1bqqnyc1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import { T0n, yc, pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { Zi } from "../Teammates团队/chunk-811z9z0t.js";
+import { xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import { Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { RH, m_, wC, Ype, qre } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import { p6, F$e, lrr, Dve } from "./chunk-5ne99rq3.js";
+import { qqt, Poe } from "../权限系统/chunk-1y2g140m.js";
+import {
+  FTe,
+  xfn,
+  Ly,
+  SLe,
+  XKn,
+  f$,
+  B_,
+  $l,
+  ya,
+  ZWt,
+  z5e,
+  il,
+  K5e,
+  Ahn,
+  X5e,
+  DI,
+  JEe,
+  YM,
+  Fhn,
+  c9t,
+  SY,
+  Z5e,
+  u9t,
+  e8e,
+  JV,
+  Li,
+  JM,
+  W3,
+  t8e,
+  Whn,
+  lre,
+  Ghn,
+  fj,
+  f9t,
+  cpe,
+  qhn,
+  wY,
+  mj,
+  sD,
+  mu,
+  G3,
+  upe,
+} from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import { C7e } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { Mt, DD, sCn } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6kad94y1.js";
+import "../../01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js";
+import "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { Ud, wEt } from "../Teammates团队/chunk-thxapyam.js";
+import "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import "../MCP客户端/chunk-3kmsshb6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import "../插件系统/chunk-7s6mt1vg.js";
+import "../图表-Mermaid/chunk-743atbtj.js";
+import "../Skills技能/chunk-sapykxw7.js";
+import "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
+import "../权限系统/chunk-t3b7pg2x.js";
+import "../权限系统/chunk-fjrcf22x.js";
+import { rf } from "../权限系统/chunk-qdy0h5k2.js";
+import "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import "../后台任务-Shell管理/chunk-x3txegas.js";
+import "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import "../状态栏-主题/chunk-dqyc6kge.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import "../Workflow编排/chunk-0t0sve49.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import "../文件监听-Watch/文件监听-Watch.3efypmps.js";
+import "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import "../状态栏-主题/chunk-jz6b76hr.js";
+import "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import "../Teammates团队/chunk-g6nvp9mm.js";
+import { kAn, w4t, HAn, ZK, PAn, OAn } from "./chunk-9estzwf5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import "../Hooks钩子/chunk-z3433nr6.js";
+import "../Hooks钩子/chunk-bzqqe6xh.js";
+import "../插件系统/chunk-ajtn749s.js";
+import "../插件系统/chunk-hh8f1qrw.js";
+import "../图片-截图-ComputerUse/chunk-b8jsase9.js";
+import { ef } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-5jqttbex.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import "../后台任务-Shell管理/chunk-djserjj5.js";
+import "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import "../Artifact发布-渲染/chunk-rr78st95.js";
+import "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
+import "../认证-OAuth登录/chunk-x3rm9w4b.js";
+import "../Skills技能/chunk-1zy5c8mf.js";
+import "../Teammates团队/chunk-6b13bhw1.js";
+import "../Teammates团队/chunk-t899nada.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
+import { cb } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { hG } from "./chunk-3j7ezsr7.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import "../后台任务-Shell管理/chunk-9d5wk5b9.js";
+import "../Cron-定时任务/chunk-mk3zm4ew.js";
+import "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import "../Teammates团队/chunk-3k2smxfn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import { Ive, vme, lCn } from "./chunk-tyce0p0b.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
+import "./chunk-mxsfy35q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import "../ClaudeinChrome/chunk-hnp84hf6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-21sqz10e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
+import "../会话-历史-恢复/chunk-m1xj4s02.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0qtt3z52.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
+import "../语音-音频/chunk-cfhndstm.js";
+import "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
+import "../图片-截图-ComputerUse/chunk-bvxymt09.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
+import "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import "../权限系统/chunk-8rrcddth.js";
+import { RAe, W8e } from "./chunk-ct52ffwb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0kqw1wf5.js";
+import "./chunk-1yq098a7.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js";
+import { k4, U3e } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
+import { Ust } from "./chunk-2mm1aqzx.js";
+import { E2n } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
+import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
+import { Dot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { bQt } from "../Git-Worktree/chunk-qdn32vbw.js";
+import { ult, S4 } from "../会话-历史-恢复/chunk-ybcvb652.js";
+import { ndt, Yjn } from "./chunk-ga43tr2w.js";
+import "./chunk-znhfst8k.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
+import "./chunk-jpq2fv3g.js";
+import { APe, ldt, CPe, Bee, abe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2skajgkt.js";
+import { Gtn, _Bn, Xat } from "./chunk-1g5kqtqx.js";
+import "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
+import "./chunk-z5v9hvat.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-42rkrq9r.js";
+import "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
+import "../Teammates团队/chunk-mrfx53ye.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
+import "../插件系统/chunk-33bdfgmx.js";
+import "../MCP客户端/chunk-0mwqsv0r.js";
+import "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import "../DesignSync/chunk-5kyac4wk.js";
+import "../MCP客户端/chunk-tznd4407.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k1vb7vky.js";
+import "../工具Monitor/chunk-kxk3njnj.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
+import "../Teammates团队/chunk-eey53z5b.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6eskfcpn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
+import "../工具ToolSearch/chunk-1m51pqtd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
+import "../权限系统/chunk-pcxn6gwz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
+import { Jsr, FR } from "./chunk-4zd60pbm.js";
+import { Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import "../Teammates团队/chunk-enjekn9t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
+import "../Bedrock-Vertex/chunk-p991cddr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
+import { Qo, pxt } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import "../图片-截图-ComputerUse/chunk-6kdvf977.js";
+var gn = 3000;
+async function gt(d, c) {
+  if (!(await Gtn(c)) || !mh()?.accountUuid) return;
+  return (s) => mn(s, d, c);
+}
+async function mn(d, c, s) {
+  let r = await kt(hn(c, s), gn).then(
+    (h) => h ?? "unknown_timeout",
+    () => "unknown_error",
+  );
+  return (
+    n(`[bridge:signed-out] site=${d} verdict=${r}`),
+    i("tengu_bridge_token_absence_classified", { site: u(d), verdict: u(r) }),
+    r
+  );
+}
+async function hn(d, c) {
+  let s = yn(),
+    r = await sy(d),
+    h = !r?.accountUuid && Boolean(mh()?.accountUuid);
+  if (r?.accountUuid || h) {
+    if ((await s.readAsync(c))?.claudeAiOauth?.refreshToken === "")
+      return "refresh_token_dead";
+    return h ? "unknown_identity_cached_only" : "unknown_identity_present";
+  }
+  let p = await s.readAsyncStrict?.(c);
+  if (p === void 0 || p === hc) return "unknown_store_unreadable";
+  if (p?.claudeAiOauth?.refreshToken === "") return "refresh_token_dead";
+  if (p?.claudeAiOauth !== void 0)
+    return "unknown_identity_absent_token_present";
+  return "signed_out";
+}
+async function mt(d) {
+  let c = pr(d),
+    s = await C7e().catch(() => {
+      return;
+    });
+  if (s === void 0) {
+    g("bridge_resume_guard", "registry_read_failed");
+    return;
+  }
+  for (let r of s) {
+    if (
+      r.pid === process.pid ||
+      r.bridgeSessionId === void 0 ||
+      pr(r.bridgeSessionId) !== c
+    )
+      continue;
+    let h = r.procStartFt ?? r.procStart;
+    if (h === void 0 || !Vs(r.pid)) continue;
+    let p = await Ba(r.pid, { skipCache: !0 });
+    if (p === void 0) {
+      n(
+        `[bridge:repl] pid ${r.pid} advertises bridge session ${d} but its start token is unreadable \u2014 not treated as a holder`,
+      );
+      continue;
+    }
+    if (p === h) return { pid: r.pid, startedAt: r.startedAt };
+  }
+  return;
+}
+function ht() {
+  try {
+    if (
+      RH() === void 0 &&
+      qD() === "store" &&
+      xRn() &&
+      !wZe() &&
+      bRe() === null
+    )
+      return "unreachable";
+  } catch {}
+  return "rejected";
+}
+import { stat as Sn } from "fs/promises";
+import { sep as yt } from "path";
+var _t = 20;
+async function Tt(d, c, s, r, h) {
+  if (YM())
+    return (
+      n(
+        "[persistence-sync] Refusing backfill: conversation carries a history-suppression taint",
+      ),
+      { uploadedMain: 0, uploadedSubagents: 0 }
+    );
+  let p = K(),
+    k = il(),
+    F = k !== null && SY(p, k) ? k : Z5e(p),
+    [f, b] = await Promise.all([c.readMain(), c.readSubagents()]),
+    w = new Set();
+  for (let E of f?.events ?? []) {
+    let P = E.payload.uuid;
+    if (typeof P === "string") w.add(P);
+  }
+  for (let E of b?.events ?? []) {
+    let P = E.payload.uuid;
+    if (typeof P === "string") w.add(P);
+  }
+  n(`[persistence-sync] Server has ${w.size} events since compaction`);
+  let S = (E) => {
+    n(`[persistence-sync] Write failed: ${E}`);
+  };
+  if (p !== K())
+    return (
+      n(
+        "[persistence-sync] Refusing backfill: session id changed since the scan anchor was pinned (mid-scan /resume) \u2014 pinned content is not the current conversation",
+      ),
+      { uploadedMain: 0, uploadedSubagents: 0 }
+    );
+  if (wY(Li(p)))
+    return (
+      n(
+        "[persistence-sync] Refusing backfill: foreign binding or suppression carrier present at the post-await re-consult",
+      ),
+      { uploadedMain: 0, uploadedSubagents: 0 }
+    );
+  let T = await bt(F, w, !0, r, h);
+  if (T === "budget-exhausted") {
+    let E = fj(Li(p));
+    if ((JM(Li(p)), W3(Li(p)), !E)) t8e(Li(p));
+    return (
+      n(
+        "[persistence-sync] Taint sweep budget exhausted: refusing this backfill (precautionary hold, no durable stamp)",
+      ),
+      { uploadedMain: 0, uploadedSubagents: 0 }
+    );
+  }
+  if (T === "tainted")
+    return (
+      e8e(Li(p)),
+      n(
+        "[persistence-sync] Main transcript tainted: aborting sync (subagents included), healing the in-memory flag",
+      ),
+      { uploadedMain: 0, uploadedSubagents: 0 }
+    );
+  for (let E of T)
+    d("transcript", E, {
+      ...($l(E) && {
+        isCompaction: !0,
+        preservedEventIds: E.compactMetadata?.preservedMessages?.uuids,
+      }),
+    }).catch(S);
+  if (p !== K())
+    return (
+      n(
+        "[persistence-sync] Skipping subagent backfill: session id changed during the main read (mid-sync /resume)",
+      ),
+      { uploadedMain: T.length, uploadedSubagents: 0 }
+    );
+  let C = 0;
+  for (let { agentId: E, path: P } of await kn(s, r)) {
+    let x = await bt(P, w, !1, r, h);
+    if (x === "budget-exhausted") {
+      let D = fj(Li(p));
+      if ((JM(Li(p)), W3(Li(p)), !D)) t8e(Li(p));
+      break;
+    }
+    if (x === "tainted") {
+      e8e(Li(p));
+      break;
+    }
+    for (let D of x)
+      d("transcript", D, {
+        ...($l(D) && {
+          isCompaction: !0,
+          preservedEventIds: D.compactMetadata?.preservedMessages?.uuids,
+        }),
+        agentId: E,
+      }).catch(S);
+    C += x.length;
+  }
+  return (
+    n(`[persistence-sync] Uploaded ${T.length} main + ${C} subagent entries`),
+    { uploadedMain: T.length, uploadedSubagents: C }
+  );
+}
+async function kn(d, c) {
+  let r = (
+      c !== void 0 ? await bn(c, d) : await Promise.all(d.map((f) => vt(f)))
+    ).filter((f) => f !== null),
+    h = r.filter((f) => f.size <= qie),
+    p = h.sort((f, b) => b.mtimeMs - f.mtimeMs).slice(0, _t),
+    k = r.length - h.length,
+    F = h.length - p.length;
+  if (k > 0 || F > 0)
+    n(
+      `[persistence-sync] Subagent backfill capped: ${k} over ${qie}B, ${F} beyond ${_t}-agent limit (live stream unaffected)`,
+    );
+  return p;
+}
+async function bt(d, c, s = !0, r, h) {
+  let p = r ? At(d) : null,
+    k = [],
+    F = !1;
+  try {
+    let f = 0,
+      b = r && p ? ZWt(r, p) : nje(d);
+    for await (let w of b) {
+      if (u9t(w))
+        return (
+          n(
+            "[persistence-sync] Refusing backfill: history-suppression entry in transcript",
+          ),
+          "tainted"
+        );
+      if (F) {
+        if (++f >= c9t)
+          return (
+            n(
+              "[persistence-sync] Refusing backfill: pre-boundary taint sweep exhausted its line budget without a verdict",
+            ),
+            "budget-exhausted"
+          );
+        continue;
+      }
+      let S;
+      try {
+        S = z(w);
+      } catch {
+        continue;
+      }
+      if (!z5e(S)) continue;
+      if (f9t(S, h)) continue;
+      if (!c.has(S.uuid)) k.push(S);
+      if ($l(S)) {
+        if (!s) break;
+        F = !0;
+      }
+    }
+  } catch (f) {
+    if (W(f)) return [];
+    throw f;
+  }
+  return k.reverse();
+}
+async function vt(d, c = Ud(d)) {
+  try {
+    let s = await Sn(c);
+    return { agentId: d, path: c, size: s.size, mtimeMs: s.mtimeMs };
+  } catch {
+    return null;
+  }
+}
+async function bn(d, c) {
+  let s = c.map((f) => {
+      let b = Ud(f);
+      return { agentId: f, path: b, key: At(b) };
+    }),
+    r = (f) =>
+      f !== null && f.namespace === "transcript" && f.agentId !== void 0
+        ? f
+        : null,
+    h = (f) => [f.projectKey, f.sessionId, ...(f.agentRelPath ?? [])].join("/"),
+    p = new Map();
+  for (let { key: f } of s) {
+    let b = r(f);
+    if (b !== null)
+      p.set(h(b), {
+        projectKey: b.projectKey,
+        sessionId: b.sessionId,
+        ...(b.agentRelPath !== void 0 && { agentRelPath: b.agentRelPath }),
+      });
+  }
+  let k = new Map(),
+    F = pxt();
+  return (
+    await Promise.all(
+      [...p].map(
+        async ([f, { projectKey: b, sessionId: w, agentRelPath: S }]) => {
+          let T = new Map();
+          k.set(f, T);
+          let C = () => k.delete(f),
+            E =
+              S === void 0
+                ? `session ${w}`
+                : `session ${w} subtree ${S.join("/")}`;
+          try {
+            let P = await Qo(
+              (x) =>
+                d.listEntries(
+                  {
+                    namespace: "transcript",
+                    projectKey: b,
+                    sessionId: w,
+                    ...(S !== void 0 && { agentRelPath: S }),
+                  },
+                  { skipScopeStats: !0, ...(x !== void 0 && { cursor: x }) },
+                ),
+              (x) => {
+                for (let D of x)
+                  if (
+                    D.kind === "key" &&
+                    D.key.namespace === "transcript" &&
+                    D.key.agentId !== void 0 &&
+                    h(D.key) === f &&
+                    D.size !== void 0 &&
+                    D.mtimeMs !== void 0
+                  )
+                    T.set(D.key.agentId, { size: D.size, mtimeMs: D.mtimeMs });
+              },
+              { budget: F },
+            );
+            if (P.status !== "done")
+              (n(
+                `[persistence-sync] subagent listing for ${E} ${P.status === "error" ? `failed: ${We(P.error)}` : "was capped"} \u2014 its subagents are skipped`,
+              ),
+                C());
+          } catch (P) {
+            (n(
+              `[persistence-sync] subagent listing for ${E} threw: ${l(P)} \u2014 its subagents are skipped`,
+            ),
+              C());
+          }
+        },
+      ),
+    ),
+    Promise.all(
+      s.map(async ({ agentId: f, path: b, key: w }) => {
+        let S = r(w);
+        if (S === null) return vt(f, b);
+        let T = k.get(h(S)),
+          C = T?.get(S.agentId);
+        if (C === void 0 && T !== void 0)
+          n(
+            `[persistence-sync] subagent ${f} not in its folder's listing \u2014 skipped`,
+          );
+        return C === void 0 ? null : { agentId: f, path: b, ...C };
+      }),
+    )
+  );
+}
+function At(d) {
+  let c = Sc() + yt;
+  if (!d.startsWith(c)) return null;
+  let s = d.slice(c.length).split(yt);
+  if (s.length === 2 && s[1].endsWith(".jsonl")) {
+    let r = s[0],
+      h = s[1].slice(0, -6);
+    return _n(r) && _n(h) ? wt(Ce.transcript(r, h)) : null;
+  }
+  if (
+    s.length >= 4 &&
+    s[2] === "subagents" &&
+    s.at(-1).startsWith("agent-") &&
+    s.at(-1).endsWith(".jsonl")
+  ) {
+    let r = s[0],
+      h = s[1],
+      p = s.slice(3, -1),
+      k = s.at(-1).slice(6, -6);
+    return _n(r) && _n(h) && _n(k) && (p.length === 0 || Uw(p))
+      ? wt(Ce.transcript(r, h, k, p.length > 0 ? p : void 0))
+      : null;
+  }
+  return null;
+}
+function wt(d) {
+  return kd(d) === void 0 ? d : null;
+}
+var wn = 2100;
+function Rt(d) {
+  let { sessionId: c, apiBaseUrl: s, requestFreshSecret: r } = d,
+    h = Ct(d.secret, c);
+  if (typeof h === "string")
+    throw new R(`work secret rejected: ${h}`, "work secret rejected");
+  let p = Bee(s, c),
+    k = null,
+    F = !1;
+  async function f() {
+    if (!r)
+      return (n("[bridge:work-secret] the host offers no refresh path"), null);
+    let w;
+    try {
+      w = await r(c);
+    } catch (C) {
+      return (
+        n(`[bridge:work-secret] host refresh request failed: ${l(C)}`, {
+          level: "warn",
+        }),
+        null
+      );
+    }
+    if (!w)
+      return (n("[bridge:work-secret] host has no fresh secret yet"), null);
+    let S = Ct(w, c);
+    if (typeof S === "string")
+      return (
+        n(`[bridge:work-secret] fresh secret rejected: ${S}`, {
+          level: "warn",
+        }),
+        null
+      );
+    let T = FR(S.session_ingress_token);
+    if (
+      k &&
+      (S.session_ingress_token === k.secret.session_ingress_token ||
+        (k.exp !== null && T !== null && T <= k.exp))
+    )
+      return (
+        n(
+          "[bridge:work-secret] host returned a secret no fresher than the registered one",
+        ),
+        null
+      );
+    return S;
+  }
+  async function b(w, S = !1) {
+    let T = w.session_ingress_token,
+      C;
+    try {
+      C = await abe(p, T);
+    } catch (x) {
+      let { kind: D, status: j } = Ps(x);
+      if (
+        (n(
+          `[bridge:work-secret] /worker/register failed kind=${D} status=${j ?? "none"}: ${l(x)}`,
+          { level: "warn" },
+        ),
+        D === "other")
+      )
+        return { terminal: !0, reason: "malformed_response", status: 200 };
+      if (j === void 0 || j === 408 || j === 429 || j >= 500) return null;
+      if (S && (j === 401 || j === 403)) return ((F = !0), null);
+      return { terminal: !0, reason: "request_rejected", status: j };
+    }
+    let E = FR(T);
+    ((k = { secret: w, exp: E }), (F = !1));
+    let P = E === null ? wn : Math.max(0, E - Math.floor(Date.now() / 1000));
+    return (
+      n(`[bridge:work-secret] registered worker epoch=${C} expires_in=${P}s`),
+      { worker_jwt: T, api_base_url: s, expires_in: P, worker_epoch: C }
+    );
+  }
+  return {
+    async register(w, S) {
+      if (w === "initial") return b(h);
+      let T = await f();
+      if (S?.stillWanted && !S.stillWanted())
+        return (
+          n(
+            "[bridge:work-secret] bridge torn down or superseded while the host was asked; not registering",
+          ),
+          null
+        );
+      if (T) return b(T);
+      let C =
+        k !== null && k.exp !== null
+          ? k.exp - Math.floor(Date.now() / 1000)
+          : 0;
+      if (
+        k !== null &&
+        !F &&
+        S?.reuseHeldAboveS !== void 0 &&
+        C > S.reuseHeldAboveS
+      )
+        return (
+          n(
+            `[bridge:work-secret] nothing fresher from the host; re-registering the held secret (${C}s left)`,
+          ),
+          b(k.secret, !0)
+        );
+      return null;
+    },
+  };
+}
+function Ct(d, c) {
+  let s;
+  try {
+    s = ldt(d);
+  } catch (h) {
+    return h instanceof APe ? h.message : "undecodable";
+  }
+  let r = Jsr(s.session_ingress_token);
+  if (r === void 0) return "token carries no session_id claim";
+  if (!CPe(r, c)) return "token is for a different session";
+  return s;
+}
+var yi = { perFileMs: 400, totalMs: 1500 },
+  Si = { perFileMs: 2000, totalMs: 6000 },
+  vn = 60000;
+async function ki(d) {
+  let {
+    getToolPermissionContext: c,
+    host: s,
+    workspaceDiffComputeBudget: r,
+    getTools: h,
+    onInboundMessage: p,
+    onPermissionResponse: k,
+    onInterrupt: F,
+    onStopTask: f,
+    onBackgroundTasks: b,
+    getInitializeState: w,
+    getCommands: S,
+    isTurnLive: T,
+    onDialogKindsDeclared: C,
+    onClientInitialize: E,
+    onSetModel: P,
+    onSetMaxThinkingTokens: x,
+    onSetPermissionMode: D,
+    onApplyFlagSettings: j,
+    onSetColor: Bt,
+    onMcpAuthenticate: Ot,
+    onMcpOauthCallbackUrl: Dt,
+    onMcpReconnect: Pt,
+    onMcpStatus: It,
+    onBridgeInjectedMcp: Ft,
+    onGetContextUsage: Ut,
+    onGetUsage: Ht,
+    onStateChange: G,
+    initialMessages: de,
+    getMessages: xt,
+    initialName: $e,
+    outboundOnly: Ge,
+    tags: Lt,
+    sessionGroupingId: je,
+    reattachSessionId: Ne,
+    reattachSequenceNum: Wt,
+    reattachOrFail: $t,
+    reviveInitiated: Gt,
+    neverArchive: jt,
+    recordAtEnable: Ke,
+    onReattachPointerDead: Nt,
+    localHolderGuard: Ee,
+    suppressHistoryBackfill: ze,
+    onHistoryBackfillSuppressed: Be,
+    expectedAccount: qe,
+    onAuthProven: Kt,
+    enableSessionPersistence: zt,
+    onTransportRebuilt: qt,
+    storageV5: O,
+    credentials: U,
+    workSecret: Ve,
+    onWorkSecretRefresh: Vt,
+  } = d ?? {};
+  (T0n(HAn), lrr(ZK), Dve(vme));
+  let v = Li(K()),
+    Oe = il() ?? void 0,
+    ke = Oe !== void 0 && v !== void 0 && !SY(v, Oe),
+    De = ke ? void 0 : Oe,
+    _e = !1,
+    I = Boolean(ze) || YM() || fj(v) || JV(v),
+    be = () => wY(Li(K())),
+    le = (e) => {
+      if (I || cpe() || be()) return;
+      let t = K();
+      return t ? e(t) : void 0;
+    };
+  async function Xe(e, t, o) {
+    if (((I = !0), (_e = !0), ke))
+      g("rc_cross_account_suppression", "torn_entry_pair");
+    else y("rc_cross_account_suppression");
+    if (ke)
+      (JM(v),
+        lre(v),
+        n(
+          `[bridge:repl] ${t} veto under a TORN entry pair (mid-/resume window): precautionary suppression only, no permanent taint write`,
+          { level: "warn" },
+        ));
+    else await JEe(v, De, e, o, O);
+  }
+  let Pe = 0,
+    Xt = {
+      onTransportPersistenceReady: (e, t, o) => {
+        let m = ++Pe;
+        (async () => {
+          try {
+            if (I || be())
+              n(
+                "[bridge:repl] Persistence backfill suppressed (cross-account veto or foreign binding) \u2014 installing live writer only",
+              );
+            else {
+              let _ = await wEt(O);
+              await Tt(e, t, _, O, o);
+            }
+          } catch (_) {
+            n(`[bridge:repl] Persistence sync failed: ${l(_)}`, {
+              level: "error",
+            });
+          }
+          if (m !== Pe) {
+            n(
+              "[bridge:repl] Transport torn down during sync \u2014 skipping writer install",
+            );
+            return;
+          }
+          (K5e(
+            (_, H, ie) => (
+              e(_, H, ie).catch((Le) => {
+                (i("tengu_session_persistence_failed", {}),
+                  n(`[bridge:repl] Internal event write failed: ${l(Le)}`, {
+                    level: "error",
+                  }));
+              }),
+              Promise.resolve()
+            ),
+            o,
+          ),
+            X5e(t.readMain, t.readSubagents),
+            n(
+              "[bridge:repl] Session persistence enabled \u2014 transcript writer + hydrate readers registered",
+            ));
+        })();
+      },
+      onTransportPersistenceTeardown: () => {
+        (Pe++, Ahn());
+      },
+    },
+    ne = process.env.CLAUDE_BRIDGE_REATTACH_SESSION,
+    B = ne ?? Ne,
+    Ye = process.env.CLAUDE_BRIDGE_REATTACH_SEQ,
+    Yt = process.env.CLAUDE_BRIDGE_REATTACH_GROUPING,
+    Je = a.CLAUDE_BRIDGE_REATTACH_OWNER_ACCT,
+    Jt = a.CLAUDE_BRIDGE_REATTACH_OWNER_ORG,
+    Qt = a.CLAUDE_BRIDGE_REATTACH_NO_BACKFILL;
+  if (ne)
+    (delete process.env.CLAUDE_BRIDGE_REATTACH_SESSION,
+      delete process.env.CLAUDE_BRIDGE_REATTACH_SEQ,
+      delete process.env.CLAUDE_BRIDGE_REATTACH_OUTBOUND_ONLY,
+      delete process.env.CLAUDE_BRIDGE_REATTACH_GROUPING,
+      delete process.env.CLAUDE_BRIDGE_REATTACH_OWNER_ACCT,
+      delete process.env.CLAUDE_BRIDGE_REATTACH_OWNER_ORG,
+      delete process.env.CLAUDE_BRIDGE_REATTACH_NO_BACKFILL);
+  let ce = ne ? (Ye ? Number.parseInt(Ye, 10) || void 0 : void 0) : Wt,
+    oe = $t,
+    se = ne ? "env" : Ne ? "option" : void 0,
+    Qe = !1,
+    Me,
+    we = (e, t) => e !== void 0 && t !== void 0 && pr(e) === pr(t),
+    A = Ke === void 0 ? sD() : (Ke ?? void 0);
+  if (!ne) {
+    if (A) {
+      let e = Boolean(A.ownerAccountUuid),
+        t = e
+          ? await sy(O).catch(() => {
+              return;
+            })
+          : void 0,
+        o =
+          e &&
+          wg(t, {
+            accountUuid: A.ownerAccountUuid,
+            organizationUuid: A.ownerOrganizationUuid,
+          });
+      if (e && t?.accountUuid && !o)
+        (await Xe(
+          "restored_owner_mismatch",
+          B ? "Host-directed" : "Restored-pointer",
+          t.accountUuid,
+        ),
+          n(
+            `[bridge:repl] ${B ? "Host-directed" : "Restored-pointer"} reattach vetoed: the credential store account changed since this conversation's pointer was persisted \u2014 minting fresh, history channels suppressed`,
+            { level: "warn" },
+          ),
+          (B = void 0),
+          (ce = void 0),
+          (se = void 0));
+      else {
+        let m =
+          e &&
+          wg(t, {
+            accountUuid: A.ownerAccountUuid,
+            organizationUuid: A.ownerOrganizationUuid,
+          });
+        if (A.noHistoryBackfill) I = !0;
+        if (B && we(B, A.id)) B = A.id;
+        if (!B) {
+          if (((B = A.id), (ce = A.seq), !m || !OAn())) oe = !0;
+          ((se = m
+            ? oe
+              ? "restored_owner_match_pinned"
+              : "restored_owner_match"
+            : e
+              ? "restored_identity_unreadable"
+              : "restored_owner_unknown"),
+            (Qe = !0),
+            n(
+              `[bridge:repl] Reattaching to persisted bridge session ${A.id} at seq ${A.seq} (${oe ? "reattach-or-fail" : "fresh-mint fallback"}, ${se})`,
+            ));
+        } else if (m) {
+          if (!we(B, A.id))
+            Me = {
+              accountUuid: A.ownerAccountUuid,
+              organizationUuid: A.ownerOrganizationUuid,
+            };
+        } else if (we(B, A.id))
+          ((oe = !0),
+            n(
+              `[bridge:repl] Reattaching to the recorded bridge session ${A.id} as named by the carrier; owner unconfirmed \u2014 reattach-or-fail`,
+            ));
+        else
+          ((I = !0),
+            JM(v),
+            lre(v),
+            n(
+              "[bridge:repl] Host-directed reattach: this conversation\u2019s recorded owner could not be confirmed as the current login \u2014 attaching with history channels suppressed",
+              { level: "warn" },
+            ));
+      }
+    }
+  }
+  if (ne && B) {
+    if (Qt) ((I = !0), JM(v), lre(v));
+    let e = await sy(O).catch(() => {
+      return;
+    });
+    if (Je && e?.accountUuid) {
+      if (!wg(e, { accountUuid: Je, organizationUuid: Jt }))
+        ((B = void 0),
+          (ce = void 0),
+          (se = void 0),
+          await Xe("env_owner_mismatch", "Env-handoff", e.accountUuid),
+          n(
+            "[bridge:repl] Env-handoff reattach vetoed: the credential store account changed since the handoff was recorded \u2014 minting fresh, history channels suppressed",
+            { level: "warn" },
+          ));
+    } else
+      ((oe = !0),
+        (se = "env_or_fail"),
+        n(
+          "[bridge:repl] Env-handoff reattach: owner identity unavailable \u2014 reattach-or-fail",
+        ));
+  }
+  let Ze = we(B, A?.id);
+  if (Ze) {
+    if (A?.noHistoryBackfill) I = !0;
+    ce ??= A?.seq;
+  }
+  let ue,
+    et = () =>
+      Whn(v) &&
+      !ze &&
+      !_e &&
+      !YM() &&
+      !JV(v) &&
+      A?.noHistoryBackfill !== !0 &&
+      K() === v
+        ? { uncertaintyOnly: !0 }
+        : void 0;
+  if (I) ((ue = et()), Be?.(ue));
+  let tt = _e ? [] : p6(A?.declaredDialogKinds);
+  if (tt.length > 0) C?.(tt, "restored");
+  let Ie;
+  if (B) Ie = ne ? Yt : Ze ? A?.groupingId : void 0;
+  else Ie = je;
+  if (!(await kAn()))
+    return (
+      cb("not_enabled", "[bridge:repl] Skipping: bridge not enabled"),
+      null
+    );
+  let pe = M() && U !== void 0;
+  if (!(pe ? await wC(U) : m_()))
+    return (
+      cb("no_oauth", "[bridge:repl] Skipping: no OAuth tokens"),
+      G?.("failed", RAe, "auth"),
+      null
+    );
+  let nt = async (e, t, o) => {
+    let m = await v5(O, U).catch(() => {
+      return;
+    });
+    if (wg(m, e)) return !0;
+    return (cb(t, o), G?.("failed", W8e, "terminal"), !1);
+  };
+  if (
+    qe &&
+    !(await nt(
+      qe,
+      "revive_identity_recheck_failed",
+      "[bridge:repl] Skipping: revive identity re-check failed (store changed or unreadable since the watcher validated)",
+    ))
+  )
+    return null;
+  await b_();
+  let fe = DD("allow_remote_control");
+  if (fe === "cache_miss" || fe === "route_missing")
+    return (
+      cb(
+        fe === "route_missing" ? "policy_route_missing" : "policy_unverified",
+        `[bridge:repl] Skipping: allow_remote_control policy unverified (${fe})`,
+      ),
+      G?.(
+        "failed",
+        sCn("allow_remote_control", "disabled by your organization's policy"),
+        "terminal",
+      ),
+      null
+    );
+  if (fe === "org_denied")
+    return (
+      cb(
+        "policy_denied",
+        "[bridge:repl] Skipping: allow_remote_control policy not allowed",
+      ),
+      G?.("policy_disabled", w4t()),
+      null
+    );
+  if (Ge && !Mt("allow_remote_sessions"))
+    return (
+      cb(
+        "policy_denied",
+        "[bridge:repl] Skipping mirror: allow_remote_sessions policy not allowed",
+      ),
+      G?.(
+        "policy_disabled",
+        "session mirroring is disabled by your organization's policy (allow_remote_sessions)",
+      ),
+      null
+    );
+  let rt = !1;
+  if (Ee && Qe && B && PAn()) {
+    let e = await mt(B);
+    if (e) {
+      if (Ee.mode === "decline")
+        return (
+          cb(
+            "restored_pointer_held_locally",
+            `[bridge:repl] Skipping: bridge session ${B} from the resumed transcript is still served by local pid ${e.pid} \u2014 not taking it over (/remote-control here moves it)`,
+          ),
+          y("bridge_resume_guard"),
+          Ee.onDeclined(e),
+          null
+        );
+      (n(
+        `[bridge:repl] Explicit enable is taking over bridge session ${B} from local pid ${e.pid}`,
+      ),
+        (rt = !0));
+    }
+  }
+  let ae = Li(K());
+  if (!YM()) {
+    let e = await Fhn(O);
+    if (e === "found") e8e(ae);
+    else if (e === "clean") Ghn(ae);
+    else if (e === "torn") g("rc_cross_account_suppression", "scan_torn");
+    else {
+      g(
+        "rc_cross_account_suppression",
+        e === "budget-exhausted" ? "scan_budget_exhausted" : "scan_read_error",
+      );
+      let t = fj(ae);
+      if ((JM(ae), W3(ae), !t)) t8e(ae);
+    }
+  }
+  if (!I && (YM() || fj(v) || JV(v) || K() !== v))
+    ((I = !0), (ue = et()), Be?.(ue));
+  if (!RH()) {
+    let e = ee();
+    if (
+      e.bridgeOauthDeadExpiresAt != null &&
+      (e.bridgeOauthDeadFailCount ?? 0) >= 3 &&
+      XKt() === e.bridgeOauthDeadExpiresAt
+    )
+      return (
+        n(
+          `[bridge:repl] Skipping: cross-process backoff (dead token seen ${e.bridgeOauthDeadFailCount} times)`,
+        ),
+        null
+      );
+    await Ss({ credentials: U, storageV5: O });
+    let t = XKt();
+    if (t !== null && t <= Date.now()) {
+      (cb(
+        "oauth_expired_unrefreshable",
+        "[bridge:repl] Skipping: OAuth token expired and refresh failed (re-login required)",
+      ),
+        G?.("failed", RAe, "auth"));
+      let o = t;
+      return (
+        await Te(
+          (m) => ({
+            ...m,
+            bridgeOauthDeadExpiresAt: o,
+            bridgeOauthDeadFailCount:
+              m.bridgeOauthDeadExpiresAt === o
+                ? (m.bridgeOauthDeadFailCount ?? 0) + 1
+                : 1,
+          }),
+          O,
+        ),
+        null
+      );
+    }
+  }
+  let ve = await lCn(U);
+  if (ve)
+    return (
+      cb("trusted_device_unenrolled", `[bridge:repl] Skipping: ${ve}`),
+      G?.("failed", ve, ve === Ive ? "terminal" : "auth"),
+      null
+    );
+  let Q = Ype(),
+    V = `${qre()}-${xU()}`,
+    Z = !1,
+    N = !1;
+  if ($e) ((V = $e), (Z = !0), (N = !0));
+  else if (!I) {
+    let e = le(mu),
+      t = le(G3);
+    if (e) ((V = e), (Z = !0), (N = !0));
+    else if (t) ((V = t), (Z = !0));
+    else if (de && de.length > 0)
+      for (let o = de.length - 1; o >= 0; o--) {
+        let m = de[o];
+        if (!F$e(m) || f$(m)) continue;
+        let _ = B_(m.message.content);
+        if (!_) continue;
+        let H = Cn(_);
+        if (!H) continue;
+        ((V = H), (Z = !0));
+        break;
+      }
+  }
+  let X = 0,
+    Ae,
+    Y = null,
+    Fe = 0,
+    J = !1,
+    Ue = !1,
+    He,
+    Zt = (e) => He?.bridgeSessionId === e && He.sessionId === K(),
+    q = Xat({
+      isOwnTitle: (e, t) => te.has(t),
+      onRemoteTitleAdopted: (e, t) => {
+        (Poe(e, t), (re = e));
+      },
+    }),
+    ge = (e, t) => te.has(t) || q.hasSent(e, t),
+    re,
+    it = `${qre()}-${xU()}`,
+    te = new Set([V]),
+    ot;
+  if (I) {
+    let e = K(),
+      t = e ? G3(e) : void 0;
+    if (t) te.add(t);
+    ot = e ? mu(e) : void 0;
+  }
+  let st = Promise.resolve(),
+    xe = (e, t, o, m) => {
+      let _ = () => m && (cpe() || be()),
+        H = () => !Ue;
+      if (J || _() || Ly(t)) return !1;
+      return (
+        (Z = !0),
+        (V = e),
+        te.add(e),
+        Poe(t, e),
+        n(`[bridge:repl] derived title from message ${o}: ${e}`),
+        q
+          .update(t, e, {
+            baseUrl: Q,
+            getAccessToken: m_,
+            shouldSend: () => {
+              if (J || _() || !H()) return !1;
+              return !Ly(t);
+            },
+          })
+          .catch(() => {}),
+        !0
+      );
+    },
+    at = (e, t, o) => {
+      if (J) return;
+      let m = ++Fe,
+        _ = X,
+        H = AbortSignal.timeout(15000);
+      S4(e, H, U).then(async (ie) => {
+        let Le = () => {
+            let Se = G3(K());
+            return Boolean(Se && !te.has(Se));
+          },
+          ft = () => {
+            let Se = mu(K());
+            return (
+              J || m !== Fe || Ae !== t || N || Boolean(Se && Se !== ot) || Le()
+            );
+          };
+        if (!ie || ft()) return;
+        let fn = pe ? await wC(U) : void 0,
+          ye = await FTe(t, {
+            baseUrl: Q,
+            getAccessToken: pe ? () => fn : m_,
+            credentials: U,
+          }).catch(() => null);
+        if (ft()) return;
+        if (ye === null) return;
+        if (ye.title && !ge(t, ye.title)) {
+          (Poe(t, ye.title), q.noteRemoteTitle(t, ye.title), (re = t));
+          return;
+        }
+        xe(ie, t, _, o);
+      });
+    },
+    en = (e) => {
+      let t = si(e);
+      if (!t) return { ok: !1, error: "title must be non-empty" };
+      if (((V = t), (Z = !0), (N = !0), te.add(t), te.add(e), Y)) {
+        if (
+          ((Y.selfTitle = t), q.noteRemoteTitle(Y.bridgeSessionId, t), e !== t)
+        )
+          q.noteRemoteTitle(Y.bridgeSessionId, e);
+      }
+      let o = cpe(),
+        m = o ? qhn() : K();
+      if (m)
+        DI(m, t, o ? Z5e(m) : void 0, "remote", O).catch((_) => {
+          n(`saveCustomTitle: transcript append failed: ${l(_)}`);
+        });
+      else
+        n(
+          "[bridge:repl] Dropping inbound rename mirror: foreign binding with no bound-sid exposure \u2014 the live conversation is not the one the phone renamed",
+        );
+      if (!Zi() && !o)
+        st = st.then(async () => {
+          try {
+            await SLe(t, "user", O);
+          } catch (_) {
+            n(`onRenameSession: name propagation failed: ${l(_)}`);
+          }
+        });
+      return { ok: !0 };
+    },
+    dt = (e) => {
+      let t = K(),
+        o = le(G3);
+      if (!o || ge(e, o)) return !1;
+      let m = X;
+      return (
+        FTe(e, { baseUrl: Q, getAccessToken: m_ })
+          .catch(() => null)
+          .then((_) => {
+            if (N || re === e || mu(K())) return;
+            if (_ === null) return;
+            if (_.title && !ge(e, _.title)) {
+              (Poe(e, _.title), q.noteRemoteTitle(e, _.title), (re = e));
+              return;
+            }
+            if (K() !== t || le(G3) !== o) return;
+            if ((Fe++, xe(o, e, m, !0)))
+              He = { bridgeSessionId: e, sessionId: t };
+          }),
+        !0
+      );
+    },
+    tn = () => {
+      let e = Y?.bridgeSessionId;
+      if (!e || J || Ue || N || re === e || mu(K())) return;
+      dt(e);
+    },
+    nn = (e, t) => {
+      if (J) return !0;
+      if (N || Zt(t) || re === t) return !0;
+      let o = le(mu);
+      if (o) {
+        if (!ge(t, o))
+          FTe(t, { baseUrl: Q, getAccessToken: m_ })
+            .catch(() => null)
+            .then((m) => {
+              if (N || mu(K()) !== o) return;
+              if (m === null) return;
+              if (m.title && !ge(t, m.title)) {
+                (Poe(t, m.title), q.noteRemoteTitle(t, m.title), (re = t));
+                return;
+              }
+              (xe(o, t, X, !0), (N = !0));
+            });
+        return !0;
+      }
+      if (dt(t)) return !0;
+      if (Ae !== void 0 && Ae !== t) X = 0;
+      if (((Ae = t), X++, X === 1 && !Z)) at(e, t, !1);
+      else if (X === 3) {
+        let m = I || cpe() || be() ? void 0 : xt?.(),
+          _ = m ? ult(ya(m)) : e;
+        at(_, t, m !== void 0);
+      }
+      return (X >= 3 && (Z || N)) || X >= 8;
+    },
+    rn = 200,
+    lt = await GD();
+  if (!lt)
+    return (
+      cb("no_org_uuid", "[bridge:repl] Skipping: no org UUID"),
+      G?.("failed", RAe, "auth"),
+      null
+    );
+  let on = pe ? await wC(U) : void 0,
+    sn = await _Bn({
+      getAccessToken: pe ? () => on : m_,
+      storageV5: O,
+      credentials: U,
+    }),
+    an = await gt(O, U),
+    ct = await ndt();
+  if (ct)
+    return (
+      cb("version_too_old", `[bridge:repl] Skipping: ${ct}`, !0),
+      G?.("failed", "run `claude update` to upgrade", "terminal"),
+      null
+    );
+  let { branch: dn, gitRepoUrl: ln, defaultBranch: cn } = await XIn(),
+    me;
+  function ut() {
+    if (((J = !0), me?.teardown(), Y)) (q.forget(Y.bridgeSessionId), qqt(Y, O));
+  }
+  if (Me) {
+    if (
+      !(await nt(
+        Me,
+        "host_target_owner_recheck_failed",
+        "[bridge:repl] Skipping: the login changed (or became unreadable) between adjudicating this conversation\u2019s owner and connecting \u2014 not attaching it to the host\u2019s session",
+      ))
+    )
+      return null;
+    n(
+      "[bridge:repl] Host-directed target on a recorded conversation: owner re-verified immediately before connecting",
+    );
+  }
+  let pt;
+  if (Ve !== void 0) {
+    if (!B)
+      return (
+        n(
+          "[bridge:repl] Skipping: work secret supplied but this init has no session to reattach (no target, or the target was vetoed)",
+          { level: "error" },
+        ),
+        cb("work_secret_no_target", void 0, !0),
+        G?.(
+          "failed",
+          "Remote Control could not attach: no session to attach the host credential to",
+          "terminal",
+        ),
+        null
+      );
+    try {
+      pt = Rt({
+        secret: Ve,
+        sessionId: B,
+        apiBaseUrl: Q,
+        requestFreshSecret: Vt,
+      });
+    } catch (e) {
+      return (
+        n(`[bridge:repl] Skipping: ${l(e)}`, { level: "error" }),
+        cb("work_secret_rejected", void 0, !0),
+        G?.("failed", `Remote Control could not attach: ${l(e)}`, "terminal"),
+        null
+      );
+    }
+    n(
+      `[bridge:repl] Attaching ${B} with the host's work secret (worker-credential path)`,
+    );
+  }
+  if (rt) i("tengu_bridge_restored_pointer_takeover", {});
+  let Re,
+    un = 0,
+    pn = rf(),
+    he,
+    L = (Y = await Yjn({
+      titleWriter: q,
+      noHistoryBackfill: I && ue?.uncertaintyOnly !== !0,
+      neutralFallbackTitle: it,
+      onReattachGoneBounce: () => {
+        (te.add(it), (I = !0), Be?.(), JM(v), W3(v), lre(v));
+      },
+      reattachSessionId: B,
+      reattachSequenceNum: ce,
+      reattachOrFail: oe,
+      reattachOrigin: se,
+      reviveInitiated: Gt,
+      neverArchive: jt,
+      onAuthProven: Kt,
+      onReattachPointerDead: () => {
+        if ((JM(v), W3(v), lre(v), !ke))
+          mj(v, De, De ? { targetExists: !0 } : void 0, O);
+        Nt?.();
+      },
+      baseUrl: Q,
+      orgUUID: lt,
+      title: V,
+      ownerPin: sn,
+      onOwnerChanged: ut,
+      getAccessToken: m_,
+      onAuth401: (e) => cm(e, U, O),
+      classifyFailedOAuthRefresh: ht,
+      onReadFreshOAuthToken: () => dQ(U),
+      onClassifyMissingOAuthToken: an,
+      onProactiveRefresh: async () => {
+        await Ss({ credentials: U, storageV5: O });
+      },
+      toSDKMessages: (e) => XKn(e, h?.()),
+      initialHistoryCap: rn,
+      initialMessages: I ? void 0 : de,
+      gitRepoUrl: ln,
+      branch: dn,
+      defaultBranch: cn,
+      onInboundMessage: p,
+      onUserMessage: nn,
+      onSessionEstablished: (e) => {
+        if (
+          (me?.teardown(),
+          (me = Ust(yc(e), Q, () => {
+            let o = m_();
+            if (!o || J) return null;
+            return { Authorization: `Bearer ${o}` };
+          })),
+          hG() && !St())
+        )
+          E2n(O);
+        let t = upe();
+        if (t && t !== "default")
+          xfn(e, t, ef, { baseUrl: Q, getAccessToken: m_ });
+      },
+      onBeforePushTriggeringState: () => me?.pulseIfClientPresent(),
+      onPermissionResponse: k,
+      onInterrupt: F,
+      onStopTask: f,
+      onBackgroundTasks: b,
+      getInitializeState: w,
+      getCommands: S,
+      isTurnLive: T,
+      onDialogKindsDeclared: C,
+      onClientInitialize: E,
+      onSetModel: P,
+      onSetMaxThinkingTokens: x,
+      onSetPermissionMode: D,
+      onApplyFlagSettings: j,
+      onRenameSession: en,
+      onSetColor: Bt,
+      async onFileSuggestions(e) {
+        return (await U3e(k4, e, !0, O)).map((o) => ({ path: o.displayText }));
+      },
+      onReadFile: (e, t, o) => Dot(e, t, c?.() ?? rf(), o, "repl_bridge"),
+      onGetWorkspaceDiff: s
+        ? (e) => {
+            let t = c?.() ?? pn,
+              o = he;
+            if (
+              ((he = void 0),
+              o && o.permissionContext === t && Date.now() - o.settledAt <= vn)
+            )
+              return Promise.resolve(o.result);
+            let m = Re;
+            if (!m || m.permissionContext !== t) {
+              let H = {
+                sequence: ++un,
+                permissionContext: t,
+                pendingWaiters: 0,
+                promise: bQt(s, t, r)
+                  .then((ie) => {
+                    if (
+                      H.pendingWaiters === 0 &&
+                      !(he && he.sequence > H.sequence)
+                    )
+                      he = {
+                        sequence: H.sequence,
+                        settledAt: Date.now(),
+                        permissionContext: t,
+                        result: ie,
+                      };
+                    return ie;
+                  })
+                  .finally(() => {
+                    if (Re === H) Re = void 0;
+                  }),
+              };
+              ((Re = H), (m = H));
+            }
+            let _ = m;
+            if (!e.aborted)
+              (_.pendingWaiters++,
+                e.addEventListener(
+                  "abort",
+                  () => {
+                    _.pendingWaiters--;
+                  },
+                  { once: !0 },
+                ));
+            return _.promise;
+          }
+        : void 0,
+      onMcpAuthenticate: Ot,
+      onMcpOauthCallbackUrl: Dt,
+      onMcpReconnect: Pt,
+      onMcpStatus: It,
+      onBridgeInjectedMcp: Ft,
+      onGetContextUsage: Ut,
+      onGetUsage: Ht,
+      onStateChange: G,
+      outboundOnly: Ge,
+      tags: Lt,
+      sessionGroupingId: Ie,
+      requestedSessionGroupingId: je,
+      onTransportRebuilt: qt,
+      storageV5: O,
+      credentialsStore: U,
+      workSecretCredentials: pt,
+      ...(zt ? Xt : {}),
+    }));
+  if (L) {
+    let e = L.detachForHandoff?.bind(L);
+    L.detachForHandoff = () => {
+      (ut(), e?.());
+    };
+    let t = L.teardown.bind(L);
+    if (
+      ((L.teardown = async (o) => {
+        ((Ue = !0), q.forget(L.bridgeSessionId), await t(o));
+      }),
+      J)
+    )
+      qqt(L, O);
+    ((L.selfTitle = V), (L.adoptLocalAiTitle = tn), (L.ownerVetoed = _e));
+  }
+  return An(L, () => me);
+}
+function An(d, c) {
+  if (!d) return (c()?.teardown(), null);
+  let s = d.teardown.bind(d);
+  return (
+    (d.teardown = async (r) => {
+      (c()?.teardown(), await s(r));
+    }),
+    d
+  );
+}
+var Et = 50;
+function Cn(d) {
+  let c = eje(d),
+    r = (/^(.*?[.!?])\s/.exec(c)?.[1] ?? c).replace(/\s+/g, " ").trim();
+  if (!r) return;
+  return r.length > Et ? r.slice(0, Et - 1) + "\u2026" : r;
+}
+export {
+  Si as HEADLESS_BRIDGE_WORKSPACE_DIFF_COMPUTE_BUDGET,
+  yi as REPL_WORKSPACE_DIFF_COMPUTE_BUDGET,
+  ki as initReplBridge,
+};

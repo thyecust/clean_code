@@ -1,0 +1,1520 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { Ga } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { le, Io, Xu, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
+import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { Zse, Hp, fr, QC, sS, mBe, Ml, p1 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { $f, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { Yy } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import {
+  N1e,
+  Am,
+  NXe,
+  MH,
+  iqt,
+  TN,
+  lqt,
+  BZn,
+  nP,
+  Nd,
+  NH,
+  Fd,
+  boe,
+  her,
+  Cn,
+  IC,
+} from "./chunk-01ymf0ar.js";
+import { ne, kTn } from "./chunk-rr78st95.js";
+import { s } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+function N(t) {
+  return typeof t === "object" && t !== null && !Array.isArray(t) ? t : null;
+}
+function v(t, ...e) {
+  let n = { ...t };
+  for (let r of e) delete n[r];
+  return n;
+}
+function C(t) {
+  return typeof t === "string";
+}
+function W(t) {
+  return C(t.from_url) || Array.isArray(t.asset_ids);
+}
+var Q3n = [
+    "read_file",
+    "read_asset",
+    "describe_type",
+    "list_files",
+    "list_assets",
+    "list_types",
+    "upload_asset",
+    "delete_asset",
+    "copy_from",
+  ],
+  gI = {
+    comments: "comments",
+    reply: "comments",
+    resolve: "comments",
+    watch: "comments",
+    unwatch: "comments",
+    status: "comments",
+    resume_replies: "comments",
+    read_db: "data",
+    write_db: "data",
+    verify: "check",
+    preview: "check",
+  };
+function E$t(t) {
+  return Object.hasOwn(gI, t);
+}
+function wte(t) {
+  let e = N(t);
+  if (e === null) return t;
+  let n = e.action;
+  if (n === void 0 || n === "publish") {
+    if (e.asset === !0)
+      return W(e)
+        ? { ...v(e, "asset"), action: "copy_from" }
+        : { ...v(e, "asset"), action: "upload_asset" };
+    return "asset" in e ? v(e, "asset") : t;
+  }
+  if (n === "read") {
+    if (C(e.type_url) && e.url === void 0)
+      return { ...e, action: "describe_type" };
+    if (C(e.path))
+      return Hp.test(e.path)
+        ? { ...v(e, "path"), action: "read_asset", asset_id: e.path }
+        : { ...e, action: "read_file" };
+    return t;
+  }
+  if (n === "list") {
+    if (e.scope === "types") return { ...v(e, "scope"), action: "list_types" };
+    if (e.scope === "files") return { ...v(e, "scope"), action: "list_files" };
+    if (e.scope === "assets")
+      return { ...v(e, "scope"), action: "list_assets" };
+    return t;
+  }
+  if (n === "delete" && C(e.path))
+    return { ...v(e, "path"), action: "delete_asset", asset_id: e.path };
+  return t;
+}
+function Eft(t) {
+  let e = N(t);
+  if (e === null) return t;
+  switch (e.action) {
+    case "upload_asset":
+      return C(e.file_path) ? { ...e, action: "publish", asset: !0 } : t;
+    case "copy_from":
+      return W(e) ? { ...e, action: "publish", asset: !0 } : t;
+    case "describe_type":
+      return C(e.type_url) && e.url === void 0 ? { ...e, action: "read" } : t;
+    case "read_file":
+      return C(e.path) ? { ...e, action: "read" } : t;
+    case "read_asset":
+      return C(e.asset_id)
+        ? { ...v(e, "asset_id"), action: "read", path: e.asset_id }
+        : t;
+    case "list_types":
+      return { ...e, action: "list", scope: "types" };
+    case "list_files":
+      return { ...e, action: "list", scope: "files" };
+    case "list_assets":
+      return { ...e, action: "list", scope: "assets" };
+    case "delete_asset":
+      return C(e.asset_id)
+        ? { ...v(e, "asset_id"), action: "delete", path: e.asset_id }
+        : t;
+    default:
+      return t;
+  }
+}
+function lwe(t, e) {
+  let n = N(e);
+  if (n === null) return e;
+  let r = n.action;
+  if (t === "comments") {
+    if (r === "read") return { ...n, action: "comments" };
+    if (r === "watch") {
+      let o = v(n, "on", "replies");
+      if (n.replies === !0) return { ...o, action: "resume_replies" };
+      if (n.on === !1) return { ...o, action: "unwatch" };
+      if (n.url === void 0) return { ...o, action: "status" };
+      return { ...o, action: "watch" };
+    }
+    return e;
+  }
+  if (t === "data") {
+    if (r === "get" || r === "list" || r === "query")
+      return { ...n, action: "read_db", db_op: r };
+    if (r === "set" || r === "update" || r === "delete" || r === "batch")
+      return { ...n, action: "write_db", db_op: r };
+    return e;
+  }
+  return e;
+}
+function Tte(t, e) {
+  let n = N(e);
+  if (n === null) return e;
+  let r = n.action;
+  if (t === "comments")
+    switch (r) {
+      case "comments":
+        return { ...n, action: "read" };
+      case "watch":
+        return { ...n, action: "watch" };
+      case "unwatch":
+        return { ...n, action: "watch", on: !1 };
+      case "status":
+        return { ...v(n, "url"), action: "watch" };
+      case "resume_replies":
+        return { ...n, action: "watch", replies: !0 };
+      default:
+        return e;
+    }
+  if (t === "data") {
+    if ((r === "read_db" || r === "write_db") && C(n.db_op))
+      return { ...v(n, "db_op"), action: n.db_op };
+    return e;
+  }
+  return e;
+}
+var K = /^u_[A-Za-z0-9_]{1,62}$/;
+function cwe(t, e) {
+  if (e.tokens.has(t)) return !0;
+  return e.account !== void 0 && t.toLowerCase() === e.account;
+}
+function G() {
+  return N1e().info?.accountUuid?.toLowerCase() ?? null;
+}
+var J = new Set();
+function uwe() {
+  let t = ne(),
+    e = t.ownPrincipalTokens;
+  if (e.size === 0) return J;
+  if (t.ownPrincipalTokenAccount !== G()) return (kTn(t), J);
+  let n = lqt();
+  for (let [r, o] of e) if (o !== ee && o !== n) e.delete(r);
+  return new Set(e.keys());
+}
+var ee = "relay",
+  Re = m(() => s().regex(K));
+async function te(t) {
+  return (
+    await BZn(t),
+    uwe(),
+    { epoch: ne().ownPrincipalTokenEpoch, account: G(), bearer: lqt() }
+  );
+}
+function re(t, e, n, r) {
+  let o = ne();
+  if (o.ownPrincipalTokenEpoch !== e.epoch || G() !== e.account) return;
+  let c =
+    r === "relay"
+      ? ee
+      : e.bearer !== null && lqt() === e.bearer && n === e.bearer
+        ? e.bearer
+        : void 0;
+  if (c === void 0) return;
+  let u = Re().safeParse(t);
+  if (u.success) {
+    if (o.ownPrincipalTokenAccount !== e.account)
+      (o.ownPrincipalTokens.clear(), (o.ownPrincipalTokenAccount = e.account));
+    o.ownPrincipalTokens.set(u.data, c);
+  }
+}
+function tV() {
+  return a.CLAUDE_CODE_ARTIFACT_COMMENTS ?? H("tengu_teal_corbel", !1);
+}
+function Z3n() {
+  return a.CLAUDE_CODE_ARTIFACT_COMMENTS !== void 0
+    ? "env"
+    : $f("tengu_teal_corbel", !1).source;
+}
+function dwe() {
+  return H("tengu_medlar_quoin", !1);
+}
+var ke = 256;
+function we(t) {
+  let e = ne().postedReplyIds;
+  if ((e.add(t), e.size > ke)) {
+    let n = e.values().next().value;
+    if (n !== void 0) e.delete(n);
+  }
+}
+function Aft(t) {
+  return t !== "" && ne().postedReplyIds.has(t);
+}
+function eGn() {
+  return ne().postedReplyIds.size > 0;
+}
+function wm(t) {
+  if (t.role === "degraded") return "unknown";
+  return t.role === void 0 || t.role === "" ? "human" : "agent";
+}
+function M_(t) {
+  if (t === void 0) return null;
+  let e = Date.parse(t);
+  return Number.isFinite(e) ? e : null;
+}
+function EOe(t, e) {
+  let n = M_(e.createdAt);
+  if (n === null) return !1;
+  return t.some((r) => {
+    let o = M_(r.toClaudeAt);
+    return o !== null && o > n;
+  });
+}
+function pwe(t) {
+  if (
+    t.commentsDegraded === !0 ||
+    t.resolvedDegraded === !0 ||
+    t.comments.some((o) => wm(o) === "unknown")
+  )
+    return [];
+  let e = t.comments.findLastIndex((o) => wm(o) === "agent"),
+    n = e >= 0 ? t.comments[e] : void 0,
+    r = t.resolved
+      ? {
+          id: "resolution-gesture",
+          account: "",
+          text: "",
+          createdAt: t.resolvedAt,
+        }
+      : void 0;
+  return t.comments.filter(
+    (o, c) =>
+      wm(o) === "human" &&
+      M_(o.toClaudeAt) !== null &&
+      (n === void 0 || c > e || EOe([o], n)) &&
+      (r === void 0 || EOe([o], r)),
+  );
+}
+function Lcn(t) {
+  return t.map((e) => {
+    let n = new Set(pwe(e));
+    return {
+      id: e.id,
+      ...(e.createdAt !== void 0 && { created_at: e.createdAt }),
+      resolved: e.resolved,
+      ...(e.resolvedDegraded && { resolved_degraded: !0 }),
+      ...(e.resolvedByClaude && { resolved_by_claude: !0 }),
+      claude_activated: e.claudeActivated,
+      ...(e.activatedAtDegraded && { activated_degraded: !0 }),
+      ...(e.carried && { carried: !0 }),
+      ...(e.commentsDegraded && { comments_degraded: !0 }),
+      ...(e.anchorPath !== void 0 && { anchor_path: e.anchorPath }),
+      ...(e.spanQuote !== void 0 && { span_quote: e.spanQuote }),
+      ...(e.anchorFile !== void 0 && { anchor_file: e.anchorFile }),
+      ...(e.anchorFileDegraded && { anchor_file_degraded: !0 }),
+      ...(e.anchorFileSha !== void 0 && { anchor_file_sha: e.anchorFileSha }),
+      ...(e.anchorLabel !== void 0 && { anchor_label: e.anchorLabel }),
+      ...(e.anchorDetail !== void 0 && { anchor_detail: e.anchorDetail }),
+      ...(e.region && { anchor_region: !0 }),
+      comments: e.comments.map((r) => {
+        let o = wm(r),
+          c = M_(r.toClaudeAt) !== null,
+          u = r.toClaudeAtDegraded === !0 || (r.toClaudeAt !== void 0 && !c),
+          l = c || u;
+        return {
+          id: r.id,
+          account: r.account,
+          ...(r.role !== void 0 && { role: r.role }),
+          text: r.text,
+          ...(r.createdAt !== void 0 && { created_at: r.createdAt }),
+          ...(o === "human" &&
+            c && {
+              sent_to_claude: !0,
+              ...(r.sentByViewer !== void 0 && {
+                sent_by_viewer: r.sentByViewer,
+              }),
+            }),
+          ...(((o === "human" && u) || (o === "unknown" && l)) && {
+            sent_to_claude_degraded: !0,
+          }),
+          ...(r.postedByArtifact && { posted_by_artifact: !0 }),
+          ...(n.has(r) && { awaiting_reply: !0 }),
+        };
+      }),
+    };
+  });
+}
+function Ee(t) {
+  if (
+    t.commentsDegraded === !0 ||
+    t.comments.some(
+      (o) =>
+        wm(o) === "unknown" ||
+        (wm(o) === "human" && o.toClaudeAtDegraded === !0),
+    )
+  )
+    return null;
+  let e = t.comments.findLastIndex((o) => wm(o) === "agent");
+  if (e < 0) return null;
+  let n = t.comments[e];
+  if (M_(n.createdAt) === null) return null;
+  let r = !1;
+  for (let [o, c] of t.comments.entries()) {
+    if (wm(c) !== "human" || c.toClaudeAt == null) continue;
+    if (M_(c.toClaudeAt) === null) return null;
+    if (((r = !0), o > e || EOe([c], n))) return null;
+  }
+  return r ? n : null;
+}
+function Cft(t, e) {
+  let n = U(t, e);
+  return n === void 0 ? null : Ee(n);
+}
+function tGn(t, e, n) {
+  let r = U(t, e);
+  if (r === void 0 || r.commentsDegraded === !0) return null;
+  return r.comments.findLast((o) => wm(o) === "agent" && !n.has(o.id)) ?? null;
+}
+function U(t, e) {
+  if (t.err !== null || t.threadsDegraded === !0 || t.threadsDropped === !0)
+    return;
+  return t.threads.find((n) => n.id === e);
+}
+function nGn(t, e) {
+  let n = U(t, e);
+  if (
+    n === void 0 ||
+    n.commentsDegraded === !0 ||
+    n.comments.some((o) => wm(o) === "unknown")
+  )
+    return;
+  let r = n.comments.findLast((o) => wm(o) === "agent");
+  return r !== void 0 && Aft(r.id) ? r.id : void 0;
+}
+var nV = 4096;
+function de(t, e) {
+  return t !== 10240 && mBe.test(e);
+}
+var ue =
+    /[\u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\u2800\u{1D159}\u{13441}\u{13442}\uFFFC]/u,
+  ve =
+    /[ \t\u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\u2800\u{1D159}\u{13441}\u{13442}\uFFFC]{3,}/gu;
+function Ete(t) {
+  for (let e of t.match(ve) ?? []) if (ue.test(e)) return !0;
+  return Array.from(t).some((e) => {
+    let n = e.codePointAt(0) ?? 0;
+    if (n === 10 || n === 9) return !1;
+    return sS(n) || de(n, e);
+  });
+}
+function fwe(t) {
+  let e = Array.from(t, (n) => {
+    let r = n.codePointAt(0) ?? 0;
+    if (r === 10 || r === 9) return n;
+    if (r === 13) return "";
+    return sS(r) || de(r, n) ? " " : n;
+  }).join("");
+  return Ml(e);
+}
+var Ce = new RegExp(`^[\\s${ue.source.slice(1, -1)}]*[\\p{Ps}${Zse}]`, "u");
+function fk(t, e, n = "") {
+  let r = fwe(t).replace(
+    /\n/g,
+    `
+${n}${e}| `,
+  );
+  return Ce.test(r) ? `${e}| ${r}` : r;
+}
+function k(t, e) {
+  t.gates.set(e, (t.gates.get(e) ?? 0) + 1);
+}
+function O(t, e, n) {
+  return () => (k(t, e), n);
+}
+var ce = [],
+  fe = [];
+function x(t, e, n) {
+  return le()
+    .nullable()
+    .optional()
+    .catch(O(t, e, n))
+    .transform((r) => r ?? void 0);
+}
+function Se(t) {
+  let e = nt({
+      id: le(),
+      author: nt({
+        account: le().nullable().optional(),
+        role: x(t, "role", "degraded"),
+      }),
+      text: le(),
+      created_at: x(t, "created_at", void 0),
+      to_claude_at: x(t, "to_claude_at", "degraded"),
+      source: Xu().optional(),
+      sent_by_viewer: Io()
+        .nullable()
+        .optional()
+        .catch(O(t, "sent_by_viewer", void 0))
+        .transform((o) => o ?? void 0),
+    }),
+    n = nt({
+      id: le(),
+      created_at: x(t, "thread_created_at", void 0),
+      comments: cr(Xu())
+        .readonly()
+        .nullable()
+        .catch(O(t, "comments_list", fe)),
+      resolved_at: x(t, "resolved_at", "degraded"),
+      resolved_by: Xu().optional(),
+      claude_activated_at: x(t, "claude_activated_at", "degraded"),
+      claude_activated_by: x(t, "claude_activated_by", void 0),
+      claude_capability: Xu().optional(),
+      carried: Io()
+        .nullable()
+        .optional()
+        .catch(O(t, "carried", void 0))
+        .transform((o) => o ?? void 0),
+      anchor: nt({
+        path: Xu().optional(),
+        span: Xu().optional(),
+        file: Xu().optional(),
+        file_sha: Xu().optional(),
+        label: Xu().optional(),
+        detail: Xu().optional(),
+        region: Xu().optional(),
+      })
+        .nullable()
+        .optional()
+        .catch(O(t, "anchor", { file: _e }))
+        .transform((o) => o ?? void 0),
+    }),
+    r = nt({
+      threads: cr(Xu())
+        .readonly()
+        .nullable()
+        .catch(O(t, "threads_list", ce)),
+    });
+  return { comment: e, thread: n, payload: r };
+}
+var aue = /^[0-9a-fA-F-]{1,64}$/,
+  AOe = /^[0-9T:.\-+Z ]{1,40}$/;
+function Mcn(t) {
+  return aue.test(t) || K.test(t);
+}
+function me(t, e, n) {
+  if (Mcn(n)) return n;
+  return (k(t, e), "unknown");
+}
+function Te(t, e) {
+  if (e === null || e === void 0) return "unknown";
+  return me(t, "account", e);
+}
+var De = /^[a-z_]{0,32}$/;
+function xe(t, e) {
+  if (e === void 0 || De.test(e)) return e;
+  return (k(t, "role"), "degraded");
+}
+function Oe(t, e) {
+  if (e === "edit") return !0;
+  if (e !== void 0 && e !== null && e !== "reply") k(t, "claude_capability");
+  return;
+}
+function Ie(t, e, n) {
+  if (e === void 0 || e === null || e === "") return;
+  if (e === "agent" && n === "assistant") return;
+  if (e !== "page") k(t, "source");
+  return !0;
+}
+function Me(t, e) {
+  if (e === void 0 || e === "") return;
+  if (M_(e) !== null) return { resolvedAt: e };
+  if (e !== "degraded") k(t, "resolved_at");
+  return { resolvedDegraded: !0 };
+}
+function Le(t, e) {
+  if (e === "claude") return !0;
+  if (e !== void 0 && e !== null) k(t, "resolved_by");
+  return;
+}
+var COe = "[anchor detail]",
+  Ate = "[anchored at]",
+  mwe = "[anchored element]",
+  gwe = "[inside region]",
+  vOe = "[location]",
+  A$t = "[on text]",
+  ROe = "[on page]",
+  $9 = "[region of]",
+  Ncn = /^#[A-Za-z_-][A-Za-z0-9_-]{0,31}$/,
+  Fcn = /^\[data-id="([A-Za-z0-9_-]{1,64})"\]$/,
+  $cn = /^[a-z][a-z0-9-]{0,23}:nth-of-type\([1-9][0-9]{0,3}\)$/,
+  ae = 128,
+  Pe = /^[\p{Cc}\p{Cf}\p{Variation_Selector}\u2028\u2029]$/u;
+function Ne(t, e) {
+  if (Pe.test(e)) return !0;
+  switch (t) {
+    case 847:
+    case 4447:
+    case 4448:
+    case 6068:
+    case 6069:
+    case 8293:
+    case 12644:
+    case 65440:
+      return !0;
+  }
+  if ((t & 65534) === 65534 || (t >= 64976 && t <= 65007)) return !0;
+  return (t >= 65520 && t <= 65528) || (t >= 917504 && t <= 921599);
+}
+function Fe(t) {
+  if (t.length > ae || !Wc(t) || new TextEncoder().encode(t).length > ae)
+    return !1;
+  for (let e of t) {
+    let n = e.codePointAt(0);
+    if (n < 32 || Ne(n, e)) return !1;
+  }
+  return !0;
+}
+function Be(t, e) {
+  if (e === void 0 || e === null || e === "") return;
+  if (typeof e !== "string") {
+    k(t, "anchor_path");
+    return;
+  }
+  let n = e.split(" > ");
+  if (
+    e.length <= 1024 &&
+    n.length <= 10 &&
+    n.every((r, o) => $cn.test(r) || (o === 0 && (Ncn.test(r) || Fcn.test(r))))
+  )
+    return e;
+  k(t, Fe(e) ? "anchor_path_opaque" : "anchor_path");
+  return;
+}
+var $e = 512,
+  He = 16777216,
+  Ke = 128,
+  Ge = 512,
+  C$t = 8,
+  qe = 4096,
+  Ue = /^[a-f0-9]{64}$/,
+  _e = Symbol("degraded-wire-anchor-file");
+function Ye(t, e) {
+  let n = e?.file;
+  if (n === void 0 || n === null || n === "") return;
+  if (n === _e) return { anchorFileDegraded: !0 };
+  let r = () => (k(t, "anchor_file"), { anchorFileDegraded: !0 });
+  if (typeof n !== "string") return r();
+  if (!Wc(n)) return r();
+  if (new TextEncoder().encode(n).length > 512) return r();
+  for (let u of n) {
+    let l = u.codePointAt(0);
+    if (l < 32 || l === 127 || u === "%" || u === ";" || u === "\\") return r();
+  }
+  if (n.endsWith(".cmekshadow") || n.startsWith("/")) return r();
+  let o = n.split("/");
+  if (o.some((u) => u === "" || u === "." || u === "..")) return r();
+  if (o[0].startsWith("_")) return r();
+  if (Ete(n)) return r();
+  let c = e?.file_sha;
+  if (c === void 0 || c === null || c === "") return { anchorFile: n };
+  if (typeof c !== "string" || !Ue.test(c))
+    return (k(t, "anchor_file_sha"), { anchorFile: n });
+  return { anchorFile: n, anchorFileSha: c };
+}
+function ze(t, e) {
+  if (e === void 0 || e === null) return;
+  if (typeof e !== "object") {
+    k(t, "anchor_span");
+    return;
+  }
+  let n = e;
+  if (
+    typeof n.start !== "number" ||
+    !Number.isInteger(n.start) ||
+    n.start < 0 ||
+    n.start > He ||
+    typeof n.quote !== "string" ||
+    n.quote === "" ||
+    new TextEncoder().encode(n.quote).length > $e
+  ) {
+    k(t, "anchor_span");
+    return;
+  }
+  return n.quote;
+}
+function oe(t, e, n, r) {
+  if (n === void 0 || n === null || n === "") return;
+  if (typeof n !== "string" || new TextEncoder().encode(n).length > r) {
+    k(t, e);
+    return;
+  }
+  let o = fwe(n).replace(QC, " ").replace(/\s+/g, " ").trim();
+  return o === "" ? void 0 : o;
+}
+function je(t, e) {
+  if (e === void 0 || e === null) return;
+  if (typeof e !== "object") {
+    k(t, "anchor_region");
+    return;
+  }
+  let n = e,
+    r = (u) => typeof u === "number" && u >= 0 && u <= 1,
+    o = (u) => Math.round(u * 1000) / 1000;
+  if (
+    !r(n.x0) ||
+    !r(n.y0) ||
+    !r(n.x1) ||
+    !r(n.y1) ||
+    o(n.x0) >= o(n.x1) ||
+    o(n.y0) >= o(n.y1)
+  ) {
+    k(t, "anchor_region");
+    return;
+  }
+  if (n.kids === void 0 || n.kids === null) return { kids: [] };
+  let c = n.kids;
+  if (
+    !Array.isArray(c) ||
+    c.length > C$t ||
+    !c.every(
+      (u, l) =>
+        Number.isInteger(u) && u >= 0 && u < qe && (l === 0 || u > c[l - 1]),
+    )
+  )
+    return (k(t, "anchor_region"), { kids: [] });
+  return { kids: c };
+}
+function se(t, e, n) {
+  if (n === void 0) return !1;
+  if (AOe.test(n)) return !0;
+  return (k(t, e), !1);
+}
+function Xe(t, e = "artifact_comments_read") {
+  let n = { gates: new Map() },
+    r = Se(n),
+    o = r.payload.safeParse(t);
+  if (!o.success) return null;
+  let c = o.data.threads === ce,
+    u = [],
+    l = new Set(),
+    d = 0,
+    h = 0;
+  for (let A of o.data.threads ?? []) {
+    let b = r.thread.safeParse(A);
+    if (!b.success) {
+      d++;
+      continue;
+    }
+    let _ = b.data;
+    if (l.has(_.id)) {
+      d++;
+      continue;
+    }
+    if ((l.add(_.id), !fr.test(_.id))) {
+      d++;
+      continue;
+    }
+    let E = [],
+      p = h,
+      S = Be(n, _.anchor?.path),
+      I = ze(n, _.anchor?.span),
+      T = I !== void 0 ? fwe(I) : void 0,
+      B = oe(n, "anchor_label", _.anchor?.label, Ke),
+      R = oe(n, "anchor_detail", _.anchor?.detail, Ge),
+      P = _.anchor?.span !== void 0 && _.anchor?.span !== null,
+      D = S !== void 0 && !P ? je(n, _.anchor?.region) : void 0,
+      j = new Set();
+    for (let be of _.comments ?? []) {
+      let Q = r.comment.safeParse(be);
+      if (!Q.success) {
+        h++;
+        continue;
+      }
+      let w = Q.data;
+      if (!aue.test(w.id)) {
+        h++;
+        continue;
+      }
+      if (j.has(w.id)) {
+        h++;
+        continue;
+      }
+      j.add(w.id);
+      let V = xe(n, w.author.role);
+      E.push({
+        id: w.id,
+        account: Te(n, w.author.account),
+        ...(V !== void 0 && { role: V }),
+        text: fwe(w.text),
+        ...(se(n, "created_at", w.created_at) && { createdAt: w.created_at }),
+        ...(w.to_claude_at !== void 0 &&
+          w.to_claude_at !== "" &&
+          w.to_claude_at !== "degraded" && { toClaudeAt: w.to_claude_at }),
+        ...(w.to_claude_at === "degraded" && { toClaudeAtDegraded: !0 }),
+        ...(Ie(n, w.source, V) === !0 && { postedByArtifact: !0 }),
+        ...(w.sent_by_viewer !== void 0 && { sentByViewer: w.sent_by_viewer }),
+      });
+    }
+    let X = Me(n, _.resolved_at);
+    u.push({
+      id: _.id,
+      ...(se(n, "thread_created_at", _.created_at) && {
+        createdAt: _.created_at,
+      }),
+      resolved: X !== void 0,
+      ...(Le(n, _.resolved_by) === !0 && { resolvedByClaude: !0 }),
+      ...X,
+      claudeActivated:
+        _.claude_activated_at !== void 0 &&
+        _.claude_activated_at !== "" &&
+        _.claude_activated_at !== "degraded",
+      ...(_.claude_activated_at !== void 0 &&
+        _.claude_activated_at !== "" &&
+        _.claude_activated_at !== "degraded" && {
+          activatedAt: _.claude_activated_at,
+        }),
+      ...(_.claude_activated_at === "degraded" && { activatedAtDegraded: !0 }),
+      ...(_.claude_activated_by !== void 0 &&
+        _.claude_activated_by !== "" &&
+        me(n, "claude_activated_by", _.claude_activated_by) !== "unknown" && {
+          activatedBy: _.claude_activated_by,
+        }),
+      ...((_.comments === fe || h > p) && { commentsDegraded: !0 }),
+      carried: _.carried === !0,
+      ...(S !== void 0 && { anchorPath: S }),
+      ...Ye(n, _.anchor),
+      ...(T !== void 0 && T.trim() !== "" && { spanQuote: T }),
+      ...(B !== void 0 && { anchorLabel: B }),
+      ...(R !== void 0 && { anchorDetail: R }),
+      ...(D !== void 0 && {
+        region: !0,
+        ...(D.kids.length > 0 && { regionKids: D.kids }),
+      }),
+      ...(Oe(n, _.claude_capability) === !0 && { editCapable: !0 }),
+      comments: E,
+    });
+  }
+  if (d > 0 || h > 0 || n.gates.size > 0) {
+    let A = [...n.gates];
+    g(e, "rows_degraded", {
+      ...Object.fromEntries(A.map(([b, _]) => [`degraded_${b}`, _])),
+      dropped_threads: d,
+      dropped_comments: h,
+      degraded_fields: A.reduce((b, [, _]) => b + _, 0),
+      ...(A.length > 0 && { degraded_gates: Ga(A.map(([b]) => b)) }),
+    });
+  } else y(e);
+  return {
+    threads: u,
+    ...(c && { threadsDegraded: !0 }),
+    ...(d > 0 && { threadsDropped: !0 }),
+  };
+}
+function Qe(t, e) {
+  if (t.status === 403 && L(t.data).includes(z))
+    return (g(e, "service_key_credential"), { err: at, unavailable: !0 });
+  if (t.status < 200 || t.status >= 300)
+    return (
+      g(e, "server_read_unavailable", { status: t.status }),
+      pe(t.status)
+    );
+  let n = Xe(t.data, e);
+  if (n === null)
+    return (
+      f(e, "malformed_body"),
+      { err: "comments fetch failed (unexpected response)" }
+    );
+  return {
+    err: null,
+    threads: n.threads,
+    ...(n.threadsDegraded && { threadsDegraded: !0 }),
+    ...(n.threadsDropped && { threadsDropped: !0 }),
+  };
+}
+var We = { min: 300, max: 800 },
+  Ze = 120000;
+function Je(t, e) {
+  if (t !== 429 && t !== 503) return;
+  let n = Yy(typeof e === "string" ? e : void 0);
+  return n === void 0 || n <= 0 ? void 0 : Math.min(n, Ze);
+}
+function et() {
+  let { min: t, max: e } = We;
+  return t + Math.floor(Math.random() * (e - t + 1));
+}
+async function ie(t, e, n, r) {
+  let o = await te(r),
+    c = performance.now(),
+    u;
+  try {
+    u = await Nd.getRelayBound(`/api/frame/comments/${encodeURIComponent(t)}`, {
+      refreshOAuth: !0,
+      credentials: r,
+      headers: Fd(),
+      timeout: 15000,
+      maxContentLength: her,
+      signal: e,
+      reportSentAuth: !0,
+    });
+  } catch (d) {
+    if (qi(d)) throw d;
+    let h = boe(d, c),
+      A = () => (
+        f(n, "server_read_request_error", h),
+        h.transport
+          ? { err: "comments fetch failed (network error)", retryable: !0 }
+          : { err: "comments fetch failed (the response could not be read)" }
+      );
+    return h.transport
+      ? { kind: "retryable", miss: h, fail: A }
+      : { kind: "done", result: A() };
+  }
+  if (!u.ok) {
+    if (u.reason === "relay-unavailable") {
+      let { status: d } = u;
+      f(n, "server_read_relay_unavailable", { status: d });
+      let h = d === 0 || d === 429 || d >= 500;
+      return {
+        kind: "done",
+        result: {
+          err: `comments fetch failed (this session's comment connection did not carry the read${d !== 0 ? `, HTTP ${d}` : ""}; nothing was read) \u2014 retry once; if it fails again, tell the user comments cannot be read from this session right now`,
+          ...(h && { retryable: !0 }),
+        },
+      };
+    }
+    return (
+      f(n, u.reason.replace(/-/g, "_")),
+      {
+        kind: "done",
+        result: {
+          err:
+            u.reason === "no-auth"
+              ? Am(u.detail)
+              : `comments read unavailable: ${u.reason}`,
+        },
+      }
+    );
+  }
+  if (!u.fromFrame) {
+    let { status: d } = u,
+      h = d >= 500 || d === 499,
+      A = () => (
+        f(n, "server_read_relay_error", { status: d }),
+        {
+          err: `comments fetch failed (relay HTTP ${d})`,
+          ...((h || d === 429) && { retryable: !0 }),
+        }
+      );
+    return h
+      ? { kind: "retryable", miss: { relay_status: d }, fail: A }
+      : { kind: "done", result: A() };
+  }
+  if (u.status >= 500 || u.status === 429) {
+    let { status: d } = u,
+      h = Je(d, u.response?.headers?.["retry-after"]),
+      A = d === 429 || h !== void 0,
+      b = () => {
+        if (A) g(n, "server_read_unavailable", { status: d });
+        else f(n, "server_read_unavailable", { status: d });
+        return pe(d, { retryable: !0, retryAfterMs: h });
+      };
+    return d === 503 || A
+      ? { kind: "done", result: b() }
+      : { kind: "retryable", miss: { status: d }, fail: b };
+  }
+  let l = Qe(u, n);
+  if (l.err === null) re(tt(u.data), o, u.sentAuthFingerprint, u.route);
+  return { kind: "done", result: l };
+}
+function tt(t) {
+  return typeof t === "object" && t !== null && "viewer" in t
+    ? t.viewer
+    : void 0;
+}
+function pe(t, e = {}) {
+  return {
+    err: `comments are not available on this artifact right now (the comments service answered HTTP ${t})`,
+    unavailable: !0,
+    status: t,
+    ...(e.retryable && { retryable: !0 }),
+    ...(e.retryAfterMs !== void 0 && { retryAfterMs: e.retryAfterMs }),
+  };
+}
+async function rt(t, e, n, r) {
+  let o = await ie(t, e, n, r);
+  if (o.kind === "done") return o.result;
+  if ((await Z(et(), e), e.aborted)) throw new Ve();
+  let c = await ie(t, e, n, r);
+  if (c.kind === "done") {
+    if (c.result.err === null) g(n, "server_read_retried", o.miss);
+    return c.result;
+  }
+  return c.fail();
+}
+async function j7(
+  t,
+  e,
+  n,
+  r = "artifact_comments_read",
+  { skipBootProbe: o = !1 } = {},
+) {
+  if (!H("tengu_onyx_sluice", !1))
+    return (
+      g(r, "cp_read_disabled"),
+      {
+        err: "comments are not available on this artifact right now",
+        unavailable: !0,
+      }
+    );
+  let c;
+  if (!o) {
+    let l = await IC(t, r, e, { credentials: n });
+    if (l.err !== null) {
+      let A =
+        l.errorCode === "boot_request_error" ||
+        (l.errorCode === "boot_relay_error" && l.status === void 0) ||
+        (l.status !== void 0 && (l.status >= 500 || l.status === 429));
+      return { err: l.err, ...(A && { retryable: !0 }) };
+    }
+    if (l.assetToken === void 0)
+      return { err: "comments are not readable on a public artifact serve" };
+    let d = Cn(t.slug),
+      h =
+        (Array.isArray(l.data.docs) && l.data.docs.length > 0) ||
+        (d?.livePaths?.length ?? 0) > 0;
+    if (
+      l.data.artifactKind !== NH &&
+      d?.artifactKind !== NH &&
+      l.data.headSeq === void 0 &&
+      !h
+    )
+      c = l.ver;
+  }
+  let u = await rt(t.slug, e, r, n);
+  return u.err === null && c !== void 0 ? { ...u, ver: c } : u;
+}
+var Y = "not activated on this thread",
+  z = "comments require a user-scoped credential",
+  at =
+    "this session's credential is an organization service key with no Claude agent grant; comments are readable only by a user login or by the agent that created the Artifact \u2014 tell the user that comments can't be read from this session",
+  ge =
+    "this session's credential is an organization service key with no Claude agent grant, so it cannot post or resolve comments (only a user login can, or the agent that created the Artifact on threads a person activated for Claude) \u2014 tell the user that; don't write replies into the page itself",
+  ot = "summon_already_answered",
+  he = "summon_foreign_sender",
+  ye = 524288,
+  st =
+    "comment reply not sent (this session's comment connection did not carry it on this attempt, so nothing was posted) \u2014 retry the reply once; if it fails again, tell the user you could not post the reply from this session",
+  it = m(() => nt({ thread_id: le(), comment_id: le() }));
+function Ae(t) {
+  if (!t || typeof t !== "object") return {};
+  return {
+    ...("error" in t && typeof t.error === "string" && { error: t.error }),
+    ...("reason" in t && typeof t.reason === "string" && { reason: t.reason }),
+  };
+}
+function M(t) {
+  return Ae(t).reason ?? null;
+}
+var dt = m(() => nt({ standing_reply: nt({ id: le(), own: Io() }) }));
+function ut(t) {
+  let e = dt().safeParse(t);
+  if (!e.success || !fr.test(e.data.standing_reply.id)) return;
+  return e.data.standing_reply;
+}
+function L(t) {
+  let e = Ae(t).error ?? t;
+  return typeof e === "string" ? p1(e, 300) : "";
+}
+function F(t, e) {
+  return {
+    refreshOAuth: !0,
+    credentials: e,
+    headers: Fd(),
+    timeout: 30000,
+    maxContentLength: ye,
+    signal: t,
+  };
+}
+async function Ucn(
+  {
+    slug: t,
+    threadId: e,
+    text: n,
+    answersSummon: r,
+    continuesReplyId: o,
+    resend: c,
+    credentials: u,
+  },
+  l,
+) {
+  let d,
+    h = !1,
+    A = c ? { resend: c } : {},
+    b = c ? [{ resend: c }] : [];
+  if (o !== void 0 && r !== !0 && dwe())
+    if (fr.test(o)) d = o;
+    else h = !0;
+  let _ = ne().accountEpoch,
+    E = performance.now(),
+    p;
+  try {
+    p = await Nd.postRelayBound(
+      `/api/frame/comments/${encodeURIComponent(t)}/${encodeURIComponent(e)}`,
+      {
+        text: n,
+        ...(r === !0 && { answers_summon: !0 }),
+        ...(d !== void 0 && { continues_reply_id: d }),
+      },
+      F(l, u),
+    );
+  } catch (R) {
+    if (qi(R)) throw R;
+    if (nP(R))
+      return (
+        f("artifact_comment_reply", "relay_request_error", {
+          ...boe(R, E),
+          ...A,
+        }),
+        {
+          kind: "error",
+          message:
+            "comment reply outcome unknown (relay request failed) \u2014 it may have posted; re-read the comments before retrying",
+          reason: "relay_request_error",
+        }
+      );
+    return (
+      f("artifact_comment_reply", "request_error", { ...boe(R, E), ...A }),
+      {
+        kind: "error",
+        message: "comment reply failed (network error)",
+        reason: "request_error",
+      }
+    );
+  }
+  if (!p.ok) {
+    if (p.reason === "relay-unavailable")
+      return (
+        f("artifact_comment_reply", "relay_unavailable", {
+          status: p.status,
+          ...A,
+        }),
+        { kind: "error", message: st, reason: "relay_unavailable" }
+      );
+    return (
+      f("artifact_comment_reply", p.reason.replace(/-/g, "_"), ...b),
+      {
+        kind: "error",
+        message:
+          p.reason === "no-auth"
+            ? Am(p.detail)
+            : `comment reply unavailable: ${p.reason}`,
+        reason: "transport",
+      }
+    );
+  }
+  if (p.status === 201) {
+    let R = it().safeParse(p.data);
+    if (!R.success)
+      return (
+        g("artifact_comment_reply", "malformed_echo", ...b),
+        { kind: "ok", threadId: e, commentId: "" }
+      );
+    let P = fr.test(R.data.thread_id),
+      D = aue.test(R.data.comment_id);
+    if (!P || !D) g("artifact_comment_reply", "malformed_echo", ...b);
+    else if (h)
+      g("artifact_comment_reply", "continues_reply_id_malformed", ...b);
+    else y("artifact_comment_reply", ...b);
+    if (D && _ === ne().accountEpoch) we(R.data.comment_id);
+    return {
+      kind: "ok",
+      threadId: P ? R.data.thread_id : e,
+      commentId: D ? R.data.comment_id : "",
+    };
+  }
+  if (!p.fromFrame)
+    return (
+      f("artifact_comment_reply", "relay_error", { status: p.status, ...A }),
+      {
+        kind: "error",
+        message: `comment reply outcome unknown (relay HTTP ${p.status}) \u2014 it may have posted; re-read the comments before retrying`,
+        reason: "relay_error",
+      }
+    );
+  let S = L(p.data);
+  if (p.status === 403 && S.includes(Y))
+    return (
+      g("artifact_comment_reply", "not_activated", ...b),
+      { kind: "not_activated" }
+    );
+  if (p.status === 403 && S.includes(z))
+    return (
+      g("artifact_comment_reply", "service_key_credential", ...b),
+      {
+        kind: "error",
+        message: `comment reply refused: ${ge}`,
+        reason: "service_key_credential",
+      }
+    );
+  if (p.status === 409 && M(p.data) === ot) {
+    let R = _ === ne().accountEpoch ? ut(p.data) : void 0;
+    return (
+      g(
+        "artifact_comment_reply",
+        R?.own === !0 ? "summon_answered_own" : "summon_answered_elsewhere",
+        ...b,
+      ),
+      { kind: "summon_answered", ...(R && { standing: R }) }
+    );
+  }
+  if (p.status === 403 && M(p.data) === he)
+    return (
+      g("artifact_comment_reply", "summon_foreign_sender", ...b),
+      { kind: "summon_foreign" }
+    );
+  let I =
+    p.status === 403
+      ? "forbidden"
+      : p.status === 404
+        ? "not_found"
+        : p.status === 409
+          ? "conflict"
+          : p.status === 422
+            ? "unembeddable"
+            : p.status === 429
+              ? "rate_limited"
+              : p.status === 503
+                ? "unavailable"
+                : "http_failed";
+  f("artifact_comment_reply", I, { status: p.status, ...A });
+  let T = S !== "" ? `: ${S}` : "";
+  return {
+    kind: "error",
+    message:
+      p.status === 404
+        ? "artifact or comment thread not found \u2014 it may have been deleted, or you may not have access"
+        : p.status === 429
+          ? "rate limited \u2014 comment replies spend the user's budget; do not retry now"
+          : p.status === 503
+            ? `comment reply temporarily unavailable${T} \u2014 retry later if still needed`
+            : p.status === 409
+              ? `comment reply conflicted${T} \u2014 re-read the comments before retrying`
+              : `comment reply refused (HTTP ${p.status})${T}`,
+    reason: I,
+  };
+}
+async function rGn(t, e, n) {
+  let r;
+  try {
+    r = await Nd.postRelayBound(
+      `/api/frame/comments/${encodeURIComponent(t)}/${encodeURIComponent(e)}/summon-status`,
+      n,
+      { isBackground: !0, headers: Fd(), timeout: 5000, maxContentLength: ye },
+    );
+  } catch {
+    return { kind: "failed", reason: "request_error" };
+  }
+  if (!r.ok) {
+    if (r.reason === "relay-unavailable" || r.reason === "relay-not-served")
+      return { kind: "unsent", status: r.status };
+    return { kind: "skipped", reason: r.reason };
+  }
+  if (!r.fromFrame)
+    return { kind: "failed", reason: "relay_error", status: r.status };
+  if (r.status === 404) return { kind: "route_absent" };
+  if (r.status < 200 || r.status >= 300)
+    return { kind: "failed", reason: "http_failed", status: r.status };
+  return { kind: "accepted" };
+}
+var ct = "the artifact changed since this edit",
+  lt = "this thread's edit grant is no longer active",
+  ft = "not published under your credential";
+function mt(t, e) {
+  if (t === 409 && e.includes(ct)) return { kind: "superseded" };
+  if (t === 403) {
+    if (e.includes(lt)) return { kind: "grant_inactive" };
+    if (e.includes(ft)) return { kind: "principal_mismatch" };
+    if (e.includes(Y)) return { kind: "not_activated" };
+  }
+  return {
+    kind: "error",
+    message: `thread resolve failed (status ${t})`,
+    reason: t === 404 ? "not_found" : t === 429 ? "rate_limited" : "http",
+  };
+}
+async function oGn(t) {
+  let { slug: e, threadId: n, afterVersion: r, signal: o, credentials: c } = t;
+  if (!fr.test(e) || !fr.test(n))
+    return {
+      kind: "error",
+      message: "invalid slug or thread id",
+      reason: "input",
+    };
+  let u = performance.now(),
+    l;
+  try {
+    l = await Nd.postRelayBound(
+      `/api/frame/comments/${encodeURIComponent(e)}/${encodeURIComponent(n)}/resolve`,
+      { resolved: !0, after_version: r },
+      F(o, c),
+    );
+  } catch (h) {
+    if (qi(h)) throw h;
+    return (
+      f("artifact_comment_resolve", "request_error", boe(h, u)),
+      {
+        kind: "error",
+        message: "thread resolve failed (network error)",
+        reason: "request_error",
+      }
+    );
+  }
+  if (!l.ok) {
+    if (l.reason === "relay-unavailable")
+      return (
+        f("artifact_comment_resolve", "relay_unavailable", {
+          status: l.status,
+        }),
+        {
+          kind: "error",
+          message: "thread resolve not sent (relay unavailable)",
+          reason: "relay_unavailable",
+        }
+      );
+    return (
+      f("artifact_comment_resolve", l.reason.replace(/-/g, "_")),
+      {
+        kind: "error",
+        message: `thread resolve unavailable: ${l.reason}`,
+        reason: "transport",
+      }
+    );
+  }
+  if (l.status === 200) return (y("artifact_comment_resolve"), { kind: "ok" });
+  if (!l.fromFrame)
+    return (
+      f("artifact_comment_resolve", "relay_error", { status: l.status }),
+      {
+        kind: "error",
+        message: `thread resolve outcome unknown (relay HTTP ${l.status})`,
+        reason: "relay_error",
+      }
+    );
+  let d = mt(l.status, L(l.data));
+  if (d.kind === "error") f("artifact_comment_resolve", d.reason);
+  else if (d.kind === "principal_mismatch")
+    f("artifact_comment_resolve", d.kind);
+  else g("artifact_comment_resolve", d.kind);
+  return d;
+}
+var _t = "only the thread starter or a writer",
+  pt = "requires a claude.ai session",
+  gt = "relayed_credential",
+  ht = "thread_not_found",
+  yt = "CCR agent tokens cannot call this route",
+  q =
+    "thread resolve not confirmed (this session's comment connection failed on this attempt, so the thread may or may not be resolved) \u2014 retry the resolve once if you have not already, it is safe to repeat; if it fails again, leave the thread unresolved and, if you addressed it, say so in a reply on the thread";
+async function sGn({ slug: t, threadId: e, credentials: n }, r) {
+  if (!fr.test(t) || !fr.test(e))
+    return {
+      kind: "error",
+      message: "invalid slug or thread id",
+      reason: "input",
+    };
+  let o = (E) =>
+      `/api/frame/comments/${encodeURIComponent(t)}/${encodeURIComponent(e)}/${E}`,
+    c = (E) => Nd.post(o(E), { resolved: !0 }, F(r, n)),
+    u = performance.now(),
+    l = iqt(NXe),
+    d;
+  try {
+    if (MH(NXe) && !(l && TN(NXe))) {
+      if (
+        ((d = await Nd.postRelayOnly(o("resolve"), { resolved: !0 }, F(r, n))),
+        l && !d.ok && d.reason === "relay-unavailable")
+      )
+        (g("artifact_comment_session_resolve", "relay_declined", {
+          status: d.status,
+        }),
+          (d = void 0));
+    }
+    if (d === void 0) {
+      ((u = performance.now()), (d = await c("session-resolve")));
+      let E = d.ok && d.status === 404 && M(d.data) !== ht,
+        p = d.ok && d.status === 403 && L(d.data).includes(yt);
+      if (E || p)
+        (g(
+          "artifact_comment_session_resolve",
+          p ? "session_route_ccr_denied" : "session_route_fell_back",
+        ),
+          (u = performance.now()),
+          (d = await c("resolve")));
+    }
+  } catch (E) {
+    if (qi(E)) throw E;
+    if (nP(E))
+      return (
+        f("artifact_comment_session_resolve", "relay_request_error"),
+        { kind: "error", message: q, reason: "relay_request_error" }
+      );
+    return (
+      f("artifact_comment_session_resolve", "request_error", boe(E, u)),
+      {
+        kind: "error",
+        message: "thread resolve failed (network error)",
+        reason: "request_error",
+      }
+    );
+  }
+  if (!d.ok) {
+    if (d.reason === "relay-unavailable")
+      return (
+        f("artifact_comment_session_resolve", "relay_unavailable", {
+          status: d.status,
+        }),
+        { kind: "error", message: q, reason: "relay_unavailable" }
+      );
+    return (
+      f("artifact_comment_session_resolve", d.reason.replace(/-/g, "_")),
+      {
+        kind: "error",
+        message:
+          d.reason === "no-auth"
+            ? Am(d.detail)
+            : `thread resolve unavailable: ${d.reason}`,
+        reason: "transport",
+      }
+    );
+  }
+  if (d.status === 200)
+    return (y("artifact_comment_session_resolve"), { kind: "ok" });
+  if (!d.fromFrame)
+    return (
+      f("artifact_comment_session_resolve", "relay_error", {
+        status: d.status,
+      }),
+      { kind: "error", message: q, reason: "relay_error" }
+    );
+  let h = L(d.data);
+  if (d.status === 403) {
+    if (h.includes(Y))
+      return (
+        g("artifact_comment_session_resolve", "not_activated"),
+        { kind: "not_activated" }
+      );
+    if (h.includes(_t))
+      return (
+        g("artifact_comment_session_resolve", "not_authorized"),
+        { kind: "not_authorized" }
+      );
+    if (M(d.data) === he)
+      return (
+        g("artifact_comment_session_resolve", "summon_foreign_sender"),
+        { kind: "summon_foreign" }
+      );
+    if (h.includes(pt) || M(d.data) === gt)
+      return (
+        g("artifact_comment_session_resolve", "relayed_credential"),
+        { kind: "relayed_credential" }
+      );
+    if (h.includes(z))
+      return (
+        g("artifact_comment_session_resolve", "service_key_credential"),
+        {
+          kind: "error",
+          message: `thread resolve refused: ${ge}`,
+          reason: "service_key_credential",
+        }
+      );
+  }
+  let A =
+    d.status === 403
+      ? "forbidden"
+      : d.status === 404
+        ? "not_found"
+        : d.status === 429
+          ? "rate_limited"
+          : d.status === 503
+            ? "unavailable"
+            : "http";
+  f("artifact_comment_session_resolve", A, { status: d.status });
+  let b = h !== "" ? `: ${h}` : "";
+  return {
+    kind: "error",
+    message:
+      d.status === 404
+        ? "artifact or comment thread not found \u2014 it may have been deleted, or you may not have access"
+        : d.status === 429
+          ? "rate limited \u2014 do not retry now"
+          : d.status === 503
+            ? `thread resolve temporarily unavailable${b} \u2014 retry later if still needed`
+            : `thread resolve refused (HTTP ${d.status})${b}`,
+    reason: A,
+  };
+}
+function FS() {
+  let t = ne();
+  if (t.toolsetLatch === null)
+    ((t.toolsetLatch =
+      a.CLAUDE_CODE_ARTIFACT_TOOLSET ??
+      H("tengu_cobalt_plinth_damson", !1) === !0),
+      i("tengu_artifact_toolset", { on: t.toolsetLatch }));
+  return t.toolsetLatch;
+}
+export {
+  Q3n,
+  gI,
+  E$t,
+  wte,
+  Eft,
+  lwe,
+  Tte,
+  cwe,
+  uwe,
+  tV,
+  Z3n,
+  dwe,
+  Aft,
+  eGn,
+  wm,
+  M_,
+  EOe,
+  pwe,
+  Lcn,
+  Cft,
+  tGn,
+  nGn,
+  nV,
+  Ete,
+  fwe,
+  fk,
+  aue,
+  AOe,
+  Mcn,
+  COe,
+  Ate,
+  mwe,
+  gwe,
+  vOe,
+  A$t,
+  ROe,
+  $9,
+  Ncn,
+  Fcn,
+  $cn,
+  C$t,
+  j7,
+  Ucn,
+  rGn,
+  oGn,
+  sGn,
+  FS,
+};

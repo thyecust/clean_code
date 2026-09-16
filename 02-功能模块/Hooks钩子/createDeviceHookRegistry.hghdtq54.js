@@ -1,0 +1,102 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import "../../00-第三方库/lodash/lodash.207999qb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+var y = 2;
+function D(i) {
+  let e = null,
+    l = null,
+    a = 0,
+    o = !1,
+    s = null,
+    d = 0,
+    p = [],
+    m = () => {
+      (l?.clear(), (l = null));
+    },
+    v = () => {
+      if ((m(), e === null)) return;
+      let r = e;
+      l = i.setTimer(
+        () => {
+          if (((l = null), e !== r)) return;
+          if (i.now() < r.leaseExpiresAt) {
+            v();
+            return;
+          }
+          let t = { ...r, entries: [] };
+          e = t.templates.length === 0 ? null : t;
+          for (let u of [...(i.onLeaseExpired ? [i.onLeaseExpired] : []), ...p])
+            try {
+              u(t);
+            } catch (c) {
+              n(
+                `[deviceHooks] lease-expiry listener threw: ${ge(c).stack ?? String(c)}`,
+                { level: "error" },
+              );
+            }
+        },
+        Math.min(pS, Math.max(0, r.leaseExpiresAt - i.now())),
+      );
+    };
+  return {
+    current: () => e,
+    generation: () => d,
+    recordMiss(r, t) {
+      if (e === null || e.instanceId !== r || t !== d) return !1;
+      if (((a += 1), !o && a >= y)) ((o = !0), (s = i.now()));
+      return o;
+    },
+    recordHit(r) {
+      if (e !== null && e.instanceId === r) a = 0;
+    },
+    isAway: (r) => e !== null && e.instanceId === r && o,
+    awaySince: (r) => (e !== null && e.instanceId === r && o ? s : null),
+    replaceOwner(r) {
+      let t =
+          e !== null && e.instanceId !== r.instanceId ? e.instanceId : void 0,
+        u = e !== null && t === void 0,
+        c = u && o ? s : null;
+      if (((e = r), !u || c !== null)) ((a = 0), (o = !1), (s = null));
+      return (
+        (d += 1),
+        v(),
+        {
+          ...(t !== void 0 && { replaced: t }),
+          ...(c !== null && { awaySince: c }),
+        }
+      );
+    },
+    removeOwner(r) {
+      if (e === null || e.instanceId !== r) return !1;
+      return ((e = null), (a = 0), (o = !1), (s = null), m(), !0);
+    },
+    clear() {
+      ((e = null), (a = 0), (o = !1), (s = null), m());
+    },
+    onLeaseExpired(r) {
+      p.push(r);
+    },
+  };
+}
+function H(i, e) {
+  let l = setTimeout(i, e);
+  return (l.unref(), { clear: () => clearTimeout(l) });
+}
+export { D as createDeviceHookRegistry, H as productionRegistryTimer };

@@ -1,0 +1,240 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { Gt, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { Et, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { Zp } from "./chunk-bvxymt09.js";
+import { n6 } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+var w = ["ELOOP", "ENXIO", "EISDIR"],
+  Gyn = new Set(w);
+function AH(e) {
+  return e !== void 0 && Gyn.has(e);
+}
+function k3t(e) {
+  return e.code === "Failed" && AH(e.telemetryCode);
+}
+import {
+  lstat as h,
+  readFile as E,
+  unlink as c,
+  writeFile as L,
+} from "fs/promises";
+import { join as U } from "path";
+var I = "computer-use.lock",
+  l = { kind: "acquired", fresh: !0 },
+  p = { kind: "acquired", fresh: !1 };
+function S(e) {
+  if (typeof e !== "object" || e === null) return !1;
+  return (
+    "sessionId" in e &&
+    typeof e.sessionId === "string" &&
+    "pid" in e &&
+    typeof e.pid === "number"
+  );
+}
+function i() {
+  return U(be(), I);
+}
+function u() {
+  return Ce.state("computer-use-lock");
+}
+async function s(e) {
+  if (e) {
+    let r = await e.read([u()]);
+    if (!r.ok) return;
+    let t = r.value.items[0];
+    if (!t.found) return;
+    try {
+      let o = z(Buffer.from(t.value).toString("utf8"));
+      return S(o) ? o : void 0;
+    } catch {
+      return;
+    }
+  }
+  try {
+    let r = await E(i(), "utf8"),
+      t = z(r);
+    return S(t) ? t : void 0;
+  } catch {
+    return;
+  }
+}
+function C(e) {
+  try {
+    return (process.kill(e, 0), !0);
+  } catch {
+    return !1;
+  }
+}
+async function x() {
+  try {
+    return !(await h(i())).isFile();
+  } catch (e) {
+    return A(e) === "ENOENT";
+  }
+}
+async function m(e, r) {
+  if (M() && r !== void 0) {
+    let t = await r.write(u(), b(e), {
+      precondition: { type: "ifAbsent" },
+      mode: 438 & ~process.umask(),
+    });
+    if (t.ok) return !0;
+    if (
+      t.error.code === "AlreadyExists" ||
+      (t.error.code === "Failed" &&
+        AH("telemetryCode" in t.error ? t.error.telemetryCode : void 0) &&
+        (await x()))
+    )
+      return !1;
+    throw new R(
+      `failed to create computer-use lock: ${t.error.code}`,
+      "computer-use lock v5 create failed",
+    );
+  }
+  try {
+    return (await L(i(), b(e), { flag: "wx" }), !0);
+  } catch (t) {
+    if (A(t) === "EEXIST") return !1;
+    throw t;
+  }
+}
+function k(e) {
+  let r = Zp();
+  (r.unregisterLockCleanup?.(),
+    (r.unregisterLockCleanup = Et(async () => {
+      await F(e);
+    })));
+}
+async function UYn(e) {
+  let r = await s(e);
+  if (!r) return { kind: "free" };
+  if (a()) return { kind: "held_by_self" };
+  if (r.sessionId === K()) return { kind: "held_by_self" };
+  if (C(r.pid)) return { kind: "blocked", by: r.sessionId };
+  if (
+    (n(
+      `Recovering stale computer-use lock from session ${r.sessionId} (PID ${r.pid})`,
+    ),
+    e)
+  )
+    await e.delete(u());
+  else await c(i()).catch(() => {});
+  return { kind: "free" };
+}
+function a() {
+  return Zp().unregisterLockCleanup !== void 0;
+}
+async function BYn(e) {
+  let r = K(),
+    t = { sessionId: r, pid: process.pid, acquiredAt: Date.now() };
+  if (!e) await qt().mkdir(be());
+  if (e && a()) {
+    if ((await s(e)) && a()) return (y("computeruse_lock_acquire"), p);
+  }
+  if (await m(t, e)) return (k(e), y("computeruse_lock_acquire"), l);
+  let o = await s(e);
+  if (!o) {
+    if (e) await e.delete(u());
+    else await c(i()).catch(() => {});
+    if (await m(t, e))
+      return (k(e), g("computeruse_lock_acquire", "stale_recovered"), l);
+    return (
+      f("computeruse_lock_acquire", "lock_held"),
+      { kind: "blocked", by: (await s(e))?.sessionId ?? "unknown" }
+    );
+  }
+  if (a()) return (y("computeruse_lock_acquire"), p);
+  if (o.sessionId === r) return (y("computeruse_lock_acquire"), p);
+  if (C(o.pid))
+    return (
+      f("computeruse_lock_acquire", "lock_held"),
+      { kind: "blocked", by: o.sessionId }
+    );
+  if (
+    (n(
+      `Recovering stale computer-use lock from session ${o.sessionId} (PID ${o.pid})`,
+    ),
+    e)
+  )
+    await e.delete(u());
+  else await c(i()).catch(() => {});
+  if (await m(t, e))
+    return (k(e), g("computeruse_lock_acquire", "stale_recovered"), l);
+  return (
+    f("computeruse_lock_acquire", "lock_held"),
+    { kind: "blocked", by: (await s(e))?.sessionId ?? "unknown" }
+  );
+}
+async function F(e) {
+  let r = a(),
+    t = Zp();
+  (t.unregisterLockCleanup?.(), (t.unregisterLockCleanup = void 0));
+  let o = await s(e);
+  if (!o || (!r && o.sessionId !== K())) return !1;
+  if (e) {
+    let d = await e.delete(u());
+    if (d.ok && d.value.existed) return (n("Released computer-use lock"), !0);
+    return !1;
+  }
+  try {
+    return (await c(i()), n("Released computer-use lock"), !0);
+  } catch {
+    return !1;
+  }
+}
+function VSt() {
+  return Zp().activeThisTurn;
+}
+function jYn() {
+  if (Zp().activeThisTurn) return !1;
+  return ((Zp().activeThisTurn = !0), !0);
+}
+function WYn() {
+  Zp().activeThisTurn = !1;
+}
+var T = n6("computerUseMcpState", void 0);
+class PAe {
+  #e;
+  constructor(e) {
+    this.#e = e;
+  }
+  static over(e) {
+    return new PAe(T(e.getState, e.setState));
+  }
+  get() {
+    return this.#e.get();
+  }
+  update(e) {
+    this.#e.set(e);
+  }
+}
+class _ {
+  owner = void 0;
+  acquire(e) {
+    if (this.owner) return () => {};
+    return (
+      (this.owner = e),
+      () => {
+        if (this.owner === e) this.owner = void 0;
+      }
+    );
+  }
+}
+var MNe = new Gt(() => new _());
+function J8e(e) {
+  return MNe.of(e).owner;
+}
+export { Gyn, AH, k3t, UYn, BYn, VSt, jYn, WYn, PAe, MNe, J8e };

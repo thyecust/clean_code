@@ -1,0 +1,79 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { rge, Yt, gt, vn } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { R4 } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { N8, MHe, Kz } from "../../02-功能模块/Bridge-RemoteControl/chunk-3b6ct3yp.js";
+import { e } from "../../00-第三方库/react/react.kwtapczy.js";
+import { Gr } from "../核心工具-路径与平台/chunk-p6wxwtjk.js";
+function m(t) {
+  return `https://claude.ai/upgrade/max?utm_source=claude_code&utm_medium=cli&utm_campaign=${t}`;
+}
+async function tgr(t, r) {
+  return Qae(t, r, "upgrade_command");
+}
+async function Qae(t, r, l) {
+  let u = R4(t),
+    c = m(l);
+  try {
+    if (gt()) {
+      let o = Yt(),
+        n = !1;
+      if (o?.subscriptionType && o?.rateLimitTier)
+        n =
+          o.subscriptionType === "max" &&
+          o.rateLimitTier === "default_claude_max_20x";
+      else if (o?.accessToken) {
+        let i = await rge(o.accessToken);
+        n =
+          i?.organization?.organization_type === "claude_max" &&
+          i?.organization?.rate_limit_tier === "default_claude_max_20x";
+      }
+      if (n)
+        return (
+          setTimeout(
+            u,
+            0,
+            "You are already on the highest Max subscription plan. For additional usage, run /login to switch to an API usage-billed account.",
+          ),
+          null
+        );
+    }
+    await Gr(c);
+    let a = vn(),
+      s = a && {
+        accountUuid: a.accountUuid,
+        organizationUuid: a.organizationUuid,
+      },
+      p = ns();
+    return e(Kz, {
+      startingMessage:
+        "Starting new login following /upgrade. Exit with Ctrl-C to use existing account.",
+      onDone: async (o, n, i) => {
+        let d = await N8(r, o, {
+          setAppState: i,
+          previousAccount: s,
+          previousGatewayAuth: p,
+        });
+        u(...MHe(r, o, d));
+      },
+    });
+  } catch (a) {
+    (h(a),
+      setTimeout(
+        u,
+        0,
+        `Failed to open browser. Please visit ${c} to upgrade.`,
+      ));
+  }
+  return null;
+}
+export { tgr, Qae };

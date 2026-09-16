@@ -1,0 +1,1626 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
+import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import "../../00-第三方库/lodash/lodash.207999qb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
+import { U, It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { x, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { le, Zt, Io, Xu, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
+import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import "../Git-Worktree/chunk-9ys1bnqr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { te, I1 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import "../Teammates团队/chunk-qe04h4c5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
+import "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { Itt, Vl } from "../权限系统/chunk-e4pfvp7x.js";
+import "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import "../工具Bash-Shell/chunk-4pap8y5n.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-svk2cp17.js";
+import "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import "../权限系统/chunk-ynkf3yy4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import "../Teammates团队/chunk-811z9z0t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1bqqnyc1.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
+import "../Git-Worktree/chunk-bk9696gx.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { Fi, $vt } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import "../Hooks钩子/chunk-9em0d4k5.js";
+import "../图表-Mermaid/chunk-743atbtj.js";
+import "./chunk-rr78st95.js";
+import {
+  Am,
+  Nd,
+  qwt,
+  Q1e,
+  pqt,
+  zZn,
+  VZn,
+  Fd,
+  D$,
+  rm,
+} from "./chunk-01ymf0ar.js";
+import "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
+import "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import "../MCP客户端/chunk-3kmsshb6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import "../插件系统/chunk-7s6mt1vg.js";
+import "../Skills技能/chunk-sapykxw7.js";
+import "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
+import "../权限系统/chunk-t3b7pg2x.js";
+import "../权限系统/chunk-fjrcf22x.js";
+import "../权限系统/chunk-qdy0h5k2.js";
+import "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import "../Teammates团队/chunk-thxapyam.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import "../权限系统/chunk-1y2g140m.js";
+import "./chunk-y8j05azr.js";
+import "./chunk-pdd7kz7p.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6kad94y1.js";
+import "../../01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js";
+import "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import "../后台任务-Shell管理/chunk-x3txegas.js";
+import "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import "../状态栏-主题/chunk-dqyc6kge.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import "../Workflow编排/chunk-0t0sve49.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import "../文件监听-Watch/文件监听-Watch.3efypmps.js";
+import "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import "../状态栏-主题/chunk-jz6b76hr.js";
+import "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import "../Teammates团队/chunk-g6nvp9mm.js";
+import "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import "../Hooks钩子/chunk-z3433nr6.js";
+import "../Hooks钩子/chunk-bzqqe6xh.js";
+import "../插件系统/chunk-ajtn749s.js";
+import "../插件系统/chunk-hh8f1qrw.js";
+import "../图片-截图-ComputerUse/chunk-b8jsase9.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-5jqttbex.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import "../后台任务-Shell管理/chunk-djserjj5.js";
+import "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
+import "../认证-OAuth登录/chunk-x3rm9w4b.js";
+import "../Skills技能/chunk-1zy5c8mf.js";
+import "../Teammates团队/chunk-6b13bhw1.js";
+import "../Teammates团队/chunk-t899nada.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
+import "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import "../后台任务-Shell管理/chunk-9d5wk5b9.js";
+import "../Cron-定时任务/chunk-mk3zm4ew.js";
+import "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import "../Teammates团队/chunk-3k2smxfn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
+import "../Bridge-RemoteControl/chunk-mxsfy35q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import "../ClaudeinChrome/chunk-hnp84hf6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-21sqz10e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
+import "../会话-历史-恢复/chunk-m1xj4s02.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0qtt3z52.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
+import "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import "../权限系统/chunk-8rrcddth.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
+import "../语音-音频/chunk-cfhndstm.js";
+import "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
+import "../图片-截图-ComputerUse/chunk-bvxymt09.js";
+import "../Bridge-RemoteControl/chunk-ct52ffwb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0kqw1wf5.js";
+import "../Bridge-RemoteControl/chunk-1yq098a7.js";
+import "./chunk-5gz5xvw9.js";
+import { lin } from "./chunk-kshc4v5t.js";
+import "./chunk-p1dkvpxj.js";
+import "../工具Monitor/工具Monitor.981fw9dy.js";
+import "./chunk-qpgskeea.js";
+import "./chunk-qdg189tc.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
+import "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import "../状态栏-主题/chunk-w5jaj6kg.js";
+import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import "../状态栏-主题/chunk-q7ekqy5h.js";
+import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import "../认证-OAuth登录/chunk-s51acx6w.js";
+import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-kk7p3hsm.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ewa397cg.js";
+import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
+import "../键位绑定(Keybindings)/chunk-qy43nqgh.js";
+import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-dhg3raay.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
+import "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
+import "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
+import { M0t, N0t, KW, u6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-my8s4daz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-sdk55p8n.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/设置-配置/chunk-9m8zsynn.js";
+import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
+import "../状态栏-主题/chunk-jrr487ty.js";
+import "../Hooks钩子/chunk-22aft7vr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import { JWe } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
+import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
+import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-tw8akhx1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-951vj555.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-xc85bfby.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7jfz2w01.js";
+import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-fgegxt0m.js";
+import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-j4vveza5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { gPe, Dut, _Pe, Kon } from "./chunk-b6k1z7an.js";
+import { Wjn, Tce, SPe, $ee, Dv } from "../../01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js";
+import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-j3qyvdwg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
+import { re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
+import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
+import "../插件系统/chunk-33bdfgmx.js";
+import "../MCP客户端/chunk-0mwqsv0r.js";
+import "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import "../DesignSync/chunk-5kyac4wk.js";
+import "../MCP客户端/chunk-tznd4407.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k1vb7vky.js";
+import "../工具Monitor/chunk-kxk3njnj.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
+import "../Teammates团队/chunk-eey53z5b.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6eskfcpn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
+import "../工具ToolSearch/chunk-1m51pqtd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
+import "../权限系统/chunk-pcxn6gwz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
+import "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import "../Teammates团队/chunk-enjekn9t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
+import "../Bedrock-Vertex/chunk-p991cddr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import "../图片-截图-ComputerUse/chunk-6kdvf977.js";
+import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+F();
+F();
+var Mr = m(() =>
+    nt({
+      frames: cr(Xu()).nullable(),
+      starsEnabled: Io()
+        .optional()
+        .catch(void 0),
+    }),
+  ),
+  Qe = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/,
+  Ur = m(() =>
+    nt({
+      slug: le(),
+      title: le()
+        .optional()
+        .catch(void 0),
+      favicon: le()
+        .optional()
+        .catch(void 0),
+      description: le()
+        .optional()
+        .catch(void 0),
+      label: le()
+        .optional()
+        .catch(void 0),
+      rel: ru(["mine", "shared"]).catch("shared"),
+      source_surface: le()
+        .optional()
+        .catch(void 0),
+      updatedAt: le()
+        .regex(Qe)
+        .optional()
+        .catch(void 0),
+      created_at: le()
+        .regex(Qe)
+        .optional()
+        .catch(void 0),
+      owner_email: le()
+        .optional()
+        .catch(void 0),
+      view_count: Zt()
+        .optional()
+        .catch(void 0),
+      unique_view_count: Zt()
+        .optional()
+        .catch(void 0),
+      needs_pin: Io()
+        .optional()
+        .catch(void 0),
+      softDeleted: Io()
+        .optional()
+        .catch(void 0),
+      audience: ru(["owner", "users", "org", "public"])
+        .optional()
+        .catch(void 0),
+      starred: Io()
+        .optional()
+        .catch(void 0),
+      last_viewed_at: le()
+        .regex(Qe)
+        .optional()
+        .catch(void 0),
+    }),
+  ),
+  Ir = 4194304;
+function Oe(i) {
+  if (i === void 0) return;
+  return Q1e(i) ?? void 0;
+}
+async function Bt(i, l) {
+  let p;
+  try {
+    p = await Nd.get("/api/frame/frames?limit=200", {
+      refreshOAuth: !0,
+      credentials: i,
+      headers: Fd(),
+      timeout: 15000,
+      maxContentLength: Ir,
+      signal: l,
+    });
+  } catch (R) {
+    if (qi(R)) throw R;
+    return (
+      f("artifact_gallery", "request_error"),
+      { err: "Couldn't load artifacts (network error)" }
+    );
+  }
+  if (!p.ok)
+    return (
+      f("artifact_gallery", p.reason),
+      {
+        err:
+          p.reason === "no-auth"
+            ? Am(p.detail)
+            : `Artifacts unavailable: ${p.reason}`,
+      }
+    );
+  if (!p.fromFrame)
+    return (
+      f("artifact_gallery", "relay_error"),
+      { err: `Couldn't load artifacts (relay HTTP ${p.status})` }
+    );
+  if (p.status < 200 || p.status >= 300)
+    return (
+      f("artifact_gallery", "http_failed"),
+      { err: `Couldn't load artifacts (HTTP ${p.status})` }
+    );
+  let h = Mr().safeParse(p.data);
+  if (!h.success)
+    return (
+      f("artifact_gallery", "malformed_body"),
+      { err: "Couldn't load artifacts (unexpected response)" }
+    );
+  let u = [],
+    S = 0;
+  for (let R of h.data.frames ?? []) {
+    let v = Ur().safeParse(R);
+    if (!v.success) {
+      S++;
+      continue;
+    }
+    let w = v.data;
+    if (w.softDeleted === !0) continue;
+    let O = `https://claude.ai/code/artifact/${w.slug}`;
+    if (Fi(O) !== w.slug) {
+      S++;
+      continue;
+    }
+    let P = w.favicon === void 0 ? void 0 : (VZn(w.favicon) ?? void 0);
+    u.push({
+      slug: w.slug,
+      title: Oe(w.title),
+      editableTitle: w.title === void 0 ? void 0 : (pqt(w.title) ?? void 0),
+      favicon: P !== void 0 && te(P) <= 4 ? P : void 0,
+      description: Oe(w.description),
+      label: Oe(w.label),
+      rel: w.rel,
+      source_surface: w.source_surface,
+      updatedAt: w.updatedAt,
+      createdAt: w.created_at,
+      ownerEmail: Oe(w.owner_email),
+      view_count: w.view_count,
+      unique_view_count: w.unique_view_count,
+      needs_pin: w.needs_pin,
+      audience: w.audience,
+      starred: w.starred,
+      lastViewedAt: w.last_viewed_at,
+    });
+  }
+  if (u.length === 0 && S > 0)
+    return (
+      f("artifact_gallery", "all_rows_dropped"),
+      { err: "Couldn't load artifacts (unexpected response)" }
+    );
+  if (S > 0) g("artifact_gallery", "rows_dropped", { count: S });
+  else y("artifact_gallery");
+  return { err: null, frames: u, starsEnabled: h.data.starsEnabled === !0 };
+}
+var Nr = 65536,
+  Br = m(() =>
+    nt({
+      title: le()
+        .optional()
+        .catch(void 0),
+    }),
+  );
+async function Kt(i, l, p, h) {
+  let u;
+  try {
+    u = await ht.post(
+      `/api/frame/retitle/${encodeURIComponent(i)}`,
+      { title: l },
+      {
+        host: "frame",
+        auth: "claude-ai-oauth",
+        refreshOAuth: !0,
+        headers: Fd(),
+        timeout: 15000,
+        maxContentLength: Nr,
+        validateStatus: () => !0,
+        signal: h,
+        credentials: p,
+      },
+    );
+  } catch (v) {
+    if (qi(v)) throw v;
+    return (
+      f("artifact_rename", "request_error"),
+      { err: "Couldn't rename artifact (network error)" }
+    );
+  }
+  if (!u.ok)
+    return (
+      f("artifact_rename", u.reason),
+      {
+        err:
+          u.reason === "no-auth"
+            ? Am(u.detail)
+            : `Artifact rename unavailable: ${u.reason}`,
+      }
+    );
+  if (u.status === 404)
+    return (
+      g("artifact_rename", "not_found"),
+      {
+        err: "Artifact not found \u2014 it may have been deleted, or you are not the owner",
+      }
+    );
+  if (u.status === 400 || u.status === 409) {
+    if (u.status === 409) g("artifact_rename", "conflict");
+    else f("artifact_rename", "rejected");
+    let v = typeof u.data === "string" ? Q1e(u.data.trim()) : null;
+    return {
+      err: v
+        ? `Couldn't rename artifact: ${v}`
+        : `Couldn't rename artifact (HTTP ${u.status})`,
+    };
+  }
+  if (u.status < 200 || u.status >= 300)
+    return (
+      f("artifact_rename", "http_failed"),
+      { err: `Couldn't rename artifact (HTTP ${u.status})` }
+    );
+  let S = Br().safeParse(u.data),
+    R = S.success && S.data.title !== void 0 ? Q1e(S.data.title) : null;
+  return (y("artifact_rename"), { err: null, title: R ?? Q1e(l) ?? "" });
+}
+function Yr(i, l, p) {
+  let h = l ? ["all", "mine", "shared", "pinned"] : ["all", "mine", "shared"],
+    u = h.indexOf(i);
+  return h[(u + p + h.length) % h.length] ?? "all";
+}
+var Ie = Itt,
+  Qr = 400;
+function bt({
+  onDone: i,
+  onAttach: l,
+  onAbortAttach: p,
+  attachedSlugs: h,
+  onDetach: u,
+  onDeleted: S,
+}) {
+  Rs("artifacts-dialog");
+  let { credentials: R } = _e(),
+    { rows: v, columns: w } = ks(Se()),
+    O = Va(),
+    [P, B] = d([]),
+    [se, Ve] = d(!1),
+    [Z, be] = d(""),
+    [De, je] = d(0),
+    oe = C(""),
+    Ce = C(0),
+    ce = C(null),
+    [, ur] = d(0),
+    [me, At] = d(!0),
+    [fe, _t] = d(null),
+    [pe, k] = d(null),
+    [M, dr] = d({ mode: "list" }),
+    [ge, ae] = d(0),
+    [ee, vt] = d(!1),
+    Fe = C(ee),
+    J = C(M),
+    z = re((n) => {
+      ((J.current = n), dr(n));
+    }, []),
+    K = C(!1),
+    {
+      query: W,
+      cursorOffset: mr,
+      handleKeyDown: fr,
+      handlePaste: pr,
+    } = jp({
+      isActive: ee && M.mode === "list",
+      onExit: () => {
+        ((Fe.current = !1), (K.current = !0), vt(!1), ae(0));
+      },
+      passthroughCtrlKeys: ["c", "d"],
+    }),
+    [X, Xe] = d("all"),
+    He = C(0),
+    ke = C(new Map()),
+    Ae = C(new Set()),
+    xt = C(new Set()),
+    qe = C(!1),
+    Le = re(
+      (n) => {
+        (At(!0),
+          _t(null),
+          Bt(R, n)
+            .then((s) => {
+              if (n?.aborted) return;
+              if (s.err !== null) _t(s.err);
+              else {
+                let c = s.frames.filter((b) => !xt.current.has(b.slug));
+                if (
+                  (B(
+                    s.starsEnabled
+                      ? c.map((b) => {
+                          let q = ke.current.get(b.slug);
+                          if (q === void 0) return b;
+                          if (b.starred !== q) Ae.current.add(b.slug);
+                          else Ae.current.delete(b.slug);
+                          return { ...b, starred: q };
+                        })
+                      : c,
+                  ),
+                  (He.current += 1),
+                  Ve(s.starsEnabled),
+                  !s.starsEnabled)
+                )
+                  Xe((b) => (b === "pinned" ? "all" : b));
+              }
+              At(!1);
+            })
+            .catch(() => {}));
+      },
+      [R],
+    );
+  E(() => {
+    let n = new AbortController();
+    return (Le(n.signal), () => n.abort());
+  }, [Le]);
+  let $e = V(() => Zr(P), [P]),
+    {
+      list: N,
+      mineCount: gr,
+      sharedCount: hr,
+      pinnedCount: yr,
+    } = V(() => {
+      let n = $e;
+      if (W) {
+        let c = W.toLowerCase();
+        n = n.filter(
+          (b) =>
+            (b.title ?? "").toLowerCase().includes(c) ||
+            b.slug.toLowerCase().includes(c) ||
+            (b.description ?? "").toLowerCase().includes(c) ||
+            (b.label ?? "").toLowerCase().includes(c) ||
+            (b.ownerEmail ?? "").toLowerCase().includes(c),
+        );
+      }
+      let s = G(n, (c) => c.rel === "mine");
+      return {
+        list:
+          X === "all"
+            ? n
+            : X === "pinned"
+              ? n.filter((c) => c.starred === !0)
+              : n.filter((c) => c.rel === X),
+        mineCount: s,
+        sharedCount: n.length - s,
+        pinnedCount: G(n, (c) => c.starred === !0),
+      };
+    }, [$e, W, X]);
+  E(() => {
+    ae((n) => Math.min(n, Math.max(0, N.length - 1)));
+  }, [N.length]);
+  let Je = C(null);
+  E(() => {
+    Je.current = N[ge]?.slug ?? null;
+  });
+  let Pe = C(null);
+  (E(() => {
+    let n = Pe.current;
+    if (n === null) return;
+    Pe.current = null;
+    let s = N.findIndex((c) => c.slug === n);
+    if (s !== -1) (ae(s), (Je.current = n));
+  }, [N]),
+    E(() => {
+      ((K.current = !1), (qe.current = !1));
+    }));
+  let wr = V(() => G($e, (n) => n.starred === !0), [$e]),
+    Tt = se && (wr > 0 || X === "pinned"),
+    T = N[ge],
+    ze = T?.rel === "mine",
+    Et = ze && !a.CLAUDE_CODE_REMOTE,
+    Dt = T !== void 0 && h.has(T.slug),
+    br = re((n) => {
+      let s = rm(n);
+      Gr(s).then((c) => {
+        k(
+          c
+            ? `Opened ${s}`
+            : `Couldn't open a browser \u2014 press c to copy ${s}`,
+        );
+      });
+    }, []),
+    Rr = re(
+      (n) => {
+        if (ke.current.has(n.slug)) return !1;
+        let s = n.starred !== !0,
+          c = we(n),
+          b = (H) =>
+            B((ye) =>
+              ye.map((I) => (I.slug === n.slug ? { ...I, starred: H } : I)),
+            );
+        (ke.current.set(n.slug, s), Ae.current.delete(n.slug));
+        let q = He.current;
+        return (
+          (Pe.current = n.slug),
+          b(s),
+          k(s ? `Pinned ${c}` : `Unpinned ${c}`),
+          gPe(n.slug, s, R)
+            .then((H) => {
+              if (H.err === null) return;
+              if ((k(H.err), He.current !== q && !Ae.current.has(n.slug)))
+                return;
+              if (Je.current === n.slug) Pe.current = n.slug;
+              B((ye) =>
+                ye.map((I) =>
+                  I.slug === n.slug && I.starred === s
+                    ? { ...I, starred: !s }
+                    : I,
+                ),
+              );
+            })
+            .finally(() => {
+              (ke.current.delete(n.slug), Ae.current.delete(n.slug));
+            }),
+          !0
+        );
+      },
+      [R],
+    ),
+    Cr = re(
+      (n) => {
+        let s = n.editableTitle || n.title || n.label || "";
+        (k(null),
+          (oe.current = s),
+          (Ce.current = s.length),
+          (ce.current = null),
+          be(s),
+          je(s.length),
+          z({ mode: "rename", slug: n.slug, title: s }));
+      },
+      [z],
+    ),
+    Sr = re((n) => {
+      let s = M0t(oe.current, n, $vt);
+      if (
+        ((ce.current =
+          s.caret === "pass"
+            ? null
+            : s.caret === "keep"
+              ? Ce.current
+              : s.caret),
+        s.caret !== "pass")
+      )
+        ur((c) => c + 1);
+      ((oe.current = s.text), be(s.text));
+    }, []),
+    Fr = re((n) => {
+      let s = ce.current ?? n;
+      ((ce.current = null), (Ce.current = s), je(s));
+    }, []),
+    kt = C(0),
+    Ge = C(new Map()),
+    Ar = re(() => J.current.mode === "rename", []),
+    _r = re(() => {
+      let n = J.current;
+      if (n.mode !== "rename") return;
+      let s = pqt(oe.current) ?? "";
+      if (
+        (z({ mode: "list" }),
+        (kt.current = Date.now()),
+        s === "" || s === n.title)
+      )
+        return;
+      let c = (Ge.current.get(n.slug) ?? 0) + 1;
+      (Ge.current.set(n.slug, c),
+        k("Renaming\u2026"),
+        Kt(n.slug, s, R).then((b) => {
+          if (Ge.current.get(n.slug) !== c) return;
+          if (b.err !== null) {
+            k(b.err);
+            return;
+          }
+          (B((q) =>
+            q.map((H) =>
+              H.slug === n.slug
+                ? { ...H, title: b.title || void 0, editableTitle: s }
+                : H,
+            ),
+          ),
+            k(b.title ? `Renamed to ${b.title}` : "Renamed"));
+        }));
+    }, [z, R]),
+    he = C(!1),
+    Lt = C(!1),
+    We = C(!1),
+    Y = C(null),
+    $t = C(!1),
+    vr = re(
+      (n) => {
+        if (he.current) return;
+        ((he.current = !0),
+          k(`Attaching ${we(n)}\u2026`),
+          l(n).then(
+            ({ status: s, metaMessage: c }) => {
+              if (Lt.current) return;
+              ((We.current = !0),
+                i(s, {
+                  display: "system",
+                  ...(c !== void 0 && { metaMessages: [c] }),
+                }));
+            },
+            () => {
+              ((he.current = !1),
+                k(
+                  "The artifact could not be attached. Select it and press Enter to try again.",
+                ));
+            },
+          ));
+      },
+      [l, i],
+    ),
+    Ye = re(() => {
+      if (J.current.mode !== "list") return;
+      (k(null), (Fe.current = !0), vt(!0));
+    }, []);
+  Ze(
+    {
+      "confirm:previous": () => {
+        if ((k(null), (K.current = !0), ge === 0)) Ye();
+        else ae((n) => Math.max(0, n - 1));
+      },
+      "confirm:next": () => {
+        k(null);
+        let n = Math.max(0, N.length - 1);
+        if (ge < n) K.current = !0;
+        ae((s) => Math.min(n, s + 1));
+      },
+    },
+    {
+      context: "Confirmation",
+      isActive: M.mode === "list" && !me && fe === null && !ee && P.length > 0,
+    },
+  );
+  let Pt = re(() => {
+    if (We.current) return;
+    if (J.current.mode === "confirm-delete" || J.current.mode === "rename") {
+      z({ mode: "list" });
+      return;
+    }
+    if (Fe.current) return;
+    if (he.current) {
+      ((Lt.current = !0), p(), i("Attach cancelled", { display: "system" }));
+      return;
+    }
+    if (Y.current !== null) {
+      (($t.current = !0),
+        k(
+          `Still deleting ${Y.current} \u2014 the panel closes when it finishes`,
+        ));
+      return;
+    }
+    i("Artifacts panel closed", { display: "system" });
+  }, [z, i, p]);
+  (Ze({ "confirm:no": Pt }, { context: "Settings", isActive: !ee }),
+    Ze(
+      { "settings:search": Ye },
+      {
+        context: "Settings",
+        isActive:
+          M.mode === "list" && !me && fe === null && !ee && P.length > 0,
+      },
+    ));
+  let xr = (n) => {
+      if (n.defaultPrevented) return;
+      if (me) return;
+      if (fe !== null) {
+        if (n.key === "r" && !n.ctrl && !n.meta)
+          (n.preventDefault(), k(null), Le());
+        return;
+      }
+      if (Fe.current && M.mode === "list") {
+        fr(n);
+        return;
+      }
+      if (J.current.mode === "rename") return;
+      if (n.key === "return" && Date.now() - kt.current < Qr) {
+        n.preventDefault();
+        return;
+      }
+      if (n.ctrl && n.key === "r" && T && ze && J.current.mode === "list") {
+        if ((n.preventDefault(), K.current || he.current || Y.current !== null))
+          return;
+        Cr(T);
+        return;
+      }
+      if (n.ctrl || n.meta) return;
+      let s = J.current;
+      if (s.mode === "confirm-delete") {
+        if (n.key === "y") {
+          n.preventDefault();
+          let { slug: c, title: b, updatedAt: q } = s,
+            H = q !== void 0 ? Date.parse(q) : Number.NaN;
+          (z({ mode: "list" }), k("Deleting\u2026"), (Y.current = b));
+          let ye = (I) => {
+            if (((Y.current = null), $t.current))
+              ((We.current = !0), i(I, { display: "system" }));
+            else k(I);
+          };
+          Dut(c, R, {
+            source: "dialog",
+            ...(Number.isFinite(H) && {
+              sinceUpdateSeconds: Math.max(
+                0,
+                Math.round((Date.now() - H) / 1000),
+              ),
+            }),
+          }).then(
+            (I) => {
+              try {
+                if (I.err === null)
+                  ((K.current = !0),
+                    xt.current.add(c),
+                    B(($r) => $r.filter((Pr) => Pr.slug !== c)),
+                    S(c));
+              } finally {
+                ye(
+                  I.err ??
+                    (I.alreadyGone
+                      ? "Artifact was already deleted"
+                      : "Artifact deleted"),
+                );
+              }
+            },
+            () => {
+              ye(
+                "Couldn't confirm the delete \u2014 press r to refresh the list",
+              );
+            },
+          );
+        } else if (n.key === "n") (n.preventDefault(), z({ mode: "list" }));
+        return;
+      }
+      if (n.key === "/" && P.length > 0) (n.preventDefault(), Ye());
+      else if (
+        (n.key === "tab" || n.key === "right" || n.key === "left") &&
+        P.length > 0
+      ) {
+        if ((n.preventDefault(), qe.current)) return;
+        ((K.current = !0),
+          k(null),
+          ae(0),
+          Xe((c) =>
+            Yr(
+              c,
+              Tt,
+              n.key === "left" || (n.key === "tab" && n.shift) ? -1 : 1,
+            ),
+          ));
+      } else if (n.key === "return" && T) {
+        if ((n.preventDefault(), K.current || Y.current !== null)) return;
+        vr(T);
+      } else if (n.key === "o" && T) (n.preventDefault(), br(T.slug));
+      else if (n.key === "c" && T) {
+        n.preventDefault();
+        let c = rm(T.slug);
+        z_(c).then((b) => {
+          if (b) process.stdout.write(b);
+          k(`Copied ${c}`);
+        });
+      } else if (n.key === "x" && Dt && T) {
+        if ((n.preventDefault(), K.current)) return;
+        (u(T),
+          y("frame_link_dismiss_dialog"),
+          k(`Dismissed ${we(T)} from this session's list`));
+      } else if (n.key === "p" && T && se) {
+        if ((n.preventDefault(), K.current || Y.current !== null)) return;
+        if (Rr(T)) ((K.current = !0), (qe.current = !0));
+      } else if (n.key === "d" && T && Et) {
+        if ((n.preventDefault(), K.current || he.current || Y.current !== null))
+          return;
+        (k(null),
+          z({
+            mode: "confirm-delete",
+            slug: T.slug,
+            title: we(T),
+            ...(T.updatedAt !== void 0 && { updatedAt: T.updatedAt }),
+          }));
+      } else if (n.key === "r") {
+        if ((n.preventDefault(), Y.current !== null)) return;
+        (k(null), Le());
+      }
+    },
+    Tr = (n) => {
+      if (Fe.current && M.mode === "list") pr(n);
+    },
+    Er = 20,
+    Dr = oa(Math.min(v - 12, Er), 3, Math.max(3, N.length)),
+    {
+      windowStart: Ot,
+      windowEnd: kr,
+      moreAbove: Mt,
+      moreBelow: Ut,
+    } = KW(ge, N.length, Dr),
+    Lr = N.slice(Ot, kr),
+    ie = !me && fe === null && P.length > 0,
+    Nt =
+      M.mode === "rename"
+        ? r(o, {
+            marginTop: 1,
+            flexDirection: "column",
+            children: [
+              e(t, { bold: !0, children: "Rename artifact:" }),
+              e(hn, {
+                value: Z,
+                onChange: Sr,
+                inputFilter: en,
+                onSubmit: _r,
+                disableCtrlCClear: !0,
+                placeholder: "New name",
+                columns: Math.max(20, w - 8),
+                cursorOffset: De,
+                onChangeCursorOffset: Fr,
+                focus: !0,
+                showCursor: !0,
+              }),
+            ],
+          })
+        : null;
+  return e(o, {
+    flexDirection: "column",
+    tabIndex: 0,
+    autoFocus: !0,
+    onKeyDown: xr,
+    onPaste: Tr,
+    children: e(de, {
+      title: "Artifacts",
+      onCancel: Pt,
+      color: "background",
+      isCancelActive: !1,
+      inputGuide: e(ci, {
+        exitActive: M.mode !== "rename",
+        onInterrupt: Ar,
+        children:
+          M.mode === "confirm-delete"
+            ? r(ue, {
+                children: [
+                  e(D, { chord: "y", action: "delete" }),
+                  e(D, { chord: "n", action: "keep" }),
+                ],
+              })
+            : M.mode === "rename"
+              ? r(ue, {
+                  children: [
+                    e(D, { chord: "enter", action: "save" }),
+                    e(D, { chord: "escape", action: "cancel" }),
+                  ],
+                })
+              : ee
+                ? r(ue, {
+                    children: [
+                      e(t, { children: "Type to filter" }),
+                      e(D, { chord: ["enter", "down"], action: "list" }),
+                      e(D, { chord: "escape", action: "clear" }),
+                    ],
+                  })
+                : r(ue, {
+                    children: [
+                      ie &&
+                        N.length > 0 &&
+                        e(D, { chord: "enter", action: "attach" }),
+                      ie && Dt && e(D, { chord: "x", action: "dismiss" }),
+                      ie &&
+                        N.length > 0 &&
+                        e(D, { chord: "c", action: "copy url" }),
+                      ie &&
+                        ze &&
+                        e(D, {
+                          chord: "ctrl+r",
+                          action: "rename",
+                          format: { modCase: "title", charCase: "upper" },
+                        }),
+                      ie && Et && e(D, { chord: "d", action: "delete" }),
+                      ie &&
+                        se &&
+                        T !== void 0 &&
+                        e(D, {
+                          chord: "p",
+                          action: T.starred === !0 ? "unpin" : "pin",
+                        }),
+                      ie && e(D, { chord: "/", action: "search" }),
+                      !me && e(D, { chord: "r", action: "refresh" }),
+                    ],
+                  }),
+      }),
+      children: me
+        ? e($n, { message: "Loading artifacts\u2026", dimColor: !0 })
+        : fe !== null
+          ? e(Rn, { children: fe })
+          : P.length === 0
+            ? r(o, {
+                flexDirection: "column",
+                children: [
+                  e(Rn, {
+                    children:
+                      "No artifacts yet. Publish one with the Artifact tool.",
+                  }),
+                  pe &&
+                    M.mode === "list" &&
+                    e(o, {
+                      marginTop: 1,
+                      children: e(t, { dimColor: !0, children: pe }),
+                    }),
+                ],
+              })
+            : r(o, {
+                flexDirection: "column",
+                gap: 1,
+                children: [
+                  e(Xd, {
+                    query: W,
+                    isFocused: ee,
+                    isTerminalFocused: O,
+                    cursorOffset: mr,
+                    placeholder: "Search artifacts\u2026",
+                  }),
+                  e(rr, {
+                    relFilter: X,
+                    mineCount: gr,
+                    sharedCount: hr,
+                    pinnedCount: Tt ? yr : null,
+                    onSelect: (n) => {
+                      (k(null), ae(0), Xe(n));
+                    },
+                  }),
+                  N.length === 0
+                    ? r(o, {
+                        flexDirection: "column",
+                        children: [
+                          e(t, {
+                            dimColor: !0,
+                            italic: !0,
+                            children: W
+                              ? X === "all"
+                                ? `No artifacts match "${W}"`
+                                : X === "mine"
+                                  ? `No artifacts you created match "${W}"`
+                                  : X === "pinned"
+                                    ? `No pinned artifacts match "${W}"`
+                                    : `No artifacts shared with you match "${W}"`
+                              : X === "shared"
+                                ? "Nothing has been shared with you yet."
+                                : X === "pinned"
+                                  ? "Nothing pinned yet. Press p on an artifact to pin it."
+                                  : "Nothing created by you yet.",
+                          }),
+                          Nt,
+                          pe &&
+                            M.mode === "list" &&
+                            e(o, {
+                              marginTop: 1,
+                              children: e(t, { dimColor: !0, children: pe }),
+                            }),
+                        ],
+                      })
+                    : r(o, {
+                        flexDirection: "column",
+                        children: [
+                          Mt > 0 &&
+                            r(t, {
+                              dimColor: !0,
+                              children: [
+                                "  ",
+                                L.arrowUp,
+                                " ",
+                                Mt,
+                                " more above",
+                              ],
+                            }),
+                          Lr.map((n, s) => {
+                            let c = Ot + s;
+                            return e(
+                              nr,
+                              {
+                                frame: n,
+                                isSelected: c === ge && !ee,
+                                isAttached: h.has(n.slug),
+                              },
+                              n.slug,
+                            );
+                          }),
+                          Ut > 0 &&
+                            r(t, {
+                              dimColor: !0,
+                              children: [
+                                "  ",
+                                L.arrowDown,
+                                " ",
+                                Ut,
+                                " more below",
+                              ],
+                            }),
+                          M.mode === "confirm-delete" &&
+                            e(o, {
+                              marginTop: 1,
+                              children: r(t, {
+                                children: [
+                                  "Delete ",
+                                  e(t, { bold: !0, children: M.title }),
+                                  "? This cannot be undone.",
+                                ],
+                              }),
+                            }),
+                          Nt,
+                          pe &&
+                            M.mode === "list" &&
+                            e(o, {
+                              marginTop: 1,
+                              children: e(t, { dimColor: !0, children: pe }),
+                            }),
+                        ],
+                      }),
+                ],
+              }),
+    }),
+  });
+}
+function rr(bo) {
+  let ve = _(17),
+    {
+      relFilter: Vt,
+      mineCount: Kr,
+      sharedCount: Vr,
+      pinnedCount: et,
+      onSelect: jt,
+    } = bo;
+  const Xt = `All ${Kr + Vr}`;
+  let tt;
+  if (ve[0] !== Xt) ((tt = ["all", Xt]), (ve[0] = Xt), (ve[1] = tt));
+  else tt = ve[1];
+  const Ht = `${Vl} Created by me ${Kr}`;
+  let rt;
+  if (ve[2] !== Ht) ((rt = ["mine", Ht]), (ve[2] = Ht), (ve[3] = rt));
+  else rt = ve[3];
+  const qt = `${Ie} Shared with me ${Vr}`;
+  let ot;
+  if (ve[4] !== qt) ((ot = ["shared", qt]), (ve[4] = qt), (ve[5] = ot));
+  else ot = ve[5];
+  let Me;
+  if (ve[6] !== et || ve[7] !== tt || ve[8] !== rt || ve[9] !== ot) {
+    Me = [tt, rt, ot];
+    if (et !== null) {
+      const xe = `${L.star} Pinned ${et}`;
+      let at;
+      if (ve[11] !== xe) ((at = ["pinned", xe]), (ve[11] = xe), (ve[12] = at));
+      else at = ve[12];
+      Me.push(at);
+    }
+    ((ve[6] = et), (ve[7] = tt), (ve[8] = rt), (ve[9] = ot), (ve[10] = Me));
+  } else Me = ve[10];
+  let xe;
+  if (ve[13] !== jt || ve[14] !== Vt || ve[15] !== Me)
+    ((xe = e(o, {
+      flexDirection: "row",
+      gap: 1,
+      marginLeft: 1,
+      children: Me.map((at) => {
+        let [Jt, Ro] = at;
+        return e(
+          JWe,
+          {
+            title: Ro,
+            isCurrent: Vt === Jt,
+            headerFocused: !1,
+            color: void 0,
+            onClick: () => jt(Jt),
+          },
+          Jt,
+        );
+      }),
+    })),
+      (ve[13] = jt),
+      (ve[14] = Vt),
+      (ve[15] = Me),
+      (ve[16] = xe));
+  else xe = ve[16];
+  return xe;
+}
+function nr(Co) {
+  let j = _(38),
+    { frame: A, isSelected: jr, isAttached: So } = Co,
+    Ue,
+    Xr;
+  if (j[0] !== A)
+    ((Ue = we(A)), (Xr = Array.from(Ue)), (j[0] = A), (j[1] = Ue), (j[2] = Xr));
+  else ((Ue = j[1]), (Xr = j[2]));
+  let it = Xr,
+    Hr;
+  if (j[3] !== Ue || j[4] !== it)
+    ((Hr = it.length > 50 ? it.slice(0, 49).join("") + "\u2026" : Ue),
+      (j[3] = Ue),
+      (j[4] = it),
+      (j[5] = Hr));
+  else Hr = j[5];
+  let zt = Hr,
+    qr;
+  if (j[6] !== A.ownerEmail || j[7] !== A.rel)
+    ((qr = A.rel === "shared" && A.ownerEmail ? ft(A.ownerEmail, "@") : null),
+      (j[6] = A.ownerEmail),
+      (j[7] = A.rel),
+      (j[8] = qr));
+  else qr = j[8];
+  let Jr = qr,
+    st = A.updatedAt ?? A.createdAt;
+  const Gt = So ? "attached" : null;
+  let lt;
+  if (j[9] !== A.audience)
+    ((lt = er(A.audience)), (j[9] = A.audience), (j[10] = lt));
+  else lt = j[10];
+  const Wt = Jr ? `by ${Jr}` : null;
+  let ct;
+  if (j[11] !== st)
+    ((ct = st ? I1(new Date(st)) : null), (j[11] = st), (j[12] = ct));
+  else ct = j[12];
+  let ut;
+  if (j[13] !== A.view_count)
+    ((ut = A.view_count ? `${A.view_count} ${x(A.view_count, "view")}` : null),
+      (j[13] = A.view_count),
+      (j[14] = ut));
+  else ut = j[14];
+  let zr;
+  if (
+    j[15] !== Gt ||
+    j[16] !== lt ||
+    j[17] !== Wt ||
+    j[18] !== ct ||
+    j[19] !== ut
+  )
+    ((zr = [Gt, lt, Wt, ct, ut].filter(Boolean)),
+      (j[15] = Gt),
+      (j[16] = lt),
+      (j[17] = Wt),
+      (j[18] = ct),
+      (j[19] = ut),
+      (j[20] = zr));
+  else zr = j[20];
+  let dt = zr;
+  const Yt = jr ? L.pointer + " " : "  ";
+  let mt;
+  if (j[21] !== Yt) ((mt = e(t, { children: Yt })), (j[21] = Yt), (j[22] = mt));
+  else mt = j[22];
+  const Qt = jr ? "suggestion" : void 0;
+  let pt;
+  if (j[23] !== A.rel)
+    ((pt =
+      A.rel === "shared"
+        ? e(t, { color: "permission", children: Ie })
+        : e(t, { color: "claude", children: Vl })),
+      (j[23] = A.rel),
+      (j[24] = pt));
+  else pt = j[24];
+  let gt;
+  if (j[25] !== A.starred)
+    ((gt =
+      A.starred === !0 && r(t, { color: "warning", children: [L.star, " "] })),
+      (j[25] = A.starred),
+      (j[26] = gt));
+  else gt = j[26];
+  let yt;
+  if (j[27] !== dt)
+    ((yt =
+      dt.length > 0 &&
+      r(t, { dimColor: !0, children: ["  ", dt.join(" \xB7 ")] })),
+      (j[27] = dt),
+      (j[28] = yt));
+  else yt = j[28];
+  let wt;
+  if (
+    j[29] !== zt ||
+    j[30] !== Qt ||
+    j[31] !== pt ||
+    j[32] !== gt ||
+    j[33] !== yt
+  )
+    ((wt = r(t, { color: Qt, children: [pt, " ", gt, zt, yt] })),
+      (j[29] = zt),
+      (j[30] = Qt),
+      (j[31] = pt),
+      (j[32] = gt),
+      (j[33] = yt),
+      (j[34] = wt));
+  else wt = j[34];
+  let Wr;
+  if (j[35] !== mt || j[36] !== wt)
+    ((Wr = r(o, { children: [mt, wt] })),
+      (j[35] = mt),
+      (j[36] = wt),
+      (j[37] = Wr));
+  else Wr = j[37];
+  return Wr;
+}
+function er(i) {
+  switch (i) {
+    case "owner":
+      return "private";
+    case "org":
+      return "org-wide";
+    case "users":
+      return "specific people";
+    case "public":
+      return "public";
+    case void 0:
+      return null;
+  }
+}
+function Zr(i) {
+  return i.toSorted((l, p) => {
+    let h = Number(p.starred === !0) - Number(l.starred === !0);
+    if (h !== 0) return h;
+    let u = tr(l),
+      S = tr(p);
+    return u === S ? 0 : S - u;
+  });
+}
+function tr(i) {
+  let l = i.lastViewedAt ?? i.updatedAt ?? i.createdAt;
+  return l === void 0 ? -1 / 0 : new Date(l).getTime();
+}
+function we(i) {
+  return i.title || i.label || i.slug;
+}
+function en(i) {
+  return zZn(N0t(i));
+}
+function Te(i, l) {
+  for (let [p, h] of Dv(i)) if (!SPe(p) && Fi(h.url) === l) return p;
+  return;
+}
+function Rt(i) {
+  let l = new Set();
+  for (let [p, h] of Dv(i)) {
+    let u = Fi(h.url);
+    if (u !== null && !SPe(p)) l.add(u);
+  }
+  return l;
+}
+async function Ct(i) {
+  let {
+      frame: l,
+      frameUrls: p,
+      setAppState: h,
+      getKnownVer: u,
+      context: S,
+    } = i,
+    R = rm(l.slug),
+    v = l.rel === "mine" ? l.title || l.slug : l.slug;
+  if (Te(p, l.slug) !== void 0)
+    return (
+      y("artifact_attach", { already_attached: !0 }),
+      { status: `${Vl} ${v} is already attached` }
+    );
+  let O = await lin({
+    slug: l.slug,
+    url: R,
+    getKnownVer: () => u(l.slug),
+    context: S,
+  });
+  if (S.abortController.signal.aborted)
+    return (
+      g("artifact_attach", "cancelled"),
+      { status: `${Vl} ${v} \u2014 attach cancelled` }
+    );
+  let P = !1;
+  if (
+    (h((Z) => {
+      if (Te(Z.frameUrls, l.slug) !== void 0) return ((P = !0), Z);
+      let be = `${$ee}${l.slug}`,
+        De = `${Tce}${l.slug}`,
+        { [be]: je, [De]: oe, ...Ce } = Z.frameUrls,
+        ce = Z.frameOpenFailedPath === be || Z.frameOpenFailedPath === De;
+      return {
+        ...Z,
+        ...(ce && { frameOpenFailedPath: null }),
+        frameUrls: {
+          ...Ce,
+          [`${Wjn}${l.slug}`]: {
+            url: R,
+            updatedAt: Date.now(),
+            ...(l.title !== void 0 && { title: l.title }),
+            ...(oe?.favicon !== void 0 && { favicon: oe.favicon }),
+          },
+        },
+      };
+    }),
+    P)
+  )
+    return (
+      y("artifact_attach", { already_attached: !0 }),
+      { status: `${Vl} ${v} is already attached` }
+    );
+  if (l.rel === "mine") S.setArtifactContractTarget(l.slug);
+  let B = O.outcome !== "skipped",
+    se = O.outcome === "skipped" && O.reason === "stop_latched",
+    Ve = B
+      ? " You'll be notified if it is republished elsewhere (another session, or someone saving from the page)."
+      : se
+        ? " Its watch was stopped earlier in this session, so no republish notice will come; do not watch it again unless the user asks."
+        : "";
+  return (
+    y("artifact_attach", { watching: B }),
+    {
+      status: B
+        ? `Attached ${Vl} ${v} \u2014 you'll be notified when it's republished`
+        : se
+          ? `Attached ${Vl} ${v} \u2014 not watching (its watch was stopped earlier in this session)`
+          : `Attached ${Vl} ${v}`,
+      metaMessage: `The user attached the artifact ${R} to this session as the current artifact of interest. re-read it before editing or republishing (${qwt()}).${Ve}`,
+    }
+  );
+}
+function cn(zo) {
+  return zo.frameUrls;
+}
+async function Vo(i, l) {
+  return e(lr, { onDone: i, context: l });
+}
+function lr(Xo) {
+  let Ee = _(20),
+    { onDone: or, context: Q } = Xo,
+    ne = It(),
+    St = Yn(),
+    ar = U(cn),
+    tn;
+  if (Ee[0] !== ar) ((tn = Rt(ar)), (Ee[0] = ar), (Ee[1] = tn));
+  else tn = Ee[1];
+  let ir = tn,
+    rn;
+  if (Ee[2] !== Q || Ee[3] !== ne || Ee[4] !== St)
+    ((rn = function Ne(Ho) {
+      return Ct({
+        frame: Ho,
+        frameUrls: St.getState().frameUrls,
+        setAppState: ne,
+        getKnownVer: (qo) => D$(St.getState(), qo),
+        context: Q,
+      });
+    }),
+      (Ee[2] = Q),
+      (Ee[3] = ne),
+      (Ee[4] = St),
+      (Ee[5] = rn));
+  else rn = Ee[5];
+  let Ne = rn,
+    nn;
+  if (Ee[6] !== ne)
+    ((nn = function Be(Jo) {
+      ne((sr) => {
+        let on = Te(sr.frameUrls, Jo.slug);
+        return on === void 0 ? sr : u6e(sr, on);
+      });
+    }),
+      (Ee[6] = ne),
+      (Ee[7] = nn));
+  else nn = Ee[7];
+  let Be = nn,
+    an;
+  if (Ee[8] !== Q || Ee[9] !== ne)
+    ((an = function Ke(sn) {
+      (_Pe(sn, { updateAppState: ne, context: Q }),
+        Q.applyMessageOp({
+          type: "append",
+          messages: [Re({ content: Kon(rm(sn)), isMeta: !0 })],
+        }));
+    }),
+      (Ee[8] = Q),
+      (Ee[9] = ne),
+      (Ee[10] = an));
+  else an = Ee[10];
+  let Ke = an,
+    Ft;
+  if (Ee[11] !== Q.abortController)
+    ((Ft = () => Q.abortController.abort()),
+      (Ee[11] = Q.abortController),
+      (Ee[12] = Ft));
+  else Ft = Ee[12];
+  let ln;
+  if (
+    Ee[13] !== ir ||
+    Ee[14] !== Ne ||
+    Ee[15] !== Ke ||
+    Ee[16] !== Be ||
+    Ee[17] !== or ||
+    Ee[18] !== Ft
+  )
+    ((ln = e(bt, {
+      onDone: or,
+      onAttach: Ne,
+      onDetach: Be,
+      onDeleted: Ke,
+      attachedSlugs: ir,
+      onAbortAttach: Ft,
+    })),
+      (Ee[13] = ir),
+      (Ee[14] = Ne),
+      (Ee[15] = Ke),
+      (Ee[16] = Be),
+      (Ee[17] = or),
+      (Ee[18] = Ft),
+      (Ee[19] = ln));
+  else ln = Ee[19];
+  return ln;
+}
+export { Vo as call };

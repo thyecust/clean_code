@@ -1,0 +1,2127 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import {
+  j,
+  Gt,
+  he,
+  VR,
+  MA,
+  d8,
+  m_e,
+  y_e,
+  ALn,
+  CLn,
+  HW,
+  DLn,
+  Nn,
+  mp,
+} from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import {
+  AB,
+  Pz,
+  li,
+  jf,
+  Bxe,
+  rdr,
+  Ww,
+  DYt,
+  RHt,
+  jxe,
+  Oz,
+  wh,
+} from "../../00-第三方库/lodash/lodash.207999qb.js";
+import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { yt, R, l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { Et, z, fp, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { fi } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { y, f, g, Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
+import { eae, jhe, Kl, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { Z5, zhe } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import {
+  nve,
+  Bzt,
+  SJe,
+  d$e,
+  TJe,
+  Sl,
+  sb,
+  rA,
+  Gzt,
+  X$,
+  $t,
+  dme,
+} from "./chunk-7s6mt1vg.js";
+import { Nr, jge, jBe, Vn, zt, mke, g8t, h8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import {
+  ht,
+  wU,
+  TU,
+  Gl,
+  UUe,
+  ARn,
+  VKt,
+  BUe,
+  f0,
+  Yt,
+  lge,
+  TZe,
+  Ss,
+  H,
+  Cd,
+} from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import {
+  die,
+  Hge,
+  qT,
+  ho,
+  IP,
+  ye,
+  xxn,
+  Ige,
+  pie,
+  dS,
+  fie,
+  mie,
+  gRt,
+} from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { h1, zRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import { Pe, In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { at, xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { dz } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
+import { L1, ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import { Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { JS, lCe, Swt, uJ, yN, yG } from "./chunk-hh8f1qrw.js";
+import { Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { $bn } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import { Uy } from "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
+import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
+import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+var toe = { source: "github", repo: "anthropics/claude-plugins-official" },
+  ig = "claude-plugins-official";
+var Xe = [
+  fi,
+  "raw.githubusercontent.com",
+  "objects.githubusercontent.com",
+  "gist.githubusercontent.com",
+  "gitlab.com",
+  "bitbucket.org",
+  "codeberg.org",
+  "dev.azure.com",
+  "ssh.dev.azure.com",
+  "storage.googleapis.com",
+];
+function Je(e) {
+  let t,
+    r = /^[^@/]+@([^:/]+):/.exec(e);
+  if (r) t = r[1];
+  else
+    try {
+      t = new URL(e).hostname;
+    } catch {
+      return "unknown";
+    }
+  let o = t.toLowerCase();
+  return Xe.find((s) => s === o) ?? "other";
+}
+function Ze(e) {
+  return e.includes(`anthropics/${ig}`);
+}
+function qE(e, t, r, o, s) {
+  i("tengu_plugin_remote_fetch", {
+    source: u(e),
+    host: u(t ? Je(t) : "unknown"),
+    is_official: e === "plugin_catalog" || (t ? Ze(t) : !1),
+    outcome: u(r),
+    duration_ms: Math.round(o),
+    ...(s && { error_kind: u(s) }),
+  });
+}
+function _N(e) {
+  let t = String(e?.message ?? e);
+  if (
+    /ENOTFOUND|ECONNREFUSED|EAI_AGAIN|Could not resolve host|Connection refused/i.test(
+      t,
+    )
+  )
+    return "dns_or_refused";
+  if (/ETIMEDOUT|timed out|timeout/i.test(t)) return "timeout";
+  if (
+    /ECONNRESET|socket hang up|Connection reset by peer|remote end hung up/i.test(
+      t,
+    )
+  )
+    return "conn_reset";
+  if (/403|401|authentication|permission denied/i.test(t)) return "auth";
+  if (/404|not found|repository not found/i.test(t)) return "not_found";
+  if (/certificate|SSL|TLS|unable to get local issuer/i.test(t)) return "tls";
+  if (/Invalid response format|Invalid marketplace schema/i.test(t))
+    return "invalid_schema";
+  return "other";
+}
+import { readdir as de, stat as Qe } from "fs/promises";
+import { join as ue } from "path";
+var et = ".claude-plugin",
+  Rbn = [
+    "commands",
+    "skills",
+    "agents",
+    "hooks",
+    "themes",
+    "output-styles",
+    "monitors",
+    "workflows",
+  ],
+  tt = ["SKILL.md", ".mcp.json", ".lsp.json"],
+  aCe = [et, ...Rbn, ...tt];
+async function nwt(e) {
+  return (await de(e)).filter((r) => !fe(r)).some(pe);
+}
+async function iXe(e) {
+  let t = (await de(e, { withFileTypes: !0 })).filter((r) => !fe(r.name));
+  if (t.some((r) => r.name === ".claude-plugin")) return e;
+  if (t.length === 1 && t[0].isDirectory()) {
+    let r = ue(e, t[0].name);
+    if (await rt(ue(r, ".claude-plugin"))) return r;
+    if (!pe(t[0].name) && (await nwt(r))) return r;
+  }
+  return e;
+}
+function pe(e) {
+  return aCe.includes(e);
+}
+async function rt(e) {
+  try {
+    return (await Qe(e), !0);
+  } catch {
+    return !1;
+  }
+}
+function fe(e) {
+  return e === "__MACOSX" || e === ".DS_Store";
+}
+function _1e() {
+  if (St()) return !1;
+  if (afe()) return !1;
+  return V();
+}
+function V() {
+  return H("tengu_plugin_command_source_refresh", !0);
+}
+var ot = 30000;
+function afe() {
+  let e = Sl(),
+    t = Oz(sb());
+  if (P() === "windows" ? rdr(e) : li(e)) return !0;
+  let r = $t().provenLocalRoots,
+    o = r.get(t);
+  if (o === void 0 || !X$(o, ot)) {
+    if (Bxe(t, { allowLocalWsl: !0 })) return (r.delete(t), !0);
+    r.set(t, Date.now());
+  }
+  if (wh(be(), t)) return !1;
+  return it().some(
+    (s) => wh(t, s, { foldCase: !0 }) || wh(s, t, { foldCase: !0 }),
+  );
+}
+function it() {
+  return Y(
+    [he(), ...mp()].flatMap((e) => {
+      let t = tr(e);
+      return t !== null ? [e, t] : [e];
+    }),
+  );
+}
+var st = [
+  "local",
+  "npm",
+  "github",
+  "git",
+  "subdir",
+  "archive",
+  "command",
+  "unknown",
+];
+function rwt(e) {
+  let t = Math.random()
+    .toString(36)
+    .slice(2, 2 + _e)
+    .padEnd(1, "0");
+  return `${ge}${e}_${Date.now()}_${t}`;
+}
+var ge = "temp_",
+  _e = 6,
+  owt = "_x",
+  kbn = ".clone",
+  yGt = new RegExp(
+    `^${ge}(?:${st.join("|")})_(\\d{10,})_[a-z0-9]{1,${_e}}(?:${owt}|\\${kbn})?$`,
+  );
+function we(e, t) {
+  return `${e}${Se}${t}`;
+}
+var Se = ".linking-",
+  cZn = new RegExp(`\\${Se}(\\d+)$`);
+import { createHash as xe } from "crypto";
+import {
+  lstat as Ne,
+  mkdir as X,
+  open as ct,
+  readdir as L,
+  readFile as ut,
+  readlink as U,
+  realpath as Q,
+  rename as dt,
+  stat as pt,
+  symlink as Le,
+  writeFile as Ie,
+} from "fs/promises";
+import { homedir as ft } from "os";
+import {
+  dirname as Oe,
+  isAbsolute as G,
+  join as v,
+  relative as J,
+  resolve as Ae,
+  sep as D,
+} from "path";
+import { spawn as lt } from "child_process";
+var ke = 2000;
+function Ee(
+  e,
+  { cwd: t, env: r, timeoutMs: o, maxStdoutBytes: s, maxStderrBytes: c },
+) {
+  return new Promise((p) => {
+    let d = "",
+      h = "",
+      _ = 0,
+      w = 0,
+      S = !1,
+      b = !1,
+      C,
+      T,
+      k = lt(e, [], {
+        shell: !0,
+        cwd: t,
+        env: r,
+        stdio: ["ignore", "pipe", "pipe"],
+        detached: P() !== "windows",
+        windowsHide: !0,
+        ...Bs("plugin"),
+      }),
+      ie = Et(async () => {
+        if (!S && k.pid !== void 0) await Uy(k.pid, "SIGKILL");
+      });
+    function x(E) {
+      if (S) return;
+      if (((S = !0), ie(), clearTimeout(ae), T)) clearTimeout(T);
+      (k.stdout?.removeAllListeners("data"),
+        k.stderr?.removeAllListeners("data"),
+        k.stdout?.destroy(),
+        k.stderr?.destroy(),
+        p(E));
+    }
+    function se(E) {
+      if (C) return;
+      ((C = E),
+        k.stdout?.removeAllListeners("data"),
+        k.stderr?.removeAllListeners("data"),
+        k.stdout?.pause(),
+        k.stderr?.pause());
+      let N = { kind: E, stdout: d, stderr: h },
+        M = () => {
+          if (S) return;
+          if (b) {
+            x(N);
+            return;
+          }
+          let F = () => x(N);
+          if (
+            (k.once("exit", F),
+            (T = setTimeout((K) => K(), ke, F)),
+            typeof T === "object")
+          )
+            T.unref();
+        };
+      if (k.pid === void 0) {
+        x(N);
+        return;
+      }
+      Uy(k.pid, "SIGKILL").then(M, M);
+    }
+    let ae = setTimeout((E) => E("timed-out"), o, se);
+    (k.stdout?.setEncoding("utf8"),
+      k.stderr?.setEncoding("utf8"),
+      k.stdout?.on("data", (E) => {
+        if (((_ += Buffer.byteLength(E)), _ > s)) {
+          se("stdout-overflow");
+          return;
+        }
+        d += E;
+      }),
+      k.stderr?.on("data", (E) => {
+        if (w >= c) return;
+        ((w += Buffer.byteLength(E)), (h += E));
+      }),
+      k.once("error", (E) => {
+        x({ kind: "spawn-error", message: E.message, stdout: d, stderr: h });
+      }));
+    function ce(E, N) {
+      if (C) return;
+      if (typeof E === "number")
+        x({ kind: "exited", exitCode: E, stdout: d, stderr: h });
+      else
+        x({ kind: "signaled", signal: N ?? "unknown", stdout: d, stderr: h });
+    }
+    (k.once("exit", (E, N) => {
+      if (((b = !0), S || C)) return;
+      if (
+        (clearTimeout(ae),
+        (T = setTimeout((M, F, K) => M(F, K), ke, ce, E, N)),
+        typeof T === "object")
+      )
+        T.unref();
+    }),
+      k.once("close", (E, N) => {
+        ce(E, N);
+      }));
+  });
+}
+var mt = 60,
+  Re = 65536,
+  gt = 65536,
+  ve = 500,
+  Te = 268435456,
+  Ce = 20000,
+  _t = new Set(aCe);
+async function wt(e) {
+  let t = (e.timeout ?? mt) * 1000,
+    r = Vn(e.command, 200);
+  n(`Plugin command source: running \`${r}\` (timeout ${t}ms)`);
+  let o = await Ee(e.command, {
+      cwd: ft(),
+      env: Hi(),
+      timeoutMs: t,
+      maxStdoutBytes: Re,
+      maxStderrBytes: gt,
+    }),
+    s = Vn(o.stderr.trim(), ve),
+    c = s ? ` (stderr: ${s})` : "";
+  switch (o.kind) {
+    case "exited":
+      if (o.exitCode !== 0)
+        throw new R(
+          `Plugin source command \`${r}\` exited with code ${o.exitCode}` +
+            (s ? `: ${s}` : " and no error output."),
+          "plugin command source exited non-zero",
+        );
+      break;
+    case "timed-out":
+      throw new R(
+        `Plugin source command \`${r}\` did not finish within ${t / 1000}s and was stopped.${c}`,
+        "plugin command source timed out",
+      );
+    case "stdout-overflow":
+      throw new R(
+        `Plugin source command \`${r}\` printed more than ${Re / 1024} KB and was stopped; it must print a single absolute path.`,
+        "plugin command source exceeded the stdout cap",
+      );
+    case "signaled":
+      throw new R(
+        `Plugin source command \`${r}\` was killed by ${o.signal} before it finished.${c}`,
+        "plugin command source killed by a signal",
+      );
+    case "spawn-error":
+      throw new R(
+        `Plugin source command \`${r}\` could not be started: ` +
+          Vn(o.message, ve),
+        "plugin command source failed to spawn",
+      );
+  }
+  let p = o.stdout
+    .split(/\r?\n/)
+    .map((w) => w.trim())
+    .filter((w) => w.length > 0);
+  if (p.length === 0)
+    throw new R(
+      `Plugin source command \`${r}\` printed nothing; it must print the absolute path of the plugin directory.`,
+      "plugin command source printed nothing",
+    );
+  if (p.length > 1)
+    throw new R(
+      `Plugin source command \`${r}\` printed ${p.length} lines; it must print exactly one absolute path.`,
+      "plugin command source printed multiple lines",
+    );
+  let d = p[0];
+  if (!G(d))
+    throw new R(
+      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, which is not an absolute path.`,
+      "plugin command source printed a relative path",
+    );
+  if ((P() === "windows" && Ww(d)) || jf(d))
+    throw new Ui(
+      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, a network path (UNC or automount), which is not supported as a plugin directory.`,
+      "plugin command source printed a network path",
+    );
+  if (jxe(d))
+    throw new Ui(
+      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, which is reached through a link onto a network location (or one that cannot be trusted); that is not supported as a plugin directory.`,
+      "plugin command source printed a path through a suspect link",
+    );
+  let h;
+  try {
+    h = await Q(d);
+  } catch (w) {
+    throw new R(
+      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, but that path could not be resolved (${A(w) ?? "unknown error"}).`,
+      "plugin command source path does not resolve",
+    );
+  }
+  if (jf(h) || (P() === "windows" && Ww(h)))
+    throw new Ui(
+      `Plugin source command \`${r}\` printed a path that resolves to a network location, which is not supported as a plugin directory.`,
+      "plugin command source path resolves to a network path",
+    );
+  let _;
+  try {
+    _ = await L(h);
+  } catch (w) {
+    let S = A(w);
+    throw new R(
+      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, ` +
+        (S === "ENOTDIR"
+          ? "which is not a directory."
+          : `which could not be read as a directory (${S ?? "unknown error"}).`),
+      "plugin command source path is not a readable directory",
+    );
+  }
+  if (!_.some((w) => _t.has(w)))
+    throw new R(
+      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, but that directory has no plugin content (expected .claude-plugin/ or a commands/, skills/, agents/, hooks/, themes/, output-styles/, monitors/, workflows/, SKILL.md, .mcp.json, or .lsp.json at the top level). Nothing was installed.`,
+      "plugin command source directory has no plugin content",
+    );
+  return (n(`Plugin command source: resolved plugin directory ${h}`), h);
+}
+async function Me(e, t, r) {
+  let o = [],
+    s = 0,
+    c = 0;
+  async function p(d) {
+    let h = await L(d, { withFileTypes: !0 });
+    for (let _ of h) {
+      if ((c++, c > Ce))
+        throw new R(
+          `Plugin directory has more than ${Ce} entries; refusing to install it as a plugin.`,
+          "plugin command source directory has too many files",
+        );
+      let w = v(d, _.name),
+        S = await eae(d, _);
+      if (S.isDirectory) {
+        if (d === e && _.name === ".git") continue;
+        await p(w);
+      } else if (S.isFile) {
+        let b = S.size ?? (await Ne(w)).size;
+        if ((r?.set(w, b), (s += b), s > Te))
+          throw new R(
+            `Plugin directory is larger than ${Te / 1048576} MB; refusing to install it as a plugin.`,
+            "plugin command source directory too large",
+          );
+        o.push(w);
+      } else if (S.isSymbolicLink) t?.push(w);
+    }
+  }
+  return (await p(e), t?.sort(), o.sort());
+}
+async function bt(e) {
+  let t = [],
+    r = new Map(),
+    o = await Me(e, t, r),
+    s = xe("sha256");
+  for (let c of o) {
+    let p = r.get(c) ?? 0;
+    s.update(`f ${J(e, c).split(D).join("/")}\x00${p}\x00`);
+    let d = p;
+    if (p > 0) {
+      let h = await ct(c, "r");
+      try {
+        for await (let _ of h.createReadStream({ start: 0, end: p - 1 }))
+          (s.update(_), (d -= _.length));
+      } finally {
+        await h.close();
+      }
+    }
+    if (d > 0) s.update(Buffer.alloc(d));
+  }
+  for (let c of t) {
+    let p = await U(c);
+    (s.update(`l ${J(e, c).split(D).join("/")}\x00`),
+      s.update(`${Buffer.byteLength(p)}\x00${p}`));
+  }
+  return s.digest("hex");
+}
+var y1e =
+  'This plugin source uses mode "link", which is not supported on Windows yet; the marketplace can use mode "copy" instead.';
+function vC(e) {
+  return e.mode === "link" ? `${e.command}${SJe}` : e.command;
+}
+function aXe(e) {
+  return e.mode === "link"
+    ? 'mode "link": its output directory is used in place (linked, not copied)'
+    : 'mode "copy": its output directory is copied into the plugin cache';
+}
+class Ui extends R {}
+function At(e, t) {
+  if (t && t.kind !== "none" && t.command === vC(e)) return;
+  let r = Vn(e.command, mke) + (e.mode === "link" ? " [mode: link]" : ""),
+    o = t?.pluginId !== void 0 ? Vn(t.pluginId, 200) : void 0,
+    s = o ?? "This plugin",
+    c = o ?? "";
+  if (t?.kind === "recorded" && t.command !== void 0)
+    throw new Ui(
+      `${s}'s marketplace changed the command that installs it, or how its output is used (now \`${r}\`), since it was accepted, so it was not run. Review and accept the new command: ${rA("plugin update", c, { tail: "in a terminal (add `--scope` for a project/local install)", fallback: "an explicit plugin update in a terminal reviews it" })}.`,
+      "plugin command source command changed since consent",
+    );
+  if (t?.kind === "recorded")
+    throw new Ui(
+      `${s}'s marketplace entry now installs it by running a command on this machine (\`${r}\`) that has not been reviewed yet, so it was not run. Review and accept it: ${rA("plugin update", c, { tail: "in a terminal (add `--scope` for a project/local install)", fallback: "an explicit plugin update in a terminal reviews it" })}.`,
+      "plugin command source never consented for an installed plugin",
+    );
+  if (t?.kind === "shown")
+    throw new Ui(
+      `${s}'s marketplace entry changed while it was being installed (it now declares \`${r}\`, not the command that was shown), so nothing was run. Re-run the install/update to review the current command.`,
+      "plugin command source changed between display and run",
+    );
+  throw new Ui(
+    `${s} is installed by running a command on this machine (\`${r}\`) that has not been reviewed yet, so it was not run. Review and accept it from its /plugin details pane, or in a terminal: ${rA("plugin install", c, { fallback: "an explicit plugin install reviews it" })}.`,
+    "plugin command source without consent",
+  );
+}
+async function Pt(e, t) {
+  let r = (await L(e)).filter((c) => !lXe(c)).sort(),
+    o = await Fe(
+      e,
+      r.map((c) => ({ name: c, path: v(e, c) })),
+    );
+  await X(t, { recursive: !0 });
+  for (let { name: c, target: p, isDirectory: d } of o)
+    await Le(p, v(t, c), d ? "dir" : "file");
+  await Ie(v(t, nve), JSON.stringify({ target: e }), { flag: "wx" });
+  let s = xe("sha256");
+  s.update(`${e}\x00`);
+  for (let { name: c, target: p } of o)
+    (s.update(`${Buffer.byteLength(c)}\x00${c}`),
+      s.update(`${Buffer.byteLength(p)}\x00${p}`));
+  return s.digest("hex");
+}
+async function Fe(e, t) {
+  let r = [];
+  for (let { name: o, path: s } of t) {
+    if (RHt(s, Oe(s)))
+      throw new Ui(
+        `A top-level entry of the plugin directory (${Vn(o, 100)}) points at a network location or through a link that cannot be trusted; refusing to link it.`,
+        "plugin command source entry traverses a suspect link",
+      );
+    let c, p;
+    try {
+      ((c = await Q(s)), (p = (await pt(c)).isDirectory()));
+    } catch {
+      throw new R(
+        `A top-level entry of the plugin directory its command produced could not be resolved (${Vn(o, 80)}); refusing to link it.`,
+        "plugin command source link entry unresolvable",
+      );
+    }
+    let d = J(e, c);
+    if (d === "" || d === ".." || d.startsWith(`..${D}`) || G(d))
+      throw new Ui(
+        `A top-level entry of the plugin directory its command produced (${Vn(o, 80)}) points outside that directory; refusing to link it.`,
+        "plugin command source link escapes producer directory",
+      );
+    r.push({ name: o, target: c, isDirectory: p });
+  }
+  return r;
+}
+async function uZn(e, t) {
+  let r = Ae(he(), e),
+    o = Ae(he(), t),
+    s = await ee(v(r, nve)),
+    c = Bzt().parse(JSON.parse(s)).target;
+  if (DYt(c))
+    throw new Ui(
+      "The link farm points at a producer reached through a link that cannot be trusted; refusing to relink it.",
+      "plugin command source relink target traverses a suspect link",
+    );
+  let p = await Q(c);
+  if (Ww(p))
+    throw new Ui(
+      "The link farm points at a producer that now resolves to a network location; refusing to relink it.",
+      "plugin command source relink target resolves to a network path",
+    );
+  let d = [];
+  for (let S of await L(r, { withFileTypes: !0 })) {
+    if (lXe(S.name)) continue;
+    if ((await jhe(r, S))?.isSymbolicLink) d.push(S);
+  }
+  let h = [];
+  for (let S of d) {
+    let b;
+    try {
+      b = await U(v(r, S.name));
+    } catch (C) {
+      if (W(C)) continue;
+      throw new Ui(
+        `A link in the staged farm could not be read (${Vn(l(C), 120)}); refusing to relink it.`,
+        "plugin command source relink entry unreadable",
+      );
+    }
+    if (AB(b))
+      throw new Ui(
+        "A link in the staged farm is not in canonical form; refusing to relink it.",
+        "plugin command source relink entry not canonical",
+      );
+    h.push(S);
+  }
+  let _ = await Fe(
+    p,
+    h.map((S) => ({ name: S.name, path: v(r, S.name) })),
+  );
+  await X(Oe(o), { recursive: !0 });
+  let w = we(o, process.pid);
+  (await Kl(w), await X(w));
+  try {
+    for (let { name: S, target: b, isDirectory: C } of _)
+      await Le(b, v(w, S), C ? "dir" : "file");
+    (await Ie(v(w, nve), s, { flag: "wx" }), await dt(w, o));
+  } catch (S) {
+    await Kl(w).catch(() => {});
+    let b = A(S);
+    if (
+      (b === "ENOTEMPTY" || b === "EEXIST") &&
+      (await SGt(o)) === "live" &&
+      !(await S1e(o, p))
+    )
+      return;
+    throw S;
+  }
+}
+async function xbn(e, { keepGit: t }) {
+  for (let r of await L(e))
+    if (lXe(r) && !(t && Pz(r) === ".git")) await Kl(v(e, r));
+}
+function lXe(e) {
+  return TJe(e, Rt);
+}
+var Rt = new Set([...d$e, ".git"]);
+async function cXe(e, { unclassifiableIsFarm: t = !1 } = {}) {
+  let r = await SGt(e);
+  return r === "live" || (r === "unclassifiable" && t);
+}
+async function SGt(e) {
+  try {
+    Bzt().parse(JSON.parse(await ee(v(e, nve))));
+  } catch (r) {
+    if (A(r) !== void 0) return t(r);
+  }
+  try {
+    for (let r of await L(e, { withFileTypes: !0 })) {
+      if (lXe(r.name)) continue;
+      try {
+        let o = await eae(e, r);
+        if (o.isSymbolicLink && G(o.linkTarget ?? (await U(v(e, r.name)))))
+          return "live";
+      } catch (o) {
+        if (A(o) === "ENOENT") continue;
+        return t(o);
+      }
+    }
+    return "not-live";
+  } catch (r) {
+    return t(r);
+  }
+  function t(r) {
+    let o = A(r);
+    return o === "ENOENT" || o === "ENOTDIR" ? "not-live" : "unclassifiable";
+  }
+}
+var vt = new Set([".ds_store", "thumbs.db", "desktop.ini", "icon\r"]);
+function Tt(e) {
+  let t = Pz(e);
+  return vt.has(t) || t.startsWith("._");
+}
+function Ct(e) {
+  return d$e.has(e);
+}
+async function S1e(e, t) {
+  let r = t.replace(/[\\/]+$/, "") + D;
+  try {
+    for (let o of await L(e, { withFileTypes: !0 })) {
+      if (Ct(o.name)) continue;
+      let s;
+      try {
+        let c = await eae(e, o);
+        if (c.isFile && (Tt(o.name) || TJe(o.name, d$e))) continue;
+        if (!c.isSymbolicLink) return !0;
+        s = c.linkTarget ?? (await U(v(e, o.name)));
+      } catch (c) {
+        if (A(c) === "ENOENT") continue;
+        return !0;
+      }
+      if (!G(s) || AB(s) || Ww(s) || !s.startsWith(r)) return !0;
+    }
+    return !1;
+  } catch (o) {
+    let s = A(o);
+    return s !== "ENOENT" && s !== "ENOTDIR";
+  }
+}
+async function dZn(e) {
+  try {
+    return Bzt().parse(JSON.parse(await ee(v(e, nve)))).target;
+  } catch {
+    return;
+  }
+}
+var xt = 16384;
+async function ee(e) {
+  let t = await Ne(e);
+  if (!t.isFile() || t.size > xt)
+    throw new Ui(
+      "The link-farm marker is not a small regular file; refusing to read it.",
+      "plugin command source link marker not a small regular file",
+    );
+  return ut(e, "utf8");
+}
+function xj(e) {
+  return typeof e === "object" && e.source === "command" ? e : void 0;
+}
+function R$(e) {
+  return xj(e)?.mode === "link";
+}
+async function pZn(e, t, r, o) {
+  if (JS())
+    throw new Ui(yN, "plugin command source disabled by managed policy");
+  if (e.mode === "link" && P() === "windows")
+    throw new Ui(y1e, "plugin command source link mode unsupported on windows");
+  return (
+    At(e, o),
+    Sr("plugin_command_install", async () => {
+      let s = await wt(e);
+      if (wh(s, he(), { foldCase: !0 }))
+        throw new Ui(
+          `Plugin source command printed the working directory or one of its parents (${Vn(s, 300)}); refusing to use it as a plugin.`,
+          "plugin command source printed cwd or an ancestor",
+        );
+      if ((dme(s), e.mode === "link"))
+        return { contentSha256: await Pt(s, t), producerDirectory: s };
+      return (
+        await Me(s),
+        await r(s, t),
+        await xbn(t, { keepGit: !1 }),
+        { contentSha256: await bt(t), producerDirectory: s }
+      );
+    })
+  );
+}
+import { createHash as Dt } from "crypto";
+var Nt = /^([a-z][a-z\d+\-.]*:)?\/\//i;
+function Lt(e, t) {
+  let r = t?.baseURL,
+    o = Nt.test(e),
+    s = null;
+  if (o && !L1(e)) s = e;
+  else if (r != null && !L1(r)) s = r;
+  else if (!o && r == null) s = e;
+  if (s !== null)
+    throw Error(
+      `downloads: request (url="${e}"` +
+        (r != null ? `, baseURL="${r}"` : "") +
+        ") does not resolve to the public CDN (downloads.claude.ai). Use firstPartyApi for api.anthropic.com (residency-gated) or externalHttp for non-Anthropic hosts.",
+    );
+}
+var hN = {
+  get(e, t) {
+    return (Lt(e, t), dz(), at.get(e, t));
+  },
+};
+import { homedir as It } from "os";
+var Ot = 1e4,
+  Mt = 1e6;
+function Ft(e) {
+  if (Cd(e)) return !0;
+  return (e === void 0 || e === It()) && VR() && DLn();
+}
+async function swt(e) {
+  if (e.isRepoResidentConfig && !Ft(e.repoResidentOrigin))
+    return { ok: !1, reason: "missing_trust" };
+  let t = await Be(e.command, [], {
+    shell: !0,
+    timeout: Ot,
+    maxBuffer: Mt,
+    cwd: e.cwd,
+    env: Ht(e),
+    extendEnv: !1,
+  });
+  if (t.code !== 0 || !t.stdout) return { ok: !1, reason: "exec_failed" };
+  let r;
+  try {
+    r = z(t.stdout.trim());
+  } catch {
+    return { ok: !1, reason: "parse_failed" };
+  }
+  if (!me(r)) return { ok: !1, reason: "non_object" };
+  let o = {};
+  for (let [s, c] of Object.entries(r)) {
+    if (typeof c !== "string") return { ok: !1, reason: "non_string_value" };
+    o[s] = c;
+  }
+  return { ok: !0, headers: o };
+}
+function Ht(e) {
+  let t = { ...Hi() };
+  if (!e.scrubCredentialEnv) return { ...t, ...e.env };
+  let r = [];
+  for (let p of Hge()) {
+    let d = process.env[p] ?? t[p];
+    if (d !== void 0 && d !== "") r.push(d);
+    delete t[p];
+  }
+  let o = process.env,
+    s = {};
+  for (let p of new Set([...Object.keys(t), ...Object.keys(o)]))
+    s[p] = o[p] ?? t[p];
+  for (let p of die(s).lostCredential) {
+    let d = s[p];
+    if (d !== void 0 && d !== "") r.push(d);
+  }
+  (Object.assign(t, die(t).respelled), r.sort((p, d) => d.length - p.length));
+  let c = {};
+  for (let [p, d] of Object.entries(e.env ?? {}))
+    c[p] = r.reduce((h, _) => h.split(_).join("REDACTED"), d);
+  return { ...t, ...c };
+}
+var iJ = 268435456,
+  iwt = 5242880,
+  Ut = 120000,
+  Hbn = "Claude-Code-Plugin-Manager";
+async function fZn(e, t = {}) {
+  if (!h8t(e))
+    throw new R(`${g8t}: ${fp(e)}`, "plugin archive URL policy rejected");
+  let r = fp(e);
+  n(`Downloading plugin archive from ${r}`);
+  let o = t.headers ?? {},
+    s = { ...o, "User-Agent": Hbn },
+    c = L1(e) ? hN.get : ra.get,
+    p = performance.now(),
+    d;
+  try {
+    let _ = await c(e, {
+      timeout: Ut,
+      responseType: "arraybuffer",
+      maxRedirects: 5,
+      maxContentLength: iJ,
+      headers: s,
+      beforeRedirect: Bt(e, Ibn(o)),
+    });
+    (qE("plugin_archive", e, "success", performance.now() - p),
+      (d = Buffer.from(_.data)));
+  } catch (_) {
+    qE("plugin_archive", e, "failure", performance.now() - p, _N(_));
+    let w = Dbn(_);
+    if (w) throw w;
+    throw new R(Kt(_, e, r), "plugin archive download failed");
+  }
+  let h = Dt("sha256").update(d).digest("hex");
+  if (t.sha256 && t.sha256.toLowerCase() !== h)
+    throw new R(
+      `Plugin archive integrity check failed for ${r}: expected sha256 ${t.sha256.toLowerCase()}, got ${h}. The archive was not installed. Verify the sha256 in the marketplace entry, or that the URL serves the intended file.`,
+      "plugin archive sha256 mismatch",
+    );
+  return { data: d, contentSha256: h };
+}
+function Ibn(e) {
+  return Object.keys(e ?? {}).filter((t) => t.toLowerCase() !== "user-agent");
+}
+function De(e, t, r = "plugin archive") {
+  let o = new Set(t.map((s) => s.toLowerCase()));
+  return (s) => {
+    if (o.size === 0 || !s.headers) return;
+    let c = jBe(s);
+    if (c && fwt(e, c)) return;
+    let p = 0;
+    for (let d of Object.keys(s.headers))
+      if (o.has(d.toLowerCase())) (delete s.headers[d], p++);
+    if (p > 0)
+      n(
+        `Fetch of ${r} redirected to a different origin; dropped inherited marketplace headers`,
+      );
+  };
+}
+function Bt(e, t) {
+  let r = De(e, t);
+  return (o) => {
+    let s = jBe(o);
+    if (!h8t(s))
+      throw new R(
+        "Plugin archive redirected to a disallowed URL and was refused \u2014 " +
+          `every hop must satisfy the archive URL policy (${g8t.replace(/^Archive URLs must /, "")}): ` +
+          (s ? fp(s) : "(unparseable redirect target)"),
+        "plugin archive redirect policy rejected",
+      );
+    r(o);
+  };
+}
+function mZn(e, t) {
+  let r = De(e, t, "marketplace catalog");
+  return (o) => {
+    let s = jBe(o);
+    if (!(
+      s !== "" &&
+      (fwt(e, s) || (s.toLowerCase().startsWith("https:") && !jge(nn(s))))
+    ))
+      throw new R(
+        "Marketplace catalog redirected to a disallowed URL and was refused \u2014 " +
+          "a server-chosen cross-origin redirect must use https:// and must not point at a loopback, link-local, or cloud-metadata host (only a hop that stays on the origin you started from is exempt): " +
+          (s ? fp(s) : "(unparseable redirect target)"),
+        "marketplace catalog redirect policy rejected",
+      );
+    r(o);
+  };
+}
+function Kt(e, t, r) {
+  let o = (s) => s.replaceAll(t, () => r);
+  if (xd(e)) {
+    if (e.code === "ECONNREFUSED" || e.code === "ENOTFOUND")
+      return `Could not connect to ${r}. Check your network connection and that the archive URL is correct.
+
+Technical details: ${o(e.message)}`;
+    if (e.code === "ETIMEDOUT" || e.code === "ECONNABORTED")
+      return `Timed out downloading plugin archive from ${r}. The server may be slow or unreachable.
+
+Technical details: ${o(e.message)}`;
+    if (e.response) {
+      let s = e.response.status;
+      return `HTTP ${s} while downloading plugin archive from ${r}.${s === 401 || s === 403 ? " The server rejected the request \u2014 if it requires authentication, add `headers` to the marketplace source (they are forwarded to plugin archives on the same origin) or configure your proxy." : ""}
+
+Technical details: ${o(e.message)}`;
+    }
+  }
+  return `Failed to download plugin archive from ${r}: ${o(l(e))}`;
+}
+function aJ(e) {
+  return typeof e.headersHelper === "string" && e.headersHelper !== "";
+}
+var awt = {
+  unshown: "entry_helper_unshown",
+  command: "entry_helper_changed",
+  archive_url: "entry_archive_url_changed",
+};
+function uXe(e, t) {
+  let { entry: r } = e;
+  return aJ(r) &&
+    r.headersHelper !== void 0 &&
+    (!e.requireInlinedManifest || r.strict === !1)
+    ? { command: r.headersHelper, archiveUrl: t }
+    : null;
+}
+function lwt(e, t) {
+  if (e === void 0 || e === null) return t === null ? null : "unshown";
+  if (t === null) return null;
+  if (e.command !== t.command) return "command";
+  if (He(t.archiveUrl) !== He(e.archiveUrl)) return "archive_url";
+  return null;
+}
+function He(e) {
+  return yG(fp(e));
+}
+function dXe(e, t = "lockdown") {
+  let r = zt(e);
+  if (t === "remote_policy_unconsented")
+    return `"${r}" fetches its archive through a headersHelper command that was not run: ${Swt}. The plugin was not installed or updated.`;
+  return `"${r}" fetches its archive through a marketplace-declared headersHelper command, and your organization's managed settings disable marketplace-declared commands (disableCommandPluginSources / allowManagedHooksOnly). The plugin was not installed or updated and the command was not run; ask your admin to allow it or to declare the marketplace in managed settings.`;
+}
+var jt = {
+  entry_helper_unshown:
+    "plugin entry helper consent mismatch at install: entry_helper_unshown",
+  entry_helper_changed:
+    "plugin entry helper consent mismatch at install: entry_helper_changed",
+  entry_archive_url_changed:
+    "plugin entry helper consent mismatch at install: entry_archive_url_changed",
+  entry_helper_deferred: "plugin headers helper deferred to explicit install",
+  entry_helper_disabled_by_policy:
+    "plugin entry helper disabled by managed policy",
+  entry_helper_unconfirmed:
+    "plugin entry helper unconfirmed at install (nothing was announced)",
+  entry_helper_not_inlined:
+    "plugin entry headersHelper requires strict:false (catalog authoring error)",
+  entry_helper_remote_policy_unconsented:
+    "plugin entry helper declared by remote managed settings not yet verified and consented",
+};
+function Wt(e) {
+  return Pbn[e] === "sad";
+}
+var Pbn = {
+  entry_helper_unshown: "sad",
+  entry_helper_changed: "sad",
+  entry_archive_url_changed: "sad",
+  entry_helper_deferred: "sad",
+  entry_helper_disabled_by_policy: "sad",
+  entry_helper_unconfirmed: "sad",
+  entry_helper_remote_policy_unconsented: "sad",
+  entry_helper_not_inlined: "bad",
+};
+function cwt(e) {
+  if (e instanceof k$)
+    return { code: e.failureCode, kind: Wt(e.failureCode) ? "sad" : "bad" };
+  return { code: "command_source_refused", kind: "sad" };
+}
+class k$ extends Ui {
+  failureCode;
+  constructor(e, t) {
+    super(e, jt[t]);
+    this.failureCode = t;
+  }
+}
+function uwt(e, t, r) {
+  let o = zt(t),
+    s =
+      r === "update"
+        ? "Review the command now shown, then update again."
+        : "Reopen its details in /plugin to review it, then install again.";
+  if (e === "unshown")
+    return r === "update"
+      ? `This update would run a headersHelper command for "${o}" that was not shown on this pane. ${s}`
+      : `This install would run a headersHelper command for "${o}" that was not shown to you first. Retry the same install to review the command before it runs.`;
+  return e === "command"
+    ? `The headersHelper command for "${o}" changed since it was shown. ${s}`
+    : `The archive URL for "${o}" changed since its headersHelper command was shown. ${s}`;
+}
+function noe(e) {
+  let t =
+    e.trustedSettingsEntryAuth !== void 0 &&
+    e.trustedSettingsEntryAuth.origin !== "settings" &&
+    e.marketplaceSource?.source !== "settings"
+      ? void 0
+      : e.trustedSettingsEntryAuth;
+  if (t !== void 0) {
+    let r = t.origin === "settings";
+    if (!tn(t.archiveUrl, e.archiveUrl))
+      return { entry: {}, operatorAuthored: r, requireInlinedManifest: !1 };
+    if (
+      t.headersHelper !== void 0 &&
+      t.operatorTier === "policySettings" &&
+      !lCe()
+    )
+      throw new k$(
+        `This plugin's headersHelper was not run: ${Swt}.`,
+        "entry_helper_remote_policy_unconsented",
+      );
+    return {
+      entry: {
+        headers: t.headers,
+        headersHelper: t.origin === "addDir" ? void 0 : t.headersHelper,
+      },
+      operatorAuthored: r,
+      requireInlinedManifest: !1,
+    };
+  }
+  if (
+    e.marketplaceSource !== void 0 &&
+    e.marketplaceSource.source !== "settings"
+  )
+    return { entry: e.entry, operatorAuthored: !1, requireInlinedManifest: !0 };
+  return {
+    entry: { headers: e.entry.headers },
+    operatorAuthored: !1,
+    requireInlinedManifest: !0,
+  };
+}
+async function dwt(e, t) {
+  if (e?.source !== "url") return {};
+  let r = t.trustedDeclaration,
+    o = `marketplace ${zt(t.marketplaceName ?? fp(e.url))}`,
+    s = (d, h) =>
+      pwt(d, `${o} (${h})`, { operatorAuthored: r?.operatorAuthored === !0 }),
+    c = s(
+      r ? { ...r.headers } : { ...e.headers },
+      r
+        ? r.operatorAuthored
+          ? "operator declaration"
+          : "repo-tier declaration"
+        : "state copy",
+    );
+  if (r?.headersHelper === void 0) return c;
+  if (!/^https:\/\//i.test(e.url))
+    return (
+      n(`${o}: headersHelper not run \u2014 marketplace URL is not https`, {
+        level: "warn",
+      }),
+      c
+    );
+  if (r.authoredBy === "policySettings" && !lCe())
+    throw (
+      g("plugin_headers_helper", "remote_policy_unconsented"),
+      new Ui(
+        `${o}: headersHelper not run \u2014 ${Swt}. The marketplace was not fetched.`,
+        "marketplace headersHelper from remote managed settings not yet verified and consented",
+      )
+    );
+  if (JS() && r.authoredBy !== "policySettings")
+    throw new Ui(
+      `${o}: your organization's managed settings disable marketplace-declared commands (disableCommandPluginSources / allowManagedHooksOnly), and this marketplace's headersHelper is not declared in managed settings. The marketplace was not fetched and the command was not run; ask your admin to allow it or to declare the marketplace in managed settings.`,
+      "marketplace headersHelper disabled by managed policy",
+    );
+  if (!V())
+    return (
+      n(
+        `${o}: headersHelper not run \u2014 disabled by the plugin command kill switch`,
+        { level: "warn" },
+      ),
+      c
+    );
+  let p = await Vt(
+    r.headersHelper,
+    e.url,
+    t.marketplaceName,
+    r.operatorAuthored,
+  );
+  return { ...c, ...s(p, "helper output") };
+}
+var qt = 60000;
+async function Vt(e, t, r, o) {
+  let s = `${e}\x00${t}\x00${r ?? ""}\x00${o ? "operator" : "repo"}`,
+    c = Date.now(),
+    { marketplaceHelperMemo: p } = $t(),
+    d = p.get(s);
+  if (d && d.expiresAt > c) return d.headers;
+  let h = Xt(e, t, r, o);
+  p.set(s, { expiresAt: c + qt, headers: h });
+  try {
+    return await h;
+  } catch (_) {
+    throw (p.delete(s), _);
+  }
+}
+async function Xt(e, t, r, o) {
+  let s = await swt({
+    command: e,
+    scrubCredentialEnv: !o,
+    isRepoResidentConfig: !1,
+    cwd: be(),
+    env: {
+      CLAUDE_CODE_MARKETPLACE_URL: t,
+      ...(r !== void 0 && { CLAUDE_CODE_MARKETPLACE_NAME: r }),
+    },
+  });
+  if (!s.ok)
+    throw (
+      f("plugin_headers_helper", s.reason),
+      new R(
+        `marketplace headersHelper failed (${s.reason})`,
+        "marketplace headers helper failed",
+      )
+    );
+  return (y("plugin_headers_helper"), s.headers);
+}
+async function Jt(e, t) {
+  let r = (c) =>
+      pwt(c, `plugin ${zt(t.pluginName)}`, {
+        operatorAuthored: t.operatorAuthored === !0,
+      }),
+    o = r(e.headers ?? {});
+  if (!aJ(e) || e.headersHelper === void 0) return o;
+  $e(e, { ...t, disabledByPolicy: uJ(t.marketplaceSource, t.marketplaceName) });
+  let s = await swt({
+    command: e.headersHelper,
+    scrubCredentialEnv: !t.operatorAuthored,
+    cwd: be(),
+    isRepoResidentConfig: !1,
+    env: {
+      CLAUDE_CODE_PLUGIN_NAME: t.pluginName,
+      CLAUDE_CODE_PLUGIN_ARCHIVE_URL: t.archiveUrl,
+    },
+  });
+  if (!s.ok)
+    throw (
+      f("plugin_headers_helper", s.reason),
+      new R(
+        `plugin headersHelper for "${te(t.pluginName)}" failed (${s.reason})`,
+        "plugin headers helper failed",
+      )
+    );
+  return (y("plugin_headers_helper"), { ...o, ...r(s.headers) });
+}
+var Zt = new Set([
+    "host",
+    "cookie",
+    "forwarded",
+    "x-real-ip",
+    "x-client-ip",
+    "true-client-ip",
+    "client-ip",
+    "cf-connecting-ip",
+    "fastly-client-ip",
+    "x-originating-ip",
+    "x-remote-ip",
+    "x-remote-addr",
+    "x-cluster-client-ip",
+    "connection",
+    "upgrade",
+    "transfer-encoding",
+    "content-length",
+    "te",
+    "trailer",
+    "expect",
+    "via",
+  ]),
+  Qt = ["x-forwarded-", "x-original-", "proxy-"],
+  en = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+function Obn(e) {
+  let t = e.toLowerCase().replaceAll("_", "-");
+  return Zt.has(t) || Qt.some((r) => t.startsWith(r));
+}
+function pwt(e, t, { operatorAuthored: r = !1 } = {}) {
+  let o = {};
+  for (let [s, c] of Object.entries(e)) {
+    if (!en.test(s) || /[\r\n\0]/.test(c)) {
+      n(`Dropping header "${zt(s)}" for ${t}: malformed name or value`, {
+        level: "warn",
+      });
+      continue;
+    }
+    if (!r && Obn(s)) {
+      n(
+        `Dropping header "${zt(s)}" for ${t}: request-routing/identity headers are not accepted from non-operator sources`,
+        { level: "warn" },
+      );
+      continue;
+    }
+    o[s] = c;
+  }
+  return o;
+}
+function te(e) {
+  return zt(e);
+}
+function $e(e, t) {
+  if (t.disabledByPolicy !== null)
+    throw new k$(
+      dXe(t.pluginName, t.disabledByPolicy),
+      t.disabledByPolicy === "remote_policy_unconsented"
+        ? "entry_helper_remote_policy_unconsented"
+        : "entry_helper_disabled_by_policy",
+    );
+  if (t.requireInlinedManifest !== !1 && e.strict !== !1)
+    throw new k$(
+      `Plugin "${te(t.pluginName)}" declares a headersHelper but is not strict:false \u2014 an entry with headersHelper must inline its manifest so its capabilities can be reviewed before the command runs.`,
+      "entry_helper_not_inlined",
+    );
+  if (!t.runEntryHelper)
+    throw new k$(
+      `Plugin "${te(t.pluginName)}" fetches its archive through a headersHelper, ` +
+        "which only runs when you install or update it from its own details view \u2014 open this plugin in /plugin (or run `claude plugin install`/`update`), where the command is shown first.",
+      "entry_helper_deferred",
+    );
+}
+async function b1e(e) {
+  if (typeof e.pluginSource !== "object" || e.pluginSource.source !== "archive")
+    return;
+  let t = e.pluginSource.url,
+    {
+      entry: r,
+      operatorAuthored: o,
+      requireInlinedManifest: s,
+    } = noe({
+      entry: e.entry,
+      archiveUrl: t,
+      marketplaceSource: e.marketplaceSource,
+      trustedSettingsEntryAuth: e.trustedSettingsEntryAuth,
+    }),
+    c =
+      e.marketplaceSource?.source === "url" ? e.marketplaceSource.url : void 0,
+    p = uJ(e.marketplaceSource, e.marketplaceName);
+  if (aJ(r))
+    $e(r, {
+      pluginName: e.pluginName,
+      runEntryHelper: e.runEntryHelper,
+      requireInlinedManifest: s,
+      operatorAuthored: o,
+      disabledByPolicy: p,
+    });
+  let d =
+      c !== void 0 && fwt(c, t)
+        ? await dwt(e.marketplaceSource, {
+            marketplaceName: e.marketplaceName,
+            trustedDeclaration: e.trustedMarketplaceAuth,
+          })
+        : {},
+    h = await Jt(r, {
+      pluginName: e.pluginName,
+      archiveUrl: t,
+      runEntryHelper: e.runEntryHelper,
+      requireInlinedManifest: s,
+      operatorAuthored: o,
+      marketplaceSource: e.marketplaceSource,
+      marketplaceName: e.marketplaceName,
+    }),
+    _ = { ...d, ...h };
+  if (Object.keys(_).length === 0) return;
+  return { url: t, headers: _ };
+}
+function lJ(e, t) {
+  let r = yD(e);
+  return r ? t[r]?.source : void 0;
+}
+function yD(e) {
+  let t = e.split("@");
+  return t.length === 2 && t[1] ? t[1] : void 0;
+}
+function tn(e, t) {
+  return yG(e) === yG(t);
+}
+function fwt(e, t) {
+  try {
+    let r = new URL(e).origin,
+      o = new URL(t).origin;
+    return r !== "null" && r === o;
+  } catch {
+    return !1;
+  }
+}
+function nn(e) {
+  try {
+    return new URL(e).hostname;
+  } catch {
+    return "";
+  }
+}
+function Dbn(e) {
+  let t = e;
+  for (let r = 0; r < 5 && t instanceof Error; r++) {
+    if (t instanceof R) return t;
+    t = t.cause;
+  }
+  return;
+}
+function AGt(e) {
+  let t = (o, s) => {
+      let c = qT(o, s);
+      return c.settings === null && mie(c.errors).length > 0;
+    },
+    r = ["userSettings", "localSettings", "flagSettings"].some((o) => {
+      let s = ho(o);
+      if (s === void 0) return !1;
+      switch (o) {
+        case "flagSettings":
+          return t(s, MA() ?? d8());
+        case "localSettings": {
+          let c = IP();
+          return t(s) || (c !== void 0 && c !== s && t(c));
+        }
+        case "userSettings":
+          return t(s);
+      }
+    });
+  return (
+    !gRt(e.settingKey) ||
+    (fie().length > 0 && dS() !== "helper") ||
+    r ||
+    xxn(e.settingKey) ||
+    (m_e() && Ige()) ||
+    zRe(e.policyKey) === "org_denied" ||
+    zRe(e.policyKey) === "unregistered"
+  );
+}
+function CGt(e) {
+  if (!gRt(e.settingKey)) return !1;
+  if (!e.isTierInPlay()) return !1;
+  if (Pe() !== "firstParty") return !1;
+  if (a.ANTHROPIC_UNIX_SOCKET) return !1;
+  if (Nn()) return !1;
+  if (Gl().source !== "claude.ai") return !1;
+  if (St()) return !1;
+  if (!h1(e.policyKey)) return !1;
+  return O(e);
+}
+function hwt() {
+  return Gl().source === "claude.ai" && !Nn();
+}
+function O(e) {
+  return H(e.flagName, !1) === !0;
+}
+function vGt(e) {
+  if ($bn()) return !1;
+  let t = zRe(e.policyKey);
+  return t === "cache_miss" || t === "route_missing";
+}
+function RGt(e) {
+  return (
+    [...pie(), ye("userSettings")].some((r) => r?.[e.settingKey] === !1) ||
+    zRe(e.policyKey) === "org_denied"
+  );
+}
+var I = {
+  settingKey: "syncClaudeAiPlugins",
+  policyKey: "allow_account_plugins_sync",
+  flagName: "tengu_account_plugins_sync_enabled",
+  isTierInPlay: () => lfe(),
+};
+function _wt() {
+  kGt();
+  let e = rn() && !HW();
+  return (ALn(e), e);
+}
+function kGt() {
+  CLn(AGt(I));
+}
+function fXe() {
+  return (kGt(), HW());
+}
+function gZn() {
+  return y_e().length > 0 || mXe();
+}
+function mXe() {
+  return Mbn() || (O(I) && hwt());
+}
+function w1e() {
+  return O(I) && hwt() && lfe() && !fXe();
+}
+function hZn() {
+  return O(I);
+}
+function Mbn() {
+  return a.CLAUDE_CODE_SYNC_PLUGINS || a.CLAUDE_CODE_SYNC_SESSION_REFS;
+}
+function ywt() {
+  return vGt(I);
+}
+function lfe() {
+  return !Xr("plugins") && Nr("userSettings");
+}
+function rn() {
+  return CGt(I);
+}
+function _Zn() {
+  return RGt(I);
+}
+function cfe(e) {
+  let t = e.sessionRefsGate;
+  if (t.ccrSessionID() === void 0) {
+    let r = a.CLAUDE_CODE_SESSION_ID;
+    if (r && pr(r) !== r) t.latchCcrSessionID(r);
+  }
+  return t.ccrSessionID();
+}
+function on(e) {
+  return cfe(e) !== void 0;
+}
+function cJ(e) {
+  let t = e.sessionRefsGate.syncEnabled();
+  if (t !== void 0) return t;
+  return e.sessionRefsGate.latchSyncEnabled(
+    !!a.CLAUDE_CODE_SYNC_SESSION_REFS && on(e),
+  );
+}
+var B = "user:plugins";
+async function sn(e) {
+  if (!h1("allow_plugin_skill_search"))
+    return { ok: !1, reason: "policy_disabled" };
+  if (!In()) return { ok: !1, reason: "wrong_provider" };
+  if (St()) return { ok: !1, reason: "essential_traffic_only" };
+  if (Gi()) return { ok: !0, expanded: !1 };
+  try {
+    await Ss({ credentials: e });
+  } catch (o) {
+    n(`[plugins-scope] pre-ensure token freshen failed: ${l(o)}`);
+  }
+  let t = Yt();
+  if (!t?.accessToken) return { ok: !1, reason: "no_token" };
+  if (t.scopes?.includes(B)) return { ok: !0, expanded: !1 };
+  if (t.clientId) return { ok: !1, reason: "custom_client" };
+  if (!t.refreshToken) return { ok: !1, reason: "no_refresh" };
+  if (await f0(e)) return { ok: !1, reason: "no_refresh" };
+  if (ARn(t.refreshToken))
+    return {
+      ok: !1,
+      reason: "expand_failed",
+      detail: "expansion already attempted this session for this credential",
+    };
+  let r = !1;
+  try {
+    return await TZe(
+      async ({ lockedTokens: o, isCompromised: s, signal: c }) => {
+        if (!o?.refreshToken) return { ok: !1, reason: "no_refresh" };
+        if (s()) return { ok: !1, reason: "lock_contended" };
+        if (o.scopes?.includes(B)) return { ok: !0, expanded: !1 };
+        if (o.clientId) return { ok: !1, reason: "custom_client" };
+        if (await f0(e)) return { ok: !1, reason: "no_refresh" };
+        let p;
+        try {
+          ((r = !0),
+            VKt(o.refreshToken),
+            (p = await wU(o.refreshToken, {
+              clientId: o.clientId,
+              scopes: Y([...Z5, ...zhe(o.scopes), B]),
+              signal: c,
+              telemetryContext: "plugins_scope_expansion",
+            })));
+        } catch (h) {
+          if (TU(h) && !s()) await BUe(o.refreshToken, e);
+          if (s() || yt(h)) return { ok: !1, reason: "lock_contended" };
+          throw h;
+        }
+        let d = await UUe({
+          isCompromised: s,
+          postedRefreshToken: o.refreshToken,
+          refreshedTokens: p,
+          credentials: e,
+        });
+        if (p.refreshToken) VKt(p.refreshToken);
+        if (d === "adopted_sibling")
+          return { ok: !1, reason: "lock_contended" };
+        if (d === "save_failed")
+          return (
+            g("plugins_scope_expansion", "save_failed"),
+            { ok: !1, reason: "save_failed" }
+          );
+        if (!p.scopes?.includes(B))
+          return (
+            g("plugins_scope_expansion", "expand_failed"),
+            {
+              ok: !1,
+              reason: "expand_failed",
+              detail: "refresh succeeded but user:plugins not granted",
+            }
+          );
+        return (y("plugins_scope_expansion"), { ok: !0, expanded: !0 });
+      },
+      e,
+    );
+  } catch (o) {
+    if (o instanceof lge || yt(o)) return { ok: !1, reason: "lock_contended" };
+    if (!r) return { ok: !1, reason: "lock_contended", detail: l(o) };
+    return (
+      g("plugins_scope_expansion", "expand_failed"),
+      { ok: !1, reason: "expand_failed", detail: l(o) }
+    );
+  }
+}
+class Ue {
+  inFlight = void 0;
+  begin(e) {
+    this.inFlight = e;
+  }
+  settle(e) {
+    if (this.inFlight === e) this.inFlight = void 0;
+  }
+}
+var an = new j(() => new Ue()),
+  ln = 15000;
+function cn(e, t) {
+  let r = an.of(e),
+    o = r.inFlight;
+  if (o) return o;
+  let s = sn(t)
+      .then((p) => {
+        if (!p.ok)
+          n(
+            `[plugins-scope] expansion skipped/failed: ${p.reason}${p.detail ? ` (${p.detail})` : ""}`,
+          );
+        return p;
+      })
+      .catch((p) => {
+        let d = l(p);
+        return (
+          n(`[plugins-scope] unexpected ensure error: ${d}`),
+          { ok: !1, reason: "expand_failed", detail: d }
+        );
+      })
+      .then((p) => (r.settle(s), c(), p)),
+    c = Et(() => kt(s, ln));
+  return (r.begin(s), s);
+}
+var un = 1e4;
+async function sJ(e, t, r, o = un) {
+  if (t?.aborted) return;
+  let s = cn(e, r);
+  if (!t) {
+    await kt(s, o);
+    return;
+  }
+  let c,
+    p = new Promise((d) => {
+      ((c = () => d()), t.addEventListener("abort", c, { once: !0 }));
+    });
+  try {
+    await kt(Promise.race([s, p]), o);
+  } finally {
+    t.removeEventListener("abort", c);
+  }
+}
+function bGt(e, t) {
+  if (!t.ok)
+    return t.reason === "no-auth"
+      ? { success: !1, error: t.detail, kind: "no_auth" }
+      : { success: !1, error: t.reason, kind: "gated" };
+  let r = TGt().safeParse(t.data);
+  if (r.success) {
+    let o = r.data.error.type ?? "error_envelope_no_type";
+    return (
+      q(
+        "warn",
+        e === "skills" ? "skills_sync_list_error" : "plugins_sync_list_error",
+        { serverError: o, status: t.status },
+      ),
+      { success: !1, error: o, kind: "server_error", status: t.status }
+    );
+  }
+  return (
+    q(
+      "warn",
+      e === "skills"
+        ? "skills_sync_list_malformed"
+        : "plugins_sync_list_malformed",
+    ),
+    { success: !1, error: `malformed list-${e} response`, kind: "malformed" }
+  );
+}
+function wGt(e) {
+  let { kind: t, message: r } = Ps(e);
+  return { success: !1, error: r, kind: t };
+}
+function mwt(e) {
+  return { kind: u(e.kind), ...(e.status !== void 0 && { status: e.status }) };
+}
+var TGt = m(() =>
+  nt({
+    error: nt({
+      type: le().optional(),
+      message: le()
+        .nullish()
+        .catch(void 0),
+    }),
+  }),
+);
+function gwt(e) {
+  try {
+    let t = TGt().safeParse(z(e.toString("utf8", 0, 2048)));
+    if (t.success) return t.data.error.type ?? "error_envelope_no_type";
+  } catch {}
+  return "non_json_body";
+}
+import { createWriteStream as pn } from "fs";
+import { open as fn, rm as je, writeFile as mn } from "fs/promises";
+import { Transform as gn } from "stream";
+import { pipeline as hn } from "stream/promises";
+function Ge(e) {
+  let t = Gzt(e.installation_preference);
+  return {
+    pluginId: e.id,
+    name: e.name,
+    description: e.description ?? "",
+    version: e.version ?? null,
+    updatedAt: e.updated_at ?? null,
+    ...(typeof e.marketplace_name === "string" &&
+      e.marketplace_name && { marketplaceName: e.marketplace_name }),
+    ...(t && { installationPreference: t }),
+  };
+}
+function Ke(e) {
+  return e.enabled !== !1;
+}
+var yn = 1e4,
+  oe = 60000,
+  ze = 500,
+  Ye = 100,
+  ne = 20,
+  re = iJ;
+function _n() {
+  return a.CLAUDE_CODE_SYNC_PLUGINS_DOWNLOAD_STALL_MS ?? oe;
+}
+var wn =
+  "/api/oauth/organizations/:orgUUID/plugins/list-plugins?enabled_only=true&compact=true";
+async function Sn(e) {
+  let t = await e();
+  if (t.ok) return t;
+  return (await Z(ze), e());
+}
+async function pXe(e, t = {}) {
+  await sJ(e, t.signal, t.credentials);
+  let r = await We(t);
+  if (r.success || r.status === 403) return r;
+  return (await Z(ze), We(t));
+}
+async function We(e) {
+  let t = [];
+  try {
+    for (let r = 0; r < ne; r++) {
+      let o = r * Ye,
+        s = await ht.get(`${wn}&limit=${Ye}&offset=${o}`, {
+          auth: "teleport-org",
+          isBackground: e.isBackground,
+          timeout: yn,
+          credentials: e.credentials,
+        });
+      if (!s.ok || !Array.isArray(s.data?.plugins)) return bGt("plugins", s);
+      for (let c of s.data.plugins) if (Ke(c)) t.push(Ge(c));
+      if (s.data.has_more !== !0) return { success: !0, plugins: t };
+    }
+    return (
+      q("warn", "plugins_sync_list_page_cap", {
+        pages: ne,
+        collected: t.length,
+      }),
+      {
+        success: !1,
+        error: `list-plugins page cap (${ne}) exceeded`,
+        kind: "page_cap",
+      }
+    );
+  } catch (r) {
+    return wGt(r);
+  }
+}
+function Lbn(e, t) {
+  let r = [];
+  if (t) r.push(`version=${encodeURIComponent(t)}`);
+  if (a.CLAUDE_CODE_CCR_SURFACE === "tag")
+    r.push("included_default_marketplaces=claude-tag-plugins");
+  let o = r.length > 0 ? `?${r.join("&")}` : "";
+  return `/api/oauth/organizations/:orgUUID/plugins/${encodeURIComponent(e)}/download${o}`;
+}
+async function EGt(e, t, r, o = {}) {
+  return Sn(() => kn(e, t, r, o));
+}
+async function kn(e, t, r, o) {
+  let s = Lbn(e, r);
+  if (a.CLAUDE_CODE_SYNC_PLUGINS_BUFFERED_DOWNLOAD) return En(s, t, o);
+  let c = 0,
+    p = !1;
+  try {
+    let S = function () {
+        ((p = !0), w.destroy(Error("plugin download stream stalled")));
+      },
+      d = await ht.get(s, {
+        auth: "teleport-org",
+        isBackground: o.isBackground,
+        timeout: oe,
+        responseType: "stream",
+        credentials: o.credentials,
+      });
+    if (!d.ok || !d.data) {
+      let k = d.ok ? "empty_body" : d.reason;
+      return (
+        q("warn", "plugins_sync_download_not_ok", { reason: k }),
+        { ok: !1, reason: k }
+      );
+    }
+    let h = _n(),
+      _,
+      w = new gn({
+        transform(k, ie, x) {
+          if (
+            (clearTimeout(_), (_ = setTimeout(S, h)), (c += k.length), c > re)
+          )
+            x(Error("plugin zip exceeds download byte cap"));
+          else x(null, k);
+        },
+        flush(k) {
+          (clearTimeout(_), k());
+        },
+      });
+    _ = setTimeout(S, h);
+    try {
+      await hn(d.data, w, pn(t));
+    } finally {
+      clearTimeout(_);
+    }
+    let b = Buffer.alloc(2048),
+      C = await fn(t, "r"),
+      T;
+    try {
+      T = (await C.read(b, 0, b.length, 0)).bytesRead;
+    } finally {
+      await C.close();
+    }
+    if (T < 2 || b[0] !== 80 || b[1] !== 75) {
+      await je(t, { force: !0 });
+      let k = T === 0 ? "empty_body" : gwt(b.subarray(0, T));
+      return (
+        q("warn", "plugins_sync_download_not_zip", {
+          serverError: k,
+          bodyLen: c,
+        }),
+        { ok: !1, reason: k }
+      );
+    }
+    return { ok: !0 };
+  } catch (d) {
+    await je(t, { force: !0 }).catch(() => {});
+    let h = d?.response?.data;
+    if (
+      h !== null &&
+      typeof h === "object" &&
+      "destroy" in h &&
+      typeof h.destroy === "function"
+    )
+      h.destroy();
+    let _ =
+        d !== null && typeof d === "object" && "code" in d ? d.code : void 0,
+      w = p
+        ? "timeout"
+        : c > re
+          ? "too_large"
+          : _ === "ECONNRESET" || _ === "EPIPE" || _ === "ETIMEDOUT"
+            ? "network"
+            : Ps(d).kind;
+    return (
+      q("warn", "plugins_sync_download_exception", { kind: w }),
+      { ok: !1, reason: w }
+    );
+  }
+}
+async function En(e, t, r) {
+  try {
+    let o = await ht.get(e, {
+      auth: "teleport-org",
+      isBackground: r.isBackground,
+      timeout: oe,
+      responseType: "arraybuffer",
+      maxContentLength: re,
+      credentials: r.credentials,
+    });
+    if (!o.ok || !o.data) {
+      let c = o.ok ? "empty_body" : o.reason;
+      return (
+        q("warn", "plugins_sync_download_not_ok", { reason: c }),
+        { ok: !1, reason: c }
+      );
+    }
+    let s = Buffer.from(o.data);
+    if (s.length < 2 || s[0] !== 80 || s[1] !== 75) {
+      let c = s.length === 0 ? "empty_body" : gwt(s);
+      return (
+        q("warn", "plugins_sync_download_not_zip", {
+          serverError: c,
+          bodyLen: s.length,
+        }),
+        { ok: !1, reason: c }
+      );
+    }
+    return (await mn(t, s), { ok: !0 });
+  } catch (o) {
+    let { kind: s } = Ps(o);
+    return (
+      q("warn", "plugins_sync_download_exception", { kind: s }),
+      { ok: !1, reason: s }
+    );
+  }
+}
+var bn = m(() => {
+    let e = le()
+        .nullish()
+        .transform((o) => o ?? ""),
+      t = nt({ id: e, name: e, description: e, version: e, directory: e }),
+      r = cr(t)
+        .nullish()
+        .transform((o) => o ?? []);
+    return nt({ skills: r, plugins: r }).strict();
+  }),
+  An = 30000,
+  Pn = 500;
+class Ve {
+  inflight = null;
+  featureEventReported = new Set();
+  fetch() {
+    if (!this.inflight) {
+      let e = Rn().finally(() => {
+        if (this.inflight === e) this.inflight = null;
+      });
+      this.inflight = e;
+    }
+    return this.inflight;
+  }
+  discardInflight() {
+    this.inflight = null;
+  }
+  async listEntries(e) {
+    let t =
+        e === "skills"
+          ? "sync_session_refs_skills"
+          : "sync_session_refs_plugins",
+      r = !this.featureEventReported.has(e);
+    this.featureEventReported.add(e);
+    let o = await this.fetch();
+    if (!o.ok) {
+      if (
+        (i(
+          e === "skills"
+            ? "tengu_skills_sync_manifest_failed"
+            : "tengu_plugins_sync_manifest_failed",
+          { unavailable: o.reason === "unavailable" },
+        ),
+        r)
+      )
+        f(t, o.reason);
+      return { success: !1, error: `manifest ${o.reason}`, kind: "manifest" };
+    }
+    if (r) y(t);
+    return { success: !0, entries: o[e] };
+  }
+}
+var roe = new Gt(() => new Ve());
+async function Rn() {
+  let e = await qe();
+  if (e.ok || e.reason === "no_auth" || e.reason === "gated") return e;
+  return (await Z(Pn), qe());
+}
+async function qe() {
+  try {
+    let e = await ht.get("/worker/skill-manifest", {
+      host: "ccr-session",
+      auth: "session-jwt",
+      headers: { "anthropic-version": "2023-06-01" },
+      timeout: An,
+      validateStatus: () => !0,
+    });
+    if (!e.ok) {
+      if (e.reason === "no-auth")
+        return (
+          q("warn", "session_refs_manifest_no_auth"),
+          { ok: !1, reason: "no_auth" }
+        );
+      return (
+        q("warn", "session_refs_manifest_gated", { reason: e.reason }),
+        { ok: !1, reason: "gated" }
+      );
+    }
+    if (e.status === 503)
+      return (
+        q("warn", "session_refs_manifest_unavailable"),
+        { ok: !1, reason: "unavailable" }
+      );
+    if (e.status >= 300)
+      return (
+        q("warn", "session_refs_manifest_http_error", { status: e.status }),
+        { ok: !1, reason: "http_error" }
+      );
+    let t = bn().safeParse(e.data);
+    if (!t.success)
+      return (
+        q("warn", "session_refs_manifest_malformed"),
+        { ok: !1, reason: "malformed" }
+      );
+    return {
+      ok: !0,
+      skills: t.data.skills.filter((r) => r.id),
+      plugins: t.data.plugins.filter((r) => r.id),
+    };
+  } catch (e) {
+    let { kind: t } = Ps(e);
+    return (
+      q("warn", "session_refs_manifest_exception", { kind: t }),
+      { ok: !1, reason: "transport" }
+    );
+  }
+}
+export {
+  hN,
+  toe,
+  ig,
+  qE,
+  _N,
+  sJ,
+  Rbn,
+  aCe,
+  nwt,
+  iXe,
+  _1e,
+  afe,
+  rwt,
+  owt,
+  kbn,
+  yGt,
+  cZn,
+  y1e,
+  vC,
+  aXe,
+  Ui,
+  uZn,
+  xbn,
+  lXe,
+  cXe,
+  SGt,
+  S1e,
+  dZn,
+  xj,
+  R$,
+  pZn,
+  swt,
+  iJ,
+  iwt,
+  Hbn,
+  fZn,
+  Ibn,
+  mZn,
+  aJ,
+  awt,
+  uXe,
+  lwt,
+  dXe,
+  Pbn,
+  cwt,
+  k$,
+  uwt,
+  noe,
+  dwt,
+  Obn,
+  pwt,
+  b1e,
+  lJ,
+  yD,
+  fwt,
+  Dbn,
+  bGt,
+  wGt,
+  mwt,
+  TGt,
+  gwt,
+  pXe,
+  Lbn,
+  EGt,
+  AGt,
+  CGt,
+  hwt,
+  vGt,
+  RGt,
+  _wt,
+  kGt,
+  fXe,
+  gZn,
+  mXe,
+  w1e,
+  hZn,
+  Mbn,
+  ywt,
+  lfe,
+  _Zn,
+  cfe,
+  cJ,
+  roe,
+};

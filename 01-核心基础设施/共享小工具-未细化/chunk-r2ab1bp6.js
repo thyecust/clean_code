@@ -1,0 +1,130 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
+import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Npe, $St, z_ } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { vt } from "./chunk-tmxdrqem.js";
+import { D } from "../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { e } from "../../00-第三方库/react/react.kwtapczy.js";
+import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { p } from "./chunk-2c9tjhwd.js";
+F();
+var g = 2000,
+  x = 2000;
+function e9(r) {
+  let i = vt(),
+    [P, s] = d(null),
+    n = C(null),
+    l = C(null),
+    o = C(null),
+    a = C(0),
+    f = C(!0),
+    m = re(() => {
+      ((a.current += 1),
+        o.current?.(),
+        (o.current = null),
+        (l.current = null),
+        n.current?.(),
+        (n.current = null),
+        s(null));
+    }, []);
+  (E(() => {
+    if ((m(), r !== null)) $St();
+  }, [r, m]),
+    E(
+      () => (
+        (f.current = !0),
+        () => {
+          ((f.current = !1),
+            o.current?.(),
+            (o.current = null),
+            (l.current = null),
+            n.current?.(),
+            (n.current = null));
+        }
+      ),
+      [],
+    ));
+  let v = re(
+    (b) => {
+      if (l.current === b) return;
+      ((l.current = b),
+        o.current?.(),
+        (o.current = i.setTimeout(() => {
+          ((o.current = null), (l.current = null));
+        }, g)));
+      let y = Npe(),
+        R = a.current;
+      z_(b).then((h) => {
+        if (!f.current || R !== a.current) return;
+        if (h) process.stdout.write(h);
+        if ((n.current?.(), (n.current = null), s(y), y === "native"))
+          n.current = i.setTimeout(() => {
+            ((n.current = null), s(null));
+          }, x);
+      });
+    },
+    [i],
+  );
+  return { copiedVia: P, copy: v, reset: m };
+}
+function YL(W) {
+  let L = _(2),
+    { via: k } = W;
+  if (k === "native") {
+    let u;
+    if (L[0] === p)
+      ((u = e(t, { color: "success", children: "(Copied!)" })), (L[0] = u));
+    else u = L[0];
+    return u;
+  }
+  if (k === null) {
+    let u;
+    if (L[1] === p)
+      ((u = e(t, {
+        dimColor: !0,
+        children: e(D, { chord: "c", action: "copy", parens: !0 }),
+      })),
+        (L[1] = u));
+    else u = L[1];
+    return u;
+  }
+  return null;
+}
+function JL(B) {
+  let O = _(2),
+    { via: U } = B;
+  if (U === "tmux-buffer") {
+    let c;
+    if (O[0] === p)
+      ((c = e(t, {
+        dimColor: !0,
+        children:
+          "(Copied to tmux buffer \xB7 select the URL manually if paste fails)",
+      })),
+        (O[0] = c));
+    else c = O[0];
+    return c;
+  }
+  if (U === "osc52") {
+    let c;
+    if (O[1] === p)
+      ((c = e(t, {
+        dimColor: !0,
+        children:
+          "(Sent via OSC 52 \xB7 select the URL manually if paste fails)",
+      })),
+        (O[1] = c));
+    else c = O[1];
+    return c;
+  }
+  return null;
+}
+export { e9, YL, JL };

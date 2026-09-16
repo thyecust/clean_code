@@ -1,0 +1,3244 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
+import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import {
+  rV,
+  Lmt,
+  dX,
+  yDe,
+  kl,
+  M2,
+  i3,
+  CV,
+  BTe,
+  RLe,
+  Gjt,
+  wde,
+  QVn,
+  EKe,
+  kk,
+  Hne,
+  Q2,
+  Ine,
+  HLe,
+  SXn,
+  nR,
+  ET,
+} from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import "./chunk-z5vtnzjg.js";
+import { x, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import "../MCP客户端/chunk-3kmsshb6.js";
+import "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import "../../00-第三方库/zod/zod.3g334xwq.js";
+import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import "../Git-Worktree/chunk-9ys1bnqr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { D1, mn, fi } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { Tx, Cke, Fr } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { Rp, $Ct, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import "../权限系统/chunk-ynkf3yy4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import "../Teammates团队/chunk-811z9z0t.js";
+import "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { Js, rc, bie, Ske, XT, NQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
+import "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { Cet, tRt, nRt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import "../权限系统/chunk-e4pfvp7x.js";
+import "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-svk2cp17.js";
+import "../../00-第三方库/axios/axios.t0fczzmz.js";
+import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1bqqnyc1.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
+import "../Git-Worktree/chunk-bk9696gx.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { _r, nie } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import "../Hooks钩子/chunk-9em0d4k5.js";
+import { e$e } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import "../插件系统/chunk-7s6mt1vg.js";
+import "../图表-Mermaid/chunk-743atbtj.js";
+import "../Skills技能/chunk-sapykxw7.js";
+import "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
+import "../权限系统/chunk-t3b7pg2x.js";
+import "../权限系统/chunk-fjrcf22x.js";
+import "../权限系统/chunk-qdy0h5k2.js";
+import "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import "../Teammates团队/chunk-thxapyam.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import "../Hooks钩子/chunk-z3433nr6.js";
+import "../Hooks钩子/chunk-bzqqe6xh.js";
+import "../插件系统/chunk-ajtn749s.js";
+import "../插件系统/chunk-hh8f1qrw.js";
+import "../状态栏-主题/chunk-dqyc6kge.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import "../图片-截图-ComputerUse/chunk-b8jsase9.js";
+import { LD, aU } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import "../Teammates团队/chunk-g6nvp9mm.js";
+import "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
+import "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
+import { Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import "../Teammates团队/chunk-t899nada.js";
+import "./chunk-9d5wk5b9.js";
+import "../Cron-定时任务/chunk-mk3zm4ew.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
+import "../Artifact发布-渲染/chunk-rr78st95.js";
+import { Cr, Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
+import "../权限系统/chunk-1y2g140m.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import "./chunk-x3txegas.js";
+import "../Workflow编排/chunk-0t0sve49.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6kad94y1.js";
+import "../../01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js";
+import "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import "../会话-历史-恢复/chunk-m1xj4s02.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
+import "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import "../文件监听-Watch/文件监听-Watch.3efypmps.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import "../状态栏-主题/chunk-jz6b76hr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import "../Teammates团队/chunk-6b13bhw1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import "./chunk-djserjj5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
+import "../认证-OAuth登录/chunk-x3rm9w4b.js";
+import "../Skills技能/chunk-1zy5c8mf.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-5jqttbex.js";
+import "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import "../Teammates团队/chunk-3k2smxfn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import "../Bridge-RemoteControl/chunk-mxsfy35q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import "../ClaudeinChrome/chunk-hnp84hf6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-21sqz10e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0qtt3z52.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
+import "./chunk-7wsy8vxb.js";
+import "../权限系统/chunk-8rrcddth.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
+import "../语音-音频/chunk-cfhndstm.js";
+import "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
+import "../图片-截图-ComputerUse/chunk-bvxymt09.js";
+import "../Bridge-RemoteControl/chunk-1yq098a7.js";
+import "../Bridge-RemoteControl/chunk-ct52ffwb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0kqw1wf5.js";
+import {
+  zHt,
+  Yje,
+  RNn,
+  rJt,
+  oJt,
+  sJt,
+  Jje,
+  iJt,
+  Qje,
+  Eot,
+  VHt,
+  aJt,
+} from "../Memory-CLAUDE.md/chunk-3ehd7vx0.js";
+import { ale, GZt, Z$n } from "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
+import "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
+import "../Teammates团队/chunk-mrfx53ye.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
+import "../插件系统/chunk-33bdfgmx.js";
+import "../MCP客户端/chunk-0mwqsv0r.js";
+import "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import "../DesignSync/chunk-5kyac4wk.js";
+import "../MCP客户端/chunk-tznd4407.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k1vb7vky.js";
+import "../工具Monitor/chunk-kxk3njnj.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
+import "../Teammates团队/chunk-eey53z5b.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6eskfcpn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
+import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
+import "../工具ToolSearch/chunk-1m51pqtd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
+import "../权限系统/chunk-pcxn6gwz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
+import "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { vd, eir } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import "../Teammates团队/chunk-enjekn9t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
+import "../Bedrock-Vertex/chunk-p991cddr.js";
+import { s, ocr, vx, O, se, v, c, Qe, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import "../图片-截图-ComputerUse/chunk-6kdvf977.js";
+import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
+import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { join as Pi } from "path";
+var Yt = 1,
+  Xt = 2147483648,
+  ht = 8388608,
+  qt = 32,
+  gr = 1e5,
+  hr = 1024,
+  Zt = 4096,
+  yr = qt + 16,
+  Ze = new Set(["__proto__", "constructor", "prototype"]),
+  br = new Set([
+    "language",
+    "outputStyle",
+    "attribution",
+    "includeCoAuthoredBy",
+    "includeGitInstructions",
+    "alwaysThinkingEnabled",
+    "showThinkingSummaries",
+    "permissions",
+  ]),
+  Sr = new Set(["commit", "pr", "sessionUrl", "commitTrailers"]),
+  wr = new Set(["allow", "deny", "ask"]),
+  Rr = 32,
+  Er = 64,
+  Jt = m(() => vx().min(0)),
+  ie = m(() => vx().min(0).default(0)),
+  vr = m(() => c({ version: vx() })),
+  Bi = m(() => c({ generation: vx().min(1).max(Xt) })),
+  kr = m(() =>
+    c({
+      withheldSensitive: ie(),
+      withheldReadDenied: ie(),
+      rulesUnreadable: O().default(!1),
+      includesNotSent: ie(),
+      symlinksNotSent: ie(),
+      notDestinations: ie(),
+      overCap: ie(),
+      unreadable: ie(),
+      settingsKeysWithheld: ie(),
+      rulesCoveringDeviceTools: ie(),
+      droppedRules: c({
+        rooted: ie(),
+        device: ie(),
+        invalid: ie(),
+        overCap: ie(),
+        guarded: ie(),
+      }).default(() => ({
+        rooted: 0,
+        device: 0,
+        invalid: 0,
+        overCap: 0,
+        guarded: 0,
+      })),
+    }),
+  ),
+  Ar = m(() =>
+    Qe({
+      path: s().min(1).max(hr),
+      size: Jt(),
+      sha256: s().regex(D1),
+      content: ocr(),
+    }),
+  ),
+  Hr = m(() =>
+    c({
+      version: k(Yt),
+      generation: vx().min(1).max(Xt),
+      writtenAtMs: Jt(),
+      files: v(Ar()).max(Zt),
+      settings: fe(s(), se()).nullable(),
+      summary: kr(),
+    }),
+  );
+function Or(e) {
+  let t = e.map(iJt),
+    n = new Set(
+      t.flatMap((r) =>
+        r
+          .split("/")
+          .slice(0, -1)
+          .map((o, d, _) => _.slice(0, d + 1).join("/")),
+      ),
+    );
+  return new Set(t).size === t.length && t.every((r) => !n.has(r));
+}
+function Tr(e) {
+  return (
+    e.length <= zHt &&
+    e.every((t) => t <= Yje) &&
+    e.reduce((t, n) => t + n, 0) <= RNn
+  );
+}
+function yt(e) {
+  if (e.length > ht) return { ok: !1, reason: "oversize" };
+  let t = e.toString("utf8");
+  if (Dr(t)) return { ok: !1, reason: "malformed" };
+  let n = We(t),
+    r = vr().safeParse(n);
+  if (r.success && r.data.version !== Yt)
+    return { ok: !1, reason: "unsupported_version" };
+  if (Mr(n)) return { ok: !1, reason: "malformed" };
+  if (!Nr(n)) return { ok: !1, reason: "malformed" };
+  let o = Hr().safeParse(n);
+  if (!o.success) return { ok: !1, reason: "malformed" };
+  let d = o.data,
+    _ = d.files.filter(Ir);
+  if (!Or(_.map((F) => F.path))) return { ok: !1, reason: "malformed" };
+  let h = _.filter((F) => F.size <= Yje);
+  if (!Tr(h.map((F) => F.size))) return { ok: !1, reason: "over_cap" };
+  let S = h.map(Lr),
+    T = S.filter((F) => F !== null);
+  if (T.length !== S.length) return { ok: !1, reason: "content_mismatch" };
+  let P = Pr(d.settings);
+  return {
+    ok: !0,
+    pack: {
+      generation: d.generation,
+      writtenAtMs: d.writtenAtMs,
+      files: T,
+      settings: d.settings === null || P !== "none" ? null : Qt(d.settings),
+      summary: d.summary,
+    },
+    refused: {
+      destination: d.files.length - _.length,
+      overCap: _.length - h.length,
+      settings: P,
+    },
+  };
+}
+function Pr(e) {
+  if (e === null) return "none";
+  let t = Object.keys(e).filter((r) => !Ze.has(r));
+  if (t.length > Rr || t.some((r) => r.length > Er)) return "over_bounds";
+  return t.every((r) => br.has(r)) &&
+    Vt(e.attribution, Sr) &&
+    Vt(e.permissions, wr) &&
+    (!me(e.permissions) ||
+      Object.entries(e.permissions).every(([r, o]) => Ze.has(r) || xr(o)))
+    ? "none"
+    : "not_portable_key";
+}
+function Vt(e, t) {
+  return (
+    e === void 0 ||
+    (me(e) && Object.keys(e).every((n) => t.has(n) || Ze.has(n)))
+  );
+}
+function xr(e) {
+  return Array.isArray(e) && e.every((t) => typeof t === "string");
+}
+function We(e) {
+  try {
+    return z(e);
+  } catch {
+    return;
+  }
+}
+function Dr(e) {
+  let t = 0,
+    n = !1;
+  for (let r = 0; r < e.length; r++) {
+    let o = e[r];
+    if (n) {
+      if (o === "\\") r++;
+      else if (o === '"') n = !1;
+    } else if (o === '"') n = !0;
+    else if (o === "[" || o === "{") {
+      if ((t++, t > yr)) return !0;
+    } else if (o === "]" || o === "}") t--;
+  }
+  return !1;
+}
+function Mr(e) {
+  let t = me(e) ? e.files : void 0;
+  return Array.isArray(t) && t.length > Zt;
+}
+function Nr(e) {
+  return !me(e) || (Wr(e.settings) && zr(e.settings));
+}
+function Ir(e) {
+  return Eot(e.path);
+}
+function Lr(e) {
+  if (e.content.length !== Math.ceil(e.size / 3) * 4) return null;
+  let t = Buffer.from(e.content, "base64");
+  return t.length === e.size && mn(t) === e.sha256
+    ? { path: e.path, content: t, sha256: e.sha256 }
+    : null;
+}
+function Wr(e) {
+  let t = [{ value: e, depth: 0 }],
+    n = 1;
+  for (let r = t.pop(); r !== void 0; r = t.pop()) {
+    let { value: o, depth: d } = r;
+    if (d > qt) return !1;
+    if (typeof o !== "object" || o === null) continue;
+    let _ = Array.isArray(o) ? o : Object.values(o);
+    if (((n += _.length), n > gr)) return !1;
+    for (let h of _) t.push({ value: h, depth: d + 1 });
+  }
+  return !0;
+}
+function zr(e) {
+  let t = [e];
+  while (t.length > 0) {
+    let n = t.pop();
+    if (
+      n === null ||
+      typeof n === "string" ||
+      typeof n === "boolean" ||
+      (typeof n === "number" && Number.isFinite(n))
+    )
+      continue;
+    if (Array.isArray(n)) {
+      for (let r = 0; r < n.length; r++) t.push(n[r]);
+      continue;
+    }
+    if (me(n)) {
+      let r = Object.getPrototypeOf(n);
+      if (r === Object.prototype || r === null) {
+        for (let o of Object.values(n)) t.push(o);
+        continue;
+      }
+    }
+    return !1;
+  }
+  return !0;
+}
+function Qt(e) {
+  return Object.fromEntries(
+    Object.keys(e)
+      .filter((t) => !Ze.has(t))
+      .toSorted()
+      .map((t) => [t, en(e[t])]),
+  );
+}
+function en(e) {
+  return Array.isArray(e) ? e.map(en) : me(e) ? Qt(e) : e;
+}
+var Br = [
+    "language",
+    "outputStyle",
+    "attribution",
+    "includeCoAuthoredBy",
+    "includeGitInstructions",
+    "alwaysThinkingEnabled",
+    "showThinkingSummaries",
+    "permissions",
+  ],
+  Kr = ["commit", "pr", "sessionUrl", "commitTrailers"],
+  Ur = ["allow", "deny", "ask"],
+  $r = $Ct,
+  jr = 256,
+  Gr = 8192,
+  Vr = 1024,
+  tn = 1000,
+  Yr = 1048576,
+  un = new Set([...bie.filePatternTools, ro, "MultiEdit", "LS"]),
+  cn = [
+    tt,
+    ro,
+    co,
+    M2,
+    ...nie,
+    Yc,
+    i3,
+    ...eir.map((e) => rc(vd, e)),
+    "NotebookRead",
+    "LS",
+    ...bie.bashPrefixTools,
+    Ut,
+    ia,
+  ],
+  Xr = nie,
+  qr = [...bie.bashPrefixTools, ia],
+  Zr = [Bt, Mn, Wl, ...nie, "MultiEdit", ...cn];
+function Jr(e) {
+  if (e === Bt) return Zr;
+  if (e === _r) return Xr;
+  if (e === tt) return cn;
+  if (bie.bashPrefixTools.includes(e)) return qr;
+  let t = Js(e);
+  if (t !== null && t.toolName === void 0 && !Tx(e))
+    return [`${rc(t.serverName, "")}*`];
+  return [e];
+}
+var Qr = new Set([...bie.bashPrefixTools, Ut]),
+  eo = new Set([Cr, "WebBrowser"]),
+  to = "/",
+  fn = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Default_Ignorable_Code_Point}]/u,
+  no =
+    /[\p{Cf}\p{Zl}\p{Zp}\p{Default_Ignorable_Code_Point}]|[^\P{Cc}\t\n\r]|\r(?!\n)/u,
+  oo = /^[\w*-]+$/,
+  io = /\*{3,}/,
+  so = 8;
+function pn(e, { settingsToCloud: t = aU, preToolUseHookActiveHere: n }) {
+  if (!ao(t))
+    return {
+      document: null,
+      reason: "flag_off",
+      counts: { forwardedKeys: 0, withheldKeys: 0, rules: St() },
+    };
+  if (!me(e))
+    return {
+      document: null,
+      reason: "settings_unreadable",
+      counts: { forwardedKeys: 0, withheldKeys: 0, rules: St() },
+    };
+  let r = Ao(he(e, "permissions"), n),
+    o = he(e, "language"),
+    d = {
+      language: an(typeof o === "string" ? o.trim() : o),
+      outputStyle: an(he(e, "outputStyle")),
+      attribution: Mo(he(e, "attribution")),
+      includeCoAuthoredBy: et(he(e, "includeCoAuthoredBy")),
+      includeGitInstructions: et(he(e, "includeGitInstructions")),
+      alwaysThinkingEnabled: et(he(e, "alwaysThinkingEnabled")),
+      showThinkingSummaries: et(he(e, "showThinkingSummaries")),
+      permissions: r.value,
+    },
+    _ = Br.reduce((P, F) => Co(P, d, F), {}),
+    h = Object.keys(e),
+    S = {
+      forwardedKeys: Object.keys(_).length,
+      withheldKeys: G(h, (P) => !Object.hasOwn(_, P)),
+      rules: r.counts,
+    };
+  if (S.forwardedKeys === 0)
+    return { document: null, reason: "nothing_to_send", counts: S };
+  let T = {
+    forwardedKeys: 0,
+    withheldKeys: h.length,
+    rules: { ...S.rules, kept: 0, coveringDeviceTools: 0 },
+  };
+  if (!XT().safeParse(_).success)
+    return { document: null, reason: "schema_rejected", counts: T };
+  if (Buffer.byteLength(Rt(_), "utf8") > Yr)
+    return { document: null, reason: "settings_too_large", counts: T };
+  return { document: _, counts: S };
+}
+function ao(e) {
+  try {
+    return e();
+  } catch {
+    return !1;
+  }
+}
+function Rt(e) {
+  return (
+    b(NQ(e), null, 2) +
+    `
+`
+  );
+}
+function lo(e, t) {
+  if (e.length > Vr) return "over_cap";
+  if (
+    fn.test(e) ||
+    io.test(e) ||
+    G([...e], (o) => o === "*") > so ||
+    !Ske(e, t).valid
+  )
+    return "invalid";
+  let { toolName: n, ruleContent: r } = Fr(e);
+  if (!oo.test(n)) return "invalid";
+  if (Js(n)?.serverName === Rp)
+    return t === "allow" ? "device" : "keep_covers_device_tools";
+  if (r !== void 0 && (un.has(n) || Tx(n))) {
+    let o = ko(r);
+    if (o === "machine" || (o === "home" && t === "allow")) return "rooted";
+  }
+  if (r !== void 0 && t === "allow" && Qr.has(n) && !po(r, n)) return "rooted";
+  if (r !== void 0 && t === "allow" && eo.has(n) && Ro(r)) return "rooted";
+  if (t !== "allow" && vo(n)) return "keep_covers_device_tools";
+  return "keep";
+}
+var nn = "[A-Za-z0-9_.@*+][A-Za-z0-9_.@*+:~-]*",
+  uo = new RegExp(
+    `^(?:(?:\\./)?${nn}(?:/${nn})*/?|-{1,2}(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?)$`,
+  ),
+  fo = new Set([
+    "curl",
+    "wget",
+    "nc",
+    "ncat",
+    "netcat",
+    "telnet",
+    "ssh",
+    "scp",
+    "sftp",
+    "rsync",
+    "ping",
+    "ping6",
+    "traceroute",
+    "dig",
+    "nslookup",
+    "host",
+    "socat",
+    "psql",
+    "mysql",
+    "redis-cli",
+    "mongosh",
+    "ftp",
+    "http",
+    "https",
+    "xh",
+    "nmap",
+    "mtr",
+    "mosh",
+    "grpcurl",
+    "websocat",
+    "aria2c",
+    "w3m",
+    "lynx",
+    "whois",
+    "iwr",
+    "irm",
+    "invoke-webrequest",
+    "invoke-restmethod",
+    "test-netconnection",
+    "tnc",
+    "test-connection",
+    "resolve-dnsname",
+    "pg_dump",
+    "pg_dumpall",
+    "pg_restore",
+    "pg_isready",
+    "createdb",
+    "dropdb",
+    "mysqldump",
+    "mysqladmin",
+    "mariadb",
+    "mariadb-dump",
+    "mongo",
+    "mongodump",
+    "mongorestore",
+    "mongoexport",
+    "mongoimport",
+    "redis-benchmark",
+    "pgcli",
+    "mycli",
+    "mysqlsh",
+    "clickhouse-client",
+    "mongostat",
+    "mongotop",
+    "mongofiles",
+  ]),
+  rn = new Set([
+    "sudo",
+    "doas",
+    "env",
+    "time",
+    "timeout",
+    "gtimeout",
+    "watch",
+    "xargs",
+    "command",
+    "builtin",
+    "exec",
+    "nohup",
+    "nice",
+    "caffeinate",
+    "setsid",
+    "stdbuf",
+    "ionice",
+    "chrt",
+    "strace",
+    "unbuffer",
+    "sshpass",
+    "proxychains",
+    "proxychains4",
+    "torsocks",
+    "tsocks",
+    "taskset",
+    "numactl",
+    "setpriv",
+    "flock",
+    "runuser",
+  ]),
+  mo = new Set([
+    fi,
+    "gitlab.com",
+    "bitbucket.org",
+    "ssh.dev.azure.com",
+    `ssh.${fi}`,
+    "altssh.gitlab.com",
+    "altssh.bitbucket.org",
+    "codeberg.org",
+  ]);
+function po(e, t) {
+  if (/(?:^|[\s:=])\d{4,}:\*$/.test(e.trim())) return !1;
+  let n = e
+      .trim()
+      .replace(/(?::\*|\s+\*)$/, "")
+      .split(/\s+/)
+      .filter((d) => d !== ""),
+    r = ho(n),
+    o =
+      r === null &&
+      Be(n, 0) !== null &&
+      !n.some((d) => nt(d) || /[*/\\]/.test(d));
+  return (
+    n.length > 0 &&
+    n.every(
+      (d, _) =>
+        (o && go(n, _)) ||
+        (uo.test(d) &&
+          !d.endsWith(":") &&
+          !d.split(/[/:@]/).some(yo) &&
+          !(d.startsWith("-") && d.includes("..")) &&
+          !/\*[A-Za-z]*\.\./.test(d) &&
+          !/^\*+-[A-Za-z]*\.\.(?:\/|$)/.test(d) &&
+          !/^~|:\**~/.test(d) &&
+          !/^[A-Za-z]:(?!:)/.test(d) &&
+          !/[:@]\//.test(d) &&
+          !(t === Ut && /^\**[A-Za-z][\w*]*:/.test(d)) &&
+          !bo(d, r !== null && _ > r && !d.startsWith("-"))),
+    )
+  );
+}
+var on = new Set([
+    "--host",
+    "--hostname",
+    "--bind",
+    "--listen",
+    "--addr",
+    "--address",
+    "-H",
+    "-b",
+  ]),
+  _o = new Set(["HOST", "HOSTNAME", "BIND", "BIND_ADDR", "BIND_ADDRESS"]);
+function go(e, t) {
+  let n = e[t] ?? "",
+    r = /^(--[a-z-]+)=(.+)$/.exec(n);
+  if (r !== null) return on.has(r[1] ?? "") && bt(r[2] ?? "");
+  let o = /^([A-Z_]+)=(.+)$/.exec(n);
+  if (o !== null) return _o.has(o[1] ?? "") && bt(o[2] ?? "");
+  return t > 0 && on.has(e[t - 1] ?? "") && bt(n);
+}
+function bt(e) {
+  let t = e.toLowerCase();
+  return [t, t.replace(/:\d{1,5}$/, "")].some(
+    (n) =>
+      n === "0.0.0.0" ||
+      n === "127.0.0.1" ||
+      n === "localhost" ||
+      /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+localhost$/.test(n) ||
+      n === "::" ||
+      n === "[::]" ||
+      n === "::1" ||
+      n === "[::1]",
+  );
+}
+function ho(e) {
+  let t = Be(e, 0);
+  if (t !== null && nt(e[t] ?? "")) return t;
+  let n = e.findIndex(
+    (r, o) => o > (t ?? 0) && /^-(?:exec|execdir|ok|okdir)$/.test(r),
+  );
+  if (n >= 0) {
+    let r = Be(e, n + 1);
+    return r !== null && nt(e[r] ?? "") ? r : null;
+  }
+  return null;
+}
+function nt(e) {
+  return fo.has(e.toLowerCase().replace(/\.(?:exe|cmd|bat|ps1)$/, ""));
+}
+function Be(e, t) {
+  let n = e[t];
+  if (n === void 0) return null;
+  if (/^[A-Za-z_][A-Za-z0-9_]*=/.test(n)) return Be(e, t + 1);
+  let r = n.toLowerCase().replace(/\.exe$/, "");
+  if (!rn.has(r)) return t;
+  let o = t + 1;
+  while (o < e.length) {
+    let d = e[o] ?? "";
+    if (d.startsWith("-")) {
+      let _ =
+        (/^(?:-[A-Za-z]|--[A-Za-z][A-Za-z-]*)$/.test(d) ||
+          ((r === "sudo" || r === "doas") &&
+            /^-[A-Za-z]+[ugUCDrtTph]$/.test(d))) &&
+        !(e[o + 1] ?? "").startsWith("-") &&
+        !nt(e[o + 1] ?? "") &&
+        !rn.has((e[o + 1] ?? "").toLowerCase().replace(/\.exe$/, ""));
+      o += _ ? 2 : 1;
+    } else if (/^\d[\d.]*[smhd]?$/.test(d)) o += 1;
+    else break;
+  }
+  return Be(e, o);
+}
+function yo(e) {
+  return /^[.*]+$/.test(e) && !/^(?:\.|\.{3,}|\*{1,2}|\*\.\*)$/.test(e);
+}
+function bo(e, t = !1) {
+  let n = /^-[A-Za-z][A-Za-z0-9_.-]+$/.test(e)
+      ? Array.from({ length: e.length - 2 }, (h, S) => S + 2)
+          .filter((h) => /^[A-Za-z]+$/.test(e.slice(1, h)))
+          .map((h) => e.slice(h))
+      : [],
+    r = n[0],
+    o = t || /[:@]/.test(e) || r !== void 0,
+    d = e.startsWith("--")
+      ? e
+          .replace(/^--[^=]*=|^--/, "")
+          .split(/[/:@]/)
+          .filter((h) => h !== "")
+      : e.startsWith("-")
+        ? n
+        : e.split(/[/:@]/).filter((h) => h !== ""),
+    _ = e.split("@").slice(e.startsWith("@") ? 2 : 1);
+  return (
+    (t && e.includes("*")) ||
+    e.split("/").some((h) => {
+      let S = h.split(":");
+      return S.length > 1 && S.some((T) => /^(?:\d{4,}|\*+)$/.test(T));
+    }) ||
+    e
+      .split(/[/@]/)
+      .flatMap(So)
+      .some(
+        (h) =>
+          /\d/.test(h) &&
+          /^[0-9a-f:*]+$/i.test(h) &&
+          (h.includes("::") || ln(h, ":") >= 2),
+      ) ||
+    _.some((h) => {
+      let S = h.replace(/[/:].*$/, "").toLowerCase();
+      if (mo.has(S)) return !1;
+      return (
+        /^[a-z0-9*-]+(?:\.[a-z0-9*-]+)*\.[a-z*][a-z0-9*-]*$/.test(S) ||
+        ale(S.replace(/\*/g, "")) ||
+        /^(?:0+|0x[0-9a-f]*)$/.test(S) ||
+        (t && S !== "")
+      );
+    }) ||
+    /^0+\//.test(e) ||
+    (t && /^0+:/.test(e)) ||
+    d.some(
+      (h, S) =>
+        wo(h) ||
+        ((t || (r !== void 0 && S === 0)) &&
+          !e.startsWith("--") &&
+          /^(?:0+|0x[0-9a-f]*|[0-9a-fx]*\.[0-9a-fx.]*)$/i.test(h) &&
+          /\d/.test(h)),
+    ) ||
+    (e.includes("*") &&
+      (e.includes(":") ||
+        d.some(
+          (h) => /^[0-9a-fx.*]+$/i.test(h) && /\d/.test(h) && h.includes("*"),
+        ))) ||
+    d.some((h) => (o ? ale(h.replace(/\*/g, "")) : GZt(h.replace(/\*/g, ""))))
+  );
+}
+function So(e) {
+  let t = [e],
+    n = e;
+  for (;;) {
+    let r = n.replace(/^[a-z][\w-]*:/i, "");
+    if (r === n || r === "") return t;
+    (t.push(r), (n = r));
+  }
+}
+function wo(e) {
+  let t = e.replace(/\.+$/, "");
+  return (
+    /^(?:(?:\d+|0x[0-9a-f]+)\.){3}(?:\d+|0x[0-9a-f]+)$/i.test(t) ||
+    /^(?:127\.|0\d+\.|0x[0-9a-f]*\.)[0-9a-fx.]*$/i.test(t) ||
+    /^0x[0-9a-f]+$/i.test(t) ||
+    /^\d{8,}$/.test(t)
+  );
+}
+function Ro(e) {
+  let t = e
+      .replace(/^domain:/i, "")
+      .trim()
+      .toLowerCase()
+      .replace(/%.*$/, ""),
+    n = t
+      .replace(/\.+(?=(?::(?:\d+|\*))*$)/, "")
+      .replace(/(?::(?:\d+|\*))+$/, "")
+      .replace(/\.+$/, "");
+  return (
+    ale(n) ||
+    (n === "*" && n !== t) ||
+    (/^[\[\]0-9a-fx.:*]+$/.test(n) && /[\d:]/.test(n)) ||
+    (n.includes("*") && n !== "*" && !/^\*\.[^*]+$/.test(n)) ||
+    (/^\*\./.test(n) && Z$n(n.slice(2)))
+  );
+}
+function Eo(e) {
+  return (
+    e.startsWith("~\\") ||
+    (e.startsWith("\\") && e[1] !== "!" && e[1] !== "#") ||
+    /^[A-Za-z]:[/\\]/.test(e)
+  );
+}
+function vo(e) {
+  return Tx(e) && Cke(e.replace(/\*{2,}/g, "*"), $r);
+}
+function ko(e) {
+  let t = e.replace(/^\s+/, "").replace(/^[!#]/, "").trim();
+  if (t.split("/").includes("..") || Eo(t) || /^~[^/]/.test(t))
+    return "machine";
+  if (t === "~" || t.startsWith("~/")) return "home";
+  return e$e(t, to).root !== null ? "machine" : "none";
+}
+function Ao(e, t) {
+  if (!me(e)) return { value: void 0, counts: St() };
+  let n = Ur.map((_) => {
+      let h = Po(he(e, _), _);
+      return _ === "allow" && typeof t === "function" ? Oo(h, t) : h;
+    }),
+    r =
+      t === !0 ||
+      n.some(({ behavior: _, counts: h, carveOutLost: S }) =>
+        _ === "allow" ? S : Ho(h) > 0,
+      ),
+    o = n.map((_) => (_.behavior === "allow" && r ? To(_) : _)),
+    d = o.reduce((_, { behavior: h, rules: S }) => {
+      if (S.length > 0) _[h] = S;
+      return _;
+    }, {});
+  return {
+    value: o.some(({ rules: _ }) => _.length > 0) ? d : void 0,
+    counts: o.map(({ counts: _ }) => _).reduce(xo),
+  };
+}
+function Ho(e) {
+  return (
+    e.droppedRooted + e.droppedDevice + e.droppedInvalid + e.droppedOverCap
+  );
+}
+function Oo(e, t) {
+  let n = (o) => Jr(Fr(o).toolName).some(t),
+    r = e.rules.filter(n);
+  if (r.length === 0) return e;
+  return {
+    ...e,
+    rules: e.rules.filter((o) => !n(o)),
+    carveOutLost: e.carveOutLost || r.some(_n),
+    counts: {
+      ...e.counts,
+      kept: e.counts.kept - r.length,
+      droppedGuarded: e.counts.droppedGuarded + r.length,
+    },
+  };
+}
+function To(e) {
+  return {
+    behavior: e.behavior,
+    rules: [],
+    carveOutLost: e.carveOutLost,
+    counts: {
+      ...e.counts,
+      kept: 0,
+      coveringDeviceTools: 0,
+      droppedGuarded: e.counts.droppedGuarded + e.rules.length,
+    },
+  };
+}
+function Po(e, t) {
+  let n = Array.isArray(e) ? e : [],
+    r = n.slice(0, tn),
+    o = r.filter((P) => typeof P === "string"),
+    d = Y(o),
+    _ = new Set(d),
+    h = G(n.slice(tn), (P) => typeof P !== "string" || !_.has(P)),
+    S = d.map((P) => ({ rule: P, verdict: lo(P, t) })),
+    T = S.filter(({ verdict: P }) => sn(P));
+  return {
+    behavior: t,
+    rules: T.map(({ rule: P }) => P),
+    carveOutLost:
+      t === "allow" &&
+      (h > 0 || S.some(({ rule: P, verdict: F }) => !sn(F) && _n(P))),
+    counts: {
+      kept: T.length,
+      duplicates: o.length - d.length + (n.length - r.length - h),
+      droppedRooted: ze(S, "rooted"),
+      droppedDevice: ze(S, "device"),
+      droppedInvalid:
+        ze(S, "invalid") +
+        (r.length - o.length) +
+        (e !== void 0 && !Array.isArray(e) ? 1 : 0),
+      droppedOverCap: ze(S, "over_cap") + h,
+      droppedGuarded: 0,
+      coveringDeviceTools: ze(T, "keep_covers_device_tools"),
+    },
+  };
+}
+function sn(e) {
+  return e === "keep" || e === "keep_covers_device_tools";
+}
+function _n(e) {
+  let { toolName: t, ruleContent: n } = Fr(e);
+  return n !== void 0 && (un.has(t) || Tx(t)) && n.trimStart().startsWith("!");
+}
+function ze(e, t) {
+  return G(e, ({ verdict: n }) => n === t);
+}
+function St() {
+  return {
+    kept: 0,
+    duplicates: 0,
+    droppedRooted: 0,
+    droppedDevice: 0,
+    droppedInvalid: 0,
+    droppedOverCap: 0,
+    droppedGuarded: 0,
+    coveringDeviceTools: 0,
+  };
+}
+function xo(e, t) {
+  return {
+    kept: e.kept + t.kept,
+    duplicates: e.duplicates + t.duplicates,
+    droppedRooted: e.droppedRooted + t.droppedRooted,
+    droppedDevice: e.droppedDevice + t.droppedDevice,
+    droppedInvalid: e.droppedInvalid + t.droppedInvalid,
+    droppedOverCap: e.droppedOverCap + t.droppedOverCap,
+    droppedGuarded: e.droppedGuarded + t.droppedGuarded,
+    coveringDeviceTools: e.coveringDeviceTools + t.coveringDeviceTools,
+  };
+}
+var Do = { commit: dn, pr: dn, sessionUrl: wt, commitTrailers: wt };
+function Mo(e) {
+  if (!me(e)) return;
+  let t = Kr.reduce((n, r) => Fo(n, e, r), {});
+  return Object.keys(t).length > 0 ? t : void 0;
+}
+function Fo(e, t, n) {
+  let r = he(t, n);
+  if (Do[n](r)) e[n] = r;
+  return e;
+}
+function Co(e, t, n) {
+  let r = t[n];
+  if (r !== void 0 && XT().shape[n].safeParse(r).success) e[n] = r;
+  return e;
+}
+function an(e) {
+  return typeof e === "string" &&
+    e.trim() !== "" &&
+    e.length <= jr &&
+    !fn.test(e)
+    ? e
+    : void 0;
+}
+function et(e) {
+  return wt(e) ? e : void 0;
+}
+function wt(e) {
+  return typeof e === "boolean";
+}
+function dn(e) {
+  return (
+    typeof e === "string" && Buffer.byteLength(e, "utf8") <= Gr && !no.test(e)
+  );
+}
+function he(e, t) {
+  return Object.hasOwn(e, t) ? e[t] : void 0;
+}
+var rt = "ccr-home-seed.json",
+  Et = 1,
+  No = 4,
+  Pe = zHt * No,
+  Ke = 131072,
+  gn = m(() =>
+    Qe({
+      version: k(Et),
+      generation: vx().min(1),
+      writtenAtMs: vx().min(0),
+      entries: v(Qe({ path: s().min(1).max(rJt), sha256: s().regex(D1) })).max(
+        Pe,
+      ),
+      settingsSha256: s().regex(D1).nullable(),
+      packEtag: s().min(1).max(aJt).optional(),
+    }),
+  );
+function vt(e) {
+  if (e.length > Ke) return null;
+  let t = We(e.toString("utf8"));
+  if (!me(t) || (Array.isArray(t.entries) && t.entries.length > Pe))
+    return null;
+  let n = gn().safeParse(t);
+  return n.success ? n.data : null;
+}
+function hn(e) {
+  let t = gn().safeParse({ ...e, entries: e.entries.slice(-Pe) });
+  if (!t.success) throw Error("home sidecar is off its own schema");
+  let n = Buffer.from(b(t.data));
+  if (n.length > Ke) throw Error("home sidecar exceeds its byte bound");
+  return n;
+}
+function Io(e) {
+  let t = Rt(e);
+  return { document: e, rendered: t, sha256: mn(t) };
+}
+function kt({
+  pack: e,
+  packEtag: t,
+  refused: n,
+  sidecar: r,
+  lastAppliedGeneration: o,
+  permissionsAdmissible: d,
+}) {
+  if (e.generation <= o)
+    return {
+      kind: "stale_generation",
+      generation: e.generation,
+      lastApplied: o,
+    };
+  let _ = new Map(
+      (r?.entries ?? []).flatMap((F) => {
+        let K = VHt(F.path);
+        return K === null
+          ? []
+          : [
+              [
+                K.destination,
+                { path: K.destination, kind: K.kind, sha256: F.sha256 },
+              ],
+            ];
+      }),
+    ),
+    h = new Map([..._.values()].map(({ path: F, sha256: K }) => [F, K])),
+    S = new Set(e.files.map((F) => F.path)),
+    T = [..._.values()].filter(({ path: F }) => !S.has(F)),
+    P = Wo(e.settings, d);
+  return {
+    kind: "plan",
+    plan: {
+      generation: e.generation,
+      packEtag: t,
+      writes: e.files.flatMap(Lo),
+      removals: T,
+      settings: P.plan,
+      priorSettingsSha256: r?.settingsSha256 ?? null,
+      priorEntries: h,
+      counts: {
+        refused: n,
+        refilteredKeys: P.refilteredKeys,
+        permissionsDropped: P.permissionsDropped,
+      },
+    },
+  };
+}
+function Lo(e) {
+  let t = Qje(e.path);
+  return t === null ? [] : [{ ...e, kind: t }];
+}
+function Wo(e, t) {
+  if (e === null)
+    return { plan: null, refilteredKeys: 0, permissionsDropped: !1 };
+  let n = pn(e, { settingsToCloud: () => !0, preToolUseHookActiveHere: !1 }),
+    r = n.counts.withheldKeys;
+  if (n.document === null)
+    return { plan: null, refilteredKeys: r, permissionsDropped: !1 };
+  let { permissions: o, ...d } = n.document,
+    _ = o?.allow !== void 0 && !t,
+    { allow: h, ...S } = o ?? {},
+    T = _
+      ? Object.keys(S).length === 0
+        ? d
+        : { ...d, permissions: S }
+      : n.document;
+  if (Object.keys(T).length === 0)
+    return { plan: null, refilteredKeys: r, permissionsDropped: _ };
+  return { plan: Io(T), refilteredKeys: r, permissionsDropped: _ };
+}
+var Ht = 1,
+  zo = 65536,
+  At = m(() => vx().min(0).default(0)),
+  Bo = m(() => c({ version: vx() })),
+  yn = m(() =>
+    c({
+      version: k(Ht),
+      generation: vx().min(1),
+      appliedBeforeFirstAsk: O(),
+      outcome: X(["applied", "partial"]),
+      filesApplied: At(),
+      filesRefused: At(),
+      settingsWritten: O().default(!1),
+      replacedForeign: At(),
+      writtenAtMs: vx().min(0),
+    }),
+  );
+function Ot(e) {
+  let t = yn().safeParse({ ...e, version: Ht });
+  if (!t.success) throw Error("home ready row is off-schema");
+  return Buffer.from(b(t.data));
+}
+function bn(e) {
+  if (e.length > zo) return { ok: !1, reason: "oversize" };
+  let t = xt(e.toString("utf8"), !1),
+    n = Bo().safeParse(t);
+  if (n.success && n.data.version !== Ht)
+    return { ok: !1, reason: "unsupported_version" };
+  let r = yn().safeParse(t);
+  if (!r.success) return { ok: !1, reason: "malformed" };
+  let { version: o, ...d } = r.data;
+  return { ok: !0, ready: d };
+}
+var Pt = 300000,
+  Dt = 60000,
+  vn = 3,
+  kn = 500,
+  Ko = 2000,
+  An = !0,
+  Uo =
+    "Settings sync: the user's machine sent this session a copy of their Claude Code settings (their CLAUDE.md instructions, permission rules and preferences), but it had not been applied when this turn began, so this turn runs on the session's default settings; if the copy lands it takes effect from a later turn. If the user refers to instructions, rules or preferences from their machine that you do not see in effect, say they have not arrived here yet.",
+  $o =
+    "Settings sync: the user's machine sent this session a copy of their Claude Code settings (their CLAUDE.md instructions, permission rules and preferences), but this session could not take it, so it runs on its default settings. If the user refers to instructions, rules or preferences from their machine that you do not see in effect, say they did not arrive here.",
+  jo = /^[A-Za-z][A-Za-z0-9_*-]{0,127}(?:\([A-Za-z0-9 ._\-/:*~@+=,]{1,64}\))?$/,
+  Go = 200,
+  Sn = m(() => fe(s(), se()));
+function wn(e) {
+  let t = v(se()).safeParse(e);
+  return t.success ? t.data.filter((n) => typeof n === "string") : [];
+}
+var Vo = "restored-without-announcement";
+function Rn(e) {
+  return e === "flag_off" || e === "verdict_off";
+}
+var Yo = { etag: "", beforeFirstCommand: !0, ordinal: 0.5 };
+function Xo(e) {
+  try {
+    return e.enabledNow?.() === !0;
+  } catch {
+    return !1;
+  }
+}
+function En(e, t, n) {
+  if (t === void 0) return;
+  queueMicrotask(() => {
+    try {
+      e(t);
+    } catch {
+      q("error", n, {});
+    }
+  });
+}
+function Hn(e, t) {
+  let n,
+    r = !1,
+    o,
+    d = !1,
+    _ = new Set(),
+    h = new Set(),
+    S,
+    T,
+    P = !1,
+    F = 0,
+    K = 0,
+    Re = !1,
+    ce = !1,
+    V,
+    pe,
+    U = !1,
+    Me = 0,
+    L,
+    ye,
+    _e = !1,
+    le,
+    He,
+    ve,
+    Ge = !1,
+    be = !1,
+    w = !1,
+    te = !t.epochGt1,
+    Se = t.epochGt1 && Xo(t),
+    Fe = !1,
+    Oe,
+    Nt = !1,
+    Ne = 0,
+    Ie = !1,
+    It = !1,
+    dt = !1,
+    Te = new Set(),
+    ge = () => {
+      for (let l of [...Te]) l();
+    },
+    we = (l) => {
+      if (!r) {
+        if (((o = l), V !== void 0 || pe !== void 0)) ((Ie ||= !Rn(l)), Lt());
+      }
+      if (((r = !0), (V = void 0), (pe = void 0), w && !U))
+        ne("lane_unavailable", 0, t.now(), !1);
+      ((w = !1), (Se = !1), (te = !0), ge());
+    },
+    Lt = () => {
+      if (!P)
+        ((P = !0),
+          q("info", "home_seed_announcement_discarded", {
+            reason: o ?? "stopped",
+          }));
+    },
+    Ve = () => {
+      let l = [V, pe, w || Se ? Yo : void 0].filter((p) => p !== void 0);
+      return l.length === 0
+        ? void 0
+        : l.reduce((p, H) => (H.ordinal > p.ordinal ? H : p));
+    };
+  function Wt(l) {
+    if (r || d) {
+      ((Ie ||= !Rn(o)), Lt());
+      return;
+    }
+    if (!te) ((te = !0), (Se = !1));
+    else if (w && !U) ((w = !1), ke("superseded", 0, t.now()));
+    if (l.etag === V?.etag || l.etag === pe?.etag) return;
+    if (l.etag === ye) {
+      if (le !== void 0 && L === void 0)
+        L = { etag: l.etag, ready: ar(le), readyWritten: !1 };
+      if (L !== void 0 && !L.readyWritten)
+        if (U || !Re || n !== "served") _e = !0;
+        else mt();
+      return;
+    }
+    if (L !== void 0 && l.etag === L.etag) {
+      if (!L.readyWritten)
+        if (U) _e = !0;
+        else mt();
+      return;
+    }
+    if (((V = l), t.epochGt1 && !Nt)) {
+      Nt = !0;
+      let p = t.now();
+      ((He ??= t.readSidecar(e.configHome).catch(() => null)),
+        He.then((H) => {
+          Jn(H, p);
+        }));
+    }
+    if (n === "served") Xe(!1);
+  }
+  function Jn(l, p) {
+    if (
+      l === null ||
+      l.packEtag === void 0 ||
+      V?.etag !== l.packEtag ||
+      L !== void 0 ||
+      ye !== void 0
+    )
+      return;
+    ((ye = l.packEtag),
+      (le = l),
+      (V = void 0),
+      Ne++,
+      re("already_applied", "none", null, l.generation, p),
+      ge());
+  }
+  function Qn(l, p) {
+    if (r || d) return;
+    if (((n = l), l === "served")) {
+      if (V !== void 0) Xe(!p);
+      else if (_e) Le();
+      else ut(!p);
+      return;
+    }
+    we(l === "off" ? "verdict_off" : "verdict_refused");
+  }
+  function ut(l = !1) {
+    if (!te && Re && Oe === "absent" && !r && !d)
+      ((te = !0), (w = !0), (Se = !1));
+    if (!w || n !== "served" || U || r || d) return;
+    ((U = !0), (Fe = !0));
+    let p = t.now();
+    er(!l, p)
+      .catch((H) => {
+        (q("error", "home_seed_recovery_threw", { name: wde(H) }),
+          ke("threw", 0, p));
+      })
+      .finally(() => {
+        ((U = !1), (w = !1), ge(), Le());
+      });
+  }
+  async function er(l, p) {
+    if ((K++, l)) {
+      let ee = await t.pullRow(BTe);
+      if (Ye(p)) return;
+      if (ee.kind !== "ok" && ee.kind !== "not_found") {
+        let ae = ct(ee);
+        if (ae === "refused" || ae === "rejected") we("probe_refused");
+        ne(
+          ae === "auth" ? "auth_failed" : "request_failed",
+          0,
+          p,
+          ae === "auth",
+        );
+        return;
+      }
+    }
+    let H = await t.pullRow(Gjt);
+    if (Ye(p)) return;
+    if (H.kind !== "ok") {
+      if (H.kind === "not_found") ne("no_ready_row", 0, p, !1);
+      else {
+        let ee = ct(H);
+        if (ee === "refused") we("ready_refused");
+        ne(
+          ee === "auth" ? "auth_failed" : "request_failed",
+          0,
+          p,
+          ee === "auth",
+        );
+      }
+      return;
+    }
+    let E = bn(H.buf);
+    if (!E.ok) {
+      ne("ready_unreadable", 0, p, !0);
+      return;
+    }
+    let R = E.ready.generation,
+      C = await t.pullRow(RLe);
+    if (Ye(p)) return;
+    if (C.kind !== "ok") {
+      let ee = C.kind === "not_found" ? "not_found" : ct(C);
+      if (ee === "refused") we("pack_refused");
+      ne(
+        ee === "not_found"
+          ? "pack_absent"
+          : ee === "auth"
+            ? "auth_failed"
+            : "request_failed",
+        R,
+        p,
+        !0,
+      );
+      return;
+    }
+    let N = yt(C.buf);
+    if (!N.ok) {
+      (q("warn", "home_seed_bad_pack", { reason: N.reason }),
+        ne("pack_unreadable", R, p, !0));
+      return;
+    }
+    if (N.pack.generation !== R) {
+      ne("generation_mismatch", R, p, !0);
+      return;
+    }
+    let I = kt({
+      pack: N.pack,
+      packEtag: Vo,
+      refused: N.refused,
+      sidecar: null,
+      lastAppliedGeneration: 0,
+      permissionsAdmissible: !1,
+    });
+    if (I.kind === "stale_generation") {
+      ne("generation_mismatch", R, p, !0);
+      return;
+    }
+    if (N.refused.settings !== "none") {
+      ne("settings_refused", R, p, !0);
+      return;
+    }
+    let D = tr(I.plan, N.pack.settings);
+    if (D.deny.length === 0 && D.ask.length === 0) {
+      if (D.dropped > 0) ne("rules_unverifiable", R, p, !0, D.dropped);
+      else ne("no_rules", R, p, !1);
+      return;
+    }
+    if (e.settingsPath === void 0) {
+      ne("no_rules", R, p, !1);
+      return;
+    }
+    let J = await t
+      .readStandingSettings(e.settingsPath)
+      .catch(() => ({ kind: "unusable" }));
+    if (Ye(p)) return;
+    let j = J.kind === "unusable" ? null : nr(I.plan, D, J);
+    if (j === null) {
+      ne("settings_unusable", R, p, !0);
+      return;
+    }
+    let B = await t.execute(j, e, t.applyDeps()),
+      de = !be;
+    if (B.outcome === "config_home_unsafe" || B.outcome === "flag_off") {
+      if (B.outcome === "flag_off") dt = !0;
+      (re(B.outcome, "recovery", B, B.generation, p),
+        ne("nothing_applied", R, p, !1));
+      return;
+    }
+    if (!B.settingsWritten) {
+      (re(B.outcome, "recovery", B, B.generation, p),
+        ne("nothing_applied", R, p, !0));
+      return;
+    }
+    try {
+      t.afterApply(B, { beforeFirstAsk: de, applied: zt(j, B) });
+    } catch {
+      q("error", "home_seed_after_apply_threw", {});
+    }
+    (Ne++,
+      ft({
+        kind: "restored",
+        denyRules: D.deny.length,
+        askRules: D.ask.length,
+        droppedRules: D.dropped,
+        beforeFirstAsk: de,
+        duringHold: Te.size > 0,
+      }),
+      re(B.outcome, "recovery", B, B.generation, p),
+      ke("restored", R, p, D.dropped));
+  }
+  function tr(l, p) {
+    let H = l.settings?.document.permissions,
+      E = (J) => (J ?? []).filter((j) => jo.test(j)).slice(0, Go),
+      R = E(H?.deny),
+      C = E(H?.ask),
+      N = Sn().safeParse(p?.permissions),
+      I = (J) => (N.success ? Y(wn(N.data[J])).length : 0),
+      D = Math.max(0, I("deny") + I("ask") - R.length - C.length);
+    return { deny: R, ask: C, dropped: D };
+  }
+  function nr(l, p, H) {
+    let E = H.kind === "object" ? H.value : {},
+      R = Sn().safeParse(E.permissions);
+    if (E.permissions !== void 0 && E.permissions !== null && !R.success)
+      return null;
+    let C = R.success ? R.data : {},
+      N = (B, de) => Y([...wn(C[B]), ...de]),
+      I = N("deny", p.deny),
+      D = N("ask", p.ask),
+      J = {
+        ...E,
+        permissions: {
+          ...C,
+          ...(I.length > 0 && { deny: I }),
+          ...(D.length > 0 && { ask: D }),
+        },
+      },
+      j =
+        b(J, null, 2) +
+        `
+`;
+    return {
+      ...l,
+      writes: [],
+      removals: [],
+      restoreRecord: !0,
+      settings: {
+        document: {
+          permissions: {
+            ...(p.deny.length > 0 && { deny: [...p.deny] }),
+            ...(p.ask.length > 0 && { ask: [...p.ask] }),
+          },
+        },
+        rendered: j,
+        sha256: mn(j),
+      },
+    };
+  }
+  function ct(l) {
+    let p = Tt(l);
+    return (
+      q("warn", "home_seed_lane_request_failed", {
+        outcome: p,
+        kind: l.errorKind,
+        status: l.status ?? 0,
+      }),
+      p
+    );
+  }
+  function Ye(l) {
+    if (r || d) return (ke("gate_closed", 0, l), !0);
+    if (V !== void 0) return ((w = !1), ke("superseded", 0, l), !0);
+    return !1;
+  }
+  function ne(l, p, H, E, R = 0) {
+    if (((w = !1), ke(l, p, H, R), E && rr(l)))
+      ft({ kind: "not_restored", reason: l });
+  }
+  function rr(l) {
+    return (
+      l === "ready_unreadable" ||
+      l === "rules_unverifiable" ||
+      l === "settings_refused" ||
+      l === "auth_failed" ||
+      l === "pack_absent" ||
+      l === "pack_unreadable" ||
+      l === "generation_mismatch" ||
+      l === "request_failed" ||
+      l === "settings_unusable" ||
+      l === "nothing_applied"
+    );
+  }
+  function ke(l, p, H, E = 0) {
+    try {
+      t.telemetry.recovery({
+        outcome: l,
+        generation: p,
+        durationMs: t.now() - H,
+        rulesDropped: E,
+      });
+    } catch {
+      q("error", "home_seed_telemetry_threw", {});
+    }
+  }
+  function ft(l) {
+    let p = (H, E, R) => {
+      for (let C of H)
+        try {
+          C(E);
+        } catch {
+          q("error", R, {});
+        }
+    };
+    if (l.kind === "restored" || l.kind === "not_restored")
+      ((T = h.size === 0 ? l : void 0),
+        p(h, l, "home_seed_restore_listener_threw"));
+    else
+      ((S = _.size === 0 ? l : void 0),
+        p(_, l, "home_seed_applied_listener_threw"));
+  }
+  function Xe(l) {
+    if (!Re || U || V === void 0 || r || d) return;
+    ((U = !0),
+      or(l)
+        .catch((p) => {
+          q("error", "home_seed_run_threw", { name: wde(p) });
+        })
+        .finally(() => {
+          ((U = !1), (pe = void 0), ge(), Le());
+        }));
+  }
+  function Le() {
+    if (V !== void 0 && n === "served") {
+      if ((Xe(!1), U)) _e = !1;
+      return;
+    }
+    if (!_e) return;
+    if (L === void 0 || L.readyWritten) {
+      _e = !1;
+      return;
+    }
+    if ((mt(), U)) _e = !1;
+  }
+  function mt() {
+    if (L === void 0 || U || r || d || !Re || n !== "served") return;
+    let l = L;
+    ((U = !0),
+      pt(l.ready)
+        .then((p) => {
+          if (p) l.readyWritten = !0;
+        })
+        .catch((p) => {
+          q("error", "home_seed_run_threw", { name: wde(p) });
+        })
+        .finally(() => {
+          ((U = !1), ge(), Le());
+        }));
+  }
+  async function or(l) {
+    let p = t.now(),
+      H = V;
+    if (H === void 0) return;
+    if (((V = void 0), L !== void 0 && H.etag === L.etag)) {
+      if (!L.readyWritten) L.readyWritten = await pt(L.ready);
+      return;
+    }
+    if (H.etag === ye) return;
+    if (((pe = H), K++, t.epochGt1 && L === void 0 && ye === void 0)) {
+      let oe = await (He ?? t.readSidecar(e.configHome));
+      if (oe?.packEtag === H.etag) {
+        ((ye = H.etag),
+          (le = oe),
+          Ne++,
+          re("already_applied", "none", null, oe.generation, p));
+        return;
+      }
+    }
+    let E = "verdict_wake";
+    if (!l) {
+      let oe = await Kt(BTe);
+      if (oe.kind === "deaf") return;
+      if (
+        ((E = sr(oe.kind)), oe.kind === "refused" || oe.kind === "rejected")
+      ) {
+        (re("refused_lane", E, null, 0, p), we("probe_refused"));
+        return;
+      }
+      if (oe.kind === "auth" || oe.kind === "transport") {
+        re(
+          oe.kind === "auth" ? "auth_skipped" : "transport_failed",
+          E,
+          null,
+          0,
+          p,
+        );
+        return;
+      }
+    }
+    let R = await Kt(RLe);
+    switch (R.kind) {
+      case "deaf":
+        return;
+      case "refused":
+        (re("refused_lane", E, null, 0, p), we("pack_refused"));
+        return;
+      case "rejected":
+        re("request_rejected", E, null, 0, p);
+        return;
+      case "auth":
+      case "transport":
+        re(
+          R.kind === "auth" ? "auth_skipped" : "transport_failed",
+          E,
+          null,
+          0,
+          p,
+        );
+        return;
+      case "not_found":
+        re("pack_absent", E, null, 0, p);
+        return;
+      case "ok":
+        break;
+    }
+    let C = t.announcements.remembered().findLast((oe) => oe.etag === R.etag);
+    if (C === void 0) {
+      re("unannounced_row", E, null, 0, p);
+      return;
+    }
+    let N = yt(R.buf);
+    if (!N.ok) {
+      (q("warn", "home_seed_bad_pack", { reason: N.reason }),
+        re("bad_pack", E, null, 0, p));
+      return;
+    }
+    let I = kt({
+      pack: N.pack,
+      packEtag: R.etag,
+      refused: N.refused,
+      sidecar: await t.readSidecar(e.configHome),
+      lastAppliedGeneration: F,
+      permissionsAdmissible:
+        t.limits.permissionsFromAnyAnnouncedPack ||
+        (C.beforeFirstCommand && !t.epochGt1),
+    });
+    if (I.kind === "stale_generation") {
+      re("stale_generation", E, null, I.generation, p);
+      return;
+    }
+    let D = await t.execute(I.plan, e, t.applyDeps()),
+      J = !be;
+    if (D.outcome === "config_home_unsafe" || D.outcome === "flag_off") {
+      if (D.outcome === "flag_off") dt = !0;
+      else Ie = !0;
+      re(D.outcome, E, D, D.generation, p);
+      return;
+    }
+    F = D.generation;
+    let j = { beforeFirstAsk: J, applied: zt(I.plan, D) };
+    try {
+      t.afterApply(D, j);
+    } catch {
+      q("error", "home_seed_after_apply_threw", {});
+    }
+    Ne++;
+    let B = Te.size > 0,
+      de = await ir(I.plan, D);
+    (ft({
+      ...j,
+      outcome: D.outcome,
+      generation: D.generation,
+      duringHold: B || Te.size > 0,
+      outputStyleMissing: de === "unresolved",
+    }),
+      re(D.outcome, E, D, D.generation, p, {
+        appliedBeforeFirstAsk: J,
+        outputStyleCheck: de,
+      }));
+    let ee = lr(D, J),
+      ae = { etag: R.etag, ready: ee, readyWritten: !1 };
+    ((L = ae), (pe = void 0), ge(), (ae.readyWritten = await pt(ee)));
+  }
+  function zt(l, p) {
+    let H = p.settingsWritten ? l.settings?.document : void 0,
+      E = H?.permissions;
+    return {
+      claudeMd: p.appliedByKind.claude_md > 0,
+      rules: p.appliedByKind.rule,
+      outputStyles: p.appliedByKind.output_style,
+      permissionRules:
+        (E?.allow?.length ?? 0) +
+        (E?.deny?.length ?? 0) +
+        (E?.ask?.length ?? 0),
+      settingsKeys: Object.keys(H ?? {}).filter((R) => R !== "permissions"),
+      settingsNotWritten: p.settingsAttempted && !p.settingsWritten,
+      settingsRefused: p.settingsRefused !== "none",
+      filesNotApplied:
+        Object.values(p.filesRefused).reduce((R, C) => R + C, 0) +
+        p.filesFailed,
+      filesRemoved: p.filesRemoved,
+      settingsRemoved: p.settingsRemoved,
+      removalsFailed: p.removalsFailed,
+      settingsRemoveFailed: p.settingsRemoveFailed,
+    };
+  }
+  async function ir(l, p) {
+    let H = p.settingsWritten ? l.settings?.document.outputStyle : void 0,
+      E = t.outputStyleAvailable;
+    if (H === void 0 || E === void 0) return "not_asked";
+    let R = await new Promise((C) => {
+      let N = t.setTimer(() => C("ask_capped"), Ko);
+      Promise.resolve()
+        .then(() => E(H))
+        .then(
+          (I) => (I ? "available" : "unresolved"),
+          () => "ask_failed",
+        )
+        .then((I) => {
+          (N(), C(I));
+        });
+    });
+    if (R === "unresolved") q("info", "home_seed_output_style_unresolved", {});
+    return R;
+  }
+  function sr(l) {
+    switch (l) {
+      case "ok":
+        return "found";
+      case "not_found":
+        return "absent";
+      case "refused":
+      case "rejected":
+        return "refused";
+      case "auth":
+      case "transport":
+        return l;
+    }
+  }
+  function re(
+    l,
+    p,
+    H,
+    E,
+    R,
+    C = { appliedBeforeFirstAsk: !be, outputStyleCheck: "not_asked" },
+  ) {
+    try {
+      t.telemetry.apply({
+        outcome: l,
+        probe: p,
+        report: H,
+        generation: E,
+        epochGt1: t.epochGt1,
+        durationMs: t.now() - R,
+        ...C,
+      });
+    } catch {
+      q("error", "home_seed_telemetry_threw", {});
+    }
+  }
+  async function Kt(l) {
+    let p = t.limits.requestRetryDelayMs;
+    for (let H = 1; ; H++) {
+      if (r || d) return { kind: "deaf" };
+      let E = await t.pullRow(l);
+      if (E.kind === "ok")
+        return { kind: "ok", buf: E.buf, etag: E.content_sha256 };
+      if (E.kind === "not_found") return { kind: "not_found" };
+      let R = Tt(E);
+      if (R !== "transport" || H >= t.limits.requestAttempts)
+        return (
+          q("warn", "home_seed_lane_request_failed", {
+            outcome: R,
+            kind: E.errorKind,
+            status: E.status ?? 0,
+          }),
+          { kind: R }
+        );
+      (await t.sleep(p), (p *= 2));
+    }
+  }
+  async function pt(l) {
+    let p = t.limits.requestRetryDelayMs,
+      H = !1;
+    for (let E = 1; ; E++) {
+      if (r || d) return !1;
+      let R = await t.putRow(Gjt, l, ve);
+      if (R.kind === "ok") return ((ve = R.content_sha256), !0);
+      if (R.kind === "conflict" && !H) {
+        if (((H = !0), r || d)) return !1;
+        let N = await t.pullRow(Gjt);
+        ve = N.kind === "ok" ? N.content_sha256 : void 0;
+        continue;
+      }
+      if (
+        !(R.kind === "error" && Tt(R) === "transport") ||
+        E >= t.limits.requestAttempts
+      )
+        return (
+          q("warn", "home_seed_ready_put_failed", {
+            kind: R.kind,
+            ...(R.kind === "error" && {
+              errorKind: R.errorKind,
+              status: R.status ?? 0,
+            }),
+          }),
+          !1
+        );
+      (await t.sleep(p), (p *= 2));
+    }
+  }
+  function ar(l) {
+    return Ot({
+      generation: l.generation,
+      appliedBeforeFirstAsk: !1,
+      outcome: "applied",
+      filesApplied: l.entries.length,
+      filesRefused: 0,
+      settingsWritten: l.settingsSha256 !== null,
+      replacedForeign: 0,
+      writtenAtMs: t.now(),
+    });
+  }
+  function lr(l, p) {
+    return Ot({
+      generation: l.generation,
+      appliedBeforeFirstAsk: p,
+      outcome: l.outcome === "applied" ? "applied" : "partial",
+      filesApplied: l.filesApplied,
+      filesRefused:
+        Object.values(l.filesRefused).reduce((H, E) => H + E, 0) +
+        l.filesFailed,
+      settingsWritten: l.settingsWritten,
+      replacedForeign:
+        l.filesReplacedForeign +
+        (l.replacedExistingSettings === "foreign" ? 1 : 0),
+      writtenAtMs: t.now(),
+    });
+  }
+  let dr = () => Ne === 0 && (!t.epochGt1 || Oe === "absent"),
+    qe = (l) => {
+      if (It || !dr() || !Re || dt) return "none";
+      It = !0;
+      try {
+        t.notifyAgent(l === "pending" ? Uo : $o);
+      } catch {
+        q("error", "home_seed_notify_threw", {});
+      }
+      return l;
+    },
+    ur = () => {
+      let l = Ie ? qe("dropped") : _t() ? qe("pending") : "none";
+      if (l !== "none") q("info", "home_seed_agent_told", { kind: l });
+    },
+    _t = () => !r && !d && (Ve()?.ordinal ?? 0) >= 1;
+  function cr(l) {
+    let p = t.now(),
+      H = !be,
+      E = () => {
+        let C = r || d ? void 0 : Ve();
+        return C !== void 0 && C.ordinal > Me ? C : void 0;
+      };
+    if (E() === void 0 || t.limits.holdMaxMs <= 0)
+      return ((be = !0), ur(), Promise.resolve());
+    let R = _t();
+    return new Promise((C) => {
+      let N = !1,
+        I = 0,
+        D = n !== void 0 && ce,
+        J = [],
+        j = (ae) => {
+          if (N) return;
+          N = !0;
+          for (let pr of J) pr();
+          if ((Te.delete(B), ae !== "released" && ae !== "gate_off"))
+            Me = Math.max(Me, Ve()?.ordinal ?? 0);
+          let oe = R || _t(),
+            mr =
+              ae === "interrupted"
+                ? "none"
+                : Ie
+                  ? qe("dropped")
+                  : oe && ae !== "gate_off"
+                    ? qe("pending")
+                    : "none";
+          ((be = !0), C());
+          try {
+            t.telemetry.hold({
+              outcome: ae,
+              waitedMs: t.now() - p,
+              verdictWaitMs: I,
+              firstAsk: H,
+              agentNotice: mr,
+            });
+          } catch {
+            q("error", "home_seed_telemetry_threw", {});
+          }
+        },
+        B = () => {
+          if (!D && n !== void 0 && ce) ((D = !0), (I = t.now() - p), de());
+          if (r || d) j("gate_off");
+          else if (E() === void 0) j("released");
+        },
+        de = () => {};
+      if (l.aborted) {
+        j("interrupted");
+        return;
+      }
+      if (
+        (Te.add(B),
+        J.push(t.setTimer(() => j("timeout"), t.limits.holdMaxMs)),
+        !D)
+      )
+        ((de = t.setTimer(() => {
+          if (((I = t.now() - p), n === void 0)) j("verdict_timeout");
+          else if (!ce) j("flag_timeout");
+        }, t.limits.verdictWaitMaxMs)),
+          J.push(() => de()));
+      let ee = () => j("interrupted");
+      (l.addEventListener("abort", ee, { once: !0 }),
+        J.push(() => l.removeEventListener("abort", ee)));
+    });
+  }
+  let gt;
+  try {
+    gt = t.enabled();
+  } catch {
+    gt = Promise.resolve(!1);
+  }
+  gt.then(
+    (l) => {
+      if (((ce = !0), l)) {
+        if (((Re = !0), jt(), V !== void 0 && n === "served")) Xe(!1);
+        else if (_e) Le();
+        else ut();
+        return;
+      }
+      we("flag_off");
+    },
+    () => {
+      ((ce = !0), we("flag_off"));
+    },
+  ).finally(ge);
+  let $t = !1,
+    jt = () => {
+      if ($t || !t.epochGt1) return;
+      (($t = !0),
+        t
+          .sidecarState(e.configHome)
+          .catch(() => "invalid")
+          .then((l) => {
+            if (((Oe = l), l === "absent")) ut();
+            else {
+              if (l === "invalid" && !te) ke("sidecar_invalid", 0, t.now());
+              ((te = !0), (Se = !1));
+            }
+            ge();
+          }));
+    };
+  if (Se) jt();
+  for (let l of t.announcements.remembered()) Wt(l);
+  let fr = t.announcements.subscribe((l) => {
+      queueMicrotask(() => {
+        (Wt(l), ge());
+      });
+    }),
+    Gt = () => {};
+  Ge = !0;
+  try {
+    Gt = t.verdicts.subscribe((l) => {
+      let p = Ge;
+      queueMicrotask(() => {
+        (Qn(l, p), ge());
+      });
+    });
+  } catch {
+    q("error", "home_seed_verdict_subscribe_threw", {});
+  } finally {
+    Ge = !1;
+  }
+  return {
+    beforeTurn: cr,
+    state: () => ({
+      verdict: n,
+      deaf: r,
+      deafReason: o,
+      lastAppliedGeneration: F,
+      pending: Ve() !== void 0 || U || !te,
+      runs: K,
+      restore: Fe
+        ? U && w
+          ? "running"
+          : "done"
+        : w
+          ? "armed"
+          : Se
+            ? "provisional"
+            : te
+              ? "done"
+              : "none",
+    }),
+    onApplied: (l) => (
+      _.add(l),
+      En(l, S, "home_seed_applied_listener_threw"),
+      (S = void 0),
+      () => _.delete(l)
+    ),
+    onRestore: (l) => (
+      h.add(l),
+      En(l, T, "home_seed_restore_listener_threw"),
+      (T = void 0),
+      () => h.delete(l)
+    ),
+    stop: () => {
+      ((d = !0), fr(), Gt(), we("stopped"));
+    },
+  };
+}
+var qo = 501,
+  Zo = 409;
+function Tt(e) {
+  if (e.errorKind === "auth") return "auth";
+  if (e.errorKind === "gated" || e.status === qo || e.status === Zo)
+    return "refused";
+  return e.retryable ? "transport" : "rejected";
+}
+import {
+  lstat as zn,
+  open as gi,
+  realpath as Ue,
+  unlink as Bn,
+} from "fs/promises";
+import {
+  basename as Kn,
+  dirname as Ct,
+  join as xe,
+  resolve as Un,
+  sep as Ln,
+} from "path";
+import { realpath as Jo, stat as Qo } from "fs/promises";
+import {
+  basename as On,
+  dirname as Tn,
+  join as ei,
+  relative as ti,
+  sep as ni,
+} from "path";
+async function ri(e) {
+  try {
+    return (await Qo(e), !0);
+  } catch {
+    return !1;
+  }
+}
+async function ot(e, t) {
+  try {
+    let n = Tn(t),
+      r = [];
+    while (!(await ri(n))) {
+      r.unshift(On(n));
+      let h = Tn(n);
+      if (h === n) return null;
+      n = h;
+    }
+    let o = await Jo(n),
+      d = ei(o, ...r, On(t)),
+      _ = ti(e, d);
+    if (_ === "" || _.startsWith("..")) return null;
+    return _.split(ni).join("/");
+  } catch {
+    return null;
+  }
+}
+import { lstat as oi, mkdir as Pn, realpath as Mt } from "fs/promises";
+import {
+  basename as ii,
+  dirname as it,
+  join as si,
+  posix as ai,
+  relative as st,
+  resolve as xn,
+  sep as Ft,
+} from "path";
+function li(e) {
+  if (e === Jje) return Ce.userSettings();
+  let t = Qje(e),
+    [, ...n] = e.split("/");
+  switch (t) {
+    case null:
+      return null;
+    case "claude_md":
+      return Ce.state("user-memory");
+    case "rule":
+      return Ce.userConfigDir(oJt, n);
+    case "output_style":
+      return Ce.userConfigDir(sJt, n);
+  }
+}
+function Fn({
+  storageV5: e,
+  flagOn: t,
+  configHome: n,
+  settingsToCloud: r = LD,
+}) {
+  let o = (_) => async (h, S, T) => {
+    if (!(await r().catch(() => !1)))
+      throw ue(
+        Error("settings forwarding is not enabled for this account"),
+        "HOME_DEST_FLAG_OFF",
+      );
+    return _(h, S, T);
+  };
+  if (!t || e === void 0) return o(Dn);
+  let d = xn(n);
+  return o(async (_, h, S) => {
+    if (xn(_) !== d)
+      throw ue(
+        Error("destination names a config home the backend does not address"),
+        "HOME_DEST_HOME_MISMATCH",
+      );
+    let T = st(_, h).split(Ft).join(ai.sep),
+      P = li(T);
+    if (P === null) return Dn(_, h, S);
+    await di(_, h);
+    let F = await e.write(P, S, {
+      publishDiscipline: "atomic",
+      mode: Ine,
+      precondition: { type: "none" },
+      parent: "mustExist",
+    });
+    if (!F.ok) {
+      let { error: K } = F;
+      throw ue(
+        Error("storage backend refused the write"),
+        K.code === "Failed"
+          ? `HOME_STORAGE_FAILED_${K.failureClass.toUpperCase()}${K.telemetryCode === void 0 ? "" : `_${K.telemetryCode.toUpperCase()}`}`
+          : `HOME_STORAGE_${K.code.toUpperCase()}`,
+      );
+    }
+  });
+}
+function Dn(e, t, n) {
+  return HLe(e, t, n, "replace");
+}
+async function di(e, t) {
+  if (kk(st(e, t)))
+    throw ue(
+      Error("destination name is one the lane writer ignores"),
+      "HOME_DEST_IGNORED",
+    );
+  await Pn(e).catch((o) => {
+    if (A(o) !== "EEXIST") throw o;
+  });
+  let n = await Mt(e);
+  (await ui(n, it(t)), await Pn(it(t), { recursive: !0 }));
+  let r = await Mt(it(t));
+  if (!Cn({ path: r, directory: n }))
+    throw ue(
+      Error("destination parent escaped the config home"),
+      "HOME_DEST_PARENT_ESCAPE",
+    );
+  if (kk(st(n, si(r, ii(t)))))
+    throw ue(
+      Error("destination resolves to a name the lane writer ignores"),
+      "HOME_DEST_IGNORED",
+    );
+  try {
+    let o = await oi(t);
+    if (o.isSymbolicLink())
+      throw ue(Error("destination is a symlink"), "HOME_DEST_SYMLINK");
+    if (o.isDirectory())
+      throw ue(Error("destination is a directory"), "HOME_DEST_IS_DIRECTORY");
+    if (o.nlink > 1)
+      throw ue(
+        Error("destination is hard-linked elsewhere"),
+        "HOME_DEST_HARD_LINKED",
+      );
+  } catch (o) {
+    if (!W(o)) throw o;
+  }
+}
+async function ui(e, t) {
+  let n = t;
+  for (;;)
+    try {
+      let r = await Mt(n);
+      if (!Cn({ path: r, directory: e }))
+        throw ue(
+          Error("destination ancestor escaped the config home"),
+          "HOME_DEST_PARENT_ESCAPE",
+        );
+      if (kk(st(e, r)))
+        throw ue(
+          Error(
+            "destination ancestor resolves to a name the lane writer ignores",
+          ),
+          "HOME_DEST_IGNORED",
+        );
+      return;
+    } catch (r) {
+      if (A(r) !== "ENOENT") throw r;
+      let o = it(n);
+      if (o === n) throw r;
+      n = o;
+    }
+}
+function Cn({ path: e, directory: t }) {
+  return e === t || e.startsWith(t.endsWith(Ft) ? t : t + Ft);
+}
+function ue(e, t) {
+  return ((e.code = t), e);
+}
+import { isAbsolute as ci, join as mi, relative as pi, sep as Nn } from "path";
+function In(e, t) {
+  try {
+    return SXn(
+      t.content.toString("utf8"),
+      mi(e, ...t.path.split("/")),
+      "User",
+    ).every((n) => _i(e, n));
+  } catch {
+    return !1;
+  }
+}
+function _i(e, t) {
+  let n = pi(e, t);
+  if (n === "" || n === ".." || n.startsWith(`..${Nn}`) || ci(n)) return !1;
+  let r = VHt(n.split(Nn).join("/"));
+  return r !== null && r.kind !== "output_style";
+}
+async function $n(e) {
+  let t = await De(xe(e, rt), Ke);
+  return t.kind === "read" ? vt(t.content) : null;
+}
+async function jn(e) {
+  let t = await De(xe(e, rt), Ke);
+  if (t.kind === "absent") return "absent";
+  return t.kind === "read" && vt(t.content) !== null ? "valid" : "invalid";
+}
+async function Gn(e) {
+  let t = await De(e, hi);
+  if (t.kind === "absent") return { kind: "absent" };
+  if (t.kind !== "read") return { kind: "unusable" };
+  let n = yi().safeParse(We(t.content.toString("utf8")));
+  return n.success ? { kind: "object", value: n.data } : { kind: "unusable" };
+}
+var hi = 1048576,
+  yi = m(() => fe(s(), se()));
+function je(e) {
+  return e === "ENOENT" || e === "ENOTDIR";
+}
+async function De(e, t) {
+  try {
+    let n = await gi(e, Ha());
+    try {
+      let r = await n.stat();
+      if (!r.isFile()) return { kind: "not_regular" };
+      if (r.size > t) return { kind: "too_large" };
+      return { kind: "read", content: await Ti(n, r.size) };
+    } finally {
+      await n.close();
+    }
+  } catch (n) {
+    let r = A(n) ?? "unknown";
+    if (je(r)) return { kind: "absent" };
+    return r === "ELOOP" || r === "EISDIR" || r === "ENXIO"
+      ? { kind: "not_regular" }
+      : { kind: "unreadable", code: r };
+  }
+}
+function Vn({ storageV5: e, configHome: t }) {
+  return {
+    writeHomeFile: Fn({ storageV5: e, flagOn: M(), configHome: t }),
+    markInternalWrite: tRt,
+    consumeInternalWrite: (n) => {
+      nRt(n, Cet);
+    },
+    now: () => Date.now(),
+    settingsToCloud: LD,
+  };
+}
+async function bi(e, t, n = EKe) {
+  let r = Un(e),
+    o;
+  try {
+    o = await zn(r);
+  } catch (T) {
+    return { ok: !1, reason: W(T) ? "missing" : "unresolvable" };
+  }
+  if (o.isSymbolicLink()) return { ok: !1, reason: "symlink" };
+  if (!o.isDirectory()) return { ok: !1, reason: "not_directory" };
+  let d, _;
+  try {
+    ((d = await Ue(r)), (_ = await Ue(t)));
+  } catch {
+    return { ok: !1, reason: "unresolvable" };
+  }
+  if (at({ path: _, directory: d })) return { ok: !1, reason: "overlaps_repo" };
+  if (await Yn(d)) return { ok: !1, reason: "inside_git_worktree" };
+  if (at({ path: d, directory: _ }))
+    q("info", "home_under_cwd_no_worktree", {});
+  let h;
+  try {
+    h = await Ue(n);
+  } catch (T) {
+    if (!je(A(T))) return { ok: !1, reason: "unresolvable" };
+    h = null;
+  }
+  if (
+    [n, h].some(
+      (T) =>
+        T !== null &&
+        (at({ path: d, directory: T }) || at({ path: T, directory: d })),
+    )
+  )
+    return { ok: !1, reason: "inside_synced_root" };
+  return { ok: !0, real: d };
+}
+async function Yn(e) {
+  for (let t = e; ; t = Ct(t)) {
+    if ((await $e(xe(t, ".git"))) !== "absent") return !0;
+    if (Ct(t) === t) return !1;
+  }
+}
+async function $e(e) {
+  try {
+    return await zn(e);
+  } catch (t) {
+    return je(A(t)) ? "absent" : "unverifiable";
+  }
+}
+function at({ path: e, directory: t }) {
+  return e === t || e.startsWith(t.endsWith(Ln) ? t : t + Ln);
+}
+async function Xn(e, t, n) {
+  let r = await Promise.resolve()
+    .then(n.settingsToCloud)
+    .then(
+      (w) => (w ? "on" : "off"),
+      () => "threw",
+    );
+  if (r !== "on")
+    return (
+      q("info", "home_seed_apply_flag_off", { gate: r }),
+      { outcome: "flag_off", generation: e.generation }
+    );
+  let o = await bi(t.configHome, t.repoRoot, t.syncedRoot);
+  if (!o.ok)
+    return (
+      q("warn", "home_seed_config_home_unsafe", { reason: o.reason }),
+      {
+        outcome: "config_home_unsafe",
+        generation: e.generation,
+        reason: o.reason,
+      }
+    );
+  let d = { configHome: Un(t.configHome), homeReal: o.real, deps: n },
+    _ = [];
+  for (let w of e.removals) _.push({ removal: w, result: await Wn(w, d) });
+  let h = [];
+  for (let w of e.writes) {
+    let { result: te, stoodForeign: Se } = await Si(
+      w,
+      e.priorEntries.get(w.path),
+      d,
+    );
+    h.push({ file: w, result: te, stoodForeign: Se });
+    let Fe = e.priorEntries.get(w.path);
+    if (te === "loader_reach" && Fe !== void 0) {
+      let Oe = { path: w.path, kind: w.kind, sha256: Fe };
+      _.push({ removal: Oe, result: await Wn(Oe, d) });
+    }
+  }
+  let S = await Ai(e, t.settingsPath, d),
+    T = h.filter(({ result: w }) => w === "applied"),
+    P = _.filter(({ result: w }) => w === "removed"),
+    F = new Set(
+      _.filter(({ result: w }) => w !== "failed").map(
+        ({ removal: w }) => w.path,
+      ),
+    ),
+    K = h.filter(({ result: w }) => w === "applied" || w === "unverified"),
+    Re = new Set(K.map(({ file: w }) => w.path)),
+    ce = new Map([
+      ...[...e.priorEntries].filter(([w]) => !F.has(w) && !Re.has(w)),
+      ...K.map(({ file: w }) => [w.path, w.sha256]),
+    ]),
+    V = e.settings !== null && t.settingsPath !== void 0,
+    pe =
+      e.settings === null &&
+      e.priorSettingsSha256 !== null &&
+      t.settingsPath !== void 0,
+    U =
+      V ||
+      pe ||
+      (t.settingsPath !== void 0 && e.counts.refused.settings !== "none"),
+    Me =
+      e.counts.refused.settings === "none" &&
+      (S.written || (pe && !S.removeFailed)),
+    L = e.writes.length + _.length + (U ? 1 : 0),
+    ye = G(_, ({ result: w }) => w === "failed"),
+    _e = T.length + (_.length - ye) + (Me ? 1 : 0),
+    le = (w) => G(h, (te) => te.result === w),
+    He = L === 0 ? "empty" : _e === L ? "applied" : "partial",
+    ve = e.restoreRecord === !0,
+    be =
+      !(ve
+        ? !S.written
+        : ce.size === 0 &&
+          S.sha256After === null &&
+          e.priorEntries.size === 0 &&
+          e.priorSettingsSha256 === null) &&
+      (await Oi(d, {
+        version: Et,
+        generation: e.generation,
+        writtenAtMs: n.now(),
+        entries: ve ? [] : [...ce].map(([w, te]) => ({ path: w, sha256: te })),
+        settingsSha256: ve ? null : S.sha256After,
+        ...(He !== "partial" && { packEtag: e.packEtag }),
+      }));
+  if (be && ce.size > Pe)
+    q("warn", "home_seed_sidecar_trimmed", { dropped: ce.size - Pe });
+  return {
+    outcome: He,
+    generation: e.generation,
+    filesApplied: T.length,
+    appliedByKind: {
+      claude_md: G(T, ({ file: w }) => w.kind === "claude_md"),
+      rule: G(T, ({ file: w }) => w.kind === "rule"),
+      output_style: G(T, ({ file: w }) => w.kind === "output_style"),
+    },
+    filesReplacedForeign: G(T, ({ stoodForeign: w }) => w),
+    filesRefused: {
+      destination: e.counts.refused.destination,
+      overCap: e.counts.refused.overCap,
+      resolvedDestination: le("refused") + le("unverified"),
+      parentNotDirectory: le("parent_not_directory"),
+      destIsDirectory: le("dest_is_directory"),
+      loaderReach: le("loader_reach"),
+    },
+    filesFailed: le("failed"),
+    filesRemoved: P.length,
+    removalsFailed: ye,
+    settingsAttempted: V,
+    settingsWritten: S.written,
+    settingsRemoved: S.removed,
+    settingsRemoveFailed: S.removeFailed,
+    settingsRefused: e.counts.refused.settings,
+    replacedExistingSettings: S.replaced,
+    refilteredKeys: e.counts.refilteredKeys,
+    permissionsDropped: e.counts.permissionsDropped,
+    touchedKinds: new Set([
+      ...K.map(({ file: w }) => w.kind),
+      ...P.map(({ removal: w }) => w.kind),
+    ]),
+    sidecarWritten: be,
+  };
+}
+function Ae(e, t) {
+  return xe(e, ...t.split("/"));
+}
+async function Si(e, t, n) {
+  let r = await wi(e, n);
+  if (r !== "clear") return { result: r, stoodForeign: !1 };
+  let o = await ki(e.path, t, n);
+  return { result: await Ri(e, n), stoodForeign: o };
+}
+async function wi(e, t) {
+  if (e.kind !== "output_style" && !In(t.homeReal, e))
+    return (
+      q("warn", "home_seed_destination_refused", { reason: "loader_reach" }),
+      "loader_reach"
+    );
+  let n = Ae(t.configHome, e.path),
+    r = await ot(t.homeReal, n);
+  if (r === null || !Eot(r))
+    return (
+      q("warn", "home_seed_destination_refused", {
+        reason: "resolved_spelling",
+      }),
+      "refused"
+    );
+  let o = await vi(e.path, t);
+  if (o !== "clear")
+    return (
+      q("warn", "home_seed_destination_obstructed", { reason: o }),
+      o === "parent_not_directory" || o === "dest_is_directory" ? o : "refused"
+    );
+  if (!(await Ee(t)))
+    return (
+      q("warn", "home_seed_destination_refused", { reason: "home_unvetted" }),
+      "refused"
+    );
+  return "clear";
+}
+async function Ri(e, t) {
+  let n = Ae(t.configHome, e.path);
+  try {
+    if (
+      (await t.deps.writeHomeFile(t.configHome, n, e.content),
+      !(await Ei(e.path, t)))
+    )
+      return "unverified";
+    return "applied";
+  } catch (r) {
+    let o = A(r) ?? "unknown";
+    if (o.startsWith("WORKING_") || o.startsWith("HOME_DEST_"))
+      return (
+        q("warn", "home_seed_destination_refused", { reason: o }),
+        "refused"
+      );
+    return (q("warn", "home_seed_write_failed", { code: o }), "failed");
+  }
+}
+async function Ee(e) {
+  try {
+    return (await Ue(e.configHome)) === e.homeReal && !(await Yn(e.homeReal));
+  } catch {
+    return !1;
+  }
+}
+async function Ei(e, t) {
+  let n = Ae(t.configHome, e),
+    o = (await ot(t.homeReal, n)) !== e ? "resolved_spelling" : await lt(n);
+  if (o !== null)
+    return (q("warn", "home_seed_write_escaped", { reason: o }), !1);
+  if (!(await Ee(t))) return (q("warn", "home_seed_write_unverified", {}), !1);
+  return !0;
+}
+async function lt(e) {
+  let t = await $e(e);
+  return t === "absent"
+    ? "leaf_absent"
+    : t === "unverifiable"
+      ? "leaf_unverifiable"
+      : t.isFile()
+        ? null
+        : "leaf_not_regular";
+}
+async function qn(e, t) {
+  let n = e.split("/");
+  for (let r = 1; r < n.length; r++) {
+    let o = Ae(t.configHome, n.slice(0, r).join("/")),
+      d = await $e(o);
+    if (d === "absent") return "none";
+    if (d === "unverifiable") return "ancestor_unverifiable";
+    if (d.isSymbolicLink()) return "ancestor_is_symlink";
+    if (!d.isDirectory()) return "parent_not_directory";
+    let _ = await $e(xe(o, ".git"));
+    if (_ === "unverifiable") return "ancestor_unverifiable";
+    if (_ !== "absent") return "ancestor_in_worktree";
+  }
+  return "none";
+}
+async function vi(e, t) {
+  let n = await qn(e, t);
+  if (n !== "none") return n;
+  let r = await $e(Ae(t.configHome, e));
+  if (r === "absent") return "clear";
+  if (r === "unverifiable") return "leaf_unverifiable";
+  if (r.isSymbolicLink()) return "leaf_is_symlink";
+  if (r.isDirectory()) return "dest_is_directory";
+  return r.isFile() ? "clear" : "leaf_not_regular";
+}
+async function ki(e, t, n) {
+  let r = await De(Ae(n.configHome, e), Yje);
+  switch (r.kind) {
+    case "absent":
+    case "not_regular":
+      return !1;
+    case "too_large":
+    case "unreadable":
+      return !0;
+    case "read":
+      return t === void 0 || mn(r.content) !== t;
+  }
+}
+async function Wn(e, t) {
+  let n = Ae(t.configHome, e.path),
+    r = await ot(t.homeReal, n),
+    o = !(await Ee(t))
+      ? "home_unvetted"
+      : r === null
+        ? "unresolvable"
+        : !Eot(r)
+          ? "resolves_elsewhere"
+          : await qn(e.path, t);
+  if (o !== "none")
+    return (q("warn", "home_seed_remove_obstructed", { reason: o }), "failed");
+  let d = await De(n, Yje);
+  switch (d.kind) {
+    case "absent":
+      return "gone";
+    case "too_large":
+      return "not_ours";
+    case "not_regular":
+      return (
+        q("warn", "home_seed_remove_obstructed", { reason: "not_regular" }),
+        "failed"
+      );
+    case "unreadable":
+      return (q("warn", "home_seed_remove_failed", { code: d.code }), "failed");
+    case "read":
+      break;
+  }
+  if (mn(d.content) !== e.sha256) return "not_ours";
+  try {
+    return (await Bn(n), "removed");
+  } catch (_) {
+    let h = A(_) ?? "unknown";
+    if (je(h)) return "gone";
+    return (q("warn", "home_seed_remove_failed", { code: h }), "failed");
+  }
+}
+async function Ai(e, t, n) {
+  let r = {
+    written: !1,
+    removed: !1,
+    removeFailed: !1,
+    replaced: "none",
+    sha256After: e.priorSettingsSha256,
+  };
+  if (t === void 0 || (e.settings === null && e.priorSettingsSha256 === null))
+    return r;
+  if (Kn(t) !== Jje || !(await Hi(n.homeReal, t)))
+    return (
+      q("warn", "home_seed_settings_path_refused", {}),
+      e.settings === null ? { ...r, removeFailed: !0 } : r
+    );
+  let o = t;
+  if (e.settings === null && !(await Ee(n)))
+    return (
+      q("warn", "home_seed_settings_remove_failed", { code: "home_unvetted" }),
+      { ...r, removeFailed: !0 }
+    );
+  let d = await De(o, ht);
+  if (d.kind === "not_regular" || d.kind === "unreadable")
+    return (
+      q("warn", "home_seed_settings_not_replaceable", { reason: d.kind }),
+      e.settings === null ? { ...r, removeFailed: !0 } : r
+    );
+  let _ =
+    d.kind === "absent"
+      ? "none"
+      : d.kind === "read" && mn(d.content) === e.priorSettingsSha256
+        ? "ours"
+        : "foreign";
+  if (e.settings === null) {
+    if (_ !== "ours") return { ...r, replaced: _, sha256After: null };
+    try {
+      return (
+        await Bn(o),
+        { ...r, removed: !0, replaced: _, sha256After: null }
+      );
+    } catch (h) {
+      let S = A(h) ?? "unknown";
+      if (je(S)) return { ...r, replaced: _, sha256After: null };
+      return (
+        q("warn", "home_seed_settings_remove_failed", { code: S }),
+        { ...r, removeFailed: !0, replaced: _ }
+      );
+    }
+  }
+  if (!(await Ee(n)))
+    return (
+      q("warn", "home_seed_settings_not_replaceable", {
+        reason: "home_unvetted",
+      }),
+      { ...r, replaced: _ }
+    );
+  n.deps.markInternalWrite(o);
+  try {
+    await n.deps.writeHomeFile(
+      n.configHome,
+      o,
+      Buffer.from(e.settings.rendered),
+    );
+    let h = await lt(o);
+    if (h !== null || !(await Ee(n)))
+      return (
+        q("warn", "home_seed_write_unverified", {
+          reason: h ?? "home_unvetted",
+        }),
+        { ...r, replaced: _, sha256After: e.settings.sha256 }
+      );
+    return { ...r, written: !0, replaced: _, sha256After: e.settings.sha256 };
+  } catch (h) {
+    return (
+      n.deps.consumeInternalWrite(o),
+      q("warn", "home_seed_settings_write_failed", { code: A(h) ?? "unknown" }),
+      {
+        ...r,
+        replaced: _,
+        sha256After: _ === "ours" ? e.priorSettingsSha256 : null,
+      }
+    );
+  }
+}
+async function Hi(e, t) {
+  try {
+    return (await Ue(Ct(t))) === e && Kn(t) !== "";
+  } catch {
+    return !1;
+  }
+}
+async function Oi(e, t) {
+  if (!(await Ee(e)))
+    return (
+      q("warn", "home_seed_sidecar_write_failed", { code: "home_unvetted" }),
+      !1
+    );
+  let n = xe(e.configHome, rt),
+    r = await lt(n);
+  if (r !== null && r !== "leaf_absent")
+    return (q("warn", "home_seed_sidecar_write_refused", { reason: r }), !1);
+  try {
+    await e.deps.writeHomeFile(e.configHome, n, hn(t));
+  } catch (d) {
+    return (
+      q("warn", "home_seed_sidecar_write_failed", { code: A(d) ?? "unknown" }),
+      !1
+    );
+  }
+  let o = await lt(n);
+  if (o !== null || !(await Ee(e)))
+    return (
+      q("warn", "home_seed_sidecar_write_unverified", {
+        reason: o ?? "home_unvetted",
+      }),
+      !1
+    );
+  return !0;
+}
+async function Ti(e, t) {
+  let n = Buffer.allocUnsafe(t),
+    r = 0;
+  while (r < t) {
+    let { bytesRead: o } = await e.read(n, r, t - r, r);
+    if (o === 0) break;
+    r += o;
+  }
+  return n.subarray(0, r);
+}
+function Zn() {
+  return {
+    apply: ({
+      outcome: e,
+      probe: t,
+      report: n,
+      generation: r,
+      epochGt1: o,
+      durationMs: d,
+      appliedBeforeFirstAsk: _,
+      outputStyleCheck: h,
+    }) => {
+      let S =
+        n !== null &&
+        n.outcome !== "config_home_unsafe" &&
+        n.outcome !== "flag_off"
+          ? n
+          : null;
+      switch (
+        (i("tengu_home_seed_apply", {
+          outcome: u(e),
+          probe: u(t),
+          generation: r,
+          epoch_gt1: o,
+          duration_ms: d,
+          applied_before_first_ask: _,
+          output_style_check: u(h),
+          ...(S !== null && {
+            files_applied: S.filesApplied,
+            files_replaced_foreign: S.filesReplacedForeign,
+            files_refused_destination: S.filesRefused.destination,
+            files_refused_over_cap: S.filesRefused.overCap,
+            files_refused_resolved_destination:
+              S.filesRefused.resolvedDestination,
+            files_refused_parent_not_directory:
+              S.filesRefused.parentNotDirectory,
+            files_refused_dest_is_directory: S.filesRefused.destIsDirectory,
+            files_refused_loader_reach: S.filesRefused.loaderReach,
+            files_failed: S.filesFailed,
+            files_removed: S.filesRemoved,
+            removals_failed: S.removalsFailed,
+            settings_written: S.settingsWritten,
+            settings_removed: S.settingsRemoved,
+            settings_refused: u(S.settingsRefused),
+            replaced_existing_settings: u(S.replacedExistingSettings),
+            refiltered_keys: S.refilteredKeys,
+            permissions_dropped: S.permissionsDropped,
+            sidecar_written: S.sidecarWritten,
+          }),
+          ...(n?.outcome === "config_home_unsafe" && {
+            config_home_unsafe_reason: u(n.reason),
+          }),
+        }),
+        e)
+      ) {
+        case "applied":
+        case "already_applied":
+        case "empty":
+          y("ccr_home_seed");
+          break;
+        case "partial":
+        case "stale_generation":
+        case "auth_skipped":
+        case "transport_failed":
+        case "request_rejected":
+        case "pack_absent":
+        case "unannounced_row":
+        case "refused_lane":
+        case "flag_off":
+          g("ccr_home_seed", e);
+          break;
+        case "bad_pack":
+        case "config_home_unsafe":
+          f("ccr_home_seed", e);
+          break;
+        default:
+      }
+    },
+    hold: ({
+      outcome: e,
+      waitedMs: t,
+      verdictWaitMs: n,
+      firstAsk: r,
+      agentNotice: o,
+    }) => {
+      i("tengu_home_seed_hold", {
+        outcome: u(e),
+        waited_ms: t,
+        verdict_wait_ms: n,
+        first_ask: r,
+        agent_notice: u(o),
+      });
+    },
+    recovery: ({
+      outcome: e,
+      generation: t,
+      durationMs: n,
+      rulesDropped: r,
+    }) => {
+      switch (
+        (i("tengu_home_seed_recovery", {
+          outcome: u(e),
+          generation: t,
+          duration_ms: n,
+          rules_dropped: r,
+        }),
+        e)
+      ) {
+        case "restored":
+        case "no_ready_row":
+        case "no_rules":
+        case "superseded":
+        case "gate_closed":
+        case "nothing_applied":
+          break;
+        case "lane_unavailable":
+        case "pack_absent":
+        case "generation_mismatch":
+        case "request_failed":
+        case "sidecar_invalid":
+        case "rules_unverifiable":
+        case "settings_refused":
+        case "auth_failed":
+          g("ccr_home_seed", `recovery_${e}`);
+          break;
+        case "ready_unreadable":
+        case "pack_unreadable":
+        case "settings_unusable":
+        case "threw":
+          f("ccr_home_seed", `recovery_${e}`);
+          break;
+      }
+    },
+  };
+}
+function xi(e, t, n) {
+  if (e.outcome === "config_home_unsafe" || e.outcome === "flag_off") return;
+  if (e.settingsWritten || e.settingsRemoved) n.reloadUserSettings();
+  if (e.touchedKinds.has("claude_md") || e.touchedKinds.has("rule"))
+    (n.clearMemoryFiles(), n.clearUserContext());
+  if (
+    (e.filesApplied > 0 ||
+      e.filesRemoved > 0 ||
+      e.settingsWritten ||
+      e.settingsRemoved) &&
+    !t.beforeFirstAsk
+  )
+    n.clearSystemPromptSections();
+  if (e.touchedKinds.has("output_style")) n.clearOutputStyles();
+}
+var Di = {
+    outputStyle: "output style",
+    includeCoAuthoredBy: "co-author preference",
+    includeGitInstructions: "git-instructions preference",
+    alwaysThinkingEnabled: "thinking preference",
+    showThinkingSummaries: "thinking-summary preference",
+  },
+  Mi =
+    "the output style your settings select is not available in this session, so it does not apply",
+  Fi = {
+    ready_unreadable: "the earlier acknowledgement could not be read",
+    rules_unverifiable:
+      "none of them is in a form this environment can take without your machine",
+    settings_refused:
+      "this environment's build could not read the settings your machine sent",
+    auth_failed:
+      "this environment's credentials were refused while fetching them",
+    pack_absent: "they are no longer stored for this session",
+    pack_unreadable: "the stored copy could not be read",
+    generation_mismatch:
+      "the stored copy is not the one this session acknowledged",
+    request_failed: "the stored copy could not be fetched",
+    settings_unusable: "the settings file here could not be merged into",
+    nothing_applied: "they could not be written here",
+  };
+function Ja(e) {
+  if (e.kind === "not_restored")
+    return {
+      text: `This cloud environment was recreated and the permission rules forwarded from your machine could not be restored (${Fi[e.reason]}): the deny and ask rules your machine sent are not restored here; ${e.reason === "settings_refused" ? "a cloud environment on a newer Claude Code build will have them" : "a new cloud session started from that machine will have them"}.`,
+      level: "warning",
+    };
+  let t = [
+      ...(e.denyRules > 0
+        ? [`${e.denyRules} deny ${x(e.denyRules, "rule")}`]
+        : []),
+      ...(e.askRules > 0 ? [`${e.askRules} ask ${x(e.askRules, "rule")}`] : []),
+    ],
+    n = e.beforeFirstAsk
+      ? ""
+      : e.duringHold
+        ? " (in effect for this reply)"
+        : " (from your next message)",
+    r =
+      e.droppedRules > 0
+        ? ` (${e.droppedRules} ${x(e.droppedRules, "rule")} ${x(e.droppedRules, "was", "were")} left out: too long, too many, or not in a plain form)`
+        : "";
+  return {
+    text: `Restored ${t.join(" and ")} from this session\u2019s stored copy of your machine\u2019s settings after this cloud environment was recreated${n}${r}; CLAUDE.md, preferences and allow rules from your machine are not restored in this environment \u2014 a new cloud session started from that machine will have them.`,
+    level: "notice",
+  };
+}
+function Qa(e) {
+  let { applied: t } = e,
+    n = [
+      ...(t.claudeMd ? ["CLAUDE.md"] : []),
+      ...(t.rules > 0 ? [`${t.rules} ${x(t.rules, "rule")}`] : []),
+      ...(t.outputStyles > 0
+        ? [`${t.outputStyles} ${x(t.outputStyles, "output style")}`]
+        : []),
+      ...(t.permissionRules > 0
+        ? [`${t.permissionRules} ${x(t.permissionRules, "permission rule")}`]
+        : []),
+      ...t.settingsKeys
+        .filter((P) => !(e.outputStyleMissing && P === "outputStyle"))
+        .map((P) => Di[P] ?? P),
+    ],
+    r = [
+      ...(e.outputStyleMissing ? [Mi] : []),
+      ...(t.filesNotApplied > 0
+        ? [
+            `${t.filesNotApplied} ${x(t.filesNotApplied, "file")} could not be applied`,
+          ]
+        : []),
+      ...(t.settingsNotWritten ? ["settings could not be written"] : []),
+      ...(t.settingsRefused ? ["settings could not be applied"] : []),
+      ...(t.removalsFailed > 0
+        ? [
+            `${t.removalsFailed} earlier ${x(t.removalsFailed, "file")} could not be removed`,
+          ]
+        : []),
+      ...(t.settingsRemoveFailed
+        ? ["the earlier settings could not be removed"]
+        : []),
+    ],
+    o = [
+      ...(t.filesRemoved > 0
+        ? [`${t.filesRemoved} ${x(t.filesRemoved, "file")}`]
+        : []),
+      ...(t.settingsRemoved ? ["the forwarded settings"] : []),
+    ],
+    d = n.length === 0 && o.length > 0;
+  if (n.length === 0 && !d && r.length === 0) return null;
+  let _ = e.beforeFirstAsk
+      ? ""
+      : e.duringHold
+        ? " (in effect for this reply)"
+        : " (from your next message)",
+    h = r.length > 0 ? ` (${r.join("; ")})` : "",
+    S = t.filesRemoved + (t.settingsRemoved ? 2 : 0);
+  return {
+    text: d
+      ? `${o.join(" and ")} from your machine ${x(S, "was", "were")} removed${h}${_}`
+      : n.length === 0
+        ? `Settings from your machine could not be applied: ${r.join("; ")}`
+        : e.generation === 1
+          ? e.beforeFirstAsk
+            ? `Started with settings from your machine: ${n.join(", ")}${h}`
+            : `Applied settings from your machine: ${n.join(", ")}${h}${_}`
+          : `Updated settings from your machine: ${n.join(", ")}${h}${_}`,
+    level:
+      e.outcome === "partial" || e.outputStyleMissing
+        ? "warning"
+        : r.length === 0
+          ? "debug"
+          : "notice",
+  };
+}
+function Ci() {
+  return {
+    holdMaxMs: Math.min(a.CLAUDE_CODE_HOME_SEED_HOLD_TIMEOUT_MS ?? Pt, Pt),
+    verdictWaitMaxMs: Math.min(
+      a.CLAUDE_CODE_HOME_SEED_VERDICT_TIMEOUT_MS ?? Dt,
+      Dt,
+    ),
+  };
+}
+function el({
+  session: e,
+  record: t,
+  configHome: n,
+  repoRoot: r,
+  storageV5: o,
+}) {
+  let d = {
+    reloadUserSettings: () => kl.notifyChange("userSettings"),
+    clearMemoryFiles: () => nR(e),
+    clearUserContext: () => ET(e, "settings_sync"),
+    clearSystemPromptSections: rV,
+    clearOutputStyles: () => {
+      (Lmt(), yDe());
+    },
+  };
+  return Hn(
+    { configHome: n, repoRoot: r, settingsPath: Pi(n, Jje) },
+    {
+      verdicts: { subscribe: QVn.subscribe },
+      announcements: {
+        remembered: t.announcements,
+        subscribe: t.announced.subscribe,
+      },
+      pullRow: Q2,
+      putRow: Hne,
+      readSidecar: $n,
+      sidecarState: jn,
+      readStandingSettings: Gn,
+      execute: Xn,
+      applyDeps: rs(() => Vn({ storageV5: o, configHome: n })),
+      afterApply: (_, h) => xi(_, h, d),
+      telemetry: Zn(),
+      notifyAgent: (_) => {
+        let h = CV.of(e);
+        (h.openGate(), h.stage(_));
+      },
+      now: () => Date.now(),
+      setTimer: (_, h) => {
+        let S = setTimeout(_, h);
+        return () => clearTimeout(S);
+      },
+      sleep: Z,
+      epochGt1: (a.CLAUDE_CODE_WORKER_EPOCH ?? 1) > 1,
+      outputStyleAvailable: async (_) => Object.hasOwn(await dX(Q(), o), _),
+      enabled: LD,
+      enabledNow: aU,
+      limits: {
+        ...Ci(),
+        requestAttempts: vn,
+        requestRetryDelayMs: kn,
+        permissionsFromAnyAnnouncedPack: An,
+      },
+    },
+  );
+}
+function tl(e) {
+  (q("warn", "home_seed_stopped_no_dir_sync", {}), e.stop());
+}
+export {
+  Qa as formatHomeAppliedLine,
+  Ja as formatHomeRestoreLine,
+  el as startWorkerHomeSeed,
+  tl as stopHomeSeedWithoutDirSync,
+};

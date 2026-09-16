@@ -1,0 +1,387 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+class YA {
+  cachedSessionId = null;
+  initialized = !1;
+  initializeInFlight = null;
+  discoverInFlight = null;
+  servedCatalogHashes = new Map();
+  approvedPlans = new Map();
+  verifiedProjectGrants = new Set();
+  recardAllProjects = !1;
+  recardProjects = new Set();
+  grantIneligibleProjects = new Set();
+  planStore = new Map();
+  consentCache = null;
+  consentFetch = null;
+  consentCacheGeneration = 0;
+  grantsFetch = null;
+}
+import { randomBytes as A } from "crypto";
+var j = m(() =>
+    c({
+      projectId: s(),
+      writes: v(s()),
+      deletes: v(s()),
+      localDir: s().optional(),
+    }),
+  ),
+  _ = /^plan_[a-z0-9]{1,16}_[a-f0-9]{12}$/;
+function R(e) {
+  let t =
+      e
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "")
+        .slice(0, 16) || "anon",
+    n = A(6).toString("hex");
+  return `plan_${t}_${n}`;
+}
+function tT(e) {
+  return e
+    .replace(/\\/g, "/")
+    .split("/")
+    .filter((t) => t !== "" && t !== ".")
+    .join("/");
+}
+function wdt(e) {
+  let t = tT(e).toLowerCase();
+  return (
+    t === "claude.md" ||
+    t.startsWith("claude.md/") ||
+    t === ".claude" ||
+    t.startsWith(".claude/")
+  );
+}
+function $Pe(e) {
+  return /[*?]/.test(e);
+}
+var g = 3,
+  UPe = 256;
+function h(e) {
+  let t = "",
+    n = 0,
+    o = 0,
+    r = () => {
+      if (++o > g) throw Error(`glob "${e}" exceeds ${g} '*'/'**' wildcards`);
+    };
+  while (n < e.length) {
+    let i = e.charAt(n);
+    if (i === "*" && e.charAt(n + 1) === "*")
+      if ((r(), e.charAt(n + 2) === "/")) ((t += "(?:.*/)?"), (n += 3));
+      else ((t += ".*"), (n += 2));
+    else if (i === "*") (r(), (t += "[^/]*"), (n += 1));
+    else if (i === "?") ((t += "[^/]"), (n += 1));
+    else if (/[.+^$|()[\]{}\\]/.test(i)) ((t += "\\" + i), (n += 1));
+    else ((t += i), (n += 1));
+  }
+  return new RegExp(`^${t}$`);
+}
+function Tdt(e, t) {
+  let n = tT(e);
+  if (!n) return !1;
+  if (n.length > UPe) return !1;
+  if (n.split("/").includes("..") || n.includes("\x00")) return !1;
+  for (let o of t) {
+    let r = tT(o);
+    if ($Pe(r))
+      try {
+        if (h(r).test(n)) return !0;
+      } catch {}
+    else if (r === n) return !0;
+  }
+  return !1;
+}
+function C6n(e, t) {
+  let n = {
+      projectId: t.projectId,
+      writes: t.writes.map(tT),
+      deletes: t.deletes.map(tT),
+      ...(t.localDir !== void 0 && { localDir: t.localDir }),
+    },
+    o = j().safeParse(n);
+  if (!o.success) throw Error("registerPlan: plan failed shape validation");
+  for (let i of [...o.data.writes, ...o.data.deletes]) if ($Pe(i)) h(i);
+  let r = R(t.projectId);
+  return (e.planStore.set(r, o.data), r);
+}
+function Edt(e, t) {
+  if (!_.test(t)) return null;
+  return e.planStore.get(t) ?? null;
+}
+function a(e) {
+  return e
+    .toLowerCase()
+    .replace(/^urn:uuid:/, "")
+    .replace(/[{}-]/g, "");
+}
+function v6n(e) {
+  e.planStore.clear();
+}
+function mbe(e, t) {
+  let n = a(t);
+  for (let [o, r] of e.planStore)
+    if (a(r.projectId) === n) e.planStore.delete(o);
+}
+var y = 900000,
+  d = 20,
+  hqe = 80,
+  x = 2000,
+  P = 256,
+  k =
+    /[\x00-\x1f\x7f-\x9f#?,:[\]\u00AD\u061C\u200B-\u200F\u2026\u2028\u2029\u202A-\u202E\u2066-\u2069\uFEFF\uFF0C\uFF1A\uFF3B\uFF3D]/;
+function p(e) {
+  return k.test(e);
+}
+function F(e, t) {
+  if (e.length > d || t.length > d) return !1;
+  for (let r of [...e, ...t]) if (r.length > hqe || p(r)) return !1;
+  let n = (r) =>
+    r.length === 0
+      ? 0
+      : 32 +
+        r.reduce((i, l) => i + l.length, 0) +
+        2 * Math.max(0, r.length - 1);
+  return 240 + n(e) + n(t) <= x;
+}
+function $sn(e) {
+  if (e === void 0 || e.length === 0 || e.length > d) return !1;
+  for (let r of e) if ((b(r)?.length ?? 1 / 0) > hqe || p(r)) return !1;
+  let t = Math.max(0, Math.min(200, Math.floor(1800 / e.length) - 95)),
+    n = 44 + (t > 0 ? t + 3 : 0);
+  return (
+    272 +
+      e.reduce((r, i) => r + i.length + n, 0) +
+      2 * Math.max(0, e.length - 1) <=
+    x
+  );
+}
+function C(e) {
+  return e.length > 0 && b(e).length <= hqe && !p(e);
+}
+var Xee = new Set(["update_sharing", "add_member", "update_member_role"]);
+function Yee(e, t) {
+  let n = a(t);
+  for (let [o, r] of e.approvedPlans)
+    if (a(r.projectId) === n) e.approvedPlans.delete(o);
+}
+function R6n(e) {
+  e.approvedPlans.clear();
+}
+function Jee(e, t) {
+  if (typeof t !== "string" || t.length === 0) return;
+  e.verifiedProjectGrants.add(t);
+}
+function Adt(e, t) {
+  return e.verifiedProjectGrants.has(t);
+}
+function Ice(e, t) {
+  let n = a(t);
+  for (let o of e.verifiedProjectGrants)
+    if (a(o) === n) e.verifiedProjectGrants.delete(o);
+}
+function N4(e, t) {
+  return e.recardAllProjects || e.recardProjects.has(a(t));
+}
+function gbe(e, t) {
+  if (typeof t !== "string" || t.length === 0) return;
+  e.recardProjects.add(a(t));
+}
+function k6n(e) {
+  (e.verifiedProjectGrants.clear(), (e.recardAllProjects = !0));
+}
+function x6n(e, t) {
+  if (typeof t !== "string" || t.length === 0) return;
+  e.grantIneligibleProjects.add(a(t));
+}
+function H6n(e, t) {
+  return e.grantIneligibleProjects.has(a(t));
+}
+function I6n(e, t, n, o = Date.now()) {
+  if (typeof t !== "string" || t.length === 0) return !1;
+  if ((Yee(e, n.projectId), !C(n.projectId) || !F(n.writes, n.deletes)))
+    return !1;
+  let r = n.serverExpiresAtMs;
+  if (typeof r === "number" && !Number.isFinite(r)) return !1;
+  if (typeof r === "number" && Number.isFinite(r) && r <= o) return !1;
+  return (
+    e.approvedPlans.set(t, {
+      projectId: n.projectId,
+      writes: new Set(n.writes.map(tT)),
+      deletes: new Set(n.deletes.map(tT)),
+      expiresAt:
+        typeof r === "number" && Number.isFinite(r)
+          ? Math.min(r, o + y)
+          : o + y,
+    }),
+    !0
+  );
+}
+var S = {
+  write_files: (e) => {
+    let t = e.files;
+    if (!Array.isArray(t)) return null;
+    let n = [];
+    for (let o of t) {
+      let r = o?.path;
+      if (typeof r !== "string") return null;
+      n.push(r);
+    }
+    return { targets: n, set: "writes" };
+  },
+  delete_files: (e) => {
+    if (e.paths !== void 0 && e.files !== void 0) return null;
+    let t = [];
+    if (Array.isArray(e.paths)) {
+      for (let n of e.paths) {
+        if (typeof n !== "string") return null;
+        t.push(n);
+      }
+      return { targets: t, set: "deletes" };
+    }
+    if (Array.isArray(e.files)) {
+      for (let n of e.files) {
+        let o = n?.path;
+        if (typeof o !== "string") return null;
+        t.push(o);
+      }
+      return { targets: t, set: "deletes" };
+    }
+    return null;
+  },
+  create_support_js: (e) => {
+    let t = e.path;
+    if (t === void 0 || t === "")
+      return { targets: ["support.js"], set: "writes" };
+    if (typeof t !== "string") return null;
+    return { targets: [t], set: "writes" };
+  },
+};
+function D(e) {
+  return Object.hasOwn(S, e);
+}
+function E(e) {
+  if (p(e)) return `rejected character in path: ${e}`;
+  if (wdt(e)) return `reserved path: ${e}`;
+  if (
+    tT(e)
+      .toLowerCase()
+      .split("/")
+      .some((n) => {
+        let o = n.replace(/[\s.]+$/, "").replace(/^\s+/, "");
+        return o === "claude.md" || o === ".claude" || /~\d/.test(o);
+      })
+  )
+    return `reserved segment: ${e}`;
+  let t = tT(e);
+  if (
+    !t ||
+    t.split("/").some((n) => /^\s*\.\.[\s.]*$/.test(n)) ||
+    t.includes("\x00")
+  )
+    return `path does not normalize: ${e}`;
+  return null;
+}
+function _qe(e, t) {
+  let n = D(e) ? S[e] : void 0;
+  if (!n || !t) return { outcome: "ask", reason: "not a plan-gated operation" };
+  let o = n(t);
+  if (!o) return { outcome: "ask", reason: "target paths unenumerable" };
+  let { targets: r, set: i } = o;
+  if (r.length === 0)
+    return { outcome: "ask", reason: "no target paths", targets: r };
+  if (r.length > P)
+    return {
+      outcome: "ask",
+      reason: `more than ${P} target paths`,
+      targets: r,
+    };
+  for (let l of r) {
+    let u = E(l);
+    if (u !== null) return { outcome: "ask", reason: u, targets: r };
+  }
+  return { outcome: "pass", targets: r, set: i };
+}
+function P6n(e, t, n, o = Date.now()) {
+  if (!D(t) || !n)
+    return { outcome: "ask", reason: "not a plan-gated operation" };
+  let { plan_token: r, project_id: i } = n;
+  if (typeof r !== "string" || typeof i !== "string")
+    return { outcome: "ask", reason: "missing plan_token or project_id" };
+  let l = e.approvedPlans.get(r);
+  if (!l)
+    return {
+      outcome: "ask",
+      reason: "plan_token not approved in this process",
+    };
+  if (o >= l.expiresAt)
+    return (
+      e.approvedPlans.delete(r),
+      { outcome: "ask", reason: "approved plan expired" }
+    );
+  if (l.projectId !== i)
+    return { outcome: "ask", reason: "plan_token is for a different project" };
+  let u = _qe(t, n);
+  if (u.outcome !== "pass") return { outcome: "ask", reason: u.reason };
+  let w = u.set === "writes" ? l.writes : l.deletes;
+  for (let f of u.targets)
+    if (!w.has(tT(f)))
+      return { outcome: "ask", reason: `path not in approved plan: ${f}` };
+  return { outcome: "allow" };
+}
+function O6n(e) {
+  for (let t of e)
+    if (t?.type === "text" && typeof t.text === "string")
+      try {
+        let n = z(t.text),
+          o = n.plan_token;
+        if (typeof o !== "string" || o.length === 0) return null;
+        let r = n.expires_at,
+          i =
+            typeof r === "number" && Number.isFinite(r * 1000)
+              ? r * 1000
+              : null;
+        return { token: o, expiresAtMs: i };
+      } catch {
+        return null;
+      }
+  return null;
+}
+export {
+  YA,
+  tT,
+  wdt,
+  $Pe,
+  UPe,
+  Tdt,
+  C6n,
+  Edt,
+  v6n,
+  mbe,
+  hqe,
+  $sn,
+  Xee,
+  Yee,
+  R6n,
+  Jee,
+  Adt,
+  Ice,
+  N4,
+  gbe,
+  k6n,
+  x6n,
+  H6n,
+  I6n,
+  _qe,
+  P6n,
+  O6n,
+};

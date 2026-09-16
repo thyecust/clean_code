@@ -1,0 +1,99 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { eFe } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { nAt } from "../../02-功能模块/图表-Mermaid/chunk-743atbtj.js";
+import { $jn } from "../../02-功能模块/CodeReview/chunk-cwdcyphs.js";
+import { Njn } from "./chunk-wm4s322b.js";
+import { Fi } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { Gjn } from "./chunk-f7n720sn.js";
+import { ef } from "./chunk-sda3j0p4.js";
+import { nbe } from "./chunk-1rpyafm2.js";
+function a(e, r) {
+  return Object.entries(e.frameUrls ?? {}).find(
+    ([i, s]) => s?.url !== void 0 && !nbe(i) && Fi(s.url) === r,
+  )?.[0];
+}
+function l(e, r) {
+  return (
+    (e.workshopVerifiedSlugs ?? []).includes(r) ||
+    Object.entries(e.frameUrls ?? {}).some(
+      ([i, s]) => s?.url !== void 0 && Fi(s.url) === r && nAt(i),
+    )
+  );
+}
+function Ole(e, r) {
+  return {
+    ownPublishes: eFe(e, r),
+    workshopTelemetry: Gjn(e, r),
+    whiteboardTelemetry: Njn(e, r),
+    prReviewTargets: $jn(e, r),
+    recordedPages: {
+      isWorkshopPage: (i) => l(e(), i),
+      localSourcePath: (i) => a(e(), i),
+    },
+  };
+}
+function elt() {
+  let e = {};
+  return Ole(
+    () => e,
+    (r) => {
+      e = r(e);
+    },
+  );
+}
+var tlt = {
+  assign: () => ef[0],
+  get: () => {
+    return;
+  },
+};
+function Dle(e) {
+  return {
+    assign(r) {
+      let i = e.get(),
+        s = i.assignments.get(r);
+      if (s) return s;
+      let t = ef[i.index % ef.length];
+      return (
+        e.set((o) => {
+          if (o.assignments.has(r)) return o;
+          let n = new Map(o.assignments);
+          return (n.set(r, t), { assignments: n, index: o.index + 1 });
+        }),
+        t
+      );
+    },
+    get(r) {
+      return e.get().assignments.get(r);
+    },
+  };
+}
+var i7 = Object.freeze({ bridge: void 0, channel: void 0 });
+class yDt {
+  #e = void 0;
+  #r = void 0;
+  get bridge() {
+    return this.#e;
+  }
+  get channel() {
+    return this.#r;
+  }
+  connectBridge(e) {
+    this.#e = e;
+  }
+  disconnectBridge() {
+    this.#e = void 0;
+  }
+  setChannel(e) {
+    this.#r = e;
+  }
+}
+export { Ole, elt, tlt, Dle, i7, yDt };

@@ -1,0 +1,1734 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
+import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import "../../00-第三方库/lodash/lodash.207999qb.js";
+import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { be, Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { os, x, us } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import "../../00-第三方库/zod/zod.3g334xwq.js";
+import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
+import "../键位绑定(Keybindings)/chunk-qy43nqgh.js";
+import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import "../文件监听-Watch/文件监听-Watch.3efypmps.js";
+import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { Ff, ua, hvt, Ns, ee, es } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import "../Git-Worktree/chunk-9ys1bnqr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import { jn, Ks, tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { Pn, uy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import "../Teammates团队/chunk-qe04h4c5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
+import "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { Ge, Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import "../权限系统/chunk-e4pfvp7x.js";
+import "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import "../工具Bash-Shell/chunk-4pap8y5n.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-svk2cp17.js";
+import "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import { pr } from "../权限系统/chunk-ynkf3yy4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import "../Teammates团队/chunk-811z9z0t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import "../../00-第三方库/axios/axios.t0fczzmz.js";
+import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1bqqnyc1.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
+import "../Git-Worktree/chunk-bk9696gx.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import "../Hooks钩子/chunk-9em0d4k5.js";
+import "../状态栏-主题/chunk-dqyc6kge.js";
+import "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
+import "../状态栏-主题/chunk-jz6b76hr.js";
+import "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import "../状态栏-主题/chunk-w5jaj6kg.js";
+import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import "../状态栏-主题/chunk-q7ekqy5h.js";
+import "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import "../认证-OAuth登录/chunk-s51acx6w.js";
+import "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-kk7p3hsm.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ewa397cg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
+import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { eee } from "../../01-核心基础设施/共享小工具-未细化/chunk-my8s4daz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-sdk55p8n.js";
+import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import "../Workflow编排/chunk-0t0sve49.js";
+import "../Hooks钩子/chunk-bzqqe6xh.js";
+import "../插件系统/chunk-7s6mt1vg.js";
+import { Efn, Djt, Ljt, an, Na, qMe, QMe, Ny, nR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
+import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
+import "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import "../Teammates团队/chunk-thxapyam.js";
+import {
+  jj,
+  qTn,
+  HK,
+  Vqt,
+  CFe,
+  zer,
+  M$,
+  om,
+  OYe,
+  DCe,
+  N$,
+  Vk,
+  HN,
+  DYe,
+  Ker,
+  jfe,
+  vTt,
+  vFe,
+  nf,
+  RTt,
+  kTt,
+  HTt,
+  tEn,
+  nEn,
+  rEn,
+  IK,
+  Wj,
+  FCe,
+  xJ,
+  kFe,
+  xFe,
+  ih,
+  Ed,
+  $a,
+  ezt,
+  cEn,
+  HG,
+  ctr,
+  OC,
+  Wy,
+  fEn,
+  mEn,
+  LFe,
+} from "./Memory-CLAUDE.md.vx19drc8.js";
+import { t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import "../MCP客户端/chunk-3kmsshb6.js";
+import "../图表-Mermaid/chunk-743atbtj.js";
+import "../Skills技能/chunk-sapykxw7.js";
+import "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
+import "../权限系统/chunk-t3b7pg2x.js";
+import "../权限系统/chunk-fjrcf22x.js";
+import "../权限系统/chunk-qdy0h5k2.js";
+import "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import "../后台任务-Shell管理/chunk-x3txegas.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6kad94y1.js";
+import "../../01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js";
+import "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import "../Teammates团队/chunk-g6nvp9mm.js";
+import "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
+import "../Teammates团队/chunk-3k2smxfn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import "../后台任务-Shell管理/chunk-djserjj5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import "../Hooks钩子/chunk-z3433nr6.js";
+import "../插件系统/chunk-ajtn749s.js";
+import "../插件系统/chunk-hh8f1qrw.js";
+import "../图片-截图-ComputerUse/chunk-b8jsase9.js";
+import "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
+import "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import "../Teammates团队/chunk-t899nada.js";
+import "../后台任务-Shell管理/chunk-9d5wk5b9.js";
+import "../Cron-定时任务/chunk-mk3zm4ew.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
+import "../Artifact发布-渲染/chunk-rr78st95.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import "../权限系统/chunk-1y2g140m.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0qtt3z52.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import "../Teammates团队/chunk-6b13bhw1.js";
+import "../认证-OAuth登录/chunk-x3rm9w4b.js";
+import "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-5jqttbex.js";
+import "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import "../Skills技能/chunk-1zy5c8mf.js";
+import "../Bridge-RemoteControl/chunk-1yq098a7.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
+import "../ClaudeinChrome/chunk-hnp84hf6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-21sqz10e.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
+import "../图片-截图-ComputerUse/chunk-bvxymt09.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
+import "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import "../权限系统/chunk-8rrcddth.js";
+import "../会话-历史-恢复/chunk-m1xj4s02.js";
+import "../Bridge-RemoteControl/chunk-mxsfy35q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
+import "../语音-音频/chunk-cfhndstm.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
+import "../Bridge-RemoteControl/chunk-ct52ffwb.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-0kqw1wf5.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/设置-配置/chunk-9m8zsynn.js";
+import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
+import "../状态栏-主题/chunk-jrr487ty.js";
+import "../Hooks钩子/chunk-22aft7vr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
+import { $Z } from "../Vim模式/Vim模式.nnewe0gf.js";
+import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
+import { zle } from "../../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js";
+import { Gp } from "../../01-核心基础设施/共享小工具-未细化/chunk-c8g7bday.js";
+import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-37xdmryq.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-tw8akhx1.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-951vj555.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-xc85bfby.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-7jfz2w01.js";
+import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-fgegxt0m.js";
+import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-j4vveza5.js";
+import { kv } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnzfncps.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { yqe } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-j3qyvdwg.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
+import { Dn, jFt, kn, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
+import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
+import "../插件系统/chunk-33bdfgmx.js";
+import "../MCP客户端/chunk-0mwqsv0r.js";
+import "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import "../DesignSync/chunk-5kyac4wk.js";
+import "../MCP客户端/chunk-tznd4407.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-k1vb7vky.js";
+import "../工具Monitor/chunk-kxk3njnj.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
+import { QS } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
+import "../Teammates团队/chunk-eey53z5b.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-6eskfcpn.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
+import "../工具ToolSearch/chunk-1m51pqtd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
+import "../权限系统/chunk-pcxn6gwz.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
+import "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import "../Teammates团队/chunk-enjekn9t.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
+import "../Bedrock-Vertex/chunk-p991cddr.js";
+import { s, T, O, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
+import "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
+import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import "../图片-截图-ComputerUse/chunk-6kdvf977.js";
+import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+F();
+import { writeFile as Sn } from "fs/promises";
+F();
+function qo(Zn, er) {
+  return e(t, { wrap: "truncate-end", children: an(Zn) || " " }, er);
+}
+var Wo = 65536,
+  Go = m(() =>
+    c({
+      memoryFiles: v(
+        c({ path: s(), type: s().catch(""), tokens: T().catch(0) })
+          .nullable()
+          .catch(null),
+      ).catch([]),
+    }),
+  ),
+  zo = m(() =>
+    c({
+      contents: s(),
+      truncated: O()
+        .optional()
+        .catch(void 0),
+    }),
+  );
+async function eo(w, b) {
+  try {
+    let M = kv(
+      "get_context_usage",
+      Go(),
+      await w.sendControlRequest(
+        { subtype: "get_context_usage", detail: "summary" },
+        { signal: b },
+      ),
+    );
+    if (!M)
+      return {
+        kind: "unreadable",
+        reason: "the cloud session sent a reply this version can't display",
+      };
+    return {
+      kind: "read",
+      files: M.memoryFiles.flatMap((k) =>
+        k === null
+          ? []
+          : [
+              {
+                path: k.path,
+                shownPath: an(k.path),
+                type: an(k.type),
+                tokens: k.tokens,
+                userScope: k.type === "User",
+              },
+            ],
+      ),
+    };
+  } catch (M) {
+    return { kind: "unreadable", reason: an(l(M)) };
+  }
+}
+async function Zt(w, b, M) {
+  try {
+    let k = kv(
+      "read_file",
+      zo(),
+      await w.sendControlRequest(
+        { subtype: "read_file", path: b, max_bytes: Wo },
+        { signal: M },
+      ),
+    );
+    return k
+      ? { kind: "read", contents: k.contents, truncated: k.truncated === !0 }
+      : {
+          kind: "unreadable",
+          reason: "the cloud session sent a reply this version can't display",
+        };
+  } catch (k) {
+    let R = l(k);
+    return {
+      kind: "unreadable",
+      reason: R.startsWith("read denied")
+        ? "the cloud session only shows a terminal the files inside its workspace, and this one isn't"
+        : an(R),
+    };
+  }
+}
+function Vo(w) {
+  let b = /[\\/]\.claude[\\/]rules[\\/]([^\\/]+)$/.exec(w);
+  return b ? `~/.claude/rules/${b[1]}` : "~/.claude/CLAUDE.md";
+}
+function ot(w, b) {
+  return w === "sentFromHere"
+    ? `User files were sent from ${qMe()} at launch \u2014 edit ${b === void 0 ? "them under ~/.claude" : Vo(b)} there; changes apply to the next cloud session, or when this machine re-attaches.`
+    : "This file is in the cloud session's own ~/.claude (not from this machine) and can't be opened from here.";
+}
+function _t(zn) {
+  let X = _(31),
+    {
+      onExit: zt,
+      remote: Vt,
+      filesRead: qt,
+      signal: Yt,
+      userMemoryOrigin: ge,
+    } = zn,
+    [Me, Do] = d(null),
+    Fo;
+  if (X[0] !== zt)
+    ((Fo = () => zt("Memory dialog dismissed", { display: "system" })),
+      (X[0] = zt),
+      (X[1] = Fo));
+  else Fo = X[1];
+  let He = Fo;
+  if (Me !== null) {
+    const Be = `${Me.file.type} memory \xB7 read-only`;
+    let Ze;
+    if (X[2] === p) ((Ze = () => Do(null)), (X[2] = Ze));
+    else Ze = X[2];
+    let xe;
+    if (X[3] === p)
+      ((xe = e(D, { chord: "escape", action: "go back" })), (X[3] = xe));
+    else xe = X[3];
+    let je;
+    if (X[4] === p)
+      ((je = e($n, { message: "Reading\u2026", dimColor: !0 })), (X[4] = je));
+    else je = X[4];
+    let $e;
+    if (X[5] !== Me.read)
+      (($e = e(Dn, { fallback: je, children: e(Ot, { read: Me.read }) })),
+        (X[5] = Me.read),
+        (X[6] = $e));
+    else $e = X[6];
+    let Ee;
+    if (X[7] !== Me.file.shownPath || X[8] !== Be || X[9] !== $e)
+      ((Ee = e(de, {
+        title: Me.file.shownPath,
+        subtitle: Be,
+        onCancel: Ze,
+        color: "remember",
+        inputGuide: xe,
+        children: $e,
+      })),
+        (X[7] = Me.file.shownPath),
+        (X[8] = Be),
+        (X[9] = $e),
+        (X[10] = Ee));
+    else Ee = X[10];
+    return Ee;
+  }
+  let Be;
+  if (X[11] === p)
+    ((Be = r(ue, {
+      children: [
+        e(D, { chord: "enter", action: "view" }),
+        e(D, { chord: "escape", action: "close" }),
+      ],
+    })),
+      (X[11] = Be));
+  else Be = X[11];
+  let Ze;
+  if (X[12] === p)
+    ((Ze = e($n, {
+      message: "Asking the cloud session for its memory files\u2026",
+      dimColor: !0,
+    })),
+      (X[12] = Ze));
+  else Ze = X[12];
+  let xe;
+  if (X[13] !== Vt || X[14] !== Yt || X[15] !== ge)
+    ((xe = (wt) =>
+      Do({
+        file: wt,
+        read: wt.userScope
+          ? Promise.resolve({ kind: "userScope", hint: ot(ge, wt.shownPath) })
+          : Zt(Vt, wt.path, Yt),
+      })),
+      (X[13] = Vt),
+      (X[14] = Yt),
+      (X[15] = ge),
+      (X[16] = xe));
+  else xe = X[16];
+  let je;
+  if (X[17] !== He || X[18] !== qt || X[19] !== xe || X[20] !== ge)
+    ((je = e(Dn, {
+      fallback: Ze,
+      children: e(Rt, {
+        filesRead: qt,
+        onPick: xe,
+        onCancel: He,
+        userMemoryOrigin: ge,
+      }),
+    })),
+      (X[17] = He),
+      (X[18] = qt),
+      (X[19] = xe),
+      (X[20] = ge),
+      (X[21] = je));
+  else je = X[21];
+  let $e;
+  if (X[22] === p)
+    (($e = e(t, {
+      dimColor: !0,
+      wrap: "wrap-trim",
+      children:
+        "Workspace files are read-only here: the session takes no edits from a terminal \u2014 ask Claude to edit one, or edit and commit it in the repo.",
+    })),
+      (X[22] = $e));
+  else $e = X[22];
+  let Ee;
+  if (X[23] !== ge)
+    ((Ee =
+      ge === "sentFromHere" &&
+      e(t, { dimColor: !0, wrap: "wrap-trim", children: ot("sentFromHere") })),
+      (X[23] = ge),
+      (X[24] = Ee));
+  else Ee = X[24];
+  let St;
+  if (X[25] !== Ee)
+    ((St = r(o, { flexDirection: "column", children: [$e, Ee] })),
+      (X[25] = Ee),
+      (X[26] = St));
+  else St = X[26];
+  let Io;
+  if (X[27] !== He || X[28] !== je || X[29] !== St)
+    ((Io = r(de, {
+      title: "Memory",
+      subtitle: "Loaded in the cloud session",
+      onCancel: He,
+      color: "remember",
+      inputGuide: Be,
+      children: [je, St],
+    })),
+      (X[27] = He),
+      (X[28] = je),
+      (X[29] = St),
+      (X[30] = Io));
+  else Io = X[30];
+  return Io;
+}
+function Rt(Vn) {
+  let We = _(15),
+    { filesRead: qn, onPick: Kt, onCancel: Xt, userMemoryOrigin: et } = Vn,
+    te = kn(qn);
+  if (te.kind === "unreadable") {
+    let re;
+    if (We[0] !== te.reason)
+      ((re = r(t, {
+        color: "error",
+        children: [
+          "Couldn't list the cloud session's memory files: ",
+          te.reason,
+        ],
+      })),
+        (We[0] = te.reason),
+        (We[1] = re));
+    else re = We[1];
+    return re;
+  }
+  if (te.files.length === 0) {
+    let re;
+    if (We[2] === p)
+      ((re = e(Rn, {
+        hint: "Add a CLAUDE.md to the repo, or ask Claude to write one",
+        children: "No memory files loaded in the cloud session",
+      })),
+        (We[2] = re));
+    else re = We[2];
+    return re;
+  }
+  let re;
+  if (We[3] !== te.files || We[4] !== et) {
+    let De;
+    if (We[6] !== et)
+      ((De = (bt, Yn) => ({
+        value: String(Yn),
+        label: bt.shownPath,
+        description:
+          `${bt.type} \xB7 ${Pn(bt.tokens)} tokens` +
+          (!bt.userScope
+            ? ""
+            : et === "sentFromHere"
+              ? ` \xB7 sent from ${qMe()} at launch`
+              : " \xB7 the session's own ~/.claude, not sent from here"),
+      })),
+        (We[6] = et),
+        (We[7] = De));
+    else De = We[7];
+    re = te.files.map(De);
+    ((We[3] = te.files), (We[4] = et), (We[5] = re));
+  } else re = We[5];
+  let De;
+  if (We[8] !== Kt || We[9] !== te.files)
+    ((De = (Kn) => {
+      let To = te.files[Number(Kn)];
+      if (To) Kt(To);
+    }),
+      (We[8] = Kt),
+      (We[9] = te.files),
+      (We[10] = De));
+  else De = We[10];
+  let Lo;
+  if (We[11] !== Xt || We[12] !== re || We[13] !== De)
+    ((Lo = e(ve, {
+      options: re,
+      visibleOptionCount: 10,
+      hideIndexes: !0,
+      inlineDescriptions: !0,
+      onChange: De,
+      onCancel: Xt,
+    })),
+      (We[11] = Xt),
+      (We[12] = re),
+      (We[13] = De),
+      (We[14] = Lo));
+  else Lo = We[14];
+  return Lo;
+}
+function Ot(Xn) {
+  let tt = _(18),
+    { read: Jn } = Xn,
+    K = kn(Jn),
+    { rows: Qt } = Se();
+  if (K.kind === "userScope") {
+    let se;
+    if (tt[0] !== K.hint)
+      ((se = e(t, { dimColor: !0, wrap: "wrap-trim", children: K.hint })),
+        (tt[0] = K.hint),
+        (tt[1] = se));
+    else se = tt[1];
+    return se;
+  }
+  if (K.kind === "unreadable") {
+    let se;
+    if (tt[2] !== K.reason)
+      ((se = r(t, {
+        color: "error",
+        children: ["Couldn't read it: ", K.reason],
+      })),
+        (tt[2] = K.reason),
+        (tt[3] = se));
+    else se = tt[3];
+    return se;
+  }
+  let Mt, Fe, se, Ct;
+  if (tt[4] !== K.contents || tt[5] !== Qt) {
+    let No = K.contents.replaceAll("\t", "    ").split(/\r?\n/);
+    let Qn = Math.max(5, Qt - 12);
+    let Uo = No.slice(0, Qn);
+    Fe = No.length - Uo.length;
+    Mt = o;
+    se = "column";
+    Ct = Uo.map(qo);
+    ((tt[4] = K.contents),
+      (tt[5] = Qt),
+      (tt[6] = Mt),
+      (tt[7] = Fe),
+      (tt[8] = se),
+      (tt[9] = Ct));
+  } else ((Mt = tt[6]), (Fe = tt[7]), (se = tt[8]), (Ct = tt[9]));
+  let vt;
+  if (tt[10] !== Fe || tt[11] !== K.truncated)
+    ((vt =
+      (Fe > 0 || K.truncated) &&
+      r(t, {
+        dimColor: !0,
+        children: [
+          "\u2026 ",
+          Fe > 0 ? `${Fe} more ${x(Fe, "line")}` : "more",
+          K.truncated ? " (the session sent only the beginning)" : "",
+          " \u2014 ask Claude to show or change the rest",
+        ],
+      })),
+      (tt[10] = Fe),
+      (tt[11] = K.truncated),
+      (tt[12] = vt));
+  else vt = tt[12];
+  let Ho;
+  if (tt[13] !== Mt || tt[14] !== se || tt[15] !== Ct || tt[16] !== vt)
+    ((Ho = r(Mt, { flexDirection: se, children: [Ct, vt] })),
+      (tt[13] = Mt),
+      (tt[14] = se),
+      (tt[15] = Ct),
+      (tt[16] = vt),
+      (tt[17] = Ho));
+  else Ho = tt[17];
+  return Ho;
+}
+F();
+import { mkdir as pn } from "fs/promises";
+import { join as xt } from "path";
+var ze = `${ih} / ${Ed} / ${$a}`,
+  to = 80,
+  Yo =
+    /[\u2039\u203A\uFF1C\uFF1E\uFE64\uFE65\u3008\u3009\u2329\u232A\u27E8\u27E9\u02C2\u02C3]/g,
+  Ko = 20000,
+  Xo = 120000;
+class no {
+  latest = 0;
+  begin() {
+    return ++this.latest;
+  }
+}
+var Jo = new Gt(() => new no());
+async function ro(w, b) {
+  try {
+    let M = Jo.of(w),
+      k = M.begin(),
+      R = b === "project" ? Vqt() : null,
+      P = jj(),
+      j = nt(),
+      W = () => {
+        j = nt();
+      },
+      V = b === "off" ? rEn(W) : nEn(W),
+      B = (await kt(V, Ko)) ?? "timeout";
+    if (B !== "timeout" && B.kind === "refused")
+      return (
+        oo("refused", j, j, []),
+        g("org_memory_project_switch", B.reason),
+        { outcome: "refused", notice: ln(B.reason) }
+      );
+    let I = nt(),
+      Ce = B === "timeout" || B.current.state === "undecided",
+      z = Ce ? "pending" : on(b, j, I),
+      Ie =
+        B !== "timeout" && B.current.state === "on"
+          ? B.current.request.selection
+          : null,
+      he = !Ce && R !== null && Ie !== R && jj() === P && Vqt() === null;
+    Qo(z, j, I);
+    let ce = z === "switched" || z === "connected" ? await rn(I.stores) : [];
+    if ((oo(z, j, I, ce, he), he))
+      g("org_memory_project_switch", "selection_dropped");
+    else if (z === "unavailable" || z === "pending")
+      g(
+        "org_memory_project_switch",
+        B === "timeout" ? "switch_deadline" : nn(B.current),
+      );
+    else y("org_memory_project_switch", { outcome: u(z) });
+    if (z === "pending")
+      V.then(() => vFe(Xo, void 0, { unref: !0 }))
+        .then(() => {
+          if (k !== M.latest) return;
+          let Ye = nt();
+          if (ke(j) || Ye.stores.length > 0)
+            HG(Ye.stores.some((q) => q.writable));
+        })
+        .catch(() => {});
+    let qe = mn(z, b, j, I, ce, he);
+    return {
+      outcome: z,
+      notice: sn(z, b, j, I, he),
+      ...(qe !== null && { modelMessage: qe }),
+    };
+  } catch (M) {
+    return (
+      kTt(),
+      M$(),
+      h(M),
+      f("org_memory_project_switch", "unexpected_throw"),
+      { outcome: "unavailable", notice: cn(b) }
+    );
+  }
+}
+function Qo(w, b, M) {
+  switch (w) {
+    case "switched":
+    case "connected":
+      HG(M.stores.some((k) => k.writable));
+      return;
+    case "disconnected":
+    case "unavailable":
+    case "pending":
+      if (ke(b)) HG(!1);
+      return;
+    case "unchanged":
+      if (ke(b) || M.stores.length > 0) HG(M.stores.some((k) => k.writable));
+      return;
+  }
+}
+function ke(w) {
+  return w.servedEarlier || w.stores.length > 0;
+}
+function nt() {
+  return {
+    project: Zo(nf()),
+    servedEarlier: RTt() !== null,
+    stores: kFe(Wj()).map((w) => ({
+      id: xJ(w),
+      description: xFe(w),
+      writable: FCe(w),
+      promptIndex: w.promptIndex,
+      store: w,
+    })),
+  };
+}
+function Zo(w) {
+  if (w.state !== "on") return { kind: "none" };
+  let b = w.request.selection;
+  if (b === null || w.selectionSource !== "preference")
+    return { kind: "default" };
+  if (HK(b)) return { kind: "picked", name: "all public projects" };
+  let M = HTt()?.candidates.find((k) => k.id === b);
+  return { kind: "picked", name: M === void 0 ? null : en(M.name) };
+}
+function en(w) {
+  let b = t5(w)
+    .replaceAll('"', "'")
+    .replaceAll("<", "\u2039")
+    .replaceAll(">", "\u203A")
+    .replace(/[\u2028\u2029]/g, " ")
+    .trim();
+  if (b === "") return null;
+  return us(b, to) === b ? b : `${us(b, to - 1)}\u2026`;
+}
+function tn(w, b) {
+  return (
+    w.stores.length === b.stores.length &&
+    w.stores.every((M, k) => {
+      let R = b.stores[k];
+      return (
+        R !== void 0 &&
+        M.id === R.id &&
+        M.store.path === R.store.path &&
+        M.promptIndex === R.promptIndex &&
+        M.writable === R.writable
+      );
+    })
+  );
+}
+function on(w, b, M) {
+  if (M.stores.length === 0) {
+    if (w === "off") return ke(b) ? "disconnected" : "unchanged";
+    return "unavailable";
+  }
+  if (b.stores.length === 0) return "connected";
+  return tn(b, M) ? "unchanged" : "switched";
+}
+function nn(w) {
+  switch (w.state) {
+    case "off":
+      return `off_${w.cause}`;
+    case "parked":
+      return `parked_${w.cause}`;
+    case "ended":
+      return `ended_${w.cause}`;
+    case "undecided":
+      return "settle_timeout";
+    case "on":
+      return "no_stores";
+  }
+}
+async function rn(w) {
+  let b = w.filter((k) => k.promptIndex !== void 0),
+    M = await Promise.all(b.map((k) => ctr(k.store)));
+  return b.map((k, R) => {
+    let P = M[R];
+    if (P === null || P === void 0)
+      return { store: k, state: "unavailable", content: "" };
+    return P.content.trim() === ""
+      ? { store: k, state: "empty", content: "" }
+      : { store: k, state: "loaded", content: P.content };
+  });
+}
+function oo(w, b, M, k, R = !1) {
+  i("tengu_org_memory_project_switch", {
+    outcome: u(w),
+    pick_dropped: R,
+    stores_before: b.stores.length,
+    stores_after: M.stores.length,
+    indexes_loaded: G(k, (P) => P.state === "loaded"),
+    indexes_empty: G(k, (P) => P.state === "empty"),
+    indexes_unavailable: G(k, (P) => P.state === "unavailable"),
+  });
+}
+function sn(w, b, M, k, R) {
+  if (R) return dn(w, k);
+  switch (w) {
+    case "switched":
+    case "connected":
+      return so(k);
+    case "disconnected":
+      return `off for this directory \u2014 Claude has stopped using ${io(M.project)}`;
+    case "unavailable":
+      return M.stores.length > 0
+        ? "couldn't connect, so it is off for now \u2014 the pick is kept for this directory; Enter on it in /memory retries"
+        : "couldn't connect \u2014 the pick is kept for this directory; Enter on it in /memory retries";
+    case "pending":
+      return b === "off"
+        ? "off for this directory \u2014 disconnecting once the in-flight connection attempt lands"
+        : "saved for this directory \u2014 still connecting; Claude can use it once it lands";
+    case "unchanged":
+      return b === "off"
+        ? "off for this directory \u2014 nothing was connected"
+        : "saved for this directory \u2014 already connected, nothing changed";
+  }
+}
+function cn(w) {
+  return w === "off"
+    ? "off for this directory \u2014 the disconnect may not have finished this session; it holds from next session"
+    : "couldn't connect \u2014 the pick is kept for this directory; Enter on it in /memory retries";
+}
+function so(w) {
+  let b = w.stores.some((R) => R.writable),
+    M = `connected to ${io(w.project)}${b ? "" : " (read-only)"}`,
+    k = b ? "Claude can use it and save to it now" : "Claude can use it now";
+  return w.project.kind === "picked"
+    ? `${M} \u2014 saved for this directory; ${k}`
+    : `${M} \u2014 ${k}`;
+}
+function ln(w) {
+  switch (w) {
+    case "account_boundary":
+      return "saved for this directory \u2014 the account changed mid-session, so it connects next session";
+    case "untrusted_workspace":
+      return "saved for this directory \u2014 this workspace is not trusted yet, so it connects next session";
+  }
+}
+function dn(w, b) {
+  switch (w) {
+    case "switched":
+    case "connected":
+      return `${"that project is no longer available \u2014 the pick was cleared"}; ${so(b)}`;
+    case "unchanged":
+      return `${"that project is no longer available \u2014 the pick was cleared"}; connection unchanged`;
+    case "unavailable":
+    case "disconnected":
+    case "pending":
+      return `${"that project is no longer available \u2014 the pick was cleared"}; project memory is off until another pick in /memory`;
+  }
+}
+function io(w) {
+  switch (w.kind) {
+    case "none":
+      return "project memory";
+    case "default":
+      return "the default project memory";
+    case "picked":
+      return w.name ?? "the picked project";
+  }
+}
+function Ve(w) {
+  switch (w.kind) {
+    case "none":
+      return "project memory";
+    case "default":
+      return "the default project memory";
+    case "picked":
+      return w.name === null
+        ? "a project with no displayable name"
+        : `project "${QS(w.name).replace(Yo, (b) => `&#${b.codePointAt(0)};`)}"`;
+  }
+}
+function mn(w, b, M, k, R, P = !1) {
+  let j = M.stores.length > 0 ? ` \u2014 most recently ${Ve(M.project)}` : "",
+    W = ke(M)
+      ? ` Any connected memory store list or shared memory index your system prompt may carry, and any ${ze} results earlier in this conversation, describe an earlier connection${j}, possibly to a different project. Treat them as stale until re-checked with the tools: do not attribute those memories to, or save them into, the project connected now on the strength of the earlier results alone. Your personal memory directory, if your system prompt names one, is unaffected.`
+      : "";
+  switch (w) {
+    case "unchanged":
+      return null;
+    case "pending":
+      if (ke(M))
+        return Na(
+          `This session is no longer connected to ${Ve(M.project)} (a re-pick in /memory is still being applied). Any connected memory store list or shared memory index your system prompt may carry, and any ${ze} results earlier in this conversation, are stale. Call ${ih} with no arguments to check what, if anything, is connected before relying on the memory tools again.`,
+        );
+      return b === "off"
+        ? null
+        : Na(
+            `The user picked a project's shared memory in /memory and the connection is still being set up; nothing is connected yet. Before relying on the ${ze} tools, call ${ih} with no arguments: once it lists connected stores, read your teammates' shared memories and save new shared learnings through those tools as their prompts describe. Your personal memory directory, if your system prompt names one, is unaffected either way.`,
+          );
+    case "disconnected":
+    case "unavailable":
+      if (!ke(M)) return null;
+      return Na(
+        `This session is no longer connected to ${Ve(M.project)} (${w === "disconnected" ? "the user turned it off in /memory" : P ? "the project the user re-picked is no longer available, so the pick was cleared and nothing connected" : "reconnecting to the re-picked project failed"}). Any connected memory store list or shared memory index your system prompt may carry, and any ${ze} results earlier in this conversation, are stale, and nothing is connected for the memory tools to serve until the user reconnects in /memory (${ih} with no arguments reports what, if anything, is connected whenever you need to re-check). If the user asks you to remember something, use your personal memory directory if your system prompt names one; otherwise explain that project memory is disconnected for this session.`,
+      );
+    case "switched":
+    case "connected": {
+      let V = k.stores.map((z) =>
+          ezt(z.store, z.writable, z.id, z.description),
+        ),
+        B = V.find((z) => !z.readOnly),
+        I =
+          B === void 0
+            ? `Every connected store is read-only in this session: ${$a} calls are refused.`
+            : `Save new shared memories in \`${B.id}\` under \`${B.projectDir}\` and keep its index \`${B.indexPath}\` current, as the ${$a} tool prompt describes. Private memories belong in your personal memory directory, if your system prompt names one; the shared stores are for what teammates should also see. Never save secrets, credentials or other sensitive data to the shared stores.`;
+      return [
+        Na(
+          [
+            `The project memory connected to this session has changed: ${P ? `the project the user picked in /memory is no longer available, so ${Ve(k.project)} is connected instead` : k.project.kind === "default" ? "the user picked a project in /memory, and the default project memory is what is now connected" : `the user picked ${Ve(k.project)} in /memory`}.${W}`,
+            "",
+            `Connected memory stores for the rest of this session \u2014 pass an id as the ${ze} tools' store argument, and call ${ih} with no arguments to re-check this set whenever you are unsure:`,
+            ...V.map(cEn),
+            "",
+            I,
+          ].join(`
+`),
+        ),
+        ...R.map(un),
+      ].join(`
+
+`);
+    }
+  }
+}
+function un(w) {
+  let b = `/${w.store.promptIndex}`,
+    M = fEn(w.store.id, b);
+  switch (w.state) {
+    case "unavailable":
+      return `(${M} could not be fetched just now \u2014 call ${Ed} on it when you need it.)`;
+    case "empty":
+      return `(${M} is currently empty.)`;
+    case "loaded":
+      return mEn(M, b, w.content);
+  }
+}
+function ao(w) {
+  return tr(w) !== null;
+}
+class co {
+  promise = null;
+  rowsOnce(w) {
+    return ((this.promise ??= w()), this.promise);
+  }
+  reset() {
+    this.promise = null;
+  }
+}
+var rt = new Gt(() => new co());
+var Ae = "__open_folder__";
+function fn(w, b, M) {
+  return w.rowsOnce(async () => {
+    let k = await tEn(b, M).catch(() => null),
+      R = HTt();
+    if (k === null) return { mounts: [], picker: R };
+    let P = Ker(),
+      j = nf(),
+      W =
+        j.state === "on"
+          ? j.initialGrant.find(
+              (I) =>
+                HN(I.path) === "grouping_root" ||
+                (I.kind === "grouping_root" && HN(I.path) === "unknown"),
+            )
+          : void 0,
+      V =
+        j.state === "on"
+          ? j.initialGrant.find(
+              (I) => I.kind === "grouping" || HN(I.path) === "grouping",
+            )
+          : void 0,
+      B = j.state === "on" && DYe(j.initialGrant);
+    return {
+      mounts: k
+        .filter((I) => I.scope === "team")
+        .map((I) => ({
+          mount: I.mount,
+          dir: xt(Wy(), I.mount),
+          description:
+            W !== void 0 && om(I.path) === om(W.path)
+              ? I.mode === "rw" && Vk(I.path) === "rw" && N$()
+                ? "public project memory, read-write"
+                : "public project memory, read-only"
+              : V !== void 0 && om(I.path) === om(V.path)
+                ? B
+                  ? "private project, read-only"
+                  : "project memory, read-only"
+                : I.mode === "rw" && Vk(I.path) === "rw" && N$()
+                  ? "read-write"
+                  : B
+                    ? "read-only \u2014 private project selected"
+                    : P
+                      ? "writes requested \u2014 granted read-only"
+                      : "read-only",
+        })),
+      picker: R,
+    };
+  });
+}
+var Pt = "__org_memory_project_picker__",
+  st = "__org_memory_project_off__";
+function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
+  let R = w.project.originalCwd,
+    P = $Z.of(w.host),
+    j = rt.of(w),
+    { storageV5: W, credentials: V } = _e(),
+    B = kn(Ny(w, !1, W, V)),
+    I = ua() || Hr(),
+    Ce = ua() && !Hr(),
+    { mounts: z, picker: Ie } = Ce
+      ? kn(fn(j, W, V))
+      : { mounts: [], picker: null },
+    [he, ce] = d(!1),
+    [qe, Ye] = d(!1),
+    [q, jt] = d(CFe),
+    at = q !== null && HK(q),
+    [uo] = d(IK),
+    [ct] = d(() => es().orgMemoryRead ?? !0),
+    [po, Te] = d(null),
+    [fo, go] = d(!1),
+    $t = C(!1),
+    lt = k !== void 0 && IK(),
+    le = nf(),
+    dt = !Ce
+      ? null
+      : le.state === "on"
+        ? { label: "active", note: le.stores.map((S) => S.mount).join(", ") }
+        : le.state === "parked"
+          ? {
+              label: "parked",
+              note: lt
+                ? "paused for this session \u2014 pick a project to reconnect"
+                : "paused for this session \u2014 a new pick still applies next session",
+            }
+          : le.state === "ended"
+            ? {
+                label: "ended",
+                note:
+                  le.cause === "account_switch"
+                    ? "account changed \u2014 next session decides fresh"
+                    : "signed out \u2014 next session decides fresh",
+              }
+            : null,
+    mt = xt(be(), "CLAUDE.md"),
+    Ke = xt(R, "CLAUDE.md"),
+    ho = B.some((S) => S.path === mt),
+    yo = B.some((S) => S.path === Ke),
+    wo = [
+      ...B.filter(
+        (S) =>
+          S.type !== "AutoMem" && S.type !== "AutoMemPinned" && !QMe(S.path),
+      ).map((S) => ({ ...S, exists: !0 })),
+      ...(ho ? [] : [{ path: mt, type: "User", content: "", exists: !1 }]),
+      ...(yo ? [] : [{ path: Ke, type: "Project", content: "", exists: !1 }]),
+    ],
+    Et = new Map(),
+    So = wo.map((S) => {
+      let H = Ao(S.path),
+        me = S.exists ? "" : " (new)",
+        pe = S.parent ? (Et.get(S.parent) ?? 0) + 1 : 0;
+      Et.set(S.path, pe);
+      let J = pe > 0 ? os("  ", pe - 1) : "",
+        Z;
+      if (S.type === "User" && !S.isNested && S.path === mt)
+        Z = "User instructions";
+      else if (S.type === "Project" && !S.isNested && S.path === Ke)
+        Z = "Project instructions";
+      else if (pe > 0) Z = `${J}L ${H}${me}`;
+      else Z = `${H}`;
+      let ne,
+        fe = ao(R);
+      if (S.type === "User" && !S.isNested) ne = "Saved in ~/.claude/CLAUDE.md";
+      else if (S.type === "Project" && !S.isNested && S.path === Ke)
+        ne = `${fe ? "Checked in at" : "Saved in"} ./CLAUDE.md`;
+      else if (S.parent) ne = "@-imported";
+      else if (S.isNested) ne = "dynamically loaded";
+      else ne = "";
+      return { label: Z, value: S.path, description: ne };
+    }),
+    Dt = [],
+    Le = [],
+    bo = U((S) => S.agentDefinitions),
+    [Re] = d(() => ({ write: !1, picker: !1, pickerData: null }));
+  if (Ie !== null) Re.pickerData = Ie;
+  let Y = Ie ?? Re.pickerData,
+    Ft = Y !== null && at;
+  E(() => {
+    if (Ft) i("tengu_org_memory_legacy_pick_nudged", {});
+  }, [Ft]);
+  let Mo = le.state === "on" && q === le.request.selection,
+    At =
+      q !== null &&
+      (Mo
+        ? DYe(le.initialGrant)
+        : Y?.candidates.find((S) => S.id === q)?.visibility === "private"),
+    ko =
+      q === null || Y === null
+        ? st
+        : (Y.candidates.find((S) => S.id === q)?.id ??
+          Y.candidates.find((S) => S.isDefault)?.id ??
+          Y.candidates[0]?.id ??
+          st);
+  if (I) {
+    if (
+      (Le.push({
+        label: "Open auto-memory folder",
+        value: `${Ae}${Ns()}`,
+        description: "",
+      }),
+      OC())
+    )
+      Le.push({
+        label: "Open team memory folder",
+        value: `${Ae}${Wy()}`,
+        description: "",
+      });
+    if (!uo)
+      for (let S of z)
+        Le.push({
+          label: `Open synced project memory: ${S.mount}`,
+          value: `${Ae}${S.dir}`,
+          description: S.description,
+        });
+    if (((Re.picker ||= Y !== null), Y !== null && Re.picker)) {
+      let S = q === null ? void 0 : Y.candidates.find((pe) => pe.id === q),
+        H = q === null ? null : (S?.name ?? (at ? "all public projects" : q)),
+        me =
+          H === null
+            ? "off"
+            : ct
+              ? At
+                ? `${H} (private)`
+                : H
+              : "off \u2014 disabled in settings";
+      Dt.push({
+        label: `Sync memories from: ${me}`,
+        value: Pt,
+        description:
+          po ||
+          (at
+            ? "set automatically \u2014 pick a project to choose where saves go"
+            : Y.writeOptInAvailable && DCe() && !jfe()
+              ? "change \xB7 org allows write opt-in (/config)"
+              : "change"),
+      });
+    }
+    for (let S of bo.activeAgents)
+      if (S.memory) {
+        let H = LFe(S.agentType, S.memory);
+        Le.push({
+          label: `Open ${ie.bold(S.agentType)} agent memory`,
+          value: `${Ae}${H}`,
+          description: `${S.memory} scope`,
+        });
+      }
+  }
+  let ut = [...Dt, ...So, ...Le],
+    pt = P.memorySelectorLastPath,
+    Co = pt && ut.some((S) => S.value === pt) ? pt : ut[0]?.value || "",
+    [Oe, It] = d(ua),
+    [Tt, vo] = d(Djt),
+    [Xe, Ro] = d(hvt);
+  E(
+    () =>
+      Ff(() => {
+        let S = hvt();
+        if (S !== Xe) (Ro(S), It(ua()));
+      }),
+    [Xe],
+  );
+  let Oo = Xe && !Oe,
+    [ye] = d(() => Oe && Efn()),
+    Lt = U((S) =>
+      Object.values(S.tasks).some(
+        (H) => H.type === "dream" && H.status === "running",
+      ),
+    ),
+    [ft, _o] = d(null);
+  E(() => {
+    if (!ye) return;
+    Ljt(void 0, W).then(_o);
+  }, [ye, Lt, W]);
+  let Nt = Lt
+      ? "running"
+      : ft === null
+        ? ""
+        : ft === 0
+          ? "never"
+          : `last ran ${uy(new Date(ft))}`,
+    [oe, gt] = d(null),
+    Je = oe !== null,
+    [Ue, Ut] = d(jfe),
+    [Po, we] = d(null);
+  Re.write ||= !OYe() && (Ue || (z.length > 0 && DCe()));
+  let ht = ct && q !== null && Re.write,
+    Qe = ye ? 2 : 1,
+    Ht = ht ? Qe : ye ? 1 : 0;
+  function xo() {
+    if (!ht) return;
+    jFt(() => {
+      let S = !Ue,
+        H = vTt(S, W);
+      if (H === "granted" || H === "withdrawn") (j.reset(), Ut(S), we(null));
+      else if (H === "noop") (Ut(jfe()), we(null));
+      else if (H === "refused_gates") we("unavailable right now");
+      else if (H === "refused_identity") we("requires an OAuth login");
+      else if (H === "refused_read_off") we("enable reads first");
+    });
+  }
+  function jo() {
+    if (Hr()) return;
+    if (Xe) return;
+    let S = !Oe;
+    (Jt("userSettings", { autoMemoryEnabled: S }, void 0, W),
+      It(S),
+      i("tengu_auto_memory_toggled", { enabled: S }));
+  }
+  function $o() {
+    if (!ye || !Oe) return;
+    let S = !Tt,
+      H = S && Ge().autoDreamEnabled === void 0;
+    (Jt("userSettings", { autoDreamEnabled: S }, void 0, W),
+      vo(S),
+      i("tengu_auto_dream_toggled", { enabled: S, is_first_enable: H }));
+  }
+  return (
+    is(),
+    Ne(
+      "confirm:no",
+      () => {
+        if (he) {
+          ce(!1);
+          return;
+        }
+        M();
+      },
+      { context: "Confirmation" },
+    ),
+    Ne(
+      "confirm:yes",
+      () => {
+        if (oe === 0) jo();
+        else if (oe === 1 && ye) $o();
+        else if (oe === Qe) xo();
+      },
+      { context: "Confirmation", isActive: Je },
+    ),
+    Ne(
+      "select:next",
+      () => {
+        gt((S) => (S !== null && S < Ht ? S + 1 : null));
+      },
+      { context: "Select", isActive: Je },
+    ),
+    Ne(
+      "select:previous",
+      () => {
+        gt((S) => (S !== null && S > 0 ? S - 1 : S));
+      },
+      { context: "Select", isActive: Je },
+    ),
+    r(o, {
+      flexDirection: "column",
+      width: "100%",
+      children: [
+        r(o, {
+          flexDirection: "column",
+          marginBottom: 1,
+          children: [
+            e(nl, {
+              isFocused: oe === 0,
+              children: r(t, {
+                children: [
+                  "Auto-memory:",
+                  " ",
+                  Oo
+                    ? e(t, {
+                        dimColor: !0,
+                        children: "unavailable for current model",
+                      })
+                    : Hr()
+                      ? r(t, {
+                          dimColor: !0,
+                          children: [
+                            "off in safe mode \u2014 ",
+                            yf(),
+                            " to re-enable",
+                          ],
+                        })
+                      : Oe
+                        ? "on"
+                        : "off",
+                ],
+              }),
+            }),
+            ye &&
+              e(nl, {
+                isFocused: oe === 1,
+                styled: !1,
+                children: e(t, {
+                  color: oe === 1 ? "suggestion" : void 0,
+                  children: Oe
+                    ? r(N, {
+                        children: [
+                          "Auto-dream: ",
+                          Tt ? "on" : "off",
+                          Nt &&
+                            r(t, { dimColor: !0, children: [" \xB7 ", Nt] }),
+                        ],
+                      })
+                    : e(t, {
+                        dimColor: !0,
+                        children: "Auto-dream: off while auto-memory is off",
+                      }),
+                }),
+              }),
+            ht &&
+              e(nl, {
+                isFocused: oe === Qe,
+                styled: !1,
+                children: r(t, {
+                  color: oe === Qe ? "suggestion" : void 0,
+                  children: [
+                    "Write to synced project memory: ",
+                    Ue ? "on" : "off",
+                    r(t, {
+                      dimColor: !0,
+                      children: [
+                        " ",
+                        "\xB7",
+                        " ",
+                        Po ??
+                          (At
+                            ? "no effect under a private project pick"
+                            : "this directory, applies next session"),
+                      ],
+                    }),
+                  ],
+                }),
+              }),
+            dt !== null &&
+              e(nl, {
+                isFocused: !1,
+                styled: !1,
+                children: r(t, {
+                  children: [
+                    "Synced project memory: ",
+                    dt.label,
+                    r(t, { dimColor: !0, children: [" \xB7 ", dt.note] }),
+                  ],
+                }),
+              }),
+          ],
+        }),
+        he && Y !== null
+          ? e(eee, {
+              scope: "Confirmation",
+              claimFocus: !0,
+              bindings: [{ action: "confirm:no", run: () => ce(!1) }],
+              children: e(ve, {
+                defaultFocusValue: ko,
+                options: [
+                  {
+                    label: "off",
+                    value: st,
+                    description:
+                      Y.candidates.length === 0
+                        ? "no projects to pick yet"
+                        : q === null
+                          ? ""
+                          : "clear the saved pick",
+                  },
+                  ...Y.candidates.map((S) => ({
+                    label: S.name,
+                    value: S.id,
+                    description:
+                      S.visibility === "private"
+                        ? "private \u2014 org store becomes read-only"
+                        : S.kind === "project"
+                          ? "public project"
+                          : "",
+                  })),
+                ],
+                onChange: (S) => {
+                  if ($t.current) return;
+                  jFt(() => {
+                    let H = S === st,
+                      me = H ? void 0 : Y.candidates.find((Pe) => Pe.id === S),
+                      pe = H ? qTn : S,
+                      J = H ? null : S,
+                      Z = zer(pe, W),
+                      ne = Z === "saved" || Z === "cleared",
+                      fe = nf(),
+                      Eo =
+                        Z === "noop" &&
+                        (J === null
+                          ? fe.state === "on" || fe.state === "parked"
+                          : !(fe.state === "on" && fe.request.selection === J)),
+                      Bt =
+                        lt &&
+                        J === null &&
+                        (fe.state === "off" || fe.state === "ended"),
+                      Wt =
+                        (ne || Eo) &&
+                        !Bt &&
+                        lt &&
+                        k(() => ro(w, J === null ? "off" : "project"));
+                    if (Z === "saved" && me !== void 0)
+                      i("tengu_org_memory_project_selected", {
+                        is_default: me.isDefault === !0,
+                        kind: u(me.kind),
+                        private: me.visibility === "private",
+                        reconnects_now: Wt,
+                      });
+                    if (Wt)
+                      (($t.current = !0),
+                        jt(J),
+                        we(null),
+                        Te(
+                          J === null
+                            ? "disconnecting\u2026"
+                            : "connecting\u2026",
+                        ),
+                        go(!0));
+                    else if (ne) {
+                      let Pe = nf(),
+                        yt =
+                          Pe.state === "on" &&
+                          Pe.request.writeAccess &&
+                          (J === null || Pe.request.selection !== J) &&
+                          kTt();
+                      if (yt || Pe.state === "undecided") M$();
+                      if ((jt(J), J === null))
+                        (we(null),
+                          Te(
+                            yt && Ue
+                              ? "off \u2014 writes stop now; unsync next session"
+                              : Bt
+                                ? "off \u2014 saved for this directory"
+                                : "off \u2014 applies next session",
+                          ));
+                      else
+                        Te(
+                          !ct
+                            ? "saved \u2014 enable reads in /config (orgMemoryRead) to apply"
+                            : yt && Ue
+                              ? "saved \u2014 previous workspace writes stop now; applies next session"
+                              : "saved \u2014 applies next session",
+                        );
+                      j.reset();
+                    } else if (Z === "refused") Te("requires an OAuth login");
+                    else Te(null);
+                    ce(!1);
+                  });
+                },
+                onCancel: () => ce(!1),
+              }),
+            })
+          : e(ve, {
+              defaultFocusValue: qe ? Pt : Co,
+              options: ut,
+              isDisabled: Je || fo,
+              onChange: (S) => {
+                if (S === Pt) {
+                  (ce(!0), Ye(!0));
+                  return;
+                }
+                if (S.startsWith(Ae)) {
+                  let H = S.slice(Ae.length);
+                  pn(H, { recursive: !0 })
+                    .catch(() => {})
+                    .then(() => yqe(H))
+                    .catch(() => {});
+                  return;
+                }
+                (P.rememberMemorySelectorPath(S), b(S));
+              },
+              onCancel: M,
+              onUpFromFirstItem: () => gt(Ht),
+            }),
+      ],
+    })
+  );
+}
+var gn = m(() =>
+  c({
+    generation: T().int().min(1),
+    etag: s().optional(),
+    allow: v(s()),
+    at: T(),
+  }),
+);
+function hn(w) {
+  return pr(w);
+}
+function mo(w) {
+  let b = ee().remoteHomeSettingsSent?.[hn(w)];
+  if (b === void 0) return;
+  let M = gn().safeParse(b);
+  return M.success ? M.data : void 0;
+}
+import { homedir as yn } from "os";
+import { relative as wn } from "path";
+function it(w) {
+  let b = yn(),
+    M = Q(),
+    k = w.startsWith(b) ? "~" + w.slice(b.length) : null,
+    R = w.startsWith(M) ? "./" + wn(M, w) : null;
+  if (k && R) return k.length <= R.length ? k : R;
+  return k || R || w;
+}
+function bn({ session: w, onDone: b }) {
+  let M = async (R) => {
+      try {
+        if (R.includes(be())) await ae().mkdir(be());
+        try {
+          await Sn(R, "", { encoding: "utf8", flag: "wx" });
+        } catch (I) {
+          if (A(I) !== "EEXIST") throw I;
+        }
+        if (!zle(R)) {
+          b(
+            `Couldn't open ${it(R)} in an editor. If no editor is configured, set $EDITOR or $VISUAL, then run /memory again.`,
+            { display: "system" },
+          );
+          return;
+        }
+        let P = "default",
+          j = "";
+        if (a.VISUAL) ((P = "$VISUAL"), (j = a.VISUAL));
+        else if (a.EDITOR) ((P = "$EDITOR"), (j = a.EDITOR));
+        let W = P !== "default" ? `Using ${P}="${j}".` : "",
+          V = W
+            ? `> ${W} To change editor, set $EDITOR or $VISUAL environment variable.`
+            : "> To use a different editor, set the $EDITOR or $VISUAL environment variable.",
+          B = Hr()
+            ? `
+
+> Safe mode: this session doesn't load CLAUDE.md files, so changes take effect after you ${yf()}.`
+            : "";
+        b(
+          `Opened ${it(R)}${B}
+
+${V}`,
+          { display: "system" },
+        );
+      } catch (P) {
+        (n(`Failed to open memory file ${R}: ${P}`, { level: "error" }),
+          b(`Couldn't open ${it(R)}: ${l(P)}`, { display: "system" }));
+      }
+    },
+    k = () => {
+      b("Cancelled memory editing", { display: "system" });
+    };
+  return e(de, {
+    title: "Memory",
+    onCancel: k,
+    color: "remember",
+    children: r(o, {
+      flexDirection: "column",
+      gap: 1,
+      children: [
+        Hr() &&
+          r(o, {
+            flexDirection: "column",
+            children: [
+              r(t, { color: "suggestion", children: [L.info, " Safe mode"] }),
+              r(t, {
+                dimColor: !0,
+                children: [
+                  "CLAUDE.md files aren't loaded into this session. You can still edit them \u2014 changes take effect after you",
+                  " ",
+                  yf(),
+                  ".",
+                ],
+              }),
+            ],
+          }),
+        e(Dn, {
+          fallback: e($n, { message: "Loading\u2026", dimColor: !0 }),
+          children: e(lo, { session: w, onSelect: M, onCancel: k }),
+        }),
+        e(Gp, { url: "https://code.claude.com/docs/en/memory" }),
+      ],
+    }),
+  });
+}
+var si = async (w, b) => {
+  let M = jn();
+  if (M) {
+    if (!Ks())
+      return (
+        w("Memory files aren't available over this remote connection"),
+        null
+      );
+    return e(_t, {
+      onExit: w,
+      remote: M,
+      filesRead: eo(M, b.abortController.signal),
+      signal: b.abortController.signal,
+      userMemoryOrigin:
+        M.sessionId !== void 0 && mo(M.sessionId) !== void 0
+          ? "sentFromHere"
+          : "inSession",
+    });
+  }
+  return (
+    nR(b.session),
+    rt.of(b.session).reset(),
+    await Ny(b.session, !1, b.storageV5, b.credentials),
+    e(bn, { session: b.session, onDone: w })
+  );
+};
+export { si as call };
