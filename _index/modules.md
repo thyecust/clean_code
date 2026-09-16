@@ -1618,11 +1618,10 @@
 - [`01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js`](../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js) — 5.4 KB
 - [`01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js`](../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js) — 4.2 KB
 
-## HTTP / 网络层  <sub>01-核心基础设施 · 3 个文件 · 0.10 MB</sub>
+## HTTP / 网络层  <sub>01-核心基础设施 · 2 个文件 · 0.09 MB</sub>
 
 - [`01-核心基础设施/HTTP-网络层/HTTP-网络层.pfw3b51q.js`](../01-核心基础设施/HTTP-网络层/HTTP-网络层.pfw3b51q.js) — 80.8 KB
 - [`01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js`](../01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js) — 13.5 KB
-- [`01-核心基础设施/HTTP-网络层/getAgentProxyEnv.25qhmvb6.js`](../01-核心基础设施/HTTP-网络层/getAgentProxyEnv.25qhmvb6.js) — 7.0 KB
 
 ## 上下文压缩 / Compact  <sub>02-功能模块 · 11 个文件 · 0.10 MB</sub>
 

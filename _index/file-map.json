@@ -853,13 +853,6 @@
   "kb": 1.5,
   "confidence": "low"
  },
- "chunk-25qhmvb6.js": {
-  "path": "01-核心基础设施/HTTP-网络层/getAgentProxyEnv.25qhmvb6.js",
-  "module": "HTTP / 网络层",
-  "tier": 1,
-  "kb": 7.0,
-  "confidence": "medium"
- },
  "chunk-266bdzsn.js": {
   "path": "02-功能模块/斜杠命令-UI组件/__remote-workflow-cmd.266bdzsn.js",
   "module": "斜杠命令 · UI 组件",

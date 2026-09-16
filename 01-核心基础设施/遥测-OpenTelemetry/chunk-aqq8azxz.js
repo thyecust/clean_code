@@ -226,8 +226,11 @@ async function T(t = {}) {
       Ie(process.env.CLAUDE_CODE_REMOTE))
     )
       try {
-        let { initAgentProxy: i, getAgentProxyEnv: d } =
-            await import("../HTTP-网络层/getAgentProxyEnv.25qhmvb6.js"),
+        // 原来指向 ./getAgentProxyEnv.25qhmvb6.js —— 那是个纯转出桶（无自身实现），已删除。
+        // 该桶只是把 pfw3b51q 的 _gr / ygr / qit 转出为 initAgentProxy / getAgentProxyEnv /
+        // PLACEHOLDER_CREDENTIAL_KEYS，这里直接用实现模块的原始名。
+        let { _gr: i, ygr: d } =
+            await import("../HTTP-网络层/HTTP-网络层.pfw3b51q.js"),
           { registerAgentProxyEnvFn: b } = await import("./registerAgentProxyEnvFn.84gxhdny.js");
         (b(d), await i());
       } catch (i) {
