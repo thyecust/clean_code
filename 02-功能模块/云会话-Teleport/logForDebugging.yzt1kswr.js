@@ -7,6 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
+
+// [preload stripped] 原本在此预载 9 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
   zR,
   Gxt,
@@ -23,15 +25,6 @@ import {
   ZPn,
   AW,
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 export {
   YPn as enableDebugLogging,
   o8 as flushDebugLogs,

@@ -7,7 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import "./chunk-w76kejwn.js";
+
+// [preload stripped] 原本在此预载 1 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
   TZ,
   YP,

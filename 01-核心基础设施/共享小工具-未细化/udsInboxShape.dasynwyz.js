@@ -7,10 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "./chunk-510m1t2d.js";
-import "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import "./chunk-78nzsrc6.js";
+
+// [preload stripped] 原本在此预载 4 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { I } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { au } from "./chunk-2c9tjhwd.js";
 var o = {};

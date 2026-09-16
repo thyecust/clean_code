@@ -7,29 +7,17 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
+
+// [preload stripped] 原本在此预载 14 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import "../../00-第三方库/zod/zod.3g334xwq.js";
-import "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { B2e, Sc, yh } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { ykt } from "../权限系统/chunk-ynkf3yy4.js";
 import { s, T, v, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
-import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { mkdir as h, readFile as B, stat as _, unlink as E } from "fs/promises";
 import { dirname as x, join as I } from "path";
 var S = 50,

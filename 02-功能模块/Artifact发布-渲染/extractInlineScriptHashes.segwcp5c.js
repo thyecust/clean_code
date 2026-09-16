@@ -7,19 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
+
+// [preload stripped] 原本在此预载 11 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { S4t, rAt } from "../../00-第三方库/parse5/parse5.2zwbfepc.js";
-import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { b$e, BN, jN } from "../图表-Mermaid/chunk-743atbtj.js";
 import {
   Ufe,

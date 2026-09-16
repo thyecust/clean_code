@@ -7,40 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+
+// [preload stripped] 原本在此预载 28 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import "../../00-第三方库/zod/zod.3g334xwq.js";
-import "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
 import { fn, Fo, Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
 import { Eu, H1, lt, Zq } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import "../Teammates团队/chunk-qe04h4c5.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
-import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { lstat as p, open as w } from "fs/promises";
 import { join as c, resolve as E } from "path";
 var d = 1e4;

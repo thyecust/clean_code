@@ -7,10 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
+
+// [preload stripped] 原本在此预载 3 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Eyn, Dpe, Ayn, B8e } from "../../02-功能模块/权限系统/chunk-8rrcddth.js";
-import "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "./chunk-510m1t2d.js";
 export {
   B8e as FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION,
   Ayn as cliCarriesForkRestrictedConfig,

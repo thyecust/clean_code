@@ -7,10 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
+
+// [preload stripped] 原本在此预载 3 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { AS, f_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "./chunk-h62vxw7j.js";
-import "./chunk-510m1t2d.js";
 import { i } from "./chunk-an83zrbx.js";
 var m = async (t, o) => {
   let e = !AS();

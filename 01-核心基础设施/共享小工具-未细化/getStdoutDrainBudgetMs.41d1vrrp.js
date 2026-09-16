@@ -7,6 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
+
+// [preload stripped] 原本在此预载 1 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
   oje,
   Vnt,
@@ -22,7 +24,6 @@ import {
   Knt,
   oOn,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
-import "./chunk-510m1t2d.js";
 export {
   sje as drainStdoutBeforeExit,
   Abr as exitWithError,
