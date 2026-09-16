@@ -7,48 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import {
-  cL,
-  ly,
-  qU,
-  mf,
-  gf,
-  Rie,
-  n2e,
-  s0n,
-  i0n,
-  Att,
-  a0n,
-  r2e,
-  vke,
-  Ctt,
-  ov,
-  o2e,
-  uL,
-  Op,
-  zU,
-  vtt,
-  s2e,
-  Rtt,
-  kie,
-  F8t,
-  lkt,
-  $8t,
-  ktt,
-  l0n,
-  U8t,
-  c0n,
-  u0n,
-  i2e,
-  xie,
-  Hie,
-  xtt,
-  d0n,
-  Htt,
-  p0n,
-  f0n,
-  Rke,
-} from "./chunk-e4pfvp7x.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 40 个导出。
 export {
   Rtt as BASH_COMMAND_CLAMP_CRASH_REASON,
   s2e as BASH_COMMAND_CLAMP_DENY_REASON,
@@ -90,4 +50,4 @@ export {
   vtt as outsideReadsSedScriptAsk,
   zU as outsideReadsTooComplexAsk,
   gf as parsePermissionMode,
-};
+} from "./chunk-e4pfvp7x.js";

@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { kF, Dun } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
-import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-export { kF as flushAnalyticsSinks, Dun as registerPreFlushTask };
+
+// [barrel thinned] 原本在此预载 4 个依赖 chunk；经查它们均已由主入口初始化，已移除以还原真实模块边界。
+export {
+  kF as flushAnalyticsSinks,
+  Dun as registerPreFlushTask,
+} from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";

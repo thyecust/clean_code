@@ -7,27 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import {
-  lun,
-  cun,
-  uun,
-  dun,
-  pun,
-  fun,
-  mun,
-  gun,
-  hun,
-  c_r,
-  D$t,
-  L$t,
-  M$t,
-  N$t,
-  F$t,
-  $$t,
-  U$t,
-  B$t,
-  j$t,
-} from "../../02-功能模块/自托管Runner/chunk-01gj9cjk.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 19 个导出。
 export {
   D$t as GET_POOL_DESCRIPTION,
   lun as GET_POOL_TOOL_NAME,
@@ -48,4 +29,4 @@ export {
   pun as SPAWN_LOCAL_TOOL_NAME,
   B$t as TAIL_LOG_DESCRIPTION,
   gun as TAIL_LOG_TOOL_NAME,
-};
+} from "../../02-功能模块/自托管Runner/chunk-01gj9cjk.js";

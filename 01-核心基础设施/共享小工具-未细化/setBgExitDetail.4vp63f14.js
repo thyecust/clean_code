@@ -7,11 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { znt, Fp, Ebr, eOn, tOn } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 5 个导出。
 export {
   znt as BG_EXIT_CAUSE_SESSION_IN_USE,
   eOn as readAndClearBgExitCause,
   tOn as readAndClearBgExitDetail,
   Fp as setBgExitCause,
   Ebr as setBgExitDetail,
-};
+} from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";

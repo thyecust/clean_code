@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { eBn, Otn, Mat } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-fgegxt0m.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 3 个导出。
 export {
   Mat as eraseViewportInPlace,
   eBn as getClearTerminalSequence,
   Otn as getEraseScreenSequence,
-};
+} from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";

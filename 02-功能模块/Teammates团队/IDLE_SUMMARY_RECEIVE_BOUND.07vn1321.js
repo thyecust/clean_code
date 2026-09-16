@@ -7,122 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import {
-  uyr,
-  ffr,
-  x1e,
-  ffe,
-  mfe,
-  ag,
-  BGt,
-  pJ,
-  SG,
-  fJ,
-  kwt,
-  vXe,
-  coe,
-  bG,
-  Kbn,
-  kZn,
-  x$,
-  RXe,
-  xwt,
-  OH,
-  eP,
-  xZn,
-  mfr,
-  kC,
-  sh,
-  pCe,
-  Hwt,
-  Xbn,
-  Iwt,
-  gfe,
-  __,
-  gfr,
-  Pwt,
-  hfr,
-  _fr,
-  H1e,
-  fCe,
-  tP,
-  Pj,
-  rp,
-  wG,
-  Owt,
-  HZn,
-  yfr,
-  Ybn,
-  Jbn,
-  jGt,
-  I1e,
-  Qbn,
-  Zbn,
-  WGt,
-  GGt,
-  qGt,
-  zGt,
-  VGt,
-  hfe,
-  ewn,
-  twn,
-  nwn,
-  rwn,
-  mCe,
-  Dwt,
-  mJ,
-  Sfr,
-  kXe,
-  xXe,
-  HXe,
-  own,
-  P1e,
-  KGt,
-  By,
-  swn,
-  IXe,
-  iwn,
-  DH,
-  PXe,
-  bfr,
-  O1e,
-  awn,
-  OXe,
-  Lwt,
-  lwn,
-} from "./chunk-g6nvp9mm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
-import "./chunk-811z9z0t.js";
-import "./chunk-enjekn9t.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import "../权限系统/chunk-e4pfvp7x.js";
-import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
-import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import "./chunk-qe04h4c5.js";
-import "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
-import "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import "../../00-第三方库/zod/zod.3g334xwq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 82 个导出。
 export {
   HZn as ApprovedPermissionRequestSchema,
   Kbn as FAILURE_REASON_MAX_LENGTH,
@@ -206,4 +92,4 @@ export {
   tP as stripFrameControlChars,
   O1e as withShutdownReplyInstructions,
   ag as writeToMailbox,
-};
+} from "./chunk-g6nvp9mm.js";

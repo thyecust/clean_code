@@ -7,7 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z_e, KQt } from "./chunk-6nr84z8c.js";
-import "../../00-第三方库/react/react.zhnvc798.js";
-import "./chunk-w76kejwn.js";
-export { Z_e as createFleetViewHost, KQt as useAttachFleetOwners };
+
+// [barrel thinned] 原本在此预载 2 个依赖 chunk；经查它们均已由主入口初始化，已移除以还原真实模块边界。
+export {
+  Z_e as createFleetViewHost,
+  KQt as useAttachFleetOwners,
+} from "./chunk-6nr84z8c.js";

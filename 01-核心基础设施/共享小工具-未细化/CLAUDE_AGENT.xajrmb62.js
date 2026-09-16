@@ -7,5 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { uue } from "./chunk-kyy28ene.js";
-export { uue as CLAUDE_AGENT };
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 1 个导出。
+export {
+  uue as CLAUDE_AGENT,
+} from "./chunk-kyy28ene.js";

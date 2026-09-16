@@ -7,16 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { uzt, Yj, jFe, NK, jCe } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import "./chunk-an83zrbx.js";
-import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "./chunk-510m1t2d.js";
-import "./chunk-h62vxw7j.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 5 个导出。
 export {
   Yj as PARSE_ABORTED,
   jCe as extractCommandArguments,
   NK as findCommandNode,
   uzt as parseCommand,
   jFe as parseCommandRaw,
-};
+} from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";

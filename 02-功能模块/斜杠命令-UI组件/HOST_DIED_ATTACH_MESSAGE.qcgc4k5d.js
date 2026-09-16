@@ -7,55 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import {
-  ba,
-  x8e,
-  FI,
-  y$,
-  vSt,
-  mAe,
-  d3t,
-  syn,
-  gAe,
-  iyn,
-  Sj,
-  ayn,
-  RSt,
-  H8e,
-  I8e,
-  hAe,
-  yNe,
-  kpe,
-  P8e,
-  O8e,
-  xpe,
-  _Ae,
-  SNe,
-  yAe,
-  D8e,
-  SAe,
-  L8e,
-  p3t,
-  uYn,
-  lyn,
-  cyn,
-} from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 31 个导出。
 export {
   ba as BG_PROTO,
   x8e as BG_PROTO_MIN,
@@ -88,4 +41,4 @@ export {
   iyn as parseInteractiveMarkRv,
   p3t as rosterEntryExtras,
   mAe as wrapDaemonHint,
-};
+} from "../后台任务-Shell管理/chunk-7wsy8vxb.js";

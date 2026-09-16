@@ -7,33 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import {
-  el,
-  Xe,
-  Ob,
-  SL,
-  or,
-  gW,
-  Ot,
-  zQ,
-  Ihe,
-  No,
-  Pn,
-  xx,
-  I1,
-  uy,
-  Ent,
-  Au,
-  $2e,
-  jie,
-} from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 19 个导出。
 export {
   Ihe as formatBarElapsed,
   Ot as formatDuration,
   zQ as formatDurationCoarse,
-  Ft as formatFileSize,
   Ent as formatLogMetadata,
   No as formatNumber,
   jie as formatOverflowHint,
@@ -49,4 +28,7 @@ export {
   Ob as truncateStartToWidth,
   Xe as truncateToWidth,
   SL as truncateToWidthNoEllipsis,
-};
+} from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+export {
+  Ft as formatFileSize,
+} from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";

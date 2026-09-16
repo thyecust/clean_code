@@ -7,25 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import {
-  qhe,
-  F1,
-  uB,
-  OPn,
-  py,
-  dB,
-  Bc,
-  Z5,
-  DPn,
-  eZ,
-  zhe,
-  tae,
-  nae,
-  Vt,
-} from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+
+// [barrel thinned] 原本在此预载 3 个依赖 chunk；经查它们均已由主入口初始化，已移除以还原真实模块边界。
 export {
   nae as ALLOWED_OAUTH_BASE_URLS,
   DPn as ALL_OAUTH_SCOPES,
@@ -41,4 +24,4 @@ export {
   F1 as fileSuffixForOauthConfig,
   Vt as getOauthConfig,
   zhe as preservableScopesFrom,
-};
+} from "../认证-OAuth登录/chunk-9g2q4bjq.js";

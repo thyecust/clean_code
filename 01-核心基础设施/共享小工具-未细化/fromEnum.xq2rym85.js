@@ -7,21 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import {
-  S,
-  u,
-  we,
-  Yr,
-  KP,
-  _y,
-  jHt,
-  Ga,
-  W0,
-  Ln,
-  Gf,
-  Mz,
-  WYt,
-} from "./chunk-w76kejwn.js";
+
+// [barrel thinned] 原本在此预载 0 个依赖 chunk；经查它们均已由主入口初始化，已移除以还原真实模块边界。
 export {
   Mz as agentTypeForAnalytics_GATE_EVALUATED,
   _y as concatSafe,
@@ -36,4 +23,4 @@ export {
   S as lit,
   Gf as mcpNameForAnalytics_GATE_EVALUATED,
   WYt as pluginIdForAnalytics_GATE_EVALUATED,
-};
+} from "./chunk-w76kejwn.js";

@@ -7,24 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import {
-  hr,
-  qh,
-  vEt,
-  FJ,
-  _Je,
-  yu,
-  Ua,
-  l$e,
-  qK,
-  ob,
-  UG,
-  yJe,
-  c$e,
-  qEn,
-  zEn,
-  VEn,
-} from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 16 个导出。
 export {
   vEt as PromptScopedAbortController,
   _Je as attachDetachableAbortRelay,
@@ -42,4 +26,4 @@ export {
   FJ as turnAbortControllerOf,
   Ua as unwrapAbortReason,
   yu as userAbortReason,
-};
+} from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";

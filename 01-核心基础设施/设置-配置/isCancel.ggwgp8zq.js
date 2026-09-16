@@ -7,12 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Txt, ra } from "../共享小工具-未细化/chunk-yz7dtpc3.js";
-import "../共享小工具-未细化/chunk-jj2wxn4x.js";
-import { qi, xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 4 个导出。
 export {
   ra as externalHttp,
+  Txt as isTransportError,
+} from "../共享小工具-未细化/chunk-yz7dtpc3.js";
+export {
   xd as isAxiosError,
   qi as isCancel,
-  Txt as isTransportError,
-};
+} from "../../00-第三方库/axios/axios.t0fczzmz.js";

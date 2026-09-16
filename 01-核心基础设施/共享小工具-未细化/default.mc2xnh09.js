@@ -7,5 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { at, Nnt, qi, xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-export { Nnt as AxiosError, at as default, xd as isAxiosError, qi as isCancel };
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 4 个导出。
+export {
+  Nnt as AxiosError,
+  at as default,
+  xd as isAxiosError,
+  qi as isCancel,
+} from "../../00-第三方库/axios/axios.t0fczzmz.js";

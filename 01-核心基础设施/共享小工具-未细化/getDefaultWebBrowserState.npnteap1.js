@@ -7,5 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Arn, tce } from "./chunk-hkbpxv9z.js";
-export { Arn as getDefaultWebBrowserState, tce as makeSetWebBrowserSlice };
+
+// [barrel thinned] 原本在此预载 0 个依赖 chunk；经查它们均已由主入口初始化，已移除以还原真实模块边界。
+export {
+  Arn as getDefaultWebBrowserState,
+  tce as makeSetWebBrowserSlice,
+} from "./chunk-hkbpxv9z.js";

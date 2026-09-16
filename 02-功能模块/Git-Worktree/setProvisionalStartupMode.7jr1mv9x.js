@@ -7,33 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import {
-  aor,
-  Hfr,
-  YN,
-  qC,
-  fb,
-  cvn,
-  yg,
-  uvn,
-  dvn,
-  aCt,
-  DQe,
-  pvn,
-  fvn,
-  VVt,
-  aq,
-  fUe,
-  mvn,
-  lCt,
-  Jve,
-  KVt,
-  XVt,
-} from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../../00-第三方库/lodash/lodash.207999qb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+
+// [barrel thinned] 原本在此预载 4 个依赖 chunk；经查它们均已由主入口初始化，已移除以还原真实模块边界。
 export {
   aor as AutoModeState,
   Hfr as autoModeStates,
@@ -56,4 +31,4 @@ export {
   uvn as setAutoModeFlagCli,
   VVt as setAutoModeFromFallback,
   fUe as setProvisionalStartupMode,
-};
+} from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

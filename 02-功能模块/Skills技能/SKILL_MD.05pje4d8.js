@@ -7,5 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ntn, Ftn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ngp4wa3z.js";
-export { Ntn as SKILL_MD, Ftn as default };
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 2 个导出。
+export {
+  Ntn as SKILL_MD,
+  Ftn as default,
+} from "../../01-核心基础设施/共享小工具-未细化/chunk-ngp4wa3z.js";

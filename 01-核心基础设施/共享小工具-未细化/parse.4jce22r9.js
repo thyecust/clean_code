@@ -7,11 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ty, sse, S4t, rAt, _yr } from "../../00-第三方库/parse5/parse5.2zwbfepc.js";
+
+// [barrel thinned] 原本在此预载 0 个依赖 chunk；经查它们均已由主入口初始化，已移除以还原真实模块边界。
 export {
   sse as Tokenizer,
   ty as TokenizerMode,
   rAt as parse,
   _yr as parseFragment,
   S4t as serialize,
-};
+} from "../../00-第三方库/parse5/parse5.2zwbfepc.js";

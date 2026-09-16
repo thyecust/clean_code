@@ -7,19 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import {
-  pR,
-  eFe,
-  pyr,
-  tFe,
-  nFe,
-  xwn,
-  gqt,
-  hqt,
-  _qt,
-  Hwn,
-} from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+
+// [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 10 个导出。
 export {
   pR as VER_SHAPE,
   _qt as clearPublishInFlight,
@@ -31,4 +20,4 @@ export {
   hqt as markPublishInFlight,
   tFe as recordOwnPublish,
   gqt as withPublishInFlight,
-};
+} from "../Artifact发布-渲染/chunk-01ymf0ar.js";
