@@ -7,25 +7,25 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { DEFAULT_MAX_IMAGE_RAW_BYTES } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { DEFAULT_MAX_IMAGE_RAW_BYTES } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, A, Jr, hv, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isBunStandaloneExecutable, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { jo, Bf, a_ } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrow, execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { resolvePath, findSimilarFile, getSuggestedPathOutsideCwd } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSdkHostedBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
-import { outsideReadBlocked, pathInAllowedWorkingPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { outsideReadBlocked, pathInAllowedWorkingPath } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -1183,7 +1183,7 @@ async function resolveAttachmentsForUpload(e, t) {
   }
   let { lane: s } = t;
   if (o.length === 0 || s === "none" || s === "sdk_hosted_disabled") return r;
-  let { uploadBriefAttachment: m } = await import("../Bridge-RemoteControl/uploadBytesToBridgeStore.rrjdccq9.js"),
+  let { uploadBriefAttachment: m } = await import("../远程控制-Bridge/uploadBytesToBridgeStore.rrjdccq9.js"),
     c = await Promise.all(
       o.map((d) =>
         m(r[d].path, r[d].size, {

@@ -14,8 +14,8 @@
   "confidence": "high"
  },
  "chunk-01jnk0v2.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-01jnk0v2.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-01jnk0v2.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 36.2,
   "confidence": "high"
@@ -28,8 +28,8 @@
   "confidence": "low"
  },
  "chunk-01ymf0ar.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 376.5,
   "confidence": "medium"
@@ -56,8 +56,8 @@
   "confidence": "high"
  },
  "chunk-04hfp4jb.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/SESSION_TRANSPORT_LIMITS.04hfp4jb.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/SESSION_TRANSPORT_LIMITS.04hfp4jb.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 3.3,
   "confidence": "low"
@@ -70,8 +70,8 @@
   "confidence": "low"
  },
  "chunk-09vb7v5q.js": {
-  "path": "02-功能模块/跨会话消息(UDS)/injectPeerFilePrefix.09vb7v5q.js",
-  "module": "跨会话消息 (UDS)",
+  "path": "02-功能模块/跨会话消息-UDS/injectPeerFilePrefix.09vb7v5q.js",
+  "module": "跨会话消息 / UDS",
   "tier": 2,
   "kb": 4.2,
   "confidence": "low"
@@ -231,15 +231,15 @@
   "confidence": "high"
  },
  "chunk-0s8r3ncd.js": {
-  "path": "02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js",
-  "module": "Wellbeing / 使用时长",
+  "path": "02-功能模块/使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js",
+  "module": "使用时长 / Wellbeing",
   "tier": 2,
   "kb": 7.5,
   "confidence": "medium"
  },
  "chunk-0t0sve49.js": {
-  "path": "02-功能模块/Workflow编排/chunk-0t0sve49.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/chunk-0t0sve49.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 127.7,
   "confidence": "high"
@@ -315,8 +315,8 @@
   "confidence": "low"
  },
  "chunk-123wryak.js": {
-  "path": "02-功能模块/DesignSync/DesignSync.123wryak.js",
-  "module": "Design Sync",
+  "path": "02-功能模块/设计同步/设计同步.123wryak.js",
+  "module": "设计同步",
   "tier": 2,
   "kb": 36.5,
   "confidence": "high"
@@ -343,8 +343,8 @@
   "confidence": "high"
  },
  "chunk-14tfx6yq.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/recordCreatedPrToCcr.14tfx6yq.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/recordCreatedPrToCcr.14tfx6yq.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 4.7,
   "confidence": "medium"
@@ -357,8 +357,8 @@
   "confidence": "low"
  },
  "unattended-serving-consent.js": {
-  "path": "02-功能模块/AutoMode-自动模式/unattended-serving-consent.js",
-  "module": "AutoMode / 自动模式",
+  "path": "02-功能模块/自动模式-AutoMode/unattended-serving-consent.js",
+  "module": "自动模式 / AutoMode",
   "tier": 2,
   "kb": 6.2,
   "confidence": "medium"
@@ -490,8 +490,8 @@
   "confidence": "low"
  },
  "chunk-1g5kqtqx.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-1g5kqtqx.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-1g5kqtqx.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 13.0,
   "confidence": "high"
@@ -616,15 +616,15 @@
   "confidence": "high"
  },
  "chunk-1thfsdgf.js": {
-  "path": "02-功能模块/Bedrock-Vertex/AnthropicVertex.1thfsdgf.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/AnthropicVertex.1thfsdgf.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 7.9,
   "confidence": "medium"
  },
  "dir-sync-git-lane.js": {
-  "path": "02-功能模块/目录同步(dir-sync)/dir-sync-git-lane.js",
-  "module": "目录同步 (dir-sync)",
+  "path": "02-功能模块/目录同步-dir-sync/dir-sync-git-lane.js",
+  "module": "目录同步 / dir-sync",
   "tier": 2,
   "kb": 4.1,
   "confidence": "high"
@@ -658,8 +658,8 @@
   "confidence": "medium"
  },
  "chunk-1yq098a7.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-1yq098a7.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 17.9,
   "confidence": "high"
@@ -693,8 +693,8 @@
   "confidence": "high"
  },
  "design-consent-and-grants.js": {
-  "path": "02-功能模块/DesignSync/design-consent-and-grants.js",
-  "module": "Design Sync",
+  "path": "02-功能模块/设计同步/design-consent-and-grants.js",
+  "module": "设计同步",
   "tier": 2,
   "kb": 8.6,
   "confidence": "medium"
@@ -770,8 +770,8 @@
   "confidence": "low"
  },
  "chunk-27ncq5fr.js": {
-  "path": "02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 13.9,
   "confidence": "medium"
@@ -798,8 +798,8 @@
   "confidence": "low"
  },
  "remote-control-ui-strings.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/remote-control-ui-strings.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/remote-control-ui-strings.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 2.8,
   "confidence": "low"
@@ -812,8 +812,8 @@
   "confidence": "low"
  },
  "chunk-2eg6a3nr.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/HEADLESS_BRIDGE_WORKSPACE_DIFF_COMPUTE_BUDGET.2eg6a3nr.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/HEADLESS_BRIDGE_WORKSPACE_DIFF_COMPUTE_BUDGET.2eg6a3nr.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 46.4,
   "confidence": "high"
@@ -861,15 +861,15 @@
   "confidence": "low"
  },
  "device-bridge-registration.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/device-bridge-registration.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/device-bridge-registration.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 40.9,
   "confidence": "high"
  },
  "client-presence.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/client-presence.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/client-presence.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 4.2,
   "confidence": "medium"
@@ -882,8 +882,8 @@
   "confidence": "high"
  },
  "chunk-2nwears6.js": {
-  "path": "02-功能模块/Artifact发布-渲染/ARTIFACT_ADDON_TOOLS.2nwears6.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/ARTIFACT_ADDON_TOOLS.2nwears6.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 15.1,
   "confidence": "high"
@@ -973,8 +973,8 @@
   "confidence": "high"
  },
  "chrome-tool-error-classifier.js": {
-  "path": "02-功能模块/ClaudeinChrome/chrome-tool-error-classifier.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/chrome-tool-error-classifier.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 5.1,
   "confidence": "high"
@@ -1008,8 +1008,8 @@
   "confidence": "low"
  },
  "git-operations.js": {
-  "path": "02-功能模块/Git-Worktree/git-operations.js",
-  "module": "Git / Worktree",
+  "path": "02-功能模块/工作树-Git/git-operations.js",
+  "module": "工作树 / Git",
   "tier": 2,
   "kb": 36.8,
   "confidence": "high"
@@ -1064,8 +1064,8 @@
   "confidence": "low"
  },
  "login-flow.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/login-flow.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/login-flow.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 14.8,
   "confidence": "low"
@@ -1092,8 +1092,8 @@
   "confidence": "low"
  },
  "chunk-3degt91f.js": {
-  "path": "02-功能模块/Bedrock-Vertex/fromProcess.3degt91f.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/fromProcess.3degt91f.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 3.0,
   "confidence": "low"
@@ -1106,8 +1106,8 @@
   "confidence": "high"
  },
  "chunk-3ehd7vx0.js": {
-  "path": "02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js",
-  "module": "Memory / CLAUDE.md",
+  "path": "02-功能模块/记忆-CLAUDE.md/chunk-3ehd7vx0.js",
+  "module": "记忆 / CLAUDE.md",
   "tier": 2,
   "kb": 3.5,
   "confidence": "low"
@@ -1127,8 +1127,8 @@
   "confidence": "high"
  },
  "chunk-3h3nj5kh.js": {
-  "path": "02-功能模块/Cron-定时任务/CronListTool.3h3nj5kh.js",
-  "module": "Cron / 定时任务",
+  "path": "02-功能模块/定时任务-Cron/CronListTool.3h3nj5kh.js",
+  "module": "定时任务 / Cron",
   "tier": 2,
   "kb": 5.1,
   "confidence": "high"
@@ -1148,8 +1148,8 @@
   "confidence": "low"
  },
  "push-notification-tool.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/push-notification-tool.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/push-notification-tool.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 2.8,
   "confidence": "low"
@@ -1211,8 +1211,8 @@
   "confidence": "low"
  },
  "chunk-3nh3xt2m.js": {
-  "path": "02-功能模块/计划模式(Plan)/plan-ui.3nh3xt2m.js",
-  "module": "计划模式 (Plan)",
+  "path": "02-功能模块/计划模式-Plan/plan-ui.3nh3xt2m.js",
+  "module": "计划模式 / Plan",
   "tier": 2,
   "kb": 15.1,
   "confidence": "high"
@@ -1232,8 +1232,8 @@
   "confidence": "medium"
  },
  "chunk-3xk8h04p.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/createRemoteToolHostsRuntime.3xk8h04p.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/createRemoteToolHostsRuntime.3xk8h04p.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 114.8,
   "confidence": "high"
@@ -1309,8 +1309,8 @@
   "confidence": "high"
  },
  "chunk-45dh7k0y.js": {
-  "path": "02-功能模块/Bedrock-Vertex/call.45dh7k0y.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/call.45dh7k0y.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 9.2,
   "confidence": "medium"
@@ -1421,8 +1421,8 @@
   "confidence": "low"
  },
  "chunk-4ncr5gk1.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/fork-ui.4ncr5gk1.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/fork-ui.4ncr5gk1.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 13.8,
   "confidence": "medium"
@@ -1491,15 +1491,15 @@
   "confidence": "medium"
  },
  "chunk-4z5z1s3c.js": {
-  "path": "02-功能模块/MCP连接器(Connector)/SearchMcpRegistryTool.4z5z1s3c.js",
-  "module": "MCP 连接器 (Connector)",
+  "path": "02-功能模块/MCP连接器-Connector/SearchMcpRegistryTool.4z5z1s3c.js",
+  "module": "MCP 连接器 / Connector",
   "tier": 2,
   "kb": 5.0,
   "confidence": "medium"
  },
  "chunk-4zd60pbm.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-4zd60pbm.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 6.6,
   "confidence": "high"
@@ -1554,15 +1554,15 @@
   "confidence": "high"
  },
  "chunk-54kz7amv.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-54kz7amv.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-54kz7amv.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 14.8,
   "confidence": "medium"
  },
  "chunk-54xx04er.js": {
-  "path": "02-功能模块/Memory-CLAUDE.md/chunk-54xx04er.js",
-  "module": "Memory / CLAUDE.md",
+  "path": "02-功能模块/记忆-CLAUDE.md/chunk-54xx04er.js",
+  "module": "记忆 / CLAUDE.md",
   "tier": 2,
   "kb": 5.6,
   "confidence": "low"
@@ -1589,8 +1589,8 @@
   "confidence": "low"
  },
  "chunk-57cqn97y.js": {
-  "path": "02-功能模块/Workflow编排/workflow-launch-exec-cmd.57cqn97y.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/workflow-launch-exec-cmd.57cqn97y.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 8.0,
   "confidence": "low"
@@ -1673,22 +1673,22 @@
   "confidence": "high"
  },
  "artifact-read-for-model.js": {
-  "path": "02-功能模块/Artifact发布-渲染/artifact-read-for-model.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/artifact-read-for-model.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 20.5,
   "confidence": "high"
  },
  "artifact-comment-monitor-intent.js": {
-  "path": "02-功能模块/Artifact发布-渲染/artifact-comment-monitor-intent.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/artifact-comment-monitor-intent.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 26.2,
   "confidence": "medium"
  },
  "chunk-5h247hbm.js": {
-  "path": "02-功能模块/Memory-CLAUDE.md/searchMemoryFilesWithIndex.5h247hbm.js",
-  "module": "Memory / CLAUDE.md",
+  "path": "02-功能模块/记忆-CLAUDE.md/searchMemoryFilesWithIndex.5h247hbm.js",
+  "module": "记忆 / CLAUDE.md",
   "tier": 2,
   "kb": 48.8,
   "confidence": "high"
@@ -1729,8 +1729,8 @@
   "confidence": "low"
  },
  "design-sync-tool-metadata.js": {
-  "path": "02-功能模块/DesignSync/design-sync-tool-metadata.js",
-  "module": "Design Sync",
+  "path": "02-功能模块/设计同步/design-sync-tool-metadata.js",
+  "module": "设计同步",
   "tier": 2,
   "kb": 4.7,
   "confidence": "high"
@@ -1757,15 +1757,15 @@
   "confidence": "low"
  },
  "chunk-5ndhfaq9.js": {
-  "path": "02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 5.4,
   "confidence": "medium"
  },
  "chunk-5ne99rq3.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-5ne99rq3.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 49.3,
   "confidence": "high"
@@ -1792,8 +1792,8 @@
   "confidence": "low"
  },
  "chunk-5pkb0sjc.js": {
-  "path": "02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js",
-  "module": "终端环境探测 (TUI/tmux)",
+  "path": "02-功能模块/终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js",
+  "module": "终端环境探测 / TUI-tmux",
   "tier": 2,
   "kb": 9.0,
   "confidence": "medium"
@@ -1834,8 +1834,8 @@
   "confidence": "low"
  },
  "chunk-5tp7a8xn.js": {
-  "path": "02-功能模块/Memory-CLAUDE.md/ClaudeMdExternalIncludesDialog.5tp7a8xn.js",
-  "module": "Memory / CLAUDE.md",
+  "path": "02-功能模块/记忆-CLAUDE.md/ClaudeMdExternalIncludesDialog.5tp7a8xn.js",
+  "module": "记忆 / CLAUDE.md",
   "tier": 2,
   "kb": 5.0,
   "confidence": "high"
@@ -1855,15 +1855,15 @@
   "confidence": "high"
  },
  "chunk-5x9mh6vy.js": {
-  "path": "02-功能模块/Artifact发布-渲染/ArtifactTool.5x9mh6vy.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/ArtifactTool.5x9mh6vy.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 7.9,
   "confidence": "high"
  },
  "streamable-http-client-transport.js": {
-  "path": "02-功能模块/MCP传输(stdio-SSE-HTTP)/streamable-http-client-transport.js",
-  "module": "MCP 传输 (stdio/SSE/HTTP)",
+  "path": "02-功能模块/MCP传输-stdio-SSE-HTTP/streamable-http-client-transport.js",
+  "module": "MCP 传输 / stdio-SSE-HTTP",
   "tier": 2,
   "kb": 11.5,
   "confidence": "high"
@@ -2002,8 +2002,8 @@
   "confidence": "high"
  },
  "chunk-6cfazjmq.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/initSinks.6cfazjmq.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/initSinks.6cfazjmq.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 3.1,
   "confidence": "low"
@@ -2037,8 +2037,8 @@
   "confidence": "low"
  },
  "workflow-dialogs.js": {
-  "path": "02-功能模块/Workflow编排/workflow-dialogs.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/workflow-dialogs.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 58.8,
   "confidence": "high"
@@ -2079,8 +2079,8 @@
   "confidence": "low"
  },
  "chunk-6n1dt2fb.js": {
-  "path": "02-功能模块/Artifact发布-渲染/loadHljsBundleJs.6n1dt2fb.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/loadHljsBundleJs.6n1dt2fb.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 0.8,
   "confidence": "low"
@@ -2128,8 +2128,8 @@
   "confidence": "low"
  },
  "chunk-6rptg3rs.js": {
-  "path": "02-功能模块/Workflow编排/workflows-ui.6rptg3rs.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/workflows-ui.6rptg3rs.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 25.4,
   "confidence": "high"
@@ -2177,8 +2177,8 @@
   "confidence": "low"
  },
  "chunk-6tpbhye8.js": {
-  "path": "02-功能模块/工具Design(MCP)/工具Design(MCP).6tpbhye8.js",
-  "module": "工具: Design (MCP)",
+  "path": "02-功能模块/工具Design-MCP/工具Design-MCP.6tpbhye8.js",
+  "module": "工具 Design-MCP",
   "tier": 2,
   "kb": 66.6,
   "confidence": "high"
@@ -2219,8 +2219,8 @@
   "confidence": "low"
  },
  "chunk-71gz2pr7.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/withCollectTimeout.71gz2pr7.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/withCollectTimeout.71gz2pr7.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 5.0,
   "confidence": "low"
@@ -2338,8 +2338,8 @@
   "confidence": "low"
  },
  "remote-bootstrap-checklist.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/remote-bootstrap-checklist.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/remote-bootstrap-checklist.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 8.0,
   "confidence": "high"
@@ -2373,8 +2373,8 @@
   "confidence": "low"
  },
  "local-divergence-probe.js": {
-  "path": "02-功能模块/Git-Worktree/local-divergence-probe.js",
-  "module": "Git / Worktree",
+  "path": "02-功能模块/工作树-Git/local-divergence-probe.js",
+  "module": "工作树 / Git",
   "tier": 2,
   "kb": 14.6,
   "confidence": "high"
@@ -2499,8 +2499,8 @@
   "confidence": "low"
  },
  "chunk-7xe5wk62.js": {
-  "path": "02-功能模块/向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js",
-  "module": "向导 (Wizard) UI",
+  "path": "02-功能模块/向导UI-Wizard/向导UI-Wizard.7xe5wk62.js",
+  "module": "向导 UI-Wizard",
   "tier": 2,
   "kb": 6.0,
   "confidence": "medium"
@@ -2513,15 +2513,15 @@
   "confidence": "high"
  },
  "chunk-7yzaq8je.js": {
-  "path": "02-功能模块/Bedrock-Vertex/fromTokenFile.7yzaq8je.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/fromTokenFile.7yzaq8je.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 2.7,
   "confidence": "low"
  },
  "chunk-7z7zf7rm.js": {
-  "path": "02-功能模块/Memory-CLAUDE.md/memory-ui.7z7zf7rm.js",
-  "module": "Memory / CLAUDE.md",
+  "path": "02-功能模块/记忆-CLAUDE.md/memory-ui.7z7zf7rm.js",
+  "module": "记忆 / CLAUDE.md",
   "tier": 2,
   "kb": 52.8,
   "confidence": "high"
@@ -2534,8 +2534,8 @@
   "confidence": "high"
  },
  "chunk-7zp91kjd.js": {
-  "path": "02-功能模块/跨会话消息(UDS)/MAX_IDLE_SUBSCRIPTIONS.7zp91kjd.js",
-  "module": "跨会话消息 (UDS)",
+  "path": "02-功能模块/跨会话消息-UDS/MAX_IDLE_SUBSCRIPTIONS.7zp91kjd.js",
+  "module": "跨会话消息 / UDS",
   "tier": 2,
   "kb": 7.7,
   "confidence": "high"
@@ -2590,8 +2590,8 @@
   "confidence": "low"
  },
  "chunk-85kzjn95.js": {
-  "path": "02-功能模块/Diff引擎/DiffDialog.85kzjn95.js",
-  "module": "Diff 引擎",
+  "path": "02-功能模块/差异引擎-Diff/DiffDialog.85kzjn95.js",
+  "module": "差异引擎 / Diff",
   "tier": 2,
   "kb": 28.8,
   "confidence": "high"
@@ -2632,8 +2632,8 @@
   "confidence": "medium"
  },
  "chunk-8ab67cqd.js": {
-  "path": "02-功能模块/推送通知(Push)/推送通知(Push).8ab67cqd.js",
-  "module": "推送通知 (Push)",
+  "path": "02-功能模块/推送通知-Push/推送通知-Push.8ab67cqd.js",
+  "module": "推送通知 / Push",
   "tier": 2,
   "kb": 5.0,
   "confidence": "medium"
@@ -2702,8 +2702,8 @@
   "confidence": "high"
  },
  "chunk-8ptea57x.js": {
-  "path": "02-功能模块/Workflow编排/WorkflowDetailDialog.8ptea57x.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/WorkflowDetailDialog.8ptea57x.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 8.5,
   "confidence": "high"
@@ -2765,8 +2765,8 @@
   "confidence": "low"
  },
  "chunk-8sw91yn5.js": {
-  "path": "02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js",
-  "module": "策略限制 (Policy Limits)",
+  "path": "02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js",
+  "module": "策略限制 / PolicyLimits",
   "tier": 2,
   "kb": 27.6,
   "confidence": "high"
@@ -2891,8 +2891,8 @@
   "confidence": "high"
  },
  "chunk-9b6sc1gb.js": {
-  "path": "02-功能模块/Memory-CLAUDE.md/chunk-9b6sc1gb.js",
-  "module": "Memory / CLAUDE.md",
+  "path": "02-功能模块/记忆-CLAUDE.md/chunk-9b6sc1gb.js",
+  "module": "记忆 / CLAUDE.md",
   "tier": 2,
   "kb": 10.1,
   "confidence": "medium"
@@ -2919,8 +2919,8 @@
   "confidence": "high"
  },
  "chunk-9da0pmrs.js": {
-  "path": "02-功能模块/Bedrock-Vertex/AnthropicAws.9da0pmrs.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/AnthropicAws.9da0pmrs.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 9.9,
   "confidence": "low"
@@ -2933,15 +2933,15 @@
   "confidence": "low"
  },
  "chunk-9estzwf5.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-9estzwf5.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 17.1,
   "confidence": "high"
  },
  "chunk-9f9wpf77.js": {
-  "path": "02-功能模块/ClaudeinChrome/getClaudeInChromeMCPToolOverrides.9f9wpf77.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/getClaudeInChromeMCPToolOverrides.9f9wpf77.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 9.6,
   "confidence": "high"
@@ -2989,15 +2989,15 @@
   "confidence": "low"
  },
  "chunk-9k4nmsaw.js": {
-  "path": "02-功能模块/AutoMode-自动模式/hasExistingAutoModeConfig.9k4nmsaw.js",
-  "module": "AutoMode / 自动模式",
+  "path": "02-功能模块/自动模式-AutoMode/hasExistingAutoModeConfig.9k4nmsaw.js",
+  "module": "自动模式 / AutoMode",
   "tier": 2,
   "kb": 31.0,
   "confidence": "high"
  },
  "chunk-9kbevsjg.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/call.9kbevsjg.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/call.9kbevsjg.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 25.5,
   "confidence": "high"
@@ -3017,8 +3017,8 @@
   "confidence": "low"
  },
  "chunk-9kzxq41e.js": {
-  "path": "02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js",
-  "module": "跨会话消息 (UDS)",
+  "path": "02-功能模块/跨会话消息-UDS/chunk-9kzxq41e.js",
+  "module": "跨会话消息 / UDS",
   "tier": 2,
   "kb": 8.9,
   "confidence": "medium"
@@ -3066,8 +3066,8 @@
   "confidence": "medium"
  },
  "chunk-9r92qaht.js": {
-  "path": "02-功能模块/Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js",
-  "module": "Cowork 远程设备注册",
+  "path": "02-功能模块/设备注册-Cowork/设备注册-Cowork.9r92qaht.js",
+  "module": "设备注册 / Cowork",
   "tier": 2,
   "kb": 7.1,
   "confidence": "high"
@@ -3087,15 +3087,15 @@
   "confidence": "low"
  },
  "chunk-9y8d6e21.js": {
-  "path": "02-功能模块/目录同步(dir-sync)/LOCAL_DIVERGENCE_DEADLINE_MS.9y8d6e21.js",
-  "module": "目录同步 (dir-sync)",
+  "path": "02-功能模块/目录同步-dir-sync/LOCAL_DIVERGENCE_DEADLINE_MS.9y8d6e21.js",
+  "module": "目录同步 / dir-sync",
   "tier": 2,
   "kb": 4.2,
   "confidence": "high"
  },
  "git-exec-hardening.js": {
-  "path": "02-功能模块/Git-Worktree/git-exec-hardening.js",
-  "module": "Git / Worktree",
+  "path": "02-功能模块/工作树-Git/git-exec-hardening.js",
+  "module": "工作树 / Git",
   "tier": 2,
   "kb": 11.7,
   "confidence": "high"
@@ -3122,8 +3122,8 @@
   "confidence": "high"
  },
  "chunk-a4mdm49v.js": {
-  "path": "02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js",
-  "module": "Grove / 隐私设置",
+  "path": "02-功能模块/隐私设置-Grove/chunk-a4mdm49v.js",
+  "module": "隐私设置 / Grove",
   "tier": 2,
   "kb": 11.0,
   "confidence": "high"
@@ -3136,8 +3136,8 @@
   "confidence": "low"
  },
  "remote-workflow-launch.js": {
-  "path": "02-功能模块/Workflow编排/remote-workflow-launch.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/remote-workflow-launch.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 6.1,
   "confidence": "low"
@@ -3220,8 +3220,8 @@
   "confidence": "low"
  },
  "sso-token-provider.js": {
-  "path": "02-功能模块/Bedrock-Vertex/sso-token-provider.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/sso-token-provider.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 4.5,
   "confidence": "low"
@@ -3234,8 +3234,8 @@
   "confidence": "high"
  },
  "chunk-ahmkq2k0.js": {
-  "path": "02-功能模块/ClaudeDesktop交接/desktop-ui.ahmkq2k0.js",
-  "module": "Claude Desktop 交接",
+  "path": "02-功能模块/交接-ClaudeDesktop/desktop-ui.ahmkq2k0.js",
+  "module": "交接 / ClaudeDesktop",
   "tier": 2,
   "kb": 13.4,
   "confidence": "high"
@@ -3325,8 +3325,8 @@
   "confidence": "medium"
  },
  "diff-tool-result-render.js": {
-  "path": "02-功能模块/Diff引擎/diff-tool-result-render.js",
-  "module": "Diff 引擎",
+  "path": "02-功能模块/差异引擎-Diff/diff-tool-result-render.js",
+  "module": "差异引擎 / Diff",
   "tier": 2,
   "kb": 6.6,
   "confidence": "low"
@@ -3367,8 +3367,8 @@
   "confidence": "low"
  },
  "chunk-axhd6c0p.js": {
-  "path": "02-功能模块/Insights报告/default.axhd6c0p.js",
-  "module": "Insights 报告",
+  "path": "02-功能模块/洞察报告-Insights/default.axhd6c0p.js",
+  "module": "洞察报告 / Insights",
   "tier": 2,
   "kb": 98.9,
   "confidence": "high"
@@ -3388,8 +3388,8 @@
   "confidence": "low"
  },
  "design-oauth-credentials.js": {
-  "path": "02-功能模块/DesignSync/design-oauth-credentials.js",
-  "module": "Design Sync",
+  "path": "02-功能模块/设计同步/design-oauth-credentials.js",
+  "module": "设计同步",
   "tier": 2,
   "kb": 10.7,
   "confidence": "high"
@@ -3416,8 +3416,8 @@
   "confidence": "high"
  },
  "chunk-b1s7beta.js": {
-  "path": "02-功能模块/Workflow编排/WorkflowTool.b1s7beta.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/WorkflowTool.b1s7beta.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 88.1,
   "confidence": "high"
@@ -3437,8 +3437,8 @@
   "confidence": "high"
  },
  "chunk-b6k1z7an.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-b6k1z7an.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-b6k1z7an.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 85.3,
   "confidence": "high"
@@ -3451,8 +3451,8 @@
   "confidence": "low"
  },
  "device-bind.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/device-bind.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/device-bind.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 4.0,
   "confidence": "medium"
@@ -3535,29 +3535,29 @@
   "confidence": "low"
  },
  "chunk-bjn9jreb.js": {
-  "path": "02-功能模块/Bedrock-Vertex/fromIni.bjn9jreb.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/fromIni.bjn9jreb.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 0.7,
   "confidence": "low"
  },
  "git-repository-detection.js": {
-  "path": "02-功能模块/Git-Worktree/git-repository-detection.js",
-  "module": "Git / Worktree",
+  "path": "02-功能模块/工作树-Git/git-repository-detection.js",
+  "module": "工作树 / Git",
   "tier": 2,
   "kb": 8.2,
   "confidence": "high"
  },
  "workflow-runtime.js": {
-  "path": "02-功能模块/Workflow编排/workflow-runtime.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/workflow-runtime.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 116.8,
   "confidence": "high"
  },
  "session-event-transport.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/session-event-transport.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/session-event-transport.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 16.0,
   "confidence": "high"
@@ -3570,22 +3570,22 @@
   "confidence": "high"
  },
  "chunk-bnd7s557.js": {
-  "path": "02-功能模块/Artifact发布-渲染/COMMENT_ANALYST_AGENT.bnd7s557.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/COMMENT_ANALYST_AGENT.bnd7s557.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 5.4,
   "confidence": "low"
  },
  "apply-3p-default-fallbacks.js": {
-  "path": "02-功能模块/Bedrock-Vertex/apply-3p-default-fallbacks.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/apply-3p-default-fallbacks.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 7.9,
   "confidence": "medium"
  },
  "chunk-br7dq41d.js": {
-  "path": "02-功能模块/Memory-CLAUDE.md/chunk-br7dq41d.js",
-  "module": "Memory / CLAUDE.md",
+  "path": "02-功能模块/记忆-CLAUDE.md/chunk-br7dq41d.js",
+  "module": "记忆 / CLAUDE.md",
   "tier": 2,
   "kb": 14.9,
   "confidence": "low"
@@ -3640,8 +3640,8 @@
   "confidence": "low"
  },
  "chunk-by6ppgfd.js": {
-  "path": "02-功能模块/目录同步(dir-sync)/openFolderGitSync.by6ppgfd.js",
-  "module": "目录同步 (dir-sync)",
+  "path": "02-功能模块/目录同步-dir-sync/openFolderGitSync.by6ppgfd.js",
+  "module": "目录同步 / dir-sync",
   "tier": 2,
   "kb": 32.2,
   "confidence": "high"
@@ -3717,8 +3717,8 @@
   "confidence": "low"
  },
  "chunk-c8wnxdrq.js": {
-  "path": "02-功能模块/Workflow编排/LocalWorkflowTask.c8wnxdrq.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/LocalWorkflowTask.c8wnxdrq.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 7.1,
   "confidence": "high"
@@ -3752,8 +3752,8 @@
   "confidence": "low"
  },
  "chunk-caxv2veh.js": {
-  "path": "02-功能模块/Daemon-守护服务/getBaseRenderOptions.caxv2veh.js",
-  "module": "Daemon / 守护服务",
+  "path": "02-功能模块/守护服务-Daemon/getBaseRenderOptions.caxv2veh.js",
+  "module": "守护服务 / Daemon",
   "tier": 2,
   "kb": 2.9,
   "confidence": "low"
@@ -3766,8 +3766,8 @@
   "confidence": "low"
  },
  "workflow-script.js": {
-  "path": "02-功能模块/Workflow编排/workflow-script.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/workflow-script.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 6.7,
   "confidence": "high"
@@ -3780,8 +3780,8 @@
   "confidence": "low"
  },
  "chunk-ce1ven8w.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/NON_REPL_SUBCOMMANDS.ce1ven8w.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/NON_REPL_SUBCOMMANDS.ce1ven8w.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 1.2,
   "confidence": "low"
@@ -3934,8 +3934,8 @@
   "confidence": "high"
  },
  "remote-control-messages.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/remote-control-messages.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/remote-control-messages.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 1.8,
   "confidence": "low"
@@ -3969,8 +3969,8 @@
   "confidence": "high"
  },
  "pr-review-target.js": {
-  "path": "02-功能模块/CodeReview/pr-review-target.js",
-  "module": "Code Review",
+  "path": "02-功能模块/代码审查/pr-review-target.js",
+  "module": "代码审查",
   "tier": 2,
   "kb": 4.6,
   "confidence": "medium"
@@ -3997,15 +3997,15 @@
   "confidence": "low"
  },
  "chunk-d09asyvz.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/call.d09asyvz.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/call.d09asyvz.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 4.4,
   "confidence": "medium"
  },
  "chunk-d0bebdj3.js": {
-  "path": "02-功能模块/MCP传输(stdio-SSE-HTTP)/MCP传输(stdio-SSE-HTTP).d0bebdj3.js",
-  "module": "MCP 传输 (stdio/SSE/HTTP)",
+  "path": "02-功能模块/MCP传输-stdio-SSE-HTTP/MCP传输-stdio-SSE-HTTP.d0bebdj3.js",
+  "module": "MCP 传输 / stdio-SSE-HTTP",
   "tier": 2,
   "kb": 17.6,
   "confidence": "high"
@@ -4053,8 +4053,8 @@
   "confidence": "low"
  },
  "chunk-d61a305c.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/exit-ui.d61a305c.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/exit-ui.d61a305c.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 13.9,
   "confidence": "medium"
@@ -4123,15 +4123,15 @@
   "confidence": "medium"
  },
  "chunk-ddrd6y06.js": {
-  "path": "02-功能模块/CodeReview/CodeReview.ddrd6y06.js",
-  "module": "Code Review",
+  "path": "02-功能模块/代码审查/代码审查.ddrd6y06.js",
+  "module": "代码审查",
   "tier": 2,
   "kb": 41.6,
   "confidence": "high"
  },
  "chunk-ddtmwhn7.js": {
-  "path": "02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js",
-  "module": "跨会话消息 (UDS)",
+  "path": "02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js",
+  "module": "跨会话消息 / UDS",
   "tier": 2,
   "kb": 29.5,
   "confidence": "high"
@@ -4221,8 +4221,8 @@
   "confidence": "high"
  },
  "chunk-dmme15m7.js": {
-  "path": "02-功能模块/跨会话消息(UDS)/SendFileTool.dmme15m7.js",
-  "module": "跨会话消息 (UDS)",
+  "path": "02-功能模块/跨会话消息-UDS/SendFileTool.dmme15m7.js",
+  "module": "跨会话消息 / UDS",
   "tier": 2,
   "kb": 29.7,
   "confidence": "medium"
@@ -4319,8 +4319,8 @@
   "confidence": "low"
  },
  "workflow-progress-ui.js": {
-  "path": "02-功能模块/Workflow编排/workflow-progress-ui.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/workflow-progress-ui.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 25.6,
   "confidence": "high"
@@ -4375,8 +4375,8 @@
   "confidence": "high"
  },
  "chunk-e5mh1avy.js": {
-  "path": "02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js",
-  "module": "计划模式 (Plan)",
+  "path": "02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js",
+  "module": "计划模式 / Plan",
   "tier": 2,
   "kb": 29.6,
   "confidence": "high"
@@ -4445,8 +4445,8 @@
   "confidence": "high"
  },
  "remote-control-policy-messages.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/remote-control-policy-messages.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/remote-control-policy-messages.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 0.8,
   "confidence": "medium"
@@ -4550,15 +4550,15 @@
   "confidence": "low"
  },
  "forwarded-tool-call-registry.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/forwarded-tool-call-registry.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/forwarded-tool-call-registry.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 5.2,
   "confidence": "medium"
  },
  "chunk-ethw1dn7.js": {
-  "path": "02-功能模块/Bedrock-Vertex/fromHttp.ethw1dn7.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/fromHttp.ethw1dn7.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 5.8,
   "confidence": "low"
@@ -4571,8 +4571,8 @@
   "confidence": "low"
  },
  "chunk-ew7kwnxk.js": {
-  "path": "02-功能模块/Workflow编排/renderToolResultMessage.ew7kwnxk.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/renderToolResultMessage.ew7kwnxk.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 11.0,
   "confidence": "high"
@@ -4690,15 +4690,15 @@
   "confidence": "low"
  },
  "chunk-fbbevkgf.js": {
-  "path": "02-功能模块/ClaudeinChrome/runChromeNativeHost.fbbevkgf.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/runChromeNativeHost.fbbevkgf.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 9.4,
   "confidence": "high"
  },
  "chunk-fc8k0hbw.js": {
-  "path": "02-功能模块/Git-Worktree/IDENTITY_CHANGED_SUMMARY.fc8k0hbw.js",
-  "module": "Git / Worktree",
+  "path": "02-功能模块/工作树-Git/IDENTITY_CHANGED_SUMMARY.fc8k0hbw.js",
+  "module": "工作树 / Git",
   "tier": 2,
   "kb": 8.5,
   "confidence": "low"
@@ -4725,8 +4725,8 @@
   "confidence": "low"
  },
  "notification-queue.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/notification-queue.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/notification-queue.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 7.7,
   "confidence": "medium"
@@ -4781,8 +4781,8 @@
   "confidence": "low"
  },
  "chunk-fx5ekm7e.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-fx5ekm7e.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 13.0,
   "confidence": "high"
@@ -4823,8 +4823,8 @@
   "confidence": "high"
  },
  "chunk-fzc9qmkz.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/PushNotificationTool.fzc9qmkz.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/PushNotificationTool.fzc9qmkz.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 7.8,
   "confidence": "low"
@@ -4837,8 +4837,8 @@
   "confidence": "low"
  },
  "chunk-g159fp6a.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/listBridgePeerSessions.g159fp6a.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/listBridgePeerSessions.g159fp6a.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 14.7,
   "confidence": "high"
@@ -4886,8 +4886,8 @@
   "confidence": "medium"
  },
  "chunk-g4xng0pg.js": {
-  "path": "02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js",
-  "module": "通知 (Notifications)",
+  "path": "02-功能模块/通知-Notifications/通知-Notifications.g4xng0pg.js",
+  "module": "通知 / Notifications",
   "tier": 2,
   "kb": 4.1,
   "confidence": "high"
@@ -4907,8 +4907,8 @@
   "confidence": "high"
  },
  "bedrock-setup-wizard.js": {
-  "path": "02-功能模块/Bedrock-Vertex/bedrock-setup-wizard.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/bedrock-setup-wizard.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 50.2,
   "confidence": "high"
@@ -4935,22 +4935,22 @@
   "confidence": "high"
  },
  "chunk-ga43tr2w.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-ga43tr2w.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-ga43tr2w.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 100.0,
   "confidence": "high"
  },
  "dir-sync-git-store.js": {
-  "path": "02-功能模块/目录同步(dir-sync)/dir-sync-git-store.js",
-  "module": "目录同步 (dir-sync)",
+  "path": "02-功能模块/目录同步-dir-sync/dir-sync-git-store.js",
+  "module": "目录同步 / dir-sync",
   "tier": 2,
   "kb": 63.3,
   "confidence": "high"
  },
  "chunk-gbme4p3n.js": {
-  "path": "01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js",
-  "module": "安全文件系统 (FS 加固)",
+  "path": "01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js",
+  "module": "安全文件系统 / FS 加固",
   "tier": 1,
   "kb": 87.0,
   "confidence": "high"
@@ -4970,8 +4970,8 @@
   "confidence": "low"
  },
  "chunk-gcjbt04b.js": {
-  "path": "02-功能模块/Bedrock-Vertex/ThirdPartyModelUpgradeDialog.gcjbt04b.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/ThirdPartyModelUpgradeDialog.gcjbt04b.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 7.0,
   "confidence": "medium"
@@ -4991,8 +4991,8 @@
   "confidence": "high"
  },
  "chunk-gf6zmqr4.js": {
-  "path": "02-功能模块/ClaudeinChrome/ClaudeInChromeOnboarding.gf6zmqr4.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/ClaudeInChromeOnboarding.gf6zmqr4.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 7.7,
   "confidence": "high"
@@ -5061,8 +5061,8 @@
   "confidence": "high"
  },
  "chunk-gs6mjdq6.js": {
-  "path": "02-功能模块/Goal-目标模式/Goal-目标模式.gs6mjdq6.js",
-  "module": "Goal / 目标模式",
+  "path": "02-功能模块/目标模式-Goal/目标模式-Goal.gs6mjdq6.js",
+  "module": "目标模式 / Goal",
   "tier": 2,
   "kb": 11.0,
   "confidence": "high"
@@ -5082,8 +5082,8 @@
   "confidence": "low"
  },
  "chunk-gvnv2w95.js": {
-  "path": "02-功能模块/ClaudeinChrome/BROWSER_ENABLE_STUB_TOOLS.gvnv2w95.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/BROWSER_ENABLE_STUB_TOOLS.gvnv2w95.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 5.7,
   "confidence": "high"
@@ -5124,8 +5124,8 @@
   "confidence": "low"
  },
  "chunk-h0v8b5d9.js": {
-  "path": "02-功能模块/Workflow编排/WORKFLOW_LAUNCH_DIGEST_ENV.h0v8b5d9.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/WORKFLOW_LAUNCH_DIGEST_ENV.h0v8b5d9.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 7.4,
   "confidence": "low"
@@ -5180,8 +5180,8 @@
   "confidence": "high"
  },
  "remote-session-host-registry.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/remote-session-host-registry.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/remote-session-host-registry.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 4.5,
   "confidence": "high"
@@ -5201,15 +5201,15 @@
   "confidence": "low"
  },
  "chunk-h633j7p7.js": {
-  "path": "02-功能模块/键位绑定(Keybindings)/keybindings-cmd.h633j7p7.js",
-  "module": "键位绑定 (Keybindings)",
+  "path": "02-功能模块/键位绑定-Keybindings/keybindings-cmd.h633j7p7.js",
+  "module": "键位绑定 / Keybindings",
   "tier": 2,
   "kb": 4.9,
   "confidence": "high"
  },
  "atomic-file-write.js": {
-  "path": "01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js",
-  "module": "安全文件系统 (FS 加固)",
+  "path": "01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js",
+  "module": "安全文件系统 / FS 加固",
   "tier": 1,
   "kb": 12.5,
   "confidence": "high"
@@ -5243,8 +5243,8 @@
   "confidence": "medium"
  },
  "chrome-bridge-mcp-server.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chrome-bridge-mcp-server.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chrome-bridge-mcp-server.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 46.4,
   "confidence": "high"
@@ -5257,15 +5257,15 @@
   "confidence": "low"
  },
  "workflow-snapshots.js": {
-  "path": "02-功能模块/Workflow编排/workflow-snapshots.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/workflow-snapshots.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 5.0,
   "confidence": "high"
  },
  "claude-md-external-includes-dialog.js": {
-  "path": "02-功能模块/Memory-CLAUDE.md/claude-md-external-includes-dialog.js",
-  "module": "Memory / CLAUDE.md",
+  "path": "02-功能模块/记忆-CLAUDE.md/claude-md-external-includes-dialog.js",
+  "module": "记忆 / CLAUDE.md",
   "tier": 2,
   "kb": 6.1,
   "confidence": "low"
@@ -5320,8 +5320,8 @@
   "confidence": "high"
  },
  "claude-in-chrome-host.js": {
-  "path": "02-功能模块/ClaudeinChrome/claude-in-chrome-host.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/claude-in-chrome-host.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 14.8,
   "confidence": "high"
@@ -5341,8 +5341,8 @@
   "confidence": "high"
  },
  "policy-limits-client.js": {
-  "path": "02-功能模块/策略限制(PolicyLimits)/policy-limits-client.js",
-  "module": "策略限制 (Policy Limits)",
+  "path": "02-功能模块/策略限制-PolicyLimits/policy-limits-client.js",
+  "module": "策略限制 / PolicyLimits",
   "tier": 2,
   "kb": 27.3,
   "confidence": "high"
@@ -5376,15 +5376,15 @@
   "confidence": "low"
  },
  "workflow-launch.js": {
-  "path": "02-功能模块/Workflow编排/workflow-launch.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/workflow-launch.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 12.1,
   "confidence": "low"
  },
  "chunk-hsr720kb.js": {
-  "path": "02-功能模块/Bedrock-Vertex/fromSSO.hsr720kb.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/fromSSO.hsr720kb.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 7.0,
   "confidence": "low"
@@ -5411,8 +5411,8 @@
   "confidence": "medium"
  },
  "chunk-hvk38aac.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/diff-ui.hvk38aac.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/diff-ui.hvk38aac.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 5.0,
   "confidence": "high"
@@ -5474,8 +5474,8 @@
   "confidence": "low"
  },
  "chunk-j56ajwyt.js": {
-  "path": "02-功能模块/Routines(定时云任务)/Routines(定时云任务).j56ajwyt.js",
-  "module": "Routines (定时云任务)",
+  "path": "02-功能模块/Routines-定时云任务/Routines-定时云任务.j56ajwyt.js",
+  "module": "Routines / 定时云任务",
   "tier": 2,
   "kb": 35.7,
   "confidence": "high"
@@ -5502,8 +5502,8 @@
   "confidence": "medium"
  },
  "keybinding-display.js": {
-  "path": "02-功能模块/键位绑定(Keybindings)/keybinding-display.js",
-  "module": "键位绑定 (Keybindings)",
+  "path": "02-功能模块/键位绑定-Keybindings/keybinding-display.js",
+  "module": "键位绑定 / Keybindings",
   "tier": 2,
   "kb": 5.9,
   "confidence": "high"
@@ -5628,8 +5628,8 @@
   "confidence": "high"
  },
  "chunk-jmem3wk1.js": {
-  "path": "02-功能模块/Bedrock-Vertex/seedEnvDefaultForUserPin.jmem3wk1.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/seedEnvDefaultForUserPin.jmem3wk1.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 6.9,
   "confidence": "medium"
@@ -5642,8 +5642,8 @@
   "confidence": "high"
  },
  "bridge-inbound-origin.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/bridge-inbound-origin.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/bridge-inbound-origin.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 8.9,
   "confidence": "medium"
@@ -5761,8 +5761,8 @@
   "confidence": "low"
  },
  "chunk-k1x233hx.js": {
-  "path": "02-功能模块/Cron-定时任务/CronDeleteTool.k1x233hx.js",
-  "module": "Cron / 定时任务",
+  "path": "02-功能模块/定时任务-Cron/CronDeleteTool.k1x233hx.js",
+  "module": "定时任务 / Cron",
   "tier": 2,
   "kb": 4.8,
   "confidence": "high"
@@ -5775,8 +5775,8 @@
   "confidence": "low"
  },
  "policy-limits-status.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/policy-limits-status.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/policy-limits-status.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 5.0,
   "confidence": "low"
@@ -5950,8 +5950,8 @@
   "confidence": "low"
  },
  "chunk-km6675e1.js": {
-  "path": "02-功能模块/AutoMode-自动模式/auto-mode-setup-cmd.km6675e1.js",
-  "module": "AutoMode / 自动模式",
+  "path": "02-功能模块/自动模式-AutoMode/auto-mode-setup-cmd.km6675e1.js",
+  "module": "自动模式 / AutoMode",
   "tier": 2,
   "kb": 19.4,
   "confidence": "high"
@@ -5971,8 +5971,8 @@
   "confidence": "high"
  },
  "chunk-knbv811d.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/validateExplicitMessagingSocketPath.knbv811d.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 7.6,
   "confidence": "low"
@@ -6013,8 +6013,8 @@
   "confidence": "low"
  },
  "chunk-kshc4v5t.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-kshc4v5t.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 116.3,
   "confidence": "high"
@@ -6041,8 +6041,8 @@
   "confidence": "low"
  },
  "chunk-kvm00s1b.js": {
-  "path": "02-功能模块/Git-Worktree/MAX_OVERLAY_PREREQUISITES.kvm00s1b.js",
-  "module": "Git / Worktree",
+  "path": "02-功能模块/工作树-Git/MAX_OVERLAY_PREREQUISITES.kvm00s1b.js",
+  "module": "工作树 / Git",
   "tier": 2,
   "kb": 37.3,
   "confidence": "high"
@@ -6062,8 +6062,8 @@
   "confidence": "high"
  },
  "chunk-kxmaf32p.js": {
-  "path": "02-功能模块/MCP连接器(Connector)/SuggestConnectorsTool.kxmaf32p.js",
-  "module": "MCP 连接器 (Connector)",
+  "path": "02-功能模块/MCP连接器-Connector/SuggestConnectorsTool.kxmaf32p.js",
+  "module": "MCP 连接器 / Connector",
   "tier": 2,
   "kb": 5.0,
   "confidence": "medium"
@@ -6083,8 +6083,8 @@
   "confidence": "high"
  },
  "chunk-kyx52j2g.js": {
-  "path": "02-功能模块/Wellbeing-使用时长/wellbeing-ui.kyx52j2g.js",
-  "module": "Wellbeing / 使用时长",
+  "path": "02-功能模块/使用时长-Wellbeing/wellbeing-ui.kyx52j2g.js",
+  "module": "使用时长 / Wellbeing",
   "tier": 2,
   "kb": 6.4,
   "confidence": "medium"
@@ -6097,8 +6097,8 @@
   "confidence": "low"
  },
  "chunk-kz8yw55j.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/AssistantNarrationSummaryMessage.kz8yw55j.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/AssistantNarrationSummaryMessage.kz8yw55j.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 9.4,
   "confidence": "medium"
@@ -6118,8 +6118,8 @@
   "confidence": "low"
  },
  "teleport-resume-ui.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/teleport-resume-ui.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/teleport-resume-ui.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 14.0,
   "confidence": "low"
@@ -6202,8 +6202,8 @@
   "confidence": "low"
  },
  "chunk-mcy72eh1.js": {
-  "path": "02-功能模块/Bedrock-Vertex/call.mcy72eh1.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/call.mcy72eh1.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 9.1,
   "confidence": "low"
@@ -6223,8 +6223,8 @@
   "confidence": "low"
  },
  "chunk-mg2gq0d6.js": {
-  "path": "02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js",
-  "module": "AppState / 状态管理",
+  "path": "02-功能模块/状态管理-AppState/getOriginalCwd.mg2gq0d6.js",
+  "module": "状态管理 / AppState",
   "tier": 2,
   "kb": 19.5,
   "confidence": "high"
@@ -6244,15 +6244,15 @@
   "confidence": "high"
  },
  "chunk-mjs9q59k.js": {
-  "path": "02-功能模块/AutoMode-自动模式/LINK_SCAN_MAX_BYTES.mjs9q59k.js",
-  "module": "AutoMode / 自动模式",
+  "path": "02-功能模块/自动模式-AutoMode/LINK_SCAN_MAX_BYTES.mjs9q59k.js",
+  "module": "自动模式 / AutoMode",
   "tier": 2,
   "kb": 39.8,
   "confidence": "medium"
  },
  "chunk-mk3zm4ew.js": {
-  "path": "02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js",
-  "module": "Cron / 定时任务",
+  "path": "02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js",
+  "module": "定时任务 / Cron",
   "tier": 2,
   "kb": 5.9,
   "confidence": "high"
@@ -6286,8 +6286,8 @@
   "confidence": "low"
  },
  "clawd-mascot.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/clawd-mascot.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/clawd-mascot.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 4.9,
   "confidence": "medium"
@@ -6356,8 +6356,8 @@
   "confidence": "high"
  },
  "code-session-api.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/code-session-api.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/code-session-api.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 11.5,
   "confidence": "medium"
@@ -6405,22 +6405,22 @@
   "confidence": "low"
  },
  "chunk-n2hxcpxd.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/tui-ui.n2hxcpxd.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/tui-ui.n2hxcpxd.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 8.6,
   "confidence": "medium"
  },
  "chunk-n2v4aa82.js": {
-  "path": "02-功能模块/Bedrock-Vertex/checkMantleDefaultAvailability.n2v4aa82.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/checkMantleDefaultAvailability.n2v4aa82.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 8.5,
   "confidence": "medium"
  },
  "chunk-n35pw6j7.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/runBridgeHeadless.n35pw6j7.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/runBridgeHeadless.n35pw6j7.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 141.7,
   "confidence": "high"
@@ -6524,8 +6524,8 @@
   "confidence": "high"
  },
  "chunk-nd3hcr54.js": {
-  "path": "02-功能模块/Workflow编排/getWorkflowCommands.nd3hcr54.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/getWorkflowCommands.nd3hcr54.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 8.8,
   "confidence": "high"
@@ -6650,8 +6650,8 @@
   "confidence": "medium"
  },
  "chunk-np0gtt22.js": {
-  "path": "02-功能模块/Goal-目标模式/goal-ui.np0gtt22.js",
-  "module": "Goal / 目标模式",
+  "path": "02-功能模块/目标模式-Goal/goal-ui.np0gtt22.js",
+  "module": "目标模式 / Goal",
   "tier": 2,
   "kb": 10.5,
   "confidence": "high"
@@ -6713,8 +6713,8 @@
   "confidence": "low"
  },
  "chunk-ny2380rf.js": {
-  "path": "02-功能模块/ClaudeinChrome/createChromeContext.ny2380rf.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/createChromeContext.ny2380rf.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 16.3,
   "confidence": "high"
@@ -6755,22 +6755,22 @@
   "confidence": "low"
  },
  "chunk-p1dkvpxj.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-p1dkvpxj.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 176.6,
   "confidence": "high"
  },
  "chunk-p1f3ce53.js": {
-  "path": "02-功能模块/新手引导(Onboarding)/PowerupDiscoveryStep.p1f3ce53.js",
-  "module": "新手引导 (Onboarding)",
+  "path": "02-功能模块/新手引导-Onboarding/PowerupDiscoveryStep.p1f3ce53.js",
+  "module": "新手引导 / Onboarding",
   "tier": 2,
   "kb": 10.3,
   "confidence": "high"
  },
  "structured-diff.js": {
-  "path": "02-功能模块/Diff引擎/structured-diff.js",
-  "module": "Diff 引擎",
+  "path": "02-功能模块/差异引擎-Diff/structured-diff.js",
+  "module": "差异引擎 / Diff",
   "tier": 2,
   "kb": 12.1,
   "confidence": "high"
@@ -6804,8 +6804,8 @@
   "confidence": "high"
  },
  "chunk-p4tjt1zq.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/PERSISTED_SESSION_RESUME_WINDOW_MS.p4tjt1zq.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/PERSISTED_SESSION_RESUME_WINDOW_MS.p4tjt1zq.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 5.2,
   "confidence": "low"
@@ -6853,15 +6853,15 @@
   "confidence": "low"
  },
  "chunk-p991cddr.js": {
-  "path": "02-功能模块/Bedrock-Vertex/chunk-p991cddr.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/chunk-p991cddr.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 9.2,
   "confidence": "low"
  },
  "chunk-pa9qbw6d.js": {
-  "path": "02-功能模块/Advisor-模型设置/advisor-ui.pa9qbw6d.js",
-  "module": "Advisor / 模型设置",
+  "path": "02-功能模块/模型顾问/advisor-ui.pa9qbw6d.js",
+  "module": "模型顾问",
   "tier": 2,
   "kb": 13.6,
   "confidence": "high"
@@ -6895,8 +6895,8 @@
   "confidence": "low"
  },
  "chunk-pctyn7re.js": {
-  "path": "02-功能模块/Fleet多会话视图/mountFleetView.pctyn7re.js",
-  "module": "Fleet 多会话视图",
+  "path": "02-功能模块/多会话视图-Fleet/mountFleetView.pctyn7re.js",
+  "module": "多会话视图 / Fleet",
   "tier": 2,
   "kb": 10.5,
   "confidence": "medium"
@@ -6909,8 +6909,8 @@
   "confidence": "low"
  },
  "chunk-pdd7kz7p.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-pdd7kz7p.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-pdd7kz7p.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 32.2,
   "confidence": "high"
@@ -6993,15 +6993,15 @@
   "confidence": "high"
  },
  "workflow-registry.js": {
-  "path": "02-功能模块/Workflow编排/workflow-registry.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/workflow-registry.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 12.0,
   "confidence": "high"
  },
  "chunk-pre219yw.js": {
-  "path": "02-功能模块/Protobuf-gRPC/OTLPTraceExporter.pre219yw.js",
-  "module": "Protobuf / gRPC",
+  "path": "02-功能模块/协议-Protobuf-gRPC/OTLPTraceExporter.pre219yw.js",
+  "module": "协议 / Protobuf-gRPC",
   "tier": 2,
   "kb": 1.1,
   "confidence": "low"
@@ -7035,8 +7035,8 @@
   "confidence": "low"
  },
  "chunk-pvn70hnm.js": {
-  "path": "02-功能模块/新手引导(Onboarding)/新手引导(Onboarding).pvn70hnm.js",
-  "module": "新手引导 (Onboarding)",
+  "path": "02-功能模块/新手引导-Onboarding/新手引导-Onboarding.pvn70hnm.js",
+  "module": "新手引导 / Onboarding",
   "tier": 2,
   "kb": 29.6,
   "confidence": "high"
@@ -7049,15 +7049,15 @@
   "confidence": "low"
  },
  "chunk-pvztfdrb.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-pvztfdrb.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-pvztfdrb.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 801.5,
   "confidence": "high"
  },
  "chunk-pw1402cq.js": {
-  "path": "02-功能模块/Daemon-守护服务/createRoot.pw1402cq.js",
-  "module": "Daemon / 守护服务",
+  "path": "02-功能模块/守护服务-Daemon/createRoot.pw1402cq.js",
+  "module": "守护服务 / Daemon",
   "tier": 2,
   "kb": 5.2,
   "confidence": "low"
@@ -7140,15 +7140,15 @@
   "confidence": "low"
  },
  "aws-credential-provider-node.js": {
-  "path": "02-功能模块/Bedrock-Vertex/aws-credential-provider-node.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/aws-credential-provider-node.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 6.5,
   "confidence": "low"
  },
  "chunk-q6ph5ccp.js": {
-  "path": "02-功能模块/Workflow编排/WorkflowPermissionDialog.q6ph5ccp.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/WorkflowPermissionDialog.q6ph5ccp.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 28.0,
   "confidence": "high"
@@ -7210,8 +7210,8 @@
   "confidence": "low"
  },
  "artifact-reply-yield.js": {
-  "path": "02-功能模块/Artifact发布-渲染/artifact-reply-yield.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/artifact-reply-yield.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 9.9,
   "confidence": "medium"
@@ -7231,8 +7231,8 @@
   "confidence": "low"
  },
  "chunk-qdn32vbw.js": {
-  "path": "02-功能模块/Git-Worktree/chunk-qdn32vbw.js",
-  "module": "Git / Worktree",
+  "path": "02-功能模块/工作树-Git/chunk-qdn32vbw.js",
+  "module": "工作树 / Git",
   "tier": 2,
   "kb": 11.0,
   "confidence": "medium"
@@ -7259,8 +7259,8 @@
   "confidence": "low"
  },
  "chunk-qgx0v22d.js": {
-  "path": "02-功能模块/Bedrock-Vertex/seedEnvDefaultForUserPin.qgx0v22d.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/seedEnvDefaultForUserPin.qgx0v22d.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 8.9,
   "confidence": "medium"
@@ -7287,8 +7287,8 @@
   "confidence": "medium"
  },
  "session-env-vars.js": {
-  "path": "02-功能模块/Workflow编排/session-env-vars.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/session-env-vars.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 1.7,
   "confidence": "low"
@@ -7329,15 +7329,15 @@
   "confidence": "low"
  },
  "device-bridge-remote-tools.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/device-bridge-remote-tools.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/device-bridge-remote-tools.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 24.5,
   "confidence": "high"
  },
  "chunk-qpgskeea.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-qpgskeea.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-qpgskeea.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 43.5,
   "confidence": "high"
@@ -7350,8 +7350,8 @@
   "confidence": "high"
  },
  "chunk-qs63rzfp.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 2452.0,
   "confidence": "medium"
@@ -7371,15 +7371,15 @@
   "confidence": "low"
  },
  "peer-file-transfer.js": {
-  "path": "02-功能模块/跨会话消息(UDS)/peer-file-transfer.js",
-  "module": "跨会话消息 (UDS)",
+  "path": "02-功能模块/跨会话消息-UDS/peer-file-transfer.js",
+  "module": "跨会话消息 / UDS",
   "tier": 2,
   "kb": 5.9,
   "confidence": "high"
  },
  "keybinding-context.js": {
-  "path": "02-功能模块/键位绑定(Keybindings)/keybinding-context.js",
-  "module": "键位绑定 (Keybindings)",
+  "path": "02-功能模块/键位绑定-Keybindings/keybinding-context.js",
+  "module": "键位绑定 / Keybindings",
   "tier": 2,
   "kb": 5.3,
   "confidence": "high"
@@ -7392,8 +7392,8 @@
   "confidence": "medium"
  },
  "chunk-qzxf1256.js": {
-  "path": "02-功能模块/Workflow编排/initBundledWorkflows.qzxf1256.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/initBundledWorkflows.qzxf1256.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 28.2,
   "confidence": "high"
@@ -7434,8 +7434,8 @@
   "confidence": "low"
  },
  "chunk-r6bvyjj3.js": {
-  "path": "02-功能模块/Fleet多会话视图/Fleet多会话视图.r6bvyjj3.js",
-  "module": "Fleet 多会话视图",
+  "path": "02-功能模块/多会话视图-Fleet/多会话视图-Fleet.r6bvyjj3.js",
+  "module": "多会话视图 / Fleet",
   "tier": 2,
   "kb": 10.5,
   "confidence": "medium"
@@ -7574,22 +7574,22 @@
   "confidence": "medium"
  },
  "ultrareview-tips.js": {
-  "path": "02-功能模块/CodeReview/ultrareview-tips.js",
-  "module": "Code Review",
+  "path": "02-功能模块/代码审查/ultrareview-tips.js",
+  "module": "代码审查",
   "tier": 2,
   "kb": 5.0,
   "confidence": "high"
  },
  "chunk-rr78st95.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-rr78st95.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-rr78st95.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 35.9,
   "confidence": "medium"
  },
  "chunk-rrjdccq9.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/uploadBytesToBridgeStore.rrjdccq9.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/uploadBytesToBridgeStore.rrjdccq9.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 8.0,
   "confidence": "high"
@@ -7623,8 +7623,8 @@
   "confidence": "medium"
  },
  "chunk-rv1gzm0a.js": {
-  "path": "02-功能模块/Protobuf-gRPC/OTLPLogExporter.rv1gzm0a.js",
-  "module": "Protobuf / gRPC",
+  "path": "02-功能模块/协议-Protobuf-gRPC/OTLPLogExporter.rv1gzm0a.js",
+  "module": "协议 / Protobuf-gRPC",
   "tier": 2,
   "kb": 1.1,
   "confidence": "low"
@@ -7658,8 +7658,8 @@
   "confidence": "high"
  },
  "chunk-rztqpvts.js": {
-  "path": "02-功能模块/Bedrock-Vertex/EventStreamSerde.rztqpvts.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/EventStreamSerde.rztqpvts.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 6.4,
   "confidence": "low"
@@ -7763,8 +7763,8 @@
   "confidence": "medium"
  },
  "chunk-sanfja6a.js": {
-  "path": "02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js",
-  "module": "键位绑定 (Keybindings)",
+  "path": "02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js",
+  "module": "键位绑定 / Keybindings",
   "tier": 2,
   "kb": 47.8,
   "confidence": "high"
@@ -7798,8 +7798,8 @@
   "confidence": "medium"
  },
  "chunk-sc8n0cp3.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-sc8n0cp3.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-sc8n0cp3.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 57.9,
   "confidence": "medium"
@@ -7840,8 +7840,8 @@
   "confidence": "low"
  },
  "chunk-segwcp5c.js": {
-  "path": "02-功能模块/Artifact发布-渲染/extractInlineScriptHashes.segwcp5c.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/extractInlineScriptHashes.segwcp5c.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 24.3,
   "confidence": "high"
@@ -7910,8 +7910,8 @@
   "confidence": "high"
  },
  "tool-result-display.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/tool-result-display.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/tool-result-display.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 5.0,
   "confidence": "medium"
@@ -7952,15 +7952,15 @@
   "confidence": "low"
  },
  "chunk-sts4ygex.js": {
-  "path": "02-功能模块/Bedrock-Vertex/AnthropicGoogleCloud.sts4ygex.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/AnthropicGoogleCloud.sts4ygex.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 8.3,
   "confidence": "high"
  },
  "artifact-asset-store.js": {
-  "path": "02-功能模块/Artifact发布-渲染/artifact-asset-store.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/artifact-asset-store.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 33.6,
   "confidence": "high"
@@ -8057,8 +8057,8 @@
   "confidence": "low"
  },
  "uds-messaging.js": {
-  "path": "02-功能模块/跨会话消息(UDS)/uds-messaging.js",
-  "module": "跨会话消息 (UDS)",
+  "path": "02-功能模块/跨会话消息-UDS/uds-messaging.js",
+  "module": "跨会话消息 / UDS",
   "tier": 2,
   "kb": 49.9,
   "confidence": "high"
@@ -8155,8 +8155,8 @@
   "confidence": "low"
  },
  "chunk-tcxk2866.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/handleListAllKinds.tcxk2866.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/handleListAllKinds.tcxk2866.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 10.7,
   "confidence": "low"
@@ -8365,15 +8365,15 @@
   "confidence": "low"
  },
  "chunk-ty1529wk.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/createRemoteToolsAnnounceWorker.ty1529wk.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/createRemoteToolsAnnounceWorker.ty1529wk.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 10.6,
   "confidence": "low"
  },
  "chunk-tyce0p0b.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 8.1,
   "confidence": "low"
@@ -8428,8 +8428,8 @@
   "confidence": "low"
  },
  "chunk-v59fjmt8.js": {
-  "path": "02-功能模块/Bedrock-Vertex/AnthropicFoundry.v59fjmt8.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/AnthropicFoundry.v59fjmt8.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 4.0,
   "confidence": "high"
@@ -8463,8 +8463,8 @@
   "confidence": "low"
  },
  "claude-in-chrome-tool-permissions.js": {
-  "path": "02-功能模块/ClaudeinChrome/claude-in-chrome-tool-permissions.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/claude-in-chrome-tool-permissions.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 18.2,
   "confidence": "high"
@@ -8484,15 +8484,15 @@
   "confidence": "medium"
  },
  "dir-sync-git-repository.js": {
-  "path": "02-功能模块/Git-Worktree/dir-sync-git-repository.js",
-  "module": "Git / Worktree",
+  "path": "02-功能模块/工作树-Git/dir-sync-git-repository.js",
+  "module": "工作树 / Git",
   "tier": 2,
   "kb": 48.8,
   "confidence": "high"
  },
  "chunk-va9cgbfs.js": {
-  "path": "02-功能模块/Workflow编排/chunk-va9cgbfs.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/chunk-va9cgbfs.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 10.5,
   "confidence": "high"
@@ -8519,8 +8519,8 @@
   "confidence": "low"
  },
  "chunk-vdaqzanp.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/createDeviceMcpServer.vdaqzanp.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/createDeviceMcpServer.vdaqzanp.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 4.7,
   "confidence": "low"
@@ -8568,8 +8568,8 @@
   "confidence": "low"
  },
  "chunk-vfs4tecm.js": {
-  "path": "02-功能模块/ClaudeinChrome/ChromeAutoEnableDialog.vfs4tecm.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/ChromeAutoEnableDialog.vfs4tecm.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 9.2,
   "confidence": "high"
@@ -8596,8 +8596,8 @@
   "confidence": "high"
  },
  "chunk-vh6x80gr.js": {
-  "path": "02-功能模块/Grove-隐私设置/call.vh6x80gr.js",
-  "module": "Grove / 隐私设置",
+  "path": "02-功能模块/隐私设置-Grove/call.vh6x80gr.js",
+  "module": "隐私设置 / Grove",
   "tier": 2,
   "kb": 9.7,
   "confidence": "medium"
@@ -8645,8 +8645,8 @@
   "confidence": "low"
  },
  "chunk-vpp75aza.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/chunk-vpp75aza.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 5.0,
   "confidence": "high"
@@ -8687,15 +8687,15 @@
   "confidence": "low"
  },
  "scroll-box.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/scroll-box.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/scroll-box.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 5.9,
   "confidence": "high"
  },
  "chunk-vx19drc8.js": {
-  "path": "02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js",
-  "module": "Memory / CLAUDE.md",
+  "path": "02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js",
+  "module": "记忆 / CLAUDE.md",
   "tier": 2,
   "kb": 492.6,
   "confidence": "medium"
@@ -8722,8 +8722,8 @@
   "confidence": "low"
  },
  "workflow-tool-prompt.js": {
-  "path": "02-功能模块/Workflow编排/workflow-tool-prompt.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/workflow-tool-prompt.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 21.1,
   "confidence": "high"
@@ -8764,8 +8764,8 @@
   "confidence": "high"
  },
  "chunk-w6jg9g54.js": {
-  "path": "02-功能模块/Workflow编排/recordWorkflowUsageConsent.w6jg9g54.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/recordWorkflowUsageConsent.w6jg9g54.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 4.1,
   "confidence": "high"
@@ -8806,8 +8806,8 @@
   "confidence": "low"
  },
  "chunk-wb95xgtr.js": {
-  "path": "02-功能模块/Bedrock-Vertex/AnthropicBedrockMantle.wb95xgtr.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/AnthropicBedrockMantle.wb95xgtr.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 22.7,
   "confidence": "high"
@@ -8841,8 +8841,8 @@
   "confidence": "low"
  },
  "chunk-wenjnk3h.js": {
-  "path": "02-功能模块/Artifact发布-渲染/runtimeBlockInsertionIndex.wenjnk3h.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/runtimeBlockInsertionIndex.wenjnk3h.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 1.5,
   "confidence": "low"
@@ -8897,8 +8897,8 @@
   "confidence": "high"
  },
  "chunk-wm1nbm73.js": {
-  "path": "02-功能模块/ClaudeinChrome/setChromeBinding.wm1nbm73.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/setChromeBinding.wm1nbm73.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 7.0,
   "confidence": "high"
@@ -8925,8 +8925,8 @@
   "confidence": "medium"
  },
  "chunk-wnn25q3j.js": {
-  "path": "02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js",
-  "module": "Channel / Slack 集成",
+  "path": "02-功能模块/通道集成-Slack/通道集成-Slack.wnn25q3j.js",
+  "module": "通道集成 / Slack",
   "tier": 2,
   "kb": 19.3,
   "confidence": "medium"
@@ -8939,8 +8939,8 @@
   "confidence": "low"
  },
  "config-shorthand.js": {
-  "path": "02-功能模块/Memory-CLAUDE.md/config-shorthand.js",
-  "module": "Memory / CLAUDE.md",
+  "path": "02-功能模块/记忆-CLAUDE.md/config-shorthand.js",
+  "module": "记忆 / CLAUDE.md",
   "tier": 2,
   "kb": 10.3,
   "confidence": "low"
@@ -8960,8 +8960,8 @@
   "confidence": "medium"
  },
  "chunk-wsqhx4dn.js": {
-  "path": "02-功能模块/Artifact发布-渲染/artifacts-ui.wsqhx4dn.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/artifacts-ui.wsqhx4dn.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 46.5,
   "confidence": "high"
@@ -8995,8 +8995,8 @@
   "confidence": "high"
  },
  "chunk-wyzjbwp5.js": {
-  "path": "02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js",
-  "module": "AppState / 状态管理",
+  "path": "02-功能模块/状态管理-AppState/状态管理-AppState.wyzjbwp5.js",
+  "module": "状态管理 / AppState",
   "tier": 2,
   "kb": 20.4,
   "confidence": "high"
@@ -9016,15 +9016,15 @@
   "confidence": "medium"
  },
  "chunk-x29r16ke.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-x29r16ke.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/chunk-x29r16ke.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 9.8,
   "confidence": "medium"
  },
  "chunk-x2kwwph8.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-x2kwwph8.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-x2kwwph8.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 3.2,
   "confidence": "low"
@@ -9037,15 +9037,15 @@
   "confidence": "high"
  },
  "chunk-x36rsj57.js": {
-  "path": "02-功能模块/Workflow编排/getWorkflowAuthoringAutoloadMessages.x36rsj57.js",
-  "module": "Workflow 编排",
+  "path": "02-功能模块/编排-Workflow/getWorkflowAuthoringAutoloadMessages.x36rsj57.js",
+  "module": "编排 / Workflow",
   "tier": 2,
   "kb": 8.1,
   "confidence": "high"
  },
  "chunk-x379yyxb.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-x379yyxb.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 89.1,
   "confidence": "medium"
@@ -9079,8 +9079,8 @@
   "confidence": "high"
  },
  "remote-approval-messages.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/remote-approval-messages.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/remote-approval-messages.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 5.0,
   "confidence": "medium"
@@ -9093,8 +9093,8 @@
   "confidence": "low"
  },
  "hardened-fs-primitives.js": {
-  "path": "01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js",
-  "module": "安全文件系统 (FS 加固)",
+  "path": "01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js",
+  "module": "安全文件系统 / FS 加固",
   "tier": 1,
   "kb": 21.5,
   "confidence": "high"
@@ -9149,8 +9149,8 @@
   "confidence": "low"
  },
  "chunk-xbgcrjmm.js": {
-  "path": "02-功能模块/MCP连接器(Connector)/ListConnectorsTool.xbgcrjmm.js",
-  "module": "MCP 连接器 (Connector)",
+  "path": "02-功能模块/MCP连接器-Connector/ListConnectorsTool.xbgcrjmm.js",
+  "module": "MCP 连接器 / Connector",
   "tier": 2,
   "kb": 5.3,
   "confidence": "medium"
@@ -9184,29 +9184,29 @@
   "confidence": "medium"
  },
  "resume-session-state.js": {
-  "path": "02-功能模块/Git-Worktree/resume-session-state.js",
-  "module": "Git / Worktree",
+  "path": "02-功能模块/工作树-Git/resume-session-state.js",
+  "module": "工作树 / Git",
   "tier": 2,
   "kb": 26.8,
   "confidence": "high"
  },
  "chunk-xffs735q.js": {
-  "path": "02-功能模块/ClaudeinChrome/chrome-ui.xffs735q.js",
-  "module": "Claude in Chrome",
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/chrome-ui.xffs735q.js",
+  "module": "浏览器集成 / ClaudeinChrome",
   "tier": 2,
   "kb": 18.9,
   "confidence": "high"
  },
  "chunk-xfhvxg8z.js": {
-  "path": "02-功能模块/Grove-隐私设置/PrivacySettingsDialog.xfhvxg8z.js",
-  "module": "Grove / 隐私设置",
+  "path": "02-功能模块/隐私设置-Grove/PrivacySettingsDialog.xfhvxg8z.js",
+  "module": "隐私设置 / Grove",
   "tier": 2,
   "kb": 8.4,
   "confidence": "medium"
  },
  "chunk-xk2et39h.js": {
-  "path": "02-功能模块/Protobuf-gRPC/OTLPMetricExporter.xk2et39h.js",
-  "module": "Protobuf / gRPC",
+  "path": "02-功能模块/协议-Protobuf-gRPC/OTLPMetricExporter.xk2et39h.js",
+  "module": "协议 / Protobuf-gRPC",
   "tier": 2,
   "kb": 1.1,
   "confidence": "low"
@@ -9240,8 +9240,8 @@
   "confidence": "high"
  },
  "chunk-xpa1s9x1.js": {
-  "path": "02-功能模块/Bedrock-Vertex/GetRoleCredentialsCommand.xpa1s9x1.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/GetRoleCredentialsCommand.xpa1s9x1.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 1.0,
   "confidence": "low"
@@ -9373,8 +9373,8 @@
   "confidence": "low"
  },
  "artifact-db.js": {
-  "path": "02-功能模块/Artifact发布-渲染/artifact-db.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/artifact-db.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 28.8,
   "confidence": "high"
@@ -9464,8 +9464,8 @@
   "confidence": "low"
  },
  "smithy-property-provider.js": {
-  "path": "02-功能模块/Bedrock-Vertex/smithy-property-provider.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/smithy-property-provider.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 2.7,
   "confidence": "low"
@@ -9506,8 +9506,8 @@
   "confidence": "low"
  },
  "artifact-prompt-paragraphs.js": {
-  "path": "02-功能模块/Artifact发布-渲染/artifact-prompt-paragraphs.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/artifact-prompt-paragraphs.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 23.5,
   "confidence": "high"
@@ -9527,8 +9527,8 @@
   "confidence": "high"
  },
  "vertex-setup-wizard.js": {
-  "path": "02-功能模块/Bedrock-Vertex/vertex-setup-wizard.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/vertex-setup-wizard.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 42.7,
   "confidence": "high"
@@ -9562,15 +9562,15 @@
   "confidence": "medium"
  },
  "auto-mode-setup-proposal.js": {
-  "path": "02-功能模块/AutoMode-自动模式/auto-mode-setup-proposal.js",
-  "module": "AutoMode / 自动模式",
+  "path": "02-功能模块/自动模式-AutoMode/auto-mode-setup-proposal.js",
+  "module": "自动模式 / AutoMode",
   "tier": 2,
   "kb": 17.6,
   "confidence": "high"
  },
  "chunk-z0smrekj.js": {
-  "path": "02-功能模块/Daemon-守护服务/daemon-ui.z0smrekj.js",
-  "module": "Daemon / 守护服务",
+  "path": "02-功能模块/守护服务-Daemon/daemon-ui.z0smrekj.js",
+  "module": "守护服务 / Daemon",
   "tier": 2,
   "kb": 32.6,
   "confidence": "high"
@@ -9646,8 +9646,8 @@
   "confidence": "low"
  },
  "bridge-effort-sync.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/bridge-effort-sync.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/bridge-effort-sync.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 3.6,
   "confidence": "low"
@@ -9674,8 +9674,8 @@
   "confidence": "low"
  },
  "chunk-zbxyj64j.js": {
-  "path": "02-功能模块/目录同步(dir-sync)/chunk-zbxyj64j.js",
-  "module": "目录同步 (dir-sync)",
+  "path": "02-功能模块/目录同步-dir-sync/chunk-zbxyj64j.js",
+  "module": "目录同步 / dir-sync",
   "tier": 2,
   "kb": 33.9,
   "confidence": "high"
@@ -9702,8 +9702,8 @@
   "confidence": "high"
  },
  "external-editor.js": {
-  "path": "03-入口与运行时/会话UI(REPL)/external-editor.js",
-  "module": "会话 UI (REPL)",
+  "path": "03-入口与运行时/会话UI-REPL/external-editor.js",
+  "module": "会话 UI-REPL",
   "tier": 3,
   "kb": 6.2,
   "confidence": "medium"
@@ -9772,8 +9772,8 @@
   "confidence": "low"
  },
  "chunk-zmx4vxzb.js": {
-  "path": "02-功能模块/Notebook(.ipynb)/Notebook(.ipynb).zmx4vxzb.js",
-  "module": "Notebook (.ipynb)",
+  "path": "02-功能模块/Notebook-ipynb/Notebook-ipynb.zmx4vxzb.js",
+  "module": "Notebook-ipynb",
   "tier": 2,
   "kb": 11.6,
   "confidence": "high"
@@ -9786,8 +9786,8 @@
   "confidence": "low"
  },
  "chunk-znhfst8k.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-znhfst8k.js",
-  "module": "Bridge / Remote Control",
+  "path": "02-功能模块/远程控制-Bridge/chunk-znhfst8k.js",
+  "module": "远程控制 / Bridge",
   "tier": 2,
   "kb": 94.4,
   "confidence": "high"
@@ -9821,8 +9821,8 @@
   "confidence": "high"
  },
  "token-providers.js": {
-  "path": "02-功能模块/Bedrock-Vertex/token-providers.js",
-  "module": "Bedrock / Vertex",
+  "path": "02-功能模块/模型接入-Bedrock-Vertex/token-providers.js",
+  "module": "模型接入 / Bedrock-Vertex",
   "tier": 2,
   "kb": 2.0,
   "confidence": "low"
@@ -9842,15 +9842,15 @@
   "confidence": "high"
  },
  "chunk-zxaexmtx.js": {
-  "path": "02-功能模块/Artifact发布-渲染/renderCheckToolUseMessage.zxaexmtx.js",
-  "module": "Artifact 发布 / 渲染",
+  "path": "02-功能模块/制品发布-Artifact/renderCheckToolUseMessage.zxaexmtx.js",
+  "module": "制品发布 / Artifact",
   "tier": 2,
   "kb": 41.8,
   "confidence": "high"
  },
  "register-design-skill.js": {
-  "path": "02-功能模块/DesignSync/register-design-skill.js",
-  "module": "Design Sync",
+  "path": "02-功能模块/设计同步/register-design-skill.js",
+  "module": "设计同步",
   "tier": 2,
   "kb": 5.2,
   "confidence": "high"

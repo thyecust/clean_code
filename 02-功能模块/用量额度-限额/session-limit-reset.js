@@ -13,7 +13,7 @@ import { withDeadline } from "../../01-核心基础设施/共享小工具-未细
 import { ge, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -35,7 +35,7 @@ import {
   getSessionLimitResetCopy,
   formatSessionLimitResetLine,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { hasArmedQuotaAutoResume, recheckAutoResume, cancelAutoResume, isConversationResetSwitchReason } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { hasArmedQuotaAutoResume, recheckAutoResume, cancelAutoResume, isConversationResetSwitchReason } from "../状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
 import { isContinuableUsageLimitWall, getSubscriptionTier, sendAutoContinuationPrompt } from "../../01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js";
 import { s, T, O, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 function L() {

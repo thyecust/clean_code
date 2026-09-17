@@ -12,7 +12,7 @@
 import { DESIGN_OAUTH_SCOPES, getOauthConfig } from "./chunk-9g2q4bjq.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { revokeOAuthToken } from "./认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -22,7 +22,7 @@ import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
-import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
+import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
@@ -34,8 +34,8 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/remote-control-ui-strings.js";
-import { readDesignOauthTokens, saveDesignOauthTokens, getDesignOauthClientId, isDesignOauthClientConfigured, validateDesignOauthResponse } from "../DesignSync/design-oauth-credentials.js";
+import "../远程控制-Bridge/remote-control-ui-strings.js";
+import { readDesignOauthTokens, saveDesignOauthTokens, getDesignOauthClientId, isDesignOauthClientConfigured, validateDesignOauthResponse } from "../设计同步/design-oauth-credentials.js";
 import { OAuthLoginFlow } from "./oauth-login-flow.js";
 import { isHeadlessEnvironment } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";

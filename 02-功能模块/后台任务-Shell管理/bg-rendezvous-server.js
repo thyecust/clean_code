@@ -14,12 +14,12 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, drainCleanup, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { replaceInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { CURSOR_HOME_SEQUENCE, ERASE_SCREEN_SEQUENCE } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { readBoundedFile } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { renameWithRetry, writeNewFileExclusive } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { renameWithRetry, writeNewFileExclusive } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { clampColorLevelForAttacher } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { readSocketTokenFile, timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";

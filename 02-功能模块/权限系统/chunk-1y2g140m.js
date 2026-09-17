@@ -12,7 +12,7 @@ import { getSessionRuntimeState, toCompatSessionId, sessionIdBody, isSelfAddress
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { sanitizeDisplayName, buildBridgeAddress, updateSessionBridgeId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getExternalPermissionMode } from "./chunk-e4pfvp7x.js";
-import { setAttestationSenderDropWriter, clearAttestationSenderDropWriter } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { setAttestationSenderDropWriter, clearAttestationSenderDropWriter } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 function l(e, o) {
   let t = getSessionRuntimeState().dropSenderWriterByHandle;
   if (e !== null && e !== o) {

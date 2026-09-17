@@ -13,7 +13,7 @@ import { isLightThemeName } from "../../02-功能模块/状态栏-主题/chunk-j
 import { getStoredThemeSetting, KillRingProvider } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AltScreenContainer } from "./alt-screen-container.js";
-import { isFullscreenEnabled, getMouseMode } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { isFullscreenEnabled, getMouseMode } from "../../02-功能模块/终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getCachedSystemTheme, subscribeSystemThemeChange, resolveThemeName } from "./theme-resolution.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";

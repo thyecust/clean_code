@@ -10,7 +10,7 @@
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getOauthConfig } from "./chunk-9g2q4bjq.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { resolveRefreshTokenExpiresAt, shouldUseClaudeAIAuth, parseScopes, buildAuthUrl, exchangeCodeForTokens, fetchProfileInfo } from "./认证-OAuth登录.419zdfz3.js";
 import { isAccountOnHoldEnabled, ACCOUNT_ON_HOLD_ERROR_CODE, sanitizeAccountOnHoldUrl, OAuthCallbackError } from "./chunk-wk0e3dz4.js";

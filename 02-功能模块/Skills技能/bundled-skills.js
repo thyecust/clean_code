@@ -11,7 +11,7 @@ import { getHostStateStore } from "../../01-核心基础设施/共享小工具-�
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getBundledSkillsRoot } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getBundledSkillsRoot } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { defineLazyProperty, Fwt } from "../../01-核心基础设施/共享小工具-未细化/define-lazy-property.js";
 import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import { join as P } from "path";

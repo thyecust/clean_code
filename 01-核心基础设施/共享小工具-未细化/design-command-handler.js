@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { DesignSessionState } from "../../02-功能模块/Memory-CLAUDE.md/chunk-9b6sc1gb.js";
-import { postDesignConsent, revokeDesignConsent } from "../../02-功能模块/DesignSync/design-consent-and-grants.js";
+import { DesignSessionState } from "../../02-功能模块/记忆-CLAUDE.md/chunk-9b6sc1gb.js";
+import { postDesignConsent, revokeDesignConsent } from "../../02-功能模块/设计同步/design-consent-and-grants.js";
 var s = "Usage: /design consent | /design revoke",
   runDesignCommand = async (r, e) => {
     let n = r.trim().split(/\s+/).filter(Boolean)[0],

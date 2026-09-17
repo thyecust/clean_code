@@ -15,8 +15,8 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { pathSpaces, registerCleanup, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { SYNCED_DIR_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { SYNCED_DIR_NAME } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import {
   clearAgentDefinitionsCache,

@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { gL, cy } from "./chunk-dm9sg03f.js";
 import { Lm } from "./chunk-w3axq133.js";
-import { defaultProvider } from "../../../02-功能模块/Bedrock-Vertex/aws-credential-provider-node.js";
+import { defaultProvider } from "../../../02-功能模块/模型接入-Bedrock-Vertex/aws-credential-provider-node.js";
 import "./chunk-z7ktsccq.js";
-import { createEnvSigningNameTokenProvider, createMemoizedTokenProvider } from "../../../02-功能模块/Bedrock-Vertex/token-providers.js";
-import "../../../02-功能模块/Bedrock-Vertex/sso-token-provider.js";
+import { createEnvSigningNameTokenProvider, createMemoizedTokenProvider } from "../../../02-功能模块/模型接入-Bedrock-Vertex/token-providers.js";
+import "../../../02-功能模块/模型接入-Bedrock-Vertex/sso-token-provider.js";
 import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
@@ -36,7 +36,7 @@ import {
 import "./chunk-zdrvwe5r.js";
 import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "../第三方库-其他/chunk-jtb5q5xr.js";
-import { utilUtf8Module, utilBase64Module } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import { utilUtf8Module, utilBase64Module } from "../../../02-功能模块/模型接入-Bedrock-Vertex/chunk-p991cddr.js";
 import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
 import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";

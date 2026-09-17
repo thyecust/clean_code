@@ -18,7 +18,7 @@ import { getMaxOutputTokens, isAnthropicAuthEnabled, validateForceLoginMethod } 
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { getBridgeDoctorInfo } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { getBridgeDoctorInfo } from "../远程控制-Bridge/chunk-9estzwf5.js";
 import { Box, Text, createRoot } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
@@ -27,7 +27,7 @@ import { handleReplAppStateChange, partitionSettingsErrors } from "../输入分�
 import { getInstallationDiagnostics } from "../自动更新-安装/install-diagnostics.js";
 import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import { WelcomeBanner } from "../../03-入口与运行时/CLI入口-Commander/welcome-banner.js";
-import { getPolicyLimitsStatus, formatPolicyLimitsStatus } from "../Bridge-RemoteControl/policy-limits-status.js";
+import { getPolicyLimitsStatus, formatPolicyLimitsStatus } from "../远程控制-Bridge/policy-limits-status.js";
 import { getManagedSettingsStatus, isManagedSettingsFetchInProgress, formatManagedSettingsStatus } from "../../01-核心基础设施/共享小工具-未细化/managed-settings-status.js";
 import { getAutoUpdatesChannel } from "../自动更新-安装/auto-updates-channel.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -197,7 +197,7 @@ async function doctorHandler(c) {
           waitForPolicyLimitsToLoad: s,
           POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS: h,
         } = await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
-        { getLastFetchOutcome: w } = await import("../策略限制(PolicyLimits)/chunk-8sw91yn5.js"),
+        { getLastFetchOutcome: w } = await import("../策略限制-PolicyLimits/chunk-8sw91yn5.js"),
         T = !1,
         A = s().then(() => {
           T = !0;

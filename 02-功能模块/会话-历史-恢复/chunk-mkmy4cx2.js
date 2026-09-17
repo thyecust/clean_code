@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { zn, _Z } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { getClaudeConfigDir, getConfiguredProjectDirName } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, getConfiguredProjectDirName } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { isByteViewUnsupportedFailure } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { hashString } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { hashString } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 import { extractUserPromptText } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";

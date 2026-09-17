@@ -11,7 +11,7 @@ import { KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS as Qxn, isWindowsCredManagerAvaila
 import "./keychain-access.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import "../../00-第三方库/lodash/lodash.207999qb.js";
 import "./async-timeout-utils.js";
 import "./chunk-h62vxw7j.js";

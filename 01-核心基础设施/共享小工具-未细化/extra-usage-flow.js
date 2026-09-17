@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isBgSession, getOauthAccountInfo, getSubscriptionType } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { withAutoResumeRecheck } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { runPostLoginHooks, loginCompletion, Login } from "../../02-功能模块/Bridge-RemoteControl/login-flow.js";
-import { UsageCreditsAdminRequestDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { withAutoResumeRecheck } from "../../02-功能模块/状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
+import { runPostLoginHooks, loginCompletion, Login } from "../../02-功能模块/远程控制-Bridge/login-flow.js";
+import { UsageCreditsAdminRequestDialog } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { USAGE_CREDITS_ADMIN_REQUEST_NOTICE, canBuyUsageCreditsInApp, resolveExtraUsageOutcome } from "../../02-功能模块/成本-Token统计/usage-credits-flow.js";
 var s = import.meta.require("../../02-功能模块/用量额度-限额/ExtraUsageDialog.fybj08bs.js").ExtraUsageDialog;

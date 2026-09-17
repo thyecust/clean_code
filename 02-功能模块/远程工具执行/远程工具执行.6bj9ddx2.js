@@ -13,7 +13,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { INTERRUPTED_FOR_TOOL_USE_MARKER, USER_REFUSED_ACTION_MARKER } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
   sanitizeDisplayText,
@@ -31,7 +31,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { pickBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { HOST_FIELD_NAME, getDefaultMachineName, isReservedMachineName, sanitizeMachineName } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { HOST_FIELD_NAME, getDefaultMachineName, isReservedMachineName, sanitizeMachineName } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { SUPPORTED_PROTOCOL_VERSIONS, INSTANCE_ID_PATTERN, isUnverifiedRefusal, ALLOWED_TOOL_OUTPUT_FIELDS, PDF_READ_NOTE_PREFIX } from "./remote-tool-protocol.js";
 import { stageDirSyncNotice } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
 import { toHostDescription } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";

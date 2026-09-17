@@ -11,7 +11,7 @@ import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getSubscriptionType, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getMergedSettings } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { isPolicyAllowed } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
 function areWorkflowsDisabledBySettings() {
   return (
     a.CLAUDE_CODE_DISABLE_WORKFLOWS || getMergedSettings()?.settings.disableWorkflows === !0

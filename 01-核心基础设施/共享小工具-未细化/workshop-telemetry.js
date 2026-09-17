@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { fromEnum } from "./analytics-fields.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { sanitizeArtifactSlugForTelemetry, sanitizeArtifactVersionForTelemetry } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { sanitizeArtifactSlugForTelemetry, sanitizeArtifactVersionForTelemetry } from "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import { defineStoreField } from "./state-store.js";
 var k = {
     startedSeen: [],

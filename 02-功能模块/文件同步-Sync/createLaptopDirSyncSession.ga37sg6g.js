@@ -17,8 +17,8 @@ import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { describeStorageError, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { findGitRoot } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getProjectsDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import {
@@ -45,7 +45,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "./sync-journal.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { createLazyDirSyncStreamer, readGitSessionRecord } from "../目录同步(dir-sync)/chunk-zbxyj64j.js";
+import { createLazyDirSyncStreamer, readGitSessionRecord } from "../目录同步-dir-sync/chunk-zbxyj64j.js";
 import { createStatusFeed } from "../../01-核心基础设施/共享小工具-未细化/status-feed.js";
 import { getFileEntryKind } from "../../01-核心基础设施/共享小工具-未细化/file-entry-kind.js";
 import { getDirSyncRecordPath, resolveDirSyncRecordLocation, getDirSyncRecordKey, getDirSyncRecordFileName } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
@@ -96,7 +96,7 @@ function createLaptopDirSyncSession({
           : r.kind === "folder"
             ? N(
                 o.publish,
-                import("../目录同步(dir-sync)/openFolderGitSync.by6ppgfd.js").then(({ openFolderGitSync: _ }) =>
+                import("../目录同步-dir-sync/openFolderGitSync.by6ppgfd.js").then(({ openFolderGitSync: _ }) =>
                   _({
                     sessionId: i,
                     folder: w,

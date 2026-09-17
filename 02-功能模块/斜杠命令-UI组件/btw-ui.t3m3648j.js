@@ -15,7 +15,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { isBgSession, isUnattendedBgSession, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { formatSingleLineText, MAX_DESCRIPTION_LENGTH, MARKDOWN_SYNTAX_CHARS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { FORK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
@@ -23,7 +23,7 @@ import { Box, Text, useInterval, useTimeout } from "../../01-核心基础设施/
 import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { isDetachedSinceLastAttach } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
@@ -41,17 +41,17 @@ import {
   buildDefaultSystemPrompt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import { stripMemoryTags } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { stripMemoryTags } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { Markdown } from "../语法高亮-Markdown渲染/markdown-renderer.js";
 import { $8 } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
-import { FleetAgentNudge, detachToBackgroundDaemon } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { FleetAgentNudge, detachToBackgroundDaemon } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { LEFT_ARROW_HINT_TIMEOUT_MS, DETACH_CONFIRM_HINT, AMBIGUOUS_LEFT_ARROW_HINT, createLeftArrowGestureState, resolveLeftArrowGesture, applyLeftArrowGestureState, logLeftArrowBlocked } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../后台任务-Shell管理/bg-rendezvous-server.js";
-import { ScrollBox } from "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
+import { ScrollBox } from "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
 import { runSideQuestion } from "../权限系统/chunk-qjqc5vxm.js";
 import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { IntensitySpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { qxt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
@@ -17,7 +17,7 @@ import { registerCleanup, jsonParse, isDebugMode, logForDebugging } from "../../
 import { writeToStdout } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { onGrowthBookRefresh, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isHumanTurnEvent } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
+import { isHumanTurnEvent } from "../远程控制-Bridge/bridge-inbound-origin.js";
 import {
   normalizeDeviceAttestationStatus,
   meetsAttestationLevel,
@@ -30,7 +30,7 @@ import {
   formatRemoteActivityDropReply,
   getControlFrameRequestId,
   isEventRejectedByAttestation,
-} from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+} from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { addStartupContext } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
@@ -51,13 +51,13 @@ import {
   readTranscriptTailForTip,
   stringifyJsonSafe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getAttestationFilterPolicy } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { getAttestationFilterPolicy } from "../远程控制-Bridge/chunk-tyce0p0b.js";
 import { isProjectsHumanOriginEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { setMainLoopRefcountListener, setNestedChainDropListener, getMainLoopRefcount } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { recordStartupPhase, markHydratePrefetchSettled } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { StructuredIO } from "../../03-入口与运行时/Headless-SDK模式/structured-io.js";
 import { CURRENT_PROTOCOL_VERSION, SENDER_BELOW_FLOOR_FLAG, parseToolCallResult, buildToolCallResult } from "./remote-tool-protocol.js";
-import { SERVER_AUTHORED_ONLY_PAYLOAD_TYPES, SSETransport, DEFAULT_STREAM_EVENT_FLUSH_INTERVAL_MS, CCRClientInitError, isTransientWorkerRegisterFailure, createSessionReadSourceBase, CCRClient, createIdleTracker } from "../Bridge-RemoteControl/chunk-znhfst8k.js";
+import { SERVER_AUTHORED_ONLY_PAYLOAD_TYPES, SSETransport, DEFAULT_STREAM_EVENT_FLUSH_INTERVAL_MS, CCRClientInitError, isTransientWorkerRegisterFailure, createSessionReadSourceBase, CCRClient, createIdleTracker } from "../远程控制-Bridge/chunk-znhfst8k.js";
 import { isHermeticModeEnabled } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { TOKEN_FILE_RETRY_DELAYS_MS } from "../../01-核心基础设施/共享小工具-未细化/session-ingress-token.js";
 import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY } from "../插件系统/plugin-forwarding.js";

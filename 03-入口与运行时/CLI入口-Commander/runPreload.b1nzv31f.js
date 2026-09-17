@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { NON_INHERITED_SESSION_ENV_VARS } from "../../02-功能模块/Workflow编排/session-env-vars.js";
+import { NON_INHERITED_SESSION_ENV_VARS } from "../../02-功能模块/编排-Workflow/session-env-vars.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { receiveSpareClaim, bootClaimedSpare } from "../../01-核心基础设施/共享小工具-未细化/spare-session-claim.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-ingress-token.js";
@@ -20,7 +20,7 @@ async function d(i, t) {
   let r = i[0] || P,
     n = `${r}.pid`,
     s = t();
-  import("../../02-功能模块/Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js");
+  import("../../02-功能模块/远程控制-Bridge/validateExplicitMessagingSocketPath.knbv811d.js");
   for (let o of NON_INHERITED_SESSION_ENV_VARS) delete process.env[o];
   try {
     (mkdirSync(dirname(r), { recursive: !0, mode: 448 }), unlinkSync(r));

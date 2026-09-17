@@ -15,7 +15,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { isBunStandaloneExecutable, getGlobalClaudeFile, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_GLOBAL_FILE_SUFFIXES, fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -24,9 +24,9 @@ import { truncateToCodeUnits, beforeFirst } from "../../01-核心基础设施/�
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { EDIT_TOOL_NAME, WRITE_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
-import { isTempFilePath, writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { isTempFilePath, writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { GITHUB_HOST, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -36,9 +36,9 @@ import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing
 import { getProxyFetchOptions, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { provenSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { isTempScratchName, stripRecursiveGlobSuffix, parseRuleForSandbox, resolvePathPatternForSandboxAt, resolveSandboxFilesystemPathAt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { normalizePathForCompare, getResolvedClaudeTempDir, getResolvedChildProcessTmpDir, patternWithRootFor } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { normalizePathForCompare, getResolvedClaudeTempDir, getResolvedChildProcessTmpDir, patternWithRootFor } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { SYNTHETIC_MODEL_NAME } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { SYNTHETIC_MODEL_NAME } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import "../自动更新-安装/install-diagnostics.js";
 import { lockCurrentVersion } from "../自动更新-安装/native-installer.js";
 import {
@@ -93,14 +93,14 @@ import {
   addSessionWorktree,
   removeSessionWorktrees,
   redactGitCredentials,
-} from "../Git-Worktree/git-operations.js";
+} from "../工作树-Git/git-operations.js";
 import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
 import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
 import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
-import { decodeTokenClaims, getTokenExpiry, createTokenRefreshScheduler, decodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { decodeTokenClaims, getTokenExpiry, createTokenRefreshScheduler, decodeTaggedId } from "../远程控制-Bridge/chunk-4zd60pbm.js";
 import { readFileWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
 import { getProcStartTime, getProcParentPid, getProcGroupId, getProcState, isExitedProcessState } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";

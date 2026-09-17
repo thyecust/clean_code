@@ -13,10 +13,10 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { EDIT_TOOL_NAME, WRITE_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { dt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { VY, W3t } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
-import { getArtifactState, DECISION_ID_PATTERN, isWorkshopEnabled } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { getArtifactState, DECISION_ID_PATTERN, isWorkshopEnabled } from "../制品发布-Artifact/chunk-rr78st95.js";
 import { isWorkshopHtmlFile } from "../图表-Mermaid/chunk-743atbtj.js";
 var m = 100,
   _ = 8,

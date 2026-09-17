@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { parseConfigInteger, isSafeMode, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger, isSafeMode, xg } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -23,14 +23,14 @@ import { isRemoteCoworkEntrypoint } from "../运行宿主探测/运行宿主探�
 import { getSettingsSchema, toJsonSchema, stripInternalSchemaDescriptions } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
-import { getClaudeInChromeState, CFC_TOOL_PREFIX, detectAvailableBrowser, openInChrome } from "../ClaudeinChrome/claude-in-chrome-host.js";
+import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
+import { getClaudeInChromeState, CFC_TOOL_PREFIX, detectAvailableBrowser, openInChrome } from "../浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
 import { MCP_SERVERS_BETA, getCanonicalName, getAgentDepth, isActingAsBgJob, isCommitSkillRolloutEnabled, isVerifySkillRolloutEnabled, getFeatureValue_CACHED_MAY_BE_STALE, isAutoMemoryEnabled, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isRemoteActive, gitExe, getIsGit, getDefaultBranch, getGitPushShellPatterns } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive, gitExe, getIsGit, getDefaultBranch, getGitPushShellPatterns } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getSettingsFilePathForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { strip1mSuffix } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isGitLabMrTarget, glabMrId, glabMrProjectUrl } from "../Git-Worktree/git-repository-detection.js";
+import { isGitLabMrTarget, glabMrId, glabMrProjectUrl } from "../工作树-Git/git-repository-detection.js";
 import {
   canUseCloudReview,
   isCloudReviewEnabled,
@@ -75,16 +75,16 @@ import {
   GIT_CHECKOUT_FORCE_DISALLOWED_PATTERNS,
   GIT_ADD_FORCE_DISALLOWED_PATTERNS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getOrgMemoryStores, MEMORY_TYPES_SKILL_NAME, isMemoryTypesSkillEnabled, MEMORY_TYPES_SECTIONS_WITH_SCOPE, MEMORY_TYPES_SECTIONS_NO_SCOPE, hasTeamMemoryStore, isStoneShellPromptServed, registerAvailabilityPredicate } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getOrgMemoryStores, MEMORY_TYPES_SKILL_NAME, isMemoryTypesSkillEnabled, MEMORY_TYPES_SECTIONS_WITH_SCOPE, MEMORY_TYPES_SECTIONS_NO_SCOPE, hasTeamMemoryStore, isStoneShellPromptServed, registerAvailabilityPredicate } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
 import { isBashToolAvailable, isSkillsAsToolsEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { EFFORT_LEVELS, isValidEffortLevel, parseEffortLevelAlias, resolveModelEffortLevel, sanitizeEffortLevel } from "../权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
-import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { getArtifactState } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { getArtifactState } from "../制品发布-Artifact/chunk-rr78st95.js";
 import {
   formatArtifactServerDisplayName,
   escapeTextForDisplay,
@@ -109,23 +109,23 @@ import {
   isProductivitySkillsEnabled,
   isArtifactPrReviewEnabled,
   isArtifactPrReviewComposeLatched,
-} from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+} from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { invokeMcpToolRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { getRosterFilePath } from "../后台任务-Shell管理/chunk-djserjj5.js";
 import { registerBundledSkillSessionReset, registerBundledSkill, getBundledSkills, getBundledSkillExtractDir, extractAdditionalSkillFiles } from "./bundled-skills.js";
 import { getJobsDir } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { DEFAULT_KEYBINDINGS, KEYBINDING_CONTEXT_NAMES, KEYBINDING_CONTEXT_DESCRIPTIONS, KEYBINDING_ACTION_IDS, NON_REBINDABLE_KEYS, TERMINAL_RESERVED_KEYS, MACOS_RESERVED_KEYS, isKeybindingCustomizationEnabled } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { buildArtifactToolSpellingNote } from "../Artifact发布-渲染/chunk-01jnk0v2.js";
-import { listClaudeAiConnectorServers, getArtifactConnectorHostingState, artifactLiveEditPromptGateOpen, artifactCapabilitiesPromptGateOpen, artifactCommentsPromptGateOpen, artifactRoomSurfaceOpen, artifactReadPageDataPromptGateOpen } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
+import { DEFAULT_KEYBINDINGS, KEYBINDING_CONTEXT_NAMES, KEYBINDING_CONTEXT_DESCRIPTIONS, KEYBINDING_ACTION_IDS, NON_REBINDABLE_KEYS, TERMINAL_RESERVED_KEYS, MACOS_RESERVED_KEYS, isKeybindingCustomizationEnabled } from "../键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
+import { buildArtifactToolSpellingNote } from "../制品发布-Artifact/chunk-01jnk0v2.js";
+import { listClaudeAiConnectorServers, getArtifactConnectorHostingState, artifactLiveEditPromptGateOpen, artifactCapabilitiesPromptGateOpen, artifactCommentsPromptGateOpen, artifactRoomSurfaceOpen, artifactReadPageDataPromptGateOpen } from "../制品发布-Artifact/chunk-b6k1z7an.js";
 import { markWorkshopInvokeStart } from "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
-import { prependPageContract } from "../Artifact发布-渲染/artifact-prompt-paragraphs.js";
-import { getUltrareviewProsePointerTip } from "../CodeReview/ultrareview-tips.js";
+import { prependPageContract } from "../制品发布-Artifact/artifact-prompt-paragraphs.js";
+import { getUltrareviewProsePointerTip } from "../代码审查/ultrareview-tips.js";
 import { getDaemonLockPath, getDaemonLockStateKey } from "../后台任务-Shell管理/daemon-lock.js";
-import { registerDesignSkill } from "../DesignSync/register-design-skill.js";
-import { recordPrReviewTarget } from "../CodeReview/pr-review-target.js";
+import { registerDesignSkill } from "../设计同步/register-design-skill.js";
+import { recordPrReviewTarget } from "../代码审查/pr-review-target.js";
 import { getDaemonStatusPath, getDaemonStatusStateKey } from "../../01-核心基础设施/共享小工具-未细化/daemon-status.js";
 import { getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
-import { DESIGN_SYNC_POLICY_GATE, isDesignSyncPolicyAllowed } from "../DesignSync/design-sync-tool-metadata.js";
+import { DESIGN_SYNC_POLICY_GATE, isDesignSyncPolicyAllowed } from "../设计同步/design-sync-tool-metadata.js";
 import {
   ARTIFACT_DESIGN_SKILL_NAME,
   ARTIFACT_DIAGRAMMING_SKILL_NAME,
@@ -4772,7 +4772,7 @@ function registerAllBundledSkills() {
   let { registerLoopSkill: t } = import.meta.require("./registerLoopSkill.v4bkm9ca.js");
   t();
   let { registerScheduleRemoteAgentsSkill: o } = import.meta.require(
-    "../Routines(定时云任务)/Routines(定时云任务).j56ajwyt.js",
+    "../Routines-定时云任务/Routines-定时云任务.j56ajwyt.js",
   );
   o();
   let { registerClaudeApiSkill: s } = import.meta.require(

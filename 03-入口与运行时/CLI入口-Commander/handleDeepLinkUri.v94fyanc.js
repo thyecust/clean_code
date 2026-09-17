@@ -14,7 +14,7 @@ import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核�
 import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrow } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
 import { URL_HANDLER_BUNDLE_ID } from "../../02-功能模块/深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
 import { getRepoLastFetchTime, getTrackedRepoPaths, filterExistingRepoPaths } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { parseDeepLinkUri } from "../../02-功能模块/插件系统/chunk-q8w2zntw.js";

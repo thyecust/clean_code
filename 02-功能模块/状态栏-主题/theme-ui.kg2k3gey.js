@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 244 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getSafeModeExitHint } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getThemePalette, isValidThemeColorValue } from "./chunk-jz6b76hr.js";
@@ -23,12 +23,12 @@ import { FULL_BLOCK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { DimParenthetical, SearchablePickerDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
+import { DimParenthetical, SearchablePickerDialog } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
-import "../Diff引擎/structured-diff.js";
+import "../差异引擎-Diff/structured-diff.js";
 import { ThemePicker } from "./theme-picker.js";
 import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";

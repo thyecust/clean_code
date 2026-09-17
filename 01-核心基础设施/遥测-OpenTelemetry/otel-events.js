@@ -17,7 +17,7 @@ import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { otelApiModule, otelCoreModule, runtimeEnvironment, getWorkflowAnalyticsAttributes, getOauthAccountInfo, getAuthenticatedAccountInfo, getOrCreateUserID } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getEnvEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
-import { decodeTokenClaims, encodeTaggedId } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { decodeTokenClaims, encodeTaggedId } from "../../02-功能模块/远程控制-Bridge/chunk-4zd60pbm.js";
 import { toESM } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var w = createLazyValue(() =>
   nt({

@@ -12,7 +12,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { buildMessagePreview, slugifyDisplayName } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindingChordText } from "./use-keybinding-chord-text.js";
-import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";

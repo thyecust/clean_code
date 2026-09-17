@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Box, Text, NoSelect } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { StructuredDiff } from "../../02-功能模块/Diff引擎/structured-diff.js";
+import { StructuredDiff } from "../../02-功能模块/差异引擎-Diff/structured-diff.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { intersperse } from "./chunk-d16fhdtx.js";
 function DiffHunks({

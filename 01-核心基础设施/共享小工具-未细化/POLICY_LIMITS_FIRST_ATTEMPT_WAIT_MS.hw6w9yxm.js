@@ -32,7 +32,7 @@ import {
   clearPolicyLimitsCache as XAn,
   startBackgroundPolling as Ryr,
   stopBackgroundPolling as kyr,
-} from "../../02-功能模块/策略限制(PolicyLimits)/policy-limits-client.js";
+} from "../../02-功能模块/策略限制-PolicyLimits/policy-limits-client.js";
 export {
   Fnr as DefaultPolicyLimitsClientSlot,
   Cfr as FAIL_CLOSED_SHADOW_CACHE_TTL_MS,

@@ -12,7 +12,7 @@ import { getEnabledSettingsSources } from "./设置-配置.aqbb35ee.js";
 import { getGlobalClaudeFile } from "./chunk-zqr5ctyf.js";
 import { projectSettingsAliasesUserSettings, getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getProjectMcpServerApprovalStatus, findOperatorAuthoredMarketplaceAuth, OPERATOR_SETTINGS_SOURCES, getOperatorDeclaredMarketplaces, isMcpServerAllowedByPolicy, getMcpConfigsByScope, doesEnterpriseMcpConfigExist } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isWorkspaceTrustSatisfied, hasRepoSettingsRequiringTrust } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isWorkspaceTrustSatisfied, hasRepoSettingsRequiringTrust } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { isPluginBlockedByPolicy, areCommandPluginSourcesDisabledByPolicy, isSourceAllowedByPolicy } from "../../02-功能模块/插件系统/plugin-source-policy.js";
 var a = OPERATOR_SETTINGS_SOURCES.filter((e) => e !== "userSettings");
 function shouldOfferTrustBackstop(e) {

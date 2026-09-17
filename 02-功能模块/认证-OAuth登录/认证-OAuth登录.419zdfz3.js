@@ -10,7 +10,7 @@
 import { default as at, AxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Ie, po, Le, rs, zn, An, my, ku, SZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { parseRegionName, parseConfigInteger, getClaudeConfigDir, parseConfigIntegerOrDefault, isSimpleMode, isSafeMode, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseRegionName, parseConfigInteger, getClaudeConfigDir, parseConfigIntegerOrDefault, isSimpleMode, isSafeMode, xg } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE, OAUTH_BETA_HEADER, CLAUDE_AI_OAUTH_SCOPES, ALL_OAUTH_SCOPES, preservableScopesFrom, ALLOWED_OAUTH_BASE_URLS, getOauthConfig } from "./chunk-9g2q4bjq.js";
 import {
   parseShortId,
@@ -119,7 +119,7 @@ import {
   logAntError,
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, truncateToCodeUnits, toWellFormed, sanitizeLoneSurrogates, truncateAtWordBoundary } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { CROSS_SESSION_MESSAGE_TAG, isEssentialTrafficOnly, isNonessentialTrafficRestricted, getNonessentialTrafficDisabledEnvVar, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { CROSS_SESSION_MESSAGE_TAG, isEssentialTrafficOnly, isNonessentialTrafficRestricted, getNonessentialTrafficDisabledEnvVar, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { stripProtoFields, logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -143,12 +143,12 @@ import {
   getRelativeSettingsFilePathForSource,
   isAdminPolicyOrigin,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { toForwardSlashPath, writeFileSyncAndFlush, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizePath, getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { Jcr, wS, Bf, a_ } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { GIT_HARDENED_ARGS, execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { GIT_HARDENED_ARGS, execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import {
   isRemoteActive,
   hasRemoteControlChannel,
@@ -160,7 +160,7 @@ import {
   findCanonicalGitRootUncached,
   readGitConfigValue,
   getRepoRemoteHash,
-} from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+} from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
@@ -262,7 +262,7 @@ import { isTainted, areComplianceTaintsSettled } from "../../01-核心基础设�
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { sampleChildProcessPeaks } from "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
 import { isBgAuthSnapshotPending, waitForBgAuthSnapshot, hasCredentialDescriptor, getOAuthToken, getOAuthTokenWithBgSnapshot, getGatewayToken, getApiKey, getSessionAccessToken } from "./credential-file-descriptors.js";
-import { parseGitHubRepository } from "../Git-Worktree/git-repository-detection.js";
+import { parseGitHubRepository } from "../工作树-Git/git-repository-detection.js";
 import { ensureAxiosEgressGuardInstalled } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
 import { SECURE_STORAGE_READ_FAILED_SENTINEL, invalidateCredentialsCopyCache, getSecureStorage } from "./secure-storage.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
@@ -278,7 +278,7 @@ import { slugifyText } from "../../01-核心基础设施/核心工具-其他/核
 import { isProcessProvablyGone, looksLikeFullHostProcessTable, startTokensEqualOrCrossFormat, ownProcStartAsync, procIdentityOf, procIdentityFields, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { ownPidDomain, timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
-import { getTokenExpiry, decodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { getTokenExpiry, decodeTaggedId } from "../远程控制-Bridge/chunk-4zd60pbm.js";
 import { isClaudeInChromeMCPServer, CLAUDE_IN_CHROME_TOOL_NAMES } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
 import { customSchema, defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { MAX_SESSION_RECORD_BYTES, isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
@@ -286,7 +286,7 @@ import { isFlagPresent } from "../上下文压缩-Compact/cli-args.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "../Teammates团队/chunk-enjekn9t.js";
 import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { serializeAsyncCalls, createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
-import { fetchHttpHandlerModule } from "../Bedrock-Vertex/chunk-p991cddr.js";
+import { fetchHttpHandlerModule } from "../模型接入-Bedrock-Vertex/chunk-p991cddr.js";
 import {
   lW,
   unt,
@@ -23974,11 +23974,11 @@ async function Tle(e, t, r) {
   if (!(await o().catch(() => !1))) return e;
   let [{ classifyElevatedAuthError: d }, { extractErrorDetail: p }] =
     await Promise.all([
-      import("../Bridge-RemoteControl/code-session-api.js"),
+      import("../远程控制-Bridge/code-session-api.js"),
       import("../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js"),
     ]);
   if (d(e.data, p(e.data)) !== "untrusted_device") return e;
-  let { withUntrustedDeviceRecovery: _ } = await import("../Bridge-RemoteControl/chunk-tyce0p0b.js");
+  let { withUntrustedDeviceRecovery: _ } = await import("../远程控制-Bridge/chunk-tyce0p0b.js");
   return (
     (await _(t, r, void 0).catch(() => {
       return;
@@ -23988,7 +23988,7 @@ async function Tle(e, t, r) {
 async function trustedDeviceHeaders() {
   let { isViolinWoodEnabled: e } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js");
   if (!(await e().catch(() => !1))) return {};
-  let { getTrustedDeviceToken: t } = await import("../Bridge-RemoteControl/chunk-tyce0p0b.js"),
+  let { getTrustedDeviceToken: t } = await import("../远程控制-Bridge/chunk-tyce0p0b.js"),
     r = await t().catch(() => {
       return;
     });
@@ -30646,7 +30646,7 @@ var Bde = {
 function getRemoteControlAtStartup() {
   let e = getExplicitRemoteControlAtStartup();
   if (e !== void 0) return e;
-  return import.meta.require("../Bridge-RemoteControl/chunk-9estzwf5.js").getCcrAutoConnectDefault();
+  return import.meta.require("../远程控制-Bridge/chunk-9estzwf5.js").getCcrAutoConnectDefault();
 }
 function getDaemonColdStart() {
   let e = process.env.CLAUDE_CODE_DAEMON_COLD_START;

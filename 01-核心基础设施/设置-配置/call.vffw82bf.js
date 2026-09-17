@@ -13,7 +13,7 @@ import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js
 import { oa, Dat, aee, Ttn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { isWindsurfOrDevinPath, env as a } from "./chunk-zqr5ctyf.js";
 import { repeatString, pluralize } from "../核心工具-字符串与文本/string-utils.js";
-import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Av, iDt, j0e } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../共享小工具-未细化/storage-v5-context.js";
@@ -24,7 +24,7 @@ import { getSettingsFilePathForSource, updateSettingsForSource } from "../核心
 import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { readVSCodeScrollSensitivity } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { FocusableBox } from "../共享小工具-未细化/focusable-box.js";
-import { sanitizeTerminalName } from "../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
+import { sanitizeTerminalName } from "../../02-功能模块/通知-Notifications/通知-Notifications.g4xng0pg.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";

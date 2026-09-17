@@ -14,7 +14,7 @@ import { useKeybinding, useKeybindings } from "../../../01-核心基础设施/�
 import { DotSeparatedList } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "./chunk-tp42fv8j.js";
 import { de } from "./chunk-92g8hxqw.js";
-import { KeybindingHint } from "../../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
 import { ErrorMessage } from "../../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { V, d, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";

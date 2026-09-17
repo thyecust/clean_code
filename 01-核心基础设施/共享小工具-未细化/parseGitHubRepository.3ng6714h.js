@@ -29,7 +29,7 @@ import {
   parseGitRemote as Rx,
   parseRepoSlug as vIn,
   parseGitHubRepository as whe,
-} from "../../02-功能模块/Git-Worktree/git-repository-detection.js";
+} from "../../02-功能模块/工作树-Git/git-repository-detection.js";
 export {
   bIn as clearRepositoryCaches,
   She as detectCurrentRepository,

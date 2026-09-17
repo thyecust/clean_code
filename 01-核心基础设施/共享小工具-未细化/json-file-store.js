@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { writeFileAtomic } from "../安全文件系统(FS加固)/atomic-file-write.js";
+import { writeFileAtomic } from "../安全文件系统-FS加固/atomic-file-write.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { mkdir, readFile } from "fs/promises";
 import { dirname } from "path";

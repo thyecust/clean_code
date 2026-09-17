@@ -21,7 +21,7 @@ import {
   canBackgroundSession as WJt,
   BackgroundAndExit as U0t,
   deriveBackgroundSeed as Uae,
-} from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+} from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import "./chunk-xmxjyg29.js";
 import "./chunk-jfk5mpe1.js";
 import "./chunk-gnmy62vg.js";

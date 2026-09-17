@@ -11,7 +11,7 @@ import { j, B, ke } from "../lodash/lodash.2x3q7cfh.js";
 import { Ie, po, rs } from "../lodash/lodash.207999qb.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../lodash/lodash.0vqzb8ad.js";
 import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { hasNodeOption } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { hasNodeOption } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Mnt, default as at } from "../axios/axios.t0fczzmz.js";
 import { a_ } from "../which-isexe/isexe.knmpyrza.js";

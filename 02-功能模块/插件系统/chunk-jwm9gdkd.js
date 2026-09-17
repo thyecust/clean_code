@@ -13,9 +13,9 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isSafeMode, getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSafeMode, getSafeModeExitHint } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { capitalize, pluralize, beforeFirst, truncateWithCharCount, formatShortText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError, logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -65,7 +65,7 @@ import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-�
 import { getSettingsForSource, getSettings_DEPRECATED, updateSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { UP_ARROW_GLYPH, DOWN_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -174,7 +174,7 @@ import {
   getMcpConfigByName,
   isMcpServerDisabled,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { sanitizeForRelay } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { sanitizeForRelay } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import { stripBom, parseYaml, FRONTMATTER_PATTERN } from "../MCP客户端/chunk-3kmsshb6.js";
 import { OFFICIAL_MARKETPLACE_NAME, LINK_MODE_WINDOWS_UNSUPPORTED_MESSAGE, getSourceCommandKey, describeSourceMode, PluginSourceError } from "./chunk-ajtn749s.js";
 import { isPluginBlockedByPolicy, areCommandPluginSourcesDisabledByPolicy, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, getPluginTrustMessage, getPluginSuggestionMarketplaces, isMarketplaceSourceDeclaredByPolicy } from "./plugin-source-policy.js";
@@ -217,7 +217,7 @@ import {
 } from "./chunk-q8w2zntw.js";
 import { redactManagedMcpConfig, normalizePluginRelevanceSignals, matchPluginRelevanceSignal } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { SelectListRow, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { useListCursor, Table, SelectableRow, DimParenthetical, StatusLine, useMcpReconnect, useMcpToggleEnabled } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { useListCursor, Table, SelectableRow, DimParenthetical, StatusLine, useMcpReconnect, useMcpToggleEnabled } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { getIdentityEpoch, isRemoteTransport, awaitDiscoveryCacheFlush } from "../MCP客户端/mcp-discovery-cache.js";
 import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import { getFlaggedPlugins, markFlaggedPluginsSeen, clearFlaggedPlugin } from "../后台任务-Shell管理/chunk-n6g2zfwn.js";
@@ -237,7 +237,7 @@ import { BulletItem } from "../../01-核心基础设施/共享小工具-未细�
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { refreshActivePlugins, getPluginReloadCacheImpact } from "../MCP客户端/plugin-reload-cache-impact.js";
 import { resolveMissingDependencies, buildMissingDependencyNotice } from "./plugin-dependency-resolution.js";
-import { getPluginSuggestionDiscoverShownCount, recordPluginSuggestionDiscoverShown } from "../CodeReview/ultrareview-tips.js";
+import { getPluginSuggestionDiscoverShownCount, recordPluginSuggestionDiscoverShown } from "../代码审查/ultrareview-tips.js";
 import { padEndToWidth, padStartToWidth, buildSkillTableLayout, SkillDoctorStageError, collectSkillUsageData } from "../MCP客户端/skill-doctor-data.js";
 import { getDisusedPlugins, getPluginDaysSinceLastUse } from "./plugin-disuse.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";

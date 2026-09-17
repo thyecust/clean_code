@@ -11,7 +11,7 @@ import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { RESERVED_DIRECTORY_NAMES_LC, normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { DANGEROUS_FILES_LC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { DANGEROUS_FILES_LC } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import {
   getSeedFilePath,
   checkSeedPath,
@@ -30,8 +30,8 @@ import {
   hasWindowsReservedPathComponent,
   looksLikeWindowsShortName,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { readFileWithDigests, READ_ONLY_NONBLOCK_FLAGS, openVerifiedFile, writeFileAtomically, createFileSystemHost } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
-import { isBlobIdUnchanged } from "../Git-Worktree/dir-sync-git-repository.js";
+import { readFileWithDigests, READ_ONLY_NONBLOCK_FLAGS, openVerifiedFile, writeFileAtomically, createFileSystemHost } from "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
+import { isBlobIdUnchanged } from "../工作树-Git/dir-sync-git-repository.js";
 import { normalizeFileMode } from "./sync-journal.js";
 import { stripSentField, computeGitBlobId, computeContentDigests, matchesAgreedDigest } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";

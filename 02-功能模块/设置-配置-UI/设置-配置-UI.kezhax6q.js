@@ -12,9 +12,9 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, getSafeModeExitHint, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, getSafeModeExitHint, xg } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize, countOccurrences, normalizeFullWidthDigits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -44,8 +44,8 @@ import {
   getAutoUpdaterDisabledReason,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
-import { getRemoteTransport, isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
+import { getRemoteTransport, isRemoteActive } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth, formatDuration, formatNumber, formatTokens, formatRelativeTimeAgo, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { listedProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
@@ -79,7 +79,7 @@ import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共�
 import { isChannelsPolicyBlocked } from "../插件系统/channel-gate.js";
 import { useAppStateSession, useAppStateSelector, useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useMainLoopModelOverride } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
-import { SYNTHETIC_MODEL_NAME } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { SYNTHETIC_MODEL_NAME } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import {
   formatCostSummary,
   DEFAULT_OUTPUT_STYLE_NAME,
@@ -106,27 +106,27 @@ import {
 import { areWorkflowsAvailable } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { isArtifactConfigToggleable } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { ensurePolicyLimitsLoadedForDiagnostic } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
-import { isPushNotificationsEnabled, isInputNeededPushEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
+import { isArtifactConfigToggleable } from "../制品发布-Artifact/chunk-01ymf0ar.js";
+import { ensurePolicyLimitsLoadedForDiagnostic } from "../远程控制-Bridge/chunk-9estzwf5.js";
+import { isPushNotificationsEnabled, isInputNeededPushEnabled } from "../远程控制-Bridge/push-notification-tool.js";
 import { formatCronSchedule } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { isAgentsFleetEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
-import { getUdsInboxUnavailableReason } from "../跨会话消息(UDS)/uds-messaging.js";
-import { githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49v.js";
+import { getUdsInboxUnavailableReason } from "../跨会话消息-UDS/uds-messaging.js";
+import { githubConnectionStatusStore } from "../隐私设置-Grove/chunk-a4mdm49v.js";
 import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { flattenNodeText, useStateWithGetter, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { Table, ModelPicker, SelectableRow } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { Table, ModelPicker, SelectableRow } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
+import { useNotificationQueue } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { ThemePicker } from "../状态栏-主题/theme-picker.js";
 import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { RemoteHomeSettingsDialog } from "../Memory-CLAUDE.md/chunk-54xx04er.js";
-import { recordExternalIncludesDecision, ClaudeMdExternalIncludesDialog } from "../Memory-CLAUDE.md/claude-md-external-includes-dialog.js";
-import { getEffectiveAutoContinueAtUsageLimit, isAutoContinueSettingUserControlled } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { getPushReachability, subscribePushReachability, subscribePushPreferencesHydrated } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
+import { RemoteHomeSettingsDialog } from "../记忆-CLAUDE.md/chunk-54xx04er.js";
+import { recordExternalIncludesDecision, ClaudeMdExternalIncludesDialog } from "../记忆-CLAUDE.md/claude-md-external-includes-dialog.js";
+import { getEffectiveAutoContinueAtUsageLimit, isAutoContinueSettingUserControlled } from "../状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
+import { getPushReachability, subscribePushReachability, subscribePushPreferencesHydrated } from "../推送通知-Push/推送通知-Push.8ab67cqd.js";
 import { formatNotificationChannelLabel, getSecuritySensitiveSettings, getEffectiveConfig, createSettingsViewModel } from "../../01-核心基础设施/设置-配置/settings-config-model.js";
 import { getUsagePatternsAccess, collectRecentUsageSummary } from "../成本-Token统计/usage-transcript-scan.js";
 import { seedUtilization, loadPlanRateLimits } from "../MCP客户端/usage-rate-limits.js";

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { isHoverRestEnabled, pinHoverRestFlag } from "./chunk-h62vxw7j.js";
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, isSameAsConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, isSameAsConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 function pinStorageV5FromEnv(e = tryCreateV5Backend) {
   let o = a.CLAUDE_CODE_HOVER_REST;

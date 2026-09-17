@@ -10,7 +10,7 @@
 import { watchGlobalConfigThroughStorage, seedInstallIDs } from "./认证-OAuth登录.419zdfz3.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, initDefaultDebugLog, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -23,7 +23,7 @@ import { isDaemonWorkerRegistryEnabled } from "../../01-核心基础设施/共�
 import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import { credentialsStoreFor } from "./credentials-store.js";
 import { getBridgeTokenOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE } from "../Bridge-RemoteControl/remote-control-messages.js";
+import { REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE } from "../远程控制-Bridge/remote-control-messages.js";
 import { updateDaemonConfig, normalizeRemoteControlEntries, scheduledTasksFileSchema, runScheduledWorker } from "../权限系统/chunk-3kjwvb3e.js";
 import { PERMANENT_FAILURE_EXIT_CODE, TEMP_FAILURE_EXIT_CODE } from "../../01-核心基础设施/共享小工具-未细化/exit-codes.js";
 import { s, T, O, c, X, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -244,7 +244,7 @@ function createDaemonAuth(e, t, y = () => !0, d, p) {
       t(`auth: cooldown write error: ${o}`);
     }
     try {
-      let { execFileNoThrow: o } = await import("../Git-Worktree/git-exec-hardening.js");
+      let { execFileNoThrow: o } = await import("../工作树-Git/git-exec-hardening.js");
       o("osascript", [
         "-e",
         'display notification "Your Claude assistant needs re-authentication" with title "Claude"',
@@ -497,7 +497,7 @@ var V = createLazyValue(() =>
         );
       });
     let { runBridgeHeadless: x, BridgeHeadlessPermanentError: Y } =
-        await import("../Bridge-RemoteControl/runBridgeHeadless.n35pw6j7.js"),
+        await import("../远程控制-Bridge/runBridgeHeadless.n35pw6j7.js"),
       _ = null,
       I = !1,
       L = (a) => {

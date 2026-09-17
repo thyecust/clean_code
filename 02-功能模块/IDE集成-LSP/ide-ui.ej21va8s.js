@@ -16,7 +16,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { getCurrentWorktreeSession, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { Box, Text, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useIsMountRecent, useSettleAfterChange, useRefusedInputWindow, NO_COMMITTED_ROW, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -24,7 +24,7 @@ import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工
 import { isJetBrainsIde, isJetBrainsTerminal, isSupportedIdeTerminal, discoverIdeServers, identifyVscodeFork, resolveVscodeCommand, detectRunningIdes, getIdeDisplayName } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import { OverflowHint } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
+import { OverflowHint } from "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { setMcpClientOnClose } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";

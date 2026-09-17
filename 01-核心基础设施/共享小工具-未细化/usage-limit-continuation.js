@@ -11,7 +11,7 @@ import { ze, ld, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isBgSession, isClaudeAISubscriber, getOauthAccountInfo, getSubscriptionType, getRateLimitTier } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isFirstPartyApiBackend } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { enqueueCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isResettableUsageLimitRejection } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { isResettableUsageLimitRejection } from "../../02-功能模块/状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
 import { randomUUID } from "crypto";
 var o =
   "You can continue now. Continue the task you were working on when the usage limit was reached; do not repeat work that is already complete.";

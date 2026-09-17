@@ -24,7 +24,7 @@ import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { enqueueSdkEvent, getCurrentWorktreeSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   contextBudgetTracker,
   getTotalTokensReminderMode,
@@ -64,13 +64,13 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSessionTranscriptPath, getAgentTranscriptPath } from "../Teammates团队/transcript-paths.js";
 import { logGoalCleared } from "../Skills技能/chunk-sapykxw7.js";
-import { clearAllPlanSlugs } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { clearAllPlanSlugs } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { evictTaskOutput, initTaskOutputAsSymlink } from "../后台任务-Shell管理/task-output.js";
-import { retainPathLinks } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { isBridgeStateFramesEnabled } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { retainPathLinks } from "../制品发布-Artifact/chunk-01ymf0ar.js";
+import { isBridgeStateFramesEnabled } from "../远程控制-Bridge/chunk-9estzwf5.js";
 import { getCcrSessionId } from "../插件系统/chunk-ajtn749s.js";
 import { setMcpClientOnClose } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { rearmWatchNoticeBudgets, clearRefusedPublishBodies, disposeArtifactRoom, retireLiveDocWatches, resetArtifactConversationState } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { rearmWatchNoticeBudgets, clearRefusedPublishBodies, disposeArtifactRoom, retireLiveDocWatches, resetArtifactConversationState } from "../制品发布-Artifact/chunk-rr78st95.js";
 import { runBundledSkillSessionResets } from "../Skills技能/bundled-skills.js";
 import { syncJobResumeSessionId } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";

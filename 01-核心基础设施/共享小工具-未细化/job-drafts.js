@@ -10,7 +10,7 @@
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { writeFileAtomic, writeFileAtomicSync } from "../安全文件系统(FS加固)/atomic-file-write.js";
+import { writeFileAtomic, writeFileAtomicSync } from "../安全文件系统-FS加固/atomic-file-write.js";
 import { createLazyValue } from "./lazy-value.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { jsonStringify, jsonParse } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";

@@ -136,12 +136,12 @@ async function Lt() {
       : void 0;
   if (process.argv[2] === "--claude-in-chrome-mcp") {
     m("cli_claude_in_chrome_mcp_path");
-    let { runClaudeInChromeMcpServer: e } = await import("./02-功能模块/ClaudeinChrome/createChromeContext.ny2380rf.js");
+    let { runClaudeInChromeMcpServer: e } = await import("./02-功能模块/浏览器集成-ClaudeinChrome/createChromeContext.ny2380rf.js");
     await e(n);
     return;
   } else if (process.argv[2] === "--chrome-native-host") {
     m("cli_chrome_native_host_path");
-    let { runChromeNativeHost: e } = await import("./02-功能模块/ClaudeinChrome/runChromeNativeHost.fbbevkgf.js");
+    let { runChromeNativeHost: e } = await import("./02-功能模块/浏览器集成-ClaudeinChrome/runChromeNativeHost.fbbevkgf.js");
     await e();
     return;
   } else if (process.argv[2] === "--computer-use-mcp") {
@@ -197,7 +197,7 @@ async function Lt() {
       let { ensureFastPathSettingsLoaded: r } =
         await import("./01-核心基础设施/共享小工具-未细化/runFastPathPolicyHelper.vgxesh6m.js");
       await r(n);
-      let { initSinks: o } = await import("./02-功能模块/Bridge-RemoteControl/initSinks.6cfazjmq.js");
+      let { initSinks: o } = await import("./02-功能模块/远程控制-Bridge/initSinks.6cfazjmq.js");
       o();
       let { daemonMain: v } = await import("./02-功能模块/后台任务-Shell管理/daemonMain.sesbvnxj.js");
       await v(e, n);
@@ -368,7 +368,7 @@ async function Lt() {
           { setInlinePlugins: y, setInlinePluginsNoMcp: P },
           { clearPluginCache: g },
         ] = await Promise.all([
-          import("./02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js"),
+          import("./02-功能模块/状态管理-AppState/getOriginalCwd.mg2gq0d6.js"),
           import("./02-功能模块/插件系统/clearPluginCache.zqb4jr60.js"),
         ]);
         (y(l.config.pluginDir),
@@ -419,10 +419,10 @@ async function Lt() {
             { pinStorageV5: pt },
           ] = await Promise.all([
             import("./01-核心基础设施/共享小工具-未细化/FleetViewScreen.w73yzmz1.js"),
-            import("./02-功能模块/Daemon-守护服务/createRoot.pw1402cq.js"),
-            import("./02-功能模块/Daemon-守护服务/getBaseRenderOptions.caxv2veh.js"),
+            import("./02-功能模块/守护服务-Daemon/createRoot.pw1402cq.js"),
+            import("./02-功能模块/守护服务-Daemon/getBaseRenderOptions.caxv2veh.js"),
             import("path"),
-            import("./02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js"),
+            import("./02-功能模块/状态管理-AppState/getOriginalCwd.mg2gq0d6.js"),
             import("./01-核心基础设施/共享小工具-未细化/FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION.etv8bjdx.js"),
             import("./01-核心基础设施/共享小工具-未细化/pinStorageV5.xt5bqpq9.js"),
           ]),
@@ -560,7 +560,7 @@ async function Lt() {
           };
         {
           let { mountFleetViewWithComposerBack: d } =
-            await import("./02-功能模块/Fleet多会话视图/Fleet多会话视图.r6bvyjj3.js");
+            await import("./02-功能模块/多会话视图-Fleet/多会话视图-Fleet.r6bvyjj3.js");
           await d(K, wt);
         }
         await Q.catch(() => {});
@@ -625,7 +625,7 @@ async function Lt() {
           { pinStorageV5: R },
           { initDefaultDebugLog: k },
         ] = await Promise.all([
-          import("./02-功能模块/Git-Worktree/IDENTITY_CHANGED_SUMMARY.fc8k0hbw.js"),
+          import("./02-功能模块/工作树-Git/IDENTITY_CHANGED_SUMMARY.fc8k0hbw.js"),
           import("./01-核心基础设施/共享小工具-未细化/pinStorageV5.xt5bqpq9.js"),
           import("./02-功能模块/云会话-Teleport/logForDebugging.yzt1kswr.js"),
         ]),
@@ -661,7 +661,7 @@ async function Lt() {
     isPluginEvalInvocation: F,
     isRemoteControlInvocation: ot,
     isAgentsJsonInvocation: rt,
-  } = await import("./02-功能模块/Bridge-RemoteControl/NON_REPL_SUBCOMMANDS.ce1ven8w.js");
+  } = await import("./02-功能模块/远程控制-Bridge/NON_REPL_SUBCOMMANDS.ce1ven8w.js");
   if (
     !L.has(process.argv[2] ?? "") &&
     !I(process.argv.slice(2)) &&

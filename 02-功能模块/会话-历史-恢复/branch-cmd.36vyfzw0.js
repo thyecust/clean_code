@@ -15,7 +15,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { ge, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getOwnJobShortId, syncJobName } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { getProjectKey, buildHistorySuppressionEntry } from "./chunk-mkmy4cx2.js";
 import {

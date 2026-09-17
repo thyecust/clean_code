@@ -16,7 +16,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { isConnectedMcpServer, parseMcpToolName, getMcpToolPrefix } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -26,14 +26,14 @@ import { isValidCliNameToken } from "../插件系统/plugin-system-core.js";
 import { sanitizeDisplayTextWithoutRedaction, sanitizeDisplayText, isUnconfiguredMcpServer, ToolHostRegistry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../远程工具执行/remote-tool-protocol.js";
 import "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
-import { refreshRemoteToolHosts } from "../Bridge-RemoteControl/device-bridge-remote-tools.js";
-import "../Bridge-RemoteControl/session-event-transport.js";
-import "../Bridge-RemoteControl/remote-session-host-registry.js";
+import { refreshRemoteToolHosts } from "../远程控制-Bridge/device-bridge-remote-tools.js";
+import "../远程控制-Bridge/session-event-transport.js";
+import "../远程控制-Bridge/remote-session-host-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 import { getReconnectMcpServer, getToggleMcpServer, getIsMcpServerDisabled } from "../../01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js";
 import { getMcpServerType, getBlockingMcpServerState, formatDisabledElsewhereMessage, formatDisableNotPersistedMessage, formatBulkTogglePersistWarning, formatStaleDisableMessage } from "./mcp-server-state-messages.js";
-import { sanitizeForRelay } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { sanitizeForRelay } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function U(t) {
   let c = new Map(),

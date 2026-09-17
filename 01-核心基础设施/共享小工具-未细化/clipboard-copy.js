@@ -11,7 +11,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getClipboardCopyStrategy, probeLinuxClipboardTool, setClipboard } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { useClock } from "./use-clock.js";
-import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "./chunk-2c9tjhwd.js";

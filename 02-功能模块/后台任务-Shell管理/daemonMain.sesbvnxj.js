@@ -16,7 +16,7 @@ import { lit as S, fromEnum, fromNumber, concatSafe } from "../../01-核心基�
 import { R, ge, l, A, Jr, Po, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonParse, changeWorkingDirectory, redactSecretsFromText, initDefaultDebugLog, getDebugFilePath, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
@@ -2925,13 +2925,13 @@ async function daemonMain(t, e) {
   switch ((initializeFirstPartyEventLogging(D), k)) {
     case "list": {
       Re(d, ["--json"]);
-      let { handleListAllKinds: _ } = await import("../Bridge-RemoteControl/handleListAllKinds.tcxk2866.js");
+      let { handleListAllKinds: _ } = await import("../远程控制-Bridge/handleListAllKinds.tcxk2866.js");
       await _(d.includes("--json"), r, D);
       return;
     }
     case "scheduled":
     case "remote-control": {
-      let { handleCliKind: _ } = await import("../Bridge-RemoteControl/handleListAllKinds.tcxk2866.js");
+      let { handleCliKind: _ } = await import("../远程控制-Bridge/handleListAllKinds.tcxk2866.js");
       await _(k, d, r, D);
       return;
     }
@@ -2941,7 +2941,7 @@ async function daemonMain(t, e) {
         return;
       }
       let { renderDaemonHubStandalone: _ } =
-        await import("../Daemon-守护服务/daemon-ui.z0smrekj.js");
+        await import("../守护服务-Daemon/daemon-ui.z0smrekj.js");
       return (await _(D), process.exit(0));
     }
     case "run": {

@@ -34,7 +34,7 @@ import {
 import { isLocalAgentTask, findNearNameMatches, isMainSessionLocalAgent, loadLivePeerSessions, getBridgeSessionListing } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { readTeamFileAsync } from "./team-file-store.js";
-import { refreshPeerIdentityOwner, loadBridgePeerSessionRows, isBridgeRowsIdentityCurrent, recordBridgeSessionRows, forgetBridgeSessionRows, excludeCloudKnownBridgeRows, isCloudListUnavailable, listCloudPeerSessions } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
+import { refreshPeerIdentityOwner, loadBridgePeerSessionRows, isBridgeRowsIdentityCurrent, recordBridgeSessionRows, forgetBridgeSessionRows, excludeCloudKnownBridgeRows, isCloudListUnavailable, listCloudPeerSessions } from "../远程控制-Bridge/chunk-1yq098a7.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 async function checkCrossSessionSendPermission({

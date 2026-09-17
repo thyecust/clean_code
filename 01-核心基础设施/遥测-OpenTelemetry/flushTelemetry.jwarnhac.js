@@ -64,7 +64,7 @@ import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { CLEANUP_DRAIN_TIMEOUT_MS, registerCleanup, jsonStringify, getHasFormattedOutput, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isNonessentialTrafficRestricted, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isNonessentialTrafficRestricted, logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { omitBy } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
@@ -76,7 +76,7 @@ import { isDetailedTracingEnabled, logPerfettoTracingInit, isEnhancedTelemetryBe
 import { getResolvedWIFBaseUrlSnapshot } from "../../02-功能模块/认证-OAuth登录/wif-credentials.js";
 import { OtelDiagLogger } from "../共享小工具-未细化/otel-diag-logger.js";
 import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
-import { decodeTokenClaims } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { decodeTokenClaims } from "../../02-功能模块/远程控制-Bridge/chunk-4zd60pbm.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { getCurrentPlatform, getWslVersion } from "../核心工具-路径与平台/platform-detection.js";
 import { getClientUserAgent } from "../共享小工具-未细化/user-agent.js";
@@ -1563,7 +1563,7 @@ async function vt(e) {
           break;
         }
         case "http/protobuf": {
-          let { OTLPMetricExporter: p } = await import("../../02-功能模块/Protobuf-gRPC/OTLPMetricExporter.xk2et39h.js");
+          let { OTLPMetricExporter: p } = await import("../../02-功能模块/协议-Protobuf-gRPC/OTLPMetricExporter.xk2et39h.js");
           r.push(new p(c));
           break;
         }
@@ -1617,7 +1617,7 @@ async function bt() {
           break;
         }
         case "http/protobuf": {
-          let { OTLPLogExporter: c } = await import("../../02-功能模块/Protobuf-gRPC/OTLPLogExporter.rv1gzm0a.js");
+          let { OTLPLogExporter: c } = await import("../../02-功能模块/协议-Protobuf-gRPC/OTLPLogExporter.rv1gzm0a.js");
           s.push(new c(i));
           break;
         }
@@ -1654,7 +1654,7 @@ async function It() {
           break;
         }
         case "http/protobuf": {
-          let { OTLPTraceExporter: i } = await import("../../02-功能模块/Protobuf-gRPC/OTLPTraceExporter.pre219yw.js");
+          let { OTLPTraceExporter: i } = await import("../../02-功能模块/协议-Protobuf-gRPC/OTLPTraceExporter.pre219yw.js");
           t.push(new i(o));
           break;
         }

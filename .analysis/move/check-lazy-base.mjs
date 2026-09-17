@@ -67,9 +67,10 @@ const ASSET_CALL_RE = /readEmbeddedAsset(?:Sync)?\(\s*([A-Za-z0-9_$]+|["'][^"'\n
 
 // 这几个资源**在本仓库里从未存在**（git 里没有新增记录，只有加载器引用它们）：
 // 打包产物把它们留在了外部。别把它们当成「搬坏了」。
+// 目录改名时这里要跟着改路径（如 `Artifact发布-渲染` → `制品发布-Artifact`）。
 const KNOWN_MISSING = new Set([
   "02-功能模块/Skills技能/payload.template.html.asset",
-  "02-功能模块/Artifact发布-渲染/hljsBundle.generated.min.js",
+  "02-功能模块/制品发布-Artifact/hljsBundle.generated.min.js",
   "02-功能模块/图表-Mermaid/chart.umd.min.js",
   "02-功能模块/图表-Mermaid/mermaid.min.js",
 ]);

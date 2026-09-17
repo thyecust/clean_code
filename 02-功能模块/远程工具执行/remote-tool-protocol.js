@@ -13,7 +13,7 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { DEFAULTS_SLOT_MARKER, mapKeys } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { MACHINE_NAME_PATTERN, isReservedMachineName } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { MACHINE_NAME_PATTERN, isReservedMachineName } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { BASH_TOOL_NAME, EDIT_TOOL_NAME, WRITE_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, O, se, v, c, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";

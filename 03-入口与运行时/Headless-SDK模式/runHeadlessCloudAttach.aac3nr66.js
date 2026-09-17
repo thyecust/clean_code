@@ -19,7 +19,7 @@ import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共
 import { Ve, zi, yt, Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonStringify, setHasFormattedOutput, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { isEssentialTrafficOnly, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly, logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { printCliError } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -43,7 +43,7 @@ import {
   isWorkspacePersistedTrusted,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDisplayText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { sanitizeAnalyticsId } from "../CLI入口-Commander/startup-profiler.js";
 import { getSettingsForSource, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -52,7 +52,7 @@ import { PERMISSION_MODE_MANUAL_ALIAS, parsePermissionMode, CAN_USE_TOOL_INVALID
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { buildClaudeAiSessionUrl } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { isAutoModeSeedable, isTrustedPlanModeDisplaced, buildPermissionModeSeed } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
-import { DEVICE_FIELD_NAME, isValidMachineName, hasRequestedMachine } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { DEVICE_FIELD_NAME, isValidMachineName, hasRequestedMachine } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import {
   gracefulShutdown,
@@ -102,7 +102,7 @@ import {
   normalizeDisconnectReason,
   formatDisconnectMessage,
 } from "../../02-功能模块/权限系统/chunk-z0pt04s8.js";
-import { isUnattendedServingEnabled, UNATTENDED_SERVING_CONSENT_VERSION, UNATTENDED_SERVING_CONSENT_TERMS, unattendedServingMachineName, readUnattendedServingConsent, writeUnattendedServingConsent, managedSettingsForbidUnattendedServing, primeUnattendedServingConsent } from "../../02-功能模块/AutoMode-自动模式/unattended-serving-consent.js";
+import { isUnattendedServingEnabled, UNATTENDED_SERVING_CONSENT_VERSION, UNATTENDED_SERVING_CONSENT_TERMS, unattendedServingMachineName, readUnattendedServingConsent, writeUnattendedServingConsent, managedSettingsForbidUnattendedServing, primeUnattendedServingConsent } from "../../02-功能模块/自动模式-AutoMode/unattended-serving-consent.js";
 import {
   cloudPluginsForwarderMemories,
   setUnrefTimer,
@@ -119,7 +119,7 @@ import {
   getResponseTimeoutMs,
 } from "../../02-功能模块/Hooks钩子/device-hooks-serving.js";
 import { DEFAULT_REMOTE_TOOL_LIMITS, WITHDRAWN_FEEDBACK, parseToolCallResult } from "../../02-功能模块/远程工具执行/remote-tool-protocol.js";
-import { normalizeDeclaredDialogKinds } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { normalizeDeclaredDialogKinds } from "../../02-功能模块/远程控制-Bridge/chunk-5ne99rq3.js";
 import {
   getWorkerEpoch,
   hasMachineGeneratedContent,
@@ -132,9 +132,9 @@ import {
   RemoteSessionManager,
   getSessionRequestTarget,
   fetchLatestSessionEvents,
-} from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
+} from "../../02-功能模块/远程控制-Bridge/chunk-x379yyxb.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
-import { startDeviceRegistration } from "../../02-功能模块/Bridge-RemoteControl/device-bridge-registration.js";
+import { startDeviceRegistration } from "../../02-功能模块/远程控制-Bridge/device-bridge-registration.js";
 import "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
 import { resolveAttachDeviceBinding, pullsBackToThisMachine, registerAttachedDevice } from "../../02-功能模块/认证-OAuth登录/attach-device-binding.js";
 import {
@@ -149,8 +149,8 @@ import {
   isProjectFilesSyncPending,
   getUploadOriginFacts,
   describeCloudSessionSync,
-} from "../../02-功能模块/Bridge-RemoteControl/chunk-sc8n0cp3.js";
-import { waitForPolicyLimitsToLoad } from "../../02-功能模块/策略限制(PolicyLimits)/policy-limits-client.js";
+} from "../../02-功能模块/远程控制-Bridge/chunk-sc8n0cp3.js";
+import { waitForPolicyLimitsToLoad } from "../../02-功能模块/策略限制-PolicyLimits/policy-limits-client.js";
 import {
   getCloudSessionsUnavailableReason,
   isStaleBootstrapFrame,
@@ -175,14 +175,14 @@ import {
   getRepositoryModelSource,
   resolveInitialPermissionMode,
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { localBindIdentity } from "../../02-功能模块/Bridge-RemoteControl/device-bind.js";
+import { localBindIdentity } from "../../02-功能模块/远程控制-Bridge/device-bind.js";
 import { deviceEventSignerFor } from "../../02-功能模块/认证-OAuth登录/device-event-signer.js";
 import { permissionResultSchema, StructuredIO } from "./structured-io.js";
-import "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
+import "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
 import "../../02-功能模块/文件同步-Sync/sync-journal.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { runProbeGit } from "../../02-功能模块/Git-Worktree/local-divergence-probe.js";
-import "../../02-功能模块/Git-Worktree/dir-sync-git-repository.js";
+import { runProbeGit } from "../../02-功能模块/工作树-Git/local-divergence-probe.js";
+import "../../02-功能模块/工作树-Git/dir-sync-git-repository.js";
 import { forecastKeyOf, decideSyncOffer } from "../../02-功能模块/文件同步-Sync/sync-offer-probe.js";
 import { buildControlSuccessResponse, buildControlErrorResponse, buildErrorResultMessage } from "./headless-sdk-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
@@ -190,7 +190,7 @@ import { parseThinClientReply } from "../../01-核心基础设施/共享小工�
 import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 import "./chunk-yb7jadvp.js";
-import { buildDefaultDeviceDisplayName } from "../../02-功能模块/Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
+import { buildDefaultDeviceDisplayName } from "../../02-功能模块/设备注册-Cowork/设备注册-Cowork.9r92qaht.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
 import "../../02-功能模块/云会话-Teleport/overlay-bundle.js";
 import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";

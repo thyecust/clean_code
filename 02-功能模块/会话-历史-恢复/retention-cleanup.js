@@ -11,11 +11,11 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { l, W, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { describeStorageError, jsonParse, jsonParseUntraced, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, getTeamsDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, getTeamsDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { logDirectories, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isTempFileFor, writeFileAtomicWithOptions } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { logDirectories, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isTempFileFor, writeFileAtomicWithOptions } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { getPluginsDir } from "../插件系统/plugin-system-core.js";
 import { isTempFileName, isValidPathSegment, getNormalizedNames, STORAGE_KEYS, createBridgeSpawnKey } from "../Teammates团队/storage-keys.js";
 import { isSettingsSourceEnabled, PARENT_MANAGED_SETTINGS_LABEL, CLEANUP_PERIOD_SETTING_KEYS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -45,7 +45,7 @@ import { readJobStateFreshOrNull, readPinnedJobIds, isSettled } from "../后台�
 import { MASKED_IDS_FILE_NAME, getModelCatalogCacheDir, getFeatureValue_CACHED_MAY_BE_STALE, getMemoryBaseDir, getAutoMemPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { LITE_READ_BUF_SIZE, extractFieldFromFirstEntryStrict, extractFieldFromLastEntryStrict, readHeadAndTail, anchorOffsetTail } from "./chunk-mkmy4cx2.js";
-import { CLOUD_SNAPSHOTS_DIR_NAME, ARCHIVE_SYNC_DIR_NAME, FOLDER_SYNC_DIR_NAME, parseRecordingStampFromFileName, isValidSessionName, TOOL_RESULTS_DIR_NAME } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { CLOUD_SNAPSHOTS_DIR_NAME, ARCHIVE_SYNC_DIR_NAME, FOLDER_SYNC_DIR_NAME, parseRecordingStampFromFileName, isValidSessionName, TOOL_RESULTS_DIR_NAME } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { isDesktopHostEntrypointValue } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSettingsForSource, getSettings_DEPRECATED, anyAdminPolicyTierGovernsRetention, getPolicySettingsLoadErrors, getSecuritySensitiveSetting, rawSettingsKeyPresence } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isTainted } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
@@ -62,17 +62,17 @@ import {
   SYNCED_PLUGINS_DIR_PATH,
   PLUGINS_TRASH_DIR_PATH,
   SYNCED_PLUGINS_STAGING_DIR_PATH,
-} from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+} from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { emitRetentionSweepEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { MCP_SKILL_ARCHIVES_DIR_NAME, readMcpSkillCacheMeta } from "../Skills技能/mcp-skill-cache.js";
 import { MAX_FILE_READ_LINES, MAX_FILE_READ_BYTES, parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
 import { cleanupStaleImageCacheDirs, PUBLISHED_FLOOR_FILE_NAME, getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
-import { resetPlanFileCacheToUnknown } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { resetPlanFileCacheToUnknown } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { NON_REGULAR_PATH_ERRNOS } from "../图片-截图-ComputerUse/computer-use-lock.js";
 import { RECEIVED_FILES_MAX_AGE_DAYS } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
-import { peerTransferSpoolDir } from "../跨会话消息(UDS)/peer-file-transfer.js";
+import { peerTransferSpoolDir } from "../跨会话消息-UDS/peer-file-transfer.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import * as A from "fs/promises";

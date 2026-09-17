@@ -33,13 +33,13 @@ import {
   wh,
   $W,
 } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { isTempFileFor } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { isTempFileFor } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { j, rE, B, he, Irt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { INVISIBLE_CHAR_CLASS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { describeSettingsSourceShort, sanitizeForDisplay, formatLongDisplayText, truncateWithEllipsis, toDisplayText, formatQuotedDisplayText, CLAUDE_AI_MARKETPLACE_NAME_PREFIX } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";

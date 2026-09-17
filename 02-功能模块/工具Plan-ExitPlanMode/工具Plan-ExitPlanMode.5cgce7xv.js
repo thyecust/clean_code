@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 var ENTER_PLAN_MODE_TOOL_NAME = "EnterPlanMode";
 var ASK_USER_QUESTION_TOOL_NAME = "AskUserQuestion",
   MAX_QUESTION_HEADER_CHARS = 12,

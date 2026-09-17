@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { writeFileAtomic } from "../安全文件系统(FS加固)/atomic-file-write.js";
+import { writeFileAtomic } from "../安全文件系统-FS加固/atomic-file-write.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "./open-flags.js";
 import { AsyncLocalStorage } from "async_hooks";
 import { constants } from "fs";

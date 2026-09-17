@@ -34,9 +34,9 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { R, A, Jg } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { RENAME_CONTENTION_ERRNOS, renameWithRetry, writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { RENAME_CONTENTION_ERRNOS, renameWithRetry, writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { describeStorageError, registerCleanup, registerPreExitFlush, jsonStringify, jsonParse, hasNetworkPathSpelling, hasUnverifiableAncestrySync, resolveSymlinkAncestrySync, fsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { lr, le, Zt, Io, cr, nt, Cu, ru, Rmr } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -59,11 +59,11 @@ import {
 import { captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
-import { DEFAULT_OPEN_FILE_MODE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { DEFAULT_OPEN_FILE_MODE } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getSettingsForSource, getInitialSettings, getSettings_DEPRECATED, isAdminPolicyUnreadable } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { unpinLaunchEffortLevels } from "../权限系统/chunk-t3b7pg2x.js";
 import { getProjectsDir, getProjectKeyFromDir, getSessionSubagentsDir, getAgentTranscriptPath } from "../Teammates团队/transcript-paths.js";
-import { isManagedPermissionRulesOnlyEnabled, getEffectivePermissionRules, getDeclaredAndRepoOnlyDirectories, getEffectiveAdditionalDirectories, applyPermissionUpdate, getResolvedClaudeTempDir, getCurrentProjectTempDir, getProjectTempDirForPath, realpathIfResolvable } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isManagedPermissionRulesOnlyEnabled, getEffectivePermissionRules, getDeclaredAndRepoOnlyDirectories, getEffectiveAdditionalDirectories, applyPermissionUpdate, getResolvedClaudeTempDir, getCurrentProjectTempDir, getProjectTempDirForPath, realpathIfResolvable } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
 import { userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
@@ -114,10 +114,10 @@ import {
 import { getMcpServerConfigCacheKey } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { ComputerUseMcpStateStore, ComputerUseLockOwnerContext } from "../图片-截图-ComputerUse/computer-use-lock.js";
-import { MAX_ARTIFACT_WATCHES, MAX_WATCH_HANDOFF_ENTRIES, getArtifactState } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { isKeybindingContextName, keybindingStore, loadKeybindingsWithWarnings, startKeybindingsWatcher, resolveKeyEvent, resolveKeyEventByContextPriority, logKeybindingActionFired } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { pauseWorkflowTask } from "../Workflow编排/chunk-va9cgbfs.js";
-import { forgetArtifactCommentMonitors } from "../Artifact发布-渲染/artifact-comment-monitor-intent.js";
+import { MAX_ARTIFACT_WATCHES, MAX_WATCH_HANDOFF_ENTRIES, getArtifactState } from "../制品发布-Artifact/chunk-rr78st95.js";
+import { isKeybindingContextName, keybindingStore, loadKeybindingsWithWarnings, startKeybindingsWatcher, resolveKeyEvent, resolveKeyEventByContextPriority, logKeybindingActionFired } from "../键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
+import { pauseWorkflowTask } from "../编排-Workflow/chunk-va9cgbfs.js";
+import { forgetArtifactCommentMonitors } from "../制品发布-Artifact/artifact-comment-monitor-intent.js";
 import { getProcessStartTimeTicksAsync, killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import {
   EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
@@ -137,12 +137,12 @@ import {
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AppStateContext, AppStateSessionContext, McpConnectionsContext, ActivePluginsContext } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { NotificationProvider } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { NotificationProvider } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { StorageV5ContextProvider, useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { r7, KB, U0e, XB, p4 } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { ga } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { sessionServicesFor } from "../认证-OAuth登录/credentials-store.js";
-import { buildInkKeyEvent, createKeyHandlerRegistry, KeybindingProvider, useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
+import { buildInkKeyEvent, createKeyHandlerRegistry, KeybindingProvider, useKeybindingContext } from "../键位绑定-Keybindings/keybinding-context.js";
 import { SessionProvider, useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { CommandQueueProvider } from "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import { isRemoteTransport } from "../MCP客户端/mcp-discovery-cache.js";
@@ -156,7 +156,7 @@ import { isAwaySummaryEnabled } from "../权限系统/ccr-recap.js";
 import { isTaskAdoptionEnabled, summarizeBackgroundTasks } from "./background-task-inventory.js";
 import { PluginStateStore } from "../插件系统/plugin-state-store.js";
 import { getBlockedServerErrorFields } from "../MCP客户端/mcp-server-state-messages.js";
-import { getWorkflowTranscriptDir } from "../Workflow编排/workflow-snapshots.js";
+import { getWorkflowTranscriptDir } from "../编排-Workflow/workflow-snapshots.js";
 import { getAutoReactWiredSlugs, getBootingAutoReactArmSlugs, disposeSupervisors, MAX_UNATTENDED_REPLIES, drainUnattendedReplies } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import { Qt, re, De, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";

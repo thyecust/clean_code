@@ -14,7 +14,7 @@ import { resolvePathInfo, getFsSurface, logForDebugging } from "../核心工具-
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
 import { isSettingsSourceEnabled } from "./设置-配置.aqbb35ee.js";
-import { applyPermissionUpdate, persistPermissionUpdate, pathInAllowedWorkingPath, pathInWorkingPath } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { applyPermissionUpdate, persistPermissionUpdate, pathInAllowedWorkingPath, pathInWorkingPath } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { isCustomizationDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import { isRestrictedToPluginOnly } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import { getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";

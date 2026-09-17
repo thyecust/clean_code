@@ -38,13 +38,13 @@ import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共
 import { R, ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { COMMAND_NAME_TAG, COMMAND_ARGS_TAG, FORK_SOURCE_TAG, TASK_NOTIFICATION_TAG, TASK_ID_TAG, STATUS_TAG, SUMMARY_TAG, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { COMMAND_NAME_TAG, COMMAND_ARGS_TAG, FORK_SOURCE_TAG, TASK_NOTIFICATION_TAG, TASK_ID_TAG, STATUS_TAG, SUMMARY_TAG, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { GIT_HARDENED_ARGS } from "../Git-Worktree/git-exec-hardening.js";
-import { findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { GIT_HARDENED_ARGS } from "../工作树-Git/git-exec-hardening.js";
+import { findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { isLocalMarketplaceSource, CLAUDE_AI_MARKETPLACE_NAME_PREFIX } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { pathExists } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -58,7 +58,7 @@ import { getArtifactEnvironment, ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, parseArti
 import { provenSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { getSessionAnnouncementState } from "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import { getPluginRegistryFileScope, getPluginsDir, isReservedClaudeAiMarketplaceName, getPluginRegistryState } from "../插件系统/plugin-system-core.js";
-import { stripMemoryTags, getMemoryTagStats, collectMemoryCitationMetrics, stripMemoryTagsFromContentBlocks } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { stripMemoryTags, getMemoryTagStats, collectMemoryCitationMetrics, stripMemoryTagsFromContentBlocks } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import {
   getCommandName,
   dropShadowedSyncedSkills,
@@ -129,30 +129,30 @@ import { getAgentTranscriptPath } from "../Teammates团队/transcript-paths.js";
 import { SKILL_TOOL_NAME } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { findLivePeerBySessionId } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { derivePublishContextFrom, mainObservedArtifactVersion, isArtifactReadOnlySurface } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { applyHearthRelayFields } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
-import { SYNTHETIC_MODEL_NAME, MAX_DECLARED_DIALOG_KINDS, isPlainUserMessage } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { isBridgeRateLimitEventEnabled } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { findLivePeerBySessionId } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
+import { derivePublishContextFrom, mainObservedArtifactVersion, isArtifactReadOnlySurface } from "../制品发布-Artifact/chunk-01ymf0ar.js";
+import { applyHearthRelayFields } from "../通道集成-Slack/通道集成-Slack.wnn25q3j.js";
+import { SYNTHETIC_MODEL_NAME, MAX_DECLARED_DIALOG_KINDS, isPlainUserMessage } from "../远程控制-Bridge/chunk-5ne99rq3.js";
+import { isBridgeRateLimitEventEnabled } from "../远程控制-Bridge/chunk-9estzwf5.js";
 import { LIST_AGENTS_TOOL_NAME } from "../Teammates团队/list-agents-tool-constants.js";
 import { computeOneShotTaskFireTime } from "./scheduled-tasks.js";
-import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
-import { MAX_ARTIFACT_WATCHES, MAX_WATCH_HANDOFF_ENTRIES, getArtifactState } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, isKairosCronEnabled } from "../定时任务-Cron/chunk-mk3zm4ew.js";
+import { MAX_ARTIFACT_WATCHES, MAX_WATCH_HANDOFF_ENTRIES, getArtifactState } from "../制品发布-Artifact/chunk-rr78st95.js";
 import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { syncLiveInFlightSnapshot } from "./chunk-7wsy8vxb.js";
 import { getCronJitterConfig } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
-import { parseArtifactCommentMonitorIntent, readArtifactCommentMonitorRecords, getTornArtifactCommentMonitorStops, applyArtifactCommentMonitorStops } from "../Artifact发布-渲染/artifact-comment-monitor-intent.js";
-import { isArtifactCommentsAvailable, resolveLiveSessionHolder, buildHolderDescriptor, describeHolderWithOthers, getHolderTelemetryFields, stripGoneJobHolderFields, isArtifactAutoReactEnabled } from "../Artifact发布-渲染/chunk-p1dkvpxj.js";
-import { onArmSettled, slugRepliesWiredHere, maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
+import { parseArtifactCommentMonitorIntent, readArtifactCommentMonitorRecords, getTornArtifactCommentMonitorStops, applyArtifactCommentMonitorStops } from "../制品发布-Artifact/artifact-comment-monitor-intent.js";
+import { isArtifactCommentsAvailable, resolveLiveSessionHolder, buildHolderDescriptor, describeHolderWithOthers, getHolderTelemetryFields, stripGoneJobHolderFields, isArtifactAutoReactEnabled } from "../制品发布-Artifact/chunk-p1dkvpxj.js";
+import { onArmSettled, slugRepliesWiredHere, maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../制品发布-Artifact/chunk-kshc4v5t.js";
 import { relinkAdoptedAgentSymlinks } from "./chunk-c7mzes79.js";
 import { collectMinimalAmbientContext, buildSystemInitMessage } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { isVerifiedSlackHumanTurn } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
+import { isVerifiedSlackHumanTurn } from "../远程控制-Bridge/bridge-inbound-origin.js";
 import { uninstallPlugin } from "../插件系统/chunk-q8w2zntw.js";
 import { summarizeBackgroundTasks } from "./background-task-inventory.js";
 import { resolvePreModelSwitchDecision, formatModelSwitchBlockedNotice, toSingleLineDisplayText } from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import { isWebFetchAgentToolUse } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
-import { getEffectiveEffortLevel } from "../Bridge-RemoteControl/bridge-effort-sync.js";
+import { getEffectiveEffortLevel } from "../远程控制-Bridge/bridge-effort-sync.js";
 import { isUserPresent, addUnattendedReplies, takeUnattendedReplies, buildUnattendedRepliesNotice } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import { sanitizeDisplayName, formatModelRestrictedMessage } from "../Teammates团队/chunk-mrfx53ye.js";
 import { resolveSubagentTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
@@ -950,7 +950,7 @@ function Zn(e, t, o) {
           resolveLiveSessionHolder({
             records: await (
               o?.listSessionRecords ??
-              (await import("../跨会话消息(UDS)/chunk-ddtmwhn7.js")).listRegisteredSessionRecords
+              (await import("../跨会话消息-UDS/chunk-ddtmwhn7.js")).listRegisteredSessionRecords
             )(),
             sessionId: me,
             selfPid: process.pid,
@@ -1019,7 +1019,7 @@ function Zn(e, t, o) {
         ) {
           let N = await (
             o?.requestReplyTakeover ??
-            (await import("../Artifact发布-渲染/chunk-54kz7amv.js")).requestReplyTakeover
+            (await import("../制品发布-Artifact/chunk-54kz7amv.js")).requestReplyTakeover
           )({
             holders: [w, ...v],
             holdersIncomplete: T,

@@ -17,7 +17,7 @@ import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { SelectListRow } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { parseCronExpression, formatCronSchedule, createScheduledTask, deleteScheduledTasks, listScheduledTasks } from "./scheduled-tasks.js";

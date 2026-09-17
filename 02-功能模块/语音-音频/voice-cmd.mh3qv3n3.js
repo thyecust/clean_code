@@ -13,7 +13,7 @@ import { Ije } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { isAnthropicAuthEnabled, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { policyDeniedReason } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { getKeybindingChord, isVoiceEnabled, isVoiceModeAvailable } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 var V = 2;
 function L(s) {

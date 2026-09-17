@@ -15,10 +15,10 @@ import { isBgSession, isClaudeAISubscriber } from "../认证-OAuth登录/认证-
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { markLoopStarted } from "../语音-音频/loop-wakeup-scheduler.js";
-import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { PUSH_NOTIFICATION_TOOL_NAME, isAgentPushNotificationEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
-import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { PUSH_NOTIFICATION_TOOL_NAME, isAgentPushNotificationEnabled } from "../远程控制-Bridge/push-notification-tool.js";
+import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled } from "../定时任务-Cron/chunk-mk3zm4ew.js";
 import { registerBundledSkill } from "./bundled-skills.js";
 import { SKILL_TOOL_NAME } from "../权限系统/chunk-fjrcf22x.js";
 import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";

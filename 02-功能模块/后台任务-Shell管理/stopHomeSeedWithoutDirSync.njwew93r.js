@@ -54,10 +54,10 @@ import { parseMcpToolName, buildMcpToolName, TOOL_RULE_VALIDATION, validatePermi
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { INTERNAL_WRITE_SUPPRESSION_MS, markInternalWrite, consumeInternalWrite } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { ARTIFACT_TOOL_NAME, ARTIFACT_FAMILY_TOOL_NAMES } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { patternWithRootFor } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { patternWithRootFor } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { isSettingsToCloudEnabled, isSettingsToCloudEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
-import { WEB_FETCH_TOOL_NAME, getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { WEB_FETCH_TOOL_NAME, getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import {
   MAX_HOME_SEED_FILES,
   MAX_HOME_SEED_FILE_BYTES,
@@ -71,7 +71,7 @@ import {
   isAllowedMemoryPath,
   parseMemoryDestination,
   MAX_ETAG_LENGTH,
-} from "../Memory-CLAUDE.md/chunk-3ehd7vx0.js";
+} from "../记忆-CLAUDE.md/chunk-3ehd7vx0.js";
 import { isLocalHostname, isLoopbackHostname, isPrivateDomain } from "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, CLAUDE_IN_CHROME_FILE_UPLOAD_TOOL_NAMES } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";

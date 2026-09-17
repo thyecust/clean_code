@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybindingChordText } from "./use-keybinding-chord-text.js";
-import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 function ActionKeybindingHint(l) {
   let R = _(5),

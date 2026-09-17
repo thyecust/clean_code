@@ -15,7 +15,7 @@ import "./retention-cleanup.js";
 import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import "../Skills技能/mcp-skill-cache.js";
-import "../跨会话消息(UDS)/peer-file-transfer.js";
+import "../跨会话消息-UDS/peer-file-transfer.js";
 import "../自动更新-安装/native-installer.js";
 import "../自动更新-安装/install-diagnostics.js";
 import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";

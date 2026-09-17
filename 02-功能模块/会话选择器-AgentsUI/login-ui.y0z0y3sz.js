@@ -24,7 +24,7 @@ import {
   buildLoginDoneMessage as Udr,
   call as ngr,
   Login as Kz,
-} from "../Bridge-RemoteControl/login-flow.js";
+} from "../远程控制-Bridge/login-flow.js";
 import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import "../../01-核心基础设施/设置-配置/managed-settings-approval-dialog.js";
@@ -35,11 +35,11 @@ import "../../01-核心基础设施/共享小工具-未细化/feature-flag-versi
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../认证-OAuth登录/oauth-login-completion.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
-import "../Bedrock-Vertex/bedrock-setup-wizard.js";
-import "../Bedrock-Vertex/vertex-setup-wizard.js";
-import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
+import "../模型接入-Bedrock-Vertex/bedrock-setup-wizard.js";
+import "../模型接入-Bedrock-Vertex/vertex-setup-wizard.js";
+import "../向导UI-Wizard/向导UI-Wizard.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
+import "../通知-Notifications/通知-Notifications.g4xng0pg.js";
 import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -47,7 +47,7 @@ import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
 import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
+import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
@@ -56,7 +56,7 @@ import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js"
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
-import "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import "../远程控制-Bridge/remote-control-ui-strings.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../认证-OAuth登录/console-profile-auth.js";
 import "../认证-OAuth登录/oauth-login-flow.js";

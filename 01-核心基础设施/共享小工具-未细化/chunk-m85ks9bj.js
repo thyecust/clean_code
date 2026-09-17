@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { makeOwnPublishesStore } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { makeOwnPublishesStore } from "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import { isWorkshopFile } from "../../02-功能模块/图表-Mermaid/chunk-743atbtj.js";
-import { makePrReviewTargetsStore } from "../../02-功能模块/CodeReview/pr-review-target.js";
+import { makePrReviewTargetsStore } from "../../02-功能模块/代码审查/pr-review-target.js";
 import { makeWhiteboardTelemetryStore } from "./whiteboard-telemetry.js";
 import { uuidSlugFromUrl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { createWorkshopTelemetryStore } from "./workshop-telemetry.js";

@@ -10,7 +10,7 @@
 import { HA } from "./chunk-z7ktsccq.js";
 import { nu } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { awsSdkCoreClientModule } from "../../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
-import { getPropertyProviderModule } from "../../../02-功能模块/Bedrock-Vertex/smithy-property-provider.js";
+import { getPropertyProviderModule } from "../../../02-功能模块/模型接入-Bedrock-Vertex/smithy-property-provider.js";
 import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var k = toESM(HA());
 var ne = toESM(getPropertyProviderModule());
@@ -22,7 +22,7 @@ var L = toESM(awsSdkCoreClientModule()),
   O = (e, r, t) => {
     let o = {
       EcsContainer: async (s) => {
-        let { fromHttp: n } = await import("../../../02-功能模块/Bedrock-Vertex/fromHttp.ethw1dn7.js"),
+        let { fromHttp: n } = await import("../../../02-功能模块/模型接入-Bedrock-Vertex/fromHttp.ethw1dn7.js"),
           { fromContainerMetadata: i } = await import("./ENV_CMDS_RELATIVE_URI.zcs53e9c.js");
         return (
           t?.debug(
@@ -428,14 +428,14 @@ var z = toESM(awsSdkCoreClientModule()),
     typeof e === "object" &&
     typeof e.credential_process === "string",
   X = async (e, r) =>
-    import("../../../02-功能模块/Bedrock-Vertex/fromProcess.3degt91f.js").then(({ fromProcess: t }) =>
+    import("../../../02-功能模块/模型接入-Bedrock-Vertex/fromProcess.3degt91f.js").then(({ fromProcess: t }) =>
       t({ ...e, profile: r })().then((o) =>
         z.setCredentialFeature(o, "CREDENTIALS_PROFILE_PROCESS", "v"),
       ),
     );
 var v = toESM(awsSdkCoreClientModule()),
   Q = async (e, r, t = {}) => {
-    let { fromSSO: o } = await import("../../../02-功能模块/Bedrock-Vertex/fromSSO.hsr720kb.js");
+    let { fromSSO: o } = await import("../../../02-功能模块/模型接入-Bedrock-Vertex/fromSSO.hsr720kb.js");
     return o({
       profile: e,
       logger: t.logger,
@@ -486,7 +486,7 @@ var te = toESM(awsSdkCoreClientModule()),
     typeof e.role_arn === "string" &&
     ["undefined", "string"].indexOf(typeof e.role_session_name) > -1,
   oe = async (e, r) =>
-    import("../../../02-功能模块/Bedrock-Vertex/fromTokenFile.7yzaq8je.js").then(({ fromTokenFile: t }) =>
+    import("../../../02-功能模块/模型接入-Bedrock-Vertex/fromTokenFile.7yzaq8je.js").then(({ fromTokenFile: t }) =>
       t({
         webIdentityTokenFile: e.web_identity_token_file,
         roleArn: e.role_arn,

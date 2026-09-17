@@ -15,10 +15,10 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ra, R, l, A, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, xg } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { markStdoutDrainExternallyClocked } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, truncateMiddle, beforeFirst, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { openFileReadOnlyHardened } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { openFileReadOnlyHardened } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { escapeUntrustedText, escapeNonPrintableAscii, replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -102,7 +102,7 @@ import { isBunStandaloneExecutable, isDockerenvPresent, env as a, antEnv } from 
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { jo, Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { GIT_ENV_VARS_TO_CLEAR, GIT_CONFIG_ENTRY_ENV_RE, NONINTERACTIVE_GIT_ENV, execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
+import { GIT_ENV_VARS_TO_CLEAR, GIT_CONFIG_ENTRY_ENV_RE, NONINTERACTIVE_GIT_ENV, execFileNoThrow, execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import {
   extractManagedSettings,
   isMemoryApiEnvVar,
@@ -148,16 +148,16 @@ import { getAuthPrecedenceSource, describeProfileAuthSource, getAnthropicConfigD
 import { hasCredentialDescriptor, getApiKey } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, ARTIFACT_STUB_URL_PREFIX, parseArtifactUrl, parseStubArtifactUrl } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { DANGEROUS_FILES, DANGEROUS_DIRECTORIES, normalizeCaseForComparison } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { DANGEROUS_FILES, DANGEROUS_DIRECTORIES, normalizeCaseForComparison } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { stripBom, parseYaml, FRONTMATTER_PATTERN } from "../MCP客户端/chunk-3kmsshb6.js";
 import { formatPluginError, UNTRUSTED_PATH_REASON, classifyPathTrust } from "./plugin-system-core.js";
 import { SKILL_TOOL_NAME } from "../权限系统/chunk-fjrcf22x.js";
 import { PLACEHOLDER_CREDENTIAL_VALUE, SSH_PLACEHOLDER_VALUE, PROXY_INJECTED_ENV_VAR_NAMES, BG_WORKER_IDENTITY_ENV_VARS, isArtifactDevBaseUrlVar, subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
-import { readExactBytesFromHandle, WEB_FETCH_TOOL_NAME, getNoFollowOpenFlags, writeFileExclusive } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { readExactBytesFromHandle, WEB_FETCH_TOOL_NAME, getNoFollowOpenFlags, writeFileExclusive } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { ENTER_WORKTREE_TOOL_NAME, EXIT_WORKTREE_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { PLUGIN_CONTENT_SUBDIRS, PLUGIN_CONTENT_MARKERS } from "./chunk-ajtn749s.js";
 import { getWIFTokenCache } from "../认证-OAuth登录/wif-credentials.js";
-import { NON_INHERITED_SESSION_ENV_VARS } from "../Workflow编排/session-env-vars.js";
+import { NON_INHERITED_SESSION_ENV_VARS } from "../编排-Workflow/session-env-vars.js";
 import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import { awaitRemoteSettingsLoaded } from "../../01-核心基础设施/设置-配置/remote-managed-settings.js";
 import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/ca-trust-env-vars.js";
@@ -11500,7 +11500,7 @@ async function Xl(e) {
         let { waitForPolicyLimitsToLoad: J } =
           await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
         await withTimeout(J(), 3000, "policy limits load timed out").catch(() => {});
-        let { isArtifactToolEnabled: K } = await import("../Artifact发布-渲染/chunk-01ymf0ar.js");
+        let { isArtifactToolEnabled: K } = await import("../制品发布-Artifact/chunk-01ymf0ar.js");
         if (((U = K()), !U && E))
           (process.stderr.write(
             F
@@ -11540,9 +11540,9 @@ async function Xl(e) {
 `),
               (N ??= "publish_interrupted"));
         } else {
-          let { publishArtifact: re } = await import("../Artifact发布-渲染/chunk-01ymf0ar.js"),
+          let { publishArtifact: re } = await import("../制品发布-Artifact/chunk-01ymf0ar.js"),
             { makeLocalOwnPublishesStore: V } =
-              await import("../Artifact发布-渲染/chunk-01ymf0ar.js");
+              await import("../制品发布-Artifact/chunk-01ymf0ar.js");
           process.stderr
             .write(`Publishing report to claude.ai (private to you)\u2026
 `);

@@ -20,7 +20,7 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { getHostManagedEnvVarsToStrip } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { jo } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { getExternalPermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
 import { getCarriableEffortLevel } from "../权限系统/chunk-t3b7pg2x.js";
 import { isInsideTmux, isTmuxAvailable, isInITerm2 } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";

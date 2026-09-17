@@ -11,12 +11,12 @@ import { withTimeout } from "../../01-核心基础设施/共享小工具-未细�
 import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { K, qP, Tz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { isBgSession, isDaemonBgWorker, getScreenReaderEnvOverrides } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { createSyntheticAssistantTextMessage } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { createSyntheticAssistantTextMessage } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import { isTeammate } from "./teammate-context.js";
 import { wS } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";

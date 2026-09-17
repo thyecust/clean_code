@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { withDeadline } from "./async-timeout-utils.js";
-import { isSimpleMode } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CREDENTIALS_SUFFIX, getKeychainServiceName, getKeychainAccountName, getKeychainState, primeKeychainCache } from "./keychain-access.js";
 import { execFile } from "child_process";
 var s = 1e4,

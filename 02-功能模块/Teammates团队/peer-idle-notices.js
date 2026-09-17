@@ -14,12 +14,12 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { preclassifyStatusFromMarkers } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCanonicalSocketPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { getMainThreadQueueLength, enqueueCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isUuidString } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
-import { formatRedactedPreview, formatRedactedErrorDetail, classifySendFailure, UdsSendRefusedError } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { formatRedactedPreview, formatRedactedErrorDetail, classifySendFailure, UdsSendRefusedError } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 import { getInboundPolicy, getPeerInboundPolicy, getHeldPeerMessageCount } from "../权限系统/cross-session-inbound-gate.js";
 import { isSaneEpochMs } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { s, se, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";

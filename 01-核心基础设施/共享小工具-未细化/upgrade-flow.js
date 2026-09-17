@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { fetchOAuthProfileWithToken, getClaudeAIOAuthTokens, isClaudeAISubscriber, getOauthAccountInfo } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { withAutoResumeRecheck } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { runPostLoginHooks, loginCompletion, Login } from "../../02-功能模块/Bridge-RemoteControl/login-flow.js";
+import { withAutoResumeRecheck } from "../../02-功能模块/状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
+import { runPostLoginHooks, loginCompletion, Login } from "../../02-功能模块/远程控制-Bridge/login-flow.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { tryOpenUrlInBrowser } from "../核心工具-路径与平台/open-external-url.js";
 function m(t) {

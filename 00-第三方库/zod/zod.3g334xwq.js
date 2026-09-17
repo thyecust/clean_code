@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ie, po } from "../lodash/lodash.207999qb.js";
-import { parseConfigInteger } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 var y;
 (function (e) {

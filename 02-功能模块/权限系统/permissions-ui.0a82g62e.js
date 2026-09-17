@@ -13,7 +13,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -21,7 +21,7 @@ import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chal
 import { BASH_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SETTINGS_SOURCE_ORDER, describeSettingsSourceShort, HOOK_SETTINGS_SOURCE_ORDER, getRelativeSettingsFilePathForSource } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { parseSettingsFile, getSettingsFilePathForSource, getSettingsForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema, AUTO_MODE_TRUSTED_SOURCES } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionRule, formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
@@ -34,7 +34,7 @@ import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import {
   SandboxManager,
@@ -54,15 +54,15 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import { applyPermissionUpdate, persistPermissionUpdate, getAlwaysAllowRules, getAlwaysDenyRules, getAlwaysAskRules } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { MAX_DISPLAY_TEXT_UNITS, MAX_DISPLAY_PAYLOAD_UNITS, prepareDisplayText, toUniqueDisplayLabels, replaceLineBreaks, formatValueListForDisplay } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { applyPermissionUpdate, persistPermissionUpdate, getAlwaysAllowRules, getAlwaysDenyRules, getAlwaysAskRules } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
+import { MAX_DISPLAY_TEXT_UNITS, MAX_DISPLAY_PAYLOAD_UNITS, prepareDisplayText, toUniqueDisplayLabels, replaceLineBreaks, formatValueListForDisplay } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
-import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
+import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
+import "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
 import { qp, ss, a0e, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { useAutoModeDenials } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
@@ -71,7 +71,7 @@ import { Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { AddDirectoryToWorkspaceDialog } from "./add-directory-to-workspace.js";
 import { MAX_AUTO_MODE_ENTRIES, MAX_PERMISSION_RULE_LENGTH, describeAutoModeWriteError, validateAutoModeEntries, stripVariationSelectors } from "./chunk-4wrkmv3h.js";
-import { openFileInEditor, resolveEditorCommand, getEditorDisplayName, editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
+import { openFileInEditor, resolveEditorCommand, getEditorDisplayName, editFileInExternalEditor } from "../../03-入口与运行时/会话UI-REPL/external-editor.js";
 import { formatRuleContentForDisplay, MultilineBorderBox } from "./chunk-0hcqee2w.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -84,10 +84,10 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import "../远程控制-Bridge/remote-control-ui-strings.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import "../Git-Worktree/git-operations.js";
+import "../工作树-Git/git-operations.js";
 import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { s, se, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";

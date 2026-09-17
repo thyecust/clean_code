@@ -27,8 +27,8 @@ import {
   clearUserContextCache,
   clearCommandsCache,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { clearResolveGitDirCache, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { clearRepositoryCaches } from "../Git-Worktree/git-repository-detection.js";
+import { clearResolveGitDirCache, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
+import { clearRepositoryCaches } from "../工作树-Git/git-repository-detection.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { sessionDateCache } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { globalFileIndexCache, resetFileIndexCache } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";

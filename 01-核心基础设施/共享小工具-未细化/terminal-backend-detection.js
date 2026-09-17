@@ -10,7 +10,7 @@
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrow } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
 import { TMUX_BINARY } from "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
 var c = "it2";
 class u {

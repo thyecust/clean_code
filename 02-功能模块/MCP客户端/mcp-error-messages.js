@@ -11,7 +11,7 @@ import { mi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isCliOwnedMcpConfig, isSessionIngressUrl, getMcpServerOrigin } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { sanitizeDisplayTextWithoutRedaction, sanitizeDisplayText, sanitizeMessageText, unwrapCcrProxyUrl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { sanitizeForRelay } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { sanitizeForRelay } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 var f = new Set([
   "INVALID_CONFIG",
   "UNCONFIGURED",

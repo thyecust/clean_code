@@ -11,7 +11,7 @@ import { _ } from "../../react/react.zhnvc798.js";
 import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport, useVirtualScrollViewportSize, useScrollViewport, useClaimScrollBox } from "../../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { getStringWidth } from "../../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { ScrollBox } from "../../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
+import { ScrollBox } from "../../../03-入口与运行时/会话UI-REPL/scroll-box.js";
 import { useCursorDeclaration } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { Box, Text, useFocus, measureElement } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";

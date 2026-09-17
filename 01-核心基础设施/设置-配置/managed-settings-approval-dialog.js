@@ -18,7 +18,7 @@ import { useKeybinding } from "../共享小工具-未细化/keybinding-hooks.js"
 import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useIsMountRecent, useMountTime, useSettleAfterChange, useRefusedInputWindow } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useTerminalSize } from "../共享小工具-未细化/use-terminal-size.js";
-import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
 import { ConfirmPrompt } from "../共享小工具-未细化/confirm-prompt.js";
 import { PermissionDialogFrame } from "../../02-功能模块/权限系统/permission-dialog.js";
 import { InputGuide } from "../共享小工具-未细化/input-guide.js";

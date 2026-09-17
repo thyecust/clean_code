@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { WORKFLOW_TOOL_NAME } from "./chunk-7fcxwgtq.js";
-import { getWorkflowAuthoringReference } from "../../02-功能模块/Workflow编排/workflow-tool-prompt.js";
+import { getWorkflowAuthoringReference } from "../../02-功能模块/编排-Workflow/workflow-tool-prompt.js";
 import { areWorkflowsEnabled } from "./workflow-feature-gates.js";
 import { registerBundledSkill } from "../../02-功能模块/Skills技能/bundled-skills.js";
 import { WORKFLOW_AUTHORING_SKILL_NAME } from "./bundled-skill-names.js";

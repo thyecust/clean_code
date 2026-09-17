@@ -14,10 +14,10 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { resolveRealPath, createPathWithholdClassifier } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
+import { openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
 import {
   createDirSyncRepo,
   buildPackfile,
@@ -31,10 +31,10 @@ import {
   buildFolderSeed,
   resolveDirSyncStoreRoot,
   getStatCachePath,
-} from "../目录同步(dir-sync)/dir-sync-git-store.js";
+} from "../目录同步-dir-sync/dir-sync-git-store.js";
 import "./sync-journal.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { formatBundleHeader } from "../Git-Worktree/dir-sync-git-repository.js";
+import { formatBundleHeader } from "../工作树-Git/dir-sync-git-repository.js";
 import "./chunk-tqwnv5vj.js";
 import "./sync-folder-scan.js";
 import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";

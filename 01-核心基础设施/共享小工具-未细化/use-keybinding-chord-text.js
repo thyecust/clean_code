@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { useKeybindingContext } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-context.js";
-import { formatKeybindingChordText, resolveKeybindingChord, logKeybindingFallbackUsed } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { useKeybindingContext } from "../../02-功能模块/键位绑定-Keybindings/keybinding-context.js";
+import { formatKeybindingChordText, resolveKeybindingChord, logKeybindingFallbackUsed } from "../../02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
 function useKeybindingChordText(e, i, t) {

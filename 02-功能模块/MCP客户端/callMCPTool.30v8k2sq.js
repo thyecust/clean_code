@@ -53,7 +53,7 @@ import { UnauthorizedError, auth, extractWWWAuthenticateParams } from "../认证
 import { Qs, K, he, sn, yB, Mrt, Lx, Nrt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { DEFAULT_IMAGE_LIMITS, getCurrentToolResultsDir } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { DEFAULT_IMAGE_LIMITS, getCurrentToolResultsDir } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { CLAUDE_CODE_URL, persistToolResultToFile, isPersistError } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -90,7 +90,7 @@ import { Ve, yt, R, ge, l, pot } from "../../00-第三方库/@anthropic-ai/sdk/s
 import { describeStorageError, registerCleanup, jsonStringify, sanitizeUrl, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPError, logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { MAX_TIMER_DELAY_MS, buildMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { _xt, jo, yxt, Qie } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
@@ -170,7 +170,7 @@ import { mTt } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai
 import { getMcpSdkGeneration } from "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js";
 import { CCR_TURN_ID_HEADER, getCcrTurnId } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { MCP_TOOL_BASE } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
-import { DesignSessionState, deletePlansForProject, PLAN_INVALIDATING_OPERATIONS, deleteApprovedPlansForProject, deleteVerifiedProjectGrantsForProject, markProjectForRecard } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
+import { DesignSessionState, deletePlansForProject, PLAN_INVALIDATING_OPERATIONS, deleteApprovedPlansForProject, deleteVerifiedProjectGrantsForProject, markProjectForRecard } from "../记忆-CLAUDE.md/chunk-9b6sc1gb.js";
 import { getAdditionalWorkingDirectories } from "../../01-核心基础设施/共享小工具-未细化/additional-working-directories.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
 import { runElicitationHooks, runElicitationResultHooks } from "./mcp-elicitation-handlers.js";
@@ -229,7 +229,7 @@ import "./mcp-elicitation-request-handler.js";
 import { hce } from "../../00-第三方库/_未识别/第三方库-Nodepolyfill/chunk-5y6047zm.js";
 import { logChromeToolsAdded } from "../Hooks钩子/chrome-telemetry-events.js";
 import { collectResourceLinks, stripReservedMetaKeys } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
-import { headersToRecord, createFetchWithInit, StreamableHTTPError, StreamableHTTPClientTransport } from "../MCP传输(stdio-SSE-HTTP)/streamable-http-client-transport.js";
+import { headersToRecord, createFetchWithInit, StreamableHTTPError, StreamableHTTPClientTransport } from "../MCP传输-stdio-SSE-HTTP/streamable-http-client-transport.js";
 import { getDesignAuthResolver, hasFirstPartyDesignAuth, FirstPartyDesignNeedsConsentError, getDesignConsentProvider, setPendingScopeExpansionNotice } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
 import { hasChannelCapability } from "../../01-核心基础设施/共享小工具-未细化/has-channel-capability.js";
 import { resolveProxyFetchOptions } from "../../01-核心基础设施/共享小工具-未细化/proxy-fetch-options.js";
@@ -1408,7 +1408,7 @@ function getMcpToolIdleTimeoutMs(e) {
   let o = e?.timeout !== void 0 && e.timeout >= 1000 ? e.timeout : 0;
   return Math.min(Math.max(r, o, 1000), getMcpToolTimeoutMs(e));
 }
-var eo = () => import.meta.require("../ClaudeinChrome/getClaudeInChromeMCPToolOverrides.9f9wpf77.js"),
+var eo = () => import.meta.require("../浏览器集成-ClaudeinChrome/getClaudeInChromeMCPToolOverrides.9f9wpf77.js"),
   to = () => import.meta.require("../图片-截图-ComputerUse/buildSessionContext.s2wedcct.js"),
   MCP_TREE_ID = "v1",
   oo = 900000,
@@ -2404,12 +2404,12 @@ var connectToServer = lct(
               errorCode: "POLICY_BLOCKED",
             }
           );
-        let { createChromeContext: O } = await import("../ClaudeinChrome/createChromeContext.ny2380rf.js"),
+        let { createChromeContext: O } = await import("../浏览器集成-ClaudeinChrome/createChromeContext.ny2380rf.js"),
           { createChromeSocketClient: N, createClaudeForChromeMcpServer: te } =
             await import("../../01-核心基础设施/共享小工具-未细化/createChromeSocketClient.s4c4rtzf.js"),
           { createLinkedTransportPair: Se } =
             await import("../../01-核心基础设施/共享小工具-未细化/createLinkedTransportPair.qtywxtch.js"),
-          { setChromeBinding: Pe } = await import("../ClaudeinChrome/setChromeBinding.wm1nbm73.js"),
+          { setChromeBinding: Pe } = await import("../浏览器集成-ClaudeinChrome/setChromeBinding.wm1nbm73.js"),
           { registerChromeTabGroupCleanup: we } =
             await import("../权限系统/registerChromeTabGroupCleanup.epxd464c.js"),
           xe = O(t.env, {
