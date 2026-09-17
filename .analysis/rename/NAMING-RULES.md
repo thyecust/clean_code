@@ -4,8 +4,9 @@
 但**字符串字面量、属性名、解构赋值都是原样的**。
 
 任务：把模块**仍混淆的导出名**换成可读名，并给模块文件起描述性文件名。
-示范（仓库里已有的两个提交）：`01-核心基础设施/共享小工具-未细化/build-ref-name.js` 的
-`getBuildRefName`、同目录 `user-agent.js` 的 `getClientUserAgent`。
+示范（仓库里已有的两个提交）：`build-ref-name.js` 的 `getBuildRefName`、`user-agent.js` 的
+`getClientUserAgent`。（两文件当时都在收容所目录「共享小工具-未细化」里；
+2026-09-17 目录重组后分别落在 `01-核心基础设施/核心工具-其他/` 与 `01-核心基础设施/HTTP-网络层/`。）
 
 ## 输入
 
@@ -50,7 +51,7 @@ JSON 数组写到调用方指定的路径：
 4. `newFileName`：kebab-case 描述模块用途（`build-ref-name.js`、`user-agent.js` 这种）。
    - 只有用途**单一且明确**时才给；一个模块塞了多个不相关的东西就**不给**这个字段（只改导出名）。
    - **如果该模块是目录入口文件**（文件名形如 `<所在目录名>.<hash>.js`，
-     例如 `02-功能模块/向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js`），
+     例如 `02-功能模块/向导UI-Wizard/向导UI-Wizard.7xe5wk62.js`），
      **一律不给 `newFileName`** —— 那个名字本身就是目录名。
    - 绝不能起成 `chunk-xxx.js`。
 
