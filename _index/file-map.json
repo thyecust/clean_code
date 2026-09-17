@@ -7216,8 +7216,8 @@
   "kb": 9.9,
   "confidence": "medium"
  },
- "chunk-qdhvxsk2.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js",
+ "user-agent.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/user-agent.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 2.7,

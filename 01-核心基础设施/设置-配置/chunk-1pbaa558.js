@@ -88,7 +88,7 @@ import { Fy } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js
 import { I4t, P4t } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { QGt, I$, XE, hwn } from "../共享小工具-未细化/chunk-6eskfcpn.js";
 import { s, T, se, c, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { va } from "../共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent } from "../共享小工具-未细化/user-agent.js";
 var Te = 5000;
 class Q {
   updates = new Fy();
@@ -836,7 +836,7 @@ async function Pe(e, t = !1, o) {
     let R = et(),
       w = {
         ...d.headers,
-        "User-Agent": va(),
+        "User-Agent": getClientUserAgent(),
         "Cache-Control": "no-cache",
         Pragma: "no-cache",
       };

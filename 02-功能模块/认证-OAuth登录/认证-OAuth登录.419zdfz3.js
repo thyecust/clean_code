@@ -317,7 +317,7 @@ import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/ch
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { JQ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q35gycf9.js";
 import { P, rxe, Hxt, gur } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { va, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { pe, w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Mh = w(function (wh) {
@@ -13966,7 +13966,7 @@ async function Frr(e) {
       ...(p && { Authorization: `Bearer ${p}` }),
       ...(_ && { "x-api-key": _ }),
       "anthropic-version": "2023-06-01",
-      "User-Agent": va(),
+      "User-Agent": getClientUserAgent(),
     };
     for (let [te, re] of Object.entries(E)) {
       for (let ce of Object.keys(C))
@@ -28325,7 +28325,7 @@ class gm {
     if (this.isKilled()) throw Error("firstParty sink killswitch active");
     let r = {
         "Content-Type": "application/json",
-        "User-Agent": va(),
+        "User-Agent": getClientUserAgent(),
         "x-service-name": "claude-code",
       },
       o = Bo() || ke();
@@ -33832,7 +33832,7 @@ async function Kpe(e, t, r) {
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            "User-Agent": va(),
+            "User-Agent": getClientUserAgent(),
           },
           timeout: 1e4,
           maxRedirects: 0,

@@ -40,7 +40,7 @@ import { GDt } from "../远程工具执行/chunk-66axrkvh.js";
 import { XGe } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb9matb3.js";
 import { bF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vthq2yn2.js";
 import { s, T, O, se, v, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { va, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID as me } from "crypto";
 var x = m(() => {
@@ -1394,7 +1394,7 @@ class de {
       "anthropic-version": "2023-06-01",
       "anthropic-client-platform": getClientPlatform(),
       "x-organization-uuid": this.orgUuid,
-      "User-Agent": va(),
+      "User-Agent": getClientUserAgent(),
       ...(e && { "X-Trusted-Device-Token": e }),
     };
   }

@@ -59,7 +59,7 @@ import "../DesignSync/chunk-aycc6z76.js";
 import "../认证-OAuth登录/chunk-5bg9xwqx.js";
 import { mWn } from "../../01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js";
 import { s, O, se, v, c, Qe, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 function N(e) {
   return Buffer.byteLength(e, "utf8");
 }

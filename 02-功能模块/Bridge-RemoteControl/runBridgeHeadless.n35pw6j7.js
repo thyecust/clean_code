@@ -87,7 +87,7 @@ import { e5 } from "./chunk-eg5a0eq0.js";
 import { vRe } from "./chunk-4zd60pbm.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P, Hxt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 import { homedir, hostname } from "os";
@@ -113,7 +113,7 @@ function Xt(e) {
         "anthropic-version": "2023-06-01",
         "anthropic-beta": HCn.header,
         "x-environment-runner-version": e.runnerVersion,
-        "User-Agent": va(),
+        "User-Agent": getClientUserAgent(),
       },
       T = await e.getTrustedDeviceToken?.();
     if (T) _["X-Trusted-Device-Token"] = T;

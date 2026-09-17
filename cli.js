@@ -11,7 +11,7 @@ import { M } from "./01-核心基础设施/共享小工具-未细化/chunk-h62vx
 import { lit as S } from "./01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { kHt, Wxe, Gxe, sdr, xHt } from "./01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js";
 import { getBuildRefName } from "./01-核心基础设施/共享小工具-未细化/build-ref-name.js";
-import { HHt } from "./01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { ensureClientAgentEnv } from "./01-核心基础设施/共享小工具-未细化/user-agent.js";
 function et() {
   try {
     process.cwd();
@@ -28,7 +28,7 @@ function et() {
 }
 process.env.NoDefaultCurrentDirectoryInExePath = "1";
 process.env.COREPACK_ENABLE_AUTO_PIN = "0";
-HHt();
+ensureClientAgentEnv();
 if (process.env.CLAUDE_CODE_REMOTE === "true") {
   let a = process.env.NODE_OPTIONS || "";
   process.env.NODE_OPTIONS = a

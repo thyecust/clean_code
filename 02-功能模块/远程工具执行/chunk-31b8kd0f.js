@@ -63,7 +63,7 @@ import { $Jt } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { Qz } from "../插件系统/chunk-55xj4ev5.js";
 import { sdt } from "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { createWriteStream, fstatSync } from "fs";
 import { PassThrough } from "stream";
 import { URL as ie } from "url";

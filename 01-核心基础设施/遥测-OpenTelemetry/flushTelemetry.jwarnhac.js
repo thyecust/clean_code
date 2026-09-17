@@ -79,7 +79,7 @@ import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry
 import { AP } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { P, rxe } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { va } from "../共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent } from "../共享小工具-未细化/user-agent.js";
 import { pe } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var C = pe(Ls(), 1);
 var le = pe(Mc(), 1),
@@ -1225,7 +1225,7 @@ class Oe {
     }
   }
   postOnce(e, t) {
-    let r = { "Content-Type": "application/json", "User-Agent": va(), ...t },
+    let r = { "Content-Type": "application/json", "User-Agent": getClientUserAgent(), ...t },
       s = mVt({ url: this.endpoint, payload: e, storageV5: this.storageV5 });
     return at.post(this.endpoint, s?.body ?? e, {
       timeout: this.timeout,

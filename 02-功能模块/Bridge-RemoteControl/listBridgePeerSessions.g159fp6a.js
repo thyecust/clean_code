@@ -32,7 +32,7 @@ import "./chunk-jpq2fv3g.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-2skajgkt.js";
 import "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
-import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { randomUUID } from "crypto";
 var A = 5;
 async function listBridgePeerSessions(t, i) {
@@ -52,7 +52,7 @@ async function listBridgePeerSessions(t, i) {
     b = {
       ...C.headers,
       ...(!f && { "x-organization-uuid": x }),
-      "User-Agent": va(),
+      "User-Agent": getClientUserAgent(),
     },
     p = await getTrustedDeviceToken();
   if (p) b["X-Trusted-Device-Token"] = p;
@@ -224,7 +224,7 @@ async function postInterClaudeMessage(t, i, u, w, P, k, x) {
       ...C(v),
       "anthropic-beta": b,
       "x-organization-uuid": S,
-      "User-Agent": va(),
+      "User-Agent": getClientUserAgent(),
     },
     s = await getTrustedDeviceToken();
   if (s) T["X-Trusted-Device-Token"] = s;
