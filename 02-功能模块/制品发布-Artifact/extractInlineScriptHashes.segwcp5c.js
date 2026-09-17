@@ -27,7 +27,7 @@ import {
 } from "./chunk-rr78st95.js";
 import { TAn } from "../../00-第三方库/parse5/chunk-psby6rnv.js";
 import { isSafeExternalUrl } from "./chunk-01ymf0ar.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 var S = new RegExp(`^${DECISION_ID_PATTERN}$`),
   W = "http://www.w3.org/2000/svg",
   _ = "http://www.w3.org/1998/Math/MathML",

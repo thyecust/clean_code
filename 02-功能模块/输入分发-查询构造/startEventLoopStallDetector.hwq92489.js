@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 14 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
+import { getInkInstanceRegistry } from "../多会话视图-Fleet/ink-instance-registry.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { XUn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 var p = 200,
   T = 1000,

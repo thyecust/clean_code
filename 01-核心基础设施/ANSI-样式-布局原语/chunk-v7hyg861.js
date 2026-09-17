@@ -28,16 +28,16 @@ import {
   uiRenderCache,
   turnEvents,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { useTerminalSize } from "../共享小工具-未细化/use-terminal-size.js";
-import { useStoreSelector } from "../共享小工具-未细化/use-store-selector.js";
+import { useTerminalSize } from "../UI组件-TUI/use-terminal-size.js";
+import { useStoreSelector } from "../核心工具-未归类/use-store-selector.js";
 import { hn } from "../UI组件-TUI/chunk-tp42fv8j.js";
-import { StaticFrameContext } from "../共享小工具-未细化/one-shot-render.js";
-import { useForcedExpandedContent } from "../共享小工具-未细化/expanded-content-context.js";
-import { useQueuedMessageContext } from "../共享小工具-未细化/queued-message-context.js";
-import { LinkifiedText } from "../共享小工具-未细化/linkified-text.js";
+import { StaticFrameContext } from "../UI组件-TUI/one-shot-render.js";
+import { useForcedExpandedContent } from "../核心工具-未归类/expanded-content-context.js";
+import { useQueuedMessageContext } from "../核心工具-未归类/queued-message-context.js";
+import { LinkifiedText } from "../UI组件-TUI/linkified-text.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, Ry, De, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { defineExportGetters } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { defineExportGetters } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 var le = 600;
 function Ke(s, p, i) {

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { randomUUID } from "crypto";
 var f = "is not supported in a cloud-hosted session",
   y =

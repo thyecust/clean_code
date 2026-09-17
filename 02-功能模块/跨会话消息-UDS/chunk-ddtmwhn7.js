@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { R, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodePoints, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   hashForTelemetry,
@@ -47,13 +47,13 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isProcessProvablyGone, getProcessStartTokenLinuxSync, isSameProcessAsync, provenSameProcessAsync, getProcessCreationTimeMsAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { ownPidDomain } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { createMessageEnvelope, getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
-import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
-import { MAX_SESSION_RECORD_BYTES, parsePidFromFileName, isSaneEpochMs, toSaneEpochMs, normalizeSessionRecord, isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { ownPidDomain } from "../守护服务-Daemon/chunk-035vf5et.js";
+import { createMessageEnvelope, getBridgeHostState } from "../远程控制-Bridge/bridge-state-containers.js";
+import { getRemoteSessionCompatId } from "../../01-核心基础设施/核心工具-未归类/remote-session-compat-id.js";
+import { MAX_SESSION_RECORD_BYTES, parsePidFromFileName, isSaneEpochMs, toSaneEpochMs, normalizeSessionRecord, isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { dedupe, asStringArray } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe, asStringArray } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function B(e) {
   if (getCurrentPlatform() === "windows") return null;
   let t = q(e);

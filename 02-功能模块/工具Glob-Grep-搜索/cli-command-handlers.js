@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS, SETUP_TOKEN_DEFAULT_EXPIRY_DAYS } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -15,20 +15,20 @@ import { writeToStdout } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { getMaxOutputTokens, isAnthropicAuthEnabled, validateForceLoginMethod } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { getBridgeDoctorInfo } from "../远程控制-Bridge/chunk-9estzwf5.js";
 import { Box, Text, createRoot } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { resolveCappedConfigInteger, MAX_BASH_OUTPUT_CHARS, DEFAULT_BASH_OUTPUT_CHARS, TASK_MAX_OUTPUT_LENGTH_UPPER_LIMIT, DEFAULT_TASK_MAX_OUTPUT_LENGTH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { handleReplAppStateChange, partitionSettingsErrors } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { getInstallationDiagnostics } from "../自动更新-安装/install-diagnostics.js";
-import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
+import { getBaseRenderOptions } from "../../01-核心基础设施/UI组件-TUI/base-render-options.js";
 import { WelcomeBanner } from "../../03-入口与运行时/CLI入口-Commander/welcome-banner.js";
 import { getPolicyLimitsStatus, formatPolicyLimitsStatus } from "../远程控制-Bridge/policy-limits-status.js";
-import { getManagedSettingsStatus, isManagedSettingsFetchInProgress, formatManagedSettingsStatus } from "../../01-核心基础设施/共享小工具-未细化/managed-settings-status.js";
+import { getManagedSettingsStatus, isManagedSettingsFetchInProgress, formatManagedSettingsStatus } from "../../01-核心基础设施/设置-配置/managed-settings-status.js";
 import { getAutoUpdatesChannel } from "../自动更新-安装/auto-updates-channel.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
@@ -196,7 +196,7 @@ async function doctorHandler(c) {
       let {
           waitForPolicyLimitsToLoad: s,
           POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS: h,
-        } = await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
+        } = await import("../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
         { getLastFetchOutcome: w } = await import("../策略限制-PolicyLimits/chunk-8sw91yn5.js"),
         T = !1,
         A = s().then(() => {

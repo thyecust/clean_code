@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { otelApiModule } from "./认证-OAuth登录.419zdfz3.js";
-import { execAsyncModule } from "../../01-核心基础设施/共享小工具-未细化/exec-async-module.js";
-import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { execAsyncModule } from "../../01-核心基础设施/核心工具-其他/exec-async-module.js";
+import { commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var u = commonJS(function (r) {
   Object.defineProperty(r, "__esModule", { value: !0 });
   r.getMachineId = void 0;

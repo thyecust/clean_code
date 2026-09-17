@@ -12,12 +12,12 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { extractErrorDetail } from "../远程控制-Bridge/chunk-x4q0245z.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCACertificates, getMTLSConfig, parseProxyUrl, getUsableProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Bs, a_ } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
-import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
+import { raceWithTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/with-timeout.js";
+import { redactSecrets } from "../../01-核心基础设施/核心工具-日志与脱敏/redact-secrets.js";
 import { decodeTaggedId } from "../远程控制-Bridge/chunk-4zd60pbm.js";
 var RUNNER_VERSION = {
     ISSUES_EXPLAINER:

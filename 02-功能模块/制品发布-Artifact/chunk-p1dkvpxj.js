@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { oo, Xn, bh, LA, Gt, B, K, _B, fae, ke, pa } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { MAX_LEDGER_ARTIFACTS, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { registerCleanup, jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodePoints, truncateToCodeUnits, takeLastCodeUnits, isWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   getArtifactEnvironment,
@@ -36,7 +36,7 @@ import {
   sweepProvenanceMarker,
   DECISION_SURFACE_BRACKETS_RE,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { getArtifactState, asDocument, getAttributeValue } from "./chunk-rr78st95.js";
 import {
   getSmallFastModel,
@@ -140,7 +140,7 @@ import {
   mintStoredPageProbe,
   isWorkshopEnabled,
 } from "./chunk-01ymf0ar.js";
-import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
+import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/核心工具-未归类/max-subagent-spawn-depth.js";
 import { syncRespawnFlag } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import {
   ARTIFACT_ACTION_FAMILIES,
@@ -178,12 +178,12 @@ import {
   isArtifactToolsetEnabled,
 } from "./chunk-qpgskeea.js";
 import { isArtifactReplyYieldEnabled, reclaimSlugsFromDeadHolders } from "./artifact-reply-yield.js";
-import { artifactUrlRule, artifactUrlInputRule } from "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
+import { artifactUrlRule, artifactUrlInputRule } from "../../01-核心基础设施/核心工具-未归类/chunk-d8c3rz29.js";
 import { stopAllArmedArtifactCommentMonitors } from "./artifact-comment-monitor-intent.js";
-import { isUserPresent, recordUnattendedReply } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
-import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
+import { isUserPresent, recordUnattendedReply } from "../../01-核心基础设施/核心工具-未归类/auto-react-state.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js";
 import { s, T, O, se, v, c, Qe, uW, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function Dn() {
   return isArtifactToolsetEnabled() ? ARTIFACT_COMMENTS_TOOL_NAME : ARTIFACT_TOOL_NAME;
 }
@@ -1719,9 +1719,9 @@ async function Qt(e, t, n) {
   }
   if (r.size === 0) return o;
   try {
-    let { nestingBudgetExceeded: i } = await import("../../01-核心基础设施/共享小工具-未细化/RAWTEXT_MODES.4tes4m4a.js");
+    let { nestingBudgetExceeded: i } = await import("../../01-核心基础设施/核心工具-未归类/RAWTEXT_MODES.4tes4m4a.js");
     if (i(e)) return o;
-    let { parse: d } = await import("../../01-核心基础设施/共享小工具-未细化/parse.4jce22r9.js"),
+    let { parse: d } = await import("../../01-核心基础设施/核心工具-未归类/parse.4jce22r9.js"),
       l = asDocument(d(e)),
       p = new Map(),
       S = new Map(),

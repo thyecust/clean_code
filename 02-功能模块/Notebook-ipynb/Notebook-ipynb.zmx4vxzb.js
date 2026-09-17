@@ -15,15 +15,15 @@ import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-�
 import { sanitizeUntrustedText, collapseInvisibleCharacterRuns, replaceLineBreaks } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
+import "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-context.js";
 import { ToolErrorMessage } from "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
-import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { ToolResultRow } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import { TruncatedFilePath } from "../../03-入口与运行时/会话UI-REPL/chunk-vpp75aza.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
+import "../../01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js";
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function M(q) {
   let a = _(23),

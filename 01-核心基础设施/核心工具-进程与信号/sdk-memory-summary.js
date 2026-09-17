@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { registerCleanup } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSimpleMode } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { isSdkEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";

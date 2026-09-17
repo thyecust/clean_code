@@ -7,19 +7,19 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { isValidPathSegment } from "../Teammates团队/storage-keys.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { LITE_READ_BUF_SIZE, validateUuid, readSessionLite } from "./chunk-mkmy4cx2.js";
 import { getSidecarKeyForPath } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getProjectKeyFromDir } from "../Teammates团队/transcript-paths.js";
-import { resolveTranscriptLocator, createTranscriptSource } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { resolveTranscriptLocator, createTranscriptSource } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
 import { sanitizeSessionName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, O, c, it, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
-import { extractUserPromptText } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
+import { extractUserPromptText } from "../../01-核心基础设施/核心工具-未归类/user-prompt-text.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 class AsyncQueue {
   returned;
   queue = [];

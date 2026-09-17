@@ -15,7 +15,7 @@ import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工�
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { xA, lz, Ycr } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { lstat as Bn, realpath as me } from "fs/promises";
 import { resolve, sep as _e } from "path";
 var re = (e) => e === "a" || e === "e" || e === "i" || e === "o" || e === "u",

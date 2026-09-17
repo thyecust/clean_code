@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { oo, parseShortId } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -32,11 +32,11 @@ import {
   collectLocalBridgeSessionIds,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isLocalAgentTask, findNearNameMatches, isMainSessionLocalAgent, loadLivePeerSessions, getBridgeSessionListing } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
 import { readTeamFileAsync } from "./team-file-store.js";
 import { refreshPeerIdentityOwner, loadBridgePeerSessionRows, isBridgeRowsIdentityCurrent, recordBridgeSessionRows, forgetBridgeSessionRows, excludeCloudKnownBridgeRows, isCloudListUnavailable, listCloudPeerSessions } from "../远程控制-Bridge/chunk-1yq098a7.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 async function checkCrossSessionSendPermission({
   tool: e,
   input: i,

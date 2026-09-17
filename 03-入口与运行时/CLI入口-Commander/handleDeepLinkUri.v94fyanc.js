@@ -391,7 +391,7 @@ async function handleDeepLinkUri(r) {
 async function handleUrlSchemeLaunch() {
   if (a.__CFBundleIdentifier !== URL_HANDLER_BUNDLE_ID) return null;
   try {
-    let { waitForUrlEvent: r } = await import("../../01-核心基础设施/共享小工具-未细化/waitForUrlEvent.2gg81sjj.js"),
+    let { waitForUrlEvent: r } = await import("../../02-功能模块/深链接-URL协议/waitForUrlEvent.2gg81sjj.js"),
       t = r(5000);
     if (!t) return null;
     return await handleDeepLinkUri(t);

@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { Ie, Le, Fb } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, Jr, Gw, lNn, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -34,15 +34,15 @@ import {
   getHostAuthEnvVarName,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { PROCESS_WRAPPER_ENV_VAR, FAST_CRASH_WINDOW_MS, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
-import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
+import { resolveWrappedClaudeInvocation } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
 import { Bs, eur } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { readBoundedFile, getVersionForAnalytics, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FOCUS_IN_SEQUENCE, FOCUS_OUT_SEQUENCE } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { readLinuxProcState, sigtermThenKill, reapDetachedRepl, getProcessStartTime, isSameProcess, getProcessStartTimeAsync, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { readSocketTokenFile } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS, removeRestrictedEnvVars, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
+import { readSocketTokenFile } from "../守护服务-Daemon/chunk-035vf5et.js";
+import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS, removeRestrictedEnvVars, removeBgDispatcherPlanEnvVars } from "../守护服务-Daemon/session-env-scrubbing.js";
 import {
   MODEL_ENV_KEYS,
   normalizeCliArgPaths,
@@ -89,13 +89,13 @@ import {
   createFrameDecoder,
 } from "./chunk-djserjj5.js";
 import { areVersionTargetsDifferent, isVersionGreater, satisfiesVersionRequirement, createDecModeTracker, isLowMemory, killPtySocket, pingPtySocket } from "./chunk-gnmy62vg.js";
-import { receiveSpareClaim, bootClaimedSpare } from "../../01-核心基础设施/共享小工具-未细化/spare-session-claim.js";
+import { receiveSpareClaim, bootClaimedSpare } from "../守护服务-Daemon/spare-session-claim.js";
 import { stripEnvironmentFlags } from "../../03-入口与运行时/Headless-SDK模式/cloud-flag-validation.js";
-import { readStreamLines } from "../../01-核心基础设施/共享小工具-未细化/read-stream-lines.js";
-import { fromJobState, ensureJobTmpDir } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { createBackendHandle, createTranscriptSource } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
-import { isExitedProcessState } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
+import { readStreamLines } from "../../01-核心基础设施/核心工具-其他/read-stream-lines.js";
+import { fromJobState, ensureJobTmpDir } from "../守护服务-Daemon/chunk-tpraq69b.js";
+import { createBackendHandle, createTranscriptSource } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
+import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
+import { isExitedProcessState } from "../../01-核心基础设施/核心工具-进程与信号/linux-proc-stat.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { randomBytes as Re } from "crypto";
 import { unlinkSync } from "fs";

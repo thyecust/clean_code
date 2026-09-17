@@ -158,25 +158,34 @@ for (const e of buildEdges(src)) {
 }
 
 // 3.2 `importMetaRequire("./x")`：相对 hub 目录
-const HUB = /(^|\/)(chunk-2c9tjhwd)\.js$/;
-const hubDirs = new Set();
-for (const p of src.keys()) if (HUB.test(p)) hubDirs.add(dirname(p));
-if (hubDirs.size !== 1) warnings.push(`捕获 import.meta.require 的模块有 ${hubDirs.size} 个：${[...hubDirs].map(short).join(", ")}`);
-const defaultHub = [...hubDirs][0];
+//
+// 基准是**捕获 import.meta.require 的那个模块所在的目录**，不是引用方目录
+// （已用实验证实：从别的目录调用，解析到的是 hub 目录里的同名文件）。
+// 注意 `newPath` 只映射**文件**、不映射目录，所以 hub 的新目录要从 hub **文件**反推。
+const HUB_FILE = /(^|\/)(chunk-2c9tjhwd\.js)$/;
+const hubFiles = [];
+for (const p of src.keys()) if (HUB_FILE.test(p)) hubFiles.push(p);
+if (hubFiles.length !== 2) warnings.push(`捕获 import.meta.require 的模块有 ${hubFiles.length} 个：${hubFiles.map(short).join(", ")}`);
+const mainHub = hubFiles.find((p) => p.includes("01-核心基础设施"));
+const newDirOf = (file) => dirname(newPath(file));
 
 const IMPORTER_OF_HUB = /from\s*["']([^"']*chunk-2c9tjhwd\.js)["']/;
 const CALL = /importMetaRequire\(\s*["'](\.[^"']*)["']\s*\)/g;
 let lazyRewrites = 0;
 for (const [f, s] of src) {
-  let hub = defaultHub;
+  let hubFile = mainHub;
   const h = s.match(IMPORTER_OF_HUB);
-  if (h) hub = dirname(normalize(join(dirname(f), h[1])));
+  if (h) hubFile = normalize(join(dirname(f), h[1]));
+  if (!hubFile) continue;
+  const hubDir = dirname(hubFile);
+  const newHubDir = newDirOf(hubFile);
   for (const m of s.matchAll(CALL)) {
     const spec = m[1];
-    const target = normalize(join(hub, spec));
+    const target = normalize(join(hubDir, spec));
     if (!fileMap.has(target)) continue;
     const specStart = m.index + m[0].indexOf(spec);
-    const next = relativeSpec(newPath(hub), newPath(target));
+    let next = relative(newHubDir, newPath(target));
+    if (!next.startsWith(".")) next = "./" + next;
     if (next === spec) continue;
     push(f, { start: specStart, end: specStart + spec.length, text: next });
     lazyRewrites++;

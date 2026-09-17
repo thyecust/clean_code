@@ -10,19 +10,19 @@
 import { runtimeEnvironment, isSemverGreaterThan, isSemverAtLeast, isSemverLessThan, getVersionForAnalytics, getPlatformForAnalytics, initializeGrowthBook, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { R, q0, ge, l, A, Jg, Po, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { writeFileAtomicSync } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { isCancel, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
+import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/HTTP-网络层/external-http.js";
 import { Cs, Vlr } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getProcessCommand } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { isNativeInstallerSymlink, isNpmShimExecutable } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -40,10 +40,10 @@ import {
   shouldSkipVersion,
 } from "./auto-updater.js";
 import { detectInstallType } from "./install-diagnostics.js";
-import { getXdgStateHome, getXdgCacheHome, getClaudeVersionsDir, getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
+import { getXdgStateHome, getXdgCacheHome, getClaudeVersionsDir, getLocalBinDir } from "../../01-核心基础设施/核心工具-路径与平台/user-directories.js";
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { s, T, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var ht = toESM(pg(), 1);
 import { constants } from "fs";
 import {

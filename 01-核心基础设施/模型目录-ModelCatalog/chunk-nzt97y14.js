@@ -1,0 +1,120 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { MODEL_CONFIGS_BY_KEY } from "./模型目录-ModelCatalog.3msq3jt8.js";
+import { DEFAULT_3P_SONNET_KEY, DEFAULT_3P_HAIKU_KEY, firstPartyNameToCanonical } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isProbeWrittenTierDefault } from "../../02-功能模块/模型接入-Bedrock-Vertex/apply-3p-default-fallbacks.js";
+var u = Object.keys(MODEL_CONFIGS_BY_KEY);
+function tierConfig(e) {
+  return {
+    sonnet: {
+      envVarPriority: ["ANTHROPIC_DEFAULT_SONNET_MODEL"],
+      defaultKey: DEFAULT_3P_SONNET_KEY,
+    },
+    opus: { envVarPriority: ["ANTHROPIC_DEFAULT_OPUS_MODEL"], defaultKey: e },
+    haiku: {
+      envVarPriority: [
+        "ANTHROPIC_SMALL_FAST_MODEL",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL",
+      ],
+      defaultKey: DEFAULT_3P_HAIKU_KEY,
+    },
+  };
+}
+function l(e) {
+  if (e.startsWith("sonnet")) return "sonnet";
+  if (e.startsWith("opus")) return "opus";
+  if (e.startsWith("haiku")) return "haiku";
+  return;
+}
+function T(e) {
+  let o = firstPartyNameToCanonical(e);
+  for (let r of u) if (firstPartyNameToCanonical(MODEL_CONFIGS_BY_KEY[r].firstParty) === o) return r;
+  return;
+}
+function upgradeKey(e) {
+  return `${e.fromKey}-to-${e.toKey}`;
+}
+function collectStalePins(e, o) {
+  let r = [];
+  for (let t of Object.keys(e)) {
+    let n = e[t],
+      i,
+      f;
+    for (let c of n.envVarPriority) {
+      let K = process.env[c]?.trim();
+      if (!K) continue;
+      if (
+        (c === "ANTHROPIC_DEFAULT_OPUS_MODEL" && isProbeWrittenTierDefault("opus")) ||
+        (c === "ANTHROPIC_DEFAULT_SONNET_MODEL" && isProbeWrittenTierDefault("sonnet"))
+      )
+        continue;
+      if (o?.(K)) continue;
+      let y = T(K);
+      if (!y || l(y) !== t || y === n.defaultKey) continue;
+      ((i = c), (f = y));
+      break;
+    }
+    if (!i || !f) continue;
+    let s = n.defaultKey,
+      d = u.indexOf(f),
+      p = u.indexOf(s);
+    if (d >= p) continue;
+    r.push({ tier: t, envVar: i, pinnedKey: f, defaultKey: s });
+  }
+  return r;
+}
+function seedEnvDefaultForUserPin(e, o) {
+  let r = e?.trim();
+  if (!r) return;
+  if (a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST) return;
+  let t = T(r);
+  if (!t) return;
+  let n = l(t);
+  if (!n) return;
+  if (n === "haiku") return;
+  let i = o[n];
+  if (getInitialSettings().modelOverrides?.[MODEL_CONFIGS_BY_KEY[i.defaultKey].firstParty]) return;
+  return { tier: n, envVar: i.envVarPriority.at(-1), value: r };
+}
+function collectUnpinnedTiers(e, o) {
+  let r = [];
+  for (let t of Object.keys(e)) {
+    let n = e[t];
+    if (o?.[MODEL_CONFIGS_BY_KEY[n.defaultKey].firstParty]) continue;
+    if (
+      n.envVarPriority.some((f) => {
+        let s = process.env[f]?.trim();
+        if (!s) return !1;
+        let d = T(s);
+        if (!d) return !0;
+        return l(d) === t;
+      })
+    )
+      continue;
+    r.push({
+      tier: t,
+      envVar: n.envVarPriority.at(-1),
+      defaultKey: n.defaultKey,
+    });
+  }
+  return r;
+}
+function predecessorsInTier(e, o) {
+  let r = u.indexOf(e),
+    t = [];
+  for (let n = r - 1; n >= 0; n--) {
+    let i = u[n];
+    if (l(i) === o) t.push(i);
+  }
+  return t;
+}
+export { tierConfig, upgradeKey, collectStalePins, seedEnvDefaultForUserPin, collectUnpinnedTiers, predecessorsInTier };

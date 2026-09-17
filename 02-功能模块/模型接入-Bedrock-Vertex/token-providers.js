@@ -11,9 +11,9 @@ import { Lm } from "../../00-第三方库/@aws-sdk/chunk-w3axq133.js";
 import { fromSso } from "./sso-token-provider.js";
 import { nu } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { lhe } from "../../00-第三方库/@aws-sdk/chunk-zdrvwe5r.js";
-import { awsSdkCoreClientModule } from "../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
+import { awsSdkCoreClientModule } from "../../01-核心基础设施/核心工具-未归类/aws-sdk-core-client.js";
 import { getPropertyProviderModule } from "./smithy-property-provider.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var a = toESM(awsSdkCoreClientModule());
 var c = nu(),
   d = Lm(),

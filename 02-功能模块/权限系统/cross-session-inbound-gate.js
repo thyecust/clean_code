@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { onGrowthBookRefresh, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isSettingsSourceEnabled, CROSS_SESSION_INBOUND_SETTING_KEY } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, getSettingsWithErrors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { PERMISSION_MODES } from "./chunk-e4pfvp7x.js";
-import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
 import { MCP_SEND_MESSAGE_ORIGIN, SLACK_BOT_ORIGIN, enqueueReportingAdmission } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
+import { getBridgeHostState } from "../远程控制-Bridge/bridge-state-containers.js";
 import { formatRedactedPreview } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 function isHarborKiteModeEmitEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_kite_mode_emit", !0);

@@ -12,12 +12,12 @@
 import { jsonStringifyUntraced, jsonParseUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSessionIngressUrl } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { runGuardedFetch } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
+import { runGuardedFetch } from "../../01-核心基础设施/HTTP-网络层/test-egress-guard.js";
 import { getSessionAuthHeaders } from "../认证-OAuth登录/credential-file-descriptors.js";
-import { getTeleportCacheState, revertTeleportCache, logTeleportFallbackOnce, verifyPreAnchorIntact, verifyToolsBaselineIntact } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
-import { resolveProxyFetchOptions } from "../../01-核心基础设施/共享小工具-未细化/proxy-fetch-options.js";
-import { getCcrSessionConfig } from "../../01-核心基础设施/共享小工具-未细化/ccr-session-config.js";
+import { getTeleportCacheState, revertTeleportCache, logTeleportFallbackOnce, verifyPreAnchorIntact, verifyToolsBaselineIntact } from "./chunk-qv8z365a.js";
+import { resolveProxyFetchOptions } from "../../01-核心基础设施/HTTP-网络层/proxy-fetch-options.js";
+import { getCcrSessionConfig } from "../../01-核心基础设施/核心工具-未归类/ccr-session-config.js";
 var P = 60000,
   L = 15000;
 function D() {

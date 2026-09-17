@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { escapeRegExp, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { normalizeDashCharacters, POWERSHELL_COMMAND_ALIASES, PARAMETER_PREFIX_CHARS, isParameterToken, getStatements, isNullRedirectTarget, getCommandSecurityPatterns } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";

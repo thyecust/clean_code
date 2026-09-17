@@ -16,7 +16,7 @@ import { ESCAPE_CHARACTER, BELL_CHARACTER, PARAM_SEPARATOR, CONTROL_INTRODUCER_C
 import { isLocalAddress } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { terminalCapabilities } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 class C {
   hooks = null;
   uiMounted = !1;

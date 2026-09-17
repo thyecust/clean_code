@@ -10,13 +10,13 @@
 import { getThemePalette, mergeThemeOverrides } from "./chunk-jz6b76hr.js";
 import { m4 } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { getThemeStore, getCachedCustomThemes, parseCustomThemeRef, loadCustomThemes, watchCustomThemes } from "./custom-themes.js";
 import { resolveSetting, saveUserIntentSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { resolveSystemTheme, subscribeSystemThemeChange } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
+import { resolveSystemTheme, subscribeSystemThemeChange } from "../../01-核心基础设施/UI组件-TUI/theme-resolution.js";
 import { Qt, re, De, E, V, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 var be = () => De(m4),
   useStdin = be;

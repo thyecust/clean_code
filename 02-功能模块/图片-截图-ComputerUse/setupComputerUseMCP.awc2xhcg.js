@@ -12,7 +12,7 @@
 import { COMPUTER_USE_MCP_SERVER_NAME, DEFAULT_COMPUTER_USE_CAPABILITIES } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { buildMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { buildComputerUseToolDefinitions } from "./computer-use-tool-definitions.js";
-import { getFrozenCoordinateMode } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
+import { getFrozenCoordinateMode } from "./computer-use-config.js";
 function setupComputerUseMCP() {
   let o = buildComputerUseToolDefinitions(DEFAULT_COMPUTER_USE_CAPABILITIES, getFrozenCoordinateMode()).map((e) => buildMcpToolName(COMPUTER_USE_MCP_SERVER_NAME, e.name));
   return {

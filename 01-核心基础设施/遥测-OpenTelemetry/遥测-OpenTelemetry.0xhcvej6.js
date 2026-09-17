@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { bee } from "../../00-第三方库/@opentelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { otelApiModule, otelCoreModule } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { commonJS, importMetaRequire } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS, importMetaRequire } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var ve = commonJS(function (he) {
   Object.defineProperty(he, "__esModule", { value: !0 });
   he.OTLPExporterBase = void 0;

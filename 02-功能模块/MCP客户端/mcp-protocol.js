@@ -31,7 +31,7 @@ import {
 } from "./chunk-tv3jbp8f.js";
 import { $c, Kkt } from "../../00-第三方库/ajv/ajv.2q22bct4.js";
 import { Ykt } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { toESM, commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM, commonJS } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var X = commonJS(function (W) {
   Object.defineProperty(W, "__esModule", { value: !0 });
   W.formatNames = W.fastFormats = W.fullFormats = void 0;

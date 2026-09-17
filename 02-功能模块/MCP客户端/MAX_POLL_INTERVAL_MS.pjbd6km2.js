@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { K, ze, Lx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { le, nt, uv, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -22,11 +22,11 @@ import { CallToolResultSchema, TaskStatusNotificationParamsSchema, GetTaskResult
 import { formatErrorWithCode, formatConnectionError } from "../认证-OAuth登录/url-and-error-redaction.js";
 import { getSessionProjectDir, writeMcpTaskMetadata, deleteMcpTaskMetadata, listMcpTaskMetadata } from "./mcp-task-metadata.js";
 import { enqueuePendingNotification, sanitizeLogValue, buildTaskNotification, MAX_CONTENT_BYTES, persistBinaryContent, formatBinaryContentSavedMessage, MCP_TASK_CANCEL_TIMEOUT_MS, isMcpTasksEnabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getMaxOutputChars, maybeTruncateOutput } from "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
-import { collectResourceLinks } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
-import { formatMcpServerToolLabel } from "../../01-核心基础设施/共享小工具-未细化/mcp-task-record.js";
+import { getMaxOutputChars, maybeTruncateOutput } from "./mcp-output-truncation.js";
+import { collectResourceLinks } from "./mcp-tool-result-fields.js";
+import { formatMcpServerToolLabel } from "./mcp-task-record.js";
 import { createPendingTask } from "../Teammates团队/chunk-mrfx53ye.js";
-import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
+import { asMcpSdkClient } from "./mcp-client-type-casts.js";
 import { shortenMcpTaskId } from "./mcp-task-id.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 var W = 2000,

@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { WORKFLOW_AUTHORING_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { WORKFLOW_AUTHORING_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
 import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
-import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/共享小工具-未细化/max-serialized-array-elements.js";
+import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/核心工具-其他/max-serialized-array-elements.js";
 var s = "",
   r = "'worktree'",
   n = "",

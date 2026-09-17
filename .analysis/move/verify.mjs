@@ -86,21 +86,18 @@ console.log(`[导出面] ${exOk} 个文件导出名不变（变了 ${exBad}）`)
 console.log(`[标识符] 新增未定义标识符 ${freeAdded} 处`);
 
 // ---------- [5] 字节核算 ----------
+//
+// 只核算 **.js**：`snap()` 覆盖的就是 .js，随行资源（.md/.zst/.node）不在其中，
+// 所以资源搬运/复制不体现在这个差值里 —— 它们的落点由 `check-lazy-base.mjs`
+// 的第 [2] 项独立验证（按加载方目录逐个解析）。
 {
   let edited = 0;
   for (const rec of manifest.edits) for (const e of rec.edits) edited += e.text.length - (e.end - e.start);
-  let copied = 0;
-  for (const r of manifest.resources ?? []) {
-    if (!r.copy) continue;
-    const p = join(ROOT, r.to);
-    if (existsSync(p)) copied += statSync(p).size;
-  }
   const sumOf = (m) => Object.values(m).reduce((n, r) => n + r.len, 0);
   const delta = sumOf(after) - sumOf(before);
-  const expect = edited + copied;
-  if (delta !== expect) bad(`字节核算对不上: 实际差 ${delta}，路径改写应带来 ${edited}，资源复制应带来 ${copied}，合计 ${expect}`);
-  else console.log(`[字节]   总字节变化 ${delta} = 路径改写 ${edited} + 资源复制 ${copied}`);
-  console.log(`        当前 ${Object.keys(after).length} 个 .js / ${sumOf(after)} 字节`);
+  if (delta !== edited) bad(`字节核算对不上: .js 总字节差 ${delta}，路径改写应带来 ${edited}`);
+  else console.log(`[字节]   .js 总字节变化 ${delta} = 全部路径字符串的长度差之和`);
+  console.log(`        ${Object.keys(after).length} 个 .js / ${sumOf(after)} 字节 · 随行资源 ${(manifest.resources ?? []).length} 项（由 check-lazy-base 验证落点）`);
 }
 
 console.log(fail ? `\n失败 ${fail} 项` : "\n搬家验证通过");

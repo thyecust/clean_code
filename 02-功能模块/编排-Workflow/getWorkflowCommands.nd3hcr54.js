@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 209 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { areWorkflowsEnabled, shouldSkipWorkflowWarmup } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
+import { areWorkflowsEnabled, shouldSkipWorkflowWarmup } from "./workflow-feature-gates.js";
 import "./workflow-script.js";
-import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";
+import { isWorkflowAuthoringSkillAvailable } from "./is-workflow-authoring-skill-available.js";
 import { getAllWorkflows, clearWorkflowCaches as v1t } from "./workflow-registry.js";
-import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
-import { WORKFLOW_AUTHORING_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import "./bundled-workflows.js";
+import { WORKFLOW_AUTHORING_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
 async function warmWorkflows(o, n) {
   if (shouldSkipWorkflowWarmup()) return;
   await getAllWorkflows(o, n);

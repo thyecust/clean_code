@@ -16,8 +16,8 @@ import { isLocalBashTask, TASK_TYPE_LABELS, isLiveBackgroundTask, isIdleTeammate
 import { parseCronExpression, getNextCronFireDate, formatCronSchedule } from "./scheduled-tasks.js";
 import { getInFlightSnapshot } from "./chunk-7wsy8vxb.js";
 import { formatBackgroundTaskSummary } from "../Teammates团队/background-task-summary.js";
-import { getAutoReactWiredSlugs, getBootingAutoReactArmSlugs, hasArmedAutoReactSupervisor } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { getAutoReactWiredSlugs, getBootingAutoReactArmSlugs, hasArmedAutoReactSupervisor } from "../../01-核心基础设施/核心工具-未归类/auto-react-state.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function isTaskAdoptionEnabled() {
   return !a.CLAUDE_DISABLE_ADOPT;
 }

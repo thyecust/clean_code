@@ -12,7 +12,7 @@
 import "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
 import "../../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js";
 import { DEFAULT_BREAK_THRESHOLD_MINUTES } from "./使用时长-Wellbeing.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import "../../01-核心基础设施/UI组件-TUI/background-text.js";
 import { F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 function E(i) {

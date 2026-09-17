@@ -12,7 +12,7 @@
 import { parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
 import { registerBundledSkill } from "./bundled-skills.js";
 function r() {
-  return import("../../01-核心基础设施/共享小工具-未细化/RUN_EXAMPLE_FILES.gz0wcr9k.js");
+  return import("../../01-核心基础设施/内嵌资源与模块互操作/RUN_EXAMPLE_FILES.gz0wcr9k.js");
 }
 var o =
   "Launch and drive this project's app to see a change working. Use when asked to run, start, or screenshot the app, or to confirm a change works in the real app (not just tests). First looks for a project skill that already covers launching the app; otherwise falls back to built-in patterns per project type (CLI, server, TUI, Electron, browser-driven, library).";

@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { Gt, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { registerCleanup, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getComputerUseSession } from "./computer-use-session.js";
-import { defineStoreField } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
+import { defineStoreField } from "../../01-核心基础设施/文件存储-原子写入/state-store.js";
 var w = ["ELOOP", "ENXIO", "EISDIR"],
   NON_REGULAR_PATH_ERRNOS = new Set(w);
 function isNonRegularPathErrno(e) {

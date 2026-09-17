@@ -9,32 +9,32 @@
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { registerCleanup, registerPreExitFlush, jsonStringify, jsonStringifyUntraced, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getSessionAccessToken, getSessionAuthHeaders } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { recordStartupPhase } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { stripVolatileMessageFields, isAutoModeClassifierDumpEntry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isReplyDegraded } from "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
+import { isReplyDegraded } from "../../01-核心基础设施/核心工具-未归类/reply-degraded-state.js";
 import { setActivityCallback, clearActivityCallback, getMainLoopRefcount } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
-import { SSEParser } from "../../01-核心基础设施/共享小工具-未细化/sse-parser.js";
-import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
+import { SSEParser } from "./sse-parser.js";
+import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/核心工具-其他/drain-response-body.js";
 import { getPendingActionRequestId } from "./chunk-1yq098a7.js";
-import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js";
 import { classifyResponseSource, isNonOriginSource } from "./code-session-api.js";
 import { getTokenExpiry } from "./chunk-4zd60pbm.js";
 import { MAX_TIMER_DELAY_MS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { s, O, se, v, c, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 var Ee = 1000,
   ke = 30000,
   ee = 45000,

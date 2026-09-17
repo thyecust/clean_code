@@ -28,7 +28,7 @@ import {
 } from "../制品发布-Artifact/artifact-prompt-paragraphs.js";
 import { isArtifactToolsetEnabled } from "../制品发布-Artifact/chunk-qpgskeea.js";
 import { artifactSchemaGates, artifactLiveEditPromptGateOpen, artifactLivePathsSchemaOpen, artifactTypesPromptParagraph, artifactTypeCatalogPromptParagraph } from "../制品发布-Artifact/chunk-b6k1z7an.js";
-import { ARTIFACT_DESIGN_SKILL_NAME, ARTIFACT_DIAGRAMMING_SKILL_NAME, WORKSHOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { ARTIFACT_DESIGN_SKILL_NAME, ARTIFACT_DIAGRAMMING_SKILL_NAME, WORKSHOP_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
 var h = null,
   p = null;
 function respell(e, t) {

@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { j, B, g_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../核心工具-路径与平台/chunk-h62vxw7j.js";
 import { shouldForceGatewayLogin, getGlobalConfig, enableConfigs } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getHostSettingsStore } from "./设置-配置.aqbb35ee.js";
 import { awaitMdmSettingsLoaded, runPolicyHelperPass, hasActivePolicyHelper, getBasePolicySettings, getBasePolicySettingsOrigin, getPolicyHelperSourceLoadErrors } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS, ensureKeychainPrefetchCompleted } from "../共享小工具-未细化/keychain-prefetch.js";
+import { KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS, ensureKeychainPrefetchCompleted } from "../../02-功能模块/认证-OAuth登录/keychain-prefetch.js";
 import { applySafeConfigEnvironmentVariables } from "../遥测-OpenTelemetry/settings-env-application.js";
-import { checkVersionPolicy } from "../共享小工具-未细化/version-policy.js";
+import { checkVersionPolicy } from "../核心工具-未归类/version-policy.js";
 class s {
   settingsLoaded = !1;
   helperResult = null;
@@ -43,7 +43,7 @@ async function ensureFastPathSettingsLoaded(t) {
       import("./chunk-b536v45y.js"),
       import("../../02-功能模块/认证-OAuth登录/secure-storage.js"),
       import("./设置-配置.aqbb35ee.js"),
-      import("../共享小工具-未细化/chunk-bgf8jybv.js"),
+      import("../核心工具-未归类/chunk-bgf8jybv.js"),
     ]);
     (await r(e),
       await Promise.all([enableConfigs(e), o(e, getHostSettingsStore())]),
@@ -56,8 +56,8 @@ async function ensureFastPathSettingsLoaded(t) {
         { primeFileDescriptorCredentials: i },
         { primeStoredLoginCopy: a },
       ] = await Promise.all([
-        import("../共享小工具-未细化/credentialsStoreFor.r7prg4pg.js"),
-        import("../共享小工具-未细化/chunk-fpak7ean.js"),
+        import("../核心工具-未归类/credentialsStoreFor.r7prg4pg.js"),
+        import("../../02-功能模块/认证-OAuth登录/chunk-fpak7ean.js"),
         import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
       ]),
       r = o(e);

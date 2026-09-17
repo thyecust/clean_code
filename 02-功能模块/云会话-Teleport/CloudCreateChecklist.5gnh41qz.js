@@ -11,26 +11,26 @@
 // [preload stripped] 原本在此预载 246 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text, useInterval } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useKeybindings } from "../键位绑定-Keybindings/keybinding-hooks.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
+import "../../01-核心基础设施/UI组件-TUI/one-shot-render.js";
 import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
+import "../../01-核心基础设施/核心工具-未归类/expanded-content-context.js";
+import "../../01-核心基础设施/核心工具-未归类/queued-message-context.js";
 import { ChecklistStepRow } from "../../03-入口与运行时/会话UI-REPL/remote-bootstrap-checklist.js";
 import { createRemoteBootstrapState, formatBootstrapStepLabel, getChecklistPhase, buildChecklistStepDisplay, getChecklistHeaderLabel } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
-import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
-import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import "../../01-核心基础设施/UI组件-TUI/progress-bar.js";
+import "../../01-核心基础设施/UI组件-TUI/linkified-text.js";
+import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
+import { ActionKeybindingHint } from "../键位绑定-Keybindings/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
 import { V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function Y() {
   return Date.now();

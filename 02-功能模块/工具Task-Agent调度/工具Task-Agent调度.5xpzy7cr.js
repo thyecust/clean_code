@@ -13,9 +13,9 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getSessionStateStore, runWithAgentContext, getAgentDepth, getWorkflowRunMetadata, getCurrentWorktreeSession, wasAgentSpawnedInWorktree, wasAgentWorktreeRemovedCleanly } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, yt, l, A, Rt, FA, CB } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { hasNetworkPathSpelling, resolveSymlinkAncestrySync, fsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { clampPermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
 import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getParentSessionId } from "../Teammates团队/teammate-context.js";
@@ -95,23 +95,23 @@ import {
   buildDefaultSystemPrompt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getTaskOutputPath } from "../后台任务-Shell管理/task-output.js";
-import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
+import { areBackgroundTasksDisabled } from "../../01-核心基础设施/核心工具-未归类/host-capability-state.js";
 import { isCoordinatorMode } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { scrubRestoredTranscriptMetadata } from "../通道集成-Slack/通道集成-Slack.wnn25q3j.js";
-import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { WORKFLOW_TOOL_NAME } from "../编排-Workflow/chunk-7fcxwgtq.js";
 import { CRON_CREATE_TOOL_NAME } from "../定时任务-Cron/chunk-mk3zm4ew.js";
 import { restoreContentReplacementState } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/核心工具-未归类/chunk-qg9n8r78.js";
 import { stripAbortedTurnMessages, hasPendingUserTurn } from "../后台任务-Shell管理/chunk-531ast3t.js";
 import { isTerminalTaskStatus } from "../Teammates团队/chunk-mrfx53ye.js";
 import { parsePluginIdIgnoringReservedMarketplace } from "../插件系统/chunk-33bdfgmx.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
-import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/send-message-constants.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
 import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "./agent-tool-constants.js";
 import { formatAgentMessage } from "../Teammates团队/chunk-enjekn9t.js";
 import { s, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 var re = "ObserverReport";
 var Ge =
     "Send a report to your report target \u2014 the agent you observe, or the coordinating agent that spawned the worker you observe. The target is resolved from your observer pairing \u2014 there is no recipient to name. Use this only when you have something genuinely useful: a mistake about to compound, a missed constraint, prior art the observed agent should see. The expected steady state is silence \u2014 if nothing warrants action, end your turn without calling this.",

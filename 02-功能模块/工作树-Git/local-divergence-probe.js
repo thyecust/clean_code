@@ -27,8 +27,8 @@ import {
   allUnlessAborted,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isSafePortablePath, openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
-import { computeGitBlobId } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
+import { computeGitBlobId } from "../目录同步-dir-sync/sync-state-schema.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js";
 import { readlink } from "fs/promises";
 import { join as U } from "path";
 import { finished } from "stream/promises";

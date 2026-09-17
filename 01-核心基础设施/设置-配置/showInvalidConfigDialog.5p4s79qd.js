@@ -13,12 +13,12 @@ import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { jsonStringify, writeFileSyncTraced } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text, render } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { getBaseRenderOptions } from "../共享小工具-未细化/base-render-options.js";
+import { getBaseRenderOptions } from "../UI组件-TUI/base-render-options.js";
 import { AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import { Select } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../UI组件-TUI/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 function C(K) {
   let n = _(19),
     { filePath: R, errorDescription: h, onExit: i, onReset: u } = K,

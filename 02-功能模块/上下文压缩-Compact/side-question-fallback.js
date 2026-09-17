@@ -11,11 +11,11 @@ import { getMainLoopModel, getRuntimeMainLoopModel, isThinkingEnabled, createMai
 import { createTaskRegistry, asSystemPrompt, createQueuedNotificationsRegistry, getSystemContext, getUserContext, buildDefaultSystemPrompt, collectExcludedDynamicSections } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { artifactReadObservationIn, makeSetArtifactReadVersion, makeSetArtifactContractTarget, makeGetArtifactContractTarget } from "../制品发布-Artifact/chunk-01ymf0ar.js";
-import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
-import { createArtifactRegistries, createTeammateColorAssigner, EMPTY_PERMISSION_RELAYS } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
-import { markPrResolvedThisSession, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
+import { makeSetWebBrowserSlice } from "../../01-核心基础设施/设置-配置/chunk-hkbpxv9z.js";
+import { createArtifactRegistries, createTeammateColorAssigner, EMPTY_PERMISSION_RELAYS } from "../../01-核心基础设施/核心工具-未归类/chunk-m85ks9bj.js";
+import { markPrResolvedThisSession, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters } from "../../01-核心基础设施/核心工具-未归类/chunk-p11r6cth.js";
 import { createAgentLifecycle } from "../Teammates团队/agent-lifecycle.js";
-import { createFieldAccessor } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
+import { createFieldAccessor } from "../../01-核心基础设施/文件存储-原子写入/state-store.js";
 async function fetchSystemPromptParts({
   session: s,
   tools: f,

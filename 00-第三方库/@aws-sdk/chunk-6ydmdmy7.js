@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { HA } from "./chunk-z7ktsccq.js";
 import { nu } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { awsSdkCoreClientModule } from "../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
+import { awsSdkCoreClientModule } from "../../01-核心基础设施/核心工具-未归类/aws-sdk-core-client.js";
 import { getPropertyProviderModule } from "../../02-功能模块/模型接入-Bedrock-Vertex/smithy-property-provider.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var k = toESM(HA());
 var ne = toESM(getPropertyProviderModule());
 var I = toESM(awsSdkCoreClientModule()),

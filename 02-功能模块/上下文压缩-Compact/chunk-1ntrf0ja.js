@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { clearWorkshopInvokeStart } from "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
-import { getDefaultWebBrowserState } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { clearWorkshopInvokeStart } from "../../01-核心基础设施/遥测-OpenTelemetry/workshop-telemetry.js";
+import { getDefaultWebBrowserState } from "../../01-核心基础设施/设置-配置/chunk-hkbpxv9z.js";
 import {
   EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
   EMPTY_ARTIFACT_DB_READ_CONSENT_SLUGS,
@@ -24,7 +24,7 @@ import {
   EMPTY_ARTIFACT_HANDLERS_WRITE_CONSENT_SLUGS,
   EMPTY_ARTIFACT_HANDLERS_WRITE_HUMAN_CONSENT_SLUGS,
   EMPTY_ARTIFACT_ROOM_JOIN_CONSENT_SLUGS,
-} from "../../01-核心基础设施/共享小工具-未细化/empty-artifact-consent-slugs.js";
+} from "../../01-核心基础设施/核心工具-未归类/empty-artifact-consent-slugs.js";
 import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, O, Uf, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var localJsxDialog = defineDialog({

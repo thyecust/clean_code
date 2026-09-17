@@ -12,11 +12,11 @@
 import { runBackgroundHousekeeping as dQt } from "../插件系统/plugin-autoupdate.js";
 import "../深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
 import "./retention-cleanup.js";
-import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
+import "../后台任务-Shell管理/job-drafts.js";
+import "../../01-核心基础设施/核心工具-其他/chunk-j86cs2ar.js";
 import "../Skills技能/mcp-skill-cache.js";
 import "../跨会话消息-UDS/peer-file-transfer.js";
 import "../自动更新-安装/native-installer.js";
 import "../自动更新-安装/install-diagnostics.js";
-import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import "../../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
 export { dQt as startBackgroundHousekeeping };

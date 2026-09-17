@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { l, W, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { describeStorageError, jsonParse, jsonParseUntraced, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, getTeamsDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { logDirectories, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isTempFileFor, writeFileAtomicWithOptions } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { getPluginsDir } from "../插件系统/plugin-system-core.js";
@@ -40,7 +40,7 @@ import {
   cleanupStaleAgentWorktrees,
   reapJobWorktreeIfSafe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { readJobStateFreshOrNull, readPinnedJobIds, isSettled } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { MASKED_IDS_FILE_NAME, getModelCatalogCacheDir, getFeatureValue_CACHED_MAY_BE_STALE, getMemoryBaseDir, getAutoMemPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
@@ -48,9 +48,9 @@ import { LITE_READ_BUF_SIZE, extractFieldFromFirstEntryStrict, extractFieldFromL
 import { CLOUD_SNAPSHOTS_DIR_NAME, ARCHIVE_SYNC_DIR_NAME, FOLDER_SYNC_DIR_NAME, parseRecordingStampFromFileName, isValidSessionName, TOOL_RESULTS_DIR_NAME } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { isDesktopHostEntrypointValue } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSettingsForSource, getSettings_DEPRECATED, anyAdminPolicyTierGovernsRetention, getPolicySettingsLoadErrors, getSecuritySensitiveSetting, rawSettingsKeyPresence } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { isTainted } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { isTainted } from "../../01-核心基础设施/核心工具-未归类/compliance-taints-store.js";
 import { Cs, hf } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
-import { sweepStaleJobDrafts } from "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
+import { sweepStaleJobDrafts } from "../后台任务-Shell管理/job-drafts.js";
 import {
   MANIFEST_FILE_NAME,
   STAGING_DIR_NAME,
@@ -71,9 +71,9 @@ import { cleanupStaleImageCacheDirs, PUBLISHED_FLOOR_FILE_NAME, getSettingsWithM
 import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
 import { resetPlanFileCacheToUnknown } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { NON_REGULAR_PATH_ERRNOS } from "../图片-截图-ComputerUse/computer-use-lock.js";
-import { RECEIVED_FILES_MAX_AGE_DAYS } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import { RECEIVED_FILES_MAX_AGE_DAYS } from "../../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
 import { peerTransferSpoolDir } from "../跨会话消息-UDS/peer-file-transfer.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import * as A from "fs/promises";
 import { homedir, tmpdir } from "os";

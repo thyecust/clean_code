@@ -16,7 +16,7 @@ import "../../02-功能模块/自动模式-AutoMode/unattended-serving-consent.j
 import "../核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "./fast-mode.js";
 import "../模型目录-ModelCatalog/model-switch.js";
-import "../共享小工具-未细化/propose-goal-feature-gate.js";
+import "../../02-功能模块/目标模式-Goal/propose-goal-feature-gate.js";
 import "../../02-功能模块/Teammates团队/backend-registry.js";
 import "../../02-功能模块/Teammates团队/chunk-88ybhavr.js";
 export {

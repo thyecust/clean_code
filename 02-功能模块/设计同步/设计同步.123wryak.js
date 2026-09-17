@@ -13,8 +13,8 @@ import { getOAuthHeaders, httpClient } from "../认证-OAuth登录/认证-OAuth�
 import { Ve, dt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { DesignSessionState, normalizeRelativePath, isClaudeInstructionPath, isGlobPattern, MAX_PATH_LENGTH, isPathAllowedByPatterns, registerPlan, getPlanById } from "../记忆-CLAUDE.md/chunk-9b6sc1gb.js";
@@ -23,7 +23,7 @@ import { isDesignOauthClientConfigured, isRemoteSession, startDesignBrowserLogin
 import "../认证-OAuth登录/oauth-login-flow.js";
 import { DESIGN_SYNC_TOOL_NAME, DESIGN_SYNC_TOOL_DESCRIPTION, isDesignSyncPolicyAllowed } from "./design-sync-tool-metadata.js";
 import { s, T, O, v, c, Qe, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { constants } from "fs";
 import { open as pe, realpath, stat as he } from "fs/promises";
 import { extname, sep as Z, resolve } from "path";

@@ -11,22 +11,22 @@
 // [preload stripped] 原本在此预载 240 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { PEER_LANE_SUFFIX_VARIANTS, HOST_INJECTED_LANE_SUFFIX_VARIANTS, CROSS_SESSION_OPENER_PREFIXES } from "./chunk-g6nvp9mm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { shouldExpandContent } from "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
+import { shouldExpandContent } from "../../01-核心基础设施/核心工具-未归类/expanded-content-context.js";
 import { sanitizeDisplayName, parsePeerAddress } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
+import "../../01-核心基础设施/核心工具-未归类/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
+import "../../01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import { Markdown } from "../语法高亮-Markdown渲染/markdown-renderer.js";
-import { resolveAgentColor, CollapsedMessagesHint } from "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
-import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
+import { resolveAgentColor, CollapsedMessagesHint } from "../多会话视图-Fleet/chunk-pazpsfq6.js";
+import "../../01-核心基础设施/核心工具-未归类/queued-message-context.js";
 import { TruncatedText } from "../工具UI渲染/chunk-g4k5jjwt.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import { figures } from "./chunk-mrfx53ye.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var g = "</cross-session-message>",
   B = "peer";
 function v(s) {

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Gt, B, K, ze, _B, fae, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { jsonStringify, jsonParseUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { MAX_ARTIFACT_WATCHES, stopArtifactSupervisor, getArtifactState, getArtifactPresence, disposePresenceSlug, retirePresenceSlug, isPresenceDeclined } from "./chunk-rr78st95.js";
@@ -42,7 +42,7 @@ import {
 import { getUserAgent, isActingAsBgJob, sameOwnerAccount, getFeatureValue_CACHED_MAY_BE_STALE, readFreshOauthAccountFromDisk } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isStrictHumanTurn, hasStrictHumanDecider, isUserDrivenTurn } from "../远程控制-Bridge/chunk-5ne99rq3.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import {
   enqueuePendingNotification,
   removeCommandsByFilter,
@@ -144,8 +144,8 @@ import {
   scheduleArtifactAutoReactWake,
 } from "./chunk-p1dkvpxj.js";
 import { resolveOwnProcStart, getArtifactCommentMonitorStorage, ensureArtifactCommentMonitorState, armArtifactCommentMonitor, stopArtifactCommentMonitor, markArtifactCommentMonitorTraveling } from "./artifact-comment-monitor-intent.js";
-import { hasLiveAutoReactSupervision } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
-import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
+import { hasLiveAutoReactSupervision } from "../../01-核心基础设施/核心工具-未归类/auto-react-state.js";
+import { createStore } from "../../01-核心基础设施/文件存储-原子写入/state-store.js";
 import { s, T, O, se, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 class kn {
   working = createStore({ working: !1 });
@@ -3340,7 +3340,7 @@ ${escapeHtmlText(w.detail)}`,
                 let N = isArtifactReplyYieldEnabled() ? registerPendingClaim([r], Date.now()) : void 0;
                 (async () => {
                   let fe = await import("../跨会话消息-UDS/chunk-ddtmwhn7.js"),
-                    An = await import("../../01-核心基础设施/共享小工具-未细化/process-record.js"),
+                    An = await import("../守护服务-Daemon/process-record.js"),
                     AnQ = await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js"),
                     Ke = await resolveLiveSessionHolder({
                       records: await fe.listRegisteredSessionRecords(),

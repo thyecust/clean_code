@@ -10,26 +10,26 @@
 
 // [preload stripped] 原本在此预载 200 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { readBoundedFile, shutdownFirstPartyEventLogging, logFirstPartyEventAsync, initializeFirstPartyEventLogging, initializeGrowthBook, getFeatureValue_CACHED_MAY_BE_STALE, watchGlobalConfigThroughStorage, seedInstallIDs, shutdownDatadog, trackDatadogEvent } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { lit as S, fromEnum, fromNumber, concatSafe } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { lit as S, fromEnum, fromNumber, concatSafe } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { R, ge, l, A, Jr, Po, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonParse, changeWorkingDirectory, redactSecretsFromText, initDefaultDebugLog, getDebugFilePath, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { sigtermThenKill, reapDetachedRepl, procIdentityOf, procIdentityFields, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { isAgentViewDisabled, ensureFleetGateHydrated, isDaemonCliEnabled, isDaemonWorkerRegistryEnabled, isDaemonServiceInstallEnabled, isDaemonServiceRecalled, bgSupervisorNoun, fleetGateRejected } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
-import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
+import { isAgentViewDisabled, ensureFleetGateHydrated, isDaemonCliEnabled, isDaemonWorkerRegistryEnabled, isDaemonServiceInstallEnabled, isDaemonServiceRecalled, bgSupervisorNoun, fleetGateRejected } from "../多会话视图-Fleet/agent-view-feature-gates.js";
+import { pinStorageV5 } from "../../01-核心基础设施/核心工具-未归类/pin-storage-v5.js";
 import { FAST_CRASH_WINDOW_MS, getLauncherArgv, getLauncherConfigError, isLauncherRunnable, getLauncherErrorMessage, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { default as RT } from "../文件监听-Watch/文件监听-Watch.3efypmps.js";
-import { isRunningInstalledBinary, resolveWrappedClaudeInvocation, applyProcessWrapper, findInstalledVersionBinary } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
+import { isRunningInstalledBinary, resolveWrappedClaudeInvocation, applyProcessWrapper, findInstalledVersionBinary } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
 import {
   getDaemonRuntimeDir,
   redactDaemonNonce,
@@ -74,7 +74,7 @@ import "../自动更新-安装/install-diagnostics.js";
 import { lockCurrentVersion } from "../自动更新-安装/native-installer.js";
 import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
 import { runFastPathPolicyHelper } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
-import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import { controlRequest } from "../守护服务-Daemon/chunk-9fpz6abc.js";
 import {
   areVersionTargetsDifferent,
   isNewerBuildTimestamp,
@@ -129,24 +129,24 @@ import {
   writeHostManagedMarker,
   deleteHostManagedMarker,
 } from "./chunk-jfk5mpe1.js";
-import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
+import "../守护服务-Daemon/session-env-scrubbing.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
+import "../../01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import { formatCwdUnavailableMessage, createDefaultSpawnPty, isProviderManagedByHost, BgSessionWorker, spawnSpare, claimSpare, reapOrphanSpares } from "./bg-session-worker.js";
 import { createDaemonAuth, WORKER_KINDS } from "../认证-OAuth登录/daemon-worker-runtime.js";
 import "../权限系统/chunk-3kjwvb3e.js";
 import { getDefaultDaemonConfig, loadDaemonConfig, watchDaemonConfigFile, diffDaemonConfigs } from "../../01-核心基础设施/设置-配置/daemon-config.js";
-import "../../01-核心基础设施/共享小工具-未细化/spare-session-claim.js";
-import "../../01-核心基础设施/共享小工具-未细化/session-ingress-token.js";
-import { writeDaemonStatus, removeDaemonStatus } from "../../01-核心基础设施/共享小工具-未细化/daemon-status.js";
-import { getDaemonJsonPath, getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { PERMANENT_FAILURE_EXIT_CODE, TEMP_FAILURE_EXIT_CODE } from "../../01-核心基础设施/共享小工具-未细化/exit-codes.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import "../守护服务-Daemon/spare-session-claim.js";
+import "../守护服务-Daemon/session-ingress-token.js";
+import { writeDaemonStatus, removeDaemonStatus } from "../守护服务-Daemon/daemon-status.js";
+import { getDaemonJsonPath, getDaemonLogPath } from "../守护服务-Daemon/daemon-paths.js";
+import "../../01-核心基础设施/核心工具-其他/chunk-j86cs2ar.js";
+import "../守护服务-Daemon/chunk-tpraq69b.js";
+import { PERMANENT_FAILURE_EXIT_CODE, TEMP_FAILURE_EXIT_CODE } from "../../01-核心基础设施/核心工具-其他/exit-codes.js";
+import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { spawn as Br } from "child_process";
 import { open as Or, rm as Lr } from "fs/promises";
 import { homedir } from "os";
@@ -2910,9 +2910,9 @@ async function daemonMain(t, e) {
         { primeFastPathCredentials: E },
         { setGrowthBookCredentials: v, setGrowthBookStorageBackend: s },
       ] = await Promise.all([
-        import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
-        import("../../01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js"),
-        import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
+        import("../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
+        import("../认证-OAuth登录/primeFastPathCredentials.eb5w3wem.js"),
+        import("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
       ]),
       C = credentialsStoreFor(D);
     (v(C),

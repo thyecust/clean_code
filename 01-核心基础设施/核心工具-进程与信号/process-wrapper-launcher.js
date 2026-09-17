@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getLocalBinDir } from "../共享小工具-未细化/user-directories.js";
+import { getLocalBinDir } from "../核心工具-路径与平台/user-directories.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { constants, statSync } from "fs";
 import { access, stat as g } from "fs/promises";

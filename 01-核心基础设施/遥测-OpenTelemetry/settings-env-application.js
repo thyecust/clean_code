@@ -32,7 +32,7 @@ import { loadExtraCACerts, clearCACertsCache, loadMTLSClientMaterial, getLoadedM
 import { BG_DISPATCHER_ENV_VARS } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { PROCESS_WRAPPER_ENV_VAR } from "../核心工具-进程与信号/process-wrapper-launcher.js";
 import { setSettingsColorEnv } from "../核心工具-进程与信号/subprocess-env-scrub.js";
-import { isRemoteSettingsEligible } from "../共享小工具-未细化/remote-settings-eligibility.js";
+import { isRemoteSettingsEligible } from "../设置-配置/remote-settings-eligibility.js";
 import { lz } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 var M = new Set([
   "ANTHROPIC_UNIX_SOCKET",

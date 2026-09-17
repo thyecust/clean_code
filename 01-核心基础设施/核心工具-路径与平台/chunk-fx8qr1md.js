@@ -13,12 +13,12 @@ import { R, l, A, W, Nz, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/
 import { startSlowOperationSpan, resolvePathInfo, expandPathAliases, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { findExecutableWindows } from "../共享小工具-未细化/chunk-twnwwsbr.js";
-import { getCwd } from "../共享小工具-未细化/cwd-context.js";
+import { findExecutableWindows } from "../../03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js";
+import { getCwd } from "../核心工具-未归类/cwd-context.js";
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { RENAME_FALLBACK_ERRNOS, renameWithRetry, renameWithRetrySync, isUnsupportedFsOperationError } from "../安全文件系统-FS加固/atomic-file-write.js";
-import { detectFileEncoding } from "../共享小工具-未细化/safe-file-read.js";
-import { createKeyedSerialQueue } from "../共享小工具-未细化/async-serialization.js";
+import { detectFileEncoding } from "../安全文件系统-FS加固/safe-file-read.js";
+import { createKeyedSerialQueue } from "../核心工具-并发与缓存/async-serialization.js";
 import { xA } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { getCurrentPlatform } from "./platform-detection.js";
 import * as x from "path/win32";

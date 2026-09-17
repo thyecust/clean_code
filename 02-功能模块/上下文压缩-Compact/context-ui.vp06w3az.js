@@ -13,8 +13,8 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getPublicModelDisplayName, BASH_TOOL_NAME, READ_TOOL_NAME, GREP_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { CLAUDE_AI_SYNC_LABEL, getSettingsSourceDisplayName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -22,17 +22,17 @@ import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-�
 import { getRemoteTransport, REMOTE_WAIT_STOPPED_MESSAGE, hasRemoteCapability } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { StatusIndicator } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
 import { fl } from "../../01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js";
 import { analyzeContextUsage, sliceFromLastCompactBoundary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { WEB_FETCH_TOOL_NAME } from "../制品发布-Artifact/chunk-01ymf0ar.js";
-import { renderToAnsiText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
+import { renderToAnsiText } from "../../01-核心基础设施/UI组件-TUI/one-shot-render.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
+import { parseThinClientReply } from "../../01-核心基础设施/核心工具-未归类/parse-thin-client-reply.js";
 import { formatContextLimitWarning, formatContextUsageReport } from "./context-usage.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { s, T, O, v, c, qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var To = 15,
   Ae = 1e4,
   Mo = 5,

@@ -15,7 +15,7 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { truncateAtWordBoundary } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { hasCcrSurface } from "../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js";
+import { hasCcrSurface } from "../../01-核心基础设施/核心工具-未归类/chunk-s1hpfa12.js";
 import { stripMemoryTags } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { getLastCacheSafeParams, runForkedAgent, createUserMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function isAwaySummaryEnabled() {

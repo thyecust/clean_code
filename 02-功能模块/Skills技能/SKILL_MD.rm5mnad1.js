@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
-import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { readEmbeddedAssetSync } from "../../01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js";
+import { importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var t = importMetaRequire("./anti-patterns-c1rmzbdk.md");
 var a = importMetaRequire("./choosing-a-form-0b6fjqkn.md");
 var s = importMetaRequire("./color-formula-dc6qvg1m.md");
@@ -19,8 +19,8 @@ var n = "./palette-90f85f6c.md.zst";
 var l = readEmbeddedAssetSync(n, import.meta.dirname);
 var h = importMetaRequire("./SKILL-8zd8x5rj.md");
 var d = (e) => (typeof e === "string" ? e : e.default),
-  v = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.8z5qg1sz.js"),
-  w = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.8tgnzppc.js"),
+  v = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.8z5qg1sz.js"),
+  w = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.8tgnzppc.js"),
   SKILL_MD = h,
   SKILL_FILES = {
     "references/anti-patterns.md": t,

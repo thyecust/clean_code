@@ -13,9 +13,9 @@ import { clearConversation as yrn, hasAgentTaskSurvivingClear as Srn } from "../
 import "../工具WebFetch-WebSearch/clear-session-caches.js";
 import "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import "../上下文压缩-Compact/chunk-1ntrf0ja.js";
-import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
+import "../../01-核心基础设施/核心工具-未归类/session-announcement-state.js";
 import "../Teammates团队/agent-lifecycle.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
-import "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
+import "../../01-核心基础设施/设置-配置/chunk-hkbpxv9z.js";
+import "../目标模式-Goal/goal-proposal-dialog.js";
 import "../权限系统/swarm-permission-poller.js";
 export { yrn as clearConversation, Srn as hasAgentTaskSurvivingClear };

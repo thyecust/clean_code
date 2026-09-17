@@ -12,10 +12,10 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
 import { removeInvisibleChars } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { padEndToWidth, padStartToWidth, buildSkillTableLayout, SkillDoctorStageError, buildSkillDoctorContext, collectSkillUsageData } from "./skill-doctor-data.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function p(r) {
   if (r.length === 0) return chalk.dim("  (no skills loaded)");
   let { cells: s, widths: e } = buildSkillTableLayout(r),

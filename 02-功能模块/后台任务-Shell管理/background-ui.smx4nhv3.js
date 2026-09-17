@@ -25,15 +25,15 @@ import {
 import "./chunk-xmxjyg29.js";
 import "./chunk-jfk5mpe1.js";
 import "./chunk-gnmy62vg.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import "../../01-核心基础设施/核心工具-未归类/use-task-registry.js";
+import "../守护服务-Daemon/chunk-9fpz6abc.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
-import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
+import "../../01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
+import "../../01-核心基础设施/UI组件-TUI/confirm-prompt.js";
+import "../守护服务-Daemon/session-env-scrubbing.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
+import "../守护服务-Daemon/chunk-tpraq69b.js";
 import "./bg-rendezvous-server.js";
 export {
   U0t as BackgroundAndExit,

@@ -11,11 +11,11 @@ import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tur } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
-import { isInsideTmux, getLeaderPaneId, getUserTmuxSocket, isTmuxAvailable } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
+import { isInsideTmux, getLeaderPaneId, getUserTmuxSocket, isTmuxAvailable } from "../终端环境探测-TUI-tmux/terminal-backend-detection.js";
 import { SwarmPaneError, assertNoControlCharacters } from "./team-file-store.js";
 import { SWARM_TMUX_SESSION_NAME, SWARM_TMUX_WINDOW_NAME, TMUX_BINARY, PANE_PLACEHOLDER_COMMAND, getSwarmTmuxSocketName } from "./chunk-enjekn9t.js";
-import { createMutex } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { createMutex } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function h(e) {
   let t = `Failed to create teammate pane: ${e}`,
     a = e.toLowerCase();

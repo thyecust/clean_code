@@ -21,8 +21,8 @@
   "confidence": "high"
  },
  "version-policy.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/version-policy.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/version-policy.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.9,
   "confidence": "low"
@@ -35,16 +35,16 @@
   "confidence": "medium"
  },
  "chunk-02q6xmh3.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-02q6xmh3.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-02q6xmh3.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
  },
  "chunk-035vf5et.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/chunk-035vf5et.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 1.9,
   "confidence": "low"
  },
@@ -63,8 +63,8 @@
   "confidence": "low"
  },
  "syntax-highlight-adapter.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.4,
   "confidence": "low"
@@ -77,9 +77,9 @@
   "confidence": "low"
  },
  "ink-instance-registry.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/ink-instance-registry.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/多会话视图-Fleet/ink-instance-registry.js",
+  "module": "多会话视图 / Fleet",
+  "tier": 2,
   "kb": 1.2,
   "confidence": "low"
  },
@@ -98,15 +98,15 @@
   "confidence": "high"
  },
  "cli-arg-parsing.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/cli-arg-parsing.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "03-入口与运行时/CLI入口-Commander/cli-arg-parsing.js",
+  "module": "CLI 入口 / Commander",
+  "tier": 3,
   "kb": 3.3,
   "confidence": "low"
  },
  "chunk-0d0nn4ae.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-0d0nn4ae.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
@@ -119,37 +119,37 @@
   "confidence": "high"
  },
  "use-store-selector.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/use-store-selector.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/use-store-selector.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
  },
  "remote-environments.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/remote-environments.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/云会话-Teleport/remote-environments.js",
+  "module": "云会话 / Teleport",
+  "tier": 2,
   "kb": 1.8,
   "confidence": "low"
  },
  "git-commit-detection.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/git-commit-detection.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/git-commit-detection.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
  },
  "terminal-backend-detection.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/终端环境探测-TUI-tmux/terminal-backend-detection.js",
+  "module": "终端环境探测 / TUI-tmux",
+  "tier": 2,
   "kb": 2.9,
   "confidence": "low"
  },
  "claude-browser-mcp-server.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/claude-browser-mcp-server.js",
+  "module": "浏览器集成 / ClaudeinChrome",
+  "tier": 2,
   "kb": 1.3,
   "confidence": "low"
  },
@@ -161,22 +161,22 @@
   "confidence": "high"
  },
  "paginated-scan.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/paginated-scan.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/paginated-scan.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
  },
  "remote-callout-dialog.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/云会话-Teleport/remote-callout-dialog.js",
+  "module": "云会话 / Teleport",
+  "tier": 2,
   "kb": 0.9,
   "confidence": "low"
  },
  "c4e-upsell-command-gate.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/c4e-upsell-command-gate.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -189,16 +189,16 @@
   "confidence": "medium"
  },
  "chunk-0mr4qg1r.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/withTimeout.0mr4qg1r.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-并发与缓存/withTimeout.0mr4qg1r.js",
+  "module": "核心工具 · 并发与缓存",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
  },
  "chunk-0mrh424x.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-0mrh424x.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP连接器-Connector/chunk-0mrh424x.js",
+  "module": "MCP 连接器 / Connector",
+  "tier": 2,
   "kb": 1.4,
   "confidence": "low"
  },
@@ -210,15 +210,15 @@
   "confidence": "medium"
  },
  "chunk-0q6rswcd.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/rewind-cmd.0q6rswcd.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/检查点-Rewind/rewind-cmd.0q6rswcd.js",
+  "module": "检查点 / Rewind",
+  "tier": 2,
   "kb": 0.7,
   "confidence": "low"
  },
  "chunk-0qtt3z52.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-0qtt3z52.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-0qtt3z52.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -245,8 +245,8 @@
   "confidence": "high"
  },
  "chunk-0t5jksc8.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/CHANNEL_PERMISSION_METHOD.0t5jksc8.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/CHANNEL_PERMISSION_METHOD.0t5jksc8.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.4,
   "confidence": "low"
@@ -280,22 +280,22 @@
   "confidence": "low"
  },
  "compliance-taints-store.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/compliance-taints-store.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/compliance-taints-store.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.6,
   "confidence": "low"
  },
  "chunk-0z426rj0.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.0z426rj0.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.0z426rj0.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "chunk-0zd1ebnt.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.0zd1ebnt.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.0zd1ebnt.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -322,15 +322,15 @@
   "confidence": "high"
  },
  "chunk-1268b5re.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/WORKSHOP_PAGE_TEMPLATE.1268b5re.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/内嵌资源与模块互操作/WORKSHOP_PAGE_TEMPLATE.1268b5re.js",
+  "module": "内嵌资源与模块互操作",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
  },
  "titled-border-box.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/titled-border-box.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/titled-border-box.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -364,9 +364,9 @@
   "confidence": "medium"
  },
  "workflow-feature-gates.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/编排-Workflow/workflow-feature-gates.js",
+  "module": "编排 / Workflow",
+  "tier": 2,
   "kb": 2.2,
   "confidence": "low"
  },
@@ -378,15 +378,15 @@
   "confidence": "high"
  },
  "goal-proposal-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/goal-proposal-state.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/目标模式-Goal/goal-proposal-state.js",
+  "module": "目标模式 / Goal",
+  "tier": 2,
   "kb": 0.7,
   "confidence": "low"
  },
  "async-serialization.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/async-serialization.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-并发与缓存/async-serialization.js",
+  "module": "核心工具 · 并发与缓存",
   "tier": 1,
   "kb": 1.7,
   "confidence": "low"
@@ -399,22 +399,22 @@
   "confidence": "low"
  },
  "error-reporting-eligibility.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/error-reporting-eligibility.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/反馈-错误上报/error-reporting-eligibility.js",
+  "module": "反馈 / 错误上报",
+  "tier": 2,
   "kb": 3.2,
   "confidence": "low"
  },
  "max-serialized-array-elements.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/max-serialized-array-elements.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/max-serialized-array-elements.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
  },
  "json-file-store.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/json-file-store.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/文件存储-原子写入/json-file-store.js",
+  "module": "文件存储 / 原子写入",
   "tier": 1,
   "kb": 2.2,
   "confidence": "low"
@@ -441,15 +441,15 @@
   "confidence": "medium"
  },
  "keychain-prefetch.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/keychain-prefetch.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/keychain-prefetch.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 2.0,
   "confidence": "low"
  },
  "ccr-session-config.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/ccr-session-config.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/ccr-session-config.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.0,
   "confidence": "low"
@@ -462,30 +462,30 @@
   "confidence": "low"
  },
  "chunk-1d4pc3yc.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/PLAN_TEMPLATE.1d4pc3yc.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/内嵌资源与模块互操作/PLAN_TEMPLATE.1d4pc3yc.js",
+  "module": "内嵌资源与模块互操作",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
  },
  "chunk-1fb6y1wa.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS.1fb6y1wa.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS.1fb6y1wa.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 1.2,
   "confidence": "low"
  },
  "chunk-1fkyc6ha.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.1fkyc6ha.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.1fkyc6ha.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "mcp-client-type-casts.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-client-type-casts.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 0.7,
   "confidence": "low"
  },
@@ -518,8 +518,8 @@
   "confidence": "low"
  },
  "chunk-1kh149yd.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-1kh149yd.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
@@ -532,15 +532,15 @@
   "confidence": "high"
  },
  "chunk-1m91n7yv.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-1m91n7yv.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.1,
   "confidence": "low"
  },
  "boolean-from-string-schema.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/boolean-from-string-schema.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -553,8 +553,8 @@
   "confidence": "low"
  },
  "nondeterminism-check.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/nondeterminism-check.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/nondeterminism-check.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -574,8 +574,8 @@
   "confidence": "medium"
  },
  "chunk-1p3batyk.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.6,
   "confidence": "low"
@@ -588,8 +588,8 @@
   "confidence": "high"
  },
  "authentication-status-box.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/authentication-status-box.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/authentication-status-box.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.4,
   "confidence": "low"
@@ -602,8 +602,8 @@
   "confidence": "medium"
  },
  "frame-url-prefixes.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/frame-url-prefixes.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -630,8 +630,8 @@
   "confidence": "high"
  },
  "chunk-1w1x0pyk.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-1w1x0pyk.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -679,9 +679,9 @@
   "confidence": "low"
  },
  "chunk-203p0p9a.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/远程控制-Bridge/chunk-203p0p9a.js",
+  "module": "远程控制 / Bridge",
+  "tier": 2,
   "kb": 1.5,
   "confidence": "low"
  },
@@ -700,15 +700,15 @@
   "confidence": "medium"
  },
  "mcp-sdk-generation.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-sdk-generation.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 1.6,
   "confidence": "low"
  },
  "chunk-22525f7p.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/设置-配置/chunk-22525f7p.js",
+  "module": "设置 / 配置",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -742,8 +742,8 @@
   "confidence": "high"
  },
  "mdm-policy-paths.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mdm-policy-paths.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/mdm-policy-paths.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -756,8 +756,8 @@
   "confidence": "medium"
  },
  "otel-diag-logger.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/otel-diag-logger.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/otel-diag-logger.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -777,23 +777,23 @@
   "confidence": "medium"
  },
  "theme-resolution.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/theme-resolution.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/theme-resolution.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 2.1,
   "confidence": "low"
  },
  "byte-array-conversion.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/byte-array-conversion.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/byte-array-conversion.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 1.6,
   "confidence": "low"
  },
  "chunk-2a6g0n2c.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/renderWorkflowAuthoringSkillBody.2a6g0n2c.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/编排-Workflow/renderWorkflowAuthoringSkillBody.2a6g0n2c.js",
+  "module": "编排 / Workflow",
+  "tier": 2,
   "kb": 3.8,
   "confidence": "low"
  },
@@ -805,8 +805,8 @@
   "confidence": "low"
  },
  "chunk-2c9tjhwd.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js",
+  "module": "内嵌资源与模块互操作",
   "tier": 1,
   "kb": 1.8,
   "confidence": "low"
@@ -833,16 +833,16 @@
   "confidence": "high"
  },
  "title-with-subtitle.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/title-with-subtitle.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/title-with-subtitle.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
  },
  "chunk-2gg81sjj.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/waitForUrlEvent.2gg81sjj.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/深链接-URL协议/waitForUrlEvent.2gg81sjj.js",
+  "module": "深链接 / URL 协议",
+  "tier": 2,
   "kb": 0.9,
   "confidence": "low"
  },
@@ -903,16 +903,16 @@
   "confidence": "high"
  },
  "chunk-2qggy62y.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/多会话视图-Fleet/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js",
+  "module": "多会话视图 / Fleet",
+  "tier": 2,
   "kb": 3.6,
   "confidence": "low"
  },
  "work-secret.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/work-secret.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/work-secret.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 3.3,
   "confidence": "low"
  },
@@ -987,8 +987,8 @@
   "confidence": "high"
  },
  "chunk-339z9efw.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-339z9efw.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.6,
   "confidence": "low"
@@ -1001,9 +1001,9 @@
   "confidence": "low"
  },
  "device-passthrough-meta.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/设备注册-Cowork/device-passthrough-meta.js",
+  "module": "设备注册 / Cowork",
+  "tier": 2,
   "kb": 1.8,
   "confidence": "low"
  },
@@ -1022,9 +1022,9 @@
   "confidence": "high"
  },
  "stdio-server-transport.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/stdio-server-transport.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP传输-stdio-SSE-HTTP/stdio-server-transport.js",
+  "module": "MCP 传输 / stdio-SSE-HTTP",
+  "tier": 2,
   "kb": 1.9,
   "confidence": "low"
  },
@@ -1036,15 +1036,15 @@
   "confidence": "high"
  },
  "sync-state-schema.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/sync-state-schema.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/目录同步-dir-sync/sync-state-schema.js",
+  "module": "目录同步 / dir-sync",
+  "tier": 2,
   "kb": 3.9,
   "confidence": "low"
  },
  "to-local-file-url.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/to-local-file-url.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/to-local-file-url.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
@@ -1057,9 +1057,9 @@
   "confidence": "high"
  },
  "chunk-39vq3hwn.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/radio-cmd.39vq3hwn.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/斜杠命令-框架/radio-cmd.39vq3hwn.js",
+  "module": "斜杠命令 · 框架",
+  "tier": 2,
   "kb": 1.6,
   "confidence": "low"
  },
@@ -1078,16 +1078,16 @@
   "confidence": "low"
  },
  "chunk-3cmbdjbx.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/design-cmd.3cmbdjbx.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/设计同步/design-cmd.3cmbdjbx.js",
+  "module": "设计同步",
+  "tier": 2,
   "kb": 3.1,
   "confidence": "low"
  },
  "chunk-3cqb8ttd.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/startDeviceRegistration.3cqb8ttd.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/设备注册-Cowork/startDeviceRegistration.3cqb8ttd.js",
+  "module": "设备注册 / Cowork",
+  "tier": 2,
   "kb": 3.9,
   "confidence": "low"
  },
@@ -1113,8 +1113,8 @@
   "confidence": "low"
  },
  "lazy-event-emitters.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-并发与缓存/lazy-event-emitters.js",
+  "module": "核心工具 · 并发与缓存",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -1141,8 +1141,8 @@
   "confidence": "high"
  },
  "chunk-3hb68836.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/initializeAnalyticsSink.3hb68836.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/initializeAnalyticsSink.3hb68836.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 2.9,
   "confidence": "low"
@@ -1162,8 +1162,8 @@
   "confidence": "low"
  },
  "websocket-subprotocols.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/websocket-subprotocols.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -1204,8 +1204,8 @@
   "confidence": "high"
  },
  "chunk-3ng6714h.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/parseGitHubRepository.3ng6714h.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/parseGitHubRepository.3ng6714h.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.3,
   "confidence": "low"
@@ -1246,8 +1246,8 @@
   "confidence": "high"
  },
  "private-host-detection.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/private-host-detection.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/private-host-detection.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 2.9,
   "confidence": "low"
@@ -1281,22 +1281,22 @@
   "confidence": "medium"
  },
  "chunk-41d1vrrp.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/getStdoutDrainBudgetMs.41d1vrrp.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/getStdoutDrainBudgetMs.41d1vrrp.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
  },
  "auto-react-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/auto-react-state.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/auto-react-state.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.2,
   "confidence": "low"
  },
  "coo-context-properties.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/coo-context-properties.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/coo-context-properties.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -1323,8 +1323,8 @@
   "confidence": "medium"
  },
  "chunk-493670wv.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-493670wv.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/chunk-493670wv.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 2.4,
   "confidence": "low"
@@ -1337,22 +1337,22 @@
   "confidence": "medium"
  },
  "skill-usage-by-plugin.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/Skills技能/skill-usage-by-plugin.js",
+  "module": "Skills 技能",
+  "tier": 2,
   "kb": 1.7,
   "confidence": "low"
  },
  "has-channel-capability.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/has-channel-capability.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/通道集成-Slack/has-channel-capability.js",
+  "module": "通道集成 / Slack",
+  "tier": 2,
   "kb": 0.7,
   "confidence": "low"
  },
  "virtual-scroll-viewport-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-state.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -1365,8 +1365,8 @@
   "confidence": "high"
  },
  "chunk-4f55jpqh.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -1379,8 +1379,8 @@
   "confidence": "medium"
  },
  "chunk-4jce22r9.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/parse.4jce22r9.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/parse.4jce22r9.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -1414,8 +1414,8 @@
   "confidence": "high"
  },
  "chunk-4n2kvc7t.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/getBootstrapEntry.4n2kvc7t.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/getBootstrapEntry.4n2kvc7t.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -1428,9 +1428,9 @@
   "confidence": "medium"
  },
  "computer-use-config.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/computer-use-config.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/图片-截图-ComputerUse/computer-use-config.js",
+  "module": "图片 / 截图 / Computer Use",
+  "tier": 2,
   "kb": 1.4,
   "confidence": "low"
  },
@@ -1449,8 +1449,8 @@
   "confidence": "low"
  },
  "approve-api-key.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/approve-api-key.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/approve-api-key.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.1,
   "confidence": "low"
@@ -1463,16 +1463,16 @@
   "confidence": "low"
  },
  "chunk-4tes4m4a.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/RAWTEXT_MODES.4tes4m4a.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/RAWTEXT_MODES.4tes4m4a.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "alt-screen-container.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/alt-screen-container.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/多会话视图-Fleet/alt-screen-container.js",
+  "module": "多会话视图 / Fleet",
+  "tier": 2,
   "kb": 2.4,
   "confidence": "low"
  },
@@ -1505,8 +1505,8 @@
   "confidence": "high"
  },
  "async-timeout-utils.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/async-timeout-utils.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js",
+  "module": "核心工具 · 并发与缓存",
   "tier": 1,
   "kb": 2.3,
   "confidence": "low"
@@ -1519,8 +1519,8 @@
   "confidence": "medium"
  },
  "chunk-52kaw3c1.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-52kaw3c1.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
@@ -1575,8 +1575,8 @@
   "confidence": "low"
  },
  "summarize-tool-input.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/summarize-tool-input.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/summarize-tool-input.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -1596,9 +1596,9 @@
   "confidence": "low"
  },
  "chunk-57d41trc.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-57d41trc.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/用量额度-限额/chunk-57d41trc.js",
+  "module": "用量额度 / 限额",
+  "tier": 2,
   "kb": 0.9,
   "confidence": "low"
  },
@@ -1701,16 +1701,16 @@
   "confidence": "medium"
  },
  "chunk-5jmzdjnv.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/MCP_TASK.5jmzdjnv.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/MCP_TASK.5jmzdjnv.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 2.2,
   "confidence": "low"
  },
  "plugin-eval-quickref-asset.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/plugin-eval-quickref-asset.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/插件系统/plugin-eval-quickref-asset.js",
+  "module": "插件系统",
+  "tier": 2,
   "kb": 0.7,
   "confidence": "low"
  },
@@ -1722,8 +1722,8 @@
   "confidence": "high"
  },
  "theme-color.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/theme-color.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/theme-color.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
@@ -1785,9 +1785,9 @@
   "confidence": "high"
  },
  "job-drafts.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/job-drafts.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/后台任务-Shell管理/job-drafts.js",
+  "module": "后台任务 / Shell 管理",
+  "tier": 2,
   "kb": 3.2,
   "confidence": "low"
  },
@@ -1827,8 +1827,8 @@
   "confidence": "high"
  },
  "storage-v5-env-pin.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/storage-v5-env-pin.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/storage-v5-env-pin.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.7,
   "confidence": "low"
@@ -1841,8 +1841,8 @@
   "confidence": "high"
  },
  "monitor-tool-name.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/monitor-tool-name.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/monitor-tool-name.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
@@ -1939,8 +1939,8 @@
   "confidence": "low"
  },
  "chunk-64dfk6kr.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/initializeErrorLogSink.64dfk6kr.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/initializeErrorLogSink.64dfk6kr.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 3.1,
   "confidence": "low"
@@ -1953,8 +1953,8 @@
   "confidence": "high"
  },
  "chunk-66rbt254.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.66rbt254.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.66rbt254.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -1981,9 +1981,9 @@
   "confidence": "low"
  },
  "chunk-692wgjse.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/stickers-cmd.692wgjse.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/斜杠命令-框架/stickers-cmd.692wgjse.js",
+  "module": "斜杠命令 · 框架",
+  "tier": 2,
   "kb": 1.6,
   "confidence": "low"
  },
@@ -2009,29 +2009,29 @@
   "confidence": "low"
  },
  "chunk-6dk85bs6.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-6dk85bs6.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.9,
   "confidence": "low"
  },
  "init-sinks.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/init-sinks.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/init-sinks.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "remote-settings-eligibility.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/remote-settings-eligibility.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/设置-配置/remote-settings-eligibility.js",
+  "module": "设置 / 配置",
   "tier": 1,
   "kb": 2.8,
   "confidence": "low"
  },
  "exit-commit-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/exit-commit-state.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/exit-commit-state.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -2051,16 +2051,16 @@
   "confidence": "high"
  },
  "goal-proposal-dialog.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/目标模式-Goal/goal-proposal-dialog.js",
+  "module": "目标模式 / Goal",
+  "tier": 2,
   "kb": 0.9,
   "confidence": "low"
  },
  "chunk-6kad94y1.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-6kad94y1.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/反馈-错误上报/chunk-6kad94y1.js",
+  "module": "反馈 / 错误上报",
+  "tier": 2,
   "kb": 3.6,
   "confidence": "low"
  },
@@ -2086,9 +2086,9 @@
   "confidence": "low"
  },
  "chunk-6nr84z8c.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/多会话视图-Fleet/chunk-6nr84z8c.js",
+  "module": "多会话视图 / Fleet",
+  "tier": 2,
   "kb": 2.3,
   "confidence": "low"
  },
@@ -2114,8 +2114,8 @@
   "confidence": "high"
  },
  "is-record.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/is-record.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/is-record.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -2135,8 +2135,8 @@
   "confidence": "high"
  },
  "url-parser.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/url-parser.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-字符串与文本/url-parser.js",
+  "module": "核心工具 · 字符串与文本",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -2156,9 +2156,9 @@
   "confidence": "medium"
  },
  "agent-view-feature-gates.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/多会话视图-Fleet/agent-view-feature-gates.js",
+  "module": "多会话视图 / Fleet",
+  "tier": 2,
   "kb": 2.4,
   "confidence": "low"
  },
@@ -2170,8 +2170,8 @@
   "confidence": "low"
  },
  "plist-parser.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/plist-parser.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/plist-parser.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.9,
   "confidence": "low"
@@ -2191,9 +2191,9 @@
   "confidence": "high"
  },
  "spare-session-claim.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/spare-session-claim.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/spare-session-claim.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 3.4,
   "confidence": "low"
  },
@@ -2233,9 +2233,9 @@
   "confidence": "low"
  },
  "upgrade-flow.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/upgrade-flow.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/账号-订阅/upgrade-flow.js",
+  "module": "账号 / 订阅",
+  "tier": 2,
   "kb": 2.5,
   "confidence": "low"
  },
@@ -2268,8 +2268,8 @@
   "confidence": "low"
  },
  "lazy-value.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/lazy-value.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-并发与缓存/lazy-value.js",
+  "module": "核心工具 · 并发与缓存",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -2282,8 +2282,8 @@
   "confidence": "medium"
  },
  "chunk-7axvc6rn.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js",
+  "module": "核心工具 · 字符串与文本",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -2296,8 +2296,8 @@
   "confidence": "high"
  },
  "diagnostics-log.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/diagnostics-log.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js",
+  "module": "核心工具 · 日志与脱敏",
   "tier": 1,
   "kb": 2.2,
   "confidence": "low"
@@ -2310,30 +2310,30 @@
   "confidence": "high"
  },
  "claude-launcher-invocation.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js",
+  "module": "CLI 入口 / Commander",
+  "tier": 3,
   "kb": 2.1,
   "confidence": "low"
  },
  "action-keybinding-hint.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/键位绑定-Keybindings/action-keybinding-hint.js",
+  "module": "键位绑定 / Keybindings",
+  "tier": 2,
   "kb": 1.2,
   "confidence": "low"
  },
  "virtual-scroll-viewport-context.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-context.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "chunk-7fcxwgtq.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/编排-Workflow/chunk-7fcxwgtq.js",
+  "module": "编排 / Workflow",
+  "tier": 2,
   "kb": 0.6,
   "confidence": "low"
  },
@@ -2345,8 +2345,8 @@
   "confidence": "high"
  },
  "chunk-7gtjb5bg.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/fromIni.7gtjb5bg.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -2366,8 +2366,8 @@
   "confidence": "high"
  },
  "chunk-7jfz2w01.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-7jfz2w01.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-7jfz2w01.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
@@ -2394,8 +2394,8 @@
   "confidence": "low"
  },
  "tool-use-message-renderers.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/tool-use-message-renderers.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 2.6,
   "confidence": "low"
@@ -2422,8 +2422,8 @@
   "confidence": "low"
  },
  "parse-positive-integer.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/parse-positive-integer.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/parse-positive-integer.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -2450,29 +2450,29 @@
   "confidence": "medium"
  },
  "auth-error-predicates.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/auth-error-predicates.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/auth-error-predicates.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 1.2,
   "confidence": "low"
  },
  "plugin-skill-tool-names.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/plugin-skill-tool-names.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/插件系统/plugin-skill-tool-names.js",
+  "module": "插件系统",
+  "tier": 2,
   "kb": 0.8,
   "confidence": "low"
  },
  "chunk-7wm8t84g.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/chunk-7wm8t84g.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 3.1,
   "confidence": "low"
  },
  "fd-real-path.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/fd-real-path.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/fd-real-path.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -2492,8 +2492,8 @@
   "confidence": "high"
  },
  "host-claim-registry.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/host-claim-registry.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/host-claim-registry.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
@@ -2569,8 +2569,8 @@
   "confidence": "low"
  },
  "tslib-helpers.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/tslib-helpers.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/tslib-helpers.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -2597,15 +2597,15 @@
   "confidence": "high"
  },
  "standalone-security-dialog.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/standalone-security-dialog.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.0,
   "confidence": "low"
  },
  "open-flags.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/open-flags.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/open-flags.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -2618,8 +2618,8 @@
   "confidence": "medium"
  },
  "webfetch-tool-messages.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/webfetch-tool-messages.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.8,
   "confidence": "low"
@@ -2688,9 +2688,9 @@
   "confidence": "high"
  },
  "chunk-8jcv253h.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/isListAuthError.8jcv253h.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/isListAuthError.8jcv253h.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 0.8,
   "confidence": "low"
  },
@@ -2709,8 +2709,8 @@
   "confidence": "high"
  },
  "chunk-8qbxq1pk.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/create.8qbxq1pk.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/create.8qbxq1pk.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -2723,15 +2723,15 @@
   "confidence": "high"
  },
  "chunk-8qkrh8yt.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/readThemesFromPathAsync.8qkrh8yt.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/readThemesFromPathAsync.8qkrh8yt.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.8,
   "confidence": "low"
  },
  "chunk-8r3h1dwe.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-8r3h1dwe.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.9,
   "confidence": "low"
@@ -2758,8 +2758,8 @@
   "confidence": "medium"
  },
  "expanded-content-context.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/expanded-content-context.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/expanded-content-context.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -2772,15 +2772,15 @@
   "confidence": "high"
  },
  "chunk-8tgnzppc.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.8tgnzppc.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.8tgnzppc.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "bash-spawn-failure-detail.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/bash-spawn-failure-detail.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/bash-spawn-failure-detail.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -2793,8 +2793,8 @@
   "confidence": "low"
  },
  "chunk-8z5qg1sz.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.8z5qg1sz.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.8z5qg1sz.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -2828,8 +2828,8 @@
   "confidence": "medium"
  },
  "chunk-93smkgn7.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/SKILL_COMPOSED_MD.93smkgn7.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/内嵌资源与模块互操作/SKILL_COMPOSED_MD.93smkgn7.js",
+  "module": "内嵌资源与模块互操作",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
@@ -2842,30 +2842,30 @@
   "confidence": "low"
  },
  "divider.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/divider.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/divider.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 2.8,
   "confidence": "low"
  },
  "proxy-fetch-options.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/proxy-fetch-options.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/HTTP-网络层/proxy-fetch-options.js",
+  "module": "HTTP / 网络层",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
  },
  "confirm-prompt.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/confirm-prompt.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/confirm-prompt.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 2.8,
   "confidence": "low"
  },
  "chunk-97crm80y.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/目录同步-dir-sync/chunk-97crm80y.js",
+  "module": "目录同步 / dir-sync",
+  "tier": 2,
   "kb": 2.4,
   "confidence": "low"
  },
@@ -2898,8 +2898,8 @@
   "confidence": "medium"
  },
  "chunk-9bwp2jqb.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 4.0,
   "confidence": "low"
@@ -2947,9 +2947,9 @@
   "confidence": "high"
  },
  "chunk-9fpz6abc.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/chunk-9fpz6abc.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 3.9,
   "confidence": "low"
  },
@@ -2961,9 +2961,9 @@
   "confidence": "high"
  },
  "chunk-9g3yj4km.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-9g3yj4km.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP连接器-Connector/chunk-9g3yj4km.js",
+  "module": "MCP 连接器 / Connector",
+  "tier": 2,
   "kb": 1.5,
   "confidence": "low"
  },
@@ -2982,8 +2982,8 @@
   "confidence": "high"
  },
  "one-shot-render.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/one-shot-render.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/one-shot-render.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 2.1,
   "confidence": "low"
@@ -3010,8 +3010,8 @@
   "confidence": "low"
  },
  "exec-async-module.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/exec-async-module.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/exec-async-module.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -3031,8 +3031,8 @@
   "confidence": "low"
  },
  "send-message-constants.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/send-message-constants.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/send-message-constants.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -3080,8 +3080,8 @@
   "confidence": "medium"
  },
  "build-ref-name.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/build-ref-name.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/build-ref-name.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -3143,22 +3143,22 @@
   "confidence": "low"
  },
  "chunk-a5errgr8.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/远程工具执行/chunk-a5errgr8.js",
+  "module": "远程工具执行",
+  "tier": 2,
   "kb": 2.6,
   "confidence": "low"
  },
  "chunk-a7arzrr3.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/heapdump-cmd.a7arzrr3.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/诊断-HeapDump/heapdump-cmd.a7arzrr3.js",
+  "module": "诊断 / HeapDump",
+  "tier": 2,
   "kb": 3.2,
   "confidence": "low"
  },
  "safe-file-read.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/safe-file-read.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/安全文件系统-FS加固/safe-file-read.js",
+  "module": "安全文件系统 / FS 加固",
   "tier": 1,
   "kb": 3.9,
   "confidence": "low"
@@ -3199,8 +3199,8 @@
   "confidence": "high"
  },
  "chunk-adf7egmq.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/isNarrationSummaryBlock.adf7egmq.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/isNarrationSummaryBlock.adf7egmq.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.6,
   "confidence": "low"
@@ -3213,8 +3213,8 @@
   "confidence": "high"
  },
  "chunk-aeg1pn1f.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-aeg1pn1f.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -3241,8 +3241,8 @@
   "confidence": "high"
  },
  "base-render-options.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/base-render-options.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/base-render-options.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 2.0,
   "confidence": "low"
@@ -3255,8 +3255,8 @@
   "confidence": "high"
  },
  "chunk-ak8awsa2.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.ak8awsa2.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.ak8awsa2.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -3269,37 +3269,37 @@
   "confidence": "high"
  },
  "chunk-am6q7e7t.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.am6q7e7t.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.am6q7e7t.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "analytics-event-queue.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/analytics-event-queue.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 1.8,
   "confidence": "low"
  },
  "tool-result-content.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/tool-result-content.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/tool-result-content.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 3.1,
   "confidence": "low"
  },
  "mcp-timeouts.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-timeouts.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-timeouts.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 0.8,
   "confidence": "low"
  },
  "chunk-aqawy2mp.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-aqawy2mp.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/chunk-aqawy2mp.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 2.5,
   "confidence": "low"
  },
@@ -3360,8 +3360,8 @@
   "confidence": "low"
  },
  "format-hyperlink.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/format-hyperlink.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-字符串与文本/format-hyperlink.js",
+  "module": "核心工具 · 字符串与文本",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -3374,9 +3374,9 @@
   "confidence": "high"
  },
  "overlay-registry.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/overlay-registry.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/多会话视图-Fleet/overlay-registry.js",
+  "module": "多会话视图 / Fleet",
+  "tier": 2,
   "kb": 2.9,
   "confidence": "low"
  },
@@ -3402,8 +3402,8 @@
   "confidence": "low"
  },
  "session-live-elsewhere.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/session-live-elsewhere.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.0,
   "confidence": "low"
@@ -3472,15 +3472,15 @@
   "confidence": "medium"
  },
  "jittered-backoff-delay.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/jittered-backoff-delay.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-并发与缓存/jittered-backoff-delay.js",
+  "module": "核心工具 · 并发与缓存",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
  },
  "pin-storage-v5.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/pin-storage-v5.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/pin-storage-v5.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -3493,15 +3493,15 @@
   "confidence": "medium"
  },
  "input-guide.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/input-guide.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/input-guide.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
  },
  "chunk-bgf8jybv.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-bgf8jybv.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-bgf8jybv.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -3514,8 +3514,8 @@
   "confidence": "low"
  },
  "with-timeout.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/with-timeout.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-并发与缓存/with-timeout.js",
+  "module": "核心工具 · 并发与缓存",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -3528,8 +3528,8 @@
   "confidence": "medium"
  },
  "diff-hunks.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/diff-hunks.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/diff-hunks.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -3612,16 +3612,16 @@
   "confidence": "high"
  },
  "bridge-state-containers.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/bridge-state-containers.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/远程控制-Bridge/bridge-state-containers.js",
+  "module": "远程控制 / Bridge",
+  "tier": 2,
   "kb": 3.0,
   "confidence": "low"
  },
  "image-scaling.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/image-scaling.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/图片-截图-ComputerUse/image-scaling.js",
+  "module": "图片 / 截图 / Computer Use",
+  "tier": 2,
   "kb": 2.1,
   "confidence": "low"
  },
@@ -3633,8 +3633,8 @@
   "confidence": "low"
  },
  "noop-session-hooks-registry.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/noop-session-hooks-registry.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/noop-session-hooks-registry.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -3661,23 +3661,23 @@
   "confidence": "low"
  },
  "stdio-message-framing.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/stdio-message-framing.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP传输-stdio-SSE-HTTP/stdio-message-framing.js",
+  "module": "MCP 传输 / stdio-SSE-HTTP",
+  "tier": 2,
   "kb": 1.2,
   "confidence": "low"
  },
  "detail-dialog-keys.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/detail-dialog-keys.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/键位绑定-Keybindings/detail-dialog-keys.js",
+  "module": "键位绑定 / Keybindings",
+  "tier": 2,
   "kb": 1.0,
   "confidence": "low"
  },
  "dir-sync-worker-lane.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/目录同步-dir-sync/dir-sync-worker-lane.js",
+  "module": "目录同步 / dir-sync",
+  "tier": 2,
   "kb": 2.0,
   "confidence": "low"
  },
@@ -3696,9 +3696,9 @@
   "confidence": "medium"
  },
  "bundled-skill-names.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/bundled-skill-names.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/Skills技能/bundled-skill-names.js",
+  "module": "Skills 技能",
+  "tier": 2,
   "kb": 1.1,
   "confidence": "low"
  },
@@ -3710,8 +3710,8 @@
   "confidence": "medium"
  },
  "learn-more-link.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/learn-more-link.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/learn-more-link.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
@@ -3724,8 +3724,8 @@
   "confidence": "high"
  },
  "chunk-c91w9436.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/getMdmRawReadPromise.c91w9436.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/getMdmRawReadPromise.c91w9436.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -3738,15 +3738,15 @@
   "confidence": "high"
  },
  "session-announcement-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/session-announcement-state.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/session-announcement-state.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
  },
  "to-integer.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/to-integer.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/to-integer.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -3759,8 +3759,8 @@
   "confidence": "low"
  },
  "remote-autocompact-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/remote-autocompact-state.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -3808,9 +3808,9 @@
   "confidence": "high"
  },
  "propose-goal-feature-gate.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/propose-goal-feature-gate.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/目标模式-Goal/propose-goal-feature-gate.js",
+  "module": "目标模式 / Goal",
+  "tier": 2,
   "kb": 0.7,
   "confidence": "low"
  },
@@ -3829,23 +3829,23 @@
   "confidence": "low"
  },
  "empty-artifact-consent-slugs.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/empty-artifact-consent-slugs.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/empty-artifact-consent-slugs.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
  },
  "chunk-cjvwhqe6.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/pause-memory-cmd.cjvwhqe6.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/记忆-CLAUDE.md/pause-memory-cmd.cjvwhqe6.js",
+  "module": "记忆 / CLAUDE.md",
+  "tier": 2,
   "kb": 1.3,
   "confidence": "low"
  },
  "org-skills-sync.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/org-skills-sync.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/Skills技能/org-skills-sync.js",
+  "module": "Skills 技能",
+  "tier": 2,
   "kb": 3.0,
   "confidence": "low"
  },
@@ -3885,8 +3885,8 @@
   "confidence": "low"
  },
  "chunk-cq2gda4e.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/startCapturingEarlyInput.cq2gda4e.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/startCapturingEarlyInput.cq2gda4e.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -3906,16 +3906,16 @@
   "confidence": "low"
  },
  "feature-flag-version.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/feature-flag-version.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/feature-flag-version.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
  },
  "stop-background-job.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/stop-background-job.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/后台任务-Shell管理/stop-background-job.js",
+  "module": "后台任务 / Shell 管理",
+  "tier": 2,
   "kb": 1.8,
   "confidence": "low"
  },
@@ -3948,9 +3948,9 @@
   "confidence": "medium"
  },
  "cloud-session-status-message.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/cloud-session-status-message.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/云会话-Teleport/cloud-session-status-message.js",
+  "module": "云会话 / Teleport",
+  "tier": 2,
   "kb": 0.9,
   "confidence": "low"
  },
@@ -3976,22 +3976,22 @@
   "confidence": "medium"
  },
  "tool-result-row.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/tool-result-row.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/tool-result-row.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 3.2,
   "confidence": "low"
  },
  "max-subagent-spawn-depth.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/max-subagent-spawn-depth.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
  },
  "user-directories.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/user-directories.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/user-directories.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -4025,30 +4025,30 @@
   "confidence": "low"
  },
  "chunk-d16fhdtx.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js",
+  "module": "核心工具 / 数组与集合",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
  },
  "request-delivery-errors.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/request-delivery-errors.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/request-delivery-errors.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
  },
  "daemon-paths.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/daemon-paths.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/daemon-paths.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 0.8,
   "confidence": "low"
  },
  "chunk-d4kaq0ds.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/设备注册-Cowork/chunk-d4kaq0ds.js",
+  "module": "设备注册 / Cowork",
+  "tier": 2,
   "kb": 1.8,
   "confidence": "low"
  },
@@ -4067,8 +4067,8 @@
   "confidence": "low"
  },
  "chunk-d8c3rz29.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-d8c3rz29.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.5,
   "confidence": "low"
@@ -4095,22 +4095,22 @@
   "confidence": "low"
  },
  "chunk-dajvcsw3.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/远程控制-Bridge/chunk-dajvcsw3.js",
+  "module": "远程控制 / Bridge",
+  "tier": 2,
   "kb": 1.8,
   "confidence": "low"
  },
  "chunk-dasynwyz.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/udsInboxShape.dasynwyz.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/跨会话消息-UDS/udsInboxShape.dasynwyz.js",
+  "module": "跨会话消息 / UDS",
+  "tier": 2,
   "kb": 1.0,
   "confidence": "low"
  },
  "chunk-db4qa869.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.db4qa869.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.db4qa869.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -4137,15 +4137,15 @@
   "confidence": "high"
  },
  "chunk-debnsz8e.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/hasCloudPeerAccess.debnsz8e.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/hasCloudPeerAccess.debnsz8e.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.4,
   "confidence": "low"
  },
  "chunk-dedan5va.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/Server.dedan5va.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/Server.dedan5va.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -4165,8 +4165,8 @@
   "confidence": "low"
  },
  "chunk-dgth8ahx.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-dgth8ahx.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -4179,8 +4179,8 @@
   "confidence": "low"
  },
  "prompt-input-store.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/prompt-input-store.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/prompt-input-store.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.7,
   "confidence": "low"
@@ -4249,29 +4249,29 @@
   "confidence": "high"
  },
  "additional-working-directories.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/additional-working-directories.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/additional-working-directories.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
  },
  "chunk-drxbt26x.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/listMcpSkillPage.drxbt26x.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/listMcpSkillPage.drxbt26x.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 1.6,
   "confidence": "low"
  },
  "chunk-ds47w88s.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/会话-历史-恢复/chunk-ds47w88s.js",
+  "module": "会话 / 历史 / 恢复",
+  "tier": 2,
   "kb": 3.2,
   "confidence": "low"
  },
  "chunk-dsg6bce8.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 2.0,
   "confidence": "low"
@@ -4298,22 +4298,22 @@
   "confidence": "high"
  },
  "switch-confirm-dialog.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/switch-confirm-dialog.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/switch-confirm-dialog.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.5,
   "confidence": "low"
  },
  "chunk-dwr6spdb.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/design-revoke-cmd.dwr6spdb.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/设计同步/design-revoke-cmd.dwr6spdb.js",
+  "module": "设计同步",
+  "tier": 2,
   "kb": 3.2,
   "confidence": "low"
  },
  "chunk-dypysnt9.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-dypysnt9.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -4326,8 +4326,8 @@
   "confidence": "high"
  },
  "spinner-message-line.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/spinner-message-line.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/spinner-message-line.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.6,
   "confidence": "low"
@@ -4382,23 +4382,23 @@
   "confidence": "high"
  },
  "focusable-box.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/focusable-box.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/focusable-box.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
  },
  "chunk-ea9vpfhv.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/prewarm.ea9vpfhv.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/prewarm.ea9vpfhv.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.6,
   "confidence": "low"
  },
  "chunk-eb5w3wem.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/primeFastPathCredentials.eb5w3wem.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 1.6,
   "confidence": "low"
  },
@@ -4417,9 +4417,9 @@
   "confidence": "high"
  },
  "keybinding-hooks.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/keybinding-hooks.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/键位绑定-Keybindings/keybinding-hooks.js",
+  "module": "键位绑定 / Keybindings",
+  "tier": 2,
   "kb": 1.9,
   "confidence": "low"
  },
@@ -4452,8 +4452,8 @@
   "confidence": "medium"
  },
  "max-credential-file-bytes.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/max-credential-file-bytes.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/max-credential-file-bytes.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
@@ -4480,16 +4480,16 @@
   "confidence": "high"
  },
  "voice-state-provider.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/voice-state-provider.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/语音-音频/voice-state-provider.js",
+  "module": "语音 / 音频",
+  "tier": 2,
   "kb": 2.1,
   "confidence": "low"
  },
  "chunk-ek67yxn9.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/DEVICE_REGISTRY_KID_PREFIX.ek67yxn9.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/设备注册-Cowork/DEVICE_REGISTRY_KID_PREFIX.ek67yxn9.js",
+  "module": "设备注册 / Cowork",
+  "tier": 2,
   "kb": 3.8,
   "confidence": "low"
  },
@@ -4543,8 +4543,8 @@
   "confidence": "medium"
  },
  "server-approval-watch-provider.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/server-approval-watch-provider.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/server-approval-watch-provider.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -4564,8 +4564,8 @@
   "confidence": "low"
  },
  "chunk-etv8bjdx.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION.etv8bjdx.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION.etv8bjdx.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -4578,9 +4578,9 @@
   "confidence": "high"
  },
  "terminal-querier.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/terminal-querier.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/终端环境探测-TUI-tmux/terminal-querier.js",
+  "module": "终端环境探测 / TUI-tmux",
+  "tier": 2,
   "kb": 2.9,
   "confidence": "low"
  },
@@ -4599,8 +4599,8 @@
   "confidence": "high"
  },
  "mcp-control-handlers.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/mcp-control-handlers.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -4613,15 +4613,15 @@
   "confidence": "high"
  },
  "session-ingress-token.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/session-ingress-token.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/session-ingress-token.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 3.0,
   "confidence": "low"
  },
  "chunk-ezxdt3dm.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/request-id.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/request-id.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -4641,22 +4641,22 @@
   "confidence": "high"
  },
  "remote-session-compat-id.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/remote-session-compat-id.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
  },
  "chunk-f4zey5rf.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/账号-订阅/chunk-f4zey5rf.js",
+  "module": "账号 / 订阅",
+  "tier": 2,
   "kb": 2.8,
   "confidence": "low"
  },
  "workshop-telemetry.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/workshop-telemetry.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/workshop-telemetry.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 2.9,
   "confidence": "low"
@@ -4683,9 +4683,9 @@
   "confidence": "low"
  },
  "exit-keybinding-hooks.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/键位绑定-Keybindings/exit-keybinding-hooks.js",
+  "module": "键位绑定 / Keybindings",
+  "tier": 2,
   "kb": 2.0,
   "confidence": "low"
  },
@@ -4704,22 +4704,22 @@
   "confidence": "low"
  },
  "embedded-text-asset.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/embedded-text-asset.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js",
+  "module": "内嵌资源与模块互操作",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
  },
  "routines-policy.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/routines-policy.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/routines-policy.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "chunk-ff1hq6qq.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.1,
   "confidence": "low"
@@ -4732,8 +4732,8 @@
   "confidence": "medium"
  },
  "chunk-fgegxt0m.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-fgegxt0m.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-fgegxt0m.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
@@ -4746,16 +4746,16 @@
   "confidence": "medium"
  },
  "chunk-fpak7ean.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-fpak7ean.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/chunk-fpak7ean.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 1.1,
   "confidence": "low"
  },
  "buffer-coercing-stdio-transport.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/buffer-coercing-stdio-transport.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP传输-stdio-SSE-HTTP/buffer-coercing-stdio-transport.js",
+  "module": "MCP 传输 / stdio-SSE-HTTP",
+  "tier": 2,
   "kb": 0.8,
   "confidence": "low"
  },
@@ -4774,8 +4774,8 @@
   "confidence": "medium"
  },
  "chunk-fwytydyr.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.fwytydyr.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.fwytydyr.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -4830,9 +4830,9 @@
   "confidence": "low"
  },
  "bundled-workflows.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/bundled-workflows.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/编排-Workflow/bundled-workflows.js",
+  "module": "编排 / Workflow",
+  "tier": 2,
   "kb": 0.9,
   "confidence": "low"
  },
@@ -4844,29 +4844,29 @@
   "confidence": "high"
  },
  "mcp-hosted-oauth-gate.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-hosted-oauth-gate.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 2.2,
   "confidence": "low"
  },
  "extra-usage-flow.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/extra-usage-flow.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/用量额度-限额/extra-usage-flow.js",
+  "module": "用量额度 / 限额",
+  "tier": 2,
   "kb": 2.2,
   "confidence": "low"
  },
  "mcp-tool-result-fields.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-tool-result-fields.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 1.8,
   "confidence": "low"
  },
  "progress-bar.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/progress-bar.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/progress-bar.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 2.8,
   "confidence": "low"
@@ -4921,8 +4921,8 @@
   "confidence": "high"
  },
  "managed-settings-status.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/managed-settings-status.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/设置-配置/managed-settings-status.js",
+  "module": "设置 / 配置",
   "tier": 1,
   "kb": 3.6,
   "confidence": "low"
@@ -4956,8 +4956,8 @@
   "confidence": "high"
  },
  "chunk-gbrpz8cj.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/buildSubagentExtras.gbrpz8cj.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/buildSubagentExtras.gbrpz8cj.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.4,
   "confidence": "low"
@@ -4977,8 +4977,8 @@
   "confidence": "medium"
  },
  "storage-v5-context.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/storage-v5-context.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/storage-v5-context.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -5012,15 +5012,15 @@
   "confidence": "medium"
  },
  "chunk-gk1snwqh.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/getMcpErrorCode.gk1snwqh.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/getMcpErrorCode.gk1snwqh.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 1.3,
   "confidence": "low"
  },
  "structured-output-retry-errors.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/structured-output-retry-errors.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.6,
   "confidence": "low"
@@ -5075,8 +5075,8 @@
   "confidence": "high"
  },
  "chunk-gve67s30.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/isPluginSkillToolEnabled.gve67s30.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/isPluginSkillToolEnabled.gve67s30.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
@@ -5096,15 +5096,15 @@
   "confidence": "medium"
  },
  "hover-rest-transcript.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/hover-rest-transcript.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.5,
   "confidence": "low"
  },
  "chunk-gz0wcr9k.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/RUN_EXAMPLE_FILES.gz0wcr9k.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/内嵌资源与模块互操作/RUN_EXAMPLE_FILES.gz0wcr9k.js",
+  "module": "内嵌资源与模块互操作",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -5131,15 +5131,15 @@
   "confidence": "low"
  },
  "exit-codes.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/exit-codes.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/exit-codes.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
  },
  "linux-proc-stat.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/linux-proc-stat.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-进程与信号/linux-proc-stat.js",
+  "module": "核心工具 · 进程与信号",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -5152,9 +5152,9 @@
   "confidence": "low"
  },
  "keychain-access.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/keychain-access.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/keychain-access.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 3.3,
   "confidence": "low"
  },
@@ -5194,8 +5194,8 @@
   "confidence": "high"
  },
  "chunk-h62vxw7j.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
@@ -5222,9 +5222,9 @@
   "confidence": "high"
  },
  "claude-in-chrome-mcp-constants.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/claude-in-chrome-mcp-constants.js",
+  "module": "浏览器集成 / ClaudeinChrome",
+  "tier": 2,
   "kb": 1.5,
   "confidence": "low"
  },
@@ -5292,15 +5292,15 @@
   "confidence": "low"
  },
  "chunk-hkbpxv9z.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/设置-配置/chunk-hkbpxv9z.js",
+  "module": "设置 / 配置",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
  },
  "chunk-hkdjw6ht.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/终端与时钟/chunk-hkdjw6ht.js",
+  "module": "终端与时钟",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -5327,8 +5327,8 @@
   "confidence": "high"
  },
  "chunk-hp7zdndz.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/WORKER_KINDS.hp7zdndz.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/WORKER_KINDS.hp7zdndz.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.3,
   "confidence": "low"
@@ -5362,8 +5362,8 @@
   "confidence": "high"
  },
  "chunk-hrfnq7gz.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-hrfnq7gz.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-hrfnq7gz.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -5418,8 +5418,8 @@
   "confidence": "high"
  },
  "chunk-hw6w9yxm.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 4.0,
   "confidence": "low"
@@ -5432,23 +5432,23 @@
   "confidence": "low"
  },
  "analytics-event-sink.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/analytics-event-sink.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/analytics-event-sink.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 2.0,
   "confidence": "low"
  },
  "use-answer-refusal-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/use-answer-refusal-state.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
  },
  "usage-limit-continuation.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/用量额度-限额/usage-limit-continuation.js",
+  "module": "用量额度 / 限额",
+  "tier": 2,
   "kb": 1.8,
   "confidence": "low"
  },
@@ -5460,16 +5460,16 @@
   "confidence": "medium"
  },
  "lodash-to-number.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/lodash-to-number.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/lodash-to-number.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
  },
  "try-set-raw-mode.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/终端环境探测-TUI-tmux/try-set-raw-mode.js",
+  "module": "终端环境探测 / TUI-tmux",
+  "tier": 2,
   "kb": 1.0,
   "confidence": "low"
  },
@@ -5481,8 +5481,8 @@
   "confidence": "high"
  },
  "app-permission-categories.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/app-permission-categories.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/app-permission-categories.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.3,
   "confidence": "low"
@@ -5516,8 +5516,8 @@
   "confidence": "medium"
  },
  "chunk-j86cs2ar.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/chunk-j86cs2ar.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
@@ -5572,22 +5572,22 @@
   "confidence": "high"
  },
  "chunk-jhs1bd0k.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/设计同步/chunk-jhs1bd0k.js",
+  "module": "设计同步",
+  "tier": 2,
   "kb": 1.5,
   "confidence": "low"
  },
  "use-keybinding-display-text.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/键位绑定-Keybindings/use-keybinding-display-text.js",
+  "module": "键位绑定 / Keybindings",
+  "tier": 2,
   "kb": 1.0,
   "confidence": "low"
  },
  "test-egress-guard.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/test-egress-guard.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/HTTP-网络层/test-egress-guard.js",
+  "module": "HTTP / 网络层",
   "tier": 1,
   "kb": 3.5,
   "confidence": "low"
@@ -5607,16 +5607,16 @@
   "confidence": "medium"
  },
  "text-sanitization.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/text-sanitization.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-字符串与文本/text-sanitization.js",
+  "module": "核心工具 · 字符串与文本",
   "tier": 1,
   "kb": 3.9,
   "confidence": "low"
  },
  "workflow-authoring-skill.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/workflow-authoring-skill.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/编排-Workflow/workflow-authoring-skill.js",
+  "module": "编排 / Workflow",
+  "tier": 2,
   "kb": 1.3,
   "confidence": "low"
  },
@@ -5649,9 +5649,9 @@
   "confidence": "medium"
  },
  "mcp-elicitation-dialogs.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-elicitation-dialogs.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 1.5,
   "confidence": "low"
  },
@@ -5705,9 +5705,9 @@
   "confidence": "medium"
  },
  "chunk-jwa5ndmd.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/runBgSpare.jwa5ndmd.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/runBgSpare.jwa5ndmd.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 3.8,
   "confidence": "low"
  },
@@ -5733,29 +5733,29 @@
   "confidence": "high"
  },
  "state-store.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/state-store.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/文件存储-原子写入/state-store.js",
+  "module": "文件存储 / 原子写入",
   "tier": 1,
   "kb": 1.7,
   "confidence": "low"
  },
  "chunk-k012ypzf.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.k012ypzf.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.k012ypzf.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "clock-and-terminal-focus.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/终端与时钟/clock-and-terminal-focus.js",
+  "module": "终端与时钟",
   "tier": 1,
   "kb": 3.1,
   "confidence": "low"
  },
  "log-error-with-telemetry-message.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/log-error-with-telemetry-message.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/log-error-with-telemetry-message.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -5789,8 +5789,8 @@
   "confidence": "high"
  },
  "terminal-focus-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/terminal-focus-state.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/终端与时钟/terminal-focus-state.js",
+  "module": "终端与时钟",
   "tier": 1,
   "kb": 1.9,
   "confidence": "low"
@@ -5810,9 +5810,9 @@
   "confidence": "medium"
  },
  "mcp-server-not-found-message.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-server-not-found-message.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-server-not-found-message.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 1.6,
   "confidence": "low"
  },
@@ -5831,15 +5831,15 @@
   "confidence": "high"
  },
  "host-state-store.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/host-state-store.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/文件存储-原子写入/host-state-store.js",
+  "module": "文件存储 / 原子写入",
   "tier": 1,
   "kb": 3.5,
   "confidence": "low"
  },
  "read-stream-lines.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/read-stream-lines.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/read-stream-lines.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -5852,8 +5852,8 @@
   "confidence": "high"
  },
  "chunk-k8j35a02.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.k8j35a02.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.k8j35a02.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -5866,9 +5866,9 @@
   "confidence": "high"
  },
  "mcp-task-record.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-task-record.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-task-record.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 1.3,
   "confidence": "low"
  },
@@ -5880,23 +5880,23 @@
   "confidence": "medium"
  },
  "self-hosted-runner-api.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/self-hosted-runner-api.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/self-hosted-runner-api.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.3,
   "confidence": "low"
  },
  "chunk-kaxe7rw8.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-kaxe7rw8.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
  },
  "browser-tool-verb-phrases.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/browser-tool-verb-phrases.js",
+  "module": "浏览器集成 / ClaudeinChrome",
+  "tier": 2,
   "kb": 3.1,
   "confidence": "low"
  },
@@ -5922,29 +5922,29 @@
   "confidence": "high"
  },
  "protobuf-decoding.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/protobuf-decoding.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/protobuf-decoding.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.9,
   "confidence": "low"
  },
  "chunk-kk7p3hsm.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-kk7p3hsm.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/chunk-kk7p3hsm.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 1.8,
   "confidence": "low"
  },
  "git-remote-url.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/git-remote-url.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/git-remote-url.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
  },
  "chunk-kkspbfqc.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/DATADOG_CLIENT_TOKEN.kkspbfqc.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/DATADOG_CLIENT_TOKEN.kkspbfqc.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 3.0,
   "confidence": "low"
@@ -5957,8 +5957,8 @@
   "confidence": "high"
  },
  "file-storage.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/file-storage.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/文件存储-原子写入/file-storage.js",
+  "module": "文件存储 / 原子写入",
   "tier": 1,
   "kb": 3.4,
   "confidence": "low"
@@ -5985,8 +5985,8 @@
   "confidence": "high"
  },
  "main-loop-model.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/main-loop-model.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/main-loop-model.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.6,
   "confidence": "low"
@@ -5999,16 +5999,16 @@
   "confidence": "low"
  },
  "url-handler-native-module.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/url-handler-native-module.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/内嵌资源与模块互操作/url-handler-native-module.js",
+  "module": "内嵌资源与模块互操作",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "get-default-shell.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/get-default-shell.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/终端环境探测-TUI-tmux/get-default-shell.js",
+  "module": "终端环境探测 / TUI-tmux",
+  "tier": 2,
   "kb": 0.9,
   "confidence": "low"
  },
@@ -6027,9 +6027,9 @@
   "confidence": "medium"
  },
  "design-feature-gates.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/design-feature-gates.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/设计同步/design-feature-gates.js",
+  "module": "设计同步",
+  "tier": 2,
   "kb": 1.0,
   "confidence": "low"
  },
@@ -6090,8 +6090,8 @@
   "confidence": "medium"
  },
  "chunk-kyy28ene.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-kyy28ene.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.7,
   "confidence": "low"
@@ -6104,8 +6104,8 @@
   "confidence": "medium"
  },
  "hex-encoding-module.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/hex-encoding-module.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/hex-encoding-module.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
@@ -6139,16 +6139,16 @@
   "confidence": "high"
  },
  "sandbox-unavailable-message.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/sandbox-unavailable-message.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/sandbox-unavailable-message.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
  },
  "chunk-m60n47qj.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/effort-cmd.m60n47qj.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/斜杠命令-框架/effort-cmd.m60n47qj.js",
+  "module": "斜杠命令 · 框架",
+  "tier": 2,
   "kb": 3.8,
   "confidence": "low"
  },
@@ -6160,22 +6160,22 @@
   "confidence": "medium"
  },
  "chunk-m85ks9bj.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-m85ks9bj.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.5,
   "confidence": "low"
  },
  "plugin-skill-tool-gating.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/plugin-skill-tool-gating.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/plugin-skill-tool-gating.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
  },
  "use-terminal-size.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/use-terminal-size.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/use-terminal-size.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -6188,15 +6188,15 @@
   "confidence": "high"
  },
  "sse-parser.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/sse-parser.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/远程控制-Bridge/sse-parser.js",
+  "module": "远程控制 / Bridge",
+  "tier": 2,
   "kb": 3.4,
   "confidence": "low"
  },
  "file-entry-kind.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/file-entry-kind.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/file-entry-kind.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -6209,16 +6209,16 @@
   "confidence": "low"
  },
  "design-command-handler.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/design-command-handler.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/设计同步/design-command-handler.js",
+  "module": "设计同步",
+  "tier": 2,
   "kb": 2.1,
   "confidence": "low"
  },
  "daemon-status.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/daemon-status.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/daemon-status.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 2.7,
   "confidence": "low"
  },
@@ -6307,15 +6307,15 @@
   "confidence": "high"
  },
  "local-display-only-denial.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/local-display-only-denial.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/local-display-only-denial.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
  },
  "parse-thin-client-reply.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/parse-thin-client-reply.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
@@ -6342,8 +6342,8 @@
   "confidence": "high"
  },
  "bg-job-runtime-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/bg-job-runtime-state.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/bg-job-runtime-state.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
@@ -6370,15 +6370,15 @@
   "confidence": "medium"
  },
  "keybinding-scope.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/keybinding-scope.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/键位绑定-Keybindings/keybinding-scope.js",
+  "module": "键位绑定 / Keybindings",
+  "tier": 2,
   "kb": 3.2,
   "confidence": "low"
  },
  "send-message-pins.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/send-message-pins.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/send-message-pins.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.6,
   "confidence": "low"
@@ -6391,8 +6391,8 @@
   "confidence": "medium"
  },
  "host-capability-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/host-capability-state.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/host-capability-state.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -6482,8 +6482,8 @@
   "confidence": "high"
  },
  "chunk-n7htbc2y.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/USER_INTENT_SETTING_KEYS.n7htbc2y.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/USER_INTENT_SETTING_KEYS.n7htbc2y.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.0,
   "confidence": "low"
@@ -6510,8 +6510,8 @@
   "confidence": "medium"
  },
  "truncate-with-ellipsis.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-字符串与文本/truncate-with-ellipsis.js",
+  "module": "核心工具 · 字符串与文本",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -6538,8 +6538,8 @@
   "confidence": "low"
  },
  "chunk-nfcecy7x.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/chunk-nfcecy7x.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 2.4,
   "confidence": "low"
@@ -6559,8 +6559,8 @@
   "confidence": "low"
  },
  "chunk-ngp4wa3z.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-ngp4wa3z.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/内嵌资源与模块互操作/chunk-ngp4wa3z.js",
+  "module": "内嵌资源与模块互操作",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -6587,8 +6587,8 @@
   "confidence": "medium"
  },
  "use-elapsed-duration.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/终端与时钟/use-elapsed-duration.js",
+  "module": "终端与时钟",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -6608,8 +6608,8 @@
   "confidence": "medium"
  },
  "model-1m-context-suggestion.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/model-1m-context-suggestion.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -6622,9 +6622,9 @@
   "confidence": "medium"
  },
  "auth-error-guards.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/auth-error-guards.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/auth-error-guards.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 1.2,
   "confidence": "low"
  },
@@ -6678,8 +6678,8 @@
   "confidence": "low"
  },
  "chunk-nt7z2p7z.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.nt7z2p7z.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.nt7z2p7z.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -6692,8 +6692,8 @@
   "confidence": "high"
  },
  "use-hyperlink-support.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/use-hyperlink-support.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -6706,9 +6706,9 @@
   "confidence": "medium"
  },
  "oauth-callback.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/oauth-callback.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/oauth-callback.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 3.8,
   "confidence": "low"
  },
@@ -6720,22 +6720,22 @@
   "confidence": "high"
  },
  "chunk-nzt97y14.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-nzt97y14.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/模型目录-ModelCatalog/chunk-nzt97y14.js",
+  "module": "模型目录 / Model Catalog",
   "tier": 1,
   "kb": 3.2,
   "confidence": "low"
  },
  "empty-state-message.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/empty-state-message.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/empty-state-message.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
  },
  "chunk-p11r6cth.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-p11r6cth.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -6748,8 +6748,8 @@
   "confidence": "low"
  },
  "copy-env-without-undefined.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/copy-env-without-undefined.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/copy-env-without-undefined.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -6776,22 +6776,22 @@
   "confidence": "high"
  },
  "chunk-p2wzfbaj.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-p2wzfbaj.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP连接器-Connector/chunk-p2wzfbaj.js",
+  "module": "MCP 连接器 / Connector",
+  "tier": 2,
   "kb": 1.9,
   "confidence": "low"
  },
  "chunk-p2z54ya1.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.p2z54ya1.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.p2z54ya1.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "zod-helpers.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/zod-helpers.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/zod-helpers.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -6825,8 +6825,8 @@
   "confidence": "high"
  },
  "node-config-provider.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/node-config-provider.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/node-config-provider.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.4,
   "confidence": "low"
@@ -6839,15 +6839,15 @@
   "confidence": "high"
  },
  "chunk-p77rzdj8.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/isWorktreeModeEnabled.p77rzdj8.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/isWorktreeModeEnabled.p77rzdj8.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "chunk-p7jm635c.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/chunk-p7jm635c.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -6867,15 +6867,15 @@
   "confidence": "high"
  },
  "chunk-pazpsfq6.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/多会话视图-Fleet/chunk-pazpsfq6.js",
+  "module": "多会话视图 / Fleet",
+  "tier": 2,
   "kb": 2.6,
   "confidence": "low"
  },
  "use-task-registry.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/use-task-registry.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/use-task-registry.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -6888,9 +6888,9 @@
   "confidence": "low"
  },
  "is-workflow-authoring-skill-available.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/编排-Workflow/is-workflow-authoring-skill-available.js",
+  "module": "编排 / Workflow",
+  "tier": 2,
   "kb": 1.5,
   "confidence": "low"
  },
@@ -6923,8 +6923,8 @@
   "confidence": "high"
  },
  "aws-sdk-core-client.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/aws-sdk-core-client.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.7,
   "confidence": "low"
@@ -6958,9 +6958,9 @@
   "confidence": "high"
  },
  "chunk-pk0trr3f.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/workflowPermissionDialog.pk0trr3f.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/编排-Workflow/workflowPermissionDialog.pk0trr3f.js",
+  "module": "编排 / Workflow",
+  "tier": 2,
   "kb": 1.1,
   "confidence": "low"
  },
@@ -6972,15 +6972,15 @@
   "confidence": "high"
  },
  "chunk-pkw2prc7.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/用量额度-限额/chunk-pkw2prc7.js",
+  "module": "用量额度 / 限额",
+  "tier": 2,
   "kb": 1.6,
   "confidence": "low"
  },
  "chunk-pm7hyz3j.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.pm7hyz3j.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.pm7hyz3j.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -7014,9 +7014,9 @@
   "confidence": "high"
  },
  "transcript-replaced-bus.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/会话-历史-恢复/transcript-replaced-bus.js",
+  "module": "会话 / 历史 / 恢复",
+  "tier": 2,
   "kb": 0.7,
   "confidence": "low"
  },
@@ -7028,9 +7028,9 @@
   "confidence": "high"
  },
  "slack-send-tool.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/slack-send-tool.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/通道集成-Slack/slack-send-tool.js",
+  "module": "通道集成 / Slack",
+  "tier": 2,
   "kb": 1.8,
   "confidence": "low"
  },
@@ -7042,8 +7042,8 @@
   "confidence": "high"
  },
  "per-class-instance-registry.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/per-class-instance-registry.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/per-class-instance-registry.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -7063,8 +7063,8 @@
   "confidence": "low"
  },
  "attach-state-tracking.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/attach-state-tracking.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/attach-state-tracking.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -7077,8 +7077,8 @@
   "confidence": "high"
  },
  "environment-kind.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/environment-kind.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/environment-kind.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -7112,8 +7112,8 @@
   "confidence": "high"
  },
  "is-loopback-hostname.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/is-loopback-hostname.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/is-loopback-hostname.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -7126,15 +7126,15 @@
   "confidence": "high"
  },
  "mcp-name-normalization.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-name-normalization.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 0.8,
   "confidence": "low"
  },
  "chunk-q599wyee.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-q599wyee.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.2,
   "confidence": "low"
@@ -7161,15 +7161,15 @@
   "confidence": "high"
  },
  "chunk-q8d8f1jd.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/logEvent.q8d8f1jd.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
  },
  "chunk-q8r1ycrr.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-进程与信号/chunk-q8r1ycrr.js",
+  "module": "核心工具 · 进程与信号",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -7182,8 +7182,8 @@
   "confidence": "high"
  },
  "chunk-qb1kazsd.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.qb1kazsd.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.qb1kazsd.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -7196,15 +7196,15 @@
   "confidence": "medium"
  },
  "bullet-item.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/bullet-item.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/bullet-item.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
  },
  "linked-abort-signal.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/linked-abort-signal.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js",
+  "module": "核心工具 · 并发与缓存",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -7217,15 +7217,15 @@
   "confidence": "medium"
  },
  "user-agent.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/user-agent.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/HTTP-网络层/user-agent.js",
+  "module": "HTTP / 网络层",
   "tier": 1,
   "kb": 2.7,
   "confidence": "low"
  },
  "smithy-context-module.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/smithy-context-module.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/smithy-context-module.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
@@ -7252,8 +7252,8 @@
   "confidence": "low"
  },
  "chunk-qg9n8r78.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-qg9n8r78.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -7273,8 +7273,8 @@
   "confidence": "high"
  },
  "error-message.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/error-message.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/error-message.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -7322,8 +7322,8 @@
   "confidence": "high"
  },
  "user-prompt-text.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/user-prompt-text.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/user-prompt-text.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.7,
   "confidence": "low"
@@ -7357,16 +7357,16 @@
   "confidence": "medium"
  },
  "chunk-qtywxtch.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/createLinkedTransportPair.qtywxtch.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP传输-stdio-SSE-HTTP/createLinkedTransportPair.qtywxtch.js",
+  "module": "MCP 传输 / stdio-SSE-HTTP",
+  "tier": 2,
   "kb": 1.2,
   "confidence": "low"
  },
  "chunk-qv8z365a.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/云会话-Teleport/chunk-qv8z365a.js",
+  "module": "云会话 / Teleport",
+  "tier": 2,
   "kb": 2.6,
   "confidence": "low"
  },
@@ -7399,9 +7399,9 @@
   "confidence": "high"
  },
  "clipboard-copy.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/clipboard-copy.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/终端-剪贴板/clipboard-copy.js",
+  "module": "终端 / 剪贴板",
+  "tier": 2,
   "kb": 3.3,
   "confidence": "low"
  },
@@ -7420,8 +7420,8 @@
   "confidence": "high"
  },
  "app-state-context.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/app-state-context.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/app-state-context.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.8,
   "confidence": "low"
@@ -7441,15 +7441,15 @@
   "confidence": "medium"
  },
  "relaunch-confirmation-wizard.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/relaunch-confirmation-wizard.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/relaunch-confirmation-wizard.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.7,
   "confidence": "low"
  },
  "chunk-r7prg4pg.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/credentialsStoreFor.r7prg4pg.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/credentialsStoreFor.r7prg4pg.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -7490,23 +7490,23 @@
   "confidence": "low"
  },
  "chunk-rds75sre.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-rds75sre.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.2,
   "confidence": "low"
  },
  "chunk-re66yep0.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.re66yep0.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.re66yep0.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "chunk-rfb3s38d.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/跨会话消息-UDS/chunk-rfb3s38d.js",
+  "module": "跨会话消息 / UDS",
+  "tier": 2,
   "kb": 1.1,
   "confidence": "low"
  },
@@ -7546,8 +7546,8 @@
   "confidence": "low"
  },
  "chunk-rm15mpjf.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.rm15mpjf.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.rm15mpjf.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -7595,22 +7595,22 @@
   "confidence": "high"
  },
  "ended-by-model.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/ended-by-model.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/ended-by-model.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
  },
  "status-feed.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/status-feed.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/status-feed.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
  },
  "cwd-context.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/cwd-context.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/cwd-context.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -7679,8 +7679,8 @@
   "confidence": "high"
  },
  "chunk-s1hpfa12.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-s1hpfa12.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.9,
   "confidence": "low"
@@ -7693,8 +7693,8 @@
   "confidence": "medium"
  },
  "use-settings.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/use-settings.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/use-settings.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -7707,23 +7707,23 @@
   "confidence": "low"
  },
  "mcp-tool-base.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-tool-base.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-tool-base.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 2.0,
   "confidence": "low"
  },
  "max-visible-list-items.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/max-visible-list-items.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/max-visible-list-items.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
  },
  "chunk-s4c4rtzf.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/createChromeSocketClient.s4c4rtzf.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/浏览器集成-ClaudeinChrome/createChromeSocketClient.s4c4rtzf.js",
+  "module": "浏览器集成 / ClaudeinChrome",
+  "tier": 2,
   "kb": 0.9,
   "confidence": "low"
  },
@@ -7735,8 +7735,8 @@
   "confidence": "low"
  },
  "text-truncation.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/text-truncation.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-字符串与文本/text-truncation.js",
+  "module": "核心工具 · 字符串与文本",
   "tier": 1,
   "kb": 1.0,
   "confidence": "low"
@@ -7784,9 +7784,9 @@
   "confidence": "high"
  },
  "chunk-sbhmj7r0.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/design-consent-cmd.sbhmj7r0.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/设计同步/design-consent-cmd.sbhmj7r0.js",
+  "module": "设计同步",
+  "tier": 2,
   "kb": 3.2,
   "confidence": "low"
  },
@@ -7805,23 +7805,23 @@
   "confidence": "medium"
  },
  "agent-color-palette.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/agent-color-palette.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/多会话视图-Fleet/agent-color-palette.js",
+  "module": "多会话视图 / Fleet",
+  "tier": 2,
   "kb": 1.4,
   "confidence": "low"
  },
  "chunk-sdeyn1dg.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-sdeyn1dg.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
  },
  "use-keybinding-chord-text.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/键位绑定-Keybindings/use-keybinding-chord-text.js",
+  "module": "键位绑定 / Keybindings",
+  "tier": 2,
   "kb": 1.1,
   "confidence": "low"
  },
@@ -7833,9 +7833,9 @@
   "confidence": "high"
  },
  "narration-signature.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/narration-signature.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "03-入口与运行时/会话UI-REPL/narration-signature.js",
+  "module": "会话 UI-REPL",
+  "tier": 3,
   "kb": 1.0,
   "confidence": "low"
  },
@@ -7854,9 +7854,9 @@
   "confidence": "high"
  },
  "bridge-poll-interval-config.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/远程控制-Bridge/bridge-poll-interval-config.js",
+  "module": "远程控制 / Bridge",
+  "tier": 2,
   "kb": 2.8,
   "confidence": "low"
  },
@@ -7896,8 +7896,8 @@
   "confidence": "low"
  },
  "define-lazy-property.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/define-lazy-property.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-类型与数值/define-lazy-property.js",
+  "module": "核心工具 / 类型与数值",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -7917,15 +7917,15 @@
   "confidence": "medium"
  },
  "eager-load-settings.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/eager-load-settings.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/设置-配置/eager-load-settings.js",
+  "module": "设置 / 配置",
   "tier": 1,
   "kb": 3.1,
   "confidence": "low"
  },
  "kill-process-tree.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/kill-process-tree.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-进程与信号/kill-process-tree.js",
+  "module": "核心工具 · 进程与信号",
   "tier": 1,
   "kb": 3.5,
   "confidence": "low"
@@ -7938,9 +7938,9 @@
   "confidence": "medium"
  },
  "reload-skills.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/reload-skills.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/Skills技能/reload-skills.js",
+  "module": "Skills 技能",
+  "tier": 2,
   "kb": 1.1,
   "confidence": "low"
  },
@@ -7987,9 +7987,9 @@
   "confidence": "medium"
  },
  "fleet-view-screen.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/fleet-view-screen.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/多会话视图-Fleet/fleet-view-screen.js",
+  "module": "多会话视图 / Fleet",
+  "tier": 2,
   "kb": 2.4,
   "confidence": "low"
  },
@@ -8015,8 +8015,8 @@
   "confidence": "high"
  },
  "it2-setup-dialog.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/it2-setup-dialog.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/it2-setup-dialog.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -8029,9 +8029,9 @@
   "confidence": "high"
  },
  "first-party-remote-session.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/first-party-remote-session.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/云会话-Teleport/first-party-remote-session.js",
+  "module": "云会话 / Teleport",
+  "tier": 2,
   "kb": 0.7,
   "confidence": "low"
  },
@@ -8064,8 +8064,8 @@
   "confidence": "high"
  },
  "early-input-capture.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/early-input-capture.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/early-input-capture.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.1,
   "confidence": "low"
@@ -8099,9 +8099,9 @@
   "confidence": "high"
  },
  "sdk-mcp-transports.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/sdk-mcp-transports.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP传输-stdio-SSE-HTTP/sdk-mcp-transports.js",
+  "module": "MCP 传输 / stdio-SSE-HTTP",
+  "tier": 2,
   "kb": 1.5,
   "confidence": "low"
  },
@@ -8141,15 +8141,15 @@
   "confidence": "medium"
  },
  "chunk-tbz185gf.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/loadSettingsFromFlag.tbz185gf.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/设置-配置/loadSettingsFromFlag.tbz185gf.js",
+  "module": "设置 / 配置",
   "tier": 1,
   "kb": 1.8,
   "confidence": "low"
  },
  "standalone-agent-context.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/standalone-agent-context.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/standalone-agent-context.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -8162,15 +8162,15 @@
   "confidence": "low"
  },
  "chunk-tfspgges.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-tfspgges.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-tfspgges.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
  },
  "import-items.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/import-items.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/import-items.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -8183,15 +8183,15 @@
   "confidence": "high"
  },
  "publish-permission-snapshot.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/publish-permission-snapshot.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/publish-permission-snapshot.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.7,
   "confidence": "low"
  },
  "reply-degraded-state.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/reply-degraded-state.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/reply-degraded-state.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -8218,8 +8218,8 @@
   "confidence": "medium"
  },
  "relaunch-terminal-size.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/relaunch-terminal-size.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/终端与时钟/relaunch-terminal-size.js",
+  "module": "终端与时钟",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -8239,15 +8239,15 @@
   "confidence": "medium"
  },
  "chunk-tm2wnzn7.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/isListAuthError.tm2wnzn7.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/isListAuthError.tm2wnzn7.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 0.8,
   "confidence": "low"
  },
  "use-clock.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/use-clock.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/终端与时钟/use-clock.js",
+  "module": "终端与时钟",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -8281,9 +8281,9 @@
   "confidence": "high"
  },
  "chunk-tpraq69b.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/chunk-tpraq69b.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 2.0,
   "confidence": "low"
  },
@@ -8316,8 +8316,8 @@
   "confidence": "high"
  },
  "command-park.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/command-park.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/command-park.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -8330,16 +8330,16 @@
   "confidence": "high"
  },
  "kb-cohesion-fixes.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/kb-cohesion-fixes.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/kb-cohesion-fixes.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "chunk-twnwwsbr.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js",
+  "module": "CLI 入口 / Commander",
+  "tier": 3,
   "kb": 2.6,
   "confidence": "low"
  },
@@ -8358,8 +8358,8 @@
   "confidence": "low"
  },
  "remote-tools-logger.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/remote-tools-logger.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/remote-tools-logger.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -8393,15 +8393,15 @@
   "confidence": "medium"
  },
  "chunk-v0baz11a.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/resolveAndPrepend.v0baz11a.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/resolveAndPrepend.v0baz11a.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.9,
   "confidence": "low"
  },
  "federation-cache-dir.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/federation-cache-dir.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/federation-cache-dir.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -8421,8 +8421,8 @@
   "confidence": "high"
  },
  "ca-trust-env-vars.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/ca-trust-env-vars.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/ca-trust-env-vars.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -8435,8 +8435,8 @@
   "confidence": "high"
  },
  "announcement-notices.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/announcement-notices.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/announcement-notices.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
@@ -8512,9 +8512,9 @@
   "confidence": "low"
  },
  "dir-sync-record-path.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/目录同步-dir-sync/dir-sync-record-path.js",
+  "module": "目录同步 / dir-sync",
+  "tier": 2,
   "kb": 1.4,
   "confidence": "low"
  },
@@ -8526,8 +8526,8 @@
   "confidence": "low"
  },
  "redact-secrets.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/redact-secrets.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-日志与脱敏/redact-secrets.js",
+  "module": "核心工具 · 日志与脱敏",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -8547,8 +8547,8 @@
   "confidence": "high"
  },
  "chunk-ve2h3qad.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-ve2h3qad.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.3,
   "confidence": "low"
@@ -8582,8 +8582,8 @@
   "confidence": "medium"
  },
  "chunk-vgxesh6m.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/runFastPathPolicyHelper.vgxesh6m.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/runFastPathPolicyHelper.vgxesh6m.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.2,
   "confidence": "low"
@@ -8603,8 +8603,8 @@
   "confidence": "medium"
  },
  "command-queue-context.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/command-queue-context.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/command-queue-context.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -8617,16 +8617,16 @@
   "confidence": "high"
  },
  "chunk-vkv8kr1s.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.vkv8kr1s.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.vkv8kr1s.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "conversation-reset.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/conversation-reset.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/会话-历史-恢复/conversation-reset.js",
+  "module": "会话 / 历史 / 恢复",
+  "tier": 2,
   "kb": 1.3,
   "confidence": "low"
  },
@@ -8638,9 +8638,9 @@
   "confidence": "high"
  },
  "disable-bundled-skills.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/Skills技能/disable-bundled-skills.js",
+  "module": "Skills 技能",
+  "tier": 2,
   "kb": 0.9,
   "confidence": "low"
  },
@@ -8666,22 +8666,22 @@
   "confidence": "high"
  },
  "chunk-vtgvbed1.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-vtgvbed1.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "drain-response-body.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/drain-response-body.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-其他/drain-response-body.js",
+  "module": "核心工具 · 其他",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
  },
  "dashed-border-box.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/dashed-border-box.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/dashed-border-box.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.4,
   "confidence": "low"
@@ -8708,15 +8708,15 @@
   "confidence": "low"
  },
  "worktree-state-store.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/worktree-state-store.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/worktree-state-store.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "recent-window.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/recent-window.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/recent-window.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -8743,8 +8743,8 @@
   "confidence": "high"
  },
  "expand-tabs.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/expand-tabs.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-字符串与文本/expand-tabs.js",
+  "module": "核心工具 · 字符串与文本",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
@@ -8771,15 +8771,15 @@
   "confidence": "high"
  },
  "chunk-w73yzmz1.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/FleetViewScreen.w73yzmz1.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/多会话视图-Fleet/FleetViewScreen.w73yzmz1.js",
+  "module": "多会话视图 / Fleet",
+  "tier": 2,
   "kb": 3.6,
   "confidence": "low"
  },
  "analytics-fields.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/analytics-fields.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -8792,15 +8792,15 @@
   "confidence": "medium"
  },
  "apply-node-extra-ca-certs.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/apply-node-extra-ca-certs.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/设置-配置/apply-node-extra-ca-certs.js",
+  "module": "设置 / 配置",
   "tier": 1,
   "kb": 1.9,
   "confidence": "low"
  },
  "coordinator-mode.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/coordinator-mode.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/coordinator-mode.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -8820,9 +8820,9 @@
   "confidence": "low"
  },
  "chunk-wdns14nh.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-wdns14nh.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/目标模式-Goal/chunk-wdns14nh.js",
+  "module": "目标模式 / Goal",
+  "tier": 2,
   "kb": 2.2,
   "confidence": "low"
  },
@@ -8848,9 +8848,9 @@
   "confidence": "low"
  },
  "propose-goal-tool.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/propose-goal-tool.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/目标模式-Goal/propose-goal-tool.js",
+  "module": "目标模式 / Goal",
+  "tier": 2,
   "kb": 2.2,
   "confidence": "low"
  },
@@ -8869,9 +8869,9 @@
   "confidence": "medium"
  },
  "chunk-whq65fek.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/getCachedIdpIdToken.whq65fek.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/getCachedIdpIdToken.whq65fek.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 2.1,
   "confidence": "low"
  },
@@ -8904,16 +8904,16 @@
   "confidence": "high"
  },
  "whiteboard-telemetry.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/遥测-OpenTelemetry/whiteboard-telemetry.js",
+  "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 1.2,
   "confidence": "low"
  },
  "claude-code-args.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/claude-code-args.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "03-入口与运行时/CLI入口-Commander/claude-code-args.js",
+  "module": "CLI 入口 / Commander",
+  "tier": 3,
   "kb": 1.2,
   "confidence": "low"
  },
@@ -8946,9 +8946,9 @@
   "confidence": "low"
  },
  "resumed-agent-handback.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/会话-历史-恢复/resumed-agent-handback.js",
+  "module": "会话 / 历史 / 恢复",
+  "tier": 2,
   "kb": 1.6,
   "confidence": "low"
  },
@@ -8967,8 +8967,8 @@
   "confidence": "high"
  },
  "linkified-text.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/linkified-text.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/linkified-text.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.5,
   "confidence": "low"
@@ -9086,9 +9086,9 @@
   "confidence": "medium"
  },
  "chunk-x4q0245z.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/远程控制-Bridge/chunk-x4q0245z.js",
+  "module": "远程控制 / Bridge",
+  "tier": 2,
   "kb": 2.7,
   "confidence": "low"
  },
@@ -9107,9 +9107,9 @@
   "confidence": "high"
  },
  "chunk-x86eq6fe.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/getCachedIdpIdToken.x86eq6fe.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/认证-OAuth登录/getCachedIdpIdToken.x86eq6fe.js",
+  "module": "认证 / OAuth 登录",
+  "tier": 2,
   "kb": 2.1,
   "confidence": "low"
  },
@@ -9135,8 +9135,8 @@
   "confidence": "low"
  },
  "background-text.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/background-text.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/background-text.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -9156,8 +9156,8 @@
   "confidence": "medium"
  },
  "reduced-motion.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/reduced-motion.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/UI组件-TUI/reduced-motion.js",
+  "module": "UI 组件 / TUI",
   "tier": 1,
   "kb": 0.8,
   "confidence": "low"
@@ -9170,8 +9170,8 @@
   "confidence": "high"
  },
  "intl-text-utils.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/intl-text-utils.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js",
+  "module": "核心工具 · 日期与本地化",
   "tier": 1,
   "kb": 2.8,
   "confidence": "low"
@@ -9212,23 +9212,23 @@
   "confidence": "low"
  },
  "advisor-command.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/advisor-command.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/模型顾问/advisor-command.js",
+  "module": "模型顾问",
+  "tier": 2,
   "kb": 3.2,
   "confidence": "low"
  },
  "worker-agent-type.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/worker-agent-type.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/worker-agent-type.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.6,
   "confidence": "low"
  },
  "chunk-xmqbkz02.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/advisor-cmd.xmqbkz02.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/模型顾问/advisor-cmd.xmqbkz02.js",
+  "module": "模型顾问",
+  "tier": 2,
   "kb": 3.6,
   "confidence": "low"
  },
@@ -9254,8 +9254,8 @@
   "confidence": "high"
  },
  "chunk-xsnaqgwj.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/adoptStorageV5EnvPin.xsnaqgwj.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/adoptStorageV5EnvPin.xsnaqgwj.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
@@ -9268,8 +9268,8 @@
   "confidence": "medium"
  },
  "chunk-xt5bqpq9.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/pinStorageV5.xt5bqpq9.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/pinStorageV5.xt5bqpq9.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.9,
   "confidence": "low"
@@ -9296,9 +9296,9 @@
   "confidence": "high"
  },
  "mcp-output-truncation.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/mcp-output-truncation.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 3.7,
   "confidence": "low"
  },
@@ -9324,16 +9324,16 @@
   "confidence": "medium"
  },
  "file-transfer-config.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/file-transfer-config.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/file-transfer-config.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
  },
  "chunk-y32gpf8a.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/createCliExecutor.y32gpf8a.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/图片-截图-ComputerUse/createCliExecutor.y32gpf8a.js",
+  "module": "图片 / 截图 / Computer Use",
+  "tier": 2,
   "kb": 1.5,
   "confidence": "low"
  },
@@ -9387,8 +9387,8 @@
   "confidence": "high"
  },
  "queued-message-context.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/queued-message-context.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/queued-message-context.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.6,
   "confidence": "low"
@@ -9408,8 +9408,8 @@
   "confidence": "high"
  },
  "chunk-ydn85r3t.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/chunk-ydn85r3t.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -9443,9 +9443,9 @@
   "confidence": "low"
  },
  "chunk-ygye20n9.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/usage-credits-cmd.ygye20n9.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/用量额度-限额/usage-credits-cmd.ygye20n9.js",
+  "module": "用量额度 / 限额",
+  "tier": 2,
   "kb": 3.4,
   "confidence": "low"
  },
@@ -9471,9 +9471,9 @@
   "confidence": "low"
  },
  "connector-registry-api.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/connector-registry-api.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP连接器-Connector/connector-registry-api.js",
+  "module": "MCP 连接器 / Connector",
+  "tier": 2,
   "kb": 3.4,
   "confidence": "low"
  },
@@ -9513,9 +9513,9 @@
   "confidence": "high"
  },
  "session-env-scrubbing.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/session-env-scrubbing.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 3.2,
   "confidence": "low"
  },
@@ -9534,8 +9534,8 @@
   "confidence": "high"
  },
  "external-http.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/external-http.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/HTTP-网络层/external-http.js",
+  "module": "HTTP / 网络层",
   "tier": 1,
   "kb": 2.1,
   "confidence": "low"
@@ -9604,16 +9604,16 @@
   "confidence": "high"
  },
  "process-record.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/process-record.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/守护服务-Daemon/process-record.js",
+  "module": "守护服务 / Daemon",
+  "tier": 2,
   "kb": 2.3,
   "confidence": "low"
  },
  "terminal-mode-sequences.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/终端环境探测-TUI-tmux/terminal-mode-sequences.js",
+  "module": "终端环境探测 / TUI-tmux",
+  "tier": 2,
   "kb": 1.9,
   "confidence": "low"
  },
@@ -9632,15 +9632,15 @@
   "confidence": "high"
  },
  "session-context.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/session-context.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/session-context.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.3,
   "confidence": "low"
  },
  "git-host-utils.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/git-host-utils.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-路径与平台/git-host-utils.js",
+  "module": "核心工具 · 路径与平台",
   "tier": 1,
   "kb": 2.8,
   "confidence": "low"
@@ -9667,8 +9667,8 @@
   "confidence": "high"
  },
  "chunk-z80978je.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/getAutoModeDescription.z80978je.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/getAutoModeDescription.z80978je.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 3.6,
   "confidence": "low"
@@ -9688,8 +9688,8 @@
   "confidence": "high"
  },
  "bash-mode-draft-text.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/bash-mode-draft-text.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.9,
   "confidence": "low"
@@ -9730,8 +9730,8 @@
   "confidence": "medium"
  },
  "plan-approval-permission-mode.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/plan-approval-permission-mode.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/plan-approval-permission-mode.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 1.1,
   "confidence": "low"
@@ -9751,23 +9751,23 @@
   "confidence": "low"
  },
  "chunk-zjbghh1h.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/TelemetrySafeError_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS.zjbghh1h.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/TelemetrySafeError_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS.zjbghh1h.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 2.8,
   "confidence": "low"
  },
  "chunk-zjf86jvg.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/default.zjf86jvg.js",
-  "module": "共享小工具 · 未细化",
+  "path": "01-核心基础设施/核心工具-未归类/default.zjf86jvg.js",
+  "module": "核心工具 / 未归类",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
  "chunk-zkm67jdf.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/getMcpErrorCode.zkm67jdf.js",
-  "module": "共享小工具 · 未细化",
-  "tier": 1,
+  "path": "02-功能模块/MCP客户端/getMcpErrorCode.zkm67jdf.js",
+  "module": "MCP 客户端",
+  "tier": 2,
   "kb": 1.2,
   "confidence": "low"
  },

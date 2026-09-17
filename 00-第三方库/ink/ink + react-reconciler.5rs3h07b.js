@@ -53,20 +53,20 @@ import { repeatString, toWellFormed, countOccurrences } from "../../01-核心基
 import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../react/react.zhnvc798.js";
 import { cz } from "../which-isexe/isexe.knmpyrza.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { reportRenderError, isScreenReaderModeEnabled, endScreenReaderStartupQuiet, getScreenReaderStartupQuietRemainingMs, getScreenReaderPreParkDelayMs, drainScreenReaderAnnouncements, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { chalk, getColorLevelGeneration } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { terminalCapabilities, convertTruecolorToAnsi256, stripItalicIfRendersAsStandout, applyColorSpec, applyTextStyles, applyForegroundColor, applyPersistentBackground } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
-import { getAttachStampMs, isAttachQuietDrainActive, waitForAttachQuietDrainEnd } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
+import { getAttachStampMs, isAttachQuietDrainActive, waitForAttachQuietDrainEnd } from "../../01-核心基础设施/核心工具-未归类/attach-state-tracking.js";
 import { getSessionFeatureCache } from "../../02-功能模块/Hooks钩子/session-feature-cache.js";
-import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
+import { stopCapturingEarlyInput } from "../../01-核心基础设施/核心工具-未归类/early-input-capture.js";
 import { isTmuxControlMode, shouldUseFullscreen, markMouseObserved } from "../../02-功能模块/终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
-import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
+import { isExiting } from "../../01-核心基础设施/核心工具-未归类/exit-commit-state.js";
 import { wrapOscForMultiplexer, setClipboard, readClipboard, formatHyperlinkStart, HYPERLINK_END, CLEAR_ITERM2_PROGRESS_SEQUENCE, RESET_TAB_STATUS_SEQUENCE, isTabStatusEnabled } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
+import { getInkInstanceRegistry } from "../../02-功能模块/多会话视图-Fleet/ink-instance-registry.js";
 import {
   cee,
   H9e,
@@ -107,20 +107,20 @@ import {
   DISABLE_WIN32_INPUT_MODE,
   DISABLE_MOUSE_TRACKING,
   getMouseTrackingSequence,
-} from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
-import { setTerminalFocus, isTerminalFocused, getTerminalFocus, getTerminalFocusGainedAt } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
-import { createDecrpmQuery, createCursorPositionQuery, createXtVersionQuery, TerminalQuerier } from "../../01-核心基础设施/共享小工具-未细化/terminal-querier.js";
-import { CLOCK_TICK_INTERVAL_MS, TerminalFocusProvider, ClockProvider } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
-import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
+} from "../../02-功能模块/终端环境探测-TUI-tmux/terminal-mode-sequences.js";
+import { setTerminalFocus, isTerminalFocused, getTerminalFocus, getTerminalFocusGainedAt } from "../../01-核心基础设施/终端与时钟/terminal-focus-state.js";
+import { createDecrpmQuery, createCursorPositionQuery, createXtVersionQuery, TerminalQuerier } from "../../02-功能模块/终端环境探测-TUI-tmux/terminal-querier.js";
+import { CLOCK_TICK_INTERVAL_MS, TerminalFocusProvider, ClockProvider } from "../../01-核心基础设施/终端与时钟/clock-and-terminal-focus.js";
+import { getClaimRegistry } from "../../01-核心基础设施/核心工具-未归类/host-claim-registry.js";
 import { e, r } from "../react/react.kwtapczy.js";
-import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
-import { toNumber } from "../../01-核心基础设施/共享小工具-未细化/lodash-to-number.js";
+import { trySetRawMode } from "../../02-功能模块/终端环境探测-TUI-tmux/try-set-raw-mode.js";
+import { toNumber } from "../../01-核心基础设施/核心工具-类型与数值/lodash-to-number.js";
 import { Cln, Uze, Qt, vln, V, F } from "../react/React运行时-JSX.j03jpdbn.js";
-import { expandTabs } from "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
-import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
+import { expandTabs } from "../../01-核心基础设施/核心工具-字符串与文本/expand-tabs.js";
+import { getGraphemeSegmenter } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { toESM, commonJS, initESM, MEMO_CACHE_SENTINEL, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { toESM, commonJS, initESM, MEMO_CACHE_SENTINEL, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 function Uf(t, s) {
   var c = t.length;
   t.push(s);

@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -27,17 +27,17 @@ import {
   PERMISSION_DENIED_MESSAGE,
   PERMISSION_DENIED_PREFIX,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { pickBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { sanitizeDeep } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { HOST_FIELD_NAME, getDefaultMachineName, isReservedMachineName, sanitizeMachineName } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { SUPPORTED_PROTOCOL_VERSIONS, INSTANCE_ID_PATTERN, isUnverifiedRefusal, ALLOWED_TOOL_OUTPUT_FIELDS, PDF_READ_NOTE_PREFIX } from "./remote-tool-protocol.js";
-import { stageDirSyncNotice } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
-import { toHostDescription } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
-import { INT32_MAX, hasMutualTakeAgreement } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
+import { stageDirSyncNotice } from "../目录同步-dir-sync/dir-sync-worker-lane.js";
+import { toHostDescription } from "../../01-核心基础设施/终端与时钟/chunk-hkdjw6ht.js";
+import { INT32_MAX, hasMutualTakeAgreement } from "../../01-核心基础设施/核心工具-未归类/chunk-ydn85r3t.js";
 import { s, T, O, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function formatUnknownHostMessage({ requested: e, attached: t }) {
   let r = sanitizeMachineName(e),
     o = e.trim().replace(/\s+\(offline\)$/i, "");

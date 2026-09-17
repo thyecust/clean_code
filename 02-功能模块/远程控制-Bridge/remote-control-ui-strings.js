@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { getClaudeAiBaseUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { getStringWidth, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
+import { getGraphemeSegmenter } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
 var RECENT_ACTIVITY_WINDOW_MS = 30000,
   BRIDGE_FAILED_ERROR = "bridge-failed",
   BRIDGE_DISABLED_AFTER_FAILURES_ERROR = "disabled after repeated failures \xB7 restart to retry",

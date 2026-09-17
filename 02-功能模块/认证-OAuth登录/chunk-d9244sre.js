@@ -8,5 +8,5 @@
 
 // Version: 2.1.263
 import { cy } from "../../00-第三方库/@aws-sdk/chunk-dm9sg03f.js";
-import "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import "../../01-核心基础设施/核心工具-未归类/smithy-context-module.js";
 export default cy();

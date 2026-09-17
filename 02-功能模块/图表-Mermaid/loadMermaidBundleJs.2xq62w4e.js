@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { readEmbeddedAsset } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
+import { readEmbeddedAsset } from "../../01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js";
 var D = "./mermaid.min.js";
 var H = `/*! mermaid v11.16.1 | MIT | Copyright (c) 2014 - 2022 Knut Sveidqvist */
 `;

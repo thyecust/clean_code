@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
-import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
+import { createJsonFileStore } from "../../01-核心基础设施/文件存储-原子写入/json-file-store.js";
+import { normalizeMcpName } from "../MCP客户端/mcp-name-normalization.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { readFile, stat as v } from "fs/promises";
 import { join as f } from "path";
 var MCP_SKILL_ARCHIVES_DIR_NAME = "mcp-skill-archives",

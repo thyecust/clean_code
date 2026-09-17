@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 194 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { B, K, jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { getBgJobRuntimeState } from "../../01-核心基础设施/共享小工具-未细化/bg-job-runtime-state.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { getBgJobRuntimeState } from "../../01-核心基础设施/核心工具-未归类/bg-job-runtime-state.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isAbsentParentFailure, describeStorageError, jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, takeLastCodeUnits, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -65,7 +65,7 @@ import {
   updateSessionActivity,
   getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { uuidSlugFromUrl } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { reconcileInheritPermissionMode } from "../权限系统/inherit-permission-mode-flag.js";
@@ -87,10 +87,10 @@ import { getSessionTranscriptPath } from "../Teammates团队/transcript-paths.js
 import { CRON_CREATE_TOOL_NAME } from "../定时任务-Cron/chunk-mk3zm4ew.js";
 import { tryConjugateVerbPhrase } from "../../01-核心基础设施/核心工具-字符串与文本/verb-conjugation.js";
 import { sendRv, disarmStartupWedgeWatchdog } from "../后台任务-Shell管理/bg-rendezvous-server.js";
-import { fromJobState, ensureJobDir } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { fromJobState, ensureJobDir } from "../守护服务-Daemon/chunk-tpraq69b.js";
+import { resolveTranscriptLocator } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
 import { appendFile, open as xe } from "fs/promises";
 import { join as Ne } from "path";
 function re(e) {

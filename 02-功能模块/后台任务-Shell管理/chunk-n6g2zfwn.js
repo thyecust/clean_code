@@ -30,18 +30,18 @@ import {
   getGlobalConfig,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseShortId, Qs, j, K, ze, he, Rg, bB, kg, m8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { le, Zt, Io, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { R, ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { COMMAND_NAME_TAG, COMMAND_ARGS_TAG, FORK_SOURCE_TAG, TASK_NOTIFICATION_TAG, TASK_ID_TAG, STATUS_TAG, SUMMARY_TAG, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { GIT_HARDENED_ARGS } from "../工作树-Git/git-exec-hardening.js";
 import { findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
@@ -53,10 +53,10 @@ import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Comma
 import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
 import { escapeHtmlText, unescapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { MODEL_ALIASES, isModelAlias, strip1mSuffix, stripLongContextTags, kP, getCatalogIdByProviderId, getCatalogEntryById, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
 import { getArtifactEnvironment, ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, parseArtifactUrl, artifactViewerUrlFor } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { provenSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { getSessionAnnouncementState } from "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
+import { getSessionAnnouncementState } from "../../01-核心基础设施/核心工具-未归类/session-announcement-state.js";
 import { getPluginRegistryFileScope, getPluginsDir, isReservedClaudeAiMarketplaceName, getPluginRegistryState } from "../插件系统/plugin-system-core.js";
 import { stripMemoryTags, getMemoryTagStats, collectMemoryCitationMetrics, stripMemoryTagsFromContentBlocks } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import {
@@ -128,7 +128,7 @@ import {
 import { getAgentTranscriptPath } from "../Teammates团队/transcript-paths.js";
 import { SKILL_TOOL_NAME } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
-import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
 import { findLivePeerBySessionId } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 import { derivePublishContextFrom, mainObservedArtifactVersion, isArtifactReadOnlySurface } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { applyHearthRelayFields } from "../通道集成-Slack/通道集成-Slack.wnn25q3j.js";
@@ -140,7 +140,7 @@ import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, isKairosCronEnabled } fro
 import { MAX_ARTIFACT_WATCHES, MAX_WATCH_HANDOFF_ENTRIES, getArtifactState } from "../制品发布-Artifact/chunk-rr78st95.js";
 import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { syncLiveInFlightSnapshot } from "./chunk-7wsy8vxb.js";
-import { getCronJitterConfig } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
+import { getCronJitterConfig } from "../../01-核心基础设施/核心工具-未归类/chunk-52kaw3c1.js";
 import { parseArtifactCommentMonitorIntent, readArtifactCommentMonitorRecords, getTornArtifactCommentMonitorStops, applyArtifactCommentMonitorStops } from "../制品发布-Artifact/artifact-comment-monitor-intent.js";
 import { isArtifactCommentsAvailable, resolveLiveSessionHolder, buildHolderDescriptor, describeHolderWithOthers, getHolderTelemetryFields, stripGoneJobHolderFields, isArtifactAutoReactEnabled } from "../制品发布-Artifact/chunk-p1dkvpxj.js";
 import { onArmSettled, slugRepliesWiredHere, maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../制品发布-Artifact/chunk-kshc4v5t.js";
@@ -151,17 +151,17 @@ import { uninstallPlugin } from "../插件系统/chunk-q8w2zntw.js";
 import { summarizeBackgroundTasks } from "./background-task-inventory.js";
 import { resolvePreModelSwitchDecision, formatModelSwitchBlockedNotice, toSingleLineDisplayText } from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import { isWebFetchAgentToolUse } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
-import { getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
+import { getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/核心工具-未归类/frame-url-prefixes.js";
 import { getEffectiveEffortLevel } from "../远程控制-Bridge/bridge-effort-sync.js";
-import { isUserPresent, addUnattendedReplies, takeUnattendedReplies, buildUnattendedRepliesNotice } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
+import { isUserPresent, addUnattendedReplies, takeUnattendedReplies, buildUnattendedRepliesNotice } from "../../01-核心基础设施/核心工具-未归类/auto-react-state.js";
 import { sanitizeDisplayName, formatModelRestrictedMessage } from "../Teammates团队/chunk-mrfx53ye.js";
-import { resolveSubagentTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { resolveSubagentTranscriptLocator } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
 import { isOfficialMarketplace } from "../插件系统/chunk-33bdfgmx.js";
-import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/send-message-constants.js";
 import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { defineExportGetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { defineExportGetters } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var Gn = createLazyValue(() =>
     cr(
       nt({
@@ -1278,7 +1278,7 @@ function rearmArtifactLiveInHeadlessHost(e) {
     let d =
         r?.warmFlags ??
         (async () => {
-          let { initializeGrowthBook: w } = await import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js");
+          let { initializeGrowthBook: w } = await import("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js");
           return w();
         }),
       c =

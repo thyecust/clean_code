@@ -43,13 +43,13 @@ import {
   EXIT_ALT_SCREEN,
   DISABLE_MOUSE_TRACKING,
   getMouseTrackingSequence,
-} from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
+} from "../../02-功能模块/终端环境探测-TUI-tmux/terminal-mode-sequences.js";
 import { isSemverAtLeast } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatOscSequence, wrapOscForMultiplexer, OSC_CODES, formatHyperlinkStart, ITERM2_OSC_COMMANDS, ITERM2_PROGRESS_STATES } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { e } from "../react/react.kwtapczy.js";
 import { Qt, re, De, V, F } from "../react/React运行时-JSX.j03jpdbn.js";
 import { pg } from "../semver/chunk-jm5cswvd.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var le = buildCsiSequence(0, "f");
 function getClearTerminalSequence() {
   return ERASE_SCREEN_SEQUENCE + ERASE_SCROLLBACK_SEQUENCE + CURSOR_HOME_SEQUENCE;

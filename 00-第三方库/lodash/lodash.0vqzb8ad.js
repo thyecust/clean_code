@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { toString as Sz } from "./lodash.2x3q7cfh.js";
-import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent, logEventAsync } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 function arrayReduce(e, r, o, a) {
   var n = -1,
     s = e == null ? 0 : e.length;

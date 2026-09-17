@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, FILE_TRANSFER_ERROR_MESSAGE, RECEIVED_FILES_MAX_AGE_DAYS } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
+import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, FILE_TRANSFER_ERROR_MESSAGE, RECEIVED_FILES_MAX_AGE_DAYS } from "../../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
 import { getUploadsDirectory } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getMediaTypeFromPath } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";

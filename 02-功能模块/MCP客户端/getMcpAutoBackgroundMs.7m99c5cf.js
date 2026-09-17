@@ -9,14 +9,14 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { areBackgroundTasksDisabled } from "../../01-核心基础设施/核心工具-未归类/host-capability-state.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { MAX_TIMER_DELAY_MS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -25,7 +25,7 @@ import { enqueuePendingNotification } from "../../03-入口与运行时/核心�
 import "./chunk-tv3jbp8f.js";
 import "../认证-OAuth登录/pkce-challenge.js";
 import "../认证-OAuth登录/oauth-client.js";
-import { createMcpTaskRecord } from "../../01-核心基础设施/共享小工具-未细化/mcp-task-record.js";
+import { createMcpTaskRecord } from "./mcp-task-record.js";
 import { StreamableHTTPError } from "../MCP传输-stdio-SSE-HTTP/streamable-http-client-transport.js";
 var K = new Set([
   "ClaudeAiProxyBearerRejectedError",

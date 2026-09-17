@@ -13,7 +13,7 @@ import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getEnabledSettingsSources } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
+import { getHostStateStore } from "../../01-核心基础设施/文件存储-原子写入/host-state-store.js";
 import {
   HooksError,
   getSourceLoaderName,
@@ -34,7 +34,7 @@ import {
 } from "./chunk-bzqqe6xh.js";
 import { fAe } from "../../00-第三方库/acorn/acorn.pk8w19yv.js";
 import { INLINE_PLUGIN_SOURCE, BUILTIN_PLUGIN_SOURCE } from "../插件系统/chunk-33bdfgmx.js";
-import { defineLazyProperty, Fwt } from "../../01-核心基础设施/共享小工具-未细化/define-lazy-property.js";
+import { defineLazyProperty, Fwt } from "../../01-核心基础设施/核心工具-类型与数值/define-lazy-property.js";
 var PLUGIN_HOOKS_MODULES_FLAG = "tengu_plugin_hooks_modules";
 var M = () => !1;
 var isFunctionHooksEnabled = () => a.CLAUDE_CODE_ENABLE_FUNCTION_HOOKS ?? getFeatureValue_CACHED_MAY_BE_STALE(PLUGIN_HOOKS_MODULES_FLAG, M());

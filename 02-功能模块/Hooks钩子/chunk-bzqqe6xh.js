@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 class HooksError extends Error {
   name = "HooksError";
 }

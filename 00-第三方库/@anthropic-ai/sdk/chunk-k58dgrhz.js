@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { Lt, uot, GW } from "./sdk.h4f48kbj.js";
-import { lit, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { isValidRequestId } from "../../../01-核心基础设施/共享小工具-未细化/request-id.js";
+import { lit, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { isValidRequestId } from "../../../01-核心基础设施/核心工具-其他/request-id.js";
 var Aer = 600000;
 function Bqt(e) {
   return e.escalated ? e.retryWindowMs : e.firstWindowMs;

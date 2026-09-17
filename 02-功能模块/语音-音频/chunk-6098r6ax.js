@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly, isNonessentialTrafficRestricted } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getUserAgent, isAnthropicAuthEnabled, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { checkWebSocketEgress } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
-import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
+import { checkWebSocketEgress } from "../../01-核心基础设施/HTTP-网络层/test-egress-guard.js";
+import { getClientPlatform } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
 import m from "ws";
 var V = '{"type":"KeepAlive"}',
   F = '{"type":"CloseStream"}',

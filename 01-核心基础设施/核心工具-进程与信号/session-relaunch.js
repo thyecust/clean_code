@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
+import { withTimeout } from "../核心工具-并发与缓存/async-timeout-utils.js";
 import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { CLEANUP_DRAIN_TIMEOUT_MS, drainCleanup, drainPreExitFlush, changeWorkingDirectory, flushDebugLogs, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PROCESS_WRAPPER_ENV_VAR, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "./process-wrapper-launcher.js";
-import { flushDiagnostics } from "../共享小工具-未细化/diagnostics-log.js";
+import { flushDiagnostics } from "../核心工具-日志与脱敏/diagnostics-log.js";
 import {
   cleanupTerminalModes,
   emitScrollTelemetrySummary,
@@ -32,11 +32,11 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { drainRegisteredWriteQueues } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getProjectDir } from "../../02-功能模块/Teammates团队/transcript-paths.js";
-import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../共享小工具-未细化/claude-launcher-invocation.js";
+import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
 import { AUTO_RESUME_CANCEL_MESSAGES, cancelAutoResumeForHandoff, clearHandoffInProgress } from "../../02-功能模块/状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
-import { RELAUNCH_TERMINAL_SIZE_ENV_VAR, getRelaunchTerminalSizeEnv } from "../共享小工具-未细化/relaunch-terminal-size.js";
-import { copyEnvWithoutUndefined } from "../共享小工具-未细化/copy-env-without-undefined.js";
-import { resolveTranscriptLocator } from "../共享小工具-未细化/hover-rest-transcript.js";
+import { RELAUNCH_TERMINAL_SIZE_ENV_VAR, getRelaunchTerminalSizeEnv } from "../终端与时钟/relaunch-terminal-size.js";
+import { copyEnvWithoutUndefined } from "../核心工具-其他/copy-env-without-undefined.js";
+import { resolveTranscriptLocator } from "../核心工具-未归类/hover-rest-transcript.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { spawnSync } from "child_process";
 import { stat as I } from "fs/promises";

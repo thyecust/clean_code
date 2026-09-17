@@ -10,16 +10,16 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getStringWidth } from "../核心工具-字符串与文本/ansi-text-utils.js";
 import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useKeybinding, useKeybindings } from "../共享小工具-未细化/keybinding-hooks.js";
-import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybinding, useKeybindings } from "../../02-功能模块/键位绑定-Keybindings/keybinding-hooks.js";
+import { DotSeparatedList } from "../核心工具-未归类/chunk-ff1hq6qq.js";
 import { hn } from "./chunk-tp42fv8j.js";
 import { de } from "./chunk-92g8hxqw.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
-import { ErrorMessage } from "../共享小工具-未细化/error-message.js";
+import { ErrorMessage } from "./error-message.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
-import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function Be(lo) {
   return getStringWidth(lo.label);

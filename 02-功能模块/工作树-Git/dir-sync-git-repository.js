@@ -12,7 +12,7 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isIterateeCall, sliceArrayRange, omitBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import {
@@ -27,9 +27,9 @@ import {
   isValidFullGitRefName,
   isClaudeSessionRef,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { toInteger } from "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
+import { toInteger } from "../../01-核心基础设施/核心工具-类型与数值/to-integer.js";
 import { getSafeReadOpenFlags, getNoFollowOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { spawn } from "child_process";
 import { constants } from "fs";
 import { lstat as Q, open as fe } from "fs/promises";

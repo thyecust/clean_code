@@ -15,7 +15,7 @@ import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "./chrome-tool-error-classifier.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { getClaudeInChromePermissionOverrides } from "./claude-in-chrome-tool-permissions.js";
-import "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
+import "./browser-tool-verb-phrases.js";
 function c(e, o, s) {
   let a = e.tabId;
   if (typeof a === "number") trackClaudeInChromeTabId(a);

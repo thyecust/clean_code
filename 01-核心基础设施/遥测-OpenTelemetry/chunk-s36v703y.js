@@ -10,7 +10,7 @@
 import { m3e } from "../../00-第三方库/@grpc/grpc-js/grpc-js.5zkynjxh.js";
 import { otlpExporterBaseModule, otlpTransformerModule } from "./遥测-OpenTelemetry.0xhcvej6.js";
 import "../../00-第三方库/@opentelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
-import { commonJS } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var s = commonJS(function (o) {
   Object.defineProperty(o, "__esModule", { value: !0 });
   o.OTLPLogExporter = void 0;

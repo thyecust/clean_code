@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { tslibAwaiter, tslibGenerator } from "../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
-import { toUint8Array, isEmptyData } from "../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
+import { tslibAwaiter, tslibGenerator } from "../../01-核心基础设施/核心工具-类型与数值/tslib-helpers.js";
+import { toUint8Array, isEmptyData } from "../../01-核心基础设施/核心工具-类型与数值/byte-array-conversion.js";
 var s = 64,
   y = 32,
   m = new Uint32Array([

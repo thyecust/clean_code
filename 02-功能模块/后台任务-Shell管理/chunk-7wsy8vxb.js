@@ -7,37 +7,37 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { Xn, j, Si, B, K, Ec, vz, _B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, Xo, Fb } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { R, dt, ge, l, A, Jr, Jg, WW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum, fromEnumOpt, fromEnumArr, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt, fromEnumArr, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { PROVIDER_CONFIG_ENV_VARS, MODEL_ENV_VARS, CUSTOM_MODEL_OPTION_ENV_VARS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { normalizeComparableText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { normalizeComparableText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { isModelRetiredOrRemapped, parseUserSpecifiedModel, getJobsDir as Xvn, getJobStorageKey, isLocalAddress, sanitizeSessionName, getBgTakeover } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { renameWithRetry, writeNewFileExclusive, writeNewFileAfterAbsenceCheck, writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { le, Xu, nt, hm } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getRosterFilePath, MAX_TERMINAL_DIMENSION } from "./chunk-djserjj5.js";
-import { getBgJobRuntimeState } from "../../01-核心基础设施/共享小工具-未细化/bg-job-runtime-state.js";
+import { getBgJobRuntimeState } from "../../01-核心基础设施/核心工具-未归类/bg-job-runtime-state.js";
 import { isExitedProcessAsync, isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { resolveAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
+import { resolveAgentColorName } from "../多会话视图-Fleet/agent-color-palette.js";
 import { isUuidShaped } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION } from "../权限系统/fork-restricted-launch-flags.js";
 import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getCarriableEffortLevel } from "../权限系统/chunk-t3b7pg2x.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
-import { createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
+import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
+import { createKeyedSerialQueue } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
 import { s, T, O, se, v, c, it, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { isAbsolute as bt } from "path";
 var VALUE_TAKING_RESPAWN_FLAGS = new Set([
     "--exec",

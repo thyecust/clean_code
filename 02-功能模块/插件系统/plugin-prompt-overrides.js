@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { parsePluginScopedServerName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { splitPluginId, isOfficialMarketplace, isFirstPartyPlugin } from "./chunk-33bdfgmx.js";

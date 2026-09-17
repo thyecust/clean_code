@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { updateSettingsForSource, hasSkipWorkflowUsageWarning } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isUltracodeActive } from "../权限系统/chunk-t3b7pg2x.js";
 import { getToolPermissionContext, getEffortValue, getUltracodeRequested } from "../权限系统/chunk-fjrcf22x.js";
-import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { WORKFLOW_TOOL_NAME } from "./chunk-7fcxwgtq.js";
 import { isTeammateWorker } from "../Teammates团队/permission-sync-mailbox.js";
 function workflowNeedsUsageConsentPrompt(e, o) {
   if (e !== WORKFLOW_TOOL_NAME) return !1;

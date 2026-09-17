@@ -11,24 +11,24 @@
 // [preload stripped] 原本在此预载 251 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useKeybinding } from "../键位绑定-Keybindings/keybinding-hooks.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
-import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
+import { useKeybindingDisplayText } from "../键位绑定-Keybindings/use-keybinding-display-text.js";
+import { useGlobalExitKeybinding } from "../键位绑定-Keybindings/exit-keybinding-hooks.js";
 import { isFeedbackCommandEnabled, formatDescriptionWithSource } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useVirtualScrollViewportSize } from "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-state.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
 import "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
 import { qp, ss, Jd } from "../../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { PromptFooterHints } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-tfspgges.js";
-import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
-import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import "../../01-核心基础设施/核心工具-未归类/chunk-tfspgges.js";
+import "../../01-核心基础设施/UI组件-TUI/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/UI组件-TUI/empty-state-message.js";
 import { Qr } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { V, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function xo(Wo, Xo) {
   return Wo.name.localeCompare(Xo.name);

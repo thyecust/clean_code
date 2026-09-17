@@ -12,24 +12,24 @@
 import { unwrapAbortReason, isUserInitiatedAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Fx } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { getDetectedBuildTools } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, G0, R, dt, ge, l, Ub, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { resolvePathInfo, resolveSymlinkTargetSync, expandPathAliases, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { TruncatingOutputBuffer } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { emitTaskNotification, getOwnValue, isForegroundSubagentContext, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, POWERSHELL_TOOL_NAME, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { getToolResultsDirForSession, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getContainingDirectory, containsPathTraversal } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { INLINE_CODE_FLAGS, isOutsideReadsBlockedAsk, outsideReadsRuntimePathAsk, outsideReadsTooComplexAsk, BASH_COMMAND_CLAMP_DENY_REASON, BASH_COMMAND_CLAMP_CRASH_REASON } from "../权限系统/chunk-e4pfvp7x.js";
 import { OUTPUT_MAX_CHARS_CEILING, TOOL_USE_SUMMARY_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { getHostCapabilityState, areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
+import { getHostCapabilityState, areBackgroundTasksDisabled } from "../../01-核心基础设施/核心工具-未归类/host-capability-state.js";
 import {
   isWindowsNetworkPath,
   buildDirectoryReadRuleUpdate,
@@ -149,7 +149,7 @@ import {
   ARBITRARY_CODE_EXECUTION_COMMANDS,
   MODULE_OR_SCRIPT_INSTALL_COMMANDS,
 } from "./powershell-command-safety.js";
-import { buildBooleanFromStringSchema } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
+import { buildBooleanFromStringSchema } from "../../01-核心基础设施/核心工具-类型与数值/boolean-from-string-schema.js";
 import { isMonitorToolEnabled } from "../工具Monitor/monitor-tool-description.js";
 import { s, T, O, c, Qe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";

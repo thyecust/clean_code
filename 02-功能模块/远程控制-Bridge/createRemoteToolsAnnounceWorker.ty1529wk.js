@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { remoteToolsAnnounceRequestSchema } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { jsonStringifyUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { formatSingleLineText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { normalizeWithdrawalReason, isWithinDepth, parseMachineDescription, parseToolAnnouncement } from "../远程工具执行/remote-tool-protocol.js";
 import { ForwardedToolCallRegistry } from "./forwarded-tool-call-registry.js";
 import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
-import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
+import { logRemoteToolsEvent } from "../../01-核心基础设施/核心工具-未归类/remote-tools-logger.js";
 var _ = 1048576,
   w = 32,
   k = 200;
@@ -189,12 +189,12 @@ async function productionRemoteToolsAnnounceDeps(e) {
       { fromEnum: c, lit: l },
       { logFeatureBad: h, logFeatureOk: p, logFeatureSad: f },
     ] = await Promise.all([
-      import("../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
+      import("../目录同步-dir-sync/chunk-97crm80y.js"),
+      import("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
       import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
       import("./SESSION_TRANSPORT_LIMITS.04hfp4jb.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/analytics-fields.js"),
+      import("../../01-核心基础设施/遥测-OpenTelemetry/logEvent.q8d8f1jd.js"),
+      import("../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js"),
       import("../../00-第三方库/lodash/lodash.0vqzb8ad.js"),
     ]);
   return {

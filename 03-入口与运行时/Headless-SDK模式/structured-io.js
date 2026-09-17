@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import {
   hashForTelemetry,
   recordCredentialInvalidation,
@@ -26,20 +26,20 @@ import {
   getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Xn, K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Ve, zi, yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeToStdout, drainStdoutBeforeExit } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { writeDiagnosticsEvent, flushDiagnostics } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent, flushDiagnostics } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { drainRegisteredWriteQueues } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { stripAnsi, formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi, formatSingleLineText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { HOOK_REWRITE_HEADLESS_DENY_REASON, CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON, CAN_USE_TOOL_INVALID_RESULT_DENY_REASON, CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON, CAN_USE_TOOL_ABORTED_DENY_REASON } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { TOOL_USE_SUMMARY_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { sanitizeTextForDisplay } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
@@ -74,17 +74,17 @@ import {
   stringifyJsonSafe,
   executeNotificationHooks,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
+import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/核心工具-未归类/exit-commit-state.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { WEB_FETCH_TOOL_NAME } from "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import { CONNECT_GITHUB_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { normalizeRequestIdFields, recordOutboundRequestId, markPromptRequestResolved } from "../../02-功能模块/远程控制-Bridge/chunk-5ne99rq3.js";
 import { SessionStateStore } from "../../02-功能模块/远程控制-Bridge/chunk-1yq098a7.js";
 import { AsyncQueue } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
-import { ServingInstanceGoneError, RequestDeliveryUnknownError, RequestWithdrawnUnsentError, RequestNotDeliveredError } from "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
-import { isJsonRpcRequest } from "../../01-核心基础设施/共享小工具-未细化/sdk-mcp-transports.js";
+import { ServingInstanceGoneError, RequestDeliveryUnknownError, RequestWithdrawnUnsentError, RequestNotDeliveredError } from "../../01-核心基础设施/核心工具-未归类/request-delivery-errors.js";
+import { isJsonRpcRequest } from "../../02-功能模块/MCP传输-stdio-SSE-HTTP/sdk-mcp-transports.js";
 import { buildPendingActionDetail, markUserInteraction, isUserDrivenInbound, isHumanInputRequest } from "./chunk-yb7jadvp.js";
-import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js";
 import { AA, s, O, tB, se, v, c, $e, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var Je = createLazyValue(() =>
     c({

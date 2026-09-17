@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { DESIGN_OAUTH_SCOPES, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -18,7 +18,7 @@ import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { refreshOAuthToken, revokeOAuthToken, isOAuthTokenExpired, isInvalidGrantError } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
-import { getSecureStorageDir } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
+import { getSecureStorageDir } from "../认证-OAuth登录/keychain-access.js";
 import { OAuthLoginFlow } from "../认证-OAuth登录/oauth-login-flow.js";
 import { join as O } from "path";
 async function readDesignOauthTokens(r) {

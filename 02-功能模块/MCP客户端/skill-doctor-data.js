@@ -15,8 +15,8 @@ import { getStringWidth, formatTokens, formatTokenEstimate } from "../../01-核�
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { getSkillTokenCountsAccess, collectSkillTokenUsage } from "../成本-Token统计/usage-transcript-scan.js";
 import { getDisusedPlugins } from "../插件系统/plugin-disuse.js";
-import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { normalizeMcpName } from "./mcp-name-normalization.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function padEndToWidth(n, t) {
   return n + " ".repeat(Math.max(0, t - getStringWidth(n)));
 }

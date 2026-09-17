@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { lit as S, fromEnumOpt } from "../共享小工具-未细化/analytics-fields.js";
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
+import { lit as S, fromEnumOpt } from "../遥测-OpenTelemetry/analytics-fields.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { getSettingsForSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionMode } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { canCycleToAuto } from "../../02-功能模块/权限系统/permission-mode-cycle.js";

@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 82 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { SHARE_ONBOARDING_GUIDE_TOOL_NAME, SHARE_ONBOARDING_GUIDE_TOOL_DESCRIPTION } from "./share-onboarding-guide-tool.js";

@@ -12,16 +12,16 @@
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { ToolResultRow } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { validateWorkingDirectory, formatDirectoryValidationMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { AddDirectoryToWorkspaceDialog } from "../权限系统/add-directory-to-workspace.js";
-import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
-import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import "../../01-核心基础设施/UI组件-TUI/focusable-box.js";
+import "../../01-核心基础设施/UI组件-TUI/empty-state-message.js";
+import "../../01-核心基础设施/UI组件-TUI/error-message.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { addWorkingDirectory, explainAlreadyAccessibleDirectory } from "../../01-核心基础设施/设置-配置/add-working-directory.js";
-import "../../01-核心基础设施/共享小工具-未细化/reload-skills.js";
+import "../Skills技能/reload-skills.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 function D(X) {
   let C = _(7),

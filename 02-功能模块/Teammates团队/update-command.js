@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { K, qP, Tz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { isBgSession, isDaemonBgWorker, getScreenReaderEnvOverrides } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createSyntheticAssistantTextMessage } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import { isTeammate } from "./teammate-context.js";
@@ -26,7 +26,7 @@ import { getMaterializedSessionFile, isTranscriptPersistenceDisabled, flushSessi
 import { getToolPermissionContext, getSessionEffort } from "../权限系统/chunk-fjrcf22x.js";
 import { BG_WORKER_IDENTITY_ENV_VARS } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { getLauncherArgv } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
-import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
+import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
 import { recordExitTranscript, surfaceCancelledContinueNotice, relaunchWithErrorNotice, persistTranscriptLeafCheckpoint, assertLauncherRunnable, resolveSessionWorkingDirectory } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import { isBgExitHandoffEnabled, hasCarriedCommentMonitor, classifyBackgroundActivity } from "../后台任务-Shell管理/background-task-inventory.js";
 import { spawn } from "child_process";

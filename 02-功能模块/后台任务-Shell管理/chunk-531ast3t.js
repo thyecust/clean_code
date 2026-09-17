@@ -12,8 +12,8 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isInterruptLikeUserMessage } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getPromptScreenSnapshot, didPromptScreenChange, isTranscriptPersistenceDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isCheckinOrigin } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
-import { isAgentsFleetEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
+import { isCheckinOrigin } from "../../01-核心基础设施/核心工具-未归类/chunk-6dk85bs6.js";
+import { isAgentsFleetEnabled } from "../多会话视图-Fleet/agent-view-feature-gates.js";
 function isAgentsViewAvailable() {
   return isAgentsFleetEnabled() && !Nn();
 }

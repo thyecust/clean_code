@@ -9,19 +9,19 @@
 // Version: 2.1.263
 import { K, sn, ke, gje, f8, Rz, vje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { getHostStateStore } from "../../01-核心基础设施/文件存储-原子写入/host-state-store.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { parseConfigInteger, isSafeMode, xg } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { describeStorageError, jsonStringify, jsonParse, readTailBytes, enableDebugLogging, flushDebugLogs, logForDebugging, getDebugLogPath, isDefaultDebugLogPath } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, pluralize, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isRemoteCoworkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSettingsSchema, toJsonSchema, stripInternalSchemaDescriptions } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { getClaudeInChromeState, CFC_TOOL_PREFIX, detectAvailableBrowser, openInChrome } from "../浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
@@ -82,7 +82,7 @@ import { EFFORT_LEVELS, isValidEffortLevel, parseEffortLevelAlias, resolveModelE
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
-import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
+import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/核心工具-未归类/max-subagent-spawn-depth.js";
 import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { getArtifactState } from "../制品发布-Artifact/chunk-rr78st95.js";
 import {
@@ -110,21 +110,21 @@ import {
   isArtifactPrReviewEnabled,
   isArtifactPrReviewComposeLatched,
 } from "../制品发布-Artifact/chunk-01ymf0ar.js";
-import { invokeMcpToolRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { invokeMcpToolRaw } from "../MCP客户端/chunk-7wm8t84g.js";
 import { getRosterFilePath } from "../后台任务-Shell管理/chunk-djserjj5.js";
 import { registerBundledSkillSessionReset, registerBundledSkill, getBundledSkills, getBundledSkillExtractDir, extractAdditionalSkillFiles } from "./bundled-skills.js";
 import { getJobsDir } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { DEFAULT_KEYBINDINGS, KEYBINDING_CONTEXT_NAMES, KEYBINDING_CONTEXT_DESCRIPTIONS, KEYBINDING_ACTION_IDS, NON_REBINDABLE_KEYS, TERMINAL_RESERVED_KEYS, MACOS_RESERVED_KEYS, isKeybindingCustomizationEnabled } from "../键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import { buildArtifactToolSpellingNote } from "../制品发布-Artifact/chunk-01jnk0v2.js";
 import { listClaudeAiConnectorServers, getArtifactConnectorHostingState, artifactLiveEditPromptGateOpen, artifactCapabilitiesPromptGateOpen, artifactCommentsPromptGateOpen, artifactRoomSurfaceOpen, artifactReadPageDataPromptGateOpen } from "../制品发布-Artifact/chunk-b6k1z7an.js";
-import { markWorkshopInvokeStart } from "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
+import { markWorkshopInvokeStart } from "../../01-核心基础设施/遥测-OpenTelemetry/workshop-telemetry.js";
 import { prependPageContract } from "../制品发布-Artifact/artifact-prompt-paragraphs.js";
 import { getUltrareviewProsePointerTip } from "../代码审查/ultrareview-tips.js";
 import { getDaemonLockPath, getDaemonLockStateKey } from "../后台任务-Shell管理/daemon-lock.js";
 import { registerDesignSkill } from "../设计同步/register-design-skill.js";
 import { recordPrReviewTarget } from "../代码审查/pr-review-target.js";
-import { getDaemonStatusPath, getDaemonStatusStateKey } from "../../01-核心基础设施/共享小工具-未细化/daemon-status.js";
-import { getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
+import { getDaemonStatusPath, getDaemonStatusStateKey } from "../守护服务-Daemon/daemon-status.js";
+import { getDaemonLogPath } from "../守护服务-Daemon/daemon-paths.js";
 import { DESIGN_SYNC_POLICY_GATE, isDesignSyncPolicyAllowed } from "../设计同步/design-sync-tool-metadata.js";
 import {
   ARTIFACT_DESIGN_SKILL_NAME,
@@ -141,14 +141,14 @@ import {
   COMMIT_SKILL_NAME,
   PR_SKILL_NAME,
   COWORK_PLUGIN_SKILL_NAME,
-} from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
-import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
-import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
+} from "./bundled-skill-names.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js";
+import { isCoordinatorModeEnabled } from "../../01-核心基础设施/核心工具-未归类/coordinator-mode.js";
 import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../浏览器集成-ClaudeinChrome/claude-in-chrome-mcp-constants.js";
 import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { O, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 function en(e) {
   return e === null || e === void 0
@@ -523,7 +523,7 @@ function ge() {
 }
 registerAvailabilityPredicate(() => isPlanWorkshopOfferEnabled() && ge());
 function it() {
-  return import("../../01-核心基础设施/共享小工具-未细化/WORKSHOP_PAGE_TEMPLATE.1268b5re.js");
+  return import("../../01-核心基础设施/内嵌资源与模块互操作/WORKSHOP_PAGE_TEMPLATE.1268b5re.js");
 }
 var vn =
   "Build a design together with the user, one decision at a time - publish an evolving plan document as an Artifact, surface each open decision on the page for the reader to answer there, apply their choices in this session, and republish the updated draft until the reader starts the build. Use when asked to workshop a design, brainstorm with decision points, or drive an iterative decide-and-revise loop through an artifact.";
@@ -3629,7 +3629,7 @@ function xo() {
   });
 }
 function Io() {
-  return import("../../01-核心基础设施/共享小工具-未细化/PLAN_TEMPLATE.1d4pc3yc.js");
+  return import("../../01-核心基础设施/内嵌资源与模块互操作/PLAN_TEMPLATE.1d4pc3yc.js");
 }
 var ss =
   "Create or customize a shareable plan Artifact from an implementation plan, design doc, or RFC. Use when asked to publish a plan as an artifact, restyle or edit a plan artifact, or present a plan as a shareable page.";
@@ -3948,7 +3948,7 @@ function Bo() {
   });
 }
 function Ho() {
-  return import("../../01-核心基础设施/共享小工具-未细化/SKILL_COMPOSED_MD.93smkgn7.js");
+  return import("../../01-核心基础设施/内嵌资源与模块互操作/SKILL_COMPOSED_MD.93smkgn7.js");
 }
 var bs =
     "Create a PR review artifact - a structured review briefing for a GitHub pull request (synthesis title and bottom line, a recommendation, reviewer judgment calls, a visual explainer, signals, and blind spots), published as a shareable page. Use when the user asks to review a PR as an artifact, publish a PR review page, or share a review briefing. NOT a narrative walkthrough. Only for CREATING a new artifact; edits to an existing artifact modify its HTML directly.",
@@ -4785,7 +4785,7 @@ function registerAllBundledSkills() {
   d({ disabled: a.CLAUDE_CODE_DISABLE_CLAUDE_CODE_SKILL === !0 });
   {
     let { registerWorkflowAuthoringSkill: p } = import.meta.require(
-      "../../01-核心基础设施/共享小工具-未细化/renderWorkflowAuthoringSkillBody.2a6g0n2c.js",
+      "../编排-Workflow/renderWorkflowAuthoringSkillBody.2a6g0n2c.js",
     );
     p();
   }

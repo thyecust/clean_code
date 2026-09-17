@@ -11,11 +11,11 @@
 // [preload stripped] 原本在此预载 106 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { resolveAttachDeviceBinding as LJt, pullsBackToThisMachine as MJt, servedToolsForAttach as qmr, registerAttachedDevice as NJt } from "../认证-OAuth登录/attach-device-binding.js";
 import "../远程控制-Bridge/device-bridge-registration.js";
-import "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
+import "../设备注册-Cowork/device-passthrough-meta.js";
 import "../远程工具执行/remote-tool-protocol.js";
 import "../设备注册-Cowork/设备注册-Cowork.9r92qaht.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
+import "../设备注册-Cowork/chunk-d4kaq0ds.js";
+import "../../01-核心基础设施/核心工具-未归类/chunk-rds75sre.js";
 export {
   MJt as pullsBackToThisMachine,
   NJt as registerAttachedDevice,

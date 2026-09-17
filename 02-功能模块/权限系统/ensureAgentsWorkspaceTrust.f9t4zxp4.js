@@ -13,7 +13,7 @@ import { B, Dx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { checkHasTrustDialogAccepted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { shouldOfferTrustBackstop } from "../../01-核心基础设施/设置-配置/marketplace-helper-sources.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 function agentsTrustDecision() {
@@ -30,7 +30,7 @@ async function ensureAgentsWorkspaceTrust(r, i, o) {
         t(o);
       }
       {
-        let { capturePolicySnapshot: t } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js");
+        let { capturePolicySnapshot: t } = await import("../../01-核心基础设施/设置-配置/chunk-22525f7p.js");
         t();
       }
       return;
@@ -39,7 +39,7 @@ async function ensureAgentsWorkspaceTrust(r, i, o) {
       let [{ primePlanSlugCollisions: t }, { capturePolicySnapshot: s }] =
         await Promise.all([
           import("../计划模式-Plan/计划模式-Plan.e5mh1avy.js"),
-          import("../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js"),
+          import("../../01-核心基础设施/设置-配置/chunk-22525f7p.js"),
         ]);
       (t(o), s());
       return;
@@ -65,10 +65,10 @@ async function ensureAgentsWorkspaceTrust(r, i, o) {
         { logError: d },
         { capturePolicySnapshot: g },
       ] = await Promise.all([
-        import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
+        import("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
         import("../计划模式-Plan/计划模式-Plan.e5mh1avy.js"),
         import("../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js"),
-        import("../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js"),
+        import("../../01-核心基础设施/设置-配置/chunk-22525f7p.js"),
       ]);
       (m({ preservePendingExposures: !0 }), u().catch(d), l(o), g());
       return;

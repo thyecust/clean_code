@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 75 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { registerPreFlushTask } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
-import { logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
-import { getMcpSdkGeneration } from "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js";
+import { registerPreFlushTask } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-p7jm635c.js";
+import { logEventAsync } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { getClaimRegistry } from "../../01-核心基础设施/核心工具-未归类/host-claim-registry.js";
+import { getMcpSdkGeneration } from "./mcp-sdk-generation.js";
 function emitTripwireEvent(e, t) {
   if (!getClaimRegistry().claim("mcp_tree_id_tripwire")) return;
   registerPreFlushTask(
@@ -60,23 +60,23 @@ function mcpTaskWatcherModule() {
   return import.meta.require("./MAX_POLL_INTERVAL_MS.dm2c0dwm.js");
 }
 function mcpSdkErrorClassificationModule() {
-  if (getMcpSdkGeneration() === "v2") return import.meta.require("../../01-核心基础设施/共享小工具-未细化/getMcpErrorCode.gk1snwqh.js");
-  return import.meta.require("../../01-核心基础设施/共享小工具-未细化/getMcpErrorCode.zkm67jdf.js");
+  if (getMcpSdkGeneration() === "v2") return import.meta.require("./getMcpErrorCode.gk1snwqh.js");
+  return import.meta.require("./getMcpErrorCode.zkm67jdf.js");
 }
 function mcpDirectoryReadModule() {
   if (getMcpSdkGeneration() === "v2") return import.meta.require("./readMcpDirectory.gnvw0enw.js");
   return import.meta.require("./readMcpDirectory.8gn0ks90.js");
 }
 function mcpIsListAuthErrorModule() {
-  if (getMcpSdkGeneration() === "v2") return import.meta.require("../../01-核心基础设施/共享小工具-未细化/isListAuthError.tm2wnzn7.js");
-  return import.meta.require("../../01-核心基础设施/共享小工具-未细化/isListAuthError.8jcv253h.js");
+  if (getMcpSdkGeneration() === "v2") return import.meta.require("../认证-OAuth登录/isListAuthError.tm2wnzn7.js");
+  return import.meta.require("../认证-OAuth登录/isListAuthError.8jcv253h.js");
 }
 function mcpXaaIdpLoginModule() {
-  if (getMcpSdkGeneration() === "v2") return import.meta.require("../../01-核心基础设施/共享小工具-未细化/getCachedIdpIdToken.whq65fek.js");
-  return import.meta.require("../../01-核心基础设施/共享小工具-未细化/getCachedIdpIdToken.x86eq6fe.js");
+  if (getMcpSdkGeneration() === "v2") return import.meta.require("../认证-OAuth登录/getCachedIdpIdToken.whq65fek.js");
+  return import.meta.require("../认证-OAuth登录/getCachedIdpIdToken.x86eq6fe.js");
 }
 function mcpSkillsListModule() {
-  return import.meta.require("../../01-核心基础设施/共享小工具-未细化/listMcpSkillPage.drxbt26x.js");
+  return import.meta.require("./listMcpSkillPage.drxbt26x.js");
 }
 export {
   emitTripwireEvent,

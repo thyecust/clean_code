@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { requestSessionLimitReset } from "../用量额度-限额/session-limit-reset.js";
-import "../../01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js";
+import "../用量额度-限额/usage-limit-continuation.js";
 async function a(e, t) {
   return { type: "text", value: (await requestSessionLimitReset("command", t.credentials)).text };
 }

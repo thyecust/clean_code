@@ -20,7 +20,7 @@ import {
   otlpHttpExporterBaseModule,
 } from "../../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
 import { otelApiModule, otelCoreModule } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS, importMetaRequire } from "../../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var To = commonJS(function (Co) {
   Object.defineProperty(Co, "__esModule", { value: !0 });
   Co.VERSION = void 0;

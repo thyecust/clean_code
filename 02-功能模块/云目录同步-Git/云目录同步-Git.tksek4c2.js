@@ -8,21 +8,21 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, yt, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { RENAME_FALLBACK_ERRNOS, renameWithRetry } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { registerCleanup, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodePoints, firstLine, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { replaceControlChars, formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { replaceControlChars, formatSingleLineText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { Cs, hf } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getEnvVarCaseInsensitive, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import {
@@ -108,7 +108,7 @@ import {
   formatUnreadableSettingsSuffix,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { JOURNAL_VERSION_WITH_NOTE, MAX_USER_EVENT_UUIDS, parseSyncJournal, normalizeFileMode, encodeSyncJournal } from "../文件同步-Sync/sync-journal.js";
-import { computeGitBlobId } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import { computeGitBlobId } from "../目录同步-dir-sync/sync-state-schema.js";
 import { MAX_SYNC_UPLOAD_BYTES, isSafePortablePath, parseTaggedPathListing, readFileWithDigests, openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
 import {
   DEFAULT_GIT_TIMEOUT_MS,
@@ -175,11 +175,11 @@ import {
 import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { segmentScopeSkip } from "../文件同步-Sync/sync-folder-scan.js";
 import { getSideGitDirPath, buildSessionRefName, listSessionRefs, UNREADABLE_CARRIER_STATUS, createDirSyncJournalTransport } from "../目录同步-dir-sync/dir-sync-git-lane.js";
-import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
-import { sanitizePathSegment, getDirSyncRecordPath, resolveDirSyncRecordLocation } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
-import { createHoverRestOptions } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { truncateWithEllipsis } from "../../01-核心基础设施/核心工具-字符串与文本/truncate-with-ellipsis.js";
+import { sanitizePathSegment, getDirSyncRecordPath, resolveDirSyncRecordLocation } from "../目录同步-dir-sync/dir-sync-record-path.js";
+import { createHoverRestOptions } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import {
   lstat as al,
   mkdtemp,

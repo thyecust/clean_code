@@ -12,7 +12,7 @@ import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logMCPError, logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { executeElicitationHooks, executeElicitationResultHooks, executeNotificationHooks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getOrCreateElicitationHandler } from "./mcp-elicitation-request-handler.js";
-import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
+import { asMcpSdkClient } from "./mcp-client-type-casts.js";
 function parseRelatedTaskMetadataV2(e) {
   let t = RelatedTaskMetadataSchema.safeParse(e?.[RELATED_TASK_META_KEY]);
   return t.success ? { taskId: t.data.taskId } : null;

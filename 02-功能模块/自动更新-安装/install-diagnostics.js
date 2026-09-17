@@ -8,29 +8,29 @@
 
 // Version: 2.1.263
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { Bf, a_ } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { isBunStandaloneExecutable, resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
-import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { getOtelHeadersHelperLastFailure, getGlobalConfig, formatAutoUpdaterDisabledReason, getAutoUpdaterDisabledReason } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getManagedSettingsDirPath, CUSTOMIZATION_SURFACES, hasSettingsContent } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getWslInheritsWindowsSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { WSL_MANAGED_SETTINGS_DIR } from "../../01-核心基础设施/共享小工具-未细化/mdm-policy-paths.js";
-import { getKeychainAccountName } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
+import { WSL_MANAGED_SETTINGS_DIR } from "../../01-核心基础设施/核心工具-路径与平台/mdm-policy-paths.js";
+import { getKeychainAccountName } from "../认证-OAuth登录/keychain-access.js";
 import { getRipgrepStatus, isScrubOnlySandboxMode, SandboxManager, isNativeInstallerSymlink, isNpmShimExecutable } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isRunningFromLocalInstall, localInstallExists, detectCurrentShell, getShellConfigPaths, findClaudeAliasTarget, findInstalledClaudeAliasTarget, checkGlobalInstallPermissions } from "./auto-updater.js";
-import { getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
+import { getLocalBinDir } from "../../01-核心基础设施/核心工具-路径与平台/user-directories.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
+import { getBuildRefName } from "../../01-核心基础设施/核心工具-其他/build-ref-name.js";
 import { join as J } from "path";
 var Q = createLazyValue(() =>
   nt({

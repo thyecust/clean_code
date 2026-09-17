@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { registerBundledSkill } from "../Skills技能/bundled-skills.js";
-import { isDesignSyncEnabled } from "../../01-核心基础设施/共享小工具-未细化/design-feature-gates.js";
+import { isDesignSyncEnabled } from "./design-feature-gates.js";
 import { CLAUDE_DESIGN_TOOL_NAME, CLAUDE_DESIGN_LIST_OPERATION } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { DESIGN_SYNC_POLICY_GATE } from "./design-sync-tool-metadata.js";
 function s(t) {

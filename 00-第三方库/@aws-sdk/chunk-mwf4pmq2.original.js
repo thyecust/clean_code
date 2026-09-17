@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { UQ } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Rb, w2e, Oke } from "./chunk-jtb5q5xr.js";
-import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var q = commonJS(function (J) {
   var C = (e, t) => {
       let r = [];

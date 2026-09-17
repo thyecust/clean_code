@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 178 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po, CS, An, gp, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parseConfigInteger } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { isBunStandaloneExecutable, getGlobalClaudeFile, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -25,10 +25,10 @@ import { formatDuration } from "../../01-核心基础设施/核心工具-字符�
 import { EDIT_TOOL_NAME, WRITE_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
-import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
+import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/核心工具-其他/open-flags.js";
 import { isTempFilePath, writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { GITHUB_HOST, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { GITHUB_HOST, isSameHost } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { MAX_SETTINGS_FILE_BYTES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { resolvePath, ATOMIC_WRITE_STAGING_DIR_NAME } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -69,11 +69,11 @@ import {
   getInFlightHookCount,
   runPostSessionHook,
 } from "./chunk-cgmv5fe7.js";
-import { serverToolsValueNamesSelfHostedRunnerTool, sanitizeServerClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/chunk-02q6xmh3.js";
+import { serverToolsValueNamesSelfHostedRunnerTool, sanitizeServerClaudeCodeArgs } from "../../01-核心基础设施/核心工具-未归类/chunk-02q6xmh3.js";
 import { configureGitGovernedEntries } from "./runner-git-config.js";
 import { startGuestVitalsEmitter } from "./guest-vitals-emitter.js";
-import { appendClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
-import { OTEL_DIAG_ERROR_LOG_PREFIX } from "../../01-核心基础设施/共享小工具-未细化/otel-diag-logger.js";
+import { appendClaudeCodeArgs } from "../../03-入口与运行时/CLI入口-Commander/claude-code-args.js";
+import { OTEL_DIAG_ERROR_LOG_PREFIX } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-diag-logger.js";
 import {
   GIT_WORKTREE_TIMEOUT_MS,
   isMissingRemoteRefError,
@@ -94,17 +94,17 @@ import {
   removeSessionWorktrees,
   redactGitCredentials,
 } from "../工作树-Git/git-operations.js";
-import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
-import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
-import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
+import { raceWithTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/with-timeout.js";
+import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/核心工具-其他/drain-response-body.js";
+import { redactSecrets } from "../../01-核心基础设施/核心工具-日志与脱敏/redact-secrets.js";
+import "../../01-核心基础设施/核心工具-其他/chunk-j86cs2ar.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
+import { killProcessTree } from "../../01-核心基础设施/核心工具-进程与信号/kill-process-tree.js";
 import { decodeTokenClaims, getTokenExpiry, createTokenRefreshScheduler, decodeTaggedId } from "../远程控制-Bridge/chunk-4zd60pbm.js";
-import { readFileWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
-import { getProcStartTime, getProcParentPid, getProcGroupId, getProcState, isExitedProcessState } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
+import { readFileWithMetadata } from "../../01-核心基础设施/安全文件系统-FS加固/safe-file-read.js";
+import { getProcStartTime, getProcParentPid, getProcGroupId, getProcState, isExitedProcessState } from "../../01-核心基础设施/核心工具-进程与信号/linux-proc-stat.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { execFileSync } from "child_process";
 import { createWriteStream, fchmod } from "fs";
 import {

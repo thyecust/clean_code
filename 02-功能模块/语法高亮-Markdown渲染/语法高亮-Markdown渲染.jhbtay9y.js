@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { highlightLanguageRegistry, resolveCanonicalLanguageId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { HLJS_SUBLANGUAGE_TABLE } from "../制品发布-Artifact/chunk-01ymf0ar.js";
-import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var Je = commonJS(function (su, Qe) {
   function Hc(e) {
     let t = e.regex,

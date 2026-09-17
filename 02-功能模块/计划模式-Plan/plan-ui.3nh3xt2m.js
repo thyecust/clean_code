@@ -10,21 +10,21 @@
 
 // [preload stripped] 原本在此预载 223 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { h8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { planArtifactSlot, ModePushTimeoutError, registerModePushWaiter } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { resolveEditorCommand, editFileInExternalEditor } from "../../03-入口与运行时/会话UI-REPL/external-editor.js";
 import { getIdeDisplayName, prepareContextForPlanMode, createUserMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { applyPermissionUpdate } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { notePlanFileForgotten, peekPlanSlug, getPlanFilePath, getPlanAsync } from "./计划模式-Plan.e5mh1avy.js";
-import { renderToPlainText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
-import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
+import { renderToPlainText } from "../../01-核心基础设施/UI组件-TUI/one-shot-render.js";
+import { TitleWithSubtitle } from "../../01-核心基础设施/核心工具-未归类/title-with-subtitle.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 var x = 15000,
   G = 1e4,

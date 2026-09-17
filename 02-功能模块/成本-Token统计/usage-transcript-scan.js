@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { isTainted } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { isTainted } from "../../01-核心基础设施/核心工具-未归类/compliance-taints-store.js";
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParseUntraced, streamFileLines, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { formatTruncatedText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { BASH_STDOUT_TAG, BASH_STDERR_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, LOCAL_COMMAND_CAVEAT_TAG, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { listedProjectKey, getProjectsDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isValidPathSegment } from "../Teammates团队/storage-keys.js";
-import { BRIEF_ENFORCE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { BRIEF_ENFORCE_SENTINEL } from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
 import {
   INTERRUPTED_BY_USER_MARKER,
   OPERATION_STOPPED_BY_HOOK_MESSAGE,
@@ -29,7 +29,7 @@ import {
   GOAL_CHECK_IN_PREFIX,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
-import { DEFAULT_MAX_PAGES, runPaginatedScan, createPageBudget, classifyScanOutcome, getAdditionalTruncationCount } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan, createPageBudget, classifyScanOutcome, getAdditionalTruncationCount } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 var Te = "allow_usage_transcript_scan",
   he = "allow_skill_doctor_transcript_scan",
   Me = {

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { MIN_IMAGE_SCALE, MAX_IMAGE_SCALE, IMAGE_SCALE_DESCRIPTION } from "../../01-核心基础设施/共享小工具-未细化/image-scaling.js";
+import { MIN_IMAGE_SCALE, MAX_IMAGE_SCALE, IMAGE_SCALE_DESCRIPTION } from "./image-scaling.js";
 var f = {
     pixels: {
       x: "Horizontal pixel position read directly from the most recent screenshot image, measured from the left edge. The server handles all scaling.",

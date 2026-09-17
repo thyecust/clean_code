@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createPartialStateUpdater } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
+import { createPartialStateUpdater } from "../../01-核心基础设施/文件存储-原子写入/state-store.js";
 function a(e) {
   let t = "plugin" in e ? e.plugin : "no-plugin";
   return `${e.type}:${e.source}:${t}`;

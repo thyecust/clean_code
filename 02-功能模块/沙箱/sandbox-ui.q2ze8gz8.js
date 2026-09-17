@@ -17,7 +17,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getRemoteTransport, isRemoteActive } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getSettingsFilePathForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useKeybindings } from "../键位绑定-Keybindings/keybinding-hooks.js";
 import {
   checkWindowsSandboxStatusAsync,
   isWindowsSandboxEnabled,
@@ -36,15 +36,15 @@ import "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
 import { qp, ss, Jd } from "../../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js";
 import { runWindowsSandboxInstall } from "./windows-sandbox-install.js";
 import { StatusLine } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
-import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
-import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
-import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
+import { LearnMoreLink } from "../../01-核心基础设施/核心工具-未归类/learn-more-link.js";
+import "../../01-核心基础设施/UI组件-TUI/background-text.js";
+import { InputGuide } from "../../01-核心基础设施/UI组件-TUI/input-guide.js";
 import { Qr } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
+import { getThemeColor } from "../../01-核心基础设施/UI组件-TUI/theme-color.js";
 import { Dn, kn, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { relative } from "path";
 function ce(Un, Fn) {
   return e(Text, { dimColor: !0, children: Un }, Fn);

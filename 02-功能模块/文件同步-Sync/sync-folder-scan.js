@@ -31,8 +31,8 @@ import { DEFAULT_MAX_SYNC_FILES } from "../../01-核心基础设施/安全文件
 import { isPathEligibleForSync, compareByPath } from "./sync-journal.js";
 import { isRefusedFilePath, isRefusedDirectoryPath } from "./chunk-tqwnv5vj.js";
 import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var P = toESM(nodeIgnoreModule(), 1);
 import {
   lstat,

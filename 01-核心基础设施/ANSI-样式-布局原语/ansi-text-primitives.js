@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { getStringWidth, BELL_CHARACTER, CONTROL_INTRODUCER_CODES, createAnsiTokenizer } from "../核心工具-字符串与文本/ansi-text-utils.js";
-import { getGraphemeSegmenter } from "../共享小工具-未细化/intl-text-utils.js";
-import { commonJS } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { getGraphemeSegmenter } from "../核心工具-日期与本地化/intl-text-utils.js";
+import { commonJS } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var G = commonJS(function (Xe, ue) {
   ue.exports = {
     single: {

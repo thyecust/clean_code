@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 234 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { splitIntoSanitizedLines, formatMemoryWriteSummary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
+import "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-context.js";
 import { MAX_ERROR_MESSAGE_LINES, ToolErrorMessage } from "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
-import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { ToolResultRow } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function B(v) {
   return v === "" ? " " : v;

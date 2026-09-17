@@ -15,7 +15,7 @@ import { PREVIEW_PROMPT_PARAGRAPH, commentsPromptParagraphs, DB_PROMPT_PARAGRAPH
 import { ARTIFACT_ACTION_FAMILIES, toFamilyParentInput, fromFamilyParentInput } from "./chunk-qpgskeea.js";
 import "./chunk-x29r16ke.js";
 import { isArtifactVerifyEnabled, isArtifactPreviewEnabled, isArtifactAddonToolEnabled } from "./chunk-01jnk0v2.js";
-import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
+import "../浏览器集成-ClaudeinChrome/claude-browser-mcp-server.js";
 import { artifactSchemaGates } from "./chunk-b6k1z7an.js";
 import "./chunk-fx5ekm7e.js";
 import {
@@ -30,8 +30,8 @@ import {
   artifactRuleTargetInput,
 } from "./chunk-pvztfdrb.js";
 import "../Teammates团队/chunk-weg7y2ya.js";
-import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/whiteboard-telemetry.js";
+import "../../01-核心基础设施/核心工具-未归类/chunk-dgth8ahx.js";
 import "../远程控制-Bridge/bridge-inbound-origin.js";
 import { getCommentsUnavailableNote, buildWatchRepublishesParagraph } from "./artifact-prompt-paragraphs.js";
 import "./artifact-read-for-model.js";

@@ -7,18 +7,18 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isUnboundCreateReason, formatCreatedUnboundNotice, formatUnboundNotice } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { unboundCreateReason, productionUnboundCreatesDeps } from "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
-import { isViolinWoodEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { unboundCreateReason, productionUnboundCreatesDeps } from "../../01-核心基础设施/核心工具-未归类/chunk-rds75sre.js";
+import { isViolinWoodEnabled } from "../目录同步-dir-sync/chunk-97crm80y.js";
 import { startDeviceRegistration } from "../远程控制-Bridge/device-bridge-registration.js";
-import { NOT_HELD_STATE } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
+import { NOT_HELD_STATE } from "../../01-核心基础设施/终端与时钟/chunk-hkdjw6ht.js";
 import { readLocalDeviceId } from "../设备注册-Cowork/设备注册-Cowork.9r92qaht.js";
-import { resolveAccountIdentity, isEgressAllowed } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
+import { resolveAccountIdentity, isEgressAllowed } from "../设备注册-Cowork/chunk-d4kaq0ds.js";
 async function resolveAttachDeviceBinding(e) {
   let s = e.session.then(
     (o) => ({ read: !0, session: o }),

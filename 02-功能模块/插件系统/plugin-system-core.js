@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { hasValidPathSegments, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import {
   Le,
@@ -40,14 +40,14 @@ import { j, rE, B, he, Irt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.
 import { jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { INVISIBLE_CHAR_CLASS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { INVISIBLE_CHAR_CLASS } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { describeSettingsSourceShort, sanitizeForDisplay, formatLongDisplayText, truncateWithEllipsis, toDisplayText, formatQuotedDisplayText, CLAUDE_AI_MARKETPLACE_NAME_PREFIX } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
+import { createStore } from "../../01-核心基础设施/文件存储-原子写入/state-store.js";
 import { readBoundedFile } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, se, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { isAbsolute as te } from "path";
 var PLUGIN_LINK_MARKER_FILENAME = ".claude-plugin-link",
   getPluginLinkMarkerSchema = createLazyValue(() =>

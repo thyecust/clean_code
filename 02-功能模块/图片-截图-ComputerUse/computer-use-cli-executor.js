@@ -7,15 +7,15 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { getComputerUseSession, getComputerUseNativeModule, runComputerUseNativeCall, notifyExpectedEscape } from "./computer-use-session.js";
 import { getComputerUseInputNativeModule } from "./computer-use-input-native.js";
-import { IMAGE_TOKEN_BUDGET, fitSizeToTokenBudget } from "../../01-核心基础设施/共享小工具-未细化/image-scaling.js";
+import { IMAGE_TOKEN_BUDGET, fitSizeToTokenBudget } from "./image-scaling.js";
 import { DEFAULT_HOST_BUNDLE_ID, getHostBundleIdentifier, DEFAULT_COMPUTER_USE_CAPABILITIES } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var M = commonJS(function (k, E) {
   var H = importMetaRequire("path");
   {

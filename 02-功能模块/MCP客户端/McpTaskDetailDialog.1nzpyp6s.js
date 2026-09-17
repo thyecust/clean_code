@@ -12,15 +12,15 @@
 import { sanitizeSingleLineDisplayText } from "../键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useElapsedDuration } from "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useElapsedDuration } from "../../01-核心基础设施/终端与时钟/use-elapsed-duration.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
 import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
-import { useDetailDialogKeys } from "../../01-核心基础设施/共享小工具-未细化/detail-dialog-keys.js";
-import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { useDetailDialogKeys } from "../键位绑定-Keybindings/detail-dialog-keys.js";
+import { FocusableBox } from "../../01-核心基础设施/UI组件-TUI/focusable-box.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { sanitizeMcpTaskId, formatDurationMs } from "./mcp-task-id.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 function McpTaskDetailDialog(so) {
   let s = _(63),
     { task: n, onDone: K, onKill: d, onBack: m } = so,

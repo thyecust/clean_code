@@ -15,7 +15,7 @@ import { truncateToCodePoints, truncateToCodeUnits } from "../../01-核心基础
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
-import { isEgressAllowed } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
+import { isEgressAllowed } from "./chunk-d4kaq0ds.js";
 import { getPlatformDisplayName } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import {
   createPrivateKey,

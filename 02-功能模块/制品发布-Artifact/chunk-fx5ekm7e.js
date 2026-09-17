@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getArtifactState, clearRefusedPublishBodies, clearReadDeliveries, pruneRefusedPublishBodies, resetArtifactConversationState } from "./chunk-rr78st95.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { ARTIFACT_TOOL_NAME, PR_REVIEW_SECURITY_WALL, ArtifactInputError, ARTIFACT_VERSION_SAFE_RE, ARTIFACT_DELETED_NOTE_TAG, ARTIFACT_DELETED_NOTE_RE, uuidSlugFromUrl, canonicalArtifactTargetFor, sanitizeArtifactTitle } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { runBundledSkillSessionResets } from "../Skills技能/bundled-skills.js";
 import { hashForTelemetry, READ_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { WEB_FETCH_TOOL_NAME, formatArtifactTitle, linkPathToSlug, unlinkPath, retainPathLinks } from "./chunk-01ymf0ar.js";
-import { CREATED_FRAME_URL_PREFIX, OPENED_FRAME_URL_PREFIX, getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
+import { CREATED_FRAME_URL_PREFIX, OPENED_FRAME_URL_PREFIX, getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/核心工具-未归类/frame-url-prefixes.js";
 import { hasAutoEditChainPublishId, isPipelineReplyOriginToolUseId } from "./chunk-p1dkvpxj.js";
 var E = 3,
   I = 1024,

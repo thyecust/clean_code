@@ -16,18 +16,18 @@ import "../MCP客户端/mcp-protocol.js";
 import "../MCP客户端/mcp-server.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { createClaudeForChromeMcpServer } from "../远程控制-Bridge/chrome-bridge-mcp-server.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { shutdownFirstPartyEventLogging, validateOAuthToken, getClaudeAIOAuthTokens, checkAndRefreshOAuthTokenIfNeeded, saveGlobalConfig, watchGlobalConfigThroughStorage, getGlobalConfig, seedInstallIDs, shutdownDatadog } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { initDefaultDebugLog, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getAPIProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
+import { initializeAnalyticsSink } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-sink.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
+import { pinStorageV5 } from "../../01-核心基础设施/核心工具-未归类/pin-storage-v5.js";
 import { loadFastPathPolicy } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
 import { isPolicyAllowedInResponse } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { fetchPolicyLimitsForBearer } from "../策略限制-PolicyLimits/policy-limits-client.js";
@@ -35,8 +35,8 @@ import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js"
 import { CLAUDE_IN_CHROME_URL } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSecureSocketPath, getAllSocketPaths } from "./claude-in-chrome-host.js";
 import { logChromeBridgeConnected, logChromeExtensionConnected, logChromeToolCallDisconnected } from "../Hooks钩子/chrome-telemetry-events.js";
-import { StdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
-import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
+import { StdioServerTransport } from "../MCP传输-stdio-SSE-HTTP/stdio-server-transport.js";
+import "../MCP传输-stdio-SSE-HTTP/stdio-message-framing.js";
 import { format } from "util";
 var P =
     "https://github.com/anthropics/claude-code/issues/new?labels=bug,claude-in-chrome",
@@ -242,7 +242,7 @@ async function runClaudeInChromeMcpServer(e) {
       c = credentialsStoreFor(o);
     if (isHoverRestEnabled() && o !== void 0) {
       (initDefaultDebugLog({ storageV5: o }), watchGlobalConfigThroughStorage(o));
-      let { primeFastPathCredentials: C } = await import("../../01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js");
+      let { primeFastPathCredentials: C } = await import("../认证-OAuth登录/primeFastPathCredentials.eb5w3wem.js");
       (await C(c), await seedInstallIDs(o));
     }
     configureGlobalAgents();

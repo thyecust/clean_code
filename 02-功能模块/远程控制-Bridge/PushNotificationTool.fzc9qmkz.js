@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { BOn, Nn, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getFeatureValue_CACHED_WITH_REFRESH } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { PUSH_NOTIFICATION_TOOL_NAME, PUSH_NOTIFICATION_TOOL_DESCRIPTION, getPushNotificationToolPrompt } from "./push-notification-tool.js";

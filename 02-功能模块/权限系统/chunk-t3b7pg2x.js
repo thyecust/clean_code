@@ -41,14 +41,14 @@ import { MXt, Xxt, jc, drt, ke, gae, bHt } from "../../00-第三方库/lodash/lo
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getEnabledSettingsSources, isSettingsSourceEnabled } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { isTopLevelCoworkSession, isVsCodeExtensionSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getPolicyHelperAppendSystemPrompt, getSettingsForSource, getInitialSettings, getEffectiveSettingSource, updateSettingsForSource, hasVouchedSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { normalizePermissionModeAlias, parsePermissionMode, clampPermissionMode, parsePermissionModeOrDefault } from "./chunk-e4pfvp7x.js";
 import { strip1mSuffix, getCatalogEntryById, modelHasCapability, getAPIProvider, getProviderForModel, hasFirstPartyCapabilities } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { areWorkflowsEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
+import { areWorkflowsEnabled } from "../编排-Workflow/workflow-feature-gates.js";
 function resolvePermissionModeForProactivityLevel(e, t, o) {
   switch (e) {
     case "ask":

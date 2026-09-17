@@ -12,7 +12,7 @@
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { validateWorkingDirectory, formatDirectoryValidationMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { addWorkingDirectory, explainAlreadyAccessibleDirectory } from "../../01-核心基础设施/设置-配置/add-working-directory.js";
-import "../../01-核心基础设施/共享小工具-未细化/reload-skills.js";
+import "../Skills技能/reload-skills.js";
 async function d(r, t) {
   let o = r.trim();
   if (!o) return { type: "text", value: "Usage: /add-dir <path>" };

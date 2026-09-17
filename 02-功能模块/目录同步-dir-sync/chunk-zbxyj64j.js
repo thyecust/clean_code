@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { Ve, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
@@ -33,12 +33,12 @@ import {
   isKnownSyncSkipReason,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { MAX_ETAG_LENGTH, HALT_REASONS, getResolvedBundleSchema, isSyncableRelativePath, getWithheldCountsSchema } from "../文件同步-Sync/sync-journal.js";
-import { parseSessionSyncState, parseSessionSeedNote } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { STREAMING_TIMING_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
+import { parseSessionSyncState, parseSessionSeedNote } from "./sync-state-schema.js";
+import { STREAMING_TIMING_DEFAULTS } from "../../01-核心基础设施/核心工具-未归类/chunk-ydn85r3t.js";
 import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { s, T, O, v, c, it, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { watch } from "fs";
 var ce = 50;
 function Ke(e, t, r) {

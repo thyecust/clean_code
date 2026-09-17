@@ -14,7 +14,7 @@ import { FORMAT_PARAGRAPH, SKELETON_SENTENCES, TITLE_PARAGRAPH, COMMENTS_OFF_SEN
 import { isArtifactToolsetEnabled } from "./chunk-qpgskeea.js";
 import { noWatchRailCollabNote } from "./chunk-b6k1z7an.js";
 import { detectImageMediaType } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { ARTIFACT_CAPABILITIES_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { ARTIFACT_CAPABILITIES_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
 import { dirname, join as A, normalize } from "path";
 var d = 4096,
   v = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);

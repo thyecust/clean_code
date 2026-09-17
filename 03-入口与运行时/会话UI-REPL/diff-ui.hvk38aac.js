@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 78 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { isRemoteActive } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
+import { useSession } from "../../01-核心基础设施/核心工具-未归类/session-context.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { isReplDiffSidebarEnabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";

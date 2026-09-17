@@ -12,7 +12,7 @@
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getAuthTokenSource, getAnthropicApiKeyWithSourceSafe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isBridgeFirstParty, isRemoteControlHardDisabled, isBridgeEnabled, isRunningInRemoteEnvironment } from "../远程控制-Bridge/chunk-9estzwf5.js";
-import { c4eUpsellCommandGate } from "../../01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js";
+import { c4eUpsellCommandGate } from "../../01-核心基础设施/核心工具-未归类/c4e-upsell-command-gate.js";
 function e() {
   if (isBridgeEnabled()) return !0;
   try {

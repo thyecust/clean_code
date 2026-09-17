@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { K, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -16,14 +16,14 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getCanonicalSocketPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
 import { getMainThreadQueueLength, enqueueCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isUuidString } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
+import { isUuidString } from "../远程控制-Bridge/bridge-state-containers.js";
 import { formatRedactedPreview, formatRedactedErrorDetail, classifySendFailure, UdsSendRefusedError } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 import { getInboundPolicy, getPeerInboundPolicy, getHeldPeerMessageCount } from "../权限系统/cross-session-inbound-gate.js";
-import { isSaneEpochMs } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { isSaneEpochMs } from "../守护服务-Daemon/process-record.js";
 import { s, se, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 var R = 43200000,
   MAX_IDLE_SUBSCRIPTIONS = 32,
   V = 3,

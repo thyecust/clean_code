@@ -10,13 +10,13 @@
 import { Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { DEFAULTS_SLOT_MARKER, mapKeys } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { MACHINE_NAME_PATTERN, isReservedMachineName } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { BASH_TOOL_NAME, EDIT_TOOL_NAME, WRITE_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, O, se, v, c, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 var CURRENT_PROTOCOL_VERSION = 1,
   SUPPORTED_PROTOCOL_VERSIONS = [1],
   A = 1,

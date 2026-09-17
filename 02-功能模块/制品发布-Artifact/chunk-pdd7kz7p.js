@@ -11,7 +11,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { MAX_ARTIFACT_BYTES, dailyPublishResetEpochSeconds, MANIFEST_TOTAL_BUDGET, BINARY_FILE_MAX_BYTES, MAX_PUBLISH_FILES, ARTIFACT_OTHER_ORG_MESSAGE, OTHER_ORG_SIGN_IN_HINT } from "./chunk-01ymf0ar.js";
 import { MAX_BATCH_WRITE_OPS } from "./artifact-db.js";
-import { ARTIFACT_DESIGN_SKILL_NAME, ARTIFACT_DIAGRAMMING_SKILL_NAME, ARTIFACT_CAPABILITIES_SKILL_NAME, WORKSHOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { ARTIFACT_DESIGN_SKILL_NAME, ARTIFACT_DIAGRAMMING_SKILL_NAME, ARTIFACT_CAPABILITIES_SKILL_NAME, WORKSHOP_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
 var VERIFY_GUIDE_TEXT = `Before claiming this page works: pass action: "verify" to read the runtime diagnostics viewers' browsers captured for this version \u2014 an empty result means no viewer has loaded it yet, not that it works.`,
   VERIFY_CLAUSE =
     " 'verify' reads the runtime diagnostics (console output, uncaught errors, failed resource loads, capability-call outcomes) that viewers' browsers captured for an artifact's current version \u2014 pass `url`, or omit it to target this session's most recent publish. An empty result can mean no viewer has loaded the version yet, which is NOT evidence of a clean render.",

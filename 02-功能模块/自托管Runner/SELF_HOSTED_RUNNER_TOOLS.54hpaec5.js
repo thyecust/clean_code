@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { isBunStandaloneExecutable } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { wS } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
+import { externalHttp } from "../../01-核心基础设施/HTTP-网络层/external-http.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
@@ -36,8 +36,8 @@ import {
   TAIL_LOG_DESCRIPTION,
   REQUEUE_SESSION_DESCRIPTION,
 } from "./chunk-01gj9cjk.js";
-import { DEFAULT_HEALTH_PORT, resolveApiBaseUrl, buildUiEquivalentPath, requestSelfHostedRunnerApi, makeToolResultBlock, formatToolUseInput } from "../../01-核心基础设施/共享小工具-未细化/self-hosted-runner-api.js";
-import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
+import { DEFAULT_HEALTH_PORT, resolveApiBaseUrl, buildUiEquivalentPath, requestSelfHostedRunnerApi, makeToolResultBlock, formatToolUseInput } from "../../01-核心基础设施/核心工具-未归类/self-hosted-runner-api.js";
+import { redactSecrets } from "../../01-核心基础设施/核心工具-日志与脱敏/redact-secrets.js";
 import { s, T, O, se, v, c, Qe, $e, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var B = createLazyValue(() =>
     Qe({ pool_id: s().describe("Tagged environment id (ccpool_\u2026).") }),

@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { rE, Gt, ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, Oi, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, zi, yt, dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jsonParse, resolvePathInfo, getFsSurface, redactSecretsFromText, redactForDisplay, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import {
   isAutoClassifierActive,
   getHookCallerPluginName,
@@ -93,8 +93,8 @@ import {
   PERMISSION_DENIED_PREFIX,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { resolvePath, isJupyterNotebookPath, DEFAULT_MAX_FILE_READ_BYTES } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { OUTSIDE_READS_BLOCKED_DENY_REASON } from "./chunk-e4pfvp7x.js";
@@ -122,20 +122,20 @@ import { unstripSkillInvocationAllowRules, getToolPermissionContext } from "./ch
 import { areUserPermissionRulesAllowed, sanitizePermissionUpdates, applyPermissionUpdates, isPersistableSettingsSource, persistPermissionUpdates, hasRequestedMachine } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS, notePlanFileForgotten, getPlanFilePath, getPlan } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { isTeammateWakeupPrompt, getLastPeerDmSummary } from "../Teammates团队/chunk-g6nvp9mm.js";
-import { sendMcpNotification } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { appStateStore } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
+import { sendMcpNotification } from "../MCP客户端/chunk-7wm8t84g.js";
+import { appStateStore } from "../../01-核心基础设施/终端与时钟/terminal-focus-state.js";
 import { CFC_TOOL_PREFIX } from "../浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
 import { CHANNEL_PERMISSION_REQUEST_METHOD, findChannelEntry } from "../插件系统/channel-gate.js";
 import { logShellAllowRulesAdded } from "../../01-核心基础设施/设置-配置/shell-allow-rule-analytics.js";
 import { createProfanityFreeShortId, sanitizeAndTruncateText, truncateForPreview, findChannelPermissionServers } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
-import { getBrowserToolVerbPhrase } from "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
-import { getServerApprovalWatchProvider } from "../../01-核心基础设施/共享小工具-未细化/server-approval-watch-provider.js";
-import { getWsSubprotocols, MAX_SUBPROTOCOLS } from "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
+import { getBrowserToolVerbPhrase } from "../浏览器集成-ClaudeinChrome/browser-tool-verb-phrases.js";
+import { getServerApprovalWatchProvider } from "../../01-核心基础设施/核心工具-未归类/server-approval-watch-provider.js";
+import { getWsSubprotocols, MAX_SUBPROTOCOLS } from "../../01-核心基础设施/核心工具-其他/websocket-subprotocols.js";
 import { WslPathConverter } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/send-message-constants.js";
 import { customSchema, defineDialog, isAsyncIterable } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "../Teammates团队/chunk-enjekn9t.js";
-import { isNotRegularFileError, isFileTooLargeError, readFileSyncText, readFileWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
+import { isNotRegularFileError, isFileTooLargeError, readFileSyncText, readFileWithMetadata } from "../../01-核心基础设施/安全文件系统-FS加固/safe-file-read.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 async function runCoordinatorAutomatedPermissionCheck(e) {
   let { ctx: r, updatedInput: o, suggestions: t, permissionMode: s } = e,
@@ -1835,7 +1835,7 @@ var fo = null,
   yo = null,
   Po = null,
   De = import.meta.require("../编排-Workflow/WorkflowTool.b1s7beta.js").WorkflowTool,
-  ho = import.meta.require("../../01-核心基础设施/共享小工具-未细化/workflowPermissionDialog.pk0trr3f.js").workflowPermissionDialog,
+  ho = import.meta.require("../编排-Workflow/workflowPermissionDialog.pk0trr3f.js").workflowPermissionDialog,
   bo = import.meta.require("../编排-Workflow/recordWorkflowUsageConsent.w6jg9g54.js"),
   Qo = import.meta.require("../工具Monitor/工具Monitor.981fw9dy.js").MonitorTool,
   ko =

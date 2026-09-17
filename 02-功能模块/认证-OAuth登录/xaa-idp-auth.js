@@ -15,7 +15,7 @@ import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8
 import { redactUrl, rethrowFetchError } from "./url-and-error-redaction.js";
 import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getSecureStorage } from "./secure-storage.js";
-import { renderOAuthCallbackPage, pickOAuthCallbackPort } from "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
+import { renderOAuthCallbackPage, pickOAuthCallbackPort } from "./oauth-callback.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { randomBytes } from "crypto";

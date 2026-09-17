@@ -10,5 +10,5 @@
 
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { callSetColorCommand as Xgr, performSetColor as XDt } from "../Teammates团队/set-session-color.js";
-import "../../01-核心基础设施/共享小工具-未细化/standalone-agent-context.js";
+import "../../01-核心基础设施/核心工具-未归类/standalone-agent-context.js";
 export { Xgr as call, XDt as performSetColor };

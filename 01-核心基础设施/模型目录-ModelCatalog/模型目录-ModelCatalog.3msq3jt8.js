@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { ns, fLn, h_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
-import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
+import { fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js";
+import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { BEDROCK_INFERENCE_PROFILE_PREFIXES, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { s, T, O, v, c, $e, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";

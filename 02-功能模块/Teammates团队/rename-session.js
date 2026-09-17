@@ -14,8 +14,8 @@ import { createMainAgentContext, sanitizeSessionName, getFeatureValue_CACHED_MAY
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { isTeammate } from "./teammate-context.js";
 import { collectConversationText } from "../会话-历史-恢复/session-title.js";
-import { updateStandaloneAgentContext } from "../../01-核心基础设施/共享小工具-未细化/standalone-agent-context.js";
-import { escapeMarkupText } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import { updateStandaloneAgentContext } from "../../01-核心基础设施/核心工具-未归类/standalone-agent-context.js";
+import { escapeMarkupText } from "../../01-核心基础设施/核心工具-未归类/chunk-339z9efw.js";
 var d =
   'Generate a short kebab-case name (2-4 words) that captures the main topic of this conversation. Use lowercase words separated by hyphens. Examples: "fix-login-bug", "add-auth-feature", "refactor-api-client", "debug-test-failures". Return JSON with a "name" field.';
 function p(t) {

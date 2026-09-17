@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { j, Gt, B, Rg } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { isRunningWithBun, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum } from "../共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, stripInvisibleCharacters } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getMaxSubagentSpawnDepth } from "../共享小工具-未细化/max-subagent-spawn-depth.js";
+import { getMaxSubagentSpawnDepth } from "../核心工具-未归类/max-subagent-spawn-depth.js";
 import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
   getMainLoopModel,
@@ -31,7 +31,7 @@ import {
   getFeatureValue_CACHED_MAY_BE_STALE,
   isToolSearchFetchRuleEnabled,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getGitBashPath } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isRemoteTriggerEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
@@ -39,30 +39,30 @@ import { getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelC
 import { ARTIFACT_TOOL_NAME } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { PUSH_NOTIFICATION_TOOL_NAME } from "../../02-功能模块/远程控制-Bridge/push-notification-tool.js";
 import { MEMORY_TOOL_NAMES, TOOL_SEARCH_TOOL_NAME, isSimpleModeEnabled, resolvePreReadLineDropped, resolveLeanPrompt, REPL_TOOL_NAME } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { areWorkflowsEnabled } from "../共享小工具-未细化/workflow-feature-gates.js";
+import { areWorkflowsEnabled } from "../../02-功能模块/编排-Workflow/workflow-feature-gates.js";
 import { SKILL_TOOL_NAME } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, getRegisteredTools, buildTool, matchesAnyToolName } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import { POLL_TOOL_NAME, AsyncEvalDispatcher } from "../../02-功能模块/通道集成-Slack/通道集成-Slack.wnn25q3j.js";
-import { WORKFLOW_TOOL_NAME } from "../共享小工具-未细化/chunk-7fcxwgtq.js";
+import { WORKFLOW_TOOL_NAME } from "../../02-功能模块/编排-Workflow/chunk-7fcxwgtq.js";
 import { LIST_AGENTS_TOOL_NAME } from "../../02-功能模块/Teammates团队/list-agents-tool-constants.js";
 import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, CRON_LIST_TOOL_NAME } from "../../02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js";
-import { END_CONVERSATION_TOOL_NAME } from "../共享小工具-未细化/chunk-vtgvbed1.js";
+import { END_CONVERSATION_TOOL_NAME } from "../核心工具-未归类/chunk-vtgvbed1.js";
 import { WEB_FETCH_TOOL_NAME, isArtifactToolRegistered } from "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import { EXIT_PLAN_MODE_TOOL_NAME } from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
-import { isCrossSessionMessagingEnabled } from "../共享小工具-未细化/chunk-rfb3s38d.js";
-import { PROPOSE_GOAL_TOOL_NAME } from "../共享小工具-未细化/propose-goal-tool.js";
+import { isCrossSessionMessagingEnabled } from "../../02-功能模块/跨会话消息-UDS/chunk-rfb3s38d.js";
+import { PROPOSE_GOAL_TOOL_NAME } from "../../02-功能模块/目标模式-Goal/propose-goal-tool.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
-import { isCoordinatorModeEnabled } from "../共享小工具-未细化/coordinator-mode.js";
-import { SEND_MESSAGE_TOOL_NAME } from "../共享小工具-未细化/send-message-constants.js";
-import { PLUGIN_SKILL_DISCOVERY_TOOL_NAMES } from "../共享小工具-未细化/plugin-skill-tool-names.js";
-import { MONITOR_TOOL_NAME } from "../共享小工具-未细化/monitor-tool-name.js";
+import { isCoordinatorModeEnabled } from "../核心工具-未归类/coordinator-mode.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../核心工具-未归类/send-message-constants.js";
+import { PLUGIN_SKILL_DISCOVERY_TOOL_NAMES } from "../../02-功能模块/插件系统/plugin-skill-tool-names.js";
+import { MONITOR_TOOL_NAME } from "../核心工具-未归类/monitor-tool-name.js";
 import { getNonDeferrableBuiltinToolNames } from "../../02-功能模块/工具ToolSearch/tool-search-enablement.js";
 import { AGENT_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
 import { Kkt } from "../../00-第三方库/ajv/ajv.2q22bct4.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
-import { isRecord } from "../共享小工具-未细化/is-record.js";
-import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../核心工具-类型与数值/is-record.js";
+import { countMatching } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
 var SYSTEM_NOTIFICATION_HEADER = "[SYSTEM NOTIFICATION - NOT USER INPUT]",
   BACKGROUND_TASK_NOTIFICATION_PREAMBLE = `${"[SYSTEM NOTIFICATION - NOT USER INPUT]"}
 This is an automated background-task event, NOT a message from the user.
@@ -1029,7 +1029,7 @@ function fe(e) {
   if (typeof t !== "string") return;
   return t.length > pe ? truncateToCodeUnits(t, pe) + "\u2026" : t;
 }
-var et = import.meta.require("../共享小工具-未细化/chunk-q599wyee.js").BRIEF_TOOL_NAME,
+var et = import.meta.require("../核心工具-未归类/chunk-q599wyee.js").BRIEF_TOOL_NAME,
   nt = `Fetches full schema definitions for deferred tools so they can be called.
 
 Deferred tools appear by name in <system-reminder> messages.`,
@@ -1400,7 +1400,7 @@ var Et = new Set([SEND_MESSAGE_TOOL_NAME, STRUCTURED_OUTPUT_TOOL_NAME]);
 function Ot(e) {
   {
     let { isPluginSkillToolAdvertised: t } = import.meta.require(
-      "../共享小工具-未细化/isPluginSkillToolEnabled.gve67s30.js",
+      "../核心工具-未归类/isPluginSkillToolEnabled.gve67s30.js",
     );
     return t(e);
   }

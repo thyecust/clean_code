@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { MCP_ELICITATION_DIALOG, MCP_ELICITATION_WAITING_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
+import { MCP_ELICITATION_DIALOG, MCP_ELICITATION_WAITING_DIALOG } from "./mcp-elicitation-dialogs.js";
 import { logMCPError, logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 class g {
   urlFlows = new Map();

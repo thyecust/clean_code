@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import {
   Kxe,
   Iae,
@@ -23,16 +23,16 @@ import {
   Po,
   Rt,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parseAccountOnHoldApiError, isNoRefreshAvailableError, getAuthPrecedenceSource, resetProfileAuthCache } from "./chunk-wk0e3dz4.js";
 import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
-import { getFederationCacheDir } from "../../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { getFederationCacheDir } from "../../01-核心基础设施/核心工具-未归类/federation-cache-dir.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { mkdir, readFile, stat as F } from "fs/promises";
 import { join as b } from "path";
 import { dirname } from "path";
@@ -224,8 +224,8 @@ function C(e, t, r, s) {
           !s.has(m) &&
           (typeof p !== "number" || Date.now() / 1000 < p - Kxe)
         ) {
-          let { logEvent: _ } = await import("../../01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js"),
-            { fromEnum: g } = await import("../../01-核心基础设施/共享小工具-未细化/analytics-fields.js");
+          let { logEvent: _ } = await import("../../01-核心基础设施/遥测-OpenTelemetry/logEvent.q8d8f1jd.js"),
+            { fromEnum: g } = await import("../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js");
           return (
             _("tengu_wif_user_oauth_refresh_race_resolved", { mode: g(r) }),
             logForDebugging(
@@ -266,7 +266,7 @@ function W(e, t) {
         try {
           let m = await r();
           if (m && m.refresh_token === c) {
-            let { logEvent: p } = await import("../../01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js");
+            let { logEvent: p } = await import("../../01-核心基础设施/遥测-OpenTelemetry/logEvent.q8d8f1jd.js");
             (await Iae(t, { ...m, refresh_token: void 0 }),
               p("tengu_wif_user_oauth_refresh_token_cleared", {}));
           }

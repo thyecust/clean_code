@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { authStateStore } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { qP, Tz, c_e, ns, bje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { REMOTE_CALLOUT_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
+import { REMOTE_CALLOUT_DIALOG } from "../云会话-Teleport/remote-callout-dialog.js";
 import { resetUserData, isBgSession, removeDiscardedGatewayCredential, sameOwnerAccount, getOauthAccountInfo, getScreenReaderEnvOverrides, refreshGrowthBookAfterAuthChange } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -17,7 +17,7 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yieldToEventLoop } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
+import { isExiting } from "../../01-核心基础设施/核心工具-未归类/exit-commit-state.js";
 import { readStoredTrustedDeviceToken, clearTrustedDeviceToken, enrollTrustedDevice } from "./chunk-tyce0p0b.js";
 import { REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "./remote-control-messages.js";
 import { notifyRoomAccountChanged } from "../制品发布-Artifact/chunk-rr78st95.js";
@@ -29,24 +29,24 @@ import { applyConfigEnvironmentVariables } from "../../01-核心基础设施/遥
 import { buildCarriableSessionFlags, collectUncarriableLaunchReasons, buildCarriableRuleFlags } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { refreshPolicyLimits } from "../策略限制-PolicyLimits/policy-limits-client.js";
 import { acquireConsentHandoffHold, setConsentNeededRelease, clearRemoteManagedSettings, tryRefreshRemoteManagedSettings, refreshRemoteManagedSettings } from "../../01-核心基础设施/设置-配置/remote-managed-settings.js";
-import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
+import { useHasVirtualScrollViewport } from "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-state.js";
 import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
+import { useKeybinding } from "../键位绑定-Keybindings/keybinding-hooks.js";
+import { useSetAppState } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
+import { useGlobalExitKeybinding } from "../键位绑定-Keybindings/exit-keybinding-hooks.js";
 import { removeNotificationFromState } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { WA, Vx, de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { OAuthLoginScreen } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import { showStandaloneSecurityDialog } from "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
-import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
-import { hasPolicyDiverged } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
-import { resetAuthCachesAfterLogin, runAutoModeGateCheck, rearmAutoModeCheck } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
+import { showStandaloneSecurityDialog } from "../../01-核心基础设施/核心工具-未归类/standalone-security-dialog.js";
+import { useMainLoopModel } from "../../01-核心基础设施/核心工具-未归类/main-loop-model.js";
+import { hasPolicyDiverged } from "../../01-核心基础设施/设置-配置/chunk-22525f7p.js";
+import { resetAuthCachesAfterLogin, runAutoModeGateCheck, rearmAutoModeCheck } from "../../01-核心基础设施/核心工具-未归类/chunk-8r3h1dwe.js";
 import { persistTranscriptLeafCheckpoint, relaunchClaudeCode } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
-import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { ActionKeybindingHint } from "../键位绑定-Keybindings/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { BRIDGE_FAILED_ERROR } from "./remote-control-ui-strings.js";
 import { C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function runOrgMemoryAuthBoundary() {
   onOrgMemoryAuthCompletion(getOrgMemoryIdentity());

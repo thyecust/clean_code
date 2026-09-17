@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { withDeadline } from "../共享小工具-未细化/async-timeout-utils.js";
+import { withDeadline } from "../核心工具-并发与缓存/async-timeout-utils.js";
 import { RL, cZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
@@ -27,15 +27,15 @@ import {
   getCanonicalName,
   parseUserSpecifiedModel,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { getRemoteTransport, hasRemoteControlChannel } from "../安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 import { getConfiguredSessionModel, hasPreModelSwitchHooks, recordModelSwitchIfChanged, enqueueSessionTask, formatInlineCode, FAST_MODE_ON_LABEL, MODEL_SET_SUFFIX, ControlRequestTimeoutError } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { applyFlagSettingsPatch } from "../../02-功能模块/上下文压缩-Compact/apply-flag-settings.js";
-import { getThemeColor } from "../共享小工具-未细化/theme-color.js";
+import { getThemeColor } from "../UI组件-TUI/theme-color.js";
 import { resolvePreModelSwitchDecision, toSingleLineDisplayText, formatModelSwitchBlockedError } from "../模型目录-ModelCatalog/model-switch.js";
-import { resolveThemePalette } from "../共享小工具-未细化/theme-resolution.js";
+import { resolveThemePalette } from "../UI组件-TUI/theme-resolution.js";
 function renderFastModeIndicator(t = !0, e = !1) {
   if (!t) return FAST_MODE_GLYPH;
   let o = resolveThemePalette(resolveSetting("theme", "dark").value);

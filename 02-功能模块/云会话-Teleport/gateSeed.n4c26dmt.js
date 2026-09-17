@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 203 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
 import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { CCR_SESSION_ID_RE } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
+import { CCR_SESSION_ID_RE } from "../会话-历史-恢复/chunk-ds47w88s.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parsePermissionModeFromSystemMessage, trustedDeviceHeaders, httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
@@ -32,7 +32,7 @@ import {
 import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../远程工具执行/remote-tool-protocol.js";
 import { parseSdkInitFrame, parseActiveGoalState, parseRemoteAutocompactState, adaptSdkMessageFrame, extractRetractionSignal } from "../../03-入口与运行时/Headless-SDK模式/sdk-message-adapter.js";
-import "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
+import "../../01-核心基础设施/核心工具-未归类/remote-autocompact-state.js";
 import { createWriteStream } from "fs";
 import {
   mkdir,

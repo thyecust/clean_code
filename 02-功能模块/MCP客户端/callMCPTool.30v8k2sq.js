@@ -51,15 +51,15 @@ import { isZ4Schema, safeParse, getObjectShape, Protocol, mergeCapabilities, Ajv
 import "../认证-OAuth登录/pkce-challenge.js";
 import { UnauthorizedError, auth, extractWWWAuthenticateParams } from "../认证-OAuth登录/oauth-client.js";
 import { Qs, K, he, sn, yB, Mrt, Lx, Nrt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { DEFAULT_IMAGE_LIMITS, getCurrentToolResultsDir } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { CLAUDE_CODE_URL, persistToolResultToFile, isPersistError } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { MCP_URL_ELICITATION_DIALOG, getMcpNeedsAuthCachePath, getMcpNeedsAuthCacheStateKey, readMcpNeedsAuthCache, invalidateMcpNeedsAuthCache, createMcpAuthStubTools, initMcpDiscoveryCacheKillSwitch } from "./mcp-auth-cache.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum, fromNumber, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum, fromNumber, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   getMCPUserAgent,
@@ -92,17 +92,17 @@ import { pluralize, truncateToCodeUnits, beforeFirst } from "../../01-核心基�
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPError, logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { MAX_TIMER_DELAY_MS, buildMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { _xt, jo, yxt, Qie } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
-import { normalizeComparableText, sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
+import { normalizeComparableText, sanitizeDeep } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl, getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { isFirstPartyProvider, shouldPropagateTraceContext } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isPolicyAllowed, getPolicyDeniedReason } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { isPolicyAllowed, getPolicyDeniedReason } from "../../01-核心基础设施/核心工具-未归类/compliance-taints-store.js";
 import { registerChildProcess } from "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
 import { getMcpClientState, isCliOwnedMcpConfig, hasCliOwnedBearerProvider, getCliOwnedBearerToken, isSessionIngressUrl, isBridgeCarrierServer, isCcrProxyConfig, getMcpServerOrigin } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
-import { invalidateKeychainCache } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
+import { invalidateKeychainCache } from "../认证-OAuth登录/keychain-access.js";
 import { MAX_RESULT_SIZE_CHARS_CEILING } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
@@ -165,14 +165,14 @@ import { createAbortController } from "../../03-入口与运行时/核心应用-
 import { getPluginToolStagingDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { agentProxyEnv, subprocessEnv, shouldUseMcpAllowlistEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { emitOtelEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
-import { isMcpServerUrlMissing, hashMcpServerConfig, getMcpServerConfigCacheKey } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { isMcpServerUrlMissing, hashMcpServerConfig, getMcpServerConfigCacheKey } from "./chunk-7wm8t84g.js";
 import { mTt } from "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
-import { getMcpSdkGeneration } from "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js";
-import { CCR_TURN_ID_HEADER, getCcrTurnId } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
-import { MCP_TOOL_BASE } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
+import { getMcpSdkGeneration } from "./mcp-sdk-generation.js";
+import { CCR_TURN_ID_HEADER, getCcrTurnId } from "../../01-核心基础设施/核心工具-未归类/chunk-6dk85bs6.js";
+import { MCP_TOOL_BASE } from "./mcp-tool-base.js";
 import { DesignSessionState, deletePlansForProject, PLAN_INVALIDATING_OPERATIONS, deleteApprovedPlansForProject, deleteVerifiedProjectGrantsForProject, markProjectForRecard } from "../记忆-CLAUDE.md/chunk-9b6sc1gb.js";
-import { getAdditionalWorkingDirectories } from "../../01-核心基础设施/共享小工具-未细化/additional-working-directories.js";
-import "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
+import { getAdditionalWorkingDirectories } from "../../01-核心基础设施/核心工具-未归类/additional-working-directories.js";
+import "./mcp-elicitation-dialogs.js";
 import { runElicitationHooks, runElicitationResultHooks } from "./mcp-elicitation-handlers.js";
 import { getOfficialPluginPromptOverrides, getOverriddenServerInstructions, applyParamDescriptions } from "../插件系统/plugin-prompt-overrides.js";
 import {
@@ -188,8 +188,8 @@ import {
   pct,
   fct,
 } from "../../00-第三方库/ajv/chunk-7bsbdzwc.js";
-import { boundDial } from "../../01-核心基础设施/共享小工具-未细化/chunk-aqawy2mp.js";
-import { reauthReconnectEmitter, cachedRowAdoptEmitter, cachedRowDialFailedEmitter } from "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
+import { boundDial } from "./chunk-aqawy2mp.js";
+import { reauthReconnectEmitter, cachedRowAdoptEmitter, cachedRowDialFailedEmitter } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-event-emitters.js";
 import {
   resolveAccountTokenAndRecord,
   getIdentityEpoch as ir,
@@ -213,39 +213,39 @@ import {
   deleteDiscoveryCacheEntry,
   acquireDiscoveryCacheRefreshLock,
 } from "./mcp-discovery-cache.js";
-import "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
+import "../认证-OAuth登录/oauth-callback.js";
 import { redactHeaders, redactUrl, formatErrorWithCode, formatConnectionError, redactErrorForLogging, rethrowFetchError } from "../认证-OAuth登录/url-and-error-redaction.js";
 import { clearMcpOAuthStubIfTokenless, wrapFetchWithStepUpDetection, ClaudeAuthProvider } from "../认证-OAuth登录/mcp-oauth-provider.js";
 import "../认证-OAuth登录/xaa-idp-auth.js";
-import { recordReplyDegradedState } from "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
-import { isClaudeAiBearerRejectedError, isListAuthError } from "../../01-核心基础设施/共享小工具-未细化/auth-error-predicates.js";
-import { isClaudeBrowserMcpServerName, createHostHandledConsentPermissions } from "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
-import { isSlackSendTool, createSlackSendUiDescriptor } from "../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
-import "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
+import { recordReplyDegradedState } from "../../01-核心基础设施/核心工具-未归类/reply-degraded-state.js";
+import { isClaudeAiBearerRejectedError, isListAuthError } from "../认证-OAuth登录/auth-error-predicates.js";
+import { isClaudeBrowserMcpServerName, createHostHandledConsentPermissions } from "../浏览器集成-ClaudeinChrome/claude-browser-mcp-server.js";
+import { isSlackSendTool, createSlackSendUiDescriptor } from "../通道集成-Slack/slack-send-tool.js";
+import "./mcp-hosted-oauth-gate.js";
 import { noopTaskRegistry } from "../工具WebFetch-WebSearch/noop-task-registry.js";
-import { SdkMcpClientTransport } from "../../01-核心基础设施/共享小工具-未细化/sdk-mcp-transports.js";
-import { stripTextBlockMeta, estimateContentTokens, shouldTruncateOutput, maybeTruncateOutput } from "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
+import { SdkMcpClientTransport } from "../MCP传输-stdio-SSE-HTTP/sdk-mcp-transports.js";
+import { stripTextBlockMeta, estimateContentTokens, shouldTruncateOutput, maybeTruncateOutput } from "./mcp-output-truncation.js";
 import "./mcp-elicitation-request-handler.js";
 import { hce } from "../../00-第三方库/_未识别/chunk-5y6047zm.js";
 import { logChromeToolsAdded } from "../Hooks钩子/chrome-telemetry-events.js";
-import { collectResourceLinks, stripReservedMetaKeys } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
+import { collectResourceLinks, stripReservedMetaKeys } from "./mcp-tool-result-fields.js";
 import { headersToRecord, createFetchWithInit, StreamableHTTPError, StreamableHTTPClientTransport } from "../MCP传输-stdio-SSE-HTTP/streamable-http-client-transport.js";
-import { getDesignAuthResolver, hasFirstPartyDesignAuth, FirstPartyDesignNeedsConsentError, getDesignConsentProvider, setPendingScopeExpansionNotice } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
-import { hasChannelCapability } from "../../01-核心基础设施/共享小工具-未细化/has-channel-capability.js";
-import { resolveProxyFetchOptions } from "../../01-核心基础设施/共享小工具-未细化/proxy-fetch-options.js";
+import { getDesignAuthResolver, hasFirstPartyDesignAuth, FirstPartyDesignNeedsConsentError, getDesignConsentProvider, setPendingScopeExpansionNotice } from "../设计同步/chunk-jhs1bd0k.js";
+import { hasChannelCapability } from "../通道集成-Slack/has-channel-capability.js";
+import { resolveProxyFetchOptions } from "../../01-核心基础设施/HTTP-网络层/proxy-fetch-options.js";
 import { splitPluginId } from "../插件系统/chunk-33bdfgmx.js";
 import { isMcpSkillsEnabled, isMcpSkillsCapable } from "./mcp-skills-extension.js";
-import { asMcpClient, asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
+import { asMcpClient, asMcpSdkClient } from "./mcp-client-type-casts.js";
 import { buildImageBlock } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
-import { isClaudeInChromeMCPServer } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
-import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
-import { ReadBuffer, deserializeMessage, serializeMessage } from "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
+import { getMcpTimeoutMs } from "./mcp-timeouts.js";
+import { isClaudeInChromeMCPServer } from "../浏览器集成-ClaudeinChrome/claude-in-chrome-mcp-constants.js";
+import { normalizeMcpName } from "./mcp-name-normalization.js";
+import { ReadBuffer, deserializeMessage, serializeMessage } from "../MCP传输-stdio-SSE-HTTP/stdio-message-framing.js";
 import { AA, s, v, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Jke } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 class ht {
   constructor(e) {
     this._client = e;
@@ -2406,9 +2406,9 @@ var connectToServer = lct(
           );
         let { createChromeContext: O } = await import("../浏览器集成-ClaudeinChrome/createChromeContext.ny2380rf.js"),
           { createChromeSocketClient: N, createClaudeForChromeMcpServer: te } =
-            await import("../../01-核心基础设施/共享小工具-未细化/createChromeSocketClient.s4c4rtzf.js"),
+            await import("../浏览器集成-ClaudeinChrome/createChromeSocketClient.s4c4rtzf.js"),
           { createLinkedTransportPair: Se } =
-            await import("../../01-核心基础设施/共享小工具-未细化/createLinkedTransportPair.qtywxtch.js"),
+            await import("../MCP传输-stdio-SSE-HTTP/createLinkedTransportPair.qtywxtch.js"),
           { setChromeBinding: Pe } = await import("../浏览器集成-ClaudeinChrome/setChromeBinding.wm1nbm73.js"),
           { registerChromeTabGroupCleanup: we } =
             await import("../权限系统/registerChromeTabGroupCleanup.epxd464c.js"),
@@ -2427,7 +2427,7 @@ var connectToServer = lct(
         let { createComputerUseMcpServerForCli: w } =
             await import("../图片-截图-ComputerUse/runComputerUseMcpServer.cvpyez80.js"),
           { createLinkedTransportPair: O } =
-            await import("../../01-核心基础设施/共享小工具-未细化/createLinkedTransportPair.qtywxtch.js");
+            await import("../MCP传输-stdio-SSE-HTTP/createLinkedTransportPair.qtywxtch.js");
         h = await w();
         let [N, te] = O();
         (await h.connect(te),

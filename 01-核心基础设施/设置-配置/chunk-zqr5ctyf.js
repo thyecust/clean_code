@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../共享小工具-未细化/analytics-fields.js";
+import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../遥测-OpenTelemetry/analytics-fields.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, my, _Z, AHt, Tae } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
+import { withTimeout } from "../核心工具-并发与缓存/async-timeout-utils.js";
 import { hasUnverifiableAncestry, getFsSurface } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fileSuffixForOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { hur, I } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
-import { dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
-import { defineExportGetters } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { dedupe } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
+import { defineExportGetters } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 function isRunningWithBun() {
   return !0;
 }
@@ -241,7 +241,7 @@ function getGlobalClaudeFile() {
 }
 async function Rt() {
   try {
-    let { externalHttp: t } = await import("../共享小工具-未细化/external-http.js");
+    let { externalHttp: t } = await import("../HTTP-网络层/external-http.js");
     return (
       await t.head("http://1.1.1.1", { signal: AbortSignal.timeout(1000) }),
       !0
@@ -2738,7 +2738,7 @@ function f(t, o) {
 var env = f(AI, T),
   DI = {},
   antEnv = f(DI, null),
-  cI = import.meta.require("../共享小工具-未细化/udsInboxShape.dasynwyz.js").udsInboxShape,
+  cI = import.meta.require("../../02-功能模块/跨会话消息-UDS/udsInboxShape.dasynwyz.js").udsInboxShape,
   udsEnv = f(cI, null);
 export {
   isRunningWithBun,

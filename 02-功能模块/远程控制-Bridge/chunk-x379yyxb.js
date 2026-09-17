@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { Ve, dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { COMMAND_MESSAGE_TAG, LOCAL_COMMAND_CAVEAT_TAG, TICK_TAG, TASK_NOTIFICATION_TAG, TEAMMATE_MESSAGE_TAG, CHANNEL_SOURCE_OPEN_TAG, FORK_BOILERPLATE_TAG, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   EXTERNAL_MESSAGE_PREFIX,
@@ -26,22 +26,22 @@ import {
   createControlResponseError,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { CROSS_SESSION_MESSAGE_PREFIX, CROSS_SESSION_OPENER_PREFIXES, isCrossSessionMessage } from "../Teammates团队/chunk-g6nvp9mm.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { signClientEvent, tryHandleFrame, buildSuccessControlResponse, prepareApiRequest, getSessionRequestHeaders, sendEventToRemoteSession, sendBashCommandToRemoteSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../目录同步-dir-sync/chunk-97crm80y.js";
+import { extractErrorDetail } from "./chunk-x4q0245z.js";
 import { getTrustedDeviceToken, recoverFromUntrustedDevice } from "./chunk-tyce0p0b.js";
 import { classifyElevatedAuthError } from "./code-session-api.js";
 import { MAX_RESULT_BYTES } from "../远程工具执行/remote-tool-protocol.js";
-import { SSEParser } from "../../01-核心基础设施/共享小工具-未细化/sse-parser.js";
-import { drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
+import { SSEParser } from "./sse-parser.js";
+import { drainResponseBody } from "../../01-核心基础设施/核心工具-其他/drain-response-body.js";
 import { s, T, O, se, v, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID as me } from "crypto";
 var x = createLazyValue(() => {
   let e = fe(s(), se()),

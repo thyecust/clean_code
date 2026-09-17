@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { extractErrorDetail } from "./chunk-x4q0245z.js";
 import { validateBridgeId, toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
-import { isValidRequestId } from "../../01-核心基础设施/共享小工具-未细化/request-id.js";
-import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
+import { isValidRequestId } from "../../01-核心基础设施/核心工具-其他/request-id.js";
+import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
 var k = /cloudflare/i;
 function classifyResponseSource(e) {
   let r = e("request-id");
@@ -82,7 +82,7 @@ async function createCodeSession(e, r, i, c, a, f, m, p, o, t, g) {
   let d = `${e}/v1/code/sessions`,
     s = { cwd: m ?? getCwd(), ...(p && { model: p }) };
   if (f) {
-    let { buildGitSessionContext: _ } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js"),
+    let { buildGitSessionContext: _ } = await import("../../01-核心基础设施/核心工具-未归类/chunk-ve2h3qad.js"),
       {
         sources: S,
         outcomes: C,

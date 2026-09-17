@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 87 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { getTeammateContext } from "../Teammates团队/teammate-context.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { getScheduledTasksPath, deleteScheduledTasks, listScheduledTasks } from "../后台任务-Shell管理/scheduled-tasks.js";

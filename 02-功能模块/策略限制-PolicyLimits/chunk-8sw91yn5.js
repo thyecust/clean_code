@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { po, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { getClaudeConfigDir, isSimpleMode } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -35,15 +35,15 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getStringWidth, truncateToWidth, truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { replaceInvisibleChars, stripInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { replaceInvisibleChars, stripInvisibleChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { getAPIProvider, isFirstPartyAnthropicBaseUrl, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { setComplianceTaints, getComplianceTaints, registerPolicyVerdict } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { setComplianceTaints, getComplianceTaints, registerPolicyVerdict } from "../../01-核心基础设施/核心工具-未归类/compliance-taints-store.js";
 import { getNameableComplianceTaints, formatPolicyDeniedMessage, policyCacheMissMessage, policyRouteMissingMessage, formatPolicyBlockedReason, policyCacheMissReason, policyRouteMissingReason } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { expandTabs } from "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
+import { expandTabs } from "../../01-核心基础设施/核心工具-字符串与文本/expand-tabs.js";
 import { INVALID_TOOL_NAME_PLACEHOLDER, l1, lkn } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { getGraphemeSegmenter } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { readFileSync } from "fs";
 import { join as We } from "path";
 function buildAttributionHeader(e, t, r, o, i) {

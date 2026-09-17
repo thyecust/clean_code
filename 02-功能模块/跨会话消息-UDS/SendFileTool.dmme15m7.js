@@ -10,9 +10,9 @@
 
 // [preload stripped] 原本在此预载 187 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Dr } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { Ve, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -20,7 +20,7 @@ import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27n
 import { findLastPeerHopChain, parsePeerAddress, validateMessageTarget, slugify, parseAgentDisplayName, formatCandidateSummary } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { sanitizeTextForDisplay, isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
@@ -45,7 +45,7 @@ import { findMatchingDenyRule, findMatchingAskRule, READ_PATH_PROBE, readPermiss
 import { createConcurrencyLimiter, SEND_FILE_TOOL_NAME, SEND_FILE_TOOL_DESCRIPTION, buildSendFileToolPrompt, BoundedTtlCache, getCurrentSessionPeerNameFor } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isMessageTooLargeError, isSenderPacedError, isInboxGoneError, formatStaleSocketHint, BUSY_PIPE_RETRY_HINT, isRetryableSendError } from "./chunk-ddtmwhn7.js";
 import { LIST_AGENTS_TOOL_NAME } from "../Teammates团队/list-agents-tool-constants.js";
-import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, isSendFileEnabled, FILE_TRANSFER_ERROR_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, isSendFileEnabled, FILE_TRANSFER_ERROR_MESSAGE } from "../../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
 import { readPeerFileBounded, stageLocalPeerFile, sweepStaleSpoolEntries } from "./peer-file-transfer.js";
 import {
   checkCrossSessionSendPermission,
@@ -60,7 +60,7 @@ import {
   resolveMessageRecipient,
 } from "../Teammates团队/message-recipient-resolution.js";
 import { IMAGE_FILE_EXTENSION_PATTERN, getMediaTypeFromPath, validateAttachmentPath } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/send-message-constants.js";
 import { MAIN_CONVERSATION_NAME } from "../Teammates团队/chunk-enjekn9t.js";
 import { s, T, O, v, c, Qe, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { realpath, unlink } from "fs/promises";

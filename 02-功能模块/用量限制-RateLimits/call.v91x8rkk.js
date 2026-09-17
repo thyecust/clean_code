@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { isLowPriorityActive, endLowPriorityMode } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { enableLowPriorityMode, formatLowPriorityEnabledMessage, formatLowPriorityUnavailableMessage, formatLowPriorityOffMessage } from "../限流-重试/限流-重试.4mc5yc28.js";
-import "../../01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js";
+import "../用量额度-限额/usage-limit-continuation.js";
 async function r() {
   if (isLowPriorityActive()) return (endLowPriorityMode("user"), { type: "text", value: formatLowPriorityOffMessage() });
   let t = enableLowPriorityMode("command");

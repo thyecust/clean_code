@@ -24,8 +24,8 @@ import {
   rs,
   zn,
 } from "./lodash.207999qb.js";
-import { getNormalizedRealCwd, STARTUP_REAL_CWD, STARTUP_CWD, isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { defineExportGetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { getNormalizedRealCwd, STARTUP_REAL_CWD, STARTUP_CWD, isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { defineExportGetters } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { homedir } from "os";
 import { sep as cn } from "path";
 import { randomUUID as i8 } from "crypto";

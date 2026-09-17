@@ -35,7 +35,7 @@ import { findCanonicalGitRoot } from "../安全文件系统-FS加固/安全文�
 import { pickBy, isMemoryApiEnvVar, SECRET_TOKEN_ENV_VARS, getHostManagedEnvVarsToStrip, resolveLocalSettingsStoreRoot } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { getChildProcessTmpDir } from "../核心工具-路径与平台/temp-directory.js";
 import { id, noProxyUnion } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { getFederationCacheDir } from "../共享小工具-未细化/federation-cache-dir.js";
+import { getFederationCacheDir } from "../核心工具-未归类/federation-cache-dir.js";
 import { homedir } from "os";
 import { dirname, posix } from "path";
 var PLACEHOLDER_CREDENTIAL_VALUE = "proxy-injected";

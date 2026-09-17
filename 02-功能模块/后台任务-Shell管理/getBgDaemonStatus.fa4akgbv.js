@@ -15,12 +15,12 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { getVerifiedDaemonLock } from "./daemon-lock.js";
 import { getDaemonRuntimeDir, redactDaemonNonce, getRosterFilePath, getControlSocketPath } from "./chunk-djserjj5.js";
 import { BG_PROTO, rosterKey, readRoster } from "./chunk-7wsy8vxb.js";
-import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import { controlRequest } from "../守护服务-Daemon/chunk-9fpz6abc.js";
 import { isDaemonServiceInstalled } from "./chunk-jfk5mpe1.js";
 import { DAEMON_CONFIG_MAX_BYTES, readDaemonConfigContent } from "../权限系统/chunk-3kjwvb3e.js";
-import { getDaemonJsonPath, getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
+import { getDaemonJsonPath, getDaemonLogPath } from "../守护服务-Daemon/daemon-paths.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { readFile, stat as f } from "fs/promises";
 async function getBgDaemonStatus(e) {
   let r = await getVerifiedDaemonLock(1, e).catch(() => null),

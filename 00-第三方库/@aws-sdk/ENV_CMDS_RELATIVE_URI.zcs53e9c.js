@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getNodeConfigProviderModule } from "../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
-import { getUrlParserModule } from "../../01-核心基础设施/共享小工具-未细化/url-parser.js";
+import { getNodeConfigProviderModule } from "../../01-核心基础设施/核心工具-未归类/node-config-provider.js";
+import { getUrlParserModule } from "../../01-核心基础设施/核心工具-字符串与文本/url-parser.js";
 import "./chunk-z7ktsccq.js";
 import { getPropertyProviderModule } from "../../02-功能模块/模型接入-Bedrock-Vertex/smithy-property-provider.js";
-import { toESM, initESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM, initESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { Buffer as ae } from "buffer";
 import { request } from "http";
 function httpRequest(e) {

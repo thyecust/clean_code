@@ -12,14 +12,14 @@
 import { renderFeedbackComponent as jdr, callLegacyFeedbackDialog as LPt, call as ggr } from "../斜杠命令-UI组件/feedback-dialog.js";
 import "./反馈-错误上报.grgh562d.js";
 import "../语法高亮-Markdown渲染/markdown-renderer.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
+import "../../01-核心基础设施/核心工具-未归类/use-hyperlink-support.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
-import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
+import "../../01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "./feedback-draft-submit.js";
-import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
-import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import "../../01-核心基础设施/UI组件-TUI/focusable-box.js";
+import "../../01-核心基础设施/UI组件-TUI/error-message.js";
+import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 export {
   ggr as call,
   LPt as callLegacyFeedbackDialog,

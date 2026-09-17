@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
+import { getBridgeHostState } from "../远程控制-Bridge/bridge-state-containers.js";
 import { permissionUpdateSchema } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function u(e) {
   if (!Array.isArray(e)) return [];

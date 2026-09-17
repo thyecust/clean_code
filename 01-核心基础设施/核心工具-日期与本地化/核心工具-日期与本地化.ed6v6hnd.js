@@ -11,7 +11,7 @@ import { TIME_FORMATS } from "../../02-功能模块/图片-截图-ComputerUse/se
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { truncateToCodeUnits, beforeFirst, stripInvisibleCharacters, stripAnsiAndControlChars } from "../核心工具-字符串与文本/string-utils.js";
 import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
-import { withTimeZone, getDateTimeFormat } from "../共享小工具-未细化/intl-text-utils.js";
+import { withTimeZone, getDateTimeFormat } from "./intl-text-utils.js";
 var h = new Map();
 function getSystemLocale() {
   let t = a.LC_ALL || a.LC_TIME || a.LANG || "";

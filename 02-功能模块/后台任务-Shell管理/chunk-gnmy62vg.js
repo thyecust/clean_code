@@ -13,13 +13,13 @@ import { redactSecretsFromText, logForDebugging } from "../../01-核心基础设
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getPtySocketDir, getPtySocketPath, getSparePtyDir, getPtyPidDir, getPtyPidFilePath, getPtyHostStderrPath, getPtyLateOutputPath, getPtyExecExitPath, encodeControlFrame } from "./chunk-djserjj5.js";
 import { readRoster, updateRoster, writeReapedTerminalState, MAX_DETAIL_CHARS, clipWithEllipsis } from "./chunk-7wsy8vxb.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { readBoundedFile, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sigtermThenKill, reapDetachedRepl, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { lstat, readdir, unlink } from "fs/promises";
 import { connect } from "net";
 import { basename, join as x } from "path";

@@ -11,7 +11,7 @@ import { useFocusTrap } from "../../02-功能模块/文本编辑-输入缓冲/�
 import { normalizeFullWidthDigits, normalizeIdeographicSpaces } from "../核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text, useIsScreenReaderEnabled } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useActiveOverlay } from "../共享小工具-未细化/overlay-registry.js";
+import { useActiveOverlay } from "../../02-功能模块/多会话视图-Fleet/overlay-registry.js";
 import { MultiSelect, OptionRow, EditableOptionRow, useStateWithGetter, useOptionListFocus, useStrayClickGuard, useVisibleOptionCount } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";

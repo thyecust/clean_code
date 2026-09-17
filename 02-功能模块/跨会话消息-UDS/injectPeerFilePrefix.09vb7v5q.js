@@ -22,7 +22,7 @@ import {
   sweepStaleSpoolEntries as Aan,
   materializeLocalPeerFiles as Khr,
 } from "./peer-file-transfer.js";
-import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import "../../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
 export {
   nFt as emitPeerFileReceiveTelemetry,
   rFt as injectPeerFilePrefix,

@@ -11,23 +11,23 @@
 // [preload stripped] 原本在此预载 252 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { parseUserSpecifiedModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { stripLongContextTags } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
 import { baseModelSupportsAdvisor, isValidAdvisorModelString, getAdvisorModelAliases, isValidAdvisorModel, isAdvisorModelPendingCreditsConsent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
-import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
-import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
-import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import "../../01-核心基础设施/核心工具-未归类/feature-flag-version.js";
+import { useMainLoopModel } from "../../01-核心基础设施/核心工具-未归类/main-loop-model.js";
+import { LearnMoreLink } from "../../01-核心基础设施/核心工具-未归类/learn-more-link.js";
+import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { formatAdvisorConsentHint, applyAdvisorModelSetting } from "../../01-核心基础设施/共享小工具-未细化/advisor-command.js";
+import { formatAdvisorConsentHint, applyAdvisorModelSetting } from "./advisor-command.js";
 import { validateModelAvailability, formatModelDisplayName } from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import { E, vr, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function lo(Do) {
   return Do.advisorModel;

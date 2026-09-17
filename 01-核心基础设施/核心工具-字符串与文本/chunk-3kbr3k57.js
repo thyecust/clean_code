@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { stripInvisibleChars, escapeControlChars, toUnicodeEscape } from "../共享小工具-未细化/text-sanitization.js";
+import { stripInvisibleChars, escapeControlChars, toUnicodeEscape } from "./text-sanitization.js";
 var C = new Map([
   [
     "a",

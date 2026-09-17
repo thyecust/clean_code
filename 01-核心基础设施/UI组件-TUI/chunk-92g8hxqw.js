@@ -8,19 +8,19 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport } from "../共享小工具-未细化/virtual-scroll-viewport-state.js";
+import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport } from "./virtual-scroll-viewport-state.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getStringWidth } from "../核心工具-字符串与文本/ansi-text-utils.js";
 import { Box, Text, measureElement } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Q0 } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useKeybindingContext } from "../../02-功能模块/键位绑定-Keybindings/keybinding-context.js";
 import { formatKeybindingChordText, resolveKeybindingChordInContexts } from "../../02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
-import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
-import { useExitKeybindingEntries } from "../共享小工具-未细化/exit-keybinding-hooks.js";
-import { KeybindingScope } from "../共享小工具-未细化/keybinding-scope.js";
+import { DotSeparatedList } from "../核心工具-未归类/chunk-ff1hq6qq.js";
+import { useExitKeybindingEntries } from "../../02-功能模块/键位绑定-Keybindings/exit-keybinding-hooks.js";
+import { KeybindingScope } from "../../02-功能模块/键位绑定-Keybindings/keybinding-scope.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
-import { ActionKeybindingHint } from "../共享小工具-未细化/action-keybinding-hint.js";
-import { Divider } from "../共享小工具-未细化/divider.js";
+import { ActionKeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/action-keybinding-hint.js";
+import { Divider } from "./divider.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { De, E, dn, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 var WA = 2,

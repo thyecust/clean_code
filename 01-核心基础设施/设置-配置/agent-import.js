@@ -13,9 +13,9 @@ import { getClaudeConfigDir } from "../../02-功能模块/模型接入-Bedrock-V
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize, truncateToCodePoints } from "../核心工具-字符串与文本/string-utils.js";
 import { tryGetRealPath, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
-import { runWithCwd } from "../共享小工具-未细化/cwd-context.js";
-import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
+import { runWithCwd } from "../核心工具-未归类/cwd-context.js";
+import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { writeFileAndFlush } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { BASH_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ike } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -23,10 +23,10 @@ import { updateSettingsForSource } from "../核心工具-路径与平台/核心�
 import { escapeShellCommandMarkers, findSkillShellCommands, addMcpConfig, userScopeMcpServerExists, readRawMcpJsonServersFromCwd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isSyncOwnedRootName } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { stringifyYaml } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
-import { MAX_SKILL_FILE_BYTES } from "../共享小工具-未细化/chunk-7wm8t84g.js";
+import { MAX_SKILL_FILE_BYTES } from "../../02-功能模块/MCP客户端/chunk-7wm8t84g.js";
 import { s, T, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
-import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
 import { join as Ae } from "path";
 import {
   copyFile,

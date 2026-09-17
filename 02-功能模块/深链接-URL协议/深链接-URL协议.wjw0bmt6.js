@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -15,10 +15,10 @@ import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { resolveExecutablePathAsync } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
-import { getInstalledClaudePath } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
+import { getInstalledClaudePath } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { DEEP_LINK_SCHEME } from "../插件系统/chunk-q8w2zntw.js";
-import { getXdgDataHome } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
+import { getXdgDataHome } from "../../01-核心基础设施/核心工具-路径与平台/user-directories.js";
 import { promises } from "fs";
 import * as g from "os";
 import * as o from "path";

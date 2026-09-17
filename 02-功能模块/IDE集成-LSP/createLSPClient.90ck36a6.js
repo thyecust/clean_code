@@ -9,15 +9,15 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 49 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonParseUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Qcr, Bs, exe, SPn, Zcr, SW } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { registerChildProcess, markChildProcessExited } from "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
-import { logErrorWithTelemetryMessage } from "../../01-核心基础设施/共享小工具-未细化/log-error-with-telemetry-message.js";
-import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
-import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { logErrorWithTelemetryMessage } from "../../01-核心基础设施/遥测-OpenTelemetry/log-error-with-telemetry-message.js";
+import { killProcessTree } from "../../01-核心基础设施/核心工具-进程与信号/kill-process-tree.js";
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var me = commonJS(function (zt) {
   Object.defineProperty(zt, "__esModule", { value: !0 });
   zt.stringArray =

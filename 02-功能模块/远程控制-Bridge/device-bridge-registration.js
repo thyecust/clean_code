@@ -8,22 +8,22 @@
 
 // Version: 2.1.263
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum, fromEnumOpt, fromNumber, fromNumberOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum, fromEnumOpt, fromNumber, fromNumberOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { BASH_TOOL_NAME, onGrowthBookRefresh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hashStringWithBun, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { subscribeComplianceTaints } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { subscribeComplianceTaints } from "../../01-核心基础设施/核心工具-未归类/compliance-taints-store.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { isAllowedBridgeWsUrl } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { isViolinWoodEnabled, isViolinWoodServedOff } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabled, isViolinWoodServedOff } from "../目录同步-dir-sync/chunk-97crm80y.js";
 import {
   isSessionChannelDisabled,
   isRemoteToolServingMuted,
@@ -46,11 +46,11 @@ import {
   sanitizeDeviceName,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { CURRENT_PROTOCOL_VERSION, REMOTE_TOOL_EXECUTION_META_KEY, parseToolDescriptor } from "../远程工具执行/remote-tool-protocol.js";
-import { DEVICE_PASSTHROUGH_META_KEY, parseDevicePassthroughMeta } from "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
-import { NOT_HELD_STATE } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
-import { resolveAccountIdentity, isEgressAllowed } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
+import { DEVICE_PASSTHROUGH_META_KEY, parseDevicePassthroughMeta } from "../设备注册-Cowork/device-passthrough-meta.js";
+import { NOT_HELD_STATE } from "../../01-核心基础设施/终端与时钟/chunk-hkdjw6ht.js";
+import { resolveAccountIdentity, isEgressAllowed } from "../设备注册-Cowork/chunk-d4kaq0ds.js";
 import { s, T, Jq, c, $e, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { hostname } from "os";
 class se {
   transport;

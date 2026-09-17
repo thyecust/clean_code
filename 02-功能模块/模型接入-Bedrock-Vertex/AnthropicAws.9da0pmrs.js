@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { gn, xu, Bx } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getNodeConfigProviderModule } from "../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
+import { getNodeConfigProviderModule } from "../../01-核心基础设施/核心工具-未归类/node-config-provider.js";
 import { cy } from "../../00-第三方库/@aws-sdk/chunk-dm9sg03f.js";
-import "../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
+import "../../01-核心基础设施/核心工具-类型与数值/tslib-helpers.js";
 import { FOe } from "../../00-第三方库/_未识别/chunk-e0ewk5yt.js";
-import "../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
+import "../../01-核心基础设施/核心工具-类型与数值/byte-array-conversion.js";
 import { nu } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { lhe } from "../../00-第三方库/@aws-sdk/chunk-zdrvwe5r.js";
 import { fetchHttpHandlerModule } from "./chunk-p991cddr.js";
-import "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import "../../01-核心基础设施/核心工具-未归类/smithy-context-module.js";
 import "../../00-第三方库/@aws-sdk/chunk-z7ktsccq.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var u = (e) => ((u = Array.isArray), u(e)),
   A = u;
 var O = Symbol.for("brand.privateNullableHeaders");
@@ -140,7 +140,7 @@ var I = (e) => {
   return Error(e);
 };
 var Y = (e, t) =>
-    import("../../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js")
+    import("../../01-核心基础设施/核心工具-未归类/fromIni.7gtjb5bg.js")
       .then(({ fromNodeProviderChain: r }) =>
         r({
           ...(e != null ? { profile: e } : {}),

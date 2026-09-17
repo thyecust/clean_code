@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { tslibAwaiter, tslibGenerator, tslibValues } from "../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
-import { toUint8Array, isEmptyData, uint32ToBytes, toUint32Array } from "../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
+import { tslibAwaiter, tslibGenerator, tslibValues } from "../../01-核心基础设施/核心工具-类型与数值/tslib-helpers.js";
+import { toUint8Array, isEmptyData, uint32ToBytes, toUint32Array } from "../../01-核心基础设施/核心工具-类型与数值/byte-array-conversion.js";
 import { ta } from "./chunk-mwf4pmq2.js";
-import { hexEncodingModule } from "../../01-核心基础设施/共享小工具-未细化/hex-encoding-module.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { hexEncodingModule } from "../../01-核心基础设施/核心工具-类型与数值/hex-encoding-module.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var F = toESM(ta());
 class pL extends F.ServiceException {
   constructor(e) {

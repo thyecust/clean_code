@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { j, bi } from "../lodash/lodash.2x3q7cfh.js";
 import { po } from "../lodash/lodash.207999qb.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad } from "../lodash/lodash.0vqzb8ad.js";
 import { R, A, Jr } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { resolveExecutablePath, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
-import { getProcStartTime, getProcParentPid } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
+import { resolveExecutableSafely } from "../../03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js";
+import { getProcStartTime, getProcParentPid } from "../../01-核心基础设施/核心工具-进程与信号/linux-proc-stat.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var it = commonJS(function (gi, ot) {
   ot.exports = rt;
   rt.sync = Hn;

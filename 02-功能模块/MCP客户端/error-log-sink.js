@@ -13,7 +13,7 @@ import { createStringBatchWriter, registerCleanup, registerPreExitFlush, jsonStr
 import { getCurrentWorkingDirectory, logDirectories, dateToFilename, attachErrorLogSink } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { reportError } from "../../01-核心基础设施/HTTP-网络层/error-tracking-report.js";
 import { emitInternalErrorEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
-import { createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
+import { createKeyedSerialQueue } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
 import { dirname, join as a } from "path";
 var f = dateToFilename(new Date());
 function c() {

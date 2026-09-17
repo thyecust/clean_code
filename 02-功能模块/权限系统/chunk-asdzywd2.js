@@ -30,7 +30,7 @@ import {
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { MAIN_AGENT_ID } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { AsyncEvalDispatcher } from "../通道集成-Slack/通道集成-Slack.wnn25q3j.js";
-import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
+import { isCoordinatorModeEnabled } from "../../01-核心基础设施/核心工具-未归类/coordinator-mode.js";
 async function spawnForkFromDirective(t, e, a, m, p) {
   if (e.getAppState().endedByModel)
     return (logFeatureBad("subagent_launch", "subagent_fork_ended_by_model"), null);

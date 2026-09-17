@@ -12,7 +12,7 @@
 import { confirmYesNo as C0e, createSubcommandRoot as Agr, setupTokenHandler as Cgr, doctorHandler as vgr, installHandler as Rgr } from "../../02-功能模块/工具Glob-Grep-搜索/cli-command-handlers.js";
 import "./welcome-banner.js";
 import "../../02-功能模块/远程控制-Bridge/policy-limits-status.js";
-import "../../01-核心基础设施/共享小工具-未细化/managed-settings-status.js";
+import "../../01-核心基础设施/设置-配置/managed-settings-status.js";
 import "../../02-功能模块/自动更新-安装/auto-updates-channel.js";
 import "../../02-功能模块/自动更新-安装/install-diagnostics.js";
 export {

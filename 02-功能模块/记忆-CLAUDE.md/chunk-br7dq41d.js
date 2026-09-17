@@ -10,13 +10,13 @@
 import { he, VR, ES, Dx, Aje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { expandPathAliases, changeWorkingDirectory, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isWorkspacePersistedTrusted, isPathTrusted, setPathTrusted, clearProjectPathForConfigCache } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { reanchorGitFileWatcher, findCanonicalGitRootUncached, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { resolvePath, canonicalizePathForComparison } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -43,8 +43,8 @@ import {
 import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { skillChangeDetector } from "../文件监听-Watch/skill-change-detector.js";
 import { validateUntrustedPath, getUntrustedPathReason } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { escapePromptText } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { escapePromptText } from "../../01-核心基础设施/核心工具-未归类/chunk-339z9efw.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { homedir } from "os";
 import { realpath, stat as j } from "fs/promises";
 import { dirname, parse } from "path";

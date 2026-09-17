@@ -8,24 +8,24 @@
 
 // Version: 2.1.263
 import { watchGlobalConfigThroughStorage, seedInstallIDs } from "./认证-OAuth登录.419zdfz3.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, initDefaultDebugLog, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { pickBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { EXTERNAL_PERMISSION_MODES, normalizePermissionModeAlias } from "../权限系统/chunk-e4pfvp7x.js";
-import { isDaemonWorkerRegistryEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
-import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
+import { isDaemonWorkerRegistryEnabled } from "../多会话视图-Fleet/agent-view-feature-gates.js";
+import { pinStorageV5 } from "../../01-核心基础设施/核心工具-未归类/pin-storage-v5.js";
 import { credentialsStoreFor } from "./credentials-store.js";
-import { getBridgeTokenOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getBridgeTokenOverride } from "../远程控制-Bridge/chunk-203p0p9a.js";
 import { REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE } from "../远程控制-Bridge/remote-control-messages.js";
 import { updateDaemonConfig, normalizeRemoteControlEntries, scheduledTasksFileSchema, runScheduledWorker } from "../权限系统/chunk-3kjwvb3e.js";
-import { PERMANENT_FAILURE_EXIT_CODE, TEMP_FAILURE_EXIT_CODE } from "../../01-核心基础设施/共享小工具-未细化/exit-codes.js";
+import { PERMANENT_FAILURE_EXIT_CODE, TEMP_FAILURE_EXIT_CODE } from "../../01-核心基础设施/核心工具-其他/exit-codes.js";
 import { s, T, O, c, X, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { randomUUID } from "crypto";
@@ -460,8 +460,8 @@ var V = createLazyValue(() =>
   ke = 500,
   ne = async (e, t, y, d, p, u) => {
     let h = V().parse(e),
-      { initializeErrorLogSink: f } = await import("../../01-核心基础设施/共享小工具-未细化/initializeErrorLogSink.64dfk6kr.js"),
-      { initializeAnalyticsSink: k } = await import("../../01-核心基础设施/共享小工具-未细化/initializeAnalyticsSink.3hb68836.js");
+      { initializeErrorLogSink: f } = await import("../../01-核心基础设施/遥测-OpenTelemetry/initializeErrorLogSink.64dfk6kr.js"),
+      { initializeAnalyticsSink: k } = await import("../../01-核心基础设施/遥测-OpenTelemetry/initializeAnalyticsSink.3hb68836.js");
     (f(), k());
     let w = () => getBridgeTokenOverride() ?? d.getAccessToken();
     if (!w()) (y(REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE), process.exit(1));
@@ -474,8 +474,8 @@ var V = createLazyValue(() =>
       { flushAnalyticsSinks: D },
       { populateOAuthAccountInfoIfNeeded: N },
     ] = await Promise.all([
-      import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js"),
+      import("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
+      import("../../01-核心基础设施/遥测-OpenTelemetry/chunk-p7jm635c.js"),
       import("./认证-OAuth登录.419zdfz3.js"),
     ]);
     if (
@@ -649,9 +649,9 @@ async function runDaemonWorker(e, t) {
       { primeFastPathCredentials: S },
       { setGrowthBookCredentials: C, setGrowthBookStorageBackend: D },
     ] = await Promise.all([
-      import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
+      import("../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
+      import("./primeFastPathCredentials.eb5w3wem.js"),
+      import("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
     ]);
     (v({ storageV5: f, credentials: k }),
       C(k),

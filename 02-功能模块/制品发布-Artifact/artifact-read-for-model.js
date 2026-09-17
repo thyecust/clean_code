@@ -46,7 +46,7 @@ import { buildArtifactTypePublishNote, buildArtifactTypeInstructionsSection } fr
 import { registerHandoverRead, handoverPersistTarget, refreshHandoverCopy, handoverCoverageNote } from "./chunk-x29r16ke.js";
 import { CONTENT_TYPE_PATTERN } from "./artifact-asset-store.js";
 import { FETCHED_CONTENT_CHAR_BUDGET, getHttpStatusText, persistBinaryContent, buildArtifactFileName } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 import { createHash } from "crypto";
 function ye() {
   return getArtifactState().frozenMultiFile ?? isFrameMultiFileEnabled();

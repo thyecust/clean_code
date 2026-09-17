@@ -11,17 +11,17 @@
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { identity as _m, Xn, Vur, $p, he, pje, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { toCompatSessionId, toInfraSessionId, sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { Ve, zi, yt, Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonStringify, setHasFormattedOutput, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { printCliError } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { printCliError } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js";
+import { logEvent, logEventAsync } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   getMainLoopModel,
@@ -47,7 +47,7 @@ import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { sanitizeAnalyticsId } from "../CLI入口-Commander/startup-profiler.js";
 import { getSettingsForSource, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { PERMISSION_MODE_MANUAL_ALIAS, parsePermissionMode, CAN_USE_TOOL_INVALID_RESULT_REASON, CAN_USE_TOOL_REQUEST_FAILED_REASON, getExternalPermissionMode } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { buildClaudeAiSessionUrl } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
@@ -87,7 +87,7 @@ import {
   resolveStandingLapse,
   deviceHooksProcessMemories,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isViolinWoodEnabled, isViolinWoodEnabledCached, isSettingsToCloudEnabled, isCloudPluginForwardingFlagOn } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabled, isViolinWoodEnabledCached, isSettingsToCloudEnabled, isCloudPluginForwardingFlagOn } from "../../02-功能模块/目录同步-dir-sync/chunk-97crm80y.js";
 import {
   routeCloudControlRequest,
   getOptionRetentionKind,
@@ -133,9 +133,9 @@ import {
   getSessionRequestTarget,
   fetchLatestSessionEvents,
 } from "../../02-功能模块/远程控制-Bridge/chunk-x379yyxb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
+import "../../01-核心基础设施/核心工具-未归类/chunk-rds75sre.js";
 import { startDeviceRegistration } from "../../02-功能模块/远程控制-Bridge/device-bridge-registration.js";
-import "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
+import "../../02-功能模块/设备注册-Cowork/device-passthrough-meta.js";
 import { resolveAttachDeviceBinding, pullsBackToThisMachine, registerAttachedDevice } from "../../02-功能模块/认证-OAuth登录/attach-device-binding.js";
 import {
   createCloudPluginsConsentStorage,
@@ -180,26 +180,26 @@ import { deviceEventSignerFor } from "../../02-功能模块/认证-OAuth登录/d
 import { permissionResultSchema, StructuredIO } from "./structured-io.js";
 import "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
 import "../../02-功能模块/文件同步-Sync/sync-journal.js";
-import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import "../../02-功能模块/目录同步-dir-sync/sync-state-schema.js";
 import { runProbeGit } from "../../02-功能模块/工作树-Git/local-divergence-probe.js";
 import "../../02-功能模块/工作树-Git/dir-sync-git-repository.js";
 import { forecastKeyOf, decideSyncOffer } from "../../02-功能模块/文件同步-Sync/sync-offer-probe.js";
 import { buildControlSuccessResponse, buildControlErrorResponse, buildErrorResultMessage } from "./headless-sdk-messages.js";
-import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
-import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
-import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
-import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
+import "../../01-核心基础设施/核心工具-路径与平台/private-host-detection.js";
+import { parseThinClientReply } from "../../01-核心基础设施/核心工具-未归类/parse-thin-client-reply.js";
+import "../../01-核心基础设施/核心工具-未归类/request-delivery-errors.js";
+import "../../01-核心基础设施/核心工具-未归类/remote-tools-logger.js";
 import "./chunk-yb7jadvp.js";
 import { buildDefaultDeviceDisplayName } from "../../02-功能模块/设备注册-Cowork/设备注册-Cowork.9r92qaht.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
+import "../../02-功能模块/设备注册-Cowork/chunk-d4kaq0ds.js";
 import "../../02-功能模块/云会话-Teleport/overlay-bundle.js";
-import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
-import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
-import { createStatusFeed } from "../../01-核心基础设施/共享小工具-未细化/status-feed.js";
-import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
+import { truncateWithEllipsis } from "../../01-核心基础设施/核心工具-字符串与文本/truncate-with-ellipsis.js";
+import "../../01-核心基础设施/核心工具-类型与数值/to-integer.js";
+import { createStatusFeed } from "../../01-核心基础设施/核心工具-未归类/status-feed.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js";
 import { defineDialog } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { AA, s, T, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function J(e) {
   if (yt(e)) {
     logForDebugging("[headlessFeatures] a feature hook was aborted");

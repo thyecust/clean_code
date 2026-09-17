@@ -13,9 +13,9 @@ import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
-import { isInITerm2, getIt2Command, isIt2CliAvailable } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
+import { isInITerm2, getIt2Command, isIt2CliAvailable } from "../终端环境探测-TUI-tmux/terminal-backend-detection.js";
 import { SwarmPaneError, assertNoControlCharacters } from "./team-file-store.js";
-import { createMutex } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
+import { createMutex } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
 function d(e) {
   return execFileNoThrow(getIt2Command(), e);
 }

@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 23 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { CS } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { parseConfigInteger } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -32,9 +32,9 @@ import {
   assertFeatureSupportedOnPlatform,
 } from "./chunk-cgmv5fe7.js";
 import { isSupportedGitUrl } from "../工作树-Git/git-operations.js";
-import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
-import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
-import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
+import { raceWithTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/with-timeout.js";
+import { redactSecrets } from "../../01-核心基础设施/核心工具-日志与脱敏/redact-secrets.js";
+import { killProcessTree } from "../../01-核心基础设施/核心工具-进程与信号/kill-process-tree.js";
 import { decodeTokenClaims, encodeTaggedId } from "../远程控制-Bridge/chunk-4zd60pbm.js";
 import { randomUUID } from "crypto";
 import { constants } from "fs";

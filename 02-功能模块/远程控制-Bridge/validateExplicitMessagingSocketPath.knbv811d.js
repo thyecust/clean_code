@@ -29,7 +29,7 @@ import {
 } from "../跨会话消息-UDS/uds-messaging.js";
 import "../Teammates团队/peer-idle-notices.js";
 import "../权限系统/cross-session-inbound-gate.js";
-import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import "../../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
 export {
   iBn as currentSenderClass,
   Vdr as getDefaultUdsSocketPath,

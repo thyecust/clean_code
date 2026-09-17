@@ -37,20 +37,20 @@ import {
   Oz,
   wh,
 } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { yt, R, l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonParse, sanitizeUrl, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { GITHUB_HOST } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { GITHUB_HOST } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { getDirentFileInfo, tryGetDirentFileInfo, removeDirectoryRecursive, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { CLAUDE_AI_OAUTH_SCOPES, preservableScopesFrom } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
@@ -102,20 +102,20 @@ import {
   isNotDisabledInTrustedSources,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { isPolicyAllowed, getPolicyDenyKind } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { isPolicyAllowed, getPolicyDenyKind } from "../../01-核心基础设施/核心工具-未归类/compliance-taints-store.js";
 import { getAPIProvider, isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { default as at, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { ensureAxiosEgressGuardInstalled } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
-import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
+import { ensureAxiosEgressGuardInstalled } from "../../01-核心基础设施/HTTP-网络层/test-egress-guard.js";
+import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/HTTP-网络层/external-http.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { areCommandPluginSourcesDisabledByPolicy, policyTierCommandsMayRun, REMOTE_POLICY_UNCONSENTED_MESSAGE, headersHelperPolicyRefusal, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, canonicalFetchSourceUrl } from "./plugin-source-policy.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
-import { isRemoteOrCoworkSession } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
+import { isRemoteOrCoworkSession } from "../../01-核心基础设施/核心工具-未归类/chunk-339z9efw.js";
+import { killProcessTree } from "../../01-核心基础设施/核心工具-进程与信号/kill-process-tree.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 var OFFICIAL_MARKETPLACE_SOURCE = { source: "github", repo: "anthropics/claude-plugins-official" },
   OFFICIAL_MARKETPLACE_NAME = "claude-plugins-official";
 var Xe = [

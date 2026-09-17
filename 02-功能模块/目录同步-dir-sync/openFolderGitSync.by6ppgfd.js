@@ -11,15 +11,15 @@
 // [preload stripped] 原本在此预载 204 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { formatSingleLineText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { isSignalAborted, isDirSyncStreamingEnabled, resolveRealPath, getDirectoryDirSyncConsent, createStoppedEngine, createSyncedFileLaneClient, createPathWithholdClassifier, CLAUDE_REF_PREFIX, MAX_LISTED_COMMITS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
 import "../文件同步-Sync/sync-journal.js";
-import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import "./sync-state-schema.js";
 import { createDirChangeFeed, createGitSessionRecord, readGitSessionRecord, writeGitSessionRecord } from "./chunk-zbxyj64j.js";
 import { DEFAULT_MAX_BUNDLE_BYTES, formatBundleHeader, validateBundleForRefs } from "../工作树-Git/dir-sync-git-repository.js";
 import "../文件同步-Sync/chunk-tqwnv5vj.js";
@@ -47,9 +47,9 @@ import {
   getStatCachePath,
 } from "./dir-sync-git-store.js";
 import { createDirSyncJournalTransport } from "./dir-sync-git-lane.js";
-import "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
-import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
-import { sanitizePathSegment, resolveDirSyncRecordLocation } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/truncate-with-ellipsis.js";
+import "../../01-核心基础设施/核心工具-类型与数值/to-integer.js";
+import { sanitizePathSegment, resolveDirSyncRecordLocation } from "./dir-sync-record-path.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { mkdir } from "fs/promises";
 import { join as q } from "path";

@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
+import { getHostStateStore } from "../../01-核心基础设施/文件存储-原子写入/host-state-store.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getBundledSkillsRoot } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { defineLazyProperty, Fwt } from "../../01-核心基础设施/共享小工具-未细化/define-lazy-property.js";
-import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
+import { defineLazyProperty, Fwt } from "../../01-核心基础设施/核心工具-类型与数值/define-lazy-property.js";
+import { areBundledSkillsDisabled } from "./disable-bundled-skills.js";
 import { join as P } from "path";
 import { constants } from "fs";
 import { lstat, mkdir, open as b } from "fs/promises";
