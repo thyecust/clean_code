@@ -43,6 +43,11 @@ export function isClearlyReadable(n) {
   // 全是人写的英文词，见 README）。
   // 注意：**改这条必须重跑 candidates.mjs**，否则 lint 用的还是旧白名单。
   if (/^[A-Z][a-z]{4,}$/.test(n)) return true;
+  // 缩写前缀 + PascalCase 词：`REPLScreen` / `SSOClient` / `SSEParser` / `APIError`。
+  // 同样是「词内没有小写→大写过渡」，`[a-z][A-Z]` 认不出 —— 这是第五处。前缀全大写，
+  // 所以 `REPL|Screen` 之间没有那种过渡。混淆名不会长成「≥3 个大写 + 小写」。
+  // **改这条必须重跑 candidates.mjs**。实测全树符合该形状的 5 个名字全是人写的。
+  if (/^[A-Z]{2,}[A-Z][a-z]/.test(n)) return true;
   // Long names are human: an underscore-separated composite
   // (`fromSanitizer_SANITIZER_OUTPUT_ONLY`) or a word join (`getClientPlatform`).
   // The mangler only ever emits `_` as a leading char on a 2-3 char name (`_0e`).

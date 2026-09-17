@@ -100,6 +100,18 @@ node verify.mjs $WORK/wave.json $WORK/backup
    又出现在候选表里，那些模块被推回池子，下一轮会去「改」已经是好名字的名字。
    （`auth` 是另一条：4 字符，卡在 `n.length < 5` 那条上。）
 
+5. **缩写前缀 + PascalCase 词也被判为混淆** —— `REPLScreen` / `SSOClient` /
+   `SSEParser` / `APIError`。同一条根因：`isClearlyReadable` 靠 `/[a-z][A-Z]/` 认词连接，
+   而 `REPL|Screen` 之间**全是大写**，没有小写→大写的过渡。已加判据
+   `^[A-Z]{2,}[A-Z][a-z]`，实测全树符合该形状的 5 个名字全是人写的（见下）。
+   这条是**第十轮由命名 agent 自己发现并报告的**（它拿到一个只有 `REPLScreen`
+   的切片，认出那不是混淆名而跳过，同时给出了完整形状与全树命中清单）。
+
+   **4 和 5 合起来说明一件事**：`SHORT_REAL_WORDS` 白名单能兜住的只是「短词」，
+   而「长得像人写的名字」有一整族形状 —— 凡是不含「小写→大写过渡」的都会被漏掉。
+   反向判定（先认人写的样子）比正向枚举可靠，但枚举本身永远补不完；
+   下一个形状出现时，仍然靠命名 agent 在证据面前停下来说「这不是混淆名」。
+
 **改动 `isMangled` 之后务必重新跑一遍 `candidates.mjs`**，否则 lint 用的还是旧白名单。
 （只改 `looksLikeManglerOutput` 不必重跑 —— 它只管新名的形状，不参与候选筛选。）
 
