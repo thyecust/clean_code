@@ -50,6 +50,6 @@ function ensureClientAgentEnv() {
     process.env.AI_AGENT.startsWith("claude-code_") ||
     process.env.AI_AGENT.startsWith("claude-code/")
   )
-    process.env.AI_AGENT = getUserAgentWithSuffix("harness");
+    process.env.AI_AGENT = getClientUserAgentWithSuffix("harness");
 }
 export { getClientUserAgent, getClientPlatform, getClientUserAgentWithSuffix, ensureClientAgentEnv };
