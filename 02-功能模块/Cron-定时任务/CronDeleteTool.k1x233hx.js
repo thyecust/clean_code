@@ -10,15 +10,15 @@
 
 // [preload stripped] 原本在此预载 87 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { getTeammateContext as iS } from "../Teammates团队/chunk-811z9z0t.js";
+import { getTeammateContext } from "../Teammates团队/chunk-811z9z0t.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { rJ, SK, vj } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { CRON_DELETE_TOOL_NAME as YS, isKairosCronEnabled as EC, isDurableCronEnabled as yK, CRON_DELETE_DESCRIPTION as fbn, buildCronDeletePrompt as mbn } from "./chunk-mk3zm4ew.js";
+import { CRON_DELETE_TOOL_NAME, isKairosCronEnabled, isDurableCronEnabled, CRON_DELETE_DESCRIPTION, buildCronDeletePrompt } from "./chunk-mk3zm4ew.js";
 import { s, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var n = m(() => Qe({ id: s().describe("Job ID returned by CronCreate.") })),
   u = m(() => c({ id: s() })),
-  C = Tt({
-    name: YS,
+  CronDeleteTool = Tt({
+    name: CRON_DELETE_TOOL_NAME,
     searchHint: "cancel a scheduled cron job",
     maxResultSizeChars: 1e5,
     shouldDefer: !0,
@@ -29,16 +29,16 @@ var n = m(() => Qe({ id: s().describe("Job ID returned by CronCreate.") })),
       return u();
     },
     isEnabled() {
-      return EC();
+      return isKairosCronEnabled();
     },
     toAutoClassifierInput(e) {
       return e.id;
     },
     async description() {
-      return fbn;
+      return CRON_DELETE_DESCRIPTION;
     },
     async prompt() {
-      return mbn(yK());
+      return buildCronDeletePrompt(isDurableCronEnabled());
     },
     getPath() {
       return rJ();
@@ -51,7 +51,7 @@ var n = m(() => Qe({ id: s().describe("Job ID returned by CronCreate.") })),
           message: `No scheduled job with id '${e.id}'`,
           errorCode: 1,
         };
-      let o = iS();
+      let o = getTeammateContext();
       if (o && r.agentId !== o.agentId)
         return {
           result: !1,
@@ -74,4 +74,4 @@ var n = m(() => Qe({ id: s().describe("Job ID returned by CronCreate.") })),
       return e.id ?? "";
     },
   });
-export { C as CronDeleteTool };
+export { CronDeleteTool };

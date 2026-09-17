@@ -10,14 +10,14 @@
 import { po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { os, oe, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { Npn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { jit, BB } from "./语法高亮-Markdown渲染.jhbtay9y.js";
 import { Ol } from "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { basename as re, extname as se } from "path";
+import { basename, extname } from "path";
 var Mit = 2000;
 function Rye(e, n = 0) {
   if (e.length - n <= Mit) return { code: e.slice(n), truncatedChars: 0 };
@@ -342,8 +342,8 @@ var P = new Map([
   ["CMakeLists", "cmake"],
 ]);
 function X(e, n) {
-  let t = re(e),
-    s = se(e).slice(1),
+  let t = basename(e),
+    s = extname(e).slice(1),
     r = ft(t, "."),
     i = P.get(t) ?? P.get(r);
   if (i) {
@@ -406,7 +406,7 @@ function Y(e, n, t) {
   }
   if (!be(r._emitter)) {
     if (Ol().claim("color_diff_hljs_emitter_shape_error"))
-      h(
+      logError(
         Error(
           `color-diff: hljs emitter shape mismatch (keys: ${Object.keys(r._emitter).join(",")}). Syntax highlighting disabled.`,
         ),

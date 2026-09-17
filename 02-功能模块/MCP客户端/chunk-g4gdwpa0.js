@@ -13,17 +13,17 @@ import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js
 import { Et, Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dy } from "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jt, rS, Jse, UR } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { U5 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { hc, getSecureStorage as yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { hc, getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
 import { cq, la, i0, pA } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   gmt,
@@ -108,7 +108,7 @@ function Q3e() {
   let e = jt();
   if (e.identityChangedThisProcess) return;
   ((e.identityChangedThisProcess = !0),
-    g("mcp_discovery_cache", "identity_changed"));
+    logFeatureSad("mcp_discovery_cache", "identity_changed"));
 }
 function Ee() {
   return (ue(), jt().identityChangedThisProcess);
@@ -166,12 +166,12 @@ class ke {
   }
 }
 import { createHash as pe } from "crypto";
-import { basename as dt, join as U } from "path";
+import { basename, join as U } from "path";
 import {
-  createCipheriv as nt,
-  createDecipheriv as it,
+  createCipheriv,
+  createDecipheriv,
   createHash as ot,
-  randomBytes as Me,
+  randomBytes,
 } from "crypto";
 var Pe = 32,
   Q = 12,
@@ -189,11 +189,11 @@ async function N() {
   if (e === hc) return;
   let t = _e(e?.mcpDiscoveryCacheKey);
   if (t) return t;
-  let r = Me(Pe).toString("base64"),
+  let r = randomBytes(Pe).toString("base64"),
     i = !1;
   try {
     i = (
-      await yn().mutate((p) =>
+      await getSecureStorage().mutate((p) =>
         xe(p.mcpDiscoveryCacheKey) ? p : { ...p, mcpDiscoveryCacheKey: r },
       )
     ).success;
@@ -221,8 +221,8 @@ function Ae(e, t, r) {
   return o;
 }
 function Te(e, t) {
-  let r = Me(Q),
-    i = nt("aes-256-gcm", e.key, r, { authTagLength: H });
+  let r = randomBytes(Q),
+    i = createCipheriv("aes-256-gcm", e.key, r, { authTagLength: H });
   i.setAAD(e.aad);
   let o = Buffer.concat([i.update(t, "utf8"), i.final()]),
     d = i.getAuthTag();
@@ -264,7 +264,7 @@ function fe(e, t) {
     d = i.subarray(i.length - H),
     p = i.subarray(Q, i.length - H);
   try {
-    let u = it("aes-256-gcm", e.key, o, { authTagLength: H });
+    let u = createDecipheriv("aes-256-gcm", e.key, o, { authTagLength: H });
     return (
       u.setAuthTag(d),
       u.setAAD(e.aad),
@@ -539,7 +539,7 @@ function R() {
   return gT().storageV5;
 }
 function ge(e) {
-  return Ce.userConfigDir("mcp-discovery-cache", [dt(e)]);
+  return Ce.userConfigDir("mcp-discovery-cache", [basename(e)]);
 }
 var Rt = { namespace: "userConfigDir", dir: "mcp-discovery-cache" },
   F = 8388608;
@@ -680,7 +680,7 @@ async function Hct(e, t, r = Date.now()) {
           if (!Ze) de.delete(M);
         }));
     return (
-      J(
+      logMCPDebug(
         e,
         `discovery-cache: ${i} \u2014 purging this server's cache-key family, serving miss`,
       ),
@@ -692,7 +692,7 @@ async function Hct(e, t, r = Date.now()) {
     o = await _(e, t);
   } catch (C) {
     return (
-      J(e, `discovery-cache: fingerprint failed: ${C}`),
+      logMCPDebug(e, `discovery-cache: fingerprint failed: ${C}`),
       { kind: "miss", reason: "no-fingerprint" }
     );
   }
@@ -703,7 +703,7 @@ async function Hct(e, t, r = Date.now()) {
     },
     u = () => (
       p(),
-      f("mcp_discovery_cache", "corrupt_entry"),
+      logFeatureBad("mcp_discovery_cache", "corrupt_entry"),
       { kind: "miss", reason: "corrupt" }
     ),
     h;
@@ -711,9 +711,9 @@ async function Hct(e, t, r = Date.now()) {
     h = await ce(d, R());
   } catch (C) {
     if (se(C))
-      return (J(e, `discovery-cache: ${C.reason} entry, deleting`), u());
+      return (logMCPDebug(e, `discovery-cache: ${C.reason} entry, deleting`), u());
     return (
-      J(e, `discovery-cache: read failed: ${C}`),
+      logMCPDebug(e, `discovery-cache: read failed: ${C}`),
       { kind: "miss", reason: "absent" }
     );
   }
@@ -721,17 +721,17 @@ async function Hct(e, t, r = Date.now()) {
   let w = await We(h, o, e, () => P(d, e, void 0));
   if (w.miss) {
     if (w.miss === "unsealed")
-      if (w.cause === "v1") g("mcp_discovery_cache", "unsealed_v1");
-      else f("mcp_discovery_cache", `unsealed_${w.cause}`);
+      if (w.cause === "v1") logFeatureSad("mcp_discovery_cache", "unsealed_v1");
+      else logFeatureBad("mcp_discovery_cache", `unsealed_${w.cause}`);
     return { kind: "miss", reason: w.miss };
   }
   let S = ne().safeParse(xt(w.plaintext, !1));
   if (!S.success)
-    return (J(e, "discovery-cache: corrupt entry, deleting"), u());
+    return (logMCPDebug(e, "discovery-cache: corrupt entry, deleting"), u());
   let D = S.data;
   if (D.cacheKey !== x(e, t))
     return (
-      J(e, "discovery-cache: entry keyed for another server, deleting"),
+      logMCPDebug(e, "discovery-cache: entry keyed for another server, deleting"),
       u()
     );
   if (D.consecutiveRefreshFailures >= $e())
@@ -748,7 +748,7 @@ function Y(e, t, r) {
   return gT()
     .serializeWrite(e, r)
     .catch((i) => {
-      J(t, `discovery-cache: write op failed: ${i}`);
+      logMCPDebug(t, `discovery-cache: write op failed: ${i}`);
     });
 }
 function q(e) {
@@ -843,7 +843,7 @@ async function We(e, t, r, i) {
   let o = await N();
   if (o === void 0)
     return (
-      J(
+      logMCPDebug(
         r,
         "Discovery cache: sealing key unavailable (secure storage unreadable) \u2014 cache off for this process",
       ),
@@ -852,18 +852,18 @@ async function We(e, t, r, i) {
     );
   let d = fe(we(o, t), e);
   if (d.ok) return { plaintext: d.plaintext };
-  J(r, `Discovery cache: entry did not open (${d.reason}) \u2014 discarded`);
+  logMCPDebug(r, `Discovery cache: entry did not open (${d.reason}) \u2014 discarded`);
   try {
     await i();
   } catch (p) {
-    J(r, `discovery-cache: reap after failed open skipped ${p}`);
+    logMCPDebug(r, `discovery-cache: reap after failed open skipped ${p}`);
   }
   return { miss: "unsealed", cause: d.reason };
 }
 function O({ verdict: e, code: t }) {
-  if (e === "written") y("mcp_discovery_cache");
-  else if (e === "terminal") f("mcp_discovery_cache", t);
-  else g("mcp_discovery_cache", t);
+  if (e === "written") logFeatureOk("mcp_discovery_cache");
+  else if (e === "terminal") logFeatureBad("mcp_discovery_cache", t);
+  else logFeatureSad("mcp_discovery_cache", t);
   return e;
 }
 async function Se(e) {
@@ -878,7 +878,7 @@ async function Se(e) {
   } = e;
   if (pMe() !== void 0)
     return (
-      J(
+      logMCPDebug(
         r,
         `Discovery cache ${u} refused: the cache turned off since this round started`,
       ),
@@ -886,7 +886,7 @@ async function Se(e) {
     );
   if (q(o) !== e.capturedDeleteGeneration)
     return (
-      J(
+      logMCPDebug(
         r,
         `Discovery cache ${u} refused: entry deleted since this round started (tombstone)`,
       ),
@@ -894,7 +894,7 @@ async function Se(e) {
     );
   if (!mE(p.identityEpoch))
     return (
-      J(
+      logMCPDebug(
         r,
         `Discovery cache ${u} refused: identity changed since this round was fetched (stale epoch)`,
       ),
@@ -904,7 +904,7 @@ async function Se(e) {
   if (h === void 0)
     return (
       sgn(),
-      J(
+      logMCPDebug(
         r,
         `Discovery cache ${u} refused: sealing key unavailable (secure storage unreadable) \u2014 cache off for this process`,
       ),
@@ -918,7 +918,7 @@ async function Se(e) {
   }
   if (w === hc)
     return (
-      J(
+      logMCPDebug(
         r,
         `Discovery cache ${u} refused: OAuth token store unreadable (cannot verify no secrets on disk)`,
       ),
@@ -932,7 +932,7 @@ async function Se(e) {
   }
   if (S === void 0 || S.path !== t || S.legToken !== p.grantLeg)
     return (
-      J(
+      logMCPDebug(
         r,
         `Discovery cache ${u} refused: grant or era changed since this round was fetched (stale leg)`,
       ),
@@ -941,13 +941,13 @@ async function Se(e) {
   let D = ne().safeParse(d);
   if (!D.success)
     return (
-      J(r, `Discovery cache ${u} refused: entry failed schema validation`),
+      logMCPDebug(r, `Discovery cache ${u} refused: entry failed schema validation`),
       { verdict: "terminal", code: "schema" }
     );
   let b = Tc(D.data);
   if (Buffer.byteLength(b, "utf8") > F)
     return (
-      J(
+      logMCPDebug(
         r,
         `Discovery cache ${u} refused: serialized entry exceeds DISCOVERY_ENTRY_MAX_BYTES`,
       ),
@@ -955,7 +955,7 @@ async function Se(e) {
     );
   if (pMe() !== void 0)
     return (
-      J(
+      logMCPDebug(
         r,
         `Discovery cache ${u} refused: the cache turned off since this round started`,
       ),
@@ -964,13 +964,13 @@ async function Se(e) {
   let E = It(b, i, w);
   if (E !== void 0) {
     if (Pu().takeOverflowNotice())
-      J(
+      logMCPDebug(
         r,
         "Discovery cache: presented-credential log is full \u2014 cache writes are refused for the rest of this process",
       );
     if (E === "scan-budget")
       return (
-        J(
+        logMCPDebug(
           r,
           `Discovery cache ${u} refused: secret-material scan exceeds its work budget (materials \xD7 entry size) \u2014 not scanned, not written`,
         ),
@@ -978,14 +978,14 @@ async function Se(e) {
       );
     if (E === "presented-log-incomplete")
       return (
-        J(
+        logMCPDebug(
           r,
           `Discovery cache ${u} refused: presented-credential log incomplete (cannot verify no secrets on disk)`,
         ),
         { verdict: "terminal", code: "presented_log_incomplete" }
       );
     return (
-      J(
+      logMCPDebug(
         r,
         `Discovery cache ${u} refused: entry would carry presented secret material`,
       ),
@@ -995,7 +995,7 @@ async function Se(e) {
   let C = Te(we(h, S), b);
   if (Buffer.byteLength(C, "utf8") > F)
     return (
-      J(
+      logMCPDebug(
         r,
         `Discovery cache ${u} refused: sealed entry exceeds DISCOVERY_ENTRY_MAX_BYTES`,
       ),
@@ -1005,7 +1005,7 @@ async function Se(e) {
     await Mt(t, C, R());
   } catch (M) {
     return (
-      J(r, `Discovery cache ${u} refused: disk write failed (${l(M)})`),
+      logMCPDebug(r, `Discovery cache ${u} refused: disk write failed (${l(M)})`),
       { verdict: "transient", code: "transient" }
     );
   }
@@ -1050,7 +1050,7 @@ async function Ict(e, t, r, i) {
   if (u === void 0) return "superseded";
   if (u.legToken !== i.grantLeg)
     return (
-      J(
+      logMCPDebug(
         e,
         "Discovery cache write refused: grant changed since this round was fetched (stale grant)",
       ),
@@ -1081,7 +1081,7 @@ async function Ict(e, t, r, i) {
         b = await ce(S, R());
       } catch (E) {
         if (!se(E)) {
-          (J(
+          (logMCPDebug(
             e,
             `Discovery cache write deferred: existing entry unreadable (${l(E)})`,
           ),
@@ -1150,7 +1150,7 @@ async function Pct(e, t, r, i) {
   }
   if (p === void 0) return;
   if (p.legToken !== i.grantLeg) {
-    (J(
+    (logMCPDebug(
       e,
       "Discovery cache tools merge refused: grant changed since this refresh was fetched (stale grant)",
     ),
@@ -1199,7 +1199,7 @@ async function Z3e(e, t, r) {
   }
   if (d === void 0) return;
   if (d.legToken !== r.grantLeg) {
-    J(
+    logMCPDebug(
       e,
       "Discovery cache refresh-failure strike refused: grant changed since this refresh was fetched (stale grant)",
     );
@@ -1210,7 +1210,7 @@ async function Z3e(e, t, r) {
     let u = await Xe(d, e);
     if (!u) return;
     if (!mE(r.identityEpoch)) {
-      J(
+      logMCPDebug(
         e,
         "Discovery cache refresh-failure strike refused: identity changed since this refresh was fetched (stale epoch)",
       );
@@ -1223,7 +1223,7 @@ async function Z3e(e, t, r) {
       return;
     }
     if (h === void 0 || h.path !== p || h.legToken !== r.grantLeg) {
-      J(
+      logMCPDebug(
         e,
         "Discovery cache refresh-failure strike refused: grant changed since this refresh was fetched (stale grant)",
       );
@@ -1285,7 +1285,7 @@ async function qe(e, t) {
       }
       if (r.has(u)) await P(d, e, void 0);
     } catch (p) {
-      J(e, `discovery-cache: purge scan skipped ${p}`);
+      logMCPDebug(e, `discovery-cache: purge scan skipped ${p}`);
     }
   }
 }
@@ -1359,7 +1359,7 @@ async function UIe(e, t) {
     for (let u of d) if (u !== r.path) p.push(P(u, e, void 0));
     (await Promise.all(p), await Ke(e, t));
   } catch (r) {
-    J(e, `discovery-cache: delete failed: ${r}`);
+    logMCPDebug(e, `discovery-cache: delete failed: ${r}`);
   }
 }
 async function Dct(e, t) {
@@ -1378,7 +1378,7 @@ async function Dct(e, t) {
         retries: 0,
         stale: 60000,
         onCompromised: (i) =>
-          J(
+          logMCPDebug(
             e,
             `discovery-cache: refresh lock compromised, skipping refresh: ${i}`,
           ),
@@ -1387,11 +1387,11 @@ async function Dct(e, t) {
   } catch (i) {
     let o = i instanceof Error ? i.message : String(i);
     if (i?.code === "ELOCKED" || o.includes("already being held")) {
-      J(e, "discovery-cache: refresh lock held elsewhere, skipping");
+      logMCPDebug(e, "discovery-cache: refresh lock held elsewhere, skipping");
       return;
     }
     return (
-      J(e, `discovery-cache: lock error, proceeding: ${o}`),
+      logMCPDebug(e, `discovery-cache: lock error, proceeding: ${o}`),
       async () => {}
     );
   }

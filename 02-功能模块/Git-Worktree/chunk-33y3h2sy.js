@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { CS } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { env as a, antEnv as Wn } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, Qu } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -19,26 +19,26 @@ import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { uu } from "../../01-核心基础设施/共享小工具-未细化/chunk-bgwm3fhf.js";
 import { ml } from "../../01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js";
 import { jG } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
-import { spawn as Fe } from "child_process";
+import { spawn } from "child_process";
 import {
-  lstat as He,
-  mkdir as Ue,
+  lstat,
+  mkdir,
   open as Ft,
-  readdir as Ht,
-  readFile as Ut,
-  realpath as _e,
+  readdir,
+  readFile,
+  realpath,
   rm as Be,
-  rmdir as We,
+  rmdir,
   stat as Bt,
-  unlink as je,
-  writeFile as Ee,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import {
-  basename as Ve,
-  dirname as J,
-  isAbsolute as Ke,
+  basename,
+  dirname,
+  isAbsolute,
   join as G,
-  resolve as jt,
+  resolve,
   sep as Ye,
 } from "path";
 var fe = 50;
@@ -139,10 +139,10 @@ var st = 1e4,
   at = 1000,
   ct = 15;
 function ve() {
-  return Boolean(Wn.CLAUDE_RUNNER_FAIL_FAST_FETCH);
+  return Boolean(antEnv.CLAUDE_RUNNER_FAIL_FAST_FETCH);
 }
 function ut() {
-  return Boolean(Wn.CLAUDE_RUNNER_STALL_GIVEUP);
+  return Boolean(antEnv.CLAUDE_RUNNER_STALL_GIVEUP);
 }
 function dt(e) {
   return e
@@ -161,7 +161,7 @@ function dt(e) {
     });
 }
 function ft() {
-  return Boolean(Wn.CCR_DELTA_RESET);
+  return Boolean(antEnv.CCR_DELTA_RESET);
 }
 var lt = ["couldn't find remote ref"];
 function Vlt(e) {
@@ -221,13 +221,13 @@ async function gt(e) {
   let t = Date.now();
   try {
     let { repoExisted: n } = await pt(e);
-    y("byoc_git_prepare_repo", {
+    logFeatureOk("byoc_git_prepare_repo", {
       repo_existed: n,
       duration_ms: Date.now() - t,
     });
   } catch (n) {
     throw (
-      f("byoc_git_prepare_repo", "error", { duration_ms: Date.now() - t }),
+      logFeatureBad("byoc_git_prepare_repo", "error", { duration_ms: Date.now() - t }),
       n
     );
   }
@@ -358,7 +358,7 @@ async function mt(e, t) {
   return (
     e.onDebug(`[byoc:git] No prefetched repo, fresh init at ${e.repoPath}`),
     await uu(
-      Ue(t, { recursive: !0 }),
+      mkdir(t, { recursive: !0 }),
       st,
       `[runner:stuck] mkdir ${t} (check NFS/CSI mount health)`,
     ),
@@ -634,7 +634,7 @@ async function _t(e, { base: t, target: n }) {
     if (w === void 0) return;
     let T = w.filter((g) => c.has(g));
     if (T.length === 0) return 0;
-    let h = await _e(e.repoPath),
+    let h = await realpath(e.repoPath),
       S = 0,
       m = new Set();
     for (let g of T) {
@@ -644,24 +644,24 @@ async function _t(e, { base: t, target: n }) {
       }
       let d = G(h, g);
       try {
-        if ((await _e(J(d))) !== J(d)) {
+        if ((await realpath(dirname(d))) !== dirname(d)) {
           e.onDebug(
             `[byoc:git] Standby stray clean-up: refusing '${g}' (its directory resolves to another path)`,
           );
           continue;
         }
-        let o = await He(d);
+        let o = await lstat(d);
         if (!o.isFile() && !o.isSymbolicLink()) continue;
-        (await je(d), S++, m.add(J(d)));
+        (await unlink(d), S++, m.add(dirname(d)));
       } catch (_) {
         if (A(_) !== "ENOENT")
           e.onDebug(`[byoc:git] Standby stray clean-up: '${g}': ${L(_)}`);
       }
     }
     for (let g of [...m].sort((d, _) => _.length - d.length))
-      for (let d = g; d !== h && d.startsWith(h + Ye); d = J(d))
+      for (let d = g; d !== h && d.startsWith(h + Ye); d = dirname(d))
         try {
-          await We(d);
+          await rmdir(d);
         } catch {
           break;
         }
@@ -677,7 +677,7 @@ async function _t(e, { base: t, target: n }) {
   }
 }
 function Et(e) {
-  if (e.length === 0 || Ke(e) || e.includes("\\")) return !1;
+  if (e.length === 0 || isAbsolute(e) || e.includes("\\")) return !1;
   let t = e.split("/");
   if (t.some((n) => n === "" || n === "." || n === "..")) return !1;
   return t[0].toLowerCase() !== ".git";
@@ -973,7 +973,7 @@ async function p(e, t, n, r, i = le, s) {
     D = Date.now();
   try {
     return await new Promise((I, H) => {
-      let C = Fe("git", h, {
+      let C = spawn("git", h, {
           cwd: t || void 0,
           windowsHide: !0,
           ...Bs("helper"),
@@ -1194,7 +1194,7 @@ function hrn(e, t) {
 }
 function _rn(e, t) {
   if (t.type === "test-file") {
-    let r = Ve(t.repo);
+    let r = basename(t.repo);
     if (!r || r === "." || r === "..") return "";
     return G(e, r);
   }
@@ -1234,7 +1234,7 @@ async function L2n(e) {
   }
   if (w === c) {
     let h = (await p(u, n, ["rev-parse", "--absolute-git-dir"])).trim();
-    (await Ee(
+    (await writeFile(
       G(h, "FETCH_HEAD"),
       `${c}
 `,
@@ -1261,7 +1261,7 @@ async function L2n(e) {
     }),
     await p(u, t, ["worktree", "add", "--detach", n, c]));
   let T = (await p(u, n, ["rev-parse", "--absolute-git-dir"])).trim();
-  (await Ee(
+  (await writeFile(
     G(T, "FETCH_HEAD"),
     `${c}
 `,

@@ -12,35 +12,35 @@ import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { An, ac, li, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { K, fy } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { NP, ynt, rawPointerPathIsUnsafe as bS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { NP, ynt, rawPointerPathIsUnsafe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { b, z, Is, Ro, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { x, ft, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { resolveExecutableSafely as EL } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { fi, Do, _W } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { Yqn, t3, ep, oC, lgt, Lpn, isFileReadDenied as ZO } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { Yqn, t3, ep, oC, lgt, Lpn, isFileReadDenied } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { n_, jq } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getSettingsFilePathForSource as ho, updateSettingsForSourceWithTransform as Ii, autoModeConfigSchema as OU } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Fr } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { qe, tt, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { wTt, nb, findCommandNode as NK, extractCommandArguments as jCe, zCe, tJe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { wTt, nb, findCommandNode, extractCommandArguments, zCe, tJe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Pl, ll } from "../Teammates团队/chunk-thxapyam.js";
-import { subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { gF } from "../Git-Worktree/chunk-33y3h2sy.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import * as Be from "fs/promises";
-import { homedir as $n } from "os";
+import { homedir } from "os";
 import {
-  dirname as Ct,
+  dirname,
   isAbsolute as Cn,
   join as He,
   relative as xn,
@@ -222,8 +222,8 @@ async function Gn(e, t, r, o, s, l = null) {
     if (s(e)) return { remotes: [] };
     let p = await NP(e, xt, { noFollow: !0, requireNlink1: !0 }),
       u = p === null ? null : Vn(p);
-    if (u === null || jt(u, Ct(e))) return null;
-    if (((i = ct(Ct(e), u)), !ut(i, r, o)))
+    if (u === null || jt(u, dirname(e))) return null;
+    if (((i = ct(dirname(e), u)), !ut(i, r, o)))
       return { remotes: [], note: "gitdir-outside-home" };
     if (s(i)) return { remotes: [] };
     let h = await Ot(i, r, o, s);
@@ -276,7 +276,7 @@ function Kn(e, t, r) {
 }
 function dt() {
   try {
-    let e = $n();
+    let e = homedir();
     return e === "" ? null : e;
   } catch {
     return null;
@@ -286,7 +286,7 @@ function ece(e) {
   return (An(e) && !Oi(e)) || li(e);
 }
 function jt(e, t) {
-  return li(e) || li(ct(t, e)) || ac(e, t) || bS(e, t);
+  return li(e) || li(ct(t, e)) || ac(e, t) || rawPointerPathIsUnsafe(e, t);
 }
 function ut(e, t, r) {
   let o = xn(t, e),
@@ -363,7 +363,7 @@ function Ue(e, t) {
 function Ze(e) {
   return e.replace(/\n$/, "");
 }
-import { spawn as Er } from "child_process";
+import { spawn } from "child_process";
 import * as M from "fs/promises";
 import {
   isAbsolute as Sr,
@@ -543,7 +543,7 @@ var ze = /^(?!\.{1,2}$)[A-Za-z0-9_.][A-Za-z0-9_.-]*$/,
   te = "not queryable here",
   Gt = /^[\w.][\w ./-]{0,119}$/;
 function ht() {
-  let e = Hi(),
+  let e = subprocessEnv(),
     t = e.GH_HOST !== void 0 && !_W(e.GH_HOST, fi);
   return {
     ...e,
@@ -557,11 +557,11 @@ function ve(e) {
   return e.code === 127 || e.code === 4 || (e.code === 1 && e.stderr === "");
 }
 async function Wt(e, t) {
-  if (St() || !Mt("allow_auto_mode_sibling_docs"))
+  if (St() || !isPolicyAllowed("allow_auto_mode_sibling_docs"))
     return et(
       `_Not queryable here (nonessential traffic disabled or policy-restricted). ${gt}_`,
     );
-  let r = await Fe("git", ["-C", t, ...gF, "remote", "get-url", "origin"], {
+  let r = await execFileNoThrow("git", ["-C", t, ...gF, "remote", "get-url", "origin"], {
       timeout: zt,
       maxBuffer: 65536,
       stripFinalNewline: !1,
@@ -578,9 +578,9 @@ async function Wt(e, t) {
       `_Not queryable here (origin remote is not github.com \u2014 GHE/other hosts not yet supported). ${gt}_`,
     );
   let m = ht(),
-    c = (v, O) => Fe("gh", v, { timeout: zt, env: m, maxBuffer: O }),
+    c = (v, O) => execFileNoThrow("gh", v, { timeout: zt, env: m, maxBuffer: O }),
     p = `${i}/${d}`,
-    u = e && Mt("allow_auto_mode_sibling_docs"),
+    u = e && isPolicyAllowed("allow_auto_mode_sibling_docs"),
     [h, _, w, E] = await Promise.all([
       c(["repo", "view", p, "--json", "visibility"], 8192),
       c(
@@ -623,7 +623,7 @@ async function Wt(e, t) {
       org_list_failed: u && E.code !== 0 && !ve(E),
     };
   if (Object.values(T).some(Boolean))
-    g("auto_mode_pregather", "visibility_gh_failed", T);
+    logFeatureSad("auto_mode_pregather", "visibility_gh_failed", T);
   return et(
     [
       `Repo: ${p}`,
@@ -654,9 +654,9 @@ function sr(e) {
     let t = z(e.stdout || "{}"),
       r = Kt(t.visibility);
     if (r !== null) return r;
-    return (g("auto_mode_pregather", "visibility_gh_parse_failed"), te);
+    return (logFeatureSad("auto_mode_pregather", "visibility_gh_parse_failed"), te);
   } catch {
-    return (g("auto_mode_pregather", "visibility_gh_parse_failed"), te);
+    return (logFeatureSad("auto_mode_pregather", "visibility_gh_parse_failed"), te);
   }
 }
 function ir(e) {
@@ -666,14 +666,14 @@ function ir(e) {
   try {
     let p = z(e.stdout || "[]");
     if (!Array.isArray(p))
-      return (g("auto_mode_pregather", "rulesets_gh_parse_failed"), te);
+      return (logFeatureSad("auto_mode_pregather", "rulesets_gh_parse_failed"), te);
     let u = p;
     ((t = u.filter(
       (h) => typeof h.name === "string" && typeof h.enforcement === "string",
     )),
       (r = u.length - t.length));
   } catch {
-    return (g("auto_mode_pregather", "rulesets_gh_parse_failed"), te);
+    return (logFeatureSad("auto_mode_pregather", "rulesets_gh_parse_failed"), te);
   }
   let o = t.length + r;
   if (o === 0) return "none listed";
@@ -723,7 +723,7 @@ function lr(e) {
     let u = z(e.stdout || "[]");
     if (!Array.isArray(u))
       return (
-        g("auto_mode_pregather", "org_list_gh_parse_failed"),
+        logFeatureSad("auto_mode_pregather", "org_list_gh_parse_failed"),
         `_${te} (gh output unparseable)._`
       );
     let h = u,
@@ -737,7 +737,7 @@ function lr(e) {
       (t = _.map((w) => ({ ...w, pushedAt: w.pushedAt ?? "" }))));
   } catch {
     return (
-      g("auto_mode_pregather", "org_list_gh_parse_failed"),
+      logFeatureSad("auto_mode_pregather", "org_list_gh_parse_failed"),
       `_${te} (gh output unparseable)._`
     );
   }
@@ -795,7 +795,7 @@ function OIe(e) {
       return nt;
   }
 }
-import { posix as cr, win32 as ur } from "path";
+import { posix, win32 as ur } from "path";
 var Qt = 262144,
   yt = 4000;
 function _t(e) {
@@ -930,8 +930,8 @@ function pr(e) {
   if (e.length === 0 || e.length > fr) return [];
   let t = nb()?.parse(e, mr);
   if (!t) return [];
-  let r = NK(t, null);
-  return r === null ? [] : jCe(r);
+  let r = findCommandNode(t, null);
+  return r === null ? [] : extractCommandArguments(r);
 }
 var gr = new Set(["sudo", "doas", "env"]),
   hr = new Set(["sudo", "gsudo"]),
@@ -954,7 +954,7 @@ function Xt(e, t) {
   return t;
 }
 function se(e) {
-  return e === "windows" ? ur : cr;
+  return e === "windows" ? ur : posix;
 }
 function _r(e) {
   let t = e.toLowerCase();
@@ -998,7 +998,7 @@ async function J(e, t) {
     return await t();
   } catch {
     return (
-      g("auto_mode_pregather", "section_failed", {
+      logFeatureSad("auto_mode_pregather", "section_failed", {
         section: Or.get(e) ?? S("unknown"),
       }),
       k(
@@ -1054,17 +1054,17 @@ async function P2n(e, t = nt, r, o) {
       ])),
     ].join(`
 `);
-  return (y("auto_mode_pregather"), m.replace(mn, "://"));
+  return (logFeatureOk("auto_mode_pregather"), m.replace(mn, "://"));
 }
 var mn = /:\/\/[^/\s\\]*@/g,
   pn = /(?<![a-z0-9.+-])(?:s3|gs|az):\/\/([a-z0-9][a-z0-9._-]*)/g;
 function $r(e, t) {
   return new Promise((r) => {
-    let o = EL("git");
+    let o = resolveExecutableSafely("git");
     if (o === null) return r(0);
     let s;
     try {
-      s = Er(o, ["-C", e, ...gF, ...t], {
+      s = spawn(o, ["-C", e, ...gF, ...t], {
         cwd: void 0,
         stdio: ["ignore", "pipe", "ignore"],
         timeout: $e,
@@ -1090,7 +1090,7 @@ function $r(e, t) {
   });
 }
 async function pe(e, t) {
-  let { stdout: r, code: o } = await Fe("git", ["-C", e, ...gF, ...t], {
+  let { stdout: r, code: o } = await execFileNoThrow("git", ["-C", e, ...gF, ...t], {
     timeout: $e,
     maxBuffer: 8388608,
     stripFinalNewline: !1,
@@ -1448,7 +1448,7 @@ async function Lr(e, t) {
       ne,
       "_Org not derivable from origin remote (or unsafe token) \u2014 sibling docs not gathered._",
     );
-  if (St() || !Mt("allow_auto_mode_sibling_docs"))
+  if (St() || !isPolicyAllowed("allow_auto_mode_sibling_docs"))
     return k(
       ne,
       "_Not queryable here (nonessential traffic disabled or policy-restricted)._",
@@ -1459,13 +1459,13 @@ async function Lr(e, t) {
       "_Not queryable here (origin remote is not github.com \u2014 GHE/other hosts not yet supported)._",
     );
   let p = ht(),
-    u = await Fe(
+    u = await execFileNoThrow(
       "gh",
       ["repo", "list", m, "--limit", "5", "--json", "name,pushedAt"],
       { timeout: $e, env: p, maxBuffer: 1e5 },
     );
   if (u.code !== 0) {
-    if (!ve(u)) g("auto_mode_pregather", "sibling_gh_list_failed");
+    if (!ve(u)) logFeatureSad("auto_mode_pregather", "sibling_gh_list_failed");
     return k(ne, "_Not queryable here (gh unavailable or unauthenticated)._");
   }
   let h;
@@ -1473,7 +1473,7 @@ async function Lr(e, t) {
     let w = z(u.stdout || "[]");
     if (!Array.isArray(w))
       return (
-        g("auto_mode_pregather", "sibling_gh_parse_failed"),
+        logFeatureSad("auto_mode_pregather", "sibling_gh_parse_failed"),
         k(ne, "_Not queryable here (gh unavailable or unauthenticated)._")
       );
     h = w
@@ -1488,7 +1488,7 @@ async function Lr(e, t) {
       .slice(0, 3);
   } catch {
     return (
-      g("auto_mode_pregather", "sibling_gh_parse_failed"),
+      logFeatureSad("auto_mode_pregather", "sibling_gh_parse_failed"),
       k(ne, "_Not queryable here (gh unavailable or unauthenticated)._")
     );
   }
@@ -1496,7 +1496,7 @@ async function Lr(e, t) {
     await Promise.all(
       h.map(async (w) => {
         for (let E of ["CLAUDE.md", "README.md"]) {
-          let T = await Fe(
+          let T = await execFileNoThrow(
             "gh",
             ["api", `repos/${m}/${w}/contents/${E}`, "--jq", ".content"],
             { timeout: $e, env: p, maxBuffer: 1500000 },
@@ -1551,7 +1551,7 @@ async function Ir(e) {
     o =
       "\n#### Project `.claude/settings.local.json` \u2014 autoMode keys (found content, NOT pre-approved config)",
     s = (u) => (
-      g(
+      logFeatureSad(
         "auto_mode_pregather",
         u === "oversized"
           ? "local_settings_oversized"
@@ -1570,7 +1570,7 @@ Present but ${u} \u2014 skipped. Tell the user; do not read or rewrite this file
   }
   if (!l.isDirectory())
     return (
-      g("auto_mode_pregather", "local_settings_indirection_gate"),
+      logFeatureSad("auto_mode_pregather", "local_settings_indirection_gate"),
       `${"\n#### Project `.claude/settings.local.json` \u2014 autoMode keys (found content, NOT pre-approved config)"}
 \`.claude\` itself failed the indirection gate (it is not a real directory \u2014 e.g. committed as a symlink), so whether a settings.local.json exists behind it was deliberately not probed. Tell the user; do not read, resolve, or rewrite anything under this path.`
     );
@@ -1582,7 +1582,7 @@ Present but ${u} \u2014 skipped. Tell the user; do not read or rewrite this file
   }
   if (!i.isFile() || i.nlink !== 1)
     return (
-      g("auto_mode_pregather", "local_settings_indirection_gate"),
+      logFeatureSad("auto_mode_pregather", "local_settings_indirection_gate"),
       `${"\n#### Project `.claude/settings.local.json` \u2014 autoMode keys (found content, NOT pre-approved config)"}
 Present but SKIPPED: failed the indirection gate (requires a regular non-symlink file with link count 1 inside a real .claude directory). Tell the user; do not read or rewrite this file.`
     );
@@ -1614,7 +1614,7 @@ Present but SKIPPED: failed the indirection gate (requires a regular non-symlink
   ].join(`
 `);
 }
-async function Mr(e, t = ho("userSettings") ?? L(be(), "settings.json"), r) {
+async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(be(), "settings.json"), r) {
   let o = "(no settings file)",
     s = [],
     l = [],
@@ -1897,7 +1897,7 @@ async function Kr(e, t, r) {
     m = await M.realpath(e.homeDir).catch((p) => (ynt(p) ? e.homeDir : null));
   if (m === null) return { words: [], filesRead: [], partial: !0 };
   if (ece(m)) return { words: [], filesRead: [], partial: !0, networkHome: !0 };
-  let c = (p) => ZO(p, t);
+  let c = (p) => isFileReadDenied(p, t);
   for (let p of en(e)) {
     if (r.aborted || performance.now() > d) {
       i = !0;
@@ -1954,7 +1954,7 @@ async function sn(e, t, r, o) {
   let { repos: s, limit: l } = await Lt({
     home: r,
     thisRepoHost: o,
-    isReadDenied: (d) => ZO(d, t),
+    isReadDenied: (d) => isFileReadDenied(d, t),
   });
   if (l === "network-home")
     return k(
@@ -2018,7 +2018,7 @@ async function an(
       "_NOT GATHERED \u2014 no permission context was available to enforce permissions.deny, so no other project\u2019s transcripts were read._",
     );
   let l = P(),
-    i = (H) => ZO(H, t),
+    i = (H) => isFileReadDenied(H, t),
     d = qt(),
     m = s !== void 0 && o.projectsDir === Pl() ? s : void 0,
     c = Date.now() + o.deadlineMs,
@@ -2645,13 +2645,13 @@ async function wSe(e, t) {
     r = await ao(e, t);
   } catch (o) {
     throw (
-      f("auto_mode_setup_write", o instanceof bSe ? o.code : "unknown"),
+      logFeatureBad("auto_mode_setup_write", o instanceof bSe ? o.code : "unknown"),
       o
     );
   }
   if (r.permissionsAllowSkipped)
-    g("auto_mode_setup_write", "permissions_allow_skipped");
-  else y("auto_mode_setup_write");
+    logFeatureSad("auto_mode_setup_write", "permissions_allow_skipped");
+  else logFeatureOk("auto_mode_setup_write");
   return r;
 }
 function drn(e) {
@@ -2659,7 +2659,7 @@ function drn(e) {
   if (t === void 0 && (e.removeFromPermissionsAllow ?? []).length === 0)
     return "Nothing to save.";
   if (t !== void 0) {
-    let o = OU().safeParse(t);
+    let o = autoModeConfigSchema().safeParse(t);
     if (!o.success) return `autoMode block failed validation: ${Sn(o.error)}`;
     if (!t.environment || t.environment.length === 0)
       return "autoMode.environment is empty \u2014 nothing to save.";
@@ -2693,7 +2693,7 @@ function drn(e) {
 async function ao(e, t) {
   let r = drn(e);
   if (r) throw new bSe("invalid_input", r);
-  let o = ho("userSettings");
+  let o = getSettingsFilePathForSource("userSettings");
   if (!o)
     throw new bSe(
       "no_user_settings_path",
@@ -2708,7 +2708,7 @@ async function ao(e, t) {
     p = 0,
     u = null,
     h = [],
-    { error: _ } = await Ii(
+    { error: _ } = await updateSettingsForSourceWithTransform(
       "userSettings",
       (w) => {
         let E = {};
@@ -2732,7 +2732,7 @@ async function ao(e, t) {
             N[j] = co(j, En(C?.[j]), Ne);
           }
           let U = { ...C, ...N },
-            V = OU().safeParse(U);
+            V = autoModeConfigSchema().safeParse(U);
           if (!V.success)
             return (
               (u = `merging with the existing autoMode block in the settings file would produce an invalid result: ${Sn(V.error)}`),

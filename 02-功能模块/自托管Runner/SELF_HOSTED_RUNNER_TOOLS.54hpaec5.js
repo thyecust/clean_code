@@ -13,28 +13,28 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { bc } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import {
-  GET_POOL_TOOL_NAME as lun,
-  LIST_RUNNERS_TOOL_NAME as cun,
-  LIST_POOL_SESSIONS_TOOL_NAME as uun,
-  LIST_SECRETS_TOOL_NAME as dun,
-  SPAWN_LOCAL_TOOL_NAME as pun,
-  READ_HEALTH_TOOL_NAME as fun,
-  READ_METRICS_TOOL_NAME as mun,
-  TAIL_LOG_TOOL_NAME as gun,
-  REQUEUE_SESSION_TOOL_NAME as hun,
-  GET_POOL_DESCRIPTION as D$t,
-  LIST_RUNNERS_DESCRIPTION as L$t,
-  LIST_POOL_SESSIONS_DESCRIPTION as M$t,
-  LIST_SECRETS_DESCRIPTION as N$t,
-  SPAWN_LOCAL_DESCRIPTION as F$t,
-  READ_HEALTH_DESCRIPTION as $$t,
-  READ_METRICS_DESCRIPTION as U$t,
-  TAIL_LOG_DESCRIPTION as B$t,
-  REQUEUE_SESSION_DESCRIPTION as j$t,
+  GET_POOL_TOOL_NAME,
+  LIST_RUNNERS_TOOL_NAME,
+  LIST_POOL_SESSIONS_TOOL_NAME,
+  LIST_SECRETS_TOOL_NAME,
+  SPAWN_LOCAL_TOOL_NAME,
+  READ_HEALTH_TOOL_NAME,
+  READ_METRICS_TOOL_NAME,
+  TAIL_LOG_TOOL_NAME,
+  REQUEUE_SESSION_TOOL_NAME,
+  GET_POOL_DESCRIPTION,
+  LIST_RUNNERS_DESCRIPTION,
+  LIST_POOL_SESSIONS_DESCRIPTION,
+  LIST_SECRETS_DESCRIPTION,
+  SPAWN_LOCAL_DESCRIPTION,
+  READ_HEALTH_DESCRIPTION,
+  READ_METRICS_DESCRIPTION,
+  TAIL_LOG_DESCRIPTION,
+  REQUEUE_SESSION_DESCRIPTION,
 } from "./chunk-01gj9cjk.js";
 import { Oce, Dce, Zee, ete, mM, cI } from "../../01-核心基础设施/共享小工具-未细化/chunk-kax7bdqv.js";
 import { ml } from "../../01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js";
@@ -44,7 +44,7 @@ var B = m(() =>
   ),
   G = m(() => c({ pool: fe(s(), se()), equivalent: c({ ui: s() }) })),
   E = Tt({
-    name: lun,
+    name: GET_POOL_TOOL_NAME,
     searchHint: "read self-hosted environment aggregates and queue counts",
     maxResultSizeChars: 1e5,
     shouldDefer: !0,
@@ -61,10 +61,10 @@ var B = m(() =>
       return !0;
     },
     async description() {
-      return D$t;
+      return GET_POOL_DESCRIPTION;
     },
     async prompt() {
-      return D$t;
+      return GET_POOL_DESCRIPTION;
     },
     async call({ pool_id: e }, t) {
       let r = `/v1/code/runners/self-hosted/pools/${encodeURIComponent(e)}`,
@@ -101,7 +101,7 @@ var F = m(() =>
   ),
   W = m(() => c({ sessions: v(fe(s(), se())), equivalent: c({ ui: s() }) })),
   w = Tt({
-    name: uun,
+    name: LIST_POOL_SESSIONS_TOOL_NAME,
     searchHint: "list queued/assigned sessions in a self-hosted environment",
     maxResultSizeChars: 1e5,
     shouldDefer: !0,
@@ -118,10 +118,10 @@ var F = m(() =>
       return !0;
     },
     async description() {
-      return M$t;
+      return LIST_POOL_SESSIONS_DESCRIPTION;
     },
     async prompt() {
-      return M$t;
+      return LIST_POOL_SESSIONS_DESCRIPTION;
     },
     async call({ pool_id: e, status_filter: t }, r) {
       let o = t ? `?status=${encodeURIComponent(t)}` : "",
@@ -156,7 +156,7 @@ var Q = m(() =>
   ),
   K = m(() => c({ runners: v(fe(s(), se())), equivalent: c({ ui: s() }) })),
   P = Tt({
-    name: cun,
+    name: LIST_RUNNERS_TOOL_NAME,
     searchHint: "list registered self-hosted runners for an environment",
     maxResultSizeChars: 1e5,
     shouldDefer: !0,
@@ -173,10 +173,10 @@ var Q = m(() =>
       return !0;
     },
     async description() {
-      return L$t;
+      return LIST_RUNNERS_DESCRIPTION;
     },
     async prompt() {
-      return L$t;
+      return LIST_RUNNERS_DESCRIPTION;
     },
     async call({ pool_id: e }, t) {
       let r = `/v1/code/runners/self-hosted/runners?pool_id=${encodeURIComponent(e)}`;
@@ -210,7 +210,7 @@ var X = m(() =>
   ),
   Y = m(() => c({ secrets: v(fe(s(), se())), equivalent: c({ ui: s() }) })),
   D = Tt({
-    name: dun,
+    name: LIST_SECRETS_TOOL_NAME,
     searchHint: "list self-hosted environment secrets (metadata only)",
     maxResultSizeChars: 1e5,
     shouldDefer: !0,
@@ -227,10 +227,10 @@ var X = m(() =>
       return !0;
     },
     async description() {
-      return N$t;
+      return LIST_SECRETS_DESCRIPTION;
     },
     async prompt() {
-      return N$t;
+      return LIST_SECRETS_DESCRIPTION;
     },
     async call({ pool_id: e }, t) {
       let r = `/v1/code/runners/self-hosted/pools/${encodeURIComponent(e)}/secrets`;
@@ -276,7 +276,7 @@ var J = m(() =>
     }),
   ),
   A = Tt({
-    name: fun,
+    name: READ_HEALTH_TOOL_NAME,
     searchHint: "probe local self-hosted runner /healthz endpoint",
     maxResultSizeChars: 1e5,
     shouldDefer: !0,
@@ -293,10 +293,10 @@ var J = m(() =>
       return !0;
     },
     async description() {
-      return $$t;
+      return READ_HEALTH_DESCRIPTION;
     },
     async prompt() {
-      return $$t;
+      return READ_HEALTH_DESCRIPTION;
     },
     async call({ health_port: e = Oce }) {
       if (e === 0) return { data: { disabled: !0 } };
@@ -304,7 +304,7 @@ var J = m(() =>
         return {
           data: {
             health: (
-              await ra.get(`http://127.0.0.1:${e}/healthz`, {
+              await externalHttp.get(`http://127.0.0.1:${e}/healthz`, {
                 timeout: 2000,
                 validateStatus: () => !0,
               })
@@ -368,7 +368,7 @@ function te(e) {
   return t;
 }
 var k = Tt({
-  name: mun,
+  name: READ_METRICS_TOOL_NAME,
   searchHint: "read self-hosted runner Prometheus gauges from /metrics",
   maxResultSizeChars: 1e5,
   shouldDefer: !0,
@@ -385,15 +385,15 @@ var k = Tt({
     return !0;
   },
   async description() {
-    return U$t;
+    return READ_METRICS_DESCRIPTION;
   },
   async prompt() {
-    return U$t;
+    return READ_METRICS_DESCRIPTION;
   },
   async call({ health_port: e = Oce }) {
     if (e === 0) return { data: { disabled: !0 } };
     try {
-      let t = await ra.get(`http://127.0.0.1:${e}/metrics`, {
+      let t = await externalHttp.get(`http://127.0.0.1:${e}/metrics`, {
           timeout: 2000,
           responseType: "text",
           validateStatus: () => !0,
@@ -423,7 +423,7 @@ var re = m(() =>
     c({ excluded_count: T().optional(), equivalent: c({ ui: s() }) }),
   ),
   x = Tt({
-    name: hun,
+    name: REQUEUE_SESSION_TOOL_NAME,
     searchHint:
       "requeue a stuck self-hosted runner session onto another runner",
     enablesCodeExecution: !0,
@@ -448,7 +448,7 @@ var re = m(() =>
       return `requeue session=${e.session_id} off runner=${e.runner_id}`;
     },
     async checkPermissions(e, t) {
-      if (ce(t).mode === "auto")
+      if (getToolPermissionContext(t).mode === "auto")
         return {
           behavior: "passthrough",
           message: "Requeueing a runner session requires classifier review.",
@@ -459,10 +459,10 @@ var re = m(() =>
       };
     },
     async description() {
-      return j$t;
+      return REQUEUE_SESSION_DESCRIPTION;
     },
     async prompt() {
-      return j$t;
+      return REQUEUE_SESSION_DESCRIPTION;
     },
     async call({ session_id: e, runner_id: t }, r) {
       let o = `/v1/code/runners/self-hosted/sessions/${encodeURIComponent(e)}/requeue`;
@@ -490,9 +490,9 @@ var re = m(() =>
       return cI(e);
     },
   });
-import { spawn as ne } from "child_process";
-import { mkdir as I, writeFile as ae } from "fs/promises";
-import { dirname as q, resolve as f } from "path";
+import { spawn } from "child_process";
+import { mkdir, writeFile } from "fs/promises";
+import { dirname, resolve } from "path";
 var S = "./runner-setup/workspace",
   N = "./runner-setup/runner.log",
   ue = "./runner-setup/runner.pid",
@@ -544,7 +544,7 @@ function d(e) {
   return /^[\w@%+=:,./-]+$/.test(e) ? e : `'${e.replace(/'/g, "'\\''")}'`;
 }
 var H = Tt({
-  name: pun,
+  name: SPAWN_LOCAL_TOOL_NAME,
   searchHint: "start a local self-hosted runner process for try-it-out",
   enablesCodeExecution: !0,
   maxResultSizeChars: 1e5,
@@ -568,7 +568,7 @@ var H = Tt({
     return `spawn runner: secret=${e.secret_file_path} base_dir=${e.base_dir ?? S}`;
   },
   async checkPermissions(e, t) {
-    if (ce(t).mode === "auto")
+    if (getToolPermissionContext(t).mode === "auto")
       return {
         behavior: "passthrough",
         message: "Spawning a local runner requires classifier review.",
@@ -579,10 +579,10 @@ var H = Tt({
     };
   },
   async description() {
-    return F$t;
+    return SPAWN_LOCAL_DESCRIPTION;
   },
   async prompt() {
-    return F$t;
+    return SPAWN_LOCAL_DESCRIPTION;
   },
   async call({
     secret_file_path: e,
@@ -591,10 +591,10 @@ var H = Tt({
     health_port: o = Oce,
     log_path: n = N,
   }) {
-    let u = f(r),
-      a = f(n),
-      i = f(e);
-    (await I(u, { recursive: !0 }), await I(q(a), { recursive: !0 }));
+    let u = resolve(r),
+      a = resolve(n),
+      i = resolve(e);
+    (await mkdir(u, { recursive: !0 }), await mkdir(dirname(a), { recursive: !0 }));
     let g = pe({
         secret_file_path: i,
         capacity: t,
@@ -604,7 +604,7 @@ var H = Tt({
       }),
       y = process.execPath,
       _ = bc() ? [] : [process.argv[1]],
-      h = ne(y, [..._, ...g], {
+      h = spawn(y, [..._, ...g], {
         detached: !0,
         stdio: "ignore",
         windowsHide: !0,
@@ -619,8 +619,8 @@ var H = Tt({
       throw Error(
         `Failed to spawn runner${R ? ` (${R.message})` : " (no pid)"}. Command: ${[d(y), ..._.map(d), ...g.map(d)].join(" ")}`,
       );
-    let z = f(ue);
-    (await I(q(z), { recursive: !0 }), await ae(z, String(b)));
+    let z = resolve(ue);
+    (await mkdir(dirname(z), { recursive: !0 }), await writeFile(z, String(b)));
     let j = [d(y), ..._.map(d), ...g.map(d)].join(" ");
     return {
       data: { pid: b, pid_file: z, log_path: a, health_port: o, command: j },
@@ -647,7 +647,7 @@ var M = 65536,
   ),
   he = m(() => c({ lines: s(), bytes_read: T(), error: s().optional() })),
   U = Tt({
-    name: gun,
+    name: TAIL_LOG_TOOL_NAME,
     searchHint: "tail self-hosted runner log file with secret redaction",
     maxResultSizeChars: 200000,
     shouldDefer: !0,
@@ -664,10 +664,10 @@ var M = 65536,
       return !0;
     },
     async description() {
-      return B$t;
+      return TAIL_LOG_DESCRIPTION;
     },
     async prompt() {
-      return B$t;
+      return TAIL_LOG_DESCRIPTION;
     },
     getPath(e) {
       return e.log_path;
@@ -705,5 +705,5 @@ ${e.lines}`,
       return cI(e);
     },
   });
-var qt = [E, P, w, D, H, A, k, U, x];
-export { qt as SELF_HOSTED_RUNNER_TOOLS };
+var SELF_HOSTED_RUNNER_TOOLS = [E, P, w, D, H, A, k, U, x];
+export { SELF_HOSTED_RUNNER_TOOLS };

@@ -30,18 +30,18 @@ import { Le, li, Xo, BL, RS } from "../../00-第三方库/lodash/lodash.207999qb
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { R, A, Jg } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { q2e, Ri, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { We, Et, dv, b, z, WP, Wur, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { lr, le, Zt, Io, cr, nt, Cu, ru, Rmr } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { OP, yi, zl, r8t, ts, fke, Oa, hasPolicySettingsNotified as jHn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getJobDir as rr, getOwnJobShortId as gu, listJobs as q_, IDLE_NEEDS as xf, terminalOutcome as Hf, isSettled as Hs, isSelfDriving as dD } from "./chunk-7wsy8vxb.js";
+import { OP, yi, zl, r8t, ts, fke, Oa, hasPolicySettingsNotified } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getJobDir, getOwnJobShortId, listJobs, IDLE_NEEDS, terminalOutcome, isSettled, isSelfDriving } from "./chunk-7wsy8vxb.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
   pi,
@@ -50,24 +50,24 @@ import {
   pb,
   JN,
   Jh,
-  isActingAsBgJob as Ja,
-  getBgJobDir as WD,
+  isActingAsBgJob,
+  getBgJobDir,
   pge,
   eu,
   QUe,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { captureProcessStartTimeAsync as Xse } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { dy } from "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
 import { v7t } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { getSettingsForSource as ye, getInitialSettings as Ge, getSettings_DEPRECATED as bn, isAdminPolicyUnreadable as B6 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, getInitialSettings, getSettings_DEPRECATED, isAdminPolicyUnreadable } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { iA } from "../权限系统/chunk-t3b7pg2x.js";
 import { Pl, lP, bEt, Ud } from "../Teammates团队/chunk-thxapyam.js";
 import { iP, OG, rEt, tme, Oc, $d, bR, ZYe, iEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { updateHooksConfigSnapshot as PD } from "../Skills技能/chunk-sapykxw7.js";
+import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { rf } from "../权限系统/chunk-qdy0h5k2.js";
-import { userAbortReason as yu } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { cG, $k, evictTaskOutput as Sd } from "./chunk-x3txegas.js";
+import { userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { cG, $k, evictTaskOutput } from "./chunk-x3txegas.js";
 import {
   K$t,
   T2,
@@ -79,7 +79,7 @@ import {
   kl,
   tVe,
   lTe,
-  syncPermissionRulesFromDisk as pVe,
+  syncPermissionRulesFromDisk,
   bp,
   td,
   u3,
@@ -98,25 +98,25 @@ import {
   P6t,
   XKe,
   L6t,
-  addDirsAreLauncherNamed as M6t,
-  isAutoModeDisabledByPolicySettings as Vmn,
-  createDisabledBypassPermissionsContext as Xmn,
-  isAutoModeInUse as R_t,
-  createDisabledAutoModeContext as F6t,
-  transitionPlanAutoMode as QKe,
+  addDirsAreLauncherNamed,
+  isAutoModeDisabledByPolicySettings,
+  createDisabledBypassPermissionsContext,
+  isAutoModeInUse,
+  createDisabledAutoModeContext,
+  transitionPlanAutoMode,
   Ws,
-  suppressedConnectorsEqual as D5e,
-  mcpDialBlockCause as Yp,
-  isMcpServerDisabled as Uo,
-  flushSessionStorage as kc,
-  clearCommandMemoizationCaches as rR,
+  suppressedConnectorsEqual,
+  mcpDialBlockCause,
+  isMcpServerDisabled,
+  flushSessionStorage,
+  clearCommandMemoizationCaches,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Jn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
 import { PAe, MNe } from "../图片-截图-ComputerUse/chunk-b8jsase9.js";
 import { $h, $fe, ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { DYn, hw, ONe, FYn, $pe, LNe, X3 } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { pauseWorkflowTask as k7 } from "../Workflow编排/chunk-va9cgbfs.js";
+import { pauseWorkflowTask } from "../Workflow编排/chunk-va9cgbfs.js";
 import { ize } from "../Artifact发布-渲染/chunk-5gz5xvw9.js";
 import { y9e, Gye } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import {
@@ -161,7 +161,7 @@ import { Pbe, lte, Spt, eOe, bpt } from "../../01-核心基础设施/共享小�
 import { Qt, re, De, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 import { zK, Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
-import { isBypassPermissionsModeDisabled as ey } from "../权限系统/chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -170,10 +170,10 @@ var Tr = 120000,
   Rr = 1800000,
   Pr = 1e4;
 function Cr(t) {
-  return !zo(t) && t.tempo === "blocked" && t.needs !== xf;
+  return !zo(t) && t.tempo === "blocked" && t.needs !== IDLE_NEEDS;
 }
 function zo(t) {
-  return Hs(t) && !(Hf(t.state) === "success" && dD(t));
+  return isSettled(t) && !(terminalOutcome(t.state) === "success" && isSelfDriving(t));
 }
 class FleetNudgeStore {
   #e;
@@ -192,7 +192,7 @@ class FleetNudgeStore {
   constructor(t) {
     ((this.#e = t?.sweepMs ?? Pr), (this.#f = t?.ignoredAfterMs ?? Rr));
     let o = t?.storageV5;
-    this.#g = () => q_(void 0, o);
+    this.#g = () => listJobs(void 0, o);
   }
   getSnapshot = () => this.#s;
   subscribe = (t) => {
@@ -220,7 +220,7 @@ class FleetNudgeStore {
   }
   recordOpenViaLeft() {
     if ((this.#p(), this.#n > 0 && Date.now() - this.#n <= Tr))
-      (y("fleet_needs_input_nudge"), (this.#n = 0));
+      (logFeatureOk("fleet_needs_input_nudge"), (this.#n = 0));
     return this.#s;
   }
   #i() {
@@ -244,11 +244,11 @@ class FleetNudgeStore {
       r = 0,
       s = 0,
       l = 0,
-      k = gu();
+      k = getOwnJobShortId();
     for (let v of t) {
       if (v.id === k) continue;
       if (zo(v.state)) {
-        if ((r++, Hf(v.state.state) === "success")) s++;
+        if ((r++, terminalOutcome(v.state.state) === "success")) s++;
         continue;
       }
       if ((l++, Cr(v.state))) o++;
@@ -277,7 +277,7 @@ class FleetNudgeStore {
     (this.#p(),
       (this.#r = setTimeout(() => {
         ((this.#r = null),
-          g("fleet_needs_input_nudge", "ignored"),
+          logFeatureSad("fleet_needs_input_nudge", "ignored"),
           (this.#n = 0));
       }, this.#f)),
       this.#r.unref());
@@ -304,30 +304,30 @@ function useFleetNudgeStore() {
     );
   return t;
 }
-import { createHash as _r, randomBytes as en } from "crypto";
-import { constants as Pe } from "fs";
+import { createHash, randomBytes } from "crypto";
+import { constants } from "fs";
 import {
-  copyFile as tn,
+  copyFile,
   link as on,
-  mkdir as eo,
-  readdir as xr,
-  readFile as nn,
-  realpath as ke,
+  mkdir,
+  readdir,
+  readFile,
+  realpath,
   rm as Er,
-  rmdir as Dr,
+  rmdir,
   stat as rn,
-  symlink as sn,
-  unlink as me,
-  lstat as Se,
-  readlink as an,
+  symlink,
+  unlink,
+  lstat,
+  readlink,
   open as dt,
 } from "fs/promises";
 import {
-  basename as Qe,
-  dirname as Re,
-  isAbsolute as yt,
+  basename,
+  dirname,
+  isAbsolute,
   join as Ae,
-  relative as ln,
+  relative,
   sep as Jt,
 } from "path";
 var STALE_THRESHOLD_MS = 120000,
@@ -348,8 +348,8 @@ function kt(t) {
     if (c.length === 0) return s("adopt path roots unresolvable");
     if (
       !c.some((w) => {
-        let T = ln(w, k);
-        return T === "" || (!T.startsWith("..") && !yt(T));
+        let T = relative(w, k);
+        return T === "" || (!T.startsWith("..") && !isAbsolute(T));
       })
     )
       return s(`adopt path outside allowed roots: ${k}`);
@@ -463,24 +463,24 @@ async function detachAndSerializeShell(t, o) {
       if (Xo(s) || li(s)) throw Error("network-spelled output path");
       if (Xg(Sh, s) !== void 0)
         throw Error("output path traverses a junction to remote UNC");
-      if ((await Se(s)).isSymbolicLink()) {
-        let D = await an(s);
+      if ((await lstat(s)).isSymbolicLink()) {
+        let D = await readlink(s);
         if (Xo(D) || li(D)) throw Error("network-spelled symlink target");
-        let O = yt(D) ? D : Ae(Re(s), D);
+        let O = isAbsolute(D) ? D : Ae(dirname(s), D);
         if (Xo(O) || li(O)) throw Error("network-spelled symlink hop");
         if (Xg(Sh, O) !== void 0)
           throw Error("symlink target traverses a junction to remote UNC");
-        if ((await Se(O)).isSymbolicLink())
+        if ((await lstat(O)).isSymbolicLink())
           throw Error("multi-hop symlink chain");
       }
-      let w = await ke(s),
-        T = await Se(w);
+      let w = await realpath(s),
+        T = await lstat(w);
       c = !0;
-      let L = await ke(l).catch(() => l);
+      let L = await realpath(l).catch(() => l);
       if (!w.startsWith(L + Jt)) {
         if (
           !(
-            await Promise.all([$d(), ...[]].map((x) => ke(x).catch(() => null)))
+            await Promise.all([$d(), ...[]].map((x) => realpath(x).catch(() => null)))
           )
             .filter((x) => x !== null)
             .some((x) => w.startsWith(x + Jt))
@@ -499,7 +499,7 @@ async function detachAndSerializeShell(t, o) {
           if (T.nlink !== 1) return await k("gate target has another name");
           let x = await dt(
             w,
-            P() === "windows" ? "r" : Pe.O_RDONLY | (Pe.O_NONBLOCK ?? 0) | dy,
+            P() === "windows" ? "r" : constants.O_RDONLY | (constants.O_NONBLOCK ?? 0) | dy,
           );
           try {
             let I = await x.stat();
@@ -513,7 +513,7 @@ async function detachAndSerializeShell(t, o) {
             {
               if (
                 (await H.recheckBeforeWrite(),
-                await me(W).catch(() => {}),
+                await unlink(W).catch(() => {}),
                 I.size > Yt)
               )
                 return await k("over-cap escaping output");
@@ -525,7 +525,7 @@ async function detachAndSerializeShell(t, o) {
                       ? await dt(W, "wx")
                       : await cG(
                           W,
-                          Pe.O_WRONLY | Pe.O_CREAT | Pe.O_EXCL | Pe.O_NOFOLLOW,
+                          constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW,
                           P(),
                         )));
               } catch {
@@ -568,7 +568,7 @@ async function detachAndSerializeShell(t, o) {
   return {
     taskId: t.id,
     pid: r,
-    procStart: await Xse(r),
+    procStart: await captureProcessStartTimeAsync(r),
     startTimeTicks: (await y9e(r)) ?? void 0,
     command: t.command,
     description: t.description,
@@ -588,7 +588,7 @@ async function serializeAdoptAgent(t, o = {}) {
     toolUseId: t.toolUseId,
     spawnDepth: t.spawnDepth,
     startTime: t.startTime,
-    transcriptPath: await ke(r).catch(() => {
+    transcriptPath: await realpath(r).catch(() => {
       return;
     }),
     parentAgentId: t.parentAgentId,
@@ -602,12 +602,12 @@ async function serializeAdoptWorkflow(t, o = {}) {
     workflowRunId: t.workflowRunId,
     scriptPath: t.scriptPath,
     scriptSha256: t.script
-      ? _r("sha256").update(t.script).digest("hex")
+      ? createHash("sha256").update(t.script).digest("hex")
       : void 0,
     argsJson: t.args !== void 0 ? b(t.args) : void 0,
     description: t.description,
     startTime: t.startTime,
-    transcriptDir: await ke(r).catch(() => r),
+    transcriptDir: await realpath(r).catch(() => r),
   };
 }
 function isCarriedFrameLiveWatch(t) {
@@ -710,13 +710,13 @@ async function serializeAdoptable(t, o) {
     },
     checkpointAgents: async (x) => {
       for (let I of k)
-        (I.abortController?.abort(yu("background")), k7(I.id, x));
+        (I.abortController?.abort(userAbortReason("background")), pauseWorkflowTask(I.id, x));
       if (w.length === 0) return;
       for (let I of v) if (I.agentId !== void 0) x.remove(I.taskId);
-      for (let I of l) I.abortController.abort(yu("background"));
+      for (let I of l) I.abortController.abort(userAbortReason("background"));
       (await OP(),
-        await kc().catch((I) => {
-          (g("task_local_agent", "adopt_checkpoint_flush_failed"),
+        await flushSessionStorage().catch((I) => {
+          (logFeatureSad("task_local_agent", "adopt_checkpoint_flush_failed"),
             n(`[adopt] checkpoint flush: ${I}`, { level: "warn" }));
         }));
     },
@@ -741,12 +741,12 @@ async function serializeAdoptable(t, o) {
         let I = `Background agent "${Nt(x.description)}" was checkpointed for the background fork but the fork failed to spawn; the agent was not resumed.`;
         lt(x.agentId, I, o);
       }
-      if (l.length > 0) g("task_local_agent", "adopt_spawn_failed");
+      if (l.length > 0) logFeatureSad("task_local_agent", "adopt_spawn_failed");
       for (let x of k) {
         let I = `Background workflow "${Nt(x.description)}" was checkpointed for the background fork but the fork failed to spawn; it was not resumed. To resume manually: Workflow({scriptPath: '${Nt(x.scriptPath ?? "")}', resumeFromRunId: '${Nt(x.workflowRunId ?? "")}'}).`;
         lt(x.id, I, o);
       }
-      if (k.length > 0) g("task_local_workflow", "adopt_spawn_failed");
+      if (k.length > 0) logFeatureSad("task_local_workflow", "adopt_spawn_failed");
       if (H) {
         for (let x of O)
           lt(
@@ -754,7 +754,7 @@ async function serializeAdoptable(t, o) {
             "The background session didn't start, so automatic replies to Artifact comments stopped. Publish the Artifact again to turn them back on.",
             o,
           );
-        if (L.length > 0) g("artifact_live_subscribe", "adopt_spawn_failed");
+        if (L.length > 0) logFeatureSad("artifact_live_subscribe", "adopt_spawn_failed");
       }
     },
   };
@@ -772,7 +772,7 @@ function dedupFrameLiveNewest(t) {
         v = k === void 0 || l.writtenAtMs > (k.writtenAtMs ?? 0) ? l : k;
       o.set(s.slug, c > 0 ? { ...v, unattendedReplies: c } : v);
     }
-  if (o.size > $h) g("artifact_live_subscribe", "merged_consent_capped");
+  if (o.size > $h) logFeatureSad("artifact_live_subscribe", "merged_consent_capped");
   return [...o.values()]
     .sort((r, s) => (s.writtenAtMs ?? 0) - (r.writtenAtMs ?? 0))
     .slice(0, $fe);
@@ -808,11 +808,11 @@ async function Ur(t, o) {
 }
 async function writeAdoptJson(t, o, r = {}, s) {
   let l = Ae(t, "adopt.json"),
-    k = Qe(t),
-    c = M() && s !== void 0 && _n(k) && t === rr(k) ? s : void 0,
+    k = basename(t),
+    c = M() && s !== void 0 && _n(k) && t === getJobDir(k) ? s : void 0,
     v = o;
   try {
-    let w = c ? await Ur(c, k) : await nn(l, "utf-8");
+    let w = c ? await Ur(c, k) : await readFile(l, "utf-8");
     if (w !== null && w.length <= 1e6) {
       let L = (
         r.mergeShellOutputRoot !== void 0 ? fn(r.mergeShellOutputRoot) : pn()
@@ -880,7 +880,7 @@ async function readAndConsumeAdoptJson(t, o = {}) {
   let c = Date.now(),
     v = k ? S("ebusy_retry") : S("ok");
   try {
-    let w = await nn(s, "utf-8"),
+    let w = await readFile(s, "utf-8"),
       L = (
         o.extraShellOutputRoot !== void 0 ? fn(o.extraShellOutputRoot) : pn()
       ).safeParse(JSON.parse(w));
@@ -901,7 +901,7 @@ async function readAndConsumeAdoptJson(t, o = {}) {
           result: S("stale"),
           frame_live_stale: S("true"),
         }),
-        g("artifact_live_subscribe", "carried_consent_stale_dropped"),
+        logFeatureSad("artifact_live_subscribe", "carried_consent_stale_dropped"),
         {
           writtenAtMs: L.data.writtenAtMs,
           ...(L.data.origin !== void 0 && { origin: L.data.origin }),
@@ -944,7 +944,7 @@ async function readAndConsumeAdoptJson(t, o = {}) {
       null
     );
   } finally {
-    await me(s).catch(() => {});
+    await unlink(s).catch(() => {});
   }
 }
 function recordUnresumedAdopt(t, o, r, s) {
@@ -1022,7 +1022,7 @@ var Hr = new Set([
   $r = 1048576,
   mn = ".adopt-relink.";
 function Kr(t) {
-  return `${t}${mn}${process.pid}.${Date.now()}.${en(4).toString("hex")}`;
+  return `${t}${mn}${process.pid}.${Date.now()}.${randomBytes(4).toString("hex")}`;
 }
 async function Gr(t, o, r, s) {
   let l;
@@ -1034,16 +1034,16 @@ async function Gr(t, o, r, s) {
     l = v;
   }
   if (l === "UNVERIFIED") {
-    let c = await Se(o);
+    let c = await lstat(o);
     if (c.isFile() && c.dev === r.dev && c.ino === r.ino)
       return { method: "hardlink", identity: r };
-    await me(o);
+    await unlink(o);
   }
   let k = await Vr(t, o, r);
   return { method: "copy", fallbackCode: l, identity: k };
 }
 async function Vr(t, o, r) {
-  let s = await dt(t, Pe.O_RDONLY | dy);
+  let s = await dt(t, constants.O_RDONLY | dy);
   try {
     let l = await s.stat();
     if (!l.isFile() || l.dev !== r.dev || l.ino !== r.ino)
@@ -1080,7 +1080,7 @@ async function Vr(t, o, r) {
         { dev: w, ino: T }
       );
     } finally {
-      if (!c) (await k.close().catch(() => {}), await me(o).catch(() => {}));
+      if (!c) (await k.close().catch(() => {}), await unlink(o).catch(() => {}));
     }
   } finally {
     await s.close().catch(() => {});
@@ -1089,7 +1089,7 @@ async function Vr(t, o, r) {
 async function zr(t, o, r) {
   let s;
   try {
-    s = await Se(o);
+    s = await lstat(o);
   } catch (l) {
     if (A(l) !== "ENOENT") throw l;
   }
@@ -1105,13 +1105,13 @@ async function zr(t, o, r) {
     await Ri(t, o);
   } catch (l) {
     if (s === void 0 || A(l) !== "EEXIST") throw l;
-    (await me(o), await Ri(t, o));
+    (await unlink(o), await Ri(t, o));
   }
   return s === void 0 ? "created" : "replaced";
 }
 async function Xt(t, o, r, s, l) {
   if (l) {
-    let L = await Se(t).catch(() => {
+    let L = await lstat(t).catch(() => {
       return;
     });
     if (L !== void 0 && !L.isSymbolicLink() && L.isFile())
@@ -1123,7 +1123,7 @@ async function Xt(t, o, r, s, l) {
   try {
     v = await zr(k, t, l);
   } finally {
-    await me(k).catch(() => {});
+    await unlink(k).catch(() => {});
   }
   let { identity: w, ...T } = c;
   return v === "kept"
@@ -1137,7 +1137,7 @@ async function linkAdoptedAgentTranscript(t, { storageV5: o, linkFn: r = on } = 
     if (s.method !== void 0)
       i("tengu_adopt_link", {
         kind: S("agent"),
-        method: u(s.method),
+        method: fromEnum(s.method),
         fallback_code: Jg({ code: s.fallbackCode }),
       });
     return s;
@@ -1145,7 +1145,7 @@ async function linkAdoptedAgentTranscript(t, { storageV5: o, linkFn: r = on } = 
     throw (
       i("tengu_adopt_link", {
         kind: S("agent"),
-        method: u("fail"),
+        method: fromEnum("fail"),
         error_code: Jg(s),
       }),
       s
@@ -1191,21 +1191,21 @@ async function qr(t) {
   }
   if (o === t.transcriptPath) return { forkedSkillNameFromSidecar: l };
   if (
-    (await ke(o).catch(() => {
+    (await realpath(o).catch(() => {
       return;
     })) === t.transcriptPath
   )
     return { forkedSkillNameFromSidecar: l };
-  if ((await eo(Re(o), { recursive: !0 }), s))
-    (await me(s.fork.provenanceMarker).catch(() => {}),
+  if ((await mkdir(dirname(o), { recursive: !0 }), s))
+    (await unlink(s.fork.provenanceMarker).catch(() => {}),
       await P6t(s.fork.provenanceMarker, t.forkedSkillName ?? l),
-      await me(s.fork.scoping).catch(() => {}),
-      await tn(s.parent.scoping, s.fork.scoping));
+      await unlink(s.fork.scoping).catch(() => {}),
+      await copyFile(s.parent.scoping, s.fork.scoping));
   for (let [c, v] of [
     [o, t.transcriptPath],
     [r(o), r(t.transcriptPath)],
   ])
-    (await me(c).catch(() => {}), await sn(v, c));
+    (await unlink(c).catch(() => {}), await symlink(v, c));
   return { forkedSkillNameFromSidecar: l };
 }
 function st(t, o) {
@@ -1215,7 +1215,7 @@ async function Yr(t, o) {
   if (!t.transcriptPath) return {};
   let r = Ud(oo(t.agentId)),
     s = (W) => W.replace(/\.jsonl$/, ".meta.json");
-  if (Qe(t.transcriptPath) !== Qe(r))
+  if (basename(t.transcriptPath) !== basename(r))
     throw st(
       new R(
         `adopted agent ${t.agentId} carrier names a transcript that is not agent-${t.agentId}.jsonl`,
@@ -1224,8 +1224,8 @@ async function Yr(t, o) {
       "ADOPT_WRONG_LEAF",
     );
   let [l, k] = await Promise.all([
-    Se(t.transcriptPath),
-    Se(s(t.transcriptPath)),
+    lstat(t.transcriptPath),
+    lstat(s(t.transcriptPath)),
   ]);
   if (!l.isFile() || !k.isFile())
     throw st(
@@ -1278,24 +1278,24 @@ async function Yr(t, o) {
   }
   if (r === t.transcriptPath)
     return { forkedSkillNameFromSidecar: v, method: "noop" };
-  let T = await ke(Re(r)).catch(() => {
+  let T = await realpath(dirname(r)).catch(() => {
     return;
   });
-  if (T !== void 0 && Ae(T, Qe(r)) === t.transcriptPath)
+  if (T !== void 0 && Ae(T, basename(r)) === t.transcriptPath)
     return { forkedSkillNameFromSidecar: v, method: "noop" };
-  if ((await eo(Re(r), { recursive: !0 }), c))
-    (await me(c.fork.provenanceMarker).catch(() => {}),
+  if ((await mkdir(dirname(r), { recursive: !0 }), c))
+    (await unlink(c.fork.provenanceMarker).catch(() => {}),
       await P6t(c.fork.provenanceMarker, t.forkedSkillName ?? v),
-      await me(c.fork.scoping).catch(() => {}),
-      await tn(c.parent.scoping, c.fork.scoping));
-  let L = await Se(r).catch(() => {
+      await unlink(c.fork.scoping).catch(() => {}),
+      await copyFile(c.parent.scoping, c.fork.scoping));
+  let L = await lstat(r).catch(() => {
       return;
     }),
     D =
       L !== void 0 &&
       (L.isFile() ||
         (L.isSymbolicLink() &&
-          (await ke(r).catch(() => {
+          (await realpath(r).catch(() => {
             return;
           })) === t.transcriptPath)),
     O = await Xt(s(r), s(t.transcriptPath), k, o, D),
@@ -1305,9 +1305,9 @@ async function Yr(t, o) {
   } catch (W) {
     if (O.created !== null) {
       let x = O.created;
-      await Se(s(r))
+      await lstat(s(r))
         .then(async (I) => {
-          if (I.dev === x.dev && I.ino === x.ino) await me(s(r));
+          if (I.dev === x.dev && I.ino === x.ino) await unlink(s(r));
         })
         .catch(() => {});
     }
@@ -1323,7 +1323,7 @@ async function Yr(t, o) {
       `[adopt] agent ${t.agentId}: hard link impossible (${H}) \u2014 materialised a copy of ${W}`,
       { level: "warn" },
     ),
-      g("task_local_agent", "adopt_link_fallback_copy"));
+      logFeatureSad("task_local_agent", "adopt_link_fallback_copy"));
   }
   return { forkedSkillNameFromSidecar: v, method: U.method, fallbackCode: H };
 }
@@ -1336,8 +1336,8 @@ var Jr = /^agent-[\w-]+\.(?:jsonl|meta\.json)$/,
   Xr = 900000,
   Zr = 64;
 function gn(t, o) {
-  let r = ln(t, o);
-  if (r === "" || r.startsWith("..") || yt(r)) return null;
+  let r = relative(t, o);
+  if (r === "" || r.startsWith("..") || isAbsolute(r)) return null;
   let s = r.split(Jt);
   if (s.length < 3 || s[2] !== "subagents") return null;
   return { session: Ae(s[0], s[1]), depth: s.length };
@@ -1351,13 +1351,13 @@ async function relinkAdoptedAgentSymlinks({ storageV5: t, linkFn: o = on } = {})
       n(`[adopt] relink sweep abandoned: ${r}`, { level: "warn" });
       return;
     }
-    h(r);
+    logError(r);
   }
 }
 async function ei(t, o) {
   let r;
   try {
-    r = await xr(t, { withFileTypes: !0 });
+    r = await readdir(t, { withFileTypes: !0 });
   } catch {
     return;
   }
@@ -1367,7 +1367,7 @@ async function ei(t, o) {
     let Y = Qr.exec(K.name);
     if (Y) {
       if (Math.abs(s - Number(Y[1])) > Xr)
-        await me(Ae(t, K.name)).catch(() => {});
+        await unlink(Ae(t, K.name)).catch(() => {});
       continue;
     }
     if (K.isSymbolicLink() && Jr.test(K.name)) l.push(K.name);
@@ -1382,15 +1382,15 @@ async function ei(t, o) {
     c.set(k(K), Y);
   }
   let v = [...c.entries()],
-    w = v.length > 1 ? en(4).readUInt32BE() % v.length : 0,
+    w = v.length > 1 ? randomBytes(4).readUInt32BE() % v.length : 0,
     T = [...v.slice(w), ...v.slice(0, w)],
     [L, D] = await Promise.all([
-      ke(Pl()).catch(() => null),
-      ke(t).catch(() => null),
+      realpath(Pl()).catch(() => null),
+      realpath(t).catch(() => null),
     ]);
   if (L === null || D === null) return;
   let O = gn(L, D);
-  if (lP(Re(Re(t))) === void 0 || O === null || O.depth !== 3) {
+  if (lP(dirname(dirname(t))) === void 0 || O === null || O.depth !== 3) {
     n(
       `[adopt] relink sweep: ${l.length} symlinked name(s) left as is (session dir outside the transcript store)`,
       { level: "warn" },
@@ -1435,7 +1435,7 @@ async function ei(t, o) {
           se !== null && se.gate.size === 0
             ? "meta beside an empty transcript"
             : await Qo(t, X.meta, L, U, {
-                besideDir: se === null ? void 0 : Re(se.real),
+                besideDir: se === null ? void 0 : dirname(se.real),
               });
         if (typeof Q === "string") {
           for (let ie of ee)
@@ -1448,11 +1448,11 @@ async function ei(t, o) {
       if (ce !== void 0 && X.meta !== void 0)
         (q(await Zo(ce, o)), J.add(X.meta));
     } catch (de) {
-      if (A(de) === void 0) h(de);
+      if (A(de) === void 0) logError(de);
       for (let se of ee) if (!J.has(se)) j.push(`${se} (${A(de) ?? "error"})`);
     }
   }
-  if (W > 0) g("task_local_agent", "adopt_link_fallback_copy");
+  if (W > 0) logFeatureSad("task_local_agent", "adopt_link_fallback_copy");
   (n(
     `[adopt] relink sweep: ${H} hard-linked, ${W} copied, ${j.length - (x > 0 ? 1 : 0) + x} left as is${j.length > 0 ? ` (${j.slice(0, 5).join(", ")})` : ""}`,
     { level: j.length > 0 || W > 0 ? "warn" : "debug" },
@@ -1467,7 +1467,7 @@ var at = 65536,
   ti = m(() => nt({ agentType: le() })),
   oi = m(() => nt({ agentId: le() }));
 async function hn(t, o, r) {
-  let s = await dt(t, Pe.O_RDONLY | dy);
+  let s = await dt(t, constants.O_RDONLY | dy);
   try {
     let l = await s.stat();
     if (l.dev !== o.dev || l.ino !== o.ino)
@@ -1545,23 +1545,23 @@ function ni(t, o) {
 }
 async function Qo(t, o, r, s, { besideDir: l } = {}) {
   let k = Ae(t, o),
-    c = await an(k);
-  if (!yt(c) || Qe(c) !== o || WP(c)) return "unexpected target spelling";
+    c = await readlink(k);
+  if (!isAbsolute(c) || basename(c) !== o || WP(c)) return "unexpected target spelling";
   let v;
   try {
-    v = await Se(c);
+    v = await lstat(c);
   } catch (O) {
     return `target ${A(O) ?? "unreadable"}`;
   }
   if (!v.isFile())
     return v.isSymbolicLink() ? "chained link" : "non-regular target";
-  let w = await ke(c),
+  let w = await realpath(c),
     T = gn(r, w);
-  if (T === null || T.depth < 4 || Qe(w) !== o)
+  if (T === null || T.depth < 4 || basename(w) !== o)
     return "outside the transcript store";
   if (T.session === s) return "this session's own file";
-  if (l !== void 0 && Re(w) !== l) return "not beside its transcript";
-  let L = await Se(w);
+  if (l !== void 0 && dirname(w) !== l) return "not beside its transcript";
+  let L = await lstat(w);
   if (!L.isFile() || L.dev !== v.dev || L.ino !== v.ino)
     return "target changed during the check";
   let D = await hn(w, v, o);
@@ -1572,7 +1572,7 @@ async function ri(t, o) {
   let r = Ae(t, o),
     s;
   try {
-    s = await Se(r);
+    s = await lstat(r);
   } catch {
     return "meta without its transcript";
   }
@@ -1590,24 +1590,24 @@ async function linkAdoptedWorkflowDir(t) {
   let o = eH(t.workflowRunId);
   if (o === t.transcriptDir) return;
   if (
-    (await ke(o).catch(() => {
+    (await realpath(o).catch(() => {
       return;
     })) === t.transcriptDir
   )
     return;
   (await rn(Ae(t.transcriptDir, "journal.jsonl")),
-    await eo(Re(o), { recursive: !0 }));
+    await mkdir(dirname(o), { recursive: !0 }));
   try {
-    await me(o);
+    await unlink(o);
   } catch (r) {
     if (A(r) !== "ENOENT")
       try {
-        await Dr(o);
+        await rmdir(o);
       } catch (l) {
         if (A(l) === "ENOTEMPTY") await Er(o, { recursive: !0, force: !0 });
       }
   }
-  await sn(t.transcriptDir, o, void 0);
+  await symlink(t.transcriptDir, o, void 0);
 }
 function emitAdoptWorkflowFailed(t, o, r) {
   let s =
@@ -1801,7 +1801,7 @@ function aF() {
     o = t.isTeammate() && t.isPlanModeRequired() ? "plan" : "default";
   return {
     sessionNoticesPoll: { pendingDeliveryUuids: [] },
-    settings: Ge(),
+    settings: getInitialSettings(),
     tasks: {},
     transcripts: {},
     runningSubagents: 0,
@@ -2268,7 +2268,7 @@ function Wn(fd) {
           }
         } catch (lo) {
           let wd = lo;
-          h(wd);
+          logError(wd);
         }
       }
       return !1;
@@ -2780,7 +2780,7 @@ class v0e {
   }
   setSuppressedClaudeAiConnectors(t) {
     this.#e.set((o) =>
-      D5e(o.suppressedClaudeAiConnectors ?? [], t)
+      suppressedConnectorsEqual(o.suppressedClaudeAiConnectors ?? [], t)
         ? o
         : { ...o, suppressedClaudeAiConnectors: t },
     );
@@ -2860,11 +2860,11 @@ class v0e {
             D.type === "connected" &&
             q?.type === "connected" &&
             q.client === D.client,
-          K = ts(D) && Yp(D.name, D.config) === "managed-policy";
+          K = ts(D) && mcpDialBlockCause(D.name, D.config) === "managed-policy";
         if (
           D.type !== "disabled" &&
           !J &&
-          Uo(D.name) &&
+          isMcpServerDisabled(D.name) &&
           !(K && q?.type !== "disabled")
         ) {
           if (K) o.onDoorDenied(D.name);
@@ -2884,7 +2884,7 @@ class v0e {
             };
           continue;
         }
-        let Y = ts(D) ? Yp(D.name, D.config) : null;
+        let Y = ts(D) ? mcpDialBlockCause(D.name, D.config) : null;
         if (Y) {
           o.onDoorDenied(D.name);
           let Q = D.config;
@@ -2983,7 +2983,7 @@ function Kn(t, o) {
     .filter(([s]) => !r.has(s))
     .map(([s, l]) => ({
       name: s,
-      type: Uo(s) ? "disabled" : "pending",
+      type: isMcpServerDisabled(s) ? "disabled" : "pending",
       config: l,
     }));
 }
@@ -3254,7 +3254,7 @@ function wle(t) {
   E(
     () =>
       kl.subscribe((r, s) => {
-        let l = bn();
+        let l = getSettings_DEPRECATED();
         o(r, l, s);
       }),
     [],
@@ -3278,12 +3278,12 @@ function qn() {
   ];
 }
 function Yn(t) {
-  let o = Ja() ? WD() : void 0;
+  let o = isActingAsBgJob() ? getBgJobDir() : void 0;
   if (!o || a.CLAUDE_CODE_DISABLE_BG_EXIT_HANDOFF) {
     if (o) {
       let O = ne().live;
       if ((drainUnresumedFrameLive(o), O.bootingWiredArms.size > 0))
-        g("artifact_live_subscribe", "booting_consent_uncarried");
+        logFeatureSad("artifact_live_subscribe", "booting_consent_uncarried");
       Spt(O.inFlightSubscribes);
     }
     return {
@@ -3318,7 +3318,7 @@ function Yn(t) {
     L = new Set(T.map((O) => O.slug)),
     D = ne().live;
   if ([...D.bootingWiredArms.keys()].some((O) => !L.has(O)))
-    g("artifact_live_subscribe", "booting_consent_uncarried");
+    logFeatureSad("artifact_live_subscribe", "booting_consent_uncarried");
   return (
     Spt(new Set([...L, ...D.inFlightSubscribes])),
     {
@@ -3361,22 +3361,22 @@ function Qn(
   },
   D,
 ) {
-  for (let U of o) U.abortController?.abort(yu("background"));
-  for (let U of r) U.abortController?.abort(yu("background"));
+  for (let U of o) U.abortController?.abort(userAbortReason("background"));
+  for (let U of r) U.abortController?.abort(userAbortReason("background"));
   let O = (async () => {
     let U = [];
     if (r.length > 0) {
       try {
         await Dt(
           (async () => {
-            (await OP(), await kc());
+            (await OP(), await flushSessionStorage());
           })(),
           rs,
           zn,
         );
       } catch (x) {
         let I = x instanceof Error && x.message === zn;
-        (g(
+        (logFeatureSad(
           "task_local_agent_exit_handoff",
           I ? "flush_timeout" : "flush_failed",
         ),
@@ -3427,9 +3427,9 @@ function Qn(
         }),
         H.length > 0)
       )
-        y("task_local_shell_exit_handoff");
-      if (W.length > 0) y("task_local_workflow_exit_handoff");
-      if (U.length > 0) y("task_local_agent_exit_handoff");
+        logFeatureOk("task_local_shell_exit_handoff");
+      if (W.length > 0) logFeatureOk("task_local_workflow_exit_handoff");
+      if (U.length > 0) logFeatureOk("task_local_agent_exit_handoff");
       n(
         `exit handoff: ${H.length} background shell(s), ${W.length} workflow(s), ${U.length} agent(s), and ${k.length} comment-monitoring consent record(s) handed to the next wake of this session`,
       );
@@ -3438,11 +3438,11 @@ function Qn(
         try {
           I.shellCommand?.kill();
         } catch {}
-      if (t.length > 0) f("task_local_shell_exit_handoff", "write_failed");
-      if (o.length > 0) f("task_local_workflow_exit_handoff", "write_failed");
-      if (U.length > 0) f("task_local_agent_exit_handoff", "write_failed");
+      if (t.length > 0) logFeatureBad("task_local_shell_exit_handoff", "write_failed");
+      if (o.length > 0) logFeatureBad("task_local_workflow_exit_handoff", "write_failed");
+      if (U.length > 0) logFeatureBad("task_local_agent_exit_handoff", "write_failed");
       if (k.length > 0 && c !== void 0)
-        (recordExitRetryFrameLive(c, k), f("artifact_live_subscribe", "consent_exit_write_failed"));
+        (recordExitRetryFrameLive(c, k), logFeatureBad("artifact_live_subscribe", "consent_exit_write_failed"));
       n(`exit handoff: adopt.json write failed: ${x}`, { level: "warn" });
     }
   })();
@@ -3468,7 +3468,7 @@ function $t(t, o = new Set()) {
     try {
       if (bp(r)) (r.shellCommand?.kill(), r.shellCommand?.cleanup());
       else if (no()) {
-        Sd(r.id);
+        evictTaskOutput(r.id);
         continue;
       } else if ("abortController" in r) r.abortController?.abort();
       if (!td(r))
@@ -3477,9 +3477,9 @@ function $t(t, o = new Set()) {
           summary: r.description,
           ambient: u3(r),
         });
-      Sd(r.id);
+      evictTaskOutput(r.id);
     } catch (s) {
-      h(s);
+      logError(s);
     }
   }
 }
@@ -3488,9 +3488,9 @@ function Tat(t) {
     if (!s) return;
     (is(s, t),
       i("tengu_refusal_fallback_latch_reset", {
-        source: u(r),
+        source: fromEnum(r),
         restored_to_explicit_override: s.restoredToExplicitOverride,
-        model_scope: u(FF(s.fallbackModel)),
+        model_scope: fromEnum(FF(s.fallbackModel)),
       }));
   });
 }
@@ -3525,17 +3525,17 @@ function is(t, o) {
     pb(r, s);
   ad(t.overrideValue);
 }
-import { resolve as ss } from "path";
+import { resolve } from "path";
 var rtn = new Gt(() => Le());
 function Eat(t, o, r, s, l) {
-  let k = Ge();
+  let k = getInitialSettings();
   (n(`Settings changed from ${o}, updating app state`), pge());
   let c = OG();
-  (PD({ userLayer: "retain" }), rR());
+  (updateHooksConfigSnapshot({ userLayer: "retain" }), clearCommandMemoizationCaches());
   let v = !1;
   if (
     (r((w) => {
-      let T = pVe(w.toolPermissionContext, c);
+      let T = syncPermissionRulesFromDisk(w.toolPermissionContext, c);
       T = stn(
         T,
         w.settings.permissions?.additionalDirectories,
@@ -3570,11 +3570,11 @@ function Eat(t, o, r, s, l) {
     rtn.of(t).emit();
 }
 function Aat(t) {
-  if (jHn()) t();
+  if (hasPolicySettingsNotified()) t();
 }
 function otn(t, o) {
   let r = t;
-  if (r.isBypassPermissionsModeAvailable && ey()) r = Xmn(r);
+  if (r.isBypassPermissionsModeAvailable && isBypassPermissionsModeDisabled()) r = createDisabledBypassPermissionsContext(r);
   if (r.strippedDangerousRules !== void 0) {
     let l = new Set(yi),
       k = !iP(),
@@ -3583,9 +3583,9 @@ function otn(t, o) {
       if (w && (k || v === "command") && !l.has(v)) c[v] = [...w];
     r = { ...r, strippedDangerousRules: c };
   }
-  let s = !B6() && R_t(r) && Vmn();
-  if (s) r = F6t(r);
-  return { context: QKe(r), exitedAutoMode: s };
+  let s = !isAdminPolicyUnreadable() && isAutoModeInUse(r) && isAutoModeDisabledByPolicySettings();
+  if (s) r = createDisabledAutoModeContext(r);
+  return { context: transitionPlanAutoMode(r), exitedAutoMode: s };
 }
 function stn(t, o, r, s, l = !1, k, c) {
   let v = new Set((o ?? []).flatMap((I) => rt(I, k))),
@@ -3616,7 +3616,7 @@ function stn(t, o, r, s, l = !1, k, c) {
   }
   if (s === "flagSettings") {
     let I = new Set(
-        (ye("flagSettings")?.permissions?.additionalDirectories ?? []).flatMap(
+        (getSettingsForSource("flagSettings")?.permissions?.additionalDirectories ?? []).flatMap(
           (J) => rt(J),
         ),
       ),
@@ -3627,7 +3627,7 @@ function stn(t, o, r, s, l = !1, k, c) {
         for (let K of j.get(J) ?? []) if (K !== J) L.push(K);
         (j.delete(J), (q = !0));
       }
-    if (M6t()) {
+    if (addDirsAreLauncherNamed()) {
       for (let J of I)
         if (!j.has(J)) {
           if (Wur(J)) continue;
@@ -3673,7 +3673,7 @@ function Kt(t) {
   return t === "cliArg" || t === "command" || t === "session";
 }
 function as(t, o) {
-  return ss(ot(t, o));
+  return resolve(ot(t, o));
 }
 function rt(t, o) {
   try {

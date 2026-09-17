@@ -24,7 +24,7 @@ import {
   qO,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { on, I9 } from "../Git-Worktree/chunk-v967hawf.js";
-import { basename as T, dirname as P, isAbsolute as L, join as p } from "path";
+import { basename, dirname, isAbsolute, join as p } from "path";
 var R = "side.git",
   m = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/,
   g = /^[a-z][a-z0-9-]{0,31}(?:\/[a-z0-9][a-z0-9_-]{0,63})?$/;

@@ -86,9 +86,9 @@ import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chu
 import { tl, be, Xur, uo, Hr, xg, NL } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Io, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { bc, ja, env as a, antEnv as Wn, udsEnv as Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { OAUTH_BETA_HEADER as Bc, getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we, fromNumber as Yr, fromNumberOpt as KP, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln, agentTypeForAnalytics_GATE_EVALUATED as Mz } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { bc, ja, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromNumberOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY, agentTypeForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import {
   ud,
   yt,
@@ -120,9 +120,9 @@ import {
   n,
   s8,
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { BG_EXIT_CAUSE_SESSION_IN_USE as znt, oje, Kn, rOn, Knt, oOn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { BG_EXIT_CAUSE_SESSION_IN_USE, oje, Kn, rOn, Knt, oOn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { Wf, x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { vu, Ag, gz, St, logError as h, getInMemoryErrors as hz, logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { vu, Ag, gz, St, logError, getInMemoryErrors, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Vd, Hd, UP } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import {
   Or,
@@ -131,8 +131,8 @@ import {
   pVt,
   _se,
   mg,
-  getAuthHeaders as l5,
-  withOAuth401Retry as T_,
+  getAuthHeaders,
+  withOAuth401Retry,
   fP,
   FD,
   bt,
@@ -183,24 +183,24 @@ import {
   vQe,
   Yrr,
   OVt,
-  getUserSpecifiedModelSetting as Mf,
-  getMainLoopModel as rt,
-  antUpstreamContextWindow as tvn,
-  getDefaultOpusModel as Ll,
-  getDefaultSonnetModel as Nf,
-  getDefaultHaikuModel as f5,
-  getResolvedOrgDefaultModel as JAt,
-  isRecognizedOrgDefaultName as QAt,
-  getDefaultMainLoopModelSetting as dh,
-  resolveDefaultMainLoopModelSetting as _6,
-  getEnvDefaultModel as vse,
-  getDefaultMainLoopModel as ol,
-  firstPartyNameToCanonical as Yh,
-  isRecognizedCanonical as Wme,
-  isRecognizedModel as yP,
-  getCanonicalName as Ue,
-  bytesPerTokenForModel as lf,
-  parseUserSpecifiedModel as wt,
+  getUserSpecifiedModelSetting,
+  getMainLoopModel,
+  antUpstreamContextWindow,
+  getDefaultOpusModel,
+  getDefaultSonnetModel,
+  getDefaultHaikuModel,
+  getResolvedOrgDefaultModel,
+  isRecognizedOrgDefaultName,
+  getDefaultMainLoopModelSetting,
+  resolveDefaultMainLoopModelSetting,
+  getEnvDefaultModel,
+  getDefaultMainLoopModel,
+  firstPartyNameToCanonical,
+  isRecognizedCanonical,
+  isRecognizedModel,
+  getCanonicalName,
+  bytesPerTokenForModel,
+  parseUserSpecifiedModel,
   eor,
   qVt,
   tor,
@@ -211,8 +211,8 @@ import {
   ror,
   vp,
   h5,
-  setAutoModeFlagCli as uvn,
-  isAutoModeFromFallback as aq,
+  setAutoModeFlagCli,
+  isAutoModeFromFallback,
   gvn,
   hvn,
   JN,
@@ -230,12 +230,12 @@ import {
   Ut,
   b5,
   si,
-  envSessionKind as E6,
-  isBgSession as _t,
-  isActingAsBgJob as Ja,
-  registerSession as iRn,
-  updateSessionName as t1,
-  countConcurrentSessions as iZe,
+  envSessionKind,
+  isBgSession,
+  isActingAsBgJob,
+  registerSession,
+  updateSessionName,
+  countConcurrentSessions,
   wl,
   c0,
   Ms,
@@ -243,22 +243,22 @@ import {
   lsr,
   TP,
   IUe,
-  getApiKeySourceSafe as hRn,
-  getAnthropicApiKeyWithSourceSafe as kp,
-  getAdditionalModelOptionsCache as MR,
-  clearApiKeyHelperCache as hRe,
-  clearAwsCredentialsCache as R6,
-  resetAwsAuthRefreshCooldown as _Re,
-  clearGcpCredentialsCache as SRe,
-  prefetchGcpCredentialsIfSafe as GKt,
-  prefetchAwsCredentialsAndBedRockInfoIfSafe as avt,
-  getClaudeAIOAuthTokenOrigin as qD,
-  isClaudeAISubscriber as gt,
-  hasStoredOAuthToken as wu,
+  getApiKeySourceSafe,
+  getAnthropicApiKeyWithSourceSafe,
+  getAdditionalModelOptionsCache,
+  clearApiKeyHelperCache,
+  clearAwsCredentialsCache,
+  resetAwsAuthRefreshCooldown,
+  clearGcpCredentialsCache,
+  prefetchGcpCredentialsIfSafe,
+  prefetchAwsCredentialsAndBedRockInfoIfSafe,
+  getClaudeAIOAuthTokenOrigin,
+  isClaudeAISubscriber,
+  hasStoredOAuthToken,
   is1PApiCustomer as cge,
-  getOauthAccountInfo as vn,
-  isMaxSubscriber as wRe,
-  toAccountInfo as CZe,
+  getOauthAccountInfo,
+  isMaxSubscriber,
+  toAccountInfo,
   zg,
   xsr,
   Hsr,
@@ -268,14 +268,14 @@ import {
   $f,
   H,
   Qh,
-  isAutoMemoryEnabled as ua,
-  getAutoMemPath as Ns,
+  isAutoMemoryEnabled,
+  getAutoMemPath,
   VD,
   i5t,
   LZe,
   Bo,
-  isWorkspacePersistedTrusted as Cd,
-  getWorkspacePersistedTrustKey as tS,
+  isWorkspacePersistedTrusted,
+  getWorkspacePersistedTrustKey,
   Te,
   ee,
   yq,
@@ -286,11 +286,11 @@ import {
   ql,
   skn,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, logFeatureBadAsync as wn, logFeatureSadAsync as ul, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, logFeatureSadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { Bf } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import {
   kd,
   jn,
@@ -298,18 +298,18 @@ import {
   NP,
   Qq,
   Eu,
-  getCommonDir as yL,
-  resetGitFileWatcher as WIn,
-  getRemoteUrlForDir as Uke,
-  findGitRoot as tr,
-  gitExe as lt,
-  getIsGit as hh,
-  getGitDir as Zq,
-  getHead as L2e,
-  getGitPresenceForAnalytics as YIn,
-  getWorktreeCount as M2e,
+  getCommonDir,
+  resetGitFileWatcher,
+  getRemoteUrlForDir,
+  findGitRoot,
+  gitExe,
+  getIsGit,
+  getGitDir,
+  getHead,
+  getGitPresenceForAnalytics,
+  getWorktreeCount,
 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncateToWidth as Xe, formatNumber as No, formatTokens as Pn, formatRelativeTimeAgo as uy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth, formatNumber, formatTokens, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
@@ -336,46 +336,46 @@ import {
   Oa,
   mlr,
   qge,
-  isRemoteManagedSettingsVerified as jR,
-  getLastLoadStatus as V6,
-  onLastLoadStatusChanged as _tt,
-  getRemoteManagedSettingsSyncFromCache as rv,
-  isAdminPolicyOrigin as T1,
+  isRemoteManagedSettingsVerified,
+  getLastLoadStatus,
+  onLastLoadStatusChanged,
+  getRemoteManagedSettingsSyncFromCache,
+  isAdminPolicyOrigin,
   E0,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot, El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Ee, M1, RPn, Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import {
-  getSettingsFilePathForSource as ho,
-  projectSettingsAliasesUserSettings as zT,
-  getSettingsForSource as ye,
-  getPolicyEnvCompositionForLogging as Pxn,
-  getInitialSettings as Ge,
-  getSettings_DEPRECATED as bn,
-  getEffectiveSettingSource as VT,
-  getSettingsWithErrors as bb,
-  getPolicySettingsOrigin as dS,
-  updateSettingsForSource as Jt,
-  updateSettingsForSourceWithTransform as Ii,
-  getManagedSettingsKeysForLogging as $xn,
-  getSettingsAfterPluginLoad as Oet,
-  hasSkipDangerousModePermissionPrompt as eL,
+  getSettingsFilePathForSource,
+  projectSettingsAliasesUserSettings,
+  getSettingsForSource,
+  getPolicyEnvCompositionForLogging,
+  getInitialSettings,
+  getSettings_DEPRECATED,
+  getEffectiveSettingSource,
+  getSettingsWithErrors,
+  getPolicySettingsOrigin,
+  updateSettingsForSource,
+  updateSettingsForSourceWithTransform,
+  getManagedSettingsKeysForLogging,
+  getSettingsAfterPluginLoad,
+  hasSkipDangerousModePermissionPrompt,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt, up, io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { parsePermissionMode as gf, isPreAskDeny as i0n, isRecordableDenial as Att, DP, v_, E1, _c, jlr, Eb } from "../权限系统/chunk-e4pfvp7x.js";
+import { parsePermissionMode, isPreAskDeny, isRecordableDenial, DP, v_, E1, _c, jlr, Eb } from "../权限系统/chunk-e4pfvp7x.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
-import { getDynamicTeamContext as L5, getAgentId as lS, isTeammate as Zi } from "../Teammates团队/chunk-811z9z0t.js";
-import { isProcessProvablyGone as Vg, isSameProcessAsync as Pm, getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
+import { getDynamicTeamContext, getAgentId, isTeammate } from "../Teammates团队/chunk-811z9z0t.js";
+import { isProcessProvablyGone, isSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { Qsr, ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { isCancel as qi, isAxiosError as xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { Xt, _0, er, Qa, Zkn, dm, THIRD_PARTY_PROVIDER_LABELS as yA, getAPIProvider as Pe, isFirstPartyApiBackend as Wu, isFirstPartyAnthropicBaseUrl as fo } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Fhe, L1, externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { isCancel, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { Xt, _0, er, Qa, Zkn, dm, THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, isFirstPartyApiBackend, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { Fhe, L1, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { _ir, jt, kvt, rS, g0, Tir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { air } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
 import { She, A7t, whe } from "../Git-Worktree/chunk-bk9696gx.js";
-import { getArtifactPublishStubDir as Gd } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { getArtifactPublishStubDir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
   Bfe,
   Td,
@@ -399,19 +399,19 @@ import {
   GYe,
   Ni,
   iP,
-  isUntrustedUncPath as LJ,
-  isUntrustedAutomountPath as QCe,
-  hasSuspiciousWindowsPathPattern as DN,
-  allWorkingDirectories as rb,
-  pathInWorkingPath as Ap,
-  matchingRuleForInput as vi,
-  checkReadableInternalPath as BK,
+  isUntrustedUncPath,
+  isUntrustedAutomountPath,
+  hasSuspiciousWindowsPathPattern,
+  allWorkingDirectories,
+  pathInWorkingPath,
+  matchingRuleForInput,
+  checkReadableInternalPath,
 } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { isPolicyAllowed as Mt, policyDeniedReason as op } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed, policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { tA, NG, qy, DT, r$e } from "../MCP客户端/chunk-3kmsshb6.js";
 import { MC, rA } from "../插件系统/chunk-7s6mt1vg.js";
-import { shouldAllowManagedHooksOnly as S_, shouldDisableAllHooksIncludingManaged as FC, updateHooksConfigSnapshot as PD } from "../Skills技能/chunk-sapykxw7.js";
-import { resetSettingsCacheWithBackendRead as GJe } from "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
+import { shouldAllowManagedHooksOnly, shouldDisableAllHooksIncludingManaged, updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
+import { resetSettingsCacheWithBackendRead } from "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
 import { Dc } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
 import {
   gnr,
@@ -425,16 +425,16 @@ import {
   S$e,
   Xy,
 } from "../权限系统/chunk-t3b7pg2x.js";
-import { getToolPermissionContext as ce, getEffortValue as Qc } from "../权限系统/chunk-fjrcf22x.js";
-import { unwrapAbortReason as Ua } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { primePlanSlugCollisions as lh, getPlansDirectory as Ea } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
+import { unwrapAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { primePlanSlugCollisions, getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { Pl, yl, Jtr } from "../Teammates团队/chunk-thxapyam.js";
 import { zy, bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import {
   Ds,
   xF,
-  isCommandEnabled as zp,
-  findCommand as Di,
+  isCommandEnabled,
+  findCommand,
   PGn,
   g4e,
   $Gn,
@@ -549,14 +549,14 @@ import {
   SDe,
   mBt,
   vO,
-  getBuiltInAgents as zte,
-  agentMcpSpecsToScopedConfigs as $dn,
-  toAgentInfos as V4e,
-  isBuiltInAgent as xa,
-  rebuildAgentDefinitions as Lue,
-  getAgentDefinitionsWithOverrides as SE,
-  parseAgentsFromJson as X4e,
-  validateAgentsJson as Bdn,
+  getBuiltInAgents,
+  agentMcpSpecsToScopedConfigs,
+  toAgentInfos,
+  isBuiltInAgent,
+  rebuildAgentDefinitions,
+  getAgentDefinitionsWithOverrides,
+  parseAgentsFromJson,
+  validateAgentsJson,
   Ywe,
   CDe,
   Kdn,
@@ -573,7 +573,7 @@ import {
   xM,
   Vp,
   u3,
-  isSkillOff as Tk,
+  isSkillOff,
   ggt,
   wX,
   hgt,
@@ -595,7 +595,7 @@ import {
   E4n,
   rde,
   v4n,
-  fileHistoryEnabled as iw,
+  fileHistoryEnabled,
   qpn,
   pu,
   q4n,
@@ -659,14 +659,14 @@ import {
   z5n,
   V5n,
   Vne,
-  stripDangerousPermissionsForAutoMode as qM,
-  transitionPermissionMode as Ik,
-  initialPermissionModeFromCLI as qmn,
-  initializeToolPermissionContext as zmn,
-  settleProvisionalStartupMode as N6t,
-  isAutoModeGateEnabled as cC,
-  isDefaultPermissionModeAuto as Ymn,
-  activatePlanAutoMode as k_t,
+  stripDangerousPermissionsForAutoMode,
+  transitionPermissionMode,
+  initialPermissionModeFromCLI,
+  initializeToolPermissionContext,
+  settleProvisionalStartupMode,
+  isAutoModeGateEnabled,
+  isDefaultPermissionModeAuto,
+  activatePlanAutoMode,
   zM,
   Ode,
   G6t,
@@ -682,8 +682,8 @@ import {
   rY,
   oY,
   s5e,
-  applyHookSessionTitle as i5e,
-  executeUserPromptSubmitHooks as cMe,
+  applyHookSessionTitle,
+  executeUserPromptSubmitHooks,
   Ws,
   P8n,
   dC,
@@ -695,8 +695,8 @@ import {
   G8n,
   nyt,
   EWt,
-  getAttachmentMessages as Jne,
-  createAttachmentMessage as pn,
+  getAttachmentMessages,
+  createAttachmentMessage,
   fu,
   Z8n,
   Ql,
@@ -718,31 +718,31 @@ import {
   Xde,
   gyt,
   hyt,
-  getMcpServerSignature as cj,
-  suppressedConnectorsEqual as D5e,
-  dedupClaudeAiMcpServers as CMe,
-  isMcpServerDenied as Yde,
-  filterMcpServersByPolicy as yH,
-  mcpDialBlockCause as Yp,
-  filterDynamicMcpServersByPolicy as vEe,
-  MCP_SETTINGS_SCOPES as N3,
-  getMcpConfigsByScope as nd,
-  getClaudeCodeMcpConfigs as SH,
-  consumeBridgeMcpCarrierMarker as qgn,
-  verifyBridgeCarrierPrompt as zgn,
-  parseMcpConfig as vMe,
-  parseMcpConfigFromFilePath as L5e,
-  doesEnterpriseMcpConfigExist as Zm,
-  headlessSyncsClaudeAiConnectors as M5e,
-  areMcpConfigsAllSdkType as Vgn,
-  areMcpConfigsAllowedWithEnterpriseMcpConfig as NWt,
-  isMcpServerDisabled as Uo,
-  isClaudeInChromeAllowed as rD,
-  shouldEnableClaudeInChrome as N5e,
-  shouldAutoEnableClaudeInChrome as Kgn,
-  markClaudeInChromeUnwired as RMe,
-  getClaudeInChromeMcpServerConfig as kMe,
-  setupClaudeInChrome as Zde,
+  getMcpServerSignature,
+  suppressedConnectorsEqual,
+  dedupClaudeAiMcpServers,
+  isMcpServerDenied,
+  filterMcpServersByPolicy,
+  mcpDialBlockCause,
+  filterDynamicMcpServersByPolicy,
+  MCP_SETTINGS_SCOPES,
+  getMcpConfigsByScope,
+  getClaudeCodeMcpConfigs,
+  consumeBridgeMcpCarrierMarker,
+  verifyBridgeCarrierPrompt,
+  parseMcpConfig,
+  parseMcpConfigFromFilePath,
+  doesEnterpriseMcpConfigExist,
+  headlessSyncsClaudeAiConnectors,
+  areMcpConfigsAllSdkType,
+  areMcpConfigsAllowedWithEnterpriseMcpConfig,
+  isMcpServerDisabled,
+  isClaudeInChromeAllowed,
+  shouldEnableClaudeInChrome,
+  shouldAutoEnableClaudeInChrome,
+  markClaudeInChromeUnwired,
+  getClaudeInChromeMcpServerConfig,
+  setupClaudeInChrome,
   epe,
   MEe,
   Re,
@@ -755,26 +755,26 @@ import {
   $l,
   DMe,
   ghn,
-  sessionIdExists as Nyt,
-  isTranscriptPersistenceDisabled as hl,
-  isCustomTitleEnabled as ipe,
-  recordQueueOperation as jyt,
-  saveAiGeneratedTitle as pj,
-  isBridgeBindingForeign as cpe,
-  isCompactPairWithheldFromRemote as bY,
-  getCurrentSessionAgentColor as upe,
-  saveAgentSetting as QEe,
-  cacheSessionTitle as h$,
-  cacheAgentName as ZEe,
-  titleCacheStillOn as $Me,
-  cacheHookSessionTitle as eAe,
-  loadAllSubagentTranscriptsFromDisk as Zhn,
+  sessionIdExists,
+  isTranscriptPersistenceDisabled,
+  isCustomTitleEnabled,
+  recordQueueOperation,
+  saveAiGeneratedTitle,
+  isBridgeBindingForeign,
+  isCompactPairWithheldFromRemote,
+  getCurrentSessionAgentColor,
+  saveAgentSetting,
+  cacheSessionTitle,
+  cacheAgentName,
+  titleCacheStillOn,
+  cacheHookSessionTitle,
+  loadAllSubagentTranscriptsFromDisk,
   __n,
-  executeStopHooks as xY,
-  MANAGED_HOOKS_TIER as p8e,
-  getStopHookMessage as f8e,
-  getUserPromptSubmitHookBlockingMessage as IY,
-  hasBlockingResult as P_n,
+  executeStopHooks,
+  MANAGED_HOOKS_TIER,
+  getStopHookMessage,
+  getUserPromptSubmitHookBlockingMessage,
+  hasBlockingResult,
   PY,
   j_,
   hC,
@@ -788,20 +788,20 @@ import {
   sAe,
   PXn,
   iAe,
-  warmCommandSourceCaches as T8e,
-  getCommands as kf,
-  clearCommandMemoizationCaches as rR,
-  isSkillToolCommand as Spe,
-  toSlashCommands as NY,
+  warmCommandSourceCaches,
+  getCommands,
+  clearCommandMemoizationCaches,
+  isSkillToolCommand,
+  toSlashCommands,
   Tpe,
   LXn,
   MXn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isViolinWoodEnabled as Su, isViolinWoodEnabledCached as ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
 import { Uk, ZAe, ti, _Qn, eCe } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { of, N$e, Qn, AR } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { isBridgeEnabled as lb, isRemoteControlOfferable as Ave, isRunningInRemoteEnvironment as UC, isBridgeStateFramesEnabled as ZK, isBridgePartialMessagesEnabled as IAn } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isBridgeEnabled, isRemoteControlOfferable, isRunningInRemoteEnvironment, isBridgeStateFramesEnabled, isBridgePartialMessagesEnabled } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import {
   hN,
   ig,
@@ -821,10 +821,10 @@ import {
   roe,
 } from "../插件系统/chunk-ajtn749s.js";
 import { bd, PH, wK, JS, yN, ufe, ZI, _Xe, yXe } from "../插件系统/chunk-hh8f1qrw.js";
-import { isCustomizationDisabled as Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { f7e, bo } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
 import { Dj, dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
-import { claimSessionNameAtStartup as pSn } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { claimSessionNameAtStartup } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
 import {
   XI,
   Pbt,
@@ -837,31 +837,31 @@ import {
   Dbt,
   WJn,
 } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { isArtifactToolEnabled as yR, isPublishToolEnabled as Lfe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { isArtifactToolEnabled, isPublishToolEnabled } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { zr } from "../Teammates团队/chunk-3k2smxfn.js";
 import { Q3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { getTeamFilePath as ioe, readTeamFileAsync as Pf } from "../Teammates团队/chunk-6b13bhw1.js";
+import { getTeamFilePath, readTeamFileAsync } from "../Teammates团队/chunk-6b13bhw1.js";
 import { v$e, Eo, XH } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { Per } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { hG } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
-import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
-import { isKairosCronEnabled as EC } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { Ts, VXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
-import { reportBridgePermissionMode as Ioe, reportBridgeModel as xG } from "../权限系统/chunk-1y2g140m.js";
+import { reportBridgePermissionMode, reportBridgeModel } from "../权限系统/chunk-1y2g140m.js";
 import { Fy } from "../会话-历史-恢复/chunk-m1xj4s02.js";
-import { getOwnJobShortId as gu, writeStateAtomic as Ti, logJobWriteError as Mi, readJobState as Zn, syncRespawnFlag as sR } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { getOwnJobShortId, writeStateAtomic, logJobWriteError, readJobState, syncRespawnFlag } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { Dpe, Ayn } from "../权限系统/chunk-8rrcddth.js";
 import { hw, MYn, Fpe } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { dNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
-import { collectContextData as bIe } from "../上下文压缩-Compact/chunk-40jcpbzh.js";
+import { collectContextData } from "../上下文压缩-Compact/chunk-40jcpbzh.js";
 import { xWn, HWn } from "../Artifact发布-渲染/chunk-p1dkvpxj.js";
-import { killAutoReactSubscriptions as F4 } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
+import { killAutoReactSubscriptions } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
 import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { S4 } from "../会话-历史-恢复/chunk-ybcvb652.js";
-import { nO, FleetNudgeStore as jye } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { nO, FleetNudgeStore } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { IIe } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { captureAdmin3PSteeringSnapshot as qDt } from "../Bedrock-Vertex/chunk-bnft4099.js";
+import { captureAdmin3PSteeringSnapshot } from "../Bedrock-Vertex/chunk-bnft4099.js";
 import { hLt } from "../../01-核心基础设施/共享小工具-未细化/chunk-drgqeenr.js";
 import { BAn, qJe, O4t, b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { _ee, c3e, fIe, knn } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
@@ -871,12 +871,12 @@ import { mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { o, t, ct, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Lze } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
 import { ui, fa, $o, vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { shouldOfferTerminalSetup as gle } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { shouldOfferTerminalSetup } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { flushAnalyticsSinks as kF } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
+import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import {
   d0e,
   o9e,
@@ -896,14 +896,14 @@ import {
 import { Xae, zst } from "../Skills技能/Skills技能.dpy2ket5.js";
 import { KFn } from "../../01-核心基础设施/共享小工具-未细化/chunk-th8d86j4.js";
 import { v3n } from "../权限系统/chunk-8zbmhy8a.js";
-import { printCliError as rM, cliError as un, cliWarn as Ey, exitAfterAnalyticsFlush as ys, cliErrorAfterAnalyticsFlush as di } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { bootstrapFetchCanConvergeSlot as trn, fetchBootstrapData as f7 } from "../上下文压缩-Compact/chunk-npckj9cm.js";
+import { printCliError, cliError, cliWarn, exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { bootstrapFetchCanConvergeSlot, fetchBootstrapData } from "../上下文压缩-Compact/chunk-npckj9cm.js";
 import { gnn, dlt, gee, l9, HDt, hnn, _nn } from "../CodeReview/chunk-rp57gfa9.js";
-import { CLAUDE_AGENT as uue } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
+import { CLAUDE_AGENT } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
 import { N9n } from "../自动更新-安装/chunk-548xet6h.js";
 import { Vae, gQt, CHe } from "../Git-Worktree/chunk-xercceag.js";
 import { b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
-import { isWebSetupEnabled as nIe } from "../斜杠命令-框架/chunk-a4vej95c.js";
+import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
 import { kbe, tpt, tH, xbe, h2, $ce, JPe, B4 } from "../用量额度-限额/chunk-1bfn62xh.js";
 import { Lye, PUn } from "../../01-核心基础设施/设置-配置/chunk-9m8zsynn.js";
 import { R9n, x9n, Z1t } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
@@ -940,27 +940,27 @@ import { Twt } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { XE } from "../../01-核心基础设施/共享小工具-未细化/chunk-6eskfcpn.js";
 import { jy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
 import { Y$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
-import { isBypassPermissionsModeDisabled as ey } from "../权限系统/chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
 import { mt, Vh } from "../工具Task-Agent调度/chunk-1px84m19.js";
 import { e5 } from "../Bridge-RemoteControl/chunk-eg5a0eq0.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME as vd } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { Dvt } from "../上下文压缩-Compact/chunk-qbdgst52.js";
 import { gS } from "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
 import { s, T, se, v, c, it, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { av } from "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
-import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Wxe, Gxe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { pe, p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { constants as Fa } from "fs";
+import { constants } from "fs";
 import {
   lstat as Mg,
   open as Tg,
-  readlink as Ig,
+  readlink,
   realpath as tc,
 } from "fs/promises";
 function R8(w, I, O) {
@@ -982,14 +982,14 @@ function $z(w, I) {
 }
 function Da(w, I) {
   if (gp(w)) return "nt_namespace";
-  if (LJ(w, I)) return "untrusted_unc";
-  if (QCe(w, I)) return "untrusted_automount";
-  if (DN(w, I)) return "suspicious_windows_spelling";
+  if (isUntrustedUncPath(w, I)) return "untrusted_unc";
+  if (isUntrustedAutomountPath(w, I)) return "untrusted_automount";
+  if (hasSuspiciousWindowsPathPattern(w, I)) return "suspicious_windows_spelling";
   return;
 }
 var Dg = 1e6,
-  REMOTE_READ_OPEN_FLAGS = Fa.O_RDONLY | (Fa.O_NONBLOCK ?? 0) | (Fa.O_NOCTTY ?? 0),
-  nc = { realpath: tc, lstat: Mg, readlink: Ig },
+  REMOTE_READ_OPEN_FLAGS = constants.O_RDONLY | (constants.O_NONBLOCK ?? 0) | (constants.O_NOCTTY ?? 0),
+  nc = { realpath: tc, lstat: Mg, readlink: readlink },
   REMOTE_READ_MAX_BYTES = 1e7,
   Og = new j(() => ({ promise: void 0 }));
 function Fg() {
@@ -1035,7 +1035,7 @@ async function isCanonicalPathContained(w, I) {
   try {
     O = await Fg();
   } catch {}
-  for (let U of rb(I)) {
+  for (let U of allWorkingDirectories(I)) {
     if (
       I.additionalWorkingDirectories.has(U) &&
       !Lg(U, I.trustedNetworkDirectories) &&
@@ -1049,13 +1049,13 @@ async function isCanonicalPathContained(w, I) {
       continue;
     }
     if (Uxe(U, V, wz())) continue;
-    if (Ap(w, V, { caseFold: !1, skipPrivateAlias: !0, uncShapeParity: !0 }))
+    if (pathInWorkingPath(w, V, { caseFold: !1, skipPrivateAlias: !0, uncShapeParity: !0 }))
       return !0;
   }
   for (let U of O)
-    if (Ap(w, U, { caseFold: !1, skipPrivateAlias: !0, uncShapeParity: !0 }))
+    if (pathInWorkingPath(w, U, { caseFold: !1, skipPrivateAlias: !0, uncShapeParity: !0 }))
       return !0;
-  return BK(w, {}, [w], { remoteSurface: !0 }).behavior === "allow";
+  return checkReadableInternalPath(w, {}, [w], { remoteSurface: !0 }).behavior === "allow";
 }
 var Ug = {
   nt_namespace:
@@ -1094,7 +1094,7 @@ async function readFileForRemote(w, I, O, U = "utf-8", V, te = nc) {
       Me = R8(w, me, O.trustedNetworkDirectories);
     if (!Me.ok) throw lr(w, Ug[Me.reason]);
     for (let Oe of Me.pathsToCheck)
-      if (!dT(Oe, O, "read").allowed || vi(Oe, O, "read", "ask") !== null)
+      if (!dT(Oe, O, "read").allowed || matchingRuleForInput(Oe, O, "read", "ask") !== null)
         throw lr(w);
     let Se = await Tg(me, REMOTE_READ_OPEN_FLAGS),
       xe,
@@ -1112,7 +1112,7 @@ async function readFileForRemote(w, I, O, U = "utf-8", V, te = nc) {
       if ($e === void 0) throw lr(w);
       if (
         ((Ae = $e),
-        !dT(Ae, O, "read").allowed || vi(Ae, O, "read", "ask") !== null)
+        !dT(Ae, O, "read").allowed || matchingRuleForInput(Ae, O, "read", "ask") !== null)
       )
         throw lr(w);
       if ($z(Ae, O.trustedNetworkDirectories) !== void 0) throw lr(w);
@@ -1125,7 +1125,7 @@ async function readFileForRemote(w, I, O, U = "utf-8", V, te = nc) {
     if (V)
       i("tengu_bridge_read_file_served", {
         success: !0,
-        source: u(V),
+        source: fromEnum(V),
         size_bytes: xe.length,
         requested_max_bytes: ne,
         truncated: De,
@@ -1148,7 +1148,7 @@ async function readFileForRemote(w, I, O, U = "utf-8", V, te = nc) {
       n(`readFileForRemote failed pre-deny: ${Me}`, { level: "error" });
     } catch {}
     try {
-      if (V) i("tengu_bridge_read_file_served", { success: !1, source: u(V) });
+      if (V) i("tengu_bridge_read_file_served", { success: !1, source: fromEnum(V) });
     } catch {}
     if (me instanceof R && me.message.startsWith("read denied: ")) throw me;
     throw lr(w);
@@ -1181,8 +1181,8 @@ function zW({ startedAt: w, common: I, variant: O }) {
   };
   return { ...I, ...O, ...U };
 }
-import { randomBytes as Xg } from "crypto";
-import { createWriteStream as Jg } from "fs";
+import { randomBytes } from "crypto";
+import { createWriteStream } from "fs";
 import { mkdir as Zg, rm as ty } from "fs/promises";
 import { join as lc } from "path";
 class La {
@@ -1315,8 +1315,8 @@ async function rc(
         },
         me,
       ),
-      Se ? !1 : hh(),
-      Se ? "" : L2e(),
+      Se ? !1 : getIsGit(),
+      Se ? "" : getHead(),
     ]),
     $e = Jtr(I, O),
     We = { ...xe, ...$e },
@@ -1550,10 +1550,10 @@ var dc = "https://github.com/anthropics/claude-code/issues",
 function Mae(w = "/feedback") {
   let I = uV(w);
   if (I !== null) return { kind: "disabled", reason: I };
-  let O = Pe();
+  let O = getAPIProvider();
   if (O !== "firstParty")
     return { kind: "bundle", cause: "provider", label: ny[O] };
-  if (l5().error)
+  if (getAuthHeaders().error)
     return {
       kind: "bundle",
       cause: "no_creds",
@@ -1585,7 +1585,7 @@ function e0t() {
   }
 }
 function t0t() {
-  return hz().map((w) => {
+  return getInMemoryErrors().map((w) => {
     let I = { ...w };
     if (I && typeof I.error === "string") I.error = qr(I.error);
     return I;
@@ -1719,7 +1719,7 @@ async function uc({
         messages: w,
         backgroundTasks: V,
         transcripts: te,
-        diskSubagentTranscripts: Zhn(Me),
+        diskSubagentTranscripts: loadAllSubagentTranscriptsFromDisk(Me),
         scope: U,
         maxRawTranscriptBytes: tHe,
         excludeThirdPartyTranscripts: me,
@@ -1774,27 +1774,27 @@ async function uc({
   if (De.length > 0) {
     if (ZHt($e) > v8)
       return (
-        g("feedback_precompact", "over_payload_cap"),
+        logFeatureSad("feedback_precompact", "over_payload_cap"),
         { payload: { ...$e, transcript: Oe }, thirdPartyDroppedCount: We }
       );
-    y("feedback_precompact");
+    logFeatureOk("feedback_precompact");
   } else if (DMe(w) !== -1 && !Se.thirdPartyExclusions.rawTranscript)
-    g("feedback_precompact", "empty_recovery");
+    logFeatureSad("feedback_precompact", "empty_recovery");
   return { payload: $e, thirdPartyDroppedCount: We };
 }
 function Ha(w) {
   if (w instanceof Error) {
     let I = Error(qr(w.message));
     if (w.stack) I.stack = qr(w.stack);
-    h(I);
+    logError(I);
   } else {
     let I = qr(String(w));
-    h(Error(I));
+    logError(Error(I));
   }
 }
 async function n6e(w, I, O) {
   if (St()) return { success: !1 };
-  if (!Mt("allow_product_feedback"))
+  if (!isPolicyAllowed("allow_product_feedback"))
     return { success: !1, failureReason: "policy_blocked" };
   let U = 0;
   try {
@@ -1805,7 +1805,7 @@ async function n6e(w, I, O) {
         payloadTooLarge: !0,
         failureReason: "payload_too_large_precheck",
       };
-    let te = await T_(
+    let te = await withOAuth401Retry(
       () =>
         ht.post("/api/claude_cli_feedback", V, {
           headers: { "Content-Type": "application/json" },
@@ -1841,14 +1841,14 @@ async function n6e(w, I, O) {
     else Ha(Error(ne));
     return { success: !1, failureReason: "http_error", statusCode: te.status };
   } catch (V) {
-    if (qi(V)) return { success: !1 };
+    if (isCancel(V)) return { success: !1 };
     if (V instanceof RangeError)
       return {
         success: !1,
         payloadTooLarge: !0,
         failureReason: "payload_too_large_range_error",
       };
-    if (xd(V)) {
+    if (isAxiosError(V)) {
       if (V.response?.status === 413)
         return {
           success: !1,
@@ -1883,7 +1883,7 @@ async function n6e(w, I, O) {
     }
     if (cc(V)) n(qr(l(V)));
     else Ha(V);
-    if (xd(V) && V.response)
+    if (isAxiosError(V) && V.response)
       return {
         success: !1,
         failureReason: "http_error",
@@ -1892,7 +1892,7 @@ async function n6e(w, I, O) {
     return {
       success: !1,
       failureReason:
-        xd(V) && V.code === "ECONNABORTED" ? "timeout" : "network_error",
+        isAxiosError(V) && V.code === "ECONNABORTED" ? "timeout" : "network_error",
     };
   }
 }
@@ -1905,14 +1905,14 @@ async function KNn({
   lastInterruptedAssistantAPIMessageId: te,
   credentials: ne,
 }) {
-  if (Pe() !== "firstParty")
+  if (getAPIProvider() !== "firstParty")
     return (
-      f("feedback_survey_followup", "not_first_party"),
+      logFeatureBad("feedback_survey_followup", "not_first_party"),
       { success: !1, failureReason: "not_first_party" }
     );
-  if (!Mt("allow_product_feedback"))
+  if (!isPolicyAllowed("allow_product_feedback"))
     return (
-      f("feedback_survey_followup", "policy_blocked"),
+      logFeatureBad("feedback_survey_followup", "policy_blocked"),
       { success: !1, failureReason: "policy_blocked" }
     );
   let me = OX(V),
@@ -1947,8 +1947,8 @@ async function KNn({
       survey_type: U,
     },
     Se = await n6e(Me, void 0, ne);
-  if (Se.success) y("feedback_survey_followup");
-  else f("feedback_survey_followup", Se.failureReason ?? "unknown");
+  if (Se.success) logFeatureOk("feedback_survey_followup");
+  else logFeatureBad("feedback_survey_followup", Se.failureReason ?? "unknown");
   return Se;
 }
 async function N_e({
@@ -2006,11 +2006,11 @@ async function N_e({
   }
   if ($e.success) {
     (i("tengu_bug_report_submitted", {
-      surface: u(O),
+      surface: fromEnum(O),
       remote_workspace: S(xe.remoteWorkspace ? "true" : "false"),
       retried_after_too_large: !Ae.success && Ae.payloadTooLarge === !0,
-      strip_level: Yr(We),
-      third_party_transcripts_dropped: Yr(De),
+      strip_level: fromNumber(We),
+      third_party_transcripts_dropped: fromNumber(De),
       feedback_id: Ee($e.feedbackId),
       last_assistant_message_id: Ee(Oe),
       last_assistant_api_message_id: Ee(xe.latestAssistantAPIMessageId),
@@ -2019,8 +2019,8 @@ async function N_e({
       ),
       ...(me && {
         survey_appearance_id: Ee(me.appearanceId),
-        survey_response: u(me.response),
-        survey_type: u(me.surveyType),
+        survey_response: fromEnum(me.response),
+        survey_type: fromEnum(me.surveyType),
       }),
     }),
       IUe("tengu_bug_report_description", {
@@ -2028,17 +2028,17 @@ async function N_e({
         descriptionLength: I.length,
       }));
     let Ye = !Ae.success && Ae.payloadTooLarge === !0;
-    if (Ye) g("feedback_submit", "payload_stripped");
-    else y("feedback_submit");
+    if (Ye) logFeatureSad("feedback_submit", "payload_stripped");
+    else logFeatureOk("feedback_submit");
     return { success: !0, feedbackId: $e.feedbackId, retriedAfterTooLarge: Ye };
   }
   if ($e.failureReason)
-    (f("feedback_submit", $e.failureReason),
+    (logFeatureBad("feedback_submit", $e.failureReason),
       i("tengu_bug_report_failed", {
-        surface: u(O),
+        surface: fromEnum(O),
         remote_workspace: S(xe.remoteWorkspace ? "true" : "false"),
-        reason: u($e.failureReason),
-        status_code: KP($e.statusCode) ?? S(""),
+        reason: fromEnum($e.failureReason),
+        status_code: fromNumberOpt($e.statusCode) ?? S(""),
         first_attempt_too_large: !Ae.success && Ae.payloadTooLarge === !0,
       }));
   return {
@@ -2049,13 +2049,13 @@ async function N_e({
   };
 }
 async function fJt(w, I = "feedback.json") {
-  let V = `cc-${new Date().toISOString().replace(/[-:]/g, "").replace("T", "-").slice(0, 15)}-${Xg(3).toString("hex")}`,
+  let V = `cc-${new Date().toISOString().replace(/[-:]/g, "").replace("T", "-").slice(0, 15)}-${randomBytes(3).toString("hex")}`,
     te = lc(be(), "feedback-bundles"),
     ne = lc(te, `${V}.zip`);
   try {
     await Zg(te, { recursive: !0, mode: 448 });
     let { Zip: me, ZipDeflate: Me } = await import("../../00-第三方库/_未识别/第三方库-其他/zipSync.gv6wj3ch.js"),
-      Se = Jg(ne, { mode: 384 });
+      Se = createWriteStream(ne, { mode: 384 });
     return (
       await new Promise((xe, De) => {
         Se.on("error", De);
@@ -2066,14 +2066,14 @@ async function fJt(w, I = "feedback.json") {
           Ae = new Me(I);
         (Oe.add(Ae), Ae.push(w, !0), Oe.end());
       }),
-      y("feedback_bundle"),
+      logFeatureOk("feedback_bundle"),
       { success: !0, bundleId: V, zipPath: ne }
     );
   } catch (me) {
     return (
       await ty(ne, { force: !0 }).catch(() => {}),
-      h(me),
-      f("feedback_bundle", "write_failed"),
+      logError(me),
+      logFeatureBad("feedback_bundle", "write_failed"),
       { success: !1, error: l(me) }
     );
   }
@@ -2105,8 +2105,8 @@ async function mJt({
     Me = Zxe(xe, Ga, Wa);
   } catch (Se) {
     return (
-      h(Se),
-      f("feedback_bundle", "write_failed"),
+      logError(Se),
+      logFeatureBad("feedback_bundle", "write_failed"),
       { success: !1, error: l(Se) }
     );
   }
@@ -2163,7 +2163,7 @@ function py(w) {
   let I = up(pt(w))
     .replace(/[\x00-\x1f\x7f-\x9f]/g, "")
     .trim();
-  return Xe(oe(I, cy), dy);
+  return truncateToWidth(oe(I, cy), dy);
 }
 var gc = "(value set by your organization)";
 function Fz(w, I) {
@@ -2216,10 +2216,10 @@ function hJt(w) {
   };
 }
 function Hot() {
-  let w = bn(),
+  let w = getSettings_DEPRECATED(),
     I;
-  if (ua()) {
-    if (((I = { auto: Ns() }), OC())) I.team = Wy();
+  if (isAutoMemoryEnabled()) {
+    if (((I = { auto: getAutoMemPath() }), OC())) I.team = Wy();
   }
   let O;
   return (
@@ -2229,14 +2229,14 @@ function Hot() {
     {
       cwd: Q(),
       sessionId: K(),
-      apiKeySource: hRn(),
+      apiKeySource: getApiKeySourceSafe(),
       betas: Up(),
       outputStyle: w?.outputStyle ?? uT,
       analyticsDisabled: mg(),
-      productFeedbackDisabled: !Mt("allow_product_feedback"),
+      productFeedbackDisabled: !isPolicyAllowed("allow_product_feedback"),
       memoryPaths: I,
       messagingSocketPath: O,
-      workerEpoch: ri() ? a.CLAUDE_CODE_WORKER_EPOCH : void 0,
+      workerEpoch: isViolinWoodEnabledCached() ? a.CLAUDE_CODE_WORKER_EPOCH : void 0,
       powerShellPath: P() === "windows" ? $Gn() : void 0,
       footerIndicator: o0t(),
     }
@@ -2371,8 +2371,8 @@ function hc(w, I, O, U, V, te, ne, me, Me, Se, xe) {
       is_wakeup: Ze,
       prompt_index: at,
       prompt_length: Ae.length,
-      ...(Se && { prompt_source: u(Se) }),
-      ...(Me && { effort_level: u(Me) }),
+      ...(Se && { prompt_source: fromEnum(Se) }),
+      ...(Me && { effort_level: fromEnum(Me) }),
       ...(Nt && { interrupted_message_id: Ee(Nt) }),
     }),
     I.length > 0)
@@ -2483,7 +2483,7 @@ async function rHe({
     xe,
     De,
     Oe,
-    ce(V).mode,
+    getToolPermissionContext(V).mode,
     Ae,
     $e,
     Ye,
@@ -2510,7 +2510,7 @@ async function rHe({
     ro === !0 && Lt.messages.length > 0)
   )
     Lt.messages.push(
-      pn({
+      createAttachmentMessage({
         type: "poll_events",
         deliveredVia: "value_dispatch",
         envelopes: [],
@@ -2563,7 +2563,7 @@ async function rHe({
         result: Lt,
         promptSource: At,
         wakeupSource: Ze,
-        tiers: p8e,
+        tiers: MANAGED_HOOKS_TIER,
       }),
       et =
         ln.blocked !== void 0
@@ -2625,7 +2625,7 @@ async function rHe({
     (Ts("prompt_submit_hooks_ms", performance.now() - Tn, Tn),
     en.proceeds.sessionTitle)
   )
-    await i5e(
+    await applyHookSessionTitle(
       V.session.id,
       en.proceeds.sessionTitle,
       V.storageV5,
@@ -2641,7 +2641,7 @@ async function vc(w, I, O) {
     );
     w.messages.push(...(await U(w.messages, I, O)));
   } catch (U) {
-    h(U);
+    logError(U);
   }
 }
 function by(w, I, O) {
@@ -2710,7 +2710,7 @@ async function ky({
   }
   te.nestedMemoryAttachmentTriggers?.push(...V);
   let xe = await UTe(
-    Jne(
+    getAttachmentMessages(
       O,
       te,
       null,
@@ -2766,7 +2766,7 @@ async function wy(
     zt !== !1
   )
     return (
-      y("prompt_submit_empty"),
+      logFeatureOk("prompt_submit_empty"),
       { messages: [Ht(Sc, "warning")], shouldQuery: !1, resultText: Sc }
     );
   let Tt = null,
@@ -2859,25 +2859,25 @@ async function wy(
         if (Je) tt = Je.commandName;
       }
     }
-    let He = tt ? Di(tt, O.options.commands) : void 0,
+    let He = tt ? findCommand(tt, O.options.commands) : void 0,
       Qe = et?.args ?? "";
     if (!He && tt && et && !et.isMcp && Qe.trim()) {
       let Je = Qe.trimStart(),
         Ot = Je.search(/\s/),
         nn = Ot === -1 ? Je : Je.slice(0, Ot),
-        Fn = Di(`${tt}:${nn}`, O.options.commands);
+        Fn = findCommand(`${tt}:${nn}`, O.options.commands);
       if (Fn) ((He = Fn), (Qe = Ot === -1 ? "" : Je.slice(Ot + 1).trimStart()));
     }
     if (He) {
-      let Je = Tk(He) ? void 0 : xbe(He, Qe),
-        Ot = Je ? Di(Je.targetName, O.options.commands) : void 0,
-        nn = Je && Ot && zp(Ot) ? Ot : He;
+      let Je = isSkillOff(He) ? void 0 : xbe(He, Qe),
+        Ot = Je ? findCommand(Je.targetName, O.options.commands) : void 0,
+        nn = Je && Ot && isCommandEnabled(Ot) ? Ot : He;
       if (
         M_t(nn, {
           commandName: nn.name,
           userTypedThisTurn: !1,
           isMainSession: !0,
-          permissionContext: ce(O),
+          permissionContext: getToolPermissionContext(O),
         }) === null
       )
         rn = !1;
@@ -2921,10 +2921,10 @@ async function wy(
         void 0,
         Tn,
         {
-          executeUserPromptSubmitHooks: cMe,
-          getUserPromptSubmitHookBlockingMessage: IY,
-          executeStopHooks: xY,
-          getStopHookMessage: f8e,
+          executeUserPromptSubmitHooks: executeUserPromptSubmitHooks,
+          getUserPromptSubmitHookBlockingMessage: getUserPromptSubmitHookBlockingMessage,
+          executeStopHooks: executeStopHooks,
+          getStopHookMessage: getStopHookMessage,
         },
         at,
         Qt,
@@ -2941,7 +2941,7 @@ async function wy(
   Rc("query_attachment_loading_start");
   let cn = en
       ? await UTe(
-          Jne(
+          getAttachmentMessages(
             Tt,
             O,
             te ?? null,
@@ -2960,7 +2960,7 @@ async function wy(
       : [],
     ln =
       Qt && Qt.length > 0
-        ? pn({ type: "inlined_image_paths", paths: Qt })
+        ? createAttachmentMessage({ type: "inlined_image_paths", paths: Qt })
         : null;
   if (
     (Rc("query_attachment_loading_end"),
@@ -2973,7 +2973,7 @@ async function wy(
               commandName: Qe.name,
               userTypedThisTurn: !1,
               isMainSession: O.agentId === void 0,
-              permissionContext: ce(O),
+              permissionContext: getToolPermissionContext(O),
             }) !== null
         : void 0,
       He = await et(
@@ -2995,10 +2995,10 @@ async function wy(
         $e ? void 0 : Ze,
         Tn,
         {
-          executeUserPromptSubmitHooks: cMe,
-          getUserPromptSubmitHookBlockingMessage: IY,
-          executeStopHooks: xY,
-          getStopHookMessage: f8e,
+          executeUserPromptSubmitHooks: executeUserPromptSubmitHooks,
+          getUserPromptSubmitHookBlockingMessage: getUserPromptSubmitHookBlockingMessage,
+          executeStopHooks: executeStopHooks,
+          getStopHookMessage: getStopHookMessage,
         },
         at,
         Qt,
@@ -3039,7 +3039,7 @@ async function wy(
       me,
       De,
       We,
-      Xy(O.options.mainLoopModel, Qc(O)),
+      Xy(O.options.mainLoopModel, getEffortValue(O)),
       U,
       at,
     ),
@@ -3049,17 +3049,17 @@ async function wy(
 function Py({ querySource: w, context: I }) {
   if (Ei) {
     let O = () =>
-      Ja() && w?.startsWith("repl_main_thread") === !0 && !I.agentId;
+      isActingAsBgJob() && w?.startsWith("repl_main_thread") === !0 && !I.agentId;
     return {
       markTurnActive: (U) => {
         try {
           if (O()) {
             let V = Cc(I);
-            (Ei().markTurnActive(V, gu(), U), (V.kicked = !1));
+            (Ei().markTurnActive(V, getOwnJobShortId(), U), (V.kicked = !1));
           }
         } catch (V) {
           if (yt(V)) return;
-          h(V);
+          logError(V);
         }
       },
       settleTurnEnd: async (U) => {
@@ -3067,7 +3067,7 @@ function Py({ querySource: w, context: I }) {
           if (!O()) return;
           let V = Ei(),
             te = Cc(I),
-            ne = gu();
+            ne = getOwnJobShortId();
           if (U) {
             let me = Sy(),
               Me = me.detectSurfaces(!1),
@@ -3093,7 +3093,7 @@ function Py({ querySource: w, context: I }) {
                 ).catch(($e) => {
                   n(`[classifier] error: ${l($e)}`, { level: "error" });
                 });
-              if (_t())
+              if (isBgSession())
                 await Dt(Ae, 60000, "classifier write timed out").catch(
                   () => {},
                 );
@@ -3103,7 +3103,7 @@ function Py({ querySource: w, context: I }) {
           V.markTurnAborted(te, ne);
         } catch (V) {
           if (yt(V)) return;
-          h(V);
+          logError(V);
         }
       },
     };
@@ -3282,7 +3282,7 @@ function oHe({
       if (Ot.length >= Iy) {
         if ((Ot.shift(), !nn))
           ((nn = !0),
-            h(
+            logError(
               Error(
                 "[engine] pendingDenialFrames buffer is full; dropping oldest permission_denied advisory frames",
               ),
@@ -3301,14 +3301,14 @@ function oHe({
     try {
       on?.(Ke, ze);
     } catch (ft) {
-      h(ft);
+      logError(ft);
     }
   }
   function Ar(Ke) {
     try {
       $n?.({ error: Ke });
     } catch (ze) {
-      h(ze);
+      logError(ze);
     }
   }
   function mr(Ke, ze) {
@@ -3365,7 +3365,7 @@ function oHe({
       try {
         Bt = await I(ze);
       } catch (Yt) {
-        (h(Yt), Ar(Yt), Zt.shift(), yield* Ko());
+        (logError(Yt), Ar(Yt), Zt.shift(), yield* Ko());
         let Ne = {
             ...zW({
               startedAt: ft,
@@ -3410,7 +3410,7 @@ function oHe({
       let co = Bt.toolUseContext?.abortController,
         fn = () => {
           if (
-            Ua(En.signal.reason) === "refusal-fallback-edit" &&
+            unwrapAbortReason(En.signal.reason) === "refusal-fallback-edit" &&
             co &&
             !co.signal.aborted
           )
@@ -3426,8 +3426,8 @@ function oHe({
         Cs = Bt.canUseTool,
         ks = async (Yt, Ne, Ct, In, Mo, ko) => {
           let qn = await Cs(Yt, Ne, Ct, In, Mo, ko);
-          if (Att(qn, ko)) Wr(Yt, Mo, Ne);
-          if (qn.behavior === "deny" && i0n(qn))
+          if (isRecordableDenial(qn, ko)) Wr(Yt, Mo, Ne);
+          if (qn.behavior === "deny" && isPreAskDeny(qn))
             Oo({
               type: "system",
               subtype: "permission_denied",
@@ -3501,7 +3501,7 @@ function oHe({
         Jr = null,
         Lr,
         go = Bt.toolUseContext?.options?.maxBudgetUsd,
-        ni = hz().at(-1),
+        ni = getInMemoryErrors().at(-1),
         gn;
       try {
         let Yt = await gr.next();
@@ -3819,7 +3819,7 @@ function oHe({
           }
           Yt = await gr.next();
         }
-        if ((y("shoji_engine"), Yt.done))
+        if ((logFeatureOk("shoji_engine"), Yt.done))
           gn = Yt.value ? Yt.value.reason : void 0;
       } catch (Yt) {
         ((Gn = l(Yt)), Ar(Yt));
@@ -3982,7 +3982,7 @@ function oHe({
           let ze = He?.toolUseContext?.taskRegistry,
             ft = 0;
           if (He?.toolUseContext !== void 0 && ze !== void 0) {
-            ft = F4(ze, { durable: !1 });
+            ft = killAutoReactSubscriptions(ze, { durable: !1 });
             let { setAppState: Bt } = He.toolUseContext;
             s5e({ taskRegistry: ze, setAppState: Bt });
           }
@@ -3997,18 +3997,18 @@ function oHe({
           n(`[engine] send set_model model=${Ke.model}`));
         break;
       case "set_permission_mode": {
-        let ze = gf(Ke.mode);
+        let ze = parsePermissionMode(Ke.mode);
         if (ze === void 0) {
           n("[engine] set_permission_mode rejected \u2014 unrecognized mode");
           break;
         }
-        if (ze === "bypassPermissions" && ey()) {
+        if (ze === "bypassPermissions" && isBypassPermissionsModeDisabled()) {
           n(
             "[engine] set_permission_mode:bypassPermissions rejected \u2014 disabled by settings",
           );
           break;
         }
-        if (ze === "auto" && !cC()) {
+        if (ze === "auto" && !isAutoModeGateEnabled()) {
           n(
             "[engine] set_permission_mode:auto rejected \u2014 gate not enabled",
           );
@@ -4168,7 +4168,7 @@ function oHe({
       getContextUsage: async (Ke) => {
         if (He === null) throw Error("getContextUsage: no turn received yet");
         let { messages: ze, toolUseContext: ft } = He;
-        return await bIe({
+        return await collectContextData({
           session: ft.session,
           messages: ze,
           getAppState: ft.getAppState,
@@ -4208,7 +4208,7 @@ function oHe({
       backgroundTasks: async (Ke) => {
         if (Dl())
           throw (
-            f("task_local_shell_background_all", "disabled"),
+            logFeatureBad("task_local_shell_background_all", "disabled"),
             Error("Background tasks are disabled in this session.")
           );
         if (He === null) return !Ke;
@@ -4223,10 +4223,10 @@ function oHe({
           vt = await S4(Ke, ft, ze?.credentials);
         if (vt && ze?.persist)
           try {
-            pj(K(), vt, He?.toolUseContext.storageV5);
+            saveAiGeneratedTitle(K(), vt, He?.toolUseContext.storageV5);
           } catch (Bt) {
             if (Rt(Bt)) n(`saveAiGeneratedTitle failed: ${Bt}`);
-            else h(Bt);
+            else logError(Bt);
           }
         return vt;
       },
@@ -4236,11 +4236,11 @@ function oHe({
         surface: ft = "tool_use",
         cleared: vt = !1,
       }) => {
-        if (Mt("allow_product_feedback"))
+        if (isPolicyAllowed("allow_product_feedback"))
           i("tengu_message_rated", {
             message_uuid: Ee(Ke),
-            sentiment: u(ze),
-            surface: u(ft),
+            sentiment: fromEnum(ze),
+            surface: fromEnum(ft),
             cleared: vt,
           });
       },
@@ -4428,7 +4428,7 @@ function r6e(w) {
     ? tzn((I) =>
         Kdn({
           recordOperation: (O) => {
-            jyt(O, w);
+            recordQueueOperation(O, w);
           },
           adopt: I,
         }),
@@ -4436,10 +4436,10 @@ function r6e(w) {
     : Xm();
 }
 function uJt(w) {
-  return w !== "requesting" && ZK();
+  return w !== "requesting" && isBridgeStateFramesEnabled();
 }
 function Mc() {
-  return !bY() && !cpe();
+  return !isCompactPairWithheldFromRemote() && !isBridgeBindingForeign();
 }
 function Zje(w) {
   if (
@@ -4470,12 +4470,12 @@ function L_e({
       ...(U !== void 0 && Mc() && { compact_error: U }),
     });
   } catch (V) {
-    h(V);
+    logError(V);
   }
 }
 function DNn(w) {
   try {
-    if (!ic() || !IAn()) return;
+    if (!ic() || !isBridgePartialMessagesEnabled()) return;
     if (VV(w.event)) return;
     ju({
       type: "stream_event",
@@ -4484,7 +4484,7 @@ function DNn(w) {
       ...(w.ttftMs !== void 0 && { ttft_ms: w.ttftMs }),
     });
   } catch (I) {
-    h(I);
+    logError(I);
   }
 }
 var Uy = c({
@@ -4500,7 +4500,7 @@ function LNn(w) {
       let V = Eb(w.permission_mode);
       if (
         V === "bypassPermissions" &&
-        (ey() || !O.isBypassPermissionsModeAvailable)
+        (isBypassPermissionsModeDisabled() || !O.isBypassPermissionsModeAvailable)
       )
         (n(
           "[externalMetadataToAppState] Refusing restored mode 'bypassPermissions' (disabled by settings/policy or session not launched with --dangerously-skip-permissions); falling back to 'default'",
@@ -4508,7 +4508,7 @@ function LNn(w) {
         ),
           (V = "default"));
       try {
-        if (((O = { ...Ik(O.mode, V, O), mode: V }), V === "auto")) O = qM(O);
+        if (((O = { ...transitionPermissionMode(O.mode, V, O), mode: V }), V === "auto")) O = stripDangerousPermissionsForAutoMode(O);
       } catch (te) {
         n(
           `[externalMetadataToAppState] transitionPermissionMode rejected restored mode '${V}': ${ge(te).message}`,
@@ -4563,12 +4563,12 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
         (U?.notifyMetadataChanged(Ae), U?.isWorkerPermissionModeRecordEnabled)
       )
         U.notifyInternalMetadataChanged({ worker_permission_mode: Oe });
-      if ((Ioe(me, $e), !U)) L_e({ status: null, permissionMode: Oe });
+      if ((reportBridgePermissionMode(me, $e), !U)) L_e({ status: null, permissionMode: Oe });
     }
     U?.notifyPermissionModeChanged(me);
   }
   if (ne !== me)
-    sR(
+    syncRespawnFlag(
       "--permission-mode",
       ["--inherit-permission-mode"],
       U2(me, w.proactivityLevel),
@@ -4634,17 +4634,17 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
           source: De.source,
         });
     } catch (Oe) {
-      h(ge(Oe));
+      logError(ge(Oe));
     }
   }
   if (w.mainLoopModel !== I.mainLoopModel) {
     let De = w.mainLoopModel;
     ad(De);
-    let Oe = rt();
+    let Oe = getMainLoopModel();
     try {
-      xG(Oe);
+      reportBridgeModel(Oe);
     } catch (Ae) {
-      h(ge(Ae));
+      logError(ge(Ae));
     }
     (wF(Oe, w),
       IIe(),
@@ -4652,8 +4652,8 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
       import("../上下文压缩-Compact/chunk-npckj9cm.js").then(({ fetchBootstrapData: Ae }) =>
         Ae(V, te),
       ),
-      U?.notifyMetadataChanged({ model: De ?? ol() }),
-      sR("--model", ["-m"], De, void 0, V));
+      U?.notifyMetadataChanged({ model: De ?? getDefaultMainLoopModel() }),
+      syncRespawnFlag("--model", ["-m"], De, void 0, V));
   }
   if (w.fotwClaim?.phase === "granted" && I.fotwClaim?.phase !== "granted")
     IIe();
@@ -4670,24 +4670,24 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
       effort_level:
         w.sessionEffort.kind === "level" ? String(w.sessionEffort.value) : null,
     }),
-      wF(rt(), w));
+      wF(getMainLoopModel(), w));
     let De = w.sessionEffort;
-    if (De.kind !== "level") sR("--effort", [], null, void 0, V);
+    if (De.kind !== "level") syncRespawnFlag("--effort", [], null, void 0, V);
     else if (typeof De.value === "string" && $C(De.value))
-      sR("--effort", [], De.value, void 0, V);
+      syncRespawnFlag("--effort", [], De.value, void 0, V);
   }
   if (w.mainLoopModelForSession !== I.mainLoopModelForSession) {
-    let De = rt();
+    let De = getMainLoopModel();
     try {
-      xG(De);
+      reportBridgeModel(De);
     } catch (Oe) {
-      h(ge(Oe));
+      logError(ge(Oe));
     }
     wF(De, w);
   }
   if (w.advisorModel !== I.advisorModel)
-    (mv("advisor"), sR("--advisor", [], w.advisorModel ?? null, void 0, V));
-  if (U && w.frameUrls !== I.frameUrls && Lfe()) {
+    (mv("advisor"), syncRespawnFlag("--advisor", [], w.advisorModel ?? null, void 0, V));
+  if (U && w.frameUrls !== I.frameUrls && isPublishToolEnabled()) {
     let De = Dv(w.frameUrls).map(([, Oe]) => Oe);
     if (De.length > 0 || Dv(I.frameUrls).length > 0)
       U.notifyMetadataChanged({
@@ -4724,9 +4724,9 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
   if (w.settings !== I.settings) {
     try {
       if (
-        (hRe(), R6(), _Re(), SRe(), w.settings.env !== I.settings.env && Bo())
+        (clearApiKeyHelperCache(), clearAwsCredentialsCache(), resetAwsAuthRefreshCooldown(), clearGcpCredentialsCache(), w.settings.env !== I.settings.env && Bo())
       )
-        (dR(), qDt());
+        (dR(), captureAdmin3PSteeringSnapshot());
     } catch (De) {
       n(
         `Failed to apply settings change (clear auth caches / re-apply env): ${ge(De).message}`,
@@ -4813,14 +4813,14 @@ function Oae({ newState: w, oldState: I }, O, U, V) {
     }, U);
   }
 }
-import { hostname as Hy } from "os";
+import { hostname } from "os";
 var Gy = 2,
   Ky = 1e4,
   Vy = 600000,
   Yy = 2592000000;
 function Fc() {
   try {
-    return Hy();
+    return hostname();
   } catch {
     return "unknown";
   }
@@ -4844,7 +4844,7 @@ function Jy(w) {
     host: Fc(),
     platform: P(),
     ownPid: process.pid,
-    isGone: Vg,
+    isGone: isProcessProvablyGone,
   };
 }
 function Ic(w, I) {
@@ -4981,7 +4981,7 @@ function YNn(w) {
           strikes: ne.strikes,
           new_strikes: ne.newStrikes,
           pending_age_ms: ne.pendingAgeMs,
-          would_be_entry_path: u(O),
+          would_be_entry_path: fromEnum(O),
           overrides_fullscreen: me,
         }),
         me)
@@ -5124,7 +5124,7 @@ async function $c(w) {
       w?.storageV5,
     );
   } catch (ne) {
-    h(ne);
+    logError(ne);
   } finally {
     Br("fullscreen_canary_armed");
   }
@@ -5136,7 +5136,7 @@ function JNn(w = Date.now()) {
   ((I.canary.firstFrameAt = w),
     (I.canary.timer = setTimeout(
       (O) => {
-        jc(O, "healthy").catch(h);
+        jc(O, "healthy").catch(logError);
       },
       I.canary.healthyAfterMs,
       I,
@@ -5156,7 +5156,7 @@ async function jc(w, I) {
     try {
       await te();
     } catch (me) {
-      h(me);
+      logError(me);
     }
 }
 async function p0t() {
@@ -5207,7 +5207,7 @@ function yJt(w) {
 async function Gc(w) {
   let I = Pbt();
   if (I.persisted || a1e() !== "fullscreen") return !1;
-  if (Ge().tui !== void 0)
+  if (getInitialSettings().tui !== void 0)
     return (
       n(
         "fullscreen trial: settings.tui was set explicitly during the trial \u2014 not persisting",
@@ -5222,7 +5222,7 @@ async function Gc(w) {
       !1
     );
   let O = !1,
-    { error: U } = await Ii(
+    { error: U } = await updateSettingsForSourceWithTransform(
       "userSettings",
       (V) => ((O = V?.tui !== void 0), O ? null : { tui: "fullscreen" }),
       void 0,
@@ -5230,8 +5230,8 @@ async function Gc(w) {
     );
   if (U)
     return (
-      h(U),
-      g("tui_fullscreen_upsell_trial", "settings_write_failed"),
+      logError(U),
+      logFeatureSad("tui_fullscreen_upsell_trial", "settings_write_failed"),
       !1
     );
   if (O)
@@ -5244,7 +5244,7 @@ async function Gc(w) {
   return (
     f0t(w),
     (I.persisted = !0),
-    y("tui_fullscreen_upsell_trial"),
+    logFeatureOk("tui_fullscreen_upsell_trial"),
     i("tengu_fullscreen_upsell_trial_persisted", {
       session_age_ms: Math.round(process.uptime() * 1000),
     }),
@@ -5279,17 +5279,17 @@ async function launchRepl(w, I, O, U) {
         oHe({
           run: FM,
           queryParams: async (at) => Ye.current(),
-          commands: () => NY($e.current),
+          commands: () => toSlashCommands($e.current),
           models: () => oX(NF()),
           unavailableModels: () => oX(cmt()),
-          agents: () => V4e(Ae.getState().agentDefinitions.activeAgents),
-          account: CZe(),
+          agents: () => toAgentInfos(Ae.getState().agentDefinitions.activeAgents),
+          account: toAccountInfo(),
           outputStyle: SDe(),
           mcpServers: () => XHt(Ae.getState().mcp.clients),
           ambient: Hot,
           initialModel: () => {
             let at = Ae.getState();
-            return wt(at.mainLoopModelForSession ?? at.mainLoopModel ?? dh());
+            return parseUserSpecifiedModel(at.mainLoopModelForSession ?? at.mainLoopModel ?? getDefaultMainLoopModelSetting());
           },
           initialPermissionMode: () =>
             _c(Ae.getState().toolPermissionContext.mode),
@@ -5311,7 +5311,7 @@ async function launchRepl(w, I, O, U) {
       session: me,
       storageV5: Me,
       credentials: Se,
-      fleetNudgeStore: xe = new jye({ storageV5: Me }),
+      fleetNudgeStore: xe = new FleetNudgeStore({ storageV5: Me }),
     } = I,
     De = r6e(Me);
   await $c({ onHealthy: () => Gc(Me), storageV5: Me });
@@ -5359,15 +5359,15 @@ async function V0(w) {
   else n("[mcp-policy-cold-start] skipped \u2014 no MCP server source visible");
 }
 async function oh(w) {
-  for (let I of N3)
-    if (Object.keys(nd(I, { expandVars: !1 }).servers).length > 0) return !0;
+  for (let I of MCP_SETTINGS_SCOPES)
+    if (Object.keys(getMcpConfigsByScope(I, { expandVars: !1 }).servers).length > 0) return !0;
   if (nde()) return !0;
   try {
     if ((await ei(w)).enabled.length > 0) return !0;
   } catch {
     return !0;
   }
-  return wu();
+  return hasStoredOAuthToken();
 }
 F();
 function Us() {
@@ -5403,13 +5403,13 @@ function Aot({ serverName: w, isPluginServer: I = !1, onDone: O }) {
     if (xe()) return;
     if (V.current) return;
     switch (
-      ((V.current = !0), i("tengu_mcp_dialog_choice", { choice: u(Oe) }), Oe)
+      ((V.current = !0), i("tengu_mcp_dialog_choice", { choice: fromEnum(Oe) }), Oe)
     ) {
       case "yes":
       case "yes_all": {
         let Ae = !1;
         {
-          let { error: $e } = await Ii(
+          let { error: $e } = await updateSettingsForSourceWithTransform(
             "localSettings",
             (We) => {
               let Ye = We?.enabledMcpjsonServers || [];
@@ -5422,7 +5422,7 @@ function Aot({ serverName: w, isPluginServer: I = !1, onDone: O }) {
           Ae ||= $e != null;
         }
         if (Oe === "yes_all") {
-          let { error: $e } = await Jt(
+          let { error: $e } = await updateSettingsForSource(
             "localSettings",
             { enableAllProjectMcpServers: !0 },
             void 0,
@@ -5430,11 +5430,11 @@ function Aot({ serverName: w, isPluginServer: I = !1, onDone: O }) {
           );
           Ae ||= $e != null;
         }
-        (Qxt(tS(), [w]), O({ persistFailed: Ae }));
+        (Qxt(getWorkspacePersistedTrustKey(), [w]), O({ persistFailed: Ae }));
         break;
       }
       case "no": {
-        let { error: Ae } = await Ii(
+        let { error: Ae } = await updateSettingsForSourceWithTransform(
           "localSettings",
           ($e) => {
             let We = $e?.disabledMcpjsonServers || [];
@@ -5500,7 +5500,7 @@ function Cot({ serverNames: w, pluginServerNames: I, onDone: O }) {
     });
     let We = !1;
     if (Ae.length > 0) {
-      let { error: Ye } = await Ii(
+      let { error: Ye } = await updateSettingsForSourceWithTransform(
         "localSettings",
         (Ze) => ({
           enabledMcpjsonServers: Y([
@@ -5513,8 +5513,8 @@ function Cot({ serverNames: w, pluginServerNames: I, onDone: O }) {
       );
       We ||= Ye != null;
     }
-    if ((Qxt(tS(), Ae), $e.length > 0)) {
-      let { error: Ye } = await Ii(
+    if ((Qxt(getWorkspacePersistedTrustKey(), Ae), $e.length > 0)) {
+      let { error: Ye } = await updateSettingsForSourceWithTransform(
         "localSettings",
         (Ze) => ({
           disabledMcpjsonServers: Y([
@@ -5533,7 +5533,7 @@ function Cot({ serverNames: w, pluginServerNames: I, onDone: O }) {
     if (Se()) return;
     if (V.current) return;
     V.current = !0;
-    let { error: Oe } = await Ii(
+    let { error: Oe } = await updateSettingsForSourceWithTransform(
       "localSettings",
       (Ae) => ({
         disabledMcpjsonServers: Y([
@@ -5601,7 +5601,7 @@ async function vot(w) {
   };
 }
 async function cJt(w) {
-  let { servers: I } = nd("project"),
+  let { servers: I } = getMcpConfigsByScope("project"),
     O = Object.keys(I),
     U = new Set(O),
     V = new Set(),
@@ -5636,17 +5636,17 @@ async function xNn({ pendingServers: w, pluginServerNames: I }, O, U) {
 }
 async function sh(w, I) {
   {
-    if (!_t()) return;
+    if (!isBgSession()) return;
     let O = a.CLAUDE_JOB_DIR;
     if (!O) return;
-    let U = await Zn(O, I);
+    let U = await readJobState(O, I);
     if (!U) return;
     let V = w.length,
       te = x(V, "server"),
       ne = x(V, "needs", "need");
     try {
       return (
-        await Ti(
+        await writeStateAtomic(
           O,
           {
             ...U,
@@ -5661,37 +5661,37 @@ async function sh(w, I) {
         { state: U.state, tempo: U.tempo, needs: U.needs, detail: U.detail }
       );
     } catch (me) {
-      Mi(me);
+      logJobWriteError(me);
     }
   }
   return;
 }
 async function ih(w, I) {
   {
-    if (!w || !_t()) return;
+    if (!w || !isBgSession()) return;
     let O = a.CLAUDE_JOB_DIR;
     if (!O) return;
-    let U = await Zn(O, I);
+    let U = await readJobState(O, I);
     if (!U || U.state !== "blocked") return;
     try {
-      await Ti(
+      await writeStateAtomic(
         O,
         { ...U, ...w, block: void 0, updatedAt: new Date().toISOString() },
         I,
       );
     } catch (V) {
-      Mi(V);
+      logJobWriteError(V);
     }
   }
 }
 import {
   lstat as Vc,
-  lutimes as fh,
+  lutimes,
   mkdir as gh,
   readdir as ru,
-  rename as qc,
+  rename,
   rm as $r,
-  rmdir as Xc,
+  rmdir,
   stat as iu,
 } from "fs/promises";
 import { basename as jo, join as _o, relative as au, sep as yh } from "path";
@@ -5849,18 +5849,18 @@ async function JHt(w) {
         Me = await Cu(me, null, w).catch(() => null);
       if (Me !== null)
         ((U += Me),
-          await Xc(me).then(
+          await rmdir(me).then(
             () => gDe(dr(), ne),
             () => {},
           ));
     }
-    ((U += await mu(V.strays, w)), await Xc(dr()).catch(() => {}));
+    ((U += await mu(V.strays, w)), await rmdir(dr()).catch(() => {}));
   }
   q("info", "skills_sync_pruned_for_closed_gate", {
     moved: (U ?? 0) + (O ? 1 : 0),
   });
   let te = O || (U !== null && U > 0);
-  if (te) (rR(), $V(), Rk.emit());
+  if (te) (clearCommandMemoizationCaches(), $V(), Rk.emit());
   return te;
 }
 function Oi() {
@@ -6051,7 +6051,7 @@ function Mh(w, I) {
     V.getPromptForCommand = async (te, ne) => {
       let me = await X6t(U);
       if (me.ok) {
-        let Se = Di(U, await kf(sn(), ne.storageV5));
+        let Se = findCommand(U, await getCommands(sn(), ne.storageV5));
         if (Se && Se.type === "prompt" && Se !== V)
           return (
             (V.source = Se.source),
@@ -6135,7 +6135,7 @@ async function ou(
     if (!(await I.guard.verify())) return fDe;
     if (V) await $r(Me, { recursive: !0, force: !0 });
     try {
-      await qc(Oe, Me);
+      await rename(Oe, Me);
     } catch ($e) {
       let We = A($e);
       if (V || !ymt(We)) {
@@ -6151,7 +6151,7 @@ async function ou(
       if (Ye === "landed") await $r(Me, { recursive: !0, force: !0 });
       else if (!(await xi(Me, U))) return F4e;
       try {
-        await qc(Oe, Me);
+        await rename(Oe, Me);
       } catch (Ze) {
         ne();
         let Nt = A(Ze);
@@ -6320,7 +6320,7 @@ async function xh(w, I, O) {
       q("info", "skills_sync_gate_closed");
       let { placeholders: He } = mT();
       if (He.size > 0) (He.clear(), Bs());
-      g("skills_sync_round", "gate_closed", {
+      logFeatureSad("skills_sync_round", "gate_closed", {
         account_opt_in: ne,
         duration_ms: Date.now() - U,
       });
@@ -6328,7 +6328,7 @@ async function xh(w, I, O) {
     }
     if (Jzn()) {
       (q("info", "skills_sync_policy_verdict_pending"),
-        g("skills_sync_round", "policy_verdict_pending", {
+        logFeatureSad("skills_sync_round", "policy_verdict_pending", {
           account_opt_in: ne,
           duration_ms: Date.now() - U,
         }));
@@ -6337,7 +6337,7 @@ async function xh(w, I, O) {
     let De = await oH(O);
     if (De === null) {
       (q("info", "skills_sync_bucket_unresolved"),
-        g("skills_sync_round", "bucket_unresolved", {
+        logFeatureSad("skills_sync_round", "bucket_unresolved", {
           account_opt_in: ne,
           duration_ms: Date.now() - U,
         }));
@@ -6375,7 +6375,7 @@ async function xh(w, I, O) {
           duration_ms: Date.now() - U,
           ...He,
         }),
-        f("skills_sync_round", "list_failed", {
+        logFeatureBad("skills_sync_round", "list_failed", {
           account_opt_in: ne,
           duration_ms: Date.now() - U,
           ...He,
@@ -6430,7 +6430,7 @@ async function xh(w, I, O) {
       },
       ro = new Set(Array.from(at, (He) => jo(He))),
       lo = M8n(ro);
-    if (p8n(ro) + lo > 0) (rR(), al(), Rk.emit());
+    if (p8n(ro) + lo > 0) (clearCommandMemoizationCaches(), al(), Rk.emit());
     let to = await Promise.all(
         Nt.map((He) => (zt.has(He.skillId) ? Eh(Ae, He.name, I) : null)),
       ),
@@ -6448,7 +6448,7 @@ async function xh(w, I, O) {
         (xe.pendingDownloads.get(Ot)?.resolve({ ok: !0 }),
           xe.pendingDownloads.delete(Ot),
           $V(),
-          rR(),
+          clearCommandMemoizationCaches(),
           (te = !0),
           q("info", "skills_sync_materialized_elsewhere"));
     }
@@ -6459,7 +6459,7 @@ async function xh(w, I, O) {
       on = new Set(We?.staleDirs ?? []),
       $n = new Set(),
       Kt = new Set(),
-      Hn = { pid: process.pid, procStart: await Ba(process.pid) },
+      Hn = { pid: process.pid, procStart: await getProcessStartTimeAsync(process.pid) },
       Zt = [];
     if (We?.pendingClaims) {
       let He = We.pendingClaims,
@@ -6502,10 +6502,10 @@ async function xh(w, I, O) {
         );
       if (We) {
         let He = new Date();
-        await fh(Fi(Ae), He, He).catch(() => {});
+        await lutimes(Fi(Ae), He, He).catch(() => {});
       }
       (q("info", "skills_sync_no_changes", { duration_ms: Date.now() - U }),
-        y("skills_sync_round", {
+        logFeatureOk("skills_sync_round", {
           account_opt_in: ne,
           no_changes: !0,
           duration_ms: Date.now() - U,
@@ -6516,7 +6516,7 @@ async function xh(w, I, O) {
     for (let { item: He, prev: Qe } of Ye)
       if (!Qe)
         (u8n(Mh(Ae, He)), At++, me.set(He.skillId, c8n(jo(xo(Ae, He.name)))));
-    if (At > 0) (rR(), al(), Rk.emit());
+    if (At > 0) (clearCommandMemoizationCaches(), al(), Rk.emit());
     let Mn = !0;
     try {
       let He = [];
@@ -6547,7 +6547,7 @@ async function xh(w, I, O) {
     }
     if ((il().resolve(), !Mn)) {
       if (
-        (f("skills_sync_round", "pending_claims_write_failed", {
+        (logFeatureBad("skills_sync_round", "pending_claims_write_failed", {
           account_opt_in: ne,
           duration_ms: Date.now() - U,
         }),
@@ -6586,11 +6586,11 @@ async function xh(w, I, O) {
             if ((rn.push(He), Qe && Qe.name !== He.name)) {
               if (!(await dn(Qe.name))) on.add(Qe.name);
             }
-            (d8n(jo(xo(Ae, He.name))), $V(), rR(), y("skills_sync_download"));
+            (d8n(jo(xo(Ae, He.name))), $V(), clearCommandMemoizationCaches(), logFeatureOk("skills_sync_download"));
           } else {
             let Ot = Aqn(Je.cause);
             if (Ot === null) (Tn++, q("info", "skills_sync_landing_deferred"));
-            else ((kn[Ot] = (kn[Ot] ?? 0) + 1), f("skills_sync_download", Ot));
+            else ((kn[Ot] = (kn[Ot] ?? 0) + 1), logFeatureBad("skills_sync_download", Ot));
             let nn = Qe ?? yn.get(He.skillId);
             if (nn && Je.cause === "deferred") {
               if ((an.push(nn), Qe && Qe.name !== He.name))
@@ -6672,7 +6672,7 @@ async function xh(w, I, O) {
       }),
       tt === 0)
     )
-      y("skills_sync_round", {
+      logFeatureOk("skills_sync_round", {
         account_opt_in: ne,
         downloaded: rn.length,
         deferred: Tn,
@@ -6681,7 +6681,7 @@ async function xh(w, I, O) {
         duration_ms: Date.now() - U,
       });
     else
-      g("skills_sync_round", "download_failed", {
+      logFeatureSad("skills_sync_round", "download_failed", {
         account_opt_in: ne,
         failed: tt,
         download_failed: kn.download_failed ?? 0,
@@ -6700,7 +6700,7 @@ async function xh(w, I, O) {
         reason: De.reason,
         duration_ms: Date.now() - U,
       }),
-        g("skills_sync_round", "root_refused", {
+        logFeatureSad("skills_sync_round", "root_refused", {
           account_opt_in: ne,
           duration_ms: Date.now() - U,
         }),
@@ -6710,7 +6710,7 @@ async function xh(w, I, O) {
         reason: De.reason,
         duration_ms: Date.now() - U,
       }),
-        g("skills_sync_round", "root_refused", {
+        logFeatureSad("skills_sync_round", "root_refused", {
           account_opt_in: ne,
           duration_ms: Date.now() - U,
         }));
@@ -6720,7 +6720,7 @@ async function xh(w, I, O) {
           duration_ms: Date.now() - U,
         }),
         i("tengu_skills_sync_error", { duration_ms: Date.now() - U }),
-        f("skills_sync_round", "unexpected_error", {
+        logFeatureBad("skills_sync_round", "unexpected_error", {
           account_opt_in: ne,
           duration_ms: Date.now() - U,
         }));
@@ -6742,7 +6742,7 @@ async function xh(w, I, O) {
 }
 async function ml(w) {
   let { ownerPid: I, ownerProcStart: O } = Noe(w);
-  return I !== void 0 && I !== process.pid && Vs(I) && (await Pm(I, O));
+  return I !== void 0 && I !== process.pid && isProcessRunning(I) && (await isSameProcessAsync(I, O));
 }
 async function Dh(w, I, O) {
   let U = await dl(I, O);
@@ -6771,7 +6771,7 @@ function Pu(w, I) {
   });
 }
 function Ru() {
-  return !_t();
+  return !isBgSession();
 }
 function Au(w) {
   return w.filter(
@@ -6791,7 +6791,7 @@ function Tu(w) {
       { level: "error" },
     );
 }
-import { createInterface as Oh } from "readline";
+import { createInterface } from "readline";
 class Dae extends R {
   constructor(w) {
     super(w, "plugin operation returned a failure result");
@@ -6813,14 +6813,14 @@ async function Lae(w, I, O) {
   if (w instanceof Ui && (I === "install" || I === "update")) {
     if ((console.error(ff(l(w))), I === "install")) {
       let { code: Me, kind: Se } = cwt(w);
-      if (Se === "bad") await wn("cli_plugin_install", Me);
-      else await ul("cli_plugin_install", Me);
+      if (Se === "bad") await logFeatureBadAsync("cli_plugin_install", Me);
+      else await logFeatureSadAsync("cli_plugin_install", Me);
     }
-    (await kF(), process.exit(1));
+    (await flushAnalyticsSinks(), process.exit(1));
   }
   let V = w instanceof tC ? `claudeai_${w.code}` : void 0;
   if (U === "unknown" && !(w instanceof Dae) && V === void 0)
-    h(dt(ge(w), Fh[I]));
+    logError(dt(ge(w), Fh[I]));
   else n(`Plugin command "${I}" failed: ${l(w)}`, { level: "error" });
   let te = O
     ? `${I} plugin "${O}"`
@@ -6831,27 +6831,27 @@ async function Lae(w, I, O) {
   let ne = V ?? (U === "not-found" ? "not_found" : U);
   switch (I) {
     case "install":
-      await wn("cli_plugin_install", ne);
+      await logFeatureBadAsync("cli_plugin_install", ne);
       break;
     case "uninstall":
-      await wn("cli_plugin_uninstall", ne);
+      await logFeatureBadAsync("cli_plugin_uninstall", ne);
       break;
     case "update":
-      await wn("cli_plugin_update", ne);
+      await logFeatureBadAsync("cli_plugin_update", ne);
       break;
     case "enable":
-      await wn("cli_plugin_enable", "cli_plugin_enable_failed");
+      await logFeatureBadAsync("cli_plugin_enable", "cli_plugin_enable_failed");
       break;
     default:
       break;
   }
   let me = O ? xy(O, Xf()) : {};
   (await qs("tengu_plugin_command_failed", {
-    command: u(I),
-    error_category: u(U),
+    command: fromEnum(I),
+    error_category: fromEnum(U),
     ...me,
   }),
-    await kF(),
+    await flushAnalyticsSinks(),
     process.exit(1));
 }
 function Lh(w, I) {
@@ -7084,7 +7084,7 @@ async function $Nn(w, I = "user", O, U, V, te, ne) {
     i("tengu_plugin_installed_cli", {
       ...xy(Me, Xf()),
       plugin_id: Rmt(Me),
-      scope: u(me.scope || I),
+      scope: fromEnum(me.scope || I),
       install_source: S("cli-explicit"),
     });
     let Se = "";
@@ -7122,7 +7122,7 @@ async function UNn(w, I = "user", O = !1, U = !1, V = !1, te) {
     if (!ne.success) throw new Dae(ne.message);
     await qs("tengu_plugin_uninstalled_cli", {
       ...xy(ne.pluginId || w, Xf()),
-      scope: u(ne.scope || I),
+      scope: fromEnum(ne.scope || I),
     });
     let me = !1;
     try {
@@ -7136,7 +7136,7 @@ async function UNn(w, I = "user", O = !1, U = !1, V = !1, te) {
         );
       return ne.message + zqn(Me.orphans, I);
     } catch (Me) {
-      h(
+      logError(
         dt(
           ge(Me),
           "claude plugin uninstall: post-uninstall orphan scan or prune failed",
@@ -7194,14 +7194,14 @@ Remove? [y/N] `),
   let Me = await u7n(w.orphans, I, te, { deleteDataDir: O.deleteDataDir }, U);
   return (
     await qs("tengu_plugin_prune_cli", {
-      scope: u(I),
+      scope: fromEnum(I),
       removed_count: Me.length,
     }),
     `Removed ${Me.length} auto-installed ${x(Me.length, "plugin", "plugins")}: ${Me.map((Se) => wr(Bn(Se).name)).join(", ")}`
   );
 }
 async function Ou() {
-  let w = Oh({ input: process.stdin });
+  let w = createInterface({ input: process.stdin });
   try {
     for await (let I of w) return /^y(es)?$/i.test(I.trim());
     return !1;
@@ -7216,7 +7216,7 @@ async function jNn(w, I, O) {
     return (
       await qs("tengu_plugin_disabled_cli", {
         ...xy(U.pluginId || w, Xf()),
-        scope: we(U.scope),
+        scope: fromEnumOpt(U.scope),
       }),
       `${L.tick} ${U.message}`
     );
@@ -7278,12 +7278,12 @@ async function GNn(w, I, { yes: O = !1 } = {}, U) {
         old_version: Ms(V.oldVersion),
         new_version: Ms(V.newVersion),
       });
-    (y("cli_plugin_update"), await xn(0));
+    (logFeatureOk("cli_plugin_update"), await xn(0));
   } catch (V) {
     return Lae(V, "update", w);
   }
 }
-import { mkdir as Fu, writeFile as Nh } from "fs/promises";
+import { mkdir as Fu, writeFile } from "fs/promises";
 import {
   dirname as Bh,
   join as Cr,
@@ -7383,7 +7383,7 @@ async function VNn(w, I, O) {
       await On(ne, te.contents, te.mode);
     else
       try {
-        await Nh(ne, te.contents, { flag: "wx", mode: te.mode });
+        await writeFile(ne, te.contents, { flag: "wx", mode: te.mode });
       } catch (Me) {
         if (A(Me) !== "EEXIST") throw Me;
         V.push(te.relPath);
@@ -7613,10 +7613,10 @@ await mcp.connect(new StdioServerTransport())
 var Rot = () => Xae();
 var Edr = () => Xae();
 function A8() {
-  let w = Pe();
+  let w = getAPIProvider();
   if (w !== "firstParty")
-    return `Cloud sessions aren't available with ${yA[w]}. They run on Anthropic's infrastructure and require an Anthropic account.`;
-  return op("allow_remote_sessions", "Cloud sessions", "are");
+    return `Cloud sessions aren't available with ${THIRD_PARTY_PROVIDER_LABELS[w]}. They run on Anthropic's infrastructure and require an Anthropic account.`;
+  return policyDeniedReason("allow_remote_sessions", "Cloud sessions", "are");
 }
 var gl = pe(g4e(), 1);
 import { readFile as cS, stat as uS } from "fs/promises";
@@ -7733,7 +7733,7 @@ async function y0t(w, I) {
   }
   if (w.cwd?.length) {
     let ne = Q().replaceAll("\\", "/"),
-      me = tr(Q())?.replaceAll("\\", "/"),
+      me = findGitRoot(Q())?.replaceAll("\\", "/"),
       Me = [ne];
     if (me && ne.startsWith(`${me}/`)) Me.push(ne.slice(me.length + 1));
     for (let Se of w.cwd) {
@@ -7787,7 +7787,7 @@ var mS = 3,
   r1n =
     "Your Claude Code session is ready \u2014 continue from your phone anytime.";
 function o1n() {
-  if (Wn.CLAUDE_CODE_FORCE_RC_LONG_TURN_NUDGE)
+  if (antEnv.CLAUDE_CODE_FORCE_RC_LONG_TURN_NUDGE)
     return {
       thresholdSec: 5,
       probability: 1,
@@ -7847,7 +7847,7 @@ function $u(w, I) {
 var Li = { afterPromptCount: 5, probability: 0, maxImpressions: 3 };
 function i1n() {
   let w,
-    I = Wn.CLAUDE_CODE_RC_PERMISSION_NUDGE;
+    I = antEnv.CLAUDE_CODE_RC_PERMISSION_NUDGE;
   if (I)
     try {
       w = z(I);
@@ -7863,7 +7863,7 @@ function i1n() {
   };
 }
 function bJt() {
-  if (!lb()) return !1;
+  if (!isBridgeEnabled()) return !1;
   let w = ee();
   return (
     !w.hasUsedRemoteControl &&
@@ -7872,7 +7872,7 @@ function bJt() {
   );
 }
 function a1n(w) {
-  ($u("remoteControlUpsellSeenCount", w), y("tips_rc_upsell_show"));
+  ($u("remoteControlUpsellSeenCount", w), logFeatureOk("tips_rc_upsell_show"));
 }
 function fS() {
   return ee().hasUsedRemoteControl === !0 || yq();
@@ -7881,13 +7881,13 @@ function wJt() {
   return _l() && (ee().pushNotifUpsellSeenCount ?? 0) < pS;
 }
 function _l() {
-  return lb() && hG() && fS() && Eo("agentPushNotifEnabled", !1).value !== !0;
+  return isBridgeEnabled() && hG() && fS() && Eo("agentPushNotifEnabled", !1).value !== !0;
 }
 function l1n(w) {
-  ($u("pushNotifUpsellSeenCount", w), y("tips_push_upsell_show"));
+  ($u("pushNotifUpsellSeenCount", w), logFeatureOk("tips_push_upsell_show"));
 }
 function c1n(w) {
-  if (!lb()) return !1;
+  if (!isBridgeEnabled()) return !1;
   if (w.maxImpressions === 0) return !1;
   if (w.maxImpressions < 0) return !0;
   let I = ee();
@@ -7907,10 +7907,10 @@ function u1n(w, I) {
         rcLongTurnNudgeSeenKey: w.impressionKey,
       };
     }, I);
-  y("tips_rc_long_turn_show");
+  logFeatureOk("tips_rc_long_turn_show");
 }
 function d1n(w) {
-  if (!lb()) return !1;
+  if (!isBridgeEnabled()) return !1;
   return (ee().rcPermissionNudgeSeenCount ?? 0) < w;
 }
 function p1n(w) {
@@ -7921,7 +7921,7 @@ function p1n(w) {
     }),
     w,
   ),
-    y("tips_rc_permission_nudge_show"));
+    logFeatureOk("tips_rc_permission_nudge_show"));
 }
 function f1n() {
   if (!hG()) return null;
@@ -7941,7 +7941,7 @@ function f1n() {
 }
 function m1n(w, I, O) {
   if (!I || O) return !1;
-  if (_t() || lS() != null) return !1;
+  if (isBgSession() || getAgentId() != null) return !1;
   if (w.maxImpressions === 0) return !1;
   if (w.maxImpressions < 0) return !0;
   let U = ee();
@@ -7963,7 +7963,7 @@ function g1n(w, I) {
         remoteControlReadyPushKey: w.impressionKey,
       };
     }, I);
-  y("tips_rc_ready_push_send");
+  logFeatureOk("tips_rc_ready_push_send");
 }
 function o6e(w) {
   if (ee().hasUsedRemoteControl) return;
@@ -8059,7 +8059,7 @@ async function sHe({ allowNetworkFallbackForOldGh: w }) {
   }
 }
 async function h1n(w) {
-  let I = L5();
+  let I = getDynamicTeamContext();
   if (!I?.teamName || !I?.agentName) {
     n(
       "[Reconnection] computeInitialTeamContext: No teammate context set (not a teammate)",
@@ -8067,9 +8067,9 @@ async function h1n(w) {
     return;
   }
   let { teamName: O, agentId: U, agentName: V } = I,
-    te = await Pf(O, w);
+    te = await readTeamFileAsync(O, w);
   if (!te) {
-    h(
+    logError(
       dt(
         Error(`[computeInitialTeamContext] Could not read team file for ${O}`),
         "[computeInitialTeamContext] Could not read team file",
@@ -8077,7 +8077,7 @@ async function h1n(w) {
     );
     return;
   }
-  let ne = ioe(O),
+  let ne = getTeamFilePath(O),
     me = !U;
   return (
     n(
@@ -8095,7 +8095,7 @@ async function h1n(w) {
   );
 }
 async function _1n(w, I, O, U) {
-  let V = await Pf(I, U);
+  let V = await readTeamFileAsync(I, U);
   if (!V) {
     n(
       `[initializeTeammateContextFromSession] Could not read team file for ${I} (agent: ${O}) \u2014 team may have been disbanded`,
@@ -8109,7 +8109,7 @@ async function _1n(w, I, O, U) {
       `[Reconnection] Member ${O} not found in team ${I} - may have been removed`,
     );
   let ne = te?.agentId,
-    me = ioe(I);
+    me = getTeamFilePath(I);
   (w((Me) => ({
     ...Me,
     teamContext: {
@@ -8328,10 +8328,10 @@ function zu(w) {
   if (I < 60) return `${I}s`;
   return `${Math.floor(I / 60)}m ${I % 60}s`;
 }
-import { isAbsolute as kS, resolve as wS, win32 as Vu } from "path";
+import { isAbsolute, resolve as wS, win32 as Vu } from "path";
 async function Uot(w, I, O = Sh) {
   if (
-    !(kS(w) || Vu.isAbsolute(w)) ||
+    !(isAbsolute(w) || Vu.isAbsolute(w)) ||
     An(w) ||
     gp(w) ||
     gp(Vu.normalize(w)) ||
@@ -8363,7 +8363,7 @@ var AS = 604800000,
 function S1n(w) {
   let I = [`This session was opened by an external deep link in ${TS(w.cwd)}`];
   if (w.repo) {
-    let O = w.lastFetch ? uy(w.lastFetch) : "never",
+    let O = w.lastFetch ? formatRelativeTimeAgo(w.lastFetch) : "never",
       U = !w.lastFetch || Date.now() - w.lastFetch.getTime() > AS;
     I.push(
       `Resolved ${w.repo} from local clones \xB7 last fetched ${O}${U ? " \u2014 CLAUDE.md may be stale" : ""}`,
@@ -8372,16 +8372,16 @@ function S1n(w) {
   if (w.prefillLength)
     I.push(
       w.prefillLength > EJt
-        ? `The prompt below (${No(w.prefillLength)} chars) was supplied by the link \u2014 scroll to review the entire prompt before pressing Enter.`
+        ? `The prompt below (${formatNumber(w.prefillLength)} chars) was supplied by the link \u2014 scroll to review the entire prompt before pressing Enter.`
         : "The prompt below was supplied by the link \u2014 review carefully before pressing Enter.",
     );
   return I.join(`
 `);
 }
 async function b1n(w) {
-  let I = await Zq(w);
+  let I = await getGitDir(w);
   if (!I) return;
-  let O = await yL(I),
+  let O = await getCommonDir(I),
     [U, V] = await Promise.all([
       Ju(Xu(I, "FETCH_HEAD")),
       O ? Ju(Xu(O, "FETCH_HEAD")) : Promise.resolve(void 0),
@@ -8432,7 +8432,7 @@ var xS = new Set([
   "autoUpdatesProtectedForNative",
 ]);
 function E1n(w) {
-  let I = Ge(),
+  let I = getInitialSettings(),
     O = [];
   for (let U of i5t) {
     if (xS.has(U)) continue;
@@ -8519,12 +8519,12 @@ function C1n(w) {
         jS,
         (O) => (
           (I.error = O),
-          g("sdk_launch_initialize", "stdin_error"),
+          logFeatureSad("sdk_launch_initialize", "stdin_error"),
           { kind: "absent" }
         ),
       )
       .catch(
-        () => (f("sdk_launch_initialize", "parse_threw"), { kind: "absent" }),
+        () => (logFeatureBad("sdk_launch_initialize", "parse_threw"), { kind: "absent" }),
       )),
     Bi.then(() => BS(I)));
 }
@@ -8599,7 +8599,7 @@ function jS(w) {
         "--await-initialize: stdin ended before an initialize request arrived",
         { level: "warn" },
       ),
-      g("sdk_launch_initialize", "stdin_ended"),
+      logFeatureSad("sdk_launch_initialize", "stdin_ended"),
       { kind: "absent" }
     );
   if (w === Zu)
@@ -8608,7 +8608,7 @@ function jS(w) {
         "--await-initialize: first stdin line exceeds the line-size ceiling; not parsed",
         { level: "error" },
       ),
-      f("sdk_launch_initialize", "first_line_too_long"),
+      logFeatureBad("sdk_launch_initialize", "first_line_too_long"),
       { kind: "absent" }
     );
   let I;
@@ -8616,7 +8616,7 @@ function jS(w) {
     I = N$e(z(cs(w)));
   } catch {
     return (
-      f("sdk_launch_initialize", "first_line_not_json"),
+      logFeatureBad("sdk_launch_initialize", "first_line_not_json"),
       {
         kind: "violation",
         message:
@@ -8627,7 +8627,7 @@ function jS(w) {
   let O = LS().safeParse(I);
   if (!O.success)
     return (
-      f("sdk_launch_initialize", "first_line_not_initialize"),
+      logFeatureBad("sdk_launch_initialize", "first_line_not_initialize"),
       {
         kind: "violation",
         message:
@@ -8637,7 +8637,7 @@ function jS(w) {
   let U = v(yCt()).optional().safeParse(O.data.request.plugins);
   if (!U.success)
     return (
-      f("sdk_launch_initialize", "plugins_malformed"),
+      logFeatureBad("sdk_launch_initialize", "plugins_malformed"),
       {
         kind: "violation",
         message:
@@ -8646,7 +8646,7 @@ function jS(w) {
     );
   let V = U.data ?? [];
   return (
-    y("sdk_launch_initialize"),
+    logFeatureOk("sdk_launch_initialize"),
     {
       kind: "applied",
       pluginDirs: V.filter((te) => !te.skipMcpDiscovery).map((te) => te.path),
@@ -8668,7 +8668,7 @@ async function x8(w, I) {
           credentials: I.credentials,
         }),
         U = TLe();
-      if (U) eAe(U);
+      if (U) cacheHookSessionTitle(U);
       return O;
     }
     case "setup":
@@ -8715,10 +8715,10 @@ function VW() {
 function F_e(w, I, O) {
   if (!I) return w;
   if (Hr()) return w;
-  if ((O?.strictMcpConfig && I.source !== "flagSettings") || Zm()) return w;
-  let V = $dn(I);
+  if ((O?.strictMcpConfig && I.source !== "flagSettings") || doesEnterpriseMcpConfigExist()) return w;
+  let V = agentMcpSpecsToScopedConfigs(I);
   if (Object.keys(V).length === 0) return w;
-  let { allowed: te, blocked: ne } = yH(V);
+  let { allowed: te, blocked: ne } = filterMcpServersByPolicy(V);
   if (ne.length > 0) O?.onBlocked?.(ne);
   return { ...te, ...w };
 }
@@ -8750,7 +8750,7 @@ async function sm(w) {
     );
     if (ne(w.baseTools)) P8n();
   }
-  let I = await zmn({
+  let I = await initializeToolPermissionContext({
       allowedToolsCli: w.allowedTools,
       disallowedToolsCli: w.disallowedTools,
       baseToolsCli: w.baseTools,
@@ -8767,9 +8767,9 @@ async function sm(w) {
       dangerousPermissions: V,
       overlyBroadBashPermissions: te,
     } = I;
-  if ((KFn(O), w.permissionMode === "auto")) O = qM(O);
+  if ((KFn(O), w.permissionMode === "auto")) O = stripDangerousPermissionsForAutoMode(O);
   if (w.permissionMode === "plan") {
-    let ne = k_t(O);
+    let ne = activatePlanAutoMode(O);
     if (ne) O = { ...ne, prePlanMode: "default" };
   }
   return (
@@ -8801,26 +8801,26 @@ async function im({
     xe = Ze(xe);
   }
   (Me?.(), te?.catch(() => {}), ne?.catch(() => {}));
-  let De = te ?? kf(w, Se);
+  let De = te ?? getCommands(w, Se);
   if (me) De.catch(() => {});
   let [Oe, Ae] = await Promise.all([
       me ? Promise.resolve([]) : De,
-      ne ?? SE(w, Se),
+      ne ?? getAgentDefinitionsWithOverrides(w, Se),
     ]),
     $e = [];
-  if (U && !Xr("agents", { explicitlyRequested: !0 }))
+  if (U && !isCustomizationDisabled("agents", { explicitlyRequested: !0 }))
     try {
       let Ze = xt(U);
-      if (Ze) $e = X4e(Ze, "flagSettings");
+      if (Ze) $e = parseAgentsFromJson(Ze, "flagSettings");
     } catch (Ze) {
-      h(Ze);
+      logError(Ze);
     }
   else if (U)
     n(
       "--agents: ignored in safe mode (user-supplied custom agents are disabled)",
       { level: "warn" },
     );
-  let We = Lue(Ae, [...Ae.allAgents, ...$e]),
+  let We = rebuildAgentDefinitions(Ae, [...Ae.allAgents, ...$e]),
     Ye = Rl(We.activeAgents, V);
   return (
     PW(Ye?.agentType),
@@ -8887,12 +8887,12 @@ async function* RJt() {
     (n(`getInputPrompt: stream-json stdin unreadable: ${l(w)}`, {
       level: "error",
     }),
-      h(
+      logError(
         Object.assign(Error("getInputPrompt: stream-json stdin unreadable"), {
           code: A(w),
         }),
       ),
-      await di(
+      await cliErrorAfterAnalyticsFlush(
         `Error: cannot read --input-format=stream-json messages from stdin (${A(w)}): stdin is unreadable. stream-json input requires a readable stdin for the lifetime of the session.`,
       ));
   }
@@ -8905,7 +8905,7 @@ async function mm(w, I) {
         if (O.length + te.length > um)
           return (
             process.stdin.off("data", U),
-            un(
+            cliError(
               `Error: piped stdin input exceeds ${um / 1024 / 1024}MB. Pass large content as a file path in your prompt instead.`,
             )
           );
@@ -8919,12 +8919,12 @@ async function mm(w, I) {
         n(`getInputPrompt: piped stdin unreadable: ${l(te)}`, {
           level: "error",
         }),
-        h(
+        logError(
           Object.assign(Error("getInputPrompt: piped stdin unreadable"), {
             code: A(te),
           }),
         ),
-        Ey(
+        cliWarn(
           `Warning: stdin is unreadable (${A(te)}), proceeding without piped input. ` +
             "If you piped input, it was not received \u2014 pass it as a prompt argument, or check that the process launching Claude Code wires stdin to a pipe or /dev/null.",
         ),
@@ -8933,7 +8933,7 @@ async function mm(w, I) {
     }
     let V = await Knt(process.stdin, 3000);
     if ((process.stdin.off("data", U), V))
-      Ey(
+      cliWarn(
         "Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.",
       );
     return [w, O].filter(Boolean).join(`
@@ -9187,8 +9187,8 @@ function ym(w) {
       ((O = V),
         i("tengu_session_start", {
           previous_session_id: Ee(ne),
-          source: u(te),
-          permissionMode: u(w.permissionMode),
+          source: fromEnum(te),
+          permissionMode: fromEnum(w.permissionMode),
           dangerouslySkipPermissionsPassed: w.dangerouslySkipPermissionsPassed,
           modeIsBypass: w.modeIsBypass,
           print: w.print,
@@ -9204,18 +9204,18 @@ function hm(w, I, O) {
   try {
     if (!XN() || !tp()) return null;
     if (gse(w)) return null;
-    let U = yP(w),
+    let U = isRecognizedModel(w),
       V = !U || sCt(w) || zS(w, O) || VS(w),
       te = KN,
       { window: ne, source: me } = qS(w, I, O);
     if ((me !== "auto" && ne <= te) || !V)
-      return (y("compact_context_cap_enforcement"), null);
+      return (logFeatureOk("compact_context_cap_enforcement"), null);
     let Se = U
         ? ""
         : ` or update to a Claude Code version that recognizes ${w}`,
       xe = `CLAUDE_CODE_DISABLE_1M_CONTEXT is set, but the ${te / 1000}K limit isn't enforced for ${w}, so this session can grow past it. To enforce it, set CLAUDE_CODE_AUTO_COMPACT_WINDOW=${te} (or the autoCompactWindow setting)${Se}.`;
     return (
-      f(
+      logFeatureBad(
         "compact_context_cap_enforcement",
         me === "auto" ? "window_source_auto" : "window_above_boundary",
       ),
@@ -9223,8 +9223,8 @@ function hm(w, I, O) {
     );
   } catch (U) {
     return (
-      g("compact_context_cap_enforcement", "resolve_failed"),
-      h(dt(ge(U), "cap enforcement check failed")),
+      logFeatureSad("compact_context_cap_enforcement", "resolve_failed"),
+      logError(dt(ge(U), "cap enforcement check failed")),
       null
     );
   }
@@ -9239,17 +9239,17 @@ function zS(w, I) {
       .includes(fP.header)
   ))
     return !1;
-  return Qa(Xt(Ue(w)))?.context?.supports_1m_beta === !0;
+  return Qa(Xt(getCanonicalName(w)))?.context?.supports_1m_beta === !0;
 }
 function VS(w) {
-  let I = tvn(w);
+  let I = antUpstreamContextWindow(w);
   return I !== void 0 && I > KN;
 }
 function Sm(w, I, O) {
   try {
     return YS(w, I, O);
   } catch (U) {
-    return (h(dt(ge(U), "unknown-model notice failed")), null);
+    return (logError(dt(ge(U), "unknown-model notice failed")), null);
   }
 }
 function YS(w, I, O) {
@@ -9266,7 +9266,7 @@ function YS(w, I, O) {
     Me.length > 0
       ? `; if the model accepts ${me ? "more" : "less"}, ${Me.join(", or ")}`
       : "";
-  return `${zAt(w)} Until then auto-compact keeps this session within ${Pn(V)} tokens (the context window it assumes)${Se}; CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1 restores the previous wait-for-the-API behavior.`;
+  return `${zAt(w)} Until then auto-compact keeps this session within ${formatTokens(V)} tokens (the context window it assumes)${Se}; CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1 restores the previous wait-for-the-API behavior.`;
 }
 var XS = [
   ".local",
@@ -9397,7 +9397,7 @@ function vm(w) {
     {
       cli: { model: w.userSpecifiedModel, isNonInteractiveSession: ke() },
       env: process.env,
-      settings: bn() || {},
+      settings: getSettings_DEPRECATED() || {},
       agentFrontmatter:
         w.agentModel !== void 0
           ? { model: w.agentModel, modelSource: w.agentModelSource }
@@ -9407,27 +9407,27 @@ function vm(w) {
   );
   (ad(I), YOn(O), QOn(me));
   let Me = Ume(),
-    Se = Me !== null && !QAt(Me.name);
-  if (Se) g("model_org_default", "unrecognized");
-  else l_e(JAt());
+    Se = Me !== null && !isRecognizedOrgDefaultName(Me.name);
+  if (Se) logFeatureSad("model_org_default", "unrecognized");
+  else l_e(getResolvedOrgDefaultModel());
   if (
     (tDn(a.ANTHROPIC_DEFAULT_MODEL ?? null),
     a.ANTHROPIC_DEFAULT_MODEL !== void 0)
   )
-    if (vse() === null) g("model_env_default", "inert");
-    else if (Se) g("model_env_default", "org_default_unrecognized");
-    else if (_6().attribution === "org")
-      g("model_env_default", "outranked_by_org_default");
-    else y("model_env_default");
+    if (getEnvDefaultModel() === null) logFeatureSad("model_env_default", "inert");
+    else if (Se) logFeatureSad("model_env_default", "org_default_unrecognized");
+    else if (resolveDefaultMainLoopModelSetting().attribution === "org")
+      logFeatureSad("model_env_default", "outranked_by_org_default");
+    else logFeatureOk("model_env_default");
   if (!w.routineModelTransientlySkipped)
-    sR("--model", ["-m"], O, void 0, w.storageV5);
+    syncRespawnFlag("--model", ["-m"], O, void 0, w.storageV5);
   if (te !== void 0)
-    g("startup_resolve_model", "requested_model_restricted", {
+    logFeatureSad("startup_resolve_model", "requested_model_restricted", {
       model: bt(te) ?? S("nonconforming"),
     });
   else if (ne !== void 0)
-    g("startup_resolve_model", "family_spelling_unserved");
-  else y("startup_resolve_model");
+    logFeatureSad("startup_resolve_model", "family_spelling_unserved");
+  else logFeatureOk("startup_resolve_model");
   return {
     effectiveModel: I,
     initialMainLoopModel: O,
@@ -9488,7 +9488,7 @@ function l_(w, I) {
 }
 async function d_() {
   if (a.platform === "win32") return [];
-  if (!(await hh())) return [];
+  if (!(await getIsGit())) return [];
   try {
     let w = await _se(),
       I = [
@@ -9508,13 +9508,13 @@ async function d_() {
         }
       };
     if (w) {
-      let { stdout: te } = await Be("git", [...I, `--author=${w}`], {
+      let { stdout: te } = await execFileNoThrowWithCwd("git", [...I, `--author=${w}`], {
         cwd: Q(),
       });
       U(te);
     }
     if (O.size < 10) {
-      let { stdout: te } = await Be(lt(), I, { cwd: Q() });
+      let { stdout: te } = await execFileNoThrowWithCwd(gitExe(), I, { cwd: Q() });
       U(te);
     }
     let V = Array.from(O.entries())
@@ -9566,14 +9566,14 @@ async function km(w) {
     });
 }
 function iHe(w, I, O) {
-  return (U, V) => __n(w, U, V, { storageV5: I, credentials: O }).then(P_n);
+  return (U, V) => __n(w, U, V, { storageV5: I, credentials: O }).then(hasBlockingResult);
 }
 function u_(w) {
-  let I = Ue(w, { identity: !0 });
+  let I = getCanonicalName(w, { identity: !0 });
   if (Qa(Xt(I)) !== void 0) return "compiled_catalog";
-  if (Wme(I)) return "compiled_legacy";
+  if (isRecognizedCanonical(I)) return "compiled_legacy";
   if (Xve(w, I) !== void 0) return "served_catalog";
-  if (MR().some((U) => typeof U.value === "string" && _0(U.value, w)))
+  if (getAdditionalModelOptionsCache().some((U) => typeof U.value === "string" && _0(U.value, w)))
     return "bootstrap_additional_option";
   let O = a.ANTHROPIC_CUSTOM_MODEL_OPTION;
   if (O && _0(O, w)) return "custom_option_env";
@@ -9595,7 +9595,7 @@ function m_() {
   }
 }
 function f_() {
-  if (a.CLAUDE_CODE_SESSION_KIND === "bg" || Zi()) return "forwarded_pick";
+  if (a.CLAUDE_CODE_SESSION_KIND === "bg" || isTeammate()) return "forwarded_pick";
   switch (Vd()) {
     case "sdk-ts":
     case "sdk-py":
@@ -9605,7 +9605,7 @@ function f_() {
   }
 }
 function g_() {
-  switch (_6().attribution) {
+  switch (resolveDefaultMainLoopModelSetting().attribution) {
     case "org":
       return "org_default";
     case "enforced":
@@ -9622,8 +9622,8 @@ function g_() {
 }
 function wm() {
   return {
-    model_definition_source: u(u_(rt())),
-    model_setting_source: u(m_()),
+    model_definition_source: fromEnum(u_(getMainLoopModel())),
+    model_setting_source: fromEnum(m_()),
   };
 }
 var Em = {
@@ -9643,7 +9643,7 @@ async function Rm(w, I, O) {
     if (!Hxe() || !lfe() || ywt()) return !1;
     let U = y_(I, O);
     try {
-      return await Sr(
+      return await withFeatureTelemetry(
         "claudeai_marketplaces_sync",
         () => h_(w, I),
         (V) => (V instanceof vr ? V.code : "unexpected"),
@@ -9652,7 +9652,7 @@ async function Rm(w, I, O) {
       await U;
     }
   } catch (U) {
-    if (!(U instanceof vr)) h(U);
+    if (!(U instanceof vr)) logError(U);
     return !1;
   }
 }
@@ -9679,7 +9679,7 @@ async function y_(w, I) {
         ),
       ));
   } catch (O) {
-    h(O);
+    logError(O);
   }
 }
 async function h_(w, I) {
@@ -10108,7 +10108,7 @@ async function eb(w) {
 async function Fm() {
   try {
     if (Pt()) return null;
-    let w = tr(Q());
+    let w = findGitRoot(Q());
     if (w === null) return null;
     try {
       let V = C_();
@@ -10196,14 +10196,14 @@ async function Al() {
   let w = "darwin";
   if (w === "darwin") return El("/Applications/Claude.app");
   else if (w === "linux") {
-    let { code: I, stdout: O } = await Fe("xdg-mime", [
+    let { code: I, stdout: O } = await execFileNoThrow("xdg-mime", [
       "query",
       "default",
       "x-scheme-handler/claude",
     ]);
     return I === 0 && O.trim().length > 0;
   } else if (w === "win32") {
-    let { code: I } = await Fe("reg", [
+    let { code: I } = await execFileNoThrow("reg", [
       "query",
       "HKEY_CLASSES_ROOT\\claude",
       "/ve",
@@ -10214,7 +10214,7 @@ async function Al() {
 }
 async function nb() {
   {
-    let { code: I, stdout: O } = await Fe("defaults", [
+    let { code: I, stdout: O } = await execFileNoThrow("defaults", [
       "read",
       "/Applications/Claude.app/Contents/Info.plist",
       "CFBundleShortVersionString",
@@ -10243,13 +10243,13 @@ async function ob(w) {
   n(`Opening deep link: ${w}`);
   {
     if (Ml()) {
-      let { code: U } = await Fe("osascript", [
+      let { code: U } = await execFileNoThrow("osascript", [
         "-e",
         `tell application "Electron" to open location "${w}"`,
       ]);
       return U === 0;
     }
-    let { code: O } = await Fe("open", [w]);
+    let { code: O } = await execFileNoThrow("open", [w]);
     return O === 0;
   }
   return !1;
@@ -10364,7 +10364,7 @@ ${Ae(`/plugin install ${me.name}@${V}`)}`;
   }
   countSessionsOnce(w) {
     if (this.sessionCountInFlight !== void 0) return this.sessionCountInFlight;
-    let I = iZe(w).finally(() => {
+    let I = countConcurrentSessions(w).finally(() => {
       if (this.sessionCountInFlight === I) this.sessionCountInFlight = void 0;
     });
     return ((this.sessionCountInFlight = I), I);
@@ -10374,7 +10374,7 @@ var vZ = new j(() => new Ym());
 function jm(w) {
   if (M() && w?.storageV5 !== void 0)
     return vZ.of(w.session.host).countSessionsOnce(w.storageV5);
-  return iZe(w?.storageV5);
+  return countConcurrentSessions(w?.storageV5);
 }
 async function Jm(w, I, O, U, V = ig) {
   if (!(await w.getKnownMarketplaces(O.storageV5))[V]) return !1;
@@ -10458,7 +10458,7 @@ var Qm = [
       content: async (w) => {
         let I = await G5n(w.session, w.storageV5).catch(
           (O) => (
-            g(
+            logFeatureSad(
               "tips_team_artifact_show",
               O instanceof Error
                 ? "content_scan_error"
@@ -10555,7 +10555,7 @@ var Qm = [
       isRelevant: async () => {
         try {
           let w = ee(),
-            I = bn(),
+            I = getSettings_DEPRECATED(),
             O = Boolean(w.lastPlanModeUse),
             U = Boolean(I?.permissions?.defaultMode);
           return O && !U;
@@ -10579,7 +10579,7 @@ var Qm = [
       isRelevant: async () => {
         try {
           let w = ee();
-          return (await M2e()) <= 1 && w.numStartups > 50;
+          return (await getWorktreeCount()) <= 1 && w.numStartups > 50;
         } catch (w) {
           return !1;
         }
@@ -10592,7 +10592,7 @@ var Qm = [
         "Running multiple Claude sessions? Use /color and /rename to tell them apart at a glance.",
       cooldownSessions: 10,
       isRelevant: async (w) => {
-        if (upe()) return !1;
+        if (getCurrentSessionAgentColor()) return !1;
         return (await jm(w)) >= 2;
       },
     },
@@ -10606,10 +10606,10 @@ var Qm = [
         `Running multiple Claude sessions? Press ${ut("suggestion", w.theme)(DP)} on an empty prompt to see them all in one place`,
       isRelevant: async (w) => {
         if (!Lee()) return !1;
-        if (hl()) return !1;
+        if (isTranscriptPersistenceDisabled()) return !1;
         let I = ee();
         if (I.leftArrowOpensAgents === !1) return !1;
-        if (_t()) return !1;
+        if (isBgSession()) return !1;
         if (I.hasOpenedAgentsView || I.hasUsedAgentsFleet) return !1;
         return (await jm(w)) >= 2;
       },
@@ -10623,7 +10623,7 @@ var Qm = [
           : "Run /terminal-setup to enable convenient terminal integration like Shift + Enter for new line and more",
       cooldownSessions: 10,
       async isRelevant() {
-        if (!gle()) return !1;
+        if (!shouldOfferTerminalSetup()) return !1;
         let w = ee();
         if (a.terminal === "Apple_Terminal") return !w.optionAsMetaKeyInstalled;
         return !w.shiftEnterKeyBindingInstalled;
@@ -10666,7 +10666,7 @@ var Qm = [
           : "Run /terminal-setup to enable Shift+Enter for new lines",
       cooldownSessions: 10,
       async isRelevant() {
-        if (!gle()) return !1;
+        if (!shouldOfferTerminalSetup()) return !1;
         let w = ee();
         return !(a.terminal === "Apple_Terminal"
           ? w.optionAsMetaKeyInstalled
@@ -10715,7 +10715,7 @@ var Qm = [
         "Use /statusline to set up a custom status line that will display beneath the input box",
       cooldownSessions: 25,
       advertisedCommand: "statusline",
-      isRelevant: async () => !S_() && bn().statusLine === void 0,
+      isRelevant: async () => !shouldAllowManagedHooksOnly() && getSettings_DEPRECATED().statusLine === void 0,
     },
     {
       id: "prompt-queue",
@@ -10803,9 +10803,9 @@ var Qm = [
       cooldownSessions: 10,
       isRelevant: async (w) => {
         try {
-          if (!gt()) return !1;
+          if (!isClaudeAISubscriber()) return !1;
           if (ee().slackAppInstallCount) return !1;
-          let { servers: I } = await SH({}, { storageV5: w?.storageV5 });
+          let { servers: I } = await getClaudeCodeMcpConfigs({}, { storageV5: w?.storageV5 });
           return Object.keys(I).some((O) => O.toLowerCase().includes("slack"));
         } catch (I) {
           return !1;
@@ -10845,7 +10845,7 @@ var Qm = [
       content: async () =>
         "Double-tap esc to rewind the conversation to a previous point in time",
       cooldownSessions: 10,
-      isRelevant: async () => !iw(),
+      isRelevant: async () => !fileHistoryEnabled(),
     },
     {
       id: "double-esc-code-restore",
@@ -10853,7 +10853,7 @@ var Qm = [
       content: async () =>
         "Double-tap esc to rewind the code and/or conversation to a previous point in time",
       cooldownSessions: 10,
-      isRelevant: async () => iw(),
+      isRelevant: async () => fileHistoryEnabled(),
     },
     {
       id: "continue",
@@ -10869,7 +10869,7 @@ var Qm = [
       content: async () =>
         "Name your conversations with /rename to find them easily in /resume later",
       cooldownSessions: 15,
-      isRelevant: async () => ipe() && ee().numStartups > 10,
+      isRelevant: async () => isCustomTitleEnabled() && ee().numStartups > 10,
     },
     {
       id: "custom-commands",
@@ -10880,7 +10880,7 @@ var Qm = [
       async isRelevant(w) {
         let I = ee();
         return (
-          !Xr("skills") &&
+          !isCustomizationDisabled("skills") &&
           I.numStartups > 10 &&
           !(await Hm("skills", w?.storageV5))
         );
@@ -10915,7 +10915,7 @@ var Qm = [
       async isRelevant(w) {
         let I = ee();
         return (
-          !Xr("agents") &&
+          !isCustomizationDisabled("agents") &&
           I.numStartups > 5 &&
           (await Hm("agents", w?.storageV5))
         );
@@ -10961,7 +10961,7 @@ var Qm = [
         `Use Claude Design to mock up screens before you build \xB7 ${Qg("https://claude.ai/design?utm_source=claude_code&utm_medium=tip&utm_campaign=tengu_cedar_plume", "claude.ai/design", { themeName: w.theme })}`,
       cooldownSessions: 15,
       isRelevant: async (w) => {
-        if (!gt()) return !1;
+        if (!isClaudeAISubscriber()) return !1;
         if (!Il(w)) return !1;
         return H("tengu_cedar_plume", !1);
       },
@@ -10987,7 +10987,7 @@ var Qm = [
       content: async () =>
         "Working on a plan or design doc? Ask Claude to publish it as an artifact \u2014 a polished web page you can open in your browser.",
       isRelevant: async () =>
-        !Km("artifact-publish-plan") && yR() && Gd() === null,
+        !Km("artifact-publish-plan") && isArtifactToolEnabled() && getArtifactPublishStubDir() === null,
     },
     {
       id: "artifact-duplicate",
@@ -10997,7 +10997,7 @@ var Qm = [
       content: async () =>
         "See an artifact you'd like to build on? Duplicate, in its title menu, gives you your own editable copy.",
       isRelevant: async () =>
-        !Km("artifact-duplicate") && yR() && Gd() === null,
+        !Km("artifact-duplicate") && isArtifactToolEnabled() && getArtifactPublishStubDir() === null,
     },
     {
       id: "web-app",
@@ -11015,7 +11015,7 @@ var Qm = [
       content: async (w) =>
         `Run ${ut("suggestion", w.theme)("/web-setup")} to use Claude Code on the web with the GitHub account gh is signed in to`,
       isRelevant: async (w) => {
-        if (ke() || !gt() || !nIe()) return !1;
+        if (ke() || !isClaudeAISubscriber() || !isWebSetupEnabled()) return !1;
         let I = A7t(),
           O = I ? av(I) : null;
         if (O === "gitlab" || O === "bitbucket") return !1;
@@ -11039,7 +11039,7 @@ var Qm = [
         return `Control this session from ${Qg("https://claude.com/download#mobile", "the Claude mobile app", { themeName: w.theme })} \xB7 run ${I("/remote-control")}`;
       },
       cooldownSessions: 15,
-      isRelevant: async () => Ave() && !ee().hasUsedRemoteControl && !yq(),
+      isRelevant: async () => isRemoteControlOfferable() && !ee().hasUsedRemoteControl && !yq(),
     },
     {
       id: "remote-control-next-surface",
@@ -11057,7 +11057,7 @@ var Qm = [
       cooldownSessions: 15,
       maxLifetimeShows: 3,
       isRelevant: async () => {
-        if (!Ave() || !yq()) return !1;
+        if (!isRemoteControlOfferable() || !yq()) return !1;
         if (Cl() === void 0) return !1;
         return H("tengu_maple_rung", !1);
       },
@@ -11075,7 +11075,7 @@ var Qm = [
       cooldownSessions: 10,
       advertisedCommand: "voice",
       isRelevant: async () =>
-        rNe() && !xXn(Ge()) && !xg() && !a.CLAUDE_CODE_REMOTE && !a.isSSH(),
+        rNe() && !xXn(getInitialSettings()) && !xg() && !a.CLAUDE_CODE_REMOTE && !a.isSSH(),
     },
     {
       id: "no-flicker",
@@ -11085,7 +11085,7 @@ var Qm = [
       cooldownSessions: 10,
       advertisedCommand: "tui",
       isRelevant: async () =>
-        !Ta() && Ge().tui === void 0 && !u0t() && !Dbt(kH()),
+        !Ta() && getInitialSettings().tui === void 0 && !u0t() && !Dbt(kH()),
     },
     {
       id: "console-api-key",
@@ -11093,7 +11093,7 @@ var Qm = [
         `Build your AI product with Claude API. Run ${ut("suggestion", w.theme)("/claude-api")} to get started`,
       cooldownSessions: 15,
       isRelevant: async () => {
-        if (!gt() || !wRe()) return !1;
+        if (!isClaudeAISubscriber() || !isMaxSubscriber()) return !1;
         let w = ee();
         if (w.primaryApiKey) return !1;
         if (w.customApiKeyResponses?.approved?.length) return !1;
@@ -11154,7 +11154,7 @@ var Qm = [
       cooldownSessions: 2,
       async isRelevant() {
         let w = ee(),
-          O = Mf() === "opusplan",
+          O = getUserSpecifiedModelSetting() === "opusplan",
           U = w.lastPlanModeUse
             ? (Date.now() - w.lastPlanModeUse) / 86400000
             : 1 / 0;
@@ -11183,7 +11183,7 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       content: async (w) =>
         `Say ${ut("suggestion", w.theme)('"fan out subagents"')} and Claude sends a team. Each one digs deep so nothing gets missed.`,
       cooldownSessions: 3,
-      isRelevant: async () => !gt(),
+      isRelevant: async () => !isClaudeAISubscriber(),
     },
     {
       id: "dynamic-workflows",
@@ -11206,7 +11206,7 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       isRelevant: async (w) =>
         Dc() &&
         !Vm() &&
-        (w?.toolsUsed?.has(Yc) ?? !1) &&
+        (w?.toolsUsed?.has(WORKFLOW_TOOL_NAME) ?? !1) &&
         !Gm("workflow-size-prompting"),
     },
     {
@@ -11221,7 +11221,7 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       isRelevant: async (w) =>
         Dc() &&
         !Vm() &&
-        !(w?.toolsUsed?.has(Yc) ?? !1) &&
+        !(w?.toolsUsed?.has(WORKFLOW_TOOL_NAME) ?? !1) &&
         !Gm("workflow-size-prompting-ambient"),
     },
     {
@@ -11231,9 +11231,9 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
         `${ut("suggestion", w.theme)(`/${Fbt}`)} runs any prompt on a recurring schedule. Great for monitoring deploys, babysitting PRs, or polling status.`,
       cooldownSessions: 3,
       isRelevant: async () => {
-        if (UC()) return !1;
-        if (!EC()) return !1;
-        return !gt();
+        if (isRunningInRemoteEnvironment()) return !1;
+        if (!isKairosCronEnabled()) return !1;
+        return !isClaudeAISubscriber();
       },
     },
     {
@@ -11325,7 +11325,7 @@ async function CJt(w, I) {
   } catch (O) {
     return (
       vZ.of(I.session.host).failedTipIds.add(w.id),
-      h(dt(ge(O), "tip isRelevant threw")),
+      logError(dt(ge(O), "tip isRelevant threw")),
       !1
     );
   }
@@ -11336,7 +11336,7 @@ async function b0t(w) {
     V = O.filter((Ae) => l9(Ae.id) >= Ae.cooldownSessions);
   if (U > 0 && Lye()) return V;
   let te = [...Qm, ...gb, ...(await I.getMarketplacePluginTips(w.storageV5))],
-    ne = Pe() !== "firstParty" || !fo(),
+    ne = getAPIProvider() !== "firstParty" || !isFirstPartyAnthropicBaseUrl(),
     me = te.filter((Ae) => !I.failedTipIds.has(Ae.id)),
     Me = ne ? me.filter((Ae) => Ae.providerAgnostic) : me,
     Se = await Promise.all(
@@ -11367,7 +11367,7 @@ async function ep(w, I) {
         credentials: I,
         storageV5: w,
       }),
-      U = gt() ? [Bc] : void 0,
+      U = isClaudeAISubscriber() ? [OAUTH_BETA_HEADER] : void 0,
       V = [];
     for await (let te of O.models.list({ betas: U })) {
       let ne = eor(te);
@@ -11382,7 +11382,7 @@ async function ep(w, I) {
   }
 }
 import { join as kb } from "path";
-import { createPublicKey as yb } from "crypto";
+import { createPublicKey } from "crypto";
 var hb = {
     id: "claude-code-release-signing-key",
     spkiBase64:
@@ -11412,7 +11412,7 @@ function np(w) {
   if (I === void 0) return { ok: !1, reason: "not_spki_pem" };
   let O, U;
   try {
-    let V = yb({ key: Buffer.from(I), format: "der", type: "spki" });
+    let V = createPublicKey({ key: Buffer.from(I), format: "der", type: "spki" });
     ((O = V.asymmetricKeyType), (U = V.asymmetricKeyDetails?.modulusLength));
   } catch {
     return { ok: !1, reason: "not_spki_pem" };
@@ -11637,7 +11637,7 @@ var Sp = {
 };
 var Mb = m(() => {
   let w = Er().safeParse(Sp);
-  if (!w.success) h(Error("published model-catalog seed does not parse"));
+  if (!w.success) logError(Error("published model-catalog seed does not parse"));
   return { document: w.success ? w.data : null };
 });
 function _p() {
@@ -11650,8 +11650,8 @@ function Cp(w) {
   let I = _p();
   return I === null ? null : rs(I, w);
 }
-import { createHash as Ab } from "crypto";
-import { fileURLToPath as Tb } from "url";
+import { createHash } from "crypto";
+import { fileURLToPath } from "url";
 var wp = "https://downloads.claude.ai/model-catalog/v1/catalog.json",
   Kl = ".raw-sig.json";
 function Wl() {
@@ -11660,8 +11660,8 @@ function Wl() {
 function Pp() {
   let { url: w, publicKey: I } = Wl();
   if (w === void 0 && I === void 0) return { url: void 0, publicKey: void 0 };
-  let O = dS();
-  if (!T1(O) && !(O === "remote" && jR()))
+  let O = getPolicySettingsOrigin();
+  if (!isAdminPolicyOrigin(O) && !(O === "remote" && isRemoteManagedSettingsVerified()))
     return (
       n(
         `[publishedCatalog] ignoring managed model-catalog source settings from a non-admin policy origin (${O ?? "none"}${O === "remote" ? ", unconfirmed by the server" : ""})`,
@@ -11673,7 +11673,7 @@ function Pp() {
 function is() {
   let { url: w, publicKey: I } = Wl();
   if (w === void 0 && I === void 0) return !1;
-  return dS() === "remote" && !jR();
+  return getPolicySettingsOrigin() === "remote" && !isRemoteManagedSettingsVerified();
 }
 function Ep() {
   if (!is()) return !1;
@@ -11769,10 +11769,10 @@ function xb(w, I) {
   };
 }
 function Db(w) {
-  return Ab("sha256").update(w).digest("hex").slice(0, 32);
+  return createHash("sha256").update(w).digest("hex").slice(0, 32);
 }
 function Tp(w) {
-  return Tb(w.url);
+  return fileURLToPath(w.url);
 }
 var Ob = "claude-code-model-catalog-v1\x00",
   Ip = { name: "RSASSA-PKCS1-v1_5", hash: "SHA-512" };
@@ -11888,12 +11888,12 @@ function as({ skipEssentialTrafficGate: w = !1 } = {}) {
   if (uo()) return "bare";
   if (!w && St()) return "essential_traffic";
   if (a.ANTHROPIC_UNIX_SOCKET) return "unix_socket";
-  if (!Wu()) return "not_first_party";
-  if (!gt()) return "not_claude_ai_auth";
+  if (!isFirstPartyApiBackend()) return "not_first_party";
+  if (!isClaudeAISubscriber()) return "not_claude_ai_auth";
   if (xp() === null) return "no_org";
   let I = Dp();
   if (I.accountUuid === null) return I.reason;
-  if (!Mt("allow_model_catalog")) return "policy";
+  if (!isPolicyAllowed("allow_model_catalog")) return "policy";
   return null;
 }
 function jr() {
@@ -11915,14 +11915,14 @@ function Wb(w) {
   }
 }
 function xp() {
-  let w = a.CLAUDE_CODE_ORGANIZATION_UUID ?? vn()?.organizationUuid;
+  let w = a.CLAUDE_CODE_ORGANIZATION_UUID ?? getOauthAccountInfo()?.organizationUuid;
   return Xn(w)?.toLowerCase() ?? null;
 }
 var zb = 12;
 function Dp() {
-  let w = qD();
+  let w = getClaudeAIOAuthTokenOrigin();
   if (w === "store") {
-    let O = Xn(vn()?.accountUuid);
+    let O = Xn(getOauthAccountInfo()?.accountUuid);
     return O === null
       ? { accountUuid: null, reason: "no_account" }
       : { accountUuid: O.toLowerCase() };
@@ -11967,7 +11967,7 @@ function Op(w) {
     case "not_first_party":
       return "no_3p_reader";
     case "not_claude_ai_auth":
-      return Mt("allow_model_catalog") ? null : "policy";
+      return isPolicyAllowed("allow_model_catalog") ? null : "policy";
     case "no_org":
     case "no_account":
     case "env_bearer":
@@ -12096,7 +12096,7 @@ async function Yb(w) {
   );
 }
 function Lp(w, I) {
-  return L1(w) ? hN.get(w, I) : ra.get(w, I);
+  return L1(w) ? hN.get(w, I) : externalHttp.get(w, I);
 }
 function Xb(w) {
   let I = L1(w),
@@ -12275,7 +12275,7 @@ async function rC({ mode: w, source: I, allowNetwork: O }) {
     }
   } catch (ne) {
     return (
-      h(ne),
+      logError(ne),
       {
         ...U,
         fetchStatus: "error",
@@ -12320,7 +12320,7 @@ async function Hp({ allowNetwork: w }) {
       V = ta();
     if (V !== null) {
       if (O && V === "essential_traffic")
-        (g("model_catalog_published", "essential_traffic", U),
+        (logFeatureSad("model_catalog_published", "essential_traffic", U),
           n(
             "[publishedCatalog] primary: nonessential traffic is disabled and the server-managed catalog source is not yet confirmed by the server; published path off this session",
           ));
@@ -12407,14 +12407,14 @@ async function Hp({ allowNetwork: w }) {
     }
     let Ye = Se !== void 0 && ss(Se);
     if ((qCn($e, Se?.fetchedAt, Ye), We === "seed"))
-      g("model_catalog_published", "seed", U);
-    else if (O) g("model_catalog_published", "remote_settings_unconfirmed");
-    else y("model_catalog_published");
+      logFeatureSad("model_catalog_published", "seed", U);
+    else if (O) logFeatureSad("model_catalog_published", "remote_settings_unconfirmed");
+    else logFeatureOk("model_catalog_published");
     n(
       `[publishedCatalog] primary: using ${We} rows (${Qy($e).length} rows via ${xe}${Ye ? ", stale" : ""})`,
     );
   } catch (I) {
-    if ((h(I), Or().servedCatalogActive === void 0 && Jl() === "primary"))
+    if ((logError(I), Or().servedCatalogActive === void 0 && Jl() === "primary"))
       Kr("exception", "exception");
   }
 }
@@ -12441,20 +12441,20 @@ async function aC(w) {
 }
 function lC() {
   let w = ta();
-  return w === null || (w === "essential_traffic" && (Ep() || rv() === null));
+  return w === null || (w === "essential_traffic" && (Ep() || getRemoteManagedSettingsSyncFromCache() === null));
 }
 function uC() {
-  if (!XE() || jR() || V6() !== void 0) return !1;
-  return is() || rv() === null;
+  if (!XE() || isRemoteManagedSettingsVerified() || getLastLoadStatus() !== void 0) return !1;
+  return is() || getRemoteManagedSettingsSyncFromCache() === null;
 }
 async function mC(w) {
   let I = () => {},
     O = new Promise((U) => {
       if (
-        ((I = _tt((V) => {
+        ((I = onLastLoadStatusChanged((V) => {
           if (V !== void 0) U();
         })),
-        V6() !== void 0)
+        getLastLoadStatus() !== void 0)
       )
         U();
     });
@@ -12466,7 +12466,7 @@ async function mC(w) {
 }
 function Kr(w, I, O) {
   (qCn(null),
-    g("model_catalog_published", w, O),
+    logFeatureSad("model_catalog_published", w, O),
     n(
       `[publishedCatalog] primary: published rows unavailable (${I}); using compiled behavior`,
     ));
@@ -12475,14 +12475,14 @@ function oa() {
   let w = Wp(
       NF()
         .flatMap((U) => (U.value === null ? [] : [U.value]))
-        .map((U) => wt(U)),
+        .map((U) => parseUserSpecifiedModel(U)),
     ),
-    I = rt(),
-    O = Ue(I);
+    I = getMainLoopModel(),
+    O = getCanonicalName(I);
   return {
     pickerIds: w,
-    defaultModel: ol(),
-    aliasTargets: { opus: Ll(), sonnet: Nf(), haiku: f5() },
+    defaultModel: getDefaultMainLoopModel(),
+    aliasTargets: { opus: getDefaultOpusModel(), sonnet: getDefaultSonnetModel(), haiku: getDefaultHaikuModel() },
     mainLoopModel: I,
     contextWindow: vp(I, Up()),
     maxOutputTokens: h5(I).upperLimit,
@@ -12832,7 +12832,7 @@ async function CC({ mode: w, surface: I, scope: O, allowNetwork: U }) {
     }
   } catch (ne) {
     return (
-      h(ne),
+      logError(ne),
       { ...te(), fetchStatus: "error", fetchReason: "exception", entry: V }
     );
   }
@@ -12844,7 +12844,7 @@ function uf({ allowNetwork: w }) {
   }
   let I = Or();
   if (I.servedCatalogShadowStarted) return;
-  ((I.servedCatalogShadowStarted = !0), kC(w).catch((O) => h(O)));
+  ((I.servedCatalogShadowStarted = !0), kC(w).catch((O) => logError(O)));
 }
 async function kC(w) {
   let I = await Xs({ allowNetwork: w });
@@ -12857,7 +12857,7 @@ async function kC(w) {
     try {
       U = sa(O, gP(oa));
     } catch (te) {
-      ((V = !0), h(te));
+      ((V = !0), logError(te));
     }
   (i(
     "tengu_model_catalog_compare",
@@ -12877,9 +12877,9 @@ async function kC(w) {
 function wC(w, I) {
   let O = kR();
   if (w === null || O === null) return;
-  let U = new Set(Urr(O).map((te) => Yh(ec(te)))),
+  let U = new Set(Urr(O).map((te) => firstPartyNameToCanonical(ec(te)))),
     V = w.picker.old
-      .filter((te) => !U.has(Yh(te)))
+      .filter((te) => !U.has(firstPartyNameToCanonical(te)))
       .map((te) => (I(te) ? tQ : te));
   n(
     V.length === 0
@@ -12923,11 +12923,11 @@ function AC({
     Me = w.entry,
     Se = I?.state?.selection_source;
   return {
-    mode: u(w.mode),
-    surface: u(w.surface),
-    catalog_source: we(V),
-    fetch_status: u(w.fetchStatus),
-    fetch_reason: we(w.fetchReason),
+    mode: fromEnum(w.mode),
+    surface: fromEnum(w.surface),
+    catalog_source: fromEnumOpt(V),
+    fetch_status: fromEnum(w.fetchStatus),
+    fetch_reason: fromEnumOpt(w.fetchReason),
     http_status: w.httpStatus,
     cache_age_s:
       Me === void 0
@@ -12940,7 +12940,7 @@ function AC({
     served_has_default: I?.state?.model !== void 0,
     served_has_runtime: I !== null && vVt(I),
     selection_source:
-      Se === void 0 ? void 0 : (we(PC.find((xe) => xe === Se)) ?? S("other")),
+      Se === void 0 ? void 0 : (fromEnumOpt(PC.find((xe) => xe === Se)) ?? S("other")),
     compare_failed: U,
     ...sd(O, me),
   };
@@ -12951,7 +12951,7 @@ function sd(w, I) {
   return {
     main_loop_model: od(w.mainLoopModel, I),
     behaves_as_applied: O.status === "mapped",
-    behaves_as_source: O.status === "mapped" ? u(O.source) : S("none"),
+    behaves_as_source: O.status === "mapped" ? fromEnum(O.source) : S("none"),
     unknown_unmapped: O.status === "unknown",
     served_offered_count: w.offeredCount,
     served_mapped_count: w.mappedCount,
@@ -13009,7 +13009,7 @@ function pf({ allowNetwork: w }) {
   if (!zs()) return;
   let I = Or();
   if (I.servedCatalogShadowStarted) return;
-  ((I.servedCatalogShadowStarted = !0), xC(w).catch((O) => h(O)));
+  ((I.servedCatalogShadowStarted = !0), xC(w).catch((O) => logError(O)));
 }
 async function xC(w) {
   let I = await Ys({ allowNetwork: w });
@@ -13023,7 +13023,7 @@ async function xC(w) {
     try {
       V = sa(U, gP(oa));
     } catch (ne) {
-      ((te = !0), h(ne));
+      ((te = !0), logError(ne));
     }
   (i(
     "tengu_model_catalog_compare",
@@ -13063,15 +13063,15 @@ function DC({
     xe = Se?.document,
     De = Wi(Se?.rootId);
   return {
-    mode: u(w.mode),
-    surface: u(ur()),
-    catalog_source: we(V),
-    published_fetch_status: u(w.fetchStatus),
-    published_fetch_reason: we(w.fetchReason),
+    mode: fromEnum(w.mode),
+    surface: fromEnum(ur()),
+    catalog_source: fromEnumOpt(V),
+    published_fetch_status: fromEnum(w.fetchStatus),
+    published_fetch_reason: fromEnumOpt(w.fetchReason),
     published_http_status: w.httpStatus,
     published_source: NC(w, I),
     published_version: xe?.version,
-    published_trust: we(De),
+    published_trust: fromEnumOpt(De),
     published_expired: w.expired,
     published_age_s:
       Se === void 0
@@ -13092,9 +13092,9 @@ function LC(w, I, O) {
   return ea(U, (V) => typeof V === "boolean" || typeof V === "number");
 }
 function NC(w, I) {
-  if (I === null) return u("none");
+  if (I === null) return fromEnum("none");
   let O = w.entry?.source;
-  return u(O ?? "seed");
+  return fromEnum(O ?? "seed");
 }
 var BC = ed + 250,
   jC = 2000;
@@ -13159,18 +13159,18 @@ async function yf({ allowNetwork: w }) {
     }
     let me = U !== void 0 && ds(U);
     (GCn(ne, U?.fetchedAt, me),
-      y("model_catalog_primary"),
+      logFeatureOk("model_catalog_primary"),
       n(
         `[servedCatalog] primary: using served rows (${Qy(ne).length} rows via ${V}, fetched ${Math.max(0, Math.round((Date.now() - (U?.fetchedAt ?? Date.now())) / 1000))}s ago${me ? ", stale" : ""}); the served list replaces the compiled picker for this session`,
       ));
   } catch (I) {
-    if ((h(I), Or().servedCatalogActive === void 0 && jr() === "primary"))
+    if ((logError(I), Or().servedCatalogActive === void 0 && jr() === "primary"))
       us("exception", "exception");
   }
 }
 function us(w, I) {
   (GCn(null),
-    g("model_catalog_primary", w),
+    logFeatureSad("model_catalog_primary", w),
     n(
       `[servedCatalog] primary: served rows unavailable (${I}); using compiled behavior`,
     ));
@@ -13235,7 +13235,7 @@ function GC(w) {
 }
 async function Sf(w, I, O, U) {
   try {
-    let V = await kf(w, U),
+    let V = await getCommands(w, U),
       te = $8n(),
       ne = new Set(te),
       me = [...V, ...te],
@@ -13251,7 +13251,7 @@ async function Sf(w, I, O, U) {
         ...lX(xe.source, xe.loadedFrom, xe.kind, xe.createdBy),
         skill_budget: Me,
         skill_content_chars: xe.contentLength,
-        model_invocable: Spe(xe),
+        model_invocable: isSkillToolCommand(xe),
         is_conditional: ne.has(xe),
         ...GC(xe.declaredFields),
         ...cX(xe, Se),
@@ -13259,25 +13259,25 @@ async function Sf(w, I, O, U) {
     }
     return Nqn(V);
   } catch (V) {
-    return (h(dt(ge(V), "skill load telemetry failed")), null);
+    return (logError(dt(ge(V), "skill load telemetry failed")), null);
   }
 }
 import { resolve as KC } from "path";
 function _f(w, I) {
-  if (FC()) return;
-  if (Xr("hooks")) return;
+  if (shouldDisableAllHooksIncludingManaged()) return;
+  if (isCustomizationDisabled("hooks")) return;
   let O = wl(),
-    U = S_(),
+    U = shouldAllowManagedHooksOnly(),
     V = new Set();
   for (let ne of yi) {
     if (U && ne !== "policySettings") continue;
-    let me = ho(ne);
+    let me = getSettingsFilePathForSource(ne);
     if (me) {
       let Se = KC(me);
       if (V.has(Se)) continue;
       V.add(Se);
     }
-    let Me = ye(ne)?.hooks;
+    let Me = getSettingsForSource(ne)?.hooks;
     if (!Me) continue;
     for (let [Se, xe] of Object.entries(Me))
       for (let De of xe)
@@ -13311,12 +13311,12 @@ function _f(w, I) {
   }
 }
 function bf(w) {
-  let I = $xn(w);
-  return { keyCount: I.length, keys: Ln(I.join(",")) };
+  let I = getManagedSettingsKeysForLogging(w);
+  return { keyCount: I.length, keys: fromSanitizer_SANITIZER_OUTPUT_ONLY(I.join(",")) };
 }
 function Cf(w, I) {
   let O = Qu(w, I);
-  return { flag_count: O.length, flags: Ln(O.join(",")) };
+  return { flag_count: O.length, flags: fromSanitizer_SANITIZER_OUTPUT_ONLY(O.join(",")) };
 }
 function WC(w, I, O) {
   try {
@@ -13325,7 +13325,7 @@ function WC(w, I, O) {
       .mcpClientModule();
     return U(w, I, O);
   } catch (U) {
-    return (h(U), Promise.resolve({ clients: [], tools: [], commands: [] }));
+    return (logError(U), Promise.resolve({ clients: [], tools: [], commands: [] }));
   }
 }
 var w0t = () => import.meta.require("../Teammates团队/chunk-811z9z0t.js"),
@@ -13335,9 +13335,9 @@ var w0t = () => import.meta.require("../Teammates团队/chunk-811z9z0t.js"),
   wf = null;
 function qC() {
   try {
-    let w = ye("policySettings");
+    let w = getSettingsForSource("policySettings");
     if (w) {
-      let I = Pxn();
+      let I = getPolicyEnvCompositionForLogging();
       i("tengu_managed_settings_loaded", {
         ...bf(w),
         ...(I && {
@@ -13390,20 +13390,20 @@ async function YC({
       Kt,
       Hn = {},
       Zt = Fm().catch(() => null),
-      $t = await YIn(),
+      $t = await getGitPresenceForAnalytics(),
       At = (await kt(Zt, Lm)) ?? null,
       Mn = We === null ? null : _m(We),
       rn = {
         entrypoint: S("claude"),
-        bootstrap_entry: u(RPn()),
+        bootstrap_entry: fromEnum(RPn()),
         hasInitialPrompt: V,
         hasStdin: te,
         verbose: ne,
         debug: me,
         debugToStderr: vL(),
         print: Me,
-        outputFormat: u(Se),
-        inputFormat: u(xe),
+        outputFormat: fromEnum(Se),
+        inputFormat: fromEnum(xe),
         numAllowedTools: De,
         numDisallowedTools: Oe,
         restricted: Ae,
@@ -13414,30 +13414,30 @@ async function YC({
         githubActionInputsPresent: Nt !== void 0,
         githubActionInputsLength: Nt?.length,
         dangerouslySkipPermissionsPassed: at,
-        permissionMode: u(zt),
-        proactivityLevel: we(Qt),
+        permissionMode: fromEnum(zt),
+        proactivityLevel: fromEnumOpt(Qt),
         modeIsBypass: dn,
         inProtectedNamespace: NL(),
         ...lbe(),
         ...$n,
-        apiKeySource: u(kp({ skipRetrievingKeyFromApiKeyHelper: !0 }).source),
+        apiKeySource: fromEnum(getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }).source),
         allowDangerouslySkipPermissionsPassed: ro,
-        thinkingType: u(Un.type),
-        ...(to && { systemPromptFlag: u(to) }),
-        ...(Tt && { appendSystemPromptFlag: u(Tt) }),
-        ...(on && { noFlickerEnvVar: u(on) }),
-        rendererEntryPath: u(kH()),
+        thinkingType: fromEnum(Un.type),
+        ...(to && { systemPromptFlag: fromEnum(to) }),
+        ...(Tt && { appendSystemPromptFlag: fromEnum(Tt) }),
+        ...(on && { noFlickerEnvVar: fromEnum(on) }),
+        rendererEntryPath: fromEnum(kH()),
         ...Osr(),
         ...Hn,
         is_simple: uo() || void 0,
         is_safe_mode: Hr() || void 0,
         is_coordinator: T0t?.isCoordinatorMode() ? !0 : void 0,
-        autoUpdatesChannel: u(Ge().autoUpdatesChannel ?? "latest"),
+        autoUpdatesChannel: fromEnum(getInitialSettings().autoUpdatesChannel ?? "latest"),
         ...yn,
         ...($t && {
           is_git: $t.is_git,
           has_remote: $t.has_remote,
-          remote_host_class: u($t.remote_host_class),
+          remote_host_class: fromEnum($t.remote_host_class),
         }),
         ...(At && {
           has_dockerfile: At.has_dockerfile,
@@ -13445,21 +13445,21 @@ async function YC({
           has_devcontainer: At.has_devcontainer,
           has_nix: At.has_nix,
           has_bazel: At.has_bazel,
-          lockfile_family: u(At.lockfile_family),
+          lockfile_family: fromEnum(At.lockfile_family),
           has_env_file: At.has_env_file,
           has_ci_config: At.has_ci_config,
           has_private_registry: At.has_private_registry,
-          private_registry_host_class: u(At.private_registry_host_class),
+          private_registry_host_class: fromEnum(At.private_registry_host_class),
           has_secrets_manager_refs: At.has_secrets_manager_refs,
           has_xcode_project: At.has_xcode_project,
           has_android_project: At.has_android_project,
-          os_locked_toolchain: u(At.os_locked_toolchain),
+          os_locked_toolchain: fromEnum(At.os_locked_toolchain),
         }),
         ...{},
       };
     i("tengu_init", rn);
   } catch (on) {
-    h(on);
+    logError(on);
   }
 }
 function jot(w) {
@@ -13472,7 +13472,7 @@ function jot(w) {
   i("tengu_brief_mode_enabled", {
     enabled: V,
     gated: !V,
-    source: u(O ? "env" : "flag"),
+    source: fromEnum(O ? "env" : "flag"),
   });
 }
 function XC(w) {
@@ -13526,7 +13526,7 @@ async function JC(w, I) {
       ].join(`
 `),
     ),
-    await ys(1));
+    await exitAfterAnalyticsFlush(1));
 }
 function QC(w) {
   if (ke()) {
@@ -13547,19 +13547,19 @@ function E0t(w, I, O) {
       theme: "dark",
       ...(I && { storageV5: I }),
       ...(O && { credentials: O }),
-    }).catch((V) => h(dt(ge(V), "tip prewarm failed"))),
+    }).catch((V) => logError(dt(ge(V), "tip prewarm failed"))),
     a.CLAUDE_CODE_USE_BEDROCK && !a.CLAUDE_CODE_SKIP_BEDROCK_AUTH)
   )
-    avt();
+    prefetchAwsCredentialsAndBedRockInfoIfSafe();
   if (a.CLAUDE_CODE_USE_ANTHROPIC_AWS && !a.CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH)
-    avt();
-  if (a.CLAUDE_CODE_USE_MANTLE && !a.CLAUDE_CODE_SKIP_MANTLE_AUTH) avt();
-  if (a.CLAUDE_CODE_USE_VERTEX && !a.CLAUDE_CODE_SKIP_VERTEX_AUTH) GKt();
+    prefetchAwsCredentialsAndBedRockInfoIfSafe();
+  if (a.CLAUDE_CODE_USE_MANTLE && !a.CLAUDE_CODE_SKIP_MANTLE_AUTH) prefetchAwsCredentialsAndBedRockInfoIfSafe();
+  if (a.CLAUDE_CODE_USE_VERTEX && !a.CLAUDE_CODE_SKIP_VERTEX_AUTH) prefetchGcpCredentialsIfSafe();
   if (
     a.CLAUDE_CODE_USE_ANTHROPIC_GOOGLE_CLOUD &&
     !a.CLAUDE_CODE_SKIP_ANTHROPIC_GOOGLE_CLOUD_AUTH
   )
-    GKt();
+    prefetchGcpCredentialsIfSafe();
   (pBt(Q(), AbortSignal.timeout(3000), []),
     Por(),
     tor(I),
@@ -13577,8 +13577,8 @@ function E0t(w, I, O) {
   if (UP()) air(lsr);
 }
 function A0t(w, I) {
-  let O = wt(KR() ?? ol()),
-    U = Sf(Q(), vp(O, Up()), lf(O), w);
+  let O = parseUserSpecifiedModel(KR() ?? getDefaultMainLoopModel()),
+    U = Sf(Q(), vp(O, Up()), bytesPerTokenForModel(O), w);
   ei(w, I)
     .then(async ({ enabled: V, errors: te }) => {
       let ne = Xf();
@@ -13600,15 +13600,15 @@ function A0t(w, I) {
       let me = await U;
       Fqn(V, ne, MC(), me, w);
     })
-    .catch((V) => h(dt(ge(V), "plugin session telemetry load failed")));
+    .catch((V) => logError(dt(ge(V), "plugin session telemetry load failed")));
 }
 function H8(w, I) {
-  return u(w ? "on_branch" : I ? "ref" : "default");
+  return fromEnum(w ? "on_branch" : I ? "ref" : "default");
 }
 async function x1n(w, I, O, U, V, te, ne, me, Me) {
   if (
     (Br("action_handler_start"),
-    qgn(),
+    consumeBridgeMcpCarrierMarker(),
     PGn(me),
     I.deepLinkOrigin && I.prefillB64 !== void 0 && I.prefill === void 0)
   )
@@ -13634,11 +13634,11 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
         Zf("deeplink: originalCwd changed"));
       let Le;
       using Ve = { [Symbol.dispose]: () => Le?.() };
-      if (M() && me !== void 0) Le = await GJe(me);
+      if (M() && me !== void 0) Le = await resetSettingsCacheWithBackendRead(me);
       if (U()) Vde(me, "deeplink");
-      if ((WIn(), Le !== void 0)) PD({ userLayer: "retain" });
-      else PD();
-      (Ea.cache.clear?.(), lh(me));
+      if ((resetGitFileWatcher(), Le !== void 0)) updateHooksConfigSnapshot({ userLayer: "retain" });
+      else updateHooksConfigSnapshot();
+      (getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(me));
     } catch (Le) {
       n(
         `Ignoring invalid --deep-link-cwd-b64: ${Le instanceof Error ? Le.message : Le}`,
@@ -13649,16 +13649,16 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
   if (Hr())
     ((process.env.CLAUDE_CODE_SAFE_MODE = "1"),
       (process.env.CLAUDE_CODE_DISABLE_CLAUDE_MDS = "1"),
-      y("startup_safe_mode"));
+      logFeatureOk("startup_safe_mode"));
   let Se;
   try {
     Se = Xur(I.maxTurns);
   } catch (Le) {
-    return un(l(Le));
+    return cliError(l(Le));
   }
   if (w === "code")
     (i("tengu_code_prompt_ignored", {}),
-      Ey("Tip: You can launch Claude Code with just `claude`"),
+      cliWarn("Tip: You can launch Claude Code with just `claude`"),
       (w = void 0));
   if (w && typeof w === "string" && !/\s/.test(w) && w.length > 0) {
     if (
@@ -13673,7 +13673,7 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
       let { initializeSessionTeam: Le } = await import("../Teammates团队/initializeSessionTeam.tnj1ekdv.js");
       xe = await Le(void 0, me);
     } catch (Le) {
-      h(Le);
+      logError(Le);
     }
   if (!mg())
     i(
@@ -13708,20 +13708,20 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
   if (
     typeof Hn === "string" &&
     Hn !== "" &&
-    !Xr("agents", { explicitlyRequested: !0 }) &&
+    !isCustomizationDisabled("agents", { explicitlyRequested: !0 }) &&
     !I.resume &&
     !I.continue &&
     !a.CLAUDE_BG_POST_CLEAR_RESPAWN
   ) {
-    let Le = Bdn(Hn);
+    let Le = validateAgentsJson(Hn);
     if (Le)
-      return un(`Error: Invalid --agents configuration:
+      return cliError(`Error: Invalid --agents configuration:
 ${Le}`);
   }
   let Zt = I.agent;
   if (Zt) process.env.CLAUDE_CODE_AGENT = Zt;
   let { outputFormat: $t, inputFormat: At } = I,
-    Mn = Ge().viewMode,
+    Mn = getInitialSettings().viewMode,
     rn = Bfe(),
     Lt =
       I.verbose ?? (Mn ? Mn === "verbose" : rn ? !1 : Eo("verbose", !1).value),
@@ -13735,7 +13735,7 @@ ${Le}`);
   }
   let It = I.disableSlashCommands || !1;
   HLn(It);
-  let cn = s5n(I.autocompact, Ge().autoCompactWindow),
+  let cn = s5n(I.autocompact, getInitialSettings().autoCompactWindow),
     ln = dNe() ? I.worktree : void 0,
     et = typeof ln === "string" ? ln : void 0,
     tt = ln !== void 0,
@@ -13746,11 +13746,11 @@ ${Le}`);
   }
   let Qe = dNe() && I.tmux === !0;
   if (Qe) {
-    if (!tt) return un("Error: --tmux requires --worktree");
+    if (!tt) return cliError("Error: --tmux requires --worktree");
     if (P() === "windows")
-      return un("Error: --tmux is not supported on Windows");
+      return cliError("Error: --tmux is not supported on Windows");
     if (!(await _mn()))
-      return un(`Error: tmux is not installed.
+      return cliError(`Error: tmux is not installed.
 ${ymn()}`);
   }
   let Je = XC(I);
@@ -13762,7 +13762,7 @@ ${ymn()}`);
     let Le = Je.agentId || Je.agentName || Je.teamName,
       Ve = Je.agentId && Je.agentName && Je.teamName;
     if (Le && !Ve)
-      return un(
+      return cliError(
         "Error: --agent-id, --agent-name, and --team-name must all be provided together",
       );
     if (Je.agentId && Je.agentName && Je.teamName)
@@ -13793,12 +13793,12 @@ ${ymn()}`);
     inputFormat: At,
     hasSdkUrl: Boolean(nn),
     nonInteractive: ke(),
-    isViolinWoodEnabled: Su,
+    isViolinWoodEnabled: isViolinWoodEnabled,
     hasConnect: Boolean(V?.url),
     hasSSH: Boolean(te?.host),
     rcProjectGateEnabled: !1,
   });
-  if (!Oo.ok) return Oo.flushAnalytics ? di(Oo.error) : un(Oo.error);
+  if (!Oo.ok) return Oo.flushAnalytics ? cliErrorAfterAnalyticsFlush(Oo.error) : cliError(Oo.error);
   let {
       teleport: Mr,
       cloudAttachId: Ro,
@@ -13825,7 +13825,7 @@ ${ymn()}`);
       Boolean(V?.url) ||
       Boolean(te?.host))
   )
-    return un(
+    return cliError(
       "Error: --restricted cannot be enforced in a cloud, remote-environment or ssh session, which runs its tools on another machine",
     );
   (B().host.launchOptions.replaceMayForwardHomeSettings(Ko),
@@ -13836,11 +13836,11 @@ ${ymn()}`);
     ze = I.watchArtifact ?? I.watchArtifactNoAutoreact;
   if (ze !== void 0) {
     if (a.CLAUDE_CODE_REMOTE)
-      return un(
+      return cliError(
         "Error: --watch-artifact isn't supported yet from remote sessions \u2014 run it in Claude Code on your own machine",
       );
     if (ke())
-      return un(
+      return cliError(
         "Error: --watch-artifact requires an interactive session (not print mode, --sdk-url, --init-only, or redirected output)",
       );
     if (
@@ -13850,11 +13850,11 @@ ${ymn()}`);
       Boolean(V?.url) ||
       Boolean(te?.host)
     )
-      return un(
+      return cliError(
         "Error: --watch-artifact is not available in sessions attached to a remote environment \u2014 run it in a plain local session",
       );
     let Le = xWn(ze);
-    if ("error" in Le) return un(Le.error);
+    if ("error" in Le) return cliError(Le.error);
     let Ve = typeof I.watchArtifactNoAutoreact === "string";
     (HWn(Ve ? { ...Le, autoReactDisarmed: !0 } : Le),
       (bs = Le.slug),
@@ -13873,27 +13873,27 @@ ${ymn()}`);
     forkSession: I.forkSession,
     sdkUrl: nn,
   });
-  if (!no.ok) return un(no.error);
+  if (!no.ok) return cliError(no.error);
   if (Tt) {
     if (!nn) {
       let Le = Xn(Tt);
-      if (!Le) return un("Error: Invalid session ID. Must be a valid UUID.");
-      if (!(I.forkSession && I.resume === Le) && Nyt(Le))
-        return un(`Error: Session ID ${Le} is already in use.`, znt);
+      if (!Le) return cliError("Error: Invalid session ID. Must be a valid UUID.");
+      if (!(I.forkSession && I.resume === Le) && sessionIdExists(Le))
+        return cliError(`Error: Session ID ${Le} is already in use.`, BG_EXIT_CAUSE_SESSION_IN_USE);
     }
   }
   let co = I.file;
   if (co && co.length > 0) {
     let Le = Gi();
     if (!Le)
-      return un(
+      return cliError(
         "Error: Session token required for file downloads. CLAUDE_CODE_SESSION_ACCESS_TOKEN must be set.",
       );
     let Ve = process.env.CLAUDE_CODE_REMOTE_SESSION_ID || K(),
       st = DKn(co);
     if (st.length > 0) {
       let Wt = {
-        baseUrl: process.env.ANTHROPIC_BASE_URL || Vt().BASE_API_URL,
+        baseUrl: process.env.ANTHROPIC_BASE_URL || getOauthConfig().BASE_API_URL,
         oauthToken: Le,
         sessionId: Ve,
       };
@@ -13905,7 +13905,7 @@ ${ymn()}`);
     Wr = I.systemPrompt;
   if (I.systemPromptFile) {
     if (I.systemPrompt)
-      return un(
+      return cliError(
         "Error: Cannot use both --system-prompt and --system-prompt-file. Please use only one.",
       );
     try {
@@ -13913,37 +13913,37 @@ ${ymn()}`);
       Wr = await vf(Le, "utf8");
     } catch (Le) {
       if (A(Le) === "ENOENT")
-        return un(
+        return cliError(
           `Error: System prompt file not found: ${ps(I.systemPromptFile)}`,
         );
-      return un(`Error reading system prompt file: ${l(Le)}`);
+      return cliError(`Error reading system prompt file: ${l(Le)}`);
     }
   }
   let Cs = I.appendSystemPrompt;
   if (I.appendSystemPromptFile) {
     if (I.appendSystemPrompt)
-      return un(
+      return cliError(
         "Error: Cannot use both --append-system-prompt and --append-system-prompt-file. Please use only one.",
       );
     try {
       let Le = ps(I.appendSystemPromptFile);
-      Cs = zgn(await vf(Le));
+      Cs = verifyBridgeCarrierPrompt(await vf(Le));
     } catch (Le) {
       if (A(Le) === "ENOENT")
-        return un(
+        return cliError(
           `Error: Append system prompt file not found: ${ps(I.appendSystemPromptFile)}`,
         );
-      return un(`Error reading append system prompt file: ${l(Le)}`);
+      return cliError(`Error reading append system prompt file: ${l(Le)}`);
     }
   }
   let ks = await cm(I);
-  if (!ks.ok) return un(ks.error);
+  if (!ks.ok) return cliError(ks.error);
   ((I.appendSubagentSystemPrompt = ks.prompt),
     lm(I.appendSubagentSystemPrompt));
   let { systemPrompt: gr, appendSystemPrompt: Gn } = ynr({
     cli: { systemPrompt: Wr, appendSystemPrompt: Cs },
     env: process.env,
-    settings: Ge(),
+    settings: getInitialSettings(),
   });
   if (zr() && Ot?.agentId && Ot?.agentName && Ot?.teamName) {
     let Le = zC().TEAMMATE_SYSTEM_PROMPT_ADDENDUM;
@@ -13954,7 +13954,7 @@ ${Le}`
       : Le;
   }
   let ws = Zt
-      ? zte().find((Le) => Le.agentType === Zt)?.permissionMode
+      ? getBuiltInAgents().find((Le) => Le.agentType === Zt)?.permissionMode
       : void 0,
     Dr = om({
       remote: vo,
@@ -13973,10 +13973,10 @@ ${Le}`
         Br(st.after));
     },
     Zo = () => {
-      if (XE() && !jR()) return !0;
+      if (XE() && !isRemoteManagedSettingsVerified()) return !0;
       if (tt) return !0;
       for (let Le of Ow) {
-        let Ve = Dj(ye(Le)?.env, Le);
+        let Ve = Dj(getSettingsForSource(Le)?.env, Le);
         if (Object.keys(Ve).length > 0) return !0;
       }
       return !1;
@@ -14008,7 +14008,7 @@ ${Le}`
       notification: Es,
       proactivity: Jr,
       modeSuppliedOnInvocation: Lr,
-    } = qmn({
+    } = initialPermissionModeFromCLI({
       permissionModeCli: at,
       inheritPermissionModeCli: zt,
       dangerouslySkipPermissions: Oe,
@@ -14023,17 +14023,17 @@ ${Le}`
       permissionMode: go,
       allowDangerouslySkipPermissions: Ae,
     });
-  if (ni) return un(`Error: ${ni}`);
+  if (ni) return cliError(`Error: ${ni}`);
   if (
     (v3n({ inheritPermissionModeCli: zt, resolvedMode: go, storageV5: me }),
     ILn(go === "bypassPermissions"),
     I.enableAutoMode ||
       at === "auto" ||
       ws === "auto" ||
-      (go === "auto" && !aq()) ||
-      (!at && Ymn()))
+      (go === "auto" && !isAutoModeFromFallback()) ||
+      (!at && isDefaultPermissionModeAuto()))
   )
-    uvn(!0);
+    setAutoModeFlagCli(!0);
   await V0({
     hasDynamicMcpConfig: Boolean(Nt && Nt.length > 0) || to,
     pluginStateReliable: U(),
@@ -14053,7 +14053,7 @@ ${Le}`
         So = [],
         Ls = xt(Cn, !1);
       if (Ls) {
-        let ao = vMe({
+        let ao = parseMcpConfig({
           configObject: Ls,
           filePath: "command line",
           expandVars: !0,
@@ -14064,7 +14064,7 @@ ${Le}`
         So = ao.errors;
       } else {
         let ao = ps(Cn),
-          qo = L5e({
+          qo = parseMcpConfigFromFilePath({
             filePath: ao,
             expandVars: !0,
             scope: "dynamic",
@@ -14099,7 +14099,7 @@ ${Le}`
         n(`--mcp-config validation failed (${st.length} errors): ${Cn}`, {
           level: "error",
         }),
-        un(`Error: Invalid MCP configuration:
+        cliError(`Error: Invalid MCP configuration:
 ${Cn}`)
       );
     }
@@ -14112,26 +14112,26 @@ ${Cn}`)
           pt(So)
             .replace(/[\x00-\x1f\x7f-\x9f]+/g, " ")
             .trim();
-        Ey(`Warning: ${Cn.length} ${x(Cn.length, "MCP server")} skipped due to invalid config:
+        cliWarn(`Warning: ${Cn.length} ${x(Cn.length, "MCP server")} skipped due to invalid config:
 ${Cn.map((So) => `  - ${yo(So.message)}`).join(`
 `)}`);
       }
     }
     if (Object.keys(Ve).length > 0) {
       let Cn = Boolean(a.CLAUDE_CODE_REMOTE) || br,
-        yo = wK() && !Vgn(Ve);
-      if (yo && !Cn) return un(ufe(["--mcp-config"]));
+        yo = wK() && !areMcpConfigsAllSdkType(Ve);
+      if (yo && !Cn) return cliError(ufe(["--mcp-config"]));
       let So = Si(Ve, (ki) => {
           let Qd = { ...ki, scope: "dynamic" };
           return rS(ki) ? kvt(Qd) : Qd;
         }),
-        { configs: Ls, blocked: ao } = vEe(So);
+        { configs: Ls, blocked: ao } = filterDynamicMcpServersByPolicy(So);
       if (ao.length > 0)
-        Ey(
+        cliWarn(
           `Warning: MCP ${x(ao.length, "server")} blocked by enterprise policy: ${ao.join(", ")}`,
         );
       let qo = ea(Ls, (ki) => ki.type === "sdk"),
-        Eg = Zm() && Cn && !I.strictMcpConfig && NWt(qo),
+        Eg = doesEnterpriseMcpConfigExist() && Cn && !I.strictMcpConfig && areMcpConfigsAllowedWithEnterpriseMcpConfig(qo),
         {
           servers: Jd,
           dropped: ar,
@@ -14148,11 +14148,11 @@ ${Cn.map((So) => `  - ${yo(So.message)}`).join(`
           ),
           Ia === "enterprise MCP config")
         )
-          Ey(
+          cliWarn(
             `Warning: an enterprise MCP config (managed-mcp.json) is present and has exclusive control over MCP servers; ignoring ${ar.length} MCP ${x(ar.length, "server")} supplied via --mcp-config: ${ar.join(", ")}`,
           );
         else if (Ia === "disableSideloadFlags policy")
-          Ey(
+          cliWarn(
             `Warning: managed setting disableSideloadFlags forbids --mcp-config on this machine; ignoring ${ar.length} server-delivered MCP ${x(ar.length, "server")}: ${ar.join(", ")}`,
           );
       }
@@ -14161,21 +14161,21 @@ ${Cn.map((So) => `  - ${yo(So.message)}`).join(`
   }
   let _r = I;
   vLn(_r.chrome);
-  let rr = N5e(_r.chrome) && gt();
+  let rr = shouldEnableClaudeInChrome(_r.chrome) && isClaudeAISubscriber();
   if (
     _r.chrome !== !1 &&
     (_r.chrome === !0 || a.CLAUDE_CODE_ENABLE_CFC === !0) &&
-    !rD()
+    !isClaudeInChromeAllowed()
   ) {
     let Le =
-      op("allow_claude_browser_extension", "Claude in Chrome", "is") ??
+      policyDeniedReason("allow_claude_browser_extension", "Claude in Chrome", "is") ??
       "Claude in Chrome is disabled by your organization";
     if (fn) n(`[Claude in Chrome] ${Le}`, { level: "warn" });
-    else Ey(`Warning: ${Le}`);
+    else cliWarn(`Warning: ${Le}`);
   }
-  let Ur = Yde(vd, kMe()),
-    Nr = Zm() || Ur,
-    oi = !rr && !Nr && Kgn(me),
+  let Ur = isMcpServerDenied(CLAUDE_IN_CHROME_MCP_SERVER_NAME, getClaudeInChromeMcpServerConfig()),
+    Nr = doesEnterpriseMcpConfigExist() || Ur,
+    oi = !rr && !Nr && shouldAutoEnableClaudeInChrome(me),
     Qr = rr && _r.chrome !== !0 && a.CLAUDE_CODE_ENABLE_CFC !== !0 && Nr,
     Yt =
       rr &&
@@ -14189,15 +14189,15 @@ ${Cn.map((So) => `  - ${yo(So.message)}`).join(`
     n("[Claude in Chrome] Skipping chrome wiring: --safe-mode or --restricted");
   else if (rr && Ur)
     if (fn)
-      n(`[Claude in Chrome] MCP server blocked by enterprise policy: ${vd}`, {
+      n(`[Claude in Chrome] MCP server blocked by enterprise policy: ${CLAUDE_IN_CHROME_MCP_SERVER_NAME}`, {
         level: "warn",
       });
-    else Ey(`Warning: MCP server blocked by enterprise policy: ${vd}`);
+    else cliWarn(`Warning: MCP server blocked by enterprise policy: ${CLAUDE_IN_CHROME_MCP_SERVER_NAME}`);
   else if (rr) {
     let Le = P();
     try {
       i("tengu_claude_in_chrome_setup", { platform: u0(Le) });
-      let { mcpConfig: Ve, allowedTools: st, systemPrompt: Wt } = Zde();
+      let { mcpConfig: Ve, allowedTools: st, systemPrompt: Wt } = setupClaudeInChrome();
       if (((gn = { ...gn, ...Ve }), Ye.push(...st), Wt))
         Gn = Gn
           ? `${Wt}
@@ -14208,8 +14208,8 @@ ${Gn}`
       return (
         i("tengu_claude_in_chrome_setup_failed", { platform: u0(Le) }),
         n(`[Claude in Chrome] Error: ${Ve}`),
-        h(Ve),
-        un("Error: Failed to run with Claude in Chrome.")
+        logError(Ve),
+        cliError("Error: Failed to run with Claude in Chrome.")
       );
     }
   }
@@ -14259,14 +14259,14 @@ ${Gn}`
         ? [Ke ? "--watch-artifact-no-autoreact" : "--watch-artifact", bs]
         : []),
     ]),
-    Zm())
+    doesEnterpriseMcpConfigExist())
   ) {
     if (Ct)
-      return un(
+      return cliError(
         "You cannot use --strict-mcp-config when an enterprise MCP config is present",
       );
-    if (gn && !NWt(gn))
-      return un(
+    if (gn && !areMcpConfigsAllowedWithEnterpriseMcpConfig(gn))
+      return cliError(
         "You cannot dynamically configure MCP servers when an enterprise MCP config is present",
       );
   }
@@ -14298,7 +14298,7 @@ ${Gn}`
           st.push({ kind: "server", name: Dn.slice(7) });
         else Wt.push(Dn);
       if (Wt.length > 0)
-        un(
+        cliError(
           `${Ve} entries must be tagged: ${Wt.join(", ")}
 ` +
             `  plugin:<name>@<marketplace>  \u2014 plugin-provided channel (allowlist enforced)
@@ -14361,16 +14361,16 @@ ${Gn}`
       $t !== "stream-json" &&
       a.CLAUDE_CODE_SESSION_KIND !== "bg")
   )
-    wd.forEach(Ey);
+    wd.forEach(cliWarn);
   else wd.forEach((Le) => n(`[permissions] ${E0(Le)}`, { level: "warn" }));
   N9n();
   let Pd =
-    fn && !Zs && M5e()
+    fn && !Zs && headlessSyncsClaudeAiConnectors()
       ? Xde(Me).then((Le) => {
           I5e();
-          let { allowed: Ve, blocked: st } = yH(Le ?? {});
+          let { allowed: Ve, blocked: st } = filterMcpServersByPolicy(Le ?? {});
           if (st.length > 0)
-            Ey(
+            cliWarn(
               `Warning: claude.ai MCP ${x(st.length, "server")} blocked by enterprise policy: ${st.join(", ")}`,
             );
           return Ve;
@@ -14386,38 +14386,38 @@ ${Gn}`
     _a = (
       Ct || uo() || Nn()
         ? Promise.resolve({ servers: {} })
-        : SH(gn, { storageV5: me, credentials: Me })
+        : getClaudeCodeMcpConfigs(gn, { storageV5: me, credentials: Me })
     ).then((Le) => ((Sa.value = Date.now() - Ed), Le)),
     Rd = Bo(),
-    Md = Cd();
+    Md = isWorkspacePersistedTrusted();
   if (At && At !== "text" && At !== "stream-json")
-    return un(`Error: Invalid input format "${At}".`);
+    return cliError(`Error: Invalid input format "${At}".`);
   if (At === "stream-json" && $t !== "stream-json")
-    return un(
+    return cliError(
       "Error: --input-format=stream-json requires output-format=stream-json.",
     );
   if (At === "stream-json" && !ke())
-    return un("Error: --input-format=stream-json requires --print.");
+    return cliError("Error: --input-format=stream-json requires --print.");
   {
     let Le = _ir(nn);
     if (Le !== null)
       return (
-        await qs("tengu_sdk_url_host_rejected", { code: u(Le.code) }),
-        di(
+        await qs("tengu_sdk_url_host_rejected", { code: fromEnum(Le.code) }),
+        cliErrorAfterAnalyticsFlush(
           `Error: --sdk-url rejected: ${Le.reason}. This flag is reserved for Remote Control worker processes connecting to Anthropic's backend.`,
         )
       );
   }
   if (nn) {
     if (At !== "stream-json" || $t !== "stream-json")
-      return un(
+      return cliError(
         "Error: --sdk-url requires both --input-format=stream-json and --output-format=stream-json.",
       );
     if (!a.CLAUDE_CODE_REMOTE) {
       await b_();
-      let Le = op("allow_remote_control", "Remote Control", "is");
-      if (Le) return un(Le);
-      if (bb().settings.disableRemoteControl === !0) return un(`Error: ${e5}`);
+      let Le = policyDeniedReason("allow_remote_control", "Remote Control", "is");
+      if (Le) return cliError(Le);
+      if (getSettingsWithErrors().settings.disableRemoteControl === !0) return cliError(`Error: ${e5}`);
     }
   }
   let Kf =
@@ -14428,26 +14428,26 @@ ${Gn}`
       : void 0;
   if (I.awaitInitialize) {
     if (At !== "stream-json")
-      return un(
+      return cliError(
         "Error: --await-initialize requires --input-format=stream-json.",
       );
     if (nn)
-      return un("Error: --await-initialize cannot be used with --sdk-url.");
+      return cliError("Error: --await-initialize cannot be used with --sdk-url.");
   }
   if (I.replayUserMessages) {
     if (At !== "stream-json" || $t !== "stream-json")
-      return un(
+      return cliError(
         "Error: --replay-user-messages requires both --input-format=stream-json and --output-format=stream-json.",
       );
   }
   if (I.promptSuggestions && (!fn || $t !== "stream-json"))
-    return un(
+    return cliError(
       "Error: --prompt-suggestions requires --print and --output-format=stream-json (prompt_suggestion messages are only surfaced in stream-json output).",
     );
   if (Fn) {
     if (!fn || $t !== "stream-json") {
       if (yn)
-        return un(
+        return cliError(
           "Error: --include-partial-messages requires --print and --output-format=stream-json.",
         );
       Fn = !1;
@@ -14456,32 +14456,32 @@ ${Gn}`
   if (Jo) {
     if (!fn || $t !== "stream-json") {
       if (on)
-        return un(
+        return cliError(
           "Error: --forward-subagent-text requires --print and --output-format=stream-json.",
         );
       Jo = !1;
     }
   }
   if (I.sessionPersistence === !1 && !fn)
-    return un(
+    return cliError(
       "Error: --no-session-persistence can only be used with --print mode.",
     );
   if (I.planModeInstructions && !fn)
-    return un(
+    return cliError(
       "Error: --plan-mode-instructions can only be used with --print mode.",
     );
   let so = await mm(w || "", At ?? "text"),
     zf = typeof so === "string" ? so : null;
   Br("action_after_input_prompt");
   let sr;
-  if (_Qn({ isNonInteractiveSession: fn, isBgSession: _t() }) && I.jsonSchema) {
+  if (_Qn({ isNonInteractiveSession: fn, isBgSession: isBgSession() }) && I.jsonSchema) {
     try {
       sr = z(I.jsonSchema);
     } catch (Le) {
-      return un(`Error: --json-schema is not valid JSON: ${l(Le)}`);
+      return cliError(`Error: --json-schema is not valid JSON: ${l(Le)}`);
     }
     if (typeof sr !== "object" || sr === null || Array.isArray(sr))
-      return un("Error: --json-schema must be a JSON object");
+      return cliError("Error: --json-schema must be a JSON object");
   }
   (Br("action_before_setup"), n("[STARTUP] Running setup()..."));
   let Vf = Date.now(),
@@ -14493,7 +14493,7 @@ ${Gn}`
   try {
     bl();
   } catch (Le) {
-    return (h(Le), rM(l(Le)), di());
+    return (logError(Le), printCliError(l(Le)), cliErrorAfterAnalyticsFlush());
   }
   (Xae(), zst());
   let ba = !!te?.host;
@@ -14520,14 +14520,14 @@ ${Gn}`
     Me,
   );
   if (M3(Me) && !tt && !uo() && !Hr()) ei(me, Me).catch(() => {});
-  if (!tt) T8e(ii, me);
-  let Dd = tt ? null : SE(ii, me);
+  if (!tt) warmCommandSourceCaches(ii, me);
+  let Dd = tt ? null : getAgentDefinitionsWithOverrides(ii, me);
   Dd?.catch(() => {});
   let Od = performance.now();
   try {
     await Yf;
   } catch (Le) {
-    if (Le instanceof ud) return un(Le.message);
+    if (Le instanceof ud) return cliError(Le.message);
     throw Le;
   }
   (Ts("setup_ms", performance.now() - Od, Od),
@@ -14540,15 +14540,15 @@ ${Gn}`
       replayUserMessagesFlag: Ca,
       outputFormat: $t,
       explicitSocketPath: Id,
-      socketBound: Lb.CLAUDE_CODE_MESSAGING_SOCKET !== void 0,
+      socketBound: udsEnv.CLAUDE_CODE_MESSAGING_SOCKET !== void 0,
     })),
     ke())
   )
     (dR(), j_(Po), hC(Po, me, Me), xAt());
   let Is = I.name ? si(I.name) || void 0 : void 0;
-  if (Is) (h$(Is), ZEe(Is));
+  if (Is) (cacheSessionTitle(Is), cacheAgentName(Is));
   let Kv =
-      I.model || a.ANTHROPIC_MODEL || Ge().model || a.ANTHROPIC_DEFAULT_MODEL,
+      I.model || a.ANTHROPIC_MODEL || getInitialSettings().model || a.ANTHROPIC_DEFAULT_MODEL,
     xs = I.model,
     ai = tt ? Q() : ii;
   if (!yr && TP() && TRe())
@@ -14557,12 +14557,12 @@ ${Gn}`
       after: "after_growthbook_init",
     });
   if (i2t()) YHt(Po, me, Me);
-  else if (Nb()) ($V(), JHt(me).catch(h));
+  else if (Nb()) ($V(), JHt(me).catch(logError));
   if (_wt()) (bmt(Po, Me), Rm(Po, Me, me));
-  else if (HW()) wmt().catch(h);
-  else if (hZn()) Hqn().catch(h);
+  else if (HW()) wmt().catch(logError);
+  else if (hZn()) Hqn().catch(logError);
   AVn(Po);
-  let Fd = tt ? null : kf(ai, me);
+  let Fd = tt ? null : getCommands(ai, me);
   if ((Fd?.catch(() => {}), Zd() && H("tengu_cobalt_thicket", !0))) Qsr(!0);
   n("[STARTUP] Loading commands and agents...");
   let Jf = Date.now();
@@ -14587,18 +14587,18 @@ ${Gn}`
     Zt &&
     !hn &&
     At !== "stream-json" &&
-    Zt !== uue.agentType &&
+    Zt !== CLAUDE_AGENT.agentType &&
     !I.resume &&
     !I.continue &&
     !a.CLAUDE_BG_POST_CLEAR_RESPAWN
   ) {
     let Le = pi.activeAgents.map((Ve) => Ve.agentType).join(", ");
-    return un(`--agent '${Zt}' not found. Available agents: ${Le || "(none)"}`);
+    return cliError(`--agent '${Zt}' not found. Available agents: ${Le || "(none)"}`);
   }
   if (
-    (M1({ tool_count: ci.length, skill_count: G(Zr, Spe) }),
+    (M1({ tool_count: ci.length, skill_count: G(Zr, isSkillToolCommand) }),
     Ud?.then(
-      (Le) => M1({ skill_count: G(Le, Spe) }),
+      (Le) => M1({ skill_count: G(Le, isSkillToolCommand) }),
       () => {},
     ),
     ei(me, Me).then(
@@ -14619,7 +14619,7 @@ ${Gn}`
         `[teammate] Custom agent ${Ot.agentType} not found in available agents`,
       );
   }
-  let va = Zt ?? Oet("agent");
+  let va = Zt ?? getSettingsAfterPluginLoad("agent");
   if (!hn && !Zt && va) ((hn = Rl(pi.activeAgents, va)), PW(hn?.agentType));
   ((wo = G6t(wo, hn, "cliArg")),
     n(`[STARTUP] Commands and agents loaded in ${Date.now() - Jf}ms`),
@@ -14634,7 +14634,7 @@ ${Gn}`
           { level: "warn" },
         );
       let Ve = Le.tool;
-      if (_t()) {
+      if (isBgSession()) {
         let st = Ve.call.bind(Ve);
         Ve = {
           ...Ve,
@@ -14657,16 +14657,16 @@ ${Gn}`
         await qs("tengu_structured_output_failure", {
           error: S("Invalid JSON schema"),
         }),
-        di(`Error: --json-schema is not a valid JSON Schema: ${Le.error}`)
+        cliErrorAfterAnalyticsFlush(`Error: --json-schema is not a valid JSON Schema: ${Le.error}`)
       );
   }
   if (hn)
     i("tengu_agent_flag", {
-      agentType: Mz(hn.agentType, xa(hn)),
+      agentType: agentTypeForAnalytics_GATE_EVALUATED(hn.agentType, isBuiltInAgent(hn)),
       ...(Zt && { source: S("cli") }),
     });
-  if (hn?.agentType) QEe(hn.agentType);
-  if (fn && hn && !xa(hn)) {
+  if (hn?.agentType) saveAgentSetting(hn.agentType);
+  if (fn && hn && !isBuiltInAgent(hn)) {
     let Le = hn.getSystemPrompt();
     if (Le) {
       if (hn.appendSystemPrompt)
@@ -14707,7 +14707,7 @@ ${so}`
       if (Le.status === "model") ka = Le.model;
       else if (Le.status === "transient_skip") $d = !0;
     } catch (Le) {
-      h(Le);
+      logError(Le);
     }
   let wa = ka ?? hn?.model,
     Pa;
@@ -14727,7 +14727,7 @@ ${so}`
         process.stderr.write(`Warning: ${Wt}
 `);
     } catch (Le) {
-      h(Le);
+      logError(Le);
     }
   (await yf({ allowNetwork: !ke() }), await Hp({ allowNetwork: !ke() }));
   let {
@@ -14749,7 +14749,7 @@ ${so}`
   let sg = hnr({
     cli: { fallbackModel: xr },
     env: process.env,
-    settings: Ge(),
+    settings: getInitialSettings(),
   });
   {
     let Le = Ya({ ...S$e(I.effort), mainLoopModel: To }),
@@ -14760,7 +14760,7 @@ ${so}`
         $t !== "stream-json" &&
         a.CLAUDE_CODE_SESSION_KIND !== "bg"
       )
-        Ey(Ve);
+        cliWarn(Ve);
       else n(`[effort] ${Ve}`, { level: "warn" });
   }
   let fi;
@@ -14769,7 +14769,7 @@ ${so}`
     if (Le) {
       if ((n(`[AdvisorTool] --advisor ${Le}`), !K9(To))) {
         if (a.CLAUDE_CODE_SESSION_KIND !== "bg")
-          return un(
+          return cliError(
             `Error: The model "${To}" does not support the advisor tool.`,
           );
         n(
@@ -14777,7 +14777,7 @@ ${so}`
           { level: "warn" },
         );
       }
-      let Ve = er(wt(Le));
+      let Ve = er(parseUserSpecifiedModel(Le));
       if (!Mte(Ve)) {
         let st = DF(Ve),
           Wt = st
@@ -14786,21 +14786,21 @@ ${so}`
         if (a.CLAUDE_CODE_SESSION_KIND !== "bg") {
           if (st)
             return (
-              await ul(
+              await logFeatureSadAsync(
                 "advisor_fable_consent",
                 fn
                   ? "noninteractive_set_blocked"
                   : "interactive_launch_blocked",
               ),
-              di(Wt)
+              cliErrorAfterAnalyticsFlush(Wt)
             );
-          return un(Wt);
+          return cliError(Wt);
         }
         n(`[AdvisorTool] ${Wt}`, { level: "warn" });
       }
       if (!vue(To, Ve)) {
         let st = `"${Le}" cannot advise "${To}" (the advisor must be at least as capable as the main model). The advisor will not be used for the main model.`;
-        if (a.CLAUDE_CODE_SESSION_KIND !== "bg") Ey(st);
+        if (a.CLAUDE_CODE_SESSION_KIND !== "bg") cliWarn(st);
         else n(`[AdvisorTool] ${st}`, { level: "warn" });
       }
     }
@@ -14818,16 +14818,16 @@ ${so}`
         $t !== "stream-json" &&
         a.CLAUDE_CODE_SESSION_KIND !== "bg"
       )
-        Ey(st);
+        cliWarn(st);
       else n(`[autocompact] ${st}`, { level: "warn" });
   }
-  if ((jot(I), !ke() && !Ox() && Ge().defaultView === "chat")) {
+  if ((jot(I), !ke() && !Ox() && getInitialSettings().defaultView === "chat")) {
     let { isBriefEntitled: Le } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js");
     if (Le()) lZ(!0);
   }
   let Os,
     Wd = null,
-    ag = eL();
+    ag = hasSkipDangerousModePermissionPrompt();
   if (!fn) {
     let Le =
       (await ne.runOnboarding?.({
@@ -14862,7 +14862,7 @@ ${so}`
         prompt: w,
         storageV5: me,
         credentials: Me,
-      })) ?? un("Interactive session requires the runOnboarding capability");
+      })) ?? cliError("Interactive session requires the runOnboarding capability");
     ((Os = { root: Le.root, getFpsMetrics: Le.getFpsMetrics, stats: Le.stats }),
       (Wd = Le.mcpApprovalSkipWarning),
       (gn = Le.dynamicMcpConfig),
@@ -14872,7 +14872,7 @@ ${so}`
       (so = Le.inputPrompt),
       (w = Le.prompt),
       (_a = Le.mcpConfigPromise));
-    let Ve = N6t(wo);
+    let Ve = settleProvisionalStartupMode(wo);
     if (Ve !== wo) ((wo = Ve), (go = Ve.mode));
   }
   if (process.exitCode !== void 0)
@@ -14881,7 +14881,7 @@ ${so}`
       { kind: "exited" }
     );
   if ((v4n(Po, me, Me), Os)) {
-    let { errors: Le } = bb(),
+    let { errors: Le } = getSettingsWithErrors(),
       Ve = Au(Le);
     if (Ve.length > 0 && (!Ru() || !ne.handleInvalidSettings)) Tu(Ve);
     else if (Ve.length > 0 && ne.handleInvalidSettings) {
@@ -14905,8 +14905,8 @@ ${so}`
       gi > 0 ? ` last ran ${Math.round((Date.now() - gi) / 1000)}s ago` : "";
     if (
       (n(`Starting background startup prefetches${Le}`),
-      Zmt(Me, me).catch((Ve) => h(Ve)),
-      f7(me, Me),
+      Zmt(Me, me).catch((Ve) => logError(Ve)),
+      fetchBootstrapData(me, Me),
       PXn(Me, me),
       bse(me, Me),
       Ma > 0)
@@ -14917,9 +14917,9 @@ ${so}`
       (n(
         `Skipping startup prefetches, last ran ${Math.round((Date.now() - gi) / 1000)}s ago`,
       ),
-      !uo() && Pe() === "firstParty" && trn() && !skn())
+      !uo() && getAPIProvider() === "firstParty" && bootstrapFetchCanConvergeSlot() && !skn())
     )
-      f7(me, Me);
+      fetchBootstrapData(me, Me);
     UCn();
   }
   if (!fn) km(me);
@@ -14931,15 +14931,15 @@ ${so}`
     (gn = F_e(gn, hn, {
       strictMcpConfig: Ct,
       onBlocked: (Le) =>
-        Ey(
+        cliWarn(
           `Warning: agent frontmatter MCP ${x(Le.length, "server")} blocked by enterprise policy: ${Le.join(", ")}`,
         ),
     })),
     Object.keys(gn).length > 0)
   )
     await V0({ hasDynamicMcpConfig: !0 });
-  let { configs: zd, blocked: dg } = vEe(gn),
-    { allowed: cg, blocked: ug } = yH(lg),
+  let { configs: zd, blocked: dg } = filterDynamicMcpServersByPolicy(gn),
+    { allowed: cg, blocked: ug } = filterMcpServersByPolicy(lg),
     hi = [...dg, ...ug];
   if (hi.length > 0) {
     if (
@@ -14947,13 +14947,13 @@ ${so}`
         `MCP ${x(hi.length, "server")} blocked by enterprise policy before prefetch: ${hi.join(", ")}`,
         { level: "warn" },
       ),
-      hi.includes(vd))
+      hi.includes(CLAUDE_IN_CHROME_MCP_SERVER_NAME))
     )
-      (RMe(),
+      (markClaudeInChromeUnwired(),
         (Zr = Zr.filter(
           (Le) =>
             !(
-              Le.name === vd &&
+              Le.name === CLAUDE_IN_CHROME_MCP_SERVER_NAME &&
               Le.type === "prompt" &&
               Le.source === "bundled"
             ),
@@ -15097,7 +15097,7 @@ ${so}`
       mcpClientCount: Object.keys(_i).length,
       mcpConfigs: Nn() ? null : Object.values(_i),
       worktreeEnabled: tt,
-      skipWebFetchPreflight: Ge().skipWebFetchPreflight,
+      skipWebFetchPreflight: getInitialSettings().skipWebFetchPreflight,
       githubActionInputs: a.GITHUB_ACTION_INPUTS,
       dangerouslySkipPermissionsPassed: Oe ?? !1,
       permissionMode: go,
@@ -15121,23 +15121,23 @@ ${so}`
     (tWn(wo.alwaysAllowRules),
     nKe(null, "initialization"),
     qC(),
-    iRn(me).then((Le) => {
+    registerSession(me).then((Le) => {
       if (!Le) return;
       let Ve = K();
-      (pSn({
+      (claimSessionNameAtStartup({
         sessionNameArg: Is,
-        sessionNameArgSource: E6() === void 0 ? "user" : "peer",
-        interactive: E6() === void 0 && !ke(),
+        sessionNameArgSource: envSessionKind() === void 0 ? "user" : "peer",
+        interactive: envSessionKind() === void 0 && !ke(),
         writeName: async (st, Wt) => {
-          await t1(st, me, Wt);
+          await updateSessionName(st, me, Wt);
         },
         onRenamed: (st, Wt) => {
           let Dn = si(st);
           if (K() !== Ve) return;
-          if (Dn && $Me(Ve, Wt, Dn)) (h$(Dn), ZEe(Dn));
+          if (Dn && titleCacheStillOn(Ve, Wt, Dn)) (cacheSessionTitle(Dn), cacheAgentName(Dn));
         },
       }),
-        iZe(me).then((st) => {
+        countConcurrentSessions(me).then((st) => {
           if (st >= 2) i("tengu_concurrent_sessions", { num_sessions: st });
         }));
     }),
@@ -15269,7 +15269,7 @@ async function H1n(w) {
       return;
     }
     let O = he(),
-      V = tr(O) ?? O,
+      V = findGitRoot(O) ?? O,
       te;
     try {
       te = zn(await ZC(V));
@@ -15304,7 +15304,7 @@ async function Got(w) {
 }
 async function kJt(w, I) {
   try {
-    let O = await Uke(w);
+    let O = await getRemoteUrlForDir(w);
     if (!O) return !1;
     let U = whe(O);
     if (!U) return !1;
@@ -15477,7 +15477,7 @@ function tv(w, { rerouted: I, folder: O }) {
 function nv(w, { bundle: I, folder: O }) {
   if (I === null || (w.status !== "running" && w.status !== "completed"))
     return "";
-  let U = Ft(I.sizeBytes);
+  let U = formatFileSize(I.sizeBytes);
   switch (w.id) {
     case "bundle":
       return w.status === "completed"
@@ -15510,7 +15510,7 @@ function Af(w) {
   try {
     return Xo();
   } catch (I) {
-    (h(I), n(`[MCP] ${w} connect error: ${I}`));
+    (logError(I), n(`[MCP] ${w} connect error: ${I}`));
     return;
   }
 }
@@ -15615,7 +15615,7 @@ function v0t(w, I) {
       let xe = Se.clients.find((Oe) => Oe.name === O.name);
       if (!xe || !Xo().areMcpConfigsEqual(xe.config, O.config)) {
         if (O.type === "connected")
-          (J(
+          (logMCPDebug(
             O.name,
             xe
               ? "applyConnectionResult: disposing orphaned connect (slot config changed mid-flight)"
@@ -15626,7 +15626,7 @@ function v0t(w, I) {
       }
       if (Me) {
         if (
-          (J(
+          (logMCPDebug(
             O.name,
             "applyConnectionResult: settlement superseded by an account switch \u2014 closed, not installed (the identity boundary owns the row)",
           ),
@@ -15641,12 +15641,12 @@ function v0t(w, I) {
       }
       let De =
         Ws() && O.type !== "failed" && O.type !== "disabled"
-          ? Yp(O.name, O.config)
+          ? mcpDialBlockCause(O.name, O.config)
           : null;
       if (
         Ws() &&
         De !== "managed-policy" &&
-        Uo(O.name) &&
+        isMcpServerDisabled(O.name) &&
         O.type !== "disabled"
       ) {
         let Oe =
@@ -15654,7 +15654,7 @@ function v0t(w, I) {
           xe.type === "connected" &&
           xe.client === O.client;
         if (O.type === "connected" && !Oe)
-          (J(
+          (logMCPDebug(
             O.name,
             "applyConnectionResult: disposing connect that settled after a disable",
           ),
@@ -15668,7 +15668,7 @@ function v0t(w, I) {
       }
       if (De) {
         if (O.type === "connected")
-          J(
+          logMCPDebug(
             O.name,
             `applyConnectionResult: disposing connect that settled after a ${De} deny`,
           );
@@ -15725,7 +15725,7 @@ async function qot(w, I, O, U = (V) => v0t(I, V)) {
     for (let xe of Me) {
       if (!(await Xo().discardMemoizedConnectResult(...xe))) continue;
       let [De, Oe] = xe,
-        Ae = Yp(De, Oe);
+        Ae = mcpDialBlockCause(De, Oe);
       if (Ae) {
         U({
           client: { name: De, type: "failed", config: Oe, ...Hv(Ae) },
@@ -15790,7 +15790,7 @@ function L1n(w, I, O) {
     V = (async () => {
       let te = await Xde(O);
       if (!mE(U)) return cd("list fetch");
-      let { allowed: ne, blocked: me } = yH(te);
+      let { allowed: ne, blocked: me } = filterMcpServersByPolicy(te);
       if ((I5e(), me.length > 0))
         n(
           `[MCP] claude.ai connectors blocked by enterprise policy after account switch: ${me.join(", ")}`,
@@ -15840,7 +15840,7 @@ async function Tf(w) {
 async function ov(w, I) {
   let O = w.getSuppressedPluginServers();
   if (O.length === 0) return {};
-  let { servers: U } = await SH({}, { storageV5: I }),
+  let { servers: U } = await getClaudeCodeMcpConfigs({}, { storageV5: I }),
     V = {},
     te = new Set();
   for (let ne of O) {
@@ -15888,12 +15888,12 @@ async function iv(w) {
   if (Object.keys(I).length > 0) {
     let ne = new Set();
     for (let me of Object.values(I)) {
-      let Me = cj(me);
+      let Me = getMcpServerSignature(me);
       if (Me) ne.add(Me);
     }
     for (let [me, Me] of Object.entries(O)) {
       if (!me.startsWith("plugin:")) continue;
-      let Se = cj(Me);
+      let Se = getMcpServerSignature(Me);
       if (Se && ne.has(Se)) V.add(me);
     }
     if (V.size > 0) {
@@ -15932,12 +15932,12 @@ async function iv(w) {
     }
   }
   let te = ea(O, (ne, me) => !me.startsWith("plugin:"));
-  return { ...(await CMe(I, te)), suppressedPlugins: V };
+  return { ...(await dedupClaudeAiMcpServers(I, te)), suppressedPlugins: V };
 }
 function lv({ servers: w, suppressed: I }, O, U, V) {
   return (
     O.applyMcpUpdate((te) =>
-      D5e(te.suppressedClaudeAiConnectors ?? [], I)
+      suppressedConnectorsEqual(te.suppressedClaudeAiConnectors ?? [], I)
         ? te
         : { ...te, suppressedClaudeAiConnectors: I },
     ),
@@ -16440,7 +16440,7 @@ function Ff(w) {
   return w ? $Le(w) : "the binding outcome was never reported";
 }
 function a6e(w) {
-  let I = w.startsWith("cse_") ? `session_${pr(w)}` : w;
+  let I = w.startsWith("cse_") ? `session_${sessionIdBody(w)}` : w;
   return Vn(I, 128);
 }
 function N1n(w, I, O, U) {
@@ -16524,21 +16524,21 @@ function zot({
   if (
     $v() &&
     ((me !== void 0 && !l6e(me)) ||
-      (Me && (_6().attribution === "enforced" || Bv())))
+      (Me && (resolveDefaultMainLoopModelSetting().attribution === "enforced" || Bv())))
   )
     return "allowlist";
   let Se = Uv(w) ? "remap" : void 0;
   if (I) return Se;
   if (te !== void 0 && O?.model && O.model !== "inherit") {
-    let Oe = VT("agent"),
+    let Oe = getEffectiveSettingSource("agent"),
       Ae = !U && (Oe === null || gs(Oe));
     return yd(O) || Ae ? "agent" : Se;
   }
   if (te !== void 0) return Se;
   let xe =
       !U &&
-      gs(VT("agent")) &&
-      ms().some((Oe) => !gs(Oe) && ye(Oe)?.agent !== void 0),
+      gs(getEffectiveSettingSource("agent")) &&
+      ms().some((Oe) => !gs(Oe) && getSettingsForSource(Oe)?.agent !== void 0),
     De =
       O !== void 0 &&
       yd(O) &&
@@ -16552,7 +16552,7 @@ function zot({
   if (xe || De) return "agent";
   if (Uf("ANTHROPIC_MODEL")) return "settings_env";
   if (!Me && process.env.ANTHROPIC_MODEL) return Se;
-  return gs(VT("model")) ? "settings" : Se;
+  return gs(getEffectiveSettingSource("model")) ? "settings" : Se;
 }
 function Vot({
   model: w,
@@ -16581,7 +16581,7 @@ var Lv = [
 ];
 function Uv(w) {
   return hd().some((I) => {
-    let O = ye(I),
+    let O = getSettingsForSource(I),
       U = Hf(I);
     return [
       ...Object.values(O?.modelOverrides ?? {}),
@@ -16599,14 +16599,14 @@ function ha(w) {
 }
 function Bv() {
   return ms().some(
-    (w) => w !== "policySettings" && ye(w)?.enforceAvailableModels === !0,
+    (w) => w !== "policySettings" && getSettingsForSource(w)?.enforceAvailableModels === !0,
   );
 }
 function $v() {
   return (
-    ye("policySettings")?.availableModels === void 0 &&
+    getSettingsForSource("policySettings")?.availableModels === void 0 &&
     hd().some((w) => {
-      let I = ye(w);
+      let I = getSettingsForSource(w);
       return (
         I?.availableModels !== void 0 || I?.enforceAvailableModels !== void 0
       );
@@ -16624,7 +16624,7 @@ function gd(w, I) {
   return Gf(Hf(w), I).length > 0;
 }
 function Hf(w) {
-  return Dj(ye(w)?.env, w);
+  return Dj(getSettingsForSource(w)?.env, w);
 }
 function Gf(w, I) {
   return Object.entries(w)
@@ -16640,7 +16640,7 @@ function hd() {
   return ms().filter(gs);
 }
 function gs(w) {
-  return w === "localSettings" || (w === "projectSettings" && !zT());
+  return w === "localSettings" || (w === "projectSettings" && !projectSettingsAliasesUserSettings());
 }
 export {
   V0,

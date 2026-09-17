@@ -22,49 +22,49 @@ import {
   kor,
   qe,
   Ut,
-  clearOAuthTokenCache as Hw,
+  clearOAuthTokenCache,
   H,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Xn, K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ve, zi, yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Kn, sje } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { q, Gke } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { drainRegisteredWriteQueues as y0 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { drainRegisteredWriteQueues } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt, io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { HOOK_REWRITE_HEADLESS_DENY_REASON as ktt, CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON as d0n, CAN_USE_TOOL_INVALID_RESULT_DENY_REASON as Htt, CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON as f0n, CAN_USE_TOOL_ABORTED_DENY_REASON as Rke } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { HOOK_REWRITE_HEADLESS_DENY_REASON, CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON, CAN_USE_TOOL_INVALID_RESULT_DENY_REASON, CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON, CAN_USE_TOOL_ABORTED_DENY_REASON } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ps } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { getToolPermissionContext as ce } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { Kk, nme, RD } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { turnAbortControllerOf as FJ } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { turnAbortControllerOf } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Wh } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import {
   dV,
   Xte,
-  isMisleadingConsentHost as CM,
-  consentHostEntry as tne,
-  SandboxManager as st,
+  isMisleadingConsentHost,
+  consentHostEntry,
+  SandboxManager,
   nVe,
   o3,
   l3,
-  stripWholeToolGrantsForAsk as c3,
-  withoutGrantsForRemoteScope as HO,
-  guardHookUpdatedInput as BDe,
-  hasPermissionsToUseTool as gd,
-  hookUpdatedInputSatisfiesInteraction as KBt,
-  checkRuleBasedPermissions as jv,
-  findSafetyCheckReason as WS,
+  stripWholeToolGrantsForAsk,
+  withoutGrantsForRemoteScope,
+  guardHookUpdatedInput,
+  hasPermissionsToUseTool,
+  hookUpdatedInputSatisfiesInteraction,
+  checkRuleBasedPermissions,
+  findSafetyCheckReason,
   fVe,
-  executePermissionRequestHooks as Vue,
+  executePermissionRequestHooks,
   e4n,
   c2t,
   jM,
@@ -72,7 +72,7 @@ import {
   i$,
   O3,
   gre,
-  executeNotificationHooks as gC,
+  executeNotificationHooks,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { no, sf } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
 import { Es } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
@@ -130,11 +130,11 @@ var Je = m(() =>
 function F(t, e, r, o, l) {
   if (o.forRemoteExecution === !0 || rx(o)) return;
   if (t && e.suppressesAllPermissionUpdates?.(r) === !0) {
-    let d = HO(t);
+    let d = withoutGrantsForRemoteScope(t);
     return d.length > 0 ? d : void 0;
   }
   return t && (e.suppressesAlwaysAllowRule?.(r) === !0 || l)
-    ? c3(t, e, ce(o))
+    ? stripWholeToolGrantsForAsk(t, e, getToolPermissionContext(o))
     : t;
 }
 function L0t(t, e, r, o, l = e, d = !1) {
@@ -147,7 +147,7 @@ function L0t(t, e, r, o, l = e, d = !1) {
     let f = F(t.updatedPermissions, l, r, o, d);
     if (f?.length)
       (o.setSessionToolPermissionContext((_) => Kk(_, f)),
-        RD(f, o.storageV5).catch(h));
+        RD(f, o.storageV5).catch(logError));
     let g =
       t.updatedInput && Object.keys(t.updatedInput).length > 0
         ? t.updatedInput
@@ -157,7 +157,7 @@ function L0t(t, e, r, o, l = e, d = !1) {
     (n(
       `SDK permission prompt deny+interrupt: tool=${e.name} message=${t.message}`,
     ),
-      FJ(o.abortController).abort());
+      turnAbortControllerOf(o.abortController).abort());
   return { ...t, decisionReason: p, decideLocation: "ask-path" };
 }
 import { randomUUID as M } from "crypto";
@@ -169,7 +169,7 @@ function x(t, e, r) {
   if (a.CLAUDE_CODE_DISABLE_PERMISSION_PROMPT_NOTIFY_HOOKS) return () => {};
   let o = setTimeout(
     (l, d, p) => {
-      gC(
+      executeNotificationHooks(
         { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
         {
           message: `Claude needs your permission to use ${l}`,
@@ -232,7 +232,7 @@ function ne(t, e, r, o, l) {
       p !== void 0
         ? typeof e.description === "string" && e.description
           ? qr(e.description)
-          : or(p, Iw)
+          : truncate(p, Iw)
         : qr(B(t, e));
   return {
     tool_name: t.name,
@@ -247,7 +247,7 @@ function ne(t, e, r, o, l) {
 }
 function re(t) {
   return async (e, r, o, l, d, p) => {
-    let f = p ?? (await gd(e, r, o, l, d));
+    let f = p ?? (await hasPermissionsToUseTool(e, r, o, l, d));
     if (f.behavior === "allow") return f;
     if (f.behavior === "deny") {
       if (no() && !o.abortController.signal.aborted) return sf();
@@ -259,7 +259,7 @@ function re(t) {
           behavior: "deny",
           message: "Tool permission request aborted",
           toolUseID: d,
-          decisionReason: Rke,
+          decisionReason: CAN_USE_TOOL_ABORTED_DENY_REASON,
           decideLocation: "ask-path",
         };
       return sf();
@@ -292,7 +292,7 @@ function re(t) {
         ((J = W), t.promptShown(U, P, W));
       }
       let A = f.decisionReason,
-        T = WS(A),
+        T = findSafetyCheckReason(A),
         pe = e.name === qe || e.name === Ut,
         G =
           (f.metadata && "command" in f.metadata
@@ -301,13 +301,13 @@ function re(t) {
           (pe && typeof g.command === "string"
             ? typeof g.description === "string" && g.description
               ? qr(g.description)
-              : or(qr(g.command), Iw)
+              : truncate(qr(g.command), Iw)
             : B(e, g)) ||
           void 0,
         Q =
           Xte(A) ??
           (A?.type === "subcommandResults" && T
-            ? (WS(
+            ? (findSafetyCheckReason(
                 A,
                 (P) =>
                   !P.classifierApprovable &&
@@ -339,7 +339,7 @@ function re(t) {
                 },
               }),
               classifier_approvable: T
-                ? !WS(A, (P) => !P.classifierApprovable)
+                ? !findSafetyCheckReason(A, (P) => !P.classifierApprovable)
                 : void 0,
               tool_use_id: d,
               agent_id: o.agentId,
@@ -359,7 +359,7 @@ function re(t) {
             input: g,
             messageId: l.message.id,
             toolUseID: d,
-            permissionMode: ce(o).mode,
+            permissionMode: getToolPermissionContext(o).mode,
             agentContext: o.agentContext,
             appliedAllowUpdates: (P) =>
               F(P, e, g, o, f.suppressAlwaysAllowRule === !0),
@@ -387,7 +387,7 @@ function re(t) {
             (n(
               `Hook interrupt: tool=${e.name} hookMessage=${C.outcome.decision.message}`,
             ),
-              FJ(o.abortController).abort());
+              turnAbortControllerOf(o.abortController).abort());
           return C.outcome.decision;
         }
       }
@@ -408,17 +408,17 @@ function re(t) {
         throw w;
       }
       let A = `Tool permission request failed: ${w}`,
-        T = f0n;
+        T = CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON;
       if (w instanceof AA)
         (n(
           `canUseTool returned a schema-invalid permission result for ${e.name}: ${w.message.slice(0, 2000)}`,
           { level: "error" },
         ),
           (A = `The canUseTool callback returned an invalid permission result. ${D0t}`),
-          (T = Htt));
-      else if (w instanceof zi) T = d0n;
+          (T = CAN_USE_TOOL_INVALID_RESULT_DENY_REASON));
+      else if (w instanceof zi) T = CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON;
       else if (yt(w) && R.aborted) {
-        if (((A = "Tool permission request aborted"), (T = Rke), D))
+        if (((A = "Tool permission request aborted"), (T = CAN_USE_TOOL_ABORTED_DENY_REASON), D))
           c2t(D.logContext, { kind: "turn_aborted" }, D.shownAtMs);
       }
       return {
@@ -434,8 +434,8 @@ function re(t) {
   };
 }
 async function be(t, e, r, o, l) {
-  let d = ce(o).mode,
-    p = Vue(t.name, e, r, o, d, l, o.abortController.signal);
+  let d = getToolPermissionContext(o).mode,
+    p = executePermissionRequestHooks(t.name, e, r, o, d, l, o.abortController.signal);
   for await (let f of p)
     if (
       f.permissionRequestResult &&
@@ -446,8 +446,8 @@ async function be(t, e, r, o, l) {
       if (g.behavior === "allow") {
         let _ = g.updatedInput || r;
         if (g.updatedInput) {
-          let R = BDe(
-            await jv(
+          let R = guardHookUpdatedInput(
+            await checkRuleBasedPermissions(
               t,
               _,
               { ...o, toolUseId: e },
@@ -462,7 +462,7 @@ async function be(t, e, r, o, l) {
                   ? {
                       behavior: "deny",
                       message: R.message,
-                      decisionReason: R.decisionReason ?? ktt,
+                      decisionReason: R.decisionReason ?? HOOK_REWRITE_HEADLESS_DENY_REASON,
                       decideLocation: "ask-path",
                     }
                   : { ...R, decideLocation: "ask-path" },
@@ -470,10 +470,10 @@ async function be(t, e, r, o, l) {
               permanent: !1,
             };
         }
-        if (!KBt(t, g.updatedInput) && t.requiresUserInteraction?.()) return;
+        if (!hookUpdatedInputSatisfiesInteraction(t, g.updatedInput) && t.requiresUserInteraction?.()) return;
         let y =
           t.suppressesAllPermissionUpdates?.(r) === !0
-            ? HO(g.updatedPermissions ?? [])
+            ? withoutGrantsForRemoteScope(g.updatedPermissions ?? [])
             : (g.updatedPermissions ?? []);
         if (y.length > 0)
           (o.setSessionToolPermissionContext((R) => Kk(R, y)),
@@ -768,7 +768,7 @@ class Fae {
     if (!t) return;
     (this.sessionState.republishPendingAction(t),
       i("tengu_pending_action_republished", {
-        survivor_kind: u(
+        survivor_kind: fromEnum(
           t.tool_name.startsWith("dialog:") ? "dialog" : "permission",
         ),
         pending_permission_requests: this.getPendingPermissionRequests().length,
@@ -786,7 +786,7 @@ class Fae {
       if (!this.cancelDialogByMachine(o.request_id)) continue;
       (i("tengu_request_user_dialog_implicit_cancel", {
         dialog_kind: Tn(t),
-        reason: u(e),
+        reason: fromEnum(e),
       }),
         (r += 1));
     }
@@ -819,7 +819,7 @@ class Fae {
       return !1;
     return (
       i("tengu_request_user_dialog_response_ignored", {
-        shape: u("error"),
+        shape: fromEnum("error"),
         dialog_kind: Tn(t.request.request.dialog_kind),
       }),
       n(
@@ -964,7 +964,7 @@ class Fae {
           n(
             `[structuredIO] refused update_environment_variables for non-allowlisted keys: ${l.join(", ")}`,
           );
-        if (o.includes("CLAUDE_CODE_OAUTH_TOKEN")) Hw();
+        if (o.includes("CLAUDE_CODE_OAUTH_TOKEN")) clearOAuthTokenCache();
         if (
           (n(
             `[structuredIO] applied update_environment_variables: ${o.join(", ")}`,
@@ -1015,10 +1015,10 @@ class Fae {
             (i("tengu_request_user_dialog_late_answer", {
               dialog_kind: Tn(p.dialogKind),
               lateness_ms: Date.now() - p.timedOutAt,
-              response_subtype: u(
+              response_subtype: fromEnum(
                 y === "success" || y === "error" ? y : "other",
               ),
-              behavior: u(
+              behavior: fromEnum(
                 _ === "completed" || _ === "cancelled"
                   ? _
                   : _ === void 0
@@ -1108,7 +1108,7 @@ class Fae {
           if (o || !("subtype" in r) || typeof r.subtype !== "string") {
             (i("tengu_sdk_malformed_input", {
               message_type: S("control_request"),
-              reason: u(o ? "missing_request" : "subtype_not_string"),
+              reason: fromEnum(o ? "missing_request" : "subtype_not_string"),
               transport: S("remote"),
               outcome: S("dropped"),
               has_event_uuid: "uuid" in e && Xn(e.uuid) !== null,
@@ -1151,8 +1151,8 @@ class Fae {
             message_type: S("user"),
             reason: S("invalid_message_role"),
             transport: S("remote"),
-            outcome: u(o),
-            wire_shape: u(l),
+            outcome: fromEnum(o),
+            wire_shape: fromEnum(l),
             has_event_uuid: d,
           }),
           q("warn", "cli_malformed_user_message", {
@@ -1202,8 +1202,8 @@ class Fae {
           ((this.stallFired = !0),
             i("tengu_sdk_stall", {
               session_age_ms: Date.now() - this.createdAt,
-              session_state: u(this.sessionState.getState()),
-              last_message_type: u(e),
+              session_state: fromEnum(this.sessionState.getState()),
+              last_message_type: fromEnum(e),
               pending_control_requests: this.pendingRequests.size,
             }));
         },
@@ -1215,7 +1215,7 @@ class Fae {
       let e = Sor().safeParse(t);
       if (!e.success)
         i("tengu_sdk_schema_violation", {
-          message_type: u(t.type),
+          message_type: fromEnum(t.type),
           error_path: e.error.issues[0]?.path.join(".") ?? "",
         });
     }
@@ -1631,7 +1631,7 @@ class Fae {
   createSandboxAskCallback(t, e, r) {
     let o = new Map(),
       l = async (d) => {
-        if (CM(d))
+        if (isMisleadingConsentHost(d))
           return (
             n(
               `[StructuredIO] Refusing a sandbox network ask for a host srt would re-spell: ${b(d)}`,
@@ -1642,7 +1642,7 @@ class Fae {
         try {
           let p = {
               type: "addRules",
-              rules: [{ toolName: Cr, ruleContent: `domain:${tne(d)}` }],
+              rules: [{ toolName: Cr, ruleContent: `domain:${consentHostEntry(d)}` }],
               behavior: "allow",
               destination: "localSettings",
             },
@@ -1667,7 +1667,7 @@ class Fae {
           if (g.behavior !== "allow") return !1;
           let _ = g.updatedPermissions;
           if (_ && _.length > 0) (t?.((y) => Kk(y, _)), await RD(_, e));
-          return (st.addSessionAllowedHost(d), !0);
+          return (SandboxManager.addSessionAllowedHost(d), !0);
         } catch {
           return !1;
         }
@@ -1708,7 +1708,7 @@ class Fae {
     } catch (o) {
       throw (
         i("tengu_sdk_oauth_refresh_unfulfilled", {
-          outcome: u(
+          outcome: fromEnum(
             o instanceof zi
               ? "stream_closed"
               : yt(o)
@@ -1717,7 +1717,7 @@ class Fae {
                   ? "invalid_response"
                   : "error",
           ),
-          reason: u("none"),
+          reason: fromEnum("none"),
           duration_ms: Date.now() - t,
         }),
         o
@@ -1729,8 +1729,8 @@ class Fae {
     if (r !== void 0) hor(r);
     return (
       i("tengu_sdk_oauth_refresh_unfulfilled", {
-        outcome: u(r !== void 0 ? "declined" : "null"),
-        reason: u(r ?? "none"),
+        outcome: fromEnum(r !== void 0 ? "declined" : "null"),
+        reason: fromEnum(r ?? "none"),
         duration_ms: Date.now() - t,
       }),
       null
@@ -1768,7 +1768,7 @@ class Fae {
 async function L(t) {
   console.error(t);
   let e = Date.now() + 2000;
-  (await Dt(y0(), 2000, "write queue drain timeout (exit)").catch(() => {}),
+  (await Dt(drainRegisteredWriteQueues(), 2000, "write queue drain timeout (exit)").catch(() => {}),
     await Dt(
       Gke(),
       Math.max(0, e - Date.now()),

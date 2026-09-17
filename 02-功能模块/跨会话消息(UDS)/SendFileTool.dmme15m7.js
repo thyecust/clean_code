@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 187 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Dr } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { Ve, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -21,10 +21,10 @@ import { Xme, uf, GCt, yr, jD, eZe } from "../认证-OAuth登录/认证-OAuth登
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { hasIsolatePeerMachines as gie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { ps, isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { ps, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt, Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import {
@@ -41,8 +41,8 @@ import {
   EPe,
   SF,
 } from "../Teammates团队/chunk-sr4920wy.js";
-import { ni, sm, READ_PATH_PROBE as Gy, readPermissionDecisionForPath as ww } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Ds, i3, gzn, hzn, x3, getCurrentSessionPeerNameFor as n8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { ni, sm, READ_PATH_PROBE, readPermissionDecisionForPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { Ds, i3, gzn, hzn, x3, getCurrentSessionPeerNameFor } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { $Ae, UAe, z3t, BAe, xSn, mD } from "./chunk-ddtmwhn7.js";
 import { $i } from "../Teammates团队/chunk-t899nada.js";
 import { hO, uI, rOe, Lpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
@@ -63,8 +63,8 @@ import { d7e, YNe, _Sn } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { Vr } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
 import { cp } from "../Teammates团队/chunk-enjekn9t.js";
 import { s, T, O, v, c, Qe, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { realpath as ue, unlink as me } from "fs/promises";
-import { basename as J } from "path";
+import { realpath, unlink } from "fs/promises";
+import { basename } from "path";
 var Q = m(() =>
     Qe({
       to: s().describe(
@@ -297,7 +297,7 @@ function be({ toolUseId: e, toolState: o }, a) {
 var oe =
   "If the recipient is a Remote Control or cloud session, the file contents travel via Anthropic's servers to another machine.";
 function te(e, o, a) {
-  if (!gie() || e.behavior !== "ask") return e;
+  if (!hasIsolatePeerMachines() || e.behavior !== "ask") return e;
   return (
     re(o, a),
     {
@@ -321,7 +321,7 @@ function Se({ toolUseId: e, toolState: o }, a) {
 function Ne(e) {
   return e?.type === "rule" && e.rule?.ruleBehavior === "ask";
 }
-var $e = Tt({
+var SendFileTool = Tt({
   name: i3,
   searchHint: "send files to another Claude Code session",
   ruleContentField: "files",
@@ -358,8 +358,8 @@ var $e = Tt({
     return `to ${e.to}: ${o}${a}`;
   },
   async checkPermissions(e, o) {
-    let a = ce(o),
-      f = ni(a, Gy);
+    let a = getToolPermissionContext(o),
+      f = ni(a, READ_PATH_PROBE);
     if (f)
       return {
         behavior: "deny",
@@ -368,7 +368,7 @@ var $e = Tt({
       };
     let t,
       p,
-      b = e.files.map((h) => ww(ot(h), a)),
+      b = e.files.map((h) => readPermissionDecisionForPath(ot(h), a)),
       k = b.find((h) => h.behavior === "deny");
     if (k) return k;
     for (let h of b)
@@ -380,7 +380,7 @@ var $e = Tt({
         if (t === void 0) t = h;
       }
     if (p !== void 0) return te(p, o, e);
-    let _ = sm(a, Gy);
+    let _ = sm(a, READ_PATH_PROBE);
     if (_)
       return te(
         {
@@ -393,7 +393,7 @@ var $e = Tt({
         o,
         e,
       );
-    if (gie()) {
+    if (hasIsolatePeerMachines()) {
       let h;
       try {
         ((h = await se(e.to, e.message ?? "", o)), _e(o, e, h));
@@ -513,7 +513,7 @@ var $e = Tt({
       k = be(o, e),
       _ = Se(o, e),
       h = o.abortController.signal,
-      C = ce(o);
+      C = getToolPermissionContext(o);
     if (!rOe())
       return (
         i("tengu_send_file", {
@@ -560,14 +560,14 @@ var $e = Tt({
         }),
         { data: { success: !1, message: d.message, files: [] } }
       );
-    let z = n8e(d.kind),
+    let z = getCurrentSessionPeerNameFor(d.kind),
       M = (r) =>
         p?.trim()
           ? p
           : `Sent you ${r.length} ${x(r.length, "file")}: ${r.join(", ")}`,
       B = (r, y) => {
         i("tengu_send_file", {
-          transport: u(d.kind),
+          transport: fromEnum(d.kind),
           file_count: b.length,
           delivered_count: y,
           success: r,
@@ -580,16 +580,16 @@ var $e = Tt({
     async function W(r) {
       let y;
       try {
-        y = await ue(r);
+        y = await realpath(r);
       } catch {
         return !0;
       }
       if (y === r) return !0;
-      if (ww(y, C).behavior === "allow") return !0;
+      if (readPermissionDecisionForPath(y, C).behavior === "allow") return !0;
       return `resolves to '${y}', which is not readable under this session's permissions`;
     }
     let U = b.map((r) => ot(r)),
-      j = U.map((r) => J(r));
+      j = U.map((r) => basename(r));
     if (d.kind === "uds") {
       let r = Array(U.length),
         y = await Promise.all(
@@ -620,7 +620,7 @@ var $e = Tt({
       Aan();
       let N = y.filter((g) => g !== void 0),
         E = () => {
-          for (let g of N) me(g.path).catch(() => {});
+          for (let g of N) unlink(g.path).catch(() => {});
         };
       if (h.aborted) throw (E(), new Ve());
       if (N.length === 0)
@@ -659,12 +659,12 @@ var $e = Tt({
         );
       }
     }
-    if (Pe() !== "firstParty" || St() || !Mt("allow_send_file"))
+    if (getAPIProvider() !== "firstParty" || St() || !isPolicyAllowed("allow_send_file"))
       return w(
         "Cross-machine file transfer is unavailable: it uploads file contents through Anthropic servers, which this provider/privacy configuration does not allow. Same-machine (uds:) transfers still work.",
       );
     let F = await IGe({
-      tool: $e,
+      tool: SendFileTool,
       input: { to: t, files: b, message: p },
       context: o,
       canUseTool: a,
@@ -678,7 +678,7 @@ var $e = Tt({
       ((p = F.input.message),
         (b = F.input.files),
         (U = b.map((r) => ot(r))),
-        (j = U.map((r) => J(r))));
+        (j = U.map((r) => basename(r))));
     let { uploadBytesToBridgeStore: ie } = await import("../Bridge-RemoteControl/uploadBytesToBridgeStore.rrjdccq9.js"),
       D = Array(U.length),
       ae = await Promise.all(
@@ -762,4 +762,4 @@ var $e = Tt({
     };
   },
 });
-export { $e as SendFileTool };
+export { SendFileTool };

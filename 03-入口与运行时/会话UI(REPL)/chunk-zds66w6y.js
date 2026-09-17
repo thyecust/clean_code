@@ -15,8 +15,8 @@ import { wS, tXt } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { K7, hue, j9, Ng } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { WJ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import { Td } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { spawn as C, spawnSync as S } from "child_process";
-import { basename as g } from "path";
+import { spawn, spawnSync as S } from "child_process";
+import { basename } from "path";
 function O(t) {
   return !!qR(t);
 }
@@ -26,11 +26,11 @@ function w(t) {
   for (let r of e) {
     if (/^\/[^/]+$/.test(r)) continue;
     if (r.startsWith("-")) continue;
-    let o = g(r);
+    let o = basename(r);
     if (b.has(o.toLowerCase())) continue;
     return o;
   }
-  return g(e[0] ?? t);
+  return basename(e[0] ?? t);
 }
 var I = [
     "code",
@@ -67,7 +67,7 @@ function zle(t, e) {
       f = { detached: !0, stdio: "ignore", windowsHide: !0 },
       c;
     return (
-      (c = C(l, [...u, ...i], f)),
+      (c = spawn(l, [...u, ...i], f)),
       c.on("error", (m) => n(`editor spawn failed: ${m}`, { level: "error" })),
       wS(c.pid),
       c.unref(),
@@ -76,7 +76,7 @@ function zle(t, e) {
   }
   let d = ws().get(process.stdout);
   if (!d) return !1;
-  let s = e && A.test(g(l));
+  let s = e && A.test(basename(l));
   d.enterAlternateScreen();
   try {
     let i = { stdio: "inherit" },

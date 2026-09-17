@@ -42,12 +42,12 @@ import {
   aL,
   wx,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { BG, Sl } from "./chunk-7s6mt1vg.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { findGitRoot as tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { qE, _N, iwt, aJ, Obn } from "./chunk-ajtn749s.js";
 import { aP, DEn } from "../MCP客户端/chunk-3kmsshb6.js";
@@ -97,7 +97,7 @@ function yUn(e, t) {
     marketplace: u,
   };
 }
-import { readFile as Je, unlink as Ze } from "fs/promises";
+import { readFile as Je, unlink } from "fs/promises";
 import { join as je } from "path";
 var he = 1,
   Qe = "plugin-catalog-cache.json",
@@ -187,7 +187,7 @@ async function rt(e, t) {
         return;
       }
     } else (await ae().mkdir(Sl()), await On(a, b(e), 384));
-    await Ze(je(Sl(), "install-counts-cache.json")).catch(() => {});
+    await unlink(je(Sl(), "install-counts-cache.json")).catch(() => {});
   } catch (a) {
     n(`Failed to save plugin catalog cache: ${l(a)}`, { level: "error" });
   }
@@ -196,7 +196,7 @@ async function ot() {
   n(`Fetching plugin catalog from ${Z}`);
   let e = performance.now();
   try {
-    let t = await ra.get(Z, { timeout: 1e4, maxContentLength: iwt }),
+    let t = await externalHttp.get(Z, { timeout: 1e4, maxContentLength: iwt }),
       a = Ae().safeParse(t.data);
     if (!a.success) throw Error("Invalid response format from plugin catalog");
     return (qE("plugin_catalog", Z, "success", performance.now() - e), a.data);
@@ -281,8 +281,8 @@ function nOt(e) {
   return t.endsWith(".0") ? `${t.slice(0, -2)}M` : `${t}M`;
 }
 import {
-  lstat as lt,
-  readdir as ve,
+  lstat,
+  readdir,
   readFile as $e,
   stat as ze,
 } from "fs/promises";
@@ -1375,7 +1375,7 @@ async function $t(e) {
 async function Pe(e, t) {
   let a;
   try {
-    a = await ve(e, { withFileTypes: !0 });
+    a = await readdir(e, { withFileTypes: !0 });
   } catch (i) {
     let f = A(i);
     if (f === "ENOENT" || f === "ENOTDIR")
@@ -1426,7 +1426,7 @@ async function Pt(e) {
   let { files: r } = await Pe(t, !0);
   for (let o of r)
     if (
-      await lt(o).then(
+      await lstat(o).then(
         () => !0,
         (f) => {
           let u = A(f);
@@ -1581,7 +1581,7 @@ async function Ce(e) {
     a = new Set(["claude.md", "claude.local.md"]),
     r = [];
   try {
-    r = await ve(e, { withFileTypes: !0 });
+    r = await readdir(e, { withFileTypes: !0 });
   } catch {}
   for (let i of r) {
     if (!i.isFile() || !a.has(i.name.toLowerCase())) continue;
@@ -1740,7 +1740,7 @@ async function Rt(e) {
   let f = h.join(e, "bin"),
     u = new Set();
   if (await JXe(f))
-    u = await ve(f)
+    u = await readdir(f)
       .then((d) => new Set(d))
       .catch(() => new Set());
   let k = [];
@@ -1789,10 +1789,10 @@ async function Rt(e) {
 var Ye = pe(pg(), 1);
 import { readFile as Ge, stat as jt } from "fs/promises";
 import {
-  dirname as ce,
+  dirname,
   join as ue,
-  relative as ne,
-  resolve as Se,
+  relative,
+  resolve,
   sep as Ue,
 } from "path";
 async function e9e(e, t = {}) {
@@ -1804,7 +1804,7 @@ async function e9e(e, t = {}) {
     k = [u];
   if (u.success) k.push(...(await Ce(o)));
   for (let g of k)
-    for (let P of g.warnings) a.push(`${ne(Q(), g.filePath)}: ${P.message}`);
+    for (let P of g.warnings) a.push(`${relative(Q(), g.filePath)}: ${P.message}`);
   let C = k.find((g) => !g.success);
   if (C) {
     let g = C.errors.map((P) => `  ${P.path}: ${P.message}`).join(`
@@ -1836,9 +1836,9 @@ ${g}`,
     return {
       ok: !1,
       error:
-        `No version to tag. Set "version" in ${ne(Q(), i)}` +
+        `No version to tag. Set "version" in ${relative(Q(), i)}` +
         (y
-          ? ` or in the marketplace entry at ${ne(Q(), y.path)} plugins[${y.entryIndex}].`
+          ? ` or in the marketplace entry at ${relative(Q(), y.path)} plugins[${y.entryIndex}].`
           : ".") +
         " Tags are only used for dependency version constraints, which require an explicit semver \u2014 the git-SHA fallback does not need a tag.",
       warnings: a,
@@ -1846,7 +1846,7 @@ ${g}`,
   if (y?.entry.version && p !== void 0 && y.entry.version !== p)
     return {
       ok: !1,
-      error: `Version mismatch: plugin.json says "${p}" but ${ne(Q(), y.path)} plugins[${y.entryIndex}].version says "${y.entry.version}". plugin.json wins at install time, so update the marketplace entry to "${p}" (or remove it) before tagging.`,
+      error: `Version mismatch: plugin.json says "${p}" but ${relative(Q(), y.path)} plugins[${y.entryIndex}].version says "${y.entry.version}". plugin.json wins at install time, so update the marketplace entry to "${p}" (or remove it) before tagging.`,
       warnings: a,
     };
   if (Ye.valid(S) === null)
@@ -1862,7 +1862,7 @@ ${g}`,
       error: `Computed tag name "${E}" is not a valid git ref. Check the plugin name for characters git rejects (spaces, ~, ^, :, ?, *, [, \\, or sequences like .., @{, //).`,
       warnings: a,
     };
-  let d = tr(o);
+  let d = findGitRoot(o);
   if (d === null)
     return {
       ok: !1,
@@ -1920,7 +1920,7 @@ async function t9e(e, t) {
   let a = ["-C", e.gitRoot, "tag"];
   if (t.force) a.push("-f");
   a.push("-a", e.tag, "-m", u0e(e, t.message), "HEAD");
-  let r = await Fe("git", a);
+  let r = await execFileNoThrow("git", a);
   if (r.code !== 0)
     return {
       ok: !1,
@@ -1935,7 +1935,7 @@ async function t9e(e, t) {
   let o = ["-C", e.gitRoot, "push"];
   if (t.force) o.push("--force");
   o.push(t.remote, `refs/tags/${e.tag}`);
-  let i = await Fe("git", o, { allowRepoGitHooks: !0, useCwd: !0 });
+  let i = await execFileNoThrow("git", o, { allowRepoGitHooks: !0, useCwd: !0 });
   if (i.code !== 0)
     return {
       ok: !1,
@@ -1949,7 +1949,7 @@ function u0e(e, t) {
     : t.replaceAll("%s", e.version);
 }
 async function Tt(e) {
-  let t = Se(e),
+  let t = resolve(e),
     a;
   try {
     a = await jt(t);
@@ -1960,10 +1960,10 @@ async function Tt(e) {
     };
   }
   let r = a.isFile()
-    ? [[ce(ce(t)), t]]
+    ? [[dirname(dirname(t)), t]]
     : [
         [t, ue(t, ".claude-plugin", "plugin.json")],
-        [ce(t), ue(t, "plugin.json")],
+        [dirname(t), ue(t, "plugin.json")],
       ];
   for (let [o, i] of r) {
     let f;
@@ -1992,7 +1992,7 @@ async function Tt(e) {
   };
 }
 async function At(e, t) {
-  let a = tr(e) ?? void 0,
+  let a = findGitRoot(e) ?? void 0,
     r = e;
   for (;;) {
     let o = ue(r, ".claude-plugin", "marketplace.json"),
@@ -2002,7 +2002,7 @@ async function At(e, t) {
         if (xt(k, r, e, t)) return { path: o, entryIndex: u, entry: k };
     }
     if (r === a) return;
-    let f = ce(r);
+    let f = dirname(r);
     if (f === r) return;
     r = f;
   }
@@ -2026,21 +2026,21 @@ async function Nt(e) {
 }
 function xt(e, t, a, r) {
   if (typeof e.source === "string") {
-    let o = Se(t, e.source);
+    let o = resolve(t, e.source);
     return Mt(o, a);
   }
   return e.name === r;
 }
 function Mt(e, t) {
   let a = (r) => {
-    let o = Se(r);
+    let o = resolve(r);
     return o.endsWith(Ue) ? o.slice(0, -Ue.length) : o;
   };
   return a(e) === a(t);
 }
 async function _t(e, t) {
-  let a = t.map((o) => ne(e, o) || "."),
-    r = await Fe("git", ["-C", e, "status", "--porcelain", "--", ...a]);
+  let a = t.map((o) => relative(e, o) || "."),
+    r = await execFileNoThrow("git", ["-C", e, "status", "--porcelain", "--", ...a]);
   if (r.code !== 0) return [];
   return r.stdout
     .split(
@@ -2051,7 +2051,7 @@ async function _t(e, t) {
     .filter((o) => o.length > 0);
 }
 async function Ot(e, t) {
-  let a = await Fe("git", ["-C", e, "tag", "-l", "--", t]);
+  let a = await execFileNoThrow("git", ["-C", e, "tag", "-l", "--", t]);
   return a.code === 0 && a.stdout.trim() === t;
 }
 export {

@@ -11,9 +11,9 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { bD } from "../共享小工具-未细化/chunk-cyyrj58q.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { constants as p, statSync as m } from "fs";
-import { access as h, stat as g } from "fs/promises";
-import { isAbsolute as d, join as w } from "path";
+import { constants, statSync } from "fs";
+import { access, stat as g } from "fs/promises";
+import { isAbsolute, join as w } from "path";
 var eb = "CLAUDE_CODE_PROCESS_WRAPPER",
   bfe = 12000,
   c = { argv: [], error: null, platformIgnored: !1, record: "" };
@@ -62,7 +62,7 @@ async function YE() {
 async function _wn(r) {
   try {
     if (!(await g(r)).isFile()) return !1;
-    return (await h(r, p.X_OK), !0);
+    return (await access(r, constants.X_OK), !0);
   } catch {
     return !1;
   }
@@ -98,12 +98,12 @@ function v(r) {
     return i(
       `launcher \`${s}\` is Claude Code's own launch path \u2014 point ${eb} at your launcher, not at claude`,
     );
-  if (!d(s))
+  if (!isAbsolute(s))
     return i(
       "the launcher must be an absolute path, not a bare name resolved via PATH",
     );
   try {
-    let o = m(s);
+    let o = statSync(s);
     if (!o.isFile() || (o.mode & 73) === 0)
       return i(`launcher \`${s}\` is not an executable regular file`);
   } catch {

@@ -136,7 +136,7 @@ Reference: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.ht
       );
     return e;
   };
-var Y =
+var fromSSO =
   (e = {}) =>
   async ({ callerClientConfig: f } = {}) => {
     e.logger?.debug("@aws-sdk/credential-provider-sso - fromSSO");
@@ -219,4 +219,4 @@ var Y =
         logger: e.logger,
       });
   };
-export { Y as fromSSO };
+export { fromSSO };

@@ -10,9 +10,9 @@
 
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { isBgSession as _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
-import { IF, xn, flushSessionStorage as kc } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { IF, xn, flushSessionStorage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
@@ -138,7 +138,7 @@ Learn more at ${D}`,
         }
         ((c = await a9(x(), "desktop_handoff", {}, H)),
           s({ state: "flushing" }),
-          await kc(),
+          await flushSessionStorage(),
           s({ state: "opening" }));
         let i = await ZNn();
         if (!i.success) {
@@ -151,7 +151,7 @@ Learn more at ${D}`,
               (u("Session transferred to Claude Desktop", {
                 display: "system",
               }),
-              _t())
+              isBgSession())
             )
               HB({ broadcast: !0 });
             await xn(0, "other");

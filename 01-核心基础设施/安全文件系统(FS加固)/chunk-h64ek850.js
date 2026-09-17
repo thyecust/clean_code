@@ -9,32 +9,32 @@
 // Version: 2.1.263
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Z } from "../共享小工具-未细化/chunk-510m1t2d.js";
-import { randomBytes as et } from "crypto";
+import { randomBytes } from "crypto";
 import {
-  closeSync as E,
-  constants as o,
-  fchmodSync as B,
-  fstatSync as k,
-  ftruncateSync as nt,
-  lstatSync as C,
-  openSync as L,
-  readFileSync as rt,
-  renameSync as at,
-  unlinkSync as D,
-  writeFileSync as W,
+  closeSync,
+  constants,
+  fchmodSync,
+  fstatSync,
+  ftruncateSync,
+  lstatSync,
+  openSync,
+  readFileSync,
+  renameSync,
+  unlinkSync,
+  writeFileSync,
 } from "fs";
 import {
-  lstat as Y,
+  lstat,
   open as v,
-  rename as it,
+  rename,
   stat as ot,
-  unlink as P,
-  writeFile as J,
+  unlink,
+  writeFile,
 } from "fs/promises";
 var lv = new Set(["EXDEV", "EPERM", "EEXIST", "EBUSY"]),
   q2e = new Set(["EPERM", "EBUSY", "EACCES"]);
 function lB(t) {
-  return `${t}.tmp.${et(4).toString("hex")}`;
+  return `${t}.tmp.${randomBytes(4).toString("hex")}`;
 }
 function kA(t, n) {
   let e = `${n}.tmp.`;
@@ -55,7 +55,7 @@ function V(t, n) {
 var j = 128;
 async function ft(t) {
   try {
-    return ((await Y(t)).mode & j) === 0;
+    return ((await lstat(t)).mode & j) === 0;
   } catch {
     return !1;
   }
@@ -74,17 +74,17 @@ async function pPn(t, n) {
       throw i;
     }
 }
-function Ri(t, n, e = it) {
+function Ri(t, n, e = rename) {
   return pPn(() => e(t, n), n);
 }
 function lt(t) {
   try {
-    return (C(t).mode & j) === 0;
+    return (lstatSync(t).mode & j) === 0;
   } catch {
     return !1;
   }
 }
-function fPn(t, n, e = at) {
+function fPn(t, n, e = renameSync) {
   let r = !1;
   for (let i = 0; ; i++)
     try {
@@ -100,11 +100,11 @@ function fPn(t, n, e = at) {
 }
 var Wcr = new Set(["ENOSPC", "EIO", "EDQUOT", "EFBIG"]),
   H = 67108864,
-  Kie = o.O_NONBLOCK;
+  Kie = constants.O_NONBLOCK;
 async function K(t, n, e = "darwin") {
   if (e !== "win32") return !0;
   try {
-    return (await Y(t)).isFile();
+    return (await lstat(t)).isFile();
   } catch (r) {
     return n && A(r) === "ENOENT";
   }
@@ -112,7 +112,7 @@ async function K(t, n, e = "darwin") {
 function z(t, n, e = "darwin") {
   if (e !== "win32") return !0;
   try {
-    return C(t).isFile();
+    return lstatSync(t).isFile();
   } catch (r) {
     return n && A(r) === "ENOENT";
   }
@@ -121,7 +121,7 @@ async function dt(t, n = !1) {
   if (!n && !(await K(t, !0))) return { kind: "unavailable" };
   let e;
   try {
-    e = await v(t, o.O_RDONLY | (n ? 0 : o.O_NOFOLLOW) | Kie);
+    e = await v(t, constants.O_RDONLY | (n ? 0 : constants.O_NOFOLLOW) | Kie);
   } catch (r) {
     return A(r) === "ENOENT" ? { kind: "absent" } : { kind: "unavailable" };
   }
@@ -145,7 +145,7 @@ async function ht(t, n, e = !1) {
   try {
     r = await v(
       t,
-      o.O_WRONLY | o.O_CREAT | o.O_TRUNC | (e ? 0 : o.O_NOFOLLOW) | Kie,
+      constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | (e ? 0 : constants.O_NOFOLLOW) | Kie,
       n.mode,
     );
   } catch {
@@ -183,7 +183,7 @@ var F = 3;
 async function Q(t, n) {
   if (n !== "win32") return !1;
   try {
-    return (await Y(t), !0);
+    return (await lstat(t), !0);
   } catch (e) {
     return A(e) === "ENOENT" ? !1 : { cause: e };
   }
@@ -216,21 +216,21 @@ async function G(t, n, e) {
 async function hW(t, n, e, r = "darwin") {
   return G(t, r, async (i) => {
     try {
-      return (await J(i, n, { encoding: "utf8", mode: e, flag: "wx" }), i);
+      return (await writeFile(i, n, { encoding: "utf8", mode: e, flag: "wx" }), i);
     } catch (a) {
-      if (A(a) !== "EEXIST") await P(i).catch(() => {});
+      if (A(a) !== "EEXIST") await unlink(i).catch(() => {});
       throw a;
     }
   });
 }
 async function mt(t, n, e = "darwin") {
   return G(t, e, async (r) => ({
-    fh: await v(r, e === "win32" ? "wx" : o.O_WRONLY | o.O_CREAT | o.O_EXCL, n),
+    fh: await v(r, e === "win32" ? "wx" : constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL, n),
     tmp: r,
   }));
 }
 async function Xke(t, n, e, r = "darwin") {
-  (await Yke(t, r), await J(t, n, { encoding: "utf8", mode: e, flag: "wx" }));
+  (await Yke(t, r), await writeFile(t, n, { encoding: "utf8", mode: e, flag: "wx" }));
 }
 async function Yke(t, n = "darwin") {
   let e = await Q(t, n);
@@ -251,14 +251,14 @@ async function Yie(t, n, e) {
       renameFn: _,
     } = e,
     d = r ?? i,
-    S = w === !0 ? 0 : o.O_NOFOLLOW,
+    S = w === !0 ? 0 : constants.O_NOFOLLOW,
     h,
     p = !1,
     y = !1,
     N = async (s) => {
       let c = await dt(t, w === !0),
         m = c.kind === "snapshot" ? c : void 0,
-        f = await v(t, o.O_WRONLY | o.O_CREAT | S | Kie, a ?? d),
+        f = await v(t, constants.O_WRONLY | constants.O_CREAT | S | Kie, a ?? d),
         b;
       try {
         b = await f.stat();
@@ -298,7 +298,7 @@ async function Yie(t, n, e) {
         let q =
           m !== void 0 && (await ht(t, m, w === !0))
             ? "restored"
-            : (await P(t).then(
+            : (await unlink(t).then(
                   () => !0,
                   (tt) => A(tt) === "ENOENT",
                 ))
@@ -307,7 +307,7 @@ async function Yie(t, n, e) {
         throw O(g, s, q);
       }
       let I = s ?? h;
-      if (I !== void 0) await P(I).catch(() => {});
+      if (I !== void 0) await unlink(I).catch(() => {});
     };
   try {
     try {
@@ -366,36 +366,36 @@ async function Yie(t, n, e) {
       await N(s);
     }
   } catch (s) {
-    if (h !== void 0 && !p) await P(h).catch(() => {});
+    if (h !== void 0 && !p) await unlink(h).catch(() => {});
     throw s;
   }
 }
 function x(t) {
   try {
-    D(t);
+    unlinkSync(t);
   } catch {}
 }
 function wt(t) {
   if (!z(t, !0)) return { kind: "unavailable" };
   let n;
   try {
-    n = L(t, o.O_RDONLY | o.O_NOFOLLOW | Kie);
+    n = openSync(t, constants.O_RDONLY | constants.O_NOFOLLOW | Kie);
   } catch (e) {
     return A(e) === "ENOENT" ? { kind: "absent" } : { kind: "unavailable" };
   }
   try {
-    let e = k(n);
+    let e = fstatSync(n);
     if (!e.isFile() || e.size > H) return { kind: "unavailable" };
     return {
       kind: "snapshot",
-      bytes: new Uint8Array(rt(n)),
+      bytes: new Uint8Array(readFileSync(n)),
       mode: e.mode & 4095,
     };
   } catch {
     return { kind: "unavailable" };
   } finally {
     try {
-      E(n);
+      closeSync(n);
     } catch {}
   }
 }
@@ -403,22 +403,22 @@ function yt(t, n) {
   if (!z(t, !0)) return !1;
   let e;
   try {
-    e = L(t, o.O_WRONLY | o.O_CREAT | o.O_TRUNC | o.O_NOFOLLOW | Kie, n.mode);
+    e = openSync(t, constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | constants.O_NOFOLLOW | Kie, n.mode);
   } catch {
     return !1;
   }
   let r = !1;
   try {
-    if (!k(e).isFile()) return ((r = !0), E(e), !1);
-    W(e, n.bytes);
+    if (!fstatSync(e).isFile()) return ((r = !0), closeSync(e), !1);
+    writeFileSync(e, n.bytes);
     try {
-      B(e, n.mode);
+      fchmodSync(e, n.mode);
     } catch {}
-    return ((r = !0), E(e), !0);
+    return ((r = !0), closeSync(e), !0);
   } catch {
     if (!r)
       try {
-        E(e);
+        closeSync(e);
       } catch {}
     return !1;
   }
@@ -426,7 +426,7 @@ function yt(t, n) {
 function pt(t, n) {
   if (n !== "win32") return !1;
   try {
-    return (C(t), !0);
+    return (lstatSync(t), !0);
   } catch (e) {
     return A(e) === "ENOENT" ? !1 : { cause: e };
   }
@@ -440,7 +440,7 @@ function Et(t, n, e, r = "darwin") {
       throw M(a, u);
     }
     try {
-      return (W(a, n, { encoding: "utf8", mode: e, flag: "wx" }), a);
+      return (writeFileSync(a, n, { encoding: "utf8", mode: e, flag: "wx" }), a);
     } catch (w) {
       if (A(w) === "EEXIST") {
         if (i < F) continue;
@@ -462,21 +462,21 @@ function x0(t, n, e, r) {
       if (w === void 0 || !lv.has(w)) throw u;
       let T = wt(t),
         _ = T.kind === "snapshot" ? T : void 0,
-        d = L(t, o.O_WRONLY | o.O_CREAT | o.O_NOFOLLOW | Kie, e),
+        d = openSync(t, constants.O_WRONLY | constants.O_CREAT | constants.O_NOFOLLOW | Kie, e),
         S = !1;
       {
         let y;
         try {
-          y = k(d);
+          y = fstatSync(d);
         } catch (N) {
           try {
-            E(d);
+            closeSync(d);
           } catch {}
           throw ((i = !0), O(N, a, "untouched"));
         }
         if (((S = y.isCharacterDevice()), !y.isFile() && !S)) {
           try {
-            E(d);
+            closeSync(d);
           } catch {}
           throw Object.assign(
             Error("refusing the in-place arm on a non-regular target"),
@@ -487,19 +487,19 @@ function x0(t, n, e, r) {
       let h = !1,
         p = !1;
       try {
-        if (!S) (nt(d, 0), (p = !0));
+        if (!S) (ftruncateSync(d, 0), (p = !0));
         if (
-          (W(d, n, { encoding: "utf8" }),
+          (writeFileSync(d, n, { encoding: "utf8" }),
           e !== void 0 && T.kind !== "absent" && !S)
         )
           try {
-            B(d, e);
+            fchmodSync(d, e);
           } catch {}
-        ((h = !0), E(d));
+        ((h = !0), closeSync(d));
       } catch (y) {
         if (!h)
           try {
-            E(d);
+            closeSync(d);
           } catch {}
         if (!p) throw ((i = !0), O(y, a, "untouched"));
         i = !0;
@@ -508,7 +508,7 @@ function x0(t, n, e, r) {
         if (N) s = "restored";
         else
           try {
-            (D(t), (s = "removed"));
+            (unlinkSync(t), (s = "removed"));
           } catch (c) {
             s = A(c) === "ENOENT" ? "removed" : "partial";
           }

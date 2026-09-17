@@ -12,12 +12,12 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { zg, CU, $f, H, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { resolveExecutableSafely as EL } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { Vd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { spawnSync as h } from "child_process";
+import { spawnSync } from "child_process";
 function C() {
   return {
     loggedTmuxCcDisable: !1,
@@ -45,11 +45,11 @@ function g(e) {
   if (((e.tmuxControlModeProbed = f()), e.tmuxControlModeProbed)) return;
   if (!a.TMUX) return;
   if (a.TERM_PROGRAM) return;
-  let r = EL("tmux");
+  let r = resolveExecutableSafely("tmux");
   if (r === null) return;
   let o;
   try {
-    o = h(r, ["display-message", "-p", "#{client_control_mode}"], {
+    o = spawnSync(r, ["display-message", "-p", "#{client_control_mode}"], {
       encoding: "utf8",
       timeout: 2000,
       cwd: void 0,
@@ -158,7 +158,7 @@ function Ta(e = XI) {
         ));
     return !1;
   }
-  switch (Ge().tui ?? a1e()) {
+  switch (getInitialSettings().tui ?? a1e()) {
     case "fullscreen":
       return !0;
     case "default":
@@ -185,7 +185,7 @@ function XAe(e = XI) {
   if (e.crashAutoOff || F7e()) return !1;
   if (u()) return !1;
   if (dG(e)) return !1;
-  switch (Ge().tui) {
+  switch (getInitialSettings().tui) {
     case "fullscreen":
       return !0;
     case "default":
@@ -201,7 +201,7 @@ function kH(e = XI) {
   if (e.crashAutoOff) return "crash_auto_off";
   if (dG(e)) return "tmux_cc_auto_off";
   if (u()) return "win_ssh_auto_off";
-  let r = Ge().tui;
+  let r = getInitialSettings().tui;
   switch (r ?? a1e()) {
     case "fullscreen":
       return r === "fullscreen" ? "settings_on" : "upsell_trial_on";
@@ -300,7 +300,7 @@ var T = {
 function t(e, r) {
   let { cacheKey: o, args: m } = T[r];
   return (
-    (e[o] ??= Fe("tmux", [...m], { useCwd: !1, timeout: 2000 }).then(
+    (e[o] ??= execFileNoThrow("tmux", [...m], { useCwd: !1, timeout: 2000 }).then(
       ({ stdout: b, code: E }) => (E === 0 ? b.trim() : null),
     )),
     e[o]

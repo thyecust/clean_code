@@ -21,7 +21,7 @@ import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { e1e, y7e } from "./chunk-tznd4407.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-function Z(so) {
+function McpTaskDetailDialog(so) {
   let s = _(63),
     { task: n, onDone: K, onKill: d, onBack: m } = so,
     c;
@@ -203,4 +203,4 @@ function Z(so) {
   else Y = s[62];
   return Y;
 }
-export { Z as McpTaskDetailDialog };
+export { McpTaskDetailDialog };

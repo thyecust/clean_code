@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { oe, To, B0 } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { g2t, uH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ti } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 var Udt = 5,
@@ -55,7 +55,7 @@ function V6n(t, r) {
     let e = r === void 0 ? 0 : t.lastIndexOf(r) + 1;
     return a(e === 0 ? t : t.slice(e));
   } catch (e) {
-    h(e);
+    logError(e);
     return;
   }
 }

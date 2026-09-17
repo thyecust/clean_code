@@ -12,10 +12,10 @@ import { Id, vu, Ag, BP, eje } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Dt, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { OR } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { parsePermissionMode as gf, UNRECOGNIZED_PERMISSION_MODE_ERROR as Rie } from "../权限系统/chunk-e4pfvp7x.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { parsePermissionMode, UNRECOGNIZED_PERMISSION_MODE_ERROR } from "../权限系统/chunk-e4pfvp7x.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { yt, mi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -430,8 +430,8 @@ function F$e(e) {
 function arr(e, t) {
   if (t === 0) return;
   i("tengu_human_origin_presumed", {
-    consumer: u(e),
-    count_bucket: u(t === 1 ? "1" : t <= 5 ? "2-5" : "6+"),
+    consumer: fromEnum(e),
+    count_bucket: fromEnum(t === 1 ? "1" : t <= 5 ? "2-5" : "6+"),
   });
 }
 var Me = new RegExp(`<${Id}>([^<]*)</${Id}>`);
@@ -440,7 +440,7 @@ function xe(e, t) {
   if (r === void 0 || r === "") return !1;
   return r === t.trimStart().split(/\s/, 1)[0];
 }
-import { randomUUID as T } from "crypto";
+import { randomUUID } from "crypto";
 function N$e(e) {
   if (e === null || typeof e !== "object") return e;
   let t = e;
@@ -594,12 +594,12 @@ function urr(e, t, r, s, d, S) {
       }
       if (a) r.add(a);
       (i("tengu_bridge_message_received", { is_repl: !0 }),
-        y("bridge_message_receive"),
+        logFeatureOk("bridge_message_receive"),
         s?.(p));
     } else n(`[bridge:repl] Ignoring non-user inbound message: type=${p.type}`);
   } catch (p) {
     (n(`[bridge:repl] Failed to parse ingress message: ${l(p)}`),
-      f("bridge_message_receive", "bridge_message_receive_parse_failed"));
+      logFeatureBad("bridge_message_receive", "bridge_message_receive_parse_failed"));
   }
 }
 var Pe = new Set(["effortLevel", "ultracode"]),
@@ -667,7 +667,7 @@ function je(e, t, r, s, d = Ve) {
           subtype: "informational",
           content: Qn(E),
           level: "notice",
-          uuid: T(),
+          uuid: randomUUID(),
           session_id: r,
         });
     },
@@ -814,7 +814,7 @@ function prr(e, t) {
         try {
           o = p?.() ?? [];
         } catch (I) {
-          (f("bridge_initialize_commands", "get_commands_threw"),
+          (logFeatureBad("bridge_initialize_commands", "get_commands_threw"),
             n(
               `[bridge:repl] getCommands failed; acking initialize with commands: []: ${l(I)}`,
             ));
@@ -853,7 +853,7 @@ function prr(e, t) {
     case "set_model": {
       let o = e.request.model;
       if (o != null && typeof o !== "string") {
-        (f("model_switch", "invalid_model_type"),
+        (logFeatureBad("model_switch", "invalid_model_type"),
           (h = {
             type: "control_response",
             response: {
@@ -911,10 +911,10 @@ function prr(e, t) {
       break;
     }
     case "set_permission_mode": {
-      let o = gf(e.request.mode),
+      let o = parsePermissionMode(e.request.mode),
         _ =
           o === void 0
-            ? { ok: !1, error: Rie }
+            ? { ok: !1, error: UNRECOGNIZED_PERMISSION_MODE_ERROR }
             : (ye?.(o) ?? {
                 ok: !1,
                 error:
@@ -1157,7 +1157,7 @@ function prr(e, t) {
         _;
       if (!o.ok) _ = o;
       else if (!F)
-        (f("bridge_flag_settings", "not_registered"),
+        (logFeatureBad("bridge_flag_settings", "not_registered"),
           (_ = {
             ok: !1,
             error:
@@ -1165,7 +1165,7 @@ function prr(e, t) {
           }));
       else _ = F(o.settings);
       if (_.ok)
-        (y("bridge_flag_settings"),
+        (logFeatureOk("bridge_flag_settings"),
           (h = {
             type: "control_response",
             response: { subtype: "success", request_id: e.request_id },
@@ -1239,7 +1239,7 @@ function prr(e, t) {
     case "stop_task": {
       let o = e.request.task_id;
       if (typeof o !== "string") {
-        (f("task_stop_user", "invalid_task_id"),
+        (logFeatureBad("task_stop_user", "invalid_task_id"),
           (h = {
             type: "control_response",
             response: {
@@ -1252,7 +1252,7 @@ function prr(e, t) {
       }
       let _ = o;
       if (!k) {
-        (f("task_stop_user", "not_supported"),
+        (logFeatureBad("task_stop_user", "not_supported"),
           (h = {
             type: "control_response",
             response: {
@@ -1270,7 +1270,7 @@ function prr(e, t) {
     case "background_tasks": {
       let o = K4t(e.request.tool_use_id);
       if (!o.valid) {
-        (f("task_local_shell_background_all", "invalid_tool_use_id"),
+        (logFeatureBad("task_local_shell_background_all", "invalid_tool_use_id"),
           (h = {
             type: "control_response",
             response: {
@@ -1283,7 +1283,7 @@ function prr(e, t) {
       }
       let { toolUseId: _ } = o;
       if (!E) {
-        (f("task_local_shell_background_all", "not_supported"),
+        (logFeatureBad("task_local_shell_background_all", "not_supported"),
           (h = {
             type: "control_response",
             response: {
@@ -1296,7 +1296,7 @@ function prr(e, t) {
         break;
       }
       if (Dl()) {
-        (f("task_local_shell_background_all", "disabled"),
+        (logFeatureBad("task_local_shell_background_all", "disabled"),
           (h = {
             type: "control_response",
             response: {
@@ -1347,12 +1347,12 @@ function He(e, t) {
 function ze(e) {
   if (!ie(e))
     return (
-      f("bridge_flag_settings", "invalid_shape"),
+      logFeatureBad("bridge_flag_settings", "invalid_shape"),
       { ok: !1, error: "apply_flag_settings: settings must be an object" }
     );
   let t = Object.keys(e).filter((s) => !Pe.has(s));
   if (t.length > 0) {
-    f("bridge_flag_settings", "unsupported_key");
+    logFeatureBad("bridge_flag_settings", "unsupported_key");
     let s = t.slice(0, Ue).map((S) => Vn(S, $e)),
       d = t.length > s.length ? ` (+${t.length - s.length} more)` : "";
     return {
@@ -1365,7 +1365,7 @@ function ze(e) {
     let s = e.effortLevel;
     if (s !== null && typeof s !== "string")
       return (
-        f("bridge_flag_settings", "invalid_type"),
+        logFeatureBad("bridge_flag_settings", "invalid_type"),
         {
           ok: !1,
           error: "apply_flag_settings: effortLevel must be a string or null",
@@ -1377,14 +1377,14 @@ function ze(e) {
     let s = e.ultracode;
     if (typeof s !== "boolean")
       return (
-        f("bridge_flag_settings", "invalid_type"),
+        logFeatureBad("bridge_flag_settings", "invalid_type"),
         { ok: !1, error: "apply_flag_settings: ultracode must be a boolean" }
       );
     r.ultracode = s;
   }
   if (!("effortLevel" in r) && !("ultracode" in r))
     return (
-      f("bridge_flag_settings", "nothing_to_apply"),
+      logFeatureBad("bridge_flag_settings", "nothing_to_apply"),
       {
         ok: !1,
         error:
@@ -1406,7 +1406,7 @@ function gCn(e, t) {
       modelUsage: {},
       permission_denials: [],
       session_id: e,
-      uuid: T(),
+      uuid: randomUUID(),
     };
   if (r === void 0 || s)
     return {
@@ -1441,7 +1441,7 @@ function hCn(e, t) {
     subtype: "worker_shutting_down",
     reason: t,
     session_id: e,
-    uuid: T(),
+    uuid: randomUUID(),
   };
 }
 var Ye = "PushNotification";
@@ -1450,7 +1450,7 @@ function frr(e, t) {
     type: "assistant",
     message: {
       diagnostics: null,
-      id: T(),
+      id: randomUUID(),
       container: null,
       model: fc,
       role: "assistant",
@@ -1462,7 +1462,7 @@ function frr(e, t) {
       content: [
         {
           type: "tool_use",
-          id: T(),
+          id: randomUUID(),
           name: Ye,
           input: { message: e, status: "proactive" },
         },
@@ -1472,7 +1472,7 @@ function frr(e, t) {
     parent_tool_use_id: null,
     is_meta: !0,
     session_id: t,
-    uuid: T(),
+    uuid: randomUUID(),
   };
 }
 function Z4t(e, t) {
@@ -1480,7 +1480,7 @@ function Z4t(e, t) {
     type: "assistant",
     message: {
       diagnostics: null,
-      id: T(),
+      id: randomUUID(),
       container: null,
       model: fc,
       role: "assistant",
@@ -1494,7 +1494,7 @@ function Z4t(e, t) {
     },
     parent_tool_use_id: null,
     session_id: t,
-    uuid: T(),
+    uuid: randomUUID(),
     timestamp: new Date().toISOString(),
   };
 }
@@ -1571,7 +1571,7 @@ function mrr(e) {
         `[bridge:attestation] malformed enforce config \u2014 failing closed to accept_level=VERIFIED with no accept_statuses: ${r.error.message}`,
         { level: "error" },
       ),
-        g("bridge_event_attestation", "malformed_config"));
+        logFeatureSad("bridge_event_attestation", "malformed_config"));
     } catch (s) {
       n(`[bridge:attestation] malformed-config report threw: ${l(s)}`, {
         level: "error",
@@ -1739,7 +1739,7 @@ function P(e, t) {
   if (t !== "control_request") return;
   let r = e.payload ? B$e(e.payload) : void 0;
   if (r !== void 0) x(Jo().attestation.knownInboundRequestIds, nt, r);
-  if (pe(e) !== void 0) y("bridge_control_request_attestation");
+  if (pe(e) !== void 0) logFeatureOk("bridge_control_request_attestation");
 }
 var dt = new Set([
   "bash_command",
@@ -1763,7 +1763,7 @@ function lt(e, t, r) {
         `[bridge:attestation] DROPPING unverified ${r} event_id=${e.event_id} status=${t} (stray payload class ${S}; counted once per process)`,
         { level: "warn" },
       ),
-      f("bridge_stray_event_attestation", S));
+      logFeatureBad("bridge_stray_event_attestation", S));
   } catch (s) {
     n(`[bridge:attestation] stray-drop report threw: ${l(s)}`, {
       level: "error",
@@ -1776,7 +1776,7 @@ function EAt(e) {
     s = _Cn(e.device_attestation_status),
     d = Jo().attestation.filterPolicy?.() ?? eVt;
   if (yCn(s, d.acceptLevel)) {
-    if (r) y("bridge_event_attestation");
+    if (r) logFeatureOk("bridge_event_attestation");
     return (P(e, t), !1);
   }
   if (!d.enforce) {
@@ -1786,7 +1786,7 @@ function EAt(e) {
         `[bridge:attestation] accepting unverified ${t} event_id=${e.event_id} status=${s}`,
         { level: "info" },
       ),
-        g("bridge_event_attestation", `${s.toLowerCase()}_${t}`));
+        logFeatureSad("bridge_event_attestation", `${s.toLowerCase()}_${t}`));
     return !1;
   }
   let S = d.acceptStatuses.has(s),
@@ -1800,24 +1800,24 @@ function EAt(e) {
       ),
       S)
     )
-      g("bridge_event_attestation", a);
+      logFeatureSad("bridge_event_attestation", a);
     else if (t === "control_response" && ot(e))
       ((p = !0),
         n(
           `[bridge:attestation] dropped ${t} event_id=${e.event_id} status=${s} answers an automated outbound request; notice suppressed`,
           { level: "info" },
         ),
-        f("bridge_event_attestation", `${a}_automated_reply`));
+        logFeatureBad("bridge_event_attestation", `${a}_automated_reply`));
     else if (t === "control_response" && at(e))
       ((p = !0),
         n(
           `[bridge:attestation] dropped ${t} event_id=${e.event_id} status=${s} is a duplicate answer to an already-resolved prompt; notice suppressed`,
           { level: "info" },
         ),
-        f("bridge_event_attestation", `${a}_resolved_duplicate`));
+        logFeatureBad("bridge_event_attestation", `${a}_resolved_duplicate`));
     else
       ((p = !0),
-        f("bridge_event_attestation", a),
+        logFeatureBad("bridge_event_attestation", a),
         le({ status: s, payloadType: t }, e.event_id));
   } else if (t === "control_request" && !S) {
     let a = pe(e);
@@ -1828,7 +1828,7 @@ function EAt(e) {
         `[bridge:attestation] DROPPING unverified control_request subtype=${a.subtype} event_id=${e.event_id} status=${s}${b === void 0 && a.requestId !== void 0 ? " (forged-id refusal suppressed)" : ""}`,
         { level: "warn" },
       ),
-        f(
+        logFeatureBad(
           "bridge_control_request_attestation",
           `${s.toLowerCase()}_${a.subtype}`,
         ),

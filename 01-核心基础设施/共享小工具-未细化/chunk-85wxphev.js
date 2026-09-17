@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ma } from "./chunk-vzqtx1mx.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { J0 } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { wv } from "./chunk-ajpjkvdj.js";
-import { AppRoot as zm } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
+import { AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import { cWe } from "../设置-配置/chunk-tswdb9jt.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 var FIt = (p, r, m) =>
@@ -29,7 +29,7 @@ var FIt = (p, r, m) =>
         waitUntilExit: g,
       } = await J0(
         e(
-          zm,
+          AppRoot,
           {
             session: B(),
             children: e(cWe, {
@@ -56,10 +56,10 @@ var FIt = (p, r, m) =>
         let u = Error(
           "Managed-settings consent dialog exited without an answer",
         );
-        (h(u), s(u));
+        (logError(u), s(u));
       }
     })().catch((t) => {
-      (h(t), s(t));
+      (logError(t), s(t));
     });
   });
 export { FIt };

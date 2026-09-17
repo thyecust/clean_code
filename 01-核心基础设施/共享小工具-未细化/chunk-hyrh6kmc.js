@@ -8,32 +8,32 @@
 
 // Version: 2.1.263
 import { ze, ld, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isBgSession as _t, isClaudeAISubscriber as gt, getOauthAccountInfo as vn, getSubscriptionType as qn, getRateLimitTier as UT } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isFirstPartyApiBackend as Wu } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isBgSession, isClaudeAISubscriber, getOauthAccountInfo, getSubscriptionType, getRateLimitTier } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isFirstPartyApiBackend } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { BS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { iLt } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { randomUUID as t } from "crypto";
+import { randomUUID } from "crypto";
 var o =
   "You can continue now. Continue the task you were working on when the usage limit was reached; do not repeat work that is already complete.";
 function rnn() {
   return (
-    gt() &&
-    vn()?.billingType !== "usage_based" &&
-    Wu() &&
+    isClaudeAISubscriber() &&
+    getOauthAccountInfo()?.billingType !== "usage_based" &&
+    isFirstPartyApiBackend() &&
     ld() &&
     !Nn() &&
-    !_t()
+    !isBgSession()
   );
 }
 function Mle(e) {
   return rnn() && iLt(e) && e.rateLimitType === "five_hour";
 }
 function rlt() {
-  switch (qn()) {
+  switch (getSubscriptionType()) {
     case "pro":
       return "pro";
     case "max":
-      switch (UT()) {
+      switch (getRateLimitTier()) {
         case "default_claude_max_5x":
           return "max_5x";
         case "default_claude_max_20x":
@@ -51,7 +51,7 @@ function V9e() {
     mode: "prompt",
     priority: "later",
     value: o,
-    uuid: t(),
+    uuid: randomUUID(),
     origin: { kind: "auto-continuation" },
     isMeta: !0,
     skipSlashCommands: !0,

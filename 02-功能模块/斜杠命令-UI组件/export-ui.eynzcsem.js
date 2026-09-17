@@ -13,7 +13,7 @@ import { he, Mx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -85,18 +85,18 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js"
 import { re, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
-import { mkdir as W, writeFile as Z } from "fs/promises";
-import { dirname as tt, extname as et } from "path";
+import { mkdir, writeFile } from "fs/promises";
+import { dirname, extname } from "path";
 function rt(n) {
-  let s = et(n) === "" ? `${n}.txt` : n,
+  let s = extname(n) === "" ? `${n}.txt` : n,
     i = Mx().workspace === "remote" ? he() : void 0;
   return ot(s, i);
 }
 async function b(n, s) {
   let i = rt(n);
   return (
-    await W(tt(i), { recursive: !0 }),
-    await Z(i, s, { encoding: "utf-8", flush: !0 }),
+    await mkdir(dirname(i), { recursive: !0 }),
+    await writeFile(i, s, { encoding: "utf-8", flush: !0 }),
     i
   );
 }
@@ -130,7 +130,7 @@ function T(Nt) {
       if (lt === "clipboard") {
         let pt = await z_(S);
         if (pt) process.stdout.write(pt);
-        (y("export_clipboard"),
+        (logFeatureOk("export_clipboard"),
           u({ success: !0, message: "Conversation copied to clipboard" }));
       } else if (lt === "file") (it("file"), st(!0));
     }),
@@ -144,11 +144,11 @@ function T(Nt) {
     ((mt = async () => {
       try {
         let Kt = await b(E, S);
-        (y("export_file"),
+        (logFeatureOk("export_file"),
           u({ success: !0, message: `Conversation exported to: ${Kt}` }));
       } catch (k) {
         let ft = k;
-        (f("export_file", "write_failed"),
+        (logFeatureBad("export_file", "write_failed"),
           u({
             success: !1,
             message: `Failed to export conversation: ${ft instanceof Error ? ft.message : "Unknown error"}`,
@@ -297,7 +297,7 @@ function Ct(n) {
     w = String(n.getSeconds()).padStart(2, "0");
   return `${s}-${i}-${a}-${l}${h}${w}`;
 }
-function vt(n) {
+function extractFirstPrompt(n) {
   let s = n.find((l) => l.type === "user");
   if (!s || s.type !== "user") return "";
   let i = s.message?.content,
@@ -310,7 +310,7 @@ function vt(n) {
   if (((a = kr(a)), a.length > 50)) a = a.substring(0, 49) + "\u2026";
   return a;
 }
-function bt(n) {
+function sanitizeFilename(n) {
   return n
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "")
@@ -326,20 +326,20 @@ async function le(n, s, i) {
   if (l) {
     try {
       let c = await b(l, a);
-      (y("export_file"), n(`Conversation exported to: ${c}`));
+      (logFeatureOk("export_file"), n(`Conversation exported to: ${c}`));
     } catch (c) {
-      (f("export_file", "write_failed"),
+      (logFeatureBad("export_file", "write_failed"),
         n(
           `Failed to export conversation: ${c instanceof Error ? c.message : "Unknown error"}`,
         ));
     }
     return null;
   }
-  let h = vt(s.messages),
+  let h = extractFirstPrompt(s.messages),
     w = Ct(new Date()),
     v;
   if (h) {
-    let c = bt(h);
+    let c = sanitizeFilename(h);
     v = c ? `${w}-${c}.txt` : `conversation-${w}.txt`;
   } else v = `conversation-${w}.txt`;
   return e(T, {
@@ -350,4 +350,4 @@ async function le(n, s, i) {
     },
   });
 }
-export { le as call, vt as extractFirstPrompt, bt as sanitizeFilename };
+export { le as call, extractFirstPrompt, sanitizeFilename };

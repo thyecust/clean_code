@@ -13,8 +13,8 @@ import { Ile } from "../../02-功能模块/Workflow编排/chunk-qjm604e8.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Sot, bot } from "../../01-核心基础设施/共享小工具-未细化/chunk-6y25h56s.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js";
-import { mkdirSync as u, unlinkSync as p, writeFileSync as f } from "fs";
-import { dirname as S } from "path";
+import { mkdirSync, unlinkSync, writeFileSync } from "fs";
+import { dirname } from "path";
 var P = "/home/claude/.claude/remote/spare.sock";
 async function d(i, t) {
   let r = i[0] || P,
@@ -23,12 +23,12 @@ async function d(i, t) {
   import("../../02-功能模块/Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js");
   for (let o of Ile) delete process.env[o];
   try {
-    (u(S(r), { recursive: !0, mode: 448 }), p(r));
+    (mkdirSync(dirname(r), { recursive: !0, mode: 448 }), unlinkSync(r));
   } catch {}
   let e = () => {
       for (let o of [r, n])
         try {
-          p(o);
+          unlinkSync(o);
         } catch {}
     },
     c = () => {
@@ -45,7 +45,7 @@ async function d(i, t) {
   let m;
   try {
     m = await Sot(r, () => {
-      f(n, String(process.pid), { mode: 384 });
+      writeFileSync(n, String(process.pid), { mode: 384 });
     });
   } catch (o) {
     (e(),
@@ -56,7 +56,7 @@ async function d(i, t) {
   for (let o of ["SIGTERM", "SIGHUP", "SIGINT"]) process.off(o, c);
   (process.off("uncaughtException", a), e(), await s, await bot(m, s));
 }
-function w(i, t = () => import("./main.vdzfymn2.js")) {
+function runPreload(i, t = () => import("./main.vdzfymn2.js")) {
   return d(i, t);
 }
-export { w as runPreload };
+export { runPreload };

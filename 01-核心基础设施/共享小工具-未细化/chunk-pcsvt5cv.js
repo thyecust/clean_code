@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Rg, K1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { getInitialSettings as Ge } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Ei } from "../../02-功能模块/Hooks钩子/chunk-9em0d4k5.js";
 import { Dc } from "./chunk-15vfjgmh.js";
 import { so } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
@@ -27,7 +27,7 @@ function e() {
   if (!Dc()) return !1;
   if (jy() || Rg()) return !1;
   if (a.CLAUDE_CODE_ENTRYPOINT === "local-agent") return !1;
-  let o = Ge().skillOverrides?.[$E];
+  let o = getInitialSettings().skillOverrides?.[$E];
   if (o === "off" || o === "user-invocable-only") return !1;
   let l = K1();
   if (l !== void 0 && !l.includes($E)) return !1;

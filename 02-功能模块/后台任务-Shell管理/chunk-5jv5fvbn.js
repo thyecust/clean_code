@@ -16,16 +16,16 @@ import { R, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js
 import { hW, Xke } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { provenSameProcessAsync as mA, procIdentityOf as jT, getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { provenSameProcessAsync, procIdentityOf, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
-  lstat as l,
-  readFile as f,
-  rename as m,
+  lstat,
+  readFile,
+  rename,
   rm as p,
-  unlink as d,
+  unlink,
 } from "fs/promises";
-import { uptime as g } from "os";
+import { uptime } from "os";
 import { join as w } from "path";
 async function GWe(e, r = {}) {
   try {
@@ -67,14 +67,14 @@ function E() {
   return D.of(B().host);
 }
 async function S() {
-  let e = await l(Kw()).catch(() => {
+  let e = await lstat(Kw()).catch(() => {
     return;
   });
   return e !== void 0 && e.isSymbolicLink();
 }
 async function y(e) {
   let r = Kw(),
-    t = await l(r).catch(() => {
+    t = await lstat(r).catch(() => {
       return;
     });
   if (t === void 0 || t.isFile()) return;
@@ -168,13 +168,13 @@ async function ZP(e) {
     return null;
   }
   try {
-    let o = await l(Kw());
+    let o = await lstat(Kw());
     if (!o.isFile() || o.size > 65536)
       return (
         await p(Kw(), { recursive: !0, force: !0 }).catch(() => {}),
         null
       );
-    r = await f(Kw(), "utf8");
+    r = await readFile(Kw(), "utf8");
   } catch (o) {
     if (W(o)) return null;
     throw o;
@@ -211,20 +211,20 @@ async function OPt(e, r) {
   }
   let t = await hW(Kw(), b(e, null, 2));
   try {
-    await m(t, Kw());
+    await rename(t, Kw());
   } catch (i) {
     let a = A(i);
     if (a === "EEXIST" || a === "EPERM") {
-      await d(Kw()).catch(() => {});
+      await unlink(Kw()).catch(() => {});
       try {
-        await m(t, Kw());
+        await rename(t, Kw());
       } catch (s) {
-        await d(t).catch(() => {});
+        await unlink(t).catch(() => {});
         let c = A(s);
         if (c === "EEXIST" || c === "EPERM") return !1;
         throw s;
       }
-    } else throw (await d(t).catch(() => {}), i);
+    } else throw (await unlink(t).catch(() => {}), i);
   }
   let o = await ZP(r);
   return o?.pid === e.pid && o?.startedAt === e.startedAt;
@@ -240,7 +240,7 @@ async function mUn(e) {
     return;
   }
   try {
-    await d(Kw());
+    await unlink(Kw());
   } catch (r) {
     if (!W(r)) throw r;
   }
@@ -248,7 +248,7 @@ async function mUn(e) {
 async function Nit(e) {
   let r;
   try {
-    r = await f(`/proc/${e}/cmdline`, "utf8");
+    r = await readFile(`/proc/${e}/cmdline`, "utf8");
   } catch {
     return !0;
   }
@@ -261,26 +261,26 @@ async function qWe(e, r, t) {
   if (r === void 0) return !0;
   for (let o = 0; o < t; o++) {
     if (o > 0) await Z(DPt);
-    let i = await Ba(e, { skipCache: o > 0 });
+    let i = await getProcessStartTimeAsync(e, { skipCache: o > 0 });
     if (i !== void 0) return i === r;
   }
   return !1;
 }
 var C = 120000;
-function v(e, r = Date.now(), t = g()) {
+function v(e, r = Date.now(), t = uptime()) {
   return e.startedAt < r - t * 1000 - C;
 }
 async function Fit(e) {
-  let r = jT(e);
+  let r = procIdentityOf(e);
   if (r !== void 0) {
-    let t = await mA(e.pid, r);
+    let t = await provenSameProcessAsync(e.pid, r);
     if (t === !0) return null;
     if (t === !1) return "pid_recycled";
   }
   return v(e) ? "predates_boot" : null;
 }
 function n0e(e) {
-  return jT(e) !== void 0;
+  return procIdentityOf(e) !== void 0;
 }
 function gUn() {
   return `Stop it with \`claude daemon stop --any\` (a graceful, socket-based stop); if nothing is running at that pid, delete ${Kw()}`;
@@ -294,7 +294,7 @@ async function Rh(e = 1, r) {
     return null;
   }
   if (!(await Nit(t.pid))) return null;
-  if (!(await qWe(t.pid, jT(t), e))) return null;
+  if (!(await qWe(t.pid, procIdentityOf(t), e))) return null;
   return t;
 }
 async function zWe(e) {

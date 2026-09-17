@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
@@ -17,12 +17,12 @@ import { cf, ph, sQ, Hse, Te, ee } from "../认证-OAuth登录/认证-OAuth登�
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { C8e } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var c = pe(pg(), 1);
-import { dirname as f, join as b } from "path";
+import { dirname, join as b } from "path";
 var t$n = "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md",
   xIt = "https://code.claude.com/docs/en/changelog",
   XQt = xIt.replace(/^https:\/\//, ""),
@@ -54,7 +54,7 @@ async function n$n(a) {
   } else {
     let r = u();
     try {
-      (await qt().mkdir(f(r)), await qt().writeExclusive(r, t.cachedChangelog));
+      (await qt().mkdir(dirname(r)), await qt().writeExclusive(r, t.cachedChangelog));
     } catch {}
   }
   await Te(({ cachedChangelog: r, ...e }) => e, a);
@@ -63,13 +63,13 @@ async function YQt(a) {
   if (ke()) return;
   if (St()) return;
   let t = y,
-    r = await ra.get(t);
+    r = await externalHttp.get(t);
   if (r.status === 200) {
     let e = r.data,
       i = m();
     if (e === i.content) return;
     let o = u();
-    if ((await qt().mkdir(f(o)), M() && a)) {
+    if ((await qt().mkdir(dirname(o)), M() && a)) {
       let s = await a.write(p(), e, { publishDiscipline: "inPlace" });
       if (!s.ok)
         throw (
@@ -123,7 +123,7 @@ function d(a) {
     }
     return t;
   } catch (t) {
-    return (h(ge(t)), {});
+    return (logError(ge(t)), {});
   }
 }
 function JQt() {
@@ -187,7 +187,7 @@ function Qst(a = k()) {
       })
       .filter((e) => e !== null);
   } catch (t) {
-    return (h(ge(t)), []);
+    return (logError(ge(t)), []);
   }
 }
 async function o$n(

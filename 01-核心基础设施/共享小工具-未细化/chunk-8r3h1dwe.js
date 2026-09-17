@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { j, mDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { TCn, Or, gU, clearAwsCredentialsCache as R6, clearGcpCredentialsCache as SRe, xZe, ikn } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { verifyAutoModeGateAccess as YKe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { TCn, Or, gU, clearAwsCredentialsCache, clearGcpCredentialsCache, xZe, ikn } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { verifyAutoModeGateAccess } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function iit(o) {
   if (
     (mDn(),
     gU(),
     (Or().providerCache = TCn()),
-    R6(),
-    SRe(),
+    clearAwsCredentialsCache(),
+    clearGcpCredentialsCache(),
     ikn(),
     o === "firstParty")
   )
@@ -50,7 +50,7 @@ function NHe(o) {
 }
 async function FHe(o, l, d, c, r) {
   if (!a.of(o).claimAutoModeCheck()) return;
-  let { updateContext: m, notification: e } = await YKe(l, c);
+  let { updateContext: m, notification: e } = await verifyAutoModeGateAccess(l, c);
   if (
     (d((t) => {
       let s = m(t.toolPermissionContext),

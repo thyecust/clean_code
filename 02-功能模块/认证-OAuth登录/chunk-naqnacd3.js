@@ -11,18 +11,18 @@ import { gce, BSe, jSe } from "../MCP客户端/chunk-5wa92x7d.js";
 import { l2, aI, RSe, ILt, WIe, PLt, GIe, OLt, $rn } from "../MCP客户端/chunk-78r8f7dw.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { MCP_CLIENT_METADATA_URL as tae } from "./chunk-9g2q4bjq.js";
+import { MCP_CLIENT_METADATA_URL } from "./chunk-9g2q4bjq.js";
 import { yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we, fromNumberOpt as KP, fromEnumArr as Ga, mcpNameForAnalytics_GATE_EVALUATED as Gf } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt, fromNumberOpt, fromEnumArr, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, z, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { hc, getSecureStorage as yn } from "./chunk-y7b7kf5n.js";
+import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { hc, getSecureStorage } from "./chunk-y7b7kf5n.js";
 import { A_, wA } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
 import { Tn, SP, yU, cq, la, oy, H } from "./认证-OAuth登录.419zdfz3.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
@@ -38,10 +38,10 @@ import { fM, Gr } from "../../01-核心基础设施/核心工具-路径与平台
 import { PQ } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { randomBytes as Ye, randomUUID as Ze } from "crypto";
-import { createServer as Qe } from "http";
+import { randomBytes, randomUUID } from "crypto";
+import { createServer } from "http";
 import { join as et } from "path";
-import { parse as tt } from "url";
+import { parse } from "url";
 var He = 30000,
   Xe = "urn:ietf:params:oauth:grant-type:token-exchange",
   Ue = "urn:ietf:params:oauth:grant-type:jwt-bearer",
@@ -51,7 +51,7 @@ function Oe(e) {
   return (t, n) => {
     let r = AbortSignal.timeout(He),
       d = e ? AbortSignal.any([r, e]) : r;
-    return fetch(t, { ...n, ...As({ url: String(t) }), signal: d }).catch((p) =>
+    return fetch(t, { ...n, ...getProxyFetchOptions({ url: String(t) }), signal: d }).catch((p) =>
       yE(p, t),
     );
   };
@@ -246,9 +246,9 @@ async function Je(e) {
 }
 async function me(e, t, n = "xaa", r) {
   let d = Oe(r);
-  J(n, `XAA: discovering PRM for ${Gn(e)}`);
+  logMCPDebug(n, `XAA: discovering PRM for ${Gn(e)}`);
   let p = await Ve(e, { fetchFn: d });
-  J(
+  logMCPDebug(
     n,
     `XAA: discovered resource=${Gn(p.resource)} ASes=[${p.authorization_servers.map(Gn).join(", ")}]`,
   );
@@ -284,11 +284,11 @@ async function me(e, t, n = "xaa", r) {
       h.includes("client_secret_post")
         ? "client_secret_post"
         : "client_secret_basic";
-  (J(
+  (logMCPDebug(
     n,
     `XAA: AS issuer=${Gn(o.issuer)} token_endpoint=${Gn(o.token_endpoint)} auth_method=${v}`,
   ),
-    J(n, "XAA: exchanging id_token for ID-JAG at IdP"));
+    logMCPDebug(n, "XAA: exchanging id_token for ID-JAG at IdP"));
   let k = await Ge({
     tokenEndpoint: t.idpTokenEndpoint,
     audience: o.issuer,
@@ -298,8 +298,8 @@ async function me(e, t, n = "xaa", r) {
     clientSecret: t.idpClientSecret,
     fetchFn: d,
   });
-  (J(n, "XAA: ID-JAG obtained"),
-    J(n, "XAA: exchanging ID-JAG for access_token at AS"));
+  (logMCPDebug(n, "XAA: ID-JAG obtained"),
+    logMCPDebug(n, "XAA: exchanging ID-JAG for access_token at AS"));
   let w = await Je({
     tokenEndpoint: o.token_endpoint,
     assertion: k.jwtAuthGrant,
@@ -309,7 +309,7 @@ async function me(e, t, n = "xaa", r) {
     fetchFn: d,
   });
   return (
-    J(n, "XAA: access_token obtained"),
+    logMCPDebug(n, "XAA: access_token obtained"),
     { ...w, authorizationServerUrl: o.issuer }
   );
 }
@@ -335,7 +335,7 @@ var ot = new Set(Object.values(l2)),
   dt = [...Object.values(l2), ...ct];
 function spr(e) {
   let t = dt.find((n) => n === e);
-  return we(t) ?? S("other");
+  return fromEnumOpt(t) ?? S("other");
 }
 function ipr(e, t) {
   let n =
@@ -416,7 +416,7 @@ function bLt() {
 async function Me(e, t) {
   let n = AbortSignal.timeout(rt),
     r = t?.method?.toUpperCase() === "POST",
-    d = As({ url: String(e) });
+    d = getProxyFetchOptions({ url: String(e) });
   if (!t?.signal) {
     let h;
     try {
@@ -488,7 +488,7 @@ async function he(e, t, n) {
       );
   } catch (v) {
     if (v instanceof iI) throw v;
-    J(e, `RFC 9728 discovery failed, falling back: ${_E(v, t)}`);
+    logMCPDebug(e, `RFC 9728 discovery failed, falling back: ${_E(v, t)}`);
   }
   let h = new URL(t);
   if (h.pathname === "/") return;
@@ -505,7 +505,7 @@ async function he(e, t, n) {
     return v;
   } catch (v) {
     if (v instanceof iI) throw v;
-    J(e, `Path-aware auth server discovery failed: ${_E(v, t)}`);
+    logMCPDebug(e, `Path-aware auth server discovery failed: ${_E(v, t)}`);
     return;
   }
 }
@@ -590,13 +590,13 @@ function _ct({
   try {
     let h = r === void 0 ? ["issuer_missing"] : ft(n, r),
       v = d ? Fg(d) : void 0,
-      k = d ? Gf(e, oy(e, d)) : void 0;
+      k = d ? mcpNameForAnalytics_GATE_EVALUATED(e, oy(e, d)) : void 0;
     i("tengu_mcp_oauth_issuer_echo_mismatch", {
-      site: u(t),
-      mode: u(o),
-      originRelation: u(p),
+      site: fromEnum(t),
+      mode: fromEnum(o),
+      originRelation: fromEnum(p),
       outcome: _ ? S("denied") : S("proceeded"),
-      ...(h.length > 0 && { mismatchFacets: Ga(h) }),
+      ...(h.length > 0 && { mismatchFacets: fromEnumArr(h) }),
       expectedIssuerHash: Tn(n),
       ...(r !== void 0 && { receivedIssuerHash: Tn(r) }),
       ...(v && { mcpServerBaseUrl: v }),
@@ -604,7 +604,7 @@ function _ct({
     });
   } catch (h) {
     try {
-      J(e, `issuer-echo telemetry failed: ${l(h)}`);
+      logMCPDebug(e, `issuer-echo telemetry failed: ${l(h)}`);
     } catch {}
   }
   if (_) throw new iI(n, r);
@@ -628,7 +628,7 @@ function Pe(e) {
   return t === "http://127.0.0.1" || t === "http://localhost";
 }
 function xe() {
-  return a.MCP_OAUTH_CLIENT_METADATA_URL || tae;
+  return a.MCP_OAUTH_CLIENT_METADATA_URL || MCP_CLIENT_METADATA_URL;
 }
 function be(e) {
   if (!Pe(e)) return !1;
@@ -639,7 +639,7 @@ function be(e) {
   }
 }
 function pt(e) {
-  return e !== void 0 && (e === tae || e === xe());
+  return e !== void 0 && (e === MCP_CLIENT_METADATA_URL || e === xe());
 }
 function nhr(e) {
   return jt().oauthCallbackSubmitters.get(e);
@@ -658,17 +658,17 @@ function ohr(e) {
 }
 async function wLt(e, t) {
   let n = la(e, t),
-    r = (await yn().readAsync())?.mcpOAuth?.[n];
+    r = (await getSecureStorage().readAsync())?.mcpOAuth?.[n];
   if (!r || r.accessToken || r.refreshToken) return;
   try {
-    await yn().mutate((d) => {
+    await getSecureStorage().mutate((d) => {
       let p = d.mcpOAuth?.[n];
       if (!p || p.accessToken || p.refreshToken) return d;
       let o = { ...d.mcpOAuth };
       return (delete o[n], { ...d, mcpOAuth: o });
     });
   } catch (d) {
-    J(e, `clear tokenless stub failed: ${l(d)}`);
+    logMCPDebug(e, `clear tokenless stub failed: ${l(d)}`);
   }
 }
 async function Ie({
@@ -694,23 +694,23 @@ async function Ie({
       ((v.Authorization = `Basic ${k}`), Pu().record(k));
     }
   else if (d) h.set("client_id", d);
-  else J(e, `No client_id available for ${r} revocation - server may reject`);
+  else logMCPDebug(e, `No client_id available for ${r} revocation - server may reject`);
   try {
-    (await at.post(t, h, { headers: v }), J(e, `Successfully revoked ${r}`));
+    (await at.post(t, h, { headers: v }), logMCPDebug(e, `Successfully revoked ${r}`));
   } catch (k) {
     if (at.isAxiosError(k) && k.response?.status === 401 && o)
-      (J(e, `Got 401, retrying ${r} revocation with Bearer auth`),
+      (logMCPDebug(e, `Got 401, retrying ${r} revocation with Bearer auth`),
         h.delete("client_id"),
         h.delete("client_secret"),
         await at.post(t, h, {
           headers: { ...v, Authorization: `Bearer ${o}` },
         }),
-        J(e, `Successfully revoked ${r} with Bearer auth`));
+        logMCPDebug(e, `Successfully revoked ${r} with Bearer auth`));
     else throw k;
   }
 }
 async function shr(e, t) {
-  let r = (await yn().readAsync())?.mcpOAuth?.[la(e, t)];
+  let r = (await getSecureStorage().readAsync())?.mcpOAuth?.[la(e, t)];
   if (!r?.accessToken && !r?.refreshToken) return;
   return {
     accessToken: r.accessToken || void 0,
@@ -734,11 +734,11 @@ async function $e(e, t, n) {
         configuredMetadataUrl: t.oauth?.authServerMetadataUrl,
         serverConfigForAnalytics: t,
       });
-    if (!o) (J(e, "No OAuth metadata found"), (d = "no_metadata"));
+    if (!o) (logMCPDebug(e, "No OAuth metadata found"), (d = "no_metadata"));
     else {
       let _ = "revocation_endpoint" in o ? o.revocation_endpoint : null;
       if (!_)
-        (J(e, "Server does not support token revocation"),
+        (logMCPDebug(e, "Server does not support token revocation"),
           (d = "no_revocation_endpoint"));
       else {
         let h = String(_),
@@ -755,7 +755,7 @@ async function $e(e, t, n) {
             v.includes("client_secret_post")
               ? "client_secret_post"
               : "client_secret_basic";
-        if ((J(e, `Revoking tokens via ${Gn(h)} (${k})`), n.refreshToken))
+        if ((logMCPDebug(e, `Revoking tokens via ${Gn(h)} (${k})`), n.refreshToken))
           try {
             await Ie({
               serverName: e,
@@ -768,7 +768,7 @@ async function $e(e, t, n) {
               authMethod: k,
             });
           } catch (w) {
-            (J(e, `Failed to revoke refresh token: ${l(w)}`),
+            (logMCPDebug(e, `Failed to revoke refresh token: ${l(w)}`),
               (d = "server_revoke_failed"));
           }
         if (n.accessToken)
@@ -784,13 +784,13 @@ async function $e(e, t, n) {
               authMethod: k,
             });
           } catch (w) {
-            (J(e, `Failed to revoke access token: ${l(w)}`),
+            (logMCPDebug(e, `Failed to revoke access token: ${l(w)}`),
               (d = "server_revoke_failed"));
           }
       }
     }
   } catch (p) {
-    (J(e, `Failed to revoke tokens: ${l(p)}`),
+    (logMCPDebug(e, `Failed to revoke tokens: ${l(p)}`),
       (d = p instanceof iI ? "issuer_echo_denied" : "server_revoke_failed"));
   }
   return d;
@@ -798,7 +798,7 @@ async function $e(e, t, n) {
 async function ihr(e, t, n) {
   let r;
   try {
-    let d = (await yn().readAsync())?.mcpOAuth?.[la(e, t)],
+    let d = (await getSecureStorage().readAsync())?.mcpOAuth?.[la(e, t)],
       p = {
         ...n,
         accessToken:
@@ -811,22 +811,22 @@ async function ihr(e, t, n) {
             : void 0,
       };
     if (!p.accessToken && !p.refreshToken) {
-      (J(e, "No replaced tokens to revoke"), y("mcp_oauth_revoke"));
+      (logMCPDebug(e, "No replaced tokens to revoke"), logFeatureOk("mcp_oauth_revoke"));
       return;
     }
     r = await $e(e, t, p);
   } catch (d) {
-    (J(e, `Failed to revoke replaced tokens: ${l(d)}`),
+    (logMCPDebug(e, `Failed to revoke replaced tokens: ${l(d)}`),
       (r = "server_revoke_failed"));
   }
-  if (r) g("mcp_oauth_revoke", r);
-  else y("mcp_oauth_revoke");
+  if (r) logFeatureSad("mcp_oauth_revoke", r);
+  else logFeatureOk("mcp_oauth_revoke");
 }
 async function ahr(e, t, { preserveStepUpState: n = !1 } = {}) {
-  let r = yn(),
+  let r = getSecureStorage(),
     d = await r.readAsync();
   if (!d?.mcpOAuth) {
-    y("mcp_oauth_revoke");
+    logFeatureOk("mcp_oauth_revoke");
     return;
   }
   let p = la(e, t),
@@ -844,7 +844,7 @@ async function ahr(e, t, { preserveStepUpState: n = !1 } = {}) {
         },
       }),
     });
-  else J(e, "No tokens to revoke");
+  else logMCPDebug(e, "No tokens to revoke");
   try {
     if (n && o && (o.stepUpScope || o.discoveryState || o.clientId))
       (await r.mutate((h) => {
@@ -881,19 +881,19 @@ async function ahr(e, t, { preserveStepUpState: n = !1 } = {}) {
           },
         };
       }),
-        J(e, "Preserved step-up auth state across revocation"));
+        logMCPDebug(e, "Preserved step-up auth state across revocation"));
     else await U2n(e, t);
   } catch (h) {
-    (J(e, `clear local tokens failed: ${l(h)}`), (_ ??= "local_clear_failed"));
+    (logMCPDebug(e, `clear local tokens failed: ${l(h)}`), (_ ??= "local_clear_failed"));
   }
-  if ((gE(e), _)) g("mcp_oauth_revoke", _);
-  else y("mcp_oauth_revoke");
+  if ((gE(e), _)) logFeatureSad("mcp_oauth_revoke", _);
+  else logFeatureOk("mcp_oauth_revoke");
 }
 async function U2n(e, t, n) {
   let r = la(e, t),
     d;
   if (
-    (await yn().mutate((p) => {
+    (await getSecureStorage().mutate((p) => {
       let o = p.mcpOAuth?.[r];
       if (!o) return p;
       let _ = { ...p.mcpOAuth };
@@ -912,7 +912,7 @@ async function U2n(e, t, n) {
     }),
     d)
   )
-    J(
+    logMCPDebug(
       e,
       d === "tokens"
         ? "Cleared stored tokens (preserved client registration)"
@@ -923,12 +923,12 @@ function De(e, t, n, r) {
   if (n?.success) return;
   let d = r ? "mutate_rejected" : "storage_write_failed",
     p = r ? l(r) : (n?.warning ?? "storage write failed");
-  J(e, `Token persist failed: ${p}`);
+  logMCPDebug(e, `Token persist failed: ${p}`);
   let o = Fg(t);
   i("tengu_mcp_oauth_token_persist_failed", {
-    transportType: u(t.type),
+    transportType: fromEnum(t.type),
     ...(o && { mcpServerBaseUrl: o }),
-    reason: u(d),
+    reason: fromEnum(d),
   });
 }
 async function _t(e, t, n, r, d) {
@@ -946,10 +946,10 @@ async function _t(e, t, n, r, d) {
   let h = (await B2n(e, t))?.clientSecret;
   if (!h) {
     let E = la(e, t),
-      M = Object.keys((await yn().readAsync())?.mcpOAuthClientConfig ?? {}),
+      M = Object.keys((await getSecureStorage().readAsync())?.mcpOAuthClientConfig ?? {}),
       D = g9(t.headers ?? {});
     throw (
-      J(
+      logMCPDebug(
         e,
         `XAA: secret lookup miss. wanted=${E} have=[${M.join(", ")}] configHeaders=${b(D)}`,
       ),
@@ -958,7 +958,7 @@ async function _t(e, t, n, r, d) {
       )
     );
   }
-  J(e, "XAA: starting cross-app access flow");
+  logMCPDebug(e, "XAA: starting cross-app access flow");
   let v = await ELt(p.issuer),
     k = (await Sct(p.issuer)) !== void 0,
     w = "idp_login";
@@ -1002,7 +1002,7 @@ async function _t(e, t, n, r, d) {
       if (U instanceof q) {
         if (U.shouldClearIdToken)
           (await TLt(p.issuer),
-            J(e, "XAA: cleared cached id_token after token-exchange failure"));
+            logMCPDebug(e, "XAA: cleared cached id_token after token-exchange failure"));
       } else if (
         O.includes("PRM discovery failed") ||
         O.includes("AS metadata discovery failed") ||
@@ -1017,7 +1017,7 @@ async function _t(e, t, n, r, d) {
     (T.record(D.access_token), T.record(D.refresh_token));
     let I, K;
     try {
-      I = await yn().mutate((U) => {
+      I = await getSecureStorage().mutate((U) => {
         let O = U.mcpOAuth?.[C];
         return {
           ...U,
@@ -1046,20 +1046,20 @@ async function _t(e, t, n, r, d) {
     } catch (U) {
       K = U;
     }
-    if (I?.success) J(e, "XAA: tokens saved");
+    if (I?.success) logMCPDebug(e, "XAA: tokens saved");
     else De(e, t, I, K);
     (i("tengu_mcp_oauth_flow_success", {
       authMethod: S("xaa"),
       idTokenCacheHit: k,
     }),
-      y("mcp_oauth_flow"));
+      logFeatureOk("mcp_oauth_flow"));
   } catch (E) {
     if (E instanceof q3e) throw E;
     throw (
-      f("mcp_oauth_flow", "mcp_oauth_xaa_failed"),
+      logFeatureBad("mcp_oauth_flow", "mcp_oauth_xaa_failed"),
       i("tengu_mcp_oauth_flow_failure", {
         authMethod: S("xaa"),
-        xaaFailureStage: u(w),
+        xaaFailureStage: fromEnum(w),
         idTokenCacheHit: k,
       }),
       E
@@ -1075,13 +1075,13 @@ async function lhr(e, t, n, r, d) {
     (i("tengu_mcp_oauth_flow_start", {
       isOAuthFlow: !0,
       authMethod: S("xaa"),
-      transportType: u(t.type),
+      transportType: fromEnum(t.type),
       ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
     }),
       await _t(e, t, n, r, d?.skipBrowserOpen));
     return;
   }
-  let p = yn(),
+  let p = getSecureStorage(),
     o = la(e, t),
     _ = (await p.readAsync())?.mcpOAuth?.[o],
     h = _?.stepUpScope,
@@ -1095,14 +1095,14 @@ async function lhr(e, t, n, r, d) {
     try {
       w = new URL(v);
     } catch {
-      J(e, `Invalid cached resourceMetadataUrl: ${Gn(v)}`);
+      logMCPDebug(e, `Invalid cached resourceMetadataUrl: ${Gn(v)}`);
     }
   let E = { scope: h, resourceMetadataUrl: w },
-    M = Ze();
+    M = randomUUID();
   i("tengu_mcp_oauth_flow_start", {
     flowAttemptId: Ee(M),
     isOAuthFlow: !0,
-    transportType: u(t.type),
+    transportType: fromEnum(t.type),
     ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
   });
   let D = !1;
@@ -1111,7 +1111,7 @@ async function lhr(e, t, n, r, d) {
       T = !!d?.redirectUri,
       I = T ? 0 : (C ?? (await b7(k))),
       K = d?.redirectUri ?? BIe(I);
-    J(
+    logMCPDebug(
       e,
       T
         ? `Using custom redirectUri: ${Gn(K)} (no localhost listener)`
@@ -1121,7 +1121,7 @@ async function lhr(e, t, n, r, d) {
     try {
       await U2n(e, t, { preserveClientRegistration: U });
     } catch (L) {
-      J(e, `clear stored credentials failed: ${l(L)}`);
+      logMCPDebug(e, `clear stored credentials failed: ${l(L)}`);
     }
     let O = jt(),
       G = new AbortController();
@@ -1139,13 +1139,13 @@ async function lhr(e, t, n, r, d) {
       });
       if (L)
         (W.setMetadata(L),
-          J(
+          logMCPDebug(
             e,
             `Fetched OAuth metadata with scope: ${Zw("scope", Ne(L) ?? "") || "NONE"}`,
           ));
     } catch (L) {
       if (L instanceof iI) throw L;
-      J(e, `Failed to fetch OAuth metadata: ${_E(L, t.url)}`);
+      logMCPDebug(e, `Failed to fetch OAuth metadata: ${_E(L, t.url)}`);
     }
     let B = await W.state(),
       x = null,
@@ -1167,7 +1167,7 @@ async function lhr(e, t, n, r, d) {
           O.oauthCallbackListeners.delete(I);
         if (O.oauthCallbackSubmitters.get(e) === ke)
           O.oauthCallbackSubmitters.delete(e);
-        J(e, "MCP OAuth server cleaned up");
+        logMCPDebug(e, "MCP OAuth server cleaned up");
       },
       { code: Ae, iss: Fe } = await new Promise((L, ze) => {
         let ie = !1,
@@ -1211,7 +1211,7 @@ async function lhr(e, t, n, r, d) {
               }
               if (!te) return !1;
               return (
-                J(e, "Received auth code via manual callback URL"),
+                logMCPDebug(e, "Received auth code via manual callback URL"),
                 V(),
                 ye(te, re),
                 !0
@@ -1226,7 +1226,7 @@ async function lhr(e, t, n, r, d) {
         }
         let Te = async () => {
           try {
-            (J(e, "Starting SDK auth"), J(e, `Server URL: ${Gn(t.url)}`));
+            (logMCPDebug(e, "Starting SDK auth"), logMCPDebug(e, `Server URL: ${Gn(t.url)}`));
             let N = await WIe(W, {
               serverUrl: t.url,
               scope: E.scope,
@@ -1234,10 +1234,10 @@ async function lhr(e, t, n, r, d) {
               fetchFn: bLt(),
               skipIssuerMetadataValidation: !0,
             });
-            if ((J(e, `Initial auth result: ${N}`), N !== "REDIRECT"))
-              J(e, `Unexpected auth result, expected REDIRECT: ${N}`);
+            if ((logMCPDebug(e, `Initial auth result: ${N}`), N !== "REDIRECT"))
+              logMCPDebug(e, `Unexpected auth result, expected REDIRECT: ${N}`);
           } catch (N) {
-            (J(e, `SDK auth error: ${_E(N, t.url)}`),
+            (logMCPDebug(e, `SDK auth error: ${_E(N, t.url)}`),
               V(),
               Q(
                 Object.assign(
@@ -1249,8 +1249,8 @@ async function lhr(e, t, n, r, d) {
         };
         if (T) Te();
         else
-          ((x = Qe((N, F) => {
-            let j = tt(N.url || "", !0);
+          ((x = createServer((N, F) => {
+            let j = parse(N.url || "", !0);
             if (j.pathname === "/callback") {
               let te = j.query.code,
                 pe = j.query.state,
@@ -1343,7 +1343,7 @@ async function lhr(e, t, n, r, d) {
           X.unref());
       });
     ((D = !0),
-      J(e, "Completing auth flow with authorization code"),
+      logMCPDebug(e, "Completing auth flow with authorization code"),
       Pu().record(Ae));
     let fe = await WIe(W, {
       serverUrl: t.url,
@@ -1353,22 +1353,22 @@ async function lhr(e, t, n, r, d) {
       fetchFn: bLt(),
       skipIssuerMetadataValidation: !0,
     });
-    if ((J(e, `Auth result: ${fe}`), fe === "AUTHORIZED")) {
+    if ((logMCPDebug(e, `Auth result: ${fe}`), fe === "AUTHORIZED")) {
       let L = await W.tokens().catch(() => {
         return;
       });
-      if ((J(e, `Tokens after auth: ${L ? "Present" : "Missing"}`), L))
-        J(e, `Token expires_in: ${L.expires_in}`);
+      if ((logMCPDebug(e, `Tokens after auth: ${L ? "Present" : "Missing"}`), L))
+        logMCPDebug(e, `Token expires_in: ${L.expires_in}`);
       (i("tengu_mcp_oauth_flow_success", {
         flowAttemptId: Ee(M),
-        transportType: u(t.type),
+        transportType: fromEnum(t.type),
         ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
       }),
-        y("mcp_oauth_flow"));
+        logFeatureOk("mcp_oauth_flow"));
     } else
       throw new R("Unexpected auth result: " + fe, "Unexpected auth result");
   } catch (C) {
-    J(e, `Error during auth completion: ${_E(C, t.url)}`);
+    logMCPDebug(e, `Error during auth completion: ${_E(C, t.url)}`);
     let T = "unknown",
       I,
       K,
@@ -1410,7 +1410,7 @@ async function lhr(e, t, n, r, d) {
       ) {
         let B = la(e, t);
         try {
-          await yn().mutate((x) => {
+          await getSecureStorage().mutate((x) => {
             let X = x.mcpOAuth?.[B];
             if (!X) return x;
             return {
@@ -1422,13 +1422,13 @@ async function lhr(e, t, n, r, d) {
             };
           });
         } catch (x) {
-          J(e, `clear clientId failed: ${l(x)}`);
+          logMCPDebug(e, `clear clientId failed: ${l(x)}`);
         }
       }
     }
     if (T === "timeout" || U.includes("OAuth error:")) {
       let B = la(e, t);
-      await yn()
+      await getSecureStorage()
         .mutate((x) => {
           let X = x.mcpOAuth?.[B];
           if (
@@ -1446,15 +1446,15 @@ async function lhr(e, t, n, r, d) {
             },
           };
         })
-        .catch((x) => J(e, `drop clientId failed: ${l(x)}`));
+        .catch((x) => logMCPDebug(e, `drop clientId failed: ${l(x)}`));
     }
-    if (T !== "cancelled") f("mcp_oauth_flow", "mcp_oauth_flow_failed");
+    if (T !== "cancelled") logFeatureBad("mcp_oauth_flow", "mcp_oauth_flow_failed");
     i("tengu_mcp_oauth_flow_error", {
       flowAttemptId: Ee(M),
-      reason: u(T),
+      reason: fromEnum(T),
       error_code: I === void 0 ? void 0 : spr(I),
-      http_status: KP(K),
-      transportType: u(t.type),
+      http_status: fromNumberOpt(K),
+      transportType: fromEnum(t.type),
       ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
     });
     let ne = _E(C, t.url);
@@ -1523,7 +1523,7 @@ class z3e {
       t = this.getCuratedMetadataScope();
     if (t)
       ((e.scope = t),
-        J(
+        logMCPDebug(
           this.serverName,
           `Using scope from metadata: ${Zw("scope", e.scope)}`,
         ));
@@ -1531,14 +1531,14 @@ class z3e {
   }
   get clientMetadataUrl() {
     if (!be(this.redirectUri)) {
-      J(
+      logMCPDebug(
         this.serverName,
         `redirectUri ${Gn(this.redirectUri)} is not the document's loopback /callback: withholding CIMD client_id \u2014 registering via DCR`,
       );
       return;
     }
     let e = xe();
-    if (e !== tae) J(this.serverName, `Using CIMD URL from env: ${e}`);
+    if (e !== MCP_CLIENT_METADATA_URL) logMCPDebug(this.serverName, `Using CIMD URL from env: ${e}`);
     return e;
   }
   setMetadata(e) {
@@ -1557,14 +1557,14 @@ class z3e {
   }
   markStepUpPending(e) {
     ((this._pendingStepUpScope = e),
-      J(this.serverName, `Marked step-up pending: ${Zw("scope", e)}`));
+      logMCPDebug(this.serverName, `Marked step-up pending: ${Zw("scope", e)}`));
   }
   sawAuthChallenge = !1;
   async readCredentialStore() {
     let e = await cq();
     if (e === hc)
       throw (
-        J(
+        logMCPDebug(
           this.serverName,
           "Credential store read failed; not reporting credentials as absent",
         ),
@@ -1574,8 +1574,8 @@ class z3e {
   }
   async state() {
     if (!this._state)
-      ((this._state = Ye(32).toString("base64url")),
-        J(this.serverName, "Generated new OAuth state"));
+      ((this._state = randomBytes(32).toString("base64url")),
+        logMCPDebug(this.serverName, "Generated new OAuth state"));
     return this._state;
   }
   async clientInformation() {
@@ -1595,7 +1595,7 @@ class z3e {
       p = this.handleRedirection && pt(d?.clientId) && !be(this.redirectUri);
     if (p) {
       if (
-        (J(
+        (logMCPDebug(
           this.serverName,
           `Stored client_id is the CIMD document URL (loopback /callback only); current redirectUri is ${Gn(this.redirectUri)} \u2014 ${r ? "serving the configured client" : "registering via DCR"} instead`,
         ),
@@ -1617,7 +1617,7 @@ class z3e {
       ) {
         let _ = o ? Gn(o) : "localhost";
         if (!r) {
-          J(
+          logMCPDebug(
             this.serverName,
             `Cached client_id was registered for ${_}; current redirectUri is ${Gn(this.redirectUri)} \u2014 forcing re-DCR`,
           );
@@ -1625,7 +1625,7 @@ class z3e {
         }
         if (d.clientId !== r)
           return (
-            J(
+            logMCPDebug(
               this.serverName,
               `Stored client_id is stale and its redirectUri ${_} predates ${Gn(this.redirectUri)} \u2014 serving the configured client (no registration to redo)`,
             ),
@@ -1641,7 +1641,7 @@ class z3e {
             (this._lastServedClientId = r),
             { client_id: r, issuer: d.issuer, client_secret: n }
           );
-        (J(
+        (logMCPDebug(
           this.serverName,
           `Stored redirectUri ${_} predates ${Gn(this.redirectUri)}, but the client_id is the configured one \u2014 serving it (no registration to redo)`,
         ),
@@ -1652,7 +1652,7 @@ class z3e {
           ));
       }
       return (
-        J(this.serverName, "Found client info"),
+        logMCPDebug(this.serverName, "Found client info"),
         (this._lastServedClientId = d.clientId),
         {
           client_id: d.clientId,
@@ -1663,27 +1663,27 @@ class z3e {
     }
     if (r)
       return (
-        J(this.serverName, "Using pre-configured client ID"),
+        logMCPDebug(this.serverName, "Using pre-configured client ID"),
         (this._lastServedClientId = r),
         { client_id: r, client_secret: n }
       );
-    J(this.serverName, "No client info found");
+    logMCPDebug(this.serverName, "No client info found");
     return;
   }
   async patchStoredClientEntry(e, t, n) {
     try {
       if (
         !(
-          await yn().mutate((d) => {
+          await getSecureStorage().mutate((d) => {
             let p = d.mcpOAuth?.[e];
             if (!p) return d;
             return { ...d, mcpOAuth: { ...d.mcpOAuth, [e]: { ...p, ...t } } };
           })
         )?.success
       )
-        J(this.serverName, `${n} resolved unsuccessful`);
+        logMCPDebug(this.serverName, `${n} resolved unsuccessful`);
     } catch (r) {
-      J(this.serverName, `${n} failed: ${l(r)}`);
+      logMCPDebug(this.serverName, `${n} failed: ${l(r)}`);
     }
   }
   async saveClientInformation(e) {
@@ -1693,7 +1693,7 @@ class z3e {
     try {
       if (
         (
-          await yn().mutate((r) => ({
+          await getSecureStorage().mutate((r) => ({
             ...r,
             mcpOAuth: {
               ...r.mcpOAuth,
@@ -1724,12 +1724,12 @@ class z3e {
       )
         this._lastServedClientId = e.client_id;
       else
-        J(
+        logMCPDebug(
           this.serverName,
           "saveClientInformation persist resolved unsuccessful",
         );
     } catch (n) {
-      J(this.serverName, `saveClientInformation persist failed: ${l(n)}`);
+      logMCPDebug(this.serverName, `saveClientInformation persist failed: ${l(n)}`);
     }
   }
   async tokens() {
@@ -1744,7 +1744,7 @@ class z3e {
         (n.expiresAt != null && (n.expiresAt - Date.now()) / 1000 <= 300))
     ) {
       if (!this._refreshInProgress)
-        (J(
+        (logMCPDebug(
           this.serverName,
           n
             ? "XAA: access_token expiring, attempting silent exchange"
@@ -1765,15 +1765,15 @@ class z3e {
             { ..._, issuer: n?.issuer }
           );
       } catch (_) {
-        J(this.serverName, `XAA silent exchange failed: ${l(_)}`);
+        logMCPDebug(this.serverName, `XAA silent exchange failed: ${l(_)}`);
       }
     }
     if (!n) {
-      J(this.serverName, "No token data found");
+      logMCPDebug(this.serverName, "No token data found");
       return;
     }
     if (!n.accessToken) {
-      J(this.serverName, "No access token in storage");
+      logMCPDebug(this.serverName, "No access token in storage");
       return;
     }
     ((this._lastServedAccessToken = n.accessToken),
@@ -1784,17 +1784,17 @@ class z3e {
       d = this._pendingStepUpScope,
       p = d !== void 0;
     if (p)
-      J(
+      logMCPDebug(
         this.serverName,
         `Step-up pending (${Zw("scope", d)}), omitting refresh_token`,
       );
     if (r != null && r <= 0 && !n.refreshToken) {
-      J(this.serverName, "Token expired without refresh token");
+      logMCPDebug(this.serverName, "Token expired without refresh token");
       return;
     }
     if (r != null && r <= 300 && n.refreshToken && !p) {
       if (!this._refreshInProgress)
-        (J(
+        (logMCPDebug(
           this.serverName,
           `Token expires in ${Math.floor(r)}s, attempting proactive refresh`,
         ),
@@ -1804,7 +1804,7 @@ class z3e {
             this._refreshInProgress = void 0;
           })));
       else
-        J(
+        logMCPDebug(
           this.serverName,
           "Token refresh already in progress, reusing existing promise",
         );
@@ -1812,7 +1812,7 @@ class z3e {
         let _ = await this._refreshInProgress;
         if (_)
           return (
-            J(this.serverName, "Token refreshed successfully"),
+            logMCPDebug(this.serverName, "Token refreshed successfully"),
             (this._lastServedAccessToken = _.access_token),
             this._presented.record(_.access_token),
             this._presented.record(_.refresh_token),
@@ -1820,9 +1820,9 @@ class z3e {
               _.refresh_token ?? this._lastServedRefreshToken),
             { ..._, issuer: n?.issuer }
           );
-        J(this.serverName, "Token refresh failed, returning current tokens");
+        logMCPDebug(this.serverName, "Token refresh failed, returning current tokens");
       } catch (_) {
-        J(
+        logMCPDebug(
           this.serverName,
           `Token refresh error: ${_E(_, this.serverConfig.url)}`,
         );
@@ -1837,9 +1837,9 @@ class z3e {
       issuer: n.issuer,
     };
     return (
-      J(this.serverName, "Returning tokens"),
-      J(this.serverName, `Has refresh token: ${!!o.refresh_token}`),
-      J(
+      logMCPDebug(this.serverName, "Returning tokens"),
+      logMCPDebug(this.serverName, `Has refresh token: ${!!o.refresh_token}`),
+      logMCPDebug(
         this.serverName,
         r != null ? `Expires in: ${Math.floor(r)}s` : "No expiration specified",
       ),
@@ -1853,12 +1853,12 @@ class z3e {
       n = this._flowDiscoveryStateAt;
     if (t) this._pendingStepUpScope = void 0;
     let r = la(this.serverName, this.serverConfig);
-    (J(this.serverName, "Saving tokens"),
-      J(this.serverName, `Token expires in: ${e.expires_in}`),
-      J(this.serverName, `Has refresh token: ${!!e.refresh_token}`));
+    (logMCPDebug(this.serverName, "Saving tokens"),
+      logMCPDebug(this.serverName, `Token expires in: ${e.expires_in}`),
+      logMCPDebug(this.serverName, `Has refresh token: ${!!e.refresh_token}`));
     let d, p;
     try {
-      d = await yn().mutate((o) => ({
+      d = await getSecureStorage().mutate((o) => ({
         ...o,
         mcpOAuth: {
           ...o.mcpOAuth,
@@ -1895,13 +1895,13 @@ class z3e {
     if (!e) return;
     let t = await Sct(e.issuer);
     if (!t) {
-      J(this.serverName, "XAA: id_token not cached, needs interactive re-auth");
+      logMCPDebug(this.serverName, "XAA: id_token not cached, needs interactive re-auth");
       return;
     }
     let n = this.serverConfig.oauth?.clientId,
       r = await B2n(this.serverName, this.serverConfig);
     if (!n || !r?.clientSecret) {
-      J(
+      logMCPDebug(
         this.serverName,
         "XAA: missing clientId or clientSecret in config \u2014 skipping silent refresh",
       );
@@ -1912,7 +1912,7 @@ class z3e {
     try {
       p = await bct(e.issuer);
     } catch (o) {
-      J(
+      logMCPDebug(
         this.serverName,
         `XAA: OIDC discovery failed in silent refresh: ${l(o)}`,
       );
@@ -1936,7 +1936,7 @@ class z3e {
         h,
         v;
       try {
-        h = await yn().mutate((k) => {
+        h = await getSecureStorage().mutate((k) => {
           let w = k.mcpOAuth?.[_];
           return {
             ...k,
@@ -1978,7 +1978,7 @@ class z3e {
     } catch (o) {
       if (o instanceof q && o.shouldClearIdToken)
         (await TLt(e.issuer),
-          J(this.serverName, "XAA: cleared id_token after exchange failure"));
+          logMCPDebug(this.serverName, "XAA: cleared id_token after exchange failure"));
       throw o;
     }
   }
@@ -1992,14 +1992,14 @@ class z3e {
       n = e.searchParams.get("scope"),
       r = t ?? n;
     if (r !== n)
-      J(
+      logMCPDebug(
         this.serverName,
         `Overrode authorization scope from ${n ? Zw("scope", n) : "NONE"} to configured: ${r ? Zw("scope", r) : "NONE"}`,
       );
     let d = r === null ? null : apr(r, this._metadata);
     if (d !== null && d !== n) {
       if ((e.searchParams.set("scope", d), d !== t))
-        J(this.serverName, "Appended offline_access to authorization scope");
+        logMCPDebug(this.serverName, "Appended offline_access to authorization scope");
     }
     let p = lpr(e),
       o = e.searchParams.getAll("prompt"),
@@ -2014,12 +2014,12 @@ class z3e {
     this._authorizationUrl = e.toString();
     let h = e.searchParams.get("scope");
     if (
-      (J(this.serverName, `Authorization URL: ${F2n(e)}`),
-      J(this.serverName, `Scopes in URL: ${h ? Zw("scope", h) : "NOT FOUND"}`),
+      (logMCPDebug(this.serverName, `Authorization URL: ${F2n(e)}`),
+      logMCPDebug(this.serverName, `Scopes in URL: ${h ? Zw("scope", h) : "NOT FOUND"}`),
       h)
     )
       ((this._scopes = h),
-        J(
+        logMCPDebug(
           this.serverName,
           `Captured scopes from authorization URL: ${Zw("scope", h)}`,
         ));
@@ -2027,15 +2027,15 @@ class z3e {
       let M = this.getCuratedMetadataScope();
       if (M)
         ((this._scopes = M),
-          J(this.serverName, `Using scopes from metadata: ${Zw("scope", M)}`));
-      else J(this.serverName, "No scopes available from URL or metadata");
+          logMCPDebug(this.serverName, `Using scopes from metadata: ${Zw("scope", M)}`));
+      else logMCPDebug(this.serverName, "No scopes available from URL or metadata");
     }
     if (this._scopes && !this.handleRedirection && this._pendingStepUpScope) {
       let M = la(this.serverName, this.serverConfig),
         D = this._scopes,
         C = !1;
       try {
-        await yn().mutate((T) => {
+        await getSecureStorage().mutate((T) => {
           let I = T.mcpOAuth?.[M];
           if (!I) return T;
           return (
@@ -2044,12 +2044,12 @@ class z3e {
           );
         });
       } catch (T) {
-        J(this.serverName, `step-up scope persist failed: ${l(T)}`);
+        logMCPDebug(this.serverName, `step-up scope persist failed: ${l(T)}`);
       }
-      if (C) J(this.serverName, `Persisted step-up scope: ${Zw("scope", D)}`);
+      if (C) logMCPDebug(this.serverName, `Persisted step-up scope: ${Zw("scope", D)}`);
     }
     if (!this.handleRedirection) {
-      J(this.serverName, "Redirection handling is disabled, skipping redirect");
+      logMCPDebug(this.serverName, "Redirection handling is disabled, skipping redirect");
       return;
     }
     let v = e.toString();
@@ -2057,15 +2057,15 @@ class z3e {
       throw Error(
         "Invalid authorization URL: must use http:// or https:// scheme",
       );
-    J(this.serverName, "Redirecting to authorization URL");
+    logMCPDebug(this.serverName, "Redirecting to authorization URL");
     let k = F2n(e);
     if (
-      (J(this.serverName, `Authorization URL: ${k}`),
+      (logMCPDebug(this.serverName, `Authorization URL: ${k}`),
       this.onAuthorizationUrlCallback)
     )
       this.onAuthorizationUrlCallback(v);
     if (this.skipBrowserOpen) {
-      J(
+      logMCPDebug(
         this.serverName,
         `Skipping browser open (skipBrowserOpen=true). URL: ${k}`,
       );
@@ -2073,36 +2073,36 @@ class z3e {
     }
     let w = fM();
     if (w)
-      J(
+      logMCPDebug(
         this.serverName,
         `Skipping browser open (headless environment). URL: ${k}`,
       );
-    else J(this.serverName, `Opening authorization URL: ${k}`);
+    else logMCPDebug(this.serverName, `Opening authorization URL: ${k}`);
     let E = w ? !1 : await Gr(v);
     if (
       (i("tengu_mcp_oauth_browser_open", {
         success: E,
         headless: w,
-        platform: u(P()),
+        platform: fromEnum(P()),
       }),
       !w && !E)
     )
-      J(
+      logMCPDebug(
         this.serverName,
         "Browser didn't open automatically. URL is shown in UI.",
       );
   }
   async saveCodeVerifier(e) {
-    (J(this.serverName, "Saving code verifier"), (this._codeVerifier = e));
+    (logMCPDebug(this.serverName, "Saving code verifier"), (this._codeVerifier = e));
   }
   async codeVerifier() {
     if (!this._codeVerifier)
       throw (
-        J(this.serverName, "No code verifier saved"),
+        logMCPDebug(this.serverName, "No code verifier saved"),
         Error("No code verifier saved")
       );
     return (
-      J(this.serverName, "Returning code verifier"),
+      logMCPDebug(this.serverName, "Returning code verifier"),
       this._presented.record(this._codeVerifier),
       this._codeVerifier
     );
@@ -2110,7 +2110,7 @@ class z3e {
   async invalidateCredentials(e) {
     if (e === "verifier") {
       ((this._codeVerifier = void 0),
-        J(this.serverName, "Invalidated credentials (scope: verifier)"));
+        logMCPDebug(this.serverName, "Invalidated credentials (scope: verifier)"));
       return;
     }
     let t = e,
@@ -2120,7 +2120,7 @@ class z3e {
       let d = this._lastServedClientId,
         p = this._lastServedAccessToken,
         o = this._lastServedRefreshToken;
-      await yn().mutate((_) => {
+      await getSecureStorage().mutate((_) => {
         let h = _.mcpOAuth?.[n];
         if (!h) return _;
         let v = { ..._.mcpOAuth };
@@ -2130,7 +2130,7 @@ class z3e {
               w = d != null && h.clientId != null && h.clientId !== d;
             if (k || w)
               return (
-                J(
+                logMCPDebug(
                   this.serverName,
                   `invalidateCredentials('all') preserved: ${k ? "foreign token" : "concurrent re-registration"}`,
                 ),
@@ -2156,7 +2156,7 @@ class z3e {
               (p != null && !!h.accessToken && h.accessToken !== p)
             )
               return (
-                J(
+                logMCPDebug(
                   this.serverName,
                   "invalidateCredentials('tokens') preserved: concurrent rotation",
                 ),
@@ -2173,7 +2173,7 @@ class z3e {
           case "discovery": {
             if (!h.discoveryState?.authorizationServerMetadata)
               return (
-                J(
+                logMCPDebug(
                   this.serverName,
                   "invalidateCredentials('discovery') preserved: concurrent URL-only re-save",
                 ),
@@ -2186,9 +2186,9 @@ class z3e {
         return ((r = !0), { ..._, mcpOAuth: v });
       });
     } catch (d) {
-      J(this.serverName, `invalidateCredentials persist failed: ${l(d)}`);
+      logMCPDebug(this.serverName, `invalidateCredentials persist failed: ${l(d)}`);
     }
-    if (r) J(this.serverName, `Invalidated credentials (scope: ${e})`);
+    if (r) logMCPDebug(this.serverName, `Invalidated credentials (scope: ${e})`);
   }
   async saveDiscoveryState(e) {
     if (e.authorizationServerMetadata)
@@ -2201,12 +2201,12 @@ class z3e {
       });
     ((this._flowDiscoveryState = e), (this._flowDiscoveryStateAt = Date.now()));
     let t = la(this.serverName, this.serverConfig);
-    J(
+    logMCPDebug(
       this.serverName,
       `Saving discovery state (authServer: ${Gn(e.authorizationServerUrl)})`,
     );
     try {
-      await yn().mutate((n) => ({
+      await getSecureStorage().mutate((n) => ({
         ...n,
         mcpOAuth: {
           ...n.mcpOAuth,
@@ -2225,7 +2225,7 @@ class z3e {
         },
       }));
     } catch (n) {
-      J(this.serverName, `saveDiscoveryState persist failed: ${l(n)}`);
+      logMCPDebug(this.serverName, `saveDiscoveryState persist failed: ${l(n)}`);
     }
   }
   servePolicyCheckedDiscoveryState(e) {
@@ -2249,7 +2249,7 @@ class z3e {
   async discoveryState() {
     let e = this.serverConfig.oauth?.authServerMetadataUrl;
     if (e) {
-      J(this.serverName, `Fetching metadata from configured URL: ${Gn(e)}`);
+      logMCPDebug(this.serverName, `Fetching metadata from configured URL: ${Gn(e)}`);
       try {
         let o = await he(this.serverName, this.serverConfig.url, {
           configuredMetadataUrl: e,
@@ -2265,7 +2265,7 @@ class z3e {
           );
         }
       } catch (o) {
-        J(
+        logMCPDebug(
           this.serverName,
           `Failed to fetch from configured metadata URL: ${_E(o, this.serverConfig.url)}`,
         );
@@ -2278,7 +2278,7 @@ class z3e {
     )
       return this.servePolicyCheckedDiscoveryState(this._flowDiscoveryState);
     let t = this._flowDiscoveryStateAt,
-      r = await yn().readAsync();
+      r = await getSecureStorage().readAsync();
     if (
       this._flowDiscoveryState &&
       this._flowDiscoveryStateAt !== t &&
@@ -2288,7 +2288,7 @@ class z3e {
     let d = la(this.serverName, this.serverConfig),
       p = r?.mcpOAuth?.[d]?.discoveryState;
     if (p?.authorizationServerUrl) {
-      J(
+      logMCPDebug(
         this.serverName,
         `Returning cached discovery state (authServer: ${Gn(p.authorizationServerUrl)})`,
       );
@@ -2324,35 +2324,35 @@ class z3e {
       p;
     for (let o = 0; o < ge; o++)
       try {
-        (J(this.serverName, `Acquiring refresh lock (attempt ${o + 1})`),
+        (logMCPDebug(this.serverName, `Acquiring refresh lock (attempt ${o + 1})`),
           (p = await Cs(d, {
             realpath: !1,
             stale: 60000,
             update: 5000,
             onCompromised: () => {
-              J(this.serverName, "Refresh lock was compromised");
+              logMCPDebug(this.serverName, "Refresh lock was compromised");
             },
           })),
-          J(this.serverName, "Acquired refresh lock"));
+          logMCPDebug(this.serverName, "Acquired refresh lock"));
         break;
       } catch (_) {
         let h = A(_);
         if (h === "ELOCKED") {
-          (J(
+          (logMCPDebug(
             this.serverName,
             `Refresh lock held by another process, waiting (attempt ${o + 1}/${ge})`,
           ),
             await Z(1000 + Math.random() * 1000));
           continue;
         }
-        J(
+        logMCPDebug(
           this.serverName,
           `Failed to acquire refresh lock: ${h}; skipping refresh`,
         );
         return;
       }
     if (!p) {
-      J(
+      logMCPDebug(
         this.serverName,
         `Could not acquire refresh lock after ${ge} retries; skipping refresh`,
       );
@@ -2360,13 +2360,13 @@ class z3e {
     }
     try {
       wA();
-      let h = (await yn().readAsync())?.mcpOAuth?.[t];
+      let h = (await getSecureStorage().readAsync())?.mcpOAuth?.[t];
       if (h) {
         let v =
           h.expiresAt != null ? (h.expiresAt - Date.now()) / 1000 : void 0;
         if (h.accessToken && (v == null || v > 300))
           return (
-            J(
+            logMCPDebug(
               this.serverName,
               v != null
                 ? `Another process already refreshed tokens (expires in ${Math.floor(v)}s)`
@@ -2389,20 +2389,20 @@ class z3e {
     } finally {
       if (p)
         try {
-          (await p(), J(this.serverName, "Released refresh lock"));
+          (await p(), logMCPDebug(this.serverName, "Released refresh lock"));
         } catch {
-          J(this.serverName, "Failed to release refresh lock");
+          logMCPDebug(this.serverName, "Failed to release refresh lock");
         }
     }
   }
   async readConcurrentRefreshWinner() {
     wA();
-    let t = (await yn().readAsync())?.mcpOAuth?.[
+    let t = (await getSecureStorage().readAsync())?.mcpOAuth?.[
         la(this.serverName, this.serverConfig)
       ],
       n = t?.expiresAt != null ? (t.expiresAt - Date.now()) / 1000 : void 0;
     if (t?.accessToken && (n == null || n > 300)) {
-      J(this.serverName, "Another process landed fresh tokens; using those");
+      logMCPDebug(this.serverName, "Another process landed fresh tokens; using those");
       let r = {
         access_token: t.accessToken,
         refresh_token: t.refreshToken,
@@ -2424,16 +2424,16 @@ class z3e {
             ? "tengu_mcp_oauth_refresh_success"
             : "tengu_mcp_oauth_refresh_failure",
           {
-            transportType: u(this.serverConfig.type),
+            transportType: fromEnum(this.serverConfig.type),
             ...(n && { mcpServerBaseUrl: n }),
-            ...(p && { reason: u(p) }),
+            ...(p && { reason: fromEnum(p) }),
           },
         );
       };
     for (let d = 1; d <= t; d++) {
       let p;
       try {
-        J(this.serverName, "Starting token refresh");
+        logMCPDebug(this.serverName, "Starting token refresh");
         let o = bLt(),
           _ = ue() ? "enforce" : "observe",
           h = this._metadataEchoMode === _ ? this._metadata : void 0;
@@ -2441,7 +2441,7 @@ class z3e {
           let k = await this.discoveryState();
           if (k?.authorizationServerMetadata) h = k.authorizationServerMetadata;
           else if (k?.authorizationServerUrl) {
-            J(
+            logMCPDebug(
               this.serverName,
               `Re-discovering metadata from persisted auth server URL: ${Gn(k.authorizationServerUrl)}`,
             );
@@ -2466,9 +2466,9 @@ class z3e {
             serverConfigForAnalytics: this.serverConfig,
           });
         if (!h) {
-          (J(this.serverName, "Failed to discover OAuth metadata"),
+          (logMCPDebug(this.serverName, "Failed to discover OAuth metadata"),
             r("failure", "metadata_discovery_failed"),
-            f("mcp_oauth_refresh", "mcp_oauth_refresh_metadata_failed"));
+            logFeatureBad("mcp_oauth_refresh", "mcp_oauth_refresh_metadata_failed"));
           return;
         }
         if (
@@ -2477,9 +2477,9 @@ class z3e {
           (p = await this.clientInformation()),
           !p)
         ) {
-          (J(this.serverName, "No client information available"),
+          (logMCPDebug(this.serverName, "No client information available"),
             r("failure", "no_client_info"),
-            f("mcp_oauth_refresh", "mcp_oauth_refresh_no_client_info"));
+            logFeatureBad("mcp_oauth_refresh", "mcp_oauth_refresh_no_client_info"));
           return;
         }
         let v = await $rn(new URL(this.serverConfig.url), {
@@ -2491,43 +2491,43 @@ class z3e {
         });
         if (v)
           return (
-            J(this.serverName, "Token refresh successful"),
+            logMCPDebug(this.serverName, "Token refresh successful"),
             await this.saveTokens(v),
             r("success"),
-            y("mcp_oauth_refresh"),
+            logFeatureOk("mcp_oauth_refresh"),
             v
           );
-        (J(this.serverName, "Token refresh returned no tokens"),
+        (logMCPDebug(this.serverName, "Token refresh returned no tokens"),
           r("failure", "no_tokens_returned"),
-          f("mcp_oauth_refresh", "mcp_oauth_refresh_no_tokens"));
+          logFeatureBad("mcp_oauth_refresh", "mcp_oauth_refresh_no_tokens"));
         return;
       } catch (o) {
         if (o instanceof iI) {
-          (J(
+          (logMCPDebug(
             this.serverName,
             `Token refresh denied by issuer-echo policy: ${l(o)}`,
           ),
             r("failure", "issuer_echo_denied"),
-            f("mcp_oauth_refresh", "mcp_oauth_refresh_issuer_echo_denied"));
+            logFeatureBad("mcp_oauth_refresh", "mcp_oauth_refresh_issuer_echo_denied"));
           return;
         }
         if (o instanceof aI && o.code === l2.InvalidGrant) {
-          J(
+          logMCPDebug(
             this.serverName,
             `Token refresh failed with invalid_grant: ${o.message}`,
           );
           let { freshTokens: E } = await this.readConcurrentRefreshWinner();
           if (E)
             return (
-              g("mcp_oauth_refresh", "mcp_oauth_refresh_concurrent_winner"),
+              logFeatureSad("mcp_oauth_refresh", "mcp_oauth_refresh_concurrent_winner"),
               E
             );
-          (J(
+          (logMCPDebug(
             this.serverName,
             "No valid tokens in storage, clearing stored tokens",
           ),
             r("failure", "invalid_grant"),
-            f("mcp_oauth_refresh", "mcp_oauth_refresh_invalid_grant"),
+            logFeatureBad("mcp_oauth_refresh", "mcp_oauth_refresh_invalid_grant"),
             await this.invalidateCredentials("tokens"),
             Ree.emit(this.serverName));
           return;
@@ -2536,7 +2536,7 @@ class z3e {
           o instanceof aI &&
           (o.code === "invalid_client" || o.code === "unauthorized_client")
         ) {
-          J(
+          logMCPDebug(
             this.serverName,
             "Token refresh failed: DCR client expired or invalid; clearing stored client registration",
           );
@@ -2544,16 +2544,16 @@ class z3e {
             await this.readConcurrentRefreshWinner();
           if (M)
             return (
-              g("mcp_oauth_refresh", "mcp_oauth_refresh_concurrent_winner"),
+              logFeatureSad("mcp_oauth_refresh", "mcp_oauth_refresh_concurrent_winner"),
               M
             );
           if (E?.clientId && p && E.clientId !== p.client_id) {
-            (J(
+            (logMCPDebug(
               this.serverName,
               "Another process re-registered client; preserving",
             ),
               r("failure", "concurrent_reregister"),
-              g(
+              logFeatureSad(
                 "mcp_oauth_refresh",
                 "mcp_oauth_refresh_concurrent_reregister",
               ));
@@ -2565,7 +2565,7 @@ class z3e {
               ? "unauthorized_client"
               : "invalid_client",
           ),
-            f(
+            logFeatureBad(
               "mcp_oauth_refresh",
               o.code === "unauthorized_client"
                 ? "mcp_oauth_refresh_unauthorized_client"
@@ -2576,12 +2576,12 @@ class z3e {
           return;
         }
         if (ve(o)) {
-          (J(
+          (logMCPDebug(
             this.serverName,
             `Token refresh failed: token response rejected by SDK schema: ${l(o)}`,
           ),
             r("failure", "token_response_schema_rejected"),
-            f(
+            logFeatureBad(
               "mcp_oauth_refresh",
               "mcp_oauth_refresh_token_response_schema_rejected",
             ));
@@ -2599,16 +2599,16 @@ class z3e {
               !ot.has(o.code)),
           k = h || v || _;
         if (!k || d >= t) {
-          (J(
+          (logMCPDebug(
             this.serverName,
             `Token refresh failed: ${_E(o, this.serverConfig.url)}`,
           ),
             r("failure", k ? "transient_retries_exhausted" : "request_failed"),
-            f("mcp_oauth_refresh", "mcp_oauth_refresh_request_failed"));
+            logFeatureBad("mcp_oauth_refresh", "mcp_oauth_refresh_request_failed"));
           return;
         }
         let w = 1000 * Math.pow(2, d - 1);
-        (J(
+        (logMCPDebug(
           this.serverName,
           `Token refresh failed, retrying in ${w}ms (attempt ${d}/${t})`,
         ),
@@ -2655,7 +2655,7 @@ async function chr() {
 async function uhr(e, t, n) {
   let r = la(e, t);
   try {
-    return await yn().mutate((d) => ({
+    return await getSecureStorage().mutate((d) => ({
       ...d,
       mcpOAuthClientConfig: {
         ...d.mcpOAuthClientConfig,
@@ -2668,14 +2668,14 @@ async function uhr(e, t, n) {
 }
 async function dhr(e, t) {
   let n = la(e, t);
-  await yn().mutate((r) => {
+  await getSecureStorage().mutate((r) => {
     if (!r.mcpOAuthClientConfig?.[n]) return r;
     let d = { ...r.mcpOAuthClientConfig };
     return (delete d[n], { ...r, mcpOAuthClientConfig: d });
   });
 }
 async function B2n(e, t) {
-  let r = await yn().readAsync(),
+  let r = await getSecureStorage().readAsync(),
     d = la(e, t);
   return r?.mcpOAuthClientConfig?.[d];
 }

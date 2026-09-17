@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { validateBridgeId as fm } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { validateBridgeId } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { q } from "./chunk-7beprh8k.js";
-import { isViolinWoodEnabled as Su } from "./chunk-97crm80y.js";
+import { isViolinWoodEnabled } from "./chunk-97crm80y.js";
 import { CV, ZVn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { dirname as o, join as t } from "path";
+import { dirname, join as t } from "path";
 var GFn = 1e4;
 function qFn(e) {
   try {
-    let n = fm(a.CLAUDE_CODE_REMOTE_SESSION_ID ?? "", "remote session id");
-    return { sessionId: n, path: t(o(e), ".ccr-dir-sync", `worker-${n}.json`) };
+    let n = validateBridgeId(a.CLAUDE_CODE_REMOTE_SESSION_ID ?? "", "remote session id");
+    return { sessionId: n, path: t(dirname(e), ".ccr-dir-sync", `worker-${n}.json`) };
   } catch {
     return null;
   }
@@ -59,7 +59,7 @@ function VFn(e) {
   CV.of(B()).markCopyCleared(e);
 }
 async function $Qt() {
-  let e = await Su();
+  let e = await isViolinWoodEnabled();
   if (e) CV.of(B()).openGate();
   return e;
 }

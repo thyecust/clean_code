@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getTeamName as ii } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
+import { getTeamName } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
 function b2n(t) {
-  if (ii()) return;
+  if (getTeamName()) return;
   return t.standaloneAgentContext?.name;
 }
 function Vle(t, n) {

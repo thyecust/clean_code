@@ -12,19 +12,19 @@
 import { Wi, w5, E_, Mse, df, H, NR, EP, x5, tBe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { lit as S, fromEnum as u, fromNumber as Yr, concatSafe as _y } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromNumber, concatSafe } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { R, ge, l, A, Jr, Po, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, Yu, qr, zR, XPn, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { sigtermThenKill as I5, reapDetachedRepl as Tq, procIdentityOf as jT, procIdentityFields as kU, getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { sigtermThenKill, reapDetachedRepl, procIdentityOf, procIdentityFields, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { A$e, C$e, Tve, JK, Sme, AAn, Lc, bme } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
 import { bfe, Il, Pc, YE, wfe, Gk } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
@@ -55,26 +55,26 @@ import {
 } from "./chunk-djserjj5.js";
 import {
   Cre,
-  BG_PROTO as ba,
-  BgDispatchSchema as RSt,
+  BG_PROTO,
+  BgDispatchSchema,
   f3t,
   m3t,
-  readRoster as IE,
-  bgShort as AT,
-  updateRoster as S$,
-  getJobDir as rr,
-  writeStateAtomic as Ti,
-  readJobState as Zn,
-  readPinnedJobIds as Hpe,
-  ABANDONED_WORKER_MS as wNe,
-  isSettled as Hs,
-  writeReapedTerminalState as Ope,
+  readRoster,
+  bgShort,
+  updateRoster,
+  getJobDir,
+  writeStateAtomic,
+  readJobState,
+  readPinnedJobIds,
+  ABANDONED_WORKER_MS,
+  isSettled,
+  writeReapedTerminalState,
 } from "./chunk-7wsy8vxb.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
 import { Tw } from "../认证-OAuth登录/chunk-s51acx6w.js";
 import { mut } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
-import { controlRequest as Wp } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import {
   Aye,
   X$n,
@@ -144,14 +144,14 @@ import { Vb, s9 } from "../../01-核心基础设施/共享小工具-未细化/ch
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { NSt, j8e } from "../../01-核心基础设施/共享小工具-未细化/chunk-h14anec2.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { spawn as Br } from "child_process";
 import { open as Or, rm as Lr } from "fs/promises";
-import { homedir as Wr } from "os";
-import { dirname as Nr, resolve as Tt } from "path";
-import { createWriteStream as jt } from "fs";
+import { homedir } from "os";
+import { dirname, resolve } from "path";
+import { createWriteStream } from "fs";
 import { rename as rt, stat as Ft, unlink as nt } from "fs/promises";
 var ot = 10485760;
 async function Le(t) {
@@ -193,7 +193,7 @@ async function Le(t) {
   };
 }
 function it(t) {
-  let e = jt(t, { flags: "a" });
+  let e = createWriteStream(t, { flags: "a" });
   return (e.on("error", () => {}), e);
 }
 function at(t) {
@@ -215,7 +215,7 @@ async function st(t) {
       await rt(t, e).catch(() => nt(t).catch(() => {})));
   }
 }
-import { realpath as Dr, stat as Rr } from "fs/promises";
+import { realpath, stat as Rr } from "fs/promises";
 import {
   access as Qe,
   lstat as Qt,
@@ -223,16 +223,16 @@ import {
   readdir as er,
   rm as Fe,
   unlink as te,
-  writeFile as tr,
+  writeFile,
 } from "fs/promises";
-import { freemem as nr } from "os";
+import { freemem } from "os";
 import { basename as Ve, join as yt } from "path";
 import { once as Ht } from "events";
 import {
   lstat as Gt,
   mkdir as dt,
   readdir as Kt,
-  readFile as Ut,
+  readFile,
   rename as zt,
   rm as lt,
   unlink as ct,
@@ -250,7 +250,7 @@ function Te(t, e) {
     i("tengu_bg_dispatch_rejected", { reason: e }));
 }
 function ut(t) {
-  return _y(S("oversized ("), Yr(t), S(" bytes)"));
+  return concatSafe(S("oversized ("), fromNumber(t), S(" bytes)"));
 }
 async function ft(t, e) {
   let o;
@@ -259,33 +259,33 @@ async function ft(t, e) {
   } catch (p) {
     if (W(p)) return;
     return (
-      f("daemon_bg_dispatch_ingest", "read_failed"),
+      logFeatureBad("daemon_bg_dispatch_ingest", "read_failed"),
       xe(t, Jr(p) ?? S("unknown"))
     );
   }
   if (o.isSymbolicLink())
-    return (f("daemon_bg_dispatch_ingest", "symlink"), xe(t, S("symlink")));
+    return (logFeatureBad("daemon_bg_dispatch_ingest", "symlink"), xe(t, S("symlink")));
   if (!o.isFile()) {
-    (f("daemon_bg_dispatch_ingest", "not_a_file"),
+    (logFeatureBad("daemon_bg_dispatch_ingest", "not_a_file"),
       n(`[bg-dispatch] removed non-regular ${Ie(t)}`, { level: "warn" }),
       await lt(t, { recursive: !0, force: !0 }).catch(() => {}));
     return;
   }
   if (o.size > ze)
-    return (f("daemon_bg_dispatch_ingest", "oversized"), xe(t, ut(o.size)));
+    return (logFeatureBad("daemon_bg_dispatch_ingest", "oversized"), xe(t, ut(o.size)));
   let r;
   try {
-    r = await Ut(t, "utf8");
+    r = await readFile(t, "utf8");
   } catch (p) {
     if (W(p)) return;
     return (
-      f("daemon_bg_dispatch_ingest", "read_failed"),
+      logFeatureBad("daemon_bg_dispatch_ingest", "read_failed"),
       xe(t, Jr(p) ?? S("unknown"))
     );
   }
   let a = mt(r);
   if (!a.ok) return xe(t, a.reason);
-  (e(a.dispatch), y("daemon_bg_dispatch_ingest"), await ct(t).catch(() => {}));
+  (e(a.dispatch), logFeatureOk("daemon_bg_dispatch_ingest"), await ct(t).catch(() => {}));
 }
 var gt = { namespace: "daemon", relPath: ["dispatch"] };
 async function Jt(t) {
@@ -307,21 +307,21 @@ function mt(t) {
   }
   let r;
   try {
-    r = RSt().safeParse(e);
+    r = BgDispatchSchema().safeParse(e);
   } catch {
     return (
-      f("daemon_bg_dispatch_ingest", "transform_throw"),
+      logFeatureBad("daemon_bg_dispatch_ingest", "transform_throw"),
       { ok: !1, reason: S("transform_throw") }
     );
   }
   if (!r.success)
     return (
-      f("daemon_bg_dispatch_ingest", o ? "schema" : "bad_json"),
+      logFeatureBad("daemon_bg_dispatch_ingest", o ? "schema" : "bad_json"),
       { ok: !1, reason: S("schema") }
     );
   if (Date.now() - r.data.createdAt > Yt)
     return (
-      f("daemon_bg_dispatch_ingest", "stale"),
+      logFeatureBad("daemon_bg_dispatch_ingest", "stale"),
       { ok: !1, reason: S("stale") }
     );
   return { ok: !0, dispatch: r.data };
@@ -330,7 +330,7 @@ async function Ye(t) {
   await lt(Ne(iG(), t), { recursive: !0, force: !0 }).catch(() => {});
 }
 async function ht(t) {
-  (f("daemon_bg_dispatch_ingest", "not_a_file"),
+  (logFeatureBad("daemon_bg_dispatch_ingest", "not_a_file"),
     n(`[bg-dispatch] removed non-regular ${t}`, { level: "warn" }),
     await Ye(t));
 }
@@ -349,7 +349,7 @@ async function wt(t, e, o) {
     a = await f3t(Ne(iG(), e));
   if (a.kind === "refused") {
     if (a.symlink) {
-      (f("daemon_bg_dispatch_ingest", "symlink"),
+      (logFeatureBad("daemon_bg_dispatch_ingest", "symlink"),
         await Ye(e),
         Te(e, S("symlink")));
       return;
@@ -358,7 +358,7 @@ async function wt(t, e, o) {
     return;
   }
   if (a.kind === "error") {
-    (f("daemon_bg_dispatch_ingest", "read_failed"),
+    (logFeatureBad("daemon_bg_dispatch_ingest", "read_failed"),
       Te(e, Jr(a.error) ?? S("unknown")));
     return;
   }
@@ -367,7 +367,7 @@ async function wt(t, e, o) {
   });
   if (p === void 0 || !p.ok) {
     if (
-      (f("daemon_bg_dispatch_ingest", "read_failed"),
+      (logFeatureBad("daemon_bg_dispatch_ingest", "read_failed"),
       p !== void 0 && m3t(p.error))
     )
       return Ke(t, e, S("v5_read_failed"), void 0);
@@ -378,20 +378,20 @@ async function wt(t, e, o) {
   if (!w.found) return;
   if (w.totalBytes > ze)
     return (
-      f("daemon_bg_dispatch_ingest", "oversized"),
+      logFeatureBad("daemon_bg_dispatch_ingest", "oversized"),
       Ke(t, e, ut(w.totalBytes), void 0)
     );
   let d = mt(Buffer.from(w.value).toString("utf8"));
   if (!d.ok) return Ke(t, e, d.reason, w.value);
   (o(d.dispatch),
-    y("daemon_bg_dispatch_ingest"),
+    logFeatureOk("daemon_bg_dispatch_ingest"),
     await t.delete(r).catch(() => {
       return;
     }));
 }
 async function Xt(t, e, o) {
   if (!_n(e)) {
-    (f("daemon_bg_dispatch_ingest", "bad_name"),
+    (logFeatureBad("daemon_bg_dispatch_ingest", "bad_name"),
       Te(e, S("bad_name")),
       await Ye(e));
     return;
@@ -453,7 +453,7 @@ function Ue(t) {
   return t.startsWith(".") || _t(t) || t === "rejected";
 }
 async function kt(t, e) {
-  return Sr("daemon_bg_watcher_start", () => Zt(t, e));
+  return withFeatureTelemetry("daemon_bg_watcher_start", () => Zt(t, e));
 }
 async function Zt(t, e) {
   await Jt(e);
@@ -503,7 +503,7 @@ var or = 3600000,
   vt = 1000,
   lr = new Set();
 function Xe(t) {
-  return Hpe(t).catch((e) => (h(e), new Set()));
+  return readPinnedJobIds(t).catch((e) => (logError(e), new Set()));
 }
 async function St(t, e = {}) {
   let o,
@@ -568,7 +568,7 @@ async function St(t, e = {}) {
                 });
                 return;
               }
-              h(K);
+              logError(K);
             })
             .finally(() => {
               N = !1;
@@ -605,11 +605,11 @@ async function St(t, e = {}) {
             if (
               (t(`bg refused ${m.short} (${m.source}): ${c}`),
               i("tengu_bg_spawn_cwd_gone", {
-                short: AT(m.short),
+                short: bgShort(m.short),
                 attempt: 0,
-                via: u("dispatch"),
+                via: fromEnum("dispatch"),
               }),
-              g("daemon_bg_session_create", "cwd_gone"),
+              logFeatureSad("daemon_bg_session_create", "cwd_gone"),
               m.nonce)
             )
               D(m.short, m.nonce, c);
@@ -620,12 +620,12 @@ async function St(t, e = {}) {
             try {
               if ((await pr(e.storageV5), e.storageV5))
                 await kit(e.storageV5, m.short);
-              else await tr(XY(m.short), "");
+              else await writeFile(XY(m.short), "");
               ce = !0;
             } catch (c) {
               return (
-                h(c),
-                f("daemon_bg_session_create", "host_tombstone_write"),
+                logError(c),
+                logFeatureBad("daemon_bg_session_create", "host_tombstone_write"),
                 "dropped"
               );
             }
@@ -653,10 +653,10 @@ async function St(t, e = {}) {
               c)
             )
               return (
-                f("daemon_bg_session_create", "dup_retry_exhausted"),
+                logFeatureBad("daemon_bg_session_create", "dup_retry_exhausted"),
                 "dropped"
               );
-            return (y("daemon_bg_session_create"), "dup-live");
+            return (logFeatureOk("daemon_bg_session_create"), "dup-live");
           }
           if (!E8(m))
             if (e.storageV5) LWe(e.storageV5, m.short);
@@ -669,7 +669,7 @@ async function St(t, e = {}) {
                 `bg: low memory but sweep anchor is ${Math.round(c / 1000)}s stale (host slept?) \u2014 deferring eager retire to the next sweep tick`,
               );
             else {
-              let I = Math.round(nr() / 1024 / 1024);
+              let I = Math.round(freemem() / 1024 / 1024);
               (t(
                 `bg: low memory (${Se !== void 0 ? `macOS memorystatus pressure level ${Se}` : `${I}MB free`}) \u2014 retiring settled workers before spawning ${m.short}`,
               ),
@@ -682,7 +682,7 @@ async function St(t, e = {}) {
                   for (let ae of a.values())
                     ae.retireIfSettled(Je, j)
                       .then((we) => Ze(t, ae, we, "low memory"))
-                      .catch((we) => h(we));
+                      .catch((we) => logError(we));
                 }));
             }
           }
@@ -732,14 +732,14 @@ async function St(t, e = {}) {
                 }),
                 ue(
                   w,
-                  S$((j) => {
+                  updateRoster((j) => {
                     j.workers[m.short] = I.rosterEntry();
-                  }, e.storageV5).catch((j) => h(j)),
+                  }, e.storageV5).catch((j) => logError(j)),
                 ),
                 k(),
                 i("tengu_bg_spare_claim", { age_ms: Date.now() - c.startedAt }),
                 t(`bg claimed-spare ${m.short} (${m.source})`),
-                y("daemon_bg_session_create"),
+                logFeatureOk("daemon_bg_session_create"),
                 q(),
                 "claimed"
               );
@@ -753,7 +753,7 @@ async function St(t, e = {}) {
                       : I instanceof Error
                         ? "error"
                         : "unknown";
-              (i("tengu_bg_spare_claim_fail", { reason: u(ae) }), c.dispose());
+              (i("tengu_bg_spare_claim_fail", { reason: fromEnum(ae) }), c.dispose());
             }
           }
           let $e = qW.spawn(
@@ -774,7 +774,7 @@ async function St(t, e = {}) {
             k(),
             q(),
             t(`bg spawned ${m.short} (${m.source})`),
-            y("daemon_bg_session_create"),
+            logFeatureOk("daemon_bg_session_create"),
             "spawned"
           );
         },
@@ -812,14 +812,14 @@ async function St(t, e = {}) {
               ],
         ),
         FJn());
-      let X = await IE(void 0, e.storageV5),
+      let X = await readRoster(void 0, e.storageV5),
         ne = 0,
         ie = 0,
         he = 0,
         De = 0,
         Q = 0,
         ye = 0,
-        ve = X.updatedAt > 0 && Date.now() - X.updatedAt > wNe;
+        ve = X.updatedAt > 0 && Date.now() - X.updatedAt > ABANDONED_WORKER_MS;
       if (
         (await Promise.all(
           Object.entries(X.workers).map(async ([m, T]) => {
@@ -834,7 +834,7 @@ async function St(t, e = {}) {
                 e.credentials,
               );
             } catch (ee) {
-              (h(n1e(ee)), ie++);
+              (logError(n1e(ee)), ie++);
               return;
             }
             if (
@@ -843,7 +843,7 @@ async function St(t, e = {}) {
               T.ptySock &&
               (await xit(T.ptySock))
             ) {
-              T.procStart = await Ba(T.pid);
+              T.procStart = await getProcessStartTimeAsync(T.pid);
               try {
                 K = await qW.adopt(
                   m,
@@ -854,7 +854,7 @@ async function St(t, e = {}) {
                   e.credentials,
                 );
               } catch (ee) {
-                (h(n1e(ee)), (K = null));
+                (logError(n1e(ee)), (K = null));
               }
               K ??= qW.unverified(m, T, e.storageV5, e.credentials);
             }
@@ -889,7 +889,7 @@ async function St(t, e = {}) {
             )
               (ye++,
                 i("tengu_bg_adopt_upgrade_respawn", {}),
-                Y(T.dispatch, 0, !0).catch((ee) => h(ee)));
+                Y(T.dispatch, 0, !0).catch((ee) => logError(ee)));
             else {
               ie++;
               let ee = !1;
@@ -900,7 +900,7 @@ async function St(t, e = {}) {
                   detail: "process gone while supervisor was down",
                 };
               if (
-                (await Ope(
+                (await writeReapedTerminalState(
                   m,
                   ce.state,
                   ce.detail,
@@ -933,11 +933,11 @@ async function St(t, e = {}) {
                     te(Nh(T.ptySock)).catch(() => {}),
                     te(vT(T.ptySock)).catch(() => {}),
                     te(dN(T.ptySock)).catch(() => {}),
-                    await Tq(T.replPid, T.replProcStart));
+                    await reapDetachedRepl(T.replPid, T.replProcStart));
                   try {
                     process.kill(T.pid, 0);
                   } catch {
-                    I5([-T.pid]);
+                    sigtermThenKill([-T.pid]);
                   }
                 }
               }
@@ -963,9 +963,9 @@ async function St(t, e = {}) {
           }),
           ie - Q === 0)
         )
-          y("daemon_bg_adopt");
-        else if (ne > 0 || ye > 0) g("daemon_bg_adopt", "partial");
-        else f("daemon_bg_adopt", "all_workers_dead");
+          logFeatureOk("daemon_bg_adopt");
+        else if (ne > 0 || ye > 0) logFeatureSad("daemon_bg_adopt", "partial");
+        else logFeatureBad("daemon_bg_adopt", "all_workers_dead");
       let pe = await ZP(e.storageV5).catch(() => null),
         be = pe?.pid === process.pid,
         fe =
@@ -978,16 +978,16 @@ async function St(t, e = {}) {
       if (be && !X.parseFailed) cr(a, t, { storageV5: e.storageV5 });
       if (be && !X.parseFailed) await eJt(a, t);
       if (be && !X.inspectFailed)
-        await S$((m) => {
+        await updateRoster((m) => {
           m.workers = {};
           for (let [T, K] of a) m.workers[T] = K.rosterEntry();
-        }, e.storageV5).catch((m) => h(m));
+        }, e.storageV5).catch((m) => logError(m));
       let Pe = fe
-        ? await kt((m) => void Y(m).catch((T) => h(T)), e.storageV5)
+        ? await kt((m) => void Y(m).catch((T) => logError(T)), e.storageV5)
         : null;
       if (((r = Pe ?? void 0), (B = fe), fe)) E.resolve();
       if ((k(), fe && a.size > 0)) O = !0;
-      if ((q(), fe)) _e().catch((m) => h(m));
+      if ((q(), fe)) _e().catch((m) => logError(m));
       re = Date.now();
       let ke = !1,
         Be = setInterval(
@@ -1019,13 +1019,13 @@ async function St(t, e = {}) {
             me = await Xe(e.storageV5);
           for (let c of m.values())
             if (me.has(c.dispatch.short))
-              c.respawnIfIdleStale(me).catch((I) => h(I));
+              c.respawnIfIdleStale(me).catch((I) => logError(I));
           let Se = await Promise.all(
               [...m.values()].map((c) =>
                 c
                   .retireIfSettled(ce, me, de)
                   .then((I) => Ze(t, c, I, le ? "low memory" : ""))
-                  .catch((I) => (h(I), !1)),
+                  .catch((I) => (logError(I), !1)),
               ),
             ),
             $e = G(Se, (c) => c);
@@ -1039,7 +1039,7 @@ async function St(t, e = {}) {
               for (let I of c)
                 I.retireIfSettled(ce, lr, de)
                   .then((j) => Ze(t, I, j, "low memory, pinned"))
-                  .catch((j) => h(j));
+                  .catch((j) => logError(j));
             }
           }
           if (!le && MZt()) {
@@ -1101,7 +1101,7 @@ async function St(t, e = {}) {
                 (
                   await j
                     .respawnIfIdleStale(void 0, "prewarm")
-                    .catch((we) => (h(we), { respawned: !1 }))
+                    .catch((we) => (logError(we), { respawned: !1 }))
                 ).respawned
               )
                 c--;
@@ -1158,7 +1158,7 @@ async function St(t, e = {}) {
               (
                 await ae
                   .respawnIfIdleStale(void 0, "burst")
-                  .catch((Vt) => (h(Vt), { respawned: !1 }))
+                  .catch((Vt) => (logError(Vt), { respawned: !1 }))
               ).respawned
             )
               (de++, j--);
@@ -1189,7 +1189,7 @@ async function St(t, e = {}) {
       }
       return {
         handles: a,
-        dispatch: (m) => void Y(m).catch((T) => h(T)),
+        dispatch: (m) => void Y(m).catch((T) => logError(T)),
         leaseCount: L.leaseCount,
         liveHandleCount: () => {
           let m = 0;
@@ -1219,7 +1219,7 @@ async function St(t, e = {}) {
       };
     };
   try {
-    return await Sr(
+    return await withFeatureTelemetry(
       "daemon_bg_manager_start",
       p,
       (w) => Jr(w)?.toLowerCase() ?? "error",
@@ -1238,7 +1238,7 @@ async function St(t, e = {}) {
 }
 function qe(t, e, o, r, a, p) {
   (e.onSettle.subscribe((w) => {
-    let d = rr(e.record.short),
+    let d = getJobDir(e.record.short),
       k = w === "done" ? "done" : w === "killed" ? "stopped" : "failed",
       D = e.record.detail,
       _ = e.sessionIdTaken,
@@ -1252,47 +1252,47 @@ function qe(t, e, o, r, a, p) {
     )
       ue(
         r,
-        p.storageV5 && d === rr(e.record.short)
+        p.storageV5 && d === getJobDir(e.record.short)
           ? bt(p.storageV5, e.record.short, d, (v) =>
-              h(
+              logError(
                 new R(
                   `jobdir retire deleteScope: ${v}`,
                   "jobdir retire deleteScope failed",
                 ),
               ),
-            ).catch((v) => h(v))
-          : Fe(d, { recursive: !0, force: !0 }).catch((v) => h(v)),
+            ).catch((v) => logError(v))
+          : Fe(d, { recursive: !0, force: !0 }).catch((v) => logError(v)),
       );
     else if (w === "killed" && e.isHandoffKill)
       i("tengu_bg_handoff_settle", { jobSessionId: Ee(e.record.sessionId) });
     else
       ue(
         r,
-        Zn(d, p.storageV5)
+        readJobState(d, p.storageV5)
           .then((v) => {
             if (
               v
-                ? (Hs(v) && !(w === "crashed" && v.state === "failed")) ||
+                ? (isSettled(v) && !(w === "crashed" && v.state === "failed")) ||
                   (w === "done" &&
                     v.state === "blocked" &&
                     e.dispatch.launch.mode !== "exec")
                 : w !== "crashed" || e.dispatch.source === "spare"
             ) {
               if (!v && e.dispatch.source === "spare") {
-                if (p.storageV5 && d === rr(e.record.short))
+                if (p.storageV5 && d === getJobDir(e.record.short))
                   return p.storageV5
                     .statMeta(Ce.job(e.record.short, ["state.json"]))
                     .then(
                       (N) =>
                         !N.ok && N.error.code === "NotFound"
                           ? bt(p.storageV5, e.record.short, d, (O) =>
-                              h(
+                              logError(
                                 new R(
                                   `spare-sweep deleteScope: ${O}`,
                                   "spare-sweep deleteScope failed",
                                 ),
                               ),
-                            ).catch((O) => h(O))
+                            ).catch((O) => logError(O))
                           : void 0,
                       () => {
                         return;
@@ -1304,7 +1304,7 @@ function qe(t, e, o, r, a, p) {
                   },
                   (N) =>
                     A(N) === "ENOENT"
-                      ? Fe(d, { recursive: !0, force: !0 }).catch((O) => h(O))
+                      ? Fe(d, { recursive: !0, force: !0 }).catch((O) => logError(O))
                       : void 0,
                 );
               }
@@ -1335,7 +1335,7 @@ function qe(t, e, o, r, a, p) {
                 firstTerminalAt: null,
                 backend: "daemon",
               };
-            return Ti(
+            return writeStateAtomic(
               d,
               {
                 ...C,
@@ -1355,14 +1355,14 @@ function qe(t, e, o, r, a, p) {
               p.storageV5,
             );
           })
-          .catch((v) => h(v)),
+          .catch((v) => logError(v)),
       );
     if (
       (ue(
         r,
-        S$((v) => {
+        updateRoster((v) => {
           delete v.workers[e.record.short];
-        }, p.storageV5).catch((v) => h(v)),
+        }, p.storageV5).catch((v) => logError(v)),
       ),
       p.credentials)
     )
@@ -1454,27 +1454,27 @@ function qe(t, e, o, r, a, p) {
       if (w.pid)
         ue(
           r,
-          S$((d) => {
+          updateRoster((d) => {
             d.workers[e.record.short] = e.rosterEntry();
-          }, p.storageV5).catch((d) => h(d)),
+          }, p.storageV5).catch((d) => logError(d)),
         );
       if (w.state === "crashed" || w.state === "resuming") {
         let d = w.state,
           k = e.record.detail,
           D = d === "crashed" ? "idle" : "active",
-          _ = rr(e.record.short),
-          B = Zn(_, p.storageV5)
+          _ = getJobDir(e.record.short),
+          B = readJobState(_, p.storageV5)
             .then((E) => {
               if (
                 e.record.outcome ||
                 !E ||
-                Hs(E) ||
+                isSettled(E) ||
                 E.state === "blocked" ||
                 E.tempo === "blocked"
               )
                 return;
               if (d === "resuming" && E.state !== "crashed") return;
-              return Ti(
+              return writeStateAtomic(
                 _,
                 {
                   ...E,
@@ -1487,7 +1487,7 @@ function qe(t, e, o, r, a, p) {
                 p.storageV5,
               );
             })
-            .catch((E) => h(E));
+            .catch((E) => logError(E));
         ue(r, B);
       }
     }));
@@ -1525,7 +1525,7 @@ async function cr(t, e, o = {}) {
         s = vT(oh(_)),
         C = dN(oh(_));
       if (!r) {
-        (Ope(
+        (writeReapedTerminalState(
           _,
           "failed",
           "reaped (roster gap)",
@@ -1545,7 +1545,7 @@ async function cr(t, e, o = {}) {
             te(C).catch(() => {}));
       };
       if (E) {
-        (Ope(
+        (writeReapedTerminalState(
           _,
           "failed",
           "reaped (roster gap)",
@@ -1558,8 +1558,8 @@ async function cr(t, e, o = {}) {
       (o.storageV5 ? $Zt(o.storageV5, _) : Wi(B, FWe))
         .then((O) => {
           if (O === null) return;
-          if (!Vs(Number(O)))
-            (Ope(
+          if (!isProcessRunning(Number(O)))
+            (writeReapedTerminalState(
               _,
               "failed",
               "reaped (roster gap)",
@@ -1630,7 +1630,7 @@ function ue(t, e) {
 }
 import { spawn as hr } from "child_process";
 import { access as wr } from "fs/promises";
-import { createInterface as Et } from "readline";
+import { createInterface } from "readline";
 var _r = 60000,
   kr = 5000,
   vr = 300000,
@@ -1712,7 +1712,7 @@ class Ge {
         !this.wrapperParkLogged)
       )
         ((this.wrapperParkLogged = !0),
-          f("agent_launcher", "registry_worker_refused"));
+          logFeatureBad("agent_launcher", "registry_worker_refused"));
       this.scheduleRespawn(yr);
       return;
     }
@@ -1755,12 +1755,12 @@ class Ge {
       )
         ((this.lastBusy = d.busy), (this.lastBusyAt = Date.now()));
     });
-    let a = Et({ input: r.stdout });
+    let a = createInterface({ input: r.stdout });
     a.on("line", (d) => this.logger.write(this.id, d));
-    let p = Et({ input: r.stderr });
+    let p = createInterface({ input: r.stderr });
     (p.on("line", (d) => this.logger.write(this.id, d)),
       r.on("spawn", () => {
-        ((this.wrapperParkLogged = !1), y("daemon_worker_spawn"));
+        ((this.wrapperParkLogged = !1), logFeatureOk("daemon_worker_spawn"));
       }));
     let w = !1;
     this.exitPromise = new Promise((d) => {
@@ -1781,7 +1781,7 @@ class Ge {
       (r.on("exit", k),
         r.on("error", (D) => {
           (this.logger.write(this.id, `spawn error: ${D.message}`),
-            f(
+            logFeatureBad(
               "daemon_worker_spawn",
               W(D) ? "daemon_worker_spawn_enoent" : "daemon_worker_spawn_error",
             ));
@@ -1798,7 +1798,7 @@ class Ge {
               !this.wrapperParkLogged)
             )
               ((this.wrapperParkLogged = !0),
-                f("agent_launcher", "registry_worker_refused"));
+                logFeatureBad("agent_launcher", "registry_worker_refused"));
             k(j8e, null);
             return;
           }
@@ -1839,7 +1839,7 @@ class Ge {
         i("tengu_daemon_worker_permanent_exit", {
           exit_code: t ?? void 0,
           uptime_ms: r,
-          worker_kind: u(this.kind),
+          worker_kind: fromEnum(this.kind),
         }));
       return;
     }
@@ -1852,11 +1852,11 @@ class Ge {
         !this.wrapperParkLogged)
       )
         ((this.wrapperParkLogged = !0),
-          f("agent_launcher", "registry_worker_launcher_forked"));
+          logFeatureBad("agent_launcher", "registry_worker_launcher_forked"));
       i("tengu_daemon_worker_permanent_exit", {
         exit_code: t ?? void 0,
         uptime_ms: r,
-        worker_kind: u(this.kind),
+        worker_kind: fromEnum(this.kind),
       });
       return;
     }
@@ -1883,7 +1883,7 @@ class Ge {
           consecutive: this.consecutiveCrashes,
           exit_code: t ?? void 0,
           uptime_ms: r,
-          worker_kind: u(this.kind),
+          worker_kind: fromEnum(this.kind),
         }),
         this.scheduleRespawn(p));
     } else
@@ -2011,7 +2011,7 @@ async function Rt(t) {
     },
     v = Promise.resolve(),
     s = p(e, () => {
-      v = v.then(E).catch((O) => h(O));
+      v = v.then(E).catch((O) => logError(O));
     }),
     C = !1;
   function N() {
@@ -2051,7 +2051,7 @@ var Ar = 60000,
   Tr = K0 + Ct;
 async function At(t) {
   try {
-    let e = await Dr(t),
+    let e = await realpath(t),
       o = await Rr(e);
     return { target: e, mtimeMs: o.mtimeMs };
   } catch (e) {
@@ -2074,7 +2074,7 @@ function Mr(t) {
     });
     return;
   }
-  h(t);
+  logError(t);
 }
 async function It(t) {
   let {
@@ -2106,11 +2106,11 @@ async function It(t) {
         "supervisor",
         `transient daemon running (pid=${C.pid}, origin=transient) \u2014 asking it to yield to origin=${r}`,
       ));
-    let c = await Wp({ proto: ba, op: "yield" });
+    let c = await controlRequest({ proto: BG_PROTO, op: "yield" });
     if (c.ok && c.op === "yield" && c.yielding) {
       let I = Date.now() + 5000;
       while (C && Date.now() < I) (await Z(100), (C = await Rh(kye, E)));
-      if ((i("tengu_daemon_yield_takeover", { ok: !C, new_origin: u(r) }), C))
+      if ((i("tengu_daemon_yield_takeover", { ok: !C, new_origin: fromEnum(r) }), C))
         s.write(
           "supervisor",
           "yield acked but lock still held after 5s \u2014 refusing to start",
@@ -2140,8 +2140,8 @@ async function It(t) {
       ),
       N)
     )
-      g("daemon_start", "daemon_start_yield_failed");
-    else y("daemon_start");
+      logFeatureSad("daemon_start", "daemon_start_yield_failed");
+    else logFeatureOk("daemon_start");
     return (await s.close(), { upgradeDetected: !1, exitCode: 1 });
   }
   let O = rd({ pinToCurrentBinary: !0 }),
@@ -2151,14 +2151,14 @@ async function It(t) {
         n(`binaryIdentity(${V}) failed at startup: ${c.code}`, {
           level: "error",
         });
-      else h(c);
+      else logError(c);
       return null;
     }),
-    re = await Ba(process.pid);
+    re = await getProcessStartTimeAsync(process.pid);
   if (re === void 0) {
     if (
       (await Z(DPt),
-      (re = await Ba(process.pid, { skipCache: !0 })),
+      (re = await getProcessStartTimeAsync(process.pid, { skipCache: !0 })),
       re === void 0)
     )
       s.write(
@@ -2186,7 +2186,7 @@ async function It(t) {
       startedAt: Date.now(),
       origin: r,
       spawnedBy: a,
-      ...kU(re),
+      ...procIdentityFields(re),
       launchTarget: q?.target,
       processWrapper: Gk(),
     },
@@ -2198,7 +2198,7 @@ async function It(t) {
         ae = null;
       try {
         (process.kill(c.pid, 0),
-          (j = (await Nit(c.pid)) && (await qWe(c.pid, jT(c), kye))));
+          (j = (await Nit(c.pid)) && (await qWe(c.pid, procIdentityOf(c), kye))));
       } catch (we) {
         if (A(we) !== "ESRCH") {
           if (((ae = await Fit(c)), (j = ae === null), ae !== null))
@@ -2214,7 +2214,7 @@ async function It(t) {
             "supervisor",
             `another daemon won the lock race (pid=${c.pid}) \u2014 exiting`,
           ),
-          y("daemon_start"),
+          logFeatureOk("daemon_start"),
           await s.close(),
           { upgradeDetected: !1, exitCode: 1 }
         );
@@ -2248,7 +2248,7 @@ async function It(t) {
           "supervisor",
           "another daemon won the lock race \u2014 exiting",
         ),
-        y("daemon_start"),
+        logFeatureOk("daemon_start"),
         await s.close(),
         { upgradeDetected: !1, exitCode: 1 }
       );
@@ -2262,8 +2262,8 @@ async function It(t) {
         ),
         I)
       )
-        y("daemon_start");
-      else g("daemon_start", "lock_vanished_after_replace");
+        logFeatureOk("daemon_start");
+      else logFeatureSad("daemon_start", "lock_vanished_after_replace");
       return (await s.close(), { upgradeDetected: !1, exitCode: 1 });
     }
   }
@@ -2327,7 +2327,7 @@ async function It(t) {
       } catch (we) {
         if (Po(we))
           n(`binaryIdentity(${V}) poll failed: ${we.code}`, { level: "error" });
-        else h(we);
+        else logError(we);
         if (Q !== null) {
           if ((X?.busyWorkerCount() ?? 0) === 0) {
             if (!Q.capExpiredEmitted)
@@ -2372,7 +2372,7 @@ async function It(t) {
                   ? `binary at ${V} changed but CLAUDE_CODE_PROCESS_WRAPPER cannot be used (${I}) \u2014 deferring the upgrade restart until it is fixed (re-checked every poll)`
                   : `binary at ${V} changed but launcher \`${j[0]}\` is not runnable right now \u2014 deferring the upgrade restart until it is (re-checked every poll)`,
               ),
-              g("agent_launcher", "upgrade_deferred_launcher_unrunnable"));
+              logFeatureSad("agent_launcher", "upgrade_deferred_launcher_unrunnable"));
           return ((Q = null), !1);
         }
         De = !1;
@@ -2507,7 +2507,7 @@ async function It(t) {
         return void (async () => {
           if (ve && !fe && (await L()) === null) c.killAll("SIGTERM");
           await c.close({ skipPathCleanup: !0 });
-        })().catch((j) => h(n1e(j)));
+        })().catch((j) => logError(n1e(j)));
       ((_e.manager = c), ee());
     })
     .catch((c) => {
@@ -2519,7 +2519,7 @@ async function It(t) {
           "supervisor",
           `bg manager failed to start: ${j} \u2014 control pipe unavailable; bg sessions disabled (registry workers keep running)`,
         ),
-          fUn(Y, E).catch(h));
+          fUn(Y, E).catch(logError));
         return;
       }
       (s.write(
@@ -2548,9 +2548,9 @@ async function It(t) {
   (i("tengu_daemon_start", {
     worker_kinds: Object.keys(o9).length,
     worker_count: le,
-    origin: u(r),
+    origin: fromEnum(r),
   }),
-    y("daemon_start"),
+    logFeatureOk("daemon_start"),
     ee());
   let ce = null;
   try {
@@ -2589,7 +2589,7 @@ async function It(t) {
                   }),
                   ke?.());
             })
-            .catch((I) => h(n1e(I)));
+            .catch((I) => logError(n1e(I)));
       }, k);
     });
   } finally {
@@ -2631,12 +2631,12 @@ async function It(t) {
     `shutting down (cause=${de}, uptime=${Math.round(me / 1000)}s, leases=${_e.manager?.leaseCount() ?? -1}, live_workers=${_e.manager?.liveHandleCount() ?? -1})`,
   ),
     i("tengu_daemon_exit", {
-      cause: u(de),
+      cause: fromEnum(de),
       uptime_ms: me,
       lease_count: _e.manager?.leaseCount() ?? -1,
       live_handles: _e.manager?.liveHandleCount() ?? -1,
       ever_had_keep_alive: T,
-      origin: u(r),
+      origin: fromEnum(r),
     }));
   let Se = !1,
     $e = async () => {
@@ -2649,11 +2649,11 @@ async function It(t) {
   if (Ae || ve || pe || be) {
     if ((await $e(), ve && !fe)) {
       if ((_e.manager?.killAll("SIGTERM"), !_e.manager)) {
-        let c = await IE({ silent: !0 }, E).catch(() => null);
+        let c = await readRoster({ silent: !0 }, E).catch(() => null);
         for (let I of Object.values(c?.workers ?? {}))
           if (I.pid > 0)
             (await UZt(I.pid, I.procStart).catch(() => !1),
-              await Tq(I.replPid, I.replProcStart).catch(() => !1));
+              await reapDetachedRepl(I.replPid, I.replProcStart).catch(() => !1));
       }
     }
   }
@@ -2877,7 +2877,7 @@ async function se(t) {
   ]).catch(() => {}),
     process.exit(t));
 }
-async function na(t, e) {
+async function daemonMain(t, e) {
   if ((await C$e(), t.includes("--help") || t.includes("-h"))) {
     if (!Tve()) return bme("daemon");
     F(Mt());
@@ -2951,11 +2951,11 @@ async function na(t, e) {
           process.exit(0)
         );
       process.title = "claude daemon";
-      let _ = Tt(r),
-        B = Tt(a);
+      let _ = resolve(r),
+        B = resolve(a);
       XPn();
       try {
-        Yu(Wr());
+        Yu(homedir());
       } catch {}
       q4();
       let E = new AbortController(),
@@ -2979,8 +2979,8 @@ async function na(t, e) {
         }));
       } catch (V) {
         return (
-          h(V),
-          f("daemon_start", "daemon_start_crash"),
+          logError(V),
+          logFeatureBad("daemon_start", "daemon_start_crash"),
           await Promise.all([
             E_("tengu_daemon_startup_crash", {}),
             tBe("tengu_daemon_startup_crash", {}),
@@ -3008,7 +3008,7 @@ async function na(t, e) {
           U(
             `Service install isn't available on ${"darwin"} \u2014 the daemon still runs on demand when a client connects.`,
           ),
-          f("daemon_service_install", "daemon_service_install_unsupported"),
+          logFeatureBad("daemon_service_install", "daemon_service_install_unsupported"),
           se(1)
         );
       if (process.env.CLAUDE_CONFIG_DIR)
@@ -3016,13 +3016,13 @@ async function na(t, e) {
           U(
             "service install only supports the default config dir \u2014 the launchd/systemd unit is a per-user singleton",
           ),
-          f("daemon_service_install", "daemon_service_install_config_dir"),
+          logFeatureBad("daemon_service_install", "daemon_service_install_config_dir"),
           se(1)
         );
       let _ = await wfe();
       if (_)
         return (
-          f("daemon_service_install", "daemon_service_install_launcher"),
+          logFeatureBad("daemon_service_install", "daemon_service_install_launcher"),
           await E_("tengu_daemon_install", { ok: !1, launcher: !0 }),
           U(`install refused: ${_}`),
           se(1)
@@ -3030,14 +3030,14 @@ async function na(t, e) {
       let B = await zWe(D);
       if (B.kind === "foreground")
         return (
-          f("daemon_service_install", "daemon_service_install_foreground"),
+          logFeatureBad("daemon_service_install", "daemon_service_install_foreground"),
           await E_("tengu_daemon_install", { ok: !1, foreground: !0 }),
           U(Ot("install", B.lock.pid)),
           se(1)
         );
       if (B.kind === "not-stopped")
         return (
-          f(
+          logFeatureBad(
             "daemon_service_install",
             B.outcome === "unverified"
               ? "daemon_service_install_holder_unverified"
@@ -3053,7 +3053,7 @@ async function na(t, e) {
         );
       if (B.kind === "unknown-origin")
         return (
-          f(
+          logFeatureBad(
             "daemon_service_install",
             "daemon_service_install_holder_unknown_origin",
           ),
@@ -3070,14 +3070,14 @@ async function na(t, e) {
       if (!E.ok) {
         if (
           (await E_("tengu_daemon_install", { ok: !1 }),
-          f("daemon_service_install", "daemon_service_install_failed"),
+          logFeatureBad("daemon_service_install", "daemon_service_install_failed"),
           U(`install failed: ${E.error}`),
           E.servicePath)
         )
           U(`  (service file was written to ${E.servicePath})`);
         return se(1);
       }
-      (y("daemon_service_install"), F(`installed: ${E.servicePath}`));
+      (logFeatureOk("daemon_service_install"), F(`installed: ${E.servicePath}`));
       let v = await kPt(K0, D);
       if (
         (await E_("tengu_daemon_install", { ok: !0, reachable: v !== null }), v)
@@ -3117,7 +3117,7 @@ async function na(t, e) {
       let _ = await wfe();
       if (_)
         return (
-          f("daemon_service_install", "daemon_service_install_launcher"),
+          logFeatureBad("daemon_service_install", "daemon_service_install_launcher"),
           await E_("tengu_daemon_control", {
             op_start: k === "start",
             op_restart: k === "restart",
@@ -3130,7 +3130,7 @@ async function na(t, e) {
       let B = await zWe(D);
       if (B.kind === "foreground")
         return (
-          f("daemon_service_install", "daemon_service_install_foreground"),
+          logFeatureBad("daemon_service_install", "daemon_service_install_foreground"),
           await E_("tengu_daemon_control", {
             op_start: k === "start",
             op_restart: k === "restart",
@@ -3142,7 +3142,7 @@ async function na(t, e) {
         );
       if (B.kind === "not-stopped")
         return (
-          f(
+          logFeatureBad(
             "daemon_service_install",
             B.outcome === "unverified"
               ? "daemon_service_install_holder_unverified"
@@ -3160,7 +3160,7 @@ async function na(t, e) {
         );
       if (B.kind === "unknown-origin")
         return (
-          f(
+          logFeatureBad(
             "daemon_service_install",
             "daemon_service_install_holder_unknown_origin",
           ),
@@ -3230,9 +3230,9 @@ async function na(t, e) {
       if (
         (await E_("tengu_daemon_control", { op_uninstall: !0, ok: _.ok }), _.ok)
       )
-        (y("daemon_service_uninstall"), F("uninstalled"));
+        (logFeatureOk("daemon_service_uninstall"), F("uninstalled"));
       else
-        (f("daemon_service_uninstall", "daemon_service_uninstall_failed"),
+        (logFeatureBad("daemon_service_uninstall", "daemon_service_uninstall_failed"),
           U(`uninstall failed: ${_.error}`));
       return se(_.ok ? 0 : 1);
     }
@@ -3250,8 +3250,8 @@ async function na(t, e) {
             );
         },
         v = async (L, X, ne = "daemon_stop_failed") => {
-          if (L) y("daemon_stop");
-          else f("daemon_stop", ne);
+          if (L) logFeatureOk("daemon_stop");
+          else logFeatureBad("daemon_stop", ne);
           return (
             await E_("tengu_daemon_control", {
               op_stop: !0,
@@ -3269,10 +3269,10 @@ async function na(t, e) {
         V;
       if (!O) {
         let L = await ZP(D);
-        if (L && Vs(L.pid)) {
+        if (L && isProcessRunning(L.pid)) {
           let X = await Nit(L.pid),
-            ne = X ? await Ba(L.pid, { skipCache: !0 }) : void 0,
-            ie = jT(L),
+            ne = X ? await getProcessStartTimeAsync(L.pid, { skipCache: !0 }) : void 0,
+            ie = procIdentityOf(L),
             he = ie !== void 0 && ne !== void 0;
           if (!X || (he && ne !== ie)) V = L.pid;
           else if (he) ((N = L), (O = L));
@@ -3288,7 +3288,7 @@ async function na(t, e) {
           ),
           se(1)
         );
-      let q = await Wp({ proto: ba, op: "shutdown", reapWorkers: !_ });
+      let q = await controlRequest({ proto: BG_PROTO, op: "shutdown", reapWorkers: !_ });
       if (q.ok && q.op === "shutdown") {
         let L = _
           ? { reaped: 0, kept: 0 }
@@ -3386,7 +3386,7 @@ async function na(t, e) {
         s = _.processWrapper ?? "",
         C = "";
       if (E || v || s) {
-        let Y = await Wp({ proto: ba, op: "nudge" }).catch(() => null);
+        let Y = await controlRequest({ proto: BG_PROTO, op: "nudge" }).catch(() => null);
         C = Y?.ok && Y.op === "nudge" ? (Y.processWrapper ?? "") : s;
       }
       let N = oe(To(pt(C)), 200);
@@ -3508,9 +3508,9 @@ async function en(t, e, o, r) {
         stderr_captured: d.length > 0,
       });
   }
-  if (p) Lr(Nr(p), { recursive: !0, force: !0 }).catch(() => {});
+  if (p) Lr(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
   if (a)
-    (h(`daemon: upgrade self-respawn failed: ${l(a)}`),
+    (logError(`daemon: upgrade self-respawn failed: ${l(a)}`),
       await E_("tengu_bg_daemon_spawn_failed", {
         respawn: !0,
         errno_enoent: A(a) === "ENOENT",
@@ -3597,4 +3597,4 @@ async function rn(t, e) {
     else await Z(500);
   }
 }
-export { na as daemonMain };
+export { daemonMain };

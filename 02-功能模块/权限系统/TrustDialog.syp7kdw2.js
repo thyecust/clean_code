@@ -16,12 +16,12 @@ import { ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { qe, Bo, eu } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
-import { Pr, $s, an, getMcpConfigsByScope as nd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { Pr, $s, an, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Nae, x0t, H0t } from "../../01-核心基础设施/设置-配置/chunk-avjbj8nf.js";
 import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -74,12 +74,12 @@ function Kt(b) {
 function qt(Eo) {
   return { ...Eo, hasTrustDialogAccepted: !0 };
 }
-function Gt(wo) {
+function TrustDialog(wo) {
   let s = _(67),
     { onDone: I, commands: T } = wo,
     { storageV5: Ce } = _e(),
     it;
-  if (s[0] === p) ((it = nd("project")), (s[0] = it));
+  if (s[0] === p) ((it = getMcpConfigsByScope("project")), (s[0] = it));
   else it = s[0];
   let { servers: bo } = it,
     lt;
@@ -226,15 +226,15 @@ function Gt(wo) {
       }
       if (((K.current = !0), vo === "exit")) {
         if (w) {
-          (f("onboarding_trust_dialog", "gated_grants_backstop_declined"), I());
+          (logFeatureBad("onboarding_trust_dialog", "gated_grants_backstop_declined"), I());
           return;
         }
-        (f("onboarding_trust_dialog", "onboarding_trust_denied"), Pr(1));
+        (logFeatureBad("onboarding_trust_dialog", "onboarding_trust_denied"), Pr(1));
         return;
       }
       let Pt = VR();
       if (
-        (y("onboarding_trust_dialog"),
+        (logFeatureOk("onboarding_trust_dialog"),
         i("tengu_trust_dialog_accept", {
           isHomeDir: Pt,
           hasMcpServers: xe,
@@ -517,4 +517,4 @@ function Gt(wo) {
   else Ft = s[66];
   return Ft;
 }
-export { Gt as TrustDialog };
+export { TrustDialog };

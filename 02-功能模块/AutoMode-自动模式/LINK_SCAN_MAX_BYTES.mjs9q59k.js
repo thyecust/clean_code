@@ -15,11 +15,11 @@ import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chu
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { KI } from "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { rZ, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { us, Qu, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   vpe,
@@ -28,17 +28,17 @@ import {
   gNe,
   lYn,
   cYn,
-  getJobDir as rr,
-  getOwnJobShortId as gu,
-  writeStateAtomic as Ti,
-  logJobWriteError as Mi,
-  readJobState as Zn,
-  getBgRelocatedCwd as S3t,
-  listJobs as q_,
-  IDLE_NEEDS as xf,
-  isOverlayNeeds as Ipe,
-  isTerminal as DE,
-  isSettled as Hs,
+  getJobDir,
+  getOwnJobShortId,
+  writeStateAtomic,
+  logJobWriteError,
+  readJobState,
+  getBgRelocatedCwd,
+  listJobs,
+  IDLE_NEEDS,
+  isOverlayNeeds,
+  isTerminal,
+  isSettled,
   Ep,
   pYn,
   al,
@@ -51,23 +51,23 @@ import {
   _Yn,
   DSt,
 } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import {
-  getSmallFastModel as xm,
-  getMainLoopModel as rt,
-  classifierFlagshipRerouteTarget as NVt,
+  getSmallFastModel,
+  getMainLoopModel,
+  classifierFlagshipRerouteTarget,
   gUe,
   Vme,
-  isBgSession as _t,
-  isActingAsBgJob as Ja,
-  isBeingWatched as oZe,
-  isBeingWatchedV5 as sZe,
-  updateSessionActivity as xUe,
+  isBgSession,
+  isActingAsBgJob,
+  isBeingWatched,
+  isBeingWatchedV5,
+  updateSessionActivity,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { uuidSlugFromUrl as Fi } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { uuidSlugFromUrl } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { R3n } from "../权限系统/chunk-8zbmhy8a.js";
 import { aAt } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import {
@@ -77,21 +77,21 @@ import {
   $Te,
   zS,
   OI,
-  getMaterializedSessionFile as il,
-  worktreeStateSignals as S9t,
+  getMaterializedSessionFile,
+  worktreeStateSignals,
   nN,
   rN,
   oR,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { yl } from "../Teammates团队/chunk-thxapyam.js";
-import { CRON_CREATE_TOOL_NAME as nm } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { CRON_CREATE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { k3n } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
-import { sendRv as J4, disarmStartupWedgeWatchdog as uln } from "../后台任务-Shell管理/chunk-rh0xpf1w.js";
+import { sendRv, disarmStartupWedgeWatchdog } from "../后台任务-Shell管理/chunk-rh0xpf1w.js";
 import { fI, sft } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
-import { appendFile as Fe, open as xe } from "fs/promises";
+import { appendFile, open as xe } from "fs/promises";
 import { join as Ne } from "path";
 function re(e) {
   let r = e.message.content;
@@ -113,13 +113,13 @@ function re(e) {
 `);
 }
 async function N(e, r, t, s) {
-  if ((await Ti(e, r, s), Object.keys(t).length > 0))
-    J4({ type: "state", patch: t });
+  if ((await writeStateAtomic(e, r, s), Object.keys(t).length > 0))
+    sendRv({ type: "state", patch: t });
 }
-function cn(e) {
+function stashBgStructuredResult(e) {
   KI().pendingStructuredResult = e;
 }
-function dn(e = {}) {
+function createClassifierJobState(e = {}) {
   return {
     storageV5: e.storageV5,
     credentials: e.credentials,
@@ -158,8 +158,8 @@ function ae() {
   });
 }
 function Ae() {
-  if (ae()?.useSmallFastModel) return xm();
-  return NVt(rt());
+  if (ae()?.useSmallFastModel) return getSmallFastModel();
+  return classifierFlagshipRerouteTarget(getMainLoopModel());
 }
 function Ee(e) {
   if (gUe(e)) return [void 0, Se];
@@ -183,21 +183,21 @@ function le(e) {
   return r;
 }
 function je(e, r, t) {
-  if (!_t() || e.dispatchEmitted) return;
+  if (!isBgSession() || e.dispatchEmitted) return;
   if (((e.dispatchEmitted = !0), $e())) return;
   let s = a.CLAUDE_BG_SOURCE;
   i("tengu_bg_agent_dispatch", {
     agent: r,
-    source: s === void 0 ? S("shell") : cYn(s) ? u(s) : S("other"),
+    source: s === void 0 ? S("shell") : cYn(s) ? fromEnum(s) : S("other"),
     intentLength: e.capturedIntent.length,
     ...le(t),
   });
 }
-function un(e, r) {
+function captureIntent(e, r) {
   if (e.capturedIntent || !r) return e.capturedIntent;
   return ((e.capturedIntent = us(qr(ce(r)), 500)), e.capturedIntent);
 }
-function fn(e) {
+function findLatestRealUserAsk(e) {
   let r = e.findLast(
     (t) =>
       t.type === "user" &&
@@ -210,7 +210,7 @@ function fn(e) {
     ? r.message.content
     : void 0;
 }
-function mn(e, r) {
+function captureLatestAsk(e, r) {
   if (!r) return;
   e.latestAsk = us(qr(ce(r)), 300);
 }
@@ -218,17 +218,17 @@ function ce(e) {
   let t = e.lastIndexOf("</system-reminder>");
   return (t >= 0 ? e.slice(t + 18) : e).trim();
 }
-function gn(e, r, t) {
-  if ((qe(e), uln(), e.kicked)) return;
+function markTurnActive(e, r, t) {
+  if ((ensurePermissionBridge(e), disarmStartupWedgeWatchdog(), e.kicked)) return;
   ((e.kicked = !0),
     (e.bridgeWriteChain = e.bridgeWriteChain
       .then(() => ve(r, t, e.storageV5))
       .then(() => R3n(e.storageV5))
-      .catch(Mi)),
+      .catch(logJobWriteError)),
     de(e, r));
 }
 function de(e, r) {
-  if (!Ja()) return;
+  if (!isActingAsBgJob()) return;
   let t = zS.current();
   if (!t?.overlay) return;
   e.bridgeWriteChain = e.bridgeWriteChain
@@ -238,23 +238,23 @@ function de(e, r) {
       let s = e.lastBridgeNeeds;
       return (
         (e.lastBridgeNeeds = t.text),
-        Ie(r, t, e.storageV5, s).catch((o) => {
-          if (!W(o)) Mi(o);
+        setPermissionBlock(r, t, e.storageV5, s).catch((o) => {
+          if (!W(o)) logJobWriteError(o);
         })
       );
     });
 }
-function pn(e, r, t, s, o, l, d) {
-  if (Ja() && !e.kicked)
-    ((e.kicked = !0), ve(r, void 0, e.storageV5).catch(Mi));
+function classifyAndPushDebounced(e, r, t, s, o, l, d) {
+  if (isActingAsBgJob() && !e.kicked)
+    ((e.kicked = !0), ve(r, void 0, e.storageV5).catch(logJobWriteError));
   let c = Date.now(),
     f = d.has("repl") ? Je : _e;
   if (c - e.lastClassifyAt < f) return;
   if (e.inFlight) return;
   ((e.lastClassifyAt = c),
-    Qe(e, r, t, e.capturedIntent, s, o, l, d, !0).catch(Mi));
+    classifyAndPush(e, r, t, e.capturedIntent, s, o, l, d, !0).catch(logJobWriteError));
 }
-function ue(e, r, t) {
+function appendTimelineLine(e, r, t) {
   let s =
     b(t) +
     `
@@ -264,7 +264,7 @@ function ue(e, r, t) {
       .then((o) => {
         if (!o.ok) {
           let l = o.error;
-          Mi(
+          logJobWriteError(
             Object.assign(
               new R(
                 `[jobs] v5 timeline append failed: ${We(l)}`,
@@ -281,21 +281,21 @@ function ue(e, r, t) {
           );
         }
       })
-      .catch(Mi);
+      .catch(logJobWriteError);
     return;
   }
-  Fe(Ne(rr(r), "timeline.jsonl"), s, "utf-8").catch(Mi);
+  appendFile(Ne(getJobDir(r), "timeline.jsonl"), s, "utf-8").catch(logJobWriteError);
 }
 async function ve(e, r, t) {
-  let s = rr(e),
-    o = await Zn(s, t);
+  let s = getJobDir(e),
+    o = await readJobState(s, t);
   if (!o) return;
   if (o.tempo === "active") return;
-  if (Hs(o) && !r) return;
+  if (isSettled(o) && !r) return;
   let l = zS.current();
   if (
     o.tempo === "blocked" &&
-    Ipe(o) &&
+    isOverlayNeeds(o) &&
     l?.overlay === !0 &&
     l.text === o.needs
   )
@@ -325,29 +325,29 @@ async function ve(e, r, t) {
     ),
     _)
   )
-    ue(t, e, { at: d, state: o.state, detail: _, text: "" });
+    appendTimelineLine(t, e, { at: d, state: o.state, detail: _, text: "" });
 }
-async function Ie(e, r, t, s) {
-  let o = rr(e),
+async function setPermissionBlock(e, r, t, s) {
+  let o = getJobDir(e),
     l = r?.text ?? null,
     d = r?.overlay === !0,
-    c = await Zn(o, t);
+    c = await readJobState(o, t);
   if (!c) return;
   let f = (A) =>
       A.tempo === "blocked" &&
       A.needs !== void 0 &&
-      A.needs !== xf &&
-      !Ipe(A) &&
+      A.needs !== IDLE_NEEDS &&
+      !isOverlayNeeds(A) &&
       A.needs !== s,
     _ = (A) => A.tempo !== "blocked" || (s !== void 0 && A.needs !== s);
   if (l) {
-    if (DE(c.state)) return;
+    if (isTerminal(c.state)) return;
     if (c.tempo === "blocked" && c.needs === l) return;
     if (d && f(c)) return;
   } else if (_(c)) return;
-  let w = (await Zn(o, t)) ?? c;
+  let w = (await readJobState(o, t)) ?? c;
   if (l) {
-    if (DE(w.state)) return;
+    if (isTerminal(w.state)) return;
     if (w.tempo === "blocked" && w.needs === l) return;
     if (d && f(w)) return;
   } else if (_(w)) return;
@@ -368,11 +368,11 @@ async function Ie(e, r, t, s) {
     t,
   );
 }
-async function He(e, r, t) {
-  let s = rr(e),
-    o = await Zn(s, t);
+async function setWorktreeOwnership(e, r, t) {
+  let s = getJobDir(e),
+    o = await readJobState(s, t);
   if (!o) return;
-  let l = ee(r, o);
+  let l = worktreeOwnershipFields(r, o);
   if (
     l.worktreePath === o.worktreePath &&
     l.worktreeBranch === o.worktreeBranch &&
@@ -381,44 +381,44 @@ async function He(e, r, t) {
     return;
   await N(s, { ...o, ...l, updatedAt: new Date().toISOString() }, {}, t);
 }
-function qe(e) {
+function ensurePermissionBridge(e) {
   if (e.permissionBridgeSubscribed) return () => {};
   e.permissionBridgeSubscribed = !0;
   let r = zS.subscribe((o) => {
-      if (!Ja()) return;
-      let l = gu();
+      if (!isActingAsBgJob()) return;
+      let l = getOwnJobShortId();
       e.bridgeWriteChain = e.bridgeWriteChain
         .then(() => e.inFlight ?? void 0)
         .catch(() => {})
         .then(() => {
           let d = e.lastBridgeNeeds;
           if (o) e.lastBridgeNeeds = o.text;
-          return Ie(l, o, e.storageV5, d).catch((c) => {
-            if (!W(c)) Mi(c);
+          return setPermissionBlock(l, o, e.storageV5, d).catch((c) => {
+            if (!W(c)) logJobWriteError(c);
           });
         });
     }),
-    t = S9t.of(B().host).subscribe((o) => {
-      if (!Ja()) return;
-      let l = gu();
+    t = worktreeStateSignals.of(B().host).subscribe((o) => {
+      if (!isActingAsBgJob()) return;
+      let l = getOwnJobShortId();
       e.bridgeWriteChain = e.bridgeWriteChain
         .then(() => e.inFlight ?? void 0)
         .catch(() => {})
         .then(() =>
-          He(l, o, e.storageV5).catch((d) => {
-            if (!W(d)) Mi(d);
+          setWorktreeOwnership(l, o, e.storageV5).catch((d) => {
+            if (!W(d)) logJobWriteError(d);
           }),
         );
     }),
     s = lYn(() => {
-      if (!Ja()) return;
-      let o = gu();
+      if (!isActingAsBgJob()) return;
+      let o = getOwnJobShortId();
       e.bridgeWriteChain = e.bridgeWriteChain
         .then(() => e.inFlight ?? void 0)
         .catch(() => {})
         .then(() =>
-          ze(o, e.storageV5).catch((l) => {
-            if (!W(l)) Mi(l);
+          pushInFlightProgress(o, e.storageV5).catch((l) => {
+            if (!W(l)) logJobWriteError(l);
           }),
         );
     });
@@ -426,11 +426,11 @@ function qe(e) {
     (r(), t(), s(), (e.permissionBridgeSubscribed = !1));
   };
 }
-async function ze(e, r) {
-  if (!_t() && gu() !== e) return;
-  let t = rr(e),
-    s = await Zn(t, r);
-  if (!s || Hs(s)) return;
+async function pushInFlightProgress(e, r) {
+  if (!isBgSession() && getOwnJobShortId() !== e) return;
+  let t = getJobDir(e),
+    s = await readJobState(t, r);
+  if (!s || isSettled(s)) return;
   if (s.tempo === "blocked") return;
   let o = gNe(),
     l = o.items.length > 0 ? o.items : void 0,
@@ -451,9 +451,9 @@ async function ze(e, r) {
   );
 }
 async function Oe(e, r) {
-  let t = il() ?? yl(),
+  let t = getMaterializedSessionFile() ?? yl(),
     s = e.linkScanPath && e.linkScanPath !== t ? 0 : (e.linkScanOffset ?? 0),
-    o = await Me(t, e.children ?? null, s, r);
+    o = await scanLinkRecords(t, e.children ?? null, s, r);
   return { transcriptPath: t, prevOffset: s, scan: o };
 }
 function fe(e) {
@@ -462,28 +462,28 @@ function fe(e) {
     (e.lastMidturnLlmDetail = ""),
     (e.midturnLlmIntervalMs = 0));
 }
-function hn(e, r) {
+function markTurnAborted(e, r) {
   if (
     ((e.kicked = !1),
     fe(e),
     (e.lastEmittedDetail = ""),
     (e.lastClassifyAt = 0),
-    !Ja())
+    !isActingAsBgJob())
   )
     return;
-  let t = rr(r);
+  let t = getJobDir(r);
   e.bridgeWriteChain = e.bridgeWriteChain
     .then(() => e.inFlight ?? void 0)
     .catch(() => {})
     .then(async () => {
-      let s = await Zn(t, e.storageV5);
+      let s = await readJobState(t, e.storageV5);
       if (!s) return;
       let {
           transcriptPath: o,
           prevOffset: l,
           scan: d,
         } = await Oe(s, e.storageV5),
-        c = (await Zn(t, e.storageV5)) ?? s,
+        c = (await readJobState(t, e.storageV5)) ?? s,
         f = c.tempo === "active";
       if (!f && d.linkScanOffset === l) return;
       await N(
@@ -494,7 +494,7 @@ function hn(e, r) {
           children: d.children,
           linkScanOffset: d.linkScanOffset,
           linkScanPath: o,
-          ...ee(d.worktree, c),
+          ...worktreeOwnershipFields(d.worktree, c),
           inFlight: mNe(),
           updatedAt: new Date().toISOString(),
         },
@@ -502,30 +502,30 @@ function hn(e, r) {
         e.storageV5,
       );
     })
-    .catch(Mi);
+    .catch(logJobWriteError);
 }
-async function Sn(e, r, t, s, o) {
+async function markApiFailure(e, r, t, s, o) {
   let l = fYn(t, s, o);
   if (!l) return;
-  let d = rr(r),
+  let d = getJobDir(r),
     c = s
       .replace(/^Please run \/login \u00B7 /, "")
       .replace(/^Failed to authenticate\. /, "")
       .replace(/ \u00B7 Please run \/login$/, "")
       .replace(/^Not logged in$/, ""),
-    f = or(qr(c.replace(/\s+/g, " ").trim()), Ep),
+    f = truncate(qr(c.replace(/\s+/g, " ").trim()), Ep),
     _ = `${l.needs}${f ? ` \xB7 ${f}` : ""}`,
-    w = Ja();
+    w = isActingAsBgJob();
   ((e.bridgeWriteChain = e.bridgeWriteChain
     .then(() => e.inFlight ?? void 0)
     .catch(() => {})
     .then(async () => {
       if (!w) return;
-      let k = await Zn(d, e.storageV5);
-      if (!k || Hs(k)) return;
+      let k = await readJobState(d, e.storageV5);
+      if (!k || isSettled(k)) return;
       let { transcriptPath: A, scan: m } = await Oe(k, e.storageV5),
-        C = (await Zn(d, e.storageV5)) ?? k;
-      if (Hs(C)) return;
+        C = (await readJobState(d, e.storageV5)) ?? k;
+      if (isSettled(C)) return;
       let I = new Date().toISOString(),
         P = l.state === "failed" ? "idle" : "blocked",
         E = l.state === "failed" ? void 0 : _;
@@ -542,7 +542,7 @@ async function Sn(e, r, t, s, o) {
           children: m.children,
           linkScanOffset: m.linkScanOffset,
           linkScanPath: A,
-          ...ee(m.worktree, C),
+          ...worktreeOwnershipFields(m.worktree, C),
           updatedAt: I,
           firstTerminalAt:
             l.state === "failed" && !C.firstTerminalAt ? I : C.firstTerminalAt,
@@ -550,9 +550,9 @@ async function Sn(e, r, t, s, o) {
         { state: l.state, detail: f, tempo: P, needs: E ?? "" },
         e.storageV5,
       ),
-        ue(e.storageV5, r, { at: I, state: l.state, detail: f, text: f }));
+        appendTimelineLine(e.storageV5, r, { at: I, state: l.state, detail: f, text: f }));
     })
-    .catch(Mi)),
+    .catch(logJobWriteError)),
     await e.bridgeWriteChain,
     (e.prevState = l.state),
     (e.kicked = !1),
@@ -567,10 +567,10 @@ var Ge = 3,
   Ke =
     /^(i|i['\u2019]m|i['\u2019]ve|i['\u2019]ll|i['\u2019]d|sorry|unfortunately|unable|please|cannot|can['\u2019]t)(?=$|[\s,.\u2026:;!?\u2014\u2013])|^no access\b/;
 async function Xe(e, r, t, s) {
-  let o = await q_(void 0, e.storageV5).catch(() => []),
+  let o = await listJobs(void 0, e.storageV5).catch(() => []),
     l = new Set(
       o
-        .filter((c) => !DE(c.state.state) && c.state.name)
+        .filter((c) => !isTerminal(c.state.state) && c.state.name)
         .map((c) => c.state.name),
     ),
     d = "";
@@ -595,10 +595,10 @@ Avoid these (already taken): ${[...l].join(", ")}`
             {
               role: "user",
               content: `2-4 word lowercase label for this job.
-User: "${or(t, 300)}"${
+User: "${truncate(t, 300)}"${
                 s
                   ? `
-Agent: "${or(s, 300)}"`
+Agent: "${truncate(s, 300)}"`
                   : ""
               }
 
@@ -611,36 +611,36 @@ Skip generic verbs like fix/add/update. Respond with ONLY the label.${f}`,
         }).catch(() => null)
       )?.content.find((I) => I.type === "text");
     if (m?.type !== "text") {
-      g("job_name", "side_query_failed");
+      logFeatureSad("job_name", "side_query_failed");
       return;
     }
     let C = m.text.trim().toLowerCase().replace(/\s+/g, " ");
-    if (((d = or(C, 40)), !d || Ye.test(d))) {
-      g("job_name", "degenerate_label");
+    if (((d = truncate(C, 40)), !d || Ye.test(d))) {
+      logFeatureSad("job_name", "degenerate_label");
       return;
     }
     if (Ke.test(d) || ln(C, " ") + 1 > 5) {
-      g("job_name", "conversational_label");
+      logFeatureSad("job_name", "conversational_label");
       return;
     }
     if (!l.has(d)) break;
     l.add(d);
   }
   if (l.has(d)) {
-    g("job_name", "all_names_taken");
+    logFeatureSad("job_name", "all_names_taken");
     return;
   }
   ((e.bridgeWriteChain = e.bridgeWriteChain
     .then(() => e.inFlight ?? void 0)
     .catch(() => {})
     .then(async () => {
-      let c = await Zn(r, e.storageV5);
+      let c = await readJobState(r, e.storageV5);
       if (!c) {
-        g("job_name", "state_gone_after_gen");
+        logFeatureSad("job_name", "state_gone_after_gen");
         return;
       }
       if (c.name) {
-        y("job_name");
+        logFeatureOk("job_name");
         return;
       }
       (await N(
@@ -654,16 +654,16 @@ Skip generic verbs like fix/add/update. Respond with ONLY the label.${f}`,
         { name: d },
         e.storageV5,
       ),
-        $Te(d, "auto", e.storageV5).catch(h),
-        y("job_name"));
+        $Te(d, "auto", e.storageV5).catch(logError),
+        logFeatureOk("job_name"));
     })
-    .catch(Mi)),
+    .catch(logJobWriteError)),
     await e.bridgeWriteChain);
 }
-async function Qe(e, r, t, s, o, l, d, c = new Set(), f = !1) {
+async function classifyAndPush(e, r, t, s, o, l, d, c = new Set(), f = !1) {
   je(e, t, c);
   let _ = e.inFlight;
-  if (_) await Promise.race([_.catch(Mi), Z(60000, void 0, { unref: !0 })]);
+  if (_) await Promise.race([_.catch(logJobWriteError), Z(60000, void 0, { unref: !0 })]);
   let w = et(e, r, t, s, o, l, d, c, f);
   e.inFlight = w;
   try {
@@ -702,11 +702,11 @@ function Ze(e, r) {
 }
 async function et(e, r, t, s, o, l, d, c, f) {
   let _ = e.midturnLlmEpoch,
-    w = rr(r),
-    k = await Zn(w, e.storageV5),
+    w = getJobDir(r),
+    k = await readJobState(w, e.storageV5),
     A = o.length;
-  if (k && DE(k.state) && k.tempo !== "active" && A === e.lastMsgCount) return;
-  if (k && DE(k.state))
+  if (k && isTerminal(k.state) && k.tempo !== "active" && A === e.lastMsgCount) return;
+  if (k && isTerminal(k.state))
     ((e.prevState = ""),
       (e.prevStateSince = Date.parse(k.updatedAt) || Date.now()));
   else if (k && k.state !== e.prevState)
@@ -745,10 +745,10 @@ async function et(e, r, t, s, o, l, d, c, f) {
 
 `),
           ),
-          he = oe(o);
+          he = summarizeToolCalls(o);
         if (pe || he) {
           let T = await Dt(
-            ke(pe, {
+            classify(pe, {
               prev: "working",
               latestAsk: e.latestAsk,
               toolSummary: he,
@@ -780,7 +780,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
 `);
     if (!/[\p{L}\p{N}]/u.test(F) && A > D) {
       let v = k?.state || e.prevState || "working",
-        x = k && Ipe(k) ? void 0 : k?.needs;
+        x = k && isOverlayNeeds(k) ? void 0 : k?.needs;
       m = {
         state: v,
         tempo: v === "blocked" ? "blocked" : "idle",
@@ -791,10 +791,10 @@ async function et(e, r, t, s, o, l, d, c, f) {
       };
     } else
       ((C = qr(F)),
-        (m = await ke(C, {
+        (m = await classify(C, {
           prev: e.prevState || "working",
           latestAsk: e.latestAsk,
-          toolSummary: oe(o),
+          toolSummary: summarizeToolCalls(o),
           minsInState: Math.round((Date.now() - e.prevStateSince) / 60000),
           engine: d,
           surfaces: c,
@@ -803,26 +803,26 @@ async function et(e, r, t, s, o, l, d, c, f) {
   }
   if (!m) return;
   let I =
-    M() && !Ja() && e.storageV5 !== void 0 ? await sZe(e.storageV5) : void 0;
+    M() && !isActingAsBgJob() && e.storageV5 !== void 0 ? await isBeingWatchedV5(e.storageV5) : void 0;
   if (f && e.midturnLlmEpoch !== _) {
     n("[classifier] dropped stale mid-turn result (turn ended)");
     return;
   }
   if (l) {
-    if (DE(m.state)) m.state = e.prevState || "working";
+    if (isTerminal(m.state)) m.state = e.prevState || "working";
     if (m.tempo === "idle" || m.tempo === "blocked") m.tempo = "active";
   } else if (!f && m.tempo === "active" && m.state === "working")
     m.tempo = "idle";
   if (m.state !== e.prevState)
     ((e.prevState = m.state), (e.prevStateSince = Date.now()));
-  if (((e.accumulatedOutputs = m.output), e.onClassified?.(m, f), !Ja())) {
+  if (((e.accumulatedOutputs = m.output), e.onClassified?.(m, f), !isActingAsBgJob())) {
     if (!f) e.lastMsgCount = A;
-    if (I ?? oZe())
-      await xUe(
+    if (I ?? isBeingWatched())
+      await updateSessionActivity(
         {
           state: m.state,
           detail: m.detail,
-          tempo: DE(m.state) ? "idle" : m.tempo,
+          tempo: isTerminal(m.state) ? "idle" : m.tempo,
           needs: m.tempo === "blocked" ? m.needs : void 0,
         },
         e.storageV5,
@@ -830,20 +830,20 @@ async function et(e, r, t, s, o, l, d, c, f) {
     return;
   }
   let P = s || e.capturedIntent,
-    E = await Zn(w, e.storageV5);
-  if (E && Hs(E) && E.updatedAt !== k?.updatedAt) return;
+    E = await readJobState(w, e.storageV5);
+  if (E && isSettled(E) && E.updatedAt !== k?.updatedAt) return;
   if (!f) e.lastMsgCount = A;
-  if (!_t() && gu() !== r) return;
-  await sft(r, e.storageV5).catch(Mi);
-  let V = il() ?? yl(),
+  if (!isBgSession() && getOwnJobShortId() !== r) return;
+  await sft(r, e.storageV5).catch(logJobWriteError);
+  let V = getMaterializedSessionFile() ?? yl(),
     te = E?.linkScanPath && E.linkScanPath !== V ? 0 : (E?.linkScanOffset ?? 0),
     {
       children: ne,
       linkScanOffset: j,
       worktree: q,
-    } = await Me(V, E?.children ?? null, te, e.storageV5),
+    } = await scanLinkRecords(V, E?.children ?? null, te, e.storageV5),
     O = new Date().toISOString(),
-    p = (await Zn(w, e.storageV5)) ?? E,
+    p = (await readJobState(w, e.storageV5)) ?? E,
     J = Jgt(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE),
     L = gNe(),
     U =
@@ -853,18 +853,18 @@ async function et(e, r, t, s, o, l, d, c, f) {
           ? L.items
           : void 0,
     Pe = vpe(L.budget) === vpe(p?.budget) ? p?.budget : L.budget,
-    X = p?.tempo === "blocked" && p.updatedAt !== k?.updatedAt && !Ipe(p),
-    me = DE(m.state) && !p?.firstTerminalAt;
+    X = p?.tempo === "blocked" && p.updatedAt !== k?.updatedAt && !isOverlayNeeds(p),
+    me = isTerminal(m.state) && !p?.firstTerminalAt;
   if (me)
     i("tengu_bg_agent_terminal", {
       agent: t,
       outcome: fI(m.state),
       durationMs: p ? Date.now() - Date.parse(p.createdAt) : 0,
-      classifySource: we(m.source),
+      classifySource: fromEnumOpt(m.source),
       ...le(c),
     });
-  let ie = DE(m.state) ? "idle" : X ? "blocked" : m.tempo,
-    G = DE(m.state)
+  let ie = isTerminal(m.state) ? "idle" : X ? "blocked" : m.tempo,
+    G = isTerminal(m.state)
       ? void 0
       : X
         ? p?.needs
@@ -874,7 +874,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
   if (!f)
     e.lastResult = {
       tempo: ie,
-      block: DE(m.state) || !X ? void 0 : p?.block,
+      block: isTerminal(m.state) || !X ? void 0 : p?.block,
       needs: G,
     };
   (await N(
@@ -888,7 +888,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
       budget: Pe,
       tokens: Math.max(p?.tokens ?? 0, jc()),
       needs: G,
-      block: DE(m.state) || !X ? void 0 : p?.block,
+      block: isTerminal(m.state) || !X ? void 0 : p?.block,
       output:
         Object.keys(e.accumulatedOutputs).length > 0
           ? e.accumulatedOutputs
@@ -923,9 +923,9 @@ async function et(e, r, t, s, o, l, d, c, f) {
           "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
         DD_SOURCEMAP_GROUP: "darwin",
       }.VERSION,
-      cwd: S3t() ?? p?.cwd ?? Q(),
-      ...ee(q, p),
-      originCwd: p?.worktreePath ? p.originCwd : (S3t() ?? p?.originCwd),
+      cwd: getBgRelocatedCwd() ?? p?.cwd ?? Q(),
+      ...worktreeOwnershipFields(q, p),
+      originCwd: p?.worktreePath ? p.originCwd : (getBgRelocatedCwd() ?? p?.originCwd),
       bridgeSessionId: p?.bridgeSessionId,
       bridgeOutboundOnly: p?.bridgeOutboundOnly,
       bridgeSessionSeq: p?.bridgeSessionSeq,
@@ -952,7 +952,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
     { state: m.state, detail: m.detail, tempo: ie, needs: G ?? "" },
     e.storageV5,
   ),
-    ue(e.storageV5, r, {
+    appendTimelineLine(e.storageV5, r, {
       at: O,
       state: m.state,
       detail: m.detail,
@@ -964,11 +964,11 @@ async function et(e, r, t, s, o, l, d, c, f) {
         .filter((x) => !x.isApiErrorMessage)
         .map(OI)
         .find(Boolean),
-      F = D ? "" : oe(o),
+      F = D ? "" : summarizeToolCalls(o),
       v = us(qr(D ?? (F ? `[calling ${F}]` : "")), 500);
     ((e.nameInFlight = !0),
       Xe(e, w, ge, v)
-        .catch(Mi)
+        .catch(logJobWriteError)
         .finally(() => {
           e.nameInFlight = !1;
         }));
@@ -982,8 +982,8 @@ async function et(e, r, t, s, o, l, d, c, f) {
     `[classifier] ${m.state} (${Le}) \xB7 ${m.detail}${G ? ` \xB7 needs: ${G}` : ""}`,
   );
 }
-var tt = new Set([Xi, nm, ia]);
-function oe(e) {
+var tt = new Set([Xi, CRON_CREATE_TOOL_NAME, ia]);
+function summarizeToolCalls(e) {
   let r = new Map();
   for (let t of e)
     if (Array.isArray(t.message.content)) {
@@ -997,7 +997,7 @@ function oe(e) {
     .map(([t, s]) => (s > 1 ? `${t}\xD7${s}` : t))
     .join(", ");
 }
-async function ke(e, r) {
+async function classify(e, r) {
   let {
       prev: t,
       latestAsk: s,
@@ -1090,11 +1090,11 @@ Previous response was not valid JSON. Respond with ONLY the JSON object, nothing
   }
   return (
     i("tengu_bg_classify", {
-      path: u(k),
-      engine: u(d),
+      path: fromEnum(k),
+      engine: fromEnum(d),
       ...le(f),
-      branch: u(w?.branch ?? (k === "heuristic" ? "heuristic" : "none")),
-      closingShape: u(mYn(e)),
+      branch: fromEnum(w?.branch ?? (k === "heuristic" ? "heuristic" : "none")),
+      closingShape: fromEnum(mYn(e)),
       prevState: fI(t),
       newState: fI(C?.state) ?? S("null"),
       stateChanged: C !== null && C.state !== t,
@@ -1112,7 +1112,7 @@ Previous response was not valid JSON. Respond with ONLY the JSON object, nothing
     C
   );
 }
-function ee(e, r) {
+function worktreeOwnershipFields(e, r) {
   if (e === void 0)
     return {
       worktreePath: r?.worktreePath,
@@ -1131,8 +1131,8 @@ function ee(e, r) {
     worktreeHookBased: e.hookBased,
   };
 }
-var Y = 4194304;
-async function Me(e, r, t, s) {
+var LINK_SCAN_MAX_BYTES = 4194304;
+async function scanLinkRecords(e, r, t, s) {
   let o = hu(e, s);
   if (o !== void 0) return nt(o, r, t);
   let l;
@@ -1145,7 +1145,7 @@ async function Me(e, r, t, s) {
   try {
     let { size: c } = await l.stat();
     if (c === t) return { children: r, linkScanOffset: c };
-    if (((d = c < t ? 0 : t), c - d > Y)) d = c - Y;
+    if (((d = c < t ? 0 : t), c - d > LINK_SCAN_MAX_BYTES)) d = c - LINK_SCAN_MAX_BYTES;
     let f = Buffer.alloc(c - d);
     await l.read(f, 0, f.length, d);
     let _ = f.lastIndexOf(10);
@@ -1159,11 +1159,11 @@ async function Me(e, r, t, s) {
       { children: r, linkScanOffset: d }
     );
   } finally {
-    await l.close().catch(h);
+    await l.close().catch(logError);
   }
 }
 function be(e) {
-  return e.kind === "frame" ? `frame:${Fi(e.href) ?? e.href}` : e.href;
+  return e.kind === "frame" ? `frame:${uuidSlugFromUrl(e.href) ?? e.href}` : e.href;
 }
 function Te(e, r) {
   let t = new Map((r ?? []).map((o) => [be(o), o])),
@@ -1200,12 +1200,12 @@ function Te(e, r) {
   return { children: t.size > 0 ? [...t.values()] : r, worktree: s };
 }
 async function nt(e, r, t) {
-  let s = await ye(e, t, Y);
+  let s = await ye(e, t, LINK_SCAN_MAX_BYTES);
   if (s === null) return { children: r, linkScanOffset: t };
   let o = s.totalBytes;
   if (o === t) return { children: r, linkScanOffset: o };
   let l = o < t ? 0 : t;
-  if (o - l > Y) l = o - Y;
+  if (o - l > LINK_SCAN_MAX_BYTES) l = o - LINK_SCAN_MAX_BYTES;
   let d = s.bytes;
   if (l !== t) {
     let A = await ye(e, l, o - l);
@@ -1227,24 +1227,24 @@ async function ye(e, r, t) {
   return o.found ? { bytes: o.value, totalBytes: o.totalBytes } : null;
 }
 export {
-  Y as LINK_SCAN_MAX_BYTES,
-  ue as appendTimelineLine,
-  un as captureIntent,
-  mn as captureLatestAsk,
-  ke as classify,
-  Qe as classifyAndPush,
-  pn as classifyAndPushDebounced,
-  dn as createClassifierJobState,
-  qe as ensurePermissionBridge,
-  fn as findLatestRealUserAsk,
-  Sn as markApiFailure,
-  hn as markTurnAborted,
-  gn as markTurnActive,
-  ze as pushInFlightProgress,
-  Me as scanLinkRecords,
-  Ie as setPermissionBlock,
-  He as setWorktreeOwnership,
-  cn as stashBgStructuredResult,
-  oe as summarizeToolCalls,
-  ee as worktreeOwnershipFields,
+  LINK_SCAN_MAX_BYTES,
+  appendTimelineLine,
+  captureIntent,
+  captureLatestAsk,
+  classify,
+  classifyAndPush,
+  classifyAndPushDebounced,
+  createClassifierJobState,
+  ensurePermissionBridge,
+  findLatestRealUserAsk,
+  markApiFailure,
+  markTurnAborted,
+  markTurnActive,
+  pushInFlightProgress,
+  scanLinkRecords,
+  setPermissionBlock,
+  setWorktreeOwnership,
+  stashBgStructuredResult,
+  summarizeToolCalls,
+  worktreeOwnershipFields,
 };

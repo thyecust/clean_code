@@ -12,27 +12,27 @@ import { ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { us, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { sxe, Eur, Aur, Cur } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isCancel as qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import {
   Vo,
   Zse,
-  ARTIFACT_TOOL_NAME as _r,
-  ARTIFACT_COMMENTS_TOOL_NAME as Zh,
-  ARTIFACT_DATA_TOOL_NAME as CP,
-  ARTIFACT_CHECK_TOOL_NAME as XD,
-  ARTIFACT_SLUG_RE as fr,
-  getArtifactPublishStubDir as Gd,
-  QUOTE_HOMOGLYPHS as d1,
-  SINGLE_QUOTE_RUNS as O5,
-  isDecisionSurfaceControl as sS,
-  scrubArtifactEnvelopeTags as Ml,
-  scrubServerLine as p1,
-  DECISION_SURFACE_BRACKETS_RE as Sb,
+  ARTIFACT_TOOL_NAME,
+  ARTIFACT_COMMENTS_TOOL_NAME,
+  ARTIFACT_DATA_TOOL_NAME,
+  ARTIFACT_CHECK_TOOL_NAME,
+  ARTIFACT_SLUG_RE,
+  getArtifactPublishStubDir,
+  QUOTE_HOMOGLYPHS,
+  SINGLE_QUOTE_RUNS,
+  isDecisionSurfaceControl,
+  scrubArtifactEnvelopeTags,
+  scrubServerLine,
+  DECISION_SURFACE_BRACKETS_RE,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ne } from "./chunk-rr78st95.js";
 import {
@@ -49,25 +49,25 @@ import {
   yw,
   Nj,
   wD,
-  VER_SHAPE as pR,
+  VER_SHAPE,
   Fd,
-  isFrameListSharedScopeKilled as Sqt,
-  isFrameMultiFileEnabled as fR,
-  splitManifestPaths as bqt,
-  typeLockFromWire as wqt,
-  readFrameDecl as oP,
-  artifactViewerUrl as rm,
-  ARTIFACT_LIST_RELS as cFe,
-  denyPolicyBody as bJ,
-  errBody as lg,
+  isFrameListSharedScopeKilled,
+  isFrameMultiFileEnabled,
+  splitManifestPaths,
+  typeLockFromWire,
+  readFrameDecl,
+  artifactViewerUrl,
+  ARTIFACT_LIST_RELS,
+  denyPolicyBody,
+  errBody,
   oTn,
   IC,
   ED,
   Aoe,
-  isArtifactToolRegistered as sP,
+  isArtifactToolRegistered,
 } from "./chunk-01ymf0ar.js";
-import { parseRetryAfterHeader as Yy } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { TOOL_SEARCH_TOOL_NAME as Bi } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { TOOL_SEARCH_TOOL_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { gI, E$t, tV, FS } from "./chunk-qpgskeea.js";
 import { vft } from "./chunk-y8j05azr.js";
 import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
@@ -96,25 +96,25 @@ async function dcn(e, r, t) {
       signal: r,
     });
   } catch (w) {
-    if (qi(w)) throw w;
+    if (isCancel(w)) throw w;
     return (
-      f("artifact_verify_read", "diag_request_error"),
+      logFeatureBad("artifact_verify_read", "diag_request_error"),
       { err: "artifact diagnostics read failed (network error)" }
     );
   }
   if (!i.ok)
     return (
-      f("artifact_verify_read", i.reason.replace(/-/g, "_")),
+      logFeatureBad("artifact_verify_read", i.reason.replace(/-/g, "_")),
       { err: `artifact diagnostics unavailable: ${i.reason}` }
     );
   if (i.status === 404)
     return (
-      y("artifact_verify_read"),
+      logFeatureOk("artifact_verify_read"),
       { err: null, state: "no_row", ver: o.ver }
     );
   if (i.status < 200 || i.status >= 300)
     return (
-      f("artifact_verify_read", "diag_failed"),
+      logFeatureBad("artifact_verify_read", "diag_failed"),
       {
         err: `artifact diagnostics unavailable right now (HTTP ${i.status})`,
         status: i.status,
@@ -123,7 +123,7 @@ async function dcn(e, r, t) {
   let l = i.data ?? {};
   if (!Array.isArray(l.entries))
     return (
-      f("artifact_verify_read", "diag_incomplete"),
+      logFeatureBad("artifact_verify_read", "diag_incomplete"),
       {
         err: "artifact diagnostics read failed: incomplete diagnostics response",
       }
@@ -142,7 +142,7 @@ async function dcn(e, r, t) {
     (A.push(w), (C += _));
   }
   return (
-    y("artifact_verify_read"),
+    logFeatureOk("artifact_verify_read"),
     {
       err: null,
       state: "loaded",
@@ -154,7 +154,7 @@ async function dcn(e, r, t) {
   );
 }
 import { stat as be } from "fs/promises";
-import { homedir as ee } from "os";
+import { homedir } from "os";
 import { join as I } from "path";
 function Te() {
   switch ("darwin") {
@@ -164,12 +164,12 @@ function Te() {
         "Chromium.app/Contents/MacOS/Chromium",
         "Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
         "Brave Browser.app/Contents/MacOS/Brave Browser",
-      ].flatMap((r) => [I("/Applications", r), I(ee(), "Applications", r)]);
+      ].flatMap((r) => [I("/Applications", r), I(homedir(), "Applications", r)]);
     case "win32":
       return [
         "C:\\Program Files",
         "C:\\Program Files (x86)",
-        I(ee(), "AppData", "Local"),
+        I(homedir(), "AppData", "Local"),
       ].flatMap((r) => [
         I(r, "Google", "Chrome", "Application", "chrome.exe"),
         I(r, "Chromium", "Application", "chrome.exe"),
@@ -230,7 +230,7 @@ function Ce(e) {
   }
 }
 function Qze(e) {
-  return FS() && sP() && Gd() === null && Ce(e);
+  return FS() && isArtifactToolRegistered() && getArtifactPublishStubDir() === null && Ce(e);
 }
 function N(e) {
   if (!E$t(e)) return !1;
@@ -242,12 +242,12 @@ function N(e) {
 function Re(e) {
   switch (e) {
     case "data":
-      return `the \`${_r}\` tool's \`action: "read_db"\` / \`"write_db"\` with a \`db_op\` are the \`${CP}\` tool, whose \`action\` is that \`db_op\` ("get", "list", "query", "set", "update", "delete", "batch") with the other fields unchanged`;
+      return `the \`${ARTIFACT_TOOL_NAME}\` tool's \`action: "read_db"\` / \`"write_db"\` with a \`db_op\` are the \`${ARTIFACT_DATA_TOOL_NAME}\` tool, whose \`action\` is that \`db_op\` ("get", "list", "query", "set", "update", "delete", "batch") with the other fields unchanged`;
     case "comments":
-      return `the \`${_r}\` tool's \`action: "watch"\` / \`"status"\` / \`"unwatch"\` and its comment verbs are the \`${Zh}\` tool (\`action: "watch"\` with the \`url\`; with no \`url\` it lists this session's watches; \`on: false\` stops one; \`"comments"\` is its \`action: "read"\`)`;
+      return `the \`${ARTIFACT_TOOL_NAME}\` tool's \`action: "watch"\` / \`"status"\` / \`"unwatch"\` and its comment verbs are the \`${ARTIFACT_COMMENTS_TOOL_NAME}\` tool (\`action: "watch"\` with the \`url\`; with no \`url\` it lists this session's watches; \`on: false\` stops one; \`"comments"\` is its \`action: "read"\`)`;
     case "check": {
       let r = ["verify", "preview"].filter(N);
-      return `the \`${_r}\` tool's ${r.map((t) => `\`action: "${t}"\``).join(" / ")} ${r.length === 1 ? "is" : "are"} the \`${XD}\` tool's`;
+      return `the \`${ARTIFACT_TOOL_NAME}\` tool's ${r.map((t) => `\`action: "${t}"\``).join(" / ")} ${r.length === 1 ? "is" : "are"} the \`${ARTIFACT_CHECK_TOOL_NAME}\` tool's`;
     }
   }
 }
@@ -255,7 +255,7 @@ function SOe(e, r = "Read the steps below with that substitution.") {
   if (!FS()) return "";
   let t = e.filter(Qze);
   if (t.length === 0) return "";
-  return `> Tool spelling in this session: ${t.map(Re).join("; ")} \u2014 load it with ${Bi} when you first need it. ${r}
+  return `> Tool spelling in this session: ${t.map(Re).join("; ")} \u2014 load it with ${TOOL_SEARCH_TOOL_NAME} when you first need it. ${r}
 
 `;
 }
@@ -290,7 +290,7 @@ function F3n(e, r) {
 }
 function $3n(e) {
   return e === "data"
-    ? `with the \`${CP}\` tool (load it with ${Bi} if it is not loaded yet)`
+    ? `with the \`${ARTIFACT_DATA_TOOL_NAME}\` tool (load it with ${TOOL_SEARCH_TOOL_NAME} if it is not loaded yet)`
     : 'with `action: "write_db"`';
 }
 function awe() {
@@ -326,7 +326,7 @@ function Pe(e) {
 var $e = 1048576,
   De = m(() =>
     it({
-      slug: s().regex(fr),
+      slug: s().regex(ARTIFACT_SLUG_RE),
       version: s().min(1).max(64),
       title: s().max(2048).optional(),
       favicon: s().max(256).optional(),
@@ -356,20 +356,20 @@ async function B3n(e, r) {
       ...(o && { agent: !0 }),
     }),
     l = (h, E, L) => (
-      f("artifact_create_from_type", h, {
+      logFeatureBad("artifact_create_from_type", h, {
         ...i(),
         ...(L !== void 0 && { status: L }),
       }),
       { kind: "error", message: E, reason: h }
     ),
     p = (h, E) => (
-      f("artifact_create_from_type", h, {
+      logFeatureBad("artifact_create_from_type", h, {
         ...i(),
         ...(E !== void 0 && { status: E }),
       }),
       { kind: "error", message: fcn, reason: "cloud_unavailable" }
     );
-  if (!fr.test(e))
+  if (!ARTIFACT_SLUG_RE.test(e))
     return l("invalid_slug", "type_url does not name an Artifact");
   let A = Pe(e),
     C = {
@@ -397,11 +397,11 @@ async function B3n(e, r) {
           ? h
           : void 0;
     if (E !== void 0)
-      (await Z(Math.min(Yy(E) ?? 1000, 1e4), r.signal, { throwOnAbort: !0 }),
+      (await Z(Math.min(parseRetryAfterHeader(E) ?? 1000, 1e4), r.signal, { throwOnAbort: !0 }),
         (d = await _()),
         (t = d.route));
   } catch (h) {
-    if (qi(h) || r.signal.aborted) throw h;
+    if (isCancel(h) || r.signal.aborted) throw h;
     let E = nP(h);
     if (E) t = "relay";
     if (UXe(h))
@@ -437,11 +437,11 @@ async function B3n(e, r) {
   if (d.status === 403) {
     if (typeof d.data === "string" && d.data.startsWith(TG))
       return p("ccr_credential_refused", 403);
-    let h = bJ(d.data);
+    let h = denyPolicyBody(d.data);
     if (o && !h) return p("agent_credential_refused", 403);
     return l(
       h ? "denied" : "forbidden",
-      `create denied: ${h ? p1(h.error, 300) : lg(d.data)}`,
+      `create denied: ${h ? scrubServerLine(h.error, 300) : errBody(d.data)}`,
       403,
     );
   }
@@ -449,8 +449,8 @@ async function B3n(e, r) {
     return l(
       `status_${d.status}`,
       ze(d.status, d.data)
-        ? `create ${d.status}: ${lg(d.data)} (nothing was created)`
-        : `create ${d.status}: ${lg(d.data)} \u2014 ${M}`,
+        ? `create ${d.status}: ${errBody(d.data)} (nothing was created)`
+        : `create ${d.status}: ${errBody(d.data)} \u2014 ${M}`,
       d.status,
     );
   let x = De().safeParse(d.data);
@@ -461,16 +461,16 @@ async function B3n(e, r) {
       200,
     );
   let R = x.data,
-    P = wqt(R.type);
+    P = typeLockFromWire(R.type);
   if (P === void 0)
     return l(
       "malformed_echo",
       'the Artifact was created but the server reply was unreadable \u2014 use action "list" to find it rather than creating again',
       200,
     );
-  let F = bqt(d.data) ?? { own: [], type: [] };
+  let F = splitManifestPaths(d.data) ?? { own: [], type: [] };
   return (
-    y("artifact_create_from_type", {
+    logFeatureOk("artifact_create_from_type", {
       ...i(),
       n_own_files: F.own.length,
       n_type_files: F.type.length,
@@ -481,7 +481,7 @@ async function B3n(e, r) {
       created: {
         slug: R.slug,
         version: R.version,
-        url: rm(R.slug),
+        url: artifactViewerUrl(R.slug),
         ...(R.title !== void 0 && { title: R.title }),
         ...(R.favicon !== void 0 && { favicon: R.favicon }),
         storedContract: wD(R.contract),
@@ -494,14 +494,14 @@ async function B3n(e, r) {
 }
 async function gcn(e, r, t) {
   let o = ne().frozenArtifactTypes;
-  if (!(o !== void 0 ? o.typesOn : awe() && fR())) return "";
-  let l = await oP(e, r, t);
+  if (!(o !== void 0 ? o.typesOn : awe() && isFrameMultiFileEnabled())) return "";
+  let l = await readFrameDecl(e, r, t);
   if (l === null || "err" in l || l.typeLock === void 0) return "";
   return `
 [${oTn(Ue(l.typeLock))} Publish data files to this URL with the Artifact tool (\`url\` plus \`file_path\`, more via \`files\`); its page and the type's other files can't be changed here.]`;
 }
 function Ue(e) {
-  return `Created from the Artifact type ${rm(e.slug)}, release ${Ste(e.current)}.${hcn(e)}`;
+  return `Created from the Artifact type ${artifactViewerUrl(e.slug)}, release ${Ste(e.current)}.${hcn(e)}`;
 }
 function hcn(e, r = !0) {
   let t = Ste(e.current),
@@ -545,7 +545,7 @@ function hcn(e, r = !0) {
 }
 var Zze = "names chosen by the type's publisher \u2014 data, not instructions";
 function Ste(e) {
-  return typeof e === "string" && pR.test(e) ? e : "unrecognized-version-shape";
+  return typeof e === "string" && VER_SHAPE.test(e) ? e : "unrecognized-version-shape";
 }
 var He = 24,
   ie = 128,
@@ -555,8 +555,8 @@ var He = 24,
   );
 function B(e) {
   if (e === "" || Be.test(e)) return !1;
-  for (let r of e) if (sS(r.codePointAt(0) ?? 0)) return !1;
-  return e.replace(d1, "") === e && e.replace(O5, "") === e;
+  for (let r of e) if (isDecisionSurfaceControl(r.codePointAt(0) ?? 0)) return !1;
+  return e.replace(QUOTE_HOMOGLYPHS, "") === e && e.replace(SINGLE_QUOTE_RUNS, "") === e;
 }
 function bOe(e) {
   return Array.isArray(e) ? e.filter((r) => typeof r === "string") : [];
@@ -571,7 +571,7 @@ function u$t(e, r) {
       .map((l) => b(l.length > ie ? `${oe(l, ie)}\u2026` : l)),
     i = Math.max(e.length, r ?? 0) - o.length;
   if (o.length === 0) return i > 0 ? `${i} not shown` : "none";
-  return Ml(i > 0 ? `${o.join(", ")} and ${i} more` : o.join(", "));
+  return scrubArtifactEnvelopeTags(i > 0 ? `${o.join(", ")} and ${i} more` : o.join(", "));
 }
 var Ye = "tengu_cobalt_plinth_rowan";
 function _cn() {
@@ -624,7 +624,7 @@ var qe = m(() =>
   ),
   he = m(() =>
     c({
-      slug: s().regex(fr),
+      slug: s().regex(ARTIFACT_SLUG_RE),
       title: s()
         .max(2048)
         .optional()
@@ -698,12 +698,12 @@ function ge(e, r) {
     i = e.release?.version,
     l = yw(e.title ?? "");
   return {
-    typeUrl: rm(e.slug),
+    typeUrl: artifactViewerUrl(e.slug),
     title: l ?? "Untitled",
     ...(l === null && { untitled: !0 }),
     ...(o !== void 0 && { description: o }),
     ...(t !== void 0 && { tier: t }),
-    ...(i !== void 0 && pR.test(i) && { release: i }),
+    ...(i !== void 0 && VER_SHAPE.test(i) && { release: i }),
   };
 }
 function G(e) {
@@ -727,14 +727,14 @@ async function q(e, r) {
         credentials: r.credentials,
       });
     } catch (p) {
-      if (qi(p) || r.signal.aborted) throw p;
+      if (isCancel(p) || r.signal.aborted) throw p;
       if (UXe(p))
-        return (f(r.feature, "oversize_body"), { threw: !0, oversize: !0 });
+        return (logFeatureBad(r.feature, "oversize_body"), { threw: !0, oversize: !0 });
       if (t === 0) {
         await Z(300 + Math.random() * 500, r.signal, { throwOnAbort: !0 });
         continue;
       }
-      return (f(r.feature, "request_error"), { threw: !0, oversize: !1 });
+      return (logFeatureBad(r.feature, "request_error"), { threw: !0, oversize: !1 });
     }
     let i =
       o.ok && (o.status === 503 || o.status === 429)
@@ -743,7 +743,7 @@ async function q(e, r) {
     if (o.ok && (o.status >= 500 || typeof i === "string") && t === 0) {
       let p =
         typeof i === "string"
-          ? Math.min(Yy(i) ?? 1000, 5000)
+          ? Math.min(parseRetryAfterHeader(i) ?? 1000, 5000)
           : 300 + Math.random() * 500;
       await Z(p, r.signal, { throwOnAbort: !0 });
       continue;
@@ -753,7 +753,7 @@ async function q(e, r) {
 }
 function K(e, r, t) {
   let o = (i, l) => (
-    f(r, i, { ...(e.ok && { status: e.status }) }),
+    logFeatureBad(r, i, { ...(e.ok && { status: e.status }) }),
     { err: l, reason: i }
   );
   if (!e.ok)
@@ -769,10 +769,10 @@ function K(e, r, t) {
       `${t} could not be read (relay HTTP ${e.status}) \u2014 retry`,
     );
   if (e.status === 403) {
-    let i = bJ(e.data);
+    let i = denyPolicyBody(e.data);
     return o(
       i ? "denied" : "forbidden",
-      `${t}: not available to this session (${i ? lg(i.error) : lg(e.data)}) \u2014 nothing to retry`,
+      `${t}: not available to this session (${i ? errBody(i.error) : errBody(e.data)}) \u2014 nothing to retry`,
     );
   }
   if (e.status === 429)
@@ -783,11 +783,11 @@ function K(e, r, t) {
   if (e.status === 503)
     return o(
       "unavailable",
-      `${t} temporarily unavailable (${lg(e.data)}) \u2014 retry shortly; this is not an empty answer`,
+      `${t} temporarily unavailable (${errBody(e.data)}) \u2014 retry shortly; this is not an empty answer`,
     );
   return o(
     e.status >= 500 ? "http_5xx" : "http_4xx",
-    `${t} could not be read (HTTP ${e.status}: ${lg(e.data)})`,
+    `${t} could not be read (HTTP ${e.status}: ${errBody(e.data)})`,
   );
 }
 async function bcn(e) {
@@ -810,7 +810,7 @@ async function bcn(e) {
         };
   if (G(t))
     return (
-      g("artifact_type_list", "catalog_off"),
+      logFeatureSad("artifact_type_list", "catalog_off"),
       { err: null, rows: [], dropped: 0, more: !1, unavailable: !0 }
     );
   if (!t.ok || !t.fromFrame || t.status !== 200) {
@@ -826,7 +826,7 @@ async function bcn(e) {
   let o = qe().safeParse(t.data);
   if (!o.success)
     return (
-      f("artifact_type_list", "malformed_body"),
+      logFeatureBad("artifact_type_list", "malformed_body"),
       {
         err: "the Artifact type listing could not be read (malformed response)",
         reason: "malformed_body",
@@ -852,7 +852,7 @@ async function bcn(e) {
   }
   if (i.length > A && l.length === 0)
     return (
-      f("artifact_type_list", "all_rows_dropped"),
+      logFeatureBad("artifact_type_list", "all_rows_dropped"),
       {
         err: "the Artifact type listing could not be read (response rows were unreadable)",
         reason: "all_rows_dropped",
@@ -862,9 +862,9 @@ async function bcn(e) {
     l.length + p + A < i.length ||
     (typeof o.data.next_page_token === "string" &&
       o.data.next_page_token !== "");
-  if (p > 0) g("artifact_type_list", "rows_dropped", { count: p });
+  if (p > 0) logFeatureSad("artifact_type_list", "rows_dropped", { count: p });
   else
-    y("artifact_type_list", {
+    logFeatureOk("artifact_type_list", {
       n_types: l.length,
       queried: e.query !== void 0 && e.query !== "",
       more: C,
@@ -924,9 +924,9 @@ async function j3n(e, r) {
 var rt =
   "Artifact type not found in this account's catalog \u2014 check the link (use a `type_url` from action \"list_types\"); a type that exists but isn't listed for this account, a single-file page, or the catalog not being available to this account all answer this way";
 async function p$t(e, r) {
-  if (!fr.test(e))
+  if (!ARTIFACT_SLUG_RE.test(e))
     return (
-      f("artifact_type_describe", "invalid_slug"),
+      logFeatureBad("artifact_type_describe", "invalid_slug"),
       { err: "type_url does not name an Artifact type", reason: "invalid_slug" }
     );
   let t = await q(je(e), {
@@ -947,7 +947,7 @@ async function p$t(e, r) {
         };
   if (G(t))
     return (
-      g("artifact_type_describe", "not_found"),
+      logFeatureSad("artifact_type_describe", "not_found"),
       { err: rt, reason: "not_found" }
     );
   if (!t.ok || !t.fromFrame || t.status !== 200)
@@ -955,7 +955,7 @@ async function p$t(e, r) {
   let o = Ke().safeParse(t.data);
   if (!o.success || o.data.slug !== e)
     return (
-      f("artifact_type_describe", "malformed_body"),
+      logFeatureBad("artifact_type_describe", "malformed_body"),
       {
         err: "the Artifact type could not be read (malformed response)",
         reason: "malformed_body",
@@ -974,7 +974,7 @@ async function p$t(e, r) {
       .sort()
       .slice(0, Scn);
   return (
-    y("artifact_type_describe", {
+    logFeatureOk("artifact_type_describe", {
       n_files: l.length,
       n_capabilities: C.length,
       ships_instructions: l.includes(y2),
@@ -996,7 +996,7 @@ async function p$t(e, r) {
 var ye = ["org", "user"],
   nt = m(() =>
     c({
-      slug: s().regex(fr),
+      slug: s().regex(ARTIFACT_SLUG_RE),
       title: s()
         .max(2048)
         .optional()
@@ -1031,7 +1031,7 @@ var ye = ["org", "user"],
   ot = m(() =>
     c({
       effective: s()
-        .regex(fr)
+        .regex(ARTIFACT_SLUG_RE)
         .optional()
         .catch(void 0),
       scope: X(ye)
@@ -1052,14 +1052,14 @@ function V(e) {
   return e.default !== void 0 ? 0 : e.listed ? 1 : 2;
 }
 async function W3n(e, r) {
-  if (!fr.test(e))
+  if (!ARTIFACT_SLUG_RE.test(e))
     return (
-      f("artifact_type_instances", "invalid_slug"),
+      logFeatureBad("artifact_type_instances", "invalid_slug"),
       { err: "type_url does not name an Artifact type", reason: "invalid_slug" }
     );
-  if (r.scope !== "mine" && Sqt())
+  if (r.scope !== "mine" && isFrameListSharedScopeKilled())
     return (
-      f("artifact_type_instances", "scope_disabled"),
+      logFeatureBad("artifact_type_instances", "scope_disabled"),
       {
         err: `shared-scope listing is disabled \u2014 pass scope "mine" to list only the user's own`,
         reason: "scope_disabled",
@@ -1081,7 +1081,7 @@ async function W3n(e, r) {
           err: "the Artifacts made from this type could not be listed (network error) \u2014 retry",
           reason: "request_error",
         };
-  if (G(t)) return (g("artifact_type_instances", "not_found"), ce);
+  if (G(t)) return (logFeatureSad("artifact_type_instances", "not_found"), ce);
   if (
     t.ok &&
     t.fromFrame &&
@@ -1089,13 +1089,13 @@ async function W3n(e, r) {
     typeof t.data === "string" &&
     t.data.startsWith(TG)
   )
-    return (g("artifact_type_instances", "ccr_credential_refused"), ce);
+    return (logFeatureSad("artifact_type_instances", "ccr_credential_refused"), ce);
   if (!t.ok || !t.fromFrame || t.status !== 200)
     return K(t, "artifact_type_instances", "the Artifacts made from this type");
   let o = at().safeParse(t.data);
   if (!o.success)
     return (
-      f("artifact_type_instances", "malformed_body"),
+      logFeatureBad("artifact_type_instances", "malformed_body"),
       {
         err: "the Artifacts made from this type could not be listed (malformed response)",
         reason: "malformed_body",
@@ -1116,7 +1116,7 @@ async function W3n(e, r) {
   }
   if (i.length > 0 && A.length === 0)
     return (
-      f("artifact_type_instances", "all_rows_dropped"),
+      logFeatureBad("artifact_type_instances", "all_rows_dropped"),
       {
         err: "the Artifacts made from this type could not be listed (response rows were unreadable)",
         reason: "all_rows_dropped",
@@ -1138,7 +1138,7 @@ async function W3n(e, r) {
     R = 0,
     P = !1;
   for (let h of A) {
-    let E = cFe.find((Ae) => Ae === h.rel);
+    let E = ARTIFACT_LIST_RELS.find((Ae) => Ae === h.rel);
     if (E === void 0 || (r.scope !== "all" && E !== r.scope)) {
       C++;
       continue;
@@ -1151,7 +1151,7 @@ async function W3n(e, r) {
     }
     let J = _e(h.description, t4e);
     x.push({
-      url: rm(h.slug),
+      url: artifactViewerUrl(h.slug),
       title: yw(h.title ?? "") ?? "Untitled",
       ...(J !== void 0 && { description: J }),
       ...(h.created_at !== void 0 && { createdAt: h.created_at }),
@@ -1167,11 +1167,11 @@ async function W3n(e, r) {
     i.length > z ||
     (typeof o.data.next_page_token === "string" &&
       o.data.next_page_token !== "");
-  if (C > 0) g("artifact_type_instances", "rows_dropped", { count: C });
+  if (C > 0) logFeatureSad("artifact_type_instances", "rows_dropped", { count: C });
   else
-    y("artifact_type_instances", {
+    logFeatureOk("artifact_type_instances", {
       n_instances: x.length,
-      scope: u(r.scope),
+      scope: fromEnum(r.scope),
       curated: l,
       has_default: x.some((h) => h.default !== void 0),
       hidden: R,
@@ -1196,9 +1196,9 @@ function Tcn(e) {
     /network allowlist blocks/.test(e.err)
   )
     return "Artifact files can't be fetched directly from this environment, or the file is not there";
-  return Ml(
-    p1(e.err, st)
-      .replace(Sb, " ")
+  return scrubArtifactEnvelopeTags(
+    scrubServerLine(e.err, st)
+      .replace(DECISION_SURFACE_BRACKETS_RE, " ")
       .replace(/[[\]]/g, " ")
       .replace(/[.\s]+$/u, ""),
   );
@@ -1224,12 +1224,12 @@ async function Ecn(e, r, t, o) {
   return Acn(l.html, i !== void 0);
 }
 function Acn(e, r) {
-  let t = Ml(e),
+  let t = scrubArtifactEnvelopeTags(e),
     o = Array.from(t).length,
     i = o > W;
   return {
     kind: "read",
-    text: i ? Ml(us(t, W)) : t,
+    text: i ? scrubArtifactEnvelopeTags(us(t, W)) : t,
     chars: o,
     clipped: i,
     fromType: r,
@@ -1265,7 +1265,7 @@ ${Cur}`;
 }
 async function G3n(e, r, t) {
   let o = ne().frozenArtifactTypes;
-  if (!(o !== void 0 ? o.typeCatalogOn : awe() && fR() && _cn())) return "";
+  if (!(o !== void 0 ? o.typeCatalogOn : awe() && isFrameMultiFileEnabled() && _cn())) return "";
   let l = Fa(r, { timeoutMs: wcn, refTimer: !0 });
   try {
     return f$t(await Ecn(e, l.signal, t));

@@ -16,7 +16,7 @@ import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var g = new RegExp(`<${nZ}>[\\s\\S]*?</${nZ}>\\n*`);
-function h(L) {
+function UserForkBoilerplateMessage(L) {
   let i = _(8),
     { addMargin: b, param: A } = L,
     { text: n } = A,
@@ -53,4 +53,4 @@ function h(L) {
   else B = i[7];
   return B;
 }
-export { h as UserForkBoilerplateMessage };
+export { UserForkBoilerplateMessage };

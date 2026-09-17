@@ -14,13 +14,13 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { spawn as R } from "child_process";
-import { homedir as m } from "os";
+import { spawn } from "child_process";
+import { homedir } from "os";
 import { join as v } from "path";
-var V = v(m(), ".cache", "coder-audio", "port"),
-  M = v(m(), ".cache", "coder-audio", "token");
+var V = v(homedir(), ".cache", "coder-audio", "port"),
+  M = v(homedir(), ".cache", "coder-audio", "token");
 class g {
   audioNapi = null;
   audioNapiPromise = null;
@@ -54,7 +54,7 @@ var k = 16000,
   E = "2.0",
   S = "3%";
 async function u(e) {
-  return (await Fe(e, ["--version"], { timeout: 3000, useCwd: !1 })).code === 0;
+  return (await execFileNoThrow(e, ["--version"], { timeout: 3000, useCwd: !1 })).code === 0;
 }
 async function b() {
   if (await u("brew"))
@@ -65,7 +65,7 @@ async function b() {
     };
   return null;
 }
-async function ce(e) {
+async function checkVoiceDependencies(e) {
   let o = l.of(e);
   if ((await f(o)).isNativeAudioAvailable())
     return { available: !0, missing: [], installCommand: null };
@@ -78,11 +78,11 @@ async function ce(e) {
     installCommand: t?.displayCommand ?? null,
   };
 }
-async function le(e) {
+async function requestMicrophonePermission(e) {
   if (!(await f(l.of(e))).isNativeAudioAvailable()) return !0;
   if (
     (
-      await y(
+      await startRecording(
         e,
         (s) => {},
         () => {},
@@ -90,10 +90,10 @@ async function le(e) {
       )
     ).started
   )
-    return (D(e), !0);
+    return (stopRecording(e), !0);
   return !1;
 }
-async function ue(e, o = {}) {
+async function checkRecordingAvailability(e, o = {}) {
   if (xg() || a.CLAUDE_CODE_REMOTE)
     return {
       available: !1,
@@ -134,7 +134,7 @@ To use voice mode, run Claude Code locally instead.`,
 This usually means the host has no microphone (for example, a remote server). Run Claude Code on a machine with a microphone to use voice input.`,
   };
 }
-async function y(e, o, r, s) {
+async function startRecording(e, o, r, s) {
   n("[voice] startRecording called, platform=darwin");
   let t = l.of(e),
     d = await f(t),
@@ -176,7 +176,7 @@ function C(e, o, r, s) {
       "-",
     ];
   if (t) d.push("silence", "1", "0.1", S, "1", E, S);
-  let i = R("rec", d, {
+  let i = spawn("rec", d, {
     stdio: ["pipe", "pipe", "pipe"],
     windowsHide: !0,
     ...Bs("helper"),
@@ -201,7 +201,7 @@ function C(e, o, r, s) {
     !0
   );
 }
-function D(e) {
+function stopRecording(e) {
   let o = l.of(e);
   if (o.nativeRecordingActive && o.audioNapi) {
     (o.audioNapi.stopNativeRecording(), (o.nativeRecordingActive = !1));
@@ -211,9 +211,9 @@ function D(e) {
     (o.activeRecorder.kill("SIGTERM"), (o.activeRecorder = null));
 }
 export {
-  ue as checkRecordingAvailability,
-  ce as checkVoiceDependencies,
-  le as requestMicrophonePermission,
-  y as startRecording,
-  D as stopRecording,
+  checkRecordingAvailability,
+  checkVoiceDependencies,
+  requestMicrophonePermission,
+  startRecording,
+  stopRecording,
 };

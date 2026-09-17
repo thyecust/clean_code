@@ -10,7 +10,7 @@
 import { he, y_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, my, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { bq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Xg, Sh, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -31,7 +31,7 @@ import {
   Om,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu, El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { getSettingsForSource as ye, updateSettingsForSourceWithTransform as Ii } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pIn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import {
   afe,
@@ -125,7 +125,7 @@ import {
   ei,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { uD, _j, ASt, v8e } from "../Hooks钩子/chunk-z3433nr6.js";
-import { checkEnabledPlugins as Fle, getPluginEditableScopes as pF } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
+import { checkEnabledPlugins, getPluginEditableScopes } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { dnn, cIe } from "./chunk-bh1q9esj.js";
 import {
   np,
@@ -176,10 +176,10 @@ async function bUn(e, t, s) {
   }
 }
 function dle(e) {
-  if (e === "refreshed") y("plugin_install_refresh_first");
+  if (e === "refreshed") logFeatureOk("plugin_install_refresh_first");
   else if (e === "refresh-failed")
-    f("plugin_install_refresh_first", "refresh_failed");
-  else g("plugin_install_refresh_first", "ineligible");
+    logFeatureBad("plugin_install_refresh_first", "refresh_failed");
+  else logFeatureSad("plugin_install_refresh_first", "ineligible");
 }
 async function d0e(e, t, s) {
   if (St()) return { outcome: "ineligible" };
@@ -208,7 +208,7 @@ async function d0e(e, t, s) {
   }
 }
 var _e = pe(pg(), 1);
-import { join as Ae, resolve as Fe, sep as He } from "path";
+import { join as Ae, resolve, sep as He } from "path";
 function We(e, t) {
   let s = { install: "installed", update: "updated", uninstall: "uninstalled" }[
     t
@@ -257,7 +257,7 @@ function o9e(e) {
   return e === "project" || e === "local" ? he() : void 0;
 }
 function wUn(e) {
-  let t = ye("projectSettings")?.enabledPlugins;
+  let t = getSettingsForSource("projectSettings")?.enabledPlugins;
   if (!t) return !1;
   let s = WI(Object.keys(t), e);
   return s !== void 0 && t[s] === !0;
@@ -292,7 +292,7 @@ function s9e(e) {
     s = WI(Object.keys(t.plugins), e);
   if (s) return s;
   for (let r of ["local", "project", "user"]) {
-    let i = ye(bC(r))?.enabledPlugins;
+    let i = getSettingsForSource(bC(r))?.enabledPlugins;
     if (!i) continue;
     let o = WI(Object.keys(i), e);
     if (o) return o;
@@ -306,7 +306,7 @@ function Re(e, t = ["local", "project", "user"]) {
   let s = e.includes("@"),
     r = e.toLowerCase();
   for (let i of t) {
-    let o = ye(bC(i))?.enabledPlugins;
+    let o = getSettingsForSource(bC(i))?.enabledPlugins;
     if (!o) continue;
     for (let p of Object.keys(o))
       if (s ? $y(p, e) : p.toLowerCase().startsWith(`${r}@`))
@@ -402,7 +402,7 @@ async function EUn(
           ? `. Your local copy may be out of date${I ? ` \u2014 try \`${I}\`` : " \u2014 update it from /plugin > Marketplaces"}.`
           : "";
     return (
-      f(
+      logFeatureBad(
         "plugin_marketplace_resolve",
         c
           ? "marketplace_policy_blocked"
@@ -417,10 +417,10 @@ async function EUn(
   let N = P,
     D = `${N.name}@${S}`;
   if (c)
-    f("plugin_marketplace_resolve", "marketplace_policy_blocked", {
+    logFeatureBad("plugin_marketplace_resolve", "marketplace_policy_blocked", {
       scoped: !0,
     });
-  else y("plugin_marketplace_resolve", { scoped: k !== void 0 });
+  else logFeatureOk("plugin_marketplace_resolve", { scoped: k !== void 0 });
   if (await fen(D, t, o)) {
     let m = await c7n(D, t, o9e(t), o),
       I = await cIe(D, o);
@@ -530,7 +530,7 @@ async function r4(e, t = "user", s = !0, r) {
     k = [...o, ...p],
     a = je(e, k),
     P = bC(t),
-    S = ye(P),
+    S = getSettingsForSource(P),
     w,
     X,
     A = Cf(),
@@ -594,7 +594,7 @@ async function r4(e, t = "user", s = !0, r) {
     };
   }
   let U = D.installPath;
-  (await Ii(
+  (await updateSettingsForSourceWithTransform(
     P,
     (m) => {
       let I = { ...m?.enabledPlugins },
@@ -842,14 +842,14 @@ async function $e(e, t, s, r, i) {
       message: `Plugin "${P}" is blocked by your organization's policy and cannot be enabled`,
     };
   let X = bC(S),
-    A = ye(X)?.enabledPlugins?.[P],
+    A = getSettingsForSource(X)?.enabledPlugins?.[P],
     c = s && w && fe[s] > fe[w.scope];
   if (s && A === void 0 && w && w.scope !== s && !c)
     return {
       success: !1,
       message: `Plugin "${e}" is installed at ${w.scope} scope, not ${s}. Use --scope ${w.scope} or omit --scope to auto-detect.`,
     };
-  let _ = s && !c ? A === !0 : pF().has(P);
+  let _ = s && !c ? A === !0 : getPluginEditableScopes().has(P);
   if (t === _)
     return {
       success: !1,
@@ -929,7 +929,7 @@ async function $e(e, t, s, r, i) {
     for (let E of T)
       for (let H of oe) {
         if (fe[H] <= fe[S]) continue;
-        let ne = ye(bC(H))?.enabledPlugins?.[E];
+        let ne = getSettingsForSource(bC(H))?.enabledPlugins?.[E];
         if (ne === void 0) continue;
         if (ne === !1) le.push({ dep: E, scope: H });
         break;
@@ -950,7 +950,7 @@ async function $e(e, t, s, r, i) {
     let ge = Kwe(X);
     D = T.filter((E) => !ge.has(E));
   }
-  let { error: U } = await Ii(
+  let { error: U } = await updateSettingsForSourceWithTransform(
     X,
     (F) => ({
       enabledPlugins: {
@@ -986,7 +986,7 @@ async function m0e(e, t, s) {
   return $e(e, !1, t, void 0, s);
 }
 async function AUn(e) {
-  let t = pF();
+  let t = getPluginEditableScopes();
   await qwe();
   let s = await Promise.all(y_e().map((_) => Fgn(_, e))),
     r = Y(s.filter((_) => _ !== void 0).map((_) => `${_}@${Qp}`)),
@@ -1011,7 +1011,7 @@ async function AUn(e) {
     else c.push(wr(`${_}: ${N.message}`));
   }
   for (let _ of X) {
-    let { error: N } = await Ii(
+    let { error: N } = await updateSettingsForSourceWithTransform(
       "userSettings",
       (D) => ({ enabledPlugins: { ...D?.enabledPlugins, [_]: !1 } }),
       void 0,
@@ -1040,8 +1040,8 @@ async function Pye(e, t, s = {}, r) {
   } catch (o) {
     if (o instanceof Ui) {
       let p = o instanceof k$ ? o.failureCode : "command_source_refused";
-      if (Ie[p] === "sad") g("plugin_update_op", p);
-      else f("plugin_update_op", p);
+      if (Ie[p] === "sad") logFeatureSad("plugin_update_op", p);
+      else logFeatureBad("plugin_update_op", p);
       return {
         outcome: "failed",
         message: o.message,
@@ -1049,28 +1049,28 @@ async function Pye(e, t, s = {}, r) {
         failureCode: p,
       };
     }
-    throw (f("plugin_update_op", "exception"), o);
+    throw (logFeatureBad("plugin_update_op", "exception"), o);
   }
   switch (i.outcome) {
     case "failed":
       if (i.failureCode !== void 0 && Ie[i.failureCode] === "sad")
-        g("plugin_update_op", i.failureCode);
-      else f("plugin_update_op", i.failureCode ?? "op_failed");
+        logFeatureSad("plugin_update_op", i.failureCode);
+      else logFeatureBad("plugin_update_op", i.failureCode ?? "op_failed");
       break;
     case "skipped":
-      g("plugin_update_op", i.skipReason ?? "skipped");
+      logFeatureSad("plugin_update_op", i.skipReason ?? "skipped");
       break;
     case "up_to_date":
     case "updated":
       if (i.refreshFailed)
-        g(
+        logFeatureSad(
           "plugin_update_op",
           i.refreshRefusedByPolicy
             ? "marketplace_refresh_policy_refused"
             : "marketplace_refresh_failed",
         );
       else
-        y("plugin_update_op", {
+        logFeatureOk("plugin_update_op", {
           already_up_to_date: i.outcome === "up_to_date",
           version_unknown: i.newVersion === "unknown",
         });
@@ -1213,7 +1213,7 @@ async function qe(
   if (typeof d.source === "object" && d.source.source === "command") {
     let u = JS(),
       L = u || r,
-      G = WI(await Fle(), c) !== void 0,
+      G = WI(await checkEnabledPlugins(), c) !== void 0,
       Z = u || (r && !G),
       Q = t === "user" ? void 0 : `--scope ${t}`;
     j = L ? void 0 : await i?.(c, d, b.sourceCommand);
@@ -1634,7 +1634,7 @@ async function qe(
     };
   } finally {
     let u = u$(c, B);
-    if (ue && v !== u && !Fe(u).startsWith(Fe(v) + He))
+    if (ue && v !== u && !resolve(u).startsWith(resolve(v) + He))
       await ee.rm(v, { recursive: !0, force: !0 });
   }
 }
@@ -1715,7 +1715,7 @@ async function Qe(e, t) {
   return t === void 0 || (await S1e(e, t));
 }
 function Se(e, t, s) {
-  return Ze(ye(bC(e))?.enabledPlugins, t, s);
+  return Ze(getSettingsForSource(bC(e))?.enabledPlugins, t, s);
 }
 function Xe() {
   let e = new Map();
@@ -1782,7 +1782,7 @@ function en(e, t) {
   let s = new Set(ms());
   for (let r of ["policySettings", "flagSettings"]) {
     if (!s.has(r)) continue;
-    let i = ye(r)?.enabledPlugins?.[e];
+    let i = getSettingsForSource(r)?.enabledPlugins?.[e];
     if (i === void 0) continue;
     return (i === !0) === t ? void 0 : r;
   }
@@ -1796,7 +1796,7 @@ function Be(e, t) {
 }
 function ve(e, t, s, r, i) {
   let o = { ...r, [t]: s };
-  return Ii(
+  return updateSettingsForSourceWithTransform(
     e,
     (p) => ({
       enabledPlugins: {
@@ -1820,7 +1820,7 @@ function nn(e, t) {
 }
 function Ne(e, t, s) {
   return tn.map((r) => {
-    let i = ye(r)?.enabledPlugins;
+    let i = getSettingsForSource(r)?.enabledPlugins;
     if (r !== e) return { source: r, record: i };
     let o = zl(i ?? {}, Be(i, t));
     return { source: r, record: s === void 0 ? o : { ...o, [t]: s } };

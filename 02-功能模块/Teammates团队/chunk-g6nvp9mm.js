@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Px, mz, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { Px, mz, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l, A, Po, Bp, vB, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { _n, Ce } from "./chunk-qe04h4c5.js";
@@ -25,7 +25,7 @@ import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chu
 import { SD, ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import { hkt } from "../权限系统/chunk-e4pfvp7x.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { getTeammateContext as iS, getTeamName as ii } from "./chunk-811z9z0t.js";
+import { getTeammateContext, getTeamName } from "./chunk-811z9z0t.js";
 import { gCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
 import { Vr, _Ce } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
 import { cp, fs } from "./chunk-enjekn9t.js";
@@ -266,10 +266,10 @@ function xt(e) {
   }
 }
 import {
-  readdir as he,
-  readFile as Ke,
-  unlink as He,
-  writeFile as ie,
+  readdir,
+  readFile,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import { join as Q } from "path";
 function TZn(e) {
@@ -311,7 +311,7 @@ function Mt(e) {
 }
 var q = {
   retries: { retries: 30, minTimeout: 5, maxTimeout: 100 },
-  onCompromised: (e) => h(e),
+  onCompromised: (e) => logError(e),
 };
 function Xe(e) {
   return Q(Wk(e), zbn);
@@ -326,7 +326,7 @@ async function ue(e, t) {
   }
   let r = Xe(e);
   try {
-    let o = (await Ke(r, "utf8")).trim(),
+    let o = (await readFile(r, "utf8")).trim(),
       i = parseInt(o, 10);
     return isNaN(i) ? 0 : i;
   } catch {
@@ -351,7 +351,7 @@ async function _e(e, t, r) {
     return;
   }
   let o = Xe(e);
-  await ie(o, String(t), { encoding: "utf8" });
+  await writeFile(o, String(t), { encoding: "utf8" });
 }
 async function At(e, t, r) {
   try {
@@ -401,7 +401,7 @@ async function AZn(e, t) {
     else {
       let _;
       try {
-        _ = await he(r);
+        _ = await readdir(r);
       } catch {
         _ = [];
       }
@@ -409,7 +409,7 @@ async function AZn(e, t) {
         if (p.endsWith(".json") && !p.startsWith(".")) {
           let T = Q(r, p);
           try {
-            await He(T);
+            await unlink(T);
           } catch {}
         }
     }
@@ -420,9 +420,9 @@ async function AZn(e, t) {
 }
 function zE() {
   if (a.CLAUDE_CODE_TASK_LIST_ID) return a.CLAUDE_CODE_TASK_LIST_ID;
-  let e = iS();
+  let e = getTeammateContext();
   if (e) return e.teamName;
-  return ii() || ds().taskList.leaderTeamName || K();
+  return getTeamName() || ds().taskList.leaderTeamName || K();
 }
 function VE(e) {
   return e.replace(/[^a-zA-Z0-9_-]/g, "-");
@@ -547,7 +547,7 @@ async function Ve(e, t) {
   let r = Wk(e),
     o;
   try {
-    o = await he(r);
+    o = await readdir(r);
   } catch {
     return 0;
   }
@@ -599,7 +599,7 @@ async function vZn(e, t, r) {
     else {
       let _ = { id: u, ...t },
         p = B(e, u);
-      await ie(p, b(_, null, 2), { encoding: "utf8" });
+      await writeFile(p, b(_, null, 2), { encoding: "utf8" });
     }
     return (L(), u);
   } finally {
@@ -621,7 +621,7 @@ function le(e, t) {
       (n(`[Tasks] Failed to read task ${e}: ${l(r)}`),
       !(r instanceof SyntaxError))
     )
-      h(r);
+      logError(r);
     return null;
   }
 }
@@ -637,7 +637,7 @@ async function EK(e, t, r) {
   if (r) return et(r, e, t);
   let o = B(e, t);
   try {
-    let i = await Ke(o, "utf8"),
+    let i = await readFile(o, "utf8"),
       d = z(i),
       u = Ye().safeParse(d);
     if (!u.success)
@@ -652,7 +652,7 @@ async function EK(e, t, r) {
       (n(`[Tasks] Failed to read task ${t}: ${l(i)}`, { level: "error" }),
       !(i instanceof SyntaxError) && !Kd(i) && !Bp(i))
     )
-      h(i);
+      logError(i);
     return null;
   }
 }
@@ -662,7 +662,7 @@ async function tt(e, t, r, o) {
   if (!i) return null;
   let d = { ...i, ...r, id: t },
     u = B(e, t);
-  return (await ie(u, b(d, null, 2), { encoding: "utf8" }), L(), d);
+  return (await writeFile(u, b(d, null, 2), { encoding: "utf8" }), L(), d);
 }
 var It = 5,
   vt = gCe(50);
@@ -753,7 +753,7 @@ async function UGt(e, t, r) {
       if (!u.value.existed) return !1;
     } else
       try {
-        await He(o);
+        await unlink(o);
       } catch (u) {
         if (A(u) === "ENOENT") return !1;
         throw u;
@@ -775,7 +775,7 @@ async function RC(e, t) {
   let r = Wk(e),
     o;
   try {
-    o = await he(r);
+    o = await readdir(r);
   } catch {
     return [];
   }
@@ -798,7 +798,7 @@ async function Te(e, t) {
   await CXe(e, t);
   let r = Q(Wk(e), ".lock");
   try {
-    await ie(r, "", { flag: "wx" });
+    await writeFile(r, "", { flag: "wx" });
   } catch {}
   return r;
 }
@@ -845,7 +845,7 @@ async function RZn(e, t, r, o = {}, i) {
   } catch (p) {
     return (
       n(`[Tasks] Failed to claim task ${t}: ${l(p)}`),
-      h(p),
+      logError(p),
       { success: !1, reason: "task_not_found" }
     );
   } finally {
@@ -899,7 +899,7 @@ async function $t(e, t, r, o) {
   } catch (u) {
     return (
       n(`[Tasks] Failed to claim task ${t} with busy check: ${l(u)}`),
-      h(u),
+      logError(u),
       { success: !1, reason: "task_not_found" }
     );
   } finally {
@@ -924,7 +924,7 @@ async function dCe(e, t, r, o, i) {
 }
 var U = {
     retries: { retries: 10, minTimeout: 5, maxTimeout: 100 },
-    onCompromised: (e) => h(e),
+    onCompromised: (e) => logError(e),
   },
   ot = m(() =>
     it({
@@ -976,18 +976,18 @@ function zt(e, t, r) {
   let d = `[TeammateMailbox] dropped schema-invalid inbox entry (${r})`;
   if (t === null || typeof t !== "object" || Array.isArray(t))
     return (
-      h(new R(d, "TeammateMailbox: dropped inbox entry that is not an object")),
+      logError(new R(d, "TeammateMailbox: dropped inbox entry that is not an object")),
       !0
     );
   let u = t.text;
   if (u === void 0)
-    h(new R(d, "TeammateMailbox: dropped inbox entry with missing text"));
+    logError(new R(d, "TeammateMailbox: dropped inbox entry with missing text"));
   else if (u === null)
-    h(new R(d, "TeammateMailbox: dropped inbox entry with null text"));
+    logError(new R(d, "TeammateMailbox: dropped inbox entry with null text"));
   else if (typeof u !== "string")
-    h(new R(d, "TeammateMailbox: dropped inbox entry with non-string text"));
+    logError(new R(d, "TeammateMailbox: dropped inbox entry with non-string text"));
   else
-    h(
+    logError(
       new R(
         d,
         "TeammateMailbox: dropped inbox entry failing schema validation",
@@ -1001,7 +1001,7 @@ function Dt(e, t) {
   let o = `${e}\x00(not-an-array)`;
   if (r.has(o)) return;
   (r.add(o),
-    h(
+    logError(
       new R(
         `[TeammateMailbox] inbox file top level is ${t === null ? "null" : typeof t}, expected an array`,
         "TeammateMailbox: inbox file is not an array",
@@ -1077,7 +1077,7 @@ async function pruneInvalidMailboxEntries(e, t, r) {
   }
 }
 function getInboxPath(e, t) {
-  let r = t || ii() || "default",
+  let r = t || getTeamName() || "default",
     o = VE(r),
     i = VE(e),
     d = Re(T_e(), o, "inboxes"),
@@ -1088,13 +1088,13 @@ function getInboxPath(e, t) {
   );
 }
 async function Ft(e) {
-  let t = e || ii() || "default",
+  let t = e || getTeamName() || "default",
     r = VE(t),
     o = Re(T_e(), r, "inboxes");
   (await qt().mkdir(o), n(`[TeammateMailbox] Ensured inbox directory: ${o}`));
 }
 function W(e, t) {
-  let r = VE(t || ii() || "default"),
+  let r = VE(t || getTeamName() || "default"),
     o = VE(e);
   return _n(r) && _n(o) ? Ce.mailbox(r, o) : void 0;
 }
@@ -1175,7 +1175,7 @@ async function readMailbox(e, t, r, o) {
         []
       );
     if (o?.throwOnUnknownReadError) throw u;
-    return (n(`Failed to read inbox for ${e}: ${u}`), h(u), []);
+    return (n(`Failed to read inbox for ${e}: ${u}`), logError(u), []);
   }
 }
 async function readUnreadMessages(e, t, r) {
@@ -1196,7 +1196,7 @@ async function writeToMailbox(e, t, r, o) {
       `[TeammateMailbox] writeToMailbox: refusing schema-invalid message for ${e} (${T})`,
       { level: "warn" },
     ),
-      h(
+      logError(
         typeof t.text !== "string"
           ? new R(
               `[TeammateMailbox] refused mailbox write (${T})`,
@@ -1222,7 +1222,7 @@ async function writeToMailbox(e, t, r, o) {
         T.msg_id
       );
     } catch (w) {
-      (n(`Failed to write to inbox for ${e}: ${w}`, { level: "error" }), h(w));
+      (n(`Failed to write to inbox for ${e}: ${w}`, { level: "error" }), logError(w));
       return;
     }
   }
@@ -1251,7 +1251,7 @@ async function writeToMailbox(e, t, r, o) {
         ),
         !Po(T))
       )
-        h(T);
+        logError(T);
       return;
     }
   }
@@ -1270,7 +1270,7 @@ async function writeToMailbox(e, t, r, o) {
     if (
       (n(`Failed to write to inbox for ${e}: ${T}`, { level: "error" }), !Po(T))
     )
-      h(T);
+      logError(T);
     return;
   } finally {
     await hf(p, `[TeammateMailbox] writeToMailbox(${e})`);
@@ -1309,7 +1309,7 @@ async function markSingleMessageAsRead(e, t, r, o) {
       );
     } catch (p) {
       (n(`[TeammateMailbox] markSingleMessageAsRead FAILED for ${e}: ${p}`),
-        h(p));
+        logError(p));
     }
     return;
   }
@@ -1339,7 +1339,7 @@ async function markSingleMessageAsRead(e, t, r, o) {
       return;
     }
     (n(`[TeammateMailbox] markSingleMessageAsRead FAILED for ${e}: ${p}`),
-      h(p));
+      logError(p));
   } finally {
     await hf(_, "[TeammateMailbox] markSingleMessageAsRead");
   }
@@ -1379,7 +1379,7 @@ async function markMessagesAsRead(e, t, r, o) {
     } catch (T) {
       return (
         n(`[TeammateMailbox] markMessagesAsRead FAILED for ${e}: ${T}`),
-        h(T),
+        logError(T),
         !1
       );
     }
@@ -1420,7 +1420,7 @@ async function markMessagesAsRead(e, t, r, o) {
       );
     return (
       n(`[TeammateMailbox] markMessagesAsRead FAILED for ${e}: ${p}`),
-      h(p),
+      logError(p),
       !1
     );
   } finally {
@@ -1439,7 +1439,7 @@ async function clearMailbox(e, t, r) {
       )
         n(`[TeammateMailbox] Cleared inbox for ${e}`);
     } catch (_) {
-      (n(`Failed to clear inbox for ${e}: ${_}`), h(_));
+      (n(`Failed to clear inbox for ${e}: ${_}`), logError(_));
     }
     return;
   }
@@ -1451,7 +1451,7 @@ async function clearMailbox(e, t, r) {
       n(`[TeammateMailbox] Cleared inbox for ${e}`));
   } catch (_) {
     if (A(_) === "ENOENT") return;
-    (n(`Failed to clear inbox for ${e}: ${_}`), h(_));
+    (n(`Failed to clear inbox for ${e}: ${_}`), logError(_));
   } finally {
     await hf(u, "[TeammateMailbox] clearMailbox");
   }
@@ -1876,7 +1876,7 @@ function applyAggregateIdleResultBudget(e) {
       (d++, (t[u] = { ...p, text: x }));
   }
   if (d > 0 && !rt.has(e))
-    (rt.add(e), g("swarm_idle_result_delivery", "budget_truncated"));
+    (rt.add(e), logFeatureSad("swarm_idle_result_delivery", "budget_truncated"));
   if (t.every((u, _) => u === e[_])) return (we.add(e), e);
   return (we.add(t), t);
 }
@@ -1900,9 +1900,9 @@ function createIdleNotification(e, t) {
 }
 function logIdleResultDeliveryOutcome(e, t, r) {
   if (e.result === void 0) return;
-  if (r === void 0) f("swarm_idle_result_delivery", "mailbox_write_failed");
-  else if (t !== void 0 && e.result === ft(t)) y("swarm_idle_result_delivery");
-  else g("swarm_idle_result_delivery", "per_frame_truncated");
+  if (r === void 0) logFeatureBad("swarm_idle_result_delivery", "mailbox_write_failed");
+  else if (t !== void 0 && e.result === ft(t)) logFeatureOk("swarm_idle_result_delivery");
+  else logFeatureSad("swarm_idle_result_delivery", "per_frame_truncated");
 }
 var Vt =
     /[\u0000-\u0008\u000B-\u001F\u007F-\u009F\u2028\u2029]|(?![\u200C\u200D\uFE00-\uFE0F\u{E0100}-\u{E01EF}])[\p{Cf}\p{Default_Ignorable_Code_Point}]/u,
@@ -2320,7 +2320,7 @@ async function markMessagesAsReadByPredicate(e, t, r, o) {
         !0
       );
     } catch (p) {
-      return (h(p), !1);
+      return (logError(p), !1);
     }
   let u = `${i}.lock`,
     _;
@@ -2332,7 +2332,7 @@ async function markMessagesAsReadByPredicate(e, t, r, o) {
     return (await qt().atomicWrite(i, b(T, null, 2)), !0);
   } catch (p) {
     if (A(p) === "ENOENT") return !0;
-    return (h(p), !1);
+    return (logError(p), !1);
   } finally {
     await hf(_, "[TeammateMailbox] markMessagesAsReadByPredicate");
   }

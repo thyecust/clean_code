@@ -11,18 +11,18 @@
 // [preload stripped] 原本在此预载 252 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { setBgExitCause as Fp } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { getUserAgent as ex, isAnthropicAuthEnabled as cl, getUnapprovedCustomApiKey as yZe, gatewaySignInScreenConfigured as vZe, adminPolicyUnreadable as RZe, zg } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getProxyUrlWithSource as Oie, getProxyAuthFromHelper as f2e, getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getUserAgent, isAnthropicAuthEnabled, getUnapprovedCustomApiKey, gatewaySignInScreenConfigured, adminPolicyUnreadable, zg } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getProxyUrlWithSource, getProxyAuthFromHelper, getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { o, t, zb, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { shouldOfferTerminalSetup as gle, setupTerminal as bOt } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { shouldOfferTerminalSetup, setupTerminal } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
@@ -69,22 +69,22 @@ import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2
 F();
 F();
 function be() {
-  (Fp("preflight_endpoint"), process.exit(1));
+  (setBgExitCause("preflight_endpoint"), process.exit(1));
 }
 var ce = 1e4;
 async function ae() {
   try {
-    await f2e();
-    let s = Vt(),
+    await getProxyAuthFromHelper();
+    let s = getOauthConfig(),
       c = new URL(s.TOKEN_URL),
       g = [`${s.BASE_API_URL}/api/hello`, `${c.origin}/v1/oauth/hello`],
       R = async (u) => {
         let S = new URL(u).hostname,
-          b = As({ url: u }),
+          b = getProxyFetchOptions({ url: u }),
           T = b.proxy !== void 0;
         try {
           let n = await fetch(u, {
-            headers: { "User-Agent": ex() },
+            headers: { "User-Agent": getUserAgent() },
             signal: AbortSignal.timeout(ce),
             ...b,
           });
@@ -121,7 +121,7 @@ async function ae() {
     return x || { success: !0 };
   } catch (s) {
     return (
-      h(s),
+      logError(s),
       i("tengu_preflight_check_failed", { isConnectivityError: !0 }),
       {
         success: !1,
@@ -135,7 +135,7 @@ function z(Ge) {
     { onSuccess: w } = Ge,
     [l, Ve] = d(null),
     [I, Xe] = d(!0),
-    ye = Oie()?.source,
+    ye = getProxyUrlWithSource()?.source,
     ie = Un(1000) && I,
     Se,
     Ce;
@@ -347,8 +347,8 @@ oe.Item = P;
 var W = oe;
 function Yt({ host: s, onDone: c }) {
   let [g, R] = d(0),
-    [m] = d(() => cl()),
-    [x] = d(() => vZe() || RZe()),
+    [m] = d(() => isAnthropicAuthEnabled()),
+    [x] = d(() => gatewaySignInScreenConfigured() || adminPolicyUnreadable()),
     u = C(!1),
     [S, b] = cn(),
     { storageV5: T } = _e();
@@ -360,11 +360,11 @@ function Yt({ host: s, onDone: c }) {
     if (O < k.length) {
       R(O);
       for (let X = g + 1; X <= O; X++)
-        (i("tengu_onboarding_step", { oauthEnabled: m, stepId: we(k[X]?.id) }),
-          y("onboarding_step_complete"));
+        (i("tengu_onboarding_step", { oauthEnabled: m, stepId: fromEnumOpt(k[X]?.id) }),
+          logFeatureOk("onboarding_step_complete"));
     } else {
       if (u.current) return;
-      ((u.current = !0), y("onboarding_complete"), c());
+      ((u.current = !0), logFeatureOk("onboarding_complete"), c());
     }
   }
   function Y(v) {
@@ -423,7 +423,7 @@ function Yt({ host: s, onDone: c }) {
       ],
     }),
     ge = e(z, { onSuccess: n }),
-    re = V(yZe, []);
+    re = V(getUnapprovedCustomApiKey, []);
   function xe(v) {
     let O = v && k[g + 1]?.id === "oauth";
     n(O ? 2 : 1);
@@ -445,7 +445,7 @@ function Yt({ host: s, onDone: c }) {
         children: e(V8, { onDone: n, urlOutdent: 1 }),
       }),
     });
-  if ((k.push({ id: "security", component: he }), gle()))
+  if ((k.push({ id: "security", component: he }), shouldOfferTerminalSetup()))
     k.push({
       id: "terminal-setup",
       component: r(o, {
@@ -476,10 +476,10 @@ function Yt({ host: s, onDone: c }) {
                 confirmLabel: "Yes, use recommended settings",
                 cancelLabel: "No, maybe later with /terminal-setup",
                 onConfirm: () =>
-                  void bOt(s, S, T)
-                    .then(() => y("onboarding_terminal_setup"))
+                  void setupTerminal(s, S, T)
+                    .then(() => logFeatureOk("onboarding_terminal_setup"))
                     .catch(() =>
-                      f(
+                      logFeatureBad(
                         "onboarding_terminal_setup",
                         "onboarding_terminal_setup_failed",
                       ),

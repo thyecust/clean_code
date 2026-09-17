@@ -13,7 +13,7 @@ import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-a
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -29,7 +29,7 @@ F();
 function no() {
   i("tengu_chrome_auto_enable_prompt_shown", {});
 }
-function ro(Co) {
+function ChromeAutoEnableDialog(Co) {
   let n = _(29),
     { onDone: v, isDontAskMode: Q, isAutoMode: U } = Co,
     ko = Q === void 0 ? !1 : Q,
@@ -79,8 +79,8 @@ function ro(Co) {
         ),
         m)
       )
-        y("chrome_auto_enable_prompt");
-      else g("chrome_auto_enable_prompt", "declined");
+        logFeatureOk("chrome_auto_enable_prompt");
+      else logFeatureSad("chrome_auto_enable_prompt", "declined");
       v(m);
     }),
       (n[5] = v),
@@ -202,4 +202,4 @@ function ro(Co) {
   else eo = n[28];
   return eo;
 }
-export { ro as ChromeAutoEnableDialog };
+export { ChromeAutoEnableDialog };

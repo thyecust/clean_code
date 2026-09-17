@@ -12,19 +12,19 @@
 import { i8, j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { createAbortController as hr } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Qu, Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { be, xMn } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Ls, nq, gor } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, J1, x_e, ge, l, A, Jr, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { validateUuid as bL, writeEntriesToJsonlFile as Wie, sanitizePath as RA, getProjectKey as yh } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
+import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { validateUuid, writeEntriesToJsonlFile, sanitizePath, getProjectKey } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { Fy } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { $5, Sx, tv } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
@@ -38,31 +38,31 @@ import { Ytn } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { hct, krn } from "../../01-核心基础设施/共享小工具-未细化/chunk-t4xxq70d.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { execFile as qs } from "child_process";
+import { execFile } from "child_process";
 import { randomUUID as Hs } from "crypto";
-import { createReadStream as Ea, realpathSync as Gs } from "fs";
+import { createReadStream, realpathSync } from "fs";
 import {
-  mkdir as Ze,
-  readdir as Ca,
+  mkdir,
+  readdir,
   readFile as zs,
   rm as Ws,
   writeFile as Kt,
 } from "fs/promises";
-import { createRequire as Vs } from "module";
-import { homedir as et, tmpdir as Qs } from "os";
+import { createRequire } from "module";
+import { homedir as et, tmpdir } from "os";
 import {
-  dirname as Ft,
-  isAbsolute as Bt,
+  dirname,
+  isAbsolute,
   join as D,
-  relative as Js,
-  resolve as xe,
+  relative,
+  resolve,
   sep as Ht,
 } from "path";
-import { fileURLToPath as Xs } from "url";
-import { spawn as ms } from "child_process";
+import { fileURLToPath } from "url";
+import { spawn } from "child_process";
 import { existsSync as gs } from "fs";
-import { createInterface as hs } from "readline";
-import { StringDecoder as Ss } from "string_decoder";
+import { createInterface } from "readline";
+import { StringDecoder } from "string_decoder";
 import { randomUUID as ds } from "crypto";
 import { join as mt } from "path";
 class gt {
@@ -232,7 +232,7 @@ class We {
   stderrTail = "";
   exitListeners = [];
   abortHandler;
-  forwardedAbort = hr();
+  forwardedAbort = createAbortController();
   pendingWrites = [];
   pendingEndInput = !1;
   spawnResolve;
@@ -240,7 +240,7 @@ class We {
   spawnPromise;
   constructor(e) {
     this.options = e;
-    if (((this.abortController = e.abortController || hr()), e.deferSpawn))
+    if (((this.abortController = e.abortController || createAbortController()), e.deferSpawn))
       ((this.spawnPromise = new Promise((t, r) => {
         ((this.spawnResolve = t), (this.spawnReject = r));
       })),
@@ -281,14 +281,14 @@ class We {
   }
   spawnLocalProcess(e) {
     let { command: t, args: r, cwd: o, env: d, signal: p } = e,
-      f = ms(t, r, {
+      f = spawn(t, r, {
         cwd: o,
         stdio: ["pipe", "pipe", "pipe"],
         signal: p,
         env: d,
         windowsHide: !0,
       }),
-      g = new Ss("utf8"),
+      g = new StringDecoder("utf8"),
       h = !1,
       w = !1,
       k = !1,
@@ -723,7 +723,7 @@ class We {
     if (!this.processStdout)
       throw Error("ProcessTransport output stream not available");
     if (this.exitError) throw this.exitError;
-    let e = hs({ input: this.processStdout }),
+    let e = createInterface({ input: this.processStdout }),
       t = this.process
         ? (() => {
             let r = this.process,
@@ -1286,7 +1286,7 @@ class _e {
           `[Query] No onUserDialog handler for request_user_dialog (kind=${e.request.dialog_kind}) \u2014 staying silent so a capable client (or the worker's park deadline) settles it`,
         ),
         i("tengu_request_user_dialog_response_ignored", {
-          shape: u("auto_cancel"),
+          shape: fromEnum("auto_cancel"),
         }),
         ue
       );
@@ -1398,7 +1398,7 @@ class _e {
     return p;
   }
   async interrupt(e) {
-    return Sr("sdk_interrupt", async () => {
+    return withFeatureTelemetry("sdk_interrupt", async () => {
       let t = await this.request({
           subtype: "interrupt",
           ...(e?.cancelQueued === !0 && { cancel_queued: !0 }),
@@ -1475,7 +1475,7 @@ class _e {
     });
   }
   async applyFlagSettings(e) {
-    return Sr("sdk_apply_flag_settings", async () => {
+    return withFeatureTelemetry("sdk_apply_flag_settings", async () => {
       await this.request({ subtype: "apply_flag_settings", settings: e });
     });
   }
@@ -1483,7 +1483,7 @@ class _e {
     return (await this.request({ subtype: "get_settings" })).response;
   }
   async updateSettings(e, t) {
-    return Sr("sdk_update_settings", async () => {
+    return withFeatureTelemetry("sdk_update_settings", async () => {
       await this.request({
         subtype: "update_settings",
         source: e,
@@ -1492,7 +1492,7 @@ class _e {
     });
   }
   async rewindFiles(e, t) {
-    return Sr(
+    return withFeatureTelemetry(
       "sdk_rewind_files",
       async () =>
         (
@@ -1513,7 +1513,7 @@ class _e {
     await this.request({ subtype: "seed_read_state", path: e, mtime: t });
   }
   async setCwd(e, t) {
-    return Sr(
+    return withFeatureTelemetry(
       "sdk_set_cwd",
       async () =>
         (
@@ -1583,7 +1583,7 @@ class _e {
     ).response;
   }
   async generateSessionTitle(e, t) {
-    return Sr(
+    return withFeatureTelemetry(
       "sdk_session_title_generate",
       async () =>
         (
@@ -1596,7 +1596,7 @@ class _e {
     );
   }
   async askSideQuestion(e, t) {
-    return Sr(
+    return withFeatureTelemetry(
       "sdk_side_question",
       async () => {
         let o = (
@@ -1737,7 +1737,7 @@ class _e {
     return this.initialization;
   }
   reinitialize() {
-    return Sr("sdk_reinitialize", () => this.initialize());
+    return withFeatureTelemetry("sdk_reinitialize", () => this.initialize());
   }
   async supportedCommands() {
     let { commands: e } = await this.initialization;
@@ -1753,12 +1753,12 @@ class _e {
     await this.request({ subtype: "mcp_reconnect", serverName: e });
   }
   async toggleMcpServer(e, t) {
-    return Sr("sdk_mcp_toggle_server", async () => {
+    return withFeatureTelemetry("sdk_mcp_toggle_server", async () => {
       await this.request({ subtype: "mcp_toggle", serverName: e, enabled: t });
     });
   }
   async enableChannel(e) {
-    return Sr("sdk_mcp_enable_channel", async () => {
+    return withFeatureTelemetry("sdk_mcp_enable_channel", async () => {
       await this.request({ subtype: "channel_enable", serverName: e });
     });
   }
@@ -1835,26 +1835,26 @@ class _e {
     }
   }
   async reloadPlugins() {
-    return Sr(
+    return withFeatureTelemetry(
       "sdk_reload_plugins",
       async () => (await this.request({ subtype: "reload_plugins" })).response,
     );
   }
   async reloadSkills() {
-    return Sr(
+    return withFeatureTelemetry(
       "sdk_reload_skills",
       async () => (await this.request({ subtype: "reload_skills" })).response,
     );
   }
   async reloadOutputStyles() {
-    return Sr(
+    return withFeatureTelemetry(
       "sdk_reload_output_styles",
       async () =>
         (await this.request({ subtype: "reload_output_styles" })).response,
     );
   }
   async setMcpServers(e) {
-    return Sr("sdk_mcp_set_servers", async () => {
+    return withFeatureTelemetry("sdk_mcp_set_servers", async () => {
       let t = {},
         r = {};
       for (let [g, h] of Object.entries(e))
@@ -2145,7 +2145,7 @@ class Qe {
 }
 var De = pe(Ls(), 1);
 import {
-  copyFile as $s,
+  copyFile,
   readFile as Ns,
   rm as xt,
   writeFile as At,
@@ -2165,7 +2165,7 @@ async function Me(e, t, r, o) {
   if (o) return Ks(o, e, t, r);
   try {
     if (r) await At(t, r(await Ns(e)), { mode: 384 });
-    else await $s(e, t);
+    else await copyFile(e, t);
   } catch (d) {
     if (A(d) === void 0) throw d;
     if (!W(d))
@@ -2254,7 +2254,7 @@ async function Zs(e, t) {
 function er() {
   let e = Sx($5);
   return new Promise((t) => {
-    qs(
+    execFile(
       "security",
       ["find-generic-password", "-a", tv(), "-w", "-s", e],
       { encoding: "utf-8", timeout: 5000, windowsHide: !0 },
@@ -2263,7 +2263,7 @@ function er() {
   });
 }
 async function tr(e, t, r, o, d = 60000, p) {
-  if (!bL(t)) return;
+  if (!validateUuid(t)) return;
   let f = Vt(r, o),
     g = await Dt(
       e.load({ projectKey: f, sessionId: t }),
@@ -2271,12 +2271,12 @@ async function tr(e, t, r, o, d = 60000, p) {
       `SessionStore.load() timed out after ${d}ms for session ${t}`,
     );
   if (!g || g.length === 0) return;
-  let h = D(Qs(), `claude-resume-${Hs()}`);
+  let h = D(tmpdir(), `claude-resume-${Hs()}`);
   try {
     let w = D(h, "projects", f);
-    await Ze(w, { recursive: !0, mode: 448 });
+    await mkdir(w, { recursive: !0, mode: 448 });
     let k = D(w, `${t}.jsonl`);
-    await Wie(k, g);
+    await writeEntriesToJsonlFile(k, g);
     let S = o?.CLAUDE_CONFIG_DIR ?? process.env.CLAUDE_CONFIG_DIR,
       C = S ?? D(et(), ".claude"),
       _;
@@ -2324,10 +2324,10 @@ async function sr(e, t, r, o) {
     `SessionStore.listSubkeys() timed out after ${o}ms for session ${t.sessionId}`,
   );
   for (let p of d) {
-    let f = xe(r, p + ".jsonl");
+    let f = resolve(r, p + ".jsonl");
     if (
       !p ||
-      Bt(p) ||
+      isAbsolute(p) ||
       p.split(/[\\/]/).includes("..") ||
       !f.startsWith(r + Ht)
     ) {
@@ -2347,11 +2347,11 @@ async function sr(e, t, r, o) {
     for (let k of g)
       if (ar(k)) h.push(k);
       else w.push(k);
-    if (w.length > 0) (await Ze(Ft(f), { recursive: !0 }), await Wie(f, w));
+    if (w.length > 0) (await mkdir(dirname(f), { recursive: !0 }), await writeEntriesToJsonlFile(f, w));
     if (h.length > 0) {
       let k = h.at(-1),
-        S = xe(r, p + ".meta.json");
-      await Ze(Ft(S), { recursive: !0 });
+        S = resolve(r, p + ".meta.json");
+      await mkdir(dirname(S), { recursive: !0 });
       let { type: C, ..._ } = k;
       await Kt(S, b(_), { mode: 384 });
     }
@@ -2380,7 +2380,7 @@ function Gt(e, t) {
   process.env.CLAUDE_AGENT_SDK_VERSION =
     process.env.CLAUDE_AGENT_SDK_VERSION ?? "unknown";
   let {
-      abortController: E = hr(),
+      abortController: E = createAbortController(),
       additionalDirectories: T = [],
       agent: V,
       agents: ee,
@@ -2465,8 +2465,8 @@ function Gt(e, t) {
   let ct = $e === "initialize" && ke !== void 0 && ke.length > 0,
     Ne = k.pathToClaudeCodeExecutable;
   if (!Ne) {
-    let I = Xs(import.meta.url),
-      L = Vs(I),
+    let I = fileURLToPath(import.meta.url),
+      L = createRequire(I),
       G = _t((X) => L.resolve(X));
     if (!G)
       throw Error(
@@ -2659,7 +2659,7 @@ function nr(e, t) {
     .catch(() => {})
     .finally(() => Wt(t));
 }
-function al({ prompt: e, options: t }) {
+function query({ prompt: e, options: t }) {
   if ((t?.resume || t?.continue) && t?.sessionStore) return ir(e, t);
   let {
     queryInstance: r,
@@ -2678,7 +2678,7 @@ function ir(e, t) {
       { ...t },
       { isSingleUserTurn: typeof e === "string", deferSpawn: !0 },
     ),
-    f = xe(t.cwd ?? "."),
+    f = resolve(t.cwd ?? "."),
     g = t.sessionStore,
     h = t.loadTimeoutMs ?? 60000,
     w = t.resume;
@@ -2716,10 +2716,10 @@ function ir(e, t) {
   );
 }
 function or(e) {
-  let t = xe(e ?? "."),
+  let t = resolve(e ?? "."),
     r;
   try {
-    r = Gs(t);
+    r = realpathSync(t);
   } catch {
     r = t;
   }
@@ -2727,10 +2727,10 @@ function or(e) {
 }
 function Vt(e, t) {
   let r = or(e);
-  if (t === void 0) return yh(r);
+  if (t === void 0) return getProjectKey(r);
   return (
     (t.CLAUDE_CONFIG_DIR ? xMn(t.CLAUDE_CODE_PROJECT_DIR_NAME) : void 0) ??
-    RA(r)
+    sanitizePath(r)
   );
 }
 function ar(e) {
@@ -2742,9 +2742,9 @@ function ar(e) {
   );
 }
 function Nt(e, t) {
-  let r = Js(t, e),
+  let r = relative(t, e),
     o = r.split(Ht);
-  if (o[0] === ".." || Bt(r)) return null;
+  if (o[0] === ".." || isAbsolute(r)) return null;
   if (o.length < 2) return null;
   let d = o[0],
     p = o[1];
@@ -2760,4 +2760,4 @@ function Nt(e, t) {
   }
   return null;
 }
-export { al as query };
+export { query };

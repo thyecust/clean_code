@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
 import {
@@ -26,15 +26,15 @@ import {
   MT,
   XEt,
 } from "../权限系统/chunk-t3b7pg2x.js";
-import { isBridgeEffortSyncEnabled as v4t } from "./chunk-9estzwf5.js";
+import { isBridgeEffortSyncEnabled } from "./chunk-9estzwf5.js";
 function A9(e, r) {
   let o = MT(e, r);
   return typeof o === "string" ? o : null;
 }
 function adt(e, { model: r, getAppState: o, setAppState: E, storageV5: v }) {
-  if (!v4t())
+  if (!isBridgeEffortSyncEnabled())
     return (
-      f("bridge_flag_settings", "disabled"),
+      logFeatureBad("bridge_flag_settings", "disabled"),
       {
         ok: !1,
         error:
@@ -48,7 +48,7 @@ function adt(e, { model: r, getAppState: o, setAppState: E, storageV5: v }) {
       let t = Xk(e.effortLevel) ?? h$e(e.effortLevel);
       if (typeof t !== "string" || !$C(t))
         return (
-          f("bridge_flag_settings", "invalid_effort_level"),
+          logFeatureBad("bridge_flag_settings", "invalid_effort_level"),
           { ok: !1, error: "apply_flag_settings: unrecognized effortLevel" }
         );
       s = Z$(t, r);
@@ -56,7 +56,7 @@ function adt(e, { model: r, getAppState: o, setAppState: E, storageV5: v }) {
     let a = VH();
     if (a !== void 0 && s !== a)
       return (
-        f("bridge_flag_settings", "env_override"),
+        logFeatureBad("bridge_flag_settings", "env_override"),
         {
           ok: !1,
           error:
@@ -68,7 +68,7 @@ function adt(e, { model: r, getAppState: o, setAppState: E, storageV5: v }) {
     i = "ultracode" in e ? e.ultracode === !0 : void 0;
   if ((i === !0 || (i === void 0 && d)) && !ib(r))
     return (
-      f("bridge_flag_settings", "ultracode_unavailable"),
+      logFeatureBad("bridge_flag_settings", "ultracode_unavailable"),
       {
         ok: !1,
         error:
@@ -102,7 +102,7 @@ function adt(e, { model: r, getAppState: o, setAppState: E, storageV5: v }) {
 }
 function p(e) {
   let r = c();
-  if (!r || !v4t()) return;
+  if (!r || !isBridgeEffortSyncEnabled()) return;
   let o = Jo();
   if (((o.lastKnownEffort = e), o.lastReportedEffort === e)) return;
   ((o.lastReportedEffort = e), r.reportMetadata({ effort_level: e }));

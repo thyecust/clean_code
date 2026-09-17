@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 252 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { parseUserSpecifiedModel as wt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { parseUserSpecifiedModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { er } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -65,7 +65,7 @@ function K(Lo) {
   let N = Q,
     k;
   if (a[7] !== l || a[8] !== g || a[9] !== w)
-    ((k = l && DF(er(wt(l))) ? "off" : g ? g.value : (w ?? "off")),
+    ((k = l && DF(er(parseUserSpecifiedModel(l))) ? "off" : g ? g.value : (w ?? "off")),
       (a[7] = l),
       (a[8] = g),
       (a[9] = w),
@@ -207,7 +207,7 @@ var Bo = async (s, m, d) => {
   if (!n) return e(K, { onDone: s, storageV5: m.storageV5 });
   if (n === "off" || n === "unset")
     return e(T, { choice: "off", onDone: s, storageV5: m.storageV5 });
-  let c = wt(n),
+  let c = parseUserSpecifiedModel(n),
     v = await Yle(c, { credentials: m.credentials });
   if (!v.valid) return (s(`Invalid advisor model: ${v.error}`), null);
   if (!Mte(c))

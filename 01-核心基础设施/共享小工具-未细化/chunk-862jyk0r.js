@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { constants as O } from "fs";
-var Ant = O.O_NONBLOCK,
-  dy = O.O_NOFOLLOW | Ant;
+import { constants } from "fs";
+var Ant = constants.O_NONBLOCK,
+  dy = constants.O_NOFOLLOW | Ant;
 export { Ant, dy };

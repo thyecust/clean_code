@@ -12,7 +12,7 @@ import { l } from "./chunk-h4f48kbj.js";
 import "./chunk-w76kejwn.js";
 import { NHt, Je, QMn } from "./chunk-bzqqe6xh.js";
 import "./chunk-1wezmyx2.js";
-import { workerData as A } from "worker_threads";
+import { workerData } from "worker_threads";
 var H = (t) => ({
   post: (n) => t.postMessage(n),
   ports: new Map(),
@@ -114,7 +114,7 @@ function R(t) {
     log: (p, o) => e({ type: "log", text: p, level: o }),
     hookFailed: (p) => e({ type: "hook_failed", ...p }),
   });
-  let a = JMn((p) => I(n, p), E(A));
+  let a = JMn((p) => I(n, p), E(workerData));
   (O(n, a),
     (t.onmessage = (p) => {
       let o = p.data;

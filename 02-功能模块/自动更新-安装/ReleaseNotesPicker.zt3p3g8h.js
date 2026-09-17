@@ -30,18 +30,18 @@ function q(L) {
   };
 }
 var O = "__show_all__";
-function w(s, n) {
+function formatVersion(s, n) {
   let i = `Version ${s}:`,
     g = n.map((a) => `\xB7 ${a}`).join(`
 `);
   return `${i}
 ${g}`;
 }
-function k(s) {
+function formatAll(s) {
   return s
     .slice()
     .sort(([n], [i]) => (cf(n, i) ? 1 : -1))
-    .map(([n, i]) => w(n, i)).join(`
+    .map(([n, i]) => formatVersion(n, i)).join(`
 
 `);
 }
@@ -59,9 +59,9 @@ var ee = async (s, n) => {
       .sort(([a], [S]) => (cf(a, S) ? -1 : 1));
   if (g.length === 0)
     return (y(`See the full changelog at: ${t$n}`, n.applyMessageOp, s), null);
-  return e(x, { notes: g, applyMessageOp: n.applyMessageOp, onDone: s });
+  return e(ReleaseNotesPicker, { notes: g, applyMessageOp: n.applyMessageOp, onDone: s });
 };
-function x(L) {
+function ReleaseNotesPicker(L) {
   let f = _(19),
     { notes: l, applyMessageOp: R, onDone: c } = L;
   const X = `${l.length} versions`;
@@ -84,7 +84,7 @@ function x(L) {
         return;
       }
       if (((b.current = !0), B === O)) {
-        y(k(l), R, c);
+        y(formatAll(l), R, c);
         return;
       }
       let j = l.find((v) => {
@@ -95,7 +95,7 @@ function x(L) {
         c(void 0, { display: "skip" });
         return;
       }
-      y(w(j[0], j[1]), R, c);
+      y(formatVersion(j[0], j[1]), R, c);
     }),
       (f[5] = R),
       (f[6] = l),
@@ -147,8 +147,8 @@ function x(L) {
   return E;
 }
 export {
-  x as ReleaseNotesPicker,
+  ReleaseNotesPicker,
   ee as call,
-  k as formatAll,
-  w as formatVersion,
+  formatAll,
+  formatVersion,
 };

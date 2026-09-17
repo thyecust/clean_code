@@ -9,26 +9,26 @@
 // Version: 2.1.263
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { fileSuffixForOauthConfig as F1 } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u, fromEnumOpt as we, fromNumber as Yr, fromNumberOpt as KP } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum, fromEnumOpt, fromNumber, fromNumberOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { qe, Ff } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { antEnv as Wn } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Fxt, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { toInfraSessionId as yc, sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { Fxt, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { qRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
-import { getWebSocketTLSOptions as Ab, getWebSocketProxyUrl as Cb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { h5t } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { isViolinWoodEnabled as Su, isViolinWoodServedOff as cQe } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabled, isViolinWoodServedOff } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import {
-  isSessionChannelDisabled as YF,
-  isRemoteToolServingMuted as m3,
-  onServingMuteRecheck as AV,
-  remoteToolServingOffReason as eLe,
+  isSessionChannelDisabled,
+  isRemoteToolServingMuted,
+  onServingMuteRecheck,
+  remoteToolServingOffReason,
   Z7n,
   i_n,
   eXn,
@@ -51,7 +51,7 @@ import { qz } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { cte, O7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
 import { s, T, Jq, c, $e, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { hostname as nn } from "os";
+import { hostname } from "os";
 class se {
   transport;
   announced;
@@ -449,7 +449,7 @@ function ye() {
       try {
         o.emit(p);
       } catch (S) {
-        for (let _ of S instanceof AggregateError ? S.errors : [S]) h(_);
+        for (let _ of S instanceof AggregateError ? S.errors : [S]) logError(_);
       }
     };
   return {
@@ -466,7 +466,7 @@ function ye() {
       try {
         o.emit(C);
       } catch (A) {
-        for (let L of A instanceof AggregateError ? A.errors : [A]) h(L);
+        for (let L of A instanceof AggregateError ? A.errors : [A]) logError(L);
       }
     },
     definitions: () => r.definitions,
@@ -506,7 +506,7 @@ var He = 0,
   Se = "__synthetic_init__",
   te = 33554432;
 function Ke(e) {
-  let t = new globalThis.WebSocket(e, { proxy: Cb(e), tls: Ab() || void 0 });
+  let t = new globalThis.WebSocket(e, { proxy: getWebSocketProxyUrl(e), tls: getWebSocketTLSOptions() || void 0 });
   return ((t.binaryType = "arraybuffer"), t);
 }
 class ce {
@@ -1002,7 +1002,7 @@ var tn = "wss://bridge.claudeusercontent.com",
       : "unknown";
 function rn(e, t) {
   let o = x9t(e),
-    r = c_n(pr(t).slice(-Ce), Ce);
+    r = c_n(sessionIdBody(t).slice(-Ce), Ce);
   return r ? `${o}-cc-${r}` : o;
 }
 function sn(e, t, o, r) {
@@ -1027,9 +1027,9 @@ function an(e, t) {
   );
 }
 function dn() {
-  if (Wn.CLAUDE_REMOTE_TOOLS_BRIDGE_URL !== void 0)
-    return Wn.CLAUDE_REMOTE_TOOLS_BRIDGE_URL;
-  switch (F1()) {
+  if (antEnv.CLAUDE_REMOTE_TOOLS_BRIDGE_URL !== void 0)
+    return antEnv.CLAUDE_REMOTE_TOOLS_BRIDGE_URL;
+  switch (fileSuffixForOauthConfig()) {
     case "":
       return tn;
     case "-staging-oauth":
@@ -1039,7 +1039,7 @@ function dn() {
   }
 }
 function c6e(e) {
-  let t = e.transport ?? (YF() ? "bridge" : "auto"),
+  let t = e.transport ?? (isSessionChannelDisabled() ? "bridge" : "auto"),
     o = !1,
     r,
     a,
@@ -1062,7 +1062,7 @@ function c6e(e) {
     M = !1,
     j = !1,
     W,
-    J = u("stored"),
+    J = fromEnum("stored"),
     O = { current: void 0 },
     H = (d) => (v ??= oe(d)),
     oe = async (d) => {
@@ -1087,7 +1087,7 @@ function c6e(e) {
           (d === "channel_acknowledged" || d === "channel_adopted_mcp") && !o,
       });
       if (((x = R), (V = w), await R, x === R)) ((x = void 0), (V = void 0));
-      if (S) i("tengu_device_bridge_stopped", { reason: u(d) });
+      if (S) i("tengu_device_bridge_stopped", { reason: fromEnum(d) });
     },
     I = () => {
       if (o || E !== void 0 || B !== void 0 || F === void 0) return;
@@ -1104,7 +1104,7 @@ function c6e(e) {
           ((E = R),
             i("tengu_device_bridge_started", {
               account_source: J,
-              transport: u(t),
+              transport: fromEnum(t),
               redial: !0,
             }),
             R.start());
@@ -1117,7 +1117,7 @@ function c6e(e) {
         });
     },
     D = async () => {
-      let w = await (e.isEnabled ?? Su)();
+      let w = await (e.isEnabled ?? isViolinWoodEnabled)();
       if (((C = !0), !w)) return !1;
       let R = e.isEgressAllowed ?? O7;
       if (!R())
@@ -1141,10 +1141,10 @@ function c6e(e) {
           !1
         );
       let { accountUuid: Me } = N;
-      J = u(N.source);
+      J = fromEnum(N.source);
       let Ie = _e(Te);
       ((g = ye()), g.setGroup(X, []));
-      let pe = eLe(void 0, { ignoringMute: !0 }),
+      let pe = remoteToolServingOffReason(void 0, { ignoringMute: !0 }),
         Ne = e.toolGroupProviders ?? (await fn(pe));
       if (o) return !1;
       l = vn(Ne, {
@@ -1187,7 +1187,7 @@ function c6e(e) {
       let fe = () => {
           if (!R()) H("egress_denied");
         },
-        Ge = e.isStillEnabled ?? (() => !cQe()),
+        Ge = e.isStillEnabled ?? (() => !isViolinWoodServedOff()),
         ve = () => {
           if (!Ge())
             (n("[deviceBridge] stopping: the gate turned off"), H("gate_off"));
@@ -1196,7 +1196,7 @@ function c6e(e) {
         Fe = (e.onEnabledChange ?? Ff)(ve),
         me = !1,
         be = () => {
-          let U = (e.isMuted ?? m3)();
+          let U = (e.isMuted ?? isRemoteToolServingMuted)();
           if (U !== me)
             ((me = U),
               n(
@@ -1205,7 +1205,7 @@ function c6e(e) {
               i("tengu_device_bridge_muted", { muted: U }));
           re.withholdAllExcept([X], U);
         },
-        je = (e.onMuteRecheck ?? AV)(be);
+        je = (e.onMuteRecheck ?? onServingMuteRecheck)(be);
       if (
         ((a = () => {
           (Ue(), Fe(), je());
@@ -1219,8 +1219,8 @@ function c6e(e) {
       if (
         ((S = !0),
         i("tengu_device_bridge_started", {
-          account_source: u(N.source),
-          transport: u(t),
+          account_source: fromEnum(N.source),
+          transport: fromEnum(t),
           redial: !1,
         }),
         (j = !0),
@@ -1272,7 +1272,7 @@ function c6e(e) {
     },
     xe = (d) => {
       if (d.kind === "authenticated") {
-        if ((A.clear(), (L = !1), !_)) ((_ = !0), y("device_bridge_register"));
+        if ((A.clear(), (L = !1), !_)) ((_ = !0), logFeatureOk("device_bridge_register"));
         Oe(d);
         return;
       }
@@ -1283,7 +1283,7 @@ function c6e(e) {
     },
     Pe = (d) => {
       if (d.kind === "reconnect_exhausted") {
-        if (!_) ((_ = !0), f("device_bridge_register", "reconnect_exhausted"));
+        if (!_) ((_ = !0), logFeatureBad("device_bridge_register", "reconnect_exhausted"));
         if (L) return;
         L = !0;
       }
@@ -1296,7 +1296,7 @@ function c6e(e) {
         i("tengu_device_bridge_start_failed", {}),
         !_)
       )
-        ((_ = !0), f("device_bridge_register", "start_failed"));
+        ((_ = !0), logFeatureBad("device_bridge_register", "start_failed"));
       return !1;
     }),
     Be = Q.then((d) =>
@@ -1340,10 +1340,10 @@ async function ln({
   onLivenessEvent: p,
   onTransportEvent: v,
 }) {
-  let C = rn((e.getHostname ?? nn)(), e.sessionId),
+  let C = rn((e.getHostname ?? hostname)(), e.sessionId),
     S =
       e.getBridgeBaseUrl !== void 0 ||
-      Wn.CLAUDE_REMOTE_TOOLS_BRIDGE_URL !== void 0,
+      antEnv.CLAUDE_REMOTE_TOOLS_BRIDGE_URL !== void 0,
     _ = (e.getBridgeBaseUrl ?? dn)();
   if (_ === void 0) {
     n("[deviceBridge] skipped: no device bridge for this OAuth environment");
@@ -1373,7 +1373,7 @@ async function ln({
       getAccessToken: () => e.getAccessToken(),
       getTools: () => gn(r),
       getDeviceId: e.getDeviceId,
-      getSessionId: () => yc(e.sessionId),
+      getSessionId: () => toInfraSessionId(e.sessionId),
       parseMessage: F,
       createSocket: e.createSocket,
       isAllowedUrl: (D) => a() && (h5t(D) || (S && an(D, _))),
@@ -1446,26 +1446,26 @@ function Oe(e) {
       return;
     case "rejected":
       i("tengu_device_bridge_rejected", {
-        phase: u(e.phase),
-        reason: we(e.reason),
-        status: KP(e.status),
+        phase: fromEnum(e.phase),
+        reason: fromEnumOpt(e.reason),
+        status: fromNumberOpt(e.status),
         slot_contention: e.slotContention,
       });
       return;
     case "closed":
       i("tengu_device_bridge_closed", {
-        phase: u(e.phase),
-        code: KP(e.code),
+        phase: fromEnum(e.phase),
+        code: fromNumberOpt(e.code),
         superseded: e.superseded,
       });
       return;
     case "token_unavailable":
     case "handshake_timeout":
     case "socket_error":
-      i("tengu_device_bridge_connect_failed", { cause: u(e.kind) });
+      i("tengu_device_bridge_connect_failed", { cause: fromEnum(e.kind) });
       return;
     case "dial_failed":
-      i("tengu_device_bridge_connect_failed", { cause: u("dial_failed") });
+      i("tengu_device_bridge_connect_failed", { cause: fromEnum("dial_failed") });
       return;
     default:
       return;
@@ -1481,20 +1481,20 @@ function pn(e) {
       return;
     case "heartbeat_unsupported":
       i("tengu_device_bridge_heartbeat_unsupported", {
-        protocol_version: Yr(e.protocolVersion),
+        protocol_version: fromNumber(e.protocolVersion),
       });
       return;
     case "reannounce":
       i("tengu_device_bridge_reannounce", {
-        reason: u(e.reason),
-        outcome: u(e.outcome),
+        reason: fromEnum(e.reason),
+        outcome: fromEnum(e.outcome),
         inflight_at_start: e.inFlightAtStart,
         drained_ms: e.drainedMs,
         drain_timed_out: e.drainTimedOut,
       });
       return;
     case "reannounce_contended":
-      i("tengu_device_bridge_reannounce_contended", { reason: u(e.reason) });
+      i("tengu_device_bridge_reannounce_contended", { reason: fromEnum(e.reason) });
       return;
     default:
       return;
@@ -1509,7 +1509,7 @@ function vn(e, t) {
       let a = r(t);
       return a ? [a] : [];
     } catch (a) {
-      return (h(ge(a)), []);
+      return (logError(ge(a)), []);
     }
   });
   return () =>
@@ -1517,7 +1517,7 @@ function vn(e, t) {
       try {
         r();
       } catch (a) {
-        h(ge(a));
+        logError(ge(a));
       }
     });
 }

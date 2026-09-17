@@ -22,21 +22,21 @@ import {
   pEe,
   Q_t,
   U8n,
-  resetSentSkillNames as VM,
+  resetSentSkillNames,
   L_n,
   EXn,
-  clearCommandsCache as xE,
+  clearCommandsCache,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { clearResolveGitDirCache as MIn, clearIsGitMemoFor as D2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { clearResolveGitDirCache, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { bIn } from "../Git-Worktree/chunk-bk9696gx.js";
 import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
 import { YSn } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { globalFileIndexCache as k4, resetFileIndexCache as wrn } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
+import { globalFileIndexCache, resetFileIndexCache } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { LPe } from "../../01-核心基础设施/共享小工具-未细化/chunk-16992wzt.js";
 import { lWn } from "../权限系统/chunk-n4x6jsp3.js";
 function brn(t, r = new Set(), i, o, l, m = !1) {
   let a = r.size > 0;
-  if ((EXn(t), D2e(t), YSn.of(t).clear(), wrn(k4), xE(), yVn(r), jrt(null), !a))
+  if ((EXn(t), clearIsGitMemoFor(t), YSn.of(t).clear(), resetFileIndexCache(globalFileIndexCache), clearCommandsCache(), yVn(r), jrt(null), !a))
     lfn.peek(t)?.clear();
   let s = dfn();
   if (s?.getTeleportCacheState().status === "active")
@@ -44,7 +44,7 @@ function brn(t, r = new Set(), i, o, l, m = !1) {
   if (
     (HV(t, void 0, i, void 0, void 0, void 0, l),
     mv("clear"),
-    VM(),
+    resetSentSkillNames(),
     Vxt(pa()),
     !m)
   )
@@ -73,7 +73,7 @@ function brn(t, r = new Set(), i, o, l, m = !1) {
   )
     lWn();
   if ((bIn(), !a)) kVn();
-  if ((eMn(r), MIn(), U8n(), Q_t().catch(() => {}), C4n(t), o))
+  if ((eMn(r), clearResolveGitDirCache(), U8n(), Q_t().catch(() => {}), C4n(t), o))
     (o.get(LPe).clear(),
       import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then(({ WebFetchCache: e }) =>
         o.get(e).clear(),

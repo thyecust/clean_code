@@ -26,7 +26,7 @@ import {
   Hhe,
 } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { j, B, dl } from "../../lodash/lodash.2x3q7cfh.js";
-import { JETBRAINS_IDES as wW, env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { JETBRAINS_IDES, env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   P9e,
@@ -69,8 +69,8 @@ class cee {
     this._didStopImmediatePropagation = !0;
   }
 }
-import { EventEmitter as H } from "events";
-class H9e extends H {
+import { EventEmitter } from "events";
+class H9e extends EventEmitter {
   constructor() {
     super();
     this.setMaxListeners(0);
@@ -116,7 +116,7 @@ class g {
     let t = Lat(),
       r = dl(),
       o = r?.wheelFlood ?? Itn(),
-      u = r ? wW.includes(r.terminal ?? "") : CT.isJetBrainsIdeTerminal(),
+      u = r ? JETBRAINS_IDES.includes(r.terminal ?? "") : CT.isJetBrainsIdeTerminal(),
       s = r?.wtSession ?? !!a.WT_SESSION,
       p = Zd(),
       i = this.value;

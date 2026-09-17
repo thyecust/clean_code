@@ -10,8 +10,8 @@
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { wc, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { da, Za, uHn, primeRemoteManagedSettingsCache as Stt, ZBe, Ake, Eie, jq } from "./设置-配置.aqbb35ee.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { da, Za, uHn, primeRemoteManagedSettingsCache, ZBe, Ake, Eie, jq } from "./设置-配置.aqbb35ee.js";
 import {
   S0,
   B5t,
@@ -21,18 +21,18 @@ import {
   dRt,
   Exn,
   Axn,
-  localSettingsStoreRootAwaitingOwnershipProbe as Cxn,
-  getSettingsFilePathForSource as ho,
-  getLegacyLocalSettingsFilePath as IP,
-  projectSettingsAliasesUserSettings as zT,
-  getSettingsWithErrors as bb,
+  localSettingsStoreRootAwaitingOwnershipProbe,
+  getSettingsFilePathForSource,
+  getLegacyLocalSettingsFilePath,
+  projectSettingsAliasesUserSettings,
+  getSettingsWithErrors,
 } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { basename as _, dirname as z, join as f } from "path";
+import { basename, dirname, join as f } from "path";
 var b = 3,
   x = 8;
 function v() {
-  let t = ho("userSettings");
-  return t !== void 0 && _(t) === jq.default ? t : void 0;
+  let t = getSettingsFilePathForSource("userSettings");
+  return t !== void 0 && basename(t) === jq.default ? t : void 0;
 }
 async function seedUserSettings(t, e) {
   if (!M()) return;
@@ -166,7 +166,7 @@ class T {
         return;
       this.consecutiveThrows = 0;
       try {
-        (bb(), this.loggedThrowMessages.clear());
+        (getSettingsWithErrors(), this.loggedThrowMessages.clear());
       } catch (r) {
         if (!this.disposed) this.logThrowOnce(r);
       }
@@ -250,7 +250,7 @@ class T {
   logThrowOnce(t, e = this.loggedThrowMessages) {
     let s = l(t);
     if (e.has(s) || e.size >= x) return;
-    (e.add(s), h(t));
+    (e.add(s), logError(t));
   }
   primes(t) {
     return this.storageV5 === t;
@@ -279,7 +279,7 @@ async function primeSettings(t, e) {
       );
     return;
   }
-  (Stt(t).catch(h), (e.primer = new T(t, e)), await e.primer.whenIdle());
+  (primeRemoteManagedSettingsCache(t).catch(logError), (e.primer = new T(t, e)), await e.primer.whenIdle());
 }
 async function resetSettingsCacheWithBackendRead(t) {
   let e = da(),
@@ -313,8 +313,8 @@ function G(t) {
 function O(t) {
   let e = [];
   for (let s of ["projectSettings", "localSettings"]) {
-    if (s === "projectSettings" && zT()) continue;
-    let i = ho(s);
+    if (s === "projectSettings" && projectSettingsAliasesUserSettings()) continue;
+    let i = getSettingsFilePathForSource(s);
     if (i !== void 0)
       e.push(
         Exn(
@@ -325,7 +325,7 @@ function O(t) {
         ),
       );
     if (s === "localSettings") {
-      let r = IP();
+      let r = getLegacyLocalSettingsFilePath();
       if (r !== void 0 && r !== i)
         e.push(Exn(t, s, r, "legacy local settings"));
     }
@@ -414,7 +414,7 @@ function P(t, e, s) {
     e.systemAttestationContradicted = !0;
     for (let { basePath: r, dropInDir: a } of i)
       (e.clearFolderListing(a, s), e.unseedParsedFile(r, "policySettings", s));
-    h(
+    logError(
       Error(
         "settings: a managed-settings file was read from a folder the host attested absent ('system' space); the attestation is ignored for the rest of this process and the policy walk reads the host's files itself",
       ),
@@ -461,7 +461,7 @@ function C(t, e, s, i, r) {
         contentHash: u.contentHash,
         parsed: u.parsed,
       }));
-    let c = i.get(z(d.path)),
+    let c = i.get(dirname(d.path)),
       S =
         c !== void 0 && c !== "install"
           ? c
@@ -580,7 +580,7 @@ async function E(t, e) {
     typeof process.geteuid !== "function"
   )
     return;
-  let s = Cxn();
+  let s = localSettingsStoreRootAwaitingOwnershipProbe();
   if (s === void 0 || e.localStoreProbes.hasCanonicalRootOwnerUids(s)) return;
   let i = t.hostFiles;
   if (!i.serves("workspace")) {

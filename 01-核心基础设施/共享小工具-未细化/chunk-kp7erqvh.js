@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { U } from "./chunk-r3y9qj3r.js";
-import { getDefaultMainLoopModelSetting as dh, parseUserSpecifiedModel as wt } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getDefaultMainLoopModelSetting, parseUserSpecifiedModel } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { BA } from "./chunk-csjxh2sy.js";
 import { Ai } from "./chunk-s339rbnn.js";
 import { V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { gLe, Tne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
 function KPt(o, n) {
-  return gLe(o) ?? gLe(n) ?? dh();
+  return gLe(o) ?? gLe(n) ?? getDefaultMainLoopModelSetting();
 }
 function Wit(o) {
-  return wt(KPt(o.mainLoopModelForSession, o.mainLoopModel));
+  return parseUserSpecifiedModel(KPt(o.mainLoopModelForSession, o.mainLoopModel));
 }
 function q8() {
   let o = U((e) => e.mainLoopModel),

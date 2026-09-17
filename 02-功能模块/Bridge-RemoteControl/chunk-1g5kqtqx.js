@@ -8,22 +8,22 @@
 
 // Version: 2.1.263
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { PUe, getClaudeAIOAuthTokenOriginAsync as $T, getClaudeAIOAuthTokensAsync as Qi, readFreshOAuthCredentialSnapshot as v5, getOauthAccountInfo as vn, getAuthenticatedAccountInfo as zD, ERe, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getBridgeTokenOverride as RH } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { isBridgeFirstParty as u6, isBridgeOwnerPinnedEndEnabled as wme } from "./chunk-9estzwf5.js";
-import { getBridgeSession as FTe, updateBridgeSessionTitle as kfn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { PUe, getClaudeAIOAuthTokenOriginAsync, getClaudeAIOAuthTokensAsync, readFreshOAuthCredentialSnapshot, getOauthAccountInfo, getAuthenticatedAccountInfo, ERe, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getBridgeTokenOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { isBridgeFirstParty, isBridgeOwnerPinnedEndEnabled } from "./chunk-9estzwf5.js";
+import { getBridgeSession, updateBridgeSessionTitle } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 async function Wtn(t) {
-  let i = zD();
+  let i = getAuthenticatedAccountInfo();
   if (i?.accountUuid)
     return {
       accountUuid: i.accountUuid,
       organizationUuid: i.organizationUuid || void 0,
     };
-  if (!wme() || St()) return;
+  if (!isBridgeOwnerPinnedEndEnabled() || St()) return;
   let e = t(),
     r = e === void 0 ? void 0 : await A(e);
   if (r === void 0)
@@ -40,7 +40,7 @@ var J = 1000,
   K = 1e4,
   Q = 3000;
 async function Gtn(t) {
-  return RH() === void 0 && u6() && (await $T(t)) === "store";
+  return getBridgeTokenOverride() === void 0 && isBridgeFirstParty() && (await getClaudeAIOAuthTokenOriginAsync(t)) === "store";
 }
 async function _Bn(t) {
   return (await Z(t)).pin;
@@ -53,7 +53,7 @@ async function Z({
 }) {
   let d = t();
   if (d === void 0) return { pin: void 0, reason: "no_token" };
-  if (!wme() || St()) return { pin: void 0, reason: "disabled" };
+  if (!isBridgeOwnerPinnedEndEnabled() || St()) return { pin: void 0, reason: "disabled" };
   if (r === void 0 && !(await Gtn(e)))
     return { pin: void 0, reason: "not_store_login" };
   let u = await sy(i),
@@ -75,7 +75,7 @@ async function Z({
       organizationUuid: u.organizationUuid || void 0,
     };
   }
-  let I = r === void 0 ? zD() : void 0;
+  let I = r === void 0 ? getAuthenticatedAccountInfo() : void 0;
   if (I !== void 0 && !x(I) && !(await z()))
     return (
       n(
@@ -133,7 +133,7 @@ async function Z({
     );
   }
   async function D(o) {
-    let s = await Qi(e).catch(() => null);
+    let s = await getClaudeAIOAuthTokensAsync(e).catch(() => null);
     return (
       s?.accessToken === o && s.expiresAt !== null && s.expiresAt <= Date.now()
     );
@@ -141,10 +141,10 @@ async function Z({
   function B() {
     if (!f && r !== void 0) return !0;
     if (!f) {
-      let s = zD();
+      let s = getAuthenticatedAccountInfo();
       if (s !== void 0 && !x(s)) return !0;
     }
-    let o = vn();
+    let o = getOauthAccountInfo();
     return Boolean(o?.accountUuid) && !p(o);
   }
   function _(o) {
@@ -171,7 +171,7 @@ async function Z({
     let s = void 0;
     if (!f && r !== void 0) {
       if (
-        ((s = await v5(i, e).catch(() => {
+        ((s = await readFreshOAuthCredentialSnapshot(i, e).catch(() => {
           return;
         })),
         s === void 0)
@@ -181,11 +181,11 @@ async function Z({
       if (U === "foreign") return (_(0), "changed");
       if (U === "unknown") return k(p(s) ? "unchanged" : "inconclusive");
     } else if (!f) {
-      let U = zD();
+      let U = getAuthenticatedAccountInfo();
       if (!(U !== void 0 && x(U)) && !(await z())) return k("inconclusive");
     }
     if (
-      ((s ??= await v5(i, e).catch(() => {
+      ((s ??= await readFreshOAuthCredentialSnapshot(i, e).catch(() => {
         return;
       })),
       !s?.accountUuid)
@@ -227,7 +227,7 @@ async function Z({
     },
     noteAcceptedToken(o) {
       let s = o !== c;
-      if (((c = o), (h = 0), !s || m !== void 0 || !wme())) return;
+      if (((c = o), (h = 0), !s || m !== void 0 || !isBridgeOwnerPinnedEndEnabled())) return;
       m = sy(i)
         .then(async (S) => {
           if (!S?.accountUuid || p(S)) return;
@@ -327,7 +327,7 @@ function ee(t, i, e, r) {
     let a = [u];
     if ((v(d), d.pending || d.inFlight)) {
       if (d.suppressed === 0)
-        g("bridge_session_patch", "title_write_coalesced");
+        logFeatureSad("bridge_session_patch", "title_write_coalesced");
       d.suppressed += 1;
     }
     (R(d.pending?.waiters),
@@ -375,7 +375,7 @@ function W(t, i) {
       `[bridge] title write: sending latest after coalescing ${e.suppressed} update(s)`,
     ),
       (e.suppressed = 0));
-  kfn(i, d, u)
+  updateBridgeSessionTitle(i, d, u)
     .then(
       (f) => {
         if (f === "landed") ((e.lastSentTitle = d), (e.lastSentOk = !0));
@@ -405,7 +405,7 @@ function ie(t, i, e, r) {
     n("[bridge] title write retry dropped: sending is now barred");
     return;
   }
-  FTe(i, {
+  getBridgeSession(i, {
     baseUrl: r?.baseUrl,
     getAccessToken: r?.getAccessToken,
     credentials: r?.credentials,

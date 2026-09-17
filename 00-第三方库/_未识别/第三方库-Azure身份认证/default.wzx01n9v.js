@@ -10,7 +10,7 @@
 import N from "process";
 import { Buffer as R } from "buffer";
 import z from "path";
-import { fileURLToPath as we } from "url";
+import { fileURLToPath } from "url";
 import { promisify as ge } from "util";
 import D from "child_process";
 import he, { constants as xe } from "fs/promises";
@@ -136,7 +136,7 @@ async function S() {
 }
 import te from "process";
 import { promisify as ne } from "util";
-import { execFile as ie, execFileSync as Xe } from "child_process";
+import { execFile as ie, execFileSync } from "child_process";
 var se = ne(ie);
 async function W(e, { humanReadableOutput: r = !0, signal: o } = {}) {
   if (te.platform !== "darwin") throw Error("macOS only");
@@ -204,7 +204,7 @@ async function B() {
   throw Error("Only macOS, Linux, and Windows are supported");
 }
 var ye = ge(D.execFile),
-  F = z.dirname(we(import.meta.url)),
+  F = z.dirname(fileURLToPath(import.meta.url)),
   k = z.join(F, "xdg-open"),
   { platform: u, arch: H } = N;
 async function ve() {

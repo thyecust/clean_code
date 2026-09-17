@@ -14,7 +14,7 @@ import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { xce, C7, Hce, h6n, hdt, pbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-yjnahe9e.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { SEARCH_MCP_REGISTRY_TOOL_NAME as yun, DESCRIPTION as Sun, PROMPT as bun } from "../../01-核心基础设施/共享小工具-未细化/chunk-p2wzfbaj.js";
+import { SEARCH_MCP_REGISTRY_TOOL_NAME, DESCRIPTION, PROMPT } from "../../01-核心基础设施/共享小工具-未细化/chunk-p2wzfbaj.js";
 import { G7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-t0m264jc.js";
 import { s, v, c, Qe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var i = m(() =>
@@ -34,8 +34,8 @@ var i = m(() =>
       message: s().optional(),
     }),
   ),
-  g = Tt({
-    name: yun,
+  SearchMcpRegistryTool = Tt({
+    name: SEARCH_MCP_REGISTRY_TOOL_NAME,
     searchHint: "discover MCP connectors by keyword",
     maxResultSizeChars: 50000,
     shouldDefer: !0,
@@ -53,10 +53,10 @@ var i = m(() =>
       return !0;
     },
     async description() {
-      return Sun;
+      return DESCRIPTION;
     },
     async prompt() {
-      return bun;
+      return PROMPT;
     },
     create({ credentials: e, mcpClients: r }) {
       return {
@@ -89,4 +89,4 @@ var i = m(() =>
       return (e.keywords ?? []).join(", ");
     },
   });
-export { g as SearchMcpRegistryTool };
+export { SearchMcpRegistryTool };

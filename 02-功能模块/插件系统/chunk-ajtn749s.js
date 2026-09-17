@@ -39,21 +39,21 @@ import {
 } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { yt, R, l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, z, fp, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fi } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { eae, jhe, Kl, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { CLAUDE_AI_OAUTH_SCOPES as Z5, preservableScopesFrom as zhe } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { CLAUDE_AI_OAUTH_SCOPES, preservableScopesFrom } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { findGitRoot as tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
   nve,
   Bzt,
@@ -71,46 +71,46 @@ import {
 import { Nr, jge, jBe, Vn, zt, mke, g8t, h8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   ht,
-  refreshOAuthToken as wU,
-  isInvalidGrantError as TU,
-  getAuthTokenSource as Gl,
-  saveRefreshedOAuthTokensRespectingLock as UUe,
-  hasAttemptedScopeExpansion as ARn,
-  recordScopeExpansionAttempt as VKt,
-  markRefreshTokenDeadAfterInvalidGrant as BUe,
-  isOAuthRefreshKnownDeadAsync as f0,
-  getClaudeAIOAuthTokens as Yt,
+  refreshOAuthToken,
+  isInvalidGrantError,
+  getAuthTokenSource,
+  saveRefreshedOAuthTokensRespectingLock,
+  hasAttemptedScopeExpansion,
+  recordScopeExpansionAttempt,
+  markRefreshTokenDeadAfterInvalidGrant,
+  isOAuthRefreshKnownDeadAsync,
+  getClaudeAIOAuthTokens,
   OAuthRefreshLockContendedError as lge,
-  withOAuthRefreshLock as TZe,
-  checkAndRefreshOAuthTokenIfNeeded as Ss,
+  withOAuthRefreshLock,
+  checkAndRefreshOAuthTokenIfNeeded,
   H,
-  isWorkspacePersistedTrusted as Cd,
+  isWorkspacePersistedTrusted,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   die,
   Hge,
-  parseSettingsFile as qT,
-  getSettingsFilePathForSource as ho,
-  getLegacyLocalSettingsFilePath as IP,
-  getSettingsForSource as ye,
-  flagInlineSettingDropped as xxn,
-  parentManagedTierParticipates as Ige,
-  getDurablePolicyTierSettings as pie,
-  getPolicySettingsOrigin as dS,
-  getFatalAdminPolicyLoadErrors as fie,
-  filterFatalPolicyErrors as mie,
-  isNotDisabledInTrustedSources as gRt,
+  parseSettingsFile,
+  getSettingsFilePathForSource,
+  getLegacyLocalSettingsFilePath,
+  getSettingsForSource,
+  flagInlineSettingDropped,
+  parentManagedTierParticipates,
+  getDurablePolicyTierSettings,
+  getPolicySettingsOrigin,
+  getFatalAdminPolicyLoadErrors,
+  filterFatalPolicyErrors,
+  isNotDisabledInTrustedSources,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { h1, zRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
-import { getAPIProvider as Pe, isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { default as at, isAxiosError as xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { getAPIProvider, isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { default as at, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { dz } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
-import { L1, externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { L1, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { JS, lCe, Swt, uJ, yN, yG } from "./chunk-hh8f1qrw.js";
-import { isCustomizationDisabled as Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { $bn } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { Uy } from "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
@@ -148,12 +148,12 @@ function Ze(e) {
 }
 function qE(e, t, r, o, s) {
   i("tengu_plugin_remote_fetch", {
-    source: u(e),
-    host: u(t ? Je(t) : "unknown"),
+    source: fromEnum(e),
+    host: fromEnum(t ? Je(t) : "unknown"),
     is_official: e === "plugin_catalog" || (t ? Ze(t) : !1),
-    outcome: u(r),
+    outcome: fromEnum(r),
     duration_ms: Math.round(o),
-    ...(s && { error_kind: u(s) }),
+    ...(s && { error_kind: fromEnum(s) }),
   });
 }
 function _N(e) {
@@ -246,7 +246,7 @@ function afe() {
 function it() {
   return Y(
     [he(), ...mp()].flatMap((e) => {
-      let t = tr(e);
+      let t = findGitRoot(e);
       return t !== null ? [e, t] : [e];
     }),
   );
@@ -282,28 +282,28 @@ var Se = ".linking-",
   cZn = new RegExp(`\\${Se}(\\d+)$`);
 import { createHash as xe } from "crypto";
 import {
-  lstat as Ne,
-  mkdir as X,
+  lstat,
+  mkdir,
   open as ct,
   readdir as L,
-  readFile as ut,
-  readlink as U,
-  realpath as Q,
-  rename as dt,
+  readFile,
+  readlink,
+  realpath,
+  rename,
   stat as pt,
-  symlink as Le,
+  symlink,
   writeFile as Ie,
 } from "fs/promises";
 import { homedir as ft } from "os";
 import {
-  dirname as Oe,
-  isAbsolute as G,
+  dirname,
+  isAbsolute,
   join as v,
-  relative as J,
-  resolve as Ae,
+  relative,
+  resolve,
   sep as D,
 } from "path";
-import { spawn as lt } from "child_process";
+import { spawn } from "child_process";
 var ke = 2000;
 function Ee(
   e,
@@ -318,7 +318,7 @@ function Ee(
       b = !1,
       C,
       T,
-      k = lt(e, [], {
+      k = spawn(e, [], {
         shell: !0,
         cwd: t,
         env: r,
@@ -418,7 +418,7 @@ async function wt(e) {
   n(`Plugin command source: running \`${r}\` (timeout ${t}ms)`);
   let o = await Ee(e.command, {
       cwd: ft(),
-      env: Hi(),
+      env: subprocessEnv(),
       timeoutMs: t,
       maxStdoutBytes: Re,
       maxStderrBytes: gt,
@@ -471,7 +471,7 @@ async function wt(e) {
       "plugin command source printed multiple lines",
     );
   let d = p[0];
-  if (!G(d))
+  if (!isAbsolute(d))
     throw new R(
       `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, which is not an absolute path.`,
       "plugin command source printed a relative path",
@@ -488,7 +488,7 @@ async function wt(e) {
     );
   let h;
   try {
-    h = await Q(d);
+    h = await realpath(d);
   } catch (w) {
     throw new R(
       `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, but that path could not be resolved (${A(w) ?? "unknown error"}).`,
@@ -538,7 +538,7 @@ async function Me(e, t, r) {
         if (d === e && _.name === ".git") continue;
         await p(w);
       } else if (S.isFile) {
-        let b = S.size ?? (await Ne(w)).size;
+        let b = S.size ?? (await lstat(w)).size;
         if ((r?.set(w, b), (s += b), s > Te))
           throw new R(
             `Plugin directory is larger than ${Te / 1048576} MB; refusing to install it as a plugin.`,
@@ -557,7 +557,7 @@ async function bt(e) {
     s = xe("sha256");
   for (let c of o) {
     let p = r.get(c) ?? 0;
-    s.update(`f ${J(e, c).split(D).join("/")}\x00${p}\x00`);
+    s.update(`f ${relative(e, c).split(D).join("/")}\x00${p}\x00`);
     let d = p;
     if (p > 0) {
       let h = await ct(c, "r");
@@ -571,8 +571,8 @@ async function bt(e) {
     if (d > 0) s.update(Buffer.alloc(d));
   }
   for (let c of t) {
-    let p = await U(c);
-    (s.update(`l ${J(e, c).split(D).join("/")}\x00`),
+    let p = await readlink(c);
+    (s.update(`l ${relative(e, c).split(D).join("/")}\x00`),
       s.update(`${Buffer.byteLength(p)}\x00${p}`));
   }
   return s.digest("hex");
@@ -620,9 +620,9 @@ async function Pt(e, t) {
       e,
       r.map((c) => ({ name: c, path: v(e, c) })),
     );
-  await X(t, { recursive: !0 });
+  await mkdir(t, { recursive: !0 });
   for (let { name: c, target: p, isDirectory: d } of o)
-    await Le(p, v(t, c), d ? "dir" : "file");
+    await symlink(p, v(t, c), d ? "dir" : "file");
   await Ie(v(t, nve), JSON.stringify({ target: e }), { flag: "wx" });
   let s = xe("sha256");
   s.update(`${e}\x00`);
@@ -634,22 +634,22 @@ async function Pt(e, t) {
 async function Fe(e, t) {
   let r = [];
   for (let { name: o, path: s } of t) {
-    if (RHt(s, Oe(s)))
+    if (RHt(s, dirname(s)))
       throw new Ui(
         `A top-level entry of the plugin directory (${Vn(o, 100)}) points at a network location or through a link that cannot be trusted; refusing to link it.`,
         "plugin command source entry traverses a suspect link",
       );
     let c, p;
     try {
-      ((c = await Q(s)), (p = (await pt(c)).isDirectory()));
+      ((c = await realpath(s)), (p = (await pt(c)).isDirectory()));
     } catch {
       throw new R(
         `A top-level entry of the plugin directory its command produced could not be resolved (${Vn(o, 80)}); refusing to link it.`,
         "plugin command source link entry unresolvable",
       );
     }
-    let d = J(e, c);
-    if (d === "" || d === ".." || d.startsWith(`..${D}`) || G(d))
+    let d = relative(e, c);
+    if (d === "" || d === ".." || d.startsWith(`..${D}`) || isAbsolute(d))
       throw new Ui(
         `A top-level entry of the plugin directory its command produced (${Vn(o, 80)}) points outside that directory; refusing to link it.`,
         "plugin command source link escapes producer directory",
@@ -659,8 +659,8 @@ async function Fe(e, t) {
   return r;
 }
 async function uZn(e, t) {
-  let r = Ae(he(), e),
-    o = Ae(he(), t),
+  let r = resolve(he(), e),
+    o = resolve(he(), t),
     s = await ee(v(r, nve)),
     c = Bzt().parse(JSON.parse(s)).target;
   if (DYt(c))
@@ -668,7 +668,7 @@ async function uZn(e, t) {
       "The link farm points at a producer reached through a link that cannot be trusted; refusing to relink it.",
       "plugin command source relink target traverses a suspect link",
     );
-  let p = await Q(c);
+  let p = await realpath(c);
   if (Ww(p))
     throw new Ui(
       "The link farm points at a producer that now resolves to a network location; refusing to relink it.",
@@ -683,7 +683,7 @@ async function uZn(e, t) {
   for (let S of d) {
     let b;
     try {
-      b = await U(v(r, S.name));
+      b = await readlink(v(r, S.name));
     } catch (C) {
       if (W(C)) continue;
       throw new Ui(
@@ -702,13 +702,13 @@ async function uZn(e, t) {
     p,
     h.map((S) => ({ name: S.name, path: v(r, S.name) })),
   );
-  await X(Oe(o), { recursive: !0 });
+  await mkdir(dirname(o), { recursive: !0 });
   let w = we(o, process.pid);
-  (await Kl(w), await X(w));
+  (await Kl(w), await mkdir(w));
   try {
     for (let { name: S, target: b, isDirectory: C } of _)
-      await Le(b, v(w, S), C ? "dir" : "file");
-    (await Ie(v(w, nve), s, { flag: "wx" }), await dt(w, o));
+      await symlink(b, v(w, S), C ? "dir" : "file");
+    (await Ie(v(w, nve), s, { flag: "wx" }), await rename(w, o));
   } catch (S) {
     await Kl(w).catch(() => {});
     let b = A(S);
@@ -744,7 +744,7 @@ async function SGt(e) {
       if (lXe(r.name)) continue;
       try {
         let o = await eae(e, r);
-        if (o.isSymbolicLink && G(o.linkTarget ?? (await U(v(e, r.name)))))
+        if (o.isSymbolicLink && isAbsolute(o.linkTarget ?? (await readlink(v(e, r.name)))))
           return "live";
       } catch (o) {
         if (A(o) === "ENOENT") continue;
@@ -778,12 +778,12 @@ async function S1e(e, t) {
         let c = await eae(e, o);
         if (c.isFile && (Tt(o.name) || TJe(o.name, d$e))) continue;
         if (!c.isSymbolicLink) return !0;
-        s = c.linkTarget ?? (await U(v(e, o.name)));
+        s = c.linkTarget ?? (await readlink(v(e, o.name)));
       } catch (c) {
         if (A(c) === "ENOENT") continue;
         return !0;
       }
-      if (!G(s) || AB(s) || Ww(s) || !s.startsWith(r)) return !0;
+      if (!isAbsolute(s) || AB(s) || Ww(s) || !s.startsWith(r)) return !0;
     }
     return !1;
   } catch (o) {
@@ -800,13 +800,13 @@ async function dZn(e) {
 }
 var xt = 16384;
 async function ee(e) {
-  let t = await Ne(e);
+  let t = await lstat(e);
   if (!t.isFile() || t.size > xt)
     throw new Ui(
       "The link-farm marker is not a small regular file; refusing to read it.",
       "plugin command source link marker not a small regular file",
     );
-  return ut(e, "utf8");
+  return readFile(e, "utf8");
 }
 function xj(e) {
   return typeof e === "object" && e.source === "command" ? e : void 0;
@@ -821,7 +821,7 @@ async function pZn(e, t, r, o) {
     throw new Ui(y1e, "plugin command source link mode unsupported on windows");
   return (
     At(e, o),
-    Sr("plugin_command_install", async () => {
+    withFeatureTelemetry("plugin_command_install", async () => {
       let s = await wt(e);
       if (wh(s, he(), { foldCase: !0 }))
         throw new Ui(
@@ -864,13 +864,13 @@ import { homedir as It } from "os";
 var Ot = 1e4,
   Mt = 1e6;
 function Ft(e) {
-  if (Cd(e)) return !0;
+  if (isWorkspacePersistedTrusted(e)) return !0;
   return (e === void 0 || e === It()) && VR() && DLn();
 }
 async function swt(e) {
   if (e.isRepoResidentConfig && !Ft(e.repoResidentOrigin))
     return { ok: !1, reason: "missing_trust" };
-  let t = await Be(e.command, [], {
+  let t = await execFileNoThrowWithCwd(e.command, [], {
     shell: !0,
     timeout: Ot,
     maxBuffer: Mt,
@@ -894,7 +894,7 @@ async function swt(e) {
   return { ok: !0, headers: o };
 }
 function Ht(e) {
-  let t = { ...Hi() };
+  let t = { ...subprocessEnv() };
   if (!e.scrubCredentialEnv) return { ...t, ...e.env };
   let r = [];
   for (let p of Hge()) {
@@ -927,7 +927,7 @@ async function fZn(e, t = {}) {
   n(`Downloading plugin archive from ${r}`);
   let o = t.headers ?? {},
     s = { ...o, "User-Agent": Hbn },
-    c = L1(e) ? hN.get : ra.get,
+    c = L1(e) ? hN.get : externalHttp.get,
     p = performance.now(),
     d;
   try {
@@ -1006,7 +1006,7 @@ function mZn(e, t) {
 }
 function Kt(e, t, r) {
   let o = (s) => s.replaceAll(t, () => r);
-  if (xd(e)) {
+  if (isAxiosError(e)) {
     if (e.code === "ECONNREFUSED" || e.code === "ENOTFOUND")
       return `Could not connect to ${r}. Check your network connection and that the archive URL is correct.
 
@@ -1176,7 +1176,7 @@ async function dwt(e, t) {
     );
   if (r.authoredBy === "policySettings" && !lCe())
     throw (
-      g("plugin_headers_helper", "remote_policy_unconsented"),
+      logFeatureSad("plugin_headers_helper", "remote_policy_unconsented"),
       new Ui(
         `${o}: headersHelper not run \u2014 ${Swt}. The marketplace was not fetched.`,
         "marketplace headersHelper from remote managed settings not yet verified and consented",
@@ -1231,13 +1231,13 @@ async function Xt(e, t, r, o) {
   });
   if (!s.ok)
     throw (
-      f("plugin_headers_helper", s.reason),
+      logFeatureBad("plugin_headers_helper", s.reason),
       new R(
         `marketplace headersHelper failed (${s.reason})`,
         "marketplace headers helper failed",
       )
     );
-  return (y("plugin_headers_helper"), s.headers);
+  return (logFeatureOk("plugin_headers_helper"), s.headers);
 }
 async function Jt(e, t) {
   let r = (c) =>
@@ -1259,13 +1259,13 @@ async function Jt(e, t) {
   });
   if (!s.ok)
     throw (
-      f("plugin_headers_helper", s.reason),
+      logFeatureBad("plugin_headers_helper", s.reason),
       new R(
         `plugin headersHelper for "${te(t.pluginName)}" failed (${s.reason})`,
         "plugin headers helper failed",
       )
     );
-  return (y("plugin_headers_helper"), { ...o, ...r(s.headers) });
+  return (logFeatureOk("plugin_headers_helper"), { ...o, ...r(s.headers) });
 }
 var Zt = new Set([
     "host",
@@ -1421,17 +1421,17 @@ function Dbn(e) {
 }
 function AGt(e) {
   let t = (o, s) => {
-      let c = qT(o, s);
-      return c.settings === null && mie(c.errors).length > 0;
+      let c = parseSettingsFile(o, s);
+      return c.settings === null && filterFatalPolicyErrors(c.errors).length > 0;
     },
     r = ["userSettings", "localSettings", "flagSettings"].some((o) => {
-      let s = ho(o);
+      let s = getSettingsFilePathForSource(o);
       if (s === void 0) return !1;
       switch (o) {
         case "flagSettings":
           return t(s, MA() ?? d8());
         case "localSettings": {
-          let c = IP();
+          let c = getLegacyLocalSettingsFilePath();
           return t(s) || (c !== void 0 && c !== s && t(c));
         }
         case "userSettings":
@@ -1439,28 +1439,28 @@ function AGt(e) {
       }
     });
   return (
-    !gRt(e.settingKey) ||
-    (fie().length > 0 && dS() !== "helper") ||
+    !isNotDisabledInTrustedSources(e.settingKey) ||
+    (getFatalAdminPolicyLoadErrors().length > 0 && getPolicySettingsOrigin() !== "helper") ||
     r ||
-    xxn(e.settingKey) ||
-    (m_e() && Ige()) ||
+    flagInlineSettingDropped(e.settingKey) ||
+    (m_e() && parentManagedTierParticipates()) ||
     zRe(e.policyKey) === "org_denied" ||
     zRe(e.policyKey) === "unregistered"
   );
 }
 function CGt(e) {
-  if (!gRt(e.settingKey)) return !1;
+  if (!isNotDisabledInTrustedSources(e.settingKey)) return !1;
   if (!e.isTierInPlay()) return !1;
-  if (Pe() !== "firstParty") return !1;
+  if (getAPIProvider() !== "firstParty") return !1;
   if (a.ANTHROPIC_UNIX_SOCKET) return !1;
   if (Nn()) return !1;
-  if (Gl().source !== "claude.ai") return !1;
+  if (getAuthTokenSource().source !== "claude.ai") return !1;
   if (St()) return !1;
   if (!h1(e.policyKey)) return !1;
   return O(e);
 }
 function hwt() {
-  return Gl().source === "claude.ai" && !Nn();
+  return getAuthTokenSource().source === "claude.ai" && !Nn();
 }
 function O(e) {
   return H(e.flagName, !1) === !0;
@@ -1472,7 +1472,7 @@ function vGt(e) {
 }
 function RGt(e) {
   return (
-    [...pie(), ye("userSettings")].some((r) => r?.[e.settingKey] === !1) ||
+    [...getDurablePolicyTierSettings(), getSettingsForSource("userSettings")].some((r) => r?.[e.settingKey] === !1) ||
     zRe(e.policyKey) === "org_denied"
   );
 }
@@ -1512,7 +1512,7 @@ function ywt() {
   return vGt(I);
 }
 function lfe() {
-  return !Xr("plugins") && Nr("userSettings");
+  return !isCustomizationDisabled("plugins") && Nr("userSettings");
 }
 function rn() {
   return CGt(I);
@@ -1524,7 +1524,7 @@ function cfe(e) {
   let t = e.sessionRefsGate;
   if (t.ccrSessionID() === void 0) {
     let r = a.CLAUDE_CODE_SESSION_ID;
-    if (r && pr(r) !== r) t.latchCcrSessionID(r);
+    if (r && sessionIdBody(r) !== r) t.latchCcrSessionID(r);
   }
   return t.ccrSessionID();
 }
@@ -1542,21 +1542,21 @@ var B = "user:plugins";
 async function sn(e) {
   if (!h1("allow_plugin_skill_search"))
     return { ok: !1, reason: "policy_disabled" };
-  if (!In()) return { ok: !1, reason: "wrong_provider" };
+  if (!isFirstPartyProvider()) return { ok: !1, reason: "wrong_provider" };
   if (St()) return { ok: !1, reason: "essential_traffic_only" };
   if (Gi()) return { ok: !0, expanded: !1 };
   try {
-    await Ss({ credentials: e });
+    await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   } catch (o) {
     n(`[plugins-scope] pre-ensure token freshen failed: ${l(o)}`);
   }
-  let t = Yt();
+  let t = getClaudeAIOAuthTokens();
   if (!t?.accessToken) return { ok: !1, reason: "no_token" };
   if (t.scopes?.includes(B)) return { ok: !0, expanded: !1 };
   if (t.clientId) return { ok: !1, reason: "custom_client" };
   if (!t.refreshToken) return { ok: !1, reason: "no_refresh" };
-  if (await f0(e)) return { ok: !1, reason: "no_refresh" };
-  if (ARn(t.refreshToken))
+  if (await isOAuthRefreshKnownDeadAsync(e)) return { ok: !1, reason: "no_refresh" };
+  if (hasAttemptedScopeExpansion(t.refreshToken))
     return {
       ok: !1,
       reason: "expand_failed",
@@ -1564,52 +1564,52 @@ async function sn(e) {
     };
   let r = !1;
   try {
-    return await TZe(
+    return await withOAuthRefreshLock(
       async ({ lockedTokens: o, isCompromised: s, signal: c }) => {
         if (!o?.refreshToken) return { ok: !1, reason: "no_refresh" };
         if (s()) return { ok: !1, reason: "lock_contended" };
         if (o.scopes?.includes(B)) return { ok: !0, expanded: !1 };
         if (o.clientId) return { ok: !1, reason: "custom_client" };
-        if (await f0(e)) return { ok: !1, reason: "no_refresh" };
+        if (await isOAuthRefreshKnownDeadAsync(e)) return { ok: !1, reason: "no_refresh" };
         let p;
         try {
           ((r = !0),
-            VKt(o.refreshToken),
-            (p = await wU(o.refreshToken, {
+            recordScopeExpansionAttempt(o.refreshToken),
+            (p = await refreshOAuthToken(o.refreshToken, {
               clientId: o.clientId,
-              scopes: Y([...Z5, ...zhe(o.scopes), B]),
+              scopes: Y([...CLAUDE_AI_OAUTH_SCOPES, ...preservableScopesFrom(o.scopes), B]),
               signal: c,
               telemetryContext: "plugins_scope_expansion",
             })));
         } catch (h) {
-          if (TU(h) && !s()) await BUe(o.refreshToken, e);
+          if (isInvalidGrantError(h) && !s()) await markRefreshTokenDeadAfterInvalidGrant(o.refreshToken, e);
           if (s() || yt(h)) return { ok: !1, reason: "lock_contended" };
           throw h;
         }
-        let d = await UUe({
+        let d = await saveRefreshedOAuthTokensRespectingLock({
           isCompromised: s,
           postedRefreshToken: o.refreshToken,
           refreshedTokens: p,
           credentials: e,
         });
-        if (p.refreshToken) VKt(p.refreshToken);
+        if (p.refreshToken) recordScopeExpansionAttempt(p.refreshToken);
         if (d === "adopted_sibling")
           return { ok: !1, reason: "lock_contended" };
         if (d === "save_failed")
           return (
-            g("plugins_scope_expansion", "save_failed"),
+            logFeatureSad("plugins_scope_expansion", "save_failed"),
             { ok: !1, reason: "save_failed" }
           );
         if (!p.scopes?.includes(B))
           return (
-            g("plugins_scope_expansion", "expand_failed"),
+            logFeatureSad("plugins_scope_expansion", "expand_failed"),
             {
               ok: !1,
               reason: "expand_failed",
               detail: "refresh succeeded but user:plugins not granted",
             }
           );
-        return (y("plugins_scope_expansion"), { ok: !0, expanded: !0 });
+        return (logFeatureOk("plugins_scope_expansion"), { ok: !0, expanded: !0 });
       },
       e,
     );
@@ -1617,7 +1617,7 @@ async function sn(e) {
     if (o instanceof lge || yt(o)) return { ok: !1, reason: "lock_contended" };
     if (!r) return { ok: !1, reason: "lock_contended", detail: l(o) };
     return (
-      g("plugins_scope_expansion", "expand_failed"),
+      logFeatureSad("plugins_scope_expansion", "expand_failed"),
       { ok: !1, reason: "expand_failed", detail: l(o) }
     );
   }
@@ -1706,7 +1706,7 @@ function wGt(e) {
   return { success: !1, error: r, kind: t };
 }
 function mwt(e) {
-  return { kind: u(e.kind), ...(e.status !== void 0 && { status: e.status }) };
+  return { kind: fromEnum(e.kind), ...(e.status !== void 0 && { status: e.status }) };
 }
 var TGt = m(() =>
   nt({
@@ -1725,10 +1725,10 @@ function gwt(e) {
   } catch {}
   return "non_json_body";
 }
-import { createWriteStream as pn } from "fs";
+import { createWriteStream } from "fs";
 import { open as fn, rm as je, writeFile as mn } from "fs/promises";
 import { Transform as gn } from "stream";
-import { pipeline as hn } from "stream/promises";
+import { pipeline } from "stream/promises";
 function Ge(e) {
   let t = Gzt(e.installation_preference);
   return {
@@ -1847,7 +1847,7 @@ async function kn(e, t, r, o) {
       });
     _ = setTimeout(S, h);
     try {
-      await hn(d.data, w, pn(t));
+      await pipeline(d.data, w, createWriteStream(t));
     } finally {
       clearTimeout(_);
     }
@@ -1978,10 +1978,10 @@ class Ve {
         ),
         r)
       )
-        f(t, o.reason);
+        logFeatureBad(t, o.reason);
       return { success: !1, error: `manifest ${o.reason}`, kind: "manifest" };
     }
-    if (r) y(t);
+    if (r) logFeatureOk(t);
     return { success: !0, entries: o[e] };
   }
 }

@@ -10,38 +10,38 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { toCompatSessionId as zu, toInfraSessionId as yc } from "../权限系统/chunk-ynkf3yy4.js";
+import { toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, yt, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { lv, Ri } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, us, kr, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Sn, io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getProjectDir as Mp, canonicalizePath as Vu } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { Wd, getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { Wd, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import {
   Ds,
   Ct,
-  rootLaptopDirSyncRegistry as jO,
+  rootLaptopDirSyncRegistry,
   SKe,
   qVn,
   vht,
-  builderGit as Af,
-  readGitLayout as UX,
-  layoutStillHolds as WO,
-  parseGitVersion as kht,
-  hardenedSpawnEnv as J2,
-  reachRootsOf as BX,
-  BuilderGitProbes as Rne,
+  builderGit,
+  readGitLayout,
+  layoutStillHolds,
+  parseGitVersion,
+  hardenedSpawnEnv,
+  reachRootsOf,
+  BuilderGitProbes,
   bde,
   r$,
-  MAX_WORKING_FILE_BYTES as Jm,
+  MAX_WORKING_FILE_BYTES,
   Xfn,
   GO,
   E3,
@@ -182,14 +182,14 @@ import { P } from "../../01-核心基础设施/核心工具-路径与平台/chun
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import {
   lstat as al,
-  mkdtemp as sh,
-  readFile as ah,
+  mkdtemp,
+  readFile,
   realpath as lh,
   rm as dh,
   unlink as rl,
   writeFile as uh,
 } from "fs/promises";
-import { tmpdir as ch } from "os";
+import { tmpdir } from "os";
 import {
   dirname as ll,
   isAbsolute as dl,
@@ -207,7 +207,7 @@ import {
   rename as Wl,
   rm as wn,
   stat as Ul,
-  utimes as jl,
+  utimes,
   writeFile as vo,
 } from "fs/promises";
 import {
@@ -235,7 +235,7 @@ var rs = [
 async function os(e) {
   let t = AbortSignal.timeout(nd),
     r = e.signal === void 0 ? t : AbortSignal.any([e.signal, t]),
-    o = e.probes?.screenMemo !== void 0 ? e.probes : new Rne("operation"),
+    o = e.probes?.screenMemo !== void 0 ? e.probes : new BuilderGitProbes("operation"),
     s = await Vl({ ...e, signal: r }, o);
   if (s.kind !== "refused") return s;
   if (e.signal?.aborted === !0)
@@ -250,7 +250,7 @@ async function os(e) {
 async function Vl(e, t) {
   let r = Date.now(),
     { gitRoot: o, layout: s, sideGitDir: a, signal: d } = e;
-  if (!(await WO(s, [])))
+  if (!(await layoutStillHolds(s, [])))
     return se(
       "git_error",
       "the checkout\u2019s git directory changed since it was read; read the layout again",
@@ -316,7 +316,7 @@ async function Vl(e, t) {
 async function Jl(e, t, r) {
   let { gitRoot: o, layout: s, sideGitDir: a, signal: d } = e,
     { real: f, headSha: p, branch: y, started: w } = t,
-    k = BX(s),
+    k = reachRootsOf(s),
     _ = {
       objectsDir: ce(s.commonDir, "objects"),
       ...(k !== void 0 && { reachRoots: k }),
@@ -341,7 +341,7 @@ async function Jl(e, t, r) {
       r,
     ),
     C = new Date();
-  await jl(ce(a, "HEAD"), C, C).catch(() => {});
+  await utimes(ce(a, "HEAD"), C, C).catch(() => {});
   let O = ce(a, `run-${process.pid}-${ts(6).toString("hex")}`),
     D = ce(O, "index"),
     pe = { GIT_SHALLOW_FILE: ce(O, "shallow") },
@@ -849,7 +849,7 @@ async function rd(e) {
   return null;
 }
 function od() {
-  return Ba(process.pid).then(
+  return getProcessStartTimeAsync(process.pid).then(
     (e) => `${process.pid}:${e ?? ""}`,
     () => `${process.pid}:`,
   );
@@ -860,7 +860,7 @@ async function id(e) {
     o = t === -1 ? "" : e.slice(t + 1);
   if (!(r > 0) || !as(r)) return !1;
   let s =
-    (await Ba(r).catch(() => {
+    (await getProcessStartTimeAsync(r).catch(() => {
       return;
     })) ?? "";
   return o === "" || s === "" || o === s;
@@ -954,7 +954,7 @@ async function Yi(e, t) {
     } else {
       (await wn(e, { recursive: !0, force: !0 }),
         await Un(e, { recursive: !0, mode: 448 }));
-      let re = await Af(
+      let re = await builderGit(
         e,
         [
           "-c",
@@ -1483,7 +1483,7 @@ function wd(e) {
 }
 async function yd(e) {
   let t = await e(["version"]),
-    r = t.code === 0 ? kht(t.stdout) : null;
+    r = t.code === 0 ? parseGitVersion(t.stdout) : null;
   return r !== null && (r.major > 2 || (r.major === 2 && r.minor >= 32));
 }
 async function ds(e, t, r) {
@@ -3160,8 +3160,8 @@ function cn(e) {
 }
 import { createHash as Cu } from "crypto";
 import { lstat as fr, readdir as Ou } from "fs/promises";
-import { devNull as Vs } from "os";
-import { join as Tn, posix as cr } from "path";
+import { devNull } from "os";
+import { join as Tn, posix } from "path";
 var dr = ".claude-cloud-trash",
   Ks = 384,
   pu = 448,
@@ -3326,8 +3326,8 @@ var xu = 25,
   Js = 4,
   $u = 5000,
   Bu = {
-    GIT_CONFIG_GLOBAL: Vs,
-    GIT_CONFIG_SYSTEM: Vs,
+    GIT_CONFIG_GLOBAL: devNull,
+    GIT_CONFIG_SYSTEM: devNull,
     GIT_CONFIG_NOSYSTEM: "1",
   },
   Mu = 64,
@@ -3563,7 +3563,7 @@ async function Ju(e) {
     return await Qu(e);
   } catch (t) {
     return (
-      h(t),
+      logError(t),
       {
         ...uo(e.workerNote.report),
         received: { kind: "refused", reason: "git_error" },
@@ -3955,7 +3955,7 @@ async function Qu({
     qn = 0,
     $n = 0;
   ut = hn.map(({ path: m }) => m);
-  await using Bn = await e.openBlobReader({ maxBytes: Jm });
+  await using Bn = await e.openBlobReader({ maxBytes: MAX_WORKING_FILE_BYTES });
   for (let { path: m, entry: U } of hn) {
     if (te?.aborted === !0 || xn === null) {
       ((Yt = !0), ae.push(m));
@@ -4243,7 +4243,7 @@ async function ec(e, t, r, o = {}) {
       return !0;
     },
     p = ha(r),
-    y = jO(),
+    y = rootLaptopDirSyncRegistry(),
     w = `tree:${a}:${e.gitDir}`;
   if (p.length > s && !y.wholeListingOutgrew(w)) {
     let k = await on(e, ["ls-tree", "-r", "-z", "--full-tree", `${t}^{tree}`], {
@@ -4626,7 +4626,7 @@ async function pc(e, t) {
     let y = s.filter((k) => a(k) === p),
       w = await Promise.all(
         y.map(async (k) => {
-          let _ = p === 0 ? "plain" : o.get(cr.dirname(k));
+          let _ = p === 0 ? "plain" : o.get(posix.dirname(k));
           return [k, _ === "plain" ? await r(k) : (_ ?? "unknown")];
         }),
       );
@@ -4653,7 +4653,7 @@ async function zo(
         if (d.has(E)) a.set(E, _ === "S" ? "absent_here" : "present");
     },
     p = ha(t),
-    y = jO(),
+    y = rootLaptopDirSyncRegistry(),
     w = `index:${s}:${e}`;
   if (p.length > o && !y.wholeListingOutgrew(w)) {
     let k = await xl(e, ["ls-files", "-z", "-t", "-c"], r, s);
@@ -4699,9 +4699,9 @@ async function oa(e, t) {
   }
 }
 async function gc(e, t, r, o, s) {
-  let a = cr.dirname(r),
-    d = cr.basename(r).normalize("NFC"),
-    f = cr.extname(d),
+  let a = posix.dirname(r),
+    d = posix.basename(r).normalize("NFC"),
+    f = posix.extname(d),
     p = d.slice(0, d.length - f.length),
     y = ` (${Ban} `,
     w;
@@ -4713,7 +4713,7 @@ async function gc(e, t, r, o, s) {
   let k = (O) => O.slice(0, Math.max(0, O.lastIndexOf(y))),
     _ = (O) => {
       let D = Wan(r, new Date(0), O);
-      return D === null ? null : k(cr.basename(D).normalize("NFC"));
+      return D === null ? null : k(posix.basename(D).normalize("NFC"));
     },
     E = _(0),
     R = _(jan - 1) ?? E,
@@ -4744,7 +4744,7 @@ async function gc(e, t, r, o, s) {
 }
 async function wc(e, t, r, o, s, a, d) {
   if ((await Kpt(e, t, o, d)) !== null) return !1;
-  let f = cr.dirname(o);
+  let f = posix.dirname(o);
   return (f === "." ? Promise.resolve() : r.mkdirp(f))
     .then(() => r.create(o, s, a))
     .then(
@@ -4980,7 +4980,7 @@ async function ka({ record: e, deps: t }) {
         E !== null && _a(Yo(e, E), E, _, t.now(), t.installedTree?.() ?? null),
     };
   } catch (o) {
-    if (!yt(o)) h(o);
+    if (!yt(o)) logError(o);
     return null;
   } finally {
     await r?.().catch(() => {});
@@ -5006,7 +5006,7 @@ async function Sa({ record: e, deps: t }) {
     );
   } catch (o) {
     if (yt(o)) return { kind: "aborted", record: e };
-    return (h(o), bn(e, "unknown", "unexpected", "unexpected throw"));
+    return (logError(o), bn(e, "unknown", "unexpected", "unexpected throw"));
   } finally {
     await r?.().catch(() => {});
   }
@@ -5264,7 +5264,7 @@ async function Ea(e, t, r = t.now()) {
     );
     return s.kind === "ok" ? { ...e, announcementEtag: s.etag } : e;
   } catch (s) {
-    if (!yt(s)) h(s);
+    if (!yt(s)) logError(s);
     return e;
   }
 }
@@ -5305,7 +5305,7 @@ async function Qn(e, t, r, o = null, s = !1) {
     }
     return e;
   } catch (d) {
-    if (!yt(d)) h(d);
+    if (!yt(d)) logError(d);
     return e;
   }
 }
@@ -5351,7 +5351,7 @@ async function Pa(e, t, r) {
         return { record: e, done: !1 };
     }
   } catch (s) {
-    if (!yt(s)) h(s);
+    if (!yt(s)) logError(s);
     return { record: e, done: !1 };
   }
 }
@@ -5442,7 +5442,7 @@ async function hr({
   } catch (a) {
     if (yt(a)) return { kind: "aborted", record: e };
     return (
-      h(a),
+      logError(a),
       {
         kind: "not_delivered",
         record: e,
@@ -5776,18 +5776,18 @@ function Oe(e) {
 }
 function Da(e, t, r, o, s = !1) {
   i("tengu_dir_sync_push", {
-    engine: u("git"),
-    trigger: u(o),
-    outcome: u(e.kind),
+    engine: fromEnum("git"),
+    trigger: fromEnum(o),
+    outcome: fromEnum(e.kind),
     held: s,
-    reason: we(
+    reason: fromEnumOpt(
       e.kind === "snapshot_refused" ||
         e.kind === "lane_lost" ||
         e.kind === "not_delivered"
         ? e.reason
         : null,
     ),
-    via: we(e.kind === "sent" ? e.via : null),
+    via: fromEnumOpt(e.kind === "sent" ? e.via : null),
     generation:
       e.kind === "sent" ? e.generation : (e.record.sent[0]?.generation ?? 0),
     bundle_bytes:
@@ -5822,11 +5822,11 @@ function Da(e, t, r, o, s = !1) {
 }
 function ri(e, { covered: t, outcome: r, counts: o }, s, a) {
   i("tengu_dir_sync_pull", {
-    engine: u("git"),
-    trigger: u(e),
-    outcome: u(r),
-    received: we(o?.received ?? null),
-    round_skipped: we(o?.roundSkipped ?? null),
+    engine: fromEnum("git"),
+    trigger: fromEnum(e),
+    outcome: fromEnum(r),
+    received: fromEnumOpt(o?.received ?? null),
+    round_skipped: fromEnumOpt(o?.roundSkipped ?? null),
     installed: o?.installed ?? 0,
     not_installed: o?.notInstalled ?? 0,
     skipped_down: o?.skippedDown ?? 0,
@@ -6386,7 +6386,7 @@ function hFt({
     On = () =>
       me !== null &&
       (me.start.kind !== "clone" || me.start.origin === "bundle"),
-    Hr = `claude --cloud ${zu(e)}`,
+    Hr = `claude --cloud ${toCompatSessionId(e)}`,
     hn = new Set(),
     er = (c) => (hn.add(c), () => hn.delete(c)),
     Wr = () => {
@@ -6465,7 +6465,7 @@ function hFt({
     try {
       p(c, b);
     } catch (T) {
-      h(T);
+      logError(T);
     }
   }
   function Fe(c, b, T = "info") {
@@ -6484,11 +6484,11 @@ function hFt({
       (xe = { reason: c, line: c === "offline" ? b : wKn(bKn(Oe(b))) }),
       Ie(xe.line, "warning"),
       i("tengu_dir_sync_git_ended", {
-        reason: u(c),
+        reason: fromEnum(c),
         first_upload_landed: qe || Pe,
         created_here: w === "send",
       }),
-      g("ccr_dir_sync_pull", `ended_${c}`),
+      logFeatureSad("ccr_dir_sync_pull", `ended_${c}`),
       c === "offline")
     )
       Ai(L, !1);
@@ -6768,7 +6768,7 @@ function hFt({
     if (yt(c)) return;
     if (
       ((q[b] += 1),
-      h(c),
+      logError(c),
       Fe(
         `unexpected-${b}`,
         b === "push"
@@ -6931,7 +6931,7 @@ function hFt({
     try {
       (await Ybe(o, c), (Ke = 0));
     } catch (b) {
-      if (!yt(b)) h(b);
+      if (!yt(b)) logError(b);
       if (b instanceof eft) return;
       if (((Ke += 1), Ke === Qo))
         Ie(
@@ -7004,7 +7004,7 @@ function hFt({
     try {
       te?.(c.armedAtMs);
     } catch (v) {
-      h(v);
+      logError(v);
     }
   }
   async function kl() {
@@ -7263,7 +7263,7 @@ function hFt({
       try {
         if (F) ge?.(Q());
       } catch (de) {
-        h(de);
+        logError(de);
       }
     }
     let ue = T !== null && be.userEventUuids.includes(T),
@@ -7536,7 +7536,7 @@ function hFt({
               ...(ke !== void 0 && { layoutRead: ke }),
             }).catch((Re) => {
               if (yt(Re)) throw Re;
-              return (h(Re), null);
+              return (logError(Re), null);
             }),
           Me = await tn(We),
           X =
@@ -7571,8 +7571,8 @@ function hFt({
         if (H === ft)
           Bi(c, b, T, v, L, z.last !== null && af.has(z.last.reason));
         i("tengu_dir_sync_git_fast_forward", {
-          outcome: u("no_snapshot"),
-          reason: we(z.last?.reason),
+          outcome: fromEnum("no_snapshot"),
+          reason: fromEnumOpt(z.last?.reason),
           ms: Q() - Se,
         });
         return;
@@ -7586,14 +7586,14 @@ function hFt({
         }),
         !yt(We))
       )
-        h(We);
+        logError(We);
       return;
     }
     if (H === ft) Bi(c, b, T, v, L, ue.kind === "waiting" && lf.has(ue.reason));
     switch (
       (i("tengu_dir_sync_git_fast_forward", {
-        outcome: u(ue.kind),
-        reason: we(ue.kind === "waiting" ? ue.reason : void 0),
+        outcome: fromEnum(ue.kind),
+        reason: fromEnumOpt(ue.kind === "waiting" ? ue.reason : void 0),
         paths: ue.kind === "fast_forwarded" ? ue.paths : void 0,
         kept: ue.kind === "fast_forwarded" ? ue.keptLocal.length : void 0,
         ms: Q() - Se,
@@ -7930,7 +7930,7 @@ function hFt({
           let Nt = it.slice(0, 5).map(Oe).join(", ");
           Fe(
             `too-large:${it.length}:${Nt}`,
-            `Too large for this session (over ${Math.floor(Jm / 1048576)} MiB each), so changes to them stay on this machine: ${Nt}${it.length > 5 ? ` and ${it.length - 5} more` : ""}`,
+            `Too large for this session (over ${Math.floor(MAX_WORKING_FILE_BYTES / 1048576)} MiB each), so changes to them stay on this machine: ${Nt}${it.length > 5 ? ` and ${it.length - 5} more` : ""}`,
             "warning",
           );
         }
@@ -9025,7 +9025,7 @@ function hFt({
         if (z.kind === "shipping") Fn("capture").catch(Te);
         return (
           i("tengu_dir_sync_git_capture_point", {
-            outcome: u(z.kind),
+            outcome: fromEnum(z.kind),
             probe: S(ue ? "captured" : "refused"),
             matched: S(ot),
             installed_tree_held: Pr !== null,
@@ -9425,7 +9425,7 @@ async function rh(e, t, r, o) {
   let s = await e.statIn(t, r).catch(() => null);
   if (s === null) return "other";
   if (s.isDirectory()) return "directory";
-  if (!s.isFile() || s.size > BigInt(Jm)) return "other";
+  if (!s.isFile() || s.size > BigInt(MAX_WORKING_FILE_BYTES)) return "other";
   let a = await e.openIn(t, r, Ja.O_RDONLY | Ja.O_NONBLOCK).catch(() => null);
   if (a === null) return "other";
   try {
@@ -9502,7 +9502,7 @@ async function ih(e, t, r, o, s) {
   }
 }
 var mh = "claude-cloud-trash",
-  go = (e, t, r) => UX(e, t, { bound: !0, ...(r !== void 0 && { probes: r }) });
+  go = (e, t, r) => readGitLayout(e, t, { bound: !0, ...(r !== void 0 && { probes: r }) });
 function ph(e, t = go) {
   let r = null;
   return async (o) => {
@@ -9530,7 +9530,7 @@ async function Yhr({
   now: a = Date.now,
   storageV5: d,
 }) {
-  let f = yc(e),
+  let f = toInfraSessionId(e),
     { path: p, v5: y } = await Qce(t, f, d),
     w = Zpt({ sessionId: f, armedAtMs: a(), start: r, uploadOnly: o });
   if (M() && d !== void 0 && y !== void 0) {
@@ -9577,8 +9577,8 @@ async function Jhr({
 }) {
   let w = qVn();
   i("tengu_dir_sync_git_open", { branch_rule: w, upload_at_open: f });
-  let k = await Vu(t, If(y)),
-    _ = K9n(Mp(k)),
+  let k = await canonicalizePath(t, If(y)),
+    _ = K9n(getProjectDir(k)),
     E = { gitDir: _, timeoutMs: Aze },
     R = await nft(t, e, y),
     N = await lh(t),
@@ -9629,7 +9629,7 @@ async function Jhr({
             signal: J,
           }) => {
             let [fe, K] = await Promise.all([
-                UX(t, J, { linkedTrees: !0 }),
+                readGitLayout(t, J, { linkedTrees: !0 }),
                 gs(t, J),
               ]),
               ee =
@@ -9845,7 +9845,7 @@ function Ah({
     shallowFile: y,
     layoutRead: w,
   }) => {
-    let k = new Rne("operation"),
+    let k = new BuilderGitProbes("operation"),
       _ =
         w !== void 0 &&
         w.layout.gitDirId !== void 0 &&
@@ -9872,7 +9872,7 @@ function Ah({
     let E = y !== void 0 ? Ih(y) : await Nh(yi(e, _.layout.commonDir));
     try {
       let R = s(),
-        N = BX(_.layout),
+        N = reachRootsOf(_.layout),
         C = il(qX(e, _.layout, p, N, k)),
         O = await xh(ul(C), R);
       if (O === null)
@@ -10096,10 +10096,10 @@ async function Nh(e) {
       let d = await al(t).catch((f) => (W(f) ? null : "irregular"));
       if (d === null) return null;
       if (d === "irregular" || !d.isFile() || d.size > Lh) return "irregular";
-      return ah(t).catch(() => "irregular");
+      return readFile(t).catch(() => "irregular");
     },
     o = await r(),
-    s = await sh(Gr(ch(), "claude-shallow-")),
+    s = await mkdtemp(Gr(tmpdir(), "claude-shallow-")),
     a = Gr(s, "shallow");
   if (Buffer.isBuffer(o)) await uh(a, o, { mode: 384 });
   return {
@@ -10118,7 +10118,7 @@ function il(e) {
   return (t, r, o) => e(t, { GIT_ALLOW_PROTOCOL: "none", ...r }, o);
 }
 function ul(e) {
-  let t = J2(void 0),
+  let t = hardenedSpawnEnv(void 0),
     r = Wd(t, "GIT_CONFIG_GLOBAL"),
     o = Wd(t, "GIT_CONFIG_SYSTEM"),
     s = {

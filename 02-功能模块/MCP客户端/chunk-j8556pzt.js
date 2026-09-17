@@ -8,22 +8,22 @@
 
 // Version: 2.1.263
 import {
-  LATEST_PROTOCOL_VERSION as WQ,
-  SUPPORTED_PROTOCOL_VERSIONS as Xq,
-  ErrorCode as xo,
-  EmptyResultSchema as GQ,
-  InitializeRequestSchema as Dkt,
-  InitializedNotificationSchema as Lkt,
-  CreateTaskResultSchema as V5,
-  CallToolResultSchema as v1,
-  CallToolRequestSchema as Cx,
-  LoggingLevelSchema as snt,
-  SetLevelRequestSchema as p7t,
-  CreateMessageResultSchema as fhe,
-  CreateMessageResultWithToolsSchema as v2e,
-  ElicitResultSchema as Fie,
-  ListRootsResultSchema as _7t,
-  McpError as _o,
+  LATEST_PROTOCOL_VERSION,
+  SUPPORTED_PROTOCOL_VERSIONS,
+  ErrorCode,
+  EmptyResultSchema,
+  InitializeRequestSchema,
+  InitializedNotificationSchema,
+  CreateTaskResultSchema,
+  CallToolResultSchema,
+  CallToolRequestSchema,
+  LoggingLevelSchema,
+  SetLevelRequestSchema,
+  CreateMessageResultSchema,
+  CreateMessageResultWithToolsSchema,
+  ElicitResultSchema,
+  ListRootsResultSchema,
+  McpError,
 } from "./chunk-tv3jbp8f.js";
 import { uhe, C1, C2e, Xtt, xkt, Ytt, Hkt, Ikt } from "./chunk-98spw152.js";
 class g {
@@ -69,7 +69,7 @@ class g {
     }
     return this.requestStream(
       { method: "sampling/createMessage", params: e },
-      fhe,
+      CreateMessageResultSchema,
       t,
     );
   }
@@ -91,7 +91,7 @@ class g {
     let o = s === "form" && e.mode === void 0 ? { ...e, mode: "form" } : e;
     return this.requestStream(
       { method: "elicitation/create", params: o },
-      Fie,
+      ElicitResultSchema,
       t,
     );
   }
@@ -114,7 +114,7 @@ class A1 extends Xtt {
     if (
       ((this._serverInfo = e),
       (this._loggingLevels = new Map()),
-      (this.LOG_LEVEL_SEVERITY = new Map(snt.options.map((i, s) => [i, s]))),
+      (this.LOG_LEVEL_SEVERITY = new Map(LoggingLevelSchema.options.map((i, s) => [i, s]))),
       (this.isMessageIgnored = (i, s) => {
         let o = this._loggingLevels.get(s);
         return o
@@ -124,15 +124,15 @@ class A1 extends Xtt {
       (this._capabilities = t?.capabilities ?? {}),
       (this._instructions = t?.instructions),
       (this._jsonSchemaValidator = t?.jsonSchemaValidator ?? new Ytt()),
-      this.setRequestHandler(Dkt, (i) => this._oninitialize(i)),
-      this.setNotificationHandler(Lkt, () => this.oninitialized?.()),
+      this.setRequestHandler(InitializeRequestSchema, (i) => this._oninitialize(i)),
+      this.setNotificationHandler(InitializedNotificationSchema, () => this.oninitialized?.()),
       this._capabilities.logging)
     )
-      this.setRequestHandler(p7t, async (i, s) => {
+      this.setRequestHandler(SetLevelRequestSchema, async (i, s) => {
         let o =
             s.sessionId || s.requestInfo?.headers["mcp-session-id"] || void 0,
           { level: n } = i.params,
-          r = snt.safeParse(n);
+          r = LoggingLevelSchema.safeParse(n);
         if (r.success) this._loggingLevels.set(o, r.data);
         return {};
       });
@@ -161,29 +161,29 @@ class A1 extends Xtt {
       throw Error("Schema method literal must be a string");
     if (o === "tools/call") {
       let r = async (h, c) => {
-        let a = C1(Cx, h);
+        let a = C1(CallToolRequestSchema, h);
         if (!a.success) {
           let p = a.error instanceof Error ? a.error.message : String(a.error);
-          throw new _o(xo.InvalidParams, `Invalid tools/call request: ${p}`);
+          throw new McpError(ErrorCode.InvalidParams, `Invalid tools/call request: ${p}`);
         }
         let { params: l } = a.data,
           u = await Promise.resolve(t(h, c));
         if (l.task) {
-          let p = C1(V5, u);
+          let p = C1(CreateTaskResultSchema, u);
           if (!p.success) {
             let d =
               p.error instanceof Error ? p.error.message : String(p.error);
-            throw new _o(
-              xo.InvalidParams,
+            throw new McpError(
+              ErrorCode.InvalidParams,
               `Invalid task creation result: ${d}`,
             );
           }
           return p.data;
         }
-        let f = C1(v1, u);
+        let f = C1(CallToolResultSchema, u);
         if (!f.success) {
           let p = f.error instanceof Error ? f.error.message : String(f.error);
-          throw new _o(xo.InvalidParams, `Invalid tools/call result: ${p}`);
+          throw new McpError(ErrorCode.InvalidParams, `Invalid tools/call result: ${p}`);
         }
         return f.data;
       };
@@ -306,7 +306,7 @@ class A1 extends Xtt {
       (this._clientCapabilities = e.params.capabilities),
       (this._clientVersion = e.params.clientInfo),
       {
-        protocolVersion: Xq.includes(t) ? t : WQ,
+        protocolVersion: SUPPORTED_PROTOCOL_VERSIONS.includes(t) ? t : LATEST_PROTOCOL_VERSION,
         capabilities: this.getCapabilities(),
         serverInfo: this._serverInfo,
         ...(this._instructions && { instructions: this._instructions }),
@@ -323,7 +323,7 @@ class A1 extends Xtt {
     return this._capabilities;
   }
   async ping() {
-    return this.request({ method: "ping" }, GQ);
+    return this.request({ method: "ping" }, EmptyResultSchema);
   }
   async createMessage(e, t) {
     if (e.tools || e.toolChoice) {
@@ -363,12 +363,12 @@ class A1 extends Xtt {
     if (e.tools)
       return this.request(
         { method: "sampling/createMessage", params: e },
-        v2e,
+        CreateMessageResultWithToolsSchema,
         t,
       );
     return this.request(
       { method: "sampling/createMessage", params: e },
-      fhe,
+      CreateMessageResultSchema,
       t,
     );
   }
@@ -380,7 +380,7 @@ class A1 extends Xtt {
         let s = e;
         return this.request(
           { method: "elicitation/create", params: s },
-          Fie,
+          ElicitResultSchema,
           t,
         );
       }
@@ -390,7 +390,7 @@ class A1 extends Xtt {
         let s = e.mode === "form" ? e : { ...e, mode: "form" },
           o = await this.request(
             { method: "elicitation/create", params: s },
-            Fie,
+            ElicitResultSchema,
             t,
           );
         if (o.action === "accept" && o.content && s.requestedSchema)
@@ -399,14 +399,14 @@ class A1 extends Xtt {
               o.content,
             );
             if (!r.valid)
-              throw new _o(
-                xo.InvalidParams,
+              throw new McpError(
+                ErrorCode.InvalidParams,
                 `Elicitation response content does not match requested schema: ${r.errorMessage}`,
               );
           } catch (n) {
-            if (n instanceof _o) throw n;
-            throw new _o(
-              xo.InternalError,
+            if (n instanceof McpError) throw n;
+            throw new McpError(
+              ErrorCode.InternalError,
               `Error validating elicitation response: ${n instanceof Error ? n.message : String(n)}`,
             );
           }
@@ -429,7 +429,7 @@ class A1 extends Xtt {
       );
   }
   async listRoots(e, t) {
-    return this.request({ method: "roots/list", params: e }, _7t, t);
+    return this.request({ method: "roots/list", params: e }, ListRootsResultSchema, t);
   }
   async sendLoggingMessage(e, t) {
     if (this._capabilities.logging) {

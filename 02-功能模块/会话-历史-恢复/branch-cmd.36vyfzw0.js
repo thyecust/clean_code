@@ -15,36 +15,36 @@ import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-a
 import { ge, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getOwnJobShortId as gu, syncJobName as b$ } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { getProjectKey as yh, buildHistorySuppressionEntry as Phe } from "./chunk-mkmy4cx2.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getOwnJobShortId, syncJobName } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { getProjectKey, buildHistorySuppressionEntry } from "./chunk-mkmy4cx2.js";
 import {
-  isTranscriptMessage as TH,
-  getMaterializedSessionFile as il,
-  getTranscriptPathForSession as Tp,
-  saveCustomTitle as DI,
-  isSessionHistorySuppressed as YM,
-  isSessionHistorySuppressedFor as JV,
-  pinSessionId as Li,
-  isPrecautionarySuppressionHeldFor as fj,
-  getCurrentSessionTitle as mu,
-  saveAgentName as EY,
-  searchSessionsByCustomTitle as QM,
-  primeSessionMessagesCache as w9t,
+  isTranscriptMessage,
+  getMaterializedSessionFile,
+  getTranscriptPathForSession,
+  saveCustomTitle,
+  isSessionHistorySuppressed,
+  isSessionHistorySuppressedFor,
+  pinSessionId,
+  isPrecautionarySuppressionHeldFor,
+  getCurrentSessionTitle,
+  saveAgentName,
+  searchSessionsByCustomTitle,
+  primeSessionMessagesCache,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ll, yl } from "../Teammates团队/chunk-thxapyam.js";
 import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { Ohe } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { randomUUID as D } from "crypto";
+import { randomUUID } from "crypto";
 import { once as N } from "events";
-import { createReadStream as O, createWriteStream as x } from "fs";
-import { mkdir as j, unlink as H } from "fs/promises";
-import { createInterface as J } from "readline";
-import { finished as V } from "stream/promises";
+import { createReadStream, createWriteStream } from "fs";
+import { mkdir, unlink } from "fs/promises";
+import { createInterface } from "readline";
+import { finished } from "stream/promises";
 var X = 4194304,
   q = 1e5;
-function G(t) {
+function deriveFirstPrompt(t) {
   let u = { commandFallback: "" },
     d;
   for (let n of t) if (((d = Ohe(n, u)), d !== void 0)) break;
@@ -54,19 +54,19 @@ function G(t) {
       "Branched conversation"
   );
 }
-async function Y(t, u, d, n) {
-  let a = D(),
+async function createFork(t, u, d, n) {
+  let a = randomUUID(),
     p = K(),
-    A = YM() || JV(Li(p)),
+    A = isSessionHistorySuppressed() || isSessionHistorySuppressedFor(pinSessionId(p)),
     s = X1(),
     E = ll(he()),
-    l = Tp(a),
-    C = il() ?? yl(),
+    l = getTranscriptPathForSession(a),
+    C = getMaterializedSessionFile() ?? yl(),
     g = hu(C, n);
   if (g !== void 0)
     return Q({
       sourceV5: g,
-      forkKey: Ce.transcript(yh(he()), a),
+      forkKey: Ce.transcript(getProjectKey(he()), a),
       forkSessionId: a,
       originalSessionId: p,
       sourceTaintAtEntry: A,
@@ -76,26 +76,26 @@ async function Y(t, u, d, n) {
       extraMessages: d,
       forkSessionPath: l,
     });
-  await j(E, { recursive: !0, mode: 448 });
+  await mkdir(E, { recursive: !0, mode: 448 });
   let F;
   try {
-    ((F = O(C, { encoding: "utf8" })), await N(F, "open"));
+    ((F = createReadStream(C, { encoding: "utf8" })), await N(F, "open"));
   } catch (e) {
     if (W(e)) throw Error("No conversation to branch");
-    throw (h(e), e);
+    throw (logError(e), e);
   }
-  let m = x(l, { encoding: "utf8", mode: 384 }),
+  let m = createWriteStream(l, { encoding: "utf8", mode: 384 }),
     w = null;
   m.on("error", (e) => {
     w = ge(e);
   });
-  let S = J({ input: F, crlfDelay: 1 / 0 }),
+  let S = createInterface({ input: F, crlfDelay: 1 / 0 }),
     U = new Set(t.map((e) => e.uuid)),
     v = new Map(),
     I = [],
     k,
     R = async () => {
-      (m.destroy(), await H(l).catch(() => {}));
+      (m.destroy(), await unlink(l).catch(() => {}));
     },
     M = async (e) => {
       if (w) throw (await R(), w);
@@ -104,7 +104,7 @@ async function Y(t, u, d, n) {
     r = A,
     o = () =>
       M(
-        b(Phe(a, "fork_inherit")) +
+        b(buildHistorySuppressionEntry(a, "fork_inherit")) +
           `
 `,
       );
@@ -141,7 +141,7 @@ async function Y(t, u, d, n) {
         if (!r) ((r = !0), await o());
         continue;
       }
-      if (!TH(c) || c.isSidechain || !U.has(c.uuid)) continue;
+      if (!isTranscriptMessage(c) || c.isSidechain || !U.has(c.uuid)) continue;
       v.set(c.uuid, c);
     }
   } catch (e) {
@@ -228,7 +228,7 @@ async function Y(t, u, d, n) {
         `
 `,
     );
-  if ((m.end(), await V(m).catch(() => {}), w)) throw (await R(), w);
+  if ((m.end(), await finished(m).catch(() => {}), w)) throw (await R(), w);
   return {
     sessionId: a,
     title: u,
@@ -264,7 +264,7 @@ async function Q(t) {
     w = [],
     S,
     U = t.sourceTaintAtEntry;
-  if (U) g.push(B(Phe(n, "fork_inherit")));
+  if (U) g.push(B(buildHistorySuppressionEntry(n, "fork_inherit")));
   let v;
   for (let r = 0; ; r++) {
     if (r >= q) throw Error("Conversation too long to branch through storage");
@@ -278,7 +278,7 @@ async function Q(t) {
       let y = Error("Conversation unreadable through storage", {
         cause: o.error,
       });
-      throw (h(y), y);
+      throw (logError(y), y);
     }
     for (let y of o.value.items) {
       let T = Buffer.from(y.data.buffer, y.data.byteOffset, y.data.byteLength)
@@ -311,10 +311,10 @@ async function Q(t) {
         continue;
       }
       if (e.type === "history-suppression") {
-        if (!U) ((U = !0), g.push(B(Phe(n, "fork_inherit"))));
+        if (!U) ((U = !0), g.push(B(buildHistorySuppressionEntry(n, "fork_inherit"))));
         continue;
       }
-      if (!TH(e) || e.isSidechain || !F.has(e.uuid)) continue;
+      if (!isTranscriptMessage(e) || e.isSidechain || !F.has(e.uuid)) continue;
       m.set(e.uuid, e);
     }
     if (((v = o.value.nextSeq), v === void 0)) break;
@@ -397,8 +397,8 @@ async function Q(t) {
 }
 async function Z(t, u) {
   let d = `${t} (Branch)`;
-  if ((await QM(d, { exact: !0 }, u)).length === 0) return d;
-  let a = await QM(`${t} (Branch`, void 0, u),
+  if ((await searchSessionsByCustomTitle(d, { exact: !0 }, u)).length === 0) return d;
+  let a = await searchSessionsByCustomTitle(`${t} (Branch`, void 0, u),
     p = new Set([1]),
     A = new RegExp(`^${iu(t)} \\(Branch(?: (\\d+))?\\)$`);
   for (let E of a) {
@@ -411,10 +411,10 @@ async function Z(t, u) {
   while (p.has(s)) s++;
   return `${t} (Branch ${s})`;
 }
-async function ee(t, u, d = {}) {
+async function branchAndResume(t, u, d = {}) {
   let n = K(),
-    a = mu(n),
-    p = YM() || JV(Li(n)),
+    a = getCurrentSessionTitle(n),
+    p = isSessionHistorySuppressed() || isSessionHistorySuppressedFor(pinSessionId(n)),
     A = X1();
   try {
     let {
@@ -424,17 +424,17 @@ async function ee(t, u, d = {}) {
       serializedMessages: C,
       contentReplacementRecords: g,
       sessionHistorySuppressed: F,
-    } = await Y(t.messages, d.customTitle, d.extraMessages, t.storageV5);
-    w9t(
+    } = await createFork(t.messages, d.customTitle, d.extraMessages, t.storageV5);
+    primeSessionMessagesCache(
       s,
       C.map((M) => M.uuid),
     );
     let m = new Date(),
-      w = G(C),
+      w = deriveFirstPrompt(C),
       S = E?.replace(/\s+/g, " ").trim() ?? (await Z(w, t.storageV5)),
       U = E ? "user" : "auto";
-    (await DI(s, S, l, U, t.storageV5),
-      await EY(s, S, l, U, t.storageV5),
+    (await saveCustomTitle(s, S, l, U, t.storageV5),
+      await saveAgentName(s, S, l, U, t.storageV5),
       i("tengu_conversation_forked", {
         message_count: C.length,
         has_custom_title: !!E,
@@ -455,7 +455,7 @@ async function ee(t, u, d = {}) {
         contentReplacements: g,
         sessionHistorySuppressed: F || p ? !0 : void 0,
         atisLatch: A,
-        precautionarySuppressionHeld: fj(Li(n)) ? !0 : void 0,
+        precautionarySuppressionHeld: isPrecautionarySuppressionHeldFor(pinSessionId(n)) ? !0 : void 0,
         forkedFromSessionId: n,
       },
       I = E ? ` "${S}"` : "",
@@ -463,7 +463,7 @@ async function ee(t, u, d = {}) {
       R = `Branched conversation${I}. You are now in the new branch (session ${s}). Use /resume ${n}${k} to return to the original, or run \`claude -r ${n}\` in a new terminal.`;
     if (t.resume)
       (await t.resume(s, v, "fork"),
-        b$(gu(), S, "user", t.storageV5),
+        syncJobName(getOwnJobShortId(), S, "user", t.storageV5),
         u(R, { display: "system" }));
     else u(`Branched conversation${I}. Resume with: /resume ${s}`);
     return !0;
@@ -473,11 +473,11 @@ async function ee(t, u, d = {}) {
   }
 }
 async function ve(t, u, d) {
-  return (await ee(u, t, { customTitle: d?.trim() || void 0 }), null);
+  return (await branchAndResume(u, t, { customTitle: d?.trim() || void 0 }), null);
 }
 export {
-  ee as branchAndResume,
+  branchAndResume,
   ve as call,
-  Y as createFork,
-  G as deriveFirstPrompt,
+  createFork,
+  deriveFirstPrompt,
 };

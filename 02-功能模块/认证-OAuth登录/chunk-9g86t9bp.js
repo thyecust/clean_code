@@ -9,21 +9,21 @@
 // Version: 2.1.263
 import { B, l_e, N0, kW, p8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { CLAUDE_AI_INFERENCE_SCOPE as py, CLAUDE_AI_PROFILE_SCOPE as dB } from "./chunk-9g2q4bjq.js";
-import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE } from "./chunk-9g2q4bjq.js";
+import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   uVt,
   Or,
   lU,
   Grr,
   gU,
-  isBgSession as _t,
-  revokeOAuthToken as eS,
+  isBgSession,
+  revokeOAuthToken,
   T5,
-  isProfileAuthShadowed as UKt,
-  removeApiKey as ERn,
-  clearOAuthTokenMemos as Use,
-  getAnthropicApiKeyWithSourceAsyncSafe as QKt,
+  isProfileAuthShadowed,
+  removeApiKey,
+  clearOAuthTokenMemos,
+  getAnthropicApiKeyWithSourceAsyncSafe,
   _q,
   Te,
 } from "./认证-OAuth登录.419zdfz3.js";
@@ -31,16 +31,16 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Iae, _dr, lot, R, l, A, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { THIRD_PARTY_PROVIDER_LABELS as yA, getAPIProvider as Pe, isFirstPartyAnthropicHost as GT } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, isFirstPartyAnthropicHost } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ORe, KD } from "./chunk-wk0e3dz4.js";
-import { hc, Xxn, Uar, IQ, getSecureStorage as yn } from "./chunk-y7b7kf5n.js";
-import { clearTrustedDeviceTokenCache as Pve } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { hc, Xxn, Uar, IQ, getSecureStorage } from "./chunk-y7b7kf5n.js";
+import { clearTrustedDeviceTokenCache } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { tqn, yk, xzn, Izn, Pzn, ET } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { clearOrgMemoryCredential as M$ } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { clearOrgMemoryCredential } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { zY } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
 import { Der, Ler } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { q8t, resetWIFCredentialState as z8t } from "./chunk-x3rm9w4b.js";
+import { q8t, resetWIFCredentialState } from "./chunk-x3rm9w4b.js";
 import { ZB, l7, b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { cGn } from "../Artifact发布-渲染/chunk-y8j05azr.js";
 import { Jx } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
@@ -49,14 +49,14 @@ import { hlt } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js
 import { dIe } from "../../01-核心基础设施/共享小工具-未细化/chunk-v5nz99k6.js";
 import { s, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import {
-  mkdir as O,
-  readFile as T,
-  unlink as U,
-  writeFile as K,
+  mkdir,
+  readFile,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import { join as C } from "path";
 var uIe = "41077d10-94b8-4194-be48-d251e9eb21b4",
-  UBn = [dB, py],
+  UBn = [CLAUDE_AI_PROFILE_SCOPE, CLAUDE_AI_INFERENCE_SCOPE],
   x = /^[A-Za-z0-9_.-]+$/,
   P = { created_by: "claude-code" },
   j = m(() =>
@@ -120,16 +120,16 @@ async function ODt() {
       "Console profile login refused: env-quad federation outranks the implicit profile",
       "wif_env_quad",
     );
-  let e = Pe();
+  let e = getAPIProvider();
   if (e !== "firstParty")
     throw new R(
-      `This session uses ${yA[e]}, which does not use Anthropic Console sign-in.`,
+      `This session uses ${THIRD_PARTY_PROVIDER_LABELS[e]}, which does not use Anthropic Console sign-in.`,
       "This session uses a third-party provider, which does not use Anthropic Console sign-in.",
       "third_party_provider",
     );
   let o = a.ANTHROPIC_API_KEY;
   if (o) {
-    let c = await QKt({ skipRetrievingKeyFromApiKeyHelper: !0 });
+    let c = await getAnthropicApiKeyWithSourceAsyncSafe({ skipRetrievingKeyFromApiKeyHelper: !0 });
     if (c.source === "ANTHROPIC_API_KEY" && c.key === o)
       throw new R(
         "ANTHROPIC_API_KEY is set in this environment and takes precedence over a profile, so a profile sign-in would not be used. Unset it to sign in this way.",
@@ -137,7 +137,7 @@ async function ODt() {
         "api_key_env",
       );
   }
-  if (UKt())
+  if (isProfileAuthShadowed())
     throw new R(
       "Something in this environment \u2014 an API key helper, an injected token, or a third-party provider setting \u2014 takes precedence over a profile sign-in, so it would not be used here.",
       "Console profile login refused: env credential shadows the profile",
@@ -153,7 +153,7 @@ async function ODt() {
   let i = I(t),
     f = await k(C(t, "configs", `${i}.json`));
   if (f !== null) {
-    if (f.base_url && !GT(f.base_url))
+    if (f.base_url && !isFirstPartyAnthropicHost(f.base_url))
       throw new R(
         "This profile is bound to a different Anthropic deployment, so Claude Code will not replace it here. Sign out of it with the tool that created it, then try again.",
         "Console profile login refused: profile bound to another deployment",
@@ -195,14 +195,14 @@ async function ODt() {
 async function WBn(e) {
   let o = await ODt();
   return (
-    await O(C(o.configDir, "credentials"), { recursive: !0, mode: 448 }),
+    await mkdir(C(o.configDir, "credentials"), { recursive: !0, mode: 448 }),
     q8t(w(o.configDir, o.profile), () => q(e))
   );
 }
 async function q(e) {
   let { profile: o, configDir: t, isNewProfile: i } = await ODt(),
     f = C(t, "configs", `${o}.json`);
-  await O(C(t, "configs"), { recursive: !0, mode: 448 });
+  await mkdir(C(t, "configs"), { recursive: !0, mode: 448 });
   let c = {
     version: _dr,
     organization_id: e.organizationUuid,
@@ -239,7 +239,7 @@ async function q(e) {
     n(
       `Console profile login: wrote credentials for profile ${o}${g ? " (new profile)" : ""}${E ? " (set active)" : ""}`,
     ),
-    z8t(),
+    resetWIFCredentialState(),
     { profile: o, configDir: t }
   );
 }
@@ -285,7 +285,7 @@ async function V(e) {
   if (e && g.refreshToken)
     await e({ refreshToken: g.refreshToken, clientId: g.clientId });
   try {
-    await U(f);
+    await unlink(f);
   } catch (p) {
     return (
       n(`Logout: could not remove profile credentials: ${l(p)}`, {
@@ -296,7 +296,7 @@ async function V(e) {
   }
   return (
     n(`Logout: removed credentials for profile ${t}`),
-    z8t(),
+    resetWIFCredentialState(),
     { removed: !0, ...g }
   );
 }
@@ -319,7 +319,7 @@ function w(e, o) {
 async function k(e) {
   let o;
   try {
-    o = await T(e, "utf-8");
+    o = await readFile(e, "utf-8");
   } catch (f) {
     if (A(f) === "ENOENT") return null;
     if (Rt(f)) return { authentication: { type: "unreadable" } };
@@ -347,7 +347,7 @@ function F(e) {
 async function S(e) {
   let o;
   try {
-    o = await T(e, "utf-8");
+    o = await readFile(e, "utf-8");
   } catch (c) {
     if (Rt(c)) return null;
     throw c;
@@ -375,7 +375,7 @@ async function GBn(e) {
 }
 async function Z(e, o) {
   try {
-    return (await K(e, o, { flag: "wx", mode: 420 }), !0);
+    return (await writeFile(e, o, { flag: "wx", mode: 420 }), !0);
   } catch (t) {
     if (A(t) === "EEXIST") return !1;
     throw t;
@@ -392,7 +392,7 @@ async function performLogout({
   credentials: p,
 }) {
   let { flushTelemetry: E } = await import("../../01-核心基础设施/遥测-OpenTelemetry/flushTelemetry.jwarnhac.js");
-  if ((await E(), await Ler(c), _t())) {
+  if ((await E(), await Ler(c), isBgSession())) {
     await clearAuthRelatedCaches(i, {
       preserveQuotaAutoResume: f,
       artifactAccount: c,
@@ -400,29 +400,29 @@ async function performLogout({
     });
     return;
   }
-  if (!o && Pe() === "firstParty") {
-    let d = yn();
+  if (!o && getAPIProvider() === "firstParty") {
+    let d = getSecureStorage();
     d.invalidateCache?.();
     let r = await d.readAsync(p),
       u = r?.claudeAiOauth;
-    if (u?.refreshToken) await eS(u.refreshToken, u.clientId);
+    if (u?.refreshToken) await revokeOAuthToken(u.refreshToken, u.clientId);
     let v = r?.designOauth;
-    if (v?.refreshToken) await eS(v.refreshToken, v.clientId);
+    if (v?.refreshToken) await revokeOAuthToken(v.refreshToken, v.clientId);
   }
   if (!o) (a.unset("CLAUDE_CODE_OAUTH_TOKEN"), N0(null));
-  (await ERn(i),
+  (await removeApiKey(i),
     await L({
       revoke:
-        !o && Pe() === "firstParty"
-          ? ({ refreshToken: d, clientId: r }) => eS(d, r)
+        !o && getAPIProvider() === "firstParty"
+          ? ({ refreshToken: d, clientId: r }) => revokeOAuthToken(d, r)
           : void 0,
     }));
-  let _ = yn();
+  let _ = getSecureStorage();
   if (t) {
-    if (Pe() === "firstParty") {
+    if (getAPIProvider() === "firstParty") {
       _.invalidateCache?.();
       let d = (await _.readAsync(p))?.designOauth;
-      if (d?.refreshToken) await eS(d.refreshToken, d.clientId);
+      if (d?.refreshToken) await revokeOAuthToken(d.refreshToken, d.clientId);
     }
     await _.mutate((d) => {
       let r = { ...d };
@@ -443,7 +443,7 @@ async function performLogout({
         );
         return;
       }
-      h(d);
+      logError(d);
     });
   } else {
     let d = !1,
@@ -455,7 +455,7 @@ async function performLogout({
       };
     await Xxn(r).catch((u) => {
       if (d) throw u;
-      return (h(u), Uar(r));
+      return (logError(u), Uar(r));
     });
   }
   (kW(null),
@@ -503,7 +503,7 @@ async function performLogout({
       );
     }, i),
     l_e(void 0),
-    y("oauth_logout"));
+    logFeatureOk("oauth_logout"));
 }
 async function clearAuthRelatedCaches(
   e,
@@ -514,15 +514,15 @@ async function clearAuthRelatedCaches(
     credentials: f,
   } = {},
 ) {
-  if ((Use(), M() && f === void 0)) IQ();
-  (Pve(),
+  if ((clearOAuthTokenMemos(), M() && f === void 0)) IQ();
+  (clearTrustedDeviceTokenCache(),
     gU(),
     Or().providerCache.modelConfigs.clear(),
     uVt(),
     Or().providerCache.validatedModels.clear(),
     Grr(),
     T5(),
-    M$());
+    clearOrgMemoryCredential());
   let c = B();
   if (
     (cGn(c.host),
@@ -554,7 +554,7 @@ async function fleetHostLogout({
   try {
     (await performLogout({ clearOnboarding: !0, storageV5: i, credentials: f }), e());
   } catch (c) {
-    (h(c),
+    (logError(c),
       o(
         `Couldn't sign out \u2014 ${c instanceof Error ? c.message : String(c)}`,
       ));
@@ -576,14 +576,14 @@ async function Q(e, o, t) {
     } catch (c) {
       i = c;
     }
-  h(i);
+  logError(i);
 }
 async function J(e, o) {
   for (let t = 0; t < 2; t++) {
     let i = await (e.readAsyncStrict?.(o) ?? e.readAsync(o));
     if (i !== hc) return i?.coworkRemoteDevice;
   }
-  h(
+  logError(
     Error(
       "logout: secure storage could not be read, so the device identity is not carried across the wipe",
     ),

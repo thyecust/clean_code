@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { ARTIFACT_COMMENTS_TOOL_NAME as Zh, ARTIFACT_DATA_TOOL_NAME as CP, ARTIFACT_CHECK_TOOL_NAME as XD } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { isCoworkHostSession as Uj, isRepublishInlinePromptEnabled as SYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { TOOL_SEARCH_TOOL_NAME as Bi } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { ARTIFACT_COMMENTS_TOOL_NAME, ARTIFACT_DATA_TOOL_NAME, ARTIFACT_CHECK_TOOL_NAME } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { isCoworkHostSession, isRepublishInlinePromptEnabled } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { TOOL_SEARCH_TOOL_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { so, mme } from "../权限系统/chunk-fjrcf22x.js";
-import { PIN_CORE_BULLET as Uln, HEAD_PARAGRAPH as n$t, DELIVERABLE_PARAGRAPH as o$t, FILE_LOCATION_SENTENCE as yft, langPromptParagraph as zze, FILES_PROMPT_PARAGRAPH as Vze, COMMENTS_OFF_SENTENCE as owe, ROOM_PROMPT_PARAGRAPH as Kze } from "../Artifact发布-渲染/chunk-pdd7kz7p.js";
+import { PIN_CORE_BULLET, HEAD_PARAGRAPH, DELIVERABLE_PARAGRAPH, FILE_LOCATION_SENTENCE, langPromptParagraph, FILES_PROMPT_PARAGRAPH, COMMENTS_OFF_SENTENCE, ROOM_PROMPT_PARAGRAPH } from "../Artifact发布-渲染/chunk-pdd7kz7p.js";
 import {
   Iut,
   Put,
@@ -27,7 +27,7 @@ import {
   kjn,
 } from "../Artifact发布-渲染/chunk-yrjr7v83.js";
 import { FS } from "../Artifact发布-渲染/chunk-qpgskeea.js";
-import { artifactSchemaGates as E9, artifactLiveEditPromptGateOpen as bce, artifactLivePathsSchemaOpen as bm, artifactTypesPromptParagraph as UGe, artifactTypeCatalogPromptParagraph as BGe } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
+import { artifactSchemaGates, artifactLiveEditPromptGateOpen, artifactLivePathsSchemaOpen, artifactTypesPromptParagraph, artifactTypeCatalogPromptParagraph } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
 import { pN, JAe, QY } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 var h = null,
   p = null;
@@ -49,7 +49,7 @@ var m = [
   w = [
     [
       '`action: "status"` lists the rooms',
-      `the \`${Zh}\` tool's \`watch\` action with no \`url\` lists the rooms`,
+      `the \`${ARTIFACT_COMMENTS_TOOL_NAME}\` tool's \`watch\` action with no \`url\` lists the rooms`,
     ],
   ],
   g = [
@@ -69,25 +69,25 @@ function artifactCorePromptCacheKeyBit(e) {
 }
 function u(e) {
   let t = new Set((e ?? []).map((a) => a.name));
-  return { comments: t.has(Zh), data: t.has(CP), check: t.has(XD) };
+  return { comments: t.has(ARTIFACT_COMMENTS_TOOL_NAME), data: t.has(ARTIFACT_DATA_TOOL_NAME), check: t.has(ARTIFACT_CHECK_TOOL_NAME) };
 }
 function y(e, t, a) {
   let s = a
-      ? `Watching an artifact you did not just publish, listing this session's watches, and stopping one go through the \`${Zh}\` tool's \`watch\` action.`
+      ? `Watching an artifact you did not just publish, listing this session's watches, and stopping one go through the \`${ARTIFACT_COMMENTS_TOOL_NAME}\` tool's \`watch\` action.`
       : "Watching an artifact you did not just publish is not available in this session.",
     i = e
       ? a
-        ? ` Comments people leave on an artifact are read and answered with the \`${Zh}\` tool.`
+        ? ` Comments people leave on an artifact are read and answered with the \`${ARTIFACT_COMMENTS_TOOL_NAME}\` tool.`
         : ""
-      : owe;
+      : COMMENTS_OFF_SENTENCE;
   if (t === "none")
     return `**Watching for republishes**: not available in this session \u2014 nothing notifies it when an artifact is republished elsewhere${e ? " or when a comment on one is sent to Claude" : ""}. If the user asks you to watch an artifact, say so plainly, and do not claim you are watching one.${i}`;
   if (t === "durable")
     return `**Watching for republishes**: in this remote session a watch is a durable wake subscription held by the artifact service, not a live connection: this session is woken with a new turn when the watched artifact is republished elsewhere${e ? ", or when a comment on it is sent to Claude" : ""}; nothing streams in between, so on a wake re-read the artifact before editing. Publishing an artifact starts registering its watch in the background, and the result line says whether that began, was skipped, or was already registered. ${s} Do not claim you are watching an artifact unless a watch result or a publish result's "already registered" line says so \u2014 its "arming" line is not yet a watch.${i}`;
   return `**Watching for republishes**: publishing an artifact starts subscribing this session to its live changes in the background, and the result line says whether that began, was skipped, or was already connected; you are told if it cannot connect, and watches reconnect on their own if the connection drops. A later republish from elsewhere \u2014 another session, or someone saving from a page that can publish new versions of itself \u2014 arrives as a notification telling you to re-read it before editing.${e ? " A comment on a watched artifact that is sent to Claude also wakes this session while that artifact's auto-replies are armed (when comment auto-replies are on for this session, a publish arms them)." : ""} ${s} Watches are session-local, and the user can see and stop them in /tasks. Do not claim you are watching an artifact unless a watch result or a publish result's "already connected" line says so \u2014 its "arming" line is not yet a watch. Only an interactive or SDK main-loop session holds a watch (not a subagent, teammate, background, or print session).${i}`;
 }
-var b = `**Before writing the file \u2014 a skill-instructed \`.md\` included \u2014 you MUST load the \`${pN}\` skill**: it carries the page contract \u2014 author HTML (Markdown only when a loaded skill instructs it), the publish-time skeleton, the title, which libraries a page may load, browser storage, the size cap, responsive layout, theming and the favicon \u2014 and calibrates how much design investment this particular request warrants; Markdown is never a shortcut past it. The one exception to loading it is a workshop document from the \`${QY}\` skill \u2014 both its lanes carry their own design: skip \`${pN}\` there, and load \`${JAe}\` for a template page's diagrams instead. Then write the content to a file (via Write/Edit) and call Artifact with its path. ${yft}`,
-  A = `**Before writing the file**: the page contract below \u2014 author HTML, the publish-time skeleton, the title, which libraries a page may load, browser storage, the size cap, responsive layout, theming and the favicon \u2014 is this tool's own; skills are not available in this session, so read it here. Then write the content to a file (via Write/Edit) and call Artifact with its path. ${yft}`,
+var b = `**Before writing the file \u2014 a skill-instructed \`.md\` included \u2014 you MUST load the \`${pN}\` skill**: it carries the page contract \u2014 author HTML (Markdown only when a loaded skill instructs it), the publish-time skeleton, the title, which libraries a page may load, browser storage, the size cap, responsive layout, theming and the favicon \u2014 and calibrates how much design investment this particular request warrants; Markdown is never a shortcut past it. The one exception to loading it is a workshop document from the \`${QY}\` skill \u2014 both its lanes carry their own design: skip \`${pN}\` there, and load \`${JAe}\` for a template page's diagrams instead. Then write the content to a file (via Write/Edit) and call Artifact with its path. ${FILE_LOCATION_SENTENCE}`,
+  A = `**Before writing the file**: the page contract below \u2014 author HTML, the publish-time skeleton, the title, which libraries a page may load, browser storage, the size cap, responsive layout, theming and the favicon \u2014 is this tool's own; skills are not available in this session, so read it here. Then write the content to a file (via Write/Edit) and call Artifact with its path. ${FILE_LOCATION_SENTENCE}`,
   _ =
     "**Title**: Set a `<title>` at the top of the HTML \u2014 a name, not a summary: a short noun phrase, typically two to four words, distinctive to this page's subject, never a name plus an appended explainer after a dash or colon. The explanation belongs in the one-sentence `description` parameter. Keep the title stable across redeploys.",
   E = [jon, _, Uon, Bon].join(`
@@ -146,7 +146,7 @@ ${[
         "- **open**: `url` \u2014 shows the user that existing artifact where they view artifacts and changes nothing; use it right after another tool created or updated an artifact the user should now see, or when they ask to see one \u2014 never for one you just published (a publish already shows its artifact).",
       ]
     : []),
-  ...(e.pinOn ? [Uln] : []),
+  ...(e.pinOn ? [PIN_CORE_BULLET] : []),
 ].join(`
 `)}`;
 }
@@ -155,28 +155,28 @@ function O(e) {
 }
 function R(e) {
   let t = [
-    e.comments ? `comment threads on a published artifact (\`${Zh}\`)` : "",
+    e.comments ? `comment threads on a published artifact (\`${ARTIFACT_COMMENTS_TOOL_NAME}\`)` : "",
     e.data
-      ? `an artifact's shared database (\`${CP}\` \u2014 skills and type instructions that say \`read_db\` / \`write_db\` mean its actions)`
+      ? `an artifact's shared database (\`${ARTIFACT_DATA_TOOL_NAME}\` \u2014 skills and type instructions that say \`read_db\` / \`write_db\` mean its actions)`
       : "",
-    e.check ? `local preview and viewers' diagnostics (\`${XD}\`)` : "",
+    e.check ? `local preview and viewers' diagnostics (\`${ARTIFACT_CHECK_TOOL_NAME}\`)` : "",
   ].filter(Boolean);
   if (t.length === 0) return "";
-  return `**Separate tools**: ${t.join(", ")} \u2014 ${t.length === 1 ? "a separate tool" : "separate tools"}; load one with ${Bi} when you need it.`;
+  return `**Separate tools**: ${t.join(", ")} \u2014 ${t.length === 1 ? "a separate tool" : "separate tools"}; load one with ${TOOL_SEARCH_TOOL_NAME} when you need it.`;
 }
 function corePrompt(e) {
-  let t = E9(),
+  let t = artifactSchemaGates(),
     a = u(e),
     s = ne().frozenArtifactTypes,
-    i = bm(),
-    r = h && bce() ? (i ? h.LIVE_FILES_PROMPT : "") + h.SYNC_PROMPT : "",
-    l = t.langOn ? zze(s?.typesOn === !0, s?.typeCreateOn === !0) : "",
+    i = artifactLivePathsSchemaOpen(),
+    r = h && artifactLiveEditPromptGateOpen() ? (i ? h.LIVE_FILES_PROMPT : "") + h.SYNC_PROMPT : "",
+    l = t.langOn ? langPromptParagraph(s?.typesOn === !0, s?.typeCreateOn === !0) : "",
     o = e !== void 0 && !d(e),
     n = [
-      n$t,
-      o$t,
+      HEAD_PARAGRAPH,
+      DELIVERABLE_PARAGRAPH,
       ...(t.capabilitiesOn
-        ? [Iut(t.watchRail), ...(SYe() ? [Put()] : [])]
+        ? [Iut(t.watchRail), ...(isRepublishInlinePromptEnabled() ? [Put()] : [])]
         : []),
       `${
         o
@@ -186,18 +186,18 @@ function corePrompt(e) {
 ${E}`
       }
 
-${l}${t.multiFileOn ? Vze : ""}${P(t)}`,
+${l}${t.multiFileOn ? FILES_PROMPT_PARAGRAPH : ""}${P(t)}`,
       Lon,
-      O(Uj()),
+      O(isCoworkHostSession()),
       y(t.commentsOn, t.watchRail, a.comments),
       $on,
     ];
   if (o) n.push(kjn());
   if (r !== "") n.push(r.trim());
   if (t.handlersOn && p) n.push(p.HANDLERS_PROMPT_PARAGRAPH);
-  if (t.roomOn) n.push(respell(Kze, a.comments ? w : g));
-  if (t.typeCreateOn) n.push(UGe(t.typeCatalogOn));
-  if (t.typeCatalogOn) n.push(respell(BGe(t.typeCreateOn), m));
+  if (t.roomOn) n.push(respell(ROOM_PROMPT_PARAGRAPH, a.comments ? w : g));
+  if (t.typeCreateOn) n.push(artifactTypesPromptParagraph(t.typeCatalogOn));
+  if (t.typeCatalogOn) n.push(respell(artifactTypeCatalogPromptParagraph(t.typeCreateOn), m));
   let c = R(a);
   if (c !== "") n.push(c);
   return (

@@ -12,10 +12,10 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { u5t, d5t } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isAxiosError as xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { externalHttp as ra } from "./chunk-yz7dtpc3.js";
+import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { externalHttp } from "./chunk-yz7dtpc3.js";
 import { ZAn } from "./chunk-1945b2ak.js";
-import { randomUUID as d } from "crypto";
+import { randomUUID } from "crypto";
 var c = "https://browser-intake-us5-datadoghq.com/api/v2/logs",
   p = 30000,
   g = 25,
@@ -50,15 +50,15 @@ async function f(e) {
           "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
         DD_SOURCEMAP_GROUP: "darwin",
       }.VERSION,
-      "dd-request-id": d(),
+      "dd-request-id": randomUUID(),
     });
   try {
-    await ra.post(`${c}?${s}`, r, {
+    await externalHttp.post(`${c}?${s}`, r, {
       headers: { "Content-Type": "application/json" },
       timeout: u,
     });
   } catch (t) {
-    if (xd(t) && t.response)
+    if (isAxiosError(t) && t.response)
       n(
         `dd-error-tracking: intake responded ${t.response.status} (batch=${e.length})`,
         { level: "warn" },

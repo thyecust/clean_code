@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ht, getClaudeAIOAuthTokens as Yt, getClaudeAIOAuthTokensAsync as Qi, checkAndRefreshOAuthTokenIfNeeded as Ss } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { ht, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { v6n, R6n, Jee, N4, k6n, x6n } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
 import { fbe, Nsn } from "./chunk-aycc6z76.js";
 import { D6n, L6n, M6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
@@ -33,10 +33,10 @@ function S6n(e) {
     e.consentCacheGeneration++);
 }
 async function c(e) {
-  await Ss({ credentials: e });
+  await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   let t;
-  if (M() && e !== void 0) t = await Qi(e);
-  else t = Yt();
+  if (M() && e !== void 0) t = await getClaudeAIOAuthTokensAsync(e);
+  else t = getClaudeAIOAuthTokens();
   let s =
     t?.refreshToken && t.scopes?.includes("user:design:read")
       ? t.accessToken
@@ -80,12 +80,12 @@ async function b6n(e) {
   return !!(await fbe(e))?.accessToken;
 }
 async function h(e) {
-  if (!In()) return { ok: !1, reason: "wrong_provider" };
+  if (!isFirstPartyProvider()) return { ok: !1, reason: "wrong_provider" };
   if (St()) return { ok: !1, reason: "essential_traffic_only" };
-  await Ss({ credentials: e });
+  await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   let t;
-  if (M() && e !== void 0) t = await Qi(e);
-  else t = Yt();
+  if (M() && e !== void 0) t = await getClaudeAIOAuthTokensAsync(e);
+  else t = getClaudeAIOAuthTokens();
   if (
     t?.accessToken &&
     t.refreshToken &&
@@ -113,7 +113,7 @@ async function NPe(e) {
   return h(e);
 }
 async function gqe(e, t) {
-  if (!In() || St()) return null;
+  if (!isFirstPartyProvider() || St()) return null;
   if (e.consentCache === null) {
     let s = (e.consentFetch ??= _(t)),
       r = e.consentCacheGeneration,
@@ -132,10 +132,10 @@ async function gqe(e, t) {
     : null;
 }
 async function Msn(e) {
-  if (!In() || St()) return !1;
+  if (!isFirstPartyProvider() || St()) return !1;
   let t;
-  if (M() && e !== void 0) t = (await Qi(e))?.accessToken;
-  else t = Yt()?.accessToken;
+  if (M() && e !== void 0) t = (await getClaudeAIOAuthTokensAsync(e))?.accessToken;
+  else t = getClaudeAIOAuthTokens()?.accessToken;
   if (t) return !1;
   return !(await fbe(e))?.accessToken;
 }
@@ -152,9 +152,9 @@ async function Kee(e, t, s) {
         "design consent POST blocked by policy gate",
       );
   } catch (r) {
-    throw (f("design_consent", "post_failed"), r);
+    throw (logFeatureBad("design_consent", "post_failed"), r);
   }
-  (C9(e, t, !0), y("design_consent"));
+  (C9(e, t, !0), logFeatureOk("design_consent"));
 }
 async function w6n(e, t, s) {
   try {
@@ -169,9 +169,9 @@ async function w6n(e, t, s) {
         "design consent DELETE blocked by policy gate",
       );
   } catch (r) {
-    throw (f("design_consent", "delete_failed"), r);
+    throw (logFeatureBad("design_consent", "delete_failed"), r);
   }
-  (C9(e, t, !1), y("design_consent"));
+  (C9(e, t, !1), logFeatureOk("design_consent"));
 }
 async function k(e) {
   try {
@@ -182,7 +182,7 @@ async function k(e) {
     if (!t.ok || t.status !== 200) {
       let o = t.ok ? t.status : 0;
       return (
-        g(
+        logFeatureSad(
           "design_project_grant",
           o === 404 ? "probe_404_old_server" : "probe_http_error",
           { status: o },
@@ -192,7 +192,7 @@ async function k(e) {
     }
     let s = t.data?.grants;
     if (!Array.isArray(s))
-      return (g("design_project_grant", "probe_shape"), null);
+      return (logFeatureSad("design_project_grant", "probe_shape"), null);
     let r = new Set();
     for (let o of s) {
       let a = o?.project_id;
@@ -204,7 +204,7 @@ async function k(e) {
       n(
         `Design project-grant probe failed (${l(t)}); falling back to the per-batch plan flow.`,
       ),
-      g("design_project_grant", "probe_network"),
+      logFeatureSad("design_project_grant", "probe_network"),
       null
     );
   }
@@ -234,18 +234,18 @@ async function T6n(e, t, s) {
       );
     r = o.status;
   } catch (o) {
-    throw (f("design_project_grant", "post_failed"), o);
+    throw (logFeatureBad("design_project_grant", "post_failed"), o);
   }
   if (r === 404)
     throw (
       x6n(e, t),
-      f("design_project_grant", "mint_refused_404"),
+      logFeatureBad("design_project_grant", "mint_refused_404"),
       new R(
         "This project cannot hold a durable write grant for this account (it may be shared from another organization, or not viewable) \u2014 use finalize_plan with writes/deletes and pass the returned plan_token for writes to this project.",
         "design project grant mint refused for this project",
       )
     );
-  (Jee(e, t), y("design_project_grant"));
+  (Jee(e, t), logFeatureOk("design_project_grant"));
 }
 function E6n(e, t, s) {
   let r = null;

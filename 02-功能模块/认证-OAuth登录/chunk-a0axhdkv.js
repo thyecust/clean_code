@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { J1t } from "../Bridge-RemoteControl/chunk-b9tbevd9.js";
 import { E9n } from "../Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
 import { cte } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
-import { createHash as p, sign as m } from "crypto";
+import { createHash, sign as m } from "crypto";
 var S = "anthropic.ccr.client_event.v1",
   w = "claude-code-jcs@1";
 function h(r) {
@@ -57,7 +57,7 @@ function h(r) {
 }
 function E(r, t) {
   let { uuid: i, type: s, ...e } = t,
-    o = p("sha256").update(h(e), "utf8").digest();
+    o = createHash("sha256").update(h(e), "utf8").digest();
   return Buffer.concat([
     Buffer.from(S, "utf8"),
     u,
@@ -129,7 +129,7 @@ async function qhr(r, t) {
   if (i?.status !== "resolved") return;
   let s = await d(i.accountUuid, t);
   if (s.status !== "loaded" || s.rowPk !== r.toLowerCase()) return;
-  return (y("client_event_signer"), g(s.rowPk, s.key));
+  return (logFeatureOk("client_event_signer"), g(s.rowPk, s.key));
 }
 async function d(r, t) {
   try {
@@ -148,14 +148,14 @@ function v(r, t) {
   switch (r.status) {
     case "no_device_key":
     case "load_failed":
-      f("client_event_signer", r.status);
+      logFeatureBad("client_event_signer", r.status);
       return;
     case "loaded":
       if (r.rowPk !== t.toLowerCase()) {
-        f("client_event_signer", "bound_elsewhere");
+        logFeatureBad("client_event_signer", "bound_elsewhere");
         return;
       }
-      return (y("client_event_signer"), g(r.rowPk, r.key));
+      return (logFeatureOk("client_event_signer"), g(r.rowPk, r.key));
   }
 }
 export { Ghr, Y1t, qhr };

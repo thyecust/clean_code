@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { killWorkflowTask as EF } from "./chunk-va9cgbfs.js";
+import { killWorkflowTask } from "./chunk-va9cgbfs.js";
 function s(o) {
   switch (o) {
     case "user":
@@ -21,11 +21,11 @@ function s(o) {
       return "stop";
   }
 }
-var t = {
+var LocalWorkflowTask = {
   name: "LocalWorkflowTask",
   type: "local_workflow",
   async kill(o, e, a, l) {
-    EF(o, e, s(l));
+    killWorkflowTask(o, e, s(l));
   },
 };
-export { t as LocalWorkflowTask };
+export { LocalWorkflowTask };

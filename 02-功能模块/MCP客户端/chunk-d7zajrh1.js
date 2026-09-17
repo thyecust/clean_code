@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { S1, Pp } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getRuntimeMainLoopModel as ip } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { gVn, Sjt, bjt, attributionSkillName as _C, dropShadowedFallbackSkills as tK, isFallbackStub as cNe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { te, formatTokens as Pn, formatTokenEstimate as xx } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getRuntimeMainLoopModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { gVn, Sjt, bjt, attributionSkillName, dropShadowedFallbackSkills, isFallbackStub } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { te, formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { i3e, $Bn } from "../成本-Token统计/chunk-3nwwgatc.js";
 import { Ule } from "../插件系统/chunk-gzfe39h3.js";
 import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
@@ -25,8 +25,8 @@ function xv(n, t) {
 }
 function s3e(n) {
   let t = n.map((o) => ({
-    context: o.listingTokens === null ? "-" : xx(o.listingTokens),
-    week: o.weekTokens === null ? "-" : Pn(o.weekTokens),
+    context: o.listingTokens === null ? "-" : formatTokenEstimate(o.listingTokens),
+    week: o.weekTokens === null ? "-" : formatTokens(o.weekTokens),
     lastUsed:
       o.daysSinceUse === null
         ? "never"
@@ -59,7 +59,7 @@ function uSe(n) {
     mcpClients: n.getMcp().clients,
     agentId: n.agentId,
     mainLoopModel: n.options.mainLoopModel,
-    permissionMode: ce(n).mode,
+    permissionMode: getToolPermissionContext(n).mode,
     storageV5: n.storageV5,
   };
 }
@@ -78,17 +78,17 @@ async function flt(n) {
         throw new hee("skill_set_failed", e);
       },
     ),
-    S = ip({
+    S = getRuntimeMainLoopModel({
       permissionMode: n.permissionMode,
       mainLoopModel: n.mainLoopModel,
     }),
     w = Sjt(k, S, n.mainLoopModel),
     p = await c,
     r = [],
-    l = tK([...n.commands]),
+    l = dropShadowedFallbackSkills([...n.commands]),
     y = new Set(l.map((e) => e.name)),
     M = new Set(
-      n.commands.filter((e) => cNe(e) && !y.has(e.name)).map((e) => e.name),
+      n.commands.filter((e) => isFallbackStub(e) && !y.has(e.name)).map((e) => e.name),
     ),
     m = new Map();
   for (let e of l) {
@@ -130,7 +130,7 @@ async function flt(n) {
       usageCount: f?.usageCount ?? 0,
       daysSinceUse: f?.daysSinceUse ?? null,
       listingTokens: w.get(e.name) ?? null,
-      weekTokens: p.get(_C(e)) ?? (d ? p.get(d) : void 0) ?? null,
+      weekTokens: p.get(attributionSkillName(e)) ?? (d ? p.get(d) : void 0) ?? null,
     });
   }
   r.sort((e, s) => (s.daysSinceUse ?? 1 / 0) - (e.daysSinceUse ?? 1 / 0));

@@ -11,7 +11,7 @@ import { Ie, ku } from "../../lodash/lodash.207999qb.js";
 import { j, ze, ke, Ox } from "../../lodash/lodash.2x3q7cfh.js";
 import { M } from "../../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { dt } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u, fromNumber as Yr } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum, fromNumber } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, z, n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Wf, x, oe, ft, ln, To } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import {
@@ -27,7 +27,7 @@ import {
   Px,
   gz,
   St,
-  logError as h,
+  logError,
 } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, nt, uv } from "../../zod/zod.3g334xwq.js";
@@ -37,14 +37,14 @@ import { i } from "../../../01-核心基础设施/共享小工具-未细化/chun
 import {
   Nve,
   sr,
-  getUserSpecifiedModelSetting as Mf,
-  getMainLoopModel as rt,
-  getDefaultSonnetModel as Nf,
-  planModeConstituentFamily as jme,
-  renderModelName as oi,
-  renderFableModelName as Hm,
-  parseUserSpecifiedModel as wt,
-  getMarketingNameForModel as bu,
+  getUserSpecifiedModelSetting,
+  getMainLoopModel,
+  getDefaultSonnetModel,
+  planModeConstituentFamily,
+  renderModelName,
+  renderFableModelName,
+  parseUserSpecifiedModel,
+  getMarketingNameForModel,
   FT,
   s0,
   qe,
@@ -55,19 +55,19 @@ import {
   ro,
   Wl,
   Ut,
-  isBgSession as _t,
+  isBgSession,
   aZe,
   Hn,
-  isClaudeAISubscriber as gt,
-  getSubscriptionType as qn,
-  getRateLimitTier as UT,
+  isClaudeAISubscriber,
+  getSubscriptionType,
+  getRateLimitTier,
   H,
-  getAutoMemPath as Ns,
-  isAutoMemPath as a1,
+  getAutoMemPath,
+  isAutoMemPath,
 } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Pt } from "../../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, truncateToWidth as Xe, truncateToWidthNoEllipsis as SL, truncate as or, formatSecondsShort as gW, formatDuration as Ot, formatNumber as No, formatTokens as Pn, formatResetTime as Au } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, truncateToWidth, truncateToWidthNoEllipsis, truncate, formatSecondsShort, formatDuration, formatNumber, formatTokens, formatResetTime } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Uw, Ce } from "../../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { oL, xt } from "../../jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Js } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -91,9 +91,9 @@ import { SA, M5 } from "../../../01-核心基础设施/核心工具-字符串与
 import { Skn, wkn } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { Yxn } from "../../../02-功能模块/认证-OAuth登录/chunk-y7b7kf5n.js";
 import { dW } from "../../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
-import { BRIEF_TOOL_NAME as t_ } from "../../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { BRIEF_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { iy, gc, _b, hA, JZe } from "../../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { SEND_USER_FILE_TOOL_NAME as BT } from "../../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import { SEND_USER_FILE_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
 import { rg } from "../../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { Vm } from "../../ink/ink + react-reconciler.5rs3h07b.js";
 import { D } from "../../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
@@ -182,7 +182,7 @@ import {
   zVe,
   rfn,
   tht,
-  WebFetchTool as Em,
+  WebFetchTool,
   t$,
   pKe,
   uht,
@@ -216,9 +216,9 @@ import { aP, eve, zo } from "../../../02-功能模块/MCP客户端/chunk-3kmsshb
 import { eU } from "../../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { so } from "../../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { NN, J$, ar, LT } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
-import { Jc, getPlan as MN } from "../../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { Jc, getPlan } from "../../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { Cr } from "../../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { isViolinWoodEnabledCached as ri } from "../../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabledCached } from "../../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { BE, jE, _D, Wbt, YI, lR, ti, X7e, eJ, Xre } from "../../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { sp, ER, pse, hAt } from "../../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
@@ -227,36 +227,36 @@ import {
   Gbn,
   Ij,
   aoe,
-  IdleNotificationMessageSchema as bG,
-  capFrameFieldForDisplay as x$,
-  capFailureReasonForDisplay as RXe,
-  PLAN_CONTENT_DISPLAY_BOUND as xwt,
-  capFrameBodyForDisplay as OH,
-  IDLE_RESULT_MAX_LENGTH as eP,
-  IDLE_SUMMARY_RECEIVE_BOUND as kC,
-  IDLE_ID_FIELD_RECEIVE_BOUND as sh,
-  capReceivedIdleResult as Hwt,
-  UNKNOWN_SENDER as __,
-  capIdFrameField as rp,
-  capRawFrameTextForDisplay as wG,
-  PlanApprovalRequestMessageSchema as qGt,
-  PlanApprovalResponseMessageSchema as zGt,
-  ShutdownRequestMessageSchema as VGt,
-  ShutdownApprovedMessageSchema as hfe,
-  ShutdownRejectedMessageSchema as ewn,
-  isTaskAssignment as own,
-  TaskCompletedMessageSchema as P1e,
-  TeammateTerminatedMessageSchema as KGt,
-  parseFrameForDisplay as By,
-  withShutdownReplyInstructions as O1e,
+  IdleNotificationMessageSchema,
+  capFrameFieldForDisplay,
+  capFailureReasonForDisplay,
+  PLAN_CONTENT_DISPLAY_BOUND,
+  capFrameBodyForDisplay,
+  IDLE_RESULT_MAX_LENGTH,
+  IDLE_SUMMARY_RECEIVE_BOUND,
+  IDLE_ID_FIELD_RECEIVE_BOUND,
+  capReceivedIdleResult,
+  UNKNOWN_SENDER,
+  capIdFrameField,
+  capRawFrameTextForDisplay,
+  PlanApprovalRequestMessageSchema,
+  PlanApprovalResponseMessageSchema,
+  ShutdownRequestMessageSchema,
+  ShutdownApprovedMessageSchema,
+  ShutdownRejectedMessageSchema,
+  isTaskAssignment,
+  TaskCompletedMessageSchema,
+  TeammateTerminatedMessageSchema,
+  parseFrameForDisplay,
+  withShutdownReplyInstructions,
 } from "../../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
 import { doe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
 import { Bl } from "../第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import { cR } from "../../../02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js";
-import { CRON_CREATE_TOOL_NAME as nm, CRON_DELETE_TOOL_NAME as YS, CRON_LIST_TOOL_NAME as Jre } from "../../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
+import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, CRON_LIST_TOOL_NAME } from "../../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
 import { E$ } from "../../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { zr } from "../../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
-import { CFC_TOOL_PREFIX as BI } from "../../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
+import { CFC_TOOL_PREFIX } from "../../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
 import { tm } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { Se } from "../../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
 import { xe, Mye } from "../../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
@@ -344,7 +344,7 @@ import { Mtt } from "../../../01-核心基础设施/共享小工具-未细化/ch
 import { s, v, c, $e } from "../../zod/zod.5ef0bk11.js";
 import { Qo } from "../../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { xA } from "../../lru-cache/lru-cache.8crev50p.js";
-import { formatFileSize as Ft } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { me } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y, lc } from "../../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { p, en } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -434,7 +434,7 @@ function Zg(dq) {
           qg,
           " tool ",
           qg === 1 ? "use" : "uses",
-          Hg !== null && r(N, { children: [" \xB7 ", No(Hg), " tokens"] }),
+          Hg !== null && r(N, { children: [" \xB7 ", formatNumber(Hg), " tokens"] }),
         ],
       })),
       (Zs[14] = vn),
@@ -753,7 +753,7 @@ function Fd(dH) {
     else fL = Go[12];
     let nh;
     if (Go[13] !== oh)
-      ((nh = oh ? r(t, { dimColor: !0, children: [" using ", oi(oh)] }) : null),
+      ((nh = oh ? r(t, { dimColor: !0, children: [" using ", renderModelName(oh)] }) : null),
         (Go[13] = oh),
         (Go[14] = nh));
     else nh = Go[14];
@@ -951,9 +951,9 @@ function XIt(l) {
   return tN.isEnabled() && (l === void 0 || l.includes("overage"));
 }
 function iu(l) {
-  let f = qn(),
+  let f = getSubscriptionType(),
     g = f === "team" || f === "enterprise";
-  return XIt(l) && !g && !St() && jme(Mf()) === null;
+  return XIt(l) && !g && !St() && planModeConstituentFamily(getUserSpecifiedModelSetting()) === null;
 }
 F();
 var ML = 30000;
@@ -997,7 +997,7 @@ function LB() {
 }
 function yS(l, f) {
   let g = l.phase === "armed" ? l.resetsAtSeconds : 0,
-    T = g * 1000 > f ? Au(g) : void 0;
+    T = g * 1000 > f ? formatResetTime(g) : void 0;
   return T ? `at ${T}` : "shortly";
 }
 function pS(l, f) {
@@ -1020,7 +1020,7 @@ function lu(l, f) {
   if (l.phase !== "armed") return "";
   if (f)
     return "Usage limit reached \xB7 continuing shortly \xB7 esc to cancel";
-  let g = Au(l.resetsAtSeconds);
+  let g = formatResetTime(l.resetsAtSeconds);
   return g
     ? "Usage limit reached \xB7 continuing automatically at " +
         g +
@@ -1273,17 +1273,17 @@ function tp(v2) {
       onRateLimitAutoQueueContinue: Kd,
     } = v2,
     LL;
-  if (ho[0] === p) ((LL = qn()), (ho[0] = LL));
+  if (ho[0] === p) ((LL = getSubscriptionType()), (ho[0] = LL));
   else LL = ho[0];
   let MS = LL,
     OL;
-  if (ho[1] === p) ((OL = UT()), (ho[1] = OL));
+  if (ho[1] === p) ((OL = getRateLimitTier()), (ho[1] = OL));
   else OL = ho[1];
   let D2 = OL,
     vL = MS === "team" || MS === "enterprise",
     IL = MS === "max" && D2 === "default_claude_max_20x",
     DL;
-  if (ho[2] === p) ((DL = Nve() || gt()), (ho[2] = DL));
+  if (ho[2] === p) ((DL = Nve() || isClaudeAISubscriber()), (ho[2] = DL));
   else DL = ho[2];
   let BL = DL,
     Ke = QR(),
@@ -1579,7 +1579,7 @@ function IS(l, f) {
 function kh(z2) {
   let OS = _(10),
     { state: op, upgradePaths: AS } = z2,
-    K2 = Au(op.resetsAtSeconds),
+    K2 = formatResetTime(op.resetsAtSeconds),
     yh = Fn(op);
   const ES = t,
     Y2 = !0,
@@ -1656,7 +1656,7 @@ function bh(l, f, g = !0) {
       k = f - R - te(du),
       S = te(y.name),
       P = S > DS ? Math.max(k, DS) : k;
-    if (P >= 1 && P < S) y = { ...y, name: Xe(y.name, P) };
+    if (P >= 1 && P < S) y = { ...y, name: truncateToWidth(y.name, P) };
   }
   return y;
 }
@@ -1780,7 +1780,7 @@ function _h(l) {
         row: {
           tone: g.length > 0 ? "red" : y || T.length > 0 ? "gold" : "dim",
           text: `Ran ${f} stop ${f === 1 ? "hook" : "hooks"}`,
-          detail: S && k > 0 ? gW(k) : void 0,
+          detail: S && k > 0 ? formatSecondsShort(k) : void 0,
           subLines: P.length > 0 ? P : void 0,
           linkify: !1,
         },
@@ -1795,7 +1795,7 @@ function Sh(l, f) {
     l.messagesSummarized !== void 0 && l.messagesSummarized > 0
       ? `${l.messagesSummarized} ${l.messagesSummarized === 1 ? "message" : "messages"} summarized`
       : l.preTokens > 0
-        ? `${Pn(l.preTokens)} tokens summarized`
+        ? `${formatTokens(l.preTokens)} tokens summarized`
         : null;
   return {
     tone: "dim",
@@ -1841,7 +1841,7 @@ function ei(l) {
   return T.length > 0 ? { ...y, subLines: T } : y;
 }
 function Ch({ status: l, summary: f, durationMs: g, deliveryNote: T }) {
-  let y = [Number.isFinite(g) && g > 0 ? Ot(g) : null, T].filter(
+  let y = [Number.isFinite(g) && g > 0 ? formatDuration(g) : null, T].filter(
       (S) => S !== null,
     ),
     [R = "", ...k] = ga(f);
@@ -2225,7 +2225,7 @@ function Kh(az) {
                 children: [
                   "To continue immediately, use /model to switch to",
                   " ",
-                  oi(Nf()),
+                  renderModelName(getDefaultSonnetModel()),
                   " and continue coding.",
                 ],
               }),
@@ -2365,7 +2365,7 @@ function Yh() {
   let Bh = _(7),
     ZS = qa(),
     jh;
-  if (Bh[0] !== ZS) ((jh = Hm(ZS)), (Bh[0] = ZS), (Bh[1] = jh));
+  if (Bh[0] !== ZS) ((jh = renderFableModelName(ZS)), (Bh[0] = ZS), (Bh[1] = jh));
   else jh = Bh[1];
   let Fh;
   if (Bh[2] !== jh)
@@ -2382,7 +2382,7 @@ function Yh() {
       children: [
         "To continue immediately, use /model to switch to",
         " ",
-        oi(Nf()),
+        renderModelName(getDefaultSonnetModel()),
         " and continue coding.",
       ],
     })),
@@ -2589,7 +2589,7 @@ function ai(Sz) {
 }
 F();
 F();
-import { inspect as dv } from "util";
+import { inspect } from "util";
 var dP = '{"code":"';
 function m$n(l) {
   if (!l.startsWith(dP)) return "";
@@ -2642,14 +2642,14 @@ function lT(l) {
   if (!l || typeof l !== "object") return "";
   let f = Object.values(l).find((g) => typeof g === "string");
   if (typeof f !== "string") return "";
-  return Xe(f.replace(/\s+/g, " "), 40);
+  return truncateToWidth(f.replace(/\s+/g, " "), 40);
 }
 function uT(l) {
   let f = l[0]?.timestamp,
     g = l.at(-1)?.timestamp;
   if (!f || !g) return "";
   let T = Date.parse(g) - Date.parse(f);
-  return Number.isFinite(T) && T >= 0 ? gW(T) : "";
+  return Number.isFinite(T) && T >= 0 ? formatSecondsShort(T) : "";
 }
 function pv(tK) {
   return tK.data.type === "repl_tool_call";
@@ -2856,7 +2856,7 @@ function jT(rK) {
     case "failed": {
       let Yt;
       if (dn[16] !== RT)
-        ((Yt = (RT ? Xe(ft(RT, ":"), 40) : "Failed") || "Failed"),
+        ((Yt = (RT ? truncateToWidth(ft(RT, ":"), 40) : "Failed") || "Failed"),
           (dn[16] = RT),
           (dn[17] = Yt));
       else Yt = dn[17];
@@ -2997,7 +2997,7 @@ function qT(TK) {
 function UP(l) {
   if (typeof l === "string") return l;
   try {
-    return dv(l, { colors: !1, depth: 3, customInspect: !1 });
+    return inspect(l, { colors: !1, depth: 3, customInspect: !1 });
   } catch {
     return "[non-serializable value]";
   }
@@ -3016,7 +3016,7 @@ function HT(_u, kK) {
       if (IT || lv.current.has(_u)) {
         return;
       }
-      (lv.current.add(_u), i("tengu_repl_verbose_render", { state: u(_u) }));
+      (lv.current.add(_u), i("tengu_repl_verbose_render", { state: fromEnum(_u) }));
     }),
       (cv = [IT, _u]),
       (iv[1] = _u),
@@ -3039,7 +3039,7 @@ class Yz extends Aln {
     return { hasError: !0 };
   }
   componentDidCatch(l, f) {
-    h(l);
+    logError(l);
     try {
       this.props.onError?.(l, f);
     } catch {}
@@ -3239,7 +3239,7 @@ function QT(l, f) {
   let g = ice(l),
     y =
       g > Pv
-        ? `${L.warning} Large MCP response (~${No(g)} tokens), this can fill up context quickly`
+        ? `${L.warning} Large MCP response (~${formatNumber(g)} tokens), this can fill up context quickly`
         : null,
     R;
   if (Array.isArray(l)) {
@@ -3337,7 +3337,7 @@ function Uv(l, f) {
 var Ev = 256,
   IP = /^[a-zA-Z0-9_-]{1,128}$/;
 function Zae(l, f) {
-  if (!Pt() || !ri()) return;
+  if (!Pt() || !isViolinWoodEnabledCached()) return;
   let g = Js(l);
   if (!g?.toolName || !IP.test(g.serverName) || !IP.test(g.toolName)) return;
   return Ov.of(f)(l, g.serverName, g.toolName);
@@ -3634,7 +3634,7 @@ function zP(l, f, { theme: g }) {
   });
 }
 function KP({ plan: l }, { theme: f }) {
-  let g = l ?? MN() ?? "No plan found";
+  let g = l ?? getPlan() ?? "No plan found";
   return e(o, { flexDirection: "column", children: e(_a, { plan: g }) });
 }
 function gp(ZV) {
@@ -4128,7 +4128,7 @@ function RI(gn) {
         DX
           ? e(Pg, { filePath: gn.path, children: Ao(gn.path) })
           : e(t, { children: Ao(gn.path) }),
-        r(t, { dimColor: !0, children: [" (", Ft(gn.size), ")"] }),
+        r(t, { dimColor: !0, children: [" (", formatFileSize(gn.size), ")"] }),
       ],
     },
     gn.file_uuid ?? gn.path,
@@ -4483,7 +4483,7 @@ function vI(l) {
   if (f.length > OC)
     g = f.slice(0, OC).join(`
 `);
-  if (te(g) > vC) g = SL(g, vC);
+  if (te(g) > vC) g = truncateToWidthNoEllipsis(g, vC);
   return g.trim();
 }
 function IC(l, f, { verbose: g }) {
@@ -4671,7 +4671,7 @@ function xp(D7) {
   let Aa;
   if (Hu[3] !== hn)
     ((Aa = () => {
-      (i("tengu_slash_link_clicked", { command: u(hn) }),
+      (i("tengu_slash_link_clicked", { command: fromEnum(hn) }),
         zI(hn, { kind: "human" }));
     }),
       (Hu[3] = hn),
@@ -4824,7 +4824,7 @@ function JC(l) {
                   f.humanSchedule,
                   f.recurring ? " (recurring)" : " (one-shot)",
                   f.durable === !1 ? " [session-only]" : "",
-                  f.prompt ? `: ${or(f.prompt, 60, !0)}` : "",
+                  f.prompt ? `: ${truncate(f.prompt, 60, !0)}` : "",
                 ],
               }),
             ],
@@ -4953,7 +4953,7 @@ var _y = {
       renderToolUseProgressMessage: pC,
       renderToolUseErrorMessage: fC,
     },
-    [t_]: { renderToolResultMessage: yC },
+    [BRIEF_TOOL_NAME]: { renderToolResultMessage: yC },
     [Jc]: { renderToolResultMessage: zP, renderToolUseRejectedMessage: KP },
     get [Bt]() {
       let l = import.meta.require("../../../02-功能模块/工具文件读写编辑/renderToolUseErrorMessage.8cb1t7h1.js");
@@ -5045,9 +5045,9 @@ var _y = {
     [GE]: { renderToolResultMessage: jC, renderToolUseRejectedMessage: FC },
     [lR]: { renderToolResultMessage: $C },
     [Xre]: { renderToolResultMessage: WC },
-    [nm]: { renderToolResultMessage: XC },
-    [YS]: { renderToolResultMessage: QC },
-    [Jre]: { renderToolResultMessage: JC },
+    [CRON_CREATE_TOOL_NAME]: { renderToolResultMessage: XC },
+    [CRON_DELETE_TOOL_NAME]: { renderToolResultMessage: QC },
+    [CRON_LIST_TOOL_NAME]: { renderToolResultMessage: JC },
     [E$]: { renderToolResultMessage: VC },
     [fLt]: { renderToolResultMessage: Pu, renderToolUseProgressMessage: XT },
     [Rrn]: {
@@ -5056,7 +5056,7 @@ var _y = {
       renderToolUseTag: HP,
     },
     [ia]: { renderToolResultMessage: HC },
-    [BT]: { renderToolResultMessage: ow },
+    [SEND_USER_FILE_TOOL_NAME]: { renderToolResultMessage: ow },
     [i3]: { renderToolResultMessage: ew },
     [eJ]: { renderToolResultMessage: rw },
     [cR]: { renderToolResultMessage: zC },
@@ -5164,7 +5164,7 @@ var _y = {
   uD = `mcp__${s0}__`;
 function mD(l, f) {
   if (l.builtinRenderFamily === "claude-in-chrome") {
-    let g = l.name.slice(BI.length);
+    let g = l.name.slice(CFC_TOOL_PREFIX.length);
     if (f === "renderToolResultMessage") return WP(g);
     if (f === "renderToolUseTag") return $P;
   }
@@ -5380,7 +5380,7 @@ function qy(S4) {
   if (ht[13] !== Ju || ht[14] !== Ue.name)
     ((ts = () => {
       if (Ju === "no-tools")
-        h(
+        logError(
           dt(
             Error(`Tools array is undefined for tool ${Ue.name}`),
             `Tools array is undefined (mcp=${Ue.name.startsWith("mcp__")})`,
@@ -5389,7 +5389,7 @@ function qy(S4) {
       else if (Ju === "expected-absent")
         n(`Tool ${Ue.name} not found in render-time tools`, { level: "error" });
       else if (Ju === "unknown")
-        h(dt(Error(`Tool ${Ue.name} not found`), "Tool not found"));
+        logError(dt(Error(`Tool ${Ue.name} not found`), "Tool not found"));
     }),
       (Up = [Ue.name, Ju]),
       (ht[13] = Ju),
@@ -5980,7 +5980,7 @@ function pw(l, f, g) {
     return Sye(l, f, g);
   } catch (y) {
     return (
-      h(
+      logError(
         dt(
           Error(`Error rendering tool use message for ${l.name}: ${y}`),
           `Error rendering tool use message (mcp=${l.name.startsWith("mcp__")})`,
@@ -6030,7 +6030,7 @@ function Ap(
     });
   } catch (I) {
     return (
-      h(
+      logError(
         dt(
           Error(
             `Error rendering tool use progress message for ${l.name}: ${I}`,
@@ -6047,7 +6047,7 @@ function gw(l) {
     return hp(l, "renderToolUseQueuedMessage")?.();
   } catch (f) {
     return (
-      h(
+      logError(
         dt(
           Error(`Error rendering tool use queued message for ${l.name}: ${f}`),
           `Error rendering tool use queued message (mcp=${l.name.startsWith("mcp__")})`,
@@ -6185,19 +6185,19 @@ function vp(K4) {
   } else Lp = Rw[3];
   if (Lp !== en) return Lp;
 }
-import { resolve as Qy } from "path";
+import { resolve } from "path";
 import {
-  readdir as AD,
-  readFile as ED,
-  realpath as Pw,
+  readdir,
+  readFile,
+  realpath,
   stat as LD,
-  utimes as OD,
+  utimes,
 } from "fs/promises";
 import {
   basename as vD,
   isAbsolute as ID,
   join as Yy,
-  normalize as Ip,
+  normalize,
   relative as Cw,
   sep as Wa,
 } from "path";
@@ -6276,7 +6276,7 @@ async function WD(l) {
     let T = g.pop(),
       y;
     try {
-      y = await AD(Yy(l, T), { withFileTypes: !0 });
+      y = await readdir(Yy(l, T), { withFileTypes: !0 });
     } catch {
       continue;
     }
@@ -6295,20 +6295,20 @@ async function WD(l) {
 }
 async function qD(l, f, g) {
   if (!l.endsWith(".md")) return null;
-  let T = (S) => a1(S) && !qj(S) && !Xy(f, S);
+  let T = (S) => isAutoMemPath(S) && !qj(S) && !Xy(f, S);
   if (ID(l)) {
-    let S = Ip(l);
+    let S = normalize(l);
     return T(S) ? S : null;
   }
   if (l.includes("/") || l.includes(Wa)) {
-    let S = Ip(Yy(f, l));
+    let S = normalize(Yy(f, l));
     return T(S) ? S : null;
   }
   let y = await g();
   if (y.truncated) return null;
   let R = y.files.filter((S) => vD(S) === l);
   if (R.length !== 1) return null;
-  let k = Ip(Yy(f, R[0]));
+  let k = normalize(Yy(f, R[0]));
   return T(k) ? k : null;
 }
 function Bp(l) {
@@ -6405,7 +6405,7 @@ async function zD(l, f, g, T) {
   return j6(l, async () => {
     let y;
     try {
-      let [S, P, A] = await Promise.all([Pw(f), zfe(), zfe("team")]);
+      let [S, P, A] = await Promise.all([realpath(f), zfe(), zfe("team")]);
       if (S !== f || !GD(f, P, A)) return !1;
       y = Cw(P, f).split(Wa);
     } catch {
@@ -6438,7 +6438,7 @@ async function zD(l, f, g, T) {
     } else {
       let S;
       try {
-        S = await ED(f, "utf8");
+        S = await readFile(f, "utf8");
       } catch {
         return !1;
       }
@@ -6447,7 +6447,7 @@ async function zD(l, f, g, T) {
       await HQ(f, P, "utf8", Mtt(S));
     }
     try {
-      await OD(f, k, R);
+      await utimes(f, k, R);
     } catch {}
     return !0;
   });
@@ -6488,7 +6488,7 @@ function Sw(l, f, g) {
 async function mZt(l, f, g, T) {
   try {
     if (!Number.isInteger(g) || g < 1 || g > 3) return [];
-    let y = Ns(),
+    let y = getAutoMemPath(),
       R = T === void 0 ? void 0 : U$(y),
       k =
         M() && T !== void 0 && R !== void 0 && (await UCe(y))
@@ -6500,7 +6500,7 @@ async function mZt(l, f, g, T) {
     for (let B of f.slice(0, DD)) {
       let K = await qD(B.trim(), y, P);
       if (K === null) continue;
-      let W = await Pw(K).catch(() => null);
+      let W = await realpath(K).catch(() => null);
       if (W !== null && !A.has(W)) A.set(W, K);
     }
     let O = await Promise.allSettled(
@@ -6512,9 +6512,9 @@ async function mZt(l, f, g, T) {
       I = G(O, (B) => B.status === "fulfilled" && B.value === !0);
     return (
       i("tengu_memory_rating_writeback", {
-        cited_count: Yr(f.length),
-        resolved_count: Yr(A.size),
-        written_count: Yr(I),
+        cited_count: fromNumber(f.length),
+        resolved_count: fromNumber(A.size),
+        written_count: fromNumber(I),
       }),
       [...A.values()]
     );
@@ -6523,8 +6523,8 @@ async function mZt(l, f, g, T) {
   }
 }
 function jp(l) {
-  let f = Ip(l);
-  return f.endsWith(".md") && a1(f) && !qj(f) && !Xy(Ns(), f);
+  let f = normalize(l);
+  return f.endsWith(".md") && isAutoMemPath(f) && !qj(f) && !Xy(getAutoMemPath(), f);
 }
 function gZt(l) {
   return (l ?? []).filter((f) => f.rated === void 0);
@@ -6556,7 +6556,7 @@ function VD(l) {
     return l.attachment.memories
       .filter((g) => jp(g.path))
       .map((g) => ({
-        path: Qy(g.path),
+        path: resolve(g.path),
         content: g.content,
         source: "recalled",
       }));
@@ -6566,7 +6566,7 @@ function VD(l) {
     return [];
   return [
     {
-      path: Qy(f.data.file.filePath),
+      path: resolve(f.data.file.filePath),
       content: Jy(f.data.file.content, l.message.content),
       source: "read",
     },
@@ -6594,7 +6594,7 @@ function h$n(l) {
   return l
     .filter((f) => f.type === "AutoMemPinned" && tNe(f) && jp(f.path))
     .map((f) => ({
-      path: Qy(f.path),
+      path: resolve(f.path),
       content: f.rawContent ?? f.content,
       source: "pinned",
     }));
@@ -6650,7 +6650,7 @@ function Ri(v3) {
           : eR
             ? "Remembering"
             : "Remembered";
-      let D3 = Xe(Mm(LVe($p.path, Lw($p, I3, Nw)), !1), Aw - Rm - te(`${QD} `));
+      let D3 = truncateToWidth(Mm(LVe($p.path, Lw($p, I3, Nw)), !1), Aw - Rm - te(`${QD} `));
       return r(
         t,
         {
@@ -6725,10 +6725,10 @@ function Mm(l, f) {
 function TR(G3) {
   let Wp = _(12),
     { request: Ow, senderName: z3, replyInstructions: uR } = G3,
-    K3 = z3 || __,
+    K3 = z3 || UNKNOWN_SENDER,
     oB;
   if (Wp[0] !== Ow.reason)
-    ((oB = OH(Ow.reason, kC)), (Wp[0] = Ow.reason), (Wp[1] = oB));
+    ((oB = capFrameBodyForDisplay(Ow.reason, IDLE_SUMMARY_RECEIVE_BOUND)), (Wp[0] = Ow.reason), (Wp[1] = oB));
   else oB = Wp[1];
   let mR = oB;
   const vw = `Shutdown request from ${K3}`;
@@ -6763,10 +6763,10 @@ function TR(G3) {
 function Fw(Y3) {
   let gR = _(8),
     { response: Iw, senderName: V3 } = Y3,
-    X3 = V3 || __,
+    X3 = V3 || UNKNOWN_SENDER,
     rB;
   if (gR[0] !== Iw.reason)
-    ((rB = OH(Iw.reason, kC)), (gR[0] = Iw.reason), (gR[1] = rB));
+    ((rB = capFrameBodyForDisplay(Iw.reason, IDLE_SUMMARY_RECEIVE_BOUND)), (gR[0] = Iw.reason), (gR[1] = rB));
   else rB = gR[1];
   let Bw = rB;
   const jw = `Shutdown rejected by ${X3}`;
@@ -6803,16 +6803,16 @@ function $w(l, f) {
 
 `),
     T = g === -1 ? l : l.slice(0, g),
-    y = By(VGt(), T);
+    y = parseFrameForDisplay(ShutdownRequestMessageSchema(), T);
   if (y && T === l) return e(TR, { request: y, senderName: f });
-  if (y && wG(T, f) === T && O1e(T, f) === l)
+  if (y && capRawFrameTextForDisplay(T, f) === T && withShutdownReplyInstructions(T, f) === l)
     return e(TR, {
       request: y,
       senderName: f,
       replyInstructions: l.slice(g + 2),
     });
-  if (By(hfe(), l)) return null;
-  let R = By(ewn(), l);
+  if (parseFrameForDisplay(ShutdownApprovedMessageSchema(), l)) return null;
+  let R = parseFrameForDisplay(ShutdownRejectedMessageSchema(), l);
   if (R) return e(Fw, { response: R, senderName: f });
   return null;
 }
@@ -6821,22 +6821,22 @@ function Hw(n6) {
     { assignment: ss, senderName: s6 } = n6,
     iB;
   if (Ha[0] !== ss.taskId)
-    ((iB = rp(ss.taskId, sh)), (Ha[0] = ss.taskId), (Ha[1] = iB));
+    ((iB = capIdFrameField(ss.taskId, IDLE_ID_FIELD_RECEIVE_BOUND)), (Ha[0] = ss.taskId), (Ha[1] = iB));
   else iB = Ha[1];
   let i6 = iB;
-  const Ww = s6 || __;
+  const Ww = s6 || UNKNOWN_SENDER;
   let aB;
-  if (Ha[2] !== Ww) ((aB = rp(Ww, sh)), (Ha[2] = Ww), (Ha[3] = aB));
+  if (Ha[2] !== Ww) ((aB = capIdFrameField(Ww, IDLE_ID_FIELD_RECEIVE_BOUND)), (Ha[2] = Ww), (Ha[3] = aB));
   else aB = Ha[3];
   let a6 = aB,
     lB;
   if (Ha[4] !== ss.subject)
-    ((lB = rp(ss.subject, kC)), (Ha[4] = ss.subject), (Ha[5] = lB));
+    ((lB = capIdFrameField(ss.subject, IDLE_SUMMARY_RECEIVE_BOUND)), (Ha[4] = ss.subject), (Ha[5] = lB));
   else lB = Ha[5];
   let yR = lB,
     uB;
   if (Ha[6] !== ss.description)
-    ((uB = OH(ss.description, eP)), (Ha[6] = ss.description), (Ha[7] = uB));
+    ((uB = capFrameBodyForDisplay(ss.description, IDLE_RESULT_MAX_LENGTH)), (Ha[6] = ss.description), (Ha[7] = uB));
   else uB = Ha[7];
   let RR = uB;
   const qw = `Task #${i6} assigned by ${a6}`;
@@ -6869,22 +6869,22 @@ function Hw(n6) {
   return mB;
 }
 function Gw(l, f) {
-  let g = own(l);
+  let g = isTaskAssignment(l);
   if (g) return e(Hw, { assignment: g, senderName: f });
   return null;
 }
 function Vw(k6) {
   let qp = _(12),
     { request: km, senderName: b6 } = k6,
-    x6 = b6 || __,
+    x6 = b6 || UNKNOWN_SENDER,
     cB;
   if (qp[0] !== km.planFilePath)
-    ((cB = rp(km.planFilePath, sh)), (qp[0] = km.planFilePath), (qp[1] = cB));
+    ((cB = capIdFrameField(km.planFilePath, IDLE_ID_FIELD_RECEIVE_BOUND)), (qp[0] = km.planFilePath), (qp[1] = cB));
   else cB = qp[1];
   let zw = cB,
     dB;
   if (qp[2] !== km.planContent)
-    ((dB = OH(km.planContent, xwt)), (qp[2] = km.planContent), (qp[3] = dB));
+    ((dB = capFrameBodyForDisplay(km.planContent, PLAN_CONTENT_DISPLAY_BOUND)), (qp[2] = km.planContent), (qp[3] = dB));
   else dB = qp[3];
   let Kw = dB;
   const Yw = `Plan Approval Request from ${x6}`;
@@ -6919,10 +6919,10 @@ function Xw(_6) {
     { response: _R, senderName: S6 } = _6,
     fB;
   if (wr[0] !== _R.feedback)
-    ((fB = OH(_R.feedback, eP)), (wr[0] = _R.feedback), (wr[1] = fB));
+    ((fB = capFrameBodyForDisplay(_R.feedback, IDLE_RESULT_MAX_LENGTH)), (wr[0] = _R.feedback), (wr[1] = fB));
   else fB = wr[1];
   let Mi = fB,
-    bm = S6 || __;
+    bm = S6 || UNKNOWN_SENDER;
   if (_R.approved) {
     let Hp;
     if (wr[2] === p)
@@ -7000,23 +7000,23 @@ function Xw(_6) {
   return zp;
 }
 function Qw(l, f) {
-  let g = By(qGt(), l);
+  let g = parseFrameForDisplay(PlanApprovalRequestMessageSchema(), l);
   if (g) return e(Vw, { request: g, senderName: f });
-  let T = By(zGt(), l);
+  let T = parseFrameForDisplay(PlanApprovalResponseMessageSchema(), l);
   if (T) return e(Xw, { response: T, senderName: f });
   return null;
 }
 function Jw(l, f) {
-  let g = By(KGt(), l);
+  let g = parseFrameForDisplay(TeammateTerminatedMessageSchema(), l);
   if (!g) return null;
-  let T = OH(g.message, eP);
+  let T = capFrameBodyForDisplay(g.message, IDLE_RESULT_MAX_LENGTH);
   if (!T.trim()) return null;
   return e(o, {
     flexDirection: "column",
     marginY: 1,
     children: e(_s, {
       color: "subtle",
-      title: `Teammate terminated (from ${f || __})`,
+      title: `Teammate terminated (from ${f || UNKNOWN_SENDER})`,
       children: e(t, { wrap: "wrap", children: T }),
     }),
   });
@@ -7261,7 +7261,7 @@ function Nm(l) {
 function gM(l) {
   return l.filter((f) => {
     if (f.summary?.trim()) return !0;
-    if (By(hfe(), f.content)) return !1;
+    if (parseFrameForDisplay(ShutdownApprovedMessageSchema(), f.content)) return !1;
     return !0;
   });
 }
@@ -7271,7 +7271,7 @@ function b0(l) {
 }
 function M0(l, f) {
   if (f) return l;
-  let g = x$(l);
+  let g = capFrameFieldForDisplay(l);
   return g === l.trim() ? g : `${g}\u2026`;
 }
 function Zp(P9) {
@@ -7316,7 +7316,7 @@ function Zp(P9) {
       if (BR[13] !== Qp || BR[14] !== fr || BR[15] !== Ka)
         ((Xa = (Ur, PB) => {
           let HR = Bb(Ur.color);
-          let Jp = rp(Qp(Ur.teammateId), sh) || __;
+          let Jp = capIdFrameField(Qp(Ur.teammateId), IDLE_ID_FIELD_RECEIVE_BOUND) || UNKNOWN_SENDER;
           let GR = Ur.summary ? M0(Ur.summary, Ka) : "";
           let E9 = GR.trim()
             ? r(o, {
@@ -7337,7 +7337,7 @@ function Zp(P9) {
           if (CB) {
             return { kind: "panel", node: r(N, { children: [E9, CB] }) };
           }
-          let wm = By(bG(), Ur.content);
+          let wm = parseFrameForDisplay(IdleNotificationMessageSchema(), Ur.content);
           if (wm && !Ur.summary) {
             return {
               kind: "panel",
@@ -7357,10 +7357,10 @@ function Zp(P9) {
               ),
             };
           }
-          let zR = By(P1e(), Ur.content);
+          let zR = parseFrameForDisplay(TaskCompletedMessageSchema(), Ur.content);
           if (zR) {
-            let L9 = rp(zR.taskId, sh);
-            let O9 = zR.taskSubject ? rp(zR.taskSubject, kC) : "";
+            let L9 = capIdFrameField(zR.taskId, IDLE_ID_FIELD_RECEIVE_BOUND);
+            let O9 = zR.taskSubject ? capIdFrameField(zR.taskSubject, IDLE_SUMMARY_RECEIVE_BOUND) : "";
             return {
               kind: "panel",
               node: e(
@@ -7380,7 +7380,7 @@ function Zp(P9) {
             kind: "text",
             displayName: Jp,
             inkColor: HR,
-            content: wG(Ur.content, Ur.teammateId),
+            content: capRawFrameTextForDisplay(Ur.content, Ur.teammateId),
             summary: fr ? GR : Ur.summary,
           };
         }),
@@ -7549,7 +7549,7 @@ function el(I9) {
   return IB;
 }
 function k0(l) {
-  let f = x$(l);
+  let f = capFrameFieldForDisplay(l);
   return f === l.trim() ? f : `${f}\u2026`;
 }
 function ol(B9) {
@@ -7573,23 +7573,23 @@ function ol(B9) {
           ? "was interrupted"
           : "finished",
     BB;
-  if (er[0] !== T0) ((BB = RXe(T0)), (er[0] = T0), (er[1] = BB));
+  if (er[0] !== T0) ((BB = capFailureReasonForDisplay(T0)), (er[0] = T0), (er[1] = BB));
   else BB = er[1];
   let oM = BB,
     jB;
   if (er[2] !== Za || er[3] !== eM)
-    ((jB = eM ? Hwt(eM, Za !== "failed") : ""),
+    ((jB = eM ? capReceivedIdleResult(eM, Za !== "failed") : ""),
       (er[2] = Za),
       (er[3] = eM),
       (er[4] = jB));
   else jB = er[4];
   let Ci = jB,
     FB;
-  if (er[5] !== JR) ((FB = JR ? rp(JR, kC) : ""), (er[5] = JR), (er[6] = FB));
+  if (er[5] !== JR) ((FB = JR ? capIdFrameField(JR, IDLE_SUMMARY_RECEIVE_BOUND) : ""), (er[5] = JR), (er[6] = FB));
   else FB = er[6];
   let tM = FB,
     $B;
-  if (er[7] !== ZR) (($B = ZR ? rp(ZR, sh) : ""), (er[7] = ZR), (er[8] = $B));
+  if (er[7] !== ZR) (($B = ZR ? capIdFrameField(ZR, IDLE_ID_FIELD_RECEIVE_BOUND) : ""), (er[7] = ZR), (er[8] = $B));
   else $B = er[8];
   let rM = $B,
     WB;
@@ -7760,7 +7760,7 @@ function Ai(s8) {
       let vm = Number(Om);
       let rl;
       if (Nr[13] !== vm)
-        ((rl = Number.isFinite(vm) && vm > 0 ? ` \xB7 ${Ot(vm)}` : null),
+        ((rl = Number.isFinite(vm) && vm > 0 ? ` \xB7 ${formatDuration(vm)}` : null),
           (Nr[13] = vm),
           (Nr[14] = rl));
       else rl = Nr[14];
@@ -7781,7 +7781,7 @@ function Ai(s8) {
       if (Nr[18] !== MM || Nr[19] !== wi)
         ((Ui = MM ? P0(wi) : ""),
           (sl = MM
-            ? `delivered to Claude as a ${BE} result${Ui ? ` (${No(Ui.length)} chars)` : ""}`
+            ? `delivered to Claude as a ${BE} result${Ui ? ` (${formatNumber(Ui.length)} chars)` : ""}`
             : null),
           (Nr[18] = MM),
           (Nr[19] = wi),
@@ -8157,7 +8157,7 @@ function ZM(aJ) {
     uf = wM(),
     [D0, h1] = d(!1),
     { columns: B0 } = Se(),
-    Er = lf.id !== void 0 && !_t() ? lf.id : void 0,
+    Er = lf.id !== void 0 && !isBgSession() ? lf.id : void 0,
     OM,
     vM,
     IM,
@@ -8533,7 +8533,7 @@ function ck(KJ) {
   else F1 = qm[5];
   let zm = F1;
   if (!pl) {
-    return (h(Error("No content found in user prompt message")), null);
+    return (logError(Error("No content found in user prompt message")), null);
   }
   if (JJ) {
     let cs;
@@ -9012,10 +9012,10 @@ function Jz(jZ) {
   return Re;
 }
 function Tj(lj) {
-  if (x$(lj.summary)) {
+  if (capFrameFieldForDisplay(lj.summary)) {
     return !0;
   }
-  return !By(hfe(), lj.text);
+  return !parseFrameForDisplay(ShutdownApprovedMessageSchema(), lj.text);
 }
 function yj(ic, Oee) {
   return ic.kind === "panel"
@@ -9109,8 +9109,8 @@ function Cf(Pee) {
         if (X[6] !== hl)
           ((uo = (hs, Z1) => {
             let yk = Bb(hs.color);
-            let yf = rp(hs.from, sh) || __;
-            let Rk = x$(hs.summary);
+            let yf = capIdFrameField(hs.from, IDLE_ID_FIELD_RECEIVE_BOUND) || UNKNOWN_SENDER;
+            let Rk = capFrameFieldForDisplay(hs.summary);
             let Cee = Rk
               ? r(o, {
                   children: [
@@ -9130,7 +9130,7 @@ function Cf(Pee) {
             if (ej) {
               return { kind: "panel", node: r(N, { children: [Cee, ej] }) };
             }
-            let Zm = By(bG(), hs.text);
+            let Zm = parseFrameForDisplay(IdleNotificationMessageSchema(), hs.text);
             if (Zm && !hs.summary) {
               return {
                 kind: "panel",
@@ -9150,10 +9150,10 @@ function Cf(Pee) {
                 ),
               };
             }
-            let Mk = By(P1e(), hs.text);
+            let Mk = parseFrameForDisplay(TaskCompletedMessageSchema(), hs.text);
             if (Mk) {
-              let Uee = rp(Mk.taskId, sh);
-              let Nee = Mk.taskSubject ? rp(Mk.taskSubject, kC) : "";
+              let Uee = capIdFrameField(Mk.taskId, IDLE_ID_FIELD_RECEIVE_BOUND);
+              let Nee = Mk.taskSubject ? capIdFrameField(Mk.taskSubject, IDLE_SUMMARY_RECEIVE_BOUND) : "";
               return {
                 kind: "panel",
                 node: e(
@@ -9169,7 +9169,7 @@ function Cf(Pee) {
                 ),
               };
             }
-            let Aee = wG(hs.text, hs.from);
+            let Aee = capRawFrameTextForDisplay(hs.text, hs.from);
             return {
               kind: "text",
               displayName: yf,
@@ -9274,7 +9274,7 @@ function Cf(Pee) {
         ((Z =
           w.content.type === "text"
             ? `${w.content.file.numLines}${w.truncated ? "+" : ""} lines`
-            : Ft(w.content.file.originalSize)),
+            : formatFileSize(w.content.file.originalSize)),
           (X[23] = w.content.file.numLines),
           (X[24] = w.content.file.originalSize),
           (X[25] = w.content.type),
@@ -10077,7 +10077,7 @@ function Cf(Pee) {
           if (w.durationMs !== void 0) {
             let q;
             if (X[235] !== w.durationMs)
-              ((q = Ot(w.durationMs, { mostSignificantOnly: !0 })),
+              ((q = formatDuration(w.durationMs, { mostSignificantOnly: !0 })),
                 (X[235] = w.durationMs),
                 (X[236] = q));
             else q = X[236];
@@ -10096,7 +10096,7 @@ function Cf(Pee) {
           if (w.tokens !== void 0) {
             let q;
             if (X[239] !== w.tokens)
-              ((q = Pn(w.tokens)), (X[239] = w.tokens), (X[240] = q));
+              ((q = formatTokens(w.tokens)), (X[239] = w.tokens), (X[240] = q));
             else q = X[240];
             sc.push(`${q} tokens`);
           }
@@ -10795,7 +10795,7 @@ function Ml(l, f, g) {
   if (l6.of(l).claim(`primitive_tool_result_reported:${g.name}`)) {
     let T = typeof f;
     queueMicrotask(() => {
-      h(
+      logError(
         dt(
           Error(
             `renderToolResultMessage returned a bare ${T} (tool: ${g.name}) \u2014 wrapped in <Text>`,
@@ -10822,7 +10822,7 @@ function zF(DF, xre) {
         e(t, { "aria-hidden": !0, children: "     \u23BF " }),
         DF.command,
         " (",
-        gW(DF.durationMs ?? 0),
+        formatSecondsShort(DF.durationMs ?? 0),
         ")",
       ],
     },
@@ -10871,7 +10871,7 @@ var wN = 700,
   qF = 200;
 function EN(l) {
   let f = l === void 0 ? "" : To(pt(l));
-  return f === "" ? void 0 : Xe(f, qF);
+  return f === "" ? void 0 : truncateToWidth(f, qF);
 }
 function Ob(Wk) {
   let pc = _(28),
@@ -11740,7 +11740,7 @@ function Db(ere) {
                 "PreToolUse ",
                 se.hookCount === 1 ? "hook" : "hooks",
                 " (",
-                gW(se.hookTotalMs ?? 0),
+                formatSecondsShort(se.hookTotalMs ?? 0),
                 ")",
               ],
             }),
@@ -11790,7 +11790,7 @@ function Db(ere) {
     if (Kc !== void 0 && Kc >= 2) {
       const Ge = Kc * 1000;
       let Mo;
-      if (Fe[49] !== Ge) ((Mo = Ot(Ge)), (Fe[49] = Ge), (Fe[50] = Mo));
+      if (Fe[49] !== Ge) ((Mo = formatDuration(Ge)), (Fe[49] = Ge), (Fe[50] = Mo));
       else Mo = Fe[50];
       let xF = Mo;
       Tb =
@@ -11900,7 +11900,7 @@ function Db(ere) {
       } else {
         const Ge = Math.max(1000, El);
         let Mo;
-        if (Fe[86] !== Ge) ((Mo = Ot(Ge)), (Fe[86] = Ge), (Fe[87] = Mo));
+        if (Fe[86] !== Ge) ((Mo = formatDuration(Ge)), (Fe[86] = Ge), (Fe[87] = Mo));
         else Mo = Fe[87];
         let Hr;
         if (Fe[88] !== Mo)
@@ -12189,7 +12189,7 @@ function Db(ere) {
             " ",
             se.hookCount === 1 ? "hook" : "hooks",
             " (",
-            gW(se.hookTotalMs ?? 0),
+            formatSecondsShort(se.hookTotalMs ?? 0),
             ")",
           ],
         }),
@@ -12396,7 +12396,7 @@ function Db(ere) {
           " ",
           se.hookCount === 1 ? "hook" : "hooks",
           " (",
-          gW(se.hookTotalMs),
+          formatSecondsShort(se.hookTotalMs),
           ")",
         ],
       })),
@@ -12444,7 +12444,7 @@ function jb(Cre) {
       : BF;
   const PN = Math.max(1000, Ure);
   let Ab;
-  if (_N[2] !== PN) ((Ab = Ot(PN)), (_N[2] = PN), (_N[3] = Ab));
+  if (_N[2] !== PN) ((Ab = formatDuration(PN)), (_N[2] = PN), (_N[3] = Ab));
   else Ab = _N[3];
   let FF;
   if (_N[4] !== Ab)
@@ -12461,7 +12461,7 @@ function Fb(Are) {
     return null;
   }
   let Lb;
-  if ($F[0] !== Eb) ((Lb = Ot(Eb)), ($F[0] = Eb), ($F[1] = Lb));
+  if ($F[0] !== Eb) ((Lb = formatDuration(Eb)), ($F[0] = Eb), ($F[1] = Lb));
   else Lb = $F[1];
   let WF;
   if ($F[2] !== Lb)
@@ -12875,7 +12875,7 @@ function $8(WN) {
 }
 function ele(l, f) {
   if (!l) return null;
-  let g = bu(l) ?? fw(l),
+  let g = getMarketingNameForModel(l) ?? fw(l),
     T = f === void 0 ? void 0 : typeof f === "number" ? void 0 : eU(f);
   return T !== void 0 ? `${g} (${T})` : g;
 }
@@ -13627,7 +13627,7 @@ function Gx(Ise) {
     Sx = U(Y$),
     _$;
   if (Ls[4] !== Rt.durationMs)
-    ((_$ = Ot(Rt.durationMs)), (Ls[4] = Rt.durationMs), (Ls[5] = _$));
+    ((_$ = formatDuration(Rt.durationMs)), (Ls[4] = Rt.durationMs), (Ls[5] = _$));
   else _$ = Ls[5];
   let lA = _$,
     uA = Rt.budgetLimit !== void 0,
@@ -13645,15 +13645,15 @@ function Gx(Ise) {
         rd >= nd
           ? r(t, {
               children: [
-                No(rd),
+                formatNumber(rd),
                 " used (",
-                No(nd),
+                formatNumber(nd),
                 " min",
                 r(t, { "aria-hidden": !0, children: [" ", L.tick] }),
                 ")",
               ],
             })
-          : `${No(rd)} / ${No(nd)} (${Math.round((rd / nd) * 100)}%)`),
+          : `${formatNumber(rd)} / ${formatNumber(nd)} (${Math.round((rd / nd) * 100)}%)`),
         (Ls[6] = nd),
         (Ls[7] = rd),
         (Ls[8] = Gl));
@@ -14310,7 +14310,7 @@ function dg(Bie) {
   return uW;
 }
 F();
-var mE = new Set([t_]);
+var mE = new Set([BRIEF_TOOL_NAME]);
 function fg(m_, aE, d_) {
   let hW = _(8),
     fW = d_.toolUseByToolUseID.get(m_)?.name,
@@ -15307,7 +15307,7 @@ function IW(l) {
 }
 function Ng(l, f, g) {
   if (!l6.of(l).claim(`unrenderable_block:${IW(f)}`)) return;
-  h(g);
+  logError(g);
 }
 function N_(_le) {
   let Ys = _(56),
@@ -15875,7 +15875,7 @@ function b$n(
       content: K,
       prompt: W,
     } = l,
-    de = `Done (${[O === 1 ? "1 tool use" : `${O} tool uses`, No(I) + " tokens", Ot(A)].join(" \xB7 ")})`,
+    de = `Done (${[O === 1 ? "1 tool use" : `${O} tool uses`, formatNumber(I) + " tokens", formatDuration(A)].join(" \xB7 ")})`,
     Le = Vc({
       content: de,
       usage: {
@@ -15934,7 +15934,7 @@ function rgr(l, f) {
   if (!g || !T) return null;
   if (!f.isTranscriptMode && t$(y, f.activeAgents)) {
     let R = Skn(T) ?? Skn(g);
-    if (R !== void 0) return Em.renderToolUseMessage({ url: R }, f);
+    if (R !== void 0) return WebFetchTool.renderToolUseMessage({ url: R }, f);
   }
   return g.replace(/\s+/g, " ").trim();
 }
@@ -15952,7 +15952,7 @@ function eq(l) {
   let { modelsUsed: g, resolvedModel: T, status: y, model: R } = f.data;
   if (g && g.length > 0) return g;
   if (T) return [T];
-  if (y === "teammate_spawned" && R) return [wt(R)];
+  if (y === "teammate_spawned" && R) return [parseUserSpecifiedModel(R)];
   return [];
 }
 function oq(l) {
@@ -15976,7 +15976,7 @@ function w$n(l, f) {
           marginLeft: 1,
           children: e(t, {
             dimColor: !0,
-            children: T.map(oi).join(" \u2192 "),
+            children: T.map(renderModelName).join(" \u2192 "),
           }),
         },
         "model",
@@ -15985,8 +15985,8 @@ function w$n(l, f) {
   else if (l.model && l.model !== "inherit") {
     let y = T[0];
     if (y) {
-      let R = rt(),
-        k = wt(l.model);
+      let R = getMainLoopModel(),
+        k = parseUserSpecifiedModel(l.model);
       if (y !== R || k !== y)
         g.push(
           e(
@@ -15994,7 +15994,7 @@ function w$n(l, f) {
             {
               flexWrap: "nowrap",
               marginLeft: 1,
-              children: e(t, { dimColor: !0, children: oi(y) }),
+              children: e(t, { dimColor: !0, children: renderModelName(y) }),
             },
             "model",
           ),
@@ -16054,7 +16054,7 @@ function jHe(
           " tool",
           " ",
           ce === 1 ? "use" : "uses",
-          ie && ` \xB7 ${No(ie)} tokens`,
+          ie && ` \xB7 ${formatNumber(ie)} tokens`,
           " \xB7",
           " ",
           e(je, {

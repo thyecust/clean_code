@@ -11,14 +11,14 @@ import { Ie, Le, Fb } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureBad as f, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, Jr, Gw, lNn, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { BG_EXIT_CAUSE_SESSION_IN_USE as znt, setBgExitCause as Fp, readAndClearBgExitCause as eOn, readAndClearBgExitDetail as tOn } from "./chunk-z5vtnzjg.js";
+import { BG_EXIT_CAUSE_SESSION_IN_USE, setBgExitCause, readAndClearBgExitCause, readAndClearBgExitDetail } from "./chunk-z5vtnzjg.js";
 import { To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   $U,
   iL,
@@ -38,32 +38,32 @@ import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Bs, eur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { Wi, Ms, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jke, xhe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { quarantineJobTranscript as Gie, isTranscriptFileResumeArg as XQ, resolveJobTranscript as iz } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { readLinuxProcState as m5t, sigtermThenKill as I5, reapDetachedRepl as Tq, getProcessStartTime as Vse, isSameProcess as wvt, getProcessStartTimeAsync as Ba, captureProcessStartTimeAsync as Xse } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { readLinuxProcState, sigtermThenKill, reapDetachedRepl, getProcessStartTime, isSameProcess, getProcessStartTimeAsync, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { RRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { i9, nSe, g4, Q0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import {
   nyn,
   yj,
-  BG_PROTO as ba,
-  DAEMON_DETACH_APC as y$,
-  wrapDaemonHint as mAe,
-  interactiveMarkApc as d3t,
-  parseInteractiveMarkRv as iyn,
-  daemonDetachApc as Sj,
-  HOST_DIED_DETAIL as xpe,
-  HOST_DIED_EXEC_DETAIL as SNe,
-  rosterEntryExtras as p3t,
-  bgShort as AT,
-  getJobDir as rr,
-  writeStateAtomic as Ti,
-  buildBridgeReattachEnv as oK,
-  readJobState as Zn,
-  IDLE_NEEDS as xf,
-  ABANDONED_WORKER_MS as wNe,
-  terminalOutcome as Hf,
-  isSettled as Hs,
+  BG_PROTO,
+  DAEMON_DETACH_APC,
+  wrapDaemonHint,
+  interactiveMarkApc,
+  parseInteractiveMarkRv,
+  daemonDetachApc,
+  HOST_DIED_DETAIL,
+  HOST_DIED_EXEC_DETAIL,
+  rosterEntryExtras,
+  bgShort,
+  getJobDir,
+  writeStateAtomic,
+  buildBridgeReattachEnv,
+  readJobState,
+  IDLE_NEEDS,
+  ABANDONED_WORKER_MS,
+  terminalOutcome,
+  isSettled,
   Ep,
   al,
 } from "./chunk-7wsy8vxb.js";
@@ -94,28 +94,28 @@ import { vye } from "../../03-入口与运行时/Headless-SDK模式/chunk-9r4nh2
 import { Pit } from "../../01-核心基础设施/共享小工具-未细化/chunk-k76a6y9v.js";
 import { fI, eue } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { sN, Mh } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { Mhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { randomBytes as Re } from "crypto";
-import { unlinkSync as Dt } from "fs";
+import { unlinkSync } from "fs";
 import {
   mkdir as Pt,
   open as Ot,
-  readdir as Lt,
+  readdir,
   unlink as X,
 } from "fs/promises";
-import { connect as be } from "net";
+import { connect } from "net";
 import { join as pe } from "path";
 import { randomBytes as de } from "crypto";
-import { statSync as Ue } from "fs";
+import { statSync } from "fs";
 import {
-  access as ft,
+  access,
   mkdir as et,
   unlink as ce,
-  writeFile as ve,
+  writeFile,
 } from "fs/promises";
-import { basename as gt, dirname as mt } from "path";
+import { basename, dirname } from "path";
 var Pe = 2000,
   ne = Ep,
   st = /\x1b\[\d*D/g;
@@ -131,10 +131,10 @@ function Se(e, t) {
       w = `${k}|${v}|${_}`;
     if (w === o) return;
     ((o = w),
-      Zn(e, t)
+      readJobState(e, t)
         .then((y) =>
           y && !c
-            ? Ti(
+            ? writeStateAtomic(
                 e,
                 {
                   ...y,
@@ -147,7 +147,7 @@ function Se(e, t) {
               )
             : void 0,
         )
-        .catch(h));
+        .catch(logError));
   }
   let m = setInterval(() => {
     if (d > 0 && Date.now() - d < Pe) g("working", "active");
@@ -192,9 +192,9 @@ function Se(e, t) {
     }
   );
 }
-import { rename as nt, unlink as oe } from "fs/promises";
+import { rename, unlink as oe } from "fs/promises";
 import { Socket as ot } from "net";
-import { StringDecoder as at } from "string_decoder";
+import { StringDecoder } from "string_decoder";
 var Oe = [50, 100, 250, 500, 1000, 2000],
   Ne = 30,
   dt = 4,
@@ -212,7 +212,7 @@ function ae(e, t, r) {
     g = Le(),
     m = Le(),
     k,
-    v = new at("utf8"),
+    v = new StringDecoder("utf8"),
     _,
     w = !1,
     y = !1,
@@ -233,7 +233,7 @@ function ae(e, t, r) {
     Te = !1,
     q = s;
   if (q === void 0)
-    Ba(t, { skipCache: !0 }).then((E) => {
+    getProcessStartTimeAsync(t, { skipCache: !0 }).then((E) => {
       q = E;
     });
   let Ce = [],
@@ -284,13 +284,13 @@ function ae(e, t, r) {
       i("tengu_bg_ptyhost_crash", {
         hadBreadcrumb: V.length > 0,
         hadHello: G,
-        via: u(E),
+        via: fromEnum(E),
         short: p,
         ...(Y && { stderr_errno: Y }),
       });
     }),
-      I5(C ? [-t, C] : [-t], E !== "hung" ? void 0 : q),
-      Tq(C, F));
+      sigtermThenKill(C ? [-t, C] : [-t], E !== "hung" ? void 0 : q),
+      reapDetachedRepl(C, F));
     let O = Il().length > 0,
       L = O
         ? (x, V) =>
@@ -318,7 +318,7 @@ function ae(e, t, r) {
         let I = v.write(E.payload);
         if (ue) g.emit(I);
         else if (I.length > 0) {
-          let O = (ee + I).replaceAll(y$, ""),
+          let O = (ee + I).replaceAll(DAEMON_DETACH_APC, ""),
             L = lt(O);
           ee = L > 0 ? O.slice(O.length - L) : "";
           let x = L > 0 ? O.slice(0, O.length - L) : O;
@@ -336,7 +336,7 @@ function ae(e, t, r) {
         C > 1 && P() !== "windows")
       ) {
         let I = C;
-        Xse(I).then((O) => {
+        captureProcessStartTimeAsync(I).then((O) => {
           if (C !== I || y || w || O === void 0) return;
           ((F = O), K?.(C, O));
         });
@@ -390,7 +390,7 @@ function ae(e, t, r) {
         let O = Nh(e),
           L = `${O}.read`;
         if (
-          (nt(O, L)
+          (rename(O, L)
             .then(() => Wi(L, 1048576))
             .then((V) => {
               let Y = (V ?? "").slice(0, 2000).trim();
@@ -425,7 +425,7 @@ ${Y}`,
         Wi(vT(e), 8388608)
           .then((I) => I ?? "")
           .then((I) => {
-            if (!G && I.length > 0) g.emit(I.replaceAll(y$, ""));
+            if (!G && I.length > 0) g.emit(I.replaceAll(DAEMON_DETACH_APC, ""));
             (oe(vT(e)).catch(() => {}), ge("connect"));
           }));
       return;
@@ -445,7 +445,7 @@ ${Y}`,
       n(`[bg-pty] ${e}: ${D} connect attempts failed; treating host as dead`, {
         level: "warn",
       });
-      let I = q && Vse(t);
+      let I = q && getProcessStartTime(t);
       if (t > 1 && (!q || !I || q === I))
         try {
           process.kill(-t, "SIGKILL");
@@ -458,7 +458,7 @@ ${Y}`,
         Wi(vT(e), 8388608)
           .then((O) => O ?? "")
           .then((O) => {
-            if (!G && O.length > 0) g.emit(O.replaceAll(y$, ""));
+            if (!G && O.length > 0) g.emit(O.replaceAll(DAEMON_DETACH_APC, ""));
             oe(vT(e)).catch(() => {});
             let L = Il().length > 0,
               x = (V, Y) => {
@@ -519,7 +519,7 @@ ${Y}`,
           if (U) clearTimeout(U);
           ((U = setTimeout(
             (L, x) => {
-              if (!wvt(L, q)) {
+              if (!isSameProcess(L, q)) {
                 x(-1);
                 return;
               }
@@ -545,15 +545,15 @@ ${Y}`,
             j(-1);
           }
         }
-        if ((Tq(C, F, I), I === "SIGTERM" && !y)) {
+        if ((reapDetachedRepl(C, F, I), I === "SIGTERM" && !y)) {
           if (U) clearTimeout(U);
           ((U = setTimeout(
             (L, x) => {
-              if (!wvt(L, q)) {
+              if (!isSameProcess(L, q)) {
                 x(-1);
                 return;
               }
-              Tq(C, F, "SIGKILL");
+              reapDetachedRepl(C, F, "SIGKILL");
               try {
                 process.kill(-L, "SIGKILL");
               } catch {
@@ -589,8 +589,8 @@ function Me(e) {
     .find((t) => t.length > 0);
 }
 function lt(e) {
-  let t = Math.min(y$.length - 1, e.length);
-  for (let r = t; r > 0; r--) if (e.endsWith(y$.slice(0, r))) return r;
+  let t = Math.min(DAEMON_DETACH_APC.length - 1, e.length);
+  for (let r = t; r > 0; r--) if (e.endsWith(DAEMON_DETACH_APC.slice(0, r))) return r;
   return 0;
 }
 import { Socket as ut } from "net";
@@ -620,7 +620,7 @@ function He(e, t, r, s, p) {
           (d = _),
           _.write(
             b({
-              proto: ba,
+              proto: BG_PROTO,
               role: "supervisor",
               supervisorPid: process.pid,
               auth: p,
@@ -878,7 +878,7 @@ async function Ee(e, t) {
   try {
     return (
       await et(jAe(), { recursive: !0, mode: 448 }),
-      await ve(r, JSON.stringify(t), { mode: 384 }),
+      await writeFile(r, JSON.stringify(t), { mode: 384 }),
       r
     );
   } catch (s) {
@@ -892,7 +892,7 @@ async function Ae(e, t) {
   try {
     return (
       await et(jAe(), { recursive: !0, mode: 448 }),
-      await ve(r, JSON.stringify(t), { mode: 384 }),
+      await writeFile(r, JSON.stringify(t), { mode: 384 }),
       r
     );
   } catch (s) {
@@ -934,7 +934,7 @@ function re(e, t) {
 }
 function ye(e) {
   let t = e.inFlight?.kinds ?? [],
-    r = Hs(e) && t.length > 0 && t.every((p) => tt.includes(p)),
+    r = isSettled(e) && t.length > 0 && t.every((p) => tt.includes(p)),
     s = (e.inFlight?.tasks ?? 0) - (e.inFlight?.drainableMonitors ?? 0);
   return (
     (e.inFlight?.queued ?? 0) > 0 || (s > 0 && !r) || t.includes("session_cron")
@@ -942,7 +942,7 @@ function ye(e) {
 }
 function Ct(e) {
   if (!e) return null;
-  if (Hs(e)) return "settled";
+  if (isSettled(e)) return "settled";
   if (e.tempo === "active") return "active";
   if (ye(e)) return "inflight";
   return null;
@@ -1064,7 +1064,7 @@ class qW {
     let t = this.attachers.get(e);
     if (!t || t.caps?.imark !== !0) return;
     for (let r of this.firedInteractiveMarks)
-      t.deliver(d3t({ ...r, nonce: t.imarkNonce }));
+      t.deliver(interactiveMarkApc({ ...r, nonce: t.imarkNonce }));
   }
   get isVersionStale() {
     return (
@@ -1142,8 +1142,8 @@ class qW {
     if (this.downgradeRefusalLogged || !this.record.cliVersion) return;
     ((this.downgradeRefusalLogged = !0),
       i("tengu_bg_respawn_downgrade_refused", {
-        short: AT(this.dispatch.short),
-        trigger: u(e),
+        short: bgShort(this.dispatch.short),
+        trigger: fromEnum(e),
         worker_cli_version: Ms(this.record.cliVersion),
       }));
   }
@@ -1203,7 +1203,7 @@ class qW {
     )
       return { respawned: !1, reason: "busy" };
     let r = Date.now(),
-      s = await Zn(rr(this.dispatch.short), this.storageV5);
+      s = await readJobState(getJobDir(this.dispatch.short), this.storageV5);
     if (this.isTransitioning) return { respawned: !1, reason: "in-progress" };
     if (this.record.outcome) return { respawned: !1, reason: "no-state" };
     if (this.attachers.size > 0) return { respawned: !1, reason: "attached" };
@@ -1212,15 +1212,15 @@ class qW {
     if (!s) return { respawned: !1, reason: "no-state" };
     if (
       t !== "attach" &&
-      !Hs(s) &&
+      !isSettled(s) &&
       this.adoptedAt &&
       Date.now() - this.adoptedAt < Je
     )
       return { respawned: !1, reason: "busy" };
-    if (Hs(s) && t === "sweep" && !e?.has(this.dispatch.short))
+    if (isSettled(s) && t === "sweep" && !e?.has(this.dispatch.short))
       return { respawned: !1, reason: "settled" };
     if (
-      !Hs(s) &&
+      !isSettled(s) &&
       s.tempo !== "idle" &&
       !(this.isParkedIdleFork(s) && s.inFlight !== void 0)
     )
@@ -1231,9 +1231,9 @@ class qW {
     return (
       this.onState.emit({ pid: this.record.pid }),
       i("tengu_bg_respawn_stale", {
-        short: AT(this.dispatch.short),
+        short: bgShort(this.dispatch.short),
         rvSent: this.shutdownWorker(),
-        trigger: u(t),
+        trigger: fromEnum(t),
         worker_cli_version: Ms(this.record.cliVersion),
       }),
       { respawned: !0 }
@@ -1261,7 +1261,7 @@ class qW {
         e.inFlight?.drainableMonitors !== void 0) &&
       e.state === "working" &&
       e.tempo === "blocked" &&
-      e.needs === xf &&
+      e.needs === IDLE_NEEDS &&
       e.interactiveLineage === !0
     );
   }
@@ -1275,7 +1275,7 @@ class qW {
       return { retired: !1, reason: "recent-adopt" };
     if (this.lastInputAt && Date.now() - this.lastInputAt < e)
       return { retired: !1, reason: "recent-input" };
-    let s = await Zn(rr(this.dispatch.short), this.storageV5);
+    let s = await readJobState(getJobDir(this.dispatch.short), this.storageV5);
     if (this.isTransitioning || this.attachers.size > 0)
       return { retired: !1, reason: "in-progress" };
     if (this.lastInputAt && Date.now() - this.lastInputAt < e)
@@ -1290,7 +1290,7 @@ class qW {
         let T = Date.now() - this.dispatch.createdAt;
         return (
           i("tengu_bg_retired", {
-            short: AT(this.dispatch.short),
+            short: bgShort(this.dispatch.short),
             rvSent: this.shutdownWorker(),
             settledForMs: T,
             state: S("stale-spare"),
@@ -1321,7 +1321,7 @@ class qW {
       return (
         (this.deleteJobDirOnSettle = !0),
         i("tengu_bg_retired", {
-          short: AT(this.dispatch.short),
+          short: bgShort(this.dispatch.short),
           rvSent: this.shutdownWorker(),
           settledForMs: N,
           state: S("empty-idle"),
@@ -1333,7 +1333,7 @@ class qW {
     }
     let p = this.isParkedIdleFork(s),
       d =
-        Hs(s) ||
+        isSettled(s) ||
         (this.dispatch.launch.mode !== "exec" &&
           (s.tempo === "idle" ||
             (s.state === "blocked" && s.tempo === "blocked") ||
@@ -1343,7 +1343,7 @@ class qW {
         s.tempo === "blocked" &&
         s.state !== "blocked" &&
         s.needs !== void 0 &&
-        s.needs !== xf,
+        s.needs !== IDLE_NEEDS,
       g =
         this.isVersionStale &&
         !(
@@ -1390,10 +1390,10 @@ class qW {
         (s.inFlight?.tasks ?? 0) === 0 &&
         (s.inFlight?.queued ?? 0) === 0 &&
         !(s.inFlight?.kinds ?? []).includes("session_cron") &&
-        o < Date.now() - wNe;
+        o < Date.now() - ABANDONED_WORKER_MS;
     if (!d && !g) return { retired: !1, reason: "not-settled" };
     let m = s.inFlight?.kinds ?? [],
-      k = Hs(s) && m.length > 0 && m.every((T) => tt.includes(T)),
+      k = isSettled(s) && m.length > 0 && m.every((T) => tt.includes(T)),
       v =
         s.interactiveLineage === !0 &&
         DZt(
@@ -1426,16 +1426,16 @@ class qW {
     if (!this.transitionTo({ kind: "retiring", reason: "grace" }))
       return { retired: !1, reason: "in-progress" };
     let D = s.inFlight?.tasks !== void 0 && s.inFlight.queued !== void 0,
-      B = !d || !D ? "abandoned-stale" : Hs(s) ? "settled" : "idle-prompt";
+      B = !d || !D ? "abandoned-stale" : isSettled(s) ? "settled" : "idle-prompt";
     return (
       i("tengu_bg_retired", {
-        short: AT(this.dispatch.short),
+        short: bgShort(this.dispatch.short),
         rvSent: this.shutdownWorker(),
         settledForMs: y,
         bridged: !!s.bridgeSessionId,
         detritusOnly: k,
         state: fI(s.state),
-        cause: u(B),
+        cause: fromEnum(B),
         worker_cli_version: Ms(this.record.cliVersion),
       }),
       { retired: !0, cause: B, idleMs: y }
@@ -1448,7 +1448,7 @@ class qW {
   }
   onPtyAuthRequired() {
     let e = this.dispatch.launch.mode;
-    if ((i("tengu_bg_pty_auth_mismatch", { mode: u(e) }), e === "exec")) {
+    if ((i("tengu_bg_pty_auth_mismatch", { mode: fromEnum(e) }), e === "exec")) {
       n(
         `[bg] exec worker ${this.dispatch.short}: ptyHost rejected auth token \u2014 roster ptyAuth poisoned; input is dead until re-dispatch (exec workers are never auto-respawned)`,
         { level: "warn" },
@@ -1473,12 +1473,12 @@ class qW {
       return;
     }
     ((this.authRekeyFired = !0),
-      Zn(rr(this.dispatch.short), this.storageV5).then((t) => {
+      readJobState(getJobDir(this.dispatch.short), this.storageV5).then((t) => {
         let r = Ze(t, e);
         if (r === "settled") {
           ((this.authRekeyFired = !1),
             i("tengu_bg_adopt_token_lost_respawn", {
-              source: u(e),
+              source: fromEnum(e),
               deferred: !1,
               skipped: S("settled"),
             }),
@@ -1490,9 +1490,9 @@ class qW {
         }
         if (r !== null) {
           (i("tengu_bg_adopt_token_lost_respawn", {
-            source: u(e),
+            source: fromEnum(e),
             deferred: !0,
-            reason: u(r),
+            reason: fromEnum(r),
           }),
             n(
               `[bg] worker ${this.dispatch.short}: auth mismatch (${e}) \u2014 ` +
@@ -1505,7 +1505,7 @@ class qW {
             (this.pendingAuthRekey = e));
           return;
         }
-        (i("tengu_bg_adopt_token_lost_respawn", { source: u(e), deferred: !1 }),
+        (i("tengu_bg_adopt_token_lost_respawn", { source: fromEnum(e), deferred: !1 }),
           n(
             `[bg] worker ${this.dispatch.short}: auth mismatch (${e}) \u2014 respawning to re-key (--resume preserves the session)`,
             { level: "warn" },
@@ -1579,10 +1579,10 @@ class qW {
         o
           .buildBridgeReattachEnvFromState()
           .then((c) => o.doSpawn(c, !0))
-          .catch(h),
+          .catch(logError),
         o
       );
-    return (o.doSpawn(e.reattachEnv).catch(h), o);
+    return (o.doSpawn(e.reattachEnv).catch(logError), o);
   }
   static claim(e, t) {
     let r = new qW(
@@ -1625,7 +1625,7 @@ class qW {
       r.wirePty(ae(t.ptySockPath, t.pid, { short: e.short, auth: r.ptyAuth })),
       r.resize(e.cols ?? 200, e.rows ?? 50),
       r.connectRv(),
-      Ba(t.pid, { skipCache: !0 }).then((s) => {
+      getProcessStartTimeAsync(t.pid, { skipCache: !0 }).then((s) => {
         if (r.record.pid !== t.pid || r.isDetached || r.record.outcome) return;
         if (s) r.procStart = s;
         r.patch({ pid: t.pid });
@@ -1641,7 +1641,7 @@ class qW {
     );
   }
   static buildClaimFrame(e, t, r) {
-    let s = rr(e.short),
+    let s = getJobDir(e.short),
       p = Xe(e, s, t, x7e(e.short), r);
     if ((delete p.CLAUDE_BG_PTY_AUTH, e.reattachEnv))
       Object.assign(p, e.reattachEnv);
@@ -1659,8 +1659,8 @@ class qW {
         )
           delete t.dispatch.env[g];
     }
-    if (!Vs(t.pid)) return null;
-    let o = await Ba(t.pid, { skipCache: !0 });
+    if (!isProcessRunning(t.pid)) return null;
+    let o = await getProcessStartTimeAsync(t.pid, { skipCache: !0 });
     if (o && t.procStart !== o) return null;
     let c = new qW(
       t.dispatch,
@@ -1683,7 +1683,7 @@ class qW {
     if (
       ((c.attempt = t.attempt),
       (c.procStart = t.procStart),
-      (c.rosterExtras = p3t(t)),
+      (c.rosterExtras = rosterEntryExtras(t)),
       (c.workerReady = !0),
       (c.adoptedAt = Date.now()),
       (c.rvSockPath = t.rendezvousSock),
@@ -1692,7 +1692,7 @@ class qW {
       (c.ptyAuth = t.ptyAuth),
       c.dispatch.launch.mode === "exec")
     )
-      ((c.execTracker = Se(rr(c.dispatch.short), c.storageV5)),
+      ((c.execTracker = Se(getJobDir(c.dispatch.short), c.storageV5)),
         (c.workerReady = !0));
     if (t.ptySock)
       (c.wirePty(
@@ -1801,7 +1801,7 @@ class qW {
     if (
       ((p.attempt = t.attempt),
       (p.procStart = t.procStart),
-      (p.rosterExtras = p3t(t)),
+      (p.rosterExtras = rosterEntryExtras(t)),
       t.firedInteractiveMarks)
     )
       p.firedInteractiveMarks = t.firedInteractiveMarks.slice(0, 2);
@@ -1830,7 +1830,7 @@ class qW {
         p,
       )),
       p.pidPoll.unref(),
-      i("tengu_bg_adopt_unverified", { short: AT(e) }),
+      i("tengu_bg_adopt_unverified", { short: bgShort(e) }),
       p
     );
   }
@@ -1981,7 +1981,7 @@ class qW {
   }
   async reply(e) {
     ((this.lastInputAt = Date.now()), (this.lastInputAttacher = void 0));
-    let t = await Zn(rr(this.dispatch.short), this.storageV5);
+    let t = await readJobState(getJobDir(this.dispatch.short), this.storageV5);
     if (
       (!t || (t.tempo ?? this.record.tempo) === "blocked") &&
       this.rv?.send({ type: "reply", text: e })
@@ -2076,12 +2076,12 @@ class qW {
       (this.lastSpawnAt = Date.now()),
       (this.lastExitExternalStop = !1));
     let r = this.dispatch,
-      s = rr(r.short);
+      s = getJobDir(r.short);
     await eue(r.short, this.storageV5).catch(() => {});
     let p = Pc();
     if (p) {
       (i("tengu_bg_launcher_worker_refused", { attempt: this.attempt }),
-        f("agent_launcher", "worker_refused"),
+        logFeatureBad("agent_launcher", "worker_refused"),
         this.patch({ state: "crashed", detail: p }));
       let R = this.dimNotice(p);
       return (this.pushRing(R), this.onStream.emit(R), this.settle("crashed"));
@@ -2097,7 +2097,7 @@ class qW {
           : this.socketAuth(),
       );
     try {
-      await NJn(mt(Nh(this.ptySockPath ?? oh(r.short))));
+      await NJn(dirname(Nh(this.ptySockPath ?? oh(r.short))));
     } catch (R) {
       if (this.credentials)
         await Promise.all([
@@ -2135,25 +2135,25 @@ class qW {
       { respawnFlags: _, cwd: w } = r,
       y = !1;
     if (this.attempt > 1) {
-      let R = await Zn(s, this.storageV5);
+      let R = await readJobState(s, this.storageV5);
       ((k = R?.resumeSessionId ?? r.sessionId),
         (_ = R?.respawnFlags ?? r.respawnFlags),
         (w = R?.cwd ?? r.cwd),
         (y = R?.interactiveLineage === !0));
       let C = Mh(sN(this.storageV5)),
-        F = await iz(k, w, R?.linkScanPath, void 0, C);
+        F = await resolveJobTranscript(k, w, R?.linkScanPath, void 0, C);
       if (((g = F.hasMessages), g))
         ((v = F.path), (this.liveTranscriptPath = F.path));
-      let K = c !== void 0 && XQ(c);
+      let K = c !== void 0 && isTranscriptFileResumeArg(c);
       if (
         ((m =
           !g &&
           c !== void 0 &&
-          !(await iz(K ? gt(c, ".jsonl") : c, w, K ? c : void 0, void 0, C))
+          !(await resolveJobTranscript(K ? basename(c, ".jsonl") : c, w, K ? c : void 0, void 0, C))
             .hasMessages),
         !g)
       )
-        await Gie(F.path, C);
+        await quarantineJobTranscript(F.path, C);
     }
     if (
       ((this.effectiveCwd = w),
@@ -2181,7 +2181,7 @@ class qW {
           state: "crashed",
           detail: "Bun.Terminal unavailable (running under Node?)",
         }),
-        i("tengu_bg_pty_unavailable", { short: AT(this.dispatch.short) }),
+        i("tengu_bg_pty_unavailable", { short: bgShort(this.dispatch.short) }),
         this.settle("crashed")
       );
     let D = Ye(r, this.attempt, g, k, v, _);
@@ -2226,7 +2226,7 @@ class qW {
       let C = A(R),
         F = Il()[0];
       if (W(R)) {
-        let K = await ft(w).then(
+        let K = await access(w).then(
           () => !0,
           () => !1,
         );
@@ -2239,10 +2239,10 @@ class qW {
             : "daemon binary was deleted (upgrade in progress) \u2014 run your command again to use the new version";
         if (F)
           (i("tengu_bg_launcher_worker_refused", { attempt: this.attempt }),
-            f("agent_launcher", "worker_launcher_enoent"));
+            logFeatureBad("agent_launcher", "worker_launcher_enoent"));
         else
           i("tengu_bg_spawn_binary_gone", {
-            short: AT(this.dispatch.short),
+            short: bgShort(this.dispatch.short),
             attempt: this.attempt,
           });
         this.patch({ state: "crashed", detail: J });
@@ -2257,7 +2257,7 @@ class qW {
         if (this.record.outcome) return;
         let K = `launcher \`${F}\` could not be executed (${C})`;
         (i("tengu_bg_launcher_worker_refused", { attempt: this.attempt }),
-          f(
+          logFeatureBad(
             "agent_launcher",
             C === "EACCES" ? "worker_launcher_eacces" : "worker_launcher_eperm",
           ),
@@ -2275,7 +2275,7 @@ class qW {
       (this.execTracker?.dispose(),
         (this.execTracker = Se(s, this.storageV5)),
         (this.workerReady = !0));
-    if (P() === "windows") ve(lG(r.short), String(N.pid)).catch(() => {});
+    if (P() === "windows") writeFile(lG(r.short), String(N.pid)).catch(() => {});
     (this.wirePty(N),
       this.rv?.close(),
       (this.rv = void 0),
@@ -2302,12 +2302,12 @@ class qW {
         }.VERSION,
       }),
       i("tengu_bg_worker_spawn", {
-        short: AT(this.dispatch.short),
+        short: bgShort(this.dispatch.short),
         attempt: this.attempt,
-        source: u(this.dispatch.source),
-        launch_mode: u(this.dispatch.launch.mode),
+        source: fromEnum(this.dispatch.source),
+        launch_mode: fromEnum(this.dispatch.launch.mode),
       }),
-      Ba(N.pid, { skipCache: !0 }).then((R) => {
+      getProcessStartTimeAsync(N.pid, { skipCache: !0 }).then((R) => {
         if (
           !R ||
           this.record.pid !== N.pid ||
@@ -2335,7 +2335,7 @@ class qW {
         if (this.decModes.feed(r) && this.record.pid)
           this.onState.emit({ pid: this.record.pid });
         (this.execTracker?.feed(r),
-          this.pushRing(r.includes(y$) ? r.replaceAll(y$, "") : r),
+          this.pushRing(r.includes(DAEMON_DETACH_APC) ? r.replaceAll(DAEMON_DETACH_APC, "") : r),
           this.onStream.emit(r));
       })));
     let t = !1;
@@ -2351,7 +2351,7 @@ class qW {
     });
   }
   dimNotice(e) {
-    return mAe(`\r
+    return wrapDaemonHint(`\r
 \x1B[2m[${e}]\x1B[0m\r
 `);
   }
@@ -2379,7 +2379,7 @@ class qW {
         e.tempo !== "active")
     ) {
       let t = this.pendingAuthRekey;
-      Zn(rr(this.dispatch.short), this.storageV5).then((r) => {
+      readJobState(getJobDir(this.dispatch.short), this.storageV5).then((r) => {
         if (this.pendingAuthRekey !== t) return;
         let s = Ze(r, t);
         if (s === "settled") {
@@ -2420,19 +2420,19 @@ class qW {
           ? `(launch command: \`${m}\` \u2026): ${k}`
           : void 0,
       _ = !!m && e === 0 && !this.workerReady && s !== void 0 && s < bfe,
-      w = e !== 0 ? eOn(rr(this.dispatch.short)) : void 0,
-      y = w ? tOn(rr(this.dispatch.short), w) : void 0,
+      w = e !== 0 ? readAndClearBgExitCause(getJobDir(this.dispatch.short)) : void 0,
+      y = w ? readAndClearBgExitDetail(getJobDir(this.dispatch.short), w) : void 0,
       D = y ? al(To(pt(y)), he) || void 0 : void 0,
       B = !g && D ? `: ${D}` : "",
       T = d && !!w && w === this.lastExitCause;
     this.lastExitCause = d ? w : void 0;
-    let U = !this.workerReady && w === znt,
+    let U = !this.workerReady && w === BG_EXIT_CAUSE_SESSION_IN_USE,
       N = g ? ` \u2014 ${g}` : v ? ` \u2014 ${v}` : w ? ` \u2014 ${w}` : "",
       R = this.effectiveCwd ?? this.dispatch.cwd,
       C = !1;
     if (w === "setcwd")
       try {
-        C = !Ue(R).isDirectory();
+        C = !statSync(R).isDirectory();
       } catch {
         C = !0;
       }
@@ -2459,14 +2459,14 @@ class qW {
       K = "crashed";
     if (
       (i("tengu_bg_worker_exit", {
-        short: AT(this.dispatch.short),
+        short: bgShort(this.dispatch.short),
         code: e ?? void 0,
-        signal: we(t),
+        signal: fromEnumOpt(t),
         attempt: this.attempt,
         procUptimeMs: s,
-        source: u(this.dispatch.source),
-        launch_mode: u(this.dispatch.launch.mode),
-        outcome: we(K),
+        source: fromEnum(this.dispatch.source),
+        launch_mode: fromEnum(this.dispatch.launch.mode),
+        outcome: fromEnumOpt(K),
         exitCause: lNn(w),
         worker_cli_version: Ms(this.record.cliVersion),
         worker_stale: this.isVersionStale,
@@ -2485,14 +2485,14 @@ class qW {
         (this.procStart = void 0),
         this.buildBridgeReattachEnvFromState()
           .then((G) => this.doSpawn(G, !0))
-          .catch(h));
+          .catch(logError));
       return;
     }
     if (_) {
       let G = `the launcher exited before Claude Code started \u2014 \`${m}\` must exec, not daemonize${v ? ` \u2014 ${v}` : ""}`;
       return (
         i("tengu_bg_launcher_fork_and_exit", { attempt: this.attempt }),
-        f("agent_launcher", "worker_fork_and_exit"),
+        logFeatureBad("agent_launcher", "worker_fork_and_exit"),
         this.patch({ state: "crashed", detail: G }),
         this.settle("crashed")
       );
@@ -2519,10 +2519,10 @@ class qW {
     if (U) {
       ((this.sessionIdTakenLatch = !0),
         i("tengu_bg_session_id_taken", {
-          short: AT(this.dispatch.short),
+          short: bgShort(this.dispatch.short),
           attempt: this.attempt,
-          via: u(this.via),
-          launch_mode: u(this.dispatch.launch.mode),
+          via: fromEnum(this.via),
+          launch_mode: fromEnum(this.dispatch.launch.mode),
         }),
         this.patch({ state: "crashed", detail: We }));
       let G = this.dimNotice(We);
@@ -2530,7 +2530,7 @@ class qW {
     }
     if (!this.workerReady && w?.startsWith("spare_postclaim:"))
       try {
-        if (!Ue(this.dispatch.cwd).isDirectory())
+        if (!statSync(this.dispatch.cwd).isDirectory())
           return this.settleCwdGone("spare");
       } catch {
         return this.settleCwdGone("spare");
@@ -2561,7 +2561,7 @@ class qW {
   }
   async doSpawnUnlessSettledOnDisk() {
     let e = $e()
-      ? await Zn(rr(this.dispatch.short), this.storageV5).catch(() => {
+      ? await readJobState(getJobDir(this.dispatch.short), this.storageV5).catch(() => {
           return;
         })
       : void 0;
@@ -2571,12 +2571,12 @@ class qW {
       this.phase.kind === "retired"
     )
       return;
-    if (e && Hs(e) && !e.queuedPrompt) {
+    if (e && isSettled(e) && !e.queuedPrompt) {
       i("tengu_bg_respawn_suppressed", {
-        short: AT(this.dispatch.short),
+        short: bgShort(this.dispatch.short),
         reason: S("settled_on_disk"),
       });
-      let t = Hf(e.state);
+      let t = terminalOutcome(e.state);
       return this.settle(
         t === "success" ? "done" : t === "failure" ? "failed" : "killed",
       );
@@ -2584,7 +2584,7 @@ class qW {
     if (e?.interactiveLineage && this.lastExitExternalStop)
       return (
         i("tengu_bg_respawn_suppressed", {
-          short: AT(this.dispatch.short),
+          short: bgShort(this.dispatch.short),
           reason: S("no_task_contract"),
         }),
         this.patch({
@@ -2598,18 +2598,18 @@ class qW {
   settleCwdGone(e, t = this.dispatch.cwd) {
     let r = YYt(t);
     (i("tengu_bg_spawn_cwd_gone", {
-      short: AT(this.dispatch.short),
+      short: bgShort(this.dispatch.short),
       attempt: this.attempt,
-      via: u(e),
+      via: fromEnum(e),
     }),
       this.patch({ state: "crashed", detail: r }));
     let s = this.dimNotice(`${r} \u2014 this job cannot be respawned`);
     (this.pushRing(s), this.onStream.emit(s), this.settle("crashed"));
   }
   async buildBridgeReattachEnvFromState() {
-    let e = await Zn(rr(this.dispatch.short), this.storageV5).catch(() => null);
+    let e = await readJobState(getJobDir(this.dispatch.short), this.storageV5).catch(() => null);
     if (!e) return;
-    return oK(
+    return buildBridgeReattachEnv(
       e.bridgeSessionId,
       e.bridgeSessionSeq,
       e.bridgeOutboundOnly,
@@ -2625,7 +2625,7 @@ class qW {
     if (this.attempt >= Fe)
       return (
         i("tengu_bg_respawn_exhausted", {
-          short: AT(this.dispatch.short),
+          short: bgShort(this.dispatch.short),
           attempts: this.attempt,
         }),
         this.patch({ state: "crashed", detail: e }),
@@ -2642,15 +2642,15 @@ class qW {
           ((this.backoffTimer = null),
           this.phase.kind !== "retiring" && this.phase.kind !== "retired")
         )
-          this.doSpawnUnlessSettledOnDisk().catch(h);
+          this.doSpawnUnlessSettledOnDisk().catch(logError);
       }, _t)),
       this.backoffTimer.unref());
   }
   settle(e) {
     if (this.record.outcome) return;
     (i("tengu_bg_settle", {
-      short: AT(this.dispatch.short),
-      outcome: u(e),
+      short: bgShort(this.dispatch.short),
+      outcome: fromEnum(e),
       uptimeMs: Date.now() - this.record.startedAt,
       attempt: this.attempt,
       worker_cli_version: Ms(this.record.cliVersion),
@@ -2686,7 +2686,7 @@ class qW {
         else if (e.type === "done") this.settle(e.outcome);
         else if (e.type === "state") this.patch(e.patch);
         else if (e.type === "detach-request") {
-          let t = Sj(e.msg),
+          let t = daemonDetachApc(e.msg),
             r = this.attachers.get(this.lastInputAttacher);
           if (!e.broadcast && r) r.deliver(t);
           else if (this.attachers.size > 0)
@@ -2694,7 +2694,7 @@ class qW {
           else this.onStream.emit(t);
         } else if (e.type === "repaint-done") this.onRepaintDone.emit();
         else if (e.type === "interactive-mark") {
-          let t = iyn(e);
+          let t = parseInteractiveMarkRv(e);
           if (!t) {
             (n(
               `[bg ${this.record.short}] dropped malformed rv interactive-mark frame`,
@@ -2712,7 +2712,7 @@ class qW {
           }
           for (let r of this.attachers.values())
             if (r.caps?.imark === !0)
-              r.deliver(d3t({ ...t, nonce: r.imarkNonce }));
+              r.deliver(interactiveMarkApc({ ...t, nonce: r.imarkNonce }));
         }
       },
       () => void this.checkPid(),
@@ -2736,18 +2736,18 @@ class qW {
   }
   pidRecycled() {
     if (!this.procStart || !this.record.pid) return !1;
-    let e = Vse(this.record.pid);
+    let e = getProcessStartTime(this.record.pid);
     return e !== void 0 && e !== this.procStart;
   }
   async pidRecycledAsync() {
     if (!this.procStart || !this.record.pid) return !1;
-    let e = await Ba(this.record.pid);
+    let e = await getProcessStartTimeAsync(this.record.pid);
     return e !== void 0 && e !== this.procStart;
   }
   async failIfHostExited(e) {
     let t = this.record.pid;
     if (!t || this.record.outcome || this.isKilling || !this.pty) return !1;
-    let r = await m5t(t);
+    let r = await readLinuxProcState(t);
     if (!Mhe(r)) return !1;
     if (
       this.record.outcome ||
@@ -2762,16 +2762,16 @@ class qW {
         { level: "warn" },
       ),
       i("tengu_bg_ptyhost_zombie", {
-        short: AT(this.dispatch.short),
-        via: u(e),
-        state: u(r === "Z" ? "Z" : "X"),
+        short: bgShort(this.dispatch.short),
+        via: fromEnum(e),
+        state: fromEnum(r === "Z" ? "Z" : "X"),
         uptimeMs: Date.now() - this.record.startedAt,
         attachers: this.attachers.size,
       }),
       this.kill(
         "SIGKILL",
         "failed",
-        this.dispatch.launch.mode === "exec" ? SNe : xpe,
+        this.dispatch.launch.mode === "exec" ? HOST_DIED_EXEC_DETAIL : HOST_DIED_DETAIL,
       ),
       !0
     );
@@ -2796,11 +2796,11 @@ class qW {
       }
     let s = this.lastRvHeartbeat;
     if (!r && !this.stalledLogged && s !== void 0 && Date.now() - s > yt) {
-      let p = await Zn(rr(this.dispatch.short), this.storageV5);
+      let p = await readJobState(getJobDir(this.dispatch.short), this.storageV5);
       if (!this.stalledLogged && (p?.tempo ?? this.record.tempo) === "active")
         ((this.stalledLogged = !0),
           i("tengu_bg_worker_stalled", {
-            short: AT(this.dispatch.short),
+            short: bgShort(this.dispatch.short),
             sinceMs: Date.now() - s,
           }));
     }
@@ -2818,7 +2818,7 @@ class qW {
   logVanished(e, t) {
     if (this.isKilling) return;
     i("tengu_bg_worker_vanished", {
-      short: AT(this.dispatch.short),
+      short: bgShort(this.dispatch.short),
       recycled: e,
       fromPoll: t,
       uptimeMs: Date.now() - this.record.startedAt,
@@ -2844,7 +2844,7 @@ async function Gmr(e) {
     s = import("../../03-入口与运行时/CLI入口-Commander/main.vdzfymn2.js"),
     p = () => {
       try {
-        Dt(t);
+        unlinkSync(t);
       } catch {}
     },
     d = () => {
@@ -2854,7 +2854,7 @@ async function Gmr(e) {
       (p(),
         process.stderr.write(`[bg-spare] uncaughtException: ${l(v)}
 `),
-        Fp("spare_uncaught"),
+        setBgExitCause("spare_uncaught"),
         process.exit(1));
     },
     c = process.ppid,
@@ -2881,7 +2881,7 @@ async function Gmr(e) {
     (p(),
       process.stderr.write(`[bg-spare] claim recv failed: ${l(v)}
 `),
-      Fp("spare_claim_recv"),
+      setBgExitCause("spare_claim_recv"),
       process.exit(1));
   }
   m();
@@ -2890,7 +2890,7 @@ async function Gmr(e) {
   } catch (v) {
     let _ = Jr(v) ?? Gw(v) ?? "Error";
     throw (
-      Fp("spare_postclaim:" + _, k.env.CLAUDE_JOB_DIR),
+      setBgExitCause("spare_postclaim:" + _, k.env.CLAUDE_JOB_DIR),
       process.stderr.write(`[bg-spare] post-claim init failed: ${l(v)}
 `),
       v
@@ -2916,7 +2916,7 @@ async function QYt(e) {
   if (!(await YE())) {
     if (!e.launcherNotRunnableEpisode.logged)
       ((e.launcherNotRunnableEpisode.logged = !0),
-        f("agent_launcher", "spare_launcher_not_runnable"),
+        logFeatureBad("agent_launcher", "spare_launcher_not_runnable"),
         n(
           `bg spare: launcher \`${Il()[0]}\` was deleted or is not executable \u2014 not minting a warm spare until it is restored`,
           { level: "warn" },
@@ -2925,7 +2925,7 @@ async function QYt(e) {
   }
   return (
     (e.launcherNotRunnableEpisode.logged = !1),
-    Sr("daemon_bg_spare_refill", async () => {
+    withFeatureTelemetry("daemon_bg_spare_refill", async () => {
       let t = Re(4).toString("hex"),
         r = $Jn(t),
         s = UJn(t),
@@ -3034,8 +3034,8 @@ ${N}`,
               { level: "warn" },
             );
           if (C)
-            (I5([-_.pid]),
-              f("agent_launcher", "spare_fork_or_crash"),
+            (sigtermThenKill([-_.pid]),
+              logFeatureBad("agent_launcher", "spare_fork_or_crash"),
               n(
                 `bg spare: launcher \`${Il()[0]}\` exited ${R}ms after spawn \u2014 it either daemonized instead of calling \`exec\` (launcher contract #1) or crashed at startup. Warm spares are disabled until the background service restarts; sessions still start, without the warm-attach shortcut.`,
                 { level: "warn" },
@@ -3097,7 +3097,7 @@ function ZYt(e, t, r, s, p, d) {
           error: l(c).slice(0, 100),
         }),
           n(`[bg-spare] send-claim failed: ${l(c)}`, { level: "warn" }));
-        let g = be(t.ptySock);
+        let g = connect(t.ptySock);
         (g.on("error", () => {}),
           g.once("connect", () => {
             (g.write(TC({ t: "kill", sig: "SIGTERM" })), g.end());
@@ -3128,7 +3128,7 @@ async function Bt(e, t) {
 }
 function Ht(e, t) {
   return new Promise((r, s) => {
-    let p = be(e);
+    let p = connect(e);
     (p.once("error", s),
       p.once("connect", () => {
         p.end(
@@ -3147,14 +3147,14 @@ async function eJt(e, t) {
     let o = d.rosterEntry().ptySock;
     if (o) r.add(o);
   }
-  let s = await Lt(Aj()).catch(() => []),
+  let s = await readdir(Aj()).catch(() => []),
     p = 0;
   for (let d of s) {
     if (!d.endsWith(".pty.sock")) continue;
     let o = pe(Aj(), d);
     if (r.has(o)) continue;
     p++;
-    let c = be(o);
+    let c = connect(o);
     (c.on("error", () => {
       X(o).catch(() => {});
     }),

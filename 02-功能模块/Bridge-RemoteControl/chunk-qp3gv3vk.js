@@ -9,18 +9,18 @@
 // Version: 2.1.263
 import { mB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Jn, GI, QSt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { g0, UR, VZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { _U } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { _S } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { sme } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { ka, vM, isRemoteToolForwardingEnabled as vX, isSessionChannelDisabled as YF, rj, s$, aY, lY, MV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { ka, vM, isRemoteToolForwardingEnabled, isSessionChannelDisabled, rj, s$, aY, lY, MV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   pE,
   yee,
@@ -468,23 +468,23 @@ function J(t, e, r) {
   if (k(o) === k(s)) return;
   i("tengu_remote_tool_targets", {
     event:
-      t.toolState.get(u9).entries().length === 0 ? S("withdrawn") : u(oe(o, s)),
+      t.toolState.get(u9).entries().length === 0 ? S("withdrawn") : fromEnum(oe(o, s)),
     source: S("session"),
-    trigger: u(r),
+    trigger: fromEnum(r),
     target_count: s.length,
     served_tool_count: s.reduce((d, g) => d + g.servedTools.size, 0),
-    target_kind: we(s[0]?.description?.kind),
-    target_platform: we(te(s[0]?.description?.platform)),
+    target_kind: fromEnumOpt(s[0]?.description?.kind),
+    target_platform: fromEnumOpt(te(s[0]?.description?.platform)),
     incompatible_count: G(s, (d) => d.protocol.kind === "incompatible"),
   });
 }
 async function Ne(t, e, r) {
-  if (!(await vX())) return;
+  if (!(await isRemoteToolForwardingEnabled())) return;
   let o = t.toolState.get(E);
   return (
     (o.inFlight ??= Ue(t, o, e, r)
       .catch((s) => {
-        h(ge(s));
+        logError(ge(s));
       })
       .finally(() => {
         o.inFlight = void 0;
@@ -561,8 +561,8 @@ async function Ue(t, e, r, o) {
       ),
       i("tengu_remote_tool_targets", {
         event: S("list_failed"),
-        trigger: u(o),
-        reason: "error" in f && je(f.error) ? S("timeout") : u(f.kind),
+        trigger: fromEnum(o),
+        reason: "error" in f && je(f.error) ? S("timeout") : fromEnum(f.kind),
       }));
     return;
   }
@@ -576,7 +576,7 @@ async function Ue(t, e, r, o) {
   if (b && (e.provisional === void 0 || e.provisional.stub !== f.value.stub))
     (i("tengu_remote_tool_targets", {
       event: S("listed_empty"),
-      trigger: u(o),
+      trigger: fromEnum(o),
       tool_count: f.value.tools.length,
       truncated: f.value.truncated,
       has_served_name: f.value.tools.some((v) => lY.has(v.name)),
@@ -643,7 +643,7 @@ function I(t) {
 function Hnn(t) {
   let e = $e(t);
   if (e === void 0) return;
-  if (YF()) return e;
+  if (isSessionChannelDisabled()) return e;
   let r = t.toolState.get(u9);
   if (r.hasAnnouncedThisLife())
     return r.entries().length === 0 ? "serves_nothing" : e;
@@ -717,9 +717,9 @@ function Ge(t, e, r) {
     ),
     i("tengu_remote_tool_targets", {
       event: S("no_bridge_connection"),
-      trigger: u(r),
+      trigger: fromEnum(r),
       servers_seen: o.length,
-      reason: u(s[0] ?? "none"),
+      reason: fromEnum(s[0] ?? "none"),
       ingress_base_unset: g0.atStartup === void 0,
     }));
 }
@@ -800,22 +800,22 @@ function Q(
   if (r !== void 0)
     i("tengu_remote_tool_targets", {
       event: S("listing_invalid"),
-      reason: u(r),
-      trigger: u(d),
+      reason: fromEnum(r),
+      trigger: fromEnum(d),
     });
   let _ = f ? oe(g, m) : void 0;
   if (_ !== void 0)
     i("tengu_remote_tool_targets", {
-      event: u(_),
-      trigger: u(d),
+      event: fromEnum(_),
+      trigger: fromEnum(d),
       target_count: m.length,
       served_tool_count: m.reduce((b, y) => b + y.servedTools.size, 0),
       passthrough_tool_count: m.reduce(
         (b, y) => b + (y.passthroughTools?.size ?? 0),
         0,
       ),
-      target_kind: we(m[0]?.description?.kind),
-      target_platform: we(te(m[0]?.description?.platform)),
+      target_kind: fromEnumOpt(m[0]?.description?.kind),
+      target_platform: fromEnumOpt(te(m[0]?.description?.platform)),
       incompatible_count: G(m, (b) => b.protocol.kind === "incompatible"),
       protocol_version:
         m[0]?.protocol.kind === "compatible" ? m[0].protocol.version : void 0,
@@ -823,7 +823,7 @@ function Q(
   if (o > 0 || s > 0)
     i("tengu_remote_tool_targets", {
       event: S("unreadable"),
-      trigger: u(d),
+      trigger: fromEnum(d),
       unreadable_count: o,
       unreadable_marker_count: s,
     });

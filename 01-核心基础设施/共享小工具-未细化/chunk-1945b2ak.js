@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { CLAUDE_AI_INFERENCE_SCOPE as py } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { mg, getAuthTokenSource as Gl, getConfiguredApiKeyHelper as bg, hasStoredOAuthToken as wu, hasOAuthScope as gq, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getAPIProvider as Pe, isFirstPartyAnthropicBaseUrl as fo } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isPolicyAllowed as Mt, areComplianceTaintsSettled as q4t, getResponseFromCache as ch } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { CLAUDE_AI_INFERENCE_SCOPE } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { mg, getAuthTokenSource, getConfiguredApiKeyHelper, hasStoredOAuthToken, hasOAuthScope, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isPolicyAllowed, areComplianceTaintsSettled, getResponseFromCache } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { pe } from "./chunk-2c9tjhwd.js";
 var r = pe(pg(), 1);
@@ -24,18 +24,18 @@ function l() {
   }
 }
 function QAn() {
-  let e = ch();
-  if (!Mt("allow_error_reporting")) {
+  let e = getResponseFromCache();
+  if (!isPolicyAllowed("allow_error_reporting")) {
     if (e === null) return "blocked_cache_miss";
     return e.restrictions.allow_error_reporting?.allowed === !1
       ? "blocked_restriction"
       : "blocked_tainted";
   }
-  let o = q4t();
+  let o = areComplianceTaintsSettled();
   if (e !== null) return o ? "allowed_taints_clean" : "blocked_unsettled";
-  if (wu() && !gq(py)) return "blocked_scopeless_oauth";
-  if (Gl().source === "ANTHROPIC_AUTH_TOKEN") return "blocked_auth_token_env";
-  if (bg()) return "blocked_api_key_helper";
+  if (hasStoredOAuthToken() && !hasOAuthScope(CLAUDE_AI_INFERENCE_SCOPE)) return "blocked_scopeless_oauth";
+  if (getAuthTokenSource().source === "ANTHROPIC_AUTH_TOKEN") return "blocked_auth_token_env";
+  if (getConfiguredApiKeyHelper()) return "blocked_api_key_helper";
   return o ? "allowed_untaintable" : "blocked_unsettled";
 }
 function ZAn() {
@@ -45,7 +45,7 @@ function ZAn() {
 function Vnr() {
   if (process.env.DISABLE_ERROR_REPORTING) return !1;
   if (mg()) return !1;
-  if (Pe() !== "firstParty" || !fo()) return !1;
+  if (getAPIProvider() !== "firstParty" || !isFirstPartyAnthropicBaseUrl()) return !1;
   if (
     !r.gte(
       r.coerce(

@@ -14,24 +14,24 @@ import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js"
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Rh } from "./chunk-5jv5fvbn.js";
 import { KY, g_, zI, VI } from "./chunk-djserjj5.js";
-import { BG_PROTO as ba, rosterKey as bNe, readRoster as IE } from "./chunk-7wsy8vxb.js";
-import { controlRequest as Wp } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import { BG_PROTO, rosterKey, readRoster } from "./chunk-7wsy8vxb.js";
+import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { tF } from "./chunk-jfk5mpe1.js";
 import { kle, Y0e } from "../权限系统/chunk-3kjwvb3e.js";
 import { Vb, s9 } from "../../01-核心基础设施/共享小工具-未细化/chunk-d3d1v4d6.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { readFile as h, stat as f } from "fs/promises";
-async function T(e) {
+import { readFile, stat as f } from "fs/promises";
+async function getBgDaemonStatus(e) {
   let r = await Rh(1, e).catch(() => null),
     t = r?.logPath ?? s9(),
     [n, i, o, a, k, b] = await Promise.all([
-      Wp({ op: "ping", proto: ba }, { timeoutMs: 1000 }).catch((l) => ({
+      controlRequest({ op: "ping", proto: BG_PROTO }, { timeoutMs: 1000 }).catch((l) => ({
         ok: !1,
         code: "ENOCONN",
         error: String(l),
       })),
-      IE({ silent: !0 }, e),
+      readRoster({ silent: !0 }, e),
       S(e),
       v(t, e),
       tF().catch(() => !1),
@@ -49,8 +49,8 @@ async function T(e) {
   if (n.ok) {
     let l = { ok: !1 },
       [c, m] = await Promise.all([
-        Wp({ op: "list", proto: ba }, { timeoutMs: 1000 }).catch(() => l),
-        Wp({ op: "leases", proto: ba }, { timeoutMs: 1000 }).catch(() => l),
+        controlRequest({ op: "list", proto: BG_PROTO }, { timeoutMs: 1000 }).catch(() => l),
+        controlRequest({ op: "leases", proto: BG_PROTO }, { timeoutMs: 1000 }).catch(() => l),
       ]);
     if (c.ok && "jobs" in c) {
       d = G(c.jobs, (s) => !s.outcome);
@@ -102,7 +102,7 @@ async function T(e) {
 }
 async function S(e) {
   if (e) {
-    let r = await e.statMeta(bNe()).catch(() => {
+    let r = await e.statMeta(rosterKey()).catch(() => {
       return;
     });
     return r?.ok ? { mtimeMs: r.value.mtimeMs } : null;
@@ -128,7 +128,7 @@ async function y(e, r) {
     try {
       let o = await f(e);
       if (!o.isFile() || o.size > kle) return 0;
-      t = await h(e, "utf8");
+      t = await readFile(e, "utf8");
     } catch {
       return 0;
     }
@@ -141,7 +141,7 @@ async function y(e, r) {
   }
   return i;
 }
-function W(e) {
+function formatBgDaemonStatus(e) {
   let r = ["", "bg sessions:"];
   if (
     (r.push(`  sock dir:     ${e.sockDir}`),
@@ -187,4 +187,4 @@ function B(e) {
   if (e < 1048576) return `${(e / 1024).toFixed(1)}KB`;
   return `${(e / 1024 / 1024).toFixed(1)}MB`;
 }
-export { W as formatBgDaemonStatus, T as getBgDaemonStatus };
+export { formatBgDaemonStatus, getBgDaemonStatus };

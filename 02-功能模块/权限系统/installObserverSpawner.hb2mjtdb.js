@@ -14,11 +14,11 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { Q5, Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Y6 } from "./chunk-e4pfvp7x.js";
 import { kw, mc, o0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getParentSessionId as aS } from "../Teammates团队/chunk-811z9z0t.js";
-import { getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
+import { getParentSessionId } from "../Teammates团队/chunk-811z9z0t.js";
+import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import {
-  isBuiltInAgent as xa,
-  isPluginAgent as pX,
+  isBuiltInAgent,
+  isPluginAgent,
   nh,
   p3,
   c4n,
@@ -26,21 +26,21 @@ import {
   RV,
   cH,
   zne,
-  runAgent as dw,
+  runAgent,
   EE,
   k3,
   QO,
   Re,
-  writeAgentMetadata as zEe,
-  readAgentMetadata as fC,
+  writeAgentMetadata,
+  readAgentMetadata,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { excludeCoordinatorCommsMcpTools as kj } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import { gNt, pjn } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { og } from "../插件系统/chunk-33bdfgmx.js";
 async function v(e, r, o) {
   if (
-    (await zEe(oo(e), { agentType: r.agentType, isObserver: !0 }, o),
-    (await fC(oo(e), o))?.isObserver !== !0)
+    (await writeAgentMetadata(oo(e), { agentType: r.agentType, isObserver: !0 }, o),
+    (await readAgentMetadata(oo(e), o))?.isObserver !== !0)
   )
     throw Error("observer marker read-back failed");
 }
@@ -57,14 +57,14 @@ var b = {
       d = t.session.withProject({ cwd: Q() });
     await v(s, e, t.storageV5);
     let { taskRegistry: p } = t,
-      m = ce(t),
+      m = getToolPermissionContext(t),
       g = Y6(r.armingPermissionMode, m.mode) ?? m.mode,
       c = { ...m, mode: g },
       w = t.options.tools.filter(nh),
       l = `${e.agentType}@${r.observedEnvelopeName}`,
       i = mc(t.agentContext) + 1,
       A = gNt(
-        EE(e, QO(c, kj(w), { skipReplFilter: !0 }), !0, !1, !1, i)
+        EE(e, QO(c, excludeCoordinatorCommsMcpTools(w), { skipReplFilter: !0 }), !0, !1, !1, i)
           .resolvedTools,
       ),
       u = cH(e.model, t.options.mainLoopModel, void 0, c.mode),
@@ -85,22 +85,22 @@ var b = {
     let T = {
         prompt: o,
         resolvedAgentModel: u,
-        isBuiltInAgent: xa(e),
+        isBuiltInAgent: isBuiltInAgent(e),
         startTime: Date.now(),
         agentType: e.agentType,
         agentDepth: i,
         isAsync: !0,
         source: e.source,
-        pluginId: pX(e) ? og(e.plugin) : void 0,
+        pluginId: isPluginAgent(e) ? og(e.plugin) : void 0,
       },
       k = {
         agentId: s,
         parentAgentId: t.agentId,
         depth: i,
-        parentSessionId: aS(),
+        parentSessionId: getParentSessionId(),
         agentType: "subagent",
         subagentName: e.agentType,
-        isBuiltIn: xa(e),
+        isBuiltIn: isBuiltInAgent(e),
         invocationKind: "spawn",
         invocationEmitted: !1,
         ...o0(t.agentContext),
@@ -111,7 +111,7 @@ var b = {
           taskId: s,
           abortController: y.abortController,
           makeStream: (S, I, M) =>
-            dw({
+            runAgent({
               agentDefinition: e,
               promptMessages: [
                 Re({ content: o }),
@@ -120,7 +120,7 @@ var b = {
               toolUseContext: t,
               canUseTool: f,
               isAsync: !0,
-              querySource: p3(e.agentType, xa(e)),
+              querySource: p3(e.agentType, isBuiltInAgent(e)),
               availableTools: A,
               useExactTools: !0,
               session: d,
@@ -160,11 +160,11 @@ var b = {
     });
   },
 };
-function D(e) {
+function installObserverSpawner(e) {
   try {
     c4n(e, b);
   } catch (r) {
     n(`[agentObserver] spawner registration failed: ${r}`);
   }
 }
-export { D as installObserverSpawner };
+export { installObserverSpawner };

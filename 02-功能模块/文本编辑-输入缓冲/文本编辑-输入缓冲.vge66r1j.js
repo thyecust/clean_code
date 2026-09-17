@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { JETBRAINS_IDES as wW, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { cs, IBe, Wet, vRt, ike, rHn, qar } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
@@ -21,12 +21,12 @@ import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm
 import { Pat, Oat, T9e } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { getMainLoopModel as rt, zg, H6, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel, zg, H6, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { te, dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { gi, bs, nk } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { XB, ZOt, R9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
@@ -47,16 +47,16 @@ import { lK, Z3, pJn, fJn } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js
 import { Xs, Wke, rPn } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 import { P, mur } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { randomBytes as Pe } from "crypto";
+import { randomBytes } from "crypto";
 import {
-  copyFile as Re,
-  mkdir as tt,
-  readFile as Ee,
-  writeFile as je,
+  copyFile,
+  mkdir,
+  readFile,
+  writeFile,
 } from "fs/promises";
 import { homedir as Ge, platform as Le } from "os";
 import { dirname as lr, join as Q } from "path";
-import { pathToFileURL as ur } from "url";
+import { pathToFileURL } from "url";
 import { platform as er } from "os";
 function shouldOfferTerminalSetup() {
   return (
@@ -98,7 +98,7 @@ async function ht(e) {
   let t = Se(),
     r = `${t}.bak`;
   try {
-    let { code: s } = await Fe("defaults", ["export", "com.apple.Terminal", t]);
+    let { code: s } = await execFileNoThrow("defaults", ["export", "com.apple.Terminal", t]);
     if (s !== 0) return null;
     try {
       await mt(t);
@@ -106,14 +106,14 @@ async function ht(e) {
       return null;
     }
     return (
-      await Fe("defaults", ["export", "com.apple.Terminal", r]),
+      await execFileNoThrow("defaults", ["export", "com.apple.Terminal", r]),
       await nr(r, e),
       r
     );
   } catch (s) {
     if (Rt(s))
       return (n(`backupTerminalPreferences: fs inaccessible: ${s}`), null);
-    return (h(s), null);
+    return (logError(s), null);
   }
 }
 async function yOt(e) {
@@ -127,17 +127,17 @@ async function yOt(e) {
   }
   let s = !1;
   try {
-    let { code: o } = await Fe("defaults", ["import", "com.apple.Terminal", r]);
+    let { code: o } = await execFileNoThrow("defaults", ["import", "com.apple.Terminal", r]);
     if (o !== 0) return { status: "failed", backupPath: r };
     return (
       (s = !0),
-      await Fe("killall", ["cfprefsd"]),
+      await execFileNoThrow("killall", ["cfprefsd"]),
       await $e(e),
       { status: "restored" }
     );
   } catch (o) {
     if (Rt(o)) n(`checkAndRestoreTerminalBackup: fs inaccessible: ${o}`);
-    else h(o);
+    else logError(o);
     return (
       await $e(e),
       s ? { status: "restored" } : { status: "failed", backupPath: r }
@@ -145,7 +145,7 @@ async function yOt(e) {
   }
 }
 import { homedir as sr } from "os";
-import { dirname as Qr, join as ge, resolve as en } from "path";
+import { dirname as Qr, join as ge, resolve } from "path";
 function or() {
   let e = a.SHELL || "",
     t = sr(),
@@ -188,7 +188,7 @@ async function Cen() {
 }
 function ar(e) {
   let { cmd: t, prefixArgs: r } = rd();
-  return Fe(t, [...r, "completion", e.shellFlag, "--output", e.cacheFile]);
+  return execFileNoThrow(t, [...r, "completion", e.shellFlag, "--output", e.cacheFile]);
 }
 var p = `
 `,
@@ -220,7 +220,7 @@ function getNativeCSIuTerminalDisplayName() {
 }
 function ne(e) {
   if (!Tf()) return e;
-  return `\x1B]8;;${ur(e).href}\x07${e}\x1B]8;;\x07`;
+  return `\x1B]8;;${pathToFileURL(e).href}\x07${e}\x1B]8;;\x07`;
 }
 function Be() {
   return "";
@@ -277,14 +277,14 @@ var wt =
 async function enableITerm2ClipboardAccess(e) {
   let t = ie.dim(wt);
   try {
-    let { stdout: r, code: s } = await Fe("defaults", [
+    let { stdout: r, code: s } = await execFileNoThrow("defaults", [
       "read",
       "com.googlecode.iterm2",
       "AllowClipboardAccess",
     ]);
     if (s === 0 && r.trim() === "1")
       return `${ut("success", e)("iTerm2 clipboard access already enabled")}${p}${p}`;
-    let { code: o } = await Fe("defaults", [
+    let { code: o } = await execFileNoThrow("defaults", [
       "write",
       "com.googlecode.iterm2",
       "AllowClipboardAccess",
@@ -296,7 +296,7 @@ async function enableITerm2ClipboardAccess(e) {
     return `${ut("success", e)('Enabled "Applications in terminal may access clipboard" in iTerm2')}${p}${ie.dim("Restart iTerm2 for this to take effect. Undo: defaults write com.googlecode.iterm2 AllowClipboardAccess -bool false")}${p}${p}`;
   } catch (r) {
     return (
-      h(r),
+      logError(r),
       `${ut("warning", e)("Couldn't update iTerm2 clipboard setting.")}${p}${t}${p}${p}`
     );
   }
@@ -374,7 +374,7 @@ async function readVSCodeScrollSensitivity(e) {
   let t = cr();
   if (!t || Ke()) return null;
   try {
-    let r = await Ee(Q(await vscodeUserDirectories.of(e).pathFor(t), "settings.json"), {
+    let r = await readFile(Q(await vscodeUserDirectories.of(e).pathFor(t), "settings.json"), {
         encoding: "utf-8",
       }),
       s = ike(r),
@@ -385,7 +385,7 @@ async function readVSCodeScrollSensitivity(e) {
       recommended: Oe,
     };
   } catch (r) {
-    if (!Rt(r)) h(r);
+    if (!Rt(r)) logError(r);
     return { editor: t, sensitivity: null, recommended: Oe };
   }
 }
@@ -434,7 +434,7 @@ async function Ze(e, t, r) {
     let l = "{}",
       m = !1;
     try {
-      ((l = await Ee(o, { encoding: "utf-8" })), (m = !0));
+      ((l = await readFile(o, { encoding: "utf-8" })), (m = !0));
     } catch (T) {
       if (!Rt(T)) throw T;
     }
@@ -447,15 +447,15 @@ async function Ze(e, t, r) {
     if (x === l)
       return `${ut("warning", r)(`Couldn't update ${t} settings.json.`)}${p}${s}${p}`;
     if (m) {
-      let T = `${o}.${Pe(4).toString("hex")}.bak`;
+      let T = `${o}.${randomBytes(4).toString("hex")}.bak`;
       try {
-        await Re(o, T);
+        await copyFile(o, T);
       } catch {
         return `${ut("warning", r)(`Couldn't back up ${t} settings.json; not modifying it.`)}${p}${s}${p}`;
       }
     }
     return (
-      await je(o, x, { encoding: "utf-8" }),
+      await writeFile(o, x, { encoding: "utf-8" }),
       `${ut("success", r)(`Set ${t} terminal scroll sensitivity to ${Oe}`)}${p}${ie.dim(`See ${ne(o)}`)}${p}`
     );
   } catch (l) {
@@ -472,52 +472,52 @@ async function installVSCodeGpuAccelerationOff(e, t, r) {
   let s = ie.dim(
     `To fix garbled text, set "${He}": "${Je}" in ${t} settings (undo: set it back to "auto").`,
   );
-  if (Ke()) return (g("terminal_setup_gpu_accel", "remote_ssh"), `${s}${p}`);
+  if (Ke()) return (logFeatureSad("terminal_setup_gpu_accel", "remote_ssh"), `${s}${p}`);
   let o = Q(await vscodeUserDirectories.of(e).pathFor(t), "settings.json");
   try {
     let l = "{}",
       m = !1;
     try {
-      ((l = await Ee(o, { encoding: "utf-8" })), (m = !0));
+      ((l = await readFile(o, { encoding: "utf-8" })), (m = !0));
     } catch (T) {
       if (!Rt(T)) throw T;
     }
     let c = ike(l);
     if (!me(c))
       return (
-        g("terminal_setup_gpu_accel", "not_json_object"),
+        logFeatureSad("terminal_setup_gpu_accel", "not_json_object"),
         `${ut("warning", r)(`${t} settings.json isn't a JSON object; not modifying it.`)}${p}${s}${p}`
       );
     if (c[He] === Je)
       return (
-        y("terminal_setup_gpu_accel"),
+        logFeatureOk("terminal_setup_gpu_accel"),
         `${ut("success", r)(`${t} GPU acceleration already off; leaving as-is`)}${p}${ie.dim(`See ${ne(o)}`)}${p}`
       );
     let x = rHn(l, He, Je);
     if (x === l)
       return (
-        g("terminal_setup_gpu_accel", "write_failed"),
+        logFeatureSad("terminal_setup_gpu_accel", "write_failed"),
         `${ut("warning", r)(`Couldn't update ${t} settings.json.`)}${p}${s}${p}`
       );
     if (m) {
-      let T = `${o}.${Pe(4).toString("hex")}.bak`;
+      let T = `${o}.${randomBytes(4).toString("hex")}.bak`;
       try {
-        await Re(o, T);
+        await copyFile(o, T);
       } catch {
         return (
-          g("terminal_setup_gpu_accel", "backup_failed"),
+          logFeatureSad("terminal_setup_gpu_accel", "backup_failed"),
           `${ut("warning", r)(`Couldn't back up ${t} settings.json; not modifying it.`)}${p}${s}${p}`
         );
       }
     }
     return (
-      await je(o, x, { encoding: "utf-8" }),
-      y("terminal_setup_gpu_accel"),
+      await writeFile(o, x, { encoding: "utf-8" }),
+      logFeatureOk("terminal_setup_gpu_accel"),
       `${ut("success", r)(`Turned off ${t} GPU acceleration to fix garbled text`)}${p}${ie.dim(`Reload the ${t} window to apply. Undo: set "${He}" back to "auto".`)}${p}${ie.dim(`See ${ne(o)}`)}${p}`
     );
   } catch (l) {
     return (
-      g("terminal_setup_gpu_accel", "write_failed"),
+      logFeatureSad("terminal_setup_gpu_accel", "write_failed"),
       n(
         `Couldn't update ${t} settings.json at ${o}: ${l instanceof Error ? l.message : String(l)}`,
         { level: "error" },
@@ -539,20 +539,20 @@ async function Qe(e, t = "VSCode", r) {
   let s = await vscodeUserDirectories.of(e).pathFor(t),
     o = Q(s, "keybindings.json");
   try {
-    await tt(s, { recursive: !0 });
+    await mkdir(s, { recursive: !0 });
     let l = "[]",
       m = [],
       c = !1;
     try {
-      ((l = await Ee(o, { encoding: "utf-8" })), (c = !0), (m = ike(l) ?? []));
+      ((l = await readFile(o, { encoding: "utf-8" })), (c = !0), (m = ike(l) ?? []));
     } catch (L) {
       if (!Rt(L)) throw L;
     }
     if (c) {
-      let L = Pe(4).toString("hex"),
+      let L = randomBytes(4).toString("hex"),
         I = `${o}.${L}.bak`;
       try {
-        await Re(o, I);
+        await copyFile(o, I);
       } catch {
         return `${ut("warning", r)(`Error backing up existing ${t} terminal keybindings. Bailing out.`)}${p}${ie.dim(`See ${ne(o)}`)}${p}${ie.dim(`Backup path: ${ne(I)}`)}${p}`;
       }
@@ -574,7 +574,7 @@ async function Qe(e, t = "VSCode", r) {
     }
     let R = qar(l, x);
     return (
-      await je(o, R, { encoding: "utf-8" }),
+      await writeFile(o, R, { encoding: "utf-8" }),
       `${ut("success", r)(`Installed ${t} terminal Shift+Enter key binding`)}${p}${ie.dim(`See ${ne(o)}`)}${p}`
     );
   } catch (l) {
@@ -588,13 +588,13 @@ async function Qe(e, t = "VSCode", r) {
   }
 }
 async function pt(e) {
-  let { code: t } = await Fe("/usr/libexec/PlistBuddy", [
+  let { code: t } = await execFileNoThrow("/usr/libexec/PlistBuddy", [
     "-c",
     `Add :'Window Settings':'${e}':useOptionAsMetaKey bool true`,
     Se(),
   ]);
   if (t !== 0) {
-    let { code: r } = await Fe("/usr/libexec/PlistBuddy", [
+    let { code: r } = await execFileNoThrow("/usr/libexec/PlistBuddy", [
       "-c",
       `Set :'Window Settings':'${e}':useOptionAsMetaKey true`,
       Se(),
@@ -611,13 +611,13 @@ async function pt(e) {
   return !0;
 }
 async function gt(e) {
-  let { code: t } = await Fe("/usr/libexec/PlistBuddy", [
+  let { code: t } = await execFileNoThrow("/usr/libexec/PlistBuddy", [
     "-c",
     `Add :'Window Settings':'${e}':Bell bool false`,
     Se(),
   ]);
   if (t !== 0) {
-    let { code: r } = await Fe("/usr/libexec/PlistBuddy", [
+    let { code: r } = await execFileNoThrow("/usr/libexec/PlistBuddy", [
       "-c",
       `Set :'Window Settings':'${e}':Bell false`,
       Se(),
@@ -642,14 +642,14 @@ async function dr(e, t) {
       throw Error(
         "Failed to create backup of Terminal.app preferences, bailing out",
       );
-    let { stdout: l, code: m } = await Fe("defaults", [
+    let { stdout: l, code: m } = await execFileNoThrow("defaults", [
       "read",
       "com.apple.Terminal",
       "Default Window Settings",
     ]);
     if (m !== 0 || !l.trim())
       throw Error("Failed to read default Terminal.app profile");
-    let { stdout: c, code: x } = await Fe("defaults", [
+    let { stdout: c, code: x } = await execFileNoThrow("defaults", [
       "read",
       "com.apple.Terminal",
       "Startup Window Settings",
@@ -680,7 +680,7 @@ async function dr(e, t) {
         "Failed to enable Option as Meta key or disable audio bell for any Terminal.app profile",
       );
     }
-    (await Fe("killall", ["cfprefsd"]), await $e(t));
+    (await execFileNoThrow("killall", ["cfprefsd"]), await $e(t));
     let J = [ut("success", e)("Configured Terminal.app settings:")];
     if (!r) J.push(ut("success", e)('- Enabled "Use Option as Meta key"'));
     if (!s) J.push(ut("success", e)("- Disabled the audible bell"));
@@ -726,7 +726,7 @@ async function fr(e) {
     m = !1;
   for (let c of r)
     try {
-      ((l = await Ee(c, { encoding: "utf-8" })), (o = c), (m = !0));
+      ((l = await readFile(c, { encoding: "utf-8" })), (o = c), (m = !0));
       break;
     } catch (x) {
       if (!Rt(x)) throw x;
@@ -737,14 +737,14 @@ async function fr(e) {
     if (m) {
       if (l.includes('mods = "Shift"') && l.includes('key = "Return"'))
         return `${ut("success", e)("Alacritty Shift+Enter key binding already configured")}${p}${ie.dim(`See ${ne(o)}`)}${p}`;
-      let x = Pe(4).toString("hex"),
+      let x = randomBytes(4).toString("hex"),
         T = `${o}.${x}.bak`;
       try {
-        await Re(o, T);
+        await copyFile(o, T);
       } catch {
         return `${ut("warning", e)("Error backing up existing Alacritty config. Bailing out.")}${p}${ie.dim(`See ${ne(o)}`)}${p}${ie.dim(`Backup path: ${ne(T)}`)}${p}`;
       }
-    } else await tt(lr(o), { recursive: !0 });
+    } else await mkdir(lr(o), { recursive: !0 });
     let c = l;
     if (
       l &&
@@ -760,7 +760,7 @@ key = "Return"
 mods = "Shift"
 chars = "\\u001B\\r"
 `),
-      await je(o, c, { encoding: "utf-8" }),
+      await writeFile(o, c, { encoding: "utf-8" }),
       `${ut("success", e)("Installed Alacritty Shift+Enter key binding")}${p}${ut("success", e)("You may need to restart Alacritty for changes to take effect")}${p}${ie.dim(`See ${ne(o)}`)}${p}`
     );
   } catch (c) {
@@ -794,10 +794,10 @@ async function mr(e) {
     c = `${ut("warning", e)("Couldn't read your Zed keymap, so it was left unchanged.")}${p}${l}${p}`,
     x = `${ut("warning", e)("Your Zed keymap isn't a readable list of keybindings, so it was left unchanged.")}${p}${l}${p}`;
   try {
-    await tt(r, { recursive: !0 });
+    await mkdir(r, { recursive: !0 });
     let T = null;
     try {
-      T = await Ee(s, { encoding: "utf-8" });
+      T = await readFile(s, { encoding: "utf-8" });
     } catch (O) {
       if (!Rt(O)) throw O;
       if (!W(O)) return { message: c, installed: !1 };
@@ -825,10 +825,10 @@ async function mr(e) {
         message: `${ut("success", e)("Zed Shift+Enter key binding already configured")}${p}${o}${p}`,
         installed: !0,
       };
-    let D = Pe(4).toString("hex"),
+    let D = randomBytes(4).toString("hex"),
       J = `${s}.${D}.bak`;
     try {
-      await Re(s, J);
+      await copyFile(s, J);
     } catch (O) {
       return (
         n(
@@ -2436,10 +2436,10 @@ function T0e() {
   return [l, { char: ot[R], hex: _ }];
 }
 F();
-import { basename as Pr } from "path";
+import { basename } from "path";
 var _r = 50;
 function Pt() {
-  return Ka(rt());
+  return Ka(getMainLoopModel());
 }
 function Fye({
   onPaste: e,
@@ -2496,7 +2496,7 @@ function Fye({
         })
         .catch((A) => {
           if (c.current)
-            (f("input_image_paste", "clipboard_read_failed"), h(A));
+            (logFeatureBad("input_image_paste", "clipboard_read_failed"), logError(A));
         })
         .finally(() => {
           M();
@@ -2568,7 +2568,7 @@ function Fye({
           let le = ue.filter((he) => he !== null);
           if (le.length > 0 || fe.length > 0) {
             for (let [he, ce] of le.entries()) {
-              let w = Pr(ce.path);
+              let w = basename(ce.path);
               r?.(ce.base64, {
                 mediaType: ce.mediaType,
                 filename: w,
@@ -2578,7 +2578,7 @@ function Fye({
               });
             }
             if (le.length === 0 && se.length > 0)
-              (g("input_image_drag", "read_failed"), be.push(...se));
+              (logFeatureSad("input_image_drag", "read_failed"), be.push(...se));
             if (be.length > 0)
               _(
                 be.join(`
@@ -2586,11 +2586,11 @@ function Fye({
               );
             M();
           } else if (ae && I) Y();
-          else (g("input_image_drag", "read_failed"), _(q), M());
+          else (logFeatureSad("input_image_drag", "read_failed"), _(q), M());
         })
         .catch((ue) => {
           if (!c.current) return;
-          (f("input_image_drag", "read_threw"),
+          (logFeatureBad("input_image_drag", "read_threw"),
             n(
               `Image paste read failed: ${ue instanceof Error ? ue.message : String(ue)}`,
               { level: "error" },

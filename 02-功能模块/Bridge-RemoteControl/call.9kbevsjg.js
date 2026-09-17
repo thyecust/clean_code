@@ -14,13 +14,13 @@ import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { getOauthAccountInfo as vn, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getBridgeAccessToken as m_, getBridgeAccessTokenAsync as wC } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { getBridgeDisabledReason as T4t } from "./chunk-9estzwf5.js";
+import { getOauthAccountInfo, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getBridgeAccessToken, getBridgeAccessTokenAsync } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getBridgeDisabledReason } from "./chunk-9estzwf5.js";
 import { ndt } from "./chunk-ga43tr2w.js";
-import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE as Ive, isProactiveEnrollmentDisabled as r5, isTrustedDeviceUnenrolled as fAt, enrollTrustedDeviceIfNeeded as V4t } from "./chunk-tyce0p0b.js";
+import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE, isProactiveEnrollmentDisabled, isTrustedDeviceUnenrolled, enrollTrustedDeviceIfNeeded } from "./chunk-tyce0p0b.js";
 import { vAe, Hre } from "./chunk-ct52ffwb.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -85,7 +85,7 @@ function Rr(ko) {
   return ko.replBridgeOutboundOnly;
 }
 function Er() {
-  let ve = vn();
+  let ve = getOauthAccountInfo();
   return (
     ve && { accountUuid: ve.accountUuid, organizationUuid: ve.organizationUuid }
   );
@@ -183,10 +183,10 @@ function ze(_o) {
               },
         ),
           u("", { display: "system" }));
-        let Co = se(vn());
+        let Co = se(getOauthAccountInfo());
         $e(Z1, {}, { place: "under" })
           .then((Ke) => {
-            let Ae = Ke === "enable" && se(vn()) === Co;
+            let Ae = Ke === "enable" && se(getOauthAccountInfo()) === Co;
             if (Ke === "enable" && !Ae)
               n(
                 "[bridge:repl] Remote Control callout answered under a different account than it was asked for \u2014 not enabling",
@@ -217,7 +217,7 @@ function ze(_o) {
                   };
             });
           })
-          .catch(h);
+          .catch(logError);
         return;
       }
       i("tengu_bridge_command", { action: S("connect") });
@@ -661,14 +661,14 @@ function Oe(wo) {
   return Br;
 }
 async function ie(l) {
-  let C = await T4t();
+  let C = await getBridgeDisabledReason();
   if (C) return { kind: "error", message: C };
   let b = await ndt();
   if (b) return { kind: "error", message: b };
-  if (!(M() && l !== void 0 ? await wC(l) : m_()))
+  if (!(M() && l !== void 0 ? await getBridgeAccessTokenAsync(l) : getBridgeAccessToken()))
     return { kind: "error", message: vAe };
-  if ((await V4t(l), await fAt())) {
-    if (r5()) return { kind: "error", message: Ive };
+  if ((await enrollTrustedDeviceIfNeeded(l), await isTrustedDeviceUnenrolled())) {
+    if (isProactiveEnrollmentDisabled()) return { kind: "error", message: PROACTIVE_ENROLLMENT_DISABLED_MESSAGE };
     return { kind: "unenrolled-trusted-device" };
   }
   return (n("[bridge] Prerequisites passed, enabling bridge"), null);

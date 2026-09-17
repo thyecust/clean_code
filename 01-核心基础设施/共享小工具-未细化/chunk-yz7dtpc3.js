@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { default as at, isAxiosError as xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { dz } from "./chunk-jj2wxn4x.js";
 var r = /(^|\.)(anthropic\.com|claude\.ai|claude\.com)$/i,
   i = /(^|\.)downloads\.claude\.ai$/i;
@@ -42,7 +42,7 @@ var R = new Set([
   "ERR_STREAM_WRITE_AFTER_END",
 ]);
 function isTransportError(e) {
-  return xd(e) && e.response === void 0 && !R.has(e.code ?? "");
+  return isAxiosError(e) && e.response === void 0 && !R.has(e.code ?? "");
 }
 function o(e, t) {
   for (let n of [e, t?.baseURL])

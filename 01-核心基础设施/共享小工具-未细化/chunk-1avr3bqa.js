@@ -10,8 +10,8 @@
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { On } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
 import { b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { mkdir as v, readFile as g } from "fs/promises";
-import { dirname as P } from "path";
+import { mkdir, readFile } from "fs/promises";
+import { dirname } from "path";
 function T$(e, f, c) {
   let {
     defaultValue: a,
@@ -26,7 +26,7 @@ function T$(e, f, c) {
   async function m() {
     let t;
     try {
-      t = await g(e, "utf8");
+      t = await readFile(e, "utf8");
     } catch (i) {
       if (W(i)) return u();
       throw i;
@@ -52,7 +52,7 @@ function T$(e, f, c) {
   }
   async function d(t) {
     if (s !== !1)
-      await v(P(e), { recursive: !0, mode: s === !0 ? void 0 : s.mode });
+      await mkdir(dirname(e), { recursive: !0, mode: s === !0 ? void 0 : s.mode });
     let r =
       b(t, null, p) +
       (w

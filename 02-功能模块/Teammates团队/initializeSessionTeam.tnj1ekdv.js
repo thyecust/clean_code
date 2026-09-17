@@ -12,10 +12,10 @@
 import { K, he, TYt, QLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ef } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
 import { TZn, Wk, CXe } from "./chunk-g6nvp9mm.js";
-import { getTeamFilePath as ioe, readTeamFileAsync as Pf, logTeamFileWriteFailure as DGt, writeTeamFileAsync as LGt, registerTeamForSessionCleanup as Wbn } from "./chunk-6b13bhw1.js";
+import { getTeamFilePath, readTeamFileAsync, logTeamFileWriteFailure, writeTeamFileAsync, registerTeamForSessionCleanup } from "./chunk-6b13bhw1.js";
 import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { fs } from "./chunk-enjekn9t.js";
-import { rename as d } from "fs/promises";
+import { rename } from "fs/promises";
 var l = "session";
 function c(t) {
   return `${l}-${t.slice(0, 8)}`;
@@ -27,12 +27,12 @@ function p() {
   }
   return TYt() ?? null;
 }
-async function x(t, n) {
+async function initializeSessionTeam(t, n) {
   let i = t?.existingTeamName || p(),
     e = i ?? c(K()),
     a = ix(fs, e),
-    m = ioe(e);
-  if (!(i ? await Pf(e, n) : null)) {
+    m = getTeamFilePath(e);
+  if (!(i ? await readTeamFileAsync(e, n) : null)) {
     let r = {
       name: e,
       createdAt: Date.now(),
@@ -51,12 +51,12 @@ async function x(t, n) {
         },
       ],
     };
-    await LGt(e, r, n).catch((T) => DGt(e, T));
+    await writeTeamFileAsync(e, r, n).catch((T) => logTeamFileWriteFailure(e, T));
   }
   TZn(e);
   let o = K();
-  if (e !== o) await d(Wk(o), Wk(e)).catch(() => {});
-  (await CXe(e, n), Wbn(e));
+  if (e !== o) await rename(Wk(o), Wk(e)).catch(() => {});
+  (await CXe(e, n), registerTeamForSessionCleanup(e));
   let s = ef[0];
   return {
     teamContext: {
@@ -78,4 +78,4 @@ async function x(t, n) {
     teammateColors: { assignments: new Map([[a, s]]), index: 1 },
   };
 }
-export { x as initializeSessionTeam };
+export { initializeSessionTeam };

@@ -8,18 +8,18 @@
 
 // Version: 2.1.263
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { ja } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { Upe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
-import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { WB } from "../插件系统/chunk-q8w2zntw.js";
 import { Tfe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
-import { promises as a } from "fs";
+import { promises } from "fs";
 import * as g from "os";
 import * as o from "path";
 var pQt = "com.anthropic.claude-code-url-handler",
@@ -43,11 +43,11 @@ function C(e) {
 async function D(e) {
   let t = o.join(c, "Contents");
   try {
-    await a.rm(c, { recursive: !0 });
+    await promises.rm(c, { recursive: !0 });
   } catch (s) {
     if (A(s) !== "ENOENT") throw s;
   }
-  await a.mkdir(o.dirname(l), { recursive: !0 });
+  await promises.mkdir(o.dirname(l), { recursive: !0 });
   let r = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -77,9 +77,9 @@ async function D(e) {
   </array>
 </dict>
 </plist>`;
-  (await a.writeFile(o.join(t, "Info.plist"), r),
-    await a.symlink(e, l),
-    await Fe(
+  (await promises.writeFile(o.join(t, "Info.plist"), r),
+    await promises.symlink(e, l),
+    await execFileNoThrow(
       "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister",
       ["-R", c],
       { useCwd: !1 },
@@ -87,7 +87,7 @@ async function D(e) {
     n(`Registered ${WB}:// protocol handler at ${c}`));
 }
 async function _(e) {
-  await a.mkdir(o.dirname(d()), { recursive: !0 });
+  await promises.mkdir(o.dirname(d()), { recursive: !0 });
   let t = `[Desktop Entry]
 Name=${p}
 Comment=Handle ${WB}:// deep links for Claude Code
@@ -96,10 +96,10 @@ Type=Application
 NoDisplay=true
 MimeType=x-scheme-handler/${WB};
 `;
-  await a.writeFile(d(), t);
+  await promises.writeFile(d(), t);
   let r = await ja("xdg-mime");
   if (r) {
-    let { code: i } = await Fe(r, ["default", w, `x-scheme-handler/${WB}`], {
+    let { code: i } = await execFileNoThrow(r, ["default", w, `x-scheme-handler/${WB}`], {
       useCwd: !1,
     });
     if (i !== 0)
@@ -115,7 +115,7 @@ async function F(e) {
     ["add", u, "/v", "URL Protocol", "/d", "", "/f"],
     ["add", h, "/ve", "/d", C(e), "/f"],
   ]) {
-    let { code: r } = await Fe("reg", t, { useCwd: !1 });
+    let { code: r } = await execFileNoThrow("reg", t, { useCwd: !1 });
     if (r !== 0)
       throw Object.assign(Error(`reg add exited with code ${r}`), {
         code: "REG_FAILED",
@@ -142,7 +142,7 @@ async function L(e) {
 async function E() {
   let e = Upe();
   try {
-    return (await a.realpath(e), e);
+    return (await promises.realpath(e), e);
   } catch {
     return process.execPath;
   }
@@ -151,11 +151,11 @@ async function S(e) {
   try {
     switch ("darwin") {
       case "darwin":
-        return (await a.readlink(l)) === e;
+        return (await promises.readlink(l)) === e;
       case "linux":
-        return (await a.readFile(d(), "utf8")).includes(k(e));
+        return (await promises.readFile(d(), "utf8")).includes(k(e));
       case "win32": {
-        let { stdout: t, code: r } = await Fe("reg", ["query", h, "/ve"], {
+        let { stdout: t, code: r } = await execFileNoThrow("reg", ["query", h, "/ve"], {
           useCwd: !1,
         });
         return r === 0 && t.includes(C(e));
@@ -168,7 +168,7 @@ async function S(e) {
   }
 }
 async function RFn(e) {
-  if (Ge().disableDeepLinkRegistration === "disable") return;
+  if (getInitialSettings().disableDeepLinkRegistration === "disable") return;
   if (!["darwin", "linux", "win32"].includes("darwin")) return;
   let t = await E();
   if (await S(t)) return;
@@ -178,22 +178,22 @@ async function RFn(e) {
     if (i.ok && Date.now() - i.value.mtimeMs < m) return;
   } else
     try {
-      let i = await a.stat(r);
+      let i = await promises.stat(r);
       if (Date.now() - i.mtimeMs < m) return;
     } catch {}
   try {
     if (
       (await L(t),
-      y("deep_link_register"),
+      logFeatureOk("deep_link_register"),
       n("Auto-registered claude-cli:// deep link protocol handler"),
       M() && e !== void 0)
     )
       await e.delete(Ce.state("deep-link-register-failed"));
-    else await a.rm(r, { force: !0 }).catch(() => {});
+    else await promises.rm(r, { force: !0 }).catch(() => {});
   } catch (i) {
     let s = Jr(i);
     if (
-      (f("deep_link_register", s ?? "register_failed"),
+      (logFeatureBad("deep_link_register", s ?? "register_failed"),
       n(
         `Failed to auto-register deep link protocol handler: ${i instanceof Error ? i.message : String(i)}`,
         { level: "warn" },
@@ -204,7 +204,7 @@ async function RFn(e) {
         await e.write(Ce.state("deep-link-register-failed"), "", {
           publishDiscipline: "inPlace",
         });
-      else await a.writeFile(r, "").catch(() => {});
+      else await promises.writeFile(r, "").catch(() => {});
   }
 }
 export { pQt, RFn };

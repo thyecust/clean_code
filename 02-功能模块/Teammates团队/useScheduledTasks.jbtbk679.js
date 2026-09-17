@@ -13,25 +13,25 @@ import { ze, wje, Ixe, Lrt, Eje } from "../../00-第三方库/lodash/lodash.2x3q
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { g6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Zgt, nY, Re, Dk, Hyt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { wf } from "../../01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js";
 import { SK } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { getCronJitterConfig as wre } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
+import { getCronJitterConfig } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
 import { YXn, QXn, BY } from "../语音-音频/chunk-cfhndstm.js";
-import { isKairosCronEnabled as EC } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
-import { createCronScheduler as UJt } from "../工具AskUserQuestion/工具AskUserQuestion.72ht85nd.js";
+import { createCronScheduler } from "../工具AskUserQuestion/工具AskUserQuestion.72ht85nd.js";
 import { qc } from "../../01-核心基础设施/共享小工具-未细化/chunk-vke340te.js";
 import { zqe } from "./chunk-4ma81w0c.js";
 import { E, vr, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { xs } from "./chunk-mrfx53ye.js";
 import { Xi } from "./chunk-z2t8b9yc.js";
 F();
-import { randomUUID as N } from "crypto";
+import { randomUUID } from "crypto";
 function I(o) {
   return (
     o.type === "system" &&
@@ -133,14 +133,14 @@ function S(o) {
 function D(o, r, s, p) {
   let a = `Claude resuming /loop wakeup (${S(new Date())})`,
     e = r ? v(o) : { kind: "none" };
-  if (e.kind === "veto") g("loop_noop_fold", e.reason);
+  if (e.kind === "veto") logFeatureSad("loop_noop_fold", e.reason);
   if (e.kind !== "fold")
     return [...o, Hyt(a, { task: s, uuid: p, ...(r && { cronKind: "loop" }) })];
   let i = e.priorStreak + 1,
     d = S(new Date(e.since)),
     b = o.slice(e.fireIdx).map((_) => _.uuid);
   return (
-    y("loop_noop_fold", {
+    logFeatureOk("loop_noop_fold", {
       streak: i,
       span_len: b.length,
       tool_uses: e.toolUseCount,
@@ -168,7 +168,7 @@ function w(o, r) {
 }
 var T = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
   A = null;
-function ke({ isLoading: o, assistantMode: r, transcript: s, storageV5: p }) {
+function useScheduledTasks({ isLoading: o, assistantMode: r, transcript: s, storageV5: p }) {
   let c = qc(),
     a = vr(() => o),
     e = C(null),
@@ -177,7 +177,7 @@ function ke({ isLoading: o, assistantMode: r, transcript: s, storageV5: p }) {
     b = It(),
     _ = wf();
   (E(() => {
-    if (!EC() || jn() !== null) return;
+    if (!isKairosCronEnabled() || jn() !== null) return;
     let m = (t, l, u) => ({
         value: t,
         mode: "prompt",
@@ -231,7 +231,7 @@ function ke({ isLoading: o, assistantMode: r, transcript: s, storageV5: p }) {
         return t;
       },
       L = void 0,
-      h = UJt({
+      h = createCronScheduler({
         onFire: (t) => R(t, "schedule_wakeup"),
         onFireTask: (t) => {
           if (t.agentId) {
@@ -246,7 +246,7 @@ function ke({ isLoading: o, assistantMode: r, transcript: s, storageV5: p }) {
               SK([t.id]));
             return;
           }
-          let l = N();
+          let l = randomUUID();
           if (t.kind === "loop") {
             let u = !a();
             (s.replace((f) => D(f, u, U(t), l)), Ixe(t.prompt), Lrt());
@@ -261,8 +261,8 @@ function ke({ isLoading: o, assistantMode: r, transcript: s, storageV5: p }) {
         },
         isLoading: () => a(),
         assistantMode: r,
-        getJitterConfig: wre,
-        isKilled: () => !EC(),
+        getJitterConfig: getCronJitterConfig,
+        isKilled: () => !isKairosCronEnabled(),
         getExtraTasks:
           A && L
             ? () => A.getRoutineCronTasks(i.project.projectRoot, L, p)
@@ -286,4 +286,4 @@ function ke({ isLoading: o, assistantMode: r, transcript: s, storageV5: p }) {
       e.current?.checkNow();
     }, [o]));
 }
-export { ke as useScheduledTasks };
+export { useScheduledTasks };

@@ -11,22 +11,22 @@ import { P2e } from "../../01-核心基础设施/安全文件系统(FS加固)/�
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { R, l, A, Jr, hv, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { jo, Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Eg } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { ot, _ie, W6 } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { getSdkHostedBridgeHandle as bw } from "../权限系统/chunk-1y2g140m.js";
-import { outsideReadBlocked as ZCe, pathInAllowedWorkingPath as Bh } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { getSdkHostedBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
+import { outsideReadBlocked, pathInAllowedWorkingPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var B = null;
@@ -261,7 +261,7 @@ function G(e, t) {
 }
 function q(e) {
   if (!(e instanceof Error))
-    return { error_name: u(typeof e), error_code: S("") };
+    return { error_name: fromEnum(typeof e), error_code: S("") };
   return {
     error_name:
       hv(e.name !== "Error" ? e.name : e.constructor?.name) ?? S("Error"),
@@ -433,7 +433,7 @@ async function qpe(e, t, r, o) {
     if (s instanceof vH) throw s;
     let m = j(s),
       c = l(s);
-    if (G(m, s)) h(s);
+    if (G(m, s)) logError(s);
     else n(`Image resize failed: ${c}`, { level: "error" });
     i("tengu_image_resize_failed", {
       original_size_bytes: t,
@@ -462,7 +462,7 @@ async function qpe(e, t, r, o) {
     throw new vH(
       w
         ? `Unable to resize image \u2014 dimensions exceed the ${o.maxWidth}x${o.maxHeight}px limit and image processing failed. Please resize the image to reduce its pixel dimensions.`
-        : `Unable to resize image (${Ft(t)} raw, ${Ft(g)} base64). The image exceeds the ${Ft(o.maxBase64Size)} API limit and compression failed. Please resize the image manually or use a smaller image.`,
+        : `Unable to resize image (${formatFileSize(t)} raw, ${formatFileSize(g)} base64). The image exceeds the ${formatFileSize(o.maxBase64Size)} API limit and compression failed. Please resize the image manually or use a smaller image.`,
     );
   }
 }
@@ -572,7 +572,7 @@ async function Y(e, t, r) {
   } catch (m) {
     let c = j(m),
       d = l(m);
-    if (G(c, m)) h(m);
+    if (G(c, m)) logError(m);
     else n(`Image compression failed: ${d}`, { level: "error" });
     if (
       (i("tengu_image_compress_failed", {
@@ -592,7 +592,7 @@ async function Y(e, t, r) {
       };
     }
     throw new vH(
-      `Unable to compress image (${Ft(e.length)}) to fit within ${Ft(t)}. Please use a smaller image.`,
+      `Unable to compress image (${formatFileSize(e.length)}) to fit within ${formatFileSize(t)}. Please use a smaller image.`,
     );
   }
 }
@@ -693,10 +693,10 @@ function XNe(e, t) {
   }
   return `${M3t}${d.join(", ")}]`;
 }
-import { randomBytes as ge } from "crypto";
+import { randomBytes } from "crypto";
 import {
   basename as fe,
-  dirname as he,
+  dirname,
   isAbsolute as ye,
   join as D,
 } from "path";
@@ -716,14 +716,14 @@ class LAe {
       let s = e.match(/^\\\\wsl(?:\.localhost|\$)\\([^\\]+)(.*)$/);
       if (s && s[1] !== this.wslDistroName) return e;
     }
-    let { stdout: t, code: r } = await Fe("wslpath", ["-u", e], { useCwd: !1 }),
+    let { stdout: t, code: r } = await execFileNoThrow("wslpath", ["-u", e], { useCwd: !1 }),
       o = t.trim();
     if (r === 0 && o) return o;
     return cbt(e) ?? e.replaceAll("\\", "/");
   }
   async toIDEPath(e) {
     if (!e) return e;
-    let { stdout: t, code: r } = await Fe("wslpath", ["-w", e], { useCwd: !1 }),
+    let { stdout: t, code: r } = await execFileNoThrow("wslpath", ["-w", e], { useCwd: !1 }),
       o = t.trim();
     if (r === 0 && o) return o;
     return e;
@@ -827,10 +827,10 @@ async function dJn() {
       r = t()?.hasClipboardImage;
     if (r) return r();
   } catch (t) {
-    h(t);
+    logError(t);
   }
   return (
-    (await Be("osascript", ["-e", "the clipboard as \xABclass PNGf\xBB"]))
+    (await execFileNoThrowWithCwd("osascript", ["-e", "the clipboard as \xABclass PNGf\xBB"]))
       .code === 0
   );
 }
@@ -845,7 +845,7 @@ async function Z3(e) {
     if (d.length > e.targetRawSize) {
       let p = await qpe(d, d.length, "png", e);
       return (
-        y("clipboard_read"),
+        logFeatureOk("clipboard_read"),
         {
           base64: p.buffer.toString("base64"),
           mediaType: `image/${p.mediaType}`,
@@ -859,7 +859,7 @@ async function Z3(e) {
       );
     }
     return (
-      y("clipboard_read"),
+      logFeatureOk("clipboard_read"),
       {
         base64: d.toString("base64"),
         mediaType: "image/png",
@@ -874,22 +874,22 @@ async function Z3(e) {
   } catch (s) {
     if (s instanceof vH)
       n(`Native clipboard resize failed: ${s.message}`, { level: "error" });
-    else h(s);
+    else logError(s);
   }
   let t;
   try {
     t = we();
   } catch (s) {
-    return (h(s), f("clipboard_read", "construct_failed"), null);
+    return (logError(s), logFeatureBad("clipboard_read", "construct_failed"), null);
   }
   let { commands: r, screenshotPath: o } = t;
   try {
     if ((await F(r.checkImage)).exitCode !== 0) return null;
     if (
-      (await ae().mkdir(he(o), { mode: 448 }),
+      (await ae().mkdir(dirname(o), { mode: 448 }),
       (await F(r.saveImage)).exitCode !== 0)
     )
-      return (f("clipboard_read", "save_failed"), null);
+      return (logFeatureBad("clipboard_read", "save_failed"), null);
     let c = await ae().readFileBytes(o);
     if (c.length >= 2 && c[0] === 66 && c[1] === 77)
       c = await (await aK())(c).png().toBuffer();
@@ -898,11 +898,11 @@ async function Z3(e) {
       g = N3t(p);
     return (
       F(r.deleteFile),
-      y("clipboard_read"),
+      logFeatureOk("clipboard_read"),
       { base64: p, mediaType: g, dimensions: d.dimensions }
     );
   } catch {
-    return (f("clipboard_read", "read_failed"), null);
+    return (logFeatureBad("clipboard_read", "read_failed"), null);
   }
 }
 async function xe() {
@@ -933,7 +933,7 @@ function X(e) {
 var J = /^(?:[A-Za-z]:\\|\\\\)/;
 function Z(e) {
   if (P() === "wsl" && J.test(e)) return e;
-  let o = `__DOUBLE_BACKSLASH_${ge(8).toString("hex")}__`;
+  let o = `__DOUBLE_BACKSLASH_${randomBytes(8).toString("hex")}__`;
   return e
     .replaceAll("\\\\", o)
     .replace(/\\(.)/g, "$1")
@@ -1002,7 +1002,7 @@ function hSn(e) {
 import { stat as L } from "fs/promises";
 import {
   basename as Ie,
-  extname as be,
+  extname,
   isAbsolute as Ee,
   join as Pe,
 } from "path";
@@ -1011,7 +1011,7 @@ function ubt(e) {
   if (a.CLAUDE_CODE_BRIEF_UPLOAD) return "env_brief_upload";
   if (a.CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE) return "env_ccr";
   if (a.CLAUDE_CODE_REMOTE) return "env_byoc";
-  if (bw() !== null && ic())
+  if (getSdkHostedBridgeHandle() !== null && ic())
     return H("tengu_async_goblet", !0) ? "sdk_hosted" : "sdk_hosted_disabled";
   return "none";
 }
@@ -1061,7 +1061,7 @@ var Se = {
   ".zip": "application/zip",
 };
 function YNe(e) {
-  return Se[be(e).toLowerCase()];
+  return Se[extname(e).toLowerCase()];
 }
 function K(e) {
   return typeof e !== "string";
@@ -1109,13 +1109,13 @@ async function pbt(e, t) {
     let s = _Sn(o);
     if (s !== void 0) return s;
     let m = ot(o);
-    if (t.restricted && !Bh(m, t))
+    if (t.restricted && !pathInAllowedWorkingPath(m, t))
       return {
         result: !1,
         message: `Attachment "${o}" is outside the working directory; --restricted only sends files from inside it.`,
         errorCode: 1,
       };
-    if (ZCe(m, t))
+    if (outsideReadBlocked(m, t))
       return {
         result: !1,
         message: `Attachment "${o}" is outside the working directories; reads outside them are blocked (permissions.blockReadsOutsideWorkingDirectories).`,

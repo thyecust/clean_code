@@ -12,8 +12,8 @@
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { DA, EW } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { renderFableModelName as Hm, parseUserSpecifiedModel as wt, Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { renderFableModelName, parseUserSpecifiedModel, Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { RP } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Ym } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ySe, P_, Rl, rI, I3e, P3e, n2 } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
@@ -46,16 +46,16 @@ ${s}`,
       if (!e.ok) return { type: "text", value: e.message };
       if (e.model !== null && n2(e.model))
         return (
-          g("model_fable_consent", "noninteractive_set_blocked"),
+          logFeatureSad("model_fable_consent", "noninteractive_set_blocked"),
           {
             type: "text",
-            value: `${Hm(wt(e.model))} uses usage credits and needs a one-time consent \xB7 pick Fable from /model in an interactive session to set it up`,
+            value: `${renderFableModelName(parseUserSpecifiedModel(e.model))} uses usage credits and needs a one-time consent \xB7 pick Fable from /model in an interactive session to set it up`,
           }
         );
       let o = await P_(t.session, t.getAppState, e.model, "command");
       if (o.decision === "block" || o.decision === "ask")
         return (
-          g("model_switch", "blocked_by_hook"),
+          logFeatureSad("model_switch", "blocked_by_hook"),
           {
             type: "text",
             value: rI(

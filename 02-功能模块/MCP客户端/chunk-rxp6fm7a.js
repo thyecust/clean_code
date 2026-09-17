@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { cw, qLe, Bne, getMcpScopeConflicts as LWt, isOrganizationProvidedMcpScope as mY, getMcpConfigsByScope as nd, doesEnterpriseMcpConfigExist as Zm } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isRestrictedToPluginOnly as Uu } from "../Skills技能/chunk-sapykxw7.js";
+import { cw, qLe, Bne, getMcpScopeConflicts, isOrganizationProvidedMcpScope, getMcpConfigsByScope, doesEnterpriseMcpConfigExist } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isRestrictedToPluginOnly } from "../Skills技能/chunk-sapykxw7.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -48,13 +48,13 @@ function he(Ke) {
   return Ke.file;
 }
 function Ne(Ue) {
-  return !mY(Ue.scope);
+  return !isOrganizationProvidedMcpScope(Ue.scope);
 }
 function Se(ee) {
   return {
     scope: ee.scope,
     servers: ee.config.servers,
-    displayServers: nd(ee.scope, { expandVars: !1 }).servers,
+    displayServers: getMcpConfigsByScope(ee.scope, { expandVars: !1 }).servers,
   };
 }
 function ye(Xe) {
@@ -249,17 +249,17 @@ function i9e() {
     S;
   if (Y[0] === p) {
     let fe = [
-      { scope: "user", config: nd("user") },
-      { scope: "project", config: nd("project") },
-      { scope: "local", config: nd("local") },
-      { scope: "managed", config: nd("managed") },
-      { scope: "enterprise", config: nd("enterprise") },
+      { scope: "user", config: getMcpConfigsByScope("user") },
+      { scope: "project", config: getMcpConfigsByScope("project") },
+      { scope: "local", config: getMcpConfigsByScope("local") },
+      { scope: "managed", config: getMcpConfigsByScope("managed") },
+      { scope: "enterprise", config: getMcpConfigsByScope("enterprise") },
     ];
-    let Oe = LWt(fe.filter(Ne).map(Se));
+    let Oe = getMcpScopeConflicts(fe.filter(Ne).map(Se));
     S = {
       scopes: re(fe, {
-        enterpriseActive: Zm(),
-        mcpLocked: Uu("mcp"),
+        enterpriseActive: doesEnterpriseMcpConfigExist(),
+        mcpLocked: isRestrictedToPluginOnly("mcp"),
         isProjectServerApproved: ye,
       }),
       conflicts: Oe,
@@ -328,7 +328,7 @@ function re(m, s) {
     return !0;
   };
   return m.map((a, n) => {
-    let g = !mY(a.scope) && (s.enterpriseActive || s.mcpLocked),
+    let g = !isOrganizationProvidedMcpScope(a.scope) && (s.enterpriseActive || s.mcpLocked),
       l = m.slice(n + 1),
       x = (i) => l.some((u) => f(u, i));
     return {

@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 208 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { mS } from "./chunk-e4pfvp7x.js";
-import { hasPermissionsToUseTool as gd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { spawnForkFromDirective as l3e } from "./chunk-asdzywd2.js";
+import { hasPermissionsToUseTool } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { spawnForkFromDirective } from "./chunk-asdzywd2.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
 var m = async (o, s, t) => {
   let i = t.trim();
   if (!i)
     return (o("Usage: /fork \\<directive\\>", { display: "system" }), null);
-  let r = await l3e(i, s, s.canUseTool ?? gd);
+  let r = await spawnForkFromDirective(i, s, s.canUseTool ?? hasPermissionsToUseTool);
   if (!r)
     return (
       o(

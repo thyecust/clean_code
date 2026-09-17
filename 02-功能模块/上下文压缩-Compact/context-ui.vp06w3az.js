@@ -16,11 +16,11 @@ import { x } from "../../01-核心基础设施/核心工具-字符串与文本/c
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { getPublicModelDisplayName as IR, qe, tt, ro, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getPublicModelDisplayName, qe, tt, ro, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { S1, xRt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { jn, nxt, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { formatTokens as Pn, formatTokenEstimate as xx } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { fl } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
@@ -78,7 +78,7 @@ function Oo(d, i) {
   }
 }
 function Fo(d, i, g) {
-  let u = Pn(i);
+  let u = formatTokens(i);
   switch (d) {
     case qe:
     case Ut:
@@ -137,7 +137,7 @@ function $o(d, i) {
   if (h >= Mo && u.resultTokens >= Ae)
     i.push({
       severity: "info",
-      title: `File reads using ${Pn(u.resultTokens)} tokens (${h.toFixed(0)}%)`,
+      title: `File reads using ${formatTokens(u.resultTokens)} tokens (${h.toFixed(0)}%)`,
       detail:
         "If you are re-reading files, consider referencing earlier reads. Use offset/limit for large files.",
       savingsTokens: Math.floor(u.resultTokens * 0.3),
@@ -150,11 +150,11 @@ function jo(d, i) {
     let f = [...d.memoryFiles]
       .sort((C, h) => h.tokens - C.tokens)
       .slice(0, 3)
-      .map((C) => `${Ao(C.path)} (${Pn(C.tokens)})`)
+      .map((C) => `${Ao(C.path)} (${formatTokens(C.tokens)})`)
       .join(", ");
     i.push({
       severity: "info",
-      title: `Memory files using ${Pn(g)} tokens (${u.toFixed(0)}%)`,
+      title: `Memory files using ${formatTokens(g)} tokens (${u.toFixed(0)}%)`,
       detail: `Largest: ${f}. Use /memory to review and prune stale entries.`,
       savingsTokens: Math.floor(g * 0.3),
     });
@@ -192,7 +192,7 @@ function Vo(fe, Yo) {
                     " ",
                     L.arrowRight,
                     " save ~",
-                    Pn(fe.savingsTokens),
+                    formatTokens(fe.savingsTokens),
                   ],
                 })
               : null,
@@ -289,7 +289,7 @@ function St(st, On) {
           st.name,
           ":",
           " ",
-          r(t, { dimColor: !0, children: [Pn(st.tokens), " tokens"] }),
+          r(t, { dimColor: !0, children: [formatTokens(st.tokens), " tokens"] }),
         ],
       }),
     },
@@ -314,7 +314,7 @@ function vt(rt, In) {
           rt.name,
           ":",
           " ",
-          r(t, { dimColor: !0, children: [Pn(rt.tokens), " tokens"] }),
+          r(t, { dimColor: !0, children: [formatTokens(rt.tokens), " tokens"] }),
         ],
       }),
     },
@@ -333,7 +333,7 @@ function _t(at, Gn) {
           at.agentType,
           ":",
           " ",
-          r(t, { dimColor: !0, children: [Pn(at.tokens), " tokens"] }),
+          r(t, { dimColor: !0, children: [formatTokens(at.tokens), " tokens"] }),
         ],
       }),
     },
@@ -367,7 +367,7 @@ function Rt(lt, Kn) {
           Ao(lt.path),
           ":",
           " ",
-          r(t, { dimColor: !0, children: [Pn(lt.tokens), " tokens"] }),
+          r(t, { dimColor: !0, children: [formatTokens(lt.tokens), " tokens"] }),
         ],
       }),
     },
@@ -383,7 +383,7 @@ function At(mt, qn) {
           mt.name,
           ":",
           " ",
-          r(t, { dimColor: !0, children: [xx(mt.tokens), " tokens"] }),
+          r(t, { dimColor: !0, children: [formatTokenEstimate(mt.tokens), " tokens"] }),
         ],
       }),
     },
@@ -440,7 +440,7 @@ function F(Tn) {
     (($e = x(ae, yo)), (ho[0] = ae), (ho[1] = yo), (ho[2] = $e));
   else $e = ho[2];
   let je;
-  if (ho[3] !== Co) ((je = Pn(Co)), (ho[3] = Co), (ho[4] = je));
+  if (ho[3] !== Co) ((je = formatTokens(Co)), (ho[3] = Co), (ho[4] = je));
   else je = ho[4];
   let Go;
   if (ho[5] !== ae || ho[6] !== $e || ho[7] !== je)
@@ -575,16 +575,16 @@ function ne(xe) {
     oo = 0;
     to = 0;
     if (y[52] !== I)
-      ((Me = IR(I) && e(t, { children: IR(I) })), (y[52] = I), (y[53] = Me));
+      ((Me = getPublicModelDisplayName(I) && e(t, { children: getPublicModelDisplayName(I) })), (y[52] = I), (y[53] = Me));
     else Me = y[53];
     if (y[54] !== I)
       ((Se = e(t, { dimColor: !0, children: I })), (y[54] = I), (y[55] = Se));
     else Se = y[55];
     let H;
-    if (y[56] !== Ce) ((H = Pn(Ce)), (y[56] = Ce), (y[57] = H));
+    if (y[56] !== Ce) ((H = formatTokens(Ce)), (y[56] = Ce), (y[57] = H));
     else H = y[57];
     let K;
-    if (y[58] !== b) ((K = Pn(b)), (y[58] = b), (y[59] = K));
+    if (y[58] !== b) ((K = formatTokens(b)), (y[58] = b), (y[59] = K));
     else K = y[59];
     if (y[60] !== he || y[61] !== H || y[62] !== K)
       ((ze = r(t, {
@@ -615,7 +615,7 @@ function ne(xe) {
     let me;
     if (y[69] !== b)
       ((me = (te, yn) => {
-        let Cn = Pn(te.tokens);
+        let Cn = formatTokens(te.tokens);
         let hn = te.isDeferred
           ? "N/A"
           : `${((te.tokens / b) * 100).toFixed(1)}%`;
@@ -648,7 +648,7 @@ function ne(xe) {
             r(t, {
               dimColor: !0,
               children: [
-                Pn(M.find(xt)?.tokens || 0),
+                formatTokens(M.find(xt)?.tokens || 0),
                 " ",
                 "(",
                 (((M.find(kt)?.tokens || 0) / b) * 100).toFixed(1),
@@ -671,7 +671,7 @@ function ne(xe) {
           r(t, {
             dimColor: !0,
             children: [
-              Pn(le.tokens),
+              formatTokens(le.tokens),
               " tokens (",
               ((le.tokens / b) * 100).toFixed(1),
               "%)",
@@ -809,10 +809,10 @@ function ne(xe) {
             dimColor: !0,
             children:
               ie === "experiment" || ie === "clientdata"
-                ? `auto (${Pn(b)} tokens)`
+                ? `auto (${formatTokens(b)} tokens)`
                 : ie === "unknown-model"
-                  ? `${Pn(b)} tokens (default for an unrecognized model)`
-                  : `${Pn(b)} tokens`,
+                  ? `${formatTokens(b)} tokens (default for an unrecognized model)`
+                  : `${formatTokens(b)} tokens`,
           }),
         ],
       })),

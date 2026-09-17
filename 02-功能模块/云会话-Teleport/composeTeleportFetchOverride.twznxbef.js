@@ -15,7 +15,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { $he } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
 import { ZD } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { getTeleportCacheState as HOe, revertTeleportCache as Cte, logTeleportFallbackOnce as _we, verifyPreAnchorIntact as Gcn, verifyToolsBaselineIntact as qcn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
+import { getTeleportCacheState, revertTeleportCache, logTeleportFallbackOnce, verifyPreAnchorIntact, verifyToolsBaselineIntact } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
 import { Z4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-95411q5e.js";
 import { nwe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1brq31d3.js";
 var P = 60000,
@@ -57,7 +57,7 @@ async function U(r, d = E) {
     return null;
   }
 }
-function Q(r, d) {
+function composeTeleportFetchOverride(r, d) {
   return B(r, nwe(), d);
 }
 function x(r) {
@@ -100,7 +100,7 @@ function B(
   if (!d) return r;
   let o = (t, e) => (r ? r(t, e) : $he(t, e));
   return async (t, e) => {
-    let f = HOe();
+    let f = getTeleportCacheState();
     if (f.status !== "active") return o(t, e);
     if (!I(t, e)) return o(t, e);
     let b = e?.body;
@@ -118,8 +118,8 @@ function B(
     }
     if (!T) return o(t, e);
     if (f.marker.model !== void 0 && _ !== null && _ !== f.marker.model)
-      return (_we("model_mismatch"), o(t, e));
-    if (!Gcn(u())) return o(t, e);
+      return (logTeleportFallbackOnce("model_mismatch"), o(t, e));
+    if (!verifyPreAnchorIntact(u())) return o(t, e);
     let R;
     try {
       R =
@@ -134,7 +134,7 @@ function B(
             );
     } catch {
       return (
-        _we("relay_compose_error"),
+        logTeleportFallbackOnce("relay_compose_error"),
         n(
           "teleport relay tools-fingerprint computation failed \u2014 standard path for this turn, latch stays armed",
           { level: "warn" },
@@ -142,11 +142,11 @@ function B(
         o(t, e)
       );
     }
-    if (!qcn(_, R)) return o(t, e);
+    if (!verifyToolsBaselineIntact(_, R)) return o(t, e);
     let v = `${f.ingressOrigin}/v2/ccr-sessions/${f.remoteSessionId}/teleport/conversations/${f.marker.conversation_uuid}/completion`;
     if (!UR(v))
       return (
-        Cte("relay_unreachable", "relay url failed the CCR origin gate"),
+        revertTeleportCache("relay_unreachable", "relay url failed the CCR origin gate"),
         o(t, e)
       );
     let m;
@@ -160,7 +160,7 @@ function B(
       m.set("anthropic-version", f.marker.anthropic_version);
     } catch {
       return (
-        _we("relay_compose_error"),
+        logTeleportFallbackOnce("relay_compose_error"),
         n(
           "teleport relay request composition failed \u2014 standard path for this turn, latch stays armed",
           { level: "warn" },
@@ -185,7 +185,7 @@ function B(
     } catch (s) {
       if (w.aborted && !e?.signal?.aborted)
         return (
-          Cte(
+          revertTeleportCache(
             "relay_dispatch_timeout",
             `relay dispatch timed out after ${c}ms`,
           ),
@@ -202,7 +202,7 @@ function B(
         let l = performance.now() - S;
         if (l >= p)
           return (
-            Cte(
+            revertTeleportCache(
               "relay_dispatch_timeout",
               `caller signal aborted after ${Math.round(l)}ms awaiting relay headers`,
             ),
@@ -215,7 +215,7 @@ function B(
         throw s;
       }
       return (
-        _we("relay_transport_error"),
+        logTeleportFallbackOnce("relay_transport_error"),
         n(
           "teleport relay transport error \u2014 standard path for this turn, latch stays armed",
           { level: "warn" },
@@ -229,7 +229,7 @@ function B(
       if (i.status === 409) {
         if ((await U(i, y)) === "teleport_relay_refused")
           return (
-            Cte(
+            revertTeleportCache(
               "relay_refused",
               "relay http 409 with the refusal discriminant",
             ),
@@ -240,7 +240,7 @@ function B(
           );
       } else i.body?.cancel().catch(() => {});
       return (
-        _we("relay_unavailable"),
+        logTeleportFallbackOnce("relay_unavailable"),
         n(
           `teleport relay unavailable (http ${i.status}) \u2014 standard path for this turn, latch stays armed`,
           { level: "warn" },
@@ -252,10 +252,10 @@ function B(
     if (!A.includes("text/event-stream"))
       return (
         i.body?.cancel().catch(() => {}),
-        Cte("relay_not_sse", `relay 200 with content-type ${A}`),
+        revertTeleportCache("relay_not_sse", `relay 200 with content-type ${A}`),
         o(t, e)
       );
     return i;
   };
 }
-export { Q as composeTeleportFetchOverride };
+export { composeTeleportFetchOverride };

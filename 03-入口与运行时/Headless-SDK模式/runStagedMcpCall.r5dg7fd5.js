@@ -10,28 +10,28 @@
 
 // [preload stripped] 原本在此预载 70 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { bCt } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { createAbortController as hr } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { pve } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { SYNCED_FILE_ROOT as EKe, WORKING_FILESTORE_PREFIX as jX, MAX_WORKING_FILE_BYTES as Jm, relUnderSyncDir as Tde, getSyncedFile as Q2, writeLaneRowFromWorker as Kfn } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { SYNCED_FILE_ROOT, WORKING_FILESTORE_PREFIX, MAX_WORKING_FILE_BYTES, relUnderSyncDir, getSyncedFile, writeLaneRowFromWorker } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Tot } from "../../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { constants as z } from "fs";
+import { constants } from "fs";
 import {
-  mkdir as K,
-  mkdtemp as rt,
+  mkdir,
+  mkdtemp,
   open as nt,
-  realpath as Z,
+  realpath,
   rm as H,
-  writeFile as ot,
+  writeFile,
 } from "fs/promises";
-import { posix as at } from "path";
-var { extname: it, join: x } = at,
+import { posix } from "path";
+var { extname: it, join: x } = posix,
   st = 120000,
   lt = 600000,
   ut = 1000,
@@ -65,7 +65,7 @@ function V(e) {
   let t = it(e);
   return /^\.[A-Za-z0-9]{1,8}$/.test(t) ? t : "";
 }
-async function Mt(e, t) {
+async function runStagedMcpCall(e, t) {
   let a, i, h;
   try {
     let d = await ft(e, t);
@@ -75,8 +75,8 @@ async function Mt(e, t) {
     a = Q("tool_error", `unexpected failure: ${N ?? l(d)}`);
   }
   if (t.signal?.aborted) return { staging: a, tool: i };
-  if (a.ok) y("ccr_mcp_call_staged");
-  else f("ccr_mcp_call_staged", h ?? a.error_code);
+  if (a.ok) logFeatureOk("ccr_mcp_call_staged");
+  else logFeatureBad("ccr_mcp_call_staged", h ?? a.error_code);
   return { staging: a, tool: i };
 }
 function Q(e, t, a) {
@@ -129,7 +129,7 @@ async function ft(e, t) {
   let h = [];
   for (let n of i.input_files ?? [])
     try {
-      h.push({ spec: n, rel: Tde(jX, n.lane_path) });
+      h.push({ spec: n, rel: relUnderSyncDir(WORKING_FILESTORE_PREFIX, n.lane_path) });
     } catch (s) {
       return r(
         "tool_error",
@@ -141,7 +141,7 @@ async function ft(e, t) {
   for (let n of i.output_files ?? []) {
     let s;
     try {
-      s = Tde(jX, n.lane_path);
+      s = relUnderSyncDir(WORKING_FILESTORE_PREFIX, n.lane_path);
     } catch (g) {
       return r(
         "tool_error",
@@ -193,10 +193,10 @@ async function ft(e, t) {
   try {
     let n;
     if (t.tempRoot === void 0) n = pve();
-    else ((n = t.tempRoot), await K(n, { recursive: !0, mode: 448 }));
-    ((w = await rt(x(n, "plugin-tool-"))),
-      await K(x(w, "in"), { mode: 448 }),
-      await K(x(w, "out"), { mode: 448 }));
+    else ((n = t.tempRoot), await mkdir(n, { recursive: !0, mode: 448 }));
+    ((w = await mkdtemp(x(n, "plugin-tool-"))),
+      await mkdir(x(w, "in"), { mode: 448 }),
+      await mkdir(x(w, "out"), { mode: 448 }));
   } catch (n) {
     if (w !== void 0) await H(w, { recursive: !0, force: !0 }).catch(() => {});
     let s = A(n);
@@ -211,7 +211,7 @@ async function ft(e, t) {
       s = [];
     for (let [o, { spec: _, rel: k }] of h.entries()) {
       if (t.signal?.aborted) return r("tool_error", L);
-      let c = await Q2(k);
+      let c = await getSyncedFile(k);
       if (c.kind === "not_found")
         return r("input_missing", `input not found: ${_.lane_path}`);
       if (c.kind === "error")
@@ -222,7 +222,7 @@ async function ft(e, t) {
         );
       let E = x(O, "in", `${o}${V(_.lane_path)}`);
       try {
-        await ot(E, c.buf, { mode: 384 });
+        await writeFile(E, c.buf, { mode: 384 });
       } catch (M) {
         return r("tool_error", `input stage failed: ${A(M) ?? "unknown"}`);
       }
@@ -235,7 +235,7 @@ async function ft(e, t) {
       }),
       g = X ? Si(i.arguments ?? {}, (o) => G(o, n)) : (i.arguments ?? {}),
       u = Math.min(Math.max(i.timeout_ms ?? st, ut), lt),
-      D = hr(),
+      D = createAbortController(),
       I = !1,
       tt = setTimeout(() => {
         if (D.signal.aborted) return;
@@ -261,13 +261,13 @@ async function ft(e, t) {
       let o = dt(R.content);
       return r("tool_error", o || "tool returned an error result");
     }
-    let et = await Z(O),
+    let et = await realpath(O),
       j = [];
     for (let { spec: o, rel: _, path: k } of p) {
       if (t.signal?.aborted) return r("tool_error", L);
       let c;
       try {
-        c = await Z(k);
+        c = await realpath(k);
       } catch (m) {
         if (W(m))
           return r("tool_error", `tool did not produce output: ${o.name}`);
@@ -281,10 +281,10 @@ async function ft(e, t) {
           "tool_error",
           `output path escapes the staging dir: ${o.name}`,
         );
-      let E = Jm,
+      let E = MAX_WORKING_FILE_BYTES,
         M;
       try {
-        let m = await nt(c, z.O_RDONLY | z.O_NOFOLLOW | z.O_NONBLOCK);
+        let m = await nt(c, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
         try {
           let T = await m.stat();
           if (!T.isFile())
@@ -321,7 +321,7 @@ async function ft(e, t) {
           `output read failed for ${o.name}: ${A(m) ?? "unknown"}`,
         );
       }
-      let C = await Kfn(t.syncDir ?? EKe, _, M, o.if_match);
+      let C = await writeLaneRowFromWorker(t.syncDir ?? SYNCED_FILE_ROOT, _, M, o.if_match);
       if (!C.ok)
         return r(
           C.reason === "too_large"
@@ -349,4 +349,4 @@ async function ft(e, t) {
     await H(O, { recursive: !0, force: !0 }).catch(() => {});
   }
 }
-export { Mt as runStagedMcpCall };
+export { runStagedMcpCall };

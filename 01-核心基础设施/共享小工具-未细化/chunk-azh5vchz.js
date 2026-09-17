@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { SHORT_RE as FI } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { SHORT_RE } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 var $We = "Can't open \u2014 this session is running in another terminal";
 function ile({ sessionId: o, holder: i, canFork: s }) {
   let { jobId: e } = i,
@@ -20,7 +20,7 @@ function ile({ sessionId: o, holder: i, canFork: s }) {
 async function t4(o) {
   let i = (await Iit(o)).find((e) => e.kind !== "interactive");
   if (!i) return null;
-  let s = i.jobId !== void 0 && FI.test(i.jobId) ? i.jobId : void 0;
+  let s = i.jobId !== void 0 && SHORT_RE.test(i.jobId) ? i.jobId : void 0;
   return { kind: i.kind, jobId: s };
 }
 async function Iit(o, i) {

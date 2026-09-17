@@ -9,27 +9,27 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 75 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { registerPreFlushTask as Dun } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
+import { registerPreFlushTask } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import { qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Ol } from "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
 import { xT } from "../../01-核心基础设施/共享小工具-未细化/chunk-21sqz10e.js";
-function s(e, t) {
+function emitTripwireEvent(e, t) {
   if (!Ol().claim("mcp_tree_id_tripwire")) return;
-  Dun(
+  registerPreFlushTask(
     qs("tengu_mcp_tripwire", {
-      expected: u(e),
-      loaded: t === "v1" || t === "v2" ? u(t) : S("other"),
+      expected: fromEnum(e),
+      loaded: t === "v1" || t === "v2" ? fromEnum(t) : S("other"),
     }).catch(() => {}),
   );
 }
-function m() {
+function mcpClientModule() {
   if (xT() === "v2") {
     let i = import.meta.require("./LISTEN_REOPEN_DELAYS_MS.h676bx56.js"),
       o = i.MCP_TREE_ID;
     if (o !== "v2")
       throw (
-        s("v2", o),
+        emitTripwireEvent("v2", o),
         Error(
           "MCP runtime accessor tripwire: resolved generation is v2 but the loaded client module does not carry MCP_TREE_ID v2",
         )
@@ -40,53 +40,53 @@ function m() {
     t = e.MCP_TREE_ID;
   if (t !== "v1")
     throw (
-      s("v1", t),
+      emitTripwireEvent("v1", t),
       Error(
         "MCP runtime accessor tripwire: resolved generation is v1 but the loaded client module does not carry MCP_TREE_ID v1",
       )
     );
   return e;
 }
-function d() {
+function mcpAuthModule() {
   if (xT() === "v2") return import.meta.require("../认证-OAuth登录/ClaudeAuthProvider.rw5extrt.js");
   return import.meta.require("../认证-OAuth登录/ClaudeAuthProvider.163jwjev.js");
 }
-function l() {
+function mcpElicitationHandlerModule() {
   if (xT() === "v2") return import.meta.require("./registerElicitationHandler.0bnxkzrw.js");
   return import.meta.require("./registerElicitationHandler.n710jq34.js");
 }
-function y() {
+function mcpTaskWatcherModule() {
   if (xT() === "v2") return import.meta.require("./MAX_POLL_INTERVAL_MS.pjbd6km2.js");
   return import.meta.require("./MAX_POLL_INTERVAL_MS.dm2c0dwm.js");
 }
-function _() {
+function mcpSdkErrorClassificationModule() {
   if (xT() === "v2") return import.meta.require("../../01-核心基础设施/共享小工具-未细化/getMcpErrorCode.gk1snwqh.js");
   return import.meta.require("../../01-核心基础设施/共享小工具-未细化/getMcpErrorCode.zkm67jdf.js");
 }
-function j() {
+function mcpDirectoryReadModule() {
   if (xT() === "v2") return import.meta.require("./readMcpDirectory.gnvw0enw.js");
   return import.meta.require("./readMcpDirectory.8gn0ks90.js");
 }
-function v() {
+function mcpIsListAuthErrorModule() {
   if (xT() === "v2") return import.meta.require("../../01-核心基础设施/共享小工具-未细化/isListAuthError.tm2wnzn7.js");
   return import.meta.require("../../01-核心基础设施/共享小工具-未细化/isListAuthError.8jcv253h.js");
 }
-function M() {
+function mcpXaaIdpLoginModule() {
   if (xT() === "v2") return import.meta.require("../../01-核心基础设施/共享小工具-未细化/getCachedIdpIdToken.whq65fek.js");
   return import.meta.require("../../01-核心基础设施/共享小工具-未细化/getCachedIdpIdToken.x86eq6fe.js");
 }
-function E() {
+function mcpSkillsListModule() {
   return import.meta.require("../../01-核心基础设施/共享小工具-未细化/listMcpSkillPage.drxbt26x.js");
 }
 export {
-  s as emitTripwireEvent,
-  d as mcpAuthModule,
-  m as mcpClientModule,
-  j as mcpDirectoryReadModule,
-  l as mcpElicitationHandlerModule,
-  v as mcpIsListAuthErrorModule,
-  _ as mcpSdkErrorClassificationModule,
-  E as mcpSkillsListModule,
-  y as mcpTaskWatcherModule,
-  M as mcpXaaIdpLoginModule,
+  emitTripwireEvent,
+  mcpAuthModule,
+  mcpClientModule,
+  mcpDirectoryReadModule,
+  mcpElicitationHandlerModule,
+  mcpIsListAuthErrorModule,
+  mcpSdkErrorClassificationModule,
+  mcpSkillsListModule,
+  mcpTaskWatcherModule,
+  mcpXaaIdpLoginModule,
 };

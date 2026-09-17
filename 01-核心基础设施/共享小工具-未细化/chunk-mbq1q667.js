@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { lstat as s } from "fs/promises";
+import { lstat } from "fs/promises";
 async function vy(i, e, t) {
   if (i.isDirectory()) return "dir";
   if (i.isSymbolicLink()) return "symlink";
@@ -15,7 +15,7 @@ async function vy(i, e, t) {
   if (i.isFIFO() || i.isSocket() || i.isBlockDevice() || i.isCharacterDevice())
     return "other";
   try {
-    let r = await s(e);
+    let r = await lstat(e);
     return r.isDirectory()
       ? "dir"
       : r.isSymbolicLink()

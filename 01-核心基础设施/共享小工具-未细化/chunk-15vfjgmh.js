@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { getSubscriptionType as qn, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSubscriptionType, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Pw } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { isPolicyAllowed as Mt } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 function yve() {
   return (
     a.CLAUDE_CODE_DISABLE_WORKFLOWS || Pw()?.settings.disableWorkflows === !0
@@ -42,7 +42,7 @@ function PJe() {
   return Pw()?.settings.workflowKeywordTriggerEnabled ?? !0;
 }
 function JEt() {
-  return Mt("allow_workflows");
+  return isPolicyAllowed("allow_workflows");
 }
 function vnr() {
   if (yve() || !JEt()) return !0;
@@ -60,7 +60,7 @@ function i() {
   if (a.CLAUDE_CODE_WORKFLOWS === !1) return { available: !1, defaultOn: !1 };
   if (!H("tengu_workflows_enabled", !0))
     return { available: !1, defaultOn: !1 };
-  return { available: !0, defaultOn: qn() !== "pro" };
+  return { available: !0, defaultOn: getSubscriptionType() !== "pro" };
 }
 function Rnr() {
   return H("tengu_jade_compass", !0);

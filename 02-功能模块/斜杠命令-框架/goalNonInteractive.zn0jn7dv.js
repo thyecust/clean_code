@@ -17,7 +17,7 @@ var e = {
     argumentHint: "[<condition> | clear]",
     immediate: !0,
   },
-  o = {
+  goalNonInteractive = {
     type: "local",
     name: "goal",
     supportsNonInteractive: !0,
@@ -30,4 +30,4 @@ var e = {
     load: () => import("./goal-cmd.rjv3q5te.js"),
   },
   n = e;
-export { n as default, o as goalNonInteractive };
+export { n as default, goalNonInteractive };

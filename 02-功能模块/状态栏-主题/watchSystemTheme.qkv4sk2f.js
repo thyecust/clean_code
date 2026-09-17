@@ -20,7 +20,7 @@ import { dG } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux)
 import { sk } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { cft, I3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
 var v = 2000;
-function w(e, d, p) {
+function watchSystemTheme(e, d, p) {
   let o = !1,
     i = !1,
     y = p?.muxTimeoutMs ?? v,
@@ -86,4 +86,4 @@ function w(e, d, p) {
     ((o = !0), T(), h?.());
   };
 }
-export { w as watchSystemTheme };
+export { watchSystemTheme };

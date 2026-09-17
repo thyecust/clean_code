@@ -9,28 +9,28 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { createHash as a } from "crypto";
-import { homedir as o, userInfo as u } from "os";
+import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { createHash } from "crypto";
+import { homedir, userInfo } from "os";
 import { join as l } from "path";
 var $5 = "-credentials";
 function A_() {
   let n = process.env.CLAUDE_SECURESTORAGE_CONFIG_DIR;
-  if (n !== void 0) return (n || l(o(), ".claude")).normalize("NFC");
+  if (n !== void 0) return (n || l(homedir(), ".claude")).normalize("NFC");
   return be();
 }
 function Sx(n = "") {
   let e = process.env.CLAUDE_SECURESTORAGE_CONFIG_DIR,
     t = e !== void 0 ? !e : !process.env.CLAUDE_CONFIG_DIR,
     r = e !== void 0 ? e.normalize("NFC") : be(),
-    c = t ? "" : `-${a("sha256").update(r).digest("hex").substring(0, 8)}`;
-  return `Claude Code${Vt().OAUTH_FILE_SUFFIX}${n}${c}`;
+    c = t ? "" : `-${createHash("sha256").update(r).digest("hex").substring(0, 8)}`;
+  return `Claude Code${getOauthConfig().OAUTH_FILE_SUFFIX}${n}${c}`;
 }
 var s = /^[a-zA-Z0-9._-]+$/;
 function tv() {
   let n;
   try {
-    n = process.env.USER || u().username;
+    n = process.env.USER || userInfo().username;
   } catch {
     n = "claude-code-user";
   }

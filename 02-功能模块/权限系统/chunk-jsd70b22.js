@@ -11,15 +11,15 @@ import { rE, Gt, ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, Oi, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, zi, yt, dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { z, Ro, ae, qr, Zhe, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, cd } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import {
-  isAutoClassifierActive as yg,
+  isAutoClassifierActive,
   Cor,
   rx,
   y5,
@@ -37,7 +37,7 @@ import {
 import {
   Uwe,
   DUt,
-  SandboxManager as st,
+  SandboxManager,
   dT,
   lzn,
   czn,
@@ -45,13 +45,13 @@ import {
   bzn,
   wzn,
   aH,
-  resetDenialStreakAfterUserApproval as cgt,
-  stripWholeToolGrantsForAsk as c3,
-  withoutGrantsForRemoteScope as HO,
-  guardHookUpdatedInput as BDe,
-  hasPermissionsToUseTool as gd,
-  checkRuleBasedPermissions as jv,
-  executePermissionRequestHooks as Vue,
+  resetDenialStreakAfterUserApproval,
+  stripWholeToolGrantsForAsk,
+  withoutGrantsForRemoteScope,
+  guardHookUpdatedInput,
+  hasPermissionsToUseTool,
+  checkRuleBasedPermissions,
+  executePermissionRequestHooks,
   zDe,
   t4n,
   ATe,
@@ -68,7 +68,7 @@ import {
   Wv,
   Vpn,
   kX,
-  WebFetchTool as Em,
+  WebFetchTool,
   yht,
   Y2,
   zS,
@@ -77,7 +77,7 @@ import {
   oMe,
   uEe,
   QX,
-  setPermissionModeWithGuards as mH,
+  setPermissionModeWithGuards,
   aj,
   Yne,
   a8n,
@@ -97,9 +97,9 @@ import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-r
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { ot, kQ, Dge } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { OUTSIDE_READS_BLOCKED_DENY_REASON as ov } from "./chunk-e4pfvp7x.js";
+import { OUTSIDE_READS_BLOCKED_DENY_REASON } from "./chunk-e4pfvp7x.js";
 import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { turnAbortControllerOf as FJ } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { turnAbortControllerOf } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   ps,
   Tme,
@@ -118,13 +118,13 @@ import {
   Jnr,
   Oo,
 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { unstripSkillInvocationAllowRules as dAn, getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
+import { unstripSkillInvocationAllowRules, getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { FK, bzt, Kk, nme, RD, Wg } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Wh, notePlanFileForgotten as Cp, getPlanFilePath as Gh, getPlan as MN } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { isTeammateWakeupPrompt as Lwt, getLastPeerDmSummary as lwn } from "../Teammates团队/chunk-g6nvp9mm.js";
+import { Wh, notePlanFileForgotten, getPlanFilePath, getPlan } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { isTeammateWakeupPrompt, getLastPeerDmSummary } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { KYn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { zs } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
-import { CFC_TOOL_PREFIX as BI } from "../ClaudeinChrome/chunk-hnp84hf6.js";
+import { CFC_TOOL_PREFIX } from "../ClaudeinChrome/chunk-hnp84hf6.js";
 import { Iin, ste } from "../插件系统/chunk-4k4dssd9.js";
 import { I1t } from "../../01-核心基础设施/设置-配置/chunk-ekwet1zd.js";
 import { rWn, xin, oWn, sWn } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
@@ -145,9 +145,9 @@ async function Pqe(e) {
     if (R && !("reprompted" in R)) return R;
   } catch (R) {
     if (((k = !0), R instanceof Error))
-      h(dt(R, "coordinator automated permission check failed"));
+      logError(dt(R, "coordinator automated permission check failed"));
     else
-      h(
+      logError(
         dt(
           Error(`Automated permission check failed: ${String(R)}`),
           "coordinator automated permission check failed (non-Error throw)",
@@ -155,8 +155,8 @@ async function Pqe(e) {
       );
   } finally {
     if (k)
-      f("permission_coordinator_check", "permission_coordinator_check_failed");
-    else y("permission_coordinator_check");
+      logFeatureBad("permission_coordinator_check", "permission_coordinator_check_failed");
+    else logFeatureOk("permission_coordinator_check");
   }
   return null;
 }
@@ -182,7 +182,7 @@ function H1t(e) {
 }
 function Uqe(e, r, o, t, s, k, R) {
   let c = t.message.id,
-    _ = ce(o).mode;
+    _ = getToolPermissionContext(o).mode;
   function d(b, p) {
     t4n(
       {
@@ -212,7 +212,7 @@ function Uqe(e, r, o, t, s, k, R) {
     },
     persistPermissions(b) {
       if (b.length === 0 || rx(o)) return !1;
-      if ((RD(b, o.storageV5).catch(h), R !== void 0)) R(Kk(dAn(ce(o)), b));
+      if ((RD(b, o.storageV5).catch(logError), R !== void 0)) R(Kk(unstripSkillInvocationAllowRules(getToolPermissionContext(o)), b));
       else
         (o.setSessionToolPermissionContext((p) => Kk(p, b)),
           setImmediate(() => {
@@ -221,7 +221,7 @@ function Uqe(e, r, o, t, s, k, R) {
       return b.some((p) => nme(p.destination));
     },
     setModeFromBridge(b) {
-      return mH(b, ce(o), o.setToolPermissionContext);
+      return setPermissionModeWithGuards(b, getToolPermissionContext(o), o.setToolPermissionContext);
     },
     resolveIfAborted(b) {
       if (!o.abortController.signal.aborted) return !1;
@@ -245,15 +245,15 @@ function Uqe(e, r, o, t, s, k, R) {
     },
     async runHooks(b, p, F, A) {
       if (o.forRemoteExecution === !0) return null;
-      for await (let D of Vue(e.name, s, r, o, b, p, o.abortController.signal))
+      for await (let D of executePermissionRequestHooks(e.name, s, r, o, b, p, o.abortController.signal))
         if (D.permissionRequestResult) {
           let v = D.permissionRequestResult;
           if (v.behavior === "allow") {
             let T = v.updatedInput ?? F ?? r;
             if (!v.updatedInput && e.requiresUserInteraction?.()) return null;
             if (v.updatedInput) {
-              let x = BDe(
-                await jv(
+              let x = guardHookUpdatedInput(
+                await checkRuleBasedPermissions(
                   e,
                   T,
                   { ...o, toolUseId: s },
@@ -282,7 +282,7 @@ function Uqe(e, r, o, t, s, k, R) {
               v.interrupt)
             )
               (n(`Hook interrupt: tool=${e.name} hookMessage=${v.message}`),
-                FJ(o.abortController).abort());
+                turnAbortControllerOf(o.abortController).abort());
             return this.buildDeny(v.message || "Permission denied by hook", {
               type: "hook",
               hookName: "PermissionRequest",
@@ -318,10 +318,10 @@ function Uqe(e, r, o, t, s, k, R) {
           o.forRemoteExecution === !0 || rx(o)
             ? []
             : e.suppressesAllPermissionUpdates?.(r) === !0
-              ? HO(A)
+              ? withoutGrantsForRemoteScope(A)
               : e.suppressesAlwaysAllowRule?.(r) === !0 ||
                   F?.askSuppressesAlwaysAllowRule === !0
-                ? c3([...A], e, ce(o))
+                ? stripWholeToolGrantsForAsk([...A], e, getToolPermissionContext(o))
                 : A,
         v = this.persistPermissions(D);
       (I1t(D),
@@ -347,7 +347,7 @@ function Uqe(e, r, o, t, s, k, R) {
         o.forRemoteExecution === !0
           ? []
           : e.suppressesAllPermissionUpdates?.(r) === !0
-            ? HO(bzt(p))
+            ? withoutGrantsForRemoteScope(bzt(p))
             : bzt(p),
       );
       return (
@@ -489,7 +489,7 @@ var Nce = Kr({
   ),
   default: { behavior: "cancelled" },
 });
-import { basename as Co, posix as xo, relative as Io } from "path";
+import { basename as Co, posix, relative } from "path";
 var vo = new Set(["date-time"]);
 function So(e) {
   let r = e?.properties;
@@ -782,9 +782,9 @@ function oo(e) {
 }
 function to(e) {
   let r = Lv(e),
-    o = Gh();
-  Cp(o);
-  let t = MN() ?? "",
+    o = getPlanFilePath();
+  notePlanFileForgotten(o);
+  let t = getPlan() ?? "",
     s = e.assistantMessage.message.usage,
     k =
       s && typeof s.input_tokens === "number"
@@ -860,10 +860,10 @@ function io(e, r, o) {
   }
 }
 function Ce(e, r) {
-  return an(r ? e : Io(Q(), e));
+  return an(r ? e : relative(Q(), e));
 }
 function ke(e, r) {
-  return an(r ? xo.basename(e) : Co(e));
+  return an(r ? posix.basename(e) : Co(e));
 }
 async function Fo(e) {
   let { tool: r, input: o, remoteWorkspace: t, remoteOldContent: s } = e;
@@ -1293,8 +1293,8 @@ var $qe = Kr({
 var so = rE(() => zs.autoDenyPresence);
 async function Ie(e) {
   i("tengu_unary_event", {
-    event: u(e.event),
-    completion_type: u(e.completion_type),
+    event: fromEnum(e.event),
+    completion_type: fromEnum(e.completion_type),
     language_name: await e.metadata.language_name,
     message_id: Ee(e.metadata.message_id),
     platform: u0(e.metadata.platform),
@@ -1310,7 +1310,7 @@ function lo(e, r, o, t) {
     k = RTe({ filePath: e, oldContent: r, newContent: o, singleHunk: s });
   if (k.length === 0) return [];
   if (s && k.length > 1)
-    h(Error(`Unexpected number of hunks: ${k.length}. Expected 1 hunk.`));
+    logError(Error(`Unexpected number of hunks: ${k.length}. Expected 1 hunk.`));
   return F4n(k);
 }
 async function ao(e, r, o, t, s) {
@@ -1377,13 +1377,13 @@ async function ao(e, r, o, t, s) {
 async function Fe(e, r) {
   try {
     if (!r || r.type !== "connected") throw Error("IDE client not available");
-    (await R2t("close_tab", { tab_name: e }, r), y("ide_close_diff_tab"));
+    (await R2t("close_tab", { tab_name: e }, r), logFeatureOk("ide_close_diff_tab"));
   } catch (o) {
     (n(
       `Failed to close diff tab in IDE: ${o instanceof Error ? o.message : String(o)}`,
       { level: "error" },
     ),
-      g("ide_close_diff_tab", "ide_close_diff_tab_failed"));
+      logFeatureSad("ide_close_diff_tab", "ide_close_diff_tab_failed"));
   }
 }
 function jo(e) {
@@ -1418,7 +1418,7 @@ function No(e) {
 }
 var Bo = /^[A-Za-z0-9][A-Za-z0-9 ._+()-]{0,63}$/;
 function mo(e) {
-  if (Bo.test(e)) return Ln(e);
+  if (Bo.test(e)) return fromSanitizer_SANITIZER_OUTPUT_ONLY(e);
   return S("nonconforming");
 }
 function $o(e, r) {
@@ -1534,7 +1534,7 @@ function po(e) {
           if (T || !c()) return;
           (x(),
             i("tengu_ext_diff_rejected", G),
-            y("ide_diff_view"),
+            logFeatureOk("ide_diff_view"),
             _({ behavior: "deny", message: "User denied via IDE" }),
             d(),
             r.logDecision(
@@ -1549,11 +1549,11 @@ function po(e) {
         }
         if (T || !c()) return;
         if ((x(), s.denialLimitFallback !== void 0))
-          (cgt(r.toolUseContext),
-            y("permission_auto_mode_denial_fallback", { autoDenied: !1 }));
+          (resetDenialStreakAfterUserApproval(r.toolUseContext),
+            logFeatureOk("permission_auto_mode_denial_fallback", { autoDenied: !1 }));
         let I = Ho(o, t, j);
         (i("tengu_ext_diff_accepted", G),
-          y("ide_diff_view"),
+          logFeatureOk("ide_diff_view"),
           _({ behavior: "allow", updatedInput: I, updatedPermissions: [] }),
           d(),
           r.logDecision(
@@ -1574,7 +1574,7 @@ function po(e) {
           `IDE diff view failed: ${E instanceof Error ? E.message : String(E)}`,
           { level: "error" },
         ),
-          g("ide_diff_view", "ide_diff_view_failed"));
+          logFeatureSad("ide_diff_view", "ide_diff_view_failed"));
       }),
     { closeTab: x }
   );
@@ -1654,16 +1654,16 @@ function uo(e) {
     ((x = A.onResponse(T, r.tool.name, (U) => {
       if (!d()) return;
       if (U.updatedPermissionsDropped)
-        g("permission_bridge_relay", "updated_permissions_malformed");
-      else y("permission_bridge_relay");
+        logFeatureSad("permission_bridge_relay", "updated_permissions_malformed");
+      else logFeatureOk("permission_bridge_relay");
       if (x) q.removeEventListener("abort", x);
       if ((hX(v, r.toolUseID), M?.(), U.behavior === "allow")) {
         let B =
           r.tool.suppressesAllPermissionUpdates?.(s) === !0
-            ? HO(U.updatedPermissions ?? [])
+            ? withoutGrantsForRemoteScope(U.updatedPermissions ?? [])
             : r.tool.suppressesAlwaysAllowRule?.(s) === !0 ||
                 t.suppressAlwaysAllowRule === !0
-              ? c3(U.updatedPermissions ?? [], r.tool, ce(r.toolUseContext))
+              ? stripWholeToolGrantsForAsk(U.updatedPermissions ?? [], r.tool, getToolPermissionContext(r.toolUseContext))
               : (U.updatedPermissions ?? []);
         if ((zo(r, B), B.length)) I1t(B);
         (r.logDecision(
@@ -1708,7 +1708,7 @@ function uo(e) {
       for (let K of U) {
         if (K.type !== "connected") continue;
         KYn(K, { method: Iin, params: B }).catch((Y) => {
-          (f(
+          (logFeatureBad(
             "permission_channel_relay",
             "permission_channel_relay_send_failed",
           ),
@@ -1721,7 +1721,7 @@ function uo(e) {
         me = D.onResponse(I, (K) => {
           if (!d()) return;
           if (
-            (y("permission_channel_relay"), M?.(), hX(v, r.toolUseID), A && T)
+            (logFeatureOk("permission_channel_relay"), M?.(), hX(v, r.toolUseID), A && T)
           )
             A.cancelRequest(T);
           if ((x?.(), K.behavior === "allow"))
@@ -1772,7 +1772,7 @@ function uo(e) {
             B = Math.min(Math.round(B * 1.5), X);
             continue;
           }
-          if (ce(r.toolUseContext).mode === "plan") {
+          if (getToolPermissionContext(r.toolUseContext).mode === "plan") {
             (n("Server approval observed but parked: session is in plan mode"),
               (U = !1),
               (B = Math.min(Math.round(B * 1.5), X)));
@@ -1782,7 +1782,7 @@ function uo(e) {
           if ((hX(v, r.toolUseID), A && T)) A.cancelRequest(T);
           (x?.(),
             M?.(),
-            y("permission_server_approval_watch"),
+            logFeatureOk("permission_server_approval_watch"),
             r.logDecision(
               { decision: "accept", source: { type: "user", permanent: !1 } },
               { permissionPromptStartTimeMs: k },
@@ -1796,7 +1796,7 @@ function uo(e) {
           return;
         }
       })().catch((U) => {
-        (f("permission_server_approval_watch", "watcher_stopped"),
+        (logFeatureBad("permission_server_approval_watch", "watcher_stopped"),
           n(`Server-approval watcher stopped (${l(U)})`));
       }));
   }
@@ -1804,7 +1804,7 @@ function uo(e) {
     (async () => {
       if (w()) return;
       let I = await r.runHooks(
-        ce(r.toolUseContext).mode,
+        getToolPermissionContext(r.toolUseContext).mode,
         t.suggestions,
         t.updatedInput,
         k,
@@ -1826,7 +1826,7 @@ function uo(e) {
         n("PermissionRequest hooks cancelled (control stream closed)");
         return;
       }
-      h(I);
+      logError(I);
     });
   return { notifyBridgeAndTeardown: V };
 }
@@ -1844,8 +1844,8 @@ function J(e) {
   return e;
 }
 var Go = [
-  J({ matches: (e) => e === Em, dialog: $qe, build: Xe }),
-  J({ matches: (e) => e.name.startsWith(BI), dialog: Oqe, build: Ge }),
+  J({ matches: (e) => e === WebFetchTool, dialog: $qe, build: Xe }),
+  J({ matches: (e) => e.name.startsWith(CFC_TOOL_PREFIX), dialog: Oqe, build: Ge }),
   J({ matches: (e) => e === Mde, dialog: Sbe, build: Je }),
   J({ matches: (e) => e === K6t, dialog: Dqe, build: Lv }),
   J({ matches: (e) => e === aj, dialog: Lqe, build: to }),
@@ -2009,7 +2009,7 @@ async function Bqe(e, r) {
         input: D,
         permissionResult: s,
         sedInfo: T,
-        toolPermissionContext: ce(o.toolUseContext),
+        toolPermissionContext: getToolPermissionContext(o.toolUseContext),
       });
       if (o.resolveIfAborted(w.resolve)) return;
       let E;
@@ -2043,7 +2043,7 @@ async function Bqe(e, r) {
                 input: V,
                 permissionResult: j,
                 sedInfo: I,
-                toolPermissionContext: ce(o.toolUseContext),
+                toolPermissionContext: getToolPermissionContext(o.toolUseContext),
               });
             } catch (q) {
               if (
@@ -2070,7 +2070,7 @@ async function Bqe(e, r) {
       });
       return;
     }
-    let x = ce(o.toolUseContext);
+    let x = getToolPermissionContext(o.toolUseContext);
     Pe(e, w, {
       dialog: bbe,
       buildDescriptor: ({ input: M, permissionResult: E }) =>
@@ -2135,11 +2135,11 @@ function Pe(e, r, o) {
         messageID: Ee(t.messageId),
         toolName: Hn(t.tool.name),
         isMcp: t.tool.isMcp ?? !1,
-        decisionReasonType: we(E.decisionReason?.type),
-        sandboxEnabled: st.isSandboxingEnabled(),
-        permissionMode: u(C),
-        requestSource: we(Se(t.toolUseContext)?.type),
-        originAgentType: u(KC(A) && A.isMainSession ? "main" : A.agentType),
+        decisionReasonType: fromEnumOpt(E.decisionReason?.type),
+        sandboxEnabled: SandboxManager.isSandboxingEnabled(),
+        permissionMode: fromEnum(C),
+        requestSource: fromEnumOpt(Se(t.toolUseContext)?.type),
+        originAgentType: fromEnum(KC(A) && A.isMainSession ? "main" : A.agentType),
       }),
       Ie({
         completion_type: q.completion_type,
@@ -2213,10 +2213,10 @@ function Pe(e, r, o) {
     },
     Te = QX.subscribe(() => {
       if (w()) return;
-      if (_e !== void 0 && !re && !yg(sx(t.tool, ce(t.toolUseContext)))) Me();
+      if (_e !== void 0 && !re && !isAutoClassifierActive(sx(t.tool, getToolPermissionContext(t.toolUseContext)))) Me();
       if (t.tool.requiresUserInteraction?.()) return;
       if (k.forcedByCaller === !0) return;
-      gd(t.tool, t.input, t.toolUseContext, t.assistantMessage, t.toolUseID)
+      hasPermissionsToUseTool(t.tool, t.input, t.toolUseContext, t.assistantMessage, t.toolUseID)
         .then((C) => {
           if (C.behavior !== "allow") {
             if (w())
@@ -2239,7 +2239,7 @@ function Pe(e, r, o) {
         })
         .catch((C) => {
           if (!yt(C))
-            h(
+            logError(
               dt(
                 ge(C),
                 "permissionRecheckSignal: hasPermissionsToUseTool failed",
@@ -2325,8 +2325,8 @@ function Pe(e, r, o) {
     ) {
       case "allow": {
         if (k.denialLimitFallback !== void 0)
-          (cgt(t.toolUseContext),
-            y("permission_auto_mode_denial_fallback", { autoDenied: !1 }));
+          (resetDenialStreakAfterUserApproval(t.toolUseContext),
+            logFeatureOk("permission_auto_mode_denial_fallback", { autoDenied: !1 }));
         if (E.offersBlockOutsideReads === !0) lzn(t.toolUseContext);
         (Y({
           behavior: "allow",
@@ -2347,7 +2347,7 @@ function Pe(e, r, o) {
       }
       case "deny": {
         if (k.denialLimitFallback !== void 0)
-          y("permission_auto_mode_denial_fallback", { autoDenied: !1 });
+          logFeatureOk("permission_auto_mode_denial_fallback", { autoDenied: !1 });
         if (
           (Y({
             behavior: "deny",
@@ -2378,7 +2378,7 @@ function Pe(e, r, o) {
                     : te
                       ? ""
                       : " Tell the user: the setting is saved, but sandboxed commands may not be fenced until the settings change is picked up."),
-                decisionReason: { type: "other", reason: ov },
+                decisionReason: { type: "other", reason: OUTSIDE_READS_BLOCKED_DENY_REASON },
               });
             czn(t.toolUseContext)
               .then(({ error: H, sandboxRefreshed: te }) => O(H, te))
@@ -2457,7 +2457,7 @@ function Pe(e, r, o) {
           isMcp: t.tool.isMcp ?? !1,
           timeoutMs: C,
         }),
-        y("permission_auto_mode_denial_fallback", { autoDenied: !0 }),
+        logFeatureOk("permission_auto_mode_denial_fallback", { autoDenied: !0 }),
         X("reject"),
         t.logDecision(
           { decision: "reject", source: "config" },
@@ -2513,11 +2513,11 @@ function Pe(e, r, o) {
 }
 function wo(e, r) {
   let { live: o, notice: t } = uEe(e, { suppressDropTelemetry: !0 }),
-    s = lwn(o),
+    s = getLastPeerDmSummary(o),
     k = -1;
   for (let _ = o.length - 1; _ >= 0; _--) {
     let d = o[_];
-    if (d && Lwt(d)) {
+    if (d && isTeammateWakeupPrompt(d)) {
       k = _;
       break;
     }
@@ -2541,7 +2541,7 @@ function wo(e, r) {
   for (let _ = o.length - 1; _ >= 0; _--) {
     let d = o[_];
     if (!d) continue;
-    if (Lwt(d)) break;
+    if (isTeammateWakeupPrompt(d)) break;
     if (d.type !== "assistant" || d.isApiErrorMessage) continue;
     if (
       d.message.content.some(
@@ -2557,7 +2557,7 @@ function wo(e, r) {
       )
     ) {
       if (r?.emitTelemetry === !0)
-        g("swarm_idle_result_delivery", "suppressed_lead_dm");
+        logFeatureSad("swarm_idle_result_delivery", "suppressed_lead_dm");
       return { result: void 0, summary: s };
     }
     if (!oMe(d.message.content)) continue;
@@ -2586,7 +2586,7 @@ function Tbe(e, r) {
   try {
     return wo(e, r);
   } catch (o) {
-    return (h(o), { result: void 0, summary: void 0 });
+    return (logError(o), { result: void 0, summary: void 0 });
   }
 }
 function Jo(e) {

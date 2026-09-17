@@ -7,27 +7,27 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ErrorCode as xo, McpError as _o } from "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
-var o = new Set([-32002, xo.InvalidParams]);
-function e(n) {
-  return n instanceof _o ? n.code : void 0;
+import { ErrorCode, McpError } from "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
+var o = new Set([-32002, ErrorCode.InvalidParams]);
+function getMcpErrorCode(n) {
+  return n instanceof McpError ? n.code : void 0;
 }
-function t(n) {
-  return n instanceof _o && n.code === xo.MethodNotFound;
+function isMcpMethodNotFoundError(n) {
+  return n instanceof McpError && n.code === ErrorCode.MethodNotFound;
 }
-function i(n) {
-  return n instanceof _o && o.has(n.code);
+function isMcpResourceNotFoundError(n) {
+  return n instanceof McpError && o.has(n.code);
 }
-function c(n) {
-  return n instanceof _o && n.code === xo.InvalidParams;
+function isMcpNotADirectoryError(n) {
+  return n instanceof McpError && n.code === ErrorCode.InvalidParams;
 }
-function u(n) {
-  return n instanceof _o && n.code === xo.UrlElicitationRequired;
+function isUrlElicitationRequiredMcpError(n) {
+  return n instanceof McpError && n.code === ErrorCode.UrlElicitationRequired;
 }
 export {
-  e as getMcpErrorCode,
-  t as isMcpMethodNotFoundError,
-  c as isMcpNotADirectoryError,
-  i as isMcpResourceNotFoundError,
-  u as isUrlElicitationRequiredMcpError,
+  getMcpErrorCode,
+  isMcpMethodNotFoundError,
+  isMcpNotADirectoryError,
+  isMcpResourceNotFoundError,
+  isUrlElicitationRequiredMcpError,
 };

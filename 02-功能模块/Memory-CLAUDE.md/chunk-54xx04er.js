@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { o, t, tn, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { ui, $o, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -73,37 +73,37 @@ function RemoteHomeSettingsDialog({ configHome: _, storageV5: m, origin: l, onDo
     n = x(S, {
       selfOpened: p,
       onCancelled: (a) =>
-        g("ccr_home_seed_mode_prompt", a ? "cancelled_saving" : "cancelled"),
+        logFeatureSad("ccr_home_seed_mode_prompt", a ? "cancelled_saving" : "cancelled"),
     });
   (Ne("confirm:no", () => c("not_now"), {
     context: "Confirmation",
     isActive: p && !n.decided,
   }),
     E(() => {
-      i("tengu_home_settings_mode_prompt_shown", { origin: u(l) });
+      i("tengu_home_settings_mode_prompt_shown", { origin: fromEnum(l) });
     }, [l]));
   function c(a) {
     if (!n.take()) return;
     if (
-      (i("tengu_home_settings_mode_prompt", { choice: u(a), origin: u(l) }),
+      (i("tengu_home_settings_mode_prompt", { choice: fromEnum(a), origin: fromEnum(l) }),
       a === "not_now")
     ) {
-      (g("ccr_home_seed_mode_prompt", "dismissed"), n.handBack(a));
+      (logFeatureSad("ccr_home_seed_mode_prompt", "dismissed"), n.handBack(a));
       return;
     }
     Qht(a, m).then(
       (s) => {
         if (n.settled()) return;
-        if (s === "refused") f("ccr_home_seed_mode_prompt", "not_written");
+        if (s === "refused") logFeatureBad("ccr_home_seed_mode_prompt", "not_written");
         else if (s === "unconfirmed")
-          g("ccr_home_seed_mode_prompt", "unconfirmed");
-        else if (a === "forward") y("ccr_home_seed_mode_prompt");
-        else g("ccr_home_seed_mode_prompt", "declined");
+          logFeatureSad("ccr_home_seed_mode_prompt", "unconfirmed");
+        else if (a === "forward") logFeatureOk("ccr_home_seed_mode_prompt");
+        else logFeatureSad("ccr_home_seed_mode_prompt", "declined");
         n.handBack(s === "refused" ? "not_saved" : a);
       },
       (s) => {
-        if ((h(s), n.settled())) return;
-        (f("ccr_home_seed_mode_prompt", "write_failed"),
+        if ((logError(s), n.settled())) return;
+        (logFeatureBad("ccr_home_seed_mode_prompt", "write_failed"),
           n.handBack("not_saved"));
       },
     );

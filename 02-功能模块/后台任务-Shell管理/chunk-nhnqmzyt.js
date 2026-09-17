@@ -10,7 +10,7 @@
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { K, kg } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { truncate as or, formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { ite } from "../MCP客户端/chunk-xcbagjx9.js";
 import { bp, qDe, Vp, STe, a$, lEe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { JI, f1e, K_ } from "./chunk-9d5wk5b9.js";
@@ -28,7 +28,7 @@ function l(e) {
     if (e && !e(n)) continue;
     o.push({
       label: "scheduled task",
-      detail: `${h(n)} \xB7 ${or(n.prompt, c, !0)}`,
+      detail: `${h(n)} \xB7 ${truncate(n.prompt, c, !0)}`,
     });
   }
   return o;
@@ -39,7 +39,7 @@ function h(e) {
     n = o && f1e(o, new Date(e.createdAt));
   if (!n) return K_(e.cron);
   let t = Math.max(0, n.getTime() - Date.now());
-  return `Runs once in ${Ot(t, { mostSignificantOnly: !0 })}`;
+  return `Runs once in ${formatDuration(t, { mostSignificantOnly: !0 })}`;
 }
 function CBn(e, { includeDream: o = !1 } = {}) {
   let n = [];
@@ -48,7 +48,7 @@ function CBn(e, { includeDream: o = !1 } = {}) {
     if (!o && t.type === "dream") continue;
     if (t.type === "monitor_ws" && t.ambient) continue;
     if (STe(t)) continue;
-    n.push({ label: qDe[t.type], detail: or(t.description, c, !0) });
+    n.push({ label: qDe[t.type], detail: truncate(t.description, c, !0) });
   }
   return (n.push(...l()), n);
 }
@@ -64,7 +64,7 @@ function vBn() {
     n = [];
   for (let t of e) {
     if (t.kind === "todo" || t.doneAt !== void 0) continue;
-    n.push({ label: b[t.kind], detail: or(t.label, c, !0) });
+    n.push({ label: b[t.kind], detail: truncate(t.label, c, !0) });
   }
   if (o.includes("auto_mode_scan"))
     n.push({

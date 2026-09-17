@@ -13,9 +13,9 @@ import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import { TGe } from "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { B, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Et, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -37,7 +37,7 @@ function A(e) {
   return o.success && o.data.result.isError !== !0;
 }
 var F = m(() => c({ availableTabs: v(c({ tabId: T(), url: s() })) }));
-function O({
+function closeSessionTabGroup({
   sessionId: e,
   onlyIfEmpty: o,
   clientOverride: l,
@@ -89,14 +89,14 @@ async function R({
     if (!E.success)
       return (
         n(`[closeSessionTabGroup] group ${b}: unreadable tab list, keeping it`),
-        g("chrome_tab_group_close", "tabs_unreadable"),
+        logFeatureSad("chrome_tab_group_close", "tabs_unreadable"),
         { status: "kept", tabs: 0 }
       );
     t = E.data.availableTabs;
   } catch (i) {
     return (
       n(`[closeSessionTabGroup] tabs_context_mcp failed: ${String(i)}`),
-      f("chrome_tab_group_close", "context_failed"),
+      logFeatureBad("chrome_tab_group_close", "context_failed"),
       { status: "no_group" }
     );
   }
@@ -112,7 +112,7 @@ async function R({
       n(
         `[closeSessionTabGroup] group ${b} holds ${t.length} tabs, over the close cap; keeping it`,
       ),
-      g("chrome_tab_group_close", "over_cap"),
+      logFeatureSad("chrome_tab_group_close", "over_cap"),
       { status: "kept", tabs: t.length }
     );
   let G = {
@@ -146,11 +146,11 @@ async function R({
     ),
     d > 0)
   )
-    g("chrome_tab_group_close", "close_failed");
-  else y("chrome_tab_group_close");
+    logFeatureSad("chrome_tab_group_close", "close_failed");
+  else logFeatureOk("chrome_tab_group_close");
   return { status: "closed", closed: C, failed: d };
 }
-function ee() {
+function registerChromeTabGroupCleanup() {
   let e = yd();
   if (e.tabGroupCleanupRegistered) return;
   e.tabGroupCleanupRegistered = !0;
@@ -158,16 +158,16 @@ function ee() {
   ((e.unsubscribeSessionSwitch = sc((l, u) => {
     if (l === o) return;
     let r = o;
-    ((o = l), O({ sessionId: r, onlyIfEmpty: !0 }).catch(h));
+    ((o = l), closeSessionTabGroup({ sessionId: r, onlyIfEmpty: !0 }).catch(logError));
   })),
     (e.unregisterExitCleanup = Et(() => {
       if (!no()) return;
       let l = Array.from(e.closesInFlight.values(), (u) => u.promise);
       return Dt(
-        Promise.allSettled([...l, O({ sessionId: B().id, onlyIfEmpty: !0 })]),
+        Promise.allSettled([...l, closeSessionTabGroup({ sessionId: B().id, onlyIfEmpty: !0 })]),
         x,
         "chrome tab group close timed out at exit",
       ).catch(() => {});
     })));
 }
-export { O as closeSessionTabGroup, ee as registerChromeTabGroupCleanup };
+export { closeSessionTabGroup, registerChromeTabGroupCleanup };

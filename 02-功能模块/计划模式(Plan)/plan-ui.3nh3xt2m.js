@@ -14,15 +14,15 @@ import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { jn, Pt, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _6e, B0t, Q1n } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { OS, f9 } from "../../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js";
-import { Ng, prepareContextForPlanMode as JKe, Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { Ng, prepareContextForPlanMode, Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Oc } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { notePlanFileForgotten as Cp, peekPlanSlug as GK, getPlanFilePath as Gh, getPlanAsync as tve } from "./计划模式(Plan).e5mh1avy.js";
+import { notePlanFileForgotten, peekPlanSlug, getPlanFilePath, getPlanAsync } from "./计划模式(Plan).e5mh1avy.js";
 import { uat } from "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
 import { uc } from "../../01-核心基础设施/共享小工具-未细化/chunk-2gabx7f1.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -96,7 +96,7 @@ async function me(a, l, m) {
     (h8(O, "plan"),
       M((s) => ({
         ...s,
-        toolPermissionContext: Oc(JKe(s.toolPermissionContext), {
+        toolPermissionContext: Oc(prepareContextForPlanMode(s.toolPermissionContext), {
           type: "setMode",
           mode: "plan",
           destination: "session",
@@ -113,7 +113,7 @@ async function me(a, l, m) {
       } catch (u) {
         let b = u instanceof B0t;
         return (
-          f(
+          logFeatureBad(
             "plan_remote_query",
             b ? "mode_push_timeout" : "mode_push_rejected",
           ),
@@ -131,15 +131,15 @@ async function me(a, l, m) {
         !(await s.sendMessage(i, { uuid: p.uuid })))
       )
         return (
-          f("plan_remote_query", "send_failed"),
+          logFeatureBad("plan_remote_query", "send_failed"),
           a("Enabled plan mode"),
           null
         );
-      return (y("plan_remote_query"), a("Enabled plan mode"), null);
+      return (logFeatureOk("plan_remote_query"), a("Enabled plan mode"), null);
     }
     if (i.split(/\s+/)[0] === "open")
       return (
-        y("plan_remote_open"),
+        logFeatureOk("plan_remote_open"),
         a(
           "The plan file lives in the cloud workspace, so /plan open can\u2019t open it in a local editor. Use /plan to view it; to change it, tell Claude what to revise, or edit the plan in the approval dialog when Claude finishes planning.",
         ),
@@ -147,7 +147,7 @@ async function me(a, l, m) {
       );
     if (i.split(/\s+/)[0] === "share")
       return (
-        y("plan_remote_share"),
+        logFeatureOk("plan_remote_share"),
         a(
           "The plan lives in the cloud workspace, so /plan share can\u2019t publish it from this machine yet. Use /plan to view it and share its contents from there.",
         ),
@@ -161,7 +161,7 @@ async function me(a, l, m) {
       );
       if (!p.exists || !p.content)
         return (
-          y("plan_remote_view"),
+          logFeatureOk("plan_remote_view"),
           a(
             c
               ? "Enabled plan mode"
@@ -169,7 +169,7 @@ async function me(a, l, m) {
           ),
           null
         );
-      y("plan_remote_view");
+      logFeatureOk("plan_remote_view");
       let d = lo(l.session),
         u = p.content,
         b = (I) =>
@@ -189,7 +189,7 @@ async function me(a, l, m) {
       let d = p instanceof Error ? p.message : String(p),
         u = d.includes("Unsupported control request subtype");
       return (
-        f(
+        logFeatureBad(
           "plan_remote_view",
           u
             ? "unsupported_subtype"
@@ -212,11 +212,11 @@ async function me(a, l, m) {
     let s = m.trim();
     if (s && s !== "open" && s !== "share")
       return (a("Enabled plan mode", { shouldQuery: !0 }), null);
-    if (!GK()) return (a("Enabled plan mode"), null);
+    if (!peekPlanSlug()) return (a("Enabled plan mode"), null);
   }
-  let g = Gh();
-  Cp(g);
-  let C = await tve(void 0, l.storageV5);
+  let g = getPlanFilePath();
+  notePlanFileForgotten(g);
+  let C = await getPlanAsync(void 0, l.storageV5);
   if (!C)
     return (
       a(c ? "Enabled plan mode" : "Already in plan mode. No plan written yet."),
@@ -225,7 +225,7 @@ async function me(a, l, m) {
   let V = m.trim().split(/\s+/);
   if (V[0] === "open") {
     let s = await f9(g);
-    Cp(g);
+    notePlanFileForgotten(g);
     let i = lo(l.session);
     if (s.error) {
       if (i) n(`/plan open failed: ${s.error}`, { level: "error" });

@@ -21,7 +21,7 @@ import { Vb } from "../共享小工具-未细化/chunk-d3d1v4d6.js";
 import { s, v, c, $e } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { stat as C } from "fs/promises";
-import { basename as w, dirname as h, normalize as y } from "path";
+import { basename, dirname, normalize } from "path";
 function x(r) {
   return $e([r, v(r)])
     .optional()
@@ -95,9 +95,9 @@ async function D(r, o) {
   }
 }
 function IIt(r, o) {
-  let t = h(r),
-    i = y(t),
-    f = w(r),
+  let t = dirname(r),
+    i = normalize(t),
+    f = basename(r),
     a = RT.watch(t, {
       persistent: !0,
       ignoreInitial: !0,
@@ -105,8 +105,8 @@ function IIt(r, o) {
       usePolling: P() === "macos",
       interval: 100,
       ignored: (u) => {
-        let e = y(u);
-        return e !== i && w(e) !== f;
+        let e = normalize(u);
+        return e !== i && basename(e) !== f;
       },
       awaitWriteFinish: { stabilityThreshold: 300, pollInterval: 100 },
       atomic: !0,

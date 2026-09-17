@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { x } from "./chunk-1wezmyx2.js";
 import { Xs, oPn, sPn, Ncr } from "../共享小工具-未细化/chunk-xcc43dkx.js";
-import { formatFileSize as Ft } from "../共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../共享小工具-未细化/chunk-7axvc6rn.js";
 var O = { ambiguousIsNarrow: !0 };
 function te(t) {
   return Bun.stringWidth(t, O);
@@ -614,7 +614,7 @@ function formatRelativeTimeAgo(t, e = {}) {
   return formatRelativeTime(t, { ...r, numeric: "always", now: n });
 }
 function formatLogMetadata(t) {
-  let e = t.fileSize !== void 0 ? Ft(t.fileSize) : `${t.messageCount} messages`,
+  let e = t.fileSize !== void 0 ? formatFileSize(t.fileSize) : `${t.messageCount} messages`,
     n = [
       formatRelativeTimeAgo(t.modified, { style: "short" }),
       ...(t.sessionKind === "bg" ? ["bg"] : []),

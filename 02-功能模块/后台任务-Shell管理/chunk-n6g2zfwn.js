@@ -11,20 +11,20 @@ import {
   pi,
   GN,
   pU,
-  isModelAllowed as Rr,
-  getMainLoopModel as rt,
-  stepDownRestrictedFamilyAliasPick as Xh,
-  isDeploymentVouchedModel as UVt,
-  isModelAllowedUnderActiveEnforcement as dA,
-  isExemptDefaultResolvingPick as am,
-  getDefaultMainLoopModel as ol,
-  getCanonicalName as Ue,
-  parseUserSpecifiedModel as wt,
+  isModelAllowed,
+  getMainLoopModel,
+  stepDownRestrictedFamilyAliasPick,
+  isDeploymentVouchedModel,
+  isModelAllowedUnderActiveEnforcement,
+  isExemptDefaultResolvingPick,
+  getDefaultMainLoopModel,
+  getCanonicalName,
+  parseUserSpecifiedModel,
   tc,
   OR,
   FT,
-  isBgSession as _t,
-  isActingAsBgJob as Ja,
+  isBgSession,
+  isActingAsBgJob,
   H,
   Qh,
   ee,
@@ -34,16 +34,16 @@ import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Zt, Io, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { R, ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Id, pz, _Xt, Pd, oae, Ix, O0, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { Id, pz, _Xt, Pd, oae, Ix, O0, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { fn } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { findCanonicalGitRoot as $r } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { Om, z6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -52,15 +52,15 @@ import { Eg, PA, AL } from "../运行宿主探测/运行宿主探测.ysz9apmz.js
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
 import { Nt, SA } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { RP, um, Xt, er, kP, lie, Qa, getAPIProvider as Pe, isFirstPartyAnthropicBaseUrl as fo } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { BRIEF_TOOL_NAME as t_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
-import { Vo, ARTIFACT_TOOL_NAME as _r, ARTIFACT_SLUG_RE as fr, parseArtifactUrl as Wt, artifactViewerUrlFor as br } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { provenSameProcessAsync as mA } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { RP, um, Xt, er, kP, lie, Qa, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { Vo, ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, parseArtifactUrl, artifactViewerUrlFor } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { provenSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { aM } from "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
 import { BG, Sl, xEt, $t } from "../插件系统/chunk-7s6mt1vg.js";
 import { Td, rtr, otr, HFe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
-  getCommandName as qo,
+  getCommandName,
   z7,
   sV,
   Xf,
@@ -115,36 +115,36 @@ import {
   JWt,
   GEe,
   Pyt,
-  getTranscriptPathForSession as Tp,
-  readAgentMetadata as fC,
-  canFetchAgentTranscriptsOnDemand as qyt,
-  loadTranscriptFromFile as J5e,
-  mergeArtifactCommentMonitorEntries as b9t,
+  getTranscriptPathForSession,
+  readAgentMetadata,
+  canFetchAgentTranscriptsOnDemand,
+  loadTranscriptFromFile,
+  mergeArtifactCommentMonitorEntries,
   I9t,
-  hasHookForEvent as TT,
-  bridgeAdvertisedCommands as Z9t,
-  toBridgeSlashCommands as G_n,
+  hasHookForEvent,
+  bridgeAdvertisedCommands,
+  toBridgeSlashCommands,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ud } from "../Teammates团队/chunk-thxapyam.js";
 import { so } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { findLivePeerBySessionId as LSn } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { derivePublishContextFrom as vG, mainObservedArtifactVersion as D$, isArtifactReadOnlySurface as _Ye } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { findLivePeerBySessionId } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { derivePublishContextFrom, mainObservedArtifactVersion, isArtifactReadOnlySurface } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { dGt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { fc, uCn, s5 } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { isBridgeRateLimitEventEnabled as UJe } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isBridgeRateLimitEventEnabled } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { $i } from "../Teammates团队/chunk-t899nada.js";
 import { Jbt } from "./chunk-9d5wk5b9.js";
-import { CRON_CREATE_TOOL_NAME as nm, CRON_DELETE_TOOL_NAME as YS, isKairosCronEnabled as EC } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { $h, $fe, ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { getSdkHostedBridgeHandle as bw, getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
-import { syncLiveInFlightSnapshot as kre } from "./chunk-7wsy8vxb.js";
-import { getCronJitterConfig as wre } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
+import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
+import { syncLiveInFlightSnapshot } from "./chunk-7wsy8vxb.js";
+import { getCronJitterConfig } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
 import { mpt, sze, gpt, _pt } from "../Artifact发布-渲染/chunk-5gz5xvw9.js";
 import { nT, Hbe, ppt, oan, XWn, JWn, Zu } from "../Artifact发布-渲染/chunk-p1dkvpxj.js";
-import { onArmSettled as h1t, slugRepliesWiredHere as _1t, maybeSubscribeFrameLive as tte, isSocketHoldingPublishContext as hM } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
-import { relinkAdoptedAgentSymlinks as Ven } from "./chunk-c7mzes79.js";
+import { onArmSettled, slugRepliesWiredHere, maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
+import { relinkAdoptedAgentSymlinks } from "./chunk-c7mzes79.js";
 import { Iot, nHe } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Rce } from "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
 import { r4 } from "../插件系统/chunk-q8w2zntw.js";
@@ -159,7 +159,7 @@ import { wYn } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { Ug } from "../插件系统/chunk-33bdfgmx.js";
 import { Vr } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
 import { mt, Vh } from "../工具Task-Agent调度/chunk-1px84m19.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { au } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Gn = m(() =>
@@ -183,7 +183,7 @@ function Dt() {
   return t.success ? t.data : Lt;
 }
 function Ut(e) {
-  return e.requiresModel === void 0 || Rr(e.requiresModel);
+  return e.requiresModel === void 0 || isModelAllowed(e.requiresModel);
 }
 function W_e(e) {
   let t = aM();
@@ -211,10 +211,10 @@ function E6e(e, t, o) {
   let r = z7(e, [...t, ...o]);
   if (t.length === 0) return r;
   let s = new Set(r.map((p) => p.name)),
-    d = new Set(r.map(qo)),
+    d = new Set(r.map(getCommandName)),
     c = pc(t, "name")
       .filter((p) => !s.has(p.name))
-      .map((p) => (p.isMcp && d.has(qo(p)) ? { ...p, isHidden: !0 } : p));
+      .map((p) => (p.isMcp && d.has(getCommandName(p)) ? { ...p, isHidden: !0 } : p));
   return [...r, ...c];
 }
 function Bt(e, t) {
@@ -257,7 +257,7 @@ import { open as zt } from "fs/promises";
 var qn = 8388608,
   Yn = '"artifact-comment-monitor"';
 async function lFn(e) {
-  let t = Tp(e),
+  let t = getTranscriptPathForSession(e),
     o = await Xn(t);
   return o === void 0 ? void 0 : { path: t, size: o };
 }
@@ -318,7 +318,7 @@ async function Vt(e) {
     } catch {
       return null;
     }
-    if (Qn(o, E)) p = b9t(p, E);
+    if (Qn(o, E)) p = mergeArtifactCommentMonitorEntries(p, E);
   }
   return mpt(p);
 }
@@ -420,8 +420,8 @@ function Ie(e, t) {
   let r = e.artifactReadVersions?.[o];
   if (r === void 0 || r === "") return null;
   for (let [, s] of Dv(e.frameUrls ?? {})) {
-    let d = Wt(s.url);
-    if (d !== null && d.slug === o) return { slug: o, url: br(d), version: r };
+    let d = parseArtifactUrl(s.url);
+    if (d !== null && d.slug === o) return { slug: o, url: artifactViewerUrlFor(d), version: r };
   }
   return null;
 }
@@ -473,13 +473,13 @@ function Q0t(e, t) {
           ? "resume_holder_unknown"
           : null;
   if (o === null) return;
-  g("artifact_live_subscribe", o, {
-    path: u(t.path),
+  logFeatureSad("artifact_live_subscribe", o, {
+    path: fromEnum(t.path),
     probed: t.probed,
     armed_monitor_count: t.monitors,
     job_stamped: t.jobStamped,
-    takeover: u(t.takeover),
-    job_holder: u(t.jobHolder),
+    takeover: fromEnum(t.takeover),
+    job_holder: fromEnum(t.jobHolder),
     ...(t.surface !== void 0 && { surface: t.surface }),
     holder_count: t.liveHolder !== void 0 ? 1 + t.otherHolders : 0,
     ...(t.liveHolder !== void 0 && XWn(t.liveHolder, t.now)),
@@ -540,17 +540,17 @@ function rn(e, t, o) {
       d.state === "armed" &&
       d.holder === void 0 &&
       s !== t &&
-      fr.test(s) &&
+      ARTIFACT_SLUG_RE.test(s) &&
       (r === void 0 || d.writtenAtMs > r[1].writtenAtMs)
     )
       r = [s, d];
   return r === void 0
     ? null
-    : { slug: r[0], url: br({ slug: r[0], env: Vo() }) };
+    : { slug: r[0], url: artifactViewerUrlFor({ slug: r[0], env: Vo() }) };
 }
 function Jn(e) {
   let { slug: t, url: o, record: r } = e;
-  (e.arm ?? tte)({
+  (e.arm ?? maybeSubscribeFrameLive)({
     slug: t,
     url: o,
     publishContext: e.publishContext,
@@ -593,8 +593,8 @@ function sn(e) {
       context: s,
       publishContext: d,
     } = e,
-    c = e.arm ?? tte,
-    p = hM(d) ? e.resumedIntent : void 0,
+    c = e.arm ?? maybeSubscribeFrameLive,
+    p = isSocketHoldingPublishContext(d) ? e.resumedIntent : void 0,
     _ = Ie(t, o),
     I = _ ?? rn(t, o, p),
     E = _ === null && I !== null,
@@ -609,8 +609,8 @@ function sn(e) {
     let q = Vo(),
       Y = [];
     for (let F of e.carried.slice(0, $fe)) {
-      let de = br({ slug: F.slug, env: q });
-      if (Wt(de)?.slug !== F.slug) continue;
+      let de = artifactViewerUrlFor({ slug: F.slug, env: q });
+      if (parseArtifactUrl(de)?.slug !== F.slug) continue;
       if (F.slug === o) continue;
       if (F.stale === !0) {
         if (e.resumedIntent?.get(F.slug)?.state === "stopped")
@@ -678,7 +678,7 @@ function sn(e) {
           ...(I !== null && { targetSlug: I.slug }),
           ...(o !== void 0 && { excludeSlug: o }),
           named: k,
-        }).filter((ie) => fr.test(ie) && (J === void 0 || J.has(ie))),
+        }).filter((ie) => ARTIFACT_SLUG_RE.test(ie) && (J === void 0 || J.has(ie))),
         F = (B === "none" || J !== void 0) && at(e) === null ? e.tool : void 0,
         de = F !== void 0 ? Math.max(0, C - L - (q ? 1 : 0)) : 0,
         te = Y.slice(0, de);
@@ -689,7 +689,7 @@ function sn(e) {
         );
       if (F !== void 0)
         for (let ie of te)
-          re(F, ie, br({ slug: ie, env: Vo() }), p.get(ie), r(ie) === void 0);
+          re(F, ie, artifactViewerUrlFor({ slug: ie, env: Vo() }), p.get(ie), r(ie) === void 0);
     };
   if (I === null || v.has(I.slug)) {
     O(!1);
@@ -750,14 +750,14 @@ function JJt(e, t, o) {
     (n(`[frame-live] resume re-arm prelude failed: ${l(r)}`, {
       level: "error",
     }),
-      h(r));
+      logError(r));
   }
 }
 function Zn(e, t, o) {
   let { initialMessages: r, startupWatchSlug: s, storageV5: d } = e,
     { emit: c } = t,
     p = t.carried,
-    _ = u(t.publishContext === "bg_session" ? "bg_session" : t.ui),
+    _ = fromEnum(t.publishContext === "bg_session" ? "bg_session" : t.ui),
     I = "unknown",
     E = !1,
     w,
@@ -828,7 +828,7 @@ function Zn(e, t, o) {
         ...(ye > 0 ? [wpt(ye, { where: ` on ${D}`, stop: "" })] : []),
         Ht(
           lt(D, X, {
-            backgroundSession: _t(),
+            backgroundSession: isBgSession(),
             ui: t.ui,
             liveHolder: L(se),
             jobStamped: J.has(V),
@@ -840,11 +840,11 @@ function Zn(e, t, o) {
     Oe = (V) => {
       let D = Qt(V);
       if (D.countsAsLoss)
-        g("artifact_live_subscribe", "carried_consent_dropped", { surface: _ });
+        logFeatureSad("artifact_live_subscribe", "carried_consent_dropped", { surface: _ });
       let X = Vo();
       for (let U of D.warnings) {
-        let se = br({ slug: U.slug, env: X });
-        if (Wt(se)?.slug !== U.slug) continue;
+        let se = artifactViewerUrlFor({ slug: U.slug, env: X });
+        if (parseArtifactUrl(se)?.slug !== U.slug) continue;
         ie(U.slug, se, U.reason);
       }
     },
@@ -860,16 +860,16 @@ function Zn(e, t, o) {
       let X = D.flatMap((U) => U.messages.slice(0, -1));
       if (X.length > 0) c(X);
       for (let U of D) {
-        if (V === "drop" || _1t(U.slug)) continue;
+        if (V === "drop" || slugRepliesWiredHere(U.slug)) continue;
         if (V === "say") c(U.messages.slice(-1));
-        else ie(U.slug, br({ slug: U.slug, env: Vo() }), V);
+        else ie(U.slug, artifactViewerUrlFor({ slug: U.slug, env: Vo() }), V);
       }
     },
     Ae = () => $e("say");
   if ((!r || r.length === 0) && Ye.size === 0) return;
   if (p === void 0 && Ye.size === 0 && Ie(t.readFrameState(), s) === null)
     return;
-  let ue = Ja() ? void 0 : Ye,
+  let ue = isActingAsBgJob() ? void 0 : Ye,
     Mt = () => {
       let V = [...(ue ?? new Map()).entries()].filter(
         ([, D]) => D.state === "armed",
@@ -890,7 +890,7 @@ function Zn(e, t, o) {
         (de(fe, "cannot_run", D.slug, ke),
           U.push(
             lt(D.url, fe, {
-              backgroundSession: _t(),
+              backgroundSession: isBgSession(),
               ui: t.ui,
               liveHolder: L(ke),
               jobStamped: D.holder === "bg",
@@ -905,7 +905,7 @@ function Zn(e, t, o) {
                 ...(D !== null && { targetSlug: D.slug }),
                 ...(s !== void 0 && { excludeSlug: s }),
                 named: X,
-              }).map((fe) => br({ slug: fe, env: se }));
+              }).map((fe) => artifactViewerUrlFor({ slug: fe, env: se }));
       if (ye.length > 0) te("cannot_run");
       if (U.length > 0 || ye.length > 0)
         c([
@@ -935,9 +935,9 @@ function Zn(e, t, o) {
             Mt());
           let P = G([...F.values()], (N) => N === "gone");
           if (P > 0)
-            y("artifact_live_subscribe", { job_holder_gone: P, surface: _ });
+            logFeatureOk("artifact_live_subscribe", { job_holder_gone: P, surface: _ });
         } catch {
-          g("artifact_live_subscribe", "job_holder_probe_failed", {
+          logFeatureSad("artifact_live_subscribe", "job_holder_probe_failed", {
             surface: _,
           });
         }
@@ -954,8 +954,8 @@ function Zn(e, t, o) {
             )(),
             sessionId: me,
             selfPid: process.pid,
-            isRunning: o?.isRunning ?? Vs,
-            isSameProcess: o?.isSameProcess ?? mA,
+            isRunning: o?.isRunning ?? isProcessRunning,
+            isSameProcess: o?.isSameProcess ?? provenSameProcessAsync,
           });
       if (D && (Xe() !== null || Nn))
         try {
@@ -967,7 +967,7 @@ function Zn(e, t, o) {
             (T = P.verdict === "live" && P.unproven === !0));
         } catch {
           ((ce = !0),
-            g("artifact_live_subscribe", "holder_probe_failed", {
+            logFeatureSad("artifact_live_subscribe", "holder_probe_failed", {
               surface: _,
             }));
         }
@@ -1009,11 +1009,11 @@ function Zn(e, t, o) {
         w !== void 0 &&
         Tt.length > 0 &&
         K() === me &&
-        !_t() &&
+        !isBgSession() &&
         t.mayRequestTakeover()
       )
         if (
-          V.options.tools.some((N) => Kt(N, _r)) &&
+          V.options.tools.some((N) => Kt(N, ARTIFACT_TOOL_NAME)) &&
           t.commentsGateOpen() &&
           Je()
         ) {
@@ -1031,7 +1031,7 @@ function Zn(e, t, o) {
         } else C = "cannot_arm";
       let ve = k?.armable ?? new Set(),
         Le = (P) => {
-          let N = [...P].filter((oe) => ve.has(oe) && !_1t(oe));
+          let N = [...P].filter((oe) => ve.has(oe) && !slugRepliesWiredHere(oe));
           if (N.length > 0) k?.undo(new Set(N));
         };
       if (K() !== me) k?.undo();
@@ -1044,7 +1044,7 @@ function Zn(e, t, o) {
         Hn = xt ? t.commentsGateOpen : void 0,
         Ze;
       if (xt) Ze = Je();
-      let et = V.options.tools.find((P) => Kt(P, _r)),
+      let et = V.options.tools.find((P) => Kt(P, ARTIFACT_TOOL_NAME)),
         Et = Hn?.() ?? !1;
       if (U.length > 0 && j4())
         p?.discloseUnattended({ willRearm: Ze === !0 && et !== void 0 && Et });
@@ -1085,7 +1085,7 @@ function Zn(e, t, o) {
               c([
                 Ht(
                   dt(
-                    N.map((be) => br({ slug: be, env: pe })),
+                    N.map((be) => artifactViewerUrlFor({ slug: be, env: pe })),
                     oe,
                   ),
                   "notice",
@@ -1093,12 +1093,12 @@ function Zn(e, t, o) {
               ]);
             },
             onCarriedSkip: (N, oe) => {
-              if ((ie(N, br({ slug: N, env: Vo() }), oe), !ve.has(N))) return;
+              if ((ie(N, artifactViewerUrlFor({ slug: N, env: Vo() }), oe), !ve.has(N))) return;
               if (
                 oe === "arm_in_flight" &&
                 ne().live.inFlightWiredIntent.has(N)
               ) {
-                h1t(N, () => Le([N]));
+                onArmSettled(N, () => Le([N]));
                 return;
               }
               Le([N]);
@@ -1139,7 +1139,7 @@ function Zn(e, t, o) {
         let P =
           o?.isShuttingDown ??
           (await import("../../01-核心基础设施/核心工具-进程与信号/flushAnalyticsSinks.tbwzvw9n.js")).isShuttingDown;
-        if (De !== null) await new Promise((be) => h1t(De.slug, be));
+        if (De !== null) await new Promise((be) => onArmSettled(De.slug, be));
         if (K() !== me || P()) {
           Ae();
           return;
@@ -1153,16 +1153,16 @@ function Zn(e, t, o) {
             ),
           oe = await N();
         if (oe === void 0) {
-          (g("artifact_live_subscribe", "holder_reprobe_failed", {
+          (logFeatureSad("artifact_live_subscribe", "holder_reprobe_failed", {
             surface: _,
           }),
             Ae());
           return;
         }
         if (
-          (y("artifact_live_subscribe", {
+          (logFeatureOk("artifact_live_subscribe", {
             holder_gone_on_reprobe: oe === "none",
-            reprobe_verdict: u(oe),
+            reprobe_verdict: fromEnum(oe),
             surface: _,
           }),
           oe !== "none" || K() !== me || P())
@@ -1174,7 +1174,7 @@ function Zn(e, t, o) {
         if (t.rereadRecords !== void 0 && ue !== void 0) {
           let be = await t.rereadRecords(ue).catch(() => null);
           if (be === null) {
-            (g("artifact_live_subscribe", "records_reread_failed", {
+            (logFeatureSad("artifact_live_subscribe", "records_reread_failed", {
               surface: _,
             }),
               $e("record_incomplete"));
@@ -1194,7 +1194,7 @@ function Zn(e, t, o) {
           let ot = await N();
           if (ot !== "none" || K() !== me || P()) {
             if (ot === void 0)
-              g("artifact_live_subscribe", "holder_reprobe_failed", {
+              logFeatureSad("artifact_live_subscribe", "holder_reprobe_failed", {
                 surface: _,
               });
             $e(ot === "live" ? "say" : "holder_unknown");
@@ -1262,17 +1262,17 @@ function cFn(e) {
       if (
         ((s =
           r?.publishContext ??
-          vG({ agentId: void 0, isNonInteractiveSession: !0 }).publishContext),
+          derivePublishContextFrom({ agentId: void 0, isNonInteractiveSession: !0 }).publishContext),
         s !== "interactive")
       )
         return;
-      if (!(r?.hostOwned ?? (() => (Eg() && !AL() && !_Ye()) || PA()))())
+      if (!(r?.hostOwned ?? (() => (Eg() && !AL() && !isArtifactReadOnlySurface()) || PA()))())
         return;
     } catch (w) {
       (n(`[frame-live] headless resume re-arm gate failed: ${l(w)}`, {
         level: "error",
       }),
-        h(w));
+        logError(w));
       return;
     }
     let d =
@@ -1301,7 +1301,7 @@ function cFn(e) {
       E = async (w) => {
         if (_ === void 0) return null;
         if (I) {
-          let v = await J5e(_.path, e.storageV5);
+          let v = await loadTranscriptFromFile(_.path, e.storageV5);
           if (v.artifactCommentMonitor === void 0) return new Map(w);
           let T = !1,
             k = mpt(v.artifactCommentMonitor, {
@@ -1332,7 +1332,7 @@ function cFn(e) {
           return { toolUseContext: w, allowed: v };
         },
         readFrameState: p,
-        getKnownVer: (w) => D$(o(), w),
+        getKnownVer: (w) => mainObservedArtifactVersion(o(), w),
         commentsGateOpen: r?.commentsGateOpen ?? nT,
         mayRequestTakeover: () => !1,
         rereadRecords: r?.rereadRecords ?? E,
@@ -1342,20 +1342,20 @@ function cFn(e) {
   }
 }
 import { stat as oo } from "fs/promises";
-import { basename as eo } from "path";
+import { basename } from "path";
 async function ln(e, t, o) {
-  if (Mo()) {
+  if (isCrossSessionMessagingEnabled()) {
     let r = `<${_Xt}>`;
     if (e.some((w) => to(w, r)) || an(r)) return;
     let s = Date.parse(o);
     if (Number.isNaN(s)) return;
     let d = new Date(s).toISOString(),
-      c = await LSn(t);
+      c = await findLivePeerBySessionId(t);
     if (c === null) {
-      g("fork_source_note", "parent_gone");
+      logFeatureSad("fork_source_note", "parent_gone");
       return;
     }
-    let p = FT(c.name || eo(c.cwd)),
+    let p = FT(c.name || basename(c.cwd)),
       _ = p && p !== "?" ? p : null,
       I = _
         ? `a session whose self-reported name is '${Nt(_)}'`
@@ -1364,7 +1364,7 @@ async function ln(e, t, o) {
         ? `find it in the ${$i} listing under that name (it may have been renamed since)`
         : `find it in the ${$i} listing`;
     if (an(r)) return;
-    (y("fork_source_note"),
+    (logFeatureOk("fork_source_note"),
       ha({
         value: _a({
           body: `
@@ -1395,7 +1395,7 @@ function an(e) {
   return Fmt().some((t) => typeof t.value === "string" && t.value.includes(e));
 }
 async function _He(e, t, o, r, s) {
-  if (M() && s !== void 0) await Ven({ storageV5: s });
+  if (M() && s !== void 0) await relinkAdoptedAgentSymlinks({ storageV5: s });
   let d = Ygt(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE),
     c = e;
   if (d !== null) {
@@ -1407,16 +1407,16 @@ async function _He(e, t, o, r, s) {
       if (Number.isNaN(p)) return;
       if (
         ((c = e.filter((_) => Date.parse(_.timestamp) > p)),
-        Mo() && d.sessionId !== void 0 && d.parentSessionId !== void 0)
+        isCrossSessionMessagingEnabled() && d.sessionId !== void 0 && d.parentSessionId !== void 0)
       )
-        ln(c, d.parentSessionId, d.boundaryAt).catch(h);
+        ln(c, d.parentSessionId, d.boundaryAt).catch(logError);
     }
   }
   try {
     let p = uo(c);
-    (bo(p), await po(p, t, o, r, s), ho(p, t), yo(p, t), kre(Rv(t.all()), s));
+    (bo(p), await po(p, t, o, r, s), ho(p, t), yo(p, t), syncLiveInFlightSnapshot(Rv(t.all()), s));
   } catch (p) {
-    h(p);
+    logError(p);
   }
 }
 var ro = new RegExp(`<${oae}>([^<]+)</${oae}>`, "g"),
@@ -1461,9 +1461,9 @@ function uo(e) {
         if (L.name === mt || L.name === Vh) {
           if ((I.add(L.id), won(L))) E.add(L.id);
         } else if (L.name === so) w.add(L.id);
-        else if (L.name === nm)
+        else if (L.name === CRON_CREATE_TOOL_NAME)
           t.push({ toolUseId: L.id, input: B, createdAt: C });
-        else if (L.name === YS) {
+        else if (L.name === CRON_DELETE_TOOL_NAME) {
           if (typeof B.id === "string") r.add(B.id);
         }
       }
@@ -1632,7 +1632,7 @@ async function po({ asyncAgents: e, notifiedTaskIds: t }, o, r, s, d) {
   }
   if (c.length === 0) return;
   if (
-    (g("task_local_agent", "orphaned_on_resume"),
+    (logFeatureSad("task_local_agent", "orphaned_on_resume"),
     n(
       `resume: ${c.length} background agent(s) orphaned by previous process exit`,
     ),
@@ -1657,8 +1657,8 @@ async function po({ asyncAgents: e, notifiedTaskIds: t }, o, r, s, d) {
           r !== void 0 &&
           (v.launchedByAgentTool === !0 || v.launchedByForkedSkill === !0) &&
           k !== null &&
-          (await fC(T, d).catch(TTe("resume orphan probe"))) !== null;
-        return { mtimeMs: k, hasMeta: C, fetchable: k === null && qyt() };
+          (await readAgentMetadata(T, d).catch(TTe("resume orphan probe"))) !== null;
+        return { mtimeMs: k, hasMeta: C, fetchable: k === null && canFetchAgentTranscriptsOnDemand() };
       }),
     ),
     I = [],
@@ -1800,7 +1800,7 @@ function ho({ bgShells: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
   }
   if (s.length === 0) return;
   if (
-    (g("task_local_shell", "orphaned_on_resume"),
+    (logFeatureSad("task_local_shell", "orphaned_on_resume"),
     n(
       `resume: ${s.length} background shell command(s) orphaned by previous process exit`,
     ),
@@ -1845,7 +1845,7 @@ function yo({ workflows: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
   }
   if (s.length === 0) return;
   if (
-    (g("task_local_workflow", "orphaned_on_resume"),
+    (logFeatureSad("task_local_workflow", "orphaned_on_resume"),
     n(
       `resume: ${s.length} background workflow(s) orphaned by previous process exit`,
     ),
@@ -1907,9 +1907,9 @@ ${p}
   });
 }
 function bo({ calls: e, results: t, deletedCronIds: o }) {
-  if (!EC()) return;
+  if (!isKairosCronEnabled()) return;
   let r = Date.now(),
-    s = wre(),
+    s = getCronJitterConfig(),
     d = new Set(kg().map((p) => p.id)),
     c = 0;
   for (let p of e) {
@@ -2144,7 +2144,7 @@ var vo = 30000;
 function yFn({ minimumIntervalMs: e = vo, now: t = Date.now } = {}) {
   let o = new Map();
   return function (s) {
-    if (Pe() === "gateway") return !1;
+    if (getAPIProvider() === "gateway") return !1;
     let d = t(),
       c = s.resetsAt ?? 0;
     if (!Qs(md(), s)) return (o.set(c, d), !1);
@@ -2168,11 +2168,11 @@ function un(e, t) {
   );
 }
 function tIt(e, t) {
-  if (!UJe()) return;
+  if (!isBridgeRateLimitEventEnabled()) return;
   return un(e, QKn(t.rate_limit_info));
 }
 function R6e(e, t) {
-  if (!UJe()) return !1;
+  if (!isBridgeRateLimitEventEnabled()) return !1;
   try {
     e.writeSdkMessages([t]);
   } catch (o) {
@@ -2194,8 +2194,8 @@ function R6e(e, t) {
   return !0;
 }
 function hst() {
-  if (!UJe() || !MDe()) return;
-  let e = Yi() ?? bw();
+  if (!isBridgeRateLimitEventEnabled() || !MDe()) return;
+  let e = getReplBridgeHandle() ?? getSdkHostedBridgeHandle();
   if (!e) return;
   Ro();
   let t = md();
@@ -2208,7 +2208,7 @@ function hst() {
   if (r) e.reportMetadata(r);
 }
 function cn(e) {
-  if (!UJe()) return;
+  if (!isBridgeRateLimitEventEnabled()) return;
   let t = un(e, null);
   if (t) e.reportMetadata(t);
 }
@@ -2220,7 +2220,7 @@ function q_e(e) {
     return;
   }
   let o = bHe(t);
-  if (o && R6e(e, o)) y("bridge_rate_limit_forward");
+  if (o && R6e(e, o)) logFeatureOk("bridge_rate_limit_forward");
 }
 function _st({
   model: e,
@@ -2238,7 +2238,7 @@ function _st({
     mcpClients: [],
     model: e,
     permissionMode: t,
-    commands: Rg() ? [] : Z9t(o),
+    commands: Rg() ? [] : bridgeAdvertisedCommands(o),
     agents: r,
     skills: IM(s, d),
     plugins: [],
@@ -2284,8 +2284,8 @@ function SFn(e, t) {
 function yst(e) {
   if (!H("tengu_bridge_initialize_commands", !1)) return [];
   if (Rg()) return [];
-  let t = G_n(e);
-  return (y("bridge_initialize_commands"), t);
+  let t = toBridgeSlashCommands(e);
+  return (logFeatureOk("bridge_initialize_commands"), t);
 }
 function Sst(e, t, o, r) {
   let s = e.size;
@@ -2303,12 +2303,12 @@ function Sst(e, t, o, r) {
 function St(e) {
   let t = e.trim();
   if (!t) return { recognized: !1, shape: "empty" };
-  if (Pe() !== "firstParty" || !fo()) return { recognized: !0 };
+  if (getAPIProvider() !== "firstParty" || !isFirstPartyAnthropicBaseUrl()) return { recognized: !0 };
   let o = t.toLowerCase(),
     r = Xt(o).trim();
   if (um(o) || um(r)) return { recognized: !0 };
   if (Qa(r) || lie(r)) return { recognized: !0 };
-  if (UVt(t)) return { recognized: !0 };
+  if (isDeploymentVouchedModel(t)) return { recognized: !0 };
   if (Rue().some((s) => s.value === t)) return { recognized: !0 };
   if (/^claude-\S+$/.test(o)) return { recognized: !0 };
   return { recognized: !1, ...To(t) };
@@ -2337,7 +2337,7 @@ function Ct(e, t) {
   return `Model "${e}" is not a recognized model id.${o}`;
 }
 function oQt(e) {
-  return e !== void 0 && (am(e) || Rr(e)) ? wt(e) : void 0;
+  return e !== void 0 && (isExemptDefaultResolvingPick(e) || isModelAllowed(e)) ? parseUserSpecifiedModel(e) : void 0;
 }
 function bFn({ messages: e, queriedInProcess: t, activeModel: o }) {
   if (t && e.some((r) => s5(r) || pn(r) !== void 0)) return o;
@@ -2360,10 +2360,10 @@ function bFn({ messages: e, queriedInProcess: t, activeModel: o }) {
 }
 function sQt({ appliedModel: e, previousModel: t, conversationModel: o }) {
   if (o === void 0) return !1;
-  let r = wt(e),
+  let r = parseUserSpecifiedModel(e),
     s = At(r);
-  if (At(wt(o)) !== s) return !0;
-  let d = wt(t);
+  if (At(parseUserSpecifiedModel(o)) !== s) return !0;
+  let d = parseUserSpecifiedModel(t);
   return At(d) === s && tc(d) !== tc(r);
 }
 function hn(e) {
@@ -2371,8 +2371,8 @@ function hn(e) {
   let t = St(e);
   if (!t.recognized)
     return { kind: "unrecognized", shape: t.shape, suggestion: t.suggestion };
-  if (am(e) || (dA(e) ?? Rr(e))) return { kind: "allowed", model: e };
-  let o = Xh(e);
+  if (isExemptDefaultResolvingPick(e) || (isModelAllowedUnderActiveEnforcement(e) ?? isModelAllowed(e))) return { kind: "allowed", model: e };
+  let o = stepDownRestrictedFamilyAliasPick(e);
   return o === null ? { kind: "blocked" } : { kind: "steppedDown", model: o };
 }
 function bst(e, t) {
@@ -2380,25 +2380,25 @@ function bst(e, t) {
   if (o.recognized) return;
   return (
     i("tengu_set_model_unrecognized", {
-      shape: u(o.shape),
+      shape: fromEnum(o.shape),
       had_suggestion: o.suggestion !== void 0,
       surface: t,
     }),
-    f("model_switch", "unrecognized_model"),
+    logFeatureBad("model_switch", "unrecognized_model"),
     { ok: !1, error: Ct(fw(e), o.suggestion) }
   );
 }
 async function wFn(e, t) {
   let o = e.model;
   if (o != null && typeof o !== "string") {
-    if ((f("model_switch", "invalid_model_type"), e.system_prompt !== void 0))
-      f("system_prompt_switch", "model_switch_rejected");
+    if ((logFeatureBad("model_switch", "invalid_model_type"), e.system_prompt !== void 0))
+      logFeatureBad("system_prompt_switch", "model_switch_rejected");
     return { ok: !1, error: "set_model: model must be a string" };
   }
   let r = e.system_prompt;
   if (r !== void 0 && (typeof r !== "string" || r === ""))
     return (
-      f(
+      logFeatureBad(
         "system_prompt_switch",
         typeof r !== "string" ? "invalid_type" : "empty",
       ),
@@ -2416,27 +2416,27 @@ async function wFn(e, t) {
     case "unrecognized":
       if (
         (i("tengu_set_model_unrecognized", {
-          shape: u(d.shape),
+          shape: fromEnum(d.shape),
           had_suggestion: d.suggestion !== void 0,
           surface: t.surface,
         }),
-        f("model_switch", "unrecognized_model"),
+        logFeatureBad("model_switch", "unrecognized_model"),
         typeof r === "string")
       )
-        f("system_prompt_switch", "model_switch_rejected");
+        logFeatureBad("system_prompt_switch", "model_switch_rejected");
       return { ok: !1, error: Ct(fw(s), d.suggestion) };
     case "blocked": {
       let C = oQt(t.getActiveModel());
       if (
         (t.noticeRestrictedModel(s, C),
-        f("model_switch", "not_allowed"),
+        logFeatureBad("model_switch", "not_allowed"),
         typeof r === "string")
       )
-        f("system_prompt_switch", "model_switch_rejected");
-      return { ok: !1, error: Lh(s, C ?? rt()) };
+        logFeatureBad("system_prompt_switch", "model_switch_rejected");
+      return { ok: !1, error: Lh(s, C ?? getMainLoopModel()) };
     }
     case "default":
-      ((c = ol()), (p = null));
+      ((c = getDefaultMainLoopModel()), (p = null));
       break;
     case "allowed":
       ((c = d.model), (p = null));
@@ -2448,7 +2448,7 @@ async function wFn(e, t) {
   let _ = () => {
       let C = t.readAppState();
       return {
-        mainLoopModel: C.mainLoopModel ?? t.getActiveModel() ?? rt(),
+        mainLoopModel: C.mainLoopModel ?? t.getActiveModel() ?? getMainLoopModel(),
         mainLoopModelForSession: C.mainLoopModelForSession,
         toolPermissionContext: C.toolPermissionContext,
       };
@@ -2456,25 +2456,25 @@ async function wFn(e, t) {
     I = d.kind === "default" ? null : c,
     E = await P_(t.session, _, I, "sdk");
   if (E.decision !== "proceed") {
-    if ((g("model_switch", "blocked_by_hook"), typeof r === "string"))
-      f("system_prompt_switch", "model_switch_rejected");
+    if ((logFeatureSad("model_switch", "blocked_by_hook"), typeof r === "string"))
+      logFeatureBad("system_prompt_switch", "model_switch_rejected");
     return { ok: !1, error: Jle(E) };
   }
-  let w = rt(),
+  let w = getMainLoopModel(),
     v = t.getActiveModel(),
     T = t.getConversationModel();
   if (
     (Jf(t.session, _(), I, "sdk"),
     t.applyModel(c),
-    (rt() !== w || wt(c) !== wt(v ?? w)) &&
+    (getMainLoopModel() !== w || parseUserSpecifiedModel(c) !== parseUserSpecifiedModel(v ?? w)) &&
       sQt({ appliedModel: c, previousModel: v ?? w, conversationModel: T }))
   )
     t.injectModelSwitchBreadcrumbs(s, c);
   if ((t.recordAllowedModelApplied(), p !== null))
     (t.noticeRestrictedModel(s, p),
-      g("model_switch", "family_alias_stepped_down"));
-  else y("model_switch");
-  if (typeof r === "string") (t.setSystemPrompt(r), y("system_prompt_switch"));
+      logFeatureSad("model_switch", "family_alias_stepped_down"));
+  else logFeatureOk("model_switch");
+  if (typeof r === "string") (t.setSystemPrompt(r), logFeatureOk("system_prompt_switch"));
   return E.messages.length > 0
     ? { ok: !0, notices: E.messages.map(Rl) }
     : { ok: !0 };
@@ -2488,13 +2488,13 @@ function gn(e) {
   return e.type === "user" ? B_(e.message?.content) : null;
 }
 function At(e) {
-  return Ue(er(e));
+  return getCanonicalName(er(e));
 }
 function xo(e) {
   let t = hn(e);
   switch (t.kind) {
     case "default":
-      return ol();
+      return getDefaultMainLoopModel();
     case "allowed":
     case "steppedDown":
       return t.model;
@@ -2572,7 +2572,7 @@ class G_e {
     this.verdicts.clear();
   }
 }
-import { isAbsolute as Go, resolve as jo } from "path";
+import { isAbsolute, resolve } from "path";
 function KJt(e, t, o) {
   let r = [],
     s = [],
@@ -2686,14 +2686,14 @@ async function lst(e) {
   );
 }
 function kn(e, t) {
-  if ((e.source === "directory" || e.source === "file") && !Go(e.path)) {
+  if ((e.source === "directory" || e.source === "file") && !isAbsolute(e.path)) {
     let o = t ?? he(),
-      r = $r(o);
-    return { ...e, path: jo(r ?? o, e.path) };
+      r = findCanonicalGitRoot(o);
+    return { ...e, path: resolve(r ?? o, e.path) };
   }
   return e;
 }
-import { readFile as zo } from "fs/promises";
+import { readFile } from "fs/promises";
 import { join as Wo } from "path";
 var Ko = "flagged-plugins.json",
   Yo = 172800000;
@@ -2747,7 +2747,7 @@ async function je(e) {
     }
   }
   try {
-    let r = await zo(t, { encoding: "utf-8" });
+    let r = await readFile(t, { encoding: "utf-8" });
     return Sn(r);
   } catch {
     return {};
@@ -2771,7 +2771,7 @@ async function Ve(e, t) {
         level: "error",
       });
     else
-      h(
+      logError(
         new R(
           `Failed to persist flagged plugins: ${s.error.code}${d === void 0 ? "" : ` ${d}`}`,
           "flagged plugins v5 write failed",
@@ -2787,7 +2787,7 @@ async function Ve(e, t) {
     let d = A(s);
     if (d !== void 0 && wn.has(d))
       n(`Failed to persist flagged plugins: ${s}`, { level: "error" });
-    else h(s);
+    else logError(s);
   }
 }
 async function An(e) {
@@ -2869,8 +2869,8 @@ async function cst(e) {
             let T = await r4(_, v, !0, e);
             i("tengu_plugin_delisted_enforcement", {
               outcome: T.success ? S("uninstalled") : S("uninstall-failed"),
-              scope: u(v),
-              ...(!T.success && { error_kind: u(GF(T.message)) }),
+              scope: fromEnum(v),
+              ...(!T.success && { error_kind: fromEnum(GF(T.message)) }),
               ...xy(_, Xf()),
             });
           } catch (T) {
@@ -2880,8 +2880,8 @@ async function cst(e) {
             ),
               i("tengu_plugin_delisted_enforcement", {
                 outcome: S("uninstall-failed"),
-                scope: u(v),
-                error_kind: u(GF(T)),
+                scope: fromEnum(v),
+                error_kind: fromEnum(GF(T)),
                 ...xy(_, Xf()),
               }));
           }
@@ -2894,7 +2894,7 @@ async function cst(e) {
       }),
         i("tengu_plugin_delisted_enforcement", {
           outcome: S("scan-failed"),
-          error_kind: u(GF(c)),
+          error_kind: fromEnum(GF(c)),
           _PROTO_marketplace_name: d,
           is_official_marketplace: Ug(d),
         }));
@@ -3036,7 +3036,7 @@ function uFn({
     },
     begin(k) {
       if (p && !p.finalized) T(p);
-      if (!TT("MessageDisplay", t, e.id)) {
+      if (!hasHookForEvent("MessageDisplay", t, e.id)) {
         ((p = null), o(null));
         return;
       }
@@ -3102,8 +3102,8 @@ function Tn(e, t, o) {
     if (d.openTagCount === 0 && d.closeTagCount === 0) continue;
     let c = otr(s.source, (p) => e.citedStatus(p));
     i("tengu_cc_memory_tag_stripped", {
-      surface: u(s.name),
-      seam: u(o),
+      surface: fromEnum(s.name),
+      seam: fromEnum(o),
       open_tag_count: d.openTagCount,
       close_tag_count: d.closeTagCount,
       tagged_content_chars: d.taggedContentChars,
@@ -3142,7 +3142,7 @@ async function dFn(e, t, o, r, s, d, c) {
       p === t.message.content
         ? t
         : { ...t, message: { ...t.message, content: p } };
-  if (!TT("MessageDisplay", r, e.id)) return _;
+  if (!hasHookForEvent("MessageDisplay", r, e.id)) return _;
   let I = _.message.content
     .map((v) => (v.type === "text" ? v.text : ""))
     .join("");
@@ -3197,7 +3197,7 @@ var gFn = "tengu_juniper_vale",
   Wae = { enabled: !1, maxChars: 500, autoDismissAfterMs: 30000 };
 import { randomUUID as tr } from "crypto";
 var nr = 7200000,
-  SHe = new Set([t_]);
+  SHe = new Set([BRIEF_TOOL_NAME]);
 function qe(e) {
   return /\S/.test(e);
 }
@@ -3273,22 +3273,22 @@ function QJt({
       te = de?.toolCallsBefore ?? T?.toolCallsBefore ?? 0;
     try {
       i("tengu_turn_first_text", {
-        first_text_wait_end: u(T ? "painted" : O),
+        first_text_wait_end: fromEnum(T ? "painted" : O),
         ...(T && {
           ttfvt_first_text_paint_ms: Y,
-          first_text_path: u(te > 0 ? "after_tool_use" : "direct"),
+          first_text_path: fromEnum(te > 0 ? "after_tool_use" : "direct"),
           requests_before_first_text: de?.order ?? T.order,
           tool_calls_before_first_text: te,
           first_text_assistant_message_id: Ee(T.messageId),
           first_text_request_id: Ee(de?.requestId),
-          first_text_render_path: u(T.renderPath),
+          first_text_render_path: fromEnum(T.renderPath),
         }),
         ...(t && {
           user_wait_before_first_text_ms: Math.min(Math.round(F.ms), Y),
           user_waits_before_first_text: F.count,
         }),
         queryChainId: Ee(e),
-        terminal_reason: we(T ? void 0 : W),
+        terminal_reason: fromEnumOpt(T ? void 0 : W),
         ...(o &&
           _ &&
           p !== void 0 && {

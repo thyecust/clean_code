@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { oo, Xn, bh, LA, Gt, B, K, _B, fae, ke, pa } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { Nxt, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { Nxt, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Et, b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, us, oe, Qu, Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
@@ -19,62 +19,62 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import {
   Vo,
   tie,
-  ARTIFACT_TOOL_NAME as _r,
-  ARTIFACT_COMMENTS_TOOL_NAME as Zh,
-  ARTIFACT_DATA_TOOL_NAME as CP,
-  ARTIFACT_CHECK_TOOL_NAME as XD,
-  ARTIFACT_SLUG_RE as fr,
-  parseArtifactUrl as Wt,
-  parseArtifactUrlAnyCase as _ge,
-  uuidSlugFromUrl as Fi,
-  artifactViewerUrlFor as br,
-  artifactContentOriginUrlFor as sie,
-  QUOTE_HOMOGLYPHS as d1,
-  SINGLE_QUOTE_RUNS as O5,
-  INVISIBLE_BLANKS as QC,
-  scrubArtifactEnvelopeTags as Ml,
-  sweepProvenanceMarker as yb,
-  DECISION_SURFACE_BRACKETS_RE as Sb,
+  ARTIFACT_TOOL_NAME,
+  ARTIFACT_COMMENTS_TOOL_NAME,
+  ARTIFACT_DATA_TOOL_NAME,
+  ARTIFACT_CHECK_TOOL_NAME,
+  ARTIFACT_SLUG_RE,
+  parseArtifactUrl,
+  parseArtifactUrlAnyCase,
+  uuidSlugFromUrl,
+  artifactViewerUrlFor,
+  artifactContentOriginUrlFor,
+  QUOTE_HOMOGLYPHS,
+  SINGLE_QUOTE_RUNS,
+  INVISIBLE_BLANKS,
+  scrubArtifactEnvelopeTags,
+  sweepProvenanceMarker,
+  DECISION_SURFACE_BRACKETS_RE,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { ne, L$, cg } from "./chunk-rr78st95.js";
 import {
-  getSmallFastModel as xm,
-  getMainLoopModel as rt,
-  isAutoModeActive as fb,
+  getSmallFastModel,
+  getMainLoopModel,
+  isAutoModeActive,
   _5,
   kw,
   aa,
   mc,
   sx,
   si,
-  isUnattendedInteractiveSession as Sg,
-  TMUX_LOCATION_RE as HKt,
-  getClaudeAIOAuthTokenOriginAsync as $T,
+  isUnattendedInteractiveSession,
+  TMUX_LOCATION_RE,
+  getClaudeAIOAuthTokenOriginAsync,
   XC,
   H,
   xZe,
   JRn,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { truncatePathMiddle as el, truncateToWidth as Xe, formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { truncatePathMiddle, truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { bx } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Hd, Bhe, PA, AL } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { CLASSIFIER_UNAVAILABLE_REASON as kie } from "../权限系统/chunk-e4pfvp7x.js";
+import { CLASSIFIER_UNAVAILABLE_REASON } from "../权限系统/chunk-e4pfvp7x.js";
 import { Cie } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { getParentSessionId as aS } from "../Teammates团队/chunk-811z9z0t.js";
+import { getParentSessionId } from "../Teammates团队/chunk-811z9z0t.js";
 import { id } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
   Bmt,
   Uue,
-  isChainOnAllowActive as ane,
-  hasAutoModeClassifierDenyRules as ugt,
-  hasPermissionsToUseTool as gd,
-  PERMISSION_CHECK_CRASHED_REASON as mTe,
-  checkRuleBasedPermissions as jv,
+  isChainOnAllowActive,
+  hasAutoModeClassifierDenyRules,
+  hasPermissionsToUseTool,
+  PERMISSION_CHECK_CRASHED_REASON,
+  checkRuleBasedPermissions,
   S2t,
-  asSystemPrompt as Zo,
+  asSystemPrompt,
   FO,
   Gne,
   KO,
@@ -104,44 +104,44 @@ import {
   Vc,
   Re,
   xr,
-  getTranscriptWriteFailureSeq as ore,
-  registerTranscriptExitReStamp as sre,
-  recordArtifactAutoReactLedger as khn,
-  flushSessionStorage as kc,
-  takeResumedArtifactAutoReactLedger as Yhn,
-  peekResumedArtifactAutoReactLedger as Jhn,
+  getTranscriptWriteFailureSeq,
+  registerTranscriptExitReStamp,
+  recordArtifactAutoReactLedger,
+  flushSessionStorage,
+  takeResumedArtifactAutoReactLedger,
+  peekResumedArtifactAutoReactLedger,
   E8e,
   nN,
   rN,
   FY,
   uNe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { TOOL_SEARCH_TOOL_NAME as Bi, Df, jH, ime, ni, sm, PT, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { TOOL_SEARCH_TOOL_NAME, Df, jH, ime, ni, sm, PT, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { rf, ar } from "../权限系统/chunk-qdy0h5k2.js";
-import { createChildAbortController as qh } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createChildAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   Bwt,
   N1e,
   bCe,
   Cr,
   yw,
-  isFrameLiveTokenLeaseEnabled as CG,
-  servedPageLooksNested as Gwn,
-  startsWithSkeletonOpen as rYe,
-  mintRoundTripPublishSignal as zwn,
-  PUBLISH_CAP_FRAME as vqt,
-  PUBLISH_CONFLICT_LEAD as kqt,
-  PUBLISH_DENIED_FRAME as iTt,
-  PUBLISH_OUTCOME_UNKNOWN_FRAME as xqt,
-  unlinkPath as Fj,
-  markAutoReactNoticePending as hR,
+  isFrameLiveTokenLeaseEnabled,
+  servedPageLooksNested,
+  startsWithSkeletonOpen,
+  mintRoundTripPublishSignal,
+  PUBLISH_CAP_FRAME,
+  PUBLISH_CONFLICT_LEAD,
+  PUBLISH_DENIED_FRAME,
+  PUBLISH_OUTCOME_UNKNOWN_FRAME,
+  unlinkPath,
+  markAutoReactNoticePending,
   ED,
   wer,
-  isWorkshopEnabled as $H,
+  isWorkshopEnabled,
 } from "./chunk-01ymf0ar.js";
 import { ZS } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
-import { syncRespawnFlag as sR } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { syncRespawnFlag } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import {
   gI,
   lwe,
@@ -178,28 +178,28 @@ import {
   FS,
 } from "./chunk-qpgskeea.js";
 import { P7, h9n } from "./chunk-qdg189tc.js";
-import { artifactUrlRule as vte, artifactUrlInputRule as Xcn } from "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
+import { artifactUrlRule, artifactUrlInputRule } from "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
 import { i9n } from "./chunk-5gz5xvw9.js";
 import { j4, dan } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
 import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
 import { s, T, O, se, v, c, Qe, uW, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function Dn() {
-  return FS() ? Zh : _r;
+  return FS() ? ARTIFACT_COMMENTS_TOOL_NAME : ARTIFACT_TOOL_NAME;
 }
 function $e() {
   return FS()
-    ? `the ${Zh} tool (load it with ${Bi}, query \`select:${Zh}\`, if it is not loaded)`
-    : `the ${_r} tool`;
+    ? `the ${ARTIFACT_COMMENTS_TOOL_NAME} tool (load it with ${TOOL_SEARCH_TOOL_NAME}, query \`select:${ARTIFACT_COMMENTS_TOOL_NAME}\`, if it is not loaded)`
+    : `the ${ARTIFACT_TOOL_NAME} tool`;
 }
 function k9(e) {
-  return `${Zh} tool, action "${e === "comments" ? "read" : e}"`;
+  return `${ARTIFACT_COMMENTS_TOOL_NAME} tool, action "${e === "comments" ? "read" : e}"`;
 }
 function _2(e, t) {
   return FS() ? t() : e;
 }
 function Nn(e, t) {
-  return FS() ? { name: Zh, input: Tte("comments", t) } : { name: e, input: t };
+  return FS() ? { name: ARTIFACT_COMMENTS_TOOL_NAME, input: Tte("comments", t) } : { name: e, input: t };
 }
 var Lr = 86400000,
   Un = 3600000,
@@ -256,16 +256,16 @@ function Ur(e) {
     n = Gn(),
     o = n.envelope.safeParse(e);
   if (!o.success || o.data.sessionId !== K())
-    return (g("artifact_comments_autoreact", "ledger_invalid"), t);
+    return (logFeatureSad("artifact_comments_autoreact", "ledger_invalid"), t);
   let r = (o.data.accountUuid?.toLowerCase() ?? null) !== Oe();
-  if (r) g("artifact_comments_autoreact", "ledger_foreign_account");
+  if (r) logFeatureSad("artifact_comments_autoreact", "ledger_foreign_account");
   let i = Object.entries(o.data.artifacts);
   if (i.length > Wn)
-    return (g("artifact_comments_autoreact", "ledger_invalid"), t);
+    return (logFeatureSad("artifact_comments_autoreact", "ledger_invalid"), t);
   for (let [d, l] of i) {
     let p = n.artifact.safeParse(l);
-    if (!fr.test(d) || !p.success) {
-      g("artifact_comments_autoreact", "ledger_slug_invalid");
+    if (!ARTIFACT_SLUG_RE.test(d) || !p.success) {
+      logFeatureSad("artifact_comments_autoreact", "ledger_slug_invalid");
       continue;
     }
     t.set(d, r ? Lt(p.data) : p.data);
@@ -275,7 +275,7 @@ function Ur(e) {
 function at() {
   let { autoReact: e } = ne(),
     t = K(),
-    n = Br(Jhn()) === t ? Yhn() : void 0,
+    n = Br(peekResumedArtifactAutoReactLedger()) === t ? takeResumedArtifactAutoReactLedger() : void 0,
     o = Oe();
   if (n !== void 0) {
     (e.ledgerRetiredSids.delete(t),
@@ -348,7 +348,7 @@ function jn(e, t = Date.now()) {
   let r = n.own ? o : Lt(o),
     i = t - r.savedAt;
   if (i > Kn() || i < -Hn)
-    return (g("artifact_comments_autoreact", "ledger_stale"), null);
+    return (logFeatureSad("artifact_comments_autoreact", "ledger_stale"), null);
   return {
     ...r,
     turnTimestamps: r.turnTimestamps
@@ -530,7 +530,7 @@ function Ut(e = {}) {
   try {
     zr(e);
   } catch (t) {
-    (h(t), g("artifact_comments_autoreact", "ledger_write_failed"));
+    (logError(t), logFeatureSad("artifact_comments_autoreact", "ledger_write_failed"));
   }
 }
 function Yn(e, t) {
@@ -564,7 +564,7 @@ function Fn(e, t, n) {
   let r = Yn(e, t);
   if (r === null) return;
   let i = Yr(r.artifacts),
-    d = ore();
+    d = getTranscriptWriteFailureSeq();
   if (
     !n &&
     i === o.ledgerLastWritten &&
@@ -580,14 +580,14 @@ function Fn(e, t, n) {
     (o.ledgerOwnerSid ??= e),
     (o.ledgerLastWriteAccount = r.accountUuid),
     (o.ledgerFailureSeqAtWrite = d),
-    (o.ledgerExitReStamp ??= sre(Jr)));
-  let l = khn(
+    (o.ledgerExitReStamp ??= registerTranscriptExitReStamp(Jr)));
+  let l = recordArtifactAutoReactLedger(
     r,
     o.ledgerStorageV5 ?? ne().commentMonitorIntent.storageV5,
   ).catch(() => {
     if (o.ledgerLastWritten === i)
       ((o.ledgerLastWritten = null), (o.ledgerLastWriteAt = null));
-    g("artifact_comments_autoreact", "ledger_write_failed");
+    logFeatureSad("artifact_comments_autoreact", "ledger_write_failed");
   });
   o.ledgerLastAppend = Promise.all([o.ledgerLastAppend, l]).then(() => {});
 }
@@ -620,14 +620,14 @@ function Jn() {
 async function Xr() {
   (Ut({ force: !0, urgent: !0 }),
     await ne().autoReact.ledgerLastAppend,
-    await kc());
+    await flushSessionStorage());
 }
 function Jr() {
   let { autoReact: e } = ne(),
     t = K();
   if (
     e.ledgerFailureSeqAtWrite === null ||
-    ore() === e.ledgerFailureSeqAtWrite ||
+    getTranscriptWriteFailureSeq() === e.ledgerFailureSeqAtWrite ||
     (e.ledgerOwnerSid !== null && t !== e.ledgerOwnerSid)
   )
     return;
@@ -659,7 +659,7 @@ function AWn(e) {
 function Xin(e) {
   (Ft(e), x7({ flush: !0 }));
 }
-var Jin = { comments: Zh, data: CP, check: XD };
+var Jin = { comments: ARTIFACT_COMMENTS_TOOL_NAME, data: ARTIFACT_DATA_TOOL_NAME, check: ARTIFACT_CHECK_TOOL_NAME };
 function ZPe(e, t) {
   let n = t?.action,
     o = typeof n === "string" && Object.hasOwn(gI, n) ? gI[n] : void 0;
@@ -678,9 +678,9 @@ function spt(e, t, n, o) {
   );
 }
 function Jqe(e, t, n) {
-  let o = ZPe({ name: _r }, t)?.tool.name;
-  for (let r of [_r, ...(o ? [o] : [])]) {
-    let i = Xcn(ah(e, r, n), t);
+  let o = ZPe({ name: ARTIFACT_TOOL_NAME }, t)?.tool.name;
+  for (let r of [ARTIFACT_TOOL_NAME, ...(o ? [o] : [])]) {
+    let i = artifactUrlInputRule(ah(e, r, n), t);
     if (i !== null) return i;
   }
   return null;
@@ -703,7 +703,7 @@ function Uce(e, t, n, o) {
   if (r !== null) return r;
   let i = ah(e, Cr, o);
   if (i.size === 0) return null;
-  let d = new Set([new URL(br(t)).hostname, new URL(sie(t)).hostname]);
+  let d = new Set([new URL(artifactViewerUrlFor(t)).hostname, new URL(artifactContentOriginUrlFor(t)).hostname]);
   if (typeof n === "string")
     try {
       d.add(new URL(n).hostname);
@@ -715,13 +715,13 @@ function Uce(e, t, n, o) {
   return null;
 }
 function Hh(e, t, n, o, r = {}) {
-  let i = ZPe({ name: _r }, { action: r.action })?.tool.name,
+  let i = ZPe({ name: ARTIFACT_TOOL_NAME }, { action: r.action })?.tool.name,
     d = Uce(e, t, n, o);
   if (d !== null) return d;
-  for (let l of [_r, ...(i ? [i] : [])]) {
+  for (let l of [ARTIFACT_TOOL_NAME, ...(i ? [i] : [])]) {
     let p = ah(e, l, o),
       S =
-        vte(p, t, n) ?? (r.copySource === !0 ? vte(p, t, n, "from_url") : null);
+        artifactUrlRule(p, t, n) ?? (r.copySource === !0 ? artifactUrlRule(p, t, n, "from_url") : null);
     if (S !== null) return S;
   }
   return null;
@@ -755,10 +755,10 @@ function xWn(e) {
   let t = e.trim(),
     n = Vo(),
     o = tie(t);
-  if (o !== null) return { slug: o, url: br({ slug: o, env: n }) };
+  if (o !== null) return { slug: o, url: artifactViewerUrlFor({ slug: o, env: n }) };
   let r = t.toLowerCase();
-  if (fr.test(r)) return { slug: r, url: br({ slug: r, env: n }) };
-  let i = _ge(t);
+  if (ARTIFACT_SLUG_RE.test(r)) return { slug: r, url: artifactViewerUrlFor({ slug: r, env: n }) };
+  let i = parseArtifactUrlAnyCase(t);
   if (i === null)
     return {
       error:
@@ -768,7 +768,7 @@ function xWn(e) {
     return {
       error: `Error: --watch-artifact got a ${i.env} artifact URL, but this session is signed in to ${n}`,
     };
-  return { slug: i.slug, url: br(i) };
+  return { slug: i.slug, url: artifactViewerUrlFor(i) };
 }
 var dt = null;
 function HWn(e) {
@@ -821,7 +821,7 @@ function q1t(e, t) {
   }
   if (i)
     (fae(r),
-      sR(
+      syncRespawnFlag(
         "--watch-artifact",
         ["--watch-artifact-no-autoreact"],
         null,
@@ -841,7 +841,7 @@ function ro(e) {
   if (n === void 0) return !1;
   return (
     fae([...Zqe(_B()), "--watch-artifact-no-autoreact", n]),
-    sR("--watch-artifact-no-autoreact", ["--watch-artifact"], n, void 0, e),
+    syncRespawnFlag("--watch-artifact-no-autoreact", ["--watch-artifact"], n, void 0, e),
     !0
   );
 }
@@ -1014,7 +1014,7 @@ function upt(e) {
     o = t[2],
     r = t[3];
   if (!n.startsWith(ut) || !o.startsWith(uo) || !r.startsWith(lt)) return null;
-  let i = Wt(n.slice(ut.length).trim())?.slug,
+  let i = parseArtifactUrl(n.slice(ut.length).trim())?.slug,
     d = o.slice(uo.length).trim(),
     l = r.slice(lt.length);
   if (i === void 0 || Xn(d) === null || !Kt.test(l)) return null;
@@ -1032,7 +1032,7 @@ function ui(e) {
     o = t[2],
     r = t[3];
   if (!n.startsWith(ut) || !o.startsWith(lo) || !r.startsWith(lt)) return null;
-  let i = Wt(n.slice(ut.length).trim())?.slug,
+  let i = parseArtifactUrl(n.slice(ut.length).trim())?.slug,
     d = o.slice(lo.length),
     l = r.slice(lt.length);
   if (i === void 0 || !ci.test(d) || !Kt.test(l)) return null;
@@ -1258,7 +1258,7 @@ function zt(e) {
     case "claude-vscode":
       return "vscode";
     default:
-      return e.tmux !== void 0 && HKt.test(e.tmux) ? "tmux" : "terminal";
+      return e.tmux !== void 0 && TMUX_LOCATION_RE.test(e.tmux) ? "tmux" : "terminal";
   }
 }
 function ppt(e, t, n) {
@@ -1293,11 +1293,11 @@ function san(e, t) {
       (e.nameSource === void 0 ||
         e.nameSource === "user" ||
         e.nameSource === "peer")
-        ? Xe(si(oe(e.name, Ao)).replace(_i, "'"), gi)
+        ? truncateToWidth(si(oe(e.name, Ao)).replace(_i, "'"), gi)
         : "",
     o =
       e.cwd !== void 0 && e.cwd !== "?"
-        ? el(
+        ? truncatePathMiddle(
             Sn(Gu(Qu(e.cwd, Ao)))
               .replace(yi, "")
               .trim(),
@@ -1309,14 +1309,14 @@ function san(e, t) {
       return w.length > 0 ? ` (${w.join(", ")})` : "";
     },
     i = n !== "" ? `"${n}"` : "",
-    d = e.tmux !== void 0 && HKt.test(e.tmux) ? e.tmux : "",
+    d = e.tmux !== void 0 && TMUX_LOCATION_RE.test(e.tmux) ? e.tmux : "",
     l = So(e, t),
     p = Ro(e, t),
     S =
       l !== void 0 && l >= 60000
-        ? `idle for ${Ot(l, { mostSignificantOnly: !0 })}`
+        ? `idle for ${formatDuration(l, { mostSignificantOnly: !0 })}`
         : p !== void 0 && p >= 60000
-          ? `open for ${Ot(p, { mostSignificantOnly: !0 })}`
+          ? `open for ${formatDuration(p, { mostSignificantOnly: !0 })}`
           : "";
   switch (zt(e)) {
     case "background":
@@ -1335,8 +1335,8 @@ function XWn(e, t) {
   let n = So(e, t),
     o = Ro(e, t);
   return {
-    holder_surface: u(zt(e)),
-    holder_status: u(e.status ?? "none"),
+    holder_surface: fromEnum(zt(e)),
+    holder_status: fromEnum(e.status ?? "none"),
     holder_idle_min: n === void 0 ? -1 : Math.floor(n / 60000),
     holder_age_min: o === void 0 ? -1 : Math.floor(o / 60000),
     holder_has_inbox: e.sock !== void 0 && e.sock !== "",
@@ -1384,7 +1384,7 @@ function JWn(e, t) {
     } else o.set(r, i);
   return n ? o : e;
 }
-import { createHash as nr, randomUUID as or } from "crypto";
+import { createHash, randomUUID as or } from "crypto";
 function W1t() {
   return PA() || (Bhe() && !AL()) ? "userSettings" : "session";
 }
@@ -1400,7 +1400,7 @@ function opt(e, t, n) {
     Yin(e, { ...t, parsed: t.parsed }, n)
   )
     return null;
-  for (let [o, r] of ah(e, _r, "allow")) {
+  for (let [o, r] of ah(e, ARTIFACT_TOOL_NAME, "allow")) {
     let i = Xt(o);
     if (i !== null && Cie(i, "reply")) return r;
   }
@@ -1414,11 +1414,11 @@ function Yin(e, t, n) {
       if (d === void 0) return !0;
       let l = Xt(d);
       if (l !== null) return n.some((p) => Cie(l, p));
-      return vte(new Map([[d, i]]), o, t.rawUrl) !== null;
+      return artifactUrlRule(new Map([[d, i]]), o, t.rawUrl) !== null;
     };
   return Df(e).some(r) || jH(e).some(r);
 }
-var Si = [{ name: _r }, { name: Zh, familyParentToolName: _r }];
+var Si = [{ name: ARTIFACT_TOOL_NAME }, { name: ARTIFACT_COMMENTS_TOOL_NAME, familyParentToolName: ARTIFACT_TOOL_NAME }];
 function Xt(e) {
   let t = e.indexOf(":");
   if (t <= 0) return null;
@@ -1428,7 +1428,7 @@ function Xt(e) {
 }
 function To(e) {
   return (
-    e.ruleValue.toolName === _r &&
+    e.ruleValue.toolName === ARTIFACT_TOOL_NAME &&
     e.ruleValue.ruleContent !== void 0 &&
     Xt(e.ruleValue.ruleContent) !== null
   );
@@ -1436,7 +1436,7 @@ function To(e) {
 function CWn() {
   return {
     type: "addRules",
-    rules: [{ toolName: _r, ruleContent: wi }],
+    rules: [{ toolName: ARTIFACT_TOOL_NAME, ruleContent: wi }],
     behavior: "allow",
     destination: W1t(),
   };
@@ -1451,22 +1451,22 @@ function ki(e, t) {
 function apt(e) {
   return fwe(e)
     .replace(/[\n\t]/g, " ")
-    .replace(QC, " ")
+    .replace(INVISIBLE_BLANKS, " ")
     .replace(/\s+/g, " ")
     .replace(/"/g, "'")
-    .replace(d1, "'")
-    .replace(O5, "'")
+    .replace(QUOTE_HOMOGLYPHS, "'")
+    .replace(SINGLE_QUOTE_RUNS, "'")
     .trim();
 }
 function Ci(e, t) {
   let n = apt(e);
-  return Array.from(n).length > t ? `${Ml(us(n, t))}\u2026` : n;
+  return Array.from(n).length > t ? `${scrubArtifactEnvelopeTags(us(n, t))}\u2026` : n;
 }
 function Ei(e, t, n) {
   let o = e.find((S) => S.id === t),
     r = o?.comments[0];
   if (o === void 0 || r === void 0 || o.commentsDegraded) return;
-  let i = yb(Ci(r.text.replace(Sb, " "), Ri));
+  let i = sweepProvenanceMarker(Ci(r.text.replace(DECISION_SURFACE_BRACKETS_RE, " "), Ri));
   if (i === "") return;
   let d = cwe(r.account, n),
     l = wm(r),
@@ -1491,7 +1491,7 @@ function Ei(e, t, n) {
   };
 }
 function Qin(e) {
-  let t = ce(e);
+  let t = getToolPermissionContext(e);
   return (
     e.toolUseId !== void 0 &&
     t.mode !== "dontAsk" &&
@@ -1499,7 +1499,7 @@ function Qin(e) {
   );
 }
 async function Zin(e, t, n) {
-  if (!fr.test(t)) return;
+  if (!ARTIFACT_SLUG_RE.test(t)) return;
   let o = ki(e.slug, t),
     r = ne().commentTargets,
     i = ne().accountEpoch,
@@ -1526,7 +1526,7 @@ async function Zin(e, t, n) {
       tokens: uwe(),
     });
     if (w === void 0) {
-      (g("artifact_comment_consent_read", "no_opening_comment"), r.delete(o));
+      (logFeatureSad("artifact_comment_consent_read", "no_opening_comment"), r.delete(o));
       return;
     }
     if (ne().accountEpoch !== i) return;
@@ -1539,7 +1539,7 @@ async function Zin(e, t, n) {
     return w;
   } catch (S) {
     if (n.abortController.signal.aborted) throw S;
-    g("artifact_comment_consent_read", yt(S) ? "deadline" : "read_threw");
+    logFeatureSad("artifact_comment_consent_read", yt(S) ? "deadline" : "read_threw");
     return;
   } finally {
     p();
@@ -1578,11 +1578,11 @@ var xi = /(^|[\s\u3002\u3001\uFF1F\uFF01])@(?!\s)/g;
 function vo(e) {
   return e.replace(xi, "$1\uFF20");
 }
-import { createHmac as Pi } from "crypto";
+import { createHmac } from "crypto";
 var Oi = 3600000,
   Mi = Number.MAX_SAFE_INTEGER;
 function Ii(e, t, n) {
-  return Pi("sha256", JRn(n))
+  return createHmac("sha256", JRn(n))
     .update(e + t, "utf8")
     .digest("hex")
     .slice(0, 16);
@@ -1622,7 +1622,7 @@ function te(e, t) {
     S = Math.max(d.seqBySid.get(l) ?? 0, Math.floor(Date.now() / 1000) * 1000);
   if (S > Mi) return;
   d.seqBySid.set(l, S + 1);
-  let R = e.coversReplyId !== void 0 && !fr.test(e.coversReplyId),
+  let R = e.coversReplyId !== void 0 && !ARTIFACT_SLUG_RE.test(e.coversReplyId),
     w = {
       status: t.status,
       ...(p !== void 0 && { reason: p }),
@@ -1636,31 +1636,31 @@ function te(e, t) {
     (_) => {
       switch (_.kind) {
         case "accepted":
-          if (R) g("artifact_summon_status_emit", "covers_id_rejected");
-          else y("artifact_summon_status_emit");
+          if (R) logFeatureSad("artifact_summon_status_emit", "covers_id_rejected");
+          else logFeatureOk("artifact_summon_status_emit");
           return;
         case "route_absent":
           ((d.routeAbsentSince = Date.now()),
-            g("artifact_summon_status_emit", "route_absent"));
+            logFeatureSad("artifact_summon_status_emit", "route_absent"));
           return;
         case "skipped":
           if (_.reason === "no-auth")
-            g("artifact_summon_status_emit", "no_auth");
+            logFeatureSad("artifact_summon_status_emit", "no_auth");
           return;
         case "unsent":
-          g("artifact_summon_status_emit", "relay_unavailable", {
+          logFeatureSad("artifact_summon_status_emit", "relay_unavailable", {
             status: _.status,
           });
           return;
         case "failed":
-          f("artifact_summon_status_emit", _.reason, {
+          logFeatureBad("artifact_summon_status_emit", _.reason, {
             ...(_.status !== void 0 && { status: _.status }),
           });
           return;
       }
     },
     () => {
-      f("artifact_summon_status_emit", "request_error");
+      logFeatureBad("artifact_summon_status_emit", "request_error");
     },
   );
 }
@@ -2052,12 +2052,12 @@ Output the JSON verdict only.`;
   try {
     let d = await FY({
       messages: [Re({ content: i })],
-      systemPrompt: Zo([Zi]),
+      systemPrompt: asSystemPrompt([Zi]),
       thinkingConfig: { type: "disabled", mechanical: !0 },
       tools: [],
       signal: e.context.abortController.signal,
       options: {
-        model: xm(),
+        model: getSmallFastModel(),
         querySource: "artifact_comment_triage",
         isNonInteractiveSession: !0,
         agents: [],
@@ -2075,7 +2075,7 @@ Output the JSON verdict only.`;
     });
     if (d.isApiErrorMessage)
       return (
-        g("artifact_comments_autoreact", "responder_triage_error"),
+        logFeatureSad("artifact_comments_autoreact", "responder_triage_error"),
         "pipeline"
       );
     let l;
@@ -2083,21 +2083,21 @@ Output the JSON verdict only.`;
       l = z(ea(d));
     } catch {
       return (
-        g("artifact_comments_autoreact", "responder_triage_malformed"),
+        logFeatureSad("artifact_comments_autoreact", "responder_triage_malformed"),
         "pipeline"
       );
     }
     let p = Xi().safeParse(l);
     if (!p.success)
       return (
-        g("artifact_comments_autoreact", "responder_triage_malformed"),
+        logFeatureSad("artifact_comments_autoreact", "responder_triage_malformed"),
         "pipeline"
       );
     if (p.data.lane === "act") return "act";
     return "pipeline";
   } catch {
     return (
-      g("artifact_comments_autoreact", "responder_triage_threw"),
+      logFeatureSad("artifact_comments_autoreact", "responder_triage_threw"),
       "pipeline"
     );
   }
@@ -2116,7 +2116,7 @@ function na(e, t) {
         typeof i === "string" &&
         ta.has(i) &&
         typeof d === "string" &&
-        Fi(d) === e &&
+        uuidSlugFromUrl(d) === e &&
         (i !== "comments" || r.thread_id === t)
       );
     },
@@ -2133,14 +2133,14 @@ function na(e, t) {
     let R = (_) =>
         r.mcpInfo !== void 0
           ? null
-          : r.name === _r
+          : r.name === ARTIFACT_TOOL_NAME
             ? _
-            : r.name === Zh
+            : r.name === ARTIFACT_COMMENTS_TOOL_NAME
               ? lwe("comments", _)
               : null,
       w = R(i);
     if (w !== null && n(w)) {
-      let _ = await gd(r, i, d, l, p, S),
+      let _ = await hasPermissionsToUseTool(r, i, d, l, p, S),
         A = _.updatedInput,
         L =
           A !== null &&
@@ -2159,7 +2159,7 @@ async function qo(e) {
   let { context: t, url: n, slug: o, thread: r } = e;
   if (ke()) return null;
   if (mc(t.agentContext) >= ZS())
-    return (g("artifact_comments_autoreact", "analyst_depth_refused"), null);
+    return (logFeatureSad("artifact_comments_autoreact", "analyst_depth_refused"), null);
   let i = bh("comment-thread-analyst"),
     d = mc(t.agentContext) + 1,
     [{ runAgent: l }, { COMMENT_ANALYST_AGENT: p }] = await Promise.all([
@@ -2170,7 +2170,7 @@ async function qo(e) {
       agentId: i,
       parentAgentId: t.agentId,
       depth: d,
-      parentSessionId: aS(),
+      parentSessionId: getParentSessionId(),
       agentType: "subagent",
       subagentName: p.agentType,
       isBuiltIn: !0,
@@ -2198,7 +2198,7 @@ async function qo(e) {
             requireCanUseTool: !0,
             userContext: {},
             systemContext: {},
-            systemPrompt: Zo([p.getSystemPrompt({ toolUseContext: t })]),
+            systemPrompt: asSystemPrompt([p.getSystemPrompt({ toolUseContext: t })]),
             isolatedContext: !0,
           },
           description: `artifact comment thread ${r.id}`,
@@ -2206,14 +2206,14 @@ async function qo(e) {
       ),
     );
     if (w === null)
-      return (g("artifact_comments_autoreact", "analyst_run_error"), null);
+      return (logFeatureSad("artifact_comments_autoreact", "analyst_run_error"), null);
     if (w === "")
-      return (g("artifact_comments_autoreact", "analyst_empty_brief"), null);
+      return (logFeatureSad("artifact_comments_autoreact", "analyst_empty_brief"), null);
     if (!w.startsWith(oa))
-      return (g("artifact_comments_autoreact", "analyst_truncated"), null);
+      return (logFeatureSad("artifact_comments_autoreact", "analyst_truncated"), null);
     return w.length > Ho ? oe(w, Ho) : w;
   } catch {
-    return (g("artifact_comments_autoreact", "analyst_run_error"), null);
+    return (logFeatureSad("artifact_comments_autoreact", "analyst_run_error"), null);
   }
 }
 async function ra(e) {
@@ -2235,15 +2235,15 @@ async function ra(e) {
   }
   return n ? null : t;
 }
-import { writeFile as ia, rm as sa, mkdtemp as da } from "fs/promises";
-import { tmpdir as ca } from "os";
+import { writeFile, rm as sa, mkdtemp } from "fs/promises";
+import { tmpdir } from "os";
 import { join as Go } from "path";
 var ht = null;
 function gt(e) {
   return ht != null && ht.isProbedLivePage(e);
 }
 function fn(e, t) {
-  return $H() && t.artifactRegistries.recordedPages.isWorkshopPage(e);
+  return isWorkshopEnabled() && t.artifactRegistries.recordedPages.isWorkshopPage(e);
 }
 var ua =
     "If the thread asks for a change to the artifact, do NOT say you are working on it \u2014 changes to this page are made in its workshop file: say that in one plain sentence, answering any question alongside.",
@@ -2285,7 +2285,7 @@ function Sa() {
 }
 async function Ra(e) {
   let { info: t } = N1e(),
-    n = (await $T(e)) === "store" ? t?.accountUuid?.toLowerCase() : void 0;
+    n = (await getClaudeAIOAuthTokenOriginAsync(e)) === "store" ? t?.accountUuid?.toLowerCase() : void 0;
   return { account: n === "" ? void 0 : n, tokens: uwe() };
 }
 var Ta = 5000,
@@ -2341,7 +2341,7 @@ function on(e, t, n) {
     return;
   }
   if (!e.deferNoticed.has(t))
-    (e.deferNoticed.add(t), g("artifact_comments_autoreact", t));
+    (e.deferNoticed.add(t), logFeatureSad("artifact_comments_autoreact", t));
 }
 function We(e, t, n, o, r) {
   let i = Dmn(o),
@@ -2456,11 +2456,11 @@ function Yo(e, t, n) {
 }
 function Ha(e, t) {
   let n = eo();
-  if (n === null || e.agentId !== void 0 || Sg()) return null;
+  if (n === null || e.agentId !== void 0 || isUnattendedInteractiveSession()) return null;
   return async (o, r, i, d, l, p) => {
-    let S = p ?? (await gd(o, r, i, d, l));
+    let S = p ?? (await hasPermissionsToUseTool(o, r, i, d, l));
     if (S.behavior !== "ask") return S;
-    if (i.agentId !== void 0 || Sg()) return ((t.ask = "unanswered"), S);
+    if (i.agentId !== void 0 || isUnattendedInteractiveSession()) return ((t.ask = "unanswered"), S);
     return ((t.ask = "answered"), n(o, r, i, d, l, { ...S, defaultToNo: !0 }));
   };
 }
@@ -2522,17 +2522,17 @@ var pt = Object.freeze(
   ),
   Ga = 2000;
 function ur(e, t, n) {
-  let o = ce(e);
+  let o = getToolPermissionContext(e);
   return Uce(o, t, n, "deny") !== null || Uce(o, t, n, "ask") !== null;
 }
 function At(e, t) {
-  let n = ce(t);
+  let n = getToolPermissionContext(t);
   return {
     mode: sx(e, n),
-    autoActive: fb(),
-    chainOnAllow: ane(),
+    autoActive: isAutoModeActive(),
+    chainOnAllow: isChainOnAllowActive(),
     avoidPrompts: n.shouldAvoidPermissionPrompts === !0,
-    classifierDenyRules: ugt(),
+    classifierDenyRules: hasAutoModeClassifierDenyRules(),
   };
 }
 function bt(e) {
@@ -2545,7 +2545,7 @@ function bt(e) {
   );
 }
 function QWn(e, t, n) {
-  let o = ce(n);
+  let o = getToolPermissionContext(n);
   return (
     bt(At(e, n)) &&
     n.hookAskFloor !== !0 &&
@@ -2576,7 +2576,7 @@ function ja(e, t, n) {
         r.thread_id === t.threadId &&
         r.text === t.text &&
         pt.some((A) => A.text === r.text),
-      w = () => gd(o, r, i, d, l, p);
+      w = () => hasPermissionsToUseTool(o, r, i, d, l, p);
     if (
       !R ||
       p !== void 0 ||
@@ -2586,7 +2586,7 @@ function ja(e, t, n) {
     )
       return w();
     if (
-      (await jv(o, r, { ...i, toolUseId: l }, { crashIsObjection: !0 })) !==
+      (await checkRuleBasedPermissions(o, r, { ...i, toolUseId: l }, { crashIsObjection: !0 })) !==
         null ||
       !S()
     )
@@ -2671,10 +2671,10 @@ function rn(e) {
     if (e.heldForPerson === !0 && t.denial) {
       if (
         ((o.heldReplyDeclined = !0),
-        g("artifact_comments_autoreact", "held_reply_declined", _),
+        logFeatureSad("artifact_comments_autoreact", "held_reply_declined", _),
         t.feedback !== void 0)
       )
-        (hR(r),
+        (markAutoReactNoticePending(r),
           d({
             summary: y5n(e.artifactName),
             detail:
@@ -2696,7 +2696,7 @@ function rn(e) {
         KO(r) === i;
       if (A)
         ((o.autoModeDeclineNoticed = !0),
-          hR(r),
+          markAutoReactNoticePending(r),
           d(
             We(
               e.trigger,
@@ -2706,7 +2706,7 @@ function rn(e) {
               e.ackPosted ? { note: qe([e.ackCommentId]) } : void 0,
             ),
           ));
-      (g(
+      (logFeatureSad(
         "artifact_comments_autoreact",
         t.noVerdict
           ? "reply_auto_mode_no_verdict"
@@ -2716,7 +2716,7 @@ function rn(e) {
         te(l, { status: "declined", reason: "denied_by_auto_mode" }));
       return;
     }
-    (g(
+    (logFeatureSad(
       "artifact_comments_autoreact",
       t.denial ? "content_gate_refused" : "reply_refused",
       _,
@@ -2731,16 +2731,16 @@ function rn(e) {
   }
   if (t.kind === "no_result") {
     ((n.consecutivePipelineDenials += 1),
-      g("artifact_comments_autoreact", "pipeline_no_result", _),
+      logFeatureSad("artifact_comments_autoreact", "pipeline_no_result", _),
       te(l, { status: "declined", reason: "blocked" }));
     return;
   }
   if (t.kind === "not_activated") {
-    g("artifact_comments_autoreact", "deactivated_mid_turn", _);
+    logFeatureSad("artifact_comments_autoreact", "deactivated_mid_turn", _);
     return;
   }
   if (t.kind === "account_changed") {
-    g("artifact_comments_autoreact", "held_reply_account_changed", _);
+    logFeatureSad("artifact_comments_autoreact", "held_reply_account_changed", _);
     return;
   }
   if (
@@ -2748,10 +2748,10 @@ function rn(e) {
     t.kind === "answered_post_time" ||
     t.kind === "summon_foreign"
   ) {
-    if ((g("artifact_comments_autoreact", Pr(t.kind), _), S !== void 0))
-      if (Zu() && !Xp(r) && KO(r) === i) (hR(r), d(S));
+    if ((logFeatureSad("artifact_comments_autoreact", Pr(t.kind), _), S !== void 0))
+      if (Zu() && !Xp(r) && KO(r) === i) (markAutoReactNoticePending(r), d(S));
       else
-        g(
+        logFeatureSad(
           "artifact_comments_autoreact",
           t.kind === "summon_foreign"
             ? "summon_foreign_notice_suppressed"
@@ -2764,7 +2764,7 @@ function rn(e) {
   }
   if (t.kind === "unexpected_result_shape") {
     ((n.consecutivePipelineDenials += 1),
-      f("artifact_comments_autoreact", "unexpected_result_shape", _),
+      logFeatureBad("artifact_comments_autoreact", "unexpected_result_shape", _),
       te(l, { status: "declined", reason: "blocked" }));
     return;
   }
@@ -2779,17 +2779,17 @@ function rn(e) {
   )
     dan(r);
   if ((hr(n, t), e.heldForPerson !== !0 && (!Zu() || Xp(r) || KO(r) !== i))) {
-    y("artifact_comments_autoreact", {
+    logFeatureOk("artifact_comments_autoreact", {
       replied: !0,
       post_stop_notice_suppressed: !0,
       ...w,
     });
     return;
   }
-  (hR(r), d(p), y("artifact_comments_autoreact", { replied: !0, ...w }));
+  (markAutoReactNoticePending(r), d(p), logFeatureOk("artifact_comments_autoreact", { replied: !0, ...w }));
 }
 async function zo(e) {
-  let t = Wt(e.url);
+  let t = parseArtifactUrl(e.url);
   if (t === null) return !1;
   if (ur(e.context, { slug: e.slug, env: t.env }, e.url)) return !1;
   let n = await j7(
@@ -2849,7 +2849,7 @@ async function Ge(e) {
         : null,
     N = Lo({ slug: r, threadId: i, expectedToolUseId: _ }),
     P = { stoodDown: null },
-    D = e.canUseTool ?? gd,
+    D = e.canUseTool ?? hasPermissionsToUseTool,
     M =
       S !== void 0
         ? async (W, G, j, I, Q, V) => {
@@ -2945,7 +2945,7 @@ async function Ge(e) {
   if (P.stoodDown === "account_changed") return { kind: "account_changed" };
   if (P.stoodDown === "answered") return { kind: "answered_post_time" };
   if (L !== null && E.kind === "posted" && !L.consumed)
-    g(
+    logFeatureSad(
       "artifact_comments_autoreact",
       L.continuesReplyId !== void 0
         ? "follow_up_marker_unconsumed"
@@ -2990,7 +2990,7 @@ function Xa(e, t) {
       consecutivePipelineDenials: 0,
       deferNoticed: new Set(),
     });
-  y("artifact_comments_autoreact", {
+  logFeatureOk("artifact_comments_autoreact", {
     ledger_rehydrated: !0,
     ledger_threads: t.threads?.length ?? -1,
   });
@@ -3043,7 +3043,7 @@ function H7(e, t) {
   if (n === void 0 || n === "") return t;
   let o = yw(n);
   if (o === null) return t;
-  return `"${vo(o.replace(/"/g, "'").replace(d1, "'").replace(O5, "'"))}"`;
+  return `"${vo(o.replace(/"/g, "'").replace(QUOTE_HOMOGLYPHS, "'").replace(SINGLE_QUOTE_RUNS, "'"))}"`;
 }
 function mr(e) {
   let t = e.publishTranscript,
@@ -3175,7 +3175,7 @@ function an(e, t) {
   ((e.coalesceTimer = null), (e.pendingConfirm = null), (e.pendingSeed = null));
   let n = ts(Qa(t))
     .catch(() => {
-      g("artifact_comments_autoreact", "scan_error");
+      logFeatureSad("artifact_comments_autoreact", "scan_error");
     })
     .finally(() => {
       if (e.inFlightScan === n) e.inFlightScan = null;
@@ -3184,7 +3184,7 @@ function an(e, t) {
 }
 function Xo(e, t) {
   if (t && e.readRetryAttempts > 0)
-    y("artifact_comments_autoreact", {
+    logFeatureOk("artifact_comments_autoreact", {
       read_retry_cleared: !0,
       retry_attempts: e.readRetryAttempts,
     });
@@ -3200,7 +3200,7 @@ function Za(e, t, n) {
     return;
   }
   if (o >= r) {
-    (g("artifact_comments_autoreact", "read_retry_gave_up", {
+    (logFeatureSad("artifact_comments_autoreact", "read_retry_gave_up", {
       retry_attempts: o,
     }),
       (e.readRetryAttempts = 0));
@@ -3239,7 +3239,7 @@ async function ts(e) {
     if (e.seed === !0) j.baselined = !1;
     if (!j.ruleWithheldNoted)
       ((j.ruleWithheldNoted = !0),
-        g("artifact_comments_autoreact", "rule_withheld"));
+        logFeatureSad("artifact_comments_autoreact", "rule_withheld"));
     return;
   }
   Ze(r).ruleWithheldNoted = !1;
@@ -3270,13 +3270,13 @@ async function ts(e) {
           e.confirm === !0
             ? "artifact_autoreact_confirm_read"
             : "artifact_autoreact_scan_read",
-          { skipBootProbe: CG() },
+          { skipBootProbe: isFrameLiveTokenLeaseEnabled() },
         ),
       ]),
       Q = e.pickUpRecentSummons === !0 && ya();
     if (I.err !== null) {
       if (
-        (g("artifact_comments_autoreact", "read_failed", {
+        (logFeatureSad("artifact_comments_autoreact", "read_failed", {
           retryable: I.retryable === !0,
           retry_attempts: t.readRetryAttempts,
         }),
@@ -3292,7 +3292,7 @@ async function ts(e) {
     }
     if ((Xo(t, !0), (R.lastScanAt = Date.now()), I.threadsDegraded === !0)) {
       ((R.everHadThreads = !0),
-        g("artifact_comments_autoreact", "read_degraded"),
+        logFeatureSad("artifact_comments_autoreact", "read_degraded"),
         (R.lastReadDigest = null),
         (W = o === "owed"));
       return;
@@ -3302,11 +3302,11 @@ async function ts(e) {
     let V = I.threadsDropped === !0 || KO(r) !== w ? null : ns(I.threads, R);
     if (e.confirm === !0) {
       let le = e.confirmBase;
-      y("artifact_comments_autoreact", {
+      logFeatureOk("artifact_comments_autoreact", {
         confirm_read: !0,
         rescued: V !== null && le !== void 0 && le !== V,
         noref: V === null || le === void 0,
-        after: u(e.confirmAfter ?? "unread"),
+        after: fromEnum(e.confirmAfter ?? "unread"),
       });
     }
     if (V === null) ((M = "noref"), (R.lastReadDigest = null));
@@ -3323,7 +3323,7 @@ async function ts(e) {
     let re = !1;
     for (let le of I.threads) {
       if (KO(r) !== w) {
-        g("artifact_comments_autoreact", "scan_stopped_by_kill");
+        logFeatureSad("artifact_comments_autoreact", "scan_stopped_by_kill");
         return;
       }
       let _e = await rs({
@@ -3402,7 +3402,7 @@ async function ts(e) {
 }
 function ns(e, t) {
   let n = (r, i) => (r.id < i.id ? -1 : 1),
-    o = nr("sha256");
+    o = createHash("sha256");
   for (let r of [...e].sort(n)) {
     let i = t.threads.get(r.id);
     if (
@@ -3443,7 +3443,7 @@ function os(e) {
     return {
       reason: "denied_by_auto_mode",
       errorCode:
-        t.reason === kie
+        t.reason === CLASSIFIER_UNAVAILABLE_REASON
           ? "auto_mode_unavailable"
           : t.noVerdict === !0
             ? "auto_mode_no_verdict"
@@ -3470,7 +3470,7 @@ async function rs(e) {
   if (r.commentsDegraded === !0) return _ ? void 0 : "deferred_first_sight";
   if (r.resolvedDegraded === !0)
     return (
-      g("artifact_comments_autoreact", "resolution_degraded"),
+      logFeatureSad("artifact_comments_autoreact", "resolution_degraded"),
       _ ? void 0 : "deferred_first_sight"
     );
   let A = r.activatedAtDegraded === !0,
@@ -3478,7 +3478,7 @@ async function rs(e) {
   if (!_) {
     if (A)
       return (
-        g("artifact_comments_autoreact", "activation_degraded"),
+        logFeatureSad("artifact_comments_autoreact", "activation_degraded"),
         "deferred_first_sight"
       );
     let C =
@@ -3503,9 +3503,9 @@ async function rs(e) {
         de = pwe(r);
       if (((L = new Set(de.filter((pe) => Ko(pe, ae)))), F)) {
         if (L.size > 0)
-          y("artifact_comments_autoreact", { first_sight_summon: !0 });
+          logFeatureOk("artifact_comments_autoreact", { first_sight_summon: !0 });
         else if (de.length > 0)
-          g("artifact_comments_autoreact", "first_sight_summon_stale");
+          logFeatureSad("artifact_comments_autoreact", "first_sight_summon_stale");
       }
     }
     if (
@@ -3541,11 +3541,11 @@ async function rs(e) {
       !J && !q)
     ) {
       if (L.size === 0) return;
-      y("artifact_comments_autoreact", { summon_pickup: !0 });
+      logFeatureOk("artifact_comments_autoreact", { summon_pickup: !0 });
     }
   }
   if (A) {
-    g("artifact_comments_autoreact", "activation_degraded");
+    logFeatureSad("artifact_comments_autoreact", "activation_degraded");
     return;
   }
   let N = !r.claudeActivated && _.activatedAt !== null;
@@ -3566,7 +3566,7 @@ async function rs(e) {
   if (!(en() && so(performance.now(), U))) l.busyValveNoticed = !1;
   else if (!l.busyValveNoticed)
     ((l.busyValveNoticed = !0),
-      g("artifact_comments_autoreact", "foreground_busy_timeout"));
+      logFeatureSad("artifact_comments_autoreact", "foreground_busy_timeout"));
   jo(l, r);
   let W = r.activatedAt ?? null,
     G = _.activatedAt,
@@ -3630,7 +3630,7 @@ async function rs(e) {
     tt = (C) => {
       if (!Zu() || Xp(t) || KO(t) !== e.scanGen)
         return (
-          g("artifact_comments_autoreact", `stopped_during_${C}`),
+          logFeatureSad("artifact_comments_autoreact", `stopped_during_${C}`),
           te(ee, { status: "declined", reason: "auto_reply_off" }),
           !0
         );
@@ -3638,9 +3638,9 @@ async function rs(e) {
     },
     he = (C) => {
       if (tt(C)) return !0;
-      if (ce(i).mode === "plan")
+      if (getToolPermissionContext(i).mode === "plan")
         return (
-          g("artifact_comments_autoreact", `plan_mode_during_${C}`),
+          logFeatureSad("artifact_comments_autoreact", `plan_mode_during_${C}`),
           te(ee, { status: "declined", reason: "plan_mode" }),
           !0
         );
@@ -3682,7 +3682,7 @@ async function rs(e) {
     !Mr &&
     !EOe(Tt, Ae)
   ) {
-    g("artifact_comments_autoreact", "stood_down_answered");
+    logFeatureSad("artifact_comments_autoreact", "stood_down_answered");
     return;
   }
   let Ir =
@@ -3702,12 +3702,12 @@ async function rs(e) {
         return;
     }
     if (J) {
-      g("artifact_comments_autoreact", "stood_down_visible_turn");
+      logFeatureSad("artifact_comments_autoreact", "stood_down_visible_turn");
       return;
     }
   }
   if (_.breakerOpen) {
-    (g("artifact_comments_autoreact", "breaker_open"),
+    (logFeatureSad("artifact_comments_autoreact", "breaker_open"),
       te(ee, { status: "declined", reason: "loop_guard" }));
     return;
   }
@@ -3719,12 +3719,12 @@ async function rs(e) {
     Rn = () => {
       if (!l.pipelineDeniedNoticed)
         ((l.pipelineDeniedNoticed = !0),
-          hR(t),
+          markAutoReactNoticePending(t),
           d({
             summary: g5n(o),
             detail: `Automatic replies or edits on artifact ${n} are being blocked by a permission hook or content gate, or repeatedly refused by the session's configuration \u2014 recent attempts were refused or dropped after composing. Affected threads are paused; a successful auto-reply anywhere on this artifact resumes them.`,
           }));
-      (g("artifact_comments_autoreact", "pipeline_denied"),
+      (logFeatureSad("artifact_comments_autoreact", "pipeline_denied"),
         te(ee, { status: "declined", reason: "blocked" }));
     };
   if (wn && ot === void 0) {
@@ -3752,11 +3752,11 @@ async function rs(e) {
         )));
   if (!vn && !Ja(l, re)) {
     if (
-      (g("artifact_comments_autoreact", "hourly_cap"),
+      (logFeatureSad("artifact_comments_autoreact", "hourly_cap"),
       te(ee, { status: "declined", reason: "hourly_cap" }),
-      l.lastProbeAllowed && !l.capNoticed && ce(i).mode !== "plan")
+      l.lastProbeAllowed && !l.capNoticed && getToolPermissionContext(i).mode !== "plan")
     )
-      ((l.capNoticed = !0), hR(t), d(We(ue, "cap", n, o)));
+      ((l.capNoticed = !0), markAutoReactNoticePending(t), d(We(ue, "cap", n, o)));
     return;
   }
   if (!vn) {
@@ -3764,19 +3764,19 @@ async function rs(e) {
       ((l.capNoticed = !1), (l.planModeNoticed = !1));
     l.turnTimestamps.push(re);
   }
-  if (ce(i).mode === "plan") {
+  if (getToolPermissionContext(i).mode === "plan") {
     if (((l.lastProbeAllowed = !1), !l.planModeNoticed))
-      ((l.planModeNoticed = !0), hR(t), d(We(ue, "plan", n, o)));
-    (y("artifact_comments_autoreact", { plan_mode_notify: !0 }),
+      ((l.planModeNoticed = !0), markAutoReactNoticePending(t), d(We(ue, "plan", n, o)));
+    (logFeatureOk("artifact_comments_autoreact", { plan_mode_notify: !0 }),
       te(ee, { status: "declined", reason: "plan_mode" }));
     return;
   }
   if (S === void 0) {
     if (!l.defaultModeNoticed)
       ((l.defaultModeNoticed = !0),
-        hR(t),
+        markAutoReactNoticePending(t),
         d(We(ue, "reply_tool_absent", n, o)));
-    (g("artifact_comments_autoreact", "reply_tool_absent"),
+    (logFeatureSad("artifact_comments_autoreact", "reply_tool_absent"),
       te(ee, { status: "declined", reason: "blocked" }));
     return;
   }
@@ -3786,14 +3786,14 @@ async function rs(e) {
     kn = At(Ee, i),
     Cn = bt(kn),
     En = `autoreact-${r.id}-probe-${ne().autoReact.probeSeq++}`,
-    xn = () => gd(Ee, vt, i, _n(r.id), En),
+    xn = () => hasPermissionsToUseTool(Ee, vt, i, _n(r.id), En),
     be,
     xt = null,
     we = !1,
     xe;
   try {
     if (Cn) {
-      let C = await jv(
+      let C = await checkRuleBasedPermissions(
         Ee,
         vt,
         { ...i, toolUseId: En },
@@ -3801,7 +3801,7 @@ async function rs(e) {
       );
       if (
         C?.decisionReason?.type === "other" &&
-        C.decisionReason.reason === mTe
+        C.decisionReason.reason === PERMISSION_CHECK_CRASHED_REASON
       )
         throw Error("artifact permission check crashed");
       if (bt(At(Ee, i)))
@@ -3812,7 +3812,7 @@ async function rs(e) {
     } else be = await xn();
     xe = be.behavior === "deny" ? os(be) : null;
   } catch {
-    (f(
+    (logFeatureBad(
       "artifact_comments_autoreact",
       "permission_eval_error",
       Cn ? { rules_only: !0 } : void 0,
@@ -3847,9 +3847,9 @@ async function rs(e) {
       !l.autoModeDeclineNoticed;
     if (C)
       ((l.autoModeDeclineNoticed = !0),
-        hR(t),
+        markAutoReactNoticePending(t),
         d(We(ue, "auto_mode_declined", n, o)));
-    (g("artifact_comments_autoreact", xe.errorCode, {
+    (logFeatureSad("artifact_comments_autoreact", xe.errorCode, {
       notified: C,
       ...(we && { rules_only: !0 }),
     }),
@@ -3858,15 +3858,15 @@ async function rs(e) {
   }
   let Pt = () => {
     if (!l.defaultModeNoticed) {
-      ((l.defaultModeNoticed = !0), hR(t));
+      ((l.defaultModeNoticed = !0), markAutoReactNoticePending(t));
       let C = We(ue, "notify_only", n, o);
       (d(cr() && !l.heldReplyDeclined ? { ...C, summary: _5n(o) } : C),
-        y("artifact_comments_autoreact", {
+        logFeatureOk("artifact_comments_autoreact", {
           notified_only: !0,
           ...(we && { rules_only: !0 }),
         }));
     } else
-      y("artifact_comments_autoreact", {
+      logFeatureOk("artifact_comments_autoreact", {
         notified_only: !0,
         notice_suppressed: !0,
         ...(we && { rules_only: !0 }),
@@ -3891,7 +3891,7 @@ async function rs(e) {
   }
   if (ot !== void 0 && Ye) {
     ((_.lastAutoReplyAt = re),
-      hR(t),
+      markAutoReactNoticePending(t),
       d(
         La({
           trigger: ue,
@@ -3902,7 +3902,7 @@ async function rs(e) {
           sourcePath: ot,
         }),
       ),
-      y("artifact_comments_autoreact", {
+      logFeatureOk("artifact_comments_autoreact", {
         handed_to_session: !0,
         ...(we && { rules_only: !0 }),
       }));
@@ -3969,16 +3969,16 @@ async function rs(e) {
       if (((_.lastAutoReplyAt = Date.now()), !j4())) dan(t);
       let pe = !Zu() || Xp(t) || KO(t) !== e.scanGen;
       if (
-        (y("artifact_comments_autoreact", {
+        (logFeatureOk("artifact_comments_autoreact", {
           ...de,
           ...(pe && { post_stop_notice_suppressed: !0 }),
         }),
         pe)
       )
         return;
-      let Pe = ce(i).mode === "plan";
+      let Pe = getToolPermissionContext(i).mode === "plan";
       if (
-        (hR(t),
+        (markAutoReactNoticePending(t),
         d({
           coalesce: { family: "auto-replied", artifactName: o, threadId: r.id },
           detail: Pe
@@ -3991,17 +3991,17 @@ async function rs(e) {
       if (ee.coversReplyId !== void 0) te(ee, { status: "working" });
     } else if (q?.kind === "unexpected_result_shape") {
       ((_.consecutivePipelineDenials += 1),
-        f("artifact_comments_autoreact", "unexpected_result_shape", de),
+        logFeatureBad("artifact_comments_autoreact", "unexpected_result_shape", de),
         te(ee, { status: "declined", reason: "blocked" }));
       return;
     } else if (F) {
       ((_.consecutivePipelineDenials += 1),
-        f("artifact_comments_autoreact", "fast_ack_post_threw", de),
+        logFeatureBad("artifact_comments_autoreact", "fast_ack_post_threw", de),
         te(ee, { status: "declined", reason: "blocked" }));
       return;
     } else if (q?.kind === "refused" || q?.kind === "no_result") {
       if (q.kind === "no_result" || q.denial) _.consecutivePipelineDenials += 1;
-      g("artifact_comments_autoreact", "fast_ack_post_failed", de);
+      logFeatureSad("artifact_comments_autoreact", "fast_ack_post_failed", de);
     }
     if (q?.kind !== "posted" && he("fast_ack")) return;
     if (
@@ -4009,11 +4009,11 @@ async function rs(e) {
       q?.kind === "answered_post_time" ||
       q?.kind === "summon_foreign"
     ) {
-      g("artifact_comments_autoreact", Pr(q.kind), de);
+      logFeatureSad("artifact_comments_autoreact", Pr(q.kind), de);
       return;
     }
     if (q?.kind === "not_activated") {
-      g("artifact_comments_autoreact", "deactivated_mid_turn", de);
+      logFeatureSad("artifact_comments_autoreact", "deactivated_mid_turn", de);
       return;
     }
   }
@@ -4096,7 +4096,7 @@ async function rs(e) {
           recheck: sn(_, Ie),
         });
       } catch {
-        (f(
+        (logFeatureBad(
           "artifact_comments_autoreact",
           "permission_eval_error",
           we ? { rules_only: !0 } : void 0,
@@ -4136,7 +4136,7 @@ async function rs(e) {
       return;
     } else if (q.kind === "edit") {
       if (Ce === void 0) {
-        (g("artifact_comments_autoreact", "edit_no_trigger"),
+        (logFeatureSad("artifact_comments_autoreact", "edit_no_trigger"),
           te(ee, { status: "failed", reason: "compose_failed" }));
         return;
       }
@@ -4175,13 +4175,13 @@ async function rs(e) {
       let ae = (de) => {
         if (Zu() && !Xp(t) && KO(t) === e.scanGen) {
           let pe = Ne ? ` beyond the acknowledgement${qe([Te])}` : "";
-          (hR(t),
+          (markAutoReactNoticePending(t),
             d({
               summary: iEe(o),
               detail: `A requested automatic edit on artifact ${n} (thread ${r.id}) was refused because the thread's edit grant belongs to another user, so the artifact was NOT changed, and ${de}${pe}. Read the thread and make the change yourself if appropriate.`,
             }));
         } else
-          g("artifact_comments_autoreact", "summon_foreign_notice_suppressed");
+          logFeatureSad("artifact_comments_autoreact", "summon_foreign_notice_suppressed");
       };
       if (F.outcome === "compose_failed") {
         (te(
@@ -4312,7 +4312,7 @@ async function rs(e) {
           pe = F.post?.kind,
           Pe = F.post?.kind === "refused" && F.post.autoModeDeclined;
         if (Zu() && !Xp(t) && KO(t) === e.scanGen)
-          (hR(t),
+          (markAutoReactNoticePending(t),
             d({
               summary:
                 pe === "answered_elsewhere" || pe === "answered_post_time"
@@ -4332,7 +4332,7 @@ async function rs(e) {
                         : "the artifact WAS changed with no reply in the thread. Review the change and reply or revert." +
                           Ke()),
             }));
-        else g("artifact_comments_autoreact", "edit_landed_notice_suppressed");
+        else logFeatureSad("artifact_comments_autoreact", "edit_landed_notice_suppressed");
       }
       return;
     } else Le = q.text;
@@ -4348,20 +4348,20 @@ async function rs(e) {
     return;
   }
   if (Ete(Le)) {
-    (g("artifact_comments_autoreact", "compose_hidden_codepoints"),
+    (logFeatureSad("artifact_comments_autoreact", "compose_hidden_codepoints"),
       te(ee, { status: "failed", reason: "compose_failed" }));
     return;
   }
   let Dr = Le,
     Mn = async () => {
       if (ye !== null && ne().accountEpoch !== Pn) {
-        g("artifact_comments_autoreact", "held_reply_account_changed");
+        logFeatureSad("artifact_comments_autoreact", "held_reply_account_changed");
         return;
       }
       if (ye !== null && he("held_reply_compose")) return;
       let C = ye === null ? null : Yo(i, l, it);
       if (ye !== null && C === null) {
-        (g("artifact_comments_autoreact", "held_reply_channel_gone"), Pt());
+        (logFeatureSad("artifact_comments_autoreact", "held_reply_channel_gone"), Pt());
         return;
       }
       let J;
@@ -4369,7 +4369,7 @@ async function rs(e) {
         J = await Ge({
           tool: Ee,
           context:
-            ye === null ? i : { ...i, abortController: qh(i.abortController) },
+            ye === null ? i : { ...i, abortController: createChildAbortController(i.abortController) },
           url: n,
           slug: t,
           threadId: r.id,
@@ -4384,7 +4384,7 @@ async function rs(e) {
           ...(C !== null && { canUseTool: C, held: { admittedEpoch: Pn } }),
         });
       } catch {
-        (f(
+        (logFeatureBad(
           "artifact_comments_autoreact",
           "permission_eval_error",
           we ? { rules_only: !0 } : void 0,
@@ -4394,7 +4394,7 @@ async function rs(e) {
       }
       if (it.ask === "unanswered" && J.kind !== "account_changed") {
         if (he("held_reply_ask")) return;
-        (g("artifact_comments_autoreact", "held_reply_channel_gone"), Pt());
+        (logFeatureSad("artifact_comments_autoreact", "held_reply_channel_gone"), Pt());
         return;
       }
       if (
@@ -4447,7 +4447,7 @@ async function rs(e) {
   let In = (l.heldReplyChain ?? Promise.resolve())
     .then(Mn)
     .catch(() => {
-      f("artifact_comments_autoreact", "held_reply_error");
+      logFeatureBad("artifact_comments_autoreact", "held_reply_error");
     })
     .finally(() => {
       if (l.heldReplyChain === In) l.heldReplyChain = null;
@@ -4635,7 +4635,7 @@ async function Rt(e) {
     }
   }
   if ((i > 0 || d || l) && e.silentElisionTelemetry !== !0)
-    g("artifact_comments_autoreact", "compose_thread_elided", {
+    logFeatureSad("artifact_comments_autoreact", "compose_thread_elided", {
       elided_comments: i,
       newest_truncated: d,
       summoning_truncated: l,
@@ -4677,20 +4677,20 @@ async function dn(e) {
         : fn(e.slug, t)
           ? ua
           : `If the thread asks for a change to the artifact, reply with a brief acknowledgement that you're working on it (like "Working on it." or "On it \u2014 taking a look now."), answering any question alongside it.`,
-    d = rt(),
+    d = getMainLoopModel(),
     l = Rr(d),
     p = `${o}
 
 You are a reply-only composer with NO tools: you CANNOT edit the artifact, change files, or perform any action \u2014 the only thing that happens is this one comment being posted. If the thread asks a question or for feedback, answer it directly and substantively. ${i} ${gn} Do not describe your own limitations or abilities in the reply \u2014 never tell the commenter what you cannot do. Do NOT say a change is already made or done \u2014 acknowledge work in progress, never completed work. Never claim an action you did not perform.${r}
 
 Write the reply you would post to this thread: directly useful, brief, no preamble, ${hn}. Reply with ONLY the comment text.`,
-    S = qh(t.abortController),
+    S = createChildAbortController(t.abortController),
     R = Date.now(),
     w = !1;
   try {
     let _ = FY({
         messages: [Re({ content: p })],
-        systemPrompt: Zo([
+        systemPrompt: asSystemPrompt([
           "You write single comment replies on artifact comment threads. Output only the reply text.",
         ]),
         thinkingConfig: { type: "disabled", mechanical: !0 },
@@ -4721,7 +4721,7 @@ Write the reply you would post to this thread: directly useful, brief, no preamb
     if (A === void 0)
       return (
         S.abort(),
-        g("artifact_comments_autoreact", "reply_compose_timeout", {
+        logFeatureSad("artifact_comments_autoreact", "reply_compose_timeout", {
           compose_ms: Date.now() - R,
           request_delayed: w,
         }),
@@ -4730,23 +4730,23 @@ Write the reply you would post to this thread: directly useful, brief, no preamb
     if (A.isApiErrorMessage) {
       if (Ar(A))
         return (
-          g("artifact_comments_autoreact", "compose_usage_limited"),
+          logFeatureSad("artifact_comments_autoreact", "compose_usage_limited"),
           { miss: "usage_limited" }
         );
-      return (g("artifact_comments_autoreact", "compose_api_error"), Be);
+      return (logFeatureSad("artifact_comments_autoreact", "compose_api_error"), Be);
     }
     if (A.message.stop_reason === "max_tokens")
       return (
-        g("artifact_comments_autoreact", "compose_truncated", {
+        logFeatureSad("artifact_comments_autoreact", "compose_truncated", {
           empty: et(A) === null,
         }),
         Be
       );
     let L = et(A);
-    if (!L) return (g("artifact_comments_autoreact", "compose_empty"), Be);
+    if (!L) return (logFeatureSad("artifact_comments_autoreact", "compose_empty"), Be);
     return St(L, nV);
   } catch {
-    return (g("artifact_comments_autoreact", "compose_error"), Be);
+    return (logFeatureSad("artifact_comments_autoreact", "compose_error"), Be);
   }
 }
 var ss = 400;
@@ -4763,12 +4763,12 @@ async function ds(e) {
 You are about to start working on the newest comment sent to you in this thread; your full reply will follow separately. Write ONE short acknowledgement sentence (under 160 characters) telling the commenter their comment was received and what happens next, matched to what it is: for a change request, say you are working on it now; for a question, say you are finding the answer and will reply here. Do not answer the question or describe the change yet. ${gn} Output only the sentence \u2014 no quotes, no code fences, no preamble, ${hn}.`,
       i = await FY({
         messages: [Re({ content: r })],
-        systemPrompt: Zo([Va]),
+        systemPrompt: asSystemPrompt([Va]),
         thinkingConfig: { type: "disabled", mechanical: !0 },
         tools: [],
         signal: e.context.abortController.signal,
         options: {
-          model: xm(),
+          model: getSmallFastModel(),
           querySource: "artifact_comment_fast_ack",
           isNonInteractiveSession: !0,
           agents: [],
@@ -4785,28 +4785,28 @@ You are about to start working on the newest comment sent to you in this thread;
         },
       });
     if (i.isApiErrorMessage)
-      return (g("artifact_comments_autoreact", "fast_ack_compose_error"), Fe);
+      return (logFeatureSad("artifact_comments_autoreact", "fast_ack_compose_error"), Fe);
     if (i.message.stop_reason === "max_tokens")
       return (
-        g("artifact_comments_autoreact", "fast_ack_compose_truncated"),
+        logFeatureSad("artifact_comments_autoreact", "fast_ack_compose_truncated"),
         Fe
       );
     let d = et(i);
     if (!d || d.trim() === "")
-      return (g("artifact_comments_autoreact", "fast_ack_compose_empty"), Fe);
+      return (logFeatureSad("artifact_comments_autoreact", "fast_ack_compose_empty"), Fe);
     if (Ete(d))
       return (
-        g("artifact_comments_autoreact", "fast_ack_hidden_codepoints"),
+        logFeatureSad("artifact_comments_autoreact", "fast_ack_hidden_codepoints"),
         Fe
       );
     let l = d.replace(/\s+/g, " ").trim();
     return St(l, ss);
   } catch {
-    return (g("artifact_comments_autoreact", "fast_ack_compose_threw"), Fe);
+    return (logFeatureSad("artifact_comments_autoreact", "fast_ack_compose_threw"), Fe);
   }
 }
 async function cs(e, t) {
-  let n = qh(e.context.abortController),
+  let n = createChildAbortController(e.context.abortController),
     o = !1,
     i = (async () => {
       let { anchorPath: l, ...p } = e.thread,
@@ -4824,12 +4824,12 @@ You are about to start work on the newest comment sent to you in this thread, an
 ${R}`,
         _ = await FY({
           messages: [Re({ content: w })],
-          systemPrompt: Zo([Ya]),
+          systemPrompt: asSystemPrompt([Ya]),
           thinkingConfig: { type: "disabled", mechanical: !0 },
           tools: [],
           signal: n.signal,
           options: {
-            model: xm(),
+            model: getSmallFastModel(),
             querySource: "artifact_comment_fast_ack",
             isNonInteractiveSession: !0,
             agents: [],
@@ -4846,26 +4846,26 @@ ${R}`,
           },
         });
       if (_.isApiErrorMessage) {
-        if (!o) g("artifact_comments_autoreact", "fast_ack_select_error");
+        if (!o) logFeatureSad("artifact_comments_autoreact", "fast_ack_select_error");
         return 0;
       }
       let A = /^\s*([0-9])\s*$/.exec(et(_) ?? ""),
         L = A ? Number(A[1]) : -1,
         N = pt[L];
       if (N === void 0 || (N.edit && !t)) {
-        if (!o) g("artifact_comments_autoreact", "fast_ack_select_unparsed");
+        if (!o) logFeatureSad("artifact_comments_autoreact", "fast_ack_select_unparsed");
         return 0;
       }
       return L;
     })().catch(() => {
-      if (!o) g("artifact_comments_autoreact", "fast_ack_select_threw");
+      if (!o) logFeatureSad("artifact_comments_autoreact", "fast_ack_select_threw");
       return 0;
     }),
     d = await kt(i, ne().autoReact.fastAckSelectDeadlineMsOverride ?? Ga);
   if (d === void 0)
     ((o = !0),
       n.abort(),
-      g("artifact_comments_autoreact", "fast_ack_select_timeout"));
+      logFeatureSad("artifact_comments_autoreact", "fast_ack_select_timeout"));
   return pt[d ?? 0]?.text ?? Fe;
 }
 var yn = 262144,
@@ -4955,51 +4955,51 @@ async function Ss(e, t, n) {
   if (!o || o.err !== null || !o.html) return { editable: !1 };
   if (gt(e))
     return (
-      g("artifact_comments_autoreact", "edit_target_kind"),
+      logFeatureSad("artifact_comments_autoreact", "edit_target_kind"),
       { editable: !1, html: o.html }
     );
   if (o.typeLocked)
     return (
-      g("artifact_comments_autoreact", "edit_page_from_type"),
+      logFeatureSad("artifact_comments_autoreact", "edit_page_from_type"),
       { editable: !1, html: o.html }
     );
   if (fn(e, t))
     return (
-      g("artifact_comments_autoreact", "edit_target_workshop_page"),
+      logFeatureSad("artifact_comments_autoreact", "edit_target_workshop_page"),
       { editable: !1, html: o.html }
     );
-  let r = uNe(rt()),
+  let r = uNe(getMainLoopModel()),
     i = o.bytes,
     d = Math.min(yn, Math.max(0, r - ls) * 3);
   if (i > d) {
     if (
-      (g("artifact_comments_autoreact", "edit_source_oversized"), Gwn(o.html))
+      (logFeatureSad("artifact_comments_autoreact", "edit_source_oversized"), servedPageLooksNested(o.html))
     )
-      g("artifact_comments_autoreact", "edit_source_oversized_nested");
+      logFeatureSad("artifact_comments_autoreact", "edit_source_oversized_nested");
     return { editable: !1, html: o.html };
   }
   let { favicon: l } = o;
   if (l === void 0 || l === "")
     return (
-      g("artifact_comments_autoreact", "edit_favicon_unavailable"),
+      logFeatureSad("artifact_comments_autoreact", "edit_favicon_unavailable"),
       { editable: !1, html: o.html }
     );
   if (n)
     return (
-      g("artifact_comments_autoreact", "edit_rejudged_by_auto_mode"),
+      logFeatureSad("artifact_comments_autoreact", "edit_rejudged_by_auto_mode"),
       { editable: !1, html: o.html }
     );
   return { editable: !0, read: o, favicon: l, modelOutputCap: r };
 }
 async function Rs(e, t) {
-  let n = qh(e.context.abortController),
+  let n = createChildAbortController(e.context.abortController),
     o = Date.now(),
     r = !1,
     i = Ts(e, t, n, o, (l) => {
       r ||= l !== null;
     }).catch(() => {
       if (!n.signal.aborted)
-        g("artifact_comments_autoreact", "edit_compose_error", {
+        logFeatureSad("artifact_comments_autoreact", "edit_compose_error", {
           compose_ms: Date.now() - o,
           source_bytes: t.read.bytes,
         });
@@ -5009,7 +5009,7 @@ async function Rs(e, t) {
   if (d !== void 0) return d;
   return (
     n.abort(),
-    g("artifact_comments_autoreact", "edit_compose_timeout", {
+    logFeatureSad("artifact_comments_autoreact", "edit_compose_timeout", {
       compose_ms: Date.now() - o,
       source_bytes: t.read.bytes,
       request_delayed: r,
@@ -5023,7 +5023,7 @@ async function Ts(e, t, n, o, r) {
     S = Ze(e.slug),
     R = S.editUnavailable,
     w = !(R !== void 0 && R.ver === d.ver && p <= R.cap);
-  if (!w) g("artifact_comments_autoreact", "edit_rewrite_hatch_suppressed");
+  if (!w) logFeatureSad("artifact_comments_autoreact", "edit_rewrite_hatch_suppressed");
   let _ = d.html,
     { fence: A, framedThread: L } = await Rt({ ...e, sourceHtml: _ }),
     N = S.sourceFence,
@@ -5072,7 +5072,7 @@ Rules for an edit: change only what the thread asked for and preserve everything
       Zu() &&
       !Xp(e.slug) &&
       (e.scanGen === void 0 || KO(e.slug) === e.scanGen) &&
-      ce(i).mode !== "plan",
+      getToolPermissionContext(i).mode !== "plan",
     j = 0,
     I = () => ({
       source_bytes: d.bytes,
@@ -5085,7 +5085,7 @@ Rules for an edit: change only what the thread asked for and preserve everything
       V = !1,
       re = !1;
     for (;;) {
-      let le = rt(),
+      let le = getMainLoopModel(),
         _e = E8e(le),
         je = nN({ ttl: rN("artifact_comment_reply") ? "1h" : void 0 }),
         me = await FY({
@@ -5097,7 +5097,7 @@ Rules for an edit: change only what the thread asked for and preserve everything
               ],
             }),
           ],
-          systemPrompt: Zo([
+          systemPrompt: asSystemPrompt([
             "You decide and compose artifact comment-thread responses, optionally with an artifact edit. Output only the decision JSON object.",
           ]),
           thinkingConfig: { type: "disabled", mechanical: !0 },
@@ -5127,25 +5127,25 @@ Rules for an edit: change only what the thread asked for and preserve everything
       if (((j += me.message.usage?.output_tokens ?? 0), me.isApiErrorMessage)) {
         if (Ar(me))
           return (
-            g("artifact_comments_autoreact", "compose_usage_limited", I()),
+            logFeatureSad("artifact_comments_autoreact", "compose_usage_limited", I()),
             { kind: "usage_limited" }
           );
         return (
-          g("artifact_comments_autoreact", "compose_api_error", I()),
+          logFeatureSad("artifact_comments_autoreact", "compose_api_error", I()),
           null
         );
       }
       if (me.message.stop_reason === "max_tokens") {
         if (w) S.editUnavailable = { ver: d.ver, cap: Math.min(p, uNe(le)) };
         return (
-          g("artifact_comments_autoreact", "edit_compose_truncated", I()),
+          logFeatureSad("artifact_comments_autoreact", "edit_compose_truncated", I()),
           "unavailable"
         );
       }
       let Se = et(me);
       if (!Se)
         return (
-          g("artifact_comments_autoreact", "edit_compose_empty", I()),
+          logFeatureSad("artifact_comments_autoreact", "edit_compose_empty", I()),
           null
         );
       let ge = ws(Se);
@@ -5155,15 +5155,15 @@ Rules for an edit: change only what the thread asked for and preserve everything
           let ie = Qo(Se, N.nonce, A);
           if (ie === null)
             return (
-              g("artifact_comments_autoreact", "reformat_echo_refused"),
+              logFeatureSad("artifact_comments_autoreact", "reformat_echo_refused"),
               null
             );
           ((Q = bs(ie)),
-            g("artifact_comments_autoreact", "edit_decision_reformat"));
+            logFeatureSad("artifact_comments_autoreact", "edit_decision_reformat"));
           continue;
         }
         return (
-          g("artifact_comments_autoreact", "edit_decision_malformed", {
+          logFeatureSad("artifact_comments_autoreact", "edit_decision_malformed", {
             reformatted: V,
           }),
           null
@@ -5171,12 +5171,12 @@ Rules for an edit: change only what the thread asked for and preserve everything
       }
       if (ge.kind === "reply") {
         if (ge.text.includes(N.nonce))
-          return (g("artifact_comments_autoreact", "compose_fence_echo"), null);
+          return (logFeatureSad("artifact_comments_autoreact", "compose_fence_echo"), null);
         return ge;
       }
       if (Ete(ge.reply))
         return (
-          g("artifact_comments_autoreact", "compose_hidden_codepoints"),
+          logFeatureSad("artifact_comments_autoreact", "compose_hidden_codepoints"),
           null
         );
       let ue,
@@ -5186,16 +5186,16 @@ Rules for an edit: change only what the thread asked for and preserve everything
         if (!ie.ok) {
           if (ie.reason === "noop")
             return (
-              g("artifact_comments_autoreact", "edit_patch_apply_failed", {
-                reason: u("noop"),
+              logFeatureSad("artifact_comments_autoreact", "edit_patch_apply_failed", {
+                reason: fromEnum("noop"),
                 retried: re,
               }),
               { kind: "patch_failed", reason: "noop" }
             );
           if (ie.reason === "malformed")
             return (
-              g("artifact_comments_autoreact", "edit_patch_apply_failed", {
-                reason: u("malformed"),
+              logFeatureSad("artifact_comments_autoreact", "edit_patch_apply_failed", {
+                reason: fromEnum("malformed"),
                 retried: re,
               }),
               { kind: "patch_failed", reason: "unapplied" }
@@ -5203,18 +5203,18 @@ Rules for an edit: change only what the thread asked for and preserve everything
           if (!re) {
             if (!G())
               return (
-                g("artifact_comments_autoreact", "stopped_before_patch_retry"),
+                logFeatureSad("artifact_comments_autoreact", "stopped_before_patch_retry"),
                 null
               );
             let Ie = Qo(ge.edits[ie.op].find, N.nonce, A);
             if (Ie === null)
               return (
-                g("artifact_comments_autoreact", "patch_retry_echo_refused"),
+                logFeatureSad("artifact_comments_autoreact", "patch_retry_echo_refused"),
                 null
               );
             ((re = !0),
-              g("artifact_comments_autoreact", "edit_patch_retry_fired", {
-                reason: u(ie.reason),
+              logFeatureSad("artifact_comments_autoreact", "edit_patch_retry_fired", {
+                reason: fromEnum(ie.reason),
               }));
             let ee = us(Ie, ys),
               tt =
@@ -5232,8 +5232,8 @@ Re-read the source, account for your earlier edits, and output the complete deci
             continue;
           }
           return (
-            g("artifact_comments_autoreact", "edit_patch_apply_failed", {
-              reason: u(ie.reason),
+            logFeatureSad("artifact_comments_autoreact", "edit_patch_apply_failed", {
+              reason: fromEnum(ie.reason),
               retried: !0,
             }),
             { kind: "patch_failed", reason: "unapplied" }
@@ -5241,8 +5241,8 @@ Re-read the source, account for your earlier edits, and output the complete deci
         }
         if (ie.content.trim() === "" || ie.content.length > yn * 2)
           return (
-            g("artifact_comments_autoreact", "edit_patch_apply_failed", {
-              reason: u("out_of_bounds"),
+            logFeatureSad("artifact_comments_autoreact", "edit_patch_apply_failed", {
+              reason: fromEnum("out_of_bounds"),
               retried: re,
             }),
             { kind: "patch_failed", reason: "unapplied" }
@@ -5253,18 +5253,18 @@ Re-read the source, account for your earlier edits, and output the complete deci
           if (!V && G()) {
             ((V = !0),
               (Q = As),
-              g("artifact_comments_autoreact", "edit_rewrite_withheld_reask"));
+              logFeatureSad("artifact_comments_autoreact", "edit_rewrite_withheld_reask"));
             continue;
           }
           return (
-            g("artifact_comments_autoreact", "edit_rewrite_hatch_refused"),
+            logFeatureSad("artifact_comments_autoreact", "edit_rewrite_hatch_refused"),
             { kind: "patch_failed", reason: "rewrite_withheld" }
           );
         }
         ue = ge.content;
       }
       if (ue.includes(N.nonce) || ge.reply.includes(N.nonce))
-        return (g("artifact_comments_autoreact", "compose_fence_echo"), null);
+        return (logFeatureSad("artifact_comments_autoreact", "compose_fence_echo"), null);
       return {
         kind: "edit",
         content: ue,
@@ -5273,13 +5273,13 @@ Re-read the source, account for your earlier edits, and output the complete deci
         favicon: l,
         sourceVer: d.ver,
         sourceProbe: wer(e.slug, d.html),
-        ...(Ce && rYe(d.html) && { roundTripSignal: zwn(e.slug) }),
+        ...(Ce && startsWithSkeletonOpen(d.html) && { roundTripSignal: mintRoundTripPublishSignal(e.slug) }),
         ...(d.title !== void 0 && d.title !== "" && { storedTitle: d.title }),
       };
     }
   } catch {
     if (!n.signal.aborted)
-      g("artifact_comments_autoreact", "edit_compose_error", I());
+      logFeatureSad("artifact_comments_autoreact", "edit_compose_error", I());
     return null;
   }
 }
@@ -5298,8 +5298,8 @@ function vs(e) {
   return e === "automode-blocked" ? "auto_mode_declined" : null;
 }
 function ks(e) {
-  if (e.includes(xqt)) return "outcome_unknown";
-  if (e.startsWith(vqt)) return "publish_capped";
+  if (e.includes(PUBLISH_OUTCOME_UNKNOWN_FRAME)) return "outcome_unknown";
+  if (e.startsWith(PUBLISH_CAP_FRAME)) return "publish_capped";
   if (
     e.includes("pinned to an older version") ||
     e.includes("pinned to a fixed version")
@@ -5310,7 +5310,7 @@ function ks(e) {
     return "grant_inactive";
   if (e.includes("auto-edit applies to single-file artifacts only"))
     return "single_file_only";
-  let t = e.startsWith(iTt) ? e.slice(iTt.length) : null;
+  let t = e.startsWith(PUBLISH_DENIED_FRAME) ? e.slice(PUBLISH_DENIED_FRAME.length) : null;
   if (
     t !== null &&
     (t.startsWith("this edit grant was authored by another user") ||
@@ -5332,7 +5332,7 @@ function ks(e) {
     e.includes("publish pipeline error")
   )
     return "transient";
-  if (e.includes(kqt)) return "superseded";
+  if (e.includes(PUBLISH_CONFLICT_LEAD)) return "superseded";
   return "other";
 }
 var Cs = {
@@ -5443,7 +5443,7 @@ async function xs(e) {
     P,
     D;
   try {
-    ((P = await da(Go(ca(), "autoedit-"))), (D = Go(P, "artifact.html")));
+    ((P = await mkdtemp(Go(tmpdir(), "autoedit-"))), (D = Go(P, "artifact.html")));
     let W = {
       file_path: D,
       url: o,
@@ -5457,14 +5457,14 @@ async function xs(e) {
       expectedToolUseId: p,
       baseVersion: e.sourceVer,
       input: W,
-      contentSha256: nr("sha256").update(e.content).digest("hex"),
+      contentSha256: createHash("sha256").update(e.content).digest("hex"),
     })),
-      await ia(D, e.content, "utf8"));
+      await writeFile(D, e.content, "utf8"));
     let G = { type: "tool_use", id: p, name: t.name, input: W };
     for await (let j of P3(
       G,
       _n(i),
-      gd,
+      hasPermissionsToUseTool,
       {
         ...n,
         artifactStoredProbe: e.sourceProbe,
@@ -5500,7 +5500,7 @@ async function xs(e) {
           V !== void 0 &&
           typeof V.url === "string" &&
           typeof V.path === "string" &&
-          Fi(V.url) === r
+          uuidSlugFromUrl(V.url) === r
         )
           w = !0;
         else L = !0;
@@ -5511,7 +5511,7 @@ async function xs(e) {
   } finally {
     if (S !== void 0) yo(S);
     if (P !== void 0) await sa(P, { recursive: !0, force: !0 }).catch(() => {});
-    if (D !== void 0) Fj(D);
+    if (D !== void 0) unlinkPath(D);
   }
   if (!w) {
     let W = L
@@ -5520,12 +5520,12 @@ async function xs(e) {
         ? "no_result"
         : (vs(A) ?? ks(R ?? ""));
     if (W === "unexpected_result_shape")
-      f("artifact_comments_autoreact", "edit_publish_unexpected_shape");
+      logFeatureBad("artifact_comments_autoreact", "edit_publish_unexpected_shape");
     else if (W === "no_result")
-      g("artifact_comments_autoreact", "edit_publish_no_result");
+      logFeatureSad("artifact_comments_autoreact", "edit_publish_no_result");
     else
-      g("artifact_comments_autoreact", "edit_publish_refused", {
-        fail_kind: u(W),
+      logFeatureSad("artifact_comments_autoreact", "edit_publish_refused", {
+        fail_kind: fromEnum(W),
       });
     let G;
     if (W === "summon_foreign") {
@@ -5533,14 +5533,14 @@ async function xs(e) {
         return { outcome: "stood_down", post: null };
       let Q = await e
         .composeReplyOnly()
-        .catch(() => (g("artifact_comments_autoreact", "compose_error"), Be));
+        .catch(() => (logFeatureSad("artifact_comments_autoreact", "compose_error"), Be));
       if (e.paused("foreign_fallback_compose"))
         return { outcome: "stood_down", post: null };
       if (typeof Q !== "string")
         return { outcome: "compose_failed", post: null, miss: Q.miss };
       if (Ete(Q))
         return (
-          g("artifact_comments_autoreact", "compose_hidden_codepoints"),
+          logFeatureSad("artifact_comments_autoreact", "compose_hidden_codepoints"),
           { outcome: "compose_failed", post: null, miss: "failed" }
         );
       G = Q;
@@ -5564,7 +5564,7 @@ async function xs(e) {
   }
   let M = S?.versionEcho;
   if (M === void 0) {
-    g("artifact_comments_autoreact", "edit_echo_missing");
+    logFeatureSad("artifact_comments_autoreact", "edit_echo_missing");
     let W = await Ge({
         tool: t,
         context: n,
@@ -5596,7 +5596,7 @@ async function xs(e) {
   }).catch(() => null);
   if (E === null || E.kind !== "posted")
     return (
-      g(
+      logFeatureSad(
         "artifact_comments_autoreact",
         E !== null && E.kind === "answered_elsewhere"
           ? "edit_reply_answered_elsewhere"
@@ -5617,12 +5617,12 @@ async function xs(e) {
   }).catch(() => null);
   if (U === null || U.kind !== "ok") {
     if (U !== null && U.kind === "principal_mismatch")
-      f("artifact_comments_autoreact", "edit_resolve_principal_mismatch");
-    else g("artifact_comments_autoreact", "edit_resolve_refused");
+      logFeatureBad("artifact_comments_autoreact", "edit_resolve_principal_mismatch");
+    else logFeatureSad("artifact_comments_autoreact", "edit_resolve_refused");
     return { outcome: "completed_unresolved", post: E };
   }
   return (
-    y("artifact_comments_autoreact", { auto_edit: !0, ...e.composeTelemetry }),
+    logFeatureOk("artifact_comments_autoreact", { auto_edit: !0, ...e.composeTelemetry }),
     { outcome: "completed", post: E }
   );
 }

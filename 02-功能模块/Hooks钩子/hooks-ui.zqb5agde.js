@@ -12,16 +12,16 @@
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { wle, VB } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { he, MA, LL, Mx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { be, Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Wf, x, Fje, hy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { zar, yi } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { War } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
-import { getSettingsFilePathForSource as ho, getSettingsForSource as ye, getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { findGitRootUncached as k0 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getSettingsFilePathForSource, getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { findGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
   Ih,
   Awe,
@@ -45,7 +45,7 @@ import {
   rSt,
   p_n,
   oAe,
-  deviceHooksProcessMemories as aD,
+  deviceHooksProcessMemories,
   hj,
   Lk,
   fXn,
@@ -55,8 +55,8 @@ import {
   mXn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { oBe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
-import { subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { hD } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { xC } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { nIt, rIt, P6e, oIt } from "./chunk-6wg4v2yj.js";
@@ -80,8 +80,8 @@ import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
-import { realpath as Re } from "fs/promises";
-import { basename as un } from "path";
+import { realpath } from "fs/promises";
+import { basename } from "path";
 var hs =
     "not registered yet \u2014 the cloud session has not answered (it may be asleep); registers with your next message",
   Ao = {
@@ -156,10 +156,10 @@ var fs = {
 function hn(n, a) {
   let s =
     a !== void 0
-      ? un(a)
+      ? basename(a)
       : /^https?:\/\//i.test(n.trim())
         ? pn(n.trim())
-        : un(n.trim().split(/\s+/)[0] ?? "") || "hook";
+        : basename(n.trim().split(/\s+/)[0] ?? "") || "hook";
   return io(s, { maxCodeUnits: 120 }) || "hook";
 }
 function gs(n, a = new Set()) {
@@ -240,32 +240,32 @@ async function Fo({
     let { stored: q, origin: xe } = await r_n(R, y),
       Te = q,
       De = tSt(nSt()),
-      Ee = k0(n) ?? n,
+      Ee = findGitRootUncached(n) ?? n,
       ie = await Awe({
         stickyRoots: new Set(k.stickyRoots),
         pinnedScopes: new Set(k.pinnedScopes),
         pinnedRoots: new Map(k.pinnedRoots),
         baseRoots: [
           n,
-          await Re(n).catch(() => n),
+          await realpath(n).catch(() => n),
           Ee,
-          await Re(Ee).catch(() => Ee),
+          await realpath(Ee).catch(() => Ee),
         ],
         reachBaseline: k.reachBaseline ?? new Map(yi.map((b) => [b, $X(b, n)])),
-        scopeSettingsFile: (b) => ho(b) ?? null,
-        realpath: Re,
+        scopeSettingsFile: (b) => getSettingsFilePathForSource(b) ?? null,
+        realpath: realpath,
         commonRoots: () => k.commonRoots ?? Sde(n),
         scopeRoots: (b, K) => vne(n, b, K),
       });
-    if (xe === "read" && Te !== "unset" && (await WMe(c, ie, Re)) !== !1)
+    if (xe === "read" && Te !== "unset" && (await WMe(c, ie, realpath)) !== !1)
       Te = "unset";
     let { captured: z, kept: oo } = ys(
       De,
       k.baseline,
       De.kind === "none" && De.reason === "disabled_by_settings"
         ? await p_n(ie, De.switchSources ?? ["user", "flag"], {
-            realpath: Re,
-            scopeSettingsFile: (b) => ho(b) ?? null,
+            realpath: realpath,
+            scopeSettingsFile: (b) => getSettingsFilePathForSource(b) ?? null,
             everInReach: k.everInReach,
           })
         : !1,
@@ -278,7 +278,7 @@ async function Fo({
         rows: [],
         unavailableReason: oo === "off" ? ws : _s[z.reason],
       };
-    let to = Hi(),
+    let to = subprocessEnv(),
       no = Cwe({
         attached: to,
         beforeSettings: xC(),
@@ -302,7 +302,7 @@ async function Fo({
           optInPins: new Map(k.optInPins),
         },
         {
-          realpath: Re,
+          realpath: realpath,
           open: rAe().openNoFollow,
           home: vwe(no),
           defaultShell: hD(),
@@ -310,9 +310,9 @@ async function Fo({
         },
       ),
       re = [
-        ["user", ho("userSettings")],
-        ["local", ho("localSettings")],
-        ["flag", MA() === void 0 ? ho("flagSettings") : void 0],
+        ["user", getSettingsFilePathForSource("userSettings")],
+        ["local", getSettingsFilePathForSource("localSettings")],
+        ["flag", MA() === void 0 ? getSettingsFilePathForSource("flagSettings") : void 0],
       ],
       ae = new Set(z.withheld.map((b) => b.source)),
       He = new Set();
@@ -324,7 +324,7 @@ async function Fo({
       }
       let No = Y([
         K,
-        await Re(K).catch(() => K),
+        await realpath(K).catch(() => K),
         ...(k.knownSpellings.get(b) ?? []),
       ]);
       if (Ih(No, ie)) He.add(b);
@@ -353,7 +353,7 @@ async function Fo({
     };
   } catch (q) {
     return (
-      h(q),
+      logError(q),
       {
         consent: await I("unset"),
         consentLocation: c,
@@ -1881,11 +1881,11 @@ function ji(nd) {
 }
 function Bi() {
   return (
-    bn()?.disableAllHooks === !0 && ye("policySettings")?.disableAllHooks === !0
+    getSettings_DEPRECATED()?.disableAllHooks === !0 && getSettingsForSource("policySettings")?.disableAllHooks === !0
   );
 }
 function Li() {
-  return ye("policySettings")?.allowManagedHooksOnly === !0;
+  return getSettingsForSource("policySettings")?.allowManagedHooksOnly === !0;
 }
 function $i(sd) {
   return sd.mcp;
@@ -1923,7 +1923,7 @@ function dn(Bc) {
       }
       return li.transcriptSource !== "ccr-api"
         ? "remote_host"
-        : aD.of(Ce).isAttached(he())
+        : deviceHooksProcessMemories.of(Ce).isAttached(he())
           ? "cloud"
           : "off";
     }),
@@ -1937,7 +1937,7 @@ function dn(Bc) {
       if (Xe === null) {
         return null;
       }
-      let zn = aD.of(Ce);
+      let zn = deviceHooksProcessMemories.of(Ce);
       return Fo({
         launchDir: he(),
         storageV5: po,
@@ -1961,9 +1961,9 @@ function dn(Bc) {
   if (m[7] === p)
     ((ui = (Gc) => {
       if (Gc === "policySettings") {
-        let Yc = bn()?.disableAllHooks === !0;
-        (Uc(Yc && ye("policySettings")?.disableAllHooks === !0),
-          qc(ye("policySettings")?.allowManagedHooksOnly === !0));
+        let Yc = getSettings_DEPRECATED()?.disableAllHooks === !0;
+        (Uc(Yc && getSettingsForSource("policySettings")?.disableAllHooks === !0),
+          qc(getSettingsForSource("policySettings")?.allowManagedHooksOnly === !0));
       }
     }),
       (m[7] = ui));
@@ -2078,7 +2078,7 @@ function dn(Bc) {
   else Ei = m[38];
   Ne("confirm:no", xi, Ei);
   let Ri;
-  if (m[39] === p) ((Ri = bn()), (m[39] = Ri));
+  if (m[39] === p) ((Ri = getSettings_DEPRECATED()), (m[39] = Ri));
   else Ri = m[39];
   let Mi = Ri?.disableAllHooks === !0,
     Oi;
@@ -2345,12 +2345,12 @@ function dn(Bc) {
         ((Pe = (yo) => {
           if (
             (B({ mode: "select-event" }),
-            i("tengu_device_hooks_consent", { choice: u(yo) }),
+            i("tengu_device_hooks_consent", { choice: fromEnum(yo) }),
             yo === "not_now")
           ) {
             return;
           }
-          let Ji = aD.of(Ce);
+          let Ji = deviceHooksProcessMemories.of(Ce);
           (n_n(Ji.consentPin, yo),
             o_n(Ji.consentAnnounced, yo),
             t_n(yo, RY(po)).then((Qc) => {
@@ -2508,7 +2508,7 @@ function dn(Bc) {
 }
 var wd = async (n, a) => {
   i("tengu_hooks_command", {});
-  let s = ce(a),
+  let s = getToolPermissionContext(a),
     g = J1n(dC(s), s).map((k) => k.name);
   return e(dn, { toolNames: g, onExit: n });
 };

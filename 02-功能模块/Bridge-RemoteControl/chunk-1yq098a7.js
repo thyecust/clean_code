@@ -10,16 +10,16 @@
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { ju, ege, dq, RUe, nZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
-import { describeAxiosError as pQe } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
+import { describeAxiosError } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 function GY(e) {
@@ -33,8 +33,8 @@ function R(e) {
   return {
     tool_name: e.tool_name,
     ...(t === void 0 ? {} : { display_tool_name: t }),
-    action_description: or(e.action_description, Iw),
-    ...(i === void 0 ? {} : { raw_command: or(i, Iw) }),
+    action_description: truncate(e.action_description, Iw),
+    ...(i === void 0 ? {} : { raw_command: truncate(i, Iw) }),
     tool_use_id: e.tool_use_id,
     request_id: e.request_id,
     ...(e.suppressed_request_id === void 0
@@ -165,7 +165,7 @@ class s7e {
     try {
       this.stateChanged.emit(e);
     } catch (i) {
-      h(i);
+      logError(i);
     }
     if (e === "requires_action" && t)
       ((this.hasPendingAction = !0),
@@ -403,9 +403,9 @@ function cSn(e) {
 }
 function uSn(e, t, i) {
   let r = RUe(t),
-    s = new Set(i.filter((o) => !nZe(t, o.id)).map((o) => pr(o.id)));
+    s = new Set(i.filter((o) => !nZe(t, o.id)).map((o) => sessionIdBody(o.id)));
   return e.filter((o) => {
-    let u = pr(o.id);
+    let u = sessionIdBody(o.id);
     return !r.has(u) && !s.has(u);
   });
 }
@@ -481,13 +481,13 @@ async function jpe(e, t) {
 }
 function A(e, t, i, r) {
   let s = a.CLAUDE_CODE_REMOTE === !0,
-    o = s ? pr(a.CLAUDE_CODE_REMOTE_SESSION_ID ?? "") : "";
+    o = s ? sessionIdBody(a.CLAUDE_CODE_REMOTE_SESSION_ID ?? "") : "";
   if (o === "") {
     let { getPeerBridgeIdentity: c } = import.meta.require(
         "../权限系统/chunk-1y2g140m.js",
       ),
       g = c()?.bridgeSessionId;
-    o = typeof g === "string" ? pr(g) : "";
+    o = typeof g === "string" ? sessionIdBody(g) : "";
   }
   let u = (async () => {
     let c,
@@ -503,7 +503,7 @@ function A(e, t, i, r) {
     } catch (d) {
       return (
         n(
-          `[agents:cloud] session list threw: ${d instanceof TypeError ? "malformed session-list response \u2014 " : ""}${pQe(d)}`,
+          `[agents:cloud] session list threw: ${d instanceof TypeError ? "malformed session-list response \u2014 " : ""}${describeAxiosError(d)}`,
           { level: "error" },
         ),
         { sessions: [], unavailable: "fetch_failed" }
@@ -516,7 +516,7 @@ function A(e, t, i, r) {
       );
       f = d();
     }
-    let y = (o === "" ? c : c.filter((d) => pr(d.id) !== o)).map((d) => {
+    let y = (o === "" ? c : c.filter((d) => sessionIdBody(d.id) !== o)).map((d) => {
       let v = Date.parse(d.last_event_at ?? d.created_at ?? "");
       return {
         id: d.id,
@@ -556,7 +556,7 @@ function ibt(e) {
 }
 function qNe(e, t, i) {
   try {
-    if (!ibt(e)?.find((o) => pr(o.id) === pr(t))?.unreachableFromHere) return;
+    if (!ibt(e)?.find((o) => sessionIdBody(o.id) === sessionIdBody(t))?.unreachableFromHere) return;
     let { formatUnreachableElevatedRefusal: s } = import.meta.require(
       "./chunk-tyce0p0b.js",
     );
@@ -572,11 +572,11 @@ function qNe(e, t, i) {
 var l7e = "can't receive cross-session messages (off in that session)";
 function $re(e, t, i) {
   try {
-    let r = pr(t);
+    let r = sessionIdBody(t);
     if (!(
-      ibt(e)?.some((o) => pr(o.id) === r && o.acceptsPeerMessages === !1) ===
+      ibt(e)?.some((o) => sessionIdBody(o.id) === r && o.acceptsPeerMessages === !1) ===
         !0 ||
-      sbt(e)?.some((o) => pr(o.id) === r && o.acceptsPeerMessages === !1) === !0
+      sbt(e)?.some((o) => sessionIdBody(o.id) === r && o.acceptsPeerMessages === !1) === !0
     ))
       return;
     return `Not sent: '${i}' ${l7e} \u2014 its Claude would never see the message. That session is set not to accept cross-session messages (the feature is off on its platform, or a setting or policy there refuses them); reach that machine another way, or ask its user to enable it (listings refresh within a few minutes \u2014 re-run ListAgents after they do).`;
@@ -590,9 +590,9 @@ function $re(e, t, i) {
 }
 function abt(e, t) {
   try {
-    let i = pr(t),
-      r = ibt(e)?.find((o) => pr(o.id) === i),
-      s = sbt(e)?.find((o) => pr(o.id) === i);
+    let i = sessionIdBody(t),
+      r = ibt(e)?.find((o) => sessionIdBody(o.id) === i),
+      s = sbt(e)?.find((o) => sessionIdBody(o.id) === i);
     if ((r !== void 0 && !r.remoteControl) || (s !== void 0 && ege(s)))
       return !1;
     if (s?.inboundReportUnavailable && r?.acceptsPeerMessages === void 0)

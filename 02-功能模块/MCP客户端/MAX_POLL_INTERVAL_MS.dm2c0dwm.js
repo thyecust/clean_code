@@ -15,11 +15,11 @@ import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-5
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, nt, uv, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { O_, as } from "../认证-OAuth登录/chunk-7jz937t3.js";
-import { TaskStatusNotificationSchema as dhe, CallToolResultSchema as v1 } from "./chunk-tv3jbp8f.js";
+import { TaskStatusNotificationSchema, CallToolResultSchema } from "./chunk-tv3jbp8f.js";
 import { ite, Zdt, U4, ept } from "./chunk-xcbagjx9.js";
 import { ha, _a, hde, Dy, b3, Kde, xI } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { vee, m9 } from "../../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js";
@@ -30,8 +30,8 @@ import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { rG } from "./chunk-tznd4407.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 var W = 2000,
-  q = 100,
-  z = 60000,
+  MIN_POLL_INTERVAL_MS = 100,
+  MAX_POLL_INTERVAL_MS = 60000,
   X = 10,
   R = 30000;
 async function C(e, t) {
@@ -61,7 +61,7 @@ function G(e, t, a) {
   if (!s)
     ((s = new Map()),
       A.set(e, s),
-      e.setNotificationHandler(dhe, (r) => {
+      e.setNotificationHandler(TaskStatusNotificationSchema, (r) => {
         A.get(e)?.get(r.params.taskId)?.(
           r.params.status,
           r.params.statusMessage,
@@ -96,7 +96,7 @@ var Y = m(() =>
       description: le().optional(),
     }),
   );
-async function Q(e, t, a, s = hde) {
+async function mcpContentToNotificationText(e, t, a, s = hde) {
   let r;
   if (typeof e === "string") r = e;
   else {
@@ -209,15 +209,15 @@ async function te(e, t, a) {
 }
 var B = 1e4,
   se = /[\p{Cc}\p{Cf}\p{Cs}\p{Zl}\p{Zp}\p{Variation_Selector}]+/gu;
-function S(e) {
+function boundMcpStatusMessage(e) {
   if (e === void 0) return;
   let t = e.replace(se, " ").replace(/ {2,}/g, " ").trim();
   if (t === "") return;
   return t.length > B ? `${oe(t, B)}\u2026 [truncated]` : t;
 }
-function j(e) {
+function buildMcpTaskNotification(e) {
   let a = `MCP task ${rG(e.mcpTaskId)} (${Pee(e.serverName, e.toolName)}) ${e.status}.`,
-    s = S(e.statusMessage) ?? "no detail",
+    s = boundMcpStatusMessage(e.statusMessage) ?? "no detail",
     r =
       e.status === "completed"
         ? (e.resultText ?? "")
@@ -254,8 +254,8 @@ function D(e, t) {
     s = Math.floor(s * 0.9);
   }
 }
-function ae(e) {
-  return ne(e).catch((t) => h(t));
+function startMcpTaskWatcher(e) {
+  return ne(e).catch((t) => logError(t));
 }
 async function ne({
   client: e,
@@ -291,7 +291,7 @@ async function ne({
       sidecarProjectDir: b,
     }));
   let E = (k, M) => {
-      let d = S(M);
+      let d = boundMcpStatusMessage(M);
       if (k === o && d === g) return;
       if (N(o) && !N(k)) return;
       ((o = k),
@@ -299,14 +299,14 @@ async function ne({
         t.update(i, (U) => ({ ...U, mcpStatus: k, statusMessage: d })));
     },
     F = G(e, c, E),
-    O = Math.min(Math.max(s ?? W, q), z),
+    O = Math.min(Math.max(s ?? W, MIN_POLL_INTERVAL_MS), MAX_POLL_INTERVAL_MS),
     _ = 0,
     x;
   try {
     while (!N(o)) {
       if (o === "input_required")
         try {
-          await e.experimental.tasks.getTaskResult(c, v1);
+          await e.experimental.tasks.getTaskResult(c, CallToolResultSchema);
         } catch (d) {
           n(`mcp task ${c} getTaskResult during input_required: ${O_(d)}`);
         }
@@ -323,7 +323,7 @@ async function ne({
       } catch (d) {
         if ((_++, n(`mcp task ${c} poll failed: ${O_(d)}`), _ >= X)) {
           ((o = "failed"),
-            (g = S(`Task polling failed repeatedly: ${O_(d)}`)),
+            (g = boundMcpStatusMessage(`Task polling failed repeatedly: ${O_(d)}`)),
             (x = "poll_failed_repeatedly"));
           break;
         }
@@ -332,12 +332,12 @@ async function ne({
     let k, M;
     if (o === "completed")
       try {
-        let d = await e.experimental.tasks.getTaskResult(c, v1);
+        let d = await e.experimental.tasks.getTaskResult(c, CallToolResultSchema);
         if (d.isError !== !0) M = T7(d.content);
-        k = await Q(d.content ?? [], r, u);
+        k = await mcpContentToNotificationText(d.content ?? [], r, u);
       } catch (d) {
         ((o = "failed"),
-          (g = S(`Failed to fetch task result: ${O_(d)}`)),
+          (g = boundMcpStatusMessage(`Failed to fetch task result: ${O_(d)}`)),
           (x = "result_fetch_failed"));
       }
     if (L({ taskRegistry: t, registryId: i, registered: T })) {
@@ -347,9 +347,9 @@ async function ne({
         w(i, r, I, v, b));
       return;
     }
-    if (o === "completed") y("mcp_task_complete");
-    else if (o === "cancelled") f("mcp_task_complete", "cancelled_by_server");
-    else f("mcp_task_complete", x ?? "failed");
+    if (o === "completed") logFeatureOk("mcp_task_complete");
+    else if (o === "cancelled") logFeatureBad("mcp_task_complete", "cancelled_by_server");
+    else logFeatureBad("mcp_task_complete", x ?? "failed");
     (t.update(i, (d) => ({
       ...d,
       status: o === "completed" ? "completed" : "failed",
@@ -365,7 +365,7 @@ async function ne({
       w(i, r, I, v, b),
       ha(
         {
-          value: j({
+          value: buildMcpTaskNotification({
             registryId: i,
             mcpTaskId: c,
             serverName: p,
@@ -387,13 +387,13 @@ async function ne({
     F();
   }
 }
-async function Re(e) {
+async function restoreMcpTasks(e) {
   if (!xI()) return;
   let t;
   try {
     t = await ept(e.storageV5);
   } catch (a) {
-    (f("mcp_task_restore", "list_failed"),
+    (logFeatureBad("mcp_task_restore", "list_failed"),
       n(`restoreMcpTasks list failed: ${String(a)}`));
     return;
   }
@@ -413,7 +413,7 @@ async function Re(e) {
     }
     ie(a, e).catch((s) => n(`restoreMcpTasks ${a.taskId}: ${O_(s)}`));
   }
-  y("mcp_task_restore");
+  logFeatureOk("mcp_task_restore");
 }
 async function ie(
   e,
@@ -485,7 +485,7 @@ async function ie(
   }
   if (!p) {
     l ??= `server '${e.serverName}' did not connect within ${R / 1000}s`;
-    let o = S(l) ?? "no detail",
+    let o = boundMcpStatusMessage(l) ?? "no detail",
       g = !1;
     if (
       (t.update(e.taskId, (T) => {
@@ -508,7 +508,7 @@ async function ie(
     )
       return;
     ha({
-      value: j({
+      value: buildMcpTaskNotification({
         registryId: e.taskId,
         mcpTaskId: e.mcpTaskId,
         serverName: e.serverName,
@@ -533,7 +533,7 @@ async function ie(
         ));
     return;
   }
-  ae({
+  startMcpTaskWatcher({
     client: p,
     taskRegistry: t,
     taskState: i,
@@ -543,11 +543,11 @@ async function ie(
   });
 }
 export {
-  z as MAX_POLL_INTERVAL_MS,
-  q as MIN_POLL_INTERVAL_MS,
-  S as boundMcpStatusMessage,
-  j as buildMcpTaskNotification,
-  Q as mcpContentToNotificationText,
-  Re as restoreMcpTasks,
-  ae as startMcpTaskWatcher,
+  MAX_POLL_INTERVAL_MS,
+  MIN_POLL_INTERVAL_MS,
+  boundMcpStatusMessage,
+  buildMcpTaskNotification,
+  mcpContentToNotificationText,
+  restoreMcpTasks,
+  startMcpTaskWatcher,
 };

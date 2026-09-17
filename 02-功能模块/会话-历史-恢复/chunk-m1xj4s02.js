@@ -11,7 +11,7 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { _n } from "../Teammates团队/chunk-qe04h4c5.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { LITE_READ_BUF_SIZE as Mm, validateUuid as bL, readSessionLite as dxt } from "./chunk-mkmy4cx2.js";
+import { LITE_READ_BUF_SIZE, validateUuid, readSessionLite } from "./chunk-mkmy4cx2.js";
 import { tE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { lP } from "../Teammates团队/chunk-thxapyam.js";
 import { hu, Mh } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
@@ -71,7 +71,7 @@ class Fy {
     return Promise.resolve({ done: !0, value: void 0 });
   }
 }
-import { readFile as T } from "fs/promises";
+import { readFile } from "fs/promises";
 import { dirname as E, join as D } from "path";
 var C = m(() => c({ customTitle: s() }));
 function LSt(e, t) {
@@ -104,7 +104,7 @@ async function N(e, t) {
       return;
     }
   try {
-    return await T(e, "utf8");
+    return await readFile(e, "utf8");
   } catch {
     return;
   }
@@ -152,7 +152,7 @@ function vyn(e) {
         let u = JSON.parse(n);
         if (r) {
           let a = B().safeParse(u);
-          if (a.success) return bL(a.data.continuedInSessionId) ?? void 0;
+          if (a.success) return validateUuid(a.data.continuedInSessionId) ?? void 0;
         }
         if (o && z(u)) return;
       } catch {}
@@ -171,7 +171,7 @@ function z(e) {
 }
 async function Ryn(e, t, i) {
   let n = _(x(e), `${t}.jsonl`),
-    r = await dxt(n, Mh(hu(n, i)));
+    r = await readSessionLite(n, Mh(hu(n, i)));
   return r !== null && (await kyn(n, r.head, r.tail, r.size, i));
 }
 var h = '"parentUuid":',
@@ -179,7 +179,7 @@ var h = '"parentUuid":',
   I = 1048576;
 async function kyn(e, t, i, n, r) {
   if (t.includes(h) || i.includes(h)) return !0;
-  if (n <= Mm) return !1;
+  if (n <= LITE_READ_BUF_SIZE) return !1;
   if (hu(e, r) !== void 0) return !0;
   try {
     let u = await F(e, y.O_RDONLY | y.O_NOFOLLOW | y.O_NONBLOCK);
@@ -204,7 +204,7 @@ async function kyn(e, t, i, n, r) {
   }
 }
 import { readdir as q, stat as J } from "fs/promises";
-import { basename as ze, join as b } from "path";
+import { basename, join as b } from "path";
 function X(e) {
   let t = lP(e);
   return t !== void 0 && _n(t) ? t : void 0;
@@ -227,7 +227,7 @@ async function SYn(e, t, i, n, r, o) {
         (l) => {
           for (let d of l) {
             if (d.kind !== "key" || d.key.namespace !== "transcript") continue;
-            let g = bL(d.key.sessionId);
+            let g = validateUuid(d.key.sessionId);
             if (!g) continue;
             if (t && d.mtimeMs === void 0) continue;
             let w = t ? Math.trunc(d.mtimeMs ?? 0) : 0,
@@ -260,7 +260,7 @@ async function SYn(e, t, i, n, r, o) {
     await Promise.all(
       a.map(async (f) => {
         if (!f.endsWith(".jsonl")) return null;
-        let l = bL(f.slice(0, -6));
+        let l = validateUuid(f.slice(0, -6));
         if (!l) return null;
         let d = b(e, f);
         if (!t)

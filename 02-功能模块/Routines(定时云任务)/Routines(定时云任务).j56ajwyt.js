@@ -16,24 +16,24 @@ import { M0 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isClaudeAISubscriber as gt, hasStoredOAuthToken as wu, hasOAuthScope as gq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getRemoteUrl as ez } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isClaudeAISubscriber, hasStoredOAuthToken, hasOAuthScope } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getRemoteUrl } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { hasDisableClaudeAiConnectors as RQ } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { hasDisableClaudeAiConnectors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Mw, Pb, Rx } from "../Git-Worktree/chunk-bk9696gx.js";
-import { isCustomizationDisabled as Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
-import { MM, hne, Q4n, jgn, getMcpServerSignature as cj, shouldSkipClaudeAiFetchForEnterpriseLockdown as REe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { getSuppressedClaudeAiConnectors as cAn } from "../权限系统/chunk-fjrcf22x.js";
+import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { MM, hne, Q4n, jgn, getMcpServerSignature, shouldSkipClaudeAiFetchForEnterpriseLockdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { getSuppressedClaudeAiConnectors } from "../权限系统/chunk-fjrcf22x.js";
 import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { registerBundledSkill as eo } from "../Skills技能/chunk-1zy5c8mf.js";
+import { registerBundledSkill } from "../Skills技能/chunk-1zy5c8mf.js";
 import { E$ } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { gM } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
 import { YJn } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function M() {
-  return !St() && Mt("allow_quick_web_setup");
+  return !St() && isPolicyAllowed("allow_quick_web_setup");
 }
 var O = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 function z(s) {
@@ -166,7 +166,7 @@ ${s.map((i) => `- ${i}`).join(`
 `)}`;
 }
 async function W() {
-  let s = await ez();
+  let s = await getRemoteUrl();
   if (!s) return null;
   let t = Rx(s);
   if (!t || Mw(t)) return null;
@@ -392,8 +392,8 @@ Start by understanding their intent and working through the appropriate workflow
     : ""
 }`;
 }
-function we() {
-  eo({
+function registerScheduleRemoteAgentsSkill() {
+  registerBundledSkill({
     name: YJn,
     menuDescription: "Create and manage routines: cloud agents on a schedule",
     aliases: ["routines"],
@@ -403,14 +403,14 @@ function we() {
       'When the user wants to schedule a recurring cloud agent, set up automated tasks, create a cron job for Claude Code, or manage their scheduled agents/routines. Also use when the user wants a one-time scheduled run ("run this once at 3pm", "remind me to check X tomorrow").',
     userInvocable: !0,
     isEnabled: () =>
-      In() &&
-      gt() &&
+      isFirstPartyProvider() &&
+      isClaudeAISubscriber() &&
       !a.CLAUDE_CODE_REMOTE &&
-      Mt("allow_remote_sessions") &&
-      Mt(gM),
+      isPolicyAllowed("allow_remote_sessions") &&
+      isPolicyAllowed(gM),
     allowedTools: [E$, Es, "Bash(date *)"],
     async getPromptForCommand(s, t) {
-      if (!wu())
+      if (!hasStoredOAuthToken())
         return [
           {
             type: "text",
@@ -479,7 +479,7 @@ function we() {
         c = await W();
       }
       let f = G(t.options.mcpClients),
-        u = cAn(t),
+        u = getSuppressedClaudeAiConnectors(t),
         C = new Set(u.map((e) => e.duplicateOf)),
         m = new Set();
       for (let e of t.options.mcpClients)
@@ -490,7 +490,7 @@ function we() {
                 e.config.scope === "claudeai"))) ||
           C.has(e.name)
         ) {
-          let l = cj(e.config);
+          let l = getMcpServerSignature(e.config);
           if (l !== null) m.add(l);
         }
       let g = t.options.mcpClients.some(
@@ -509,7 +509,7 @@ function we() {
                 C.has(e.name)
               )
                 return !1;
-              let l = cj(e.config);
+              let l = getMcpServerSignature(e.config);
               return l === null || !m.has(l);
             })
             .map((e) => e.name),
@@ -519,14 +519,14 @@ function we() {
             .map((e) => k(e.name.replace(/^claude[.\s-]ai[.\s-]/i, "")))
             .filter((e) => e.length > 0),
         ),
-        y = !gq("user:mcp_servers"),
-        v = REe()
+        y = !hasOAuthScope("user:mcp_servers"),
+        v = shouldSkipClaudeAiFetchForEnterpriseLockdown()
           ? "lockdown"
           : M0() || uo()
             ? "restricted"
-            : a.ENABLE_CLAUDEAI_MCP_SERVERS === !1 || RQ()
+            : a.ENABLE_CLAUDEAI_MCP_SERVERS === !1 || hasDisableClaudeAiConnectors()
               ? "optout"
-              : Xr("mcpClaudeAi")
+              : isCustomizationDisabled("mcpClaudeAi")
                 ? "safe-mode"
                 : y
                   ? "missing-scope"
@@ -608,4 +608,4 @@ function we() {
     },
   });
 }
-export { we as registerScheduleRemoteAgentsSkill };
+export { registerScheduleRemoteAgentsSkill };

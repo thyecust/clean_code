@@ -24,7 +24,7 @@ function R(m) {
     ? `plugin:${m.name}@${m.marketplace}`
     : `server:${m.name}`;
 }
-function k(I) {
+function DevChannelsDialog(I) {
   let a = _(13),
     { channels: h, onAccept: d } = I,
     v;
@@ -96,4 +96,4 @@ function k(I) {
   else b = a[12];
   return b;
 }
-export { k as DevChannelsDialog };
+export { DevChannelsDialog };

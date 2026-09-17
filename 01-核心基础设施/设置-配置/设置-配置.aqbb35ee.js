@@ -71,7 +71,7 @@ import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
 import { Ghe, env as a } from "./chunk-zqr5ctyf.js";
 import { mhe, ZU, Sn } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { EXTERNAL_PERMISSION_MODES as cL, PERMISSION_MODES as ly, normalizePermissionModeAlias as mf } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { EXTERNAL_PERMISSION_MODES, PERMISSION_MODES, normalizePermissionModeAlias } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { NU, tHn, Mge, Gar, CRt, jet, ske, HBe } from "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
 import { mn, Do, Lhe } from "../共享小工具-未细化/chunk-z5tdbda7.js";
 import { Tx, Cke, Ett, Fr, Er } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
@@ -244,7 +244,7 @@ function Yt(e) {
   return `"${e.alias}" and "${e.canonical}" are the same setting; keep only "${e.canonical}"`;
 }
 import { join as ar } from "path";
-import { isAbsolute as qn } from "path";
+import { isAbsolute } from "path";
 var fa = m(() =>
     c({
       allowedDomains: v(s()).optional(),
@@ -716,13 +716,13 @@ var pt = m(() =>
             "Only honored from user, managed/policy, or CLI (--settings) settings \u2014 " +
             "project settings (.claude/settings.json and .claude/settings.local.json) are ignored.",
         ),
-      bwrapPath: ai((e) => (typeof e === "string" && qn(e) ? e : void 0), s())
+      bwrapPath: ai((e) => (typeof e === "string" && isAbsolute(e) ? e : void 0), s())
         .optional()
         .catch(void 0)
         .describe(
           "Linux/WSL only: Absolute path to the bwrap (bubblewrap) binary. Overrides auto-detection via PATH. Only honored from admin-controlled managed settings.",
         ),
-      socatPath: ai((e) => (typeof e === "string" && qn(e) ? e : void 0), s())
+      socatPath: ai((e) => (typeof e === "string" && isAbsolute(e) ? e : void 0), s())
         .optional()
         .catch(void 0)
         .describe(
@@ -2043,7 +2043,7 @@ function fke(e, t) {
   );
 }
 import { posix as Jl, win32 as Xl } from "path";
-import { isIPv4 as Wa, isIPv6 as Va } from "net";
+import { isIPv4, isIPv6 } from "net";
 var Ga = new Set([
     "metadata.google.internal",
     "metadata.goog",
@@ -2121,12 +2121,12 @@ function jge(e) {
   if (Ga.has(t)) return !0;
   if (t.startsWith("instance-data.") && t.endsWith(".compute.internal"))
     return !0;
-  if (Wa(t)) {
+  if (isIPv4(t)) {
     if (Eo.has(t)) return !0;
     let [r = 0, i = 0, d = 0, u = 0] = t.split(".").map(Number);
     return ko(r, i, d, u);
   }
-  if (!Va(t)) return !1;
+  if (!isIPv6(t)) return !1;
   let o = Ya(t);
   if (o === void 0) return !0;
   if (Ja(o)) return !0;
@@ -5825,7 +5825,7 @@ var Tt = {
     permissionsShape: () => ({
       disableAutoMode: X(["disable"]).optional().describe("Disable auto mode"),
     }),
-    permissionModes: () => ly.filter((e) => !cL.includes(e)),
+    permissionModes: () => PERMISSION_MODES.filter((e) => !EXTERNAL_PERMISSION_MODES.includes(e)),
   },
   deepLink: {
     buildGate: () => !0,
@@ -6275,7 +6275,7 @@ function Hs(e) {
       .describe(
         "List of permission rules that should always prompt for confirmation",
       ),
-    defaultMode: ai(mf, X([...cL, ...As(e)]))
+    defaultMode: ai(normalizePermissionModeAlias, X([...EXTERNAL_PERMISSION_MODES, ...As(e)]))
       .optional()
       .describe(
         "Default permission mode when Claude Code needs access ('manual' is accepted as an alias for 'default')",
@@ -8560,7 +8560,7 @@ function VRt(e) {
 function KRt(e) {
   return "serverUrl" in e && e.serverUrl !== void 0;
 }
-import { createHash as pd } from "crypto";
+import { createHash } from "crypto";
 function NQ(e) {
   if (Array.isArray(e)) return e.map(NQ);
   if (e !== null && typeof e === "object") {
@@ -8573,7 +8573,7 @@ function NQ(e) {
 function bke(e) {
   let t = NQ(e),
     o = b(t);
-  return `sha256:${pd("sha256").update(o).digest("hex")}`;
+  return `sha256:${createHash("sha256").update(o).digest("hex")}`;
 }
 function jU(e) {
   if (!e)
@@ -10512,8 +10512,8 @@ var ig = Vt(function (e, t) {
     return e == null ? {} : bi(e, t);
   }),
   DBe = ig;
-import { homedir as Ig } from "os";
-import { dirname as Dg, join as ye, resolve as ue } from "path";
+import { homedir } from "os";
+import { dirname, join as ye, resolve } from "path";
 function qHn(e) {
   return e !== void 0 && (e.commit !== void 0 || e.pr !== void 0);
 }
@@ -11778,14 +11778,14 @@ function okt(e, t, o = "file") {
 function skt(e, t) {
   switch (e) {
     case "userSettings":
-      return ue(be());
+      return resolve(be());
     case "policySettings":
     case "projectSettings":
-      return ue(t.cwd);
+      return resolve(t.cwd);
     case "localSettings":
       return X6(t.cwd, t.canonicalGitRoot);
     case "flagSettings":
-      return t.flagPath ? Dg(ue(t.flagPath)) : ue(t.cwd);
+      return t.flagPath ? dirname(resolve(t.flagPath)) : resolve(t.cwd);
   }
 }
 function X6(e, t) {
@@ -11796,9 +11796,9 @@ function X6(e, t) {
 }
 function JHn(e, t) {
   let o = t?.(e);
-  if (!o) return { decided: ue(e) };
-  let r = ue(o),
-    i = ue(e);
+  if (!o) return { decided: resolve(e) };
+  let r = resolve(o),
+    i = resolve(e);
   if (r === i) return { decided: r };
   let d;
   try {
@@ -11866,12 +11866,12 @@ function Hg() {
   return da().localStoreProbes.normalizedRealHomeDir(jg);
 }
 function jg() {
-  let e = RS(Ig());
+  let e = RS(homedir());
   if (e === null) throw Error("home directory realpath unavailable");
   return zn(e);
 }
 function blr(e, t) {
-  return e === "localSettings" ? ue(t.cwd) : skt(e, t);
+  return e === "localSettings" ? resolve(t.cwd) : skt(e, t);
 }
 var jq = { default: "settings.json", cowork: "cowork_settings.json" };
 function Fg(e) {
@@ -11900,8 +11900,8 @@ function getRelativeSettingsFilePathForSource(e) {
   }
 }
 function Aie(e) {
-  if (X6(e.cwd, e.canonicalGitRoot) === ue(e.cwd)) return;
-  return ye(ue(e.cwd), getRelativeSettingsFilePathForSource("localSettings"));
+  if (X6(e.cwd, e.canonicalGitRoot) === resolve(e.cwd)) return;
+  return ye(resolve(e.cwd), getRelativeSettingsFilePathForSource("localSettings"));
 }
 function QHn(e, t) {
   let o = t.store.perSource.get(e);
@@ -12715,8 +12715,8 @@ function Plr(e) {
       }
       if (h === "localSettings") {
         let y = Aie(e);
-        if (y && !u.has(ue(y))) {
-          u.add(ue(y));
+        if (y && !u.has(resolve(y))) {
+          u.add(resolve(y));
           let { settings: _, errors: w } = WU(y, e.store);
           if ((p(w), _))
             (e.onLegacyLocalSettingsRead?.("cascade"), (r = b0(r, _, settingsMergeCustomizer)));
@@ -12724,7 +12724,7 @@ function Plr(e) {
       }
       let f = ehe(h, e);
       if (f) {
-        let y = ue(f),
+        let y = resolve(f),
           _ = h === "flagSettings" && e.flagExpectedContent !== void 0;
         if (!u.has(y) || _) {
           u.add(y);
@@ -12760,9 +12760,9 @@ function Plr(e) {
     e.store.isLoadingFromDisk = !1;
   }
 }
-import { stripVTControlCharacters as mm } from "util";
+import { stripVTControlCharacters } from "util";
 function E0(e) {
-  return mm(e).replace(/(?![\t\n])[\p{Cc}\p{Cf}\u2028\u2029]/gu, "");
+  return stripVTControlCharacters(e).replace(/(?![\t\n])[\p{Cc}\p{Cf}\u2028\u2029]/gu, "");
 }
 export {
   lke,

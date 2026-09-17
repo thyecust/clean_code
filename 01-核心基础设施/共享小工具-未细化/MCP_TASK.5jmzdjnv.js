@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 25 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { U4 } from "../../02-功能模块/MCP客户端/chunk-xcbagjx9.js";
-var m = {
+var MCP_TASK = {
   name: "MCP Task",
   type: "mcp_task",
   async kill(a, i, p, d, r) {
@@ -38,4 +38,4 @@ var m = {
       })().catch((t) => n(`McpTask.kill deleteMcpTaskMetadata: ${String(t)}`)));
   },
 };
-export { m as MCP_TASK };
+export { MCP_TASK };

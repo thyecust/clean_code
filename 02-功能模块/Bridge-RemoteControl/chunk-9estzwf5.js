@@ -11,16 +11,16 @@ import { ns, fv, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { uo } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { CLAUDE_AI_INFERENCE_SCOPE as py } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import {
   r0,
-  describeHowToDisableAuthTokenSource as E5,
-  getAuthTokenSource as Gl,
-  getAnthropicApiKeyWithSource as qg,
-  getConfiguredApiKeyHelper as bg,
-  getClaudeAIOAuthTokens as Yt,
-  isClaudeAISubscriber as gt,
-  hasProfileScope as lp,
+  describeHowToDisableAuthTokenSource,
+  getAuthTokenSource,
+  getAnthropicApiKeyWithSource,
+  getConfiguredApiKeyHelper,
+  getClaudeAIOAuthTokens,
+  isClaudeAISubscriber,
+  hasProfileScope,
   kZe,
   XC,
   CU,
@@ -36,13 +36,13 @@ import { yXt } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Pw } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
 import { mx } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
-import { THIRD_PARTY_PROVIDER_LABELS as yA, THIRD_PARTY_PROVIDER_ENV_VARS as Eet, getAPIProvider as Pe, isFirstPartyProvider as In, getSecondaryProvider as GRe, isActualFirstPartyAnthropicBaseUrl as ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { THIRD_PARTY_PROVIDER_LABELS, THIRD_PARTY_PROVIDER_ENV_VARS, getAPIProvider, isFirstPartyProvider, getSecondaryProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { D6, MRe, lBe, Qse, cBe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { getPolicyCacheRevision as oCn, isPolicyLimitsEligible as lA, isPolicyAllowed as Mt, isPolicyRouteMissing as Cme, hasNameableComplianceTaint as xve, getPolicyDefault as aCn, getResponseFromCache as ch } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { getPolicyCacheRevision, isPolicyLimitsEligible, isPolicyAllowed, isPolicyRouteMissing, hasNameableComplianceTaint, getPolicyDefault, getResponseFromCache } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { e5, H4t } from "./chunk-eg5a0eq0.js";
 function isBridgeFirstParty() {
-  if (!In()) return !1;
-  return !!a.ANTHROPIC_UNIX_SOCKET || ev();
+  if (!isFirstPartyProvider()) return !1;
+  return !!a.ANTHROPIC_UNIX_SOCKET || isActualFirstPartyAnthropicBaseUrl();
 }
 function hasBridgeEntitlement() {
   return isBridgeFirstParty() && l() && H("tengu_ccr_bridge", !1);
@@ -122,8 +122,8 @@ async function getBridgeDisabledReason() {
 }
 function T() {
   try {
-    if (Cme()) return cBe("Remote Control");
-    if (!xve()) return O;
+    if (isPolicyRouteMissing()) return cBe("Remote Control");
+    if (!hasNameableComplianceTaint()) return O;
     if (!S()) return Qse("Remote Control");
     return describeRemoteControlPolicyDenial();
   } catch {
@@ -137,7 +137,7 @@ function getRemoteControlPolicyLockReason() {
   if (u()) return null;
   if (isRemoteControlHardDisabled()) return e5;
   let e = Jo(),
-    o = oCn(),
+    o = getPolicyCacheRevision(),
     t = e.remoteControlLockReason;
   if (t !== void 0 && t.policyCacheRevision === o) return t.reason;
   let r = P();
@@ -156,8 +156,8 @@ function getBridgeAuthDebugInfo() {
   if (!pB()) return "";
   let e = (o) => (o ? "set" : "unset");
   try {
-    let o = Yt(),
-      t = Object.values(Eet).filter((r) => Ie(process.env[r]));
+    let o = getClaudeAIOAuthTokens(),
+      t = Object.values(THIRD_PARTY_PROVIDER_ENV_VARS).filter((r) => Ie(process.env[r]));
     return [
       "",
       "[debug] Remote Control auth state:",
@@ -170,7 +170,7 @@ function getBridgeAuthDebugInfo() {
       `  oauthAccount.organizationUuid=${h()?.organizationUuid ? "set" : "unset"}`,
       `  ANTHROPIC_API_KEY=${e(process.env.ANTHROPIC_API_KEY)}`,
       `  ANTHROPIC_AUTH_TOKEN=${e(process.env.ANTHROPIC_AUTH_TOKEN)}`,
-      `  apiKeyHelper=${bg() ? "set" : "unset"}`,
+      `  apiKeyHelper=${getConfiguredApiKeyHelper() ? "set" : "unset"}`,
       `  CLAUDE_CODE_API_KEY_FILE_DESCRIPTOR=${e(process.env.CLAUDE_CODE_API_KEY_FILE_DESCRIPTOR)}`,
       `  CLAUDE_CODE_OAUTH_TOKEN=${e(process.env.CLAUDE_CODE_OAUTH_TOKEN)}`,
       `  ANTHROPIC_UNIX_SOCKET=${e(process.env.ANTHROPIC_UNIX_SOCKET)}`,
@@ -304,15 +304,15 @@ function w(e) {
 }
 function describeAuthPrecedenceBlocker({ prefix: e, suffix: o }) {
   try {
-    let { source: t } = qg({ skipRetrievingKeyFromApiKeyHelper: !0 });
+    let { source: t } = getAnthropicApiKeyWithSource({ skipRetrievingKeyFromApiKeyHelper: !0 });
     if (t === "ANTHROPIC_API_KEY")
       return `${e} ANTHROPIC_API_KEY is set, so this session is using API-key auth \u2014 unset it (or run in a shell without it) ${o}`;
     if (t === "apiKeyHelper")
       return `${e} apiKeyHelper is configured, so this session is using API-key auth \u2014 unset it ${o}`;
     if (process.env.ANTHROPIC_AUTH_TOKEN)
       return `${e} ANTHROPIC_AUTH_TOKEN is set, so this session is using API-key auth \u2014 unset it (or run in a shell without it) ${o}`;
-    let { source: r } = Gl(),
-      i = E5(r);
+    let { source: r } = getAuthTokenSource(),
+      i = describeHowToDisableAuthTokenSource(r);
     if (r !== "none" && i)
       return `${e} This session is using ${r} auth \u2014 ${i}`;
     if (process.env.ANTHROPIC_UNIX_SOCKET)
@@ -325,17 +325,17 @@ var s =
   A = "unset it (or run in a shell without it) to use Remote Control.",
   y = "unset them (or run in a shell without them) to use Remote Control.";
 function N() {
-  let e = Pe();
+  let e = getAPIProvider();
   if (e !== "firstParty") {
     if (e === "gateway")
       return fv(ns())
         ? `${s} This session is connected through an enterprise cloud gateway (set up via /login), which does not support Remote Control.`
         : `${s} CLAUDE_CODE_USE_GATEWAY is set (the gateway on-ramp also requires ANTHROPIC_BASE_URL and ANTHROPIC_AUTH_TOKEN), so this session is routed through a cloud gateway \u2014 ${y}`;
-    if (e === "bedrock" && GRe() === "mantle")
-      return `${s} ${Eet.bedrock} and ${Eet.mantle} are set, so this session is using ${yA.bedrock} + ${yA.mantle} \u2014 ${y}`;
-    return `${s} ${Eet[e]} is set, so this session is using ${yA[e]} \u2014 ${A}`;
+    if (e === "bedrock" && getSecondaryProvider() === "mantle")
+      return `${s} ${THIRD_PARTY_PROVIDER_ENV_VARS.bedrock} and ${THIRD_PARTY_PROVIDER_ENV_VARS.mantle} are set, so this session is using ${THIRD_PARTY_PROVIDER_LABELS.bedrock} + ${THIRD_PARTY_PROVIDER_LABELS.mantle} \u2014 ${y}`;
+    return `${s} ${THIRD_PARTY_PROVIDER_ENV_VARS[e]} is set, so this session is using ${THIRD_PARTY_PROVIDER_LABELS[e]} \u2014 ${A}`;
   }
-  if (!ev()) {
+  if (!isActualFirstPartyAnthropicBaseUrl()) {
     let o = a._CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL
       ? " (_CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL does not apply to Remote Control.)"
       : "";
@@ -345,21 +345,21 @@ function N() {
 }
 function d() {
   try {
-    return Boolean(Yt()?.scopes?.includes(py));
+    return Boolean(getClaudeAIOAuthTokens()?.scopes?.includes(CLAUDE_AI_INFERENCE_SCOPE));
   } catch {
     return !1;
   }
 }
 function l() {
   try {
-    return gt();
+    return isClaudeAISubscriber();
   } catch {
     return !1;
   }
 }
 function g() {
   try {
-    return lp();
+    return hasProfileScope();
   } catch {
     return !1;
   }
@@ -382,7 +382,7 @@ async function ensurePolicyLimitsLoadedForDiagnostic() {
 }
 async function k() {
   try {
-    if (ch() !== null) return;
+    if (getResponseFromCache() !== null) return;
   } catch {}
   let e = await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
   e.initializePolicyLimitsLoadingPromise();
@@ -404,7 +404,7 @@ async function k() {
 }
 function getRemoteControlPolicyVerdict() {
   try {
-    return Mt("allow_remote_control") ? "allowed" : "denied";
+    return isPolicyAllowed("allow_remote_control") ? "allowed" : "denied";
   } catch {
     return "unavailable";
   }
@@ -413,8 +413,8 @@ function isRemoteControlOfferable() {
   return isBridgeEnabled() && getRemoteControlPolicyVerdict() === "allowed";
 }
 function isPolicyLimitsCacheLoaded() {
-  if (!lA()) return !0;
-  return ch() !== null;
+  if (!isPolicyLimitsEligible()) return !0;
+  return getResponseFromCache() !== null;
 }
 function isRunningInRemoteEnvironment() {
   return Ie(process.env.CLAUDE_CODE_REMOTE) || Nn();
@@ -504,7 +504,7 @@ function getCcrAutoConnectDefault() {
 function resolveCcrAutoConnectDefault() {
   if (isRunningInRemoteEnvironment()) return { value: !1, source: "remote_env" };
   if (isPersistentRemoteSessionEnabled()) return { value: !0, source: "persistent_remote_session" };
-  let e = aCn("remote_control_at_startup");
+  let e = getPolicyDefault("remote_control_at_startup");
   if (e !== void 0) return { value: e, source: "org_policy" };
   return { value: H("tengu_cobalt_harbor", !1), source: "growthbook" };
 }

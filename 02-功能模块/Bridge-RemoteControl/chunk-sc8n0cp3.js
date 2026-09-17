@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -17,17 +17,17 @@ import { b, Tc, z, n } from "../../01-核心基础设施/核心工具-日志与�
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Lhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yi, ms, Ow, B5, SHn, gke, wx, XT, NQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getSettingsForSource as ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import { uD } from "../Hooks钩子/chunk-z3433nr6.js";
 import { YC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { toe, ig } from "../插件系统/chunk-ajtn749s.js";
 import { bK, T1e, Hc } from "../插件系统/chunk-hh8f1qrw.js";
-import { iH, isRemoteToolServingMuted as m3, onServingMuteRecheck as AV, pT, an, wEe, Ql, pY, tD, nD } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { iH, isRemoteToolServingMuted, onServingMuteRecheck, pT, an, wEe, Ql, pY, tD, nD } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Qz, SWe } from "../插件系统/chunk-55xj4ev5.js";
 import { ale, eUn } from "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
@@ -35,8 +35,8 @@ import { np, Xc, $g, Lu } from "../插件系统/chunk-33bdfgmx.js";
 import { s, T, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { hostname as fn } from "os";
-import { dirname as gn, join as hn } from "path";
+import { hostname } from "os";
+import { dirname, join as hn } from "path";
 var mn = m(() =>
     c({
       version: k(1),
@@ -128,10 +128,10 @@ function WHe(e) {
         return;
       }
       let o = WZ();
-      (await qt().mkdir(gn(o), 448), await qt().atomicWrite(o, t, 384));
+      (await qt().mkdir(dirname(o), 448), await qt().atomicWrite(o, t, 384));
     },
     now: () => new Date(),
-    hostname: fn,
+    hostname: hostname,
   };
 }
 function R$n() {
@@ -656,7 +656,7 @@ function Q(e, t) {
   return Object.hasOwn(e, t) ? e[t] : void 0;
 }
 async function rPt(e) {
-  let t = ms().map((a) => [a, ye(a)]),
+  let t = ms().map((a) => [a, getSettingsForSource(a)]),
     [o, r] = await Promise.all([Ql(e), tD(e)]),
     d = wEe(),
     w = t
@@ -740,11 +740,11 @@ function Ze({
     ge = !1;
   function ee(p, P) {
     if (P === "read_failed" || P === "internal_error" || P === "refused_whole")
-      f("ccr_cloud_plugins_forward", P, a);
+      logFeatureBad("ccr_cloud_plugins_forward", P, a);
     ((H = P),
       A("skipped"),
       i("tengu_cloud_plugins_skipped", {
-        reason: u(P),
+        reason: fromEnum(P),
         ...a,
         reattach: p.reattach,
       }));
@@ -789,10 +789,10 @@ function Ze({
           let te = gt(_e);
           if (
             (i("tengu_cloud_plugins_apply_unconfirmed", {
-              at: u(C),
+              at: fromEnum(C),
               ...a,
-              standing: u(Ae(p, j)),
-              ...(te !== null && { refused_by_worker: u(te) }),
+              standing: fromEnum(Ae(p, j)),
+              ...(te !== null && { refused_by_worker: fromEnum(te) }),
             }),
             te !== null && se())
           )
@@ -872,7 +872,7 @@ function Ze({
     let se = () => Ae(p, C),
       _e = (q) => {
         i("tengu_cloud_plugins_reload", {
-          early_apply: u(p.earlyApply),
+          early_apply: fromEnum(p.earlyApply),
           generation_changed: B,
           install_frames_seen: p.installFrames,
           forwarded_enabled: P.forwardedEnabledIds.size,
@@ -890,13 +890,13 @@ function Ze({
             K = { generation: C, patchKey: P.patchKey };
           let J = q === "session_inactive" || _ === "session_inactive";
           if (!D) {
-            if (J) g("ccr_cloud_plugins_forward", "session_inactive", { ...a });
-            else f("ccr_cloud_plugins_forward", "posts_refused", { ...a });
+            if (J) logFeatureSad("ccr_cloud_plugins_forward", "session_inactive", { ...a });
+            else logFeatureBad("ccr_cloud_plugins_forward", "posts_refused", { ...a });
             ae(ue(p, P, null, !0));
           } else if (U !== null)
-            g("ccr_cloud_plugins_forward", "refused_by_worker", { ...a });
+            logFeatureSad("ccr_cloud_plugins_forward", "refused_by_worker", { ...a });
           else
-            y("ccr_cloud_plugins_forward", {
+            logFeatureOk("ccr_cloud_plugins_forward", {
               ...a,
               message_went_first: p.messageWentFirst,
             });
@@ -905,9 +905,9 @@ function Ze({
         I.then((J) => {
           if (
             (_e({
-              apply_outcome: u(q),
-              reload_outcome: u(_),
-              standing: u(se()),
+              apply_outcome: fromEnum(q),
+              reload_outcome: fromEnum(_),
+              standing: fromEnum(se()),
               message_went_first: p.messageWentFirst,
               reload_rtt_ms: te === null ? -1 : r.now() - te,
               answered: J !== null,
@@ -1043,7 +1043,7 @@ function le(e, t) {
   try {
     return e();
   } catch (o) {
-    return (h(o), t(o));
+    return (logError(o), t(o));
   }
 }
 function ke() {}
@@ -1126,12 +1126,12 @@ function _it(e) {
       try {
         e.say(_);
       } catch (I) {
-        h(I);
+        logError(I);
       }
     },
     O = e.readChoices ?? (() => rPt(e.storageV5)),
     S = e.clock ?? bZt,
-    a = e.muted ?? m3,
+    a = e.muted ?? isRemoteToolServingMuted,
     E = (_) =>
       new Promise((I, D) => {
         let J = S.setTimeout(
@@ -1152,7 +1152,7 @@ function _it(e) {
       try {
         e.onChange?.();
       } catch (_) {
-        h(_);
+        logError(_);
       }
     },
     ge = (_) => {
@@ -1210,8 +1210,8 @@ function _it(e) {
         M.disconnected(),
         p(),
         i("tengu_cloud_plugins_admission", {
-          admission: u("flag_off"),
-          source: u("muted"),
+          admission: fromEnum("flag_off"),
+          source: fromEnum("muted"),
           reattach: o,
         }),
         K());
@@ -1242,8 +1242,8 @@ function _it(e) {
         (U = void 0),
         K(),
         i("tengu_cloud_plugins_admission", {
-          admission: u(I),
-          source: u(D),
+          admission: fromEnum(I),
+          source: fromEnum(D),
           reattach: o,
         }),
         I === "admitted" && oe)
@@ -1259,10 +1259,10 @@ function _it(e) {
       try {
         j(_);
       } catch (I) {
-        h(I);
+        logError(I);
       }
     }),
-    _e = (e.onMuteRecheck ?? AV)(() => {
+    _e = (e.onMuteRecheck ?? onServingMuteRecheck)(() => {
       try {
         let _ = a();
         if (Z.signal.aborted || _ === oe) return;
@@ -1280,7 +1280,7 @@ function _it(e) {
         }
         K();
       } catch (_) {
-        h(_);
+        logError(_);
       }
     }),
     te = () => {
@@ -1295,15 +1295,15 @@ function _it(e) {
   Pe()
     .catch(
       (_) => (
-        h(_),
+        logError(_),
         { admission: "no_consent", source: "internal_error", unsent: [] }
       ),
     )
     .then((_) => {
       if (
         (i("tengu_cloud_plugins_admission", {
-          admission: u(_.admission),
-          source: u(_.source),
+          admission: fromEnum(_.admission),
+          source: fromEnum(_.source),
           reattach: o,
         }),
         Z.signal.aborted)
@@ -1311,7 +1311,7 @@ function _it(e) {
         return;
       if (_.source === "read_failed" || _.source === "internal_error") {
         if (
-          (f("ccr_cloud_plugins_forward", _.source),
+          (logFeatureBad("ccr_cloud_plugins_forward", _.source),
           (ie = _.source),
           (de = !0),
           K(),
@@ -1329,7 +1329,7 @@ function _it(e) {
       if (re !== null) j(re);
     })
     .catch((_) => {
-      h(_);
+      logError(_);
     });
   async function Pe() {
     let _ = await V().catch(() => null);
@@ -1377,7 +1377,7 @@ function _it(e) {
     try {
       _();
     } catch (I) {
-      h(I);
+      logError(I);
     }
   };
   return {

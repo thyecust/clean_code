@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isProcessProvablyGone as Vg, provenSameProcessAsync as mA } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isProcessProvablyGone, provenSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { Nu, qI, mD } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { s, T, O, se, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 function P7() {
@@ -151,7 +151,7 @@ function g9n(e, i) {
     r = t.outstanding.get(e.orig_msg_id);
   if (r === void 0) return !1;
   if (r.expectPid !== void 0 && i !== void 0 && i !== r.expectPid)
-    return (g("artifact_live_subscribe", "yield_answer_pid_mismatch"), !1);
+    return (logFeatureSad("artifact_live_subscribe", "yield_answer_pid_mismatch"), !1);
   r.timers.clearTimeout(r.timer);
   let l = (o) =>
       Array.isArray(o)
@@ -166,11 +166,11 @@ function g9n(e, i) {
       r.resolve({ ...u, lost: [...r.lost.keys()], lostTo: [...r.lost] }));
   else {
     (t.outstanding.delete(e.orig_msg_id),
-      y("artifact_live_subscribe", { yield_answer_late: !0 }));
+      logFeatureOk("artifact_live_subscribe", { yield_answer_late: !0 }));
     try {
       r.onLate?.({ ...u, lost: [...r.lost.keys()], lostTo: [...r.lost] });
     } catch (o) {
-      h(o);
+      logError(o);
     }
   }
   return !0;
@@ -192,7 +192,7 @@ function M(e, i, t, r) {
     try {
       e.reverter?.(f, [...d.slugs]);
     } catch (a) {
-      h(a);
+      logError(a);
     }
   };
   while (e.delivered.size > x) {
@@ -216,7 +216,7 @@ function h9n(e) {
 function Y(e, i) {
   let t = [];
   for (let [r, l] of [...e.delivered])
-    if (l.pid !== void 0 && Vg(l.pid)) t.push(...R(e, r, [...l.slugs], i));
+    if (l.pid !== void 0 && isProcessProvablyGone(l.pid)) t.push(...R(e, r, [...l.slugs], i));
   return (C(e), t);
 }
 function _9n(e) {
@@ -229,12 +229,12 @@ async function C(e) {
     if (t.pid === void 0 || t.procStart === void 0) continue;
     let r;
     try {
-      r = await mA(t.pid, t.procStart);
+      r = await provenSameProcessAsync(t.pid, t.procStart);
     } catch {
       r = void 0;
     }
     if (r === !1 && e.delivered.get(i) === t)
-      (y("artifact_comments_autoreact", { yield_taker_reused: !0 }),
+      (logFeatureOk("artifact_comments_autoreact", { yield_taker_reused: !0 }),
         R(e, i, [...t.slugs]));
   }
 }
@@ -247,7 +247,7 @@ function R(e, i, t, r) {
   try {
     return e.reverter?.(i, u, r) ?? [];
   } catch (o) {
-    return (h(o), []);
+    return (logError(o), []);
   }
 }
 function lan(e, i = null) {
@@ -282,13 +282,13 @@ function can(e, i, t, r, l) {
     e.sent_at > r + 1000 ||
     (e.claimed_at !== void 0 && e.claimed_at > e.sent_at + 1000)
   )
-    (g("artifact_comments_autoreact", "yield_request_stale"), (a = "refused"));
+    (logFeatureSad("artifact_comments_autoreact", "yield_request_stale"), (a = "refused"));
   else if (D(d, e) === "refuse") a = "refused";
   else if (d.holder === null) a = { yielded: [], notHeld: [...e.slugs] };
   else
     try {
       if ((Y(d, { transferring: new Set(e.slugs) }), E(d, t?.pid)))
-        (g("artifact_comments_autoreact", "yield_table_full"), (a = "refused"));
+        (logFeatureSad("artifact_comments_autoreact", "yield_table_full"), (a = "refused"));
       else
         a = d.holder({
           msgId: e.msg_id,
@@ -297,8 +297,8 @@ function can(e, i, t, r, l) {
           requester: { cwd: e.requester?.cwd, tmux: e.requester?.tmux },
         });
     } catch (w) {
-      (h(w),
-        g("artifact_comments_autoreact", "yield_handler_threw"),
+      (logError(w),
+        logFeatureSad("artifact_comments_autoreact", "yield_handler_threw"),
         (a = "refused"));
     }
   let S =
@@ -320,12 +320,12 @@ function can(e, i, t, r, l) {
       )
         return;
       if (!mD(w)) {
-        (g("artifact_comments_autoreact", "yield_answer_send_ambiguous"),
+        (logFeatureSad("artifact_comments_autoreact", "yield_answer_send_ambiguous"),
           f(i, S, u, o).catch(() => {}),
           _.onDelivered?.());
         return;
       }
-      (g("artifact_comments_autoreact", "yield_answer_undelivered"),
+      (logFeatureSad("artifact_comments_autoreact", "yield_answer_undelivered"),
         R(d, e.msg_id, _.yielded));
     },
   );
@@ -335,13 +335,13 @@ function y9n(e, i) {
     r = t.delivered.get(e.orig_msg_id);
   if (r === void 0) return !1;
   if (r.pid !== void 0 && i !== void 0 && i !== r.pid)
-    return (g("artifact_comments_autoreact", "unyield_pid_mismatch"), !1);
+    return (logFeatureSad("artifact_comments_autoreact", "unyield_pid_mismatch"), !1);
   let l = R(t, e.orig_msg_id, e.slugs, {
     ...(e.stopped === !0 && { stopped: new Set(e.slugs) }),
   });
   return (
     l.push(...Y(t)),
-    y("artifact_comments_autoreact", { yield_handed_back: l.length }),
+    logFeatureOk("artifact_comments_autoreact", { yield_handed_back: l.length }),
     !0
   );
 }

@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { getMainLoopModel as rt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   s4t,
   wnr,
@@ -46,7 +46,7 @@ var _ = {
   max: `Maximum capability with deepest reasoning (${wnr})`,
 };
 function olt() {
-  let t = rt(),
+  let t = getMainLoopModel(),
     o = ib(t),
     n = VK(t);
   return (
@@ -89,12 +89,12 @@ function g(t, o = !1) {
         subtype: "apply_flag_settings",
         settings: { effortLevel: t ?? null, ultracode: o },
       })
-      .catch(h),
+      .catch(logError),
     null
   );
 }
 async function x(t, o, n, r) {
-  let s = rt(),
+  let s = getMainLoopModel(),
     e = typeof t === "string" ? Z$(t, s) : t,
     l = e !== t,
     f = KK(e);
@@ -108,7 +108,7 @@ async function x(t, o, n, r) {
     d = await c;
   if (d) return { message: `Failed to set effort level: ${d.message}` };
   i("tengu_effort_command", {
-    effort: typeof e === "number" ? e : u(e),
+    effort: typeof e === "number" ? e : fromEnum(e),
     is_remote: jn() !== null,
   });
   let p = jn() ? void 0 : VH();
@@ -167,7 +167,7 @@ function K9e(t, o, n) {
 async function C(t, o, n) {
   o?.({ value: void 0, ultracode: !1 });
   let r = g(void 0),
-    s = await zG(void 0, rt(), t, n);
+    s = await zG(void 0, getMainLoopModel(), t, n);
   if (s) return { message: `Failed to set effort level: ${s.message}` };
   i("tengu_effort_command", { effort: S("auto"), is_remote: jn() !== null });
   let e = t ? "" : " (this session only)",
@@ -185,7 +185,7 @@ async function C(t, o, n) {
   };
 }
 function U(t, o, n) {
-  let r = rt();
+  let r = getMainLoopModel();
   if (!ib())
     return {
       message: `Ultracode needs dynamic workflows enabled (see /config). Valid options are: ${E(r)}`,
@@ -225,7 +225,7 @@ async function w(t, o = !0, n, r) {
   if (s === "ultracode") return U(o, n, r);
   let e = _$e(t);
   if (!e)
-    return { message: `Invalid argument: ${t}. Valid options are: ${E(rt())}` };
+    return { message: `Invalid argument: ${t}. Valid options are: ${E(getMainLoopModel())}` };
   return x(e, o, n, r);
 }
 async function lSe(t, o, n = !0, r) {

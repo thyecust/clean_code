@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 204 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { xk, pH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
@@ -39,7 +39,7 @@ import "./chunk-tqwnv5vj.js";
 import "./chunk-eg4wmaq4.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-vcb9z55e.js";
-import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 var E = 3;
 async function D({
   folder: t,
@@ -157,12 +157,12 @@ async function D({
         reason: "aborted",
         detail: "the create was cancelled",
       };
-    return (h(r), { kind: "refused", reason: "internal", detail: l(r) });
+    return (logError(r), { kind: "refused", reason: "internal", detail: l(r) });
   }
 }
 function O(t) {
-  let s = t.largest.slice(0, E).map((d) => `${B(d.path)} (${Ft(d.bytes)})`);
-  return `its files come to ${Ft(t.totalBytes)}, which with packaging does not fit the ${Ft(t.capBytes)} a cloud session can start with from a folder${s.length > 0 ? `; the largest: ${s.join(", ")}` : ""}. Remove or ignore what the session does not need (a .gitignore in this folder is honoured) and start again`;
+  let s = t.largest.slice(0, E).map((d) => `${B(d.path)} (${formatFileSize(d.bytes)})`);
+  return `its files come to ${formatFileSize(t.totalBytes)}, which with packaging does not fit the ${formatFileSize(t.capBytes)} a cloud session can start with from a folder${s.length > 0 ? `; the largest: ${s.join(", ")}` : ""}. Remove or ignore what the session does not need (a .gitignore in this folder is honoured) and start again`;
 }
 async function T(t, s) {
   let d = await Promise.all(s.map((m) => t.getDeflated(m))),
@@ -180,7 +180,7 @@ var M = {
     busy: "its files kept changing while they were read",
   },
   R = "packaging its files failed unexpectedly";
-async function re({
+async function shipFolderSeed({
   folder: t,
   signal: s,
   onProgress: d,
@@ -219,13 +219,13 @@ async function re({
       return g(
         o !== "internal" && c.detail !== "" ? c.detail : (M[o] ?? R),
         o === "too_large" ? "folder_too_large" : "folder_seed_failed",
-        { outcome: S("refused"), reason: u(o) },
+        { outcome: S("refused"), reason: fromEnum(o) },
       );
     }
     let { seed: f } = c;
     if (f.content.length > r)
       return g(
-        `the packaged folder came to ${Ft(f.content.length)}, over the ${Ft(r)} a session may start from`,
+        `the packaged folder came to ${formatFileSize(f.content.length)}, over the ${formatFileSize(r)} a session may start from`,
         "folder_too_large",
         { outcome: S("refused"), reason: S("too_large") },
       );
@@ -244,7 +244,7 @@ async function re({
     );
   } catch (a) {
     if (yt(a) || s.aborted) return { kind: "aborted" };
-    return (h(a), g(R, "folder_seed_failed", { outcome: S("threw") }));
+    return (logError(a), g(R, "folder_seed_failed", { outcome: S("threw") }));
   }
 }
-export { re as shipFolderSeed };
+export { shipFolderSeed };

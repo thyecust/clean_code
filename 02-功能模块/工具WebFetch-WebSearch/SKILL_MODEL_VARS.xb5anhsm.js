@@ -132,7 +132,7 @@ var ht = "./tool-use-69c580c1.md.zst";
 var ft = Ke(ht, import.meta.dirname);
 var gt = "./README-3628b5b5.md.zst";
 var bt = Ke(gt, import.meta.dirname);
-var pl = {
+var SKILL_MODEL_VARS = {
     FABLE_ID: "claude-fable-5-1",
     FABLE_NAME: "Claude Fable 5.1",
     MYTHOS_ID: "claude-mythos-5-1",
@@ -153,8 +153,8 @@ var pl = {
     HAIKU_NAME: "Claude Haiku 4.5",
     PREV_SONNET_ID: "claude-sonnet-4-6",
   },
-  ml = G,
-  ul = {
+  SKILL_PROMPT = G,
+  SKILL_FILES = {
     "csharp/claude-api/README.md": a,
     "csharp/claude-api/batches.md": e,
     "csharp/claude-api/files-api.md": t,
@@ -231,4 +231,4 @@ var pl = {
     "typescript/claude-api/tool-use.md": ft,
     "typescript/managed-agents/README.md": bt,
   };
-export { ul as SKILL_FILES, pl as SKILL_MODEL_VARS, ml as SKILL_PROMPT };
+export { SKILL_FILES, SKILL_MODEL_VARS, SKILL_PROMPT };

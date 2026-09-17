@@ -13,23 +13,23 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { qe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { yi, ay, cke, getRelativeSettingsFilePathForSource as T0 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { yi, ay, cke, getRelativeSettingsFilePathForSource } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jn, Pt, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { parseSettingsFile as qT, getSettingsFilePathForSource as ho, getSettingsForSource as ye, updateSettingsForSourceWithTransform as Ii, autoModeConfigSchema as OU, AUTO_MODE_TRUSTED_SOURCES as hie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { parseSettingsFile, getSettingsFilePathForSource, getSettingsForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema, AUTO_MODE_TRUSTED_SOURCES } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Fr, Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { gi, o, t, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
 import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { supportsShiftEnter as ZZ } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { supportsShiftEnter } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
@@ -37,16 +37,16 @@ import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chu
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import {
-  SandboxManager as st,
+  SandboxManager,
   ep,
   sgt,
   igt,
   B2,
   oC,
   Nzn,
-  permissionRuleSourceDisplayString as ine,
-  deletePermissionRule as XBt,
-  WebFetchTool as Em,
+  permissionRuleSourceDisplayString,
+  deletePermissionRule,
+  WebFetchTool,
   an,
   Lo,
   E7n,
@@ -344,7 +344,7 @@ function dd(i) {
   return i === "projectSettings" || i === "policySettings" || i === "command";
 }
 function er(i) {
-  return ine(i);
+  return permissionRuleSourceDisplayString(i);
 }
 function Gl(i, u, f) {
   let a = er(u.source),
@@ -508,13 +508,13 @@ function la(i) {
     case "localSettings":
       return {
         label: "Project settings (local)",
-        description: `Saved in ${T0("localSettings")}`,
+        description: `Saved in ${getRelativeSettingsFilePathForSource("localSettings")}`,
         value: i,
       };
     case "projectSettings":
       return {
         label: "Project settings",
-        description: `Checked in at ${T0("projectSettings")}`,
+        description: `Checked in at ${getRelativeSettingsFilePathForSource("projectSettings")}`,
         value: i,
       };
     case "userSettings":
@@ -565,7 +565,7 @@ function tr(Ig) {
         (DG(
           { type: "addRules", rules: pt, behavior: gn, destination: oa },
           ea,
-        ).catch(h),
+        ).catch(logError),
           Zl(gd));
         let Wg = pt.map((jg) => ({
           ruleValue: jg,
@@ -573,7 +573,7 @@ function tr(Ig) {
           source: oa,
         }));
         let Vg =
-          st.isSandboxingEnabled() && st.isAutoAllowBashIfSandboxedEnabled();
+          SandboxManager.isSandboxingEnabled() && SandboxManager.isAutoAllowBashIfSandboxedEnabled();
         let Yg = ai(gd, { sandboxAutoAllowEnabled: Vg }).filter((yd) =>
           pt.some(
             (bd) =>
@@ -686,7 +686,7 @@ function or(ly) {
   else Ad = yo[5];
   let Pd, kd;
   if (yo[6] === p)
-    ((Pd = e(t, { bold: !0, children: Er({ toolName: Em.name }) })),
+    ((Pd = e(t, { bold: !0, children: Er({ toolName: WebFetchTool.name }) })),
       (kd = e(t, { bold: !1, children: " or " })),
       (yo[6] = Pd),
       (yo[7] = kd));
@@ -1208,10 +1208,10 @@ function Rn(i) {
 }
 var tt = ["allow", "soft_deny", "hard_deny", "environment"];
 function Re() {
-  let i = OU(),
+  let i = autoModeConfigSchema(),
     u = [];
-  for (let f of hie) {
-    let a = ye(f);
+  for (let f of AUTO_MODE_TRUSTED_SOURCES) {
+    let a = getSettingsForSource(f);
     if (!a) continue;
     let g = i.safeParse(a.autoMode);
     if (!g.success) continue;
@@ -1231,7 +1231,7 @@ function Re() {
   return u;
 }
 async function Fi(i, u, f) {
-  return Sr(
+  return withFeatureTelemetry(
     "auto_mode_rule_edit",
     () =>
       Sn(
@@ -1255,9 +1255,9 @@ async function Fi(i, u, f) {
   );
 }
 function Bi() {
-  let i = ye("userSettings");
+  let i = getSettingsForSource("userSettings");
   if (!i) return [];
-  let u = OU().safeParse(i.autoMode);
+  let u = autoModeConfigSchema().safeParse(i.autoMode);
   if (!u.success) return [];
   return u.data.environment ?? [];
 }
@@ -1284,11 +1284,11 @@ function Ce() {
     let g = { enabled: !0, control: "internalTemplate" };
     return { allow: g, soft_deny: g, hard_deny: g, environment: g };
   }
-  let i = OU(),
+  let i = autoModeConfigSchema(),
     u = new Set(),
     f = {};
-  for (let g of hie) {
-    let w = ye(g);
+  for (let g of AUTO_MODE_TRUSTED_SOURCES) {
+    let w = getSettingsForSource(g);
     if (!w) continue;
     let S = i.safeParse(w.autoMode);
     if (!S.success) continue;
@@ -1298,7 +1298,7 @@ function Ce() {
   }
   let a = {};
   for (let g of tt) {
-    let w = hie
+    let w = AUTO_MODE_TRUSTED_SOURCES
       .map((I) => ({ source: I, values: f[I]?.[g] ?? [] }))
       .filter((I) => I.values.length > 0);
     if (w.length === 0) {
@@ -1333,7 +1333,7 @@ function Ce() {
 }
 async function Ni(i, u, f) {
   let a = (() => !1)();
-  return Sr(
+  return withFeatureTelemetry(
     "auto_mode_rule_edit",
     () =>
       Sn(
@@ -1379,13 +1379,13 @@ class Ze extends Error {
   }
 }
 async function Sn(i, u, f) {
-  let a = ho("userSettings");
+  let a = getSettingsFilePathForSource("userSettings");
   if (!a)
     throw new Ze(
       "no_user_settings_path",
       "Could not resolve the user settings file path.",
     );
-  let { settings: g, errors: w } = qT(a);
+  let { settings: g, errors: w } = parseSettingsFile(a);
   if (g === null && w.length > 0)
     throw new Ze(
       "settings_file_invalid",
@@ -1395,7 +1395,7 @@ async function Sn(i, u, f) {
     P = 0,
     B = null,
     I = null,
-    { error: W } = await Ii(
+    { error: W } = await updateSettingsForSourceWithTransform(
       "userSettings",
       (k) => {
         ((S = !1), (P = 0), (B = null), (I = null));
@@ -1406,7 +1406,7 @@ async function Sn(i, u, f) {
               "the existing autoMode value in the settings file is an array \u2014 fix or remove it, then try again."),
             null
           );
-        if (z !== void 0 && !OU().safeParse(z).success)
+        if (z !== void 0 && !autoModeConfigSchema().safeParse(z).success)
           return (
             (B =
               "the existing autoMode value in the settings file does not match the expected shape \u2014 fix or remove it, then try again."),
@@ -1477,7 +1477,7 @@ function Ui(i, u) {
   if (a) throw new Ze("invalid_input", a);
 }
 async function Li(i, u, f) {
-  return Sr("auto_mode_rule_edit", () => wm(i, u, f), Rn("add"));
+  return withFeatureTelemetry("auto_mode_rule_edit", () => wm(i, u, f), Rn("add"));
 }
 async function wm(i, u, f) {
   let a = vo(u);
@@ -1498,7 +1498,7 @@ async function wm(i, u, f) {
   );
 }
 async function ji(i, u, f, a, g) {
-  return Sr("auto_mode_rule_edit", () => Sm(i, u, f, a, g), Rn("update"));
+  return withFeatureTelemetry("auto_mode_rule_edit", () => Sm(i, u, f, a, g), Rn("update"));
 }
 async function Sm(i, u, f, a, g) {
   let w = vo(a);
@@ -1525,7 +1525,7 @@ async function Sm(i, u, f, a, g) {
   );
 }
 async function Wi(i, u, f, a) {
-  return Sr("auto_mode_rule_edit", () => Cm(i, u, f, a), Rn("delete"));
+  return withFeatureTelemetry("auto_mode_rule_edit", () => Cm(i, u, f, a), Rn("delete"));
 }
 async function Cm(i, u, f, a) {
   return Sn(
@@ -2974,14 +2974,14 @@ function Br(cw) {
 }
 F();
 import {
-  closeSync as op,
+  closeSync,
   constants as Or,
-  mkdirSync as np,
-  openSync as rp,
-  writeSync as ip,
+  mkdirSync,
+  openSync,
+  writeSync,
 } from "fs";
 import { randomBytes as sp } from "crypto";
-import { dirname as lp } from "path";
+import { dirname } from "path";
 function ap(Sc) {
   return { label: me(Sc), value: Sc, description: Dc(Sc), dimDescription: !0 };
 }
@@ -3014,10 +3014,10 @@ function Qs(i) {
   let u = Nzn(`${sgt}${sp(8).toString("hex")}.md`);
   if (u === null) return { content: null, problem: null };
   try {
-    np(lp(u), { recursive: !0, mode: 448 });
-    let a = rp(u, Or.O_WRONLY | Or.O_CREAT | Or.O_EXCL | Or.O_NOFOLLOW, 384);
+    mkdirSync(dirname(u), { recursive: !0, mode: 448 });
+    let a = openSync(u, Or.O_WRONLY | Or.O_CREAT | Or.O_EXCL | Or.O_NOFOLLOW, 384);
     try {
-      ip(
+      writeSync(
         a,
         i.join(`
 `),
@@ -3025,7 +3025,7 @@ function Qs(i) {
         "utf8",
       );
     } finally {
-      op(a);
+      closeSync(a);
     }
   } catch (a) {
     return {
@@ -3143,7 +3143,7 @@ function Ur(Fw) {
     ((Gf = r(ue, {
       children: [
         qf,
-        e(D, { chord: ZZ() ? "shift+enter" : "ctrl+j", action: "new line" }),
+        e(D, { chord: supportsShiftEnter() ? "shift+enter" : "ctrl+j", action: "new line" }),
         e(D, { chord: "escape", action: "cancel" }),
       ],
     })),
@@ -3292,7 +3292,7 @@ function Dl(MR) {
     { rule: _c } = MR,
     mp;
   if (dp[0] !== _c.source)
-    ((mp = ine(_c.source)), (dp[0] = _c.source), (dp[1] = mp));
+    ((mp = permissionRuleSourceDisplayString(_c.source)), (dp[0] = _c.source), (dp[1] = mp));
   else mp = dp[1];
   const Mc = `From ${mp}`;
   let fp;
@@ -3961,7 +3961,7 @@ function Fl(NR) {
       WR(Eu);
       let ih = xS(Er(yt.ruleValue));
       let RS = yt.ruleBehavior;
-      (XBt({
+      (deletePermissionRule({
         rule: yt,
         initialContext: re,
         setToolPermissionContext(SS) {
@@ -3973,7 +3973,7 @@ function Fl(NR) {
           Ge((ES) => [...ES, `Deleted ${RS} rule ${ie.bold(ih)}`]);
         })
         .catch((AS) => {
-          (h(AS),
+          (logError(AS),
             Ge((PS) => [
               ...PS,
               `Could not delete ${ie.bold(ih)} \u2014 the rule is unchanged`,
@@ -4539,7 +4539,7 @@ function Fl(NR) {
         };
         let zS = Oc(re, ph);
         if ((Ct((HS) => ({ ...HS, toolPermissionContext: zS })), Lu))
-          DG(ph, Be).catch(h);
+          DG(ph, Be).catch(logError);
         (Ge((KS) => [
           ...KS,
           `Added directory ${ie.bold(an(fh))} to workspace${Lu ? " and saved to local settings" : " for this session"}`,

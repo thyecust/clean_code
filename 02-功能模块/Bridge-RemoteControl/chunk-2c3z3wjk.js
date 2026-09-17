@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { QNe } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { te, formatRelativeTimeAgo as uy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 var yBn = 30000,
   ik = "bridge-failed",
@@ -17,7 +17,7 @@ var yBn = 30000,
 function SBn(t, { crossSessionMessaging: e }, r = new Date()) {
   let n =
     t.startedAt > 0 && t.startedAt <= r.getTime()
-      ? ` (started ${uy(new Date(t.startedAt), { now: r })})`
+      ? ` (started ${formatRelativeTimeAgo(new Date(t.startedAt), { now: r })})`
       : "";
   return `${ztn} \xB7 another Claude Code on this machine${n} already has Remote Control for this conversation${e ? ", so this terminal can't see your sessions on other machines and they can't reach it" : ""} \xB7 run /remote-control to move it to this terminal`;
 }

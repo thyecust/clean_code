@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { randomUUID as h } from "crypto";
+import { randomUUID } from "crypto";
 var f = "is not supported in a cloud-hosted session",
   y =
     "names a path on this machine; the agent's files are in the cloud container",
@@ -313,7 +313,7 @@ function AF(e, t, s) {
     subtype: "informational",
     level: t,
     content: s,
-    uuid: h(),
+    uuid: randomUUID(),
     session_id: e,
   };
 }

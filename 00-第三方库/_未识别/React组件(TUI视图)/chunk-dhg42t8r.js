@@ -18,7 +18,7 @@ import { re, C, d, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.j
 import { L } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 F();
 F();
-import { isDeepStrictEqual as Pe } from "util";
+import { isDeepStrictEqual } from "util";
 function ie({
   isDisabled: u = !1,
   visibleOptionCount: W = 5,
@@ -36,7 +36,7 @@ function ie({
   let [ee, N, O] = qm(U),
     [te, V, ne] = qm(!1),
     [c, G] = d(f);
-  if (f !== c && !Pe(f, c)) (N(U), G(f));
+  if (f !== c && !isDeepStrictEqual(f, c)) (N(U), G(f));
   let [oe, X] = d(() => {
       let n = new Map();
       return (

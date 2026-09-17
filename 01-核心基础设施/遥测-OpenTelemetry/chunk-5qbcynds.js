@@ -14,7 +14,7 @@ import { Jr, hv, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj
 import { z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Ls, Mc, ry, WQe, getOauthAccountInfo as vn, getAuthenticatedAccountInfo as zD, dx } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Ls, Mc, ry, WQe, getOauthAccountInfo, getAuthenticatedAccountInfo, dx } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vd } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Gi } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
 import { AP, Svt } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
@@ -138,7 +138,7 @@ function MAe() {
     let s = Vd();
     if (s) o["app.entrypoint"] = s;
   }
-  let u = zD() ?? vn() ?? U();
+  let u = getAuthenticatedAccountInfo() ?? getOauthAccountInfo() ?? U();
   if (u) {
     let { organizationUuid: s, emailAddress: c, accountUuid: d } = u;
     if (s) o["organization.id"] = s;
@@ -172,9 +172,9 @@ function U() {
   });
 }
 var E = pe(Ls(), 1);
-import { AsyncLocalStorage as N } from "async_hooks";
+import { AsyncLocalStorage } from "async_hooks";
 class b {
-  als = new N();
+  als = new AsyncLocalStorage();
   active() {
     return this.als.getStore() ?? E.ROOT_CONTEXT;
   }

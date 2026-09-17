@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { getInitialSettings as Ge } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 function jy(t) {
   return (
     a.CLAUDE_CODE_DISABLE_BUNDLED_SKILLS ||
-    (t ?? Ge()).disableBundledSkills === !0
+    (t ?? getInitialSettings()).disableBundledSkills === !0
   );
 }
 function zqt(t, e) {

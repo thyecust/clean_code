@@ -8,19 +8,19 @@
 
 // Version: 2.1.263
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { transitionPermissionMode as Ik, isAutoModeGateEnabled as cC, getAutoModeUnavailableReason as eY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isBypassPermissionsModeDisabled as ey } from "./chunk-pcxn6gwz.js";
+import { transitionPermissionMode, isAutoModeGateEnabled, getAutoModeUnavailableReason } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isBypassPermissionsModeDisabled } from "./chunk-pcxn6gwz.js";
 function zL(e) {
-  let o = cC(),
+  let o = isAutoModeGateEnabled(),
     t = !!e.isAutoModeAvailable && o;
   if (!t)
     n(
-      `[auto-mode] canCycleToAuto=false: ctx.isAutoModeAvailable=${e.isAutoModeAvailable} isAutoModeGateEnabled=${o} reason=${eY()}`,
+      `[auto-mode] canCycleToAuto=false: ctx.isAutoModeAvailable=${e.isAutoModeAvailable} isAutoModeGateEnabled=${o} reason=${getAutoModeUnavailableReason()}`,
     );
   return t;
 }
 function uWe(e) {
-  return !!e.isBypassPermissionsModeAvailable && !ey();
+  return !!e.isBypassPermissionsModeAvailable && !isBypassPermissionsModeDisabled();
 }
 function dWe(e, o) {
   switch (e.mode) {
@@ -43,6 +43,6 @@ function dWe(e, o) {
 }
 function rZt(e, o, t) {
   let s = dWe(e, o);
-  return { nextMode: s, context: Ik(e.mode, s, e, t) };
+  return { nextMode: s, context: transitionPermissionMode(e.mode, s, e, t) };
 }
 export { zL, uWe, dWe, rZt };

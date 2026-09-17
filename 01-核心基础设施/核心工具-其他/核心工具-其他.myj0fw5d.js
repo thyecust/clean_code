@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { randomBytes as o } from "crypto";
+import { randomBytes } from "crypto";
 var t = [
     "abundant",
     "ancient",
@@ -752,7 +752,7 @@ var t = [
     "zooming",
   ];
 function g(e) {
-  return o(4).readUInt32BE(0) % e;
+  return randomBytes(4).readUInt32BE(0) % e;
 }
 function a(e) {
   return e[g(e.length)];

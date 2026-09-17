@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 69 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u, fromNumber as Yr } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum, fromNumber } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Iz } from "./chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -21,29 +21,29 @@ import {
   hse,
   mQe,
   bt,
-  DEFAULT_3P_SONNET_KEY as e0,
-  DEFAULT_BEDROCK_OPUS_KEY as kQe,
-  getMarketingNameForModel as bu,
+  DEFAULT_3P_SONNET_KEY,
+  DEFAULT_BEDROCK_OPUS_KEY,
+  getMarketingNameForModel,
   DR,
   Im,
   VC,
   Rw,
   nRe,
-  isHostManagedProviderAuth as Fc,
-  hostManagedAwsSdkCredentials as v6,
-  refreshAndGetAwsCredentials as AU,
-  getDefaultAwsProviderChain as p0,
+  isHostManagedProviderAuth,
+  hostManagedAwsSdkCredentials,
+  refreshAndGetAwsCredentials,
+  getDefaultAwsProviderChain,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { to, getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { tierConfig as g3e, collectStalePins as h3e, seedEnvDefaultForUserPin as _3e, collectUnpinnedTiers as y3e, predecessorsInTier as S3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-nzt97y14.js";
-var y = g3e(kQe);
-async function N() {
-  if (Pe() !== "bedrock") return [];
+import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { to, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { tierConfig, collectStalePins, seedEnvDefaultForUserPin, collectUnpinnedTiers, predecessorsInTier } from "../../01-核心基础设施/共享小工具-未细化/chunk-nzt97y14.js";
+var y = tierConfig(DEFAULT_BEDROCK_OPUS_KEY);
+async function findBedrockUpgradeCandidates() {
+  if (getAPIProvider() !== "bedrock") return [];
   if (a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST) return [];
-  let o = h3e(y, (e) => e.includes("application-inference-profile"));
+  let o = collectStalePins(y, (e) => e.includes("application-inference-profile"));
   if (o.length === 0) return [];
-  i("tengu_bedrock_upgrade_check", { stale_tiers: Yr(o.length) });
+  i("tengu_bedrock_upgrade_check", { stale_tiers: fromNumber(o.length) });
   let s;
   try {
     s = await RAt();
@@ -56,8 +56,8 @@ async function N() {
     let p = to[e.defaultKey].firstParty,
       r = Hme(s, p, t);
     if (!r) continue;
-    let d = bu(to[e.pinnedKey].firstParty),
-      l = bu(to[e.defaultKey].firstParty);
+    let d = getMarketingNameForModel(to[e.pinnedKey].firstParty),
+      l = getMarketingNameForModel(to[e.defaultKey].firstParty);
     if (!d || !l) continue;
     c.push({
       tier: e.tier,
@@ -75,7 +75,7 @@ async function N() {
         let p = await _(e.toBedrockId, e.tier);
         return (
           i("tengu_bedrock_probe_result", {
-            tier: u(e.tier),
+            tier: fromEnum(e.tier),
             model_id: bt(e.toBedrockId),
             accessible: p,
           }),
@@ -90,15 +90,15 @@ async function N() {
   );
 }
 function U(o) {
-  return _3e(o, y);
+  return seedEnvDefaultForUserPin(o, y);
 }
-async function F() {
-  if (Pe() !== "bedrock") return [];
+async function checkBedrockDefaultAvailability() {
+  if (getAPIProvider() !== "bedrock") return [];
   if (a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST) return [];
-  let o = Ge().modelOverrides,
-    s = y3e(y, o);
+  let o = getInitialSettings().modelOverrides,
+    s = collectUnpinnedTiers(y, o);
   if (s.length === 0) return [];
-  i("tengu_bedrock_default_check", { unpinned_tiers: Yr(s.length) });
+  i("tengu_bedrock_default_check", { unpinned_tiers: fromNumber(s.length) });
   let t;
   try {
     t = await RAt();
@@ -114,7 +114,7 @@ async function F() {
         let d = await _(r, e.tier);
         if (
           (i("tengu_bedrock_probe_result", {
-            tier: u(e.tier),
+            tier: fromEnum(e.tier),
             model_id: bt(r),
             accessible: d,
           }),
@@ -123,8 +123,8 @@ async function F() {
           return null;
         let l = await A(e.defaultKey, e.tier, t, c, o);
         if (!l) return null;
-        let m = bu(p.firstParty),
-          k = bu(to[l.key].firstParty);
+        let m = getMarketingNameForModel(p.firstParty),
+          k = getMarketingNameForModel(to[l.key].firstParty);
         if (!m || !k) return null;
         return {
           tier: e.tier,
@@ -158,12 +158,12 @@ async function A(o, s, t, c, g) {
     if (!l) return null;
     return (await _(l, d)) ? l : null;
   }
-  let e = S3e(o, s).filter((r) => !g?.[to[r].firstParty]),
+  let e = predecessorsInTier(o, s).filter((r) => !g?.[to[r].firstParty]),
     p = await Promise.all(e.map((r) => f(r, s)));
   for (let [r, d] of p.entries()) if (d) return { key: e[r], regionalId: d };
   if (s === "opus") {
-    let r = await f(e0, "sonnet");
-    if (r) return { key: e0, regionalId: r, crossTier: !0 };
+    let r = await f(DEFAULT_3P_SONNET_KEY, "sonnet");
+    if (r) return { key: DEFAULT_3P_SONNET_KEY, regionalId: r, crossTier: !0 };
   }
   return null;
 }
@@ -202,7 +202,7 @@ async function _(o, s) {
       });
     else {
       let r = a.CLAUDE_CODE_SKIP_BEDROCK_AUTH,
-        d = Fc(),
+        d = isHostManagedProviderAuth(),
         l = {
           authToken: null,
           defaultHeaders: {
@@ -214,7 +214,7 @@ async function _(o, s) {
           ...Rw,
         },
         m = r ? nRe() : void 0,
-        k = r || d ? null : await AU();
+        k = r || d ? null : await refreshAndGetAwsCredentials();
       e = k
         ? new t({
             ...f,
@@ -240,12 +240,12 @@ async function _(o, s) {
             ...(!r && l),
             ...(!r &&
               d && {
-                providerChainResolver: v6("Bedrock").providerChainResolver,
+                providerChainResolver: hostManagedAwsSdkCredentials("Bedrock").providerChainResolver,
               }),
             ...(!r &&
               !d &&
               !a.CLAUDE_CODE_SKIP_AWS_CRED_CACHE && {
-                providerChainResolver: () => p0(g),
+                providerChainResolver: () => getDefaultAwsProviderChain(g),
               }),
           });
     }
@@ -263,7 +263,7 @@ async function _(o, s) {
   }
 }
 export {
-  F as checkBedrockDefaultAvailability,
-  N as findBedrockUpgradeCandidates,
+  checkBedrockDefaultAvailability,
+  findBedrockUpgradeCandidates,
   U as seedEnvDefaultForUserPin,
 };

@@ -151,14 +151,14 @@ var f = pe(zd()),
   j = pe(nu()),
   W = pe(HA());
 import {
-  createHash as ae,
-  createPrivateKey as ce,
-  createPublicKey as le,
+  createHash,
+  createPrivateKey,
+  createPublicKey,
   sign as de,
 } from "crypto";
-import { promises as T } from "fs";
-import { homedir as fe } from "os";
-import { dirname as ue, join as H } from "path";
+import { promises } from "fs";
+import { homedir } from "os";
+import { dirname, join as H } from "path";
 class w {
   profileData;
   init;
@@ -293,7 +293,7 @@ class w {
       try {
         r = await W.readFile(e, { ignoreCache: this.init?.ignoreCache });
       } catch {
-        r = await T.readFile(e, "utf8");
+        r = await promises.readFile(e, "utf8");
       }
       let t = JSON.parse(r),
         o = ["accessToken", "clientId", "refreshToken", "dpopKey"].filter(
@@ -315,18 +315,18 @@ class w {
   }
   async saveToken(e) {
     let r = this.getTokenFilePath(),
-      t = ue(r);
+      t = dirname(r);
     try {
-      await T.mkdir(t, { recursive: !0 });
+      await promises.mkdir(t, { recursive: !0 });
     } catch (o) {}
-    await T.writeFile(r, JSON.stringify(e, null, 2), "utf8");
+    await promises.writeFile(r, JSON.stringify(e, null, 2), "utf8");
   }
   getTokenFilePath() {
     let e =
         process.env.AWS_LOGIN_CACHE_DIRECTORY ??
-        H(fe(), ".aws", "login", "cache"),
+        H(homedir(), ".aws", "login", "cache"),
       r = Buffer.from(this.loginSession, "utf8"),
-      t = ae("sha256").update(r).digest("hex");
+      t = createHash("sha256").update(r).digest("hex");
     return H(e, `${t}.json`);
   }
   derToRawSignature(e) {
@@ -362,8 +362,8 @@ class w {
   async generateDpop(e = "POST", r) {
     let t = await this.loadToken();
     try {
-      let o = ce({ key: t.dpopKey, format: "pem", type: "sec1" }),
-        n = le(o).export({ format: "der", type: "spki" }),
+      let o = createPrivateKey({ key: t.dpopKey, format: "pem", type: "sec1" }),
+        n = createPublicKey(o).export({ format: "der", type: "spki" }),
         i = -1;
       for (let p = 0; p < n.length; p++)
         if (n[p] === 4) {

@@ -14,7 +14,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t, Un, J0 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -27,14 +27,14 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js"
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
-import { homedir as U } from "os";
+import { homedir } from "os";
 import { join as L } from "path";
 function H(ce, pe) {
   return e(lu, { children: e(t, { dimColor: !0, children: ce }) }, pe);
 }
 function N() {
   let y = a.platform === "win32",
-    m = U();
+    m = homedir();
   if (y) return L(m, ".local", "bin", "claude.exe").replaceAll("/", "\\");
   return "~/.local/bin/claude";
 }
@@ -104,7 +104,7 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
           let S = !1;
           if (c === "latest" || c === "stable" || c === "rc") {
             let g = c === "rc" ? "stable" : c,
-              { error: D } = await Jt(
+              { error: D } = await updateSettingsForSource(
                 "userSettings",
                 { autoUpdatesChannel: g },
                 void 0,
@@ -295,7 +295,7 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
     })
   );
 }
-var le = {
+var install = {
   type: "local-jsx",
   name: "install",
   description: "Install Claude Code native build",
@@ -315,4 +315,4 @@ var le = {
       );
   },
 };
-export { le as install };
+export { install };

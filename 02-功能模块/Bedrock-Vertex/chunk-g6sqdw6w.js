@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -19,22 +19,22 @@ import {
   Hme,
   hse,
   Mve,
-  DEFAULT_3P_SONNET_KEY as e0,
-  DEFAULT_3P_HAIKU_KEY as p5,
-  DEFAULT_BEDROCK_OPUS_KEY as kQe,
-  DEFAULT_3P_FABLE_KEY as HQe,
+  DEFAULT_3P_SONNET_KEY,
+  DEFAULT_3P_HAIKU_KEY,
+  DEFAULT_BEDROCK_OPUS_KEY,
+  DEFAULT_3P_FABLE_KEY,
   GC,
   DR,
   Im,
   VC,
   Rw,
   HCt,
-  AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS as $se,
+  AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { getSettingsFilePathForSource as ho, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xt, to } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { resolveStsEndpointForProxyUrl as she, getAWSClientProxyConfig as ihe, getAWSProxyRequestHandler as zq } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { resolveStsEndpointForProxyUrl, getAWSClientProxyConfig, getAWSProxyRequestHandler } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { fle, vl, wi } from "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
@@ -393,7 +393,7 @@ function Fo(Jr) {
     [tt, ua] = d(null),
     An;
   if (ce[0] === p)
-    ((An = Gu(ho("userSettings") ?? "~/.claude/settings.json")), (ce[0] = An));
+    ((An = Gu(getSettingsFilePathForSource("userSettings") ?? "~/.claude/settings.json")), (ce[0] = An));
   else An = ce[0];
   let _n = An,
     bn;
@@ -424,13 +424,13 @@ function Fo(Jr) {
         return;
       }
       it.current = !0;
-      let { error: On } = await Jt("userSettings", { env: eo }, void 0, ot);
+      let { error: On } = await updateSettingsForSource("userSettings", { env: eo }, void 0, ot);
       if (On) {
         ((it.current = !1), ua(On.message));
         return;
       }
       (i("tengu_bedrock_setup_complete", {
-        auth_method: we(T.authMethod),
+        auth_method: fromEnumOpt(T.authMethod),
         pinned_models: Boolean(
           T.pinSonnet || T.pinOpus || T.pinFable || T.pinHaiku,
         ),
@@ -528,7 +528,7 @@ function ko(n) {
         );
       return { needle: to[c].firstParty, fallback: hse(f, s) };
     };
-  return { sonnet: l(e0), opus: l(kQe), haiku: l(p5), fable: l(HQe) };
+  return { sonnet: l(DEFAULT_3P_SONNET_KEY), opus: l(DEFAULT_BEDROCK_OPUS_KEY), haiku: l(DEFAULT_3P_HAIKU_KEY), fable: l(DEFAULT_3P_FABLE_KEY) };
 }
 async function Uo(n) {
   if (n.authMethod === "bearer") return xn(n);
@@ -536,10 +536,10 @@ async function Uo(n) {
   try {
     let l = await ut(n),
       f = {
-        ...(await ihe({
+        ...(await getAWSClientProxyConfig({
           url: `https://bedrock.${n.region}.amazonaws.com`,
           region: n.region,
-          requestTimeoutMs: $se,
+          requestTimeoutMs: AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS,
         })),
         region: n.region,
         ...(l && { credentials: l }),
@@ -737,9 +737,9 @@ async function ut(n) {
 async function ft(n, s) {
   let [{ fromNodeProviderChain: l }, c] = await Promise.all([
       import("../../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js"),
-      zq({ url: she(String(n.region)), requestTimeoutMs: $se }),
+      getAWSProxyRequestHandler({ url: resolveStsEndpointForProxyUrl(String(n.region)), requestTimeoutMs: AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS }),
     ]),
-    f = c ?? new lt.FetchHttpHandler({ requestTimeout: $se }),
+    f = c ?? new lt.FetchHttpHandler({ requestTimeout: AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS }),
     m = l({
       profile: s,
       ignoreCache: !0,
@@ -1402,18 +1402,18 @@ function mr(kc) {
   return Ai;
 }
 F();
-import { readFile as Oi } from "fs/promises";
-import { homedir as Pi } from "os";
+import { readFile } from "fs/promises";
+import { homedir } from "os";
 import { join as Mt } from "path";
 async function hr() {
   let n = new Set(),
-    s = Pi();
+    s = homedir();
   for (let { path: l, re: c } of [
     { path: Mt(s, ".aws", "config"), re: /^\[(?:profile\s+)?([^\]]+)\]/gm },
     { path: Mt(s, ".aws", "credentials"), re: /^\[([^\]]+)\]/gm },
   ])
     try {
-      for (let f of (await Oi(l, "utf8")).matchAll(c)) {
+      for (let f of (await readFile(l, "utf8")).matchAll(c)) {
         let m = f[1]?.trim();
         if (m && !m.startsWith("sso-session ")) n.add(m);
       }

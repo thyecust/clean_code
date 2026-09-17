@@ -10,7 +10,7 @@
 import { sse } from "../../00-第三方库/parse5/parse5.2zwbfepc.js";
 import { y4t } from "../../00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js";
 var m = /<\/(?:body|html)[\t\n\f\r />]/i;
-function f(o) {
+function runtimeBlockInsertionIndex(o) {
   if (!m.test(o)) return o.length;
   let e = -1,
     n = () => {
@@ -39,4 +39,4 @@ function f(o) {
     );
   return (a.write(o, !0), e >= 0 ? e : o.length);
 }
-export { f as runtimeBlockInsertionIndex };
+export { runtimeBlockInsertionIndex };

@@ -12,7 +12,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getSettingsForSource as ye, getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import {
   Je,
@@ -61,7 +61,7 @@ function i3t(e) {
     n;
   for (let i of uD) {
     if (!o.has(i)) continue;
-    let p = ye(i)?.pluginConfigs;
+    let p = getSettingsForSource(i)?.pluginConfigs;
     for (let s of r) {
       let f = p?.[s];
       if (f?.options) t = { ...t, ...f.options };
@@ -84,7 +84,7 @@ function a3t(e) {
     r;
   for (let t of uD) {
     if (!o.has(t)) continue;
-    let n = ye(t)?.enabledPlugins?.[e];
+    let n = getSettingsForSource(t)?.enabledPlugins?.[e];
     if (n !== void 0) r = n;
   }
   return r;
@@ -100,10 +100,10 @@ var D = "hooks/register.ts";
 var de = (e) => `builtin:${e}/${D}`;
 import { resolve as oo } from "path";
 var C = () => oo(import.meta.dirname, "../../../../../..");
-import { dirname as no, relative as io, resolve as so, sep as ao } from "path";
+import { dirname, relative as io, resolve as so, sep as ao } from "path";
 var ue = "builtin-hooks-module:";
 var po = (e, o) =>
-  io(C(), so(no(e), o.slice(ue.length)))
+  io(C(), so(dirname(e), o.slice(ue.length)))
     .split(ao)
     .join("/");
 var te = "builtin-hooks-module";
@@ -750,10 +750,10 @@ function W({ scan: e, linked: o }, r, t) {
   let u = _(e, f);
   return { fn: se(u, p.imported), linked: u };
 }
-import { createHash as ur } from "crypto";
+import { createHash } from "crypto";
 var v = (e) => `${e.length}:${e}`;
 function yr(e) {
-  let o = ur("sha256");
+  let o = createHash("sha256");
   for (let [r, { compiled: t, links: n }] of e.files) {
     o.update(v(r) + v(t));
     for (let [i, p] of n) o.update(v(i) + v(p));
@@ -1167,7 +1167,7 @@ function ASt(e) {
   return wo().builtinPlugins.get(e);
 }
 function v8e() {
-  let e = bn(),
+  let e = getSettings_DEPRECATED(),
     o = [],
     r = [];
   for (let [t, n] of wo().builtinPlugins) {

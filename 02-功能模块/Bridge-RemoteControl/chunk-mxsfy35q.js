@@ -11,10 +11,10 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { validateBridgeId as fm, toCompatSessionId as zu, toInfraSessionId as yc } from "../权限系统/chunk-ynkf3yy4.js";
+import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { validateBridgeId, toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { mse } from "../../01-核心基础设施/共享小工具-未细化/chunk-ezxdt3dm.js";
-import { va, getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { va, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 var k = /cloudflare/i;
 function dQe(e) {
   let r = e("request-id");
@@ -45,7 +45,7 @@ function oauthHeaders(e) {
     Authorization: `Bearer ${e}`,
     "Content-Type": "application/json",
     "anthropic-version": E,
-    "anthropic-client-platform": Um(),
+    "anthropic-client-platform": getClientPlatform(),
     "User-Agent": va(),
   };
 }
@@ -115,7 +115,7 @@ async function createCodeSession(e, r, i, c, a, f, m, p, o, t, g) {
     return (n(`[code-session] Session create request failed: ${l(_)}`), null);
   }
   if (u.status !== 200 && u.status !== 201) {
-    let _ = fg(u.data);
+    let _ = extractErrorDetail(u.data);
     if (
       (n(
         `[code-session] Session create failed ${u.status}${_ ? `: ${_}` : ""}`,
@@ -208,7 +208,7 @@ async function fetchRemoteCredentials(e, r, i, c, a, f) {
     return (n(`[code-session] /bridge request failed: ${l(s)}`), null);
   }
   if (o.status !== 200) {
-    let s = fg(o.data);
+    let s = extractErrorDetail(o.data);
     if (
       (n(`[code-session] /bridge failed ${o.status}${s ? `: ${s}` : ""}`),
       o.status === 401)
@@ -271,7 +271,7 @@ async function fetchRemoteCredentials(e, r, i, c, a, f) {
 }
 function v(e, r) {
   try {
-    return (fm(e, "sessionId"), !0);
+    return (validateBridgeId(e, "sessionId"), !0);
   } catch (i) {
     return (n(`[code-session] ${r}: ${l(i)}`), !1);
   }
@@ -281,7 +281,7 @@ function R(e, r, i, c, a, f = "") {
     ? { "X-Trusted-Device-Token": a.trustedDeviceToken }
     : void 0;
   if (a.useV2) {
-    let o = yc(c);
+    let o = toInfraSessionId(c);
     return {
       url: `${r}/v1/code/sessions/${o}${f}`,
       headers: { ...oauthHeaders(i), ...m },
@@ -293,7 +293,7 @@ function R(e, r, i, c, a, f = "") {
       n(`[code-session] ${e} ${c}: v1 compat path needs an org UUID`),
       null
     );
-  let p = zu(c);
+  let p = toCompatSessionId(c);
   return {
     url: `${r}/v1/sessions/${p}${f}`,
     headers: {
@@ -317,7 +317,7 @@ async function getCodeSession(e, r, i, c, a) {
       validateStatus: (s) => s < 500,
     });
     if (t.status !== 200) {
-      let s = fg(t.data);
+      let s = extractErrorDetail(t.data);
       return (
         n(`[code-session] Get ${o} failed ${t.status}${s ? `: ${s}` : ""}`),
         t.status
@@ -354,7 +354,7 @@ async function updateCodeSession(e, r, i, c, a, f) {
   try {
     let d = f.useV2 ? await at.put(p, c, g) : await at.patch(p, c, g);
     if (d.status !== 200) {
-      let s = fg(d.data);
+      let s = extractErrorDetail(d.data);
       n(`[code-session] Update ${t} failed ${d.status}${s ? `: ${s}` : ""}`);
     }
     return d.status;
@@ -383,7 +383,7 @@ async function x(e, r, i, c, a, f, m, p) {
       { headers: g, timeout: f, validateStatus: () => !0 },
     );
     if ((n(`[code-session] ${e} ${d} status=${s.status}`), s.status === 403)) {
-      let u = classifyElevatedAuthError(s.data, fg(s.data));
+      let u = classifyElevatedAuthError(s.data, extractErrorDetail(s.data));
       if (u === "untrusted_device") return u;
       if (p === "elevated_auth" && u === "session_stale_relogin") return u;
     }

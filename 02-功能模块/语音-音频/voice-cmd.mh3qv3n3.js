@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 77 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ije } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { isAnthropicAuthEnabled as cl, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getInitialSettings as Ge, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { policyDeniedReason as op } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isAnthropicAuthEnabled, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { p_, _8e, rNe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 var V = 2;
 function L(s) {
@@ -24,17 +24,17 @@ function L(s) {
 }
 var I = async (s, e) => {
   if (!rNe()) {
-    if (!cl())
+    if (!isAnthropicAuthEnabled())
       return {
         type: "text",
         value:
           "Voice mode requires a Claude.ai account. Please run /login to sign in.",
       };
-    let t = op("allow_voice_mode", "Voice mode", "is");
+    let t = policyDeniedReason("allow_voice_mode", "Voice mode", "is");
     if (t) return { type: "text", value: t };
     return { type: "text", value: "Voice mode is not available." };
   }
-  let a = Ge(),
+  let a = getInitialSettings(),
     v = _8e(a),
     o = L(s);
   if (o === "invalid")
@@ -45,7 +45,7 @@ var I = async (s, e) => {
   if (o === "off" || (o === void 0 && v)) {
     if (
       (
-        await Jt(
+        await updateSettingsForSource(
           "userSettings",
           { voiceEnabled: !1, voice: { ...a.voice, enabled: !1 } },
           void 0,
@@ -104,7 +104,7 @@ Install SoX manually for audio recording.`
   let l = o === "hold" || o === "tap" ? o : (a.voice?.mode ?? "hold");
   if (
     (
-      await Jt(
+      await updateSettingsForSource(
         "userSettings",
         { voiceEnabled: !0, voice: { ...a.voice, enabled: !0, mode: l } },
         void 0,

@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 249 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { isExtraUsageAllowed as hb, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isExtraUsageAllowed, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { policyDeniedReason as op } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { POST_IGNORED_NOTE as CDt, POST_DISABLED_NOTE as vDt, parseUltrareviewArgs as Z9e, precheckLaunchScope as RDt, previewInstructions as e3e, checkOverageGate as kDt, launchRemoteReview as xDt, ultrareviewLaunchAcknowledgementNudge as t3e } from "../CodeReview/CodeReview.ddrd6y06.js";
-import { getReviewCostNote as q7, getReviewDurationNote as HF, BOe, Km, q3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { POST_IGNORED_NOTE, POST_DISABLED_NOTE, parseUltrareviewArgs, precheckLaunchScope, previewInstructions, checkOverageGate, launchRemoteReview, ultrareviewLaunchAcknowledgementNudge } from "../CodeReview/CodeReview.ddrd6y06.js";
+import { getReviewCostNote, getReviewDurationNote, BOe, Km, q3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { o, t, ct, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -102,7 +102,7 @@ function me(ho) {
   let A = Me,
     Q;
   if (O[10] !== fe)
-    ((Q = fe ?? `${HF()} \xB7 Est. cost ${q7()} USD`),
+    ((Q = fe ?? `${getReviewDurationNote()} \xB7 Est. cost ${getReviewCostNote()} USD`),
       (O[10] = fe),
       (O[11] = Q));
   else Q = O[11];
@@ -198,7 +198,7 @@ function ce(go) {
   if (J[2] !== a.instructions || J[3] !== a.mode)
     ((Je =
       a.mode === "branch" && a.instructions
-        ? `Note for findings (not a base branch): "${e3e(a.instructions)}"`
+        ? `Note for findings (not a base branch): "${previewInstructions(a.instructions)}"`
         : null),
       (J[2] = a.instructions),
       (J[3] = a.mode),
@@ -400,7 +400,7 @@ async function Ye({
   postDropped: P,
   signal: g,
 }) {
-  let c = await xDt(l, f, n, {
+  let c = await launchRemoteReview(l, f, n, {
     applyFixesOnComplete: h,
     postReviewToPR: L,
     signal: g,
@@ -411,7 +411,7 @@ async function Ye({
     return;
   }
   if (c) {
-    let m = P && c.launched ? (P === "disabled" ? vDt : CDt) : "",
+    let m = P && c.launched ? (P === "disabled" ? POST_DISABLED_NOTE : POST_IGNORED_NOTE) : "",
       R =
         c.blocks.map((w) => (w.type === "text" ? w.text : "")).filter(Boolean)
           .join(`
@@ -419,7 +419,7 @@ async function Ye({
     b(R, {
       shouldQuery: !0,
       metaMessages: c.launched
-        ? [t3e(h, l.mode === "branch" ? l.instructions : void 0)]
+        ? [ultrareviewLaunchAcknowledgementNudge(h, l.mode === "branch" ? l.instructions : void 0)]
         : void 0,
     });
   } else
@@ -429,10 +429,10 @@ async function Ye({
     );
 }
 var $o = async (l, f, b, n) => {
-  let h = op("allow_remote_sessions", "Cloud sessions", "are");
+  let h = policyDeniedReason("allow_remote_sessions", "Cloud sessions", "are");
   if (h) return (l(h, { display: "system" }), null);
-  let { scopeArgs: L, applyFixes: P, postReview: g } = Z9e(b),
-    c = await RDt(L, n ? `/${n}` : "/ultrareview");
+  let { scopeArgs: L, applyFixes: P, postReview: g } = parseUltrareviewArgs(b),
+    c = await precheckLaunchScope(L, n ? `/${n}` : "/ultrareview");
   if (!c.ok) return (l(c.error, { display: "system" }), null);
   let m = c.scope,
     R = !1,
@@ -441,10 +441,10 @@ var $o = async (l, f, b, n) => {
         i("tengu_review_remote_precondition_recovery", {
           reason: S("no_merge_base"),
           method: S("empty_tree_bundle"),
-          outcome: u(y),
+          outcome: fromEnum(y),
         });
     },
-    s = await kDt({
+    s = await checkOverageGate({
       overageConfirmed: f.isUltrareviewOverageConfirmed(),
       credentials: f.credentials,
     });
@@ -456,7 +456,7 @@ var $o = async (l, f, b, n) => {
   \u2192 ${s.actionUrl}`
           : "",
         U =
-          s.actionUrl?.includes("/admin-settings/") && hb() && !Km()
+          s.actionUrl?.includes("/admin-settings/") && isExtraUsageAllowed() && !Km()
             ? `
   Run /usage-credits to request this from your admin.`
             : "";
@@ -472,7 +472,7 @@ var $o = async (l, f, b, n) => {
             ? { githubLogin: s.githubLogin ?? null, preferPost: g === !0 }
             : null;
       return e(me, {
-        subtitle: s.kind === "needs-confirm" ? HF() : s.billingNote || null,
+        subtitle: s.kind === "needs-confirm" ? getReviewDurationNote() : s.billingNote || null,
         body: s.kind === "needs-confirm" ? s.body : void 0,
         scope: m,
         postOption: v,

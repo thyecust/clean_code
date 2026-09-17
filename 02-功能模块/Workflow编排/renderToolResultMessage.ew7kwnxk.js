@@ -12,7 +12,7 @@
 import { x, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { formatDuration as Ot, formatTokens as Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
@@ -22,7 +22,7 @@ import "./chunk-cd542wve.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { wSt } from "../Teammates团队/chunk-mrfx53ye.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-function we(a, s) {
+function renderToolUseProgressMessage(a, s) {
   let i = GIt(a.map((l) => l.data));
   if (i.agents.length === 0 && i.logs.length === 0) return null;
   let u = Boolean(s?.verbose || s?.isTranscriptMode);
@@ -114,7 +114,7 @@ function E(Me) {
   else G = L[22];
   return G;
 }
-function ke(a) {
+function renderToolResultMessage(a) {
   if (a.error)
     return e(xe, {
       children: r(t, {
@@ -163,7 +163,7 @@ function K(he) {
   ) {
     let d;
     if (c[2] !== n.endTime || c[3] !== n.startTime)
-      ((d = n.endTime && n.startTime ? Ot(n.endTime - n.startTime) : void 0),
+      ((d = n.endTime && n.startTime ? formatDuration(n.endTime - n.startTime) : void 0),
         (c[2] = n.endTime),
         (c[3] = n.startTime),
         (c[4] = d));
@@ -188,7 +188,7 @@ function K(he) {
     else S = c[8];
     let b;
     if (c[9] !== n.totalTokens)
-      ((b = n.totalTokens > 0 && ` \xB7 ${Pn(n.totalTokens)} tokens`),
+      ((b = n.totalTokens > 0 && ` \xB7 ${formatTokens(n.totalTokens)} tokens`),
         (c[9] = n.totalTokens),
         (c[10] = b));
     else b = c[10];
@@ -263,13 +263,13 @@ function W() {
   else re = H[1];
   return re;
 }
-function Te() {
+function renderToolUseRejectedMessage() {
   return e(xe, {
     children: e(t, { dimColor: !0, children: "Dynamic workflow cancelled" }),
   });
 }
 export {
-  ke as renderToolResultMessage,
-  we as renderToolUseProgressMessage,
-  Te as renderToolUseRejectedMessage,
+  renderToolResultMessage,
+  renderToolUseProgressMessage,
+  renderToolUseRejectedMessage,
 };

@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 82 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { getOAuthHeaders as xw, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOAuthHeaders, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, dt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { YA, tT, wdt, $Pe, UPe, Tdt, C6n, Edt } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
 import { mqe, Vee, C9, NPe, gqe, Msn, Kee } from "./chunk-20rab5yy.js";
@@ -24,14 +24,14 @@ import "../认证-OAuth登录/chunk-5bg9xwqx.js";
 import { p7e, ySn, uK } from "./chunk-5kyac4wk.js";
 import { s, T, O, v, c, Qe, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { constants as K } from "fs";
-import { open as pe, realpath as N, stat as he } from "fs/promises";
-import { extname as me, sep as Z, resolve as D } from "path";
+import { constants } from "fs";
+import { open as pe, realpath, stat as he } from "fs/promises";
+import { extname, sep as Z, resolve } from "path";
 var le = "anthropic.omelette.api.v1alpha.OmeletteService";
 async function I(e, t, r, o) {
   let i = await ht.post(`/${le}/${e}`, r, {
     auth: "none",
-    headers: { ...xw(t), "X-Anthropic-Client": "claude-cli-design-sync" },
+    headers: { ...getOAuthHeaders(t), "X-Anthropic-Client": "claude-cli-design-sync" },
     timeout: 60000,
     maxBodyLength: 33554432,
     validateStatus: () => !0,
@@ -512,14 +512,14 @@ function Ie(e) {
   return t.consent;
 }
 function te(e) {
-  let t = ce(e);
+  let t = getToolPermissionContext(e);
   return (
     !e.options?.isNonInteractiveSession &&
     t.mode !== "bypassPermissions" &&
     !(t.mode === "plan" && t.isBypassPermissionsModeAvailable)
   );
 }
-var et = Tt({
+var DesignSyncTool = Tt({
   name: p7e,
   searchHint:
     "sync local design system components to a claude.ai/design project",
@@ -567,7 +567,7 @@ var et = Tt({
         if (o.length <= 50) return o.join(", ");
         return `${o.length} paths (too many to list here; the user's permission prompt shows the full list)`;
       };
-      return `project ${e.projectId ?? "?"} from ${D(Q(), e.localDir ?? ".")}: write ${t(e.writes)}; delete ${t(e.deletes)}`;
+      return `project ${e.projectId ?? "?"} from ${resolve(Q(), e.localDir ?? ".")}: write ${t(e.writes)}; delete ${t(e.deletes)}`;
     }
     if (e.method === "create_project")
       return `create project "${e.name ?? "?"}"`;
@@ -679,7 +679,7 @@ var et = Tt({
         A = await Promise.all(
           f.map(async (z) => {
             try {
-              return (await he(D(g, z)), !0);
+              return (await he(resolve(g, z)), !0);
             } catch {
               return !1;
             }
@@ -746,7 +746,7 @@ var et = Tt({
       return { data: { method: "report_validate" } };
     let o = t.toolState.get(YA),
       i = e.__consentBitShown ?? null,
-      d = ce(t),
+      d = getToolPermissionContext(t),
       a = e.__consentAskCanReachUser ?? !1,
       h = a && te(t),
       u = "";
@@ -842,7 +842,7 @@ var Pe = new Set([
   ]),
   ne = 12582912;
 async function oe(e) {
-  return N(D(Q(), e ?? "."));
+  return realpath(resolve(Q(), e ?? "."));
 }
 async function Se(e, t) {
   let r = tT(e.path);
@@ -863,19 +863,19 @@ async function Se(e, t) {
       "write_files with localPath requires a plan finalized with localDir. Re-run finalize_plan with the bundle directory.",
     );
   let o = (_) => (_.endsWith(Z) ? _ : _ + Z),
-    i = D(t),
-    d = D(i, e.localPath);
+    i = resolve(t),
+    d = resolve(i, e.localPath);
   if (d !== i && !d.startsWith(o(i)))
     throw Error(
       "write_files: localPath must be inside the directory approved at finalize_plan.",
     );
-  let [a, h] = await Promise.all([N(d), N(i)]);
+  let [a, h] = await Promise.all([realpath(d), realpath(i)]);
   if (a !== h && !a.startsWith(o(h)))
     throw Error(
       "write_files: localPath resolves outside the directory approved at finalize_plan.",
     );
-  let u = K.O_NOFOLLOW,
-    g = await pe(a, K.O_RDONLY | u),
+  let u = constants.O_NOFOLLOW,
+    g = await pe(a, constants.O_RDONLY | u),
     p;
   try {
     let _ = await g.stat();
@@ -889,7 +889,7 @@ async function Se(e, t) {
   } finally {
     await g.close();
   }
-  let f = me(a).slice(1).toLowerCase();
+  let f = extname(a).slice(1).toLowerCase();
   return Pe.has(f)
     ? { path: r, data: p.toString("utf8"), mimeType: e.mimeType }
     : {
@@ -1067,4 +1067,4 @@ async function re(e, t, r, o) {
       return { method: "report_validate" };
   }
 }
-export { et as DesignSyncTool };
+export { DesignSyncTool };

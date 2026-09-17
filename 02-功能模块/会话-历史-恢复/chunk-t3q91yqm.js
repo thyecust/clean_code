@@ -10,7 +10,7 @@
 import { An, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { j1, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getLogDisplayTitle as pxe } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getLogDisplayTitle } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
@@ -20,8 +20,8 @@ import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk
 import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { getBranch as Da } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, truncateToWidth as Xe, formatRelativeTimeAgo as uy, formatLogMetadata as Ent } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { te, truncateToWidth, formatRelativeTimeAgo, formatLogMetadata } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { B2e } from "./chunk-mkmy4cx2.js";
 import { Oq } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jY } from "../状态栏-主题/chunk-jz6b76hr.js";
@@ -36,13 +36,13 @@ import {
   Tgt,
   VDe,
   PX,
-  dropRetractedMessages as yKe,
+  dropRetractedMessages,
   Pk,
-  getFirstMeaningfulUserMessageTextContent as zyt,
-  saveCustomTitle as DI,
-  getSessionIdFromLog as Kc,
-  isLiteLog as gj,
-  loadFullLog as AY,
+  getFirstMeaningfulUserMessageTextContent,
+  saveCustomTitle,
+  getSessionIdFromLog,
+  isLiteLog,
+  loadFullLog,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
@@ -57,7 +57,7 @@ import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, L9, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { basename as pn, sep as fn } from "path";
+import { basename, sep as fn } from "path";
 F();
 F();
 function pt(mo) {
@@ -69,7 +69,7 @@ function pt(mo) {
     Kn;
   if (R[0] !== z || R[1] !== at)
     ((Gn = () => {
-      if ((Qn(null), gj(z))) AY(z, { storageV5: at }).then(Qn);
+      if ((Qn(null), isLiteLog(z))) loadFullLog(z, { storageV5: at }).then(Qn);
     }),
       (Kn = [z, at]),
       (R[0] = z),
@@ -78,17 +78,17 @@ function pt(mo) {
       (R[3] = Kn));
   else ((Gn = R[2]), (Kn = R[3]));
   E(Gn, Kn);
-  let go = gj(z) && Ue === null,
+  let go = isLiteLog(z) && Ue === null,
     j = Ue ?? z,
     qn;
   if (R[4] !== j.messages)
-    ((qn = PX(yKe(j.messages), { site: "preview" })),
+    ((qn = PX(dropRetractedMessages(j.messages), { site: "preview" })),
       (R[4] = j.messages),
       (R[5] = qn));
   else qn = R[5];
   let Ut = qn,
     zn;
-  if (R[6] !== j) ((zn = Kc(j) || ""), (R[6] = j), (R[7] = zn));
+  if (R[6] !== j) ((zn = getSessionIdFromLog(j) || ""), (R[6] = j), (R[7] = zn));
   else zn = R[7];
   let At = zn,
     Vn;
@@ -169,7 +169,7 @@ function pt(mo) {
   else ct = R[23];
   let lt;
   if (R[24] !== j.modified)
-    ((lt = uy(j.modified)), (R[24] = j.modified), (R[25] = lt));
+    ((lt = formatRelativeTimeAgo(j.modified)), (R[24] = j.modified), (R[25] = lt));
   else lt = R[25];
   const Qt = j.gitBranch ? ` \xB7 ${j.gitBranch}` : "";
   let ut;
@@ -485,7 +485,7 @@ function xt(Eo) {
 }
 function Rr(s, u) {
   let l = s.replace(/\s+/g, " ").trim();
-  return Xe(l, u);
+  return truncateToWidth(l, u);
 }
 var Ir = 2,
   Mr = 4,
@@ -530,12 +530,12 @@ function St(s, u, l) {
         ? `  ${Vl} ${s.artifactCount}`
         : "",
     w = u - S - O.length - x.length - te(I);
-  return `${Rr(pxe(s), w)}${O}${x}${I}`;
+  return `${Rr(getLogDisplayTitle(s), w)}${O}${x}${I}`;
 }
 function Tt(s, u) {
   let { isChild: l = !1, showProjectPath: f = !1 } = u || {},
     h = l ? "    " : "",
-    T = Ent(s),
+    T = formatLogMetadata(s),
     S = f && s.projectPath ? ` \xB7 ${s.projectPath}` : "";
   return h + T + S;
 }
@@ -610,7 +610,7 @@ function rit({
   let [Pe, st] = d(null),
     Pt = !1;
   E(() => {
-    Da().then((a) => et(a));
+    getBranch().then((a) => et(a));
     let n = Date.now();
     B2e(U)
       .then((a) => {
@@ -638,10 +638,10 @@ function rit({
     Rt = V(() => null, [s, kt, !1]),
     ke = V(() => {
       let n = s.filter((a) => {
-        let b = Kc(a);
+        let b = getSessionIdFromLog(a);
         if (de && b === de) return !0;
         if (a.customTitle ?? a.aiTitle) return !0;
-        if (zyt(a.messages)) return !0;
+        if (getFirstMeaningfulUserMessageTextContent(a.messages)) return !0;
         if (a.firstPrompt || a.customTitle || a.aiTitle) return !0;
         return !1;
       });
@@ -667,7 +667,7 @@ function rit({
       if (!$e) return ke;
       let n = $e.toLowerCase();
       return ke.filter((a) => {
-        let b = pxe(a).toLowerCase(),
+        let b = getLogDisplayTitle(a).toLowerCase(),
           m = (a.gitBranch || "").toLowerCase(),
           k = (a.tag || "").toLowerCase(),
           y = a.prNumber
@@ -754,9 +754,9 @@ function rit({
     M = _t?.value.log ?? null,
     En = () => {
       if (!M) return "";
-      let n = Kc(M);
+      let n = getSessionIdFromLog(M);
       if (!n) return "";
-      let a = W.filter((y) => Kc(y) === n);
+      let a = W.filter((y) => getSessionIdFromLog(y) === n);
       if (!(a.length > 1)) return "";
       let m = Ct.has(n);
       if (a.indexOf(M) > 0 || m)
@@ -764,13 +764,13 @@ function rit({
       return e(D, { chord: "right", action: "expand" });
     },
     Ln = async () => {
-      let n = M ? Kc(M) : void 0;
+      let n = M ? getSessionIdFromLog(M) : void 0;
       if (!M || !n) {
         (B("list"), we(""));
         return;
       }
       if (Ce.trim()) {
-        if ((await DI(n, Ce.trim(), M.fullPath, "user", ze), T)) T();
+        if ((await saveCustomTitle(n, Ce.trim(), M.fullPath, "user", ze), T)) T();
       }
       (B("list"), we(""));
     },
@@ -786,7 +786,7 @@ function rit({
   }, [I]);
   let kn = (n) => {
     Sn(n);
-    let a = W.findIndex((b) => Kc(b) === Kc(n.value.log));
+    let a = W.findIndex((b) => getSessionIdFromLog(b) === getSessionIdFromLog(n.value.log));
     if (a >= 0) Tn(a + 1);
   };
   Ne(
@@ -863,11 +863,11 @@ function rit({
   let pe = [],
     Ot = !!N && !w && L,
     Nt = xe ?? U;
-  if (Ot) pe.push(pn(Nt));
+  if (Ot) pe.push(basename(Nt));
   if (!G && Y) pe.push(Y);
   if (K && !Z && !w) {
     let n = Te ?? U;
-    if (!(Ot && Nt === n)) pe.push(pn(n));
+    if (!(Ot && Nt === n)) pe.push(basename(n));
   }
   let On = !!N && !w && !L,
     Ft = (pe.length > 0 || On) && v !== "search",
@@ -984,7 +984,7 @@ function rit({
                     value: Ce,
                     onChange: we,
                     onSubmit: Ln,
-                    placeholder: pxe(M, "Enter new session name"),
+                    placeholder: getLogDisplayTitle(M, "Enter new session name"),
                     columns: Mt - 2,
                     cursorOffset: yn,
                     onChangeCursorOffset: xn,
@@ -1165,7 +1165,7 @@ function Ur(s) {
 function Ar(s) {
   let u = new Map();
   for (let l of s) {
-    let f = Kc(l);
+    let f = getSessionIdFromLog(l);
     if (f) {
       let h = u.get(f);
       if (h) h.push(l);
@@ -1182,8 +1182,8 @@ function Ar(s) {
     u
   );
 }
-import { lstat as Gr } from "fs/promises";
-import { posix as Kr, sep as qr, win32 as zr } from "path";
+import { lstat } from "fs/promises";
+import { posix, sep as qr, win32 as zr } from "path";
 function LIt() {
   return P() === "windows" ? ";" : "&&";
 }
@@ -1194,13 +1194,13 @@ async function oit(s, u, l) {
     return null;
   if (!An(s.projectPath) && !jf(s.projectPath) && !(await Vr(s.projectPath)))
     return null;
-  let T = Kc(s),
+  let T = getSessionIdFromLog(s),
     S = j1(T) ? ` ${T}` : "";
   return `cd ${jo([s.projectPath])} ${LIt()} claude --resume${S}`;
 }
 async function Vr(s) {
   let u = P() === "windows",
-    { parse: l, sep: f } = u ? zr : Kr,
+    { parse: l, sep: f } = u ? zr : posix,
     h = u ? l(s).root.replaceAll("/", f) : l(s).root,
     T = s
       .slice(l(s).root.length)
@@ -1210,7 +1210,7 @@ async function Vr(s) {
   for (let x of T) {
     S = S === "" || S.endsWith(f) ? S + x : S + f + x;
     try {
-      if ((await Gr(S)).isSymbolicLink()) return !0;
+      if ((await lstat(S)).isSymbolicLink()) return !0;
     } catch (O) {
       let I = A(O);
       return I !== "ENOENT" && I !== "ENOTDIR";

@@ -11,8 +11,8 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { fn, execFileNoThrowWithCwd as Be } from "./chunk-9ys1bnqr.js";
-import { Eu, gitExe as lt, redactGitRemoteCredentials as Uie } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { fn, execFileNoThrowWithCwd } from "./chunk-9ys1bnqr.js";
+import { Eu, gitExe, redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { av, $ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
 var R1 = String.raw`(?!\.{1,2}(?:/|$))[A-Za-z0-9_.][\w.-]*`,
@@ -61,13 +61,13 @@ function fnt(t) {
 }
 async function I2e(t) {
   if (pnt().blocked()) return null;
-  let r = await Be(lt(), [...fn, "remote", "get-url", "origin"], {
+  let r = await execFileNoThrowWithCwd(gitExe(), [...fn, "remote", "get-url", "origin"], {
     cwd: t,
     preserveOutputOnError: !1,
   });
   if (r.code === 0 && r.stdout.trim())
     return { name: "origin", url: r.stdout.trim() };
-  let e = await Be(lt(), [...fn, "remote"], {
+  let e = await execFileNoThrowWithCwd(gitExe(), [...fn, "remote"], {
       cwd: t,
       preserveOutputOnError: !1,
     }),
@@ -80,7 +80,7 @@ async function I2e(t) {
           ).trim()
         : void 0;
   if (!o) return null;
-  let l = await Be(lt(), [...fn, "remote", "get-url", o], {
+  let l = await execFileNoThrowWithCwd(gitExe(), [...fn, "remote", "get-url", o], {
       cwd: t,
       preserveOutputOnError: !1,
     }),
@@ -99,7 +99,7 @@ async function G(t) {
       stdout: r,
       code: e,
       exitCode: o,
-    } = await Be(lt(), [...fn, "remote", "get-url", "--push", "origin"], {
+    } = await execFileNoThrowWithCwd(gitExe(), [...fn, "remote", "get-url", "--push", "origin"], {
       cwd: t,
       preserveOutputOnError: !1,
     }),
@@ -119,7 +119,7 @@ async function Pb(t, r) {
   };
   try {
     let s = await bhe(e);
-    if ((n(`Git remote URL: ${Uie(s)}`), !s))
+    if ((n(`Git remote URL: ${redactGitRemoteCredentials(s)}`), !s))
       return (
         n("No git remote URL found"),
         Eu().remoteHostByCwd.delete(e),
@@ -138,7 +138,7 @@ async function Pb(t, r) {
           stdout: g,
           code: p,
           exitCode: E,
-        } = await Be(lt(), [...fn, "config", "--get", "remote.origin.url"], {
+        } = await execFileNoThrowWithCwd(gitExe(), [...fn, "config", "--get", "remote.origin.url"], {
           cwd: e,
           preserveOutputOnError: !1,
         }),
@@ -158,7 +158,7 @@ async function Pb(t, r) {
     }
     ((i ??= u),
       n(
-        `Parsed repository: ${i ? `${i.host}/${i.owner}/${i.name}` : null} from URL: ${Uie(s)}`,
+        `Parsed repository: ${i ? `${i.host}/${i.owner}/${i.name}` : null} from URL: ${redactGitRemoteCredentials(s)}`,
       ));
     let R = i?.host ?? $ke(s);
     if (R) Eu().remoteHostByCwd.set(e, R);

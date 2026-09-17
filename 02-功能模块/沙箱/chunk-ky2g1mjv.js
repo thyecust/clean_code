@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { WindowsSandboxError as fd, ensurePersistentWindowsCa as J4e, installWindowsSandboxAsync as TBt, ABt, xDe, L2, resolveWindowsTlsTerminateCaSource as gX, willSandboxTlsTerminate as Fue, SandboxManager as st } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { WindowsSandboxError, ensurePersistentWindowsCa, installWindowsSandboxAsync, ABt, xDe, L2, resolveWindowsTlsTerminateCaSource, willSandboxTlsTerminate, SandboxManager } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 class d {
   inFlight = void 0;
   run(e) {
@@ -29,15 +29,15 @@ function nit(e) {
 }
 async function c() {
   try {
-    let e = await TBt({ sandboxUser: ABt, srtWin: xDe() });
+    let e = await installWindowsSandboxAsync({ sandboxUser: ABt, srtWin: xDe() });
     if (e.cancelled) {
       if (e.user.provisioned && e.user.credPresent) {
-        if (gX().source === "managed" && Fue()) {
-          st.invalidateDependencyCache();
+        if (resolveWindowsTlsTerminateCaSource().source === "managed" && willSandboxTlsTerminate()) {
+          SandboxManager.invalidateDependencyCache();
           let s = await i(e.user);
-          if ((await st.checkDependenciesAsync(), s !== null)) return s;
+          if ((await SandboxManager.checkDependenciesAsync(), s !== null)) return s;
           return (
-            y("sandbox_windows_install"),
+            logFeatureOk("sandbox_windows_install"),
             {
               status: "ok",
               message:
@@ -48,9 +48,9 @@ async function c() {
           );
         }
         return (
-          g("sandbox_windows_install", "uac_cancelled_provisioned"),
-          st.invalidateDependencyCache(),
-          await st.checkDependenciesAsync(),
+          logFeatureSad("sandbox_windows_install", "uac_cancelled_provisioned"),
+          SandboxManager.invalidateDependencyCache(),
+          await SandboxManager.checkDependenciesAsync(),
           {
             status: "cancelled",
             message:
@@ -59,7 +59,7 @@ async function c() {
         );
       }
       return (
-        g("sandbox_windows_install", "uac_cancelled"),
+        logFeatureSad("sandbox_windows_install", "uac_cancelled"),
         {
           status: "cancelled",
           message:
@@ -68,24 +68,24 @@ async function c() {
       );
     }
     if (
-      (st.invalidateDependencyCache(),
-      await st.checkDependenciesAsync(),
+      (SandboxManager.invalidateDependencyCache(),
+      await SandboxManager.checkDependenciesAsync(),
       e.user.provisioned &&
         e.user.credPresent &&
         (e.wfp.state === "installed" || e.wfp.state === "cannot-read"))
     ) {
-      if (gX().source === "managed" && Fue()) {
+      if (resolveWindowsTlsTerminateCaSource().source === "managed" && willSandboxTlsTerminate()) {
         let r = await i(e.user);
         if (r !== null) return r;
       }
-      y("sandbox_windows_install");
+      logFeatureOk("sandbox_windows_install");
       let s =
         e.wfp.state === "installed"
           ? "Sandbox user and network filters installed"
           : "Sandbox user and network filters installed (filters can't be verified from a non-elevated process)";
-      if (st.isSandboxingEnabled())
+      if (SandboxManager.isSandboxingEnabled())
         return { status: "ok", message: `${s} and active.${o()}` };
-      return st.isSandboxEnabledInSettings()
+      return SandboxManager.isSandboxEnabledInSettings()
         ? {
             status: "ok",
             message: `${s}. Run /sandbox to check the current status.${o()}`,
@@ -101,28 +101,28 @@ async function c() {
         ? "cred_not_readable"
         : "wfp_not_installed";
     return (
-      g("sandbox_windows_install", t),
+      logFeatureSad("sandbox_windows_install", t),
       {
         status: "partial",
         message: `Install completed (sandbox user: ${{ user_not_provisioned: "not provisioned", cred_not_readable: "provisioned, credential not readable", wfp_not_installed: "provisioned" }[t]}, filters: ${e.wfp.state}). Run /sandbox install again to retry.`,
       }
     );
   } catch (e) {
-    st.invalidateDependencyCache();
+    SandboxManager.invalidateDependencyCache();
     let t = l(e);
     n(`/sandbox install failed: ${t}`, { level: "error" });
     let a = L2(t, { omitCcRemedy: !0 }).replace(/\.$/, "");
-    if (e instanceof fd && e.code === "install_timeout")
+    if (e instanceof WindowsSandboxError && e.code === "install_timeout")
       return (
-        g("sandbox_windows_install", "uac_timeout"),
+        logFeatureSad("sandbox_windows_install", "uac_timeout"),
         {
           status: "error",
           message: `The install timed out after 2 minutes: ${a}. If an elevation prompt was showing, run /sandbox install again and respond to the prompt. If no prompt appeared, the installer may be blocked on this machine \u2014 run /sandbox to check sandbox status.`,
         }
       );
-    if (e instanceof fd && e.code === "install_config_conflict")
+    if (e instanceof WindowsSandboxError && e.code === "install_config_conflict")
       return (
-        g("sandbox_windows_install", "config_conflict"),
+        logFeatureSad("sandbox_windows_install", "config_conflict"),
         {
           status: "error",
           message:
@@ -131,14 +131,14 @@ async function c() {
       );
     if (/^srt-win (status|wfp|user)[ :]/.test(t))
       return (
-        g("sandbox_windows_install", "status_probe_failed"),
+        logFeatureSad("sandbox_windows_install", "status_probe_failed"),
         {
           status: "error",
           message: `The installer ran, but the sandbox status couldn't be read back afterwards: ${a}. Run /sandbox to check the current status.`,
         }
       );
     return (
-      f("sandbox_windows_install", "install_threw"),
+      logFeatureBad("sandbox_windows_install", "install_threw"),
       {
         status: "error",
         message: `Couldn't install the sandbox user and network filters: ${a}. Run /sandbox install again to retry.`,
@@ -148,7 +148,7 @@ async function c() {
 }
 async function i(e) {
   try {
-    await J4e({ status: e, srtWin: xDe() });
+    await ensurePersistentWindowsCa({ status: e, srtWin: xDe() });
   } catch (t) {
     let a = l(t);
     n(`/sandbox install: managed sandbox CA step failed: ${a}`, {
@@ -156,20 +156,20 @@ async function i(e) {
     });
     let s = L2(a, { omitCcRemedy: !0 }).replace(/\.$/, "");
     if (
-      t instanceof fd &&
+      t instanceof WindowsSandboxError &&
       (t.code === "trust_ca_failed" ||
         t.code === "spawn_failed" ||
         t.code === "srt_win_timeout")
     )
       return (
-        g("sandbox_windows_install", "trust_ca_failed"),
+        logFeatureSad("sandbox_windows_install", "trust_ca_failed"),
         {
           status: "partial",
           message: `The sandbox TLS inspection CA couldn't be trusted for the sandbox user: ${s}. Sandboxed HTTPS won't work \u2014 run /sandbox install again to retry.`,
         }
       );
     return (
-      g("sandbox_windows_install", "persistent_ca_failed"),
+      logFeatureSad("sandbox_windows_install", "persistent_ca_failed"),
       {
         status: "partial",
         message: `The sandbox TLS inspection CA couldn't be created: ${s}. Sandboxed HTTPS won't work \u2014 run /sandbox install again to retry.`,
@@ -179,7 +179,7 @@ async function i(e) {
   return null;
 }
 function o() {
-  return Fue() && st.needsRestartForTlsTerminate()
+  return willSandboxTlsTerminate() && SandboxManager.needsRestartForTlsTerminate()
     ? " Restart Claude Code to enable TLS inspection for this session."
     : "";
 }

@@ -11,24 +11,24 @@
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isBgSession as _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { updateSettingsForSource as Jt, hasSkipWorkflowUsageWarning as G5t } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { updateSettingsForSource, hasSkipWorkflowUsageWarning } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sA } from "../权限系统/chunk-t3b7pg2x.js";
-import { getToolPermissionContext as ce, getEffortValue as Qc, getUltracodeRequested as kJe } from "../权限系统/chunk-fjrcf22x.js";
-import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { getToolPermissionContext, getEffortValue, getUltracodeRequested } from "../权限系统/chunk-fjrcf22x.js";
+import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { soe } from "../Teammates团队/chunk-eey53z5b.js";
-function u(e, o) {
-  if (e !== Yc) return !1;
+function workflowNeedsUsageConsentPrompt(e, o) {
+  if (e !== WORKFLOW_TOOL_NAME) return !1;
   if (o.options.isNonInteractiveSession) return !1;
-  if (ce(o).shouldAvoidPermissionPrompts) return !1;
-  if (_t()) return !1;
+  if (getToolPermissionContext(o).shouldAvoidPermissionPrompts) return !1;
+  if (isBgSession()) return !1;
   if (soe()) return !1;
-  if (sA(o.options.mainLoopModel, Qc(o), kJe(o))) return !1;
-  return !o.session.workflowUsageConsent.isGranted() && !G5t();
+  if (sA(o.options.mainLoopModel, getEffortValue(o), getUltracodeRequested(o))) return !1;
+  return !o.session.workflowUsageConsent.isGranted() && !hasSkipWorkflowUsageWarning();
 }
-async function d(e, o) {
-  if ((e.grant(), G5t())) return;
-  let { error: r } = await Jt(
+async function recordWorkflowUsageConsent(e, o) {
+  if ((e.grant(), hasSkipWorkflowUsageWarning())) return;
+  let { error: r } = await updateSettingsForSource(
     "userSettings",
     { skipWorkflowUsageWarning: !0 },
     void 0,
@@ -43,6 +43,6 @@ async function d(e, o) {
   i("tengu_workflow_usage_warning_accepted", {});
 }
 export {
-  d as recordWorkflowUsageConsent,
-  u as workflowNeedsUsageConsentPrompt,
+  recordWorkflowUsageConsent,
+  workflowNeedsUsageConsentPrompt,
 };

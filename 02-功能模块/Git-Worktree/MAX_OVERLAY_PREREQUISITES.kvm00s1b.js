@@ -12,16 +12,16 @@
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import {
   Ds,
   Ct,
   vLe,
-  readGitLayout as UX,
+  readGitLayout,
   YVn,
   r$,
-  MAX_WORKING_FILE_BYTES as Jm,
+  MAX_WORKING_FILE_BYTES,
   T3,
   WTe,
   GTe,
@@ -180,7 +180,7 @@ function z(e) {
   let t = e?.filter;
   return t !== void 0 && t !== "unspecified" && t !== "unset";
 }
-import { lstat as ee, readdir as Ve, readlink as We } from "fs/promises";
+import { lstat, readdir, readlink } from "fs/promises";
 import { join as K } from "path";
 var J = 8,
   W = "120000",
@@ -189,7 +189,7 @@ var J = 8,
 async function Ke(e, t, r, i) {
   try {
     for (let s of te(t)) if (!(await r(s))) return "gone";
-    if (!(await ee(K(e, t))).isFile()) return "other";
+    if (!(await lstat(K(e, t))).isFile()) return "other";
     return (await qe(i, t)) ? "file" : "gone";
   } catch (o) {
     let s = A(o);
@@ -201,7 +201,7 @@ function Ye(e) {
   return (r) => {
     let i = t.get(r);
     if (i !== void 0) return i;
-    let o = Ve(r === "" ? e : K(e, r)).then(
+    let o = readdir(r === "" ? e : K(e, r)).then(
       (s) => new Set(s.map((u) => u.normalize("NFC"))),
     );
     return (t.set(r, o), o);
@@ -242,7 +242,7 @@ function De(e) {
   return (r) => {
     let i = t.get(r);
     if (i !== void 0) return i;
-    let o = ee(K(e, r)).then((s) => s.isDirectory());
+    let o = lstat(K(e, r)).then((s) => s.isDirectory());
     return (t.set(r, o), o);
   };
 }
@@ -381,7 +381,7 @@ async function Pe(e, t, r) {
   let i = new Map(),
     o = async (s) => {
       try {
-        let u = await ee(K(e, s), { bigint: !0 });
+        let u = await lstat(K(e, s), { bigint: !0 });
         return u.isFile() && u.ino !== 0n
           ? `${u.dev}:${u.ino}:${u.size}:${u.mtimeNs}:${u.ctimeNs}`
           : null;
@@ -480,7 +480,7 @@ async function Te(e, t) {
   let i = r.stdout.split("\x00").filter((u) => u !== ""),
     o = Ds(J, (u) =>
       pI(u)
-        ? ee(K(e, u)).then(
+        ? lstat(K(e, u)).then(
             (f) => f.isFile(),
             () => !1,
           )
@@ -601,7 +601,7 @@ async function Fe(e, t, r, i, o, s) {
       if (!u(p)) return b;
       if (p.oldMode === W) {
         if (!(await g(p.path))) return b;
-        let R = await We(K(e, p.path), "buffer").catch(() => null);
+        let R = await readlink(K(e, p.path), "buffer").catch(() => null);
         if (R !== null) {
           let k =
             P() === "windows"
@@ -957,7 +957,7 @@ async function Ge({
 }) {
   let g = Date.now(),
     { bundle: c, headCommit: y, pinnedCommit: w } = t;
-  if (c !== null && c.size > Jm) return CKe("overlay_too_large", 1, t, g, f);
+  if (c !== null && c.size > MAX_WORKING_FILE_BYTES) return CKe("overlay_too_large", 1, t, g, f);
   let p = await xk(e);
   if (p === null) return AKe("root_unresolvable", t, g, f);
   let b = await tKn(e, r);
@@ -1054,13 +1054,13 @@ async function Ge({
     }
   );
 }
-var le = 60000,
-  lt = 8,
+var OVERLAY_CHECK_DEADLINE_MS = 60000,
+  MAX_OVERLAY_PREREQUISITES = 8,
   de = 5000;
-async function un({ gitRoot: e, pin: t, head: r, signal: i }) {
+async function planOverlay({ gitRoot: e, pin: t, head: r, signal: i }) {
   let o = AbortSignal.timeout(de),
     s = await kt(
-      UX(e, i === void 0 ? o : AbortSignal.any([i, o]), { bound: !0 }).catch(
+      readGitLayout(e, i === void 0 ? o : AbortSignal.any([i, o]), { bound: !0 }).catch(
         () => ({ kind: "failed" }),
       ),
       de,
@@ -1072,7 +1072,7 @@ async function un({ gitRoot: e, pin: t, head: r, signal: i }) {
   let u = await dt({ gitRoot: e, pin: t, head: r, signal: i });
   if (u.kind === "not_planned") return u;
   let f = Date.now(),
-    g = AbortSignal.timeout(le),
+    g = AbortSignal.timeout(OVERLAY_CHECK_DEADLINE_MS),
     c = i === void 0 ? g : AbortSignal.any([i, g]),
     y = (await kt(
       Ge({
@@ -1090,8 +1090,8 @@ async function un({ gitRoot: e, pin: t, head: r, signal: i }) {
         createUploadFilter: pH,
         filterAttributed: Xbe(e),
         purpose: "create_check",
-      }).catch((w) => (h(w), { ok: !1, reason: "aborted" })),
-      le,
+      }).catch((w) => (logError(w), { ok: !1, reason: "aborted" })),
+      OVERLAY_CHECK_DEADLINE_MS,
     )) ?? { ok: !1, reason: "aborted" };
   if (y.ok)
     return (await kt(ut(e, r, c), de)) === !0
@@ -1105,7 +1105,7 @@ async function un({ gitRoot: e, pin: t, head: r, signal: i }) {
     };
   return Ct(i)
     ? { kind: "not_planned", whyNot: "aborted" }
-    : g.aborted || Date.now() - f >= le
+    : g.aborted || Date.now() - f >= OVERLAY_CHECK_DEADLINE_MS
       ? { kind: "not_planned", whyNot: "inventory_cut" }
       : { kind: "not_planned", whyNot: "inventory_failed" };
 }
@@ -1113,7 +1113,7 @@ async function dt({ gitRoot: e, pin: t, head: r, signal: i }) {
   if (r === t) return { kind: "planned", bundle: null };
   let o = await U9n({ gitRoot: e, prerequisiteSha: t, signal: i });
   if (o.ok) {
-    if (o.prerequisites.length > lt)
+    if (o.prerequisites.length > MAX_OVERLAY_PREREQUISITES)
       return { kind: "not_planned", whyNot: "too_many_prerequisites" };
     return o.headSha === r
       ? {
@@ -1149,7 +1149,7 @@ async function ut(e, t, r) {
   return i.code === 0 && i.stdout.trim() === t;
 }
 export {
-  lt as MAX_OVERLAY_PREREQUISITES,
-  le as OVERLAY_CHECK_DEADLINE_MS,
-  un as planOverlay,
+  MAX_OVERLAY_PREREQUISITES,
+  OVERLAY_CHECK_DEADLINE_MS,
+  planOverlay,
 };

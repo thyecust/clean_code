@@ -10,21 +10,21 @@
 import { OHe } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { qP, Tz, c_e, ns, bje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z1 } from "../../01-核心基础设施/共享小工具-未细化/chunk-0k3bh4m8.js";
-import { lU, isBgSession as _t, _sr, sameOwnerAccount as wg, getOauthAccountInfo as vn, hq, _q } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { lU, isBgSession, _sr, sameOwnerAccount, getOauthAccountInfo, hq, _q } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { OP } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
-import { readStoredTrustedDeviceToken as oQe, clearTrustedDeviceToken as cCn, enrollTrustedDevice as sQe } from "./chunk-tyce0p0b.js";
+import { readStoredTrustedDeviceToken, clearTrustedDeviceToken, enrollTrustedDevice } from "./chunk-tyce0p0b.js";
 import { Hre } from "./chunk-ct52ffwb.js";
 import { Oer } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { IF, xn, relatchTenguSandboxGbConfig as Qdn, tg, Ht, fhn, isTranscriptPersistenceDisabled as hl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { jj, clearOrgMemoryCredential as M$, onOrgMemoryAuthCompletion as VTn, clearOrgMemoryDiscoveryCaches as QTn, clearOrgMemoryDiscoveryAccountState as ZTn } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { getToolPermissionContext as ce, getSessionEffort as gme } from "../权限系统/chunk-fjrcf22x.js";
+import { IF, xn, relatchTenguSandboxGbConfig, tg, Ht, fhn, isTranscriptPersistenceDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { jj, clearOrgMemoryCredential, onOrgMemoryAuthCompletion, clearOrgMemoryDiscoveryCaches, clearOrgMemoryDiscoveryAccountState } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getToolPermissionContext, getSessionEffort } from "../权限系统/chunk-fjrcf22x.js";
 import { dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { vre, rK, Rre } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { zJe } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
@@ -39,7 +39,7 @@ import { WA, Vx, de } from "../../00-第三方库/_未识别/React组件(TUI视�
 import { V8 } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import { FIt } from "../../01-核心基础设施/共享小工具-未细化/chunk-85wxphev.js";
 import { qa } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
-import { hasPolicyDiverged as lWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
+import { hasPolicyDiverged } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
 import { iit, FHe, ait } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
 import { dF, y4 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
@@ -49,7 +49,7 @@ import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/Rea
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Pdr() {
-  VTn(jj());
+  onOrgMemoryAuthCompletion(jj());
 }
 async function N8(o, s, i) {
   if (
@@ -58,7 +58,7 @@ async function N8(o, s, i) {
     return { bridgeDisconnected: !1, accountSwitched: !1, relaunching: !1 };
   let u = ns(),
     c = u !== null && u !== i.previousGatewayAuth;
-  if (Pe() === "gateway") {
+  if (getAPIProvider() === "gateway") {
     let f = i.onConsentNeeded,
       W = { release: null },
       Z = f ? KBn(() => ((W.release ??= Ann()), f())) : null;
@@ -77,12 +77,12 @@ async function N8(o, s, i) {
         A.failure?.errorKind === "gateway_cert_mismatch"
       )
         return await le(o, H, Odr(k, A.failure.gatewayPinMismatch));
-      if (!A.fetchSucceeded || lWe()) {
+      if (!A.fetchSucceeded || hasPolicyDiverged()) {
         let V = A.fetchSucceeded ? void 0 : A.failure;
         return (await fe(o, Ddr(k, V, c), (ee) => Ldr(k, V, ee, c)), D);
       }
       if (no()) return D;
-      (iit("gateway"), dR(), Qdn());
+      (iit("gateway"), dR(), relatchTenguSandboxGbConfig());
     } finally {
       if (!no()) W.release?.();
     }
@@ -92,8 +92,8 @@ async function N8(o, s, i) {
     y = OHe.of(o.session),
     m = () => y.credentialsPersisted(),
     w = i.previousAccount,
-    E = vn(),
-    S = wg(w, E),
+    E = getOauthAccountInfo(),
+    S = sameOwnerAccount(w, E),
     { replBridgeEnabled: T, replBridgeOutboundOnly: N } = o.getAppState(),
     v = w?.accountUuid !== void 0 && !S,
     O = v && T && !N;
@@ -115,9 +115,9 @@ async function N8(o, s, i) {
         }
       );
     });
-  if ((M$(), QTn(), Oer(E), v))
+  if ((clearOrgMemoryCredential(), clearOrgMemoryDiscoveryCaches(), Oer(E), v))
     if (
-      (ZTn(),
+      (clearOrgMemoryDiscoveryAccountState(),
       i.setAppState((f) => ({
         ...f,
         replBridgeSessionGroupingId: void 0,
@@ -128,26 +128,26 @@ async function N8(o, s, i) {
     )
       o.dialogStore.dismissKind(Z1.kind);
     else
-      h(
+      logError(
         Error(
           "runPostLoginHooks: no dialog store to dismiss a pending Remote Control callout on account switch",
         ),
       );
-  if (S && (await oQe()))
+  if (S && (await readStoredTrustedDeviceToken()))
     (n(
       "[trusted-device] Same account+org re-login with existing token, skipping re-enrollment",
     ),
       m());
   else {
-    cCn();
-    let f = sQe({ credentials: o.credentials }).then(m, m);
+    clearTrustedDeviceToken();
+    let f = enrollTrustedDevice({ credentials: o.credentials }).then(m, m);
     if (i.awaitEnrollment) await f;
   }
   let { host: x } = o.session,
     Y = o.getAppState();
   return (
     ait(x),
-    FHe(x, ce(o), g, Y.fastMode),
+    FHe(x, getToolPermissionContext(o), g, Y.fastMode),
     Pdr(),
     y.loginCompleted(),
     { bridgeDisconnected: O, accountSwitched: v, relaunching: !1 }
@@ -174,7 +174,7 @@ async function le(o, s, i) {
     no())
   )
     return { ...D, gatewayLoginError: i };
-  let c = !hl();
+  let c = !isTranscriptPersistenceDisabled();
   if (c) await dF(o.messages, o.storageV5);
   return (
     await xn(0, "other", {
@@ -236,7 +236,7 @@ function Q(o, s, i) {
     ? `Signed in to Cloud gateway ${o}`
     : `Your organization's managed settings on Cloud gateway ${o} changed`;
 }
-function Ddr(o, s, i, u = !hl()) {
+function Ddr(o, s, i, u = !isTranscriptPersistenceDisabled()) {
   let c = u
       ? "\u2026"
       : " (this conversation is not saved, so it starts fresh)\u2026",
@@ -245,18 +245,18 @@ function Ddr(o, s, i, u = !hl()) {
     ? `${g}. Restarting Claude Code to retry${c}`
     : `${g}. Restarting Claude Code to apply ${i ? "your organization's managed settings" : "them"}${c}`;
 }
-function Ldr(o, s, i, u, c = !hl()) {
+function Ldr(o, s, i, u, c = !isTranscriptPersistenceDisabled()) {
   return `${Q(o, s, u)}. ${s ? "Claude Code has to restart to retry" : `Claude Code has to restart to apply ${u ? "your organization's managed settings" : "them"}`}, and ${i}, so this session is ending instead. Your sign-in is saved: start claude again the same way${c ? " (add --continue to return to this conversation)" : ""}.`;
 }
 async function fe(o, s, i) {
   if (no()) return;
   let u = (m) => xn(0, "other", { finalMessage: i(m) });
   if ((await dF(IF(o), o.storageV5), no())) return;
-  if (_t())
+  if (isBgSession())
     return u(
       "a background session cannot restart itself (sign in from a session started directly with `claude`)",
     );
-  let c = ce(o),
+  let c = getToolPermissionContext(o),
     g = rK(c, qP());
   if (g.length > 0)
     return u(
@@ -270,7 +270,7 @@ async function fe(o, s, i) {
     await y4(
       {
         freshIfNoTranscript: !0,
-        extraArgs: [...vre(c, gme(o)), ...Rre(c, Tz())],
+        extraArgs: [...vre(c, getSessionEffort(o)), ...Rre(c, Tz())],
         proactivity: y,
         env: hq(),
         preSpawn: () =>
@@ -281,7 +281,7 @@ ${s}
       o.storageV5,
     );
   } catch (m) {
-    return (h(ge(m)), u(`it could not restart itself (${l(m)})`));
+    return (logError(ge(m)), u(`it could not restart itself (${l(m)})`));
   }
 }
 function MHe(o, s, i, { envTokenWasSet: u = !1, envWarningOnce: c } = {}) {
@@ -290,7 +290,7 @@ function MHe(o, s, i, { envTokenWasSet: u = !1, envWarningOnce: c } = {}) {
   let g = s ? Mdr(o, i) : void 0,
     y = $dr({
       envTokenWasSet: u,
-      gatewayActive: Pe() === "gateway",
+      gatewayActive: getAPIProvider() === "gateway",
       willAutoQuery: g?.shouldQuery === !0,
     });
   if (y === "out-of-band" && c && !c.delivered)
@@ -340,7 +340,7 @@ ${p$n}`
 async function ngr(o, s) {
   let i = Fdr(),
     u = i !== void 0,
-    c = vn(),
+    c = getOauthAccountInfo(),
     g = c && {
       accountUuid: c.accountUuid,
       organizationUuid: c.organizationUuid,

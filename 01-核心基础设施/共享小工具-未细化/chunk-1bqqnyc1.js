@@ -10,7 +10,7 @@
 import { kt } from "./chunk-510m1t2d.js";
 import { uo } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { $5, Sx, tv, MU, Bar } from "./chunk-h3avap4w.js";
-import { execFile as c } from "child_process";
+import { execFile } from "child_process";
 var s = 1e4,
   Qxn = 250,
   r = null,
@@ -27,7 +27,7 @@ function pbr(e) {
 function a(e) {
   return new Promise((o) => {
     try {
-      c(
+      execFile(
         "security",
         ["find-generic-password", "-a", tv(), "-w", "-s", e],
         { encoding: "utf-8", timeout: s, windowsHide: !0 },

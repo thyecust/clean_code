@@ -42,7 +42,7 @@ import {
   symlink as Pt,
   unlink as J,
 } from "fs/promises";
-import { dirname as O, isAbsolute as Ct, join as v, resolve as Ce } from "path";
+import { dirname, isAbsolute, join as v, resolve } from "path";
 function hs(e, t) {
   return {
     code: "InvalidArgument",
@@ -339,26 +339,26 @@ function se(e, t) {
 import * as l from "fs";
 import {
   appendFile as Ye,
-  chmod as Xe,
-  copyFile as Qe,
+  chmod,
+  copyFile,
   link as qe,
-  lstat as I,
+  lstat,
   mkdir as et,
   open as x,
-  readdir as tt,
-  readFile as ue,
-  readlink as nt,
-  realpath as rt,
+  readdir,
+  readFile,
+  readlink,
+  realpath,
   rename as it,
-  rmdir as ot,
+  rmdir,
   rm as st,
   stat as at,
   symlink as ut,
   unlink as dt,
 } from "fs/promises";
-import { homedir as de } from "os";
+import { homedir } from "os";
 import * as f from "path";
-import { writeFileSync as Ke } from "fs";
+import { writeFileSync } from "fs";
 var an = (() => {
   let e = process.env.CLAUDE_CODE_SLOW_OPERATION_THRESHOLD_MS;
   if (e !== void 0) {
@@ -409,7 +409,7 @@ function Ru(e, t) {
 }
 function Jhe(e, t, r) {
   using i = Np`fs.writeFileSync(${e}, ${t})`;
-  Ke(e, t, r);
+  writeFileSync(e, t, r);
 }
 var ct = "\u2192";
 function lt() {
@@ -784,8 +784,8 @@ function me(e, t) {
 }
 function Tr(e) {
   let t = e;
-  if (t === "~") t = de().normalize("NFC");
-  else if (t.startsWith("~/")) t = f.join(de().normalize("NFC"), t.slice(2));
+  if (t === "~") t = homedir().normalize("NFC");
+  else if (t.startsWith("~/")) t = f.join(homedir().normalize("NFC"), t.slice(2));
   let r = new Set(),
     i = ae();
   if ((r.add(t), (An(t) && !Oi(t)) || Dr(t) || vS(t))) return Array.from(r);
@@ -834,7 +834,7 @@ var Sh = {
     return at(e);
   },
   async lstat(e) {
-    return I(e);
+    return lstat(e);
   },
   async openDirNoFollow(e) {
     await (
@@ -846,16 +846,16 @@ var Sh = {
     l.closeSync(t);
   },
   async lstatBigint(e) {
-    return I(e, { bigint: !0 });
+    return lstat(e, { bigint: !0 });
   },
   async readdir(e) {
-    return tt(e, { withFileTypes: !0 });
+    return readdir(e, { withFileTypes: !0 });
   },
   async unlink(e) {
     return dt(e);
   },
   async rmdir(e) {
-    return ot(e);
+    return rmdir(e);
   },
   async rm(e, t) {
     return st(e, t);
@@ -868,19 +868,19 @@ var Sh = {
     }
   },
   async readFile(e, t) {
-    return ue(e, { encoding: t.encoding });
+    return readFile(e, { encoding: t.encoding });
   },
   async rename(e, t) {
     return it(e, t);
   },
   async realpath(e) {
-    return zn(await rt(e));
+    return zn(await realpath(e));
   },
   async readlink(e) {
-    return nt(e);
+    return readlink(e);
   },
   async copyFile(e, t) {
-    return Qe(e, t);
+    return copyFile(e, t);
   },
   async appendFile(e, t, r) {
     if (r?.mode !== void 0)
@@ -904,7 +904,7 @@ var Sh = {
     return qe(e, t);
   },
   async chmod(e, t) {
-    return Xe(e, t);
+    return chmod(e, t);
   },
   statSync(e) {
     using t = Np`fs.statSync(${e})`;
@@ -990,7 +990,7 @@ var Sh = {
     return l.createWriteStream(e);
   },
   async readFileBytes(e, t) {
-    if (t === void 0) return ue(e);
+    if (t === void 0) return readFile(e);
     let r = await x(
       e,
       l.constants.O_RDONLY |
@@ -1008,7 +1008,7 @@ var Sh = {
     try {
       let r = lt();
       if (r === 0) {
-        if (!(await I(e)).isFile()) return null;
+        if (!(await lstat(e)).isFile()) return null;
       }
       let i = await x(e, l.constants.O_RDONLY | r);
       try {
@@ -1613,7 +1613,7 @@ function Nt(e) {
   return Object.hasOwn(X, e);
 }
 function Fe(e) {
-  return BL(e) ? null : Ce(e);
+  return BL(e) ? null : resolve(e);
 }
 function _e() {}
 var It = { sessionId: "", fromBackend: !1 };
@@ -1629,12 +1629,12 @@ function Le(e, t, r, i) {
     target: a,
     arm: u,
     configHome: t,
-    rotate: u === "raw" && !(O(a) === o && a.endsWith(".txt")),
+    rotate: u === "raw" && !(dirname(a) === o && a.endsWith(".txt")),
     pointLatest: u === "raw" && a !== s,
   };
 }
 function Y(e) {
-  return wc.userNamed(Ct(e) ? e : Ce(e));
+  return wc.userNamed(isAbsolute(e) ? e : resolve(e));
 }
 function Ht(e) {
   return e.code === "Failed" && e.telemetryCode === "ENOENT";
@@ -1899,7 +1899,7 @@ class Te {
       await this.appendV5AndMark(this.storageV5, t, r);
       return;
     }
-    if (i) await Re(O(e.target), { recursive: !0 }).catch(() => {});
+    if (i) await Re(dirname(e.target), { recursive: !0 }).catch(() => {});
     let o = e;
     try {
       await Z(e.target, r);
@@ -1917,7 +1917,7 @@ class Te {
           await this.appendV5AndMark(this.storageV5, t, r);
           return;
         }
-        await Re(O(o.target), { recursive: !0 }).catch(() => {});
+        await Re(dirname(o.target), { recursive: !0 }).catch(() => {});
         try {
           await Z(o.target, r);
         } catch {
@@ -1975,7 +1975,7 @@ class Te {
       let o = r ? t : this.logPath(),
         s = i.map((a) => a.content).join("");
       try {
-        ae().mkdirSync(O(o));
+        ae().mkdirSync(dirname(o));
       } catch {}
       try {
         ae().appendFileSync(o, s);
@@ -2065,7 +2065,7 @@ class Te {
           }
           for (let i of this.groupLines(r)) {
             let o = i.lines.map((u) => u.content).join(""),
-              s = O(i.decision.target),
+              s = dirname(i.decision.target),
               a = i.decision.arm === "raw" && (i.origin.fromBackend || e !== s);
             if (i.decision.arm === "raw") e = s;
             (this.unflushedChunks.push({
@@ -2097,7 +2097,7 @@ class Te {
   async updateLatestSymlink() {
     try {
       let e = this.logPath(),
-        t = v(O(e), "latest");
+        t = v(dirname(e), "latest");
       (await J(t).catch(() => {}), await Pt(e, t));
     } catch {}
   }

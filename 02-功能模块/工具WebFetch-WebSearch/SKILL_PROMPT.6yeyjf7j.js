@@ -16,12 +16,12 @@ var a = "./plugin-eval-b6bc95df.md.zst";
 var n = Ke(a, import.meta.dirname);
 var o = Ae("./recent-changes-ycb7sy2c.md");
 var s = Ae("./SKILL-rsyv1bsc.md");
-var S = s,
-  A = {
+var SKILL_PROMPT = s,
+  SKILL_FILES = {
     "references/claude-tag.md": e,
     "references/live-sources.md": t,
     "references/plugin-eval-quickref.md": ySt,
     "references/plugin-eval.md": n,
     "references/recent-changes.md": o,
   };
-export { A as SKILL_FILES, S as SKILL_PROMPT };
+export { SKILL_FILES, SKILL_PROMPT };

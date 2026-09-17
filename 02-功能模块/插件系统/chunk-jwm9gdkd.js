@@ -11,31 +11,31 @@ import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Wf, x, ft, cd, j0 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h, logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  getMainLoopModel as rt,
-  getCanonicalName as Ue,
-  bytesPerTokenForModel as lf,
+  getMainLoopModel,
+  getCanonicalName,
+  bytesPerTokenForModel,
   Tn,
   ht,
   i0,
   Qme,
-  isUnattendedBgSession as ap,
-  getClaudeAIOAuthTokens as Yt,
+  isUnattendedBgSession,
+  getClaudeAIOAuthTokens,
   H,
   Te,
   ee,
   bq,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { truncatePathMiddle as el, truncateToWidth as Xe, formatTokenEstimate as xx, formatRelativeTimeAgo as uy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncatePathMiddle, truncateToWidth, formatTokenEstimate, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
   S1,
@@ -62,7 +62,7 @@ import {
   dtt,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { getSettingsForSource as ye, getSettings_DEPRECATED as bn, updateSettingsForSource as Jt, updateSettingsForSourceWithTransform as Ii } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, getSettings_DEPRECATED, updateSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { sv, Lw } from "../权限系统/chunk-e4pfvp7x.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
@@ -95,7 +95,7 @@ import {
   qzt,
 } from "./chunk-7s6mt1vg.js";
 import {
-  getCommandName as qo,
+  getCommandName,
   SM,
   Hwe,
   Jft,
@@ -169,17 +169,17 @@ import {
   _yt,
   jV,
   fY,
-  isMcpDialBlockedByPolicy as d$,
-  mcpDialBlockCause as Yp,
-  getMcpConfigByName as F3,
-  isMcpServerDisabled as Uo,
+  isMcpDialBlockedByPolicy,
+  mcpDialBlockCause,
+  getMcpConfigByName,
+  isMcpServerDisabled,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { nA, zH, aP } from "../MCP客户端/chunk-3kmsshb6.js";
 import { ig, y1e, vC, aXe, Ui } from "./chunk-ajtn749s.js";
 import { bd, JS, yN, xGt, _Xe, yXe } from "./chunk-hh8f1qrw.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { getPluginEditableScopes as pF, editableScopeOf as J9e } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
+import { getPluginEditableScopes, editableScopeOf } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
@@ -221,7 +221,7 @@ import { BJt, Vi, jm, jx, Sf, Bae, P8 } from "../../03-入口与运行时/会话
 import { ir, xh, i2 } from "../MCP客户端/chunk-g4gdwpa0.js";
 import { e9, YL, JL } from "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
 import { gHe, rFn, oFn } from "../后台任务-Shell管理/chunk-n6g2zfwn.js";
-import { getPluginInventory as JPt } from "../MCP客户端/chunk-4xr0rjb4.js";
+import { getPluginInventory } from "../MCP客户端/chunk-4xr0rjb4.js";
 import { wle } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { i3e } from "../成本-Token统计/chunk-3nwwgatc.js";
 import { cQt, lIt } from "./chunk-d0tph3ay.js";
@@ -288,14 +288,14 @@ async function Bl(a, k, v, b) {
   if (
     (i("tengu_plugin_install_auto_activate", {
       activated: w === null,
-      ...(w !== null && { reason: u(w) }),
+      ...(w !== null && { reason: fromEnum(w) }),
     }),
     w === null)
   )
-    y("plugin_install_auto_activate");
+    logFeatureOk("plugin_install_auto_activate");
   else if (w === "cache_impact")
-    g("plugin_install_auto_activate", "cache_impact");
-  else f("plugin_install_auto_activate", w);
+    logFeatureSad("plugin_install_auto_activate", "cache_impact");
+  else logFeatureBad("plugin_install_auto_activate", w);
   if (w === null) return "activated";
   if (w === "plugin_load_error") return "load-failed";
   return (k.markNeedsRefresh(), "reload-required");
@@ -315,7 +315,7 @@ async function gy(a, k, v, b) {
     return null;
   } catch (R) {
     return (
-      h(R),
+      logError(R),
       n(`activatePluginsAfterInstall: falling back to needsRefresh: ${l(R)}`, {
         level: "error",
       }),
@@ -392,7 +392,7 @@ function Ol({
         (fu(K, se),
           i("tengu_marketplace_added", {
             _PROTO_marketplace_name: Je,
-            source_type: u(xt.source),
+            source_type: fromEnum(xt.source),
             repo_hash: xt.source === "github" ? Tn(xt.repo) : void 0,
             is_official_marketplace: Ug(Je),
           }));
@@ -677,7 +677,7 @@ async function $a(a, k, v, b) {
   if (!w || !(await ph(w, b))) return null;
   let R;
   for (let Q of ms()) {
-    let I = ye(Q)?.enabledPlugins?.[a];
+    let I = getSettingsForSource(Q)?.enabledPlugins?.[a];
     if (I !== void 0) R = I;
   }
   let A = R !== void 0 ? R === !1 : w.manifest.defaultEnabled === !1;
@@ -3051,7 +3051,7 @@ function cc({
                   children: [
                     e(t, {
                       dimColor: !0,
-                      children: Xe(wr(ie.entry.description), 60),
+                      children: truncateToWidth(wr(ie.entry.description), 60),
                     }),
                     ie.entry.version &&
                       r(t, {
@@ -3096,7 +3096,7 @@ function Jp(lI) {
       vk(null);
       let Pk = !1;
       return (
-        den(tc, Ue(rt()), nc)
+        den(tc, getCanonicalName(getMainLoopModel()), nc)
           .then((cI) => {
             if (!Pk) vk(cI);
           })
@@ -3132,7 +3132,7 @@ function Jp(lI) {
     Gp = !Tk;
   let rc;
   if (yi[8] !== Eo.alwaysOn)
-    ((rc = xx(Eo.alwaysOn)), (yi[8] = Eo.alwaysOn), (yi[9] = rc));
+    ((rc = formatTokenEstimate(Eo.alwaysOn)), (yi[8] = Eo.alwaysOn), (yi[9] = rc));
   else rc = yi[9];
   let ac;
   if (yi[10] !== Wp || yi[11] !== Gp || yi[12] !== rc)
@@ -3148,7 +3148,7 @@ function Jp(lI) {
   else ac = yi[13];
   let lc;
   if (yi[14] !== Eo.onInvoke)
-    ((lc = xx(Eo.onInvoke)), (yi[14] = Eo.onInvoke), (yi[15] = lc));
+    ((lc = formatTokenEstimate(Eo.onInvoke)), (yi[14] = Eo.onInvoke), (yi[15] = lc));
   else lc = yi[15];
   let sc;
   if (yi[16] !== lc)
@@ -3340,7 +3340,7 @@ function dc({
                     isInstalled: _H(io),
                   }),
                     (Ee = !0),
-                    y("plugin_install_catalog_refresh"));
+                    logFeatureOk("plugin_install_catalog_refresh"));
                   break;
                 }
               } catch (si) {
@@ -3353,11 +3353,11 @@ function dc({
               if (Ve) return;
             }
             if (!Ee)
-              if (me) f("plugin_install_catalog_refresh", "refresh_failed");
-              else if (Ge) f("plugin_install_catalog_refresh", "reload_failed");
+              if (me) logFeatureBad("plugin_install_catalog_refresh", "refresh_failed");
+              else if (Ge) logFeatureBad("plugin_install_catalog_refresh", "reload_failed");
               else if (wt)
-                g("plugin_install_catalog_refresh", "not_found_after_refresh");
-              else g("plugin_install_catalog_refresh", "ineligible");
+                logFeatureSad("plugin_install_catalog_refresh", "not_found_after_refresh");
+              else logFeatureSad("plugin_install_catalog_refresh", "ineligible");
           }
           if (Ve) return;
           if (Ee && te && !te.isInstalled && !bd(te.pluginId)) {
@@ -3585,7 +3585,7 @@ function dc({
                   marginLeft: 4,
                   children: e(t, {
                     dimColor: !0,
-                    children: Xe(wr(Ve.entry.description), 60),
+                    children: truncateToWidth(wr(Ve.entry.description), 60),
                   }),
                 }),
             ],
@@ -3739,9 +3739,9 @@ function Mk(a) {
     case "cwd":
       return "suggested for this directory";
     case "cli":
-      return `suggested for ${Xe(a.command, uc)} commands`;
+      return `suggested for ${truncateToWidth(a.command, uc)} commands`;
     case "hosts":
-      return `suggested for ${Xe(a.host, uc)}`;
+      return `suggested for ${truncateToWidth(a.host, uc)}`;
     case "filesRead":
       return `suggested for ${Xp(a.file)}`;
     case "manifestDep":
@@ -3749,11 +3749,11 @@ function Mk(a) {
   }
 }
 function Xp(a) {
-  return el(Ao(a).replaceAll("\\", "/"), uc);
+  return truncatePathMiddle(Ao(a).replaceAll("\\", "/"), uc);
 }
 F();
-import { readdir as $k, readFile as em } from "fs/promises";
-import { homedir as Dk } from "os";
+import { readdir, readFile as em } from "fs/promises";
+import { homedir } from "os";
 import * as Wo from "path";
 var pc = 5,
   Bk = m(() => c({ query: s().min(1), should_trigger: O() })),
@@ -3763,7 +3763,7 @@ async function Ak(a) {
     v = [],
     b;
   try {
-    b = await $k(a);
+    b = await readdir(a);
   } catch (w) {
     if (W(w))
       return {
@@ -3837,7 +3837,7 @@ async function Ok(a) {
   return "";
 }
 async function gc(a, k, v) {
-  let b = a === "~" || a.startsWith("~/") ? Wo.join(Dk(), a.slice(1)) : a,
+  let b = a === "~" || a.startsWith("~/") ? Wo.join(homedir(), a.slice(1)) : a,
     w = Wo.resolve(b),
     R = Wo.basename(w),
     A = await Ok(w),
@@ -4005,7 +4005,7 @@ ${L.tick} Evaluation passed`;
   return yc;
 }
 F();
-import { basename as jk } from "path";
+import { basename } from "path";
 function wc({
   setViewState: a,
   error: k,
@@ -4106,7 +4106,7 @@ function wc({
         for (let Tt of Ce) {
           if (Tt.pendingRemove) {
             if (Tt.installedPlugins.length > 0)
-              await Ii(
+              await updateSettingsForSourceWithTransform(
                 "userSettings",
                 (nn) => {
                   let Oo = { ...nn?.enabledPlugins };
@@ -5117,7 +5117,7 @@ function im(a, k, v, b) {
                   typeof se.source === "object" &&
                   se.source.source === "claudeai" &&
                   se.source.version !== "" &&
-                  jk(K.path).replace(/\.zip$/, "") !== se.source.version
+                  basename(K.path).replace(/\.zip$/, "") !== se.source.version
                 );
               });
         X =
@@ -5326,7 +5326,7 @@ function km(PE) {
 var iye = Object.assign(hm, { Item: km });
 F();
 function oye(a, k) {
-  let v = uy(new Date(a)),
+  let v = formatRelativeTimeAgo(new Date(a)),
     b = k !== void 0 ? ` \xB7 ${k} ${x(k, "tool")}` : "";
   return {
     glyph: L.radioOn,
@@ -5445,7 +5445,7 @@ function ub(a, k, v) {
 function sye(bo) {
   let Si = _(23),
     bi = bo.server.config,
-    Wr = (bi.type === "sse" || bi.type === "http") && !!Yt()?.accessToken,
+    Wr = (bi.type === "sse" || bi.type === "http") && !!getClaudeAIOAuthTokens()?.accessToken,
     ib;
   if (Si[0] !== bi || Si[1] !== Wr)
     ((ib =
@@ -5648,7 +5648,7 @@ function Rm({
   function yn(te) {
     if (te.key === "return" && Je) (te.preventDefault(), Yn());
     if (te.key === "return" && Lt) {
-      if ((te.preventDefault(), ap())) {
+      if ((te.preventDefault(), isUnattendedBgSession())) {
         (We(!1), at(!1), fe(MIt));
         return;
       }
@@ -5662,9 +5662,9 @@ function Rm({
     un = u6t(Fe.commands, a.name).length,
     Gt = P8(),
     Cn = re(() => {
-      let te = Yp(a.name, a.client.config);
+      let te = mcpDialBlockCause(a.name, a.client.config);
       if (te === "managed-policy") return (fe(NIe(a.name, te)), !0);
-      let Ee = Uo(a.name);
+      let Ee = isMcpServerDisabled(a.name);
       if (a.client.type === "disabled" || Ee)
         return (
           fe(a.client.type === "disabled" ? Cee(a.name) : s2(a.name)),
@@ -5729,7 +5729,7 @@ function Rm({
             `Got new credentials, but ${gr(a.name)} rejected them on reconnect. Try re-authenticating, or restart Claude Code if it persists.`,
           );
         else {
-          J(a.name, "Reconnection failed after authentication");
+          logMCPDebug(a.name, "Reconnection failed after authentication");
           let wt = Ge.client.type === "failed" ? iOt(Ge.client) : "";
           if (lo(j)) {
             if (wt)
@@ -6084,7 +6084,7 @@ function Rm({
       a.client.type === "failed" &&
       a.client.errorCode === "HEADERS_HELPER_AUTH_REJECTED",
     Dt =
-      a.client.type === "disabled" || Uo(a.name) || d$(a.name, a.client.config);
+      a.client.type === "disabled" || isMcpServerDisabled(a.name) || isMcpDialBlockedByPolicy(a.name, a.client.config);
   if (a.config.type === "claudeai-proxy") {
     if (a.client.type === "connected")
       Oe.push({ label: "Clear authentication", value: "claudeai-clear-auth" });
@@ -6255,7 +6255,7 @@ function Rm({
               defaultFocusValue: bt,
               onChange: async (te) => {
                 if (
-                  ap() &&
+                  isUnattendedBgSession() &&
                   (te === "auth" ||
                     te === "reauth" ||
                     te === "clear-auth" ||
@@ -6471,7 +6471,7 @@ function sit({
                   e(N, { children: "Config location:" }),
                   e(t, {
                     dimColor: !0,
-                    children: cw(F3(a.name)?.scope ?? "dynamic"),
+                    children: cw(getMcpConfigByName(a.name)?.scope ?? "dynamic"),
                   }),
                 ],
               }),
@@ -6943,7 +6943,7 @@ function Gm() {
   );
 }
 import { readFile as _b } from "fs/promises";
-import { join as Fb, resolve as Qm, sep as Ub } from "path";
+import { join as Fb, resolve, sep as Ub } from "path";
 async function Jm(a, k) {
   let v = Fb(k.path, "..", ".claude-plugin", "marketplace.json");
   if (M() && a !== void 0 && (await Vb(a, k))) {
@@ -6964,8 +6964,8 @@ async function Vb(a, k) {
   return R !== void 0 && Om(R.source) && pw(R.installLocation) === void 0;
 }
 function Ym(a, k) {
-  let v = Qm(a),
-    b = Qm(k);
+  let v = resolve(a),
+    b = resolve(k);
   return b === v || b.startsWith(v + Ub);
 }
 F();
@@ -7257,7 +7257,7 @@ function Qc(jD) {
         (tr[5] = Mo.manifest.name),
         (tr[6] = nr));
     else nr = tr[6];
-    Kb = t0e([...ta, ...Zm], lf(eg ?? void 0)).byPlugin.find(nr);
+    Kb = t0e([...ta, ...Zm], bytesPerTokenForModel(eg ?? void 0)).byPlugin.find(nr);
     ((tr[0] = Zm),
       (tr[1] = eg),
       (tr[2] = Mo.manifest.name),
@@ -8251,9 +8251,9 @@ function kx(Sg) {
 }
 var px = ["on", "name-only", "user-invocable-only", "off"];
 function Pg(a, k) {
-  let v = ye("localSettings")?.skillOverrides,
-    b = ye("projectSettings")?.skillOverrides,
-    w = ye("userSettings")?.skillOverrides,
+  let v = getSettingsForSource("localSettings")?.skillOverrides,
+    b = getSettingsForSource("projectSettings")?.skillOverrides,
+    w = getSettingsForSource("userSettings")?.skillOverrides,
     R = (I) => b?.[I] ?? w?.[I],
     A =
       R(a.cmdName) ??
@@ -8302,7 +8302,7 @@ function Tg(Sg) {
     ((ax = () => {
       let vg = !1;
       return (
-        JPt(nu, ou)
+        getPluginInventory(nu, ou)
           .then((WA) => {
             if (!vg) qA(WA);
           })
@@ -8544,7 +8544,7 @@ function pu({
       return "failed";
     },
     Bt = V(() => {
-      let T = bn(),
+      let T = getSettings_DEPRECATED(),
         Z = new Map();
       for (let qe of q)
         if (qe.name.startsWith("plugin:")) {
@@ -8603,7 +8603,7 @@ function pu({
           dn = He.get(Vt) || [];
         (dn.push(qe), He.set(Vt, dn));
       }
-      let gt = pF(),
+      let gt = getPluginEditableScopes(),
         Qe = [];
       for (let [qe, Pt] of He) {
         let Vt = qe.startsWith("orphan:") ? qe.slice(7) : qe;
@@ -8611,7 +8611,7 @@ function pu({
         let dn = Y3(Vt),
           Un = dn.name || Vt,
           An = dn.marketplace || jI(Vt) || "unknown",
-          Ke = J9e(gt, Vt),
+          Ke = editableScopeOf(gt, Vt),
           Vn = Ke === "flag" || Ke === void 0 ? "user" : Ke;
         Qe.push({
           type: "failed-plugin",
@@ -8650,8 +8650,8 @@ function pu({
           Pt = ee().skillUsage ?? {},
           Vt = Date.now(),
           dn = T.skillOverrides ?? {},
-          Un = ye("policySettings")?.skillOverrides ?? {},
-          An = ye("flagSettings")?.skillOverrides ?? {};
+          Un = getSettingsForSource("policySettings")?.skillOverrides ?? {},
+          An = getSettingsForSource("flagSettings")?.skillOverrides ?? {};
         for (let Ke of Q) {
           if (
             Ke.type !== "prompt" ||
@@ -8660,7 +8660,7 @@ function pu({
               Ke.loadedFrom !== "commands_DEPRECATED")
           )
             continue;
-          let Vn = qo(Ke);
+          let Vn = getCommandName(Ke);
           if (qe.has(Ke.name) || qe.has(Vn)) continue;
           let di = Un[Ke.name],
             Ed = An[Ke.name],
@@ -8845,8 +8845,8 @@ function pu({
   let En = re(
       (T, Z) => {
         if (Z === null || !Co.has(Z)) return;
-        (y("cli_plugin_disuse_review"),
-          i("tengu_plugin_disuse_review_action", { action: u(T), ...xy(Z) }),
+        (logFeatureOk("cli_plugin_disuse_review"),
+          i("tengu_plugin_disuse_review_action", { action: fromEnum(T), ...xy(Z) }),
           Po((oe) => {
             if (!oe.has(Z)) return oe;
             let le = new Map(oe);
@@ -9223,7 +9223,7 @@ function pu({
                     return (ot.set(oe, le), ot);
                   }),
                     ie(`Failed to reverse the toggle: ${l(Ae)}`),
-                    h(
+                    logError(
                       dt(
                         ge(Ae),
                         "/plugin: reversing a pending toggle on the list threw",
@@ -9256,7 +9256,7 @@ function pu({
                     return (ot.delete(oe), ot);
                   }),
                     ie(`Failed to toggle: ${l(Ae)}`),
-                    h(
+                    logError(
                       dt(
                         ge(Ae),
                         "/plugin: toggling a plugin on the list threw",
@@ -9279,7 +9279,7 @@ function pu({
         let oe = hg(Z.override, Z.lockSource);
         if (oe === Z.override) return;
         (te.current.add(Z.id), it((ce) => new Set(ce).add(Z.id)));
-        let { error: le } = await Jt(
+        let { error: le } = await updateSettingsForSource(
           "localSettings",
           { skillOverrides: { [Z.cmdName]: Pg(Z, oe) } },
           void 0,
@@ -9508,8 +9508,8 @@ function pu({
                 le = oe.success;
               if (!le) {
                 for (let ce of w0)
-                  if (ye(ce)?.enabledPlugins?.[T] !== void 0)
-                    (await Ii(
+                  if (getSettingsForSource(ce)?.enabledPlugins?.[T] !== void 0)
+                    (await updateSettingsForSourceWithTransform(
                       ce,
                       (gt) => ({
                         enabledPlugins: { ...gt?.enabledPlugins, [T]: void 0 },
@@ -9544,7 +9544,7 @@ function pu({
         ie(null),
         (async () => {
           try {
-            let { error: oe } = await Ii(
+            let { error: oe } = await updateSettingsForSourceWithTransform(
               "localSettings",
               (le) => ({ enabledPlugins: { ...le?.enabledPlugins, [Z]: !1 } }),
               void 0,
@@ -9582,7 +9582,7 @@ function pu({
               }
               ce = He.message;
             } else {
-              let { error: He } = await Ii(
+              let { error: He } = await updateSettingsForSourceWithTransform(
                 "projectSettings",
                 (gt) => {
                   let Qe = gt?.enabledPlugins ?? {},
@@ -10179,7 +10179,7 @@ function pu({
       Z = [T.override, ...px.filter((le) => le !== T.override)],
       oe = async (le) => {
         if (le === T.override) return;
-        let { error: ce } = await Jt(
+        let { error: ce } = await updateSettingsForSource(
           "localSettings",
           { skillOverrides: { [T.cmdName]: Pg(T, le) } },
           void 0,
@@ -10838,17 +10838,17 @@ function Nx(Vg) {
 function Nu(a) {
   return flt(a).then(
     (k) => {
-      if (k.rows.length === 0) g("cli_skill_doctor", "no_user_skills");
+      if (k.rows.length === 0) logFeatureSad("cli_skill_doctor", "no_user_skills");
       else if (k.weekTokensNote !== null)
-        g("cli_skill_doctor", "scan_policy_denied");
-      else y("cli_skill_doctor");
+        logFeatureSad("cli_skill_doctor", "scan_policy_denied");
+      else logFeatureOk("cli_skill_doctor");
       return { ok: !0, report: k };
     },
     (k) => {
       let v = k instanceof hee ? k.cause : k;
       return (
-        h(v),
-        f(
+        logError(v),
+        logFeatureBad(
           "cli_skill_doctor",
           k instanceof hee ? k.featureErrorCode : "render_failed",
         ),
@@ -11698,7 +11698,7 @@ function xd(rN) {
         da("No plugins installed. Use `/plugin install` to install a plugin.");
         return;
       }
-      let aN = pF();
+      let aN = getPluginEditableScopes();
       let lN = new Set(Cl.map(Rv));
       let pS = ["Installed plugins:"];
       let mS = 0;
@@ -11836,8 +11836,8 @@ function Pd(a) {
       { source: "localSettings", scope: "local" },
     ];
   for (let { source: R, scope: A } of v)
-    if (ye(R)?.extraKnownMarketplaces?.[a]) k.push({ source: R, scope: A });
-  let b = ye("policySettings"),
+    if (getSettingsForSource(R)?.extraKnownMarketplaces?.[a]) k.push({ source: R, scope: A });
+  let b = getSettingsForSource("policySettings"),
     w = Boolean(b?.extraKnownMarketplaces?.[a]);
   return { editableSources: k, isInPolicy: w };
 }
@@ -11893,7 +11893,7 @@ function Qf(a, k, v) {
     key: R === void 0 ? void 0 : xi(A ? `${R}@${A}` : R),
     label: R === void 0 ? a.source : A ? `${R} @ ${A}` : R,
     scope:
-      J9e(v, a.source) ?? (R !== void 0 && b ? J9e(v, `${R}@${b}`) : void 0),
+      editableScopeOf(v, a.source) ?? (R !== void 0 && b ? editableScopeOf(v, `${R}@${b}`) : void 0),
     named: R !== void 0,
   };
 }
@@ -11993,7 +11993,7 @@ function Yf(a, k, v, b, w, R, A, Q, I) {
 }
 function Jf(a, k, v) {
   for (let { source: b } of k)
-    Ii(
+    updateSettingsForSourceWithTransform(
       b,
       (w) => {
         if (!w) return null;
@@ -12063,7 +12063,7 @@ function Td(CN) {
     } else if (zoe($i) !== void 0) ES.push($i);
     else MS.push($i);
   }
-  let pr = Yf(TS, RS, ES, MS, DN, IS, IN, pF(), [...RN, ...EN]),
+  let pr = Yf(TS, RS, ES, MS, DN, IS, IN, getPluginEditableScopes(), [...RN, ...EN]),
     $S;
   if (to[4] !== Ju)
     (($S = () => {

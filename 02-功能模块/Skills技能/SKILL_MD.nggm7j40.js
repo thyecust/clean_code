@@ -57,8 +57,8 @@ var e = (t) => (typeof t === "string" ? t : t.default),
   Z = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.1fkyc6ha.js"),
   U = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.am6q7e7t.js"),
   Q = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.rm15mpjf.js"),
-  ue = n,
-  ye = {
+  SKILL_MD = n,
+  SKILL_FILES = {
     "storybook/SKILL.md": a,
     "non-storybook/SKILL.md": o,
     "package-build.mjs": e(R),
@@ -85,4 +85,4 @@ var e = (t) => (typeof t === "string" ? t : t.default),
     "lib/remote-diff.mjs": e(U),
     "resync.mjs": e(Q),
   };
-export { ye as SKILL_FILES, ue as SKILL_MD };
+export { SKILL_FILES, SKILL_MD };

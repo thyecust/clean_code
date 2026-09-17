@@ -14,26 +14,26 @@ import { RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { y8 } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { fn, Fo, execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { fn, Fo, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Pt, findGitRoot as tr, gitExe as lt, getGitDir as Zq, isCurrentDirectoryBareGitRepo as Rhe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { Pt, findGitRoot, gitExe, getGitDir, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { X_, zE, RC } from "../Teammates团队/chunk-g6nvp9mm.js";
-import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { BFt, O3n, Tln } from "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
 import {
-  appendFile as mt,
-  lstat as _,
-  mkdir as et,
-  readFile as it,
-  readdir as ft,
+  appendFile,
+  lstat,
+  mkdir,
+  readFile,
+  readdir,
   rm as pt,
 } from "fs/promises";
-import { homedir as ht } from "os";
-import { isAbsolute as ot, join as s, relative as gt } from "path";
+import { homedir } from "os";
+import { isAbsolute, join as s, relative } from "path";
 var v = ".claude/RESUME.md",
   O = "refs/claude/checkpoint-",
   h = 30000,
@@ -48,7 +48,7 @@ function b(o) {
   return e.length > tt ? `${oe(e, tt)}\u2026` : e;
 }
 var Rt = 1209600;
-async function ie(o) {
+async function performRateLimitCheckpoint(o) {
   let e = O3n();
   if (e !== null) return e;
   BFt(null);
@@ -72,27 +72,27 @@ async function ie(o) {
     Tln(null);
   }
   if ((BFt(n), n.committed))
-    (y("usage_limit_checkpoint_commit", { trigger: u(o.trigger) }),
+    (logFeatureOk("usage_limit_checkpoint_commit", { trigger: fromEnum(o.trigger) }),
       i("tengu_rl_checkpoint_a1_shown", {}));
   else
-    g("usage_limit_checkpoint_commit", n.skipReason, { trigger: u(o.trigger) });
+    logFeatureSad("usage_limit_checkpoint_commit", n.skipReason, { trigger: fromEnum(o.trigger) });
   return n;
 }
 function S(o, e) {
   if (o === e) return !0;
-  let r = gt(e, o);
-  return r !== "" && !r.startsWith("..") && !ot(r);
+  let r = relative(e, o);
+  return r !== "" && !r.startsWith("..") && !isAbsolute(r);
 }
 async function kt(o) {
   if (ke()) return { committed: !1, skipReason: "non_interactive" };
   if (Pt()) return { committed: !1, skipReason: "remote_workspace" };
-  if (!Mt("allow_local_checkpoint_commit"))
+  if (!isPolicyAllowed("allow_local_checkpoint_commit"))
     return { committed: !1, skipReason: "policy" };
-  let e = tr(Q());
+  let e = findGitRoot(Q());
   if (e === null) return { committed: !1, skipReason: "not_git" };
-  if (Rhe() !== !1) return { committed: !1, skipReason: "bare_repo" };
+  if (isCurrentDirectoryBareGitRepo() !== !1) return { committed: !1, skipReason: "bare_repo" };
   let r = RS(e),
-    n = RS(ht());
+    n = RS(homedir());
   if (r === null || n === null || S(n, r))
     return { committed: !1, skipReason: "gitroot_uncontained" };
   let a = K(),
@@ -101,13 +101,13 @@ async function kt(o) {
     c = [...fn],
     f;
   try {
-    let m = await Zq(e);
+    let m = await getGitDir(e);
     if (m === null) return { committed: !1, skipReason: "not_git" };
     let A = RS(m);
     if (A === null || !S(A, r))
       return { committed: !1, skipReason: "gitdir_uncontained" };
     if (
-      (await _(s(m, "commondir")).catch((t) => {
+      (await lstat(s(m, "commondir")).catch((t) => {
         if (t.code === "ENOENT") return null;
         throw t;
       })) !== null
@@ -123,14 +123,14 @@ async function kt(o) {
       "packed-refs",
       "reftable",
     ]) {
-      let p = await _(s(m, t)).catch((R) => {
+      let p = await lstat(s(m, t)).catch((R) => {
         if (R.code === "ENOENT") return null;
         throw R;
       });
       if (p !== null && p.isSymbolicLink())
         return { committed: !1, skipReason: "gitdir_uncontained" };
     }
-    let rt = await ft(s(m, "objects"), { withFileTypes: !0 }).catch((t) => {
+    let rt = await readdir(s(m, "objects"), { withFileTypes: !0 }).catch((t) => {
       if (t.code === "ENOENT") return [];
       throw t;
     });
@@ -146,37 +146,37 @@ async function kt(o) {
       GIT_TERMINAL_PROMPT: "0",
     });
     if (
-      (await _(s(m, "info", "sparse-checkout")).catch((t) => {
+      (await lstat(s(m, "info", "sparse-checkout")).catch((t) => {
         if (t.code === "ENOENT") return null;
         throw t;
       })) !== null
     ) {
-      let t = await Be(
-        lt(),
+      let t = await execFileNoThrowWithCwd(
+        gitExe(),
         [...c, "config", "--type=bool", "--get", "core.sparseCheckout"],
         { cwd: e, env: w, timeout: h },
       );
       if (t.code === 0 && t.stdout.trim() === "true")
         return { committed: !1, skipReason: "sparse_checkout" };
     }
-    let nt = await _(s(m, "lfs")).catch((t) => {
+    let nt = await lstat(s(m, "lfs")).catch((t) => {
         if (t.code === "ENOENT") return null;
         throw t;
       }),
       F = s(e, ".gitattributes"),
-      T = await _(F).catch((t) => {
+      T = await lstat(F).catch((t) => {
         if (t.code === "ENOENT") return null;
         throw t;
       }),
       st =
         T !== null && T.isFile() && T.size <= 65536
-          ? await it(F, "utf-8").catch(() => "")
+          ? await readFile(F, "utf-8").catch(() => "")
           : "";
     if (nt !== null || /\bfilter\s*=\s*lfs\b/.test(st))
       return { committed: !1, skipReason: "content_filters" };
     if (await Et(m))
       return { committed: !1, skipReason: "sequencer_in_progress" };
-    let G = await Be(lt(), [...c, "rev-parse", "--verify", "HEAD"], {
+    let G = await execFileNoThrowWithCwd(gitExe(), [...c, "rev-parse", "--verify", "HEAD"], {
       cwd: e,
       env: w,
       timeout: h,
@@ -184,7 +184,7 @@ async function kt(o) {
     if (G.code !== 0) return { committed: !1, skipReason: "no_head" };
     let L = G.stdout.trim(),
       D = (t, p) =>
-        Be(lt(), [...fn, ...t], {
+        execFileNoThrowWithCwd(gitExe(), [...fn, ...t], {
           cwd: p.cwd,
           env: w,
           input: p.input,
@@ -193,18 +193,18 @@ async function kt(o) {
     f = s(m, `claude-checkpoint-index.${process.pid}`);
     let k = { ...w, GIT_INDEX_FILE: f };
     if (
-      (await Be(lt(), [...c, "read-tree", L], { cwd: e, env: k, timeout: h }))
+      (await execFileNoThrowWithCwd(gitExe(), [...c, "read-tree", L], { cwd: e, env: k, timeout: h }))
         .code !== 0
     )
       return { committed: !1, skipReason: "git_error" };
     let [M, H] = await Promise.all([
-      Be(lt(), [...c, "ls-files", "-z", "--cached"], {
+      execFileNoThrowWithCwd(gitExe(), [...c, "ls-files", "-z", "--cached"], {
         cwd: e,
         env: k,
         maxBuffer: 33554432,
         timeout: h,
       }),
-      Be(lt(), [...c, "ls-files", "-z", "-o", "--exclude-standard"], {
+      execFileNoThrowWithCwd(gitExe(), [...c, "ls-files", "-z", "-o", "--exclude-standard"], {
         cwd: e,
         env: k,
         maxBuffer: 33554432,
@@ -232,7 +232,7 @@ async function kt(o) {
         if (t.split("/").some((C) => C === "." || C === "..")) return;
         let R;
         try {
-          R = await _(s(e, t));
+          R = await lstat(s(e, t));
         } catch (C) {
           if (p && W(C)) I.push(t);
           return;
@@ -257,7 +257,7 @@ async function kt(o) {
       U = yt({ sessionId: a, ref: l, trigger: o.trigger, todos: o.todos });
     try {
       if (P) await nke(e, N);
-      (await et(N, { recursive: !0 }),
+      (await mkdir(N, { recursive: !0 }),
         await wb(s(e, ".claude", "RESUME.md"), U, {
           encoding: "utf-8",
           allowSymlink: !P,
@@ -266,7 +266,7 @@ async function kt(o) {
     } catch {
       return { committed: !1, skipReason: "resume_write_refused" };
     }
-    let X = await Be(lt(), [...c, "hash-object", "-w", "--stdin"], {
+    let X = await execFileNoThrowWithCwd(gitExe(), [...c, "hash-object", "-w", "--stdin"], {
       cwd: e,
       env: w,
       input: U,
@@ -276,8 +276,8 @@ async function kt(o) {
     let at = X.stdout.trim(),
       x = [];
     if (E.length > 0) {
-      let t = await Be(
-        lt(),
+      let t = await execFileNoThrowWithCwd(
+        gitExe(),
         [...c, "hash-object", "-w", "--no-filters", "--stdin-paths"],
         {
           cwd: e,
@@ -310,7 +310,7 @@ async function kt(o) {
 `);
     if (
       (
-        await Be(lt(), [...c, "update-index", "--add", "--index-info"], {
+        await execFileNoThrowWithCwd(gitExe(), [...c, "update-index", "--add", "--index-info"], {
           cwd: e,
           env: k,
           input:
@@ -325,8 +325,8 @@ async function kt(o) {
     if (I.length > 0) {
       if (
         (
-          await Be(
-            lt(),
+          await execFileNoThrowWithCwd(
+            gitExe(),
             [...c, "update-index", "--force-remove", "-z", "--stdin"],
             { cwd: e, env: k, input: I.join("\x00"), timeout: h },
           )
@@ -334,15 +334,15 @@ async function kt(o) {
       )
         return { committed: !1, skipReason: "git_error" };
     }
-    let Y = await Be(lt(), [...c, "write-tree"], {
+    let Y = await execFileNoThrowWithCwd(gitExe(), [...c, "write-tree"], {
       cwd: e,
       env: k,
       timeout: h,
     });
     if (Y.code !== 0) return { committed: !1, skipReason: "git_error" };
     let ut = Y.stdout.trim(),
-      q = await Be(
-        lt(),
+      q = await execFileNoThrowWithCwd(
+        gitExe(),
         [
           ...c,
           "-c",
@@ -363,7 +363,7 @@ async function kt(o) {
     if (q.code !== 0) return { committed: !1, skipReason: "git_error" };
     let V = q.stdout.trim();
     if (
-      (await _(s(m, "commondir")).catch((t) => {
+      (await lstat(s(m, "commondir")).catch((t) => {
         if (t.code === "ENOENT") return null;
         throw t;
       })) !== null
@@ -371,8 +371,8 @@ async function kt(o) {
       return { committed: !1, skipReason: "gitdir_uncontained" };
     if (
       (
-        await Be(
-          lt(),
+        await execFileNoThrowWithCwd(
+          gitExe(),
           [
             ...c,
             "-c",
@@ -409,7 +409,7 @@ async function Et(o) {
         "rebase-merge",
         "rebase-apply",
       ].map((r) =>
-        _(s(o, r)).then(
+        lstat(s(o, r)).then(
           () => !0,
           () => !1,
         ),
@@ -420,18 +420,18 @@ async function Et(o) {
 async function Ct(o, e) {
   let r = await e(["rev-parse", "--git-path", "info/exclude"], { cwd: o });
   if (r.code !== 0) return;
-  let n = ot(r.stdout.trim()) ? r.stdout.trim() : s(o, r.stdout.trim());
+  let n = isAbsolute(r.stdout.trim()) ? r.stdout.trim() : s(o, r.stdout.trim());
   for (let c of [s(n, ".."), n])
     try {
-      let f = await _(c);
+      let f = await lstat(c);
       if (f.isSymbolicLink()) return;
       if (!f.isFile() && !f.isDirectory()) return;
       if (c === n && f.isFile() && f.size > 65536) return;
     } catch {}
-  let a = await it(n, "utf-8").catch(() => ""),
+  let a = await readFile(n, "utf-8").catch(() => ""),
     d = `/${v}`;
   if (a.split(/\r?\n/).includes(d)) return;
-  await et(s(n, ".."), { recursive: !0 }).catch(() => {});
+  await mkdir(s(n, ".."), { recursive: !0 }).catch(() => {});
   let l =
     a.length > 0 &&
     !a.endsWith(`
@@ -439,7 +439,7 @@ async function Ct(o, e) {
       ? `
 `
       : "";
-  await mt(
+  await appendFile(
     n,
     `${l}${d}
 `,
@@ -529,4 +529,4 @@ function yt(o) {
 `)
   );
 }
-export { ie as performRateLimitCheckpoint };
+export { performRateLimitCheckpoint };

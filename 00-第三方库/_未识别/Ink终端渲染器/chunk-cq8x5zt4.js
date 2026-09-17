@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../react/react.zhnvc798.js";
-import { AppRoot as zm } from "../../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
+import { AppRoot } from "../../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import { env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { e } from "../../react/react.kwtapczy.js";
 import { Dn, kn, E, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -216,7 +216,7 @@ function T(ae) {
   else B = U[6];
   let ee;
   if (U[7] !== y || U[8] !== m || U[9] !== q || U[10] !== B)
-    ((ee = e(zm, {
+    ((ee = e(AppRoot, {
       session: m,
       storageV5: q,
       onChangeAppState: B,

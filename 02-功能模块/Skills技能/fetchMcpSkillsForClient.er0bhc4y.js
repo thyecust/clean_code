@@ -11,13 +11,13 @@
 // [preload stripped] 原本在此预载 66 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logMCPError as Wr, logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { up, _S } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { jt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
@@ -30,8 +30,8 @@ import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { wwt, A1e, C1e, Ewt } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
 import { xA, Jke } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { randomBytes as z } from "crypto";
-import { mkdir as K, rename as w, rm as R, writeFile as N } from "fs/promises";
+import { randomBytes } from "crypto";
+import { mkdir, rename, rm as R, writeFile } from "fs/promises";
 import { join as b } from "path";
 function F(e) {
   if (!e.endsWith("/SKILL.md")) return;
@@ -67,10 +67,10 @@ function j(e, r, s) {
     a = o.has(c) ? "refetch" : "initial";
   (o.add(c),
     i("tengu_mcp_skills_funnel", {
-      step: u(e),
+      step: fromEnum(e),
       client: S("claude-code-cli"),
       server_name: Tn(r.name),
-      cause: u(a),
+      cause: fromEnum(a),
       skill_count: s,
     }));
 }
@@ -86,11 +86,11 @@ class I {
       if (o.length === 0) {
         if (c)
           (this.invalidate(Jn(e.name, e.config)),
-            g("skill_mcp_load", "skill_mcp_claudeai_bearer_rejected"));
+            logFeatureSad("skill_mcp_load", "skill_mcp_claudeai_bearer_rejected"));
         return [];
       }
       (j("parsed_nonempty", e, o.length),
-        J(e.name, `Found ${o.length} ${x(o.length, "skill")} via skills/list`));
+        logMCPDebug(e.name, `Found ${o.length} ${x(o.length, "skill")} via skills/list`));
       let a = JSt(),
         p = (d) => {
           if (d === "skill_mcp_claudeai_bearer_rejected") c = !0;
@@ -108,9 +108,9 @@ class I {
       if (c)
         (this.invalidate(Jn(e.name, e.config)),
           (e.discoveryBearerRejected = !0));
-      if (s) f("skill_mcp_load", s, { mcp_server_sha12: Tn(e.name) });
-      else if (c) g("skill_mcp_load", "skill_mcp_claudeai_bearer_rejected");
-      else if (m.length > 0) y("skill_mcp_load");
+      if (s) logFeatureBad("skill_mcp_load", s, { mcp_server_sha12: Tn(e.name) });
+      else if (c) logFeatureSad("skill_mcp_load", "skill_mcp_claudeai_bearer_rejected");
+      else if (m.length > 0) logFeatureOk("skill_mcp_load");
       if (m.length > 0)
         (j("surfaced", e, m.length),
           n(
@@ -136,13 +136,13 @@ function v() {
   if (e.skillsFetcher === null) e.skillsFetcher = new I();
   return e.skillsFetcher;
 }
-function Pe(e, r) {
+function fetchMcpSkillsForClient(e, r) {
   return v().fetchForClient(e, r);
 }
-function Fe(e) {
+function invalidateMcpSkillsForServer(e) {
   v().invalidate(e);
 }
-function we(e) {
+function invalidateMcpSkillsExcept(e) {
   v().invalidateExcept(e);
 }
 async function H(e, r) {
@@ -159,27 +159,27 @@ async function H(e, r) {
       if (p === 0) {
         if (!U().isMcpMethodNotFoundError(t))
           if (
-            (J(
+            (logMCPDebug(
               e.name,
               `skills/list failed (${l(t)}) \u2014 skipping skill discovery`,
             ),
             e.config.type === "claudeai-proxy" && P(t))
           )
-            (g("skill_mcp_load", "skill_mcp_claudeai_bearer_rejected"),
+            (logFeatureSad("skill_mcp_load", "skill_mcp_claudeai_bearer_rejected"),
               v().invalidate(Jn(e.name, e.config)),
               (e.discoveryBearerRejected = !0));
-          else g("skill_mcp_load", "skill_mcp_list_failed");
+          else logFeatureSad("skill_mcp_load", "skill_mcp_list_failed");
         return [];
       }
       if (
-        (J(
+        (logMCPDebug(
           e.name,
           `skills/list page ${p + 1} failed (${l(t)}) \u2014 using ${s.length} ${x(s.length, "entry", "entries")} from prior pages`,
         ),
         e.config.type === "claudeai-proxy" && P(t))
       )
         r();
-      else g("skill_mcp_load", "skill_mcp_list_page_failed");
+      else logFeatureSad("skill_mcp_load", "skill_mcp_list_page_failed");
       break;
     }
     for (let t of k.skills) {
@@ -203,16 +203,16 @@ async function H(e, r) {
     ((a = k.nextCursor || void 0), p++);
   } while (a !== void 0 && p < q && s.length < B);
   if (a !== void 0 || o)
-    J(
+    logMCPDebug(
       e.name,
       `skills/list: stopped after ${p} ${x(p, "page")} / ${s.length} valid ${x(s.length, "entry", "entries")} with more pending`,
     );
   if (c > 0)
-    (J(
+    (logMCPDebug(
       e.name,
       `${c} skills/list ${x(c, "entry", "entries")} skipped (malformed, missing, or oversized fields)`,
     ),
-      g("skill_mcp_load", "skill_mcp_list_entries_dropped"));
+      logFeatureSad("skill_mcp_load", "skill_mcp_list_entries_dropped"));
   return s;
 }
 function G(e) {
@@ -222,7 +222,7 @@ async function W(e, r, s, c, o) {
   let a = await I9n(e.name, r, o);
   if (a.hit)
     return (
-      J(e.name, `Skill '${r.name}' cache hit \u2014 no resources/read`),
+      logMCPDebug(e.name, `Skill '${r.name}' cache hit \u2014 no resources/read`),
       D({
         client: e,
         uri: r.uri,
@@ -256,13 +256,13 @@ async function Y({
     );
     if (!t || !("text" in t))
       return (
-        J(e.name, `Skill resource ${r} has no text content`),
+        logMCPDebug(e.name, `Skill resource ${r} has no text content`),
         o("skill_mcp_no_text_content"),
         null
       );
     if (t.text.length > Fk)
       return (
-        J(e.name, `Skill resource ${r} exceeds ${Fk / 1e6}MB, skipping`),
+        logMCPDebug(e.name, `Skill resource ${r} exceeds ${Fk / 1e6}MB, skipping`),
         o("skill_mcp_content_too_large"),
         null
       );
@@ -271,7 +271,7 @@ async function Y({
       d = mn(h);
     if (m && m !== d)
       return (
-        Wr(
+        logMCPError(
           e.name,
           `SKILL.md digest mismatch for ${r}: skills/list declares ${m.slice(0, 12)}\u2026, served content hashes to ${d.slice(0, 12)}\u2026`,
         ),
@@ -284,10 +284,10 @@ async function Y({
     );
   } catch (k) {
     if (e.config.type === "claudeai-proxy" && P(k))
-      (J(e.name, `Failed to load MCP skill from ${r}: ${l(k)}`),
+      (logMCPDebug(e.name, `Failed to load MCP skill from ${r}: ${l(k)}`),
         o("skill_mcp_claudeai_bearer_rejected"));
     else
-      (Wr(e.name, `Failed to load MCP skill from ${r}: ${l(k)}`),
+      (logMCPError(e.name, `Failed to load MCP skill from ${r}: ${l(k)}`),
         o("skill_mcp_fetch_failed"));
     return null;
   }
@@ -304,13 +304,13 @@ async function Z(e, r, s, c, o) {
     if (!h)
       if (M() && o) await O9n(o, p, a, s);
       else {
-        let m = b(k, `.tmp-${process.pid}-${z(4).toString("hex")}`);
-        await K(m, { recursive: !0 });
+        let m = b(k, `.tmp-${process.pid}-${randomBytes(4).toString("hex")}`);
+        await mkdir(m, { recursive: !0 });
         let d = !1;
         try {
-          await N(b(m, Cpt), s);
+          await writeFile(b(m, Cpt), s);
           try {
-            (await w(m, t), (d = !0));
+            (await rename(m, t), (d = !0));
           } catch (_) {
             if (!(await Tan(p, a, t, void 0))) {
               let C = A(_);
@@ -322,12 +322,12 @@ async function Z(e, r, s, c, o) {
                 C !== "EACCES"
               )
                 throw _;
-              (J(
+              (logMCPDebug(
                 e,
                 `Replacing ${t}, which has no SKILL.md, with the fetched copy`,
               ),
                 await R(t, { recursive: !0, force: !0 }),
-                await w(m, t),
+                await rename(m, t),
                 (d = !0));
             }
           }
@@ -337,7 +337,7 @@ async function Z(e, r, s, c, o) {
       }
     await D9n({ slug: p, slugDir: k }, r, a, o);
   } catch (a) {
-    J(e, `Failed to cache SKILL.md for '${r.name}': ${l(a)}`);
+    logMCPDebug(e, `Failed to cache SKILL.md for '${r.name}': ${l(a)}`);
   }
 }
 function D({
@@ -353,12 +353,12 @@ function D({
     m = a(k, h, s),
     d = rn(s);
   if (m.hooks)
-    J(
+    logMCPDebug(
       e.name,
       `Skill '${d}' declared hooks in frontmatter \u2014 ignored (MCP-sourced skills cannot register hooks)`,
     );
   if (m.allowedTools.length > 0)
-    J(
+    logMCPDebug(
       e.name,
       `Skill '${d}' declared allowed-tools in frontmatter \u2014 ignored (MCP-sourced skills cannot bypass permissions)`,
     );
@@ -372,7 +372,7 @@ function D({
         }
       : void 0;
   return (
-    J(e.name, `Loaded MCP skill '${d}' from ${r}`),
+    logMCPDebug(e.name, `Loaded MCP skill '${d}' from ${r}`),
     o({
       ...m,
       ...A1e(m),
@@ -388,7 +388,7 @@ function D({
   );
 }
 export {
-  Pe as fetchMcpSkillsForClient,
-  we as invalidateMcpSkillsExcept,
-  Fe as invalidateMcpSkillsForServer,
+  fetchMcpSkillsForClient,
+  invalidateMcpSkillsExcept,
+  invalidateMcpSkillsForServer,
 };

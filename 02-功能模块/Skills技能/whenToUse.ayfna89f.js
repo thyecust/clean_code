@@ -10,5 +10,5 @@
 import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
 var t = "./SKILL-2954d82b.md.zst";
 var l = Ke(t, import.meta.dirname);
-var y = l;
-export { y as SKILL_MD };
+var SKILL_MD = l;
+export { SKILL_MD };

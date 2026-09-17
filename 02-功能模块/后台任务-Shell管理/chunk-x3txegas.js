@@ -11,12 +11,12 @@ import { j1, Xn, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { R, l, A, WW } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Ro, Tr, ae, Qhe, k_, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Pl } from "../Teammates团队/chunk-thxapyam.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sr, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { gh, xQ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { $d, bR, normalizeCaseForComparison as dr } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { $d, bR, normalizeCaseForComparison } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { H5 } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { Glr } from "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
@@ -37,27 +37,27 @@ function Vre(t, e, i = {}) {
     n(
       `resume: transcript session id (${typeof t}) rejected by the adoption gate; continuing as a fork under the fresh session id`,
     ),
-    g("session_resume", "unadoptable_session_id"),
+    logFeatureSad("session_resume", "unadoptable_session_id"),
     { adoptedSessionId: null, effectiveFork: !0 }
   );
 }
-import { constants as _, fstat as Qt } from "fs";
+import { constants as _, fstat } from "fs";
 import {
   lstat as J,
   mkdir as It,
   open as yt,
-  readdir as qt,
+  readdir,
   readlink as ut,
-  realpath as pt,
-  symlink as Nt,
-  unlink as gt,
+  realpath,
+  symlink,
+  unlink,
 } from "fs/promises";
 import {
   basename as mt,
   dirname as x,
   isAbsolute as At,
   join as U,
-  resolve as at,
+  resolve,
   sep as Z,
 } from "path";
 import { constants as S } from "fs";
@@ -724,7 +724,7 @@ class DiskTaskOutput {
           n(`Task output drain retry failed (${e}): ${t}`, { level: "error" });
           break;
         case "unexpected":
-          h(t);
+          logError(t);
           break;
       }
     if (this.#e > ee)
@@ -785,7 +785,7 @@ async function getTaskOutputDelta(t, e, i = Bt) {
     if (r === "ENOENT") return { content: "", newOffset: e };
     if (r && WW.has(r))
       n(`getTaskOutputDelta failed (${r}): ${o}`, { level: "error" });
-    else h(o);
+    else logError(o);
     return { content: "", newOffset: e };
   }
 }
@@ -809,7 +809,7 @@ ${r}`;
     if (o === "ENOENT") return "";
     if (o && WW.has(o))
       n(`getTaskOutput failed (${o}): ${i}`, { level: "error" });
-    else h(i);
+    else logError(i);
     return "";
   }
 }
@@ -833,7 +833,7 @@ async function getTaskOutputSize(t) {
     }
     if (i && WW.has(i))
       n(`getTaskOutputSize failed (${i}): ${e}`, { level: "error" });
-    else h(e);
+    else logError(e);
     return 0;
   }
 }
@@ -848,7 +848,7 @@ async function repointTaskOutputSymlinks(t, e) {
   for (let s of o) {
     let c;
     try {
-      c = await qt(s);
+      c = await readdir(s);
     } catch (a) {
       let u = A(a);
       if (u !== "ENOENT")
@@ -856,7 +856,7 @@ async function repointTaskOutputSymlinks(t, e) {
           n(`repointTaskOutputSymlinks readdir failed (${u}): ${a}`, {
             level: "error",
           });
-        else h(a);
+        else logError(a);
       continue;
     }
     await ie(s, c, r, t, e);
@@ -880,12 +880,12 @@ async function ie(t, e, i, o, r) {
       let k = r + u.slice(o.length);
       if ((await ut(w)) !== u) b(a, "output symlink was re-pointed");
       (await f?.recheckBeforeWrite(),
-        await gt(w),
+        await unlink(w),
         await f?.recheckBeforeWrite(),
-        await Nt(k, w),
+        await symlink(k, w),
         await Lt(a, k));
     } catch (w) {
-      if (A(w) !== "ENOENT") h(w);
+      if (A(w) !== "ENOENT") logError(w);
     } finally {
       await f?.close();
     }
@@ -983,7 +983,7 @@ async function openTaskOutputForRead(t, e = 0) {
 }
 async function Ht(t, e) {
   let i = await ut(e),
-    o = At(i) && at(i).startsWith(at(Pl()) + Z);
+    o = At(i) && resolve(i).startsWith(resolve(Pl()) + Z);
   if (!At(i) || (!q(i) && !o))
     return b(
       t,
@@ -1014,7 +1014,7 @@ async function Ct(t, e, i) {
   }
   let o, r;
   try {
-    let s = await pt(t);
+    let s = await realpath(t);
     if (q(s)) return b(i, "output link leads back into the tasks tree");
     ((r = await J(s)),
       (o = await cG(s, _.O_RDONLY | lt | (_.O_NONBLOCK ?? 0), P())));
@@ -1111,23 +1111,23 @@ function Tt(t, e) {
 }
 function re(t) {
   let e = _t(),
-    i = at(t);
+    i = resolve(t);
   if (i.startsWith(e + Z)) return i;
   let o = ae(),
     r = x(x(x(x(i)))),
     { resolvedPath: s } = Ro(o, r);
-  return dr(s) === dr(e) ? U(e, i.slice(r.length + 1)) : i;
+  return normalizeCaseForComparison(s) === normalizeCaseForComparison(e) ? U(e, i.slice(r.length + 1)) : i;
 }
 function _t() {
-  return x(x(x(at(getTaskOutputDir()))));
+  return x(x(x(resolve(getTaskOutputDir()))));
 }
 function isTaskOutputFilePath(t) {
   let e = _t(),
     i = ae(),
-    o = new Set([e, Ro(i, e).resolvedPath].map((r) => dr(r)));
+    o = new Set([e, Ro(i, e).resolvedPath].map((r) => normalizeCaseForComparison(r)));
   return Tr(t).some((r) => {
-    let s = x(at(r));
-    return dr(mt(s)) === "tasks" && Yt(mt(x(s))) && o.has(dr(x(x(x(s)))));
+    let s = x(resolve(r));
+    return normalizeCaseForComparison(mt(s)) === "tasks" && Yt(mt(x(s))) && o.has(normalizeCaseForComparison(x(x(x(s)))));
   });
 }
 function bt() {
@@ -1146,14 +1146,14 @@ function taskOutputDirExclusions(t) {
     r = new Set(),
     s = (a, u) => {
       let f = a.endsWith(Z) ? a : a + Z;
-      return dr(u).startsWith(dr(f)) ? u.slice(f.length) : null;
+      return normalizeCaseForComparison(u).startsWith(normalizeCaseForComparison(f)) ? u.slice(f.length) : null;
     },
     c = (a) => a.replaceAll("\\", "/");
   for (let a of Tr(t)) {
-    let u = at(a);
+    let u = resolve(a);
     for (let f of o) {
       let w = mt(f);
-      if (dr(u) === dr(f)) {
+      if (normalizeCaseForComparison(u) === normalizeCaseForComparison(f)) {
         for (let y of bt())
           (r.add(`!/*/${y}/tasks/**`), r.add(`!**/${w}/*/${y}/tasks/**`));
         continue;
@@ -1174,7 +1174,7 @@ function taskOutputDirExclusions(t) {
         else if (!Yt(y[1] ?? ""));
         else if (y.length === 2)
           (r.add("!/tasks/**"), r.add(`!**/${w}/${c(m)}/tasks/**`));
-        else if (dr(y[2] ?? "") === "tasks") r.add("!**");
+        else if (normalizeCaseForComparison(y[2] ?? "") === "tasks") r.add("!**");
       }
     }
   }
@@ -1221,7 +1221,7 @@ async function unlinkTaskOutput(t) {
   let e = sr().linkedOutputs.get(t);
   if ((sr().linkedOutputs.delete(t), e !== void 0)) Ot.delete(e);
   if (P() === "windows") {
-    await gt(t);
+    await unlink(t);
     return;
   }
   let i;
@@ -1232,7 +1232,7 @@ async function unlinkTaskOutput(t) {
     throw o;
   }
   try {
-    (await i.recheckBeforeWrite(), await gt(i.ioPath));
+    (await i.recheckBeforeWrite(), await unlink(i.ioPath));
   } finally {
     await i.close();
   }
@@ -1355,7 +1355,7 @@ var Pt;
 async function oe() {
   let t = $d();
   if (Pt?.root === t) return Pt.ok;
-  let e = await pt(t).then(
+  let e = await realpath(t).then(
     () => !0,
     (i) => A(i) !== "EPERM",
   );
@@ -1364,7 +1364,7 @@ async function oe() {
 }
 var H = new Map();
 function se(t) {
-  return new Promise((e, i) => Qt(t, (o, r) => (o ? i(o) : e(r))));
+  return new Promise((e, i) => fstat(t, (o, r) => (o ? i(o) : e(r))));
 }
 var le = 8;
 function openTaskOutputForAppend(t, e = "a") {
@@ -1394,7 +1394,7 @@ function b(t, e, i) {
   let s = `${e}\x00${t}`;
   if (!ht.has(s)) {
     if (ht.size >= ce) ht.clear();
-    (ht.add(s), h(r));
+    (ht.add(s), logError(r));
   }
   throw r;
 }
@@ -1502,7 +1502,7 @@ async function ue(t, e, i = t) {
   if (t === e) return !0;
   try {
     if (!(await J(i)).isFile()) return !1;
-    return (await pt(i)) === (await pt(e));
+    return (await realpath(i)) === (await realpath(e));
   } catch {
     return !1;
   }
@@ -1520,13 +1520,13 @@ function initTaskOutputAsSymlink(t, e, i) {
           }
           if (q(e)) await Mt(e);
           try {
-            (await r.recheckBeforeWrite(), await Nt(e, r.ioPath));
+            (await r.recheckBeforeWrite(), await symlink(e, r.ioPath));
           } catch (s) {
             if (A(s) !== "EEXIST") throw s;
             (await r.recheckBeforeWrite(),
-              await gt(r.ioPath),
+              await unlink(r.ioPath),
               await r.recheckBeforeWrite(),
-              await Nt(e, r.ioPath));
+              await symlink(e, r.ioPath));
           }
           sr().linkedOutputs.set(o, e);
         } finally {
@@ -1537,7 +1537,7 @@ function initTaskOutputAsSymlink(t, e, i) {
         let r = A(o);
         if ((r && WW.has(r)) || r === "EROFS")
           n(`initTaskOutputAsSymlink failed (${r}): ${o}`, { level: "error" });
-        else h(o);
+        else logError(o);
         return initTaskOutput(t);
       }
     })(),

@@ -29,9 +29,9 @@ class r {
       ((this.peer.closed = !0), this.peer.onclose?.());
   }
 }
-function o() {
+function createLinkedTransportPair() {
   let e = new r(),
     s = new r();
   return (e._setPeer(s), s._setPeer(e), [e, s]);
 }
-export { o as createLinkedTransportPair };
+export { createLinkedTransportPair };

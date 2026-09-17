@@ -11,16 +11,16 @@ import { Ie, po, ac, Dr, Xo } from "../../00-第三方库/lodash/lodash.207999qb
 import { Xn, j, Gt, B, K, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { l, A, Jg, AZ, GW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, x, us, oe, Wc, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { nS, aBe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { rae, St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { rae, St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   NCt,
   TUe,
@@ -31,17 +31,17 @@ import {
   KQe,
   mKt,
   Lor,
-  isBgSession as _t,
-  isWIFDispatchAuth as mq,
-  getClaudeAIOAuthTokenOrigin as qD,
-  getClaudeAIOAuthTokenOriginAsync as $T,
-  checkAndRefreshOAuthTokenIfNeeded as Ss,
-  isClaudeAISubscriber as gt,
-  hasUsableClaudeAILogin as kRn,
-  getStoredOAuthSubscriptionType as WUe,
-  getOauthAccountInfo as vn,
-  getStoredOauthAccountInfo as mh,
-  getSubscriptionType as qn,
+  isBgSession,
+  isWIFDispatchAuth,
+  getClaudeAIOAuthTokenOrigin,
+  getClaudeAIOAuthTokenOriginAsync,
+  checkAndRefreshOAuthTokenIfNeeded,
+  isClaudeAISubscriber,
+  hasUsableClaudeAILogin,
+  getStoredOAuthSubscriptionType,
+  getOauthAccountInfo,
+  getStoredOauthAccountInfo,
+  getSubscriptionType,
   H,
   RU,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -63,46 +63,46 @@ import {
   AL,
   xPn,
 } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { projectSettingsAliasesUserSettings as zT, getSettingsForSource as ye, getLegacyLocalSettingsOverlay as W5t, getAllPolicyTierSettings as Rd, getAdminTierEnvValue as vBe, getDurablePolicyTierSettings as pie, getPolicySettingsOrigin as dS } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { isCancel as qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { G5, KU, bkt, getUsableProxyUrl as o_ } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { projectSettingsAliasesUserSettings, getSettingsForSource, getLegacyLocalSettingsOverlay, getAllPolicyTierSettings, getAdminTierEnvValue, getDurablePolicyTierSettings, getPolicySettingsOrigin } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { G5, KU, bkt, getUsableProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import {
   Vo,
   YZe,
-  ARTIFACT_TOOL_NAME as _r,
-  notAnArtifactUrlMessage as Ikn,
-  ArtifactInputError as Oe,
-  ARTIFACT_SLUG_RE as fr,
-  ARTIFACT_VERSION_SAFE_RE as L6,
-  ARTIFACT_MAX_RESULT_SIZE_CHARS as YD,
-  ARTIFACT_PAGE_INLINE_RESULT_CAP as Mkn,
-  ARTIFACT_DB_READ_MAX_RESULT_SIZE_CHARS as EQ,
-  ARTIFACT_STUB_URL_PREFIX as fBe,
-  getArtifactPublishStubDir as Gd,
-  parseArtifactUrl as Wt,
-  artifactViewerPath as T5t,
-  artifactContentOriginUrlFor as sie,
-  vetForeignFavicon as iie,
-  sanitizeArtifactTitle as e_,
-  QUOTE_HOMOGLYPHS as d1,
-  SINGLE_QUOTE_RUNS as O5,
-  INVISIBLE_BLANKS as QC,
-  isDecisionSurfaceControl as sS,
-  INVISIBLE_BLANK_CODE_POINT as mBe,
-  isJoinerOrEmojiSelector as bge,
-  rideStateAfter as Bvt,
-  selectorOrJoinerRides as jvt,
-  scrubArtifactEnvelopeTags as Ml,
-  scrubServerLine as p1,
-  sweepAskCopy as Pa,
-  MODEL_TEXT_PUNCT_CODE_POINT as Gkn,
-  sweepMarkerLookalikes as fet,
+  ARTIFACT_TOOL_NAME,
+  notAnArtifactUrlMessage,
+  ArtifactInputError,
+  ARTIFACT_SLUG_RE,
+  ARTIFACT_VERSION_SAFE_RE,
+  ARTIFACT_MAX_RESULT_SIZE_CHARS,
+  ARTIFACT_PAGE_INLINE_RESULT_CAP,
+  ARTIFACT_DB_READ_MAX_RESULT_SIZE_CHARS,
+  ARTIFACT_STUB_URL_PREFIX,
+  getArtifactPublishStubDir,
+  parseArtifactUrl,
+  artifactViewerPath,
+  artifactContentOriginUrlFor,
+  vetForeignFavicon,
+  sanitizeArtifactTitle,
+  QUOTE_HOMOGLYPHS,
+  SINGLE_QUOTE_RUNS,
+  INVISIBLE_BLANKS,
+  isDecisionSurfaceControl,
+  INVISIBLE_BLANK_CODE_POINT,
+  isJoinerOrEmojiSelector,
+  rideStateAfter,
+  selectorOrJoinerRides,
+  scrubArtifactEnvelopeTags,
+  scrubServerLine,
+  sweepAskCopy,
+  MODEL_TEXT_PUNCT_CODE_POINT,
+  sweepMarkerLookalikes,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { go, vge } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { isTeammate as Zi } from "../Teammates团队/chunk-811z9z0t.js";
-import { isTransportError as Txt, externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { isTeammate } from "../Teammates团队/chunk-811z9z0t.js";
+import { isTransportError, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import {
   yme,
   hAn,
@@ -137,7 +137,7 @@ import {
   ose,
   MJe,
 } from "../图表-Mermaid/chunk-743atbtj.js";
-import { parseRetryAfterHeader as Yy } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import {
   xN,
   ne,
@@ -157,9 +157,9 @@ import {
   jer,
 } from "./chunk-rr78st95.js";
 import { bFe, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import { DANGEROUS_FILES_LC as WH } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { isPolicyLimitsEligible as lA, getPolicyLimitsIneligibleReason as KJ, isPolicyAllowed as Mt, isPolicyRouteMissing as Cme, getResponseFromCache as ch } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { getRemoteControlSessionCompatId as xYe } from "../权限系统/chunk-1y2g140m.js";
+import { DANGEROUS_FILES_LC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isPolicyLimitsEligible, getPolicyLimitsIneligibleReason, isPolicyAllowed, isPolicyRouteMissing, getResponseFromCache } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { getRemoteControlSessionCompatId } from "../权限系统/chunk-1y2g140m.js";
 import { xC, moe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { Fu, RJ } from "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
 import { jy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
@@ -225,35 +225,35 @@ function SCe(e) {
     : "this session holds no gateway credential";
 }
 function M1e() {
-  return gt() || os();
+  return isClaudeAISubscriber() || os();
 }
 function os() {
   if (nS() !== "env-quad") return !1;
   try {
-    return mq() && kRn();
+    return isWIFDispatchAuth() && hasUsableClaudeAILogin();
   } catch {
     return !1;
   }
 }
 function dn() {
-  return !gt() && os();
+  return !isClaudeAISubscriber() && os();
 }
 function Bwt() {
   let { info: e, storeBearerOnly: t } = N1e();
   if (!t || e === void 0) return e;
-  return qD() === "store" ? e : void 0;
+  return getClaudeAIOAuthTokenOrigin() === "store" ? e : void 0;
 }
 function N1e() {
-  let e = vn();
+  let e = getOauthAccountInfo();
   if (e !== void 0) return { info: e, storeBearerOnly: !1 };
   return dn()
-    ? { info: mh(), storeBearerOnly: !0 }
+    ? { info: getStoredOauthAccountInfo(), storeBearerOnly: !0 }
     : { info: void 0, storeBearerOnly: !1 };
 }
 async function bCe(e) {
   let { info: t, storeBearerOnly: r } = N1e();
   if (!r || t === void 0) return t;
-  return (await $T(e)) === "store" ? t : void 0;
+  return (await getClaudeAIOAuthTokenOriginAsync(e)) === "store" ? t : void 0;
 }
 function Am(e) {
   return `Not authenticated \u2014 run /login (${e})`;
@@ -428,12 +428,12 @@ async function $r() {
     let { loadChartBundleJs: r } = await import("../图表-Mermaid/loadChartBundleJs.85fbh2k8.js");
     e = await r();
   } catch {
-    return (g("artifact_publish", "chart_bundle_unreadable"), null);
+    return (logFeatureSad("artifact_publish", "chart_bundle_unreadable"), null);
   }
   if (cc(e) !== null)
-    return (g("artifact_publish", "chart_bundle_unsafe"), null);
+    return (logFeatureSad("artifact_publish", "chart_bundle_unsafe"), null);
   if (bve(as) !== null)
-    return (g("artifact_publish", "chart_init_unsafe"), null);
+    return (logFeatureSad("artifact_publish", "chart_init_unsafe"), null);
   let t =
     `
 <script>` +
@@ -443,7 +443,7 @@ async function $r() {
     as +
     `</script>
 `;
-  if (!ds(t)) return (g("artifact_publish", "chart_block_unstrippable"), null);
+  if (!ds(t)) return (logFeatureSad("artifact_publish", "chart_block_unstrippable"), null);
   return QEt + t + p4t;
 }
 var G1e = {
@@ -963,14 +963,14 @@ async function Lr() {
     let { loadHljsBundleJs: p } = await import("./loadHljsBundleJs.6n1dt2fb.js");
     e = await p();
   } catch (p) {
-    return (h(p), g("artifact_publish", "hljs_bundle_unreadable"), null);
+    return (logError(p), logFeatureSad("artifact_publish", "hljs_bundle_unreadable"), null);
   }
   let t = ne().bundleEmbedVerdicts;
   if (t.hljs === void 0) t.hljs = uc(e);
   if (t.hljs !== null)
-    return (g("artifact_publish", "hljs_bundle_unsafe"), null);
+    return (logFeatureSad("artifact_publish", "hljs_bundle_unsafe"), null);
   let r = bc();
-  if (bve(r) !== null) return (g("artifact_publish", "hljs_init_unsafe"), null);
+  if (bve(r) !== null) return (logFeatureSad("artifact_publish", "hljs_init_unsafe"), null);
   let o =
     `
 <script>` +
@@ -981,10 +981,10 @@ async function Lr() {
     `</script>
 `;
   if (o.length >= ps)
-    return (g("artifact_publish", "hljs_bundle_overspan"), null);
+    return (logFeatureSad("artifact_publish", "hljs_bundle_overspan"), null);
   let d = ne().blockStripVerdicts;
   if (d.hljs === void 0) d.hljs = hs(o);
-  if (!d.hljs) return (g("artifact_publish", "hljs_block_unstrippable"), null);
+  if (!d.hljs) return (logFeatureSad("artifact_publish", "hljs_block_unstrippable"), null);
   return (
     `
 ` +
@@ -1202,7 +1202,7 @@ function Ec(e) {
 function Wwt() {
   let e = wc();
   if (bve(e) !== null)
-    return (g("artifact_publish", "mermaid_init_unsafe"), null);
+    return (logFeatureSad("artifact_publish", "mermaid_init_unsafe"), null);
   let t =
       `
 ` +
@@ -1218,7 +1218,7 @@ function Wwt() {
     r = ne().blockStripVerdicts;
   if (r.mermaid === void 0) r.mermaid = bs(t);
   if (!r.mermaid)
-    return (g("artifact_publish", "mermaid_block_unstrippable"), null);
+    return (logFeatureSad("artifact_publish", "mermaid_block_unstrippable"), null);
   return (
     `
 ` +
@@ -1335,7 +1335,7 @@ function Dc(e) {
     if (!w.sourceCodeLocation?.endTag) continue;
     if (Lc(w)) {
       if (Mr(w, "async")) {
-        g("artifact_publish", "block_ids_load_point_unsure");
+        logFeatureSad("artifact_publish", "block_ids_load_point_unsure");
         return;
       }
       _ = !0;
@@ -1344,7 +1344,7 @@ function Dc(e) {
     let E = t(w);
     if (!(o < E)) {
       if (d) {
-        g("artifact_publish", "block_ids_load_point_unsure");
+        logFeatureSad("artifact_publish", "block_ids_load_point_unsure");
         return;
       }
       continue;
@@ -1352,7 +1352,7 @@ function Dc(e) {
     let R = r.findIndex((D) => t(D) < E),
       C = r[R];
     if (r.slice(0, R).some((D) => t(D) === 1 / 0) || Nc(w, C)) {
-      g("artifact_publish", "block_ids_load_point_unsure");
+      logFeatureSad("artifact_publish", "block_ids_load_point_unsure");
       return;
     }
     return { page: C, seen: w.sourceCodeLocation.endOffset };
@@ -1380,7 +1380,7 @@ function Bc(e, t) {
     else if (ae === void 0) R.push(N);
   }
   if (R.some((I) => !E.has(I) && ws.test(I)))
-    return (g("artifact_publish", "block_ids_unplaced_id"), []);
+    return (logFeatureSad("artifact_publish", "block_ids_unplaced_id"), []);
   let C = Ic(d),
     M = new Map(),
     D = [],
@@ -1422,21 +1422,21 @@ async function As(e) {
   if (!e.includes(In)) return e;
   try {
     let { nestingBudgetExceeded: t } = await import("../../01-核心基础设施/共享小工具-未细化/RAWTEXT_MODES.4tes4m4a.js");
-    if (t(e)) return (g("artifact_publish", "block_ids_nesting_budget"), e);
+    if (t(e)) return (logFeatureSad("artifact_publish", "block_ids_nesting_budget"), e);
     let { parse: r } = await import("../../01-核心基础设施/共享小工具-未细化/parse.4jce22r9.js"),
       o = ks + e,
       d = L$(r(o, { sourceCodeLocationInfo: !0 })),
       p = Bc(o, d);
     if (p === null)
       return (
-        g("artifact_publish", "block_ids_text_budget"),
+        logFeatureSad("artifact_publish", "block_ids_text_budget"),
         n("[artifact] doc block ids skipped: too much text to hash"),
         e
       );
     return jc(o, p).slice(ks.length);
   } catch (t) {
     return (
-      g("artifact_publish", "block_ids_parse_failed"),
+      logFeatureSad("artifact_publish", "block_ids_parse_failed"),
       n(`[artifact] doc block ids skipped: ${String(t)}`),
       e
     );
@@ -1606,7 +1606,7 @@ function Is() {
     return;
   }
   let o = Fs();
-  if (o === void 0 || o_() !== void 0) return;
+  if (o === void 0 || getUsableProxyUrl() !== void 0) return;
   return { host: r, agent: t.agentFor(o) };
 }
 var Kc = "x-ccr-relay-upstream",
@@ -1743,7 +1743,7 @@ function Ws(e) {
   let t = ne().frameRelay;
   if (!t.botContextNoted)
     ((t.botContextNoted = !0),
-      g("artifact_frame_relay", "bot_context_not_served", { hosted: Fu() }));
+      logFeatureSad("artifact_frame_relay", "bot_context_not_served", { hosted: Fu() }));
   return !0;
 }
 function _oe() {
@@ -1810,9 +1810,9 @@ function yoe(e) {
 var Ys = () => !0;
 function Br(e, t, r) {
   (ne().frameRelay.tunnelDeclinedUntil.set(e, Date.now() + Ur),
-    g("artifact_frame_relay", "tunnel_declined", {
+    logFeatureSad("artifact_frame_relay", "tunnel_declined", {
       family: e,
-      cause: u(t),
+      cause: fromEnum(t),
       status: r,
     }));
 }
@@ -1839,7 +1839,7 @@ async function aqt(e, t, r, o, d) {
       if (((E = R.status), E >= 500 || E === 499))
         return (Br(d, "hop_failed", E), { res: R, tunnelled: !0 });
     } catch (R) {
-      if (qi(R)) throw R;
+      if (isCancel(R)) throw R;
       if (!Ms(R)) {
         if ((Br(d, "threw", 0), typeof R === "object" && R !== null)) Ks.add(R);
         throw R;
@@ -1887,7 +1887,7 @@ function lqt() {
 async function BZn(e) {
   if (!FCt()) return;
   try {
-    await Ss({ credentials: e });
+    await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   } catch {}
 }
 function hJ(e) {
@@ -1941,7 +1941,7 @@ async function Ut(e, t, r, o, d = "fallback") {
     R = qs(e, t, d),
     C = R.relaying && !Fu(),
     M = (q, ge) => (
-      g("artifact_frame_relay", "relay_only_unavailable", {
+      logFeatureSad("artifact_frame_relay", "relay_only_unavailable", {
         ...(R.family !== null && { family: R.family }),
         status: q,
         probed: ge,
@@ -1987,7 +1987,7 @@ async function Ut(e, t, r, o, d = "fallback") {
           { ...Le, route: "direct", fromFrame: !0, gatewayDeclined: q }
         );
       } finally {
-        g("artifact_frame_relay", "relay_unavailable", {
+        logFeatureSad("artifact_frame_relay", "relay_unavailable", {
           family: D,
           status: q,
           probed: ge,
@@ -2005,7 +2005,7 @@ async function Ut(e, t, r, o, d = "fallback") {
         maxContentLength: eu,
       });
     } catch (ge) {
-      if (qi(ge)) throw ge;
+      if (isCancel(ge)) throw ge;
       return ((F = Bs(ge)), U(0, !0));
     }
     if (!q.ok) return p ? M(0, !0) : E();
@@ -2018,11 +2018,11 @@ async function Ut(e, t, r, o, d = "fallback") {
   try {
     te = await J(e, t, r, V);
   } catch (q) {
-    if (!qi(q)) {
+    if (!isCancel(q)) {
       if (((F = Bs(q)), KU(q) !== void 0)) return U(0, !1);
       if (
         (Lj(D, !0),
-        f("artifact_frame_relay", "request_error", { family: D, ...I() }),
+        logFeatureBad("artifact_frame_relay", "request_error", { family: D, ...I() }),
         typeof q === "object" && q !== null)
       )
         Us.add(q);
@@ -2033,7 +2033,7 @@ async function Ut(e, t, r, o, d = "fallback") {
   if (Jc(te))
     return (
       EG(D),
-      g("artifact_frame_relay", "relay_policy_refused", {
+      logFeatureSad("artifact_frame_relay", "relay_policy_refused", {
         family: D,
         status: te.status,
         ...I(),
@@ -2045,7 +2045,7 @@ async function Ut(e, t, r, o, d = "fallback") {
     ce = re || te.status < 300;
   if (ce)
     (EG(D),
-      y("artifact_frame_relay", {
+      logFeatureOk("artifact_frame_relay", {
         family: D,
         status: te.status,
         upstream: re,
@@ -2053,13 +2053,13 @@ async function Ut(e, t, r, o, d = "fallback") {
       }));
   else if (te.status >= 500 || te.status === 499)
     (Lj(D, !0),
-      f("artifact_frame_relay", "relay_error", {
+      logFeatureBad("artifact_frame_relay", "relay_error", {
         family: D,
         status: te.status,
         ...I(),
       }));
   else
-    g("artifact_frame_relay", "relay_refused", {
+    logFeatureSad("artifact_frame_relay", "relay_refused", {
       family: D,
       status: te.status,
       ...I(),
@@ -2119,12 +2119,12 @@ function GZn(e) {
 }
 function zr() {
   return Zs.isAvailable()
-    ? `read it with the ${_r} tool (action: "read", url)`
+    ? `read it with the ${ARTIFACT_TOOL_NAME} tool (action: "read", url)`
     : `${Cr} the url`;
 }
 function qwt() {
   return Gwt()
-    ? `for a workshop page use the ${_r} tool's read_page_data action with schema "workshop-decisions" \u2014 the workshop skill forbids a content read there; otherwise ${zr()}`
+    ? `for a workshop page use the ${ARTIFACT_TOOL_NAME} tool's read_page_data action with schema "workshop-decisions" \u2014 the workshop skill forbids a content read there; otherwise ${zr()}`
     : zr();
 }
 function Efe(e) {
@@ -2138,7 +2138,7 @@ function Efe(e) {
         : "*.frame.claudeusercontent.com";
   return {
     readRemedy: t
-      ? `for a workshop page use the ${_r} tool's read_page_data action with schema "workshop-decisions" \u2014 the workshop skill forbids a content read and force there; otherwise ${r}`
+      ? `for a workshop page use the ${ARTIFACT_TOOL_NAME} tool's read_page_data action with schema "workshop-decisions" \u2014 the workshop skill forbids a content read and force there; otherwise ${r}`
       : r,
     forceAdvisory: t
       ? ""
@@ -2727,13 +2727,13 @@ var io = "[a-z][a-z_-]{0,31}",
   Pt = new RegExp("^[a-z][a-z_-]{0,31}$");
 var Ru = 100;
 function Q1e(e) {
-  return e_(so(e));
+  return sanitizeArtifactTitle(so(e));
 }
 function so(e) {
   let t = e.normalize("NFC");
-  return Array.from(t, (o) => (sS(o.codePointAt(0) ?? 0) ? " " : o))
+  return Array.from(t, (o) => (isDecisionSurfaceControl(o.codePointAt(0) ?? 0) ? " " : o))
     .join("")
-    .replace(QC, " ")
+    .replace(INVISIBLE_BLANKS, " ")
     .replace(Tu, " ")
     .replace(
       /[\u0300-\u036F\u0483-\u0489\u1AB0-\u1AFF\u1DC0-\u1DFF\u20D0-\u20F0\uA66F-\uA67D\uFE20-\uFE2F]/g,
@@ -2750,14 +2750,14 @@ function ACe(e, t) {
     .trim();
   if (r === "") return null;
   let o = us(r, t);
-  return Ml(
+  return scrubArtifactEnvelopeTags(
     (o === r ? r : `${o.trimEnd()}\u2026`).replace(/:\/\//g, ":\u2215\u2215"),
   );
 }
 var Tu =
   /[\u20DD-\u20E4\u23FA\u25C9\u25CB\u25CE\u25CF\u25EF\u26AA\u26AB\u26AC\u29BE\u29BF\u2B24\u2B55\u2B58\u{1F534}\u{1F535}\u{1F785}-\u{1F78B}\u{1F7E0}-\u{1F7E4}]/gu;
 function pqt(e) {
-  return e_(oo(e.normalize("NFC"), !1));
+  return sanitizeArtifactTitle(oo(e.normalize("NFC"), !1));
 }
 function zZn(e) {
   return oo(e, !0);
@@ -2786,7 +2786,7 @@ function oo(e, t) {
       if (R && (E === void 0 || !Gr(E))) o.push(p);
       continue;
     }
-    o.push(sS(_) || mBe.test(p) ? " " : p);
+    o.push(isDecisionSurfaceControl(_) || INVISIBLE_BLANK_CODE_POINT.test(p) ? " " : p);
   }
   return o.join("");
 }
@@ -2817,15 +2817,15 @@ function Ou(e, t) {
 }
 function VZn(e) {
   let t = Array.from(e.normalize("NFC"), (r) =>
-    sS(r.codePointAt(0) ?? 0) ? " " : r,
+    isDecisionSurfaceControl(r.codePointAt(0) ?? 0) ? " " : r,
   ).join("");
-  return e_(t.replace(QC, " "));
+  return sanitizeArtifactTitle(t.replace(INVISIBLE_BLANKS, " "));
 }
 function yw(e) {
   let t = Q1e(e);
   if (t === null) return null;
   let r = us(t, Ru);
-  return Ml((r === t ? t : `${r}\u2026`).replace(/:\/\//g, ":\u2215\u2215"));
+  return scrubArtifactEnvelopeTags((r === t ? t : `${r}\u2026`).replace(/:\/\//g, ":\u2215\u2215"));
 }
 var Yr = 128,
   Kr = 32,
@@ -2866,7 +2866,7 @@ var Mu = /^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Cf} ]+$/u,
   zu = new RegExp(`^[^\\p{L}]*[${hn}]host(?:$|[^a-z])`, "iu"),
   Vu = /[\u0600-\u0605\u06DD\u070F\u0890\u0891\u08E2]/u,
   Wu = new RegExp(`(?![${ho}])[${hn}]`, "gu"),
-  mo = new RegExp(`["<>\\\\\`${on}${uo}]|${d1.source}|${O5.source}`, "gu"),
+  mo = new RegExp(`["<>\\\\\`${on}${uo}]|${QUOTE_HOMOGLYPHS.source}|${SINGLE_QUOTE_RUNS.source}`, "gu"),
   Gu = new RegExp(`^\\p{M}+|[^ \\P{Z}]|[\\p{C}\\p{Cn}]|${mo.source}`, "gu");
 function Yu(e) {
   let t = e.normalize("NFD"),
@@ -2904,19 +2904,19 @@ function Xwt(e) {
   );
 }
 function Y_(e, t) {
-  if (typeof e === "string" && Xwt(e)) return Ml(e.replace(mo, Yn));
+  if (typeof e === "string" && Xwt(e)) return scrubArtifactEnvelopeTags(e.replace(mo, Yn));
   let r = t?.max ?? sn,
     o = e,
     d = !1;
   if (typeof e === "string") ({ text: o, cut: d } = Ro(e, Lu(e), r));
-  let p = Ml(
-    Pa(jg(o, { ...t, max: r }).replace(/`/g, "'"))?.replace(/^\p{M}+/u, Yn) ??
+  let p = scrubArtifactEnvelopeTags(
+    sweepAskCopy(jg(o, { ...t, max: r }).replace(/`/g, "'"))?.replace(/^\p{M}+/u, Yn) ??
       "?",
   );
   return d ? `${p}\u2026` : p;
 }
 function fqt(e) {
-  return Ml(us(e, sn).replace(Gu, Yn));
+  return scrubArtifactEnvelopeTags(us(e, sn).replace(Gu, Yn));
 }
 function zt(e) {
   return e.declarable !== !1 && Xwt(e.server);
@@ -3268,13 +3268,13 @@ var Eo = new Set([
     "assets",
     "user",
   ]),
-  Zu = new RegExp(`^${d1.source}$`, "u");
+  Zu = new RegExp(`^${QUOTE_HOMOGLYPHS.source}$`, "u");
 function Qu(e) {
   return (
-    Gkn.test(e) &&
+    MODEL_TEXT_PUNCT_CODE_POINT.test(e) &&
     !/^[\p{P}\p{M}]$/u.test(e) &&
     !Zu.test(e) &&
-    !bge(e.codePointAt(0) ?? 0) &&
+    !isJoinerOrEmojiSelector(e.codePointAt(0) ?? 0) &&
     !qr.test(e)
   );
 }
@@ -3283,7 +3283,7 @@ function ed(e) {
     r = t.length,
     o = t.map(Qu),
     d = t.map(
-      (C, M) => o[M] || /^\p{M}$/u.test(C) || bge(C.codePointAt(0) ?? 0),
+      (C, M) => o[M] || /^\p{M}$/u.test(C) || isJoinerOrEmojiSelector(C.codePointAt(0) ?? 0),
     ),
     p = t.map((C, M) => !o[M] && /^[\p{L}\p{N}]$/u.test(C)),
     _ = Array(r).fill(!1),
@@ -3306,12 +3306,12 @@ function td(e) {
     let _ = p.codePointAt(0) ?? 0;
     if (r(p, d)) return ((o = "none"), !0);
     if (t.has(d)) return ((o = "none"), !0);
-    if (bge(_)) {
-      let w = jvt(_, o);
+    if (isJoinerOrEmojiSelector(_)) {
+      let w = selectorOrJoinerRides(_, o);
       return ((o = w.after), !w.rides);
     }
     if (qr.test(p)) return ((o = "none"), !0);
-    return ((o = Bvt(p)), !1);
+    return ((o = rideStateAfter(p)), !1);
   };
 }
 function Ro(e, t, r) {
@@ -3330,7 +3330,7 @@ function nd(e) {
     r = !1;
   if (typeof e === "string") ({ text: t, cut: r } = Ro(e, td(e), sn));
   let o =
-    fet((Pa(jg(t, { max: sn })) ?? "?").replace(/[;,(){}]/g, " ")).trim() ||
+    sweepMarkerLookalikes((sweepAskCopy(jg(t, { max: sn })) ?? "?").replace(/[;,(){}]/g, " ")).trim() ||
     "?";
   return r ? `${o}\u2026` : o;
 }
@@ -3415,22 +3415,22 @@ function jg(e, t) {
   if (typeof e !== "string") return "?";
   let r = t?.max ?? 64,
     o = Array.from(e.slice(0, 2 * r), (d) =>
-      sS(d.codePointAt(0) ?? 0) ? " " : d,
+      isDecisionSurfaceControl(d.codePointAt(0) ?? 0) ? " " : d,
     )
       .slice(0, r)
       .join("")
-      .replace(QC, " ")
+      .replace(INVISIBLE_BLANKS, " ")
       .replace(/\s+/g, " ");
   return o.trim() === "" ? "?" : o;
 }
-import { randomUUID as ad } from "crypto";
+import { randomUUID } from "crypto";
 import {
   lstat as Co,
-  mkdir as Oo,
+  mkdir,
   realpath as er,
   rm as ti,
-  unlink as ld,
-  writeFile as cd,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import Xe from "path";
 import { lstat as Qr, open as od, realpath as Po } from "fs/promises";
@@ -3536,15 +3536,15 @@ async function Ywt(e) {
 }
 async function $o(e, t, r) {
   let o = r.slug !== void 0,
-    d = r.slug ?? ad();
-  if (!fr.test(d))
+    d = r.slug ?? randomUUID();
+  if (!ARTIFACT_SLUG_RE.test(d))
     return {
       url: null,
       slug: null,
       version: null,
       err: `not an artifact slug: ${d}`,
     };
-  let p = `${fBe}${d}`,
+  let p = `${ARTIFACT_STUB_URL_PREFIX}${d}`,
     _ = Xe.join(e, d),
     w = Xe.dirname(e),
     E = await Co(w).catch(() => null);
@@ -3570,7 +3570,7 @@ async function $o(e, t, r) {
     F = async (V) => {
       let J = Xe.resolve(R, V);
       if (!J.startsWith(R + Xe.sep)) return null;
-      if (RU(J, R + Xe.sep, WH))
+      if (RU(J, R + Xe.sep, DANGEROUS_FILES_LC))
         return (
           M.push({
             path: V,
@@ -3605,7 +3605,7 @@ async function $o(e, t, r) {
         N.push(V);
         continue;
       }
-      (await ld(J).catch((te) => {
+      (await unlink(J).catch((te) => {
         if (!W(te)) throw te;
       }),
         N.push(V));
@@ -3617,7 +3617,7 @@ async function $o(e, t, r) {
     try {
       let J = await F(V.path);
       if (J === null) continue;
-      if ((await Oo(Xe.dirname(J), { recursive: !0 }), (await I(J)) !== !0))
+      if ((await mkdir(Xe.dirname(J), { recursive: !0 }), (await I(J)) !== !0))
         continue;
       await rFe(J, V.content);
     } catch (J) {
@@ -3664,7 +3664,7 @@ async function $o(e, t, r) {
   );
 }
 async function rer(e, t) {
-  if (!fr.test(t)) return;
+  if (!ARTIFACT_SLUG_RE.test(t)) return;
   try {
     let r = await yqt(Xe.join(e, t, "manifest.json")),
       o = r === void 0 ? void 0 : z(r);
@@ -3679,10 +3679,10 @@ async function ei(e) {
   } catch (t) {
     if (!W(t)) throw t;
   }
-  await Oo(e, { recursive: !0 });
+  await mkdir(e, { recursive: !0 });
 }
 async function rFe(e, t) {
-  (await ti(e, { recursive: !0, force: !0 }), await cd(e, t, { flag: "wx" }));
+  (await ti(e, { recursive: !0, force: !0 }), await writeFile(e, t, { flag: "wx" }));
 }
 var NH = "live-doc",
   Soe = "index.html";
@@ -3792,11 +3792,11 @@ function Fd() {
 }
 var fd = /^(?:session_|cse_)[A-Za-z0-9_-]{1,184}$/;
 function ni() {
-  let e = a.CLAUDE_CODE_REMOTE_SESSION_ID ?? xYe();
+  let e = a.CLAUDE_CODE_REMOTE_SESSION_ID ?? getRemoteControlSessionCompatId();
   return e && fd.test(e) ? e : void 0;
 }
 var QXe = /^[A-Za-z0-9_-]{1,64}$/;
-import { basename as rf } from "path";
+import { basename } from "path";
 function ii() {
   return {
     async: !1,
@@ -6144,7 +6144,7 @@ function _f(e, t) {
 }
 async function fa(e) {
   return fi(e, {
-    eyebrow: `Plan \xB7 ${rf(Q())}`,
+    eyebrow: `Plan \xB7 ${basename(Q())}`,
     fallbackTitle: "Plan",
     extractLede: !0,
     feature: "plan",
@@ -6176,7 +6176,7 @@ async function aer(e, t) {
 async function fi(e, t) {
   let r = ca(e),
     o = r.length > cr;
-  if (o) g("artifact_publish", `${t.feature}_structure_scan_skipped`);
+  if (o) logFeatureSad("artifact_publish", `${t.feature}_structure_scan_skipped`);
   let d = o ? null : ua(r),
     p = d?.token,
     _ = d && p?.type === "heading" ? { token: p, offset: d.offset } : null,
@@ -6188,7 +6188,7 @@ async function fi(e, t) {
       ? await t.loadTemplate()
       : (await import("../../01-核心基础设施/共享小工具-未细化/PLAN_TEMPLATE.1d4pc3yc.js")).PLAN_TEMPLATE;
   } catch (U) {
-    (g("artifact_publish", `${t.feature}_template_load_failed`),
+    (logFeatureSad("artifact_publish", `${t.feature}_template_load_failed`),
       n(
         `${t.feature} artifact: template load failed (${l(U)}); falling back to markdown stylesheet`,
         { level: "warn" },
@@ -6210,14 +6210,14 @@ async function fi(e, t) {
     I = (U) => di(U, { neutralizeRawHtml: t.neutralizeRawHtml }),
     N = F !== null && (F.decisions.length > 0 || F.deliverables.length > 0);
   if (F !== null && F.decisions.length > 0)
-    y("workshop_decisions", { count: F.decisions.length });
+    logFeatureOk("workshop_decisions", { count: F.decisions.length });
   let ae,
     ue = !1;
   if (!N) ae = I(D);
   else {
     let U = F.substitute(I(F.md));
     if (!U.complete)
-      (g(
+      (logFeatureSad(
         "workshop_decisions",
         F.decisions.length > 0
           ? "placeholder_leak"
@@ -6239,7 +6239,7 @@ async function fi(e, t) {
   }
   if (V === null)
     return (
-      g("artifact_publish", `${t.feature}_template_shape_drift`),
+      logFeatureSad("artifact_publish", `${t.feature}_template_shape_drift`),
       n(
         `${t.feature} artifact: bundled template has no placeholder-section run; falling back to markdown stylesheet`,
         { level: "warn" },
@@ -6264,22 +6264,22 @@ async function fi(e, t) {
 function wf(e, t) {
   let r = e.lastIndexOf(ITn);
   if (r === -1) {
-    if (t.length > 0) g("workshop_decisions", "island_slot_missing");
+    if (t.length > 0) logFeatureSad("workshop_decisions", "island_slot_missing");
     return e;
   }
   let o = Fer(t);
-  if (t.length > 0 && o === null) g("workshop_decisions", "island_belt_stop");
+  if (t.length > 0 && o === null) logFeatureSad("workshop_decisions", "island_belt_stop");
   return e.slice(0, r) + (o ?? "") + e.slice(r + ITn.length);
 }
 function kf(e, t) {
   let r = e,
     o = r.indexOf(PTn);
-  if (o === -1) g("workshop_decisions", "banner_slot_missing");
+  if (o === -1) logFeatureSad("workshop_decisions", "banner_slot_missing");
   else r = r.slice(0, o) + $er(t) + r.slice(o + PTn.length);
   let d = t.find(_Tt),
     p = r.lastIndexOf(OTn);
   if (p === -1) {
-    if (d !== void 0) g("workshop_decisions", "status_footer_slot_missing");
+    if (d !== void 0) logFeatureSad("workshop_decisions", "status_footer_slot_missing");
   } else
     r =
       r.slice(0, p) + (d === void 0 ? "" : Uer(d, t)) + r.slice(p + OTn.length);
@@ -6317,17 +6317,17 @@ function Sf(e) {
 function boe(e, t) {
   let r = AZ(tf(e)?.code) ?? Jg(e);
   return {
-    transport: Txt(e),
+    transport: isTransportError(e),
     ...(r !== void 0 && { err_code: r }),
     elapsed_ms: Math.round(performance.now() - t),
   };
 }
 var Af = /^\d{1,12}-[0-9a-f]{1,32}$/;
 function iFe(e) {
-  return fr.test(e) ? Ln(e) : S("nonconforming");
+  return ARTIFACT_SLUG_RE.test(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : S("nonconforming");
 }
 function Iwn(e) {
-  return Af.test(e) ? Ln(e) : S("nonconforming");
+  return Af.test(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : S("nonconforming");
 }
 function pa(e) {
   return {
@@ -6347,7 +6347,7 @@ function pa(e) {
 var pi = pa("prototypeArmed"),
   Ef = pa("controlPlaneArmed");
 function ler() {
-  (pi.arm(), y("prototype_started", {}));
+  (pi.arm(), logFeatureOk("prototype_started", {}));
 }
 function cer() {
   return pi.take();
@@ -6363,7 +6363,7 @@ function uer(e) {
 }
 function der(e, t) {
   (hi(e, "prototype"),
-    y("prototype_publish", { artifact_slug: iFe(e), is_first_publish: t }));
+    logFeatureOk("prototype_publish", { artifact_slug: iFe(e), is_first_publish: t }));
 }
 function eYe() {
   Ef.giveBack();
@@ -6383,8 +6383,8 @@ function isFrameGuardOwnVersionProceedEnabled() {
 function artifactPageInlineResultCap() {
   let e = H("tengu_cobalt_plinth_sill", null);
   return typeof e === "number" && Number.isFinite(e) && e >= 0
-    ? Math.min(Math.floor(e), EQ)
-    : Mkn;
+    ? Math.min(Math.floor(e), ARTIFACT_DB_READ_MAX_RESULT_SIZE_CHARS)
+    : ARTIFACT_PAGE_INLINE_RESULT_CAP;
 }
 function isArtifactConflictLegacy() {
   return H("tengu_slate_quoin", !1);
@@ -6534,11 +6534,11 @@ function derivePublishContextFrom(e) {
   let t = Vd(),
     r = !e.isNonInteractiveSession || t === "claude-vscode" || Hd(),
     o =
-      e.agentType === "teammate" || Zi()
+      e.agentType === "teammate" || isTeammate()
         ? "teammate"
         : e.agentId !== void 0
           ? "subagent"
-          : _t()
+          : isBgSession()
             ? "bg_session"
             : t === "sdk-ts" || t === "sdk-py"
               ? "sdk"
@@ -6609,7 +6609,7 @@ function makeMainObservedVersionReader(e, t) {
 }
 function makeSetArtifactReadVersion(e) {
   return (t, r, o) => {
-    if (r !== void 0 && !L6.test(r)) return;
+    if (r !== void 0 && !ARTIFACT_VERSION_SAFE_RE.test(r)) return;
     let d =
         o?.indexOf(`
 `) ?? -1,
@@ -6733,7 +6733,7 @@ var Nf =
   ),
   Df = m(() =>
     it({
-      slug: s().regex(fr),
+      slug: s().regex(ARTIFACT_SLUG_RE),
       target: s().max(64).nullish(),
       current: s().max(64),
       latest: se().optional(),
@@ -6861,7 +6861,7 @@ async function Hf(e) {
     w = (C, M) => {
       let D = So(C, M);
       if (D.length === 0) return null;
-      f("artifact_publish", "unknown_capability", {
+      logFeatureBad("artifact_publish", "unknown_capability", {
         page_bytes: p,
         unknown_count: D.length,
       });
@@ -6873,7 +6873,7 @@ async function Hf(e) {
       let F = Ao(C, M);
       if ("errMsg" in F)
         return (
-          f("artifact_publish", "dual_spelling_ambiguous", { page_bytes: p }),
+          logFeatureBad("artifact_publish", "dual_spelling_ambiguous", { page_bytes: p }),
           F
         );
       let I = w(F.caps, M);
@@ -6884,9 +6884,9 @@ async function Hf(e) {
       let M = await resolveContract({ credentials: _ });
       if ("err" in M)
         return (
-          f("artifact_publish", "contract_fetch_failed", {
+          logFeatureBad("artifact_publish", "contract_fetch_failed", {
             page_bytes: p,
-            cause: u(M.cause),
+            cause: fromEnum(M.cause),
           }),
           {
             errMsg: `couldn't fetch the capability contract (${M.err}) \u2014 ${C}`,
@@ -7044,7 +7044,7 @@ function Ia(e) {
   if (e.spent === e.cap) throw new StripUnsettledError(e.exhausted, e.spent);
   e.spent++;
 }
-class StripUnsettledError extends Oe {
+class StripUnsettledError extends ArtifactInputError {
   passes;
   constructor(e = "blocks", t) {
     super(qf[e], Kf[e]);
@@ -7159,13 +7159,13 @@ async function prepareArtifactBody(e, t = {}) {
       M = E.repair;
       break;
     case "miss":
-      g("artifact_publish", "nested_repair_miss");
+      logFeatureSad("artifact_publish", "nested_repair_miss");
       break;
     case void 0:
       break;
   }
-  if (!E.unwrapped && _ === !0) g("artifact_publish", "round_trip_unwrap_miss");
-  if (Dnr(R)) g("artifact_publish", "runtime_sentinel_residual");
+  if (!E.unwrapped && _ === !0) logFeatureSad("artifact_publish", "round_trip_unwrap_miss");
+  if (Dnr(R)) logFeatureSad("artifact_publish", "runtime_sentinel_residual");
   let D = 0;
   if (w !== !1) {
     let re = await za(R);
@@ -7183,8 +7183,8 @@ async function prepareArtifactBody(e, t = {}) {
       allowStampBinding: d === !0 || p === !0,
     });
   if (I.applies && !I.ok) {
-    if (p !== !0) f("artifact_publish", "pr_review_template_mismatch");
-    throw new Oe(
+    if (p !== !0) logFeatureBad("artifact_publish", "pr_review_template_mismatch");
+    throw new ArtifactInputError(
       `This page carries the artifact-pr-review machinery but failed publish-time validation: ${I.reason}. Carry the template blocks byte-for-byte and keep the rest of the page within the skill's contract \u2014 no script fragments or event handlers, no elements or attributes that fetch or navigate, no CSS network functions, and no src/href other than the PR's canonical GitHub URL \u2014 then retry.`,
       "pr_review_template_mismatch",
     );
@@ -7395,7 +7395,7 @@ async function rp(e, t) {
 }
 var mr = 8,
   ip = 0.7,
-  sp = Math.floor((YD * ip) / (mr * 2));
+  sp = Math.floor((ARTIFACT_MAX_RESULT_SIZE_CHARS * ip) / (mr * 2));
 function wi(e) {
   let t = e !== null && typeof e === "object" ? e.warnings : void 0;
   if (!Array.isArray(t)) return [];
@@ -7449,7 +7449,7 @@ function qa(e, t) {
   return (e ?? []).filter((r) => !t.has(r)).flatMap((r) => []);
 }
 function Xa(e, t) {
-  let r = jg(e, { max: t }).replace(QC, " ").trim();
+  let r = jg(e, { max: t }).replace(INVISIBLE_BLANKS, " ").trim();
   return r !== "" && r !== "?" ? r : void 0;
 }
 var dp = 32,
@@ -7468,7 +7468,7 @@ var dp = 32,
   ),
   mp = m(() =>
     c({
-      uuid: s().regex(fr),
+      uuid: s().regex(ARTIFACT_SLUG_RE),
       path: s().regex(hp),
       module: O()
         .optional()
@@ -7746,7 +7746,7 @@ function $i(e, t = "supporting file") {
   for (let r of e) {
     if (!hl.has(r.contentType))
       return (
-        f("artifact_publish", "file_not_servable"),
+        logFeatureBad("artifact_publish", "file_not_servable"),
         ie(
           `${t} "${r.path}": contentType ${b(r.contentType)} is not servable (nothing was published). Supporting files are assets the page itself loads \u2014 scripts, styles, images, media, JSON \u2014 and only standard web media types are served, so re-encode a data asset into one (e.g. JSON) or inline it. If the intent was instead to hand the viewer a file to keep, note that neither a served file nor a data:/blob: download link does that (the viewer blocks page-initiated downloads); offering a file to save is a runtime capability where available.`,
         )
@@ -7758,7 +7758,7 @@ function $i(e, t = "supporting file") {
           : r.content.includes(27)
       )
         return (
-          f("artifact_publish", "file_esc_byte"),
+          logFeatureBad("artifact_publish", "file_esc_byte"),
           ie(
             `${t} "${r.path}" carries an ESC byte \u2014 publish ` +
               "text content without escape sequences (nothing was published)",
@@ -7770,7 +7770,7 @@ function $i(e, t = "supporting file") {
           : r.content.includes(0)
       )
         return (
-          f("artifact_publish", "file_nul_byte"),
+          logFeatureBad("artifact_publish", "file_nul_byte"),
           ie(
             `${t} "${r.path}" carries NUL bytes \u2014 publish ` +
               "text content as UTF-8 without embedded NULs (nothing was published)",
@@ -7782,7 +7782,7 @@ function $i(e, t = "supporting file") {
         typeof r.content === "string" ? r.content : r.content.toString("utf8");
       if (/<!(?:DOCTYPE|ENTITY)/i.test(d))
         return (
-          f("artifact_publish", "file_dtd"),
+          logFeatureBad("artifact_publish", "file_dtd"),
           ie(
             `${t} "${r.path}" carries a DOCTYPE or ENTITY ` +
               "declaration \u2014 XML supporting files must not use DTD " +
@@ -7794,7 +7794,7 @@ function $i(e, t = "supporting file") {
       if (_ !== -1) {
         if (!(_ === 0 && /^<\?xml[\s?]/i.test(p)) || p.indexOf("<?", 2) !== -1)
           return (
-            f("artifact_publish", "file_pi"),
+            logFeatureBad("artifact_publish", "file_pi"),
             ie(
               `${t} "${r.path}" carries a processing ` +
                 "instruction \u2014 XML supporting files may carry only a " +
@@ -7811,7 +7811,7 @@ function $i(e, t = "supporting file") {
         (r.content[0] === 254 && r.content[1] === 255))
     )
       return (
-        f("artifact_publish", "file_utf16_bom"),
+        logFeatureBad("artifact_publish", "file_utf16_bom"),
         ie(
           `${t} "${r.path}" is UTF-16 encoded \u2014 publish ` +
             "supporting text files as UTF-8 (nothing was published)",
@@ -7825,7 +7825,7 @@ function $i(e, t = "supporting file") {
           : null;
     if (o !== null && _J(o, { parsedAsMarkup: ose.has(c6(r.contentType)) }))
       return (
-        f("artifact_publish", "file_review_machinery"),
+        logFeatureBad("artifact_publish", "file_review_machinery"),
         ie(
           `${t} "${r.path}" carries the artifact-pr-review machinery; review pages publish as a single file through the publish-time guard (nothing was published)`,
         )
@@ -7834,7 +7834,7 @@ function $i(e, t = "supporting file") {
   return null;
 }
 async function publishArtifact(...e) {
-  let t = Gd();
+  let t = getArtifactPublishStubDir();
   if (t !== null) {
     let o = Buffer.byteLength(e[0], "utf8");
     if (o > MAX_ARTIFACT_BYTES)
@@ -7897,7 +7897,7 @@ async function ka(e, t) {
       t.liveFiles !== void 0)
   )
     return (
-      f("artifact_publish", "create_bad_combo"),
+      logFeatureBad("artifact_publish", "create_bad_combo"),
       ie("invalid publish options")
     );
   let ae = !!o,
@@ -7934,7 +7934,7 @@ async function ka(e, t) {
   if ((t.files !== void 0 && t.files.length > 0) || N.length > 0) {
     if (_J(e))
       return (
-        f("artifact_publish", "review_single_file"),
+        logFeatureBad("artifact_publish", "review_single_file"),
         ie(
           "artifact-pr-review pages are single-file: supporting files are not allowed alongside a review page (nothing was published)",
         )
@@ -7952,7 +7952,7 @@ async function ka(e, t) {
     ge = composeArtifactPage(q.body, t.lang ?? q.roundTripLang),
     pe = Buffer.byteLength(ge, "utf8");
   if (pe > MAX_ARTIFACT_BYTES && q.blockIdBytes > 0 && pe - q.blockIdBytes <= MAX_ARTIFACT_BYTES)
-    (g("artifact_publish", "block_ids_over_cap"),
+    (logFeatureSad("artifact_publish", "block_ids_over_cap"),
       (q = await prepareArtifactBody(e, {
         ...ce,
         docBlockIds: !1,
@@ -7970,7 +7970,7 @@ async function ka(e, t) {
     Ne = ep(Le) ? [isFrameMultiFileEnabled() ? tp : np] : [];
   if (pe > MAX_ARTIFACT_BYTES)
     return (
-      f("artifact_publish", "too_large", {
+      logFeatureBad("artifact_publish", "too_large", {
         page_bytes: pe,
         mermaid_injected: Ge,
         hljs_injected: Te,
@@ -7996,8 +7996,8 @@ async function ka(e, t) {
       de = await br(),
       ee = L(ge, de, t.verifyWorkshopHtml);
     if (!ee.ok) {
-      (g("workshop_html_publish", "verifier_refused"),
-        f("artifact_publish", "workshop_verifier_refused", { page_bytes: pe }));
+      (logFeatureSad("workshop_html_publish", "verifier_refused"),
+        logFeatureBad("artifact_publish", "workshop_verifier_refused", { page_bytes: pe }));
       let xe = ee.violations
           .slice(0, 12)
           .map((Ye) => `- [${Ye.rule}] ${Ye.where} \u2014 ${Ye.hint}`),
@@ -8031,13 +8031,13 @@ async function ka(e, t) {
       let xe = Ip(t.slug, t.refusedSidecarHistory?.());
       if (xe !== null) {
         if (xe.kind === "priors")
-          (g("workshop_html_publish", "sidecar_refused"),
-            f("artifact_publish", "workshop_sidecar_refused", {
+          (logFeatureSad("workshop_html_publish", "sidecar_refused"),
+            logFeatureBad("artifact_publish", "workshop_sidecar_refused", {
               page_bytes: pe,
             }));
         else
-          (g("workshop_html_publish", "sidecar_contract"),
-            f("artifact_publish", "workshop_sidecar_contract", {
+          (logFeatureSad("workshop_html_publish", "sidecar_contract"),
+            logFeatureBad("artifact_publish", "workshop_sidecar_contract", {
               page_bytes: pe,
             }));
         return ie(xe.err);
@@ -8047,8 +8047,8 @@ async function ka(e, t) {
       if (le) {
         if (Be.length > 0)
           return (
-            g("workshop_html_publish", "sidecar_refused"),
-            f("artifact_publish", "workshop_sidecar_refused", {
+            logFeatureSad("workshop_html_publish", "sidecar_refused"),
+            logFeatureBad("artifact_publish", "workshop_sidecar_refused", {
               page_bytes: pe,
             }),
             {
@@ -8065,7 +8065,7 @@ async function ka(e, t) {
         let xe = await Li(t.files, de, pe);
         if (xe !== null) return xe;
       }
-    if (le) y("workshop_html_publish", { count: he });
+    if (le) logFeatureOk("workshop_html_publish", { count: he });
   }
   let He =
     le && (t.template === void 0 || t.template === "plain")
@@ -8089,7 +8089,7 @@ async function ka(e, t) {
             ze.kind === "undeclarable_name",
         ),
         ln = G(ee.malformed, (ze) => ze.kind === "local_server_as_first_party");
-      f(
+      logFeatureBad(
         "artifact_publish",
         Ye > 0
           ? "host_server_unavailable"
@@ -8169,7 +8169,7 @@ async function ka(e, t) {
   } else if (R !== void 0) {
     let L = _o(R).length;
     if (L > 0)
-      g("artifact_publish", "slug_without_pairs", {
+      logFeatureSad("artifact_publish", "slug_without_pairs", {
         page_bytes: pe,
         slug_count: L,
       });
@@ -8180,7 +8180,7 @@ async function ka(e, t) {
     (!Mj.test(t.contract) || t.contract === Z1e)
   )
     return (
-      f("artifact_publish", "invalid_contract", { page_bytes: pe }),
+      logFeatureBad("artifact_publish", "invalid_contract", { page_bytes: pe }),
       ie(
         `invalid contract ${b(t.contract)} \u2014 pass 'latest' ` +
           "or a published version like 0.1.0.",
@@ -8202,7 +8202,7 @@ async function ka(e, t) {
       let de = gi(L);
       if ((await Z(ba, t.signal), !t.signal?.aborted))
         ((L = await readFrameDecl(o, t.signal, t.credentials)),
-          g("artifact_publish", "pin_readback_retried", {
+          logFeatureSad("artifact_publish", "pin_readback_retried", {
             page_bytes: pe,
             ...de,
             recovered: !(L !== null && "err" in L),
@@ -8210,11 +8210,11 @@ async function ka(e, t) {
     }
     if (L !== null && "err" in L)
       if (t.onPinReadError === "assume_none")
-        (g("artifact_publish", "pin_readback_assumed_none", { page_bytes: pe }),
+        (logFeatureSad("artifact_publish", "pin_readback_assumed_none", { page_bytes: pe }),
           (Ft = null));
       else
         return (
-          f("artifact_publish", "pin_readback_failed", {
+          logFeatureBad("artifact_publish", "pin_readback_failed", {
             page_bytes: pe,
             ...gi(L),
           }),
@@ -8241,7 +8241,7 @@ async function ka(e, t) {
     if (L !== null && "err" in L) {
       if (t.contract === void 0)
         return (
-          f("artifact_publish", "capability_readback_failed", {
+          logFeatureBad("artifact_publish", "capability_readback_failed", {
             page_bytes: pe,
             ...gi(L),
           }),
@@ -8250,7 +8250,7 @@ async function ka(e, t) {
               "a republish that declares capabilities must not silently revoke stored ones, so this publish cannot proceed without it. This is usually transient: retry. If the read keeps failing and you intend to move the artifact to the current contract anyway, pass contract: 'latest' (this changes the page's runtime semantics, and the capabilities you send then replace the stored ones).",
           )
         );
-      g("artifact_publish", "retrofit_guard_skipped");
+      logFeatureSad("artifact_publish", "retrofit_guard_skipped");
     } else wt = L?.capabilities ?? {};
   }
   let Et = (L) => (L === rP ? JE : L),
@@ -8263,7 +8263,7 @@ async function ka(e, t) {
     Tt.length > 0 &&
     Rt.some((L) => !tt.includes(L))
   ) {
-    f("artifact_publish", "capability_retrofit_refused");
+    logFeatureBad("artifact_publish", "capability_retrofit_refused");
     let L = rt(Tt, 8, ([ee]) => jg(ee)),
       de = jg(b({ ...Object.fromEntries(Tt), ...Ue }), { max: 600 });
     return ie(
@@ -8287,14 +8287,14 @@ async function ka(e, t) {
       rp(Ga(L, D ? o : void 0, t.credentials, t.signal), [...Je, ...Ne]).then(
         (de) => {
           if (de.err === null && Me !== void 0)
-            g(
+            logFeatureSad(
               "artifact_publish",
               Me === "repaired"
                 ? "nested_page_repaired"
                 : "nested_repair_partial",
             );
           if (de.err === null && De)
-            g("artifact_publish", "hoisted_comment_dropped");
+            logFeatureSad("artifact_publish", "hoisted_comment_dropped");
           let ee =
             de.err === null
               ? [...Be, ...(de.refusedClassSidecarTypes ?? [])]
@@ -8306,7 +8306,7 @@ async function ka(e, t) {
       );
   if (t.createPath !== void 0 && _J(Le))
     return (
-      f("artifact_publish", "review_single_file"),
+      logFeatureBad("artifact_publish", "review_single_file"),
       ie(
         "artifact-pr-review pages are single-file: supporting files are not allowed alongside a review page (nothing was published)",
       )
@@ -8321,14 +8321,14 @@ async function ka(e, t) {
   ) {
     if (_J(Le))
       return (
-        f("artifact_publish", "review_single_file"),
+        logFeatureBad("artifact_publish", "review_single_file"),
         ie(
           "artifact-pr-review pages are single-file: supporting files are not allowed alongside a review page (nothing was published)",
         )
       );
     if (!isFrameMultiFileEnabled())
       return (
-        f("artifact_publish", "multifile_flag_off", {
+        logFeatureBad("artifact_publish", "multifile_flag_off", {
           n_files: Dt.length + N.length,
           n_removed: Qe.length,
         }),
@@ -8340,7 +8340,7 @@ async function ka(e, t) {
       );
     if (N.length > 0 && !isFrameCopyFromEnabled())
       return (
-        f("artifact_publish", "copy_from_flag_off", { n_copied: N.length }),
+        logFeatureBad("artifact_publish", "copy_from_flag_off", { n_copied: N.length }),
         ie(Fi)
       );
     if (t.createPath !== void 0)
@@ -8441,8 +8441,8 @@ async function bi(e, t) {
   )
     return r;
   if (e.thumbnail === void 0 && e.thumbnailDark === void 0)
-    return (f("artifact_publish", "thumbnail_rejected"), r);
-  g("artifact_publish", "thumbnail_rejected");
+    return (logFeatureBad("artifact_publish", "thumbnail_rejected"), r);
+  logFeatureSad("artifact_publish", "thumbnail_rejected");
   let { thumbnail: o, thumbnailDark: d, ...p } = e,
     _ =
       r.created === void 0
@@ -8521,7 +8521,7 @@ function An(e) {
   let t = Sp().safeParse(e);
   if (!t.success) return;
   let r = xp[t.data.error],
-    o = p1(t.data.message, 200),
+    o = scrubServerLine(t.data.message, 200),
     d = o !== "" ? o : Ap[r];
   return { capType: r, message: `${PUBLISH_CAP_FRAME}${d}` };
 }
@@ -8531,7 +8531,7 @@ var va = 3,
 function ll(e, t) {
   let r = Ep * 2 ** (e - 2),
     o = Math.round(r + Math.random() * 0.25 * r),
-    d = Yy(t) ?? 0;
+    d = parseRetryAfterHeader(t) ?? 0;
   return Math.min(Math.max(d, o), al);
 }
 class Pn extends Error {
@@ -8606,7 +8606,7 @@ async function fl(e, t, r, o, d = !1) {
           n("[artifact] /deploy/direct 429 is a plan cap \u2014 not retrying"),
           _
         );
-      let I = Yy(_.response?.headers?.["retry-after"]) ?? 2000,
+      let I = parseRetryAfterHeader(_.response?.headers?.["retry-after"]) ?? 2000,
         N = Math.min(I, 30000);
       return (
         C({ status: 429, attempt: 2, maxAttempts: 2, delayMs: N }),
@@ -8615,7 +8615,7 @@ async function fl(e, t, r, o, d = !1) {
       );
     }
     if (D && _.ok) {
-      let I = Math.min(Yy(_.response?.headers?.["retry-after"]) ?? 1000, al);
+      let I = Math.min(parseRetryAfterHeader(_.response?.headers?.["retry-after"]) ?? 1000, al);
       return (
         C({ status: 503, attempt: 2, maxAttempts: 2, delayMs: I }),
         await M(I),
@@ -8641,7 +8641,7 @@ async function fl(e, t, r, o, d = !1) {
     return _;
   } finally {
     if (R !== void 0)
-      (g(
+      (logFeatureSad(
         "artifact_publish",
         R === 503 ? "deploy_503_retried" : "deploy_429_retried",
         {
@@ -8667,23 +8667,23 @@ function En() {
 async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
   let F = {
       page_bytes: p.pageBytes,
-      lane: u(p.lane),
+      lane: fromEnum(p.lane),
       forced: p.forced,
-      template: u(p.template),
+      template: fromEnum(p.template),
       ...gl(t),
       ...(D !== void 0 && D.length > 0 && { n_files: D.length }),
     },
     I;
   if (R !== void 0 && D !== void 0 && D.length > 0) {
     let J = wr(e, D, []);
-    if (J !== null) return (f("artifact_publish", J.kind, F), ie(J.msg));
+    if (J !== null) return (logFeatureBad("artifact_publish", J.kind, F), ie(J.msg));
     let U = Object.create(null);
     U["index.html"] = { content: e, contentType: "text/html", live: !0 };
     let te = Si - Ct(e);
     for (let re of D) {
       let ce = Rn(re);
       if (((te -= Ct(ce)), te < 0))
-        return (f("artifact_publish", "too_large", F), ie("file too large"));
+        return (logFeatureBad("artifact_publish", "too_large", F), ie("file too large"));
       U[re.path] = {
         content: ce,
         contentType: re.contentType,
@@ -8737,7 +8737,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
         hr.test(_e) &&
         (/\bforce\b/.test(_e) || (U !== void 0 && /\bbaseVersion\b/.test(_e)))
       )
-        (g("artifact_publish", "force_field_rejected", F),
+        (logFeatureSad("artifact_publish", "force_field_rejected", F),
           n(
             "[artifact] CP rejected force/baseVersion as unknown \u2014 retrying without them",
           ),
@@ -8753,7 +8753,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
       q.status === 400 &&
       /force and baseVersion are mutually exclusive/.test(Jt(q.data))
     )
-      (g("artifact_publish", "exclusivity_retry", F),
+      (logFeatureSad("artifact_publish", "exclusivity_retry", F),
         n(
           "[artifact] pre-relaxation CP rejected force+baseVersion \u2014 retrying without the precondition",
         ),
@@ -8763,12 +8763,12 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
       _e.reason === "no-auth"
         ? Am(_e.detail)
         : `publish unavailable: ${_e.reason}`;
-    if (!q.ok) return (f("artifact_publish", q.reason, F), ie(ge(q)));
+    if (!q.ok) return (logFeatureBad("artifact_publish", q.reason, F), ie(ge(q)));
     if (
       ((N = q.fromFrame ? Ii(q.status, q.data) : null),
       N && !ue && N.slug !== t.slug)
     )
-      return (f("artifact_publish", "deploy_slug_mismatch", F), ie(xi()));
+      return (logFeatureBad("artifact_publish", "deploy_slug_mismatch", F), ie(xi()));
     if (N && N.kind === void 0 && R === void 0 && !M?.aborted) {
       let _e = ll(2, q.response?.headers?.["retry-after"]);
       (n(
@@ -8783,7 +8783,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
           ((ae = "unknown"), (q = await ce()), (ae = "answered"));
         }
       } finally {
-        (g("artifact_publish", "deploy_stranded_retried", {
+        (logFeatureSad("artifact_publish", "deploy_stranded_retried", {
           ...F,
           fresh_publish: ue,
           deploy_final_status: ae === "answered" && q.ok ? q.status : 0,
@@ -8792,24 +8792,24 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
           C?.({ settled: !0 }));
       }
       if (!q.ok)
-        return (f("artifact_publish", q.reason, F), Xt(ie(ge(q)), N, ue, ae));
+        return (logFeatureBad("artifact_publish", q.reason, F), Xt(ie(ge(q)), N, ue, ae));
     }
     if (!q.fromFrame)
       return (
-        f("artifact_publish", "relay_error", { ...F, deploy_status: q.status }),
+        logFeatureBad("artifact_publish", "relay_error", { ...F, deploy_status: q.status }),
         Xt(ie(Ri(q.status)), N, ue, ae)
       );
     if (((U ?? o) || te || (isFrameBaseVersionEnabled() && !isArtifactConflictLegacy())) && q.status === 409) {
       let _e = yl(q.data);
       if (_e)
         return (
-          f("artifact_publish", "conflict", F),
+          logFeatureBad("artifact_publish", "conflict", F),
           Xt({ ...ie(bl(_e)), conflict: !0, conflictDetail: _e }, N, ue, ae)
         );
     }
     if (R !== void 0 && q.status === 404)
       return (
-        f("artifact_publish", "create_not_enabled", {
+        logFeatureBad("artifact_publish", "create_not_enabled", {
           ...F,
           deploy_status: 404,
         }),
@@ -8826,7 +8826,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
         p.liveFilesOn === !0,
       );
       if (_e.code !== "thumbnail_rejected")
-        f("artifact_publish", _e.code ?? "deploy_failed", {
+        logFeatureBad("artifact_publish", _e.code ?? "deploy_failed", {
           ...F,
           deploy_status: q.status,
           ..._e.extra,
@@ -8845,17 +8845,17 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
     let pe = Ai().safeParse(q.data);
     if (!pe.success)
       return (
-        f("artifact_publish", "deploy_incomplete", F),
+        logFeatureBad("artifact_publish", "deploy_incomplete", F),
         Xt(ie(En()), N, ue, ae)
       );
     let { slug: Le, version: Ge, read: Te, shared: Me, kind: De } = pe.data;
     if (re.slug && Le !== re.slug)
       return (
-        f("artifact_publish", "deploy_slug_mismatch", F),
+        logFeatureBad("artifact_publish", "deploy_slug_mismatch", F),
         Xt(ie(xi()), N, ue, ae)
       );
     if (R !== void 0 && (ha == null || De !== ha.LIVE_DOC_KIND))
-      return (f("artifact_publish", "deploy_incomplete", F), ie(En()));
+      return (logFeatureBad("artifact_publish", "deploy_incomplete", F), ie(En()));
     let Ne = Ya(q.data),
       le = Ne?.map((_e) => _e.path),
       he =
@@ -8878,7 +8878,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
       Je = ol(q.response?.headers?.date);
     return (
       recordOwnPublish(_, Le, Ge),
-      y("artifact_publish", {
+      logFeatureOk("artifact_publish", {
         ...F,
         e2e_ms: Math.round(performance.now() - p.t0),
         is_redeploy: p.isRedeploy,
@@ -8906,7 +8906,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
     );
   } catch (J) {
     return (
-      f(
+      logFeatureBad(
         "artifact_publish",
         J instanceof yr ? "relay_request_error" : "request_error",
         { ...F, ...dl(J, p.t0), ...V },
@@ -8926,8 +8926,8 @@ async function Li(e, t, r, o = "sidecar file") {
   for (let _ of d) {
     let w = p(pl(_.content), t, "probe");
     if (w.ok) continue;
-    (g("workshop_html_publish", "verifier_refused"),
-      f("artifact_publish", "workshop_verifier_refused", {
+    (logFeatureSad("workshop_html_publish", "verifier_refused"),
+      logFeatureBad("artifact_publish", "workshop_verifier_refused", {
         page_bytes: r,
         sidecar_bytes: Buffer.byteLength(_.content, "utf8"),
       }));
@@ -9113,7 +9113,7 @@ function Mi(e, t, r, o) {
         : "every file needs a non-empty path";
     if (p.has(w.path))
       return `${b(w.path)} is listed more than once in \`files\` (once as a copy from another artifact). List each path once.`;
-    if ((p.add(w.path), !fr.test(w.from.slug) || !w.from.path))
+    if ((p.add(w.path), !ARTIFACT_SLUG_RE.test(w.from.slug) || !w.from.path))
       return `file ${b(w.path)}: its source must name an artifact and a published path`;
     if (w.from.path === "index.html")
       return `file ${b(w.path)}: another artifact's page (index.html) is not a copyable file \u2014 read it and publish your own content`;
@@ -9133,7 +9133,7 @@ async function filesOnlyPublishProblem(e, t, r) {
   if (o !== null) return o.err;
   if (t.length > 0 && !isFrameCopyFromEnabled())
     return (
-      f("artifact_publish", "copy_from_flag_off", { n_copied: t.length }),
+      logFeatureBad("artifact_publish", "copy_from_flag_off", { n_copied: t.length }),
       Fi
     );
   let d = wr(null, e, [])?.msg ?? Mi(null, e, t, []);
@@ -9141,7 +9141,7 @@ async function filesOnlyPublishProblem(e, t, r) {
   return (await Li(e, await br(), 0, "file"))?.err ?? null;
 }
 async function publishInstanceFiles(e, t) {
-  if (Gd() !== null)
+  if (getArtifactPublishStubDir() !== null)
     return ie(
       "publishing to an Artifact created from an Artifact type is not available in eval stub mode",
     );
@@ -9149,7 +9149,7 @@ async function publishInstanceFiles(e, t) {
   if (!(ne().frozenArtifactTypes?.typesOn ?? isFrameMultiFileEnabled())) {
     let _ = t.removeFiles ?? [];
     return (
-      f("artifact_publish", "multifile_flag_off", {
+      logFeatureBad("artifact_publish", "multifile_flag_off", {
         n_files: e.length + r.length,
         n_removed: _.length,
       }),
@@ -9163,7 +9163,7 @@ async function publishInstanceFiles(e, t) {
   }
   if (r.length > 0 && !isFrameCopyFromEnabled())
     return (
-      f("artifact_publish", "copy_from_flag_off", { n_copied: r.length }),
+      logFeatureBad("artifact_publish", "copy_from_flag_off", { n_copied: r.length }),
       ie(Fi)
     );
   let d = $i(e, "file");
@@ -9219,10 +9219,10 @@ async function publishInstanceFiles(e, t) {
   );
 }
 async function publishLiveDocVersion(e) {
-  if (Gd() !== null) return ie("invalid publish options");
+  if (getArtifactPublishStubDir() !== null) return ie("invalid publish options");
   if (!isFrameMultiFileEnabled())
     return (
-      f("artifact_publish", "multifile_flag_off", { n_files: 0, n_removed: 0 }),
+      logFeatureBad("artifact_publish", "multifile_flag_off", { n_files: 0, n_removed: 0 }),
       ie("invalid publish options")
     );
   if (![...e.base.values()].some((r) => r.live === !0))
@@ -9277,16 +9277,16 @@ async function Ni(e, t, r, o, d, p, _) {
     I = F?.detach ?? [],
     N = {
       page_bytes: R.pageBytes,
-      lane: u(R.lane),
+      lane: fromEnum(R.lane),
       n_files: t.length + r.length,
       n_copied: r.length,
       n_removed: o.length,
       forced: R.forced,
-      template: u(R.template),
+      template: fromEnum(R.template),
       ...gl(d),
     },
-    ae = (L) => (f("artifact_publish", "files_invalid", N), ie(L)),
-    ue = (L) => (f("artifact_publish", "too_large", N), ie(L)),
+    ae = (L) => (logFeatureBad("artifact_publish", "files_invalid", N), ie(L)),
+    ue = (L) => (logFeatureBad("artifact_publish", "too_large", N), ie(L)),
     V = e === null || (d.slug !== void 0 && w !== void 0) ? "patch" : "replace";
   if (o.length > 0 && V === "replace")
     return ae(
@@ -9444,7 +9444,7 @@ async function Ni(e, t, r, o, d, p, _) {
     if (L.length > 0) wt.push(L);
   }
   let mt = async (L) => {
-      let de = Yy(L) ?? 2000;
+      let de = parseRetryAfterHeader(L) ?? 2000;
       if ((await Z(Math.min(de, 30000), M), M?.aborted))
         return (n("[artifact] 429 retry cancelled by user"), !1);
       return !0;
@@ -9452,9 +9452,9 @@ async function Ni(e, t, r, o, d, p, _) {
     Et = (L) => {
       let de = L.fromFrame && L.status === 429 ? An(L.data) : void 0;
       if (de)
-        f("artifact_publish", "publish_cap_reached", {
+        logFeatureBad("artifact_publish", "publish_cap_reached", {
           ...N,
-          cap_type: u(de.capType),
+          cap_type: fromEnum(de.capType),
         });
       return de;
     },
@@ -9542,7 +9542,7 @@ async function Ni(e, t, r, o, d, p, _) {
           return ct;
         },
         qe = (et) =>
-          typeof et?.slug === "string" && fr.test(et.slug) ? et.slug : void 0,
+          typeof et?.slug === "string" && ARTIFACT_SLUG_RE.test(et.slug) ? et.slug : void 0,
         Ae,
         nt = "";
       for (let et = 0; et < 2; et++) {
@@ -9572,7 +9572,7 @@ async function Ni(e, t, r, o, d, p, _) {
         if (We.status === 404) {
           if (hoe(We.data))
             return (
-              f("artifact_publish", "prepare_not_found", N),
+              logFeatureBad("artifact_publish", "prepare_not_found", N),
               {
                 ...ie(
                   "the server does not recognize this artifact for updating (it may no longer exist or may not be yours to update). The files were NOT published.",
@@ -9611,7 +9611,7 @@ async function Ni(e, t, r, o, d, p, _) {
         }
         if (L !== void 0 && ct !== L)
           return (
-            f("artifact_publish", "prepare_slug_mismatch", N),
+            logFeatureBad("artifact_publish", "prepare_slug_mismatch", N),
             ie(
               "the server answered the upload preflight for a different " +
                 "artifact \u2014 not publishing.",
@@ -9637,7 +9637,7 @@ async function Ni(e, t, r, o, d, p, _) {
           let Ve = await Nt(L, be);
           if (!Ve.ok)
             return (
-              f("artifact_publish", Ve.reason, N),
+              logFeatureBad("artifact_publish", Ve.reason, N),
               ie(
                 Ve.reason === "no-auth"
                   ? Am(Ve.detail) + Ee
@@ -9652,7 +9652,7 @@ async function Ni(e, t, r, o, d, p, _) {
                   `Publish again to slug ${L} after the reset.`,
               );
             return (
-              f(
+              logFeatureBad(
                 "artifact_publish",
                 Ve.fromFrame
                   ? "prepare_upload_failed"
@@ -9673,7 +9673,7 @@ async function Ni(e, t, r, o, d, p, _) {
           let be = await Nt(L, tt);
           if (!be.ok)
             return (
-              f("artifact_publish", be.reason, N),
+              logFeatureBad("artifact_publish", be.reason, N),
               ie(
                 be.reason === "no-auth"
                   ? Am(be.detail) + Ee
@@ -9686,7 +9686,7 @@ async function Ni(e, t, r, o, d, p, _) {
               return ie(
                 `${Ke.message} \u2014 this publish didn't finish. Publish again to slug ${L} after the reset.`,
               );
-            f(
+            logFeatureBad(
               "artifact_publish",
               be.fromFrame ? "copy_upload_failed" : "copy_upload_relay_error",
               { ...N, upload_status: be.status },
@@ -9712,7 +9712,7 @@ async function Ni(e, t, r, o, d, p, _) {
               ),
             kt = be.data?.files;
           if (!Array.isArray(kt) || kt.length !== tt.length)
-            return (f("artifact_publish", "copy_echo_malformed", N), Ve());
+            return (logFeatureBad("artifact_publish", "copy_echo_malformed", N), Ve());
           for (let [Ke, nn] of tt.entries()) {
             let dt = kt[Ke];
             if (
@@ -9721,7 +9721,7 @@ async function Ni(e, t, r, o, d, p, _) {
               typeof dt.contentType !== "string" ||
               !hl.has(dt.contentType)
             )
-              return (f("artifact_publish", "copy_echo_malformed", N), Ve());
+              return (logFeatureBad("artifact_publish", "copy_echo_malformed", N), Ve());
             ((nn.sha = dt.sha256), (nn.contentType = dt.contentType));
           }
           if (
@@ -9731,7 +9731,7 @@ async function Ni(e, t, r, o, d, p, _) {
             _.workshopSurface && Rt.length > 0)
           )
             return (
-              f("artifact_publish", "copy_refused_sidecar", N),
+              logFeatureBad("artifact_publish", "copy_refused_sidecar", N),
               ie(
                 `workshop pages cannot ship renderable or executable sidecar files \u2014 each is a URL that bypasses the publish-time verifier: ${jN(Rt.join(", "))} (copied). Nothing was published.${Ee}`,
               )
@@ -9739,7 +9739,7 @@ async function Ni(e, t, r, o, d, p, _) {
           let tn = tt.filter((Ke) => ose.has(c6(Ke.contentType ?? "")));
           if (tn.length > 0)
             return (
-              f("artifact_publish", "copy_refused_document", N),
+              logFeatureBad("artifact_publish", "copy_refused_document", N),
               ie(
                 `copied file ${b(tn[0].c.path)} is ${tn[0].contentType}: a page, SVG or XML document cannot be copied from another artifact into a publish (its content must pass this tool's checks, which a server-side copy skips) \u2014 read it with action "read_file" and publish it from the local copy instead. Nothing was published.${Ee}`,
               )
@@ -9756,7 +9756,7 @@ async function Ni(e, t, r, o, d, p, _) {
                 : void 0;
           if (Or !== void 0)
             return (
-              f("artifact_publish", "copy_refused_script", N),
+              logFeatureBad("artifact_publish", "copy_refused_script", N),
               ie(
                 `copied file ${b(Or.c.path)} is ${Or.contentType}: a script its source stores under a name that does not say so cannot be copied into an artifact made from a type (the approval counted it as data) \u2014 copy it to a path with a script extension, or read it with action "read_file" and publish it from the local copy instead. Nothing was published.${Ee}`,
               )
@@ -9794,7 +9794,7 @@ async function Ni(e, t, r, o, d, p, _) {
         }
         if (ut.ok && ut.status === 200 && !ut.data?.version)
           return (
-            f("artifact_publish", "prepare_no_version", N),
+            logFeatureBad("artifact_publish", "prepare_no_version", N),
             ie(En() + Ee)
           );
         ((ee = ut), (xe = !0));
@@ -9802,7 +9802,7 @@ async function Ni(e, t, r, o, d, p, _) {
       }
       if (tt.length > 0 && !xe && !st)
         return (
-          f("artifact_publish", "copy_no_preflight", {
+          logFeatureBad("artifact_publish", "copy_no_preflight", {
             ...N,
             prepare_status: Ae?.status ?? 0,
           }),
@@ -9812,7 +9812,7 @@ async function Ni(e, t, r, o, d, p, _) {
         );
       if (st && !xe)
         return (
-          f("artifact_publish", "prepare_rerun_failed", {
+          logFeatureBad("artifact_publish", "prepare_rerun_failed", {
             ...N,
             prepare_status: Ae?.status ?? 0,
           }),
@@ -9839,12 +9839,12 @@ async function Ni(e, t, r, o, d, p, _) {
       });
       if (!Re.ok)
         return (
-          f("artifact_publish", Re.reason, N),
+          logFeatureBad("artifact_publish", Re.reason, N),
           ie(`publish unavailable: ${Re.reason}`)
         );
       if (!Re.fromFrame)
         return (
-          f("artifact_publish", "relay_error", {
+          logFeatureBad("artifact_publish", "relay_error", {
             ...N,
             deploy_status: Re.status,
           }),
@@ -9854,12 +9854,12 @@ async function Ni(e, t, r, o, d, p, _) {
         let Ae = Jt(Re.data);
         if (Re.status === 400 && Ta(Ae, Ue))
           return (
-            f("artifact_publish", "live_files_unsupported", N),
+            logFeatureBad("artifact_publish", "live_files_unsupported", N),
             ie(Ra(Ae, Ue.emptyPatch))
           );
         if (Re.status === 404 || (hr.test(Ae) && Sa.test(Ae)))
           return (
-            f("artifact_publish", "multifile_unsupported", N),
+            logFeatureBad("artifact_publish", "multifile_unsupported", N),
             It(Re.status, Ae)
           );
       }
@@ -9874,7 +9874,7 @@ async function Ni(e, t, r, o, d, p, _) {
           R.liveFilesOn === !0,
         );
         if (Ae.code !== "thumbnail_rejected")
-          f("artifact_publish", Ae.code ?? "deploy_failed", {
+          logFeatureBad("artifact_publish", Ae.code ?? "deploy_failed", {
             ...N,
             deploy_status: Re.status,
             ...Ae.extra,
@@ -9883,7 +9883,7 @@ async function Ni(e, t, r, o, d, p, _) {
       }
       let qe = Ai().safeParse(Re.data);
       if (!qe.success)
-        return (f("artifact_publish", "deploy_incomplete", N), ie(En()));
+        return (logFeatureBad("artifact_publish", "deploy_incomplete", N), ie(En()));
       ((L = qe.data.slug),
         (de = qe.data.version),
         (Ye = ki(Re.data)),
@@ -9899,7 +9899,7 @@ async function Ni(e, t, r, o, d, p, _) {
     if (!xe && De.length > 0) {
       if (L === void 0)
         return (
-          f("artifact_publish", "deploy_incomplete", N),
+          logFeatureBad("artifact_publish", "deploy_incomplete", N),
           ie("internal: no slug available for staged upload")
         );
       let ve = new Set();
@@ -9908,12 +9908,12 @@ async function Ni(e, t, r, o, d, p, _) {
         let Ae = await Nt(L, qe);
         if (!Ae.ok)
           return (
-            f("artifact_publish", Ae.reason, N),
+            logFeatureBad("artifact_publish", Ae.reason, N),
             ie(`upload unavailable: ${Ae.reason}.${Ee}`)
           );
         if (Ae.status === 404)
           return (
-            f("artifact_publish", "multifile_unsupported", N),
+            logFeatureBad("artifact_publish", "multifile_unsupported", N),
             It(404, "", { maybeGone: d.slug !== void 0, debris: Ee })
           );
         if (Ae.status !== 200) {
@@ -9921,7 +9921,7 @@ async function Ni(e, t, r, o, d, p, _) {
           if (nt)
             return ie(`${nt.message} \u2014 try again after the reset.${Ee}`);
           return (
-            f(
+            logFeatureBad(
               "artifact_publish",
               Ae.fromFrame ? "upload_failed" : "upload_relay_error",
               { ...N, upload_status: Ae.status },
@@ -9938,7 +9938,7 @@ async function Ni(e, t, r, o, d, p, _) {
       let Re = De.filter((qe) => !ve.has(qe.sha));
       if (Re.length > 0)
         return (
-          f("artifact_publish", "upload_hash_mismatch", N),
+          logFeatureBad("artifact_publish", "upload_hash_mismatch", N),
           ie(
             `file upload did not stage ${Re.length} file(s) under the ` +
               "expected content hash \u2014 not publishing a manifest that would " +
@@ -9973,12 +9973,12 @@ async function Ni(e, t, r, o, d, p, _) {
     }
     if (ee === void 0)
       return (
-        f("artifact_publish", "deploy_incomplete", N),
+        logFeatureBad("artifact_publish", "deploy_incomplete", N),
         ie("internal: publish flow completed without a deploy")
       );
     if (!ee.ok)
       return (
-        f("artifact_publish", ee.reason, N),
+        logFeatureBad("artifact_publish", ee.reason, N),
         ie(
           (ee.reason === "no-auth"
             ? Am(ee.detail)
@@ -9987,7 +9987,7 @@ async function Ni(e, t, r, o, d, p, _) {
       );
     if (!ee.fromFrame)
       return (
-        f("artifact_publish", "relay_error", {
+        logFeatureBad("artifact_publish", "relay_error", {
           ...N,
           deploy_status: ee.status,
         }),
@@ -9997,12 +9997,12 @@ async function Ni(e, t, r, o, d, p, _) {
       let ve = Jt(ee.data);
       if (ee.status === 400 && Ta(ve, Ue))
         return (
-          f("artifact_publish", "live_files_unsupported", N),
+          logFeatureBad("artifact_publish", "live_files_unsupported", N),
           ie(Ra(ve, Ue.emptyPatch) + Ee)
         );
       if (ee.status === 404 || (hr.test(ve) && Sa.test(ve)))
         return (
-          f("artifact_publish", "multifile_unsupported", N),
+          logFeatureBad("artifact_publish", "multifile_unsupported", N),
           It(ee.status, ve, {
             maybeGone: ee.status === 404 && d.slug !== void 0,
             debris: Ee,
@@ -10016,7 +10016,7 @@ async function Ni(e, t, r, o, d, p, _) {
       let ve = yl(ee.data);
       if (ve)
         return (
-          f("artifact_publish", "conflict", N),
+          logFeatureBad("artifact_publish", "conflict", N),
           {
             url: null,
             slug: null,
@@ -10038,7 +10038,7 @@ async function Ni(e, t, r, o, d, p, _) {
         R.liveFilesOn === !0,
       );
       if (ve.code !== "thumbnail_rejected")
-        f("artifact_publish", ve.code ?? "deploy_failed", {
+        logFeatureBad("artifact_publish", ve.code ?? "deploy_failed", {
           ...N,
           deploy_status: ee.status,
           ...ve.extra,
@@ -10054,10 +10054,10 @@ async function Ni(e, t, r, o, d, p, _) {
     }
     let at = Ai().safeParse(ee.data);
     if (!at.success)
-      return (f("artifact_publish", "deploy_incomplete", N), ie(En() + Ee));
+      return (logFeatureBad("artifact_publish", "deploy_incomplete", N), ie(En() + Ee));
     let { slug: ze, version: jt, read: cn, shared: $n, kind: Fn } = at.data;
     if (L && ze !== L)
-      return (f("artifact_publish", "deploy_slug_mismatch", N), ie(xi() + Ee));
+      return (logFeatureBad("artifact_publish", "deploy_slug_mismatch", N), ie(xi() + Ee));
     let lt = Ya(ee.data),
       un = lt?.map((ve) => ve.path),
       Er = (un ?? []).filter(
@@ -10087,7 +10087,7 @@ async function Ni(e, t, r, o, d, p, _) {
       Rr = sl(ee.response?.headers?.[il]),
       rc = ol(ee.response?.headers?.date);
     (recordOwnPublish(_.ownPublishes, ze, jt),
-      y("artifact_publish", {
+      logFeatureOk("artifact_publish", {
         ...N,
         e2e_ms: Math.round(performance.now() - R.t0),
         is_redeploy: R.isRedeploy,
@@ -10119,7 +10119,7 @@ async function Ni(e, t, r, o, d, p, _) {
     };
   } catch (L) {
     return (
-      f(
+      logFeatureBad(
         "artifact_publish",
         L instanceof yr ? "relay_request_error" : "request_error",
         { ...N, ...dl(L, R.t0), ...Je },
@@ -10129,7 +10129,7 @@ async function Ni(e, t, r, o, d, p, _) {
   }
 }
 function artifactViewerUrl(e) {
-  return new URL(T5t(e), YZe() ?? Vt().CLAUDE_AI_ORIGIN).toString();
+  return new URL(artifactViewerPath(e), YZe() ?? getOauthConfig().CLAUDE_AI_ORIGIN).toString();
 }
 var ARTIFACT_LIST_RELS = ["mine", "shared"];
 function isKnownRel(e) {
@@ -10152,7 +10152,7 @@ function Fp(e, t) {
 }
 var Ai = m(() =>
   c({
-    slug: s().regex(fr),
+    slug: s().regex(ARTIFACT_SLUG_RE),
     version: s().regex(VER_SHAPE),
     read: se().optional(),
     shared: se().optional(),
@@ -10199,7 +10199,7 @@ function ml(e, t, r = !1) {
 }
 var Mp = m(() =>
     c({
-      slug: s().regex(fr),
+      slug: s().regex(ARTIFACT_SLUG_RE),
       title: s().max(4000).optional(),
       favicon: se().optional(),
       rel: s(),
@@ -10219,7 +10219,7 @@ async function listArtifacts(e, t) {
   let { scope: r = "mine", pins: o = !1, signal: d, credentials: p } = t;
   if (r !== "mine" && isFrameListSharedScopeKilled())
     return (
-      f("artifact_list", "scope_disabled"),
+      logFeatureBad("artifact_list", "scope_disabled"),
       { err: "shared-scope listing is disabled", reason: "scope_disabled" }
     );
   let _;
@@ -10238,7 +10238,7 @@ async function listArtifacts(e, t) {
         await Z(300 + Math.random() * 500);
         continue;
       }
-      if (!d?.aborted) f("artifact_list", "request_error");
+      if (!d?.aborted) logFeatureBad("artifact_list", "request_error");
       return {
         err: `artifact listing failed: ${l(I)}`,
         reason: "request_error",
@@ -10252,7 +10252,7 @@ async function listArtifacts(e, t) {
   }
   if (!_.ok)
     return (
-      f("artifact_list", "not_ok"),
+      logFeatureBad("artifact_list", "not_ok"),
       {
         err:
           _.reason === "no-auth"
@@ -10263,7 +10263,7 @@ async function listArtifacts(e, t) {
     );
   if (!_.fromFrame)
     return (
-      f("artifact_list", "relay_error"),
+      logFeatureBad("artifact_list", "relay_error"),
       {
         err: `artifact listing failed (relay HTTP ${_.status})`,
         reason: "relay_error",
@@ -10272,14 +10272,14 @@ async function listArtifacts(e, t) {
   if (_.status < 200 || _.status >= 300) {
     let F = _.status >= 500 ? "http_5xx" : "http_4xx";
     return (
-      f("artifact_list", F),
+      logFeatureBad("artifact_list", F),
       { err: `artifact listing failed (HTTP ${_.status})`, reason: F }
     );
   }
   let w = $p().safeParse(_.data);
   if (!w.success)
     return (
-      f("artifact_list", "malformed_body"),
+      logFeatureBad("artifact_list", "malformed_body"),
       {
         err: "artifact listing failed: malformed response",
         reason: "malformed_body",
@@ -10306,7 +10306,7 @@ async function listArtifacts(e, t) {
         softDeleted: J,
         starred: U,
       } = I.data,
-      te = iie(I.data.favicon);
+      te = vetForeignFavicon(I.data.favicon);
     if (J === !0 || !isKnownRel(ue)) continue;
     if (r !== "all" && ue !== r) continue;
     let re = yw(ae ?? "") ?? "Untitled";
@@ -10321,14 +10321,14 @@ async function listArtifacts(e, t) {
   }
   if (E.length > 0 && C.length === 0 && D === E.length)
     return (
-      f("artifact_list", "all_rows_dropped"),
+      logFeatureBad("artifact_list", "all_rows_dropped"),
       {
         err: "artifact listing failed: response rows were unreadable",
         reason: "all_rows_dropped",
       }
     );
-  if ((y("artifact_list"), r !== "mine"))
-    y(
+  if ((logFeatureOk("artifact_list"), r !== "mine"))
+    logFeatureOk(
       r === "shared" ? "artifact_list_scope_shared" : "artifact_list_scope_all",
     );
   return {
@@ -10417,7 +10417,7 @@ function Ii(e, t) {
     typeof t !== "object" ||
     !("slug" in t) ||
     typeof t.slug !== "string" ||
-    !fr.test(t.slug)
+    !ARTIFACT_SLUG_RE.test(t.slug)
   )
     return null;
   return {
@@ -10536,7 +10536,7 @@ function yl(e) {
     e.conflict !== !0 ||
     !("live" in e) ||
     typeof e.live !== "string" ||
-    !L6.test(e.live) ||
+    !ARTIFACT_VERSION_SAFE_RE.test(e.live) ||
     kr(e) !== void 0
   )
     return null;
@@ -10618,11 +10618,11 @@ function Ti(e, t, r, o, d = !1) {
     let _ = denyPolicyBody(t);
     if (_) {
       let w = Bp.find((R) => R === _.reason),
-        E = w ? u(w) : void 0;
+        E = w ? fromEnum(w) : void 0;
       return {
         code: "publish_denied",
         ...(E && { extra: { deny_reason: E } }),
-        msg: PUBLISH_DENIED_FRAME + p1(_.error, 300),
+        msg: PUBLISH_DENIED_FRAME + scrubServerLine(_.error, 300),
       };
     }
   }
@@ -10632,7 +10632,7 @@ function Ti(e, t, r, o, d = !1) {
     if (_)
       return {
         code: "publish_cap_reached",
-        extra: { cap_type: u(_.capType) },
+        extra: { cap_type: fromEnum(_.capType) },
         msg: `${_.message} \u2014 try again after the reset.`,
       };
   }
@@ -10676,24 +10676,24 @@ function Up(e, t, r) {
       code: "live_over_budget",
       msg:
         typeof t === "string"
-          ? `deploy 422: ${p1(t.trimEnd().replace(wl, ""), 500)}`
+          ? `deploy 422: ${scrubServerLine(t.trimEnd().replace(wl, ""), 500)}`
           : `deploy 422: ${errBody(t)}`,
     };
   if (e === 422 && typeof t === "string" && zp.test(t))
-    return { code: "live_over_budget", msg: `deploy 422: ${p1(t, 500)}` };
+    return { code: "live_over_budget", msg: `deploy 422: ${scrubServerLine(t, 500)}` };
   if (e === 503 && o === "render_busy")
     return { code: "render_busy", msg: `deploy 503: ${errBody(t)}` };
   return;
 }
 var zp = /exceeds the live-editing budget/;
 function Ra(e, t) {
-  return `deploy 400: ${p1(e, 200)}`;
+  return `deploy 400: ${scrubServerLine(e, 200)}`;
 }
 function Ta(e, t) {
   return (t.liveKey && Cp.test(e)) || (t.emptyPatch && Op.test(e));
 }
 function errBody(e) {
-  return p1(Jt(e), 200);
+  return scrubServerLine(Jt(e), 200);
 }
 function Jt(e) {
   if (typeof e === "string") return e;
@@ -10855,7 +10855,7 @@ function foldShareProbe(e, t, r) {
       if (r.consumedByCheck) vl(p);
       return;
     }
-    if (r.consumedByCheck) f("artifact_share_status", d.errorCode);
+    if (r.consumedByCheck) logFeatureBad("artifact_share_status", d.errorCode);
     setShareEntry(e, {
       mode: p?.mode ?? "owner",
       isSharedLive: p?.isSharedLive ?? !1,
@@ -10954,12 +10954,12 @@ function probedLivePaths(e) {
   return t?.artifactKind === NH ? [Soe] : [];
 }
 function vl(e) {
-  if (e.probeFailed) f("artifact_share_status", "probe_failed");
+  if (e.probeFailed) logFeatureBad("artifact_share_status", "probe_failed");
   else if (e.mode === "unknown")
-    g("artifact_share_status", "unknown_share_mode");
+    logFeatureSad("artifact_share_status", "unknown_share_mode");
   else if (e.role === "unknown")
-    g("artifact_share_status", "unknown_share_role");
-  else y("artifact_share_status");
+    logFeatureSad("artifact_share_status", "unknown_share_role");
+  else logFeatureOk("artifact_share_status");
 }
 function deriveShareStatus(e, t) {
   if (e === void 0 || e === "" || e === "owner")
@@ -11221,7 +11221,7 @@ function vK(e) {
 import {
   lstat as Rl,
   open as eh,
-  readlink as th,
+  readlink,
   realpath as zi,
   stat as nh,
 } from "fs/promises";
@@ -11237,11 +11237,11 @@ async function gJ(e, t) {
 }
 import { constants as Ui } from "fs";
 import {
-  dirname as Tl,
-  isAbsolute as $t,
+  dirname,
+  isAbsolute,
   join as On,
-  normalize as At,
-  relative as rh,
+  normalize,
+  relative,
   sep as pt,
 } from "path";
 function Qt(e) {
@@ -11344,7 +11344,7 @@ function pFe(e, t, r) {
   return e === t || e.startsWith(t + pt) || e === r || e.startsWith(r + pt);
 }
 function tTn(e, t, r) {
-  let o = Sr(At(t));
+  let o = Sr(normalize(t));
   if (o === r) return e;
   if (e === o) return r;
   return e.startsWith(o + pt) ? r + e.slice(o.length) : e;
@@ -11356,11 +11356,11 @@ function Sr(e) {
 function lYe(e, t) {
   if (Qt(e)) return null;
   if (e === "~" || e.startsWith(`~${pt}`) || e.startsWith("~/")) return null;
-  if ($t(e)) {
-    let o = At(e);
+  if (isAbsolute(e)) {
+    let o = normalize(e);
     return Qt(o) ? null : o;
   }
-  let r = At(e);
+  let r = normalize(e);
   if (r === ".." || r.startsWith(`..${pt}`)) return null;
   return On(t, r);
 }
@@ -11369,35 +11369,35 @@ async function fFe(e) {
   for (let r = 0; r < 40; r++) {
     let o;
     try {
-      o = await th(t);
+      o = await readlink(t);
     } catch {
       return !1;
     }
-    if (ac(o, Tl(t))) return !0;
+    if (ac(o, dirname(t))) return !0;
     if (o.split(/\/+/).includes("..")) return !0;
-    if (((t = Sr($t(o) ? At(o) : On(Tl(t), o))), Qt(t))) return !0;
+    if (((t = Sr(isAbsolute(o) ? normalize(o) : On(dirname(t), o))), Qt(t))) return !0;
   }
   return !0;
 }
 async function oh(e, t, r) {
   let o = await zi(e);
-  if (t === void 0) return { realCwd: o, realRoot: o, lexRoot: At(e) };
+  if (t === void 0) return { realCwd: o, realRoot: o, lexRoot: normalize(e) };
   if (Qt(t))
     return {
       errMsg: `root: ${JSON.stringify(t)} is a network path \u2014 the publish base must lie within the working directory`,
     };
-  let d = At(t);
-  if (!$t(d) && (d === ".." || d.startsWith(`..${pt}`)))
+  let d = normalize(t);
+  if (!isAbsolute(d) && (d === ".." || d.startsWith(`..${pt}`)))
     return {
       errMsg:
         `root: ${JSON.stringify(t)} escapes the working directory \u2014 ` +
         "the publish base must lie within it",
     };
-  if ($t(d) && !pFe(d, e, o))
+  if (isAbsolute(d) && !pFe(d, e, o))
     return {
       errMsg: `root: ${JSON.stringify(t)} is outside the working directory \u2014 pass a working-directory-relative path`,
     };
-  let p = $t(d) ? d : On(o, d),
+  let p = isAbsolute(d) ? d : On(o, d),
     _ = r?.denyPath?.(p, !1, t);
   if (_ !== void 0) return { errMsg: _ };
   if (await fFe(p))
@@ -11428,7 +11428,7 @@ async function oh(e, t, r) {
   }
   if (!E.isDirectory())
     return { errMsg: `root: ${JSON.stringify(t)} is not a directory` };
-  let R = Sr($t(d) ? d : On(At(e), d));
+  let R = Sr(isAbsolute(d) ? d : On(normalize(e), d));
   return { realCwd: o, realRoot: w, lexRoot: R };
 }
 async function nTn(e, t, r, o) {
@@ -11471,7 +11471,7 @@ async function nTn(e, t, r, o) {
       return {
         errMsg: `files: ${JSON.stringify(I)} \u2014 "~" is not expanded here; pass a base-relative or absolute path`,
       };
-    let N = $t(I) ? void 0 : At(I);
+    let N = isAbsolute(I) ? void 0 : normalize(I);
     if (N !== void 0 && (N === ".." || N.startsWith(`..${pt}`)))
       return {
         errMsg:
@@ -11481,14 +11481,14 @@ async function nTn(e, t, r, o) {
     let ae = lYe(I, _);
     if (ae === null)
       return { errMsg: `files: ${JSON.stringify(I)} cannot be resolved` };
-    if ($t(I) && !pFe(ae, p, At(t)))
+    if (isAbsolute(I) && !pFe(ae, p, normalize(t)))
       return {
         errMsg: `files: ${JSON.stringify(I)} is outside the working directory \u2014 pass a path under it`,
       };
     let ue = o?.denyPath?.(ae, !1, I);
     if (ue !== void 0) return { errMsg: ue };
     if (w !== _) {
-      let re = N ?? (ae.startsWith(_ + pt) ? rh(_, ae) : void 0);
+      let re = N ?? (ae.startsWith(_ + pt) ? relative(_, ae) : void 0);
       if (re !== void 0) {
         let ce = o?.denyPath?.(On(w, re), !0, I);
         if (ce !== void 0) return { errMsg: ce };
@@ -11668,7 +11668,7 @@ function rTn(e, t) {
 }
 var hh = /[\x00-\x08\x0b-\x1f\x7f-\x9f\u2028\u2029]+/g;
 function oTn(e) {
-  return Ml(vge(rae, e.replace(hh, " ")));
+  return scrubArtifactEnvelopeTags(vge(rae, e.replace(hh, " ")));
 }
 var her = 524288,
   Ol = 3149824;
@@ -11718,9 +11718,9 @@ function Dqt(e) {
     : void 0;
 }
 function Sw(e, t = {}) {
-  let r = Wt(e);
+  let r = parseArtifactUrl(e);
   if (r === null)
-    return { ok: !1, message: t.notUrlMessage ?? Ikn(e), errorCode: 4 };
+    return { ok: !1, message: t.notUrlMessage ?? notAnArtifactUrlMessage(e), errorCode: 4 };
   let o = Vo();
   if (r.env !== o) {
     let d = t.envHint ? ` \u2014 ${t.envHint(o)}` : "";
@@ -11784,7 +11784,7 @@ async function Mqt(
   try {
     N = p ? await Nd.getRelayOnly(F, I) : await Nd.get(F, I);
   } catch (ge) {
-    if (qi(ge)) throw ge;
+    if (isCancel(ge)) throw ge;
     return {
       err: "artifact read failed (network error)",
       errorCode: "boot_request_error",
@@ -11898,7 +11898,7 @@ async function IC(
     credentials: E,
   },
 ) {
-  let R = w ? g : f,
+  let R = w ? logFeatureSad : logFeatureBad,
     C = await Mqt(e, r, {
       relayOnly: d,
       agentPeer: p,
@@ -11976,7 +11976,7 @@ async function Ser(e, t, r) {
       },
     );
   } catch (w) {
-    if (qi(w)) throw w;
+    if (isCancel(w)) throw w;
     return { err: "renew_miss" };
   }
   if (!o.ok || !o.fromFrame || o.status < 200 || o.status >= 300)
@@ -12045,7 +12045,7 @@ async function wh(e, t) {
     try {
       _ = await r(e.source.path);
     } catch (w) {
-      if (qi(w)) throw w;
+      if (isCancel(w)) throw w;
     }
     if (_?.ok && _.status === 200)
       return (
@@ -12077,7 +12077,7 @@ async function wh(e, t) {
   try {
     p = await r(e.servedPath);
   } catch (_) {
-    if (qi(_)) throw _;
+    if (isCancel(_)) throw _;
     return (
       yoe(),
       d("the gateway request failed in transport", "request_error")
@@ -12095,7 +12095,7 @@ async function wh(e, t) {
     );
   if (p.status === 404 && e.fileRead)
     return (
-      f(e.feature, "asset_file_not_found", { relay: !0 }),
+      logFeatureBad(e.feature, "asset_file_not_found", { relay: !0 }),
       {
         relayed: !0,
         result: {
@@ -12155,14 +12155,14 @@ function ED(e, t, r, o = "artifact_webfetch_read") {
 async function ber(e, t, r, o, d = "artifact_webfetch_read") {
   let p = wJ(t);
   if ("errMsg" in p)
-    return (f(d, "invalid_path"), { err: `artifact read failed: ${p.errMsg}` });
+    return (logFeatureBad(d, "invalid_path"), { err: `artifact read failed: ${p.errMsg}` });
   return jl(e, r, d, p.key, o);
 }
 async function jl(e, t, r, o, d) {
   let p = kh(o);
   if (p === void 0)
     return (
-      f(r, "invalid_file_path"),
+      logFeatureBad(r, "invalid_file_path"),
       { err: "artifact file path is not a clean relative path" }
     );
   let _ = await IC(e, r, t, { credentials: d });
@@ -12170,7 +12170,7 @@ async function jl(e, t, r, o, d) {
   let { ver: w, assetToken: E } = _;
   if (o !== void 0 && E === void 0)
     return (
-      f(r, "public_file"),
+      logFeatureBad(r, "public_file"),
       {
         err: "the files of a public artifact read from outside its organization are not readable this way",
         status: 403,
@@ -12194,7 +12194,7 @@ async function jl(e, t, r, o, d) {
           ? "writer"
           : "reader",
     J = Cl(_.data.origin_metadata),
-    U = (le, he, Ce, Be = () => y(r, M(Ce))) => {
+    U = (le, he, Ce, Be = () => logFeatureOk(r, M(Ce))) => {
       Be();
       let He =
           o === void 0
@@ -12270,8 +12270,8 @@ async function jl(e, t, r, o, d) {
           ? `To allow artifact reads here, add ${re} to the network allowlist of the environment this remote session runs in.`
           : `To allow artifact reads here, add ${re} to the network allowlist this session runs behind \u2014 the sandbox's allowed domains, or the Claude desktop app's network settings (Settings \u2192 Capabilities; a workspace admin can add it on Team/Enterprise).`,
     q = (le, he) => (
-      f(r, "asset_egress_blocked", {
-        relay: u(le.code),
+      logFeatureBad(r, "asset_egress_blocked", {
+        relay: fromEnum(le.code),
         ...(le.status !== void 0 && { relay_status: le.status }),
         ...(!he && { connect: !0 }),
       }),
@@ -12292,7 +12292,7 @@ async function jl(e, t, r, o, d) {
           signal: t,
           ...(C !== void 0 && { source: C }),
         },
-        (Ce, Be, He) => U(Ce, Be, He, () => g(r, he, M(He))),
+        (Ce, Be, He) => U(Ce, Be, He, () => logFeatureSad(r, he, M(He))),
       ),
     pe;
   if (
@@ -12321,7 +12321,7 @@ async function jl(e, t, r, o, d) {
         return Ce.relayed ? Ce.result : q(Ce, le);
       }
       return (
-        f(r, "asset_egress_blocked", { ...(!le && { connect: !0 }) }),
+        logFeatureBad(r, "asset_egress_blocked", { ...(!le && { connect: !0 }) }),
         {
           err:
             E === void 0 && he
@@ -12333,7 +12333,7 @@ async function jl(e, t, r, o, d) {
       );
     },
     De = (le) =>
-      ra.get(le, {
+      externalHttp.get(le, {
         signal: t,
         timeout: 30000,
         responseType: "arraybuffer",
@@ -12352,7 +12352,7 @@ async function jl(e, t, r, o, d) {
     try {
       le = await De(`${Ge}${C.path}?__frame_t=${encodeURIComponent(E)}`);
     } catch (he) {
-      if (qi(he)) throw he;
+      if (isCancel(he)) throw he;
       if (F1e(he)) return Me(!1);
     }
     if (le !== void 0 && bN(le.status, le.headers)) return Me(!0);
@@ -12367,11 +12367,11 @@ async function jl(e, t, r, o, d) {
   try {
     Ne = await De(Te);
   } catch (le) {
-    if (qi(le)) throw le;
+    if (isCancel(le)) throw le;
     if (F1e(le)) return Me(!1);
     let he = KU(le),
       Ce = he === void 0 ? void 0 : (U1e(he.headers) ?? vK(he.headers)),
-      Be = Txt(le),
+      Be = isTransportError(le),
       He =
         he !== void 0
           ? `proxy refused the connection: ${G5(he.connectStatus)}${Ce === void 0 ? "" : `, ${Ce}`}`
@@ -12384,12 +12384,12 @@ async function jl(e, t, r, o, d) {
           : `, and the session gateway could not serve the read either (${je.why})`,
       Je = (je) =>
         je !== void 0 && {
-          relay: u(je.code),
+          relay: fromEnum(je.code),
           ...(je.status !== void 0 && { relay_status: je.status }),
         };
     if (he !== void 0 && he.connectStatus === 407)
       return (
-        f(r, "asset_proxy_refused", { status: he.connectStatus, ...Je(pe) }),
+        logFeatureBad(r, "asset_proxy_refused", { status: he.connectStatus, ...Je(pe) }),
         {
           err: `artifact content fetch failed (${He})${Ue(pe)}`,
           status: he.connectStatus,
@@ -12408,7 +12408,7 @@ async function jl(e, t, r, o, d) {
         _e = je;
       }
     return (
-      f(r, "asset_request_error", {
+      logFeatureBad(r, "asset_request_error", {
         ...(he !== void 0 && { status: he.connectStatus }),
         ...Je(_e),
       }),
@@ -12432,7 +12432,7 @@ async function jl(e, t, r, o, d) {
     let le = Zt(Ne.headers, Ne.data, (Ce) => _Fe(Ce, E));
     if (Ne.status === 403 && E === void 0 && Yi(Ne.headers, le))
       return (
-        f(r, "public_asset_forbidden"),
+        logFeatureBad(r, "public_asset_forbidden"),
         {
           err: "artifact is not publicly readable at this version",
           status: 403,
@@ -12440,7 +12440,7 @@ async function jl(e, t, r, o, d) {
       );
     if (Ne.status === 404 && p !== "" && E !== void 0 && Hl(Ne.headers, le))
       return (
-        g(r, "file_not_in_manifest"),
+        logFeatureSad(r, "file_not_in_manifest"),
         {
           err: "this version of the artifact has no file at that path",
           status: 404,
@@ -12449,7 +12449,7 @@ async function jl(e, t, r, o, d) {
       );
     let he = Hi(Ne.status, le);
     return (
-      f(r, he ?? "asset_failed"),
+      logFeatureBad(r, he ?? "asset_failed"),
       {
         err: `artifact content fetch failed (${xh(Ne.status, Ne.headers, le)})`,
         status: Ne.status,
@@ -12480,11 +12480,11 @@ function xh(e, t, r) {
   let o = [`HTTP ${e}`],
     d = vK(t);
   if (d === void 0 && r.reason !== void 0)
-    o.push(`response body: "${Ml(r.reason.replaceAll('"', "'"))}"`);
+    o.push(`response body: "${scrubArtifactEnvelopeTags(r.reason.replaceAll('"', "'"))}"`);
   else if (d !== void 0)
     o.push(`the environment's egress proxy reported: ${d}`);
   else if (r.proxyError !== void 0)
-    o.push(`x-proxy-error header: "${Ml(r.proxyError.replaceAll('"', "'"))}"`);
+    o.push(`x-proxy-error header: "${scrubArtifactEnvelopeTags(r.proxyError.replaceAll('"', "'"))}"`);
   if (r.requestId !== void 0) o.push(`x-request-id: ${r.requestId}`);
   return o.join("; ");
 }
@@ -12538,7 +12538,7 @@ function artifactHostUnreachable(e) {
   let t = ne();
   return (
     t.contentHostEgressDenied.has(e.env) ||
-    t.contentHostEgressUnanswered.has(sie(e))
+    t.contentHostEgressUnanswered.has(artifactContentOriginUrlFor(e))
   );
 }
 function Eh(e) {
@@ -12547,7 +12547,7 @@ function Eh(e) {
 }
 async function probeArtifactHostEgress(e, t) {
   let r = ne(),
-    o = sie(e);
+    o = artifactContentOriginUrlFor(e);
   if (r.contentHostEgressDenied.has(e.env)) {
     (r.contentHostEgressProbed.delete(o), r.contentHostEgressUnanswered.add(o));
     return;
@@ -12584,7 +12584,7 @@ async function Rh(e, t, r) {
     },
     w;
   try {
-    w = await ra.get(`${t}/`, {
+    w = await externalHttp.get(`${t}/`, {
       signal: AbortSignal.any([r, AbortSignal.timeout(Ul)]),
       timeout: Ul,
       maxRedirects: 0,
@@ -12619,9 +12619,9 @@ function Wl(e) {
   for (let _ of Th) {
     let w = zl(_, e);
     if (
-      (Vl(t, _, _ === "policySettings" ? [...w, ...pie()] : w, e),
+      (Vl(t, _, _ === "policySettings" ? [...w, ...getDurablePolicyTierSettings()] : w, e),
       r === void 0 &&
-        !(_ === "policySettings" && dS() === "hkcu") &&
+        !(_ === "policySettings" && getPolicySettingsOrigin() === "hkcu") &&
         w.some((E) => E?.[e.enableKey] === !0))
     )
       r = _;
@@ -12645,11 +12645,11 @@ function Wl(e) {
   };
 }
 function zl(e, t) {
-  if (e === "policySettings") return [...Rd(), ye("policySettings")];
+  if (e === "policySettings") return [...getAllPolicyTierSettings(), getSettingsForSource("policySettings")];
   if (!Nr(e)) return [];
-  if (e === "localSettings") return [ye(e), W5t()];
-  let r = ye(e);
-  if (e === "projectSettings" && Ch(r, t) && Nr("userSettings") && zT())
+  if (e === "localSettings") return [getSettingsForSource(e), getLegacyLocalSettingsOverlay()];
+  let r = getSettingsForSource(e);
+  if (e === "projectSettings" && Ch(r, t) && Nr("userSettings") && projectSettingsAliasesUserSettings())
     return [];
   return [r];
 }
@@ -12667,9 +12667,9 @@ function Vl(e, t, r, o) {
     e.push({ layer: t, via: "legacyDisableKey" });
 }
 function Oh(e) {
-  if (a[e] || Ie(Ki(xC(), e)) || Ie(vBe(e)) || Ie(Ki(moe(), e))) return !0;
+  if (a[e] || Ie(Ki(xC(), e)) || Ie(getAdminTierEnvValue(e)) || Ie(Ki(moe(), e))) return !0;
   for (let t of ["flagSettings", "userSettings"])
-    if (Nr(t) && Ie(Ki(ye(t)?.env, e))) return !0;
+    if (Nr(t) && Ie(Ki(getSettingsForSource(t)?.env, e))) return !0;
   return !1;
 }
 function Ki(e, t) {
@@ -12724,7 +12724,7 @@ function Nh() {
   return Kl() === null;
 }
 function Kl() {
-  if (Pe() !== "firstParty") return "third_party_provider";
+  if (getAPIProvider() !== "firstParty") return "third_party_provider";
   if (St()) return "essential_traffic_only";
   if (po(a.CLAUDE_CODE_ARTIFACT)) return "artifact_env_off";
   if (!Ie(a.CLAUDE_CODE_ARTIFACT) && $h()) return "sdk_default_off";
@@ -12745,7 +12745,7 @@ function isArtifactToolEligible() {
   return ql();
 }
 function Ih() {
-  let e = KJ();
+  let e = getPolicyLimitsIneligibleReason();
   return e === void 0 || e === "prosumer_oauth" || e === "no_auth";
 }
 function Jl() {
@@ -12763,7 +12763,7 @@ function Ql() {
   return "admin_policy";
 }
 function isArtifactToolEnabled() {
-  if (Gd() !== null) return isArtifactToolRegistered();
+  if (getArtifactPublishStubDir() !== null) return isArtifactToolRegistered();
   return M1e() && isArtifactToolRegistered() && Qi();
 }
 function isArtifactToolRegistered() {
@@ -12771,7 +12771,7 @@ function isArtifactToolRegistered() {
 }
 function artifactToolWithholdingGate() {
   if (Ar()) return "switched_off";
-  if (Gd() !== null) return null;
+  if (getArtifactPublishStubDir() !== null) return null;
   return Xl() ?? Ql();
 }
 function isArtifactReadEnabled() {
@@ -12817,7 +12817,7 @@ function maybeLogArtifactDisabledSession() {
   let t = Ji();
   if (t === null) return;
   i("tengu_artifact_disabled_session", {
-    mechanism: u(t),
+    mechanism: fromEnum(t),
     session_interactivity:
       !ke() || Vd() === "claude-vscode" || Hd()
         ? S("interactive")
@@ -12832,7 +12832,7 @@ function maybeLogArtifactToolWithheld(e) {
     let o = t.artifactWithheldReasonsLogged.at(-1);
     if (o === void 0 || t.artifactWithheldRecoveryLogged) return;
     ((t.artifactWithheldRecoveryLogged = !0),
-      i("tengu_artifact_tool_recovered", { withheld_reason: u(o) }));
+      i("tengu_artifact_tool_recovered", { withheld_reason: fromEnum(o) }));
     return;
   }
   if (Pw() === null) return;
@@ -12840,8 +12840,8 @@ function maybeLogArtifactToolWithheld(e) {
   if (t.artifactWithheldReasonsLogged.includes(r)) return;
   (t.artifactWithheldReasonsLogged.push(r),
     i("tengu_artifact_tool_withheld", {
-      reason: u(r),
-      off_mechanism: we(r === "switched_off" ? Ji() : null),
+      reason: fromEnum(r),
+      off_mechanism: fromEnumOpt(r === "switched_off" ? Ji() : null),
       after_registered: t.artifactRegisteredSeen,
     }));
 }
@@ -12850,10 +12850,10 @@ function jh(e) {
     case "surface_excluded":
       return Eg() ? "surface_excluded" : "nested_child_session";
     case "admin_policy": {
-      if (!ec(qn())) return "subscription_ineligible";
-      let t = ch();
+      if (!ec(getSubscriptionType())) return "subscription_ineligible";
+      let t = getResponseFromCache();
       if (t === null)
-        return Cme() ? "policy_route_missing" : "policy_cache_miss";
+        return isPolicyRouteMissing() ? "policy_route_missing" : "policy_cache_miss";
       return t.restrictions.allow_cobalt_plinth === void 0
         ? "compliance_taint"
         : "org_policy_denied";
@@ -12873,8 +12873,8 @@ function isArtifactConfigToggleable() {
 }
 function Qi() {
   if (dn()) return artifactYieldAdminRefusal() === null;
-  if (!ec(qn())) return !1;
-  return Mt("allow_cobalt_plinth");
+  if (!ec(getSubscriptionType())) return !1;
+  return isPolicyAllowed("allow_cobalt_plinth");
 }
 function ec(e) {
   return (
@@ -12887,13 +12887,13 @@ function ec(e) {
 }
 function artifactYieldAdminRefusal() {
   if (!dn()) return null;
-  let e = WUe();
+  let e = getStoredOAuthSubscriptionType();
   if (e === null) return "plan_unreadable";
   if (e !== "pro" && e !== "max") return "org_policy_unverifiable";
-  if (!lA()) return "policy_unavailable";
-  if (Mt("allow_cobalt_plinth")) return null;
-  if (ch() !== null) return "org_denied";
-  return Cme() ? "policy_route_missing" : "cache_miss";
+  if (!isPolicyLimitsEligible()) return "policy_unavailable";
+  if (isPolicyAllowed("allow_cobalt_plinth")) return null;
+  if (getResponseFromCache() !== null) return "org_denied";
+  return isPolicyRouteMissing() ? "policy_route_missing" : "cache_miss";
 }
 function isPlanArtifactEnabled() {
   return !1;

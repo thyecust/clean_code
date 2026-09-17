@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Z, Xrt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
@@ -18,10 +18,10 @@ import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱�
 import { iu } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { WZ, R$n } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import { yW } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getGlobalClaudeFile as Pi, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getGlobalClaudeFile, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { C_, yi, Ow, parseSettingsFileUncached as Zge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { C_, yi, Ow, parseSettingsFileUncached } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   GOe,
   iT,
@@ -42,8 +42,8 @@ import {
   jun,
   NGn,
   lUt,
-  isRemoteToolServingMuted as m3,
-  onServingMuteRecheck as AV,
+  isRemoteToolServingMuted,
+  onServingMuteRecheck,
   pT,
   $X,
   Sde,
@@ -82,20 +82,20 @@ import {
   zMe,
   pXn,
   H9t,
-  evaluateHookIfCondition as x_n,
+  evaluateHookIfCondition,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { findGitRootUncached as k0 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { findGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { getSettingsFilePathForSource as ho, getSettingsForSource as ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource, getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { I6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isViolinWoodEnabledCached as ri, isViolinAmatiEnabledCached as nVt } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { isViolinWoodEnabledCached, isViolinAmatiEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { hD } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { untrustedDeviceHint as Rme } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
-import { primeUnattendedServingConsent as v3e } from "../AutoMode-自动模式/chunk-15n5gf3t.js";
+import { untrustedDeviceHint } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { primeUnattendedServingConsent } from "../AutoMode-自动模式/chunk-15n5gf3t.js";
 import { p2n, m2n } from "../远程工具执行/chunk-66axrkvh.js";
 import { xC, moe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { kS } from "../Bridge-RemoteControl/chunk-x379yyxb.js";
@@ -353,9 +353,9 @@ function en(e) {
     scopeWriteRoots: (o, d) => vne(e, o, d),
     scopeWriteEntries: (o) => {
       let d = $X(o, e),
-        t = ho(o);
+        t = getSettingsFilePathForSource(o);
       if (o === "policySettings" || !t) return d;
-      let r = Zge(t, o === "flagSettings" ? (MA() ?? d8()) : void 0);
+      let r = parseSettingsFileUncached(t, o === "flagSettings" ? (MA() ?? d8()) : void 0);
       if (r.errors.some((k) => (k.severity ?? "fatal") === "fatal"))
         return (
           n(
@@ -366,7 +366,7 @@ function en(e) {
         );
       return Y([...$X(o, e, r.settings), ...d]);
     },
-    scopeSettingsFile: (o) => ho(o) ?? null,
+    scopeSettingsFile: (o) => getSettingsFilePathForSource(o) ?? null,
     addedDirectories: () => mp(),
   };
 }
@@ -382,7 +382,7 @@ function nn() {
   };
 }
 var Cst = new j(nn);
-import { randomUUID as hn } from "crypto";
+import { randomUUID } from "crypto";
 var tn = m(() =>
     it({
       status: X(["announced", "withdrawn"]),
@@ -430,7 +430,7 @@ function sn(e) {
   return { kind: "failed", reason: o };
 }
 async function Ce(e, o, d = {}) {
-  v3e();
+  primeUnattendedServingConsent();
   let t = new AbortController();
   try {
     let r = await e.postControlRequest(He(o), {
@@ -528,7 +528,7 @@ function Ie(e) {
       let { body: G, trimmed: x } = ln(U);
       if (x && !M)
         ((M = !0),
-          g("remote_tools_client_announce", "passthrough_over_frame"),
+          logFeatureSad("remote_tools_client_announce", "passthrough_over_frame"),
           n(
             `[remoteToolsAnnounce] the announce with this machine's ${U.passthrough.length} MCP tools is larger than the worker reads (${Pe} chars); announcing without them \u2014 they stay on the device bridge`,
             { level: "warn" },
@@ -668,7 +668,7 @@ function Me({ serving: e, manager: o, observer: d }) {
       let R = { ...r, signal: AbortSignal.any([r.signal, k.signal]) };
       pn(R, e, o, d)
         .catch((_) => {
-          (h(_), o()?.releaseServedChannelRequest(r.requestId));
+          (logError(_), o()?.releaseServedChannelRequest(r.requestId));
         })
         .finally(() => t.delete(r.requestId));
     },
@@ -711,7 +711,7 @@ function xe(e) {
   try {
     e();
   } catch (o) {
-    h(o);
+    logError(o);
   }
 }
 async function mn(e, o, d) {
@@ -752,16 +752,16 @@ function gn(e) {
 }
 function vn(e) {
   if (e.kind === "announced") {
-    y("remote_tools_client_announce");
+    logFeatureOk("remote_tools_client_announce");
     return;
   }
-  g(
+  logFeatureSad(
     "remote_tools_client_announce",
     e.kind === "unsupported" ? "unsupported" : `${e.kind}_${gn(e.reason)}`,
   );
 }
 function Rst(e) {
-  let o = `cc-${hn()}`,
+  let o = `cc-${randomUUID()}`,
     d = null,
     t = !1,
     r = null,
@@ -808,7 +808,7 @@ function Rst(e) {
             ((w = !0),
               e.onNotice?.(
                 "announce_unverified",
-                pT.announce_unverified(Rme()),
+                pT.announce_unverified(untrustedDeviceHint()),
               ));
         } else if (x.kind === "retry" && x.reason === "stale_worker_epoch")
           _ = void 0;
@@ -891,7 +891,7 @@ function Rst(e) {
     ee =
       W instanceof Promise
         ? W.then(p).catch((x) => {
-            h(x);
+            logError(x);
           })
         : Promise.resolve(p(W)),
     B = () => {},
@@ -952,8 +952,8 @@ function Rst(e) {
   return G;
 }
 import { realpath as te } from "fs/promises";
-import { isAbsolute as Nn } from "path";
-import { posix as ce } from "path";
+import { isAbsolute } from "path";
+import { posix } from "path";
 function yn(e, o) {
   let d = e.replace(/\/+$/, "");
   if (!d.startsWith("/") || d === "") return [];
@@ -1134,8 +1134,8 @@ function On(e) {
   if (t.some((C) => /[^\x21-\x7e]/.test(C))) return "unjudgeable";
   if (!r.startsWith("/") || he.test(r)) return "unjudgeable";
   let k = jun;
-  if (!An.has(Kf(ce.normalize(r))))
-    return t.slice(1).every(k) ? ce.normalize(r) : "unjudgeable";
+  if (!An.has(Kf(posix.normalize(r))))
+    return t.slice(1).every(k) ? posix.normalize(r) : "unjudgeable";
   let R = t[1] === "-S" ? t.slice(2) : t.slice(1),
     _ = R[0];
   if (
@@ -1145,7 +1145,7 @@ function On(e) {
     !R.slice(1).every(k)
   )
     return "unjudgeable";
-  if (_.startsWith("/")) return he.test(_) ? "unjudgeable" : ce.normalize(_);
+  if (_.startsWith("/")) return he.test(_) ? "unjudgeable" : posix.normalize(_);
   return /^[\w.+-]+$/.test(_) ? null : "unjudgeable";
 }
 var he = /(?:^|\/)\.\.(?:\/|$)/,
@@ -1220,7 +1220,7 @@ async function Ne(e, o, d = !1, t = !1) {
           ...(S.site.form === "exec" &&
           S.site.slot === "arg0" &&
           r.command.startsWith("/")
-            ? [he.test(r.command) ? "unjudgeable" : ce.normalize(r.command)]
+            ? [he.test(r.command) ? "unjudgeable" : posix.normalize(r.command)]
             : []),
           ...(S.interpreter === null
             ? [On(S.bytes)].filter((I) => I !== null)
@@ -1780,12 +1780,12 @@ function Ln(e, o = Date.now()) {
 }
 function P6e(e) {
   return (
-    (e.legacyConfigFile ??= jn(Pi(), NGn(e, moe()))),
+    (e.legacyConfigFile ??= jn(getGlobalClaudeFile(), NGn(e, moe()))),
     Ln(e.legacyConfigFile),
     e.legacyConfigFile
   );
 }
-function oIt(e, o, d = (t) => ye(t)?.env) {
+function oIt(e, o, d = (t) => getSettingsForSource(t)?.env) {
   let t = (k) =>
       e.pinnedScopes.has(k) ||
       (k === "userSettings" && e.everInReach.has("user")) ||
@@ -1794,7 +1794,7 @@ function oIt(e, o, d = (t) => ye(t)?.env) {
       o.env !== void 0 &&
       typeof o.real === "string" &&
       o.real !== "unresolvable" &&
-      Nn(o.path) &&
+      isAbsolute(o.path) &&
       !Ih([o.path, o.real], [...e.stickyRoots]);
   return Object.assign(
     {},
@@ -1808,7 +1808,7 @@ function sIt(e, o) {
 }
 function Est() {
   return (
-    P() !== "windows" && ri() && nVt() && !a.CLAUDE_CODE_DISABLE_HOOK_FORWARDING
+    P() !== "windows" && isViolinWoodEnabledCached() && isViolinAmatiEnabledCached() && !a.CLAUDE_CODE_DISABLE_HOOK_FORWARDING
   );
 }
 function qn(e) {
@@ -1885,11 +1885,11 @@ function Be({
     },
     () => {},
   );
-  let O = { ...Hi() };
+  let O = { ...subprocessEnv() };
   lUt(o, P6e(o).env);
   let A = o.senderFor(e),
     F = () => {
-      let p = Hi();
+      let p = subprocessEnv();
       return Cwe({
         attached: O,
         beforeSettings: xC(),
@@ -1906,7 +1906,7 @@ function Be({
       pin: rAe(),
       staging: D,
       run: (p, S, L) => yW(S.launchDir, () => Q7n(p, S, J7n, L)),
-      evaluateCondition: (p, S) => x_n(p, S, d(), S.cwd),
+      evaluateCondition: (p, S) => evaluateHookIfCondition(p, S, d(), S.cwd),
       parseTarget: (p) => {
         let S = F();
         return GOe(p, {
@@ -1922,14 +1922,14 @@ function Be({
       onLine: (p, S) => k({ line: p, level: S }),
       telemetry: (p) => {
         let S = Bn(p.outcome);
-        if (S === "ok") y("device_hooks_serve");
-        else if (S === "sad") g("device_hooks_serve", p.outcome);
-        else if (S === "bad") f("device_hooks_serve", p.outcome);
+        if (S === "ok") logFeatureOk("device_hooks_serve");
+        else if (S === "sad") logFeatureSad("device_hooks_serve", p.outcome);
+        else if (S === "bad") logFeatureBad("device_hooks_serve", p.outcome);
         i("tengu_device_hook_served", {
-          event: we(p.event),
-          kind: we(p.kind),
-          outcome: u(p.outcome),
-          exit_class: we(p.exitClass),
+          event: fromEnumOpt(p.event),
+          kind: fromEnumOpt(p.kind),
+          outcome: fromEnum(p.outcome),
+          exit_class: fromEnumOpt(p.exitClass),
           duration_ms: p.durationMs,
           translated_paths: p.translatedPaths,
           replay: p.replay,
@@ -1940,10 +1940,10 @@ function Be({
         });
       },
       debug: (p) => n(p),
-      logError: h,
+      logError: logError,
       extraWritableRoots: () => Rht(e),
       hostEnv: F,
-      childEnvironment: (p, S) => iUt(p, S, Hi()),
+      childEnvironment: (p, S) => iUt(p, S, subprocessEnv()),
       placePath: Y7,
       resolveProgram: b4e,
       defaultShell: () => hD(),
@@ -1954,7 +1954,7 @@ function Be({
       respond: t,
       release: r,
       logError: (p) => {
-        (h(p), f("device_hooks_serve", "serve_threw"));
+        (logError(p), logFeatureBad("device_hooks_serve", "serve_threw"));
       },
     });
   return (
@@ -1984,12 +1984,12 @@ function ze({
 }) {
   let D = rAe().openNoFollow,
     M = te(e).catch(() => e),
-    H = k0(e) ?? e,
+    H = findGitRootUncached(e) ?? e,
     O = o.senderFor(e),
-    A = { ...Hi() };
+    A = { ...subprocessEnv() };
   lUt(o, P6e(o).env);
   let F = () => {
-    let w = Hi();
+    let w = subprocessEnv();
     return Cwe({
       attached: A,
       beforeSettings: xC(),
@@ -2048,7 +2048,7 @@ function ze({
     commonWriteRoots: () => Sde(e),
     scopeWriteRoots: (w, E) => vne(e, w, E),
     scopeWriteEntries: (w) => $X(w, e),
-    scopeSettingsFile: (w) => ho(w) ?? null,
+    scopeSettingsFile: (w) => getSettingsFilePathForSource(w) ?? null,
     sendRequest: async (w, { timeoutMs: E }) => {
       try {
         return await r(w, { timeoutMs: E, background: !0 });
@@ -2086,8 +2086,8 @@ function ze({
       if (w.trigger === "renewal" && w.outcome === "registered") return;
       switch (
         (i("tengu_device_hooks_client_register", {
-          outcome: u(w.outcome),
-          trigger: u(w.trigger),
+          outcome: fromEnum(w.outcome),
+          trigger: fromEnum(w.trigger),
           forwarded: w.forwarded,
           templates: w.templates,
           held_after_edit: w.heldAfterEdit,
@@ -2104,25 +2104,25 @@ function ze({
         case "dormant":
         case "no_consent":
         case "muted":
-          y("device_hooks_client_register", { forwarded: w.forwarded });
+          logFeatureOk("device_hooks_client_register", { forwarded: w.forwarded });
           break;
         case "not_ready":
         case "stale_epoch":
         case "superseded":
         case "failed":
         case "consent_distrusted":
-          g("device_hooks_client_register", w.outcome);
+          logFeatureSad("device_hooks_client_register", w.outcome);
           break;
         default:
-          f("device_hooks_client_register", w.outcome);
+          logFeatureBad("device_hooks_client_register", w.outcome);
       }
     },
-    lapseTelemetry: (w) => i("tengu_device_hooks_lapse_line", { kind: u(w) }),
+    lapseTelemetry: (w) => i("tengu_device_hooks_lapse_line", { kind: fromEnum(w) }),
     reachPinnedTelemetry: (w) =>
-      i("tengu_device_hooks_reach_pinned", { source: u(w) }),
+      i("tengu_device_hooks_reach_pinned", { source: fromEnum(w) }),
     sourcePinnedTelemetry: (w) =>
       i("tengu_device_hooks_source_pinned", {
-        source: u(w.source),
+        source: fromEnum(w.source),
         changed: w.changed,
         appeared: w.appeared,
         vanished: w.vanished,
@@ -2174,7 +2174,7 @@ import { realpath as zn } from "fs/promises";
 function Ast(e) {
   let o = {
       realpath: zn,
-      repoRootOf: k0,
+      repoRootOf: findGitRootUncached,
       consentPath: WZ,
       configHome: be,
       ...e.deps,
@@ -2234,7 +2234,7 @@ var Vn = new Set([
 function vst(e) {
   let o = e.createSession ?? Be,
     d = e.createSender ?? ze,
-    t = e.isServingMuted ?? m3,
+    t = e.isServingMuted ?? isRemoteToolServingMuted,
     r = t(),
     k = o({
       launchDir: e.launchDir,
@@ -2264,14 +2264,14 @@ function vst(e) {
       onLine: e.onLine,
       storageV5: e.storageV5,
     }),
-    _ = (e.onServingMuteRecheck ?? AV)(() => {
+    _ = (e.onServingMuteRecheck ?? onServingMuteRecheck)(() => {
       try {
         let E = t();
         if (E === r) return;
         if (E) ((r = !0), R.servingMute(!0));
         else (R.servingMute(!1), (r = !1));
       } catch (E) {
-        h(E);
+        logError(E);
       }
     }),
     C = e.registerCleanup(() => R.unregister(zMe)),
@@ -2288,7 +2288,7 @@ function vst(e) {
       try {
         R.requestRegistration(E);
       } catch (p) {
-        h(p);
+        logError(p);
       }
     },
     F = e.memory.noteAttached(e.launchDir),
@@ -2376,12 +2376,12 @@ function xst({
 }) {
   let D = (A) => {
       i("tengu_remote_create_permission_mode_push", {
-        surface: u(d),
-        mode: u(o),
-        kind: u(A.kind),
-        posted_mode: u(A.postedMode),
-        outcome: u(A.outcome),
-        ...("cause" in A && { cause: u(A.cause) }),
+        surface: fromEnum(d),
+        mode: fromEnum(o),
+        kind: fromEnum(A.kind),
+        posted_mode: fromEnum(A.postedMode),
+        outcome: fromEnum(A.outcome),
+        ...("cause" in A && { cause: fromEnum(A.cause) }),
         ...("status" in A && { status: A.status }),
         ...(A.attempt !== void 0 && { attempt: A.attempt }),
         session_id: Ee(t),
@@ -2426,7 +2426,7 @@ function xst({
       }
       if (
         (D({ kind: F, postedMode: A, outcome: "gave_up" }),
-        f("remote_create_mode_push", `${F}_gave_up`),
+        logFeatureBad("remote_create_mode_push", `${F}_gave_up`),
         !(L.outcome === "failed" && L.cause === "closed"))
       )
         C?.(L.outcome === "session_inactive" ? Qn : F === "push" ? Xn : Yn);
@@ -2436,7 +2436,7 @@ function xst({
       A.then(
         () => {
           (D({ kind: "push", postedMode: o, outcome: "taken" }),
-            y("remote_create_mode_push"),
+            logFeatureOk("remote_create_mode_push"),
             n(
               `[remote] The session took its create's ${o} permission mode as a live request`,
             ));
@@ -2450,12 +2450,12 @@ function xst({
             w !== "server_error")
           ) {
             (D({ kind: "push", postedMode: o, outcome: "unanswered" }),
-              g("remote_create_mode_push", "unanswered"));
+              logFeatureSad("remote_create_mode_push", "unanswered"));
             return;
           }
           if (
             (D({ kind: "push", postedMode: o, outcome: "refused" }),
-            g("remote_create_mode_push", "refused"),
+            logFeatureSad("remote_create_mode_push", "refused"),
             M() || (o !== "auto" && o !== "acceptEdits"))
           )
             return;

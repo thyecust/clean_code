@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getMainLoopModel as rt, getRuntimeMainLoopModel as ip, JN, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Tm, asSystemPrompt as Zo, fEe, j_, hC, VS, e3t } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { artifactReadObservationIn as P$, makeSetArtifactReadVersion as Rfe, makeSetArtifactContractTarget as kfe, makeGetArtifactContractTarget as xfe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { makeSetWebBrowserSlice as tce } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
+import { getMainLoopModel, getRuntimeMainLoopModel, JN, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Tm, asSystemPrompt, fEe, j_, hC, VS, e3t } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { artifactReadObservationIn, makeSetArtifactReadVersion, makeSetArtifactContractTarget, makeGetArtifactContractTarget } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import { Ole, Dle, i7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
 import { sSe, dee, pee } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
 import { ESe } from "../Teammates团队/chunk-c8267s4e.js";
@@ -65,9 +65,9 @@ async function Qtn({
   credentials: k,
 }) {
   let i = e(),
-    C = ip({
+    C = getRuntimeMainLoopModel({
       permissionMode: i.toolPermissionContext.mode,
-      mainLoopModel: rt(),
+      mainLoopModel: getMainLoopModel(),
     }),
     {
       defaultSystemPrompt: x,
@@ -87,7 +87,7 @@ async function Qtn({
       storageV5: u,
       credentials: k,
     }),
-    M = Zo([
+    M = asSystemPrompt([
       ...(typeof t === "string" ? [t] : Array.isArray(t) ? t : x),
       ...(a ? [a] : []),
     ]),
@@ -120,7 +120,7 @@ async function Qtn({
         fastMode: i.fastMode,
         cacheBreakerPhrase: i.cacheBreakerPhrase,
       },
-      abortController: hr(),
+      abortController: createAbortController(),
       readFileState: c,
       toolState: d,
       permissionRelays: i7,
@@ -137,12 +137,12 @@ async function Qtn({
       taskRegistry: Tm(e, o),
       queuedNotificationsRegistry: fEe(e, o, s),
       sessionHooksRegistry: g,
-      setWebBrowserSlice: tce(o),
-      setArtifactReadVersion: Rfe(o),
-      getArtifactReadObservation: P$(e),
+      setWebBrowserSlice: makeSetWebBrowserSlice(o),
+      setArtifactReadVersion: makeSetArtifactReadVersion(o),
+      getArtifactReadObservation: artifactReadObservationIn(e),
       artifactRegistries: Ole(e, o),
-      setArtifactContractTarget: kfe(o),
-      getArtifactContractTarget: xfe(e),
+      setArtifactContractTarget: makeSetArtifactContractTarget(o),
+      getArtifactContractTarget: makeGetArtifactContractTarget(e),
       agentLifecycle: ESe(e, o),
       teammateColors: Dle(zK(e, o, "teammateColors")),
       rootToolSurface: { tools: n, mainLoopModel: C },

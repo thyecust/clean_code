@@ -20,11 +20,11 @@ import {
   bae,
   ic,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ju, Ia } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   Mft,
   Rte,
@@ -43,36 +43,36 @@ import {
   V2,
   K2,
   IV,
-  getMaterializedSessionFile as il,
-  resetSessionFilePointer as XM,
-  saveCustomTitle as DI,
-  isSessionHistorySuppressed as YM,
-  holdSessionHistorySuppression as $hn,
-  dropSessionHistorySuppression as Bhn,
-  pinSessionId as Li,
-  releasePrecautionarySuppressionFor as jhn,
-  isConversationEgressTainted as g9t,
-  getCurrentSessionTitle as mu,
-  getCurrentSessionAgentName as QV,
-  clearSessionMetadata as r8e,
-  saveAgentName as EY,
-  cacheSessionTitle as h$,
-  saveIsolationLatch as ZV,
-  saveWorktreeState as mC,
-  executeSessionEndHooks as YMe,
-  getSessionEndHookTimeoutMs as ppe,
+  getMaterializedSessionFile,
+  resetSessionFilePointer,
+  saveCustomTitle,
+  isSessionHistorySuppressed,
+  holdSessionHistorySuppression,
+  dropSessionHistorySuppression,
+  pinSessionId,
+  releasePrecautionarySuppressionFor,
+  isConversationEgressTainted,
+  getCurrentSessionTitle,
+  getCurrentSessionAgentName,
+  clearSessionMetadata,
+  saveAgentName,
+  cacheSessionTitle,
+  saveIsolationLatch,
+  saveWorktreeState,
+  executeSessionEndHooks,
+  getSessionEndHookTimeoutMs,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { yl, Ud } from "../Teammates团队/chunk-thxapyam.js";
 import { Q$ } from "../Skills技能/chunk-sapykxw7.js";
-import { clearAllPlanSlugs as FEn } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { evictTaskOutput as Sd, initTaskOutputAsSymlink as fK } from "../后台任务-Shell管理/chunk-x3txegas.js";
-import { retainPathLinks as uYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { isBridgeStateFramesEnabled as ZK } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { clearAllPlanSlugs } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { evictTaskOutput, initTaskOutputAsSymlink } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { retainPathLinks } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { isBridgeStateFramesEnabled } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { cfe } from "../插件系统/chunk-ajtn749s.js";
 import { Q3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { vJ, HCe, xoe, ICe, PCe } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { runBundledSkillSessionResets as _fe } from "../Skills技能/chunk-1zy5c8mf.js";
-import { syncJobResumeSessionId as hyn } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { runBundledSkillSessionResets } from "../Skills技能/chunk-1zy5c8mf.js";
+import { syncJobResumeSessionId } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { g2 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6k8nm416.js";
 import { Qlt, Zlt } from "../上下文压缩-Compact/chunk-1ntrf0ja.js";
 import { Ern } from "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
@@ -80,7 +80,7 @@ import { brn } from "./chunk-1mxgbqzj.js";
 import { ect } from "../Teammates团队/chunk-c8267s4e.js";
 import { xs } from "../Teammates团队/chunk-mrfx53ye.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { randomUUID as X } from "crypto";
+import { randomUUID } from "crypto";
 async function* yrn({
   session: t,
   setMessages: m,
@@ -100,8 +100,8 @@ async function* yrn({
   credentials: I,
 }) {
   (Cgt(t), Hy(n3), ICe(), xoe(), vJ());
-  let H = ppe();
-  (await YMe(t, "clear", {
+  let H = getSessionEndHookTimeoutMs();
+  (await executeSessionEndHooks(t, "clear", {
     sessionHooks: U,
     getAppState: s,
     signal: AbortSignal.timeout(H),
@@ -146,16 +146,16 @@ async function* yrn({
   if ((L.clear(), v)) for (let e of Object.keys(v)) delete v[e];
   if ((j?.clear(), V2(N), d && c.size === 0)) d.current = null;
   if (s) Zlt(s);
-  let l = mu(K()),
-    A = QV(),
+  let l = getCurrentSessionTitle(K()),
+    A = getCurrentSessionAgentName(),
     f = !u && l !== void 0,
-    x = f && g9t(Li(K())),
+    x = f && isConversationEgressTainted(pinSessionId(K())),
     p,
     T;
   if ((HCe(), k)) {
     if (
       (F?.dismissKind(g2.kind),
-      uYe(new Set()),
+      retainPathLinks(new Set()),
       k((e) => {
         let r = {};
         for (let [S, i] of Object.entries(e.tasks)) {
@@ -169,9 +169,9 @@ async function* yrn({
               if ("abortController" in i) i.abortController?.abort();
             }
           } catch (Q) {
-            h(Q);
+            logError(Q);
           }
-          Sd(S);
+          evictTaskOutput(S);
         }
         return (
           (p = G(Object.values(r), (S) => !Y.has(S.type))),
@@ -213,33 +213,33 @@ async function* yrn({
         await r(e.name, e.config).catch(() => {});
       }
   }
-  FEn();
+  clearAllPlanSlugs();
   let q = K(),
-    W = u ? (il() ?? yl()) : void 0,
-    z = YM(),
+    W = u ? (getMaterializedSessionFile() ?? yl()) : void 0,
+    z = isSessionHistorySuppressed(),
     _ = p === 0 && c.size === 0 ? void 0 : X1();
-  if ((r8e(), z)) $hn();
+  if ((clearSessionMetadata(), z)) holdSessionHistorySuppression();
   if (_ !== void 0) bae(_);
-  let w = X();
-  if (ke() || (ic() && ZK()))
+  let w = randomUUID();
+  if (ke() || (ic() && isBridgeStateFramesEnabled()))
     (ju({ type: "conversation_reset", new_conversation_id: w }),
-      y("bridge_conversation_reset"));
+      logFeatureOk("bridge_conversation_reset"));
   (yield { type: "conversation_reset", newConversationId: w }, aDn(o), c_e());
-  let P = Li(K()),
-    J = x || (f && g9t(P));
-  if ((aOn({ setCurrentAsParent: !0 }), f && l !== void 0)) h$(l);
+  let P = pinSessionId(K()),
+    J = x || (f && isConversationEgressTainted(P));
+  if ((aOn({ setCurrentAsParent: !0 }), f && l !== void 0)) cacheSessionTitle(l);
   let Z = Promise.resolve(!0);
-  if ((_fe(), PCe(), Ern.of(t).reset(), cfe(t), a.CLAUDE_CODE_SESSION_ID))
+  if ((runBundledSkillSessionResets(), PCe(), Ern.of(t).reset(), cfe(t), a.CLAUDE_CODE_SESSION_ID))
     process.env.CLAUDE_CODE_SESSION_ID = K();
-  if ((await XM(), Bhn(), jhn(P), await hyn(K(), yl(), o), u))
-    await DI(q, u, W, "user", o);
+  if ((await resetSessionFilePointer(), dropSessionHistorySuppression(), releasePrecautionarySuppressionFor(P), await syncJobResumeSessionId(K(), yl(), o), u))
+    await saveCustomTitle(q, u, W, "user", o);
   else if (l) {
-    if ((await DI(K(), l, void 0, "user", o), A))
-      await EY(K(), A, void 0, "user", o);
+    if ((await saveCustomTitle(K(), l, void 0, "user", o), A))
+      await saveAgentName(K(), A, void 0, "user", o);
   }
   for (let e of E) {
     if (e.status !== "running") continue;
-    fK(e.id, Ud(oo(e.agentId)));
+    initTaskOutputAsSymlink(e.id, Ud(oo(e.agentId)));
   }
   {
     let { saveMode: e } = import.meta.require("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
@@ -247,8 +247,8 @@ async function* yrn({
     e(r() ? "coordinator" : "normal");
   }
   let R = Ia();
-  if (R) mC(R, o);
-  if (d?.current) ZV(d.current, o);
+  if (R) saveWorktreeState(R, o);
+  if (d?.current) saveIsolationLatch(d.current, o);
   let D = await IV(t, "clear", { storageV5: o, credentials: I });
   if (D.length > 0) m(() => D);
 }

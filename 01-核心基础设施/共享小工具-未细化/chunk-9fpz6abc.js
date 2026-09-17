@@ -12,14 +12,14 @@ import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱�
 import { Q } from "./chunk-rsr7cnyv.js";
 import { Lc, zJ } from "./chunk-6smvq03f.js";
 import { g_, VI } from "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
-import { BG_PROTO as ba } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { BG_PROTO } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { Pit } from "./chunk-k76a6y9v.js";
-import { connect as m } from "net";
-import { StringDecoder as N } from "string_decoder";
+import { connect } from "net";
+import { StringDecoder } from "string_decoder";
 async function controlRequest(f, a) {
   let r;
   try {
-    r = m(VI());
+    r = connect(VI());
   } catch (t) {
     return { ok: !1, code: "ENOCONN", error: g_(l(t)), errno: A(t) };
   }
@@ -59,7 +59,7 @@ async function controlRequest(f, a) {
 `,
         ));
     }));
-  let c = new N("utf8"),
+  let c = new StringDecoder("utf8"),
     i = "";
   return (
     r.on("data", (t) => {
@@ -95,7 +95,7 @@ function openDaemonLease(f) {
     s = () => {
       if (r) return;
       try {
-        o = m(VI());
+        o = connect(VI());
       } catch {
         ((o = null), (e = setTimeout(s, 1000)), e.unref());
         return;
@@ -103,7 +103,7 @@ function openDaemonLease(f) {
       (o.on("error", () => o?.destroy()),
         o.once("connect", () =>
           o?.write(
-            b({ proto: ba, op: "lease", client: a }) +
+            b({ proto: BG_PROTO, op: "lease", client: a }) +
               `
 `,
           ),
@@ -126,7 +126,7 @@ function openDaemonLease(f) {
 function subscribeControl(f, a, r, o) {
   let e;
   try {
-    e = m(VI());
+    e = connect(VI());
   } catch (c) {
     return (queueMicrotask(() => o(g_(l(c)))), () => {});
   }
@@ -145,7 +145,7 @@ function subscribeControl(f, a, r, o) {
     e.on("close", () => n("control socket closed")),
     e.on("connect", () =>
       e.write(
-        b({ proto: ba, op: "subscribe", short: f, tail: a }) +
+        b({ proto: BG_PROTO, op: "subscribe", short: f, tail: a }) +
           `
 `,
       ),

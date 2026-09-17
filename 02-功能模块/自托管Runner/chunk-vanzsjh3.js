@@ -7,17 +7,17 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { execFile as O, execFileSync as b } from "child_process";
+import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { execFile, execFileSync } from "child_process";
 import {
-  chmod as h,
-  mkdir as l,
-  readFile as k,
-  writeFile as p,
+  chmod,
+  mkdir,
+  readFile,
+  writeFile,
 } from "fs/promises";
-import { join as s, resolve as P } from "path";
-import { promisify as A } from "util";
-var f = A(O),
+import { join as s, resolve } from "path";
+import { promisify } from "util";
+var f = promisify(execFile),
   D = /^[a-zA-Z0-9_-]+$/,
   _ = [2, 34];
 function Sdr(t) {
@@ -46,11 +46,11 @@ async function Fmr(t) {
     );
   }
   let o = s(t.baseDir, ".runner");
-  await l(o, { recursive: !0 });
+  await mkdir(o, { recursive: !0 });
   let i = s(o, "code-sign"),
     r = s(o, "commit_signing_key.pub"),
     a = w(t.execPath);
-  (await p(i, a, { mode: 493 }), await h(i, 493), await p(r, ""));
+  (await writeFile(i, a, { mode: 493 }), await chmod(i, 493), await writeFile(r, ""));
   let c = [
       ["user.name", "Claude"],
       ["user.email", "noreply@anthropic.com"],
@@ -138,9 +138,9 @@ async function jmr(t) {
     );
   }
   let o = s(t.baseDir, ".runner");
-  await l(o, { recursive: !0 });
+  await mkdir(o, { recursive: !0 });
   let i = wdr(t.baseDir);
-  (await p(i, bdr, { mode: 448 }), await h(i, 448));
+  (await writeFile(i, bdr, { mode: 448 }), await chmod(i, 448));
   let r = t.gitConfigPath ? ["--file", t.gitConfigPath] : ["--global"],
     a = [
       [`credential.https://${n}.helper`, `!'${x(i)}'`],
@@ -174,14 +174,14 @@ async function v(t, e, n) {
     );
     return;
   }
-  await l(o, { recursive: !0 });
+  await mkdir(o, { recursive: !0 });
   for (let a of y) {
     let c = s(o, a);
-    (await p(c, E, { mode: 493 }), await h(c, 493));
+    (await writeFile(c, E, { mode: 493 }), await chmod(c, 493));
   }
   for (let a of ["commit-msg", "prepare-commit-msg"]) {
     let c = s(o, a);
-    (await p(c, C, { mode: 493 }), await h(c, 493));
+    (await writeFile(c, C, { mode: 493 }), await chmod(c, 493));
   }
   (await f("git", ["config", ...e, "--replace-all", "core.hooksPath", o], {
     windowsHide: !0,
@@ -257,7 +257,7 @@ function H(t) {
       `code-sign: only SSH-style signing (-Y sign) is supported; got: ${t.join(" ")}`,
     );
   if (!i) throw Error("code-sign: no file specified to sign");
-  return { bufferFile: P(i), namespace: n, keyFile: o };
+  return { bufferFile: resolve(i), namespace: n, keyFile: o };
 }
 async function I(t, e) {
   let n = e.env.CLAUDE_CODE_REMOTE_SESSION_ID,
@@ -273,7 +273,7 @@ async function I(t, e) {
     );
   if (!o) throw Error("code-sign: CLAUDE_CODE_SESSION_ACCESS_TOKEN is unset");
   if (!i) throw Error("code-sign: ANTHROPIC_BASE_URL is unset");
-  let r = await k(t.bufferFile, "utf8"),
+  let r = await readFile(t.bufferFile, "utf8"),
     a = R(),
     c = JSON.stringify({
       contents: r,
@@ -290,7 +290,7 @@ async function I(t, e) {
         authorization: `Bearer ${o}`,
       },
       body: c,
-      ...As({ url: u }),
+      ...getProxyFetchOptions({ url: u }),
       signal: AbortSignal.timeout(30000),
     });
   if (!g.ok) {
@@ -303,11 +303,11 @@ async function I(t, e) {
   let m = await g.json();
   if (!m.signature) throw Error("code-sign: response missing signature");
   let d = `${t.bufferFile}.sig`;
-  return (await p(d, m.signature), d);
+  return (await writeFile(d, m.signature), d);
 }
 function R() {
   try {
-    return b("git", ["rev-parse", "--show-object-format"], {
+    return execFileSync("git", ["rev-parse", "--show-object-format"], {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
       windowsHide: !0,

@@ -12,8 +12,8 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Io, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ht, isClaudeAISubscriber as gt, getOauthAccountInfo as vn, getSubscriptionType as qn, isConsumerSubscriber as x6, Qh, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { ht, isClaudeAISubscriber, getOauthAccountInfo, getSubscriptionType, isConsumerSubscriber, Qh, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { mue, Km } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function Yqe(e) {
@@ -317,13 +317,13 @@ function U1t() {
   return h2()?.command ?? null;
 }
 function E(e) {
-  if (!gt()) return "excluded";
-  let t = qn();
+  if (!isClaudeAISubscriber()) return "excluded";
+  let t = getSubscriptionType();
   if (!t) return "excluded";
   if (e.creditless) return "viewer";
-  if (x6()) return "claimant";
+  if (isConsumerSubscriber()) return "claimant";
   if (t === "team") {
-    if (!vn()?.organizationRole) return "excluded";
+    if (!getOauthAccountInfo()?.organizationRole) return "excluded";
     return Km() ? "claimant" : "viewer";
   }
   return "excluded";
@@ -331,7 +331,7 @@ function E(e) {
 function p() {
   let e = h2();
   if (!e) return null;
-  let t = vn()?.organizationUuid;
+  let t = getOauthAccountInfo()?.organizationUuid;
   if (!t) return null;
   let r = E(e);
   if (r === "excluded") return null;
@@ -360,7 +360,7 @@ function JPe() {
 }
 function B4() {
   let e = h2(),
-    t = vn()?.organizationUuid;
+    t = getOauthAccountInfo()?.organizationUuid;
   if (!e || !t) return null;
   let r = C(t, e.feature);
   if (!r || r.amount_minor_units === null || !r.currency) return null;
@@ -400,14 +400,14 @@ async function O(e) {
     );
   } catch (l) {
     return (
-      g("api_fotw_eligibility_fetch", "request_failed"),
+      logFeatureSad("api_fotw_eligibility_fetch", "request_failed"),
       n(`FotW eligibility fetch failed: ${l}`, { level: "warn" }),
       null
     );
   }
   if (!i.ok || i.status >= 400)
-    return (g("api_fotw_eligibility_fetch", "unavailable"), null);
-  if ((y("api_fotw_eligibility_fetch"), i.data.granted)) F(a, r.feature);
+    return (logFeatureSad("api_fotw_eligibility_fetch", "unavailable"), null);
+  if ((logFeatureOk("api_fotw_eligibility_fetch"), i.data.granted)) F(a, r.feature);
   if (i.data.eligible && i.data.needs_payment_setup === !0) {
     if (i.data.amount_minor_units == null || !i.data.currency) return null;
     return {
@@ -458,7 +458,7 @@ async function wWn(e, t) {
     );
   } catch (s) {
     return (
-      f("api_fotw_claim", "request_failed"),
+      logFeatureBad("api_fotw_claim", "request_failed"),
       n(`FotW claim failed: ${s}`, { level: "warn" }),
       { outcome: "failed" }
     );
@@ -466,9 +466,9 @@ async function wWn(e, t) {
   if (!o.ok) return { outcome: "failed" };
   if (o.status >= 400) {
     if (U(o.data) === "Failed to grant credit")
-      return (f("api_fotw_claim", "grant_failed"), { outcome: "failed" });
+      return (logFeatureBad("api_fotw_claim", "grant_failed"), { outcome: "failed" });
     return (
-      g("api_fotw_claim", "not_available"),
+      logFeatureSad("api_fotw_claim", "not_available"),
       S(i, a.feature, {
         available: !1,
         eligible: !1,
@@ -480,9 +480,9 @@ async function wWn(e, t) {
     );
   }
   if (!o.data.success)
-    return (f("api_fotw_claim", "grant_failed"), { outcome: "failed" });
+    return (logFeatureBad("api_fotw_claim", "grant_failed"), { outcome: "failed" });
   return (
-    y("api_fotw_claim"),
+    logFeatureOk("api_fotw_claim"),
     F(i, a.feature),
     {
       outcome: "granted",

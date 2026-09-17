@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 204 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { toInfraSessionId as yc } from "../权限系统/chunk-ynkf3yy4.js";
+import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
@@ -51,7 +51,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-nbvmqw0g.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
 import { Y4, Qce } from "../../01-核心基础设施/共享小工具-未细化/chunk-vcb9z55e.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { mkdir as ne } from "fs/promises";
+import { mkdir } from "fs/promises";
 import { join as q } from "path";
 var M = new Set();
 function W({ folder: e }) {
@@ -401,7 +401,7 @@ async function z(e, t, s) {
   for (let h of s) if ((await e.isAncestor(t, h)) === !0) return !0;
   return !1;
 }
-import { createHash as oe } from "crypto";
+import { createHash } from "crypto";
 function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
   let m = e.store.objectFormat,
     y = async (p, f) => {
@@ -542,7 +542,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
           ok: !0,
           content: T,
           sizeBytes: T.length,
-          sha256: oe("sha256").update(T).digest("hex"),
+          sha256: createHash("sha256").update(T).digest("hex"),
           refs: k,
           omitted: E,
           prerequisites: [...f],
@@ -589,7 +589,7 @@ function le(e) {
   let t = e.split("/");
   return t.every((s, d) => qbe(s, d < t.length - 1) === null);
 }
-async function bt({
+async function openFolderGitSync({
   sessionId: e,
   folder: t,
   start: s,
@@ -604,13 +604,13 @@ async function bt({
 }) {
   let r = await xk(t);
   if (r === null) throw Error("launch folder cannot be resolved");
-  let o = yc(e),
+  let o = toInfraSessionId(e),
     c = await Qce(t, o, p),
     b = d !== void 0,
     F = await Gpt(t, p),
     E = V9n(F, o),
     k = q(E, z9n);
-  await ne(k, { recursive: !0, mode: se });
+  await mkdir(k, { recursive: !0, mode: se });
   let C = he(y),
     _ = await ue({
       folder: t,
@@ -638,7 +638,7 @@ async function bt({
     n(`folder sync: ${_.kind} for session ${o} (${_.detail})`);
     let a = _.kind;
     return (
-      i("tengu_dir_sync_folder_store_lost", { reason: u(a), at_create: b }),
+      i("tengu_dir_sync_folder_store_lost", { reason: fromEnum(a), at_create: b }),
       Fht(
         y,
         _.kind === "seed_not_stored" ? "store_unwritable" : "store_unreadable",
@@ -902,4 +902,4 @@ function he(e) {
     }
   };
 }
-export { bt as openFolderGitSync };
+export { openFolderGitSync };

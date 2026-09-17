@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { b, z, Zhe, B1, n } from "./核心工具-日志与脱敏.38sny42z.js";
 import { x, us, Yg } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { QUOTE_HOMOGLYPHS as d1, INVISIBLE_BLANKS as QC, isDecisionSurfaceControl as sS } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { QUOTE_HOMOGLYPHS, INVISIBLE_BLANKS, isDecisionSurfaceControl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 function nWn() {
   return H("tengu_harbor_permissions", !1);
@@ -80,12 +80,12 @@ function T(r) {
   );
 }
 function d(r) {
-  return Array.from(Yg(r), (e) => (sS(e.codePointAt(0) ?? 0) ? " " : e))
+  return Array.from(Yg(r), (e) => (isDecisionSurfaceControl(e.codePointAt(0) ?? 0) ? " " : e))
     .join("")
-    .replace(d1, "\xB7")
+    .replace(QUOTE_HOMOGLYPHS, "\xB7")
     .replace(U, "\xB7")
     .replace(V, "\xB7")
-    .replace(QC, " ");
+    .replace(INVISIBLE_BLANKS, " ");
 }
 var U =
     /[\u2018\u2019\u201A\u201B\u00B4\u02B9\u02BB\u02BC\u02BD\u02BE\u02BF\u02C0\u02C8\u02CA\u02CB\u02F4\u0374\u0384\u055A\u055D\u05F3\u07F4\u07F5\u1FBD\u1FBF\u1FEF\u1FFD\u1FFE\u2032\u2035\u275B\u275C\u275F\uA78B\uA78C\uFF07\uFF40]/g,
@@ -210,7 +210,7 @@ function oWn(r) {
               `truncateForPreview: redaction round-trip yielded no text for field ${b(c)} \u2014 rendering unredacted`,
               { level: "error" },
             ),
-              h(
+              logError(
                 Error(
                   "truncateForPreview: redaction round-trip yielded no text for a field \u2014 rendering unredacted",
                 ),
@@ -277,7 +277,7 @@ function oWn(r) {
           "truncateForPreview: non-object redaction round-trip failed \u2014 rendering unredacted",
           { level: "error" },
         ),
-          h(
+          logError(
             Error(
               "truncateForPreview: non-object redaction round-trip failed \u2014 rendering unredacted",
             ),

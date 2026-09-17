@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { qJ } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
 var d = "./chart.umd.min.js";
-function H() {
+function loadChartBundleJs() {
   return qJ(d, import.meta.dirname);
 }
-export { H as loadChartBundleJs };
+export { loadChartBundleJs };

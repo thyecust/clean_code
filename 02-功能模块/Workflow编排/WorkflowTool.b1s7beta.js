@@ -13,29 +13,29 @@ import { Gt, K, sc, fy, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, t8, z, Is, Ru, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, ln, B0 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { kd } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, formatOverflowHint as jie } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, formatOverflowHint } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { READ_ONLY_AUTO_ALLOW_REASON as vke, A0 } from "../权限系统/chunk-e4pfvp7x.js";
+import { READ_ONLY_AUTO_ALLOW_REASON, A0 } from "../权限系统/chunk-e4pfvp7x.js";
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { yve, Dc, Rnr } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { nH, eh, Jl, RDe, Epe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Uh, NTt, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { isServerFallbackDiscard as UG } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { isServerFallbackDiscard } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { lP, ll } from "../Teammates团队/chunk-thxapyam.js";
 import { S8, bZ, Y1, NA, vae } from "./chunk-0t0sve49.js";
-import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import {
   min,
   Ndt,
@@ -88,8 +88,8 @@ import {
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { randomUUID as Jt } from "crypto";
-import { basename as st, resolve as qt } from "path";
+import { randomUUID } from "crypto";
+import { basename as st, resolve } from "path";
 var yt = [
   "autopilot",
   "bugfix",
@@ -1411,8 +1411,8 @@ class sr {
     )
       return;
     ((this.afterKillReported = !0),
-      y("workflow_after_kill", {
-        next_action: u(e),
+      logFeatureOk("workflow_after_kill", {
+        next_action: fromEnum(e),
         seconds_since_kill: Math.round(
           (Date.now() - this.killedSize.at) / 1000,
         ),
@@ -1452,8 +1452,8 @@ class sr {
         }),
         !this.lostOnResume)
       )
-        y("workflow_kill", {
-          reason: u(e),
+        logFeatureOk("workflow_kill", {
+          reason: fromEnum(e),
           rows: r.rows,
           agents: this.killedSize.agents,
           ms_since_launch: this.msSinceLaunch(),
@@ -1472,7 +1472,7 @@ class sr {
           n(
             `workflow v2: kill record for ${this.runId} skipped \u2014 the world is full`,
           );
-        else h(o);
+        else logError(o);
       }
     }
     ((this.ctx = void 0), (this.words = void 0));
@@ -1539,7 +1539,7 @@ class sr {
           E = d.journal ? await d.journal.load() : void 0;
         } catch (pe) {
           throw (
-            f("workflow_run", "journal_load_failed", {
+            logFeatureBad("workflow_run", "journal_load_failed", {
               duration_ms: Date.now() - o,
             }),
             pe
@@ -1548,7 +1548,7 @@ class sr {
         if (this.killed) {
           let pe = Date.now() - o;
           return (
-            g("workflow_run", "killed", {
+            logFeatureSad("workflow_run", "killed", {
               agents: 0,
               rows: 0,
               duration_ms: pe,
@@ -1572,7 +1572,7 @@ class sr {
             (this.priorScopes = []),
             (this.ctx = void 0),
             (this.words = void 0),
-            f("workflow_run", "founding_failed", {
+            logFeatureBad("workflow_run", "founding_failed", {
               duration_ms: Date.now() - o,
             }),
             pe
@@ -1677,22 +1677,22 @@ class sr {
       error_results: e.errorResults,
     };
     if ((this.settlements++, e.scriptError !== void 0)) {
-      f("workflow_run", e.scriptError, r);
+      logFeatureBad("workflow_run", e.scriptError, r);
       return;
     }
     if (this.killed) {
-      g("workflow_run", "killed", r);
+      logFeatureSad("workflow_run", "killed", r);
       return;
     }
     if (e.result > e.errorResults) {
-      y("workflow_run", { ...r, rule_errors: e.errors });
+      logFeatureOk("workflow_run", { ...r, rule_errors: e.errors });
       return;
     }
     if (e.errorResults > 0) {
-      f("workflow_run", "error_result", r);
+      logFeatureBad("workflow_run", "error_result", r);
       return;
     }
-    g("workflow_run", e.errors > 0 ? "rule_error" : "no_result", r);
+    logFeatureSad("workflow_run", e.errors > 0 ? "rule_error" : "no_result", r);
   }
   settlements = 0;
   reportedRunaway = !1;
@@ -1701,14 +1701,14 @@ class sr {
       (this.requireOpen(), this.requireFounded());
     } catch (r) {
       throw (
-        f(
+        logFeatureBad(
           "workflow_steer",
           this.killed
             ? "killed"
             : this.lostOnResume
               ? "lost_on_resume"
               : "not_founded",
-          { verb: u(e) },
+          { verb: fromEnum(e) },
         ),
         r
       );
@@ -1761,14 +1761,14 @@ class sr {
       if (w) o++;
       if (p.status === "retracted" && (w || r.pendingAgents.has(p.addr))) a++;
     }
-    y("workflow_steer", {
-      verb: u(e),
+    logFeatureOk("workflow_steer", {
+      verb: fromEnum(e),
       rows_put: t,
       rows_retracted: d - r.retracted,
       agents_spawned: o,
       agents_aborted: a,
       ms_since_launch: this.msSinceLaunch(),
-      run_state: u(this.state()),
+      run_state: fromEnum(this.state()),
     });
   }
   ownRow(e) {
@@ -1788,13 +1788,13 @@ class sr {
   beginScript(e) {
     if ((this.requireOp("script"), !this.ctx || !this.words))
       return (
-        f("workflow_steer", "no_context", { verb: S("script") }),
+        logFeatureBad("workflow_steer", "no_context", { verb: S("script") }),
         { error: "run has no context yet" }
       );
     let r = v9(e, { bindWords: !0 });
     if (!r.ok)
       return (
-        f("workflow_steer", "compile_failed", { verb: S("script") }),
+        logFeatureBad("workflow_steer", "compile_failed", { verb: S("script") }),
         { error: r.error }
       );
     let t = this.evalScript(
@@ -1999,10 +1999,10 @@ function Jr({
     p = a.get(t);
   if ((a.set(t, { runId: d, at: o }), !p || o - p.at > Ft)) return;
   let w = e.get(je).byId.get(p.runId);
-  y("workflow_relaunch_soon", {
-    name: u(t),
+  logFeatureOk("workflow_relaunch_soon", {
+    name: fromEnum(t),
     seconds_since_prev: Math.round((o - p.at) / 1000),
-    prev_state: u(w ? w.state() : zt(r, p.runId)),
+    prev_state: fromEnum(w ? w.state() : zt(r, p.runId)),
     prev_was_steered: w?.wasSteered ?? !1,
   });
 }
@@ -2065,8 +2065,8 @@ function br(e) {
   if (e.script !== void 0) r.push("script");
   return r.length === 1 ? r[0] : void 0;
 }
-import { appendFile as Dt, mkdir as Nt, readFile as Mt } from "fs/promises";
-import { basename as qr, dirname as yr, join as Vt } from "path";
+import { appendFile, mkdir, readFile } from "fs/promises";
+import { basename as qr, dirname, join as Vt } from "path";
 var Bt = m(() => {
     let e = vx().nonnegative();
     return Ko("k", [
@@ -2099,8 +2099,8 @@ function Xr() {
   return Vt(e, K(), Gr);
 }
 function Zr(e) {
-  let r = yr(e),
-    t = lP(yr(r));
+  let r = dirname(e),
+    t = lP(dirname(r));
   if (t === void 0 || qr(e) !== Gr) return;
   let d = Ce.sessionJournal(t, qr(r), "world");
   return kd(d) === void 0 ? d : void 0;
@@ -2125,13 +2125,13 @@ function Qr(e, r, t) {
               );
             return;
           }
-          if (!o) (await Nt(yr(r), { recursive: !0 }), (o = !0));
-          await Dt(r, t8(I));
+          if (!o) (await mkdir(dirname(r), { recursive: !0 }), (o = !0));
+          await appendFile(r, t8(I));
         })
         .catch((x) => {
           ((a = !0),
             _(),
-            g("workflow_journal", "append_failed"),
+            logFeatureSad("workflow_journal", "append_failed"),
             n(
               `world journal append failed; the writer detaches and this session's later rows stay in memory only: ${x}`,
               { level: "warn" },
@@ -2188,7 +2188,7 @@ async function et(e, r) {
   }
   let d;
   try {
-    d = await Mt(e, "utf8");
+    d = await readFile(e, "utf8");
   } catch (w) {
     if (W(w)) return { lines: [], skipped: 0 };
     throw w;
@@ -2344,7 +2344,7 @@ function Sr(e, r) {
         p = a.get(o);
       if (p !== void 0) {
         if (
-          (g("workflow_journal", "writer_reclaimed"),
+          (logFeatureSad("workflow_journal", "writer_reclaimed"),
           n(
             `world journal at ${o} had a writer from before a session switch; the re-entered session reclaims the file and the pre-switch world stops journaling`,
             { level: "warn" },
@@ -2367,7 +2367,7 @@ function Sr(e, r) {
       if (Rr.peek(e) !== t) return Sr(e, r);
       if (!_) {
         if (
-          (g("workflow_journal", I ? "replay_failed" : "not_whole"),
+          (logFeatureSad("workflow_journal", I ? "replay_failed" : "not_whole"),
           n(
             `world journal at ${o} is not whole after replay (${w} rows restored); the world stays in memory for this session`,
             { level: "warn" },
@@ -2379,7 +2379,7 @@ function Sr(e, r) {
       }
       return (
         a.set(o, Qr(d, o, r)),
-        y("workflow_journal"),
+        logFeatureOk("workflow_journal"),
         { restored: w, attached: !0 }
       );
     })()),
@@ -2518,7 +2518,7 @@ class De extends Error {
 async function dt(e, r, t) {
   if (e.scriptPath) {
     let d, o;
-    if (e.script) ((d = e.script), (o = qt(Q(), e.scriptPath)));
+    if (e.script) ((d = e.script), (o = resolve(Q(), e.scriptPath)));
     else {
       let a = await Ndt(e.scriptPath, r);
       if ("error" in a) return a;
@@ -2556,8 +2556,8 @@ var ut = {
       "Tool dispatch was retracted by a server fallback; the input may be truncated.",
     errorCode: 7,
   },
-  oi = Tt({
-    name: Yc,
+  WorkflowTool = Tt({
+    name: WORKFLOW_TOOL_NAME,
     aliases: ["RunWorkflow"],
     searchHint: "orchestrate subagents with deterministic JavaScript workflow",
     enablesCodeExecution: !0,
@@ -2590,7 +2590,7 @@ name: ${e.name}`;
       return e.script || e.scriptPath || e.name || "";
     },
     async validateInput(e, r) {
-      if (UG(r.abortController.signal)) return ut;
+      if (isServerFallbackDiscard(r.abortController.signal)) return ut;
       if (yve())
         return {
           result: !1,
@@ -2636,12 +2636,12 @@ name: ${e.name}`;
         if (o !== null) return { result: !1, message: o, errorCode: 15 };
       }
       let t = await dt(e, r, r.storageV5);
-      if (UG(r.abortController.signal)) return ut;
+      if (isServerFallbackDiscard(r.abortController.signal)) return ut;
       if ("error" in t) {
-        if (e.name && !e.scriptPath) f("workflow_resolve", "not_found");
+        if (e.name && !e.scriptPath) logFeatureBad("workflow_resolve", "not_found");
         return { result: !1, message: t.error, errorCode: 1 };
       }
-      if (e.name && !e.scriptPath) y("workflow_resolve");
+      if (e.name && !e.scriptPath) logFeatureOk("workflow_resolve");
       let d = Vf(t.script);
       if ("error" in d)
         return {
@@ -2662,10 +2662,10 @@ name: ${e.name}`;
       return { result: !0 };
     },
     async checkPermissions(e, r) {
-      let t = ce(r),
+      let t = getToolPermissionContext(r),
         d = qe(e) !== void 0,
         o = e.scriptPath || d ? void 0 : e.name,
-        a = (B) => (o ? ah(t, Yc, B).get(o) : void 0),
+        a = (B) => (o ? ah(t, WORKFLOW_TOOL_NAME, B).get(o) : void 0),
         p = a("deny");
       if (p)
         return {
@@ -2678,7 +2678,7 @@ name: ${e.name}`;
         return {
           behavior: "allow",
           updatedInput: e,
-          decisionReason: { type: "other", reason: vke },
+          decisionReason: { type: "other", reason: READ_ONLY_AUTO_ALLOW_REASON },
         };
       let _ = e;
       if (d);
@@ -2724,7 +2724,7 @@ name: ${e.name}`;
           suggestions: [
             {
               type: "addRules",
-              rules: [{ toolName: Yc, ruleContent: o }],
+              rules: [{ toolName: WORKFLOW_TOOL_NAME, ruleContent: o }],
               behavior: "allow",
               destination: "localSettings",
             },
@@ -2752,7 +2752,7 @@ name: ${e.name}`;
     async call(e, r, t, d, o) {
       if (r.agentId !== void 0 && nH(r.agentId))
         throw (
-          f("subagent_launch", "workflow_spawner_stop_pending"),
+          logFeatureBad("subagent_launch", "workflow_spawner_stop_pending"),
           new De(
             "This agent has been stopped and its stop is still completing; it cannot launch workflows or act on existing runs.",
           )
@@ -2778,14 +2778,14 @@ name: ${e.name}`;
         I = w === "built-in" && a.scriptMatchesDefinition === !0,
         x = Vf(p);
       if ("error" in x) throw new De(`Invalid workflow script: ${x.error}`);
-      let F = e.resumeFromRunId ?? `wf_${Jt().slice(0, 12)}`,
+      let F = e.resumeFromRunId ?? `wf_${randomUUID().slice(0, 12)}`,
         B = Dh("local_workflow"),
         U = x.meta.description,
         j = x.meta.name,
         J = v9(x.scriptBody);
       if (!J.ok)
         return (
-          f("task_local_workflow", "compile_failed"),
+          logFeatureBad("task_local_workflow", "compile_failed"),
           {
             data: {
               status: "async_launched",
@@ -2809,7 +2809,7 @@ name: ${e.name}`;
           invocation_mode: S(
             e.scriptPath ? "scriptPath" : e.name ? "named" : "inline",
           ),
-          workflow_source: u(Y),
+          workflow_source: fromEnum(Y),
           workflow_name: be,
           workflow_description: we,
           phase_count: x.meta.phases?.length ?? 0,
@@ -2848,7 +2848,7 @@ name: ${e.name}`;
       };
       if (e.resumeFromRunId) {
         let D = ct(e.resumeFromRunId, r);
-        if (D) throw (f("task_local_workflow", "resume_collision"), new De(D));
+        if (D) throw (logFeatureBad("task_local_workflow", "resume_collision"), new De(D));
       }
       return (
         Rqe({ ...ie, taskId: B, isResume: e.resumeFromRunId != null }),
@@ -2970,7 +2970,7 @@ function Le(e) {
         `
 `,
       ) + 1,
-    a = jie(o - 1),
+    a = formatOverflowHint(o - 1),
     p = B0(d);
   return a ? `${p} ${a}` : p;
 }
@@ -2989,4 +2989,4 @@ function ct(e, r) {
     return `Workflow ${e} is still running. Wait for it to settle, or stop it first with ${sg}, before resuming.`;
   return;
 }
-export { oi as WorkflowTool };
+export { WorkflowTool };

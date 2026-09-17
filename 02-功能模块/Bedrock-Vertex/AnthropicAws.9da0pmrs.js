@@ -224,7 +224,7 @@ var X = function (e, t, r, n) {
     new gn(
       "No AWS region or base URL found. Set `awsRegion` in the constructor, the `AWS_REGION` / `AWS_DEFAULT_REGION` environment variable, configure a `region` for your profile in `~/.aws/config`, or provide a `baseURL` / `ANTHROPIC_AWS_BASE_URL` environment variable.",
     );
-class P extends Bx {
+class AnthropicAws extends Bx {
   constructor({
     awsRegion: e,
     baseURL: t,
@@ -328,4 +328,4 @@ class P extends Bx {
     });
     return { ...t, headers: E([t.headers, r]).values };
   }));
-export { P as AnthropicAws };
+export { AnthropicAws };

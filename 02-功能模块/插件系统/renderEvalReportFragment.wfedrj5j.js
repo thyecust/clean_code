@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { x, zxe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { AG } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { go, I5t } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { h0e } from "../成本-Token统计/chunk-rnndxh1m.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { relative as Y } from "path";
+import { relative } from "path";
 var Z = /&(?!(?:#\d{1,7}|#[Xx][0-9a-fA-F]{1,6}|\w+);)/g,
   J = /^<input (?:checked="" )?disabled="" type="checkbox"> ?/;
 function k(e) {
@@ -123,7 +123,7 @@ var D =
     archive_not_probed: "archive \u2014 identity not probed",
     will_not_load: "will not load",
   };
-function B(e) {
+function evalReportTitle(e) {
   return e.suite.plugins.length > 0
     ? e.suite.plugins
         .map((s) => {
@@ -421,11 +421,11 @@ window.addEventListener('afterprint',function(){
   });
 });
 </script>`;
-function Ce(e) {
+function renderEvalReportFragment(e) {
   let s = ee(),
     { cases: a, aggregates: n, suite: i } = e,
     l = a.filter((t) => t.aggregates.scoreWithout !== void 0),
-    p = B(e),
+    p = evalReportTitle(e),
     d = a.reduce(
       (t, g) => t + g.arms.with.length + (g.arms.without?.length ?? 0),
       0,
@@ -490,12 +490,12 @@ ${H}
 <div class="meta">
 ${i.plugins.map(
   (t) =>
-    `<span class="mono">${r(Y(i.root, t.path) || ".")}${t.problem === void 0 ? "" : ` <span class="chip ${te[t.problem] ? "chip-fail" : "chip-warn"}">${r(re[t.problem])}</span>`}</span>`,
+    `<span class="mono">${r(relative(i.root, t.path) || ".")}${t.problem === void 0 ? "" : ` <span class="chip ${te[t.problem] ? "chip-fail" : "chip-warn"}">${r(re[t.problem])}</span>`}</span>`,
 ).join(`
 `)}
 <span>Claude Code v${r(e.claudeVersion)}</span>
 <span class="num">${r(ae(e.startedAt))}</span>
-<span class="num">${Ot(e.durationSeconds * 1000, { hideTrailingZeros: !0 })}</span>
+<span class="num">${formatDuration(e.durationSeconds * 1000, { hideTrailingZeros: !0 })}</span>
 <span class="num">${O(e.costUsd)}</span>
 <span class="num">${d} runs</span>
 ${i.pluginId ? `<span class="mono">${r(i.pluginId)}</span>` : ""}
@@ -540,13 +540,13 @@ function fe(e) {
     ? ' \xB7 <span class="flag">\u26A0 aggregates in this file do not match values recomputed from its runs</span>'
     : "";
 }
-function ze(e, s) {
+function wrapReportDocument(e, s) {
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Eval report \u2014 ${r(B(e))}</title>
+<title>Eval report \u2014 ${r(evalReportTitle(e))}</title>
 </head>
 <body>
 ${s}
@@ -572,7 +572,7 @@ function F(e) {
   return e.replace(xe, " ");
 }
 export {
-  B as evalReportTitle,
-  Ce as renderEvalReportFragment,
-  ze as wrapReportDocument,
+  evalReportTitle,
+  renderEvalReportFragment,
+  wrapReportDocument,
 };

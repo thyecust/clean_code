@@ -13,7 +13,7 @@ import { Vd } from "../../02-功能模块/运行宿主探测/运行宿主探测.
 import { ht } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Voe } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
 import { iJ, bGt, wGt, gwt } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
-import { writeFile as p } from "fs/promises";
+import { writeFile } from "fs/promises";
 function a(t) {
   return {
     skillId: t.id,
@@ -85,7 +85,7 @@ async function bGn(t, r, s, e = {}) {
         }),
         !1
       );
-    return (await p(r, n), !0);
+    return (await writeFile(r, n), !0);
   } catch (i) {
     let { kind: n } = Ps(i);
     return (q("warn", "skills_sync_download_exception", { kind: n }), !1);

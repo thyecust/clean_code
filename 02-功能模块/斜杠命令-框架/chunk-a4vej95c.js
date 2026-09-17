@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 function isWebSetupEnabled() {
-  return !St() && Mt("allow_remote_sessions") && Mt("allow_quick_web_setup");
+  return !St() && isPolicyAllowed("allow_remote_sessions") && isPolicyAllowed("allow_quick_web_setup");
 }
 var e = {
     type: "local-jsx",
@@ -19,7 +19,7 @@ var e = {
     availability: ["claude-ai"],
     isEnabled: isWebSetupEnabled,
     get isHidden() {
-      return !Mt("allow_remote_sessions") || !Mt("allow_quick_web_setup");
+      return !isPolicyAllowed("allow_remote_sessions") || !isPolicyAllowed("allow_quick_web_setup");
     },
   },
   Mgr = e;

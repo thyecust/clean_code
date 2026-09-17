@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { pm } from "./chunk-0ypv8gq2.js";
 import { Eg } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { isFirstPartyProvider as In } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isFirstPartyProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { G7 } from "./chunk-t0m264jc.js";
 import { Mwt } from "./chunk-7wbbnp7y.js";
 class r {
@@ -28,7 +28,7 @@ function _un(e) {
 function cue() {
   if (pm("hipaa")) return !1;
   if (G7()) return !0;
-  return Eg() && In() && o.read();
+  return Eg() && isFirstPartyProvider() && o.read();
 }
 function u_r(e) {
   if (!Mwt.includes(e)) return !0;

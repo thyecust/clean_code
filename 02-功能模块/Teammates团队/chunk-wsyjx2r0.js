@@ -10,11 +10,11 @@
 import { oo, Mb } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { hasIsolatePeerMachines as gie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
-import { getTeamName as ii } from "./chunk-811z9z0t.js";
+import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
+import { getTeamName } from "./chunk-811z9z0t.js";
 import {
   FT,
   yr,
@@ -32,8 +32,8 @@ import {
   RUe,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { nr, rMe, $6t, fWt, cgn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { readTeamFileAsync as Pf } from "./chunk-6b13bhw1.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { readTeamFileAsync } from "./chunk-6b13bhw1.js";
 import { DAe, nbt, rbt, i7e, obt, a7e, GNe, jpe } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import { cp, fs } from "./chunk-enjekn9t.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -47,7 +47,7 @@ async function IGe({
   recipientLabel: a,
   parse: l,
 }) {
-  if (!(gie() && !r)) return { proceed: !0, input: i, asked: !1 };
+  if (!(hasIsolatePeerMachines() && !r)) return { proceed: !0, input: i, asked: !1 };
   let u = await s(e, i, { ...o, toolUseId: void 0 }, t, "");
   if (u.behavior !== "allow")
     return {
@@ -179,7 +179,7 @@ Your session list was too long to check completely, so a session by that name ma
 async function OGe(e, i, o, s, t, r) {
   await DAe({ refresh: !0, credentials: r });
   let a = yr(i),
-    l = ii(s.teamContext),
+    l = getTeamName(s.teamContext),
     d = null;
   if (vUe(i)) return { kind: "not-found", closest: [] };
   if (typeof o === "string") {
@@ -200,7 +200,7 @@ async function OGe(e, i, o, s, t, r) {
     let ne = jD(i);
     if (l) {
       if (i === fs) return { kind: "mailbox", recipientName: i };
-      if (((d = await Pf(l, t)), ne === null && d !== null)) {
+      if (((d = await readTeamFileAsync(l, t)), ne === null && d !== null)) {
         let h = nge(d, SU(s)).find((p) => p.name === i);
         if (h !== void 0)
           return {
@@ -292,7 +292,7 @@ async function OGe(e, i, o, s, t, r) {
         memberAgentId: k[0],
         memberIdentitySource: "team-context",
       };
-    if (((d = await Pf(l, t)), jD(i) === null && d !== null)) {
+    if (((d = await readTeamFileAsync(l, t)), jD(i) === null && d !== null)) {
       let m = nge(d, SU(s)).find((w) => w.name === i);
       if (m !== void 0)
         return {
@@ -400,7 +400,7 @@ function we(e, i, o) {
   let s = P(e, i);
   if (s !== "cloud" && s !== "remote-control") return;
   let t = e[i];
-  return o.has(pr(t.id)) ? t.name : void 0;
+  return o.has(sessionIdBody(t.id)) ? t.name : void 0;
 }
 function _e(e, i) {
   let o = i[0];
@@ -422,7 +422,7 @@ function P(e, i) {
   if (o === void 0) return;
   if (Mb(o.id) !== null) return "agent";
   if (o.id.startsWith("cse_")) return "cloud";
-  return pr(o.id) !== o.id ? "remote-control" : "local";
+  return sessionIdBody(o.id) !== o.id ? "remote-control" : "local";
 }
 async function de(e, i, o, s, t, r, a) {
   let l = r?.rows;
@@ -443,9 +443,9 @@ async function de(e, i, o, s, t, r, a) {
 function Se(e, i, o, s) {
   let t = P(e, i);
   if (t !== "remote-control" && t !== "cloud") return !1;
-  let r = pr(e[i].id);
-  if (o.some((a) => pr(a.id) === r)) return !1;
-  return s === void 0 || !s.some((a) => pr(a.id) === r);
+  let r = sessionIdBody(e[i].id);
+  if (o.some((a) => sessionIdBody(a.id) === r)) return !1;
+  return s === void 0 || !s.some((a) => sessionIdBody(a.id) === r);
 }
 function E(e) {
   return {
@@ -505,7 +505,7 @@ function Pe(e, i, o, s) {
       if ((a !== void 0 && a !== "agent") || l) {
         let d = e.byName.get(t[0]);
         return (
-          g(
+          logFeatureSad(
             "send_message_prefix_match",
             a !== void 0 && a !== "agent"
               ? "typed_name_pinned"
@@ -523,15 +523,15 @@ function Pe(e, i, o, s) {
           u = pe(o.sendMessagePins, t[0], d, void 0, s, !0);
         if (u)
           return (
-            y("send_message_prefix_match", {
+            logFeatureOk("send_message_prefix_match", {
               input_len: i.length,
               index_size: e.candidates.length,
               pinned: 1,
             }),
             he(u, d, o, t[0], e, s)
           );
-        if (d.length === 1) g("send_message_prefix_match", "confirm_required");
-        else f("send_message_prefix_match", "ambiguous_name");
+        if (d.length === 1) logFeatureSad("send_message_prefix_match", "confirm_required");
+        else logFeatureBad("send_message_prefix_match", "ambiguous_name");
         return {
           ...D(d, "prefix"),
           ...E(s),
@@ -540,7 +540,7 @@ function Pe(e, i, o, s) {
       }
       if (s.cloudUnavailable || s.bridgeUnavailable || s.localUnavailable)
         return (
-          g(
+          logFeatureSad(
             "send_message_prefix_match",
             s.cloudUnavailable || s.bridgeUnavailable
               ? "remote_unsearched"
@@ -553,7 +553,7 @@ function Pe(e, i, o, s) {
           }
         );
       return (
-        y("send_message_prefix_match", {
+        logFeatureOk("send_message_prefix_match", {
           input_len: i.length,
           index_size: e.candidates.length,
           ...(s.searchTruncated && { search_truncated: !0 }),
@@ -563,7 +563,7 @@ function Pe(e, i, o, s) {
     }
     if (t.length > 1)
       return (
-        f("send_message_prefix_match", "ambiguous_prefix"),
+        logFeatureBad("send_message_prefix_match", "ambiguous_prefix"),
         {
           ...E(s),
           ...C(o.sendMessagePins, [i, ...t], s.localClaimedRemoteBodies),
@@ -586,7 +586,7 @@ function ce(e, i, o) {
   return (t?.kind === "one" ? [t.candidate] : s).find((a) => a.ref === o);
 }
 async function q(e, i, o, s) {
-  if (Mo()) {
+  if (isCrossSessionMessagingEnabled()) {
     let t = !GNe(i.unavailable),
       r = nbt(e, s),
       a = await kt(r, me);
@@ -701,7 +701,7 @@ function pe(e, i, o, s, t, r = !1) {
   let l = P(e, i);
   if (l === "agent") return;
   let d = l !== "local";
-  if (d && t.localClaimedRemoteBodies.has(pr(a.id))) return;
+  if (d && t.localClaimedRemoteBodies.has(sessionIdBody(a.id))) return;
   if (
     (l === "cloud" && t.cloudUnavailable) ||
     (l === "remote-control" && t.bridgeUnavailable) ||
@@ -718,11 +718,11 @@ function pe(e, i, o, s, t, r = !1) {
       c.id === a.id,
   );
   if (u === void 0) {
-    if (!(d && t.searchTruncated)) g("send_message_pin", "stale");
+    if (!(d && t.searchTruncated)) logFeatureSad("send_message_pin", "stale");
     return;
   }
   if (s !== void 0 && u.name !== s && o.some((c) => c.name === s)) return;
-  return (y("send_message_pin"), u);
+  return (logFeatureOk("send_message_pin"), u);
 }
 function he(e, i, o, s, t, r) {
   let a = B(e, o);
@@ -735,12 +735,12 @@ function he(e, i, o, s, t, r) {
 }
 function fe(e, i, o) {
   let s = new Set([
-    ...i.sessions.map((t) => pr(t.id)),
-    ...(o ?? []).map((t) => pr(t.id)),
+    ...i.sessions.map((t) => sessionIdBody(t.id)),
+    ...(o ?? []).map((t) => sessionIdBody(t.id)),
   ]);
   return new Set(
     e.flatMap((t) =>
-      t.bridgeSessionId !== void 0 && s.has(pr(t.bridgeSessionId))
+      t.bridgeSessionId !== void 0 && s.has(sessionIdBody(t.bridgeSessionId))
         ? [t.sock]
         : [],
     ),

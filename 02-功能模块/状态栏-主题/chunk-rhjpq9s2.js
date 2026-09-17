@@ -12,7 +12,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { nM } from "../键位绑定(Keybindings)/chunk-qy43nqgh.js";
 import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
 import { cn, c4, Hat, u4 } from "./chunk-w5jaj6kg.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
@@ -85,7 +85,7 @@ function KZ(Bt) {
     ((We = () => {
       if (ye === null) {
         let Ze = !G;
-        (Jt("userSettings", { syntaxHighlightingDisabled: Ze }, void 0, be),
+        (updateSettingsForSource("userSettings", { syntaxHighlightingDisabled: Ze }, void 0, be),
           ke((Ke) => ({
             ...Ke,
             settings: { ...Ke.settings, syntaxHighlightingDisabled: Ze },

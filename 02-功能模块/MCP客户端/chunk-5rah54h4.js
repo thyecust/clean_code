@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { RELATED_TASK_META_KEY as z5, RelatedTaskMetadataSchema as s7t, ElicitRequestSchema as Nie, ElicitationCompleteNotificationSchema as R2e } from "./chunk-tv3jbp8f.js";
+import { RELATED_TASK_META_KEY, RelatedTaskMetadataSchema, ElicitRequestSchema, ElicitationCompleteNotificationSchema } from "./chunk-tv3jbp8f.js";
 import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logMCPError as Wr, logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { executeElicitationHooks as KMe, executeElicitationResultHooks as XMe, executeNotificationHooks as gC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { executeElicitationHooks, executeElicitationResultHooks, executeNotificationHooks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { jIe } from "./chunk-7gw5rbph.js";
 import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 function Zgr(e) {
-  let t = s7t.safeParse(e?.[z5]);
+  let t = RelatedTaskMetadataSchema.safeParse(e?.[RELATED_TASK_META_KEY]);
   return t.success ? { taskId: t.data.taskId } : null;
 }
 function ehr(e, t, r, s) {
@@ -26,12 +26,12 @@ function ehr(e, t, r, s) {
     runElicitationResultHooks: sct,
   });
   try {
-    (e.setRequestHandler(Nie, (o, i) => n.handle(o, { signal: i.signal })),
-      e.setNotificationHandler(R2e, (o) => {
+    (e.setRequestHandler(ElicitRequestSchema, (o, i) => n.handle(o, { signal: i.signal })),
+      e.setNotificationHandler(ElicitationCompleteNotificationSchema, (o) => {
         let { elicitationId: i } = o.params;
         if (
-          (J(t, `Received elicitation completion notification: ${i}`),
-          gC(
+          (logMCPDebug(t, `Received elicitation completion notification: ${i}`),
+          executeNotificationHooks(
             { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
             {
               message: `MCP server "${t}" confirmed elicitation ${i} complete`,
@@ -40,7 +40,7 @@ function ehr(e, t, r, s) {
           ),
           !n.complete(i))
         )
-          J(
+          logMCPDebug(
             t,
             `Ignoring completion notification for unknown elicitation: ${i}`,
           );
@@ -70,7 +70,7 @@ async function oct(e, t, r) {
     let n = t.mode === "url" ? "url" : "form",
       o = "url" in t ? t.url : void 0,
       i = "elicitationId" in t ? t.elicitationId : void 0,
-      { elicitationResponse: c, blockingError: a } = await KMe({
+      { elicitationResponse: c, blockingError: a } = await executeElicitationHooks({
         session: s,
         serverName: e,
         message: t.message,
@@ -84,14 +84,14 @@ async function oct(e, t, r) {
     if (c) return { action: c.action, content: c.content };
     return;
   } catch (n) {
-    Wr(e, `Elicitation hook error: ${n}`);
+    logMCPError(e, `Elicitation hook error: ${n}`);
     return;
   }
 }
 async function sct(e, t, r, s, n) {
   let o = { id: K(), project: { originalCwd: he(), projectRoot: sn() } };
   try {
-    let { elicitationResultResponse: i, blockingError: c } = await XMe({
+    let { elicitationResultResponse: i, blockingError: c } = await executeElicitationResultHooks({
       session: o,
       serverName: e,
       action: t.action,
@@ -102,7 +102,7 @@ async function sct(e, t, r, s, n) {
     });
     if (c)
       return (
-        gC(o, {
+        executeNotificationHooks(o, {
           message: `Elicitation response for server "${e}": decline`,
           notificationType: "elicitation_response",
         }),
@@ -110,7 +110,7 @@ async function sct(e, t, r, s, n) {
       );
     let a = i ? { action: i.action, content: i.content ?? t.content } : t;
     return (
-      gC(o, {
+      executeNotificationHooks(o, {
         message: `Elicitation response for server "${e}": ${a.action}`,
         notificationType: "elicitation_response",
       }),
@@ -118,8 +118,8 @@ async function sct(e, t, r, s, n) {
     );
   } catch (i) {
     return (
-      Wr(e, `ElicitationResult hook error: ${i}`),
-      gC(o, {
+      logMCPError(e, `ElicitationResult hook error: ${i}`),
+      executeNotificationHooks(o, {
         message: `Elicitation response for server "${e}": ${t.action}`,
         notificationType: "elicitation_response",
       }),

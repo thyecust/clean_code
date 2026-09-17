@@ -14,8 +14,8 @@ import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { BRIEF_TOOL_NAME as t_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
-import { isBriefEntitled as Lbt } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
+import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { isBriefEntitled } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
 import { O, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var r = m(() => c({ enable_slash_command: O() })),
   n = { enable_slash_command: !1 };
@@ -34,7 +34,7 @@ var l = {
       Promise.resolve({
         async call(t, o) {
           let e = !o.getAppState().isBriefOnly;
-          if (e && !Lbt())
+          if (e && !isBriefEntitled())
             return (
               i("tengu_brief_mode_toggled", {
                 enabled: !1,
@@ -58,7 +58,7 @@ var l = {
             }));
           let s = [
             `<system-reminder>
-${e ? `Brief mode is now enabled. Use the ${t_} tool for all user-facing output \u2014 plain text outside it is hidden from the user's view.` : `Brief mode is now disabled. The ${t_} tool is no longer available \u2014 reply with plain text.`}
+${e ? `Brief mode is now enabled. Use the ${BRIEF_TOOL_NAME} tool for all user-facing output \u2014 plain text outside it is hidden from the user's view.` : `Brief mode is now disabled. The ${BRIEF_TOOL_NAME} tool is no longer available \u2014 reply with plain text.`}
 </system-reminder>`,
           ];
           return (

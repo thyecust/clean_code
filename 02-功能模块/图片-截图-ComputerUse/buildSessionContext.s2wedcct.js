@@ -17,7 +17,7 @@ import { oPe } from "./chunk-1c6fx285.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { UYn, BYn, VSt, jYn, J8e } from "./chunk-b8jsase9.js";
 import { Zp, JJn } from "./chunk-bvxymt09.js";
-import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import "./chunk-w5bhde2m.js";
 import { con, put } from "./chunk-v76f8dbx.js";
 import { GSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
@@ -52,7 +52,7 @@ function C(t) {
             ? `${c(e.start_coordinate)} \u2192 ${c(e.coordinate)}`
             : `to ${c(e.coordinate)}`;
         case "type":
-          return typeof e.text === "string" ? `"${Xe(e.text, 40)}"` : "";
+          return typeof e.text === "string" ? `"${truncateToWidth(e.text, 40)}"` : "";
         case "key":
         case "hold_key":
           return typeof e.text === "string" ? e.text : "";
@@ -73,7 +73,7 @@ function C(t) {
         case "wait":
           return typeof e.duration === "number" ? `${e.duration}s` : "";
         case "write_clipboard":
-          return typeof e.text === "string" ? `"${Xe(e.text, 40)}"` : "";
+          return typeof e.text === "string" ? `"${truncateToWidth(e.text, 40)}"` : "";
         case "open_application":
           return typeof e.bundle_id === "string" ? String(e.bundle_id) : "";
         case "request_access": {
@@ -108,7 +108,7 @@ function d(t) {
 function h(t) {
   return `Computer use is in use by another Claude session (${t.slice(0, 8)}\u2026). Wait for that session to finish or run /exit there.`;
 }
-function b() {
+function buildSessionContext() {
   return {
     isAborted: () => p().abortController.signal.aborted,
     getAllowedApps: () => l()?.allowedApps ?? [],
@@ -239,10 +239,10 @@ function b() {
 function _() {
   let t = Zp();
   if (t.binding) return t.binding;
-  let e = b();
+  let e = buildSessionContext();
   return ((t.binding = { ctx: e, dispatch: con(put(), GSe(), e) }), t.binding);
 }
-function B(t) {
+function getComputerUseMCPToolOverrides(t) {
   let e = async (r, o, s, y, g) => {
     let a = Zp();
     ((a.currentToolUseContext = o),
@@ -282,4 +282,4 @@ async function U(t) {
   if (!r) return { granted: [], denied: [], flags: hF };
   return r(oPe, t, { signal: e.abortController.signal });
 }
-export { b as buildSessionContext, B as getComputerUseMCPToolOverrides };
+export { buildSessionContext, getComputerUseMCPToolOverrides };

@@ -18,7 +18,7 @@ import { GZ } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { relative as et } from "path";
+import { relative } from "path";
 var T = 10;
 function FB(Dt) {
   let i = _(38),
@@ -41,7 +41,7 @@ function FB(Dt) {
   else F = i[1];
   let J;
   if (i[2] !== f || i[3] !== m)
-    ((J = m ? f : et(Q(), f)), (i[2] = f), (i[3] = m), (i[4] = J));
+    ((J = m ? f : relative(Q(), f)), (i[2] = f), (i[3] = m), (i[4] = J));
   else J = i[4];
   let K;
   if (i[5] !== J)

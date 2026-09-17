@@ -9,22 +9,22 @@
 // Version: 2.1.263
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { env as a, antEnv as Wn } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Xn, Lx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { dv, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, Lz } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yir, bir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht, Rp, XC, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ts, Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Hd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { isCancel as qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { ASSET_ID_RE as Hp, ARTIFACT_SLUG_RE as fr, ARTIFACT_DELETED_NOTE_TAG as oie, uuidSlugFromUrl as Fi, DEFAULT_LIST_LIMIT as URe, LIST_LIMIT_MAX as aie } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { parseRetryAfterHeader as Yy } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { ASSET_ID_RE, ARTIFACT_SLUG_RE, ARTIFACT_DELETED_NOTE_TAG, uuidSlugFromUrl, DEFAULT_LIST_LIMIT, LIST_LIMIT_MAX } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { TYe, ne, Hoe, CYe, vYe } from "./chunk-rr78st95.js";
 import {
   bCe,
@@ -44,20 +44,20 @@ import {
   Z1e,
   Mj,
   Fd,
-  isArtifactLangEnabled as Dwn,
-  isFrameMultiFileEnabled as fR,
-  isFrameCopyFromEnabled as woe,
-  isFrameLiveSubscribeEnabled as kK,
-  isValidArtifactLang as nYe,
-  MAX_COPY_SOURCES as Hfe,
-  ARTIFACT_LIST_SCOPES as sYe,
-  denyPolicyBody as bJ,
+  isArtifactLangEnabled,
+  isFrameMultiFileEnabled,
+  isFrameCopyFromEnabled,
+  isFrameLiveSubscribeEnabled,
+  isValidArtifactLang,
+  MAX_COPY_SOURCES,
+  ARTIFACT_LIST_SCOPES,
+  denyPolicyBody,
   TD,
   RG,
-  unlinkPath as Fj,
-  isCoworkHostSession as Uj,
-  isWorkshopSchemaEnabled as fTn,
-  isArtifactPrReviewComposeLatched as Roe,
+  unlinkPath,
+  isCoworkHostSession,
+  isWorkshopSchemaEnabled,
+  isArtifactPrReviewComposeLatched,
 } from "./chunk-01ymf0ar.js";
 import { tV, Z3n } from "./chunk-qpgskeea.js";
 import {
@@ -75,25 +75,25 @@ import {
 import { swe, iwe, awe, U3n, _cn, y2 } from "./chunk-01jnk0v2.js";
 import { kWn, nT } from "./chunk-p1dkvpxj.js";
 import {
-  VERIFY_CLAUSE as Bze,
-  PREVIEW_CLAUSE as jze,
-  READ_CLAUSE as Rln,
-  ROOM_SEND_CLAUSE as Gze,
-  typeCatalogClause as xln,
-  ASSET_CLAUSE as Hln,
-  COPY_FROM_CLAUSE as Iln,
-  FILES_READ_CLAUSE as Pln,
-  userCanDeleteThemselves as rwe,
-  OPEN_CLAUSE as Lln,
-  PIN_CLAUSE as $ln,
-  DELETE_CLAUSE as Bln,
-  DB_CLAUSES as jln,
-  DB_BATCH_OP as sT,
+  VERIFY_CLAUSE,
+  PREVIEW_CLAUSE,
+  READ_CLAUSE,
+  ROOM_SEND_CLAUSE,
+  typeCatalogClause,
+  ASSET_CLAUSE,
+  COPY_FROM_CLAUSE,
+  FILES_READ_CLAUSE,
+  userCanDeleteThemselves,
+  OPEN_CLAUSE,
+  PIN_CLAUSE,
+  DELETE_CLAUSE,
+  DB_CLAUSES,
+  DB_BATCH_OP,
 } from "./chunk-pdd7kz7p.js";
 import { GI } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { N5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { e9n, t9n, I7, n9n, H9, _pt } from "./chunk-5gz5xvw9.js";
-import { U6n, B6n, j6n, Vsn, endFrameLiveWatchOfDeletedArtifact as Ysn } from "./chunk-kshc4v5t.js";
+import { U6n, B6n, j6n, Vsn, endFrameLiveWatchOfDeletedArtifact } from "./chunk-kshc4v5t.js";
 import { Ccn, N9, F9 } from "./chunk-stvynqrz.js";
 import { FE } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 import { Fu } from "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
@@ -145,7 +145,7 @@ function Hjn(e, r) {
   if (!a.CLAUDE_CODE_REMOTE || e === null) return;
   if (e.readFailed) {
     if (
-      (g("artifact_durable_subscribe", "registry_unread"), r.reread !== void 0)
+      (logFeatureSad("artifact_durable_subscribe", "registry_unread"), r.reread !== void 0)
     )
       bt(r.reread, r);
     return;
@@ -167,11 +167,11 @@ async function bt(e, r, t = mt) {
     try {
       De(o, r);
     } catch (c) {
-      return (h(c), !1);
+      return (logError(c), !1);
     }
-    return (y("artifact_durable_subscribe", { registry_reread: !0 }), !0);
+    return (logFeatureOk("artifact_durable_subscribe", { registry_reread: !0 }), !0);
   }
-  return (g("artifact_durable_subscribe", "registry_reread_failed"), !1);
+  return (logFeatureSad("artifact_durable_subscribe", "registry_reread_failed"), !1);
 }
 function De(e, r) {
   let t = n9n(e.internal?.artifact_durable_watches),
@@ -202,7 +202,7 @@ function De(e, r) {
     if (i.stopLatches.isStopped(o)) gt(o);
   if ((e9n(r.sink), t !== null)) t9n();
   if ((I7(), t !== null && t.rows.length + t.stopped.size > 0))
-    (y("artifact_durable_subscribe", {
+    (logFeatureOk("artifact_durable_subscribe", {
       restored_rows: t.rows.length,
       restored_stops: t.stopped.size,
     }),
@@ -218,7 +218,7 @@ function gt(e) {
       (r.rows.delete(e), r.unwatchedSlugs.add(e));
       for (let o of [i.triggerId, ...(i.unreleased ?? [])])
         r.orphanTriggers.add(o);
-      g("artifact_durable_subscribe", "restored_stop_retired_row");
+      logFeatureSad("artifact_durable_subscribe", "restored_stop_retired_row");
     };
   if (r.slugOps.has(e)) {
     pe(
@@ -448,7 +448,7 @@ async function He(e) {
     }),
     o > 0)
   )
-    g("artifact_durable_subscribe", "orphan_trigger_release_failed");
+    logFeatureSad("artifact_durable_subscribe", "orphan_trigger_release_failed");
   I7();
 }
 async function je(e, r, t, i) {
@@ -483,7 +483,7 @@ async function xNt(e) {
     try {
       e.onSettled?.(c);
     } catch (u) {
-      h(u);
+      logError(u);
     }
   }
 }
@@ -509,7 +509,7 @@ async function Wt(e, r, t) {
             ? "outcome_unknown"
             : o.reason;
       return (
-        g("artifact_durable_subscribe", `refresh_${c}`),
+        logFeatureSad("artifact_durable_subscribe", `refresh_${c}`),
         n(`[artifact] restored durable watch not refreshed: reason=${c}`),
         Ge(F().get(e) ?? i)
       );
@@ -521,19 +521,19 @@ function Ut(e) {
   switch (e.outcome) {
     case "subscribed":
       if (e.downgraded) {
-        g("artifact_durable_subscribe", "comment_events_unsupported", ...ue(e));
+        logFeatureSad("artifact_durable_subscribe", "comment_events_unsupported", ...ue(e));
         break;
       }
-      y("artifact_durable_subscribe", ...ue(e));
+      logFeatureOk("artifact_durable_subscribe", ...ue(e));
       break;
     case "already_watching":
-      y("artifact_durable_subscribe", {
+      logFeatureOk("artifact_durable_subscribe", {
         already_watching: !0,
         ...(e.restored && { restored: !0 }),
       });
       break;
     case "skipped":
-      g("artifact_durable_subscribe", e.reason);
+      logFeatureSad("artifact_durable_subscribe", e.reason);
       break;
     case "failed": {
       let r = Ht(e),
@@ -546,8 +546,8 @@ function Ut(e) {
           ...t,
         },
         o = Object.keys(i).length > 0 ? [i] : [];
-      if (r !== void 0) g("artifact_durable_subscribe", r, ...o);
-      else f("artifact_durable_subscribe", e.reason, o[0]);
+      if (r !== void 0) logFeatureSad("artifact_durable_subscribe", r, ...o);
+      else logFeatureBad("artifact_durable_subscribe", e.reason, o[0]);
       let c = e.status !== void 0 ? ` status=${e.status}` : "",
         u = e.serverMessage !== void 0 ? ` server="${e.serverMessage}"` : "";
       n(`[artifact] durable watch failed: reason=${e.reason}${c}${u}`, {
@@ -579,12 +579,12 @@ function Ge(e) {
   };
 }
 async function Ie(e, r, t, i) {
-  if (!fr.test(e)) return { outcome: "failed", reason: "invalid_slug" };
+  if (!ARTIFACT_SLUG_RE.test(e)) return { outcome: "failed", reason: "invalid_slug" };
   let o = F().get(e);
   if (o && o !== i) return Ge(o);
   if ((H9({ storageV5: r.storageV5 }), ne().durable.stopLatches.isStopped(e)))
     return { outcome: "skipped", reason: "stop_latched" };
-  if (St() || Pe() !== "firstParty")
+  if (St() || getAPIProvider() !== "firstParty")
     return { outcome: "failed", reason: "client_policy" };
   if (t && ne().durable.originatorRefused)
     return { outcome: "failed", reason: "no_originator", latched: !0 };
@@ -697,7 +697,7 @@ async function Ie(e, r, t, i) {
           !/[<>]/.test(x) &&
           typeof W === "string" &&
           W.toLowerCase().startsWith("text/plain"),
-        ye = bJ(R.data),
+        ye = denyPolicyBody(R.data),
         ee = R.fromFrame && (ye !== null || K),
         J = ee ? Oe(ye?.error ?? x ?? "") : void 0;
       A = {
@@ -765,7 +765,7 @@ async function Ie(e, r, t, i) {
     ? [i.triggerId, ...(i.unreleased ?? [])].filter((x) => x !== p.triggerId)
     : [];
   if ((await Promise.all(ft.map((x) => V(l, x)))).includes(!1))
-    g("artifact_durable_subscribe", "superseded_trigger_release_failed");
+    logFeatureSad("artifact_durable_subscribe", "superseded_trigger_release_failed");
   return {
     outcome: "subscribed",
     triggerId: p.triggerId,
@@ -779,7 +779,7 @@ async function HNt(e) {
   let { slug: r, context: t } = e;
   if ((Vsn(r), !F().has(r) && !a.CLAUDE_CODE_REMOTE))
     return { wasWatching: !1, teardown: "unsent" };
-  if (!fr.test(r)) return { wasWatching: !1, teardown: "unsent" };
+  if (!ARTIFACT_SLUG_RE.test(r)) return { wasWatching: !1, teardown: "unsent" };
   let i = de(r, () => jt(r, t));
   return (pe(i), i);
 }
@@ -819,11 +819,11 @@ async function jt(e, r) {
     }
     if (p !== null) await He(p);
   }
-  if (i && b) y("artifact_durable_subscribe", { unwatch: !0, ...l[0] });
-  else if (c && b) g("artifact_durable_subscribe", "unwatch_aborted", ...l);
+  if (i && b) logFeatureOk("artifact_durable_subscribe", { unwatch: !0, ...l[0] });
+  else if (c && b) logFeatureSad("artifact_durable_subscribe", "unwatch_aborted", ...l);
   else {
     let p = d?.ok && !i ? { status: d.status, ...l[0] } : l[0];
-    f(
+    logFeatureBad(
       "artifact_durable_subscribe",
       i
         ? "unwatch_trigger_release_failed"
@@ -840,8 +840,8 @@ function Xe() {
   return a.CLAUDE_CODE_ARTIFACT_DELETE ?? H("tengu_cobalt_plinth_alder", !1);
 }
 function INt() {
-  return Uj()
-    ? `Deleting Artifacts isn't available in this cloud session right now, so nothing was deleted; do not retry here. If the Artifact is the user's own, ${rwe(!0)}`
+  return isCoworkHostSession()
+    ? `Deleting Artifacts isn't available in this cloud session right now, so nothing was deleted; do not retry here. If the Artifact is the user's own, ${userCanDeleteThemselves(!0)}`
     : "Deleting Artifacts isn't available in this cloud session right now, so nothing was deleted; do not retry here. If the Artifact is the user's own, they can delete it themselves on claude.ai from the Artifact's own menu, or with `/artifacts` in Claude Code on their own machine (press d on the selected one).";
 }
 function Von() {
@@ -897,16 +897,16 @@ async function Dut(e, r, t) {
         (o.status === 409 || o.status === 429 || o.status === 503))
     ) {
       let l = o.response.headers?.["retry-after"],
-        d = Math.min(Yy(typeof l === "string" ? l : void 0) ?? Gt, qt);
+        d = Math.min(parseRetryAfterHeader(typeof l === "string" ? l : void 0) ?? Gt, qt);
       (await Z(d, t.signal, { abortError: () => new Ve() }),
         (c = !0),
         (o = await i()));
     }
   } catch (l) {
-    if (qi(l) || l instanceof Ve || t.signal?.aborted) throw l;
+    if (isCancel(l) || l instanceof Ve || t.signal?.aborted) throw l;
     let d = nP(l);
     return (
-      f("artifact_delete", "request_error", Ye(t, c, d ? "relay" : "direct")),
+      logFeatureBad("artifact_delete", "request_error", Ye(t, c, d ? "relay" : "direct")),
       {
         err: d
           ? qe("no answer")
@@ -919,14 +919,14 @@ async function Dut(e, r, t) {
   if (!o.ok) {
     if (o.reason === "relay-unavailable" || o.reason === "relay-not-served")
       return (
-        f("artifact_delete", o.reason.replace(/-/g, "_"), {
+        logFeatureBad("artifact_delete", o.reason.replace(/-/g, "_"), {
           ...u,
           status: o.status,
         }),
         { err: INt(), reason: "unavailable" }
       );
     return (
-      f("artifact_delete", o.reason, u),
+      logFeatureBad("artifact_delete", o.reason, u),
       {
         err:
           o.reason === "no-auth"
@@ -938,13 +938,13 @@ async function Dut(e, r, t) {
   }
   if (!o.fromFrame && (o.status < 200 || o.status >= 300))
     return (
-      f("artifact_delete", "relay_error", { ...u, status: o.status }),
+      logFeatureBad("artifact_delete", "relay_error", { ...u, status: o.status }),
       { err: qe(`HTTP ${o.status}`), reason: "http_failed", status: o.status }
     );
   if (o.status === 404) {
     if (!hoe(o.data))
       return (
-        f("artifact_delete", "not_found_foreign", { ...u, status: 404 }),
+        logFeatureBad("artifact_delete", "not_found_foreign", { ...u, status: 404 }),
         {
           err: `Couldn't confirm the delete: the "not found" answer did not come from the Artifact service (a proxy or network edge may have answered), so the Artifact may still be online \u2014 check the Artifacts list again before treating it as deleted.`,
           reason: "http_failed",
@@ -952,7 +952,7 @@ async function Dut(e, r, t) {
         }
       );
     return (
-      g("artifact_delete", "not_found", u),
+      logFeatureSad("artifact_delete", "not_found", u),
       { err: null, alreadyGone: !0 }
     );
   }
@@ -960,7 +960,7 @@ async function Dut(e, r, t) {
     let l = Yt(o.data);
     if (/^not owner\b/.test(l))
       return (
-        g("artifact_delete", "not_owner", u),
+        logFeatureSad("artifact_delete", "not_owner", u),
         {
           err: "Only the Artifact's owner can delete it.",
           reason: "not_owner",
@@ -969,13 +969,13 @@ async function Dut(e, r, t) {
       );
     if (l.startsWith(TG))
       return (
-        f("artifact_delete", "ccr_credential_refused", u),
+        logFeatureBad("artifact_delete", "ccr_credential_refused", u),
         { err: INt(), reason: "unavailable", status: 403 }
       );
   }
   if (o.status < 200 || o.status >= 300)
     return (
-      f("artifact_delete", "http_failed", { ...u, status: o.status }),
+      logFeatureBad("artifact_delete", "http_failed", { ...u, status: o.status }),
       {
         err:
           o.status >= 500
@@ -987,18 +987,18 @@ async function Dut(e, r, t) {
     );
   if (o.status !== 204 || (o.route === "relay" && !hJ(o)))
     return (
-      f("artifact_delete", "ok_foreign", { ...u, status: o.status }),
+      logFeatureBad("artifact_delete", "ok_foreign", { ...u, status: o.status }),
       {
         err: `Couldn't confirm the delete: the answer (HTTP ${o.status}) was not the Artifact service's own, so the Artifact may still be online \u2014 check the Artifacts list again before treating it as deleted.`,
         reason: "http_failed",
         status: o.status,
       }
     );
-  return (y("artifact_delete", u), { err: null, alreadyGone: !1 });
+  return (logFeatureOk("artifact_delete", u), { err: null, alreadyGone: !1 });
 }
 function Xt(e, r) {
   let t = Object.keys(e.frameUrls),
-    i = t.filter((A) => Fi(e.frameUrls[A].url) !== r),
+    i = t.filter((A) => uuidSlugFromUrl(e.frameUrls[A].url) !== r),
     o = e.artifactRefs?.filter((A) => A.slug !== r),
     c = (o?.length ?? 0) !== (e.artifactRefs?.length ?? 0),
     u = e.artifactReadVersions !== void 0 && r in e.artifactReadVersions,
@@ -1025,22 +1025,22 @@ function _Pe(e, r) {
     remoteControlSkippedSlugs: c,
     coordinatorEditors: u,
   } = ne();
-  for (let [l, d] of t.filePathToSlug) if (d === e) Fj(l);
+  for (let [l, d] of t.filePathToSlug) if (d === e) unlinkPath(l);
   for (let [l, d] of i) if (d.slug === e) i.delete(l);
   if (
     (o.delete(e),
     c.delete(e),
     TYe(e, "page_gone"),
     u.delete(e),
-    Ysn(e, r.context),
+    endFrameLiveWatchOfDeletedArtifact(e, r.context),
     ne().liveDocWatch.stop?.(e),
     N5n(e),
     a.CLAUDE_CODE_REMOTE || hPe(e) !== void 0)
   )
-    HNt({ slug: e, context: r.context }).catch(h);
+    HNt({ slug: e, context: r.context }).catch(logError);
 }
 function Kon(e) {
-  return `<${oie} url="${e}"/> The user deleted this Artifact from /artifacts: its link no longer works for anyone, it cannot be restored, and it cannot be published to again \u2014 publishing the same file creates a new Artifact at a new URL. Do not pass this url to the Artifact tool.`;
+  return `<${ARTIFACT_DELETED_NOTE_TAG} url="${e}"/> The user deleted this Artifact from /artifacts: its link no longer works for anyone, it cannot be restored, and it cannot be published to again \u2014 publishing the same file creates a new Artifact at a new URL. Do not pass this url to the Artifact tool.`;
 }
 function RNt() {
   if (a.CLAUDE_CODE_REMOTE && !Fu()) return !1;
@@ -1084,10 +1084,10 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
         ? await Nd.postRelayOnly(o, void 0, c)
         : await Nd.deleteRelayOnly(o, c);
   } catch (b) {
-    if (qi(b)) throw b;
+    if (isCancel(b)) throw b;
     let p = nP(b);
     return (
-      f("artifact_pin", "request_error", Ke(i, p ? "relay" : "direct")),
+      logFeatureBad("artifact_pin", "request_error", Ke(i, p ? "relay" : "direct")),
       {
         err: p
           ? `Couldn't confirm the ${u} (the cloud relay gave no answer) \u2014 check with action "list" before retrying.`
@@ -1100,11 +1100,11 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
   if (!l.ok) {
     if (l.reason === "relay-unavailable" || l.reason === "relay-not-served")
       return (
-        f("artifact_pin", l.reason.replace(/-/g, "_"), d),
+        logFeatureBad("artifact_pin", l.reason.replace(/-/g, "_"), d),
         { err: kNt, reason: "unavailable" }
       );
     return (
-      f("artifact_pin", l.reason, d),
+      logFeatureBad("artifact_pin", l.reason, d),
       {
         err:
           l.reason === "no-auth"
@@ -1116,7 +1116,7 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
   }
   if (!l.fromFrame && (l.status < 200 || l.status >= 300))
     return (
-      f("artifact_pin", "relay_error", d),
+      logFeatureBad("artifact_pin", "relay_error", d),
       {
         err: `Couldn't confirm the ${u} (the cloud relay failed: HTTP ${l.status}) \u2014 check with action "list" before retrying.`,
         reason: "http_failed",
@@ -1124,7 +1124,7 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
     );
   if (l.status === 404)
     return (
-      g("artifact_pin", "not_found", d),
+      logFeatureSad("artifact_pin", "not_found", d),
       {
         err: `Couldn't ${u} the artifact \u2014 it may be gone or not readable by the user, or pinning isn't available yet for this account`,
         reason: "not_found",
@@ -1136,12 +1136,12 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
     l.data.trim().startsWith(TG)
   )
     return (
-      f("artifact_pin", "ccr_credential_refused", d),
+      logFeatureBad("artifact_pin", "ccr_credential_refused", d),
       { err: kNt, reason: "unavailable" }
     );
   if (l.status < 200 || l.status >= 300)
     return (
-      f("artifact_pin", "http_failed", d),
+      logFeatureBad("artifact_pin", "http_failed", d),
       {
         err: `Couldn't ${u} the artifact (HTTP ${l.status})`,
         reason: "http_failed",
@@ -1149,13 +1149,13 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
     );
   if (l.route === "relay" && !hJ(l))
     return (
-      f("artifact_pin", "ok_foreign", d),
+      logFeatureBad("artifact_pin", "ok_foreign", d),
       {
         err: `Couldn't confirm the ${u}: the answer (HTTP ${l.status}) was not the Artifact service's own \u2014 check with action "list" before retrying.`,
         reason: "http_failed",
       }
     );
-  if ((y("artifact_pin", d), r && l.route === "direct"))
+  if ((logFeatureOk("artifact_pin", d), r && l.route === "direct"))
     Zt(t).catch((b) =>
       n(
         `markAccountHasPins failed: ${b instanceof Error ? b.message : String(b)}`,
@@ -1532,7 +1532,7 @@ function it(e) {
   ot.register(e);
 }
 function st() {
-  return Wn.CLAUDE_CODE_ARTIFACT_MCP ?? !0;
+  return antEnv.CLAUDE_CODE_ARTIFACT_MCP ?? !0;
 }
 function lt() {
   return fe(s().min(1).max(64), se())
@@ -1666,7 +1666,7 @@ var I = null,
   Ee = null,
   ge = null,
   dr = !1;
-it(fTn);
+it(isWorkshopSchemaEnabled);
 function pr(e, r, t, i, o, c, u, l, d, b, p, w, E, A) {
   let _ = ["publish", "list", "read", "list_types"];
   if (u) _.push("describe_type");
@@ -1709,7 +1709,7 @@ function frozenSnapshotAdmits(e) {
 }
 function sessionWatchRail() {
   if (a.CLAUDE_CODE_REMOTE) return "durable";
-  return kK() ? "live" : "none";
+  return isFrameLiveSubscribeEnabled() ? "live" : "none";
 }
 var ut = Symbol("artifactLivePathsOpen");
 function mr(e, r) {
@@ -1728,7 +1728,7 @@ function br(e) {
 }
 function dbFieldSchemas() {
   return {
-    db_op: X([...hwe, ...W7, sT])
+    db_op: X([...hwe, ...W7, DB_BATCH_OP])
       .optional()
       .describe(
         `Database operation: 'get', 'list' or 'query' for read_db; 'set', 'update' or 'delete' for write_db, or 'batch' to send up to ${mk} of those in \`writes\` under one approval. Required for both database actions; meaningless for every other action.`,
@@ -1828,7 +1828,7 @@ function gr() {
     o = dM(),
     c = sessionWatchRail();
   ne().frozenWatchRail = c;
-  let u = fR();
+  let u = isFrameMultiFileEnabled();
   ne().frozenMultiFile = u;
   let l = awe() && u,
     d = l && U3n(),
@@ -1838,7 +1838,7 @@ function gr() {
     w = Ccn(),
     E = swe(),
     A = Xe(),
-    _ = w && woe();
+    _ = w && isFrameCopyFromEnabled();
   ne().frozenCopyFrom = _;
   let C = iwe(),
     M = ct(),
@@ -1852,8 +1852,8 @@ function gr() {
   let j = I?.liveEditGateOpen() === !0,
     N = j && u && I?.livePathsEnabled() === !0;
   ne().livePathsGateLatch = N;
-  let B = Dwn(),
-    re = Roe(),
+  let B = isArtifactLangEnabled(),
+    re = isArtifactPrReviewComposeLatched(),
     ae =
       "Omit (or 'publish') to publish file_path. 'list' enumerates artifacts \u2014 the user's own by default, see `scope`; only `limit` and `scope` may accompany it.",
     ie =
@@ -1863,22 +1863,22 @@ function gr() {
         .optional()
         .describe(
           (j && I ? ae + I.ACTION_DESCRIBE_SYNC_CLAUSE : ae) +
-            Rln +
+            READ_CLAUSE +
             (t ? ie : "") +
             hr(t, c) +
-            (E ? Bze : "") +
+            (E ? VERIFY_CLAUSE : "") +
             (r ? readPageDataDescribe(e) : "") +
-            (i ? jln : "") +
-            (o ? Gze : "") +
-            (w ? Hln : "") +
-            (w && _ ? Iln : "") +
-            (u ? Pln : "") +
-            (A ? Bln : "") +
-            (C ? jze : "") +
-            (M ? Lln : "") +
+            (i ? DB_CLAUSES : "") +
+            (o ? ROOM_SEND_CLAUSE : "") +
+            (w ? ASSET_CLAUSE : "") +
+            (w && _ ? COPY_FROM_CLAUSE : "") +
+            (u ? FILES_READ_CLAUSE : "") +
+            (A ? DELETE_CLAUSE : "") +
+            (C ? PREVIEW_CLAUSE : "") +
+            (M ? OPEN_CLAUSE : "") +
             (P ? ge.HANDLERS_CLAUSE : "") +
-            (D ? $ln : "") +
-            (b ? xln(d) : ""),
+            (D ? PIN_CLAUSE : "") +
+            (b ? typeCatalogClause(d) : ""),
         ),
       ...(b && {
         type_query: s()
@@ -1950,7 +1950,7 @@ function gr() {
         ),
       ...(B && {
         lang: s()
-          .refine(nYe, {
+          .refine(isValidArtifactLang, {
             message: 'must be a BCP-47 language tag like "ja" or "pt-BR"',
           })
           .optional()
@@ -2030,7 +2030,7 @@ function gr() {
           .optional()
           .describe(
             (_
-              ? `Supporting files to publish alongside the page. Map form {"published/path": "source/path" | {from, contentType} | {artifact, path, ver?} | null} publishes each source at the key (what the HTML references) \u2014 an {artifact, path} source copies that Artifact's published file server side (an Artifact you can open, same organization; its type comes with it; not an HTML, SVG or XML document; at most ${Hfe} source Artifact versions per publish); when updating an existing artifact, files left out of the map are kept and null removes that path. List form publishes each file at its own spelling. Local sources must lie under the working directory.`
+              ? `Supporting files to publish alongside the page. Map form {"published/path": "source/path" | {from, contentType} | {artifact, path, ver?} | null} publishes each source at the key (what the HTML references) \u2014 an {artifact, path} source copies that Artifact's published file server side (an Artifact you can open, same organization; its type comes with it; not an HTML, SVG or XML document; at most ${MAX_COPY_SOURCES} source Artifact versions per publish); when updating an existing artifact, files left out of the map are kept and null removes that path. List form publishes each file at its own spelling. Local sources must lie under the working directory.`
               : 'Supporting files to publish alongside the page. Map form {"published/path": "source/path" | {from, contentType} | null} publishes each source at the key (what the HTML references); when updating an existing artifact, files left out of the map are kept and null removes that path. List form publishes each file at its own spelling. Sources must lie under the working directory.') +
               (N && I ? I.FILES_LIVE_DESCRIBE : ""),
           ),
@@ -2053,10 +2053,10 @@ function gr() {
       limit: T()
         .int()
         .min(1)
-        .max(aie)
+        .max(LIST_LIMIT_MAX)
         .optional()
-        .describe(`list only: maximum artifacts to return (default ${URe}).`),
-      scope: X(sYe)
+        .describe(`list only: maximum artifacts to return (default ${DEFAULT_LIST_LIMIT}).`),
+      scope: X(ARTIFACT_LIST_SCOPES)
         .optional()
         .describe(
           "list only: 'mine' (default) lists artifacts the user owns \u2014 the only ones the update flow can target; 'shared' lists artifacts other people shared with the user (read-only); 'all' lists both. Rows are labeled (mine)/(shared) whenever scope is not 'mine'." +
@@ -2171,7 +2171,7 @@ function gr() {
       }),
       ...(w && {
         asset_id: s()
-          .regex(Hp)
+          .regex(ASSET_ID_RE)
           .optional()
           .describe(
             "read_asset and delete_asset: the asset's id (32 hex characters), from a list_assets or upload_asset result.",
@@ -2189,7 +2189,7 @@ function gr() {
             .describe(
               "copy_from only: the SOURCE artifact's claude.ai URL \u2014 one you can open, in your organization.",
             ),
-          asset_ids: v(s().regex(Hp))
+          asset_ids: v(s().regex(ASSET_ID_RE))
             .min(1)
             .max(F9)
             .optional()
@@ -2278,7 +2278,7 @@ function artifactWatchRailFrozen() {
 function artifactCopyFromFrozen() {
   inputSchema();
   let e = ne();
-  return ((e.frozenCopyFrom ??= Ccn() && woe()), e.frozenCopyFrom);
+  return ((e.frozenCopyFrom ??= Ccn() && isFrameCopyFromEnabled()), e.frozenCopyFrom);
 }
 function artifactDbPromptGateOpen() {
   return "db_op" in inputSchema().shape;

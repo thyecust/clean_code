@@ -135,7 +135,7 @@ function A(s) {
 function lt(wt) {
   return wt.severity !== "warning";
 }
-function at(Et) {
+function InvalidSettingsDialog(Et) {
   let f = _(21),
     { settingsErrors: c, onContinue: F, onFix: I, onExit: L } = Et,
     it;
@@ -208,4 +208,4 @@ function at(Et) {
   else st = f[20];
   return st;
 }
-export { at as InvalidSettingsDialog };
+export { InvalidSettingsDialog };

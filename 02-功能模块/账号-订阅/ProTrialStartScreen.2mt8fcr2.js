@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 242 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { getProTrialDurationDays as $It, startProTrial as UIt } from "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
+import { getProTrialDurationDays, startProTrial } from "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
@@ -33,7 +33,7 @@ import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
-function N(L) {
+function ProTrialStartScreen(L) {
   let s = _(11),
     { onDone: u, storageV5: C, credentials: P } = L,
     [a, B] = d("idle"),
@@ -50,14 +50,14 @@ function N(L) {
         }
         (B("starting"),
           i("tengu_pro_trial_start_pressed", {}),
-          UIt(C, P)
+          startProTrial(C, P)
             .then(() => {
               (i("tengu_pro_trial_start_ok", {}), u());
             })
             .catch((S) => {
               if (cc(S))
                 n(`Failed to start pro trial: ${l(S)}`, { level: "error" });
-              else h(S);
+              else logError(S);
               (i("tengu_pro_trial_start_error", {}), B("error"));
             }));
       },
@@ -73,7 +73,7 @@ function N(L) {
   else R = s[5];
   Ze(H, R);
   let D;
-  if (s[6] === p) ((D = $It()), (s[6] = D));
+  if (s[6] === p) ((D = getProTrialDurationDays()), (s[6] = D));
   else D = s[6];
   let Y = D,
     b;
@@ -129,4 +129,4 @@ function N(L) {
   else v = s[10];
   return v;
 }
-export { N as ProTrialStartScreen };
+export { ProTrialStartScreen };

@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 85 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
@@ -48,7 +48,7 @@ async function D(e, t, r, o, i) {
   if (!h1("allow_plugin_skill_search")) {
     let S = zRe("allow_plugin_skill_search");
     throw (
-      f(
+      logFeatureBad(
         p,
         S === "org_denied"
           ? "policy_denied"
@@ -87,14 +87,14 @@ async function D(e, t, r, o, i) {
     if (h.status === 403 && S.success)
       return (
         n(`[plugin-skill-search] degraded to empty: ${N}`, { level: "error" }),
-        g(p, "not_entitled"),
+        logFeatureSad(p, "not_entitled"),
         []
       );
     throw Error(N);
   }
   let M = Z().safeParse(h.data);
   if (!M.success) throw Error("malformed search response");
-  return (y(t === L ? "skill_search" : "plugin_search"), M.data.results);
+  return (logFeatureOk(t === L ? "skill_search" : "plugin_search"), M.data.results);
 }
 async function G(e, t, r, o) {
   return D(e, I, t, r, o);
@@ -104,7 +104,7 @@ async function P(e, t, r, o) {
 }
 function R(e, t) {
   (n(`[plugin-skill-search] ${e} failed: ${l(t)}`, { level: "error" }),
-    f(e === "plugin" ? "plugin_search" : "skill_search", "fetch_failed"));
+    logFeatureBad(e === "plugin" ? "plugin_search" : "skill_search", "fetch_failed"));
 }
 async function E(e, t, r) {
   if (!cJ(e)) return null;
@@ -114,7 +114,7 @@ async function E(e, t, r) {
     t,
     () => new Ve("plugin manifest read aborted"),
   );
-  if (!o.ok) throw (f(r, "manifest_failed"), new d(`manifest ${o.reason}`));
+  if (!o.ok) throw (logFeatureBad(r, "manifest_failed"), new d(`manifest ${o.reason}`));
   return o.plugins;
 }
 var F = m(() =>
@@ -191,7 +191,7 @@ var q =
       let i = await E(o, t, "plugin_list");
       if (i !== null)
         return (
-          y("plugin_list"),
+          logFeatureOk("plugin_list"),
           i.map((u) => ({
             id: u.id,
             name: u.name,
@@ -207,13 +207,13 @@ var q =
               `[plugin-skill-list] degraded to empty: list-plugins 403 ${p.error}`,
               { level: "error" },
             ),
-            g("plugin_list", "not_entitled"),
+            logFeatureSad("plugin_list", "not_entitled"),
             []
           );
-        throw (f("plugin_list", "fetch_failed"), new d(p.error));
+        throw (logFeatureBad("plugin_list", "fetch_failed"), new d(p.error));
       }
       return (
-        y("plugin_list"),
+        logFeatureOk("plugin_list"),
         p.plugins.map((u) => ({
           id: u.pluginId,
           name: u.name,
@@ -236,13 +236,13 @@ var q =
               `[plugin-skill-list] degraded to empty: list-skills 403 ${o.error}`,
               { level: "error" },
             ),
-            g("skill_list", "not_entitled"),
+            logFeatureSad("skill_list", "not_entitled"),
             []
           );
-        throw (f("skill_list", "fetch_failed"), new d(o.error));
+        throw (logFeatureBad("skill_list", "fetch_failed"), new d(o.error));
       }
       return (
-        y("skill_list"),
+        logFeatureOk("skill_list"),
         o.skills.map((i) => ({
           id: i.skillId,
           name: i.name,
@@ -477,6 +477,6 @@ Always pass keywords from the user's request (you may set trigger: 'user_asked')
     mapToolResultToToolResultBlockParam: w,
     renderToolUseMessage: _,
   });
-var ft = [U.name, A.name, j.name, H.name, x.name, C.name],
-  kt = [U, A, j, H, x, C];
-export { ft as PLUGIN_SKILL_SAFE_TOOL_NAMES, kt as PLUGIN_SKILL_TOOLS };
+var PLUGIN_SKILL_SAFE_TOOL_NAMES = [U.name, A.name, j.name, H.name, x.name, C.name],
+  PLUGIN_SKILL_TOOLS = [U, A, j, H, x, C];
+export { PLUGIN_SKILL_SAFE_TOOL_NAMES, PLUGIN_SKILL_TOOLS };

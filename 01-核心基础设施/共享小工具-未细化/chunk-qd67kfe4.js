@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 function Fa(r, a) {
   let { signalB: o, timeoutMs: i, refTimer: d } = a ?? {},
-    n = hr();
+    n = createAbortController();
   if (r?.aborted || o?.aborted)
     return (n.abort(), { signal: n.signal, cleanup: () => {} });
   let e,

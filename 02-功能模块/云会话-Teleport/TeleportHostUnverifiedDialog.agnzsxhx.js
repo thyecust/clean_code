@@ -17,7 +17,7 @@ import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
-function Y(ie) {
+function TeleportHostUnverifiedDialog(ie) {
   let i = _(52),
     { sessionRepo: f, rawRemoteUrl: u, onConfirm: B, onCancel: g } = ie,
     a = ui(),
@@ -212,4 +212,4 @@ function Y(ie) {
   else s = i[51];
   return s;
 }
-export { Y as TeleportHostUnverifiedDialog };
+export { TeleportHostUnverifiedDialog };

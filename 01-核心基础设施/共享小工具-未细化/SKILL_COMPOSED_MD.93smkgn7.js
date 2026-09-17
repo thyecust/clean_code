@@ -14,7 +14,7 @@ var p = "./SKILL_COMPOSED-fca580f2.md.zst";
 var A = Ke(p, import.meta.dirname);
 var a = "./template.html-fb05d44d.txt.zst";
 var r = Ke(a, import.meta.dirname);
-var C = e,
-  z = A,
-  h = { "template.html": r };
-export { z as SKILL_COMPOSED_MD, h as SKILL_FILES, C as SKILL_MD };
+var SKILL_MD = e,
+  SKILL_COMPOSED_MD = A,
+  SKILL_FILES = { "template.html": r };
+export { SKILL_COMPOSED_MD, SKILL_FILES, SKILL_MD };

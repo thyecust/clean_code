@@ -11,25 +11,25 @@ import "../../02-功能模块/MCP客户端/chunk-5wa92x7d.js";
 import { Go, Ki } from "../../02-功能模块/MCP客户端/chunk-78r8f7dw.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-3wfaaze4.js";
 var n = new Set([-32002, Go.InvalidParams]);
-function e(o) {
+function getMcpErrorCode(o) {
   return o instanceof Ki ? o.code : void 0;
 }
-function t(o) {
+function isMcpMethodNotFoundError(o) {
   return o instanceof Ki && o.code === Go.MethodNotFound;
 }
-function i(o) {
+function isMcpResourceNotFoundError(o) {
   return o instanceof Ki && n.has(o.code);
 }
-function c(o) {
+function isMcpNotADirectoryError(o) {
   return o instanceof Ki && o.code === Go.InvalidParams;
 }
-function u(o) {
+function isUrlElicitationRequiredMcpError(o) {
   return o instanceof Ki && o.code === Go.UrlElicitationRequired;
 }
 export {
-  e as getMcpErrorCode,
-  t as isMcpMethodNotFoundError,
-  c as isMcpNotADirectoryError,
-  i as isMcpResourceNotFoundError,
-  u as isUrlElicitationRequiredMcpError,
+  getMcpErrorCode,
+  isMcpMethodNotFoundError,
+  isMcpNotADirectoryError,
+  isMcpResourceNotFoundError,
+  isUrlElicitationRequiredMcpError,
 };

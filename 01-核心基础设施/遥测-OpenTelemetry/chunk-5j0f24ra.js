@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { env as a, antEnv as Wn } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a, antEnv } from "../设置-配置/chunk-zqr5ctyf.js";
 var h = [
     "runner_prep_total_ms",
     "runner_prep_git_proxy_config_ms",
@@ -170,7 +170,7 @@ class c {
     if (!a.CLAUDE_CODE_REMOTE) return;
     if (this.consumed || Object.keys(this.phases).length === 0) return;
     this.consumed = !0;
-    let e = p(Wn.CCR_RUNNER_STARTUP_TIMING);
+    let e = p(antEnv.CCR_RUNNER_STARTUP_TIMING);
     return {
       ...e?.fields,
       entrypoint: a.CLAUDE_CODE_ENTRYPOINT ?? "unknown",
@@ -183,10 +183,10 @@ class c {
       resume_hydrate_delta_fetch_attempted:
         this.resumeHydrateDeltaFetchAttempted,
       resume_hydrate_anchor_walkback: this.resumeHydrateAnchorWalkback,
-      prewarm_vda: Wn.CCR_PREWARM_VDA,
-      prewarm_stat: Wn.CCR_PREWARM_STAT,
-      delta_reset: Wn.CCR_DELTA_RESET,
-      prefetch_network: Wn.CCR_PREFETCH_NETWORK,
+      prewarm_vda: antEnv.CCR_PREWARM_VDA,
+      prewarm_stat: antEnv.CCR_PREWARM_STAT,
+      delta_reset: antEnv.CCR_DELTA_RESET,
+      prefetch_network: antEnv.CCR_PREFETCH_NETWORK,
       phases: { ...e?.phases, ...this.phases },
       time_origin_ms: performance.timeOrigin,
       phase_start_ms: { ...this.phaseStarts },

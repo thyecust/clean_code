@@ -13,11 +13,11 @@ import { B, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ju } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { P6, XUe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { findCanonicalGitRootUncached as vA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, truncateStartToWidth as Ob, formatRelativeTime as I1 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { te, truncateStartToWidth, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -27,7 +27,7 @@ import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
-import { readRoster as IE } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { readRoster } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { Rh } from "../后台任务-Shell管理/chunk-5jv5fvbn.js";
 import { JI, f1e, K_ } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { dBn } from "../权限系统/chunk-3kjwvb3e.js";
@@ -51,7 +51,7 @@ import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
-import { basename as ce, resolve as we } from "path";
+import { basename, resolve } from "path";
 function po(mn) {
   return mn === "worktree"
     ? "Each session gets its own git worktree (requires a git repo)."
@@ -62,7 +62,7 @@ async function Nt(n, s) {
   if (!i.ok) return [];
   return (i.config.remoteControl ?? []).map((f) => ({
     dir: f.dir,
-    name: f.name ?? ce(f.dir),
+    name: f.name ?? basename(f.dir),
     spawnMode: f.spawnMode ?? "same-dir",
     isRunning: n,
   }));
@@ -99,7 +99,7 @@ function _e(Zo) {
           );
       } catch (Ce) {
         let _t = Ce;
-        (h(_t), Be(`Action failed: ${l(_t)}`, { display: "system" }));
+        (logError(_t), Be(`Action failed: ${l(_t)}`, { display: "system" }));
       }
     }),
       (J[0] = ke),
@@ -239,7 +239,7 @@ function tt(nn) {
   let P = _(50),
     { defaultDir: M, onCancel: xe, onAdded: Dt, storageV5: Te } = nn,
     Je;
-  if (P[0] !== M) ((Je = ce(M)), (P[0] = M), (P[1] = Je));
+  if (P[0] !== M) ((Je = basename(M)), (P[0] = M), (P[1] = Je));
   else Je = P[1];
   let to;
   if (P[2] !== M || P[3] !== Je)
@@ -261,7 +261,7 @@ function tt(nn) {
           return Tt;
         }
         let ro = { ...Tt, [We]: xt };
-        if (We === "dir" && !Ae) ro.name = ce(we(Ju(xt.trim() || M)));
+        if (We === "dir" && !Ae) ro.name = basename(resolve(Ju(xt.trim() || M)));
         return ro;
       });
     }),
@@ -272,7 +272,7 @@ function tt(nn) {
   let Oe = no,
     io;
   if (P[8] !== M || P[9] !== Y.dir)
-    ((io = we(Ju(Y.dir?.trim() || M))),
+    ((io = resolve(Ju(Y.dir?.trim() || M))),
       (P[8] = M),
       (P[9] = Y.dir),
       (P[10] = io));
@@ -281,7 +281,7 @@ function tt(nn) {
     qe;
   if (P[11] !== M)
     ((qe = (an) => {
-      let so = we(Ju(an.trim() || M));
+      let so = resolve(Ju(an.trim() || M));
       return P6(so, { advisoryNoFsProbe: !0 })
         ? "Available on claude.ai/code and the Claude mobile app."
         : `${so} is not yet trusted \u2014 you'll be asked to trust it on submit.`;
@@ -346,14 +346,14 @@ function tt(nn) {
   )
     ((co = async function le(It) {
       oo(!0);
-      let ln = Y.name?.trim() || ce(It);
+      let ln = Y.name?.trim() || basename(It);
       let cn = Y.spawnMode ?? "same-dir";
       try {
         (await D9e({ dir: It, name: ln, spawnMode: cn }, void 0, Te),
           Dt(It, void 0));
       } catch (Ge) {
         let dn = Ge;
-        (h(dn), oo(!1), xe());
+        (logError(dn), oo(!1), xe());
       }
     }),
       (P[22] = Dt),
@@ -371,7 +371,7 @@ function tt(nn) {
         return;
       }
       if (!P6(Ie)) {
-        Xe({ dir: Ie, trustRoot: vA(Ie) });
+        Xe({ dir: Ie, trustRoot: findCanonicalGitRootUncached(Ie) });
         return;
       }
       le(Ie);
@@ -472,7 +472,7 @@ async function yt(n) {
       i.then((A) => Nt(A !== null, n)),
       d$n(n).catch(() => null),
       dBn(n).catch(() => null),
-      IE({ silent: !0 }, n),
+      readRoster({ silent: !0 }, n),
       s ? tF() : Promise.resolve(!1),
     ]);
   return {
@@ -495,14 +495,14 @@ function Ut() {
 }
 async function Jn(n, s) {
   let i = await yt(s.storageV5);
-  return e(Qt, {
+  return e(DaemonHub, {
     initialData: i,
     modelOptions: Ut(),
     onDone: n,
     storageV5: s.storageV5,
   });
 }
-function Qt({ initialData: n, modelOptions: s, onDone: i, storageV5: k }) {
+function DaemonHub({ initialData: n, modelOptions: s, onDone: i, storageV5: k }) {
   let [f, H] = d(n),
     R = vt(),
     [T] = d(() => ({ wall: Date.now(), clock: R.now() })),
@@ -939,9 +939,9 @@ function zt(n, s, i, k) {
               : c?.running
                 ? "running"
                 : v
-                  ? I1(v, { now: f })
+                  ? formatRelativeTime(v, { now: f })
                   : "\u2014",
-          c?.lastFiredAt ? I1(new Date(c.lastFiredAt), { now: f }) : "\u2014",
+          c?.lastFiredAt ? formatRelativeTime(new Date(c.lastFiredAt), { now: f }) : "\u2014",
           c?.running && a !== void 0 ? String(a) : "\u2014",
         ];
       })));
@@ -990,7 +990,7 @@ function Fo(n, s) {
   return i ? f1e(i, s) : null;
 }
 function Po(n) {
-  return Ob(n, 40);
+  return truncateStartToWidth(n, 40);
 }
 var Yt = { uninstall: "Uninstall service", stop: "Stop" };
 function Gt(n) {
@@ -1111,7 +1111,7 @@ function bt(lr) {
   else No = Q[24];
   return No;
 }
-async function Xn(n) {
+async function renderDaemonHubStandalone(n) {
   let [{ createRoot: s }, { getBaseRenderOptions: i }] = await Promise.all([
       import("./createRoot.pw1402cq.js"),
       import("./getBaseRenderOptions.caxv2veh.js"),
@@ -1125,7 +1125,7 @@ async function Xn(n) {
     R.render(
       e(k, {
         session: B(),
-        children: e(Qt, {
+        children: e(DaemonHub, {
           initialData: H,
           modelOptions: Ut(),
           storageV5: n,
@@ -1144,4 +1144,4 @@ async function Xn(n) {
   }),
     R.unmount());
 }
-export { Qt as DaemonHub, Jn as call, Xn as renderDaemonHubStandalone };
+export { DaemonHub, Jn as call, renderDaemonHubStandalone };

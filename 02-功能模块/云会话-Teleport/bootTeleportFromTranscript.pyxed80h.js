@@ -12,9 +12,9 @@
 import { z, Is, k_, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getTranscriptPathForSession as Tp, readTranscriptTailV5 as Byt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getTeleportCacheState as HOe, activateTeleportCache as Wcn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getTranscriptPathForSession, readTranscriptTailV5 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getTeleportCacheState, activateTeleportCache } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
 import { nwe, L3n, M3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-1brq31d3.js";
 import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -91,7 +91,7 @@ function A({
   ingressOrigin: t,
   remoteSessionId: i,
 }) {
-  if (HOe().status !== "inactive")
+  if (getTeleportCacheState().status !== "inactive")
     return {
       armed: !1,
       code: "latch_not_inactive",
@@ -139,7 +139,7 @@ function A({
     };
   let h = a.slice(0, p + 1);
   return (
-    Wcn({
+    activateTeleportCache({
       status: "active",
       marker: u.marker,
       markerLineUuid: r,
@@ -153,12 +153,12 @@ function A({
     { armed: !0 }
   );
 }
-function Q(e) {
+function noteTeleportBootUnreached(e) {
   if (!M3n()) {
     d({ outcome: "absent" });
     return;
   }
-  (g("upgrade_teleport_cache", `boot_unreached_${e}`),
+  (logFeatureSad("upgrade_teleport_cache", `boot_unreached_${e}`),
     d({ outcome: "refused", error_code: `boot_unreached_${e}` }),
     n(
       `teleport relay carriers present but the resume lane exited before boot (${e}) \u2014 standard path`,
@@ -166,10 +166,10 @@ function Q(e) {
     ));
 }
 async function B(e, a) {
-  let t = Tp(e),
+  let t = getTranscriptPathForSession(e),
     i = hu(t, a);
   if (i !== void 0) {
-    let r = await Byt(i.key, w, i.backend).catch((l) => {
+    let r = await readTranscriptTailV5(i.key, w, i.backend).catch((l) => {
       n(
         `teleport relay seed read through storage threw; falling back to the file: ${String(l)}`,
         { level: "warn" },
@@ -199,12 +199,12 @@ async function B(e, a) {
   let { content: o } = await k_(t, w);
   return o;
 }
-async function W(e, a, t) {
+async function bootTeleportFromTranscript(e, a, t) {
   let i = nwe();
   if (!i) {
     let o = L3n();
     if (o !== null)
-      (g("upgrade_teleport_cache", "env_config_refused"),
+      (logFeatureSad("upgrade_teleport_cache", "env_config_refused"),
         d({ outcome: "refused", error_code: "env_config_refused", cause: o }),
         n(
           `teleport relay carriers present but env config refused (${o}) \u2014 standard path`,
@@ -223,14 +223,14 @@ async function W(e, a, t) {
         remoteSessionId: i.remoteSessionId,
       });
     if (!r.armed)
-      (g("upgrade_teleport_cache", r.code),
+      (logFeatureSad("upgrade_teleport_cache", r.code),
         d({ outcome: "refused", error_code: r.code }),
         n(`teleport relay not armed: ${r.reason}`));
-    else (y("upgrade_teleport_cache"), d({ outcome: "armed" }));
+    else (logFeatureOk("upgrade_teleport_cache"), d({ outcome: "armed" }));
   } catch (o) {
-    (g("upgrade_teleport_cache", "boot_failed"),
+    (logFeatureSad("upgrade_teleport_cache", "boot_failed"),
       d({ outcome: "refused", error_code: "boot_failed" }),
       n(`teleport relay boot failed: ${String(o)}`, { level: "warn" }));
   }
 }
-export { W as bootTeleportFromTranscript, Q as noteTeleportBootUnreached };
+export { bootTeleportFromTranscript, noteTeleportBootUnreached };

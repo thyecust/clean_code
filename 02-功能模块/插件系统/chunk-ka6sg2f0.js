@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ListToolsRequestSchema as C0, CallToolRequestSchema as Cx } from "../MCP客户端/chunk-tv3jbp8f.js";
+import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { ac, li, jf, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
@@ -18,8 +18,8 @@ import { ghe } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { Vtt } from "../../01-核心基础设施/共享小工具-未细化/chunk-fpr1vv1t.js";
 import { s, O, se, v, c, $e, Ko, fe, X, k, Hb } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { createHash as de } from "crypto";
-import { constants as S } from "fs";
+import { createHash } from "crypto";
+import { constants } from "fs";
 import T from "path";
 import { open as M } from "fs/promises";
 import Q from "path";
@@ -363,7 +363,7 @@ function q(e) {
       break;
   return t;
 }
-import { createConnection as ue } from "net";
+import { createConnection } from "net";
 var ztt = "eval aborted by mock",
   jQ = "mock agent responder failed";
 var pe = m(() =>
@@ -400,7 +400,7 @@ function me(e, t, r) {
       n(Error("aborted"));
       return;
     }
-    let i = ue({ path: e }),
+    let i = createConnection({ path: e }),
       a = Buffer.alloc(0),
       p = !1,
       d = (w, u) => {
@@ -466,7 +466,7 @@ var he = m(() => {
 async function mbr(e, t) {
   if (!e) throw Error("missing spec path");
   let r = await ve(e);
-  if (t !== void 0 && de("sha256").update(r).digest("hex") !== t)
+  if (t !== void 0 && createHash("sha256").update(r).digest("hex") !== t)
     throw Error(
       "spec file does not match the hash the harness launched this stand-in with \u2014 refusing to serve it",
     );
@@ -490,7 +490,7 @@ function be(e) {
       { capabilities: { tools: {} } },
     );
   ((n.onclose = () => r.abort()),
-    n.setRequestHandler(C0, async () => ({
+    n.setRequestHandler(ListToolsRequestSchema, async () => ({
       tools: e.tools.map((p) => ({
         name: p.name,
         description: p.description,
@@ -498,7 +498,7 @@ function be(e) {
       })),
     })));
   let i = Promise.resolve();
-  n.setRequestHandler(Cx, (p) => {
+  n.setRequestHandler(CallToolRequestSchema, (p) => {
     let d = i.then(() => a(p.params));
     return ((i = d.catch(() => {})), d);
   });
@@ -575,7 +575,7 @@ async function ye(e, t, r, o = "") {
 async function o7t(e) {
   try {
     await mm(T.dirname(e), T.basename(e), "mock fixture");
-    let t = await M(e, S.O_RDONLY | (P() === "windows" ? 0 : S.O_NONBLOCK));
+    let t = await M(e, constants.O_RDONLY | (P() === "windows" ? 0 : constants.O_NONBLOCK));
     try {
       let r = await t.stat();
       if (!r.isFile()) return { problem: "is not a regular file" };
@@ -605,10 +605,10 @@ function we(e) {
 async function Z(e, t) {
   try {
     let r =
-        S.O_WRONLY |
-        S.O_APPEND |
-        S.O_CREAT |
-        (P() === "windows" ? 0 : S.O_NONBLOCK),
+        constants.O_WRONLY |
+        constants.O_APPEND |
+        constants.O_CREAT |
+        (P() === "windows" ? 0 : constants.O_NONBLOCK),
       o = await M(e, r, 384);
     try {
       if (!(await o.stat()).isFile()) return !1;
@@ -654,7 +654,7 @@ function Se(e) {
 var Ee = 4194304;
 async function ve(e) {
   await mm(T.dirname(e), T.basename(e), "mock spec");
-  let t = await M(e, S.O_RDONLY | (P() === "windows" ? 0 : S.O_NONBLOCK));
+  let t = await M(e, constants.O_RDONLY | (P() === "windows" ? 0 : constants.O_NONBLOCK));
   try {
     let r = await t.stat();
     if (!r.isFile())

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 302 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { createFleetViewHost as Z_e } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
+import { createFleetViewHost } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import "../后台任务-Shell管理/chunk-jfk5mpe1.js";
 import "../后台任务-Shell管理/chunk-xmxjyg29.js";
@@ -41,8 +41,8 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js"
 import "../自动更新-安装/chunk-dv82rn71.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-async function u(e, o) {
-  let t = { ...o, host: o?.host ?? Z_e() };
+async function mountFleetViewWithComposerBack(e, o) {
+  let t = { ...o, host: o?.host ?? createFleetViewHost() };
   await BQt(e, t);
 }
-export { u as mountFleetViewWithComposerBack };
+export { mountFleetViewWithComposerBack };

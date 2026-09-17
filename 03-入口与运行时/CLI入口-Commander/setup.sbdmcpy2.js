@@ -11,30 +11,30 @@
 // [preload stripped] 原本在此预载 182 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { uo, Hr } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { env as a, udsEnv as Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _m, j, B, K, $p, sn, ES, o_e, ke, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { ud, l, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { setBgExitCause as Fp } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { Ia, isBgSession as _t, getBgJobDir as WD, prefetchApiKeyFromApiKeyHelperIfSafe as SRn, Ff, H, Bo, Te, ee, es } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Ia, isBgSession, getBgJobDir, prefetchApiKeyFromApiKeyHelperIfSafe, Ff, H, Bo, Te, ee, es } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { findCanonicalGitRoot as $r, isLinkedWorktree as kx, getIsGit as hh } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findCanonicalGitRoot, isLinkedWorktree, getIsGit } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ee, Br } from "./chunk-6rfqqsva.js";
-import { getSettingsForSource as ye, getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { _setProxyAuthHelperConfig as P0n, prefetchProxyAuthFromHelperIfSafe as D0n } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { _setProxyAuthHelperConfig, prefetchProxyAuthFromHelperIfSafe } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
 import {
   bUt,
   $s,
-  hasWorktreeCreateHook as EX,
+  hasWorktreeCreateHook,
   j4n,
   pu,
   zX,
@@ -53,12 +53,12 @@ import {
   n_t,
   M3,
   ei,
-  saveWorktreeState as mC,
+  saveWorktreeState,
   PY,
-  warmCommandSourceCaches as T8e,
+  warmCommandSourceCaches,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { captureHooksConfigSnapshot as eAn, updateHooksConfigSnapshot as PD, updateHooksConfigSnapshotThroughBackend as f$e } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
-import { primePlanSlugCollisions as lh, getPlanSlug as LN, getPlansDirectory as Ea } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { captureHooksConfigSnapshot, updateHooksConfigSnapshot, updateHooksConfigSnapshotThroughBackend } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
+import { primePlanSlugCollisions, getPlanSlug, getPlansDirectory } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { qJn } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { Ts } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
 import { zr, z_n } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
@@ -71,7 +71,7 @@ import { jtn } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { _Oe } from "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
 import "../../02-功能模块/自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../../02-功能模块/自动更新-安装/chunk-2g5h49pk.js";
-import { flushAnalyticsSinks as kF } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
+import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import { yOt } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
@@ -79,7 +79,7 @@ import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 function X(e, o) {
   let r = !1,
     c = Ff(() => {
-      if (r || $s() || Nn() || !Mo()) return;
+      if (r || $s() || Nn() || !isCrossSessionMessagingEnabled()) return;
       return ((r = !0), c(), se(e, o));
     });
   return (Et(async () => c()), c);
@@ -92,15 +92,15 @@ async function se(e, o) {
   } catch (k) {
     if (k instanceof ud)
       n(`[uds-messaging] Late bind refused: ${k.message}`, { level: "warn" });
-    else h(k);
-    f(
+    else logError(k);
+    logFeatureBad(
       "agents_cross_session_inbox",
       `${r.getUdsStartFailureCause() ?? "bind_failed"}_late`,
     );
     return;
   }
   if (!c) {
-    f(
+    logFeatureBad(
       "agents_cross_session_inbox",
       `${r.getUdsStartFailureCause() ?? "bind_failed"}_late`,
     );
@@ -111,7 +111,7 @@ async function se(e, o) {
       n(
         "[uds-messaging] Late bind landed during shutdown \u2014 torn down, not published",
       ),
-      g("agents_cross_session_inbox", "shutdown_discarded"));
+      logFeatureSad("agents_cross_session_inbox", "shutdown_discarded"));
     return;
   }
   (n(
@@ -119,26 +119,26 @@ async function se(e, o) {
   ),
     xPe());
   let m = r.getUdsStartDegradedCause();
-  if (m) g("agents_cross_session_inbox", m, { bind_late: !0 });
-  else y("agents_cross_session_inbox", { bind_late: !0 });
+  if (m) logFeatureSad("agents_cross_session_inbox", m, { bind_late: !0 });
+  else logFeatureOk("agents_cross_session_inbox", { bind_late: !0 });
   let { updateSessionMessagingSocketPath: _ } =
       await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     S = r.getUdsMessagingSocketPath();
   if (S !== void 0) await _(S, o);
 }
-import { constants as z } from "fs";
+import { constants } from "fs";
 import { open as ne } from "fs/promises";
-import { isatty as L } from "tty";
+import { isatty } from "tty";
 async function W() {
   try {
-    return (await (await ne("/dev/tty", z.O_RDWR | z.O_NOCTTY)).close(), !0);
+    return (await (await ne("/dev/tty", constants.O_RDWR | constants.O_NOCTTY)).close(), !0);
   } catch {
     return !1;
   }
 }
 async function J() {
   if (P() === "windows") return "unsupported";
-  if (!L(0) || !L(1) || !L(2)) return "not_a_tty";
+  if (!isatty(0) || !isatty(1) || !isatty(2)) return "not_a_tty";
   if (await W()) return "already";
   let e = le();
   if (!e) return "ffi_unavailable";
@@ -170,8 +170,8 @@ function le() {
     } catch {}
   return (n("[bg-ctty] no libc candidate exports login_tty"), null);
 }
-import { copyFile as ce, stat as me } from "fs/promises";
-import { homedir as pe } from "os";
+import { copyFile, stat as me } from "fs/promises";
+import { homedir } from "os";
 import { join as de } from "path";
 async function R(e) {
   await Te((o) => ({ ...o, iterm2SetupInProgress: !1 }), e);
@@ -184,14 +184,14 @@ function ue() {
   };
 }
 function fe() {
-  return de(pe(), "Library", "Preferences", "com.googlecode.iterm2.plist");
+  return de(homedir(), "Library", "Preferences", "com.googlecode.iterm2.plist");
 }
 async function V(e) {
   let { inProgress: o, backupPath: r } = ue();
   if (!o) return { status: "no_backup" };
   if (
     (i("tengu_dead_probe_iterm2_crash_restore", {
-      has_backup_path: u(r ? "true" : "false"),
+      has_backup_path: fromEnum(r ? "true" : "false"),
     }),
     !r)
   )
@@ -202,7 +202,7 @@ async function V(e) {
     return (await R(e), { status: "no_backup" });
   }
   try {
-    return (await ce(r, fe()), await R(e), { status: "restored" });
+    return (await copyFile(r, fe()), await R(e), { status: "restored" });
   } catch (c) {
     return (
       n(`Failed to restore iTerm2 settings with: ${c}`, { level: "error" }),
@@ -211,20 +211,20 @@ async function V(e) {
     );
   }
 }
-import { realpath as ge } from "fs/promises";
-import { basename as _e, resolve as he } from "path";
+import { realpath } from "fs/promises";
+import { basename, resolve } from "path";
 async function oe(e, o) {
   if (!o?.worktreePath || o.worktreeHookBased) return null;
-  let r = await ge(e).catch(() => e);
+  let r = await realpath(e).catch(() => e);
   if (!(
     o.worktreePath === e ||
     o.worktreePath === r ||
-    he(o.worktreePath) === r
+    resolve(o.worktreePath) === r
   ))
     return null;
-  let m = $r(e);
-  if (!m || !kx(e) || !t_t(e, m)) return null;
-  let _ = _e(e).replaceAll("+", "/");
+  let m = findCanonicalGitRoot(e);
+  if (!m || !isLinkedWorktree(e) || !t_t(e, m)) return null;
+  let _ = basename(e).replaceAll("+", "/");
   try {
     eEe(_);
   } catch {
@@ -261,7 +261,7 @@ async function oe(e, o) {
     hookBased: !1,
     enteredExisting: !1,
   };
-  return (VLe(w), mC(w), w);
+  return (VLe(w), saveWorktreeState(w), w);
 }
 async function te(e, o) {
   try {
@@ -270,7 +270,7 @@ async function te(e, o) {
     return !1;
   }
 }
-async function _o(e, o, r, c, m, _, S, k, w, s, T) {
+async function setup(e, o, r, c, m, _, S, k, w, s, T) {
   q("info", "setup_started");
   let U = process.version.match(/^v(\d+)\./)?.[1];
   if (!U || parseInt(U) < 22)
@@ -286,17 +286,17 @@ async function _o(e, o, r, c, m, _, S, k, w, s, T) {
         : "switched_off";
     switch ((q("info", "bg_worker_ctty", { outcome: t }), t)) {
       case "acquired":
-        (bUt(), y("bg_worker_ctty"));
+        (bUt(), logFeatureOk("bg_worker_ctty"));
         break;
       case "already":
         bUt();
         break;
       case "failed":
-        g("bg_worker_ctty", t);
+        logFeatureSad("bg_worker_ctty", t);
         break;
       case "ffi_unavailable":
       case "not_a_tty":
-        g("bg_worker_ctty", t);
+        logFeatureSad("bg_worker_ctty", t);
         break;
       case "unsupported":
       case "switched_off":
@@ -305,11 +305,11 @@ async function _o(e, o, r, c, m, _, S, k, w, s, T) {
   }
   if (S) $p(_m(S), "startup_custom_id");
   if (
-    (Lb.unset("CLAUDE_CODE_MESSAGING_SOCKET"),
-    Lb.unset("CLAUDE_CODE_MESSAGING_TOKEN"),
+    (udsEnv.unset("CLAUDE_CODE_MESSAGING_SOCKET"),
+    udsEnv.unset("CLAUDE_CODE_MESSAGING_TOKEN"),
     !uo() || w !== void 0)
   )
-    if (!Mo())
+    if (!isCrossSessionMessagingEnabled())
       if (!Nn()) {
         if (w !== void 0)
           await (
@@ -327,10 +327,10 @@ async function _o(e, o, r, c, m, _, S, k, w, s, T) {
         v = await d.startCrossSessionInbox(w, s);
       if (v) {
         let C = d.getUdsStartDegradedCause();
-        if (C) g("agents_cross_session_inbox", C);
-        else y("agents_cross_session_inbox");
+        if (C) logFeatureSad("agents_cross_session_inbox", C);
+        else logFeatureOk("agents_cross_session_inbox");
       } else
-        f(
+        logFeatureBad(
           "agents_cross_session_inbox",
           d.getUdsStartFailureCause() ?? "bind_failed",
         );
@@ -378,7 +378,7 @@ async function _o(e, o, r, c, m, _, S, k, w, s, T) {
           ),
         );
     } catch (t) {
-      h(t);
+      logError(t);
     }
   }
   try {
@@ -388,12 +388,12 @@ async function _o(e, o, r, c, m, _, S, k, w, s, T) {
       ie.red(`Error: Can't access working directory ${ie.bold(e)}: ${l(t)}
 `),
     ),
-      Fp("setcwd"),
+      setBgExitCause("setcwd"),
       process.exit(1));
   }
   let O = performance.now();
-  if (M() && s !== void 0) await f$e(s);
-  else eAn();
+  if (M() && s !== void 0) await updateHooksConfigSnapshotThroughBackend(s);
+  else captureHooksConfigSnapshot();
   if (
     (Ts("setup_hooks_snapshot_ms", performance.now() - O, O),
     q("info", "setup_hooks_captured", {
@@ -406,25 +406,25 @@ async function _o(e, o, r, c, m, _, S, k, w, s, T) {
   }
   let G = performance.now();
   if (c) {
-    let t = EX(),
-      d = await hh();
+    let t = hasWorktreeCreateHook(),
+      d = await getIsGit();
     if (!t && !d)
       (process.stderr.write(
         ie.red(`Error: Can only use --worktree in a git repository, but ${ie.bold(e)} is not a git repository. Configure a WorktreeCreate hook in settings.json to use --worktree with other VCS systems.
 `),
       ),
         process.exit(1));
-    let v = k ? `pr-${k}` : (m ?? LN()),
+    let v = k ? `pr-${k}` : (m ?? getPlanSlug()),
       b,
       C = null;
     if (d) {
-      if (((C = $r(Q())), !C))
+      if (((C = findCanonicalGitRoot(Q())), !C))
         (process.stderr.write(
           ie.red(`Error: Could not determine the main git repository root.
 `),
         ),
           process.exit(1));
-      if (kx(Q())) (q("info", "worktree_resolved_to_main_repo"), Yu(C), pu(C));
+      if (isLinkedWorktree(Q())) (q("info", "worktree_resolved_to_main_repo"), Yu(C), pu(C));
       b = _ ? p6t(C, xde(v)) : void 0;
     } else b = _ ? p6t(Q(), xde(v)) : void 0;
     let I;
@@ -441,7 +441,7 @@ async function _o(e, o, r, c, m, _, S, k, w, s, T) {
         ie.red(`Error creating worktree: ${l(E)}
 `),
       ),
-        Fp("worktree_create"),
+        setBgExitCause("worktree_create"),
         process.exit(1));
     }
     i("tengu_worktree_created", { tmux_enabled: _ });
@@ -479,24 +479,24 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
           ie.red(`Error: worktree directory ${I.worktreePath} ${D}
 `),
         ),
-        h(E),
+        logError(E),
         N && b)
       )
         await VX(b);
-      (Fp(`worktree_chdir:${x}`), await kF(), process.exit(1));
+      (setBgExitCause(`worktree_chdir:${x}`), await flushAnalyticsSinks(), process.exit(1));
     }
     if (
-      (pu(I.worktreePath), ES(Q()), o_e(Q()), mC(I), PY(), M() && s !== void 0)
+      (pu(I.worktreePath), ES(Q()), o_e(Q()), saveWorktreeState(I), PY(), M() && s !== void 0)
     )
-      await f$e(s);
-    else PD();
-    (Ea.cache.clear?.(),
-      lh(s),
+      await updateHooksConfigSnapshotThroughBackend(s);
+    else updateHooksConfigSnapshot();
+    (getPlansDirectory.cache.clear?.(),
+      primePlanSlugCollisions(s),
       Ts("setup_worktree_ms", performance.now() - G, G));
-  } else if (_t() && !Ia()) {
+  } else if (isBgSession() && !Ia()) {
     let t = performance.now();
     try {
-      let d = WD(),
+      let d = getBgJobDir(),
         v = d
           ? await (await import("../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js")).readJobState(d, s)
           : null;
@@ -514,7 +514,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
   let Y = (ke() && a.CLAUDE_CODE_SYNC_PLUGIN_INSTALL) || uo() || Hr();
   if (!Y) {
     if (M3(T)) ei(s, T).catch(() => {});
-    T8e(sn(), s);
+    warmCommandSourceCaches(sn(), s);
   }
   if (
     (import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((t) => {
@@ -544,17 +544,17 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
       tmux_flag: _,
       in_tmux_worktree: Boolean(a.CLAUDE_CODE_TMUX_SESSION && a.TMUX),
     }),
-    SRn(ke()));
-  let F = (bn() || {}).proxyAuthHelper;
+    prefetchApiKeyFromApiKeyHelperIfSafe(ke()));
+  let F = (getSettings_DEPRECATED() || {}).proxyAuthHelper;
   if (
-    (P0n({
+    (_setProxyAuthHelperConfig({
       helper: F,
       fromProjectOrLocal:
-        ye("projectSettings")?.proxyAuthHelper === F ||
-        ye("localSettings")?.proxyAuthHelper === F,
+        getSettingsForSource("projectSettings")?.proxyAuthHelper === F ||
+        getSettingsForSource("localSettings")?.proxyAuthHelper === F,
       trustAccepted: Bo,
     }),
-    D0n(),
+    prefetchProxyAuthFromHelperIfSafe(),
     be({
       isNonInteractiveSession: ke(),
       isRemoteMode: Nn(),
@@ -624,7 +624,7 @@ class re {
   }
 }
 var we = new j(() => new re());
-function ho(e) {
+function maybePrewarmRecallIndex(e) {
   if (!we.of(e.host).claim()) return;
   if (Nn() || !Bo()) return;
   (async () => {
@@ -671,4 +671,4 @@ function ho(e) {
     }
   })().catch((o) => n(`recall prewarm skipped: ${l(o)}`));
 }
-export { ho as maybePrewarmRecallIndex, _o as setup };
+export { maybePrewarmRecallIndex, setup };

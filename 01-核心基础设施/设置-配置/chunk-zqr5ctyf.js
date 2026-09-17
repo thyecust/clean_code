@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, my, _Z, AHt, Tae } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Dt } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { iae, ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { fileSuffixForOauthConfig as F1 } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { fileSuffixForOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { hur, I } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Y } from "../共享小工具-未细化/chunk-d16fhdtx.js";
@@ -25,14 +25,14 @@ function Hx() {
 function bc() {
   return typeof Bun < "u" && Bun.isStandaloneExecutable === !0;
 }
-import { lstat as Q, rmdir as q, unlink as tt } from "fs/promises";
+import { lstat as Q, rmdir, unlink as tt } from "fs/promises";
 async function cv(t) {
   try {
     return (await tt(t), "removed");
   } catch (o) {
     if (A(o) === "ENOENT") return "absent";
     try {
-      return (await q(t), "removed");
+      return (await rmdir(t), "removed");
     } catch (E) {
       let _ = A(E);
       if (_ === "ENOTEMPTY" || _ === "EEXIST") return "directory";
@@ -180,7 +180,7 @@ async function _t(t) {
   if (o.kind === "error") throw o.error;
   return o.kind === "junction";
 }
-import { delimiter as v, isAbsolute as rt } from "path";
+import { delimiter as v, isAbsolute } from "path";
 function et(t) {
   let o = process.cwd();
   return t.filter((E) => !AHt(E, o));
@@ -204,7 +204,7 @@ function uXt(t, o = "darwin") {
   return o === "win32" ? t.replaceAll('"', "") : t;
 }
 function st(t) {
-  if (!rt(t)) return !1;
+  if (!isAbsolute(t)) return !1;
   return !0;
 }
 function nt(t, o) {
@@ -212,13 +212,13 @@ function nt(t, o) {
 }
 import { constants as Ct } from "fs";
 import {
-  access as N,
+  access,
   readdir as Ot,
-  readFile as At,
-  readlink as ct,
+  readFile,
+  readlink,
 } from "fs/promises";
-import { homedir as Tt } from "os";
-import { delimiter as Lt, join as S, resolve as X } from "path";
+import { homedir } from "os";
+import { delimiter as Lt, join as S, resolve } from "path";
 function h() {
   return !1;
 }
@@ -233,8 +233,8 @@ function pt() {
   return dXt();
 }
 function dXt() {
-  let t = `.claude${F1()}.json`;
-  return S(process.env.CLAUDE_CONFIG_DIR || Tt(), t);
+  let t = `.claude${fileSuffixForOauthConfig()}.json`;
+  return S(process.env.CLAUDE_CONFIG_DIR || homedir(), t);
 }
 function getGlobalClaudeFile() {
   return C().getGlobalClaudeFile();
@@ -317,14 +317,14 @@ var pXt = [
   Ut = 1000;
 async function xt(t) {
   try {
-    return /appinstaller/i.test(await ct(t));
+    return /appinstaller/i.test(await readlink(t));
   } catch {
     return !1;
   }
 }
 async function IPn(t) {
   if (t === "" || _Z(t) || my(t)) return !1;
-  return !(await iae(X(t)));
+  return !(await iae(resolve(t)));
 }
 async function $nt(t, o) {
   let E = P() === "windows",
@@ -365,9 +365,9 @@ async function $nt(t, o) {
           if (L && (await xt(S(e, O.name)))) continue;
         } else {
           let D = S(e, O.name);
-          if ((O.isSymbolicLink() || vxt(O)) && (await iae(X(D)))) continue;
+          if ((O.isSymbolicLink() || vxt(O)) && (await iae(resolve(D)))) continue;
           try {
-            await N(D, Ct.X_OK);
+            await access(D, Ct.X_OK);
           } catch {
             continue;
           }
@@ -673,13 +673,13 @@ var Bt = new Set([
   "ion",
 ]);
 function normalizeShellNameForAnalytics(t) {
-  if (!t) return Ln("none");
+  if (!t) return fromSanitizer_SANITIZER_OUTPUT_ONLY("none");
   let o = t
     .split(/[/\\]/)
     .pop()
     .toLowerCase()
     .replace(/\.exe$/, "");
-  return Ln(Bt.has(o) ? o : "other");
+  return fromSanitizer_SANITIZER_OUTPUT_ONLY(Bt.has(o) ? o : "other");
 }
 function getShellForAnalytics() {
   return normalizeShellNameForAnalytics(process.env.SHELL || process.env.COMSPEC || "");

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { getMainLoopModel as rt, getCanonicalName as Ue, H, ql } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel, getCanonicalName, H, ql } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 function o() {
   let e = ql()?.pewter_owl_model;
@@ -19,7 +19,7 @@ function r(e) {
   if (a.CLAUDE_CODE_PEWTER_OWL !== void 0) return a.CLAUDE_CODE_PEWTER_OWL;
   if (ke()) return !1;
   let t = o();
-  if (t !== "" && !Ue(rt()).includes(t)) return !1;
+  if (t !== "" && !getCanonicalName(getMainLoopModel()).includes(t)) return !1;
   return H(`tengu_${e}`, !1) || ql()?.[e] === !0;
 }
 function isPewterOwlTool() {

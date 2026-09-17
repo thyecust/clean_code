@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { LKn, Xht, Yht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { unboundCreateReason as Han, productionUnboundCreatesDeps as Ian } from "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
-import { isViolinWoodEnabled as Su } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { unboundCreateReason, productionUnboundCreatesDeps } from "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
+import { isViolinWoodEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { c6e } from "../Bridge-RemoteControl/chunk-2m80582f.js";
 import { qz } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
 import { T9n } from "../Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
@@ -24,14 +24,14 @@ async function LJt(e) {
     (o) => ({ read: !0, session: o }),
     (o) => ({ read: !1, error: o }),
   );
-  if (!(await (e.isEnabled ?? Su)().catch(() => !1)))
+  if (!(await (e.isEnabled ?? isViolinWoodEnabled)().catch(() => !1)))
     return { status: "disabled" };
   let r = await s;
   if (!r.read) return v("session_unreadable", r.error);
   if (r.session.archived) return { status: "disabled" };
   if (r.session.boundDeviceId === void 0) {
     let o = await (
-      e.readUnboundCreateReason ?? ((b) => Han(b, LKn, Ian(e.storageV5)))
+      e.readUnboundCreateReason ?? ((b) => unboundCreateReason(b, LKn, productionUnboundCreatesDeps(e.storageV5)))
     )(e.sessionId).catch(() => {
       return;
     });
@@ -65,7 +65,7 @@ async function LJt(e) {
     return c("other_device");
   return (
     i("tengu_device_bind_attach", { outcome: S("bound") }),
-    y("device_bind_attach"),
+    logFeatureOk("device_bind_attach"),
     { status: "bound", deviceId: a.deviceId }
   );
 }
@@ -128,18 +128,18 @@ function NJt(e) {
 }
 function c(e) {
   return (
-    i("tengu_device_bind_attach", { outcome: u(e) }),
-    g("device_bind_attach", e),
+    i("tengu_device_bind_attach", { outcome: fromEnum(e) }),
+    logFeatureSad("device_bind_attach", e),
     { status: "unbound", reason: e }
   );
 }
 function v(e, s) {
   if (
-    (i("tengu_device_bind_attach", { outcome: u(e) }),
+    (i("tengu_device_bind_attach", { outcome: fromEnum(e) }),
     e === "session_unreadable")
   )
-    g("device_bind_attach", e);
-  else f("device_bind_attach", e);
+    logFeatureSad("device_bind_attach", e);
+  else logFeatureBad("device_bind_attach", e);
   return (
     n(
       `[deviceBind] attach could not check the session's binding (${e}): ${l(s)}`,

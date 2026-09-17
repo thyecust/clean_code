@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { dnr } from "../Skills技能/chunk-sapykxw7.js";
-import { getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 function l(e) {
   return {
     get agentId() {
@@ -45,7 +45,7 @@ function l(e) {
       return e.options.isNonInteractiveSession;
     },
     mcpClients: () => e.options.refreshMcpClients?.() ?? e.options.mcpClients,
-    permissions: () => ce(e),
+    permissions: () => getToolPermissionContext(e),
     get setToolPermissionContext() {
       return e.setToolPermissionContext;
     },

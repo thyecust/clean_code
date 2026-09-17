@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { readFile as r, readlink as s } from "fs/promises";
-import { hostname as i } from "os";
+import { readFile, readlink } from "fs/promises";
+import { hostname } from "os";
 var IRe = 262144;
 function lir(n) {
   let e = n.replace(/\.json$/, ""),
@@ -54,14 +54,14 @@ function isProcessRunning(n) {
   }
 }
 async function uir(n) {
-  if (n === "windows") return `darwin:${i().toLowerCase()}`;
+  if (n === "windows") return `darwin:${hostname().toLowerCase()}`;
   if (n !== "linux" && n !== "wsl") return "darwin";
   let [e, t] = await Promise.all([
-    r("/etc/machine-id", "utf8").then(
+    readFile("/etc/machine-id", "utf8").then(
       (o) => o.trim(),
       () => "",
     ),
-    s("/proc/self/ns/pid").catch(() => ""),
+    readlink("/proc/self/ns/pid").catch(() => ""),
   ]);
   return `darwin:${e}:${t}`;
 }

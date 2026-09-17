@@ -121,7 +121,7 @@ var L = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI",
   v = "AWS_CONTAINER_CREDENTIALS_FULL_URI",
   U = "AWS_CONTAINER_AUTHORIZATION_TOKEN_FILE",
   k = "AWS_CONTAINER_AUTHORIZATION_TOKEN",
-  H = (e = {}) => {
+  fromHttp = (e = {}) => {
     e.logger?.debug("@aws-sdk/credential-provider-http - fromHttp");
     let o,
       n = e.awsContainerCredentialsRelativeUri ?? process.env[L],
@@ -174,4 +174,4 @@ Set AWS_CONTAINER_CREDENTIALS_FULL_URI or AWS_CONTAINER_CREDENTIALS_RELATIVE_URI
       e.timeout ?? 1000,
     );
   };
-export { H as fromHttp };
+export { fromHttp };

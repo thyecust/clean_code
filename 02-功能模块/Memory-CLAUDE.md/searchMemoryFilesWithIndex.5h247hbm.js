@@ -17,7 +17,7 @@ import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { xA, lz, Ycr } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { lstat as Bn, realpath as me } from "fs/promises";
-import { resolve as Ne, sep as _e } from "path";
+import { resolve, sep as _e } from "path";
 var re = (e) => e === "a" || e === "e" || e === "i" || e === "o" || e === "u",
   se = (e, t) => {
     let n = e[t];
@@ -800,7 +800,7 @@ var Re = {
 import {
   lstat as Me,
   open as Sn,
-  readdir as In,
+  readdir,
   realpath as ne,
   stat as wn,
 } from "fs/promises";
@@ -946,7 +946,7 @@ var j = Symbol("transient-read-failure"),
       r = [""];
     while (r.length > 0) {
       let f = r.pop(),
-        m = await In(X(e, f), { withFileTypes: !0 }).catch((g) => {
+        m = await readdir(X(e, f), { withFileTypes: !0 }).catch((g) => {
           if (f === "") {
             if (W(g)) return ((s = !0), []);
             throw g;
@@ -1134,7 +1134,7 @@ var _ = async (e, t = {}) => {
   n?.("memory_recall_select", e, { via_index: !0, ...t });
 };
 import { join as _n } from "path";
-import { lstat as Tn, open as Dn, unlink as Mn } from "fs/promises";
+import { lstat as Tn, open as Dn, unlink } from "fs/promises";
 import { sep as zn } from "path";
 var yt = 10,
   kn = (e) => {
@@ -1280,7 +1280,7 @@ var yt = 10,
       let r = await Tn(t).catch(() => {
         return;
       });
-      if (r !== void 0 && r.size > n) await Mn(t).catch(() => {});
+      if (r !== void 0 && r.size > n) await unlink(t).catch(() => {});
       return 0;
     }
     return (await On(t, o, 384), s);
@@ -1579,7 +1579,7 @@ var Mt = new Gt(() => new Dt()),
       e.releaseIfCurrent(t, r, i);
     return a;
   },
-  Xo = (e, t, n, o) => {
+  prewarmMemoryIndex = (e, t, n, o) => {
     zt(Mt.of(e), t, null, n, o, !0)
       .then(({ store: s }) => {
         if (!s.lastSync.scanCompleted)
@@ -1591,7 +1591,7 @@ var Mt = new Gt(() => new Dt()),
         _("index_prewarm_failed", { prewarm: !0 });
       });
   },
-  Jo = async (e, t, n, o, s = 5, r = null, i, a = !1, c) => {
+  searchMemoryFilesWithIndex = async (e, t, n, o, s = 5, r = null, i, a = !1, c) => {
     let l = performance.now(),
       d = Mt.of(e),
       h = d.isHeld(n, a),
@@ -1637,14 +1637,14 @@ var Mt = new Gt(() => new Dt()),
       P = await me(n).catch(() => {
         return;
       }),
-      v = Ne(n),
+      v = resolve(n),
       R = [],
       E = [],
       D = await Promise.all(
         y.map(async (F) => {
           let M = u.index.pathToId.get(F.path),
             O = M === void 0 ? void 0 : u.index.docs.get(M),
-            L = Ne(n, F.path),
+            L = resolve(n, F.path),
             U = await me(L).catch((ye) =>
               A(ye) === "structural" ? void 0 : he,
             );
@@ -1675,7 +1675,7 @@ var Mt = new Gt(() => new Dt()),
     if (R.length > 0 || E.length > 0) {
       let F = await Promise.all(
           R.map(async (O) =>
-            (await me(Ne(n, O)).then(
+            (await me(resolve(n, O)).then(
               () => !1,
               (L) => A(L) === "structural",
             ))
@@ -1698,4 +1698,4 @@ var Mt = new Gt(() => new Dt()),
       stats: g(u.lastSync, J, w.terms.length),
     };
   };
-export { Xo as prewarmMemoryIndex, Jo as searchMemoryFilesWithIndex };
+export { prewarmMemoryIndex, searchMemoryFilesWithIndex };

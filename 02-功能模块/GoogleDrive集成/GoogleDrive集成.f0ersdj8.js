@@ -11,24 +11,24 @@ import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { OAUTH_BETA_HEADER as Bc, CLAUDE_AI_OAUTH_SCOPES as Z5, preservableScopesFrom as zhe } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { OAUTH_BETA_HEADER, CLAUDE_AI_OAUTH_SCOPES, preservableScopesFrom } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   ht,
-  refreshOAuthToken as wU,
-  isInvalidGrantError as TU,
-  saveRefreshedOAuthTokensRespectingLock as UUe,
-  markRefreshTokenDeadAfterInvalidGrant as BUe,
-  isOAuthRefreshKnownDeadAsync as f0,
-  getClaudeAIOAuthTokens as Yt,
+  refreshOAuthToken,
+  isInvalidGrantError,
+  saveRefreshedOAuthTokensRespectingLock,
+  markRefreshTokenDeadAfterInvalidGrant,
+  isOAuthRefreshKnownDeadAsync,
+  getClaudeAIOAuthTokens,
   OAuthRefreshLockContendedError as lge,
-  withOAuthRefreshLock as TZe,
-  checkAndRefreshOAuthTokenIfNeeded as Ss,
+  withOAuthRefreshLock,
+  checkAndRefreshOAuthTokenIfNeeded,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var w = 30000,
   R = "/v2/ccr-sessions/-/chat-project";
@@ -62,7 +62,7 @@ function d(e, t) {
   return {
     auth: "teleport-org",
     timeout: w,
-    headers: { "anthropic-beta": Bc },
+    headers: { "anthropic-beta": OAUTH_BETA_HEADER },
     validateStatus: () => !0,
     signal: e,
     credentials: t,
@@ -178,45 +178,45 @@ function E(e) {
 var P = "user:projects:read",
   x = "user:projects:write";
 async function s1t(e) {
-  if (!Mt("allow_projects_tool")) return { ok: !1, reason: "policy_disabled" };
-  if (!In()) return { ok: !1, reason: "wrong_provider" };
+  if (!isPolicyAllowed("allow_projects_tool")) return { ok: !1, reason: "policy_disabled" };
+  if (!isFirstPartyProvider()) return { ok: !1, reason: "wrong_provider" };
   if (St()) return { ok: !1, reason: "essential_traffic_only" };
   let t = Gi();
   if (t) return { ok: !0, accessToken: t, expanded: !1 };
   try {
-    await Ss({ credentials: e });
+    await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   } catch {}
-  let r = Yt();
+  let r = getClaudeAIOAuthTokens();
   if (!r?.accessToken) return { ok: !1, reason: "no_token" };
   if (h(r.scopes)) return { ok: !0, accessToken: r.accessToken, expanded: !1 };
   if (r.clientId) return { ok: !1, reason: "custom_client" };
   if (!r.refreshToken) return { ok: !1, reason: "no_refresh" };
-  if (await f0(e)) return { ok: !1, reason: "no_refresh" };
+  if (await isOAuthRefreshKnownDeadAsync(e)) return { ok: !1, reason: "no_refresh" };
   let i = !1;
   try {
-    return await TZe(
+    return await withOAuthRefreshLock(
       async ({ lockedTokens: o, isCompromised: s, signal: m }) => {
         if (!o?.refreshToken) return { ok: !1, reason: "no_refresh" };
         if (s()) return { ok: !1, reason: "lock_contended" };
         if (h(o.scopes) && o.accessToken)
           return { ok: !0, accessToken: o.accessToken, expanded: !1 };
         if (o.clientId) return { ok: !1, reason: "custom_client" };
-        if (await f0(e)) return { ok: !1, reason: "no_refresh" };
+        if (await isOAuthRefreshKnownDeadAsync(e)) return { ok: !1, reason: "no_refresh" };
         let c;
         try {
           ((i = !0),
-            (c = await wU(o.refreshToken, {
+            (c = await refreshOAuthToken(o.refreshToken, {
               clientId: o.clientId,
-              scopes: Y([...Z5, ...zhe(o.scopes), P, x]),
+              scopes: Y([...CLAUDE_AI_OAUTH_SCOPES, ...preservableScopesFrom(o.scopes), P, x]),
               signal: m,
               telemetryContext: "projects_scope_expansion",
             })));
         } catch (_) {
-          if (TU(_) && !s()) await BUe(o.refreshToken, e);
+          if (isInvalidGrantError(_) && !s()) await markRefreshTokenDeadAfterInvalidGrant(o.refreshToken, e);
           if (s() || yt(_)) return { ok: !1, reason: "lock_contended" };
           throw _;
         }
-        let j = await UUe({
+        let j = await saveRefreshedOAuthTokensRespectingLock({
           isCompromised: s,
           postedRefreshToken: o.refreshToken,
           refreshedTokens: c,
@@ -226,12 +226,12 @@ async function s1t(e) {
           return { ok: !1, reason: "lock_contended" };
         if (j === "save_failed")
           return (
-            g("projects_scope_expansion", "save_failed"),
+            logFeatureSad("projects_scope_expansion", "save_failed"),
             { ok: !1, reason: "save_failed" }
           );
         if (!h(c.scopes))
           return (
-            g("projects_scope_expansion", "expand_failed"),
+            logFeatureSad("projects_scope_expansion", "expand_failed"),
             {
               ok: !1,
               reason: "expand_failed",
@@ -239,7 +239,7 @@ async function s1t(e) {
             }
           );
         return (
-          y("projects_scope_expansion"),
+          logFeatureOk("projects_scope_expansion"),
           { ok: !0, accessToken: c.accessToken, expanded: !0 }
         );
       },
@@ -249,7 +249,7 @@ async function s1t(e) {
     if (o instanceof lge || yt(o)) return { ok: !1, reason: "lock_contended" };
     if (!i) return { ok: !1, reason: "lock_contended", detail: l(o) };
     return (
-      g("projects_scope_expansion", "expand_failed"),
+      logFeatureSad("projects_scope_expansion", "expand_failed"),
       { ok: !1, reason: "expand_failed", detail: l(o) }
     );
   }

@@ -15,15 +15,15 @@ import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { U, It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
 import { x, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Zt, Io, Xu, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { te, formatRelativeTime as I1 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Itt, Vl } from "../权限系统/chunk-e4pfvp7x.js";
-import { isCancel as qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { uuidSlugFromUrl as Fi, TITLE_MAX_RUNES as $vt } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { uuidSlugFromUrl, TITLE_MAX_RUNES } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
   Am,
   Nd,
@@ -33,11 +33,11 @@ import {
   zZn,
   VZn,
   Fd,
-  mainObservedArtifactVersion as D$,
-  artifactViewerUrl as rm,
+  mainObservedArtifactVersion,
+  artifactViewerUrl,
 } from "./chunk-01ymf0ar.js";
 import { Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { subscribeFrameLiveOnAttach as lin } from "./chunk-kshc4v5t.js";
+import { subscribeFrameLiveOnAttach } from "./chunk-kshc4v5t.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -156,15 +156,15 @@ async function Bt(i, l) {
       signal: l,
     });
   } catch (R) {
-    if (qi(R)) throw R;
+    if (isCancel(R)) throw R;
     return (
-      f("artifact_gallery", "request_error"),
+      logFeatureBad("artifact_gallery", "request_error"),
       { err: "Couldn't load artifacts (network error)" }
     );
   }
   if (!p.ok)
     return (
-      f("artifact_gallery", p.reason),
+      logFeatureBad("artifact_gallery", p.reason),
       {
         err:
           p.reason === "no-auth"
@@ -174,18 +174,18 @@ async function Bt(i, l) {
     );
   if (!p.fromFrame)
     return (
-      f("artifact_gallery", "relay_error"),
+      logFeatureBad("artifact_gallery", "relay_error"),
       { err: `Couldn't load artifacts (relay HTTP ${p.status})` }
     );
   if (p.status < 200 || p.status >= 300)
     return (
-      f("artifact_gallery", "http_failed"),
+      logFeatureBad("artifact_gallery", "http_failed"),
       { err: `Couldn't load artifacts (HTTP ${p.status})` }
     );
   let h = Mr().safeParse(p.data);
   if (!h.success)
     return (
-      f("artifact_gallery", "malformed_body"),
+      logFeatureBad("artifact_gallery", "malformed_body"),
       { err: "Couldn't load artifacts (unexpected response)" }
     );
   let u = [],
@@ -199,7 +199,7 @@ async function Bt(i, l) {
     let w = v.data;
     if (w.softDeleted === !0) continue;
     let O = `https://claude.ai/code/artifact/${w.slug}`;
-    if (Fi(O) !== w.slug) {
+    if (uuidSlugFromUrl(O) !== w.slug) {
       S++;
       continue;
     }
@@ -226,11 +226,11 @@ async function Bt(i, l) {
   }
   if (u.length === 0 && S > 0)
     return (
-      f("artifact_gallery", "all_rows_dropped"),
+      logFeatureBad("artifact_gallery", "all_rows_dropped"),
       { err: "Couldn't load artifacts (unexpected response)" }
     );
-  if (S > 0) g("artifact_gallery", "rows_dropped", { count: S });
-  else y("artifact_gallery");
+  if (S > 0) logFeatureSad("artifact_gallery", "rows_dropped", { count: S });
+  else logFeatureOk("artifact_gallery");
   return { err: null, frames: u, starsEnabled: h.data.starsEnabled === !0 };
 }
 var Nr = 65536,
@@ -260,15 +260,15 @@ async function Kt(i, l, p, h) {
       },
     );
   } catch (v) {
-    if (qi(v)) throw v;
+    if (isCancel(v)) throw v;
     return (
-      f("artifact_rename", "request_error"),
+      logFeatureBad("artifact_rename", "request_error"),
       { err: "Couldn't rename artifact (network error)" }
     );
   }
   if (!u.ok)
     return (
-      f("artifact_rename", u.reason),
+      logFeatureBad("artifact_rename", u.reason),
       {
         err:
           u.reason === "no-auth"
@@ -278,14 +278,14 @@ async function Kt(i, l, p, h) {
     );
   if (u.status === 404)
     return (
-      g("artifact_rename", "not_found"),
+      logFeatureSad("artifact_rename", "not_found"),
       {
         err: "Artifact not found \u2014 it may have been deleted, or you are not the owner",
       }
     );
   if (u.status === 400 || u.status === 409) {
-    if (u.status === 409) g("artifact_rename", "conflict");
-    else f("artifact_rename", "rejected");
+    if (u.status === 409) logFeatureSad("artifact_rename", "conflict");
+    else logFeatureBad("artifact_rename", "rejected");
     let v = typeof u.data === "string" ? Q1e(u.data.trim()) : null;
     return {
       err: v
@@ -295,12 +295,12 @@ async function Kt(i, l, p, h) {
   }
   if (u.status < 200 || u.status >= 300)
     return (
-      f("artifact_rename", "http_failed"),
+      logFeatureBad("artifact_rename", "http_failed"),
       { err: `Couldn't rename artifact (HTTP ${u.status})` }
     );
   let S = Br().safeParse(u.data),
     R = S.success && S.data.title !== void 0 ? Q1e(S.data.title) : null;
-  return (y("artifact_rename"), { err: null, title: R ?? Q1e(l) ?? "" });
+  return (logFeatureOk("artifact_rename"), { err: null, title: R ?? Q1e(l) ?? "" });
 }
 function Yr(i, l, p) {
   let h = l ? ["all", "mine", "shared", "pinned"] : ["all", "mine", "shared"],
@@ -454,7 +454,7 @@ function bt({
     Et = ze && !a.CLAUDE_CODE_REMOTE,
     Dt = T !== void 0 && h.has(T.slug),
     br = re((n) => {
-      let s = rm(n);
+      let s = artifactViewerUrl(n);
       Gr(s).then((c) => {
         k(
           c
@@ -514,7 +514,7 @@ function bt({
       [z],
     ),
     Sr = re((n) => {
-      let s = M0t(oe.current, n, $vt);
+      let s = M0t(oe.current, n, TITLE_MAX_RUNES);
       if (
         ((ce.current =
           s.caret === "pass"
@@ -735,7 +735,7 @@ function bt({
       } else if (n.key === "o" && T) (n.preventDefault(), br(T.slug));
       else if (n.key === "c" && T) {
         n.preventDefault();
-        let c = rm(T.slug);
+        let c = artifactViewerUrl(T.slug);
         z_(c).then((b) => {
           if (b) process.stdout.write(b);
           k(`Copied ${c}`);
@@ -743,7 +743,7 @@ function bt({
       } else if (n.key === "x" && Dt && T) {
         if ((n.preventDefault(), K.current)) return;
         (u(T),
-          y("frame_link_dismiss_dialog"),
+          logFeatureOk("frame_link_dismiss_dialog"),
           k(`Dismissed ${we(T)} from this session's list`));
       } else if (n.key === "p" && T && se) {
         if ((n.preventDefault(), K.current || Y.current !== null)) return;
@@ -1092,7 +1092,7 @@ function nr(Co) {
   const Wt = Jr ? `by ${Jr}` : null;
   let ct;
   if (j[11] !== st)
-    ((ct = st ? I1(new Date(st)) : null), (j[11] = st), (j[12] = ct));
+    ((ct = st ? formatRelativeTime(new Date(st)) : null), (j[11] = st), (j[12] = ct));
   else ct = j[12];
   let ut;
   if (j[13] !== A.view_count)
@@ -1205,13 +1205,13 @@ function en(i) {
   return zZn(N0t(i));
 }
 function Te(i, l) {
-  for (let [p, h] of Dv(i)) if (!SPe(p) && Fi(h.url) === l) return p;
+  for (let [p, h] of Dv(i)) if (!SPe(p) && uuidSlugFromUrl(h.url) === l) return p;
   return;
 }
 function Rt(i) {
   let l = new Set();
   for (let [p, h] of Dv(i)) {
-    let u = Fi(h.url);
+    let u = uuidSlugFromUrl(h.url);
     if (u !== null && !SPe(p)) l.add(u);
   }
   return l;
@@ -1224,14 +1224,14 @@ async function Ct(i) {
       getKnownVer: u,
       context: S,
     } = i,
-    R = rm(l.slug),
+    R = artifactViewerUrl(l.slug),
     v = l.rel === "mine" ? l.title || l.slug : l.slug;
   if (Te(p, l.slug) !== void 0)
     return (
-      y("artifact_attach", { already_attached: !0 }),
+      logFeatureOk("artifact_attach", { already_attached: !0 }),
       { status: `${Vl} ${v} is already attached` }
     );
-  let O = await lin({
+  let O = await subscribeFrameLiveOnAttach({
     slug: l.slug,
     url: R,
     getKnownVer: () => u(l.slug),
@@ -1239,7 +1239,7 @@ async function Ct(i) {
   });
   if (S.abortController.signal.aborted)
     return (
-      g("artifact_attach", "cancelled"),
+      logFeatureSad("artifact_attach", "cancelled"),
       { status: `${Vl} ${v} \u2014 attach cancelled` }
     );
   let P = !1;
@@ -1267,7 +1267,7 @@ async function Ct(i) {
     P)
   )
     return (
-      y("artifact_attach", { already_attached: !0 }),
+      logFeatureOk("artifact_attach", { already_attached: !0 }),
       { status: `${Vl} ${v} is already attached` }
     );
   if (l.rel === "mine") S.setArtifactContractTarget(l.slug);
@@ -1279,7 +1279,7 @@ async function Ct(i) {
         ? " Its watch was stopped earlier in this session, so no republish notice will come; do not watch it again unless the user asks."
         : "";
   return (
-    y("artifact_attach", { watching: B }),
+    logFeatureOk("artifact_attach", { watching: B }),
     {
       status: B
         ? `Attached ${Vl} ${v} \u2014 you'll be notified when it's republished`
@@ -1313,7 +1313,7 @@ function lr(Xo) {
         frame: Ho,
         frameUrls: St.getState().frameUrls,
         setAppState: ne,
-        getKnownVer: (qo) => D$(St.getState(), qo),
+        getKnownVer: (qo) => mainObservedArtifactVersion(St.getState(), qo),
         context: Q,
       });
     }),
@@ -1341,7 +1341,7 @@ function lr(Xo) {
       (_Pe(sn, { updateAppState: ne, context: Q }),
         Q.applyMessageOp({
           type: "append",
-          messages: [Re({ content: Kon(rm(sn)), isMeta: !0 })],
+          messages: [Re({ content: Kon(artifactViewerUrl(sn)), isMeta: !0 })],
         }));
     }),
       (Ee[8] = Q),

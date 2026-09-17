@@ -8,24 +8,24 @@
 
 // Version: 2.1.263
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ACn, Srr, ht, getOauthAccountInfo as vn, getSubscriptionType as qn, Te, ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { ACn, Srr, ht, getOauthAccountInfo, getSubscriptionType, Te, ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var l = 14;
 function getProTrialDurationDays() {
-  return vn()?.claudeCodeTrialDurationDays ?? null;
+  return getOauthAccountInfo()?.claudeCodeTrialDurationDays ?? null;
 }
 var s = { status: "ineligible", daysRemaining: null };
 function getProTrialState() {
   let e = ACn();
   if (e) return o(!0, e.endsAt);
-  let t = vn();
-  if (!t || qn() !== "pro") return s;
+  let t = getOauthAccountInfo();
+  if (!t || getSubscriptionType() !== "pro") return s;
   let r = t.ccOnboardingFlags?.e10 === !0;
   return o(r, t.claudeCodeTrialEndsAt ?? null);
 }
 async function startProTrial(e, t) {
-  return Sr("api_pro_trial_start", async () => {
+  return withFeatureTelemetry("api_pro_trial_start", async () => {
     if (ACn()) {
       let i = new Date(Date.now() + l * 24 * 60 * 60 * 1000).toISOString();
       return (Srr({ endsAt: i }), o(!0, i));
@@ -70,7 +70,7 @@ function o(e, t) {
   if (!t) return { status: "not_started", daysRemaining: null };
   let r = new Date(t);
   if (Number.isNaN(r.getTime()))
-    return (h(Error(`Invalid claude_code_trial_ends_at: ${t}`)), s);
+    return (logError(Error(`Invalid claude_code_trial_ends_at: ${t}`)), s);
   let a = r.getTime() - Date.now();
   if (a <= 0) return { status: "expired", daysRemaining: 0 };
   return { status: "active", daysRemaining: Math.ceil(a / 86400000) };

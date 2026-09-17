@@ -9,13 +9,13 @@
 // Version: 2.1.263
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { St } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isFirstPartyProvider as In } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isPolicyAllowed as Mt } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isFirstPartyProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isPolicyAllowed } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 var e = "tengu_omelette_fouet";
 function ube() {
-  if (!Mt("allow_design_sync")) return !1;
+  if (!isPolicyAllowed("allow_design_sync")) return !1;
   if (St()) return !1;
-  if (!In()) return !1;
+  if (!isFirstPartyProvider()) return !1;
   return H(e, !1);
 }
 var r = "tengu_omelette_grant_watch";

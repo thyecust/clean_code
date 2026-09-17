@@ -18,10 +18,10 @@ var o = "./tokens.css-6f9090cf.txt.zst";
 var r = Ke(o, import.meta.dirname);
 var c = Ae("./skeleton.html-893t268n.txt");
 var t = Ae("./theme-script.html-zm5eq8m1.txt");
-var X = s,
-  H = t,
-  Z = e,
-  K = {
+var SKILL_MD = s,
+  DECISION_THEME_SCRIPT = t,
+  DECISION_DECISIONS_SCRIPT = e,
+  SKILL_FILES = {
     "decision/skeleton.html": c,
     "decision/theme-script.html": t,
     "decision/decisions-script.html": e,
@@ -29,8 +29,8 @@ var X = s,
     "decision/tokens.css": r,
   };
 export {
-  Z as DECISION_DECISIONS_SCRIPT,
-  H as DECISION_THEME_SCRIPT,
-  K as SKILL_FILES,
-  X as SKILL_MD,
+  DECISION_DECISIONS_SCRIPT,
+  DECISION_THEME_SCRIPT,
+  SKILL_FILES,
+  SKILL_MD,
 };

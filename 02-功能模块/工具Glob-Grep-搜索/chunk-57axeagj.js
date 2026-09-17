@@ -13,19 +13,19 @@ import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-a
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { jn, Pt, Ks, findGitRoot as tr, gitExe as lt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { jn, Pt, Ks, findGitRoot, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { OP, Vet, Ket } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { kJ, MK, UTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { dUt, t3, Qqn, uX, createBaseHookInput as Sa, executeFileSuggestionCommand as D_n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { dUt, t3, Qqn, uX, createBaseHookInput, executeFileSuggestionCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var w = pe(kJ(), 1);
-import { statSync as D } from "fs";
+import { statSync } from "fs";
 import * as m from "path";
 function M() {
   return {
@@ -83,10 +83,10 @@ function C(e) {
   return `${r}:${(t >>> 0).toString(16)}`;
 }
 function G() {
-  let e = tr(Q());
+  let e = findGitRoot(Q());
   if (!e) return null;
   try {
-    return D(m.join(e, ".git", "index")).mtimeMs;
+    return statSync(m.join(e, ".git", "index")).mtimeMs;
   } catch {
     return null;
   }
@@ -163,13 +163,13 @@ async function j(e, r, s) {
   let t = Date.now(),
     a = e.cacheGeneration;
   n("[FileIndex] getFilesUsingGit called");
-  let o = tr(Q());
+  let o = findGitRoot(Q());
   if (!o) return (n("[FileIndex] not a git repo, returning null"), null);
   try {
     let g = Q(),
       c = Date.now(),
-      u = await Be(
-        lt(),
+      u = await execFileNoThrowWithCwd(
+        gitExe(),
         ["-c", "core.quotepath=false", "ls-files", "--recurse-submodules"],
         { timeout: 5000, abortSignal: r, cwd: o },
       );
@@ -308,7 +308,7 @@ async function N(e, r) {
   let s = AbortSignal.timeout(1e4),
     t = (e.fileIndex ??= new Ket());
   try {
-    let a = Ge(),
+    let a = getInitialSettings(),
       o = ee(),
       g = a.respectGitignore ?? o.respectGitignore ?? !0,
       c = Q(),
@@ -392,7 +392,7 @@ function startBackgroundCacheRefresh(e, r) {
       .catch((o) => {
         if (
           (n(`[FileIndex] Cache refresh failed: ${l(o)}`),
-          h(o),
+          logError(o),
           t === e.cacheGeneration)
         )
           e.fileListRefreshPromise = null;
@@ -423,10 +423,10 @@ async function generateFileSuggestions(e, r, s = !1, t) {
     return U(r);
   }
   if (!r && !s) return [];
-  if (dUt(Ge().fileSuggestion)?.type === "command") {
+  if (dUt(getInitialSettings().fileSuggestion)?.type === "command") {
     let g = { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
-      c = { ...Sa(g, Q()), query: r };
-    return (await D_n(g, c)).slice(0, S).map(I);
+      c = { ...createBaseHookInput(g, Q()), query: r };
+    return (await executeFileSuggestionCommand(g, c)).slice(0, S).map(I);
   }
   if (r === "" || r === "." || r === "./") {
     let g = await O();
@@ -457,7 +457,7 @@ async function generateFileSuggestions(e, r, s = !1, t) {
       f
     );
   } catch (g) {
-    return (h(g), []);
+    return (logError(g), []);
   }
 }
 async function U(e) {
@@ -497,7 +497,7 @@ function H(e, r, s, t) {
         ]
       : ["-c", "core.quotepath=false", "ls-files", "--others"],
     o = e.cacheGeneration;
-  e.untrackedFetchPromise = Be(lt(), a, { timeout: 1e4, cwd: r })
+  e.untrackedFetchPromise = execFileNoThrowWithCwd(gitExe(), a, { timeout: 1e4, cwd: r })
     .then(async (g) => {
       if (o !== e.cacheGeneration) return;
       if (g.code !== 0) return;

@@ -9,26 +9,26 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 201 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { ListToolsRequestSchema as C0, CallToolRequestSchema as Cx } from "../MCP客户端/chunk-tv3jbp8f.js";
+import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
 import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
-import { artifactReadObservationIn as P$ } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { artifactReadObservationIn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { bh, B, Nb, HW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-wm4s322b.js";
-import { getMainLoopModel as rt, qe, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel, qe, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { vo } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { tA, DT } from "../MCP客户端/chunk-3kmsshb6.js";
 import { rf, ar, LT, ID, oA } from "../权限系统/chunk-qdy0h5k2.js";
-import { createAbortController as hr, createChildAbortController as qh, userAbortReason as yu } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController, createChildAbortController, userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { i5 } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
 import {
   wmt,
   Xm,
-  hasPermissionsToUseTool as gd,
+  hasPermissionsToUseTool,
   wpn,
   d3,
   pu,
@@ -68,7 +68,7 @@ function G(e, m) {
     : e.required;
   return { ...e, properties: d, required: S };
 }
-async function Ve(e, m, d, S, a) {
+async function startMCPServer(e, m, d, S, a) {
   pu(e);
   let C = q(m, d, B(), "stdio", S, a),
     L = new Vtt();
@@ -91,8 +91,8 @@ function q(e, m, d, S, a, C = "raw") {
     let r = i5();
     (r.disableBackgroundTasks(), r.disableUnsandboxedCommands());
   }
-  if ((N8n(pgn()), d3(), Nb())) JHt(a).catch(h);
-  if ((kGt(), HW())) wmt().catch(h);
+  if ((N8n(pgn()), d3(), Nb())) JHt(a).catch(logError);
+  if ((kGt(), HW())) wmt().catch(logError);
   let H = DT(tA),
     U = new uO(),
     E = new A1(
@@ -114,12 +114,12 @@ function q(e, m, d, S, a, C = "raw") {
       },
       { capabilities: { tools: {} } },
     ),
-    P = hr();
+    P = createAbortController();
   return (
     (E.onclose = () => {
-      P.abort(yu("shutdown"));
+      P.abort(userAbortReason("shutdown"));
     }),
-    E.setRequestHandler(C0, async () => {
+    E.setRequestHandler(ListToolsRequestSchema, async () => {
       let r = rf(),
         R = dC(r, { skipReplFilter: !0, skipSimpleModeFilter: p }).filter(
           (i) => !oA(i),
@@ -148,7 +148,7 @@ function q(e, m, d, S, a, C = "raw") {
       };
     }),
     E.setRequestHandler(
-      Cx,
+      CallToolRequestSchema,
       async ({ params: { name: r, arguments: R } }, { signal: T }) => {
         let i = rf(),
           v = dC(i, { skipReplFilter: !0, skipSimpleModeFilter: p }).filter(
@@ -157,8 +157,8 @@ function q(e, m, d, S, a, C = "raw") {
           _ = p ? v.filter((o) => N.has(o.name)) : v,
           s = ar(_, r);
         if (!s) throw Error(`Tool ${r} not found`);
-        let I = qh(P),
-          M = () => I.abort(yu("remote-cancel"));
+        let I = createChildAbortController(P),
+          M = () => I.abort(userAbortReason("remote-cancel"));
         if (T.aborted) M();
         else T.addEventListener("abort", M, { once: !0 });
         let F = new D(U),
@@ -170,7 +170,7 @@ function q(e, m, d, S, a, C = "raw") {
             options: {
               commands: [],
               tools: _,
-              mainLoopModel: rt(),
+              mainLoopModel: getMainLoopModel(),
               thinkingConfig: { type: "disabled", mechanical: !0 },
               mcpClients: [],
               mcpResources: {},
@@ -195,13 +195,13 @@ function q(e, m, d, S, a, C = "raw") {
             sessionHooksRegistry: Vat,
             setWebBrowserSlice: () => {},
             setArtifactReadVersion: () => {},
-            getArtifactReadObservation: P$(aF),
+            getArtifactReadObservation: artifactReadObservationIn(aF),
             artifactRegistries: elt(),
             setArtifactContractTarget: () => {},
             getArtifactContractTarget: () => ({ targetSlug: void 0, pins: {} }),
             agentLifecycle: tct,
             teammateColors: tlt,
-            rootToolSurface: { tools: _, mainLoopModel: rt() },
+            rootToolSurface: { tools: _, mainLoopModel: getMainLoopModel() },
             messages: [],
             turnStartIndex: 0,
             readFileState: H,
@@ -245,7 +245,7 @@ function q(e, m, d, S, a, C = "raw") {
               { isError: !0, content: [{ type: "text", text: t }] }
             );
           }
-          let A = await s.call(c.data, x, gd, Vc({ content: [] })),
+          let A = await s.call(c.data, x, hasPermissionsToUseTool, Vc({ content: [] })),
             l;
           if (
             ((l ??= { content: [{ type: "text", text: b(A.data) }] }),
@@ -258,7 +258,7 @@ function q(e, m, d, S, a, C = "raw") {
 ${t}`;
             else l.content.push({ type: "text", text: t });
           }
-          return (y(m5e(s.name)), l);
+          return (logFeatureOk(m5e(s.name)), l);
         } catch (o) {
           let c =
             (o instanceof Error ? wpn(o) : [String(o)])
@@ -275,15 +275,15 @@ ${t}`;
               (n(`MCP server tool call '${r}' failed: ${c}`, {
                 level: "error",
               }),
-                g(m5e(s.name), u));
+                logFeatureSad(m5e(s.name), u));
             else {
               let l = ge(o);
-              (h(
+              (logError(
                 "telemetryMessage" in l
                   ? l
                   : dt(l, `mcp server tool '${s.name}' threw`),
               ),
-                f(m5e(s.name), u));
+                logFeatureBad(m5e(s.name), u));
             }
           }
           return { isError: !0, content: [{ type: "text", text: c }] };
@@ -295,4 +295,4 @@ ${t}`;
     E
   );
 }
-export { Ve as startMCPServer };
+export { startMCPServer };

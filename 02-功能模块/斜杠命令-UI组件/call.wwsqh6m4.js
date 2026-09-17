@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 273 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { isUnattendedBgSession as ap } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isUnattendedBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Lot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
@@ -50,7 +50,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-ey89qg3e.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 var r = async (s, o) => {
-  if (ap()) {
+  if (isUnattendedBgSession()) {
     let t = await ynn("", o);
     return (
       s(t.type === "text" ? t.value : void 0, { display: "system" }),

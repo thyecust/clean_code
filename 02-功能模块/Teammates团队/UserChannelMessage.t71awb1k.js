@@ -12,7 +12,7 @@
 import { Vhe, Khe } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { h0n } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { M5 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
@@ -65,7 +65,7 @@ function V(c) {
   return { lead: i, rest: s, open: y, source: x, user: ot.exec(R ?? "")?.[1] };
 }
 var Y = 60;
-function st(gt) {
+function UserChannelMessage(gt) {
   let u = _(34),
     { addMargin: W, param: $t, followsSpeakerLabel: X } = gt,
     { text: T } = $t,
@@ -124,7 +124,7 @@ function st(gt) {
         break bb0;
       }
       let Rt = `${g ? `${g} ` : ""}${j}`.trim().replace(/\s+/g, " ");
-      K = Xe(Rt, Y);
+      K = truncateToWidth(Rt, Y);
       B = o;
       F = W ? 1 : 0;
       U = t;
@@ -198,4 +198,4 @@ function st(gt) {
   else k = u[33];
   return k;
 }
-export { st as UserChannelMessage };
+export { UserChannelMessage };

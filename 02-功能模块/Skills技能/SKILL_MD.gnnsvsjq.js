@@ -14,6 +14,6 @@ var L = "./template.html-af756034.txt.zst";
 var i = Ke(L, import.meta.dirname);
 var a = "./board.mjs-0bf8864f.txt.zst";
 var e = Ke(a, import.meta.dirname);
-var f = t,
-  U = { "template.html": i, "board.mjs": e };
-export { U as SKILL_FILES, f as SKILL_MD };
+var SKILL_MD = t,
+  SKILL_FILES = { "template.html": i, "board.mjs": e };
+export { SKILL_FILES, SKILL_MD };

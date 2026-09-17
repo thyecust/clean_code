@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _ } from "../../react/react.zhnvc798.js";
 import { u_, Ma } from "../../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
 import { te } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, Od } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Q0 } from "../../ink/ink + react-reconciler.5rs3h07b.js";
@@ -198,8 +198,8 @@ function Q(Bt) {
       if (((Oe.current = J), $t && J === "fell_back")) {
         return;
       }
-      if (J === "ok") y("keybinding_auto_hints");
-      else g("keybinding_auto_hints", J);
+      if (J === "ok") logFeatureOk("keybinding_auto_hints");
+      else logFeatureSad("keybinding_auto_hints", J);
     }),
       (tt = [x.fellBack, x.hadEntryWithoutDescription]),
       (re[12] = x.fellBack),

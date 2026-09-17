@@ -9,12 +9,12 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Ol } from "./chunk-7xabjzfw.js";
 import "./chunk-kk3mqttk.js";
 import { _Gn, yGn } from "./chunk-se27pkgx.js";
 var t = new WeakMap();
-function i(n) {
+function isNarrationTaggedBlock(n) {
   try {
     if (n.type !== "thinking" || !n.signature) return !1;
     let r;
@@ -22,24 +22,24 @@ function i(n) {
     else ((r = yGn(n.signature)), t.set(n, r));
     return r === _Gn;
   } catch (r) {
-    if (Ol().claim("narration_classifier_error")) h(r);
+    if (Ol().claim("narration_classifier_error")) logError(r);
     return !1;
   }
 }
-function u(n) {
-  return !!n.thinking?.trim() && i(n);
+function isNarrationSummaryBlock(n) {
+  return !!n.thinking?.trim() && isNarrationTaggedBlock(n);
 }
-function f(n) {
+function narrationBlockIndexes(n) {
   let r = [];
   return (
     n.forEach((e, s) => {
-      if (i(e)) r.push(s);
+      if (isNarrationTaggedBlock(e)) r.push(s);
     }),
     r
   );
 }
 export {
-  u as isNarrationSummaryBlock,
-  i as isNarrationTaggedBlock,
-  f as narrationBlockIndexes,
+  isNarrationSummaryBlock,
+  isNarrationTaggedBlock,
+  narrationBlockIndexes,
 };

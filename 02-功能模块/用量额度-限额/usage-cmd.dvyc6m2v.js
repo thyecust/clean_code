@@ -13,14 +13,14 @@ import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { isClaudeAISubscriber as gt, hasProfileScope as lp, getSubscriptionType as qn, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { formatResetTime as Au, formatResetText as $2e } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { isClaudeAISubscriber, hasProfileScope, getSubscriptionType, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { formatResetTime, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { AO, mqn, fV, VF, rne, md, RM } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ble } from "../成本-Token统计/chunk-3nwwgatc.js";
 import { IDt, o3e } from "../MCP客户端/chunk-22bnxvxv.js";
-function h(t) {
+function formatRateLimits(t) {
   let { rate_limits: e, subscription_type: n } = t;
   if (!e) return null;
   let i = n === "max" || n === "team" || n === null,
@@ -35,7 +35,7 @@ function h(t) {
     r = [];
   for (let { title: o, limit: a } of s) {
     if (!a || a.utilization === null) continue;
-    let l = a.resets_at ? ` \xB7 resets ${$2e(a.resets_at, !0, !0, !0)}` : "";
+    let l = a.resets_at ? ` \xB7 resets ${formatResetText(a.resets_at, !0, !0, !0)}` : "";
     r.push(`${o}: ${Math.floor(a.utilization)}% used${l}`);
   }
   return r.length > 0
@@ -43,7 +43,7 @@ function h(t) {
 `)
     : null;
 }
-function d(t) {
+function formatBehaviors(t) {
   let { behaviors: e } = t;
   if (!e) return null;
   let n = [f("Last 24h", e.day), f("Last 7d", e.week)].filter(
@@ -62,8 +62,8 @@ function d(t) {
 }
 var g = "What's contributing to your limits usage?",
   O = async (t, e) => {
-    let n = qn() !== null || lp();
-    if (gt() && n && !AO()) {
+    let n = getSubscriptionType() !== null || hasProfileScope();
+    if (isClaudeAISubscriber() && n && !AO()) {
       let s;
       if (md().isUsingOverage)
         s =
@@ -78,17 +78,17 @@ var g = "What's contributing to your limits usage?",
           storageV5: e.storageV5,
           credentials: e.credentials,
         }),
-        l = h(a);
+        l = formatRateLimits(a);
       if (l)
         s += `
 
 ${l}`;
-      let c = a.behaviors && !lo(e.session) ? d(a) : null;
+      let c = a.behaviors && !lo(e.session) ? formatBehaviors(a) : null;
       if (c)
         s += `
 
 ${c}`;
-      else if (r && !lo(e.session) && !o.allowed && gt())
+      else if (r && !lo(e.session) && !o.allowed && isClaudeAISubscriber())
         s += `
 
 ${g}
@@ -103,12 +103,12 @@ ${ie.dim(m)}`;
       return { type: "text", value: s };
     }
     let i = pt(fV());
-    if (Pe() === "gateway") {
+    if (getAPIProvider() === "gateway") {
       let s = RM().overage;
       if (s)
         i += `
 
-Spend limit: ${Math.round(s.utilization * 100)}% used \xB7 resets ${Au(s.resets_at, !0, !0, !0)}`;
+Spend limit: ${Math.round(s.utilization * 100)}% used \xB7 resets ${formatResetTime(s.resets_at, !0, !0, !0)}`;
     }
     return { type: "text", value: i };
   },
@@ -149,4 +149,4 @@ function u(t, e, n) {
     s = e.length - p;
   return `${t}: ${i}${s > 0 ? `, +${s} more` : ""}`;
 }
-export { O as call, d as formatBehaviors, h as formatRateLimits };
+export { O as call, formatBehaviors, formatRateLimits };

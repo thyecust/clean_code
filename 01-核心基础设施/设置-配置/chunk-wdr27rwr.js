@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { H, Te, ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { lit as S, fromEnumOpt as we } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnumOpt } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { getSettingsForSource as ye, updateSettingsForSource as Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { parsePermissionMode as gf } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { getSettingsForSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { parsePermissionMode } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { zL } from "../../02-功能模块/权限系统/chunk-hv6z01db.js";
 function shouldShowAutoDefaultNudge(u, { requireOnboarding: r = !0 } = {}) {
   let o = ee();
@@ -21,29 +21,29 @@ function shouldShowAutoDefaultNudge(u, { requireOnboarding: r = !0 } = {}) {
     !H("tengu_maple_pier", !1)
   )
     return null;
-  let e = ye("userSettings")?.permissions?.defaultMode,
+  let e = getSettingsForSource("userSettings")?.permissions?.defaultMode,
     t = [
       "projectSettings",
       "localSettings",
       "flagSettings",
       "policySettings",
-    ].some((n) => ye(n)?.permissions?.defaultMode);
+    ].some((n) => getSettingsForSource(n)?.permissions?.defaultMode);
   if (e && e !== "auto" && !t && zL(u)) return e;
   return null;
 }
 function handleAutoDefaultNudgeEventFromHost(u, r, o) {
   if (ee().hasSeenAutoDefaultNudge) return;
-  let e = gf(r.current_mode);
+  let e = parsePermissionMode(r.current_mode);
   if (u === "shown") {
     i("tengu_auto_default_nudge_shown", {
-      current_mode: we(e),
+      current_mode: fromEnumOpt(e),
       surface: S("ide"),
     });
     return;
   }
   let t = r.choice === "accept" ? "accept" : "decline";
   if (t === "accept")
-    Jt("userSettings", { permissions: { defaultMode: "auto" } }, void 0, o);
+    updateSettingsForSource("userSettings", { permissions: { defaultMode: "auto" } }, void 0, o);
   (Te(
     (n) =>
       n.hasSeenAutoDefaultNudge ? n : { ...n, hasSeenAutoDefaultNudge: !0 },
@@ -52,7 +52,7 @@ function handleAutoDefaultNudgeEventFromHost(u, r, o) {
     i("tengu_auto_default_nudge_resolved", {
       choice: S(t),
       outcome: t === "accept" ? S("switched") : S("declined"),
-      current_mode: we(e),
+      current_mode: fromEnumOpt(e),
       surface: S("ide"),
     }));
 }

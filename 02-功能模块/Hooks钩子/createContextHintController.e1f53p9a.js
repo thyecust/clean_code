@@ -13,7 +13,7 @@ import { kCn, tt, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js
 import { Lt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { KGn, Dg, hfn, _fn, EVn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -95,7 +95,7 @@ async function P(e, t, o, a) {
 async function k(e) {
   let t = await P(e.messages, e.querySource, e.storageV5, e.agentId);
   return (
-    y("compact_hint_reject"),
+    logFeatureOk("compact_hint_reject"),
     C({
       requestId: e.requestId,
       preCompactTokenEstimate: t.preCompactTokenEstimate,
@@ -111,7 +111,7 @@ async function k(e) {
     }
   );
 }
-function G(e) {
+function createContextHintController(e) {
   if (!e.includeFirstPartyBetas) return null;
   if (!e.querySource.startsWith("repl_main_thread")) return null;
   let t = c(),
@@ -182,4 +182,4 @@ function G(e) {
     },
   };
 }
-export { G as createContextHintController };
+export { createContextHintController };

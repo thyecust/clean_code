@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 3 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { deflateSync as j, inflateRawSync as L } from "zlib";
+import { deflateSync, inflateRawSync } from "zlib";
 var z = {
     30: { r: 0, g: 0, b: 0 },
     31: { r: 205, g: 49, b: 49 },
@@ -153,7 +153,7 @@ function Y() {
 }
 var A = N();
 function N() {
-  let t = L(Buffer.from(S, "base64")),
+  let t = inflateRawSync(Buffer.from(S, "base64")),
     r = t.readUInt16LE(0),
     n = new Map(),
     e = 2;
@@ -163,7 +163,7 @@ function N() {
   }
   return n;
 }
-function sn(t, r = {}) {
+function ansiToPng(t, r = {}) {
   let {
       scale: n = 1,
       paddingX: e = 48,
@@ -299,7 +299,7 @@ function V(t, r, n) {
     let g = o * (i + 1);
     ((s[g] = 0), s.set(t.subarray(o * i, (o + 1) * i), g + 1));
   }
-  let l = j(s);
+  let l = deflateSync(s);
   return Buffer.concat([
     E,
     v("IHDR", e),
@@ -307,4 +307,4 @@ function V(t, r, n) {
     v("IEND", new Uint8Array(0)),
   ]);
 }
-export { sn as ansiToPng };
+export { ansiToPng };

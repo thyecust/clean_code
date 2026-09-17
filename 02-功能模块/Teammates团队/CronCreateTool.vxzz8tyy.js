@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { bB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { getTeammateContext as iS } from "./chunk-811z9z0t.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getTeammateContext } from "./chunk-811z9z0t.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { JI, K_, rJ, nCe, vj, Z7e } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { CRON_CREATE_TOOL_NAME as nm, DEFAULT_MAX_AGE_DAYS as nJ, isKairosCronEnabled as EC, isDurableCronEnabled as yK, buildCronCreateDescription as ubn, buildDurableParamDescription as dbn, buildCronCreatePrompt as pbn } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { CRON_CREATE_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled, isDurableCronEnabled, buildCronCreateDescription, buildDurableParamDescription, buildCronCreatePrompt } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { NE } from "../../01-核心基础设施/共享小工具-未细化/chunk-1md6qpsy.js";
 import { s, O, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var n = 50,
@@ -27,16 +27,16 @@ var n = 50,
       ),
       prompt: s().describe("The prompt to enqueue at each fire time."),
       recurring: NE(O().optional()).describe(
-        `true (default) = fire on every cron match until deleted or auto-expired after ${nJ} days. false = fire once at the next match, then auto-delete. Use false for "remind me at X" one-shot requests with pinned minute/hour/dom/month.`,
+        `true (default) = fire on every cron match until deleted or auto-expired after ${DEFAULT_MAX_AGE_DAYS} days. false = fire once at the next match, then auto-delete. Use false for "remind me at X" one-shot requests with pinned minute/hour/dom/month.`,
       ),
-      durable: NE(O().optional()).describe(dbn(yK())),
+      durable: NE(O().optional()).describe(buildDurableParamDescription(isDurableCronEnabled())),
     }),
   ),
   u = m(() =>
     c({ id: s(), humanSchedule: s(), recurring: O(), durable: O().optional() }),
   ),
-  D = Tt({
-    name: nm,
+  CronCreateTool = Tt({
+    name: CRON_CREATE_TOOL_NAME,
     searchHint: "schedule a recurring or one-shot prompt",
     enablesCodeExecution: !0,
     maxResultSizeChars: 1e5,
@@ -48,13 +48,13 @@ var n = 50,
       return u();
     },
     isEnabled() {
-      return EC();
+      return isKairosCronEnabled();
     },
     toAutoClassifierInput(e) {
       return `${e.cron}: ${e.prompt}`;
     },
     async checkPermissions(e, r) {
-      if (ce(r).mode === "auto")
+      if (getToolPermissionContext(r).mode === "auto")
         return {
           behavior: "passthrough",
           message: "Scheduling a cron prompt requires classifier review.",
@@ -62,10 +62,10 @@ var n = 50,
       return { behavior: "allow", updatedInput: e };
     },
     async description() {
-      return ubn(yK());
+      return buildCronCreateDescription(isDurableCronEnabled());
     },
     async prompt() {
-      return pbn(yK());
+      return buildCronCreatePrompt(isDurableCronEnabled());
     },
     getPath() {
       return rJ();
@@ -89,7 +89,7 @@ var n = 50,
           message: `Too many scheduled jobs (max ${n}). Cancel one first.`,
           errorCode: 3,
         };
-      if (e.durable && iS())
+      if (e.durable && getTeammateContext())
         return {
           result: !1,
           message:
@@ -99,8 +99,8 @@ var n = 50,
       return { result: !0 };
     },
     async call({ cron: e, prompt: r, recurring: t = !0, durable: a = !1 }) {
-      let o = a && yK(),
-        i = await nCe(e, r, t, o, iS()?.agentId);
+      let o = a && isDurableCronEnabled(),
+        i = await nCe(e, r, t, o, getTeammateContext()?.agentId);
       return (
         bB(!0),
         { data: { id: i, humanSchedule: K_(e), recurring: t, durable: o } }
@@ -114,12 +114,12 @@ var n = 50,
         tool_use_id: r,
         type: "tool_result",
         content: e.recurring
-          ? `Scheduled recurring job ${e.id} (${e.humanSchedule}). ${t}. Auto-expires after ${nJ} days. Use CronDelete to cancel sooner.`
+          ? `Scheduled recurring job ${e.id} (${e.humanSchedule}). ${t}. Auto-expires after ${DEFAULT_MAX_AGE_DAYS} days. Use CronDelete to cancel sooner.`
           : `Scheduled one-shot task ${e.id} (${e.humanSchedule}). ${t}. It will fire once then auto-delete.`,
       };
     },
     renderToolUseMessage(e) {
-      return `${e.cron ?? ""}${e.prompt ? `: ${or(e.prompt, 60, !0)}` : ""}`;
+      return `${e.cron ?? ""}${e.prompt ? `: ${truncate(e.prompt, 60, !0)}` : ""}`;
     },
   });
-export { D as CronCreateTool };
+export { CronCreateTool };

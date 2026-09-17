@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 197 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { vTe, asSystemPrompt as Zo, U3, LEe, xr, getSessionIdFromLog as Kc, getSessionFilesWithMtime as jMe, loadAllLogsFromSessionFile as l8e, UY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { vTe, asSystemPrompt, U3, LEe, xr, getSessionIdFromLog, getSessionFilesWithMtime, loadAllLogsFromSessionFile, UY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -17,8 +17,8 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { R, dt, ge, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, ft, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { ixe, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getDefaultOpusModel as Ll, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { ixe, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getDefaultOpusModel, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { go } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { Pl } from "../Teammates团队/chunk-thxapyam.js";
@@ -27,13 +27,13 @@ import { mt, Vh } from "../工具Task-Agent调度/chunk-1px84m19.js";
 import { s, T, O, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import {
-  mkdir as Te,
-  readdir as De,
-  readFile as Ne,
-  unlink as Fe,
-  writeFile as de,
+  mkdir,
+  readdir,
+  readFile,
+  unlink,
+  writeFile,
 } from "fs/promises";
-import { extname as He, join as q } from "path";
+import { extname, join as q } from "path";
 var Pe = new RegExp(`<(${ixe.join("|")})>[\\s\\S]*?(?:</\\1>|$)`, "g");
 function Me(e) {
   return e.replace(Pe, "").trim();
@@ -94,10 +94,10 @@ function ve(e, t) {
   return o;
 }
 function $e() {
-  return Ll();
+  return getDefaultOpusModel();
 }
 function Le() {
-  return Ll();
+  return getDefaultOpusModel();
 }
 var Ae = m(() =>
     c({
@@ -247,11 +247,11 @@ async function Je(e, t, o) {
     return i;
   }
   try {
-    await Te(se(), { recursive: !0 });
+    await mkdir(se(), { recursive: !0 });
   } catch {}
   return (
-    await de(i, e, { encoding: "utf-8", mode: 384 }),
-    await de(q(se(), "report.html"), e, { encoding: "utf-8", mode: 384 }),
+    await writeFile(i, e, { encoding: "utf-8", mode: 384 }),
+    await writeFile(q(se(), "report.html"), e, { encoding: "utf-8", mode: 384 }),
     i
   );
 }
@@ -361,7 +361,7 @@ function Qe(e) {
             if (S) {
               let Q = te(S.file_path);
               if (Q) {
-                let L = Ue[He(Q).toLowerCase()];
+                let L = Ue[extname(Q).toLowerCase()];
                 if (L) o[L] = (o[L] || 0) + 1;
                 if (C === "Edit" || C === "Write") P.add(Q);
               }
@@ -464,7 +464,7 @@ function Qe(e) {
 }
 function pe(e) {
   let t = Qe(e),
-    o = Kc(e) || "unknown",
+    o = getSessionIdFromLog(e) || "unknown",
     i = e.created.toISOString(),
     a = Math.round((e.modified.getTime() - e.created.getTime()) / 1000 / 60),
     l = 0,
@@ -547,7 +547,7 @@ TRANSCRIPT CHUNK:
 async function tt(e, t) {
   try {
     let o = await UY({
-      systemPrompt: Zo([]),
+      systemPrompt: asSystemPrompt([]),
       userPrompt: et + e,
       signal: new AbortController().signal,
       options: {
@@ -600,11 +600,11 @@ async function ot(e, t) {
   }
   let o = q(ae(), `${e}.json`);
   try {
-    let i = await Ne(o, { encoding: "utf-8" }),
+    let i = await readFile(o, { encoding: "utf-8" }),
       a = z(i);
     if (!he(a)) {
       try {
-        await Fe(o);
+        await unlink(o);
       } catch {}
       return null;
     }
@@ -627,7 +627,7 @@ function Re(e, t) {
 }
 async function nt(e, t) {
   try {
-    await Te(ae(), { recursive: !0 });
+    await mkdir(ae(), { recursive: !0 });
   } catch {}
   if (M() && t) {
     let i = await t.write(ue(e.session_id), b(e, null, 2), {
@@ -642,7 +642,7 @@ async function nt(e, t) {
     return;
   }
   let o = q(ae(), `${e.session_id}.json`);
-  await de(o, b(e, null, 2), { encoding: "utf-8", mode: 384 });
+  await writeFile(o, b(e, null, 2), { encoding: "utf-8", mode: 384 });
 }
 async function it(e, t) {
   if (t) {
@@ -710,7 +710,7 @@ async function rt(e, t) {
         let i = o.error;
         if (Ge(i)) n(`saveSessionMeta: cache write failed: ${We(i)}`);
         else
-          h(
+          logError(
             new R(
               `saveSessionMeta: cache write failed: ${We(i)}`,
               "insights session-meta cache write failed",
@@ -725,7 +725,7 @@ async function rt(e, t) {
       n(`saveSessionMeta: cache write failed: ${o}`);
       return;
     }
-    h(o);
+    logError(o);
   }
 }
 async function at(e, t, o) {
@@ -747,7 +747,7 @@ RESPOND WITH ONLY A VALID JSON OBJECT matching this schema:
   "brief_summary": "One sentence: what user wanted and whether they got it"
 }`,
       l = await UY({
-        systemPrompt: Zo([]),
+        systemPrompt: asSystemPrompt([]),
         userPrompt: a,
         signal: new AbortController().signal,
         options: {
@@ -1074,7 +1074,7 @@ Find something genuinely interesting or amusing from the session summaries.`,
 async function Se(e, t, o) {
   try {
     let i = await UY({
-        systemPrompt: Zo([]),
+        systemPrompt: asSystemPrompt([]),
         userPrompt:
           e.prompt +
           `
@@ -1108,7 +1108,7 @@ DATA:
     return { name: e.name, result: null };
   } catch (i) {
     return (
-      h(
+      logError(
         dt(
           Error(`${e.name} failed: ${ge(i).message}`),
           "insight section query failed",
@@ -2236,14 +2236,14 @@ async function xt(e) {
   let t = Pl(),
     o;
   try {
-    o = await De(t, { withFileTypes: !0 });
+    o = await readdir(t, { withFileTypes: !0 });
   } catch {
     return [];
   }
   let i = o.filter((l) => l.isDirectory()).map((l) => q(t, l.name)),
     a = [];
   for (let l = 0; l < i.length; l++) {
-    let p = await jMe(i[l]);
+    let p = await getSessionFilesWithMtime(i[l]);
     for (let [r, g] of p)
       a.push({ sessionId: r, path: g.path, mtime: g.mtime, size: g.size });
     if (l % 10 === 9) await new Promise((r) => setImmediate(r));
@@ -2302,11 +2302,11 @@ async function wt(e) {
               cached: I,
               logs:
                 e?.storageV5 && k.key
-                  ? await l8e(`${k.sessionId}.jsonl`, void 0, {
+                  ? await loadAllLogsFromSessionFile(`${k.sessionId}.jsonl`, void 0, {
                       backend: e.storageV5,
                       key: k.key,
                     })
-                  : await l8e(k.path ?? ""),
+                  : await loadAllLogsFromSessionFile(k.path ?? ""),
             };
           } catch {
             return { sessionInfo: k, cached: I, logs: [] };

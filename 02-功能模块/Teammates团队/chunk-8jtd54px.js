@@ -11,12 +11,12 @@ import { oo, CW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { gbt } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { pi, bytesPerTokenForModel as lf, kw, mc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { pi, bytesPerTokenForModel, kw, mc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { zir } from "./chunk-811z9z0t.js";
@@ -24,9 +24,9 @@ import {
   Rwe,
   SV,
   Mg,
-  stripWholeToolGrantsForAsk as c3,
-  withoutGrantsForRemoteScope as HO,
-  hasPermissionsToUseToolWithSink as fTe,
+  stripWholeToolGrantsForAsk,
+  withoutGrantsForRemoteScope,
+  hasPermissionsToUseToolWithSink,
   n2t,
   Yue,
   qzn,
@@ -37,7 +37,7 @@ import {
   J2t,
   iLe,
   Q2t,
-  asSystemPrompt as Zo,
+  asSystemPrompt,
   z2,
   NTe,
   oKe,
@@ -46,50 +46,50 @@ import {
   Cne,
   E6t,
   JLe,
-  runAgent as dw,
+  runAgent,
   r8n,
   II,
   $3,
   nhn,
   Co,
   Re,
-  isLoggableMessage as bT,
+  isLoggableMessage,
   VS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { NFe, RD } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Woe } from "../MCP客户端/chunk-3kmsshb6.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
-import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
+import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { UE, mG, WE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import {
   loe,
   RC,
   RZn,
-  readMailbox as ffe,
-  writeToMailbox as ag,
-  markSingleMessageAsRead as BGt,
-  MARK_READ_FAILURE_CAP as pJ,
-  messageIdentityKey as SG,
-  markMessagesAsRead as fJ,
-  formatTeammateMessage as vXe,
-  formatTeammateMessages as coe,
-  UNKNOWN_SENDER as __,
-  sanitizeReceivedStructuredFrame as Pwt,
-  createIdleNotification as H1e,
-  logIdleResultDeliveryOutcome as fCe,
-  isPermissionResponse as I1e,
-  isShutdownRequest as mCe,
-  isPlanApprovalResponse as HXe,
-  isModeSetRequest as IXe,
-  isStructuredProtocolMessage as DH,
-  planApprovalResumeText as PXe,
-  withShutdownReplyInstructions as O1e,
+  readMailbox,
+  writeToMailbox,
+  markSingleMessageAsRead,
+  MARK_READ_FAILURE_CAP,
+  messageIdentityKey,
+  markMessagesAsRead,
+  formatTeammateMessage,
+  formatTeammateMessages,
+  UNKNOWN_SENDER,
+  sanitizeReceivedStructuredFrame,
+  createIdleNotification,
+  logIdleResultDeliveryOutcome,
+  isPermissionResponse,
+  isShutdownRequest,
+  isPlanApprovalResponse,
+  isModeSetRequest,
+  isStructuredProtocolMessage,
+  planApprovalResumeText,
+  withShutdownReplyInstructions,
 } from "./chunk-g6nvp9mm.js";
-import { evictTaskOutput as Sd } from "../后台任务-Shell管理/chunk-x3txegas.js";
-import { removeMemberByAgentId as TXe } from "./chunk-6b13bhw1.js";
+import { evictTaskOutput } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { removeMemberByAgentId } from "./chunk-6b13bhw1.js";
 import { hbt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { Pqe, Uqe, Bqe, eWn, Tbe, Kdt } from "../权限系统/chunk-jsd70b22.js";
-import { TEAMMATE_SYSTEM_PROMPT_ADDENDUM as vin } from "./chunk-5nnwwahg.js";
+import { TEAMMATE_SYSTEM_PROMPT_ADDENDUM } from "./chunk-5nnwwahg.js";
 import { Xdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnvjcy8y.js";
 import { Jdt, jqe, Wqe } from "../权限系统/chunk-n4x6jsp3.js";
 import { L1t } from "./chunk-4ma81w0c.js";
@@ -102,11 +102,11 @@ var je = 500,
   be = 500;
 function Ge(s, e, t, _) {
   return async (o, m, T, d, M, C) => {
-    let w = C ?? (await fTe(o, m, T, d, M, void 0, _));
+    let w = C ?? (await hasPermissionsToUseToolWithSink(o, m, T, d, M, void 0, _));
     if (w.behavior !== "ask") return w;
     let p = w.updatedInput ?? m;
     if (e.signal.aborted) return { behavior: "ask", message: II };
-    let A = ce(T),
+    let A = getToolPermissionContext(T),
       I = () =>
         o.description(p, {
           isNonInteractiveSession: T.options.isNonInteractiveSession,
@@ -170,12 +170,12 @@ function Ge(s, e, t, _) {
           R();
           let z =
             o.suppressesAllPermissionUpdates?.(p) === !0
-              ? HO(D)
+              ? withoutGrantsForRemoteScope(D)
               : o.suppressesAlwaysAllowRule?.(p) === !0 ||
                   w.suppressAlwaysAllowRule === !0
-                ? c3(D, o, ce(T))
+                ? stripWholeToolGrantsForAsk(D, o, getToolPermissionContext(T))
                 : D;
-          RD(z, T.storageV5).catch(h);
+          RD(z, T.storageV5).catch(logError);
           let X = a && Object.keys(a).length > 0 ? a : p;
           l({
             behavior: "allow",
@@ -209,13 +209,13 @@ function Ge(s, e, t, _) {
               (D(), F({ behavior: "ask", message: II }));
               return;
             }
-            let ie = await ffe(B.agentName, B.teamName, X);
+            let ie = await readMailbox(B.agentName, B.teamName, X);
             for (let K of ie)
               if (K && !K.read) {
-                let O = I1e(K.text);
+                let O = isPermissionResponse(K.text);
                 if (O && O.request_id === z.id) {
                   if (
-                    (await BGt(B.agentName, B.teamName, K, X), K.from !== fs)
+                    (await markSingleMessageAsRead(B.agentName, B.teamName, K, X), K.from !== fs)
                   ) {
                     n(
                       `[InProcessRunner] Ignoring permission response from non-team-lead: ${K.from}`,
@@ -268,7 +268,7 @@ function L(s, e, t) {
   t.update(s, (_) => (_.type === "in_process_teammate" ? e(_) : _));
 }
 async function Ke(s, e, t, _, o) {
-  return ag(
+  return writeToMailbox(
     fs,
     { from: s, text: e, timestamp: new Date().toISOString(), color: t },
     _,
@@ -276,12 +276,12 @@ async function Ke(s, e, t, _, o) {
   );
 }
 async function Ae(s, e, t, _, o) {
-  let m = H1e(s, _),
+  let m = createIdleNotification(s, _),
     T;
   try {
     T = await Ke(s, b(m), e, t, o);
   } finally {
-    fCe(m, _?.result, T);
+    logIdleResultDeliveryOutcome(m, _?.result, T);
   }
   return T !== void 0;
 }
@@ -327,7 +327,7 @@ async function De(s, e, t, _) {
 async function Se(s, e, t, _, o) {
   let m;
   try {
-    ((m = await ffe(s.agentName, s.teamName, _, {
+    ((m = await readMailbox(s.agentName, s.teamName, _, {
       throwOnUnknownReadError: !0,
     })),
       (o.readFailures = 0));
@@ -346,7 +346,7 @@ async function Se(s, e, t, _, o) {
   for (let p = 0; p < m.length; p++) {
     let A = m[p];
     if (A && !A.read) {
-      let I = mCe(A.text);
+      let I = isShutdownRequest(A.text);
       if (I) {
         ((T = p), (d = I));
         break;
@@ -357,15 +357,15 @@ async function Se(s, e, t, _, o) {
     if (o.count > 0) {
       let I = m.filter(
         (E, l) =>
-          !E.read && l !== T && !DH(E.text) && !o.deliveredUnmarked.has(SG(E)),
+          !E.read && l !== T && !isStructuredProtocolMessage(E.text) && !o.deliveredUnmarked.has(messageIdentityKey(E)),
       );
       if (I.length > 0) {
-        for (let l of I) o.deliveredUnmarked.add(SG(l));
-        let E = await fJ(s.agentName, s.teamName, I, _);
+        for (let l of I) o.deliveredUnmarked.add(messageIdentityKey(l));
+        let E = await markMessagesAsRead(s.agentName, s.teamName, I, _);
         if (E) ((o.count = 0), (o.reported = !1), o.deliveredUnmarked.clear());
         else if (!o.reported)
           ((o.reported = !0),
-            g("swarm_inbox_poll", "worker_mark_read_failed_streak"));
+            logFeatureSad("swarm_inbox_poll", "worker_mark_read_failed_streak"));
         return (
           n(
             `[inProcessRunner] ${s.agentName} delivering ${I.length} held message(s) ahead of a shutdown_request${E ? "" : " (mark still not landed)"}`,
@@ -381,7 +381,7 @@ async function Se(s, e, t, _, o) {
       n(
         `[inProcessRunner] ${s.agentName} received shutdown request from ${d?.from} (prioritized over ${A} unread messages)`,
       ),
-      await BGt(s.agentName, s.teamName, p, _),
+      await markSingleMessageAsRead(s.agentName, s.teamName, p, _),
       {
         type: "shutdown_request",
         request: d,
@@ -394,27 +394,27 @@ async function Se(s, e, t, _, o) {
     C = [];
   for (let p of m) {
     if (!p || p.read) continue;
-    if (DH(p.text)) M.push(p);
+    if (isStructuredProtocolMessage(p.text)) M.push(p);
     else C.push(p);
   }
   let w = null;
   if (M.length > 0) {
     for (let A of M) {
-      let I = HXe(A.text);
+      let I = isPlanApprovalResponse(A.text);
       if (I && A.from === fs) {
         let E = r8n(e, I, t, _);
         if (E)
           (n(
             `[inProcessRunner] ${s.agentName} applied lead plan_approval_response: approved=${E.approved}`,
           ),
-            (w = PXe(E)));
+            (w = planApprovalResumeText(E)));
         else
           n(
             `[inProcessRunner] ${s.agentName} ignoring stale plan_approval_response (not awaiting approval)`,
           );
         continue;
       }
-      if (IXe(A.text)) {
+      if (isModeSetRequest(A.text)) {
         n(
           `[inProcessRunner] ${s.agentName} dropping mode_set_request message: permission mode changes are never accepted from the inbox`,
           { level: "warn" },
@@ -426,7 +426,7 @@ async function Se(s, e, t, _, o) {
         { level: "warn" },
       );
     }
-    if (!(await fJ(s.agentName, s.teamName, M, _)))
+    if (!(await markMessagesAsRead(s.agentName, s.teamName, M, _)))
       n(
         `[inProcessRunner] ${s.agentName} could not mark ${M.length} protocol frame(s) read; retrying next poll`,
         { level: "warn" },
@@ -434,14 +434,14 @@ async function Se(s, e, t, _, o) {
   }
   if (w) return { type: "new_message", message: w, from: fs };
   if (C.length > 0) {
-    if (await fJ(s.agentName, s.teamName, C, _))
+    if (await markMessagesAsRead(s.agentName, s.teamName, C, _))
       ((o.count = 0), (o.reported = !1), o.deliveredUnmarked.clear());
     else {
       let A = ++o.count;
-      if (A < pJ)
+      if (A < MARK_READ_FAILURE_CAP)
         return (
           n(
-            `[inProcessRunner] ${s.agentName} could not mark ${C.length} message(s) read (${A}/${pJ}); delivery retried next poll`,
+            `[inProcessRunner] ${s.agentName} could not mark ${C.length} message(s) read (${A}/${MARK_READ_FAILURE_CAP}); delivery retried next poll`,
             { level: "warn" },
           ),
           null
@@ -454,8 +454,8 @@ async function Se(s, e, t, _, o) {
         !o.reported)
       )
         ((o.reported = !0),
-          g("swarm_inbox_poll", "worker_mark_read_failed_streak"));
-      for (let I of C) o.deliveredUnmarked.add(SG(I));
+          logFeatureSad("swarm_inbox_poll", "worker_mark_read_failed_streak"));
+      for (let I of C) o.deliveredUnmarked.add(messageIdentityKey(I));
     }
     return (
       n(
@@ -530,7 +530,7 @@ async function Ye(s, e, t, _, o, m, T, d, M, C = !1, w) {
     try {
       let R = await Se(s, t, o, w, M);
       if (R) return R;
-      if (M.count > 0 && M.readFailures < pJ) {
+      if (M.count > 0 && M.readFailures < MARK_READ_FAILURE_CAP) {
         p = Date.now();
         let a = _().tasks[t];
         if (a?.type === "in_process_teammate" && a.evictAfter !== void 0)
@@ -602,7 +602,7 @@ async function Je(s) {
   else {
     let H = [
       ...(await VS(z, X, void 0, { teammate: !0 })).filter((W) => W !== FU),
-      vin,
+      TEAMMATE_SYSTEM_PROMPT_ADDENDUM,
     ];
     if (m) {
       let W = m.getSystemPrompt({
@@ -616,7 +616,7 @@ ${W}`);
       if (m.memory)
         i("tengu_agent_memory_loaded", {
           ...!1,
-          scope: u(m.memory),
+          scope: fromEnum(m.memory),
           source: S("in-process-teammate"),
         });
     }
@@ -646,7 +646,7 @@ ${W}`);
       ...(m && { customAgentType: m.agentType }),
       ...(C && { model: C }),
     },
-    ve = vXe({ from: j ?? fs, text: _, summary: o }),
+    ve = formatTeammateMessage({ from: j ?? fs, text: _, summary: o }),
     V = ve,
     me = void 0,
     pe = !1,
@@ -661,13 +661,13 @@ ${W}`);
           (n(
             `[inProcessRunner] ${e.agentId} received shutdown request - passing to model`,
           ),
-            (V = vXe({
+            (V = formatTeammateMessage({
               from:
                 typeof P.entryFrom === "string" && P.entryFrom !== ""
                   ? P.entryFrom
-                  : __,
-              text: O1e(
-                Pwt(P.originalMessage, P.entryFrom) ?? P.originalMessage,
+                  : UNKNOWN_SENDER,
+              text: withShutdownReplyInstructions(
+                sanitizeReceivedStructuredFrame(P.originalMessage, P.entryFrom) ?? P.originalMessage,
                 P.entryFrom,
               ),
             })),
@@ -683,7 +683,7 @@ ${W}`);
           )
             ((V = P.message), (me = P.origin));
           else
-            ((V = vXe({
+            ((V = formatTeammateMessage({
               from: P.from,
               text: P.message,
               color: P.color,
@@ -696,7 +696,7 @@ ${W}`);
           (n(
             `[inProcessRunner] ${e.agentId} received ${P.messages.length} drained message(s)`,
           ),
-            (V = coe(P.messages, { recipientIsLead: !1 })),
+            (V = formatTeammateMessages(P.messages, { recipientIsLead: !1 })),
             (me = void 0),
             L1t(t, Re({ content: V }), a));
           break;
@@ -712,7 +712,7 @@ ${W}`);
             !l)
           )
             (d.agentLifecycle.setTeammate(e.agentId, void 0),
-              await TXe(
+              await removeMemberByAgentId(
                 e.teamName,
                 e.agentId,
                 { onlyIfJoinedBefore: Date.now() },
@@ -736,7 +736,7 @@ ${W}`);
       n(
         `[inProcessRunner] ${e.agentId} processing prompt: ${V.substring(0, 50)}...`,
       );
-      let v = hr();
+      let v = createAbortController();
       (v.signal.addEventListener("abort", () => {
         fe = !0;
       }),
@@ -748,7 +748,7 @@ ${W}`);
       let J = Re({ content: V, origin: me }),
         ye = [J],
         de = U,
-        Ee = Mg(U, lf(X));
+        Ee = Mg(U, bytesPerTokenForModel(X));
       if (Ee > NTe(X, E6t(d.options.autoCompactWindow))) {
         n(`[inProcessRunner] ${e.agentId} compacting history (${Ee} tokens)`);
         let r = {
@@ -766,7 +766,7 @@ ${W}`);
             U,
             r,
             {
-              systemPrompt: Zo([]),
+              systemPrompt: asSystemPrompt([]),
               userContext: {},
               systemContext: {},
               toolUseContext: r,
@@ -832,7 +832,7 @@ ${W}`);
                 turnStartTime: Date.now(),
               })),
               D.setMode("responding"));
-            for await (let r of dw({
+            for await (let r of runAgent({
               agentDefinition: qe,
               promptMessages: ye,
               toolUseContext: d,
@@ -900,7 +900,7 @@ ${W}`);
                   ),
                   r.type === "assistant" ||
                     r.type === "user" ||
-                    (r.type === "attachment" && bT(r)))
+                    (r.type === "attachment" && isLoggableMessage(r)))
                 )
                   (ue.push(r), U.push(r), (te = Cne(U, r, te)));
                 $e = !0;
@@ -984,7 +984,7 @@ ${W}`);
           while (
             r === null &&
             F.count > 0 &&
-            F.readFailures < pJ &&
+            F.readFailures < MARK_READ_FAILURE_CAP &&
             !M.signal.aborted
           )
             (await Z(be), (r = await Se(e, t, a, d.storageV5, F)));
@@ -1026,7 +1026,7 @@ ${W}`);
       }
       if (se?.isTransient)
         i("tengu_teammate_transient_turn_failure", {
-          error_kind: u(se.errorKind ?? "unknown"),
+          error_kind: fromEnum(se.errorKind ?? "unknown"),
           hold_evict: re,
         });
       let Ce = d.getAppState().tasks[t],
@@ -1118,11 +1118,11 @@ ${W}`);
         messages: v.messages.length ? [v.messages.at(-1)] : [],
         inProgressToolUseIDs: new Set(),
       }));
-    if ((Sd(t), a.evictTerminal(t), !oe))
+    if ((evictTaskOutput(t), a.evictTerminal(t), !oe))
       pi(t, "completed", { toolUseId: x, summary: e.agentId });
     if ((Rwe(e.agentId), we))
-      g("swarm_in_process_run", "compact_blocked_by_hook");
-    else y("swarm_in_process_run");
+      logFeatureSad("swarm_in_process_run", "compact_blocked_by_hook");
+    else logFeatureOk("swarm_in_process_run");
     return { success: !0, messages: U };
   } catch (P) {
     let H = P instanceof Error ? P.message : "Unknown error";
@@ -1161,7 +1161,7 @@ ${W}`);
         messages: x.messages.length ? [x.messages.at(-1)] : [],
         inProgressToolUseIDs: new Set(),
       }));
-    if ((Sd(t), a.evictTerminal(t), !W))
+    if ((evictTaskOutput(t), a.evictTerminal(t), !W))
       pi(t, "failed", { toolUseId: oe, summary: e.agentId });
     if (!l) {
       let x;
@@ -1188,7 +1188,7 @@ ${W}`);
     }
     return (
       Rwe(e.agentId),
-      f("swarm_in_process_run", "agent_loop_failed"),
+      logFeatureBad("swarm_in_process_run", "agent_loop_failed"),
       { success: !1, error: H, messages: U }
     );
   }

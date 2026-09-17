@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { _3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { derivePublishContextFrom as vG, makeMainObservedVersionReader as Uwn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { derivePublishContextFrom, makeMainObservedVersionReader } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { maybeSubscribeFrameLive as tte, isSocketHoldingPublishContext as hM } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
+import { maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
 var l = 32;
 function subagentPublishAdopter(n) {
   if (
@@ -22,11 +22,11 @@ function subagentPublishAdopter(n) {
     n.context.teammateContext !== void 0
   )
     return null;
-  let { publishContext: t } = vG({
+  let { publishContext: t } = derivePublishContextFrom({
     agentId: void 0,
     isNonInteractiveSession: ke(),
   });
-  return hM(t) ? t : null;
+  return isSocketHoldingPublishContext(t) ? t : null;
 }
 function stageSubagentPublishArm(n, t) {
   let e = ne().live.pendingSubagentArms,
@@ -40,7 +40,7 @@ function stageSubagentPublishArm(n, t) {
   while (r > l) {
     let [o, a] = e.entries().next().value;
     if ((a.shift(), a.length === 0)) e.delete(o);
-    (r--, g("artifact_live_subscribe", "subagent_arm_evicted"));
+    (r--, logFeatureSad("artifact_live_subscribe", "subagent_arm_evicted"));
   }
 }
 function d(n) {
@@ -59,7 +59,7 @@ function adoptSubagentPublishArms(n) {
   b(t);
   let s = d(t);
   if (s.length === 0) return;
-  let { publishContext: i } = vG({
+  let { publishContext: i } = derivePublishContextFrom({
     agentId: e.agentId,
     agentType: e.agentContext?.agentType,
     isNonInteractiveSession: e.options.isNonInteractiveSession,
@@ -70,24 +70,24 @@ function adoptSubagentPublishArms(n) {
       !ne().live.finishedSubagentAdopters.has(e.agentId);
     for (let a of s)
       if (o) stageSubagentPublishArm(e.agentId, a);
-      else g("artifact_live_subscribe", "subagent_arm_orphaned");
+      else logFeatureSad("artifact_live_subscribe", "subagent_arm_orphaned");
     return;
   }
-  if (!hM(i)) return;
+  if (!isSocketHoldingPublishContext(i)) return;
   let r = { ...e, abortController: new AbortController() };
   for (let o of s)
-    tte({
+    maybeSubscribeFrameLive({
       ...o,
       publishContext: i,
-      getKnownVer: Uwn(e.getArtifactReadObservation, o.slug),
+      getKnownVer: makeMainObservedVersionReader(e.getArtifactReadObservation, o.slug),
       context: r,
       adoptedPublish: !0,
       announceArmlessEnd: !0,
     }).catch(() => {});
-  y("artifact_live_subscribe", {
+  logFeatureOk("artifact_live_subscribe", {
     subagent_publish_adopted: !0,
     count: s.length,
-    publish_context: u(i),
+    publish_context: fromEnum(i),
   });
 }
 export { subagentPublishAdopter, stageSubagentPublishArm, adoptSubagentPublishArms };

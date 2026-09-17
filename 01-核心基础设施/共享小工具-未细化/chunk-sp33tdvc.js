@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { i } from "./chunk-an83zrbx.js";
-import { fromEnum as u } from "./chunk-w76kejwn.js";
+import { fromEnum } from "./chunk-w76kejwn.js";
 import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { execFileNoThrowWithCwd as Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
-import { spawn as w } from "child_process";
+import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { spawn } from "child_process";
 var f = 500;
 function Uy(r, t = "SIGKILL") {
   if (!Number.isInteger(r) || r <= 1) return Promise.resolve(new Set());
@@ -57,7 +57,7 @@ async function IGt(r, t) {
 }
 async function d(r) {
   let t = new Map(),
-    { stdout: o } = await Be(
+    { stdout: o } = await execFileNoThrowWithCwd(
       "ps",
       ["-o", "pid=", "-o", "lstart=", "-p", r.join(",")],
       {
@@ -117,7 +117,7 @@ function b() {
   return new Promise((r, t) => {
     let o;
     try {
-      o = w("ps", ["-A", "-o", "pid=", "-o", "ppid="], {
+      o = spawn("ps", ["-A", "-o", "pid=", "-o", "ppid="], {
         cwd: "/",
         stdio: ["ignore", "pipe", "ignore"],
         windowsHide: !0,
@@ -138,7 +138,7 @@ function k(r, t) {
       e = Jr(t);
     (n(`killProcessTree ${r} failed: ${o ?? t}`),
       i("tengu_bash_tool_kill_error", {
-        stage: u(r),
+        stage: fromEnum(r),
         ...(e && { error_code: e }),
       }));
   } catch {}

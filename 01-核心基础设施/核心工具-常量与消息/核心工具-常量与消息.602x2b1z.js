@@ -20,12 +20,12 @@ import {
   jP,
   Mxt,
 } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, us, oe, Yg } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { env as a, antEnv as Wn } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a, antEnv } from "../设置-配置/chunk-zqr5ctyf.js";
 import { mx } from "../共享小工具-未细化/chunk-0ypv8gq2.js";
-import { BRIEF_ENFORCE_SENTINEL as bet } from "../共享小工具-未细化/chunk-q599wyee.js";
+import { BRIEF_ENFORCE_SENTINEL } from "../共享小工具-未细化/chunk-q599wyee.js";
 import { KRe, Cge, Xvt, Yvt, P5t, vq, iar } from "../核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { JQ } from "../共享小工具-未细化/chunk-q35gycf9.js";
 import { G, Y } from "../共享小工具-未细化/chunk-d16fhdtx.js";
@@ -41,10 +41,10 @@ var Mvt = 4,
   XZe = 1e4,
   Mir = 1e5;
 function Vo() {
-  return Vt().CLAUDE_AI_ORIGIN.includes("staging") ? "staging" : "prod";
+  return getOauthConfig().CLAUDE_AI_ORIGIN.includes("staging") ? "staging" : "prod";
 }
 function Nir() {
-  return Q() ?? Vt().CLAUDE_AI_ORIGIN;
+  return Q() ?? getOauthConfig().CLAUDE_AI_ORIGIN;
 }
 function Q() {
   return;
@@ -85,7 +85,7 @@ function Fir() {
   return !1;
 }
 function $ir() {
-  return tt() ?? Vt().BASE_API_URL;
+  return tt() ?? getOauthConfig().BASE_API_URL;
 }
 function tt() {
   return;
@@ -222,7 +222,7 @@ var pBe = "[structured-output-enforce]",
     "[Your previous response had no visible output. Please continue and produce a user-visible response.]",
   tet = "The PermissionDenied hook indicated you may retry this tool call.",
   net = "Goal check-in: \xAB",
-  nt = [pBe, Rkn, bet].filter((t) => t.length > 0),
+  nt = [pBe, Rkn, BRIEF_ENFORCE_SENTINEL].filter((t) => t.length > 0),
   rt = [ZZe, kkn, eet, tet];
 function Bir(t) {
   if (t.type !== "user" || t.isMeta !== !0) return !1;
@@ -365,7 +365,7 @@ var ARTIFACT_SLUG_RE = new RegExp(`^${g}$`),
   ARTIFACT_DB_READ_MAX_RESULT_SIZE_CHARS = 300000,
   ARTIFACT_STUB_URL_PREFIX = "eval-stub://artifact/";
 function getArtifactPublishStubDir() {
-  let t = Wn.CLAUDE_CODE_EVAL_ARTIFACT_STUB_DIR;
+  let t = antEnv.CLAUDE_CODE_EVAL_ARTIFACT_STUB_DIR;
   return typeof t === "string" && t.length > 0 ? t : null;
 }
 function parseArtifactUrl(t) {

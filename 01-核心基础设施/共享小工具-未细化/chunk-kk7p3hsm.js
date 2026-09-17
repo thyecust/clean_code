@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { U0 } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { An, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { posix as a } from "path";
+import { posix } from "path";
 var Rdt = String.raw`\s\u2800\uFFF9-\uFFFB\p{Cc}\p{M}\p{Default_Ignorable_Code_Point}`,
   c = new RegExp(`^[${Rdt}]+`, "u");
 function Wsn(n) {
@@ -22,10 +22,10 @@ function c1t(n, r = Gsn(n)) {
 }
 var u = /^\.\.\//;
 function hbe(n) {
-  return jf(n) || jf(a.normalize(n).replace(u, "/")) || (l(n) && jf("/" + n));
+  return jf(n) || jf(posix.normalize(n).replace(u, "/")) || (l(n) && jf("/" + n));
 }
 function l(n) {
-  let r = a.normalize(n);
+  let r = posix.normalize(n);
   return r === ".." || r.startsWith("../");
 }
 function kdt(n) {

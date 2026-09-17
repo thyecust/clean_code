@@ -12,10 +12,10 @@ import { Ie, zn, ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { R, l, A, W, Nz, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Np, Ro, Tr, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { findExecutableWindows as rXt } from "../共享小工具-未细化/chunk-twnwwsbr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { findExecutableWindows } from "../共享小工具-未细化/chunk-twnwwsbr.js";
 import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
-import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { lv, Ri, fPn, Xie } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
 import { B8t } from "../共享小工具-未细化/chunk-a7cfts2d.js";
 import { Dm } from "../共享小工具-未细化/chunk-17typpec.js";
@@ -62,7 +62,7 @@ function de() {
     "C:\\Program Files (x86)\\Git\\bin\\bash.exe",
   ];
   for (let i of t) if (e(i)) return i;
-  let r = rXt("git");
+  let r = findExecutableWindows("git");
   if (r) {
     let i = x.join(r, "..", "..", "bin", "bash.exe");
     if (e(i)) return i;
@@ -187,33 +187,33 @@ function y1(e) {
 function kQ(e) {
   return ue(e).toLowerCase() === ".ipynb";
 }
-import { randomBytes as ee } from "crypto";
+import { randomBytes } from "crypto";
 import {
-  closeSync as _,
-  fchmodSync as ye,
-  constants as m,
-  fstatSync as C,
-  writeFileSync as V,
-  fsyncSync as X,
-  openSync as F,
-  readSync as Oe,
+  closeSync,
+  fchmodSync,
+  constants,
+  fstatSync,
+  writeFileSync,
+  fsyncSync,
+  openSync,
+  readSync,
 } from "fs";
 import {
-  lstat as be,
+  lstat,
   open as D,
-  readlink as Ee,
-  realpath as te,
+  readlink,
+  realpath,
   stat as re,
 } from "fs/promises";
 import { homedir as ne } from "os";
 import {
-  basename as N,
+  basename,
   dirname as O,
   extname as J,
   isAbsolute as M,
   join as L,
   normalize as Se,
-  parse as _e,
+  parse,
   relative as z,
   resolve as Y,
   sep as T,
@@ -226,7 +226,7 @@ class ie {
       o = this.identities.get(s);
     if (o)
       try {
-        _(o.fd);
+        closeSync(o.fd);
       } catch {}
     this.identities.set(s, { dev: t, ino: r, fd: i });
   }
@@ -236,7 +236,7 @@ class ie {
   reset() {
     for (let { fd: e } of this.identities.values())
       try {
-        _(e);
+        closeSync(e);
       } catch {}
     this.identities.clear();
   }
@@ -257,7 +257,7 @@ function k(e) {
   if (!t) return;
   let r;
   try {
-    r = F(e, m.O_RDONLY | m.O_DIRECTORY | m.O_NOFOLLOW);
+    r = openSync(e, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW);
   } catch (i) {
     let s = A(i);
     if (s === "ENOENT" || s === "ENOTDIR" || s === "ELOOP" || s === "EACCES")
@@ -267,13 +267,13 @@ function k(e) {
     throw i;
   }
   try {
-    let i = C(r);
+    let i = fstatSync(r);
     if (i.dev !== t.dev || i.ino !== t.ino)
       rke(
         `Staging dir ${e} identity changed (expected ${t.dev}/${t.ino}, found ${i.dev}/${i.ino}) \u2014 refusing atomic write`,
       );
   } finally {
-    _(r);
+    closeSync(r);
   }
 }
 function oe(e, t, r, i) {
@@ -281,9 +281,9 @@ function oe(e, t, r, i) {
   if (!e) return s;
   let o = G().identity(e);
   if (i && O(t) !== O(e)) return (k(e), s);
-  let c = m.O_RDONLY | m.O_DIRECTORY | m.O_NOFOLLOW;
+  let c = constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW;
   try {
-    _(F(O(e), c));
+    closeSync(openSync(O(e), c));
   } catch (w) {
     let p = A(w);
     if (p === "ELOOP" || p === "ENOTDIR") {
@@ -305,7 +305,7 @@ function oe(e, t, r, i) {
   }
   let u;
   try {
-    u = F(e, c);
+    u = openSync(e, c);
   } catch (w) {
     let p = A(w);
     if (p === "ENOENT" || p === "ENOTDIR" || p === "ELOOP") {
@@ -319,16 +319,16 @@ function oe(e, t, r, i) {
   }
   try {
     if (o) {
-      let w = C(u);
+      let w = fstatSync(u);
       if (w.dev !== o.dev || w.ino !== o.ino)
         rke(
           `Staging dir ${e} identity changed (expected ${o.dev}/${o.ino}, found ${w.dev}/${w.ino}) \u2014 refusing atomic write`,
         );
     }
   } finally {
-    _(u);
+    closeSync(u);
   }
-  return L(e, `${N(t)}${r}`);
+  return L(e, `${basename(t)}${r}`);
 }
 class gh extends Error {
   constructor(e) {
@@ -353,7 +353,7 @@ async function nke(e, t) {
   for (let s of r.split(T)) {
     i = L(i, s);
     try {
-      await (await D(i, m.O_RDONLY | m.O_DIRECTORY | m.O_NOFOLLOW)).close();
+      await (await D(i, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)).close();
     } catch (o) {
       let c = A(o);
       if (c === "ELOOP" || c === "ENOTDIR")
@@ -372,7 +372,7 @@ class se extends Error {
   }
 }
 function rke(e) {
-  throw (f("sandbox_exec", "atomic_write_staging_dir_tampered"), new se(e));
+  throw (logFeatureBad("sandbox_exec", "atomic_write_staging_dir_tampered"), new se(e));
 }
 function DU(e, t, r = "write") {
   let i = e.session.writePermissionStash.consume(e.toolUseId, t, r);
@@ -408,24 +408,24 @@ function Lge(
 ) {
   using s = Np`fs.readBoundedSync(${e}, max ${t} bytes)`;
   let o = "r";
-  if (r === "refuse") o = m.O_RDONLY | m.O_NOFOLLOW | m.O_NONBLOCK;
-  else if (i) o = m.O_RDONLY | m.O_NONBLOCK;
-  let c = F(e, o);
+  if (r === "refuse") o = constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK;
+  else if (i) o = constants.O_RDONLY | constants.O_NONBLOCK;
+  let c = openSync(e, o);
   try {
     if (i) {
-      if (!C(c).isFile())
+      if (!fstatSync(c).isFile())
         throw Object.assign(Error("EINVAL: not a regular file"), {
           code: "EINVAL",
         });
     }
     return ce(c, e, t);
   } finally {
-    _(c);
+    closeSync(c);
   }
 }
 function Nar(e, { maxBytes: t }) {
   using r = Np`fs.readInheritedFdSync(fd ${e}, max ${t} bytes)`;
-  let i = C(e);
+  let i = fstatSync(e);
   if (!i.isSocket() && !i.isFIFO())
     throw new R(
       `refusing to read fd ${e}: not a pipe or socket`,
@@ -435,7 +435,7 @@ function Nar(e, { maxBytes: t }) {
 }
 function z5t(e) {
   try {
-    return C(e).isSocket();
+    return fstatSync(e).isSocket();
   } catch {
     return !1;
   }
@@ -444,7 +444,7 @@ function xe(e, t) {
   try {
     return ce(e, `fd ${e}`, t, { untilNewline: !0 });
   } finally {
-    _(e);
+    closeSync(e);
   }
 }
 function ce(e, t, r, { untilNewline: i = !1 } = {}) {
@@ -452,7 +452,7 @@ function ce(e, t, r, { untilNewline: i = !1 } = {}) {
     o = 0,
     c = Buffer.alloc(8192);
   while (!0) {
-    let u = Oe(e, c, 0, c.length, null);
+    let u = readSync(e, c, 0, c.length, null);
     if (u === 0) return Buffer.concat(s).toString("utf8");
     if (((o += u), o > r))
       throw new R(
@@ -517,7 +517,7 @@ function Far(e) {
       n(`detectFileEncoding failed for expected reason: ${A(t)}`, {
         level: "debug",
       });
-    else h(t);
+    else logError(t);
     return "utf8";
   }
 }
@@ -541,9 +541,9 @@ async function _ie(e) {
   let t = ae();
   try {
     let r = O(e),
-      i = N(e, J(e)),
+      i = basename(e, J(e)),
       c = (await t.readdir(r)).filter(
-        (u) => N(u.name, J(u.name)) === i && L(r, u.name) !== e,
+        (u) => basename(u.name, J(u.name)) === i && L(r, u.name) !== e,
       )[0];
     if (c) return c.name;
     return;
@@ -558,8 +558,8 @@ async function W6(e) {
     r = O(t),
     i = e;
   try {
-    let S = await te(O(e));
-    i = L(S, N(e));
+    let S = await realpath(O(e));
+    i = L(S, basename(e));
   } catch {}
   let s = r === T ? T : r + T,
     c = P() === "windows" ? (S) => S.toLowerCase() : (S) => S,
@@ -624,7 +624,7 @@ function le(e, t) {
 }
 function Kxn(e, t, r = { encoding: "utf-8" }) {
   let i = ae(),
-    s = r.allowSymlink ? 0 : m.O_NOFOLLOW,
+    s = r.allowSymlink ? 0 : constants.O_NOFOLLOW,
     o = e,
     c,
     u = !1;
@@ -637,7 +637,7 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
   else {
     if (r.checkParentDir)
       try {
-        _(F(O(e), m.O_RDONLY | m.O_DIRECTORY | m.O_NOFOLLOW));
+        closeSync(openSync(O(e), constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW));
       } catch (d) {
         let b = A(d);
         if (b === "ELOOP" || b === "ENOTDIR")
@@ -654,7 +654,7 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
       if (!W(d)) throw d;
     }
   }
-  let w = `.tmp.${process.pid}.${ee(6).toString("hex")}`,
+  let w = `.tmp.${process.pid}.${randomBytes(6).toString("hex")}`,
     p = oe(r.stagingDir, o, w, r.allowSymlink ?? !1),
     S = !1;
   if (r.allowSymlink && !u)
@@ -668,24 +668,24 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
     ((c = r.mode), n(`Setting permissions for new file: ${c.toString(8)}`));
   try {
     n(`Writing to temp file: ${p}`);
-    let d = F(
+    let d = openSync(
         p,
-        m.O_WRONLY | m.O_CREAT | m.O_EXCL | s,
+        constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | s,
         !u && r.mode !== void 0 ? r.mode : void 0,
       ),
       b = !1,
       v;
     try {
       if (O(p) !== O(o)) k(r.stagingDir);
-      if ((V(d, t, { encoding: r.encoding }), u && c !== void 0))
+      if ((writeFileSync(d, t, { encoding: r.encoding }), u && c !== void 0))
         try {
-          (ye(d, c), n("Applied original permissions to temp file"));
+          (fchmodSync(d, c), n("Applied original permissions to temp file"));
         } catch (g) {
           if (!Xie(g)) throw g;
           n(`fchmod unsupported on this filesystem: ${g}`);
         }
       try {
-        X(d);
+        fsyncSync(d);
       } catch (g) {
         if (!Xie(g)) throw g;
         n(`fsync unsupported on this filesystem: ${g}`);
@@ -695,7 +695,7 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
       ((b = !0), (v = g));
     }
     try {
-      _(d);
+      closeSync(d);
     } catch (g) {
       if (!b) throw g;
       n(`closeSync also failed after temp write error: ${g}`, {
@@ -717,9 +717,9 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
     if ((S && b !== void 0 && lv.has(b)) || (!S && u && b === "EACCES")) {
       let E;
       try {
-        E = F(
+        E = openSync(
           o,
-          m.O_WRONLY | m.O_CREAT | m.O_TRUNC | s,
+          constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | s,
           !u && r.mode !== void 0 ? r.mode : void 0,
         );
       } catch (y) {
@@ -733,14 +733,14 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
         throw d;
       }
       try {
-        V(E, t, { encoding: r.encoding });
+        writeFileSync(E, t, { encoding: r.encoding });
         try {
-          X(E);
+          fsyncSync(E);
         } catch (y) {
           if (!Xie(y)) throw y;
           n(`fsync unsupported on this filesystem: ${y}`);
         }
-        _(E);
+        closeSync(E);
         try {
           i.unlinkSync(p);
         } catch (y) {
@@ -750,7 +750,7 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
         return;
       } catch (y) {
         try {
-          _(E);
+          closeSync(E);
         } catch {}
         try {
           i.unlinkSync(o);
@@ -773,21 +773,21 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
 }
 async function wb(e, t, r = { encoding: "utf-8" }) {
   let i = ae(),
-    s = r.allowSymlink ? 0 : m.O_NOFOLLOW,
+    s = r.allowSymlink ? 0 : constants.O_NOFOLLOW,
     o = e,
     c,
     u = !1;
   if (r.allowSymlink)
     try {
-      let d = await Ee(e);
-      ((o = M(d) ? d : Y(await te(O(e)), d)),
+      let d = await readlink(e);
+      ((o = M(d) ? d : Y(await realpath(O(e)), d)),
         n(`Writing through symlink: ${e} -> ${o}`));
     } catch {}
   else {
     if (r.checkParentDir)
       try {
         await (
-          await D(O(e), m.O_RDONLY | m.O_DIRECTORY | m.O_NOFOLLOW)
+          await D(O(e), constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)
         ).close();
       } catch (d) {
         let b = A(d);
@@ -795,7 +795,7 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
           throw new gh(`Refusing to write into symlinked directory: ${O(e)}`);
       }
     try {
-      let d = await be(e);
+      let d = await lstat(e);
       if (d.isSymbolicLink())
         throw new gh(
           `Refusing to write through symlink: ${e}. Resolve the symlink and pass the real target path explicitly.`,
@@ -805,7 +805,7 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
       if (!W(d)) throw d;
     }
   }
-  let w = `.tmp.${process.pid}.${ee(6).toString("hex")}`,
+  let w = `.tmp.${process.pid}.${randomBytes(6).toString("hex")}`,
     p = oe(r.stagingDir, o, w, r.allowSymlink ?? !1),
     S = !1;
   if (r.allowSymlink && !u)
@@ -821,7 +821,7 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
     n(`Writing to temp file: ${p}`);
     let d = await D(
         p,
-        m.O_WRONLY | m.O_CREAT | m.O_EXCL | s,
+        constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | s,
         !u && r.mode !== void 0 ? r.mode : void 0,
       ),
       b = !1,
@@ -868,7 +868,7 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
       try {
         E = await D(
           o,
-          m.O_WRONLY | m.O_CREAT | m.O_TRUNC | s,
+          constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | s,
           !u && r.mode !== void 0 ? r.mode : void 0,
         );
       } catch (y) {
@@ -960,7 +960,7 @@ function pf(e) {
   let t = P() === "windows",
     r = Se(e),
     i = t ? /[\\/]+$/ : /\/+$/,
-    s = r.length > _e(r).root.length ? r.replace(i, "") : r;
+    s = r.length > parse(r).root.length ? r.replace(i, "") : r;
   return t ? s.replaceAll("/", "\\").toLowerCase() : s;
 }
 function ERt(e, t) {

@@ -12,7 +12,7 @@ import { V2e, HPn } from "./chunk-an83zrbx.js";
 import {
   GAt,
   qrr,
-  getMainLoopModel as rt,
+  getMainLoopModel,
   tKt,
   FQe,
   HUe,
@@ -33,7 +33,7 @@ function s() {
 }
 function f(t) {
   try {
-    GAt(rt());
+    GAt(getMainLoopModel());
   } catch {}
   return qrr(t);
 }

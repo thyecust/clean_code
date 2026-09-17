@@ -12,14 +12,14 @@
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { b, zR } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { exitAfterAnalyticsFlush as ys } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { logFeatureOkAsync as ki, logFeatureBadAsync as wn } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { logFeatureOkAsync, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Mse, NR, EP } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { _F } from "../../01-核心基础设施/共享小工具-未细化/chunk-hxq0hkxe.js";
 import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
 import { Dce } from "../../01-核心基础设施/共享小工具-未细化/chunk-kax7bdqv.js";
 import { sPe } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
-import { spawnSync as f } from "child_process";
+import { spawnSync } from "child_process";
 function l(e) {
   let r = new URL(e).host;
   return `You are diagnosing a **self-hosted runner** deployment for Claude Code on the web. Work through the diagnostic categories below, gather evidence with the typed \`self_hosted_runner_*\` read tools (admin-API state, \`/healthz\`, \`/metrics\`, redacted log tail) and Bash for everything else, fix what you can, and escalate cleanly when you can't.
@@ -188,7 +188,7 @@ var g = [
   ].join(","),
   m =
     "Start the self-hosted runner doctor wizard. Greet me, then ask me to describe the symptom or pick from the 8 diagnostic categories. Work through it one step at a time.";
-async function F(e, r) {
+async function selfHostedRunnerDoctorMain(e, r) {
   if (e.includes("--help") || e.includes("-h")) {
     console.log(`Usage: claude self-hosted-runner doctor [args...]
 
@@ -240,29 +240,29 @@ Any extra args are passed to the underlying Claude Code session.`);
         ],
       }),
     );
-  let t = f(process.execPath, i, { stdio: "inherit" });
+  let t = spawnSync(process.execPath, i, { stdio: "inherit" });
   if (t.error)
     return (
       console.error(
         `[self-hosted-runner:doctor] failed to spawn child: ${t.error.message}`,
       ),
-      await wn("cli_self_hosted_doctor", "spawn_failed"),
-      ys(1)
+      await logFeatureBadAsync("cli_self_hosted_doctor", "spawn_failed"),
+      exitAfterAnalyticsFlush(1)
     );
   if ((t.status !== null && t.status !== 0) || t.signal)
     (console.error(
       `[self-hosted-runner:doctor] child exited with status ${t.status ?? "(null)"}${t.signal ? `, signal ${t.signal}` : ""}`,
     ),
-      await wn(
+      await logFeatureBadAsync(
         "cli_self_hosted_doctor",
         t.signal ? "child_signal" : "child_nonzero",
       ));
-  else await ki("cli_self_hosted_doctor");
+  else await logFeatureOkAsync("cli_self_hosted_doctor");
   return (
     console.error(
       "[self-hosted-runner:doctor] To continue diagnosis, re-run `claude self-hosted-runner doctor` \u2014 resuming the session with `claude --resume`/`-c` will not re-enable the doctor tools.",
     ),
-    ys(t.status !== null ? t.status : 1)
+    exitAfterAnalyticsFlush(t.status !== null ? t.status : 1)
   );
 }
-export { F as selfHostedRunnerDoctorMain };
+export { selfHostedRunnerDoctorMain };

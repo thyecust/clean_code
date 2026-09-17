@@ -12,10 +12,10 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ht, isClaudeAISubscriber as gt, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { ht, isClaudeAISubscriber, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { getInitialSettings as Ge, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
 import { s, T, O, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var _ = m(() => {
@@ -50,7 +50,7 @@ function T2n(e) {
   return o().hydrated.subscribe(e);
 }
 function P() {
-  let e = Ge(),
+  let e = getInitialSettings(),
     t = ee();
   return {
     agentPushNotifEnabled: e.agentPushNotifEnabled ?? t.agentPushNotifEnabled,
@@ -60,7 +60,7 @@ function P() {
 }
 var N = "/api/claude_code/notification/preferences";
 function h() {
-  return gt();
+  return isClaudeAISubscriber();
 }
 async function E() {
   if (!h()) return { ok: !1, reason: "no_auth" };
@@ -88,14 +88,14 @@ async function k(e) {
   if (!h()) return;
   try {
     if (!(await ht.patch(N, e, { timeout: b })).ok) {
-      g("notif_prefs_patch", "no_auth");
+      logFeatureSad("notif_prefs_patch", "no_auth");
       return;
     }
-    (q("info", "notif_prefs_patch_ok", {}), y("notif_prefs_patch"));
+    (q("info", "notif_prefs_patch_ok", {}), logFeatureOk("notif_prefs_patch"));
   } catch (t) {
     let { kind: r } = Ps(t);
     (q("warn", "notif_prefs_patch_failed", { kind: r }),
-      f("notif_prefs_patch", "http_error"));
+      logFeatureBad("notif_prefs_patch", "http_error"));
   }
 }
 function Vnn() {
@@ -110,14 +110,14 @@ function Vnn() {
 }
 async function E2n(e) {
   if (!h()) {
-    (g("notif_prefs_hydrate", "no_auth"),
+    (logFeatureSad("notif_prefs_hydrate", "no_auth"),
       o().reachability.setState(() => null),
       q("info", "notif_prefs_hydrate_skipped", { reason: "no_auth" }));
     return;
   }
   let t = await E();
   if (!t.ok) {
-    (f("notif_prefs_hydrate", t.reason),
+    (logFeatureBad("notif_prefs_hydrate", t.reason),
       o().reachability.setState(() => null),
       q("info", "notif_prefs_hydrate_skipped", { reason: t.reason }));
     return;
@@ -147,11 +147,11 @@ async function E2n(e) {
     }),
     Object.keys(a).length === 0)
   ) {
-    y("notif_prefs_hydrate");
+    logFeatureOk("notif_prefs_hydrate");
     return;
   }
-  (await Jt("userSettings", a, void 0, e),
+  (await updateSettingsForSource("userSettings", a, void 0, e),
     o().hydrated.emit(),
-    y("notif_prefs_hydrate"));
+    logFeatureOk("notif_prefs_hydrate"));
 }
 export { Dlt, Llt, T2n, Vnn, E2n };

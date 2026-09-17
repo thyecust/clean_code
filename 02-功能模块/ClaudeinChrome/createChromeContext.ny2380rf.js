@@ -17,27 +17,27 @@ import "../MCP客户端/chunk-j8556pzt.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { aNt } from "../Bridge-RemoteControl/chunk-hbndb8am.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { w5, PUe, getClaudeAIOAuthTokens as Yt, checkAndRefreshOAuthTokenIfNeeded as Ss, Te, NR, ee, EP, x5 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { w5, PUe, getClaudeAIOAuthTokens, checkAndRefreshOAuthTokenIfNeeded, Te, NR, ee, EP, x5 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { zR, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { fileSuffixForOauthConfig as F1 } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureBad as f, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getWebSocketTLSOptions as Ab, getWebSocketProxyUrl as Cb, configureGlobalAgents as vb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { getAPIProvider as Pe, isActualFirstPartyAnthropicBaseUrl as ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getWebSocketTLSOptions, getWebSocketProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getAPIProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { _F } from "../../01-核心基础设施/共享小工具-未细化/chunk-hxq0hkxe.js";
 import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
 import { SGe } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
-import { isPolicyAllowedInResponse as G4t } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowedInResponse } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { jAn } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { Tw } from "../认证-OAuth登录/chunk-s51acx6w.js";
 import { HI } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getSecureSocketPath as Z8e, getAllSocketPaths as Xyn } from "./chunk-hnp84hf6.js";
+import { getSecureSocketPath, getAllSocketPaths } from "./chunk-hnp84hf6.js";
 import { Z2n, ejn, tjn } from "../Hooks钩子/chunk-rwdpktga.js";
 import { che } from "../../01-核心基础设施/共享小工具-未细化/chunk-36nx9gcx.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js";
-import { format as E } from "util";
+import { format } from "util";
 var P =
     "https://github.com/anthropics/claude-code/issues/new?labels=bug,claude-in-chrome",
   U = new Set(["bridge_status", "error_type", "tool_name"]),
@@ -53,7 +53,7 @@ function R() {
 function L() {
   return a.USE_LOCAL_OAUTH || a.LOCAL_BRIDGE;
 }
-function N(e, r) {
+function createChromeContext(e, r) {
   let {
       availabilityFunnel: o = !1,
       storageV5: c,
@@ -80,8 +80,8 @@ function N(e, r) {
   return {
     serverName: "Claude in Chrome",
     logger: m,
-    socketPath: Z8e(),
-    getSocketPaths: Xyn,
+    socketPath: getSecureSocketPath(),
+    getSocketPaths: getAllSocketPaths,
     clientTypeId: "claude-code",
     onAuthenticationError: () => {
       m.warn(
@@ -118,9 +118,9 @@ function N(e, r) {
         let t =
           ee().oauthAccount?.accountUuid ||
           process.env.CLAUDE_CODE_ACCOUNT_UUID;
-        if (Pe() !== "firstParty") return ((p = !1), t);
-        await Ss({ credentials: u, storageV5: c }).catch(() => {});
-        let s = Yt()?.accessToken;
+        if (getAPIProvider() !== "firstParty") return ((p = !1), t);
+        await checkAndRefreshOAuthTokenIfNeeded({ credentials: u, storageV5: c }).catch(() => {});
+        let s = getClaudeAIOAuthTokens()?.accessToken;
         if (!s) return ((p = !1), t);
         if (C?.token !== s) {
           let g = await PUe(s).catch(() => {
@@ -142,14 +142,14 @@ function N(e, r) {
         return ((p = l), d);
       },
       getOAuthToken: async () => {
-        await Ss({ credentials: u, storageV5: c }).catch(() => {});
-        let t = Yt()?.accessToken ?? "";
+        await checkAndRefreshOAuthTokenIfNeeded({ credentials: u, storageV5: c }).catch(() => {});
+        let t = getClaudeAIOAuthTokens()?.accessToken ?? "";
         if (t && !(await v(t))) return "";
         return t;
       },
       getWsOptions: () => {
-        let t = Ab(),
-          s = Cb(_);
+        let t = getWebSocketTLSOptions(),
+          s = getWebSocketProxyUrl(_);
         if (!t && !s) return;
         return { ...t, ...(s && { proxy: s }) };
       },
@@ -177,17 +177,17 @@ var B = 3000;
 async function F(e) {
   let r = w();
   if (r) return r;
-  await Ss(e).catch(() => {});
-  let o = Yt()?.accessToken;
+  await checkAndRefreshOAuthTokenIfNeeded(e).catch(() => {});
+  let o = getClaudeAIOAuthTokens()?.accessToken;
   if (!o) return { denied: !1, unverified: "no_oauth_token", verified: null };
   return A(o, e);
 }
 function w() {
   if (a.CLAUDE_CODE_CHROME_MCP_ORG_DENIED)
     return { denied: !0, cause: "parent_org_policy" };
-  if (Pe() !== "firstParty")
+  if (getAPIProvider() !== "firstParty")
     return { denied: !1, unverified: "third_party_provider", verified: null };
-  if (!ev() || F1() === "-local-oauth")
+  if (!isActualFirstPartyAnthropicBaseUrl() || fileSuffixForOauthConfig() === "-local-oauth")
     return { denied: !1, unverified: "custom_base_url", verified: null };
   return null;
 }
@@ -197,7 +197,7 @@ async function A(e, { timeoutMs: r } = {}) {
   let c = await jAn(e, { timeoutMs: r });
   if (!c)
     return { denied: !1, unverified: "policy_unverified", verified: null };
-  return G4t(c, "allow_claude_browser_extension")
+  return isPolicyAllowedInResponse(c, "allow_claude_browser_extension")
     ? { denied: !1, unverified: null, verified: { bearer: e } }
     : { denied: !0, cause: "org_policy" };
 }
@@ -231,8 +231,8 @@ function k(e) {
       return "Couldn't read your organization's Claude in Chrome policy (network or server error). Continuing; the extension enforces the org setting.";
   }
 }
-async function Se(e) {
-  return Sr("chrome_mcp_server_start", async () => {
+async function runClaudeInChromeMcpServer(e) {
+  return withFeatureTelemetry("chrome_mcp_server_start", async () => {
     let r = await SGe(e);
     if (r)
       process.stderr.write(`${r}
@@ -245,18 +245,18 @@ async function Se(e) {
       let { primeFastPathCredentials: C } = await import("../../01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js");
       (await C(c), await EP(o));
     }
-    vb();
+    configureGlobalAgents();
     let u = await F({ credentials: c, storageV5: o, timeoutMs: B });
     if (u.denied)
       (process.stderr.write(`${D}
 `),
-        f("chrome_mcp_server_start", u.cause),
+        logFeatureBad("chrome_mcp_server_start", u.cause),
         await w5(),
         await x5(),
         process.exit(1));
     if (!u.verified)
       n(`[Claude in Chrome] ${k(u.unverified)}`, { level: "warn" });
-    let v = N(void 0, {
+    let v = createChromeContext(void 0, {
         storageV5: o,
         credentials: c,
         bearerGate: V(u.verified),
@@ -277,19 +277,19 @@ async function Se(e) {
 }
 class x {
   silly(e, ...r) {
-    n(E(e, ...r), { level: "debug" });
+    n(format(e, ...r), { level: "debug" });
   }
   debug(e, ...r) {
-    n(E(e, ...r), { level: "debug" });
+    n(format(e, ...r), { level: "debug" });
   }
   info(e, ...r) {
-    n(E(e, ...r), { level: "info" });
+    n(format(e, ...r), { level: "info" });
   }
   warn(e, ...r) {
-    n(E(e, ...r), { level: "warn" });
+    n(format(e, ...r), { level: "warn" });
   }
   error(e, ...r) {
-    n(E(e, ...r), { level: "error" });
+    n(format(e, ...r), { level: "error" });
   }
 }
-export { N as createChromeContext, Se as runClaudeInChromeMcpServer };
+export { createChromeContext, runClaudeInChromeMcpServer };

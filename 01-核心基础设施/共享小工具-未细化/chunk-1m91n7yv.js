@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Oa } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { BRIEF_TOOL_NAME as t_ } from "./chunk-q599wyee.js";
-import { SEND_USER_FILE_TOOL_NAME as BT } from "./chunk-a5errgr8.js";
+import { BRIEF_TOOL_NAME } from "./chunk-q599wyee.js";
+import { SEND_USER_FILE_TOOL_NAME } from "./chunk-a5errgr8.js";
 import { Xoe, TR } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import { qtr } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { xF, pc, nh, Kp, dWt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { qbt } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { isCoordinatorCommsMcpTool as _Gt } from "./chunk-qg9n8r78.js";
-var p = new Set([t_, BT]),
+import { isCoordinatorCommsMcpTool } from "./chunk-qg9n8r78.js";
+var p = new Set([BRIEF_TOOL_NAME, SEND_USER_FILE_TOOL_NAME]),
   T = ["subscribe_pr_activity", "unsubscribe_pr_activity"];
 function c(o) {
   return T.some((t) => o.endsWith(t));
@@ -44,7 +44,7 @@ function applyCoordinatorToolFilter(o) {
       qbt.has(r.name) ||
       c(r.name) ||
       f(r) ||
-      _Gt(r) ||
+      isCoordinatorCommsMcpTool(r) ||
       (t && p.has(r.name)) ||
       TR(r, e),
   );

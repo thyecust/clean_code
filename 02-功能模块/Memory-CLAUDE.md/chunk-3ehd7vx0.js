@@ -16,10 +16,10 @@ var _ =
 function Tot(n) {
   return _.test(n) ? Date.parse(n) : Number.NaN;
 }
-import { posix as m } from "path";
-var x = m.dirname(RLe),
+import { posix } from "path";
+var x = posix.dirname(RLe),
   p = "/mnt/user-data/working",
-  d = m.join(p, RLe),
+  d = posix.join(p, RLe),
   zHt = 32,
   Yje = 524288,
   RNn = 2097152,

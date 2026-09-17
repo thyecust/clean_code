@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { ErrorCode as xo, ListResourcesResultSchema as phe, McpError as _o } from "./chunk-tv3jbp8f.js";
-import { logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { ErrorCode, ListResourcesResultSchema, McpError } from "./chunk-tv3jbp8f.js";
+import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { t7e } from "./chunk-0mwqsv0r.js";
 import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
 var n = 20;
-function c(r) {
+function serverDeclaresDirectoryRead(r) {
   let e = r?.extensions?.[t7e];
   return (
     e != null &&
@@ -24,8 +24,8 @@ function c(r) {
     e.directoryRead === !0
   );
 }
-async function R(r, e) {
-  if (!c(r.capabilities))
+async function readMcpDirectory(r, e) {
+  if (!serverDeclaresDirectoryRead(r.capabilities))
     throw Error(
       "readMcpDirectory called on a server without directoryRead capability",
     );
@@ -40,13 +40,13 @@ async function R(r, e) {
           method: "resources/directory/read",
           params: { uri: e, ...(t && { cursor: t }) },
         },
-        phe,
+        ListResourcesResultSchema,
         { timeout: Hl() },
       );
     } catch (a) {
-      if (s === 0 || !(a instanceof _o && a.code === xo.InvalidParams)) throw a;
+      if (s === 0 || !(a instanceof McpError && a.code === ErrorCode.InvalidParams)) throw a;
       return (
-        J(
+        logMCPDebug(
           r.name,
           `resources/directory/read ${e}: page ${s + 1} returned InvalidParams on cursor; returning ${o.length} entries from prior pages`,
         ),
@@ -56,10 +56,10 @@ async function R(r, e) {
     (o.push(...i.resources), (t = i.nextCursor), s++);
   } while (t && s < n);
   if (t)
-    J(
+    logMCPDebug(
       r.name,
       `resources/directory/read ${e}: stopped at ${n} pages with more pending`,
     );
   return o;
 }
-export { R as readMcpDirectory, c as serverDeclaresDirectoryRead };
+export { readMcpDirectory, serverDeclaresDirectoryRead };

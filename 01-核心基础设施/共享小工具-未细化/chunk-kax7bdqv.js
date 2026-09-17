@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { M } from "./chunk-h62vxw7j.js";
 import { b } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeAIOAuthTokens as Yt, getClaudeAIOAuthTokensAsync as Qi, checkAndRefreshOAuthTokenIfNeeded as Ss } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { oL } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { ml } from "./chunk-vdg9aytt.js";
 var p =
@@ -36,14 +36,14 @@ function c() {
 function Dce() {
   let t = a.ANTHROPIC_BASE_URL?.replace(/\/+$/, "");
   if (t) return t;
-  return Vt().BASE_API_URL;
+  return getOauthConfig().BASE_API_URL;
 }
 function F6n() {
-  return Vt().CLAUDE_AI_ORIGIN;
+  return getOauthConfig().CLAUDE_AI_ORIGIN;
 }
 async function m(t) {
-  (c(), await Ss({ credentials: t }).catch(() => {}));
-  let e = M() && t !== void 0 ? (await Qi(t))?.accessToken : Yt()?.accessToken;
+  (c(), await checkAndRefreshOAuthTokenIfNeeded({ credentials: t }).catch(() => {}));
+  let e = M() && t !== void 0 ? (await getClaudeAIOAuthTokensAsync(t))?.accessToken : getClaudeAIOAuthTokens()?.accessToken;
   if (!e)
     throw new i(
       401,

@@ -12,14 +12,14 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { aa, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { jn, Pt, getIsGit as hh, getGitState as j7t } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { jn, Pt, getIsGit, getGitState } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { uV, xO, asSystemPrompt as Zo, YO, yC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { uV, xO, asSystemPrompt, YO, yC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -98,8 +98,8 @@ function gt({
     [pe] = d(() =>
       Q
         ? Promise.resolve(null)
-        : hh()
-            .then((i) => (i ? j7t() : null))
+        : getIsGit()
+            .then((i) => (i ? getGitState() : null))
             .catch(() => null),
     ),
     [Ze, St] = d(null),
@@ -577,7 +577,7 @@ ${qr(f)}
 async function ft(u, s, f) {
   try {
     let m = await yC({
-        systemPrompt: Zo([
+        systemPrompt: asSystemPrompt([
           "Generate a concise, technical issue title (max 80 chars) for a public GitHub issue based on this bug report for Claude Code.",
           "Claude Code is an agentic coding CLI based on the Anthropic API.",
           "The title should:",
@@ -616,7 +616,7 @@ async function ft(u, s, f) {
       n("Feedback title generation via Haiku aborted, using fallback", {
         level: "debug",
       });
-    else h(m);
+    else logError(m);
     return Je(u);
   }
 }

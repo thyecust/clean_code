@@ -20,13 +20,13 @@ import {
   xBe,
   Lar,
 } from "../共享小工具-未细化/chunk-24x3spwe.js";
-import { execFile as S } from "child_process";
+import { execFile } from "child_process";
 import {
-  accessSync as p,
-  closeSync as k,
-  constants as w,
-  openSync as E,
-  readSync as y,
+  accessSync,
+  closeSync,
+  constants,
+  openSync,
+  readSync,
 } from "fs";
 class f {
   promise = null;
@@ -64,7 +64,7 @@ function a(t, n, e) {
   let u = Date.now();
   return new Promise((o) => {
     try {
-      S(
+      execFile(
         t,
         n,
         {
@@ -111,7 +111,7 @@ function x(t) {
 function O(t) {
   let n;
   try {
-    return ((n = E(t, "r")), y(n, Buffer.alloc(1), 0, 1, 0), null);
+    return ((n = openSync(t, "r")), readSync(n, Buffer.alloc(1), 0, 1, 0), null);
   } catch (e) {
     return {
       code: e && typeof e === "object" && "code" in e ? e.code : void 0,
@@ -120,7 +120,7 @@ function O(t) {
   } finally {
     if (n !== void 0)
       try {
-        k(n);
+        closeSync(n);
       } catch {}
   }
 }
@@ -132,7 +132,7 @@ function hRt() {
           await Promise.all(
             t.map(async ({ path: o, ...s }) => {
               try {
-                p(o, w.R_OK);
+                accessSync(o, constants.R_OK);
               } catch (l) {
                 let c =
                   l && typeof l === "object" && "code" in l ? l.code : void 0;

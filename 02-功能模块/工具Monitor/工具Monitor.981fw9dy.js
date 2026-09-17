@@ -12,15 +12,15 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { R, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tu } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { getWebSocketTLSOptions as Ab, getWebSocketProxyUrl as Cb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Ext } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { rU, isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { rU, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   nH,
-  isHostAllowedBySandboxNetworkPolicy as Zdn,
+  isHostAllowedBySandboxNetworkPolicy,
   pzn,
   PBt,
   qmt,
@@ -47,7 +47,7 @@ import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { s, T, O, v, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { isIP as oe } from "net";
-import { lookup as X } from "dns/promises";
+import { lookup } from "dns/promises";
 import { isIP as Y } from "net";
 import F from "ws";
 class ybe extends Error {
@@ -86,7 +86,7 @@ async function J(e, t) {
   }
   let h;
   try {
-    h = await X(u, { all: !0 });
+    h = await lookup(u, { all: !0 });
   } catch (k) {
     throw new ybe(`could not resolve ${u}: ${ge(k).message}`);
   }
@@ -156,8 +156,8 @@ async function Hqe(e, t) {
         return (Qf(r, p, { quiet: !0 }), !0);
       },
     }),
-    I = Cb(M),
-    D = await J(M, { proxy: I, tls: Ab() }),
+    I = getWebSocketProxyUrl(M),
+    D = await J(M, { proxy: I, tls: getWebSocketTLSOptions() }),
     A = tu(e.headers ?? {}, (l, i) => i.toLowerCase() === "host"),
     g = new F(D.url, k, {
       proxy: I,
@@ -537,7 +537,7 @@ async function fe(e, t, o, u) {
   );
 }
 function wsEgressDenyReason(e) {
-  if (!Mt("allow_web_fetch"))
+  if (!isPolicyAllowed("allow_web_fetch"))
     return {
       kind: "compliance",
       host: "",
@@ -554,7 +554,7 @@ function wsEgressDenyReason(e) {
         "the address is in a private, link-local, or cloud-metadata range",
     };
   let u = t.port !== "" ? Number(t.port) : t.protocol === "wss:" ? 443 : 80,
-    h = Zdn(o, u);
+    h = isHostAllowedBySandboxNetworkPolicy(o, u);
   if (!h.allowed) return { kind: "sandbox-policy", host: o, detail: h.reason };
   return null;
 }
@@ -600,7 +600,7 @@ var be = {
     },
     getToolUseSummary(e) {
       if (!e?.description) return null;
-      return or(e.description, Iw);
+      return truncate(e.description, Iw);
     },
     getActivityDescription(e) {
       return e?.description ? `Monitoring: ${e.description}` : "Monitoring";

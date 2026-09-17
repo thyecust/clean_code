@@ -10,11 +10,11 @@
 import { BHt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { K, sn, bB, Prt, kg, HL } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { getProcessStartTime as Vse, isSameProcessAsync as Pm, ownProcStart as O6 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { getProcessStartTime, isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
   K_,
@@ -30,18 +30,18 @@ import {
   Jbt,
   zQn,
 } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { resolveGitDir as Nw, getCommonDir as yL } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { resolveGitDir, getCommonDir } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ol } from "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import {
   mkdir as _e,
   readFile as ye,
-  unlink as ce,
-  writeFile as Q,
+  unlink,
+  writeFile,
 } from "fs/promises";
-import { dirname as Ie, join as de } from "path";
-import { appendFile as he, mkdir as ge, readFile as Se } from "fs/promises";
+import { dirname, join as de } from "path";
+import { appendFile, mkdir as ge, readFile as Se } from "fs/promises";
 import { join as oe } from "path";
 var Te = [
     "**/.claude/scheduled_tasks.lock",
@@ -59,9 +59,9 @@ var Te = [
 async function ie(r) {
   if (!Ol().claim(`claude_runtime_exclude_ensured:${r}`)) return;
   try {
-    let t = await Nw(r);
+    let t = await resolveGitDir(r);
     if (!t) return;
-    let a = (await yL(t)) ?? t,
+    let a = (await getCommonDir(t)) ?? t,
       S = oe(a, "info", "exclude"),
       l = "";
     try {
@@ -79,7 +79,7 @@ async function ie(r) {
           : "",
       k = [se, ...Te, ""].join(`
 `);
-    await he(S, u + k);
+    await appendFile(S, u + k);
   } catch (t) {
     n(`ensureClaudeRuntimeFilesExcluded: ${t}`);
   }
@@ -105,14 +105,14 @@ async function ae(r, t) {
   let a = N(t),
     S = b(r);
   try {
-    return (await Q(a, S, { flag: "wx" }), !0);
+    return (await writeFile(a, S, { flag: "wx" }), !0);
   } catch (l) {
     let u = A(l);
     if (u === "EEXIST") return !1;
     if (u === "ENOENT") {
-      await _e(Ie(a), { recursive: !0 });
+      await _e(dirname(a), { recursive: !0 });
       try {
-        return (await Q(a, S, { flag: "wx" }), !0);
+        return (await writeFile(a, S, { flag: "wx" }), !0);
       } catch (k) {
         if (A(k) === "EEXIST") return !1;
         throw k;
@@ -134,7 +134,7 @@ async function Y(r, t) {
     l = {
       sessionId: S,
       pid: process.pid,
-      procStart: O6(),
+      procStart: ownProcStart(),
       acquiredAt: Date.now(),
     };
   if (await ae(l, a))
@@ -146,10 +146,10 @@ async function Y(r, t) {
     );
   let u = await le(a);
   if (u?.sessionId === S) {
-    if (u.pid !== process.pid) (await Q(N(a), b(l)), X(r, t));
+    if (u.pid !== process.pid) (await writeFile(N(a), b(l)), X(r, t));
     return !0;
   }
-  if (u && Vs(u.pid) && (await Pm(u.pid, u.procStart))) {
+  if (u && isProcessRunning(u.pid) && (await isSameProcessAsync(u.pid, u.procStart))) {
     if (r.lastBlockedBy !== u.sessionId)
       ((r.lastBlockedBy = u.sessionId),
         n(
@@ -159,7 +159,7 @@ async function Y(r, t) {
   }
   if (u)
     n(`[ScheduledTasks] recovering stale scheduler lock from PID ${u.pid}`);
-  if ((await ce(N(a)).catch(() => {}), await ae(l, a)))
+  if ((await unlink(N(a)).catch(() => {}), await ae(l, a)))
     return ((r.lastBlockedBy = void 0), X(r, t), !0);
   return !1;
 }
@@ -170,7 +170,7 @@ async function j(r, t) {
     l = await le(a);
   if (!l || l.sessionId !== S) return;
   try {
-    (await ce(N(a)), n("[ScheduledTasks] released scheduler lock"));
+    (await unlink(N(a)), n("[ScheduledTasks] released scheduler lock"));
   } catch {}
 }
 class Z {
@@ -220,11 +220,11 @@ function createCronScheduler(r) {
     w = !1,
     q = new Map();
   function me(o, h) {
-    if (!Vs(o)) return (q.delete(o), !0);
+    if (!isProcessRunning(o)) return (q.delete(o), !0);
     if (h === void 0) return !1;
     let p = Date.now(),
       _ = q.get(o);
-    if (!_ || p - _.at >= 60000) ((_ = { at: p, token: Vse(o) }), q.set(o, _));
+    if (!_ || p - _.at >= 60000) ((_ = { at: p, token: getProcessStartTime(o) }), q.set(o, _));
     return _.token !== void 0 && _.token !== h;
   }
   function te(o) {
@@ -240,7 +240,7 @@ function createCronScheduler(r) {
       p = z
         ? await z().catch((d) => {
             if (Ol().claim("cron_extra_tasks_load_bad"))
-              f("routine_register_trigger", "extra_tasks_load_failed");
+              logFeatureBad("routine_register_trigger", "extra_tasks_load_failed");
             return (n(`[ScheduledTasks] getExtraTasks failed: ${d}`), []);
           })
         : [];
@@ -254,7 +254,7 @@ function createCronScheduler(r) {
         d.createdByPid !== process.pid
       )
         ((d.createdByPid = process.pid),
-          (d.createdByProcStart = O6()),
+          (d.createdByProcStart = ownProcStart()),
           (_ = !0));
     if (_)
       await Ybt(h, k).catch((d) =>
@@ -298,7 +298,7 @@ function createCronScheduler(r) {
           ? eXe(e.cron, e.lastFiredAt ?? e.createdAt, e.id, _)
           : Jbt(e.cron, e.createdAt, e.id, _);
         if (C === null)
-          f("cron_task_fire", "next_fire_unresolvable", {
+          logFeatureBad("cron_task_fire", "next_fire_unresolvable", {
             recurring: e.recurring ?? !1,
           });
         ((x = C ?? 1 / 0),
@@ -321,7 +321,7 @@ function createCronScheduler(r) {
       )
         l(e);
       else t(e.prompt);
-      y("cron_task_fire", {
+      logFeatureOk("cron_task_fire", {
         recurring: e.recurring ?? !1,
         permanent: e.permanent ?? !1,
       });
@@ -335,7 +335,7 @@ function createCronScheduler(r) {
       }
       if (e.recurring && !ne) {
         let C = eXe(e.cron, o, e.id, _);
-        if (C === null) g("cron_task_fire", "reschedule_unresolvable");
+        if (C === null) logFeatureSad("cron_task_fire", "reschedule_unresolvable");
         let pe = C ?? 1 / 0;
         if ((I.set(e.id, pe), !d)) p.push(e.id);
       } else if (d) (HL([e.id]), I.delete(e.id));

@@ -10,7 +10,7 @@
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "./chunk-78nzsrc6.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, O, v, c, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var xce = m(() => it({ name: s().optional() })),
@@ -68,12 +68,12 @@ async function d(e, r, a, t) {
 }
 async function h6n(e, r, a) {
   let t = await d(C, { keywords: e, include_custom: !0 }, r, a);
-  if (!C7(t)) y("connector_suggest_search");
+  if (!C7(t)) logFeatureOk("connector_suggest_search");
   return t;
 }
 async function _6n(e, r, a) {
   let t = await d(_, { uuids: e }, r, a);
-  if (!C7(t)) y("connector_suggest_lookup");
+  if (!C7(t)) logFeatureOk("connector_suggest_lookup");
   return t;
 }
 function hdt(e, r) {
@@ -92,12 +92,12 @@ function hdt(e, r) {
 }
 async function y6n(e, r) {
   let a = await d(S, {}, e, r);
-  if (!C7(a)) y("connector_suggest_list");
+  if (!C7(a)) logFeatureOk("connector_suggest_list");
   return a;
 }
 function pbe(e, r) {
   (n(`[connector-suggest] ${e} failed: ${l(r)}`, { level: "error" }),
-    f(
+    logFeatureBad(
       e === "search"
         ? "connector_suggest_search"
         : e === "lookup"

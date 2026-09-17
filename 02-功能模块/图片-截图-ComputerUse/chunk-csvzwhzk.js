@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { qqe } from "./chunk-mk8kjx9c.js";
-import { promises as x } from "fs";
-import { createConnection as O } from "net";
-import { platform as M } from "os";
-import { dirname as j } from "path";
+import { promises } from "fs";
+import { createConnection } from "net";
+import { platform } from "os";
+import { dirname } from "path";
 class Pv extends Error {
   constructor(e) {
     super(e);
@@ -78,7 +78,7 @@ class v {
       return;
     }
     if (n !== this.connectEpoch) return;
-    ((this.socket = O(o)),
+    ((this.socket = createConnection(o)),
       (this.connectTimer = setTimeout(() => {
         if (!this.connected)
           (t.info(`[${e}] Connection attempt timed out after 5000ms`),
@@ -275,12 +275,12 @@ class v {
   }
   async validateSocketSecurity(e) {
     let { serverName: t, logger: n } = this.context;
-    if (M() === "win32") return;
+    if (platform() === "win32") return;
     try {
-      let o = j(e);
+      let o = dirname(e);
       if ((o.split("/").pop() || "").startsWith("claude-mcp-browser-bridge-"))
         try {
-          let a = await x.stat(o);
+          let a = await promises.stat(o);
           if (a.isDirectory()) {
             let d = a.mode & 511;
             if (d !== 448)
@@ -296,7 +296,7 @@ class v {
         } catch (a) {
           if (a.code !== "ENOENT") throw a;
         }
-      let s = await x.stat(e);
+      let s = await promises.stat(e);
       if (!s.isSocket())
         throw Error(`[${t}] Path exists but it's not a socket: ${e}`);
       let r = s.mode & 511;
@@ -323,12 +323,12 @@ function lNt(e) {
   return new v(e);
 }
 import {
-  lstat as J,
-  mkdir as q,
-  mkdtemp as U,
-  writeFile as G,
+  lstat,
+  mkdir,
+  mkdtemp,
+  writeFile,
 } from "fs/promises";
-import { tmpdir as W } from "os";
+import { tmpdir } from "os";
 import { join as R } from "path";
 var S = {
     "image/png": "png",
@@ -341,7 +341,7 @@ var S = {
   w;
 function E() {
   return (
-    (w ??= U(R(W(), "claude-chrome-screenshots-")).catch((e) => {
+    (w ??= mkdtemp(R(tmpdir(), "claude-chrome-screenshots-")).catch((e) => {
       throw ((w = void 0), e);
     })),
     w
@@ -351,11 +351,11 @@ async function V(e) {
   if (e.getScreenshotSaveDir) {
     let n = e.getScreenshotSaveDir();
     if (n === void 0) return;
-    return (await q(n, { recursive: !0, mode: 448 }), n);
+    return (await mkdir(n, { recursive: !0, mode: 448 }), n);
   }
   let t = await E();
   try {
-    let n = await J(t),
+    let n = await lstat(t),
       o = process.getuid;
     if (
       n.isDirectory() &&
@@ -410,7 +410,7 @@ async function _(e, t) {
     let r = Object.hasOwn(S, s.mimeType) ? S[s.mimeType] : "png",
       i = R(n, `screenshot-${Date.now()}-${X++}.${r}`);
     try {
-      (await G(i, Buffer.from(s.data, "base64"), { flag: "wx", mode: 384 }),
+      (await writeFile(i, Buffer.from(s.data, "base64"), { flag: "wx", mode: 384 }),
         (l = !0),
         o.push({ type: "text", text: `${z}${i}` }));
     } catch (a) {

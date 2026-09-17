@@ -12,7 +12,7 @@
 import { Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -21,8 +21,8 @@ import { E9e, A9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
 import { OM, PVe, Ngt, Lr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isScratchpadDisplayPath as YFe, isWorkshopDisplayPath as JFe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { getPlansDirectory as Ea } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { isScratchpadDisplayPath, isWorkshopDisplayPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
 import { Ac, vh, Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
@@ -38,7 +38,7 @@ import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
-import { isAbsolute as je, relative as ee, resolve as Ne } from "path";
+import { isAbsolute, relative, resolve } from "path";
 function Re(i, a, s = 1 / 0) {
   let l = a <= 0 || !Number.isFinite(a),
     f = 0,
@@ -122,7 +122,7 @@ function he(gt) {
   else z = g[9];
   let A;
   if (g[10] !== D || g[11] !== m)
-    ((A = m ? D : ee(Q(), D)), (g[10] = D), (g[11] = m), (g[12] = A));
+    ((A = m ? D : relative(Q(), D)), (g[10] = D), (g[11] = m), (g[12] = A));
   else A = g[12];
   let G;
   if (g[13] !== A)
@@ -192,22 +192,22 @@ function be({ type: i, content: a, structuredPatch: s, originalFile: l }) {
     a !== ""
   );
 }
-function lt(i, { columns: a }) {
+function isResultTruncated(i, { columns: a }) {
   let { type: s, content: l } = i;
   if (s !== "create" && !be(i)) return !1;
   if (typeof l !== "string") return !1;
   let f = l.endsWith(R) ? b + 1 : b;
   return re(l, Math.max(1, a - 12), f);
 }
-function ct(i, { verbose: a }) {
+function renderToolUseMessage(i, { verbose: a }) {
   if (!i.file_path) return null;
-  if (i.file_path.startsWith(Ea())) return "";
+  if (i.file_path.startsWith(getPlansDirectory())) return "";
   return e(Pg, {
     filePath: i.file_path,
     children: a ? i.file_path : Ao(i.file_path),
   });
 }
-function ft({ file_path: i, content: a }, { style: s, verbose: l }) {
+function renderToolUseRejectedMessage({ file_path: i, content: a }, { style: s, verbose: l }) {
   return e(ye, { filePath: i, content: a, style: s, verbose: l });
 }
 function ye(bt) {
@@ -324,7 +324,7 @@ function te(yt) {
 }
 async function ge(i, a) {
   try {
-    let s = je(i) ? i : Ne(Q(), i),
+    let s = isAbsolute(i) ? i : resolve(Q(), i),
       l = await PVe(s);
     if (l === null) return { type: "create" };
     let f;
@@ -348,18 +348,18 @@ async function ge(i, a) {
       n(`Failed to load rejection diff for ${i}: ${s.message}`, {
         level: "error",
       });
-    else h(s);
+    else logError(s);
     return { type: "error" };
   }
 }
-function pt(i, { verbose: a }) {
+function renderToolUseErrorMessage(i, { verbose: a }) {
   if (!a && typeof i === "string" && Lr(i, "tool_use_error"))
     return e(xe, {
       children: e(t, { color: "error", children: "Error writing file" }),
     });
   return e(Yd, { result: i, verbose: a });
 }
-function ut(i, a, { style: s, verbose: l }) {
+function renderToolResultMessage(i, a, { style: s, verbose: l }) {
   return Pe(i, a, { style: s, verbose: l });
 }
 function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
@@ -373,7 +373,7 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
   if (!c) return null;
   switch (w) {
     case "create": {
-      if (c.startsWith(Ea()) && !l) {
+      if (c.startsWith(getPlansDirectory()) && !l) {
         if (s !== "condensed")
           return e(xe, {
             children: e(t, { dimColor: !0, children: "/plan to preview" }),
@@ -388,11 +388,11 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
             x(C, "line"),
             " to",
             " ",
-            e(t, { bold: !0, children: ee(Q(), c) }),
+            e(t, { bold: !0, children: relative(Q(), c) }),
             f && e(N, {}),
           ],
         });
-      } else if (!l && (YFe(c) || JFe(c))) {
+      } else if (!l && (isScratchpadDisplayPath(c) || isWorkshopDisplayPath(c))) {
         let C = O(u);
         return e(xe, {
           children: r(t, {
@@ -422,7 +422,7 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
           verbose: l,
           replacedUndiffedContent: !0,
         });
-      let V = c.startsWith(Ea());
+      let V = c.startsWith(getPlansDirectory());
       return e(wWe, {
         filePath: c,
         structuredPatch: k,
@@ -431,15 +431,15 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
         style: s,
         verbose: l,
         previewHint: V ? "/plan to preview" : void 0,
-        collapsed: !V && (YFe(c) || JFe(c)),
+        collapsed: !V && (isScratchpadDisplayPath(c) || isWorkshopDisplayPath(c)),
       });
     }
   }
 }
 export {
-  lt as isResultTruncated,
-  ut as renderToolResultMessage,
-  pt as renderToolUseErrorMessage,
-  ct as renderToolUseMessage,
-  ft as renderToolUseRejectedMessage,
+  isResultTruncated,
+  renderToolResultMessage,
+  renderToolUseErrorMessage,
+  renderToolUseMessage,
+  renderToolUseRejectedMessage,
 };

@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getSettingsForSource as ye } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { ph, sQ } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { pe } from "./chunk-2c9tjhwd.js";
@@ -52,7 +52,7 @@ function J2n(e) {
   try {
     let r = e.parent ? e : null;
     while (r?.parent?.parent) r = r.parent;
-    let i = ye("policySettings");
+    let i = getSettingsForSource("policySettings");
     return l({
       currentVersion: {
         ISSUES_EXPLAINER:
@@ -72,12 +72,12 @@ function J2n(e) {
       topLevelCommand: r?.name(),
     });
   } catch (r) {
-    return (h(r), null);
+    return (logError(r), null);
   }
 }
 function Q2n() {
   try {
-    let e = ye("policySettings");
+    let e = getSettingsForSource("policySettings");
     return l({
       currentVersion: {
         ISSUES_EXPLAINER:
@@ -97,7 +97,7 @@ function Q2n() {
       topLevelCommand: void 0,
     });
   } catch (e) {
-    return (h(e), null);
+    return (logError(e), null);
   }
 }
 export { J2n, Q2n };

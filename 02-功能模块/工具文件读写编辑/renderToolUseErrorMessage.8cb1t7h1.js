@@ -12,7 +12,7 @@
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ao, yx } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -25,8 +25,8 @@ import "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
 import "../Diff引擎/chunk-p2gj9dsf.js";
-import { isScratchpadDisplayPath as YFe, isWorkshopDisplayPath as JFe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { getPlansDirectory as Ea } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { isScratchpadDisplayPath, isWorkshopDisplayPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import { FB, wWe } from "../Diff引擎/chunk-arr1hvsk.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-bhcz98rd.js";
@@ -34,18 +34,18 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js"
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
-function oe({ file_path: r }, { verbose: s }) {
+function renderToolUseMessage({ file_path: r }, { verbose: s }) {
   if (!r) return null;
-  if (r.startsWith(Ea())) return "";
+  if (r.startsWith(getPlansDirectory())) return "";
   return e(Pg, { filePath: r, children: s ? r : Ao(r) });
 }
-function se(
+function renderToolResultMessage(
   { filePath: r = "", structuredPatch: s, originalFile: i },
   a,
   { style: o, verbose: l },
 ) {
   if (!r) return null;
-  let c = r.startsWith(Ea());
+  let c = r.startsWith(getPlansDirectory());
   return e(wWe, {
     filePath: r,
     structuredPatch: s,
@@ -54,10 +54,10 @@ function se(
     style: o,
     verbose: l,
     previewHint: c ? "/plan to preview" : void 0,
-    collapsed: !c && (YFe(r) || JFe(r)),
+    collapsed: !c && (isScratchpadDisplayPath(r) || isWorkshopDisplayPath(r)),
   });
 }
-function ne(r, s) {
+function renderToolUseRejectedMessage(r, s) {
   let { style: i, verbose: a } = s,
     o = r.file_path,
     l = r.old_string ?? "",
@@ -87,7 +87,7 @@ function ne(r, s) {
     verbose: a,
   });
 }
-function ie(r, s) {
+function renderToolUseErrorMessage(r, s) {
   let { verbose: i } = s;
   if (!i && typeof r === "string" && Lr(r, "tool_use_error")) {
     let a = Lr(r, "tool_use_error");
@@ -218,13 +218,13 @@ async function x(r, s, i, a) {
       n(`Failed to load rejection diff for ${r}: ${o.message}`, {
         level: "error",
       });
-    else h(o);
+    else logError(o);
     return { patch: [], firstLine: null, fileContent: void 0 };
   }
 }
 export {
-  se as renderToolResultMessage,
-  ie as renderToolUseErrorMessage,
-  oe as renderToolUseMessage,
-  ne as renderToolUseRejectedMessage,
+  renderToolResultMessage,
+  renderToolUseErrorMessage,
+  renderToolUseMessage,
+  renderToolUseRejectedMessage,
 };

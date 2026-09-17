@@ -9,17 +9,17 @@
 // Version: 2.1.263
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnumArr as Ga } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Io, Xu, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Zse, ASSET_ID_RE as Hp, ARTIFACT_SLUG_RE as fr, INVISIBLE_BLANKS as QC, isDecisionSurfaceControl as sS, INVISIBLE_BLANK_CODE_POINT as mBe, scrubArtifactEnvelopeTags as Ml, scrubServerLine as p1 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { Zse, ASSET_ID_RE, ARTIFACT_SLUG_RE, INVISIBLE_BLANKS, isDecisionSurfaceControl, INVISIBLE_BLANK_CODE_POINT, scrubArtifactEnvelopeTags, scrubServerLine } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { $f, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isCancel as qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { parseRetryAfterHeader as Yy } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import {
   N1e,
   Am,
@@ -35,7 +35,7 @@ import {
   Fd,
   boe,
   her,
-  getShareEntry as Cn,
+  getShareEntry,
   IC,
 } from "./chunk-01ymf0ar.js";
 import { ne, kTn } from "./chunk-rr78st95.js";
@@ -96,7 +96,7 @@ function wte(t) {
     if (C(e.type_url) && e.url === void 0)
       return { ...e, action: "describe_type" };
     if (C(e.path))
-      return Hp.test(e.path)
+      return ASSET_ID_RE.test(e.path)
         ? { ...v(e, "path"), action: "read_asset", asset_id: e.path }
         : { ...e, action: "read_file" };
     return t;
@@ -401,7 +401,7 @@ function nGn(t, e) {
 }
 var nV = 4096;
 function de(t, e) {
-  return t !== 10240 && mBe.test(e);
+  return t !== 10240 && INVISIBLE_BLANK_CODE_POINT.test(e);
 }
 var ue =
     /[\u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\u2800\u{1D159}\u{13441}\u{13442}\uFFFC]/u,
@@ -412,7 +412,7 @@ function Ete(t) {
   return Array.from(t).some((e) => {
     let n = e.codePointAt(0) ?? 0;
     if (n === 10 || n === 9) return !1;
-    return sS(n) || de(n, e);
+    return isDecisionSurfaceControl(n) || de(n, e);
   });
 }
 function fwe(t) {
@@ -420,9 +420,9 @@ function fwe(t) {
     let r = n.codePointAt(0) ?? 0;
     if (r === 10 || r === 9) return n;
     if (r === 13) return "";
-    return sS(r) || de(r, n) ? " " : n;
+    return isDecisionSurfaceControl(r) || de(r, n) ? " " : n;
   }).join("");
-  return Ml(e);
+  return scrubArtifactEnvelopeTags(e);
 }
 var Ce = new RegExp(`^[\\s${ue.source.slice(1, -1)}]*[\\p{Ps}${Zse}]`, "u");
 function fk(t, e, n = "") {
@@ -656,7 +656,7 @@ function oe(t, e, n, r) {
     k(t, e);
     return;
   }
-  let o = fwe(n).replace(QC, " ").replace(/\s+/g, " ").trim();
+  let o = fwe(n).replace(INVISIBLE_BLANKS, " ").replace(/\s+/g, " ").trim();
   return o === "" ? void 0 : o;
 }
 function je(t, e) {
@@ -718,7 +718,7 @@ function Xe(t, e = "artifact_comments_read") {
       d++;
       continue;
     }
-    if ((l.add(_.id), !fr.test(_.id))) {
+    if ((l.add(_.id), !ARTIFACT_SLUG_RE.test(_.id))) {
       d++;
       continue;
     }
@@ -804,14 +804,14 @@ function Xe(t, e = "artifact_comments_read") {
   }
   if (d > 0 || h > 0 || n.gates.size > 0) {
     let A = [...n.gates];
-    g(e, "rows_degraded", {
+    logFeatureSad(e, "rows_degraded", {
       ...Object.fromEntries(A.map(([b, _]) => [`degraded_${b}`, _])),
       dropped_threads: d,
       dropped_comments: h,
       degraded_fields: A.reduce((b, [, _]) => b + _, 0),
-      ...(A.length > 0 && { degraded_gates: Ga(A.map(([b]) => b)) }),
+      ...(A.length > 0 && { degraded_gates: fromEnumArr(A.map(([b]) => b)) }),
     });
-  } else y(e);
+  } else logFeatureOk(e);
   return {
     threads: u,
     ...(c && { threadsDegraded: !0 }),
@@ -820,16 +820,16 @@ function Xe(t, e = "artifact_comments_read") {
 }
 function Qe(t, e) {
   if (t.status === 403 && L(t.data).includes(z))
-    return (g(e, "service_key_credential"), { err: at, unavailable: !0 });
+    return (logFeatureSad(e, "service_key_credential"), { err: at, unavailable: !0 });
   if (t.status < 200 || t.status >= 300)
     return (
-      g(e, "server_read_unavailable", { status: t.status }),
+      logFeatureSad(e, "server_read_unavailable", { status: t.status }),
       pe(t.status)
     );
   let n = Xe(t.data, e);
   if (n === null)
     return (
-      f(e, "malformed_body"),
+      logFeatureBad(e, "malformed_body"),
       { err: "comments fetch failed (unexpected response)" }
     );
   return {
@@ -843,7 +843,7 @@ var We = { min: 300, max: 800 },
   Ze = 120000;
 function Je(t, e) {
   if (t !== 429 && t !== 503) return;
-  let n = Yy(typeof e === "string" ? e : void 0);
+  let n = parseRetryAfterHeader(typeof e === "string" ? e : void 0);
   return n === void 0 || n <= 0 ? void 0 : Math.min(n, Ze);
 }
 function et() {
@@ -865,10 +865,10 @@ async function ie(t, e, n, r) {
       reportSentAuth: !0,
     });
   } catch (d) {
-    if (qi(d)) throw d;
+    if (isCancel(d)) throw d;
     let h = boe(d, c),
       A = () => (
-        f(n, "server_read_request_error", h),
+        logFeatureBad(n, "server_read_request_error", h),
         h.transport
           ? { err: "comments fetch failed (network error)", retryable: !0 }
           : { err: "comments fetch failed (the response could not be read)" }
@@ -880,7 +880,7 @@ async function ie(t, e, n, r) {
   if (!u.ok) {
     if (u.reason === "relay-unavailable") {
       let { status: d } = u;
-      f(n, "server_read_relay_unavailable", { status: d });
+      logFeatureBad(n, "server_read_relay_unavailable", { status: d });
       let h = d === 0 || d === 429 || d >= 500;
       return {
         kind: "done",
@@ -891,7 +891,7 @@ async function ie(t, e, n, r) {
       };
     }
     return (
-      f(n, u.reason.replace(/-/g, "_")),
+      logFeatureBad(n, u.reason.replace(/-/g, "_")),
       {
         kind: "done",
         result: {
@@ -907,7 +907,7 @@ async function ie(t, e, n, r) {
     let { status: d } = u,
       h = d >= 500 || d === 499,
       A = () => (
-        f(n, "server_read_relay_error", { status: d }),
+        logFeatureBad(n, "server_read_relay_error", { status: d }),
         {
           err: `comments fetch failed (relay HTTP ${d})`,
           ...((h || d === 429) && { retryable: !0 }),
@@ -922,8 +922,8 @@ async function ie(t, e, n, r) {
       h = Je(d, u.response?.headers?.["retry-after"]),
       A = d === 429 || h !== void 0,
       b = () => {
-        if (A) g(n, "server_read_unavailable", { status: d });
-        else f(n, "server_read_unavailable", { status: d });
+        if (A) logFeatureSad(n, "server_read_unavailable", { status: d });
+        else logFeatureBad(n, "server_read_unavailable", { status: d });
         return pe(d, { retryable: !0, retryAfterMs: h });
       };
     return d === 503 || A
@@ -954,7 +954,7 @@ async function rt(t, e, n, r) {
   if ((await Z(et(), e), e.aborted)) throw new Ve();
   let c = await ie(t, e, n, r);
   if (c.kind === "done") {
-    if (c.result.err === null) g(n, "server_read_retried", o.miss);
+    if (c.result.err === null) logFeatureSad(n, "server_read_retried", o.miss);
     return c.result;
   }
   return c.fail();
@@ -968,7 +968,7 @@ async function j7(
 ) {
   if (!H("tengu_onyx_sluice", !1))
     return (
-      g(r, "cp_read_disabled"),
+      logFeatureSad(r, "cp_read_disabled"),
       {
         err: "comments are not available on this artifact right now",
         unavailable: !0,
@@ -986,7 +986,7 @@ async function j7(
     }
     if (l.assetToken === void 0)
       return { err: "comments are not readable on a public artifact serve" };
-    let d = Cn(t.slug),
+    let d = getShareEntry(t.slug),
       h =
         (Array.isArray(l.data.docs) && l.data.docs.length > 0) ||
         (d?.livePaths?.length ?? 0) > 0;
@@ -1026,12 +1026,12 @@ function M(t) {
 var dt = m(() => nt({ standing_reply: nt({ id: le(), own: Io() }) }));
 function ut(t) {
   let e = dt().safeParse(t);
-  if (!e.success || !fr.test(e.data.standing_reply.id)) return;
+  if (!e.success || !ARTIFACT_SLUG_RE.test(e.data.standing_reply.id)) return;
   return e.data.standing_reply;
 }
 function L(t) {
   let e = Ae(t).error ?? t;
-  return typeof e === "string" ? p1(e, 300) : "";
+  return typeof e === "string" ? scrubServerLine(e, 300) : "";
 }
 function F(t, e) {
   return {
@@ -1060,7 +1060,7 @@ async function Ucn(
     A = c ? { resend: c } : {},
     b = c ? [{ resend: c }] : [];
   if (o !== void 0 && r !== !0 && dwe())
-    if (fr.test(o)) d = o;
+    if (ARTIFACT_SLUG_RE.test(o)) d = o;
     else h = !0;
   let _ = ne().accountEpoch,
     E = performance.now(),
@@ -1076,10 +1076,10 @@ async function Ucn(
       F(l, u),
     );
   } catch (R) {
-    if (qi(R)) throw R;
+    if (isCancel(R)) throw R;
     if (nP(R))
       return (
-        f("artifact_comment_reply", "relay_request_error", {
+        logFeatureBad("artifact_comment_reply", "relay_request_error", {
           ...boe(R, E),
           ...A,
         }),
@@ -1091,7 +1091,7 @@ async function Ucn(
         }
       );
     return (
-      f("artifact_comment_reply", "request_error", { ...boe(R, E), ...A }),
+      logFeatureBad("artifact_comment_reply", "request_error", { ...boe(R, E), ...A }),
       {
         kind: "error",
         message: "comment reply failed (network error)",
@@ -1102,14 +1102,14 @@ async function Ucn(
   if (!p.ok) {
     if (p.reason === "relay-unavailable")
       return (
-        f("artifact_comment_reply", "relay_unavailable", {
+        logFeatureBad("artifact_comment_reply", "relay_unavailable", {
           status: p.status,
           ...A,
         }),
         { kind: "error", message: st, reason: "relay_unavailable" }
       );
     return (
-      f("artifact_comment_reply", p.reason.replace(/-/g, "_"), ...b),
+      logFeatureBad("artifact_comment_reply", p.reason.replace(/-/g, "_"), ...b),
       {
         kind: "error",
         message:
@@ -1124,15 +1124,15 @@ async function Ucn(
     let R = it().safeParse(p.data);
     if (!R.success)
       return (
-        g("artifact_comment_reply", "malformed_echo", ...b),
+        logFeatureSad("artifact_comment_reply", "malformed_echo", ...b),
         { kind: "ok", threadId: e, commentId: "" }
       );
-    let P = fr.test(R.data.thread_id),
+    let P = ARTIFACT_SLUG_RE.test(R.data.thread_id),
       D = aue.test(R.data.comment_id);
-    if (!P || !D) g("artifact_comment_reply", "malformed_echo", ...b);
+    if (!P || !D) logFeatureSad("artifact_comment_reply", "malformed_echo", ...b);
     else if (h)
-      g("artifact_comment_reply", "continues_reply_id_malformed", ...b);
-    else y("artifact_comment_reply", ...b);
+      logFeatureSad("artifact_comment_reply", "continues_reply_id_malformed", ...b);
+    else logFeatureOk("artifact_comment_reply", ...b);
     if (D && _ === ne().accountEpoch) we(R.data.comment_id);
     return {
       kind: "ok",
@@ -1142,7 +1142,7 @@ async function Ucn(
   }
   if (!p.fromFrame)
     return (
-      f("artifact_comment_reply", "relay_error", { status: p.status, ...A }),
+      logFeatureBad("artifact_comment_reply", "relay_error", { status: p.status, ...A }),
       {
         kind: "error",
         message: `comment reply outcome unknown (relay HTTP ${p.status}) \u2014 it may have posted; re-read the comments before retrying`,
@@ -1152,12 +1152,12 @@ async function Ucn(
   let S = L(p.data);
   if (p.status === 403 && S.includes(Y))
     return (
-      g("artifact_comment_reply", "not_activated", ...b),
+      logFeatureSad("artifact_comment_reply", "not_activated", ...b),
       { kind: "not_activated" }
     );
   if (p.status === 403 && S.includes(z))
     return (
-      g("artifact_comment_reply", "service_key_credential", ...b),
+      logFeatureSad("artifact_comment_reply", "service_key_credential", ...b),
       {
         kind: "error",
         message: `comment reply refused: ${ge}`,
@@ -1167,7 +1167,7 @@ async function Ucn(
   if (p.status === 409 && M(p.data) === ot) {
     let R = _ === ne().accountEpoch ? ut(p.data) : void 0;
     return (
-      g(
+      logFeatureSad(
         "artifact_comment_reply",
         R?.own === !0 ? "summon_answered_own" : "summon_answered_elsewhere",
         ...b,
@@ -1177,7 +1177,7 @@ async function Ucn(
   }
   if (p.status === 403 && M(p.data) === he)
     return (
-      g("artifact_comment_reply", "summon_foreign_sender", ...b),
+      logFeatureSad("artifact_comment_reply", "summon_foreign_sender", ...b),
       { kind: "summon_foreign" }
     );
   let I =
@@ -1194,7 +1194,7 @@ async function Ucn(
               : p.status === 503
                 ? "unavailable"
                 : "http_failed";
-  f("artifact_comment_reply", I, { status: p.status, ...A });
+  logFeatureBad("artifact_comment_reply", I, { status: p.status, ...A });
   let T = S !== "" ? `: ${S}` : "";
   return {
     kind: "error",
@@ -1252,7 +1252,7 @@ function mt(t, e) {
 }
 async function oGn(t) {
   let { slug: e, threadId: n, afterVersion: r, signal: o, credentials: c } = t;
-  if (!fr.test(e) || !fr.test(n))
+  if (!ARTIFACT_SLUG_RE.test(e) || !ARTIFACT_SLUG_RE.test(n))
     return {
       kind: "error",
       message: "invalid slug or thread id",
@@ -1267,9 +1267,9 @@ async function oGn(t) {
       F(o, c),
     );
   } catch (h) {
-    if (qi(h)) throw h;
+    if (isCancel(h)) throw h;
     return (
-      f("artifact_comment_resolve", "request_error", boe(h, u)),
+      logFeatureBad("artifact_comment_resolve", "request_error", boe(h, u)),
       {
         kind: "error",
         message: "thread resolve failed (network error)",
@@ -1280,7 +1280,7 @@ async function oGn(t) {
   if (!l.ok) {
     if (l.reason === "relay-unavailable")
       return (
-        f("artifact_comment_resolve", "relay_unavailable", {
+        logFeatureBad("artifact_comment_resolve", "relay_unavailable", {
           status: l.status,
         }),
         {
@@ -1290,7 +1290,7 @@ async function oGn(t) {
         }
       );
     return (
-      f("artifact_comment_resolve", l.reason.replace(/-/g, "_")),
+      logFeatureBad("artifact_comment_resolve", l.reason.replace(/-/g, "_")),
       {
         kind: "error",
         message: `thread resolve unavailable: ${l.reason}`,
@@ -1298,10 +1298,10 @@ async function oGn(t) {
       }
     );
   }
-  if (l.status === 200) return (y("artifact_comment_resolve"), { kind: "ok" });
+  if (l.status === 200) return (logFeatureOk("artifact_comment_resolve"), { kind: "ok" });
   if (!l.fromFrame)
     return (
-      f("artifact_comment_resolve", "relay_error", { status: l.status }),
+      logFeatureBad("artifact_comment_resolve", "relay_error", { status: l.status }),
       {
         kind: "error",
         message: `thread resolve outcome unknown (relay HTTP ${l.status})`,
@@ -1309,10 +1309,10 @@ async function oGn(t) {
       }
     );
   let d = mt(l.status, L(l.data));
-  if (d.kind === "error") f("artifact_comment_resolve", d.reason);
+  if (d.kind === "error") logFeatureBad("artifact_comment_resolve", d.reason);
   else if (d.kind === "principal_mismatch")
-    f("artifact_comment_resolve", d.kind);
-  else g("artifact_comment_resolve", d.kind);
+    logFeatureBad("artifact_comment_resolve", d.kind);
+  else logFeatureSad("artifact_comment_resolve", d.kind);
   return d;
 }
 var _t = "only the thread starter or a writer",
@@ -1323,7 +1323,7 @@ var _t = "only the thread starter or a writer",
   q =
     "thread resolve not confirmed (this session's comment connection failed on this attempt, so the thread may or may not be resolved) \u2014 retry the resolve once if you have not already, it is safe to repeat; if it fails again, leave the thread unresolved and, if you addressed it, say so in a reply on the thread";
 async function sGn({ slug: t, threadId: e, credentials: n }, r) {
-  if (!fr.test(t) || !fr.test(e))
+  if (!ARTIFACT_SLUG_RE.test(t) || !ARTIFACT_SLUG_RE.test(e))
     return {
       kind: "error",
       message: "invalid slug or thread id",
@@ -1341,7 +1341,7 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
         ((d = await Nd.postRelayOnly(o("resolve"), { resolved: !0 }, F(r, n))),
         l && !d.ok && d.reason === "relay-unavailable")
       )
-        (g("artifact_comment_session_resolve", "relay_declined", {
+        (logFeatureSad("artifact_comment_session_resolve", "relay_declined", {
           status: d.status,
         }),
           (d = void 0));
@@ -1351,7 +1351,7 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
       let E = d.ok && d.status === 404 && M(d.data) !== ht,
         p = d.ok && d.status === 403 && L(d.data).includes(yt);
       if (E || p)
-        (g(
+        (logFeatureSad(
           "artifact_comment_session_resolve",
           p ? "session_route_ccr_denied" : "session_route_fell_back",
         ),
@@ -1359,14 +1359,14 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
           (d = await c("resolve")));
     }
   } catch (E) {
-    if (qi(E)) throw E;
+    if (isCancel(E)) throw E;
     if (nP(E))
       return (
-        f("artifact_comment_session_resolve", "relay_request_error"),
+        logFeatureBad("artifact_comment_session_resolve", "relay_request_error"),
         { kind: "error", message: q, reason: "relay_request_error" }
       );
     return (
-      f("artifact_comment_session_resolve", "request_error", boe(E, u)),
+      logFeatureBad("artifact_comment_session_resolve", "request_error", boe(E, u)),
       {
         kind: "error",
         message: "thread resolve failed (network error)",
@@ -1377,13 +1377,13 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
   if (!d.ok) {
     if (d.reason === "relay-unavailable")
       return (
-        f("artifact_comment_session_resolve", "relay_unavailable", {
+        logFeatureBad("artifact_comment_session_resolve", "relay_unavailable", {
           status: d.status,
         }),
         { kind: "error", message: q, reason: "relay_unavailable" }
       );
     return (
-      f("artifact_comment_session_resolve", d.reason.replace(/-/g, "_")),
+      logFeatureBad("artifact_comment_session_resolve", d.reason.replace(/-/g, "_")),
       {
         kind: "error",
         message:
@@ -1395,10 +1395,10 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
     );
   }
   if (d.status === 200)
-    return (y("artifact_comment_session_resolve"), { kind: "ok" });
+    return (logFeatureOk("artifact_comment_session_resolve"), { kind: "ok" });
   if (!d.fromFrame)
     return (
-      f("artifact_comment_session_resolve", "relay_error", {
+      logFeatureBad("artifact_comment_session_resolve", "relay_error", {
         status: d.status,
       }),
       { kind: "error", message: q, reason: "relay_error" }
@@ -1407,27 +1407,27 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
   if (d.status === 403) {
     if (h.includes(Y))
       return (
-        g("artifact_comment_session_resolve", "not_activated"),
+        logFeatureSad("artifact_comment_session_resolve", "not_activated"),
         { kind: "not_activated" }
       );
     if (h.includes(_t))
       return (
-        g("artifact_comment_session_resolve", "not_authorized"),
+        logFeatureSad("artifact_comment_session_resolve", "not_authorized"),
         { kind: "not_authorized" }
       );
     if (M(d.data) === he)
       return (
-        g("artifact_comment_session_resolve", "summon_foreign_sender"),
+        logFeatureSad("artifact_comment_session_resolve", "summon_foreign_sender"),
         { kind: "summon_foreign" }
       );
     if (h.includes(pt) || M(d.data) === gt)
       return (
-        g("artifact_comment_session_resolve", "relayed_credential"),
+        logFeatureSad("artifact_comment_session_resolve", "relayed_credential"),
         { kind: "relayed_credential" }
       );
     if (h.includes(z))
       return (
-        g("artifact_comment_session_resolve", "service_key_credential"),
+        logFeatureSad("artifact_comment_session_resolve", "service_key_credential"),
         {
           kind: "error",
           message: `thread resolve refused: ${ge}`,
@@ -1445,7 +1445,7 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
           : d.status === 503
             ? "unavailable"
             : "http";
-  f("artifact_comment_session_resolve", A, { status: d.status });
+  logFeatureBad("artifact_comment_session_resolve", A, { status: d.status });
   let b = h !== "" ? `: ${h}` : "";
   return {
     kind: "error",

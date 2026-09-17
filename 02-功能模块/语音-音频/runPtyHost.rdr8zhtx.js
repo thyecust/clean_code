@@ -12,7 +12,7 @@
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { x0 } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Nx } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { setBgExitCause as Fp } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { RRe, $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import {
@@ -31,19 +31,19 @@ import { llt } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { Tfe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import {
-  appendFileSync as re,
-  createWriteStream as ie,
-  mkdirSync as oe,
+  appendFileSync,
+  createWriteStream,
+  mkdirSync,
 } from "fs";
 import {
-  appendFile as se,
+  appendFile,
   mkdir as ce,
   unlink as N,
   writeFile as ae,
 } from "fs/promises";
-import { createServer as le } from "net";
-import { getPriority as de, setPriority as ue } from "os";
-import { dirname as Q } from "path";
+import { createServer } from "net";
+import { getPriority, setPriority } from "os";
+import { dirname } from "path";
 import {
   link as j,
   mkdir as q,
@@ -91,7 +91,7 @@ async function z() {
   } catch {}
 }
 var fe = 1048576;
-async function He(r) {
+async function runPtyHost(r) {
   let n = r.indexOf("--"),
     t = r.includes("--bg-spare", n + 1);
   if (!t) await z();
@@ -126,7 +126,7 @@ async function He(r) {
   }
   if (P() !== "windows")
     try {
-      ue(0, Math.min(de(0) + 5, 19));
+      setPriority(0, Math.min(getPriority(0) + 5, 19));
     } catch {}
   let B = he(H7e),
     p = new Set(),
@@ -214,7 +214,7 @@ async function He(r) {
     }
   }
   await N(o).catch(() => {});
-  let C = le((e) => {
+  let C = createServer((e) => {
     (e.on("error", () => e.destroy()),
       e.once("close", () => p.delete(e)),
       w(
@@ -340,7 +340,7 @@ async function He(r) {
           o,
           `orphan watchdog: ppid ${O}\u2192${process.ppid}, no client for ${u * i}ms`,
         ),
-        Fp("ptyhost_orphan_watchdog"));
+        setBgExitCause("ptyhost_orphan_watchdog"));
       try {
         d.kill("SIGTERM");
       } catch {}
@@ -447,7 +447,7 @@ function ye(r, n, t) {
   let o = process.hrtime.bigint(),
     l;
   try {
-    l = ie(r, { flags: "w" });
+    l = createWriteStream(r, { flags: "w" });
   } catch {
     return;
   }
@@ -478,8 +478,8 @@ function ye(r, n, t) {
 async function X(r, n) {
   try {
     let t = Nh(r);
-    (await ce(Q(t), { recursive: !0 }),
-      await se(
+    (await ce(dirname(t), { recursive: !0 }),
+      await appendFile(
         t,
         `${new Date().toISOString()} ${n}
 `,
@@ -490,8 +490,8 @@ function _(r, n) {
   if (r)
     try {
       let t = Nh(r);
-      (oe(Q(t), { recursive: !0 }),
-        re(
+      (mkdirSync(dirname(t), { recursive: !0 }),
+        appendFileSync(
           t,
           `${new Date().toISOString()} ${n}
 `,
@@ -499,4 +499,4 @@ function _(r, n) {
     } catch {}
   process.exit(1);
 }
-export { He as runPtyHost };
+export { runPtyHost };

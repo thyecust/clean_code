@@ -9,21 +9,21 @@
 // Version: 2.1.263
 import { Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { DESIGN_OAUTH_SCOPES as eZ, getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { DESIGN_OAUTH_SCOPES, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { refreshOAuthToken as wU, revokeOAuthToken as eS, isOAuthTokenExpired as n1, isInvalidGrantError as TU } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getSecureStorage as yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { refreshOAuthToken, revokeOAuthToken, isOAuthTokenExpired, isInvalidGrantError } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { A_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
 import { ck } from "../认证-OAuth登录/chunk-5bg9xwqx.js";
 import { join as O } from "path";
 async function fbe(r) {
   try {
-    return (await yn().readAsync(r))?.designOauth ?? null;
+    return (await getSecureStorage().readAsync(r))?.designOauth ?? null;
   } catch (t) {
     return (
       n(`Failed to read design OAuth tokens: ${l(t)}`, { level: "error" }),
@@ -34,7 +34,7 @@ async function fbe(r) {
 async function Sdt(r, t) {
   try {
     let o = !1,
-      s = await yn().mutate((e) => {
+      s = await getSecureStorage().mutate((e) => {
         if (t?.onlyIf && !t.onlyIf(e.designOauth)) return ((o = !0), e);
         return { ...e, designOauth: r };
       });
@@ -48,7 +48,7 @@ async function Sdt(r, t) {
 }
 async function k(r) {
   try {
-    await yn().mutate((t) => {
+    await getSecureStorage().mutate((t) => {
       if (!t.designOauth) return t;
       if (!r(t.designOauth)) return t;
       let o = { ...t };
@@ -115,18 +115,18 @@ async function y(r) {
   }
 }
 async function p() {
-  let r = yn();
+  let r = getSecureStorage();
   return (r.invalidateCache?.(), (await r.readAsync())?.designOauth ?? null);
 }
 async function Nsn(r) {
   let t = await fbe(r);
   if (!t?.accessToken) return { ok: !1, reason: "needs_design_login" };
-  if (!n1(t.expiresAt)) return { ok: !0, accessToken: t.accessToken };
+  if (!isOAuthTokenExpired(t.expiresAt)) return { ok: !0, accessToken: t.accessToken };
   try {
     return await y(async (o) => {
       let s = await p();
       if (!s?.accessToken) return { ok: !1, reason: "needs_design_login" };
-      if (!n1(s.expiresAt)) return { ok: !0, accessToken: s.accessToken };
+      if (!isOAuthTokenExpired(s.expiresAt)) return { ok: !0, accessToken: s.accessToken };
       if (!s.refreshToken) {
         let e = s.refreshToken;
         return (
@@ -143,7 +143,7 @@ async function Nsn(r) {
       }
       if (o.isCompromised())
         return (
-          g("oauth_token_refresh", "design_oauth_refresh_lock_compromised"),
+          logFeatureSad("oauth_token_refresh", "design_oauth_refresh_lock_compromised"),
           {
             ok: !1,
             reason: "design_refresh_failed",
@@ -151,22 +151,22 @@ async function Nsn(r) {
           }
         );
       try {
-        let e = await wU(s.refreshToken, {
+        let e = await refreshOAuthToken(s.refreshToken, {
           clientId: s.clientId,
           scopes: s.scopes,
           skipProfileFetch: !0,
         });
         if (!e.refreshToken || !e.expiresAt) {
           if (e.refreshToken && e.refreshToken !== s.refreshToken)
-            await eS(e.refreshToken, s.clientId);
+            await revokeOAuthToken(e.refreshToken, s.clientId);
           return {
             ok: !1,
             reason: "design_refresh_failed",
             detail: "refresh response missing refresh_token or expiry",
           };
         }
-        if (!eZ.every((i) => e.scopes.includes(i))) {
-          if (e.refreshToken) await eS(e.refreshToken, s.clientId);
+        if (!DESIGN_OAUTH_SCOPES.every((i) => e.scopes.includes(i))) {
+          if (e.refreshToken) await revokeOAuthToken(e.refreshToken, s.clientId);
           let i = s.refreshToken;
           return (
             await k((d) => d.refreshToken === i),
@@ -183,15 +183,15 @@ async function Nsn(r) {
               accessToken: e.accessToken,
               refreshToken: e.refreshToken,
               expiresAt: e.expiresAt,
-              scopes: e.scopes.filter((i) => eZ.some((d) => d === i)),
+              scopes: e.scopes.filter((i) => DESIGN_OAUTH_SCOPES.some((d) => d === i)),
               clientId: s.clientId,
             },
             { onlyIf: (i) => i?.refreshToken === c },
           );
         if (u.raced) {
-          await eS(e.refreshToken, s.clientId);
+          await revokeOAuthToken(e.refreshToken, s.clientId);
           let i = await p();
-          return i?.accessToken && !n1(i.expiresAt)
+          return i?.accessToken && !isOAuthTokenExpired(i.expiresAt)
             ? { ok: !0, accessToken: i.accessToken }
             : { ok: !1, reason: "needs_design_login" };
         }
@@ -204,17 +204,17 @@ async function Nsn(r) {
       } catch (e) {
         if (o.isCompromised()) {
           let c = await p();
-          if (c?.accessToken && !n1(c.expiresAt))
+          if (c?.accessToken && !isOAuthTokenExpired(c.expiresAt))
             return { ok: !0, accessToken: c.accessToken };
-          if (!TU(e))
-            g("oauth_token_refresh", "design_oauth_refresh_lock_compromised");
+          if (!isInvalidGrantError(e))
+            logFeatureSad("oauth_token_refresh", "design_oauth_refresh_lock_compromised");
           return {
             ok: !1,
             reason: "design_refresh_failed",
             detail: "another process is refreshing the design token",
           };
         }
-        if (TU(e)) {
+        if (isInvalidGrantError(e)) {
           let c = s.refreshToken;
           return (
             await k((u) => u.refreshToken === c),
@@ -230,28 +230,28 @@ async function Nsn(r) {
     });
   } catch (o) {
     if (o instanceof T)
-      g("oauth_token_refresh", "design_oauth_refresh_lock_contention");
-    else (h(o), f("oauth_token_refresh", "design_oauth_refresh_lock_error"));
+      logFeatureSad("oauth_token_refresh", "design_oauth_refresh_lock_contention");
+    else (logError(o), logFeatureBad("oauth_token_refresh", "design_oauth_refresh_lock_error"));
     return { ok: !1, reason: "design_refresh_failed", detail: l(o) };
   }
 }
 function bdt() {
-  return a.CLAUDE_CODE_DESIGN_OAUTH_CLIENT_ID ?? Vt().DESIGN_CLIENT_ID;
+  return a.CLAUDE_CODE_DESIGN_OAUTH_CLIENT_ID ?? getOauthConfig().DESIGN_CLIENT_ID;
 }
 function FPe() {
   return !bdt().startsWith("00000000-");
 }
 async function l1t(r, t) {
-  let o = eZ.filter((s) => !r.scopes.includes(s));
+  let o = DESIGN_OAUTH_SCOPES.filter((s) => !r.scopes.includes(s));
   if (o.length > 0) {
-    if (r.refreshToken) await eS(r.refreshToken, t);
+    if (r.refreshToken) await revokeOAuthToken(r.refreshToken, t);
     return {
       ok: !1,
       message: `The authorization server did not grant the design scopes (missing: ${o.join(", ")}) \u2014 the Claude Design app registration may be incomplete or out of date.`,
     };
   }
   if (!r.refreshToken || !r.expiresAt) {
-    if (r.refreshToken) await eS(r.refreshToken, t);
+    if (r.refreshToken) await revokeOAuthToken(r.refreshToken, t);
     return {
       ok: !1,
       message:
@@ -264,7 +264,7 @@ async function l1t(r, t) {
       accessToken: r.accessToken,
       refreshToken: r.refreshToken,
       expiresAt: r.expiresAt,
-      scopes: r.scopes.filter((s) => eZ.some((e) => e === s)),
+      scopes: r.scopes.filter((s) => DESIGN_OAUTH_SCOPES.some((e) => e === s)),
       clientId: t,
     },
   };
@@ -295,12 +295,12 @@ async function A6n(r) {
   try {
     let u = o.startOAuthFlow(async () => {}, {
       loginWithClaudeAi: !0,
-      oauthClient: { clientId: t, scopes: eZ },
+      oauthClient: { clientId: t, scopes: DESIGN_OAUTH_SCOPES },
       skipProfileFetch: !0,
-      successRedirectUrl: Vt().CLAUDEAI_SUCCESS_URL,
+      successRedirectUrl: getOauthConfig().CLAUDEAI_SUCCESS_URL,
     });
     u.then((m) => {
-      if (e && m.refreshToken) eS(m.refreshToken, t);
+      if (e && m.refreshToken) revokeOAuthToken(m.refreshToken, t);
     }).catch(() => {});
     let i = await Promise.race([
         u,
@@ -321,7 +321,7 @@ async function A6n(r) {
     if (!d.ok) return { ok: !1, message: d.message };
     if (!(await Sdt(d.slot)).success)
       return (
-        await eS(d.slot.refreshToken, d.slot.clientId),
+        await revokeOAuthToken(d.slot.refreshToken, d.slot.clientId),
         {
           ok: !1,
           message:

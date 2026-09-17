@@ -70,5 +70,5 @@ function l({ name: h, label: _, description: e, result: t }) {
 }
 var C = l({ name: o, label: "Claude in Chrome", description: r, result: u }),
   T = l({ name: n, label: "Browser", description: a, result: i }),
-  b = [C, T];
-export { b as BROWSER_ENABLE_STUB_TOOLS };
+  BROWSER_ENABLE_STUB_TOOLS = [C, T];
+export { BROWSER_ENABLE_STUB_TOOLS };

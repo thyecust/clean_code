@@ -9,25 +9,25 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 180 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { unwrapAbortReason as Ua, isUserInitiatedAbortReason as l$e } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { unwrapAbortReason, isUserInitiatedAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Fx } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { dur } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, G0, R, dt, ge, l, Ub, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Ro, D0, Tr, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { sot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { pi, Ad, DCt, Bt, tt, Mn, co, ro, Ut, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { yS, hL, _L, isCurrentDirectoryBareGitRepo as Rhe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { yS, hL, _L, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { nL, Iq } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { INLINE_CODE_FLAGS as o2e, isOutsideReadsBlockedAsk as uL, outsideReadsRuntimePathAsk as Op, outsideReadsTooComplexAsk as zU, BASH_COMMAND_CLAMP_DENY_REASON as s2e, BASH_COMMAND_CLAMP_CRASH_REASON as Rtt } from "../权限系统/chunk-e4pfvp7x.js";
+import { INLINE_CODE_FLAGS, isOutsideReadsBlockedAsk, outsideReadsRuntimePathAsk, outsideReadsTooComplexAsk, BASH_COMMAND_CLAMP_DENY_REASON, BASH_COMMAND_CLAMP_CRASH_REASON } from "../权限系统/chunk-e4pfvp7x.js";
 import { hge, Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { i5, Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
 import {
@@ -38,13 +38,13 @@ import {
   Qj,
   uEt,
   dEt,
-  normalizeCaseForComparison as dr,
-  allWorkingDirectories as rb,
-  matchingRuleForInput as vi,
+  normalizeCaseForComparison,
+  allWorkingDirectories,
+  matchingRuleForInput,
 } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Ys, jE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   Uft,
@@ -78,16 +78,16 @@ import {
   _k,
   $mt,
   Jte,
-  SandboxPolicyRefusalError as Zte,
-  SandboxManager as st,
+  SandboxPolicyRefusalError,
+  SandboxManager,
   dT,
   IDe,
   Gmt,
   fzn,
   jS,
   tTe,
-  createPermissionRequestMessage as Fl,
-  carriesAskRuleIntent as que,
+  createPermissionRequestMessage,
+  carriesAskRuleIntent,
   d2t,
   p2t,
   f2t,
@@ -119,7 +119,7 @@ import {
   _Wt,
   yWt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { MAX_PERSISTED_OUTPUT_BYTES as VAe, getTaskOutputRootDir as O7e, getTaskOutputPath as _l, persistTaskOutputSnapshot as N7e } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { MAX_PERSISTED_OUTPUT_BYTES, getTaskOutputRootDir, getTaskOutputPath, persistTaskOutputSnapshot } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import { ZNe, g7e, Vpe, _7e } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
   Swe,
@@ -632,8 +632,8 @@ import {
   basename as yn,
   dirname as Pt,
   isAbsolute as vn,
-  posix as xt,
-  relative as Sn,
+  posix,
+  relative,
   resolve as _t,
   sep as Je,
 } from "path";
@@ -685,7 +685,7 @@ function je(e, t) {
         return a || ".";
       })
       .join("/")),
-    (o = xt.normalize(o)),
+    (o = posix.normalize(o)),
     r)
   )
     o = r + o;
@@ -806,7 +806,7 @@ function On(e) {
     f = be(a);
   if (be(d) === f) return !0;
   let b = Ro(t, he()).resolvedPath,
-    p = Sn(b, d);
+    p = relative(b, d);
   if (p === ".." || p.startsWith(".." + Je) || vn(p)) return !1;
   let I = be(b),
     x = d;
@@ -875,7 +875,7 @@ function Ot(e, t = !1) {
       for (let C of ze(w)) {
         let A = C === "" ? "." : C;
         if (L ? /\$/.test(A) : Ct(A)) return !0;
-        let F = xt.basename(A);
+        let F = posix.basename(A);
         if (F === "." || F === "..") return !0;
         if (Le(F)) return !0;
       }
@@ -1069,7 +1069,7 @@ import { homedir as Dn } from "os";
 import {
   dirname as $n,
   isAbsolute as Pe,
-  normalize as Fn,
+  normalize,
   resolve as Ce,
 } from "path";
 var rt = 5,
@@ -1737,7 +1737,7 @@ function $e(e) {
     let r = o,
       a = r.indexOf("::");
     if (a >= 0) r = r.slice(a + 2);
-    if (((r = Fe(xe(r).replace(/\\/g, "/"))), Pe(r))) r = Fn(r);
+    if (((r = Fe(xe(r).replace(/\\/g, "/"))), Pe(r))) r = normalize(r);
     if (IDe(r)) return !0;
   }
   return !1;
@@ -1781,7 +1781,7 @@ function De(e, t, o, r) {
     { resolvedPath: f } = Ro(ae(), d),
     b = r === "read" ? "read" : "edit";
   for (let p of Tr(f)) {
-    let I = vi(p, o, b, "deny");
+    let I = matchingRuleForInput(p, o, b, "deny");
     if (I !== null) return { resolvedPath: f, rule: I };
   }
   return null;
@@ -1941,7 +1941,7 @@ function Ee(e, t, o, r) {
         { resolvedPath: E } = Ro(ae(), W),
         z = r === "read" ? "read" : "edit";
       for (let B of Tr(E)) {
-        let q = vi(B, o, z, "deny");
+        let q = matchingRuleForInput(B, o, z, "deny");
         if (q !== null)
           return {
             allowed: !1,
@@ -1963,7 +1963,7 @@ function Ee(e, t, o, r) {
     let w = Bn(p),
       C = Pe(w) ? w : Ce(t, w),
       { resolvedPath: A } = Ro(ae(), C),
-      j = vi(A, o, r === "read" ? "read" : "edit", "deny");
+      j = matchingRuleForInput(A, o, r === "read" ? "read" : "edit", "deny");
     if (j !== null)
       return {
         allowed: !1,
@@ -2123,7 +2123,7 @@ function Mt(e, t, o, r = !1) {
     let b = Gn(f, o, r);
     if (b.behavior === "deny") return b;
     if (b.behavior === "ask") {
-      if (((a ??= b), uL(b.decisionReason))) d ??= b;
+      if (((a ??= b), isOutsideReadsBlockedAsk(b.decisionReason))) d ??= b;
     }
   }
   return (
@@ -2142,7 +2142,7 @@ function qn(e, t, o, r) {
       .replace(/\.exe$/i, "")
       .replace(/[\d.]+$/, ""),
     b =
-      o2e.get(f) ??
+      INLINE_CODE_FLAGS.get(f) ??
       (f.toLowerCase() === "cmd" ? new Set(["/c", "/k"]) : void 0);
   if (
     b !== void 0 &&
@@ -2153,14 +2153,14 @@ function qn(e, t, o, r) {
       );
     })
   )
-    return zU(
+    return outsideReadsTooComplexAsk(
       `${a} runs inline code, which cannot be checked against the read block`,
     );
   for (let p = 0; p < e.args.length; p++) {
     let I = e.args[p],
       x = d ? d[p + 1] : void 0;
     if (x !== void 0 && x !== "StringConstant" && x !== "Parameter")
-      return Op(a);
+      return outsideReadsRuntimePathAsk(a);
     if (I === "") continue;
     let y = I.indexOf(":"),
       L = I.indexOf("="),
@@ -2170,14 +2170,14 @@ function qn(e, t, o, r) {
           : L > 0 && /^--?[A-Za-z][A-Za-z-]*$/.test(I.slice(0, L))
             ? I.slice(L + 1)
             : void 0;
-    if (_ !== void 0 && _.includes("$")) return Op(a);
-    if (An(I)) return Op(a);
+    if (_ !== void 0 && _.includes("$")) return outsideReadsRuntimePathAsk(a);
+    if (An(I)) return outsideReadsRuntimePathAsk(a);
     if (_ === void 0 && Q7(I, x)) continue;
     for (let w of _ !== void 0 ? [_] : [I]) {
       if (w === "") continue;
-      if (w.startsWith("~") && w !== "~" && !/^~[\\/]/.test(w)) return Op(a);
+      if (w.startsWith("~") && w !== "~" && !/^~[\\/]/.test(w)) return outsideReadsRuntimePathAsk(a);
       let C = xe(w);
-      if (r && !Pe(C)) return Op(a);
+      if (r && !Pe(C)) return outsideReadsRuntimePathAsk(a);
       let A = w,
         F = Fx(C);
       if (F !== -1) {
@@ -2185,7 +2185,7 @@ function qn(e, t, o, r) {
         A = /[\\/]$/.test(z) ? z : $n(z);
       }
       let j = xe(A);
-      if (An(j)) return Op(a);
+      if (An(j)) return outsideReadsRuntimePathAsk(a);
       let W = Pe(j) ? j : Ce(t, j);
       if (!ae().existsSync(W)) continue;
       let E = Ee(A, t, o, "read");
@@ -2196,9 +2196,9 @@ function qn(e, t, o, r) {
           message: `${a} targeting '${E.resolvedPath}' was blocked by a deny rule`,
           decisionReason: E.decisionReason,
         };
-      if (uL(E.decisionReason))
+      if (isOutsideReadsBlockedAsk(E.decisionReason))
         return lt(a, E.decisionReason, ie(A) ? E.resolvedPath : void 0);
-      return Op(a);
+      return outsideReadsRuntimePathAsk(a);
     }
   }
   return;
@@ -2276,7 +2276,7 @@ function Gn(e, t, o = !1) {
       if (E?.behavior === "deny") return E;
       d ??= E;
     }
-    if (f && A === "new-item" && Un(y.args)) d ??= Op(A);
+    if (f && A === "new-item" && Un(y.args)) d ??= outsideReadsRuntimePathAsk(A);
     let j = x;
     if (!zn.has(A)) x = !0;
     if (p) {
@@ -2307,7 +2307,7 @@ function Gn(e, t, o = !1) {
         }),
         b(A, _))
       )
-        d ??= Op(A);
+        d ??= outsideReadsRuntimePathAsk(A);
     }
     if (w) {
       let E = Ef(y.name);
@@ -2318,7 +2318,7 @@ function Gn(e, t, o = !1) {
         }),
         b(A, _))
       )
-        d ??= Op(A);
+        d ??= outsideReadsRuntimePathAsk(A);
     }
     if (_ !== "read" && !C && L.length === 0 && F) {
       a ??= {
@@ -2335,7 +2335,7 @@ function Gn(e, t, o = !1) {
         }),
         b(A, _))
       )
-        d ??= Op(A);
+        d ??= outsideReadsRuntimePathAsk(A);
     }
     let W = Ef(y.name) === "remove-item";
     if (W) {
@@ -2347,11 +2347,11 @@ function Gn(e, t, o = !1) {
           return G.length >= 2 && "-recurse".startsWith(G);
         })
       ) {
-        let z = dr(r);
+        let z = normalizeCaseForComparison(r);
         for (let B of L) {
           let q = xe(Fe(B)).replace(/\\/g, "/"),
             G = Pe(q) ? Ce(q) : Ce(r, q),
-            J = dr(G);
+            J = normalizeCaseForComparison(G);
           if (J === z || z.startsWith(J + "/") || z.startsWith(J + "\\")) {
             a ??= {
               behavior: "ask",
@@ -2362,7 +2362,7 @@ function Gn(e, t, o = !1) {
         }
       }
     }
-    if (o && b(A, _) && L.some((E) => !Pe(xe(E)))) d ??= Op(A);
+    if (o && b(A, _) && L.some((E) => !Pe(xe(E)))) d ??= outsideReadsRuntimePathAsk(A);
     for (let E of L) {
       if (W && $e(E)) return Re(E);
       let { allowed: z, resolvedPath: B, decisionReason: q } = Ee(E, r, t, _);
@@ -2374,7 +2374,7 @@ function Gn(e, t, o = !1) {
             message: `${A} targeting '${G.resolvedPath}' was blocked by a deny rule`,
             decisionReason: G.decisionReason,
           };
-        if (!G.allowed && uL(G.decisionReason))
+        if (!G.allowed && isOutsideReadsBlockedAsk(G.decisionReason))
           d ??= lt(A, G.decisionReason, ie(E) ? G.resolvedPath : void 0);
       }
       if (W && IDe(B)) return Re(B);
@@ -2384,7 +2384,7 @@ function Gn(e, t, o = !1) {
       }
       if (!z) {
         let G = Ef(y.name),
-          J = Array.from(rb(t)),
+          J = Array.from(allWorkingDirectories(t)),
           se = He(J),
           ee =
             q?.type === "other" || q?.type === "safetyCheck"
@@ -2420,7 +2420,7 @@ function Gn(e, t, o = !1) {
           decisionReason: q,
           suggestions: oe,
         };
-        if (((a ??= fe), uL(q))) d ??= fe;
+        if (((a ??= fe), isOutsideReadsBlockedAsk(q))) d ??= fe;
       }
     }
   }
@@ -2441,7 +2441,7 @@ function Gn(e, t, o = !1) {
           }),
           b(A, _))
         )
-          d ??= Op(A);
+          d ??= outsideReadsRuntimePathAsk(A);
       }
       if (_ !== "read" && !C && L.length === 0 && Ad(it, A) !== void 0) {
         a ??= {
@@ -2462,7 +2462,7 @@ function Gn(e, t, o = !1) {
               message: `${A} targeting '${B.resolvedPath}' was blocked by a deny rule`,
               decisionReason: B.decisionReason,
             };
-          if (!B.allowed && uL(B.decisionReason))
+          if (!B.allowed && isOutsideReadsBlockedAsk(B.decisionReason))
             d ??= lt(A, B.decisionReason, ie(j) ? B.resolvedPath : void 0);
         }
         if (F && IDe(E)) return Re(E);
@@ -2472,7 +2472,7 @@ function Gn(e, t, o = !1) {
         }
         if (!W) {
           let B = Ef(y.name),
-            q = Array.from(rb(t)),
+            q = Array.from(allWorkingDirectories(t)),
             G = He(q),
             J =
               z?.type === "other" || z?.type === "safetyCheck"
@@ -2508,7 +2508,7 @@ function Gn(e, t, o = !1) {
             decisionReason: z,
             suggestions: se,
           };
-          if (((a ??= ee), uL(z))) d ??= ee;
+          if (((a ??= ee), isOutsideReadsBlockedAsk(z))) d ??= ee;
         }
       }
       if (p)
@@ -2530,7 +2530,7 @@ function Gn(e, t, o = !1) {
             decisionReason: C,
           } = Ee(L.target, r, t, "create");
           if (!_) {
-            let A = Array.from(rb(t)),
+            let A = Array.from(allWorkingDirectories(t)),
               F = He(A),
               j =
                 C?.type === "other" || C?.type === "safetyCheck"
@@ -2567,7 +2567,7 @@ function Gn(e, t, o = !1) {
         decisionReason: w,
       } = Ee(y.target, r, t, "create");
       if (!L) {
-        let C = Array.from(rb(t)),
+        let C = Array.from(allWorkingDirectories(t)),
           A = He(C),
           F =
             w?.type === "other" || w?.type === "safetyCheck"
@@ -3481,7 +3481,7 @@ function Ht(e, t) {
   if (d[0] !== void 0)
     return {
       behavior: "ask",
-      message: Fl(Ut),
+      message: createPermissionRequestMessage(Ut),
       decisionReason: { type: "rule", rule: d[0] },
     };
   if (f[0] !== void 0)
@@ -3493,7 +3493,7 @@ function Ht(e, t) {
   let b = { type: "other", reason: "This command requires approval" };
   return {
     behavior: "passthrough",
-    message: Fl(Ut, b),
+    message: createPermissionRequestMessage(Ut, b),
     decisionReason: b,
     suggestions: _e(o),
   };
@@ -3517,7 +3517,7 @@ function As(e, t) {
   if (f[0] !== void 0)
     return {
       behavior: "ask",
-      message: Fl(Ut),
+      message: createPermissionRequestMessage(Ut),
       decisionReason: { type: "rule", rule: f[0] },
     };
   if (a.behavior === "allow") return a;
@@ -3530,7 +3530,7 @@ function As(e, t) {
   let p = { type: "other", reason: "This command requires approval" };
   return {
     behavior: "passthrough",
-    message: Fl(Ut, p),
+    message: createPermissionRequestMessage(Ut, p),
     decisionReason: p,
     suggestions: _e(o),
   };
@@ -3590,7 +3590,7 @@ async function Os(e, t) {
   ];
 }
 async function Gt(e, t) {
-  let o = ce(t);
+  let o = getToolPermissionContext(t);
   if (o.bashCommandClamps !== void 0 && o.bashCommandClamps.length > 0)
     return {
       behavior: "deny",
@@ -3598,18 +3598,18 @@ async function Gt(e, t) {
         "Permission to use PowerShell has been denied: this agent carries a per-spawn bashCommandClamp, which scopes shell execution to a " +
         "fixed set of Bash command forms \u2014 PowerShell commands cannot " +
         "match them. Use the clamped Bash forms instead.",
-      decisionReason: { type: "other", reason: s2e },
+      decisionReason: { type: "other", reason: BASH_COMMAND_CLAMP_DENY_REASON },
     };
   return Is(e, t, o);
 }
 function Kt(e) {
-  let t = ce(e).bashCommandClamps;
+  let t = getToolPermissionContext(e).bashCommandClamps;
   if (t !== void 0 && t.length > 0)
     return {
       behavior: "deny",
       message:
         "The PowerShell permission check crashed and this agent carries a per-spawn bashCommandClamp; denying rather than running an unverified command.",
-      decisionReason: { type: "other", reason: Rtt },
+      decisionReason: { type: "other", reason: BASH_COMMAND_CLAMP_CRASH_REASON },
     };
   return;
 }
@@ -3636,7 +3636,7 @@ async function Is(e, t, o) {
   if (p[0] !== void 0)
     I = {
       behavior: "ask",
-      message: Fl(Ut),
+      message: createPermissionRequestMessage(Ut),
       decisionReason: { type: "rule", rule: p[0] },
     };
   if (I === null && Q_(r))
@@ -3692,19 +3692,19 @@ async function Is(e, t, o) {
     }
     if (N && V !== void 0) return Re(V);
     let U = (Z) =>
-      K !== void 0 && Z.behavior === "ask" && !que(Z)
+      K !== void 0 && Z.behavior === "ask" && !carriesAskRuleIntent(Z)
         ? { ...Z, matchedAskRule: K }
         : Z;
     if (I !== null) return U(I);
     if (o.blockReadsOutsideWorkingDirectories === !0)
-      return zU(
+      return outsideReadsTooComplexAsk(
         `Command contains malformed syntax that cannot be parsed: ${d.errors[0]?.message ?? "unknown error"}`,
       );
     let ne = {
         type: "other",
         reason: `Command contains malformed syntax that cannot be parsed: ${d.errors[0]?.message ?? "unknown error"}`,
       },
-      D = { behavior: "ask", decisionReason: ne, message: Fl(Ut, ne) };
+      D = { behavior: "ask", decisionReason: ne, message: createPermissionRequestMessage(Ut, ne) };
     return U({
       ...D,
       decisionReason: { type: "subcommandResults", reasons: new Map([[r, D]]) },
@@ -3715,12 +3715,12 @@ async function Is(e, t, o) {
   if (I !== null) y.push(I);
   let L = Vt(r, d);
   if (L.behavior !== "passthrough")
-    if (o.blockReadsOutsideWorkingDirectories === !0) y.push(zU(L.message));
+    if (o.blockReadsOutsideWorkingDirectories === !0) y.push(outsideReadsTooComplexAsk(L.message));
     else {
       let v = { type: "other", reason: L.message };
       y.push({
         behavior: "ask",
-        message: Fl(Ut, v),
+        message: createPermissionRequestMessage(Ut, v),
         decisionReason: v,
         suggestions: _e(r),
       });
@@ -3733,7 +3733,7 @@ async function Is(e, t, o) {
     };
     y.push({
       behavior: "ask",
-      message: Fl(Ut, v),
+      message: createPermissionRequestMessage(Ut, v),
       decisionReason: v,
       suggestions: _e(r),
     });
@@ -3746,7 +3746,7 @@ async function Is(e, t, o) {
     };
     y.push({
       behavior: "ask",
-      message: Fl(Ut, v),
+      message: createPermissionRequestMessage(Ut, v),
       decisionReason: v,
       suggestions: _e(r),
     });
@@ -3759,7 +3759,7 @@ async function Is(e, t, o) {
     };
     y.push({
       behavior: "ask",
-      message: Fl(Ut, v),
+      message: createPermissionRequestMessage(Ut, v),
       decisionReason: v,
       suggestions: _e(r),
     });
@@ -3838,7 +3838,7 @@ async function Is(e, t, o) {
     else if (Z !== void 0)
       y.push({
         behavior: "ask",
-        message: Fl(Ut),
+        message: createPermissionRequestMessage(Ut),
         decisionReason: { type: "rule", rule: Z },
       });
   }
@@ -3851,7 +3851,7 @@ async function Is(e, t, o) {
       message:
         "Compound commands with cd/Set-Location and git require approval to prevent bare repository attacks",
     });
-  let W = j && Rhe();
+  let W = j && isCurrentDirectoryBareGitRepo();
   if (W)
     y.push({
       behavior: "ask",
@@ -3987,7 +3987,7 @@ async function Is(e, t, o) {
   let se = y.find((v) => v.behavior === "deny");
   if (se !== void 0) return se;
   let ee =
-    y.find((v) => v.behavior === "ask" && uL(v.decisionReason)) ??
+    y.find((v) => v.behavior === "ask" && isOutsideReadsBlockedAsk(v.decisionReason)) ??
     y.find((v) => v.behavior === "ask");
   if (ee !== void 0) {
     let v = {
@@ -3997,7 +3997,7 @@ async function Is(e, t, o) {
         reasons: new Map([[r, ee]]),
       },
     };
-    if (!que(v)) {
+    if (!carriesAskRuleIntent(v)) {
       for (let N of y)
         if (
           N.behavior === "ask" &&
@@ -4119,7 +4119,7 @@ async function Is(e, t, o) {
     if (PF(d).hasScriptBlocks) {
       let v = {
         behavior: "ask",
-        message: Fl(Ut),
+        message: createPermissionRequestMessage(Ut),
         decisionReason: {
           type: "other",
           reason:
@@ -4152,7 +4152,7 @@ async function Is(e, t, o) {
   }
   let ve = {
     behavior: "passthrough",
-    message: Fl(Ut, te),
+    message: createPermissionRequestMessage(Ut, te),
     decisionReason: te,
     suggestions: Te,
   };
@@ -4372,9 +4372,9 @@ function Qt(e, t, o) {
   if (
     o ||
     P() !== "windows" ||
-    !st.isSandboxEnabledInSettings() ||
-    !st.isPlatformInEnabledList() ||
-    !st.isStrictSandboxModeConfigured() ||
+    !SandboxManager.isSandboxEnabledInSettings() ||
+    !SandboxManager.isPlatformInEnabledList() ||
+    !SandboxManager.isStrictSandboxModeConfigured() ||
     e
   )
     return null;
@@ -4469,7 +4469,7 @@ var Ks =
         ),
     }),
   ),
-  Fa = Tt({
+  PowerShellTool = Tt({
     name: Ut,
     ruleContentField: "command",
     searchHint: "execute Windows PowerShell commands",
@@ -4533,11 +4533,11 @@ var Ks =
       if (!e?.command) return null;
       let { command: t, description: o } = e;
       if (o) return o;
-      return or(t, Iw);
+      return truncate(t, Iw);
     },
     getActivityDescription(e) {
       if (!e?.command) return "Running command";
-      return `Running ${e.description ?? or(e.command, Iw)}`;
+      return `Running ${e.description ?? truncate(e.command, Iw)}`;
     },
     isEnabled() {
       return !0;
@@ -4546,7 +4546,7 @@ var Ks =
       let t = Qt(Ze(e), e.command, !1);
       if (t !== null)
         return (
-          g("sandbox_exec", "windows_policy_refusal"),
+          logFeatureSad("sandbox_exec", "windows_policy_refusal"),
           { result: !1, message: t, errorCode: 11 }
         );
       if (QI() && Ys() && !Dl() && !e.run_in_background) {
@@ -4626,7 +4626,7 @@ var Ks =
       let w = f
         ? $2t({
             backgroundTaskId: f,
-            outputPath: _l(f),
+            outputPath: getTaskOutputPath(f),
             backgroundedByUser: b,
             backgroundedToDeliverMessage: p,
             timedOutAfterMs: I,
@@ -4658,7 +4658,7 @@ var Ks =
         f = Ze(e, { userTypedShellDispatch: d }),
         b = Qt(f, e.command, d && e.dangerouslyDisableSandbox === !0);
       if (b !== null)
-        throw (g("sandbox_exec", "windows_policy_refusal"), new Zte(b));
+        throw (logFeatureSad("sandbox_exec", "windows_policy_refusal"), new SandboxPolicyRefusalError(b));
       let { abortController: p, emitToolProgress: I } = t,
         x = !t.agentId,
         y = 0;
@@ -4710,14 +4710,14 @@ var Ks =
         )
           t.markPrResolvedThisSession();
         let F = tTe(e.command),
-          j = Ua(p.signal.reason),
+          j = unwrapAbortReason(p.signal.reason),
           W = w.interrupted && j === "interrupt",
-          E = w.interrupted && l$e(j);
+          E = w.interrupted && isUserInitiatedAbortReason(j);
         if (w.interrupted && j === "background") throw new Ve();
         let z = "",
           B = t.session.project.cwd;
         if (x) {
-          if (B2t(t.session, ce(t))) z = U2t("");
+          if (B2t(t.session, getToolPermissionContext(t))) z = U2t("");
         }
         let q =
           w.backgroundTaskId !== void 0 && DCt(t.agentContext) ? !0 : void 0;
@@ -4780,24 +4780,24 @@ var Ks =
             le = gt(Y, w.code);
           throw (
             i("tengu_powershell_tool_command_failed", {
-              command_type: u(Ie(e.command)),
+              command_type: fromEnum(Ie(e.command)),
               exit_code: w.code,
               stdout_length: J.length,
               error_class: Ub(le),
               not_recognized_kind:
                 le === "not_recognized" || le === "command_not_found"
-                  ? u(wt(Y) ?? "unextracted")
+                  ? fromEnum(wt(Y) ?? "unextracted")
                   : void 0,
               parser_error_kind:
                 le === "parser_error" || le === "ps5_chain_op"
-                  ? u(bt(Y) ?? "unextracted")
+                  ? fromEnum(bt(Y) ?? "unextracted")
                   : void 0,
-              bash_syntax_shape: u(vt(e.command)),
-              powershell_edition: u((await Vft()) ?? "unknown"),
+              bash_syntax_shape: fromEnum(vt(e.command)),
+              powershell_edition: fromEnum((await Vft()) ?? "unknown"),
               user_typed_shell_dispatch: d,
-              destructive_category: u(F ?? "none"),
-              destructive_target_scope: u(Jte(e.command, Q(), F)),
-              permission_mode: u(ce(t).mode),
+              destructive_category: fromEnum(F ?? "none"),
+              destructive_target_scope: fromEnum(Jte(e.command, Q(), F)),
+              permission_mode: fromEnum(getToolPermissionContext(t).mode),
             }),
             new G0({
               stdout: ee,
@@ -4816,11 +4816,11 @@ var Ks =
               te = M() && t.storageV5 !== void 0 ? hL($s(le), Ds(le)) : void 0,
               Te = !0;
             if (M() && t.storageV5 !== void 0 && te !== void 0) {
-              let ve = await _Wt(t.storageV5, te, w.outputFilePath, VAe, O7e());
+              let ve = await _Wt(t.storageV5, te, w.outputFilePath, MAX_PERSISTED_OUTPUT_BYTES, getTaskOutputRootDir());
               if (((Te = ve === "today"), typeof ve === "number"))
                 ((oe = le), (fe = ve));
             }
-            if (Te) ((fe = await N7e(w.outputFilePath, le, VAe)), (oe = le));
+            if (Te) ((fe = await persistTaskOutputSnapshot(w.outputFilePath, le, MAX_PERSISTED_OUTPUT_BYTES)), (oe = le));
           } catch {}
         let ye = Ugt(ee),
           re = ee;
@@ -4844,16 +4844,16 @@ var Ks =
         }
         return (
           i("tengu_powershell_tool_command_executed", {
-            command_type: u(Ie(e.command)),
+            command_type: fromEnum(Ie(e.command)),
             stdout_length: re.length,
             stderr_length: de.length,
             exit_code: w.code,
             interrupted: w.interrupted,
-            powershell_edition: u((await Vft()) ?? "unknown"),
+            powershell_edition: fromEnum((await Vft()) ?? "unknown"),
             user_typed_shell_dispatch: d,
-            destructive_category: u(F ?? "none"),
-            destructive_target_scope: u(Jte(e.command, Q(), F)),
-            permission_mode: u(ce(t).mode),
+            destructive_category: fromEnum(F ?? "none"),
+            destructive_target_scope: fromEnum(Jte(e.command, Q(), F)),
+            permission_mode: fromEnum(getToolPermissionContext(t).mode),
           }),
           {
             data: {
@@ -4970,7 +4970,7 @@ async function* Qs({
         }
       );
     return (
-      h(dt(ge(D), "PowerShell exec() pre-spawn setup failed")),
+      logError(dt(ge(D), "PowerShell exec() pre-spawn setup failed")),
       {
         stdout: "",
         stderr: `Failed to execute PowerShell command: ${l(D)}`,
@@ -5002,14 +5002,14 @@ async function* Qs({
   function N(D, Z) {
     if (U) {
       if (!I_t(U, te, A || C, r, p)) return;
-      ((G = U), i(D, { command_type: u(Ie(C)) }), Z?.(U));
+      ((G = U), i(D, { command_type: fromEnum(Ie(C)) }), Z?.(U));
       return;
     }
     v().then((ue) => {
       G = ue;
       let X = oe;
       if (X) ((oe = null), X());
-      if ((i(D, { command_type: u(Ie(C)) }), Z)) Z(ue);
+      if ((i(D, { command_type: fromEnum(Ie(C)) }), Z)) Z(ue);
     });
   }
   if (te.onTimeout && de)
@@ -5024,7 +5024,7 @@ async function* Qs({
     let D = await v();
     return (
       i("tengu_powershell_command_explicitly_backgrounded", {
-        command_type: u(Ie(C)),
+        command_type: fromEnum(Ie(C)),
       }),
       { stdout: "", stderr: "", code: 0, interrupted: !1, backgroundTaskId: D }
     );
@@ -5072,7 +5072,7 @@ async function* Qs({
         };
       if (
         o.signal.aborted &&
-        (Ua(o.signal.reason) === "interrupt" || ee()) &&
+        (unwrapAbortReason(o.signal.reason) === "interrupt" || ee()) &&
         !se
       ) {
         if (((se = !0), de || (ee() && pe))) {
@@ -5138,4 +5138,4 @@ async function* Qs({
     }
   }
 }
-export { Fa as PowerShellTool };
+export { PowerShellTool };

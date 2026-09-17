@@ -36,7 +36,7 @@ function hE(t) {
       : "";
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Claude Code</title><style>${u}</style></head><body><main>${d}<h1>${l(r)}</h1><p class="sub">${l(n)}</p>${o}</main>${s}</body></html>`;
 }
-import { createServer as g } from "http";
+import { createServer } from "http";
 function eGe(t) {
   let e = Array.isArray(t) ? t[0] : t;
   return e ? e : void 0;
@@ -69,7 +69,7 @@ async function c(t) {
   try {
     return (
       await new Promise((e, r) => {
-        let n = g();
+        let n = createServer();
         (n.once("error", r),
           n.listen(t, "127.0.0.1", () => {
             n.close(() => e());

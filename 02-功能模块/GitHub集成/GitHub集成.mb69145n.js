@@ -10,20 +10,20 @@
 
 // [preload stripped] 原本在此预载 232 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS as uB } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { isUnattendedBgSession as ap, lm, isAnthropicAuthEnabled as cl, getAnthropicApiKeySafe as gb, validateForceLoginMethod as Wse, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isUnattendedBgSession, lm, isAnthropicAuthEnabled, getAnthropicApiKeySafe, validateForceLoginMethod, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { getGithubRepo as N2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { getGithubRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { fi, Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { bhe } from "../Git-Worktree/chunk-bk9696gx.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -1446,7 +1446,7 @@ function Ut(yu) {
           Ae.handleManualAuthCodeInput({ authorizationCode: Qi, state: en }));
       } catch (Uo) {
         let tn = Uo;
-        (h(tn),
+        (logError(tn),
           Oe({
             state: "error",
             message: l(tn),
@@ -1462,7 +1462,7 @@ function Ut(yu) {
   if (le[8] !== Nt || le[9] !== Ae || le[10] !== Zs || le[11] !== or)
     ((Uo = async () => {
       (wt.current.forEach(_n), wt.current.clear());
-      let on = Wse(!0);
+      let on = validateForceLoginMethod(!0);
       if (!on.valid) {
         Oe({
           state: "error",
@@ -1479,7 +1479,7 @@ function Ut(yu) {
               Ko(!0);
             else wt.current.add(Nt.setTimeout(() => Ko(!0), 3000));
           },
-          { loginWithClaudeAi: !0, inferenceOnly: !0, expiresIn: uB },
+          { loginWithClaudeAi: !0, inferenceOnly: !0, expiresIn: LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS },
         );
         (Oe({ state: "processing" }),
           wt.current.add(
@@ -2130,7 +2130,7 @@ async function On({
   message: v,
   context: O,
 }) {
-  let A = await Fe("gh", ["api", `repos/${g}/contents/${f}`, "--jq", ".sha"]),
+  let A = await execFileNoThrow("gh", ["api", `repos/${g}/contents/${f}`, "--jq", ".sha"]),
     H = null;
   if (A.code === 0) H = A.stdout.trim();
   let P = a;
@@ -2158,7 +2158,7 @@ async function On({
       `branch=${b}`,
     ];
   if (H) X.push("-f", `sha=${H}`);
-  let B = await Fe("gh", X);
+  let B = await execFileNoThrow("gh", X);
   if (B.code !== 0) {
     if (B.stderr.includes("422") && B.stderr.includes("sha"))
       throw (
@@ -2199,7 +2199,7 @@ async function Jo(g, b, f, a, c = !1, v, O, A, H) {
       selected_claude_review_workflow: v.includes("claude-review"),
       ...A,
     });
-    let P = await Fe("gh", ["api", `repos/${g}`, "--jq", ".id"]);
+    let P = await execFileNoThrow("gh", ["api", `repos/${g}`, "--jq", ".id"]);
     if (P.code !== 0)
       throw (
         i("tengu_setup_github_actions_failed", {
@@ -2209,7 +2209,7 @@ async function Jo(g, b, f, a, c = !1, v, O, A, H) {
         }),
         Error(`Failed to access repository ${g}: ${P.stderr}`)
       );
-    let U = await Fe("gh", ["api", `repos/${g}`, "--jq", ".default_branch"]);
+    let U = await execFileNoThrow("gh", ["api", `repos/${g}`, "--jq", ".default_branch"]);
     if (U.code !== 0)
       throw (
         i("tengu_setup_github_actions_failed", {
@@ -2220,7 +2220,7 @@ async function Jo(g, b, f, a, c = !1, v, O, A, H) {
         Error(`Failed to get default branch: ${U.stderr}`)
       );
     let X = U.stdout.trim(),
-      B = await Fe("gh", [
+      B = await execFileNoThrow("gh", [
         "api",
         `repos/${g}/git/ref/heads/${X}`,
         "--jq",
@@ -2239,7 +2239,7 @@ async function Jo(g, b, f, a, c = !1, v, O, A, H) {
       j = null;
     if (!c) {
       (a(), (j = `add-claude-github-actions-${Date.now()}`));
-      let T = await Fe("gh", [
+      let T = await execFileNoThrow("gh", [
         "api",
         "--method",
         "POST",
@@ -2284,7 +2284,7 @@ async function Jo(g, b, f, a, c = !1, v, O, A, H) {
         });
     }
     if ((a(), b)) {
-      let T = await Fe("gh", ["secret", "set", f, "--body", b, "--repo", g]);
+      let T = await execFileNoThrow("gh", ["secret", "set", f, "--body", b, "--repo", g]);
       if (T.code !== 0) {
         i("tengu_setup_github_actions_failed", {
           reason: S("failed_to_set_api_key_secret"),
@@ -2314,7 +2314,7 @@ Need help? Common issues:
     (i("tengu_setup_github_actions_completed", {
       skip_workflow: c,
       has_api_key: !!b,
-      auth_type: u(O),
+      auth_type: fromEnum(O),
       using_default_secret_name: f === "ANTHROPIC_API_KEY",
       selected_claude_workflow: v.includes("claude"),
       selected_claude_review_workflow: v.includes("claude-review"),
@@ -2337,7 +2337,7 @@ Need help? Common issues:
       }),
       P instanceof Error)
     )
-      h(P);
+      logError(P);
     throw P;
   }
 }
@@ -2442,13 +2442,13 @@ function Vt(dp) {
   return Nn;
 }
 function Ta() {
-  return gb();
+  return getAnthropicApiKeySafe();
 }
 function Ea() {
   i("tengu_install_github_app_started", {});
 }
 function Ha(Um) {
-  return { ...Um, ...Xt };
+  return { ...Um, ...UNATTENDED_BG_DECLINE };
 }
 function Ba(Lm) {
   return { ...Lm, step: "creating", currentWorkflowInstallStep: 0 };
@@ -2505,7 +2505,7 @@ function Va(Qm) {
   return { ...Qm, secretExists: !0, step: "check-existing-secret" };
 }
 function za(ed) {
-  return { ...ed, ...Xt };
+  return { ...ed, ...UNATTENDED_BG_DECLINE };
 }
 function Xa(td) {
   return { ...td, step: "oauth-flow" };
@@ -2546,7 +2546,7 @@ var Ir = {
     selectedApiKeyOption: "new",
     authType: "api_key",
   },
-  Xt = {
+  UNATTENDED_BG_DECLINE = {
     step: "error",
     error:
       "Can't finish /install-github-app while no terminal is attached to this background session. Attach to it and run the command again.",
@@ -2558,7 +2558,7 @@ function Or(ke) {
     { storageV5: gr } = _e(),
     [q] = d(Ta);
   const wr = !!q,
-    _r = q ? "existing" : cl() ? "oauth" : "new";
+    _r = q ? "existing" : isAnthropicAuthEnabled() ? "oauth" : "new";
   let Dn;
   if (R[0] !== wr || R[1] !== _r)
     ((Dn = { ...Ir, useExistingKey: wr, selectedApiKeyOption: _r }),
@@ -2639,7 +2639,7 @@ function Or(ke) {
           }
         }
       }
-      let yr = (await N2e()) ?? "";
+      let yr = (await getGithubRepo()) ?? "";
       (i("tengu_install_github_app_step_completed", { step: S("check-gh") }),
         I((rm) => ({
           ...rm,
@@ -2677,7 +2677,7 @@ function Or(ke) {
     R[19] !== gr
   )
     ((Zn = async (im, nm) => {
-      if (ap()) {
+      if (isUnattendedBgSession()) {
         (i("tengu_install_github_app_error", {
           reason: S("unattended_bg_session"),
         }),
@@ -2750,7 +2750,7 @@ function Or(ke) {
   if (R[22] === p)
     ((ta = async function kr(cm) {
       try {
-        let rs = await Fe("gh", [
+        let rs = await execFileNoThrow("gh", [
           "api",
           `repos/${cm}`,
           "--jq",
@@ -2775,7 +2775,7 @@ function Or(ke) {
     ((oa = async function Cr(um) {
       return (
         (
-          await Fe("gh", [
+          await execFileNoThrow("gh", [
             "api",
             `repos/${um}/contents/.github/workflows/claude.yml`,
             "--jq",
@@ -2795,7 +2795,7 @@ function Or(ke) {
     R[27] !== s.selectedRepoName
   )
     ((sa = async function De() {
-      let ra = await Fe("gh", [
+      let ra = await execFileNoThrow("gh", [
         "secret",
         "list",
         "--app",
@@ -2971,7 +2971,7 @@ function Or(ke) {
           apiKeyOrOAuthToken: as,
           useExistingKey: s.selectedApiKeyOption === "existing",
         }));
-        let ua = await Fe("gh", [
+        let ua = await execFileNoThrow("gh", [
           "secret",
           "list",
           "--app",
@@ -3044,7 +3044,7 @@ function Or(ke) {
     fa;
   if (R[45] === p)
     ((fa = () => {
-      if (ap()) {
+      if (isUnattendedBgSession()) {
         (i("tengu_install_github_app_error", {
           reason: S("unattended_bg_session"),
         }),
@@ -3131,7 +3131,7 @@ function Or(ke) {
       if (
         (i("tengu_install_github_app_step_completed", {
           step: S("setup-actions-prompt"),
-          action: u(va),
+          action: fromEnum(va),
         }),
         va === "skip")
       )
@@ -3296,7 +3296,7 @@ For manual setup instructions, see: ${Z}`,
     }
     case "api-key": {
       let k;
-      if (R[88] === p) ((k = cl() ? vm : void 0), (R[88] = k));
+      if (R[88] === p) ((k = isAnthropicAuthEnabled() ? vm : void 0), (R[88] = k));
       else k = R[88];
       let z;
       if (
@@ -3458,7 +3458,7 @@ For manual setup instructions, see: ${Z}`,
   }
 }
 async function tm(g, b) {
-  if (ap()) {
+  if (isUnattendedBgSession()) {
     let v = await aye(
       b.session.host,
       "open this session to finish /install-github-app",
@@ -3496,4 +3496,4 @@ async function tm(g, b) {
     );
   return e(Or, { onDone: g });
 }
-export { Xt as UNATTENDED_BG_DECLINE, tm as call };
+export { UNATTENDED_BG_DECLINE, tm as call };

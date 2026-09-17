@@ -12,16 +12,16 @@
 import { Tn } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { qP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { uo, Hr } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qr } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { B8e } from "../../02-功能模块/权限系统/chunk-8rrcddth.js";
-import { _X, tY, isTranscriptPersistenceDisabled as hl } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { _X, tY, isTranscriptPersistenceDisabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -62,7 +62,7 @@ function re(Be) {
 }
 var Ne = async (r, n, g) => {
   if (Ci()) return (r(F0t, { display: "system" }), null);
-  if (hl())
+  if (isTranscriptPersistenceDisabled())
     return (
       r(
         "Can't fork: session persistence is off, so the new session would have nothing to start from. Run the task here, or fork from a session that saves its transcript.",
@@ -121,16 +121,16 @@ function W(Pe) {
             storageV5: M,
           });
           if (!s.ok) {
-            (f("repl_session_fork", s.reason ?? "spawn_failed"), d(s.error));
+            (logFeatureBad("repl_session_fork", s.reason ?? "spawn_failed"), d(s.error));
             return;
           }
-          (y("repl_session_fork"),
+          (logFeatureOk("repl_session_fork"),
             i("tengu_session_fork", {
               had_prompt: c.length > 0,
               message_count: k.length,
               had_worktree: s.hadWorktree,
               relocated: s.relocatedTo !== void 0,
-              ...(s.relocatedFrom && { relocated_from: u(s.relocatedFrom) }),
+              ...(s.relocatedFrom && { relocated_from: fromEnum(s.relocatedFrom) }),
               ...(s.sessionId && { child_session_hash: Tn(s.sessionId) }),
             }));
           let De = s.name ? fZt(qr(To(s.name))) : void 0;
@@ -146,7 +146,7 @@ function W(Pe) {
             id: s.short,
             chips: z ? [z] : [],
           });
-          let Q = Mo()
+          let Q = isCrossSessionMessagingEnabled()
             ? `The fork runs as its own separate session \u2014 nothing it does arrives in this conversation, and it does not see what happens here after the fork point. If you need to coordinate with it, it appears in the ${$i} listing as '${qr(To(s.rosterName))}' (it may be renamed later) and ${Vr} can message it there; it can message this session the same way.`
             : void 0;
           d(Xe, {
@@ -154,8 +154,8 @@ function W(Pe) {
             ...(Q !== void 0 && { metaMessages: [Q] }),
           });
         })().catch((Y) => {
-          (h(Y),
-            f("repl_session_fork", "unexpected_error"),
+          (logError(Y),
+            logFeatureBad("repl_session_fork", "unexpected_error"),
             d(
               `Couldn't fork: ${l(Y)}. This session is unaffected; try again.`,
             ));

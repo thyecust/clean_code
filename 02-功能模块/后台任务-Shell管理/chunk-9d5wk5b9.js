@@ -11,9 +11,9 @@ import { K, sn, G1, GDn, kg, m8, HL } from "../../00-第三方库/lodash/lodash.
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { y8 } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { rL, nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { ownProcStart as O6 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 var x = [
   { min: 0, max: 59 },
@@ -226,9 +226,9 @@ function Qre(e) {
     error: "use an interval (5m, 2h, 1d) or 5-field cron (*/5 * * * *)",
   };
 }
-import { randomUUID as I } from "crypto";
-import { readFileSync as A } from "fs";
-import { mkdir as D } from "fs/promises";
+import { randomUUID } from "crypto";
+import { readFileSync } from "fs";
+import { mkdir } from "fs/promises";
 import { join as S } from "path";
 var Xbt = 300000,
   P = /^\*\/\d+ \* \* \* \*$/,
@@ -243,7 +243,7 @@ async function Q7e(e) {
     r = await s.readFile(rJ(e), { encoding: "utf-8" });
   } catch (o) {
     if (Rt(o)) return [];
-    return (h(o), []);
+    return (logError(o), []);
   }
   let t = xt(r, !1);
   if (!t || typeof t !== "object") return [];
@@ -293,7 +293,7 @@ function uGt(e) {
   if (_bn(e)) return !1;
   let s;
   try {
-    s = A(rJ(e), "utf-8");
+    s = readFileSync(rJ(e), "utf-8");
   } catch {
     return !1;
   }
@@ -306,7 +306,7 @@ async function Ybt(e, s) {
   let r = s ?? sn(),
     t = !y8(S(r, ".claude"));
   if (t) await nke(r, S(r, ".claude"));
-  await D(S(r, ".claude"), { recursive: !0 });
+  await mkdir(S(r, ".claude"), { recursive: !0 });
   let i = { tasks: e.map(({ durable: a, ...o }) => o) };
   await wb(
     rJ(r),
@@ -322,7 +322,7 @@ async function Ybt(e, s) {
   );
 }
 async function nCe(e, s, r, t, i) {
-  let a = I().slice(0, 8),
+  let a = randomUUID().slice(0, 8),
     o = {
       id: a,
       cron: e,
@@ -337,7 +337,7 @@ async function nCe(e, s, r, t, i) {
       ...o,
       createdBySessionId: K(),
       createdByPid: process.pid,
-      createdByProcStart: O6(),
+      createdByProcStart: ownProcStart(),
     }),
     await Ybt(c),
     a

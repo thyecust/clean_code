@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { KLn, XLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { sXt } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 function n() {
@@ -23,7 +23,7 @@ function n() {
           : [Math.round(process.uptime() * 1000), "process_start"];
   return {
     msSinceSessionStart: r,
-    startAnchor: u(s),
+    startAnchor: fromEnum(s),
     isRemoteSession: Boolean(a.CLAUDE_CODE_REMOTE_SESSION_ID),
   };
 }
@@ -37,12 +37,12 @@ function gut(e, o) {
   i("tengu_chrome_tools_added", {
     ...n(),
     toolCount: e,
-    discoverySource: u(o),
+    discoverySource: fromEnum(o),
   });
 }
 function Z2n(e) {
   if (!t("bridge_connected")) return;
-  i("tengu_chrome_bridge_connected", { ...n(), bridgeStatus: we(e) });
+  i("tengu_chrome_bridge_connected", { ...n(), bridgeStatus: fromEnumOpt(e) });
 }
 function ejn() {
   if (!t("extension_connected")) return;

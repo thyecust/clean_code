@@ -489,7 +489,7 @@ return {
     { disableModelInvocation: l },
   );
 }
-function v() {
+function initBundledWorkflows() {
   a();
 }
-export { v as initBundledWorkflows };
+export { initBundledWorkflows };

@@ -35,7 +35,7 @@ ${t.map((e) => `- ${e}`).join(`
 `)}
 
 In the plain-text case, end your turn after asking. Their reply \u2014 one of the options or a free-form answer \u2014 is their role for the rest of setup.`,
-  o = `# Guided setup
+  SETUP_COWORK_PROMPT = `# Guided setup
 
 Help the user get Claude set up for their work. Six steps \u2014 role, plugins, connectors, try a skill, writing voice, wrap.
 
@@ -121,4 +121,4 @@ If they don't have a voice profile by the wrap, add one clause and no more: "\u2
 - The user trying a skill mid-flow is expected. Help with it, then return to where you left off. Don't let a skill invocation end the setup. This applies to Step 5 too: \`setup-writing-style\` is a long flow, and when it ends \u2014 however it ends \u2014 the user still needs the Step 6 wrap.
 - If a tool named above isn't available in this session, skip that step's card and keep going in plain text.
 `;
-export { o as SETUP_COWORK_PROMPT };
+export { SETUP_COWORK_PROMPT };

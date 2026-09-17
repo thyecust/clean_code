@@ -14,9 +14,9 @@ import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-a
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { Ia, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { ui, fa, $o, vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -228,7 +228,7 @@ function ao(Ft, Dn) {
     {
       children: r(t, {
         dimColor: !0,
-        children: [Ft.name, ": ", me(Ft.workspaceFolders)],
+        children: [Ft.name, ": ", formatWorkspaceFolders(Ft.workspaceFolders)],
       }),
     },
     Dn,
@@ -312,7 +312,7 @@ function Pe(dn) {
         return {
           label: ae.name,
           value: ae.port.toString(),
-          description: In ? me(ae.workspaceFolders) : void 0,
+          description: In ? formatWorkspaceFolders(ae.workspaceFolders) : void 0,
         };
       }),
         (A[10] = se),
@@ -591,7 +591,7 @@ function mt(Tn) {
   else ((Ht = Vn[2]), (Kt = Vn[3]));
   return (E(Ht, Kt), null);
 }
-async function io(n, s, m, l) {
+async function openProjectInSelectedIDE(n, s, m, l) {
   if (!n) {
     l("No IDE selected.");
     return;
@@ -605,15 +605,15 @@ async function io(n, s, m, l) {
     return;
   }
   let w = { useCwd: !0, useToolMemoryCgroup: !1 },
-    { code: g } = await Fe(a, [s], w);
+    { code: g } = await execFileNoThrow(a, [s], w);
   if (g !== 0 && !fe.basename(a).startsWith("code"))
-    ({ code: g } = await Fe("code", [s], w));
+    ({ code: g } = await execFileNoThrow("code", [s], w));
   if (g === 0) {
-    (y("ide_open_project"),
+    (logFeatureOk("ide_open_project"),
       l(`Opened ${m ? "worktree" : "project"} in ${ie.bold(n.name)}`));
     return;
   }
-  (f("ide_open_project", "ide_open_project_failed"),
+  (logFeatureBad("ide_open_project", "ide_open_project_failed"),
     l(`Failed to open in ${n.name}. Try opening manually: ${s}`));
 }
 async function cn(n, s, m) {
@@ -630,7 +630,7 @@ async function cn(n, s, m) {
       return (n("No IDEs with Claude Code extension detected."), null);
     return e(ut, {
       availableIDEs: b,
-      onSelectIDE: (T) => io(T, x, !!I, n),
+      onSelectIDE: (T) => openProjectInSelectedIDE(T, x, !!I, n),
       onDone: () => {
         n("Exited without opening IDE", { display: "system" });
       },
@@ -667,7 +667,7 @@ Please ${ie.bold("restart your IDE")} completely for it to take effect`);
     onDone: n,
   });
 }
-var dt = 35000;
+var IDE_CONNECTION_TIMEOUT_MS = 35000;
 function ft(_n) {
   let J = _(27),
     {
@@ -696,9 +696,9 @@ function ft(_n) {
         return;
       }
       if (P.type === "connected")
-        (y("ide_connect"), v(`Connected to ${S.name}.`));
+        (logFeatureOk("ide_connect"), v(`Connected to ${S.name}.`));
       else if (P.type === "failed")
-        (f("ide_connect", "ide_connect_failed"),
+        (logFeatureBad("ide_connect", "ide_connect_failed"),
           v(`Failed to connect to ${S.name}.`));
     }),
       (Qt = [P, S, v]),
@@ -715,7 +715,7 @@ function ft(_n) {
       if (!S) {
         return;
       }
-      (f("ide_connect", "ide_connect_timeout"),
+      (logFeatureBad("ide_connect", "ide_connect_timeout"),
         v(`Connection to ${S.name} timed out.`));
     }),
       (J[5] = S),
@@ -726,7 +726,7 @@ function ft(_n) {
   if (J[8] !== S || J[9] !== v)
     ((Gt = [S, v]), (J[8] = S), (J[9] = v), (J[10] = Gt));
   else Gt = J[10];
-  Un(Zt, S ? dt : null, Gt);
+  Un(Zt, S ? IDE_CONNECTION_TIMEOUT_MS : null, Gt);
   let eo;
   if (J[11] !== L || J[12] !== P || J[13] !== ue || J[14] !== v || J[15] !== at)
     ((eo = (oe) => {
@@ -742,7 +742,7 @@ function ft(_n) {
             .mcpClientModule();
           (Pn("ide", P.config), at(fo));
         }
-        if ((ue(ho), L)) y("ide_disconnect");
+        if ((ue(ho), L)) logFeatureOk("ide_disconnect");
         v(L ? `Disconnected from ${L.name}.` : "No IDE selected.");
         return;
       }
@@ -807,7 +807,7 @@ function ft(_n) {
   else oo = J[26];
   return oo;
 }
-function me(n, s = 100) {
+function formatWorkspaceFolders(n, s = 100) {
   if (n.length === 0) return "";
   let m = Q(),
     l = n.slice(0, 2),
@@ -830,8 +830,8 @@ function me(n, s = 100) {
 }
 export {
   ft as IDECommandFlow,
-  dt as IDE_CONNECTION_TIMEOUT_MS,
+  IDE_CONNECTION_TIMEOUT_MS,
   cn as call,
-  me as formatWorkspaceFolders,
-  io as openProjectInSelectedIDE,
+  formatWorkspaceFolders,
+  openProjectInSelectedIDE,
 };

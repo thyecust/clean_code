@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { hbe, kdt } from "./chunk-kk7p3hsm.js";
 import { An, ku, NW } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { resolve as o } from "path";
-import { pathToFileURL as l } from "url";
+import { resolve } from "path";
+import { pathToFileURL } from "url";
 function tO(n) {
   try {
     let r = NW(n),
-      e = NW(o(r));
+      e = NW(resolve(r));
     if (ku(r) || An(e) || hbe(r) || hbe(e)) return null;
-    let t = l(r);
+    let t = pathToFileURL(r);
     return t.hostname !== "" || kdt(t.href) ? null : t.href;
   } catch {
     return null;

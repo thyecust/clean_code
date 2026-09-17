@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ar, Llr, LP, gkt, w0n } from "../权限系统/chunk-e4pfvp7x.js";
-import { getMarketingNameForModel as bu } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { te, truncateToWidth as Xe, formatDuration as Ot, formatBarElapsed as Ihe, formatTokens as Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getMarketingNameForModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { te, truncateToWidth, formatDuration, formatBarElapsed, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { h_ } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -25,7 +25,7 @@ import { xs, L, fw } from "../Teammates团队/chunk-mrfx53ye.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function uye(n, i) {
-  let a = (s) => bu(s) ?? fw(s);
+  let a = (s) => getMarketingNameForModel(s) ?? fw(s);
   if (i != null) return `${n == null ? "" : `${a(n)} `}${Llr} ${a(i)}`;
   return n != null ? a(n) : "";
 }
@@ -129,7 +129,7 @@ function ne(Eo) {
     if (m.tokens != null) {
       let P;
       if (S[11] !== m.tokens)
-        ((P = Pn(m.tokens)), (S[11] = m.tokens), (S[12] = P));
+        ((P = formatTokens(m.tokens)), (S[11] = m.tokens), (S[12] = P));
       else P = S[12];
       w.push(`${P} tok`);
     }
@@ -144,7 +144,7 @@ function ne(Eo) {
     if (m.durationMs != null) {
       let P;
       if (S[15] !== m.durationMs)
-        ((P = Ot(m.durationMs)), (S[15] = m.durationMs), (S[16] = P));
+        ((P = formatDuration(m.durationMs)), (S[15] = m.durationMs), (S[16] = P));
       else P = S[16];
       w.push(P);
     }
@@ -640,7 +640,7 @@ function VIt(Rr) {
     Jt = Math.max(1, be - Wr),
     so;
   if (O[0] !== Vt || O[1] !== Jt)
-    ((so = Xe(Vt, Jt)), (O[0] = Vt), (O[1] = Jt), (O[2] = so));
+    ((so = truncateToWidth(Vt, Jt)), (O[0] = Vt), (O[1] = Jt), (O[2] = so));
   else so = O[2];
   let Ye = so,
     $r = `${ge} ${he} ${Ye}`,
@@ -728,7 +728,7 @@ function KIt(Dr) {
     j = lo === void 0 ? !1 : lo,
     co;
   if (re[0] !== ct)
-    ((co = ct !== void 0 ? Ihe(ct) : void 0), (re[0] = ct), (re[1] = co));
+    ((co = ct !== void 0 ? formatBarElapsed(ct) : void 0), (re[0] = ct), (re[1] = co));
   else co = re[1];
   let uo = co,
     an = Ir ? ` \xB7 ${L.ellipsis} to view` : "",
@@ -968,14 +968,14 @@ var wt = " & ";
 function pWe(n) {
   let { titles: i, positionStart: a, totalPhases: s } = n,
     l = i.map(Po);
-  if (l.length === 1) return `${Xe(l[0] ?? "", xe)} (${a}/${s})`;
+  if (l.length === 1) return `${truncateToWidth(l[0] ?? "", xe)} (${a}/${s})`;
   if (l.length === 2) {
-    let c = l.map((h) => Xe(h, xe)).join(wt),
+    let c = l.map((h) => truncateToWidth(h, xe)).join(wt),
       g = Math.floor((xn - wt.length) / 2);
-    return te(c) <= xn ? c : l.map((h) => Xe(h, g)).join(wt);
+    return te(c) <= xn ? c : l.map((h) => truncateToWidth(h, g)).join(wt);
   }
   let u = ` +${l.length - 1}`;
-  return Xe(l[0] ?? "", xe - te(u)) + u;
+  return truncateToWidth(l[0] ?? "", xe - te(u)) + u;
 }
 function cZt(n, i) {
   let a = 0,
@@ -1002,7 +1002,7 @@ function dZt(n, i, a, s) {
               ? " \xB7 failed"
               : "",
     u = i,
-    c = `${a.doneAgents}/${a.totalAgents} ${x(a.totalAgents, "agent")} \xB7 ${Ihe(s)}${l}`;
+    c = `${a.doneAgents}/${a.totalAgents} ${x(a.totalAgents, "agent")} \xB7 ${formatBarElapsed(s)}${l}`;
   return {
     name: n.workflowName ?? n.summary ?? n.description,
     subtext: u,

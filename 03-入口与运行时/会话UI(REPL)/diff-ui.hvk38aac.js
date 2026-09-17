@@ -29,12 +29,12 @@ var N = async (t, o) => {
     (eN() || o.dispatchedAsImmediate)
   ) {
     let i = await import("./chunk-vpp75aza.js");
-    return e(y, { onDone: t, sidebar: i });
+    return e(ToggleDiffSidebar, { onDone: t, sidebar: i });
   }
   let { DiffDialog: a } = await import("../../02-功能模块/Diff引擎/DiffDialog.85kzjn95.js");
   return e(a, { messages: o.messages, onDone: t });
 };
-function y(B) {
+function ToggleDiffSidebar(B) {
   let G = _(9),
     { onDone: s, sidebar: r } = B,
     m = U(h),
@@ -93,4 +93,4 @@ function y(B) {
   else ((I = G[7]), (R = G[8]));
   return (E(I, R), null);
 }
-export { y as ToggleDiffSidebar, N as call };
+export { ToggleDiffSidebar, N as call };

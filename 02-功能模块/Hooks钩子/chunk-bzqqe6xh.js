@@ -35,7 +35,7 @@ var fdr = (r) =>
   typeof r.addEventListener === "function" &&
   typeof r.removeEventListener === "function";
 var FHt = (r) => new Je(`${r}: its environment was unloaded`);
-import { readFile as rr } from "fs/promises";
+import { readFile } from "fs/promises";
 var h = `/** @jsxRuntime classic */
 /** @jsx h */
 /** @jsxFrag Fragment */
@@ -71,16 +71,16 @@ async function g(r, o) {
 }
 var V = (r, o, e) => new Je(`${r}: ${o}: not readable (${c(e)})`);
 var oNn = (r, o) => new Je(`${r}: ${o} is over ${tNn} bytes and was not read`);
-import { lstat as Y, realpath as S } from "fs/promises";
-import { basename as B, isAbsolute as q, relative as G, sep as J } from "path";
+import { lstat, realpath } from "fs/promises";
+import { basename, isAbsolute as q, relative as G, sep as J } from "path";
 async function sNn(r, o, e) {
-  let p = await g(S(o), (m) => V(e, B(o), m)),
+  let p = await g(realpath(o), (m) => V(e, basename(o), m)),
     f = (m) => w(e, r, m),
-    t = await g(S(r), f),
+    t = await g(realpath(r), f),
     a = G(p, t);
   if (a === ".." || a.startsWith(`..${J}`) || q(a))
     throw new Je(`${e}: ${r}: ${t} resolves outside the plugin's folder`);
-  let x = await g(Y(t), f);
+  let x = await g(lstat(t), f);
   if (!x.isFile()) throw new Je(`${e}: ${r}: not a regular file`);
   return { real: t, size: x.size };
 }
@@ -88,7 +88,7 @@ async function iNn(r, o, e) {
   let { real: p, size: f } = await sNn(r, o, e);
   if (f > tNn) throw oNn(e, r);
   try {
-    return await rr(p, "utf8");
+    return await readFile(p, "utf8");
   } catch (t) {
     throw w(e, r, t);
   }
@@ -108,9 +108,9 @@ var nNn = (r, o, e) =>
   new Je(
     `${r}: cannot import "${o}" (from ${e}): a hooks module imports its own files by relative path and "${rot}", nothing else`,
   );
-import { dirname as b, resolve as _ } from "path";
+import { dirname, resolve } from "path";
 var T = (r, o) =>
-  [".", "..", "./", "../"].includes(o) ? _(b(r), o, "index") : _(b(r), o);
+  [".", "..", "./", "../"].includes(o) ? resolve(dirname(r), o, "index") : resolve(dirname(r), o);
 var rNn = (r) =>
   r === "." || r === ".." || r.startsWith("./") || r.startsWith("../");
 var H = [

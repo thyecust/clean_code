@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import {
-  lstatSync as S,
-  readFileSync as C,
-  rmSync as p,
-  unlinkSync as g,
-  writeFileSync as f,
+  lstatSync,
+  readFileSync,
+  rmSync,
+  unlinkSync,
+  writeFileSync,
 } from "fs";
 import { join as c } from "path";
 var y = "exit-cause",
@@ -24,7 +24,7 @@ function setBgExitCause(e, t) {
   let n = t ?? process.env.CLAUDE_JOB_DIR;
   if (!n) return;
   try {
-    f(c(n, y), e);
+    writeFileSync(c(n, y), e);
   } catch {}
 }
 function setBgExitDetail(e, t, n) {
@@ -32,7 +32,7 @@ function setBgExitDetail(e, t, n) {
     i = t.trim();
   if (!r || !i) return;
   try {
-    f(
+    writeFileSync(
       c(r, h),
       `${e}
 ${i.slice(0, P)}`,
@@ -51,15 +51,15 @@ function readAndClearBgExitDetail(e, t) {
 }
 function E(e) {
   try {
-    let t = S(e);
+    let t = lstatSync(e);
     if (!t.isFile() || t.size > 65536) {
       try {
-        p(e, { recursive: !0, force: !0 });
+        rmSync(e, { recursive: !0, force: !0 });
       } catch {}
       return;
     }
-    let n = C(e, "utf8");
-    return (g(e), n);
+    let n = readFileSync(e, "utf8");
+    return (unlinkSync(e), n);
   } catch {
     return;
   }

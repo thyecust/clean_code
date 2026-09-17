@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { l, W, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { We, z, Is, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, T_e } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { uxe, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { uxe, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { kA, Yie } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Sl } from "../插件系统/chunk-7s6mt1vg.js";
 import { Gcr, _n, O1, Ce, Vcr } from "../Teammates团队/chunk-qe04h4c5.js";
@@ -41,13 +41,13 @@ import {
   Emn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { readJobStateFreshOrNull as myn, readPinnedJobIds as Hpe, isSettled as Hs } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { wvn, QN, H, getMemoryBaseDir as s1, getAutoMemPath as Ns } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isSameProcessAsync as Pm } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { LITE_READ_BUF_SIZE as Mm, extractFieldFromFirstEntryStrict as qke, extractFieldFromLastEntryStrict as V7t, readHeadAndTail as Rnt, anchorOffsetTail as aPn } from "./chunk-mkmy4cx2.js";
+import { readJobStateFreshOrNull, readPinnedJobIds, isSettled } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { wvn, QN, H, getMemoryBaseDir, getAutoMemPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { LITE_READ_BUF_SIZE, extractFieldFromFirstEntryStrict, extractFieldFromLastEntryStrict, readHeadAndTail, anchorOffsetTail } from "./chunk-mkmy4cx2.js";
 import { The, lcr, txt, xIn, ccr, Ehe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { kPn } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { getSettingsForSource as ye, getSettings_DEPRECATED as bn, anyAdminPolicyTierGovernsRetention as Nxn, getPolicySettingsLoadErrors as xq, getSecuritySensitiveSetting as hx, rawSettingsKeyPresence as kBe } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, getSettings_DEPRECATED, anyAdminPolicyTierGovernsRetention, getPolicySettingsLoadErrors, getSecuritySensitiveSetting, rawSettingsKeyPresence } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pm } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { Apt } from "../../01-核心基础设施/共享小工具-未细化/chunk-5pc36v8n.js";
@@ -69,29 +69,29 @@ import { tOe, wan } from "../Skills技能/chunk-wwgqvtfr.js";
 import { FG, jK, zo } from "../MCP客户端/chunk-3kmsshb6.js";
 import { k9n, yan, W4 } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { Pl } from "../Teammates团队/chunk-thxapyam.js";
-import { resetPlanFileCacheToUnknown as gJe } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { resetPlanFileCacheToUnknown } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { Gyn } from "../图片-截图-ComputerUse/chunk-b8jsase9.js";
 import { Mpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
 import { fze } from "../跨会话消息(UDS)/chunk-qvnte9zp.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import * as A from "fs/promises";
-import { homedir as fr, tmpdir as _e } from "os";
-import { basename as ne, dirname as me, join as d } from "path";
+import { homedir, tmpdir } from "os";
+import { basename, dirname, join as d } from "path";
 var ce = 3,
   le = 3,
   V = 1;
 import {
-  lstat as Re,
-  mkdir as $t,
-  realpath as Ht,
-  rename as Wt,
+  lstat,
+  mkdir,
+  realpath,
+  rename,
   rm as Yt,
 } from "fs/promises";
 async function K(e) {
   let t;
   try {
-    t = await Re(e, { bigint: !0 });
+    t = await lstat(e, { bigint: !0 });
   } catch (a) {
     if (W(a)) return null;
     throw a;
@@ -121,20 +121,20 @@ function ve(e) {
   );
 }
 async function Ept(e) {
-  if (!Nr("userSettings") && bn()?.cleanupPeriodDays === void 0)
+  if (!Nr("userSettings") && getSettings_DEPRECATED()?.cleanupPeriodDays === void 0)
     return (
       n(
         "Skipping retention cleanup: userSettings source is disabled (--setting-sources) and no enabled source provides cleanupPeriodDays.",
       ),
       "user_source_disabled"
     );
-  if (ye("policySettings")?.cleanupPeriodDays !== void 0) return null;
+  if (getSettingsForSource("policySettings")?.cleanupPeriodDays !== void 0) return null;
   if (
     W4().errors.filter((r) => !r.mcpErrorMetadata && r.severity !== "warning")
       .length > 0
   )
     for (let r of t2e) {
-      let a = await kBe(
+      let a = await rawSettingsKeyPresence(
         r,
         e,
         r === "desktopSessionCleanupPeriodDays"
@@ -162,7 +162,7 @@ async function Vhr(e) {
   return (await Ept(e)) === null;
 }
 function NS(e) {
-  let r = (bn() || {}).cleanupPeriodDays ?? q;
+  let r = (getSettings_DEPRECATED() || {}).cleanupPeriodDays ?? q;
   if (r === 0) return null;
   if (e !== void 0 && e < r) r = e;
   let a = r * 24 * 60 * 60 * 1000;
@@ -192,14 +192,14 @@ function Te(e) {
   return /^[0-9A-Za-z_-]{1,64}$/.test(e);
 }
 function xe() {
-  let e = hx("desktopSessionCleanupPeriodDays")[0] ?? Ee;
+  let e = getSecuritySensitiveSetting("desktopSessionCleanupPeriodDays")[0] ?? Ee;
   if (e === 0) return null;
   return new Date(Date.now() - e * 24 * 60 * 60 * 1000);
 }
 function Ae() {
-  if (ye("policySettings")?.cleanupPeriodDays !== void 0) return !0;
-  if (Nxn()) return !0;
-  return xq().some(
+  if (getSettingsForSource("policySettings")?.cleanupPeriodDays !== void 0) return !0;
+  if (anyAdminPolicyTierGovernsRetention()) return !0;
+  return getPolicySettingsLoadErrors().some(
     (e) =>
       e.file !== H8t &&
       (t2e.some((t) => t === e.path) || e.severity !== "warning"),
@@ -247,7 +247,7 @@ async function pe(e, t, r) {
     if (W(o));
     else if (Obe(o))
       n(`cleanup readdir ${e} failed: ${o.code}`, { level: "error" });
-    else h(o);
+    else logError(o);
   }
   return a;
 }
@@ -273,7 +273,7 @@ async function je() {
     if (W(f));
     else if (Obe(f))
       n(`cleanup mcp-logs scan failed: ${f.code}`, { level: "error" });
-    else h(f);
+    else logError(f);
   }
   return o;
 }
@@ -488,8 +488,8 @@ async function Be() {
             )
               return (t.transcriptsExemptedDesktop++, !0);
           }
-          p ??= Buffer.allocUnsafe(Mm);
-          let { head: b, tail: _ } = await Rnt(D, R.size, p);
+          p ??= Buffer.allocUnsafe(LITE_READ_BUF_SIZE);
+          let { head: b, tail: _ } = await readHeadAndTail(D, R.size, p);
           if (b === "" && R.size > 0)
             throw (
               await a.stat(D),
@@ -497,16 +497,16 @@ async function Be() {
                 "transient read failure while classifying a transcript for the desktop retention exemption",
               )
             );
-          let B = R.size > Mm ? aPn(_) : _,
-            k = qke(b, "entrypoint"),
-            I = V7t(B, "entrypoint");
+          let B = R.size > LITE_READ_BUF_SIZE ? anchorOffsetTail(_) : _,
+            k = extractFieldFromFirstEntryStrict(b, "entrypoint"),
+            I = extractFieldFromLastEntryStrict(B, "entrypoint");
           if (!((k !== void 0 && kPn(k)) || (I !== void 0 && kPn(I))))
             return !1;
-          let Y = ne(D).startsWith("agent-")
-            ? (qke(b, "sessionId") ?? V7t(B, "sessionId"))
+          let Y = basename(D).startsWith("agent-")
+            ? (extractFieldFromFirstEntryStrict(b, "sessionId") ?? extractFieldFromLastEntryStrict(B, "sessionId"))
             : void 0;
           if (Y !== void 0 && Te(Y)) {
-            let L = d(me(D), `${Y}${X}`);
+            let L = d(dirname(D), `${Y}${X}`);
             if (L !== te(D)) {
               if ((await fe(L, a, e)) === "release-now") return !1;
             }
@@ -727,7 +727,7 @@ async function Ue() {
     if (!W(a))
       if ((e.errors++, Obe(a)))
         n(`cleanup team-discovery-cache failed: ${a.code}`, { level: "error" });
-      else h(a);
+      else logError(a);
   }
   return e;
 }
@@ -751,7 +751,7 @@ async function He() {
     if (!W(a))
       if ((e.errors++, Obe(a)))
         n(`cleanup mcp-auth-cache failed: ${a.code}`, { level: "error" });
-      else h(a);
+      else logError(a);
   }
   return e;
 }
@@ -768,7 +768,7 @@ async function Ye() {
         n(`cleanup device-unbound-creates failed: ${a.code}`, {
           level: "error",
         });
-      else h(a);
+      else logError(a);
   }
   return e;
 }
@@ -954,7 +954,7 @@ async function qe(e) {
       return await v(t, (r) => r.endsWith(".md") || r.includes(".md.tmp."));
     return await v(t, ".md");
   } finally {
-    gJe();
+    resetPlanFileCacheToUnknown();
   }
 }
 async function j(
@@ -1037,7 +1037,7 @@ async function tt(e) {
         o?.ino !== r.ino ||
         o.dev !== r.dev ||
         (await K(a)) === null ||
-        (await A.realpath(a)) !== d(await A.realpath(me(t)), Q4e, ne(a))
+        (await A.realpath(a)) !== d(await A.realpath(dirname(t)), Q4e, basename(a))
       );
     },
   });
@@ -1358,7 +1358,7 @@ async function Dt() {
   }
   return t;
 }
-async function kt(e, t = _e()) {
+async function kt(e, t = tmpdir()) {
   let r = E(),
     a = ae(),
     o = process.getuid?.(),
@@ -1439,7 +1439,7 @@ async function Pt(e) {
   let a = v9n(),
     o = NS(),
     f = new Set();
-  if (!a) for (let p of await Hpe(e)) f.add(p);
+  if (!a) for (let p of await readPinnedJobIds(e)) f.add(p);
   let w = !1,
     y = !1;
   try {
@@ -1458,8 +1458,8 @@ async function Pt(e) {
             typeof _ === "object" &&
             "pid" in _ &&
             typeof _.pid === "number" &&
-            Vs(_.pid) &&
-            (await Pm(
+            isProcessRunning(_.pid) &&
+            (await isSameProcessAsync(
               _.pid,
               "procStart" in _ && typeof _.procStart === "string"
                 ? _.procStart
@@ -1478,19 +1478,19 @@ async function Pt(e) {
         skipIf: async (p) => {
           let g;
           try {
-            g = await myn(p, e);
+            g = await readJobStateFreshOrNull(p, e);
           } catch (D) {
             throw (
-              h(D),
+              logError(D),
               n(
-                `[cleanup] jobs/${ne(p)}: job state read threw \u2014 keeping the folder (${l(D)})`,
+                `[cleanup] jobs/${basename(p)}: job state read threw \u2014 keeping the folder (${l(D)})`,
                 { level: "error" },
               ),
               D
             );
           }
-          if (!a && (g === null || !Hs(g))) return !0;
-          if (g?.worktreePath && Hs(g) && o)
+          if (!a && (g === null || !isSettled(g))) return !0;
+          if (g?.worktreePath && isSettled(g) && o)
             await Emn({
               worktreePath: g.worktreePath,
               worktreeBranch: g.worktreeBranch,
@@ -1597,7 +1597,7 @@ async function gan(e) {
   i("tengu_cleanup_throttle_marker", {
     marker: S("last-cleanup"),
     verdict: S("not_regular_rerun"),
-    code: u(t.error.code),
+    code: fromEnum(t.error.code),
     errno: It("telemetryCode" in t.error ? t.error.telemetryCode : void 0),
   });
   let r = await e.delete(Ce.state("last-cleanup"));
@@ -1665,7 +1665,7 @@ async function Nt() {
   let e = E(),
     t = NS();
   if (t === null) return e;
-  let r = d(s1(), "projects"),
+  let r = d(getMemoryBaseDir(), "projects"),
     a = ae(),
     o = await a.lstat(r).catch((w) => {
       if (!W(w)) e.errors++;
@@ -1692,14 +1692,14 @@ async function jt() {
   let t = E(),
     r = NS();
   if (r === null) return t;
-  let a = d(s1(), "projects"),
+  let a = d(getMemoryBaseDir(), "projects"),
     o = ae(),
     f = await o.readdir(a).catch(() => []);
   for (let w of f) {
     if (!w.isDirectory()) continue;
     t = F(t, await de(d(a, w.name, "memory", "proposals"), r, o));
   }
-  return F(t, await de(d(Ns(), "proposals"), r, o));
+  return F(t, await de(d(getAutoMemPath(), "proposals"), r, o));
 }
 var Mt = "skill-proposal";
 async function de(e, t, r) {
@@ -1733,9 +1733,9 @@ async function de(e, t, r) {
 async function _an(e) {
   await k9n();
   let t = await Ept(e),
-    r = bn()?.cleanupPeriodDays;
+    r = getSettings_DEPRECATED()?.cleanupPeriodDays;
   if (t !== null) {
-    (i("tengu_retention_sweep", { skipped: !0, skipReason: u(t) }),
+    (i("tengu_retention_sweep", { skipped: !0, skipReason: fromEnum(t) }),
       wSn({
         result: "skipped",
         skipReason: t,

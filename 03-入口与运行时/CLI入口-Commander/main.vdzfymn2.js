@@ -49,7 +49,7 @@ import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we, fromEnumArr as Ga } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Iu, dt, ge, l, A, Gw, EZ, hv, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, Yu, zur, fp, zR, rje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tl, Nx, be, kje, uo, Hr, Grt, Yur } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -59,7 +59,7 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import "../../00-第三方库/zod/zod.3g334xwq.js";
 import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
 import { cur, uur } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Ee, Br, Fnt } from "./chunk-6rfqqsva.js";
@@ -78,28 +78,28 @@ import {
   NAt,
   $rr,
   jCn,
-  getMainLoopModel as rt,
-  getDefaultOpusModel as Ll,
-  isOpus1mMergeEnabled as vw,
-  isLegacyModelRemapEnabled as dUe,
+  getMainLoopModel,
+  getDefaultOpusModel,
+  isOpus1mMergeEnabled,
+  isLegacyModelRemapEnabled,
   Tn,
   Ise,
-  prepareApiRequest as ox,
-  fetchSession as w6,
-  sendEventToRemoteSession as Jme,
+  prepareApiRequest,
+  fetchSession,
+  sendEventToRemoteSession,
   SP,
   yU,
-  isBgSession as _t,
-  isUnattendedInteractiveSession as Sg,
+  isBgSession,
+  isUnattendedInteractiveSession,
   u0,
   LUe,
-  getUnapprovedCustomApiKey as yZe,
-  getStoredOauthAccountInfo as mh,
-  getSubscriptionType as qn,
-  isMaxSubscriber as wRe,
-  isTeamPremiumSubscriber as pvt,
-  isProSubscriber as Bse,
-  validateForceLoginOrg as cx,
+  getUnapprovedCustomApiKey,
+  getStoredOauthAccountInfo,
+  getSubscriptionType,
+  isMaxSubscriber,
+  isTeamPremiumSubscriber,
+  isProSubscriber,
+  validateForceLoginOrg,
   df,
   H,
   od,
@@ -107,8 +107,8 @@ import {
   qUe,
   VD,
   Bo,
-  isWorkspacePersistedTrusted as Cd,
-  getWorkspacePersistedTrustKey as tS,
+  isWorkspacePersistedTrusted,
+  getWorkspacePersistedTrustKey,
   YC,
   Te,
   ee,
@@ -121,22 +121,22 @@ import {
   _Q,
   eBe,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
-import { Pt, getIsGit as hh, getBranch as Da, getWorktreeCount as M2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { Pt, getIsGit, getBranch, getWorktreeCount } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { isTranscriptFileResumeArg as XQ } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
+import { isTranscriptFileResumeArg } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { Za, getLastLoadStatus as V6, getRemoteSettingsPathOverride as YT, isAdminPolicyOrigin as T1 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { Za, getLastLoadStatus, getRemoteSettingsPathOverride, isAdminPolicyOrigin } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import {
   rRt,
@@ -148,29 +148,29 @@ import {
   Sar,
   bar,
   war,
-  getSettingsForSource as ye,
-  getInitialSettings as Ge,
-  getSettings_DEPRECATED as bn,
-  getEffectiveSettingSource as VT,
-  getBasePolicySettings as CQ,
-  getBasePolicySettingsOrigin as vQ,
-  isForceRemoteSettingsRefreshConfigured as mRt,
-  getPolicyHelperSourceLoadErrors as RBe,
-  updateSettingsForSource as Jt,
-  updateSettingsForSourceWithTransform as Ii,
-  hasSkipDangerousModePermissionPrompt as eL,
-  getAutoModeConfig as tL,
+  getSettingsForSource,
+  getInitialSettings,
+  getSettings_DEPRECATED,
+  getEffectiveSettingSource,
+  getBasePolicySettings,
+  getBasePolicySettingsOrigin,
+  isForceRemoteSettingsRefreshConfigured,
+  getPolicyHelperSourceLoadErrors,
+  updateSettingsForSource,
+  updateSettingsForSourceWithTransform,
+  hasSkipDangerousModePermissionPrompt,
+  getAutoModeConfig,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { PERMISSION_MODES as ly, PERMISSION_MODE_MANUAL_ALIAS as qU, E1, Eb } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { PERMISSION_MODES, PERMISSION_MODE_MANUAL_ALIAS, E1, Eb } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
 import "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
 import "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { toCompatSessionId as zu, remoteRowId as Ntt } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { toCompatSessionId, remoteRowId } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { getDynamicTeamContext as L5 } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
+import { getDynamicTeamContext } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
-import { Xt, getAPIProvider as Pe, isFirstPartyApiBackend as Wu } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { Xt, getAPIProvider, isFirstPartyApiBackend } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import "../../00-第三方库/axios/axios.t0fczzmz.js";
 import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
@@ -189,13 +189,13 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js"
 import "../../02-功能模块/Hooks钩子/chunk-9em0d4k5.js";
 import { v$e, Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { ny, FJe } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
-import { printCliError as rM, cliError as un, cliOk as Yw, cliWarn as Ey, cliErrorAfterAnalyticsFlush as di, cliOkAfterAnalyticsFlush as dO } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { printCliError, cliError, cliOk, cliWarn, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { Aa } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
 import "../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
-import { isClaudeMdLoadingDisabled as uR } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
+import { isClaudeMdLoadingDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
 import "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { isScrubEnabled as Bu } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { goe, dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import {
   X7,
@@ -209,10 +209,10 @@ import {
   rmt,
   lT,
   kl,
-  SandboxManager as st,
+  SandboxManager,
   ep,
   lTe,
-  syncPermissionRulesFromDisk as pVe,
+  syncPermissionRulesFromDisk,
   Yzn,
   ggt,
   wX,
@@ -222,7 +222,7 @@ import {
   LX,
   ght,
   hht,
-  loadConversationForResume as PV,
+  loadConversationForResume,
   Dht,
   Yht,
   NKn,
@@ -231,32 +231,32 @@ import {
   zLe,
   UKn,
   BKn,
-  processMessagesForTeleportResume as $Ke,
-  checkOutTeleportedSessionBranch as UKe,
-  validateSessionRepository as g6t,
-  formatRepoMismatchDisplay as h6t,
-  handleTeleportPrerequisites as _6t,
-  teleportToRemoteWithErrorHandling as Amn,
-  teleportToRemote as Kv,
-  getAutoModeUnavailableNotification as ij,
-  verifyAutoModeGateAccess as YKe,
-  getAutoModeEnabledState as Kmn,
+  processMessagesForTeleportResume,
+  checkOutTeleportedSessionBranch,
+  validateSessionRepository,
+  formatRepoMismatchDisplay,
+  handleTeleportPrerequisites,
+  teleportToRemoteWithErrorHandling,
+  teleportToRemote,
+  getAutoModeUnavailableNotification,
+  verifyAutoModeGateAccess,
+  getAutoModeEnabledState,
   M3,
   ei,
   Zf,
-  addMcpConfig as KM,
-  getClaudeCodeMcpConfigs as SH,
-  isClaudeInChromeAllowed as rD,
-  shouldSuppressChromeOffer as Xgn,
-  setupClaudeInChrome as Zde,
+  addMcpConfig,
+  getClaudeCodeMcpConfigs,
+  isClaudeInChromeAllowed,
+  shouldSuppressChromeOffer,
+  setupClaudeInChrome,
   Re,
   Ht,
-  TranscriptFileFormatError as yY,
-  loadTranscriptFromFile as J5e,
-  saveMode as ure,
-  getSessionIdFromLog as Kc,
-  searchSessionsByCustomTitle as QM,
-  getSessionEndHookTimeoutMs as ppe,
+  TranscriptFileFormatError,
+  loadTranscriptFromFile,
+  saveMode,
+  getSessionIdFromLog,
+  searchSessionsByCustomTitle,
+  getSessionEndHookTimeoutMs,
   lD,
   gpe,
   Ny,
@@ -270,8 +270,8 @@ import {
   vXn,
   RXn,
   kXn,
-  getCommands as kf,
-  filterCommandsForHeadless as wpe,
+  getCommands,
+  filterCommandsForHeadless,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
@@ -282,7 +282,7 @@ import { wK, ufe } from "../../02-功能模块/插件系统/chunk-hh8f1qrw.js";
 import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
 import "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-b8jsase9.js";
-import { isViolinWoodEnabled as Su, isViolinWoodEnabledCached as ri, isSettingsToCloudEnabled as LD } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabled, isViolinWoodEnabledCached, isSettingsToCloudEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
 import "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
@@ -308,9 +308,9 @@ import "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
 import "../../02-功能模块/图表-Mermaid/chunk-743atbtj.js";
 import "../核心应用-Agent循环/chunk-h3cty6gp.js";
-import { primePlanSlugCollisions as lh, getPlansDirectory as Ea } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { primePlanSlugCollisions, getPlansDirectory } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import "../../02-功能模块/Teammates团队/chunk-thxapyam.js";
-import { resolveCcrAutoConnectDefault as x4t } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
+import { resolveCcrAutoConnectDefault } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
 import { no, a5 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
@@ -407,7 +407,7 @@ import {
   h1n,
   iHe,
   S1n,
-  launchSessionRepl as i6e,
+  launchSessionRepl,
   T1n,
   E1n,
   A1n,
@@ -440,17 +440,17 @@ import {
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { lO } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import "../../02-功能模块/会话-历史-恢复/chunk-ybcvb652.js";
-import { HOt, wat, Tat, otn, stn, aF, EMPTY_PROJECTS_SELF_IDENTITY as FOt, AppRoot as zm } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
+import { HOt, wat, Tat, otn, stn, aF, EMPTY_PROJECTS_SELF_IDENTITY, AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { TIER_LABELS as p9, withProbeDeadline as SIe, apply3PDefaultFallbacks as Bnn } from "../../02-功能模块/Bedrock-Vertex/chunk-bnft4099.js";
+import { TIER_LABELS, withProbeDeadline, apply3PDefaultFallbacks as Bnn } from "../../02-功能模块/Bedrock-Vertex/chunk-bnft4099.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-drgqeenr.js";
-import { registerToolHosts as UQt } from "../../01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js";
+import { registerToolHosts } from "../../01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js";
 import { qJe, b_, KAn, zJe } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { XBn, fIe, _lt, mIe, YBn, $Dt, UDt } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
-import { capturePolicySnapshot as cit, hasPolicyDiverged as lWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
+import { capturePolicySnapshot, hasPolicyDiverged } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
 import { CHe, $st } from "../../02-功能模块/Git-Worktree/chunk-xercceag.js";
 import { CF, gOe, Dze } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
 import { wv } from "../../01-核心基础设施/共享小工具-未细化/chunk-ajpjkvdj.js";
@@ -482,7 +482,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-cj5z5g82.js";
-import { runSteps as rye, showScreen as Gx } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
+import { runSteps, showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-5ss8pwgq.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-bgf8jybv.js";
@@ -491,7 +491,7 @@ import { nJt, Qxe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk
 import "../../01-核心基础设施/共享小工具-未细化/chunk-th8d86j4.js";
 import "../../02-功能模块/权限系统/chunk-8zbmhy8a.js";
 import "../../02-功能模块/Skills技能/Skills技能.dpy2ket5.js";
-import { registerClientDataGetters as oLt } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
+import { registerClientDataGetters } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-y8j05azr.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-01jnk0v2.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-pdd7kz7p.js";
@@ -2288,7 +2288,7 @@ var _n = pe(hn(), 1),
     Option: z,
     Help: Sn,
   } = _n.default;
-import { randomUUID as Ma } from "crypto";
+import { randomUUID } from "crypto";
 function wn(v) {
   v.configureHelp({
     ...v.configureHelp(),
@@ -2520,16 +2520,16 @@ Examples:
         let N = x,
           I = U;
         if (!T)
-          un(`Error: Server name is required.
+          cliError(`Error: Server name is required.
 Usage: claude mcp add <name> <command> [args...]`);
         else if (!N)
-          un(`Error: Command is required when server name is provided.
+          cliError(`Error: Command is required when server name is provided.
 Usage: claude mcp add <name> <command> [args...]`);
         try {
           let L = zLe(D.scope),
             W = UKn(D.transport);
           if (D.xaa && !SP())
-            un(
+            cliError(
               "Error: --xaa requires CLAUDE_CODE_ENABLE_XAA=1 in your environment",
             );
           let K = Boolean(D.xaa);
@@ -2539,7 +2539,7 @@ Usage: claude mcp add <name> <command> [args...]`);
             if (!D.clientSecret) q.push("--client-secret");
             if (!yU())
               q.push("'claude mcp xaa setup' (settings.xaaIdp not configured)");
-            if (q.length) un(`Error: --xaa requires: ${q.join(", ")}`);
+            if (q.length) cliError(`Error: --xaa requires: ${q.join(", ")}`);
           }
           let j = D.transport !== void 0,
             V =
@@ -2550,21 +2550,21 @@ Usage: claude mcp add <name> <command> [args...]`);
               N.endsWith("/mcp");
           if (
             (await qs("tengu_mcp_add", {
-              type: u(W),
-              scope: u(L),
+              type: fromEnum(W),
+              scope: fromEnum(L),
               source: S("command"),
-              transport: u(W),
+              transport: fromEnum(W),
               transportExplicit: j,
               looksLikeUrl: V,
             }),
             W === "sse" || W === "http")
           ) {
             let q = W === "sse" ? "SSE" : "HTTP";
-            if (!N) return di(`Error: URL is required for ${q} transport.`);
+            if (!N) return cliErrorAfterAnalyticsFlush(`Error: URL is required for ${q} transport.`);
             let J = D.header ? BKn(D.header) : void 0,
               X = D.callbackPort ? tl(D.callbackPort) : void 0;
             if (X !== void 0 && (!Number.isInteger(X) || X <= 0 || X > 65535))
-              return di(
+              return cliErrorAfterAnalyticsFlush(
                 "Error: --callback-port must be an integer in [1, 65535]",
               );
             let ce =
@@ -2583,7 +2583,7 @@ Usage: claude mcp add <name> <command> [args...]`);
                 W === "sse"
                   ? { type: "sse", url: N, headers: J, oauth: ce }
                   : { type: "http", url: N, headers: J, oauth: ce };
-            if ((await KM(T, fe, L, R), qe)) {
+            if ((await addMcpConfig(T, fe, L, R), qe)) {
               let oe = await Le(T, fe, qe);
               if (!oe.success)
                 process.stderr
@@ -2622,14 +2622,14 @@ Warning: The command "${q}" looks like a URL, but is being interpreted as a stdi
 `);
             }
             let J = Yur(D.env);
-            (await KM(T, { type: "stdio", command: N, args: I, env: J }, L, R),
+            (await addMcpConfig(T, { type: "stdio", command: N, args: I, env: J }, L, R),
               process.stdout
                 .write(`Added stdio MCP server ${T} with command: ${q} ${I.join(" ")} to ${L} config
 `));
           }
-          return dO(`File modified: ${cw(L)}`);
+          return cliOkAfterAnalyticsFlush(`File modified: ${cw(L)}`);
         } catch (L) {
-          return di(l(L));
+          return cliErrorAfterAnalyticsFlush(l(L));
         }
       }),
     );
@@ -2661,7 +2661,7 @@ function vn(v, k) {
         try {
           x = new URL(T.issuer);
         } catch {
-          return un(`Error: --issuer must be a valid URL (got "${T.issuer}")`);
+          return cliError(`Error: --issuer must be a valid URL (got "${T.issuer}")`);
         }
         if (
           x.protocol !== "https:" &&
@@ -2672,21 +2672,21 @@ function vn(v, k) {
               x.hostname === "[::1]")
           )
         )
-          return un(
+          return cliError(
             `Error: --issuer must use https:// (got "${x.protocol}//${x.host}")`,
           );
         let U = T.callbackPort ? tl(T.callbackPort) : void 0;
         if (U !== void 0 && (!Number.isInteger(U) || U <= 0 || U > 65535))
-          return un("Error: --callback-port must be an integer in [1, 65535]");
+          return cliError("Error: --callback-port must be an integer in [1, 65535]");
         let D = T.clientSecret ? a.MCP_XAA_IDP_CLIENT_SECRET : void 0;
         if (T.clientSecret && !D)
-          return un(
+          return cliError(
             "Error: --client-secret requires MCP_XAA_IDP_CLIENT_SECRET env var",
           );
         let N = yU(),
           I = N?.issuer,
           L = N?.clientId,
-          { error: W } = await Jt(
+          { error: W } = await updateSettingsForSource(
             "userSettings",
             {
               xaaIdp: {
@@ -2698,7 +2698,7 @@ function vn(v, k) {
             void 0,
             R,
           );
-        if (W) return un(`Error writing settings: ${W.message}`);
+        if (W) return cliError(`Error writing settings: ${W.message}`);
         if (I) {
           if (Ke().issuerKey(I) !== Ke().issuerKey(T.issuer))
             (await Ke().clearIdpIdToken(I), await Ke().clearIdpClientSecret(I));
@@ -2711,11 +2711,11 @@ function vn(v, k) {
             D,
           );
           if (!K)
-            return un(
+            return cliError(
               `Error: settings written but keychain save failed${j ? ` \u2014 ${j}` : ""}. Re-run with --client-secret once keychain is available.`,
             );
         }
-        Yw(`XAA IdP connection configured for ${T.issuer}`);
+        cliOk(`XAA IdP connection configured for ${T.issuer}`);
       }),
     ),
     O.command("login")
@@ -2733,21 +2733,21 @@ function vn(v, k) {
       .action(async (R) => {
         let T = yU();
         if (!T)
-          return un(
+          return cliError(
             "Error: no XAA IdP connection. Run 'claude mcp xaa setup' first.",
           );
         if (R.idToken)
           try {
             let U = await Ke().saveIdpIdTokenFromJwt(T.issuer, R.idToken);
-            return Yw(
+            return cliOk(
               `id_token cached for ${T.issuer} (expires ${new Date(U).toISOString()})`,
             );
           } catch (U) {
-            return un(`id_token cache write failed: ${l(U)}`);
+            return cliError(`id_token cache write failed: ${l(U)}`);
           }
         if (R.force) await Ke().clearIdpIdToken(T.issuer);
         if ((await Ke().getCachedIdpIdToken(T.issuer)) !== void 0)
-          return Yw(
+          return cliOk(
             `Already logged in to ${T.issuer} (cached id_token still valid). Use --force to re-login.`,
           );
         process.stdout.write(`Opening browser for IdP login at ${T.issuer}\u2026
@@ -2764,18 +2764,18 @@ function vn(v, k) {
 `);
             },
           }),
-            Yw(
+            cliOk(
               "Logged in. MCP servers with --xaa will now authenticate silently.",
             ));
         } catch (U) {
-          un(`IdP login failed: ${l(U)}`);
+          cliError(`IdP login failed: ${l(U)}`);
         }
       }),
     O.command("show")
       .description("Show the current IdP connection config")
       .action(async () => {
         let R = yU();
-        if (!R) return Yw("No XAA IdP connection configured.");
+        if (!R) return cliOk("No XAA IdP connection configured.");
         let T = (await Ke().getIdpClientSecret(R.issuer)) !== void 0,
           x = (await Ke().getCachedIdpIdToken(R.issuer)) !== void 0;
         if (
@@ -2793,24 +2793,24 @@ function vn(v, k) {
           process.stdout
             .write(`Logged in:     ${x ? "yes (id_token cached)" : "no \u2014 run 'claude mcp xaa login'"}
 `),
-          Yw());
+          cliOk());
       }),
     O.command("clear")
       .description("Clear the IdP connection config and cached id_token")
       .action(
         k(async (R) => {
           let T = yU(),
-            { error: x } = await Jt(
+            { error: x } = await updateSettingsForSource(
               "userSettings",
               { xaaIdp: void 0 },
               void 0,
               R,
             );
-          if (x) return un(`Error writing settings: ${x.message}`);
+          if (x) return cliError(`Error writing settings: ${x.message}`);
           if (T)
             (await Ke().clearIdpIdToken(T.issuer),
               await Ke().clearIdpClientSecret(T.issuer));
-          Yw("XAA IdP connection cleared");
+          cliOk("XAA IdP connection cleared");
         }),
       ));
 }
@@ -2852,7 +2852,7 @@ function En(v, k) {
             import("../../02-功能模块/MCP客户端/mcpAddFromDesktopHandler.k5n890xx.js"),
             import("./setupTokenHandler.q3zjg9cb.js"),
           ]);
-        return (await D(await N(), x, U, T), dO());
+        return (await D(await N(), x, U, T), cliOkAfterAnalyticsFlush());
       }),
     ),
     O.command("list")
@@ -2941,7 +2941,7 @@ function En(v, k) {
               import("../../02-功能模块/MCP客户端/mcpAddFromDesktopHandler.k5n890xx.js"),
               import("./setupTokenHandler.q3zjg9cb.js"),
             ]);
-          return (await N(await I(), x, U, D, T), dO());
+          return (await N(await I(), x, U, D, T), cliOkAfterAnalyticsFlush());
         }),
       ),
     O.command("add-from-claude-desktop")
@@ -2969,7 +2969,7 @@ function En(v, k) {
               import("../../02-功能模块/MCP客户端/mcpAddFromDesktopHandler.k5n890xx.js"),
               import("./setupTokenHandler.q3zjg9cb.js"),
             ]);
-          return (await x(await U(), T), dO());
+          return (await x(await U(), T), cliOkAfterAnalyticsFlush());
         }),
       ));
 }
@@ -3059,12 +3059,12 @@ function An(v, k, O) {
               import("../../02-功能模块/插件系统/marketplaceAddHandler.1j5syrfw.js"),
               import("./setupTokenHandler.q3zjg9cb.js"),
             ]);
-          (await L(W, I, D, N), Yw());
+          (await L(W, I, D, N), cliOk());
         }),
       ));
   {
     let D = () => {
-        if (!C8e()) un("`plugin eval` is currently in early access");
+        if (!C8e()) cliError("`plugin eval` is currently in early access");
       },
       N = T.command("eval [target]")
         .description(zw.eval.description)
@@ -3143,7 +3143,7 @@ function An(v, k, O) {
                 K.ablation !== "none" &&
                 K.ablation !== "with-without")
             )
-              un('--ablation must be "none" or "with-without"');
+              cliError('--ablation must be "none" or "with-without"');
             let { pluginEvalHandler: j } = await import("../../02-功能模块/插件系统/pluginEvalInitHandler.sdxbyz28.js");
             await j(
               W,
@@ -3183,7 +3183,7 @@ function An(v, k, O) {
           forceInteractive: L.interactive || L.interview,
           evalDir: L.evalDir ?? N.opts().evalDir,
         }),
-          Yw());
+          cliOk());
       });
   }
   T.command("details <name>")
@@ -3196,7 +3196,7 @@ function An(v, k, O) {
             import("../../02-功能模块/插件系统/marketplaceAddHandler.1j5syrfw.js"),
             import("./setupTokenHandler.q3zjg9cb.js"),
           ]);
-        (await W(K, I, L, D, N), Yw());
+        (await W(K, I, L, D, N), cliOk());
       }),
     );
   let U = T.command("marketplace")
@@ -3238,7 +3238,7 @@ function An(v, k, O) {
               import("../../02-功能模块/插件系统/marketplaceAddHandler.1j5syrfw.js"),
               import("./setupTokenHandler.q3zjg9cb.js"),
             ]);
-          (await I(L, N, D), Yw());
+          (await I(L, N, D), cliOk());
         }),
       ),
     U.command("remove <name>")
@@ -3256,7 +3256,7 @@ function An(v, k, O) {
               import("../../02-功能模块/插件系统/marketplaceAddHandler.1j5syrfw.js"),
               import("./setupTokenHandler.q3zjg9cb.js"),
             ]);
-          (await L(await W(), N, I, D), Yw());
+          (await L(await W(), N, I, D), cliOk());
         }),
       ),
     U.command("update [name]")
@@ -3408,9 +3408,9 @@ function An(v, k, O) {
         }),
       ));
 }
-import { basename as Ia } from "path";
+import { basename } from "path";
 F();
-import { openSync as Zs, writeSync as ea } from "fs";
+import { openSync, writeSync } from "fs";
 var Ls = {
   iterm: "iTerm",
   "iterm.app": "iTerm",
@@ -3479,7 +3479,7 @@ function da(Ac) {
 }
 function ta(v) {
   if (a.CLAUBBIT || !Bo()) return;
-  (Dx(!0), lh(v));
+  (Dx(!0), primePlanSlugCollisions(v));
 }
 function oa(v) {
   Te(
@@ -3511,7 +3511,7 @@ function In(v, k) {
     if (T.length > 0) {
       let x = Y(T.map((U) => U.file).filter(Boolean)).join(", ");
       return (
-        g(
+        logFeatureSad(
           "mcp_project_approval_dialog",
           "mcp_project_approval_skipped_settings_errors",
         ),
@@ -3530,7 +3530,7 @@ function In(v, k) {
             let U = ra(x);
             if (U) k(U);
           } catch (U) {
-            h(ge(U));
+            logError(ge(U));
           } finally {
             O();
           }
@@ -3539,7 +3539,7 @@ function In(v, k) {
       );
     } catch (x) {
       throw (
-        f("mcp_project_approval_dialog", "mcp_project_approval_dialog_threw"),
+        logFeatureBad("mcp_project_approval_dialog", "mcp_project_approval_dialog_threw"),
         x
       );
     }
@@ -3548,26 +3548,26 @@ function In(v, k) {
 function ra(v) {
   if (v.persistFailed)
     return (
-      f("mcp_project_approval_dialog", "mcp_approval_persist_failed"),
+      logFeatureBad("mcp_project_approval_dialog", "mcp_approval_persist_failed"),
       {
         key: "mcp-approval-persist-failed",
         text: "one or more of your MCP server choices could not be saved (check permissions on .claude/settings.local.json) \xB7 you will be asked again next startup",
       }
     );
-  let k = tS();
+  let k = getWorkspacePersistedTrustKey();
   if (
     lrt().some((O) => O.workspaceKey === k) &&
-    !Cd() &&
+    !isWorkspacePersistedTrusted() &&
     YC({ onIndeterminate: "tracked" })
   )
     return (
-      g("mcp_project_approval_dialog", "mcp_approval_persist_gated"),
+      logFeatureSad("mcp_project_approval_dialog", "mcp_approval_persist_gated"),
       {
         key: "mcp-approval-persist-gated",
         text: "your MCP server choices apply to this session only (workspace not explicitly trusted; .claude/settings.local.json is gated) \xB7 to persist, add them to enabledMcpjsonServers in ~/.claude/settings.json",
       }
     );
-  return (y("mcp_project_approval_dialog"), null);
+  return (logFeatureOk("mcp_project_approval_dialog"), null);
 }
 async function Ne(v, k, O) {
   return Rr(v, k, { color: "error", beforeExit: O });
@@ -3576,7 +3576,7 @@ async function Rr(v, k, O) {
   let R = O?.color,
     T = O?.exitCode ?? 1;
   if (
-    (Gx(v, R ? e(t, { color: R, children: k }) : e(t, { children: k })),
+    (showScreen(v, R ? e(t, { color: R, children: k }) : e(t, { children: k })),
     v.unmount(),
     await O?.beforeExit?.(),
     T !== 0)
@@ -3596,7 +3596,7 @@ async function Rr(v, k, O) {
 }
 function qt(v, k, O) {
   return new Promise((R, T) => {
-    rye(
+    runSteps(
       v,
       [
         (x) =>
@@ -3613,7 +3613,7 @@ function qt(v, k, O) {
   });
 }
 async function io(v, k, O, R, T) {
-  let x = Gx(v, k);
+  let x = showScreen(v, k);
   (KRn(), E0t(O, R, T));
   try {
     if (
@@ -3632,7 +3632,7 @@ async function io(v, k, O, R, T) {
       (Dte(
         `Claude Code exited after an unrecoverable interface error (${D.message}).${I}`,
       ),
-      _t() || Grt())
+      isBgSession() || Grt())
     )
       throw U;
     try {
@@ -3654,12 +3654,12 @@ async function Hn(v, k, O, R, T, x, U, D, N, I) {
     W = (K) => {
       L.mcpApprovalSkipWarning = K;
     };
-  if (_t() || a.CLAUDE_BRIDGE_REATTACH_SESSION) {
+  if (isBgSession() || a.CLAUDE_BRIDGE_REATTACH_SESSION) {
     let K = [
       () => (
         Dx(!0),
         qUe({ preservePendingExposures: !0 }),
-        df().catch((j) => h(ge(j))),
+        df().catch((j) => logError(ge(j))),
         j_(v),
         null
       ),
@@ -3667,17 +3667,17 @@ async function Hn(v, k, O, R, T, x, U, D, N, I) {
       () => (
         dR(),
         import("./setup.sbdmcpy2.js").then((j) => j.maybePrewarmRecallIndex(v)),
-        lh(N),
-        cit(),
+        primePlanSlugCollisions(N),
+        capturePolicySnapshot(),
         setImmediate(Qxe, N),
         null
       ),
     ];
-    return (await rye(k, K, { session: v, storageV5: N }), L);
+    return (await runSteps(k, K, { session: v, storageV5: N }), L);
   }
-  if (Ie(!1) || a.IS_DEMO) return (ta(N), cit(), L);
+  if (Ie(!1) || a.IS_DEMO) return (ta(N), capturePolicySnapshot(), L);
   return (
-    await rye(
+    await runSteps(
       k,
       ia(
         {
@@ -3752,7 +3752,7 @@ function ia(
           ei(D, N).catch(() => {});
       }
       if ((qUe({ preservePendingExposures: !0 }), L.hasCompletedOnboarding))
-        return (df().catch((j) => h(ge(j))), null);
+        return (df().catch((j) => logError(ge(j))), null);
       return (lU(), sa());
     },
     () => {
@@ -3782,8 +3782,8 @@ function ia(
         kn(D),
         dR(),
         import("./setup.sbdmcpy2.js").then((j) => j.maybePrewarmRecallIndex(v)),
-        lh(D),
-        cit(),
+        primePlanSlugCollisions(D),
+        capturePolicySnapshot(),
         W && !K && !Nn() && !uo())
       )
         import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((j) => j.startMemoryWatcher(D, N));
@@ -3826,7 +3826,7 @@ function ia(
       return e(q, { onDone: () => j() });
     },
     (j) => {
-      let V = yZe();
+      let V = getUnapprovedCustomApiKey();
       if (!V) return null;
       return import("../../02-功能模块/认证-OAuth登录/ApproveApiKey.vsj58w41.js").then(({ ApproveApiKey: q }) =>
         e(q, { customApiKeyTruncated: V, onDone: () => j() }),
@@ -3839,7 +3839,7 @@ function ia(
       try {
         V = await Bnn();
       } catch (X) {
-        return (h(X), null);
+        return (logError(X), null);
       }
       let { lines: q, hasHardFailure: J } = V;
       if (q.length === 0) return null;
@@ -3853,7 +3853,7 @@ function ia(
       });
     },
     (j) => {
-      if ((k !== "bypassPermissions" && !O) || eL()) return null;
+      if ((k !== "bypassPermissions" && !O) || hasSkipDangerousModePermissionPrompt()) return null;
       return import("../../02-功能模块/斜杠命令-UI组件/BypassPermissionsModeDialog.d9va36zm.js").then(
         ({ BypassPermissionsModeDialog: V }) =>
           e(V, { onAccept: () => j(), storageV5: D }),
@@ -3875,7 +3875,7 @@ function ia(
           let Me = x.map((Le) => ({ ...Le, dev: !0 }));
           (Sae(ym().concat(Me)), cMn(!0));
         };
-      if (!V() || Pe() !== "firstParty" || q(J("policySettings")))
+      if (!V() || getAPIProvider() !== "firstParty" || q(J("policySettings")))
         return (X(), null);
       let { DevChannelsDialog: ce } = await import("../../02-功能模块/插件系统/DevChannelsDialog.wp2a141g.js");
       return e(ce, {
@@ -3966,7 +3966,7 @@ async function sa() {
       }),
       !(k instanceof Error && k.message === Mn))
     )
-      h(ge(k));
+      logError(ge(k));
   }
   return null;
 }
@@ -4009,12 +4009,12 @@ function Dn(v, k) {
       let [T, { upgradeKey: x }] = await Promise.all([
           v === "bedrock"
             ? import("../../02-功能模块/Bedrock-Vertex/seedEnvDefaultForUserPin.qgx0v22d.js").then((W) =>
-                SIe("bedrock-upgrade", W.findBedrockUpgradeCandidates()).then(
+                withProbeDeadline("bedrock-upgrade", W.findBedrockUpgradeCandidates()).then(
                   (K) => K.map((j) => ({ ...j, toId: j.toBedrockId })),
                 ),
               )
             : import("../../02-功能模块/Bedrock-Vertex/seedEnvDefaultForUserPin.jmem3wk1.js").then((W) =>
-                SIe("vertex-upgrade", W.findVertexUpgradeCandidates()).then(
+                withProbeDeadline("vertex-upgrade", W.findVertexUpgradeCandidates()).then(
                   (K) => K.map((j) => ({ ...j, toId: j.toVertexId })),
                 ),
               ),
@@ -4034,7 +4034,7 @@ function Dn(v, k) {
         import("../../02-功能模块/Bedrock-Vertex/ThirdPartyModelUpgradeDialog.gcjbt04b.js"),
       ]);
       async function L(W, K) {
-        let j = u(W.tier);
+        let j = fromEnum(W.tier);
         if (!K)
           return (
             await Te((J) => {
@@ -4046,8 +4046,8 @@ function Dn(v, k) {
             }, k),
             i(O.declined, {
               tier: j,
-              from_key: u(W.fromKey),
-              to_key: u(W.toKey),
+              from_key: fromEnum(W.fromKey),
+              to_key: fromEnum(W.toKey),
             }),
             !1
           );
@@ -4066,8 +4066,8 @@ function Dn(v, k) {
         return (
           i(O.accepted, {
             tier: j,
-            from_key: u(W.fromKey),
-            to_key: u(W.toKey),
+            from_key: fromEnum(W.fromKey),
+            to_key: fromEnum(W.toKey),
           }),
           !0
         );
@@ -4080,7 +4080,7 @@ function Dn(v, k) {
         Dialog: I,
       });
     } catch (T) {
-      return (h(T), null);
+      return (logError(T), null);
     }
   };
 }
@@ -4158,7 +4158,7 @@ function Un(fc) {
     return null;
   }
   if (Gt === "save-failed") {
-    const Ut = p9[it.tier];
+    const Ut = TIER_LABELS[it.tier];
     let Co;
     if (wo[11] !== Ut)
       ((Co = r(t, {
@@ -4170,7 +4170,7 @@ function Un(fc) {
     else Co = wo[12];
     return Co;
   }
-  const Ut = p9[it.tier];
+  const Ut = TIER_LABELS[it.tier];
   let Co;
   if (
     wo[13] !== yo ||
@@ -4193,7 +4193,7 @@ function Un(fc) {
             yo(Xs);
           },
           (yc) => {
-            (h(yc), So());
+            (logError(yc), So());
           },
         ));
     }),
@@ -4249,7 +4249,7 @@ function Bn(v) {
     N = Math.max(1, a.CLAUDE_CODE_FRAME_TIMING_SAMPLE_EVERY || 1);
   if (x)
     try {
-      U = Zs(x, "a");
+      U = openSync(x, "a");
     } catch {}
   return {
     getFpsMetrics: () => R.getMetrics(),
@@ -4274,7 +4274,7 @@ function Bn(v) {
               }) +
               `
 `;
-          ea(U, W);
+          writeSync(U, W);
         }
         if (lO()) return;
         for (let L of I.flickers) {
@@ -4371,16 +4371,16 @@ function zn(v, k) {
   }
   let I = O.then(
     (j) => j,
-    (j) => (N(() => f("ccr_create_checklist", "load_failed")), h(j), null),
+    (j) => (N(() => logFeatureBad("ccr_create_checklist", "load_failed")), logError(j), null),
   );
   function L({ CloudCreateChecklist: j }, V) {
     let q = e(j, { state: V, cancelling: x !== null, onCancel: () => K(j) });
     if (T) T.update(q);
-    else T = Gx(v, q, { session: k.session });
+    else T = showScreen(v, q, { session: k.session });
   }
   function W(j) {
     return (
-      N(() => g("ccr_create_checklist", "cancelled")),
+      N(() => logFeatureSad("ccr_create_checklist", "cancelled")),
       Rr(v, O1n(j), { exitCode: 130, beforeExit: () => xn(130) })
     );
   }
@@ -4396,13 +4396,13 @@ function zn(v, k) {
     ((x = Date.now()),
       k.onCancel(),
       i("tengu_cloud_create_cancelled", {
-        phase: u($_e(V)),
+        phase: fromEnum($_e(V)),
         request_sent: V.requestSent,
       }));
     try {
       L({ CloudCreateChecklist: j }, V);
     } catch (q) {
-      h(q);
+      logError(q);
     }
   }
   return {
@@ -4414,13 +4414,13 @@ function zn(v, k) {
             J = R === null;
           if (((R = P1n(R ?? I1n(q), j, q)), L(V, R), J))
             i("tengu_cloud_create_checklist_shown", {});
-          if (j.kind === "created") N(() => y("ccr_create_checklist"));
+          if (j.kind === "created") N(() => logFeatureOk("ccr_create_checklist"));
         } catch (q) {
-          (N(() => f("ccr_create_checklist", "render_failed")), h(q));
+          (N(() => logFeatureBad("ccr_create_checklist", "render_failed")), logError(q));
         }
       });
     },
-    failed: () => N(() => f("ccr_create_checklist", "create_failed")),
+    failed: () => N(() => logFeatureBad("ccr_create_checklist", "create_failed")),
     exitCancelled: () => (U ? new Promise(() => {}) : W(R)),
   };
 }
@@ -4433,7 +4433,7 @@ async function Kn(v, k, O, R) {
     I = r6e(D);
   await io(
     v,
-    e(zm, {
+    e(AppRoot, {
       session: U,
       storageV5: D,
       messageQueue: I,
@@ -4449,14 +4449,14 @@ async function Kn(v, k, O, R) {
     N,
   );
 }
-import { posix as Jn, win32 as Qn } from "path";
-import { types as Zn } from "util";
+import { posix, win32 as Qn } from "path";
+import { types } from "util";
 var pa = 1000;
 function ua() {
   let v = process.argv[1] || "",
     k = process.execPath || process.argv[0] || "";
   if (P() === "windows")
-    ((v = v.split(Qn.sep).join(Jn.sep)), (k = k.split(Qn.sep).join(Jn.sep)));
+    ((v = v.split(Qn.sep).join(posix.sep)), (k = k.split(Qn.sep).join(posix.sep)));
   let O = [v, k],
     R = [
       "/build-ant/",
@@ -4476,7 +4476,7 @@ function ti() {
     (process.removeAllListeners("warning"), (process.noProcessWarnings = !0));
   let O = (R) => {
     try {
-      if (Zn.isProxy(R) || !Zn.isNativeError(R)) return;
+      if (types.isProxy(R) || !types.isNativeError(R)) return;
       let T = Object.getOwnPropertyDescriptor(R, "message"),
         x = T && typeof T.value === "string" ? T.value : "",
         U = Object.getOwnPropertyDescriptor(R, "name"),
@@ -4518,7 +4518,7 @@ var fa = new Set([
   "claude-desktop-3p",
 ]);
 function oi() {
-  (ti(), oLt());
+  (ti(), registerClientDataGetters());
 }
 function ni({ interactivity: v }) {
   let k = process.argv.slice(2),
@@ -4567,8 +4567,8 @@ function ni({ interactivity: v }) {
     tLn(!0);
   (Br("main_client_type_determined"), tJt());
 }
-var Tr = ly.map((v) => (v === "default" ? qU : v)),
-  ga = [...ly, qU];
+var Tr = PERMISSION_MODES.map((v) => (v === "default" ? PERMISSION_MODE_MANUAL_ALIAS : v)),
+  ga = [...PERMISSION_MODES, PERMISSION_MODE_MANUAL_ALIAS];
 function xr(v) {
   if (!ga.includes(v)) throw new Ft(`Allowed choices are ${Tr.join(", ")}.`);
   return v;
@@ -4593,7 +4593,7 @@ async function ii() {
     if (O) x.push("enableAllProjectMcpServers");
     if (R) x.push("enabledMcpjsonServers");
     if (T) x.push("disabledMcpjsonServers");
-    let { error: U } = await Ii(
+    let { error: U } = await updateSettingsForSourceWithTransform(
       "localSettings",
       (D) => {
         let N = D ?? {},
@@ -4639,11 +4639,11 @@ async function ii() {
     (i("tengu_migrate_mcp_approval_fields_success", {
       migratedCount: x.length,
     }),
-      y("migration_mcp_servers_to_settings"));
+      logFeatureOk("migration_mcp_servers_to_settings"));
   } catch (x) {
-    (h(x),
+    (logError(x),
       i("tengu_migrate_mcp_approval_fields_error", {}),
-      f(
+      logFeatureBad(
         "migration_mcp_servers_to_settings",
         "migration_mcp_servers_unexpected_error",
       ));
@@ -4651,15 +4651,15 @@ async function ii() {
 }
 var ha = {};
 async function si(v = ha, k) {
-  if (Pe() !== "firstParty") return !0;
-  let O = ye("userSettings")?.model;
+  if (getAPIProvider() !== "firstParty") return !0;
+  let O = getSettingsForSource("userSettings")?.model;
   if (!O) return !0;
   let R = Xt(O);
   if (!Object.hasOwn(v, R)) return !0;
   let T = v[R];
   if (T === void 0) return !0;
   let x = R !== O,
-    { error: U } = await Jt(
+    { error: U } = await updateSettingsForSource(
       "userSettings",
       { model: x ? `${T}[1m]` : T },
       void 0,
@@ -4683,8 +4683,8 @@ async function ai(v) {
   let k = ee();
   if (k.autoUpdates !== !1 || k.autoUpdatesProtectedForNative === !0) return !0;
   try {
-    let O = ye("userSettings") || {},
-      { error: R } = await Jt(
+    let O = getSettingsForSource("userSettings") || {},
+      { error: R } = await updateSettingsForSource(
         "userSettings",
         { env: { DISABLE_AUTOUPDATER: "1" } },
         void 0,
@@ -4701,14 +4701,14 @@ async function ai(v) {
         let { autoUpdates: x, autoUpdatesProtectedForNative: U, ...D } = T;
         return D;
       }, v),
-      y("migration_auto_updates_to_settings"),
+      logFeatureOk("migration_auto_updates_to_settings"),
       !0
     );
   } catch (O) {
     return (
       n(`Failed to migrate auto-updates: ${O}`, { level: "error" }),
       i("tengu_migrate_autoupdates_error", { has_error: !0 }),
-      f(
+      logFeatureBad(
         "migration_auto_updates_to_settings",
         "migration_auto_updates_write_failed",
       ),
@@ -4719,8 +4719,8 @@ async function ai(v) {
 async function li(v) {
   if (!ee().bypassPermissionsModeAccepted) return !0;
   try {
-    if (!eL()) {
-      let { error: O } = await Jt(
+    if (!hasSkipDangerousModePermissionPrompt()) {
+      let { error: O } = await updateSettingsForSource(
         "userSettings",
         { skipDangerousModePermissionPrompt: !0 },
         void 0,
@@ -4735,7 +4735,7 @@ async function li(v) {
         let { bypassPermissionsModeAccepted: R, ...T } = O;
         return T;
       }, v),
-      y("migration_bypass_permissions_to_settings"),
+      logFeatureOk("migration_bypass_permissions_to_settings"),
       !0
     );
   } catch (O) {
@@ -4743,7 +4743,7 @@ async function li(v) {
       n(`Failed to migrate bypass permissions accepted: ${O}`, {
         level: "error",
       }),
-      f(
+      logFeatureBad(
         "migration_bypass_permissions_to_settings",
         "migration_bypass_permissions_write_failed",
       ),
@@ -4752,11 +4752,11 @@ async function li(v) {
   }
 }
 async function ci(v) {
-  if (!Wu()) return !0;
-  let k = ye("userSettings")?.model;
+  if (!isFirstPartyApiBackend()) return !0;
+  let k = getSettingsForSource("userSettings")?.model;
   if (k !== "claude-fable-5" && k !== "claude-fable-5[1m]") return !0;
   let O = k.endsWith("[1m]"),
-    { error: R } = await Jt(
+    { error: R } = await updateSettingsForSource(
       "userSettings",
       { model: O ? "fable[1m]" : "fable" },
       void 0,
@@ -4765,21 +4765,21 @@ async function ci(v) {
   if (R)
     return (
       n(`Failed to migrate Fable 5 model setting: ${R}`, { level: "error" }),
-      f("migration_fable5_to_fable_alias", "migration_fable5_write_failed"),
+      logFeatureBad("migration_fable5_to_fable_alias", "migration_fable5_write_failed"),
       !1
     );
   if (ee().numStartups > 1)
     Te((x) => ({ ...x, fable5ToFableAliasMigrationTimestamp: Date.now() }), v);
   return (
-    i("tengu_fable5_to_fable_alias_migration", { from_model: u(k), has_1m: O }),
-    y("migration_fable5_to_fable_alias"),
+    i("tengu_fable5_to_fable_alias_migration", { from_model: fromEnum(k), has_1m: O }),
+    logFeatureOk("migration_fable5_to_fable_alias"),
     !0
   );
 }
 async function pi(v) {
-  if (Pe() !== "firstParty") return !0;
-  if (!dUe()) return !0;
-  let k = ye("userSettings")?.model;
+  if (getAPIProvider() !== "firstParty") return !0;
+  if (!isLegacyModelRemapEnabled()) return !0;
+  let k = getSettingsForSource("userSettings")?.model;
   if (
     k !== "claude-opus-4-20250514" &&
     k !== "claude-opus-4-1-20250805" &&
@@ -4787,13 +4787,13 @@ async function pi(v) {
     k !== "claude-opus-4-1"
   )
     return !0;
-  let { error: O } = await Jt("userSettings", { model: "opus" }, void 0, v);
+  let { error: O } = await updateSettingsForSource("userSettings", { model: "opus" }, void 0, v);
   if (O)
     return (
       n(`Failed to migrate legacy Opus model setting: ${O}`, {
         level: "error",
       }),
-      f(
+      logFeatureBad(
         "migration_legacy_opus_to_current",
         "migration_legacy_opus_write_failed",
       ),
@@ -4801,8 +4801,8 @@ async function pi(v) {
     );
   return (
     Te((R) => ({ ...R, legacyOpusMigrationTimestamp: Date.now() }), v),
-    i("tengu_legacy_opus_migration", { from_model: u(k) }),
-    y("migration_legacy_opus_to_current"),
+    i("tengu_legacy_opus_migration", { from_model: fromEnum(k) }),
+    logFeatureOk("migration_legacy_opus_to_current"),
     !0
   );
 }
@@ -4821,21 +4821,21 @@ function ui(v) {
       R.seenNotifications !== void 0 ? R : { ...R, seenNotifications: O },
     v,
   ),
-    y("migration_notification_dismissals"));
+    logFeatureOk("migration_notification_dismissals"));
 }
 async function mi(v) {
-  if (!vw()) return !0;
-  if (ye("userSettings")?.model !== "opus") return !0;
-  let { error: O } = await Jt("userSettings", { model: "opus[1m]" }, void 0, v);
+  if (!isOpus1mMergeEnabled()) return !0;
+  if (getSettingsForSource("userSettings")?.model !== "opus") return !0;
+  let { error: O } = await updateSettingsForSource("userSettings", { model: "opus[1m]" }, void 0, v);
   if (O)
     return (
       n(`Failed to migrate opus model setting: ${O}`, { level: "error" }),
-      f("migration_opus_to_opus1m", "migration_opus_to_opus1m_write_failed"),
+      logFeatureBad("migration_opus_to_opus1m", "migration_opus_to_opus1m_write_failed"),
       !1
     );
   return (
     i("tengu_opus_to_opus1m_migration", {}),
-    y("migration_opus_to_opus1m"),
+    logFeatureOk("migration_opus_to_opus1m"),
     !0
   );
 }
@@ -4851,13 +4851,13 @@ function fi(v) {
     }, v),
     k)
   )
-    y("migration_repl_bridge_to_remote_control");
+    logFeatureOk("migration_repl_bridge_to_remote_control");
 }
 async function gi(v) {
   if (ee().sonnet1m45MigrationComplete) return !0;
   let O = !1;
-  if (ye("userSettings")?.model === "sonnet[1m]") {
-    let { error: x } = await Jt(
+  if (getSettingsForSource("userSettings")?.model === "sonnet[1m]") {
+    let { error: x } = await updateSettingsForSource(
       "userSettings",
       { model: "sonnet-4-5-20250929[1m]" },
       void 0,
@@ -4868,20 +4868,20 @@ async function gi(v) {
         n(`Failed to migrate sonnet[1m] model setting: ${x}`, {
           level: "error",
         }),
-        f("migration_sonnet1m_to_sonnet45", "migration_sonnet1m_write_failed"),
+        logFeatureBad("migration_sonnet1m_to_sonnet45", "migration_sonnet1m_write_failed"),
         !1
       );
     O = !0;
   }
   if (Ec() === "sonnet[1m]") (ad("sonnet-4-5-20250929[1m]"), (O = !0));
   if ((Te((x) => ({ ...x, sonnet1m45MigrationComplete: !0 }), v), O))
-    y("migration_sonnet1m_to_sonnet45");
+    logFeatureOk("migration_sonnet1m_to_sonnet45");
   return !0;
 }
 async function hi(v) {
-  if (Pe() !== "firstParty") return !0;
-  if (!Bse() && !wRe() && !pvt()) return !0;
-  let k = ye("userSettings")?.model;
+  if (getAPIProvider() !== "firstParty") return !0;
+  if (!isProSubscriber() && !isMaxSubscriber() && !isTeamPremiumSubscriber()) return !0;
+  let k = getSettingsForSource("userSettings")?.model;
   if (
     k !== "claude-sonnet-4-5-20250929" &&
     k !== "claude-sonnet-4-5-20250929[1m]" &&
@@ -4890,7 +4890,7 @@ async function hi(v) {
   )
     return !0;
   let O = k.endsWith("[1m]"),
-    { error: R } = await Jt(
+    { error: R } = await updateSettingsForSource(
       "userSettings",
       { model: O ? "sonnet[1m]" : "sonnet" },
       void 0,
@@ -4899,20 +4899,20 @@ async function hi(v) {
   if (R)
     return (
       n(`Failed to migrate Sonnet 4.5 model setting: ${R}`, { level: "error" }),
-      f("migration_sonnet45_to_sonnet46", "migration_sonnet45_write_failed"),
+      logFeatureBad("migration_sonnet45_to_sonnet46", "migration_sonnet45_write_failed"),
       !1
     );
   if (ee().numStartups > 1)
     Te((x) => ({ ...x, sonnet45To46MigrationTimestamp: Date.now() }), v);
   return (
-    i("tengu_sonnet45_to_46_migration", { from_model: u(k), has_1m: O }),
-    y("migration_sonnet45_to_sonnet46"),
+    i("tengu_sonnet45_to_46_migration", { from_model: fromEnum(k), has_1m: O }),
+    logFeatureOk("migration_sonnet45_to_sonnet46"),
     !0
   );
 }
 async function _i(v) {
   let k = ee(),
-    O = ye("userSettings"),
+    O = getSettingsForSource("userSettings"),
     R = {};
   for (let T of v$e) {
     let x = k[T];
@@ -4923,19 +4923,19 @@ async function _i(v) {
   }
   if (Object.keys(R).length === 0) return !0;
   try {
-    let { error: T } = await Jt("userSettings", R, void 0, v);
+    let { error: T } = await updateSettingsForSource("userSettings", R, void 0, v);
     if (T) throw T;
     return (
       i("tengu_migrate_user_intent_to_settings", {
         migrated_count: Object.keys(R).length,
       }),
-      y("migration_user_intent_to_settings"),
+      logFeatureOk("migration_user_intent_to_settings"),
       !0
     );
   } catch (T) {
     return (
-      h(Error(`Failed to migrate user-intent settings: ${T}`)),
-      f(
+      logError(Error(`Failed to migrate user-intent settings: ${T}`)),
+      logFeatureBad(
         "migration_user_intent_to_settings",
         "migration_user_intent_write_failed",
       ),
@@ -4945,11 +4945,11 @@ async function _i(v) {
 }
 async function Si(v) {
   if (ee().hasResetAutoModeOptInForDefaultOffer) return !0;
-  if (Kmn() !== "enabled") return !0;
+  if (getAutoModeEnabledState() !== "enabled") return !0;
   try {
-    let O = ye("userSettings");
+    let O = getSettingsForSource("userSettings");
     if (O?.skipAutoPermissionPrompt && O?.permissions?.defaultMode !== "auto") {
-      let { error: R } = await Jt(
+      let { error: R } = await updateSettingsForSource(
         "userSettings",
         { skipAutoPermissionPrompt: void 0 },
         void 0,
@@ -4957,7 +4957,7 @@ async function Si(v) {
       );
       if (R) throw R;
       (i("tengu_migrate_reset_auto_opt_in_for_default_offer", {}),
-        y("migration_reset_auto_mode_opt_in"));
+        logFeatureOk("migration_reset_auto_mode_opt_in"));
     }
     Te((R) => {
       if (R.hasResetAutoModeOptInForDefaultOffer) return R;
@@ -4965,8 +4965,8 @@ async function Si(v) {
     }, v);
   } catch (O) {
     return (
-      h(Error(`Failed to reset auto mode opt-in: ${O}`)),
-      f(
+      logError(Error(`Failed to reset auto mode opt-in: ${O}`)),
+      logFeatureBad(
         "migration_reset_auto_mode_opt_in",
         "migration_reset_auto_mode_write_failed",
       ),
@@ -4977,12 +4977,12 @@ async function Si(v) {
 }
 function wi(v) {
   if (ee().opusProMigrationComplete) return;
-  if (Pe() !== "firstParty" || !Bse()) {
+  if (getAPIProvider() !== "firstParty" || !isProSubscriber()) {
     (Te((T) => ({ ...T, opusProMigrationComplete: !0 }), v),
       i("tengu_reset_pro_to_opus_default", { skipped: !0 }));
     return;
   }
-  if (bn()?.model === void 0) {
+  if (getSettings_DEPRECATED()?.model === void 0) {
     let T = Date.now();
     (Te(
       (x) => ({
@@ -5002,7 +5002,7 @@ function wi(v) {
         skipped: !1,
         had_custom_model: !0,
       }));
-  y("migration_reset_pro_to_opus_default");
+  logFeatureOk("migration_reset_pro_to_opus_default");
 }
 var Dr = 14;
 async function yi(v) {
@@ -5036,7 +5036,7 @@ async function yi(v) {
   );
 }
 async function Ci() {
-  let v = ye("policySettings");
+  let v = getSettingsForSource("policySettings");
   return JSON.stringify([
     v?.claudeMd ?? null,
     cRt(),
@@ -5047,7 +5047,7 @@ async function Ci() {
   ]);
 }
 async function Sa() {
-  if (uR() || Pt()) return [];
+  if (isClaudeMdLoadingDisabled() || Pt()) return [];
   let v = new Set(),
     k = es().hasClaudeMdExternalIncludesApproved || !1;
   return [
@@ -5071,7 +5071,7 @@ function vi(v) {
         if (((k = x), T)) return;
         (nR(v), ET(v, "policy_refresh"));
       } catch (x) {
-        h(x);
+        logError(x);
       }
     });
   return (R(!0), () => R(!1));
@@ -5133,7 +5133,7 @@ async function bi(v, k) {
       verbose: Ho,
     } = v;
   if ((HDn(Ve ?? "text"), ut)) {
-    if ((rje(!0), dR(), Qxe(v.storageV5), ri() && !uo()))
+    if ((rje(!0), dR(), Qxe(v.storageV5), isViolinWoodEnabledCached() && !uo()))
       kl.initialize(iHe(yt, v.storageV5, v.credentials), v.storageV5, {
         machineServesSession: !0,
       });
@@ -5142,27 +5142,27 @@ async function bi(v, k) {
     return X === null ? Ye(v, k, B().host) : Ce(v, k, X, B().host);
   }
   if (X !== null) {
-    let Ce = await cx(v.credentials);
-    if (!Ce.valid) return di(Ce.message);
+    let Ce = await validateForceLoginOrg(v.credentials);
+    if (!Ce.valid) return cliErrorAfterAnalyticsFlush(Ce.message);
     await b_();
     let Ye = A8();
-    if (Ye) return di(`Error: ${Ye}`);
+    if (Ye) return cliErrorAfterAnalyticsFlush(`Error: ${Ye}`);
     if (Ve === "stream-json")
-      return un(
+      return cliError(
         "Error: --cloud <session_id> does not support --output-format stream-json",
       );
     let tt = typeof Ue === "string" && Ue.trim() !== "" ? Ue : null;
     if (tt === null)
-      return un(
+      return cliError(
         "Error: non-interactive --cloud <session_id> requires a prompt (positional or stdin).",
       );
     i("tengu_remote_send_headless", {
-      entry_point: u("cloud_attach_headless"),
+      entry_point: fromEnum("cloud_attach_headless"),
     });
     let St = null,
       Qt;
     try {
-      let me = await w6(X, void 0, v.credentials);
+      let me = await fetchSession(X, void 0, v.credentials);
       if (me.session_status === "archived")
         St = `cloud session ${X} is archived and cannot accept new messages`;
       Qt = me.bound_device_uuid;
@@ -5170,7 +5170,7 @@ async function bi(v, k) {
       St = l(me);
     }
     let jt =
-        St === null && Qt !== void 0 && ri()
+        St === null && Qt !== void 0 && isViolinWoodEnabledCached()
           ? import("../../02-功能模块/云会话-Teleport/deviceEventSignerFor.14ybgam1.js").then(
               ({ deviceEventSignerIfBoundHere: me }) => me(Qt, v.credentials),
               Ise,
@@ -5180,12 +5180,12 @@ async function bi(v, k) {
         St !== null
           ? { ok: !1, reason: St }
           : jt === void 0
-            ? await Jme(X, tt)
-            : await Jme(X, tt, { eventSigner: jt });
+            ? await sendEventToRemoteSession(X, tt)
+            : await sendEventToRemoteSession(X, tt, { eventSigner: jt });
     if (!ft.ok) {
       if (
         (await qs("tengu_remote_send_headless_error", {
-          entry_point: u("cloud_attach_headless"),
+          entry_point: fromEnum("cloud_attach_headless"),
         }),
         Ve === "json")
       )
@@ -5194,12 +5194,12 @@ async function bi(v, k) {
             `
 `,
         );
-      return di(
+      return cliErrorAfterAnalyticsFlush(
         `Error: failed to send message to cloud session ${X}: ${ft.reason}`,
       );
     }
     await qs("tengu_remote_send_headless_success", {
-      entry_point: u("cloud_attach_headless"),
+      entry_point: fromEnum("cloud_attach_headless"),
     });
     let gt = wa(X, void 0, { from: "cli", m: "0" });
     if (Ve === "json")
@@ -5219,27 +5219,27 @@ async function bi(v, k) {
     return;
   }
   if (Bt !== null) {
-    let Ce = await cx(v.credentials);
-    if (!Ce.valid) return di(Ce.message);
+    let Ce = await validateForceLoginOrg(v.credentials);
+    if (!Ce.valid) return cliErrorAfterAnalyticsFlush(Ce.message);
     await b_();
     let Ye = A8();
-    if (Ye) return di(`Error: ${Ye}`);
+    if (Ye) return cliErrorAfterAnalyticsFlush(`Error: ${Ye}`);
     let tt = typeof Ue === "string" && Ue.trim() !== "" ? Ue : null;
     if (tt === null)
-      return un(
+      return cliError(
         "Error: non-interactive --environment requires a prompt (positional or stdin). Run from a TTY for an interactive cloud session.",
       );
     i("tengu_remote_create_session", {
       has_initial_prompt: S("true"),
-      entry_point: u("pool_headless"),
+      entry_point: fromEnum("pool_headless"),
       branch_mode: H8(Je, De),
     });
     let St = U_e(Tt),
-      Qt = Je ?? De ?? (await Da()),
+      Qt = Je ?? De ?? (await getBranch()),
       jt,
       ft,
       gt,
-      me = await Kv({
+      me = await teleportToRemote({
         initialMessage: tt,
         signal: new AbortController().signal,
         source: "remote",
@@ -5264,11 +5264,11 @@ async function bi(v, k) {
     if (!me) {
       if (
         (await qs("tengu_remote_create_session_error", {
-          error: we(ft),
-          entry_point: u("pool_headless"),
+          error: fromEnumOpt(ft),
+          entry_point: fromEnum("pool_headless"),
           branch_mode: H8(Je, De),
-          ...(gt?.endpoint && { create_endpoint: u(gt.endpoint) }),
-          ...(gt?.serverReason && { server_reason: u(gt.serverReason) }),
+          ...(gt?.endpoint && { create_endpoint: fromEnum(gt.endpoint) }),
+          ...(gt?.serverReason && { server_reason: fromEnum(gt.serverReason) }),
           ...(gt?.preflightTransient !== void 0 && {
             deny_transient: S(gt.preflightTransient ? "true" : "false"),
           }),
@@ -5280,11 +5280,11 @@ async function bi(v, k) {
             `
 `,
         );
-      return di(jt ? void 0 : "Error: Unable to create cloud session");
+      return cliErrorAfterAnalyticsFlush(jt ? void 0 : "Error: Unable to create cloud session");
     }
     await qs("tengu_remote_create_session_success", {
       session_id: Tn(me.id),
-      entry_point: u("pool_headless"),
+      entry_point: fromEnum("pool_headless"),
       branch_mode: H8(Je, De),
     });
     let Lo = wa(me.id, void 0, { from: "cli", m: "0" });
@@ -5315,7 +5315,7 @@ async function bi(v, k) {
   if (Ve === "stream-json" || Ve === "json") rje(!0);
   (dR(), Qxe(v.storageV5));
   let Lt = (k.continue || k.resume || se) && !CHe() ? null : jCn(ao ?? lo);
-  if (Lt && Ve !== "json" && Ve !== "stream-json") Ey(Lt);
+  if (Lt && Ve !== "json" && Ve !== "stream-json") cliWarn(Lt);
   let ae = performance.now(),
     He =
       k.continue || k.resume || se || fo
@@ -5329,9 +5329,9 @@ async function bi(v, k) {
             (Ce) => (Ts("hooks_init_ms", performance.now() - ae, ae), Ce),
           );
   (He?.catch(() => {}), Br("before_validateForceLoginOrg"));
-  let ho = await cx(v.credentials);
-  if (!ho.valid) return (rM(ho.message), await Eue(), un());
-  let _o = qe ? [] : Le ? Le.then(wpe) : wpe(ce);
+  let ho = await validateForceLoginOrg(v.credentials);
+  if (!ho.valid) return (printCliError(ho.message), await Eue(), cliError());
+  let _o = qe ? [] : Le ? Le.then(filterCommandsForHeadless) : filterCommandsForHeadless(ce);
   if (_o instanceof Promise) _o.catch(() => {});
   let Fo = aF(),
     Xe = {
@@ -5358,7 +5358,7 @@ async function bi(v, k) {
   if (
     (Et(() => wat(at.getState().tasks, v.storageV5)),
     Tat(at.setState),
-    YKe(Se, at.getState().fastMode).then(({ updateContext: Ce }) => {
+    verifyAutoModeGateAccess(Se, at.getState().fastMode).then(({ updateContext: Ce }) => {
       at.setState((Ye) => {
         let tt = Ce(Ye.toolPermissionContext);
         if (tt === Ye.toolPermissionContext) return Ye;
@@ -5464,13 +5464,13 @@ async function bi(v, k) {
   return;
 }
 function ya() {
-  if (YT()) return !1;
+  if (getRemoteSettingsPathOverride()) return !1;
   if (Sar()) return !1;
-  let v = CQ(),
-    k = vQ();
+  let v = getBasePolicySettings(),
+    k = getBasePolicySettingsOrigin();
   if (k === "remote") return _ar(v);
   return (
-    T1(k) && (v?.policyHelpers != null || v?.policyHelper != null) && fIe()
+    isAdminPolicyOrigin(k) && (v?.policyHelpers != null || v?.policyHelper != null) && fIe()
   );
 }
 var Ca = 120000,
@@ -5478,15 +5478,15 @@ var Ca = 120000,
 function ba() {
   let v = 0;
   try {
-    v = ppe();
+    v = getSessionEndHookTimeoutMs();
   } catch {}
   return Math.max(Ca, v + va);
 }
 function Ir() {
-  un();
+  cliError();
 }
 var ka = {
-    readBase: () => ({ settings: CQ(), origin: vQ(), loadErrors: RBe() }),
+    readBase: () => ({ settings: getBasePolicySettings(), origin: getBasePolicySettingsOrigin(), loadErrors: getPolicyHelperSourceLoadErrors() }),
     baseSettled: () => !fIe(),
     refuse: (v) => {
       let k = no();
@@ -5544,7 +5544,7 @@ function ki(v) {
     let j = performance.now(),
       V = await v1n();
     if (V) Ts("await_initialize_ms", performance.now() - j, j);
-    if (V?.kind === "violation") return un(V.message);
+    if (V?.kind === "violation") return cliError(V.message);
     let q = V?.kind === "applied" ? V : void 0,
       J = [...Ei(I.getOptionValue("pluginDir")), ...(q?.pluginDirs ?? [])];
     if (J.length > 0) (krt(J), Zf("preAction: --plugin-dir inline plugins"));
@@ -5563,34 +5563,34 @@ function ki(v) {
       (wLn(ce), Zf("preAction: --plugin-url inline plugins"));
     (await Ra(R), Br("preAction_after_migrations"));
     let Me = L.parent?.name() === "auth";
-    if (mRt() && !Me) {
+    if (isForceRemoteSettingsRefreshConfigured() && !Me) {
       let oe = await $Dt(async () =>
         _lt(await v.showSecurityDialog?.(), R, { credentials: T }),
       );
-      if (!oe.valid) return un(oe.message);
-    } else if (Pe() === "gateway" && !Me) {
+      if (!oe.valid) return cliError(oe.message);
+    } else if (getAPIProvider() === "gateway" && !Me) {
       if (!(await _lt(await v.showSecurityDialog?.(), R, { credentials: T }))) {
         let oe = Fr();
-        if (!oe.endedSession || L !== k || ke() || Sg())
-          return un(oe.exitMessage);
+        if (!oe.endedSession || L !== k || ke() || isUnattendedInteractiveSession())
+          return cliError(oe.exitMessage);
         Ta();
       }
     } else if (ya() && !Me)
       await Promise.resolve(v.showSecurityDialog?.())
         .then((oe) => _lt(oe, R, { singleAttempt: !0, credentials: T }))
-        .catch(h);
+        .catch(logError);
     else
       Promise.resolve(v.showSecurityDialog?.())
         .then((oe) => _lt(oe, R, { credentials: T }))
-        .catch(h);
+        .catch(logError);
     if (Pa(L, k)) XBn();
     let Le = L === k && qJe();
     KAn({ startupAwaited: Le });
     {
-      let oe = vQ();
+      let oe = getBasePolicySettingsOrigin();
       bar(oe);
-      let je = await ABe(CQ(), oe, RBe());
-      if (je) return un(je);
+      let je = await ABe(getBasePolicySettings(), oe, getPolicyHelperSourceLoadErrors());
+      if (je) return cliError(je);
       if ((war(ka), uRt())) goe();
     }
     let qe = vi(B());
@@ -5609,10 +5609,10 @@ function ki(v) {
         if (je(I.getOptionValue($e)) || je(L.getOptionValue($e))) oe.push(ut);
       if (q && q.pluginDirs.length + q.pluginDirsNoMcp.length > 0)
         oe.push("plugins (initialize request)");
-      if (oe.length > 0) return un(ufe(oe));
+      if (oe.length > 0) return cliError(ufe(oe));
     }
     let fe = J2n(L);
-    if (fe) return un(fe);
+    if (fe) return cliError(fe);
     if (
       (kl.subscribe((oe) => {
         if (oe === "policySettings") qe();
@@ -6165,7 +6165,7 @@ function ki(v) {
     if (K.kind === "exited") return;
     if (K.kind === "prepared-headless") return bi(K, W);
     if (!v.runInteractiveSession)
-      return un(
+      return cliError(
         "Interactive session requires the runInteractiveSession capability",
       );
     return v.runInteractiveSession(K, W);
@@ -6372,7 +6372,7 @@ function Ta() {
 }
 function Fr() {
   let v = ns()?.url ?? "",
-    k = V6(),
+    k = getLastLoadStatus(),
     O =
       k?.state === "failed" || k?.state === "stale_cache"
         ? k.failure.errorKind
@@ -6401,7 +6401,7 @@ function Fr() {
 function Oi({ remoteControlFlag: v, isRemoteThinClient: k }) {
   let O = a.CLAUDE_CODE_REMOTE,
     R = l5t(),
-    T = !k && !O && !v && R.value === void 0 ? x4t() : void 0,
+    T = !k && !O && !v && R.value === void 0 ? resolveCcrAutoConnectDefault() : void 0,
     x = !k && !O && (v || (R.value ?? T?.value ?? !1)),
     U = !1,
     D = Boolean(a.CLAUDE_BRIDGE_REATTACH_SESSION),
@@ -6425,22 +6425,22 @@ function Oi({ remoteControlFlag: v, isRemoteThinClient: k }) {
 }
 function Pi(v) {
   i("tengu_rc_autostart_resolved", {
-    explicit_setting: u(
+    explicit_setting: fromEnum(
       v.explicit.value === void 0
         ? "unset"
         : v.explicit.value
           ? "true"
           : "false",
     ),
-    explicit_source: u(v.explicit.source),
+    explicit_source: fromEnum(v.explicit.source),
     default_value: v.autoConnectDefault?.value,
-    default_source: u(v.autoConnectDefault?.source ?? "unevaluated"),
+    default_source: fromEnum(v.autoConnectDefault?.source ?? "unevaluated"),
     mirror: v.ccrMirrorEnabled,
     remote_control_flag: v.remoteControlFlag,
     env_remote: v.envRemote,
     thin_client: v.isRemoteThinClient,
     reattach: v.reattach,
-    result: u(v.result),
+    result: fromEnum(v.result),
   });
 }
 var xa = m(() => c({ session_id: s(), ws_url: s(), work_dir: s().optional() }));
@@ -6455,7 +6455,7 @@ var tr = () =>
   import("../../01-核心基础设施/设置-配置/showStandaloneSecurityDialog.nm3g924k.js").then(
     (v) => v.showStandaloneSecurityDialog,
     (v) => {
-      h(v);
+      logError(v);
       return;
     },
   );
@@ -6475,7 +6475,7 @@ function Ha() {
 }
 if (Ha()) process.exit(1);
 function Fa() {
-  let v = tL(),
+  let v = getAutoModeConfig(),
     k = { allow: 0, soft_deny: 0, hard_deny: 0, environment: 0 },
     O = 0;
   for (let R of ["allow", "soft_deny", "hard_deny", "environment"])
@@ -6508,27 +6508,27 @@ function Ua() {
 async function Na(v, k) {
   if (mg()) return;
   let [O, R, T, x] = await Promise.all([
-      hh(),
-      M2e(),
+      getIsGit(),
+      getWorktreeCount(),
       sHe({ allowNetworkFallbackForOldGh: !1 }),
       null,
     ]),
     U = T1n(),
     D = E1n(v),
-    N = A1n(Ge());
+    N = A1n(getInitialSettings());
   i("tengu_startup_telemetry", {
     is_git: O,
     worktree_count: R,
     ...k,
     ...!1,
     warm_spare_claimed: BXn(),
-    gh_auth_status: u(T.status),
-    sandbox_enabled: st.isSandboxingEnabled(),
-    are_unsandboxed_commands_allowed: st.areUnsandboxedCommandsAllowed(),
+    gh_auth_status: fromEnum(T.status),
+    sandbox_enabled: SandboxManager.isSandboxingEnabled(),
+    are_unsandboxed_commands_allowed: SandboxManager.areUnsandboxedCommandsAllowed(),
     is_auto_bash_allowed_if_sandbox_enabled:
-      st.isAutoAllowBashIfSandboxedEnabled(),
+      SandboxManager.isAutoAllowBashIfSandboxedEnabled(),
     auto_updater_disabled: Sq(),
-    prefers_reduced_motion: Ge().prefersReducedMotion ?? !1,
+    prefers_reduced_motion: getInitialSettings().prefersReducedMotion ?? !1,
     precompute_compaction_setting_enabled: Eo(
       "precomputeCompactionEnabled",
       pLe(),
@@ -6537,9 +6537,9 @@ async function Na(v, k) {
     set_env_var_count: U.length,
     set_env_vars: U.join(","),
     nondefault_setting_count: D.length,
-    nondefault_settings: Ga(D),
+    nondefault_settings: fromEnumArr(D),
     set_user_settings_count: N.length,
-    set_user_settings: Ga(N),
+    set_user_settings: fromEnumArr(N),
     ...Ua(),
     ...Fa(),
   });
@@ -6547,7 +6547,7 @@ async function Na(v, k) {
 async function Hw(v) {
   (Br("main_function_start"),
     Qr(),
-    UQt(),
+    registerToolHosts(),
     oi(),
     BJn(),
     process.on("exit", () => {
@@ -6589,7 +6589,7 @@ async function Hw(v) {
       let D = RXn(T, U);
       if (D.kind === "rewrite")
         process.argv = [process.argv[0], process.argv[1], ...D.argv];
-      else return un(D.kind === "config-error" ? vXn : F_n);
+      else return cliError(D.kind === "config-error" ? vXn : F_n);
     }
   }
   (ni({ interactivity: { kind: "detect" } }),
@@ -6701,7 +6701,7 @@ async function ja(v) {
     n("[STARTUP] Running showSetupScreens()..."));
   let ao = Date.now(),
     et = !1,
-    lo = Xgn({
+    lo = shouldSuppressChromeOffer({
       isSSHPending: D,
       isRemoteMode: Nn(),
       hasTeleport: Boolean(R),
@@ -6729,21 +6729,21 @@ async function ja(v) {
     )),
     kLn(Nt),
     n(`[STARTUP] showSetupScreens() completed in ${Date.now() - ao}ms`),
-    ((!V && Bo()) || (!q && Cd())) && !J && !uo() && !Nn())
+    ((!V && Bo()) || (!q && isWorkspacePersistedTrusted())) && !J && !uo() && !Nn())
   ) {
     let le = Date.now();
-    $e = SH(ut, { storageV5: fe, credentials: oe }).then(
+    $e = getClaudeCodeMcpConfigs(ut, { storageV5: fe, credentials: oe }).then(
       (mt) => ((v.mcpConfigResolvedMs.value = Date.now() - le), mt),
     );
   }
-  if (et && !rD())
+  if (et && !isClaudeInChromeAllowed())
     n(
       "[Claude in Chrome] Skipping accepted offer: denied by organization policy (allow_claude_browser_extension)",
     );
   else if (et) {
     try {
       i("tengu_claude_in_chrome_setup", { platform: u0(P()) });
-      let { mcpConfig: le, systemPrompt: mt } = Zde();
+      let { mcpConfig: le, systemPrompt: mt } = setupClaudeInChrome();
       if (((ut = { ...ut, ...le }), mt))
         Rt = Rt
           ? `${mt}
@@ -6752,11 +6752,11 @@ ${Rt}`
           : mt;
     } catch (le) {
       (i("tengu_claude_in_chrome_setup_failed", { platform: u0(P()) }),
-        h(le),
+        logError(le),
         n(`[Claude in Chrome] Error (startup offer): ${le}`));
     }
     try {
-      je = await kf(X, fe);
+      je = await getCommands(X, fe);
     } catch (le) {
       n(`[Claude in Chrome] command refresh after accept failed: ${le}`);
     }
@@ -6772,16 +6772,16 @@ ${Rt}`
       le = await mt();
     }
     if (((Ue = le === null), le))
-      Ey(`${le}
+      cliWarn(`${le}
 ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
     else o6e(fe);
   }
   if (Nt && zt?.trim().toLowerCase() === "/login") zt = "";
   if (Nt) {
-    if (mRt()) {
+    if (isForceRemoteSettingsRefreshConfigured()) {
       let le = await $Dt(async () => mIe(await tr(), fe, oe));
       if (!le.valid) return await Ne(De, le.message);
-    } else if (Pe() === "gateway") {
+    } else if (getAPIProvider() === "gateway") {
       if (!(await mIe(await tr(), fe, oe))) {
         let le = Fr();
         return await Ne(
@@ -6813,8 +6813,8 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
           );
           break;
       }
-    if (Pe() === "gateway") {
-      if (lWe())
+    if (getAPIProvider() === "gateway") {
+      if (hasPolicyDiverged())
         return (
           await Te(
             (le) => ({
@@ -6852,7 +6852,7 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
         ),
       ));
   }
-  let co = await cx(oe);
+  let co = await validateForceLoginOrg(oe);
   if (!co.valid) await Ne(De, co.message, () => Eue());
   return {
     root: De,
@@ -6965,9 +6965,9 @@ async function $a(v, k, O, R) {
     cli_flag: bt(k.model),
     env_var: bt(process.env.ANTHROPIC_MODEL),
     default_env_var: bt(a.ANTHROPIC_DEFAULT_MODEL),
-    settings_file: bt(Ge().model),
-    settings_source: we(VT("model")),
-    subscriptionType: we(qn()),
+    settings_file: bt(getInitialSettings().model),
+    settings_source: fromEnumOpt(getEffectiveSettingSource("model")),
+    subscriptionType: fromEnumOpt(getSubscriptionType()),
     agent: N,
   });
   let Ye = $rr(Io ?? fo),
@@ -6981,14 +6981,14 @@ async function $a(v, k, O, R) {
   if (Yt)
     tt.push({ key: Yt.key, text: Yt.text, color: "warning", priority: "high" });
   let St = Ao;
-  if ((!Ce && Bo()) || (!ir && Cd())) {
+  if ((!Ce && Bo()) || (!ir && isWorkspacePersistedTrusted())) {
     if (!Ce && Bo())
       import("../../01-核心基础设施/共享小工具-未细化/parseGitHubRepository.3ng6714h.js").then((Oe) => {
         Oe.detectCurrentRepositoryWithHost();
       });
     let _e = OG(),
-      ve = otn(stn(pVe(Ao, _e), [], tme(), void 0, !1, void 0, ae), _e);
-    if (((St = ve.context), ve.exitedAutoMode)) tt.push(NHe(ij("settings")));
+      ve = otn(stn(syncPermissionRulesFromDisk(Ao, _e), [], tme(), void 0, !1, void 0, ae), _e);
+    if (((St = ve.context), ve.exitedAutoMode)) tt.push(NHe(getAutoModeUnavailableNotification("settings")));
   }
   let Qt = {
       ...St,
@@ -6997,10 +6997,10 @@ async function $a(v, k, O, R) {
     jt = Ox(),
     ft = Oi({ remoteControlFlag: yt, isRemoteThinClient: Nn() || Boolean(Xe) });
   Pi(ft);
-  let gt = Ho?.teamContext ?? (L5() ? await h1n(ae) : void 0),
+  let gt = Ho?.teamContext ?? (getDynamicTeamContext() ? await h1n(ae) : void 0),
     me = {
       sessionNoticesPoll: { pendingDeliveryUuids: [] },
-      settings: Ge(),
+      settings: getInitialSettings(),
       tasks: {},
       attentionBudget: rmt,
       proactivityLevel: co,
@@ -7064,7 +7064,7 @@ async function $a(v, k, O, R) {
       prStatus: null,
       prNeedsAuth: !1,
       remoteSessionUrl: void 0,
-      projectsSelfIdentity: FOt,
+      projectsSelfIdentity: EMPTY_PROJECTS_SELF_IDENTITY,
       remoteConnectionStatus: "connecting",
       remoteBootstrap: null,
       remoteBackgroundTasks: [],
@@ -7200,7 +7200,7 @@ async function $a(v, k, O, R) {
         { clearSessionCaches: Oe } = await import("../Headless-SDK模式/clearSessionCaches.avjeddw7.js");
       Oe(Se, void 0, void 0, void 0, ae);
       let Ct,
-        Zt = await PV(void 0, void 0, {
+        Zt = await loadConversationForResume(void 0, void 0, {
           forkSession: !!k.forkSession,
           replyOnResume: !!k.replyOnResume,
           storageV5: ae,
@@ -7237,7 +7237,7 @@ async function $a(v, k, O, R) {
         (_e = !0));
       let Vt = F_e(ce, We.restoredAgentDef ?? T, { strictMcpConfig: ho });
       if (Object.keys(Vt).length > 0) await V0({ hasDynamicMcpConfig: !0 });
-      await i6e(
+      await launchSessionRepl(
         se,
         {
           getFpsMetrics: fe,
@@ -7262,7 +7262,7 @@ async function $a(v, k, O, R) {
       );
     } catch (ve) {
       if (!_e) await qs("tengu_continue", { success: !1 });
-      h(dt(ge(ve), "continue/resume launchRepl failed"));
+      logError(dt(ge(ve), "continue/resume launchRepl failed"));
       let Oe = ge(ve).message;
       (Dte(
         _e
@@ -7285,11 +7285,11 @@ async function $a(v, k, O, R) {
       if (k.fromPr === !0) Vt = !0;
       else if (typeof k.fromPr === "string") Vt = k.fromPr;
     }
-    if (k.resume && typeof k.resume === "string" && !Ct && !XQ(k.resume)) {
+    if (k.resume && typeof k.resume === "string" && !Ct && !isTranscriptFileResumeArg(k.resume)) {
       let ne = k.resume.trim();
       if (ne) {
-        let Z = await QM(ne, { exact: !0 }, ae);
-        if (Z.length === 1) ((We = Z[0]), (Ct = Kc(We) ?? null));
+        let Z = await searchSessionsByCustomTitle(ne, { exact: !0 }, ae);
+        if (Z.length === 1) ((We = Z[0]), (Ct = getSessionIdFromLog(We) ?? null));
         else Zt = ne;
       }
     }
@@ -7300,7 +7300,7 @@ async function $a(v, k, O, R) {
     }
     if (x !== null) {
       let ne = Bot(x),
-        Z = ne !== null ? zu(ne) : null;
+        Z = ne !== null ? toCompatSessionId(ne) : null;
       if (Je !== null) {
         if (ao) {
           if (typeof Ue === "string" && Ue.length > 0) x = Ue;
@@ -7312,7 +7312,7 @@ async function $a(v, k, O, R) {
           );
       }
       let de = !Z && x.length > 0,
-        Qe = de ? Ma() : void 0,
+        Qe = de ? randomUUID() : void 0,
         ue = Tt ? Eb(Tt) : void 0,
         Fe = ue && E1(ue) && ue !== "bypassPermissions" ? ue : void 0,
         ze = H("tengu_remote_backend", !1);
@@ -7378,7 +7378,7 @@ Usage: claude --cloud "your task description"`,
           import("../../01-核心基础设施/共享小工具-未细化/FleetViewScreen.w73yzmz1.js"),
           import("../../02-功能模块/Daemon-守护服务/createRoot.pw1402cq.js"),
         ]);
-        (zo(), (process.env.CLAUDE_AGENTS_SELECT = Ntt(Z)));
+        (zo(), (process.env.CLAUDE_AGENTS_SELECT = remoteRowId(Z)));
         let Mt = await At(wv(!1));
         return (
           await oo(Mt, {
@@ -7395,7 +7395,7 @@ Usage: claude --cloud "your task description"`,
           branch_mode: H8(De, et),
         });
         try {
-          vt = await ox(He);
+          vt = await prepareApiRequest(He);
         } catch (Ze) {
           return (
             n(`--remote auth setup failed: ${l(Ze)}`, { level: "error" }),
@@ -7404,7 +7404,7 @@ Usage: claude --cloud "your task description"`,
             )
           );
         }
-        let nt = await Su().catch(() => !1),
+        let nt = await isViolinWoodEnabled().catch(() => !1),
           Po = new AbortController(),
           to =
             ze && nt
@@ -7434,7 +7434,7 @@ Usage: claude --cloud "your task description"`,
                 onDecided: (Xo) => {
                   if (!Xo.offer)
                     i("tengu_dir_sync_mode_prompt_skipped", {
-                      reason: u(Xo.reason),
+                      reason: fromEnum(Xo.reason),
                     });
                 },
               })
@@ -7442,7 +7442,7 @@ Usage: claude --cloud "your task description"`,
           )
             await Wn(se, { repositoryRoot: Ro, storageV5: ae });
         }
-        let oo = nt && (await LD().catch(() => !1));
+        let oo = nt && (await isSettingsToCloudEnabled().catch(() => !1));
         if (
           oo &&
           FKn({ staysAttached: ze, launchMayForward: Le, hostConsent: qe })
@@ -7457,12 +7457,12 @@ Usage: claude --cloud "your task description"`,
             gateOn: zo,
             permissionModeTyped: Tt !== void 0,
             dangerouslySkipPermissions: q === !0,
-            scrubbed: Bu(),
-            settings: Ge(),
+            scrubbed: isScrubEnabled(),
+            settings: getInitialSettings(),
             effort: Ya(me),
           });
         if (nt) {
-          ko = rt();
+          ko = getMainLoopModel();
           let Ze = l6e(ko);
           if (
             ((ot = Vot({
@@ -7472,8 +7472,8 @@ Usage: claude --cloud "your task description"`,
               droppedMode: (ue !== void 0 && !Fe) || Boolean(q),
               settingsMode: At.settingsDefault,
               settingsModeForwardable: zo,
-              autoSeedable: xJe(Ge()) && !Bu(),
-              publicModel: Ll(),
+              autoSeedable: xJe(getInitialSettings()) && !isScrubEnabled(),
+              publicModel: getDefaultOpusModel(),
               repositoryModel: Ze
                 ? zot({
                     model: ko,
@@ -7486,7 +7486,7 @@ Usage: claude --cloud "your task description"`,
                     restrictedModel: vo,
                   })
                 : void 0,
-              trustedPlanDisplaced: qEt(Ge()),
+              trustedPlanDisplaced: qEt(getInitialSettings()),
             })),
             ot.notice)
           )
@@ -7497,22 +7497,22 @@ Usage: claude --cloud "your task description"`,
           ((lr = Mt && { mode: Mt }),
             (qo = Snr({
               sentMode: Mt,
-              repositorySettings: ye("projectSettings"),
+              repositorySettings: getSettingsForSource("projectSettings"),
             })),
             (Yo = bnr({
               seed: At,
-              settingsMode: Ge().permissions?.defaultMode,
+              settingsMode: getInitialSettings().permissions?.defaultMode,
               sentMode: Mt,
               startsIn: qo,
             })));
         let Ko = nt,
           Jo = !Ko ? void 0 : !ze ? "not_attached" : void 0;
-        if (Jo) (i("tengu_device_bind_skipped", { reason: u(Jo) }), (Go = Jo));
+        if (Jo) (i("tengu_device_bind_skipped", { reason: fromEnum(Jo) }), (Go = Jo));
         let Ni =
             Ko && !Jo
               ? {
                   orgUuid: vt.orgUUID,
-                  accountUuid: mh()?.accountUuid,
+                  accountUuid: getStoredOauthAccountInfo()?.accountUuid,
                   onBound: (Ze) => {
                     Wo = Ze;
                   },
@@ -7521,9 +7521,9 @@ Usage: claude --cloud "your task description"`,
                   },
                 }
               : void 0,
-          Bi = De ?? et ?? (await Da()),
+          Bi = De ?? et ?? (await getBranch()),
           { showTeleportErrorsImpl: Li } = await import("../../02-功能模块/云会话-Teleport/showTeleportErrorsImpl.pjrm8ksf.js"),
-          ct = await Amn(se, {
+          ct = await teleportToRemoteWithErrorHandling(se, {
             showTeleportErrors: Li,
             staysAttached: ze,
             deferInitialMessage: ze,
@@ -7553,14 +7553,14 @@ Usage: claude --cloud "your task description"`,
           return (
             to?.failed(),
             i("tengu_remote_create_session_error", {
-              error: u(ct.failReason),
+              error: fromEnum(ct.failReason),
               branch_mode: H8(De, et),
               settings_gate: S(oo ? "on" : "off"),
               ...(ct.failDetail?.endpoint && {
-                create_endpoint: u(ct.failDetail.endpoint),
+                create_endpoint: fromEnum(ct.failDetail.endpoint),
               }),
               ...(ct.failDetail?.serverReason && {
-                server_reason: u(ct.failDetail.serverReason),
+                server_reason: fromEnum(ct.failDetail.serverReason),
               }),
               ...(ct.failDetail?.preflightTransient !== void 0 && {
                 deny_transient: S(
@@ -7599,7 +7599,7 @@ Usage: claude --cloud "your task description"`,
                         ? "settings_withheld"
                         : "none",
             ),
-            permission_mode: we(Mt),
+            permission_mode: fromEnumOpt(Mt),
             settings_gate: S(oo ? "on" : "off"),
           }),
           ot && ot.action !== "none")
@@ -7607,13 +7607,13 @@ Usage: claude --cloud "your task description"`,
           i("tengu_remote_model_gate_hint", {
             entry_point: S("interactive"),
             session_id: Ee(kt.id),
-            permission_mode: we(Mt) ?? S("unset"),
-            requested_mode: we(ue) ?? S("unset"),
-            settings_mode: we(At.permissionMode) ?? S("unset"),
+            permission_mode: fromEnumOpt(Mt) ?? S("unset"),
+            requested_mode: fromEnumOpt(ue) ?? S("unset"),
+            settings_mode: fromEnumOpt(At.permissionMode) ?? S("unset"),
             skip_permissions: S(q ? "true" : "false"),
-            action: u(ot.action),
+            action: fromEnum(ot.action),
             ...(ot.repositoryModel && {
-              repository_model: u(ot.repositoryModel),
+              repository_model: fromEnum(ot.repositoryModel),
             }),
           });
         if (!ze) {
@@ -7645,7 +7645,7 @@ Usage: claude --cloud "your task description"`,
       let { getClaudeAIOAuthTokens: Ri, handleOAuth401Error: Ti } =
           await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
         jr = () => Ri()?.accessToken ?? vt.accessToken,
-        $r = ri()
+        $r = isViolinWoodEnabledCached()
           ? await (
               await import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js")
             )
@@ -7696,7 +7696,7 @@ Usage: claude --cloud "your task description"`,
           }),
         },
         Gr = wa(xt, void 0, { from: "cli", m: "0" }),
-        qr = hit("create", Gr, ri()),
+        qr = hit("create", Gr, isViolinWoodEnabledCached()),
         Yr = Yo ? [Ht(Yo.text, Yo.level)] : [],
         Kr = ht.map((nt) => Ht(nt, "warning")),
         Jr = de ? Re({ content: x, uuid: Qe }) : null,
@@ -7776,7 +7776,7 @@ Usage: claude --cloud "your task description"`,
           }),
         };
       (Nr(Se, k),
-        await i6e(
+        await launchSessionRepl(
           se,
           {
             getFpsMetrics: fe,
@@ -7810,13 +7810,13 @@ Usage: claude --cloud "your task description"`,
           n("selectAndResumeTeleportTask: Starting teleport flow..."));
         let ne = await jn(se);
         if (!ne) (await xn(0), process.exit(0));
-        let { branchError: Z } = await UKe(ne.branch);
-        ve = $Ke(ne.log, Z, ne.environmentKind);
+        let { branchError: Z } = await checkOutTeleportedSessionBranch(ne.branch);
+        ve = processMessagesForTeleportResume(ne.log, Z, ne.environmentKind);
       } else if (typeof Xe === "string") {
         i("tengu_teleport_resume_session", { mode: S("direct") });
         try {
-          let ne = await w6(Xe, void 0, He),
-            Z = await g6t(ne);
+          let ne = await fetchSession(Xe, void 0, He),
+            Z = await validateSessionRepository(ne);
           if (Z.status === "host_unverified") {
             let Fe =
               Z.sessionHost && !Do(Z.sessionHost)
@@ -7847,13 +7847,13 @@ Usage: claude --cloud "your task description"`,
                   initialPaths: xt,
                   storageV5: ae,
                 });
-                if (ht) (Yu(ht), pu(ht), ES(ht), Ea.cache.clear?.(), lh(ae));
+                if (ht) (Yu(ht), pu(ht), ES(ht), getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(ae));
                 else await xn(0);
               } else {
                 let ht = Fe,
                   vt = "";
                 if (Z.status === "mismatch") {
-                  let eo = h6t(Z);
+                  let eo = formatRepoMismatchDisplay(Z);
                   ((ht = eo.sessionDisplay ?? Fe),
                     (vt = eo.currentDisplay
                       ? `
@@ -7881,23 +7881,23 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
             );
           let { showTeleportErrorsImpl: de } =
             await import("../../02-功能模块/云会话-Teleport/showTeleportErrorsImpl.pjrm8ksf.js");
-          await _6t(se, new Set(), de);
+          await handleTeleportPrerequisites(se, new Set(), de);
           let { teleportWithProgress: Qe } =
               await import("../../02-功能模块/云会话-Teleport/teleportWithProgress.vh5heaat.js"),
             ue = await Qe(se, Se, Xe);
           (Cje({ sessionId: Xe }), (ve = ue.messages));
         } catch (ne) {
           let Z = ne instanceof Iu;
-          if (!Z) h(dt(ge(ne), "teleport direct resume failed"));
+          if (!Z) logError(dt(ge(ne), "teleport direct resume failed"));
           await Ne(se, Z ? ne.message : l(ne), () => xn(1));
         }
       }
     }
-    if (ny() || (typeof k.resume === "string" && XQ(k.resume))) {
+    if (ny() || (typeof k.resume === "string" && isTranscriptFileResumeArg(k.resume))) {
       if (k.resume && typeof k.resume === "string" && !Ct) {
         let Z = null?.parseCcshareId(k.resume);
-        if (XQ(k.resume)) {
-          let de = Xn(Ia(k.resume, ".jsonl"));
+        if (isTranscriptFileResumeArg(k.resume)) {
+          let de = Xn(basename(k.resume, ".jsonl"));
           if (de && !k.forkSession) {
             let ue = await t4(de);
             if (ue)
@@ -7909,8 +7909,8 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
           let Qe = "load_error";
           try {
             let ue = performance.now(),
-              Fe = await J5e(k.resume, ae),
-              ze = await PV(Fe, void 0, {
+              Fe = await loadTranscriptFromFile(k.resume, ae),
+              ze = await loadConversationForResume(Fe, void 0, {
                 forkSession: !!k.forkSession,
                 replyOnResume: !!k.replyOnResume,
                 storageV5: ae,
@@ -7956,14 +7956,14 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
                     ? S("processing_error")
                     : S("load_error"),
                 error_name: Gw(ge(ue)),
-                error_code: ue instanceof yY ? u(ue.code) : EZ(ue),
+                error_code: ue instanceof TranscriptFileFormatError ? fromEnum(ue.code) : EZ(ue),
               }),
               Qe === "load_error" && (Kd(ue) || Bp(ue)))
             )
               n(`--resume file unreadable (${A(ue)}): ${l(ue)}`, {
                 level: "error",
               });
-            else h(ue);
+            else logError(ue);
             await Ne(
               se,
               `Unable to load transcript from file: ${k.resume}`,
@@ -7983,7 +7983,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
       let Z = "load_error";
       try {
         let de = performance.now(),
-          Qe = await PV(We ?? ne, void 0, {
+          Qe = await loadConversationForResume(We ?? ne, void 0, {
             forkSession: !!k.forkSession,
             replyOnResume: !!k.replyOnResume,
             storageV5: ae,
@@ -8036,7 +8036,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
           n(`--resume session load failed (${A(de)}): ${l(de)}`, {
             level: "error",
           });
-        else h(de);
+        else logError(de);
         await Ne(se, `Failed to resume session ${ne}`);
       }
     }
@@ -8044,7 +8044,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
       try {
         let ne = await Me,
           Z = G(ne, (de) => !de.success);
-        if (Z > 0) Ey(`Warning: ${Z}/${ne.length} file(s) failed to download.`);
+        if (Z > 0) cliWarn(`Warning: ${Z}/${ne.length} file(s) failed to download.`);
       } catch (ne) {
         return await Ne(se, `Error downloading files: ${l(ne)}`);
       }
@@ -8066,7 +8066,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
       (jot(k), await Ur(k));
       let ne = F_e(ce, lt.restoredAgentDef ?? T, { strictMcpConfig: ho });
       if (Object.keys(ne).length > 0) await V0({ hasDynamicMcpConfig: !0 });
-      await i6e(
+      await launchSessionRepl(
         se,
         {
           getFpsMetrics: fe,
@@ -8145,10 +8145,10 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
     (Br("action_after_hooks"),
       jot(k),
       await Ur(k),
-      ure(T0t?.isCoordinatorMode() ? "coordinator" : "normal"),
+      saveMode(T0t?.isCoordinatorMode() ? "coordinator" : "normal"),
       Nr(Se, k));
     let ve = oe.length > 0 ? oe : void 0;
-    await i6e(
+    await launchSessionRepl(
       se,
       {
         getFpsMetrics: fe,

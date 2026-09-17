@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Mxe } from "./chunk-5ndhfaq9.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -17,9 +17,9 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { DEFAULT_3P_SONNET_KEY as e0, DEFAULT_3P_HAIKU_KEY as p5, DEFAULT_VERTEX_OPUS_KEY as xQe, DEFAULT_3P_FABLE_KEY as HQe, GC, Rw } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { DEFAULT_3P_SONNET_KEY, DEFAULT_3P_HAIKU_KEY, DEFAULT_VERTEX_OPUS_KEY, DEFAULT_3P_FABLE_KEY, GC, Rw } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { getSettingsFilePathForSource as ho, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xt, to } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -27,7 +27,7 @@ import { fle, vl, wi } from "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { buildVertexGoogleAuth as aDe, suppressVertexAuthRejection as sX, vertexResidualCredentialPins as iX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { buildVertexGoogleAuth, suppressVertexAuthRejection, vertexResidualCredentialPins } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
@@ -164,7 +164,7 @@ function At(Ao) {
     [Eo, Qi] = d(null),
     Pr;
   if (ne[0] === p)
-    ((Pr = Gu(ho("userSettings") ?? "~/.claude/settings.json")), (ne[0] = Pr));
+    ((Pr = Gu(getSettingsFilePathForSource("userSettings") ?? "~/.claude/settings.json")), (ne[0] = Pr));
   else Pr = ne[0];
   let Ir = Pr,
     Rr;
@@ -194,13 +194,13 @@ function At(Ao) {
         return;
       }
       bo.current = !0;
-      let { error: Nr } = await Jt("userSettings", { env: $e }, void 0, _o);
+      let { error: Nr } = await updateSettingsForSource("userSettings", { env: $e }, void 0, _o);
       if (Nr) {
         ((bo.current = !1), Qi(Nr.message));
         return;
       }
       (i("tengu_vertex_setup_complete", {
-        auth_method: we(T.authMethod),
+        auth_method: fromEnumOpt(T.authMethod),
         pinned_models: Boolean(
           T.pinSonnet || T.pinOpus || T.pinFable || T.pinHaiku,
         ),
@@ -287,10 +287,10 @@ function At(Ao) {
 F();
 function nt() {
   return {
-    sonnet: to[e0].vertex,
-    opus: to[xQe].vertex,
-    haiku: to[p5].vertex,
-    fable: to[HQe].vertex,
+    sonnet: to[DEFAULT_3P_SONNET_KEY].vertex,
+    opus: to[DEFAULT_VERTEX_OPUS_KEY].vertex,
+    haiku: to[DEFAULT_3P_HAIKU_KEY].vertex,
+    fable: to[DEFAULT_3P_FABLE_KEY].vertex,
   };
 }
 function _t(n) {
@@ -309,7 +309,7 @@ var Fr = 12000;
 async function Ot(n) {
   let s;
   try {
-    let f = await aDe(Ro(n), n.projectId),
+    let f = await buildVertexGoogleAuth(Ro(n), n.projectId),
       O = (async () => {
         await (await f.getClient()).getAccessToken();
       })();
@@ -397,14 +397,14 @@ async function Wr(n) {
   let [{ AnthropicVertex: s }, { getProxyFetchOptions: c }] = await Promise.all(
       [import("./AnthropicVertex.1thfsdgf.js"), import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js")],
     ),
-    u = await aDe(Ro(n), n.projectId);
-  return sX(
+    u = await buildVertexGoogleAuth(Ro(n), n.projectId);
+  return suppressVertexAuthRejection(
     new s({
       region: n.region,
       projectId: n.projectId,
       googleAuth: u,
       maxRetries: 0,
-      defaultHeaders: iX(),
+      defaultHeaders: vertexResidualCredentialPins(),
       ...Rw,
       timeout: 15000,
       fetchOptions: c({ url: a.ANTHROPIC_VERTEX_BASE_URL || Mxe(n.region) }),
@@ -1016,7 +1016,7 @@ function Ht(Xa) {
   return Sn;
 }
 F();
-import { readdir as jn, readFile as er } from "fs/promises";
+import { readdir, readFile } from "fs/promises";
 import { homedir as zn } from "os";
 import { join as pt } from "path";
 async function $t() {
@@ -1024,10 +1024,10 @@ async function $t() {
     s = a.CLOUDSDK_CONFIG ?? Un();
   try {
     let c = pt(s, "configurations");
-    for (let u of await jn(c)) {
+    for (let u of await readdir(c)) {
       if (!u.startsWith("config_")) continue;
       try {
-        let f = await er(pt(c, u), "utf8");
+        let f = await readFile(pt(c, u), "utf8");
         for (let O of f.matchAll(/^project\s*=\s*(\S+)/gm)) {
           let m = O[1]?.trim();
           if (m) n.add(m);
@@ -1036,7 +1036,7 @@ async function $t() {
     }
   } catch {}
   try {
-    let c = z(await er(pt(s, "application_default_credentials.json"), "utf8"));
+    let c = z(await readFile(pt(s, "application_default_credentials.json"), "utf8"));
     if (c.quota_project_id) n.add(c.quota_project_id);
   } catch {}
   return [...n].sort();

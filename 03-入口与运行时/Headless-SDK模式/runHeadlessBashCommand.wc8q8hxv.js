@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { fz, I0, hXt } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrowWithCwd as Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { zit } from "../../01-核心基础设施/共享小工具-未细化/chunk-ksg0m9bg.js";
 import { Iye } from "../../01-核心基础设施/共享小工具-未细化/chunk-8w004g4b.js";
-import { randomUUID as p } from "crypto";
-async function C(e) {
+import { randomUUID } from "crypto";
+async function runHeadlessBashCommand(e) {
   let { command: s } = e,
     i = e.cwd ?? Q(),
     { file: a, args: n } =
@@ -29,19 +29,19 @@ async function C(e) {
       stderr: d,
       code: o,
       error: r,
-    } = await Be(a, n, {
+    } = await execFileNoThrowWithCwd(a, n, {
       abortSignal: e.abortSignal,
       cwd: i,
       preserveOutputOnError: !0,
     }),
     t = r && !r.startsWith(`Command failed with exit code ${o}`) ? r : "";
-  if (t) f("input_remote_bash", "spawn_failed");
-  else y("input_remote_bash");
+  if (t) logFeatureBad("input_remote_bash", "spawn_failed");
+  else logFeatureOk("input_remote_bash");
   let l = t ? Iye(t, e.session) : "";
   return {
-    outputUuid: p(),
+    outputUuid: randomUUID(),
     outputText: `<${fz}>${Nt(m)}</${fz}><${I0}>${Nt(d || l)}</${I0}><${hXt}>${o}</${hXt}>`,
     exitCode: o,
   };
 }
-export { C as runHeadlessBashCommand };
+export { runHeadlessBashCommand };

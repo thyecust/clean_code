@@ -12,7 +12,7 @@ import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
 import { Et } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { uo } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { UP } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { readFileSync as u } from "fs";
+import { readFileSync } from "fs";
 function fkn(t, e) {
   n().registerAttributor(t, e);
 }
@@ -53,7 +53,7 @@ class m {
   getPageSizeBytes() {
     if (this.pageSizeBytes !== void 0) return this.pageSizeBytes;
     try {
-      let t = u("/proc/self/statm", "utf8"),
+      let t = readFileSync("/proc/self/statm", "utf8"),
         e = Number(t.split(" ")[1]);
       this.pageSizeBytes =
         e > 0 ? Math.round(process.memoryUsage().rss / e) : 4096;

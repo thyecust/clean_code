@@ -79,7 +79,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js"
 import "../图表-Mermaid/chunk-743atbtj.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import "../Artifact发布-渲染/chunk-rr78st95.js";
-import { isDesignCanvasEnabled as hTn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { isDesignCanvasEnabled } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
@@ -147,7 +147,7 @@ import "../后台任务-Shell管理/chunk-djserjj5.js";
 import "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
 import "../认证-OAuth登录/chunk-x3rm9w4b.js";
-import { registerBundledSkill as eo } from "./chunk-1zy5c8mf.js";
+import { registerBundledSkill } from "./chunk-1zy5c8mf.js";
 import "../Teammates团队/chunk-6b13bhw1.js";
 import "../Teammates团队/chunk-t899nada.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
@@ -190,7 +190,7 @@ import "../工具Monitor/工具Monitor.981fw9dy.js";
 import "../Artifact发布-渲染/chunk-qdg189tc.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
 import "../Artifact发布-渲染/chunk-stvynqrz.js";
-import { artifactCapabilitiesPromptGateOpen as Ov } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
+import { artifactCapabilitiesPromptGateOpen } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
 import { ZQt } from "../DesignSync/chunk-zyy4nsb8.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kv5vaqew.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js";
@@ -236,15 +236,15 @@ import "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.
 import "../图片-截图-ComputerUse/chunk-6kdvf977.js";
 var r = "design";
 function o() {
-  return hTn() && Ov();
+  return isDesignCanvasEnabled() && artifactCapabilitiesPromptGateOpen();
 }
 function a() {
   return import("./PAYLOAD_TEMPLATE_FILE.8cmajbh9.js");
 }
 var i =
   "Create a design canvas - a multi-artboard visual design published as an Artifact that runs Claude Design's canvas editor (an early preview of Claude Design inside Claude Code). You DRAFT the design as .dc.html artboards laid out on one pan/zoom canvas; where saving is enabled for the user's account they refine every element visually (click-to-select, a properties panel, inline text editing, undo/redo) and Save publishes a new version for everyone, otherwise they get a view-and-export (PNG/PDF) preview of your draft. Good for UI mockups and screen flows, landing pages, marketing and social graphics, and print pieces - posters, flyers, brochures as single-page artboards; memos and reports as one flowing artboard. Use when someone wants a design, mockup, wireframe, UI or screen design, landing page, poster, flyer, brochure, banner, card, one-pager, or any visual layout they would rather tweak by hand than in code. Only for CREATING or re-seeding a canvas; an existing one is edited in its published Artifact.";
-function u() {
-  eo({
+function registerDesignCanvasSkill() {
+  registerBundledSkill({
     name: r,
     menuDescription:
       "Draft a design on a canvas Artifact \u2014 editable where saving is enabled (Claude Design preview)",
@@ -268,4 +268,4 @@ ${e}`;
     },
   });
 }
-export { u as registerDesignCanvasSkill };
+export { registerDesignCanvasSkill };

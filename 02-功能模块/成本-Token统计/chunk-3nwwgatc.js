@@ -11,10 +11,10 @@ import { pm } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, Is, qur, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { kae } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { fz, I0, vu, Ag, BP, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { listedProjectKey as Y5, getProjectsDir as Sc } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { fz, I0, vu, Ag, BP, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { listedProjectKey, getProjectsDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { _n } from "../Teammates团队/chunk-qe04h4c5.js";
-import { BRIEF_ENFORCE_SENTINEL as bet } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { BRIEF_ENFORCE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import {
   iy,
   TQ,
@@ -28,7 +28,7 @@ import {
   tet,
   net,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { isPolicyAllowed as Mt, policyDeniedReason as op, policyDenyKind as DD } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Uc, Qo, pxt, $cr, Ucr } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 var Te = "allow_usage_transcript_scan",
   he = "allow_skill_doctor_transcript_scan",
@@ -45,13 +45,13 @@ var Te = "allow_usage_transcript_scan",
       "Not shown for HIPAA-regulated organizations: measured by scanning the session transcripts saved on this machine.",
   };
 function j(e) {
-  if (Mt(e.policy)) return { allowed: !0 };
-  if (DD(e.policy) === "org_denied" && pm("hipaa"))
+  if (isPolicyAllowed(e.policy)) return { allowed: !0 };
+  if (policyDenyKind(e.policy) === "org_denied" && pm("hipaa"))
     return { allowed: !1, reason: e.hipaaReason };
   return {
     allowed: !1,
     reason:
-      op(e.policy, e.label, "are") ?? `${e.label} are unavailable right now.`,
+      policyDeniedReason(e.policy, e.label, "are") ?? `${e.label} are unavailable right now.`,
   };
 }
 function Ble() {
@@ -60,8 +60,8 @@ function Ble() {
 function i3e() {
   return j(Re);
 }
-import { readdir as F, stat as be } from "fs/promises";
-import { extname as Y, join as N } from "path";
+import { readdir, stat as be } from "fs/promises";
+import { extname, join as N } from "path";
 var D = 4,
   te = 4194304,
   ye = te,
@@ -127,7 +127,7 @@ var D = 4,
     let o = t ? b(e) : b(e).slice(0, -1);
     return [d.encode(`"content":${o}`), d.encode(`"text":${o}`)];
   },
-  fn = [...vkn.map((e) => `${e}${S5t}`), pBe, Rkn, bet, net]
+  fn = [...vkn.map((e) => `${e}${S5t}`), pBe, Rkn, BRIEF_ENFORCE_SENTINEL, net]
     .filter((e) => e.length > 0)
     .flatMap((e) => ce(e)),
   mn = [ZZe, kkn, eet, tet].flatMap((e) => ce(e, !0)),
@@ -238,10 +238,10 @@ async function a3e(e) {
 }
 async function ue(e, t, o, s, r) {
   if (o) return En(o, e, t, s, r);
-  let i = Sc(),
+  let i = getProjectsDir(),
     c;
   try {
-    c = await F(i);
+    c = await readdir(i);
   } catch (u) {
     if (Rt(u)) return;
     throw u;
@@ -281,7 +281,7 @@ async function En(e, t, o, s, r) {
         ),
       (S) => {
         for (let E of S) {
-          let y = Y5(E, _n);
+          let y = listedProjectKey(E, _n);
           if (y !== void 0) i.push(y);
         }
       },
@@ -451,7 +451,7 @@ async function $Bn(e) {
 async function In(e) {
   let t;
   try {
-    t = await F(e, { withFileTypes: !0 });
+    t = await readdir(e, { withFileTypes: !0 });
   } catch (i) {
     if (Rt(i)) return [];
     throw i;
@@ -459,14 +459,14 @@ async function In(e) {
   let o = [],
     s = [];
   for (let i of t)
-    if (i.isFile() && Y(i.name) === ".jsonl") o.push(N(e, i.name));
+    if (i.isFile() && extname(i.name) === ".jsonl") o.push(N(e, i.name));
     else if (i.isDirectory()) s.push(i.name);
   let r = await Promise.all(
     s.map(async (i) => {
       let c = N(e, i, "subagents");
       try {
-        return (await F(c, { recursive: !0 }))
-          .filter((f) => Y(f) === ".jsonl")
+        return (await readdir(c, { recursive: !0 }))
+          .filter((f) => extname(f) === ".jsonl")
           .map((f) => N(c, f));
       } catch (a) {
         if (Rt(a)) return [];
@@ -514,7 +514,7 @@ function _e(e) {
       try {
         s();
       } catch (r) {
-        ((t = !1), h(r));
+        ((t = !1), logError(r));
       }
     };
   return {

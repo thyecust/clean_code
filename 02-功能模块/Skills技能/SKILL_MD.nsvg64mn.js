@@ -12,6 +12,6 @@ import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 var e = Ae("./SKILL-s3202xee.md");
 var t = "./template.html-1461d319.txt.zst";
 var a = Ke(t, import.meta.dirname);
-var p = { doc: e },
-  m = { doc: { "template.html": a } };
-export { m as SKILL_FILES, p as SKILL_MD };
+var SKILL_MD = { doc: e },
+  SKILL_FILES = { doc: { "template.html": a } };
+export { SKILL_FILES, SKILL_MD };

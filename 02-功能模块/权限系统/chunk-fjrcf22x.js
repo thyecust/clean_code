@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ya } from "./chunk-t3b7pg2x.js";
-import { isBypassPermissionsModeDisabled as ey } from "./chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled } from "./chunk-pcxn6gwz.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function d(e, o) {
   if (o.length === 0) return e;
@@ -199,7 +199,7 @@ function getToolPermissionContext(e) {
       case "permission_mode": {
         if (
           n.mode === "bypassPermissions" &&
-          (ey() || !o.isBypassPermissionsModeAvailable)
+          (isBypassPermissionsModeDisabled() || !o.isBypassPermissionsModeAvailable)
         )
           break;
         o = { ...o, mode: n.mode };

@@ -13,10 +13,10 @@ import "./chunk-z7ktsccq.js";
 import { zd } from "../../../02-功能模块/Bedrock-Vertex/chunk-yjjbkvm4.js";
 import { pe, Wo } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { Buffer as ae } from "buffer";
-import { request as se } from "http";
-function p(e) {
+import { request } from "http";
+function httpRequest(e) {
   return new Promise((t, n) => {
-    let o = se({
+    let o = request({
       method: "GET",
       ...e,
       hostname: e.hostname?.replace(/^\[(.+)\]$/, "$1"),
@@ -87,12 +87,12 @@ var _ = (e, t) => {
   return n;
 };
 var D = () => {};
-import { parse as ie } from "url";
+import { parse } from "url";
 var T,
-  x = "AWS_CONTAINER_CREDENTIALS_FULL_URI",
-  w = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI",
+  ENV_CMDS_FULL_URI = "AWS_CONTAINER_CREDENTIALS_FULL_URI",
+  ENV_CMDS_RELATIVE_URI = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI",
   k = "AWS_CONTAINER_AUTHORIZATION_TOKEN",
-  Fe = (e = {}) => {
+  fromContainerMetadata = (e = {}) => {
     let { timeout: t, maxRetries: n } = C(e);
     return () =>
       _(async () => {
@@ -109,15 +109,15 @@ var T,
   ce = async (e, t) => {
     if (process.env[k])
       t.headers = { ...t.headers, Authorization: process.env[k] };
-    return (await p({ ...t, timeout: e })).toString();
+    return (await httpRequest({ ...t, timeout: e })).toString();
   },
   de = "169.254.170.2",
   le,
   me,
   fe = async ({ logger: e }) => {
-    if (process.env[w]) return { hostname: de, path: process.env[w] };
-    if (process.env[x]) {
-      let t = ie(process.env[x]);
+    if (process.env[ENV_CMDS_RELATIVE_URI]) return { hostname: de, path: process.env[ENV_CMDS_RELATIVE_URI] };
+    if (process.env[ENV_CMDS_FULL_URI]) {
+      let t = parse(process.env[ENV_CMDS_FULL_URI]);
       if (!t.hostname || !(t.hostname in le))
         throw new T.CredentialsProviderError(
           `${t.hostname} is not a valid container metadata service hostname`,
@@ -131,7 +131,7 @@ var T,
       return { ...t, port: t.port ? parseInt(t.port, 10) : void 0 };
     }
     throw new T.CredentialsProviderError(
-      `The container metadata credential provider cannot be used unless the ${w} or ${x} environment variable is set`,
+      `The container metadata credential provider cannot be used unless the ${ENV_CMDS_RELATIVE_URI} or ${ENV_CMDS_FULL_URI} environment variable is set`,
       { tryNextLink: !1, logger: e },
     );
   };
@@ -189,7 +189,7 @@ var H = Wo(() => {
 });
 var P,
   Y,
-  y = async () => Y.parseUrl((await _e()) || (await Te())),
+  getInstanceMetadataEndpoint = async () => Y.parseUrl((await _e()) || (await Te())),
   _e = async () => P.loadConfig(K)(),
   Te = async () => {
     let e = await P.loadConfig(q)();
@@ -247,7 +247,7 @@ var Q,
   F = "AWS_EC2_METADATA_V1_DISABLED",
   X = "ec2_metadata_v1_disabled",
   Z = "x-aws-ec2-metadata-token",
-  nt = (e = {}) => J(Ae(e), { logger: e.logger }),
+  fromInstanceMetadata = (e = {}) => J(Ae(e), { logger: e.logger }),
   Ae = (e = {}) => {
     let t = !1,
       { logger: n, profile: o } = e,
@@ -312,7 +312,7 @@ var Q,
         }, s);
       };
     return async () => {
-      let s = await y();
+      let s = await getInstanceMetadataEndpoint();
       if (t)
         return (
           n?.debug(
@@ -348,15 +348,15 @@ var Q,
     };
   },
   Se = async (e) =>
-    p({
+    httpRequest({
       ...e,
       path: ue,
       method: "PUT",
       headers: { "x-aws-ec2-metadata-token-ttl-seconds": "21600" },
     }),
-  Ne = async (e) => (await p({ ...e, path: ee })).toString(),
+  Ne = async (e) => (await httpRequest({ ...e, path: ee })).toString(),
   ge = async (e, t, n) => {
-    let o = JSON.parse((await p({ ...t, path: ee + e })).toString());
+    let o = JSON.parse((await httpRequest({ ...t, path: ee + e })).toString());
     if (!N(o))
       throw new L.CredentialsProviderError(
         "Invalid response received from instance metadata service.",
@@ -385,10 +385,10 @@ var Ce = Wo(() => {
 });
 Ce();
 export {
-  x as ENV_CMDS_FULL_URI,
-  w as ENV_CMDS_RELATIVE_URI,
-  Fe as fromContainerMetadata,
-  nt as fromInstanceMetadata,
-  y as getInstanceMetadataEndpoint,
-  p as httpRequest,
+  ENV_CMDS_FULL_URI,
+  ENV_CMDS_RELATIVE_URI,
+  fromContainerMetadata,
+  fromInstanceMetadata,
+  getInstanceMetadataEndpoint,
+  httpRequest,
 };

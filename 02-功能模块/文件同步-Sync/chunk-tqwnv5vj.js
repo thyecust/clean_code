@@ -11,15 +11,15 @@ import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { IZe, nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { DANGEROUS_FILES_LC as WH } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { DANGEROUS_FILES_LC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   Vfn,
   r$,
-  MAX_WORKING_FILE_BYTES as Jm,
-  relUnderSyncDir as Tde,
-  escapesSyncRoot as xLe,
-  shouldIgnore as kk,
-  SYNCED_FILE_WRITE_MODE as Ine,
+  MAX_WORKING_FILE_BYTES,
+  relUnderSyncDir,
+  escapesSyncRoot,
+  shouldIgnore,
+  SYNCED_FILE_WRITE_MODE,
   T3,
   E3,
   WX,
@@ -36,13 +36,13 @@ import { oT } from "./chunk-ht8ydg1v.js";
 import { sln, JA, Jbe, pOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { lstat as H, realpath as X } from "fs/promises";
+import { lstat, realpath } from "fs/promises";
 import {
-  basename as le,
-  dirname as Ae,
+  basename,
+  dirname,
   join as C,
   posix as Te,
-  relative as M,
+  relative,
   sep as D,
 } from "path";
 import { posix as x } from "path";
@@ -194,14 +194,14 @@ async function pe(e, t, r, a) {
   }
 }
 function J(e, t) {
-  return e.backend === "by_name" ? Ine : t;
+  return e.backend === "by_name" ? SYNCED_FILE_WRITE_MODE : t;
 }
 async function ue(e, t, r, a) {
   return t.backend === "by_name" ? G(e, t, r, a) : fe(e, t, r);
 }
 async function me(e) {
   try {
-    return (await H(e), !0);
+    return (await lstat(e), !0);
   } catch (t) {
     return A(t) !== "ENOENT";
   }
@@ -213,7 +213,7 @@ async function Le(e, t, r, a) {
 }
 async function Ne(e) {
   try {
-    return qTe(await H(e)) !== null ? "refused" : "present";
+    return qTe(await lstat(e)) !== null ? "refused" : "present";
   } catch {
     return "absent";
   }
@@ -273,11 +273,11 @@ function lOe(e, t, r, a = !1) {
     o = Y([i.replace(Ce, ""), E3(i)]);
   return (
     De.test(e) ||
-    kk(i) ||
+    shouldIgnore(i) ||
     o.some((c) => {
       let s = c.split("/");
       return (
-        kk(c) ||
+        shouldIgnore(c) ||
         aOe(s, r) ||
         (!(
           a &&
@@ -308,7 +308,7 @@ async function Be(e, t, r, a = !1) {
 async function Kpt(e, t, r, a = !1) {
   let i = C(e, r);
   try {
-    if (Tde(e, i).split(D).join("/") !== r) return "place";
+    if (relUnderSyncDir(e, i).split(D).join("/") !== r) return "place";
   } catch {
     return "place";
   }
@@ -318,7 +318,7 @@ async function Kpt(e, t, r, a = !1) {
 function Xce(e) {
   return Y([e, E3(e)]).some((t) => {
     let r = nc(t.split("/").at(-1) ?? "");
-    return WH.has(r) || Fe.has(xe(r) ?? "");
+    return DANGEROUS_FILES_LC.has(r) || Fe.has(xe(r) ?? "");
   });
 }
 function xe(e) {
@@ -326,7 +326,7 @@ function xe(e) {
   return t === null ? null : (t[1] ?? "") + (t[2] ?? "");
 }
 var Fe = new Set(
-  [...WH].map((e) => {
+  [...DANGEROUS_FILES_LC].map((e) => {
     let t = e.replace(/^\.+/, ""),
       r = t.lastIndexOf("."),
       a = (r < 0 ? t : t.slice(0, r)).replace(/[^a-z0-9_!#$%&'()@^{}-]/g, ""),
@@ -335,11 +335,11 @@ var Fe = new Set(
   }),
 );
 async function he(e, t, r, a = null) {
-  let i = M(t, Ae(e)).split(D).filter(Boolean),
+  let i = relative(t, dirname(e)).split(D).filter(Boolean),
     o = i.map((f, l) => C(t, ...i.slice(0, l + 1))),
     c = async (f) => {
       try {
-        if ((await H(f)).isSymbolicLink()) return "link";
+        if ((await lstat(f)).isSymbolicLink()) return "link";
       } catch (l) {
         return A(l) === "ENOENT" ? "absent" : "plain";
       }
@@ -355,8 +355,8 @@ async function he(e, t, r, a = null) {
     { refused: d, deepest: u } = await s(o, t);
   if (d) return !0;
   try {
-    let f = M(r, await X(u)),
-      l = M(t, u);
+    let f = relative(r, await realpath(u)),
+      l = relative(t, u);
     return (
       f !== "" &&
       q(f, "directory", a !== null && f === l ? f.split(D).join("/") : null)
@@ -367,14 +367,14 @@ async function he(e, t, r, a = null) {
 }
 function q(e, t, r = null) {
   return (
-    xLe(e) ||
+    escapesSyncRoot(e) ||
     lOe(e, D, t, r !== null && e.split(D).join("/") === r) ||
     (t === "file" && WX(e))
   );
 }
 async function zan(e) {
   try {
-    return !(await H(C(e, "HEAD"))).isDirectory();
+    return !(await lstat(C(e, "HEAD"))).isDirectory();
   } catch (t) {
     let r = A(t);
     return r !== "ENOENT" && r !== "ENOTDIR";
@@ -388,7 +388,7 @@ function v(e) {
   return ((t.code = e), t);
 }
 async function R(e, t, r = null) {
-  if (e.backend === "by_name" && q(M(e.realRoot, await X(t)), "file", r))
+  if (e.backend === "by_name" && q(relative(e.realRoot, await realpath(t)), "file", r))
     throw v("WORKING_RESOLVES_OUTSIDE");
 }
 async function K(e, t, r, a = null) {
@@ -403,7 +403,7 @@ async function K(e, t, r, a = null) {
       throw v("WORKING_LANDED_OUTSIDE");
     return;
   }
-  if (!q(M(e.realRoot, await X(t.abs)), "file", a)) return;
+  if (!q(relative(e.realRoot, await realpath(t.abs)), "file", a)) return;
   if (await Re(e, t.rel, r)) await e.unlink(t.rel).catch(() => {});
   throw v("WORKING_LANDED_OUTSIDE");
 }
@@ -435,9 +435,9 @@ function Ge(e, t) {
   ).text;
 }
 function Ue(e) {
-  let r = `${Ge(le(e.abs), Me)}.incoming-${process.hrtime.bigint().toString(36).slice(-8)}`;
+  let r = `${Ge(basename(e.abs), Me)}.incoming-${process.hrtime.bigint().toString(36).slice(-8)}`;
   return {
-    abs: e.abs.slice(0, -le(e.abs).length) + r,
+    abs: e.abs.slice(0, -basename(e.abs).length) + r,
     rel: e.rel.slice(0, -Te.basename(e.rel).length) + r,
   };
 }
@@ -523,13 +523,13 @@ async function e3n({
     }),
     w = { abs: C(t, e.path), rel: e.path };
   try {
-    if (Tde(t, w.abs).split(D).join("/") !== w.rel) return h("failed");
+    if (relUnderSyncDir(t, w.abs).split(D).join("/") !== w.rel) return h("failed");
   } catch {
     return h("failed");
   }
   if (lOe(e.path, "/", "file", o)) return h("failed");
   let O = o ? e.path : null;
-  if (e.size > Jm) return h("failed");
+  if (e.size > MAX_WORKING_FILE_BYTES) return h("failed");
   if (a.rootOnly) return h("failed", null, { refused: !0 });
   let T = await Ne(w.abs),
     B = e.path.split("/");

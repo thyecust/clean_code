@@ -11,15 +11,15 @@ import { j, B, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { ge, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { formatResetTime as Au } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { withOAuth401Retry as T_, ht, hasProfileScope as lp, getOauthAccountInfo as vn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { withOAuth401Retry, ht, hasProfileScope, getOauthAccountInfo } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { isAxiosError as xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import {
   MF,
   yk,
@@ -180,7 +180,7 @@ function U(e) {
 }
 async function R(e) {
   try {
-    if (!lp()) return { kind: "no_profile_scope" };
+    if (!hasProfileScope()) return { kind: "no_profile_scope" };
     let t = await kO(e, { atWall: !0 });
     if (!Ymt(t))
       return (
@@ -196,21 +196,21 @@ async function R(e) {
       (n(`[juniper-tide] status fetch failed: ${ge(t).message}`, {
         level: "warn",
       }),
-      xd(t) && (t.response?.status === 401 || t.response?.status === 403))
+      isAxiosError(t) && (t.response?.status === 401 || t.response?.status === 403))
     )
       return { kind: "answered", status: null };
     return { kind: "failed" };
   }
 }
 async function E(e) {
-  let t = vn()?.organizationUuid;
+  let t = getOauthAccountInfo()?.organizationUuid;
   if (!t)
     return (
       n("[juniper-tide] no OAuth organization; cannot claim"),
       { result: "auth_error", nextAvailableAt: null }
     );
   try {
-    let r = await T_(
+    let r = await withOAuth401Retry(
       () =>
         ht.post(
           `/api/organizations/${t}/reset_rate_limits`,
@@ -242,7 +242,7 @@ async function E(e) {
         n(`[juniper-tide] unreadable claim response: ${a.error.message}`, {
           level: "error",
         }),
-        h(Error("[juniper-tide] unreadable claim response")),
+        logError(Error("[juniper-tide] unreadable claim response")),
         { result: "error", nextAvailableAt: null }
       );
     return {
@@ -252,8 +252,8 @@ async function E(e) {
   } catch (r) {
     if (cc(r))
       n(`[juniper-tide] claim failed: ${ge(r).message}`, { level: "warn" });
-    else h(ge(r));
-    if (xd(r))
+    else logError(ge(r));
+    if (isAxiosError(r))
       switch (r.response?.status) {
         case 429:
           return { result: "rate_limited", nextAvailableAt: null };
@@ -313,7 +313,7 @@ function sIe(e, t = Date.now()) {
 function S(e) {
   if (e === null) return;
   let t = Date.parse(e);
-  return Number.isFinite(t) ? Au(Math.floor(t / 1000), !1, !0, !0) : void 0;
+  return Number.isFinite(t) ? formatResetTime(Math.floor(t / 1000), !1, !0, !0) : void 0;
 }
 function ABn(e, t) {
   if (!iNe() || !Mle(e)) return;
@@ -351,7 +351,7 @@ function w(e, t, r) {
         });
       })
       .catch((A) => {
-        h(ge(A));
+        logError(ge(A));
         try {
           C({
             wallResetsAt: a,
@@ -361,7 +361,7 @@ function w(e, t, r) {
             autoArmed: p,
           });
         } catch (W) {
-          h(ge(W));
+          logError(ge(W));
         }
       })
       .finally(() => {
@@ -385,12 +385,12 @@ function C({
   else _({ phase: "answered", wallResetsAt: e, accountEpoch: t, status: l });
   if (
     (i("tengu_juniper_tide_asked", {
-      outcome: u(
+      outcome: fromEnum(
         a.kind === "answered" ? (l === null ? "absent" : "block") : a.kind,
       ),
       attempt: r + 1,
       eligible: l?.eligible ?? !1,
-      ineligible_reason: we(l?.ineligibleReason) ?? void 0,
+      ineligible_reason: fromEnumOpt(l?.ineligibleReason) ?? void 0,
       config_version: fSt(),
     }),
     l === null || !l.eligible)
@@ -398,18 +398,18 @@ function C({
     return;
   i("tengu_juniper_tide_wall", {
     in_experiment: l.inExperiment,
-    arm: we(l.arm) ?? void 0,
+    arm: fromEnumOpt(l.arm) ?? void 0,
     available: l.available,
-    tier: u(rlt()),
+    tier: fromEnum(rlt()),
     auto_armed: d,
     low_priority_active: MF(),
     config_version: fSt(),
-    surface: we(l.eventProps?.surface) ?? void 0,
-    server_tier: we(l.eventProps?.tier) ?? void 0,
-    tenure_bucket: we(l.eventProps?.tenureBucket) ?? void 0,
-    billing_path: we(l.eventProps?.billingPath) ?? void 0,
-    billing_period: we(l.eventProps?.billingPeriod) ?? void 0,
-    extra_usage_state: we(l.eventProps?.extraUsageState) ?? void 0,
+    surface: fromEnumOpt(l.eventProps?.surface) ?? void 0,
+    server_tier: fromEnumOpt(l.eventProps?.tier) ?? void 0,
+    tenure_bucket: fromEnumOpt(l.eventProps?.tenureBucket) ?? void 0,
+    billing_path: fromEnumOpt(l.eventProps?.billingPath) ?? void 0,
+    billing_period: fromEnumOpt(l.eventProps?.billingPeriod) ?? void 0,
+    extra_usage_state: fromEnumOpt(l.eventProps?.extraUsageState) ?? void 0,
   });
 }
 function q9e(e, t) {
@@ -419,8 +419,8 @@ function q9e(e, t) {
   a.shownWallResetsAt = r;
   let d = x(e);
   i("tengu_juniper_tide_shown", {
-    arm: we(d?.arm) ?? void 0,
-    surface: u(t),
+    arm: fromEnumOpt(d?.arm) ?? void 0,
+    surface: fromEnum(t),
     config_version: fSt(),
   });
 }
@@ -431,7 +431,7 @@ async function z9e(e, t) {
   try {
     return await K(e, t);
   } catch (r) {
-    return (h(ge(r)), { outcome: "unavailable", text: z3().unavailableLine });
+    return (logError(ge(r)), { outcome: "unavailable", text: z3().unavailableLine });
   }
 }
 async function K(e, t) {
@@ -453,7 +453,7 @@ async function K(e, t) {
   let o = d.resetsAt,
     l = fSt();
   i("tengu_juniper_tide_selected", {
-    entry: u(e),
+    entry: fromEnum(e),
     auto_armed: v4(),
     config_version: l,
   });
@@ -467,8 +467,8 @@ async function K(e, t) {
   }
   switch (
     (i("tengu_juniper_tide_result", {
-      result: u(p.result),
-      entry: u(e),
+      result: fromEnum(p.result),
+      entry: fromEnum(e),
       latency_ms: Date.now() - v,
       config_version: l,
     }),
@@ -478,13 +478,13 @@ async function K(e, t) {
     case "not_limited":
     case "already_used":
     case "ineligible":
-      y("juniper_tide");
+      logFeatureOk("juniper_tide");
       break;
     case "unavailable":
     case "rate_limited":
     case "auth_error":
     case "error":
-      g("juniper_tide", p.result);
+      logFeatureSad("juniper_tide", p.result);
       break;
   }
   switch (p.result) {
@@ -542,7 +542,7 @@ function Y(e, t, r, a) {
     try {
       o();
     } catch (l) {
-      h(ge(l));
+      logError(ge(l));
     }
 }
 function Z(e) {
@@ -561,7 +561,7 @@ function ee(e) {
     return;
   }
   Zmt(e, void 0).catch((t) => {
-    h(ge(t));
+    logError(ge(t));
   });
 }
 function te(e, t) {

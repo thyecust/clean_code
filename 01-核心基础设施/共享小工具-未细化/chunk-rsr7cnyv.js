@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { he, Bw, s_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { AsyncLocalStorage as n } from "async_hooks";
-var e = new n();
+import { AsyncLocalStorage } from "async_hooks";
+var e = new AsyncLocalStorage();
 function yW(t, r) {
   return e.run({ cwd: zn(t) }, r);
 }

@@ -21,9 +21,9 @@ import { R, Kd, Vje } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { T$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -54,7 +54,7 @@ async function O(e) {
     o = Date.now();
   if (o - (t.closedIssuesLastChecked ?? 0) < Q) return null;
   let a = o,
-    { stdout: u, code: l } = await Fe(
+    { stdout: u, code: l } = await execFileNoThrow(
       "gh",
       [
         "issue",
@@ -131,7 +131,7 @@ async function S(e) {
       t = await e.read([K()]);
     } catch (l) {
       if (Kd(l)) n(`closed-issues cache read failed: ${l}`);
-      else h(l);
+      else logError(l);
       return [];
     }
     if (!t.ok) {
@@ -139,7 +139,7 @@ async function S(e) {
       if ("telemetryCode" in l && Vje(l.telemetryCode))
         n(`closed-issues cache read failed: ${We(l)}`);
       else
-        h(
+        logError(
           new R(
             `closed-issues cache read failed: ${We(l)}`,
             "closed-issues cache read failed (v5 backend error)",
@@ -172,7 +172,7 @@ async function S(e) {
     return await B().read();
   } catch (t) {
     if (Kd(t)) n(`closed-issues cache read failed: ${t}`);
-    else h(t);
+    else logError(t);
     return [];
   }
 }
@@ -221,7 +221,7 @@ function G(e) {
     { text: "). Thanks for reporting!", color: "success" },
   ];
 }
-function ae() {
+function ClosedIssueNotice() {
   let Ge = _(4),
     { storageV5: I } = _e(),
     { addNotification: A } = Ir(),
@@ -233,7 +233,7 @@ function ae() {
       if (se.current) {
         return;
       }
-      if (((se.current = !0), In())) {
+      if (((se.current = !0), isFirstPartyProvider())) {
         let re = function (Ve) {
           let Ye = new Set(D.map(ue));
           let N = Ve.filter((qe) => !Ye.has(qe.number));
@@ -269,7 +269,7 @@ function ae() {
           if (!j && ie.length > 0) re(ie);
         };
         return (
-          P().catch(h),
+          P().catch(logError),
           () => {
             j = !0;
           }
@@ -284,4 +284,4 @@ function ae() {
   else ((te = Ge[2]), (oe = Ge[3]));
   return (E(te, oe), null);
 }
-export { ae as ClosedIssueNotice };
+export { ClosedIssueNotice };

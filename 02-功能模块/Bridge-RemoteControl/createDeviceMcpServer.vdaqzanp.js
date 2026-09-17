@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 8 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { JSONRPCMessageSchema as GR, ListToolsRequestSchema as C0, CallToolRequestSchema as Cx } from "../MCP客户端/chunk-tv3jbp8f.js";
+import { JSONRPCMessageSchema as GR, ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
 import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
-import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -29,10 +29,10 @@ function v(e) {
     toolArgs: s,
   };
 }
-function N(e) {
+function parseJsonRpcMessage(e) {
   return GR.parse(e);
 }
-function O(e) {
+function createDeviceMcpServer(e) {
   let t = 0,
     o = [],
     s = () => {
@@ -45,11 +45,11 @@ function O(e) {
       { capabilities: { tools: {} } },
     );
   return (
-    c.setRequestHandler(C0, async () => ({
+    c.setRequestHandler(ListToolsRequestSchema, async () => ({
       tools: [...e.registry.definitions()],
     })),
     c.setRequestHandler(
-      Cx,
+      CallToolRequestSchema,
       async ({ params: { name: r, arguments: l } }, m) => {
         let d = e.registry.get(r);
         if (!d)
@@ -58,7 +58,7 @@ function O(e) {
             isError: !0,
           };
         let { sessionId: a, toolArgs: f } = v(l);
-        if (a !== void 0 && pr(a) !== pr(e.sessionId))
+        if (a !== void 0 && sessionIdBody(a) !== sessionIdBody(e.sessionId))
           return h(d, a, e.sessionId);
         t++;
         try {
@@ -113,7 +113,7 @@ function h(e, t, o) {
   );
 }
 var y = "This machine is attached but does not run commands for this session.";
-function M(e) {
+function deviceInfoProbeTool(e) {
   let t = e.now ?? (() => new Date());
   return {
     definition: {
@@ -137,7 +137,7 @@ function M(e) {
   };
 }
 export {
-  O as createDeviceMcpServer,
-  M as deviceInfoProbeTool,
-  N as parseJsonRpcMessage,
+  createDeviceMcpServer,
+  deviceInfoProbeTool,
+  parseJsonRpcMessage,
 };

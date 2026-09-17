@@ -22,14 +22,14 @@ import {
   vUe,
   lRe,
   nZe,
-  FORMER_NAME_HINT_TTL_MS as rRn,
-  getRegisteredSessionName as mb,
+  FORMER_NAME_HINT_TTL_MS,
+  getRegisteredSessionName,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { getAgentId as lS, getTeamName as ii } from "./chunk-811z9z0t.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { SessionRecordsUnreadableError as A7e, ownMessagingSocket as C$, listLivePeerSessions as DSn } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { getSessionNamingState as rh } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getAgentId, getTeamName } from "./chunk-811z9z0t.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { SessionRecordsUnreadableError, ownMessagingSocket, listLivePeerSessions } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { getSessionNamingState } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
 import {
   O3t,
   lSn,
@@ -46,15 +46,15 @@ import {
   l7e,
 } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import { f2 } from "./chunk-sr4920wy.js";
-import { readTeamFileAsync as Pf } from "./chunk-6b13bhw1.js";
+import { readTeamFileAsync } from "./chunk-6b13bhw1.js";
 import { cp } from "./chunk-enjekn9t.js";
-import { basename as v } from "path";
+import { basename } from "path";
 var k = "not reachable from this cloud session",
   A =
     "(session list too long to fetch completely \u2014 sessions beyond the first pages are missing from this listing)";
 async function osn(e, n, i) {
   let s = !1,
-    t = Mo();
+    t = isCrossSessionMessagingEnabled();
   if (t) await DAe({ refresh: !0, credentials: i });
   let l = t
       ? nbt(e, i)
@@ -63,8 +63,8 @@ async function osn(e, n, i) {
     u = !1,
     [g, c, r, o] = await Promise.all([
       t
-        ? DSn().catch((d) => {
-            if (d instanceof A7e) return ((u = !0), []);
+        ? listLivePeerSessions().catch((d) => {
+            if (d instanceof SessionRecordsUnreadableError) return ((u = !0), []);
             throw d;
           })
         : Promise.resolve([]),
@@ -100,17 +100,17 @@ async function osn(e, n, i) {
   };
 }
 function j(e = !1) {
-  let n = C$(),
-    i = tZe(mb()?.name);
+  let n = ownMessagingSocket(),
+    i = tZe(getRegisteredSessionName()?.name);
   if (!n || i === null) return null;
-  let s = mb();
+  let s = getRegisteredSessionName();
   return {
     name: i,
     token: `${i} [${lRe("session", n)}]`,
     callerIsSubagent: e,
     nameIsUserChosen:
       (s?.source === "user" || s?.source === "collision") &&
-      rh().userTypedName === s.name,
+      getSessionNamingState().userTypedName === s.name,
   };
 }
 function D(e) {
@@ -121,10 +121,10 @@ function D(e) {
 }
 async function ssn(e, n) {
   let i = e.getAppState(),
-    s = ii(i.teamContext);
+    s = getTeamName(i.teamContext);
   return {
     appState: i,
-    teamFile: s ? await Pf(s, e.storageV5) : null,
+    teamFile: s ? await readTeamFileAsync(s, e.storageV5) : null,
     callerTeammateId:
       e.teammateContext === void 0
         ? void 0
@@ -223,7 +223,7 @@ function N(e, n, i) {
         : (i ??
           (s
             ? (s.selfAgentId ?? (s.isLeader === !1 ? void 0 : s.leadAgentId))
-            : lS())),
+            : getAgentId())),
     l = new Map();
   for (let o of Object.values(e.tasks))
     if (o.type === "in_process_teammate")
@@ -297,7 +297,7 @@ function O(e, n, i) {
   let s = e.formerNames?.[0];
   if (s === void 0) return;
   let t = n - s.until;
-  if (t < 0 || t >= rRn) return;
+  if (t < 0 || t >= FORMER_NAME_HINT_TTL_MS) return;
   let l = i(s.name);
   return l ? `says it was ${l} until ${y(n - s.until)} ago` : void 0;
 }
@@ -347,7 +347,7 @@ function X(e, n, i, s, t, l, p, u) {
               ? a.tmux
               : void 0,
           I = O(a, g, dq);
-        return P(d ? bU(d) : (dq(a.name || v(a.cwd)) ?? "(untitled)"), [
+        return P(d ? bU(d) : (dq(a.name || basename(a.cwd)) ?? "(untitled)"), [
           I,
           a.kind,
           a.status,
@@ -529,6 +529,6 @@ function z(e, n = !1) {
   );
 }
 function y(e) {
-  return Ot(Math.max(0, e), { mostSignificantOnly: !0 });
+  return formatDuration(Math.max(0, e), { mostSignificantOnly: !0 });
 }
 export { osn, ssn, Phr, isn };

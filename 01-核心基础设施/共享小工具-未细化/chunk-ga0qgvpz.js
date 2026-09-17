@@ -7,18 +7,18 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getEligibilityMemo as wie, getIneligibleReason as htt, getLastLoadStatus as V6 } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { getEligibilityMemo, getIneligibleReason, getLastLoadStatus } from "../设置-配置/设置-配置.aqbb35ee.js";
 function Sle() {
-  let e = V6();
+  let e = getLastLoadStatus();
   if (e) return e;
-  if (wie() === !1) {
-    let t = htt();
+  if (getEligibilityMemo() === !1) {
+    let t = getIneligibleReason();
     if (t) return { state: "ineligible", reason: t };
   }
   return;
 }
 function MUn() {
-  return wie() === !0 && V6() === void 0;
+  return getEligibilityMemo() === !0 && getLastLoadStatus() === void 0;
 }
 function r(e) {
   switch (e) {

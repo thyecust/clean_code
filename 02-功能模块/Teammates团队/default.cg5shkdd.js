@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 77 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 var s = {
     type: "local",
     name: "list-agents",
@@ -17,7 +17,7 @@ var s = {
     description:
       "List subagents, teammates, and other Claude sessions you can message",
     supportsNonInteractive: !0,
-    isEnabled: () => Mo(),
+    isEnabled: () => isCrossSessionMessagingEnabled(),
     load: () => import("./list-agents-cmd.p17nwag3.js"),
   },
   a = s;

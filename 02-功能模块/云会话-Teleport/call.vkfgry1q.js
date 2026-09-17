@@ -16,7 +16,7 @@ import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-j
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { ay } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getSettingsForSource as ye, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { y3, LO, LM } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
@@ -118,15 +118,15 @@ function fe(fn) {
         return;
       }
       let yn =
-        ye("localSettings")?.remote?.defaultEnvironmentId !== void 0
-          ? Jt(
+        getSettingsForSource("localSettings")?.remote?.defaultEnvironmentId !== void 0
+          ? updateSettingsForSource(
               "localSettings",
               { remote: { defaultEnvironmentId: void 0 } },
               void 0,
               S,
             )
           : Promise.resolve({ error: null });
-      let bn = Jt(
+      let bn = updateSettingsForSource(
         "userSettings",
         { remote: { defaultEnvironmentId: LO(L) } },
         void 0,

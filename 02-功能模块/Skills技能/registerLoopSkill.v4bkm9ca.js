@@ -11,15 +11,15 @@
 // [preload stripped] 原本在此预载 100 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { isBgSession as _t, isClaudeAISubscriber as gt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession, isClaudeAISubscriber } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { K_n } from "../语音-音频/chunk-cfhndstm.js";
-import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { cR, oJ } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
-import { CRON_CREATE_TOOL_NAME as nm, CRON_DELETE_TOOL_NAME as YS, DEFAULT_MAX_AGE_DAYS as nJ, isKairosCronEnabled as EC } from "../Cron-定时任务/chunk-mk3zm4ew.js";
-import { registerBundledSkill as eo } from "./chunk-1zy5c8mf.js";
+import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { registerBundledSkill } from "./chunk-1zy5c8mf.js";
 import { so } from "../权限系统/chunk-fjrcf22x.js";
 import { gM } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
 import { Fbt } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
@@ -48,11 +48,11 @@ var N =
 function T() {
   if (
     !a.CLAUDE_CODE_REMOTE &&
-    !_t() &&
-    In() &&
-    gt() &&
-    Mt("allow_remote_sessions") &&
-    Mt(gM) &&
+    !isBgSession() &&
+    isFirstPartyProvider() &&
+    isClaudeAISubscriber() &&
+    isPolicyAllowed("allow_remote_sessions") &&
+    isPolicyAllowed(gM) &&
     ym().length === 0
   )
     return `
@@ -67,10 +67,10 @@ If either is true, call ${Es} first:
 - \`header\`: "Schedule"
 - \`options\`: \`[{label: "Cloud schedule (recommended)", description: "Runs in Anthropic's cloud even after you close this session"}, {label: "This session only", description: "Runs in this terminal until you exit"}]\`
 
-If they pick **Cloud schedule**: do NOT call ${nm}. Invoke the \`schedule\` skill directly via the ${so} tool with \`args\` set to their original input verbatim (e.g. \`${so}({skill: "schedule", args: "every morning tell me a joke"})\`), then follow that skill's instructions to completion. Do NOT tell the user to run /schedule themselves. **Then stop \u2014 do not continue to any section below** (no ${nm}, no ${Xi}, no "execute the prompt now").
+If they pick **Cloud schedule**: do NOT call ${CRON_CREATE_TOOL_NAME}. Invoke the \`schedule\` skill directly via the ${so} tool with \`args\` set to their original input verbatim (e.g. \`${so}({skill: "schedule", args: "every morning tell me a joke"})\`), then follow that skill's instructions to completion. Do NOT tell the user to run /schedule themselves. **Then stop \u2014 do not continue to any section below** (no ${CRON_CREATE_TOOL_NAME}, no ${Xi}, no "execute the prompt now").
 If they pick **This session only**:
 - If the trigger was a parsed \u226560-minute interval (rule 1 or 2): continue below with that interval.
-- If the trigger was daily phrasing only (rule 3, no parsed interval): do NOT call ${nm}. Explain that a daily-cadence loop won't fire before this session closes, so there's nothing useful to schedule locally \u2014 suggest they either pick Cloud schedule, or re-run \`/loop\` with an explicit shorter interval (e.g. \`/loop 1h <prompt>\`) if they want a session loop. Then stop.
+- If the trigger was daily phrasing only (rule 3, no parsed interval): do NOT call ${CRON_CREATE_TOOL_NAME}. Explain that a daily-cadence loop won't fire before this session closes, so there's nothing useful to schedule locally \u2014 suggest they either pick Cloud schedule, or re-run \`/loop\` with an explicit shorter interval (e.g. \`/loop 1h <prompt>\`) if they want a session loop. Then stop.
 If neither trigger condition was met: continue below.
 `;
   return "";
@@ -78,11 +78,11 @@ If neither trigger condition was met: continue below.
 function I() {
   if (
     !a.CLAUDE_CODE_REMOTE &&
-    !_t() &&
-    In() &&
-    gt() &&
-    Mt("allow_remote_sessions") &&
-    Mt(gM)
+    !isBgSession() &&
+    isFirstPartyProvider() &&
+    isClaudeAISubscriber() &&
+    isPolicyAllowed("allow_remote_sessions") &&
+    isPolicyAllowed(gM)
   ) {
     if (ym().length > 0)
       return ` End the confirmation with this exact line on its own, italicized: ${"`_Runs until you close this session \xB7 For durable cloud-based loops, use /schedule_`"}`;
@@ -146,8 +146,8 @@ Convert the interval to a cron expression:
 ${N}
 
 Then:
-1. Call ${nm} with: \`cron\` (the expression above), \`prompt\` (the parsed prompt verbatim), \`recurring: true\`.
-2. Briefly confirm: what's scheduled, the cron expression, the human-readable cadence, that recurring tasks auto-expire after ${nJ} days, and that the user can cancel sooner with ${YS} (include the job ID).${I()}
+1. Call ${CRON_CREATE_TOOL_NAME} with: \`cron\` (the expression above), \`prompt\` (the parsed prompt verbatim), \`recurring: true\`.
+2. Briefly confirm: what's scheduled, the cron expression, the human-readable cadence, that recurring tasks auto-expire after ${DEFAULT_MAX_AGE_DAYS} days, and that the user can cancel sooner with ${CRON_DELETE_TOOL_NAME} (include the job ID).${I()}
 3. **Then immediately execute the parsed prompt now** \u2014 don't wait for the first cron fire. If it's a slash command, invoke it via the Skill tool; otherwise act on it directly.
 
 ## Dynamic mode (rule 3 \u2014 no interval)
@@ -211,14 +211,14 @@ The user invoked \`/loop\` with no prompt (input was empty or just the interval 
       ? "it expands at fire time to the full loop.md contents on first delivery (and whenever loop.md has been edited since last fire), and to a short reminder on subsequent unchanged fires. The long instructions stay in the cached message-prefix."
       : "it expands at fire time to the full autonomous-loop instructions on first delivery, and to a short reminder on subsequent fires (the long instructions stay in the cached message-prefix).",
     w = e
-      ? `what's scheduled, the cron expression, the human-readable cadence, that it's running tasks from \`${e.path}\`, that recurring tasks auto-expire after ${nJ} days, and that the user can cancel sooner with ${YS} (include the job ID).`
-      : `what's scheduled, the cron expression, the human-readable cadence, that recurring tasks auto-expire after ${nJ} days, and that they can cancel sooner with ${YS} (include the job ID). Mention this is the autonomous default and that the autonomous-loop instructions are baked in.`;
+      ? `what's scheduled, the cron expression, the human-readable cadence, that it's running tasks from \`${e.path}\`, that recurring tasks auto-expire after ${DEFAULT_MAX_AGE_DAYS} days, and that the user can cancel sooner with ${CRON_DELETE_TOOL_NAME} (include the job ID).`
+      : `what's scheduled, the cron expression, the human-readable cadence, that recurring tasks auto-expire after ${DEFAULT_MAX_AGE_DAYS} days, and that they can cancel sooner with ${CRON_DELETE_TOOL_NAME} (include the job ID). Mention this is the autonomous default and that the autonomous-loop instructions are baked in.`;
   return `${u}
 
 ## Action
 
 1. Convert \`${t}\` to a 5-field cron expression. Supported suffixes: \`s\` \u2192 ceil to nearest minute, \`m\` (minutes), \`h\` (hours), \`d\` (days). Examples: \`5m\` \u2192 \`*/5 * * * *\`, \`1h\` \u2192 \`0 * * * *\`, \`1d\` \u2192 \`0 0 * * *\`. If the interval doesn't cleanly divide its unit, round to the nearest clean interval and tell the user what you rounded to.
-2. Call ${nm} with:
+2. Call ${CRON_CREATE_TOOL_NAME} with:
    - \`cron\`: the expression from step 1
    - \`prompt\`: the literal string \`${l}\` \u2014 ${g}
    - \`recurring\`: \`true\`
@@ -229,8 +229,8 @@ ${s}
 
 ${n}`;
 };
-function G() {
-  eo({
+function registerLoopSkill() {
+  registerBundledSkill({
     name: Fbt,
     menuDescription:
       "Repeat a prompt or command on an interval (e.g. /loop 5m /foo)",
@@ -244,7 +244,7 @@ function G() {
     },
     userInvocable: !0,
     argsMayContainSlashCommands: !0,
-    isEnabled: EC,
+    isEnabled: isKairosCronEnabled,
     async getPromptForCommand(e, o) {
       let t = e.trim();
       if (!o.options?.isSkillPreload && !o.options?.modelScheduledOrigin)
@@ -273,4 +273,4 @@ function G() {
     },
   });
 }
-export { G as registerLoopSkill };
+export { registerLoopSkill };

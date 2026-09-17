@@ -14,8 +14,8 @@ import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { K3, X8e, PNe, iN, Y8e, Uyn } from "./键位绑定(Keybindings).sanfja6a.js";
 import { f9 } from "../../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js";
-import { writeFile as c } from "fs/promises";
-import { dirname as f } from "path";
+import { writeFile } from "fs/promises";
+import { dirname } from "path";
 function m(s) {
   let n = new Set(X8e.map((e) => PNe(e.key)));
   return s
@@ -58,9 +58,9 @@ async function _(s, n) {
           "keybindings template write failed",
         );
   } else {
-    await ae().mkdir(f(e));
+    await ae().mkdir(dirname(e));
     try {
-      await c(e, a(), { encoding: "utf-8", flag: "wx" });
+      await writeFile(e, a(), { encoding: "utf-8", flag: "wx" });
     } catch (i) {
       if (A(i) === "EEXIST") t = !0;
       else throw i;

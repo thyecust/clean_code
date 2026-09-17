@@ -16,11 +16,11 @@ var o = Ae("./mcp-servers-chmkz450.md");
 var i = Ae("./search-strategies-4qam2bp6.md");
 var s = "./SKILL-0e9ec89e.md.zst";
 var r = Ke(s, import.meta.dirname);
-var x = r,
-  A = {
+var SKILL_MD = r,
+  SKILL_FILES = {
     "references/component-schemas.md": t,
     "references/example-plugins.md": n,
     "references/mcp-servers.md": o,
     "references/search-strategies.md": i,
   };
-export { A as SKILL_FILES, x as SKILL_MD };
+export { SKILL_FILES, SKILL_MD };

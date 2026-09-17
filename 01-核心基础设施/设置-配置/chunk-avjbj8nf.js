@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { VR, M0 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ms } from "./设置-配置.aqbb35ee.js";
-import { getGlobalClaudeFile as Pi } from "./chunk-zqr5ctyf.js";
-import { projectSettingsAliasesUserSettings as zT, getSettingsForSource as ye } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { ZTe, n7n, Rgn, pC, isMcpServerAllowedByPolicy as uj, getMcpConfigsByScope as nd, doesEnterpriseMcpConfigExist as Zm } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getGlobalClaudeFile } from "./chunk-zqr5ctyf.js";
+import { projectSettingsAliasesUserSettings, getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { ZTe, n7n, Rgn, pC, isMcpServerAllowedByPolicy, getMcpConfigsByScope, doesEnterpriseMcpConfigExist } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { REn, JYe } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { bd, JS, Hc } from "../../02-功能模块/插件系统/chunk-hh8f1qrw.js";
 var a = Rgn.filter((e) => e !== "userSettings");
@@ -23,7 +23,7 @@ function Nae(e) {
 function x0t(e = H0t()) {
   let r = [...e];
   if (i("project")) r.push(".mcp.json");
-  if (i("local")) r.push(`${Pi()} (local-scope MCP servers for this project)`);
+  if (i("local")) r.push(`${getGlobalClaudeFile()} (local-scope MCP servers for this project)`);
   return r;
 }
 function c(e, r) {
@@ -56,7 +56,7 @@ function u(e, r) {
   if (
     a.some(
       (t) =>
-        o.includes(t) && Object.hasOwn(ye(t)?.extraKnownMarketplaces ?? {}, e),
+        o.includes(t) && Object.hasOwn(getSettingsForSource(t)?.extraKnownMarketplaces ?? {}, e),
     )
   )
     return !0;
@@ -66,22 +66,22 @@ function p(e) {
   return Object.hasOwn(pC(), e);
 }
 function i(e) {
-  if (M0() || Zm()) return !1;
-  let { servers: r } = nd(e, { expandVars: !1 });
+  if (M0() || doesEnterpriseMcpConfigExist()) return !1;
+  let { servers: r } = getMcpConfigsByScope(e, { expandVars: !1 });
   return Object.entries(r).some(
     ([o, t]) =>
       "headersHelper" in t &&
       !!t.headersHelper &&
       !(e === "project" && ZTe(o) === "rejected") &&
-      uj(o, t),
+      isMcpServerAllowedByPolicy(o, t),
   );
 }
 function H0t() {
   if (VR()) return [];
   let e = ms(),
-    r = e.includes("localSettings") ? ye("localSettings") : null,
+    r = e.includes("localSettings") ? getSettingsForSource("localSettings") : null,
     o = [];
-  if (e.includes("projectSettings") && !zT() && c(ye("projectSettings"), r))
+  if (e.includes("projectSettings") && !projectSettingsAliasesUserSettings() && c(getSettingsForSource("projectSettings"), r))
     o.push(".claude/settings.json");
   if (c(r)) o.push(".claude/settings.local.json");
   return o;

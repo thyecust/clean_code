@@ -8,29 +8,29 @@
 
 // Version: 2.1.263
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getUsableProxyUrl as o_, getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { agentProxyEnv as fme } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { readFile as i } from "fs/promises";
+import { getUsableProxyUrl, getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { agentProxyEnv } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { readFile } from "fs/promises";
 async function Z4(t) {
-  if (!o_()) {
-    let r = fme();
+  if (!getUsableProxyUrl()) {
+    let r = agentProxyEnv();
     if (r.HTTPS_PROXY && URL.parse(t)?.protocol === "https:") {
       let o;
       if (r.SSL_CERT_FILE)
         try {
-          o = await i(r.SSL_CERT_FILE, "utf8");
+          o = await readFile(r.SSL_CERT_FILE, "utf8");
         } catch (e) {
           n(
             `MCP agent-proxy fallback: failed to read CA bundle: ${e instanceof Error ? e.message : String(e)}`,
             { level: "warn" },
           );
         }
-      return As({
+      return getProxyFetchOptions({
         url: t,
         fallbackProxy: { url: r.HTTPS_PROXY, noProxy: r.NO_PROXY, ca: o },
       });
     }
   }
-  return As({ url: t });
+  return getProxyFetchOptions({ url: t });
 }
 export { Z4 };

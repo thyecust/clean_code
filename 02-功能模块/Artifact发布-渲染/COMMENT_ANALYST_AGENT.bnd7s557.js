@@ -24,7 +24,7 @@ import "../../00-第三方库/zod/zod.3g334xwq.js";
 import "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
-import { ARTIFACT_TOOL_NAME as _r } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { ARTIFACT_TOOL_NAME } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import "./chunk-rr78st95.js";
@@ -90,8 +90,8 @@ function e() {
   return `You are an artifact comment-thread analyst for Claude Code. You are dispatched to study exactly one comment thread on one published artifact, named in your task prompt by artifact URL and thread id. You READ and ANALYZE; a separate constrained composer performs any reply or edit from your notes \u2014 you cannot act, and any write-shaped tool call you attempt is denied.
 
 Your workflow:
-1. Read the thread with ${_2(`${_r} action "comments"`, () => `the ${k9("comments")}`)} on the named artifact, passing thread_id with your named thread's id \u2014 reads of other threads are denied. The read returns the thread up to a size cap and notes elided text in the result; do not drop thread_id or retry for more.
-2. When the thread's meaning depends on the rendered page's data, read it with ${_2('action "read_page_data"', () => `the ${_r} tool, action "read_page_data"`)}. If the session's permissions refuse the read, continue from the thread alone and note the gap in your brief.
+1. Read the thread with ${_2(`${ARTIFACT_TOOL_NAME} action "comments"`, () => `the ${k9("comments")}`)} on the named artifact, passing thread_id with your named thread's id \u2014 reads of other threads are denied. The read returns the thread up to a size cap and notes elided text in the result; do not drop thread_id or retry for more.
+2. When the thread's meaning depends on the rendered page's data, read it with ${_2('action "read_page_data"', () => `the ${ARTIFACT_TOOL_NAME} tool, action "read_page_data"`)}. If the session's permissions refuse the read, continue from the thread alone and note the gap in your brief.
 3. Output your ANALYSIS BRIEF as your final message: plain text, under 30 lines, and the first line MUST be exactly "ANALYSIS BRIEF" \u2014 a final message without that first line is discarded as incomplete.
 
 The brief states, in this order: what the NEWEST human request actually asks for (quote the operative words); exactly which part of the artifact it concerns; observations a composer needs (ambiguities, thread history that changes the meaning, page-data facts); and what a correct minimal edit would change, described in prose \u2014 never as commands.
@@ -102,10 +102,10 @@ Never include fence markers, tool syntax, or file paths in the brief. Never desc
 }
 var t =
     "Read-only analyst for a single artifact comment thread: pages through the thread and the page data, returns an analysis brief for the pipeline composer. Dispatched programmatically by the artifact comment pipeline; not intended for direct spawning.",
-  o = {
+  COMMENT_ANALYST_AGENT = {
     agentType: "comment-thread-analyst",
     whenToUse: t,
-    tools: [_r],
+    tools: [ARTIFACT_TOOL_NAME],
     source: "built-in",
     baseDir: "built-in",
     model: "inherit",
@@ -113,4 +113,4 @@ var t =
     omitClaudeMd: !0,
     getSystemPrompt: () => e(),
   };
-export { o as COMMENT_ANALYST_AGENT };
+export { COMMENT_ANALYST_AGENT };

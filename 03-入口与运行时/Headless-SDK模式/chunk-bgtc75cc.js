@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { of } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { randomUUID as s } from "crypto";
+import { randomUUID } from "crypto";
 function I8(r, e) {
   return {
     type: "control_response",
@@ -35,7 +35,7 @@ function xB(r, e, o) {
     usage: of,
     modelUsage: {},
     permission_denials: [],
-    uuid: s(),
+    uuid: randomUUID(),
     errors: e,
     ...(o !== void 0 && { user_message_uuid: o }),
   };

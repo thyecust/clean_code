@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { j, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Te, ee, es, eu } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { findGitRootRecheckingNegative as H1 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncatePathMiddle as el } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { findGitRootRecheckingNegative } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ame } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { eN } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -44,7 +44,7 @@ function clearReplDiffPanelAutoOpen(o) {
   TWe.of(o).autoOpenPending = !1;
 }
 function diffSidebarHasGitRepo() {
-  return H1(Q()) !== null;
+  return findGitRootRecheckingNegative(Q()) !== null;
 }
 function diffPanelCanMount({
   fullscreen: o,
@@ -70,7 +70,7 @@ function toggleReplDiffTab(o, n, r, i) {
     ));
   let l = s === "diff";
   if (ee().diffSidebarOpen !== l) Te((a) => ({ ...a, diffSidebarOpen: l }), i);
-  return (y("repl_tab_switch", { tab: u(s) }), s);
+  return (logFeatureOk("repl_tab_switch", { tab: fromEnum(s) }), s);
 }
 function resetReplTabToConvo(o, n) {
   (clearReplDiffPanelAutoOpen(o),
@@ -83,7 +83,7 @@ function resetReplTabToConvo(o, n) {
 function closeReplDiffTab(o, n, r) {
   if ((resetReplTabToConvo(o, n), ee().diffSidebarOpen !== !1))
     Te((i) => ({ ...i, diffSidebarOpen: !1 }), r);
-  y("repl_tab_switch", { tab: u("convo") });
+  logFeatureOk("repl_tab_switch", { tab: fromEnum("convo") });
 }
 var g = ["session", "uncommitted", "branch"];
 function getPersistedDiffBaseMode() {
@@ -98,14 +98,14 @@ function cycleDiffBaseMode(o, n) {
         i.diffSidebarBaseMode === r ? i : { ...i, diffSidebarBaseMode: r },
       n,
     ),
-    y("repl_diff_base_switch", { mode: u(r) }),
+    logFeatureOk("repl_diff_base_switch", { mode: fromEnum(r) }),
     r
   );
 }
 F();
-import { homedir as O } from "os";
+import { homedir } from "os";
 import { isAbsolute as H, sep as U } from "path";
-import { resolve as le, sep as k, win32 as B } from "path";
+import { resolve, sep as k, win32 as B } from "path";
 function C(o) {
   return Ame(M(o));
 }
@@ -145,7 +145,7 @@ function Pg(Ue) {
   }
   let c;
   if (h[1] !== b || h[2] !== f)
-    ((c = b !== null && typeof f === "string" ? el(f, b) : f),
+    ((c = b !== null && typeof f === "string" ? truncatePathMiddle(f, b) : f),
       (h[1] = b),
       (h[2] = f),
       (h[3] = c));
@@ -169,8 +169,8 @@ function m(o) {
   return H(n) ? C(n) : Ame(n);
 }
 function L(o) {
-  if (o === "~") return O();
-  return o.startsWith("~" + U) ? O() + o.slice(1) : o;
+  if (o === "~") return homedir();
+  return o.startsWith("~" + U) ? homedir() + o.slice(1) : o;
 }
 export {
   TWe,

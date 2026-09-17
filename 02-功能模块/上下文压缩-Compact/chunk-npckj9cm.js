@@ -12,27 +12,27 @@ import { Qs, ns, p8, xW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js"
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Zt, Io, Xu, cr, nt, hm } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { OAUTH_BETA_HEADER as Bc, getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  withOAuth401Retry as T_,
+  withOAuth401Retry,
   Orr,
-  isNonCustomFableModel as Ase,
-  getMainLoopModel as rt,
-  firstPartyNameToCanonical as Yh,
-  getMarketingNameForModel as bu,
+  isNonCustomFableModel,
+  getMainLoopModel,
+  firstPartyNameToCanonical,
+  getMarketingNameForModel,
   gU,
   C6,
   T5,
-  shouldUseWIFAuth as Zc,
-  getAnthropicApiKeySafe as gb,
-  getClaudeAIOAuthTokens as Yt,
-  isClaudeAISubscriber as gt,
-  hasProfileScope as lp,
+  shouldUseWIFAuth,
+  getAnthropicApiKeySafe,
+  getClaudeAIOAuthTokens,
+  isClaudeAISubscriber,
+  hasProfileScope,
   s5t,
   Bsr,
   _vt,
@@ -46,8 +46,8 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { xb, eB } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { er, BR, getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { getWIFCredentials as m2e, getWIFTokenCache as BQ } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
+import { er, BR, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getWIFCredentials, getWIFTokenCache } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
 import { lDe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 var X = m(() =>
@@ -62,12 +62,12 @@ var X = m(() =>
       }).transform(
         ({ model: t, name: e, description: u, disabled_reason: l }) => {
           let d = BR(er(t)),
-            c = d ? bu(t) : null,
+            c = d ? getMarketingNameForModel(t) : null,
             _ = u;
           if (d && c && l == null) {
             let s = u ? (u.startsWith(c) ? u : `${c} \xB7 ${u}`) : c,
               o = Orr(t);
-            _ = o && !gt() && !s.includes("per Mtok") ? `${s} \xB7 ${o}` : s;
+            _ = o && !isClaudeAISubscriber() && !s.includes("per Mtok") ? `${s} \xB7 ${o}` : s;
           }
           return {
             value: t,
@@ -134,7 +134,7 @@ var X = m(() =>
 function O() {
   return {
     entrypoint: Vd(),
-    model: er(rt()),
+    model: er(getMainLoopModel()),
     ccVersion: {
       ISSUES_EXPLAINER:
         "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -156,13 +156,13 @@ function J() {
     try {
       return s5t(O());
     } catch (t) {
-      return (h(t), "bi1-key-unavailable");
+      return (logError(t), "bi1-key-unavailable");
     }
   });
 }
 J();
 function E() {
-  let t = Pe();
+  let t = getAPIProvider();
   return (
     t === "firstParty" ||
     (t === "anthropicAws" && a.ANTHROPIC_AWS_BASE_URL === void 0)
@@ -174,14 +174,14 @@ function registerClientDataGetters() {
       try {
         return E();
       } catch (t) {
-        return (h(t), !0);
+        return (logError(t), !0);
       }
     }),
       tkn(() => {
         try {
           return E();
         } catch (t) {
-          return (h(t), !1);
+          return (logError(t), !1);
         }
       }),
       rkn(() => {
@@ -194,11 +194,11 @@ function registerClientDataGetters() {
             org: t.organizationUuid,
           };
         } catch (t) {
-          return (h(t), null);
+          return (logError(t), null);
         }
       }));
   } catch (t) {
-    h(t);
+    logError(t);
   }
 }
 function Q(t) {
@@ -230,7 +230,7 @@ function Z(t) {
   });
 }
 async function tt(t, e) {
-  if (Pe() === "gateway") {
+  if (getAPIProvider() === "gateway") {
     if (!a.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY)
       return (
         n(
@@ -243,7 +243,7 @@ async function tt(t, e) {
   }
   if (St())
     return (n("[Bootstrap] Skipped: Nonessential traffic disabled"), null);
-  if (Pe() !== "firstParty")
+  if (getAPIProvider() !== "firstParty")
     return (n("[Bootstrap] Skipped: 3P provider"), null);
   let { params: u, userAgent: l } = Q(t),
     d = async (o, r) => {
@@ -262,22 +262,22 @@ async function tt(t, e) {
       if (!A.success)
         return (
           n(`[Bootstrap] Response failed validation: ${A.error.message}`),
-          g("api_bootstrap_fetch", "parse_failed"),
+          logFeatureSad("api_bootstrap_fetch", "parse_failed"),
           null
         );
       return (n("[Bootstrap] Fetch ok"), A.data);
     },
-    c = gb();
-  if (!c && Zc())
+    c = getAnthropicApiKeySafe();
+  if (!c && shouldUseWIFAuth())
     try {
-      let [o, r] = await Promise.all([BQ(), m2e()]);
+      let [o, r] = await Promise.all([getWIFTokenCache(), getWIFCredentials()]);
       if (o !== null) {
         let p = await d(
-          a.ANTHROPIC_BASE_URL || r?.baseURL || Vt().BASE_API_URL,
+          a.ANTHROPIC_BASE_URL || r?.baseURL || getOauthConfig().BASE_API_URL,
           {
             ...r?.extraHeaders,
             Authorization: `Bearer ${await o.getToken()}`,
-            "anthropic-beta": Bc,
+            "anthropic-beta": OAUTH_BETA_HEADER,
           },
         );
         return p && { response: p, viaScopelessOAuth: !1 };
@@ -287,32 +287,32 @@ async function tt(t, e) {
         n(
           `[Bootstrap] WIF fetch failed: ${at.isAxiosError(o) ? (o.response?.status ?? o.code) : o instanceof Error ? o.constructor.name : "unknown"}`,
         ),
-        g("api_bootstrap_fetch", "wif_unavailable"),
+        logFeatureSad("api_bootstrap_fetch", "wif_unavailable"),
         null
       );
     }
-  if (!Yt()?.accessToken && !c)
+  if (!getClaudeAIOAuthTokens()?.accessToken && !c)
     return (n("[Bootstrap] Skipped: no usable OAuth, WIF, or API key"), null);
   if (a.ANTHROPIC_UNIX_SOCKET)
     return (
       n("[Bootstrap] Skipped: unix-socket-proxied session"),
-      g("api_bootstrap_fetch", "unix_socket_skip"),
+      logFeatureSad("api_bootstrap_fetch", "unix_socket_skip"),
       null
     );
   let s = !1;
   try {
-    let o = await T_(
+    let o = await withOAuth401Retry(
       async () => {
-        let r = Yt()?.accessToken,
-          p = lp(),
+        let r = getClaudeAIOAuthTokens()?.accessToken,
+          p = hasProfileScope(),
           A;
         if (r && (p || !c))
           ((s = !p && !c),
-            (A = { Authorization: `Bearer ${r}`, "anthropic-beta": Bc }));
+            (A = { Authorization: `Bearer ${r}`, "anthropic-beta": OAUTH_BETA_HEADER }));
         else if (c) ((s = !1), (A = { "x-api-key": c }));
         else
           return (n("[Bootstrap] No auth available on retry, aborting"), null);
-        return d(Vt().BASE_API_URL, A);
+        return d(getOauthConfig().BASE_API_URL, A);
       },
       { credentials: e },
     );
@@ -322,21 +322,21 @@ async function tt(t, e) {
     if (s && r === 403)
       return (
         n("[Bootstrap] Skipped: 403 for OAuth token without profile scope"),
-        g("api_bootstrap_fetch", "no_profile_scope_403"),
+        logFeatureSad("api_bootstrap_fetch", "no_profile_scope_403"),
         null
       );
     throw (
       n(
         `[Bootstrap] Fetch failed: ${at.isAxiosError(o) ? (o.response?.status ?? o.code) : "unknown"}`,
       ),
-      f("api_bootstrap_fetch", "request_failed"),
+      logFeatureBad("api_bootstrap_fetch", "request_failed"),
       o
     );
   }
 }
 function bootstrapFetchCanConvergeSlot() {
   if (a.ANTHROPIC_UNIX_SOCKET) return !1;
-  return Boolean(gb()) || (Boolean(Yt()?.accessToken) && lp());
+  return Boolean(getAnthropicApiKeySafe()) || (Boolean(getClaudeAIOAuthTokens()?.accessToken) && hasProfileScope());
 }
 async function fetchBootstrapData(t, e) {
   await refreshBootstrapData(t, e);
@@ -344,7 +344,7 @@ async function fetchBootstrapData(t, e) {
 async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
   registerClientDataGetters();
   try {
-    let l = Pe() === "firstParty";
+    let l = getAPIProvider() === "firstParty";
     if (!l) (gU(), T5());
     let d = O(),
       c = xW(),
@@ -356,10 +356,10 @@ async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
         n(
           "[Bootstrap] Discarding response fetched under a superseded credential",
         ),
-        g("api_bootstrap_fetch", "superseded_credential"),
+        logFeatureSad("api_bootstrap_fetch", "superseded_credential"),
         !1
       );
-    y("api_bootstrap_fetch");
+    logFeatureOk("api_bootstrap_fetch");
     let r = ee(),
       p = s.narrowed ?? o,
       A = p && s.additional_model_options == null,
@@ -465,7 +465,7 @@ async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
   } catch (l) {
     if (cc(l))
       n(`[Bootstrap] fetchBootstrapData failed: ${l}`, { level: "error" });
-    else h(l);
+    else logError(l);
     return !1;
   }
 }
@@ -506,7 +506,7 @@ async function ot(t) {
       .filter((c) => /(claude|anthropic)/i.test(c.id))
       .filter((c) => {
         let _ = BR(c.id);
-        return _ === null || Ase(Yh(_.firstParty));
+        return _ === null || isNonCustomFableModel(firstPartyNameToCanonical(_.firstParty));
       })
       .map((c) => ({
         value: c.id,

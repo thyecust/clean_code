@@ -13,12 +13,12 @@ import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Pl, ll } from "../Teammates团队/chunk-thxapyam.js";
 import {
-  mkdir as g,
-  readdir as k,
-  readFile as h,
-  writeFile as y,
+  mkdir,
+  readdir,
+  readFile,
+  writeFile,
 } from "fs/promises";
-import { basename as S, dirname as u, join as p } from "path";
+import { basename, dirname, join as p } from "path";
 function P(t) {
   return p(m(), `${t}.json`);
 }
@@ -32,7 +32,7 @@ function eH(t) {
 }
 function C1t() {
   let t = fy() ?? ll(he());
-  return u(t) === Pl() ? S(t) : void 0;
+  return dirname(t) === Pl() ? basename(t) : void 0;
 }
 function W(t, a, s) {
   return Ce.sidecar(t, a, ["workflows", `${s}.json`]);
@@ -44,7 +44,7 @@ async function K6n(t, a, s) {
       e = M() && s ? C1t() : void 0,
       r = K();
     if (
-      (await g(u(l), { recursive: !0, mode: 448 }),
+      (await mkdir(dirname(l), { recursive: !0, mode: 448 }),
       M() && s && e !== void 0 && _n(`${t}.json`))
     ) {
       let o = await s.write(W(e, r, t), b(i), {
@@ -54,7 +54,7 @@ async function K6n(t, a, s) {
       if (!o.ok) n(`Failed to write workflow snapshot ${t}: ${o.error.code}`);
       return;
     }
-    await y(l, b(i), { encoding: "utf8", mode: 384 });
+    await writeFile(l, b(i), { encoding: "utf8", mode: 384 });
   } catch (i) {
     n(
       `Failed to write workflow snapshot ${t}: ${i instanceof Error ? i.message : i}`,
@@ -93,7 +93,7 @@ async function Tin(t) {
   let s = m(),
     i;
   try {
-    i = await k(s);
+    i = await readdir(s);
   } catch {
     return [];
   }
@@ -103,7 +103,7 @@ async function Tin(t) {
         .filter((e) => e.endsWith(".json"))
         .map(async (e) => {
           try {
-            let r = await h(p(s, e), "utf8"),
+            let r = await readFile(p(s, e), "utf8"),
               o = z(r);
             return d(o, e.replace(/\.json$/, ""));
           } catch (r) {

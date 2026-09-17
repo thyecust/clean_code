@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { isInsideTmux as Oj, getLeaderPaneId as YGt, getUserTmuxSocket as JGt, isTmuxAvailable as foe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { isInsideTmux, getLeaderPaneId, getUserTmuxSocket, isTmuxAvailable } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
 import { jk, cCe } from "./chunk-6b13bhw1.js";
 import { M6, wet, N6, Tge, Tet } from "./chunk-enjekn9t.js";
 import { Ike } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
@@ -36,16 +36,16 @@ function T(e) {
   }[e];
 }
 function d(e) {
-  let t = JGt(),
+  let t = getUserTmuxSocket(),
     a = t ? ["-S", t, ...e] : e;
-  return Fe(N6, a);
+  return execFileNoThrow(N6, a);
 }
 function l(e, t) {
-  return Fe(N6, ["-L", Tet(), ...e], t);
+  return execFileNoThrow(N6, ["-L", Tet(), ...e], t);
 }
 async function respawnPaneWithCommand(e, t, a) {
-  await Fe(N6, [...e, "set-option", "-p", "-t", t, "remain-on-exit", "failed"]);
-  let r = await Fe(N6, [
+  await execFileNoThrow(N6, [...e, "set-option", "-p", "-t", t, "remain-on-exit", "failed"]);
+  let r = await execFileNoThrow(N6, [
     ...e,
     "respawn-pane",
     "-k",
@@ -64,10 +64,10 @@ class TmuxBackend {
   firstPaneUsedForExternal = !1;
   paneCreationLock = Ike();
   async isAvailable() {
-    return foe();
+    return isTmuxAvailable();
   }
   async isRunningInside() {
-    return Oj();
+    return isInsideTmux();
   }
   async createTeammatePaneInSwarmView(e, t) {
     let a = await this.paneCreationLock.acquire();
@@ -83,9 +83,9 @@ class TmuxBackend {
     try {
       cCe(t);
     } catch (o) {
-      throw (f("swarm_pane_spawn", "swarm_pane_command_control_chars"), o);
+      throw (logFeatureBad("swarm_pane_spawn", "swarm_pane_command_control_chars"), o);
     }
-    let r = JGt(),
+    let r = getUserTmuxSocket(),
       s = a ? ["-L", Tet()] : r ? ["-S", r] : [];
     await respawnPaneWithCommand(s, e, t);
   }
@@ -139,7 +139,7 @@ class TmuxBackend {
     return (await (t ? l : d)(["kill-pane", "-t", e])).code === 0;
   }
   async getCurrentPaneId() {
-    let e = YGt();
+    let e = getLeaderPaneId();
     if (e) return e;
     let t = await d(["display-message", "-p", "#{pane_id}"]);
     if (t.code !== 0)
@@ -153,7 +153,7 @@ class TmuxBackend {
   }
   async getCurrentWindowTarget() {
     if (this.cachedLeaderWindowTarget) return this.cachedLeaderWindowTarget;
-    let e = YGt(),
+    let e = getLeaderPaneId(),
       t = ["display-message"];
     if (e) t.push("-t", e);
     t.push("-p", "#{window_id}");

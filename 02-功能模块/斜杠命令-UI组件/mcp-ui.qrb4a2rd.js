@@ -13,10 +13,10 @@ import { H_ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Wf, x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { gHn, ts } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { isUnattendedBgSession as ap } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isUnattendedBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { sv, Lw } from "../权限系统/chunk-e4pfvp7x.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { gr, ka, ow, Y2, BM, cw, gmn, _yt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -105,7 +105,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
   }, [m]);
   Ne("confirm:no", oe, { context: "Confirmation", isActive: m });
   let c = re(async () => {
-      if (ap()) {
+      if (isUnattendedBgSession()) {
         J(MIt);
         return;
       }
@@ -1433,7 +1433,7 @@ function Ft(oi) {
               break bb91;
             }
             case "needs-auth": {
-              if ((Je(`${gr(W)} requires authentication`), ze(!1), ap())) {
+              if ((Je(`${gr(W)} requires authentication`), ze(!1), isUnattendedBgSession())) {
                 let ai = await aye(
                   Ot,
                   Y2(
@@ -1635,13 +1635,13 @@ function Wo(Li) {
             () => Oe(`MCP server "${gr(ee)}" ${Ae ? "enabled" : "disabled"}`),
             (Fi) => Oe(YZ(Fi, ee, qe, { persistsOffBox: lo(zt) })),
           )
-          .catch(h);
+          .catch(logError);
         return;
       }
       Promise.allSettled(Fo.map((Hi) => Ke(Hi.name)))
         .then((zo) => {
           for (const Un of zo) {
-            if (Un.status === "rejected") h(Un.reason);
+            if (Un.status === "rejected") logError(Un.reason);
           }
           let _n = G(zo, Gn);
           let jn = zo.length - _n;
@@ -1653,7 +1653,7 @@ function Wo(Li) {
               (Ho !== null ? `. ${Ho}` : ""),
           );
         })
-        .catch(h);
+        .catch(logError);
     }),
       (En = [qe, ee, Ht, Ke, Oe, zt]),
       (Ui[0] = qe),
@@ -1685,7 +1685,7 @@ async function Ei(s, i, l) {
       u = f?.[1] ?? "",
       m = f?.[2] ?? "";
     if (u === "no-redirect") {
-      if (ap()) return (await Vo(s, i), null);
+      if (isUnattendedBgSession()) return (await Vo(s, i), null);
       return e(He, { onComplete: Qe(s) });
     }
     if (u === "reconnect" && m)
@@ -1693,7 +1693,7 @@ async function Ei(s, i, l) {
     if (u === "enable" || u === "disable")
       return e(Wo, { action: u, target: m || "all", onComplete: Qe(s) });
   }
-  if (ap()) return (await Vo(s, i), null);
+  if (isUnattendedBgSession()) return (await Vo(s, i), null);
   return e(He, { onComplete: Qe(s) });
 }
 export { Ei as call };

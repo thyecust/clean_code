@@ -14,16 +14,16 @@ import { z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱�
 import { oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
 import { ot } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Nr, Ow, CHn, getRemoteManagedSettingsSyncFromCache as rv } from "./设置-配置.aqbb35ee.js";
+import { Nr, Ow, CHn, getRemoteManagedSettingsSyncFromCache } from "./设置-配置.aqbb35ee.js";
 import { pt } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { getSettingsForSource as ye } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { se, v, c, $e } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { constants as E } from "fs";
-import { open as G, realpath as U } from "fs/promises";
-import { isAbsolute as k } from "path";
+import { constants } from "fs";
+import { open as G, realpath } from "fs/promises";
+import { isAbsolute } from "path";
 var Sen = "org-tip:",
   dOt = "custom-tip-",
   I = 500,
@@ -52,14 +52,14 @@ function q(e) {
 var Q = m(() => $e([v(se()), c({ tips: v(se()) }).transform((e) => e.tips)]));
 async function V(e) {
   try {
-    let t = P() === "windows" ? 0 : E.O_NOFOLLOW | E.O_NONBLOCK,
-      i = await G(await U(e), E.O_RDONLY | t),
+    let t = P() === "windows" ? 0 : constants.O_NOFOLLOW | constants.O_NONBLOCK,
+      i = await G(await realpath(e), constants.O_RDONLY | t),
       r;
     try {
       let d = await i.stat();
       if (!d.isFile())
         return (
-          f("tips_org_tips_file_load", "not_regular_file"),
+          logFeatureBad("tips_org_tips_file_load", "not_regular_file"),
           n(
             `spinnerTipsOverride.tipsFile ${e} is not a regular file; ignoring it`,
             { level: "warn" },
@@ -68,7 +68,7 @@ async function V(e) {
         );
       if (d.size > O)
         return (
-          f("tips_org_tips_file_load", "too_large"),
+          logFeatureBad("tips_org_tips_file_load", "too_large"),
           n(
             `spinnerTipsOverride.tipsFile ${e} is larger than ${O} bytes; ignoring it`,
             { level: "warn" },
@@ -79,7 +79,7 @@ async function V(e) {
         { bytesRead: g } = await i.read(u, 0, u.length, 0);
       if (g > O)
         return (
-          f("tips_org_tips_file_load", "too_large"),
+          logFeatureBad("tips_org_tips_file_load", "too_large"),
           { entries: [], transient: !1 }
         );
       r = cs(u.toString("utf8", 0, g));
@@ -90,14 +90,14 @@ async function V(e) {
       l = a.success ? CHn().parse(a.data) : void 0;
     if (l === void 0)
       return (
-        f("tips_org_tips_file_load", "wrong_shape"),
+        logFeatureBad("tips_org_tips_file_load", "wrong_shape"),
         n(
           `spinnerTipsOverride.tipsFile ${e} must be a JSON array of tips (or {"tips": [...]}); ignoring it`,
           { level: "warn" },
         ),
         { entries: [], transient: !1 }
       );
-    return (y("tips_org_tips_file_load"), { entries: l, transient: !1 });
+    return (logFeatureOk("tips_org_tips_file_load"), { entries: l, transient: !1 });
   } catch (t) {
     let i = A(t),
       r = W(t)
@@ -108,7 +108,7 @@ async function V(e) {
             ? "parse_failed"
             : "read_failed";
     return (
-      f("tips_org_tips_file_load", r),
+      logFeatureBad("tips_org_tips_file_load", r),
       n(
         W(t)
           ? `spinnerTipsOverride.tipsFile ${e} does not exist; no file tips loaded`
@@ -136,7 +136,7 @@ class C {
 }
 var ee = new j(() => new C());
 function te() {
-  if (rv()?.spinnerTipsOverride?.tipsFile)
+  if (getRemoteManagedSettingsSyncFromCache()?.spinnerTipsOverride?.tipsFile)
     return (
       n(
         "spinnerTipsOverride.tipsFile from remote managed settings is ignored; ship inline tips or install the file path via managed-settings.json",
@@ -148,7 +148,7 @@ function te() {
 }
 function ie(e) {
   if (!e) return;
-  if (!k(e) && e !== "~" && !e.startsWith("~/")) {
+  if (!isAbsolute(e) && e !== "~" && !e.startsWith("~/")) {
     n(
       `spinnerTipsOverride.tipsFile must be an absolute or ~/ path (got "${e}"); ignoring it`,
       { level: "warn" },
@@ -177,7 +177,7 @@ function R(e) {
   let t = [];
   for (let i of e) {
     if (!Nr(i)) continue;
-    let r = ye(i)?.spinnerTipsOverride;
+    let r = getSettingsForSource(i)?.spinnerTipsOverride;
     if (r) t.push({ source: i, override: r });
   }
   return t;

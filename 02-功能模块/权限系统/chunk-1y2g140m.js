@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Jo, toCompatSessionId as zu, sessionIdBody as pr, isSelfAddressableSessionId as Ftt } from "./chunk-ynkf3yy4.js";
+import { Jo, toCompatSessionId, sessionIdBody, isSelfAddressableSessionId } from "./chunk-ynkf3yy4.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { FT, tRe, updateSessionBridgeId as KCt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { FT, tRe, updateSessionBridgeId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { _c } from "./chunk-e4pfvp7x.js";
 import { SAt, bAt } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 function l(e, o) {
@@ -34,7 +34,7 @@ function setSdkHostedBridgeHandle(e, o) {
     i = a(e),
     r = t.sdkHostedHandle;
   ((t.sdkHostedHandle = i),
-    KCt(i ? zu(i.bridgeSessionId) : null, o).catch(() => {}),
+    updateSessionBridgeId(i ? toCompatSessionId(i.bridgeSessionId) : null, o).catch(() => {}),
     (t.lastReportedPermissionMode = void 0),
     (t.lastKnownPermissionMode = void 0),
     (t.lastReportedEffort = void 0),
@@ -62,10 +62,10 @@ function setReplBridgeHandle(e, o) {
     (t.lastReportedCrossSessionInbound = void 0),
     (t.lastKnownCrossSessionInbound = void 0),
     l(r, i));
-  let s = i ? zu(i.bridgeSessionId) : void 0;
+  let s = i ? toCompatSessionId(i.bridgeSessionId) : void 0;
   if (s !== void 0) process.env.CLAUDE_CODE_BRIDGE_SESSION_ID = s;
   else delete process.env.CLAUDE_CODE_BRIDGE_SESSION_ID;
-  KCt(s ?? null, o).catch(() => {});
+  updateSessionBridgeId(s ?? null, o).catch(() => {});
 }
 function getReplBridgeHandle() {
   return Jo().replHandle;
@@ -97,7 +97,7 @@ function reseedBridgePermissionMode() {
     reportBridgePermissionMode(e.lastKnownPermissionMode);
 }
 function setSupervisedBridgeSession(e, o, t) {
-  let i = Ftt(e);
+  let i = isSelfAddressableSessionId(e);
   if (!i)
     n(
       "[bridge] supervised session id refused (not a safe bridge id) \u2014 this child has no Remote Control identity for the peer surface",
@@ -106,7 +106,7 @@ function setSupervisedBridgeSession(e, o, t) {
   ((Jo().supervisedBridgeSession = i
     ? { bridgeSessionId: e, owner: t, selfTitle: void 0 }
     : null),
-    KCt(i ? zu(e) : null, o).catch(() => {}));
+    updateSessionBridgeId(i ? toCompatSessionId(e) : null, o).catch(() => {}));
 }
 function adoptSelfBridgeTitleFromRoster(e) {
   let o = Jo().supervisedBridgeSession;
@@ -223,7 +223,7 @@ function reseedBridgeModel() {
 }
 function getSelfBridgeCompatId() {
   let e = getPeerBridgeIdentity();
-  return e ? zu(e.bridgeSessionId) : void 0;
+  return e ? toCompatSessionId(e.bridgeSessionId) : void 0;
 }
 function ownBridgePeerAddress() {
   let e = getSelfBridgeCompatId();
@@ -231,14 +231,14 @@ function ownBridgePeerAddress() {
 }
 function getRemoteControlSessionCompatId() {
   let e = getReplBridgeHandle();
-  return e && !e.outboundOnly ? zu(e.bridgeSessionId) : void 0;
+  return e && !e.outboundOnly ? toCompatSessionId(e.bridgeSessionId) : void 0;
 }
 function getSelfBridgeTitle() {
   return getPeerBridgeIdentity()?.selfTitle;
 }
 function setSelfBridgeTitle(e, o) {
   let t = getReplBridgeHandle() ?? getSdkHostedBridgeHandle();
-  if (t && pr(t.bridgeSessionId) === pr(e)) t.selfTitle = u(o);
+  if (t && sessionIdBody(t.bridgeSessionId) === sessionIdBody(e)) t.selfTitle = u(o);
 }
 function a(e) {
   return e !== null && Jo().retiredHandles.has(e) ? null : e;

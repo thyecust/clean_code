@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { i } from "./chunk-an83zrbx.js";
-import { fromEnum as u } from "./chunk-w76kejwn.js";
+import { fromEnum } from "./chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 var g = 2000,
@@ -90,7 +90,7 @@ function extractErrorDetail(e) {
 function logBridgeSkip(e, o, r, t) {
   if (o) n(o);
   i("tengu_bridge_repl_skipped", {
-    reason: u(e),
+    reason: fromEnum(e),
     ...(r !== void 0 && { v2: r }),
     ...t,
   });

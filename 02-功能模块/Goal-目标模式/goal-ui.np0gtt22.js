@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 121 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { x, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { formatDuration as Ot, formatTokens as Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ott } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -45,12 +45,12 @@ function L(ut) {
     const N = Date.now() - i.setAt;
     let h;
     if (s[1] !== N)
-      ((h = Ot(N, { mostSignificantOnly: !0 })), (s[1] = N), (s[2] = h));
+      ((h = formatDuration(N, { mostSignificantOnly: !0 })), (s[1] = N), (s[2] = h));
     else h = s[2];
     let gt = h;
     const G = jc() - i.tokensAtStart;
     let C;
-    if (s[3] !== G) ((C = Pn(G)), (s[3] = G), (s[4] = C));
+    if (s[3] !== G) ((C = formatTokens(G)), (s[3] = G), (s[4] = C));
     else C = s[4];
     let yt = C;
     const k = `running ${gt}`;
@@ -126,10 +126,10 @@ function L(ut) {
       if (c) {
         let b = [];
         if (c.durationMs !== void 0)
-          b.push(Ot(c.durationMs, { mostSignificantOnly: !0 }));
+          b.push(formatDuration(c.durationMs, { mostSignificantOnly: !0 }));
         if (c.iterations !== void 0)
           b.push(`${c.iterations} ${x(c.iterations, "turn")}`);
-        if (c.tokens !== void 0) b.push(`${Pn(c.tokens)} tokens`);
+        if (c.tokens !== void 0) b.push(`${formatTokens(c.tokens)} tokens`);
         let h;
         if (s[26] === p)
           ((h = r(t, {
@@ -242,7 +242,7 @@ var Rt = async (u, f, l) => {
   }
   if (y.length > m$e)
     return (
-      g("goal_set", "too_long"),
+      logFeatureSad("goal_set", "too_long"),
       u(`Goal condition is limited to ${m$e} characters (got ${y.length})`, {
         display: "system",
       }),

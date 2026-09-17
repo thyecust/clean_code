@@ -3528,7 +3528,7 @@ import Kf from "http";
 import Xf from "https";
 import yi from "http2";
 import bi from "util";
-import { resolve as ci } from "path";
+import { resolve } from "path";
 import ye from "zlib";
 var ve = "1.15.2";
 function lt(e) {
@@ -3661,7 +3661,7 @@ class Ys extends Bf.Transform {
   }
 }
 var zr = Ys;
-import { EventEmitter as Yf } from "events";
+import { EventEmitter } from "events";
 import Df from "util";
 import { Readable as Uf } from "stream";
 var { asyncIterator: Qs } = Symbol,
@@ -4173,7 +4173,7 @@ var ol = typeof process < "u" && u.kindOf(process) === "process",
             });
           };
         }
-        let v = new Yf();
+        let v = new EventEmitter();
         function _(x) {
           try {
             v.emit("abort", !x || x.type ? new Q(null, t, E) : x);
@@ -4358,8 +4358,8 @@ var ol = typeof process < "u" && u.kindOf(process) === "process",
             let x = Array.isArray(t.allowedSocketPaths)
                 ? t.allowedSocketPaths
                 : [t.allowedSocketPaths],
-              R = ci(t.socketPath);
-            if (!x.some((B) => typeof B === "string" && ci(B) === R))
+              R = resolve(t.socketPath);
+            if (!x.some((B) => typeof B === "string" && resolve(B) === R))
               return o(
                 new y(
                   `socketPath "${t.socketPath}" is not permitted by allowedSocketPaths`,

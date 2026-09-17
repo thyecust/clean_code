@@ -25,20 +25,20 @@ import {
   HL,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Xbt } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { getCronJitterConfig as wre } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
+import { getCronJitterConfig } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
 var w = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
   _ = 60,
   b = 3600,
   O = 1200,
   D = 1;
 function L(e, o) {
-  (i("tengu_loop_ended", { reason: u(e), ...o }), gHt(!0), Eje());
+  (i("tengu_loop_ended", { reason: fromEnum(e), ...o }), gHt(!0), Eje());
 }
 function V_n() {
   let e = kg().find((o) => o.kind === "loop");
@@ -91,7 +91,7 @@ function ZXn() {
       `[loop] model called ScheduleWakeup({stop:true}) \u2014 ending loop (${o.length} pending wakeup(s) cancelled${t !== null ? ", tick in flight" : ""})`,
     ),
     L("model_stopped", { via_keepalive: !1 }),
-    y("loop_schedule_wakeup"),
+    logFeatureOk("loop_schedule_wakeup"),
     o.length
   );
 }
@@ -103,7 +103,7 @@ function E(e, o, t) {
     d = PLn(o),
     S = d !== void 0 && r > d.lastScheduledFor + b * 1000,
     p = d === void 0 || S ? r : d.startedAt,
-    f = wre().recurringMaxAgeMs;
+    f = getCronJitterConfig().recurringMaxAgeMs;
   if (f > 0 && r - p >= f) {
     if (!d?.agedOut)
       (dYt(o, {
@@ -116,7 +116,7 @@ function E(e, o, t) {
           max_age_ms: f,
         }),
         L("aged_out", { via_keepalive: l }),
-        g("loop_schedule_wakeup", "loop_wakeup_aged_out"));
+        logFeatureSad("loop_schedule_wakeup", "loop_wakeup_aged_out"));
     return null;
   }
   let {
@@ -150,7 +150,7 @@ function E(e, o, t) {
         clamped_delay_seconds: c,
         prompt_is_sentinel: w.isLoopDefaultSentinel(o),
       }),
-      g("loop_schedule_wakeup", "model_no_reschedule"),
+      logFeatureSad("loop_schedule_wakeup", "model_no_reschedule"),
       { scheduledFor: k, clampedDelaySeconds: c, wasClamped: h }
     );
   return (
@@ -164,7 +164,7 @@ function E(e, o, t) {
       reason_length: s?.length ?? 0,
       superseded_count: m,
     }),
-    y("loop_schedule_wakeup"),
+    logFeatureOk("loop_schedule_wakeup"),
     { scheduledFor: k, clampedDelaySeconds: c, wasClamped: h }
   );
 }
@@ -179,7 +179,7 @@ function F(e) {
     s = Date.now(),
     m = s + t * 1000,
     r = P(m),
-    d = wre().cacheLeadMs;
+    d = getCronJitterConfig().cacheLeadMs;
   if (d > 0 && t * 1000 <= Xbt) {
     let f = Xbt - d;
     while (r - s > f && r - 60000 >= s + _ * 1000) r -= 60000;
@@ -221,7 +221,7 @@ function t3t() {
       `[loop/dynamic] cancelled ${e.length} pending loop wakeup(s) on user abort${o !== null ? " (tick in flight)" : ""}`,
     ),
     L("user_abort", { loops_cancelled: e.length }),
-    y("loop_cancel_all"),
+    logFeatureOk("loop_cancel_all"),
     e.length
   );
 }

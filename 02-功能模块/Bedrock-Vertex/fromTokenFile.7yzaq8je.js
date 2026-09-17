@@ -14,8 +14,8 @@ import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 var d = pe(kb()),
   a = pe(zd()),
   m = pe(HA());
-import { readFileSync as _ } from "fs";
-var l = (e) => async (t) => {
+import { readFileSync } from "fs";
+var fromWebToken = (e) => async (t) => {
   e.logger?.debug("@aws-sdk/credential-provider-web-identity - fromWebToken");
   let {
       roleArn: o,
@@ -55,7 +55,7 @@ var l = (e) => async (t) => {
 var c = "AWS_WEB_IDENTITY_TOKEN_FILE",
   S = "AWS_ROLE_ARN",
   N = "AWS_ROLE_SESSION_NAME",
-  A =
+  fromTokenFile =
     (e = {}) =>
     async (t) => {
       e.logger?.debug(
@@ -69,11 +69,11 @@ var c = "AWS_WEB_IDENTITY_TOKEN_FILE",
           "Web identity configuration not specified",
           { logger: e.logger },
         );
-      let n = await l({
+      let n = await fromWebToken({
         ...e,
         webIdentityToken:
           m.externalDataInterceptor?.getTokenRecord?.()[o] ??
-          _(o, { encoding: "ascii" }),
+          readFileSync(o, { encoding: "ascii" }),
         roleArn: r,
         roleSessionName: s,
       })(t);
@@ -81,4 +81,4 @@ var c = "AWS_WEB_IDENTITY_TOKEN_FILE",
         d.setCredentialFeature(n, "CREDENTIALS_ENV_VARS_STS_WEB_ID_TOKEN", "h");
       return n;
     };
-export { A as fromTokenFile, l as fromWebToken };
+export { fromTokenFile, fromWebToken };

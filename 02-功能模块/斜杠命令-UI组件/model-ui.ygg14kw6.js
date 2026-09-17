@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 249 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Cz, xW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { DA, Hur, St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { DA, Hur, St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   CAt,
   vAt,
@@ -30,20 +30,20 @@ import {
   QH,
   UAt,
   mU,
-  isModelAllowed as Rr,
-  isFableModelValue as zN,
-  bootstrapHasAnswered as XAt,
-  getModelUnavailabilityReason as t0,
-  getDefaultFableModel as oq,
-  getDefaultMainLoopModelSetting as dh,
-  renderFableModelName as Hm,
-  parseUserSpecifiedModel as wt,
+  isModelAllowed,
+  isFableModelValue,
+  bootstrapHasAnswered,
+  getModelUnavailabilityReason,
+  getDefaultFableModel,
+  getDefaultMainLoopModelSetting,
+  renderFableModelName,
+  parseUserSpecifiedModel,
   Tn,
-  getAdditionalModelOptionsCache as MR,
+  getAdditionalModelOptionsCache,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn, Pt, Ks, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Xt, getAPIProvider as Pe, isFirstPartyAnthropicBaseUrl as fo } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { Xt, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import {
   gdn,
   QF,
@@ -129,12 +129,12 @@ function Ue() {
   if (r.fableEntitlementProbeInFlight !== void 0) return Ye() > 0;
   if (vAt() !== void 0 || r.fableEntitlementProbeAttempts >= et || ot(r))
     return !1;
-  if (Pe() !== "firstParty" || !fo()) return !1;
+  if (getAPIProvider() !== "firstParty" || !isFirstPartyAnthropicBaseUrl()) return !1;
   if (mU()) return !1;
-  if (St() || !XAt()) return !1;
-  if (MR().some((o) => typeof o.value === "string" && zN(o.value))) return !1;
-  let t = oq();
-  return Rr(t) && t0(t)?.reason === "absent";
+  if (St() || !bootstrapHasAnswered()) return !1;
+  if (getAdditionalModelOptionsCache().some((o) => typeof o.value === "string" && isFableModelValue(o.value))) return !1;
+  let t = getDefaultFableModel();
+  return isModelAllowed(t) && getModelUnavailabilityReason(t)?.reason === "absent";
 }
 function ot(r) {
   return (
@@ -152,7 +152,7 @@ function nt({ credentials: r }) {
   if (t.fableEntitlementProbeAttempts >= et || ot(t))
     return Promise.resolve("failed");
   let O = CAt(),
-    T = oq();
+    T = getDefaultFableModel();
   ((t.fableEntitlementProbeAttempts += 1),
     (t.fableEntitlementProbeAccount = O),
     (t.fableEntitlementProbeEpoch = xW()),
@@ -181,30 +181,30 @@ async function Tt(r, t, o, O) {
         n(
           "[model picker] Fable entitlement probe answered under a superseded credential; discarded",
         ),
-        g("model_picker_fable_probe", "superseded_credential"),
+        logFeatureSad("model_picker_fable_probe", "superseded_credential"),
         "failed"
       );
     if (c.valid)
       return (
         (r.fableEntitlementProbe = "accepted"),
-        y("model_picker_fable_probe", { accepted: !0 }),
+        logFeatureOk("model_picker_fable_probe", { accepted: !0 }),
         "accepted"
       );
     if (c.notFound)
       return (
         (r.fableEntitlementProbe = "refused"),
-        y("model_picker_fable_probe", { accepted: !1 }),
+        logFeatureOk("model_picker_fable_probe", { accepted: !1 }),
         "refused"
       );
     return (
       n(`[model picker] Fable entitlement probe failed: ${c.error}`),
-      g("model_picker_fable_probe", "failed"),
+      logFeatureSad("model_picker_fable_probe", "failed"),
       "failed"
     );
   } catch (c) {
     return (
       n(`[model picker] Fable entitlement probe threw: ${c}`),
-      g("model_picker_fable_probe", "failed"),
+      logFeatureSad("model_picker_fable_probe", "failed"),
       "failed"
     );
   }
@@ -308,7 +308,7 @@ function io({
         .then((L) => {
           if ((Z(!1), se.signal.aborted)) return;
           if (((Q.current = L.messages), L.decision === "block")) {
-            (g("model_switch", "blocked_by_hook"),
+            (logFeatureSad("model_switch", "blocked_by_hook"),
               t(rI(s, L.reason, L.messages), { display: "system" }));
             return;
           }
@@ -327,7 +327,7 @@ function io({
         })
         .catch((L) => {
           if ((Z(!1), se.signal.aborted)) return;
-          (h(ge(L)),
+          (logError(ge(L)),
             t(`Model switch failed: ${Rl(l(L))}`, { display: "system" }));
         }));
   }
@@ -402,7 +402,7 @@ function io({
       pb(Y, N));
     let se = ne;
     if (se) kIe(s, o);
-    (y("model_switch"), Ze(s, de));
+    (logFeatureOk("model_switch"), Ze(s, de));
     let L = `${tre}${eg(Zg(s))}${se ? " and saved as your default for new sessions" : " for this session only"}`;
     if (w !== void 0) {
       let ve = w.ultracode ? "ultracode" : w.level;
@@ -432,7 +432,7 @@ ${Q.current.map(Rl).join(`
       ne = _e.current;
     return e(fHe, {
       variant: "picker",
-      modelName: Hm(wt(s ?? dh())),
+      modelName: renderFableModelName(parseUserSpecifiedModel(s ?? getDefaultMainLoopModelSetting())),
       onDone: (Y, N) => {
         if (ne !== _e.current) return !1;
         if (ce.current) return !1;
@@ -761,7 +761,7 @@ ${qt.map(Rl).join(`
               return;
             }
             if (((mt.current = Se.messages), Se.decision === "block")) {
-              (g("model_switch", "blocked_by_hook"),
+              (logFeatureSad("model_switch", "blocked_by_hook"),
                 b(rI(xe, Se.reason, Se.messages), { display: "system" }));
               return;
             }
@@ -780,7 +780,7 @@ ${qt.map(Rl).join(`
             if ((Ge(!1), Je.signal.aborted)) {
               return;
             }
-            (h(ge(to)),
+            (logError(ge(to)),
               b(`Model switch failed: ${Rl(l(to))}`, { display: "system" }));
           }));
     }),
@@ -814,10 +814,10 @@ ${qt.map(Rl).join(`
             return;
           }
           if (ye.model !== null && n2(ye.model)) {
-            (g("model_fable_consent", "remote_thin_client_blocked"),
+            (logFeatureSad("model_fable_consent", "remote_thin_client_blocked"),
               (Le.current = !0),
               b(
-                `${Hm(wt(ye.model))} uses usage credits, and this cloud session can\u2019t show the consent prompt yet \xB7 switch models from the workspace, or consent once in a local session first`,
+                `${renderFableModelName(parseUserSpecifiedModel(ye.model))} uses usage credits, and this cloud session can\u2019t show the consent prompt yet \xB7 switch models from the workspace, or consent once in a local session first`,
                 { display: "system" },
               ));
             return;
@@ -863,8 +863,8 @@ ${qt.map(Rl).join(`
                   priority: "immediate",
                 });
               if (ye.substitutedFrom !== void 0)
-                g("model_switch", "family_alias_stepped_down");
-              else y("model_switch");
+                logFeatureSad("model_switch", "family_alias_stepped_down");
+              else logFeatureOk("model_switch");
               ((Le.current = !0),
                 b(
                   z === null
@@ -877,7 +877,7 @@ ${qt.map(Rl).join(`
                 return;
               }
               let ro = kt instanceof wT;
-              (f("model_switch", ro ? "timeout" : "remote_rejected"),
+              (logFeatureBad("model_switch", ro ? "timeout" : "remote_rejected"),
                 (Le.current = !0),
                 b(
                   ro
@@ -941,7 +941,7 @@ ${qt.map(Rl).join(`
         }
         ((Le.current = !0),
           (Ke.current = !0),
-          g("model_switch", "remote_wait_cancelled"),
+          logFeatureSad("model_switch", "remote_wait_cancelled"),
           b(
             `Stopped waiting for the cloud session \u2014 you\u2019ll get a notice if the switch to ${J} still lands`,
             { display: "system" },
@@ -964,7 +964,7 @@ ${qt.map(Rl).join(`
     let { model: Te, substitutedFrom: At } = Gt;
     let Ln = pt.current;
     let j;
-    if (W[39] !== Te) ((j = Hm(wt(Te ?? dh()))), (W[39] = Te), (W[40] = j));
+    if (W[39] !== Te) ((j = renderFableModelName(parseUserSpecifiedModel(Te ?? getDefaultMainLoopModelSetting()))), (W[39] = Te), (W[40] = j));
     else j = W[40];
     let K;
     if (
@@ -1112,7 +1112,7 @@ function $t(In) {
 var bn = async (r, t, o) => {
   if (((o = o?.trim() || ""), Hur(o)))
     return (
-      i("tengu_model_command_inline_help", { args: u(o) }),
+      i("tengu_model_command_inline_help", { args: fromEnum(o) }),
       e($t, { onDone: r })
     );
   if (DA.includes(o)) {

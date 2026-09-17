@@ -15,8 +15,8 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { asSystemPrompt as Zo, xr, yC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { asSystemPrompt, xr, yC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Ew, F$e } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -82,7 +82,7 @@ async function w({
       ? `Write the title in ${o}. Keep technical terms and code identifiers in their original form.`
       : "Write the title in the predominant language of the session \u2014 a stray word or code token in another language doesn't change it, and neither does the English of these instructions.",
     d = await yC({
-      systemPrompt: Zo([r]),
+      systemPrompt: asSystemPrompt([r]),
       userPrompt: `<session>
 ${l}
 </session>
@@ -120,7 +120,7 @@ async function S4(r, l, o) {
     let e = await w({
       systemPrompt: y,
       content: t,
-      language: Ge().language,
+      language: getInitialSettings().language,
       signal: l,
       credentials: o,
     });

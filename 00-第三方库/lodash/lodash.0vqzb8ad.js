@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Sz } from "./lodash.2x3q7cfh.js";
 import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 function P(e, r, o, a) {
   var n = -1,
     s = e == null ? 0 : e.length;
@@ -324,22 +324,22 @@ function hookFeature(e) {
   return `hook_${d(e)}`;
 }
 function logFeatureOk(e, r) {
-  i("tengu_feature_ok", { feature_name: u(e), ...r });
+  i("tengu_feature_ok", { feature_name: fromEnum(e), ...r });
 }
 function logFeatureBad(e, r, o) {
-  i("tengu_feature_bad", { ...o, feature_name: u(e), error_code: r });
+  i("tengu_feature_bad", { ...o, feature_name: fromEnum(e), error_code: r });
 }
 function logFeatureSad(e, r, o) {
-  i("tengu_feature_sad", { ...o, feature_name: u(e), error_code: r });
+  i("tengu_feature_sad", { ...o, feature_name: fromEnum(e), error_code: r });
 }
 async function logFeatureOkAsync(e, r) {
-  await qs("tengu_feature_ok", { feature_name: u(e), ...r });
+  await qs("tengu_feature_ok", { feature_name: fromEnum(e), ...r });
 }
 async function logFeatureBadAsync(e, r, o) {
-  await qs("tengu_feature_bad", { ...o, feature_name: u(e), error_code: r });
+  await qs("tengu_feature_bad", { ...o, feature_name: fromEnum(e), error_code: r });
 }
 async function logFeatureSadAsync(e, r, o) {
-  await qs("tengu_feature_sad", { ...o, feature_name: u(e), error_code: r });
+  await qs("tengu_feature_sad", { ...o, feature_name: fromEnum(e), error_code: r });
 }
 async function withFeatureTelemetry(e, r, o) {
   try {

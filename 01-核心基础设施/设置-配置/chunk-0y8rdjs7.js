@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getSettingsForSource as ye, getInitialSettings as Ge } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { uD, a3t } from "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
 import { iH, Iue } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { $Ne, xi } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 async function checkEnabledPlugins() {
-  let o = Ge(),
+  let o = getInitialSettings(),
     t = [],
     r = Iue();
   for (let [e, i] of Object.entries(r)) {
@@ -48,7 +48,7 @@ function getPluginEditableScopes() {
     { scope: "flag", source: "flagSettings" },
   ];
   for (let { scope: e, source: i } of r) {
-    let c = ye(i);
+    let c = getSettingsForSource(i);
     if (!c?.enabledPlugins) continue;
     for (let [s, u] of Object.entries(c.enabledPlugins)) {
       if (!s.includes("@")) continue;

@@ -13,35 +13,35 @@ import {
   Kxe,
   Iae,
   Ra,
-  TokenCache as qje,
+  TokenCache,
   ydr,
   GYt,
-  resolveCredentialsFromConfig as zje,
+  resolveCredentialsFromConfig,
   dt,
   ge,
   l,
   Po,
   Rt,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { gge, iBe, nS, Avt } from "./chunk-wk0e3dz4.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { ahe } from "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { mkdir as S, readFile as N, stat as F } from "fs/promises";
+import { mkdir, readFile, stat as F } from "fs/promises";
 import { join as b } from "path";
-import { dirname as v } from "path";
+import { dirname } from "path";
 var P = { "fail-closed": 5, "fail-open": 15 };
 function E(e, t, r) {
   return (s) => q8t(t, () => e(s), r);
 }
 async function q8t(e, t, r = "fail-closed") {
-  let s = v(e),
+  let s = dirname(e),
     o = P[r],
     c;
   try {
@@ -56,14 +56,14 @@ async function q8t(e, t, r = "fail-closed") {
     );
   }
   try {
-    return (i("tengu_wif_user_oauth_lock_acquired", { mode: u(r) }), await t());
+    return (i("tengu_wif_user_oauth_lock_acquired", { mode: fromEnum(r) }), await t());
   } finally {
-    i("tengu_wif_user_oauth_lock_released", { mode: u(r) });
+    i("tengu_wif_user_oauth_lock_released", { mode: fromEnum(r) });
     try {
       await c();
     } catch (d) {
       if (Po(d)) n(`wif: lock release failed: ${d}`);
-      else h(d);
+      else logError(d);
     }
   }
 }
@@ -79,7 +79,7 @@ async function O(e, t, r) {
     } catch (o) {
       if (o.code !== "ELOCKED") throw o;
       if (s >= t) {
-        i("tengu_wif_user_oauth_lock_retry_limit", { attempt: s, mode: u(r) });
+        i("tengu_wif_user_oauth_lock_retry_limit", { attempt: s, mode: fromEnum(r) });
         let c = new Ra(
           `Could not acquire credentials lock at ${e} after ${t} retries`,
         );
@@ -90,7 +90,7 @@ async function O(e, t, r) {
           c
         );
       }
-      (i("tengu_wif_user_oauth_lock_retry", { attempt: s, mode: u(r) }),
+      (i("tengu_wif_user_oauth_lock_retry", { attempt: s, mode: fromEnum(r) }),
         await Z(1000 + Math.random() * 1000));
     }
 }
@@ -119,7 +119,7 @@ function getWIFCredentials() {
 }
 function A(e) {
   if (e.credentialsPromise === void 0)
-    e.credentialsPromise = Sr("wif_credentials_resolve", async () => {
+    e.credentialsPromise = withFeatureTelemetry("wif_credentials_resolve", async () => {
       let t = await L();
       if (t === null) return ((e.resolvedBaseUrlSnapshot = null), null);
       let r = a.ANTHROPIC_BASE_URL || t.base_url,
@@ -137,7 +137,7 @@ function A(e) {
           import("./认证-OAuth登录.419zdfz3.js"),
           import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js"),
         ]),
-        _ = zje(d, {
+        _ = resolveCredentialsFromConfig(d, {
           baseURL: s,
           fetch: (g, I) =>
             fetch(g, {
@@ -190,18 +190,18 @@ function R(e) {
   return (
     (e.tokenCachePromise ??= A(e).then((t) => {
       if (t === null) return null;
-      return new qje(
+      return new TokenCache(
         async (s) => {
           try {
             let o = await t.provider(s);
-            return (y("wif_token_exchange"), o);
+            return (logFeatureOk("wif_token_exchange"), o);
           } catch (o) {
             let c =
               o instanceof Ra
                 ? o
                 : new Ra(o instanceof Error ? o.message : String(o), null);
             if (c !== o) c.cause = o;
-            throw (f("wif_token_exchange", H(c)), c);
+            throw (logFeatureBad("wif_token_exchange", H(c)), c);
           }
         },
         (s) => n(String(s), { level: "warn" }),
@@ -273,7 +273,7 @@ function W(e, t) {
         } catch (m) {
           if (Rt(m)) n(`wif: refresh-token cleanup write failed: ${m}`);
           else
-            h(dt(ge(m), "WIF: failed to clear stale user_oauth refresh_token"));
+            logError(dt(ge(m), "WIF: failed to clear stale user_oauth refresh_token"));
         }
       throw d;
     }
@@ -358,7 +358,7 @@ async function K(e, t) {
     s;
   if (r)
     try {
-      s = (await N(r, "utf-8")).trim();
+      s = (await readFile(r, "utf-8")).trim();
     } catch (d) {
       return (
         n(
@@ -377,7 +377,7 @@ async function K(e, t) {
       null
     );
   try {
-    await S(o, { recursive: !0, mode: 448 });
+    await mkdir(o, { recursive: !0, mode: 448 });
     {
       let d = await F(o),
         m = d.mode & 511;

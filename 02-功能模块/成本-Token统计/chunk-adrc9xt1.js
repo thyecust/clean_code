@@ -10,16 +10,16 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { antEnv as Wn } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { Aw, getMainLoopModel as rt, isFableFamilyOrPinnedModel as hg, cf, Hse, uRe, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Aw, getMainLoopModel, isFableFamilyOrPinnedModel, cf, Hse, uRe, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { o, t, tn, n9, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { zs } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
@@ -66,11 +66,11 @@ import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chu
 import { E, vr, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { stripVTControlCharacters as td } from "util";
+import { stripVTControlCharacters } from "util";
 F();
 F();
 function pit() {
-  let s = Wn.CLAUDE_CODE_FORCE_FIRST_LAUNCH;
+  let s = antEnv.CLAUDE_CODE_FORCE_FIRST_LAUNCH;
   if (s === void 0) return;
   if (Hse(s)) return { pretendLastSeen: s };
   return Ie(s) ? { pretendLastSeen: void 0 } : void 0;
@@ -271,7 +271,7 @@ function Bt(be, ae, cs, ds) {
     ms = tn(),
     Vl;
   if (Oe[0] !== ms)
-    ((Vl = () => cu(Ge().prefersReducedMotion) || ms),
+    ((Vl = () => cu(getInitialSettings().prefersReducedMotion) || ms),
       (Oe[0] = ms),
       (Oe[1] = Vl));
   else Vl = Oe[1];
@@ -445,7 +445,7 @@ function dd(mf) {
   return Math.max(0, mf - 1);
 }
 function fl(s) {
-  if (hg(rt()) && V9() && !tX()) Cue(s);
+  if (isFableFamilyOrPinnedModel(getMainLoopModel()) && V9() && !tX()) Cue(s);
 }
 var z = Xmt,
   gl = "https://www.anthropic.com/legal/consumer-terms",
@@ -635,8 +635,8 @@ function vl({
       let Ao = Mo?.expiry_policy_months ?? Ae?.expiry_policy_months ?? null;
       if ((te(Ao), H("tengu_satchel_banjo", !1))) {
         if (Ao !== null)
-          if (Number.isInteger(Ao) && Ao > 0) y("extra_usage_expiry_notice");
-          else f("extra_usage_expiry_notice", "invalid_months");
+          if (Number.isInteger(Ao) && Ao > 0) logFeatureOk("extra_usage_expiry_notice");
+          else logFeatureBad("extra_usage_expiry_notice", "invalid_months");
       }
       if (!re && oe === null) {
         c({
@@ -685,7 +685,7 @@ function vl({
       }));
   }, [x]);
   function qe(m) {
-    (i("tengu_extra_usage_inline_dialog_cancel", { from_step: u(m) }),
+    (i("tengu_extra_usage_inline_dialog_cancel", { from_step: fromEnum(m) }),
       s(void 0, { display: "skip" }));
   }
   function Ro() {
@@ -825,7 +825,7 @@ function vl({
         n(`Extra usage credit purchase failed: ${Ae ?? l(oe)}`, {
           level: "error",
         });
-      else h(oe);
+      else logError(oe);
       (i("tengu_extra_usage_inline_dialog_buy_result", { status: S("failed") }),
         c({
           s: "error",
@@ -1277,7 +1277,7 @@ function Dl(Em) {
   return xu;
 }
 function Cl(s) {
-  return Sn(td(s)).trim();
+  return Sn(stripVTControlCharacters(s)).trim();
 }
 function rd(s, a) {
   let c = (g) => new Date(g.getFullYear(), g.getMonth(), g.getDate()).getTime();
@@ -3156,7 +3156,7 @@ function Al(bf) {
       let bn = !1;
       let Lc;
       let yt = function yt(hf) {
-        i("tengu_extra_usage_inline_dialog_buy_result", { status: u(hf) });
+        i("tengu_extra_usage_inline_dialog_buy_result", { status: fromEnum(hf) });
       };
       async function Ha() {
         if (bn) {
@@ -3188,7 +3188,7 @@ function Al(bf) {
           }
           if (((bn = !0), cc(el)))
             n(`Purchase status poll failed: ${l(el)}`, { level: "error" });
-          else h(el);
+          else logError(el);
           Co("Failed to check purchase status");
         }
       }
@@ -3304,7 +3304,7 @@ function ts(xf) {
       ko
         .then((wf) => Qa({ value: wf }))
         .catch((Df) => {
-          (h(Df), Qa(null));
+          (logError(Df), Qa(null));
         }),
       () => {
         ll.current = !0;
@@ -3374,7 +3374,7 @@ function fit(Pf) {
         Po.then((Rf) => {
           if (!ml) ns({ value: Rf });
         }).catch((Ef) => {
-          if ((h(Ef), !ml)) ns(null);
+          if ((logError(Ef), !ml)) ns(null);
         }),
         () => {
           ml = !0;

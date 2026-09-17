@@ -14,8 +14,8 @@ import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import { stat as I } from "fs/promises";
 var p = 5000,
   _ = i8(),
@@ -42,7 +42,7 @@ function Ust(o, l, H, b = () => Promise.resolve(!1)) {
       let s = await u.getAuthHeaders();
       if (s === null)
         return (n(`${r} ${e} skipped (no credential to send under)`), null);
-      if (!In())
+      if (!isFirstPartyProvider())
         return (n(`${r} ${e} skipped (non-first-party provider)`), null);
       let E = `${u.baseUrl}/v1/code/sessions/${u.sessionId}/client/presence`;
       return (
@@ -55,7 +55,7 @@ function Ust(o, l, H, b = () => Promise.resolve(!1)) {
               headers: {
                 ...s,
                 "anthropic-version": "2023-06-01",
-                "anthropic-client-platform": Um(),
+                "anthropic-client-platform": getClientPlatform(),
               },
               timeout: p,
               validateStatus: () => !0,
@@ -77,7 +77,7 @@ function Ust(o, l, H, b = () => Promise.resolve(!1)) {
     },
     P = async (e) => {
       let t = e.clear === !0 ? "clear" : "pulse";
-      if (!In()) {
+      if (!isFirstPartyProvider()) {
         n(`${r} ${t} skipped (non-first-party provider)`);
         return;
       }

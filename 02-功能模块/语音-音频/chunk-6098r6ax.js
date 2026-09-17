@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { St, U1 } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getUserAgent as ex, isAnthropicAuthEnabled as cl, getClaudeAIOAuthTokens as Yt, getClaudeAIOAuthTokensAsync as Qi, checkAndRefreshOAuthTokenIfNeeded as Ss, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getWebSocketTLSOptions as Ab, getWebSocketProxyUrl as Cb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getUserAgent, isAnthropicAuthEnabled, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Ext } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
-import { getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import m from "ws";
 var V = '{"type":"KeepAlive"}',
   F = '{"type":"CloseStream"}',
@@ -36,8 +36,8 @@ var N = 1500;
 async function probeVoiceConnectivity() {
   if (St() || U1()) return "skipped_privacy";
   try {
-    let e = await at.get(`${Vt().BASE_API_URL}/api/hello`, {
-        headers: { "User-Agent": ex() },
+    let e = await at.get(`${getOauthConfig().BASE_API_URL}/api/hello`, {
+        headers: { "User-Agent": getUserAgent() },
         timeout: N,
         validateStatus: () => !0,
         maxRedirects: 0,
@@ -58,8 +58,8 @@ function B() {
   return H("tengu_brick_follow", !1);
 }
 function isVoiceStreamAvailable() {
-  if (!cl()) return !1;
-  let e = Yt();
+  if (!isAnthropicAuthEnabled()) return !1;
+  let e = getClaudeAIOAuthTokens();
   return e !== null && e.accessToken !== null;
 }
 var j = 1024;
@@ -81,13 +81,13 @@ function W(e) {
 }
 async function connectVoiceStream(e, s, d) {
   let u;
-  if (M() && d !== void 0) (await Ss({ credentials: d }), (u = await Qi(d)));
-  else (await Ss(), (u = Yt()));
+  if (M() && d !== void 0) (await checkAndRefreshOAuthTokenIfNeeded({ credentials: d }), (u = await getClaudeAIOAuthTokensAsync(d)));
+  else (await checkAndRefreshOAuthTokenIfNeeded(), (u = getClaudeAIOAuthTokens()));
   if (!u?.accessToken)
     return (n("[voice_stream] No OAuth token available"), null);
   let C =
     a.VOICE_STREAM_BASE_URL ||
-    Vt().BASE_API_URL.replace("https://", "wss://").replace("http://", "ws://");
+    getOauthConfig().BASE_API_URL.replace("https://", "wss://").replace("http://", "ws://");
   if (a.VOICE_STREAM_BASE_URL)
     n(
       `[voice_stream] Using VOICE_STREAM_BASE_URL override: ${a.VOICE_STREAM_BASE_URL}`,
@@ -107,16 +107,16 @@ async function connectVoiceStream(e, s, d) {
   n(`[voice_stream] Connecting to ${T}`);
   let O = {
     Authorization: `Bearer ${u.accessToken}`,
-    "User-Agent": ex(),
+    "User-Agent": getUserAgent(),
     "x-app": "cli",
-    "anthropic-client-platform": Um(),
+    "anthropic-client-platform": getClientPlatform(),
   };
   if (s?.keyterms?.length) {
     let t = W(s.keyterms);
     if (t) O["x-config-keyterms"] = t;
   }
-  let R = Ab(),
-    b = { headers: O, proxy: Cb(T), tls: R || void 0 };
+  let R = getWebSocketTLSOptions(),
+    b = { headers: O, proxy: getWebSocketProxyUrl(T), tls: R || void 0 };
   Ext(T, m);
   let i = new m(T, b),
     f = null,

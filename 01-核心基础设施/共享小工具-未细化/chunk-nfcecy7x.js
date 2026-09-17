@@ -11,13 +11,13 @@ import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import {
-  readdir as f,
-  readlink as m,
-  realpath as s,
-  rmdir as p,
-  unlink as w,
+  readdir,
+  readlink,
+  realpath,
+  rmdir,
+  unlink,
 } from "fs/promises";
-import { basename as g, dirname as k, join as u, sep as b } from "path";
+import { basename, dirname, join as u, sep as b } from "path";
 function dg(e) {
   return e
     .toLowerCase()
@@ -26,20 +26,20 @@ function dg(e) {
 }
 async function jG(e) {
   if (P() !== "windows") return !0;
-  let t = await s(k(e)).catch(() => null);
-  return !(await c(e, t == null ? null : dg(u(t, g(e)))));
+  let t = await realpath(dirname(e)).catch(() => null);
+  return !(await c(e, t == null ? null : dg(u(t, basename(e)))));
 }
 async function c(e, t) {
   try {
     return (
-      await w(e),
+      await unlink(e),
       n(`[worktree] unlinked reparse point before removal: ${e}`),
       !1
     );
   } catch {}
   try {
     return (
-      await p(e),
+      await rmdir(e),
       n(
         `[worktree] removed reparse point or empty directory before removal: ${e}`,
       ),
@@ -49,12 +49,12 @@ async function c(e, t) {
     if (W(r)) return !1;
     if (A(r) !== "ENOTEMPTY") {
       let i =
-        (await m(e).then(
+        (await readlink(e).then(
           () => "link",
           (o) => (A(o) === "EINVAL" || W(o) ? "not-link" : "unknown"),
         )) !== "not-link" || t == null
           ? null
-          : await s(e)
+          : await realpath(e)
               .then((o) => dg(o))
               .catch(() => null);
       if (i == null || (i !== t && !i.startsWith(t + b)))
@@ -67,7 +67,7 @@ async function c(e, t) {
         );
     }
   }
-  let l = await f(e, { withFileTypes: !0 }).catch((r) => (W(r) ? [] : null));
+  let l = await readdir(e, { withFileTypes: !0 }).catch((r) => (W(r) ? [] : null));
   if (l == null)
     return (
       n(`[worktree] could not enumerate ${e} before removal; not certifying`, {

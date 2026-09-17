@@ -18,5 +18,5 @@ au(o, {
 });
 var e = I.str(),
   t = I.str();
-var p = { ...o };
-export { p as udsInboxShape };
+var udsInboxShape = { ...o };
+export { udsInboxShape };

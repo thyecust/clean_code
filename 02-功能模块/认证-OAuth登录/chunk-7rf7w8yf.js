@@ -31,8 +31,8 @@ import { P } from "../../01-核心基础设施/核心工具-路径与平台/chun
 function $6() {
   return a.CLAUDE_CODE_REMOTE_SESSION_ORIGIN === "review";
 }
-import { mkdirSync as H, writeFileSync as N } from "fs";
-import { unlink as L } from "fs/promises";
+import { mkdirSync, writeFileSync } from "fs";
+import { unlink } from "fs/promises";
 var y = "/home/claude/.claude/remote",
   bBe = `${y}/.oauth_token`,
   O5t = `${y}/.api_key`,
@@ -45,8 +45,8 @@ function F(e, t, r, { skipInReviewOrigin: o = !1 } = {}) {
     return;
   }
   try {
-    (H(y, { recursive: !0, mode: 448 }),
-      N(e, t, { encoding: "utf8", mode: 384 }),
+    (mkdirSync(y, { recursive: !0, mode: 448 }),
+      writeFileSync(e, t, { encoding: "utf8", mode: 384 }),
       n(`Persisted ${r} to ${e} for subprocess access`));
   } catch (s) {
     n(`Failed to persist ${r} to disk (non-fatal): ${l(s)}`, {
@@ -296,7 +296,7 @@ function I() {
   }
   if ((delete process.env.CLAUDE_BG_AUTH_SNAPSHOT_PATH, t === void 0)) return;
   try {
-    L(e).catch(() => {});
+    unlink(e).catch(() => {});
     let r = JSON.parse(t);
     if (typeof r?.gatewayToken === "string" && r.gatewayToken) {
       (lHt(r.gatewayToken), n("Consumed gateway token from bg auth snapshot"));

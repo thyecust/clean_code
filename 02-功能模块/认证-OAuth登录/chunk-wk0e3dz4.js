@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { ALLOWED_OAUTH_BASE_URLS as nae, getOauthConfig as Vt } from "./chunk-9g2q4bjq.js";
+import { ALLOWED_OAUTH_BASE_URLS, getOauthConfig } from "./chunk-9g2q4bjq.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ra, l, Rt, FA } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -87,7 +87,7 @@ var M = 2048,
     /^https:\/\/[a-z0-9.-]+\/[A-Za-z0-9/._~%-]*(?:\?[A-Za-z0-9._~%=&-]*)?(?<![.?])$/;
 function ne(e) {
   try {
-    return e === new URL(Vt().CLAUDE_AI_ORIGIN).origin;
+    return e === new URL(getOauthConfig().CLAUDE_AI_ORIGIN).origin;
   } catch {
     return !1;
   }
@@ -159,15 +159,15 @@ class c1 extends Error {
 function Evt(e) {
   return e instanceof c1 && e.errorDescription === PRe;
 }
-import { lstatSync as le, readFileSync as ue, realpathSync as fe } from "fs";
+import { lstatSync, readFileSync, realpathSync } from "fs";
 import {
-  basename as L,
-  dirname as de,
-  isAbsolute as F,
+  basename,
+  dirname,
+  isAbsolute,
   join as u,
-  parse as pe,
-  relative as ce,
-  resolve as _,
+  parse,
+  relative,
+  resolve,
   sep as H,
 } from "path";
 function gge(e) {
@@ -343,7 +343,7 @@ function _e() {
   if (e === null) return { value: null, complete: !0 };
   let r = { dirs: [e], files: [] };
   try {
-    let t = _(e);
+    let t = resolve(e);
     r = N(t)
       ? {
           dirs: [u(t, "configs"), u(t, "credentials")],
@@ -353,7 +353,7 @@ function _e() {
     let s = process.env.ANTHROPIC_PROFILE?.trim() || ORe(e),
       i = I(e, s);
     if (typeof i !== "string" || !i.trim()) return { value: r, complete: !0 };
-    let f = Y(F(i) ? [_(i)] : [_(t, i), _(i)]).filter(
+    let f = Y(isAbsolute(i) ? [resolve(i)] : [resolve(t, i), resolve(i)]).filter(
       (p) =>
         !r.dirs.some((y) => p === y || p.startsWith(y + H)) &&
         !r.files.includes(p) &&
@@ -423,31 +423,31 @@ function q() {
 }
 function N(e) {
   let r = U(e);
-  if (r === pe(r).root) return !0;
-  let t = ce(r, U(ae().cwd())),
+  if (r === parse(r).root) return !0;
+  let t = relative(r, U(ae().cwd())),
     o = t.split(H)[0];
-  return t === "" || (o !== ".." && !F(t));
+  return t === "" || (o !== ".." && !isAbsolute(t));
 }
 function U(e) {
-  let r = _(e),
+  let r = resolve(e),
     t = "";
   for (;;)
     try {
-      r = u(fe.native(r), t);
+      r = u(realpathSync.native(r), t);
       break;
     } catch {
-      let o = de(r);
+      let o = dirname(r);
       if (o === r) {
         r = u(r, t);
         break;
       }
-      ((t = t ? u(L(r), t) : L(r)), (r = o));
+      ((t = t ? u(basename(r), t) : basename(r)), (r = o));
     }
   return r.toLowerCase();
 }
 function ye(e) {
   try {
-    return le(e).isDirectory();
+    return lstatSync(e).isDirectory();
   } catch {
     return !1;
   }
@@ -456,7 +456,7 @@ function g(e) {
   let r = d.of(B().host).primedFiles;
   if (r !== void 0 && r.has(e)) return r.get(e) ?? null;
   try {
-    return ue(e, "utf-8");
+    return readFileSync(e, "utf-8");
   } catch (t) {
     if (Rt(t)) return null;
     throw t;
@@ -504,7 +504,7 @@ var C = (e) => JSON.stringify(e);
 var Re = new Set([
   "api.anthropic.com",
   "api-staging.anthropic.com",
-  ...nae.map((e) => new URL(e).hostname),
+  ...ALLOWED_OAUTH_BASE_URLS.map((e) => new URL(e).hostname),
 ]);
 function _ir(e) {
   let r = aBe();

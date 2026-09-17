@@ -12,13 +12,13 @@ import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _z } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { withOAuth401Retry as T_, ICn, prepareApiRequest as ox, ht, getClaudeAIOAuthTokenOrigin as qD, getOauthAccountInfo as vn, isConsumerSubscriber as x6, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isAxiosError as xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { withOAuth401Retry, ICn, prepareApiRequest, ht, getClaudeAIOAuthTokenOrigin, getOauthAccountInfo, isConsumerSubscriber, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { xn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { s, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var v = 86400000,
@@ -29,7 +29,7 @@ var v = 86400000,
         return {
           success: !0,
           data: (
-            await T_(
+            await withOAuth401Retry(
               async () => {
                 let o = await ht.get("/api/oauth/account/settings", {
                   timeout: S,
@@ -56,7 +56,7 @@ var v = 86400000,
   );
 async function NDt(t) {
   try {
-    (await T_(
+    (await withOAuth401Retry(
       async () => {
         let e = await ht.post(
           "/api/oauth/account/grove_notice_viewed",
@@ -70,18 +70,18 @@ async function NDt(t) {
       { credentials: t },
     ),
       ZB.cache.clear?.(),
-      y("api_grove_notice_mark_viewed"));
+      logFeatureOk("api_grove_notice_mark_viewed"));
   } catch (e) {
     (n(
       `Failed to mark Grove notice viewed: ${e instanceof Error ? e.message : String(e)}`,
       { level: "error" },
     ),
-      f("api_grove_notice_mark_viewed", "request_failed"));
+      logFeatureBad("api_grove_notice_mark_viewed", "request_failed"));
   }
 }
 async function pIe(t, e) {
   try {
-    (await T_(
+    (await withOAuth401Retry(
       async () => {
         let o = await ht.patch(
           "/api/oauth/account/settings",
@@ -94,15 +94,15 @@ async function pIe(t, e) {
       { credentials: e },
     ),
       ZB.cache.clear?.(),
-      y("api_grove_settings_update"));
+      logFeatureOk("api_grove_settings_update"));
   } catch (o) {
     (n(`updateGroveSettings failed: ${String(o)}`, { level: "error" }),
-      f("api_grove_settings_update", "request_failed"));
+      logFeatureBad("api_grove_settings_update", "request_failed"));
   }
 }
 async function dSe(t, e) {
-  if (!x6()) return !1;
-  let o = vn()?.accountUuid;
+  if (!isConsumerSubscriber()) return !1;
+  let o = getOauthAccountInfo()?.accountUuid;
   if (!o) return !1;
   let u = ee().groveConfigCache?.[o],
     l = Date.now();
@@ -148,7 +148,7 @@ async function _(t, e, o) {
 var l7 = rs(
   async (t) => {
     try {
-      let e = await T_(
+      let e = await withOAuth401Retry(
           async () => {
             let d = await ht.get("/api/claude_code_grove", {
               timeout: S,
@@ -193,7 +193,7 @@ function FDt(t, e, o) {
     let p = new Date(r.grove_notice_viewed_at).getTime();
     if (isNaN(p))
       return (
-        h(
+        logError(
           Error(
             `Invalid grove_notice_viewed_at from API: ${r.grove_notice_viewed_at}`,
           ),
@@ -262,7 +262,7 @@ async function wnn(t, e) {
       },
     );
   } catch (r) {
-    if (xd(r))
+    if (isAxiosError(r))
       return (
         n(`import-token network error: ${r.code ?? "unknown"}`, {
           level: "error",
@@ -282,7 +282,7 @@ async function wnn(t, e) {
 }
 async function zBn(t) {
   try {
-    return (await ox(t), !0);
+    return (await prepareApiRequest(t), !0);
   } catch {
     return !1;
   }
@@ -313,14 +313,14 @@ async function Tnn(t) {
 async function C(t) {
   let e = await k(t, { timeout: 3000, isBackground: !0 });
   if (e === null)
-    return (g("api_github_connection_status", "request_failed"), "unknown");
+    return (logFeatureSad("api_github_connection_status", "request_failed"), "unknown");
   return (
-    y("api_github_connection_status"),
+    logFeatureOk("api_github_connection_status"),
     e.isAuthenticated ? "connected" : "not_connected"
   );
 }
 function c7() {
-  return `${Vt().CLAUDE_AI_ORIGIN}/code`;
+  return `${getOauthConfig().CLAUDE_AI_ORIGIN}/code`;
 }
 class G {
   inFlight = void 0;
@@ -360,7 +360,7 @@ class G {
           this.settle(o, u, e);
         },
         (u) => {
-          (h(u), this.settle(o, "unknown", e));
+          (logError(u), this.settle(o, "unknown", e));
         },
       );
     return ((this.inFlight = r), r);
@@ -386,11 +386,11 @@ var P = m(() =>
   }),
 );
 function A() {
-  let t = vn();
+  let t = getOauthAccountInfo();
   if (!t?.organizationUuid) return;
   let e = a.CLAUDE_CODE_ORGANIZATION_UUID;
   if (e && e !== t.organizationUuid) return;
-  if (qD() !== "store") return;
+  if (getClaudeAIOAuthTokenOrigin() !== "store") return;
   return { accountUuid: t.accountUuid, orgUuid: t.organizationUuid };
 }
 function E(t, e) {

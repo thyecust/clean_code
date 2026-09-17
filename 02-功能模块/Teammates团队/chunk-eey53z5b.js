@@ -7,17 +7,17 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getAgentId as lS, getAgentName as Ip, getTeamName as ii, getTeammateColor as cS } from "./chunk-811z9z0t.js";
-import { writeToMailbox as ag, createPermissionRequestMessage as Ybn, createPermissionResponseMessage as Jbn, createSandboxPermissionRequestMessage as Qbn, createSandboxPermissionResponseMessage as Zbn } from "./chunk-g6nvp9mm.js";
-import { readTeamFileAsync as Pf } from "./chunk-6b13bhw1.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getAgentId, getAgentName, getTeamName, getTeammateColor } from "./chunk-811z9z0t.js";
+import { writeToMailbox, createPermissionRequestMessage, createPermissionResponseMessage, createSandboxPermissionRequestMessage, createSandboxPermissionResponseMessage } from "./chunk-g6nvp9mm.js";
+import { readTeamFileAsync } from "./chunk-6b13bhw1.js";
 import { fs } from "./chunk-enjekn9t.js";
-import { createHash as w } from "crypto";
+import { createHash } from "crypto";
 var x = 32;
 function PGt(e, r) {
-  return w("sha256")
+  return createHash("sha256")
     .update(e)
     .update("\x00")
     .update(b(u(r)))
@@ -42,10 +42,10 @@ function S() {
   return `perm-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
 function Awt(e) {
-  let r = e.teamName || ii(),
-    o = e.workerId || lS(),
-    s = e.workerName || Ip(),
-    i = e.workerColor || cS();
+  let r = e.teamName || getTeamName(),
+    o = e.workerId || getAgentId(),
+    s = e.workerName || getAgentName(),
+    i = e.workerColor || getTeammateColor();
   if (!r) throw Error("Team name is required for permission requests");
   if (!o) throw Error("Worker ID is required for permission requests");
   if (!s) throw Error("Worker name is required for permission requests");
@@ -64,24 +64,24 @@ function Awt(e) {
   };
 }
 function k(e) {
-  if (!(e || ii())) return !1;
-  let o = lS();
+  if (!(e || getTeamName())) return !1;
+  let o = getAgentId();
   return !o || o === "team-lead";
 }
 function soe() {
-  let e = ii(),
-    r = lS();
+  let e = getTeamName(),
+    r = getAgentId();
   return !!e && !!r && !k();
 }
 async function l(e, r) {
-  let o = e || ii();
+  let o = e || getTeamName();
   if (!o) return null;
-  if (!(await Pf(o, r)))
+  if (!(await readTeamFileAsync(o, r)))
     return (n(`[PermissionSync] Team file not found for team: ${o}`), null);
   return fs;
 }
 async function p(e, r, o, s, i) {
-  if ((await ag(e, r, o, i)) === void 0)
+  if ((await writeToMailbox(e, r, o, i)) === void 0)
     return (
       n(`[PermissionSync] FAILED to deliver ${s}`, { level: "error" }),
       !1
@@ -98,7 +98,7 @@ async function Cwt(e, r) {
       !1
     );
   try {
-    let s = Ybn({
+    let s = createPermissionRequestMessage({
       request_id: e.id,
       agent_id: e.workerName,
       tool_name: e.toolName,
@@ -122,13 +122,13 @@ async function Cwt(e, r) {
   } catch (s) {
     return (
       n(`[PermissionSync] Failed to send permission request via mailbox: ${s}`),
-      h(s),
+      logError(s),
       !1
     );
   }
 }
 async function Ubn(e, r, o, s, i, a) {
-  let m = s || ii();
+  let m = s || getTeamName();
   if (!m)
     return (
       n(
@@ -137,7 +137,7 @@ async function Ubn(e, r, o, s, i, a) {
       !1
     );
   try {
-    let t = Jbn({
+    let t = createPermissionResponseMessage({
       request_id: o,
       subtype: r.decision === "approved" ? "success" : "error",
       error: r.feedback,
@@ -158,7 +158,7 @@ async function Ubn(e, r, o, s, i, a) {
       n(
         `[PermissionSync] Failed to send permission response via mailbox: ${t}`,
       ),
-      h(t),
+      logError(t),
       !1
     );
   }
@@ -167,13 +167,13 @@ function yZn() {
   return `sandbox-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
 async function SZn(e, r, o, s) {
-  let i = o || ii();
+  let i = o || getTeamName();
   if (!i)
     return (
       n(
         "[PermissionSync] Cannot send sandbox permission request: team name not found",
       ),
-      f("swarm_sandbox_permission_request", "no_team_name"),
+      logFeatureBad("swarm_sandbox_permission_request", "no_team_name"),
       !1
     );
   let a = await l(i, s);
@@ -182,22 +182,22 @@ async function SZn(e, r, o, s) {
       n(
         "[PermissionSync] Cannot send sandbox permission request: leader name not found",
       ),
-      f("swarm_sandbox_permission_request", "no_leader"),
+      logFeatureBad("swarm_sandbox_permission_request", "no_leader"),
       !1
     );
-  let m = lS(),
-    t = Ip(),
-    g = cS();
+  let m = getAgentId(),
+    t = getAgentName(),
+    g = getTeammateColor();
   if (!m || !t)
     return (
       n(
         "[PermissionSync] Cannot send sandbox permission request: worker ID or name not found",
       ),
-      f("swarm_sandbox_permission_request", "no_worker_identity"),
+      logFeatureBad("swarm_sandbox_permission_request", "no_worker_identity"),
       !1
     );
   try {
-    let d = Qbn({
+    let d = createSandboxPermissionRequestMessage({
         requestId: r,
         workerId: m,
         workerName: t,
@@ -211,22 +211,22 @@ async function SZn(e, r, o, s) {
         `sandbox permission request ${b(r)} for host ${b(e)} to leader ${b(a)} via mailbox`,
         s,
       );
-    if (c) y("swarm_sandbox_permission_request");
-    else f("swarm_sandbox_permission_request", "mailbox_write_failed");
+    if (c) logFeatureOk("swarm_sandbox_permission_request");
+    else logFeatureBad("swarm_sandbox_permission_request", "mailbox_write_failed");
     return c;
   } catch (d) {
     return (
       n(
         `[PermissionSync] Failed to send sandbox permission request via mailbox: ${d}`,
       ),
-      h(d),
-      f("swarm_sandbox_permission_request", "mailbox_write_failed"),
+      logError(d),
+      logFeatureBad("swarm_sandbox_permission_request", "mailbox_write_failed"),
       !1
     );
   }
 }
 async function OGt(e, r, o, s, i, a) {
-  let m = i || ii();
+  let m = i || getTeamName();
   if (!m)
     return (
       n(
@@ -235,7 +235,7 @@ async function OGt(e, r, o, s, i, a) {
       !1
     );
   try {
-    let t = Zbn({ requestId: r, host: o, allow: s });
+    let t = createSandboxPermissionResponseMessage({ requestId: r, host: o, allow: s });
     return await p(
       e,
       { from: fs, text: b(t), timestamp: new Date().toISOString() },
@@ -248,7 +248,7 @@ async function OGt(e, r, o, s, i, a) {
       n(
         `[PermissionSync] Failed to send sandbox permission response via mailbox: ${t}`,
       ),
-      h(t),
+      logError(t),
       !1
     );
   }

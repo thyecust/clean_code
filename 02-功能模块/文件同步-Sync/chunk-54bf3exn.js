@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Mw, pnt, I2e, Pb } from "../Git-Worktree/chunk-bk9696gx.js";
-import { findGitRoot as tr, getBranch as Da } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
@@ -41,8 +41,8 @@ import { Oan, Dan, dFt, _ze, Jb, pFt, Lan, Kce } from "../Git-Worktree/chunk-7js
 import { Xbe } from "../Git-Worktree/chunk-v967hawf.js";
 import { Pan } from "../云会话-Teleport/chunk-8scrd4ba.js";
 import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
-import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { lstat as L } from "fs/promises";
+import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { lstat } from "fs/promises";
 import { join as R } from "path";
 var B = 15000,
   E = 1048576,
@@ -125,7 +125,7 @@ async function T({
           },
           p.signal,
         ).catch(
-          (w) => (h(w), { offer: k("threw"), facts: null, forecast: null }),
+          (w) => (logError(w), { offer: k("threw"), facts: null, forecast: null }),
         ),
         p.signal,
       ),
@@ -141,7 +141,7 @@ async function T({
       elapsedMs: Date.now() - d,
     };
   } catch (f) {
-    h(f);
+    logError(f);
     let p = k("threw");
     return {
       key: "failed",
@@ -164,7 +164,7 @@ async function G(
   { explicitRef: e, selfHostedPool: o, onMeasuring: t, folderMaxFiles: s },
   r,
 ) {
-  let l = tr(Q());
+  let l = findGitRoot(Q());
   if (l === null)
     return V(
       { explicitRef: e, selfHostedPool: o, onMeasuring: t, maxFiles: s },
@@ -301,7 +301,7 @@ async function I(e) {
   );
 }
 async function H(e, o) {
-  let [t, s] = await Promise.all([I2e(e), Da()]);
+  let [t, s] = await Promise.all([I2e(e), getBranch()]);
   if (t === null) return null;
   return (
     await Dan({
@@ -405,23 +405,23 @@ async function j(e) {
 var A = Ds(x, async (e, o) => {
   if ((e.signal.throwIfAborted(), !pI(o))) return 0;
   try {
-    let t = await L(R(e.gitRoot, o));
+    let t = await lstat(R(e.gitRoot, o));
     return t.isFile() ? t.size : 0;
   } catch {
     return 0;
   }
 });
 function Y(e) {
-  return `${Ft(e)} of untracked files exceed the ${Ft(Rze)} one sync upload carries; add a .gitignore entry or commit the ones you need`;
+  return `${formatFileSize(e)} of untracked files exceed the ${formatFileSize(Rze)} one sync upload carries; add a .gitignore entry or commit the ones you need`;
 }
 function q(e, o, t) {
   let s = e.packBytes + e.changedTrackedBytes,
-    r = Ft(e.capBytes),
+    r = formatFileSize(e.capBytes),
     l = e.packOverLimit
       ? `more than the ${r} limit`
       : s > e.capBytes
-        ? `about ${Ft(s)}, over the ${r} limit`
-        : `about ${Ft(s)}, within ${Ft(E)} of the ${r} limit`;
+        ? `about ${formatFileSize(s)}, over the ${r} limit`
+        : `about ${formatFileSize(s)}, within ${formatFileSize(E)} of the ${r} limit`;
   if (o === null)
     return `File sync is not offered for this checkout: with no GitHub remote to clone, a cloud session starts from an upload of your working tree, and this one would be ${l}.`;
   let { why: d, remedy: m } =
@@ -444,7 +444,7 @@ function q(e, o, t) {
   return `File sync is not offered for this checkout: ${d}, so a synced session would have to start from an upload of your working tree, and this one would be ${l}. ${o === "github" ? `${f}; ${m}.` : `${f}.`}`;
 }
 function K(e, o) {
-  let t = e === null ? "" : ` (${Ft(e)} of packed git objects)`;
+  let t = e === null ? "" : ` (${formatFileSize(e)} of packed git objects)`;
   return {
     offer: !1,
     reason: "repository_too_large",
@@ -595,12 +595,12 @@ function W(e, o, t) {
     l = "untracked" in e ? e.untracked : null;
   if (
     (i("tengu_dir_sync_offer_probe", {
-      outcome: u(e.reason),
-      forecast: we(o.forecast?.kind),
-      deferral: e.reason === "deferred" ? u(e.deferral) : void 0,
-      host: s === null ? void 0 : u(s.host ?? "none"),
-      divergence: we(s?.verdict?.reason),
-      failure: e.reason === "probe_failed" ? u(e.failure) : void 0,
+      outcome: fromEnum(e.reason),
+      forecast: fromEnumOpt(o.forecast?.kind),
+      deferral: e.reason === "deferred" ? fromEnum(e.deferral) : void 0,
+      host: s === null ? void 0 : fromEnum(s.host ?? "none"),
+      divergence: fromEnumOpt(s?.verdict?.reason),
+      failure: e.reason === "probe_failed" ? fromEnum(e.failure) : void 0,
       pack_bytes: r?.packBytes,
       pack_over_limit: r?.packOverLimit,
       changed_tracked_bytes: r?.changedTrackedBytes,
@@ -623,7 +623,7 @@ function W(e, o, t) {
       ),
       e.reason !== "deferred")
     )
-      g("ccr_dir_sync_mode_prompt", `not_offered_${e.reason}`);
+      logFeatureSad("ccr_dir_sync_mode_prompt", `not_offered_${e.reason}`);
   }
 }
 export { KHt, lJt };

@@ -10,12 +10,12 @@
 import { j, bi } from "../lodash/lodash.2x3q7cfh.js";
 import { po } from "../lodash/lodash.207999qb.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad } from "../lodash/lodash.0vqzb8ad.js";
 import { R, A, Jr } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { qR, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { resolveExecutableSafely as EL } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { Zie, wxt } from "../../01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { pe, w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -587,7 +587,7 @@ function be(e) {
 }
 import Z from "process";
 import L from "path";
-import { fileURLToPath as Bt } from "url";
+import { fileURLToPath } from "url";
 function Y(e = {}) {
   let { env: t = process.env, platform: r = "darwin" } = e;
   if (r !== "win32") return "PATH";
@@ -604,7 +604,7 @@ var Cr = ({
     execPath: o = Z.execPath,
     addExecPath: s = !0,
   } = {}) => {
-    let c = e instanceof URL ? Bt(e) : e,
+    let c = e instanceof URL ? fileURLToPath(e) : e,
       d = L.resolve(c),
       l = [];
     if (r) Er(l, d);
@@ -619,7 +619,7 @@ var Cr = ({
         (t = L.resolve(t, "..")));
   },
   wr = (e, t, r) => {
-    let o = t instanceof URL ? Bt(t) : t;
+    let o = t instanceof URL ? fileURLToPath(t) : t;
     e.push(L.resolve(r, o, ".."));
   },
   Kt = ({ env: e = Z.env, ...t } = {}) => {
@@ -1207,7 +1207,7 @@ var zr = 5000,
       s();
     });
   };
-import { createWriteStream as Yr } from "fs";
+import { createWriteStream } from "fs";
 import { ChildProcess as Zr } from "child_process";
 function ee(e) {
   return e !== null && typeof e === "object" && typeof e.pipe === "function";
@@ -1222,7 +1222,7 @@ function Te(e) {
 }
 var Qr = (e) => e instanceof Zr && typeof e.then === "function",
   Pe = (e, t, r) => {
-    if (typeof r === "string") return (e[t].pipe(Yr(r)), e);
+    if (typeof r === "string") return (e[t].pipe(createWriteStream(r)), e);
     if (Te(r)) return (e[t].pipe(r), e);
     if (!Qr(r))
       throw TypeError(
@@ -1237,7 +1237,7 @@ var Qr = (e) => e instanceof Zr && typeof e.then === "function",
     if (e.stderr !== null) e.pipeStderr = Pe.bind(void 0, e, "stderr");
     if (e.all !== void 0) e.pipeAll = Pe.bind(void 0, e, "all");
   };
-import { createReadStream as bo, readFileSync as Co } from "fs";
+import { createReadStream, readFileSync as Co } from "fs";
 import { setTimeout as Eo } from "timers/promises";
 var M = async (
     e,
@@ -1463,7 +1463,7 @@ var gn = pe(mn(), 1),
   },
   To = ({ input: e, inputFile: t }) => {
     if (typeof t !== "string") return e;
-    return (hn(e), bo(t));
+    return (hn(e), createReadStream(t));
   },
   Sn = (e, t) => {
     let r = To(t);
@@ -1596,9 +1596,9 @@ var En = (e) => {
       });
     return r;
   };
-import { debuglog as Fo } from "util";
+import { debuglog } from "util";
 import Go from "process";
-var Pn = Fo("execa").enabled,
+var Pn = debuglog("execa").enabled,
   ie = (e, t) => String(e).padStart(t, "0"),
   Lo = () => {
     let e = new Date();
@@ -1811,14 +1811,14 @@ function jo(e) {
     .join(" ");
 }
 import {
-  mkdirSync as Ke,
+  mkdirSync,
   readFileSync as G,
-  rmdirSync as Rn,
-  statSync as Ko,
-  writeFileSync as ae,
+  rmdirSync,
+  statSync,
+  writeFileSync,
 } from "fs";
-import { totalmem as zo } from "os";
-import { posix as E } from "path";
+import { totalmem } from "os";
+import { posix } from "path";
 var Ue = "claude-code-bash",
   Wo = "claude-code-keeper",
   _n = 1073741824,
@@ -1868,7 +1868,7 @@ function ze() {
   try {
     let s = oi(G("/proc/self/cgroup", "utf8"));
     if (!s) throw Error("no memory cgroup hierarchy");
-    let c = ui(o, zo());
+    let c = ui(o, totalmem());
     if (c === void 0) {
       ((e.dir = null),
         n("tool cgroup: disabled (host too small for the default cap)"),
@@ -1882,7 +1882,7 @@ function ze() {
       n(
         `tool cgroup: ${s.dir} ${s.reuse ? "(nested: already capped, reusing our own)" : `limit=${c}`}`,
       ),
-      y("shell_memory_cgroup"),
+      logFeatureOk("shell_memory_cgroup"),
       i(
         "tengu_tool_cgroup",
         s.reuse
@@ -1892,7 +1892,7 @@ function ze() {
   } catch (s) {
     ((e.dir = null),
       n(`tool cgroup: disabled (${A(s) ?? s})`),
-      f("shell_memory_cgroup", Jr(s) ?? "no_hierarchy"),
+      logFeatureBad("shell_memory_cgroup", Jr(s) ?? "no_hierarchy"),
       i("tengu_tool_cgroup", { status: S("disabled") }));
   }
   return e.dir ?? void 0;
@@ -1905,7 +1905,7 @@ function B(e) {
   if (r === void 0) return;
   if ((jn(t), !t.activatedClasses.has(e)))
     (t.activatedClasses.add(e),
-      i("tengu_tool_cgroup", { status: S("class_enabled"), class: u(e) }));
+      i("tengu_tool_cgroup", { status: S("class_enabled"), class: fromEnum(e) }));
   return r;
 }
 function Qcr(e) {
@@ -1913,7 +1913,7 @@ function Qcr(e) {
 }
 function Ho(
   e,
-  t = { exists: Vo, mkdirSync: Ke, writeFileSync: ae, rmdirSync: Rn },
+  t = { exists: Vo, mkdirSync: mkdirSync, writeFileSync: writeFileSync, rmdirSync: rmdirSync },
 ) {
   if (e.dir === void 0 || e.dir === null) return;
   try {
@@ -1934,7 +1934,7 @@ function Ho(
   }
 }
 function Vo(e) {
-  return Ko(e, { throwIfNoEntry: !1 }) !== void 0;
+  return statSync(e, { throwIfNoEntry: !1 }) !== void 0;
 }
 function Gn() {
   let e = a.CLAUDE_CODE_TOOL_MEMORY_CGROUP_EXCLUDE?.trim(),
@@ -1995,7 +1995,7 @@ function exe() {
 var Zo = 64,
   Sxt = {
     readStarttime: Jo,
-    writeFileSync: ae,
+    writeFileSync: writeFileSync,
     readCgroupPids: ti,
     readProcIdentity: ei,
   };
@@ -2045,7 +2045,7 @@ function Ln(e, { cls: t, starttime: r, shouldStayUncapped: o }, s) {
       n(`tool cgroup: ${t} pid ${e} left uncapped`);
       return;
     }
-    let d = E.join(c, "cgroup.procs");
+    let d = posix.join(c, "cgroup.procs");
     s.writeFileSync(d, String(e));
     let l = 1,
       p = bi(T).layout;
@@ -2079,7 +2079,7 @@ function ei(e) {
   }
 }
 function ti(e) {
-  return G(E.join(e, "cgroup.procs"), "utf8")
+  return G(posix.join(e, "cgroup.procs"), "utf8")
     .split(
       `
 `,
@@ -2092,7 +2092,7 @@ function ni(e) {
   return t ? Number.parseInt(t[1], 10) : void 0;
 }
 function We(e) {
-  return E.join(e.dir, e.v2 ? "memory.events" : "memory.oom_control");
+  return posix.join(e.dir, e.v2 ? "memory.events" : "memory.oom_control");
 }
 function K(e) {
   return G(e, "utf8");
@@ -2161,7 +2161,7 @@ function bxt(e, t, r = Sxt) {
     let s = o.layout;
     if (!o.dir || s === void 0 || s.reuse) return !1;
     if (r.readStarttime(e) !== t) return !1;
-    let c = E.join(s.selfDir, "cgroup.procs");
+    let c = posix.join(s.selfDir, "cgroup.procs");
     r.writeFileSync(c, String(e));
     let d = 1 + Mn(e, s.dir, c, r, "released");
     return (
@@ -2225,7 +2225,7 @@ function ri(e, t, r) {
     for (let p of s.get(d[l]) ?? []) (c.push(p), d.push(p.pid));
   return c;
 }
-function Dn(e, t, r = { mkdirSync: Ke, writeFileSync: ae, rmdirSync: Rn }) {
+function Dn(e, t, r = { mkdirSync: mkdirSync, writeFileSync: writeFileSync, rmdirSync: rmdirSync }) {
   if (e.reuse) return;
   let o = !0;
   try {
@@ -2236,7 +2236,7 @@ function Dn(e, t, r = { mkdirSync: Ke, writeFileSync: ae, rmdirSync: Rn }) {
   }
   try {
     r.writeFileSync(
-      E.join(e.dir, e.v2 ? "memory.max" : "memory.limit_in_bytes"),
+      posix.join(e.dir, e.v2 ? "memory.max" : "memory.limit_in_bytes"),
       String(t),
     );
   } catch (s) {
@@ -2250,7 +2250,7 @@ function Dn(e, t, r = { mkdirSync: Ke, writeFileSync: ae, rmdirSync: Rn }) {
 function oi(e) {
   let t = Un(e);
   if (!t) return;
-  return si(t.mountRoot, t.path, t.v2 ? E.dirname(t.path) : t.path, t.v2);
+  return si(t.mountRoot, t.path, t.v2 ? posix.dirname(t.path) : t.path, t.v2);
 }
 function Un(e) {
   let t;
@@ -2272,13 +2272,13 @@ function ii(e) {
   let r = t.path.split("/"),
     o = r.indexOf(Ue);
   if (o < 0) return;
-  let s = E.join(t.mountRoot, ...r.slice(0, o));
-  return t.v2 ? { dir: E.join(s, Wo), create: !0 } : { dir: s, create: !1 };
+  let s = posix.join(t.mountRoot, ...r.slice(0, o));
+  return t.v2 ? { dir: posix.join(s, Wo), create: !0 } : { dir: s, create: !1 };
 }
 var Bn = {
   readSelfCgroup: () => G("/proc/self/cgroup", "utf8"),
-  mkdirSync: Ke,
-  writeFileSync: ae,
+  mkdirSync: mkdirSync,
+  writeFileSync: writeFileSync,
 };
 function Kn(e) {
   let t = P();
@@ -2303,7 +2303,7 @@ function wS(e, t = Bn) {
   let r = Kn(t);
   if (r === void 0) return;
   try {
-    (t.writeFileSync(E.join(r, "cgroup.procs"), String(e)),
+    (t.writeFileSync(posix.join(r, "cgroup.procs"), String(e)),
       n(`tool cgroup: keeper pid ${e} moved to ${r}`));
   } catch (o) {
     n(`tool cgroup: keeper pid ${e} not moved (${A(o) ?? o})`);
@@ -2315,10 +2315,10 @@ function tXt(e = Bn) {
 }
 function si(e, t, r, o) {
   let s = t.split("/").includes(Ue),
-    c = E.join(e, t, ".");
+    c = posix.join(e, t, ".");
   return s
     ? { dir: c, v2: o, reuse: !0, selfDir: c }
-    : { dir: E.join(e, r, Ue), v2: o, reuse: !1, selfDir: c };
+    : { dir: posix.join(e, r, Ue), v2: o, reuse: !1, selfDir: c };
 }
 function ai(e) {
   return Math.floor(e - Math.max(2 * _n, e * 0.15));
@@ -2346,7 +2346,7 @@ async function Bf(e, t = [], r = {}) {
   let { useToolMemoryCgroup: o, toolCgroupClass: s, ...c } = r,
     d = { ...z({ useToolMemoryCgroup: o, toolCgroupClass: s }), ...c };
   if (He()) {
-    let l = EL(e);
+    let l = resolveExecutableSafely(e);
     if (l === null)
       throw Error(
         `Command '${e}' not found or is in an unsafe location (current directory)`,
@@ -2359,7 +2359,7 @@ function SW(e, t = [], r = {}) {
   let { useToolMemoryCgroup: o, toolCgroupClass: s, ...c } = r,
     d = e;
   if (He()) {
-    let m = EL(e);
+    let m = resolveExecutableSafely(e);
     if (m === null)
       throw Object.assign(
         new R(
@@ -2379,7 +2379,7 @@ function bPn(e, t = [], r = {}) {
   let { useToolMemoryCgroup: o, toolCgroupClass: s, ...c } = r,
     d = { ...z({ useToolMemoryCgroup: o, toolCgroupClass: s }), ...c };
   if (He()) {
-    let l = EL(e);
+    let l = resolveExecutableSafely(e);
     if (l === null)
       throw Error(
         `Command '${e}' not found or is in an unsafe location (current directory)`,

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { vW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { w3t } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { Zd, m4, uF, ga, Kx, Z0 } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
@@ -18,7 +18,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { K0e } from "../共享小工具-未细化/chunk-gd42wcxf.js";
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { te, X5, _h, Ccr, vcr, ePn, sB } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pt } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
 import { Ta } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
@@ -101,17 +101,17 @@ function ree() {
   return ((s.current ??= ze()), s.current);
 }
 import { Stream as fo } from "stream";
-import { writeSync as me } from "fs";
+import { writeSync } from "fs";
 function co() {
   if (!process.stdout.isTTY) return;
   try {
-    (QOt(), me(1, s7));
+    (QOt(), writeSync(1, s7));
     let r = ws().get(process.stdout);
     if (r?.isAltScreenActive)
       try {
         r.unmount();
       } catch {
-        me(1, uF());
+        writeSync(1, uF());
       }
     if (
       (r?.drainStdin(),
@@ -119,7 +119,7 @@ function co() {
       rDt(),
       !a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE)
     )
-      me(1, vYn);
+      writeSync(1, vYn);
   } catch {}
 }
 function po() {
@@ -232,17 +232,17 @@ function go(r) {
       stylepool_overflowed: r.overflowed,
       atlas_glyph_keys: s.size,
       atlas_keys_saturated: s.saturated,
-      term_program: u(xo()),
+      term_program: fromEnum(xo()),
       is_xtermjs: Zd(),
-      session_age_bucket: u(Co(vW())),
+      session_age_bucket: fromEnum(Co(vW())),
       proactive_reset_count: c.count,
-      proactive_reset_last_reason: u(c.lastReason),
+      proactive_reset_last_reason: fromEnum(c.lastReason),
     }),
     !s.stylePoolHealthyReported)
   )
-    ((s.stylePoolHealthyReported = !0), y("render_stylepool"));
+    ((s.stylePoolHealthyReported = !0), logFeatureOk("render_stylepool"));
   if (r.overflowed && !s.stylePoolCapHitReported)
-    ((s.stylePoolCapHitReported = !0), g("render_stylepool", "cap_hit"));
+    ((s.stylePoolCapHitReported = !0), logFeatureSad("render_stylepool", "cap_hit"));
 }
 function xo() {
   if (a.CURSOR_TRACE_ID !== void 0) return "cursor";

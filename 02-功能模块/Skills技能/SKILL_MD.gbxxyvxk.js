@@ -12,6 +12,6 @@ import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 var e = "./SKILL-e3d212e9.md.zst";
 var t = Ke(e, import.meta.dirname);
 var a = Ae("./template-eg8004mh.md");
-var p = t,
-  m = a;
-export { p as SKILL_MD, m as TEMPLATE_MD };
+var SKILL_MD = t,
+  TEMPLATE_MD = a;
+export { SKILL_MD, TEMPLATE_MD };

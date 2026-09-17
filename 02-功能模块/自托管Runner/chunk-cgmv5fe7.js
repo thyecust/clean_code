@@ -12,9 +12,9 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getCACertificates as MP, getMTLSConfig as JT, parseProxyUrl as Lie, getUsableProxyUrl as o_, configureGlobalAgents as vb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getCACertificates, getMTLSConfig, parseProxyUrl, getUsableProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Bs, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { uu } from "../../01-核心基础设施/共享小工具-未细化/chunk-bgwm3fhf.js";
 import { ml } from "../../01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js";
@@ -83,7 +83,7 @@ function De(e) {
 }
 function I(e, n, o) {
   if (e >= 200 && e < 300) return;
-  let u = fg(n);
+  let u = extractErrorDetail(n);
   switch (e) {
     case 401:
       throw Object.assign(
@@ -778,22 +778,22 @@ function bNn(e, n, o) {
   return (
     u.on("error", (t) => {
       if (!u.listening) n.listeningOn = void 0;
-      if (!r) ((r = !0), g("self_hosted_healthz_listen", "listen_failed"));
+      if (!r) ((r = !0), logFeatureSad("self_hosted_healthz_listen", "listen_failed"));
       o(
         `[runner:warn] /healthz listener failed on port ${e}: ${t.message} \u2014 continuing without health endpoint`,
       );
     }),
     u.listen(e, () => {
       if (((n.listeningOn = u.address()?.port ?? e), !r))
-        ((r = !0), y("self_hosted_healthz_listen"));
+        ((r = !0), logFeatureOk("self_hosted_healthz_listen"));
       o(`[runner:health] /healthz and /metrics listening on :${e}`);
     }),
     u
   );
 }
-import { randomBytes as Fe, timingSafeEqual as Ye } from "crypto";
+import { randomBytes, timingSafeEqual } from "crypto";
 import { open as Ve } from "fs/promises";
-import { resolve as je } from "path";
+import { resolve } from "path";
 import { createServer as We, connect as Xe } from "net";
 import { connect as Ge } from "tls";
 var ge = ["https_proxy", "HTTPS_PROXY", "http_proxy", "HTTP_PROXY"],
@@ -1102,13 +1102,13 @@ async function pt(e) {
     e.onStatus(
       "[runner:egress-proxy] note: the upstream proxy URL carries user:password credentials; they are replaced by the minted Proxy-Authorization value on every request to the upstream proxy",
     );
-  let t = Fe(24).toString("base64url"),
+  let t = randomBytes(24).toString("base64url"),
     s = Buffer.from("Basic " + Buffer.from(`runner:${t}`).toString("base64")),
     a = (c) => {
       let f = se(c, "proxy-authorization");
       if (f === void 0) return !1;
       let S = Buffer.from(f);
-      return S.length === s.length && Ye(S, s);
+      return S.length === s.length && timingSafeEqual(S, s);
     },
     i = (c) => e.onDebug?.(`[runner:egress-proxy] ${c}`),
     d = (c) => e.onStatus(`[runner:egress-proxy] ${c}`),
@@ -1759,7 +1759,7 @@ function _t(e, n = process.env) {
     );
   let o = (e.command ?? n[got])?.trim(),
     u = (e.file ?? n[hot])?.trim(),
-    r = u ? je(u) : u,
+    r = u ? resolve(u) : u,
     t = o !== void 0 && o !== "",
     s = r !== void 0 && r !== "";
   if (t && s)
@@ -1773,8 +1773,8 @@ function _t(e, n = process.env) {
 function TNn(e, n = process.env) {
   let o = _t(e, n);
   if (!o) return;
-  let u = o_(n),
-    r = u ? Lie(u) : void 0;
+  let u = getUsableProxyUrl(n),
+    r = u ? parseProxyUrl(u) : void 0;
   if (!u || !r)
     throw Error(
       "--proxy-authorization-command / --proxy-authorization-file require HTTPS_PROXY (or HTTP_PROXY) to be set to the upstream proxy URL that the Proxy-Authorization value is for (ALL_PROXY alone is not consulted)",
@@ -1787,8 +1787,8 @@ function TNn(e, n = process.env) {
 }
 async function ENn(e, n) {
   let o = _e(),
-    u = JT(),
-    r = MP(),
+    u = getMTLSConfig(),
+    r = getCACertificates(),
     t = it({
       source: e.source,
       upstreamProxyUrl: e.upstreamProxyUrl,
@@ -1813,7 +1813,7 @@ async function ENn(e, n) {
     n.onStatus(
       `[runner:egress-proxy] note: ${a.rewritten.join("/")} named different proxies; all of them now go through the listener to ${ml(e.upstreamProxyUrl)} (the one this runner resolves for its own traffic)`,
     );
-  if ((vb(), process.env.CLAUDE_CODE_ENABLE_PROXY_AUTH_HELPER))
+  if ((configureGlobalAgents(), process.env.CLAUDE_CODE_ENABLE_PROXY_AUTH_HELPER))
     n.onStatus(
       "[runner:egress-proxy] note: CLAUDE_CODE_ENABLE_PROXY_AUTH_HELPER is set on the runner; it is cleared for sessions while --proxy-authorization-* is active (the runner now mints Proxy-Authorization for all proxied traffic, and a session-side proxyAuthHelper header would be refused by the loopback listener)",
     );
@@ -1843,9 +1843,9 @@ function ANn(e, n = process.env) {
       "proxy-authorization knob given to the orchestrator subcommand",
     );
 }
-import { spawn as Le } from "child_process";
-import { constants as yt } from "fs";
-import { access as Et, stat as ye } from "fs/promises";
+import { spawn } from "child_process";
+import { constants } from "fs";
+import { access, stat as ye } from "fs/promises";
 import { join as Oe } from "path";
 var ce = 5000;
 function Ne() {
@@ -1875,7 +1875,7 @@ async function yot(e, n) {
   let o = Oe(e, n);
   try {
     if (!(await uu(ye(o), ce, `stat ${o}`)).isFile()) return null;
-    return (await uu(Et(o, yt.X_OK), ce, `access ${o}`), o);
+    return (await uu(access(o, constants.X_OK), ce, `access ${o}`), o);
   } catch {
     return null;
   }
@@ -1906,7 +1906,7 @@ async function CNn(e) {
   let o = [],
     u = !1;
   await new Promise((t, s) => {
-    let a = Le(e.hookPath, [], {
+    let a = spawn(e.hookPath, [], {
         cwd: e.cwd,
         env: n,
         stdio: ["ignore", "pipe", "pipe"],
@@ -2057,7 +2057,7 @@ async function vNn(e) {
     r = new Promise((E) => {
       u = E;
     }),
-    t = Le(e.hookPath, [], {
+    t = spawn(e.hookPath, [], {
       cwd: e.cwd,
       env: n,
       stdio: ["ignore", "pipe", "pipe"],

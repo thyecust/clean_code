@@ -14,16 +14,16 @@ var p = "./artifact-workshop.html-c3fd3f6a.txt.zst";
 var t = Ke(p, import.meta.dirname);
 var T = "./workshop-page.html-919ee91c.txt.zst";
 var I = Ke(T, import.meta.dirname);
-var m = e,
-  r = t,
-  x = I,
-  J = {
+var SKILL_MD = e,
+  WORKSHOP_TEMPLATE = t,
+  WORKSHOP_PAGE_TEMPLATE = I,
+  SKILL_FILES = {
     "templates/artifact-workshop.html": t,
     "templates/workshop-page.html": I,
   };
 export {
-  J as SKILL_FILES,
-  m as SKILL_MD,
-  x as WORKSHOP_PAGE_TEMPLATE,
-  r as WORKSHOP_TEMPLATE,
+  SKILL_FILES,
+  SKILL_MD,
+  WORKSHOP_PAGE_TEMPLATE,
+  WORKSHOP_TEMPLATE,
 };

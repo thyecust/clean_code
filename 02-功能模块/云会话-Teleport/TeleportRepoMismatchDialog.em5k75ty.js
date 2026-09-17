@@ -37,7 +37,7 @@ function I(G) {
     value: G,
   };
 }
-function H(ro) {
+function TeleportRepoMismatchDialog(ro) {
   let f = _(19),
     {
       targetRepo: a,
@@ -155,4 +155,4 @@ function H(ro) {
   else E = f[18];
   return E;
 }
-export { H as TeleportRepoMismatchDialog };
+export { TeleportRepoMismatchDialog };

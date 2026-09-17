@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { setMaxListeners as c } from "events";
+import { setMaxListeners } from "events";
 var l = 50;
 function createAbortController(e = l) {
   let r = new AbortController();
-  return (c(e, r.signal), r);
+  return (setMaxListeners(e, r.signal), r);
 }
 function b(e) {
   let r = this.deref();
@@ -48,7 +48,7 @@ class PromptScopedAbortController extends AbortController {
   constructor(e) {
     super();
     this.turnController = e;
-    (c(l, this.signal), s(e, this, b));
+    (setMaxListeners(l, this.signal), s(e, this, b));
   }
 }
 function turnAbortControllerOf(e) {

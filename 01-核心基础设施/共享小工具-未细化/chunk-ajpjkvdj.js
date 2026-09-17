@@ -14,8 +14,8 @@ import { Vnt } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnz
 import { lm, zg } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { kBn } from "./chunk-tkfrb8jm.js";
 import { Dvt } from "../../02-功能模块/上下文压缩-Compact/chunk-qbdgst52.js";
-import { openSync as d } from "fs";
-import { ReadStream as s } from "tty";
+import { openSync } from "fs";
+import { ReadStream } from "tty";
 class o {
   override = null;
   get() {
@@ -33,8 +33,8 @@ class o {
       return;
     }
     try {
-      let t = d("/dev/tty", "r"),
-        e = new s(t);
+      let t = openSync("/dev/tty", "r"),
+        e = new ReadStream(t);
       return (
         Vnt(e),
         e.on("error", (r) => {

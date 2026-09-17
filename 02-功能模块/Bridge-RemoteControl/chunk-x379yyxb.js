@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { Ve, dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { pp, BP, jP, Pd, Px, Khe, nZ, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { pp, BP, jP, Pd, Px, Khe, nZ, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   C2,
   JVn,
@@ -27,20 +27,20 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dJ, Ij, aoe } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { oKt, CCt, _Ue, prepareApiRequest as ox, getSessionRequestHeaders as bUe, sendEventToRemoteSession as Jme, sendBashCommandToRemoteSession as Wvn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { oKt, CCt, _Ue, prepareApiRequest, getSessionRequestHeaders, sendEventToRemoteSession, sendBashCommandToRemoteSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { isViolinWoodEnabled as Su, isViolinWoodEnabledCached as ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { getTrustedDeviceToken as uh, recoverFromUntrustedDevice as o5 } from "./chunk-tyce0p0b.js";
-import { classifyElevatedAuthError as m6 } from "./chunk-mxsfy35q.js";
+import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { getTrustedDeviceToken, recoverFromUntrustedDevice } from "./chunk-tyce0p0b.js";
+import { classifyElevatedAuthError } from "./chunk-mxsfy35q.js";
 import { GDt } from "../远程工具执行/chunk-66axrkvh.js";
 import { XGe } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb9matb3.js";
 import { bF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vthq2yn2.js";
 import { s, T, O, se, v, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { va, getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { va, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID as me } from "crypto";
 var x = m(() => {
@@ -558,12 +558,12 @@ function tt(e) {
   );
 }
 import { randomUUID as _t } from "crypto";
-import { isDeepStrictEqual as Rt } from "util";
+import { isDeepStrictEqual } from "util";
 function ye(e, t) {
   if (t !== void 0) return t;
   return e === "side_question" ? 600000 : 75000;
 }
-import { appendFile as nt } from "fs/promises";
+import { appendFile } from "fs/promises";
 function P(e, t, o) {
   return;
 }
@@ -712,7 +712,7 @@ class de {
     }
     ((this.state = "connecting"), (this.connectedSince = Date.now()));
     let e = new URL(
-      `${Vt().BASE_API_URL}/v1/code/sessions/${this.sessionId}/events/stream`,
+      `${getOauthConfig().BASE_API_URL}/v1/code/sessions/${this.sessionId}/events/stream`,
     );
     if (this.lastSequenceNum > 0)
       e.searchParams.set("from_sequence_num", String(this.lastSequenceNum));
@@ -747,7 +747,7 @@ class de {
       },
       o = (async () => {
         try {
-          let r = (await Su()) ? ((await uh()) ?? "") : "";
+          let r = (await isViolinWoodEnabled()) ? ((await getTrustedDeviceToken()) ?? "") : "";
           if (!r) t();
           return r;
         } catch (r) {
@@ -773,7 +773,7 @@ class de {
       r = (async () => {
         let a = e === void 0 ? "" : await e.catch(() => "");
         try {
-          let d = (await Su()) ? await o5(a || void 0) : void 0;
+          let d = (await isViolinWoodEnabled()) ? await recoverFromUntrustedDevice(a || void 0) : void 0;
           if (d) return d;
         } catch (d) {
           n(`[SessionsV2Client] trusted-device re-enrollment failed: ${l(d)}`);
@@ -792,8 +792,8 @@ class de {
   }
   async recoverTrustedDeviceToken(e) {
     try {
-      if (!(await Su())) return !1;
-      let t = await o5(e || void 0);
+      if (!(await isViolinWoodEnabled())) return !1;
+      let t = await recoverFromUntrustedDevice(e || void 0);
       if (!t) return !1;
       return ((this.trustedDeviceToken = Promise.resolve(t)), !0);
     } catch (t) {
@@ -809,7 +809,7 @@ class de {
       headers: o,
       body: b(t),
       signal: AbortSignal.timeout(r),
-      ...As({ url: e }),
+      ...getProxyFetchOptions({ url: e }),
     });
     if (a.ok) {
       let R = (await a.json()).results?.[0],
@@ -818,7 +818,7 @@ class de {
     }
     let p,
       d = !1;
-    if (a.status === 403 && ri()) p = await Ee(a);
+    if (a.status === 403 && isViolinWoodEnabledCached()) p = await Ee(a);
     else if (a.status === 409) d = await vt(a);
     else await bF(a);
     return {
@@ -840,20 +840,20 @@ class de {
         method: "GET",
         headers: t,
         signal: o.signal,
-        ...As({ url: e.href }),
+        ...getProxyFetchOptions({ url: e.href }),
       });
     } catch (_) {
       if ((clearTimeout(p), a)) {
         (n(`[SessionsV2Client] Connect timed out after ${be}ms, reconnecting`, {
           level: "error",
         }),
-          g("remote_connect", "remote_connect_timeout"),
+          logFeatureSad("remote_connect", "remote_connect_timeout"),
           this.handleStreamEnd());
         return;
       }
       if (o.signal.aborted) return;
       (n(`[SessionsV2Client] Connect error: ${l(_)}`, { level: "error" }),
-        g("remote_connect", "remote_connect_request_failed"),
+        logFeatureSad("remote_connect", "remote_connect_request_failed"),
         this.callbacks.onError?.(ge(_)),
         this.handleStreamEnd());
       return;
@@ -868,11 +868,11 @@ class de {
       if ((clearTimeout(p), this.abortController !== o)) return;
       if (r.status === 401 && this.onAuth401) {
         (n("[SessionsV2Client] 401 on SSE connect \u2014 refreshing"),
-          f("remote_connect", "remote_connect_auth_401"));
+          logFeatureBad("remote_connect", "remote_connect_auth_401"));
         let M = await this.onAuth401(this.getAccessToken());
         if (this.abortController !== o) return;
         if (!M && this.reconnectAttempts >= K && this.keepRedialling) {
-          (f("remote_connect", "remote_connect_reconnect_exhausted"),
+          (logFeatureBad("remote_connect", "remote_connect_reconnect_exhausted"),
             (this.state = "closed"),
             (this.exhaustedBudget = !0),
             this.callbacks.onClose?.());
@@ -890,18 +890,18 @@ class de {
           (n(
             "[SessionsV2Client] untrusted_device on SSE connect \u2014 re-enrolled, reconnecting",
           ),
-            g("remote_connect", "remote_connect_untrusted_device"),
+            logFeatureSad("remote_connect", "remote_connect_untrusted_device"),
             this.handleStreamEnd());
           return;
         }
       }
       if (lt.has(r.status)) {
-        (f("remote_connect", "remote_connect_permanent_failure"),
+        (logFeatureBad("remote_connect", "remote_connect_permanent_failure"),
           (this.state = "closed"),
           this.callbacks.onClose?.(_));
         return;
       }
-      (g("remote_connect", "remote_connect_http_error"),
+      (logFeatureSad("remote_connect", "remote_connect_http_error"),
         this.handleStreamEnd());
       return;
     }
@@ -926,7 +926,7 @@ class de {
       this.resetLivenessTimer(),
       this.startDriftWatch(),
       n("[SessionsV2Client] Connected"),
-      y("remote_connect"),
+      logFeatureOk("remote_connect"),
       this.callbacks.onConnected?.());
     let S = r.body.getReader(),
       R = new XGe();
@@ -941,7 +941,7 @@ class de {
     } catch (_) {
       if (o.signal.aborted) return;
       (n(`[SessionsV2Client] Stream read error: ${l(_)}`, { level: "error" }),
-        g("remote_connect", "remote_connect_stream_error"));
+        logFeatureSad("remote_connect", "remote_connect_stream_error"));
     } finally {
       S.releaseLock();
     }
@@ -953,13 +953,13 @@ class de {
     try {
       r = z(o);
     } catch (a) {
-      (h(
+      (logError(
         dt(
           Error(`[SessionsV2Client] Failed to parse ${e} frame: ${l(a)}`),
           "SessionsV2Client: failed to parse event frame",
         ),
       ),
-        g("remote_connect", "remote_connect_frame_parse_failed"));
+        logFeatureSad("remote_connect", "remote_connect_frame_parse_failed"));
       return;
     }
     switch (e) {
@@ -1098,7 +1098,7 @@ class de {
       }
       case "catch_up_truncated":
         (n("[SessionsV2Client] catch_up_truncated \u2014 transcript gap"),
-          g("remote_connect", "remote_catch_up_truncated"),
+          logFeatureSad("remote_connect", "remote_catch_up_truncated"),
           this.callbacks.onCatchUpTruncated?.());
         return;
       case "session_update": {
@@ -1127,7 +1127,7 @@ class de {
   }
   deliver(e, t) {
     if (!CCt((o) => this.callbacks.onMessage(o, t), e, "SessionsV2Client"))
-      g("remote_connect", "remote_connect_frame_handler_threw");
+      logFeatureSad("remote_connect", "remote_connect_frame_handler_threw");
   }
   handleStreamEnd() {
     if (
@@ -1140,7 +1140,7 @@ class de {
     let e = this.reconnectAttempts >= K;
     if (e && !this.keepRedialling) {
       (n(`[SessionsV2Client] Reconnect budget exhausted (${K}), closing`),
-        f("remote_connect", "remote_connect_reconnect_exhausted"),
+        logFeatureBad("remote_connect", "remote_connect_reconnect_exhausted"),
         (this.state = "closed"),
         (this.exhaustedBudget = !0),
         this.callbacks.onClose?.());
@@ -1149,7 +1149,7 @@ class de {
     if (!e) this.reconnectAttempts++;
     else if (!this.rediallingPastBudget)
       ((this.rediallingPastBudget = !0),
-        g("remote_connect", "remote_connect_redialling_past_budget"));
+        logFeatureSad("remote_connect", "remote_connect_redialling_past_budget"));
     this.state = "idle";
     let t = e ? we : Math.min(st * 2 ** (this.reconnectAttempts - 1), we);
     if (
@@ -1220,10 +1220,10 @@ class de {
     if (this.state === "closed")
       return (
         n("[SessionsV2Client] Cannot send: closed", { level: "warn" }),
-        f("remote_send_event", "remote_send_event_closed"),
+        logFeatureBad("remote_send_event", "remote_send_event_closed"),
         { outcome: "failed", cause: "closed" }
       );
-    let o = `${Vt().BASE_API_URL}/v1/code/sessions/${this.sessionId}/events`;
+    let o = `${getOauthConfig().BASE_API_URL}/v1/code/sessions/${this.sessionId}/events`;
     try {
       let r = await oKt(this.eventSigner, this.sessionId, e),
         a = { session_id: this.sessionId, events: [r] },
@@ -1266,21 +1266,21 @@ class de {
           d.inactive)
         )
           return (
-            g("remote_send_event", "remote_send_event_session_inactive"),
+            logFeatureSad("remote_send_event", "remote_send_event_session_inactive"),
             { outcome: "session_inactive" }
           );
         return (
-          f("remote_send_event", "remote_send_event_http_error"),
+          logFeatureBad("remote_send_event", "remote_send_event_http_error"),
           { outcome: "failed", cause: "http", status: d.status }
         );
       }
-      if (S) g("remote_send_event", "remote_send_event_untrusted_device");
-      else y("remote_send_event");
+      if (S) logFeatureSad("remote_send_event", "remote_send_event_untrusted_device");
+      else logFeatureOk("remote_send_event");
       return { outcome: "accepted", sequence_num: d.sequence_num };
     } catch (r) {
       return (
         n(`[SessionsV2Client] POST /events failed: ${l(r)}`, { level: "warn" }),
-        f("remote_send_event", "remote_send_event_request_failed"),
+        logFeatureBad("remote_send_event", "remote_send_event_request_failed"),
         { outcome: "failed", cause: St(r) ? "timeout" : "network" }
       );
     }
@@ -1381,7 +1381,7 @@ class de {
     )
       return !1;
     return (
-      g("remote_connect", "remote_connect_revived_by_user_send"),
+      logFeatureSad("remote_connect", "remote_connect_revived_by_user_send"),
       this.reconnect(),
       !0
     );
@@ -1392,7 +1392,7 @@ class de {
       Authorization: `Bearer ${this.getAccessToken()}`,
       "Content-Type": "application/json",
       "anthropic-version": "2023-06-01",
-      "anthropic-client-platform": Um(),
+      "anthropic-client-platform": getClientPlatform(),
       "x-organization-uuid": this.orgUuid,
       "User-Agent": va(),
       ...(e && { "X-Trusted-Device-Token": e }),
@@ -1401,7 +1401,7 @@ class de {
 }
 async function Ee(e) {
   let t = await Te(e);
-  return m6(t, fg(t));
+  return classifyElevatedAuthError(t, extractErrorDetail(t));
 }
 async function vt(e) {
   return gt().safeParse(await Te(e)).success;
@@ -1464,7 +1464,7 @@ function bt(e, t) {
 }
 function qe(e, t) {
   try {
-    return Rt(e, t);
+    return isDeepStrictEqual(e, t);
   } catch {
     return !1;
   }
@@ -1661,7 +1661,7 @@ class D6e {
         !this.hookGiveUpsTold.has(r)
       )
         (A(this.hookGiveUpsTold, r),
-          f("remote_control_response", "overtaken"),
+          logFeatureBad("remote_control_response", "overtaken"),
           this.callbacks.onResponseUndelivered?.(r, "hook", "overtaken"));
       if (this.pendingForwardedHooks.delete(r)) {
         (n(
@@ -1723,8 +1723,8 @@ class D6e {
         p.giveUpOnSettle !== "overtaken"
       )
         if ((this.dropKept(p), p.failures > 0))
-          g("remote_control_response", "recovered");
-        else y("remote_control_response");
+          logFeatureSad("remote_control_response", "recovered");
+        else logFeatureOk("remote_control_response");
       this.pendingModelSwitchIds.delete(r);
       let d = this.pendingControlRequests.get(r);
       if (d)
@@ -1866,7 +1866,7 @@ class D6e {
           (this.reinstatablePermissionRequests.delete(a.request_id),
           !qe(S, a.request))
         ) {
-          (f("remote_permission_request", "redelivered_mismatch"),
+          (logFeatureBad("remote_permission_request", "redelivered_mismatch"),
             n(
               `[RemoteSessionManager] Redelivered can_use_tool ${kS(a.request_id)} differs from the request first shown under that id \u2014 not arming it`,
               { level: "warn" },
@@ -1882,7 +1882,7 @@ class D6e {
         !d && o.has(a.request_id))
       )
         (this.reinstatableDialogIds.delete(a.request_id),
-          y(
+          logFeatureOk(
             t === "can_use_tool"
               ? "remote_permission_redelivery"
               : "remote_dialog_redelivery",
@@ -1906,7 +1906,7 @@ class D6e {
             `[RemoteSessionManager] Duplicate permission request ${kS(String(r))} \u2014 already pending, skipping`,
           );
         else
-          (f("remote_permission_request", "redelivered_mismatch"),
+          (logFeatureBad("remote_permission_request", "redelivered_mismatch"),
             n(
               `[RemoteSessionManager] Permission request ${kS(String(r))} redelivered with a different body (${kS(String(a.tool_name))}) \u2014 keeping the one first shown (${kS(p.tool_name)})`,
               { level: "warn" },
@@ -1914,7 +1914,7 @@ class D6e {
         return;
       }
       if (this.retiredPermissionRequestIds.has(r)) {
-        (f("remote_permission_request", "retired_id_rearmed"),
+        (logFeatureBad("remote_permission_request", "retired_id_rearmed"),
           n(
             `[RemoteSessionManager] Permission request ${kS(String(r))} arrived again after it was retired here \u2014 not arming it`,
             { level: "warn" },
@@ -2045,7 +2045,7 @@ class D6e {
     return this.send(
       e,
       t,
-      (o, r) => Jme(this.config.sessionId, o, this.signedOpts(r)),
+      (o, r) => sendEventToRemoteSession(this.config.sessionId, o, this.signedOpts(r)),
       !1,
     );
   }
@@ -2069,13 +2069,13 @@ class D6e {
           `[RemoteSessionManager] Send to session ${this.config.sessionId} threw: ${l(S)}`,
           { level: "error" },
         ),
-        f("remote_send_message", "remote_send_message_threw"),
+        logFeatureBad("remote_send_message", "remote_send_message_threw"),
         S
       );
     }
     if (!d.ok && d.withheld)
       (n(`[RemoteSessionManager] Message withheld by a send gate: ${d.reason}`),
-        g(
+        logFeatureSad(
           "remote_send_message",
           d.reason === Ost
             ? "remote_send_message_cancelled"
@@ -2088,9 +2088,9 @@ class D6e {
         `[RemoteSessionManager] Failed to send message to session ${this.config.sessionId}: ${d.reason}`,
         { level: "error" },
       ),
-        f("remote_send_message", "remote_send_message_failed"));
+        logFeatureBad("remote_send_message", "remote_send_message_failed"));
     else if (
-      (y("remote_send_message"), (this.sentAMessage = !0), t?.uuid !== void 0)
+      (logFeatureOk("remote_send_message"), (this.sentAMessage = !0), t?.uuid !== void 0)
     )
       this.config.dirSync?.sync.messageSent(t.uuid);
     return d;
@@ -2135,7 +2135,7 @@ class D6e {
       a,
       p = async (C, U) => {
         ((r += 1), (a ??= Date.now()));
-        let I = await Jme(this.config.sessionId, C, this.signedOpts(U));
+        let I = await sendEventToRemoteSession(this.config.sessionId, C, this.signedOpts(U));
         if (
           I.ok ||
           r >= Ct ||
@@ -2148,7 +2148,7 @@ class D6e {
           (await Z(o * r, this.lifetime.signal),
           this.exitFlushRequested && !this.firstSendReleased)
         )
-          return ((r += 1), Jme(this.config.sessionId, C, this.signedOpts(U)));
+          return ((r += 1), sendEventToRemoteSession(this.config.sessionId, C, this.signedOpts(U)));
         return this.lifetime.signal.aborted || this.firstSendReleased
           ? I
           : p(C, U);
@@ -2171,7 +2171,7 @@ class D6e {
     if (
       (i("tengu_home_seed_prompt_resequenced", {
         success: S.ok,
-        withheld_for: u(
+        withheld_for: fromEnum(
           this.config.homeSeed !== void 0
             ? this.config.dirSync !== void 0
               ? "both"
@@ -2179,7 +2179,7 @@ class D6e {
             : "file_sync",
         ),
         attempts: r,
-        reason: u(S.ok ? "ok" : R ? "aborted" : Q(S)),
+        reason: fromEnum(S.ok ? "ok" : R ? "aborted" : Q(S)),
         duration_ms: Date.now() - t,
       }),
       S.ok)
@@ -2373,14 +2373,14 @@ class D6e {
       `[RemoteSessionManager] Sending bash_command to session ${this.config.sessionId}`,
     ),
       this.reviveStreamForUserSend());
-    let o = await Wvn(this.config.sessionId, e, this.signedOpts(t));
+    let o = await sendBashCommandToRemoteSession(this.config.sessionId, e, this.signedOpts(t));
     if (!o.ok)
       (n(
         `[RemoteSessionManager] Failed to send bash_command to session ${this.config.sessionId}: ${o.reason}`,
         { level: "error" },
       ),
-        f("remote_send_bash", "remote_send_bash_failed"));
-    else y("remote_send_bash");
+        logFeatureBad("remote_send_bash", "remote_send_bash_failed"));
+    else logFeatureOk("remote_send_bash");
     return o;
   }
   reviveStreamForUserSend() {
@@ -2432,8 +2432,8 @@ class D6e {
         return;
       }
       if ((this.dropKept(e), e.failures > 0 || e.giveUpOnSettle !== null))
-        g("remote_control_response", "recovered");
-      else y("remote_control_response");
+        logFeatureSad("remote_control_response", "recovered");
+      else logFeatureOk("remote_control_response");
       return;
     }
     if (e.giveUpOnSettle !== null) {
@@ -2448,7 +2448,7 @@ class D6e {
         n(
           `[RemoteSessionManager] Answer for ${kS(o)} has no session to go to (${t.outcome === "failed" && t.cause === "http" ? `http ${t.status}` : "session not active"}); dropped`,
         ),
-        g("remote_control_response", "session_gone"));
+        logFeatureSad("remote_control_response", "session_gone"));
       return;
     }
     if (t.outcome === "failed" && t.cause === "closed") {
@@ -2483,7 +2483,7 @@ class D6e {
         this.giveUp(e));
       return;
     }
-    if (e.failures === 1) g("remote_control_response", "resend");
+    if (e.failures === 1) logFeatureSad("remote_control_response", "resend");
     this.scheduleResponseResend(e);
   }
   dropKept(e) {
@@ -2504,7 +2504,7 @@ class D6e {
       } else A(this.reinstatableDialogIds, r);
     if (t === "undelivered" && e.kind === "hook" && o !== "refused")
       A(this.undeliveredHookIds, r);
-    if ((f("remote_control_response", o), e.told)) return;
+    if ((logFeatureBad("remote_control_response", o), e.told)) return;
     ((e.told = !0), this.callbacks.onResponseUndelivered?.(r, e.kind, t));
   }
   scheduleResponseResend(e) {
@@ -2543,18 +2543,18 @@ class D6e {
         ((e.inFlight = !1), this.giveUp(e, "overtaken"));
         continue;
       }
-      (this.dropKept(e), g("remote_control_response", "session_gone"));
+      (this.dropKept(e), logFeatureSad("remote_control_response", "session_gone"));
     }
   }
   respondToPermissionRequest(e, t) {
     let o = this.pendingPermissionRequests.get(e);
     if (!o) {
-      (h(
+      (logError(
         Error(
           `[RemoteSessionManager] No pending permission request with ID: ${e}`,
         ),
       ),
-        f("remote_permission_respond", "remote_permission_respond_no_pending"));
+        logFeatureBad("remote_permission_respond", "remote_permission_respond_no_pending"));
       return;
     }
     (this.retirePermissionRequest(e),
@@ -2568,16 +2568,16 @@ class D6e {
     (n(`[RemoteSessionManager] Sending permission response: ${t.behavior}`),
       P("out", r),
       this.sendResponse(r, "permission", o),
-      y("remote_permission_respond"));
+      logFeatureOk("remote_permission_respond"));
   }
   respondToUserDialogRequest(e, t) {
     if (!this.pendingDialogRequests.delete(e)) {
-      (h(
+      (logError(
         Error(
           `[RemoteSessionManager] No pending user dialog request with ID: ${e}`,
         ),
       ),
-        f("remote_dialog_respond", "remote_dialog_respond_no_pending"));
+        logFeatureBad("remote_dialog_respond", "remote_dialog_respond_no_pending"));
       return;
     }
     (this.recordSeenControlResponseId(e), this.reviveStreamForUserSend());
@@ -2588,7 +2588,7 @@ class D6e {
     (n(`[RemoteSessionManager] Sending user dialog response: ${t.behavior}`),
       P("out", o),
       this.sendResponse(o, "dialog"),
-      y("remote_dialog_respond"));
+      logFeatureOk("remote_dialog_respond"));
   }
   releaseForwardedHook(e) {
     if (
@@ -2922,10 +2922,10 @@ function aIt(e) {
   return t !== void 0 && !isNaN(t) ? t : void 0;
 }
 async function V_e(e, t) {
-  let { accessToken: o } = await ox(t);
+  let { accessToken: o } = await prepareApiRequest(t);
   return {
-    sessionUrl: `${Vt().BASE_API_URL}/v1/code/sessions/${e}`,
-    headers: await bUe(o),
+    sessionUrl: `${getOauthConfig().BASE_API_URL}/v1/code/sessions/${e}`,
+    headers: await getSessionRequestHeaders(o),
   };
 }
 async function xe(e, t, o, r) {
@@ -2966,8 +2966,8 @@ async function xe(e, t, o, r) {
 async function Lst(e, t = L6e, o) {
   let r = await xe(e, { limit: t, sort_order: "desc" }, "fetchLatestEvents");
   if (o?.reportFeatureHealth !== !1)
-    if (r === null) f("assistant_history_load", "http_error");
-    else y("assistant_history_load");
+    if (r === null) logFeatureBad("assistant_history_load", "http_error");
+    else logFeatureOk("assistant_history_load");
   return r;
 }
 async function Mst(e, t, o = L6e, r) {

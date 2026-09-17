@@ -11,13 +11,13 @@ import { he, jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isCustomizationDisabled as Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { $J } from "../插件系统/chunk-7s6mt1vg.js";
 import {
   wM,
-  getAgentDefinitionsWithOverrides as SE,
-  SandboxManager as st,
+  getAgentDefinitionsWithOverrides,
+  SandboxManager,
   rde,
   xgt,
   x2t,
@@ -26,7 +26,7 @@ import {
   Hgt,
   U4n,
   W4n,
-  loadPluginHooks as w3,
+  loadPluginHooks,
   Rk,
   dMe,
   bEe,
@@ -35,7 +35,7 @@ import {
   a7n,
   Ph,
   myt,
-  getConnectablePluginMcpServerNames as Ggn,
+  getConnectablePluginMcpServerNames,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Zj, e6, Z_ } from "../工具ToolSearch/chunk-1m51pqtd.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -47,8 +47,8 @@ async function Xx(r, o, m, p = {}) {
   if ((n("refreshActivePlugins: clearing all plugin caches"), d)) a7n();
   if ((fu(o, m), d)) U4n();
   let g = await Ph(o, m);
-  (W4n(), st.refreshConfig());
-  let [f, y, c] = await Promise.all([bEe(o), syt(o), SE(he(), o)]),
+  (W4n(), SandboxManager.refreshConfig());
+  let [f, y, c] = await Promise.all([bEe(o), syt(o), getAgentDefinitionsWithOverrides(he(), o)]),
     { enabled: t, disabled: u, errors: w, warnings: s } = g,
     k = [],
     [L, F] = await Promise.all([
@@ -85,10 +85,10 @@ async function Xx(r, o, m, p = {}) {
     Hgt(o, m));
   let A = !1;
   try {
-    await w3(o, m);
+    await loadPluginHooks(o, m);
   } catch (e) {
     ((A = !0),
-      h(e),
+      logError(e),
       n(`refreshActivePlugins: loadPluginHooks failed: ${l(e)}`));
   }
   let j = t.reduce((e, a) => {
@@ -131,14 +131,14 @@ async function mee(r) {
     ),
     m,
     p = () => (m ??= myt(r.storageV5)),
-    d = await Ggn(r.dynamicMcpConfig ?? {}, r.storageV5, p),
+    d = await getConnectablePluginMcpServerNames(r.dynamicMcpConfig ?? {}, r.storageV5, p),
     g = [...d].filter((s) => !o.has(s)).sort(),
     f = [...o].filter((s) => !d.has(s)).sort(),
     y = g.length > 0 || f.length > 0,
     c = Z_() && e6(r.model) && !Zj(r.model),
     t = jc() > 0,
     u = null;
-  if (dMe() && !c && t && !Xr("lspServers")) {
+  if (dMe() && !c && t && !isCustomizationDisabled("lspServers")) {
     let s = Dpn()
       ? {
           hasServers: !1,

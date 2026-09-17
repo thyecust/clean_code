@@ -105,7 +105,7 @@ function M(q) {
   else L = a[22];
   return L;
 }
-function re(
+function renderToolUseMessage(
   { notebook_path: s, cell_id: i, new_source: l, cell_type: c, edit_mode: m },
   { verbose: p },
 ) {
@@ -123,7 +123,7 @@ function re(
   }
   return r(N, { children: [e(Pg, { filePath: s, children: f }), `@${d}`] });
 }
-function te(s, { verbose: i }) {
+function renderToolUseRejectedMessage(s, { verbose: i }) {
   return e(M, {
     notebook_path: s.notebook_path,
     cell_id: s.cell_id,
@@ -133,14 +133,14 @@ function te(s, { verbose: i }) {
     verbose: i,
   });
 }
-function se(s, { verbose: i }) {
+function renderToolUseErrorMessage(s, { verbose: i }) {
   if (!i && typeof s === "string" && Lr(s, "tool_use_error"))
     return e(xe, {
       children: e(t, { color: "error", children: "Error editing notebook" }),
     });
   return e(Yd, { result: s, verbose: i });
 }
-function ie({ cell_id: s, new_source: i, error: l }) {
+function renderToolResultMessage({ cell_id: s, new_source: i, error: l }) {
   if (l) return e(xe, { children: e(t, { color: "error", children: _i(l) }) });
   return e(xe, {
     children: r(o, {
@@ -163,8 +163,8 @@ function ie({ cell_id: s, new_source: i, error: l }) {
   });
 }
 export {
-  ie as renderToolResultMessage,
-  se as renderToolUseErrorMessage,
-  re as renderToolUseMessage,
-  te as renderToolUseRejectedMessage,
+  renderToolResultMessage,
+  renderToolUseErrorMessage,
+  renderToolUseMessage,
+  renderToolUseRejectedMessage,
 };

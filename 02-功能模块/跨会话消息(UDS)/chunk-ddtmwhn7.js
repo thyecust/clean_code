@@ -14,7 +14,7 @@ import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱�
 import { x, us, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { env as a, udsEnv as Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   Tn,
   UQe,
@@ -38,19 +38,19 @@ import {
   zor,
   tRn,
   Vor,
-  MAX_FORMER_NAMES as CKt,
-  isRegistrySweepPermitted as Lse,
-  reapKeysOfReapedRecord as xKt,
-  mayReapRecordFromThisDomain as YCt,
+  MAX_FORMER_NAMES,
+  isRegistrySweepPermitted,
+  reapKeysOfReapedRecord,
+  mayReapRecordFromThisDomain,
   H,
   m0,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isProcessProvablyGone as Vg, getProcessStartTokenLinuxSync as xRe, isSameProcessAsync as Pm, provenSameProcessAsync as mA, getProcessCreationTimeMsAsync as HRe } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { ownPidDomain as wq } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isProcessProvablyGone, getProcessStartTokenLinuxSync, isSameProcessAsync, provenSameProcessAsync, getProcessCreationTimeMsAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { ownPidDomain } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { SD, ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
-import { IRe, lir, isSaneEpochMs as nBe, jZe, cir, isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { IRe, lir, isSaneEpochMs, jZe, cir, isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Y, lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -105,16 +105,16 @@ function q(e) {
   return typeof t?.fd === "number" ? t.fd : -1;
 }
 import {
-  lstat as Ne,
-  readdir as Me,
+  lstat,
+  readdir,
   stat as Ue,
-  unlink as ce,
+  unlink,
 } from "fs/promises";
-import { connect as pe } from "net";
-import { basename as Be, dirname as ue, join as He } from "path";
+import { connect } from "net";
+import { basename, dirname, join as He } from "path";
 var S7e = 1048576;
-import { randomBytes as Pe } from "crypto";
-var _e = Pe(32);
+import { randomBytes } from "crypto";
+var _e = randomBytes(32);
 function FAe(e) {
   return Tor(e, _e);
 }
@@ -349,7 +349,7 @@ function kSn({ trailMs: e = Ie } = {}) {
       `[peer-guard] Dropped peer message from ${_.from}${_.name ? ` (@${_.name})` : ""}: ${S.reason}${I > 0 ? ` (+${I} suppressed)` : ""}`,
       { level: "warn" },
     ),
-      g("peer_loop_guard", S.reason),
+      logFeatureSad("peer_loop_guard", S.reason),
       ds().ingress.messageDropped.emit(v));
   }
   async function k(S = xe) {
@@ -542,13 +542,13 @@ function mD(e) {
 function $e(e) {
   if (typeof e !== "object" || e === null) return !1;
   let { name: t, until: r } = e;
-  return typeof t === "string" && nBe(r);
+  return typeof t === "string" && isSaneEpochMs(r);
 }
 function Ge(e) {
   if (!Array.isArray(e)) return [];
   return e
     .filter($e)
-    .slice(0, CKt)
+    .slice(0, MAX_FORMER_NAMES)
     .map(({ name: t, until: r }) => ({ name: oe(t, fA), until: r }));
 }
 function je() {
@@ -726,8 +726,8 @@ async function registeredInboxesOfPids(e) {
 }
 async function X(e) {
   let t = e.procStartFt ?? e.procStart;
-  if (t === void 0 || Vg(e.pid)) return !1;
-  return (await mA(e.pid, t)) === !0;
+  if (t === void 0 || isProcessProvablyGone(e.pid)) return !1;
+  return (await provenSameProcessAsync(e.pid, t)) === !0;
 }
 function me(e) {
   let t = b(e),
@@ -740,12 +740,12 @@ async function Je(e) {
   if (t === void 0) return !1;
   for (let r of await L()) {
     if (!r.sock || Zy(r.sock) !== t) continue;
-    if (Vg(r.pid)) continue;
+    if (isProcessProvablyGone(r.pid)) continue;
     if ((r.procStartFt ?? r.procStart) !== void 0) {
       if (await X(r)) return !0;
       continue;
     }
-    if (Vs(r.pid)) return !0;
+    if (isProcessRunning(r.pid)) return !0;
   }
   return !1;
 }
@@ -781,7 +781,7 @@ async function ge(
   if (d && !(P() === "windows" && cQ(e) !== void 0)) {
     let S;
     try {
-      S = (await Ne(e)).isSymbolicLink();
+      S = (await lstat(e)).isSymbolicLink();
     } catch (w) {
       if (W(w)) throw w;
       throw (
@@ -798,7 +798,7 @@ async function ge(
     `
 `;
   return new Promise((S, w) => {
-    let _ = pe({ path: e }),
+    let _ = connect({ path: e }),
       E = !1;
     (_.setTimeout(5000, () => {
       ((E = !0), _.destroy(), w(Error(`Timed out sending to ${e}`)));
@@ -861,7 +861,7 @@ async function ge(
               ));
             return;
           }
-          if (l !== void 0 && xRe(y) !== l) {
+          if (l !== void 0 && getProcessStartTokenLinuxSync(y) !== l) {
             ((E = !0),
               _.destroy(),
               n(
@@ -898,7 +898,7 @@ function Se(e) {
       t(!1);
       return;
     }
-    let r = pe({ path: e }),
+    let r = connect({ path: e }),
       d = (s) => {
         (r.destroy(), t(s));
       };
@@ -919,7 +919,7 @@ async function L(e) {
   let t = e1(),
     r;
   try {
-    r = await Me(t);
+    r = await readdir(t);
   } catch (s) {
     if (e?.rejectUnreadable && !W(s)) throw new SessionRecordsUnreadableError(A(s));
     return [];
@@ -940,7 +940,7 @@ async function V(e, t, r) {
     let f = lir(t);
     if (f === null) return null;
     let { pid: u } = f;
-    if (!f.canonical) return (ce(l).catch(() => {}), null);
+    if (!f.canonical) return (unlink(l).catch(() => {}), null);
     s = u;
     let i = await Wi(l, IRe);
     if (i === null) return null;
@@ -999,7 +999,7 @@ async function V(e, t, r) {
       file: l,
     };
   } catch {
-    if (r?.rejectTornLiveRecord && d && s !== void 0 && Vs(s)) {
+    if (r?.rejectTornLiveRecord && d && s !== void 0 && isProcessRunning(s)) {
       if (!r.isReread) return (await Z(EKt), V(e, t, { ...r, isReread: !0 }));
       let [f, u] = await Promise.all([
         Ue(l).then(
@@ -1008,10 +1008,10 @@ async function V(e, t, r) {
             return;
           },
         ),
-        HRe(s),
+        getProcessCreationTimeMsAsync(s),
       ]);
       if (f !== void 0 && u !== null && u > f + 2000) return null;
-      if (u === null && !Vs(s)) return null;
+      if (u === null && !isProcessRunning(s)) return null;
       throw new SessionRecordsUnreadableError("EBADRECORD");
     }
     return null;
@@ -1022,13 +1022,13 @@ async function listRegisteredSessionRecords() {
 }
 function be(e, t, r, d) {
   if (M() && d !== void 0) {
-    d.delete(Ce.session(Be(e)))
-      .then((s) => (s.ok && s.value.existed ? xKt(ue(e), t, r, d) : void 0))
+    d.delete(Ce.session(basename(e)))
+      .then((s) => (s.ok && s.value.existed ? reapKeysOfReapedRecord(dirname(e), t, r, d) : void 0))
       .catch(() => {});
     return;
   }
-  ce(e)
-    .then(() => xKt(ue(e), t, r, d))
+  unlink(e)
+    .then(() => reapKeysOfReapedRecord(dirname(e), t, r, d))
     .catch(() => {});
 }
 async function listAllLiveSessions(e, t) {
@@ -1036,26 +1036,26 @@ async function listAllLiveSessions(e, t) {
       rejectUnreadable: t?.rejectUnreadable === !0,
       rejectTornLiveRecord: t?.rejectUnreadable === !0,
     }),
-    d = t?.rejectUnreadable === !0 ? await wq() : void 0,
+    d = t?.rejectUnreadable === !0 ? await ownPidDomain() : void 0,
     s = (p) => d !== void 0 && p.pidDomain !== void 0 && p.pidDomain !== d,
-    l = r.map((p) => s(p) || Vs(p.pid)),
+    l = r.map((p) => s(p) || isProcessRunning(p.pid)),
     f = await Promise.all(
       r.map(
-        (p, k) => l[k] && (s(p) || Pm(p.pid, p.procStartFt ?? p.procStart)),
+        (p, k) => l[k] && (s(p) || isSameProcessAsync(p.pid, p.procStartFt ?? p.procStart)),
       ),
     ),
-    u = await Lse(),
-    i = u ? await wq() : "",
+    u = await isRegistrySweepPermitted(),
+    i = u ? await ownPidDomain() : "",
     o = [];
   for (let p = 0; p < r.length; p++) {
     let { file: k, ...h } = r[p];
     if (f[p]) o.push(h);
-    else if (u && YCt(h, i) && Vg(h.pid)) be(k, h.pid, i, e);
+    else if (u && mayReapRecordFromThisDomain(h, i) && isProcessProvablyGone(h.pid)) be(k, h.pid, i, e);
   }
   return o;
 }
 function ownMessagingSocket() {
-  return Lb.CLAUDE_CODE_MESSAGING_SOCKET;
+  return udsEnv.CLAUDE_CODE_MESSAGING_SOCKET;
 }
 async function listLivePeerSessions(e) {
   let t = ownMessagingSocket(),
@@ -1063,13 +1063,13 @@ async function listLivePeerSessions(e) {
       (u) => u.sock && !(t && ZQe(u.sock, t)) && !ye(u),
     ),
     d = await Promise.all(r.map((u) => Se(u.sock))),
-    s = await Lse(),
-    l = s ? await wq() : "",
+    s = await isRegistrySweepPermitted(),
+    l = s ? await ownPidDomain() : "",
     f = [];
   for (let u = 0; u < r.length; u++) {
     let { file: i, ...o } = r[u];
     if (d[u]) f.push(o);
-    else if (s && YCt(o, l) && Vg(o.pid)) be(i, o.pid, l, e);
+    else if (s && mayReapRecordFromThisDomain(o, l) && isProcessProvablyGone(o.pid)) be(i, o.pid, l, e);
   }
   return f;
 }

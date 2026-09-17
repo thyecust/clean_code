@@ -12,27 +12,27 @@
 import { pv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isCCREnvironmentKind as GQe, yq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isCCREnvironmentKind, yq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { findGitRoot as tr, getBranch as Da, getIsHeadOnRemote as U7t, hasUnpushedCommits as Tnt, getIsClean as vhe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findGitRoot, getBranch, getIsHeadOnRemote, hasUnpushedCommits, getIsClean } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { y3, _ht, PVn, RESTRICTED_SESSION_CLOUD_REFUSAL as y6t, Ht, clearBridgeSession as mj } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { y3, _ht, PVn, RESTRICTED_SESSION_CLOUD_REFUSAL, Ht, clearBridgeSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import { extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
+import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { getTrustedDeviceToken as uh } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
-import { oauthHeaders as W$e } from "../Bridge-RemoteControl/chunk-mxsfy35q.js";
-import { getBridgeAccessToken as m_, getBridgeAccessTokenAsync as wC, getBridgeBaseUrl as Ype } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getTrustedDeviceToken } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { oauthHeaders } from "../Bridge-RemoteControl/chunk-mxsfy35q.js";
+import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
@@ -82,7 +82,7 @@ async function U(s) {
       timeoutMs: R = 15000,
     } = s,
     w = `${c}/v1/code/sessions/${a}/move-to-cloud`,
-    v = W$e(h);
+    v = oauthHeaders(h);
   if (_) v["X-Trusted-Device-Token"] = _;
   let p;
   try {
@@ -112,7 +112,7 @@ async function U(s) {
       { ok: !0, environmentKind: I, environmentId: B, sessionId: a }
     );
   }
-  let k = fg(p.data) ?? "";
+  let k = extractErrorDetail(p.data) ?? "";
   if (
     (n(
       `[code-session] move-to-cloud ${a} failed ${p.status}${k ? `: ${k}` : ""}`,
@@ -157,12 +157,12 @@ function G(s) {
   };
 }
 async function K(s) {
-  if (!tr(Q())) return { kind: "no-git" };
+  if (!findGitRoot(Q())) return { kind: "no-git" };
   let [a, c, h, m] = await Promise.all([
-    Da(),
-    vhe({ ignoreUntracked: !0 }),
-    Tnt(),
-    U7t(),
+    getBranch(),
+    getIsClean({ ignoreUntracked: !0 }),
+    hasUnpushedCommits(),
+    getIsHeadOnRemote(),
   ]);
   if (!c) return { kind: "dirty", branch: a };
   if (h || !m) return { kind: "unpushed", branch: a };
@@ -171,24 +171,24 @@ async function K(s) {
 async function P(s) {
   if (pv())
     return (
-      f("teleport_to_cloud", "restricted_session"),
-      { kind: "precondition", message: y6t }
+      logFeatureBad("teleport_to_cloud", "restricted_session"),
+      { kind: "precondition", message: RESTRICTED_SESSION_CLOUD_REFUSAL }
     );
-  let a = X(Yi()),
+  let a = X(getReplBridgeHandle()),
     c = a?.bridgeSessionId;
   if (!a || !c)
     return (
-      f("teleport_to_cloud", "no_bridge"),
+      logFeatureBad("teleport_to_cloud", "no_bridge"),
       {
         kind: "precondition",
         message:
           "This session isn\u2019t connected to Remote Control. Run /remote-control first, then try again.",
       }
     );
-  let h = M() && s.credentials !== void 0 ? await wC(s.credentials) : m_();
+  let h = M() && s.credentials !== void 0 ? await getBridgeAccessTokenAsync(s.credentials) : getBridgeAccessToken();
   if (!h)
     return (
-      f("teleport_to_cloud", "no_auth"),
+      logFeatureBad("teleport_to_cloud", "no_auth"),
       {
         kind: "precondition",
         message:
@@ -199,7 +199,7 @@ async function P(s) {
   switch (m.kind) {
     case "no-git":
       return (
-        f("teleport_to_cloud", "no_git"),
+        logFeatureBad("teleport_to_cloud", "no_git"),
         {
           kind: "precondition",
           message: `${Q()} isn\u2019t a git repository. The cloud session clones your repo from its remote, so there\u2019s nothing for it to check out here \u2014 try again from inside a git repo that has a remote.`,
@@ -207,7 +207,7 @@ async function P(s) {
       );
     case "dirty":
       return (
-        f("teleport_to_cloud", "git_dirty"),
+        logFeatureBad("teleport_to_cloud", "git_dirty"),
         {
           kind: "precondition",
           message: `You have uncommitted changes on ${m.branch || "this branch"}. The cloud session clones from the remote, so local edits won\u2019t be visible there. Commit and push them, or stash them if they shouldn\u2019t go to the cloud. Then try again.`,
@@ -215,7 +215,7 @@ async function P(s) {
       );
     case "unpushed":
       return (
-        f("teleport_to_cloud", "git_unpushed"),
+        logFeatureBad("teleport_to_cloud", "git_unpushed"),
         {
           kind: "precondition",
           message: `${m.branch || "This branch"} has commits that haven\u2019t been pushed. The cloud session clones from the remote, so it won\u2019t have them. Push, then try again.`,
@@ -232,7 +232,7 @@ async function P(s) {
     T = await oWe(s.storageV5, s.credentials);
   } catch (p) {
     return (
-      f("teleport_to_cloud", "env_lookup_failed"),
+      logFeatureBad("teleport_to_cloud", "env_lookup_failed"),
       {
         kind: "precondition",
         message: `Couldn\u2019t look up cloud environments \u2014 ${l(p)}`,
@@ -247,14 +247,14 @@ async function P(s) {
   if (!w || y3(w)) {
     if (T.environmentsError)
       return (
-        f("teleport_to_cloud", "env_lookup_failed"),
+        logFeatureBad("teleport_to_cloud", "env_lookup_failed"),
         {
           kind: "precondition",
           message: `Couldn\u2019t look up cloud environments \u2014 ${T.environmentsError}`,
         }
       );
     return (
-      f("teleport_to_cloud", "no_environment"),
+      logFeatureBad("teleport_to_cloud", "no_environment"),
       {
         kind: "precondition",
         message:
@@ -271,15 +271,15 @@ async function P(s) {
     await a.settleUploadsBeforeHandoff?.());
   let v = await U({
     sessionId: c,
-    baseUrl: Ype(),
+    baseUrl: getBridgeBaseUrl(),
     accessToken: h,
     environmentId: w.environment_id,
-    trustedDeviceToken: await uh(),
+    trustedDeviceToken: await getTrustedDeviceToken(),
     outcomeBranch: _,
   });
   if (!v.ok) {
-    if (v.mayHaveCommitted) g("teleport_to_cloud", "maybe_committed");
-    else (f("teleport_to_cloud", "request_failed"), PVn(c));
+    if (v.mayHaveCommitted) logFeatureSad("teleport_to_cloud", "maybe_committed");
+    else (logFeatureBad("teleport_to_cloud", "request_failed"), PVn(c));
     return (
       i("tengu_teleport_to_cloud", {
         action: S(v.mayHaveCommitted ? "maybe_committed" : "failed"),
@@ -288,11 +288,11 @@ async function P(s) {
     );
   }
   return (
-    y("teleport_to_cloud"),
+    logFeatureOk("teleport_to_cloud"),
     i("tengu_teleport_to_cloud", {
       action: S("success"),
-      environment_kind: GQe(v.environmentKind)
-        ? u(v.environmentKind)
+      environment_kind: isCCREnvironmentKind(v.environmentKind)
+        ? fromEnum(v.environmentKind)
         : S(v.environmentKind === "cloud" ? "cloud" : "other"),
     }),
     {
@@ -350,7 +350,7 @@ async function Y(s, a, c = J) {
   let h = Date.now() + c;
   while (Date.now() < h) {
     if (a.aborted) return null;
-    let m = Yi()?.bridgeSessionId;
+    let m = getReplBridgeHandle()?.bridgeSessionId;
     if (m && m !== s) return m;
     await Z(W, a);
   }
@@ -378,7 +378,7 @@ async function V(s) {
       if (c.failure.mayHaveCommitted)
         return (
           _ht(c.sessionId),
-          mj(void 0, void 0, void 0, s.storageV5),
+          clearBridgeSession(void 0, void 0, void 0, s.storageV5),
           setTimeout(H, L, s, !0),
           YB(
             `Couldn\u2019t teleport: ${c.failure.message}
@@ -389,7 +389,7 @@ ${x}`,
       return YB(`Couldn\u2019t teleport: ${c.failure.message}`, a);
     }
     case "ok": {
-      (_ht(c.success.sessionId), mj(void 0, void 0, void 0, s.storageV5));
+      (_ht(c.success.sessionId), clearBridgeSession(void 0, void 0, void 0, s.storageV5));
       let h = c.sessionUrl,
         m = A(c.success.sessionId);
       if (m.kind === "disconnect")
@@ -406,9 +406,9 @@ ${x}`,
   }
 }
 function j(s) {
-  i("tengu_teleport_menu", { action: u(s) });
+  i("tengu_teleport_menu", { action: fromEnum(s) });
 }
-function Qe({
+function TeleportMenu({
   onExit: s,
   context: a,
   exposure: c,
@@ -503,4 +503,4 @@ function Qe({
     ],
   });
 }
-export { Qe as TeleportMenu };
+export { TeleportMenu };

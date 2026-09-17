@@ -14,7 +14,7 @@ import {
   Ds,
   Ct,
   $M,
-  shouldIgnore as kk,
+  shouldIgnore,
   qjt,
   A3,
   PLe,
@@ -35,10 +35,10 @@ import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d
 import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var P = pe(kJ(), 1);
 import {
-  lstat as L,
+  lstat,
   open as q,
-  opendir as Q,
-  realpath as O,
+  opendir,
+  realpath,
 } from "fs/promises";
 import { join as p } from "path";
 var D = 8,
@@ -79,7 +79,7 @@ function qbe(e, t) {
       .split("/")
       .map((o, s, i) => ({ part: o, holdsEntries: t || s < i.length - 1 })),
   );
-  return n.some(({ part: r }) => r.length === 0 || kk(r))
+  return n.some(({ part: r }) => r.length === 0 || shouldIgnore(r))
     ? "filtered"
     : n.some(({ part: r, holdsEntries: o }) => o && A3.has(r))
       ? "dependency_dir"
@@ -96,7 +96,7 @@ function Fan(e) {
       let o = t.get(r);
       if (o === void 0) {
         let s = p(e, r);
-        ((o = L(p(s, U)).then(
+        ((o = lstat(p(s, U)).then(
           () => !0,
           () => o6t(s),
         )),
@@ -159,7 +159,7 @@ async function Tze(e) {
   let t = p(e, ae),
     n;
   try {
-    n = await L(t, { bigint: !0 });
+    n = await lstat(t, { bigint: !0 });
   } catch (r) {
     return z(A(r)) ? M() : m("unreadable");
   }
@@ -418,10 +418,10 @@ function z(e) {
 }
 async function Te(e, t, n, r, o) {
   try {
-    if (n !== "" && (await O(p(e, n))) !== p(t, n))
+    if (n !== "" && (await realpath(p(e, n))) !== p(t, n))
       return { kind: "unreadable" };
     let s = [];
-    for await (let i of await Q(p(e, n))) {
+    for await (let i of await opendir(p(e, n))) {
       if (r.remaining <= 0 || Ct(o)) return { kind: "too_many" };
       if ((r.remaining--, n !== "" && i.name === U))
         return { kind: "nested_repository" };
@@ -470,7 +470,7 @@ async function We(e, { path: t, dirent: n }) {
   )
     return "other";
   try {
-    let r = await L(p(e, t));
+    let r = await lstat(p(e, t));
     return r.isSymbolicLink()
       ? "symlink"
       : r.isDirectory()
@@ -513,7 +513,7 @@ function Be({ path: e, dirent: t }, n, r, o) {
 async function He(e, t) {
   try {
     let n = Date.now(),
-      r = await L(p(e, t));
+      r = await lstat(p(e, t));
     if (r.isDirectory())
       return {
         kind: "skip",
@@ -564,7 +564,7 @@ async function Uan({
     h = [],
     k = 0,
     c = { remaining: s },
-    S = await O(e).catch(() => null);
+    S = await realpath(e).catch(() => null);
   if (S === null) return { ok: !1, reason: "root_unreadable" };
   let y = [""],
     _ = Ds(D, (a) => Te(e, S, a, c, r));

@@ -10,7 +10,7 @@
 import { DMn } from "./chunk-n9d7c592.js";
 var a = null,
   u = !1;
-function l() {
+function getNativeModule() {
   if (u) return a;
   u = !0;
   try {
@@ -20,10 +20,10 @@ function l() {
   }
   return a;
 }
-function p(m) {
+function sharp(m) {
   let t = [];
   async function s(e) {
-    let r = l();
+    let r = getNativeModule();
     if (!r) throw Error("Native image processor module not available");
     let n = await r.processImage(m);
     if (e) for (let i of t) i(n);
@@ -81,5 +81,5 @@ function p(m) {
   };
   return o;
 }
-var b = p;
-export { b as default, l as getNativeModule, p as sharp };
+var b = sharp;
+export { b as default, getNativeModule, sharp };

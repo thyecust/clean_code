@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { isJSONRPCRequest as fL, isJSONRPCResultResponse as aW, JSONRPCMessageSchema as GR, isInitializedNotification as nIn } from "../MCP客户端/chunk-tv3jbp8f.js";
+import { isJSONRPCRequest, isJSONRPCResultResponse, JSONRPCMessageSchema as GR, isInitializedNotification } from "../MCP客户端/chunk-tv3jbp8f.js";
 import { XA, u2, aPe } from "../认证-OAuth登录/chunk-j990pwax.js";
 import { RGe } from "../../00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js";
 function AGe(e) {
@@ -154,7 +154,7 @@ class cNt {
           if (!o.event || o.event === "message")
             try {
               let h = GR.parse(JSON.parse(o.data));
-              if (aW(h)) {
+              if (isJSONRPCResultResponse(h)) {
                 if (((u = !0), a !== void 0)) h.id = a;
               }
               this.onmessage?.(h);
@@ -227,7 +227,7 @@ class cNt {
       if (r) {
         this._startOrAuthSse({
           resumptionToken: r,
-          replayMessageId: fL(e) ? e.id : void 0,
+          replayMessageId: isJSONRPCRequest(e) ? e.id : void 0,
         }).catch((i) => this.onerror?.(i));
         return;
       }
@@ -294,7 +294,7 @@ class cNt {
         (this._lastUpscopingHeader = void 0),
         n.status === 202)
       ) {
-        if ((await n.body?.cancel(), nIn(e)))
+        if ((await n.body?.cancel(), isInitializedNotification(e)))
           this._startOrAuthSse({ resumptionToken: void 0 }).catch((i) =>
             this.onerror?.(i),
           );

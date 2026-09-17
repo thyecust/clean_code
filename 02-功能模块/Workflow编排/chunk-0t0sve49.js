@@ -2270,7 +2270,7 @@ var Ep = {
   ),
 };
 var IHt = ["tool_use_id", "name", "fork", "parentModel", "permissionMode"];
-import { isAbsolute as vp } from "path";
+import { isAbsolute } from "path";
 function Kr(e, t) {
   let { prompt: r, model: o, cwd: n } = e;
   return [
@@ -2301,7 +2301,7 @@ function Kr(e, t) {
     ],
     [
       "cwd",
-      n === void 0 || (typeof n === "string" && vp(n)),
+      n === void 0 || (typeof n === "string" && isAbsolute(n)),
       "a cwd that is not an absolute path",
     ],
   ].find(([p, i]) => !i && e[p] !== t[p])?.[2];
@@ -3436,13 +3436,13 @@ function Fo(e, t, r) {
   }
   return { fromEnvironment: o, intoEnvironment: n };
 }
-import { dirname as vf } from "path";
-import { pathToFileURL as Sf } from "url";
-var Do = (e) => ({ url: Sf(e).href, dir: vf(e), file: e });
+import { dirname } from "path";
+import { pathToFileURL } from "url";
+var Do = (e) => ({ url: pathToFileURL(e).href, dir: dirname(e), file: e });
 var ze = (e, t) => `${e.length}:${e}${t.length}:${t}`;
 import { resolve as If } from "path";
 var Uo = (e) => new Map(e.map((t) => [ze(If(t.from), t.spelled), t.file]));
-import { relative as jf, resolve as _t } from "path";
+import { relative, resolve as _t } from "path";
 import * as Ve from "vm";
 import { resolve as Cf } from "path";
 var Ko = ({ modulePath: e, source: t, linked: r }) =>
@@ -3456,7 +3456,7 @@ async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
     d = Uo(e.links);
   async function u(w, S) {
     if (w === rot) return c;
-    if (!rNn(w)) throw nNn(s, w, jf(a, S.identifier) || n);
+    if (!rNn(w)) throw nNn(s, w, relative(a, S.identifier) || n);
     let O = d.get(ze(_t(S.identifier), w)),
       C = O === void 0 ? void 0 : m.get(O);
     if (O !== void 0 && C !== void 0) return b(O, C);
@@ -3943,10 +3943,10 @@ async function Qf(e, t, r = {}) {
     ownsValue: T,
   };
 }
-import { isProxy as em } from "util/types";
+import { isProxy } from "util/types";
 function Mt(e) {
   if (!e) return "a rejection that is not an Error";
-  if (em(e)) return "a rejection that is not plain data";
+  if (isProxy(e)) return "a rejection that is not plain data";
   let t = Object.getOwnPropertyDescriptor(e, "message")?.value;
   return typeof t === "string" ? t : Mt(Object.getPrototypeOf(e));
 }
