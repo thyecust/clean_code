@@ -254,7 +254,7 @@ function hasNoControlCharacters(e) {
   for (let t = 0; t < e.length; t++) if (X(e.charCodeAt(t))) return !1;
   return !0;
 }
-function ps(e) {
+function sanitizeTextForDisplay(e) {
   return ee(e, !0);
 }
 function ee(e, t) {
@@ -324,13 +324,13 @@ function De(e, t) {
   return o;
 }
 function sanitizeUntrustedText(e) {
-  return ps(ne(e, Ie));
+  return sanitizeTextForDisplay(ne(e, Ie));
 }
 function sanitizeInvisibleText(e) {
   return F(re(e));
 }
 function re(e) {
-  return ps(ne(e, P));
+  return sanitizeTextForDisplay(ne(e, P));
 }
 var MAX_DISPLAY_TEXT_UNITS = 2000,
   Me = 253;
@@ -392,7 +392,7 @@ function collapseInvisibleCharacterRuns(e) {
   return o ? `${t}\uFFFD` : t;
 }
 function F(e) {
-  return ps(collapseInvisibleCharacterRuns(e));
+  return sanitizeTextForDisplay(collapseInvisibleCharacterRuns(e));
 }
 function ze(e) {
   let t = Array.from(e),
@@ -452,7 +452,7 @@ function cse(e) {
 }
 function k(e) {
   return F(
-    ps(
+    sanitizeTextForDisplay(
       De(e, (t, r, o, i) => {
         if (r === 65038 || r === 65039) return !(o > 127 || i === 8419);
         if (r === 8204 || r === 8205) return !(o > 127 && i > 127);
@@ -573,7 +573,7 @@ function formatMcpToolUserFacingName(e) {
     f = hasRenderableText(r) ? k(r) : hasVisibleContent(u) ? u : hasVisibleContent(p) ? p : "(unnamed tool)";
   return l1(truncateToWidth(`${i} \u2014 ${f}`.replace(/\s+/g, " ").trim(), MAX_DISPLAY_LABEL_WIDTH));
 }
-function uAt(e) {
+function formatToolNameForDisplay(e) {
   return l1(formatDisplayTextOrDefault(e, "(unnamed tool)"));
 }
 function formatDisplayTextOrDefault(e, t) {
@@ -696,7 +696,7 @@ function hasCollapsedInvisibleRuns(e) {
 function ce(e) {
   return collapseInvisibleCharacterRuns(e) !== e;
 }
-function N4t(e) {
+function formatListEntryForDisplay(e) {
   let t = cse(truncateToCodeUnits(e, MAX_DISPLAY_VALUE_UNITS)),
     r = t.replace(/\s+/g, " ").trim();
   return quoteIfAmbiguous(
@@ -1097,7 +1097,7 @@ export {
   monitoringNoticeStore,
   GRAPHEME_TRUNCATION_MARKER_PATTERN,
   hasNoControlCharacters,
-  ps,
+  sanitizeTextForDisplay,
   stripDefaultIgnorableCharacters,
   sanitizePlainText,
   hasInvisibleCharacters,
@@ -1124,14 +1124,14 @@ export {
   formatDisplayLabel,
   isBlankDisplayText,
   formatMcpToolUserFacingName,
-  uAt,
+  formatToolNameForDisplay,
   formatDisplayTextOrDefault,
   prepareDisplayText,
   tryFormatShortDisplayValue,
   formatWithholdableValue,
   shouldWithholdValue,
   hasCollapsedInvisibleRuns,
-  N4t,
+  formatListEntryForDisplay,
   toUniqueDisplayLabels,
   replaceLineBreaks,
   formatValueListForDisplay,

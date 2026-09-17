@@ -41,7 +41,7 @@ import { WizardProvider, useWizard, WizardStepFrame } from "../向导(Wizard)UI/
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
@@ -213,7 +213,7 @@ function Ro() {
       children: r(Box, {
         flexDirection: "column",
         gap: 1,
-        children: [dn, e(ve, { options: ws, onChange: Yr, onCancel: $r })],
+        children: [dn, e(Select, { options: ws, onChange: Yr, onCancel: $r })],
       }),
     })),
       (go[6] = $r),
@@ -1157,7 +1157,7 @@ function gr() {
   else Jo = S[72];
   let Zo;
   if (S[73] !== mt || S[74] !== At || S[75] !== Jo)
-    ((Zo = e(ve, { options: Jo, onChange: At, onCancel: mt })),
+    ((Zo = e(Select, { options: Jo, onChange: At, onCancel: mt })),
       (S[73] = mt),
       (S[74] = At),
       (S[75] = Jo),
@@ -1247,7 +1247,7 @@ function Nt({
               : `No ${Ee[n]} profiles found in your account.`,
         }),
         e(
-          ve,
+          Select,
           {
             options: ie,
             defaultValue: y ? q.find(B) : f,
@@ -1542,7 +1542,7 @@ function Ar(Fc) {
     else De = I[23];
     let Te;
     if (I[24] !== kr || I[25] !== De || I[26] !== be || I[27] !== me)
-      ((Te = e(ve, {
+      ((Te = e(Select, {
         options: be,
         defaultValue: me,
         onChange: De,
@@ -1868,7 +1868,7 @@ function Br() {
       else Xe = K[17];
       let vr;
       if (K[18] !== po || K[19] !== Xe)
-        ((vr = e(ve, { options: Ge, onChange: Xe, onCancel: po })),
+        ((vr = e(Select, { options: Ge, onChange: Xe, onCancel: po })),
           (K[18] = po),
           (K[19] = Xe),
           (K[20] = vr));

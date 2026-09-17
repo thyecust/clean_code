@@ -19,14 +19,14 @@ import { hur, I } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { defineExportGetters } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
-function Hx() {
+function isRunningWithBun() {
   return !0;
 }
-function bc() {
+function isBunStandaloneExecutable() {
   return typeof Bun < "u" && Bun.isStandaloneExecutable === !0;
 }
 import { lstat as Q, rmdir, unlink as tt } from "fs/promises";
-async function cv(t) {
+async function tryRemoveFileOrEmptyDirectory(t) {
   try {
     return (await tt(t), "removed");
   } catch (o) {
@@ -58,7 +58,7 @@ import {
   unlink as F,
 } from "fs/promises";
 import { join as U } from "path";
-function vxt(t) {
+function hasUnknownFileType(t) {
   return (
     !t.isDirectory() &&
     !t.isFile() &&
@@ -69,9 +69,9 @@ function vxt(t) {
     !t.isCharacterDevice()
   );
 }
-async function eae(t, o) {
+async function getDirentFileInfo(t, o) {
   let E;
-  if (!vxt(o))
+  if (!hasUnknownFileType(o))
     E = {
       isDirectory: o.isDirectory(),
       isFile: o.isFile(),
@@ -106,15 +106,15 @@ async function eae(t, o) {
   }
   return E;
 }
-async function jhe(t, o) {
+async function tryGetDirentFileInfo(t, o) {
   try {
-    return await eae(t, o);
+    return await getDirentFileInfo(t, o);
   } catch (E) {
     if (W(E)) return;
     throw E;
   }
 }
-async function Whe(t) {
+async function removePathRecursively(t) {
   let o;
   try {
     o = await x(t);
@@ -130,11 +130,11 @@ async function Whe(t) {
     await F(t);
     return;
   }
-  await Kl(t);
+  await removeDirectoryRecursive(t);
 }
 var K = 16;
-async function Kl(t) {
-  if ((await cv(t)) !== "directory") return;
+async function removeDirectoryRecursive(t) {
+  if ((await tryRemoveFileOrEmptyDirectory(t)) !== "directory") return;
   let E;
   try {
     E = await x(t);
@@ -147,7 +147,7 @@ async function Kl(t) {
     E.isSymbolicLink() ||
     (getCurrentPlatform() === "windows" && (await _t(t)))
   ) {
-    await cv(t);
+    await tryRemoveFileOrEmptyDirectory(t);
     return;
   }
   let _;
@@ -159,14 +159,14 @@ async function Kl(t) {
     throw r;
   }
   for (let r = 0; r < _.length; r += K)
-    await Promise.all(_.slice(r, r + K).map((s) => Kl(U(t, s))));
-  if ((await cv(t)) === "directory")
+    await Promise.all(_.slice(r, r + K).map((s) => removeDirectoryRecursive(U(t, s))));
+  if ((await tryRemoveFileOrEmptyDirectory(t)) === "directory")
     throw Object.assign(Error("directory refilled during removal"), {
       code: "ENOTEMPTY",
       path: t,
     });
 }
-async function cXt(t, o) {
+async function overwriteFileContents(t, o) {
   let E = getCurrentPlatform() === "windows" ? 0 : R.O_NOFOLLOW | R.O_NONBLOCK,
     _ = await ot(t, R.O_WRONLY | R.O_CREAT | R.O_TRUNC | E, 438);
   try {
@@ -191,16 +191,16 @@ function g(t) {
 function y(t, o) {
   return o;
 }
-var ja = async (t) => g(t),
-  qR = g;
-function Rxt(t, o) {
+var resolveExecutablePathAsync = async (t) => g(t),
+  resolveExecutablePath = g;
+function resolveCommandInPath(t, o) {
   let E = o
     .split(v)
-    .map((_) => uXt(_))
+    .map((_) => normalizePathEntry(_))
     .filter((_) => st(_));
   return E.length === 0 ? null : nt(t, E.join(v));
 }
-function uXt(t, o = "darwin") {
+function normalizePathEntry(t, o = "darwin") {
   return o === "win32" ? t.replaceAll('"', "") : t;
 }
 function st(t) {
@@ -230,9 +230,9 @@ function V() {
 }
 function pt() {
   if (getFsSurface().existsSync(S(getClaudeConfigDir(), ".config.json"))) return S(getClaudeConfigDir(), ".config.json");
-  return dXt();
+  return getDefaultGlobalClaudeFilePath();
 }
-function dXt() {
+function getDefaultGlobalClaudeFilePath() {
   let t = `.claude${fileSuffixForOauthConfig()}.json`;
   return S(process.env.CLAUDE_CONFIG_DIR || homedir(), t);
 }
@@ -255,7 +255,7 @@ async function St() {
 }
 async function c(t) {
   try {
-    return !!(await ja(t));
+    return !!(await resolveExecutablePathAsync(t));
   } catch {
     return !1;
   }
@@ -274,7 +274,7 @@ async function It() {
   if (await c("node")) t.push("node");
   return t;
 }
-var pXt = [
+var BUILD_TOOL_COMMANDS = [
     "git",
     "node",
     "npm",
@@ -322,11 +322,11 @@ async function xt(t) {
     return !1;
   }
 }
-async function IPn(t) {
+async function isVerifiablePath(t) {
   if (t === "" || _Z(t) || my(t)) return !1;
   return !(await hasUnverifiableAncestry(resolve(t)));
 }
-async function $nt(t, o) {
+async function findCommandsOnPath(t, o) {
   let E = getCurrentPlatform() === "windows",
     _ = new Set(t),
     r = E
@@ -343,7 +343,7 @@ async function $nt(t, o) {
     );
   await Promise.all(
     s.map(async (e) => {
-      if (!(await IPn(e))) return;
+      if (!(await isVerifiablePath(e))) return;
       let n;
       try {
         n = await Ot(e, { withFileTypes: !0 });
@@ -365,7 +365,7 @@ async function $nt(t, o) {
           if (L && (await xt(S(e, O.name)))) continue;
         } else {
           let D = S(e, O.name);
-          if ((O.isSymbolicLink() || vxt(O)) && (await hasUnverifiableAncestry(resolve(D)))) continue;
+          if ((O.isSymbolicLink() || hasUnknownFileType(O)) && (await hasUnverifiableAncestry(resolve(D)))) continue;
           try {
             await access(D, Ct.X_OK);
           } catch {
@@ -380,17 +380,17 @@ async function $nt(t, o) {
 async function Nt() {
   let t = new Set();
   try {
-    await withTimeout($nt(pXt, t), Ut, "build tool PATH scan timed out");
+    await withTimeout(findCommandsOnPath(BUILD_TOOL_COMMANDS, t), Ut, "build tool PATH scan timed out");
   } catch {}
-  return pXt.filter((o) => t.has(o));
+  return BUILD_TOOL_COMMANDS.filter((o) => t.has(o));
 }
-function dur() {
+function getDetectedBuildTools() {
   return C().getDetectedBuildTools();
 }
 function lt(t) {
   try {
     if (!t.isWslEnvironment()) return !1;
-    let o = qR("npm");
+    let o = resolveExecutablePath("npm");
     if (o === null) return !1;
     return o.startsWith("/mnt/c/");
   } catch (o) {
@@ -418,7 +418,7 @@ var JETBRAINS_IDES = [
   "jetbrains",
   "androidstudio",
 ];
-function PPn(t) {
+function isWindsurfOrDevinPath(t) {
   let o = t.toLowerCase();
   return (
     o.includes("windsurf") ||
@@ -432,7 +432,7 @@ function at() {
   if (process.env.CURSOR_TRACE_ID) return "cursor";
   let t = process.env.VSCODE_GIT_ASKPASS_MAIN?.toLowerCase() ?? "";
   if (t.includes("cursor")) return "cursor";
-  if (PPn(t)) return "windsurf";
+  if (isWindsurfOrDevinPath(t)) return "windsurf";
   if (t.includes("antigravity")) return "antigravity";
   let o = process.env.__CFBundleIdentifier?.toLowerCase();
   if (o?.includes("vscodium")) return "codium";
@@ -560,10 +560,10 @@ var Mt = new j(
 function C() {
   return Mt.of(B().host);
 }
-function pur() {
+function primeSystemInfo() {
   return C().prime();
 }
-function kxt() {
+function isDockerenvPresent() {
   return C().isDockerenvPresent();
 }
 function Z() {
@@ -638,7 +638,7 @@ var T = {
   getRuntimes() {
     return C().getRuntimes();
   },
-  isRunningWithBun: Hx,
+  isRunningWithBun: isRunningWithBun,
   isWslEnvironment() {
     return C().isWslEnvironment();
   },
@@ -684,7 +684,7 @@ function normalizeShellNameForAnalytics(t) {
 function getShellForAnalytics() {
   return normalizeShellNameForAnalytics(process.env.SHELL || process.env.COMSPEC || "");
 }
-var TW = ["us", "eu", "apac", "jp", "au", "us-gov", "global"],
+var BEDROCK_INFERENCE_PROFILE_PREFIXES = ["us", "eu", "apac", "jp", "au", "us-gov", "global"],
   z = ["us", "eu", "apac", "jp", "au", "global"];
 var l = {};
 defineExportGetters(l, {
@@ -1208,7 +1208,7 @@ defineExportGetters(u, {
   INK_SCREEN_READER: () => qE,
   USE_API_CONTEXT_MANAGEMENT: () => yn,
 });
-var Ghe = ["5m", "1h"];
+var PROMPT_CACHE_TTL_VALUES = ["5m", "1h"];
 var JE = I.triBool(),
   zE = I.int({ min: 0 }),
   QE = I.int({ min: 0 }),
@@ -1454,8 +1454,8 @@ var JE = I.triBool(),
   Mn = I.triBool(),
   un = I.bool(),
   Bn = I.bool(),
-  bn = I.enum(Ghe),
-  mn = I.enum(Ghe),
+  bn = I.enum(PROMPT_CACHE_TTL_VALUES),
+  mn = I.enum(PROMPT_CACHE_TTL_VALUES),
   Gn = I.bool(),
   Hn = I.bool(),
   dn = I.str(),
@@ -2741,34 +2741,34 @@ var env = f(AI, T),
   cI = import.meta.require("../共享小工具-未细化/udsInboxShape.dasynwyz.js").udsInboxShape,
   udsEnv = f(cI, null);
 export {
-  Hx,
-  bc,
-  cv,
-  vxt,
-  eae,
-  jhe,
-  Whe,
-  Kl,
-  cXt,
-  ja,
-  qR,
-  Rxt,
-  uXt,
-  dXt,
+  isRunningWithBun,
+  isBunStandaloneExecutable,
+  tryRemoveFileOrEmptyDirectory,
+  hasUnknownFileType,
+  getDirentFileInfo,
+  tryGetDirentFileInfo,
+  removePathRecursively,
+  removeDirectoryRecursive,
+  overwriteFileContents,
+  resolveExecutablePathAsync,
+  resolveExecutablePath,
+  resolveCommandInPath,
+  normalizePathEntry,
+  getDefaultGlobalClaudeFilePath,
   getGlobalClaudeFile,
-  pXt,
-  IPn,
-  $nt,
-  dur,
+  BUILD_TOOL_COMMANDS,
+  isVerifiablePath,
+  findCommandsOnPath,
+  getDetectedBuildTools,
   JETBRAINS_IDES,
-  PPn,
-  pur,
-  kxt,
+  isWindsurfOrDevinPath,
+  primeSystemInfo,
+  isDockerenvPresent,
   getHostPlatformForAnalytics,
   normalizeShellNameForAnalytics,
   getShellForAnalytics,
-  Ghe,
-  TW,
+  PROMPT_CACHE_TTL_VALUES,
+  BEDROCK_INFERENCE_PROFILE_PREFIXES,
   env,
   antEnv,
   udsEnv,

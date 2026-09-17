@@ -12,7 +12,7 @@
 import { WORKFLOW_LAUNCH_DIGEST_ENV as $gr, createWorkflowLaunchState as Ugr, readWorkflowLaunchRecord as Bgr, workflowLaunchHandoffs as TDt, handleWorkflowLaunchEvent as jgr, resumeWorkflowLaunch as Wgr } from "./workflow-launch.js";
 import "./remote-workflow-launch.js";
 import "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
-import "./chunk-bkcg0nbj.js";
+import "./workflow-runtime.js";
 import "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
 import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
 import "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";

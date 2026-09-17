@@ -347,7 +347,7 @@ import {
   EXECUTABLE_CONTENT_TYPES,
 } from "../图表-Mermaid/chunk-743atbtj.js";
 import {
-  xN,
+  buildAgentArtifactKey,
   revokeCodeliveredFollowups,
   MAX_ARTIFACT_WATCHES,
   getArtifactState,
@@ -492,11 +492,11 @@ import { pinWriteTarget } from "../后台任务-Shell管理/task-output.js";
 import { isRunningInRemoteEnvironment } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { ensureArtifactCommentMonitorState, stopArtifactCommentMonitor, getArtifactCommentMonitorState, forgetArtifactCommentMonitors, isArtifactCommentMonitorWired } from "./artifact-comment-monitor-intent.js";
 import {
-  p1t,
-  Pdt,
-  zsn,
-  f1t,
-  W6n,
+  isSlugNamedByStrictHumanTurn,
+  formatArmFailureReason,
+  describeHttpFailureOrigin,
+  getArmFailureAdvice,
+  durableWakeArmRows,
   labelledArmedVia,
   parseArmedVia,
   armedViaWording,
@@ -557,7 +557,7 @@ import {
   updateCommentCensusCounts,
   recordCommentCensusReadIds,
   getCommentCensusEntry,
-  cpt,
+  isArtifactSummonEnabled,
   parseArtifactCommentEnvelope,
   settleSummonSeed,
   isSummonSettled,
@@ -628,7 +628,7 @@ import {
   getMaxAssetBytesForType,
   ASSET_FILE_EXTENSIONS,
   SUPPORTED_ASSET_TYPE_LIST,
-  r4e,
+  getAssetContentTypeForPath,
   isTextAssetContentType,
   NOT_A_FILE_MESSAGE,
   EMPTY_FILE_MESSAGE,
@@ -653,7 +653,7 @@ import {
   listArtifactAssets,
   deleteArtifactAsset,
   copyArtifactAssets,
-  S$t,
+  getAssetFileExtensionForContentType,
   readArtifactAsset,
 } from "./artifact-asset-store.js";
 import {
@@ -3278,7 +3278,7 @@ function yu(e, t, o) {
 `,
     Rr =
       'To reply, call Artifact with action "reply", the same url, a thread_id from above, and text (plain text, \u22644096 UTF-8 bytes).' +
-      (cpt() &&
+      (isArtifactSummonEnabled() &&
       p.threads.some((ge) =>
         ge.comments.some(
           (Ze) => Ze.awaiting_reply === !0 && N(Ze) === "addressed" && !B(Ze),
@@ -11182,7 +11182,7 @@ var bn = null,
   Bb = null;
 function Hb(e, t) {
   let o = frameLiveArmRows(e, t),
-    r = W6n(t);
+    r = durableWakeArmRows(t);
   if (o.length === 0 && r.length === 0) return {};
   let d = getArtifactEnvironment(),
     w = Date.now();
@@ -11278,12 +11278,12 @@ function Vb(e, t, o) {
           return B !== null ? `${B}.` : `reason: ${er(C.reason)}.`;
         };
       if (C.rail !== void 0) {
-        let B = f1t(I ?? "unknown");
+        let B = getArmFailureAdvice(I ?? "unknown");
         switch (C.state) {
           case "arming":
             return `- ${D} \u2014 not a wake subscription yet: its registration is in flight right now. Check status again in a few seconds before relying on it.`;
           case "failed":
-            return `- ${D} \u2014 NOT subscribed: the durable wake subscription failed to register at ${Eo(C.at)} (${er(C.reason)}${_l(C.detail)}) \u2014 ${Pdt(I ?? "unknown", Zc(C.server_message))} Nothing will wake this session about this artifact${B === null ? "" : `; ${B}`}.`;
+            return `- ${D} \u2014 NOT subscribed: the durable wake subscription failed to register at ${Eo(C.at)} (${er(C.reason)}${_l(C.detail)}) \u2014 ${formatArmFailureReason(I ?? "unknown", Zc(C.server_message))} Nothing will wake this session about this artifact${B === null ? "" : `; ${B}`}.`;
           default:
             return `- ${D} \u2014 no wake subscription (state: ${er(C.state)}).`;
         }
@@ -11342,7 +11342,7 @@ function Gb(e) {
             : ""),
       };
     case "failed": {
-      let t = zsn(e);
+      let t = describeHttpFailureOrigin(e);
       return {
         watching: !1,
         outcome: "failed",
@@ -11350,7 +11350,7 @@ function Gb(e) {
         reason: e.reason,
         ...(e.status !== void 0 && { status: e.status }),
         ...(t !== void 0 && { detail: t }),
-        note: Pdt(e.reason, e.serverMessage),
+        note: formatArmFailureReason(e.reason, e.serverMessage),
       };
     }
     case "skipped":
@@ -11618,7 +11618,7 @@ var sp = {
             D &&
             ao(o) &&
             hasStrictHumanDecider(o.messages) &&
-            p1t(o.messages, r.slug) &&
+            isSlugNamedByStrictHumanTurn(o.messages, r.slug) &&
             !N.declined &&
             !(isSlugStopped(r.slug) && !isSlugSwept(r.slug)) &&
             !knownNonEditor(r.slug) &&
@@ -12784,7 +12784,7 @@ function bp(e, t, o, r) {
 }
 function ki(e, t, o, r, d, w, p) {
   let _ = getArtifactState().refusedPublishBodies,
-    E = xN(e, t),
+    E = buildAgentArtifactKey(e, t),
     C = _.get(E),
     D = r ?? C?.live,
     I =
@@ -12805,7 +12805,7 @@ function d_(e, t) {
   return up[e] >= up[t] ? e : t;
 }
 function _p(e, t, o) {
-  getArtifactState().refusedPublishBodies.get(xN(e, t))?.hashes.add(o);
+  getArtifactState().refusedPublishBodies.get(buildAgentArtifactKey(e, t))?.hashes.add(o);
 }
 function Md(e, t) {
   let { readRemedy: o, forceAdvisory: r } = buildArtifactReadGuidance();
@@ -12819,7 +12819,7 @@ function Md(e, t) {
   );
 }
 function vp(e, t, o) {
-  let r = getArtifactState().refusedPublishBodies.get(xN(e, t));
+  let r = getArtifactState().refusedPublishBodies.get(buildAgentArtifactKey(e, t));
   return r !== void 0 &&
     o !== void 0 &&
     r.batch === o &&
@@ -12837,7 +12837,7 @@ function Cp(e, t, o) {
     : { sourceless: r.sourceless, forceRefused: r.forceRefused };
 }
 function $p(e, t, o, r) {
-  let d = getArtifactState().refusedPublishBodies.get(xN(e, t));
+  let d = getArtifactState().refusedPublishBodies.get(buildAgentArtifactKey(e, t));
   if (d === void 0 || !d.hashes.has(o)) return null;
   let w = d.observedFrom;
   if (w !== void 0 && (w === "" || w !== (r ?? ""))) return null;
@@ -12883,7 +12883,7 @@ async function Ep(e, t, o) {
   };
 }
 function Pp(e, t) {
-  getArtifactState().refusedPublishBodies.delete(xN(e, t));
+  getArtifactState().refusedPublishBodies.delete(buildAgentArtifactKey(e, t));
 }
 function Op(e) {
   if (!isRecord(e) || !("note" in e)) return null;
@@ -16256,7 +16256,7 @@ var hv = {
           },
         ]),
         dn = `${ASSET_UPLOAD_CARD_LEDE}${Ds}${Lt ? planModeCardNote(Ds !== "") : ""}${Gt}${Wn ? (artifactCopyFromFrozen() ? ASSET_UPLOAD_COVERS_SESSION_COPIES_NOTE : ASSET_UPLOAD_COVERS_SESSION_NOTE) : ""}`,
-        ns = isTextAssetContentType(r4e(De)) ? We : tt;
+        ns = isTextAssetContentType(getAssetContentTypeForPath(De)) ? We : tt;
       return {
         behavior: "ask",
         message:
@@ -18316,7 +18316,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
             'action "upload_asset" requires `file_path` \u2014 the local file to upload.',
           errorCode: 7,
         };
-      let Ie = r4e(C);
+      let Ie = getAssetContentTypeForPath(C);
       if (Ie === void 0)
         return {
           result: !1,
@@ -19307,7 +19307,7 @@ ${re}`
         typeof e.seededThread === "string" &&
         ARTIFACT_SLUG_RE.test(e.seededThread) &&
         isArtifactCommentsAvailable() &&
-        cpt()
+        isArtifactSummonEnabled()
           ? `
 
 ${Q_(e.seededThread)}`
@@ -19687,7 +19687,7 @@ ${B}`,
           'file_path is required for action "upload_asset"',
           "asset_upload_missing_field",
         );
-      let ie = r4e(p.file_path);
+      let ie = getAssetContentTypeForPath(p.file_path);
       if (ie === void 0)
         throw new ArtifactInputError(
           `unsupported asset type "${Mr(p.file_path)}": upload_asset takes ${SUPPORTED_ASSET_TYPE_LIST}`,
@@ -20267,7 +20267,7 @@ ${B}`,
       if (mt.kind === "error")
         throw new ArtifactInputError(mt.message, `asset_read_${mt.reason}`);
       ma(p, t, L, Ue, qn(getShareEntry(L.slug)), "assets");
-      let zt = `${Ne}${S$t(mt.contentType) ?? ""}`,
+      let zt = `${Ne}${getAssetFileExtensionForContentType(mt.contentType) ?? ""}`,
         mr = getWorktreeWriteBlockMessage(zt, t);
       if (mr)
         throw (
@@ -22253,7 +22253,7 @@ ${B}`,
         release: Be.current,
       });
     let Ja;
-    if (!ts && cpt()) {
+    if (!ts && isArtifactSummonEnabled()) {
       let L = analyzeTurnTail(t.messages).decider,
         ie = L?.text != null ? parseArtifactCommentEnvelope(L.text) : null;
       if (ie !== null && ie.slug.toLowerCase() === we.slug.toLowerCase()) {

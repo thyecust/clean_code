@@ -24,7 +24,7 @@ import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-�
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { SelectListRow, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { readRoster } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
@@ -40,7 +40,7 @@ import { addRemoteControlEntry, removeRemoteControlEntry } from "../认证-OAuth
 import { loadDaemonConfig } from "../../01-核心基础设施/设置-配置/daemon-config.js";
 import { loadScheduledTasks, ScheduledTaskDetail, ScheduledTaskForm } from "../权限系统/scheduled-task-ui.js";
 import { readDaemonStatus } from "../../01-核心基础设施/共享小工具-未细化/daemon-status.js";
-import { ole, XHe, DWe, tF } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
+import { isDaemonServiceControlSupported, uninstallDaemonService, stopDaemonService, isDaemonServiceInstalled } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
@@ -218,7 +218,7 @@ function _e(Zo) {
   else Ke = J[32];
   let Ee;
   if (J[33] !== ke || J[34] !== oe || J[35] !== Ke)
-    ((Ee = e(ve, { options: on, isDisabled: ke, onChange: Ke, onCancel: oe })),
+    ((Ee = e(Select, { options: on, isDisabled: ke, onChange: Ke, onCancel: oe })),
       (J[33] = ke),
       (J[34] = oe),
       (J[35] = Ke),
@@ -464,7 +464,7 @@ function tt(nn) {
   return Le;
 }
 async function yt(n) {
-  let s = await ole(),
+  let s = await isDaemonServiceControlSupported(),
     i = getVerifiedDaemonLock(1, n).catch(() => null),
     [k, f, H, R, T, m, b] = await Promise.all([
       i,
@@ -473,7 +473,7 @@ async function yt(n) {
       readDaemonStatus(n).catch(() => null),
       readScheduledStatus(n).catch(() => null),
       readRoster({ silent: !0 }, n),
-      s ? tF() : Promise.resolve(!1),
+      s ? isDaemonServiceInstalled() : Promise.resolve(!1),
     ]);
   return {
     tasks: f,
@@ -529,10 +529,10 @@ function DaemonHub({ initialData: n, modelOptions: s, onDone: i, storageV5: k })
     try {
       switch (I) {
         case "uninstall":
-          Pe = await XHe();
+          Pe = await uninstallDaemonService();
           break;
         case "stop":
-          Pe = await DWe();
+          Pe = await stopDaemonService();
           break;
       }
       if (!Pe.ok) c(`${I} failed: ${Pe.error}`);
@@ -907,7 +907,7 @@ function Fe(sr) {
   else ct = Ao[3];
   let Io;
   if (Ao[4] !== Se || Ao[5] !== ct)
-    ((Io = e(nl, { isFocused: Se, styled: !1, children: ct })),
+    ((Io = e(SelectListRow, { isFocused: Se, styled: !1, children: ct })),
       (Ao[4] = Se),
       (Ao[5] = ct),
       (Ao[6] = Io));

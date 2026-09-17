@@ -18,7 +18,7 @@ import { isWorkspacePersistedTrusted, isPathTrusted, setPathTrusted, clearProjec
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { reanchorGitFileWatcher, findCanonicalGitRootUncached, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { resolvePath, pf } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath, canonicalizePathForComparison } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
@@ -111,7 +111,7 @@ async function E(e) {
     try {
       c = await realpath(o);
     } catch {}
-    return pf(zn(c));
+    return canonicalizePathForComparison(zn(c));
   };
   return (await t(e)) === (await t(homedir()));
 }
@@ -159,7 +159,7 @@ function cdRuleRefusalMessage(e, t, o = (s) => s, c) {
 async function N(e, t, o) {
   if (a.CLAUDE_CODE_DISABLE_CLAUDE_MDS) return "";
   let c = new Set();
-  for (let m of await getSessionMemoryFiles(e, !1, o)) c.add(pf(m.path));
+  for (let m of await getSessionMemoryFiles(e, !1, o)) c.add(canonicalizePathForComparison(m.path));
   let s = [],
     l = t;
   while (l !== parse(l).root) (s.push(l), (l = dirname(l)));

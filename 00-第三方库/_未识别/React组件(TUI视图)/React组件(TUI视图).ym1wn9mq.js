@@ -94,7 +94,7 @@ import { isGitLabMergeRequestUrl } from "../../../02-功能模块/Git-Worktree/g
 import { BRIEF_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { INTERRUPTED_BY_USER_MARKER, INTERRUPTED_FOR_TOOL_USE_MARKER, TOOL_CALL_NOT_COMPLETED_MARKER, API_REQUEST_ABORTED_MESSAGE, isUserRefusalOrSkipMessage } from "../../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { SEND_USER_FILE_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
-import { rg } from "../../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { sanitizeSingleLineDisplayText } from "../../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { Vm } from "../../ink/ink + react-reconciler.5rs3h07b.js";
 import { KeybindingHint } from "../../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { qA } from "../Ink终端渲染器/chunk-hm8z9h7j.js";
@@ -210,8 +210,8 @@ import {
   shouldInjectMemoryFile,
   USAGE_CREDITS_COMMAND,
 } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { stripMemoryTags, parseMemoryDocument, MEMORY_WRITE_TOOL_NAME, getMemoryProjectKey, canUseTeamMemoryStorage, resolveAutoMemPath, isWithinTeamMemoryDir, UYe, REPL_TOOL_NAME } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { ps } from "../../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { stripMemoryTags, parseMemoryDocument, MEMORY_WRITE_TOOL_NAME, getMemoryProjectKey, canUseTeamMemoryStorage, resolveAutoMemPath, isWithinTeamMemoryDir, isStoneShellEnabled, REPL_TOOL_NAME } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { sanitizeTextForDisplay } from "../../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { FRONTMATTER_PATTERN, STRICT_FRONTMATTER_PATTERN, parseFrontmatter } from "../../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { sanitizeEffortLevel } from "../../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME } from "../../../02-功能模块/权限系统/chunk-fjrcf22x.js";
@@ -3186,7 +3186,7 @@ function XT(l) {
       children: e(Text, { dimColor: !0, children: "Running\u2026" }),
     });
   let { progress: g, total: T } = f.data,
-    y = rg(f.data.progressMessage);
+    y = sanitizeSingleLineDisplayText(f.data.progressMessage);
   if (g === void 0)
     return e(ToolResultRow, {
       height: 1,
@@ -4842,19 +4842,19 @@ function ZC(l, f, { verbose: g }) {
   let y = getHandbackDisplayText(T.data);
   return y === void 0
     ? null
-    : e(ToolResultRow, { children: e(Text, { dimColor: !0, children: ps(y) }) });
+    : e(ToolResultRow, { children: e(Text, { dimColor: !0, children: sanitizeTextForDisplay(y) }) });
 }
 function ew(l) {
   if (typeof l === "string")
-    return e(ToolResultRow, { children: e(Text, { dimColor: !0, children: ps(l) }) });
+    return e(ToolResultRow, { children: e(Text, { dimColor: !0, children: sanitizeTextForDisplay(l) }) });
   let f = l.files.filter((g) => g.error !== void 0);
   return r(ToolResultRow, {
     children: [
-      e(Text, { dimColor: !0, children: ps(l.message) }),
+      e(Text, { dimColor: !0, children: sanitizeTextForDisplay(l.message) }),
       f.map((g) =>
         r(
           Text,
-          { color: "warning", children: ["  ", ps(`${g.path}: ${g.error}`)] },
+          { color: "warning", children: ["  ", sanitizeTextForDisplay(`${g.path}: ${g.error}`)] },
           g.path,
         ),
       ),
@@ -9582,7 +9582,7 @@ function Cf(Pee) {
                   xk.path,
                 ),
               )
-            : UYe() &&
+            : isStoneShellEnabled() &&
               e(Ri, {
                 ops: w.memories.map(Mj),
                 relevantMemories: w.memories,
@@ -11602,7 +11602,7 @@ function Db(ere) {
           ) ?? Ol.toolName;
       } else if (Ol?.type === "mcp_progress") {
         let { progress: db, total: mN, progressMessage: cre } = Ol;
-        let pb = rg(cre);
+        let pb = sanitizeSingleLineDisplayText(cre);
         if (db !== void 0 && mN !== void 0 && mN > 0) {
           let RF = Math.round(Math.min(1, Math.max(0, db / mN)) * 100);
           Ll = pb ? `${pb} (${RF}%)` : `${RF}%`;
@@ -12310,7 +12310,7 @@ function Db(ere) {
   )
     ((wb =
       se.memoryOps &&
-      UYe() &&
+      isStoneShellEnabled() &&
       e(Ri, {
         ops: se.memoryOps,
         relevantMemories: se.relevantMemories,

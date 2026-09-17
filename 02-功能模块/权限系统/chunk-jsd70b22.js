@@ -15,7 +15,7 @@ import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } 
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, zi, yt, dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { jsonParse, resolvePathInfo, getFsSurface, qr, redactForDisplay, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, resolvePathInfo, getFsSurface, redactSecretsFromText, redactForDisplay, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
@@ -101,7 +101,7 @@ import { OUTSIDE_READS_BLOCKED_DENY_REASON } from "./chunk-e4pfvp7x.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { turnAbortControllerOf } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
-  ps,
+  sanitizeTextForDisplay,
   sanitizeInvisibleText,
   MAX_DISPLAY_PAYLOAD_UNITS,
   collapseInvisibleCharacterRuns,
@@ -111,7 +111,7 @@ import {
   formatDisplayLabel,
   isBlankDisplayText,
   formatMcpToolUserFacingName,
-  uAt,
+  formatToolNameForDisplay,
   prepareDisplayText,
   formatWithholdableValue,
   shouldWithholdValue,
@@ -515,7 +515,7 @@ function buildBasePermissionDescriptor(e) {
       R = e.tool.name;
     }
     let c = e.tool.isMcp === !0 && R.endsWith(" (MCP)") ? R.slice(0, -6) : R;
-    t = uAt(c);
+    t = formatToolNameForDisplay(c);
   }
   let s = "",
     k;
@@ -526,7 +526,7 @@ function buildBasePermissionDescriptor(e) {
           theme: e.theme,
           verbose: !0,
         }) ?? null;
-      s = typeof R === "string" ? ps(R) : R;
+      s = typeof R === "string" ? sanitizeTextForDisplay(R) : R;
     } catch {
       ((s = "parameters could not be rendered \u2014 deny unless expected"),
         (k = !0));
@@ -686,12 +686,12 @@ function Ye(e) {
       typeof e.input.name === "string" &&
       e.input.name !== "" &&
       !e.input.scriptPath &&
-      ps(e.input.name) === e.input.name
+      sanitizeTextForDisplay(e.input.name) === e.input.name
         ? e.input.name
         : void 0,
     R =
       typeof r.renderedToolUseMessage === "string"
-        ? ps(r.renderedToolUseMessage)
+        ? sanitizeTextForDisplay(r.renderedToolUseMessage)
         : r.renderedToolUseMessage,
     c = e.input.args;
   return {
@@ -772,11 +772,11 @@ function oo(e) {
   let r = buildBasePermissionDescriptor(e),
     o =
       typeof e.input.command === "string" && e.input.command.length <= MAX_DISPLAY_PAYLOAD_UNITS
-        ? ps(e.input.command)
+        ? sanitizeTextForDisplay(e.input.command)
         : "",
     t =
       typeof r.renderedToolUseMessage === "string"
-        ? ps(r.renderedToolUseMessage)
+        ? sanitizeTextForDisplay(r.renderedToolUseMessage)
         : r.renderedToolUseMessage;
   return { ...r, renderedToolUseMessage: t, command: o };
 }
@@ -800,11 +800,11 @@ function buildBashPermissionDescriptor(e) {
   let r = buildBasePermissionDescriptor(e),
     o =
       typeof e.input.command === "string" && e.input.command.length <= MAX_DISPLAY_PAYLOAD_UNITS
-        ? ps(e.input.command)
+        ? sanitizeTextForDisplay(e.input.command)
         : "",
     t =
       typeof r.renderedToolUseMessage === "string"
-        ? ps(r.renderedToolUseMessage)
+        ? sanitizeTextForDisplay(r.renderedToolUseMessage)
         : r.renderedToolUseMessage;
   return {
     ...r,
@@ -1645,7 +1645,7 @@ function uo(e) {
       r.tool.name,
       s,
       r.toolUseID,
-      sanitizeAndTruncateText(qr(I)),
+      sanitizeAndTruncateText(redactSecretsFromText(I)),
       t.suggestions,
       t.blockedPath,
       r.tool.requiresUserInteraction?.(),

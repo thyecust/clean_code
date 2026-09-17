@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 302 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Qmr, YFn, BQt } from "../会话选择器-AgentsUI/会话选择器-AgentsUI.jta2pccx.js";
+import { seedHostJobs as Qmr, remountClearSeq as YFn, mountFleetView as BQt } from "../会话选择器-AgentsUI/会话选择器-AgentsUI.jta2pccx.js";
 import "../Vim模式/Vim模式.nnewe0gf.js";
 import "../../01-核心基础设施/共享小工具-未细化/fleet-view-screen.js";
 import "../../01-核心基础设施/共享小工具-未细化/alt-screen-container.js";
@@ -37,7 +37,7 @@ import "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
 import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
-import "../自动更新-安装/chunk-2g5h49pk.js";
+import "../自动更新-安装/native-installer.js";
 import "../自动更新-安装/install-diagnostics.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import "../Teammates团队/chunk-88ybhavr.js";

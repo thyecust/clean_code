@@ -31,7 +31,7 @@ import {
   addToExcludedCommands,
   SandboxManager,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { runWindowsSandboxInstall } from "./windows-sandbox-install.js";
@@ -718,7 +718,7 @@ function go(wt) {
     C[17] !== Go ||
     C[18] !== bo
   )
-    ((fo = e(ve, {
+    ((fo = e(Select, {
       options: Go,
       onChange: V,
       onCancel: bo,
@@ -1068,7 +1068,7 @@ function Wo(Xt) {
     D[9] !== L ||
     D[10] !== ko
   )
-    ((Ro = e(ve, {
+    ((Ro = e(Select, {
       options: L,
       defaultValue: yo,
       defaultFocusValue: yo,

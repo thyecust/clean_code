@@ -170,7 +170,7 @@ function tn(e) {
     "a built-in module has no registerPlugin function",
   );
 }
-function Xae() {
+function registerBuiltinPlugins() {
   let e = getHostStateStore();
   if (e.builtinPluginsInitialized) return;
   if (
@@ -782,13 +782,13 @@ function pt() {
     },
   });
 }
-var K6e = defineDialog({
+var CHROME_INSTALL_UPSELL_DIALOG = defineDialog({
   kind: "chrome_install_upsell",
   payload: createLazyValue(() => c({})),
   result: createLazyValue(() => X(["install", "not_now", "dont_ask_again", "cancelled"])),
   default: "cancelled",
 });
-var X6e = defineDialog({
+var CHROME_INSTALL_SETUP_DIALOG = defineDialog({
   kind: "chrome_install_setup",
   payload: createLazyValue(() =>
     c({
@@ -975,7 +975,7 @@ async function wt(e, t) {
   }
   try {
     while (!0) {
-      let E = await t(X6e, V(), { signal: o });
+      let E = await t(CHROME_INSTALL_SETUP_DIALOG, V(), { signal: o });
       if (E === "keep_waiting") continue;
       let { phase: D } = L();
       if (E === "continue" && D === "connected" && T) {
@@ -1230,7 +1230,7 @@ async function qn(e, t) {
       logFeatureSad("chrome_install_upsell", "no_browser_detected"),
       Y
     );
-  switch (await t(K6e, {}, { signal: e.abortController.signal })) {
+  switch (await t(CHROME_INSTALL_UPSELL_DIALOG, {}, { signal: e.abortController.signal })) {
     case "install": {
       let r = await wt(e, t);
       if (r === we) getClaudeInChromeState().installUpsellResolution = void 0;
@@ -4715,7 +4715,7 @@ ${e}`);
     },
   });
 }
-function zst() {
+function registerAllBundledSkills() {
   let e = getHostStateStore();
   if (e.bundledSkillsInitialized) return;
   if (
@@ -4796,4 +4796,4 @@ function zst() {
     );
   (r(), h());
 }
-export { Xae, K6e, X6e, zst };
+export { registerBuiltinPlugins, CHROME_INSTALL_UPSELL_DIALOG, CHROME_INSTALL_SETUP_DIALOG, registerAllBundledSkills };

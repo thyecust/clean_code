@@ -18,7 +18,7 @@ import { useKeybindings } from "../../01-核心基础设施/共享小工具-未�
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { nl } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { SelectListRow } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { parseCronExpression, formatCronSchedule, createScheduledTask, deleteScheduledTasks, listScheduledTasks } from "./scheduled-tasks.js";
 import { listGoalStopHooks, setSessionGoal, clearSessionGoal } from "../Skills技能/chunk-sapykxw7.js";
@@ -458,7 +458,7 @@ function ke(io) {
     else B = x[10];
     let Lt;
     if (x[11] !== Q || x[12] !== B)
-      ((Lt = e(nl, { isFocused: Q, children: B })),
+      ((Lt = e(SelectListRow, { isFocused: Q, children: B })),
         (x[11] = Q),
         (x[12] = B),
         (x[13] = Lt));
@@ -483,7 +483,7 @@ function ke(io) {
   else T = x[20];
   let B;
   if (x[21] !== Q || x[22] !== T)
-    ((B = e(nl, { isFocused: Q, children: T })),
+    ((B = e(SelectListRow, { isFocused: Q, children: T })),
       (x[21] = Q),
       (x[22] = T),
       (x[23] = B));

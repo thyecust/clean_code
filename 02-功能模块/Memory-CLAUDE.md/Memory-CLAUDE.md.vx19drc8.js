@@ -8049,7 +8049,7 @@ var Yd = new Set([
 function Co(e) {
   return Yd.has(strip1mSuffix(e));
 }
-function FYe(e, t) {
+function requiresPreReadGuard(e, t) {
   if (t === void 0) return Co(e);
   return t.model !== void 0 && Co(t.model);
 }
@@ -8557,10 +8557,10 @@ metadata:
 function Oo() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_stone_shell", !1);
 }
-function UYe() {
+function isStoneShellEnabled() {
   return Oo();
 }
-function Loe() {
+function isStoneShellRecallEnabled() {
   return Oo();
 }
 function shouldServeStoneShellPrompt() {
@@ -18052,7 +18052,7 @@ export {
   ptr,
   isOpus48Model,
   mtr,
-  FYe,
+  requiresPreReadGuard,
   isEapModelId,
   isModelInGrowthBookRoster,
   isBasaltCoveEnabled,
@@ -18084,8 +18084,8 @@ export {
   isWithinTeamMemoryDir,
   resolveTeamMemoryKey,
   isTeamMemoryPath,
-  UYe,
-  Loe,
+  isStoneShellEnabled,
+  isStoneShellRecallEnabled,
   shouldServeStoneShellPrompt,
   isStoneShellPromptServed,
   truncateMemoryContent,

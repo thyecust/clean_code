@@ -26,7 +26,7 @@ import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施
 import { Cs, Vlr } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { getProcessCommand } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { isNativeInstallerSymlink, isNpmShimExecutable } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { hN } from "../插件系统/chunk-ajtn749s.js";
+import { claudeDownloadsHttpClient } from "../插件系统/chunk-ajtn749s.js";
 import { SR, UH, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import {
   runWithRetry,
@@ -120,7 +120,7 @@ var Tt = 1,
       ),
     }),
   );
-class rT extends R {
+class ManifestSignatureError extends R {
   reason;
   constructor(e, t) {
     super(
@@ -138,27 +138,27 @@ function Ue({
   publicKeyPem: d,
 }) {
   let p = Ct().safeParse(t);
-  if (!p.success) throw new rT(r, "sidecar_malformed");
+  if (!p.success) throw new ManifestSignatureError(r, "sidecar_malformed");
   let { signature: o, publicKeySha256: _ } = p.data;
   if (Buffer.from(o, "base64").toString("base64") !== o)
-    throw new rT(r, "sidecar_malformed");
+    throw new ManifestSignatureError(r, "sidecar_malformed");
   let w;
   try {
     w = createPublicKey(d);
   } catch {
-    throw new rT(r, "key_mismatch");
+    throw new ManifestSignatureError(r, "key_mismatch");
   }
   let v = $t("sha256")
     .update(w.export({ type: "spki", format: "der" }))
     .digest("hex");
-  if (_ !== v) throw new rT(r, "key_mismatch");
+  if (_ !== v) throw new ManifestSignatureError(r, "key_mismatch");
   let S = !1;
   try {
     S = verify("sha512", Buffer.concat([Ve, e]), w, Buffer.from(o, "base64"));
   } catch {
     S = !1;
   }
-  if (!S) throw new rT(r, "signature_invalid");
+  if (!S) throw new ManifestSignatureError(r, "signature_invalid");
   let F;
   try {
     let I = Se().safeParse(jsonParse(e.toString("utf8")));
@@ -166,12 +166,12 @@ function Ue({
   } catch {
     F = void 0;
   }
-  if (!F || F.version !== r) throw new rT(r, "version_mismatch");
+  if (!F || F.version !== r) throw new ManifestSignatureError(r, "version_mismatch");
   return F;
 }
 var Ae = "https://downloads.claude.ai/claude-code-releases";
 function Pe(e, t) {
-  return isClaudeDownloadsHost(e) ? hN.get(e, t) : externalHttp.get(e, t);
+  return isClaudeDownloadsHost(e) ? claudeDownloadsHttpClient.get(e, t) : externalHttp.get(e, t);
 }
 var Ge = 30000,
   qe = 3;
@@ -231,7 +231,7 @@ async function Lt(e = "latest", t, r) {
     );
   }
 }
-async function Hpt(e) {
+async function resolveReleaseVersion(e) {
   if (/^v?\d+\.\d+\.\d+(-\S+)?$/.test(e)) {
     let r = e.startsWith("v") ? e.slice(1) : e;
     if (/^99\.99\./.test(r))
@@ -266,7 +266,7 @@ function Vt() {
 function zt() {
   return Number(a.CLAUDE_CODE_DOWNLOAD_DEADLINE_MS_FOR_TESTING) || Ke;
 }
-class mze extends Error {
+class StallTimeoutError extends Error {
   constructor() {
     super("Download stalled: no data received for 120 seconds");
     this.name = "StallTimeoutError";
@@ -386,7 +386,7 @@ async function We(e, t, r, d = {}, p) {
         );
       let Y = N instanceof Error && N.message.includes("Checksum mismatch"),
         U = !F && (Ye(N) || tf(N)?.code === "ERR_STREAM_PREMATURE_CLOSE"),
-        O = ne ? new mze() : ge(N);
+        O = ne ? new StallTimeoutError() : ge(N);
       if (((o = O), (ne || Y || U) && !Ht(N) && v < le)) {
         if (Y) _ = !0;
         else if (U) w = !0;
@@ -439,7 +439,7 @@ async function Qe(
     v,
     S,
     F = !1,
-    I = Ipt(p);
+    I = getBinaryName(p);
   try {
     let x = await Ce(`${e}/${t}/manifest.json`, {
       timeout: 1e4,
@@ -490,8 +490,8 @@ async function Qe(
         });
         ((F ||= L.dropRetried), (D = L.data));
       } catch (L) {
-        if (((C = _e(L)), C !== 404)) throw new rT(t, "sidecar_fetch_failed");
-        if (d !== "allow-unsigned-legacy") throw new rT(t, "sidecar_missing");
+        if (((C = _e(L)), C !== 404)) throw new ManifestSignatureError(t, "sidecar_fetch_failed");
+        if (d !== "allow-unsigned-legacy") throw new ManifestSignatureError(t, "sidecar_missing");
         N = !0;
       }
       if (N)
@@ -509,18 +509,18 @@ async function Qe(
         });
         logForDebugging(`Verified manifest signature for ${t}`);
         let G = L.platforms[p];
-        if (G && G.binary !== I) throw new rT(t, "binary_name_mismatch");
+        if (G && G.binary !== I) throw new ManifestSignatureError(t, "binary_name_mismatch");
         if (
           ((S = L),
           (P = !0),
           d === "require-enforcing-release" &&
             !jt(L.manifestSignatureEnforcement))
         )
-          throw new rT(t, "release_predates_enforcement");
+          throw new ManifestSignatureError(t, "release_predates_enforcement");
         ((E = !0), logFeatureOk("update_manifest_signature"));
       }
     } catch (D) {
-      if (!(D instanceof rT)) throw D;
+      if (!(D instanceof ManifestSignatureError)) throw D;
       await initializeGrowthBook().catch(() => null);
       let N = Bt();
       if (
@@ -565,8 +565,8 @@ async function Qe(
 async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
   let o = getFsSurface();
   await o.rm(t, { recursive: !0, force: !0 });
-  let _ = G4(),
-    w = Ipt(_),
+  let _ = getPlatform(),
+    w = getBinaryName(_),
     v = Date.now();
   logEvent("tengu_binary_download_attempt", {});
   let [S, F] = await Promise.all([
@@ -644,7 +644,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
       J = O instanceof Error ? O.message : String(O),
       ie = J.includes("Checksum mismatch");
     if (ie) logFeatureBad("update_download", "update_download_checksum_mismatch");
-    else if (O instanceof mze)
+    else if (O instanceof StallTimeoutError)
       logFeatureBad("update_download", "update_download_stall_timeout");
     else if (Kt(O)) logFeatureBad("update_download", "update_download_connection_drop");
     else logFeatureBad("update_download", "update_download_binary_failed");
@@ -671,7 +671,7 @@ function Ze(e, { explicitVersionRequested: t, requireEnforcingRelease: r }) {
       : "require";
 }
 async function Je(e, t, r) {
-  let d = G4(),
+  let d = getPlatform(),
     {
       manifest: p,
       manifestAuthenticated: o,
@@ -735,7 +735,7 @@ function _e(e) {
   return;
 }
 function Me(e) {
-  if (e instanceof mze) return !0;
+  if (e instanceof StallTimeoutError) return !0;
   if (isCancel(e)) return !0;
   if (isAxiosError(e) && (e.code === "ECONNABORTED" || e.code === "ETIMEDOUT")) return !0;
   if (
@@ -785,7 +785,7 @@ function Yt(e) {
 }
 function Xt() {
   try {
-    return G4();
+    return getPlatform();
   } catch {
     return "unknown";
   }
@@ -952,7 +952,7 @@ async function ot(e) {
 var De = 2,
   Ne = 604800000,
   mn = !1;
-function G4() {
+function getPlatform() {
   let e = a.platform,
     t = "arm64";
   if (!t) {
@@ -971,12 +971,12 @@ function G4() {
   }
   return `${e}-${t}`;
 }
-function Ipt(e) {
+function getBinaryName(e) {
   return e.startsWith("win32") ? "claude.exe" : "claude";
 }
 function Q() {
-  let e = G4(),
-    t = Ipt(e);
+  let e = getPlatform(),
+    t = getBinaryName(e);
   return {
     versions: getClaudeVersionsDir(),
     staging: V(getXdgCacheHome(), "claude", "staging"),
@@ -1115,7 +1115,7 @@ async function wt(e, t, r = 0) {
   }
 }
 var lt = [100, 500, 2000];
-class gze extends R {
+class StagedBinaryChecksumError extends R {
   constructor() {
     super(
       "Staged binary no longer matches the verified checksum; refusing to install",
@@ -1132,7 +1132,7 @@ async function yt(e, t, r) {
       if (
         (await copyFile(e, o), await sn(o, 493), r !== void 0 && (await ye(o)) !== r)
       )
-        throw new gze();
+        throw new StagedBinaryChecksumError();
       return (
         await rename(o, t),
         logForDebugging(
@@ -1214,8 +1214,8 @@ async function pn(e, t, r) {
 }
 async function gn(e, t, r) {
   try {
-    let d = G4(),
-      p = Ipt(d),
+    let d = getPlatform(),
+      p = getBinaryName(d),
       o = V(e, p);
     try {
       await K(o);
@@ -1236,7 +1236,7 @@ async function gn(e, t, r) {
       { moveRetried: _ > 1 }
     );
   } catch (d) {
-    if (d instanceof gze)
+    if (d instanceof StagedBinaryChecksumError)
       (logEvent("tengu_native_install_binary_failure", {
         stage_atomic_move: !0,
         error_checksum_mismatch: !0,
@@ -1296,7 +1296,7 @@ async function ut(
       else if (C.signatureVerified)
         v.set(e, { enforcingRelease: d, checksum: P });
     } catch (C) {
-      if (C instanceof rT) {
+      if (C instanceof ManifestSignatureError) {
         if (d && C.reason === "release_predates_enforcement") return I;
         throw C;
       }
@@ -1333,7 +1333,7 @@ async function ut(
         requireEnforcingRelease: d,
       }));
     } catch (N) {
-      if (d && N instanceof rT && N.reason === "release_predates_enforcement")
+      if (d && N instanceof ManifestSignatureError && N.reason === "release_predates_enforcement")
         return I;
       throw N;
     }
@@ -1427,7 +1427,7 @@ async function En(e, t = !1) {
         o,
         "native_update",
       ),
-    v = w ? o : await Hpt(e);
+    v = w ? o : await resolveReleaseVersion(e);
   logForDebugging(`Checking for native installer update to version ${v}`);
   let S = p && (await wn());
   if (e === "latest" && !w) {
@@ -1629,7 +1629,7 @@ async function kn(e) {
   }
 }
 async function $n(e, t, { expectedChecksum: r } = {}) {
-  if (G4().startsWith("win32"))
+  if (getPlatform().startsWith("win32"))
     try {
       let w = dirname(e);
       await mkdir(w, { recursive: !0 });
@@ -1751,7 +1751,7 @@ async function $n(e, t, { expectedChecksum: r } = {}) {
     );
   }
 }
-async function Bce(e = !1) {
+async function checkInstall(e = !1) {
   if (Ie(process.env.DISABLE_INSTALLATION_CHECKS)) return [];
   let t = await detectInstallType();
   if (t === "development") return [];
@@ -1762,7 +1762,7 @@ async function Bce(e = !1) {
     _ = [],
     w = dirname(p.executable),
     v = resolve(w),
-    F = G4().startsWith("win32");
+    F = getPlatform().startsWith("win32");
   try {
     await access(w);
   } catch {
@@ -1852,7 +1852,7 @@ class bt {
   }
 }
 var Sn = new j(() => new bt());
-function jce(e, t = !1, r) {
+function installLatest(e, t = !1, r) {
   if (t) return dt(e, t, r);
   let d = Sn.of(B().host);
   if (d.inFlight)
@@ -1895,7 +1895,7 @@ async function dt(e, t = !1, r) {
         'Native installer: Set installMethod to "native" and disabled legacy auto-updater for protection',
       ));
   return (
-    oFt(),
+    cleanupOldVersions(),
     {
       latestVersion: d.latestVersion,
       wasUpdated: d.success && !d.wasSkipped,
@@ -1916,7 +1916,7 @@ function we(e, t) {
   let r = _t(t);
   return V(e.locks, `${r}.lock`);
 }
-async function q4() {
+async function lockCurrentVersion() {
   let e = Q();
   if (!process.execPath.includes(e.versions)) return;
   let t = resolve(process.execPath);
@@ -2002,11 +2002,11 @@ async function Tn(e) {
     logForDebugging(`Failed to force-remove lock file: ${l(d)}`);
   }
 }
-async function oFt() {
+async function cleanupOldVersions() {
   await Promise.resolve();
   let e = Q(),
     t = Date.now() - 3600000;
-  if (G4().startsWith("win32")) {
+  if (getPlatform().startsWith("win32")) {
     let o = dirname(e.executable);
     try {
       let _ = await be(o),
@@ -2109,7 +2109,7 @@ async function oFt() {
     if (o && o.includes(e.versions)) _.add(resolve(o));
     let w = await Rn(e.executable);
     if (w) _.add(w);
-    else if (G4().startsWith("win32"))
+    else if (getPlatform().startsWith("win32"))
       try {
         let E = await K(e.executable);
         for (let x of d) if (x.size === E.size) _.add(x.resolvedPath);
@@ -2201,7 +2201,7 @@ async function oFt() {
     else logFeatureOk("native_cleanup_versions");
   }
 }
-async function nOe() {
+async function removeInstalledSymlink() {
   let e = Q();
   try {
     if (
@@ -2233,7 +2233,7 @@ async function nOe() {
       logFeatureBad("native_remove_symlink", "unlink_failed"));
   }
 }
-async function Can() {
+async function cleanupShellAliases() {
   let e = [],
     t = getShellConfigPaths(),
     r = !1;
@@ -2281,7 +2281,7 @@ async function xn(e) {
         return !1;
       }
     }
-    if (G4().startsWith("win32")) {
+    if (getPlatform().startsWith("win32")) {
       let o = V(r, "claude.cmd"),
         _ = V(r, "claude.ps1"),
         w = V(r, "claude");
@@ -2294,7 +2294,7 @@ async function xn(e) {
     }
     if (d) {
       logForDebugging(`Successfully removed ${e} manually`);
-      let o = G4().startsWith("win32")
+      let o = getPlatform().startsWith("win32")
         ? V(r, "node_modules", e)
         : V(r, "lib", "node_modules", e);
       return {
@@ -2342,7 +2342,7 @@ async function ft(e) {
   }
   return { success: !1 };
 }
-async function van() {
+async function cleanupNpmInstallations() {
   let e = [],
     t = [],
     r = 0,
@@ -2417,4 +2417,4 @@ async function van() {
   else logFeatureBad("native_cleanup_npm", "npm_uninstall_failed");
   return { removed: r, errors: e, warnings: t };
 }
-export { rT, Hpt, mze, G4, Ipt, gze, Bce, jce, q4, oFt, nOe, Can, van };
+export { ManifestSignatureError, resolveReleaseVersion, StallTimeoutError, getPlatform, getBinaryName, StagedBinaryChecksumError, checkInstall, installLatest, lockCurrentVersion, cleanupOldVersions, removeInstalledSymlink, cleanupShellAliases, cleanupNpmInstallations };

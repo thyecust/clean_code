@@ -21,7 +21,7 @@ import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { findGitRoot, getBranch, getDefaultBranch, hasUnpushedCommits } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -434,7 +434,7 @@ function Ve(Qt) {
     ((Re = r(Box, {
       flexDirection: "column",
       gap: 1,
-      children: [ze, e(ve, { options: Qe, onChange: he, onCancel: be })],
+      children: [ze, e(Select, { options: Qe, onChange: he, onCancel: be })],
     })),
       (V[14] = he),
       (V[15] = be),

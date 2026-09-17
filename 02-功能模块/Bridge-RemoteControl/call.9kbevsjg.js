@@ -19,7 +19,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { getOauthAccountInfo, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { getBridgeDisabledReason } from "./chunk-9estzwf5.js";
-import { ndt } from "./chunk-ga43tr2w.js";
+import { getBridgeVersionRequirementMessage } from "./chunk-ga43tr2w.js";
 import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE, isProactiveEnrollmentDisabled, isTrustedDeviceUnenrolled, enrollTrustedDeviceIfNeeded } from "./chunk-tyce0p0b.js";
 import { REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE, REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "./remote-control-messages.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -28,7 +28,7 @@ import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-�
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { nl } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { SelectListRow } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { removeNotificationFromState } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
@@ -555,7 +555,7 @@ function Oe(wo) {
   else _r = c[36];
   let Re;
   if (c[37] !== v)
-    ((Re = e(nl, { isFocused: v, children: _r })), (c[37] = v), (c[38] = Re));
+    ((Re = e(SelectListRow, { isFocused: v, children: _r })), (c[37] = v), (c[38] = Re));
   else Re = c[38];
   const qe = G === 1,
     Xe = j ? "Hide QR code" : "Show QR code";
@@ -579,7 +579,7 @@ function Oe(wo) {
   else je = c[43];
   let ke;
   if (c[44] !== qe || c[45] !== je)
-    ((ke = e(nl, { isFocused: qe, children: je })),
+    ((ke = e(SelectListRow, { isFocused: qe, children: je })),
       (c[44] = qe),
       (c[45] = je),
       (c[46] = ke));
@@ -590,7 +590,7 @@ function Oe(wo) {
   else yr = c[47];
   let we;
   if (c[48] !== Qe)
-    ((we = e(nl, { isFocused: Qe, children: yr })), (c[48] = Qe), (c[49] = we));
+    ((we = e(SelectListRow, { isFocused: Qe, children: yr })), (c[48] = Qe), (c[49] = we));
   else we = c[49];
   let Ie;
   if (c[50] !== Re || c[51] !== ke || c[52] !== we)
@@ -663,7 +663,7 @@ function Oe(wo) {
 async function ie(l) {
   let C = await getBridgeDisabledReason();
   if (C) return { kind: "error", message: C };
-  let b = await ndt();
+  let b = await getBridgeVersionRequirementMessage();
   if (b) return { kind: "error", message: b };
   if (!(isHoverRestEnabled() && l !== void 0 ? await getBridgeAccessTokenAsync(l) : getBridgeAccessToken()))
     return { kind: "error", message: REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE };

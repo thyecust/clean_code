@@ -146,7 +146,7 @@ var te = {
   },
   oe = { ...O, presenceMs: 15000 },
   se = { ...O, keepaliveMs: 25000 };
-function xN(e, t) {
+function buildAgentArtifactKey(e, t) {
   return `${e ?? "main"}
 ${t}`;
 }
@@ -496,7 +496,7 @@ function pruneRefusedPublishBodies(e) {
   let t = v().current;
   if (t === void 0) return;
   let r = t.refusedPublishBodies,
-    i = xN(void 0, "");
+    i = buildAgentArtifactKey(void 0, "");
   for (let [a, o] of r) {
     if (!a.startsWith(i)) continue;
     if (!e.has(o.batch)) r.delete(a);
@@ -942,7 +942,7 @@ function renderStatusFooter(e, t) {
 var C = 10,
   J = 120,
   xe = new RegExp(`^[-*][ \\t]+\\[([^\\][\\r\\n]{1,${J}})\\]\\((\\S+)\\)$`),
-  DTn = "data-ws-deliverable-kind",
+  DELIVERABLE_KIND_ATTRIBUTE = "data-ws-deliverable-kind",
   ke = ["pr", "artifact", "other"],
   Ce = new RegExp(
     `/artifact/(?:[A-Za-z0-9_-]*-)?(?:[0-9a-f]{8}-|(${BASE58_SLUG_PATTERN})(?:/|$))`,
@@ -977,7 +977,7 @@ function _e(e) {
   return t.length === 0 ? null : t;
 }
 function Oe(e) {
-  return `<div class="ws-deliverables"><ul>${e.map((r) => `<li class="ws-deliverable" ${DTn}="${r.kind}"><a href="${escapeHtmlAttribute(r.url)}" target="_blank" rel="noopener noreferrer">${escapeHtmlAttribute(r.label)}</a></li>`).join("")}</ul></div>`;
+  return `<div class="ws-deliverables"><ul>${e.map((r) => `<li class="ws-deliverable" ${DELIVERABLE_KIND_ATTRIBUTE}="${r.kind}"><a href="${escapeHtmlAttribute(r.url)}" target="_blank" rel="noopener noreferrer">${escapeHtmlAttribute(r.label)}</a></li>`).join("")}</ul></div>`;
 }
 function tallyDeliverableKinds(e) {
   let t = e.slice(0, C),
@@ -1230,7 +1230,7 @@ function isWorkshopEnabled() {
   return Q.isOpen();
 }
 export {
-  xN,
+  buildAgentArtifactKey,
   revokeCodeliveredFollowups,
   MAX_ARTIFACT_WATCHES,
   MAX_WATCH_HANDOFF_ENTRIES,
@@ -1271,7 +1271,7 @@ export {
   renderDecisionIslandScript,
   renderStatusBanner,
   renderStatusFooter,
-  DTn,
+  DELIVERABLE_KIND_ATTRIBUTE,
   tallyDeliverableKinds,
   extractWorkshopDecisions,
   DECISION_ISLAND_OPEN_TAG_END,

@@ -17,7 +17,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { satisfiesSemverRange, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isRunningWithBun, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, registerCleanup, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, beforeFirst, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -164,7 +164,7 @@ var B = getCurrentPlatform(),
   de = le ? "alt+v" : "ctrl+v",
   ge =
     B !== "windows" ||
-    (Hx()
+    (isRunningWithBun()
       ? satisfiesSemverRange("1.4.1", ">=1.2.23")
       : satisfiesSemverRange(process.versions.node, ">=22.17.0 <23.0.0 || >=24.2.0")),
   q = ge ? "shift+tab" : "meta+m",
@@ -1540,7 +1540,7 @@ function ze(e, r) {
 var ie = 200,
   Ye = ie * 4,
   Ge = /[\p{Cf}\p{Cs}\p{Zl}\p{Zp}\p{Variation_Selector}]+/gu;
-function rg(e) {
+function sanitizeSingleLineDisplayText(e) {
   let r = e === void 0 ? "" : normalizeWhitespace(stripAnsi(e).replace(Ge, " "));
   return r === "" ? void 0 : truncateToWidth(truncateToCodeUnits(r, Ye), ie);
 }
@@ -1819,5 +1819,5 @@ export {
   resolveKeyEventByContextPriority,
   logKeybindingActionFired,
   logKeybindingFallbackUsed,
-  rg,
+  sanitizeSingleLineDisplayText,
 };

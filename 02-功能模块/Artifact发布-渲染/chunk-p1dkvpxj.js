@@ -984,7 +984,7 @@ var Ht = "[Artifact comment sent to Claude]",
   ai = 256,
   mo = 32,
   di = "tengu_madrone_spindle_corbel";
-function cpt() {
+function isArtifactSummonEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE(di, !1) === !0;
 }
 var Kt = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/,
@@ -5694,7 +5694,7 @@ export {
   getCommentCensusEntry,
   deleteCommentCensusEntry,
   setSessionUserBusy,
-  cpt,
+  isArtifactSummonEnabled,
   isArtifactCommentEnvelopeText,
   parseArtifactCommentEnvelope,
   claimSeededSummonFromMessage,

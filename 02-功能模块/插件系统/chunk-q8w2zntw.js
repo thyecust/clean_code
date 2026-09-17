@@ -34,25 +34,25 @@ import { formatPathWithTilde, pathExists } from "../../01-核心基础设施/核
 import { getSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sanitizeUnicodeText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import {
-  afe,
-  vC,
-  Ui,
-  cXe,
-  S1e,
-  xj,
-  R$,
-  awt,
-  uXe,
-  lwt,
-  dXe,
-  Pbn,
-  k$,
-  uwt,
-  noe,
-  b1e,
-  lJ,
-  yD,
-  mXe,
+  isPluginsRootUnreliable,
+  getSourceCommandKey,
+  PluginSourceError,
+  isLiveLinkFarm,
+  isLinkFarmDiverged,
+  getCommandSource,
+  isLinkModeSource,
+  ENTRY_HELPER_FAILURE_CODES,
+  describeCurrentEntryHelper,
+  diffEntryHelperConsent,
+  formatEntryHelperRefusalMessage,
+  ENTRY_HELPER_FAILURE_SEVERITY,
+  PluginEntryHelperError,
+  formatEntryHelperMismatchMessage,
+  resolveTrustedEntryAuth,
+  resolveArchiveAuth,
+  lookupMarketplaceSource,
+  getMarketplaceNameFromPluginId,
+  isClaudeAiPluginSyncEnabled,
 } from "./chunk-ajtn749s.js";
 import { isPluginBlockedByPolicy, areLocalPluginDirsAllowedByPolicy, localPluginDirsBlockedMessage, areCommandPluginSourcesDisabledByPolicy, headersHelperPolicyRefusal, isHeadersHelperDisabledByPolicy, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, isSourceDisallowedOrUnverifiable, isSourceAllowedByPolicy } from "./plugin-source-policy.js";
 import { removePluginDataDir, buildCliCommand, buildRunCommandHint, isDependencyError, classifyPathTrust, getPluginRegistryState, emitCommandProducerDirsChanged } from "./plugin-system-core.js";
@@ -155,7 +155,7 @@ import {
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-async function bUn(e, t, s) {
+async function refreshMarketplaceOnCatalogMiss(e, t, s) {
   if (shouldSkipPluginAutoupdate()) return "ineligible";
   if (!t?.source || !isSourceAllowedByPolicy(t.source)) return "ineligible";
   if (!shouldAutoUpdateMarketplace(e, t, getDeclaredMarketplaces()[e]?.autoUpdate)) return "ineligible";
@@ -175,13 +175,13 @@ async function bUn(e, t, s) {
     );
   }
 }
-function dle(e) {
+function logPluginInstallRefreshOutcome(e) {
   if (e === "refreshed") logFeatureOk("plugin_install_refresh_first");
   else if (e === "refresh-failed")
     logFeatureBad("plugin_install_refresh_first", "refresh_failed");
   else logFeatureSad("plugin_install_refresh_first", "ineligible");
 }
-async function d0e(e, t, s) {
+async function refreshMarketplaceForScopedInstall(e, t, s) {
   if (isEssentialTrafficOnly()) return { outcome: "ineligible" };
   if (!t?.source || !isSourceAllowedByPolicy(t.source)) return { outcome: "ineligible" };
   if (t.installLocation && findContainingSeedDir(t.installLocation))
@@ -243,30 +243,30 @@ function Ge(e) {
       return "claude.ai-synced";
   }
 }
-var jB = ["user", "project", "local"],
+var INSTALLABLE_SCOPES = ["user", "project", "local"],
   fe = { user: 0, project: 1, local: 2 },
-  n9e = ["user", "project", "local", "managed"];
+  ALL_PLUGIN_SCOPES = ["user", "project", "local", "managed"];
 function De(e) {
-  if (!jB.includes(e))
-    throw Error(`Invalid scope "${e}". Must be one of: ${jB.join(", ")}`);
+  if (!INSTALLABLE_SCOPES.includes(e))
+    throw Error(`Invalid scope "${e}". Must be one of: ${INSTALLABLE_SCOPES.join(", ")}`);
 }
-function r9e(e) {
-  return jB.includes(e);
+function isInstallableScope(e) {
+  return INSTALLABLE_SCOPES.includes(e);
 }
-function o9e(e) {
+function getProjectPathForScope(e) {
   return e === "project" || e === "local" ? he() : void 0;
 }
-function wUn(e) {
+function isPluginEnabledInProjectSettings(e) {
   let t = getSettingsForSource("projectSettings")?.enabledPlugins;
   if (!t) return !1;
   let s = findKeyIgnoringCase(Object.keys(t), e);
   return s !== void 0 && t[s] === !0;
 }
-function TUn(e) {
+function isSadFailureCode(e) {
   return Ie[e] === "sad";
 }
 var Ie = {
-  ...Pbn,
+  ...ENTRY_HELPER_FAILURE_SEVERITY,
   not_installed: "bad",
   not_installed_at_scope: "bad",
   ambiguous_marketplace: "sad",
@@ -287,7 +287,7 @@ var Ie = {
   entry_helper_declined: "sad",
   claudeai_identity_changed: "sad",
 };
-function s9e(e) {
+function resolvePluginRecordKey(e) {
   let t = getInstalledPlugins(),
     s = findKeyIgnoringCase(Object.keys(t.plugins), e);
   if (s) return s;
@@ -299,7 +299,7 @@ function s9e(e) {
   }
   return e;
 }
-function p0e(e, t, s) {
+function resolvePluginEnabledState(e, t, s) {
   return findPluginEnablementEntry(e, filterEnablementRecordsToTrustedSources(e, s))?.enabled ?? t.defaultEnabled !== !1;
 }
 function Re(e, t = ["local", "project", "user"]) {
@@ -342,7 +342,7 @@ function Ke(e, t, s) {
   if (P) return { pluginId: P, pluginName: r };
   return null;
 }
-function rOt(e) {
+function resolvePluginInstallScope(e) {
   let t = getInstalledPlugins(),
     s = findKeyIgnoringCase(Object.keys(t.plugins), e),
     r = s ? t.plugins[s] : void 0;
@@ -356,13 +356,13 @@ function rOt(e) {
   if (k) return { scope: k.scope };
   return { scope: r[0].scope, projectPath: r[0].projectPath };
 }
-async function fen(e, t, s) {
+async function isPluginInstalledAndSatisfied(e, t, s) {
   if (!(await isPluginInstalledOnDisk(e, t, s))) return !1;
   return !(await getDependencyErrorsForPlugin(e, s)).some(
     (i) => i.type !== "dependency-unsatisfied" || i.reason !== "not-found",
   );
 }
-async function EUn(
+async function installPlugin(
   e,
   t = "user",
   { shownSourceCommand: s, shownEntryHelper: r, announceRefreshResult: i } = {},
@@ -383,14 +383,14 @@ async function EUn(
     let I = (await getKnownMarketplaces(o))[k],
       b = I !== void 0 && isSourceAllowedByPolicy(I.source);
     c = I !== void 0 && !b;
-    let z = i ?? (await d0e(k, I, o));
-    if ((dle(z.outcome), z.outcome === "refreshed")) X = !0;
+    let z = i ?? (await refreshMarketplaceForScopedInstall(k, I, o));
+    if ((logPluginInstallRefreshOutcome(z.outcome), z.outcome === "refreshed")) X = !0;
     else if (z.outcome === "refresh-failed")
       ((_ = !0), (A = `marketplace not refreshed (${z.errorMessage})`));
     let j = await findPluginEntry(e, o);
     if (j) ((P = j.entry), (S = k), (w = j.marketplaceInstallLocation));
   } else {
-    let m = await sOt(p, o);
+    let m = await findPluginEntryAcrossMarketplaces(p, o);
     if (m)
       ((P = m.entry), (S = m.marketplace), (w = m.marketplaceInstallLocation));
   }
@@ -421,8 +421,8 @@ async function EUn(
       scoped: !0,
     });
   else logFeatureOk("plugin_marketplace_resolve", { scoped: k !== void 0 });
-  if (await fen(D, t, o)) {
-    let m = await clearPluginAutoInstallFlag(D, t, o9e(t), o),
+  if (await isPluginInstalledAndSatisfied(D, t, o)) {
+    let m = await clearPluginAutoInstallFlag(D, t, getProjectPathForScope(t), o),
       I = await buildMissingDependencyNotice(D, o);
     return {
       success: !0,
@@ -434,9 +434,9 @@ async function EUn(
   }
   let U;
   if (r !== void 0) U = r;
-  else if (((U = await g0e(D, N, o)), U !== null))
-    throw new k$(
-      `${oOt(U)}
+  else if (((U = await buildEntryHelperRequest(D, N, o)), U !== null))
+    throw new PluginEntryHelperError(
+      `${formatHeadersHelperWarning(U)}
 This install runs that command; confirm it by running \`claude plugin install\` in a terminal (or with -y/--yes).`,
       "entry_helper_unconfirmed",
     );
@@ -522,7 +522,7 @@ This install runs that command; confirm it by running \`claude plugin install\` 
     scope: t,
   };
 }
-async function r4(e, t = "user", s = !0, r) {
+async function uninstallPlugin(e, t = "user", s = !0, r) {
   (De(t), (e = normalizePluginId(e)));
   let i = Ce(e, parsePluginId(e).marketplace, "uninstall");
   if (i !== void 0) return { success: !1, message: i };
@@ -535,7 +535,7 @@ async function r4(e, t = "user", s = !0, r) {
     X,
     A = getInstalledPlugins(),
     c = Object.keys(A.plugins),
-    _ = o9e(t);
+    _ = getProjectPathForScope(t);
   if (a) {
     let m = Object.keys(S?.enabledPlugins ?? {}),
       I = a.name.toLowerCase(),
@@ -574,7 +574,7 @@ async function r4(e, t = "user", s = !0, r) {
   let N = A.plugins[w],
     D = N?.find((m) => m.scope === t && m.projectPath === _);
   if (!D) {
-    let { scope: m } = rOt(w);
+    let { scope: m } = resolvePluginInstallScope(w);
     if (m !== t && N && N.length > 0) {
       if (m === "project") {
         let I = buildCliCommand("plugin disable", e, "--scope local");
@@ -704,7 +704,7 @@ async function $e(e, t, s, r, i) {
       if (t && a === INLINE_PLUGIN_SOURCE && !j) {
         let { name: K } = splitPluginIdOnLastAt(h),
           ue = `${K}@${SYNCED_PLUGIN_SOURCE}`,
-          q = jB.filter(
+          q = INSTALLABLE_SCOPES.filter(
             (we) => Se(we, h, p)?.value === !1 && Se(we, ue, p) === void 0,
           );
         if (q.length > 0) b = { syncedId: ue, scopes: q };
@@ -862,7 +862,7 @@ async function $e(e, t, s, r, i) {
       m = [...F, ...h],
       I = findDependentPluginNames(P, m);
     if (I.length > 0) N = I;
-    let b = mXe() ? m : m.filter((j) => getPluginMarketplace(j.source) !== SYNCED_PLUGIN_SOURCE),
+    let b = isClaudeAiPluginSyncEnabled() ? m : m.filter((j) => getPluginMarketplace(j.source) !== SYNCED_PLUGIN_SOURCE),
       z = findDependentPluginNames(P, b);
     if (z.length > 0 && !r?.bypassDependentsBlock) {
       let { name: j } = splitPluginId(P),
@@ -924,7 +924,7 @@ async function $e(e, t, s, r, i) {
         message: `${E} depends on ${de.join(", ")}, which ${pluralize(de.length, "is", "are")} blocked by your organization's plugin policy. Ask an admin to allow ${pluralize(de.length, "it", "them")}.`,
       };
     }
-    let oe = [...jB].sort((E, H) => fe[H] - fe[E]),
+    let oe = [...INSTALLABLE_SCOPES].sort((E, H) => fe[H] - fe[E]),
       le = [];
     for (let E of T)
       for (let H of oe) {
@@ -979,13 +979,13 @@ async function $e(e, t, s, r, i) {
     reverseDependents: N,
   };
 }
-async function f0e(e, t, s) {
+async function enablePlugin(e, t, s) {
   return $e(e, !0, t, void 0, s);
 }
-async function m0e(e, t, s) {
+async function disablePlugin(e, t, s) {
   return $e(e, !1, t, void 0, s);
 }
-async function AUn(e) {
+async function disableAllPlugins(e) {
   let t = getPluginEditableScopes();
   await reloadPluginDirsFromDisk();
   let s = await Promise.all(y_e().map((_) => syncedPluginMintedName(_, e))),
@@ -1033,13 +1033,13 @@ ${c.join(`
     message: `Disabled ${A.length} ${pluralize(A.length, "plugin")}`,
   };
 }
-async function Pye(e, t, s = {}, r) {
+async function updatePlugin(e, t, s = {}, r) {
   let i;
   try {
     i = await qe(e, t, s, r);
   } catch (o) {
-    if (o instanceof Ui) {
-      let p = o instanceof k$ ? o.failureCode : "command_source_refused";
+    if (o instanceof PluginSourceError) {
+      let p = o instanceof PluginEntryHelperError ? o.failureCode : "command_source_refused";
       if (Ie[p] === "sad") logFeatureSad("plugin_update_op", p);
       else logFeatureBad("plugin_update_op", p);
       return {
@@ -1158,7 +1158,7 @@ async function qe(
       try {
         await refreshMarketplace(A, a, void 0, { skipIfRecent: !0 });
       } catch (G) {
-        ((C = G instanceof Ui),
+        ((C = G instanceof PluginSourceError),
           (U = C
             ? "marketplace not refreshed \u2014 your organization's managed settings forbid its headersHelper (the version shown is from the cached catalog; ask your admin)"
             : `marketplace not refreshed (${formatShortText(l(G))})`),
@@ -1189,7 +1189,7 @@ async function qe(
       scope: t,
       failureCode: "not_installed",
     };
-  let h = o9e(t),
+  let h = getProjectPathForScope(t),
     m = D.filter((u) => u.scope === t),
     I = m.find((u) => u.projectPath === h);
   if (!I && m.length > 1)
@@ -1217,7 +1217,7 @@ async function qe(
       Z = u || (r && !G),
       Q = t === "user" ? void 0 : `--scope ${t}`;
     j = L ? void 0 : await i?.(c, d, b.sourceCommand);
-    let se = i !== void 0 && !afe() && b.sourceCommand === vC(d.source);
+    let se = i !== void 0 && !isPluginsRootUnreliable() && b.sourceCommand === getSourceCommandKey(d.source);
     if (L || (j === void 0 && !se && !G))
       return {
         outcome: "failed",
@@ -1317,24 +1317,24 @@ async function qe(
           ? { ...u, ref: H.ref, sha: H.sha }
           : u,
       G = O[A ?? ""]?.source,
-      Z = yD(c),
+      Z = getMarketplaceNameFromPluginId(c),
       Q = findSettingsDeclaredEntryAuth(Z, d.name),
       se =
         u.source === "archive"
-          ? noe({
+          ? resolveTrustedEntryAuth({
               entry: d,
               archiveUrl: u.url,
               marketplaceSource: G,
               trustedSettingsEntryAuth: Q,
             })
           : void 0,
-      me = se !== void 0 && u.source === "archive" ? uXe(se, u.url) : null,
+      me = se !== void 0 && u.source === "archive" ? describeCurrentEntryHelper(se, u.url) : null,
       Pe = me === null ? null : headersHelperPolicyRefusal(G, A),
       re =
         Pe !== null
           ? {
               outcome: "failed",
-              message: dXe(d.name, Pe),
+              message: formatEntryHelperRefusalMessage(d.name, Pe),
               pluginId: c,
               scope: t,
               failureCode:
@@ -1344,14 +1344,14 @@ async function qe(
             }
           : null;
     if (P && re !== null) return re;
-    let ie = P && k === void 0 ? lwt(p, me) : null;
+    let ie = P && k === void 0 ? diffEntryHelperConsent(p, me) : null;
     if (ie !== null)
       return {
         outcome: "failed",
-        message: uwt(ie, d.name, "update"),
+        message: formatEntryHelperMismatchMessage(ie, d.name, "update"),
         pluginId: c,
         scope: t,
-        failureCode: awt[ie],
+        failureCode: ENTRY_HELPER_FAILURE_CODES[ie],
       };
     if (!P && me !== null) {
       let ke =
@@ -1389,7 +1389,7 @@ async function qe(
     }
     if (P && me !== null) {
       if (k !== void 0) {
-        let ke = await k(oOt(me));
+        let ke = await k(formatHeadersHelperWarning(me));
         if (ke !== "accepted")
           return {
             outcome: "failed",
@@ -1427,7 +1427,7 @@ async function qe(
     let V = await cachePlugin(L, {
       manifest: { name: d.name },
       storageV5: a,
-      archiveAuth: await b1e({
+      archiveAuth: await resolveArchiveAuth({
         pluginSource: L,
         pluginName: d.name,
         marketplaceName: A,
@@ -1444,7 +1444,7 @@ async function qe(
           ? { kind: "shown", command: j, pluginId: c }
           : {
               kind: "recorded",
-              command: afe() ? void 0 : b.sourceCommand,
+              command: isPluginsRootUnreliable() ? void 0 : b.sourceCommand,
               pluginId: c,
             },
     });
@@ -1538,20 +1538,20 @@ async function qe(
         ie = re.absolute;
       Q =
         re.suspect ||
-        !(await (R$(d.source)
-          ? cXe(ie)
+        !(await (isLinkModeSource(d.source)
+          ? isLiveLinkFarm(ie)
           : ie.endsWith(".zip")
             ? pathExists(ie)
             : cacheDirHasPluginContentStrict(ie, a))) ||
-        (R$(d.source)
+        (isLinkModeSource(d.source)
           ? await Qe(ie, J ?? b.sourceProducerPath)
-          : await cXe(ie, { unclassifiableIsFarm: !0 }));
+          : await isLiveLinkFarm(ie, { unclassifiableIsFarm: !0 }));
     }
     if (Z && !Q) {
       if (
         typeof d.source === "object" &&
         d.source.source === "command" &&
-        (b.sourceCommand !== vC(d.source) ||
+        (b.sourceCommand !== getSourceCommandKey(d.source) ||
           (J !== void 0 && b.sourceProducerPath !== J))
       )
         (await updateInstalledPluginRecord(
@@ -1563,7 +1563,7 @@ async function qe(
           b.gitCommitSha,
           b.resolvedVersion,
           {
-            sourceCommand: vC(d.source),
+            sourceCommand: getSourceCommandKey(d.source),
             sourceProducerPath: J ?? b.sourceProducerPath,
           },
           a,
@@ -1596,7 +1596,7 @@ async function qe(
         H?.version,
         typeof d.source === "object" && d.source.source === "command"
           ? {
-              sourceCommand: vC(d.source),
+              sourceCommand: getSourceCommandKey(d.source),
               sourceProducerPath: J ?? b.sourceProducerPath,
             }
           : void 0,
@@ -1638,31 +1638,31 @@ async function qe(
       await ee.rm(v, { recursive: !0, force: !0 });
   }
 }
-async function g0e(e, t, s) {
+async function buildEntryHelperRequest(e, t, s) {
   let r = t ?? (await findCachedPluginEntry(e, s))?.entry;
   if (!r || typeof r.source !== "object" || r.source.source !== "archive")
     return null;
   if (isPluginBlockedByPolicy(e)) return null;
   let i = await getKnownMarketplacesOrEmpty(s),
-    o = yD(e);
+    o = getMarketplaceNameFromPluginId(e);
   if (o !== void 0 && isSourceDisallowedOrUnverifiable(i[o]?.source)) return null;
-  let p = lJ(e, i),
+  let p = lookupMarketplaceSource(e, i),
     k;
   try {
-    k = noe({
+    k = resolveTrustedEntryAuth({
       entry: r,
       archiveUrl: r.source.url,
       marketplaceSource: p,
       trustedSettingsEntryAuth: findSettingsDeclaredEntryAuth(o, r.name),
     });
   } catch (a) {
-    if (a instanceof k$) return null;
+    if (a instanceof PluginEntryHelperError) return null;
     throw a;
   }
   if (isHeadersHelperDisabledByPolicy(p, o)) return null;
-  return uXe(k, r.source.url);
+  return describeCurrentEntryHelper(k, r.source.url);
 }
-function oOt(e) {
+function formatHeadersHelperWarning(e) {
   let t = sanitizeCommandRequest(e);
   return (
     `Fetching this plugin's archive sends helper-minted headers to ${t.destination}; ` +
@@ -1673,9 +1673,9 @@ function oOt(e) {
   );
 }
 function Ye(e, t, s) {
-  let r = xj(t);
-  if (!r || !s || s.length === 0 || afe()) return;
-  let i = vC(r);
+  let r = getCommandSource(t);
+  if (!r || !s || s.length === 0 || isPluginsRootUnreliable()) return;
+  let i = getSourceCommandKey(r);
   return {
     kind: "recorded",
     command:
@@ -1684,7 +1684,7 @@ function Ye(e, t, s) {
     pluginId: e,
   };
 }
-async function sOt(e, t) {
+async function findPluginEntryAcrossMarketplaces(e, t) {
   let s = await getKnownMarketplaces(t),
     r;
   for (let [i, o] of Object.entries(s)) {
@@ -1698,7 +1698,7 @@ async function sOt(e, t) {
           marketplaceInstallLocation: o.installLocation,
         };
     } catch (p) {
-      if (p instanceof Ui) {
+      if (p instanceof PluginSourceError) {
         r ??= p;
         continue;
       }
@@ -1712,7 +1712,7 @@ async function sOt(e, t) {
   return;
 }
 async function Qe(e, t) {
-  return t === void 0 || (await S1e(e, t));
+  return t === void 0 || (await isLinkFarmDiverged(e, t));
 }
 function Se(e, t, s) {
   return Ze(getSettingsForSource(getSettingsSourceForScope(e))?.enabledPlugins, t, s);
@@ -1759,7 +1759,7 @@ function Je(e, t, s) {
     effective: o?.enabled,
   };
 }
-var Ve = [...jB].sort((e, t) => fe[t] - fe[e]);
+var Ve = [...INSTALLABLE_SCOPES].sort((e, t) => fe[t] - fe[e]);
 function Le(e, t, s, r) {
   let i = isEqualIgnoringCase(r, e) ? "" : ` via its legacy "${sanitizeForDisplay(r)}" entry`,
     o = i ? ` (remove that entry, or add "${e}": true beside it)` : "";
@@ -1827,7 +1827,7 @@ function Ne(e, t, s) {
   });
 }
 var tn = [...SETTINGS_SOURCE_ORDER].reverse();
-var WB = "claude-cli";
+var DEEP_LINK_SCHEME = "claude-cli";
 function Ue(e, { allowNewlineAndTab: t = !1 } = {}) {
   for (let s = 0; s < e.length; s++) {
     let r = e.charCodeAt(s);
@@ -1841,7 +1841,7 @@ function Ue(e, { allowNewlineAndTab: t = !1 } = {}) {
 var sn = /^[\w.-]+\/[\w.-]+$/,
   xe = 5000,
   Te = 4096;
-function men(e, t = fsSurface) {
+function validateDeepLinkCwd(e, t = fsSurface) {
   if (An(e) || jf(e))
     throw Error(
       `Invalid cwd in deep link: UNC / network paths are not supported, got "${e}"`,
@@ -1876,7 +1876,7 @@ function men(e, t = fsSurface) {
       "Invalid cwd in deep link: the path resolves through a network link",
     );
 }
-function gen(e) {
+function parseDeepLinkQuery(e) {
   let t = sanitizeUnicodeText(e).replace(
     /\r\n?/g,
     `
@@ -1888,14 +1888,14 @@ function gen(e) {
     throw Error(`Deep link query exceeds ${xe} characters (got ${t.length})`);
   return t;
 }
-function CUn(e) {
-  let t = e.startsWith(`${WB}://`)
+function parseDeepLinkUri(e) {
+  let t = e.startsWith(`${DEEP_LINK_SCHEME}://`)
     ? e
-    : e.startsWith(`${WB}:`)
-      ? e.replace(`${WB}:`, `${WB}://`)
+    : e.startsWith(`${DEEP_LINK_SCHEME}:`)
+      ? e.replace(`${DEEP_LINK_SCHEME}:`, `${DEEP_LINK_SCHEME}://`)
       : null;
   if (!t)
-    throw Error(`Invalid deep link: expected ${WB}:// scheme, got "${e}"`);
+    throw Error(`Invalid deep link: expected ${DEEP_LINK_SCHEME}:// scheme, got "${e}"`);
   let s;
   try {
     s = new URL(t);
@@ -1907,38 +1907,38 @@ function CUn(e) {
   let r = s.searchParams.get("cwd") ?? void 0,
     i = s.searchParams.get("repo") ?? void 0,
     o = s.searchParams.get("q");
-  if (r) men(r);
+  if (r) validateDeepLinkCwd(r);
   if (i && !sn.test(i))
     throw Error(`Invalid repo in deep link: expected "owner/repo", got "${i}"`);
   let p;
-  if (o && o.trim().length > 0) p = gen(o.trim());
+  if (o && o.trim().length > 0) p = parseDeepLinkQuery(o.trim());
   return { query: p, cwd: r, repo: i };
 }
 export {
-  bUn,
-  dle,
-  d0e,
-  jB,
-  n9e,
-  r9e,
-  o9e,
-  wUn,
-  TUn,
-  s9e,
-  p0e,
-  rOt,
-  fen,
-  EUn,
-  r4,
-  f0e,
-  m0e,
-  AUn,
-  Pye,
-  g0e,
-  oOt,
-  sOt,
-  WB,
-  men,
-  gen,
-  CUn,
+  refreshMarketplaceOnCatalogMiss,
+  logPluginInstallRefreshOutcome,
+  refreshMarketplaceForScopedInstall,
+  INSTALLABLE_SCOPES,
+  ALL_PLUGIN_SCOPES,
+  isInstallableScope,
+  getProjectPathForScope,
+  isPluginEnabledInProjectSettings,
+  isSadFailureCode,
+  resolvePluginRecordKey,
+  resolvePluginEnabledState,
+  resolvePluginInstallScope,
+  isPluginInstalledAndSatisfied,
+  installPlugin,
+  uninstallPlugin,
+  enablePlugin,
+  disablePlugin,
+  disableAllPlugins,
+  updatePlugin,
+  buildEntryHelperRequest,
+  formatHeadersHelperWarning,
+  findPluginEntryAcrossMarketplaces,
+  DEEP_LINK_SCHEME,
+  validateDeepLinkCwd,
+  parseDeepLinkQuery,
+  parseDeepLinkUri,
 };

@@ -89,7 +89,7 @@ import {
   buildCliCommand,
   buildRunCommandHint,
   getErrorPluginId,
-  UJ,
+  isAutoupdateSkippedError,
   formatPluginError,
   formatPluginWarning,
   formatPluginWarningGuidance,
@@ -174,9 +174,9 @@ import {
   getMcpConfigByName,
   isMcpServerDisabled,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { sanitizeForRelay } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { stripBom, parseYaml, FRONTMATTER_PATTERN } from "../MCP客户端/chunk-3kmsshb6.js";
-import { ig, y1e, vC, aXe, Ui } from "./chunk-ajtn749s.js";
+import { OFFICIAL_MARKETPLACE_NAME, LINK_MODE_WINDOWS_UNSUPPORTED_MESSAGE, getSourceCommandKey, describeSourceMode, PluginSourceError } from "./chunk-ajtn749s.js";
 import { isPluginBlockedByPolicy, areCommandPluginSourcesDisabledByPolicy, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, getPluginTrustMessage, getPluginSuggestionMarketplaces, isMarketplaceSourceDeclaredByPolicy } from "./plugin-source-policy.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { getPluginEditableScopes, editableScopeOf } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
@@ -184,39 +184,39 @@ import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
 import {
-  QPt,
-  z8,
-  yUn,
-  c0e,
-  tOt,
-  uen,
-  den,
-  nOt,
-  ek,
-  ZWe,
-  e9e,
-  t9e,
-  u0e,
+  isOrphanPluginEntry,
+  isDiagnosticForPlugin,
+  resolvePluginIdentity,
+  fetchPluginInstallCounts,
+  getPluginCatalogEntry,
+  PLUGIN_CONTEXT_COST_WARNING_THRESHOLD,
+  estimatePluginContextCost,
+  formatCompactCount,
+  sanitizeDiagnosticText,
+  resolvePluginManifestAndContents,
+  buildPluginTagPlan,
+  createPluginVersionTag,
+  buildVersionTagMessage,
 } from "./chunk-akd9b588.js";
 import { Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import {
-  bUn,
-  dle,
-  d0e,
-  r9e,
-  wUn,
-  s9e,
-  p0e,
-  rOt,
-  r4,
-  f0e,
-  m0e,
-  Pye,
-  g0e,
+  refreshMarketplaceOnCatalogMiss,
+  logPluginInstallRefreshOutcome,
+  refreshMarketplaceForScopedInstall,
+  isInstallableScope,
+  isPluginEnabledInProjectSettings,
+  resolvePluginRecordKey,
+  resolvePluginEnabledState,
+  resolvePluginInstallScope,
+  uninstallPlugin,
+  enablePlugin,
+  disablePlugin,
+  updatePlugin,
+  buildEntryHelperRequest,
 } from "./chunk-q8w2zntw.js";
 import { redactManagedMcpConfig, normalizePluginRelevanceSignals, matchPluginRelevanceSignal } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { SelectListRow, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useListCursor, Table, SelectableRow, DimParenthetical, StatusLine, useMcpReconnect, useMcpToggleEnabled } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { getIdentityEpoch, isRemoteTransport, awaitDiscoveryCacheFlush } from "../MCP客户端/mcp-discovery-cache.js";
 import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
@@ -1698,7 +1698,7 @@ function Ar(xp) {
     { storageV5: Sp } = useStorageV5Context(),
     Fh;
   if (DP[0] !== xp || DP[1] !== Sp)
-    ((Fh = tOt(xp, Sp).then(fk).catch(yk)),
+    ((Fh = getPluginCatalogEntry(xp, Sp).then(fk).catch(yk)),
       (DP[0] = xp),
       (DP[1] = Sp),
       (DP[2] = Fh));
@@ -1898,7 +1898,7 @@ function Xs(FP) {
   else Vs = Gi[2];
   let js;
   if (Gi[3] !== Ro.source)
-    ((js = aXe(Ro.source)), (Gi[3] = Ro.source), (Gi[4] = js));
+    ((js = describeSourceMode(Ro.source)), (Gi[3] = Ro.source), (Gi[4] = js));
   else js = Gi[4];
   let Hs;
   if (Gi[5] !== js)
@@ -1913,7 +1913,7 @@ function Xs(FP) {
     ((Ks =
       Ro.source.mode === "link" &&
       getCurrentPlatform() === "windows" &&
-      e(Text, { color: "warning", children: y1e })),
+      e(Text, { color: "warning", children: LINK_MODE_WINDOWS_UNSUPPORTED_MESSAGE })),
       (Gi[8] = Ro.source.mode),
       (Gi[9] = Ks));
   else Ks = Gi[9];
@@ -1967,7 +1967,7 @@ function Or(HP) {
     { storageV5: Np } = useStorageV5Context(),
     ik;
   if (ok[0] !== Bp || ok[1] !== Dp || ok[2] !== Np)
-    ((ik = g0e(Dp, Bp, Np).catch(kk)),
+    ((ik = buildEntryHelperRequest(Dp, Bp, Np).catch(kk)),
       (ok[0] = Bp),
       (ok[1] = Dp),
       (ok[2] = Np),
@@ -2225,7 +2225,7 @@ async function zp({
     consentedEntryHelper: I,
     commandSourceConsent:
       typeof a.entry.source === "object" && a.entry.source.source === "command"
-        ? { kind: "shown", command: vC(a.entry.source), pluginId: a.pluginId }
+        ? { kind: "shown", command: getSourceCommandKey(a.entry.source), pluginId: a.pluginId }
         : void 0,
     storageV5: j,
   });
@@ -2591,8 +2591,8 @@ function cc({
             Dt;
           if (b && w && !isNonMarketplacePluginSource(b)) {
             tt(`Checking ${b} for new plugins\u2026`);
-            let me = await d0e(b, $t[b], R);
-            if ((dle(me.outcome), ie)) return;
+            let me = await refreshMarketplaceForScopedInstall(b, $t[b], R);
+            if ((logPluginInstallRefreshOutcome(me.outcome), ie)) return;
             if ((tt("Loading\u2026"), me.outcome === "refresh-failed"))
               ((Dt = me.errorMessage),
                 ne(
@@ -2716,7 +2716,7 @@ function cc({
             });
           }
           try {
-            let bt = await c0e(R);
+            let bt = await fetchPluginInstallCounts(R);
             if (ie) return;
             if ((xt(bt), bt))
               Ot.sort((te, Ee) => {
@@ -3036,10 +3036,10 @@ function cc({
                         }),
                       e(DimParenthetical, { when: ie.isInstalled, children: "installed" }),
                       te !== void 0 &&
-                        X === ig &&
+                        X === OFFICIAL_MARKETPLACE_NAME &&
                         r(Text, {
                           dimColor: !0,
-                          children: [" \xB7 ", nOt(te), " installs"],
+                          children: [" \xB7 ", formatCompactCount(te), " installs"],
                         }),
                     ],
                   }),
@@ -3096,7 +3096,7 @@ function Jp(lI) {
       vk(null);
       let Pk = !1;
       return (
-        den(tc, getCanonicalName(getMainLoopModel()), nc)
+        estimatePluginContextCost(tc, getCanonicalName(getMainLoopModel()), nc)
           .then((cI) => {
             if (!Pk) vk(cI);
           })
@@ -3115,7 +3115,7 @@ function Jp(lI) {
   if ((E(wk, Ck), Eo === null)) {
     return null;
   }
-  let Tk = Eo.alwaysOn >= uen,
+  let Tk = Eo.alwaysOn >= PLUGIN_CONTEXT_COST_WARNING_THRESHOLD,
     oc;
   if (yi[4] !== Eo.isEstimate)
     ((oc = Eo.isEstimate && e(Text, { dimColor: !0, children: " (estimated)" })),
@@ -3247,7 +3247,7 @@ function dc({
             }
         let kt = ie.filter((te) => !te.isInstalled && !isPluginBlockedByPolicy(te.pluginId));
         try {
-          let te = await c0e(A);
+          let te = await fetchPluginInstallCounts(A);
           if (Ve) return;
           if ((tt(te), te))
             kt.sort((Ee, me) => {
@@ -3267,7 +3267,7 @@ function dc({
             Ee = new Set(getPluginSuggestionMarketplaces());
           for (let me of kt) {
             if (!Ee.has(me.marketplaceName)) continue;
-            if (me.marketplaceName !== ig) {
+            if (me.marketplaceName !== OFFICIAL_MARKETPLACE_NAME) {
               let st = Ce[me.marketplaceName]?.source;
               if (!st || !isMarketplaceSourceDeclaredByPolicy(me.marketplaceName, st)) continue;
             }
@@ -3324,7 +3324,7 @@ function dc({
           if (!te) {
             for (let [st, Bt] of Object.entries(Ce)) {
               xe(`Checking ${st} for new plugins\u2026`);
-              let xn = await bUn(st, Bt, A);
+              let xn = await refreshMarketplaceOnCatalogMiss(st, Bt, A);
               if (Ve) return;
               if (xn === "refresh-failed") me = !0;
               else if (xn === "refreshed") wt = !0;
@@ -3571,10 +3571,10 @@ function dc({
                           children: " [not installable on claude.ai yet]",
                         }),
                       kt !== void 0 &&
-                        Ve.marketplaceName === ig &&
+                        Ve.marketplaceName === OFFICIAL_MARKETPLACE_NAME &&
                         r(Text, {
                           dimColor: !0,
-                          children: [" \xB7 ", nOt(kt), " installs"],
+                          children: [" \xB7 ", formatCompactCount(kt), " installs"],
                         }),
                     ],
                   }),
@@ -4133,7 +4133,7 @@ function wc({
                 We(nn);
               });
             } catch (nn) {
-              if (nn instanceof Ui) {
+              if (nn instanceof PluginSourceError) {
                 (kt.push(Tt.name),
                   logForDebugging(
                     `Marketplace ${Tt.name} not updated (managed policy): ${l(nn)}`,
@@ -4692,7 +4692,7 @@ function wc({
             children: Ce.map((ke, Oe) => {
               if (!ke) return null;
               return r(
-                nl,
+                SelectListRow,
                 {
                   isFocused: Oe === pe,
                   children: [
@@ -5147,7 +5147,7 @@ function im(a, k, v, b) {
 F();
 F();
 var Wa = Qt(!1);
-function NIt() {
+function useIsFocusedListItem() {
   return De(Wa);
 }
 function hm(bE) {
@@ -5270,7 +5270,7 @@ function hm(bE) {
       Wa.Provider,
       {
         value: Zk,
-        children: e(nl, {
+        children: e(SelectListRow, {
           isFocused: Zk,
           showScrollUp: hi === "glyph" && wE,
           showScrollDown: hi === "glyph" && CE,
@@ -5323,9 +5323,9 @@ function km(PE) {
   else tb = TE[1];
   return tb;
 }
-var iye = Object.assign(hm, { Item: km });
+var SelectList = Object.assign(hm, { Item: km });
 F();
-function oye(a, k) {
+function buildCachedMcpServerStatus(a, k) {
   let v = formatRelativeTimeAgo(new Date(a)),
     b = k !== void 0 ? ` \xB7 ${k} ${pluralize(k, "tool")}` : "";
   return {
@@ -5370,7 +5370,7 @@ function zr(LE) {
 function db() {
   return !1;
 }
-var MIt =
+var MCP_AUTH_UNATTENDED_SESSION_MESSAGE =
   "Can't authenticate MCP servers while no terminal is attached to this background session. Attach to it and try again.";
 function Em() {
   return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js");
@@ -5411,7 +5411,7 @@ function ub(a, k, v) {
     });
   }
   if (a.type === "cached") {
-    let b = oye(a.cacheSavedAt, k);
+    let b = buildCachedMcpServerStatus(a.cacheSavedAt, k);
     return r(Text, { children: [getThemeColor(b.tone, v)(b.glyph), " ", b.statusText] });
   }
   if (a.type === "pending")
@@ -5442,7 +5442,7 @@ function ub(a, k, v) {
     ],
   });
 }
-function sye(bo) {
+function McpRemoteServerDialog(bo) {
   let Si = _(23),
     bi = bo.server.config,
     Wr = (bi.type === "sse" || bi.type === "http") && !!getClaudeAIOAuthTokens()?.accessToken,
@@ -5529,7 +5529,7 @@ function Rm({
   designCredential: Q,
 }) {
   let I = re(
-      (te, ...Ee) => w(typeof te === "string" ? Qn(te) : te, ...Ee),
+      (te, ...Ee) => w(typeof te === "string" ? sanitizeForRelay(te) : te, ...Ee),
       [w],
     ),
     j = useAppStateSession(),
@@ -5575,7 +5575,7 @@ function Rm({
           let me = te.client.type === "failed" ? getMcpClientFailureDetail(te.client) : "";
           if (mayHaveRemoteClient(j)) {
             if (me)
-              logForDebugging(`mcp reconnect failed for ${Qn(a.name)}: ${me}`, {
+              logForDebugging(`mcp reconnect failed for ${sanitizeForRelay(a.name)}: ${me}`, {
                 level: "error",
               });
             I(
@@ -5649,7 +5649,7 @@ function Rm({
     if (te.key === "return" && Je) (te.preventDefault(), Yn());
     if (te.key === "return" && Lt) {
       if ((te.preventDefault(), isUnattendedBgSession())) {
-        (We(!1), at(!1), fe(MIt));
+        (We(!1), at(!1), fe(MCP_AUTH_UNATTENDED_SESSION_MESSAGE));
         return;
       }
       if (nt) fn();
@@ -5733,7 +5733,7 @@ function Rm({
           let wt = Ge.client.type === "failed" ? getMcpClientFailureDetail(Ge.client) : "";
           if (mayHaveRemoteClient(j)) {
             if (wt)
-              logForDebugging(`mcp post-auth reconnect failed for ${Qn(a.name)}: ${wt}`, {
+              logForDebugging(`mcp post-auth reconnect failed for ${sanitizeForRelay(a.name)}: ${wt}`, {
                 level: "error",
               });
             I(
@@ -6250,7 +6250,7 @@ function Rm({
         se && e(Box, { children: e(ErrorMessage, { error: se }) }),
         Oe.length > 0 &&
           e(Box, {
-            children: e(ve, {
+            children: e(Select, {
               options: Oe,
               defaultFocusValue: bt,
               onChange: async (te) => {
@@ -6262,7 +6262,7 @@ function Rm({
                     te === "claudeai-auth" ||
                     te === "claudeai-clear-auth")
                 ) {
-                  fe(MIt);
+                  fe(MCP_AUTH_UNATTENDED_SESSION_MESSAGE);
                   return;
                 }
                 switch (te) {
@@ -6354,7 +6354,7 @@ function pb(a, k, v) {
     children: [e(StatusIndicator, { status: "error", withSpace: !0 }), "failed"],
   });
 }
-function sit({
+function McpStdioServerDialog({
   server: a,
   serverToolsCount: k,
   onViewTools: v,
@@ -6363,7 +6363,7 @@ function sit({
   borderless: R = !1,
 }) {
   let A = re(
-      (xe, ...we) => w(typeof xe === "string" ? Qn(xe) : xe, ...we),
+      (xe, ...we) => w(typeof xe === "string" ? sanitizeForRelay(xe) : xe, ...we),
       [w],
     ),
     Q = useAppStateSession(),
@@ -6503,7 +6503,7 @@ function sit({
         ],
       }),
       e(Box, {
-        children: e(ve, {
+        children: e(Select, {
           options: ze,
           onChange: async (xe) => {
             if (xe === "tools") v();
@@ -6529,7 +6529,7 @@ function sit({
 F();
 var Fm = 1000,
   Um = 200;
-function sWe(v$) {
+function McpToolDetailDialog(v$) {
   let Kn = _(45),
     { tool: Ft, server: Jr, onBack: Mm } = v$,
     [Ga, mb] = d(""),
@@ -6765,7 +6765,7 @@ function Db(Z$, tD) {
 function Bb(iD) {
   return iD.mcpInfo?.effectiveMaxPermission === "blocked";
 }
-function iWe(q$) {
+function McpServerToolsDialog(q$) {
   let wi = _(24),
     { server: Yo, onSelectTool: Vm, onBack: Zr } = q$,
     Hm = useAppStateSelector($b),
@@ -6863,7 +6863,7 @@ function iWe(q$) {
     ((Kc =
       po.length === 0
         ? e(EmptyStateMessage, { children: "No tools available" })
-        : e(ve, {
+        : e(Select, {
             options: qm,
             onChange: (J$) => {
               let Eb = po[parseInt(J$)];
@@ -7583,7 +7583,7 @@ function Jc(lB) {
     else So = $e[45];
     let Za;
     if ($e[46] !== lt || $e[47] !== So)
-      ((Za = e(nl, { isFocused: lt, styled: !1, children: So })),
+      ((Za = e(SelectListRow, { isFocused: lt, styled: !1, children: So })),
         ($e[46] = lt),
         ($e[47] = So),
         ($e[48] = Za));
@@ -7659,7 +7659,7 @@ function Jc(lB) {
     else Zt = $e[69];
     let In;
     if ($e[70] !== lt || $e[71] !== Zt)
-      ((In = e(nl, { isFocused: lt, styled: !1, children: Zt })),
+      ((In = e(SelectListRow, { isFocused: lt, styled: !1, children: Zt })),
         ($e[70] = lt),
         ($e[71] = Zt),
         ($e[72] = In));
@@ -7744,7 +7744,7 @@ function Jc(lB) {
     else Gn = $e[96];
     let So;
     if ($e[97] !== lt || $e[98] !== Gn)
-      ((So = e(nl, { isFocused: lt, styled: !1, children: Gn })),
+      ((So = e(SelectListRow, { isFocused: lt, styled: !1, children: Gn })),
         ($e[97] = lt),
         ($e[98] = Gn),
         ($e[99] = So));
@@ -7861,7 +7861,7 @@ function Jc(lB) {
     else So = $e[130];
     let Za;
     if ($e[131] !== lt || $e[132] !== So)
-      ((Za = e(nl, { isFocused: lt, styled: !1, children: So })),
+      ((Za = e(SelectListRow, { isFocused: lt, styled: !1, children: So })),
         ($e[131] = lt),
         ($e[132] = So),
         ($e[133] = Za));
@@ -7879,7 +7879,7 @@ function Jc(lB) {
     else ((_n = $e[135]), (Fn = $e[136]));
   } else if (be.status === "cached" && be.client.type === "cached") {
     if ($e[137] !== be.client.cacheSavedAt || $e[138] !== mt) {
-      let dg = oye(be.client.cacheSavedAt);
+      let dg = buildCachedMcpServerStatus(be.client.cacheSavedAt);
       ((_n = getThemeColor(dg.tone, mt)(dg.glyph)), (Fn = dg.statusText));
       (($e[137] = be.client.cacheSavedAt),
         ($e[138] = mt),
@@ -8010,7 +8010,7 @@ function Jc(lB) {
     else In = $e[179];
     let Gn;
     if ($e[180] !== lt || $e[181] !== In)
-      ((Gn = e(nl, { isFocused: lt, styled: !1, children: In })),
+      ((Gn = e(SelectListRow, { isFocused: lt, styled: !1, children: In })),
         ($e[180] = lt),
         ($e[181] = In),
         ($e[182] = Gn));
@@ -8082,7 +8082,7 @@ function Jc(lB) {
   else Kt = $e[203];
   let Zt;
   if ($e[204] !== lt || $e[205] !== Kt)
-    ((Zt = e(nl, { isFocused: lt, styled: !1, children: Kt })),
+    ((Zt = e(SelectListRow, { isFocused: lt, styled: !1, children: Kt })),
       ($e[204] = lt),
       ($e[205] = Kt),
       ($e[206] = Zt));
@@ -8472,7 +8472,7 @@ function pu({
   }, [Ct, b]),
     E(() => () => b(!1), [b]));
   let [pe, tn] = d(null),
-    Rt = V(() => (pe ? s9e(pe.plugin.source) : null), [pe]),
+    Rt = V(() => (pe ? resolvePluginRecordKey(pe.plugin.source) : null), [pe]),
     sn = Fr(Rt),
     [St, Wt] = d(0),
     [Ut, zn] = d([]),
@@ -8560,13 +8560,13 @@ function pu({
         le = [],
         ce = fn;
       for (let qe of yt) {
-        let Pt = s9e(qe.plugin.source),
+        let Pt = resolvePluginRecordKey(qe.plugin.source),
           Vt = Ve.get(Pt),
           dn =
             Vt !== void 0
               ? Vt === "will-disable"
-              : p0e(Pt, qe.plugin.manifest, ce),
-          Un = B.filter((Vn) => !UJ(Vn) && z8(Vn, Pt, qe.plugin.name));
+              : resolvePluginEnabledState(Pt, qe.plugin.manifest, ce),
+          Un = B.filter((Vn) => !isAutoupdateSkippedError(Vn) && isDiagnosticForPlugin(Vn, Pt, qe.plugin.name));
         for (let Vn of Un) oe.add(Vn);
         let An = qe.plugin.isBuiltin ? "builtin" : qe.scope || "user",
           Ke = Q && isSkillDoctorEnabled() ? Xa(qe.plugin.manifest.name, Q) : void 0;
@@ -8596,8 +8596,8 @@ function pu({
       }
       let He = new Map();
       for (let qe of B) {
-        if (UJ(qe)) continue;
-        let Pt = QPt(qe);
+        if (isAutoupdateSkippedError(qe)) continue;
+        let Pt = isOrphanPluginEntry(qe);
         if (!Pt && oe.has(qe)) continue;
         let Vt = Pt ? `orphan:${qe.source}` : qe.source,
           dn = He.get(Vt) || [];
@@ -8808,7 +8808,7 @@ function pu({
   E(() => {
     if (xn.length > 0) markFlaggedPluginsSeen(xn, I);
   }, [xn, I]);
-  let [si, ci] = d(() => new Set((getGlobalConfig().favoritePlugins ?? []).map(s9e))),
+  let [si, ci] = d(() => new Set((getGlobalConfig().favoritePlugins ?? []).map(resolvePluginRecordKey))),
     io = V(
       () =>
         (Q ?? []).flatMap((T) =>
@@ -8835,7 +8835,7 @@ function pu({
     return (
       getDisusedPlugins().then((Z) => {
         if (T || Z.length === 0) return;
-        Po(new Map(Z.map((oe) => [s9e(oe.pluginId), oe.daysSinceLastUse])));
+        Po(new Map(Z.map((oe) => [resolvePluginRecordKey(oe.pluginId), oe.daysSinceLastUse])));
       }),
       () => {
         T = !0;
@@ -8971,8 +8971,8 @@ function pu({
             Qe = parseEnabledPluginRecords();
           for (let [Ye, ot] of Object.entries(He)) {
             let eo = countMatching(ot, (Pn) => {
-                let $l = s9e(Pn.source);
-                return p0e($l, Pn.manifest, Qe);
+                let $l = resolvePluginRecordKey(Pn.source);
+                return resolvePluginEnabledState($l, Pn.manifest, Qe);
               }),
               To = ot.length - eo;
             gt.push({
@@ -8993,7 +8993,7 @@ function pu({
             for (let ot of Ye.installedPlugins) {
               let eo = ot.isBuiltin
                 ? "builtin"
-                : (ot.scope ?? rOt(ot.source).scope);
+                : (ot.scope ?? resolvePluginInstallScope(ot.source).scope);
               Ae.push({
                 plugin: ot,
                 marketplace: Ye.name,
@@ -9023,7 +9023,7 @@ function pu({
             (Ye) => isEqualIgnoringCase(Ye.name, Z) || isEqualIgnoringCase(splitPluginId(Ye.source).name, Z),
           );
           if (Ae) {
-            let Ye = Ae.scope ?? rOt(Ae.source).scope,
+            let Ye = Ae.scope ?? resolvePluginInstallScope(Ae.source).scope,
               ot = {
                 plugin: Ae,
                 marketplace: Qe.name,
@@ -9066,7 +9066,7 @@ function pu({
         ie("Built-in plugins cannot be updated or uninstalled.");
         return;
       }
-      if (!oe && !r9e(Z) && T !== "update") {
+      if (!oe && !isInstallableScope(Z) && T !== "update") {
         ie(
           "This plugin is managed by your organization. Contact your admin to disable it.",
         );
@@ -9078,20 +9078,20 @@ function pu({
           ce;
         switch (T) {
           case "enable": {
-            let Ye = await f0e(le, void 0, I);
+            let Ye = await enablePlugin(le, void 0, I);
             if (!Ye.success) throw Error(Ye.message);
             break;
           }
           case "disable": {
-            let Ye = await m0e(le, void 0, I);
+            let Ye = await disablePlugin(le, void 0, I);
             if (!Ye.success) throw Error(Ye.message);
             ce = Ye.reverseDependents;
             break;
           }
           case "uninstall": {
             if (oe) break;
-            if (!r9e(Z)) break;
-            if (wUn(le)) {
+            if (!isInstallableScope(Z)) break;
+            if (isPluginEnabledInProjectSettings(le)) {
               (ke(!1), Re("confirm-project-uninstall"));
               return;
             }
@@ -9101,14 +9101,14 @@ function pu({
               (ke(!1), Re({ type: "confirm-data-cleanup", size: eo }));
               return;
             }
-            let To = await r4(le, Z, void 0, I);
+            let To = await uninstallPlugin(le, Z, void 0, I);
             if (!To.success) throw Error(To.message);
             ce = To.reverseDependents;
             break;
           }
           case "update": {
             if (oe) break;
-            let Ye = await Pye(
+            let Ye = await updatePlugin(
               le,
               Z,
               { explicit: !0, consentedEntryHelper: sn.pinned() },
@@ -9143,7 +9143,7 @@ function pu({
           T === "disable" || T === "uninstall")
         )
           En(T, Rt);
-        let He = p0e(le, pe.plugin.manifest, parseEnabledPluginRecords());
+        let He = resolvePluginEnabledState(le, pe.plugin.manifest, parseEnabledPluginRecords());
         if (T !== "uninstall" && T !== "update" && He) {
           (ke(!1), Re({ type: "plugin-options" }));
           return;
@@ -9193,9 +9193,9 @@ function pu({
       if (Z.type === "plugin") {
         let oe = Z.id,
           le = Ve.get(oe),
-          ce = p0e(oe, Z.plugin.manifest, fn),
+          ce = resolvePluginEnabledState(oe, Z.plugin.manifest, fn),
           He = Z.scope;
-        if (He === "builtin" || r9e(He)) {
+        if (He === "builtin" || isInstallableScope(He)) {
           if (Ee.current.has(oe)) return;
           (Ee.current.add(oe), it((Ae) => new Set(Ae).add(oe)));
           let Qe = new Map(Ve);
@@ -9206,8 +9206,8 @@ function pu({
                 try {
                   let Ae =
                     le === "will-disable"
-                      ? await f0e(oe, void 0, I)
-                      : await m0e(oe, void 0, I);
+                      ? await enablePlugin(oe, void 0, I)
+                      : await disablePlugin(oe, void 0, I);
                   if (!Ae.success && !Ae.alreadyInGoalState) {
                     (ne((Ye) => {
                       let ot = new Map(Ye);
@@ -9239,8 +9239,8 @@ function pu({
               (async () => {
                 try {
                   let Ae = ce
-                    ? await m0e(oe, void 0, I)
-                    : await f0e(oe, void 0, I);
+                    ? await disablePlugin(oe, void 0, I)
+                    : await enablePlugin(oe, void 0, I);
                   if (!Ae.success) {
                     (ne((Ye) => {
                       let ot = new Map(Ye);
@@ -9373,7 +9373,7 @@ function pu({
   let Sa = V(() => {
     if (ae !== "plugin-details" || !pe) return [];
     let T = Rt,
-      Z = p0e(T, pe.plugin.manifest, fn),
+      Z = resolvePluginEnabledState(T, pe.plugin.manifest, fn),
       oe = pe.marketplace === "builtin",
       le = isNonMarketplacePluginSource(pe.marketplace),
       ce = [];
@@ -9502,9 +9502,9 @@ function pu({
               (ke(!0), ie(null));
               let T = ae.plugin.id,
                 Z = ae.plugin.scope,
-                oe = r9e(Z)
-                  ? await r4(T, Z, !1, I)
-                  : await r4(T, "user", !1, I),
+                oe = isInstallableScope(Z)
+                  ? await uninstallPlugin(T, Z, !1, I)
+                  : await uninstallPlugin(T, "user", !1, I),
                 le = oe.success;
               if (!le) {
                 for (let ce of USER_PROJECT_LOCAL_SETTINGS_SOURCES)
@@ -9575,7 +9575,7 @@ function pu({
               ),
               ce;
             if (le) {
-              let He = await r4(Z, "project", !1, I);
+              let He = await uninstallPlugin(Z, "project", !1, I);
               if (!He.success) {
                 (ke(!1), ie(He.message));
                 return;
@@ -9613,11 +9613,11 @@ function pu({
     if (!pe) return;
     let Z = Rt,
       oe = pe.scope;
-    if (!oe || oe === "builtin" || !r9e(oe)) return;
+    if (!oe || oe === "builtin" || !isInstallableScope(oe)) return;
     let le = async (ce) => {
       (ke(!0), ie(null));
       try {
-        let He = await r4(Z, oe, ce, I);
+        let He = await uninstallPlugin(Z, oe, ce, I);
         if (!He.success) throw Error(He.message);
         (refreshPluginState(I, j), En("uninstall", Z));
         let gt = ce ? "" : " \xB7 data preserved";
@@ -9949,14 +9949,14 @@ function pu({
     });
   if (ae === "plugin-details" && pe) {
     let T = Rt,
-      Z = p0e(T, pe.plugin.manifest, fn),
-      oe = B.filter((Ae) => z8(Ae, T, pe.plugin.name)),
+      Z = resolvePluginEnabledState(T, pe.plugin.manifest, fn),
+      oe = B.filter((Ae) => isDiagnosticForPlugin(Ae, T, pe.plugin.name)),
       le = oe
-        .filter((Ae) => !UJ(Ae))
+        .filter((Ae) => !isAutoupdateSkippedError(Ae))
         .map((Ae) => ({ message: Jo(Ae), guidance: ii(Ae) })),
       ce = [
-        ...oe.filter(UJ).map((Ae) => ({ message: Jo(Ae), guidance: ii(Ae) })),
-        ...K.filter((Ae) => z8(Ae, T, pe.plugin.name)).map((Ae) => ({
+        ...oe.filter(isAutoupdateSkippedError).map((Ae) => ({ message: Jo(Ae), guidance: ii(Ae) })),
+        ...K.filter((Ae) => isDiagnosticForPlugin(Ae, T, pe.plugin.name)).map((Ae) => ({
           message: formatPluginWarning(Ae),
           guidance: formatPluginWarningGuidance(Ae),
         })),
@@ -10257,7 +10257,7 @@ function pu({
                   ],
                 }),
                 e(
-                  iye,
+                  SelectList,
                   {
                     visibleCount: 4,
                     onSelect: (le) => {
@@ -10274,7 +10274,7 @@ function pu({
                         le !== "user-invocable-only" &&
                         le !== "off";
                       return e(
-                        iye.Item,
+                        SelectList.Item,
                         {
                           children: r(Text, {
                             dimColor: ce,
@@ -10327,7 +10327,7 @@ function pu({
         transport: "stdio",
         config: T.config,
       };
-      return e(sit, {
+      return e(McpStdioServerDialog, {
         server: Qe,
         serverToolsCount: Z,
         onViewTools: oe,
@@ -10344,7 +10344,7 @@ function pu({
         isAuthenticated: void 0,
         config: T.config,
       };
-      return e(sye, {
+      return e(McpRemoteServerDialog, {
         server: Qe,
         serverToolsCount: Z,
         onViewTools: oe,
@@ -10361,7 +10361,7 @@ function pu({
         isAuthenticated: void 0,
         config: T.config,
       };
-      return e(sye, {
+      return e(McpRemoteServerDialog, {
         server: Qe,
         serverToolsCount: Z,
         onViewTools: oe,
@@ -10378,7 +10378,7 @@ function pu({
         isAuthenticated: void 0,
         config: T.config,
       };
-      return e(sye, {
+      return e(McpRemoteServerDialog, {
         server: Qe,
         serverToolsCount: Z,
         onViewTools: oe,
@@ -10446,7 +10446,7 @@ function pu({
         isAuthenticated: void 0,
         config: T.config,
       };
-    return e(iWe, {
+    return e(McpServerToolsDialog, {
       server: le,
       onSelectTool: (ce) => {
         Re({ type: "mcp-tool-detail", client: T, tool: ce });
@@ -10494,7 +10494,7 @@ function pu({
         isAuthenticated: void 0,
         config: T.config,
       };
-    return e(sWe, {
+    return e(McpToolDetailDialog, {
       tool: Z,
       server: ce,
       onBack: () => Re({ type: "mcp-tools", client: T }),
@@ -11306,7 +11306,7 @@ ${bl}`,
           );
           return;
         }
-        let Vu = await e9e(_u ?? ".", { force: ur });
+        let Vu = await buildPluginTagPlan(_u ?? ".", { force: ur });
         let mo = Vu.warnings.map(Hx);
         if (!Vu.ok) {
           (mo.push(`${figures.cross} ${Vu.error}`),
@@ -11335,7 +11335,7 @@ ${bl}`,
         if (Uu) {
           (mo.push(
             `${figures.tick} Dry run \u2014 would create tag ${qn.tag} at HEAD in ${qn.gitRoot}`,
-            `  git -C ${qn.gitRoot} tag ${ur ? "-f " : ""}-a ${qn.tag} -m "${u0e(qn, void 0)}"`,
+            `  git -C ${qn.gitRoot} tag ${ur ? "-f " : ""}-a ${qn.tag} -m "${buildVersionTagMessage(qn, void 0)}"`,
             `  ${Ux}`,
           ),
             Ei(
@@ -11344,7 +11344,7 @@ ${bl}`,
             ));
           return;
         }
-        let Hg = await t9e(qn, {
+        let Hg = await createPluginVersionTag(qn, {
           push: Fu,
           force: ur,
           message: void 0,
@@ -11435,7 +11435,7 @@ Or from the command line:
           return;
         }
         try {
-          let { manifest: ca, contents: Wx, resolvedPath: nO } = await ZWe(sa);
+          let { manifest: ca, contents: Wx, resolvedPath: nO } = await resolvePluginManifestAndContents(sa);
           let Kg = ca ? [ca, ...Wx] : Wx;
           let Et = ca
             ? `Validating ${ca.fileType} manifest: ${ca.filePath}
@@ -11530,7 +11530,7 @@ Or from the command line:
               level: "error",
             }),
             la(
-              `${figures.cross} Unexpected error during validation: ${ek(l(Yx), 200)}`,
+              `${figures.cross} Unexpected error during validation: ${sanitizeDiagnosticText(l(Yx), 200)}`,
             ));
         }
       };
@@ -11608,7 +11608,7 @@ function Vv() {
   return new Set();
 }
 function Hv(iL) {
-  return !UJ(iL);
+  return !isAutoupdateSkippedError(iL);
 }
 function jv(kv) {
   let bv = countMatching(kv.plugins.errors, Hv);
@@ -11710,7 +11710,7 @@ function xd(rN) {
         }
         let gS = qu.some(
           (Wu) =>
-            !UJ(Wu) &&
+            !isAutoupdateSkippedError(Wu) &&
             (Wu.source === Mi || ("plugin" in Wu && Wu.plugin === sN)),
         );
         let cN = gS
@@ -11957,12 +11957,12 @@ function Yf(a, k, v, b, w, R, A, Q, I) {
     let K = Qf(B, getErrorPluginId(B), Q);
     if (K.key !== void 0 && X.has(K.key)) continue;
     if (K.key !== void 0) X.add(K.key);
-    let se = UJ(B);
+    let se = isAutoupdateSkippedError(B);
     j.push({
       label: K.label,
       message: Jo(B),
       guidance: ii(B),
-      action: K.named && !se ? Sv(yUn(B, I)) : { kind: "none" },
+      action: K.named && !se ? Sv(resolvePluginIdentity(B, I)) : { kind: "none" },
       isAdvisory: se || void 0,
       scope: K.scope,
     });
@@ -12394,7 +12394,7 @@ function Zf(a) {
   if (a.type === "manage-marketplaces") return "marketplaces";
   return "discover";
 }
-function aWe(ZN) {
+function PluginsDialog(ZN) {
   let At = _(127),
     {
       onComplete: qt,
@@ -13063,4 +13063,4 @@ function aWe(ZN) {
   else hv = At[126];
   return hv;
 }
-export { oye, MIt, sye, sit, sWe, iWe, NIt, iye, aWe };
+export { buildCachedMcpServerStatus, MCP_AUTH_UNATTENDED_SESSION_MESSAGE, McpRemoteServerDialog, McpStdioServerDialog, McpToolDetailDialog, McpServerToolsDialog, useIsFocusedListItem, SelectList, PluginsDialog };

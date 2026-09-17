@@ -12,7 +12,7 @@ import { writeDiagnosticsEvent } from "./diagnostics-log.js";
 import { getEnvEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { httpClient } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isValidPluginId } from "../../02-功能模块/插件系统/plugin-system-core.js";
-import { iJ, bGt, wGt, gwt } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
+import { MAX_PLUGIN_ARCHIVE_BYTES, describeListFailure, describeSyncError, parseServerErrorType } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import { writeFile } from "fs/promises";
 function a(t) {
   return {
@@ -30,7 +30,7 @@ function d(t) {
 }
 var g = 30000,
   k = 300000,
-  m = iJ,
+  m = MAX_PLUGIN_ARCHIVE_BYTES,
   S = 16777216,
   c =
     "/api/oauth/organizations/:orgUUID/skills/list-skills?include_wiggle_skills=true";
@@ -45,10 +45,10 @@ async function fetchOrgSkills(t = {}) {
       maxContentLength: S,
       credentials: t.credentials,
     });
-    if (!e.ok || !Array.isArray(e.data?.skills)) return bGt("skills", e);
+    if (!e.ok || !Array.isArray(e.data?.skills)) return describeListFailure("skills", e);
     return { success: !0, skills: e.data.skills.filter(d).map(a) };
   } catch (e) {
-    return wGt(e);
+    return describeSyncError(e);
   }
 }
 async function downloadSkillArchive(t, r, s, e = {}) {
@@ -80,7 +80,7 @@ async function downloadSkillArchive(t, r, s, e = {}) {
     if (n.length < 2 || n[0] !== 80 || n[1] !== 75)
       return (
         writeDiagnosticsEvent("warn", "skills_sync_download_not_zip", {
-          serverError: gwt(n),
+          serverError: parseServerErrorType(n),
           bodyLen: n.length,
         }),
         !1

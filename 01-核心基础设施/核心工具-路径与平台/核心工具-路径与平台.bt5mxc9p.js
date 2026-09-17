@@ -118,7 +118,7 @@ import { isConfigDirPath } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndh
 import { getCwd } from "../共享小工具-未细化/cwd-context.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { rL, writeFileAndFlush } from "./chunk-fx8qr1md.js";
+import { ATOMIC_WRITE_STAGING_DIR_NAME, writeFileAndFlush } from "./chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { findCanonicalGitRoot, dirIsInGitRepo } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -3590,7 +3590,7 @@ async function Xi(e, t, r, o, d) {
         allowSymlink: e === "userSettings" || C,
         checkParentDir:
           (e === "projectSettings" || e === "localSettings") && !C,
-        stagingDir: fe(pe(r), rL),
+        stagingDir: fe(pe(r), ATOMIC_WRITE_STAGING_DIR_NAME),
       });
     }
     if ((invalidateAllSettings(), _)) O = Zi(r, w);
@@ -3712,7 +3712,7 @@ async function Mn(e) {
           encoding: "utf-8",
           allowSymlink: I,
           checkParentDir: !I,
-          stagingDir: fe(pe(t), rL),
+          stagingDir: fe(pe(t), ATOMIC_WRITE_STAGING_DIR_NAME),
         },
       ),
       invalidateAllSettings(),

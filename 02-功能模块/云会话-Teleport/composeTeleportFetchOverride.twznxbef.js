@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 50 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Tc, Is, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringifyUntraced, jsonParseUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSessionIngressUrl } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
@@ -51,7 +51,7 @@ async function U(r, d = E) {
   if (p) return null;
   try {
     let g = Buffer.concat(c).toString("utf8"),
-      e = Is(g)?.error?.type;
+      e = jsonParseUntraced(g)?.error?.type;
     return typeof e === "string" ? e : null;
   } catch {
     return null;
@@ -109,7 +109,7 @@ function B(
       _ = null,
       h;
     try {
-      let l = Is(b);
+      let l = jsonParseUntraced(b);
       ((T = l.stream === !0),
         (_ = typeof l.model === "string" ? l.model : null),
         (h = l.tools));
@@ -126,7 +126,7 @@ function B(
         h === void 0
           ? null
           : hashSha256(
-              Tc(
+              jsonStringifyUntraced(
                 Array.isArray(h)
                   ? [h.some((s) => O(s)), h.filter((s) => !O(s))]
                   : h,

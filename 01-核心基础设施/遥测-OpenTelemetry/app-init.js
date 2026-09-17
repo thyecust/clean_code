@@ -25,7 +25,7 @@ import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.
 import { ud, YR, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSameAsConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { pur, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { primeSystemInfo, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
@@ -158,7 +158,7 @@ async function T(t = {}) {
       (applySafeConfigEnvironmentVariables(),
       await assertScrubSandboxAvailable(),
       applyNodeExtraCaCertsFromConfig(),
-      await Promise.all([loadExtraCACerts(), loadMTLSClientMaterial(), primePlatformDetection(), pur()]),
+      await Promise.all([loadExtraCACerts(), loadMTLSClientMaterial(), primePlatformDetection(), primeSystemInfo()]),
       await installHostCredentials(),
       await restoreGatewayAuth(e?.backend !== void 0 && isSameAsConfigDir(e.configHome) ? c : void 0),
       ns())
@@ -229,7 +229,7 @@ async function T(t = {}) {
         // 原来指向 ./getAgentProxyEnv.25qhmvb6.js —— 那是个纯转出桶（无自身实现），已删除。
         // 该桶只是把 pfw3b51q 的 _gr / ygr / qit 转出为 initAgentProxy / getAgentProxyEnv /
         // PLACEHOLDER_CREDENTIAL_KEYS，这里直接用实现模块的原始名。
-        let { _gr: i, ygr: d } =
+        let { initAgentProxy: i, getAgentProxyEnv: d } =
             await import("../HTTP-网络层/HTTP-网络层.pfw3b51q.js"),
           { registerAgentProxyEnvFn: b } = await import("../核心工具-进程与信号/subprocess-env-scrub.js");
         (b(d), await i());

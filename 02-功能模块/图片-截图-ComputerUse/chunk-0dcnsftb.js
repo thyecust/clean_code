@@ -16,7 +16,7 @@ import { R, l, A, Jr, hv, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk
 import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { jo, Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
@@ -32,7 +32,7 @@ import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chu
 var B = null;
 async function loadImageProcessor() {
   if (B) return B.default;
-  if (bc())
+  if (isBunStandaloneExecutable())
     try {
       let r = await import("./getNativeModule.xtpfwxr8.js"),
         o = r.sharp || r.default;

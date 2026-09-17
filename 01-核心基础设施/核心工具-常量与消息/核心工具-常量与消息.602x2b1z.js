@@ -32,7 +32,7 @@ import { countMatching, dedupe } from "../共享小工具-未细化/chunk-d16fhd
 var DEFAULT_MAX_RESULT_SIZE_CHARS = 50000,
   OUTPUT_MAX_CHARS_FLOOR = 4000,
   OUTPUT_MAX_CHARS_CEILING = 128000,
-  uBe = 500000;
+  MAX_RESULT_SIZE_CHARS_CEILING = 500000;
 var BYTES_PER_TOKEN = 4,
   DEFAULT_TOOL_RESULT_PERSIST_THRESHOLD = 400000,
   DEFAULT_AGGREGATE_TOOL_RESULT_BUDGET = 200000,
@@ -93,7 +93,7 @@ function tt() {
 function Uir() {
   return !1;
 }
-function YZe() {
+function getArtifactViewerOriginOverride() {
   return;
 }
 function formatComplianceTaintLabel(t) {
@@ -271,7 +271,7 @@ function slugToUuid(t) {
   return `${r.slice(0, 8)}-${r.slice(8, 12)}-${r.slice(12, 16)}-${r.slice(16, 20)}-${r.slice(20)}`;
 }
 var T = null;
-function jir(t) {
+function setFeatureValueGetter(t) {
   let e = T;
   return ((T = t), e);
 }
@@ -381,7 +381,7 @@ function M(t, e) {
     ),
   );
   if (i?.[1]) return R(t, { slug: i[1], env: i[2] ? "staging" : "prod" });
-  let u = YZe();
+  let u = getArtifactViewerOriginOverride();
   if (u) {
     let s = t.match(new RegExp(`^https?://([^/?#]+)${O}`)),
       l = S(s?.[3], e);
@@ -406,7 +406,7 @@ function R(t, e, r) {
   return c !== void 0 && ut.test(c) ? { ...o, sk: c } : o;
 }
 function artifactUrlSubPath(t) {
-  let e = YZe(),
+  let e = getArtifactViewerOriginOverride(),
     r =
       t.match(new RegExp(`^https://(?:[a-z0-9-]+\\.)?claude\\.ai${w}`))?.[1] ??
       void 0 ??
@@ -452,7 +452,7 @@ function artifactViewerPath(t) {
   return `/code/artifact/${t}`;
 }
 function H(t) {
-  let e = YZe();
+  let e = getArtifactViewerOriginOverride();
   if (e && t === getArtifactEnvironment()) return e;
   return "https://claude.ai";
 }
@@ -968,7 +968,7 @@ export {
   DEFAULT_MAX_RESULT_SIZE_CHARS,
   OUTPUT_MAX_CHARS_FLOOR,
   OUTPUT_MAX_CHARS_CEILING,
-  uBe,
+  MAX_RESULT_SIZE_CHARS_CEILING,
   BYTES_PER_TOKEN,
   DEFAULT_TOOL_RESULT_PERSIST_THRESHOLD,
   DEFAULT_AGGREGATE_TOOL_RESULT_BUDGET,
@@ -981,7 +981,7 @@ export {
   Fir,
   getBaseApiUrl,
   Uir,
-  YZe,
+  getArtifactViewerOriginOverride,
   DECISION_SURFACE_BRACKET_RANGES,
   INTERRUPTED_BY_USER_MARKER,
   INTERRUPTED_FOR_TOOL_USE_MARKER,
@@ -1009,7 +1009,7 @@ export {
   isSyntheticMetaUserMessage,
   BASE58_SLUG_PATTERN,
   slugToUuid,
-  jir,
+  setFeatureValueGetter,
   ARTIFACT_TOOL_NAME,
   ARTIFACT_COMMENTS_TOOL_NAME,
   ARTIFACT_DATA_TOOL_NAME,

@@ -19,19 +19,19 @@ import { formatSingleLineText } from "../../01-核心基础设施/共享小工�
 import { resolveRealPath, createPathWithholdClassifier } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
 import {
-  $pt,
-  Upt,
-  W9n,
-  Bpt,
-  jpt,
-  G9n,
-  yze,
-  Wpt,
-  Wbe,
-  Man,
-  Gpt,
-  qpt,
-} from "../目录同步(dir-sync)/chunk-gbhqtdpn.js";
+  createDirSyncRepo,
+  buildPackfile,
+  createMemoryObjectStore,
+  loadStatCache,
+  DIR_SYNC_GIT_IDENTITY,
+  SEED_ROOT_REF,
+  MAX_SYNC_BYTES,
+  MAX_STORE_BUDGET_BYTES,
+  DIR_SYNC_LOG_EVENTS,
+  buildFolderSeed,
+  resolveDirSyncStoreRoot,
+  getStatCachePath,
+} from "../目录同步(dir-sync)/dir-sync-git-store.js";
 import "./sync-journal.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { formatBundleHeader } from "../Git-Worktree/dir-sync-git-repository.js";
@@ -44,8 +44,8 @@ var E = 3;
 async function D({
   folder: t,
   realRoot: s,
-  maxBytes: d = yze,
-  storeBudgetBytes: p = Wpt,
+  maxBytes: d = MAX_SYNC_BYTES,
+  storeBudgetBytes: p = MAX_STORE_BUDGET_BYTES,
   statCache: m,
   withheldOf: w,
   signal: g,
@@ -53,12 +53,12 @@ async function D({
 }) {
   let _ = a();
   try {
-    let { store: r } = W9n({ objectFormat: "sha1" }),
-      c = $pt({ store: r, identity: jpt });
+    let { store: r } = createMemoryObjectStore({ objectFormat: "sha1" }),
+      c = createDirSyncRepo({ store: r, identity: DIR_SYNC_GIT_IDENTITY });
     await using f = await openTreeAnchor(createFileSystemHost(), { gitRoot: t, realRoot: s }).catch(
       (y) => (logForDebugging(`[folderSeed] tree anchor not opened (${l(y)})`), null),
     );
-    let e = await Man({
+    let e = await buildFolderSeed({
       folder: t,
       realRoot: s,
       repo: c,
@@ -131,10 +131,10 @@ async function D({
           version: 2,
           capabilities: [],
           prerequisites: [],
-          refs: [{ name: G9n, id: b.id }],
+          refs: [{ name: SEED_ROOT_REF, id: b.id }],
           packOffset: 0,
         }),
-        await Upt(k, r.objectFormat),
+        await buildPackfile(k, r.objectFormat),
       ]),
       C = new Set(o.ids.blobs);
     return {
@@ -184,14 +184,14 @@ async function shipFolderSeed({
   folder: t,
   signal: s,
   onProgress: d,
-  maxBytes: p = yze,
+  maxBytes: p = MAX_SYNC_BYTES,
   now: m = Date.now,
   storageV5: w,
 }) {
   let g = (a, _, r) => {
     if (s.aborted) return { kind: "aborted" };
     return (
-      logEvent(Wbe.seed, r),
+      logEvent(DIR_SYNC_LOG_EVENTS.seed, r),
       d?.({ kind: "bundle_failed", fallback: null }),
       { kind: "refused", line: v(a), reason: _ }
     );
@@ -203,7 +203,7 @@ async function shipFolderSeed({
         outcome: S("unresolvable"),
       });
     d?.({ kind: "bundling", rerouted: !1, folder: !0 });
-    let _ = await Bpt(qpt(await Gpt(t, w))),
+    let _ = await loadStatCache(getStatCachePath(await resolveDirSyncStoreRoot(t, w))),
       r = p,
       c = await D({
         folder: t,
@@ -232,7 +232,7 @@ async function shipFolderSeed({
     d?.({ kind: "bundled", sizeBytes: f.content.length, scope: "squashed" });
     let { content: e, ...b } = f;
     return (
-      logEvent(Wbe.seed, {
+      logEvent(DIR_SYNC_LOG_EVENTS.seed, {
         outcome: S("built"),
         files: f.files,
         bytes: f.bytes,

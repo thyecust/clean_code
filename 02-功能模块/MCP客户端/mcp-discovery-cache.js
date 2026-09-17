@@ -10,7 +10,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { registerCleanup, Tc, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringifyUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -797,7 +797,7 @@ function recordPresentedHeaders(e, t) {
 var Ot = 268435456;
 function Be(e) {
   let t = [e],
-    r = Tc(e).slice(1, -1);
+    r = jsonStringifyUntraced(e).slice(1, -1);
   if (r !== e) t.push(r);
   try {
     let i = encodeURIComponent(e);
@@ -944,7 +944,7 @@ async function Se(e) {
       logMCPDebug(r, `Discovery cache ${u} refused: entry failed schema validation`),
       { verdict: "terminal", code: "schema" }
     );
-  let b = Tc(D.data);
+  let b = jsonStringifyUntraced(D.data);
   if (Buffer.byteLength(b, "utf8") > F)
     return (
       logMCPDebug(

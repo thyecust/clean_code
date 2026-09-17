@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
-import { ps } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { sanitizeTextForDisplay } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 function collapseNewlines(n) {
   return n.replace(/[\r\n\u2028\u2029]+/g, " ");
 }
 function truncateForDisplay(n, r) {
-  let e = ps(n);
+  let e = sanitizeTextForDisplay(n);
   if (e.length <= r) return e;
   let t = truncateToCodeUnits(e, r),
     o = Array.from(e.slice(t.length)).length;

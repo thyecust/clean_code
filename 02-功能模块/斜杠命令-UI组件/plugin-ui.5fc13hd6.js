@@ -21,7 +21,7 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import { aWe } from "../插件系统/chunk-jwm9gdkd.js";
+import { PluginsDialog } from "../插件系统/chunk-jwm9gdkd.js";
 import "../插件系统/chunk-akd9b588.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
@@ -50,7 +50,7 @@ import "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-g
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 async function r(t, o, s) {
   let n = getRemoteTransport() !== null;
-  return e(aWe, {
+  return e(PluginsDialog, {
     onComplete: t,
     args: s,
     commands: o.options.commands,

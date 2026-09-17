@@ -18,7 +18,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isPolicyAllowed, getPolicyDenyKind, getPolicyDeniedReason } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
-import { sJ, TGt, pXe, fXe, cJ, roe } from "./chunk-ajtn749s.js";
+import { ensurePluginsOAuthScope, getApiErrorEnvelopeSchema, listOrganizationPlugins, isPluginsSyncVetoed, isSessionRefsSyncEnabled, sessionRefsManifestStore } from "./chunk-ajtn749s.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { registerSuggestRolloutPinReader, isPluginSkillToolEnabled } from "../../01-核心基础设施/共享小工具-未细化/plugin-skill-tool-gating.js";
 import { fetchOrgSkills } from "../../01-核心基础设施/共享小工具-未细化/org-skills-sync.js";
@@ -64,7 +64,7 @@ async function D(e, t, r, o, i) {
       )
     );
   }
-  if (t === I) await sJ(e, o, i);
+  if (t === I) await ensurePluginsOAuthScope(e, o, i);
   let u = t === I && a.CLAUDE_CODE_CCR_SURFACE === "tag",
     h = await httpClient.post(
       t,
@@ -80,7 +80,7 @@ async function D(e, t, r, o, i) {
         : `search route unavailable: ${h.reason}`,
     );
   if (h.status >= 400) {
-    let S = TGt().safeParse(h.data),
+    let S = getApiErrorEnvelopeSchema().safeParse(h.data),
       N = S.success
         ? `search route ${h.status} ${S.data.error.type ?? "error_envelope_no_type"}${S.data.error.message ? `: ${S.data.error.message}` : ""}`
         : `search route ${h.status}`;
@@ -107,10 +107,10 @@ function R(e, t) {
     logFeatureBad(e === "plugin" ? "plugin_search" : "skill_search", "fetch_failed"));
 }
 async function E(e, t, r) {
-  if (!cJ(e)) return null;
-  if (fXe()) return [];
+  if (!isSessionRefsSyncEnabled(e)) return null;
+  if (isPluginsSyncVetoed()) return [];
   let o = await raceWithAbortSignal(
-    roe.of(e).fetch(),
+    sessionRefsManifestStore.of(e).fetch(),
     t,
     () => new Ve("plugin manifest read aborted"),
   );
@@ -199,7 +199,7 @@ var q =
             enabled: !0,
           }))
         );
-      let p = await pXe(e, { signal: t, credentials: r });
+      let p = await listOrganizationPlugins(e, { signal: t, credentials: r });
       if (!p.success) {
         if (p.status === 403)
           return (

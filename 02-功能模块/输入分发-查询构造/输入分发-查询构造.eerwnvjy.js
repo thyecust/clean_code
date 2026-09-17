@@ -86,7 +86,7 @@ import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小�
 import { parseConfigInteger, getClaudeConfigDir, resolveMaxTurns, isSimpleMode, isSafeMode, xg, isInProtectedNamespace } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Io, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { bc, ja, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable, resolveExecutablePathAsync, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromNumberOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY, agentTypeForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import {
@@ -113,7 +113,7 @@ import {
   getFsSurface,
   changeWorkingDirectory,
   readTailBytes,
-  qr,
+  redactSecretsFromText,
   redactDeep,
   isDebugToStdErr,
   flushDebugLogs,
@@ -800,25 +800,25 @@ import {
 import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { SHELL_TOOL_NAMES, formatUnsatisfiableSchemaReason, STRUCTURED_OUTPUT_TOOL_NAME, isStructuredOutputSession, buildStructuredOutputToolFromSchema } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { ZERO_USAGE_TOTALS, normalizeRequestIdFields, Qn, isHumanOrigin } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { ZERO_USAGE_TOTALS, normalizeRequestIdFields, sanitizeForRelay, isHumanOrigin } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { isBridgeEnabled, isRemoteControlOfferable, isRunningInRemoteEnvironment, isBridgeStateFramesEnabled, isBridgePartialMessagesEnabled } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import {
-  hN,
-  ig,
-  afe,
-  y1e,
-  vC,
-  aXe,
-  Ui,
-  xj,
-  cwt,
-  mwt,
-  _wt,
-  hZn,
-  ywt,
-  lfe,
-  cJ,
-  roe,
+  claudeDownloadsHttpClient,
+  OFFICIAL_MARKETPLACE_NAME,
+  isPluginsRootUnreliable,
+  LINK_MODE_WINDOWS_UNSUPPORTED_MESSAGE,
+  getSourceCommandKey,
+  describeSourceMode,
+  PluginSourceError,
+  getCommandSource,
+  describePluginFailure,
+  getSyncFailureTelemetry,
+  refreshPluginsSyncEnabled,
+  isAccountPluginsSyncFlagEnabled,
+  isPluginSyncPolicyVerdictPending,
+  isPluginsSyncTierInPlay,
+  isSessionRefsSyncEnabled,
+  sessionRefsManifestStore,
 } from "../插件系统/chunk-ajtn749s.js";
 import { isPluginBlockedByPolicy, getStrictKnownMarketplaces, areSideloadFlagsDisabledByPolicy, areCommandPluginSourcesDisabledByPolicy, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, sideloadFlagsBlockedMessage, isSourceDisallowedOrUnverifiable, getPluginSuggestionMarketplaces, isMarketplaceSourceDeclaredByPolicy } from "../插件系统/plugin-source-policy.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
@@ -870,7 +870,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { Box, Text, Link, useIsScreenReaderEnabled } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { seedEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
-import { ui, fa, $o, vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { useIsMountRecent, useSettleAfterChange, useRefusedInputWindow, NO_COMMITTED_ROW, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { shouldOfferTerminalSetup } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -878,22 +878,22 @@ import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import {
-  d0e,
-  o9e,
-  TUn,
-  fen,
-  EUn,
-  r4,
-  m0e,
-  AUn,
-  Pye,
-  g0e,
-  oOt,
-  sOt,
-  men,
-  gen,
+  refreshMarketplaceForScopedInstall,
+  getProjectPathForScope,
+  isSadFailureCode,
+  isPluginInstalledAndSatisfied,
+  installPlugin,
+  uninstallPlugin,
+  disablePlugin,
+  disableAllPlugins,
+  updatePlugin,
+  buildEntryHelperRequest,
+  formatHeadersHelperWarning,
+  findPluginEntryAcrossMarketplaces,
+  validateDeepLinkCwd,
+  parseDeepLinkQuery,
 } from "../插件系统/chunk-q8w2zntw.js";
-import { Xae, zst } from "../Skills技能/Skills技能.dpy2ket5.js";
+import { registerBuiltinPlugins, registerAllBundledSkills } from "../Skills技能/Skills技能.dpy2ket5.js";
 import { publishPermissionSnapshot } from "../../01-核心基础设施/共享小工具-未细化/publish-permission-snapshot.js";
 import { applyInheritPermissionMode } from "../权限系统/inherit-permission-mode-flag.js";
 import { printCliError, cliError, cliWarn, exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
@@ -1068,7 +1068,7 @@ var Ug = {
     "read_file: suspicious Windows path spelling rejected",
 };
 function lr(w, I = "remote read denied") {
-  return new mi(`read denied: ${Qn(w)}`, I);
+  return new mi(`read denied: ${sanitizeForRelay(w)}`, I);
 }
 async function readHandleBounded(w, I, O) {
   let U = I + 1,
@@ -1587,7 +1587,7 @@ function getFeedbackUnavailableReason() {
 function getRedactedInMemoryErrors() {
   return getInMemoryErrors().map((w) => {
     let I = { ...w };
-    if (I && typeof I.error === "string") I.error = qr(I.error);
+    if (I && typeof I.error === "string") I.error = redactSecretsFromText(I.error);
     return I;
   });
 }
@@ -1698,7 +1698,7 @@ async function ay() {
       )),
         (V = `[debug log truncated to last ${O} of ${U} bytes]
 ${V}`));
-    return qr(V);
+    return redactSecretsFromText(V);
   } catch {
     return null;
   }
@@ -1784,11 +1784,11 @@ async function uc({
 }
 function Ha(w) {
   if (w instanceof Error) {
-    let I = Error(qr(w.message));
-    if (w.stack) I.stack = qr(w.stack);
+    let I = Error(redactSecretsFromText(w.message));
+    if (w.stack) I.stack = redactSecretsFromText(w.stack);
     logError(I);
   } else {
-    let I = qr(String(w));
+    let I = redactSecretsFromText(String(w));
     logError(Error(I));
   }
 }
@@ -1881,7 +1881,7 @@ async function postFeedbackRequest(w, I, O) {
           );
       }
     }
-    if (cc(V)) logForDebugging(qr(l(V)));
+    if (cc(V)) logForDebugging(redactSecretsFromText(l(V)));
     else Ha(V);
     if (isAxiosError(V) && V.response)
       return {
@@ -1922,7 +1922,7 @@ async function submitFeedbackSurveyFollowup({
       lastInterruptedAssistantAPIMessageId: te,
       message_count: V.length,
       datetime: new Date().toISOString(),
-      description: qr(w),
+      description: redactSecretsFromText(w),
       surface: "cli",
       platform: a.platform,
       gitRepo: !1,
@@ -5159,7 +5159,7 @@ async function jc(w, I) {
       logError(me);
     }
 }
-async function p0t() {
+async function recordFullscreenBootFailure() {
   let w = el();
   if (w.canary.status !== "armed") return !1;
   let { pid: I, cleanup: O, timer: U, storageV5: V } = w.canary;
@@ -5337,7 +5337,7 @@ async function launchRepl(w, I, O, U) {
       Se,
     );
   } catch (Oe) {
-    throw (await p0t().catch(() => !1), Oe);
+    throw (await recordFullscreenBootFailure().catch(() => !1), Oe);
   }
 }
 async function awaitMcpPolicyColdStart(w) {
@@ -5392,9 +5392,9 @@ function Us() {
 function NewMcpServerDialog({ serverName: w, isPluginServer: I = !1, onDone: O }) {
   let { storageV5: U } = useStorageV5Context(),
     V = C(!1),
-    te = ui(REFUSE_INPUT_WINDOW_MS),
-    { refusedWithin: ne, noteRefused: me, epoch: Me } = $o(),
-    Se = fa(Me, REFUSE_INPUT_WINDOW_MS);
+    te = useIsMountRecent(REFUSE_INPUT_WINDOW_MS),
+    { refusedWithin: ne, noteRefused: me, epoch: Me } = useRefusedInputWindow(),
+    Se = useSettleAfterChange(Me, REFUSE_INPUT_WINDOW_MS);
   function xe() {
     if (te() || ne(REFUSE_INPUT_WINDOW_MS)) return (me(), !0);
     return !1;
@@ -5456,7 +5456,7 @@ function NewMcpServerDialog({ serverName: w, isPluginServer: I = !1, onDone: O }
     children: [
       e(Us, {}),
       e(
-        ve,
+        Select,
         {
           options: [
             { label: "Use this MCP server", value: "yes" },
@@ -5471,7 +5471,7 @@ function NewMcpServerDialog({ serverName: w, isPluginServer: I = !1, onDone: O }
           hideIndexes: !0,
           refuseInput: xe,
           defaultFocusValue: "no",
-          selectedValue: vs,
+          selectedValue: NO_COMMITTED_ROW,
         },
         Se.remountKey,
       ),
@@ -5482,8 +5482,8 @@ F();
 function NewMcpServersDialog({ serverNames: w, pluginServerNames: I, onDone: O }) {
   let { storageV5: U } = useStorageV5Context(),
     V = C(!1),
-    te = ui(REFUSE_INPUT_WINDOW_MS),
-    { refusedWithin: ne, noteRefused: me } = $o(),
+    te = useIsMountRecent(REFUSE_INPUT_WINDOW_MS),
+    { refusedWithin: ne, noteRefused: me } = useRefusedInputWindow(),
     Me = useIsScreenReaderEnabled(),
     Se = re(() => {
       if (te() || ne(REFUSE_INPUT_WINDOW_MS)) return (me(), !0);
@@ -5755,7 +5755,7 @@ function waitForFirstSkillsSync(w, I, O) {
 }
 async function resyncSkillsNow(w, I, O) {
   return (
-    roe.of(w).discardInflight(),
+    sessionRefsManifestStore.of(w).discardInflight(),
     await getSkillsSyncState().syncPromise?.catch(() => {}),
     cl(w, I, O)
   );
@@ -6348,9 +6348,9 @@ async function xh(w, I, O) {
     let Ae = Oe.root;
     writeDiagnosticsEvent("info", "skills_sync_starting");
     let $e;
-    if (cJ(w)) {
+    if (isSessionRefsSyncEnabled(w)) {
       let [He, Qe] = await Promise.all([
-        roe.of(w).listEntries("skills"),
+        sessionRefsManifestStore.of(w).listEntries("skills"),
         a.CLAUDE_CODE_SYNC_SKILLS
           ? fetchOrgSkills({ isBackground: !0, credentials: O })
           : null,
@@ -6366,7 +6366,7 @@ async function xh(w, I, O) {
     } else $e = await fetchOrgSkills({ isBackground: !0, credentials: O });
     if (!$e.success) {
       xe.consecutiveFailedRounds++;
-      let He = mwt($e);
+      let He = getSyncFailureTelemetry($e);
       (writeDiagnosticsEvent("warn", "skills_sync_list_failed", {
         duration_ms: Date.now() - U,
         ...He,
@@ -6810,9 +6810,9 @@ var Fh = {
 };
 async function handlePluginCommandError(w, I, O) {
   let U = classifyPluginError(w);
-  if (w instanceof Ui && (I === "install" || I === "update")) {
+  if (w instanceof PluginSourceError && (I === "install" || I === "update")) {
     if ((console.error(sanitizeMultilineForDisplay(l(w))), I === "install")) {
-      let { code: Me, kind: Se } = cwt(w);
+      let { code: Me, kind: Se } = describePluginFailure(w);
       if (Se === "bad") await logFeatureBadAsync("cli_plugin_install", Me);
       else await logFeatureSadAsync("cli_plugin_install", Me);
     }
@@ -6935,13 +6935,13 @@ async function Iu(w, I, { yes: O = !1, acceptedCommand: U } = {}) {
     return;
   }
   if (I.source.mode === "link" && getCurrentPlatform() === "windows") {
-    writeToStdout(`${y1e}
+    writeToStdout(`${LINK_MODE_WINDOWS_UNSUPPORTED_MESSAGE}
 `);
     return;
   }
   let V = I.source.command,
-    te = vC(I.source);
-  if (U === te && !afe()) return;
+    te = getSourceCommandKey(I.source);
+  if (U === te && !isPluginsRootUnreliable()) return;
   let { name: ne, marketplace: me } = splitPluginId(w),
     Me = formatDisplayText(ne ?? "", 200),
     Se = formatDisplayText(me ?? "", 200);
@@ -6954,7 +6954,7 @@ async function Iu(w, I, { yes: O = !1, acceptedCommand: U } = {}) {
           : " \u2014 your earlier acceptance is recorded where it cannot be relied on (a plugins root inside a workspace, on a network location, or one that could not be resolved), so please confirm it again") +
       `:
   ${V}
-  (${aXe(I.source)})
+  (${describeSourceMode(I.source)})
 `,
   );
   let xe = await fl({ yes: O });
@@ -6997,17 +6997,17 @@ async function confirmPluginEntryDisclosure(w, I = {}, O) {
   let te = V ?? I.resolvedMarketplace;
   if (!te)
     try {
-      te = (await sOt(U, O))?.marketplace;
+      te = (await findPluginEntryAcrossMarketplaces(U, O))?.marketplace;
     } catch (Se) {
-      if (Se instanceof Ui) return null;
+      if (Se instanceof PluginSourceError) return null;
       throw Se;
     }
   if (!te) return null;
   let ne = `${U}@${te}`;
-  if (await fen(ne, I.scope ?? "user", O)) return null;
-  let me = await g0e(ne, void 0, O);
+  if (await isPluginInstalledAndSatisfied(ne, I.scope ?? "user", O)) return null;
+  let me = await buildEntryHelperRequest(ne, void 0, O);
   if (me === null) return null;
-  writeToStdout(`${oOt(me)}
+  writeToStdout(`${formatHeadersHelperWarning(me)}
 `);
   let Me = await fl(I);
   return Me === "accepted" ? me : Me;
@@ -7021,9 +7021,9 @@ async function reviewPluginCommandSource(w, I = {}, O) {
   if (!ne) {
     let Ye;
     try {
-      Ye = await sOt(U, O);
+      Ye = await findPluginEntryAcrossMarketplaces(U, O);
     } catch (Ze) {
-      if (Ze instanceof Ui) return;
+      if (Ze instanceof PluginSourceError) return;
       throw Ze;
     }
     if (!Ye) return;
@@ -7034,20 +7034,20 @@ async function reviewPluginCommandSource(w, I = {}, O) {
   let Se = `${U}@${ne}`,
     xe = me ? { entry: me } : void 0;
   if (!xe) {
-    let Ye = await d0e(ne, Me, O);
+    let Ye = await refreshMarketplaceForScopedInstall(ne, Me, O);
     I.onMarketplaceRefreshResult?.(Ye);
     try {
       xe = await findPluginEntry(Se, O);
     } catch (Ze) {
-      if (Ze instanceof Ui) return;
+      if (Ze instanceof PluginSourceError) return;
       throw Ze;
     }
   }
-  let De = xe ? xj(xe.entry.source) : void 0;
+  let De = xe ? getCommandSource(xe.entry.source) : void 0;
   if (!xe || !De) return;
   let Oe = (isHoverRestEnabled() && O !== void 0 ? await readInstalledPluginsViaStorage(O) : readInstalledPluginsFile()).plugins[Se] ?? [],
-    Ae = vC(De),
-    $e = !afe(),
+    Ae = getSourceCommandKey(De),
+    $e = !isPluginsRootUnreliable(),
     We = $e && Oe.some((Ye) => Ye.sourceCommand === Ae);
   if (await isPluginInstalledOnDisk(Se, I.scope ?? "user", O)) {
     if (!We) {
@@ -7073,7 +7073,7 @@ async function reviewPluginCommandSource(w, I = {}, O) {
 }
 async function runPluginInstallCommand(w, I = "user", O, U, V, te, ne) {
   try {
-    let me = await EUn(
+    let me = await installPlugin(
       w,
       I,
       { shownSourceCommand: U, shownEntryHelper: V, announceRefreshResult: ne },
@@ -7107,7 +7107,7 @@ ${Se}`
   }
 }
 async function xu(w, I) {
-  let O = o9e(w),
+  let O = getProjectPathForScope(w),
     { enabled: U, disabled: V } = await loadAllPluginsCacheOnly(isHoverRestEnabled() ? I : void 0);
   return computeAutoInstalledOrphans(
     (isHoverRestEnabled() && I !== void 0 ? await readInstalledPluginsViaStorage(I) : readInstalledPluginsFile()).plugins,
@@ -7118,7 +7118,7 @@ async function xu(w, I) {
 }
 async function runPluginUninstallCommand(w, I = "user", O = !1, U = !1, V = !1, te) {
   try {
-    let ne = await r4(w, I, !O, te);
+    let ne = await uninstallPlugin(w, I, !O, te);
     if (!ne.success) throw new PluginOperationFailedError(ne.message);
     await logEventAsync("tengu_plugin_uninstalled_cli", {
       ...buildPluginTelemetryFieldsFromId(ne.pluginId || w, getPolicyPluginNames()),
@@ -7167,7 +7167,7 @@ async function Du(w, I, O, U) {
       ? `Nothing to prune (no auto-installed plugins at ${I} scope).`
       : `Nothing to prune (${w.autoCount} auto-installed ${pluralize(w.autoCount, "plugin", "plugins")} at ${I} scope, all still needed).`;
   let V = (isHoverRestEnabled() && U !== void 0 ? await readInstalledPluginsViaStorage(U) : readInstalledPluginsFile()).plugins,
-    te = o9e(I),
+    te = getProjectPathForScope(I),
     ne = [...w.orphans].map((Se) => {
       let xe = V[Se]?.find((De) => De.scope === I && De.projectPath === te);
       return `  ${sanitizeForDisplay(Se)}${xe?.version ? ` (${sanitizeForDisplay(xe.version)})` : ""}`;
@@ -7211,7 +7211,7 @@ async function Ou() {
 }
 async function runPluginDisableCommand(w, I, O) {
   try {
-    let U = await m0e(w, I, O);
+    let U = await disablePlugin(w, I, O);
     if (!U.success) throw new PluginOperationFailedError(U.message);
     return (
       await logEventAsync("tengu_plugin_disabled_cli", {
@@ -7226,7 +7226,7 @@ async function runPluginDisableCommand(w, I, O) {
 }
 async function runPluginDisableAllCommand(w) {
   try {
-    let I = await AUn(w);
+    let I = await disableAllPlugins(w);
     if (!I.success) throw new PluginOperationFailedError(I.message);
     return (
       await logEventAsync("tengu_plugin_disabled_all_cli", {}),
@@ -7240,7 +7240,7 @@ async function runPluginUpdateCommand(w, I, { yes: O = !1 } = {}, U) {
   try {
     writeToStdout(`${sanitizeForDisplay(`Checking for updates for plugin "${w}" at ${I} scope\u2026`)}
 `);
-    let V = await Pye(
+    let V = await updatePlugin(
         w,
         I,
         {
@@ -7253,7 +7253,7 @@ async function runPluginUpdateCommand(w, I, { yes: O = !1 } = {}, U) {
           announceCommandSource: async (ne, me, Me) => {
             let Se = await Iu(ne, me, { yes: O, acceptedCommand: Me });
             if (Se?.kind === "declined")
-              throw new Ui(
+              throw new PluginSourceError(
                 "Aborted \u2014 the command was not run.",
                 "plugin command source declined at the prompt",
               );
@@ -7264,8 +7264,8 @@ async function runPluginUpdateCommand(w, I, { yes: O = !1 } = {}, U) {
       ),
       te = sanitizeForDisplay(V.message);
     if (V.outcome === "failed") {
-      if (V.failureCode !== void 0 && TUn(V.failureCode))
-        throw new Ui(te, `${PLUGIN_UPDATE_REFUSED_PREFIX}${V.failureCode}`);
+      if (V.failureCode !== void 0 && isSadFailureCode(V.failureCode))
+        throw new PluginSourceError(te, `${PLUGIN_UPDATE_REFUSED_PREFIX}${V.failureCode}`);
       throw new PluginOperationFailedError(te);
     }
     if (
@@ -7610,8 +7610,8 @@ mcp.setRequestHandler(CallToolRequestSchema, async req => {
 await mcp.connect(new StdioServerTransport())
 `;
 }
-var ensureBuiltinPluginsRegistered = () => Xae();
-var initializeBuiltinPlugins = () => Xae();
+var ensureBuiltinPluginsRegistered = () => registerBuiltinPlugins();
+var initializeBuiltinPlugins = () => registerBuiltinPlugins();
 function getCloudSessionsUnavailableReason() {
   let w = getAPIProvider();
   if (w !== "firstParty")
@@ -8008,7 +8008,7 @@ function Sl(w) {
   return Array.isArray(I) ? I.filter((O) => yS.some((U) => U === O)) : [];
 }
 async function checkGitHubAuthStatus({ allowNetworkFallbackForOldGh: w }) {
-  if (!(await ja("gh"))) return { status: "not_installed" };
+  if (!(await resolveExecutablePathAsync("gh"))) return { status: "not_installed" };
   try {
     let O = await Bf("gh", ["auth", "token"], {
       stdout: "ignore",
@@ -9640,7 +9640,7 @@ class vr extends Error {
 }
 async function Rm(w, I, O) {
   try {
-    if (!Hxe() || !lfe() || ywt()) return !1;
+    if (!Hxe() || !isPluginsSyncTierInPlay() || isPluginSyncPolicyVerdictPending()) return !1;
     let U = y_(I, O);
     try {
       return await withFeatureTelemetry(
@@ -10311,7 +10311,7 @@ class Ym {
     for (let V of w) {
       let te = I[V];
       if (!te) continue;
-      if (V !== ig && !isMarketplaceSourceDeclaredByPolicy(V, te.source)) {
+      if (V !== OFFICIAL_MARKETPLACE_NAME && !isMarketplaceSourceDeclaredByPolicy(V, te.source)) {
         logForDebugging(
           `Skipping plugin suggestion tips for marketplace "${V}": its registered source is not declared in managed settings (extraKnownMarketplaces or strictKnownMarketplaces)`,
         );
@@ -10323,7 +10323,7 @@ class Ym {
         let Me = me.relevance,
           Se = normalizePluginRelevanceSignals(me.name, Me);
         if (!Se) continue;
-        if (V === ig && Qm.some((Oe) => Oe.id === `${me.name}-plugin`))
+        if (V === OFFICIAL_MARKETPLACE_NAME && Qm.some((Oe) => Oe.id === `${me.name}-plugin`))
           continue;
         let xe =
             Me?.topic ??
@@ -10332,7 +10332,7 @@ class Ym {
               .map((Oe) => (Oe ? Oe.charAt(0).toUpperCase() + Oe.slice(1) : Oe))
               .join("-"),
           De =
-            V === ig
+            V === OFFICIAL_MARKETPLACE_NAME
               ? `marketplace-plugin:${me.name}`
               : `marketplace-plugin:${me.name}@${V}`;
         U.push({
@@ -10376,7 +10376,7 @@ function jm(w) {
     return spinnerTipHostStateStore.of(w.session.host).countSessionsOnce(w.storageV5);
   return countConcurrentSessions(w?.storageV5);
 }
-async function Jm(w, I, O, U, V = ig) {
+async function Jm(w, I, O, U, V = OFFICIAL_MARKETPLACE_NAME) {
   if (!(await w.getKnownMarketplaces(O.storageV5))[V]) return !1;
   if (isPluginInstalledInCurrentScope(`${I}@${V}`)) return !1;
   if (isPluginBlockedByPolicy(`${I}@${V}`)) return !1;
@@ -11168,7 +11168,7 @@ var Qm = [
       content: async (
         w,
       ) => `Working with HTML/CSS? Install the frontend-design plugin:
-${getThemeColor("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
+${getThemeColor("suggestion", w.theme)(`/plugin install frontend-design@${OFFICIAL_MARKETPLACE_NAME}`)}`,
       cooldownSessions: 3,
       maxLifetimeShows: 3,
       advertisedCommand: "plugin",
@@ -12096,7 +12096,7 @@ async function Yb(w) {
   );
 }
 function Lp(w, I) {
-  return isClaudeDownloadsHost(w) ? hN.get(w, I) : externalHttp.get(w, I);
+  return isClaudeDownloadsHost(w) ? claudeDownloadsHttpClient.get(w, I) : externalHttp.get(w, I);
 }
 function Xb(w) {
   let I = isClaudeDownloadsHost(w),
@@ -13613,7 +13613,7 @@ async function runCliActionHandler(w, I, O, U, V, te, ne, me, Me) {
     I.deepLinkOrigin && I.prefillB64 !== void 0 && I.prefill === void 0)
   )
     try {
-      I.prefill = gen(I.prefillB64);
+      I.prefill = parseDeepLinkQuery(I.prefillB64);
     } catch (Le) {
       logForDebugging(
         `Ignoring invalid --prefill-b64: ${Le instanceof Error ? Le.message : Le}`,
@@ -13622,7 +13622,7 @@ async function runCliActionHandler(w, I, O, U, V, te, ne, me, Me) {
     }
   if (I.deepLinkOrigin && I.deepLinkCwdB64 !== void 0)
     try {
-      (men(I.deepLinkCwdB64),
+      (validateDeepLinkCwd(I.deepLinkCwdB64),
         changeWorkingDirectory(I.deepLinkCwdB64),
         setSessionCwd(I.deepLinkCwdB64),
         ES(getCwd()),
@@ -14495,7 +14495,7 @@ ${Gn}`
   } catch (Le) {
     return (logError(Le), printCliError(l(Le)), cliErrorAfterAnalyticsFlush());
   }
-  (Xae(), zst());
+  (registerBuiltinPlugins(), registerAllBundledSkills());
   let ba = !!te?.host;
   if (shouldAwaitPolicyLimitsOnStartup()) {
     let Le = performance.now();
@@ -14558,9 +14558,9 @@ ${Gn}`
     });
   if (refreshSkillsSyncEnabled()) startSkillsSyncInBackground(Po, me, Me);
   else if (Nb()) (invalidateSkillDirCaches(), pruneSyncedSkillsForClosedGate(me).catch(logError));
-  if (_wt()) (startPluginSyncIfNeeded(Po, Me), Rm(Po, Me, me));
+  if (refreshPluginsSyncEnabled()) (startPluginSyncIfNeeded(Po, Me), Rm(Po, Me, me));
   else if (HW()) prunePluginsForClosedGate().catch(logError);
-  else if (hZn()) completeDeferredPluginRemovals().catch(logError);
+  else if (isAccountPluginsSyncFlagEnabled()) completeDeferredPluginRemovals().catch(logError);
   prefetchMemoryContext(Po);
   let Fd = tt ? null : getCommands(ai, me);
   if ((Fd?.catch(() => {}), Zd() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_thicket", !0))) clampColorLevelTo256(!0);
@@ -15068,7 +15068,7 @@ ${so}`
         "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
       DD_SOURCEMAP_GROUP: "darwin",
     }.VERSION,
-    is_native_binary: bc(),
+    is_native_binary: isBunStandaloneExecutable(),
   }),
     registerCleanup(async () => {
       writeDiagnosticsEvent("info", "exited");
@@ -16731,7 +16731,7 @@ export {
   checkFullscreenBootCanary,
   clearFullscreenCrashState,
   markFullscreenFirstFrame,
-  p0t,
+  recordFullscreenBootFailure,
   TUI_TRIAL_ENV_OVERRIDES,
   markFullscreenUpsellExhausted,
   getNextFullscreenUpsellImpression,

@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 142 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { useIsMountRecent, useMountTime, useSettleAfterChange, useRefusedInputWindow } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -20,8 +20,8 @@ F();
 function TeleportHostUnverifiedDialog(ie) {
   let i = _(52),
     { sessionRepo: f, rawRemoteUrl: u, onConfirm: B, onCancel: g } = ie,
-    a = ui(),
-    { refusedWithin: c, noteRefused: d, epoch: se } = $o(),
+    a = useIsMountRecent(),
+    { refusedWithin: c, noteRefused: d, epoch: se } = useRefusedInputWindow(),
     Q;
   if (i[0] !== a || i[1] !== d || i[2] !== c)
     ((Q = function l() {
@@ -36,8 +36,8 @@ function TeleportHostUnverifiedDialog(ie) {
       (i[3] = Q));
   else Q = i[3];
   let l = Q,
-    K = Gm(),
-    L = fa(se),
+    K = useMountTime(),
+    L = useSettleAfterChange(se),
     X = C(!1),
     w,
     v,

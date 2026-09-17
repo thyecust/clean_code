@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { remoteToolsAnnounceRequestSchema } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { Tc, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringifyUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { normalizeWithdrawalReason, isWithinDepth, parseMachineDescription, parseToolAnnouncement } from "../远程工具执行/remote-tool-protocol.js";
 import { ForwardedToolCallRegistry } from "./forwarded-tool-call-registry.js";
@@ -46,7 +46,7 @@ function createRemoteToolsAnnounceWorker(e) {
     async handle(i) {
       if (!isWithinDepth(i, w))
         return a("invalid", "invalid_announce: request nested too deep");
-      if (Tc(i).length > _)
+      if (jsonStringifyUntraced(i).length > _)
         return a("invalid", "invalid_announce: request larger than 1 MiB");
       let o = remoteToolsAnnounceRequestSchema().safeParse(i);
       if (!o.success) {

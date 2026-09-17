@@ -98,7 +98,11 @@ node verify.mjs $WORK/wave.json $WORK/backup
    的模块选进候选池，还会让**我们自己刚改出来的新名字**被重新判为混淆 ——
    改完第九轮后，`Login`/`Markdown`/`Protocol`/`auth`/`Decorative`/`Newline` 这些新名
    又出现在候选表里，那些模块被推回池子，下一轮会去「改」已经是好名字的名字。
-   （`auth` 是另一条：4 字符，卡在 `n.length < 5` 那条上。）
+   （`auth` 是另一条：4 字符，卡在 `n.length < 5` 那条上。这一类已命中三次 ——
+   `auth`、`main`、`Fuse`（第八轮按 Fuse.js 库名给的），三次都是命名 agent 自己
+   认出并跳过的。**没有修**：`go` 也是 4 字符实词，但它确实是混淆名（第九轮改成了
+   `escapeHtmlAttribute`），加白名单会把它误放行 —— 短实词天然无法靠形状分辨，
+   只能靠 agent 看证据。）
 
 5. **缩写前缀 + PascalCase 词也被判为混淆** —— `REPLScreen` / `SSOClient` /
    `SSEParser` / `APIError`。同一条根因：`isClearlyReadable` 靠 `/[a-z][A-Z]/` 认词连接，

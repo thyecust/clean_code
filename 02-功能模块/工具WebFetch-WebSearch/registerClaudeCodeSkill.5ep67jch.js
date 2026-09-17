@@ -13,7 +13,7 @@ import { isSemverAtMost, isUsing3PServices, getFeatureValue_CACHED_MAY_BE_STALE 
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { tWe, Qst, s$n } from "../发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
+import { loadChangelogContent, getChangelogEntries, getAvailablePluginSubcommands } from "../发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import { registerBundledSkill } from "../Skills技能/bundled-skills.js";
 import { getPluginEvalAvailabilityNotice } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 function v() {
@@ -46,7 +46,7 @@ function I(a, s) {
 ${e.join(`
 `)}`);
   }
-  let g = s$n();
+  let g = getAvailablePluginSubcommands();
   n.push(
     `**\`claude plugin\` CLI subcommands (${g.length} available in this session; run from a shell, not the prompt):**
 ` +
@@ -105,7 +105,7 @@ ${e.join(`
       }.VERSION,
       "-",
     ),
-    b = Qst(s)
+    b = getChangelogEntries(s)
       .filter(([e]) => isSemverAtMost(e, y))
       .slice(-10)
       .reverse();
@@ -166,7 +166,7 @@ function registerClaudeCodeSkill({ disabled: a = !1 } = {}) {
     },
     async getPromptForCommand(s, n) {
       logEvent("tengu_claude_code_skill_loaded", { has_args: s.trim().length > 0 });
-      let [l, { SKILL_PROMPT: o }] = await Promise.all([tWe(n.storageV5), v()]);
+      let [l, { SKILL_PROMPT: o }] = await Promise.all([loadChangelogContent(n.storageV5), v()]);
       return [{ type: "text", text: P(o, s, n, l) }];
     },
   });

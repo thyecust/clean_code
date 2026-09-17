@@ -14,7 +14,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { saveCurrentProjectConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { useIsMountRecent, useMountTime, useSettleAfterChange, useRefusedInputWindow } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -57,8 +57,8 @@ function ClaudeMdExternalIncludesDialog(Re) {
   if (n[0] === MEMO_CACHE_SENTINEL) ((re = []), (n[0] = re));
   else re = n[0];
   E(fe, re);
-  let l = ui(),
-    { refusedWithin: d, noteRefused: c, epoch: Se } = $o(),
+  let l = useIsMountRecent(),
+    { refusedWithin: d, noteRefused: c, epoch: Se } = useRefusedInputWindow(),
     ne;
   if (n[1] !== l || n[2] !== c || n[3] !== d)
     ((ne = function y() {
@@ -73,8 +73,8 @@ function ClaudeMdExternalIncludesDialog(Re) {
       (n[4] = ne));
   else ne = n[4];
   let y = ne,
-    K = Gm(),
-    O = fa(Se),
+    K = useMountTime(),
+    O = useSettleAfterChange(Se),
     se;
   if (n[5] !== w) ((se = w ?? []), (n[5] = w), (n[6] = se));
   else se = n[6];

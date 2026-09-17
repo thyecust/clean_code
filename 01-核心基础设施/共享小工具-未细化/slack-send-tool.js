@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { oL } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { jsonStringify, Tc } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonStringifyUntraced } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 var i = /[\x7f-\x9f]/g,
   s = (e) =>
     e.replace(i, (n) => `\\u${n.charCodeAt(0).toString(16).padStart(4, "0")}`),
@@ -23,7 +23,7 @@ function formatToolInputMessage(e, { verbose: n }) {
   return Object.entries(e)
     .map(([t, o]) => {
       let l = s(jsonStringify(o));
-      return `${s(Tc(t).slice(1, -1))}: ${l}`;
+      return `${s(jsonStringifyUntraced(t).slice(1, -1))}: ${l}`;
     })
     .join(", ");
 }

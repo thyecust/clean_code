@@ -10,7 +10,7 @@
 import { ns, fLn, h_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
-import { TW, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { BEDROCK_INFERENCE_PROFILE_PREFIXES, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { s, T, O, v, c, $e, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var CANONICAL_MODEL_IDS = [
@@ -1086,7 +1086,7 @@ function parseModelId(e) {
   let n = /^(?:([a-z-]+)\.)?anthropic\.(claude-.*)$/.exec(t);
   if (n) {
     let [, _, p = ""] = n;
-    if (_ !== void 0 && !TW.includes(_)) return null;
+    if (_ !== void 0 && !BEDROCK_INFERENCE_PROFILE_PREFIXES.includes(_)) return null;
     t = p;
   }
   let r = U(t);

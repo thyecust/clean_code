@@ -21,7 +21,7 @@ import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Age
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
-import { ps, sanitizeUntrustedText, MAX_DISPLAY_PAYLOAD_UNITS, needsMultilineGutter, prepareDisplayText, tryFormatShortDisplayValue, formatWithholdableValue, shouldWithholdValue, replaceLineBreaks } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { sanitizeTextForDisplay, sanitizeUntrustedText, MAX_DISPLAY_PAYLOAD_UNITS, needsMultilineGutter, prepareDisplayText, tryFormatShortDisplayValue, formatWithholdableValue, shouldWithholdValue, replaceLineBreaks } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { MultilineBorderBox, isConsentRow, mintConsentRowFromUpdates, PermissionReasonPanel, ConfirmationPrompt, shouldOfferAlwaysAllow } from "../权限系统/chunk-0hcqee2w.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { parseWorkflowScript } from "./workflow-script.js";
@@ -271,7 +271,7 @@ function Tn(ct) {
   return !ct;
 }
 function Mn(Je) {
-  return `\xB7 "${ps(Je.length > 60 ? truncateToCodeUnits(Je, 59) + "\u2026" : Je)}"`;
+  return `\xB7 "${sanitizeTextForDisplay(Je.length > 60 ? truncateToCodeUnits(Je, 59) + "\u2026" : Je)}"`;
 }
 function On(H, ht) {
   return r(N, {

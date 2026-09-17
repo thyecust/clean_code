@@ -360,7 +360,7 @@ function Xe(k) {
 var Box = Xe;
 F();
 F();
-var F0e = Qt(!1);
+var HoverHighlightContext = Qt(!1);
 function ue(r, s) {
   if (!r) return;
   if (
@@ -431,7 +431,7 @@ function Text(Qe) {
     ft = nt === void 0 ? !1 : nt,
     mt = it === void 0 ? "wrap" : it,
     J = useResolvedTheme(),
-    yt = De(F0e),
+    yt = De(HoverHighlightContext),
     vo;
   if (Re[12] !== Ae || Re[13] !== st || Re[14] !== yt || Re[15] !== J)
     ((vo = st && !yt ? J.inactive : ue(Ae, J)),
@@ -1812,7 +1812,7 @@ export {
   useRenderCaches,
   reportStylePoolHealth,
   Box,
-  F0e,
+  HoverHighlightContext,
   Text,
   Link,
   Ansi,

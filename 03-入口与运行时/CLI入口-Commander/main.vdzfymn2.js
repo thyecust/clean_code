@@ -57,7 +57,7 @@ import "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { repeatString } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import "../../00-第三方库/zod/zod.3g334xwq.js";
-import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isRunningWithBun, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
@@ -379,8 +379,8 @@ import "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation
 import "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
-import { jB, n9e } from "../../02-功能模块/插件系统/chunk-q8w2zntw.js";
-import { n$n, zw } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
+import { INSTALLABLE_SCOPES, ALL_PLUGIN_SCOPES } from "../../02-功能模块/插件系统/chunk-q8w2zntw.js";
+import { migrateChangelogFromConfig, PLUGIN_SUBCOMMAND_SPECS } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import { setSessionPromptLaunchWarning } from "../../01-核心基础设施/共享小工具-未细化/prompt-input-store.js";
 import "../../02-功能模块/上下文压缩-Compact/context-usage.js";
 import "../../02-功能模块/工具Monitor/工具Monitor.981fw9dy.js";
@@ -401,7 +401,7 @@ import {
   getCloudSessionsUnavailableReason,
   resolveCommandQueue,
   checkFullscreenBootCanary,
-  p0t,
+  recordFullscreenBootFailure,
   markRemoteControlUsed,
   checkGitHubAuthStatus,
   buildInitialTeamContext,
@@ -2981,8 +2981,8 @@ function An(v, k, O) {
       .description("Manage Claude Code plugins")
       .configureHelp(Ot());
   (T.command("init <name>")
-    .aliases(zw.init.aliases)
-    .description(zw.init.description)
+    .aliases(PLUGIN_SUBCOMMAND_SPECS.init.aliases)
+    .description(PLUGIN_SUBCOMMAND_SPECS.init.description)
     .option("--description <text>", "Manifest description")
     .option("--author <name>", "Author name (default: git config user.name)")
     .option(
@@ -3005,7 +3005,7 @@ function An(v, k, O) {
       }),
     ),
     T.command("validate <path>")
-      .description(zw.validate.description)
+      .description(PLUGIN_SUBCOMMAND_SPECS.validate.description)
       .option(
         "--strict",
         "Treat warnings as errors (exit 1). Use in CI to fail on unrecognized fields, missing metadata, and other issues that the runtime tolerates.",
@@ -3024,7 +3024,7 @@ function An(v, k, O) {
         await I(L, D, N);
       }),
     T.command("tag [path]")
-      .description(zw.tag.description)
+      .description(PLUGIN_SUBCOMMAND_SPECS.tag.description)
       .option("--push", "Push the tag to --remote after creating it")
       .option("--dry-run", "Print what would be tagged without creating it")
       .option(
@@ -3045,7 +3045,7 @@ function An(v, k, O) {
         await I(await L(), D, N);
       }),
     T.command("list")
-      .description(zw.list.description)
+      .description(PLUGIN_SUBCOMMAND_SPECS.list.description)
       .option("--json", "Output as JSON")
       .option(
         "--available",
@@ -3067,7 +3067,7 @@ function An(v, k, O) {
         if (!isPluginEvalEnabled()) cliError("`plugin eval` is currently in early access");
       },
       N = T.command("eval [target]")
-        .description(zw.eval.description)
+        .description(PLUGIN_SUBCOMMAND_SPECS.eval.description)
         .option("--case <glob>", "Filter cases by name glob")
         .option("--tag <tag...>", "Filter cases by tag (repeatable)")
         .option(
@@ -3161,7 +3161,7 @@ function An(v, k, O) {
           }),
         );
     N.command("init [name]")
-      .description(zw.evalInit.description)
+      .description(PLUGIN_SUBCOMMAND_SPECS.evalInit.description)
       .option(
         "--bare",
         "Write a blank template (prompt.md + graders/criteria.md) instead of running the interview",
@@ -3187,7 +3187,7 @@ function An(v, k, O) {
       });
   }
   T.command("details <name>")
-    .description(zw.details.description)
+    .description(PLUGIN_SUBCOMMAND_SPECS.details.description)
     .addOption(R())
     .action(
       O(async (D, N, I, L) => {
@@ -3203,7 +3203,7 @@ function An(v, k, O) {
     .description("Manage Claude Code marketplaces")
     .configureHelp(Ot());
   (U.command("add <source>")
-    .description(zw.marketplaceAdd.description)
+    .description(PLUGIN_SUBCOMMAND_SPECS.marketplaceAdd.description)
     .addOption(R())
     .option(
       "--sparse <paths...>",
@@ -3228,7 +3228,7 @@ function An(v, k, O) {
       }),
     ),
     U.command("list")
-      .description(zw.marketplaceList.description)
+      .description(PLUGIN_SUBCOMMAND_SPECS.marketplaceList.description)
       .option("--json", "Output as JSON")
       .addOption(R())
       .action(
@@ -3242,8 +3242,8 @@ function An(v, k, O) {
         }),
       ),
     U.command("remove <name>")
-      .aliases(zw.marketplaceRemove.aliases)
-      .description(zw.marketplaceRemove.description)
+      .aliases(PLUGIN_SUBCOMMAND_SPECS.marketplaceRemove.aliases)
+      .description(PLUGIN_SUBCOMMAND_SPECS.marketplaceRemove.description)
       .option(
         "--scope <scope>",
         "Remove the marketplace declaration from a specific settings scope: user, project, or local. Omit to remove it from every scope.",
@@ -3260,7 +3260,7 @@ function An(v, k, O) {
         }),
       ),
     U.command("update [name]")
-      .description(zw.marketplaceUpdate.description)
+      .description(PLUGIN_SUBCOMMAND_SPECS.marketplaceUpdate.description)
       .addOption(R())
       .action(
         k(async (D, N, I) => {
@@ -3273,8 +3273,8 @@ function An(v, k, O) {
         }),
       ),
     T.command("install <plugin>")
-      .aliases(zw.install.aliases)
-      .description(zw.install.description)
+      .aliases(PLUGIN_SUBCOMMAND_SPECS.install.aliases)
+      .description(PLUGIN_SUBCOMMAND_SPECS.install.description)
       .option(
         "-s, --scope <scope>",
         "Installation scope: user, project, or local",
@@ -3301,8 +3301,8 @@ function An(v, k, O) {
         }),
       ),
     T.command("uninstall <plugin>")
-      .aliases(zw.uninstall.aliases)
-      .description(zw.uninstall.description)
+      .aliases(PLUGIN_SUBCOMMAND_SPECS.uninstall.aliases)
+      .description(PLUGIN_SUBCOMMAND_SPECS.uninstall.description)
       .option(
         "-s, --scope <scope>",
         "Uninstall from scope: user, project, or local",
@@ -3332,8 +3332,8 @@ function An(v, k, O) {
         }),
       ),
     T.command("prune")
-      .aliases(zw.prune.aliases)
-      .description(zw.prune.description)
+      .aliases(PLUGIN_SUBCOMMAND_SPECS.prune.aliases)
+      .description(PLUGIN_SUBCOMMAND_SPECS.prune.description)
       .option(
         "-s, --scope <scope>",
         "Prune at scope: user, project, or local",
@@ -3356,10 +3356,10 @@ function An(v, k, O) {
         }),
       ),
     T.command("enable <plugin>")
-      .description(zw.enable.description)
+      .description(PLUGIN_SUBCOMMAND_SPECS.enable.description)
       .option(
         "-s, --scope <scope>",
-        `Installation scope: ${jB.join(", ")} (default: auto-detect)`,
+        `Installation scope: ${INSTALLABLE_SCOPES.join(", ")} (default: auto-detect)`,
       )
       .addOption(R())
       .action(
@@ -3373,11 +3373,11 @@ function An(v, k, O) {
         }),
       ),
     T.command("disable [plugin]")
-      .description(zw.disable.description)
+      .description(PLUGIN_SUBCOMMAND_SPECS.disable.description)
       .option("-a, --all", "Disable all enabled plugins")
       .option(
         "-s, --scope <scope>",
-        `Installation scope: ${jB.join(", ")} (default: auto-detect)`,
+        `Installation scope: ${INSTALLABLE_SCOPES.join(", ")} (default: auto-detect)`,
       )
       .addOption(R())
       .action(
@@ -3391,10 +3391,10 @@ function An(v, k, O) {
         }),
       ),
     T.command("update <plugin>")
-      .description(zw.update.description)
+      .description(PLUGIN_SUBCOMMAND_SPECS.update.description)
       .option(
         "-s, --scope <scope>",
-        `Installation scope: ${n9e.join(", ")} (default: user)`,
+        `Installation scope: ${ALL_PLUGIN_SCOPES.join(", ")} (default: user)`,
       )
       .option(
         "-y, --yes",
@@ -3625,7 +3625,7 @@ async function io(v, k, O, R, T) {
       return;
   } catch (U) {
     let D = ge(U),
-      I = (await p0t().catch(() => !1))
+      I = (await recordFullscreenBootFailure().catch(() => !1))
         ? " It happened while the fullscreen renderer was starting, so the next launch will use the classic renderer (CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1 forces that any time)."
         : "";
     if (
@@ -6349,7 +6349,7 @@ function ki(v) {
   );
 }
 async function Ra(v) {
-  (await ii(), await yi(v), n$n(v).catch(() => {}));
+  (await ii(), await yi(v), migrateChangelogFromConfig(v).catch(() => {}));
 }
 function Ei(v) {
   return Array.isArray(v) && v.every((k) => typeof k === "string") ? v : [];
@@ -6460,7 +6460,7 @@ var tr = () =>
     },
   );
 function Ha() {
-  let v = Hx(),
+  let v = isRunningWithBun(),
     k = process.execArgv.some((R) => {
       if (v) return /--inspect(-brk)?/.test(R);
       else return /--inspect(-brk)?|--debug(-brk)?/.test(R);

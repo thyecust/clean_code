@@ -70,7 +70,7 @@ import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCa
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import {
   getArtifactEnvironment,
-  YZe,
+  getArtifactViewerOriginOverride,
   ARTIFACT_TOOL_NAME,
   notAnArtifactUrlMessage,
   ArtifactInputError,
@@ -139,7 +139,7 @@ import {
 } from "../图表-Mermaid/chunk-743atbtj.js";
 import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import {
-  xN,
+  buildAgentArtifactKey,
   getArtifactState,
   XHTML_NAMESPACE,
   asDocument,
@@ -2759,7 +2759,7 @@ var Tu =
 function sanitizeEditableTitle(e) {
   return sanitizeArtifactTitle(oo(e.normalize("NFC"), !1));
 }
-function zZn(e) {
+function sanitizeArtifactTitleInput(e) {
   return oo(e, !0);
 }
 function oo(e, t) {
@@ -6568,7 +6568,7 @@ ${r}`)
 }
 var ga = { page_data: 0, summary: 1, source: 2 };
 function sourcelessObservation(e, t, r, o) {
-  let d = getArtifactState().readDeliveries.get(xN(e, t));
+  let d = getArtifactState().readDeliveries.get(buildAgentArtifactKey(e, t));
   return d !== void 0 &&
     o !== void 0 &&
     o !== "" &&
@@ -6579,7 +6579,7 @@ function sourcelessObservation(e, t, r, o) {
     : void 0;
 }
 function observedWithoutSource(e, t, r) {
-  let o = getArtifactState().readDeliveries.get(xN(e, t));
+  let o = getArtifactState().readDeliveries.get(buildAgentArtifactKey(e, t));
   return o !== void 0 && o.ver === r && !o.sourced;
 }
 var Ca = "\x00own-mint";
@@ -6624,7 +6624,7 @@ function makeSetArtifactReadVersion(e) {
       D = M ? "" : E;
     if (p !== void 0) {
       let F = getArtifactState().readDeliveries,
-        I = xN(p, t),
+        I = buildAgentArtifactKey(p, t),
         N = F.get(I),
         ae = C ?? "source",
         ue = ae === "source" || (N !== void 0 && N.ver === r && N.sourced);
@@ -6638,7 +6638,7 @@ function makeSetArtifactReadVersion(e) {
         F.set(I, { ver: r, batch: D, kind: ae, sourced: ue });
     }
     if (p !== void 0 && !M) {
-      let F = getArtifactState().refusedPublishBodies.get(xN(p, t));
+      let F = getArtifactState().refusedPublishBodies.get(buildAgentArtifactKey(p, t));
       if (
         F !== void 0 &&
         F.observedFrom === void 0 &&
@@ -10129,7 +10129,7 @@ async function Ni(e, t, r, o, d, p, _) {
   }
 }
 function artifactViewerUrl(e) {
-  return new URL(artifactViewerPath(e), YZe() ?? getOauthConfig().CLAUDE_AI_ORIGIN).toString();
+  return new URL(artifactViewerPath(e), getArtifactViewerOriginOverride() ?? getOauthConfig().CLAUDE_AI_ORIGIN).toString();
 }
 var ARTIFACT_LIST_RELS = ["mine", "shared"];
 function isKnownRel(e) {
@@ -11663,7 +11663,7 @@ function Pl(e, t, r) {
     : `${d.slice(0, t).join("")}
 [${r} truncated after ${t} characters]`;
 }
-function rTn(e, t) {
+function buildArtifactOriginNote(e, t) {
   return "";
 }
 var hh = /[\x00-\x08\x0b-\x1f\x7f-\x9f\u2028\u2029]+/g;
@@ -13057,7 +13057,7 @@ export {
   normalizeArtifactTitle,
   formatArtifactDescription,
   sanitizeEditableTitle,
-  zZn,
+  sanitizeArtifactTitleInput,
   sanitizeFaviconText,
   formatArtifactTitle,
   isDeclarableServerName,
@@ -13223,7 +13223,7 @@ export {
   isSymlinkChainUnsafe,
   resolvePublishFileManifest,
   readThumbnailFileContent,
-  rTn,
+  buildArtifactOriginNote,
   wrapArtifactOriginNotes,
   MAX_FRAME_API_RESPONSE_BYTES,
   getShareEntry,

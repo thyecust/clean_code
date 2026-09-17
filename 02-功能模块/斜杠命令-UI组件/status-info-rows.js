@@ -42,7 +42,7 @@ import { getLauncherConfigError, isLauncherRunnable, getLauncherCommandString } 
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { getInstallationDiagnostics } from "../自动更新-安装/install-diagnostics.js";
-import { Bce } from "../自动更新-安装/chunk-2g5h49pk.js";
+import { checkInstall } from "../自动更新-安装/native-installer.js";
 import { retentionCleanupSkipReason } from "../会话-历史-恢复/retention-cleanup.js";
 import { partitionSettingsErrors } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { getPolicyLimitsStatus, formatPolicyLimitsStatus, shouldReportPolicyLimits } from "../Bridge-RemoteControl/policy-limits-status.js";
@@ -253,7 +253,7 @@ function v(s) {
   return `Enterprise managed settings (${g(s)})`;
 }
 async function getAutoUpdateWarningMessages() {
-  return (await Bce()).filter((e) => e.type !== "error").map((e) => e.message);
+  return (await checkInstall()).filter((e) => e.type !== "error").map((e) => e.message);
 }
 async function getLauncherDiagnostics(s) {
   let e = getLauncherCommandString(),

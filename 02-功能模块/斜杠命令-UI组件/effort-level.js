@@ -31,7 +31,7 @@ import {
   isLaunchEffortPinned,
   createEffortLevelOrDefault,
   isSameEffortSelection,
-  ese,
+  releaseLaunchEffortPins,
   resolveModelEffortLevel,
   getDefaultEffortLevelForModel,
   applyEffortLevelChange,
@@ -202,7 +202,7 @@ function U(t, o, n) {
     return {
       message: `Not applied: the launch-effort pin holds effort at ${getDefaultEffortLevelForModel(r)} this session, and ultracode needs xhigh. Run /effort ultracode in an interactive terminal to release the pin.`,
     };
-  (ese(t, n), o?.({ value: "xhigh", ultracode: !0 }));
+  (releaseLaunchEffortPins(t, n), o?.({ value: "xhigh", ultracode: !0 }));
   let s = g("xhigh", !0);
   logEvent("tengu_effort_command", {
     effort: S("ultracode"),

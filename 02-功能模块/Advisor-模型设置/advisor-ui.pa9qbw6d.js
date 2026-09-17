@@ -15,7 +15,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { stripLongContextTags } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { baseModelSupportsAdvisor, isValidAdvisorModelString, getAdvisorModelAliases, isValidAdvisorModel, isAdvisorModelPendingCreditsConsent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -118,7 +118,7 @@ function K(Lo) {
   else B = a[23];
   let J;
   if (a[24] !== S || a[25] !== N || a[26] !== R || a[27] !== B)
-    ((J = e(ve, {
+    ((J = e(Select, {
       options: N,
       defaultValue: S,
       defaultFocusValue: S,

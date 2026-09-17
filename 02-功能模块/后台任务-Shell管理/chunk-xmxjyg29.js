@@ -18,7 +18,7 @@ import { le, Zt, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, A, Jr, H_e, I_e, WHt, Gw, Jg, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { describeStorageError, jsonStringify, jsonParse, UNVERIFIED_ANCESTRY_SENTINEL, resolveSymlinkTargetSync, getFsSurface, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, UNVERIFIED_ANCESTRY_SENTINEL, resolveSymlinkTargetSync, getFsSurface, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isStdinUnusableError, peekForStdinData } from "./chunk-z5vtnzjg.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, beforeFirst, normalizeWhitespace, stripAnsiAndControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -47,16 +47,16 @@ import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-g
 import { enableTerminalMode, disableTerminalMode, DISABLE_SYNCHRONIZED_UPDATE, SHOW_CURSOR, HIDE_CURSOR, DISABLE_WIN32_INPUT_MODE } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
 import { CLEAR_ITERM2_PROGRESS_SEQUENCE } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import {
-  _v,
-  z$n,
-  OWe,
-  K0,
-  YHe,
-  KL,
-  xPt,
-  Rit,
-  kit,
-  LWe,
+  getBackgroundSupervisorState,
+  createEscapeSequenceOnlyDetector,
+  installDaemonService,
+  DAEMON_START_TIMEOUT_MS,
+  waitForDaemonReady,
+  ensureDaemonRunning,
+  getHostManagedMarkerKey,
+  ensureHostManagedScope,
+  writeHostManagedMarker,
+  deleteHostManagedMarker,
 } from "./chunk-jfk5mpe1.js";
 import { redactDaemonNonce, readControlKey, getDispatchDir, ATTACH_JOURNAL_NAMESPACE, getAttachJournalDir, getHostManagedDir, getHostManagedMarkerPath, getPtySocketPath, getControlSocketPath } from "./chunk-djserjj5.js";
 import {
@@ -277,28 +277,28 @@ async function claimAttachBeacon(e, t, o) {
     startedAtEpochMs: Date.now(),
     attempt: 0,
   };
-  (_v().ownedBeacons.set(e, r),
+  (getBackgroundSupervisorState().ownedBeacons.set(e, r),
     await Jt(e, async () => {
       if (((r.pid = process.pid), (r.procStart = await ownProcStartAsync()), o)) {
-        if (!(await an(o, e, r, !0))) _v().ownedBeacons.delete(e);
+        if (!(await an(o, e, r, !0))) getBackgroundSupervisorState().ownedBeacons.delete(e);
         return;
       }
       if ((await uo(getAttachJournalDir(), { recursive: !0, mode: 448 }), !(await tt()))) {
-        _v().ownedBeacons.delete(e);
+        getBackgroundSupervisorState().ownedBeacons.delete(e);
         return;
       }
-      if (_v().ownedBeacons.get(e) !== r) return;
+      if (getBackgroundSupervisorState().ownedBeacons.get(e) !== r) return;
       await writeFileAtomic(Gt(e), jsonStringify(r), 384);
     }),
     await ho(o));
 }
 async function an(e, t, o, r = !1) {
   if (!(await tt(r))) return !1;
-  if (_v().ownedBeacons.get(t) === o) await e.write(on(t), jsonStringify(o));
+  if (getBackgroundSupervisorState().ownedBeacons.get(t) === o) await e.write(on(t), jsonStringify(o));
   return !0;
 }
 function Gn(e, t, o) {
-  let r = _v().ownedBeacons.get(e);
+  let r = getBackgroundSupervisorState().ownedBeacons.get(e);
   if (!r || !Number.isInteger(t) || t <= (r.attempt ?? 0)) return;
   ((r.attempt = t),
     Jt(e, async () => {
@@ -307,12 +307,12 @@ function Gn(e, t, o) {
         return;
       }
       if (!(await tt())) return;
-      if (_v().ownedBeacons.get(e) !== r) return;
+      if (getBackgroundSupervisorState().ownedBeacons.get(e) !== r) return;
       await writeFileAtomic(Gt(e), jsonStringify(r), 384);
     }));
 }
 function ut(e, t, o) {
-  let r = _v().ownedBeacons.get(e);
+  let r = getBackgroundSupervisorState().ownedBeacons.get(e);
   if (!r) return;
   if (t.marksExpected !== void 0)
     r.marksExpected = r.marksExpected === !0 || t.marksExpected;
@@ -333,13 +333,13 @@ function ut(e, t, o) {
       return;
     }
     if (!(await tt())) return;
-    if (_v().ownedBeacons.get(e) !== r) return;
+    if (getBackgroundSupervisorState().ownedBeacons.get(e) !== r) return;
     await writeFileAtomic(Gt(e), jsonStringify(r), 384);
   });
 }
 async function releaseAttachBeacon(e, t) {
   if (!Hn.test(e)) return;
-  (_v().ownedBeacons.delete(e),
+  (getBackgroundSupervisorState().ownedBeacons.delete(e),
     await Jt(e, async () => {
       if (t) {
         if (!(await tt())) return;
@@ -1048,7 +1048,7 @@ async function rt(e, t = {}) {
   let Tn = t.gateStdinUntilFirstFrame === !0 && "isTTY" in o && o.isTTY === !0,
     Ft,
     Cn = 0,
-    Qr = z$n();
+    Qr = createEscapeSequenceOnlyDetector();
   function at(U) {
     let L = () => Qr(U.toString("latin1"));
     if (!Tn || Pe) {
@@ -1392,9 +1392,9 @@ async function rt(e, t = {}) {
         (He = I.op === "attach" ? I.stale : void 0),
         (Ue = I.op === "attach" ? I.workerCliVersion : void 0),
         (ze = I.op === "attach" ? I.cached : void 0),
-        a.TMUX && !_v().tmuxRgbApplied)
+        a.TMUX && !getBackgroundSupervisorState().tmuxRgbApplied)
       )
-        ((_v().tmuxRgbApplied = !0),
+        ((getBackgroundSupervisorState().tmuxRgbApplied = !0),
           execFileNoThrow("tmux", ["set", "-as", "terminal-features", ",*:RGB"]));
       let q = ((I.op === "attach" ? I.decModes : void 0) ?? [])
         .map(enableTerminalMode)
@@ -1572,7 +1572,7 @@ async function Et(e, t) {
   let o = () => {
       (e?.onStarting?.(), jo());
     },
-    r = await KL({ onStarting: o, spawnIntent: !0 }, t);
+    r = await ensureDaemonRunning({ onStarting: o, spawnIntent: !0 }, t);
   if (r.ok || !r.askInstall) return r;
   if (!process.stdin.isTTY || !process.stderr.isTTY || a.isCI) return r;
   process.stderr.write(`No background daemon is running.
@@ -1627,28 +1627,28 @@ Installing it as a service keeps the background daemon running across reboot so 
         return (
           process.stderr.write(`${v}
 `),
-          KL({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t)
+          ensureDaemonRunning({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t)
         );
       }
-      let _ = await OWe({ jsonPath: getDaemonJsonPath(), logPath: getDaemonLogPath() });
+      let _ = await installDaemonService({ jsonPath: getDaemonJsonPath(), logPath: getDaemonLogPath() });
       if (!_.ok)
         return (
           process.stderr
             .write(`Service install failed (${_.error}). Falling back to a transient ${bgSupervisorNoun()} for now.
 `),
-          KL({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t)
+          ensureDaemonRunning({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t)
         );
       if (
         (process.stderr.write(`Installed: ${_.servicePath}
 Run 'claude daemon uninstall' to undo.
 `),
         o(),
-        !(await YHe(K0)))
+        !(await waitForDaemonReady(DAEMON_START_TIMEOUT_MS)))
       )
         return {
           ok: !1,
           causeCode: "timeout",
-          reason: `service installed but the daemon ${H_e} ${K0 / 1000}s \u2014 check 'claude daemon status'`,
+          reason: `service installed but the daemon ${H_e} ${DAEMON_START_TIMEOUT_MS / 1000}s \u2014 check 'claude daemon status'`,
         };
       let p = await getVerifiedDaemonLock(1, t).catch(() => null);
       if (p && p.origin !== "service")
@@ -1658,7 +1658,7 @@ Run 'claude daemon uninstall' to undo.
       return { ok: !0 };
     }
     case "once":
-      return KL({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t);
+      return ensureDaemonRunning({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t);
     case "never":
       return (
         await saveGlobalConfig(
@@ -1668,7 +1668,7 @@ Run 'claude daemon uninstall' to undo.
               : { ...c, daemonInstallPromptDismissed: !0 },
           t,
         ),
-        KL({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t)
+        ensureDaemonRunning({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t)
       );
     case "no":
       return r;
@@ -1766,13 +1766,13 @@ import { randomBytes } from "crypto";
 import { mkdir as qo, unlink as Yo } from "fs/promises";
 import { join as zo } from "path";
 async function pn(e, t = !1, o = Date.now(), r) {
-  let s = _v(),
+  let s = getBackgroundSupervisorState(),
     c = s.daemonConfirmedUp && getLauncherCommandString() === "" && getLauncherConfigError() === null;
   if (!c) {
     s.ensureInFlight ??= (
       e.source === "shell"
         ? Et(void 0, r)
-        : KL({ forceTransient: !0, spawnIntent: !0 }, r)
+        : ensureDaemonRunning({ forceTransient: !0, spawnIntent: !0 }, r)
     ).finally(() => {
       s.ensureInFlight = null;
     });
@@ -1899,7 +1899,7 @@ async function pn(e, t = !1, o = Date.now(), r) {
 }
 function hr(e, t, o, r, s) {
   return (
-    (_v().daemonConfirmedUp = !0),
+    (getBackgroundSupervisorState().daemonConfirmedUp = !0),
     logEvent("tengu_bg_dispatch", {
       backend_daemon: !0,
       source_shell: e.source === "shell",
@@ -2034,7 +2034,7 @@ async function preSeedReplBgJob(e, t, o) {
       respawnFlags: t.respawnFlags,
     });
   if ((await writeStateAtomic(s, d, o), a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST))
-    if (isHoverRestEnabled() && o !== void 0 && isValidPathSegment(r)) (await Rit(o), await kit(o, r));
+    if (isHoverRestEnabled() && o !== void 0 && isValidPathSegment(r)) (await ensureHostManagedScope(o), await writeHostManagedMarker(o, r));
     else (await oi(getHostManagedDir(), { recursive: !0, mode: 448 }), await ii(getHostManagedMarkerPath(r), ""));
   return { short: r, jobDir: s, state: d };
 }
@@ -2963,7 +2963,7 @@ async function hn(e, t = {}, o) {
           !SUPERVISOR_DETACH_CODE.test(w);
       if (w === void 0 || (!O && !C)) break;
       if (C) {
-        let T = await KL(
+        let T = await ensureDaemonRunning(
           {
             forceTransient: !0,
             onStarting: () => t.gesture?.markDaemonBooted?.(),
@@ -3137,7 +3137,7 @@ async function attachHandler(e, t) {
         xe(_, "detached");
     };
   while (k.outcome === "disconnected") {
-    let C = await KL(
+    let C = await ensureDaemonRunning(
       {
         forceTransient: !0,
         onStarting: () => {
@@ -4988,7 +4988,7 @@ function applyReplyPatch(e, t) {
   return {
     ...e,
     ...(hasOutstandingAsk(e) && { state: "working" }),
-    detail: clipWithEllipsis(qr(t).replace(/\s+/g, " ").trim(), MAX_DETAIL_CHARS),
+    detail: clipWithEllipsis(redactSecretsFromText(t).replace(/\s+/g, " ").trim(), MAX_DETAIL_CHARS),
     tempo: "active",
     needs: void 0,
     block: void 0,
@@ -5060,7 +5060,7 @@ async function replyToJob(e, t, o, r, s, c) {
   }
   let C = !1;
   if (!w.ok && (w.code === "ENOCONN" || w.code === "ETIMEOUT")) {
-    let T = await KL({ forceTransient: !0 }, c);
+    let T = await ensureDaemonRunning({ forceTransient: !0 }, c);
     if (((C = !T.ok), T.ok)) {
       ((E = (await readControlKey()) ?? E), (w = await k()));
       for (
@@ -5206,7 +5206,7 @@ async function attachJob(e, t = {}) {
     }),
     v;
   if (p.outcome === "error" && p.msg && o.test(p.msg)) {
-    if (((v = await KL({ forceTransient: !0 }, t.storageV5)), v.ok))
+    if (((v = await ensureDaemonRunning({ forceTransient: !0 }, t.storageV5)), v.ok))
       p = await rt(e, {
         ...s,
         telemetry: {
@@ -5259,13 +5259,13 @@ async function attachJob(e, t = {}) {
       let D = dr(process.stdin);
       try {
         O = await Promise.race([
-          KL({ forceTransient: !0 }, t.storageV5),
+          ensureDaemonRunning({ forceTransient: !0 }, t.storageV5),
           D.promise.then(() => "detach"),
         ]);
       } finally {
         if ((D.cancel(), !T)) trySetRawMode(process.stdin, !1);
       }
-    } else O = await KL({ forceTransient: !0 }, t.storageV5);
+    } else O = await ensureDaemonRunning({ forceTransient: !0 }, t.storageV5);
     if (O === "detach") {
       if (_) process.stdout.write(uF());
       return (
@@ -5645,7 +5645,7 @@ async function deleteJob(e, t = {}, o) {
       errorCode: "jobdir_rm_failed",
     };
   }
-  if (isHoverRestEnabled() && o !== void 0 && validateStorageKey(xPt(e)) === void 0) await LWe(o, e);
+  if (isHoverRestEnabled() && o !== void 0 && validateStorageKey(getHostManagedMarkerKey(e)) === void 0) await deleteHostManagedMarker(o, e);
   else await Ki(getHostManagedMarkerPath(e)).catch(() => {});
   if ((invalidateJobStateCache(getJobDir(e)), !t.internal))
     if (_)

@@ -23,7 +23,7 @@ import { resolvePath } from "../../01-核心基础设施/核心工具-路径与�
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { ps, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { sanitizeTextForDisplay, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { formatUnreachablePeerRefusal, formatCannotReceiveRefusal, isPeerInboundUnconfirmed } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
@@ -302,7 +302,7 @@ function te(e, o, a) {
     re(o, a),
     {
       ...e,
-      message: ps(
+      message: sanitizeTextForDisplay(
         `${e.message ?? `Send ${a.files.length} ${pluralize(a.files.length, "file")} to '${a.to}'?`} ${oe} (isolatePeerMachines is enabled.)`,
       ),
     }
@@ -385,7 +385,7 @@ var SendFileTool = buildTool({
       return te(
         {
           behavior: "ask",
-          message: ps(
+          message: sanitizeTextForDisplay(
             `Send ${e.files.length} ${pluralize(e.files.length, "file")} to '${e.to}'? SendFile reads file contents.`,
           ),
           decisionReason: { type: "rule", rule: _ },
@@ -413,7 +413,7 @@ var SendFileTool = buildTool({
           }),
           {
             behavior: "deny",
-            message: ps(h.message),
+            message: sanitizeTextForDisplay(h.message),
             decisionReason: { type: "other", reason: ye[h.reason] },
           }
         );
@@ -421,7 +421,7 @@ var SendFileTool = buildTool({
         re(o, e),
         {
           behavior: "ask",
-          message: ps(
+          message: sanitizeTextForDisplay(
             `Send ${e.files.length} ${pluralize(e.files.length, "file")} to '${e.to}'? ${oe}`,
           ),
           decisionReason: {

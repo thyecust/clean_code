@@ -19,7 +19,7 @@ import { checkComputerUseLock, acquireComputerUseLock, isComputerUseActiveThisTu
 import { getComputerUseSession, registerComputerUseEscapeHotkey } from "./computer-use-session.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import "./computer-use-cli-executor.js";
-import { con, put } from "./chunk-v76f8dbx.js";
+import { bindSessionContext, getComputerUseHostAdapter } from "./chunk-v76f8dbx.js";
 import { getFrozenCoordinateMode } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
 import { DEFAULT_GRANT_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
 import "./computer-use-input-native.js";
@@ -240,7 +240,7 @@ function _() {
   let t = getComputerUseSession();
   if (t.binding) return t.binding;
   let e = buildSessionContext();
-  return ((t.binding = { ctx: e, dispatch: con(put(), getFrozenCoordinateMode(), e) }), t.binding);
+  return ((t.binding = { ctx: e, dispatch: bindSessionContext(getComputerUseHostAdapter(), getFrozenCoordinateMode(), e) }), t.binding);
 }
 function getComputerUseMCPToolOverrides(t) {
   let e = async (r, o, s, y, g) => {

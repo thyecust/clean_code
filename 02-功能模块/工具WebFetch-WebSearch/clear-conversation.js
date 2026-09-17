@@ -68,7 +68,7 @@ import { clearAllPlanSlugs } from "../计划模式(Plan)/计划模式(Plan).e5mh
 import { evictTaskOutput, initTaskOutputAsSymlink } from "../后台任务-Shell管理/task-output.js";
 import { retainPathLinks } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { isBridgeStateFramesEnabled } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
-import { cfe } from "../插件系统/chunk-ajtn749s.js";
+import { getCcrSessionId } from "../插件系统/chunk-ajtn749s.js";
 import { setMcpClientOnClose } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { rearmWatchNoticeBudgets, clearRefusedPublishBodies, disposeArtifactRoom, retireLiveDocWatches, resetArtifactConversationState } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { runBundledSkillSessionResets } from "../Skills技能/bundled-skills.js";
@@ -229,7 +229,7 @@ async function* clearConversation({
     J = x || (f && isConversationEgressTainted(P));
   if ((aOn({ setCurrentAsParent: !0 }), f && l !== void 0)) cacheSessionTitle(l);
   let Z = Promise.resolve(!0);
-  if ((runBundledSkillSessionResets(), resetArtifactConversationState(), sessionAnnouncementStateStore.of(t).reset(), cfe(t), a.CLAUDE_CODE_SESSION_ID))
+  if ((runBundledSkillSessionResets(), resetArtifactConversationState(), sessionAnnouncementStateStore.of(t).reset(), getCcrSessionId(t), a.CLAUDE_CODE_SESSION_ID))
     process.env.CLAUDE_CODE_SESSION_ID = K();
   if ((await resetSessionFilePointer(), dropSessionHistorySuppression(), releasePrecautionarySuppressionFor(P), await syncJobResumeSessionId(K(), getSessionTranscriptPath(), o), u))
     await saveCustomTitle(q, u, W, "user", o);

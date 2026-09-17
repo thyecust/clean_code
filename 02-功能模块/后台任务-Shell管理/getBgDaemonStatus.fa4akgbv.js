@@ -16,7 +16,7 @@ import { getVerifiedDaemonLock } from "./daemon-lock.js";
 import { getDaemonRuntimeDir, redactDaemonNonce, getRosterFilePath, getControlSocketPath } from "./chunk-djserjj5.js";
 import { BG_PROTO, rosterKey, readRoster } from "./chunk-7wsy8vxb.js";
 import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
-import { tF } from "./chunk-jfk5mpe1.js";
+import { isDaemonServiceInstalled } from "./chunk-jfk5mpe1.js";
 import { DAEMON_CONFIG_MAX_BYTES, readDaemonConfigContent } from "../权限系统/chunk-3kjwvb3e.js";
 import { getDaemonJsonPath, getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -34,7 +34,7 @@ async function getBgDaemonStatus(e) {
       readRoster({ silent: !0 }, e),
       S(e),
       v(t, e),
-      tF().catch(() => !1),
+      isDaemonServiceInstalled().catch(() => !1),
       y(getDaemonJsonPath(), e),
     ]),
     u;

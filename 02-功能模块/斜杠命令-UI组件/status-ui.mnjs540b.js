@@ -22,10 +22,10 @@ import "../跨会话消息(UDS)/uds-messaging.js";
 import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import "../Skills技能/mcp-skill-cache.js";
 import "../自动更新-安装/install-diagnostics.js";
-import "../自动更新-安装/chunk-2g5h49pk.js";
+import "../自动更新-安装/native-installer.js";
 import "../会话-历史-恢复/retention-cleanup.js";
 import "../跨会话消息(UDS)/peer-file-transfer.js";
-import { n4 } from "../设置-配置-UI/设置-配置-UI.kezhax6q.js";
+import { SettingsDialog } from "../设置-配置-UI/设置-配置-UI.kezhax6q.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
@@ -70,6 +70,6 @@ import "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import "../../01-核心基础设施/共享小工具-未细化/propose-goal-feature-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 async function a(o, t) {
-  return e(n4, { onClose: o, context: t, defaultTab: "Status" });
+  return e(SettingsDialog, { onClose: o, context: t, defaultTab: "Status" });
 }
 export { a as call };

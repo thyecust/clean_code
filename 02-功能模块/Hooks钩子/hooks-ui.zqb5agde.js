@@ -59,13 +59,13 @@ import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { getPreferredShellToolName } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { peekPreSettingsEnvSnapshot } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
-import { nIt, rIt, P6e, oIt } from "./chunk-6wg4v2yj.js";
+import { buildHookInventory, getShellPrefixFromEnv, getLegacyConfigFileState, computeHookOwnEnv } from "./device-hooks-serving.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Box, Text, Link, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { NO_COMMITTED_ROW, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -282,10 +282,10 @@ async function Fo({
       no = mergeChildProcessEnv({
         attached: to,
         beforeSettings: peekPreSettingsEnvSnapshot(),
-        ownEnv: oIt(k, P6e(w)),
+        ownEnv: computeHookOwnEnv(k, getLegacyConfigFileState(w)),
         childrenSee: (b) => Object.hasOwn(to, b),
       }),
-      Ae = await nIt(
+      Ae = await buildHookInventory(
         z,
         {
           instanceId: "dev-0000000000000000",
@@ -306,7 +306,7 @@ async function Fo({
           open: getRealFileSystemAccess().openNoFollow,
           home: getHomeDirFromEnv(no),
           defaultShell: getPreferredShellToolName(),
-          shellPrefix: rIt(no),
+          shellPrefix: getShellPrefixFromEnv(no),
         },
       ),
       re = [
@@ -520,8 +520,8 @@ function So(Mr) {
   else Yo = J[27];
   let Vo;
   if (J[28] !== ne || J[29] !== Go || J[30] !== _n || J[31] !== Yo)
-    ((Vo = e(ve, {
-      selectedValue: vs,
+    ((Vo = e(Select, {
+      selectedValue: NO_COMMITTED_ROW,
       options: Go,
       defaultFocusValue: "not_now",
       hideIndexes: !0,
@@ -1456,7 +1456,7 @@ function Mo(pa) {
   if (Z[20] !== ao || Z[21] !== Ct || Z[22] !== co)
     ((Mt = e(Box, {
       flexDirection: "column",
-      children: e(ve, { onChange: Ct, onCancel: ao, options: co }),
+      children: e(Select, { onChange: Ct, onCancel: ao, options: co }),
     })),
       (Z[20] = ao),
       (Z[21] = Ct),
@@ -1564,7 +1564,7 @@ function Oo(Ha) {
   if (Le[15] !== ke || Le[16] !== $e || Le[17] !== Ue)
     ((Nt = e(Box, {
       flexDirection: "column",
-      children: e(ve, { options: $e, onChange: Ue, onCancel: ke }),
+      children: e(Select, { options: $e, onChange: Ue, onCancel: ke }),
     })),
       (Le[15] = ke),
       (Le[16] = $e),
@@ -1671,7 +1671,7 @@ function Po(Ua) {
   if (Ie[17] !== we || Ie[18] !== Ve || Ie[19] !== ze)
     ((Ke = e(Box, {
       flexDirection: "column",
-      children: e(ve, { options: Ve, onChange: ze, onCancel: we }),
+      children: e(Select, { options: Ve, onChange: ze, onCancel: we }),
     })),
       (Ie[17] = we),
       (Ie[18] = Ve),
@@ -2141,7 +2141,7 @@ function dn(Bc) {
     if (m[49] !== Ze || m[50] !== pe)
       ((O =
         Ze !== void 0 &&
-        e(ve, {
+        e(Select, {
           options: [
             {
               label: e(Text, {

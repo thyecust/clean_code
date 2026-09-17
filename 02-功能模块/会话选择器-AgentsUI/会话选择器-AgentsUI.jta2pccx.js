@@ -21,7 +21,7 @@ import { useTerminalFocus, setTimeoutWithCancel } from "../../01-核心基础设
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { registerCleanup, registerPreExitFlush, jsonParse, resolveSymlinkAncestry, fsSurface, readTailBytes, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, registerPreExitFlush, jsonParse, resolveSymlinkAncestry, fsSurface, readTailBytes, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   getMainLoopModel,
   renderModelSetting,
@@ -186,7 +186,7 @@ import {
 import { relaunchClaudeCode } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import { saveJobDraft, writeJobDraft, writeJobDraftSync, deleteJobDraft, readJobDraft, sweepStaleJobDrafts } from "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import { CCR_LIST_TARGET_VISIBLE } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
-import { Xae, zst } from "../Skills技能/Skills技能.dpy2ket5.js";
+import { registerBuiltinPlugins, registerAllBundledSkills } from "../Skills技能/Skills技能.dpy2ket5.js";
 import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import { hasTeammateModeSnapshot, captureTeammateModeSnapshot } from "../Teammates团队/chunk-88ybhavr.js";
 import { createFleetViewHost, useAttachFleetOwners } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
@@ -3256,9 +3256,9 @@ function Hn(s, c) {
   return yb(s);
 }
 function So(s, c = !1, m = !1) {
-  if (s.name) return qr(normalizeWhitespace(s.name));
+  if (s.name) return redactSecretsFromText(normalizeWhitespace(s.name));
   let b = 25,
-    k = qr(normalizeWhitespace(s.displayIntent ?? s.intent))
+    k = redactSecretsFromText(normalizeWhitespace(s.displayIntent ?? s.intent))
       .split(" ")
       .filter(Boolean);
   if (k.length === 0) {
@@ -10532,16 +10532,16 @@ function Cg({
     ],
   });
 }
-function Qmr(s, c, m) {
+function seedHostJobs(s, c, m) {
   _r(s, m).seedJobs(c);
 }
-function YFn(s, c, m) {
+function remountClearSeq(s, c, m) {
   if (s) return Nat();
   let b = oDt(process.stdout, null).rows;
   if (b !== process.stdout.rows) return "";
   return c && !m ? eraseViewportInPlace(b) : "";
 }
-async function BQt(s, c) {
+async function mountFleetView(s, c) {
   let m = !1;
   function b() {
     m = !0;
@@ -10554,8 +10554,8 @@ async function BQt(s, c) {
   };
   if (
     ((await import("../../01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js")).registerToolHosts(),
-    Xae(),
-    zst(),
+    registerBuiltinPlugins(),
+    registerAllBundledSkills(),
     isAgentSwarmsEnabled() && !hasTeammateModeSnapshot())
   )
     captureTeammateModeSnapshot();
@@ -10808,10 +10808,10 @@ async function BQt(s, c) {
       else logFeatureBad("fleet_view_open", "respawn_failed");
     }
     if ((HOn(), (I = await createRoot(getBaseRenderOptions(!1))), J)) {
-      if (!Fe) process.stdout.write(YFn(Fe, je, m));
+      if (!Fe) process.stdout.write(remountClearSeq(Fe, je, m));
       return ((J = !1), We(), { back: !0, root: I });
     }
-    (process.stdout.write(YFn(Fe, je, m)), logForDebugging("[PERF:bg-remount-start]"), We());
+    (process.stdout.write(remountClearSeq(Fe, je, m)), logForDebugging("[PERF:bg-remount-start]"), We());
   }
 }
-export { Qmr, YFn, BQt };
+export { seedHostJobs, remountClearSeq, mountFleetView };

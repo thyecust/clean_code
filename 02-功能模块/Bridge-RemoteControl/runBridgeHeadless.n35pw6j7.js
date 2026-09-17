@@ -22,7 +22,7 @@ import { jsonStringify, jsonParse, changeWorkingDirectory, logForDebugging } fro
 import { pluralize, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, getNonessentialTrafficDisabledEnvVar, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { pXt, IPn, $nt, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { BUILD_TOOL_COMMANDS, isVerifiablePath, findCommandsOnPath, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
@@ -70,8 +70,8 @@ import { getAttestationFilterPolicy, getTrustedDeviceToken, withUntrustedDeviceR
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE, REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE, BRIDGE_WORK_STATE_QUEUED } from "./remote-control-messages.js";
 import "../自动更新-安装/install-diagnostics.js";
-import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
-import { removeGuiHostEntrypoint, g4 } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
+import { lockCurrentVersion } from "../自动更新-安装/native-installer.js";
+import { removeGuiHostEntrypoint, removeRestrictedEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import { NESTED_SESSION_MARKER_ENV_VARS, NON_INHERITED_SESSION_ENV_VARS } from "../Workflow编排/session-env-vars.js";
 import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js";
 import { getBridgePollIntervalConfig } from "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
@@ -676,7 +676,7 @@ function Jt(e) {
       for (let j of Object.keys(ae))
         if (!ce.has(j) && ce.has(j.toUpperCase())) delete ae[j];
       if (
-        (g4(ae),
+        (removeRestrictedEnvVars(ae),
         removeGuiHostEntrypoint(ae),
         e.onDebug(
           `[bridge:session] Spawning sessionId=${t.sessionId} sdkUrl=${t.sdkUrl} accessToken=${t.accessToken ? "present" : "MISSING"}`,
@@ -1572,7 +1572,7 @@ var yn = 1500,
     "psql",
     "mysql",
     "redis-cli",
-    ...pXt,
+    ...BUILD_TOOL_COMMANDS,
   ],
   Tn = new Set([
     "xcodebuild",
@@ -1677,7 +1677,7 @@ async function Bn({ includeMcpServers: e, signal: t }) {
   try {
     if (d === void 0) return;
     let p = { pathTools: new Set(), mcpServers: [] },
-      r = [Nn(d, p), Fn(p), $nt(kr, p.pathTools)];
+      r = [Nn(d, p), Fn(p), findCommandsOnPath(kr, p.pathTools)];
     if (d === "darwin") r.push(Ln(p), Wn(p));
     if (d === "linux") r.push(jn(p));
     if (e) r.push(Hn(p));
@@ -1794,7 +1794,7 @@ async function Wn(e) {
 }
 async function Fn(e) {
   let t = a.ANDROID_HOME ?? a.ANDROID_SDK_ROOT;
-  if (t === void 0 || !(await IPn(t)) || !(await Tr(t))) return;
+  if (t === void 0 || !(await isVerifiablePath(t)) || !(await Tr(t))) return;
   e.androidSdk = "android-sdk";
 }
 async function jn(e) {
@@ -3532,7 +3532,7 @@ async function bridgeMain(e, t, o) {
     let { exitAfterAnalyticsFlush: B } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js");
     return B(1);
   }
-  (q4(), setAttestationFilterPolicy(getAttestationFilterPolicy));
+  (lockCurrentVersion(), setAttestationFilterPolicy(getAttestationFilterPolicy));
   let {
     verbose: r,
     sandbox: C,

@@ -15,7 +15,7 @@ import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { readFileHardened } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { isFileReadDenied } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ece, bSe, wSe } from "../权限系统/chunk-4wrkmv3h.js";
+import { isNetworkPath, AutoModeSetupWriteError, writeAutoModeSetup } from "../权限系统/chunk-4wrkmv3h.js";
 import { proposeAutoModeSetup, parseAutoModeProposal } from "./auto-mode-setup-proposal.js";
 import "../Git-Worktree/git-operations.js";
 import { createHash } from "crypto";
@@ -79,7 +79,7 @@ async function q(e, t) {
     if (!r.ok) return { ok: !1, code: r.code, reason: r.reason };
     return { ok: !0, proposal: r.proposal };
   }
-  if (!isAbsolute(e.path) || ece(e.path) || !(await isAllowedApplyFilePath(e.path)))
+  if (!isAbsolute(e.path) || isNetworkPath(e.path) || !(await isAllowedApplyFilePath(e.path)))
     return (
       logFeatureBad("auto_mode_setup_write", "bad_path"),
       {
@@ -172,7 +172,7 @@ async function q(e, t) {
   try {
     return {
       ok: !0,
-      ...(await wSe(
+      ...(await writeAutoModeSetup(
         {
           mode: a.proposal.mode,
           autoMode: {
@@ -197,7 +197,7 @@ async function q(e, t) {
   } catch (r) {
     return {
       ok: !1,
-      code: r instanceof bSe ? r.code : "write_failed",
+      code: r instanceof AutoModeSetupWriteError ? r.code : "write_failed",
       reason: r instanceof Error ? r.message : String(r),
     };
   }

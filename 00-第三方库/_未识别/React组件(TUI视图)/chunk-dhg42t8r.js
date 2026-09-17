@@ -12,7 +12,7 @@ import { normalizeFullWidthDigits, normalizeIdeographicSpaces } from "../../../0
 import { _ } from "../../react/react.zhnvc798.js";
 import { Box, Text, useIsScreenReaderEnabled } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useActiveOverlay } from "../../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
-import { fOt, qB, Y8, qm, gOt, u9e, d9e } from "../../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { MultiSelect, OptionRow, EditableOptionRow, useStateWithGetter, useOptionListFocus, useStrayClickGuard, useVisibleOptionCount } from "../../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { re, C, d, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
@@ -33,8 +33,8 @@ function ie({
   hideIndexes: Z = !1,
   refuseSubmitFocus: A,
 }) {
-  let [ee, N, O] = qm(U),
-    [te, V, ne] = qm(!1),
+  let [ee, N, O] = useStateWithGetter(U),
+    [te, V, ne] = useStateWithGetter(!1),
     [c, G] = d(f);
   if (f !== c && !isDeepStrictEqual(f, c)) (N(U), G(f));
   let [oe, X] = d(() => {
@@ -62,7 +62,7 @@ function ie({
       },
       [f, x],
     ),
-    y = gOt({ visibleOptionCount: W, options: f, onFocus: Y });
+    y = useOptionListFocus({ visibleOptionCount: W, options: f, onFocus: Y });
   useActiveOverlay("multi-select");
   let s = re(
     (n, l) => {
@@ -198,7 +198,7 @@ function lE(i) {
       Re[7] !== i.refuseInput ||
       Re[8] !== i.submitButtonText
     )
-      ((J = e(fOt, {
+      ((J = e(MultiSelect, {
         options: i.options,
         defaultValue: i.defaultValue,
         onChange: i.onChange,
@@ -256,7 +256,7 @@ function he(gt) {
   let we = Ne,
     H = Ae === void 0 ? !1 : Ae,
     bt = D.some(Je);
-  const Ce = d9e(ht, bt ? "compact-vertical" : "compact");
+  const Ce = useVisibleOptionCount(ht, bt ? "compact-vertical" : "compact");
   let je;
   if (
     w[2] !== we ||
@@ -304,7 +304,7 @@ function he(gt) {
     He = C(null);
   useFocusTrap(He, !p);
   let [Fe, ze] = d(!1),
-    z = u9e(),
+    z = useStrayClickGuard(),
     Le;
   if (w[15] !== p || w[16] !== z || w[17] !== a)
     ((Le = (le) =>
@@ -369,7 +369,7 @@ function he(gt) {
           Box,
           {
             gap: 1,
-            children: e(Y8, {
+            children: e(EditableOptionRow, {
               option: g,
               onClick: ae(g),
               isFocused: Ee,
@@ -406,7 +406,7 @@ function he(gt) {
         Box,
         {
           gap: 1,
-          children: r(qB, {
+          children: r(OptionRow, {
             isFocused: Ee,
             isSelected: !1,
             shouldShowDownArrow: qe && $e,

@@ -321,7 +321,7 @@ function re(e) {
       return !0;
   }
 }
-function xZ(e) {
+function conformWireFrame(e) {
   if (!q(e)) return !0;
   try {
     let t = !0;
@@ -388,7 +388,7 @@ var Xe = [
     "default_to_no",
     "requires_user_interaction",
   ];
-function EFn(e) {
+function sanitizeCanUseToolRequest(e) {
   if (!q(e)) return !1;
   try {
     if (
@@ -449,7 +449,7 @@ function EFn(e) {
     );
   }
 }
-function Pst(e) {
+function getWorkerEpoch(e) {
   let t = e.worker_epoch;
   return typeof t === "number" && Number.isSafeInteger(t) && t > 0 ? t : void 0;
 }
@@ -458,7 +458,7 @@ var Je = new RegExp(`<${TICK_TAG}[\\s>]`, "i"),
 function et(e) {
   return Je.test(e) && Ze.test(e);
 }
-var iIt = new Set(["user", "env_manager_log"]),
+var NON_WORKER_PAYLOAD_TYPES = new Set(["user", "env_manager_log"]),
   Re = 500;
 function _e(e) {
   if (
@@ -495,7 +495,7 @@ function _e(e) {
     e.includes(`<${LOCAL_COMMAND_CAVEAT_TAG}>`)
   );
 }
-function qae(e) {
+function hasMachineGeneratedContent(e) {
   if (e.tool_use_result !== void 0) return !0;
   let t = e.message?.content;
   if (typeof t === "string") return _e(t);
@@ -514,7 +514,7 @@ function qae(e) {
     )
   );
 }
-function wHe(e) {
+function hasNonTextContentBlocks(e) {
   let t = e.message?.content;
   return (
     Array.isArray(t) &&
@@ -527,7 +527,7 @@ function wHe(e) {
   );
 }
 function aQt(e) {
-  return qae(e) || wHe(e);
+  return hasMachineGeneratedContent(e) || hasNonTextContentBlocks(e);
 }
 function lQt(e) {
   if (aQt(e)) return !0;
@@ -984,14 +984,14 @@ class de {
           }
         }
         if (a.payload.type === "user") {
-          if (a.source !== "worker" && qae(a.payload)) {
+          if (a.source !== "worker" && hasMachineGeneratedContent(a.payload)) {
             logForDebugging(
               `[SessionsV2Client] Dropping worker-output-shaped user frame from source=${a.source} \u2014 only the worker produces tool results and execution output`,
               { level: "warn" },
             );
             return;
           }
-          if (wHe(a.payload)) {
+          if (hasNonTextContentBlocks(a.payload)) {
             logForDebugging(
               `[SessionsV2Client] Dropping user frame with malformed content from source=${a.source}`,
               { level: "warn" },
@@ -1029,7 +1029,7 @@ class de {
               );
               return;
             }
-          } else if (!iIt.has(a.payload.type)) {
+          } else if (!NON_WORKER_PAYLOAD_TYPES.has(a.payload.type)) {
             if (
               a.payload.type === "control_request" &&
               typeof a.payload.request_id === "string" &&
@@ -1481,8 +1481,8 @@ function Pe(e, t, o) {
     if (r !== void 0) e.delete(r);
   }
 }
-var AFn = ["can_use_tool", "request_user_dialog"];
-function kS(e) {
+var GATING_CONTROL_REQUEST_SUBTYPES = ["can_use_tool", "request_user_dialog"];
+function formatLogValue(e) {
   return e.length > 80
     ? `${e.slice(0, 80).replace(/[^\x20-\x7e]/g, "?")}\u2026(+${e.length - 80})`
     : e.replace(/[^\x20-\x7e]/g, "?");
@@ -1502,15 +1502,15 @@ function qt(e) {
     e === "http_429" || e === "server" || e === "timeout" || e === "network"
   );
 }
-var Ost = "cancelled",
-  O6e = "withdrawn",
+var SEND_REASON_CANCELLED = "cancelled",
+  SEND_REASON_WITHDRAWN = "withdrawn",
   Me = { outcome: "failed", cause: "closed" },
   Pt = 1500,
   Fe = [1000, 5000, 15000, 45000],
   De = Fe.length,
   Mt = ["remote_tool_call", "remote_plumbing_call", "remote_tools_probe"],
   Dt = 120000;
-function Dst(e, t) {
+function describeUndeliveredSend(e, t) {
   switch (e) {
     case "permission":
       return "A permission answer you gave could not be delivered to the cloud session, which may still be waiting for it. If the session looks stuck, interrupt it and retry.";
@@ -1526,7 +1526,7 @@ function Dst(e, t) {
         : "The result of work this machine did for the cloud session (a command it ran, or files it synced) could not be delivered; the session waits for it until its deadline and then carries on without it.";
   }
 }
-class D6e {
+class RemoteSessionManager {
   config;
   callbacks;
   client = null;
@@ -1665,7 +1665,7 @@ class D6e {
           this.callbacks.onResponseUndelivered?.(r, "hook", "overtaken"));
       if (this.pendingForwardedHooks.delete(r)) {
         (logForDebugging(
-          `[RemoteSessionManager] Forwarded hook request cancelled by the worker: ${kS(r)}`,
+          `[RemoteSessionManager] Forwarded hook request cancelled by the worker: ${formatLogValue(r)}`,
         ),
           this.callbacks.onForwardedHookCancelled?.(r, "worker"));
         return;
@@ -1768,7 +1768,7 @@ class D6e {
               this.callbacks.onUserDialogCancelled?.(r));
         else if (this.pendingForwardedHooks.has(r))
           logForDebugging(
-            `[RemoteSessionManager] Ignoring a peer control_response (${e.response.subtype}) for forwarded hook request ${kS(r)} \u2014 still answering it here`,
+            `[RemoteSessionManager] Ignoring a peer control_response (${e.response.subtype}) for forwarded hook request ${formatLogValue(r)} \u2014 still answering it here`,
           );
         else
           logForDebugging(
@@ -1846,7 +1846,7 @@ class D6e {
           this.errorShapedControlResponseIds.has(a.request_id))
       ) {
         logForDebugging(
-          `[RemoteSessionManager] Redelivered ${t} ${kS(a.request_id)} already answered \u2014 skipping`,
+          `[RemoteSessionManager] Redelivered ${t} ${formatLogValue(a.request_id)} already answered \u2014 skipping`,
         );
         return;
       }
@@ -1858,7 +1858,7 @@ class D6e {
         let S = this.reinstatablePermissionRequests.get(a.request_id);
         if (S === void 0) {
           logForDebugging(
-            `[RemoteSessionManager] Redelivered can_use_tool ${kS(a.request_id)} already retired here \u2014 skipping`,
+            `[RemoteSessionManager] Redelivered can_use_tool ${formatLogValue(a.request_id)} already retired here \u2014 skipping`,
           );
           return;
         }
@@ -1868,7 +1868,7 @@ class D6e {
         ) {
           (logFeatureBad("remote_permission_request", "redelivered_mismatch"),
             logForDebugging(
-              `[RemoteSessionManager] Redelivered can_use_tool ${kS(a.request_id)} differs from the request first shown under that id \u2014 not arming it`,
+              `[RemoteSessionManager] Redelivered can_use_tool ${formatLogValue(a.request_id)} differs from the request first shown under that id \u2014 not arming it`,
               { level: "warn" },
             ));
           return;
@@ -1903,12 +1903,12 @@ class D6e {
       if (p !== void 0) {
         if (qe(p, a))
           logForDebugging(
-            `[RemoteSessionManager] Duplicate permission request ${kS(String(r))} \u2014 already pending, skipping`,
+            `[RemoteSessionManager] Duplicate permission request ${formatLogValue(String(r))} \u2014 already pending, skipping`,
           );
         else
           (logFeatureBad("remote_permission_request", "redelivered_mismatch"),
             logForDebugging(
-              `[RemoteSessionManager] Permission request ${kS(String(r))} redelivered with a different body (${kS(String(a.tool_name))}) \u2014 keeping the one first shown (${kS(p.tool_name)})`,
+              `[RemoteSessionManager] Permission request ${formatLogValue(String(r))} redelivered with a different body (${formatLogValue(String(a.tool_name))}) \u2014 keeping the one first shown (${formatLogValue(p.tool_name)})`,
               { level: "warn" },
             ));
         return;
@@ -1916,7 +1916,7 @@ class D6e {
       if (this.retiredPermissionRequestIds.has(r)) {
         (logFeatureBad("remote_permission_request", "retired_id_rearmed"),
           logForDebugging(
-            `[RemoteSessionManager] Permission request ${kS(String(r))} arrived again after it was retired here \u2014 not arming it`,
+            `[RemoteSessionManager] Permission request ${formatLogValue(String(r))} arrived again after it was retired here \u2014 not arming it`,
             { level: "warn" },
           ));
         return;
@@ -1947,13 +1947,13 @@ class D6e {
       let p = this.callbacks.onForwardedHookCallback;
       if (!p) {
         logForDebugging(
-          `[RemoteSessionManager] Forwarded hook_callback ${kS(r)} \u2014 not serving device hooks here, leaving it unanswered`,
+          `[RemoteSessionManager] Forwarded hook_callback ${formatLogValue(r)} \u2014 not serving device hooks here, leaving it unanswered`,
         );
         return;
       }
       if (r.length > H || a.callback_id.length > H) {
         logForDebugging(
-          `[RemoteSessionManager] Forwarded hook_callback ${kS(r)} \u2014 an id longer than ${H} characters, leaving it unanswered`,
+          `[RemoteSessionManager] Forwarded hook_callback ${formatLogValue(r)} \u2014 an id longer than ${H} characters, leaving it unanswered`,
         );
         return;
       }
@@ -1979,7 +1979,7 @@ class D6e {
         this.pendingForwardedHooks.has(r)
       ) {
         logForDebugging(
-          `[RemoteSessionManager] Forwarded hook_callback ${kS(r)} already answered or in hand \u2014 skipping`,
+          `[RemoteSessionManager] Forwarded hook_callback ${formatLogValue(r)} already answered or in hand \u2014 skipping`,
         );
         return;
       }
@@ -1990,13 +1990,13 @@ class D6e {
       let p = this.callbacks.onServedChannelRequest;
       if (!p) {
         logForDebugging(
-          `[RemoteSessionManager] ${a.subtype} ${kS(r)} \u2014 not serving tools here, leaving it unanswered`,
+          `[RemoteSessionManager] ${a.subtype} ${formatLogValue(r)} \u2014 not serving tools here, leaving it unanswered`,
         );
         return;
       }
       if (r.length > H) {
         logForDebugging(
-          `[RemoteSessionManager] ${a.subtype} ${kS(r)} \u2014 an id longer than ${H} characters, leaving it unanswered`,
+          `[RemoteSessionManager] ${a.subtype} ${formatLogValue(r)} \u2014 an id longer than ${H} characters, leaving it unanswered`,
         );
         return;
       }
@@ -2005,7 +2005,7 @@ class D6e {
         this.pendingServedRequests.has(r)
       ) {
         logForDebugging(
-          `[RemoteSessionManager] ${a.subtype} ${kS(r)} already answered or in hand \u2014 skipping`,
+          `[RemoteSessionManager] ${a.subtype} ${formatLogValue(r)} already answered or in hand \u2014 skipping`,
         );
         return;
       }
@@ -2077,9 +2077,9 @@ class D6e {
       (logForDebugging(`[RemoteSessionManager] Message withheld by a send gate: ${d.reason}`),
         logFeatureSad(
           "remote_send_message",
-          d.reason === Ost
+          d.reason === SEND_REASON_CANCELLED
             ? "remote_send_message_cancelled"
-            : d.reason === O6e
+            : d.reason === SEND_REASON_WITHDRAWN
               ? "remote_send_message_withdrawn"
               : "remote_send_message_withheld",
         ));
@@ -2446,7 +2446,7 @@ class D6e {
     ) {
       (this.dropKept(e),
         logForDebugging(
-          `[RemoteSessionManager] Answer for ${kS(o)} has no session to go to (${t.outcome === "failed" && t.cause === "http" ? `http ${t.status}` : "session not active"}); dropped`,
+          `[RemoteSessionManager] Answer for ${formatLogValue(o)} has no session to go to (${t.outcome === "failed" && t.cause === "http" ? `http ${t.status}` : "session not active"}); dropped`,
         ),
         logFeatureSad("remote_control_response", "session_gone"));
       return;
@@ -2463,7 +2463,7 @@ class D6e {
       t.status !== 429
     ) {
       (logForDebugging(
-        `[RemoteSessionManager] Answer for ${kS(o)} was refused by the service (http ${t.status}); not re-sending`,
+        `[RemoteSessionManager] Answer for ${formatLogValue(o)} was refused by the service (http ${t.status}); not re-sending`,
         { level: "warn" },
       ),
         this.giveUp(e, "undelivered", "refused"));
@@ -2471,13 +2471,13 @@ class D6e {
     }
     if (!this.client?.isConnected()) {
       logForDebugging(
-        `[RemoteSessionManager] Answer for ${kS(o)} did not reach the session while the stream is down; it goes again at reconnect`,
+        `[RemoteSessionManager] Answer for ${formatLogValue(o)} did not reach the session while the stream is down; it goes again at reconnect`,
       );
       return;
     }
     if (((e.failures += 1), e.failures > De)) {
       (logForDebugging(
-        `[RemoteSessionManager] Answer for ${kS(o)} could not be delivered after ${e.failures} attempts; giving up`,
+        `[RemoteSessionManager] Answer for ${formatLogValue(o)} could not be delivered after ${e.failures} attempts; giving up`,
         { level: "warn" },
       ),
         this.giveUp(e));
@@ -2601,7 +2601,7 @@ class D6e {
     if (!this.pendingForwardedHooks.delete(e))
       return (
         logForDebugging(
-          `[RemoteSessionManager] Forwarded hook request ${kS(e)} is no longer pending \u2014 answer not sent`,
+          `[RemoteSessionManager] Forwarded hook request ${formatLogValue(e)} is no longer pending \u2014 answer not sent`,
         ),
         !1
       );
@@ -2620,7 +2620,7 @@ class D6e {
     if (!o)
       return (
         logForDebugging(
-          `[RemoteSessionManager] served request ${kS(e)} is no longer pending \u2014 result not sent`,
+          `[RemoteSessionManager] served request ${formatLogValue(e)} is no longer pending \u2014 result not sent`,
         ),
         !1
       );
@@ -2647,7 +2647,7 @@ class D6e {
     return (
       this.pendingServedRequests.delete(e),
       logForDebugging(
-        `[RemoteSessionManager] served request ${kS(e)} ${t === "worker" ? "cancelled by the worker" : "dropped with the stream"}`,
+        `[RemoteSessionManager] served request ${formatLogValue(e)} ${t === "worker" ? "cancelled by the worker" : "dropped with the stream"}`,
       ),
       o.abort.abort(),
       this.callbacks.onServedChannelRequestCancelled?.(e, t),
@@ -2890,7 +2890,7 @@ function xt(e) {
   if (e.ok) return { kind: "sent" };
   switch (Q(e)) {
     case "withheld":
-      return e.reason === Ost || e.reason === O6e
+      return e.reason === SEND_REASON_CANCELLED || e.reason === SEND_REASON_WITHDRAWN
         ? { kind: "unsent" }
         : { kind: "refused", reason: e.reason };
     case "http_4xx":
@@ -2905,23 +2905,23 @@ function xt(e) {
   }
 }
 function Oe(e) {
-  return e ? { go: !1, reason: O6e } : void 0;
+  return e ? { go: !1, reason: SEND_REASON_WITHDRAWN } : void 0;
 }
 function Ue(e, t) {
   return [...e].some(
     ({ onRelease: o, onExit: r }) => o === "withhold" && !(t && r === "await"),
   )
-    ? { go: !1, reason: Ost }
+    ? { go: !1, reason: SEND_REASON_CANCELLED }
     : void 0;
 }
-var L6e = 100,
-  CFn = 500;
-function aIt(e) {
+var FALLBACK_HISTORY_PAGE_SIZE = 100,
+  DEFAULT_HISTORY_PAGE_SIZE = 500;
+function parseSequenceNum(e) {
   let t =
     e?.sequence_num === void 0 ? void 0 : parseInt(String(e.sequence_num), 10);
   return t !== void 0 && !isNaN(t) ? t : void 0;
 }
-async function V_e(e, t) {
+async function getSessionRequestTarget(e, t) {
   let { accessToken: o } = await prepareApiRequest(t);
   return {
     sessionUrl: `${getOauthConfig().BASE_API_URL}/v1/code/sessions/${e}`,
@@ -2951,7 +2951,7 @@ async function xe(e, t, o, r) {
         payload: _.payload,
         createdAt: _.created_at,
         source: _.source,
-        sequenceNum: aIt(_),
+        sequenceNum: parseSequenceNum(_),
       });
   }
   let S = a.data.next_cursor ?? null;
@@ -2960,17 +2960,17 @@ async function xe(e, t, o, r) {
     firstId: S,
     hasMore: S !== null,
     droppedRows: p.length - d.length,
-    newestSequenceNum: aIt(p[0]),
+    newestSequenceNum: parseSequenceNum(p[0]),
   };
 }
-async function Lst(e, t = L6e, o) {
+async function fetchLatestSessionEvents(e, t = FALLBACK_HISTORY_PAGE_SIZE, o) {
   let r = await xe(e, { limit: t, sort_order: "desc" }, "fetchLatestEvents");
   if (o?.reportFeatureHealth !== !1)
     if (r === null) logFeatureBad("assistant_history_load", "http_error");
     else logFeatureOk("assistant_history_load");
   return r;
 }
-async function Mst(e, t, o = L6e, r) {
+async function fetchOlderSessionEvents(e, t, o = FALLBACK_HISTORY_PAGE_SIZE, r) {
   return xe(
     e,
     { limit: o, sort_order: "desc", cursor: t },
@@ -2979,24 +2979,24 @@ async function Mst(e, t, o = L6e, r) {
   );
 }
 export {
-  xZ,
-  EFn,
-  Pst,
-  iIt,
-  qae,
-  wHe,
+  conformWireFrame,
+  sanitizeCanUseToolRequest,
+  getWorkerEpoch,
+  NON_WORKER_PAYLOAD_TYPES,
+  hasMachineGeneratedContent,
+  hasNonTextContentBlocks,
   aQt,
   lQt,
-  AFn,
-  kS,
-  Ost,
-  O6e,
-  Dst,
-  D6e,
-  L6e,
-  CFn,
-  aIt,
-  V_e,
-  Lst,
-  Mst,
+  GATING_CONTROL_REQUEST_SUBTYPES,
+  formatLogValue,
+  SEND_REASON_CANCELLED,
+  SEND_REASON_WITHDRAWN,
+  describeUndeliveredSend,
+  RemoteSessionManager,
+  FALLBACK_HISTORY_PAGE_SIZE,
+  DEFAULT_HISTORY_PAGE_SIZE,
+  parseSequenceNum,
+  getSessionRequestTarget,
+  fetchLatestSessionEvents,
+  fetchOlderSessionEvents,
 };

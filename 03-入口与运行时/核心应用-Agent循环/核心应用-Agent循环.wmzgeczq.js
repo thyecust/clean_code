@@ -426,10 +426,10 @@ import {
   startSlowOperationSpan,
   jsonStringify,
   jsonStringifyLine,
-  Tc,
+  jsonStringifyUntraced,
   jsonlJoin,
   jsonParse,
-  Is,
+  jsonParseUntraced,
   deepClone,
   UNVERIFIED_ANCESTRY_SENTINEL,
   hasNetworkPathSpelling,
@@ -447,7 +447,7 @@ import {
   readTailBytes,
   streamFileLinesBackward,
   scanForSecrets,
-  qr,
+  redactSecretsFromText,
   sanitizeUrl,
   getMinDebugLogLevel,
   isDebugMode,
@@ -518,20 +518,20 @@ import {
   OA,
 } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import {
-  Hx,
-  bc,
-  cv,
-  vxt,
-  eae,
-  jhe,
-  Whe,
-  Kl,
-  cXt,
-  ja,
-  qR,
-  Rxt,
-  uXt,
-  dXt,
+  isRunningWithBun,
+  isBunStandaloneExecutable,
+  tryRemoveFileOrEmptyDirectory,
+  hasUnknownFileType,
+  getDirentFileInfo,
+  tryGetDirentFileInfo,
+  removePathRecursively,
+  removeDirectoryRecursive,
+  overwriteFileContents,
+  resolveExecutablePathAsync,
+  resolveExecutablePath,
+  resolveCommandInPath,
+  normalizePathEntry,
+  getDefaultGlobalClaudeFilePath,
   getGlobalClaudeFile,
   JETBRAINS_IDES,
   normalizeShellNameForAnalytics,
@@ -679,7 +679,7 @@ import {
   ptr,
   isOpus48Model,
   mtr,
-  FYe,
+  requiresPreReadGuard,
   isEapModelId,
   isModelInGrowthBookRoster,
   isBasaltCoveEnabled,
@@ -1087,7 +1087,7 @@ import {
   isUnprefixedAnthropicModelId,
   getInferenceProfilePrefixFromModelId,
   applyInferenceProfilePrefix,
-  ub,
+  asModelId,
   getModelOverrideSourceId,
   getEffectiveModelStrings,
   withRateLimitHeaders,
@@ -1186,7 +1186,7 @@ import {
   SESSION_ID_HEADER_NAME,
   InvalidRequestHeaderValueError,
   validateRequestHeaders,
-  Lrr,
+  MAX_SECRET_LENGTH,
   containsSecret,
   sanitizeErrorMessage,
   getGatewayModelOptions,
@@ -1640,8 +1640,8 @@ import {
   COLON_CHARS_CLASS,
   TAG_DELIMITER_CHARS,
   getInvisibleCharsPattern,
-  Age,
-  Kvt,
+  buildCharClassCaptureBackref,
+  buildNonPrintingCaptureBackref,
   neutralizeClosingTags,
   neutralizeOpeningTags,
   normalizeTagDelimiterLookalikes,
@@ -1882,7 +1882,7 @@ import {
   formatPathWithTilde,
   toForwardSlashPath,
   isJupyterNotebookPath,
-  rL,
+  ATOMIC_WRITE_STAGING_DIR_NAME,
   recordFileIdentity,
   SymlinkWriteRefusedError,
   SymlinkReadRefusedError,
@@ -1910,7 +1910,7 @@ import {
   stripLineNumberPrefix,
   writeFileAndFlush,
   isFileSizeWithinLimit,
-  pf,
+  canonicalizePathForComparison,
   isSamePath,
 } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent, flushDiagnostics, runTimedDiagnosticStep } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
@@ -2187,7 +2187,7 @@ import {
   buildAttributionHeader,
   hasClaudeAIOAuthInferenceScope,
   hasNoControlCharacters,
-  ps,
+  sanitizeTextForDisplay,
   sanitizePlainText,
   sanitizeUntrustedText,
   prepareDisplayText,
@@ -2206,8 +2206,8 @@ import { getProjectsDir as Pl, getProjectKeyFromDir, getProjectDir, getSessionTr
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import {
   LINK_MODE_COMMAND_SUFFIX,
-  jzt,
-  enr,
+  toUserSkillsStorageKey,
+  toUserSkillsStorageScope,
   ORPHANED_AT_MARKER_FILENAME,
   IN_USE_MARKER_FILENAME,
   GCS_SHA_FILENAME,
@@ -2243,7 +2243,7 @@ import {
   buildRunCommandHint,
   getInstallationPreferenceSchema,
   NOT_RECORDED_INSTALL_PATH,
-  $J,
+  isSignificantPluginError,
   getErrorPluginId,
   formatPluginError,
   toNormalizedPathKey,
@@ -2606,7 +2606,7 @@ import {
   MAIN_AGENT_ID,
   hasReplContextForAgent,
   isReplModeEnabled,
-  rbn,
+  isAsyncReplDispatchEnabled,
   excludeReplRoutedMcpTools,
   hasReplMcpRouting,
   REPL_ONLY_TOOL_NAMES,
@@ -2752,73 +2752,73 @@ import {
 } from "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
 import { HooksError, getStringErrorCause, resolvePluginFile, isHookEventName, isOperationEventName, isPluginEventName } from "../../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js";
 import {
-  hN,
-  toe,
-  ig,
-  qE,
-  _N,
-  sJ,
-  aCe,
-  nwt,
-  iXe,
-  _1e,
-  rwt,
-  owt,
-  kbn,
-  yGt,
-  cZn,
-  vC,
-  Ui,
-  uZn,
-  xbn,
-  lXe,
-  cXe,
-  SGt,
-  S1e,
-  dZn,
-  xj,
-  R$,
-  pZn,
-  iJ,
-  iwt,
-  Hbn,
-  fZn,
-  Ibn,
-  mZn,
-  awt,
-  uXe,
-  lwt,
-  dXe,
-  k$,
-  uwt,
-  noe,
-  dwt,
-  pwt,
-  b1e,
-  lJ,
-  yD,
-  fwt,
-  Dbn,
-  mwt,
-  pXe,
-  Lbn,
-  EGt,
-  AGt,
-  CGt,
-  hwt,
-  vGt,
-  RGt,
-  _wt,
-  fXe,
-  gZn,
-  w1e,
-  Mbn,
-  ywt,
-  lfe,
-  _Zn,
-  cfe,
-  cJ,
-  roe,
+  claudeDownloadsHttpClient,
+  OFFICIAL_MARKETPLACE_SOURCE,
+  OFFICIAL_MARKETPLACE_NAME,
+  logPluginRemoteFetch,
+  classifyNetworkErrorKind,
+  ensurePluginsOAuthScope,
+  PLUGIN_CONTENT_MARKERS,
+  hasPluginContentEntries,
+  resolvePluginRoot,
+  isPluginCommandSourceRefreshEnabled,
+  buildTempPluginDirName,
+  PLUGIN_TEMP_EXTRACT_SUFFIX,
+  PLUGIN_TEMP_CLONE_SUFFIX,
+  PLUGIN_TEMP_DIR_PATTERN,
+  LINKING_STAGING_DIR_PATTERN,
+  getSourceCommandKey,
+  PluginSourceError,
+  relinkPluginFarm,
+  pruneReservedEntries,
+  isReservedPluginEntry,
+  isLiveLinkFarm,
+  classifyLinkFarm,
+  isLinkFarmDiverged,
+  readLinkFarmTarget,
+  getCommandSource,
+  isLinkModeSource,
+  installFromCommandSource,
+  MAX_PLUGIN_ARCHIVE_BYTES,
+  MAX_MARKETPLACE_CATALOG_BYTES,
+  PLUGIN_ARCHIVE_USER_AGENT,
+  downloadPluginArchive,
+  getInheritableHeaderNames,
+  createMarketplaceRedirectGuard,
+  ENTRY_HELPER_FAILURE_CODES,
+  describeCurrentEntryHelper,
+  diffEntryHelperConsent,
+  formatEntryHelperRefusalMessage,
+  PluginEntryHelperError,
+  formatEntryHelperMismatchMessage,
+  resolveTrustedEntryAuth,
+  resolveMarketplaceHeaders,
+  sanitizePluginHeaders,
+  resolveArchiveAuth,
+  lookupMarketplaceSource,
+  getMarketplaceNameFromPluginId,
+  isSameOrigin,
+  findPluginErrorInCauseChain,
+  getSyncFailureTelemetry,
+  listOrganizationPlugins,
+  buildPluginDownloadUrl,
+  downloadOrganizationPlugin,
+  isSyncSettingVetoed,
+  isSyncSettingEnabled,
+  hasClaudeAiAccountAuth,
+  isSyncPolicyVerdictPending,
+  isSyncSettingDisabledBySettings,
+  refreshPluginsSyncEnabled,
+  isPluginsSyncVetoed,
+  shouldIncludeSyncedPlugins,
+  canSyncPluginsFromClaudeAi,
+  isPluginSyncForcedByEnv,
+  isPluginSyncPolicyVerdictPending,
+  isPluginsSyncTierInPlay,
+  isPluginsSyncDisabledBySettings,
+  getCcrSessionId,
+  isSessionRefsSyncEnabled,
+  sessionRefsManifestStore,
 } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import {
   isPluginBlockedByPolicy,
@@ -2933,7 +2933,7 @@ import { getBridgeTokenOverride, getBridgeBaseUrlOverride } from "../../01-核�
 import { buildGitSessionContext } from "../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js";
 import { getJobDir, getOwnJobShortId, writeStateAtomic, logJobWriteError, invalidateJobStateCache, readJobState, syncJobName, syncRespawnFlag, MAX_DETAIL_CHARS, clipWithEllipsis } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { scheduleDynamicWakeup, stopLoopWakeups } from "../../02-功能模块/语音-音频/loop-wakeup-scheduler.js";
-import { isKeybindingCustomizationEnabled, keybindingStore, getActiveKeybindings, getKeybindingDisplayText, logKeybindingFallbackUsed, rg } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { isKeybindingCustomizationEnabled, keybindingStore, getActiveKeybindings, getKeybindingDisplayText, logKeybindingFallbackUsed, sanitizeSingleLineDisplayText } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { sliceAnsi, noopFunction, cliBoxesModule } from "../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import { isWorktreeModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
 import { unregisterComputerUseEscapeHotkey } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
@@ -41922,7 +41922,7 @@ async function $wr(e) {
   return x4(t);
 }
 async function Bwr() {
-  let e = await ja("pwsh");
+  let e = await resolveExecutablePathAsync("pwsh");
   if (e) {
     if (getCurrentPlatform() === "linux") {
       let r = await tMt(e).catch(() => e);
@@ -41951,7 +41951,7 @@ async function Bwr() {
         (d ? await x4(rye(d, ".dotnet", "tools", "pwsh.exe")) : null);
     if (p) return (logFeatureSad("shell_powershell_detect", "windows_fallback_path"), p);
   }
-  let t = await ja("powershell");
+  let t = await resolveExecutablePathAsync("powershell");
   if (t) return (logFeatureSad("shell_powershell_detect", "fell_back_to_powershell_5"), t);
   if (getCurrentPlatform() === "windows") {
     let r = a.SYSTEMROOT ?? "C:\\Windows",
@@ -43281,7 +43281,7 @@ async function EEr(e, t, r) {
   let o = performance.now(),
     d = !1;
   try {
-    let _ = await (isClaudeDownloadsHost(e) ? hN.get : externalHttp.get)(e, {
+    let _ = await (isClaudeDownloadsHost(e) ? claudeDownloadsHttpClient.get : externalHttp.get)(e, {
         timeout: 120000,
         responseType: "arraybuffer",
         maxRedirects: 5,
@@ -43294,7 +43294,7 @@ async function EEr(e, t, r) {
       }),
       E = new Uint8Array(_.data);
     if (
-      (qE("mcpb", e, "success", performance.now() - o),
+      (logPluginRemoteFetch("mcpb", e, "success", performance.now() - o),
       (d = !0),
       await u2e(t, Buffer.from(E)),
       logForDebugging(`Downloaded ${E.length} bytes to ${t}`),
@@ -43303,7 +43303,7 @@ async function EEr(e, t, r) {
       r("Download complete");
     return E;
   } catch (p) {
-    if (!d) qE("mcpb", e, "failure", performance.now() - o, _N(p));
+    if (!d) logPluginRemoteFetch("mcpb", e, "failure", performance.now() - o, classifyNetworkErrorKind(p));
     let _ = l(p),
       E = Error(`Failed to download MCPB file from ${e}: ${_}`);
     throw (
@@ -52848,7 +52848,7 @@ import { homedir as Bqr } from "os";
 import * as Bb from "path";
 import { StringDecoder as Uqr } from "string_decoder";
 function fSe(e, t) {
-  return { cmd: qR(e) ?? e, args: t };
+  return { cmd: resolveExecutablePath(e) ?? e, args: t };
 }
 class z5t {
   config = void 0;
@@ -52898,14 +52898,14 @@ function jqr() {
     let { cmd: r } = fSe("rg", []);
     if (r !== "rg") return { mode: "system", command: r, args: [] };
   }
-  if (bc()) {
+  if (isBunStandaloneExecutable()) {
     let r = {
       mode: "embedded",
       command: process.execPath,
       args: ["--no-config"],
       argv0: "rg",
     };
-    if (qR(process.execPath)) return r;
+    if (resolveExecutablePath(process.execPath)) return r;
     let { cmd: o } = fSe("rg", []);
     if (o !== "rg") return { mode: "system", command: o, args: [] };
     return r;
@@ -54508,14 +54508,14 @@ function M6(e, t) {
   return /[\\/]$/.test(e.trim()) && !K$(Y$(t)) ? NN(t) : t;
 }
 function a3e(e) {
-  return el(e, ".claude", rL);
+  return el(e, ".claude", ATOMIC_WRITE_STAGING_DIR_NAME);
 }
 function P3t(e = !0) {
   let t = new Set();
   if ((t.add(a3e(he())), e)) t.add(a3e(Bw()));
-  (t.add(a3e(sn())), t.add(el(getClaudeConfigDir(), rL)));
+  (t.add(a3e(sn())), t.add(el(getClaudeConfigDir(), ATOMIC_WRITE_STAGING_DIR_NAME)));
   let r = getSettingsFilePathForSource("localSettings");
-  if (r) t.add(I_(bg(r), rL));
+  if (r) t.add(I_(bg(r), ATOMIC_WRITE_STAGING_DIR_NAME));
   return [...t];
 }
 function l3e(e) {
@@ -54581,7 +54581,7 @@ function D3t() {
   let e = F3t();
   if (!e.stagingDirGitignoreFired)
     ((e.stagingDirGitignoreFired = !0),
-      addGlobalGitignoreEntry(`.claude/${rL}/`, he()).then((t) => {
+      addGlobalGitignoreEntry(`.claude/${ATOMIC_WRITE_STAGING_DIR_NAME}/`, he()).then((t) => {
         if (!t.written) return;
         if (t.effective) logFeatureOk("gitignore_global_rule");
         else if (t.reason === "already_tracked")
@@ -54842,7 +54842,7 @@ function _oe(e) {
     let Rn = el(rG()),
       Ar = RS(Rn) ?? Rn,
       _o = Ar.normalize("NFC"),
-      Hs = pf(Ar) === pf(Rn) && pf(_o) === pf(el(rG()).normalize("NFC")),
+      Hs = canonicalizePathForComparison(Ar) === canonicalizePathForComparison(Rn) && canonicalizePathForComparison(_o) === canonicalizePathForComparison(el(rG()).normalize("NFC")),
       ys = (nl) => {
         (dn(nl, !1, ue),
           ue(el(nl, ".claude", "skills"), !1, !0),
@@ -54855,7 +54855,7 @@ function _oe(e) {
       ws = !1,
       _s = sn();
     for (;;) {
-      if ((ys(_s), pf(_s) === pf(_o))) {
+      if ((ys(_s), canonicalizePathForComparison(_s) === canonicalizePathForComparison(_o))) {
         if (((ws = !0), Hs)) break;
       }
       let nl = bg(_s);
@@ -54874,7 +54874,7 @@ function _oe(e) {
     if ((_u(sn()), !ws)) (ys(_o), _u(_o));
     let ff = findGitRoot(sn()),
       Nl = findCanonicalGitRoot(sn());
-    if (ff && Nl && pf(Nl) !== pf(ff)) ys(Nl);
+    if (ff && Nl && canonicalizePathForComparison(Nl) !== canonicalizePathForComparison(ff)) ys(Nl);
   }
   if (Me !== xe) {
     let Rn = xe.endsWith(Wk) ? xe : xe + Wk,
@@ -59256,7 +59256,7 @@ async function L4r({ fields: e, member: t, value: r }, o) {
 }
 var B4r = 30000,
   U4r = 8,
-  d_n = 64,
+  MAX_DEVICE_HOOKS_IN_HAND = 64,
   H4r = 1048576,
   j3e = 2000,
   g8t = 1000,
@@ -60401,7 +60401,7 @@ function createDeviceHookRequestServicer(e) {
           { kind: "answer", answer: dn }
         );
       }
-      if (t.size >= d_n) {
+      if (t.size >= MAX_DEVICE_HOOKS_IN_HAND) {
         e.debug(
           `[deviceHooks] ${MP(ve.requestId)}: too many requests in hand \u2014 refusing`,
         );
@@ -63201,7 +63201,7 @@ var oYe = String.raw`Pasted text|Image|Audio|\.\.\.Truncated text`,
   K5r = /\[(?:Pasted text|\.\.\.Truncated text) #\d+/,
   Y5r = new RegExp(String.raw`^(\/[^\s[]+)\[(?=(?:${oYe}) #\d+)`);
 var nYe = 65536,
-  X5r = 2 * Lrr;
+  X5r = 2 * MAX_SECRET_LENGTH;
 function CXt(e, t, { pastedTexts: r = [] } = {}) {
   if (r.some(rYe)) return !0;
   let o = e.trim();
@@ -63614,7 +63614,7 @@ function XXt(e) {
 }
 function f6r(e) {
   try {
-    let t = Is(e),
+    let t = jsonParseUntraced(e),
       r = d6r().safeParse(t);
     if (r.success)
       return { entry: r.data, droppedPasteRecords: p6r(t, r.data) };
@@ -66190,9 +66190,9 @@ function k3r(e) {
     r = findGitRoot(sn());
   if (!t || !r) return t;
   let o = findCanonicalGitRoot(e);
-  if (o && pf(o) === pf(r)) return t;
-  let d = pf(t),
-    p = pf(r);
+  if (o && canonicalizePathForComparison(o) === canonicalizePathForComparison(r)) return t;
+  let d = canonicalizePathForComparison(t),
+    p = canonicalizePathForComparison(r);
   if (d !== p && d.startsWith(p + b3r)) return r;
   return t;
 }
@@ -66206,8 +66206,8 @@ async function getProjectDirsUpToHome(e, t) {
     d = XYe(t),
     p = [];
   while (!0) {
-    if (pf(d) === pf(r)) break;
-    if ((p.push(VN(d, ".claude", e)), o && pf(d) === pf(o))) break;
+    if (canonicalizePathForComparison(d) === canonicalizePathForComparison(r)) break;
+    if ((p.push(VN(d, ".claude", e)), o && canonicalizePathForComparison(d) === canonicalizePathForComparison(o))) break;
     let C = _3r(d);
     if (C === d) break;
     d = C;
@@ -66247,7 +66247,7 @@ async function w3r(e, t, r) {
     p = VN(getManagedSettingsDirPath(), ".claude", e),
     _ = await getProjectDirsUpToHome(e, t),
     E = new Set(
-      await Promise.all(_.map(async (Ne) => pf(await GYe(Ne).catch(() => Ne)))),
+      await Promise.all(_.map(async (Ne) => canonicalizePathForComparison(await GYe(Ne).catch(() => Ne)))),
     ),
     C =
       e === "agents"
@@ -66258,13 +66258,13 @@ async function w3r(e, t, r) {
                 return await GYe(De).catch(() => De);
               }),
             ),
-          ).filter((Ne) => !E.has(pf(Ne)))
+          ).filter((Ne) => !E.has(canonicalizePathForComparison(Ne)))
         : [],
     I = findGitRoot(t),
     D = findCanonicalGitRoot(t);
   if (I && D && D !== I) {
-    let Ne = pf(VN(I, ".claude", e));
-    if (!_.some((He) => pf(He) === Ne)) {
+    let Ne = canonicalizePathForComparison(VN(I, ".claude", e));
+    if (!_.some((He) => canonicalizePathForComparison(He) === Ne)) {
       let He = VN(D, ".claude", e);
       if (!_.includes(He)) _.push(He);
     }
@@ -66855,7 +66855,7 @@ async function C8e(e, t, r) {
 async function Ake(e, t) {
   let r = await $3r(e);
   (await writeFileAtomicWithMkdir(t, r),
-    await Kl(e).catch((o) => {
+    await removeDirectoryRecursive(e).catch((o) => {
       logForDebugging(`Failed to remove ${e} after publishing its zip archive: ${l(o)}`, {
         level: "warn",
       });
@@ -66974,7 +66974,7 @@ async function Ike(e, t) {
     (writeDiagnosticsEvent("info", "plugins_sync_unzip_fallback", { code: r.code, verdict: o }),
       await aQt(t, { recursive: !0, force: !0 }),
       await extractZipFile(e, t, { skipEntry: (p) => p.split(/[\\/]/).some(isGitDirectoryName) }));
-  let d = await iXe(t);
+  let d = await resolvePluginRoot(t);
   if (await isBareGitRepoLayout(d)) return { ok: !1, reason: "bare_repo_layout" };
   return { ok: !0, root: d };
 }
@@ -68036,7 +68036,7 @@ function isPluginSyncAvailable(e) {
   return DQt(e) || Hxe();
 }
 function DQt(e) {
-  return a.CLAUDE_CODE_SYNC_PLUGINS || cJ(e);
+  return a.CLAUDE_CODE_SYNC_PLUGINS || isSessionRefsSyncEnabled(e);
 }
 function shouldStartPluginSync(e) {
   return DQt(e) && !HW();
@@ -68058,7 +68058,7 @@ function getOrStartPluginSync(e, t) {
 }
 function restartPluginSync(e, t) {
   return (
-    roe.of(e).discardInflight(),
+    sessionRefsManifestStore.of(e).discardInflight(),
     (e.pluginsSync.firstSyncPromise = (
       e.pluginsSync.firstSyncPromise ?? Promise.resolve(!1)
     )
@@ -68307,7 +68307,7 @@ async function PQt(e, t, r, o, d, p) {
   try {
     if (t.guard.refused()) return LANDING_ROOT_REFUSED;
     let D = Date.now(),
-      N = await EGt(r.pluginId, I, r.requestedVersion, {
+      N = await downloadOrganizationPlugin(r.pluginId, I, r.requestedVersion, {
         isBackground: !0,
         credentials: p,
       });
@@ -68458,7 +68458,7 @@ function cse(e, t, r, o) {
           type: r,
           source: d,
           plugin: t.name,
-          url: Lbn(t.pluginId, t.requestedVersion),
+          url: buildPluginDownloadUrl(t.pluginId, t.requestedVersion),
           details: o,
         }
       : { type: r, source: d, plugin: t.name, error: o },
@@ -68491,14 +68491,14 @@ async function U8e(e, t) {
     F = !1,
     U = () => ({ account_opt_in: N, duration_ms: Date.now() - o });
   try {
-    if (((N = Hxe()), _wt())) N = !0;
-    if (!isPluginSyncAvailable(e) || !lfe())
+    if (((N = Hxe()), refreshPluginsSyncEnabled())) N = !0;
+    if (!isPluginSyncAvailable(e) || !isPluginsSyncTierInPlay())
       return (
         writeDiagnosticsEvent("info", "plugins_sync_gate_closed"),
         logFeatureSad("plugins_sync_round", "gate_closed", U()),
         !1
       );
-    if (ywt())
+    if (isPluginSyncPolicyVerdictPending())
       return (
         writeDiagnosticsEvent("info", "plugins_sync_policy_verdict_pending"),
         logFeatureSad("plugins_sync_round", "policy_verdict_pending", U()),
@@ -68517,11 +68517,11 @@ async function U8e(e, t) {
     (writeDiagnosticsEvent("info", "plugins_sync_starting"), await ensurePluginSyncBucketRoot(e, V), (C = !0));
     let de = Date.now(),
       _e;
-    if (cJ(e)) {
+    if (isSessionRefsSyncEnabled(e)) {
       let [un, kn] = await Promise.all([
-        roe.of(e).listEntries("plugins"),
+        sessionRefsManifestStore.of(e).listEntries("plugins"),
         a.CLAUDE_CODE_SYNC_PLUGINS || Hxe()
-          ? pXe(e.host, { isBackground: !0, credentials: t })
+          ? listOrganizationPlugins(e.host, { isBackground: !0, credentials: t })
           : null,
       ]);
       if (!un.success) _e = un;
@@ -68537,10 +68537,10 @@ async function U8e(e, t) {
             $Qt,
           ),
         };
-    } else _e = await pXe(e.host, { isBackground: !0, credentials: t });
+    } else _e = await listOrganizationPlugins(e.host, { isBackground: !0, credentials: t });
     if (((_ = Date.now() - de), !_e.success)) {
       let un = p(),
-        kn = mwt(_e);
+        kn = getSyncFailureTelemetry(_e);
       return (
         writeDiagnosticsEvent("warn", "plugins_sync_list_failed", {
           duration_ms: Date.now() - o,
@@ -68950,7 +68950,7 @@ async function HQt(e) {
   return r === null ? null : { round: t, manifest: r };
 }
 async function prunePluginsForClosedGate() {
-  if (!_Zn()) return !1;
+  if (!isPluginsSyncDisabledBySettings()) return !1;
   if (_ae()) return (writeDiagnosticsEvent("info", "plugins_sync_prune_deferred_loaded"), !1);
   let e = await z8e();
   if (!e) return !1;
@@ -69001,7 +69001,7 @@ async function prunePluginsForClosedGate() {
   );
 }
 async function completeDeferredPluginRemovals() {
-  if (_ae() || Mbn()) return !1;
+  if (_ae() || isPluginSyncForcedByEnv()) return !1;
   let e = await z8e();
   if (!e) return !1;
   let t = 0,
@@ -69230,7 +69230,7 @@ function zQt(e) {
 }
 async function fetchClaudeAiMarketplaceCatalog({ host: e, etag: t, credentials: r }) {
   try {
-    await sJ(e, void 0, r);
+    await ensurePluginsOAuthScope(e, void 0, r);
     let o = await httpClient.get(jYr, {
       auth: "teleport-org",
       isBackground: !0,
@@ -69326,7 +69326,7 @@ async function rwe(e) {
   );
 }
 async function listClaudeAiMarketplaces(e) {
-  if (!w1e()) return null;
+  if (!canSyncPluginsFromClaudeAi()) return null;
   let t = await claudeAiCatalogCacheStore.of(B().host).read(`${LP()}|${K3()}`, async () => {
     let E = await resolveSkillBucketId(e);
     if (E === null || !(await rwe(E))) return null;
@@ -69506,7 +69506,7 @@ async function a8r({
 }) {
   if (!isValidMarketplaceId(e)) return { status: "failed", code: "bad_marketplace_id" };
   try {
-    await sJ(B().host, void 0, r);
+    await ensurePluginsOAuthScope(B().host, void 0, r);
     let d = [],
       p,
       _;
@@ -69600,7 +69600,7 @@ async function removeClaudeAiCatalogCache(e, t) {
   await JYr(QQt(getPluginSyncBucketDir(e), t), { force: !0 }).catch(() => {});
 }
 async function iwe(e, t) {
-  if (!w1e()) return { kind: "inert" };
+  if (!canSyncPluginsFromClaudeAi()) return { kind: "inert" };
   let r = await resolveSkillBucketId(t);
   if (r === null) return { kind: "no_identity" };
   if (getOrgIdFromBucketId(r) !== e.organizationUuid.toLowerCase())
@@ -70153,12 +70153,12 @@ async function dJt(e, t, r, o) {
           "This plugin is listed on claude.ai but cannot be installed (no published version, or its content scan blocks it).",
           "not_installable",
         );
-      let d = `${r}${owt}`,
+      let d = `${r}${PLUGIN_TEMP_EXTRACT_SUFFIX}`,
         p = uJt(d, "archive.zip"),
         _ = uJt(d, "tree");
       try {
-        (await T8r(d, { recursive: !0 }), await sJ(B().host, void 0, o));
-        let E = await EGt(e.pluginId, p, e.version, {
+        (await T8r(d, { recursive: !0 }), await ensurePluginsOAuthScope(B().host, void 0, o));
+        let E = await downloadOrganizationPlugin(e.pluginId, p, e.version, {
           isBackground: !1,
           credentials: o,
         });
@@ -70181,7 +70181,7 @@ async function dJt(e, t, r, o) {
             "The plugin archive from claude.ai was refused: it carries a git repository layout.",
             "extract_refused",
           );
-        if (!(await nwt(I.root)))
+        if (!(await hasPluginContentEntries(I.root)))
           throw new vG(
             "The plugin archive from claude.ai has no plugin content at its root. It was not installed.",
             "no_plugin_content",
@@ -70425,7 +70425,7 @@ function H8r(e, t) {
       ...t,
       source: {
         ...p,
-        ...(d && { headers: pwt(d, `--add-dir marketplace ${removeInvisibleChars(e)}`) }),
+        ...(d && { headers: sanitizePluginHeaders(d, `--add-dir marketplace ${removeInvisibleChars(e)}`) }),
       },
     };
   }
@@ -70454,7 +70454,7 @@ function H8r(e, t) {
             return {
               ...p,
               ...(d && {
-                headers: pwt(
+                headers: sanitizePluginHeaders(
                   d,
                   `--add-dir marketplace ${removeInvisibleChars(e)} entry ${removeInvisibleChars(p.name)}`,
                 ),
@@ -70827,7 +70827,7 @@ async function gwe(e, t) {
             ),
             !1
           );
-        return (EJt(r, I, void 0), await Whe(I), await writeFileAtomic(I, await n9e()), !0);
+        return (EJt(r, I, void 0), await removePathRecursively(I), await writeFileAtomic(I, await n9e()), !0);
       } catch (N) {
         let F = A(N);
         if (
@@ -70873,7 +70873,7 @@ async function gwe(e, t) {
       let C = await n9e(),
         I = { mode: 438 & ~process.umask() },
         D = await t.write(E, C, I);
-      if (!D.ok) (await Whe(p), (D = await t.write(E, C, I)));
+      if (!D.ok) (await removePathRecursively(p), (D = await t.write(E, C, I)));
       if (!D.ok)
         return (logForDebugging(`Failed to write ${IN_USE_MARKER_FILENAME} marker: ${e}: ${describeStorageError(D.error)}`), !1);
       return !0;
@@ -70897,7 +70897,7 @@ async function gwe(e, t) {
         }
       }
     }
-    return (await Whe(p), await writeFileAtomic(p, await n9e()), !0);
+    return (await removePathRecursively(p), await writeFileAtomic(p, await n9e()), !0);
   } catch (C) {
     return (logForDebugging(`Failed to write ${IN_USE_MARKER_FILENAME} marker: ${e}: ${C}`), !1);
   }
@@ -70956,7 +70956,7 @@ async function HJt(e, t) {
     });
     if (!_.ok)
       try {
-        (await Whe(r),
+        (await removePathRecursively(r),
           (_ = await t.write(d, new Date().toISOString(), {
             publishDiscipline: "inPlace",
           })));
@@ -70967,7 +70967,7 @@ async function HJt(e, t) {
     return;
   }
   try {
-    (await Whe(r), await cXt(r, new Date().toISOString()));
+    (await removePathRecursively(r), await overwriteFileContents(r, new Date().toISOString()));
   } catch (_) {
     logForDebugging(`Failed to stamp ${fwe}: ${_}`);
   }
@@ -71012,7 +71012,7 @@ async function qP(e, t, r) {
 }
 async function jY(e) {
   try {
-    if ((await cv(e)) === "directory") return !0;
+    if ((await tryRemoveFileOrEmptyDirectory(e)) === "directory") return !0;
     return (
       logForDebugging(
         `Removed a non-directory ${IN_USE_MARKER_FILENAME} at ${e}; the version reads unpinned until a session marks it again`,
@@ -71039,7 +71039,7 @@ async function CJt(e, t) {
   try {
     let r = t ?? (await GY(e)).mtimeMs;
     if (!r9e(r)) return !1;
-    if ((await cv(e)) === "directory") await Kl(e);
+    if ((await tryRemoveFileOrEmptyDirectory(e)) === "directory") await removeDirectoryRecursive(e);
     return !0;
   } catch {
     return !1;
@@ -71095,7 +71095,7 @@ async function xJt(e, t) {
       o = !0;
       continue;
     }
-    await Kl(p);
+    await removeDirectoryRecursive(p);
   }
   return o;
 }
@@ -71673,7 +71673,7 @@ async function Nse(e, t, r = {}) {
       for (let Qt of gn) {
         let wn;
         try {
-          wn = await eae(It, Qt);
+          wn = await getDirentFileInfo(It, Qt);
         } catch (un) {
           if (A(un) !== "ENOENT") ve(h0(E, Y_(It, Qt.name)), un);
           continue;
@@ -71767,7 +71767,7 @@ async function v9r(e, t, r, o = !1) {
   if (r === "install") {
     if (!(await d9e(t, LINKS_MATERIALIZED_MARKER_FILENAME))) d = !1;
     if (o) {
-      if ((await iU(cv(Y_(t, IN_USE_MARKER_FILENAME)))) === JN) d = !1;
+      if ((await iU(tryRemoveFileOrEmptyDirectory(Y_(t, IN_USE_MARKER_FILENAME)))) === JN) d = !1;
     } else if (!(await d9e(t, IN_USE_MARKER_FILENAME))) d = !1;
   }
   let p = await iU(KY(t));
@@ -71824,7 +71824,7 @@ async function v9r(e, t, r, o = !1) {
   return d;
 }
 async function c9e(e) {
-  let t = await iU(cv(e));
+  let t = await iU(tryRemoveFileOrEmptyDirectory(e));
   return t !== JN && t !== "directory";
 }
 async function u9e(e, t) {
@@ -72030,7 +72030,7 @@ async function XJt(e) {
 async function R9r(e) {
   let t = Y_(e, IN_USE_MARKER_FILENAME);
   try {
-    let r = await cv(t);
+    let r = await tryRemoveFileOrEmptyDirectory(t);
     if (r === "removed")
       logForDebugging(`materializeLinks: ${e}: removed ${IN_USE_MARKER_FILENAME}: not a directory of markers`);
     return r;
@@ -72149,7 +72149,7 @@ async function P9r(e) {
     if (!(await O9r(p, d.name, E))) continue;
     let I;
     try {
-      I = E === "directory" ? await M9r(p) : await cv(p);
+      I = E === "directory" ? await M9r(p) : await tryRemoveFileOrEmptyDirectory(p);
     } catch (D) {
       let N = A(D);
       if (N === "ENOTDIR") return;
@@ -72217,7 +72217,7 @@ async function N9r(e, t) {
   try {
     let r = await dy(t, { bigint: !0 });
     if (!r.isSymbolicLink() && r.isDirectory() && (await NP(e, IN_USE_MARKER_FILENAME))) return r;
-    let o = await cv(t);
+    let o = await tryRemoveFileOrEmptyDirectory(t);
     return (
       logForDebugging(
         `materializeLinks: ${e}: ${IN_USE_MARKER_FILENAME} re-screened before listing: no longer a real directory (${o === "directory" ? "left, a non-empty directory" : o})`,
@@ -72449,7 +72449,7 @@ async function Use(e) {
         if (!C.isDirectory()) await pve(E).catch(() => {});
         return;
       }
-      await Kl(E).catch(() => {});
+      await removeDirectoryRecursive(E).catch(() => {});
     }),
   );
 }
@@ -72496,7 +72496,7 @@ async function i8(e) {
       if (p === IN_USE_MARKER_FILENAME) {
         let _ = await VP(d).catch(() => null);
         if (_ !== null && !_.isDirectory()) {
-          if ((await cv(d)) === "directory") return "held";
+          if ((await tryRemoveFileOrEmptyDirectory(d)) === "directory") return "held";
         } else {
           if (_ !== null && !(await Lse(d, _))) await j9r(d);
           await m9e(d);
@@ -72507,12 +72507,12 @@ async function i8(e) {
           throw E;
         });
         if (_ !== null && (await Lse(d, _))) {
-          if ((await cv(d)) === "directory") return "held";
+          if ((await tryRemoveFileOrEmptyDirectory(d)) === "directory") return "held";
         } else if (p === "node_modules") {
           let E = buildTempFilePath(d);
-          (await renameWithRetry(d, E), await Kl(E));
-        } else await Kl(d);
-      } else if ((await cv(d)) === "directory") return "held";
+          (await renameWithRetry(d, E), await removeDirectoryRecursive(E));
+        } else await removeDirectoryRecursive(d);
+      } else if ((await tryRemoveFileOrEmptyDirectory(d)) === "directory") return "held";
     } catch (_) {
       let E = A(_);
       if (E === "ENOTEMPTY" || E === "EEXIST") return "held";
@@ -72548,7 +72548,7 @@ async function tZt(e) {
   );
 }
 async function h9e(e) {
-  await Kl(e).catch(() => {});
+  await removeDirectoryRecursive(e).catch(() => {});
 }
 async function _0(e, t) {
   let r = y9e(t);
@@ -73029,7 +73029,7 @@ function resolvePluginDependencyClosure(e, t) {
 }
 async function V9r(e) {
   try {
-    return !!(await ja(e));
+    return !!(await resolveExecutablePathAsync(e));
   } catch {
     return !1;
   }
@@ -74944,25 +74944,25 @@ function refreshSkillsSyncEnabled() {
   return (fHt(e), e);
 }
 function refreshSkillsSyncVetoed() {
-  mHt(AGt(Pve));
+  mHt(isSyncSettingVetoed(Pve));
 }
 function isSkillsSyncVetoed() {
   return (invalidateAllSettings(), refreshSkillsSyncVetoed(), Nb());
 }
 function Gse() {
-  return a.CLAUDE_CODE_SYNC_SKILLS || a.CLAUDE_CODE_SYNC_SESSION_REFS || hwt();
+  return a.CLAUDE_CODE_SYNC_SKILLS || a.CLAUDE_CODE_SYNC_SESSION_REFS || hasClaudeAiAccountAuth();
 }
 function isSkillsSyncTierInPlay() {
   return !isRestrictedToPluginOnly("skills") && !isCustomizationDisabled("skills") && isSettingsSourceEnabled("userSettings");
 }
 function isSkillsSyncPolicyVerdictPending() {
-  return vGt(Pve);
+  return isSyncPolicyVerdictPending(Pve);
 }
 function jXr() {
-  return CGt(Pve);
+  return isSyncSettingEnabled(Pve);
 }
 function isSkillsSyncDisabledBySettings() {
-  return RGt(Pve);
+  return isSyncSettingDisabledBySettings(Pve);
 }
 import { basename as WXr, join as GXr } from "path";
 var skillEntrySchema = createLazyValue(() =>
@@ -75804,7 +75804,7 @@ async function KZt(e) {
 }
 async function qZt(e, t) {
   let r,
-    o = isHoverRestEnabled() && t !== void 0 ? jzt(VG(e, MANIFEST_FILE_NAME)) : null;
+    o = isHoverRestEnabled() && t !== void 0 ? toUserSkillsStorageKey(VG(e, MANIFEST_FILE_NAME)) : null;
   if (t !== void 0 && o !== null) {
     let C = await t.read([o]);
     if (!C.ok) return "claim-all";
@@ -76278,7 +76278,7 @@ function ien() {
     Zse(),
     getClaudeConfigDir(),
     getSecureStorageDir(),
-    dXt(),
+    getDefaultGlobalClaudeFilePath(),
     getGlobalClaudeFile(),
     a.CLAUDE_CODE_HOST_CREDS_FILE ?? "",
     a.TMPDIR ?? "",
@@ -76286,7 +76286,7 @@ function ien() {
 }
 var R7r = rs(() => {
     let e = g8(),
-      t = dedupe([Gve(dXt()), Zse()]);
+      t = dedupe([Gve(getDefaultGlobalClaudeFilePath()), Zse()]);
     return ZN([
       ...dSe(),
       ...e.map((r) => A0(r, P6)),
@@ -77885,7 +77885,7 @@ class Uen {
     let t = JQr.find((d) => e.startsWith(d)),
       r = t ? e.slice(t.length) : e,
       o = t !== void 0 && ZQr.test(r) ? r.slice(1) : r;
-    return pf(o);
+    return canonicalizePathForComparison(o);
   }
   async beforeFileEdited(e) {
     if (
@@ -78027,7 +78027,7 @@ class Uen {
 var lspDiagnosticsService = new Gt(() => new Uen());
 function lCe(e) {
   let t = e.range;
-  return Tc([
+  return jsonStringifyUntraced([
     e.message,
     e.severity,
     e.source,
@@ -78544,7 +78544,7 @@ async function Zen(e, t) {
     o = !1;
   try {
     let { enabled: d, errors: p } = await loadAllPluginsCacheOnly(e);
-    if (p.some($J)) o = !0;
+    if (p.some(isSignificantPluginError)) o = !0;
     let _ = await Promise.all(
       d.map(async (E) => {
         let C = [];
@@ -80373,14 +80373,14 @@ function DJr(e) {
   else r.push(r.pop().slice(0, -1));
   return r;
 }
-function Lwe() {
+function isIdleAmberFinchEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_idle_amber_finch", !1);
 }
-function QGn() {
+function isQuietSlateWrenEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_quiet_slate_wren", !1);
 }
 function shouldShowUpgradeCommand() {
-  return !Lwe() && !a.DISABLE_UPGRADE_COMMAND && getSubscriptionType() !== "enterprise";
+  return !isIdleAmberFinchEnabled() && !a.DISABLE_UPGRADE_COMMAND && getSubscriptionType() !== "enterprise";
 }
 var NJr = createLazyValue(() =>
   nt({
@@ -83996,7 +83996,7 @@ var FileEditTool = buildTool({
     if (!F || F.isPartialView) {
       let de = getCanonicalName(Bd(t)),
         _e = getModelBucketForAnalytics(de),
-        Se = !FYe(de, t.remoteCall) && readAutoAllowedForMutation(EDIT_TOOL_NAME, _, t, getToolPermissionContext(t));
+        Se = !requiresPreReadGuard(de, t.remoteCall) && readAutoAllowedForMutation(EDIT_TOOL_NAME, _, t, getToolPermissionContext(t));
       if (
         (logEvent("tengu_edit_tool_not_read_hypothetical", {
           wouldHaveResult: vnn(r7e(N, d, o)),
@@ -84175,7 +84175,7 @@ async function geo(e, t, r) {
               lastRead: vt,
               oldString: F,
               replaceAll: N,
-              preReadGuard: FYe(
+              preReadGuard: requiresPreReadGuard(
                 getCanonicalName(Bd({ options: o, permissionLayers: d })),
                 t.remoteCall,
               ),
@@ -86883,7 +86883,7 @@ function gAe(e, t, r, o = "api") {
   let d = typeof t === "string" ? t.length : void 0,
     p = Vrn(o);
   if (p === !1) return { gzip: !1, reason: "env_off", bodyChars: d };
-  if (!Hx()) return { gzip: !1, reason: "not_bun_runtime", bodyChars: d };
+  if (!isRunningWithBun()) return { gzip: !1, reason: "not_bun_runtime", bodyChars: d };
   if (d === void 0)
     return { gzip: !1, reason: "non_string_body", bodyChars: d };
   if (d < Kto(o)) return { gzip: !1, reason: "below_min_size", bodyChars: d };
@@ -92181,7 +92181,7 @@ async function Jro(e) {
   if (!e || e.includes("/") || e.includes("\\")) return null;
   if (e.includes("..")) return null;
   if (e.startsWith("-") && e !== "-") return null;
-  if (Hx() && bc()) return null;
+  if (isRunningWithBun() && isBunStandaloneExecutable()) return null;
   try {
     let t = await import(`@withfig/autocomplete/build/${e}.js`);
     return t.default || t;
@@ -93280,7 +93280,7 @@ async function Voo() {
   let t = a.SHELL,
     r = t && (t.includes("bash") || t.includes("zsh")),
     o = t?.includes("bash"),
-    [d, p] = await Promise.all([ja("zsh"), ja("bash")]),
+    [d, p] = await Promise.all([resolveExecutablePathAsync("zsh"), resolveExecutablePathAsync("bash")]),
     _ = ["/bin", "/usr/bin", "/usr/local/bin", "/opt/homebrew/bin"],
     C = (o ? ["bash", "zsh"] : ["zsh", "bash"]).flatMap((D) =>
       _.map((N) => `${N}/${D}`),
@@ -95956,7 +95956,7 @@ var WriteTool = buildTool({
     if (!D || D.isPartialView) {
       let F = getCanonicalName(Bd(t)),
         U = getModelBucketForAnalytics(F),
-        V = !D && !$in(d) && !FYe(F, t.remoteCall) && readAutoAllowedForMutation(WRITE_TOOL_NAME, d, t, getToolPermissionContext(t));
+        V = !D && !$in(d) && !requiresPreReadGuard(F, t.remoteCall) && readAutoAllowedForMutation(WRITE_TOOL_NAME, d, t, getToolPermissionContext(t));
       if (
         (logEvent("tengu_write_tool_not_read_hypothetical", {
           wouldHaveResult:
@@ -96049,7 +96049,7 @@ async function Jso({ file_path: e, content: t }, r, o) {
             fullFilePath: N,
             diskContent: Me.content,
             lastRead: _.get(N),
-            preReadGuard: FYe(
+            preReadGuard: requiresPreReadGuard(
               getCanonicalName(Bd({ options: d, permissionLayers: p })),
               r.remoteCall,
             ),
@@ -97233,7 +97233,7 @@ function Aio(e, t) {
     if (!I.startsWith("{")) continue;
     let D;
     try {
-      D = Is(I);
+      D = jsonParseUntraced(I);
     } catch {
       continue;
     }
@@ -97703,7 +97703,7 @@ class Jin {
   unauthenticatedHosts = new Set();
   okEmitted = !1;
   isGlabOnPath() {
-    if (this.glabOnPath === void 0) this.glabOnPath = qR("glab") !== null;
+    if (this.glabOnPath === void 0) this.glabOnPath = resolveExecutablePath("glab") !== null;
     return this.glabOnPath;
   }
   emitOkOnce() {
@@ -97837,7 +97837,7 @@ async function Hio(e) {
       ? process.env.GH_ENTERPRISE_TOKEN || process.env.GITHUB_ENTERPRISE_TOKEN
       : void 0;
   if (t) return { kind: "token", token: t };
-  if (!(await ja("gh"))) return { kind: "gh-missing" };
+  if (!(await resolveExecutablePathAsync("gh"))) return { kind: "gh-missing" };
   let { stdout: o, code: d } = await execFileNoThrow(
     "gh",
     ["auth", "token", "--hostname", e],
@@ -111583,7 +111583,7 @@ function iyn(e) {
   for (let r of Dmo) if (r.pattern.test(t)) return r;
   return null;
 }
-function mzn(e) {
+function getPowerShellDestructiveCommandWarning(e) {
   return iyn(e)?.warning ?? null;
 }
 function getDestructiveCommandCategory(e) {
@@ -126213,7 +126213,7 @@ function uxn(e, t, r) {
       p += 1;
       continue;
     }
-    let D = Tc(I).length;
+    let D = jsonStringifyUntraced(I).length;
     d += D;
     let N =
       "name" in I && typeof I.name === "string" ? Hwo(I.name, r) : S("other");
@@ -127386,7 +127386,7 @@ async function Nxn({
       if (N !== null) return await V("parse_failed");
       let ue;
       try {
-        ue = Is(re);
+        ue = jsonParseUntraced(re);
       } catch {
         return await V("parse_failed");
       }
@@ -127474,7 +127474,7 @@ async function Lxn({
       if (C !== null) return { ok: !1, reason: "parse_failed" };
       let N;
       try {
-        N = Is(D);
+        N = jsonParseUntraced(D);
       } catch {
         return { ok: !1, reason: "parse_failed" };
       }
@@ -133766,7 +133766,7 @@ var Xvo = createLazyValue(() =>
 function CRn(e) {
   if (getAPIProvider() !== "firstParty") return !1;
   if (!a.CLAUDE_CODE_WEBFETCH_USE_CCR_PROXY) return !1;
-  return !!cfe(e);
+  return !!getCcrSessionId(e);
 }
 var Qvo = 4,
   Jvo = 1000,
@@ -133803,7 +133803,7 @@ async function vit({
     let re = getSessionAuthHeaders();
     try {
       F = await at.post(
-        `${D}/v1/code/sessions/${encodeURIComponent(cfe(e))}/worker/${t}`,
+        `${D}/v1/code/sessions/${encodeURIComponent(getCcrSessionId(e))}/worker/${t}`,
         p,
         {
           signal: E,
@@ -143446,7 +143446,7 @@ function resolveSubagentModel(e, t, r, o, d) {
     I = (F, U, V = F) => {
       let re = stepDownRestrictedFamilyAliasPick(F);
       cDo(F, re !== null);
-      let ue = re !== null ? (U ? alt(ub(re)) : re) : C();
+      let ue = re !== null ? (U ? alt(asModelId(re)) : re) : C();
       if (strip1mSuffix(parseUserSpecifiedModel(V)).toLowerCase() !== strip1mSuffix(parseUserSpecifiedModel(ue)).toLowerCase())
         d?.(F, ue, re !== null ? "family_step_down" : "parent_inherit");
       return ue;
@@ -143526,7 +143526,7 @@ function cDo(e, t) {
 }
 function alt(e) {
   let r = getCanonicalName(e).includes("opus") && supports1mContextBeta(e);
-  if (isOpus1mMergeEnabled() && !hasLongContextSuffix(e) && r) return ub(e + "[1m]");
+  if (isOpus1mMergeEnabled() && !hasLongContextSuffix(e) && r) return asModelId(e + "[1m]");
   return e;
 }
 function modelAliasMatchesFamily(e, t) {
@@ -146453,7 +146453,7 @@ function hardenedSpawnEnv(e, t) {
     N = d.flatMap(([V, re]) => {
       let ue = r[V];
       if (ue === void 0 || ue === "") return [];
-      let de = sLo(re, ue).map((Se) => uXt(Se)),
+      let de = sLo(re, ue).map((Se) => normalizePathEntry(Se)),
         _e = de.filter((Se) => !D(Se, re));
       if (_e.length === de.length) return [];
       return iLo.includes(re)
@@ -146594,7 +146594,7 @@ function bLo(e, t, r) {
     d = new Map();
   return e
     .split(vq)
-    .map((p) => uXt(p))
+    .map((p) => normalizePathEntry(p))
     .filter((p) => p !== "" && pI(p) && Fce(p, o, r, d))
     .join(vq);
 }
@@ -146745,7 +146745,7 @@ class BuilderGitProbes {
     let t = getEnvVarCaseInsensitive(e, "PATH") ?? "",
       r = this.#e.get(t);
     if (r !== void 0) return r;
-    let o = Rxt("git", t);
+    let o = resolveCommandInPath("git", t);
     if (o !== null) this.#e.set(t, o);
     return o;
   }
@@ -163960,7 +163960,7 @@ async function zUn(e) {
   await writeFileAndFlush(t, jsonStringify(e, null, 2), {
     encoding: "utf-8",
     mode: 420,
-    stagingDir: sue(getCwd(), ".claude", rL),
+    stagingDir: sue(getCwd(), ".claude", ATOMIC_WRITE_STAGING_DIR_NAME),
   });
 }
 function aFe(e) {
@@ -169280,17 +169280,17 @@ var lue = (e) => `${e}\\`;
 function ZHn(e) {
   let t = 0,
     r = "(?:^|[\\r\\n\\v\\f\\u0085\\u2028\\u2029\\u001c-\\u001e])",
-    o = Age(WHITESPACE_CHARS_CLASS, ++t),
-    d = Age(WHITESPACE_CHARS_CLASS, ++t),
+    o = buildCharClassCaptureBackref(WHITESPACE_CHARS_CLASS, ++t),
+    d = buildCharClassCaptureBackref(WHITESPACE_CHARS_CLASS, ++t),
     p = [...e]
-      .map((_, E) => (E === 0 ? "" : Kvt(++t)) + `[${buildLatinLetterConfusableClass(_)}]`)
+      .map((_, E) => (E === 0 ? "" : buildNonPrintingCaptureBackref(++t)) + `[${buildLatinLetterConfusableClass(_)}]`)
       .join("");
   return new RegExp(`${r}${o}[${OPEN_BRACKET_CHARS_CLASS}]${d}${p}(?![\\p{L}\\p{N}_])`, "giu");
 }
 function H2o() {
   let e = 0,
     t = "(?:^|[\\r\\n\\v\\f\\u0085\\u2028\\u2029\\u001c-\\u001e])",
-    r = () => Age(WHITESPACE_CHARS_CLASS, ++e),
+    r = () => buildCharClassCaptureBackref(WHITESPACE_CHARS_CLASS, ++e),
     o = r(),
     d = [...AGENT_STOPPED_NOTE_PREFIX.trimEnd()]
       .map((p, _, E) =>
@@ -169298,7 +169298,7 @@ function H2o() {
           ? `[\\r\\n]{0,2}${r()}`
           : p === ":"
             ? `${r()}[${COLON_CHARS_CLASS}]`
-            : (/[a-z]/i.test(E[_ - 1] ?? "") ? Kvt(++e) : "") +
+            : (/[a-z]/i.test(E[_ - 1] ?? "") ? buildNonPrintingCaptureBackref(++e) : "") +
               `[${buildLatinLetterConfusableClass(p.toLowerCase())}]`,
       )
       .join("");
@@ -173763,7 +173763,7 @@ function shouldSyncSkills(e) {
   return j1n(e) || Hrt();
 }
 function j1n(e) {
-  return !!a.CLAUDE_CODE_SYNC_SKILLS || cJ(e);
+  return !!a.CLAUDE_CODE_SYNC_SKILLS || isSessionRefsSyncEnabled(e);
 }
 function isSkillsSyncEnabled(e) {
   return j1n(e) && !Nb();
@@ -176750,7 +176750,7 @@ function MQ() {
 class Ljn {
   pending;
   isAvailable() {
-    return (this.pending ??= ja("gh").then((e) => e !== null));
+    return (this.pending ??= resolveExecutablePathAsync("gh").then((e) => e !== null));
   }
   reset() {
     this.pending = void 0;
@@ -179266,7 +179266,7 @@ var bfe = buildTool({
         },
       };
     }
-    if (rbn() && t.agentId === void 0)
+    if (isAsyncReplDispatchEnabled() && t.agentId === void 0)
       return getAsyncEvalDispatcher(t).run(MAIN_AGENT_ID, () => Uut(e, t, r, o, d, "withResult"));
     return Uut(e, t, r, o, d, "withResult");
   },
@@ -179356,7 +179356,7 @@ var bfe = buildTool({
 });
 function Mqo(e) {
   return (
-    rbn() &&
+    isAsyncReplDispatchEnabled() &&
     e.agentId === void 0 &&
     getToolPermissionContext(e).mode === "auto" &&
     e.getAppState().toolPermissionContext?.mode === "auto"
@@ -180022,11 +180022,11 @@ async function C$e(e, t) {
   }
   if (e.type === "mcp_task") {
     let d = Math.max(0, (e.endTime ?? Date.now()) - e.startTime),
-      p = rg(e.statusMessage),
+      p = sanitizeSingleLineDisplayText(e.statusMessage),
       _ = e.pollIntervalMs === void 0 ? void 0 : y7e(e.pollIntervalMs),
       E = [
-        `server: ${escapeHtmlText(rg(e.serverName) ?? "")}`,
-        `tool: ${escapeHtmlText(rg(e.toolName) ?? "")}`,
+        `server: ${escapeHtmlText(sanitizeSingleLineDisplayText(e.serverName) ?? "")}`,
+        `tool: ${escapeHtmlText(sanitizeSingleLineDisplayText(e.toolName) ?? "")}`,
         e.mcpTaskId !== e.id
           ? `server task id: ${escapeHtmlText(sanitizeMcpTaskId(e.mcpTaskId))}`
           : void 0,
@@ -180231,7 +180231,7 @@ var qqo = createLazyValue(() =>
 function wWn(e) {
   if (getAPIProvider() !== "firstParty") return !1;
   if (!a.CLAUDE_CODE_WEBSEARCH_USE_CCR_PROXY) return !1;
-  return !!cfe(e);
+  return !!getCcrSessionId(e);
 }
 async function EWn(e, t, r, o) {
   let d = await vit({
@@ -181539,7 +181539,7 @@ function F$e(e) {
 }
 var HWn = GQ;
 function FI(...e) {
-  return ps(e.filter(Boolean).join(" "));
+  return sanitizeTextForDisplay(e.filter(Boolean).join(" "));
 }
 function GWn(e) {
   let t = Buffer.byteLength(e, "utf8");
@@ -183507,7 +183507,7 @@ function transcriptCorroboratesDraftIdentity(e, t) {
     if (!o) continue;
     let d;
     try {
-      d = Is(o);
+      d = jsonParseUntraced(o);
     } catch {
       continue;
     }
@@ -183656,7 +183656,7 @@ async function listQueuedFeedbackDrafts(e, t) {
         continue;
       }
       using de = startSlowOperationSpan`listFeedbackDrafts parse(${ue.length})`;
-      let _e = Is(ue.toString("utf8")),
+      let _e = jsonParseUntraced(ue.toString("utf8")),
         Se = kKo().safeParse(_e);
       if (!Se.success) {
         let ve = _e?.draft_id;
@@ -194371,7 +194371,7 @@ function aXo(e) {
 }
 function lXo(e) {
   return (
-    $J(e) ||
+    isSignificantPluginError(e) ||
     (e.type === "path-not-found" && e.plugin === void 0) ||
     e.type === "marketplace-load-failed" ||
     e.type === "marketplace-not-found" ||
@@ -199580,7 +199580,7 @@ async function NJn(e, t) {
   }
 }
 async function lQo(e, t, r) {
-  if (qr(e) !== e) return;
+  if (redactSecretsFromText(e) !== e) return;
   let o = getJobDir(getOwnJobShortId());
   invalidateJobStateCache(o);
   let d = await readJobState(o, r);
@@ -212313,7 +212313,7 @@ async function markVersionOrphaned(e, t) {
   }
   try {
     let p = Ypt(r);
-    (await Whe(p), await cXt(p, `${Date.now()}`));
+    (await removePathRecursively(p), await overwriteFileContents(p, `${Date.now()}`));
   } catch (p) {
     logForDebugging(`Failed to write .orphaned_at: ${r}: ${p}`);
   }
@@ -212350,7 +212350,7 @@ async function sweepOrphanedPluginVersions(e) {
       ),
     );
     for (let C of await Vpt(t, e, t, d)) {
-      let I = yGt.exec(C);
+      let I = PLUGIN_TEMP_DIR_PATTERN.exec(C);
       if (I) {
         let N = Date.now() - Number(I[1]);
         if (
@@ -212368,7 +212368,7 @@ async function sweepOrphanedPluginVersions(e) {
           let V = mK(F, U);
           if (o.keys.has(toCaseFoldedPath(V)) || o.keys.has(toCaseFoldedPath($b(V, { foldCase: !0 }))))
             continue;
-          let re = cZn.exec(U);
+          let re = LINKING_STAGING_DIR_PATTERN.exec(U);
           if (re && (await Tts(V, Number(re[1])))) continue;
           await wts(V, p, e);
         }
@@ -212450,7 +212450,7 @@ async function wts(e, t, r) {
       }
       if (isNonRegularPathErrno("telemetryCode" in E.error ? E.error.telemetryCode : void 0)) {
         try {
-          if (!(await r.delete(_)).ok) await Whe(o);
+          if (!(await r.delete(_)).ok) await removePathRecursively(o);
           await markVersionOrphaned(e, r);
         } catch (C) {
           logForDebugging(`Failed to replace a non-regular ${ORPHANED_AT_MARKER_FILENAME}: ${e}: ${C}`);
@@ -212509,7 +212509,7 @@ async function Unr(e) {
       (r) =>
         r.isDirectory() ||
         r.isSymbolicLink() ||
-        vxt(r) ||
+        hasUnknownFileType(r) ||
         (r.isFile() && /\.zip$/i.test(r.name)),
     )
   ) {
@@ -212519,7 +212519,7 @@ async function Unr(e) {
     return;
   }
   try {
-    await Kl(e);
+    await removeDirectoryRecursive(e);
   } catch (r) {
     logForDebugging(`Failed to remove empty dir: ${e}: ${r}`);
   }
@@ -212568,7 +212568,7 @@ async function Ets(e) {
       r = [];
     for (let o of t)
       try {
-        if ((await jhe(e, o))?.isDirectory) r.push(o.name);
+        if ((await tryGetDirentFileInfo(e, o))?.isDirectory) r.push(o.name);
       } catch (d) {
         logForDebugging(`Orphan sweep: skipping ${mK(e, o.name)}: ${l(d)}`, {
           level: "warn",
@@ -212779,7 +212779,7 @@ async function fetchOfficialMarketplaceFromGcs(e, t, r) {
     C,
     I;
   try {
-    let D = await hN.get(`${Xnr}/latest`, {
+    let D = await claudeDownloadsHttpClient.get(`${Xnr}/latest`, {
       responseType: "text",
       timeout: 1e4,
     });
@@ -212802,7 +212802,7 @@ async function fetchOfficialMarketplaceFromGcs(e, t, r) {
           )) === E
     )
       return ((_ = "noop"), E);
-    let V = await hN.get(`${Xnr}/${E}.zip`, {
+    let V = await claudeDownloadsHttpClient.get(`${Xnr}/${E}.zip`, {
         responseType: "arraybuffer",
         timeout: 60000,
       }),
@@ -213005,7 +213005,7 @@ async function Dts(e, t, r, { knownAlready: o, ownEntry: d, selfKey: p } = {}) {
     `Clearing stale case-variant marketplace directory ${jsonStringify(_)} (unregistered) before publishing ${jsonStringify(t)}`,
     { level: "warn" },
   ),
-    await Kl(Zg(e, _)));
+    await removeDirectoryRecursive(Zg(e, _)));
 }
 async function bbt(e, t, r, { known: o, isSelf: d = () => !1 } = {}) {
   let p = await uHe(e, t);
@@ -213145,8 +213145,8 @@ async function $ts(e, t, r) {
     );
     return;
   }
-  if ((await Kl(d), (await p(`${e}.bak`)) === void 0)) await Kl(`${d}.bak`);
-  if ((await p(`${e}.json`)) === void 0) await cv(Zg(o, `${e}.json`));
+  if ((await removeDirectoryRecursive(d), (await p(`${e}.bak`)) === void 0)) await removeDirectoryRecursive(`${d}.bak`);
+  if ((await p(`${e}.json`)) === void 0) await tryRemoveFileOrEmptyDirectory(Zg(o, `${e}.json`));
 }
 function clearMarketplaceCaches() {
   let e = getPluginRegistryState();
@@ -213241,8 +213241,8 @@ function getDeclaredMarketplaces() {
   let e = {},
     t = { ...collectAddDirEnabledPlugins(), ...(getInitialSettings().enabledPlugins ?? {}) };
   for (let [d, p] of Object.entries(t))
-    if (p && splitPluginId(d).marketplace === ig) {
-      e[ig] = { source: toe, sourceIsFallback: !0 };
+    if (p && splitPluginId(d).marketplace === OFFICIAL_MARKETPLACE_NAME) {
+      e[OFFICIAL_MARKETPLACE_NAME] = { source: OFFICIAL_MARKETPLACE_SOURCE, sourceIsFallback: !0 };
       break;
     }
   let r = isPersistedWorkspaceTrusted(),
@@ -214109,12 +214109,12 @@ async function _O(e, t, r, o, d, p, _) {
         r,
       );
     if (
-      (qE(
+      (logPluginRemoteFetch(
         "marketplace_pull",
         e,
         _e.code === 0 ? "success" : "failure",
         performance.now() - de,
-        _e.code === 0 ? void 0 : _N(_e.stderr),
+        _e.code === 0 ? void 0 : classifyNetworkErrorKind(_e.stderr),
       ),
       _e.code === 0)
     )
@@ -214160,11 +214160,11 @@ async function _O(e, t, r, o, d, p, _) {
           ),
         ))
       )
-        (await Kl(t).catch(() => {}), await E.rename(D, t));
+        (await removeDirectoryRecursive(t).catch(() => {}), await E.rename(D, t));
     }
   }
   try {
-    await Kl(D);
+    await removeDirectoryRecursive(D);
   } catch (de) {
     throw Error(`Failed to clean up stale marketplace backup directory. Please manually delete the directory at ${D} and try again.
 
@@ -214189,17 +214189,17 @@ Technical details: ${l(de)}`);
   let re = performance.now(),
     ue = await lns(e, t, o, d, _?.skipLfs);
   if (
-    (qE(
+    (logPluginRemoteFetch(
       "marketplace_clone",
       e,
       ue.code === 0 ? "success" : "failure",
       performance.now() - re,
-      ue.code === 0 ? void 0 : _N(ue.stderr),
+      ue.code === 0 ? void 0 : classifyNetworkErrorKind(ue.stderr),
     ),
     ue.code !== 0)
   ) {
     try {
-      await Kl(t);
+      await removeDirectoryRecursive(t);
     } catch {}
     if (U)
       try {
@@ -214207,12 +214207,12 @@ Technical details: ${l(de)}`);
       } catch {}
     throw new R(
       `Failed to clone marketplace repository: ${ue.stderr}`,
-      `Failed to clone marketplace repository: ${_N(ue.stderr)} (exit ${ue.code})`,
+      `Failed to clone marketplace repository: ${classifyNetworkErrorKind(ue.stderr)} (exit ${ue.code})`,
     );
   }
   if (U)
     try {
-      await Kl(D);
+      await removeDirectoryRecursive(D);
     } catch {}
   Jk(p, "Clone complete, validating marketplace\u2026");
 }
@@ -214241,19 +214241,19 @@ async function Tbt(e, t, r) {
     t && Object.keys(t).length > 0)
   )
     logForDebugging(`Using custom headers: ${jsonStringify(uns(t))}`);
-  let d = { ...t, "User-Agent": Hbn },
+  let d = { ...t, "User-Agent": PLUGIN_ARCHIVE_USER_AGENT },
     p,
     _ = performance.now();
   try {
     p = await externalHttp.get(e, {
       timeout: 1e4,
-      maxContentLength: iwt,
+      maxContentLength: MAX_MARKETPLACE_CATALOG_BYTES,
       headers: d,
-      beforeRedirect: mZn(e, Ibn(t)),
+      beforeRedirect: createMarketplaceRedirectGuard(e, getInheritableHeaderNames(t)),
     });
   } catch (C) {
-    qE("marketplace_url", e, "failure", performance.now() - _, _N(C));
-    let I = Dbn(C);
+    logPluginRemoteFetch("marketplace_url", e, "failure", performance.now() - _, classifyNetworkErrorKind(C));
+    let I = findPluginErrorInCauseChain(C);
     if (I) throw I;
     let D = (N) => N.replaceAll(e, () => o);
     if (isAxiosError(C)) {
@@ -214278,7 +214278,7 @@ Technical details: ${D(C.message)}`);
     .safeParse(p.data);
   if (!E.success)
     throw (
-      qE(
+      logPluginRemoteFetch(
         "marketplace_url",
         e,
         "failure",
@@ -214291,7 +214291,7 @@ Technical details: ${D(C.message)}`);
         p.data,
       )
     );
-  return (qE("marketplace_url", e, "success", performance.now() - _), p.data);
+  return (logPluginRemoteFetch("marketplace_url", e, "success", performance.now() - _), p.data);
 }
 async function jrr(e, t, r, o) {
   let d = getFsSurface(),
@@ -214310,9 +214310,9 @@ function dns(e) {
           ? yK(e.path).replace(".json", "")
           : e.source === "directory"
             ? yK(e.path)
-            : rwt("git")
+            : buildTempPluginDirName("git")
   ).replace(/[^a-zA-Z0-9\-_]/g, "-");
-  return r === "" ? rwt("unknown") : r;
+  return r === "" ? buildTempPluginDirName("unknown") : r;
 }
 async function hbt(e, t) {
   let o = await getFsSurface().readFile(e, { encoding: "utf-8" });
@@ -214372,7 +214372,7 @@ async function fns(e, t, r, o, d, p, _, E, C) {
       )))
   ) {
     try {
-      await Kl(F);
+      await removeDirectoryRecursive(F);
     } catch (re) {
       throw new R(
         `Failed to finalize marketplace cache. Please manually delete the directory at ${F} if it exists and try again.
@@ -214425,7 +214425,7 @@ async function Abt(e, t, r, o, d, p) {
         if (((I = Zg(E, `${V}.json`)), isHoverRestEnabled() && r !== void 0)) {
           let xe = await Tbt(
               e.url,
-              await dwt(e, {
+              await resolveMarketplaceHeaders(e, {
                 marketplaceName: o,
                 trustedDeclaration: findTrustedMarketplaceAuth(e, o),
               }),
@@ -214445,7 +214445,7 @@ async function Abt(e, t, r, o, d, p) {
           await jrr(
             e.url,
             I,
-            await dwt(e, { marketplaceName: o, trustedDeclaration: findTrustedMarketplaceAuth(e, o) }),
+            await resolveMarketplaceHeaders(e, { marketplaceName: o, trustedDeclaration: findTrustedMarketplaceAuth(e, o) }),
             t,
           ),
           (D = I));
@@ -214476,7 +214476,7 @@ async function Abt(e, t, r, o, d, p) {
                 `SSH clone failed for ${e.repo} despite SSH being configured, falling back to HTTPS`,
                 { level: "info" },
               ),
-              await Kl(I));
+              await removeDirectoryRecursive(I));
             try {
               (await _O(Oe, I, r, e.ref, e.sparsePaths, t, {
                 skipLfs: e.skipLfs,
@@ -214508,7 +214508,7 @@ async function Abt(e, t, r, o, d, p) {
                 `HTTPS clone failed for ${e.repo} (${Ne.message}), falling back to SSH`,
                 { level: "info" },
               ),
-              await Kl(I));
+              await removeDirectoryRecursive(I));
             try {
               (await _O(xe, I, r, e.ref, e.sparsePaths, t, {
                 skipLfs: e.skipLfs,
@@ -214641,7 +214641,7 @@ async function Abt(e, t, r, o, d, p) {
           } catch (Oe) {
             logForDebugging(`Progress callback error: ${l(Oe)}`, { level: "warn" });
           }
-          (await Kl(Se), await _.rename(I, Se), (I = Se), (N = !1));
+          (await removeDirectoryRecursive(Se), await _.rename(I, Se), (I = Se), (N = !1));
         } catch (Oe) {
           let Ne = l(Oe);
           throw Error(`Failed to finalize marketplace cache. Please manually delete the directory at ${Se} if it exists and try again.
@@ -214653,7 +214653,7 @@ Technical details: ${Ne}`);
   } catch (re) {
     if (N && I && !isLocalMarketplaceSource(e))
       try {
-        await Kl(I);
+        await removeDirectoryRecursive(I);
       } catch (ue) {
         logForDebugging(
           `Warning: Failed to clean up temporary marketplace cache at ${I}: ${l(ue)}`,
@@ -214778,7 +214778,7 @@ Tip: The shorthand "${d.repo}" assumes github.com. ` +
         _e = re.suspect ? "outside" : frr(V, ue, de);
       if (_e === "same");
       else if (_e === "inside" && (await prr(V, ue, E.name, r, p)) === void 0)
-        await Kl(ue);
+        await removeDirectoryRecursive(ue);
       else
         logForDebugging(
           `Skipping cleanup of old installLocation (${D.installLocation}) \u2014 ` +
@@ -215139,7 +215139,7 @@ function loadMarketplace(e, t) {
     try {
       ({ marketplace: E } = await Abt(_.source, void 0, t, e, void 0, p));
     } catch (C) {
-      if (C instanceof Ui) throw C;
+      if (C instanceof PluginSourceError) throw C;
       throw dt(
         Error(
           `Failed to load marketplace "${e}" from source (${_.source.source}): ${l(C)}`,
@@ -215233,7 +215233,7 @@ async function findPluginEntry(e, t) {
     if (!C) return null;
     return { entry: C, marketplaceInstallLocation: _.installLocation };
   } catch (p) {
-    if (p instanceof Ui) throw p;
+    if (p instanceof PluginSourceError) throw p;
     return (logForDebugging(`Could not find plugin ${e}: ${l(p)}`, { level: "debug" }), null);
   }
 }
@@ -215276,7 +215276,7 @@ async function refreshAllMarketplaces(e) {
       continue;
     }
     let I = !1;
-    if (_ === ig) {
+    if (_ === OFFICIAL_MARKETPLACE_NAME) {
       try {
         await Grr(_, E.installLocation, e, d);
       } catch (N) {
@@ -215316,7 +215316,7 @@ async function refreshAllMarketplaces(e) {
         logFeatureSad("plugin_official_marketplace_fetch", "gcs_failed_git_fallback");
     } catch (D) {
       if (I) logFeatureBad("plugin_official_marketplace_fetch", "gcs_and_git_failed");
-      if (D instanceof Ui) {
+      if (D instanceof PluginSourceError) {
         (t.push(_),
           logForDebugging(`Marketplace ${_} not refreshed (managed policy): ${l(D)}`));
         continue;
@@ -215422,7 +215422,7 @@ async function hns(e, t, r, o) {
         `Marketplace '${e}' is seed-managed (${I}) and its content is controlled by the seed image. To update: ask your admin to update the seed.`,
       );
     if (!isLocalMarketplaceSource(C)) await Grr(e, E, t, d);
-    if (e === ig) {
+    if (e === OFFICIAL_MARKETPLACE_NAME) {
       if ((await fetchOfficialMarketplaceFromGcs(E, getMarketplacesDir(), t)) !== null) {
         (logFeatureOk("plugin_official_marketplace_fetch"), await obt(e, t));
         return;
@@ -215488,7 +215488,7 @@ You can remove this marketplace from /plugin or by editing known_marketplaces.js
         );
       }
     } else if (C.source === "url") {
-      let D = await dwt(C, {
+      let D = await resolveMarketplaceHeaders(C, {
           marketplaceName: e,
           trustedDeclaration: findTrustedMarketplaceAuth(C, e),
         }),
@@ -215513,7 +215513,7 @@ You can remove this marketplace from /plugin or by editing known_marketplaces.js
     let C = E instanceof Error ? E.message : String(E);
     if (
       (logForDebugging(`Failed to refresh marketplace ${e}: ${C}`, { level: "error" }),
-      E instanceof Ui)
+      E instanceof PluginSourceError)
     )
       throw E;
     throw Error(`Failed to refresh marketplace '${e}': ${C}`);
@@ -215939,18 +215939,18 @@ async function mHe(e) {
       _ = await t.readdir(r);
     for (let E of _) {
       let C = E.name;
-      if (yGt.test(C)) continue;
+      if (PLUGIN_TEMP_DIR_PATTERN.test(C)) continue;
       let I = KJ(r, C);
       try {
-        if (!(await jhe(r, E))?.isDirectory) continue;
+        if (!(await tryGetDirentFileInfo(r, E))?.isDirectory) continue;
         let D = await t.readdir(I),
           N = !1;
         for (let V of D) {
-          if (!(await jhe(I, V))?.isDirectory) continue;
+          if (!(await tryGetDirentFileInfo(I, V))?.isDirectory) continue;
           let re = KJ(I, V.name),
             ue = await t.readdir(re);
           for (let de of ue)
-            if (de.name.endsWith(".zip") || (await jhe(re, de))?.isDirectory) {
+            if (de.name.endsWith(".zip") || (await tryGetDirentFileInfo(re, de))?.isDirectory) {
               N = !0;
               break;
             }
@@ -215959,7 +215959,7 @@ async function mHe(e) {
         if (N) continue;
         let F = (V) => o.has(V) || p.some((re) => re.startsWith(V + vns));
         if (!(F(toCaseFoldedPath(I)) || F(toCaseFoldedPath($b(I, { foldCase: !0 })))))
-          (await Kl(I), logForDebugging(`Cleaned up legacy cache directory: ${C}`));
+          (await removeDirectoryRecursive(I), logForDebugging(`Cleaned up legacy cache directory: ${C}`));
       } catch (D) {
         logForDebugging(`Skipping legacy cache entry ${C}: ${l(D)}`, { level: "warn" });
       }
@@ -217985,10 +217985,10 @@ async function installPluginFromEntry(
       (U.source === "github" || U.source === "url" || U.source === "git-subdir")
         ? { ...U, ref: p.ref, sha: p.sha }
         : U,
-    re = findSettingsDeclaredEntryAuth(yD(e), t.name);
+    re = findSettingsDeclaredEntryAuth(getMarketplaceNameFromPluginId(e), t.name);
   if (N.explicitInstall && typeof V === "object" && V.source === "archive") {
-    let je = uXe(
-        noe({
+    let je = describeCurrentEntryHelper(
+        resolveTrustedEntryAuth({
           entry: t,
           archiveUrl: V.url,
           marketplaceSource: C,
@@ -217996,27 +217996,27 @@ async function installPluginFromEntry(
         }),
         V.url,
       ),
-      Ke = je === null ? null : headersHelperPolicyRefusal(C, yD(e));
+      Ke = je === null ? null : headersHelperPolicyRefusal(C, getMarketplaceNameFromPluginId(e));
     if (Ke !== null)
-      throw new k$(
-        dXe(t.name, Ke),
+      throw new PluginEntryHelperError(
+        formatEntryHelperRefusalMessage(t.name, Ke),
         Ke === "remote_policy_unconsented"
           ? "entry_helper_remote_policy_unconsented"
           : "entry_helper_disabled_by_policy",
       );
-    let ct = lwt(N.consented, je);
-    if (ct !== null) throw new k$(uwt(ct, t.name, "install"), awt[ct]);
+    let ct = diffEntryHelperConsent(N.consented, je);
+    if (ct !== null) throw new PluginEntryHelperError(formatEntryHelperMismatchMessage(ct, t.name, "install"), ENTRY_HELPER_FAILURE_CODES[ct]);
   }
   let ue = await cachePlugin(V, {
       commandSourceConsent: I ?? { kind: "none", pluginId: e },
       manifest: t,
       containmentRoot: typeof t.source === "string" && d ? E : void 0,
-      archiveAuth: await b1e({
+      archiveAuth: await resolveArchiveAuth({
         pluginSource: V,
         pluginName: t.name,
-        marketplaceName: yD(e),
+        marketplaceName: getMarketplaceNameFromPluginId(e),
         marketplaceSource: C,
-        trustedMarketplaceAuth: findTrustedMarketplaceAuth(C, yD(e)),
+        trustedMarketplaceAuth: findTrustedMarketplaceAuth(C, getMarketplaceNameFromPluginId(e)),
         trustedSettingsEntryAuth: re,
         entry: t,
         runEntryHelper: N.explicitInstall,
@@ -218051,7 +218051,7 @@ async function installPluginFromEntry(
   if (ue.path !== Oe) {
     let je = strictCacheAddressable(D);
     try {
-      if (xj(V)) {
+      if (getCommandSource(V)) {
         let Ke = je && (await versionParentState(Oe)) === "refused",
           ct = getVersionedZipCachePath(e, xe),
           vt =
@@ -218068,7 +218068,7 @@ async function installPluginFromEntry(
             storageV5: D,
             credentials: F,
           })),
-            await Kl(ue.path).catch((ut) => {
+            await removeDirectoryRecursive(ue.path).catch((ut) => {
               logForDebugging(
                 `Failed to remove the staging tree ${ue.path} after publishing: ${l(ut)}`,
                 { level: "warn" },
@@ -218085,11 +218085,11 @@ async function installPluginFromEntry(
         ),
           (Ne = Oe));
     } catch (Ke) {
-      if (je) await Kl(ue.path).catch(() => {});
+      if (je) await removeDirectoryRecursive(ue.path).catch(() => {});
       throw Ke;
     }
   }
-  if (He && !R$(V)) {
+  if (He && !isLinkModeSource(V)) {
     try {
       await unvouchBeforeDependencyStep(Ne, D);
       let je = await EHe(Ne);
@@ -218131,7 +218131,7 @@ async function installPluginFromEntry(
           }),
         ...(typeof V === "object" &&
           V.source === "command" && {
-            sourceCommand: vC(V),
+            sourceCommand: getSourceCommandKey(V),
             ...(ue.producerPath !== void 0 && {
               sourceProducerPath: ue.producerPath,
             }),
@@ -218578,7 +218578,7 @@ async function installPluginWithDependencies({
         Rs,
         E === !0 || vr !== e,
         bs.marketplaceInstallLocation,
-        lJ(vr, F),
+        lookupMarketplaceSource(vr, F),
         vr === e && E !== !0 ? I : { kind: "none", pluginId: vr },
         D,
         { explicitInstall: p && vr === e, consented: vr === e ? _ : void 0 },
@@ -218938,7 +218938,7 @@ async function installPluginFromMarketplace(e) {
     };
   } catch (E) {
     let C = E instanceof Error ? E.message : String(E),
-      I = E instanceof Ui;
+      I = E instanceof PluginSourceError;
     return (
       logForDebugging(
         `installPluginFromMarketplace ${I ? "refused" : "failed"} for ${t}: ${C}`,
@@ -218946,9 +218946,9 @@ async function installPluginFromMarketplace(e) {
       ),
       Kor({
         reason:
-          E instanceof k$
+          E instanceof PluginEntryHelperError
             ? E.failureCode
-            : E instanceof Ui
+            : E instanceof PluginSourceError
               ? "command-source-refused"
               : "unexpected-error",
         errorKind: classifyPluginError(E),
@@ -219025,7 +219025,7 @@ async function Rrs(e, t) {
       );
       return;
     }
-    await Kl(e);
+    await removeDirectoryRecursive(e);
   } catch (o) {
     logForDebugging(
       `Could not remove a replaced plugin version set aside by a publish that stood: ${o instanceof Error ? o.message : String(o)}`,
@@ -219142,7 +219142,7 @@ async function Ors(e, t, r, o, d) {
           `The occupant of ${t} cannot be renamed aside (${A(N)}); removing it in place instead`,
           { level: "debug" },
         ),
-          await Kl(t));
+          await removeDirectoryRecursive(t));
       else if (!qk(N)) throw N;
     }
   }
@@ -219163,7 +219163,7 @@ async function Ors(e, t, r, o, d) {
     if (_ !== void 0) await renameWithRetry(_, t).catch(() => {});
     throw D;
   }
-  if (_ !== void 0) await Kl(_).catch(() => {});
+  if (_ !== void 0) await removeDirectoryRecursive(_).catch(() => {});
 }
 async function Drs(e, t, r, o, d) {
   if (isHoverRestEnabled() && o !== void 0 && d !== void 0)
@@ -219351,7 +219351,7 @@ function iZ(e, t, r, o = "cache") {
   );
 }
 async function Tsr(e, t, r, o, d) {
-  if ((await cv(e).catch(() => "directory")) !== "directory") return;
+  if ((await tryRemoveFileOrEmptyDirectory(e).catch(() => "directory")) !== "directory") return;
   if (d === "archive")
     throw new R(
       `Could not ${o} ${t} ${r}: a link sits at its archive path and could not be removed; remove that link from the plugin cache, then retry the install.`,
@@ -219561,7 +219561,7 @@ async function removeFreshCopyUnlessInUse(e, t) {
     );
     return;
   }
-  await Kl(r).catch(() => {});
+  await removeDirectoryRecursive(r).catch(() => {});
 }
 async function rescreenCachedPluginTree(e, t) {
   if (!strictCacheAddressable(t)) return;
@@ -219780,17 +219780,17 @@ async function Jrs(e) {
   return null;
 }
 function xHe(e) {
-  return e instanceof Ui;
+  return e instanceof PluginSourceError;
 }
 async function USt(e, t) {
-  let r = await SGt(e);
+  let r = await classifyLinkFarm(e);
   if (r === "not-live") return { live: !1, reusable: !1, unclassifiable: !1 };
   if (r === "unclassifiable")
     return { live: !0, reusable: !1, unclassifiable: !0 };
-  let o = await dZn(t);
+  let o = await readLinkFarmTarget(t);
   return {
     live: !0,
-    reusable: o !== void 0 && !(await S1e(e, o)),
+    reusable: o !== void 0 && !(await isLinkFarmDiverged(e, o)),
     unclassifiable: !1,
   };
 }
@@ -219844,8 +219844,8 @@ async function _F(
     _e = !C && wg(e) === wg(r);
   for (let Se of V) {
     if (U !== void 0 && Se.name === U) continue;
-    if (D && lXe(Se.name)) continue;
-    let ve = await eae(e, Se);
+    if (D && isReservedPluginEntry(Se.name)) continue;
+    let ve = await getDirentFileInfo(e, Se);
     if ((I || p) && Se.isDirectory() && ve.isSymbolicLink)
       throw new R(
         `Refusing to copy ${dd(e, Se.name)}: it is no longer a directory as listed \u2014 a link or Windows junction stands there (planted, or swapped during the copy). Plugin trees must hold plain directories.`,
@@ -220030,7 +220030,7 @@ async function Zrs(e, t) {
 }
 async function copyPluginToVersionedCache(e, t, r, o, d, p) {
   let _ = isPluginZipCacheEnabled(),
-    E = p?.linkFarm ?? R$(o?.source),
+    E = p?.linkFarm ?? isLinkModeSource(o?.source),
     C = p?.forceOverwrite ?? !1,
     I = p?.storageV5,
     D = strictCacheAddressable(I),
@@ -220076,7 +220076,7 @@ async function copyPluginToVersionedCache(e, t, r, o, d, p) {
     else {
       let Ke = await USt(N, e);
       ((He = Ke.live),
-        (je = R$(o?.source)
+        (je = isLinkModeSource(o?.source)
           ? Ke.reusable
           : Ke.unclassifiable || (!He && (await RK(N)))));
     }
@@ -220104,7 +220104,7 @@ async function copyPluginToVersionedCache(e, t, r, o, d, p) {
   }
   let de = await Asr(t, r);
   if (de) return (logForDebugging(`Using seed cache for ${t}@${r} at ${de}`), de);
-  if ((await eos(N, I), R$(o?.source))) {
+  if ((await eos(N, I), isLinkModeSource(o?.source))) {
     let He = !0;
     if (D) {
       await U("link", "before relink");
@@ -220141,7 +220141,7 @@ async function copyPluginToVersionedCache(e, t, r, o, d, p) {
     if (!D || (await clearOccupantForReplace(N, t, r, "link")) === "recurse") await evictCachedVersionDir(N, I);
     if (D) await U("link", "during relink");
     return (
-      await uZn(e, N),
+      await relinkPluginFarm(e, N),
       logForDebugging(`Linked plugin ${t} into versioned cache at ${N}`),
       N
     );
@@ -220173,7 +220173,7 @@ async function copyPluginToVersionedCache(e, t, r, o, d, p) {
       (logForDebugging(`Copying plugin ${t} to versioned cache (fallback to full copy)`),
         await psr(e, _e, e, D));
     let He = dd(_e, ".git");
-    await Kl(He);
+    await removeDirectoryRecursive(He);
     let je = D && I !== void 0 ? toPluginVersionCacheScope(_e, anchoredPluginCachePath()) : null;
     if (
       je !== null && I !== void 0 && !(await _0(N, anchoredPluginCachePath()))
@@ -220245,7 +220245,7 @@ async function copyPluginToVersionedCache(e, t, r, o, d, p) {
               `Plugin ${t} version ${r}: clearing ${tn === "symlink" ? "a stray symlink" : cn ? "payload-free debris" : "a stray non-directory entry"} at ${N} (${l(ct)})`,
             ),
             tn === "symlink"
-              ? await cv(N).then(
+              ? await tryRemoveFileOrEmptyDirectory(N).then(
                   (Dn) => Dn !== "directory",
                   () => !1,
                 )
@@ -220352,7 +220352,7 @@ async function evictCachedVersionDir(e, t) {
       { level: "warn" },
     );
   }
-  await Kl(e);
+  await removeDirectoryRecursive(e);
 }
 async function eos(e, t) {
   let r = isHoverRestEnabled() && t !== void 0 ? parsePluginCacheDirScope(Sb(e), anchoredPluginCachePath()) : null;
@@ -220484,7 +220484,7 @@ async function ros(e, t, r, o) {
     I = await execFileNoThrow(gitExe(), E, { ...(await prepareGitCwdEnv(t, _)), stdin: "ignore" });
   if (I.code !== 0)
     throw (
-      qE("plugin_clone", e, "failure", performance.now() - C, _N(I.stderr)),
+      logPluginRemoteFetch("plugin_clone", e, "failure", performance.now() - C, classifyNetworkErrorKind(I.stderr)),
       dt(
         Error(`Failed to clone repository: ${I.stderr}`),
         "plugin git clone failed (stderr redacted)",
@@ -220508,7 +220508,7 @@ async function ros(e, t, r, o) {
       );
       if (F.code !== 0)
         throw (
-          qE("plugin_clone", e, "failure", performance.now() - C, _N(F.stderr)),
+          logPluginRemoteFetch("plugin_clone", e, "failure", performance.now() - C, classifyNetworkErrorKind(F.stderr)),
           dt(
             Error(`Failed to fetch commit ${o}: ${F.stderr}`),
             "plugin git fetch (unshallow) failed (stderr redacted)",
@@ -220522,7 +220522,7 @@ async function ros(e, t, r, o) {
     });
     if (N.code !== 0)
       throw (
-        qE("plugin_clone", e, "failure", performance.now() - C, _N(N.stderr)),
+        logPluginRemoteFetch("plugin_clone", e, "failure", performance.now() - C, classifyNetworkErrorKind(N.stderr)),
         dt(
           Error(`Failed to checkout commit ${o}: ${N.stderr}`),
           "plugin git checkout failed (stderr redacted)",
@@ -220532,7 +220532,7 @@ async function ros(e, t, r, o) {
       await Psr(t, o, { inCheckoutArgs: p, env: _ });
     } catch (F) {
       throw (
-        qE(
+        logPluginRemoteFetch(
           "plugin_clone",
           e,
           "failure",
@@ -220543,7 +220543,7 @@ async function ros(e, t, r, o) {
       );
     }
   }
-  qE("plugin_clone", e, "success", performance.now() - C);
+  logPluginRemoteFetch("plugin_clone", e, "success", performance.now() - C);
 }
 async function Isr(e, t, r, o) {
   let d = uwe(e);
@@ -220574,7 +220574,7 @@ async function ios(e, t, r, o, d, p = t) {
   if (o?.startsWith("-"))
     throw Error(`Invalid ref "${o}": cannot start with "-"`);
   let _ = sos(e),
-    E = `${p}${kbn}`,
+    E = `${p}${PLUGIN_TEMP_CLONE_SUFFIX}`,
     { pinArgs: C, inCheckoutArgs: I, env: D } = getGitInvocationForDirectory(E),
     N = [
       ...GIT_SSH_HARDENING_ARGS,
@@ -220685,10 +220685,10 @@ async function msr(e, t, r, o = !1, { noFollowFiles: d = !1 } = {}) {
   if (!(await pathExists(e))) throw Error(`Source path does not exist: ${e}`);
   await _F(e, t, e, t, r || e, o, new Set(), Mse(), !1, d, !0);
   let p = dd(t, ".git");
-  await Kl(p);
+  await removeDirectoryRecursive(p);
 }
 function aos(e) {
-  return rwt(los(e));
+  return buildTempPluginDirName(los(e));
 }
 function los(e) {
   if (typeof e === "string") return "local";
@@ -220792,7 +220792,7 @@ async function cachePlugin(e, t) {
           N = await dJt(e, _, E, t?.credentials);
           break;
         case "command": {
-          let ve = await pZn(
+          let ve = await installFromCommandSource(
             e,
             _,
             async (Me, xe) => {
@@ -220813,15 +220813,15 @@ async function cachePlugin(e, t) {
         default:
           throw new R(gsr, "plugin source type unsupported");
       }
-    if (d && !R$(e)) Rsr(await Nse(_, _F), _);
+    if (d && !isLinkModeSource(e)) Rsr(await Nse(_, _F), _);
     let Se = typeof e === "string" ? e : e.source;
-    if (((U = await loadPluginManifest(_, o, Se, [dd(_, ekt)])), !R$(e)))
-      await xbn(_, { keepGit: !0 });
+    if (((U = await loadPluginManifest(_, o, Se, [dd(_, ekt)])), !isLinkModeSource(e)))
+      await pruneReservedEntries(_, { keepGit: !0 });
   } catch (Se) {
     if (I && (d || (await pathExists(_)))) {
       logForDebugging(`Cleaning up failed installation at ${_}`);
       try {
-        await Kl(_);
+        await removeDirectoryRecursive(_);
       } catch (ve) {
         logForDebugging(`Failed to clean up installation: ${ve}`, { level: "error" });
       }
@@ -220868,16 +220868,16 @@ async function dos(e, t, r, o, d = !1, p = []) {
       );
     let _;
     if (o && Object.keys(o.headers).length > 0)
-      if (fwt(o.url, e.url)) _ = o.headers;
+      if (isSameOrigin(o.url, e.url)) _ = o.headers;
       else
         logForDebugging(
           "Not forwarding marketplace headers to plugin archive on a different origin",
         );
-    let { data: E, contentSha256: C } = await fZn(e.url, {
+    let { data: E, contentSha256: C } = await downloadPluginArchive(e.url, {
         sha256: e.sha256,
         headers: _,
       }),
-      I = `${r}${owt}`;
+      I = `${r}${PLUGIN_TEMP_EXTRACT_SUFFIX}`;
     try {
       if (
         !(await C8e(E, I)).some(
@@ -220888,7 +220888,7 @@ async function dos(e, t, r, o, d = !1, p = []) {
           `Plugin archive from ${sanitizeUrl(e.url)} contained no plugin files. The archive was not installed. Verify the URL serves a zip of the plugin contents.`,
           "plugin archive was empty",
         );
-      let F = await iXe(I);
+      let F = await resolvePluginRoot(I);
       if (F !== I)
         logForDebugging(
           `Plugin archive had a wrapper directory; using ${formatDisplayText(py(F))} as the plugin root`,
@@ -220917,7 +220917,7 @@ async function dos(e, t, r, o, d = !1, p = []) {
       }
       if (
         (await loadPluginManifest(F, py(r), "archive", [dd(F, ekt)], { isProbe: !0 }),
-        !d && !(await nwt(F)))
+        !d && !(await hasPluginContentEntries(F)))
       )
         throw new R(
           `Plugin archive from ${sanitizeUrl(e.url)} has no plugin content at its root (expected .claude-plugin/ or a commands/, skills/, agents/, hooks/, themes/, output-styles/, monitors/, workflows/, SKILL.md, .mcp.json, or .lsp.json at the top level, optionally inside a single wrapper directory). The archive was not installed.`,
@@ -222186,7 +222186,7 @@ async function ZSt({
           }
         }
         let Dn =
-            xj(en.entry.source) !== void 0 ||
+            getCommandSource(en.entry.source) !== void 0 ||
             (It !== void 0 &&
               (It.sourceCommand !== void 0 ||
                 It.sourceProducerPath !== void 0)),
@@ -222202,7 +222202,7 @@ async function ZSt({
             });
           return null;
         }
-        if (R$(en.entry.source) && It === void 0) {
+        if (isLinkModeSource(en.entry.source) && It === void 0) {
           if (Fv(He))
             E.push({
               type: "generic-error",
@@ -222225,11 +222225,11 @@ async function ZSt({
               (It.sourceCommand === void 0 &&
                 (It.sourceProducerPath !== void 0 ||
                   It.previousProducerPaths !== void 0) &&
-                R$(en.entry.source)) ||
+                isLinkModeSource(en.entry.source)) ||
               un ||
               (gn &&
                 wn !== void 0 &&
-                (await cXe(wn, { unclassifiableIsFarm: !0 }))));
+                (await isLiveLinkFarm(wn, { unclassifiableIsFarm: !0 }))));
         if (
           It !== void 0 &&
           kn &&
@@ -222238,7 +222238,7 @@ async function ZSt({
             AB(It.sourceProducerPath) ||
             Bxe(It.sourceProducerPath) ||
             wh(It.sourceProducerPath, he(), { foldCase: !0 }) ||
-            (wn !== void 0 && (await S1e(wn, It.sourceProducerPath))))
+            (wn !== void 0 && (await isLinkFarmDiverged(wn, It.sourceProducerPath))))
         ) {
           if (Fv(He))
             E.push({
@@ -222247,7 +222247,7 @@ async function ZSt({
               source: De,
               plugin: en.entry.name,
               error: un
-                ? `Not loading ${formatDisplayText(De, 200)}: its recorded install path ${UNTRUSTED_PATH_REASON}; ${xj(en.entry.source) !== void 0 ? buildRunCommandHint("plugin update", De, { tail: "to re-install it", fallback: "re-install it with an explicit plugin update" }) : buildRunCommandHint("plugin uninstall", De, { tail: "and install it again to re-record it", fallback: "uninstall and install it again to re-record it" })}.`
+                ? `Not loading ${formatDisplayText(De, 200)}: its recorded install path ${UNTRUSTED_PATH_REASON}; ${getCommandSource(en.entry.source) !== void 0 ? buildRunCommandHint("plugin update", De, { tail: "to re-install it", fallback: "re-install it with an explicit plugin update" }) : buildRunCommandHint("plugin uninstall", De, { tail: "and install it again to re-record it", fallback: "uninstall and install it again to re-record it" })}.`
                 : `Not loading ${formatDisplayText(De, 200)} here: it is served in place from ${formatDisplayText(It.sourceProducerPath ?? "(unrecorded)", 200)}, which contains the working directory, is a network location, could not be resolved, or no longer matches its cached links \u2014 its content cannot be protected from sandboxed commands; ${buildRunCommandHint("plugin update", De, { tail: "elsewhere to re-resolve it", fallback: "re-resolve it with an explicit plugin update elsewhere" })}.`,
             });
           return null;
@@ -222255,7 +222255,7 @@ async function ZSt({
         let on =
             It !== void 0
               ? It.sourceCommand?.endsWith(LINK_MODE_COMMAND_SUFFIX) === !0
-              : R$(en.entry.source),
+              : isLinkModeSource(en.entry.source),
           En = kn ? It?.sourceProducerPath : void 0;
         if (It?.claudeaiPluginId !== void 0) {
           let ur = en.entry.source;
@@ -222304,7 +222304,7 @@ async function ZSt({
               E,
               C,
               It?.version,
-              Dos(xj(en.entry.source), ve.plugins[De]) ?? It?.sourceCommand,
+              Dos(getCommandSource(en.entry.source), ve.plugins[De]) ?? It?.sourceCommand,
               {
                 storageV5: r,
                 linkFarm: on,
@@ -222482,7 +222482,7 @@ async function yos(
       else if (de) {
         if (F) {
           let ve = GSt(o, e.name, e.source, U ? "unknown" : "absent", void 0);
-          if (e.source.source === "command" && !_1e()) p.push(jSt(o, e.name));
+          if (e.source.source === "command" && !isPluginCommandSourceRefreshEnabled()) p.push(jSt(o, e.name));
           else if (ve !== null) p.push(ve);
           else {
             let Me = C === void 0 && (await HSt(o));
@@ -222512,7 +222512,7 @@ async function yos(
       }
     } else {
       if (d)
-        if (e.source.source === "command" && !_1e()) p.push(jSt(o, e.name));
+        if (e.source.source === "command" && !isPluginCommandSourceRefreshEnabled()) p.push(jSt(o, e.name));
         else
           p.push(
             GSt(o, e.name, e.source, "present", V) ?? {
@@ -222674,7 +222674,7 @@ async function _os(
               ),
               null
             );
-          if (e.source.source === "command" && !_1e())
+          if (e.source.source === "command" && !isPluginCommandSourceRefreshEnabled())
             return (
               logForDebugging(
                 `Plugin ${o}: command-source execution is switched off; not materializing the missing cache dir`,
@@ -222696,13 +222696,13 @@ async function _os(
                 : e.source,
             De = await cachePlugin(Ne, {
               manifest: { name: e.name },
-              archiveAuth: await b1e({
+              archiveAuth: await resolveArchiveAuth({
                 pluginSource: e.source,
                 pluginName: e.name,
-                marketplaceName: yD(o),
+                marketplaceName: getMarketplaceNameFromPluginId(o),
                 marketplaceSource: r,
-                trustedMarketplaceAuth: findTrustedMarketplaceAuth(r, yD(o)),
-                trustedSettingsEntryAuth: findSettingsDeclaredEntryAuth(yD(o), e.name),
+                trustedMarketplaceAuth: findTrustedMarketplaceAuth(r, getMarketplaceNameFromPluginId(o)),
+                trustedSettingsEntryAuth: findSettingsDeclaredEntryAuth(getMarketplaceNameFromPluginId(o), e.name),
                 entry: e,
                 runEntryHelper: !1,
               }),
@@ -222722,7 +222722,7 @@ async function _os(
             Ne.version === E &&
             De.contentSha256 !== re
           ) {
-            if ((await Kl(De.path).catch(() => {}), F))
+            if ((await removeDirectoryRecursive(De.path).catch(() => {}), F))
               p.push({
                 type: "generic-error",
                 refused: !0,
@@ -222733,7 +222733,7 @@ async function _os(
             return null;
           }
           let He =
-            Se !== "unknown" && !xj(e.source)
+            Se !== "unknown" && !getCommandSource(e.source)
               ? Se
               : await resolvePluginVersion(
                   o,
@@ -222753,7 +222753,7 @@ async function _os(
             })),
             De.path !== de && !wg(de).startsWith(wg(De.path) + zC))
           )
-            await Kl(De.path).catch((je) => {
+            await removeDirectoryRecursive(De.path).catch((je) => {
               logForDebugging(
                 `Failed to remove the staging tree ${De.path} after publishing: ${l(je)}`,
                 { level: "warn" },
@@ -223061,7 +223061,7 @@ async function Ssr(
 }
 var bos = 30000;
 function Usr(e) {
-  return ZJt(e, aCe);
+  return ZJt(e, PLUGIN_CONTENT_MARKERS);
 }
 var Hsr = [
     "commands",
@@ -223258,16 +223258,16 @@ async function ksr(
               if (!Ne.ok || !Ne.body)
                 throw Error(`HTTP ${Ne.status} ${Ne.statusText} from ${xe}`);
               let De = Number(Ne.headers.get("content-length"));
-              if (De > iJ)
+              if (De > MAX_PLUGIN_ARCHIVE_BYTES)
                 throw Error(
-                  `Plugin archive too large (${De} bytes, max ${iJ}) from ${xe}`,
+                  `Plugin archive too large (${De} bytes, max ${MAX_PLUGIN_ARCHIVE_BYTES}) from ${xe}`,
                 );
               let He = 0,
                 je = Urs.fromWeb(Ne.body);
               je.on("data", (ct) => {
-                if (((He += ct.byteLength), He > iJ))
+                if (((He += ct.byteLength), He > MAX_PLUGIN_ARCHIVE_BYTES))
                   je.destroy(
-                    Error(`Plugin archive exceeded ${iJ} bytes from ${xe}`),
+                    Error(`Plugin archive exceeded ${MAX_PLUGIN_ARCHIVE_BYTES} bytes from ${xe}`),
                   );
               });
               let Ke = `${D}.part`;
@@ -223343,7 +223343,7 @@ async function ksr(
               (await cZ(Me, { recursive: !0, force: !0 }),
               await extractZipFile(D, Me),
               logForDebugging(`Extracted inline plugin zip to ${Me}`),
-              (D = await iXe(Me)),
+              (D = await resolvePluginRoot(Me)),
               D !== Me)
             )
               logForDebugging(`Inline plugin zip had wrapper directory; using ${D}`);
@@ -223441,7 +223441,7 @@ async function ksr(
   return { plugins: p, errors: _, warnings: E };
 }
 async function xos(e, t) {
-  let r = isHoverRestEnabled() && e !== void 0 ? enr(t) : null;
+  let r = isHoverRestEnabled() && e !== void 0 ? toUserSkillsStorageScope(t) : null;
   if (e !== void 0 && r !== null) {
     let o = await Ove(e, r);
     if (o.error === void 0) return new Set(o.names.map(({ name: d }) => d));
@@ -223922,7 +223922,7 @@ async function getEnabledPluginBinPaths(e) {
 }
 async function Pos() {
   try {
-    if (!gZn() || !lfe() || fXe()) return [];
+    if (!shouldIncludeSyncedPlugins() || !isPluginsSyncTierInPlay() || isPluginsSyncVetoed()) return [];
     return (TLn(), (pHt() ? await BQt() : null) ?? (await H8e()));
   } catch (e) {
     return (logError(e), []);
@@ -224089,7 +224089,7 @@ function Oos(e) {
 }
 function Dos(e, t) {
   if (!e) return;
-  let r = vC(e);
+  let r = getSourceCommandKey(e);
   return t?.filter(isInstallationInCurrentScope).find((o) => o.sourceCommand === r)?.sourceCommand;
 }
 var Qsr = 1048576;
@@ -232733,7 +232733,7 @@ function Rlr(e, t, r = !0, o = !0, d = !1) {
   for (let { rows: tn } of Se.size > 0 ? I : [])
     for (let dn of tn) {
       if (Se.has(dn.id)) {
-        let Dn = Tc([
+        let Dn = jsonStringifyUntraced([
             dn.author_kind,
             dn.author_id,
             dn.where,
@@ -245045,7 +245045,7 @@ function bms(e) {
   using r = startSlowOperationSpan`parseHookOutput: json lines (${t.length})`;
   return t.every((o) => {
     try {
-      let d = hookOutputSchema().safeParse(Is(o.trim()));
+      let d = hookOutputSchema().safeParse(jsonParseUntraced(o.trim()));
       return !d.success || Object.keys(d.data).length === 0;
     } catch {
       return !1;
@@ -249690,7 +249690,7 @@ function Egs(e) {
   return r;
 }
 async function loadMemoryFileWithIncludes(e, t, r, o, d = 0, p, _) {
-  let E = pf(e);
+  let E = canonicalizePathForComparison(e);
   if (r.has(E) || d >= wgs) return [];
   if (rgr(e, t)) return [];
   let C = o && (t !== "User" || sgr());
@@ -249705,7 +249705,7 @@ async function loadMemoryFileWithIncludes(e, t, r, o, d = 0, p, _) {
         return [];
     } catch {}
   if (D) {
-    let V = pf(I);
+    let V = canonicalizePathForComparison(I);
     if (r.has(V)) return [];
     r.add(V);
   }
@@ -249895,7 +249895,7 @@ async function vgs(e, t, r, o) {
 function getGitWorktreeRoots(e) {
   let t = findGitRoot(e),
     r = findCanonicalGitRoot(e);
-  return t !== null && r !== null && pf(t) !== pf(r) && pathInWorkingPath(t, r)
+  return t !== null && r !== null && canonicalizePathForComparison(t) !== canonicalizePathForComparison(r) && pathInWorkingPath(t, r)
     ? { worktreeRoot: t, mainRepoRoot: r }
     : null;
 }
@@ -250043,7 +250043,7 @@ async function Cgs(e, t, r, o, d, p) {
     if (!o && !a.CLAUDE_CODE_REMOTE && Me === void 0 && shouldServeStoneShellPrompt()) {
       let xe = await egr(t),
         Oe = xe.entries.filter((Ne) => {
-          let De = pf(Ne.path);
+          let De = canonicalizePathForComparison(Ne.path);
           if (C.has(De)) return !1;
           return (C.add(De), !0);
         });
@@ -250062,7 +250062,7 @@ async function Cgs(e, t, r, o, d, p) {
                 : [await Oe()];
       for (let De of Ne) {
         if (!De) continue;
-        let He = pf(De.path);
+        let He = canonicalizePathForComparison(De.path);
         if (!C.has(He)) (C.add(He), E.push(De));
       }
     }
@@ -256788,7 +256788,7 @@ function Pys(e) {
   let t = 0;
   while (e.charCodeAt(t) === 0) t++;
   try {
-    return Is(t > 0 ? e.slice(t) : e);
+    return jsonParseUntraced(t > 0 ? e.slice(t) : e);
   } catch {
     return;
   }
@@ -257089,7 +257089,7 @@ function ghr(e) {
         (o.includes('"type":"user"') || o.includes('"type":"assistant"')))
     )
       try {
-        let d = Mys().safeParse(Is(o));
+        let d = Mys().safeParse(jsonParseUntraced(o));
         if (d.success) {
           let p = Date.parse(d.data.timestamp);
           if (!Number.isNaN(p)) return p;
@@ -257215,7 +257215,7 @@ function bhr(e, t) {
   let r = Buffer.from(e.data.buffer, e.data.byteOffset, e.data.byteLength);
   if (!r.includes(`"uuid":"${t}"`)) return !1;
   try {
-    let o = Is(r.toString("utf8").replace(/\r?\n$/, ""));
+    let o = jsonParseUntraced(r.toString("utf8").replace(/\r?\n$/, ""));
     return typeof o === "object" && o !== null && "uuid" in o && o.uuid === t;
   } catch {
     return !1;
@@ -259052,7 +259052,7 @@ ${D}`));
         }
       if (!de) continue;
       try {
-        let _e = Is(ue);
+        let _e = jsonParseUntraced(ue);
         if (_e.type === de) F.set(de, _e);
       } catch {}
     }
@@ -259259,7 +259259,7 @@ ${D}`));
           ue = !1;
         if (re.trim())
           try {
-            ue = Is(re).uuid === r;
+            ue = jsonParseUntraced(re).uuid === r;
           } catch {}
         if (ue) {
           _ ??= U.seq;
@@ -261101,7 +261101,7 @@ function Fge(e) {
   )
     return !1;
   try {
-    return BZ(Is(e));
+    return BZ(jsonParseUntraced(e));
   } catch {
     return !1;
   }
@@ -261329,7 +261329,7 @@ function* kyr(e) {
     if (!o) continue;
     let d;
     try {
-      d = Is(o);
+      d = jsonParseUntraced(o);
     } catch {
       continue;
     }
@@ -263747,7 +263747,7 @@ function Cyr(e, t, r, o) {
         if (un === kn) return;
         let on;
         try {
-          on = Is(Dn.toString("utf8", un, kn));
+          on = jsonParseUntraced(Dn.toString("utf8", un, kn));
         } catch {
           return;
         }
@@ -265697,7 +265697,7 @@ function Nyr(e) {
     if (!d.includes('"type":"frame-link"')) continue;
     let p;
     try {
-      p = Is(d);
+      p = jsonParseUntraced(d);
     } catch {
       continue;
     }
@@ -266506,7 +266506,7 @@ function Fyr(e) {
     if (typeof e === "string")
       return {
         error_name: "string",
-        error_message: qr(e).slice(0, 2000),
+        error_message: redactSecretsFromText(e).slice(0, 2000),
         isHostError: !1,
       };
     let E = t ? wxt(e, "name") : Rbs(e, "name"),
@@ -266514,12 +266514,12 @@ function Fyr(e) {
       I = [];
     if (E !== void 0) I.push(E);
     if (C !== void 0) I.push(C);
-    let D = I.length > 0 ? qr(I.join(": ")).slice(0, 2000) : void 0,
+    let D = I.length > 0 ? redactSecretsFromText(I.join(": ")).slice(0, 2000) : void 0,
       N = wxt(e, "stack");
     return {
       error_name: "non-error",
       error_message: D,
-      error_stack: N !== void 0 ? qr(N).slice(0, 4000) : void 0,
+      error_stack: N !== void 0 ? redactSecretsFromText(N).slice(0, 4000) : void 0,
       isHostError: !1,
     };
   }
@@ -266538,8 +266538,8 @@ function Fyr(e) {
   } catch {}
   return {
     error_name: typeof d === "string" ? d : "Error",
-    error_message: typeof p === "string" ? qr(p).slice(0, 2000) : void 0,
-    error_stack: typeof _ === "string" ? qr(_).slice(0, 4000) : void 0,
+    error_message: typeof p === "string" ? redactSecretsFromText(p).slice(0, 2000) : void 0,
+    error_stack: typeof _ === "string" ? redactSecretsFromText(_).slice(0, 4000) : void 0,
     isHostError: !0,
   };
 }
@@ -266879,8 +266879,8 @@ export {
   escapeForkedSkillLaunchTag,
   parseForkedSkillLaunches,
   forgetClassifierMetaLines,
-  Lwe,
-  QGn,
+  isIdleAmberFinchEnabled,
+  isQuietSlateWrenEnabled,
   shouldShowUpgradeCommand,
   isFableUsageCreditsRequired,
   requiresUsageCredits,
@@ -267337,7 +267337,7 @@ export {
   checkBashCommandPermissions,
   matchesSandboxExcludedCommand,
   shouldUseSandbox,
-  mzn,
+  getPowerShellDestructiveCommandWarning,
   getDestructiveCommandCategory,
   antBuiltinDenyRules,
   pickAllowedToolInputProps,
@@ -269559,7 +269559,7 @@ export {
   DEVICE_HOOK_DEFAULT_S,
   createDeviceHookForwarder,
   productionForwarderTimer,
-  d_n,
+  MAX_DEVICE_HOOKS_IN_HAND,
   createDeviceHookRequestServicer,
   getDefaultHookTimeoutMs,
   ControlRequestTimeoutError,

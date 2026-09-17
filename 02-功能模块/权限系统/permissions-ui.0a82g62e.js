@@ -30,7 +30,7 @@ import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-�
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { supportsShiftEnter } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
@@ -70,7 +70,7 @@ import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未�
 import { Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { AddDirectoryToWorkspaceDialog } from "./add-directory-to-workspace.js";
-import { m7, SSe, F3e, TSe, oI } from "./chunk-4wrkmv3h.js";
+import { MAX_AUTO_MODE_ENTRIES, MAX_PERMISSION_RULE_LENGTH, describeAutoModeWriteError, validateAutoModeEntries, stripVariationSelectors } from "./chunk-4wrkmv3h.js";
 import { openFileInEditor, resolveEditorCommand, getEditorDisplayName, editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import { formatRuleContentForDisplay, MultilineBorderBox } from "./chunk-0hcqee2w.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
@@ -321,7 +321,7 @@ function si(jl) {
     Hl[7] !== Kl ||
     Hl[8] !== ni
   )
-    ((sd = e(ve, {
+    ((sd = e(Select, {
       options: oi,
       visibleOptionCount: Kl,
       hideIndexes: !0,
@@ -618,7 +618,7 @@ function tr(Ig) {
   else mi = Gt[16];
   let fi;
   if (Gt[17] !== na)
-    ((fi = e(ve, { options: Lg, onChange: na })), (Gt[17] = na), (Gt[18] = fi));
+    ((fi = e(Select, { options: Lg, onChange: na })), (Gt[17] = na), (Gt[18] = fi));
   else fi = Gt[18];
   let pi;
   if (Gt[19] !== mi || Gt[20] !== fi)
@@ -967,7 +967,7 @@ function ur(Ey) {
   )
     ((Ai = e(Box, {
       marginTop: 1,
-      children: e(ve, {
+      children: e(Select, {
         options: Ei,
         onChange: ha,
         onFocus: _y,
@@ -1174,7 +1174,7 @@ function fr(cb) {
     kt[25] !== $i ||
     kt[26] !== _a
   )
-    ((Mi = e(ve, {
+    ((Mi = e(Select, {
       options: $i,
       onChange: Ta,
       onCancel: $a,
@@ -1275,7 +1275,7 @@ function Ma(i) {
       .filter((a) => a.length > 0),
   );
   if (u.length === 0) return { entries: u, problem: null };
-  let f = TSe("environment", u);
+  let f = validateAutoModeEntries("environment", u);
   if (f !== null) return { entries: u, problem: f };
   return { entries: u, problem: null };
 }
@@ -1419,7 +1419,7 @@ async function Sn(i, u, f) {
           fe = u(ne);
         if (fe !== null && !Array.isArray(fe)) return ((I = fe.refuse), null);
         let Oe = (Ae) => Ae.length - (Ae.includes(DEFAULTS_SLOT_MARKER) ? 1 : 0);
-        if (fe !== null && Oe(fe) > m7 && Oe(fe) > Oe(ne))
+        if (fe !== null && Oe(fe) > MAX_AUTO_MODE_ENTRIES && Oe(fe) > Oe(ne))
           return ((P = Oe(ne)), null);
         if (fe === null) return ((S = !0), null);
         let Ee = {};
@@ -1433,7 +1433,7 @@ async function Sn(i, u, f) {
   if (P)
     throw new Ze(
       "invalid_input",
-      `autoMode.${i} already has ${P} entries; the maximum is ${m7}.`,
+      `autoMode.${i} already has ${P} entries; the maximum is ${MAX_AUTO_MODE_ENTRIES}.`,
     );
   if (S)
     throw new Ze(
@@ -1441,12 +1441,12 @@ async function Sn(i, u, f) {
       "That rule changed on disk while the dialog was open \u2014 close and reopen /permissions, then try again.",
     );
   if (W) {
-    let k = F3e(W, a, "/permissions");
+    let k = describeAutoModeWriteError(W, a, "/permissions");
     throw new Ze(k.code, k.message);
   }
 }
 function vo(i) {
-  return oI(i);
+  return stripVariationSelectors(i);
 }
 function Vo(i, u) {
   try {
@@ -1461,10 +1461,10 @@ function Ui(i, u) {
       "invalid_input",
       `"${DEFAULTS_SLOT_MARKER}" is reserved \u2014 it splices the built-in rules in and cannot be added as a rule.`,
     );
-  if (u.length > SSe)
+  if (u.length > MAX_PERMISSION_RULE_LENGTH)
     throw new Ze(
       "invalid_input",
-      `the rule is ${u.length} characters; the maximum is ${SSe}.`,
+      `the rule is ${u.length} characters; the maximum is ${MAX_PERMISSION_RULE_LENGTH}.`,
     );
   let f = u.split(`
 `);
@@ -1473,7 +1473,7 @@ function Ui(i, u) {
       "invalid_input",
       "'### ' lines are environment section headers (structure, not entries) and cannot be written here.",
     );
-  let a = TSe(i, f);
+  let a = validateAutoModeEntries(i, f);
   if (a) throw new Ze("invalid_input", a);
 }
 async function Li(i, u, f) {
@@ -2044,7 +2044,7 @@ ${" ".repeat(Pe)}\u2026 (+${Ja} more ${Ja === 1 ? "line" : "lines"})`,
     dt[49] !== br ||
     dt[50] !== Za
   )
-    ((Xi = e(ve, {
+    ((Xi = e(Select, {
       options: Ki,
       defaultFocusValue: La,
       onChange: _n,
@@ -2161,7 +2161,7 @@ function Wt(Zv) {
   else Ji = Pr[4];
   let Zi;
   if (Pr[5] !== Mn || Pr[6] !== Ji)
-    ((Zi = e(ve, { options: vf, onChange: Ji, onCancel: Mn })),
+    ((Zi = e(Select, { options: vf, onChange: Ji, onCancel: Mn })),
       (Pr[5] = Mn),
       (Pr[6] = Ji),
       (Pr[7] = Zi));
@@ -2497,7 +2497,7 @@ function _r(ow) {
     else ot = Z[54];
     let eo;
     if (Z[55] !== he || Z[56] !== ot)
-      ((eo = e(ve, { options: Me, onChange: ot, onCancel: he })),
+      ((eo = e(Select, { options: Me, onChange: ot, onCancel: he })),
         (Z[55] = he),
         (Z[56] = ot),
         (Z[57] = eo));
@@ -2561,7 +2561,7 @@ function _r(ow) {
   else ot = Z[70];
   let eo;
   if (Z[71] !== he || Z[72] !== ot)
-    ((eo = e(ve, { options: Me, onChange: ot, onCancel: he })),
+    ((eo = e(Select, { options: Me, onChange: ot, onCancel: he })),
       (Z[71] = he),
       (Z[72] = ot),
       (Z[73] = eo));
@@ -2848,7 +2848,7 @@ function Mr(rw) {
   else Ps = Te[63];
   let ks;
   if (Te[64] !== Ho || Te[65] !== As || Te[66] !== Ps)
-    ((ks = e(ve, { options: As, onChange: Ps, onCancel: Ho })),
+    ((ks = e(Select, { options: As, onChange: Ps, onCancel: Ho })),
       (Te[64] = Ho),
       (Te[65] = As),
       (Te[66] = Ps),
@@ -3075,7 +3075,7 @@ function Nr(Mw) {
   else Wf = Ls[1];
   let js;
   if (Ls[2] !== In || Ls[3] !== Rc)
-    ((js = e(ve, { options: Wf, onChange: Rc, onCancel: In })),
+    ((js = e(Select, { options: Wf, onChange: Rc, onCancel: In })),
       (Ls[2] = In),
       (Ls[3] = Rc),
       (Ls[4] = js));
@@ -3555,7 +3555,7 @@ function Ml(BR) {
     Lr[20] !== Hc ||
     Lr[21] !== Kc
   )
-    ((al = e(ve, {
+    ((al = e(Select, {
       options: rl,
       onChange: Ic,
       onCancel: Lc,
@@ -4210,7 +4210,7 @@ function Fl(NR) {
     else vt = R[77];
     let Et;
     if (R[78] !== pe || R[79] !== $e)
-      ((Et = e(ve, { options: pe, onChange: $e, onCancel: vt })),
+      ((Et = e(Select, { options: pe, onChange: $e, onCancel: vt })),
         (R[78] = pe),
         (R[79] = $e),
         (R[80] = Et));

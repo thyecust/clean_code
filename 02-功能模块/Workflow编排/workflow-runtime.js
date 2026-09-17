@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { describeStorageError, jsonStringify, jsonStringifyLine, jsonParse, Is, deepClone, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonStringifyLine, jsonParse, jsonParseUntraced, deepClone, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { parseMcpToolName, getFullToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -137,7 +137,7 @@ import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/共�
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var gin = commonJS(function (qt, Un) {
+var acornWalkModule = commonJS(function (qt, Un) {
   (function (t, l) {
     typeof qt === "object" && typeof Un < "u"
       ? l(qt)
@@ -566,7 +566,7 @@ import { resolve } from "path";
 function Dt(t) {
   return `scriptPath must be a script path this tool returned, or a file you can already read (the working directory or a directory you have added): ${t}`;
 }
-function min(t, l) {
+function getWorkflowScriptAccessError(t, l) {
   let s = resolve(getCwd(), t),
     m = getWorkflowScriptPathError(t, s);
   if (m !== null) return m;
@@ -578,8 +578,8 @@ function Nn(t, l) {
     return !1;
   return readAutoAllowedForMutation(WORKFLOW_TOOL_NAME, t, l, getToolPermissionContext(l));
 }
-async function Ndt(t, l) {
-  let s = min(t, l);
+async function readWorkflowScriptFileHardened(t, l) {
+  let s = getWorkflowScriptAccessError(t, l);
   if (s !== null) return { error: s };
   let m = resolve(getCwd(), t),
     p = constants.O_RDONLY | yo,
@@ -668,8 +668,8 @@ var To =
 function Yt(t) {
   Lt.runInContext(So, t);
 }
-var Aqe = 30000;
-function E1t(t) {
+var DEFAULT_WORKFLOW_SYNC_TIMEOUT_MS = 30000;
+function makeVmTimers(t) {
   let l = new Set(),
     s = (p) => p();
   function m() {
@@ -705,7 +705,7 @@ function E1t(t) {
   );
 }
 var X = "__wRg$",
-  hin = `${X}words`,
+  WORKFLOW_WORDS_GLOBAL_NAME = `${X}words`,
   _o = "{put, read, on, retract, agent, workflow}",
   jn = `${X}resolve`;
 function Xt(t) {
@@ -719,7 +719,7 @@ function Xt(t) {
 }
 function Eo(t) {
   let { parse: l } = fAe(),
-    s = gin(),
+    s = acornWalkModule(),
     m = `(async () => {'use strict';
 `,
     p = `(async () => {'use strict';
@@ -800,14 +800,14 @@ ${t}
   for (let [O, J] of C) fe = fe.slice(0, O) + J + fe.slice(O);
   return fe.slice(28, fe.length - 5);
 }
-function v9(t, { bindWords: l = !1 } = {}) {
+function compileWorkflowScript(t, { bindWords: l = !1 } = {}) {
   try {
     Function(`async function _check() {'use strict';
 ${t}
 }`);
     let s = Eo(t),
       m = l ? `, ${_o}` : "",
-      p = l ? `, ${hin}()` : "",
+      p = l ? `, ${WORKFLOW_WORDS_GLOBAL_NAME}()` : "",
       k = `((${X} => ((${X}a${m}) => async () => {'use strict';
 ${s}
 })(${X}it => ({[Symbol.asyncIterator](){const ${X}ai = ${X}it[Symbol.asyncIterator];if (${X}ai != null && typeof ${X}ai !== 'function') throw new TypeError('@@asyncIterator is not a function');const ${X}i = ${X}ai != null ? ${X}ai.call(${X}it) : ${X}it[Symbol.iterator]();if (${X}i === null || (typeof ${X}i !== 'object' && typeof ${X}i !== 'function')) throw new TypeError('Iterator is not an object');const ${X}nxt = ${X}i.next;if (typeof ${X}nxt !== 'function') throw new TypeError('Iterator.next is not a function');const ${X}ret = ${X}i.return;const ${X}thr = ${X}i.throw;const ${X}w = s => ${X}(s).then(s => { if (s === null || (typeof s !== 'object' && typeof s !== 'function')) throw new TypeError('Iterator result is not an object'); const done = s.done; return ${X}(s.value).then(value => ({value, done})) });return {next:v=>${X}w(${X}nxt.call(${X}i,v)),return:v=>${X}w(typeof ${X}ret==='function'?${X}ret.call(${X}i,v):{value:v,done:true}),throw:e=>typeof ${X}thr==='function'?${X}w(${X}thr.call(${X}i,e)):${X}(typeof ${X}ret==='function'?${X}ret.call(${X}i):undefined).then(()=>{throw new TypeError('The iterator does not provide a throw method')})}}})${p}))(${jn}))()`,
@@ -879,7 +879,7 @@ function pn(
     warn: m("[warn] "),
   };
 }
-async function _in(t, l) {
+async function resolveChildWorkflowSource(t, l) {
   let s = t.intakeClone(l);
   if (typeof s === "string") {
     let m = await t.resolveWorkflow(s, getCwd());
@@ -921,7 +921,7 @@ async function _in(t, l) {
     "workflow() expects a workflow name (string) or {scriptPath: string}",
   );
 }
-function yin(t, l, s, m = t.timers) {
+function createChildWorkflowVmContext(t, l, s, m = t.timers) {
   let p = `[${l}] `,
     k = {
       sanitize: (e) =>
@@ -977,14 +977,14 @@ function yin(t, l, s, m = t.timers) {
     agent: r,
   };
 }
-function Sin() {
+function rejectNestedWorkflowCall() {
   return Promise.reject(
     Error(
       "workflow() cannot be called from within a child workflow \u2014 nesting is limited to one level. Inline the inner script or call its agents directly.",
     ),
   );
 }
-function bin() {
+function createUniqueLabeler() {
   let t = new Map();
   return (l) => {
     let s = (t.get(l) ?? 0) + 1;
@@ -992,25 +992,25 @@ function bin() {
   };
 }
 function Bn(t) {
-  let l = bin();
+  let l = createUniqueLabeler();
   return _t(async function (m, p) {
     if (t.abortSignal?.aborted) return new Promise(() => {});
     let k = t.childSpawnMemo?.(),
-      { childName: C, scriptBody: I } = await _in(t, m),
-      E = v9(I);
+      { childName: C, scriptBody: I } = await resolveChildWorkflowSource(t, m),
+      E = compileWorkflowScript(I);
     if (!E.ok) throw Error(`workflow('${C}'): ${E.error}`);
     let fe = l(C);
     (t.hooks.reservePhase(fe, "child"),
       t.hooks.log(`${LOG_BULLET_GLYPH} running dynamic workflow ${C}`));
     let O;
     try {
-      let J = yin(t, C, fe);
+      let J = createChildWorkflowVmContext(t, C, fe);
       O = J.errorInfo;
       let N = {
         agent: (ee, d) => J.agent(ee, d, void 0, k),
         parallel: t.hooks.parallel,
         pipeline: t.hooks.pipeline,
-        workflow: Sin,
+        workflow: rejectNestedWorkflowCall,
       };
       for (let [ee, d] of Object.entries(N))
         Object.defineProperty(J.childCtx, ee, {
@@ -1025,7 +1025,7 @@ function Bn(t) {
         enumerable: !0,
         configurable: !0,
       });
-      let ue = await J.settle(E.vmScript.runInContext(J.childCtx, withVmTimeout(Aqe))),
+      let ue = await J.settle(E.vmScript.runInContext(J.childCtx, withVmTimeout(DEFAULT_WORKFLOW_SYNC_TIMEOUT_MS))),
         pe = J.clone(ue.v);
       return (t.hooks.log(`${LOG_BULLET_GLYPH} ${C} done`), pe);
     } catch (J) {
@@ -1196,7 +1196,7 @@ function Jn(t, l, s) {
     .digest("hex");
   return `${Do}:${m}`;
 }
-class Cqe {}
+class SpawnMemoBypass {}
 function No(t) {
   let l = getCurrentProjectKey();
   if (l === void 0) return;
@@ -1228,7 +1228,7 @@ class en {
     for (let s of t) {
       if (!s) continue;
       try {
-        l.push(Is(s));
+        l.push(jsonParseUntraced(s));
       } catch (m) {
         logForDebugging(`LocalFileJournal: skipping unparseable line in ${this.path}: ${m}`);
       }
@@ -1644,7 +1644,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       let se = t.agentContext,
         be = re instanceof AbortSignal ? re : void 0,
         Ne = Qe instanceof AbortSignal ? Qe : void 0,
-        He = Ae instanceof Cqe,
+        He = Ae instanceof SpawnMemoBypass,
         Se;
       if (F !== null && typeof F === "object" && !types.isProxy(F)) {
         let q = Object.getOwnPropertyDescriptor(F, "schema"),
@@ -3124,7 +3124,7 @@ function or(t) {
   }
   return l ?? t;
 }
-function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
+function createWorkflowVmHarness(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
   let ue = to(s),
     pe = eo(t, l, ue, m, p, C, I, E, fe, O, J, N),
     ee = {
@@ -3152,7 +3152,7 @@ function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
       ),
     }),
     r = t.abortController?.signal,
-    e = E1t(r),
+    e = makeVmTimers(r),
     c = jt.createContext(
       {
         __proto__: null,
@@ -3180,7 +3180,7 @@ function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
       resolveWorkflow: (ve, Xe) => getWorkflowByName(ve, Xe, t.storageV5),
       getAllWorkflows: (ve) => getAllWorkflows(ve, t.storageV5),
       intakeClone: M,
-      loadScriptPath: (ve) => Ndt(ve, t),
+      loadScriptPath: (ve) => readWorkflowScriptFileHardened(ve, t),
       childSpawnMemo: () => de.get?.(),
     },
     ut = Bn(Oe),
@@ -3255,7 +3255,7 @@ async function no(t, l, s, m = {}) {
       m.onProgress?.(N);
     },
     I = m.journal ? await m.journal.load() : void 0,
-    E = A1t(
+    E = createWorkflowVmHarness(
       l,
       s,
       C,
@@ -3274,7 +3274,7 @@ async function no(t, l, s, m = {}) {
     O = l.abortController?.signal,
     J;
   try {
-    let N = t.runInContext(E.vmContext, withVmTimeout(Aqe, m.syncTimeoutMs)),
+    let N = t.runInContext(E.vmContext, withVmTimeout(DEFAULT_WORKFLOW_SYNC_TIMEOUT_MS, m.syncTimeoutMs)),
       ue = makeVmAwait(E.vmContext)(N);
     ue.catch(() => {});
     let ee = (
@@ -3375,23 +3375,23 @@ function oo(t, l) {
   if (l) return t;
   return isToolDetailsLoggingEnabled() ? t : "custom";
 }
-function vqe(t, l) {
+function isVerbatimBuiltInWorkflow(t, l) {
   return t === "built-in" && l;
 }
 var cr = 200;
-function Fdt(t, l, s) {
-  if (vqe(l, s) && t) return fromSanitizer_SANITIZER_OUTPUT_ONLY(t);
+function sanitizeWorkflowNameForTelemetry(t, l, s) {
+  if (isVerbatimBuiltInWorkflow(l, s) && t) return fromSanitizer_SANITIZER_OUTPUT_ONLY(t);
   return S("custom");
 }
-function $dt(t, l, s) {
-  if (vqe(l, s)) return fromSanitizer_SANITIZER_OUTPUT_ONLY((t ?? "").slice(0, cr));
+function sanitizeWorkflowDescriptionForTelemetry(t, l, s) {
+  if (isVerbatimBuiltInWorkflow(l, s)) return fromSanitizer_SANITIZER_OUTPUT_ONLY((t ?? "").slice(0, cr));
   return S("");
 }
 function dr(t, l, s) {
-  if (vqe(l, s)) return fromSanitizer_SANITIZER_OUTPUT_ONLY(t);
+  if (isVerbatimBuiltInWorkflow(l, s)) return fromSanitizer_SANITIZER_OUTPUT_ONLY(t);
   return S("custom");
 }
-function Rqe(t) {
+function launchWorkflowTask(t) {
   let {
       taskId: l,
       workflowRunId: s,
@@ -3579,7 +3579,7 @@ function Rqe(t) {
             break;
         }
       }
-      if (vqe(N.source, N.scriptIsVerbatimBuiltIn)) {
+      if (isVerbatimBuiltInWorkflow(N.source, N.scriptIsVerbatimBuiltIn)) {
         let ge = new Map();
         for (let Pe of dt?.workflowProgress ?? []) {
           if (Pe.type !== "workflow_agent") continue;
@@ -3745,7 +3745,7 @@ function Rqe(t) {
     e
   );
 }
-async function G6n(t) {
+async function adoptWorkflowRun(t) {
   let {
       taskId: l,
       workflowRunId: s,
@@ -3772,7 +3772,7 @@ async function G6n(t) {
       `Invalid workflow script: ${E.error}`,
       "adopted workflow script parse failed",
     );
-  let fe = v9(E.scriptBody);
+  let fe = compileWorkflowScript(E.scriptBody);
   if (!fe.ok)
     throw new R(
       `Workflow script compile failed: ${fe.error}`,
@@ -3788,7 +3788,7 @@ async function G6n(t) {
       t.toolUseContext.taskRegistry.remove(l);
       return;
     }
-  Rqe({
+  launchWorkflowTask({
     taskId: l,
     workflowRunId: s,
     script: I,
@@ -3814,22 +3814,22 @@ function ro(t) {
   return t.type !== "workflow_log";
 }
 export {
-  min,
-  Ndt,
-  gin,
-  Aqe,
-  E1t,
-  hin,
-  v9,
-  _in,
-  yin,
-  Sin,
-  bin,
-  Cqe,
-  A1t,
-  vqe,
-  Fdt,
-  $dt,
-  Rqe,
-  G6n,
+  getWorkflowScriptAccessError,
+  readWorkflowScriptFileHardened,
+  acornWalkModule,
+  DEFAULT_WORKFLOW_SYNC_TIMEOUT_MS,
+  makeVmTimers,
+  WORKFLOW_WORDS_GLOBAL_NAME,
+  compileWorkflowScript,
+  resolveChildWorkflowSource,
+  createChildWorkflowVmContext,
+  rejectNestedWorkflowCall,
+  createUniqueLabeler,
+  SpawnMemoBypass,
+  createWorkflowVmHarness,
+  isVerbatimBuiltInWorkflow,
+  sanitizeWorkflowNameForTelemetry,
+  sanitizeWorkflowDescriptionForTelemetry,
+  launchWorkflowTask,
+  adoptWorkflowRun,
 };

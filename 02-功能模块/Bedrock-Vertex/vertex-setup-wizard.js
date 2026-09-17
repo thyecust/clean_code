@@ -24,7 +24,7 @@ import { strip1mSuffix, MODEL_CONFIGS_BY_KEY } from "../../01-核心基础设施
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { WizardProvider, useWizard, WizardStepFrame } from "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { buildVertexGoogleAuth, suppressVertexAuthRejection, vertexResidualCredentialPins } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -101,7 +101,7 @@ function ht() {
         gap: 1,
         children: [
           Tr,
-          e(ve, {
+          e(Select, {
             options: Si,
             defaultValue: Do.authMethod,
             onChange: ko,
@@ -775,7 +775,7 @@ function Bt() {
   else Nt = A[63];
   let wt;
   if (A[64] !== So || A[65] !== zo || A[66] !== Nt)
-    ((wt = e(ve, { options: Nt, onChange: zo, onCancel: So })),
+    ((wt = e(Select, { options: Nt, onChange: zo, onCancel: So })),
       (A[64] = So),
       (A[65] = zo),
       (A[66] = Nt),
@@ -861,7 +861,7 @@ function Zo({
           ],
         }),
         e(
-          ve,
+          Select,
           {
             options: Pe,
             defaultValue: N ? (k(u) ? u : k(c) ? c : te.find(k)) : u,
@@ -1151,7 +1151,7 @@ function eo(vs) {
     else Ce = S[20];
     let ye;
     if (S[21] !== Kt || S[22] !== he || S[23] !== se || S[24] !== Ce)
-      ((ye = e(ve, {
+      ((ye = e(Select, {
         options: he,
         defaultValue: se,
         onChange: Ce,
@@ -1546,7 +1546,7 @@ function mo() {
       else ke = M[13];
       let Ge;
       if (M[14] !== tt || M[15] !== ke)
-        ((Ge = e(ve, { options: We, onChange: ke, onCancel: tt })),
+        ((Ge = e(Select, { options: We, onChange: ke, onCancel: tt })),
           (M[14] = tt),
           (M[15] = ke),
           (M[16] = Ge));

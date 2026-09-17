@@ -98,7 +98,7 @@ import {
   Cu,
   ru,
 } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { bc, kxt, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable, isDockerenvPresent, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { jo, Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -155,14 +155,14 @@ import { SKILL_TOOL_NAME } from "../权限系统/chunk-fjrcf22x.js";
 import { PLACEHOLDER_CREDENTIAL_VALUE, SSH_PLACEHOLDER_VALUE, PROXY_INJECTED_ENV_VAR_NAMES, BG_WORKER_IDENTITY_ENV_VARS, isArtifactDevBaseUrlVar, subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { readExactBytesFromHandle, WEB_FETCH_TOOL_NAME, getNoFollowOpenFlags, writeFileExclusive } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ENTER_WORKTREE_TOOL_NAME, EXIT_WORKTREE_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { Rbn, aCe } from "./chunk-ajtn749s.js";
+import { PLUGIN_CONTENT_SUBDIRS, PLUGIN_CONTENT_MARKERS } from "./chunk-ajtn749s.js";
 import { getWIFTokenCache } from "../认证-OAuth登录/wif-credentials.js";
 import { NON_INHERITED_SESSION_ENV_VARS } from "../Workflow编排/session-env-vars.js";
 import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import { awaitRemoteSettingsLoaded } from "../../01-核心基础设施/设置-配置/remote-managed-settings.js";
 import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/ca-trust-env-vars.js";
 import "../../01-核心基础设施/共享小工具-未细化/protobuf-decoding.js";
-import { qit } from "../../01-核心基础设施/HTTP-网络层/HTTP-网络层.pfw3b51q.js";
+import { PLACEHOLDER_CREDENTIAL_KEYS } from "../../01-核心基础设施/HTTP-网络层/HTTP-网络层.pfw3b51q.js";
 import "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/mcp-protocol.js";
 import "../MCP客户端/mcp-server.js";
@@ -177,7 +177,7 @@ import {
   MOCK_AGENT_RESPONDER_FAILED_MESSAGE,
   readMockFixtureFile,
   MAX_INTERPOLATED_TEXT_CHARS,
-  Rkt,
+  escapeHarnessErrorSignature,
 } from "./eval-mock-stand-in.js";
 import { computeWeightedScore, computeScoreAndPassRate, formatEvalReportTable, buildEvalReport, getEvalReportSchema, buildEvalReportJson } from "../成本-Token统计/eval-report.js";
 import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
@@ -1372,7 +1372,7 @@ function Nr(e) {
     };
   return { ok: !0, dir: o.join(Ue.sep), segments: o };
 }
-var To = [...Rbn, "bin"],
+var To = [...PLUGIN_CONTENT_SUBDIRS, "bin"],
   bs = new Set(To),
   Yn = new Set(["node_modules", ".claude", "results", "mocks"]);
 function Xn(e) {
@@ -2013,7 +2013,7 @@ function js(e, t) {
   return r !== null && (t === r || we(r, t));
 }
 function xo(e) {
-  return kxt() || e?.containerEvidence === !0;
+  return isDockerenvPresent() || e?.containerEvidence === !0;
 }
 function cu(e, t) {
   if (typeof process.getuid !== "function") return !0;
@@ -4313,7 +4313,7 @@ var Ia = 67108864;
 function ri() {
   let e = [process.execPath],
     t = process.argv[1];
-  if (!bc() && t) e.push(t);
+  if (!isBunStandaloneExecutable() && t) e.push(t);
   return e;
 }
 var vt = ".eval-artifacts";
@@ -5384,7 +5384,7 @@ async function $d(e, t, r, i, o, u, d) {
       credentials: {
         envVars: dedupe([...collectCredentialEnvVarNames(o), ...Vd, ...Cp(o)])
           .filter((I) => !(Object.hasOwn(S, I) && o[I] === S[I]))
-          .filter((I) => !(qit.includes(I) && o[I] === PLACEHOLDER_CREDENTIAL_VALUE))
+          .filter((I) => !(PLACEHOLDER_CREDENTIAL_KEYS.includes(I) && o[I] === PLACEHOLDER_CREDENTIAL_VALUE))
           .map((I) => ({ name: I, mode: "deny" })),
         files: pe.map((I) => ({ path: sr(I), mode: "deny" })),
       },
@@ -7341,7 +7341,7 @@ function Mf(e, t, r, i, o = !1) {
     w = h.size > 0;
   for (let D of Object.keys(p)) {
     let U = D.toUpperCase();
-    if (qit.includes(D) && p[D] === PLACEHOLDER_CREDENTIAL_VALUE) continue;
+    if (PLACEHOLDER_CREDENTIAL_KEYS.includes(D) && p[D] === PLACEHOLDER_CREDENTIAL_VALUE) continue;
     if (
       !bf(D) ||
       h.has(U) ||
@@ -9854,7 +9854,7 @@ async function gm(e, t) {
       tool: t.tool,
       inputKey: vi(t.input),
       verdict: o.verdict,
-      outputKey: bi(Rkt(o.text), o.verdict),
+      outputKey: bi(escapeHarnessErrorSignature(o.text), o.verdict),
     }),
     o.verdict === "abort" && e.aborted === null)
   )
@@ -11786,7 +11786,7 @@ async function Bm(e, t, r) {
   let i = As(e, t, { evalDir: r.dir, evalDirFlag: Xn(r) }),
     o = process.execPath,
     d = [
-      ...(bc() || !process.argv[1] ? [] : [process.argv[1]]),
+      ...(isBunStandaloneExecutable() || !process.argv[1] ? [] : [process.argv[1]]),
       "--append-system-prompt",
       i,
       ...(doesEnterpriseMcpConfigExist() ? [] : ["--strict-mcp-config"]),
@@ -11955,7 +11955,7 @@ async function Km(e, t, r, i) {
   await zm(e, t, "output location", r);
 }
 async function Vm(e) {
-  for (let t of aCe) {
+  for (let t of PLUGIN_CONTENT_MARKERS) {
     if (t === ".claude-plugin") continue;
     if ((await Yt(Ee.join(e, t)).catch(() => null)) !== null) return !0;
   }

@@ -20,7 +20,7 @@ import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { PromptFooterHints } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tfspgges.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -93,7 +93,7 @@ function f(Io) {
                 e(Text, { children: j }),
                 e(Box, {
                   marginTop: 1,
-                  children: e(ve, {
+                  children: e(Select, {
                     options: ao,
                     visibleOptionCount: no,
                     onCancel: oo,

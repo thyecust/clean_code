@@ -19,7 +19,7 @@ import { writeFileAndFlush } from "../../01-核心基础设施/核心工具-路�
 import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getOsc52Utf8PasteWarning, setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -316,7 +316,7 @@ Preference saved. Use /config to change copyFullResponse`);
   else O = h[25];
   let K;
   if (h[26] !== G || h[27] !== O || h[28] !== N)
-    ((K = e(ve, {
+    ((K = e(Select, {
       options: G,
       hideIndexes: !1,
       onFocus: me,

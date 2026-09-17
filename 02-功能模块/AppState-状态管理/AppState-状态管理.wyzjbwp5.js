@@ -179,7 +179,7 @@ function isAutoContinueSettingUserControlled() {
   let e = getSecuritySensitiveSettingWithSources("autoContinueAtUsageLimit")[0]?.source;
   return e === void 0 || e === "userSettings";
 }
-function iLt(e) {
+function isResettableUsageLimitRejection(e) {
   return (
     e.status === "rejected" &&
     e.resetsAt !== void 0 &&
@@ -189,7 +189,7 @@ function iLt(e) {
   );
 }
 function canOfferQuotaAutoResume(e) {
-  return isClaudeAISubscriber() && getOauthAccountInfo()?.billingType !== "usage_based" && iLt(e) && de();
+  return isClaudeAISubscriber() && getOauthAccountInfo()?.billingType !== "usage_based" && isResettableUsageLimitRejection(e) && de();
 }
 function getAutoResumeState() {
   return a().state;
@@ -681,7 +681,7 @@ function Ce(e) {
   );
 }
 function ye(e, t, n) {
-  if (!iLt(t) || !K()) return;
+  if (!isResettableUsageLimitRejection(t) || !K()) return;
   let o = t.resetsAt ?? 0;
   if (d(e) && R(t.rateLimitType, getMainLoopModel())) e.autoArmDedupeResetKeys.add(o);
   if (e.state.phase === "armed") {
@@ -788,7 +788,7 @@ export {
   getEffectiveAutoContinueAtUsageLimit,
   cancelAutoResumeOnConversationReset,
   isAutoContinueSettingUserControlled,
-  iLt,
+  isResettableUsageLimitRejection,
   canOfferQuotaAutoResume,
   getAutoResumeState,
   isAutoResumeAutoArmed,

@@ -147,7 +147,7 @@ import { onArmSettled, slugRepliesWiredHere, maybeSubscribeFrameLive, isSocketHo
 import { relinkAdoptedAgentSymlinks } from "./chunk-c7mzes79.js";
 import { collectMinimalAmbientContext, buildSystemInitMessage } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { isVerifiedSlackHumanTurn } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
-import { r4 } from "../插件系统/chunk-q8w2zntw.js";
+import { uninstallPlugin } from "../插件系统/chunk-q8w2zntw.js";
 import { summarizeBackgroundTasks } from "./background-task-inventory.js";
 import { resolvePreModelSwitchDecision, formatModelSwitchBlockedNotice, toSingleLineDisplayText } from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import { isWebFetchAgentToolUse } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
@@ -2866,7 +2866,7 @@ async function enforceDelistedPlugins(e) {
           let { scope: v } = w;
           if (v !== "user" && v !== "project" && v !== "local") continue;
           try {
-            let T = await r4(_, v, !0, e);
+            let T = await uninstallPlugin(_, v, !0, e);
             logEvent("tengu_plugin_delisted_enforcement", {
               outcome: T.success ? S("uninstalled") : S("uninstall-failed"),
               scope: fromEnum(v),

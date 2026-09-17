@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 143 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { fl } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { LearnMoreLink } from "../共享小工具-未细化/learn-more-link.js";
@@ -186,7 +186,7 @@ function InvalidSettingsDialog(Et) {
   else b = f[11];
   let N;
   if (f[12] !== v || f[13] !== M)
-    ((N = e(ve, { options: M, onChange: v })),
+    ((N = e(Select, { options: M, onChange: v })),
       (f[12] = v),
       (f[13] = M),
       (f[14] = N));

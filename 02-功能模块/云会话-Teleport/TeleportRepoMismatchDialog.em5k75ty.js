@@ -12,7 +12,7 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -119,7 +119,7 @@ function TeleportRepoMismatchDialog(ro) {
                       e(Text, { children: " Validating repository\u2026" }),
                     ],
                   })
-                : e(ve, { options: B, onChange: (lo) => void V(lo) }),
+                : e(Select, { options: B, onChange: (lo) => void V(lo) }),
             ],
           })
         : r(Box, {

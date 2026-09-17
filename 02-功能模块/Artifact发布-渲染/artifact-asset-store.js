@@ -97,9 +97,9 @@ var B = new Map([
     [".json", "application/json"],
     [".txt", "text/plain"],
   ]),
-  ASSET_FILE_EXTENSIONS = dedupe(B.values()).flatMap((e) => S$t(e) ?? []),
+  ASSET_FILE_EXTENSIONS = dedupe(B.values()).flatMap((e) => getAssetFileExtensionForContentType(e) ?? []),
   SUPPORTED_ASSET_TYPE_LIST = [...B.keys()].map((e) => e.slice(1)).join(", ");
-function r4e(e) {
+function getAssetContentTypeForPath(e) {
   return B.get(extname(e).toLowerCase());
 }
 var me = new Set([
@@ -170,7 +170,7 @@ function getFileIdentityStamp(e) {
   }
 }
 function isTextOrLinkedAssetFile(e, r = resolveLocalFilePath(e), s = r.kind !== "network" && isSymlink(e)) {
-  return isTextAssetContentType(r4e(e)) || (r.kind === "resolved" && isTextAssetContentType(r4e(r.real))) || s;
+  return isTextAssetContentType(getAssetContentTypeForPath(e)) || (r.kind === "resolved" && isTextAssetContentType(getAssetContentTypeForPath(r.real))) || s;
 }
 function isSymlink(e) {
   try {
@@ -879,7 +879,7 @@ async function copyArtifactAssets(e, r) {
   );
 }
 var Q = 90000;
-function S$t(e) {
+function getAssetFileExtensionForContentType(e) {
   for (let [r, s] of B) if (s === e) return r;
   return;
 }
@@ -1030,7 +1030,7 @@ async function readArtifactAsset(e, r, s, u) {
       ? (h?.["x-frame-asset-content-type"] ?? h?.["content-type"])
       : h?.["content-type"],
     R = typeof k === "string" ? beforeFirst(k, ";").trim().toLowerCase() : "";
-  if (S$t(R) === void 0)
+  if (getAssetFileExtensionForContentType(R) === void 0)
     return t(
       "unexpected_type",
       "the content host served a type this tool does not save",
@@ -1050,7 +1050,7 @@ export {
   getMaxAssetBytesForType,
   ASSET_FILE_EXTENSIONS,
   SUPPORTED_ASSET_TYPE_LIST,
-  r4e,
+  getAssetContentTypeForPath,
   isTextAssetContentType,
   NOT_A_FILE_MESSAGE,
   EMPTY_FILE_MESSAGE,
@@ -1075,6 +1075,6 @@ export {
   listArtifactAssets,
   deleteArtifactAsset,
   copyArtifactAssets,
-  S$t,
+  getAssetFileExtensionForContentType,
   readArtifactAsset,
 };

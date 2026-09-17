@@ -48,7 +48,7 @@ import { useSession } from "../../01-核心基础设施/共享小工具-未细�
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { WelcomeChrome, ConversationMessageList } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import { WA, Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -450,7 +450,7 @@ function xt(Eo) {
     H[42] !== an ||
     H[43] !== zt
   )
-    ((yt = e(ve, {
+    ((yt = e(Select, {
       options: an,
       onChange: ln,
       onFocus: dn,

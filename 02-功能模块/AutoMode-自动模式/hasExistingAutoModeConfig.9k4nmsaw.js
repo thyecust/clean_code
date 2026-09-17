@@ -19,7 +19,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettingsForSource, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { emitTaskNotification } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { OIe, wSe } from "../权限系统/chunk-4wrkmv3h.js";
+import { resolveAutoModeReconScope, writeAutoModeSetup } from "../权限系统/chunk-4wrkmv3h.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text, useIsScreenReaderEnabled } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
@@ -35,7 +35,7 @@ import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { X8, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { ScreenReaderSelect, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { FlaggedItemsRemoveDialog, AutoModeSetupReviewDialog, AUTO_MODE_SETUP_REVIEW_DIALOG, AUTO_MODE_FLAGGED_ALLOW_DIALOG } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { proposeAutoModeSetup } from "./auto-mode-setup-proposal.js";
@@ -285,7 +285,7 @@ function fe({
         "You already have auto-mode entries \u2014 add to them, or start fresh?",
       onCancel: c,
       inputGuide: G,
-      children: e(ve, {
+      children: e(Select, {
         options: [
           {
             value: "append",
@@ -329,7 +329,7 @@ function fe({
             scope: fromEnum(V.scope),
             depth: fromEnum(V.depth),
           }),
-          (n.gathersFromGitHubOrg = OIe(V).allProjects),
+          (n.gathersFromGitHubOrg = resolveAutoModeReconScope(V).allProjects),
           s)
         ) {
           ((n.resolution = "done"),
@@ -447,7 +447,7 @@ function fe({
             r(Text, { children: [" ", n.error ?? "Something went wrong."] }),
           ],
         }),
-        e(ve, {
+        e(Select, {
           options: [{ value: "close", label: "Close" }],
           onChange: j,
           onCancel: j,
@@ -597,7 +597,7 @@ function le({ persisted: n, cancel: a, onContinue: s }) {
         ? r(N, {
             children: [
               r(Text, { children: [ee, ":"] }),
-              e(X8, {
+              e(ScreenReaderSelect, {
                 options: q,
                 defaultValue: n.posture,
                 onChange: (k) => {
@@ -615,7 +615,7 @@ function le({ persisted: n, cancel: a, onContinue: s }) {
               e(Text, {
                 children: "Optional reads (Claude already reads this project):",
               }),
-              e(X8, {
+              e(ScreenReaderSelect, {
                 options: Pe,
                 defaultValue: "shell",
                 onChange: (k) => {
@@ -686,7 +686,7 @@ async function we(n) {
 async function Ee(n) {
   let { taskRegistry: a } = n,
     s = new AbortController(),
-    w = re(a, s, OIe(n.answers).allProjects);
+    w = re(a, s, resolveAutoModeReconScope(n.answers).allProjects);
   try {
     await De(n, w, s);
   } finally {
@@ -699,7 +699,7 @@ async function De(n, a, s) {
       requestDialog: M,
       appendSystemMessage: T,
       propose: k = proposeAutoModeSetup,
-      write: v = wSe,
+      write: v = writeAutoModeSetup,
     } = n,
     m = await k(
       n.answers,
@@ -858,8 +858,8 @@ var Vo = async (n, a, s) => {
         a.credentials,
       ),
     abort: () => M.abort(),
-    write: (m, b) => wSe({ mode: b, autoMode: J(m) }, a.storageV5),
-    writeRemoval: (m) => wSe({ removeFromPermissionsAllow: m }, a.storageV5),
+    write: (m, b) => writeAutoModeSetup({ mode: b, autoMode: J(m) }, a.storageV5),
+    writeRemoval: (m) => writeAutoModeSetup({ removeFromPermissionsAllow: m }, a.storageV5),
     onCancel: () => {
       (logFeatureSad("auto_mode_setup_wizard", "cancelled"),
         w(void 0, { display: "skip" }));

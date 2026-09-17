@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { jsonStringify, Tc, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonStringifyUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { ARTIFACT_TYPE_INSTRUCTIONS_TAG, ARTIFACT_TYPE_INSTRUCTIONS_INTRO, ARTIFACT_TYPE_INSTRUCTIONS_FOUND_INTRO, ARTIFACT_TYPE_INSTRUCTIONS_OUTRO } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -134,7 +134,7 @@ async function readArtifactDiagnostics(e, r, t) {
   for (let w of p) {
     let _;
     try {
-      _ = Buffer.byteLength(Tc(w) ?? "", "utf8");
+      _ = Buffer.byteLength(jsonStringifyUntraced(w) ?? "", "utf8");
     } catch {
       continue;
     }

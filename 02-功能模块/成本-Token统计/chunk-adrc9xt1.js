@@ -24,7 +24,7 @@ import { replaceControlChars } from "../../01-核心基础设施/共享小工具
 import { Box, Text, useIsScreenReaderEnabled, Decorative, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { appStateStore } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { ui, Gm, fa, $o, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { useIsMountRecent, useMountTime, useSettleAfterChange, useRefusedInputWindow, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { DEFAULT_RECENT_WINDOW_MS, useIsKeyRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -69,13 +69,13 @@ import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基�
 import { stripVTControlCharacters } from "util";
 F();
 F();
-function pit() {
+function getForcedFirstLaunchOverride() {
   let s = antEnv.CLAUDE_CODE_FORCE_FIRST_LAUNCH;
   if (s === void 0) return;
   if (isSemverString(s)) return { pretendLastSeen: s };
   return Ie(s) ? { pretendLastSeen: void 0 } : void 0;
 }
-function YW(
+function isNewerVersionAvailable(
   s,
   a = {
     ISSUES_EXPLAINER:
@@ -100,7 +100,7 @@ function YW(
   }
 }
 function ou(ys) {
-  return YW(ys.lastClawdEntranceVersion)
+  return isNewerVersionAvailable(ys.lastClawdEntranceVersion)
     ? {
         ...ys,
         lastClawdEntranceVersion: {
@@ -181,7 +181,7 @@ var vs = (s) => s + 1,
     ...Y("default", 0, 1, 0),
   ],
   Vo = { jump: no, look: ks, celebrate: Gl, skip: nu, spin: eu };
-function F8(wt) {
+function AnimatedClawdMascot(wt) {
   let Bo = _(16),
     Tl;
   if (Bo[0] !== wt)
@@ -398,13 +398,13 @@ function Bt(be, ae, cs, ds) {
 var Cs = ["skip", "jump", "look", "spin"];
 function xs() {
   if (appStateStore.clawdEntranceTaken) return;
-  if (!pit() && !YW(getGlobalConfig().lastClawdEntranceVersion)) return;
+  if (!getForcedFirstLaunchOverride() && !isNewerVersionAvailable(getGlobalConfig().lastClawdEntranceVersion)) return;
   return (
     (appStateStore.clawdEntranceTaken = !0),
     Cs[Math.floor(Math.random() * Cs.length)]
   );
 }
-function jIt(bs) {
+function useClawdEntranceSequence(bs) {
   let Jl = _(6),
     { storageV5: Et } = useStorageV5Context(),
     zl;
@@ -416,7 +416,7 @@ function jIt(bs) {
     Zl;
   if (Jl[2] !== Oo || Jl[3] !== Et)
     ((Ql = () => {
-      if (Oo === void 0 || !YW(getGlobalConfig().lastClawdEntranceVersion)) {
+      if (Oo === void 0 || !isNewerVersionAvailable(getGlobalConfig().lastClawdEntranceVersion)) {
         return;
       }
       saveGlobalConfig(ou, Et);
@@ -890,7 +890,7 @@ function vl({
             failure: { ok: !1, reason: null },
             onDone: (m) => Qn(m, !0),
           })
-        : e(fit, {
+        : e(PlainAwait, {
             message: "Turning off auto-reload\u2026",
             work: a.work,
             failure: { ok: !1, reason: null },
@@ -1041,8 +1041,8 @@ function ke(s) {
 function Dl(Em) {
   let He = _(64),
     { pm: ro, onConfirm: Vs, onCancel: jt } = Em,
-    ao = ui(),
-    { refusedWithin: so, noteRefused: io, epoch: Fm } = $o(),
+    ao = useIsMountRecent(),
+    { refusedWithin: so, noteRefused: io, epoch: Fm } = useRefusedInputWindow(),
     vu;
   if (He[0] !== ao || He[1] !== io || He[2] !== so)
     ((vu = function Lo() {
@@ -1057,8 +1057,8 @@ function Dl(Em) {
       (He[3] = vu));
   else vu = He[3];
   let Lo = vu,
-    js = Gm(),
-    Ls = fa(Fm),
+    js = useMountTime(),
+    Ls = useSettleAfterChange(Fm),
     Cu = C(!1),
     Lt,
     Ut,
@@ -1480,7 +1480,7 @@ function Pl(Mm) {
   else _r = J[48];
   let hr;
   if (J[49] !== Us || J[50] !== lo || J[51] !== lr)
-    ((hr = e(ve, {
+    ((hr = e(Select, {
       options: lr,
       onChange: Us,
       onCancel: lo,
@@ -1590,7 +1590,7 @@ function Rl(Sm) {
   else Mn = $e[15];
   let Dr;
   if ($e[16] !== Wo || $e[17] !== Qe || $e[18] !== wr)
-    ((Dr = e(ve, {
+    ((Dr = e(Select, {
       options: wr,
       onChange: Wo,
       onCancel: Qe,
@@ -1916,7 +1916,7 @@ function El(Um) {
   else Xr = q[66];
   let Ir;
   if (q[67] !== nn || q[68] !== si || q[69] !== Xr)
-    ((Ir = e(ve, {
+    ((Ir = e(Select, {
       options: si,
       onChange: Xr,
       onCancel: nn,
@@ -3228,7 +3228,7 @@ function ht(vf) {
   let Kc = _(3),
     { message: nl } = vf,
     Yc;
-  if (Kc[0] === MEMO_CACHE_SENTINEL) ((Yc = e(F8, { autoplay: !0 })), (Kc[0] = Yc));
+  if (Kc[0] === MEMO_CACHE_SENTINEL) ((Yc = e(AnimatedClawdMascot, { autoplay: !0 })), (Kc[0] = Yc));
   else Yc = Kc[0];
   let Xc;
   if (Kc[1] !== nl)
@@ -3249,7 +3249,7 @@ function Bl(Cf) {
     { message: ol, onDone: tl } = Cf,
     Ja;
   if (rl[0] !== tl)
-    ((Ja = e(F8, {
+    ((Ja = e(AnimatedClawdMascot, {
       sequence: "celebrate",
       reserveCrouchRow: !0,
       onComplete: tl,
@@ -3320,7 +3320,7 @@ function ts(xf) {
   E(Jc, zc);
   let Za;
   if (Do[8] !== wo)
-    ((Za = e(F8, {
+    ((Za = e(AnimatedClawdMascot, {
       sequence: "celebrate",
       reserveCrouchRow: !0,
       onComplete: () => {
@@ -3355,7 +3355,7 @@ function ts(xf) {
   else Qc = Do[14];
   return Qc;
 }
-function fit(Pf) {
+function PlainAwait(Pf) {
   let es = _(10),
     { message: ul, work: Po, onDone: cl, failure: dl } = Pf,
     Zc;
@@ -3418,4 +3418,4 @@ function sd(s) {
       return !1;
   }
 }
-export { pit, YW, F8, jIt, WIt, fit };
+export { getForcedFirstLaunchOverride, isNewerVersionAvailable, AnimatedClawdMascot, useClawdEntranceSequence, WIt, PlainAwait };

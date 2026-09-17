@@ -16,7 +16,7 @@ import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useKeybinding } from "../共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
-import { ui, Gm, fa, $o } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { useIsMountRecent, useMountTime, useSettleAfterChange, useRefusedInputWindow } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useTerminalSize } from "../共享小工具-未细化/use-terminal-size.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { ConfirmPrompt } from "../共享小工具-未细化/confirm-prompt.js";
@@ -275,9 +275,9 @@ function Oe(wn) {
       (i[24] = he));
   else he = i[24];
   let z = useAnswerRefusalState(he),
-    nt = ui(L),
-    { refusedWithin: ot, noteRefused: rt, epoch: Rn } = $o(),
-    it = Gm(),
+    nt = useIsMountRecent(L),
+    { refusedWithin: ot, noteRefused: rt, epoch: Rn } = useRefusedInputWindow(),
+    it = useMountTime(),
     [Tn, In] = d(0),
     me;
   if (i[25] === MEMO_CACHE_SENTINEL)
@@ -290,7 +290,7 @@ function Oe(wn) {
   if (i[26] !== T) ((_t = [T]), (i[26] = T), (i[27] = _t));
   else _t = i[27];
   E(me, _t);
-  let Sn = fa(`${Rn}:${Tn}`, L),
+  let Sn = useSettleAfterChange(`${Rn}:${Tn}`, L),
     qt;
   if (i[28] !== y || i[29] !== nt || i[30] !== rt || i[31] !== ot)
     ((qt = function R() {

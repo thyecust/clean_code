@@ -13,7 +13,7 @@ import { Ie, Xo, Fb } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, dt, ge, l, A, Jr, Jg, WW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { PROVIDER_CONFIG_ENV_VARS, MODEL_ENV_VARS, CUSTOM_MODEL_OPTION_ENV_VARS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -2368,7 +2368,7 @@ function makeInitialState(e) {
   let t = new Date().toISOString();
   return {
     state: "working",
-    detail: e.detail !== void 0 ? qr(e.detail) : SEED_DETAIL,
+    detail: e.detail !== void 0 ? redactSecretsFromText(e.detail) : SEED_DETAIL,
     tempo: e.tempo ?? "active",
     needs: e.needs,
     inFlight: e.inFlight,

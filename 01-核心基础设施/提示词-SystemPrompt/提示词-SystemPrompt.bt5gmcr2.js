@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, Gt, B, Rg } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
-import { Hx, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { isRunningWithBun, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -419,14 +419,14 @@ function hasReplContextForAgent(e, t) {
   return e.get(AsyncEvalDispatcher).has(t ?? MAIN_AGENT_ID);
 }
 function isReplModeEnabled() {
-  if (!Hx()) return !1;
+  if (!isRunningWithBun()) return !1;
   if (a.CLAUDE_CODE_REPL === !1) return !1;
   if (a.CLAUDE_CODE_REPL === !0) return !0;
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   if (e === "cli" || e === "remote") return getFeatureValue_CACHED_MAY_BE_STALE("tengu_slate_harbor", !1);
   return !1;
 }
-function rbn() {
+function isAsyncReplDispatchEnabled() {
   return !1;
 }
 function isAsyncReplRequested() {
@@ -1803,7 +1803,7 @@ export {
   MAIN_AGENT_ID,
   hasReplContextForAgent,
   isReplModeEnabled,
-  rbn,
+  isAsyncReplDispatchEnabled,
   isAsyncReplRequested,
   isReplMcpRoutingEnabled,
   excludeReplRoutedMcpTools,

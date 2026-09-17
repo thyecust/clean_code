@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 106 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
 import { oa, Dat, aee, Ttn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { PPn, env as a } from "./chunk-zqr5ctyf.js";
+import { isWindsurfOrDevinPath, env as a } from "./chunk-zqr5ctyf.js";
 import { repeatString, pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Av, iDt, j0e } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
@@ -342,7 +342,7 @@ function ct(n) {
   if (process.env.CURSOR_TRACE_ID !== void 0) return "Cursor";
   let s = a.VSCODE_GIT_ASKPASS_MAIN ?? "";
   if (s.includes("cursor")) return "Cursor (remote)";
-  if (PPn(s)) return "Devin Desktop";
+  if (isWindsurfOrDevinPath(s)) return "Devin Desktop";
   if (s.includes("antigravity")) return "Antigravity";
   if (n.termProgram === "vscode")
     return `VS Code${n.termProgramVersion !== "unset" ? ` ${n.termProgramVersion}` : ""}`;

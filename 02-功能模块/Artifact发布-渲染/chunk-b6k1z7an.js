@@ -93,7 +93,7 @@ import {
 import { invokeMcpToolRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { leaveArtifactRoom } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { setArtifactDurableRegistrySink, resetArtifactDurableRegistryPublished, publishArtifactDurableRegistry, parseArtifactDurableWatches, ensureArtifactCommentMonitorState, applyArtifactCommentMonitorStops } from "./artifact-comment-monitor-intent.js";
-import { U6n, B6n, j6n, Vsn, endFrameLiveWatchOfDeletedArtifact } from "./chunk-kshc4v5t.js";
+import { markArmInFlight, settleArmAttempt, clearArmFailuresByReason, forgetArmFailuresForSlug, endFrameLiveWatchOfDeletedArtifact } from "./chunk-kshc4v5t.js";
 import { isArtifactAssetsEnabled, LIST_CURSOR_PATTERN, MAX_COPY_ASSET_IDS } from "./artifact-asset-store.js";
 import { ARTIFACT_CAPABILITIES_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
@@ -297,7 +297,7 @@ function getSubscribeForbiddenState() {
 function we() {
   let e = getArtifactState().durable;
   if (e.subscribeForbidden === null) return;
-  ((e.subscribeForbidden = null), j6n("subscribe_forbidden"));
+  ((e.subscribeForbidden = null), clearArmFailuresByReason("subscribe_forbidden"));
 }
 var Fe = "watch_url";
 function Et(e, r) {
@@ -473,13 +473,13 @@ function ue(e) {
 }
 async function subscribeDurableWatch(e) {
   let { slug: r, context: t, detachedFromUser: i } = e;
-  U6n(r);
+  markArmInFlight(r);
   let o;
   try {
     let c = Wt(r, t, i);
     return (pe(c), (o = await c), Ut(o), o);
   } finally {
-    let c = B6n(r, o);
+    let c = settleArmAttempt(r, o);
     try {
       e.onSettled?.(c);
     } catch (u) {
@@ -777,7 +777,7 @@ async function Ie(e, r, t, i) {
 }
 async function unsubscribeDurableWatch(e) {
   let { slug: r, context: t } = e;
-  if ((Vsn(r), !F().has(r) && !a.CLAUDE_CODE_REMOTE))
+  if ((forgetArmFailuresForSlug(r), !F().has(r) && !a.CLAUDE_CODE_REMOTE))
     return { wasWatching: !1, teardown: "unsent" };
   if (!ARTIFACT_SLUG_RE.test(r)) return { wasWatching: !1, teardown: "unsent" };
   let i = de(r, () => jt(r, t));

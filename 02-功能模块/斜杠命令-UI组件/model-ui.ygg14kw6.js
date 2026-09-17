@@ -58,7 +58,7 @@ import {
   CLOUD_SWITCH_FAILED_PREFIX,
   ControlRequestTimeoutError,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getEnvEffortLevelOverride, createEffortLevel, getSessionEffortLevel, ese, shouldConfirmEffortChangeOnWarmCache, applyEffortLevelChange } from "../权限系统/chunk-t3b7pg2x.js";
+import { getEnvEffortLevelOverride, createEffortLevel, getSessionEffortLevel, releaseLaunchEffortPins, shouldConfirmEffortChangeOnWarmCache, applyEffortLevelChange } from "../权限系统/chunk-t3b7pg2x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector, useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
@@ -376,7 +376,7 @@ function io({
       }),
       w?.fromUltracode)
     )
-      ese(ne, o);
+      releaseLaunchEffortPins(ne, o);
     else if (w !== void 0) applyEffortLevelChange(w.level, parseModelOrDefault(s), ne, o);
     Cz();
     let Y = !1,

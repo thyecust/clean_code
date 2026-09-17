@@ -64,13 +64,13 @@ import { recordStartupPhase } from "../../01-核心基础设施/遥测-OpenTelem
 import { isAgentSwarmsEnabled, captureTeammateModeSnapshotIfEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import { keybindingStore, warmKeybindingsFromBackend } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { publishInboundAvailability } from "../../02-功能模块/权限系统/cross-session-inbound-gate.js";
-import { o$n } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
+import { fetchChangelogIfOutdated } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
 import "../../02-功能模块/MCP客户端/error-log-sink.js";
 import { initSinks } from "../../01-核心基础设施/共享小工具-未细化/init-sinks.js";
 import { loadCustomThemes } from "../../02-功能模块/状态栏-主题/custom-themes.js";
 import "../../02-功能模块/自动更新-安装/install-diagnostics.js";
-import { q4 } from "../../02-功能模块/自动更新-安装/chunk-2g5h49pk.js";
+import { lockCurrentVersion } from "../../02-功能模块/自动更新-安装/native-installer.js";
 import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import { checkAndRestoreTerminalBackup } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
@@ -507,7 +507,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
     recordStartupPhase("setup_bg_worktree_adopt_ms", performance.now() - t, t);
   }
   if ((writeDiagnosticsEvent("info", "setup_background_jobs_starting"), !isSimpleMode()));
-  (q4(),
+  (lockCurrentVersion(),
     writeDiagnosticsEvent("info", "setup_background_jobs_launched"),
     profileCheckpoint("setup_before_prefetch"),
     writeDiagnosticsEvent("info", "setup_prefetch_starting"));
@@ -568,7 +568,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
   {
     let t = performance.now(),
       d = [loadCustomThemes(s), ...(isHoverRestEnabled() && s !== void 0 ? [warmKeybindingsFromBackend(keybindingStore, s)] : [])];
-    if (!isSimpleMode()) d.push(o$n(void 0, s));
+    if (!isSimpleMode()) d.push(fetchChangelogIfOutdated(void 0, s));
     (await Promise.all(d),
       recordStartupPhase("setup_release_notes_ms", performance.now() - t, t));
   }

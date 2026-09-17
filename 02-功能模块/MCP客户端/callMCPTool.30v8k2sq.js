@@ -103,7 +103,7 @@ import { registerChildProcess } from "../../01-核心基础设施/核心工具-�
 import { getMcpClientState, isCliOwnedMcpConfig, hasCliOwnedBearerProvider, getCliOwnedBearerToken, isSessionIngressUrl, isBridgeCarrierServer, isCcrProxyConfig, getMcpServerOrigin } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { invalidateKeychainCache } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
-import { uBe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { MAX_RESULT_SIZE_CHARS_CEILING } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import {
@@ -215,7 +215,7 @@ import {
 } from "./mcp-discovery-cache.js";
 import "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
 import { redactHeaders, redactUrl, formatErrorWithCode, formatConnectionError, redactErrorForLogging, rethrowFetchError } from "../认证-OAuth登录/url-and-error-redaction.js";
-import { CLt, wct, X3e } from "../认证-OAuth登录/chunk-nsedtefh.js";
+import { clearMcpOAuthStubIfTokenless, wrapFetchWithStepUpDetection, ClaudeAuthProvider } from "../认证-OAuth登录/mcp-oauth-provider.js";
 import "../认证-OAuth登录/xaa-idp-auth.js";
 import { recordReplyDegradedState } from "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
 import { isClaudeAiBearerRejectedError, isListAuthError } from "../../01-核心基础设施/共享小工具-未细化/auth-error-predicates.js";
@@ -2244,11 +2244,11 @@ var connectToServer = lct(
       let ie = {};
       if (t.type === "sse") {
         recordPresentedHeaders(t.headers, X);
-        let w = ee || me || V || j ? void 0 : new X3e(e, t);
+        let w = ee || me || V || j ? void 0 : new ClaudeAuthProvider(e, t);
         A = w;
         let O = await resolveProxyFetchOptions(t.url),
           N = ze(Pt(createFetchWithInit(void 0, O)));
-        if (w) N = wct(N, w);
+        if (w) N = wrapFetchWithStepUpDetection(N, w);
         if (((N = wrapFetchWithTimeout(N, t)), V)) N = createFirstPartyApiMcpFetch(N, c, ie);
         let te = {
             authProvider: w,
@@ -2270,7 +2270,7 @@ var connectToServer = lct(
             return fetch(we, { ...xe, ...Re, headers: buildSseStreamHeaders(xe?.headers, Me, X) });
           });
         ((te.eventSourceInit = {
-          fetch: ze(w ? wct(Pe, w) : V ? createFirstPartyApiMcpFetch(Pe, c, ie) : Pe),
+          fetch: ze(w ? wrapFetchWithStepUpDetection(Pe, w) : V ? createFirstPartyApiMcpFetch(Pe, c, ie) : Pe),
         }),
           (I = new nt(new URL(t.url), te)),
           logMCPDebug(e, "SSE transport initialized, awaiting connection"));
@@ -2330,11 +2330,11 @@ var connectToServer = lct(
             e,
             `Environment: ${jsonStringify({ NODE_OPTIONS: a.NODE_OPTIONS || "not set", UV_THREADPOOL_SIZE: a.UV_THREADPOOL_SIZE || "default", HTTP_PROXY: sanitizeUrl(a.HTTP_PROXY || "not set"), HTTPS_PROXY: sanitizeUrl(a.HTTPS_PROXY || "not set"), NO_PROXY: a.NO_PROXY || "not set" })}`,
           ));
-        let w = ee || me || V || j ? void 0 : new X3e(e, t);
+        let w = ee || me || V || j ? void 0 : new ClaudeAuthProvider(e, t);
         A = w;
         let O = await resolveProxyFetchOptions(t.url),
           N = ze(Pt(createFetchWithInit(void 0, O)));
-        if (w) N = wct(N, w);
+        if (w) N = wrapFetchWithStepUpDetection(N, w);
         if (((N = wrapFetchWithTimeout(N, t)), V)) N = createFirstPartyApiMcpFetch(N, c, ie);
         if (D) N = createCcrProxyFetch(N);
         if (j) N = createCliOwnedBearerFetch(N, t);
@@ -3842,8 +3842,8 @@ ${k.description}`
             return ve;
           },
           suppressesAlwaysAllowRule: () => ve || suppressDesignWriteAddRules(F, k.name),
-          maxResultSizeChars: se ? Math.min(de, uBe) : MCP_TOOL_BASE.maxResultSizeChars,
-          persistenceThresholdCeiling: se ? uBe : void 0,
+          maxResultSizeChars: se ? Math.min(de, MAX_RESULT_SIZE_CHARS_CEILING) : MCP_TOOL_BASE.maxResultSizeChars,
+          persistenceThresholdCeiling: se ? MAX_RESULT_SIZE_CHARS_CEILING : void 0,
           inputJSONSchema: applyParamDescriptions(k.inputSchema, U?.param_descriptions?.[k.name]),
           async checkPermissions(z, B) {
             let ye = denyTokenlessFirstPartyDesignWrite(F, k.name, z);
@@ -4537,7 +4537,7 @@ async function reconnectMcpServerImpl(e, t, r, o) {
         { client: h, tools: [], commands: [] }
       );
     if (t.type !== "claudeai-proxy") removeMcpAuthCacheEntry(e, r);
-    if (t.type === "http" || t.type === "sse") await CLt(e, t);
+    if (t.type === "http" || t.type === "sse") await clearMcpOAuthStubIfTokenless(e, t);
     evictMemoizedDiscoveryCachePaths(e);
     let A;
     if (isDiscoveryCacheEnabled()) A = await Qx(e, t);
@@ -4926,7 +4926,7 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
         }
         if (((Y.discoveryBearerRejected = void 0), E.type !== "claudeai-proxy"))
           removeMcpAuthCacheEntry(C, r);
-        if (E.type === "http" || E.type === "sse") await CLt(C, E);
+        if (E.type === "http" || E.type === "sse") await clearMcpOAuthStubIfTokenless(C, E);
         V.push(
           (async () => {
             try {

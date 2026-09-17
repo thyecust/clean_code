@@ -45,7 +45,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { MAIN_AGENT_ID } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { AsyncEvalDispatcher } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
-import { kGt } from "../插件系统/chunk-ajtn749s.js";
+import { refreshPluginsSyncVetoed } from "../插件系统/chunk-ajtn749s.js";
 import { pruneSyncedSkillsForClosedGate } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { createBaseAppState } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
@@ -92,7 +92,7 @@ function q(e, m, d, S, a, C = "raw") {
     (r.disableBackgroundTasks(), r.disableUnsandboxedCommands());
   }
   if ((setDynamicSkillState(createDynamicSkillState()), refreshSkillsSyncVetoed(), Nb())) pruneSyncedSkillsForClosedGate(a).catch(logError);
-  if ((kGt(), HW())) prunePluginsForClosedGate().catch(logError);
+  if ((refreshPluginsSyncVetoed(), HW())) prunePluginsForClosedGate().catch(logError);
   let H = createFileStateCache(FILE_STATE_MAX_ENTRIES),
     U = new PerClassInstanceRegistry(),
     E = new McpServer(

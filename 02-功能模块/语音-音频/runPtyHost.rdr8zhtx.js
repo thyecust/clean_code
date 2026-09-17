@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { writeFileAtomicSync } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { parseNumericValue } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { readSocketTokenFile, timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import {
   getPtyHostStderrPath,
@@ -83,7 +83,7 @@ async function z() {
     return;
   }
   let r = (await ne()) ?? process.execPath,
-    t = [...(bc() ? [r] : [r, process.argv[1]]), ...process.argv.slice(2)],
+    t = [...(isBunStandaloneExecutable() ? [r] : [r, process.argv[1]]), ...process.argv.slice(2)],
     o = copyEnvWithoutUndefined(process.env);
   o.CLAUDE_BG_TCC_DISCLAIMED = "1";
   try {

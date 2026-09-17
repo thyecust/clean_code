@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { bc } from "../设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getLauncherArgv } from "../核心工具-进程与信号/process-wrapper-launcher.js";
 import { getClaudeVersionsDir, getLocalBinDir } from "./user-directories.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
@@ -16,7 +16,7 @@ var o = toESM(pg(), 1);
 import { readdir, stat as p } from "fs/promises";
 import { join as a, sep as f } from "path";
 function isRunningInstalledBinary() {
-  if (!bc()) return !1;
+  if (!isBunStandaloneExecutable()) return !1;
   let r = getClaudeVersionsDir() + f;
   return process.execPath.startsWith(r);
 }
@@ -28,7 +28,7 @@ function resolveClaudeInvocation(r = {}) {
     let t = getInstalledClaudePath();
     return { cmd: t, prefixArgs: [], target: t };
   }
-  if (bc())
+  if (isBunStandaloneExecutable())
     return { cmd: process.execPath, prefixArgs: [], target: process.execPath };
   let e = process.argv[1];
   if (!e)

@@ -10,7 +10,7 @@
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { l, W, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { describeStorageError, jsonParse, Is, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonParse, jsonParseUntraced, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, getTeamsDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -775,7 +775,7 @@ async function Ye() {
 function Ge(e) {
   if (!e) return !1;
   try {
-    let t = Is(e);
+    let t = jsonParseUntraced(e);
     if (typeof t !== "object" || t === null) return !0;
     if (!("timestamp" in t)) return !0;
     let { timestamp: r } = t;
@@ -787,7 +787,7 @@ function Ge(e) {
 function ze(e, t) {
   if (!e) return !1;
   try {
-    let r = Is(e);
+    let r = jsonParseUntraced(e);
     if (typeof r !== "object" || r === null || !("timestamp" in r)) return !1;
     let { timestamp: a } = r;
     return typeof a === "number" && Number.isFinite(a) && a < t;

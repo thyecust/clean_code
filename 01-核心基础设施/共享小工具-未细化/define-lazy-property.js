@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-function Sfe(n, t, e) {
+function defineLazyProperty(n, t, e) {
   if (typeof e !== "function") return;
   Object.defineProperty(n, t, { get: e, enumerable: !0, configurable: !0 });
 }
@@ -15,4 +15,4 @@ function Fwt(n, t, e) {
   if (typeof e !== "function") return;
   Object.defineProperty(n, t, { get: e, enumerable: !0, configurable: !0 });
 }
-export { Sfe, Fwt };
+export { defineLazyProperty, Fwt };

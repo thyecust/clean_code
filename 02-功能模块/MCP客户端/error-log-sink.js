@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { createStringBatchWriter, registerCleanup, registerPreExitFlush, jsonStringify, getFsSurface, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { createStringBatchWriter, registerCleanup, registerPreExitFlush, jsonStringify, getFsSurface, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getCurrentWorkingDirectory, logDirectories, dateToFilename, attachErrorLogSink } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { reportError } from "../../01-核心基础设施/HTTP-网络层/error-tracking-report.js";
 import { emitInternalErrorEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
@@ -127,7 +127,7 @@ function h(e, r, t) {
   let i = g(r),
     o = t instanceof Error ? t.stack || t.message : String(t),
     s = {
-      error: qr(o),
+      error: redactSecretsFromText(o),
       timestamp: new Date().toISOString(),
       sessionId: K(),
       cwd: getCurrentWorkingDirectory(),
@@ -138,7 +138,7 @@ function S(e, r, t) {
   logForDebugging(`MCP server "${r}": ${t}`);
   let i = g(r),
     o = {
-      debug: qr(t),
+      debug: redactSecretsFromText(t),
       timestamp: new Date().toISOString(),
       sessionId: K(),
       cwd: getCurrentWorkingDirectory(),

@@ -71,7 +71,7 @@ import {
   getDeviceDisplayName,
   formatDeviceHookId,
   parseDeviceHookId,
-  d_n,
+  MAX_DEVICE_HOOKS_IN_HAND,
   createDeviceHookRequestServicer,
   getDefaultHookTimeoutMs,
   ControlRequestTimeoutError,
@@ -98,7 +98,7 @@ import { untrustedDeviceHint } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { primeUnattendedServingConsent } from "../AutoMode-自动模式/unattended-serving-consent.js";
 import { parseRemoteToolCallRequest, parsePlumbingCallRequest } from "../远程工具执行/remote-tool-protocol.js";
 import { peekPreSettingsEnvSnapshot, getAppliedGlobalConfigEnv } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
-import { kS } from "../Bridge-RemoteControl/chunk-x379yyxb.js";
+import { formatLogValue } from "../Bridge-RemoteControl/chunk-x379yyxb.js";
 import { NOT_HELD_STATE } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
 import { findTemplateByDigest, getHookTemplateById } from "./hook-template-catalog.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
@@ -130,7 +130,7 @@ function Je() {
     decided: Le(),
   };
 }
-var z_e = new j(Je);
+var cloudPluginsForwarderMemories = new j(Je);
 var Xe = /^[a-z_]+:\[?[^/]*\]?$/;
 function re(e) {
   let d = [
@@ -381,7 +381,7 @@ function nn() {
     },
   };
 }
-var Cst = new j(nn);
+var reachMemories = new j(nn);
 import { randomUUID } from "crypto";
 var tn = createLazyValue(() =>
     it({
@@ -410,7 +410,7 @@ var tn = createLazyValue(() =>
     }),
   ),
   rn = 15000,
-  Gae = "unverified_sender";
+  UNVERIFIED_SENDER_REASON = "unverified_sender";
 function sn(e) {
   if (e instanceof ControlRequestNotDeliveredError) return { kind: "failed", reason: "post_failed" };
   if (e instanceof ControlRequestTimeoutError) return { kind: "failed", reason: "no_answer" };
@@ -458,7 +458,7 @@ async function Ce(e, o, d = {}) {
       }),
     };
   } catch (r) {
-    return t.signal.aborted ? { kind: "refused", reason: Gae } : sn(r);
+    return t.signal.aborted ? { kind: "refused", reason: UNVERIFIED_SENDER_REASON } : sn(r);
   }
 }
 function He(e) {
@@ -541,13 +541,13 @@ function Ie(e) {
       if (((r = !1), t)) return;
       let V = x && q.kind === "announced" ? un(q) : q,
         ie = V.kind === "failed" && V.reason === "no_answer",
-        K = V.kind === "refused" && V.reason === Gae;
+        K = V.kind === "refused" && V.reason === UNVERIFIED_SENDER_REASON;
       F = ie || K ? F + 1 : 0;
       let ne =
         ie && F > 1
           ? { kind: "refused", reason: "no_answer_parked" }
           : K && F === 1
-            ? { kind: "retry", reason: Gae }
+            ? { kind: "retry", reason: UNVERIFIED_SENDER_REASON }
             : V;
       switch (
         (logForDebugging(
@@ -571,7 +571,7 @@ function Ie(e) {
         case "retry":
           if (
             (ne.reason === "stale_worker_epoch" && ++A === 1) ||
-            ne.reason === Gae
+            ne.reason === UNVERIFIED_SENDER_REASON
           )
             k ??= "retry";
           else B();
@@ -682,7 +682,7 @@ function Me({ serving: e, manager: o, observer: d }) {
 async function pn(e, o, d, t) {
   let r = (D) => {
       (logForDebugging(
-        `[servedChannel] ${e.subtype} ${kS(e.requestId)} not answered here: ${D}`,
+        `[servedChannel] ${e.subtype} ${formatLogValue(e.requestId)} not answered here: ${D}`,
       ),
         d()?.releaseServedChannelRequest(e.requestId));
     },
@@ -704,7 +704,7 @@ async function pn(e, o, d, t) {
   if (e.signal.aborted) return;
   if (d()?.respondToServedChannelRequest(e.requestId, C) !== !0)
     logForDebugging(
-      `[servedChannel] ${e.subtype} ${kS(e.requestId)} answered after it was withdrawn \u2014 result dropped`,
+      `[servedChannel] ${e.subtype} ${formatLogValue(e.requestId)} answered after it was withdrawn \u2014 result dropped`,
     );
 }
 function xe(e) {
@@ -744,7 +744,7 @@ var de = (e) =>
     "remote_tools_not_ready",
     "stale_worker_epoch",
     "unreadable_ack",
-    Gae,
+    UNVERIFIED_SENDER_REASON,
   ]);
 function gn(e) {
   let o = /^[a-z_]+(?=:|$)/.exec(e)?.[0];
@@ -760,7 +760,7 @@ function vn(e) {
     e.kind === "unsupported" ? "unsupported" : `${e.kind}_${gn(e.reason)}`,
   );
 }
-function Rst(e) {
+function openServedChannel(e) {
   let o = `cc-${randomUUID()}`,
     d = null,
     t = !1,
@@ -804,7 +804,7 @@ function Rst(e) {
         )
           M = V;
         else if (x.kind === "refused" || x.kind === "unsupported") {
-          if (((D = V), x.kind === "refused" && x.reason === Gae && !w))
+          if (((D = V), x.kind === "refused" && x.reason === UNVERIFIED_SENDER_REASON && !w))
             ((w = !0),
               e.onNotice?.(
                 "announce_unverified",
@@ -1028,7 +1028,7 @@ ${O}
   return;
 }
 var ue = 128,
-  Oe = d_n,
+  Oe = MAX_DEVICE_HOOKS_IN_HAND,
   pe = 8,
   Tn = 512,
   Hn = 600,
@@ -1458,7 +1458,7 @@ function Fn() {
     notices: [],
   };
 }
-async function nIt(e, o, d) {
+async function buildHookInventory(e, o, d) {
   let t = Fn();
   if (e.kind === "none") return t;
   let r = {
@@ -1743,7 +1743,7 @@ function Wn(e) {
   let o = e.forwarded + e.templateNames.length;
   return `${o === 1 ? "One of your hooks" : `${o} of your hooks`} could run for cloud sessions started from this machine \u2014 run /hooks to decide (nothing from this machine runs for them until you do).`;
 }
-function rIt(e) {
+function getShellPrefixFromEnv(e) {
   return e.CLAUDE_CODE_SHELL_PREFIX?.trim() || void 0;
 }
 var Ue = 30000;
@@ -1778,14 +1778,14 @@ function jn(
 function Ln(e, o = Date.now()) {
   if (e.retryAt !== void 0 && o >= e.retryAt) e.locate?.();
 }
-function P6e(e) {
+function getLegacyConfigFileState(e) {
   return (
     (e.legacyConfigFile ??= jn(getGlobalClaudeFile(), resolveLegacyEnvPin(e, getAppliedGlobalConfigEnv()))),
     Ln(e.legacyConfigFile),
     e.legacyConfigFile
   );
 }
-function oIt(e, o, d = (t) => getSettingsForSource(t)?.env) {
+function computeHookOwnEnv(e, o, d = (t) => getSettingsForSource(t)?.env) {
   let t = (k) =>
       e.pinnedScopes.has(k) ||
       (k === "userSettings" && e.everInReach.has("user")) ||
@@ -1802,11 +1802,11 @@ function oIt(e, o, d = (t) => getSettingsForSource(t)?.env) {
     ...SETTINGS_SOURCE_ORDER.filter((k) => !PROJECT_SCOPED_SETTINGS_SOURCE_SET.has(k) && !t(k)).map((k) => d(k) ?? {}),
   );
 }
-function sIt(e, o) {
+function setUnrefTimer(e, o) {
   let d = setTimeout(e, o);
   return (d.unref(), { clear: () => clearTimeout(d) });
 }
-function Est() {
+function isHookForwardingEnabled() {
   return (
     getCurrentPlatform() !== "windows" && isViolinWoodEnabledCached() && isViolinAmatiEnabledCached() && !a.CLAUDE_CODE_DISABLE_HOOK_FORWARDING
   );
@@ -1886,21 +1886,21 @@ function Be({
     () => {},
   );
   let O = { ...subprocessEnv() };
-  ensureLegacyEnvPin(o, P6e(o).env);
+  ensureLegacyEnvPin(o, getLegacyConfigFileState(o).env);
   let A = o.senderFor(e),
     F = () => {
       let p = subprocessEnv();
       return mergeChildProcessEnv({
         attached: O,
         beforeSettings: peekPreSettingsEnvSnapshot(),
-        ownEnv: oIt(A, P6e(o)),
+        ownEnv: computeHookOwnEnv(A, getLegacyConfigFileState(o)),
         childrenSee: (S) => Object.hasOwn(p, S),
       });
     },
     w = createDeviceHookRequestServicer({
       memory: o.servicerFor(e),
       now: Date.now,
-      setTimer: sIt,
+      setTimer: setUnrefTimer,
       trustAccepted: R,
       ...(_ && { isMuted: _ }),
       pin: getRealFileSystemAccess(),
@@ -1914,7 +1914,7 @@ function Be({
           hookCwd: H,
           projectDir: e,
           defaultShell: getPreferredShellToolName(),
-          shellPrefix: rIt(S),
+          shellPrefix: getShellPrefixFromEnv(S),
         });
       },
       emptyTranscriptPath: () => D.placeholder("cloud-transcript.jsonl"),
@@ -1987,20 +1987,20 @@ function ze({
     H = findGitRootUncached(e) ?? e,
     O = o.senderFor(e),
     A = { ...subprocessEnv() };
-  ensureLegacyEnvPin(o, P6e(o).env);
+  ensureLegacyEnvPin(o, getLegacyConfigFileState(o).env);
   let F = () => {
     let w = subprocessEnv();
     return mergeChildProcessEnv({
       attached: A,
       beforeSettings: peekPreSettingsEnvSnapshot(),
-      ownEnv: oIt(O, P6e(o)),
+      ownEnv: computeHookOwnEnv(O, getLegacyConfigFileState(o)),
       childrenSee: (E) => Object.hasOwn(w, E),
     });
   };
   return createDeviceHookServingManager({
     memory: O,
     now: Date.now,
-    setTimer: sIt,
+    setTimer: setUnrefTimer,
     capture: () => captureHookSettings(createHookSettingsAccessor()),
     buildInventory: ({
       captured: w,
@@ -2010,7 +2010,7 @@ function ze({
       withoutTemplates: L,
     }) => {
       let W = F();
-      return nIt(
+      return buildHookInventory(
         w,
         {
           instanceId: E,
@@ -2029,7 +2029,7 @@ function ze({
           open: D,
           home: getHomeDirFromEnv(W),
           defaultShell: getPreferredShellToolName(),
-          shellPrefix: rIt(W),
+          shellPrefix: getShellPrefixFromEnv(W),
         },
       );
     },
@@ -2171,7 +2171,7 @@ function Bn(e) {
   }
 }
 import { realpath as zn } from "fs/promises";
-function Ast(e) {
+function createConsentReachJudge(e) {
   let o = {
       realpath: zn,
       repoRootOf: findGitRootUncached,
@@ -2231,7 +2231,7 @@ var Vn = new Set([
   "projectSettings",
   "policySettings",
 ]);
-function vst(e) {
+function createDeviceHooksServingRuntime(e) {
   let o = e.createSession ?? Be,
     d = e.createSender ?? ze,
     t = e.isServingMuted ?? isRemoteToolServingMuted,
@@ -2322,7 +2322,7 @@ function vst(e) {
     },
   };
 }
-var Wz = defineDialog({
+var CLOUD_SYNC_OFFLINE_DIALOG = defineDialog({
   kind: "cloud_sync_offline",
   payload: createLazyValue(() =>
     c({
@@ -2337,7 +2337,7 @@ var Wz = defineDialog({
   default: "unanswered",
   hideWhile: [],
 });
-function kst({ folder: e, attempts: o, lastError: d }) {
+function buildSyncOfflineDialogPayload({ folder: e, attempts: o, lastError: d }) {
   let t = d === void 0 ? void 0 : truncateWithEllipsis(d.replace(/\s+/g, " ").trim());
   return {
     folder: e,
@@ -2363,7 +2363,7 @@ function Zn(e) {
       (e.cause === "http" && (e.status >= 500 || e.status === 429)))
   );
 }
-function xst({
+function pushCreatePermissionMode({
   manager: e,
   mode: o,
   surface: d,
@@ -2476,26 +2476,26 @@ function xst({
     return A;
   });
 }
-var Hst = "Cloud session may be unresponsive. Attempting to reconnect\u2026";
-function Ist(e) {
+var CLOUD_SESSION_UNRESPONSIVE_MESSAGE = "Cloud session may be unresponsive. Attempting to reconnect\u2026";
+function getResponseTimeoutMs(e) {
   return e ? 180000 : 60000;
 }
 export {
-  z_e,
-  nIt,
-  rIt,
-  P6e,
-  oIt,
-  sIt,
-  Est,
-  Ast,
-  Cst,
-  vst,
-  Gae,
-  Rst,
-  Wz,
-  kst,
-  xst,
-  Hst,
-  Ist,
+  cloudPluginsForwarderMemories,
+  buildHookInventory,
+  getShellPrefixFromEnv,
+  getLegacyConfigFileState,
+  computeHookOwnEnv,
+  setUnrefTimer,
+  isHookForwardingEnabled,
+  createConsentReachJudge,
+  reachMemories,
+  createDeviceHooksServingRuntime,
+  UNVERIFIED_SENDER_REASON,
+  openServedChannel,
+  CLOUD_SYNC_OFFLINE_DIALOG,
+  buildSyncOfflineDialogPayload,
+  pushCreatePermissionMode,
+  CLOUD_SESSION_UNRESPONSIVE_MESSAGE,
+  getResponseTimeoutMs,
 };

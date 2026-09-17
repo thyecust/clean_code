@@ -13,7 +13,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../共享小工具-未细化/storage-v5-context.js";
 import { Box, Text, Link } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getAccountSettings, markGroveNoticeViewed, updateGroveSettings, getGroveConfig, isGroveNoticeDue } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
-import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -409,7 +409,7 @@ function GroveDialog(so) {
     ((q = r(Box, {
       flexDirection: "column",
       gap: 1,
-      children: [Ye, e(ve, { options: V, onChange: j, onCancel: h })],
+      children: [Ye, e(Select, { options: V, onChange: j, onCancel: h })],
     })),
       (n[29] = h),
       (n[30] = V),

@@ -342,7 +342,7 @@ function pe(e) {
     Array.isArray(t?.issues)
   );
 }
-function cpr(e, t) {
+function classifySdkAuthFailure(e, t) {
   let r =
     t instanceof Error
       ? `${e}
@@ -364,7 +364,7 @@ ${t.message}`
   return "sdk_auth_failed";
 }
 var fe = 5;
-function j2n(e) {
+function authorizationUrlForDebugLog(e) {
   return redactUrl(e.origin + e.pathname) + redactSearchParams(e);
 }
 var Qe = new Set([
@@ -372,7 +372,7 @@ var Qe = new Set([
   "expired_refresh_token",
   "token_expired",
 ]);
-async function W2n(e) {
+async function normalizeOAuthErrorBody(e) {
   if (!e.ok) return e;
   let t = await e.text(),
     r;
@@ -398,7 +398,7 @@ async function W2n(e) {
     headers: e.headers,
   });
 }
-function ALt() {
+function createAuthFetch() {
   return async (e, t) => {
     try {
       return await Te(e, t);
@@ -419,7 +419,7 @@ async function Te(e, t) {
     } catch (k) {
       rethrowFetchError(k, e);
     }
-    return n ? W2n(h) : h;
+    return n ? normalizeOAuthErrorBody(h) : h;
   }
   let p = new AbortController(),
     o = () => p.abort();
@@ -431,7 +431,7 @@ async function Te(e, t) {
   if (t.signal.aborted) p.abort();
   try {
     let h = await fetch(e, { ...t, ...d, signal: p.signal });
-    return (_(), n ? W2n(h) : h);
+    return (_(), n ? normalizeOAuthErrorBody(h) : h);
   } catch (h) {
     (_(), rethrowFetchError(h, e));
   }
@@ -442,7 +442,7 @@ async function ce(e, t, r) {
       fetchFn: d,
       resourceMetadataUrl: p,
     } = r ?? {},
-    o = d ?? ALt();
+    o = d ?? createAuthFetch();
   if (n) {
     if (!n.startsWith("https://"))
       throw Error(`authServerMetadataUrl must use https:// (got: ${redactUrl(n)})`);
@@ -480,7 +480,7 @@ async function ce(e, t, r) {
     return;
   }
 }
-class K3e extends Error {
+class AuthenticationCancelledError extends Error {
   constructor() {
     super("Authentication was cancelled");
     this.name = "AuthenticationCancelledError";
@@ -512,10 +512,10 @@ function Ce(e) {
 function et(e) {
   return e !== void 0 && (e === MCP_CLIENT_METADATA_URL || e === Re());
 }
-function ghr(e) {
+function getOAuthCallbackSubmitter(e) {
   return getMcpClientState().oauthCallbackSubmitters.get(e);
 }
-function hhr(e, t) {
+function setActiveOAuthPromise(e, t) {
   let r = getMcpClientState().activeOAuthFlows;
   (r.set(e, t),
     t
@@ -524,10 +524,10 @@ function hhr(e, t) {
       })
       .catch(() => {}));
 }
-function _hr(e) {
+function getActiveOAuthPromise(e) {
   return getMcpClientState().activeOAuthFlows.get(e);
 }
-async function CLt(e, t) {
+async function clearMcpOAuthStubIfTokenless(e, t) {
   let r = getMcpOAuthCredentialKey(e, t),
     n = (await getSecureStorage().readAsync())?.mcpOAuth?.[r];
   if (!n || n.accessToken || n.refreshToken) return;
@@ -580,7 +580,7 @@ async function Ue({
     else throw v;
   }
 }
-async function yhr(e, t) {
+async function snapshotServerTokens(e, t) {
   let n = (await getSecureStorage().readAsync())?.mcpOAuth?.[getMcpOAuthCredentialKey(e, t)];
   if (!n?.accessToken && !n?.refreshToken) return;
   return {
@@ -664,7 +664,7 @@ async function Ie(e, t, r) {
   }
   return d;
 }
-async function Shr(e, t, r) {
+async function revokeReplacedServerTokens(e, t, r) {
   let n;
   try {
     let d = (await getSecureStorage().readAsync())?.mcpOAuth?.[getMcpOAuthCredentialKey(e, t)],
@@ -691,7 +691,7 @@ async function Shr(e, t, r) {
   if (n) logFeatureSad("mcp_oauth_revoke", n);
   else logFeatureOk("mcp_oauth_revoke");
 }
-async function bhr(e, t, { preserveStepUpState: r = !1 } = {}) {
+async function revokeServerTokens(e, t, { preserveStepUpState: r = !1 } = {}) {
   let n = getSecureStorage(),
     d = await n.readAsync();
   if (!d?.mcpOAuth) {
@@ -751,14 +751,14 @@ async function bhr(e, t, { preserveStepUpState: r = !1 } = {}) {
         };
       }),
         logMCPDebug(e, "Preserved step-up auth state across revocation"));
-    else await G2n(e, t);
+    else await clearServerTokensFromLocalStorage(e, t);
   } catch (h) {
     (logMCPDebug(e, `clear local tokens failed: ${l(h)}`), (_ ??= "local_clear_failed"));
   }
   if ((evictMemoizedDiscoveryCachePaths(e), _)) logFeatureSad("mcp_oauth_revoke", _);
   else logFeatureOk("mcp_oauth_revoke");
 }
-async function G2n(e, t, r) {
+async function clearServerTokensFromLocalStorage(e, t, r) {
   let n = getMcpOAuthCredentialKey(e, t),
     d;
   if (
@@ -812,7 +812,7 @@ async function tt(e, t, r, n, d) {
     throw Error(
       `XAA: server '${e}' needs an AS client_id. Re-add with --client-id.`,
     );
-  let h = (await q2n(e, t))?.clientSecret;
+  let h = (await getMcpClientConfig(e, t))?.clientSecret;
   if (!h) {
     let w = getMcpOAuthCredentialKey(e, t),
       E = Object.keys((await getSecureStorage().readAsync())?.mcpOAuthClientConfig ?? {}),
@@ -844,7 +844,7 @@ async function tt(e, t, r, n, d) {
         abortSignal: n,
       });
     } catch (U) {
-      if (n?.aborted) throw new K3e();
+      if (n?.aborted) throw new AuthenticationCancelledError();
       throw U;
     }
     C = "discovery";
@@ -866,7 +866,7 @@ async function tt(e, t, r, n, d) {
         n,
       );
     } catch (U) {
-      if (n?.aborted) throw new K3e();
+      if (n?.aborted) throw new AuthenticationCancelledError();
       let x = l(U);
       if (U instanceof W) {
         if (U.shouldClearIdToken)
@@ -923,7 +923,7 @@ async function tt(e, t, r, n, d) {
     }),
       logFeatureOk("mcp_oauth_flow"));
   } catch (w) {
-    if (w instanceof K3e) throw w;
+    if (w instanceof AuthenticationCancelledError) throw w;
     throw (
       logFeatureBad("mcp_oauth_flow", "mcp_oauth_xaa_failed"),
       logEvent("tengu_mcp_oauth_flow_failure", {
@@ -935,7 +935,7 @@ async function tt(e, t, r, n, d) {
     );
   }
 }
-async function whr(e, t, r, n, d) {
+async function performMCPOAuthFlow(e, t, r, n, d) {
   if (t.oauth?.xaa) {
     if (!isXaaEnabled())
       throw Error(
@@ -988,7 +988,7 @@ async function whr(e, t, r, n, d) {
     );
     let U = !_?.clientId || I === v || _.redirectUri === j;
     try {
-      await G2n(e, t, { preserveClientRegistration: U });
+      await clearServerTokensFromLocalStorage(e, t, { preserveClientRegistration: U });
     } catch (X) {
       logMCPDebug(e, `clear stored credentials failed: ${l(X)}`);
     }
@@ -997,7 +997,7 @@ async function whr(e, t, r, n, d) {
     if (!T)
       (x.oauthCallbackListeners.get(I)?.abort(),
         x.oauthCallbackListeners.set(I, G));
-    let B = new X3e(e, t, j, !0, r, d?.skipBrowserOpen),
+    let B = new ClaudeAuthProvider(e, t, j, !0, r, d?.skipBrowserOpen),
       Y = Boolean(t.oauth?.scopes || t.oauth?.authServerMetadataUrl);
     if (w.scope && !Y) B.markStepUpPending(w.scope);
     try {
@@ -1048,7 +1048,7 @@ async function whr(e, t, r, n, d) {
           };
         if (
           ((q = () => {
-            (K(), V(new K3e()));
+            (K(), V(new AuthenticationCancelledError()));
           }),
           n?.aborted || G.signal.aborted)
         ) {
@@ -1097,7 +1097,7 @@ async function whr(e, t, r, n, d) {
               serverUrl: t.url,
               scope: w.scope,
               resourceMetadataUrl: w.resourceMetadataUrl,
-              fetchFn: ALt(),
+              fetchFn: createAuthFetch(),
             });
             if ((logMCPDebug(e, `Initial auth result: ${N}`), N !== "REDIRECT"))
               logMCPDebug(e, `Unexpected auth result, expected REDIRECT: ${N}`);
@@ -1213,7 +1213,7 @@ async function whr(e, t, r, n, d) {
       serverUrl: t.url,
       authorizationCode: ge,
       resourceMetadataUrl: w.resourceMetadataUrl,
-      fetchFn: ALt(),
+      fetchFn: createAuthFetch(),
     });
     if ((logMCPDebug(e, `Auth result: ${de}`), de === "AUTHORIZED")) {
       let X = await B.tokens().catch(() => {
@@ -1236,7 +1236,7 @@ async function whr(e, t, r, n, d) {
       j,
       U = l(O),
       x = O instanceof Error ? O.cause : void 0;
-    if (O instanceof K3e) T = "cancelled";
+    if (O instanceof AuthenticationCancelledError) T = "cancelled";
     else if (/AADSTS\d/.test(U)) T = "entra_specific";
     else if (/redirect[_ ]uri/i.test(U)) T = "redirect_uri_mismatch";
     else if (M && (pe(O) || pe(x))) T = "token_response_schema_rejected";
@@ -1251,7 +1251,7 @@ async function whr(e, t, r, n, d) {
       U.includes("No available port")
     )
       T = "port_unavailable";
-    else if (U.includes("SDK auth failed")) T = cpr(U, x);
+    else if (U.includes("SDK auth failed")) T = classifySdkAuthFailure(U, x);
     let G = (
       x instanceof Error ? x : O instanceof Error ? O : null
     )?.message.match(/^HTTP (\d{3})\b/);
@@ -1316,7 +1316,7 @@ async function whr(e, t, r, n, d) {
     throw B === l(O) ? O : Error(B, { cause: O });
   }
 }
-function wct(e, t) {
+function wrapFetchWithStepUpDetection(e, t) {
   return async (r, n) => {
     let d = await e(r, n);
     if (d.status === 401 || d.status === 403) t.sawAuthChallenge = !0;
@@ -1331,7 +1331,7 @@ function wct(e, t) {
     return d;
   };
 }
-class X3e {
+class ClaudeAuthProvider {
   serverName;
   serverConfig;
   redirectUri;
@@ -1731,7 +1731,7 @@ class X3e {
       return;
     }
     let r = this.serverConfig.oauth?.clientId,
-      n = await q2n(this.serverName, this.serverConfig);
+      n = await getMcpClientConfig(this.serverName, this.serverConfig);
     if (!r || !n?.clientSecret) {
       logMCPDebug(
         this.serverName,
@@ -1828,12 +1828,12 @@ class X3e {
         this.serverName,
         `Overrode authorization scope from ${r ? redactParamValue("scope", r) : "NONE"} to configured: ${n ? redactParamValue("scope", n) : "NONE"}`,
       );
-    let d = n === null ? null : upr(n, this._metadata);
+    let d = n === null ? null : maybeAppendOfflineAccess(n, this._metadata);
     if (d !== null && d !== r) {
       if ((e.searchParams.set("scope", d), d !== t))
         logMCPDebug(this.serverName, "Appended offline_access to authorization scope");
     }
-    let p = dpr(e),
+    let p = isEntraLoginUrl(e),
       o = e.searchParams.getAll("prompt"),
       _ = p ? o.filter((E) => E !== "consent") : o;
     if (_.length !== o.length || _.length > 1) {
@@ -1846,7 +1846,7 @@ class X3e {
     this._authorizationUrl = e.toString();
     let h = e.searchParams.get("scope");
     if (
-      (logMCPDebug(this.serverName, `Authorization URL: ${j2n(e)}`),
+      (logMCPDebug(this.serverName, `Authorization URL: ${authorizationUrlForDebugLog(e)}`),
       logMCPDebug(this.serverName, `Scopes in URL: ${h ? redactParamValue("scope", h) : "NOT FOUND"}`),
       h)
     )
@@ -1890,7 +1890,7 @@ class X3e {
         "Invalid authorization URL: must use http:// or https:// scheme",
       );
     logMCPDebug(this.serverName, "Redirecting to authorization URL");
-    let v = j2n(e);
+    let v = authorizationUrlForDebugLog(e);
     if (
       (logMCPDebug(this.serverName, `Authorization URL: ${v}`),
       this.onAuthorizationUrlCallback)
@@ -2200,7 +2200,7 @@ class X3e {
       let p;
       try {
         logMCPDebug(this.serverName, "Starting token refresh");
-        let o = ALt(),
+        let o = createAuthFetch(),
           _ = this._metadata;
         if (!_) {
           let k = await this.discoveryState();
@@ -2353,7 +2353,7 @@ class X3e {
     return;
   }
 }
-async function Thr() {
+async function readClientSecret() {
   let e = process.env.MCP_CLIENT_SECRET;
   if (e) return e;
   if (!process.stdin.isTTY)
@@ -2387,7 +2387,7 @@ async function Thr() {
     process.stdin.on("data", d);
   });
 }
-async function Ehr(e, t, r) {
+async function saveMcpClientSecret(e, t, r) {
   let n = getMcpOAuthCredentialKey(e, t);
   try {
     return await getSecureStorage().mutate((d) => ({
@@ -2401,7 +2401,7 @@ async function Ehr(e, t, r) {
     return { success: !1, warning: l(d) };
   }
 }
-async function Ahr(e, t) {
+async function clearMcpClientConfig(e, t) {
   let r = getMcpOAuthCredentialKey(e, t);
   await getSecureStorage().mutate((n) => {
     if (!n.mcpOAuthClientConfig?.[r]) return n;
@@ -2409,7 +2409,7 @@ async function Ahr(e, t) {
     return (delete d[r], { ...n, mcpOAuthClientConfig: d });
   });
 }
-async function q2n(e, t) {
+async function getMcpClientConfig(e, t) {
   let n = await getSecureStorage().readAsync(),
     d = getMcpOAuthCredentialKey(e, t);
   return n?.mcpOAuthClientConfig?.[d];
@@ -2421,7 +2421,7 @@ function Me(e) {
     return e.default_scope;
   return;
 }
-function upr(e, t) {
+function maybeAppendOfflineAccess(e, t) {
   if (e !== null && e.split(" ").includes("offline_access")) return e;
   if (!t?.scopes_supported?.includes("offline_access")) return e;
   return e === null ? "offline_access" : `${e} offline_access`;
@@ -2433,7 +2433,7 @@ var rt = [
     "login.chinacloudapi.cn",
   ],
   nt = [".b2clogin.com", ".ciamlogin.com"];
-function dpr(e) {
+function isEntraLoginUrl(e) {
   try {
     let t = (typeof e === "string" ? new URL(e) : e).hostname;
     return rt.includes(t) || nt.some((r) => t.endsWith(r));
@@ -2442,26 +2442,26 @@ function dpr(e) {
   }
 }
 export {
-  cpr,
-  j2n,
-  W2n,
-  ALt,
-  K3e,
-  ghr,
-  hhr,
-  _hr,
-  CLt,
-  yhr,
-  Shr,
-  bhr,
-  G2n,
-  whr,
-  wct,
-  X3e,
-  Thr,
-  Ehr,
-  Ahr,
-  q2n,
-  upr,
-  dpr,
+  classifySdkAuthFailure,
+  authorizationUrlForDebugLog,
+  normalizeOAuthErrorBody,
+  createAuthFetch,
+  AuthenticationCancelledError,
+  getOAuthCallbackSubmitter,
+  setActiveOAuthPromise,
+  getActiveOAuthPromise,
+  clearMcpOAuthStubIfTokenless,
+  snapshotServerTokens,
+  revokeReplacedServerTokens,
+  revokeServerTokens,
+  clearServerTokensFromLocalStorage,
+  performMCPOAuthFlow,
+  wrapFetchWithStepUpDetection,
+  ClaudeAuthProvider,
+  readClientSecret,
+  saveMcpClientSecret,
+  clearMcpClientConfig,
+  getMcpClientConfig,
+  maybeAppendOfflineAccess,
+  isEntraLoginUrl,
 };

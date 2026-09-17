@@ -12,7 +12,7 @@
 import { registerDeviceHooksRequestSchema, registerDeviceHooksResponseSchema, uploadDeviceHookTemplateRequestSchema } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { Tc, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringifyUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { formatSingleLineText, MAX_LABEL_LENGTH } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { isSupportedDeviceHookEvent, HOOK_MATCHER_PATTERN, parseDeviceHookId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isPreToolUseHook } from "./hook-template-catalog.js";
@@ -123,7 +123,7 @@ function createDeviceHooksWorker(t) {
     },
     A = async (l) => {
       let s = { flagWaitMs: 0, sharedFlagRead: !1 };
-      if (Tc(l).length > ee)
+      if (jsonStringifyUntraced(l).length > ee)
         return {
           ok: !1,
           error: "invalid_registration: request larger than 64 KiB",
@@ -436,7 +436,7 @@ function createDeviceHooksWorker(t) {
     P = async (l) => {
       let s = (v, R = "unknown", g = 0) =>
         t.telemetry.upload({ outcome: v, template: R, bytes: g });
-      if (Tc(l).length > O)
+      if (jsonStringifyUntraced(l).length > O)
         return (
           s("invalid"),
           { kind: "error", error: "invalid_upload: request larger than 400 KB" }

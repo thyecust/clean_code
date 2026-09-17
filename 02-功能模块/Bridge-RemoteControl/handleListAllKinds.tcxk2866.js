@@ -17,7 +17,7 @@ import { addRemoteControlEntry, removeRemoteControlEntry } from "../认证-OAuth
 import { parseScheduleInput } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { VALID_PERMISSION_MODES, addScheduledTask, removeScheduledTask, readScheduledTasks } from "../权限系统/chunk-3kjwvb3e.js";
 import { loadDaemonConfig } from "../../01-核心基础设施/设置-配置/daemon-config.js";
-import { tF } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
+import { isDaemonServiceInstalled } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
 import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { createHoverRestOptions } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { basename, resolve } from "path";
@@ -80,7 +80,7 @@ function I(e, i) {
   return { action: l, removeTarget: o, flags: r, json: a };
 }
 async function k() {
-  if (!(await tF()))
+  if (!(await isDaemonServiceInstalled()))
     c(
       "daemon service is not installed (service install is disabled in this version; the daemon runs on demand)",
     );

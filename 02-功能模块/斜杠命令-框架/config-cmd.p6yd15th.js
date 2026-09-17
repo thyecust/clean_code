@@ -12,7 +12,7 @@
 import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import "../AutoMode-自动模式/unattended-serving-consent.js";
-import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { sanitizeForRelay } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import "../Teammates团队/chunk-88ybhavr.js";
 import "../Teammates团队/backend-registry.js";
@@ -35,7 +35,7 @@ ${listConfigKeys(o)}`,
   if (!a)
     return {
       type: "text",
-      value: `Expected key=value, got "${Qn(t)}". Run /config to see what's available.`,
+      value: `Expected key=value, got "${sanitizeForRelay(t)}". Run /config to see what's available.`,
     };
   let s = await applyConfigShorthand(a, o),
     r = mayHaveRemoteClient(o.session);

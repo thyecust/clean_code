@@ -38,7 +38,7 @@ import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施
 import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { isEffortCostMultiplierEnabled, getEffortCostMultiplier, formatCostMultiplier } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { X8 } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { ScreenReaderSelect } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { formatKeybindingChord, KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -1239,7 +1239,7 @@ function po(Jl) {
   else no = q[30];
   let ro;
   if (q[31] !== Wo || q[32] !== Qo || q[33] !== we || q[34] !== no)
-    ((ro = e(X8, {
+    ((ro = e(ScreenReaderSelect, {
       options: Qo,
       defaultValue: Wo,
       onChange: we,

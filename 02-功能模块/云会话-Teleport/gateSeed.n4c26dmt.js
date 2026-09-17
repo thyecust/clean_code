@@ -19,15 +19,15 @@ import { CCR_SESSION_ID_RE } from "../../01-核心基础设施/共享小工具-�
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parsePermissionModeFromSystemMessage, trustedDeviceHeaders, httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
-  xZ,
-  iIt,
-  qae,
-  AFn,
-  L6e,
-  CFn,
-  aIt,
-  V_e,
-  Mst,
+  conformWireFrame,
+  NON_WORKER_PAYLOAD_TYPES,
+  hasMachineGeneratedContent,
+  GATING_CONTROL_REQUEST_SUBTYPES,
+  FALLBACK_HISTORY_PAGE_SIZE,
+  DEFAULT_HISTORY_PAGE_SIZE,
+  parseSequenceNum,
+  getSessionRequestTarget,
+  fetchOlderSessionEvents,
 } from "../Bridge-RemoteControl/chunk-x379yyxb.js";
 import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../远程工具执行/remote-tool-protocol.js";
@@ -45,7 +45,7 @@ import { tmpdir } from "os";
 import { join as b } from "path";
 import { pipeline } from "stream/promises";
 var w = null,
-  k = CFn,
+  k = DEFAULT_HISTORY_PAGE_SIZE,
   j = 4,
   F = 500,
   C = 16000000,
@@ -98,11 +98,11 @@ function B(e, t, s) {
         f = await c(k);
       if (f.ok && f.status === 400)
         (logForDebugging(
-          `[historyPrefetch] ${e} limit=${k} rejected (400) \u2014 retrying at ${L6e}`,
+          `[historyPrefetch] ${e} limit=${k} rejected (400) \u2014 retrying at ${FALLBACK_HISTORY_PAGE_SIZE}`,
         ),
           f.data.resume(),
-          (d.pageSize = L6e),
-          (f = await c(L6e)));
+          (d.pageSize = FALLBACK_HISTORY_PAGE_SIZE),
+          (f = await c(FALLBACK_HISTORY_PAGE_SIZE)));
       if (!f.ok)
         return (
           logForDebugging(
@@ -178,7 +178,7 @@ async function consumePrefetchedHistory(e, t) {
     p = Y(i);
   if (p === null) return (logForDebugging(`[historyPrefetch] ${e} parse failed`), null);
   if (!p.hasMore) return v(p);
-  let d = await V_e(e, t).catch(() => null);
+  let d = await getSessionRequestTarget(e, t).catch(() => null);
   if (d === null) return v(p);
   let S = p.events,
     c = p.firstId,
@@ -187,7 +187,7 @@ async function consumePrefetchedHistory(e, t) {
   while (c !== null && f < j && Date.now() < o && !M(S)) {
     let _ = o - Date.now(),
       h = await Promise.race([
-        Mst(d, c, r.pageSize, C),
+        fetchOlderSessionEvents(d, c, r.pageSize, C),
         sleep(_).then(() => "budget"),
       ]);
     if (h === "budget" || h === null) break;
@@ -218,7 +218,7 @@ function Y(e) {
         payload: i.payload,
         createdAt: i.created_at,
         source: i.source,
-        sequenceNum: aIt(i),
+        sequenceNum: parseSequenceNum(i),
       });
   }
   let a = t.next_cursor ?? null;
@@ -239,7 +239,7 @@ function v(e) {
   for (let o of t) {
     if (o.sequenceNum !== void 0 && o.sequenceNum > r) r = o.sequenceNum;
     try {
-      if (!xZ(o.payload)) continue;
+      if (!conformWireFrame(o.payload)) continue;
       if (o.source === "worker") {
         let h = extractRetractionSignal(o.payload);
         if (h) for (let P of h.uuids) a.add(P);
@@ -340,7 +340,7 @@ function J(e) {
         i !== null &&
         "subtype" in i &&
         typeof i.subtype === "string" &&
-        AFn.includes(i.subtype)
+        GATING_CONTROL_REQUEST_SUBTYPES.includes(i.subtype)
       )
         t.set(u.request_id, r);
     }
@@ -384,8 +384,8 @@ function M(e) {
 }
 function Q(e) {
   if (e.source === void 0 || e.source === "worker") return !0;
-  if (e.payload.type === "user") return !qae(e.payload);
-  return iIt.has(e.payload.type);
+  if (e.payload.type === "user") return !hasMachineGeneratedContent(e.payload);
+  return NON_WORKER_PAYLOAD_TYPES.has(e.payload.type);
 }
 function reportPrefetchOutcome(e) {
   if (e === null) logFeatureSad("remote_history_prefetch", "miss");

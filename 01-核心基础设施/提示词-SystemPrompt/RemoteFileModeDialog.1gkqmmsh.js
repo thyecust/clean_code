@@ -16,7 +16,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { gracefulShutdownSync, CLOUD_SESSION_CONSENT_MESSAGES, setRemoteFileMode, sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
-import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useKeybinding } from "../共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../共享小工具-未细化/exit-keybinding-hooks.js";
@@ -94,7 +94,7 @@ function RemoteFileModeDialog({ repositoryRoot: _, onDone: a, storageV5: w }) {
           e(Text, { dimColor: !0, children: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.detail"] }),
         ],
       }),
-      e(ve, {
+      e(Select, {
         options: [
           {
             label: "Yes, sync this project directory",

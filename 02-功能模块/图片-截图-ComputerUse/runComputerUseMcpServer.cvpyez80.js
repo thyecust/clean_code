@@ -20,7 +20,7 @@ import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细
 import { loadFastPathPolicy } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
 import { getComputerUseNativeModule, runComputerUseNativeCall } from "./computer-use-session.js";
 import "./computer-use-cli-executor.js";
-import { X2n, put } from "./chunk-v76f8dbx.js";
+import { createComputerUseMcpServer, getComputerUseHostAdapter } from "./chunk-v76f8dbx.js";
 import { buildComputerUseToolDefinitions } from "./computer-use-tool-definitions.js";
 import { getFrozenCoordinateMode } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
 import { StdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
@@ -131,9 +131,9 @@ async function _() {
   }
 }
 async function createComputerUseMcpServerForCli() {
-  let t = put(),
+  let t = getComputerUseHostAdapter(),
     e = getFrozenCoordinateMode(),
-    o = X2n(t, e),
+    o = createComputerUseMcpServer(t, e),
     r = await _(),
     s = buildComputerUseToolDefinitions(t.executor.capabilities, e, r);
   return (

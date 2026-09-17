@@ -31,7 +31,7 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { Ve, zi, yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { jsonStringify, jsonParse, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeToStdout, drainStdoutBeforeExit } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -42,7 +42,7 @@ import { drainRegisteredWriteQueues } from "../../01-核心基础设施/核心�
 import { stripAnsi, formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { HOOK_REWRITE_HEADLESS_DENY_REASON, CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON, CAN_USE_TOOL_INVALID_RESULT_DENY_REASON, CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON, CAN_USE_TOOL_ABORTED_DENY_REASON } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { TOOL_USE_SUMMARY_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { ps } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { sanitizeTextForDisplay } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { applyPermissionUpdates, isPersistableSettingsSource, persistPermissionUpdates } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { turnAbortControllerOf } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
@@ -226,14 +226,14 @@ function ne(t, e, r, o, l) {
     };
   let p =
       (t.name === BASH_TOOL_NAME || t.name === POWERSHELL_TOOL_NAME) && typeof e.command === "string"
-        ? qr(e.command)
+        ? redactSecretsFromText(e.command)
         : void 0,
     f =
       p !== void 0
         ? typeof e.description === "string" && e.description
-          ? qr(e.description)
+          ? redactSecretsFromText(e.description)
           : truncate(p, TOOL_USE_SUMMARY_MAX_CHARS)
-        : qr(B(t, e));
+        : redactSecretsFromText(B(t, e));
   return {
     tool_name: t.name,
     display_tool_name: formatToolDisplayName(t.name),
@@ -300,8 +300,8 @@ function re(t) {
             : void 0) ||
           (pe && typeof g.command === "string"
             ? typeof g.description === "string" && g.description
-              ? qr(g.description)
-              : truncate(qr(g.command), TOOL_USE_SUMMARY_MAX_CHARS)
+              ? redactSecretsFromText(g.description)
+              : truncate(redactSecretsFromText(g.command), TOOL_USE_SUMMARY_MAX_CHARS)
             : B(e, g)) ||
           void 0,
         Q =
@@ -315,7 +315,7 @@ function re(t) {
               )?.reason ??
               (T.circuitBreaker === "outsideReadsBlocked" ? void 0 : T.reason))
             : void 0),
-        V = f.localDisplayOnly ? ps(stripAnsi(Q ?? "")) || G : G,
+        V = f.localDisplayOnly ? sanitizeTextForDisplay(stripAnsi(Q ?? "")) || G : G,
         Y = x(formatToolDisplayName(e.name), o.storageV5, o.credentials),
         N = t
           .request(
