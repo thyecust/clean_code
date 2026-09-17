@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { kGe } from "./chunk-3wfaaze4.js";
-import { WQ } from "../MCP客户端/chunk-tv3jbp8f.js";
+import { LATEST_PROTOCOL_VERSION as WQ } from "../MCP客户端/chunk-tv3jbp8f.js";
 import { PP, PQ } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
 import { Mke, s, Nke, T, O, tB, v, c, it, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var d = Nke()

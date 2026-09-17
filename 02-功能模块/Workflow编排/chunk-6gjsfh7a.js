@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, Tc, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { y8 } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -18,17 +18,17 @@ import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Gu, nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, Xe, cxt, Ot, Ihe, Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { findGitRoot as tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { te, truncateToWidth as Xe, cxt, formatDuration as Ot, formatBarElapsed as Ihe, formatTokens as Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { zj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { gV, Rf, TH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gV, Rf, isTranscriptMessage as TH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ti } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { F1t } from "./chunk-va9cgbfs.js";
+import { buildResumePrompt as F1t } from "./chunk-va9cgbfs.js";
 import { Vf } from "./chunk-cd542wve.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
 import {
@@ -262,8 +262,8 @@ async function ci(s, a, l) {
   v1t();
   let [{ clearCommandMemoizationCaches: c }, { resetSentSkillNames: m }] =
     await Promise.all([
-      import("../斜杠命令-框架/getBuiltinCommands.8nr5y4mb.js"),
-      import("./getSkillListingAttachments.bdj704n4.js"),
+      import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
+      import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
     ]);
   return (
     c(),

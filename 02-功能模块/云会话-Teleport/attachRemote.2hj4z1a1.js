@@ -12,14 +12,14 @@
 import { _m, K, $p, Bw, s_e, Nn, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { Iu, R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { J0t } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
+import { deviceToolNoticesTo as J0t } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Ise, RCt, iKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabledCached as ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { Ht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Gx } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
+import { showScreen as Gx } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import { Uot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { hit } from "../../01-核心基础设施/共享小工具-未细化/chunk-ctr3zhmb.js";
 function de(r) {
@@ -66,11 +66,11 @@ async function ke(r, e, c, t) {
         reportPrefetchOutcome: X,
       },
     ] = await Promise.all([
-      import("../../01-核心基础设施/共享小工具-未细化/CCR_BYOC_BETA.422dq0ss.js"),
-      import("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js"),
-      import("./launchSessionRepl.d9s658w1.js"),
-      import("../斜杠命令-框架/getBuiltinCommands.8nr5y4mb.js"),
-      import("./EMPTY_PROJECTS_SELF_IDENTITY.c9g27w9f.js"),
+      import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+      import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+      import("../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js"),
+      import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
+      import("../后台任务-Shell管理/chunk-c7mzes79.js"),
       import("./logForDebugging.yzt1kswr.js"),
       import("./gateSeed.n4c26dmt.js"),
     ]),
@@ -90,7 +90,7 @@ async function ke(r, e, c, t) {
       { deviceHooksProcessMemories: ee },
     ] = await Promise.all([
       import("./pullsBackToThisMachine.gztq23vf.js"),
-      import("./deviceHooksProcessMemories.6x3sy8vd.js"),
+      import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
     ]),
     C = I(e, m),
     g = t?.viewerOnly

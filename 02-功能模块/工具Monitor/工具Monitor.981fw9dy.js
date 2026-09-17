@@ -8,19 +8,19 @@
 
 // Version: 2.1.263
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tu } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ab, Cb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getWebSocketTLSOptions as Ab, getWebSocketProxyUrl as Cb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Ext } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { rU, Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { rU, isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   nH,
-  Zdn,
+  isHostAllowedBySandboxNetworkPolicy as Zdn,
   pzn,
   PBt,
   qmt,
@@ -536,7 +536,7 @@ async function fe(e, t, o, u) {
     { data: { taskId: I.taskId, timeoutMs: M ? 0 : w, persistent: M } }
   );
 }
-function Iqe(e) {
+function wsEgressDenyReason(e) {
   if (!Mt("allow_web_fetch"))
     return {
       kind: "compliance",
@@ -559,7 +559,7 @@ function Iqe(e) {
   return null;
 }
 function he(e) {
-  let t = Iqe(e.url);
+  let t = wsEgressDenyReason(e.url);
   if (t !== null)
     return {
       behavior: "deny",
@@ -626,7 +626,7 @@ var be = {
       };
     },
   },
-  $hr = Tt({
+  MonitorTool = Tt({
     ...be,
     searchHint:
       "watch, monitor, or keep an eye on a process/log/command or WebSocket \u2014 stream each stdout line as a live notification",
@@ -655,4 +655,4 @@ var be = {
       return fe(e.command, e, t, u);
     },
   });
-export { ybe, R1t, Wdt, v7, WPe, Hqe, Iqe, $hr };
+export { ybe, R1t, Wdt, v7, WPe, Hqe, wsEgressDenyReason, MonitorTool };

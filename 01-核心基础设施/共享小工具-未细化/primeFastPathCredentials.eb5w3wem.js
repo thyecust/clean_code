@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 27 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { M } from "./chunk-h62vxw7j.js";
-import { T$e } from "./chunk-fpak7ean.js";
+import { primeFileDescriptorCredentials as T$e } from "./chunk-fpak7ean.js";
 async function t(e) {
   if (M() && e !== void 0) await T$e(e);
 }

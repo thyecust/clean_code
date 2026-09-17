@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { GR } from "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
+import { JSONRPCMessageSchema as GR } from "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
 class Ktt {
   append(e) {
     this._buffer = this._buffer ? Buffer.concat([this._buffer, e]) : e;

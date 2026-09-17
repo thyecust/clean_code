@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { jie } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatOverflowHint as jie } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { dc } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdk55p8n.js";

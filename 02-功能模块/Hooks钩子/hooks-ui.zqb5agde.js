@@ -12,16 +12,16 @@
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { wle, VB } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { he, MA, LL, Mx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { be, Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Wf, x, Fje, hy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { zar, yi } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { War } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
-import { ho, ye, bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { k0 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getSettingsFilePathForSource as ho, getSettingsForSource as ye, getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { findGitRootUncached as k0 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
   Ih,
   Awe,
@@ -45,7 +45,7 @@ import {
   rSt,
   p_n,
   oAe,
-  aD,
+  deviceHooksProcessMemories as aD,
   hj,
   Lk,
   fXn,
@@ -55,8 +55,8 @@ import {
   mXn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { oBe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
-import { Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { hD } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { xC } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { nIt, rIt, P6e, oIt } from "./chunk-6wg4v2yj.js";

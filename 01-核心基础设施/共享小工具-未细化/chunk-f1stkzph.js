@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { zu, Ftt } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { toCompatSessionId as zu, isSelfAddressableSessionId as Ftt } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 function pK() {
   if (a.CLAUDE_CODE_REMOTE !== !0) return;
   let e = a.CLAUDE_CODE_REMOTE_SESSION_ID ?? "";

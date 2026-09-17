@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Sz } from "./lodash.2x3q7cfh.js";
 import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 function P(e, r, o, a) {
   var n = -1,
     s = e == null ? 0 : e.length;
@@ -314,39 +314,39 @@ var ye = H(function (e, r, o) {
     return e + (o ? "_" : "") + r.toLowerCase();
   }),
   d = ye;
-function z2e(e) {
+function toolFeature(e) {
   return `tool_${d(e)}`;
 }
-function uz(e) {
+function cmdFeature(e) {
   return `cmd_${d(e)}`;
 }
-function Nhe(e) {
+function hookFeature(e) {
   return `hook_${d(e)}`;
 }
-function y(e, r) {
+function logFeatureOk(e, r) {
   i("tengu_feature_ok", { feature_name: u(e), ...r });
 }
-function f(e, r, o) {
+function logFeatureBad(e, r, o) {
   i("tengu_feature_bad", { ...o, feature_name: u(e), error_code: r });
 }
-function g(e, r, o) {
+function logFeatureSad(e, r, o) {
   i("tengu_feature_sad", { ...o, feature_name: u(e), error_code: r });
 }
-async function ki(e, r) {
+async function logFeatureOkAsync(e, r) {
   await qs("tengu_feature_ok", { feature_name: u(e), ...r });
 }
-async function wn(e, r, o) {
+async function logFeatureBadAsync(e, r, o) {
   await qs("tengu_feature_bad", { ...o, feature_name: u(e), error_code: r });
 }
-async function ul(e, r, o) {
+async function logFeatureSadAsync(e, r, o) {
   await qs("tengu_feature_sad", { ...o, feature_name: u(e), error_code: r });
 }
-async function Sr(e, r, o) {
+async function withFeatureTelemetry(e, r, o) {
   try {
     let a = await r();
-    return (y(e), a);
+    return (logFeatureOk(e), a);
   } catch (a) {
-    throw (f(e, o?.(a) ?? "error"), a);
+    throw (logFeatureBad(e, o?.(a) ?? "error"), a);
   }
 }
-export { z2e, uz, Nhe, y, f, g, ki, wn, ul, Sr };
+export { toolFeature, cmdFeature, hookFeature, logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync, withFeatureTelemetry };

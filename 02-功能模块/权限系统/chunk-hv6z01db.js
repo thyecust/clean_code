@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Ik, cC, eY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ey } from "./chunk-pcxn6gwz.js";
+import { transitionPermissionMode as Ik, isAutoModeGateEnabled as cC, getAutoModeUnavailableReason as eY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isBypassPermissionsModeDisabled as ey } from "./chunk-pcxn6gwz.js";
 function zL(e) {
   let o = cC(),
     t = !!e.isAutoModeAvailable && o;

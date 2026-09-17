@@ -7,15 +7,15 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { qxt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, z, pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Kn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ff, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ddt } from "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
 import {
@@ -41,18 +41,18 @@ import {
   BGn,
   xn,
   fmt,
-  Iy,
-  YF,
-  K5e,
-  Chn,
-  X5e,
-  Ohn,
-  i9t,
-  a9t,
+  isRemoteToolForwardingSwitchOn as Iy,
+  isSessionChannelDisabled as YF,
+  setInternalEventWriter as K5e,
+  sealTranscriptAppendsForShutdown as Chn,
+  setInternalEventReader as X5e,
+  updateCCRTipFromAckedBatch as Ohn,
+  getValidatedCCRTip as i9t,
+  readTranscriptTailForTip as a9t,
   gre,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { vme } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
-import { w$e } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { getAttestationFilterPolicy as vme } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { isProjectsHumanOriginEnabled as w$e } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { YAn, JAn, ase } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { Ts, jXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
 import { Fae } from "../../03-入口与运行时/Headless-SDK模式/chunk-e4xwwtsb.js";
@@ -63,7 +63,7 @@ import { $Jt } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { Qz } from "../插件系统/chunk-55xj4ev5.js";
 import { sdt } from "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import { createWriteStream as ge, fstatSync as ve } from "fs";
 import { PassThrough as Se } from "stream";
 import { URL as ie } from "url";

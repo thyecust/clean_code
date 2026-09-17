@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { eo } from "../Skills技能/chunk-1zy5c8mf.js";
+import { registerBundledSkill as eo } from "../Skills技能/chunk-1zy5c8mf.js";
 import { ube } from "../../01-核心基础设施/共享小工具-未细化/chunk-kv5vaqew.js";
 import { NV, lj } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { cK } from "./chunk-5kyac4wk.js";

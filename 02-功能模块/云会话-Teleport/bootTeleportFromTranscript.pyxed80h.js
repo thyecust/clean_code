@@ -12,9 +12,9 @@
 import { z, Is, k_, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Tp, Byt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { HOe, Wcn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getTranscriptPathForSession as Tp, readTranscriptTailV5 as Byt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getTeleportCacheState as HOe, activateTeleportCache as Wcn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
 import { nwe, L3n, M3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-1brq31d3.js";
 import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";

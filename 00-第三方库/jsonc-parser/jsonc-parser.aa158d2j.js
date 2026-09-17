@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { dt } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { xA } from "../lru-cache/lru-cache.8crev50p.js";
 function cs(e) {
   return e.startsWith("\uFEFF") ? e.slice(1) : e;

@@ -8,23 +8,23 @@
 
 // Version: 2.1.263
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { ja, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { K, qP, Tz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { _t, pq, hq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession as _t, isDaemonBgWorker as pq, hq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Z4t } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { Zi } from "./chunk-811z9z0t.js";
+import { isTeammate as Zi } from "./chunk-811z9z0t.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Yi } from "../权限系统/chunk-1y2g140m.js";
-import { vre, rK, Rre, gu, F8e, oK } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
+import { vre, rK, Rre, getOwnJobShortId as gu, resolveBridgeHandoffIdentity as F8e, buildBridgeReattachEnv as oK } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { ll } from "./chunk-thxapyam.js";
-import { il, hl, kc, sD } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ce, gme } from "../权限系统/chunk-fjrcf22x.js";
-import { pme } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { getMaterializedSessionFile as il, isTranscriptPersistenceDisabled as hl, flushSessionStorage as kc, getCurrentSessionBridge as sD } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getToolPermissionContext as ce, getSessionEffort as gme } from "../权限系统/chunk-fjrcf22x.js";
+import { BG_WORKER_IDENTITY_ENV_VARS as pme } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { Il } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
 import { rd, pD } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
 import { a9, _4, ilt, dF, X9e, cnn } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";

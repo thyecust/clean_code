@@ -39,21 +39,21 @@ import {
 } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { yt, R, l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, z, fp, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fi } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { y, f, g, Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { eae, jhe, Kl, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Z5, zhe } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { eae, jhe, Kl, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { CLAUDE_AI_OAUTH_SCOPES as Z5, preservableScopesFrom as zhe } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { findGitRoot as tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
   nve,
   Bzt,
@@ -71,46 +71,46 @@ import {
 import { Nr, jge, jBe, Vn, zt, mke, g8t, h8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   ht,
-  wU,
-  TU,
-  Gl,
-  UUe,
-  ARn,
-  VKt,
-  BUe,
-  f0,
-  Yt,
-  lge,
-  TZe,
-  Ss,
+  refreshOAuthToken as wU,
+  isInvalidGrantError as TU,
+  getAuthTokenSource as Gl,
+  saveRefreshedOAuthTokensRespectingLock as UUe,
+  hasAttemptedScopeExpansion as ARn,
+  recordScopeExpansionAttempt as VKt,
+  markRefreshTokenDeadAfterInvalidGrant as BUe,
+  isOAuthRefreshKnownDeadAsync as f0,
+  getClaudeAIOAuthTokens as Yt,
+  OAuthRefreshLockContendedError as lge,
+  withOAuthRefreshLock as TZe,
+  checkAndRefreshOAuthTokenIfNeeded as Ss,
   H,
-  Cd,
+  isWorkspacePersistedTrusted as Cd,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   die,
   Hge,
-  qT,
-  ho,
-  IP,
-  ye,
-  xxn,
-  Ige,
-  pie,
-  dS,
-  fie,
-  mie,
-  gRt,
+  parseSettingsFile as qT,
+  getSettingsFilePathForSource as ho,
+  getLegacyLocalSettingsFilePath as IP,
+  getSettingsForSource as ye,
+  flagInlineSettingDropped as xxn,
+  parentManagedTierParticipates as Ige,
+  getDurablePolicyTierSettings as pie,
+  getPolicySettingsOrigin as dS,
+  getFatalAdminPolicyLoadErrors as fie,
+  filterFatalPolicyErrors as mie,
+  isNotDisabledInTrustedSources as gRt,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
 import { h1, zRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
-import { Pe, In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { at, xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { getAPIProvider as Pe, isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { default as at, isAxiosError as xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { dz } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
-import { L1, ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { L1, externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { JS, lCe, Swt, uJ, yN, yG } from "./chunk-hh8f1qrw.js";
-import { Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { isCustomizationDisabled as Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { $bn } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { Uy } from "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";

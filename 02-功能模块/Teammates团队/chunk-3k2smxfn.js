@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 function t() {
   return process.argv.includes("--agent-teams");
 }
@@ -19,7 +19,7 @@ function zr() {
 }
 async function z_n() {
   if (!zr()) return;
-  let { captureTeammateModeSnapshot: e } = await import("./DEFAULT_TEAMMATE_MODE.9m7wt8wk.js");
+  let { captureTeammateModeSnapshot: e } = await import("./chunk-88ybhavr.js");
   e();
 }
 export { zr, z_n };

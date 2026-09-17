@@ -14,7 +14,7 @@ import { ws } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { XUn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 var p = 200,
   T = 1000,
   M = 500,

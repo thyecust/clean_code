@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, bi } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z } from "./chunk-510m1t2d.js";
-async function kF() {
+async function flushAnalyticsSinks() {
   try {
     let s = t();
     if (s.length > 0)
@@ -17,7 +17,7 @@ async function kF() {
     let [{ shutdownDatadog: n }, { shutdownErrorTracking: i }] =
         await Promise.all([
           import("./DATADOG_CLIENT_TOKEN.kkspbfqc.js"),
-          import("./errorTrackingClient.dfgvvh6d.js"),
+          import("./chunk-6kad94y1.js"),
         ]),
       l = [n(), i()];
     (await Promise.race([Promise.all(l), Z(500)]), await a);
@@ -30,7 +30,7 @@ var c = new j(() => new o());
 function t() {
   return bi(c).tasks;
 }
-function Dun(s) {
+function registerPreFlushTask(s) {
   t().push(s.catch(() => {}));
 }
-export { kF, Dun };
+export { flushAnalyticsSinks, registerPreFlushTask };

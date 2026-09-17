@@ -11,11 +11,11 @@
 // [preload stripped] 原本在此预载 50 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Tc, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { UR } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { $he } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
 import { ZD } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { HOe, Cte, _we, Gcn, qcn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
+import { getTeleportCacheState as HOe, revertTeleportCache as Cte, logTeleportFallbackOnce as _we, verifyPreAnchorIntact as Gcn, verifyToolsBaselineIntact as qcn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
 import { Z4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-95411q5e.js";
 import { nwe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1brq31d3.js";
 var P = 60000,

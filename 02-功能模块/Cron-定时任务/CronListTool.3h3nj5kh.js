@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 86 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { iS } from "../Teammates团队/chunk-811z9z0t.js";
+import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getTeammateContext as iS } from "../Teammates团队/chunk-811z9z0t.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { K_, vj } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { Jre, EC, yK, gbn, hbn } from "./chunk-mk3zm4ew.js";
+import { CRON_LIST_TOOL_NAME as Jre, isKairosCronEnabled as EC, isDurableCronEnabled as yK, CRON_LIST_DESCRIPTION as gbn, buildCronListPrompt as hbn } from "./chunk-mk3zm4ew.js";
 import { s, O, v, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var n = m(() => Qe({})),
   a = m(() =>

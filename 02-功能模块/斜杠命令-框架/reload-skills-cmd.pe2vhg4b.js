@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 207 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { z7, J$t, d3, Rk, VM, xE, HE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { z7, J$t, d3, Rk, resetSentSkillNames as VM, clearCommandsCache as xE, getSkillToolCommands as HE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var M = async (C, m) => {

@@ -50,27 +50,27 @@ import {
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { Ve, R, l, A, W, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { We, b, z, iae, Xg, Ro, Tr, Sh, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { oe, ft, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { py, dB } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { CLAUDE_AI_INFERENCE_SCOPE as py, CLAUDE_AI_PROFILE_SCOPE as dB } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Rvt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { Pi, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { St, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getGlobalClaudeFile as Pi, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   bt,
   Ad,
   nQ,
-  rt,
-  JCn,
-  yP,
-  Ue,
-  HR,
-  yg,
+  getMainLoopModel as rt,
+  isOpus5FamilyModel as JCn,
+  isRecognizedModel as yP,
+  getCanonicalName as Ue,
+  strippedCanonicalName as HR,
+  isAutoClassifierActive as yg,
   MCt,
   aQ,
   rRe,
@@ -82,32 +82,32 @@ import {
   tt,
   co,
   Ut,
-  _t,
-  gt,
-  wu,
-  gq,
-  vn,
+  isBgSession as _t,
+  isClaudeAISubscriber as gt,
+  hasStoredOAuthToken as wu,
+  hasOAuthScope as gq,
+  getOauthAccountInfo as vn,
   ux,
   H,
   vU,
   nc,
   RU,
-  ua,
-  gvt,
-  o1,
-  PZe,
-  s1,
-  BRn,
-  fQ,
-  i1,
-  Ns,
-  a1,
-  DZe,
-  gQ,
+  isAutoMemoryEnabled as ua,
+  isAutoMemoryEnabledIgnoringPause as gvt,
+  isMemoryRecallEnabled as o1,
+  isStoreMountedRecall as PZe,
+  getMemoryBaseDir as s1,
+  getAutoMemPathSettingSource as BRn,
+  hasAutoMemPathOverride as fQ,
+  getAutoMemPathState as i1,
+  getAutoMemPath as Ns,
+  isAutoMemPath as a1,
+  AUTO_MEM_WRITE_ALLOW_REASON as DZe,
+  isAutoMemPathSafeForCarveout as gQ,
   k5,
   Bo,
-  Cd,
-  tS,
+  isWorkspacePersistedTrusted as Cd,
+  getWorkspacePersistedTrustKey as tS,
   YC,
   VRn,
   Te,
@@ -119,40 +119,40 @@ import {
 import { yi, ms, w0, fS, zRt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { KT, Oge, ot, nL, Iq } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { RA, Sc, Mp } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { sanitizePath as RA, getProjectsDir as Sc, getProjectDir as Mp } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import {
   kd,
   SS,
   Qq,
   Eu,
-  R0,
-  x1,
-  bS,
-  tr,
-  H1,
-  $r,
-  Bke,
-  JIn,
+  pointerFileIsSuspect as R0,
+  readPositionIsUnsafe as x1,
+  rawPointerPathIsUnsafe as bS,
+  findGitRoot as tr,
+  findGitRootRecheckingNegative as H1,
+  findCanonicalGitRoot as $r,
+  findRepoRemoteSlug as Bke,
+  readRepoConfigText as JIn,
 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { _n, Ont, O1, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import {
   S0,
-  qT,
-  ho,
-  CBe,
-  IP,
-  zT,
-  ye,
-  Rd,
-  Ge,
-  Jt,
-  Ii,
-  Wxn,
+  parseSettingsFile as qT,
+  getSettingsFilePathForSource as ho,
+  getRuleAnchorRootForSource as CBe,
+  getLegacyLocalSettingsFilePath as IP,
+  projectSettingsAliasesUserSettings as zT,
+  getSettingsForSource as ye,
+  getAllPolicyTierSettings as Rd,
+  getInitialSettings as Ge,
+  updateSettingsForSource as Jt,
+  updateSettingsForSourceWithTransform as Ii,
+  isAutoModeClassifyAllShellEnabled as Wxn,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { up, Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { Ctt, ov } from "../权限系统/chunk-e4pfvp7x.js";
+import { RESTRICTED_MODE_DENY_REASON as Ctt, OUTSIDE_READS_BLOCKED_DENY_REASON as ov } from "../权限系统/chunk-e4pfvp7x.js";
 import {
   Tu,
   nhe,
@@ -166,26 +166,26 @@ import {
   Er,
 } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { _x } from "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
-import { Xt, _0, dm, Ca, fo } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { Xt, _0, dm, usesFirstPartyModelIds as Ca, isFirstPartyAnthropicBaseUrl as fo } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { JJe, Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { JJe, isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { o$e, FG, jK, zo } from "../MCP客户端/chunk-3kmsshb6.js";
 import { HEt, ave, lnr } from "../插件系统/chunk-7s6mt1vg.js";
 import { nAt } from "../图表-Mermaid/chunk-743atbtj.js";
 import { WG } from "../权限系统/chunk-t3b7pg2x.js";
 import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
-import { GK, Ea } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { peekPlanSlug as GK, getPlansDirectory as Ea } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { ll } from "../Teammates团队/chunk-thxapyam.js";
 import { bl, Qoe } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { Bu } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { isScrubEnabled as Bu } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
 import { Z_ } from "../工具ToolSearch/chunk-1m51pqtd.js";
 import { dg } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
 import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
 import { s, T, O, se, v, c, it, $e, fe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -969,7 +969,7 @@ function vTt(e, t) {
     ),
     !e)
   )
-    import("./getOrgMemoryAuthorization.pyhrz5hp.js").then((o) => o.clearOrgMemoryCredential());
+    Promise.resolve({ clearOrgMemoryCredential }).then((o) => o.clearOrgMemoryCredential());
   return (
     i("tengu_org_memory_writes_setting_changed", { enabled: e }),
     e ? "granted" : "withdrawn"
@@ -999,7 +999,7 @@ function Yer(e, t) {
     !e)
   ) {
     if (
-      (import("./getOrgMemoryAuthorization.pyhrz5hp.js").then((o) => o.clearOrgMemoryCredential()),
+      (Promise.resolve({ clearOrgMemoryCredential }).then((o) => o.clearOrgMemoryCredential()),
       r)
     )
       i("tengu_org_memory_writes_setting_changed", { enabled: !1 });
@@ -1148,43 +1148,43 @@ var xc = new j(() => new Ji());
 function Ze() {
   return xc.of(B().host);
 }
-function Jer(e) {
+function onOrgMemoryDecisionShrink(e) {
   return Ze().shrunk.subscribe(e);
 }
-function Qer(e) {
+function onOrgMemoryDecisionSettled(e) {
   return Ze().settled.subscribe(e);
 }
-function vFe(e, t, r) {
+function waitForOrgMemoryDecisionSettled(e, t, r) {
   return Ze().waitForSettled(e, t, r);
 }
-function zTn(e, t) {
+function waitForOrgMemoryDecisionSettledOnce(e, t) {
   return Ze().waitForSettledOnce(e, t);
 }
-function nf() {
+function getOrgMemoryDecision() {
   return Ze().decision;
 }
-function MCe() {
+function getDecisionStores() {
   return Ze().getStores();
 }
-function RTt() {
+function getOrgMemoryServedIdentity() {
   return Ze().servedIdentity;
 }
-function Zer(e) {
+function settleOrgMemoryDecisionOn(e) {
   return Ze().settleOn(e);
 }
-function BH(e) {
+function settleOrgMemoryDecisionOff(e) {
   return Ze().settleOff(e);
 }
-function etr(e) {
+function parkOrgMemoryDecision(e) {
   Ze().park(e);
 }
-function kTt() {
+function shrinkOrgMemoryDecisionWriteAsk() {
   return Ze().shrinkWriteAsk();
 }
-function VTn(e) {
+function onOrgMemoryAuthCompletion(e) {
   Ze().onAuthCompletion(e);
 }
-function KTn() {
+function reopenOrgMemoryDecision() {
   return Ze().reopen();
 }
 function Pr() {
@@ -1490,7 +1490,7 @@ class ss {
             "org memory credential renewal: superseded by a credential clear",
           )
         );
-      if (t === this.generation) etr("renewal_refused");
+      if (t === this.generation) parkOrgMemoryDecision("renewal_refused");
       throw (
         g("org_memory_credential", "renewal_refused"),
         new wd(
@@ -1509,10 +1509,10 @@ class ss {
     return (y("org_memory_credential"), _);
   }
   renegotiate(e) {
-    return nf().state === "undecided" ? this.negotiate(e) : this.routedMint();
+    return getOrgMemoryDecision().state === "undecided" ? this.negotiate(e) : this.routedMint();
   }
   routedMint() {
-    let e = nf();
+    let e = getOrgMemoryDecision();
     switch (e.state) {
       case "undecided":
         return this.negotiate();
@@ -1583,10 +1583,10 @@ var Cc = new j(() => new ss());
 function Jn() {
   return Cc.of(B().host);
 }
-function ATt() {
+function wasLastMintSelectionDegraded() {
   return Jn().lastMintSelectionDegraded;
 }
-function Ver(e, t) {
+function negotiateOrgMemoryCredential(e, t) {
   let r = Jn();
   return (
     r.adoptCredentials(e),
@@ -1595,14 +1595,14 @@ function Ver(e, t) {
     r.negotiateSingleFlight()
   );
 }
-function CTt(e) {
+function getOrgMemoryAuthorization(e) {
   let t = Jn();
   return (t.discardOnEndpointChange(), t.getAuthorization(e));
 }
-function M$() {
+function clearOrgMemoryCredential() {
   Jn().discard();
 }
-var RFe = 2500;
+var FIRST_STORE_PULL_WAIT_DEADLINE_MS = 2500;
 function eo() {
   return Boolean(process.env.CLAUDE_MEMORY_STORES?.trim());
 }
@@ -1626,28 +1626,28 @@ class as {
     if (!this.racePromise)
       ((this.racePromise = Promise.race([
         new Promise((t) => this.waiters.push(t)),
-        Z(RFe),
+        Z(FIRST_STORE_PULL_WAIT_DEADLINE_MS),
       ])),
         this.racePromise.then(() => {
           this.raceSettled = !0;
         }));
-    await Promise.race([this.racePromise, Z(RFe, e)]);
+    await Promise.race([this.racePromise, Z(FIRST_STORE_PULL_WAIT_DEADLINE_MS, e)]);
   }
 }
 var Mc = new j(() => new as());
 function Pn() {
   return Mc.of(B().host);
 }
-function XTn() {
+function settleFirstStorePull() {
   Pn().settle();
 }
-function xTt() {
+function isFirstStorePullPending() {
   return !Pn().settled && eo();
 }
-function YTn(e) {
+function waitForFirstStorePull(e) {
   return Pn().wait(e);
 }
-function JTn() {
+function firstStorePullPending() {
   return Pn().isPending();
 }
 import { join as gs } from "path";
@@ -2060,7 +2060,7 @@ class vs {
   discoverMemoized = cB(
     () => this.runDiscovery(),
     Zc,
-    () => !(this.decidingRun && nf().state === "undecided"),
+    () => !(this.decidingRun && getOrgMemoryDecision().state === "undecided"),
   );
   constructor(e = ps) {
     this.identityWaitDelay = e;
@@ -2119,7 +2119,7 @@ class vs {
   rootPromptIndexFocus(e) {
     let t = e.prompt_index;
     if (t !== void 0 && EFe(t)) return { index: t, source: "mirror" };
-    if (!this.promptIndexFallbackEmitted && !ATt())
+    if (!this.promptIndexFallbackEmitted && !wasLastMintSelectionDegraded())
       ((this.promptIndexFallbackEmitted = !0),
         g("org_memory_picker", "prompt_index_absent"));
     return { index: io, source: "fallback" };
@@ -2128,7 +2128,7 @@ class vs {
     let o = LCe() ? e.filter((E) => Vk(E.path) !== void 0) : e,
       d = Zn(t);
     if (d === void 0) {
-      if (!ATt()) this.emitGrantMissingOnce();
+      if (!wasLastMintSelectionDegraded()) this.emitGrantMissingOnce();
       return o;
     }
     if (!Vt(d.path))
@@ -2195,7 +2195,7 @@ class vs {
     let o = LCe() ? e.filter((D) => Vk(D.path) !== void 0) : e,
       d = pn();
     if (d === void 0) {
-      if (!ATt()) this.emitGrantMissingOnce();
+      if (!wasLastMintSelectionDegraded()) this.emitGrantMissingOnce();
       return o;
     }
     if (!Vt(d.path))
@@ -2268,7 +2268,7 @@ class vs {
     return e;
   }
   async applyGrantAdjustments(e, t, r) {
-    let o = nf();
+    let o = getOrgMemoryDecision();
     if (o.state !== "undecided") return o.state === "on" ? [...o.stores] : null;
     if (!this.decidingRun) return null;
     let d = await this.awaitSelectionIdentity(),
@@ -2279,10 +2279,10 @@ class vs {
         let F = jj();
         return F !== null && F !== D;
       };
-    if (p()) return (BH("superseded"), null);
+    if (p()) return (settleOrgMemoryDecisionOff("superseded"), null);
     if (d === null)
       return (
-        BH("identity_unresolved"),
+        settleOrgMemoryDecisionOff("identity_unresolved"),
         n(
           "org-memory-discovery: identity unresolved at decision time \u2014 org memory off for this session",
         ),
@@ -2290,11 +2290,11 @@ class vs {
       );
     let _;
     try {
-      _ = await Ver(this.credentials, this.storageV5);
+      _ = await negotiateOrgMemoryCredential(this.credentials, this.storageV5);
     } catch (D) {
       return (
         n(`org-memory-discovery: decision-time negotiation failed: ${l(D)}`),
-        BH(
+        settleOrgMemoryDecisionOff(
           this.discoveryGeneration === e ? "negotiation_failed" : "superseded",
         ),
         null
@@ -2319,11 +2319,11 @@ class vs {
             ? this.withSelectedSiloMount(k, L.selection, L.writeAccess)
             : this.withSelectedGroupingMounts(k, L.selection, L.writeAccess);
     } else if (LCe()) k = k.filter((D) => Vk(D.path) !== void 0);
-    if (p()) return (BH("superseded"), null);
-    if (k.length === 0) return (BH("no_stores"), null);
+    if (p()) return (settleOrgMemoryDecisionOff("superseded"), null);
+    if (k.length === 0) return (settleOrgMemoryDecisionOff("no_stores"), null);
     let E = L.selection === null && !_.degraded ? Xi() : null;
     if (
-      !Zer({
+      !settleOrgMemoryDecisionOn({
         identity: d,
         stores: k,
         request: { writeAccess: L.writeAccess, selection: L.selection ?? E },
@@ -2356,7 +2356,7 @@ class vs {
         o
       );
     if (!gn(d.path, t)) {
-      if (!this.selectionNotGrantedEmitted && !ATt())
+      if (!this.selectionNotGrantedEmitted && !wasLastMintSelectionDegraded())
         ((this.selectionNotGrantedEmitted = !0),
           g("org_memory_picker", "selection_not_granted"));
       return o;
@@ -2381,7 +2381,7 @@ class vs {
     let t = (k) => {
       if (e === this.discoveryGeneration) this.lastPickerData = k;
     };
-    if (!wt()) return (BH("gates_closed"), null);
+    if (!wt()) return (settleOrgMemoryDecisionOff("gates_closed"), null);
     let r = Q(),
       o = oo(),
       d = () => o !== null && e === this.discoveryGeneration && oo() === o,
@@ -2389,7 +2389,7 @@ class vs {
     if (o !== null && Yc(p) && p.account === o) {
       if (p.stores === null)
         return (
-          BH("server_off"),
+          settleOrgMemoryDecisionOff("server_off"),
           t(null),
           y("org_memory_discovery", { off: !0, cached: !0 }),
           null
@@ -2419,12 +2419,12 @@ class vs {
               writeOptInAvailable: p.writeOptInAvailable === !0,
             }),
             y("org_memory_discovery", { stores: 0, cached: !0, ...er(E) }),
-            nf().state !== "undecided" ||
+            getOrgMemoryDecision().state !== "undecided" ||
               (await this.awaitSelectionIdentity()) === null ||
               CFe() !== null)
           )
             return this.applyGrantAdjustments(e, o, []);
-          return (BH("no_selection"), null);
+          return (settleOrgMemoryDecisionOff("no_selection"), null);
         }
         t(null);
       }
@@ -2435,7 +2435,7 @@ class vs {
     }
     let _ = await Vc(this.credentials);
     if (_.kind === "transient")
-      return (BH("transient"), g("org_memory_discovery", "transient"), null);
+      return (settleOrgMemoryDecisionOff("transient"), g("org_memory_discovery", "transient"), null);
     let L =
       _.kind === "stores"
         ? {
@@ -2452,14 +2452,14 @@ class vs {
         );
       return (
         y("org_memory_discovery", { off: !0, cached: !1 }),
-        BH("server_off"),
+        settleOrgMemoryDecisionOff("server_off"),
         null
       );
     }
     let x = ds(_.stores);
     if (x.kind === "invalid")
       return (
-        BH("invalid"),
+        settleOrgMemoryDecisionOff("invalid"),
         t(null),
         f("org_memory_discovery", "invalid_stores"),
         null
@@ -2478,12 +2478,12 @@ class vs {
           });
         else g("org_memory_discovery", "all_stores_dropped");
         if (
-          nf().state !== "undecided" ||
+          getOrgMemoryDecision().state !== "undecided" ||
           (await this.awaitSelectionIdentity()) === null ||
           CFe() !== null
         )
           return this.applyGrantAdjustments(e, o, []);
-        return (BH("no_selection"), null);
+        return (settleOrgMemoryDecisionOff("no_selection"), null);
       }
       if (
         Array.isArray(_.candidates) &&
@@ -2494,20 +2494,20 @@ class vs {
         if (
           (t(L),
           y("org_memory_discovery", { stores: 0, cached: !1 }),
-          nf().state !== "undecided")
+          getOrgMemoryDecision().state !== "undecided")
         )
           return this.applyGrantAdjustments(e, o, []);
-        return (BH("empty"), null);
+        return (settleOrgMemoryDecisionOff("empty"), null);
       }
       if (_.candidates === void 0 && _.stores.length === 0)
         return (
-          BH("empty"),
+          settleOrgMemoryDecisionOff("empty"),
           t(null),
           y("org_memory_discovery", { stores: 0, cached: !1 }),
           null
         );
       return (
-        BH("empty"),
+        settleOrgMemoryDecisionOff("empty"),
         t(null),
         g("org_memory_discovery", "all_stores_dropped"),
         null
@@ -2526,17 +2526,17 @@ class vs {
   ensureShrinkSubscription() {
     if (this.shrinkSubscribed) return;
     ((this.shrinkSubscribed = !0),
-      Jer(() => {
+      onOrgMemoryDecisionShrink(() => {
         (this.discoverMemoized.cache.clear(), to());
       }));
   }
   rebuildMemoryPromptOnLateSettle() {
     (this.disarmLateSettleRebuild?.(),
-      (this.disarmLateSettleRebuild = Qer(() => {
+      (this.disarmLateSettleRebuild = onOrgMemoryDecisionSettled(() => {
         if (
           (this.disarmLateSettleRebuild?.(),
           (this.disarmLateSettleRebuild = null),
-          MCe().length > 0)
+          getDecisionStores().length > 0)
         )
           to();
       })));
@@ -2549,7 +2549,7 @@ class vs {
     try {
       return await this.discover();
     } catch (r) {
-      throw (BH("transient"), r);
+      throw (settleOrgMemoryDecisionOff("transient"), r);
     } finally {
       this.decidingRun = !1;
     }
@@ -2560,7 +2560,7 @@ class vs {
       this.ensureShrinkSubscription(),
       es().orgMemoryRead === !1)
     )
-      return (BH("read_disabled"), null);
+      return (settleOrgMemoryDecisionOff("read_disabled"), null);
     return this.discoverMemoized();
   }
   reconnect(e) {
@@ -2570,15 +2570,15 @@ class vs {
   }
   async runReconnect() {
     if (!Bo()) return { kind: "refused", reason: "untrusted_workspace" };
-    let e = nf(),
-      t = RTt();
+    let e = getOrgMemoryDecision(),
+      t = getOrgMemoryServedIdentity();
     if (
       (t !== null && jj() !== t) ||
-      (e.state !== "undecided" && KTn() === null)
+      (e.state !== "undecided" && reopenOrgMemoryDecision() === null)
     )
-      return (M$(), { kind: "refused", reason: "account_boundary" });
-    if ((M$(), this.decidingRun))
-      return (await vFe(Xc), { kind: "redecided", previous: e, current: nf() });
+      return (clearOrgMemoryCredential(), { kind: "refused", reason: "account_boundary" });
+    if ((clearOrgMemoryCredential(), this.decidingRun))
+      return (await waitForOrgMemoryDecisionSettled(Xc), { kind: "redecided", previous: e, current: getOrgMemoryDecision() });
     this.discoverMemoized.cache.clear();
     try {
       await this.discoverForDecision();
@@ -2587,7 +2587,7 @@ class vs {
         level: "warn",
       });
     }
-    return { kind: "redecided", previous: e, current: nf() };
+    return { kind: "redecided", previous: e, current: getOrgMemoryDecision() };
   }
   disconnect(e) {
     let t = () => (e?.(), this.runDisconnect()),
@@ -2595,16 +2595,16 @@ class vs {
     return ((this.reconnectChain = r), r);
   }
   runDisconnect() {
-    let e = nf();
+    let e = getOrgMemoryDecision();
     if (
-      (M$(),
+      (clearOrgMemoryCredential(),
       this.discoverMemoized.cache.clear(),
       e.state === "on" || e.state === "parked")
     )
-      KTn();
+      reopenOrgMemoryDecision();
     return (
-      BH("no_selection"),
-      { kind: "redecided", previous: e, current: nf() }
+      settleOrgMemoryDecisionOff("no_selection"),
+      { kind: "redecided", previous: e, current: getOrgMemoryDecision() }
     );
   }
 }
@@ -2612,35 +2612,35 @@ var Qc = new j(() => new vs());
 function Lt() {
   return Qc.of(B().host);
 }
-function QTn() {
+function clearOrgMemoryDiscoveryCaches() {
   Lt().clearCaches();
 }
-function ZTn() {
+function clearOrgMemoryDiscoveryAccountState() {
   Lt().clearAccountState();
 }
-function HTt() {
+function getOrgMemoryPickerData() {
   return Pr() ? Lt().lastPickerData : null;
 }
-function NCe() {
+function hasOrgMemoryDecisionRunStarted() {
   return Lt().decisionRunEverStarted;
 }
-function ttr() {
+function rebuildMemoryPromptOnLateSettle() {
   Lt().rebuildMemoryPromptOnLateSettle();
 }
-function eEn(e, t) {
+function discoverOrgMemoryStoresForDecision(e, t) {
   return Lt().discoverForDecision(e, t);
 }
-function tEn(e, t) {
+function discoverOrgMemoryStores(e, t) {
   return Lt().discover(e, t);
 }
-function nEn(e) {
+function reconnectOrgMemory(e) {
   return Lt().reconnect(e);
 }
-function rEn(e) {
+function disconnectOrgMemory(e) {
   return Lt().disconnect(e);
 }
 function Jc() {
-  let e = nf();
+  let e = getOrgMemoryDecision();
   if (e.state !== "on" || e.selectionSource !== "preference") return;
   let t = e.request.selection;
   if (t === null || !LCe()) return;
@@ -2650,7 +2650,7 @@ function Jc() {
   if (Ot(t) && !gn(o.path, t)) return;
   return o;
 }
-function oEn(e) {
+function isSelectionMounted(e) {
   let t = Jc();
   return t !== void 0 && e.some((r) => om(r.path) === om(t.path));
 }
@@ -2659,7 +2659,7 @@ function Pc() {
   if (!gt()) return !1;
   return wu() && gq(py) && gq(dB);
 }
-function IJ() {
+function isMultiStoreSyncAvailable() {
   if (!ua()) return !1;
   if (St()) return !1;
   if (!Mt("allow_memory_sync")) return !1;
@@ -6635,42 +6635,42 @@ var Us = 1e4,
   Hu = new Set(["word", "string", "raw_string", "number"]),
   yo = new Set(["command_substitution", "process_substitution"]),
   bo = new Set(["command", "declaration_command"]);
-async function uzt(e) {
+async function parseCommand(e) {
   if (!e || e.length > Us) return null;
   try {
     let t = nb().parse(e);
     if (!t) return null;
-    let r = NK(t, null),
+    let r = findCommandNode(t, null),
       o = Yu(r);
     return { rootNode: t, envVars: o, commandNode: r, originalCommand: e };
   } catch {
     return null;
   }
 }
-var Yj = Symbol("parse-aborted");
-async function jFe(e) {
+var PARSE_ABORTED = Symbol("parse-aborted");
+async function parseCommandRaw(e) {
   if (!e) return null;
   if (e.length > Us)
     return (
       i("tengu_tree_sitter_parse_abort", { cmdLength: e.length, panic: !1 }),
-      Yj
+      PARSE_ABORTED
     );
   try {
     let t = nb().parse(e);
     if (t === null)
       return (
         i("tengu_tree_sitter_parse_abort", { cmdLength: e.length, panic: !1 }),
-        Yj
+        PARSE_ABORTED
       );
     return t;
   } catch {
     return (
       i("tengu_tree_sitter_parse_abort", { cmdLength: e.length, panic: !0 }),
-      Yj
+      PARSE_ABORTED
     );
   }
 }
-function NK(e, t) {
+function findCommandNode(e, t) {
   let { type: r, children: o } = e;
   if (bo.has(r)) return e;
   if (r === "variable_assignment" && t)
@@ -6680,7 +6680,7 @@ function NK(e, t) {
     );
   if (r === "pipeline") {
     for (let d of o) {
-      let p = NK(d, e);
+      let p = findCommandNode(d, e);
       if (p) return p;
     }
     return null;
@@ -6688,7 +6688,7 @@ function NK(e, t) {
   if (r === "redirected_statement")
     return o.find((d) => bo.has(d.type)) ?? null;
   for (let d of o) {
-    let p = NK(d, e);
+    let p = findCommandNode(d, e);
     if (p) return p;
   }
   return null;
@@ -6701,7 +6701,7 @@ function Yu(e) {
     else if (r.type === "command_name" || r.type === "word") break;
   return t;
 }
-function jCe(e) {
+function extractCommandArguments(e) {
   if (e.type === "declaration_command") {
     let o = e.children[0];
     return o && Gu.has(o.text) ? [o.text] : [];
@@ -6790,13 +6790,13 @@ function IK() {
   return es().orgMemoryRead !== !1;
 }
 function gr() {
-  return (MCe().length > 0 || (NCe() && nf().state === "undecided")) && IK();
+  return (getDecisionStores().length > 0 || (hasOrgMemoryDecisionRunStarted() && getOrgMemoryDecision().state === "undecided")) && IK();
 }
 function ntr() {
   if (!IK()) return "inactive";
-  switch (nf().state) {
+  switch (getOrgMemoryDecision().state) {
     case "undecided":
-      return NCe() ? "connecting" : "unavailable";
+      return hasOrgMemoryDecisionRunStarted() ? "connecting" : "unavailable";
     case "on":
       return "connected";
     case "off":
@@ -6806,10 +6806,10 @@ function ntr() {
   }
 }
 function Wj() {
-  return IK() ? MCe() : [];
+  return IK() ? getDecisionStores() : [];
 }
 function Js() {
-  let e = nf();
+  let e = getOrgMemoryDecision();
   return IK() && e.state === "on" ? e.identity : null;
 }
 function FCe(e) {
@@ -7187,7 +7187,7 @@ function xFe(e) {
 function Xqt(e, t, r) {
   return new rn(
     { ...e, mode: t ? "rw" : "ro", mount: r },
-    { getAuthorization: CTt },
+    { getAuthorization: getOrgMemoryAuthorization },
   );
 }
 var Yqt = "tengu_salt_marsh",
@@ -7745,7 +7745,7 @@ var ih = "memory_list",
   Ed = "memory_read",
   $a = "memory_write",
   ltr = ["memory_list", "memory_read", "memory_write"];
-var Bi = "ToolSearch",
+var TOOL_SEARCH_TOOL_NAME = "ToolSearch",
   qfe = "DeferredToolPlaceholder",
   Zqt =
     "Reserved placeholder that keeps deferred tool loading active; never call this tool.";
@@ -7782,7 +7782,7 @@ function la(e, t) {
     ],
     J = `${ih},${Ed}`,
     te = Z_()
-      ? `If the memory tools are deferred, load them with ${Bi}("select:${J}") before first use. `
+      ? `If the memory tools are deferred, load them with ${TOOL_SEARCH_TOOL_NAME}("select:${J}") before first use. `
       : "",
     ie = D
       ? `${te}Read shared memory whenever earlier project context would help, and persist new learnings to your personal memory directory with the file tools.`
@@ -7917,7 +7917,7 @@ async function fa(e = ca, t = {}) {
   if (o === null) return [];
   let d = o.filter((x) => x.promptIndex !== void 0);
   if (d.length === 0) return [];
-  if (!IJ()) return (g("memory_prompt_index", "unavailable"), []);
+  if (!isMultiStoreSyncAvailable()) return (g("memory_prompt_index", "unavailable"), []);
   let p = r === null,
     _ = async () =>
       (await Promise.allSettled(d.map((k) => ma(k, e, p)))).flatMap((k) =>
@@ -7964,7 +7964,7 @@ async function ma(e, t, r) {
   }
 }
 async function ctr(e, t = {}) {
-  if (e.promptIndex === void 0 || !IJ()) return null;
+  if (e.promptIndex === void 0 || !isMultiStoreSyncAvailable()) return null;
   let r = await ma(e, t.timeoutMs ?? ca, !0);
   return r === null ? null : { content: r.content, promptIndex: r.promptIndex };
 }
@@ -8793,7 +8793,7 @@ These directories already exist \u2014 write to them directly with the Write too
 `);
 }
 var $o = "auto memory",
-  gf = RFe;
+  gf = FIRST_STORE_PULL_WAIT_DEADLINE_MS;
 function BYe(e, t = "index") {
   let { trimmed: r, lineCount: o, byteCount: d } = IFe(e),
     p = o > CD,
@@ -9020,8 +9020,8 @@ ${_}`;
   let L = a.CLAUDE_COWORK_MEMORY_EXTRA_GUIDELINES,
     x = IYe(),
     k = d && x === null && IK();
-  if (k && NCe()) {
-    if ((await vFe(gf), nf().state === "undecided")) ttr();
+  if (k && hasOrgMemoryDecisionRunStarted()) {
+    if ((await waitForOrgMemoryDecisionSettled(gf), getOrgMemoryDecision().state === "undecided")) rebuildMemoryPromptOnLateSettle();
   }
   let E = k ? Wj() : [];
   if (!o && !(k && E.length > 0)) HG(!1);
@@ -10099,11 +10099,11 @@ var rl = String.fromCharCode(36);
 async function Jfe(e) {
   if (e === "")
     return { kind: "simple", commands: [], bareAssignmentNames: [] };
-  let t = await jFe(e);
+  let t = await parseCommandRaw(e);
   if (t === null)
     return { kind: "simple", commands: [], bareAssignmentNames: [] };
   let r = Qfe(e, t);
-  if (t !== Yj && (r.kind === "simple" || r.nodeType !== void 0))
+  if (t !== PARSE_ABORTED && (r.kind === "simple" || r.nodeType !== void 0))
     return { ...r, tree: t };
   return r;
 }
@@ -10158,7 +10158,7 @@ function Qfe(e, t) {
     };
   if (e.trim() === "")
     return { kind: "simple", commands: [], bareAssignmentNames: [] };
-  if (t === Yj)
+  if (t === PARSE_ABORTED)
     return {
       kind: "too-complex",
       reason: "Parser aborted (timeout, resource limit, or over-length)",
@@ -15697,7 +15697,7 @@ async function RD(e, t) {
   for (let r of e) await DG(r, t);
 }
 function rme(e, t = "session") {
-  let r = MG(e);
+  let r = toPosixPath(e);
   if (r === "/") return;
   let o = vie(r, { escapeGlobs: !0 }),
     d = Ym.isAbsolute(r)
@@ -15877,7 +15877,7 @@ var np = [],
     ...!1,
   },
   Bl = [...xEn, ...[]];
-function Azt(e, t) {
+function isDangerousBashPermission(e, t) {
   if (e !== qe) return !1;
   if (t === void 0 || t === "") return !0;
   if (/^[\s*]+$/.test(t)) return !0;
@@ -15931,7 +15931,7 @@ function cEt(e, t) {
   }
   return !1;
 }
-function Czt(e, t) {
+function isDangerousPowerShellPermission(e, t) {
   if (e !== Ut) return !1;
   if (t === void 0 || t === "") return !0;
   if (/^[\s*]+$/.test(t)) return !0;
@@ -15985,7 +15985,7 @@ function Czt(e, t) {
   }
   return !1;
 }
-function Efr(e, t) {
+function isDangerousTaskPermission(e, t) {
   return Tu(e) === mt;
 }
 function rp(e) {
@@ -16011,10 +16011,10 @@ function tJe(e, t) {
   let r = `${e}\x00${t ?? ""}`,
     o = Ul.lookup(r);
   if (o !== void 0) return o;
-  let d = Azt(e, t) || Czt(e, t) || Efr(e, t) || rp(e);
+  let d = isDangerousBashPermission(e, t) || isDangerousPowerShellPermission(e, t) || isDangerousTaskPermission(e, t) || rp(e);
   return (Ul.remember(r, d), d);
 }
-function VCe(e, t) {
+function isDangerousClassifierPermission(e, t) {
   if ((e === qe || e === Ut) && zCe()) return !0;
   return tJe(e, t);
 }
@@ -16028,7 +16028,7 @@ var qFe = [
     "hostCredential",
   ],
   op = new Set([
-    import.meta.require("../../01-核心基础设施/共享小工具-未细化/END_CONVERSATION_TOOL_NAME.1xjr3136.js").END_CONVERSATION_TOOL_NAME,
+    import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js").END_CONVERSATION_TOOL_NAME,
   ]);
 function nJe(e) {
   return !e.mcpInfo && op.has(e.name);
@@ -16044,7 +16044,7 @@ function ON(e) {
       if (d === void 0) continue;
       for (let p of d) {
         let _ = Fr(p);
-        if (VCe(_.toolName, _.ruleContent)) continue;
+        if (isDangerousClassifierPermission(_.toolName, _.ruleContent)) continue;
         r.push({ source: o, ruleBehavior: "allow", ruleValue: _ });
       }
     }
@@ -16294,7 +16294,7 @@ function pEt(e, t) {
   ];
 }
 var Xl = "memory access blocked by /pause-memory",
-  YCe = [
+  DANGEROUS_FILES = [
     ".gitconfig",
     ".gitmodules",
     ".bashrc",
@@ -16333,8 +16333,8 @@ var Xl = "memory access blocked by /pause-memory",
     ".devcontainer.json",
     "pyrightconfig.json",
   ],
-  WH = new Set(YCe.map((e) => e.toLowerCase())),
-  VFe = [
+  DANGEROUS_FILES_LC = new Set(DANGEROUS_FILES.map((e) => e.toLowerCase())),
+  DANGEROUS_DIRECTORIES = [
     ".git",
     ".vscode",
     ".idea",
@@ -16345,8 +16345,8 @@ var Xl = "memory access blocked by /pause-memory",
     ".yarn",
     ".mvn",
   ],
-  oJe = [".config/git"];
-function dr(e) {
+  DANGEROUS_DIRECTORY_PATHS = [".config/git"];
+function normalizeCaseForComparison(e) {
   return e
     .toLowerCase()
     .replace(/\u0131/g, "i")
@@ -16354,13 +16354,13 @@ function dr(e) {
 }
 function bp(e) {
   let t = ot(e),
-    r = dr(t),
+    r = normalizeCaseForComparison(t),
     o = [
       { dir: ot(Ne(he(), ".claude", "skills")), prefix: "/.claude/skills/" },
       { dir: ot(Ne(Yn(), ".claude", "skills")), prefix: "~/.claude/skills/" },
     ];
   for (let { dir: d, prefix: p } of o) {
-    let _ = dr(d);
+    let _ = normalizeCaseForComparison(d);
     for (let L of [Re, "/"])
       if (r.startsWith(_ + L.toLowerCase())) {
         let x = t.slice(d.length + L.length),
@@ -16382,7 +16382,7 @@ function bp(e) {
   return null;
 }
 var Oe = st.sep;
-function JCe(e, t) {
+function relativePath(e, t) {
   if (P() === "windows") {
     let r = KT(e),
       o = KT(t);
@@ -16390,7 +16390,7 @@ function JCe(e, t) {
   }
   return st.relative(e, t);
 }
-function MG(e) {
+function toPosixPath(e) {
   if (P() === "windows") return KT(e);
   return e;
 }
@@ -16399,22 +16399,22 @@ function _p() {
   if (P() === "wsl" && S0()) e.push(Ne(_x, "managed-settings.json"));
   return e;
 }
-function fEt(e) {
+function isClaudeSettingsPath(e) {
   let t = ot(e),
-    r = dr(t);
+    r = normalizeCaseForComparison(t);
   if (
     r.endsWith(`${Re}.claude${Re}settings.json`) ||
     r.endsWith(`${Re}.claude${Re}settings.local.json`)
   )
     return !0;
-  return _p().some((o) => dr(o) === r);
+  return _p().some((o) => normalizeCaseForComparison(o) === r);
 }
 function wp(e) {
-  if (fEt(e)) return !0;
+  if (isClaudeSettingsPath(e)) return !0;
   let t = Ne(he(), ".claude", "commands"),
     r = Ne(he(), ".claude", "agents"),
     o = Ne(he(), ".claude", "skills");
-  return Ap(e, t) || Ap(e, r) || Ap(e, o);
+  return pathInWorkingPath(e, t) || pathInWorkingPath(e, r) || pathInWorkingPath(e, o);
 }
 function Ql(e, t) {
   let r = GK();
@@ -16437,17 +16437,17 @@ function Sp(e, t = Q()) {
     o = ze(e);
   return o === r || o.startsWith(r + Re);
 }
-function eA() {
+function isScratchpadEnabled() {
   if (H("tengu_scratch", !1)) return !0;
   {
     let { isArtifactToolEligible: e } = import.meta.require(
-      "../插件系统/isArtifactToolEnabled.n685fs4m.js",
+      "../Artifact发布-渲染/chunk-01ymf0ar.js",
     );
     return e();
   }
   return !1;
 }
-function Rzt() {
+function getBundledSkillsRoot() {
   let e = Jj();
   if (e.bundledSkillsRoot !== void 0) return e.bundledSkillsRoot;
   let t = fp(16).toString("hex");
@@ -16473,7 +16473,7 @@ function Rzt() {
     e.bundledSkillsRoot
   );
 }
-function GH(e = K()) {
+function getScratchpadDir(e = K()) {
   let t = Jj(),
     r = t.scratchpadDirBySessionId.get(e);
   if (r !== void 0) return r;
@@ -16485,39 +16485,39 @@ function GH(e = K()) {
   }
   return (t.scratchpadDirBySessionId.set(e, o), o);
 }
-async function KFe() {
-  if (!eA()) return null;
-  let e = GH();
+async function ensureScratchpadDir() {
+  if (!isScratchpadEnabled()) return null;
+  let e = getScratchpadDir();
   if (e === null) return null;
   return (await ae().mkdir(e, { mode: 448 }), e);
 }
 function Jl(e) {
-  if (!eA()) return null;
-  let t = GH();
+  if (!isScratchpadEnabled()) return null;
+  let t = getScratchpadDir();
   if (t === null) return null;
-  let r = dr(ze(e)),
-    o = dr(t);
+  let r = normalizeCaseForComparison(ze(e)),
+    o = normalizeCaseForComparison(t);
   return { comparePath: r, compareDir: o, prefix: o + Re };
 }
-function XFe(e) {
+function isScratchpadPath(e) {
   let t = Jl(e);
   if (t === null) return !1;
   return (
     t.comparePath === t.compareDir ||
-    (t.comparePath.startsWith(t.prefix) && !RU(t.comparePath, t.prefix, WH))
+    (t.comparePath.startsWith(t.prefix) && !RU(t.comparePath, t.prefix, DANGEROUS_FILES_LC))
   );
 }
-function YFe(e) {
+function isScratchpadDisplayPath(e) {
   let t = Jl(e);
   return (
     t !== null &&
     t.comparePath.startsWith(t.prefix) &&
-    !RU(t.comparePath, t.prefix, WH)
+    !RU(t.comparePath, t.prefix, DANGEROUS_FILES_LC)
   );
 }
-function JFe(e) {
+function isWorkshopDisplayPath(e) {
   let t = ze(Zl(e) ? e : yp(Q(), e));
-  return nAt(e) && !RU(t, "", WH);
+  return nAt(e) && !RU(t, "", DANGEROUS_FILES_LC);
 }
 function xp(e) {
   let t = [xi(Ne(e, "seed-admin"))];
@@ -16535,8 +16535,8 @@ function ki(e) {
   return xp(be()).some((r) => t === r || t.startsWith(r + Re));
 }
 function Pl(e) {
-  let t = dr(ze(e)),
-    r = dr(Ne(be(), "jobs") + Re);
+  let t = normalizeCaseForComparison(ze(e)),
+    r = normalizeCaseForComparison(Ne(be(), "jobs") + Re);
   if (!t.startsWith(r)) return !1;
   let d = t.slice(r.length).split(Re);
   return d.length === 2 && d[1].startsWith("adopt.json");
@@ -16545,21 +16545,21 @@ function Ri(e) {
   let t = a.CLAUDE_CODE_HOST_CREDS_FILE;
   if (!t) return !1;
   let o = t.replace(P() === "windows" ? /[\\/]+$/ : /\/+$/, "") || t,
-    d = dr(ze(e));
-  return Tr(o).some((p) => dr(ze(p)) === d);
+    d = normalizeCaseForComparison(ze(e));
+  return Tr(o).some((p) => normalizeCaseForComparison(ze(p)) === d);
 }
 function Ti(e) {
   let t = Rvt();
   if (t === null) return !1;
-  let r = dr(ze(e));
+  let r = normalizeCaseForComparison(ze(e));
   if (
     t.dirs.some((o) => {
-      let d = dr(ze(o));
+      let d = normalizeCaseForComparison(ze(o));
       return r === d || r.startsWith(d + Re);
     })
   )
     return !0;
-  return t.files.some((o) => Tr(o).some((d) => dr(ze(d)) === r));
+  return t.files.some((o) => Tr(o).some((d) => normalizeCaseForComparison(ze(d)) === r));
 }
 var Ai = {
     behavior: "deny",
@@ -16621,28 +16621,28 @@ function rc(e) {
     o = ze(t);
   if (!o.startsWith(r)) return !1;
   let d = o + Re + "tmp" + Re;
-  if (!dr(e).startsWith(dr(d))) return !1;
-  return !RU(e, d, WH);
+  if (!normalizeCaseForComparison(e).startsWith(normalizeCaseForComparison(d))) return !1;
+  return !RU(e, d, DANGEROUS_FILES_LC);
 }
 function nt(e, t) {
   if (!t || t.size === 0) return !1;
   for (let r of t.values())
     for (let o of r) {
       if (An(e) !== An(o)) continue;
-      if (Ap(e, o)) return !0;
+      if (pathInWorkingPath(e, o)) return !0;
     }
   return !1;
 }
-function LJ(e, t) {
+function isUntrustedUncPath(e, t) {
   if (UW(e)) return !0;
   return An(e) && !Oi(e) && !nt(e, t);
 }
-function QCe(e, t) {
+function isUntrustedAutomountPath(e, t) {
   return (Dr(e) || vS(e) || $m(e)) && !nt(e, t);
 }
 function oc(e) {
   let t = 0;
-  for (let r of QFe(he())) {
+  for (let r of getResolvedWorkingDirPaths(he())) {
     let o = ot(r).split(Re);
     if (o.length > 1 && o.at(-1) === "") o.pop();
     let d = 0;
@@ -16710,15 +16710,15 @@ function kp(e, t, r) {
     lnr(o, HEt(), be(), { maxAgeMs: 5000 })
   )
     return !0;
-  if (LJ(e, r)) return !0;
-  if (QCe(e, r)) return !0;
+  if (isUntrustedUncPath(e, r)) return !0;
+  if (isUntrustedAutomountPath(e, r)) return !0;
   let _ = !1,
     L = oc(d);
   for (let x = 0; x < d.length; x++) {
     let k = d[x],
       E = nc(k);
-    for (let C of VFe) {
-      if (E !== dr(C)) continue;
+    for (let C of DANGEROUS_DIRECTORIES) {
+      if (E !== normalizeCaseForComparison(C)) continue;
       if (C === ".claude") {
         let D = x >= L;
         if (_) return !0;
@@ -16739,18 +16739,18 @@ function kp(e, t, r) {
       return !0;
     }
   }
-  for (let x of oJe) {
+  for (let x of DANGEROUS_DIRECTORY_PATHS) {
     let k = x.split("/");
     for (let E = 0; E + k.length <= d.length; E++)
-      if (k.every((C, D) => nc(d[E + D]) === dr(C))) return !0;
+      if (k.every((C, D) => nc(d[E + D]) === normalizeCaseForComparison(C))) return !0;
   }
   if (p) {
     let x = nc(p);
-    if (YCe.some((k) => dr(k) === x)) return !0;
+    if (DANGEROUS_FILES.some((k) => normalizeCaseForComparison(k) === x)) return !0;
   }
   return !1;
 }
-function DN(e, t) {
+function hasSuspiciousWindowsPathPattern(e, t) {
   if (UW(e)) return !0;
   if (P() === "windows" || P() === "wsl") {
     if (e.indexOf(":", 2) !== -1) return !0;
@@ -16773,11 +16773,11 @@ function DN(e, t) {
   if (Q_(e, !0) && !Oi(e) && !nt(e, t)) return !0;
   return !1;
 }
-function joe(e, t, r, o, d) {
+function checkPathSafetyForAutoEdit(e, t, r, o, d) {
   let p = r || o,
     _ = t ?? Tr(e);
   for (let L of _)
-    if (DN(L, d))
+    if (hasSuspiciousWindowsPathPattern(L, d))
       return {
         safe: !1,
         message: `Claude requested permissions to write to ${e}, which contains a suspicious Windows path pattern that requires manual approval.`,
@@ -16786,7 +16786,7 @@ function joe(e, t, r, o, d) {
       };
   for (let L of _)
     if (p) {
-      if (fEt(L))
+      if (isClaudeSettingsPath(L))
         return {
           safe: !1,
           message: `Claude requested permissions to write to ${e}, but you haven't granted it yet.`,
@@ -16807,17 +16807,17 @@ function joe(e, t, r, o, d) {
       };
   return { safe: !0 };
 }
-function rb(e) {
+function allWorkingDirectories(e) {
   return new Set([he(), ...e.additionalWorkingDirectories.keys()]);
 }
-function QFe(e) {
+function getResolvedWorkingDirPaths(e) {
   let t = Jj(),
     r = t.resolvedWorkingDirPaths.get(e);
   if (r !== void 0) return r;
   let o = a.CLAUDE_CODE_EVAL_CONFINED && e === he() ? [e] : Tr(e);
   return (t.resolvedWorkingDirPaths.set(e, o), o);
 }
-function mEt(e) {
+function blockReadsWorkingDirectories(e) {
   return new Set([
     he(),
     ...Array.from(e.additionalWorkingDirectories.values())
@@ -16825,27 +16825,27 @@ function mEt(e) {
       .map((t) => t.path),
   ]);
 }
-function kzt() {
+function isAutoMemPathFromRepoSettings() {
   let e = BRn();
   return e !== void 0 && nEt().includes(e);
 }
-function ZCe(e, t, r) {
+function outsideReadBlocked(e, t, r) {
   if (t.blockReadsOutsideWorkingDirectories !== !0) return !1;
   let o = r ?? Tr(e);
   return (
-    !Bh(e, t, o, mEt(t)) &&
-    BK(e, {}, o, {
+    !pathInAllowedWorkingPath(e, t, o, blockReadsWorkingDirectories(t)) &&
+    checkReadableInternalPath(e, {}, o, {
       restricted: t.restricted,
       blockOutsideReads: !0,
       readBlockFence: !0,
     }).behavior !== "allow"
   );
 }
-function Bh(e, t, r, o = rb(t)) {
+function pathInAllowedWorkingPath(e, t, r, o = allWorkingDirectories(t)) {
   let d = r ?? Tr(e),
-    p = Array.from(o).flatMap((_) => QFe(_));
+    p = Array.from(o).flatMap((_) => getResolvedWorkingDirPaths(_));
   return d.every((_) =>
-    p.some((L) => Ap(_, L, { caseFold: !1, uncShapeParity: !0 })),
+    p.some((L) => pathInWorkingPath(_, L, { caseFold: !1, uncShapeParity: !0 })),
   );
 }
 var ic = {
@@ -16857,7 +16857,7 @@ var ic = {
     reason: ov,
   };
 function sc(e, t, r, o, d, p) {
-  if (Bh(e, r, t, p) || o().behavior === "allow") return null;
+  if (pathInAllowedWorkingPath(e, r, t, p) || o().behavior === "allow") return null;
   let _ = Array.from(p).join(", ");
   return {
     behavior: "deny",
@@ -16865,19 +16865,19 @@ function sc(e, t, r, o, d, p) {
     decisionReason: { type: "other", reason: d.reason },
   };
 }
-function xzt() {
+function isLinkedWorktreeFastPathEnabled() {
   return H("tengu_auto_mode_worktree_fast_path", !1);
 }
-async function HEn(e) {
-  if (!xzt()) return [];
+async function verifiedLinkedWorktreeDirectories(e) {
+  if (!isLinkedWorktreeFastPathEnabled()) return [];
   let t = new Set(),
     r = new Set();
-  for (let o of rb(e)) {
+  for (let o of allWorkingDirectories(e)) {
     if (await iae(o)) continue;
     let d = $r(o);
     if (d === null && H1(o)) d = $r(o);
     if (d === null || r.has(d)) continue;
-    if ((r.add(d), !Bh(d, e, QFe(d)))) continue;
+    if ((r.add(d), !pathInAllowedWorkingPath(d, e, getResolvedWorkingDirPaths(d)))) continue;
     let p;
     try {
       p = zn(await ae().realpath(d));
@@ -16896,7 +16896,7 @@ async function HEn(e) {
   }
   return Array.from(t);
 }
-function Ap(
+function pathInWorkingPath(
   e,
   t,
   { caseFold: r, skipPrivateAlias: o = !1, uncShapeParity: d = !1 } = {
@@ -16911,12 +16911,12 @@ function Ap(
     k = (F) => (o ? F : F.replace(L, "/var/").replace(x, "/tmp$1")),
     E = k(p),
     C = k(_),
-    D = r ? JCe(dr(C), dr(E)) : JCe(C, E);
+    D = r ? relativePath(normalizeCaseForComparison(C), normalizeCaseForComparison(E)) : relativePath(C, E);
   if (D === "") return !0;
   if (Iq(D)) return !1;
   return !st.isAbsolute(D);
 }
-function Hzt(e) {
+function rootPathForSource(e) {
   switch (e) {
     case "cliArg":
     case "command":
@@ -16938,10 +16938,10 @@ function Ur(e) {
 }
 function Yl({ patternRoot: e, pattern: t, rootPath: r }) {
   let o = st.join(e, t),
-    d = dr(e),
-    p = dr(r);
+    d = normalizeCaseForComparison(e),
+    p = normalizeCaseForComparison(r);
   if (d === p) return [Ur(t)];
-  else if (dr(o).startsWith(`${p}${Oe}`)) {
+  else if (normalizeCaseForComparison(o).startsWith(`${p}${Oe}`)) {
     let _ = o.slice(r.length);
     return [Ur(_)];
   } else {
@@ -16989,10 +16989,10 @@ function Rp(e, t) {
 }
 function jr(e) {
   if (P() !== "windows") return e;
-  let t = st.normalize(MG(e));
+  let t = st.normalize(toPosixPath(e));
   return t.length > 1 && t.endsWith("/") ? t.slice(0, -1) : t;
 }
-function sJe(e, t) {
+function normalizePatternsToPath(e, t) {
   let r = new Map(),
     o = e.get(null) ?? [],
     d = new Set(o),
@@ -17036,14 +17036,14 @@ function Vl(e, t, r) {
   if (k === x) return [o];
   return [o, { patternRoot: k, pattern: p.slice(L).join(Oe) + d }];
 }
-function ZFe(e) {
+function getFileReadIgnorePatterns(e) {
   let t = Yr(e, "read", "deny"),
     r = new Map();
   for (let [o, { patternMap: d }] of t.entries())
     r.set(o, Array.from(d.keys()));
   return r;
 }
-function e$e(e, t) {
+function patternWithRootFor(e, t) {
   if (
     P() === "windows" &&
     (e.startsWith("~\\") ||
@@ -17080,11 +17080,11 @@ function zr(e) {
     .replace(/^\uFEFF([!#]?)/, (r, o) => (o ? "\\" + o : ""))
     .replace(/^\uFEFF/, "[\uFEFF]");
 }
-function t$e(e, t) {
-  return e$e(e, Hzt(t));
+function patternWithRoot(e, t) {
+  return patternWithRootFor(e, rootPathForSource(t));
 }
-function IEn(e, t, r) {
-  let { relativePattern: o, root: d } = t$e(e, t),
+function compiledPathRulePattern(e, t, r) {
+  let { relativePattern: o, root: d } = patternWithRoot(e, t),
     p = r === "allow",
     _ = Di(zr(o), p);
   return _ === null ? null : { root: d, pattern: Gr(_, p) };
@@ -17149,7 +17149,7 @@ function Yr(e, t, r) {
     L = r === "allow",
     x = new Map();
   for (let [k, E] of _.entries()) {
-    let { relativePattern: C, root: D } = t$e(k, E.source),
+    let { relativePattern: C, root: D } = patternWithRoot(k, E.source),
       F = Di(zr(C), L);
     if (F === null) continue;
     let V = x.get(D);
@@ -17182,19 +17182,19 @@ function Yr(e, t, r) {
   }
   return x;
 }
-var iJe = /[^\p{ASCII}]/u;
-function gEt(e, t, r = () => [], o = !1) {
+var NON_ASCII_PATH = /[^\p{ASCII}]/u;
+function denyFoldVariantPaths(e, t, r = () => [], o = !1) {
   let d = new Set();
   for (let p of e) {
-    if ((!o && !iJe.test(p)) || d.has(p)) continue;
-    if ([...Tr(p), ...r(p)].some((_) => vi(_, t, "read", "deny") !== null))
+    if ((!o && !NON_ASCII_PATH.test(p)) || d.has(p)) continue;
+    if ([...Tr(p), ...r(p)].some((_) => matchingRuleForInput(_, t, "read", "deny") !== null))
       d.add(p);
   }
   return d;
 }
-function PEn(e, t, r) {
+function denyRuleMatchingAnywhere(e, t, r) {
   let o = ot(e);
-  if (Zl(e) || e.startsWith("~")) return vi(o, t, r, "deny");
+  if (Zl(e) || e.startsWith("~")) return matchingRuleForInput(o, t, r, "deny");
   let d = e.split(/[\\/]+/).filter((x) => x !== "" && x !== ".");
   while (d[0] === "..") d.shift();
   if (d.length === 0) return null;
@@ -17202,7 +17202,7 @@ function PEn(e, t, r) {
     _ = ah(t, r === "read" ? tt : Bt, "deny"),
     L = new Set();
   for (let [x, k] of _.entries()) {
-    let { relativePattern: E, root: C } = t$e(x, k.source),
+    let { relativePattern: E, root: C } = patternWithRoot(x, k.source),
       D = C ?? he(),
       F = zr(E)
         .split("/")
@@ -17211,22 +17211,22 @@ function PEn(e, t, r) {
       let q = [D, ...F.slice(0, V), p].join("/");
       if (L.has(q)) continue;
       L.add(q);
-      let J = vi(q, t, r, "deny");
+      let J = matchingRuleForInput(q, t, r, "deny");
       if (J !== null) return J;
     }
   }
   return null;
 }
-function vi(e, t, r, o) {
+function matchingRuleForInput(e, t, r, o) {
   let d = ot(e);
   if (P() === "windows" && d.includes("\\")) d = KT(d);
   let p = Yr(t, r, o),
     _ = P() === "windows" && o !== "allow",
     L = d ?? Q(),
-    x = _ ? dr(L) : L;
+    x = _ ? normalizeCaseForComparison(L) : L;
   for (let [k, { patternMap: E, getIg: C }] of p.entries()) {
     let D = k ?? Q(),
-      F = JCe(_ ? dr(D) : D, x);
+      F = relativePath(_ ? normalizeCaseForComparison(D) : D, x);
     if (!F || !dn.default.isPathValid(F)) continue;
     let V = C().test(F);
     if (V.ignored && V.rule) {
@@ -17243,30 +17243,30 @@ function vi(e, t, r, o) {
   }
   return null;
 }
-function OEn(e, t, r) {
+function matchingDenyRuleForDirectoryContents(e, t, r) {
   let o = Yr(t, r, "deny");
   if (o.size === 0) return null;
   let d = ot(e);
   if (P() === "windows" && d.includes("\\")) d = KT(d);
   let p = P() === "windows",
-    _ = p ? dr(d) : d;
+    _ = p ? normalizeCaseForComparison(d) : d;
   for (let [L, { patternMap: x }] of o.entries()) {
     let k = L ?? Q();
-    if (JCe(p ? dr(k) : k, _) !== "") continue;
+    if (relativePath(p ? normalizeCaseForComparison(k) : k, _) !== "") continue;
     let C = x.get("/**") ?? x.get("**");
     if (C !== void 0) return C;
   }
   return null;
 }
-function ame(e, t) {
+function matchesPathRule(e, t) {
   let r = ot(t);
   if (P() === "windows" && r.includes("\\")) r = KT(r);
-  let { relativePattern: o, root: d } = t$e(e, "session"),
+  let { relativePattern: o, root: d } = patternWithRoot(e, "session"),
     p = Di(zr(o), !0),
     _ = p === null ? null : Gr(p, !0),
     L = P() === "windows",
     x = d ?? Q(),
-    k = JCe(L ? dr(x) : x, L ? dr(r) : r);
+    k = relativePath(L ? normalizeCaseForComparison(x) : x, L ? normalizeCaseForComparison(r) : r);
   if (
     _ !== null &&
     k &&
@@ -17299,7 +17299,7 @@ function Cp() {
     } catch {}
   return ((e.trustedSymlinkEquivalences = r), r);
 }
-function hEt(e) {
+function normalizeTrustedSymlink(e) {
   for (let [t, r] of Cp())
     if (e === t || e.startsWith(t + Re)) return r + e.slice(t.length);
   return e;
@@ -17312,20 +17312,20 @@ function Ip(e) {
     e.endsWith("/**")
   );
 }
-function aJe(e, t, r) {
+function matchingAllowRuleForAllPaths(e, t, r) {
   let o = null;
   for (let d of e) {
-    let p = vi(d, t, r, "allow");
+    let p = matchingRuleForInput(d, t, r, "allow");
     if (!p) {
-      let _ = hEt(d);
-      if (_ !== d) p = vi(_, t, r, "allow");
+      let _ = normalizeTrustedSymlink(d);
+      if (_ !== d) p = matchingRuleForInput(_, t, r, "allow");
     }
     if (!p) return null;
     o ??= p;
   }
   return o;
 }
-function Izt(e, t, r, o) {
+function checkReadNetworkPathSafety(e, t, r, o) {
   if (typeof e.getPath !== "function") return null;
   let d = e.getPath(t),
     p = r.trustedNetworkDirectories;
@@ -17376,7 +17376,7 @@ function Izt(e, t, r, o) {
       );
   }
   for (let L of _)
-    if (DN(L, p))
+    if (hasSuspiciousWindowsPathPattern(L, p))
       return Tt(
         `Claude requested permissions to read from ${d}, which contains a suspicious Windows path pattern that requires manual approval.`,
         "Path contains suspicious Windows-specific patterns (alternate data streams, short names, long path prefixes, or three or more consecutive dots) that require manual verification",
@@ -17384,19 +17384,19 @@ function Izt(e, t, r, o) {
   return null;
 }
 var Op = new Set(["toolsNarrowing", "cliArg", "command"]);
-function n$e(e, t) {
+function hasReadDenyRuleForPath(e, t) {
   if (
     ni(
       t,
-      Gy,
+      READ_PATH_PROBE,
       Df(t).filter((o) => !Op.has(o.source)),
     ) !== null
   )
     return !0;
   if (Yr(t, "read", "deny").size === 0) return !1;
-  return Tr(e).some((o) => vi(o, t, "read", "deny") !== null);
+  return Tr(e).some((o) => matchingRuleForInput(o, t, "read", "deny") !== null);
 }
-var Gy = new Proxy(
+var READ_PATH_PROBE = new Proxy(
   {
     name: tt,
     mcpInfo: void 0,
@@ -17415,12 +17415,12 @@ var Gy = new Proxy(
     },
   },
 );
-function ww(e, t) {
-  return LC(Gy, { file_path: e }, t);
+function readPermissionDecisionForPath(e, t) {
+  return checkReadPermissionForTool(READ_PATH_PROBE, { file_path: e }, t);
 }
 function Dp(e, t) {
-  if (ni(t, Gy) !== null || sm(t, Gy) !== null) return !1;
-  let r = ww(e, t);
+  if (ni(t, READ_PATH_PROBE) !== null || sm(t, READ_PATH_PROBE) !== null) return !1;
+  let r = readPermissionDecisionForPath(e, t);
   if (r.behavior === "allow") return !0;
   if (r.behavior !== "ask") return !1;
   if (t.mode !== "bypassPermissions") return !1;
@@ -17435,7 +17435,7 @@ function Np(e, t) {
     !r.some((o) => Kt(o, Ni))
   );
 }
-function MJ(e, t, r, o) {
+function readAutoAllowedForMutation(e, t, r, o) {
   return !Np(e, r) && Dp(t, o);
 }
 function $p() {
@@ -17471,7 +17471,7 @@ function Bp(e) {
     return !1;
   }
 }
-function LC(e, t, r, o) {
+function checkReadPermissionForTool(e, t, r, o) {
   if (typeof e.getPath !== "function")
     return {
       behavior: "ask",
@@ -17492,7 +17492,7 @@ function LC(e, t, r, o) {
       return x;
     };
   for (let te of p) {
-    let ie = vi(te, r, "read", "deny");
+    let ie = matchingRuleForInput(te, r, "read", "deny");
     if (ie)
       return {
         behavior: "deny",
@@ -17506,13 +17506,13 @@ function LC(e, t, r, o) {
       p,
       r,
       () =>
-        BK(L(), t, p, {
+        checkReadableInternalPath(L(), t, p, {
           restricted: r.restricted,
           blockOutsideReads: r.blockReadsOutsideWorkingDirectories,
           readBlockFence: r.blockReadsOutsideWorkingDirectories,
         }),
       r.restricted ? ic : Ep,
-      r.blockReadsOutsideWorkingDirectories ? mEt(r) : rb(r),
+      r.blockReadsOutsideWorkingDirectories ? blockReadsWorkingDirectories(r) : allWorkingDirectories(r),
     );
     if (te) {
       if (
@@ -17536,10 +17536,10 @@ function LC(e, t, r, o) {
       return te;
     }
   }
-  let E = Izt(e, t, r, p);
+  let E = checkReadNetworkPathSafety(e, t, r, p);
   if (E) return E;
   for (let te of p) {
-    let ie = vi(te, r, "read", "ask");
+    let ie = matchingRuleForInput(te, r, "read", "ask");
     if (ie)
       return {
         behavior: "ask",
@@ -17548,13 +17548,13 @@ function LC(e, t, r, o) {
       };
   }
   let C = r.mode === "plan" ? { ...r, mode: "default" } : r,
-    D = OT(e, t, C, p);
+    D = checkWritePermissionForTool(e, t, C, p);
   if (D.behavior === "allow") {
     if (D.decisionReason?.type === "mode" && k())
       Kl(L(), "editImpliesRead", r.mode);
     return D;
   }
-  if (Bh(d, r, p)) {
+  if (pathInAllowedWorkingPath(d, r, p)) {
     if (k()) Kl(L(), "workingDir", r.mode);
     return {
       behavior: "allow",
@@ -17563,12 +17563,12 @@ function LC(e, t, r, o) {
     };
   }
   let V = L(),
-    q = BK(V, t, p, {
+    q = checkReadableInternalPath(V, t, p, {
       restricted: r.restricted,
       blockOutsideReads: r.blockReadsOutsideWorkingDirectories,
     });
-  if (q.behavior !== "passthrough" && cJe(q, r)) return q;
-  let J = aJe(p, r, "read");
+  if (q.behavior !== "passthrough" && internalPathDecisionStands(q, r)) return q;
+  let J = matchingAllowRuleForAllPaths(p, r, "read");
   if (J)
     return {
       behavior: "allow",
@@ -17578,14 +17578,14 @@ function LC(e, t, r, o) {
   return {
     behavior: "ask",
     message: `Claude requested permissions to read from ${d}, but you haven't granted it yet.`,
-    suggestions: lJe(d, "read", r, p),
+    suggestions: generateSuggestions(d, "read", r, p),
     decisionReason: {
       type: "workingDir",
       reason: "Path is outside allowed working directories",
     },
   };
 }
-function OT(e, t, r, o) {
+function checkWritePermissionForTool(e, t, r, o) {
   if (typeof e.getPath !== "function")
     return {
       behavior: "ask",
@@ -17594,7 +17594,7 @@ function OT(e, t, r, o) {
   let d = e.getPath(t),
     p = o ?? Tr(d);
   for (let F of p) {
-    let V = vi(F, r, "edit", "deny");
+    let V = matchingRuleForInput(F, r, "edit", "deny");
     if (V)
       return {
         behavior: "deny",
@@ -17608,9 +17608,9 @@ function OT(e, t, r, o) {
       d,
       p,
       r,
-      () => uJe(_, t, p, { permissionMode: r.mode, restricted: !0 }),
+      () => checkEditableInternalPath(_, t, p, { permissionMode: r.mode, restricted: !0 }),
       ic,
-      rb(r),
+      allWorkingDirectories(r),
     );
     if (F) return F;
   }
@@ -17625,12 +17625,12 @@ function OT(e, t, r, o) {
     }),
     x =
       L.length > 0
-        ? aJe(p, { ...r, alwaysAllowRules: { session: L } }, "edit")
+        ? matchingAllowRuleForAllPaths(p, { ...r, alwaysAllowRules: { session: L } }, "edit")
         : null;
   if (
     x &&
     r.mode !== "plan" &&
-    !p.some((F) => DN(F, r.trustedNetworkDirectories)) &&
+    !p.some((F) => hasSuspiciousWindowsPathPattern(F, r.trustedNetworkDirectories)) &&
     !p.some((F) => Hl(F) > 1)
   )
     return {
@@ -17639,7 +17639,7 @@ function OT(e, t, r, o) {
       decisionReason: { type: "rule", rule: x },
     };
   for (let F of p) {
-    let V = vi(F, r, "edit", "ask");
+    let V = matchingRuleForInput(F, r, "edit", "ask");
     if (V)
       return {
         behavior: "ask",
@@ -17647,9 +17647,9 @@ function OT(e, t, r, o) {
         decisionReason: { type: "rule", rule: V },
       };
   }
-  let k = uJe(_, t, p, { permissionMode: r.mode, restricted: r.restricted });
-  if (k.behavior !== "passthrough" && cJe(k, r)) return k;
-  let E = joe(
+  let k = checkEditableInternalPath(_, t, p, { permissionMode: r.mode, restricted: r.restricted });
+  if (k.behavior !== "passthrough" && internalPathDecisionStands(k, r)) return k;
+  let E = checkPathSafetyForAutoEdit(
     d,
     p,
     void 0,
@@ -17659,7 +17659,7 @@ function OT(e, t, r, o) {
   if (!E.safe) {
     let F =
         r.restricted ||
-        p.some((q) => Hl(q) > 1 || DN(q, r.trustedNetworkDirectories))
+        p.some((q) => Hl(q) > 1 || hasSuspiciousWindowsPathPattern(q, r.trustedNetworkDirectories))
           ? null
           : bp(d),
       V = F
@@ -17671,7 +17671,7 @@ function OT(e, t, r, o) {
               destination: "session",
             },
           ]
-        : lJe(d, "write", r, p);
+        : generateSuggestions(d, "write", r, p);
     return {
       behavior: "ask",
       message: E.message,
@@ -17694,14 +17694,14 @@ function OT(e, t, r, o) {
       message: `Cannot write to ${d} while in plan mode.`,
       decisionReason: { type: "mode", mode: "plan" },
     };
-  let C = Bh(d, r, p);
+  let C = pathInAllowedWorkingPath(d, r, p);
   if (r.mode === "acceptEdits" && C)
     return {
       behavior: "allow",
       updatedInput: t,
       decisionReason: { type: "mode", mode: r.mode },
     };
-  let D = aJe(p, r, "edit");
+  let D = matchingAllowRuleForAllPaths(p, r, "edit");
   if (D)
     return {
       behavior: "allow",
@@ -17711,7 +17711,7 @@ function OT(e, t, r, o) {
   return {
     behavior: "ask",
     message: `Claude requested permissions to write to ${d}, but you haven't granted it yet.`,
-    suggestions: lJe(d, "write", r, p),
+    suggestions: generateSuggestions(d, "write", r, p),
     decisionReason: !C
       ? {
           type: "workingDir",
@@ -17720,8 +17720,8 @@ function OT(e, t, r, o) {
       : void 0,
   };
 }
-function lJe(e, t, r, o) {
-  let d = !Bh(e, r, o);
+function generateSuggestions(e, t, r, o) {
+  let d = !pathInAllowedWorkingPath(e, r, o);
   if (t === "read" && d) {
     let L = nL(e);
     return Tr(L)
@@ -17754,20 +17754,20 @@ function lJe(e, t, r, o) {
     ? [{ type: "setMode", mode: "acceptEdits", destination: "session" }]
     : [];
 }
-function Pzt(e) {
+function normalizeInternalPathRoot(e) {
   for (let t of [Q(), he(), sn(), be(), s1(), Yn()])
-    for (let r of QFe(t)) {
+    for (let r of getResolvedWorkingDirPaths(t)) {
       if (r === t) continue;
       if (e === r || e.startsWith(r + Re)) return t + e.slice(r.length);
     }
-  return hEt(e);
+  return normalizeTrustedSymlink(e);
 }
 function dc(e, t, r) {
   let o;
   for (let d of e) {
     let p = t(d, r);
     if (p.behavior === "passthrough") {
-      let _ = Pzt(d);
+      let _ = normalizeInternalPathRoot(d);
       if (_ !== d) p = t(_, r);
     }
     if (p.behavior === "deny") return p;
@@ -17776,19 +17776,19 @@ function dc(e, t, r) {
   }
   return o ?? { behavior: "passthrough", message: "" };
 }
-function Ozt(e) {
+function untypeDenyReasonForAskPropagation(e) {
   if (e?.type !== "safetyCheck") return e;
   return { type: "other", reason: e.reason };
 }
-function cJe(e, t) {
+function internalPathDecisionStands(e, t) {
   return !(t.servedCall === !0 && e.behavior === "allow");
 }
-function uJe(e, t, r, o) {
+function checkEditableInternalPath(e, t, r, o) {
   if (r && r.length > 0) {
     if (r.some(Ri)) return Ci;
     if (r.some(ki)) return Mi;
     if (r.some(Ti)) return Ai;
-    return dc(r, (p, _) => uJe(p, _, void 0, o), t);
+    return dc(r, (p, _) => checkEditableInternalPath(p, _, void 0, o), t);
   }
   let d = ze(e);
   if (Ql(d, { includeWorkshopDoc: o?.permissionMode === "plan" }))
@@ -17798,7 +17798,7 @@ function uJe(e, t, r, o) {
       t,
       "Workflow script files for current session are allowed for writing",
     );
-  if (XFe(d))
+  if (isScratchpadPath(d))
     return De(
       t,
       "Scratchpad files for current session are allowed for writing",
@@ -17820,8 +17820,8 @@ function uJe(e, t, r, o) {
   if (Ti(d)) return Ai;
   return { behavior: "passthrough", message: "" };
 }
-function BK(e, t, r, o) {
-  if (r && r.length > 0) return dc(r, (F, V) => BK(F, V, void 0, o), t);
+function checkReadableInternalPath(e, t, r, o) {
+  if (r && r.length > 0) return dc(r, (F, V) => checkReadableInternalPath(F, V, void 0, o), t);
   let d = ze(e);
   if (a1(d) && AS())
     return {
@@ -17842,7 +17842,7 @@ function BK(e, t, r, o) {
     _ = p.endsWith(Re) ? p : p + Re;
   if (d === p || d.startsWith(_))
     return De(t, "Tool result files are allowed for reading");
-  if (XFe(d))
+  if (isScratchpadPath(d))
     return De(
       t,
       "Scratchpad files for current session are allowed for reading",
@@ -17858,7 +17858,7 @@ function BK(e, t, r, o) {
   let x = o?.remoteSurface || o?.restricted,
     k = x || o?.blockOutsideReads;
   if (!k && MFe(d)) return De(t, "Agent memory files are allowed for reading");
-  if (!x && gQ(d) && !(o?.blockOutsideReads && kzt()))
+  if (!x && gQ(d) && !(o?.blockOutsideReads && isAutoMemPathFromRepoSettings()))
     return De(t, "auto memory files are allowed for reading");
   let E = Ne(be(), "tasks") + Re;
   if (!k && (d === E.slice(0, -1) || d.startsWith(E)))
@@ -17875,7 +17875,7 @@ function BK(e, t, r, o) {
         return De(t, `User ${F} files are allowed for reading`);
     }
   }
-  let D = Rzt() + Re;
+  let D = getBundledSkillsRoot() + Re;
   if (!o?.remoteSurface && d.startsWith(D))
     return De(t, "Bundled skill reference files are allowed for reading");
   return { behavior: "passthrough", message: "" };
@@ -17901,9 +17901,9 @@ function Up() {
   let t = ae(),
     r = new Set(),
     o = (p) => {
-      r.add(dr(p));
+      r.add(normalizeCaseForComparison(p));
       try {
-        r.add(dr(t.realpathSync(p)));
+        r.add(normalizeCaseForComparison(t.realpathSync(p)));
       } catch {}
     },
     d = ot(be());
@@ -17940,10 +17940,10 @@ export {
   Vqt,
   CFe,
   zer,
-  ATt,
-  Ver,
-  CTt,
-  M$,
+  wasLastMintSelectionDegraded,
+  negotiateOrgMemoryCredential,
+  getOrgMemoryAuthorization,
+  clearOrgMemoryCredential,
   om,
   OYe,
   DCe,
@@ -17957,34 +17957,34 @@ export {
   vTt,
   Xer,
   Yer,
-  Jer,
-  Qer,
-  vFe,
-  zTn,
-  nf,
-  MCe,
-  RTt,
-  Zer,
-  BH,
-  etr,
-  kTt,
-  VTn,
-  KTn,
-  RFe,
-  XTn,
-  xTt,
-  YTn,
-  JTn,
-  QTn,
-  ZTn,
-  HTt,
-  NCe,
-  ttr,
-  eEn,
-  tEn,
-  nEn,
-  rEn,
-  oEn,
+  onOrgMemoryDecisionShrink,
+  onOrgMemoryDecisionSettled,
+  waitForOrgMemoryDecisionSettled,
+  waitForOrgMemoryDecisionSettledOnce,
+  getOrgMemoryDecision,
+  getDecisionStores,
+  getOrgMemoryServedIdentity,
+  settleOrgMemoryDecisionOn,
+  settleOrgMemoryDecisionOff,
+  parkOrgMemoryDecision,
+  shrinkOrgMemoryDecisionWriteAsk,
+  onOrgMemoryAuthCompletion,
+  reopenOrgMemoryDecision,
+  FIRST_STORE_PULL_WAIT_DEADLINE_MS,
+  settleFirstStorePull,
+  isFirstStorePullPending,
+  waitForFirstStorePull,
+  firstStorePullPending,
+  clearOrgMemoryDiscoveryCaches,
+  clearOrgMemoryDiscoveryAccountState,
+  getOrgMemoryPickerData,
+  hasOrgMemoryDecisionRunStarted,
+  rebuildMemoryPromptOnLateSettle,
+  discoverOrgMemoryStoresForDecision,
+  discoverOrgMemoryStores,
+  reconnectOrgMemory,
+  disconnectOrgMemory,
+  isSelectionMounted,
   Ooe,
   IK,
   ntr,
@@ -18034,14 +18034,14 @@ export {
   Ed,
   $a,
   ltr,
-  Bi,
+  TOOL_SEARCH_TOOL_NAME,
   qfe,
   Zqt,
   ezt,
   cEn,
   HG,
   tzt,
-  IJ,
+  isMultiStoreSyncAvailable,
   ctr,
   U$,
   utr,
@@ -18147,11 +18147,11 @@ export {
   UTt,
   czt,
   nb,
-  uzt,
-  Yj,
-  jFe,
-  NK,
-  jCe,
+  parseCommand,
+  PARSE_ABORTED,
+  parseCommandRaw,
+  findCommandNode,
+  extractCommandArguments,
   hi,
   Ltr,
   bEn,
@@ -18255,13 +18255,13 @@ export {
   xEn,
   Tzt,
   Ezt,
-  Azt,
+  isDangerousBashPermission,
   cEt,
-  Czt,
-  Efr,
+  isDangerousPowerShellPermission,
+  isDangerousTaskPermission,
   zCe,
   tJe,
-  VCe,
+  isDangerousClassifierPermission,
   qFe,
   nJe,
   ON,
@@ -18286,59 +18286,59 @@ export {
   uEt,
   dEt,
   pEt,
-  YCe,
-  WH,
-  VFe,
-  oJe,
-  dr,
-  JCe,
-  MG,
-  fEt,
-  eA,
-  Rzt,
-  GH,
-  KFe,
-  XFe,
-  YFe,
-  JFe,
-  LJ,
-  QCe,
-  DN,
-  joe,
-  rb,
-  QFe,
-  mEt,
-  kzt,
-  ZCe,
-  Bh,
-  xzt,
-  HEn,
-  Ap,
-  Hzt,
-  sJe,
-  ZFe,
-  e$e,
-  t$e,
-  IEn,
-  iJe,
-  gEt,
-  PEn,
-  vi,
-  OEn,
-  ame,
-  hEt,
-  aJe,
-  Izt,
-  n$e,
-  Gy,
-  ww,
-  MJ,
-  LC,
-  OT,
-  lJe,
-  Pzt,
-  Ozt,
-  cJe,
-  uJe,
-  BK,
+  DANGEROUS_FILES,
+  DANGEROUS_FILES_LC,
+  DANGEROUS_DIRECTORIES,
+  DANGEROUS_DIRECTORY_PATHS,
+  normalizeCaseForComparison,
+  relativePath,
+  toPosixPath,
+  isClaudeSettingsPath,
+  isScratchpadEnabled,
+  getBundledSkillsRoot,
+  getScratchpadDir,
+  ensureScratchpadDir,
+  isScratchpadPath,
+  isScratchpadDisplayPath,
+  isWorkshopDisplayPath,
+  isUntrustedUncPath,
+  isUntrustedAutomountPath,
+  hasSuspiciousWindowsPathPattern,
+  checkPathSafetyForAutoEdit,
+  allWorkingDirectories,
+  getResolvedWorkingDirPaths,
+  blockReadsWorkingDirectories,
+  isAutoMemPathFromRepoSettings,
+  outsideReadBlocked,
+  pathInAllowedWorkingPath,
+  isLinkedWorktreeFastPathEnabled,
+  verifiedLinkedWorktreeDirectories,
+  pathInWorkingPath,
+  rootPathForSource,
+  normalizePatternsToPath,
+  getFileReadIgnorePatterns,
+  patternWithRootFor,
+  patternWithRoot,
+  compiledPathRulePattern,
+  NON_ASCII_PATH,
+  denyFoldVariantPaths,
+  denyRuleMatchingAnywhere,
+  matchingRuleForInput,
+  matchingDenyRuleForDirectoryContents,
+  matchesPathRule,
+  normalizeTrustedSymlink,
+  matchingAllowRuleForAllPaths,
+  checkReadNetworkPathSafety,
+  hasReadDenyRuleForPath,
+  READ_PATH_PROBE,
+  readPermissionDecisionForPath,
+  readAutoAllowedForMutation,
+  checkReadPermissionForTool,
+  checkWritePermissionForTool,
+  generateSuggestions,
+  normalizeInternalPathRoot,
+  untypeDenyReasonForAskPropagation,
+  internalPathDecisionStands,
+  checkEditableInternalPath,
+  checkReadableInternalPath,
 };

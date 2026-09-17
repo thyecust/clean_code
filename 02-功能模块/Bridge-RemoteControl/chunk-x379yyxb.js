@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { Ve, dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { pp, BP, jP, Pd, Px, Khe, nZ, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { pp, BP, jP, Pd, Px, Khe, nZ, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   C2,
   JVn,
@@ -27,20 +27,20 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dJ, Ij, aoe } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { oKt, CCt, _Ue, ox, bUe, Jme, Wvn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Su, ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { uh, o5 } from "./chunk-tyce0p0b.js";
-import { m6 } from "./chunk-mxsfy35q.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { oKt, CCt, _Ue, prepareApiRequest as ox, getSessionRequestHeaders as bUe, sendEventToRemoteSession as Jme, sendBashCommandToRemoteSession as Wvn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { isViolinWoodEnabled as Su, isViolinWoodEnabledCached as ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { getTrustedDeviceToken as uh, recoverFromUntrustedDevice as o5 } from "./chunk-tyce0p0b.js";
+import { classifyElevatedAuthError as m6 } from "./chunk-mxsfy35q.js";
 import { GDt } from "../远程工具执行/chunk-66axrkvh.js";
 import { XGe } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb9matb3.js";
 import { bF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vthq2yn2.js";
 import { s, T, O, se, v, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { va, Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { va, getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID as me } from "crypto";
 var x = m(() => {

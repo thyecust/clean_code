@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { bh, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vir } from "./chunk-811z9z0t.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
-import { hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { bue, cUt, hd, nr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { WE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { X_ } from "./chunk-g6nvp9mm.js";
@@ -24,7 +24,7 @@ function M(t, o) {
   if (t === "plan" || t === "dontAsk") return "default";
   return t;
 }
-async function Ain(t, o) {
+async function spawnInProcessTeammate(t, o) {
   let {
       name: e,
       teamName: p,
@@ -123,4 +123,4 @@ async function Ain(t, o) {
     );
   }
 }
-export { Ain };
+export { spawnInProcessTeammate };

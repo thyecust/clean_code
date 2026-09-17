@@ -8,24 +8,24 @@
 
 // Version: 2.1.263
 import { j, B, ld } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { AsyncLocalStorage as C } from "async_hooks";
 var u = new C();
-function iS() {
+function getTeammateContext() {
   return u.getStore();
 }
 function zir(e, t) {
   return u.run(e, t);
 }
-function f1() {
+function isInProcessTeammate() {
   return u.getStore() !== void 0;
 }
 function Vir(e) {
   return { ...e, isInProcess: !0 };
 }
 import { spawnSync as I } from "child_process";
-function aS() {
-  let e = iS();
+function getParentSessionId() {
+  let e = getTeammateContext();
   if (e) return e.parentSessionId;
   let t = n();
   return t.dynamicTeamContext?.parentSessionId ?? t.cliParentSessionId;
@@ -44,53 +44,53 @@ class g {
     this.isChildSessionMarkerAmbientInTmux = f(e);
   }
 }
-var lmr = new j(() => new g());
+var teammateIdentities = new j(() => new g());
 function n() {
-  return lmr.of(B().host);
+  return teammateIdentities.of(B().host);
 }
-function ZSr(e) {
+function setCliParentSessionId(e) {
   n().setCliParentSessionId(e);
 }
-function ebr(e) {
+function setDynamicTeamContext(e) {
   n().setDynamicTeamContext(e);
 }
-function tbr() {
+function clearDynamicTeamContext() {
   n().setDynamicTeamContext(null);
 }
-function L5() {
+function getDynamicTeamContext() {
   return n().dynamicTeamContext;
 }
-function lS() {
-  let e = iS();
+function getAgentId() {
+  let e = getTeammateContext();
   if (e) return e.agentId;
   return n().dynamicTeamContext?.agentId;
 }
-function Ip() {
-  let e = iS();
+function getAgentName() {
+  let e = getTeammateContext();
   if (e) return e.agentName;
   return n().dynamicTeamContext?.agentName;
 }
-function ii(e) {
-  let t = iS();
+function getTeamName(e) {
+  let t = getTeammateContext();
   if (t) return t.teamName;
   let { dynamicTeamContext: o } = n();
   if (o?.teamName) return o.teamName;
   return e?.teamName;
 }
-function Zi() {
-  if (iS()) return !0;
+function isTeammate() {
+  if (getTeammateContext()) return !0;
   let { dynamicTeamContext: t } = n();
   return !!(t?.agentId && t?.teamName);
 }
-function vP(e) {
-  return e !== void 0 || Zi() || a.CLAUDE_CODE_CHILD_SESSION;
+function isModelDrivenSession(e) {
+  return e !== void 0 || isTeammate() || a.CLAUDE_CODE_CHILD_SESSION;
 }
-function BRe() {
+function isNestedInteractiveClaudeSession() {
   if (a.CLAUDE_CODE_FORCE_SESSION_PERSISTENCE) return !1;
-  if (!(a.CLAUDE_CODE_CHILD_SESSION && ld() && !Zi())) return !1;
+  if (!(a.CLAUDE_CODE_CHILD_SESSION && ld() && !isTeammate())) return !1;
   return !n().isChildSessionMarkerAmbientInTmux();
 }
-function nbr(e) {
+function _setAmbientMarkerProbeForTesting(e) {
   n().setAmbientMarkerProbe(e ?? x);
 }
 function f(e) {
@@ -119,9 +119,9 @@ function x() {
     return !1;
   }
   if (e.status !== 0) return !1;
-  return cmr(e.stdout);
+  return _tmuxGlobalEnvOutputHasMarker(e.stdout);
 }
-function cmr(e) {
+function _tmuxGlobalEnvOutputHasMarker(e) {
   return e
     .split(
       `
@@ -129,43 +129,43 @@ function cmr(e) {
     )
     .some((t) => t.startsWith("CLAUDE_CODE_CHILD_SESSION="));
 }
-function cS() {
-  let e = iS();
+function getTeammateColor() {
+  let e = getTeammateContext();
   if (e) return e.color;
   return n().dynamicTeamContext?.color;
 }
-function _et() {
-  let e = iS();
+function isPlanModeRequired() {
+  let e = getTeammateContext();
   if (e) return e.planModeRequired;
   let { dynamicTeamContext: t } = n();
   if (t !== null) return t.planModeRequired;
   return a.CLAUDE_CODE_PLAN_MODE_REQUIRED;
 }
-function jRe(e) {
+function hasNonLeadTeammate(e) {
   if (!e) return !1;
   let { leadAgentId: t, teammates: o } = e;
   return Object.keys(o).some((s) => s !== t);
 }
-function ZC(e) {
+function isTeamLead(e) {
   if (!e?.leadAgentId) return !1;
-  let t = lS(),
+  let t = getAgentId(),
     o = e.leadAgentId;
   if (t === o) return !0;
   if (!t) return !0;
   return !1;
 }
-function WRe(e) {
+function hasActiveInProcessTeammates(e) {
   for (let t of Object.values(e.tasks))
     if (t.type === "in_process_teammate" && t.status === "running") return !0;
   return !1;
 }
-function v5t(e) {
+function hasWorkingInProcessTeammates(e) {
   for (let t of Object.values(e.tasks))
     if (t.type === "in_process_teammate" && t.status === "running" && !t.isIdle)
       return !0;
   return !1;
 }
-function Kkn(e, t) {
+function waitForTeammatesToBecomeIdle(e, t) {
   let o = [];
   for (let [s, r] of Object.entries(t.tasks))
     if (r.type === "in_process_teammate" && r.status === "running" && !r.isIdle)
@@ -190,29 +190,29 @@ function Kkn(e, t) {
   });
 }
 export {
-  iS,
+  getTeammateContext,
   zir,
-  f1,
+  isInProcessTeammate,
   Vir,
-  aS,
-  lmr,
-  ZSr,
-  ebr,
-  tbr,
-  L5,
-  lS,
-  Ip,
-  ii,
-  Zi,
-  vP,
-  BRe,
-  nbr,
-  cmr,
-  cS,
-  _et,
-  jRe,
-  ZC,
-  WRe,
-  v5t,
-  Kkn,
+  getParentSessionId,
+  teammateIdentities,
+  setCliParentSessionId,
+  setDynamicTeamContext,
+  clearDynamicTeamContext,
+  getDynamicTeamContext,
+  getAgentId,
+  getAgentName,
+  getTeamName,
+  isTeammate,
+  isModelDrivenSession,
+  isNestedInteractiveClaudeSession,
+  _setAmbientMarkerProbeForTesting,
+  _tmuxGlobalEnvOutputHasMarker,
+  getTeammateColor,
+  isPlanModeRequired,
+  hasNonLeadTeammate,
+  isTeamLead,
+  hasActiveInProcessTeammates,
+  hasWorkingInProcessTeammates,
+  waitForTeammatesToBecomeIdle,
 };

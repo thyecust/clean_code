@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { readdir as u, readFile as a } from "fs/promises";
 import { release as f } from "os";
 function mXt() {

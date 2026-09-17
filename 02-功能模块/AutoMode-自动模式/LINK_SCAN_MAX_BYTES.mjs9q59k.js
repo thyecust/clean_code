@@ -15,12 +15,12 @@ import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chu
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { KI } from "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { rZ, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { us, Qu, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   vpe,
   Rpe,
@@ -28,17 +28,17 @@ import {
   gNe,
   lYn,
   cYn,
-  rr,
-  gu,
-  Ti,
-  Mi,
-  Zn,
-  S3t,
-  q_,
-  xf,
-  Ipe,
-  DE,
-  Hs,
+  getJobDir as rr,
+  getOwnJobShortId as gu,
+  writeStateAtomic as Ti,
+  logJobWriteError as Mi,
+  readJobState as Zn,
+  getBgRelocatedCwd as S3t,
+  listJobs as q_,
+  IDLE_NEEDS as xf,
+  isOverlayNeeds as Ipe,
+  isTerminal as DE,
+  isSettled as Hs,
   Ep,
   pYn,
   al,
@@ -51,23 +51,23 @@ import {
   _Yn,
   DSt,
 } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import {
-  xm,
-  rt,
-  NVt,
+  getSmallFastModel as xm,
+  getMainLoopModel as rt,
+  classifierFlagshipRerouteTarget as NVt,
   gUe,
   Vme,
-  _t,
-  Ja,
-  oZe,
-  sZe,
-  xUe,
+  isBgSession as _t,
+  isActingAsBgJob as Ja,
+  isBeingWatched as oZe,
+  isBeingWatchedV5 as sZe,
+  updateSessionActivity as xUe,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Fi } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { uuidSlugFromUrl as Fi } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { R3n } from "../权限系统/chunk-8zbmhy8a.js";
 import { aAt } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import {
@@ -77,16 +77,16 @@ import {
   $Te,
   zS,
   OI,
-  il,
-  S9t,
+  getMaterializedSessionFile as il,
+  worktreeStateSignals as S9t,
   nN,
   rN,
   oR,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { yl } from "../Teammates团队/chunk-thxapyam.js";
-import { nm } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { CRON_CREATE_TOOL_NAME as nm } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { k3n } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
-import { J4, uln } from "../后台任务-Shell管理/chunk-rh0xpf1w.js";
+import { sendRv as J4, disarmStartupWedgeWatchdog as uln } from "../后台任务-Shell管理/chunk-rh0xpf1w.js";
 import { fI, sft } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";

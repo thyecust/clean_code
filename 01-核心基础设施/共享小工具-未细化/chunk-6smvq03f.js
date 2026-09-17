@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { df, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { a, Wn } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a, antEnv as Wn } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Wf } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Pw } from "../设置-配置/设置-配置.aqbb35ee.js";
 function A$e() {
@@ -27,7 +27,7 @@ function ny() {
 }
 async function C$e(e = {}) {
   if (Pw() === null) {
-    let { getSettingsWithErrors: t } = await import("../设置-配置/getSettingsWithErrors.2xnfq00s.js");
+    let { getSettingsWithErrors: t } = await import("../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js");
     t();
   }
   if (e.kickGrowthBook !== !1) df().catch(() => {});

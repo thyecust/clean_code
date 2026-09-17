@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { wie, htt, V6 } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { getEligibilityMemo as wie, getIneligibleReason as htt, getLastLoadStatus as V6 } from "../设置-配置/设置-配置.aqbb35ee.js";
 function Sle() {
   let e = V6();
   if (e) return e;

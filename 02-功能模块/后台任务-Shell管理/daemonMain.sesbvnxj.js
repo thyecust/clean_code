@@ -12,23 +12,23 @@
 import { Wi, w5, E_, Mse, df, H, NR, EP, x5, tBe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { S, u, Yr, _y } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromNumber as Yr, concatSafe as _y } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { R, ge, l, A, Jr, Po, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, Yu, qr, zR, XPn, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g, Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { I5, Tq, jT, kU, Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { sigtermThenKill as I5, reapDetachedRepl as Tq, procIdentityOf as jT, procIdentityFields as kU, getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { A$e, C$e, Tve, JK, Sme, AAn, Lc, bme } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
 import { bfe, Il, Pc, YE, wfe, Gk } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { RT } from "../文件监听-Watch/文件监听-Watch.3efypmps.js";
+import { default as RT } from "../文件监听-Watch/文件监听-Watch.3efypmps.js";
 import { NNe, rd, pD, FNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
 import {
   KY,
@@ -55,26 +55,26 @@ import {
 } from "./chunk-djserjj5.js";
 import {
   Cre,
-  ba,
-  RSt,
+  BG_PROTO as ba,
+  BgDispatchSchema as RSt,
   f3t,
   m3t,
-  IE,
-  AT,
-  S$,
-  rr,
-  Ti,
-  Zn,
-  Hpe,
-  wNe,
-  Hs,
-  Ope,
+  readRoster as IE,
+  bgShort as AT,
+  updateRoster as S$,
+  getJobDir as rr,
+  writeStateAtomic as Ti,
+  readJobState as Zn,
+  readPinnedJobIds as Hpe,
+  ABANDONED_WORKER_MS as wNe,
+  isSettled as Hs,
+  writeReapedTerminalState as Ope,
 } from "./chunk-7wsy8vxb.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
 import { Tw } from "../认证-OAuth登录/chunk-s51acx6w.js";
 import { mut } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
-import { Wp } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import { controlRequest as Wp } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import {
   Aye,
   X$n,
@@ -144,7 +144,7 @@ import { Vb, s9 } from "../../01-核心基础设施/共享小工具-未细化/ch
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { NSt, j8e } from "../../01-核心基础设施/共享小工具-未细化/chunk-h14anec2.js";
-import { Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { spawn as Br } from "child_process";

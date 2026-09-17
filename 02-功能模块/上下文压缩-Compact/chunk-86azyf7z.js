@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { rt, ip, JN, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Tm, Zo, fEe, j_, hC, VS, e3t } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { P$, Rfe, kfe, xfe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { tce } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
+import { getMainLoopModel as rt, getRuntimeMainLoopModel as ip, JN, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Tm, asSystemPrompt as Zo, fEe, j_, hC, VS, e3t } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { artifactReadObservationIn as P$, makeSetArtifactReadVersion as Rfe, makeSetArtifactContractTarget as kfe, makeGetArtifactContractTarget as xfe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { makeSetWebBrowserSlice as tce } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import { Ole, Dle, i7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
 import { sSe, dee, pee } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
 import { ESe } from "../Teammates团队/chunk-c8267s4e.js";

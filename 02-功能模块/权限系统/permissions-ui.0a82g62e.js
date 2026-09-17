@@ -13,23 +13,23 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { qe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { yi, ay, cke, T0 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { yi, ay, cke, getRelativeSettingsFilePathForSource as T0 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jn, Pt, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { qT, ho, ye, Ii, OU, hie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { parseSettingsFile as qT, getSettingsFilePathForSource as ho, getSettingsForSource as ye, updateSettingsForSourceWithTransform as Ii, autoModeConfigSchema as OU, AUTO_MODE_TRUSTED_SOURCES as hie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Fr, Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { gi, o, t, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
 import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { ZZ } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { supportsShiftEnter as ZZ } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
@@ -37,16 +37,16 @@ import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chu
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import {
-  st,
+  SandboxManager as st,
   ep,
   sgt,
   igt,
   B2,
   oC,
   Nzn,
-  ine,
-  XBt,
-  Em,
+  permissionRuleSourceDisplayString as ine,
+  deletePermissionRule as XBt,
+  WebFetchTool as Em,
   an,
   Lo,
   E7n,

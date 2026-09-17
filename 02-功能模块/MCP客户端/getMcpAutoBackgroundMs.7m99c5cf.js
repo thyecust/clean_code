@@ -10,17 +10,17 @@
 
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { _Je } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { attachDetachableAbortRelay as _Je } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { ha } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "./chunk-tv3jbp8f.js";
 import "../认证-OAuth登录/chunk-3wfaaze4.js";

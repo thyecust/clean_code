@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { NRe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { L$e, kve, KJ, ch } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { L$e, getLastFetchOutcome as kve, getPolicyLimitsIneligibleReason as KJ, getResponseFromCache as ch } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 function s() {
   let e = ch();
   if (e === null) return "nothing";

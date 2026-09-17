@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { AHt } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { execFileSync as g } from "child_process";
 import { lstatSync as m } from "fs";
 import { join as w } from "path";
@@ -46,7 +46,7 @@ function y(e) {
     n = t.lastIndexOf(".");
   return n > 0 && v.has(t.slice(n));
 }
-function rXt(e, t = !1) {
+function findExecutableWindows(e, t = !1) {
   let n = h.of(B().host),
     o = n.lookup(e);
   if (o !== void 0)
@@ -95,9 +95,9 @@ function S(e) {
     o = "code" in e ? e.code : void 0;
   return t === 1 && !n && !o;
 }
-function EL(e, t = !1) {
+function resolveExecutableSafely(e, t = !1) {
   if (!E()) return e;
   if (e.includes("/") || e.includes("\\")) return e;
-  return rXt(e, t);
+  return findExecutableWindows(e, t);
 }
-export { rXt, EL };
+export { findExecutableWindows, resolveExecutableSafely };

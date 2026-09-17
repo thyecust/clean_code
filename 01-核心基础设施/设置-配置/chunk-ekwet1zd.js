@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { Fr } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
-import { Azt, Czt } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isDangerousBashPermission as Azt, isDangerousPowerShellPermission as Czt } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { qe, Ut } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var p = [
   "userSettings",

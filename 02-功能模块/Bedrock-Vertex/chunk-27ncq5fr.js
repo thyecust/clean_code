@@ -245,7 +245,7 @@ function yXt() {
   if (Ie(process.env.DO_NOT_TRACK)) return "DO_NOT_TRACK";
   return null;
 }
-function pxe(t, e) {
+function getLogDisplayTitle(t, e) {
   let r = t.firstPrompt?.startsWith(`<${jP}>`),
     o = t.firstPrompt ? eje(t.firstPrompt) : "",
     c = o && !r,
@@ -261,7 +261,7 @@ function pxe(t, e) {
       "";
   return Uxt(S).trim();
 }
-function BPn(t) {
+function dateToFilename(t) {
   return t.toISOString().replace(/[:.]/g, "-");
 }
 var N = 100;
@@ -312,10 +312,10 @@ class C {
   }
 }
 var a = new C();
-function jPn(t) {
+function attachErrorLogSink(t) {
   a.attachSink(t);
 }
-function h(t) {
+function logError(t) {
   let e = ge(t);
   try {
     if (
@@ -336,20 +336,20 @@ function h(t) {
     (a.remember(o), a.dispatch({ type: "error", error: e }));
   } catch {}
 }
-function hz() {
+function getInMemoryErrors() {
   return [...a.recentErrors];
 }
-function Wr(t, e) {
+function logMCPError(t, e) {
   try {
     a.dispatch({ type: "mcpError", serverName: t, error: e });
   } catch {}
 }
-function J(t, e) {
+function logMCPDebug(t, e) {
   try {
     a.dispatch({ type: "mcpDebug", serverName: t, message: e });
   } catch {}
 }
-function Bxt(t, e, r) {
+function captureAPIRequest(t, e, r) {
   if (!e || !e.startsWith("repl_main_thread")) return;
   if (!r) return;
   let { messages: o, ...c } = t;
@@ -434,12 +434,12 @@ export {
   U1,
   dxe,
   yXt,
-  pxe,
-  BPn,
-  jPn,
-  h,
-  hz,
-  Wr,
-  J,
-  Bxt,
+  getLogDisplayTitle,
+  dateToFilename,
+  attachErrorLogSink,
+  logError,
+  getInMemoryErrors,
+  logMCPError,
+  logMCPDebug,
+  captureAPIRequest,
 };

@@ -22,49 +22,49 @@ import {
   kor,
   qe,
   Ut,
-  Hw,
+  clearOAuthTokenCache as Hw,
   H,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Xn, K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ve, zi, yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Kn, sje } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { q, Gke } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { y0 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { drainRegisteredWriteQueues as y0 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt, io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { ktt, d0n, Htt, f0n, Rke } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { HOOK_REWRITE_HEADLESS_DENY_REASON as ktt, CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON as d0n, CAN_USE_TOOL_INVALID_RESULT_DENY_REASON as Htt, CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON as f0n, CAN_USE_TOOL_ABORTED_DENY_REASON as Rke } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ps } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { ce } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext as ce } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { Kk, nme, RD } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { FJ } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { turnAbortControllerOf as FJ } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Wh } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import {
   dV,
   Xte,
-  CM,
-  tne,
-  st,
+  isMisleadingConsentHost as CM,
+  consentHostEntry as tne,
+  SandboxManager as st,
   nVe,
   o3,
   l3,
-  c3,
-  HO,
-  BDe,
-  gd,
-  KBt,
-  jv,
-  WS,
+  stripWholeToolGrantsForAsk as c3,
+  withoutGrantsForRemoteScope as HO,
+  guardHookUpdatedInput as BDe,
+  hasPermissionsToUseTool as gd,
+  hookUpdatedInputSatisfiesInteraction as KBt,
+  checkRuleBasedPermissions as jv,
+  findSafetyCheckReason as WS,
   fVe,
-  Vue,
+  executePermissionRequestHooks as Vue,
   e4n,
   c2t,
   jM,
@@ -72,7 +72,7 @@ import {
   i$,
   O3,
   gre,
-  gC,
+  executeNotificationHooks as gC,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { no, sf } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
 import { Es } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";

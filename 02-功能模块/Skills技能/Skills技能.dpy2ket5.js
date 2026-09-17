@@ -12,30 +12,30 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { tl, Hr, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { We, b, z, k_, YPn, o8, n, s8, ZPn } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, x, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ZQ } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { XT, Tie, nkt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { yd, BI, x3t, WY } from "../ClaudeinChrome/chunk-hnp84hf6.js";
-import { SQe, Ue, mc, Ja, r5t, GUe, H, ua, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Pt, lt, hh, Fw, wnt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { yd, CFC_TOOL_PREFIX as BI, detectAvailableBrowser as x3t, openInChrome as WY } from "../ClaudeinChrome/chunk-hnp84hf6.js";
+import { SQe, getCanonicalName as Ue, mc, isActingAsBgJob as Ja, r5t, GUe, H, isAutoMemoryEnabled as ua, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Pt, gitExe as lt, getIsGit as hh, getDefaultBranch as Fw, getGitPushShellPatterns as wnt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { ho } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource as ho } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xt } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { EIn, AIn, CIn } from "../Git-Worktree/chunk-bk9696gx.js";
 import {
   ZA,
   UOe,
   Nft,
-  zp,
+  isCommandEnabled as zp,
   Ndn,
   Jwe,
   bk,
@@ -48,18 +48,18 @@ import {
   hKe,
   $jt,
   FV,
-  Yde,
-  Zm,
+  isMcpServerDenied as Yde,
+  doesEnterpriseMcpConfigExist as Zm,
   HI,
-  xEe,
-  rD,
-  FWt,
-  $Wt,
-  F5e,
-  RMe,
-  kMe,
-  Zde,
-  bH,
+  CHROME_EXTENSION_RECONNECT_URL as xEe,
+  isClaudeInChromeAllowed as rD,
+  hasBaseChromeOfferEligibility as FWt,
+  hasChromeExtensionEvidence as $Wt,
+  isClaudeInChromeWiredThisSession as F5e,
+  markClaudeInChromeUnwired as RMe,
+  getClaudeInChromeMcpServerConfig as kMe,
+  setupClaudeInChrome as Zde,
+  isChromeExtensionInstalled as bH,
   $5e,
   jWt,
   WWt,
@@ -79,7 +79,7 @@ import { Wj, aEn, lEn, PFe, PTt, OC, DK, Dtr } from "../Memory-CLAUDE.md/Memory-
 import { zo } from "../MCP客户端/chunk-3kmsshb6.js";
 import { Ys, ZY } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { im, $C, _$e, MT, eU } from "../权限系统/chunk-t3b7pg2x.js";
-import { so, ce, Qc, Bd } from "../权限系统/chunk-fjrcf22x.js";
+import { so, getToolPermissionContext as ce, getEffortValue as Qc, getMainLoopModel as Bd } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
 import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { ZS } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
@@ -92,31 +92,31 @@ import {
   JZn,
   wD,
   ler,
-  Toe,
-  Mwn,
-  Nwn,
-  oP,
-  FH,
-  yR,
-  sP,
-  voe,
-  $H,
-  mTn,
-  gTn,
-  $qt,
-  _Tn,
-  bTn,
-  wTn,
-  Uqt,
-  Roe,
+  resolveContract as Toe,
+  fetchContractDefs as Mwn,
+  fetchContractPrompt as Nwn,
+  readFrameDecl as oP,
+  isCoworkFramePublishSession as FH,
+  isArtifactToolEnabled as yR,
+  isArtifactToolRegistered as sP,
+  isPlanArtifactEnabled as voe,
+  isWorkshopEnabled as $H,
+  isWhiteboardEnabled as mTn,
+  isWhiteboardLiveEnabled as gTn,
+  isPrototypeEnabled as $qt,
+  isPlanWorkshopOfferEnabled as _Tn,
+  isArtifactTemplateSkillsEnabled as bTn,
+  isProductivitySkillsEnabled as wTn,
+  isArtifactPrReviewEnabled as Uqt,
+  isArtifactPrReviewComposeLatched as Roe,
 } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { GI } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { zI } from "../后台任务-Shell管理/chunk-djserjj5.js";
-import { uwn, eo, poe, yfe, XGt } from "./chunk-1zy5c8mf.js";
-import { OE } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { registerBundledSkillSessionReset as uwn, registerBundledSkill as eo, getBundledSkills as poe, getBundledSkillExtractDir as yfe, extractAdditionalSkillFiles as XGt } from "./chunk-1zy5c8mf.js";
+import { getJobsDir as OE } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { K3, K8e, LYn, Lre, X8e, Fyn, $yn, iN } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { SOe } from "../Artifact发布-渲染/chunk-01jnk0v2.js";
-import { Jon, Zon, bce, Ov, eT, wce, GNt } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
+import { Jon, Zon, artifactLiveEditPromptGateOpen as bce, artifactCapabilitiesPromptGateOpen as Ov, artifactCommentsPromptGateOpen as eT, artifactRoomSurfaceOpen as wce, artifactReadPageDataPromptGateOpen as GNt } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
 import { qjn } from "../../01-核心基础设施/共享小工具-未细化/chunk-f7n720sn.js";
 import { Rjn } from "../Artifact发布-渲染/chunk-yrjr7v83.js";
 import { MBn } from "../CodeReview/chunk-rp57gfa9.js";
@@ -145,10 +145,10 @@ import {
 import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
 import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
-import { vd } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME as vd } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { Kr } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { O, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 function en(e) {
   return e === null || e === void 0

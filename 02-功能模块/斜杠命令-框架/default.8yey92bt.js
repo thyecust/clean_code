@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 77 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Gl, kp } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { u6, KG, lb, UC } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { getAuthTokenSource as Gl, getAnthropicApiKeyWithSourceSafe as kp } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBridgeFirstParty as u6, isRemoteControlHardDisabled as KG, isBridgeEnabled as lb, isRunningInRemoteEnvironment as UC } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { Myn } from "../../01-核心基础设施/共享小工具-未细化/chunk-0kqw1wf5.js";
 function e() {
   if (lb()) return !0;

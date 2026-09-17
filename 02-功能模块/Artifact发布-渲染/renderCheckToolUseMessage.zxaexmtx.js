@@ -11,26 +11,26 @@
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Vl } from "../权限系统/chunk-e4pfvp7x.js";
-import { el } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncatePathMiddle as el } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import {
-  Hp,
-  ret,
-  xkn,
-  oet,
-  rie,
-  Wt,
-  JD,
-  br,
-  ls,
-  e_,
-  Bkn,
-  D5,
-  Pa,
-  yb,
-  met,
-  get,
+  ASSET_ID_RE as Hp,
+  STALE_GUARD_REJECTION_PREFIX as ret,
+  STALE_GUARD_REJECTION_PREFIX_LEGACY as xkn,
+  STALE_GUARD_CONTENT_HEADER_LINE_RE as oet,
+  CONFLICT_REJECTION_PREFIX as rie,
+  parseArtifactUrl as Wt,
+  parseArtifactUrlInput as JD,
+  artifactViewerUrlFor as br,
+  canonicalArtifactTargetFor as ls,
+  sanitizeArtifactTitle as e_,
+  revealPageInvisibles as Bkn,
+  listScopeFrom as D5,
+  sweepAskCopy as Pa,
+  sweepProvenanceMarker as yb,
+  sweptAskPath as met,
+  splitWatchRows as get,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { yw, jg, Cn, rl, $j } from "./chunk-01ymf0ar.js";
+import { yw, jg, getShareEntry as Cn, ownershipTag as rl, shareAudienceParenthetical as $j } from "./chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
@@ -38,8 +38,8 @@ import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
 import { xut } from "./chunk-fx5ekm7e.js";
 import { wte, lwe, FS } from "./chunk-qpgskeea.js";
-import { yte, sT, icn, acn, lcn } from "./chunk-pdd7kz7p.js";
-import { Sce, yPe, Mut, Nut, Fut, $ut, dM, bm } from "./chunk-b6k1z7an.js";
+import { ROOM_CONSENT_CLAUSE as yte, DB_BATCH_OP as sT, replayedPublishesRemaining as icn, replayedPublishesResetAt as acn, publishesRemainingLine as lcn } from "./chunk-pdd7kz7p.js";
+import { Sce, yPe, Mut, Nut, Fut, $ut, dM, artifactLivePathsSchemaOpen as bm } from "./chunk-b6k1z7an.js";
 import "./chunk-x29r16ke.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0ghshta0.js";
 import {
@@ -79,7 +79,7 @@ import "./chunk-5gvg7p5p.js";
 import "../Teammates团队/chunk-y89mhs4a.js";
 import { QHe } from "../../01-核心基础设施/共享小工具-未细化/chunk-86zcr8cb.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function R(ee) {

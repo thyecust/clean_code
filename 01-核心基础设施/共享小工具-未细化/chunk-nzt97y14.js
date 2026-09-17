@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Ge } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { getInitialSettings as Ge } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { to } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { e0, p5, Yh } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { DEFAULT_3P_SONNET_KEY as e0, DEFAULT_3P_HAIKU_KEY as p5, firstPartyNameToCanonical as Yh } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { d7 } from "../../02-功能模块/Bedrock-Vertex/chunk-bnft4099.js";
 var u = Object.keys(to);
-function g3e(e) {
+function tierConfig(e) {
   return {
     sonnet: {
       envVarPriority: ["ANTHROPIC_DEFAULT_SONNET_MODEL"],
@@ -40,10 +40,10 @@ function T(e) {
   for (let r of u) if (Yh(to[r].firstParty) === o) return r;
   return;
 }
-function Vgr(e) {
+function upgradeKey(e) {
   return `${e.fromKey}-to-${e.toKey}`;
 }
-function h3e(e, o) {
+function collectStalePins(e, o) {
   let r = [];
   for (let t of Object.keys(e)) {
     let n = e[t],
@@ -72,7 +72,7 @@ function h3e(e, o) {
   }
   return r;
 }
-function _3e(e, o) {
+function seedEnvDefaultForUserPin(e, o) {
   let r = e?.trim();
   if (!r) return;
   if (a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST) return;
@@ -85,7 +85,7 @@ function _3e(e, o) {
   if (Ge().modelOverrides?.[to[i.defaultKey].firstParty]) return;
   return { tier: n, envVar: i.envVarPriority.at(-1), value: r };
 }
-function y3e(e, o) {
+function collectUnpinnedTiers(e, o) {
   let r = [];
   for (let t of Object.keys(e)) {
     let n = e[t];
@@ -108,7 +108,7 @@ function y3e(e, o) {
   }
   return r;
 }
-function S3e(e, o) {
+function predecessorsInTier(e, o) {
   let r = u.indexOf(e),
     t = [];
   for (let n = r - 1; n >= 0; n--) {
@@ -117,4 +117,4 @@ function S3e(e, o) {
   }
   return t;
 }
-export { g3e, Vgr, h3e, _3e, y3e, S3e };
+export { tierConfig, upgradeKey, collectStalePins, seedEnvDefaultForUserPin, collectUnpinnedTiers, predecessorsInTier };

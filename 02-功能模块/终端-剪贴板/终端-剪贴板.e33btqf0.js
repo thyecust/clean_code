@@ -10,8 +10,8 @@
 import { j, B, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ja, wW, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { ja, JETBRAINS_IDES as wW, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { FP, $w, khe, rB } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { a0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { CT } from "../状态栏-主题/chunk-jz6b76hr.js";

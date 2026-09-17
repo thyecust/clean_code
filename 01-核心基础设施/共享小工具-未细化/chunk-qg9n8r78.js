@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { Ci } from "./chunk-w8hsca1t.js";
-function lyr(o) {
+function hasCommsRoledServer(o) {
   return o.some((r) => "role" in r.config && r.config.role === "comms");
 }
-function _Gt(o) {
+function isCoordinatorCommsMcpTool(o) {
   return o.mcpInfo?.role === "comms";
 }
-function kj(o) {
-  if (Ci()) return o.filter((r) => !_Gt(r));
+function excludeCoordinatorCommsMcpTools(o) {
+  if (Ci()) return o.filter((r) => !isCoordinatorCommsMcpTool(r));
   return o;
 }
-export { lyr, _Gt, kj };
+export { hasCommsRoledServer, isCoordinatorCommsMcpTool, excludeCoordinatorCommsMcpTools };

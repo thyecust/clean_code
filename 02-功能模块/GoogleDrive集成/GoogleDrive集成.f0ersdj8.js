@@ -10,25 +10,25 @@
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Bc, Z5, zhe } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { OAUTH_BETA_HEADER as Bc, CLAUDE_AI_OAUTH_SCOPES as Z5, preservableScopesFrom as zhe } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   ht,
-  wU,
-  TU,
-  UUe,
-  BUe,
-  f0,
-  Yt,
-  lge,
-  TZe,
-  Ss,
+  refreshOAuthToken as wU,
+  isInvalidGrantError as TU,
+  saveRefreshedOAuthTokensRespectingLock as UUe,
+  markRefreshTokenDeadAfterInvalidGrant as BUe,
+  isOAuthRefreshKnownDeadAsync as f0,
+  getClaudeAIOAuthTokens as Yt,
+  OAuthRefreshLockContendedError as lge,
+  withOAuthRefreshLock as TZe,
+  checkAndRefreshOAuthTokenIfNeeded as Ss,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var w = 30000,
   R = "/v2/ccr-sessions/-/chat-project";
@@ -265,7 +265,7 @@ var T = 50,
     mcpres: "MCP resource",
   },
   O = 5000;
-async function Lhr(e) {
+async function getProjectContextBlock(e) {
   let t = a.CLAUDE_PROJECT_UUID;
   if (!t) return null;
   try {
@@ -286,7 +286,7 @@ async function I(e, t) {
     );
   return F(await dbe(e, void 0, t));
 }
-function m2(e) {
+function safeInline(e) {
   return e.replace(/[\r\n]+/g, " ").replace(/`/g, "'");
 }
 function C(e) {
@@ -303,8 +303,8 @@ function C(e) {
 }
 var A = 200;
 function H(e) {
-  let t = v[e.type ?? ""] ?? m2(e.type ?? "source"),
-    r = m2(b(e.config)),
+  let t = v[e.type ?? ""] ?? safeInline(e.type ?? "source"),
+    r = safeInline(b(e.config)),
     i = [...r],
     o = i.length > A ? `${i.slice(0, A).join("")}\u2026` : r;
   return `${t}: \`${o}\``;
@@ -323,19 +323,19 @@ function F(e) {
 - \u2026 and ${s} more \u2014 call \`project_info\` for the full list`
         : "");
   return [
-    `This session is attached to the Project **"${m2(e.name)}"**.`,
+    `This session is attached to the Project **"${safeInline(e.name)}"**.`,
     "",
     ...(e.description ? ["## Project description", e.description, ""] : []),
     ...(e.prompt_template
       ? ["## Project instructions", e.prompt_template, ""]
       : []),
     `## Project docs (${t.length})`,
-    C(t.map((c) => `- \`${m2(c)}\``)) || "(none yet)",
+    C(t.map((c) => `- \`${safeInline(c)}\``)) || "(none yet)",
     "",
     ...(r.length > 0
       ? [
           `## Project files (${r.length})`,
-          C(r.map((c) => `- \`${m2(c.file_name)}\` (${m2(c.file_kind)})`)),
+          C(r.map((c) => `- \`${safeInline(c.file_name)}\` (${safeInline(c.file_kind)})`)),
           "",
         ]
       : []),
@@ -369,6 +369,6 @@ export {
   g6n,
   fqe,
   s1t,
-  Lhr,
-  m2,
+  getProjectContextBlock,
+  safeInline,
 };

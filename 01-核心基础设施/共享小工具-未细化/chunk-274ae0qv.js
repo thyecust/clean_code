@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 var PDt = "[3P telemetry] OTEL diag error:";
 class Snn {
   error(r, ...e) {

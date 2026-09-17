@@ -10,20 +10,20 @@
 
 // [preload stripped] 原本在此预载 232 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { uB } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS as uB } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { ap, lm, cl, gb, Wse, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isUnattendedBgSession as ap, lm, isAnthropicAuthEnabled as cl, getAnthropicApiKeySafe as gb, validateForceLoginMethod as Wse, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { N2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { getGithubRepo as N2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { fi, Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { bhe } from "../Git-Worktree/chunk-bk9696gx.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";

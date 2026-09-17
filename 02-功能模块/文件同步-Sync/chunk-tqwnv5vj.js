@@ -11,15 +11,15 @@ import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { IZe, nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { WH } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { DANGEROUS_FILES_LC as WH } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   Vfn,
   r$,
-  Jm,
-  Tde,
-  xLe,
-  kk,
-  Ine,
+  MAX_WORKING_FILE_BYTES as Jm,
+  relUnderSyncDir as Tde,
+  escapesSyncRoot as xLe,
+  shouldIgnore as kk,
+  SYNCED_FILE_WRITE_MODE as Ine,
   T3,
   E3,
   WX,

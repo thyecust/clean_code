@@ -42,12 +42,12 @@ import {
   aL,
   wx,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { BG, Sl } from "./chunk-7s6mt1vg.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { findGitRoot as tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { qE, _N, iwt, aJ, Obn } from "./chunk-ajtn749s.js";
 import { aP, DEn } from "../MCP客户端/chunk-3kmsshb6.js";

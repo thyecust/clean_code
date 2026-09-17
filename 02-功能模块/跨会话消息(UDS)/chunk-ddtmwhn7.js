@@ -14,7 +14,7 @@ import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱�
 import { x, us, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a, Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a, udsEnv as Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   Tn,
   UQe,
@@ -38,19 +38,19 @@ import {
   zor,
   tRn,
   Vor,
-  CKt,
-  Lse,
-  xKt,
-  YCt,
+  MAX_FORMER_NAMES as CKt,
+  isRegistrySweepPermitted as Lse,
+  reapKeysOfReapedRecord as xKt,
+  mayReapRecordFromThisDomain as YCt,
   H,
   m0,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Vg, xRe, Pm, mA, HRe } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { wq } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isProcessProvablyGone as Vg, getProcessStartTokenLinuxSync as xRe, isSameProcessAsync as Pm, provenSameProcessAsync as mA, getProcessCreationTimeMsAsync as HRe } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { ownPidDomain as wq } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { SD, ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
-import { IRe, lir, nBe, jZe, cir, Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { IRe, lir, isSaneEpochMs as nBe, jZe, cir, isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Y, lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -559,10 +559,10 @@ function We() {
   if (a.CLAUDE_CODE_HARBOR_KITE_PACING_OFF) return !1;
   return !H("tengu_harbor_kite_pacing_off", !1);
 }
-function HSn(e) {
+function creditPacerForHeldSend(e) {
   fe(e, (t, r) => t.credit(r));
 }
-function K3t(e) {
+function debitPacerForReleasedSend(e) {
   fe(e, (t, r) => t.debit(r));
 }
 function fe(e, t) {
@@ -572,7 +572,7 @@ function fe(e, t) {
   if (d !== "uds") return;
   t(r, Zy(s) ?? s);
 }
-async function T7e(
+async function sendToUdsSocket(
   e,
   t,
   r,
@@ -582,7 +582,7 @@ async function T7e(
   f,
   { trackReceipts: u = !0, expectPeerPid: i, expectPeerProcStart: o } = {},
 ) {
-  let p = C$(),
+  let p = ownMessagingSocket(),
     k = p ? hU(p) : void 0,
     h = yUe(k, d, t, void 0, kCt(l, k ? FAe(k) : void 0), f),
     S = SD(),
@@ -634,7 +634,7 @@ function ze(e) {
     r = t.findIndex((d) => d.msgId === e);
   if (r !== -1) t.splice(r, 1);
 }
-function ISn(e, t) {
+function admitReceiptForOutstandingSend(e, t) {
   if (typeof e !== "string") return;
   let { outstandingSends: r, awaitingTerminal: d } = ds().receipts,
     s = r.findIndex((f) => f.msgId === e);
@@ -654,7 +654,7 @@ function ISn(e, t) {
   }
   return;
 }
-function PSn(e) {
+function admitDroppedIdsByDestination(e) {
   let t = new Map();
   if (e.length === 0) return t;
   let r = new Set(e),
@@ -673,10 +673,10 @@ function PSn(e) {
   }
   return t;
 }
-function sG(e, t, r = {}) {
-  return t1e(e, t, SD(), r).then(() => {});
+function sendControlToUdsSocket(e, t, r = {}) {
+  return sendStampedControlToUdsSocket(e, t, SD(), r).then(() => {});
 }
-async function t1e(
+async function sendStampedControlToUdsSocket(
   e,
   t,
   r = SD(),
@@ -693,7 +693,7 @@ async function t1e(
   );
 }
 var Ve = 150;
-async function E7e(e) {
+async function registeredLivePeerForSocket(e) {
   let t = Zy(e);
   if (t === void 0) return;
   for (let r of await L()) {
@@ -708,7 +708,7 @@ async function E7e(e) {
   }
   return;
 }
-async function OSn(e) {
+async function registeredInboxesOfPids(e) {
   let t = Y(e),
     r = new Map();
   if (t.length === 0) return r;
@@ -907,7 +907,7 @@ function Se(e) {
       r.setTimeout(250, () => d(!1)));
   });
 }
-class A7e extends Error {
+class SessionRecordsUnreadableError extends Error {
   code;
   constructor(e) {
     super("session records directory unreadable");
@@ -921,7 +921,7 @@ async function L(e) {
   try {
     r = await Me(t);
   } catch (s) {
-    if (e?.rejectUnreadable && !W(s)) throw new A7e(A(s));
+    if (e?.rejectUnreadable && !W(s)) throw new SessionRecordsUnreadableError(A(s));
     return [];
   }
   return (
@@ -1012,12 +1012,12 @@ async function V(e, t, r) {
       ]);
       if (f !== void 0 && u !== null && u > f + 2000) return null;
       if (u === null && !Vs(s)) return null;
-      throw new A7e("EBADRECORD");
+      throw new SessionRecordsUnreadableError("EBADRECORD");
     }
     return null;
   }
 }
-async function C7e() {
+async function listRegisteredSessionRecords() {
   return (await L({ rejectUnreadable: !0 })).map(({ file: e, ...t }) => t);
 }
 function be(e, t, r, d) {
@@ -1031,7 +1031,7 @@ function be(e, t, r, d) {
     .then(() => xKt(ue(e), t, r, d))
     .catch(() => {});
 }
-async function A$(e, t) {
+async function listAllLiveSessions(e, t) {
   let r = await L({
       rejectUnreadable: t?.rejectUnreadable === !0,
       rejectTornLiveRecord: t?.rejectUnreadable === !0,
@@ -1054,11 +1054,11 @@ async function A$(e, t) {
   }
   return o;
 }
-function C$() {
+function ownMessagingSocket() {
   return Lb.CLAUDE_CODE_MESSAGING_SOCKET;
 }
-async function DSn(e) {
-  let t = C$(),
+async function listLivePeerSessions(e) {
+  let t = ownMessagingSocket(),
     r = (await L({ rejectUnreadable: !0 })).filter(
       (u) => u.sock && !(t && ZQe(u.sock, t)) && !ye(u),
     ),
@@ -1073,8 +1073,8 @@ async function DSn(e) {
   }
   return f;
 }
-async function LSn(e) {
-  let t = C$(),
+async function findLivePeerBySessionId(e) {
+  let t = ownMessagingSocket(),
     r = await L(),
     d = (i) => Boolean(i.sock) && !(t && ZQe(i.sock, t)),
     s = new Set(
@@ -1128,19 +1128,19 @@ export {
   bbt,
   uN,
   mD,
-  HSn,
-  K3t,
-  T7e,
-  ISn,
-  PSn,
-  sG,
-  t1e,
-  E7e,
-  OSn,
-  A7e,
-  C7e,
-  A$,
-  C$,
-  DSn,
-  LSn,
+  creditPacerForHeldSend,
+  debitPacerForReleasedSend,
+  sendToUdsSocket,
+  admitReceiptForOutstandingSend,
+  admitDroppedIdsByDestination,
+  sendControlToUdsSocket,
+  sendStampedControlToUdsSocket,
+  registeredLivePeerForSocket,
+  registeredInboxesOfPids,
+  SessionRecordsUnreadableError,
+  listRegisteredSessionRecords,
+  listAllLiveSessions,
+  ownMessagingSocket,
+  listLivePeerSessions,
+  findLivePeerBySessionId,
 };

@@ -13,9 +13,9 @@ import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { ye, Rd, pie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye, getAllPolicyTierSettings as Rd, getDurablePolicyTierSettings as pie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Su, ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabled as Su, isViolinWoodEnabledCached as ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { s, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { homedir as x, hostname as v } from "os";
 import { dirname as U, join as y } from "path";
@@ -46,12 +46,12 @@ async function A2n() {
 function JDt() {
   return ri() && C();
 }
-var Mlt = 1,
-  Nlt = "unattended-serving:v1:auto-arm-classifier",
+var UNATTENDED_SERVING_CONSENT_VERSION = 1,
+  UNATTENDED_SERVING_CONSENT_TERMS = "unattended-serving:v1:auto-arm-classifier",
   E = "unattended-serving-consent.json",
   _ = m(() =>
     c({
-      version: k(Mlt),
+      version: k(UNATTENDED_SERVING_CONSENT_VERSION),
       choice: X(["accepted", "declined"]),
       terms: s(),
       decidedAt: s(),
@@ -61,7 +61,7 @@ var Mlt = 1,
 function g() {
   return y(x(), ".claude", "state", E);
 }
-function Knn(e = v()) {
+function unattendedServingMachineName(e = v()) {
   return M4t(a(e));
 }
 function p() {
@@ -82,7 +82,7 @@ function p() {
     hostname: v,
   };
 }
-async function CIe(e) {
+async function readUnattendedServingConsent(e) {
   let t = e === void 0 ? i() : void 0,
     r = Date.now(),
     o = t?.writes,
@@ -118,7 +118,7 @@ async function A(e) {
     if (!r.success) return { choice: "unset", unreadable: !0 };
     let o =
       r.data.choice === "declined" ||
-      (a(r.data.hostname) === a(e.hostname()) && r.data.terms === Nlt);
+      (a(r.data.hostname) === a(e.hostname()) && r.data.terms === UNATTENDED_SERVING_CONSENT_TERMS);
     return {
       choice: o ? r.data.choice : "unset",
       unreadable: !1,
@@ -128,7 +128,7 @@ async function A(e) {
     return { choice: "unset", unreadable: !0 };
   }
 }
-async function C3e(e, t) {
+async function writeUnattendedServingConsent(e, t) {
   let r = t === void 0 ? i() : void 0,
     o = t ?? p();
   try {
@@ -136,9 +136,9 @@ async function C3e(e, t) {
       (await o.writeText(
         b(
           {
-            version: Mlt,
+            version: UNATTENDED_SERVING_CONSENT_VERSION,
             choice: e,
-            terms: Nlt,
+            terms: UNATTENDED_SERVING_CONSENT_TERMS,
             decidedAt: o.now().toISOString(),
             hostname: a(o.hostname()),
           },
@@ -180,7 +180,7 @@ var T = 3000,
 function i() {
   return bi(D);
 }
-function Kle() {
+function unattendedServingConsentView() {
   let e = i();
   if (!u(e)) M(e);
   return e.view?.choice ?? "unset";
@@ -213,7 +213,7 @@ function M(e) {
       return e.refresh;
   }
   e.refreshStartedAt = performance.now();
-  let t = CIe()
+  let t = readUnattendedServingConsent()
     .catch(() => {
       return;
     })
@@ -224,12 +224,12 @@ function M(e) {
   return ((e.refresh = t), t);
 }
 function R() {
-  return Kle() === "accepted";
+  return unattendedServingConsentView() === "accepted";
 }
-function hSe() {
-  return QDt() !== void 0;
+function managedSettingsForbidUnattendedServing() {
+  return unattendedServingForbiddenBy() !== void 0;
 }
-function QDt() {
+function unattendedServingForbiddenBy() {
   let e = (t) => t?.remoteTools?.allowUnattendedServing === !1;
   return Rd().some(e) || pie().some(e) || e(ye("policySettings"))
     ? "managed"
@@ -237,8 +237,8 @@ function QDt() {
       ? "user"
       : void 0;
 }
-function v3e() {
-  Kle();
+function primeUnattendedServingConsent() {
+  unattendedServingConsentView();
 }
 function F() {
   return i().view !== void 0;
@@ -246,15 +246,15 @@ function F() {
 function I() {
   return i().view?.unreadable === !0;
 }
-function ZDt() {
+function unattendedServingConsentMayHoldYes() {
   let { view: e } = i();
   return e?.unreadable === !0 || e?.staleYes === !0;
 }
-function Qgr() {
+function unattendedServingConsentPending() {
   try {
-    let e = Kle();
+    let e = unattendedServingConsentView();
     return (
-      hSe() ||
+      managedSettingsForbidUnattendedServing() ||
       i().staleUnresolved ||
       (JDt() ? !R() : !F() || I() || e === "declined")
     );
@@ -268,4 +268,4 @@ function Qgr() {
     );
   }
 }
-export { A2n, JDt, Mlt, Nlt, Knn, CIe, C3e, Kle, hSe, QDt, v3e, ZDt, Qgr };
+export { A2n, JDt, UNATTENDED_SERVING_CONSENT_VERSION, UNATTENDED_SERVING_CONSENT_TERMS, unattendedServingMachineName, readUnattendedServingConsent, writeUnattendedServingConsent, unattendedServingConsentView, managedSettingsForbidUnattendedServing, unattendedServingForbiddenBy, primeUnattendedServingConsent, unattendedServingConsentMayHoldYes, unattendedServingConsentPending };

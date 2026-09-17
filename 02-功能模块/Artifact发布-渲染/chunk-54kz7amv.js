@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { ze, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { P0 } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { hU, Zy, kKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { hU, Zy, ARTIFACT_YIELD_PEER_FEATURE as kKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
@@ -32,15 +32,15 @@ import {
   kI,
   nMe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { SD } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
-import { Nu, qI, mD, sG, t1e, C7e, C$ } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { Nu, qI, mD, sendControlToUdsSocket as sG, sendStampedControlToUdsSocket as t1e, listRegisteredSessionRecords as C7e, ownMessagingSocket as C$ } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { ne } from "./chunk-rr78st95.js";
 import { P7, aze, ypt, d9n, f9n, aan } from "./chunk-qdg189tc.js";
 import { dpt, san, x9 } from "./chunk-p1dkvpxj.js";
 import { Ibe } from "./chunk-5gz5xvw9.js";
 import { lte } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
-import { Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 var z = 1000,
   Q = 200,
@@ -49,7 +49,7 @@ async function Z() {
   let o = (await C7e()).find((r) => r.pid === process.pid);
   return o === void 0 ? void 0 : { sessionId: o.sessionId, tmux: o.tmux };
 }
-async function jhr(e) {
+async function requestReplyTakeover(e) {
   let o = await ee(e).finally(() => e.claim?.end());
   if (o.kind === "took_over")
     y("artifact_live_subscribe", {
@@ -124,7 +124,7 @@ async function ee(e) {
           e.alreadyReplying &&
           (X.userDisarmed || V.stopLatches.isStopped(d) || (Dd(d) && !Ld(d)))
         )
-          EWn(d, u);
+          notifyTakenOverSlugStopped(d, u);
       }
     },
     U = e.claim?.sentAt ?? T(),
@@ -291,10 +291,10 @@ function q(e, o, r, a) {
   let s = r.get(e);
   return (s !== void 0 && s === hU(o.sock)) || (!a && !Xv(e));
 }
-function EWn(e, o = sG) {
+function notifyTakenOverSlugStopped(e, o = sG) {
   j(e, !0, o);
 }
-function fpr(e, o = sG) {
+function handBackTakenOverSlug(e, o = sG) {
   j(e, !1, o);
 }
 function j(e, o, r) {
@@ -333,7 +333,7 @@ function H(e) {
     r = e.length - o.length;
   return `${o.join(", ")}${r > 0 ? ` and ${r} more` : ""}`;
 }
-function qin(e, o, r, a) {
+function repliesYieldedLine(e, o, r, a) {
   let s = san(
       {
         kind: "interactive",
@@ -348,10 +348,10 @@ function qin(e, o, r, a) {
         : `another session of this conversation (${s}), which just published or resumed them there`;
   return `Automatic replies to comments on ${H(e)} moved to ${l}; this session keeps watching for new versions only. To take them back here, publish the Artifact again or ask Claude to resume its replies.`;
 }
-function zin(e) {
+function repliesYieldRevertedLine(e) {
   return `Automatic replies to comments on ${H(e)} are back in this session: the other session of this conversation did not keep them (it could not take them over, or it has since exited).`;
 }
-function Vin(e) {
+function repliesStoppedElsewhereLine(e) {
   return `Automatic replies to comments on ${H(e)} were stopped in the other session of this conversation, so they stay off here too. To turn them back on, publish the Artifact again or ask Claude to resume its replies.`;
 }
 var te =
@@ -360,7 +360,7 @@ var te =
     "The automatic comment replies this session had handed to another session of this conversation were stopped by the user there; they stay stopped here too. Nothing to do unless the user asks to resume them or to publish again.",
   ie =
     "The automatic comment replies are back with this session: the other session of this conversation did not keep them (it could not take them over, or it has since exited).";
-function Whr(e, o) {
+function notifyModelOfReplyYield(e, o) {
   let r =
       e === "yielded"
         ? `Comment replies on ${o} Artifact(s) moved to another session of this conversation`
@@ -382,7 +382,7 @@ function Whr(e, o) {
     agentId: ze(),
   });
 }
-function Kin(e) {
+function registerReplyYieldHolder(e) {
   return (
     aan(
       (o) => {
@@ -461,10 +461,10 @@ function re(e, o) {
     a = [];
   for (let s of o) {
     if (!d5n(s, e)) continue;
-    if ((kI(r, s), Dd(s) && !Ld(s))) (Ibe(s), EWn(s));
+    if ((kI(r, s), Dd(s) && !Ld(s))) (Ibe(s), notifyTakenOverSlugStopped(s));
     a.push(s);
     let l = r.supervisors.get(s);
-    if (!Dd(s) && !E(s)) fpr(s);
+    if (!Dd(s) && !E(s)) handBackTakenOverSlug(s);
     let f = Gne(s).lastWakeArgs;
     if (!Dd(s) && E(s) && l?.taskId !== void 0 && nMe(l.taskId) && f !== null)
       x9({
@@ -482,4 +482,4 @@ function re(e, o) {
     y("artifact_comments_autoreact", { yield_reverted: a.length });
   return a;
 }
-export { jhr, EWn, fpr, qin, zin, Vin, Whr, Kin };
+export { requestReplyTakeover, notifyTakenOverSlugStopped, handBackTakenOverSlug, repliesYieldedLine, repliesYieldRevertedLine, repliesStoppedElsewhereLine, notifyModelOfReplyYield, registerReplyYieldHolder };

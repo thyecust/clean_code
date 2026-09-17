@@ -8,20 +8,20 @@
 
 // Version: 2.1.263
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { uB, OPn } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS as uB, SETUP_TOKEN_DEFAULT_EXPIRY_DAYS as OPn } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Kn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { h5, cl, Wse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { h5, isAnthropicAuthEnabled as cl, validateForceLoginMethod as Wse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { ki, wn, ul } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOkAsync as ki, logFeatureBadAsync as wn, logFeatureSadAsync as ul } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { xAn } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { getBridgeDoctorInfo as xAn } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { o, t, w9e } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ys } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { zm } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { exitAfterAnalyticsFlush as ys } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { AppRoot as zm } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { Hte, Uun, rUt, tgn, c5e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Oae, M_e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Mbe } from "../自动更新-安装/chunk-brx72pf1.js";
@@ -197,7 +197,7 @@ async function vgr(c) {
           waitForPolicyLimitsToLoad: s,
           POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS: h,
         } = await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
-        { getLastFetchOutcome: w } = await import("../策略限制(PolicyLimits)/getLastFetchOutcome.w0e6rc4p.js"),
+        { getLastFetchOutcome: w } = await import("../策略限制(PolicyLimits)/chunk-8sw91yn5.js"),
         T = !1,
         A = s().then(() => {
           T = !0;

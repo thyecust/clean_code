@@ -15,10 +15,10 @@ import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-j
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { P6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Zge, X6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { parseSettingsFileUncached as Zge, X6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { vA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findCanonicalGitRootUncached as vA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { mo, ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
@@ -29,8 +29,8 @@ import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Aot, Cot, vot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
 import { Szt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { ce } from "./chunk-fjrcf22x.js";
-import { XWe, NPt, FPt, $Pt, UPt, BPt } from "../Memory-CLAUDE.md/chunk-br7dq41d.js";
+import { getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
+import { recordDirectoryTrust as XWe, validateCdTarget as NPt, cdRuleRefusalMessage as FPt, relocateSession as $Pt, reapplyProjectSettingsAfterTrustChange as UPt, withGatedGrantsApplied as BPt } from "../Memory-CLAUDE.md/chunk-br7dq41d.js";
 import {
   jPt,
   s0e,

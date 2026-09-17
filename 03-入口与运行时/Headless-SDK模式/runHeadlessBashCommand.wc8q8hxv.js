@@ -10,9 +10,9 @@
 
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { fz, I0, hXt } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd as Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { zit } from "../../01-核心基础设施/共享小工具-未细化/chunk-ksg0m9bg.js";
 import { Iye } from "../../01-核心基础设施/共享小工具-未细化/chunk-8w004g4b.js";

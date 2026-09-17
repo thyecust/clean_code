@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 19 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { le, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { Q8e, Z8e } from "./chunk-hnp84hf6.js";
+import { getSocketDir as Q8e, getSecureSocketPath as Z8e } from "./chunk-hnp84hf6.js";
 import {
   appendFile as M,
   chmod as y,

@@ -23,7 +23,7 @@ For noisy investigation (grep sweeps, log trawls, broad search), spawn a subagen
 **Failed.** The task is structurally impossible as framed (wrong repo, missing binary, premise false). Write \`failed:\` on its own line with the reason.
 
 Everything else: keep working.`,
-  uue = {
+  CLAUDE_AGENT = {
     agentType: "claude",
     whenToUse:
       "Catch-all for any task that doesn't fit a more specific agent. FleetView's default when no agent name is typed.",
@@ -33,4 +33,4 @@ Everything else: keep working.`,
     appendSystemPrompt: !0,
     getSystemPrompt: () => e,
   };
-export { uue };
+export { CLAUDE_AGENT };

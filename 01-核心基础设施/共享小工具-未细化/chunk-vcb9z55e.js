@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { RA, yh, Mp, Vu } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
+import { sanitizePath as RA, getProjectKey as yh, getProjectDir as Mp, canonicalizePath as Vu } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { kd, R7t } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { If } from "./chunk-gyn0kh7v.js";

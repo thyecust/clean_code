@@ -25,11 +25,11 @@ function p(n) {
   return a.includes(n) ? n : void 0;
 }
 var c = 4000000000000000;
-function nBe(n) {
+function isSaneEpochMs(n) {
   return typeof n === "number" && Number.isFinite(n) && n >= 0 && n <= c;
 }
 function jZe(n) {
-  return nBe(n) ? n : void 0;
+  return isSaneEpochMs(n) ? n : void 0;
 }
 function cir(n) {
   let e = typeof n === "object" && n !== null ? n : {};
@@ -45,7 +45,7 @@ function cir(n) {
     ...(typeof e.pidDomain === "string" && { pidDomain: e.pidDomain }),
   };
 }
-function Vs(n) {
+function isProcessRunning(n) {
   if (n <= 1) return !1;
   try {
     return (process.kill(n, 0), !0);
@@ -65,4 +65,4 @@ async function uir(n) {
   ]);
   return `darwin:${e}:${t}`;
 }
-export { IRe, lir, nBe, jZe, cir, Vs, uir };
+export { IRe, lir, isSaneEpochMs, jZe, cir, isProcessRunning, uir };

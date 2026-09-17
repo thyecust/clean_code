@@ -13,7 +13,7 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { bd } from "./chunk-hh8f1qrw.js";
 import { hMe, c$, Ql, CE, Cf, nD, A5e, _H } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { pF } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
+import { getPluginEditableScopes as pF } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { SC } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
 var p = [
     {

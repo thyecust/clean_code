@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 257 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Xn, K, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { $1, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { $1, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
@@ -19,16 +19,16 @@ import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/c
 import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import {
   q9,
-  ipe,
-  Kc,
-  gj,
-  AY,
-  QM,
-  CY,
-  UMe,
-  a8e,
-  tAe,
-  mre,
+  isCustomTitleEnabled as ipe,
+  getSessionIdFromLog as Kc,
+  isLiteLog as gj,
+  loadFullLog as AY,
+  searchSessionsByCustomTitle as QM,
+  getLastSessionLog as CY,
+  loadAllProjectsMessageLogsProgressive as UMe,
+  loadSameRepoMessageLogs as a8e,
+  loadSameRepoMessageLogsProgressive as tAe,
+  enrichLogs as mre,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";

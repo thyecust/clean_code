@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Ln } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, my, _Z, AHt, Tae } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Dt } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { iae, ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { F1 } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { fileSuffixForOauthConfig as F1 } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { hur, I } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Y } from "../共享小工具-未细化/chunk-d16fhdtx.js";
@@ -236,12 +236,12 @@ function dXt() {
   let t = `.claude${F1()}.json`;
   return S(process.env.CLAUDE_CONFIG_DIR || Tt(), t);
 }
-function Pi() {
+function getGlobalClaudeFile() {
   return C().getGlobalClaudeFile();
 }
 async function Rt() {
   try {
-    let { externalHttp: t } = await import("./isCancel.ggwgp8zq.js");
+    let { externalHttp: t } = await import("../共享小工具-未细化/chunk-yz7dtpc3.js");
     return (
       await t.head("http://1.1.1.1", { signal: AbortSignal.timeout(1000) }),
       !0
@@ -400,7 +400,7 @@ function lt(t) {
 function Pt() {
   return process.env.__CFBundleIdentifier === "com.conductor.app";
 }
-var wW = [
+var JETBRAINS_IDES = [
   "pycharm",
   "intellij",
   "webstorm",
@@ -439,7 +439,7 @@ function at() {
   if (o?.includes("windsurf") || o?.includes("devin")) return "windsurf";
   if (o?.includes("com.google.android.studio")) return "androidstudio";
   if (o) {
-    for (let E of wW) if (o.includes(E)) return E;
+    for (let E of JETBRAINS_IDES) if (o.includes(E)) return E;
   }
   if (process.env.VisualStudioVersion) return "visualstudio";
   if (process.env.TERMINAL_EMULATOR === "JetBrains-JediTerm") return "pycharm";
@@ -648,7 +648,7 @@ var T = {
   isConductor: Pt,
   detectDeploymentEnvironment: Z,
 };
-function Unt() {
+function getHostPlatformForAnalytics() {
   let t = process.env.CLAUDE_CODE_HOST_PLATFORM;
   if (t === "win32" || t === "darwin" || t === "linux") return t;
   return T.platform;
@@ -672,7 +672,7 @@ var Bt = new Set([
   "xonsh",
   "ion",
 ]);
-function xxt(t) {
+function normalizeShellNameForAnalytics(t) {
   if (!t) return Ln("none");
   let o = t
     .split(/[/\\]/)
@@ -681,8 +681,8 @@ function xxt(t) {
     .replace(/\.exe$/, "");
   return Ln(Bt.has(o) ? o : "other");
 }
-function fXt() {
-  return xxt(process.env.SHELL || process.env.COMSPEC || "");
+function getShellForAnalytics() {
+  return normalizeShellNameForAnalytics(process.env.SHELL || process.env.COMSPEC || "");
 }
 var TW = ["us", "eu", "apac", "jp", "au", "us-gov", "global"],
   z = ["us", "eu", "apac", "jp", "au", "global"];
@@ -2735,11 +2735,11 @@ function f(t, o) {
     E
   );
 }
-var a = f(AI, T),
+var env = f(AI, T),
   DI = {},
-  Wn = f(DI, null),
+  antEnv = f(DI, null),
   cI = import.meta.require("../共享小工具-未细化/udsInboxShape.dasynwyz.js").udsInboxShape,
-  Lb = f(cI, null);
+  udsEnv = f(cI, null);
 export {
   Hx,
   bc,
@@ -2755,21 +2755,21 @@ export {
   Rxt,
   uXt,
   dXt,
-  Pi,
+  getGlobalClaudeFile,
   pXt,
   IPn,
   $nt,
   dur,
-  wW,
+  JETBRAINS_IDES,
   PPn,
   pur,
   kxt,
-  Unt,
-  xxt,
-  fXt,
+  getHostPlatformForAnalytics,
+  normalizeShellNameForAnalytics,
+  getShellForAnalytics,
   Ghe,
   TW,
-  a,
-  Wn,
-  Lb,
+  env,
+  antEnv,
+  udsEnv,
 };

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 var ESn = 128,
   RJn = /^[\x21-\x7e]+$/,
   kJn = "io.modelcontextprotocol/tasks";

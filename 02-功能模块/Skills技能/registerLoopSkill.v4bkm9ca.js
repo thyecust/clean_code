@@ -11,15 +11,15 @@
 // [preload stripped] 原本在此预载 100 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { _t, gt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isBgSession as _t, isClaudeAISubscriber as gt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { K_n } from "../语音-音频/chunk-cfhndstm.js";
-import { Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { cR, oJ } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
-import { nm, YS, nJ, EC } from "../Cron-定时任务/chunk-mk3zm4ew.js";
-import { eo } from "./chunk-1zy5c8mf.js";
+import { CRON_CREATE_TOOL_NAME as nm, CRON_DELETE_TOOL_NAME as YS, DEFAULT_MAX_AGE_DAYS as nJ, isKairosCronEnabled as EC } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { registerBundledSkill as eo } from "./chunk-1zy5c8mf.js";
 import { so } from "../权限系统/chunk-fjrcf22x.js";
 import { gM } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
 import { Fbt } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";

@@ -11,8 +11,8 @@ import { Zke, jo, Bs, nur } from "../../00-第三方库/which-isexe/ isexe.knmpy
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { R, dt, ge, A, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Np, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { mkdir as z } from "fs/promises";
 import {
@@ -270,7 +270,7 @@ async function fxt(e, t) {
 }
 var pe = 1000,
   Ee = 60;
-function YQ(
+function execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING(
   e,
   {
     abortSignal: t,
@@ -301,12 +301,12 @@ function YQ(
 }
 var S = 1000,
   C = 60;
-function Fe(
+function execFileNoThrow(
   e,
   t,
   r = { timeout: 10 * C * S, preserveOutputOnError: !0, useCwd: !0 },
 ) {
-  return Be(e, t, {
+  return execFileNoThrowWithCwd(e, t, {
     allowRepoGitHooks: r.allowRepoGitHooks,
     abortSignal: r.abortSignal,
     timeout: r.timeout,
@@ -355,7 +355,7 @@ function Ce(e, t) {
   if (typeof e.signal === "string") return e.signal;
   return String(t);
 }
-async function Be(
+async function execFileNoThrowWithCwd(
   e,
   t,
   {
@@ -472,7 +472,7 @@ export {
   zie,
   Vie,
   fxt,
-  YQ,
-  Fe,
-  Be,
+  execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING,
+  execFileNoThrow,
+  execFileNoThrowWithCwd,
 };

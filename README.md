@@ -1,7 +1,11 @@
 # Claude Code 2.1.263 — 目录化的打包产物
 
-把 `chunk-*.js` 按模块重新组织成一棵可浏览的目录树。**代码与实现原样保留**（包括混淆后的标识符），
-只做两件事：按模块分目录、重写 import 路径使整棵树仍然可解析。
+把 `chunk-*.js` 按模块重新组织成一棵可浏览的目录树。
+
+**重组**只做两件事：按模块分目录、重写 import 路径使整棵树仍然可解析 —— 代码与实现原样保留。
+
+**去桶**（2026-09-16）在其上又删掉了 212 个「纯转出桶」，把它们转出的名字改成在实现模块上定义。
+那是唯一一处改动标识符的改造，见 [纯转出桶的移除](#纯转出桶的移除)。
 
 ## 结构
 
@@ -30,15 +34,75 @@ import 路径按原始依赖图逐条重写并校验：
 逐边校验     97,729 条   缺失 0 / 多出 0
 ```
 
-树中的依赖关系与原始 bundle 完全一致。代码内容除 import 路径外未做任何改动。
+树中的依赖关系与原始 bundle 一致（去桶之后少了 212 个纯转出节点，见下节）。
+
+## 纯转出桶的移除
+
+重组时为可读性把一批符号的名字放在「桶」文件里转出。桶本身没有任何实现，整个文件就是一个
+`export { … } from`：
+
+```
+01-核心基础设施/共享小工具-未细化/BRIEF_PROACTIVE_SECTION.c389azz5.js
+export { rbr as BRIEF_PROACTIVE_SECTION, bet as BRIEF_ENFORCE_SENTINEL, … } from "./chunk-q599wyee.js";
+```
+
+213 个这样的文件被删掉 212 个（剩的那个见下面「例外」）。做法是**把可读名字落到定义处**：
+
+1. 在实现模块里，把被转出的混淆名就地重命名成可读名：
+   `function rbr(…)` → `function BRIEF_PROACTIVE_SECTION(…)`；
+2. 同一个模块里**直接**引用混淆名的文件，import 改成
+   `import { BRIEF_PROACTIVE_SECTION as rbr }` —— 这些文件的调用方一行不用动；
+3. 引用桶的 454 处 `import()` / `import.meta.require()` 改成指向实现模块。
+   它们全是「拿命名空间再取属性」的写法，属性名本来就是可读名，所以只改路径字符串；
+4. 桶的源**就是调用方自己**时（17 处），第 3 步会造出 `await import(自己)`。
+   桶是个独立模块、已完成求值，自己不是 —— 所以这 17 处改成用本模块的绑定拼命名空间：
+   `await import("./核心应用-Agent循环.js")` → `Promise.resolve({ executeSessionEndHooks, … })`，
+   同理 `import.meta.require(自己)` → `({ builtInCommandNames })`。**这一步不能省**：
+   `await import(自己)` 会等自己求值完成，而大 chunk 的顶层正跑着应用 —— 死锁，`/exit` 之后进程不退；
+   同步 `require(自己)` 则拿到残缺命名空间（连 hoisted 函数都是 `undefined`）。
+5. 删掉桶，并同步 `_index/file-map.json` / `_index/modules.md`。
+
+规模：重命名 3,104 个绑定、改写 7,436 条 import 说明符、454 处动态引用（含 17 处自引用修复），
+删除 212 个文件。
+
+三类例外：
+
+- `00-第三方库/parse5/parse5.2zwbfepc.js` 是**手写的 shim**（`import { parse } from "parse5"` 再转出
+  `rAt`/`sse`…）。在它里面重命名会遮蔽 import，所以这 5 个名字保持原样，
+  连带的桶 `01-核心基础设施/共享小工具-未细化/parse.4jce22r9.js` 保留。
+- 4 个桶把某个符号转出成 `default`。`default` 不是合法绑定名，所以那 4 个**绑定**保持混淆名，
+  只在该模块的 export 表里加一条 `M as default`；引用它们的 36 处 import 相应写成
+  `import { default as M }`。
+- 5 处引用同时用到同一个桶里来自**两个**实现模块的名字（例如
+  `{ isProcessRunning, isSameProcessAsync } = await import(桶)`）。这类无法指向单一模块，
+  就把桶的拆分就地展开成两条 import。
+
+验证：
+
+- **结构**：739 个改动文件里 733 个在「按同样规则反向还原」后与原件逐字节相同，证明改动只有
+  重命名 / 别名 / 路径 / 自引用展开四种形状，没有顺带改到别的代码。其余 6 个是上述第三类的手工
+  拆分与自引用展开（4 个）和 `_index/` 两个数据文件。
+- **重命名完整性**：3,104 个名字里，旧名的每一处出现都解析到模块级绑定 ——
+  0 处落在别的作用域，也没有漏改（漏改会变 ReferenceError）。
+- **全树**：1,420 个文件 0 解析错误；具名 import 全部解析到真实导出；剩余 16 条无法解析的都是
+  `_source/` 等**树外**目标，与改动前完全相同。
+- **引用类**（逐类与改动前对比，`diff` 为空才算过）：未定义标识符 0 处新增；
+  「对模块命名空间取属性」的 8 处误报改动前后完全一致；自引用 0 处（改动前 0、改动后 17，已清零）。
+- **运行时**：`bun cli --help` 与改动前 md5 相同（258 行）；`--version`、`-v`、未知参数一致；
+  138 个被改名的模块单独加载，导出面按映射完全对应、函数 arity 不变。
+  **外加一条退出路径**：在无 key 的沙箱 HOME 里跑 `bun cli < /dev/null`，比较「进程多久退出」。
+  改动前约 2–4s 退出、改动中 15s 都不退，现已回到 2–4s —— 这条正是自引用死锁的暴露点，
+  只测 `--help`、`--version` 是看不见的（它们走不到 shutdown）。
 
 ## 怎么读
 
 1. 先看 `_index/modules.md` —— 每个模块有哪些文件、各多大。
 2. 想看某个功能，进对应目录。例如 `/permissions` 的实现在
    `02-功能模块/权限系统/`：`permissions-ui.0a82g62e.js` 是对话框 UI。
-3. 文件内仍是混淆代码，但**字符串字面量、属性名、解构赋值都是原样的**——
+3. 文件内大部分仍是混淆代码 —— 但**字符串字面量、属性名、解构赋值都是原样的**，
    例如 `{ planContent: F, planPath: L } = fe` 直接告诉你 F 是 planContent。
+   去桶改造又给被转出过的符号补上了真名：`function adoptSubagentPublishArms(…)`、
+   `import { getMainLoopModel as rt } from …` —— 后者把一行里每个混淆名都标注了出来。
 4. 交叉参照原始分析：`_index/file-map.json` 里有 chunk id。
 
 ## 随行资源（重要）
@@ -108,5 +172,5 @@ import 路径按原始依赖图逐条重写并校验：
   它内部含工具定义、插件加载、SystemPrompt 等多个模块，但只能放在一个目录里。
 - **不能 `bun build --compile`。** `import.meta.require` 不是打包器的边，
   528 个文件只靠它被引用；要改造成 `await import` 得先处理 async 传染。见 [`BUN-COMPILE.md`](BUN-COMPILE.md)。
-- 825 个文件仍叫 `chunk-<id>.js` —— 它们是急切路径上的混淆块，打包器没保留任何人类名字。
+- 818 个文件仍叫 `chunk-<id>.js` —— 它们是急切路径上的混淆块，打包器没保留任何人类名字。
 - 第三方库目录里是**打包后的实现**。想换成上游源码，可按版本号 `npm pack`（见 `_index/` 与主图谱）。

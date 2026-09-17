@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { VR, M0 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ms } from "./设置-配置.aqbb35ee.js";
-import { Pi } from "./chunk-zqr5ctyf.js";
-import { zT, ye } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { ZTe, n7n, Rgn, pC, uj, nd, Zm } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getGlobalClaudeFile as Pi } from "./chunk-zqr5ctyf.js";
+import { projectSettingsAliasesUserSettings as zT, getSettingsForSource as ye } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { ZTe, n7n, Rgn, pC, isMcpServerAllowedByPolicy as uj, getMcpConfigsByScope as nd, doesEnterpriseMcpConfigExist as Zm } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { REn, JYe } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { bd, JS, Hc } from "../../02-功能模块/插件系统/chunk-hh8f1qrw.js";
 var a = Rgn.filter((e) => e !== "userSettings");

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { i } from "./chunk-an83zrbx.js";
-import { u } from "./chunk-w76kejwn.js";
+import { fromEnum as u } from "./chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 var g = 2000,
@@ -28,7 +28,7 @@ function d(e) {
     return `"${r}":"${s}"`;
   });
 }
-function lVt(e) {
+function debugTruncate(e) {
   let o = e.replaceAll(
     `
 `,
@@ -37,13 +37,13 @@ function lVt(e) {
   if (o.length <= g) return o;
   return o.slice(0, g) + `... (${o.length} chars)`;
 }
-function G$e(e) {
+function debugBody(e) {
   let o = typeof e === "string" ? e : b(e),
     r = d(o);
   if (r.length <= g) return r;
   return r.slice(0, g) + `... (${r.length} chars)`;
 }
-function pQe(e) {
+function describeAxiosError(e) {
   let o = l(e);
   if (e && typeof e === "object" && "response" in e) {
     let r = e.response;
@@ -63,7 +63,7 @@ function pQe(e) {
   }
   return o;
 }
-function Yy(e, o = Date.now()) {
+function parseRetryAfterHeader(e, o = Date.now()) {
   if (!e) return;
   let r = Number(e);
   if (Number.isFinite(r) && r >= 0) return r * 1000;
@@ -74,7 +74,7 @@ function Yy(e, o = Date.now()) {
   }
   return;
 }
-function fg(e) {
+function extractErrorDetail(e) {
   if (!e || typeof e !== "object") return;
   if ("message" in e && typeof e.message === "string") return e.message;
   if (
@@ -87,7 +87,7 @@ function fg(e) {
     return e.error.message;
   return;
 }
-function cb(e, o, r, t) {
+function logBridgeSkip(e, o, r, t) {
   if (o) n(o);
   i("tengu_bridge_repl_skipped", {
     reason: u(e),
@@ -95,4 +95,4 @@ function cb(e, o, r, t) {
     ...t,
   });
 }
-export { lVt, G$e, pQe, Yy, fg, cb };
+export { debugTruncate, debugBody, describeAxiosError, parseRetryAfterHeader, extractErrorDetail, logBridgeSkip };

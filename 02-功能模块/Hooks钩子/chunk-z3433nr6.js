@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { $f, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { ye, bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye, getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import {
   Je,
@@ -1222,7 +1222,7 @@ function ut(e) {
     r = o.get(e);
   if (!r) {
     let { wireSkillFilesExtraction: p } = import.meta.require(
-      "../../01-核心基础设施/共享小工具-未细化/getBundledSkillExtractDir.kzrtw6mn.js",
+      "../Skills技能/chunk-1zy5c8mf.js",
     );
     ((r = p(e)), o.set(e, r));
   }

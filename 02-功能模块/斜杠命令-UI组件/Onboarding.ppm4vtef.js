@@ -10,19 +10,19 @@
 
 // [preload stripped] 原本在此预载 252 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { Fp } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { setBgExitCause as Fp } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { ex, cl, yZe, vZe, RZe, zg } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Oie, f2e, As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getUserAgent as ex, isAnthropicAuthEnabled as cl, getUnapprovedCustomApiKey as yZe, gatewaySignInScreenConfigured as vZe, adminPolicyUnreadable as RZe, zg } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getProxyUrlWithSource as Oie, getProxyAuthFromHelper as f2e, getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { o, t, zb, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { gle, bOt } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { shouldOfferTerminalSetup as gle, setupTerminal as bOt } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";

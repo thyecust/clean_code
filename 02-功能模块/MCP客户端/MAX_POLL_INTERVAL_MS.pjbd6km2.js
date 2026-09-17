@@ -15,8 +15,8 @@ import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-5
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, nt, uv, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { mce, rPe, _Ge, $Se } from "./chunk-5wa92x7d.js";
 import { O_, as } from "../认证-OAuth登录/chunk-7jz937t3.js";

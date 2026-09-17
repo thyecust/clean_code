@@ -8,25 +8,25 @@
 
 // Version: 2.1.263
 import { Gt, B, K, ze, _B, fae, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { $h, EYe, ne, xer, hTt, Her, Ier } from "./chunk-rr78st95.js";
-import { P0, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { P0, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
   qwt,
-  pR,
-  tFe,
-  nFe,
-  hqt,
-  _qt,
-  Hwn,
-  kK,
-  CG,
-  vG,
-  D$,
-  hR,
+  VER_SHAPE as pR,
+  recordOwnPublish as tFe,
+  isOwnPublishedVer as nFe,
+  markPublishInFlight as hqt,
+  clearPublishInFlight as _qt,
+  isPublishInFlight as Hwn,
+  isFrameLiveSubscribeEnabled as kK,
+  isFrameLiveTokenLeaseEnabled as CG,
+  derivePublishContextFrom as vG,
+  mainObservedArtifactVersion as D$,
+  markAutoReactNoticePending as hR,
   Dqt,
   AJ,
   RN,
@@ -39,8 +39,8 @@ import {
   gYe,
   Ser,
 } from "./chunk-01ymf0ar.js";
-import { ex, Ja, wg, H, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getUserAgent as ex, isActingAsBgJob as Ja, sameOwnerAccount as wg, H, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pCn, gAt, dse } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import {
@@ -106,7 +106,7 @@ import {
   XO,
   j5n,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   Vo,
   Nir,
@@ -114,12 +114,12 @@ import {
   $ir,
   Uir,
   tie,
-  fr,
-  _ge,
-  br,
-  h0,
+  ARTIFACT_SLUG_RE as fr,
+  parseArtifactUrlAnyCase as _ge,
+  artifactViewerUrlFor as br,
+  sweepResultLineText as h0,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { ybe, R1t, Wdt, v7, WPe, Hqe, Iqe } from "../工具Monitor/工具Monitor.981fw9dy.js";
+import { ybe, R1t, Wdt, v7, WPe, Hqe, wsEgressDenyReason as Iqe } from "../工具Monitor/工具Monitor.981fw9dy.js";
 import { P7, p9n, _9n } from "./chunk-qdg189tc.js";
 import {
   k9,
@@ -1107,7 +1107,7 @@ function Ei(e, t) {
   if (t.taskStop) {
     if ((ne().durable.stopLatches.confirmStop(e), !Xv(e)))
       (Ibe(e, { storageV5: i }),
-        import("./requestReplyTakeover.7rwzdb24.js").then((l) =>
+        import("./chunk-54kz7amv.js").then((l) =>
           l.notifyTakenOverSlugStopped(e),
         ));
     let { wasWatching: o } = ur({
@@ -1192,7 +1192,7 @@ function sr(e, t) {
         (r.stallOutAfterMs = void 0),
         r.taskId === void 0 &&
           !e.inFlightSubscribes.has(t.slug) &&
-          $4(t.context, t.slug).length === 0)
+          frameLiveWatchRows(t.context, t.slug).length === 0)
       )
         ((r.watchedSince = Date.now()), (r.armedVia = t.armedVia), V1t(t.slug));
       else if (t.armedVia === "publish") r.armedVia = "publish";
@@ -1244,13 +1244,13 @@ function Wi(e, t) {
 function cr(e, t) {
   return t.slug === e.mostRecentPublishSlug && t.armedVia !== "mcp_write";
 }
-function Odt(e, t) {
+function labelledArmedVia(e, t) {
   return e ? "watch" : t === "watch" ? "watch_stopped" : t;
 }
-function m1t(e) {
+function parseArmedVia(e) {
   return P5n.find((t) => t === e) ?? "publish";
 }
-function bqe(e) {
+function armedViaWording(e) {
   switch (e) {
     case "publish":
       return {
@@ -1297,7 +1297,7 @@ function bqe(e) {
   }
 }
 function Li(e, t) {
-  let r = bqe(t.armedVia).idle,
+  let r = armedViaWording(t.armedVia).idle,
     i =
       t.armedVia === "watch"
         ? "(your watch request was later stopped; idle auto-armed watches are retired)"
@@ -1421,7 +1421,7 @@ function he(
   if (e.supervisors.get(t.slug) === t) {
     if ((te(e, t.slug), !ne().durable.stopLatches.isStopped(t.slug))) {
       if ((vr(e, t.slug, "ended", i), t.autoReactWiring !== void 0))
-        import("./requestReplyTakeover.7rwzdb24.js").then((_) =>
+        import("./chunk-54kz7amv.js").then((_) =>
           _.handBackTakenOverSlug(t.slug),
         );
     }
@@ -1526,7 +1526,7 @@ async function dr(e, t) {
         }));
     else
       (g("artifact_live_subscribe", `rewatch_stopped_${i.reason}`),
-        he(e, r, Lce(i.reason) ?? i.reason, Qt[i.reason] ?? Tr, rs(i.reason)));
+        he(e, r, frameLiveSkipReasonPhrase(i.reason) ?? i.reason, Qt[i.reason] ?? Tr, rs(i.reason)));
 }
 async function Pi(e, t) {
   let r = e.supervisors.get(t),
@@ -1551,7 +1551,7 @@ async function Pi(e, t) {
   if (d.err !== null && (d.status === 404 || RN(d))) {
     let p = RN(d) ? "other_org" : "not_found";
     (g("artifact_live_subscribe", `read_stopped_${p}`),
-      he(e, r, Lce(p) ?? p, Qt[p] ?? p, { advice: Mce(p) }));
+      he(e, r, frameLiveSkipReasonPhrase(p) ?? p, Qt[p] ?? p, { advice: noRewatchAdvice(p) }));
     for (let _ of Object.values(r.context.taskRegistry.all()))
       if (Yv(_) && _.status === "running" && _.frameLive?.slug === t)
         Qf(_.id, r.context.taskRegistry, { quiet: !0 });
@@ -1748,10 +1748,10 @@ function mr(e, t) {
 function Hi(e) {
   return x6t(e, Zu, { includeStopLatched: !0 });
 }
-function wqe(e) {
+function isClaimableAutoReactSubscription(e) {
   return x6t(e, Zu);
 }
-function F4(e, t) {
+function killAutoReactSubscriptions(e, t) {
   (rpt(t?.storageV5), R3(), QLe());
   let r = ne().live,
     i = t?.durable !== !1,
@@ -1830,10 +1830,10 @@ function Bi(e) {
   if (r > 0) y("artifact_live_subscribe", { unpaused_on_turn: r });
   return r;
 }
-function Tqe() {
+function hasStoppableAutoReactSupervision() {
   return Zu() && uan();
 }
-function $4(e, t) {
+function frameLiveWatchRows(e, t) {
   let r = [],
     i,
     d = () => (i ??= Zu()),
@@ -1888,7 +1888,7 @@ function Ki(e) {
   if (r !== null) return r === "denied_by_auto_mode" ? "declined" : "denied";
   return t?.lastReplyDeclinedByAutoMode === !0 ? "declined" : "armed";
 }
-function g1t(e, t) {
+function frameLiveStoppedRows(e, t) {
   let { live: r, autoReact: i, wakes: d } = ne(),
     o = [],
     l,
@@ -1922,7 +1922,7 @@ function g1t(e, t) {
 }
 function nt(e, t) {
   let { supervisors: r } = e,
-    i = $4(t).sort((o, l) => {
+    i = frameLiveWatchRows(t).sort((o, l) => {
       let p = r.get(o.slug),
         _ = r.get(l.slug),
         S = (R) =>
@@ -1939,7 +1939,7 @@ function nt(e, t) {
     let l = r.get(o.slug),
       p = l !== void 0 && !l.stopped,
       _ = t.taskRegistry.all()[o.taskId];
-    if (p ? Bt(e, o.slug) : o.explicit || wqe(_)) continue;
+    if (p ? Bt(e, o.slug) : o.explicit || isClaimableAutoReactSubscription(_)) continue;
     d.push(o);
   }
   return d;
@@ -1978,7 +1978,7 @@ function qi(e, t) {
     !0
   );
 }
-function Ksn() {
+function teardownFrameLiveForProcessHandoff() {
   let e = ne().live;
   ((e.handoffGeneration += 1),
     e.bootingWiredArms.clear(),
@@ -1998,7 +1998,7 @@ function ji(e) {
     if (!o.stopped) r++;
     if (o.autoReactWiring !== void 0) {
       let { slug: l } = o;
-      import("./requestReplyTakeover.7rwzdb24.js").then((p) => p.handBackTakenOverSlug(l));
+      import("./chunk-54kz7amv.js").then((p) => p.handBackTakenOverSlug(l));
     }
     (delete o.autoReactWiring, te(t, o.slug));
     for (let l of Object.values(o.context.taskRegistry.all())) {
@@ -2033,7 +2033,7 @@ function ji(e) {
     r
   );
 }
-function Xsn(e, t, r) {
+function unwatchFrameLive(e, t, r) {
   let { wasWatching: i } = Sr(e, t);
   if ((ne().live.nonEditorSlugs.delete(e), r !== void 0)) {
     let d = ne().live.repliesConsent,
@@ -2045,7 +2045,7 @@ function Xsn(e, t, r) {
   }
   return (y("artifact_live_subscribe", { unwatched: i }), { wasWatching: i });
 }
-function Ysn(e, t) {
+function endFrameLiveWatchOfDeletedArtifact(e, t) {
   q1t(e, t.storageV5);
   let { wasWatching: r } = Sr(e, t);
   if (r) y("artifact_live_subscribe", { unwatched: !0, artifact_deleted: !0 });
@@ -2074,7 +2074,7 @@ function Sr(e, t) {
   if (i) oze(e);
   return { wasWatching: d };
 }
-async function Jsn(e) {
+async function watchFrameLive(e) {
   let {
     slug: t,
     url: r,
@@ -2084,7 +2084,7 @@ async function Jsn(e) {
     tool: l,
     commentVerbsInSchema: p,
   } = e;
-  if (!hM(i)) return { outcome: "skipped", reason: "publish_context" };
+  if (!isSocketHoldingPublishContext(i)) return { outcome: "skipped", reason: "publish_context" };
   let _ = ne().live,
     S = l !== void 0 && p === !0 && Zu(),
     v = !S
@@ -2133,11 +2133,11 @@ async function Jsn(e) {
     return { ...R, degraded: v };
   return R;
 }
-function Qsn(e) {
+function knownNonEditor(e) {
   return ne().live.nonEditorSlugs.has(e);
 }
-var Zsn = { kind: "repliesConsentWriter" };
-function ein(e, t, r, i) {
+var REPLIES_CONSENT_WRITER = { kind: "repliesConsentWriter" };
+function settleRepliesConsent(e, t, r, i) {
   let d = ne().live.repliesConsent;
   if (e === void 0) return { declined: d.declined.has(t), approved: !1 };
   let o = d.outstanding.get(t);
@@ -2154,7 +2154,7 @@ function Yi(e, t) {
   let r = Vt(e, t);
   return r >= 0 ? (e[r]?.uuid ?? null) : null;
 }
-function tin(e, t, r, i) {
+function noteRepliesConsentAsk(e, t, r, i) {
   if (e === void 0) return;
   ne().live.repliesConsent.outstanding.set(t, {
     toolUseId: r,
@@ -2163,21 +2163,21 @@ function tin(e, t, r, i) {
     ),
   });
 }
-function nin(e, t) {
+function takeRepliesConsentAsk(e, t) {
   if (e === void 0 || t === void 0) return;
   let { outstanding: r } = ne().live.repliesConsent;
   for (let [i, d] of r)
     if (d.toolUseId === t) return (r.delete(i), { slug: i });
   return;
 }
-function rin(e, t, r, i) {
+function approveTakenRepliesConsent(e, t, r, i) {
   let d = ne().live.repliesConsent;
   if (e === void 0) return !1;
   let o = t?.slug === r;
   if (o && i) d.approved.add(r);
   return o || d.approved.has(r);
 }
-function oin(e) {
+function repliesConsentDeclined(e) {
   return ne().live.repliesConsent.declined.has(e);
 }
 function zi(e, t) {
@@ -2196,7 +2196,7 @@ var Xi = new Set([
 function or(e, t) {
   (hqt(e, t), setTimeout((r, i) => _qt(r, i), Qi, e, t).unref?.());
 }
-async function Fhr(e, t, r) {
+async function touchFrameLiveForMcpWrite(e, t, r) {
   try {
     if (!fr.test(e)) return;
     let i = ne(),
@@ -2228,7 +2228,7 @@ async function Fhr(e, t, r) {
       agentType: t.agentContext?.agentType,
       isNonInteractiveSession: t.options.isNonInteractiveSession,
     });
-    if (!hM(_)) return;
+    if (!isSocketHoldingPublishContext(_)) return;
     if (p.declinedEpoch === i.accountEpoch) return;
     let S = i.accountEpoch;
     ((p.arming = !0),
@@ -2253,11 +2253,11 @@ async function Fhr(e, t, r) {
     h(i);
   }
 }
-async function sin(e) {
+async function resumeFrameLiveAutoReplies(e) {
   let { slug: t, url: r, publishContext: i, getKnownVer: d, context: o } = e;
   if (ne().autoReact.userDisarmed)
     return { outcome: "refused", reason: "session_disarmed" };
-  if (!hM(i)) return { outcome: "skipped", reason: "publish_context" };
+  if (!isSocketHoldingPublishContext(i)) return { outcome: "skipped", reason: "publish_context" };
   if (!e.commentVerbsInSchema)
     return { outcome: "skipped", reason: "comments_off" };
   if (!Dd(t)) return { outcome: "skipped", reason: "not_stopped" };
@@ -2320,7 +2320,7 @@ async function sin(e) {
     approvedRelatchGen: e.approvedRelatchGen,
   });
 }
-function h1t(e, t) {
+function onArmSettled(e, t) {
   let { live: r } = ne();
   if (!r.inFlightSubscribes.has(e)) {
     t();
@@ -2329,11 +2329,11 @@ function h1t(e, t) {
   let i = r.armSettleWaiters.get(e) ?? [];
   (i.push(t), r.armSettleWaiters.set(e, i));
 }
-function _1t(e) {
+function slugRepliesWiredHere(e) {
   let t = ne().live.supervisors.get(e);
   return t !== void 0 && !t.stopped && t.autoReactWiring !== void 0;
 }
-async function iin(e) {
+async function watchArtifactFromStartup(e) {
   let {
     slug: t,
     url: r,
@@ -2371,7 +2371,7 @@ function _r(e) {
       }),
   };
 }
-async function tte(e) {
+async function maybeSubscribeFrameLive(e) {
   let {
     slug: t,
     url: r,
@@ -2393,9 +2393,9 @@ async function tte(e) {
     tFe(v, t, i);
     let A = E.supervisors.get(t);
     if (A !== void 0 && !A.stopped) A.lastActivityAt = Date.now();
-    if (hM(d)) E.mostRecentPublishSlug = t;
+    if (isSocketHoldingPublishContext(d)) E.mostRecentPublishSlug = t;
   }
-  if (!hM(d) && !(e.carriedPublishConsent === !0 && d === "bg_session")) {
+  if (!isSocketHoldingPublishContext(d) && !(e.carriedPublishConsent === !0 && d === "bg_session")) {
     if (e.sessionResume !== !0)
       g("artifact_live_subscribe", "publish_context", {
         publish_context: u(d),
@@ -2473,15 +2473,15 @@ function Me() {
   return !ne().autoReact.userDisarmed && rze();
 }
 function Kt(e, t, r) {
-  return `live updates for artifact ${e} (${bqe(Odt(t, r)).task})`;
+  return `live updates for artifact ${e} (${armedViaWording(labelledArmedVia(t, r)).task})`;
 }
-function hM(e) {
+function isSocketHoldingPublishContext(e) {
   return e === "interactive" || e === "sdk";
 }
 function ve(e) {
   return { context: WPe(e), signal: e.abortController.signal };
 }
-function Eqe(e, t) {
+function makeArtifactReadVersionReader(e, t) {
   return () => D$(e(), t);
 }
 function wr(e) {
@@ -2498,7 +2498,7 @@ function Ji(e) {
   if (t !== null) return { reason: "egress_denied", egressKind: t.kind };
   return null;
 }
-function ain(e) {
+function frameLivePublishFindsConnected(e) {
   let { context: t, slug: r, wantWiring: i, canClearLatch: d } = e,
     o = Date.now();
   for (let l of Object.values(t.taskRegistry.all()))
@@ -2511,26 +2511,26 @@ function ain(e) {
       return !0;
   return !1;
 }
-function y1t(e) {
+function frameLivePublishSkipReason(e) {
   if (ne().durable.stopLatches.isStopped(e.slug)) return "stop_latched";
-  if (!hM(e.publishContext)) return "publish_context";
+  if (!isSocketHoldingPublishContext(e.publishContext)) return "publish_context";
   return wr(e.slug)?.reason ?? null;
 }
-var BPe = "auto-replies armed",
-  S1t =
+var AUTO_REPLIES_ARMED_TOKEN = "auto-replies armed",
+  AUTO_REPLIES_PAUSED_ROW =
     "auto-replies paused by the user's interrupt (Ctrl+C or Stop) \u2014 the user's next message resumes them, as does a publish of this artifact the user asks for or an asked-for resume (publishing it without being asked, while handling a notification or a wake-up, leaves them paused); comments sent to Claude meanwhile are answered then; no comment notifications arrive until then (do not republish or resume just to re-enable them)",
-  b1t =
+  AUTO_REPLIES_YIELDED_ROW =
     "auto-replies handed to another session of this conversation (the user reopened the conversation there, or published there) \u2014 that session answers the comments now; a publish of this artifact the user asks for here, or resume_replies when the user asks for it, takes them back (do not republish or call resume_replies just to take them back unless the user asks \u2014 the user asking is not itself the take-back); no comment notifications arrive here meanwhile",
-  w1t =
+  AUTO_REPLIES_DECLINED_ROW =
     "auto mode did not approve the last comment's auto-reply; the next comment is checked again unless repeated refusals pause the thread",
-  T1t =
+  AUTO_REPLIES_DENIED_ROW =
     "a permission rule or setting blocked the last comment's auto-reply (no notice); later comments are still checked";
 function $t() {
   return nT()
-    ? `; a comment on it sent to Claude also reaches this session while this artifact's status row says ${BPe}, and plain comments never notify \u2014 read them with ${_2('action "comments"', () => `the ${k9("comments")}`)} when asked`
+    ? `; a comment on it sent to Claude also reaches this session while this artifact's status row says ${AUTO_REPLIES_ARMED_TOKEN}, and plain comments never notify \u2014 read them with ${_2('action "comments"', () => `the ${k9("comments")}`)} when asked`
     : "";
 }
-function Lce(e) {
+function frameLiveSkipReasonPhrase(e) {
   switch (e) {
     case "flag_off":
       return "the live-subscribe feature flag is off in this session's cached config, so you will not be notified here when this artifact is republished elsewhere";
@@ -2570,7 +2570,7 @@ function Lce(e) {
       return null;
   }
 }
-function Ddt(e) {
+function frameLiveSubscriptionLine(e) {
   switch (e) {
     case "arming":
       return `Live subscription: arming in the background \u2014 not connected yet, so this is not a watch until \`status\` shows it connected (you are told if it cannot connect, unless this turn is interrupted first). Once connected, this session is notified when this artifact is republished elsewhere${$t()}.`;
@@ -2583,14 +2583,14 @@ function Ddt(e) {
       return `Live subscription: not supported yet from remote sessions \u2014 nothing notifies this session of new versions${t ? " or of comments sent to Claude" : ""}; re-read the artifact${t ? " (and its comments)" : ""} when the user asks.`;
     }
     default: {
-      let t = Lce(e);
+      let t = frameLiveSkipReasonPhrase(e);
       return t !== null
         ? `Live subscription: skipped \u2014 ${t}.`
         : `Live subscription: skipped (${h0(e, 64)}).`;
     }
   }
 }
-async function lin(e) {
+async function subscribeFrameLiveOnAttach(e) {
   let { slug: t, url: r, getKnownVer: i, context: d } = e;
   return pe(ne().live, {
     slug: t,
@@ -2753,8 +2753,8 @@ async function pe(e, t) {
         e.supervisors.get(r)?.autoReactWiring?.title ??
         t.autoReactWiring?.title,
     },
-    Jt = $4(l).length + e.inFlightSubscribes.size;
-  if (t.machineArm && $4(l).length >= $h) {
+    Jt = frameLiveWatchRows(l).length + e.inFlightSubscribes.size;
+  if (t.machineArm && frameLiveWatchRows(l).length >= $h) {
     if (!Bt(e, r) || nt(e, l).length === 0)
       return (
         g("artifact_live_subscribe", "watch_cap_reconnect"),
@@ -2934,7 +2934,7 @@ async function pe(e, t) {
             })
           : void 0);
     if (v.aborted || C()) return J(e, r, t.machineArm, "cancelled", X);
-    let Ve = $4(l).length + e.inFlightSubscribes.size - 1,
+    let Ve = frameLiveWatchRows(l).length + e.inFlightSubscribes.size - 1,
       dt = e.supervisors.get(r),
       Wr =
         t.machineArm === !0 &&
@@ -2942,7 +2942,7 @@ async function pe(e, t) {
         dt !== void 0 &&
         !dt.stopped &&
         dt.lastActivityAt > Zt,
-      an = $4(l).length + e.pendingRegistrations;
+      an = frameLiveWatchRows(l).length + e.pendingRegistrations;
     if (t.machineArm && !Wr && Ve >= $h) {
       if (an >= $h) {
         if (!Bt(e, r) || !qi(e, l))
@@ -3339,21 +3339,22 @@ ${Nt(w.detail)}`,
                 mn = !0;
                 let N = P7() ? p9n([r], Date.now()) : void 0;
                 (async () => {
-                  let fe = await import("../../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js"),
-                    An = await import("../../01-核心基础设施/共享小工具-未细化/isSameProcessAsync.p5qpey0c.js"),
+                  let fe = await import("../跨会话消息(UDS)/chunk-ddtmwhn7.js"),
+                    An = await import("../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js"),
+                    AnQ = await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js"),
                     Ke = await Hbe({
                       records: await fe.listRegisteredSessionRecords(),
                       sessionId: pn,
                       selfPid: process.pid,
                       isRunning: An.isProcessRunning,
-                      isSameProcess: An.provenSameProcessAsync,
+                      isSameProcess: AnQ.provenSameProcessAsync,
                     });
                   if (Ke.verdict !== "live") {
                     N?.end();
                     return;
                   }
                   let { requestReplyTakeover: Br } =
-                      await import("./requestReplyTakeover.7rwzdb24.js"),
+                      await import("./chunk-54kz7amv.js"),
                     Rt = (
                       await Br({
                         holders: [Ke.holder, ...Ke.otherHolders],
@@ -3637,14 +3638,14 @@ function rs(e) {
   switch (e) {
     case "not_found":
     case "other_org":
-      return { advice: Mce(e) };
+      return { advice: noRewatchAdvice(e) };
     case "flag_off":
       return { advice: ns, passive: !0 };
     default:
       return { advice: st, passive: !0 };
   }
 }
-function Mce(e) {
+function noRewatchAdvice(e) {
   switch (e) {
     case "not_found":
     case Ar:
@@ -3675,9 +3676,9 @@ var kr = "connection lost",
     watch_cap: "watch limit reached",
   };
 function qt(e, t) {
-  (Ijt(e.announcedArmFailures, t), Ldt(t));
+  (Ijt(e.announcedArmFailures, t), pullStaleWatchLifecycleNotices(t));
 }
-function Ldt(e) {
+function pullStaleWatchLifecycleNotices(e) {
   Hy(
     (t) =>
       t.origin?.kind === "task-notification" &&
@@ -3688,8 +3689,8 @@ function Ldt(e) {
 }
 function is(e, t, r, i) {
   if (!aht(e.announcedArmFailures, `${t}:${i}`, kjt)) return;
-  let d = Lce(i) ?? i,
-    o = Mce(i) ?? xjt;
+  let d = frameLiveSkipReasonPhrase(i) ?? i,
+    o = noRewatchAdvice(i) ?? xjt;
   Er({
     slug: t,
     artifactName: H7(r.getTitle, r.url),
@@ -3717,10 +3718,10 @@ function Er(e) {
     agentId: ze(),
   });
 }
-function cin(e) {
+function onDurablePublishArmSettled(e) {
   let { slug: t, url: r, liveDocLoss: i, settlement: d } = e;
   if (d.settled === "registered") {
-    Ldt(t);
+    pullStaleWatchLifecycleNotices(t);
     return;
   }
   if (d.settled !== "unregistered" || !rr(t, d.reason)) return;
@@ -3736,10 +3737,10 @@ function cin(e) {
     event: `The durable wake subscription for ${r} was not registered (${o}${l !== void 0 ? `: ${l}` : ""}) \u2014 ${Pdt(o, p)} ${_}${S === null ? "" : `; ${S}`} \u2014 do not claim to be subscribed to it meanwhile.`,
   });
 }
-function uin(e) {
+function isFrameLiveRowConnecting(e) {
   return e.connected && !nMe(e.taskId);
 }
-function din(e, t) {
+function frameLiveArmRows(e, t) {
   let r = ne().live,
     i = new Set();
   for (let S of Object.values(e.taskRegistry.all()))
@@ -3747,7 +3748,7 @@ function din(e, t) {
       i.add(S.frameLive.slug);
   let d = ne().durable.stopLatches,
     o = (S) => (t === void 0 || S === t) && !i.has(S) && !d.isStopped(S),
-    l = new Set(g1t(e, t).map((S) => S.slug)),
+    l = new Set(frameLiveStoppedRows(e, t).map((S) => S.slug)),
     p = [],
     _ = new Set();
   for (let S of r.inFlightSubscribes) {
@@ -3802,46 +3803,46 @@ export {
   j6n,
   Vsn,
   W6n,
-  Odt,
-  m1t,
-  bqe,
-  wqe,
-  F4,
-  Tqe,
-  $4,
-  g1t,
-  Ksn,
-  Xsn,
-  Ysn,
-  Jsn,
-  Qsn,
-  Zsn,
-  ein,
-  tin,
-  nin,
-  rin,
-  oin,
-  Fhr,
-  sin,
-  h1t,
-  _1t,
-  iin,
-  tte,
-  hM,
-  Eqe,
-  ain,
-  y1t,
-  BPe,
-  S1t,
-  b1t,
-  w1t,
-  T1t,
-  Lce,
-  Ddt,
-  lin,
-  Mce,
-  Ldt,
-  cin,
-  uin,
-  din,
+  labelledArmedVia,
+  parseArmedVia,
+  armedViaWording,
+  isClaimableAutoReactSubscription,
+  killAutoReactSubscriptions,
+  hasStoppableAutoReactSupervision,
+  frameLiveWatchRows,
+  frameLiveStoppedRows,
+  teardownFrameLiveForProcessHandoff,
+  unwatchFrameLive,
+  endFrameLiveWatchOfDeletedArtifact,
+  watchFrameLive,
+  knownNonEditor,
+  REPLIES_CONSENT_WRITER,
+  settleRepliesConsent,
+  noteRepliesConsentAsk,
+  takeRepliesConsentAsk,
+  approveTakenRepliesConsent,
+  repliesConsentDeclined,
+  touchFrameLiveForMcpWrite,
+  resumeFrameLiveAutoReplies,
+  onArmSettled,
+  slugRepliesWiredHere,
+  watchArtifactFromStartup,
+  maybeSubscribeFrameLive,
+  isSocketHoldingPublishContext,
+  makeArtifactReadVersionReader,
+  frameLivePublishFindsConnected,
+  frameLivePublishSkipReason,
+  AUTO_REPLIES_ARMED_TOKEN,
+  AUTO_REPLIES_PAUSED_ROW,
+  AUTO_REPLIES_YIELDED_ROW,
+  AUTO_REPLIES_DECLINED_ROW,
+  AUTO_REPLIES_DENIED_ROW,
+  frameLiveSkipReasonPhrase,
+  frameLiveSubscriptionLine,
+  subscribeFrameLiveOnAttach,
+  noRewatchAdvice,
+  pullStaleWatchLifecycleNotices,
+  onDurablePublishArmSettled,
+  isFrameLiveRowConnecting,
+  frameLiveArmRows,
 };

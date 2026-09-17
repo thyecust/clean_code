@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 function pAn() {
   if ((bn() || {}).permissions?.disableBypassPermissionsMode === "disable")
     return "Bypass permissions mode was disabled by settings";
   return;
 }
-function ey() {
+function isBypassPermissionsModeDisabled() {
   return pAn() !== void 0;
 }
-export { pAn, ey };
+export { pAn, isBypassPermissionsModeDisabled };

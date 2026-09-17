@@ -7,28 +7,28 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { RT } from "./文件监听-Watch.3efypmps.js";
+import { default as RT } from "./文件监听-Watch.3efypmps.js";
 import { he, sn, Nm, mp } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { wc, Et, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Vj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import {
-  D2,
+  clearAgentDefinitionsCache as D2,
   Rk,
   mMe,
   _5e,
   $V,
   F8n,
   Q_t,
-  Egn,
-  rR,
-  xE,
+  evictSentSkillNames as Egn,
+  clearCommandMemoizationCaches as rR,
+  clearCommandsCache as xE,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import * as b from "path";

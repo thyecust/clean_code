@@ -10,7 +10,7 @@
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Ger } from "./chunk-px58ry6q.js";
 class o {
   active = void 0;

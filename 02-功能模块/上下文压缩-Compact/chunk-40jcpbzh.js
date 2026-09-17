@@ -10,7 +10,7 @@
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { xRt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { hVn, rht, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Pn, xx } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatTokens as Pn, formatTokenEstimate as xx } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 function xlt(o) {
   let r = C(o);
@@ -177,7 +177,7 @@ function Hlt(o, r) {
   }
   return e;
 }
-async function bIe(o) {
+async function collectContextData(o) {
   let {
       session: r,
       messages: t,
@@ -213,17 +213,17 @@ async function bIe(o) {
     detail: y,
   });
 }
-async function Kgr(o, r) {
-  let t = await bIe(r),
+async function call(o, r) {
+  let t = await collectContextData(r),
     l = lo(r.session),
     i = l ? { ...t, memoryFiles: [] } : t;
   return {
     type: "text",
     value: Hlt(i, { skipCollapseStatus: l }),
-    contextUsage: rpr(i),
+    contextUsage: buildContextUsage(i),
   };
 }
-function rpr(o) {
+function buildContextUsage(o) {
   let r = C(o);
   return {
     model: o.model,
@@ -264,4 +264,4 @@ function rpr(o) {
       }),
   };
 }
-export { xlt, Hlt, bIe, Kgr, rpr };
+export { xlt, Hlt, collectContextData, call, buildContextUsage };

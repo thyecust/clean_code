@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-var nlt = "/extra-usage is now /usage-credits",
-  Ngr = async (a, t) => {
+var RENAME_NOTICE = "/extra-usage is now /usage-credits",
+  call = async (a, t) => {
     let { call: e } = await import("./usage-credits-cmd.ygye20n9.js");
     return {
       type: "text",
@@ -17,4 +17,4 @@ var nlt = "/extra-usage is now /usage-credits",
 ${(await e(a, t)).value}`,
     };
   };
-export { nlt, Ngr };
+export { RENAME_NOTICE, call };

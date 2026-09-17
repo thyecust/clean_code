@@ -10,31 +10,31 @@
 import { uZ, N0, yje, p8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   ht,
   rge,
-  lx,
-  uZe,
-  dRn,
-  dZe,
-  zKt,
-  Use,
-  $T,
-  Hw,
-  Qi,
-  wg,
-  vn,
-  zD,
+  shouldUseClaudeAIAuth as lx,
+  fetchAndStoreUserRoles as uZe,
+  createAndStoreApiKey as dRn,
+  storeOAuthAccountInfo as dZe,
+  saveOAuthTokensIfNeeded as zKt,
+  clearOAuthTokenMemos as Use,
+  getClaudeAIOAuthTokenOriginAsync as $T,
+  clearOAuthTokenCache as Hw,
+  getClaudeAIOAuthTokensAsync as Qi,
+  sameOwnerAccount as wg,
+  getOauthAccountInfo as vn,
+  getAuthenticatedAccountInfo as zD,
   Te,
   ee,
 } from "./认证-OAuth登录.419zdfz3.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { zY } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
-import { c9, mlt } from "./chunk-9g86t9bp.js";
-import { f7 } from "../上下文压缩-Compact/chunk-npckj9cm.js";
+import { performLogout as c9, clearAuthRelatedCaches as mlt } from "./chunk-9g86t9bp.js";
+import { fetchBootstrapData as f7 } from "../上下文压缩-Compact/chunk-npckj9cm.js";
 async function m(e, o) {
   try {
     if (ee().claudeCodeFirstTokenDate !== void 0) {

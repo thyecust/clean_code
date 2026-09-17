@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 284 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Ave } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
-import { HT } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { isRemoteControlOfferable as Ave } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isArtifactConflictLegacy as HT } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { tye } from "../Bridge-RemoteControl/chunk-m1vpawx6.js";
 import { U, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";

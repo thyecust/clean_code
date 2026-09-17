@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ge, Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { formatTokens as Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getInitialSettings as Ge, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { tp, VVe, qS, dLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function g(r, e) {
   let { window: n, configured: o, source: s } = qS(r, e),
@@ -34,7 +34,7 @@ function g(r, e) {
   return a.join(`
 `);
 }
-async function T3e(r, e) {
+async function applyAutoCompactWindow(r, e) {
   let n = e.options.mainLoopModel;
   if (qS(n, void 0).source === "env")
     return "CLAUDE_CODE_AUTO_COMPACT_WINDOW is set and takes precedence. Unset it to change this setting.";
@@ -73,13 +73,13 @@ async function T3e(r, e) {
   else if (d < t) p = ` (capped to model limit of ${Pn(d)})`;
   return `Auto-compact window set to ${Pn(t)} tokens${p}`;
 }
-var Ygr = async (r, e) => {
+var call = async (r, e) => {
   let n = r.trim();
   if (!n)
     return {
       type: "text",
       value: g(e.options.mainLoopModel, e.options.autoCompactWindow),
     };
-  return { type: "text", value: await T3e(n, e) };
+  return { type: "text", value: await applyAutoCompactWindow(n, e) };
 };
-export { T3e, Ygr };
+export { applyAutoCompactWindow, call };

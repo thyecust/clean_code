@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 70 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { bCt } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { hr } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController as hr } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { pve } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { EKe, jX, Jm, Tde, Q2, Kfn } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { SYNCED_FILE_ROOT as EKe, WORKING_FILESTORE_PREFIX as jX, MAX_WORKING_FILE_BYTES as Jm, relUnderSyncDir as Tde, getSyncedFile as Q2, writeLaneRowFromWorker as Kfn } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Tot } from "../../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";

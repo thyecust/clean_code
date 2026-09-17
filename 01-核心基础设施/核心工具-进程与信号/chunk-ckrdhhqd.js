@@ -10,7 +10,7 @@
 import { j, B, he, z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Ekn, LRe } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { qR, a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { qR, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   JRe,
@@ -29,12 +29,12 @@ import {
   far,
   Het,
   uS,
-  Rd,
+  getAllPolicyTierSettings as Rd,
 } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { $r } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findCanonicalGitRoot as $r } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ea, OQ, Zet, Uge, X6 } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { Qoe } from "../核心工具-路径与平台/chunk-2f8axr19.js";
-import { id, G8t } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { id, noProxyUnion as G8t } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { ahe } from "../共享小工具-未细化/chunk-v2wxtqf7.js";
 import { homedir as x } from "os";
 import { dirname as P, posix as h } from "path";
@@ -185,7 +185,7 @@ function ee(e) {
     _.push(`${[...n.slice(0, p), s].join(".")}.*`);
   return _;
 }
-var pme = [
+var BG_WORKER_IDENTITY_ENV_VARS = [
   "CLAUDE_CODE_SESSION_KIND",
   "CLAUDE_BG_SOURCE",
   "CLAUDE_BG_ISOLATION",
@@ -234,14 +234,14 @@ class H {
   settingsColorEnv = {};
 }
 var m = new j(() => new H());
-function Bu() {
+function isScrubEnabled() {
   let e = u.scrubEnabledLatched;
   if (e !== void 0) return e;
   let t = Ie(process.env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB);
   return (u.setScrubEnabledLatched(t), t);
 }
-function Qzt() {
-  if (Bu()) return !0;
+function shouldScrubSubprocessEnv() {
+  if (isScrubEnabled()) return !0;
   if (po(process.env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB)) return !1;
   return process.env.CLAUDE_CODE_ENTRYPOINT === "local-agent";
 }
@@ -264,13 +264,13 @@ function G(e) {
     return;
   }
 }
-function s6() {
+function isScrubSandboxAvailable() {
   if (u.scrubSandboxAvailableLatched !== void 0)
     return u.scrubSandboxAvailableLatched;
   return !1;
 }
-async function oAn() {
-  if ((N5t(), !Bu())) return;
+async function assertScrubSandboxAvailable() {
+  if ((N5t(), !isScrubEnabled())) return;
   let e = x(),
     t = he(),
     n = process.env.GITHUB_ENV ? P(process.env.GITHUB_ENV) : void 0,
@@ -316,8 +316,8 @@ function Y() {
     u.setScriptCapsLatched(null);
   }
 }
-function sAn(e) {
-  if (!Bu()) return;
+function enforceScriptCaps(e) {
+  if (!isScrubEnabled()) return;
   if ((Y(), !u.scriptCapsLatched)) return;
   let { scriptCapsLatched: t, scriptCallCounts: n } = u;
   for (let [r, p] of Object.entries(t)) {
@@ -331,33 +331,33 @@ function sAn(e) {
     }
   }
 }
-function hyr(e) {
+function registerAgentProxyEnvFn(e) {
   m.of(B().host).getAgentProxyEnv = e;
 }
-function fme() {
+function agentProxyEnv() {
   return m.of(B().host).getAgentProxyEnv?.() ?? {};
 }
-function Zzt(e) {
+function setSettingsColorEnv(e) {
   m.of(B().host).settingsColorEnv = e;
 }
-function e4t(e) {
+function isArtifactDevBaseUrlVar(e) {
   return e.startsWith("CLAUDE_CODE_ARTIFACT") && e.endsWith("_BASE_URL");
 }
-function t4t(e) {
+function armedRunnerShedsName(e) {
   let t = e.toUpperCase();
   return !EBe(e) && kq(e) && !far.has(t) && !lRt(t);
 }
 var te = new Set(Zet.map((e) => e.toUpperCase()));
-function vJe(e) {
+function isChildScrubbedCredentialFamily(e) {
   let t = e.replace(/^INPUT_/, "");
   return (
-    e4t(t) ||
+    isArtifactDevBaseUrlVar(t) ||
     OQ(t) ||
     t.startsWith("OTEL_") ||
     t === "CLAUDE_CODE_OTEL_DIAG_STDERR"
   );
 }
-function n4t() {
+function childScrubbedCredentialKeys() {
   let e = process.env,
     t = (n) =>
       e.ANTHROPIC_UNIX_SOCKET !== void 0 &&
@@ -365,20 +365,20 @@ function n4t() {
       e[n] === CJe;
   return [
     ...Zet.filter((n) => !t(n)),
-    ...Object.keys(e).filter((n) => vJe(n.toUpperCase())),
+    ...Object.keys(e).filter((n) => isChildScrubbedCredentialFamily(n.toUpperCase())),
     ...Uge(e),
     ...Ekn(),
     "CLAUDE_CODE_SUBSCRIPTION_TYPE",
     "CLAUDE_CODE_RATE_LIMIT_TIER",
     "CLAUDE_CODE_PLUGIN_ATTRIBUTION",
     "CLAUDE_CODE_SKILL_ATTRIBUTION",
-    ...pme,
+    ...BG_WORKER_IDENTITY_ENV_VARS,
   ];
 }
 function I(e) {
   return e.toUpperCase().startsWith("BUN_JSC_");
 }
-function Hi() {
+function subprocessEnv() {
   let e = m.of(B().host),
     t = e.getAgentProxyEnv?.() ?? {},
     n = Object.keys(t).length > 0,
@@ -387,16 +387,16 @@ function Hi() {
     i = a.CLAUDE_CODE_REMOTE === !0,
     l = i ? y(n ? { ...process.env, ...t } : process.env) : {},
     c = Object.keys(l).length > 0,
-    _ = Qzt(),
+    _ = shouldScrubSubprocessEnv(),
     s =
       Object.keys(process.env).some((o) => te.has(o.toUpperCase())) ||
-      Object.keys(process.env).some((o) => vJe(o.toUpperCase())) ||
+      Object.keys(process.env).some((o) => isChildScrubbedCredentialFamily(o.toUpperCase())) ||
       process.env.CLAUDE_CODE_SUBSCRIPTION_TYPE !== void 0 ||
       process.env.CLAUDE_CODE_RATE_LIMIT_TIER !== void 0,
     f = Uge(process.env),
     K = Ekn(),
     R = !1;
-  R = pme.some((o) => process.env[o] !== void 0);
+  R = BG_WORKER_IDENTITY_ENV_VARS.some((o) => process.env[o] !== void 0);
   let X = Object.keys(process.env).some((o) =>
       /^(INPUT_)?(OTEL_|CLAUDE_CODE_OTEL_DIAG_STDERR$)/i.test(o),
     ),
@@ -425,14 +425,14 @@ function Hi() {
   let d = { ...process.env, ...r, ...t, ...l },
     W = new Set(
       [
-        ...n4t(),
+        ...childScrubbedCredentialKeys(),
         "CLAUDE_CODE_SUBSCRIPTION_TYPE",
         "CLAUDE_CODE_RATE_LIMIT_TIER",
         "CLAUDE_CODE_QUESTION_EXTENDED",
       ].map((o) => o.toUpperCase()),
     );
   for (let o of Object.keys(d)) if (W.has(o.toUpperCase())) delete d[o];
-  for (let o of pme) delete d[o];
+  for (let o of BG_WORKER_IDENTITY_ENV_VARS) delete d[o];
   for (let o of Object.keys(d)) if (o.startsWith("OTEL_")) delete d[o];
   if (
     (delete d.CLAUDE_CODE_OTEL_DIAG_STDERR,
@@ -460,7 +460,7 @@ function Hi() {
       F.has(o.toUpperCase().replace(/-/g, "_")) ||
       xet.test(o) ||
       Het(o) ||
-      (J && t4t(o))
+      (J && armedRunnerShedsName(o))
     ) {
       delete d[o];
       continue;
@@ -485,13 +485,13 @@ function Hi() {
   }
   return d;
 }
-function RJe() {
+function shouldUseMcpAllowlistEnv() {
   let e = process.env.CLAUDE_CODE_MCP_ALLOWLIST_ENV;
   if (Ie(e)) return !0;
   if (po(e)) return !1;
   return process.env.CLAUDE_CODE_ENTRYPOINT === "local-agent";
 }
-function iAn() {
+function scrubSandboxConfig() {
   let e = u.scrubPathsLatched,
     t = e?.home ?? x(),
     n = e?.originalCwd ?? he(),
@@ -618,20 +618,20 @@ export {
   jEt,
   pnr,
   rAn,
-  pme,
-  Bu,
-  Qzt,
-  s6,
-  oAn,
-  sAn,
-  hyr,
-  fme,
-  Zzt,
-  e4t,
-  t4t,
-  vJe,
-  n4t,
-  Hi,
-  RJe,
-  iAn,
+  BG_WORKER_IDENTITY_ENV_VARS,
+  isScrubEnabled,
+  shouldScrubSubprocessEnv,
+  isScrubSandboxAvailable,
+  assertScrubSandboxAvailable,
+  enforceScriptCaps,
+  registerAgentProxyEnvFn,
+  agentProxyEnv,
+  setSettingsColorEnv,
+  isArtifactDevBaseUrlVar,
+  armedRunnerShedsName,
+  isChildScrubbedCredentialFamily,
+  childScrubbedCredentialKeys,
+  subprocessEnv,
+  shouldUseMcpAllowlistEnv,
+  scrubSandboxConfig,
 };

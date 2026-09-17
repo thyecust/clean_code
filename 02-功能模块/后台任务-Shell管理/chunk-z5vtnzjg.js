@@ -17,17 +17,17 @@ import {
 } from "fs";
 import { join as c } from "path";
 var y = "exit-cause",
-  znt = "session_in_use",
+  BG_EXIT_CAUSE_SESSION_IN_USE = "session_in_use",
   h = "exit-detail",
   P = 200;
-function Fp(e, t) {
+function setBgExitCause(e, t) {
   let n = t ?? process.env.CLAUDE_JOB_DIR;
   if (!n) return;
   try {
     f(c(n, y), e);
   } catch {}
 }
-function Ebr(e, t, n) {
+function setBgExitDetail(e, t, n) {
   let r = n ?? process.env.CLAUDE_JOB_DIR,
     i = t.trim();
   if (!r || !i) return;
@@ -39,10 +39,10 @@ ${i.slice(0, P)}`,
     );
   } catch {}
 }
-function eOn(e) {
+function readAndClearBgExitCause(e) {
   return E(c(e, y));
 }
-function tOn(e, t) {
+function readAndClearBgExitDetail(e, t) {
   let n = E(c(e, h));
   if (!n) return;
   let r = n.indexOf(`
@@ -212,7 +212,7 @@ function _z(e) {
   v(process.stderr, e);
 }
 function Abr(e) {
-  (console.error(e), Fp("exit_with_error"), process.exit(1));
+  (console.error(e), setBgExitCause("exit_with_error"), process.exit(1));
 }
 function Knt(e, t) {
   let n = e;
@@ -259,11 +259,11 @@ async function* oOn(e) {
   }
 }
 export {
-  znt,
-  Fp,
-  Ebr,
-  eOn,
-  tOn,
+  BG_EXIT_CAUSE_SESSION_IN_USE,
+  setBgExitCause,
+  setBgExitDetail,
+  readAndClearBgExitCause,
+  readAndClearBgExitDetail,
   oje,
   Vnt,
   nOn,

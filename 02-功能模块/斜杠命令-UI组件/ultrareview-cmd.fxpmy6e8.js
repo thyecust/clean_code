@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Hd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { Z9e, t3e, $le } from "../CodeReview/CodeReview.ddrd6y06.js";
+import { parseUltrareviewArgs as Z9e, ultrareviewLaunchAcknowledgementNudge as t3e, runUltrareviewHeadless as $le } from "../CodeReview/CodeReview.ddrd6y06.js";
 var m = async (o, r, t) => {
   let a = t ? `/${t}` : "/ultrareview",
     { scopeArgs: s, applyFixes: n, postReview: i } = Z9e(o),

@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { ze, mp, Hz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn, Dr, vS, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { st, an, t9t, VMe, fpe, nR, ET } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { SandboxManager as st, an, recordSessionAlias as t9t, executeDirectoryAddedHooks as VMe, persistHookOutput as fpe, nR, ET } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ie } from "../ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { Nr } from "./设置-配置.aqbb35ee.js";
-import { Oc, DG, Bh, Ap } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Xr } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
-import { Uu } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
-import { ce } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
-import { _yn } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { Oc, DG, pathInAllowedWorkingPath as Bh, pathInWorkingPath as Ap } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isCustomizationDisabled as Xr } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
+import { isRestrictedToPluginOnly as Uu } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
+import { getToolPermissionContext as ce } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { appendRespawnFlag as _yn } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { M3e } from "../共享小工具-未细化/chunk-sr0ezxnp.js";
 import { G } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID as h } from "crypto";

@@ -10,7 +10,7 @@
 import { _n, Uw, Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { M } from "./chunk-h62vxw7j.js";
 import { wc } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Sc } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
+import { getProjectsDir as Sc } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { kd } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isAbsolute as g, sep as a } from "path";
 function l(e) {

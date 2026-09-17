@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { wW, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { JETBRAINS_IDES as wW, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { cs, IBe, Wet, vRt, ike, rHn, qar } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
@@ -21,12 +21,12 @@ import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm
 import { Pat, Oat, T9e } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { rt, zg, H6, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel as rt, zg, H6, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { te, dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { gi, bs, nk } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { XB, ZOt, R9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
@@ -58,7 +58,7 @@ import { homedir as Ge, platform as Le } from "os";
 import { dirname as lr, join as Q } from "path";
 import { pathToFileURL as ur } from "url";
 import { platform as er } from "os";
-function gle() {
+function shouldOfferTerminalSetup() {
   return (
     (er() === "darwin" && a.terminal === "Apple_Terminal") ||
     a.terminal === "vscode" ||
@@ -214,7 +214,7 @@ function Ke() {
     t.includes(".devin-server")
   );
 }
-function SOt() {
+function getNativeCSIuTerminalDisplayName() {
   if (!a.terminal || !(a.terminal in ve)) return null;
   return ve[a.terminal] ?? null;
 }
@@ -225,7 +225,7 @@ function ne(e) {
 function Be() {
   return "";
 }
-async function bOt(e, t, r) {
+async function setupTerminal(e, t, r) {
   let s = "",
     o = !0;
   switch (a.terminal) {
@@ -235,17 +235,17 @@ async function bOt(e, t, r) {
     case "vscode":
       ((s = await Qe(e, "VSCode", t)),
         (s += await Ze(e, "VSCode", t)),
-        (s += await ken(e, "VSCode", t)));
+        (s += await installVSCodeGpuAccelerationOff(e, "VSCode", t)));
       break;
     case "cursor":
       ((s = await Qe(e, "Cursor", t)),
         (s += await Ze(e, "Cursor", t)),
-        (s += await ken(e, "Cursor", t)));
+        (s += await installVSCodeGpuAccelerationOff(e, "Cursor", t)));
       break;
     case "windsurf":
       ((s = await Qe(e, "Devin Desktop", t)),
         (s += await Ze(e, "Devin Desktop", t)),
-        (s += await ken(e, "Devin Desktop", t)));
+        (s += await installVSCodeGpuAccelerationOff(e, "Devin Desktop", t)));
       break;
     case "alacritty":
       s = await fr(t);
@@ -274,7 +274,7 @@ async function bOt(e, t, r) {
 }
 var wt =
   'iTerm2 \u2192 Settings \u2192 General \u2192 Selection \u2192 check "Applications in terminal may access clipboard"';
-async function Gdr(e) {
+async function enableITerm2ClipboardAccess(e) {
   let t = ie.dim(wt);
   try {
     let { stdout: r, code: s } = await Fe("defaults", [
@@ -301,23 +301,23 @@ async function Gdr(e) {
     );
   }
 }
-function qdr() {
+function isShiftEnterKeyBindingInstalled() {
   return ee().shiftEnterKeyBindingInstalled === !0;
 }
 var yt = ["vscode", "cursor", "windsurf", "alacritty", "zed"];
-function ZZ() {
+function supportsShiftEnter() {
   if (a.terminal === "Apple_Terminal" && Le() === "darwin") return !0;
   if (a.terminal && a.terminal in ve) return !0;
-  return yt.includes(a.terminal ?? "") && qdr();
+  return yt.includes(a.terminal ?? "") && isShiftEnterKeyBindingInstalled();
 }
-function ven() {
+function hasUsedBackslashReturn() {
   return ee().hasUsedBackslashReturn === !0;
 }
-function DUn(e) {
+function markBackslashReturnUsed(e) {
   if (!ee().hasUsedBackslashReturn)
     Te((r) => ({ ...r, hasUsedBackslashReturn: !0 }), e);
 }
-async function Egr(e, t, r) {
+async function call(e, t, r) {
   if (
     Le() === "darwin" &&
     a.__CFBundleIdentifier === "com.googlecode.iterm2" &&
@@ -326,7 +326,7 @@ async function Egr(e, t, r) {
       a.terminal === "screen" ||
       a.terminal === null)
   ) {
-    let l = `${await Gdr(t.options.theme)}Shift+Enter is natively supported in iTerm2.
+    let l = `${await enableITerm2ClipboardAccess(t.options.theme)}Shift+Enter is natively supported in iTerm2.
 
 No configuration needed. Just use Shift+Enter to add newlines.${Be()}`;
     return (e(l), null);
@@ -337,7 +337,7 @@ No configuration needed. Just use Shift+Enter to add newlines.${Be()}`;
 No configuration needed. Just use Shift+Enter to add newlines.${Be()}`;
     return (e(o), null);
   }
-  if (!gle()) {
+  if (!shouldOfferTerminalSetup()) {
     let o = a.terminal || "your current terminal",
       l = P(),
       m = "";
@@ -363,18 +363,18 @@ ${m}   \u2022 IDE: VSCode, Cursor, Devin Desktop, Zed
 ${ie.dim("Note: iTerm2, WezTerm, Ghostty, Kitty, Warp, and Windows Terminal support Shift+Enter natively.")}${c}${Be()}`;
     return (e(x), null);
   }
-  let s = await bOt(t.session.host, t.options.theme, t.storageV5);
+  let s = await setupTerminal(t.session.host, t.options.theme, t.storageV5);
   return (e(s + Be()), null);
 }
 var ke = "terminal.integrated.mouseWheelScrollSensitivity",
   Oe = 3,
   He = "terminal.integrated.gpuAcceleration",
   Je = "off";
-async function Ren(e) {
+async function readVSCodeScrollSensitivity(e) {
   let t = cr();
   if (!t || Ke()) return null;
   try {
-    let r = await Ee(Q(await wOt.of(e).pathFor(t), "settings.json"), {
+    let r = await Ee(Q(await vscodeUserDirectories.of(e).pathFor(t), "settings.json"), {
         encoding: "utf-8",
       }),
       s = ike(r),
@@ -423,13 +423,13 @@ class xt {
     (e) => `${e}:${Ge()}`,
   );
 }
-var wOt = new j(() => new xt());
+var vscodeUserDirectories = new j(() => new xt());
 async function Ze(e, t, r) {
   let s = ie.dim(
     `For smoother scrolling, set "${ke}": ${Oe} in ${t} settings.`,
   );
   if (Ke()) return `${s}${p}`;
-  let o = Q(await wOt.of(e).pathFor(t), "settings.json");
+  let o = Q(await vscodeUserDirectories.of(e).pathFor(t), "settings.json");
   try {
     let l = "{}",
       m = !1;
@@ -468,12 +468,12 @@ async function Ze(e, t, r) {
     );
   }
 }
-async function ken(e, t, r) {
+async function installVSCodeGpuAccelerationOff(e, t, r) {
   let s = ie.dim(
     `To fix garbled text, set "${He}": "${Je}" in ${t} settings (undo: set it back to "auto").`,
   );
   if (Ke()) return (g("terminal_setup_gpu_accel", "remote_ssh"), `${s}${p}`);
-  let o = Q(await wOt.of(e).pathFor(t), "settings.json");
+  let o = Q(await vscodeUserDirectories.of(e).pathFor(t), "settings.json");
   try {
     let l = "{}",
       m = !1;
@@ -536,7 +536,7 @@ async function Qe(e, t = "VSCode", r) {
     "when": "terminalFocus"
   }
 ]`)}${p}`;
-  let s = await wOt.of(e).pathFor(t),
+  let s = await vscodeUserDirectories.of(e).pathFor(t),
     o = Q(s, "keybindings.json");
   try {
     await tt(s, { recursive: !0 });
@@ -2144,7 +2144,7 @@ function m9e({
   function Kt({ meta: u, shift: k }) {
     if (D && !J && w.offset > 0 && w.text[w.offset - 1] === "\\")
       return (
-        DUn(qe),
+        markBackslashReturnUsed(qe),
         w.backspace().insert(
           we(`
 `),
@@ -2627,20 +2627,20 @@ function Fye({
 export {
   dd,
   _p,
-  gle,
+  shouldOfferTerminalSetup,
   yOt,
   Cen,
-  SOt,
-  bOt,
-  Gdr,
-  qdr,
-  ZZ,
-  ven,
-  DUn,
-  Egr,
-  Ren,
-  wOt,
-  ken,
+  getNativeCSIuTerminalDisplayName,
+  setupTerminal,
+  enableITerm2ClipboardAccess,
+  isShiftEnterKeyBindingInstalled,
+  supportsShiftEnter,
+  hasUsedBackslashReturn,
+  markBackslashReturnUsed,
+  call,
+  readVSCodeScrollSensitivity,
+  vscodeUserDirectories,
+  installVSCodeGpuAccelerationOff,
   hle,
   TOt,
   Nye,

@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 206 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { TB, EB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "./chunk-w0pgmfvw.js";
 import { XPt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jkmndwnz.js";
 import { ZVe, Re, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -43,7 +43,7 @@ async function x(t, o, l) {
   (TB($E, `bundled:${$E}`, n, null),
     i("tengu_workflow_authoring_skill_autoload", { trigger: u(r) }),
     y("workflow_authoring_autoload"));
-  let { formatSkillLoadingMetadata: f } = await import("../斜杠命令-框架/processPromptSlashCommand.psenh9re.js");
+  let { formatSkillLoadingMetadata: f } = await import("../斜杠命令-框架/chunk-s195n5de.js");
   return [
     Re({ content: f($E), isMeta: !0, turnCompanion: !0 }),
     Re({ content: s, isMeta: !0, turnCompanion: !0 }),

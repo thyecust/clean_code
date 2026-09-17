@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { eFe } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { makeOwnPublishesStore as eFe } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { nAt } from "../../02-功能模块/图表-Mermaid/chunk-743atbtj.js";
 import { $jn } from "../../02-功能模块/CodeReview/chunk-cwdcyphs.js";
 import { Njn } from "./chunk-wm4s322b.js";
-import { Fi } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { uuidSlugFromUrl as Fi } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Gjn } from "./chunk-f7n720sn.js";
 import { ef } from "./chunk-sda3j0p4.js";
 import { nbe } from "./chunk-1rpyafm2.js";

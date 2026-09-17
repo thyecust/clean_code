@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { us, oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { vc, Ute } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { cJn } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
 var C = 0.5,

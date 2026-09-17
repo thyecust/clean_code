@@ -12,7 +12,7 @@ import { Z } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Rxt } from "../设置-配置/chunk-zqr5ctyf.js";
-import { YQ, Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING as YQ, execFileNoThrowWithCwd as Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { Zie, Lnt, Mhe } from "../共享小工具-未细化/chunk-h1jrnver.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 function Wd(e, t) {
@@ -34,7 +34,7 @@ var N = new l();
 function u() {
   return !1;
 }
-async function m5t(e) {
+async function readLinuxProcState(e) {
   if (P() !== "linux" && P() !== "wsl") return;
   if (!p(e)) return;
   try {
@@ -44,14 +44,14 @@ async function m5t(e) {
     return;
   }
 }
-async function mkn(e) {
-  return Mhe(await m5t(e));
+async function isExitedProcessAsync(e) {
+  return Mhe(await readLinuxProcState(e));
 }
 var S = 2147483647;
 function p(e) {
   return Number.isInteger(e) && e > 1 && e <= S;
 }
-function Vg(e) {
+function isProcessProvablyGone(e) {
   if (!p(e)) return !1;
   try {
     return (process.kill(e, 0), !1);
@@ -60,7 +60,7 @@ function Vg(e) {
   }
 }
 var w = 16;
-async function gkn() {
+async function looksLikeFullHostProcessTable() {
   let e = P();
   if (e !== "linux" && e !== "wsl") return !0;
   let t = ae(),
@@ -70,7 +70,7 @@ async function gkn() {
   if (!r) return !1;
   return r.filter((i) => /^\d+$/.test(i.name)).length >= w;
 }
-function I5(e, t) {
+function sigtermThenKill(e, t) {
   let n = e.filter((r) => Math.abs(r) > 1);
   for (let r of n) {
     try {
@@ -81,7 +81,7 @@ function I5(e, t) {
     return (
       setTimeout(
         (o, i, s) => {
-          if (!wvt(i, s)) return;
+          if (!isSameProcess(i, s)) return;
           try {
             process.kill(o, "SIGKILL");
           } catch {}
@@ -96,7 +96,7 @@ function I5(e, t) {
   }
   return !1;
 }
-async function Tq(e, t, n = "SIGTERM") {
+async function reapDetachedRepl(e, t, n = "SIGTERM") {
   if (!e || e <= 1 || t === void 0) return !1;
   if ((await f(e, t)) === "other") return !1;
   try {
@@ -121,24 +121,24 @@ async function Tq(e, t, n = "SIGTERM") {
   return !0;
 }
 async function f(e, t) {
-  let n = await Xse(e);
-  if (n !== void 0) return BZe(t, n) ? "same" : "other";
+  let n = await captureProcessStartTimeAsync(e);
+  if (n !== void 0) return startTokensEqualOrCrossFormat(t, n) ? "same" : "other";
   try {
     return (process.kill(e, 0), "other");
   } catch (r) {
     return A(r) === "ESRCH" ? "gone" : "other";
   }
 }
-function xRe(e) {
+function getProcessStartTokenLinuxSync(e) {
   return;
 }
-function hkn(e, t = 12) {
+function getAncestorPidsLinuxSync(e, t = 12) {
   return [];
 }
-async function _kn(e, t = 10) {
-  return (await bvt(e, t)).ancestors;
+async function getAncestorPidsAsync(e, t = 10) {
+  return (await getAncestorPidsCheckedAsync(e, t)).ancestors;
 }
-async function bvt(e, t = 10) {
+async function getAncestorPidsCheckedAsync(e, t = 10) {
   let n = `pid=${String(e)}; for i in $(seq 1 ${t}); do ppid=$(ps -o ppid= -p $pid 2>/dev/null | tr -d ' '); if [ -z "$ppid" ]; then echo FAIL; exit 0; fi; if [ "$ppid" = "0" ] || [ "$ppid" = "1" ]; then echo END; exit 0; fi; echo $ppid; pid=$ppid; done`,
     r = await Be("sh", ["-c", n], { timeout: 3000 }),
     o = (r.stdout ?? "")
@@ -157,7 +157,7 @@ async function bvt(e, t = 10) {
     truncated: r.code === 0 && o.at(-1) !== "END" && o.at(-1) !== "FAIL",
   };
 }
-function ykn(e) {
+function getProcessCommand(e) {
   try {
     let n = `ps -o command= -p ${String(e)}`,
       r = YQ(n, { timeout: 1000 });
@@ -166,7 +166,7 @@ function ykn(e) {
     return null;
   }
 }
-function Vse(e) {
+function getProcessStartTime(e) {
   try {
     let t = YQ(`LC_ALL=C TZ=UTC ps -o lstart= -p ${e}`, { timeout: 1000 });
     return t ? t.trim() : void 0;
@@ -174,11 +174,11 @@ function Vse(e) {
     return;
   }
 }
-function wvt(e, t) {
+function isSameProcess(e, t) {
   if (t === void 0) return !0;
-  return b(t, Vse(e));
+  return b(t, getProcessStartTime(e));
 }
-function BZe(e, t) {
+function startTokensEqualOrCrossFormat(e, t) {
   if (t === e) return !0;
   return !1;
 }
@@ -195,13 +195,13 @@ function y(e, t) {
     n > 300000000000000000 !== r > 300000000000000000
   );
 }
-async function Pm(e, t) {
+async function isSameProcessAsync(e, t) {
   if (t === void 0) return !0;
-  return b(t, await Ba(e));
+  return b(t, await getProcessStartTimeAsync(e));
 }
-async function mA(e, t) {
-  let n = await Ba(e, { skipCache: !0 });
-  return n === void 0 ? void 0 : BZe(t, n);
+async function provenSameProcessAsync(e, t) {
+  let n = await getProcessStartTimeAsync(e, { skipCache: !0 });
+  return n === void 0 ? void 0 : startTokensEqualOrCrossFormat(t, n);
 }
 class g {
   #e = void 0;
@@ -215,7 +215,7 @@ class g {
     this.#e = void 0;
   }
 }
-var Kse = new g();
+var ownProcStartMemo = new g();
 class h {
   #e = new Map();
   get(e) {
@@ -226,24 +226,24 @@ class h {
   }
 }
 var T = new j(() => new h());
-function O6() {
-  return Kse.token ?? Kse.set(Vse(process.pid));
+function ownProcStart() {
+  return ownProcStartMemo.token ?? ownProcStartMemo.set(getProcessStartTime(process.pid));
 }
-async function gA() {
-  return Kse.token ?? Kse.set(await Ba(process.pid));
+async function ownProcStartAsync() {
+  return ownProcStartMemo.token ?? ownProcStartMemo.set(await getProcessStartTimeAsync(process.pid));
 }
-function jT(e) {
+function procIdentityOf(e) {
   if (u()) return e.procStart !== void 0 ? void 0 : e.procStartFt;
   return e.procStart;
 }
-function kU(e) {
+function procIdentityFields(e) {
   return u()
     ? { procStart: void 0, procStartFt: e }
     : { procStart: e, procStartFt: void 0 };
 }
 var x = 60000,
   C = 5000;
-async function Ba(e, t) {
+async function getProcessStartTimeAsync(e, t) {
   let n = Date.now(),
     r = T.of(B().host);
   if (t?.env !== void 0) return m(e, t.env);
@@ -260,10 +260,10 @@ async function Ba(e, t) {
   return s;
 }
 var d = 250;
-async function Xse(e) {
-  let t = await Ba(e, { skipCache: !0 });
+async function captureProcessStartTimeAsync(e) {
+  let t = await getProcessStartTimeAsync(e, { skipCache: !0 });
   if (t !== void 0) return t;
-  return (await Z(d + Math.floor(Math.random() * d)), Ba(e, { skipCache: !0 }));
+  return (await Z(d + Math.floor(Math.random() * d)), getProcessStartTimeAsync(e, { skipCache: !0 }));
 }
 async function m(e, t) {
   let n = t === void 0 ? {} : { env: t, extendEnv: !1 };
@@ -280,7 +280,7 @@ async function m(e, t) {
     return;
   }
 }
-async function HRe(e) {
+async function getProcessCreationTimeMsAsync(e) {
   try {
     let t = await Be("ps", ["-o", "lstart=", "-p", String(e)], {
       timeout: 1000,
@@ -295,28 +295,28 @@ async function HRe(e) {
 }
 export {
   Wd,
-  m5t,
-  mkn,
-  Vg,
-  gkn,
-  I5,
-  Tq,
-  xRe,
-  hkn,
-  _kn,
-  bvt,
-  ykn,
-  Vse,
-  wvt,
-  BZe,
-  Pm,
-  mA,
-  Kse,
-  O6,
-  gA,
-  jT,
-  kU,
-  Ba,
-  Xse,
-  HRe,
+  readLinuxProcState,
+  isExitedProcessAsync,
+  isProcessProvablyGone,
+  looksLikeFullHostProcessTable,
+  sigtermThenKill,
+  reapDetachedRepl,
+  getProcessStartTokenLinuxSync,
+  getAncestorPidsLinuxSync,
+  getAncestorPidsAsync,
+  getAncestorPidsCheckedAsync,
+  getProcessCommand,
+  getProcessStartTime,
+  isSameProcess,
+  startTokensEqualOrCrossFormat,
+  isSameProcessAsync,
+  provenSameProcessAsync,
+  ownProcStartMemo,
+  ownProcStart,
+  ownProcStartAsync,
+  procIdentityOf,
+  procIdentityFields,
+  getProcessStartTimeAsync,
+  captureProcessStartTimeAsync,
+  getProcessCreationTimeMsAsync,
 };

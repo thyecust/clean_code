@@ -11,7 +11,7 @@ import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { ge, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { $ar } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { writeFileSync as k } from "fs";
@@ -124,7 +124,7 @@ async function T(u, a = 0) {
     }.VERSION,
   };
 }
-async function pnn(u = "manual", a = 0) {
+async function performHeapDump(u = "manual", a = 0) {
   try {
     let t = K(),
       e = await T(u, a),
@@ -174,4 +174,4 @@ async function j(u) {
   (k(u, Bun.generateHeapSnapshot("v8", "arraybuffer"), { mode: 384 }),
     Bun.gc(!0));
 }
-export { pnn };
+export { performHeapDump };

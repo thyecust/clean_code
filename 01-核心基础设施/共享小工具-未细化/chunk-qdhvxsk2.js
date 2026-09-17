@@ -10,7 +10,7 @@
 function va() {
   return `claude-code/${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}`;
 }
-function Um() {
+function getClientPlatform() {
   switch (process.env.CLAUDE_CODE_ENTRYPOINT) {
     case "claude-vscode":
       return "claude_code_vscode";
@@ -52,4 +52,4 @@ function HHt() {
   )
     process.env.AI_AGENT = PMn("harness");
 }
-export { va, Um, PMn, HHt };
+export { va, getClientPlatform, PMn, HHt };

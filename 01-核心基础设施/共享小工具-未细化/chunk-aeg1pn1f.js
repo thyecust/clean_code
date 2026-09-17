@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
-var jZ = {
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+var POWERUP_DISCOVERY_COPY = {
   heading: "Learn the moves",
   body:
     "Quick lessons on the things power users do \u2014 plan mode, undo, " +
@@ -18,9 +18,9 @@ var jZ = {
     "New here? Type /powerup for a 5-minute tour \u2014 modes, undo, " +
     "@-mentions, and how to teach Claude your rules.",
 };
-function oZt() {
+function resolvePowerupDiscoveryArm() {
   let e = a.CLAUDE_CODE_POWERUP_ONBOARDING;
   if (e === "banner" || e === "step") return e;
   return H("tengu_birch_lantern", "off");
 }
-export { jZ, oZt };
+export { POWERUP_DISCOVERY_COPY, resolvePowerupDiscoveryArm };

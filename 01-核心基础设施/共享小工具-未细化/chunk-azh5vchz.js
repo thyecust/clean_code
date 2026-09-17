@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { FI } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { SHORT_RE as FI } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 var $We = "Can't open \u2014 this session is running in another terminal";
 function ile({ sessionId: o, holder: i, canFork: s }) {
   let { jobId: e } = i,
@@ -26,9 +26,9 @@ async function t4(o) {
 async function Iit(o, i) {
   let s = i?.rejectUnreadable
       ? await (
-          await import("./listAllLiveSessions.wa1da7x1.js")
+          await import("../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js")
         ).listAllLiveSessions(void 0, { rejectUnreadable: !0 })
-      : await import("./listAllLiveSessions.wa1da7x1.js")
+      : await import("../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js")
           .then((n) => n.listAllLiveSessions())
           .catch(() => []),
     e = [];

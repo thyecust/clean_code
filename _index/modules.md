@@ -5,14 +5,13 @@
 - [`03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js`](../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js) — 7729.3 KB
 - [`03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js`](../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js) — 4.7 KB
 
-## 会话 UI (REPL)  <sub>03-入口与运行时 · 15 个文件 · 2.50 MB</sub>
+## 会话 UI (REPL)  <sub>03-入口与运行时 · 14 个文件 · 2.49 MB</sub>
 
 - [`03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js`](../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js) — 2452.0 KB
 - [`03-入口与运行时/会话UI(REPL)/exit-ui.d61a305c.js`](../03-入口与运行时/会话UI(REPL)/exit-ui.d61a305c.js) — 13.9 KB
 - [`03-入口与运行时/会话UI(REPL)/fork-ui.4ncr5gk1.js`](../03-入口与运行时/会话UI(REPL)/fork-ui.4ncr5gk1.js) — 13.8 KB
 - [`03-入口与运行时/会话UI(REPL)/AssistantNarrationSummaryMessage.kz8yw55j.js`](../03-入口与运行时/会话UI(REPL)/AssistantNarrationSummaryMessage.kz8yw55j.js) — 9.4 KB
 - [`03-入口与运行时/会话UI(REPL)/tui-ui.n2hxcpxd.js`](../03-入口与运行时/会话UI(REPL)/tui-ui.n2hxcpxd.js) — 8.6 KB
-- [`03-入口与运行时/会话UI(REPL)/AppRoot.n2gx0evt.js`](../03-入口与运行时/会话UI(REPL)/AppRoot.n2gx0evt.js) — 8.3 KB
 - [`03-入口与运行时/会话UI(REPL)/chunk-7gt0xchv.js`](../03-入口与运行时/会话UI(REPL)/chunk-7gt0xchv.js) — 8.0 KB
 - [`03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js`](../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js) — 7.7 KB
 - [`03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js`](../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js) — 6.2 KB
@@ -23,7 +22,7 @@
 - [`03-入口与运行时/会话UI(REPL)/chunk-mmzy53cr.js`](../03-入口与运行时/会话UI(REPL)/chunk-mmzy53cr.js) — 4.9 KB
 - [`03-入口与运行时/会话UI(REPL)/call.d09asyvz.js`](../03-入口与运行时/会话UI(REPL)/call.d09asyvz.js) — 4.4 KB
 
-## Artifact 发布 / 渲染  <sub>02-功能模块 · 35 个文件 · 2.04 MB</sub>
+## Artifact 发布 / 渲染  <sub>02-功能模块 · 26 个文件 · 1.98 MB</sub>
 
 - [`02-功能模块/Artifact发布-渲染/chunk-pvztfdrb.js`](../02-功能模块/Artifact发布-渲染/chunk-pvztfdrb.js) — 801.5 KB
 - [`02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js`](../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js) — 376.5 KB
@@ -47,21 +46,12 @@
 - [`02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js`](../02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js) — 13.0 KB
 - [`02-功能模块/Artifact发布-渲染/chunk-qdg189tc.js`](../02-功能模块/Artifact发布-渲染/chunk-qdg189tc.js) — 9.9 KB
 - [`02-功能模块/Artifact发布-渲染/chunk-x29r16ke.js`](../02-功能模块/Artifact发布-渲染/chunk-x29r16ke.js) — 9.8 KB
-- [`02-功能模块/Artifact发布-渲染/AUTO_REPLIES_DECLINED_ROW.9w1bnw47.js`](../02-功能模块/Artifact发布-渲染/AUTO_REPLIES_DECLINED_ROW.9w1bnw47.js) — 8.7 KB
-- [`02-功能模块/Artifact发布-渲染/inputSchema.vr3k4dwv.js`](../02-功能模块/Artifact发布-渲染/inputSchema.vr3k4dwv.js) — 8.4 KB
 - [`02-功能模块/Artifact发布-渲染/ArtifactTool.5x9mh6vy.js`](../02-功能模块/Artifact发布-渲染/ArtifactTool.5x9mh6vy.js) — 7.9 KB
-- [`02-功能模块/Artifact发布-渲染/respell.53kmaca9.js`](../02-功能模块/Artifact发布-渲染/respell.53kmaca9.js) — 7.3 KB
-- [`02-功能模块/Artifact发布-渲染/requestReplyTakeover.7rwzdb24.js`](../02-功能模块/Artifact发布-渲染/requestReplyTakeover.7rwzdb24.js) — 7.3 KB
-- [`02-功能模块/Artifact发布-渲染/adoptSubagentPublishArms.0w8936e8.js`](../02-功能模块/Artifact发布-渲染/adoptSubagentPublishArms.0w8936e8.js) — 7.2 KB
-- [`02-功能模块/Artifact发布-渲染/ASSET_UPLOAD_COVERS_SESSION_COPIES_NOTE.5q9rg7y1.js`](../02-功能模块/Artifact发布-渲染/ASSET_UPLOAD_COVERS_SESSION_COPIES_NOTE.5q9rg7y1.js) — 7.0 KB
-- [`02-功能模块/Artifact发布-渲染/runAgent.fdkxkbay.js`](../02-功能模块/Artifact发布-渲染/runAgent.fdkxkbay.js) — 6.9 KB
 - [`02-功能模块/Artifact发布-渲染/COMMENT_ANALYST_AGENT.bnd7s557.js`](../02-功能模块/Artifact发布-渲染/COMMENT_ANALYST_AGENT.bnd7s557.js) — 5.4 KB
-- [`02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js`](../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js) — 4.8 KB
-- [`02-功能模块/Artifact发布-渲染/describeHandoverCoverage.smfy0y9v.js`](../02-功能模块/Artifact发布-渲染/describeHandoverCoverage.smfy0y9v.js) — 4.2 KB
 - [`02-功能模块/Artifact发布-渲染/runtimeBlockInsertionIndex.wenjnk3h.js`](../02-功能模块/Artifact发布-渲染/runtimeBlockInsertionIndex.wenjnk3h.js) — 1.5 KB
 - [`02-功能模块/Artifact发布-渲染/loadHljsBundleJs.6n1dt2fb.js`](../02-功能模块/Artifact发布-渲染/loadHljsBundleJs.6n1dt2fb.js) — 0.8 KB
 
-## 认证 / OAuth 登录  <sub>02-功能模块 · 42 个文件 · 1.57 MB</sub>
+## 认证 / OAuth 登录  <sub>02-功能模块 · 38 个文件 · 1.56 MB</sub>
 
 - [`02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js`](../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js) — 1141.5 KB
 - [`02-功能模块/认证-OAuth登录/chunk-naqnacd3.js`](../02-功能模块/认证-OAuth登录/chunk-naqnacd3.js) — 82.0 KB
@@ -83,7 +73,6 @@
 - [`02-功能模块/认证-OAuth登录/ClaudeAuthProvider.rw5extrt.js`](../02-功能模块/认证-OAuth登录/ClaudeAuthProvider.rw5extrt.js) — 8.1 KB
 - [`02-功能模块/认证-OAuth登录/ClaudeAuthProvider.163jwjev.js`](../02-功能模块/认证-OAuth登录/ClaudeAuthProvider.163jwjev.js) — 8.0 KB
 - [`02-功能模块/认证-OAuth登录/chunk-s51acx6w.js`](../02-功能模块/认证-OAuth登录/chunk-s51acx6w.js) — 7.2 KB
-- [`02-功能模块/认证-OAuth登录/fleetHostCall.5dfayp1g.js`](../02-功能模块/认证-OAuth登录/fleetHostCall.5dfayp1g.js) — 7.1 KB
 - [`02-功能模块/认证-OAuth登录/chunk-dtt2nn79.js`](../02-功能模块/认证-OAuth登录/chunk-dtt2nn79.js) — 5.5 KB
 - [`02-功能模块/认证-OAuth登录/ApproveApiKey.vsj58w41.js`](../02-功能模块/认证-OAuth登录/ApproveApiKey.vsj58w41.js) — 5.0 KB
 - [`02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js`](../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js) — 4.9 KB
@@ -91,22 +80,19 @@
 - [`02-功能模块/认证-OAuth登录/chunk-a0axhdkv.js`](../02-功能模块/认证-OAuth登录/chunk-a0axhdkv.js) — 4.4 KB
 - [`02-功能模块/认证-OAuth登录/execRelaunch.ewkdrr0a.js`](../02-功能模块/认证-OAuth登录/execRelaunch.ewkdrr0a.js) — 2.8 KB
 - [`02-功能模块/认证-OAuth登录/chunk-3wfaaze4.js`](../02-功能模块/认证-OAuth登录/chunk-3wfaaze4.js) — 1.5 KB
-- [`02-功能模块/认证-OAuth登录/execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING.w7pcw6fs.js`](../02-功能模块/认证-OAuth登录/execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING.w7pcw6fs.js) — 1.4 KB
 - [`02-功能模块/认证-OAuth登录/chunk-82dmc5nx.js`](../02-功能模块/认证-OAuth登录/chunk-82dmc5nx.js) — 1.4 KB
 - [`02-功能模块/认证-OAuth登录/chunk-7krev9gw.js`](../02-功能模块/认证-OAuth登录/chunk-7krev9gw.js) — 1.3 KB
 - [`02-功能模块/认证-OAuth登录/chunk-1jew7nqy.js`](../02-功能模块/认证-OAuth登录/chunk-1jew7nqy.js) — 1.3 KB
 - [`02-功能模块/认证-OAuth登录/chunk-baa0f817.js`](../02-功能模块/认证-OAuth登录/chunk-baa0f817.js) — 1.1 KB
-- [`02-功能模块/认证-OAuth登录/parseRetryAfterHeader.4bshgbgh.js`](../02-功能模块/认证-OAuth登录/parseRetryAfterHeader.4bshgbgh.js) — 1.1 KB
 - [`02-功能模块/认证-OAuth登录/GetRoleCredentialsCommand.yevt2x6r.js`](../02-功能模块/认证-OAuth登录/GetRoleCredentialsCommand.yevt2x6r.js) — 1.0 KB
 - [`02-功能模块/认证-OAuth登录/chunk-6yshtkj2.js`](../02-功能模块/认证-OAuth登录/chunk-6yshtkj2.js) — 0.9 KB
-- [`02-功能模块/认证-OAuth登录/registerPreFlushTask.748m7jpz.js`](../02-功能模块/认证-OAuth登录/registerPreFlushTask.748m7jpz.js) — 0.8 KB
 - [`02-功能模块/认证-OAuth登录/chunk-v3686d7w.js`](../02-功能模块/认证-OAuth登录/chunk-v3686d7w.js) — 0.7 KB
 - [`02-功能模块/认证-OAuth登录/chunk-d9244sre.js`](../02-功能模块/认证-OAuth登录/chunk-d9244sre.js) — 0.7 KB
 - [`02-功能模块/认证-OAuth登录/chunk-s178scyy.js`](../02-功能模块/认证-OAuth登录/chunk-s178scyy.js) — 0.7 KB
 - [`02-功能模块/认证-OAuth登录/GoogleAuth.nmzn09n1.js`](../02-功能模块/认证-OAuth登录/GoogleAuth.nmzn09n1.js) — 0.6 KB
 - [`02-功能模块/认证-OAuth登录/chunk-j6921052.js`](../02-功能模块/认证-OAuth登录/chunk-j6921052.js) — 0.6 KB
 
-## MCP 客户端  <sub>02-功能模块 · 47 个文件 · 1.26 MB</sub>
+## MCP 客户端  <sub>02-功能模块 · 44 个文件 · 1.24 MB</sub>
 
 - [`02-功能模块/MCP客户端/chunk-78r8f7dw.js`](../02-功能模块/MCP客户端/chunk-78r8f7dw.js) — 458.5 KB
 - [`02-功能模块/MCP客户端/LISTEN_REOPEN_DELAYS_MS.h676bx56.js`](../02-功能模块/MCP客户端/LISTEN_REOPEN_DELAYS_MS.h676bx56.js) — 204.7 KB
@@ -127,8 +113,6 @@
 - [`02-功能模块/MCP客户端/reload-plugins-cmd.8gm0wyfb.js`](../02-功能模块/MCP客户端/reload-plugins-cmd.8gm0wyfb.js) — 11.6 KB
 - [`02-功能模块/MCP客户端/McpTaskDetailDialog.1nzpyp6s.js`](../02-功能模块/MCP客户端/McpTaskDetailDialog.1nzpyp6s.js) — 9.4 KB
 - [`02-功能模块/MCP客户端/chunk-rxp6fm7a.js`](../02-功能模块/MCP客户端/chunk-rxp6fm7a.js) — 8.9 KB
-- [`02-功能模块/MCP客户端/isMcpServerDenied.mc9p6dde.js`](../02-功能模块/MCP客户端/isMcpServerDenied.mc9p6dde.js) — 8.4 KB
-- [`02-功能模块/MCP客户端/getActiveAgentsFromList.1c2fx7n3.js`](../02-功能模块/MCP客户端/getActiveAgentsFromList.1c2fx7n3.js) — 7.3 KB
 - [`02-功能模块/MCP客户端/registerElicitationHandler.0bnxkzrw.js`](../02-功能模块/MCP客户端/registerElicitationHandler.0bnxkzrw.js) — 7.2 KB
 - [`02-功能模块/MCP客户端/registerElicitationHandler.n710jq34.js`](../02-功能模块/MCP客户端/registerElicitationHandler.n710jq34.js) — 7.1 KB
 - [`02-功能模块/MCP客户端/chunk-4xr0rjb4.js`](../02-功能模块/MCP客户端/chunk-4xr0rjb4.js) — 6.7 KB
@@ -138,7 +122,6 @@
 - [`02-功能模块/MCP客户端/McpbManifestSchema.5cjd12av.js`](../02-功能模块/MCP客户端/McpbManifestSchema.5cjd12av.js) — 5.5 KB
 - [`02-功能模块/MCP客户端/chunk-xcbagjx9.js`](../02-功能模块/MCP客户端/chunk-xcbagjx9.js) — 5.3 KB
 - [`02-功能模块/MCP客户端/chunk-kvkva4dp.js`](../02-功能模块/MCP客户端/chunk-kvkva4dp.js) — 5.3 KB
-- [`02-功能模块/MCP客户端/SandboxManager.creds2pz.js`](../02-功能模块/MCP客户端/SandboxManager.creds2pz.js) — 5.2 KB
 - [`02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js`](../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js) — 5.2 KB
 - [`02-功能模块/MCP客户端/chunk-k2gczbnj.js`](../02-功能模块/MCP客户端/chunk-k2gczbnj.js) — 4.9 KB
 - [`02-功能模块/MCP客户端/chunk-35zjqw7h.js`](../02-功能模块/MCP客户端/chunk-35zjqw7h.js) — 4.6 KB
@@ -156,7 +139,7 @@
 - [`02-功能模块/MCP客户端/chunk-tznd4407.js`](../02-功能模块/MCP客户端/chunk-tznd4407.js) — 1.1 KB
 - [`02-功能模块/MCP客户端/chunk-0mwqsv0r.js`](../02-功能模块/MCP客户端/chunk-0mwqsv0r.js) — 0.9 KB
 
-## 插件系统  <sub>02-功能模块 · 33 个文件 · 1.17 MB</sub>
+## 插件系统  <sub>02-功能模块 · 27 个文件 · 1.14 MB</sub>
 
 - [`02-功能模块/插件系统/pluginEvalInitHandler.sdxbyz28.js`](../02-功能模块/插件系统/pluginEvalInitHandler.sdxbyz28.js) — 378.4 KB
 - [`02-功能模块/插件系统/chunk-jwm9gdkd.js`](../02-功能模块/插件系统/chunk-jwm9gdkd.js) — 355.5 KB
@@ -175,24 +158,18 @@
 - [`02-功能模块/插件系统/getPluginArgumentCompletions.vbrr38z1.js`](../02-功能模块/插件系统/getPluginArgumentCompletions.vbrr38z1.js) — 10.8 KB
 - [`02-功能模块/插件系统/DevChannelsDialog.wp2a141g.js`](../02-功能模块/插件系统/DevChannelsDialog.wp2a141g.js) — 10.2 KB
 - [`02-功能模块/插件系统/clearPluginCache.zqb4jr60.js`](../02-功能模块/插件系统/clearPluginCache.zqb4jr60.js) — 8.2 KB
-- [`02-功能模块/插件系统/getPluginInventory.fnes377h.js`](../02-功能模块/插件系统/getPluginInventory.fnes377h.js) — 6.9 KB
-- [`02-功能模块/插件系统/MAX_ECHO_MANIFEST_ENTRIES.pqmwj915.js`](../02-功能模块/插件系统/MAX_ECHO_MANIFEST_ENTRIES.pqmwj915.js) — 6.9 KB
 - [`02-功能模块/插件系统/chunk-33bdfgmx.js`](../02-功能模块/插件系统/chunk-33bdfgmx.js) — 5.4 KB
-- [`02-功能模块/插件系统/isArtifactToolEnabled.n685fs4m.js`](../02-功能模块/插件系统/isArtifactToolEnabled.n685fs4m.js) — 5.4 KB
 - [`02-功能模块/插件系统/chunk-4k4dssd9.js`](../02-功能模块/插件系统/chunk-4k4dssd9.js) — 4.8 KB
 - [`02-功能模块/插件系统/chunk-bh1q9esj.js`](../02-功能模块/插件系统/chunk-bh1q9esj.js) — 4.3 KB
 - [`02-功能模块/插件系统/install-slack-app-cmd.yhqhenxv.js`](../02-功能模块/插件系统/install-slack-app-cmd.yhqhenxv.js) — 3.4 KB
-- [`02-功能模块/插件系统/getPluginEditableScopes.ccxx4mv7.js`](../02-功能模块/插件系统/getPluginEditableScopes.ccxx4mv7.js) — 3.3 KB
 - [`02-功能模块/插件系统/chunk-5ztq0v89.js`](../02-功能模块/插件系统/chunk-5ztq0v89.js) — 3.2 KB
 - [`02-功能模块/插件系统/COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE.63vb87ah.js`](../02-功能模块/插件系统/COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE.63vb87ah.js) — 3.1 KB
 - [`02-功能模块/插件系统/chunk-nejpd7jw.js`](../02-功能模块/插件系统/chunk-nejpd7jw.js) — 2.9 KB
 - [`02-功能模块/插件系统/chunk-gzfe39h3.js`](../02-功能模块/插件系统/chunk-gzfe39h3.js) — 2.3 KB
-- [`02-功能模块/插件系统/formatTokenEstimate.t191sxdq.js`](../02-功能模块/插件系统/formatTokenEstimate.t191sxdq.js) — 1.3 KB
 - [`02-功能模块/插件系统/chunk-rbjz1q03.js`](../02-功能模块/插件系统/chunk-rbjz1q03.js) — 1.2 KB
-- [`02-功能模块/插件系统/makeLocalOwnPublishesStore.x78ee7nz.js`](../02-功能模块/插件系统/makeLocalOwnPublishesStore.x78ee7nz.js) — 1.0 KB
 - [`02-功能模块/插件系统/chunk-55xj4ev5.js`](../02-功能模块/插件系统/chunk-55xj4ev5.js) — 0.7 KB
 
-## Bridge / Remote Control  <sub>02-功能模块 · 57 个文件 · 1.09 MB</sub>
+## Bridge / Remote Control  <sub>02-功能模块 · 47 个文件 · 1.06 MB</sub>
 
 - [`02-功能模块/Bridge-RemoteControl/runBridgeHeadless.n35pw6j7.js`](../02-功能模块/Bridge-RemoteControl/runBridgeHeadless.n35pw6j7.js) — 141.7 KB
 - [`02-功能模块/Bridge-RemoteControl/createRemoteToolHostsRuntime.3xk8h04p.js`](../02-功能模块/Bridge-RemoteControl/createRemoteToolHostsRuntime.3xk8h04p.js) — 114.8 KB
@@ -227,32 +204,22 @@
 - [`02-功能模块/Bridge-RemoteControl/chunk-x4nk7xx6.js`](../02-功能模块/Bridge-RemoteControl/chunk-x4nk7xx6.js) — 5.0 KB
 - [`02-功能模块/Bridge-RemoteControl/withCollectTimeout.71gz2pr7.js`](../02-功能模块/Bridge-RemoteControl/withCollectTimeout.71gz2pr7.js) — 5.0 KB
 - [`02-功能模块/Bridge-RemoteControl/chunk-k2f69v5t.js`](../02-功能模块/Bridge-RemoteControl/chunk-k2f69v5t.js) — 5.0 KB
-- [`02-功能模块/Bridge-RemoteControl/isCcrV2BridgeCreateEnabled.dv2d0ycr.js`](../02-功能模块/Bridge-RemoteControl/isCcrV2BridgeCreateEnabled.dv2d0ycr.js) — 4.9 KB
 - [`02-功能模块/Bridge-RemoteControl/createDeviceMcpServer.vdaqzanp.js`](../02-功能模块/Bridge-RemoteControl/createDeviceMcpServer.vdaqzanp.js) — 4.7 KB
 - [`02-功能模块/Bridge-RemoteControl/recordCreatedPrToCcr.14tfx6yq.js`](../02-功能模块/Bridge-RemoteControl/recordCreatedPrToCcr.14tfx6yq.js) — 4.7 KB
 - [`02-功能模块/Bridge-RemoteControl/chunk-h5053szy.js`](../02-功能模块/Bridge-RemoteControl/chunk-h5053szy.js) — 4.5 KB
 - [`02-功能模块/Bridge-RemoteControl/chunk-2mm1aqzx.js`](../02-功能模块/Bridge-RemoteControl/chunk-2mm1aqzx.js) — 4.2 KB
-- [`02-功能模块/Bridge-RemoteControl/isRemoteToolServingMuted.874n5d9m.js`](../02-功能模块/Bridge-RemoteControl/isRemoteToolServingMuted.874n5d9m.js) — 4.1 KB
 - [`02-功能模块/Bridge-RemoteControl/chunk-b9tbevd9.js`](../02-功能模块/Bridge-RemoteControl/chunk-b9tbevd9.js) — 4.0 KB
-- [`02-功能模块/Bridge-RemoteControl/getTrustedDeviceToken.xdsmf5rh.js`](../02-功能模块/Bridge-RemoteControl/getTrustedDeviceToken.xdsmf5rh.js) — 3.8 KB
 - [`02-功能模块/Bridge-RemoteControl/chunk-z5v9hvat.js`](../02-功能模块/Bridge-RemoteControl/chunk-z5v9hvat.js) — 3.6 KB
 - [`02-功能模块/Bridge-RemoteControl/SESSION_TRANSPORT_LIMITS.04hfp4jb.js`](../02-功能模块/Bridge-RemoteControl/SESSION_TRANSPORT_LIMITS.04hfp4jb.js) — 3.3 KB
 - [`02-功能模块/Bridge-RemoteControl/chunk-x2kwwph8.js`](../02-功能模块/Bridge-RemoteControl/chunk-x2kwwph8.js) — 3.2 KB
 - [`02-功能模块/Bridge-RemoteControl/initSinks.6cfazjmq.js`](../02-功能模块/Bridge-RemoteControl/initSinks.6cfazjmq.js) — 3.1 KB
-- [`02-功能模块/Bridge-RemoteControl/snapshotGitEvidenceForBridge.6msfz0pr.js`](../02-功能模块/Bridge-RemoteControl/snapshotGitEvidenceForBridge.6msfz0pr.js) — 3.1 KB
-- [`02-功能模块/Bridge-RemoteControl/getBridgeAccessTokenAsync.1g5s5zqm.js`](../02-功能模块/Bridge-RemoteControl/getBridgeAccessTokenAsync.1g5s5zqm.js) — 3.1 KB
 - [`02-功能模块/Bridge-RemoteControl/chunk-2c3z3wjk.js`](../02-功能模块/Bridge-RemoteControl/chunk-2c3z3wjk.js) — 2.8 KB
 - [`02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js`](../02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js) — 2.8 KB
-- [`02-功能模块/Bridge-RemoteControl/getCachedBranchForRepo.wjm2n7vs.js`](../02-功能模块/Bridge-RemoteControl/getCachedBranchForRepo.wjm2n7vs.js) — 2.6 KB
-- [`02-功能模块/Bridge-RemoteControl/hasWorktreeCreateHook.7g64q2hg.js`](../02-功能模块/Bridge-RemoteControl/hasWorktreeCreateHook.7g64q2hg.js) — 2.2 KB
 - [`02-功能模块/Bridge-RemoteControl/chunk-ct52ffwb.js`](../02-功能模块/Bridge-RemoteControl/chunk-ct52ffwb.js) — 1.8 KB
-- [`02-功能模块/Bridge-RemoteControl/exitAfterAnalyticsFlush.x9fzwcgs.js`](../02-功能模块/Bridge-RemoteControl/exitAfterAnalyticsFlush.x9fzwcgs.js) — 1.4 KB
-- [`02-功能模块/Bridge-RemoteControl/getOauthConfig.94gbqg2e.js`](../02-功能模块/Bridge-RemoteControl/getOauthConfig.94gbqg2e.js) — 1.3 KB
 - [`02-功能模块/Bridge-RemoteControl/NON_REPL_SUBCOMMANDS.ce1ven8w.js`](../02-功能模块/Bridge-RemoteControl/NON_REPL_SUBCOMMANDS.ce1ven8w.js) — 1.2 KB
-- [`02-功能模块/Bridge-RemoteControl/reportGitSessionContext.93n40fxp.js`](../02-功能模块/Bridge-RemoteControl/reportGitSessionContext.93n40fxp.js) — 1.0 KB
 - [`02-功能模块/Bridge-RemoteControl/chunk-eg5a0eq0.js`](../02-功能模块/Bridge-RemoteControl/chunk-eg5a0eq0.js) — 0.8 KB
 
-## 后台任务 / Shell 管理  <sub>02-功能模块 · 27 个文件 · 1.04 MB</sub>
+## 后台任务 / Shell 管理  <sub>02-功能模块 · 24 个文件 · 1.03 MB</sub>
 
 - [`02-功能模块/后台任务-Shell管理/chunk-xmxjyg29.js`](../02-功能模块/后台任务-Shell管理/chunk-xmxjyg29.js) — 161.8 KB
 - [`02-功能模块/后台任务-Shell管理/daemonMain.sesbvnxj.js`](../02-功能模块/后台任务-Shell管理/daemonMain.sesbvnxj.js) — 114.2 KB
@@ -274,21 +241,14 @@
 - [`02-功能模块/后台任务-Shell管理/probeDaemonJob.9d48dc1r.js`](../02-功能模块/后台任务-Shell管理/probeDaemonJob.9d48dc1r.js) — 8.5 KB
 - [`02-功能模块/后台任务-Shell管理/getBgDaemonStatus.fa4akgbv.js`](../02-功能模块/后台任务-Shell管理/getBgDaemonStatus.fa4akgbv.js) — 8.4 KB
 - [`02-功能模块/后台任务-Shell管理/spawnBgSession.z23xfr2c.js`](../02-功能模块/后台任务-Shell管理/spawnBgSession.z23xfr2c.js) — 8.4 KB
-- [`02-功能模块/后台任务-Shell管理/clearStartupDialogBlocked.1zrxea5b.js`](../02-功能模块/后台任务-Shell管理/clearStartupDialogBlocked.1zrxea5b.js) — 7.3 KB
 - [`02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js`](../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js) — 6.5 KB
 - [`02-功能模块/后台任务-Shell管理/chunk-531ast3t.js`](../02-功能模块/后台任务-Shell管理/chunk-531ast3t.js) — 5.4 KB
 - [`02-功能模块/后台任务-Shell管理/chunk-yndsh193.js`](../02-功能模块/后台任务-Shell管理/chunk-yndsh193.js) — 5.1 KB
 - [`02-功能模块/后台任务-Shell管理/chunk-nhnqmzyt.js`](../02-功能模块/后台任务-Shell管理/chunk-nhnqmzyt.js) — 5.0 KB
-- [`02-功能模块/后台任务-Shell管理/getJobDir.q5d14g0s.js`](../02-功能模块/后台任务-Shell管理/getJobDir.q5d14g0s.js) — 4.9 KB
-- [`02-功能模块/后台任务-Shell管理/MAX_PERSISTED_OUTPUT_BYTES.keeejwek.js`](../02-功能模块/后台任务-Shell管理/MAX_PERSISTED_OUTPUT_BYTES.keeejwek.js) — 4.7 KB
 
-## 共享小工具 · 未细化  <sub>01-核心基础设施 · 554 个文件 · 0.97 MB</sub>
+## 共享小工具 · 未细化  <sub>01-核心基础设施 · 466 个文件 · 0.77 MB</sub>
 
-- [`01-核心基础设施/共享小工具-未细化/runSteps.9skwgxk6.js`](../01-核心基础设施/共享小工具-未细化/runSteps.9skwgxk6.js) — 8.3 KB
-- [`01-核心基础设施/共享小工具-未细化/warmShareEntry.h77r8dj4.js`](../01-核心基础设施/共享小工具-未细化/warmShareEntry.h77r8dj4.js) — 4.0 KB
-- [`01-核心基础设施/共享小工具-未细化/updateSessionMessagingSocketPath.af9ag5c5.js`](../01-核心基础设施/共享小工具-未细化/updateSessionMessagingSocketPath.af9ag5c5.js) — 4.0 KB
 - [`01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js`](../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js) — 4.0 KB
-- [`01-核心基础设施/共享小工具-未细化/getBundledSkillExtractDir.kzrtw6mn.js`](../01-核心基础设施/共享小工具-未细化/getBundledSkillExtractDir.kzrtw6mn.js) — 4.0 KB
 - [`01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js`](../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js) — 4.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js`](../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js) — 3.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js`](../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js) — 3.9 KB
@@ -297,60 +257,39 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-6t3vmc74.js`](../01-核心基础设施/共享小工具-未细化/chunk-6t3vmc74.js) — 3.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js`](../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js) — 3.9 KB
 - [`01-核心基础设施/共享小工具-未细化/resolveAndPrepend.v0baz11a.js`](../01-核心基础设施/共享小工具-未细化/resolveAndPrepend.v0baz11a.js) — 3.9 KB
-- [`01-核心基础设施/共享小工具-未细化/probeArtifactHostEgress.jhg0ez0c.js`](../01-核心基础设施/共享小工具-未细化/probeArtifactHostEgress.jhg0ez0c.js) — 3.9 KB
 - [`01-核心基础设施/共享小工具-未细化/startDeviceRegistration.3cqb8ttd.js`](../01-核心基础设施/共享小工具-未细化/startDeviceRegistration.3cqb8ttd.js) — 3.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js`](../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js) — 3.9 KB
-- [`01-核心基础设施/共享小工具-未细化/prepareChromeFileUploadInput.m8268v86.js`](../01-核心基础设施/共享小工具-未细化/prepareChromeFileUploadInput.m8268v86.js) — 3.8 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-nw3qvjhe.js`](../01-核心基础设施/共享小工具-未细化/chunk-nw3qvjhe.js) — 3.8 KB
 - [`01-核心基础设施/共享小工具-未细化/renderWorkflowAuthoringSkillBody.2a6g0n2c.js`](../01-核心基础设施/共享小工具-未细化/renderWorkflowAuthoringSkillBody.2a6g0n2c.js) — 3.8 KB
-- [`01-核心基础设施/共享小工具-未细化/startMemoryWatcher.vp74yq2e.js`](../01-核心基础设施/共享小工具-未细化/startMemoryWatcher.vp74yq2e.js) — 3.8 KB
 - [`01-核心基础设施/共享小工具-未细化/DEVICE_REGISTRY_KID_PREFIX.ek67yxn9.js`](../01-核心基础设施/共享小工具-未细化/DEVICE_REGISTRY_KID_PREFIX.ek67yxn9.js) — 3.8 KB
 - [`01-核心基础设施/共享小工具-未细化/runBgSpare.jwa5ndmd.js`](../01-核心基础设施/共享小工具-未细化/runBgSpare.jwa5ndmd.js) — 3.8 KB
 - [`01-核心基础设施/共享小工具-未细化/effort-cmd.m60n47qj.js`](../01-核心基础设施/共享小工具-未细化/effort-cmd.m60n47qj.js) — 3.8 KB
-- [`01-核心基础设施/共享小工具-未细化/CCR_BYOC_BETA.422dq0ss.js`](../01-核心基础设施/共享小工具-未细化/CCR_BYOC_BETA.422dq0ss.js) — 3.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js`](../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js) — 3.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-6kad94y1.js`](../01-核心基础设施/共享小工具-未细化/chunk-6kad94y1.js) — 3.6 KB
-- [`01-核心基础设施/共享小工具-未细化/isClaudeInChromeAllowed.dv56r851.js`](../01-核心基础设施/共享小工具-未细化/isClaudeInChromeAllowed.dv56r851.js) — 3.6 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-mybtnk9f.js`](../01-核心基础设施/共享小工具-未细化/chunk-mybtnk9f.js) — 3.6 KB
-- [`01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js`](../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js) — 3.6 KB
 - [`01-核心基础设施/共享小工具-未细化/advisor-cmd.xmqbkz02.js`](../01-核心基础设施/共享小工具-未细化/advisor-cmd.xmqbkz02.js) — 3.6 KB
-- [`01-核心基础设施/共享小工具-未细化/AUTO_MEM_WRITE_ALLOW_REASON.tjdny6p5.js`](../01-核心基础设施/共享小工具-未细化/AUTO_MEM_WRITE_ALLOW_REASON.tjdny6p5.js) — 3.6 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-ga0qgvpz.js`](../01-核心基础设施/共享小工具-未细化/chunk-ga0qgvpz.js) — 3.6 KB
-- [`01-核心基础设施/共享小工具-未细化/getOrganizationUUID.51w9savd.js`](../01-核心基础设施/共享小工具-未细化/getOrganizationUUID.51w9savd.js) — 3.6 KB
 - [`01-核心基础设施/共享小工具-未细化/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js`](../01-核心基础设施/共享小工具-未细化/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js) — 3.6 KB
 - [`01-核心基础设施/共享小工具-未细化/FleetViewScreen.w73yzmz1.js`](../01-核心基础设施/共享小工具-未细化/FleetViewScreen.w73yzmz1.js) — 3.6 KB
 - [`01-核心基础设施/共享小工具-未细化/getAutoModeDescription.z80978je.js`](../01-核心基础设施/共享小工具-未细化/getAutoModeDescription.z80978je.js) — 3.6 KB
-- [`01-核心基础设施/共享小工具-未细化/refreshBootstrapData.0091ys3y.js`](../01-核心基础设施/共享小工具-未细化/refreshBootstrapData.0091ys3y.js) — 3.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js`](../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js) — 3.5 KB
-- [`01-核心基础设施/共享小工具-未细化/CRON_DELETE_DESCRIPTION.q1v9k9bg.js`](../01-核心基础设施/共享小工具-未细化/CRON_DELETE_DESCRIPTION.q1v9k9bg.js) — 3.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-dvytaktr.js`](../01-核心基础设施/共享小工具-未细化/chunk-dvytaktr.js) — 3.5 KB
-- [`01-核心基础设施/共享小工具-未细化/isDeferredToolInConversation.mpxybvjg.js`](../01-核心基础设施/共享小工具-未细化/isDeferredToolInConversation.mpxybvjg.js) — 3.5 KB
-- [`01-核心基础设施/共享小工具-未细化/getOrgMemoryServedIdentity.1k01dqaf.js`](../01-核心基础设施/共享小工具-未细化/getOrgMemoryServedIdentity.1k01dqaf.js) — 3.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js`](../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js) — 3.5 KB
-- [`01-核心基础设施/共享小工具-未细化/SYNCED_FILE_ROOT.j08b0ggt.js`](../01-核心基础设施/共享小工具-未细化/SYNCED_FILE_ROOT.j08b0ggt.js) — 3.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js`](../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js) — 3.5 KB
 - [`01-核心基础设施/共享小工具-未细化/buildSubagentExtras.gbrpz8cj.js`](../01-核心基础设施/共享小工具-未细化/buildSubagentExtras.gbrpz8cj.js) — 3.4 KB
-- [`01-核心基础设施/共享小工具-未细化/DIFF_SIDEBAR_MIN_COLS.5db5g0jw.js`](../01-核心基础设施/共享小工具-未细化/DIFF_SIDEBAR_MIN_COLS.5db5g0jw.js) — 3.4 KB
-- [`01-核心基础设施/共享小工具-未细化/JSONRPCMessageSchema.rez8j2m7.js`](../01-核心基础设施/共享小工具-未细化/JSONRPCMessageSchema.rez8j2m7.js) — 3.4 KB
 - [`01-核心基础设施/共享小工具-未细化/usage-credits-cmd.ygye20n9.js`](../01-核心基础设施/共享小工具-未细化/usage-credits-cmd.ygye20n9.js) — 3.4 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-yjnahe9e.js`](../01-核心基础设施/共享小工具-未细化/chunk-yjnahe9e.js) — 3.4 KB
 - [`01-核心基础设施/共享小工具-未细化/hasCloudPeerAccess.debnsz8e.js`](../01-核心基础设施/共享小工具-未细化/hasCloudPeerAccess.debnsz8e.js) — 3.4 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js`](../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js) — 3.4 KB
-- [`01-核心基础设施/共享小工具-未细化/getSessionNamingState.twsxkr9c.js`](../01-核心基础设施/共享小工具-未细化/getSessionNamingState.twsxkr9c.js) — 3.4 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-mb9matb3.js`](../01-核心基础设施/共享小工具-未细化/chunk-mb9matb3.js) — 3.4 KB
-- [`01-核心基础设施/共享小工具-未细化/getOrgMemoryPickerData.p4q92bv4.js`](../01-核心基础设施/共享小工具-未细化/getOrgMemoryPickerData.p4q92bv4.js) — 3.4 KB
 - [`01-核心基础设施/共享小工具-未细化/CHANNEL_PERMISSION_METHOD.0t5jksc8.js`](../01-核心基础设施/共享小工具-未细化/CHANNEL_PERMISSION_METHOD.0t5jksc8.js) — 3.4 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-6y25h56s.js`](../01-核心基础设施/共享小工具-未细化/chunk-6y25h56s.js) — 3.4 KB
-- [`01-核心基础设施/共享小工具-未细化/END_CONVERSATION_FORK_REFLECTION_PROMPT.4h5sjdsd.js`](../01-核心基础设施/共享小工具-未细化/END_CONVERSATION_FORK_REFLECTION_PROMPT.4h5sjdsd.js) — 3.3 KB
 - [`01-核心基础设施/共享小工具-未细化/WORKER_KINDS.hp7zdndz.js`](../01-核心基础设施/共享小工具-未细化/WORKER_KINDS.hp7zdndz.js) — 3.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js`](../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js) — 3.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js`](../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js) — 3.3 KB
-- [`01-核心基础设施/共享小工具-未细化/isSettingsToCloudEnabled.hz5nctxq.js`](../01-核心基础设施/共享小工具-未细化/isSettingsToCloudEnabled.hz5nctxq.js) — 3.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js`](../01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js) — 3.3 KB
-- [`01-核心基础设施/共享小工具-未细化/FleetNudgeStore.heek21gw.js`](../01-核心基础设施/共享小工具-未细化/FleetNudgeStore.heek21gw.js) — 3.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-2skajgkt.js`](../01-核心基础设施/共享小工具-未细化/chunk-2skajgkt.js) — 3.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-kax7bdqv.js`](../01-核心基础设施/共享小工具-未细化/chunk-kax7bdqv.js) — 3.3 KB
-- [`01-核心基础设施/共享小工具-未细化/filterToolsByDenyRules.1r7g5aqp.js`](../01-核心基础设施/共享小工具-未细化/filterToolsByDenyRules.1r7g5aqp.js) — 3.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js`](../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js) — 3.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js`](../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js) — 3.2 KB
 - [`01-核心基础设施/共享小工具-未细化/heapdump-cmd.a7arzrr3.js`](../01-核心基础设施/共享小工具-未细化/heapdump-cmd.a7arzrr3.js) — 3.2 KB
@@ -359,11 +298,9 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js`](../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js) — 3.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js`](../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js) — 3.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js`](../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js) — 3.2 KB
-- [`01-核心基础设施/共享小工具-未细化/sinksFor.zc38gf61.js`](../01-核心基础设施/共享小工具-未细化/sinksFor.zc38gf61.js) — 3.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-5pc36v8n.js`](../01-核心基础设施/共享小工具-未细化/chunk-5pc36v8n.js) — 3.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-xkt71qzj.js`](../01-核心基础设施/共享小工具-未细化/chunk-xkt71qzj.js) — 3.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js`](../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js) — 3.2 KB
-- [`01-核心基础设施/共享小工具-未细化/loadedIndexExclusions.dhdc4t68.js`](../01-核心基础设施/共享小工具-未细化/loadedIndexExclusions.dhdc4t68.js) — 3.2 KB
 - [`01-核心基础设施/共享小工具-未细化/design-consent-cmd.sbhmj7r0.js`](../01-核心基础设施/共享小工具-未细化/design-consent-cmd.sbhmj7r0.js) — 3.2 KB
 - [`01-核心基础设施/共享小工具-未细化/design-revoke-cmd.dwr6spdb.js`](../01-核心基础设施/共享小工具-未细化/design-revoke-cmd.dwr6spdb.js) — 3.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js`](../01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js) — 3.2 KB
@@ -371,34 +308,17 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js`](../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js) — 3.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js`](../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js) — 3.1 KB
 - [`01-核心基础设施/共享小工具-未细化/design-cmd.3cmbdjbx.js`](../01-核心基础设施/共享小工具-未细化/design-cmd.3cmbdjbx.js) — 3.1 KB
-- [`01-核心基础设施/共享小工具-未细化/createBridgeSession.92e0rxc9.js`](../01-核心基础设施/共享小工具-未细化/createBridgeSession.92e0rxc9.js) — 3.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js`](../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js) — 3.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-sn7k2dvd.js`](../01-核心基础设施/共享小工具-未细化/chunk-sn7k2dvd.js) — 3.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-4q59mpqf.js`](../01-核心基础设施/共享小工具-未细化/chunk-4q59mpqf.js) — 3.1 KB
-- [`01-核心基础设施/共享小工具-未细化/errorTrackingClient.dfgvvh6d.js`](../01-核心基础设施/共享小工具-未细化/errorTrackingClient.dfgvvh6d.js) — 3.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js`](../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js) — 3.1 KB
 - [`01-核心基础设施/共享小工具-未细化/initializeErrorLogSink.64dfk6kr.js`](../01-核心基础设施/共享小工具-未细化/initializeErrorLogSink.64dfk6kr.js) — 3.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-kdfkgcfn.js`](../01-核心基础设施/共享小工具-未细化/chunk-kdfkgcfn.js) — 3.1 KB
-- [`01-核心基础设施/共享小工具-未细化/seedEnvDefaultForUserPin.wv108xfy.js`](../01-核心基础设施/共享小工具-未细化/seedEnvDefaultForUserPin.wv108xfy.js) — 3.1 KB
-- [`01-核心基础设施/共享小工具-未细化/getProTrialDurationDays.0pfj6kv3.js`](../01-核心基础设施/共享小工具-未细化/getProTrialDurationDays.0pfj6kv3.js) — 3.1 KB
-- [`01-核心基础设施/共享小工具-未细化/getBriefEnforceText.y2btb2kt.js`](../01-核心基础设施/共享小工具-未细化/getBriefEnforceText.y2btb2kt.js) — 3.1 KB
-- [`01-核心基础设施/共享小工具-未细化/CROSS_SESSION_MESSAGING_DISABLED_MESSAGE.rx6da86s.js`](../01-核心基础设施/共享小工具-未细化/CROSS_SESSION_MESSAGING_DISABLED_MESSAGE.rx6da86s.js) — 3.0 KB
-- [`01-核心基础设施/共享小工具-未细化/TIER_LABELS.mfc616v6.js`](../01-核心基础设施/共享小工具-未细化/TIER_LABELS.mfc616v6.js) — 3.0 KB
-- [`01-核心基础设施/共享小工具-未细化/getChannelAllowlist.6p56jsq7.js`](../01-核心基础设施/共享小工具-未细化/getChannelAllowlist.6p56jsq7.js) — 3.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js`](../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js) — 3.0 KB
-- [`01-核心基础设施/共享小工具-未细化/getProjectContextBlock.84tx6v6z.js`](../01-核心基础设施/共享小工具-未细化/getProjectContextBlock.84tx6v6z.js) — 3.0 KB
-- [`01-核心基础设施/共享小工具-未细化/isWebSetupEnabled.yena1gz1.js`](../01-核心基础设施/共享小工具-未细化/isWebSetupEnabled.yena1gz1.js) — 3.0 KB
 - [`01-核心基础设施/共享小工具-未细化/USER_INTENT_SETTING_KEYS.n7htbc2y.js`](../01-核心基础设施/共享小工具-未细化/USER_INTENT_SETTING_KEYS.n7htbc2y.js) — 3.0 KB
 - [`01-核心基础设施/共享小工具-未细化/DATADOG_CLIENT_TOKEN.kkspbfqc.js`](../01-核心基础设施/共享小工具-未细化/DATADOG_CLIENT_TOKEN.kkspbfqc.js) — 3.0 KB
-- [`01-核心基础设施/共享小工具-未细化/restoreGoalFromTranscript.z2ke48tn.js`](../01-核心基础设施/共享小工具-未细化/restoreGoalFromTranscript.z2ke48tn.js) — 3.0 KB
-- [`01-核心基础设施/共享小工具-未细化/isMultiStoreSyncAvailable.mskcay01.js`](../01-核心基础设施/共享小工具-未细化/isMultiStoreSyncAvailable.mskcay01.js) — 3.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js`](../01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js) — 3.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js`](../01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js) — 3.0 KB
-- [`01-核心基础设施/共享小工具-未细化/getPlanFilePath.t2ddc0h6.js`](../01-核心基础设施/共享小工具-未细化/getPlanFilePath.t2ddc0h6.js) — 3.0 KB
-- [`01-核心基础设施/共享小工具-未细化/POWERUP_DISCOVERY_COPY.tbt4v206.js`](../01-核心基础设施/共享小工具-未细化/POWERUP_DISCOVERY_COPY.tbt4v206.js) — 3.0 KB
-- [`01-核心基础设施/共享小工具-未细化/renameRecordingForSession.h68qfvaj.js`](../01-核心基础设施/共享小工具-未细化/renameRecordingForSession.h68qfvaj.js) — 3.0 KB
-- [`01-核心基础设施/共享小工具-未细化/getCronJitterConfig.156pkdk6.js`](../01-核心基础设施/共享小工具-未细化/getCronJitterConfig.156pkdk6.js) — 2.9 KB
-- [`01-核心基础设施/共享小工具-未细化/isPewterOwlTool.d173ja7g.js`](../01-核心基础设施/共享小工具-未细化/isPewterOwlTool.d173ja7g.js) — 2.9 KB
 - [`01-核心基础设施/共享小工具-未细化/pinStorageV5.xt5bqpq9.js`](../01-核心基础设施/共享小工具-未细化/pinStorageV5.xt5bqpq9.js) — 2.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-f7n720sn.js`](../01-核心基础设施/共享小工具-未细化/chunk-f7n720sn.js) — 2.9 KB
 - [`01-核心基础设施/共享小工具-未细化/initializeAnalyticsSink.3hb68836.js`](../01-核心基础设施/共享小工具-未细化/initializeAnalyticsSink.3hb68836.js) — 2.9 KB
@@ -448,8 +368,6 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js`](../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js) — 2.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js`](../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js) — 2.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js`](../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js) — 2.3 KB
-- [`01-核心基础设施/共享小工具-未细化/isSameProcessAsync.p5qpey0c.js`](../01-核心基础设施/共享小工具-未细化/isSameProcessAsync.p5qpey0c.js) — 2.3 KB
-- [`01-核心基础设施/共享小工具-未细化/BOOT_ORG_MISMATCH_CODE.je808sx3.js`](../01-核心基础设施/共享小工具-未细化/BOOT_ORG_MISMATCH_CODE.je808sx3.js) — 2.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js`](../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js) — 2.2 KB
 - [`01-核心基础设施/共享小工具-未细化/MCP_TASK.5jmzdjnv.js`](../01-核心基础设施/共享小工具-未细化/MCP_TASK.5jmzdjnv.js) — 2.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js`](../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js) — 2.2 KB
@@ -469,7 +387,6 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-md00q5qh.js`](../01-核心基础设施/共享小工具-未细化/chunk-md00q5qh.js) — 2.1 KB
 - [`01-核心基础设施/共享小工具-未细化/getCachedIdpIdToken.whq65fek.js`](../01-核心基础设施/共享小工具-未细化/getCachedIdpIdToken.whq65fek.js) — 2.1 KB
 - [`01-核心基础设施/共享小工具-未细化/getCachedIdpIdToken.x86eq6fe.js`](../01-核心基础设施/共享小工具-未细化/getCachedIdpIdToken.x86eq6fe.js) — 2.1 KB
-- [`01-核心基础设施/共享小工具-未细化/getAWSProxyRequestHandler.e8dr34fc.js`](../01-核心基础设施/共享小工具-未细化/getAWSProxyRequestHandler.e8dr34fc.js) — 2.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js`](../01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js) — 2.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-hxq0hkxe.js`](../01-核心基础设施/共享小工具-未细化/chunk-hxq0hkxe.js) — 2.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-85wxphev.js`](../01-核心基础设施/共享小工具-未细化/chunk-85wxphev.js) — 2.0 KB
@@ -489,9 +406,7 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-kk3mqttk.js`](../01-核心基础设施/共享小工具-未细化/chunk-kk3mqttk.js) — 1.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js`](../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js) — 1.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js`](../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js) — 1.9 KB
-- [`01-核心基础设施/共享小工具-未细化/CLAUDE_IN_CHROME_MCP_SERVER_NAME.prrc0g26.js`](../01-核心基础设施/共享小工具-未细化/CLAUDE_IN_CHROME_MCP_SERVER_NAME.prrc0g26.js) — 1.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js`](../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js) — 1.9 KB
-- [`01-核心基础设施/共享小工具-未细化/createCronScheduler.j2xgavz8.js`](../01-核心基础设施/共享小工具-未细化/createCronScheduler.j2xgavz8.js) — 1.8 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js`](../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js) — 1.8 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-kk7p3hsm.js`](../01-核心基础设施/共享小工具-未细化/chunk-kk7p3hsm.js) — 1.8 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js`](../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js) — 1.8 KB
@@ -507,7 +422,6 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-g36jzdvm.js`](../01-核心基础设施/共享小工具-未细化/chunk-g36jzdvm.js) — 1.8 KB
 - [`01-核心基础设施/共享小工具-未细化/readThemesFromPathAsync.8qkrh8yt.js`](../01-核心基础设施/共享小工具-未细化/readThemesFromPathAsync.8qkrh8yt.js) — 1.8 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-0dk7tzf3.js`](../01-核心基础设施/共享小工具-未细化/chunk-0dk7tzf3.js) — 1.8 KB
-- [`01-核心基础设施/共享小工具-未细化/isFirstPartyProvider.dged0wfq.js`](../01-核心基础设施/共享小工具-未细化/isFirstPartyProvider.dged0wfq.js) — 1.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-pf84p45h.js`](../01-核心基础设施/共享小工具-未细化/chunk-pf84p45h.js) — 1.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-5ss8pwgq.js`](../01-核心基础设施/共享小工具-未细化/chunk-5ss8pwgq.js) — 1.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-dhg3raay.js`](../01-核心基础设施/共享小工具-未细化/chunk-dhg3raay.js) — 1.7 KB
@@ -534,28 +448,22 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-29sq3mjv.js`](../01-核心基础设施/共享小工具-未细化/chunk-29sq3mjv.js) — 1.6 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js`](../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js`](../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js) — 1.5 KB
-- [`01-核心基础设施/共享小工具-未细化/getWIFTokenCache.zrnj7q4r.js`](../01-核心基础设施/共享小工具-未细化/getWIFTokenCache.zrnj7q4r.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js`](../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js`](../01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-ttwbb0b4.js`](../01-核心基础设施/共享小工具-未细化/chunk-ttwbb0b4.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-1n8w0wz0.js`](../01-核心基础设施/共享小工具-未细化/chunk-1n8w0wz0.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-t4xxq70d.js`](../01-核心基础设施/共享小工具-未细化/chunk-t4xxq70d.js) — 1.5 KB
-- [`01-核心基础设施/共享小工具-未细化/getTeleportCacheState.g3em9jqw.js`](../01-核心基础设施/共享小工具-未细化/getTeleportCacheState.g3em9jqw.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js`](../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-9g3yj4km.js`](../01-核心基础设施/共享小工具-未细化/chunk-9g3yj4km.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js`](../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js`](../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-pcsvt5cv.js`](../01-核心基础设施/共享小工具-未细化/chunk-pcsvt5cv.js) — 1.5 KB
-- [`01-核心基础设施/共享小工具-未细化/buildVertexGoogleAuth.xn8dzdym.js`](../01-核心基础设施/共享小工具-未细化/buildVertexGoogleAuth.xn8dzdym.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js`](../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js`](../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js`](../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js`](../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js) — 1.5 KB
-- [`01-核心基础设施/共享小工具-未细化/getCodeSession.7vm8hzrd.js`](../01-核心基础设施/共享小工具-未细化/getCodeSession.7vm8hzrd.js) — 1.5 KB
-- [`01-核心基础设施/共享小工具-未细化/readRoster.k30hcsp0.js`](../01-核心基础设施/共享小工具-未细化/readRoster.k30hcsp0.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/createCliExecutor.y32gpf8a.js`](../01-核心基础设施/共享小工具-未细化/createCliExecutor.y32gpf8a.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-6rswwsrr.js`](../01-核心基础设施/共享小工具-未细化/chunk-6rswwsrr.js) — 1.5 KB
-- [`01-核心基础设施/共享小工具-未细化/performHeapDump.eg4vwgzd.js`](../01-核心基础设施/共享小工具-未细化/performHeapDump.eg4vwgzd.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-jq60dfkn.js`](../01-核心基础设施/共享小工具-未细化/chunk-jq60dfkn.js) — 1.5 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js`](../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js) — 1.4 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-0mrh424x.js`](../01-核心基础设施/共享小工具-未细化/chunk-0mrh424x.js) — 1.4 KB
@@ -563,7 +471,6 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js`](../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js) — 1.4 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js`](../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js) — 1.4 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-qck6h2yw.js`](../01-核心基础设施/共享小工具-未细化/chunk-qck6h2yw.js) — 1.4 KB
-- [`01-核心基础设施/共享小工具-未细化/LIST_RUNNERS_DESCRIPTION.qvv5bxbe.js`](../01-核心基础设施/共享小工具-未细化/LIST_RUNNERS_DESCRIPTION.qvv5bxbe.js) — 1.4 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js`](../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js) — 1.4 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js`](../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js) — 1.4 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-vcb9z55e.js`](../01-核心基础设施/共享小工具-未细化/chunk-vcb9z55e.js) — 1.4 KB
@@ -578,10 +485,8 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-vm6pzj28.js`](../01-核心基础设施/共享小工具-未细化/chunk-vm6pzj28.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-jkmndwnz.js`](../01-核心基础设施/共享小工具-未细化/chunk-jkmndwnz.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/pause-memory-cmd.cjvwhqe6.js`](../01-核心基础设施/共享小工具-未细化/pause-memory-cmd.cjvwhqe6.js) — 1.3 KB
-- [`01-核心基础设施/共享小工具-未细化/artifactUrlRule.xt2fzktx.js`](../01-核心基础设施/共享小工具-未细化/artifactUrlRule.xt2fzktx.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-95411q5e.js`](../01-核心基础设施/共享小工具-未细化/chunk-95411q5e.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-bhcz98rd.js`](../01-核心基础设施/共享小工具-未细化/chunk-bhcz98rd.js) — 1.3 KB
-- [`01-核心基础设施/共享小工具-未细化/JETBRAINS_IDES.wmat8rwg.js`](../01-核心基础设施/共享小工具-未细化/JETBRAINS_IDES.wmat8rwg.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-j3qyvdwg.js`](../01-核心基础设施/共享小工具-未细化/chunk-j3qyvdwg.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js`](../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-k76a6y9v.js`](../01-核心基础设施/共享小工具-未细化/chunk-k76a6y9v.js) — 1.3 KB
@@ -593,8 +498,6 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js`](../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js`](../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-cbdr3qdm.js`](../01-核心基础设施/共享小工具-未细化/chunk-cbdr3qdm.js) — 1.3 KB
-- [`01-核心基础设施/共享小工具-未细化/isCoordinatorCommsMcpTool.9dhv4n4y.js`](../01-核心基础设施/共享小工具-未细化/isCoordinatorCommsMcpTool.9dhv4n4y.js) — 1.3 KB
-- [`01-核心基础设施/共享小工具-未细化/createDialFailureLatch.r0zpwhgp.js`](../01-核心基础设施/共享小工具-未细化/createDialFailureLatch.r0zpwhgp.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js`](../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/adoptStorageV5EnvPin.xsnaqgwj.js`](../01-核心基础设施/共享小工具-未细化/adoptStorageV5EnvPin.xsnaqgwj.js) — 1.3 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js`](../01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js) — 1.3 KB
@@ -606,12 +509,10 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js`](../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js`](../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js`](../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js) — 1.2 KB
-- [`01-核心基础设施/共享小工具-未细化/CCR_LIST_TARGET_VISIBLE.t4wy28wc.js`](../01-核心基础设施/共享小工具-未细化/CCR_LIST_TARGET_VISIBLE.t4wy28wc.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js`](../01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-wmwgjjnt.js`](../01-核心基础设施/共享小工具-未细化/chunk-wmwgjjnt.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js`](../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-drgqeenr.js`](../01-核心基础设施/共享小工具-未细化/chunk-drgqeenr.js) — 1.2 KB
-- [`01-核心基础设施/共享小工具-未细化/rememberUnboundCreate.xa4c8fex.js`](../01-核心基础设施/共享小工具-未细化/rememberUnboundCreate.xa4c8fex.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-2gabx7f1.js`](../01-核心基础设施/共享小工具-未细化/chunk-2gabx7f1.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js`](../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/getMcpErrorCode.zkm67jdf.js`](../01-核心基础设施/共享小工具-未细化/getMcpErrorCode.zkm67jdf.js) — 1.2 KB
@@ -629,7 +530,6 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js`](../01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js`](../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-nj1exzcd.js`](../01-核心基础设施/共享小工具-未细化/chunk-nj1exzcd.js) — 1.2 KB
-- [`01-核心基础设施/共享小工具-未细化/findExecutableWindows.45hrtnft.js`](../01-核心基础设施/共享小工具-未细化/findExecutableWindows.45hrtnft.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-9v3x5my2.js`](../01-核心基础设施/共享小工具-未细化/chunk-9v3x5my2.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js`](../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js) — 1.2 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-m9kab71c.js`](../01-核心基础设施/共享小工具-未细化/chunk-m9kab71c.js) — 1.2 KB
@@ -640,7 +540,6 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js`](../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js`](../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-fpak7ean.js`](../01-核心基础设施/共享小工具-未细化/chunk-fpak7ean.js) — 1.1 KB
-- [`01-核心基础设施/共享小工具-未细化/takeLaptopDirSyncSession.7ysd15vk.js`](../01-核心基础设施/共享小工具-未细化/takeLaptopDirSyncSession.7ysd15vk.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-hxt46tkz.js`](../01-核心基础设施/共享小工具-未细化/chunk-hxt46tkz.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-vthq2yn2.js`](../01-核心基础设施/共享小工具-未细化/chunk-vthq2yn2.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-bgf8jybv.js`](../01-核心基础设施/共享小工具-未细化/chunk-bgf8jybv.js) — 1.1 KB
@@ -658,30 +557,24 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js`](../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-mbq1q667.js`](../01-核心基础设施/共享小工具-未细化/chunk-mbq1q667.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-v599v9yt.js`](../01-核心基础设施/共享小工具-未细化/chunk-v599v9yt.js) — 1.1 KB
-- [`01-核心基础设施/共享小工具-未细化/withFeatureTelemetry.jrcjxqdh.js`](../01-核心基础设施/共享小工具-未细化/withFeatureTelemetry.jrcjxqdh.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-sdk55p8n.js`](../01-核心基础设施/共享小工具-未细化/chunk-sdk55p8n.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-vke340te.js`](../01-核心基础设施/共享小工具-未细化/chunk-vke340te.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-274ae0qv.js`](../01-核心基础设施/共享小工具-未细化/chunk-274ae0qv.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/credentialsStoreFor.r7prg4pg.js`](../01-核心基础设施/共享小工具-未细化/credentialsStoreFor.r7prg4pg.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-rs9aqm75.js`](../01-核心基础设施/共享小工具-未细化/chunk-rs9aqm75.js) — 1.1 KB
-- [`01-核心基础设施/共享小工具-未细化/ownPidDomain.3ttwm0ag.js`](../01-核心基础设施/共享小工具-未细化/ownPidDomain.3ttwm0ag.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js`](../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js) — 1.1 KB
-- [`01-核心基础设施/共享小工具-未细化/fromEnum.xq2rym85.js`](../01-核心基础设施/共享小工具-未细化/fromEnum.xq2rym85.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js`](../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js`](../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-56wrzxpk.js`](../01-核心基础设施/共享小工具-未细化/chunk-56wrzxpk.js) — 1.1 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js`](../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js`](../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-j4vveza5.js`](../01-核心基础设施/共享小工具-未细化/chunk-j4vveza5.js) — 1.0 KB
-- [`01-核心基础设施/共享小工具-未细化/buildGitSessionContext.z3r1365y.js`](../01-核心基础设施/共享小工具-未细化/buildGitSessionContext.z3r1365y.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-se27pkgx.js`](../01-核心基础设施/共享小工具-未细化/chunk-se27pkgx.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js`](../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-cj5z5g82.js`](../01-核心基础设施/共享小工具-未细化/chunk-cj5z5g82.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-37xdmryq.js`](../01-核心基础设施/共享小工具-未细化/chunk-37xdmryq.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-kv5vaqew.js`](../01-核心基础设施/共享小工具-未细化/chunk-kv5vaqew.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-c172f2at.js`](../01-核心基础设施/共享小工具-未细化/chunk-c172f2at.js) — 1.0 KB
-- [`01-核心基础设施/共享小工具-未细化/setCseShimGate.9kyvz0fg.js`](../01-核心基础设施/共享小工具-未细化/setCseShimGate.9kyvz0fg.js) — 1.0 KB
-- [`01-核心基础设施/共享小工具-未细化/deviceToolNoticesTo.pxheggcg.js`](../01-核心基础设施/共享小工具-未细化/deviceToolNoticesTo.pxheggcg.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-mnzfncps.js`](../01-核心基础设施/共享小工具-未细化/chunk-mnzfncps.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-s5e85mz9.js`](../01-核心基础设施/共享小工具-未细化/chunk-s5e85mz9.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js`](../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js) — 1.0 KB
@@ -692,12 +585,10 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js`](../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js`](../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js) — 1.0 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-bgwm3fhf.js`](../01-核心基础设施/共享小工具-未细化/chunk-bgwm3fhf.js) — 0.9 KB
-- [`01-核心基础设施/共享小工具-未细化/FIRST_STORE_PULL_WAIT_DEADLINE_MS.xwkzg70n.js`](../01-核心基础设施/共享小工具-未细化/FIRST_STORE_PULL_WAIT_DEADLINE_MS.xwkzg70n.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js`](../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js`](../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js`](../01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js`](../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js) — 0.9 KB
-- [`01-核心基础设施/共享小工具-未细化/parseCommand.n06fvw6z.js`](../01-核心基础设施/共享小工具-未细化/parseCommand.n06fvw6z.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js`](../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-7wprkdaj.js`](../01-核心基础设施/共享小工具-未细化/chunk-7wprkdaj.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-g00x7t7w.js`](../01-核心基础设施/共享小工具-未细化/chunk-g00x7t7w.js) — 0.9 KB
@@ -726,7 +617,6 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js`](../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js`](../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js`](../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js) — 0.9 KB
-- [`01-核心基础设施/共享小工具-未细化/BRIEF_PROACTIVE_SECTION.c389azz5.js`](../01-核心基础设施/共享小工具-未细化/BRIEF_PROACTIVE_SECTION.c389azz5.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js`](../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js`](../01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/waitForUrlEvent.2gg81sjj.js`](../01-核心基础设施/共享小工具-未细化/waitForUrlEvent.2gg81sjj.js) — 0.9 KB
@@ -742,8 +632,6 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js`](../01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js) — 0.8 KB
 - [`01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js`](../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js) — 0.8 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-fpr1vv1t.js`](../01-核心基础设施/共享小工具-未细化/chunk-fpr1vv1t.js) — 0.8 KB
-- [`01-核心基础设施/共享小工具-未细化/setBgExitDetail.4vp63f14.js`](../01-核心基础设施/共享小工具-未细化/setBgExitDetail.4vp63f14.js) — 0.8 KB
-- [`01-核心基础设施/共享小工具-未细化/serverToolsValueNamesSelfHostedRunnerTool.qgabyb9n.js`](../01-核心基础设施/共享小工具-未细化/serverToolsValueNamesSelfHostedRunnerTool.qgabyb9n.js) — 0.8 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js`](../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js) — 0.8 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js`](../01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js) — 0.8 KB
 - [`01-核心基础设施/共享小工具-未细化/isListAuthError.8jcv253h.js`](../01-核心基础设施/共享小工具-未细化/isListAuthError.8jcv253h.js) — 0.8 KB
@@ -761,10 +649,8 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-pvrtr3v0.js`](../01-核心基础设施/共享小工具-未细化/chunk-pvrtr3v0.js) — 0.8 KB
 - [`01-核心基础设施/共享小工具-未细化/parse.4jce22r9.js`](../01-核心基础设施/共享小工具-未细化/parse.4jce22r9.js) — 0.8 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-nbvmqw0g.js`](../01-核心基础设施/共享小工具-未细化/chunk-nbvmqw0g.js) — 0.8 KB
-- [`01-核心基础设施/共享小工具-未细化/createFleetViewHost.h9h9ee2c.js`](../01-核心基础设施/共享小工具-未细化/createFleetViewHost.h9h9ee2c.js) — 0.8 KB
 - [`01-核心基础设施/共享小工具-未细化/getMdmRawReadPromise.c91w9436.js`](../01-核心基础设施/共享小工具-未细化/getMdmRawReadPromise.c91w9436.js) — 0.8 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-q35gycf9.js`](../01-核心基础设施/共享小工具-未细化/chunk-q35gycf9.js) — 0.8 KB
-- [`01-核心基础设施/共享小工具-未细化/SEND_USER_FILE_TOOL_PROMPT.9jawnj92.js`](../01-核心基础设施/共享小工具-未细化/SEND_USER_FILE_TOOL_PROMPT.9jawnj92.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js`](../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-t0m264jc.js`](../01-核心基础设施/共享小工具-未细化/chunk-t0m264jc.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/default.fwytydyr.js`](../01-核心基础设施/共享小工具-未细化/default.fwytydyr.js) — 0.7 KB
@@ -782,12 +668,10 @@
 - [`01-核心基础设施/共享小工具-未细化/default.k8j35a02.js`](../01-核心基础设施/共享小工具-未细化/default.k8j35a02.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/default.0z426rj0.js`](../01-核心基础设施/共享小工具-未细化/default.0z426rj0.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/default.ak8awsa2.js`](../01-核心基础设施/共享小工具-未细化/default.ak8awsa2.js) — 0.7 KB
-- [`01-核心基础设施/共享小工具-未细化/SEARCH_MCP_REGISTRY_TOOL_NAME.7mvtq5sb.js`](../01-核心基础设施/共享小工具-未细化/SEARCH_MCP_REGISTRY_TOOL_NAME.7mvtq5sb.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/default.nt7z2p7z.js`](../01-核心基础设施/共享小工具-未细化/default.nt7z2p7z.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/default.p2z54ya1.js`](../01-核心基础设施/共享小工具-未细化/default.p2z54ya1.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/default.rm15mpjf.js`](../01-核心基础设施/共享小工具-未细化/default.rm15mpjf.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/rewind-cmd.0q6rswcd.js`](../01-核心基础设施/共享小工具-未细化/rewind-cmd.0q6rswcd.js) — 0.7 KB
-- [`01-核心基础设施/共享小工具-未细化/SUGGEST_CONNECTORS_TOOL_NAME.cfv2aq4k.js`](../01-核心基础设施/共享小工具-未细化/SUGGEST_CONNECTORS_TOOL_NAME.cfv2aq4k.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-k1vb7vky.js`](../01-核心基础设施/共享小工具-未细化/chunk-k1vb7vky.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/default.pm7hyz3j.js`](../01-核心基础设施/共享小工具-未细化/default.pm7hyz3j.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/default.vkv8kr1s.js`](../01-核心基础设施/共享小工具-未细化/default.vkv8kr1s.js) — 0.7 KB
@@ -796,15 +680,10 @@
 - [`01-核心基础设施/共享小工具-未细化/default.re66yep0.js`](../01-核心基础设施/共享小工具-未细化/default.re66yep0.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-6dxnhjfw.js`](../01-核心基础设施/共享小工具-未细化/chunk-6dxnhjfw.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-tw8akhx1.js`](../01-核心基础设施/共享小工具-未细化/chunk-tw8akhx1.js) — 0.7 KB
-- [`01-核心基础设施/共享小工具-未细化/default.mc2xnh09.js`](../01-核心基础设施/共享小工具-未细化/default.mc2xnh09.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-krnfabt0.js`](../01-核心基础设施/共享小工具-未细化/chunk-krnfabt0.js) — 0.7 KB
-- [`01-核心基础设施/共享小工具-未细化/LIST_CONNECTORS_TOOL_NAME.ndgm0vy5.js`](../01-核心基础设施/共享小工具-未细化/LIST_CONNECTORS_TOOL_NAME.ndgm0vy5.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-ps79w9dv.js`](../01-核心基础设施/共享小工具-未细化/chunk-ps79w9dv.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js`](../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/Server.dedan5va.js`](../01-核心基础设施/共享小工具-未细化/Server.dedan5va.js) — 0.7 KB
-- [`01-核心基础设施/共享小工具-未细化/END_CONVERSATION_TOOL_NAME.1xjr3136.js`](../01-核心基础设施/共享小工具-未细化/END_CONVERSATION_TOOL_NAME.1xjr3136.js) — 0.7 KB
-- [`01-核心基础设施/共享小工具-未细化/drainRegisteredWriteQueues.keyzdbky.js`](../01-核心基础设施/共享小工具-未细化/drainRegisteredWriteQueues.keyzdbky.js) — 0.7 KB
-- [`01-核心基础设施/共享小工具-未细化/getDefaultWebBrowserState.npnteap1.js`](../01-核心基础设施/共享小工具-未细化/getDefaultWebBrowserState.npnteap1.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-ezxdt3dm.js`](../01-核心基础设施/共享小工具-未细化/chunk-ezxdt3dm.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-ch1x7wx1.js`](../01-核心基础设施/共享小工具-未细化/chunk-ch1x7wx1.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-7rcvat1g.js`](../01-核心基础设施/共享小工具-未细化/chunk-7rcvat1g.js) — 0.7 KB
@@ -815,15 +694,12 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js`](../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js`](../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js`](../01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js) — 0.7 KB
-- [`01-核心基础设施/共享小工具-未细化/extra-usage-cmd.tyypgamh.js`](../01-核心基础设施/共享小工具-未细化/extra-usage-cmd.tyypgamh.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-4bx97hcx.js`](../01-核心基础设施/共享小工具-未细化/chunk-4bx97hcx.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/isWorktreeModeEnabled.p77rzdj8.js`](../01-核心基础设施/共享小工具-未细化/isWorktreeModeEnabled.p77rzdj8.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-16992wzt.js`](../01-核心基础设施/共享小工具-未细化/chunk-16992wzt.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js`](../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js`](../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js) — 0.7 KB
-- [`01-核心基础设施/共享小工具-未细化/WORKFLOW_TOOL_NAME.s1m31c97.js`](../01-核心基础设施/共享小工具-未细化/WORKFLOW_TOOL_NAME.s1m31c97.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js`](../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js) — 0.7 KB
-- [`01-核心基础设施/共享小工具-未细化/CLAUDE_AGENT.xajrmb62.js`](../01-核心基础设施/共享小工具-未细化/CLAUDE_AGENT.xajrmb62.js) — 0.7 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-h14anec2.js`](../01-核心基础设施/共享小工具-未细化/chunk-h14anec2.js) — 0.6 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-m2j3585w.js`](../01-核心基础设施/共享小工具-未细化/chunk-m2j3585w.js) — 0.6 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-tfspgges.js`](../01-核心基础设施/共享小工具-未细化/chunk-tfspgges.js) — 0.6 KB
@@ -839,7 +715,7 @@
 - [`01-核心基础设施/共享小工具-未细化/chunk-fgegxt0m.js`](../01-核心基础设施/共享小工具-未细化/chunk-fgegxt0m.js) — 0.6 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js`](../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js) — 0.6 KB
 
-## Headless / SDK 模式  <sub>03-入口与运行时 · 18 个文件 · 0.93 MB</sub>
+## Headless / SDK 模式  <sub>03-入口与运行时 · 13 个文件 · 0.90 MB</sub>
 
 - [`03-入口与运行时/Headless-SDK模式/runHeadless.p72d7p8s.js`](../03-入口与运行时/Headless-SDK模式/runHeadless.p72d7p8s.js) — 556.6 KB
 - [`03-入口与运行时/Headless-SDK模式/runHeadlessCloudAttach.aac3nr66.js`](../03-入口与运行时/Headless-SDK模式/runHeadlessCloudAttach.aac3nr66.js) — 168.6 KB
@@ -847,15 +723,10 @@
 - [`03-入口与运行时/Headless-SDK模式/chunk-e4xwwtsb.js`](../03-入口与运行时/Headless-SDK模式/chunk-e4xwwtsb.js) — 54.4 KB
 - [`03-入口与运行时/Headless-SDK模式/chunk-ph7v431y.js`](../03-入口与运行时/Headless-SDK模式/chunk-ph7v431y.js) — 21.4 KB
 - [`03-入口与运行时/Headless-SDK模式/runStagedMcpCall.r5dg7fd5.js`](../03-入口与运行时/Headless-SDK模式/runStagedMcpCall.r5dg7fd5.js) — 12.7 KB
-- [`03-入口与运行时/Headless-SDK模式/safeWireMessage.cqk1dzsd.js`](../03-入口与运行时/Headless-SDK模式/safeWireMessage.cqk1dzsd.js) — 7.1 KB
-- [`03-入口与运行时/Headless-SDK模式/setupPluginHookHotReload.b8npbg0k.js`](../03-入口与运行时/Headless-SDK模式/setupPluginHookHotReload.b8npbg0k.js) — 7.1 KB
 - [`03-入口与运行时/Headless-SDK模式/settleAfterMachineCommand.8azm82c2.js`](../03-入口与运行时/Headless-SDK模式/settleAfterMachineCommand.8azm82c2.js) — 7.1 KB
-- [`03-入口与运行时/Headless-SDK模式/globalFileIndexCache.4s2ty027.js`](../03-入口与运行时/Headless-SDK模式/globalFileIndexCache.4s2ty027.js) — 7.0 KB
 - [`03-入口与运行时/Headless-SDK模式/clearSessionCaches.avjeddw7.js`](../03-入口与运行时/Headless-SDK模式/clearSessionCaches.avjeddw7.js) — 6.9 KB
 - [`03-入口与运行时/Headless-SDK模式/chunk-9r4nh249.js`](../03-入口与运行时/Headless-SDK模式/chunk-9r4nh249.js) — 4.3 KB
-- [`03-入口与运行时/Headless-SDK模式/readHandleBounded.xe9ahsmx.js`](../03-入口与运行时/Headless-SDK模式/readHandleBounded.xe9ahsmx.js) — 3.9 KB
 - [`03-入口与运行时/Headless-SDK模式/runHeadlessBashCommand.wc8q8hxv.js`](../03-入口与运行时/Headless-SDK模式/runHeadlessBashCommand.wc8q8hxv.js) — 3.9 KB
-- [`03-入口与运行时/Headless-SDK模式/buildWorkspaceDiffResponse.9a2qvze8.js`](../03-入口与运行时/Headless-SDK模式/buildWorkspaceDiffResponse.9a2qvze8.js) — 3.7 KB
 - [`03-入口与运行时/Headless-SDK模式/startHostedWorkerVitalsEmitter.9kjcpdzn.js`](../03-入口与运行时/Headless-SDK模式/startHostedWorkerVitalsEmitter.9kjcpdzn.js) — 2.1 KB
 - [`03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js`](../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js) — 1.9 KB
 - [`03-入口与运行时/Headless-SDK模式/chunk-bgtc75cc.js`](../03-入口与运行时/Headless-SDK模式/chunk-bgtc75cc.js) — 1.3 KB
@@ -867,7 +738,7 @@
 - [`02-功能模块/语法高亮-Markdown渲染/chunk-hqp2e8nr.js`](../02-功能模块/语法高亮-Markdown渲染/chunk-hqp2e8nr.js) — 20.7 KB
 - [`02-功能模块/语法高亮-Markdown渲染/chunk-mnn6q099.js`](../02-功能模块/语法高亮-Markdown渲染/chunk-mnn6q099.js) — 9.6 KB
 
-## 设置 / 配置  <sub>01-核心基础设施 · 39 个文件 · 0.81 MB</sub>
+## 设置 / 配置  <sub>01-核心基础设施 · 27 个文件 · 0.78 MB</sub>
 
 - [`01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js`](../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js) — 419.9 KB
 - [`01-核心基础设施/设置-配置/chunk-zqr5ctyf.js`](../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js) — 74.4 KB
@@ -880,36 +751,24 @@
 - [`01-核心基础设施/设置-配置/import-cmd.x47whmge.js`](../01-核心基础设施/设置-配置/import-cmd.x47whmge.js) — 13.4 KB
 - [`01-核心基础设施/设置-配置/chunk-tswdb9jt.js`](../01-核心基础设施/设置-配置/chunk-tswdb9jt.js) — 13.1 KB
 - [`01-核心基础设施/设置-配置/showInvalidConfigDialog.5p4s79qd.js`](../01-核心基础设施/设置-配置/showInvalidConfigDialog.5p4s79qd.js) — 11.4 KB
-- [`01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js`](../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js) — 10.1 KB
 - [`01-核心基础设施/设置-配置/InvalidSettingsDialog.kn2tcqsm.js`](../01-核心基础设施/设置-配置/InvalidSettingsDialog.kn2tcqsm.js) — 9.7 KB
 - [`01-核心基础设施/设置-配置/showStandaloneSecurityDialog.nm3g924k.js`](../01-核心基础设施/设置-配置/showStandaloneSecurityDialog.nm3g924k.js) — 9.0 KB
 - [`01-核心基础设施/设置-配置/chunk-9m8zsynn.js`](../01-核心基础设施/设置-配置/chunk-9m8zsynn.js) — 8.6 KB
-- [`01-核心基础设施/设置-配置/RemoteHomeSettingsDialog.cd7k5s1e.js`](../01-核心基础设施/设置-配置/RemoteHomeSettingsDialog.cd7k5s1e.js) — 8.3 KB
 - [`01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js`](../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js) — 8.1 KB
 - [`01-核心基础设施/设置-配置/applyConfigShorthand.xrz2kr7f.js`](../01-核心基础设施/设置-配置/applyConfigShorthand.xrz2kr7f.js) — 7.5 KB
 - [`01-核心基础设施/设置-配置/chunk-xy3cbvd8.js`](../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js) — 5.8 KB
-- [`01-核心基础设施/设置-配置/getSettingsWithErrors.2xnfq00s.js`](../01-核心基础设施/设置-配置/getSettingsWithErrors.2xnfq00s.js) — 5.5 KB
 - [`01-核心基础设施/设置-配置/chunk-992erern.js`](../01-核心基础设施/设置-配置/chunk-992erern.js) — 5.4 KB
 - [`01-核心基础设施/设置-配置/chunk-m0ds6tjw.js`](../01-核心基础设施/设置-配置/chunk-m0ds6tjw.js) — 5.3 KB
 - [`01-核心基础设施/设置-配置/chunk-bmk73cc4.js`](../01-核心基础设施/设置-配置/chunk-bmk73cc4.js) — 4.5 KB
-- [`01-核心基础设施/设置-配置/UNATTENDED_SERVING_CONSENT_VERSION.jgpzj3cc.js`](../01-核心基础设施/设置-配置/UNATTENDED_SERVING_CONSENT_VERSION.jgpzj3cc.js) — 3.5 KB
 - [`01-核心基础设施/设置-配置/getAppliedGlobalConfigEnv.zewdj9m8.js`](../01-核心基础设施/设置-配置/getAppliedGlobalConfigEnv.zewdj9m8.js) — 3.4 KB
-- [`01-核心基础设施/设置-配置/HELPER_CONSENT_STATE_ID.v68394d6.js`](../01-核心基础设施/设置-配置/HELPER_CONSENT_STATE_ID.v68394d6.js) — 2.8 KB
 - [`01-核心基础设施/设置-配置/chunk-avjbj8nf.js`](../01-核心基础设施/设置-配置/chunk-avjbj8nf.js) — 2.8 KB
 - [`01-核心基础设施/设置-配置/chunk-6rz5fqzm.js`](../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js) — 2.8 KB
 - [`01-核心基础设施/设置-配置/chunk-0y8rdjs7.js`](../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js) — 2.5 KB
-- [`01-核心基础设施/设置-配置/seedUserSettings.z495qy4c.js`](../01-核心基础设施/设置-配置/seedUserSettings.z495qy4c.js) — 2.1 KB
 - [`01-核心基础设施/设置-配置/chunk-ekwet1zd.js`](../01-核心基础设施/设置-配置/chunk-ekwet1zd.js) — 2.1 KB
 - [`01-核心基础设施/设置-配置/chunk-wdr27rwr.js`](../01-核心基础设施/设置-配置/chunk-wdr27rwr.js) — 2.0 KB
 - [`01-核心基础设施/设置-配置/chunk-5q6f0q9d.js`](../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js) — 2.0 KB
-- [`01-核心基础设施/设置-配置/primeWorkspaceRoots.9c0hdmnf.js`](../01-核心基础设施/设置-配置/primeWorkspaceRoots.9c0hdmnf.js) — 1.7 KB
-- [`01-核心基础设施/设置-配置/getSecureStorage.4fsas7z0.js`](../01-核心基础设施/设置-配置/getSecureStorage.4fsas7z0.js) — 1.5 KB
-- [`01-核心基础设施/设置-配置/primeFileDescriptorCredentials.rs3ert6b.js`](../01-核心基础设施/设置-配置/primeFileDescriptorCredentials.rs3ert6b.js) — 1.5 KB
-- [`01-核心基础设施/设置-配置/PEM_CERT_BLOCK_RE.8wanhh79.js`](../01-核心基础设施/设置-配置/PEM_CERT_BLOCK_RE.8wanhh79.js) — 1.4 KB
-- [`01-核心基础设施/设置-配置/loadExtraCACerts.xgzv5vtx.js`](../01-核心基础设施/设置-配置/loadExtraCACerts.xgzv5vtx.js) — 1.3 KB
-- [`01-核心基础设施/设置-配置/isCancel.ggwgp8zq.js`](../01-核心基础设施/设置-配置/isCancel.ggwgp8zq.js) — 0.8 KB
 
-## 遥测 / OpenTelemetry  <sub>01-核心基础设施 · 15 个文件 · 0.74 MB</sub>
+## 遥测 / OpenTelemetry  <sub>01-核心基础设施 · 14 个文件 · 0.73 MB</sub>
 
 - [`01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js`](../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js) — 615.0 KB
 - [`01-核心基础设施/遥测-OpenTelemetry/flushTelemetry.jwarnhac.js`](../01-核心基础设施/遥测-OpenTelemetry/flushTelemetry.jwarnhac.js) — 62.0 KB
@@ -919,7 +778,6 @@
 - [`01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js`](../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js) — 10.5 KB
 - [`01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js`](../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js) — 7.5 KB
 - [`01-核心基础设施/遥测-OpenTelemetry/init.22tn6x0a.js`](../01-核心基础设施/遥测-OpenTelemetry/init.22tn6x0a.js) — 7.1 KB
-- [`01-核心基础设施/遥测-OpenTelemetry/registerAgentProxyEnvFn.84gxhdny.js`](../01-核心基础设施/遥测-OpenTelemetry/registerAgentProxyEnvFn.84gxhdny.js) — 2.8 KB
 - [`01-核心基础设施/遥测-OpenTelemetry/chunk-tmz6n6ex.js`](../01-核心基础设施/遥测-OpenTelemetry/chunk-tmz6n6ex.js) — 1.6 KB
 - [`01-核心基础设施/遥测-OpenTelemetry/chunk-dek1vcp3.js`](../01-核心基础设施/遥测-OpenTelemetry/chunk-dek1vcp3.js) — 1.6 KB
 - [`01-核心基础设施/遥测-OpenTelemetry/chunk-s36v703y.js`](../01-核心基础设施/遥测-OpenTelemetry/chunk-s36v703y.js) — 1.5 KB
@@ -927,7 +785,7 @@
 - [`01-核心基础设施/遥测-OpenTelemetry/OTLPLogExporter.cq0wzx2t.js`](../01-核心基础设施/遥测-OpenTelemetry/OTLPLogExporter.cq0wzx2t.js) — 1.1 KB
 - [`01-核心基础设施/遥测-OpenTelemetry/chunk-ht8sg4yh.js`](../01-核心基础设施/遥测-OpenTelemetry/chunk-ht8sg4yh.js) — 0.7 KB
 
-## 权限系统  <sub>02-功能模块 · 46 个文件 · 0.66 MB</sub>
+## 权限系统  <sub>02-功能模块 · 36 个文件 · 0.62 MB</sub>
 
 - [`02-功能模块/权限系统/permissions-ui.0a82g62e.js`](../02-功能模块/权限系统/permissions-ui.0a82g62e.js) — 127.1 KB
 - [`02-功能模块/权限系统/chunk-4wrkmv3h.js`](../02-功能模块/权限系统/chunk-4wrkmv3h.js) — 82.6 KB
@@ -944,18 +802,14 @@
 - [`02-功能模块/权限系统/default.tqjrfh0d.js`](../02-功能模块/权限系统/default.tqjrfh0d.js) — 10.0 KB
 - [`02-功能模块/权限系统/chunk-e4pfvp7x.js`](../02-功能模块/权限系统/chunk-e4pfvp7x.js) — 9.9 KB
 - [`02-功能模块/权限系统/ensureAgentsWorkspaceTrust.f9t4zxp4.js`](../02-功能模块/权限系统/ensureAgentsWorkspaceTrust.f9t4zxp4.js) — 8.7 KB
-- [`02-功能模块/权限系统/overlyBroadShellAllowsStrippedByEverySession.dr9tct78.js`](../02-功能模块/权限系统/overlyBroadShellAllowsStrippedByEverySession.dr9tct78.js) — 8.6 KB
 - [`02-功能模块/权限系统/chunk-sx24y271.js`](../02-功能模块/权限系统/chunk-sx24y271.js) — 8.5 KB
 - [`02-功能模块/权限系统/chunk-fjrcf22x.js`](../02-功能模块/权限系统/chunk-fjrcf22x.js) — 8.1 KB
-- [`02-功能模块/权限系统/PERMISSION_CHECK_CRASHED_REASON.csj1td3d.js`](../02-功能模块/权限系统/PERMISSION_CHECK_CRASHED_REASON.csj1td3d.js) — 8.1 KB
 - [`02-功能模块/权限系统/subtask-cmd.x92jajbx.js`](../02-功能模块/权限系统/subtask-cmd.x92jajbx.js) — 7.4 KB
 - [`02-功能模块/权限系统/fork-cmd.janjbp3h.js`](../02-功能模块/权限系统/fork-cmd.janjbp3h.js) — 7.4 KB
 - [`02-功能模块/权限系统/registerChromeTabGroupCleanup.epxd464c.js`](../02-功能模块/权限系统/registerChromeTabGroupCleanup.epxd464c.js) — 7.2 KB
 - [`02-功能模块/权限系统/chunk-1y2g140m.js`](../02-功能模块/权限系统/chunk-1y2g140m.js) — 7.1 KB
 - [`02-功能模块/权限系统/fetchSystemPromptParts.kqatsmq3.js`](../02-功能模块/权限系统/fetchSystemPromptParts.kqatsmq3.js) — 7.1 KB
-- [`02-功能模块/权限系统/createAutoMemCanUseTool.nph0m6gc.js`](../02-功能模块/权限系统/createAutoMemCanUseTool.nph0m6gc.js) — 7.0 KB
 - [`02-功能模块/权限系统/chunk-qdy0h5k2.js`](../02-功能模块/权限系统/chunk-qdy0h5k2.js) — 6.0 KB
-- [`02-功能模块/权限系统/DANGEROUS_DIRECTORY_PATHS.h65h4gmh.js`](../02-功能模块/权限系统/DANGEROUS_DIRECTORY_PATHS.h65h4gmh.js) — 5.7 KB
 - [`02-功能模块/权限系统/chunk-asdzywd2.js`](../02-功能模块/权限系统/chunk-asdzywd2.js) — 5.4 KB
 - [`02-功能模块/权限系统/chunk-qjqc5vxm.js`](../02-功能模块/权限系统/chunk-qjqc5vxm.js) — 4.5 KB
 - [`02-功能模块/权限系统/chunk-n5mgv42x.js`](../02-功能模块/权限系统/chunk-n5mgv42x.js) — 4.3 KB
@@ -964,19 +818,13 @@
 - [`02-功能模块/权限系统/chunk-ynkf3yy4.js`](../02-功能模块/权限系统/chunk-ynkf3yy4.js) — 4.1 KB
 - [`02-功能模块/权限系统/applyBypassPolicyGate.baa1cgm7.js`](../02-功能模块/权限系统/applyBypassPolicyGate.baa1cgm7.js) — 4.1 KB
 - [`02-功能模块/权限系统/getCoordinatorAgents.2te73w6j.js`](../02-功能模块/权限系统/getCoordinatorAgents.2te73w6j.js) — 4.0 KB
-- [`02-功能模块/权限系统/setSupervisedBridgeSession.a6q1nmz6.js`](../02-功能模块/权限系统/setSupervisedBridgeSession.a6q1nmz6.js) — 3.8 KB
-- [`02-功能模块/权限系统/getEffortLayerOverride.23cezctk.js`](../02-功能模块/权限系统/getEffortLayerOverride.23cezctk.js) — 3.6 KB
-- [`02-功能模块/权限系统/PERMISSION_MODE_MANUAL_ALIAS.pygwpq4q.js`](../02-功能模块/权限系统/PERMISSION_MODE_MANUAL_ALIAS.pygwpq4q.js) — 2.5 KB
 - [`02-功能模块/权限系统/chunk-8rrcddth.js`](../02-功能模块/权限系统/chunk-8rrcddth.js) — 2.1 KB
-- [`02-功能模块/权限系统/capturePolicySnapshot.y30rz57r.js`](../02-功能模块/权限系统/capturePolicySnapshot.y30rz57r.js) — 2.1 KB
 - [`02-功能模块/权限系统/chunk-3bdrfpdv.js`](../02-功能模块/权限系统/chunk-3bdrfpdv.js) — 1.8 KB
 - [`02-功能模块/权限系统/chunk-8zbmhy8a.js`](../02-功能模块/权限系统/chunk-8zbmhy8a.js) — 1.6 KB
 - [`02-功能模块/权限系统/chunk-hv6z01db.js`](../02-功能模块/权限系统/chunk-hv6z01db.js) — 1.6 KB
-- [`02-功能模块/权限系统/getInMemoryErrors.0ysd6ayc.js`](../02-功能模块/权限系统/getInMemoryErrors.0ysd6ayc.js) — 1.1 KB
 - [`02-功能模块/权限系统/chunk-pcxn6gwz.js`](../02-功能模块/权限系统/chunk-pcxn6gwz.js) — 0.9 KB
-- [`02-功能模块/权限系统/asSystemPrompt.7ekbgrh0.js`](../02-功能模块/权限系统/asSystemPrompt.7ekbgrh0.js) — 0.7 KB
 
-## Memory / CLAUDE.md  <sub>02-功能模块 · 12 个文件 · 0.64 MB</sub>
+## Memory / CLAUDE.md  <sub>02-功能模块 · 10 个文件 · 0.63 MB</sub>
 
 - [`02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js`](../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js) — 492.6 KB
 - [`02-功能模块/Memory-CLAUDE.md/memory-ui.7z7zf7rm.js`](../02-功能模块/Memory-CLAUDE.md/memory-ui.7z7zf7rm.js) — 52.8 KB
@@ -984,14 +832,12 @@
 - [`02-功能模块/Memory-CLAUDE.md/chunk-br7dq41d.js`](../02-功能模块/Memory-CLAUDE.md/chunk-br7dq41d.js) — 14.9 KB
 - [`02-功能模块/Memory-CLAUDE.md/chunk-wq8d9xjt.js`](../02-功能模块/Memory-CLAUDE.md/chunk-wq8d9xjt.js) — 10.3 KB
 - [`02-功能模块/Memory-CLAUDE.md/chunk-9b6sc1gb.js`](../02-功能模块/Memory-CLAUDE.md/chunk-9b6sc1gb.js) — 10.1 KB
-- [`02-功能模块/Memory-CLAUDE.md/isMemoryFileAccess.qp28e8kz.js`](../02-功能模块/Memory-CLAUDE.md/isMemoryFileAccess.qp28e8kz.js) — 6.9 KB
 - [`02-功能模块/Memory-CLAUDE.md/chunk-hg0ww0g3.js`](../02-功能模块/Memory-CLAUDE.md/chunk-hg0ww0g3.js) — 6.1 KB
 - [`02-功能模块/Memory-CLAUDE.md/chunk-54xx04er.js`](../02-功能模块/Memory-CLAUDE.md/chunk-54xx04er.js) — 5.6 KB
 - [`02-功能模块/Memory-CLAUDE.md/ClaudeMdExternalIncludesDialog.5tp7a8xn.js`](../02-功能模块/Memory-CLAUDE.md/ClaudeMdExternalIncludesDialog.5tp7a8xn.js) — 5.0 KB
 - [`02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js`](../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js) — 3.5 KB
-- [`02-功能模块/Memory-CLAUDE.md/getOrgMemoryAuthorization.pyhrz5hp.js`](../02-功能模块/Memory-CLAUDE.md/getOrgMemoryAuthorization.pyhrz5hp.js) — 3.1 KB
 
-## Workflow 编排  <sub>02-功能模块 · 26 个文件 · 0.64 MB</sub>
+## Workflow 编排  <sub>02-功能模块 · 24 个文件 · 0.62 MB</sub>
 
 - [`02-功能模块/Workflow编排/chunk-0t0sve49.js`](../02-功能模块/Workflow编排/chunk-0t0sve49.js) — 127.7 KB
 - [`02-功能模块/Workflow编排/chunk-bkcg0nbj.js`](../02-功能模块/Workflow编排/chunk-bkcg0nbj.js) — 116.8 KB
@@ -1010,9 +856,7 @@
 - [`02-功能模块/Workflow编排/WorkflowDetailDialog.8ptea57x.js`](../02-功能模块/Workflow编排/WorkflowDetailDialog.8ptea57x.js) — 8.5 KB
 - [`02-功能模块/Workflow编排/getWorkflowAuthoringAutoloadMessages.x36rsj57.js`](../02-功能模块/Workflow编排/getWorkflowAuthoringAutoloadMessages.x36rsj57.js) — 8.1 KB
 - [`02-功能模块/Workflow编排/workflow-launch-exec-cmd.57cqn97y.js`](../02-功能模块/Workflow编排/workflow-launch-exec-cmd.57cqn97y.js) — 8.0 KB
-- [`02-功能模块/Workflow编排/getSkillListingAttachments.bdj704n4.js`](../02-功能模块/Workflow编排/getSkillListingAttachments.bdj704n4.js) — 7.9 KB
 - [`02-功能模块/Workflow编排/WORKFLOW_LAUNCH_DIGEST_ENV.h0v8b5d9.js`](../02-功能模块/Workflow编排/WORKFLOW_LAUNCH_DIGEST_ENV.h0v8b5d9.js) — 7.4 KB
-- [`02-功能模块/Workflow编排/buildResumePrompt.5ewy6ezr.js`](../02-功能模块/Workflow编排/buildResumePrompt.5ewy6ezr.js) — 7.2 KB
 - [`02-功能模块/Workflow编排/LocalWorkflowTask.c8wnxdrq.js`](../02-功能模块/Workflow编排/LocalWorkflowTask.c8wnxdrq.js) — 7.1 KB
 - [`02-功能模块/Workflow编排/chunk-cd542wve.js`](../02-功能模块/Workflow编排/chunk-cd542wve.js) — 6.7 KB
 - [`02-功能模块/Workflow编排/chunk-a5048zpn.js`](../02-功能模块/Workflow编排/chunk-a5048zpn.js) — 6.1 KB
@@ -1044,7 +888,7 @@
 - [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js) — 7.1 KB
 - [`00-第三方库/_未识别/第三方库-AWSSDK/ENV_KEY.axscv2na.js`](../00-第三方库/_未识别/第三方库-AWSSDK/ENV_KEY.axscv2na.js) — 0.7 KB
 
-## Teammates 团队  <sub>02-功能模块 · 57 个文件 · 0.56 MB</sub>
+## Teammates 团队  <sub>02-功能模块 · 48 个文件 · 0.54 MB</sub>
 
 - [`02-功能模块/Teammates团队/SendMessageTool.ejjkr3qb.js`](../02-功能模块/Teammates团队/SendMessageTool.ejjkr3qb.js) — 100.3 KB
 - [`02-功能模块/Teammates团队/chunk-g6nvp9mm.js`](../02-功能模块/Teammates团队/chunk-g6nvp9mm.js) — 65.5 KB
@@ -1069,21 +913,17 @@
 - [`02-功能模块/Teammates团队/chunk-z2t8b9yc.js`](../02-功能模块/Teammates团队/chunk-z2t8b9yc.js) — 7.4 KB
 - [`02-功能模块/Teammates团队/startInProcessTeammate.k24hqy5t.js`](../02-功能模块/Teammates团队/startInProcessTeammate.k24hqy5t.js) — 7.2 KB
 - [`02-功能模块/Teammates团队/CronCreateTool.vxzz8tyy.js`](../02-功能模块/Teammates团队/CronCreateTool.vxzz8tyy.js) — 6.9 KB
-- [`02-功能模块/Teammates团队/spawnInProcessTeammate.g3fc6s9e.js`](../02-功能模块/Teammates团队/spawnInProcessTeammate.g3fc6s9e.js) — 6.8 KB
 - [`02-功能模块/Teammates团队/chunk-eey53z5b.js`](../02-功能模块/Teammates团队/chunk-eey53z5b.js) — 6.7 KB
 - [`02-功能模块/Teammates团队/chunk-r8fvp46d.js`](../02-功能模块/Teammates团队/chunk-r8fvp46d.js) — 5.9 KB
 - [`02-功能模块/Teammates团队/ITermBackend.m7kw75rs.js`](../02-功能模块/Teammates团队/ITermBackend.m7kw75rs.js) — 5.3 KB
 - [`02-功能模块/Teammates团队/ListAgentsTool.jrhvm1mr.js`](../02-功能模块/Teammates团队/ListAgentsTool.jrhvm1mr.js) — 5.2 KB
-- [`02-功能模块/Teammates团队/IDLE_SUMMARY_RECEIVE_BOUND.07vn1321.js`](../02-功能模块/Teammates团队/IDLE_SUMMARY_RECEIVE_BOUND.07vn1321.js) — 4.9 KB
 - [`02-功能模块/Teammates团队/chunk-811z9z0t.js`](../02-功能模块/Teammates团队/chunk-811z9z0t.js) — 4.8 KB
 - [`02-功能模块/Teammates团队/chunk-sr4920wy.js`](../02-功能模块/Teammates团队/chunk-sr4920wy.js) — 4.6 KB
-- [`02-功能模块/Teammates团队/getCoordinatorSystemPrompt.geqa52wg.js`](../02-功能模块/Teammates团队/getCoordinatorSystemPrompt.geqa52wg.js) — 4.5 KB
 - [`02-功能模块/Teammates团队/list-agents-cmd.p17nwag3.js`](../02-功能模块/Teammates团队/list-agents-cmd.p17nwag3.js) — 3.9 KB
 - [`02-功能模块/Teammates团队/chunk-sjd69zy5.js`](../02-功能模块/Teammates团队/chunk-sjd69zy5.js) — 3.8 KB
 - [`02-功能模块/Teammates团队/chunk-c8267s4e.js`](../02-功能模块/Teammates团队/chunk-c8267s4e.js) — 3.8 KB
 - [`02-功能模块/Teammates团队/chunk-thxapyam.js`](../02-功能模块/Teammates团队/chunk-thxapyam.js) — 3.5 KB
 - [`02-功能模块/Teammates团队/initializeSessionTeam.tnj1ekdv.js`](../02-功能模块/Teammates团队/initializeSessionTeam.tnj1ekdv.js) — 3.4 KB
-- [`02-功能模块/Teammates团队/DEFAULT_TEAMMATE_MODE.9m7wt8wk.js`](../02-功能模块/Teammates团队/DEFAULT_TEAMMATE_MODE.9m7wt8wk.js) — 3.3 KB
 - [`02-功能模块/Teammates团队/getBackendByType.cq91cmh5.js`](../02-功能模块/Teammates团队/getBackendByType.cq91cmh5.js) — 3.2 KB
 - [`02-功能模块/Teammates团队/default.cg5shkdd.js`](../02-功能模块/Teammates团队/default.cg5shkdd.js) — 3.2 KB
 - [`02-功能模块/Teammates团队/chunk-2j84y871.js`](../02-功能模块/Teammates团队/chunk-2j84y871.js) — 3.0 KB
@@ -1091,18 +931,13 @@
 - [`02-功能模块/Teammates团队/chunk-weg7y2ya.js`](../02-功能模块/Teammates团队/chunk-weg7y2ya.js) — 2.9 KB
 - [`02-功能模块/Teammates团队/chunk-1906dgrp.js`](../02-功能模块/Teammates团队/chunk-1906dgrp.js) — 2.3 KB
 - [`02-功能模块/Teammates团队/chunk-w2g8t42p.js`](../02-功能模块/Teammates团队/chunk-w2g8t42p.js) — 2.3 KB
-- [`02-功能模块/Teammates团队/getTeamFilePath.za7qp6df.js`](../02-功能模块/Teammates团队/getTeamFilePath.za7qp6df.js) — 2.3 KB
-- [`02-功能模块/Teammates团队/isModelDrivenSession.g8xbasha.js`](../02-功能模块/Teammates团队/isModelDrivenSession.g8xbasha.js) — 2.0 KB
 - [`02-功能模块/Teammates团队/chunk-88ybhavr.js`](../02-功能模块/Teammates团队/chunk-88ybhavr.js) — 1.9 KB
-- [`02-功能模块/Teammates团队/getIt2Command.w8gvbjpr.js`](../02-功能模块/Teammates团队/getIt2Command.w8gvbjpr.js) — 1.6 KB
 - [`02-功能模块/Teammates团队/chunk-t899nada.js`](../02-功能模块/Teammates团队/chunk-t899nada.js) — 1.5 KB
 - [`02-功能模块/Teammates团队/chunk-4ma81w0c.js`](../02-功能模块/Teammates团队/chunk-4ma81w0c.js) — 1.4 KB
-- [`02-功能模块/Teammates团队/respawnPaneWithCommand.5sk18jmg.js`](../02-功能模块/Teammates团队/respawnPaneWithCommand.5sk18jmg.js) — 1.4 KB
 - [`02-功能模块/Teammates团队/chunk-hcszd97x.js`](../02-功能模块/Teammates团队/chunk-hcszd97x.js) — 1.1 KB
 - [`02-功能模块/Teammates团队/chunk-enjekn9t.js`](../02-功能模块/Teammates团队/chunk-enjekn9t.js) — 1.1 KB
 - [`02-功能模块/Teammates团队/chunk-5nnwwahg.js`](../02-功能模块/Teammates团队/chunk-5nnwwahg.js) — 1.0 KB
 - [`02-功能模块/Teammates团队/chunk-3k2smxfn.js`](../02-功能模块/Teammates团队/chunk-3k2smxfn.js) — 1.0 KB
-- [`02-功能模块/Teammates团队/TEAMMATE_SYSTEM_PROMPT_ADDENDUM.5rze4625.js`](../02-功能模块/Teammates团队/TEAMMATE_SYSTEM_PROMPT_ADDENDUM.5rze4625.js) — 0.7 KB
 
 ## Ink 终端渲染器  <sub>00-第三方库 · 3 个文件 · 0.56 MB</sub>
 
@@ -1110,7 +945,7 @@
 - [`00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js`](../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js) — 17.4 KB
 - [`00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js`](../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js) — 5.7 KB
 
-## 斜杠命令 · UI 组件  <sub>02-功能模块 · 37 个文件 · 0.55 MB</sub>
+## 斜杠命令 · UI 组件  <sub>02-功能模块 · 34 个文件 · 0.54 MB</sub>
 
 - [`02-功能模块/斜杠命令-UI组件/mcp-ui.qrb4a2rd.js`](../02-功能模块/斜杠命令-UI组件/mcp-ui.qrb4a2rd.js) — 55.0 KB
 - [`02-功能模块/斜杠命令-UI组件/effort-ui.ad3tnnp5.js`](../02-功能模块/斜杠命令-UI组件/effort-ui.ad3tnnp5.js) — 38.6 KB
@@ -1146,30 +981,19 @@
 - [`02-功能模块/斜杠命令-UI组件/rename-cmd.tgykbma6.js`](../02-功能模块/斜杠命令-UI组件/rename-cmd.tgykbma6.js) — 7.0 KB
 - [`02-功能模块/斜杠命令-UI组件/stop-ui.f96yf4dh.js`](../02-功能模块/斜杠命令-UI组件/stop-ui.f96yf4dh.js) — 6.9 KB
 - [`02-功能模块/斜杠命令-UI组件/color-cmd.dzs74rrb.js`](../02-功能模块/斜杠命令-UI组件/color-cmd.dzs74rrb.js) — 6.9 KB
-- [`02-功能模块/斜杠命令-UI组件/spawnForkFromDirective.s7gf5e5r.js`](../02-功能模块/斜杠命令-UI组件/spawnForkFromDirective.s7gf5e5r.js) — 6.8 KB
-- [`02-功能模块/斜杠命令-UI组件/openDaemonLease.tz89gp3g.js`](../02-功能模块/斜杠命令-UI组件/openDaemonLease.tz89gp3g.js) — 3.1 KB
-- [`02-功能模块/斜杠命令-UI组件/HOST_DIED_ATTACH_MESSAGE.qcgc4k5d.js`](../02-功能模块/斜杠命令-UI组件/HOST_DIED_ATTACH_MESSAGE.qcgc4k5d.js) — 2.2 KB
 
 ## 云目录同步 / Git  <sub>02-功能模块 · 2 个文件 · 0.54 MB</sub>
 
 - [`02-功能模块/云目录同步-Git/云目录同步-Git.tksek4c2.js`](../02-功能模块/云目录同步-Git/云目录同步-Git.tksek4c2.js) — 300.2 KB
 - [`02-功能模块/云目录同步-Git/startWorkerDirSync.45jsr6k0.js`](../02-功能模块/云目录同步-Git/startWorkerDirSync.45jsr6k0.js) — 255.0 KB
 
-## 输入分发 / 查询构造  <sub>02-功能模块 · 13 个文件 · 0.51 MB</sub>
+## 输入分发 / 查询构造  <sub>02-功能模块 · 5 个文件 · 0.47 MB</sub>
 
 - [`02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js`](../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js) — 452.5 KB
 - [`02-功能模块/输入分发-查询构造/processBashCommand.5n238kht.js`](../02-功能模块/输入分发-查询构造/processBashCommand.5n238kht.js) — 10.0 KB
-- [`02-功能模块/输入分发-查询构造/runUltrareviewHeadless.rx528cge.js`](../02-功能模块/输入分发-查询构造/runUltrareviewHeadless.rx528cge.js) — 7.3 KB
-- [`02-功能模块/输入分发-查询构造/fileHistoryGetDiffStats.bvavx9zg.js`](../02-功能模块/输入分发-查询构造/fileHistoryGetDiffStats.bvavx9zg.js) — 7.2 KB
-- [`02-功能模块/输入分发-查询构造/getLastCacheSafeParams.7fnyqt8w.js`](../02-功能模块/输入分发-查询构造/getLastCacheSafeParams.7fnyqt8w.js) — 7.2 KB
 - [`02-功能模块/输入分发-查询构造/RemoteIO.ygjb6hdj.js`](../02-功能模块/输入分发-查询构造/RemoteIO.ygjb6hdj.js) — 7.2 KB
-- [`02-功能模块/输入分发-查询构造/stripSoleNonDeniableTool.smvcjfny.js`](../02-功能模块/输入分发-查询构造/stripSoleNonDeniableTool.smvcjfny.js) — 7.0 KB
-- [`02-功能模块/输入分发-查询构造/resolveBridgeSlashOverride.ksew3wcv.js`](../02-功能模块/输入分发-查询构造/resolveBridgeSlashOverride.ksew3wcv.js) — 6.9 KB
-- [`02-功能模块/输入分发-查询构造/runSideQuestion.gzbreq6q.js`](../02-功能模块/输入分发-查询构造/runSideQuestion.gzbreq6q.js) — 6.9 KB
 - [`02-功能模块/输入分发-查询构造/startEventLoopStallDetector.hwq92489.js`](../02-功能模块/输入分发-查询构造/startEventLoopStallDetector.hwq92489.js) — 6.8 KB
 - [`02-功能模块/输入分发-查询构造/buildSettingsFixPrompt.h2f8g4n5.js`](../02-功能模块/输入分发-查询构造/buildSettingsFixPrompt.h2f8g4n5.js) — 2.2 KB
-- [`02-功能模块/输入分发-查询构造/DEFAULT_STAGE_FILE_ROOT.8s7tp56z.js`](../02-功能模块/输入分发-查询构造/DEFAULT_STAGE_FILE_ROOT.8s7tp56z.js) — 1.3 KB
-- [`02-功能模块/输入分发-查询构造/createAbortController.f9yjxybg.js`](../02-功能模块/输入分发-查询构造/createAbortController.f9yjxybg.js) — 1.3 KB
 
 ## React 组件 (TUI 视图)  <sub>00-第三方库 · 7 个文件 · 0.47 MB</sub>
 
@@ -1199,7 +1023,7 @@
 - [`02-功能模块/自托管Runner/chunk-01gj9cjk.js`](../02-功能模块/自托管Runner/chunk-01gj9cjk.js) — 4.9 KB
 - [`02-功能模块/自托管Runner/GIT_PROXY_CRED_HELPER_CONTENT.pcspxqeg.js`](../02-功能模块/自托管Runner/GIT_PROXY_CRED_HELPER_CONTENT.pcspxqeg.js) — 1.7 KB
 
-## Skills 技能  <sub>02-功能模块 · 30 个文件 · 0.40 MB</sub>
+## Skills 技能  <sub>02-功能模块 · 29 个文件 · 0.40 MB</sub>
 
 - [`02-功能模块/Skills技能/Skills技能.dpy2ket5.js`](../02-功能模块/Skills技能/Skills技能.dpy2ket5.js) — 228.4 KB
 - [`02-功能模块/Skills技能/skills-ui.c9mnnmhm.js`](../02-功能模块/Skills技能/skills-ui.c9mnnmhm.js) — 27.5 KB
@@ -1230,7 +1054,6 @@
 - [`02-功能模块/Skills技能/whenToUse.ayfna89f.js`](../02-功能模块/Skills技能/whenToUse.ayfna89f.js) — 0.7 KB
 - [`02-功能模块/Skills技能/whenToUse.ts7my67y.js`](../02-功能模块/Skills技能/whenToUse.ts7my67y.js) — 0.7 KB
 - [`02-功能模块/Skills技能/isEnabled.hgqvdvbe.js`](../02-功能模块/Skills技能/isEnabled.hgqvdvbe.js) — 0.7 KB
-- [`02-功能模块/Skills技能/SKILL_MD.05pje4d8.js`](../02-功能模块/Skills技能/SKILL_MD.05pje4d8.js) — 0.7 KB
 
 ## 图片 / 截图 / Computer Use  <sub>02-功能模块 · 20 个文件 · 0.39 MB</sub>
 
@@ -1282,7 +1105,7 @@
 - [`00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js`](../00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js) — 6.6 KB
 - [`00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js`](../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js) — 5.4 KB
 
-## Hooks 钩子  <sub>02-功能模块 · 22 个文件 · 0.30 MB</sub>
+## Hooks 钩子  <sub>02-功能模块 · 15 个文件 · 0.28 MB</sub>
 
 - [`02-功能模块/Hooks钩子/hooks-ui.zqb5agde.js`](../02-功能模块/Hooks钩子/hooks-ui.zqb5agde.js) — 81.0 KB
 - [`02-功能模块/Hooks钩子/chunk-6wg4v2yj.js`](../02-功能模块/Hooks钩子/chunk-6wg4v2yj.js) — 74.7 KB
@@ -1292,28 +1115,20 @@
 - [`02-功能模块/Hooks钩子/compact-cmd.s7cgb714.js`](../02-功能模块/Hooks钩子/compact-cmd.s7cgb714.js) — 13.2 KB
 - [`02-功能模块/Hooks钩子/createContextHintController.e1f53p9a.js`](../02-功能模块/Hooks钩子/createContextHintController.e1f53p9a.js) — 11.0 KB
 - [`02-功能模块/Hooks钩子/chunk-22aft7vr.js`](../02-功能模块/Hooks钩子/chunk-22aft7vr.js) — 9.8 KB
-- [`02-功能模块/Hooks钩子/SESSION_END_HOOK_TIMEOUT_MS_DEFAULT.zv5htpet.js`](../02-功能模块/Hooks钩子/SESSION_END_HOOK_TIMEOUT_MS_DEFAULT.zv5htpet.js) — 9.3 KB
-- [`02-功能模块/Hooks钩子/deserializeMessages.vsax3dt6.js`](../02-功能模块/Hooks钩子/deserializeMessages.vsax3dt6.js) — 7.1 KB
 - [`02-功能模块/Hooks钩子/chunk-bzqqe6xh.js`](../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js) — 6.5 KB
 - [`02-功能模块/Hooks钩子/registerUltrareviewPostCommitHook.t2cxwtta.js`](../02-功能模块/Hooks钩子/registerUltrareviewPostCommitHook.t2cxwtta.js) — 3.7 KB
 - [`02-功能模块/Hooks钩子/createDeviceHookRegistry.hghdtq54.js`](../02-功能模块/Hooks钩子/createDeviceHookRegistry.hghdtq54.js) — 3.1 KB
-- [`02-功能模块/Hooks钩子/getProjectDir.bkxzmr4h.js`](../02-功能模块/Hooks钩子/getProjectDir.bkxzmr4h.js) — 2.9 KB
-- [`02-功能模块/Hooks钩子/getHooksConfigFromSnapshot.r28jf2n6.js`](../02-功能模块/Hooks钩子/getHooksConfigFromSnapshot.r28jf2n6.js) — 2.6 KB
 - [`02-功能模块/Hooks钩子/createDeviceHookTemplateStore.947t9qjd.js`](../02-功能模块/Hooks钩子/createDeviceHookTemplateStore.947t9qjd.js) — 2.2 KB
-- [`02-功能模块/Hooks钩子/isRestrictedToPluginOnly.e3748qj9.js`](../02-功能模块/Hooks钩子/isRestrictedToPluginOnly.e3748qj9.js) — 2.1 KB
 - [`02-功能模块/Hooks钩子/chunk-y7gz94r8.js`](../02-功能模块/Hooks钩子/chunk-y7gz94r8.js) — 1.9 KB
 - [`02-功能模块/Hooks钩子/chunk-rwdpktga.js`](../02-功能模块/Hooks钩子/chunk-rwdpktga.js) — 1.8 KB
 - [`02-功能模块/Hooks钩子/chunk-9em0d4k5.js`](../02-功能模块/Hooks钩子/chunk-9em0d4k5.js) — 1.6 KB
-- [`02-功能模块/Hooks钩子/isClaudeMdLoadingDisabled.kqmj87cf.js`](../02-功能模块/Hooks钩子/isClaudeMdLoadingDisabled.kqmj87cf.js) — 1.2 KB
-- [`02-功能模块/Hooks钩子/DEVICE_HOOK_DEFAULT_S.nhe7mtmf.js`](../02-功能模块/Hooks钩子/DEVICE_HOOK_DEFAULT_S.nhe7mtmf.js) — 1.2 KB
 
-## 会话选择器 / Agents UI  <sub>02-功能模块 · 3 个文件 · 0.30 MB</sub>
+## 会话选择器 / Agents UI  <sub>02-功能模块 · 2 个文件 · 0.29 MB</sub>
 
 - [`02-功能模块/会话选择器-AgentsUI/会话选择器-AgentsUI.jta2pccx.js`](../02-功能模块/会话选择器-AgentsUI/会话选择器-AgentsUI.jta2pccx.js) — 289.0 KB
 - [`02-功能模块/会话选择器-AgentsUI/login-ui.y0z0y3sz.js`](../02-功能模块/会话选择器-AgentsUI/login-ui.y0z0y3sz.js) — 10.7 KB
-- [`02-功能模块/会话选择器-AgentsUI/registerToolHosts.h7s6xggv.js`](../02-功能模块/会话选择器-AgentsUI/registerToolHosts.h7s6xggv.js) — 3.6 KB
 
-## Bedrock / Vertex  <sub>02-功能模块 · 30 个文件 · 0.28 MB</sub>
+## Bedrock / Vertex  <sub>02-功能模块 · 29 个文件 · 0.27 MB</sub>
 
 - [`02-功能模块/Bedrock-Vertex/chunk-g6sqdw6w.js`](../02-功能模块/Bedrock-Vertex/chunk-g6sqdw6w.js) — 50.2 KB
 - [`02-功能模块/Bedrock-Vertex/chunk-yvs1a1sd.js`](../02-功能模块/Bedrock-Vertex/chunk-yvs1a1sd.js) — 42.7 KB
@@ -1328,7 +1143,6 @@
 - [`02-功能模块/Bedrock-Vertex/AnthropicGoogleCloud.sts4ygex.js`](../02-功能模块/Bedrock-Vertex/AnthropicGoogleCloud.sts4ygex.js) — 8.3 KB
 - [`02-功能模块/Bedrock-Vertex/chunk-bnft4099.js`](../02-功能模块/Bedrock-Vertex/chunk-bnft4099.js) — 7.9 KB
 - [`02-功能模块/Bedrock-Vertex/AnthropicVertex.1thfsdgf.js`](../02-功能模块/Bedrock-Vertex/AnthropicVertex.1thfsdgf.js) — 7.9 KB
-- [`02-功能模块/Bedrock-Vertex/getMainLoopModel.q5h945se.js`](../02-功能模块/Bedrock-Vertex/getMainLoopModel.q5h945se.js) — 7.2 KB
 - [`02-功能模块/Bedrock-Vertex/ThirdPartyModelUpgradeDialog.gcjbt04b.js`](../02-功能模块/Bedrock-Vertex/ThirdPartyModelUpgradeDialog.gcjbt04b.js) — 7.0 KB
 - [`02-功能模块/Bedrock-Vertex/fromSSO.hsr720kb.js`](../02-功能模块/Bedrock-Vertex/fromSSO.hsr720kb.js) — 7.0 KB
 - [`02-功能模块/Bedrock-Vertex/seedEnvDefaultForUserPin.jmem3wk1.js`](../02-功能模块/Bedrock-Vertex/seedEnvDefaultForUserPin.jmem3wk1.js) — 6.9 KB
@@ -1361,7 +1175,7 @@
 - [`00-第三方库/parse5/parse5.2zwbfepc.js`](../00-第三方库/parse5/parse5.2zwbfepc.js) — 233.4 KB
 - [`00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js`](../00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js) — 8.5 KB
 
-## 云会话 / Teleport  <sub>02-功能模块 · 24 个文件 · 0.23 MB</sub>
+## 云会话 / Teleport  <sub>02-功能模块 · 20 个文件 · 0.20 MB</sub>
 
 - [`02-功能模块/云会话-Teleport/TeleportMenu.ey2n7fyy.js`](../02-功能模块/云会话-Teleport/TeleportMenu.ey2n7fyy.js) — 22.6 KB
 - [`02-功能模块/云会话-Teleport/call.vkfgry1q.js`](../02-功能模块/云会话-Teleport/call.vkfgry1q.js) — 17.8 KB
@@ -1378,11 +1192,7 @@
 - [`02-功能模块/云会话-Teleport/composeTeleportFetchOverride.twznxbef.js`](../02-功能模块/云会话-Teleport/composeTeleportFetchOverride.twznxbef.js) — 8.6 KB
 - [`02-功能模块/云会话-Teleport/mobile-ui.ct57yyk2.js`](../02-功能模块/云会话-Teleport/mobile-ui.ct57yyk2.js) — 8.0 KB
 - [`02-功能模块/云会话-Teleport/session-ui.gvqzb9v7.js`](../02-功能模块/云会话-Teleport/session-ui.gvqzb9v7.js) — 8.0 KB
-- [`02-功能模块/云会话-Teleport/teleportResumeCodeSession.sn404ggd.js`](../02-功能模块/云会话-Teleport/teleportResumeCodeSession.sn404ggd.js) — 7.5 KB
 - [`02-功能模块/云会话-Teleport/chunk-eq05pssv.js`](../02-功能模块/云会话-Teleport/chunk-eq05pssv.js) — 7.4 KB
-- [`02-功能模块/云会话-Teleport/launchSessionRepl.d9s658w1.js`](../02-功能模块/云会话-Teleport/launchSessionRepl.d9s658w1.js) — 7.4 KB
-- [`02-功能模块/云会话-Teleport/EMPTY_PROJECTS_SELF_IDENTITY.c9g27w9f.js`](../02-功能模块/云会话-Teleport/EMPTY_PROJECTS_SELF_IDENTITY.c9g27w9f.js) — 7.0 KB
-- [`02-功能模块/云会话-Teleport/deviceHooksProcessMemories.6x3sy8vd.js`](../02-功能模块/云会话-Teleport/deviceHooksProcessMemories.6x3sy8vd.js) — 6.8 KB
 - [`02-功能模块/云会话-Teleport/chunk-8scrd4ba.js`](../02-功能模块/云会话-Teleport/chunk-8scrd4ba.js) — 5.0 KB
 - [`02-功能模块/云会话-Teleport/pullsBackToThisMachine.gztq23vf.js`](../02-功能模块/云会话-Teleport/pullsBackToThisMachine.gztq23vf.js) — 4.1 KB
 - [`02-功能模块/云会话-Teleport/deviceEventSignerFor.14ybgam1.js`](../02-功能模块/云会话-Teleport/deviceEventSignerFor.14ybgam1.js) — 3.8 KB
@@ -1392,14 +1202,13 @@
 
 - [`02-功能模块/设置-配置-UI/设置-配置-UI.kezhax6q.js`](../02-功能模块/设置-配置-UI/设置-配置-UI.kezhax6q.js) — 231.2 KB
 
-## 会话 / 历史 / 恢复  <sub>02-功能模块 · 12 个文件 · 0.22 MB</sub>
+## 会话 / 历史 / 恢复  <sub>02-功能模块 · 11 个文件 · 0.20 MB</sub>
 
 - [`02-功能模块/会话-历史-恢复/chunk-szqky9sa.js`](../02-功能模块/会话-历史-恢复/chunk-szqky9sa.js) — 45.6 KB
 - [`02-功能模块/会话-历史-恢复/chunk-t3q91yqm.js`](../02-功能模块/会话-历史-恢复/chunk-t3q91yqm.js) — 33.5 KB
 - [`02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js`](../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js) — 32.8 KB
 - [`02-功能模块/会话-历史-恢复/ResumeConversation.6qw1t885.js`](../02-功能模块/会话-历史-恢复/ResumeConversation.6qw1t885.js) — 30.9 KB
 - [`02-功能模块/会话-历史-恢复/branch-cmd.36vyfzw0.js`](../02-功能模块/会话-历史-恢复/branch-cmd.36vyfzw0.js) — 17.8 KB
-- [`02-功能模块/会话-历史-恢复/getTranscriptPathForSession.yb7s8f31.js`](../02-功能模块/会话-历史-恢复/getTranscriptPathForSession.yb7s8f31.js) — 16.6 KB
 - [`02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js`](../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js) — 9.4 KB
 - [`02-功能模块/会话-历史-恢复/getCutoffDate.6heqfanj.js`](../02-功能模块/会话-历史-恢复/getCutoffDate.6heqfanj.js) — 7.4 KB
 - [`02-功能模块/会话-历史-恢复/startBackgroundHousekeeping.t1hjzkg6.js`](../02-功能模块/会话-历史-恢复/startBackgroundHousekeeping.t1hjzkg6.js) — 7.3 KB
@@ -1422,7 +1231,7 @@
 - [`02-功能模块/工具Bash-Shell/chunk-qnax4jt7.js`](../02-功能模块/工具Bash-Shell/chunk-qnax4jt7.js) — 4.4 KB
 - [`02-功能模块/工具Bash-Shell/chunk-ktp8xtmy.js`](../02-功能模块/工具Bash-Shell/chunk-ktp8xtmy.js) — 4.1 KB
 
-## Git / Worktree  <sub>02-功能模块 · 10 个文件 · 0.20 MB</sub>
+## Git / Worktree  <sub>02-功能模块 · 9 个文件 · 0.20 MB</sub>
 
 - [`02-功能模块/Git-Worktree/chunk-v967hawf.js`](../02-功能模块/Git-Worktree/chunk-v967hawf.js) — 48.8 KB
 - [`02-功能模块/Git-Worktree/MAX_OVERLAY_PREREQUISITES.kvm00s1b.js`](../02-功能模块/Git-Worktree/MAX_OVERLAY_PREREQUISITES.kvm00s1b.js) — 37.3 KB
@@ -1433,7 +1242,6 @@
 - [`02-功能模块/Git-Worktree/chunk-qdn32vbw.js`](../02-功能模块/Git-Worktree/chunk-qdn32vbw.js) — 11.0 KB
 - [`02-功能模块/Git-Worktree/IDENTITY_CHANGED_SUMMARY.fc8k0hbw.js`](../02-功能模块/Git-Worktree/IDENTITY_CHANGED_SUMMARY.fc8k0hbw.js) — 8.5 KB
 - [`02-功能模块/Git-Worktree/chunk-bk9696gx.js`](../02-功能模块/Git-Worktree/chunk-bk9696gx.js) — 8.2 KB
-- [`02-功能模块/Git-Worktree/setProvisionalStartupMode.7jr1mv9x.js`](../02-功能模块/Git-Worktree/setProvisionalStartupMode.7jr1mv9x.js) — 1.6 KB
 
 ## 第三方库 · acorn  <sub>00-第三方库 · 1 个文件 · 0.18 MB</sub>
 
@@ -1450,22 +1258,19 @@
 - [`02-功能模块/自动更新-安装/update-cmd.9gb1jsgf.js`](../02-功能模块/自动更新-安装/update-cmd.9gb1jsgf.js) — 7.1 KB
 - [`02-功能模块/自动更新-安装/chunk-dv82rn71.js`](../02-功能模块/自动更新-安装/chunk-dv82rn71.js) — 0.7 KB
 
-## 斜杠命令 · 框架  <sub>02-功能模块 · 23 个文件 · 0.17 MB</sub>
+## 斜杠命令 · 框架  <sub>02-功能模块 · 20 个文件 · 0.15 MB</sub>
 
 - [`02-功能模块/斜杠命令-框架/chunk-s195n5de.js`](../02-功能模块/斜杠命令-框架/chunk-s195n5de.js) — 54.5 KB
-- [`02-功能模块/斜杠命令-框架/getBuiltinCommands.8nr5y4mb.js`](../02-功能模块/斜杠命令-框架/getBuiltinCommands.8nr5y4mb.js) — 8.2 KB
 - [`02-功能模块/斜杠命令-框架/config-cmd.p6yd15th.js`](../02-功能模块/斜杠命令-框架/config-cmd.p6yd15th.js) — 7.9 KB
 - [`02-功能模块/斜杠命令-框架/fast-cmd.rc0etws2.js`](../02-功能模块/斜杠命令-框架/fast-cmd.rc0etws2.js) — 7.6 KB
 - [`02-功能模块/斜杠命令-框架/clear-cmd.p42dwdgg.js`](../02-功能模块/斜杠命令-框架/clear-cmd.p42dwdgg.js) — 7.6 KB
 - [`02-功能模块/斜杠命令-框架/reload-skills-cmd.pe2vhg4b.js`](../02-功能模块/斜杠命令-框架/reload-skills-cmd.pe2vhg4b.js) — 7.6 KB
 - [`02-功能模块/斜杠命令-框架/add-dir-cmd.n6ncahgx.js`](../02-功能模块/斜杠命令-框架/add-dir-cmd.n6ncahgx.js) — 7.3 KB
 - [`02-功能模块/斜杠命令-框架/exit-cmd.42way6sp.js`](../02-功能模块/斜杠命令-框架/exit-cmd.42way6sp.js) — 7.1 KB
-- [`02-功能模块/斜杠命令-框架/processPromptSlashCommand.psenh9re.js`](../02-功能模块/斜杠命令-框架/processPromptSlashCommand.psenh9re.js) — 7.1 KB
 - [`02-功能模块/斜杠命令-框架/call.veneaepr.js`](../02-功能模块/斜杠命令-框架/call.veneaepr.js) — 7.0 KB
 - [`02-功能模块/斜杠命令-框架/call.x8er2x1t.js`](../02-功能模块/斜杠命令-框架/call.x8er2x1t.js) — 6.9 KB
 - [`02-功能模块/斜杠命令-框架/skill-doctor-cmd.q32yad1b.js`](../02-功能模块/斜杠命令-框架/skill-doctor-cmd.q32yad1b.js) — 6.9 KB
 - [`02-功能模块/斜杠命令-框架/stop-cmd.3kf59me0.js`](../02-功能模块/斜杠命令-框架/stop-cmd.3kf59me0.js) — 6.9 KB
-- [`02-功能模块/斜杠命令-框架/context-cmd.8wygjw52.js`](../02-功能模块/斜杠命令-框架/context-cmd.8wygjw52.js) — 6.9 KB
 - [`02-功能模块/斜杠命令-框架/default.jtnaktw8.js`](../02-功能模块/斜杠命令-框架/default.jtnaktw8.js) — 4.7 KB
 - [`02-功能模块/斜杠命令-框架/goal-cmd.rjv3q5te.js`](../02-功能模块/斜杠命令-框架/goal-cmd.rjv3q5te.js) — 3.9 KB
 - [`02-功能模块/斜杠命令-框架/default.8yey92bt.js`](../02-功能模块/斜杠命令-框架/default.8yey92bt.js) — 3.7 KB
@@ -1538,12 +1343,11 @@
 
 - [`02-功能模块/Vim模式/Vim模式.nnewe0gf.js`](../02-功能模块/Vim模式/Vim模式.nnewe0gf.js) — 142.0 KB
 
-## 目录同步 (dir-sync)  <sub>02-功能模块 · 6 个文件 · 0.14 MB</sub>
+## 目录同步 (dir-sync)  <sub>02-功能模块 · 5 个文件 · 0.13 MB</sub>
 
 - [`02-功能模块/目录同步(dir-sync)/chunk-gbhqtdpn.js`](../02-功能模块/目录同步(dir-sync)/chunk-gbhqtdpn.js) — 63.3 KB
 - [`02-功能模块/目录同步(dir-sync)/chunk-zbxyj64j.js`](../02-功能模块/目录同步(dir-sync)/chunk-zbxyj64j.js) — 33.9 KB
 - [`02-功能模块/目录同步(dir-sync)/openFolderGitSync.by6ppgfd.js`](../02-功能模块/目录同步(dir-sync)/openFolderGitSync.by6ppgfd.js) — 32.2 KB
-- [`02-功能模块/目录同步(dir-sync)/MAX_INCLUDED_FILES.wb0rcq25.js`](../02-功能模块/目录同步(dir-sync)/MAX_INCLUDED_FILES.wb0rcq25.js) — 4.4 KB
 - [`02-功能模块/目录同步(dir-sync)/LOCAL_DIVERGENCE_DEADLINE_MS.9y8d6e21.js`](../02-功能模块/目录同步(dir-sync)/LOCAL_DIVERGENCE_DEADLINE_MS.9y8d6e21.js) — 4.2 KB
 - [`02-功能模块/目录同步(dir-sync)/chunk-1vkmxx3s.js`](../02-功能模块/目录同步(dir-sync)/chunk-1vkmxx3s.js) — 4.1 KB
 
@@ -1561,14 +1365,12 @@
 
 - [`02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js`](../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js) — 132.1 KB
 
-## AutoMode / 自动模式  <sub>02-功能模块 · 7 个文件 · 0.13 MB</sub>
+## AutoMode / 自动模式  <sub>02-功能模块 · 5 个文件 · 0.11 MB</sub>
 
 - [`02-功能模块/AutoMode-自动模式/LINK_SCAN_MAX_BYTES.mjs9q59k.js`](../02-功能模块/AutoMode-自动模式/LINK_SCAN_MAX_BYTES.mjs9q59k.js) — 39.8 KB
 - [`02-功能模块/AutoMode-自动模式/hasExistingAutoModeConfig.9k4nmsaw.js`](../02-功能模块/AutoMode-自动模式/hasExistingAutoModeConfig.9k4nmsaw.js) — 31.0 KB
 - [`02-功能模块/AutoMode-自动模式/auto-mode-setup-cmd.km6675e1.js`](../02-功能模块/AutoMode-自动模式/auto-mode-setup-cmd.km6675e1.js) — 19.4 KB
 - [`02-功能模块/AutoMode-自动模式/chunk-z0qj8awf.js`](../02-功能模块/AutoMode-自动模式/chunk-z0qj8awf.js) — 17.6 KB
-- [`02-功能模块/AutoMode-自动模式/shouldShowAutoModeEntryWarning.xj71m4xa.js`](../02-功能模块/AutoMode-自动模式/shouldShowAutoModeEntryWarning.xj71m4xa.js) — 7.0 KB
-- [`02-功能模块/AutoMode-自动模式/shouldShowAutoDefaultNudge.bvr4kpmb.js`](../02-功能模块/AutoMode-自动模式/shouldShowAutoDefaultNudge.bvr4kpmb.js) — 6.9 KB
 - [`02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js`](../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js) — 6.2 KB
 
 ## IDE 集成 / LSP  <sub>02-功能模块 · 2 个文件 · 0.12 MB</sub>
@@ -1623,12 +1425,11 @@
 - [`01-核心基础设施/HTTP-网络层/HTTP-网络层.pfw3b51q.js`](../01-核心基础设施/HTTP-网络层/HTTP-网络层.pfw3b51q.js) — 80.8 KB
 - [`01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js`](../01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js) — 13.5 KB
 
-## 上下文压缩 / Compact  <sub>02-功能模块 · 11 个文件 · 0.10 MB</sub>
+## 上下文压缩 / Compact  <sub>02-功能模块 · 10 个文件 · 0.09 MB</sub>
 
 - [`02-功能模块/上下文压缩-Compact/context-ui.vp06w3az.js`](../02-功能模块/上下文压缩-Compact/context-ui.vp06w3az.js) — 36.9 KB
 - [`02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js`](../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js) — 15.2 KB
 - [`02-功能模块/上下文压缩-Compact/autocompact-ui.7sr9cvdp.js`](../02-功能模块/上下文压缩-Compact/autocompact-ui.7sr9cvdp.js) — 15.1 KB
-- [`02-功能模块/上下文压缩-Compact/autocompact-cmd.hsr15zmr.js`](../02-功能模块/上下文压缩-Compact/autocompact-cmd.hsr15zmr.js) — 6.9 KB
 - [`02-功能模块/上下文压缩-Compact/chunk-40jcpbzh.js`](../02-功能模块/上下文压缩-Compact/chunk-40jcpbzh.js) — 6.6 KB
 - [`02-功能模块/上下文压缩-Compact/chunk-86azyf7z.js`](../02-功能模块/上下文压缩-Compact/chunk-86azyf7z.js) — 4.9 KB
 - [`02-功能模块/上下文压缩-Compact/chunk-qbdgst52.js`](../02-功能模块/上下文压缩-Compact/chunk-qbdgst52.js) — 4.6 KB
@@ -1681,7 +1482,7 @@
 - [`02-功能模块/工具UI渲染/BackgroundHint.nne14pfp.js`](../02-功能模块/工具UI渲染/BackgroundHint.nne14pfp.js) — 8.2 KB
 - [`02-功能模块/工具UI渲染/renderToolResultMessage.pwg9xdk6.js`](../02-功能模块/工具UI渲染/renderToolResultMessage.pwg9xdk6.js) — 4.4 KB
 
-## 语音 / 音频  <sub>02-功能模块 · 9 个文件 · 0.08 MB</sub>
+## 语音 / 音频  <sub>02-功能模块 · 8 个文件 · 0.07 MB</sub>
 
 - [`02-功能模块/语音-音频/useVoice.ekf7rmy1.js`](../02-功能模块/语音-音频/useVoice.ekf7rmy1.js) — 28.5 KB
 - [`02-功能模块/语音-音频/runPtyHost.rdr8zhtx.js`](../02-功能模块/语音-音频/runPtyHost.rdr8zhtx.js) — 14.3 KB
@@ -1689,7 +1490,6 @@
 - [`02-功能模块/语音-音频/voice-cmd.mh3qv3n3.js`](../02-功能模块/语音-音频/voice-cmd.mh3qv3n3.js) — 6.8 KB
 - [`02-功能模块/语音-音频/checkRecordingAvailability.sby0acpc.js`](../02-功能模块/语音-音频/checkRecordingAvailability.sby0acpc.js) — 6.5 KB
 - [`02-功能模块/语音-音频/chunk-cfhndstm.js`](../02-功能模块/语音-音频/chunk-cfhndstm.js) — 6.1 KB
-- [`02-功能模块/语音-音频/isVoiceStreamAvailable.0q1zrfge.js`](../02-功能模块/语音-音频/isVoiceStreamAvailable.0q1zrfge.js) — 3.0 KB
 - [`02-功能模块/语音-音频/writeNativePlaybackData.kaab95p2.js`](../02-功能模块/语音-音频/writeNativePlaybackData.kaab95p2.js) — 2.1 KB
 - [`02-功能模块/语音-音频/chunk-4q4fh1a5.js`](../02-功能模块/语音-音频/chunk-4q4fh1a5.js) — 0.7 KB
 
@@ -1709,17 +1509,13 @@
 - [`02-功能模块/DesignSync/chunk-zyy4nsb8.js`](../02-功能模块/DesignSync/chunk-zyy4nsb8.js) — 5.2 KB
 - [`02-功能模块/DesignSync/chunk-5kyac4wk.js`](../02-功能模块/DesignSync/chunk-5kyac4wk.js) — 4.7 KB
 
-## 工具: WebFetch/WebSearch  <sub>02-功能模块 · 12 个文件 · 0.06 MB</sub>
+## 工具: WebFetch/WebSearch  <sub>02-功能模块 · 8 个文件 · 0.04 MB</sub>
 
 - [`02-功能模块/工具WebFetch-WebSearch/registerClaudeCodeSkill.5ep67jch.js`](../02-功能模块/工具WebFetch-WebSearch/registerClaudeCodeSkill.5ep67jch.js) — 9.8 KB
 - [`02-功能模块/工具WebFetch-WebSearch/SKILL_MODEL_VARS.xb5anhsm.js`](../02-功能模块/工具WebFetch-WebSearch/SKILL_MODEL_VARS.xb5anhsm.js) — 9.3 KB
 - [`02-功能模块/工具WebFetch-WebSearch/registerClaudeApiSkill.mp5xenfc.js`](../02-功能模块/工具WebFetch-WebSearch/registerClaudeApiSkill.mp5xenfc.js) — 9.0 KB
-- [`02-功能模块/工具WebFetch-WebSearch/getURLMarkdownContent.z7w6vd76.js`](../02-功能模块/工具WebFetch-WebSearch/getURLMarkdownContent.z7w6vd76.js) — 7.0 KB
 - [`02-功能模块/工具WebFetch-WebSearch/chunk-rj210cds.js`](../02-功能模块/工具WebFetch-WebSearch/chunk-rj210cds.js) — 6.9 KB
-- [`02-功能模块/工具WebFetch-WebSearch/WebFetchTool.5695xfa4.js`](../02-功能模块/工具WebFetch-WebSearch/WebFetchTool.5695xfa4.js) — 6.8 KB
 - [`02-功能模块/工具WebFetch-WebSearch/DEFAULT_ARTIFACT_READ_PROMPT.hsn2594d.js`](../02-功能模块/工具WebFetch-WebSearch/DEFAULT_ARTIFACT_READ_PROMPT.hsn2594d.js) — 4.3 KB
-- [`02-功能模块/工具WebFetch-WebSearch/ToolSearchTool.a09241da.js`](../02-功能模块/工具WebFetch-WebSearch/ToolSearchTool.a09241da.js) — 3.4 KB
-- [`02-功能模块/工具WebFetch-WebSearch/getMCPUserAgent.bp69tv0t.js`](../02-功能模块/工具WebFetch-WebSearch/getMCPUserAgent.bp69tv0t.js) — 3.1 KB
 - [`02-功能模块/工具WebFetch-WebSearch/chunk-1mxgbqzj.js`](../02-功能模块/工具WebFetch-WebSearch/chunk-1mxgbqzj.js) — 2.6 KB
 - [`02-功能模块/工具WebFetch-WebSearch/SKILL_PROMPT.6yeyjf7j.js`](../02-功能模块/工具WebFetch-WebSearch/SKILL_PROMPT.6yeyjf7j.js) — 1.2 KB
 - [`02-功能模块/工具WebFetch-WebSearch/chunk-62z2xwnm.js`](../02-功能模块/工具WebFetch-WebSearch/chunk-62z2xwnm.js) — 1.0 KB
@@ -1741,11 +1537,10 @@
 - [`00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js`](../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js) — 62.4 KB
 - [`00-第三方库/_未识别/第三方库-HTTP代理/defaultProvider.27d886dy.js`](../00-第三方库/_未识别/第三方库-HTTP代理/defaultProvider.27d886dy.js) — 0.7 KB
 
-## 策略限制 (Policy Limits)  <sub>02-功能模块 · 3 个文件 · 0.06 MB</sub>
+## 策略限制 (Policy Limits)  <sub>02-功能模块 · 2 个文件 · 0.05 MB</sub>
 
 - [`02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js`](../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js) — 27.6 KB
 - [`02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js`](../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js) — 27.3 KB
-- [`02-功能模块/策略限制(PolicyLimits)/getLastFetchOutcome.w0e6rc4p.js`](../02-功能模块/策略限制(PolicyLimits)/getLastFetchOutcome.w0e6rc4p.js) — 4.0 KB
 
 ## 反馈 / 错误上报  <sub>02-功能模块 · 4 个文件 · 0.06 MB</sub>
 
@@ -1772,11 +1567,10 @@
 - [`02-功能模块/用量额度-限额/usage-cmd.dvyc6m2v.js`](../02-功能模块/用量额度-限额/usage-cmd.dvyc6m2v.js) — 10.7 KB
 - [`02-功能模块/用量额度-限额/ExtraUsageDialog.fybj08bs.js`](../02-功能模块/用量额度-限额/ExtraUsageDialog.fybj08bs.js) — 8.9 KB
 
-## 工具: Task/Agent 调度  <sub>02-功能模块 · 4 个文件 · 0.05 MB</sub>
+## 工具: Task/Agent 调度  <sub>02-功能模块 · 3 个文件 · 0.04 MB</sub>
 
 - [`02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js`](../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js) — 31.5 KB
 - [`02-功能模块/工具Task-Agent调度/renderGroupedAgentToolUse.5y53hkmt.js`](../02-功能模块/工具Task-Agent调度/renderGroupedAgentToolUse.5y53hkmt.js) — 10.0 KB
-- [`02-功能模块/工具Task-Agent调度/FORK_AGENT.3cp5w2m6.js`](../02-功能模块/工具Task-Agent调度/FORK_AGENT.3cp5w2m6.js) — 7.0 KB
 - [`02-功能模块/工具Task-Agent调度/chunk-1px84m19.js`](../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js) — 1.1 KB
 
 ## Diff 引擎  <sub>02-功能模块 · 3 个文件 · 0.05 MB</sub>
@@ -1800,12 +1594,11 @@
 - [`02-功能模块/文件监听-Watch/文件监听-Watch.3efypmps.js`](../02-功能模块/文件监听-Watch/文件监听-Watch.3efypmps.js) — 34.1 KB
 - [`02-功能模块/文件监听-Watch/chunk-mmg1rsp2.js`](../02-功能模块/文件监听-Watch/chunk-mmg1rsp2.js) — 8.1 KB
 
-## Daemon / 守护服务  <sub>02-功能模块 · 4 个文件 · 0.04 MB</sub>
+## Daemon / 守护服务  <sub>02-功能模块 · 3 个文件 · 0.04 MB</sub>
 
 - [`02-功能模块/Daemon-守护服务/daemon-ui.z0smrekj.js`](../02-功能模块/Daemon-守护服务/daemon-ui.z0smrekj.js) — 32.6 KB
 - [`02-功能模块/Daemon-守护服务/createRoot.pw1402cq.js`](../02-功能模块/Daemon-守护服务/createRoot.pw1402cq.js) — 5.2 KB
 - [`02-功能模块/Daemon-守护服务/getBaseRenderOptions.caxv2veh.js`](../02-功能模块/Daemon-守护服务/getBaseRenderOptions.caxv2veh.js) — 2.9 KB
-- [`02-功能模块/Daemon-守护服务/getEraseScreenSequence.aw2vt67d.js`](../02-功能模块/Daemon-守护服务/getEraseScreenSequence.aw2vt67d.js) — 0.8 KB
 
 ## AppState / 状态管理  <sub>02-功能模块 · 2 个文件 · 0.04 MB</sub>
 
@@ -1837,11 +1630,10 @@
 
 - [`00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js`](../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js) — 33.7 KB
 
-## 工具: Monitor  <sub>02-功能模块 · 3 个文件 · 0.03 MB</sub>
+## 工具: Monitor  <sub>02-功能模块 · 2 个文件 · 0.02 MB</sub>
 
 - [`02-功能模块/工具Monitor/工具Monitor.981fw9dy.js`](../02-功能模块/工具Monitor/工具Monitor.981fw9dy.js) — 17.9 KB
 - [`02-功能模块/工具Monitor/chunk-kxk3njnj.js`](../02-功能模块/工具Monitor/chunk-kxk3njnj.js) — 7.5 KB
-- [`02-功能模块/工具Monitor/MonitorTool.srts92dh.js`](../02-功能模块/工具Monitor/MonitorTool.srts92dh.js) — 6.9 KB
 
 ## 核心工具 · 常量与消息  <sub>01-核心基础设施 · 1 个文件 · 0.03 MB</sub>
 
@@ -1955,15 +1747,13 @@
 
 - [`02-功能模块/Advisor-模型设置/advisor-ui.pa9qbw6d.js`](../02-功能模块/Advisor-模型设置/advisor-ui.pa9qbw6d.js) — 13.6 KB
 
-## 终端环境探测 (TUI/tmux)  <sub>02-功能模块 · 2 个文件 · 0.01 MB</sub>
+## 终端环境探测 (TUI/tmux)  <sub>02-功能模块 · 1 个文件 · 0.01 MB</sub>
 
 - [`02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js`](../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js) — 9.0 KB
-- [`02-功能模块/终端环境探测(TUI-tmux)/setupTerminal.xx9xvzr7.js`](../02-功能模块/终端环境探测(TUI-tmux)/setupTerminal.xx9xvzr7.js) — 4.5 KB
 
-## 工具: AskUserQuestion  <sub>02-功能模块 · 2 个文件 · 0.01 MB</sub>
+## 工具: AskUserQuestion  <sub>02-功能模块 · 1 个文件 · 0.01 MB</sub>
 
 - [`02-功能模块/工具AskUserQuestion/工具AskUserQuestion.72ht85nd.js`](../02-功能模块/工具AskUserQuestion/工具AskUserQuestion.72ht85nd.js) — 12.8 KB
-- [`02-功能模块/工具AskUserQuestion/default.3hksdgab.js`](../02-功能模块/工具AskUserQuestion/default.3hksdgab.js) — 0.6 KB
 
 ## Claude Desktop 交接  <sub>02-功能模块 · 1 个文件 · 0.01 MB</sub>
 
@@ -1977,9 +1767,8 @@
 
 - [`01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js`](../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js) — 12.0 KB
 
-## 工具: ToolSearch  <sub>02-功能模块 · 2 个文件 · 0.01 MB</sub>
+## 工具: ToolSearch  <sub>02-功能模块 · 1 个文件 · 0.00 MB</sub>
 
-- [`02-功能模块/工具ToolSearch/isToolSearchEnabled.vw6ce7xh.js`](../02-功能模块/工具ToolSearch/isToolSearchEnabled.vw6ce7xh.js) — 6.9 KB
 - [`02-功能模块/工具ToolSearch/chunk-1m51pqtd.js`](../02-功能模块/工具ToolSearch/chunk-1m51pqtd.js) — 4.9 KB
 
 ## Notebook (.ipynb)  <sub>02-功能模块 · 1 个文件 · 0.01 MB</sub>
@@ -1995,10 +1784,6 @@
 ## Google Drive 集成  <sub>02-功能模块 · 1 个文件 · 0.01 MB</sub>
 
 - [`02-功能模块/GoogleDrive集成/GoogleDrive集成.f0ersdj8.js`](../02-功能模块/GoogleDrive集成/GoogleDrive集成.f0ersdj8.js) — 11.0 KB
-
-## 会话恢复 / 接管 (Adopt)  <sub>02-功能模块 · 1 个文件 · 0.01 MB</sub>
-
-- [`02-功能模块/会话恢复-接管(Adopt)/CLOCK_SKEW_ALLOWANCE_MS.kh75gd37.js`](../02-功能模块/会话恢复-接管(Adopt)/CLOCK_SKEW_ALLOWANCE_MS.kh75gd37.js) — 8.8 KB
 
 ## 工具: EndConversation  <sub>02-功能模块 · 1 个文件 · 0.01 MB</sub>
 

@@ -9,13 +9,13 @@
 // Version: 2.1.263
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { uB, py } from "./chunk-9g2q4bjq.js";
-import { S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS as uB, CLAUDE_AI_INFERENCE_SCOPE as py } from "./chunk-9g2q4bjq.js";
+import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   lm,
-  eS,
-  uZe,
+  revokeOAuthToken as eS,
+  fetchAndStoreUserRoles as uZe,
   FKt,
   gsr,
   ZCt,
@@ -29,16 +29,16 @@ import {
   gRn,
   ysr,
   $Kt,
-  C5,
-  sge,
-  svt,
-  R6,
-  _Re,
-  vn,
-  cx,
-  R5,
-  vZe,
-  DRn,
+  getConfiguredAwsAuthRefresh as C5,
+  isAwsAuthRefreshFromProjectSettings as sge,
+  refreshAwsAuth as svt,
+  clearAwsCredentialsCache as R6,
+  resetAwsAuthRefreshCooldown as _Re,
+  getOauthAccountInfo as vn,
+  validateForceLoginOrg as cx,
+  getForcedLoginMethod as R5,
+  gatewaySignInScreenConfigured as vZe,
+  policyUnreadableForEnforcement as DRn,
   Bo,
   Te,
 } from "./认证-OAuth登录.419zdfz3.js";
@@ -47,12 +47,12 @@ import { le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { Tvt, Yse, c1, Evt } from "./chunk-wk0e3dz4.js";
-import { yn } from "./chunk-y7b7kf5n.js";
+import { getSecureStorage as yn } from "./chunk-y7b7kf5n.js";
 import { J5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ps } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { xH, h_ } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";

@@ -68,10 +68,10 @@ import { ou, We, b, z, Ru, Ro, ae, fp, n } from "../核心工具-日志与脱敏
 import { be, w_e } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Wf, x, oe, Wc, Rae, ft, ln, hy } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
-import { Ghe, a } from "./chunk-zqr5ctyf.js";
+import { Ghe, env as a } from "./chunk-zqr5ctyf.js";
 import { mhe, ZU, Sn } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { cL, ly, mf } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { EXTERNAL_PERMISSION_MODES as cL, PERMISSION_MODES as ly, normalizePermissionModeAlias as mf } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { NU, tHn, Mge, Gar, CRt, jet, ske, HBe } from "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
 import { mn, Do, Lhe } from "../共享小工具-未细化/chunk-z5tdbda7.js";
 import { Tx, Cke, Ett, Fr, Er } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
@@ -9070,11 +9070,11 @@ function Ld(e) {
   }
   return;
 }
-var T8t = "remote-settings.json",
+var SETTINGS_FILENAME = "remote-settings.json",
   Nt = 2097152,
-  gtt = "remote-settings-helper-consent";
-function JRt() {
-  return ar(be(), gtt);
+  HELPER_CONSENT_STATE_ID = "remote-settings-helper-consent";
+function getHelperConsentPath() {
+  return ar(be(), HELPER_CONSENT_STATE_ID);
 }
 function lr(e) {
   if (
@@ -9089,11 +9089,11 @@ function lr(e) {
   let t = jU(e);
   return Zs(t) ? t : void 0;
 }
-function FHn(e) {
+function helperConsentDigest(e) {
   let t = lr(e);
   return t && YRt(t);
 }
-function E8t(e) {
+function stripReservedKeys(e) {
   return tu(e, (t, o) => o.startsWith("$") && o !== "$schema");
 }
 class cr {
@@ -9171,81 +9171,81 @@ var Nd = new j(() => new cr());
 function ee() {
   return Nd.of(B().host);
 }
-function FQ() {
+function getSyncCacheResetEpoch() {
   return ee().resetEpoch;
 }
-function QRt() {
+function getRemoteManagedSettingsConsentedBaseline() {
   return ee().consentedPayload;
 }
-function A8t(e) {
+function markRemoteManagedSettingsConsented(e) {
   ee().markConsented(e);
 }
-function JBe(e, t, o) {
+function setSessionCache(e, t, o) {
   (ee().replaceSessionCache(e, t), Za(o));
 }
-function jR() {
+function isRemoteManagedSettingsVerified() {
   let { sessionCache: e, verifiedPayload: t } = ee();
   return e !== null && e === t;
 }
-function Yge() {
+function isRemoteManagedSettingsVerifiedAndConsented() {
   let { sessionCache: e, verifiedPayload: t, consentedPayload: o } = ee();
   return e !== null && e === t && e === o;
 }
-function $Hn(e) {
+function registerSyncCacheResetListener(e) {
   ee().registerResetListener(e);
 }
-function UHn() {
+function resetSyncCache() {
   let e = ee();
   (e.reset(), e.resetListener?.());
 }
-function BHn() {
+function markPolicySettingsNotified() {
   ee().markPolicySettingsNotified();
 }
-function jHn() {
+function hasPolicySettingsNotified() {
   return ee().policySettingsNotified;
 }
-function WHn(e, t) {
+function rememberEligibility(e, t) {
   return (ee().recordEligibility(e, { memoize: !0, ineligibleReason: t }), e);
 }
-function wie() {
+function getEligibilityMemo() {
   return ee().eligibilityMemo;
 }
-function htt() {
+function getIneligibleReason() {
   return ee().ineligibleReason;
 }
-function ZRt(e) {
+function setLastLoadStatus(e) {
   let t = ee();
   ((t.lastLoadStatus = e), t.emitLoadStatusChanged(e));
 }
-function V6() {
+function getLastLoadStatus() {
   return ee().lastLoadStatus;
 }
-function _tt(e) {
+function onLastLoadStatusChanged(e) {
   return ee().lastLoadStatusChanged.subscribe(e);
 }
-function YT() {
+function getRemoteSettingsPathOverride() {
   return;
 }
-function Jge() {
+function isEvalPolicySnapshotOnly() {
   return ee().evalPolicySnapshotOnly;
 }
-function GHn(e) {
+function setEvalPolicySnapshotOnly(e) {
   ee().evalPolicySnapshotOnly = e;
 }
-function ylr(e) {
+function isProjectedSnapshot(e) {
   return e !== null && ee().projectedView?.view === e;
 }
 function Ud(e) {
-  return e && Jge() ? { ...o8t(e), managedSourcesBehavior: "merge" } : e;
+  return e && isEvalPolicySnapshotOnly() ? { ...o8t(e), managedSourcesBehavior: "merge" } : e;
 }
-function K6() {
-  return YT() ?? ar(be(), T8t);
+function getSettingsPath() {
+  return getRemoteSettingsPathOverride() ?? ar(be(), SETTINGS_FILENAME);
 }
-function C8t() {
+function getMockRemoteSettingsValue() {
   return;
 }
-function ytt() {
-  let e = C8t();
+function getMockRemoteSettingsFixturePath() {
+  let e = getMockRemoteSettingsValue();
   return e !== void 0 && e.startsWith("@") && e.length > 1
     ? e.slice(1)
     : void 0;
@@ -9257,7 +9257,7 @@ function zd() {
     if (e === null) return null;
     let t = z(cs(e));
     if (!t || typeof t !== "object" || Array.isArray(t)) return null;
-    return E8t(t);
+    return stripReservedKeys(t);
   } catch (e) {
     if (J6(e))
       n(
@@ -9271,7 +9271,7 @@ function jd() {
   let e = Un();
   if (e !== void 0) return e.attestation;
   try {
-    return Ex(JRt(), Hd).trim() || void 0;
+    return Ex(getHelperConsentPath(), Hd).trim() || void 0;
   } catch {
     return;
   }
@@ -9279,11 +9279,11 @@ function jd() {
 function Kd() {
   let e = Un();
   if (e !== void 0) return e.content;
-  return Ex(K6(), dr);
+  return Ex(getSettingsPath(), dr);
 }
 function Un() {
   let e = ee().backendView;
-  if (!M() || e === void 0 || !e.ready || e.stoodDown || YT() !== void 0)
+  if (!M() || e === void 0 || !e.ready || e.stoodDown || getRemoteSettingsPathOverride() !== void 0)
     return;
   if (!w_e(e.configHome)) {
     e.standDown("config home changed");
@@ -9292,16 +9292,16 @@ function Un() {
   return e;
 }
 var Hn = Ce.state("remote-settings"),
-  jn = Ce.state(gtt),
+  jn = Ce.state(HELPER_CONSENT_STATE_ID),
   Fd = 2000;
-function Qge(e, t) {
+function remoteSettingsFileWritten(e, t) {
   ee().backendView?.written(e === "cache" ? Hn : jn, t);
 }
-async function Stt(e) {
+async function primeRemoteManagedSettingsCache(e) {
   if (!M() || e === void 0) return;
   let t = ee();
   if (t.backendView !== void 0) return t.backendView.priming;
-  if (YT() !== void 0) {
+  if (getRemoteSettingsPathOverride() !== void 0) {
     n(
       "Remote settings: storage prime skipped (CLAUDE_CODE_REMOTE_SETTINGS_PATH override); disk probe stays",
     );
@@ -9606,17 +9606,17 @@ function Vd(e) {
     ? { ...o, env: tu(e.env, (r, i) => Wd.has(i.toUpperCase())) }
     : o;
 }
-function ekt() {
-  let e = tkt(),
+function unverifiedRemoteCacheWithholdsProvisions() {
+  let e = getRemoteManagedSettingsRawCache(),
     t = e?.managedMcpServers;
   return e !== null && !mr(ee(), e) && me(t) && Object.keys(t).length > 0;
 }
 function mr(e, t) {
-  return t === e.verifiedPayload || Boolean(YT());
+  return t === e.verifiedPayload || Boolean(getRemoteSettingsPathOverride());
 }
-function tkt() {
+function getRemoteManagedSettingsRawCache() {
   let e = ee();
-  if (!YT() && e.eligible !== !0) return null;
+  if (!getRemoteSettingsPathOverride() && e.eligible !== !0) return null;
   if (e.sessionCache) return e.sessionCache;
   let t = Un() !== void 0,
     o = zd();
@@ -9627,11 +9627,11 @@ function tkt() {
   }
   return null;
 }
-function rv() {
-  let e = tkt(),
+function getRemoteManagedSettingsSyncFromCache() {
+  let e = getRemoteManagedSettingsRawCache(),
     t = ee(),
     o = mr(t, e) ? e : Gd(t, e);
-  if (o === null || !Jge()) return o;
+  if (o === null || !isEvalPolicySnapshotOnly()) return o;
   if (t.projectedView?.raw !== o) t.projectedView = { raw: o, view: Ud(o) };
   return t.projectedView.view;
 }
@@ -11518,7 +11518,7 @@ function Fn(e, t) {
       !0,
     );
   if ((o.push(...u), d && Object.keys(d).length > 0))
-    ((r = b0(r, d, GU)), (i = !0));
+    ((r = b0(r, d, settingsMergeCustomizer)), (i = !0));
   let p = ye(e, "managed-settings.d");
   try {
     let g = t.folderListingForPolicyWalk(p),
@@ -11534,7 +11534,7 @@ function Fn(e, t) {
     for (let f of h) {
       let { settings: y, errors: _ } = WU(ye(p, f), t, void 0, !0);
       if ((o.push(..._), y && Object.keys(y).length > 0))
-        ((r = b0(r, y, GU)), (i = !0));
+        ((r = b0(r, y, settingsMergeCustomizer)), (i = !0));
     }
   } catch (g) {
     let h = A(g);
@@ -11553,7 +11553,7 @@ function WU(e, t, o, r) {
     d = t.parsedFiles.get(i);
   if (d)
     return { settings: d.settings ? Ru(d.settings) : null, errors: d.errors };
-  let u = Zge(e, o, r);
+  let u = parseSettingsFileUncached(e, o, r);
   return (
     t.parsedFiles.set(i, u),
     { settings: u.settings ? Ru(u.settings) : null, errors: u.errors }
@@ -11637,9 +11637,9 @@ function Li(e, t) {
   };
 }
 function Bq(e) {
-  let t = e?.remote ? e.remote() : rv(),
+  let t = e?.remote ? e.remote() : getRemoteManagedSettingsSyncFromCache(),
     o =
-      !e?.remote && !e2e("managedMcpServers") && ekt()
+      !e?.remote && !e2e("managedMcpServers") && unverifiedRemoteCacheWithholdsProvisions()
         ? [
             {
               file: "remote managed settings",
@@ -11654,7 +11654,7 @@ function Bq(e) {
   if (!t || Object.keys(t).length === 0)
     return { settings: null, errors: o, servedSnapshot: !1 };
   let { settings: r, errors: i } = Tke(t, "remote managed settings");
-  return { settings: r, errors: [...o, ...v8t(i)], servedSnapshot: ylr(t) };
+  return { settings: r, errors: [...o, ...v8t(i)], servedSnapshot: isProjectedSnapshot(t) };
 }
 var H8t = "parent managed settings",
   t2e = ["cleanupPeriodDays", "desktopSessionCleanupPeriodDays"];
@@ -11688,7 +11688,7 @@ function wtt(e) {
   return { settings: i.data, errors: r };
 }
 var n_ = 2097152;
-function Zge(e, t, o) {
+function parseSettingsFileUncached(e, t, o) {
   try {
     let r;
     if (t !== void 0) r = t;
@@ -11884,14 +11884,14 @@ function ehe(e, t) {
       return ye(skt(e, t), Fg(t));
     case "projectSettings":
     case "localSettings":
-      return ye(skt(e, t), T0(e));
+      return ye(skt(e, t), getRelativeSettingsFilePathForSource(e));
     case "policySettings":
       return Mg();
     case "flagSettings":
       return t.flagPath;
   }
 }
-function T0(e) {
+function getRelativeSettingsFilePathForSource(e) {
   switch (e) {
     case "projectSettings":
       return ye(".claude", "settings.json");
@@ -11901,7 +11901,7 @@ function T0(e) {
 }
 function Aie(e) {
   if (X6(e.cwd, e.canonicalGitRoot) === ue(e.cwd)) return;
-  return ye(ue(e.cwd), T0("localSettings"));
+  return ye(ue(e.cwd), getRelativeSettingsFilePathForSource("localSettings"));
 }
 function QHn(e, t) {
   let o = t.store.perSource.get(e);
@@ -12107,7 +12107,7 @@ function O8t(e) {
   let o = am(e);
   return ((e.store.policy.allTiers = o), o);
 }
-function T1(e) {
+function isAdminPolicyOrigin(e) {
   return e === "helper" || e === "plist" || e === "hklm" || e === "file";
 }
 function Gn() {
@@ -12310,7 +12310,7 @@ function em(e, t, o) {
 function Fi(e, t, o) {
   if (Array.isArray(e) && Array.isArray(t) && o !== "fallbackModel")
     return Y([...t, ...e]);
-  return GU(e, t, o);
+  return settingsMergeCustomizer(e, t, o);
 }
 function tm(e, t) {
   let o = t[0],
@@ -12569,7 +12569,7 @@ function Gi(e) {
     if (u) return { settings: { ...u }, errors: [...p, ...(I?.errors ?? [])] };
     return { settings: null, errors: [...p, ...(I?.errors ?? [])] };
   }
-  let f = b0({}, d ?? {}, i ?? {}, GU);
+  let f = b0({}, d ?? {}, i ?? {}, settingsMergeCustomizer);
   if (r.some((I) => I.forceRemoteSettingsRefresh === !0))
     f.forceRemoteSettingsRefresh = !0;
   let y = a.CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION === !0,
@@ -12633,7 +12633,7 @@ function D8t(e, t, { includeLegacyLocalSettings: o = !0 } = {}) {
       : { settings: null };
   if (e === "flagSettings") {
     let { settings: d } = wtt(t);
-    if (d) return b0(i || {}, d, GU);
+    if (d) return b0(i || {}, d, settingsMergeCustomizer);
   }
   if (e === "localSettings" && o) {
     let d = Aie(t);
@@ -12642,7 +12642,7 @@ function D8t(e, t, { includeLegacyLocalSettings: o = !0 } = {}) {
       if (u)
         return (
           t.onLegacyLocalSettingsRead?.("per_source"),
-          b0(u, i || {}, GU)
+          b0(u, i || {}, settingsMergeCustomizer)
         );
     }
   }
@@ -12666,7 +12666,7 @@ function Ilr(e, t) {
 function Ttt(e, t) {
   return { ...e, ...t };
 }
-function GU(e, t, o) {
+function settingsMergeCustomizer(e, t, o) {
   if (o === "modelPicker" && t !== void 0) return Yi(t);
   if (Array.isArray(e) && Array.isArray(t)) {
     if (o === "fallbackModel") return t;
@@ -12695,7 +12695,7 @@ function Plr(e) {
   try {
     let o = e.store.pluginBase,
       r = {};
-    if (o) r = b0(r, o, GU);
+    if (o) r = b0(r, o, settingsMergeCustomizer);
     let i = [],
       d = new Set(),
       u = new Set(),
@@ -12709,7 +12709,7 @@ function Plr(e) {
     for (let h of XHn(e)) {
       if (h === "policySettings") {
         let { settings: y, errors: _ } = Gi(e);
-        if (((g = y), y)) r = b0(r, y, GU);
+        if (((g = y), y)) r = b0(r, y, settingsMergeCustomizer);
         p(_);
         continue;
       }
@@ -12719,7 +12719,7 @@ function Plr(e) {
           u.add(ue(y));
           let { settings: _, errors: w } = WU(y, e.store);
           if ((p(w), _))
-            (e.onLegacyLocalSettingsRead?.("cascade"), (r = b0(r, _, GU)));
+            (e.onLegacyLocalSettingsRead?.("cascade"), (r = b0(r, _, settingsMergeCustomizer)));
         }
       }
       let f = ehe(h, e);
@@ -12733,12 +12733,12 @@ function Plr(e) {
             e.store,
             h === "flagSettings" ? e.flagExpectedContent : void 0,
           );
-          if ((p(R), w)) r = b0(r, w, GU);
+          if ((p(R), w)) r = b0(r, w, settingsMergeCustomizer);
         }
       }
       if (h === "flagSettings") {
         let { settings: y, errors: _ } = wtt(e);
-        if ((p(_), y)) r = b0(r, y, GU);
+        if ((p(_), y)) r = b0(r, y, settingsMergeCustomizer);
       }
     }
     if (g) {
@@ -13005,39 +13005,39 @@ export {
   mtt,
   MHn,
   NHn,
-  T8t,
-  gtt,
-  JRt,
-  FHn,
-  E8t,
-  FQ,
-  QRt,
-  A8t,
-  JBe,
-  jR,
-  Yge,
-  $Hn,
-  UHn,
-  BHn,
-  jHn,
-  WHn,
-  wie,
-  htt,
-  ZRt,
-  V6,
-  _tt,
-  YT,
-  Jge,
-  GHn,
-  ylr,
-  K6,
-  C8t,
-  ytt,
-  Qge,
-  Stt,
-  ekt,
-  tkt,
-  rv,
+  SETTINGS_FILENAME,
+  HELPER_CONSENT_STATE_ID,
+  getHelperConsentPath,
+  helperConsentDigest,
+  stripReservedKeys,
+  getSyncCacheResetEpoch,
+  getRemoteManagedSettingsConsentedBaseline,
+  markRemoteManagedSettingsConsented,
+  setSessionCache,
+  isRemoteManagedSettingsVerified,
+  isRemoteManagedSettingsVerifiedAndConsented,
+  registerSyncCacheResetListener,
+  resetSyncCache,
+  markPolicySettingsNotified,
+  hasPolicySettingsNotified,
+  rememberEligibility,
+  getEligibilityMemo,
+  getIneligibleReason,
+  setLastLoadStatus,
+  getLastLoadStatus,
+  onLastLoadStatusChanged,
+  getRemoteSettingsPathOverride,
+  isEvalPolicySnapshotOnly,
+  setEvalPolicySnapshotOnly,
+  isProjectedSnapshot,
+  getSettingsPath,
+  getMockRemoteSettingsValue,
+  getMockRemoteSettingsFixturePath,
+  remoteSettingsFileWritten,
+  primeRemoteManagedSettingsCache,
+  unverifiedRemoteCacheWithholdsProvisions,
+  getRemoteManagedSettingsRawCache,
+  getRemoteManagedSettingsSyncFromCache,
   qHn,
   v8t,
   Tie,
@@ -13063,7 +13063,7 @@ export {
   btt,
   wtt,
   n_,
-  Zge,
+  parseSettingsFileUncached,
   Slr,
   Eke,
   I8t,
@@ -13076,7 +13076,7 @@ export {
   blr,
   jq,
   ehe,
-  T0,
+  getRelativeSettingsFilePathForSource,
   Aie,
   QHn,
   P8t,
@@ -13084,7 +13084,7 @@ export {
   Tlr,
   Elr,
   O8t,
-  T1,
+  isAdminPolicyOrigin,
   Alr,
   ZHn,
   Clr,
@@ -13099,7 +13099,7 @@ export {
   D8t,
   Ilr,
   Ttt,
-  GU,
+  settingsMergeCustomizer,
   Plr,
   E0,
 };

@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { S, u } from "./chunk-w76kejwn.js";
-import { Sj, Ti, Mi, Zn, Hs } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { _t, pq } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { lit as S, fromEnum as u } from "./chunk-w76kejwn.js";
+import { daemonDetachApc as Sj, writeStateAtomic as Ti, logJobWriteError as Mi, readJobState as Zn, isSettled as Hs } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { isBgSession as _t, isDaemonBgWorker as pq } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "./chunk-an83zrbx.js";
-import { y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { xn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function s() {

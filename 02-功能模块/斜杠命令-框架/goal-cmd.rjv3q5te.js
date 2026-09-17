@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { x, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m$e, cve, BEt, uve, dve } from "../Skills技能/chunk-sapykxw7.js";
 var u = async (l, o) => {

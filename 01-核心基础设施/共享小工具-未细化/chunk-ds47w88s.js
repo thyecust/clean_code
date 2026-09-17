@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider as Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 var d = 10,
-  XNt = 50,
-  YNt = /^(?:session|cse)_[A-Za-z0-9_-]+$/;
+  CCR_LIST_TARGET_VISIBLE = 50,
+  CCR_SESSION_ID_RE = /^(?:session|cse)_[A-Za-z0-9_-]+$/;
 function O(e) {
   let r = (e.title ?? "").trim();
   return r !== "" && !S(r);
@@ -23,15 +23,15 @@ function S(e) {
     e.startsWith("ditto:")
   );
 }
-async function Ohr(e) {
+async function walkCcrSessionList(e) {
   if (Pe() !== "firstParty") return [];
   try {
     let {
         axiosGetWithRetry: r,
         prepareApiRequest: o,
         getOAuthHeaders: _,
-      } = await import("./CCR_BYOC_BETA.422dq0ss.js"),
-      { getOauthConfig: f } = await import("../../02-功能模块/Bridge-RemoteControl/getOauthConfig.94gbqg2e.js"),
+      } = await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+      { getOauthConfig: f } = await import("../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js"),
       { accessToken: C } = await o(e?.credentials),
       u = `${f().BASE_API_URL}/v1/code/sessions`,
       b = _(C),
@@ -60,7 +60,7 @@ async function Ohr(e) {
           (g.add(t.id),
           t.status !== "archived" &&
             (e?.includeBridgeKind || t.environment_kind !== "bridge") &&
-            YNt.test(t.id) &&
+            CCR_SESSION_ID_RE.test(t.id) &&
             (e?.includeBridgeKind && t.environment_kind === "bridge"
               ? !S((t.title ?? "").trim())
               : O(t)) &&
@@ -73,7 +73,7 @@ async function Ohr(e) {
         p = c ? Date.parse(c.last_event_at ?? c.created_at) : Number.NaN;
       if (
         !s ||
-        (!e?.exhaustive && n.length >= XNt) ||
+        (!e?.exhaustive && n.length >= CCR_LIST_TARGET_VISIBLE) ||
         (e?.stopWhenOlderThan !== void 0 &&
           !Number.isNaN(p) &&
           p < e.stopWhenOlderThan)
@@ -96,4 +96,4 @@ async function Ohr(e) {
   }
   return [];
 }
-export { XNt, YNt, Ohr };
+export { CCR_LIST_TARGET_VISIBLE, CCR_SESSION_ID_RE, walkCcrSessionList };

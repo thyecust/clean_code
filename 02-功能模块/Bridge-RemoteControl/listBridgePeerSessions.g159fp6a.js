@@ -9,21 +9,21 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 196 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { tRe, kCt, yUe, GQe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { tRe, kCt, yUe, isCCREnvironmentKind as GQe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FAe } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { zu, pr } from "../权限系统/chunk-ynkf3yy4.js";
-import { ise, XG } from "./chunk-9estzwf5.js";
-import { fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { m6 } from "./chunk-mxsfy35q.js";
+import { toCompatSessionId as zu, sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { isCcrV2SendEventsEnabled as ise, isCcrV2SessionCrudEnabled as XG } from "./chunk-9estzwf5.js";
+import { extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { classifyElevatedAuthError as m6 } from "./chunk-mxsfy35q.js";
 import { cLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SD } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
-import { ZG, z4t, uh, o5, Rme } from "./chunk-tyce0p0b.js";
-import { $Tn, bTt, WTn } from "../权限系统/chunk-1y2g140m.js";
+import { isTrustedDeviceGateEnabled as ZG, CLOUD_CANNOT_REACH_ELEVATED_HINT as z4t, getTrustedDeviceToken as uh, recoverFromUntrustedDevice as o5, untrustedDeviceHint as Rme } from "./chunk-tyce0p0b.js";
+import { adoptSelfBridgeTitleFromRoster as $Tn, getSelfBridgeCompatId as bTt, getSelfBridgeTitle as WTn } from "../权限系统/chunk-1y2g140m.js";
 import { P3t } from "./chunk-1yq098a7.js";
 import { A7 } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
@@ -37,8 +37,8 @@ import { randomUUID as H } from "crypto";
 var A = 5;
 async function ne(t, i) {
   let { prepareApiRequest: u, sessionsApiWire: w } =
-      await import("../../01-核心基础设施/共享小工具-未细化/CCR_BYOC_BETA.422dq0ss.js"),
-    { getOauthConfig: P } = await import("./getOauthConfig.94gbqg2e.js"),
+      await import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+    { getOauthConfig: P } = await import("../认证-OAuth登录/chunk-9g2q4bjq.js"),
     k,
     x;
   try {
@@ -194,8 +194,8 @@ async function de(t, i, u, w, P, k, x) {
       prepareApiRequest: f,
       getOAuthHeaders: C,
       CCR_BYOC_BETA: b,
-    } = await import("../../01-核心基础设施/共享小工具-未细化/CCR_BYOC_BETA.422dq0ss.js"),
-    { getOauthConfig: p } = await import("./getOauthConfig.94gbqg2e.js"),
+    } = await import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+    { getOauthConfig: p } = await import("../认证-OAuth登录/chunk-9g2q4bjq.js"),
     v,
     S;
   try {

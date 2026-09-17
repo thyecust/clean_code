@@ -32,12 +32,12 @@ import {
   Po,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { dl, Trt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Mrr, fU, rt, Ue, E6, kZe, NRn, dx, CRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { Mrr, fU, getMainLoopModel as rt, getCanonicalName as Ue, envSessionKind as E6, kZe, NRn, dx, CRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vd, UP } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Xt } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Vnr } from "../共享小工具-未细化/chunk-1945b2ak.js";
-import { DXe, fwn, mwn } from "../共享小工具-未细化/chunk-6kad94y1.js";
+import { errorTrackingClient as DXe, isErrorTrackingCapReached as fwn, enqueueErrorLog as mwn } from "../共享小工具-未细化/chunk-6kad94y1.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { createHash as L } from "crypto";
 import { release as ne } from "os";

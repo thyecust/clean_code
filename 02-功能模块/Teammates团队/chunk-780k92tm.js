@@ -22,14 +22,14 @@ import {
   vUe,
   lRe,
   nZe,
-  rRn,
-  mb,
+  FORMER_NAME_HINT_TTL_MS as rRn,
+  getRegisteredSessionName as mb,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { lS, ii } from "./chunk-811z9z0t.js";
-import { Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { A7e, C$, DSn } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { rh } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getAgentId as lS, getTeamName as ii } from "./chunk-811z9z0t.js";
+import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { SessionRecordsUnreadableError as A7e, ownMessagingSocket as C$, listLivePeerSessions as DSn } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { getSessionNamingState as rh } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
 import {
   O3t,
   lSn,
@@ -46,7 +46,7 @@ import {
   l7e,
 } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import { f2 } from "./chunk-sr4920wy.js";
-import { Pf } from "./chunk-6b13bhw1.js";
+import { readTeamFileAsync as Pf } from "./chunk-6b13bhw1.js";
 import { cp } from "./chunk-enjekn9t.js";
 import { basename as v } from "path";
 var k = "not reachable from this cloud session",

@@ -24,7 +24,7 @@ import "../../00-第三方库/zod/zod.3g334xwq.js";
 import "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
-import { _r } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { ARTIFACT_TOOL_NAME as _r } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import "./chunk-rr78st95.js";

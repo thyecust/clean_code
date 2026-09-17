@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { rn } from "./chunk-q4e7ggp5.js";
-var vd = "claude-in-chrome",
+var CLAUDE_IN_CHROME_MCP_SERVER_NAME = "claude-in-chrome",
   f5t = "javascript_tool";
-function JC(e) {
-  return rn(e) === vd;
+function isClaudeInChromeMCPServer(e) {
+  return rn(e) === CLAUDE_IN_CHROME_MCP_SERVER_NAME;
 }
 var t = "--claude-in-chrome-mcp";
-function akn(e) {
+function isClaudeInChromeMcpLaunch(e) {
   if (e.type !== void 0 && e.type !== "stdio") return !1;
   return (
     (e.command?.includes(t) ?? !1) || (e.args?.some((r) => r.includes(t)) ?? !1)
@@ -45,4 +45,4 @@ var eir = ["file_upload", "browser_batch"],
     "list_connected_browsers",
     "select_browser",
   ];
-export { vd, f5t, JC, akn, eir, tir };
+export { CLAUDE_IN_CHROME_MCP_SERVER_NAME, f5t, isClaudeInChromeMCPServer, isClaudeInChromeMcpLaunch, eir, tir };

@@ -14,7 +14,7 @@ import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-5
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tl } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Ab, Cb, vb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getWebSocketTLSOptions as Ab, getWebSocketProxyUrl as Cb, configureGlobalAgents as vb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import {
   Pae,

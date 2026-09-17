@@ -11,7 +11,7 @@ import { Ie, ku } from "../../lodash/lodash.207999qb.js";
 import { j, ze, ke, Ox } from "../../lodash/lodash.2x3q7cfh.js";
 import { M } from "../../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { dt } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { u, Yr } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u, fromNumber as Yr } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, z, n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Wf, x, oe, ft, ln, To } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import {
@@ -27,24 +27,24 @@ import {
   Px,
   gz,
   St,
-  h,
+  logError as h,
 } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, nt, uv } from "../../zod/zod.3g334xwq.js";
-import { a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../react/react.zhnvc798.js";
 import { i } from "../../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import {
   Nve,
   sr,
-  Mf,
-  rt,
-  Nf,
-  jme,
-  oi,
-  Hm,
-  wt,
-  bu,
+  getUserSpecifiedModelSetting as Mf,
+  getMainLoopModel as rt,
+  getDefaultSonnetModel as Nf,
+  planModeConstituentFamily as jme,
+  renderModelName as oi,
+  renderFableModelName as Hm,
+  parseUserSpecifiedModel as wt,
+  getMarketingNameForModel as bu,
   FT,
   s0,
   qe,
@@ -55,19 +55,19 @@ import {
   ro,
   Wl,
   Ut,
-  _t,
+  isBgSession as _t,
   aZe,
   Hn,
-  gt,
-  qn,
-  UT,
+  isClaudeAISubscriber as gt,
+  getSubscriptionType as qn,
+  getRateLimitTier as UT,
   H,
-  Ns,
-  a1,
+  getAutoMemPath as Ns,
+  isAutoMemPath as a1,
 } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Pt } from "../../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, Xe, SL, or, gW, Ot, No, Pn, Au } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, truncateToWidth as Xe, truncateToWidthNoEllipsis as SL, truncate as or, formatSecondsShort as gW, formatDuration as Ot, formatNumber as No, formatTokens as Pn, formatResetTime as Au } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Uw, Ce } from "../../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { oL, xt } from "../../jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Js } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -91,9 +91,9 @@ import { SA, M5 } from "../../../01-核心基础设施/核心工具-字符串与
 import { Skn, wkn } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { Yxn } from "../../../02-功能模块/认证-OAuth登录/chunk-y7b7kf5n.js";
 import { dW } from "../../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
-import { t_ } from "../../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { BRIEF_TOOL_NAME as t_ } from "../../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { iy, gc, _b, hA, JZe } from "../../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { BT } from "../../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import { SEND_USER_FILE_TOOL_NAME as BT } from "../../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
 import { rg } from "../../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { Vm } from "../../ink/ink + react-reconciler.5rs3h07b.js";
 import { D } from "../../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
@@ -182,7 +182,7 @@ import {
   zVe,
   rfn,
   tht,
-  Em,
+  WebFetchTool as Em,
   t$,
   pKe,
   uht,
@@ -216,9 +216,9 @@ import { aP, eve, zo } from "../../../02-功能模块/MCP客户端/chunk-3kmsshb
 import { eU } from "../../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { so } from "../../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { NN, J$, ar, LT } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
-import { Jc, MN } from "../../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { Jc, getPlan as MN } from "../../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { Cr } from "../../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { ri } from "../../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabledCached as ri } from "../../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { BE, jE, _D, Wbt, YI, lR, ti, X7e, eJ, Xre } from "../../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { sp, ER, pse, hAt } from "../../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
@@ -227,36 +227,36 @@ import {
   Gbn,
   Ij,
   aoe,
-  bG,
-  x$,
-  RXe,
-  xwt,
-  OH,
-  eP,
-  kC,
-  sh,
-  Hwt,
-  __,
-  rp,
-  wG,
-  qGt,
-  zGt,
-  VGt,
-  hfe,
-  ewn,
-  own,
-  P1e,
-  KGt,
-  By,
-  O1e,
+  IdleNotificationMessageSchema as bG,
+  capFrameFieldForDisplay as x$,
+  capFailureReasonForDisplay as RXe,
+  PLAN_CONTENT_DISPLAY_BOUND as xwt,
+  capFrameBodyForDisplay as OH,
+  IDLE_RESULT_MAX_LENGTH as eP,
+  IDLE_SUMMARY_RECEIVE_BOUND as kC,
+  IDLE_ID_FIELD_RECEIVE_BOUND as sh,
+  capReceivedIdleResult as Hwt,
+  UNKNOWN_SENDER as __,
+  capIdFrameField as rp,
+  capRawFrameTextForDisplay as wG,
+  PlanApprovalRequestMessageSchema as qGt,
+  PlanApprovalResponseMessageSchema as zGt,
+  ShutdownRequestMessageSchema as VGt,
+  ShutdownApprovedMessageSchema as hfe,
+  ShutdownRejectedMessageSchema as ewn,
+  isTaskAssignment as own,
+  TaskCompletedMessageSchema as P1e,
+  TeammateTerminatedMessageSchema as KGt,
+  parseFrameForDisplay as By,
+  withShutdownReplyInstructions as O1e,
 } from "../../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
 import { doe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
 import { Bl } from "../第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import { cR } from "../../../02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js";
-import { nm, YS, Jre } from "../../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
+import { CRON_CREATE_TOOL_NAME as nm, CRON_DELETE_TOOL_NAME as YS, CRON_LIST_TOOL_NAME as Jre } from "../../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
 import { E$ } from "../../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { zr } from "../../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
-import { BI } from "../../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
+import { CFC_TOOL_PREFIX as BI } from "../../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
 import { tm } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { Se } from "../../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
 import { xe, Mye } from "../../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
@@ -344,7 +344,7 @@ import { Mtt } from "../../../01-核心基础设施/共享小工具-未细化/ch
 import { s, v, c, $e } from "../../zod/zod.5ef0bk11.js";
 import { Qo } from "../../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { xA } from "../../lru-cache/lru-cache.8crev50p.js";
-import { Ft } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { me } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y, lc } from "../../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { p, en } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -4890,19 +4890,19 @@ function rw(l) {
   });
 }
 var _y = {
-    name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/SEARCH_MCP_REGISTRY_TOOL_NAME.7mvtq5sb.js")
+    name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/chunk-p2wzfbaj.js")
       .SEARCH_MCP_REGISTRY_TOOL_NAME,
     ui: import.meta.require("../../../02-功能模块/MCP客户端/renderToolResultMessage.k3vkyx31.js"),
   },
   Py = {
-    name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/SUGGEST_CONNECTORS_TOOL_NAME.cfv2aq4k.js")
+    name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/chunk-0mrh424x.js")
       .SUGGEST_CONNECTORS_TOOL_NAME,
     ui: import.meta.require("../../../02-功能模块/MCP客户端/renderToolResultMessage.9n29ntaq.js"),
   },
   Cy = null,
   wy = null,
   Uy = {
-    name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/LIST_CONNECTORS_TOOL_NAME.ndgm0vy5.js").LIST_CONNECTORS_TOOL_NAME,
+    name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/chunk-9g3yj4km.js").LIST_CONNECTORS_TOOL_NAME,
     ui: import.meta.require("../../../02-功能模块/MCP客户端/renderToolResultMessage.ddfh23kw.js"),
   },
   Ny = null,
@@ -4911,7 +4911,7 @@ var _y = {
   _p = null,
   Ly = null,
   Gu = {
-    name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/WORKFLOW_TOOL_NAME.s1m31c97.js").WORKFLOW_TOOL_NAME,
+    name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js").WORKFLOW_TOOL_NAME,
     ui: import.meta.require("../../../02-功能模块/Workflow编排/renderToolResultMessage.ew7kwnxk.js"),
   },
   Sp = null,
@@ -4919,12 +4919,12 @@ var _y = {
   Pp = null,
   Cp = null,
   es = {
-    name: import.meta.require("../../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js").ARTIFACT_TOOL_NAME,
-    names: import.meta.require("../../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js"),
+    name: import.meta.require("../../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js").ARTIFACT_TOOL_NAME,
+    names: import.meta.require("../../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js"),
     ui: import.meta.require("../../../02-功能模块/Artifact发布-渲染/renderCheckToolUseMessage.zxaexmtx.js"),
   },
   vy = {
-    name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/END_CONVERSATION_TOOL_NAME.1xjr3136.js").END_CONVERSATION_TOOL_NAME,
+    name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js").END_CONVERSATION_TOOL_NAME,
     ui: import.meta.require("../../../02-功能模块/工具UI渲染/renderToolResultMessage.pwg9xdk6.js"),
   },
   Iy = {

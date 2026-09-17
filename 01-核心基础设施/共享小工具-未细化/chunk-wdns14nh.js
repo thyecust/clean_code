@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { K, jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "./chunk-an83zrbx.js";
-import { S, u } from "./chunk-w76kejwn.js";
-import { g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum as u } from "./chunk-w76kejwn.js";
+import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q$, AJe } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 function s(l) {
   if (!l) return null;
@@ -24,7 +24,7 @@ function s(l) {
   }
   return null;
 }
-function wQt(l, n, e) {
+function restoreGoalFromTranscript(l, n, e) {
   let t = s(l),
     a = t !== null ? AJe() : null;
   if (a !== null) g("goal_set", a.code, { origin: u("restored") });
@@ -69,4 +69,4 @@ function wQt(l, n, e) {
       origin: u("restored"),
     }));
 }
-export { wQt };
+export { restoreGoalFromTranscript };

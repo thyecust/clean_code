@@ -14,7 +14,7 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Tie } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { vk, DX, sVn, ajt, tfn, MX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Je } from "../Hooks钩子/chunk-bzqqe6xh.js";
 import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";

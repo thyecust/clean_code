@@ -11,30 +11,30 @@
 // [preload stripped] 原本在此预载 182 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { uo, Hr } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { a, Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a, udsEnv as Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _m, j, B, K, $p, sn, ES, o_e, ke, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { ud, l, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Fp } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { setBgExitCause as Fp } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { Ia, _t, WD, SRn, Ff, H, Bo, Te, ee, es } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Ia, isBgSession as _t, getBgJobDir as WD, prefetchApiKeyFromApiKeyHelperIfSafe as SRn, Ff, H, Bo, Te, ee, es } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { $r, kx, hh } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findCanonicalGitRoot as $r, isLinkedWorktree as kx, getIsGit as hh } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ee, Br } from "./chunk-6rfqqsva.js";
-import { ye, bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { P0n, D0n } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { getSettingsForSource as ye, getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { _setProxyAuthHelperConfig as P0n, prefetchProxyAuthFromHelperIfSafe as D0n } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
 import {
   bUt,
   $s,
-  EX,
+  hasWorktreeCreateHook as EX,
   j4n,
   pu,
   zX,
@@ -53,12 +53,12 @@ import {
   n_t,
   M3,
   ei,
-  mC,
+  saveWorktreeState as mC,
   PY,
-  T8e,
+  warmCommandSourceCaches as T8e,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { eAn, PD, f$e } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
-import { lh, LN, Ea } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { captureHooksConfigSnapshot as eAn, updateHooksConfigSnapshot as PD, updateHooksConfigSnapshotThroughBackend as f$e } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
+import { primePlanSlugCollisions as lh, getPlanSlug as LN, getPlansDirectory as Ea } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { qJn } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { Ts } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
 import { zr, z_n } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
@@ -71,7 +71,7 @@ import { jtn } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { _Oe } from "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
 import "../../02-功能模块/自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../../02-功能模块/自动更新-安装/chunk-2g5h49pk.js";
-import { kF } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
+import { flushAnalyticsSinks as kF } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import { yOt } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
@@ -122,7 +122,7 @@ async function se(e, o) {
   if (m) g("agents_cross_session_inbox", m, { bind_late: !0 });
   else y("agents_cross_session_inbox", { bind_late: !0 });
   let { updateSessionMessagingSocketPath: _ } =
-      await import("../../01-核心基础设施/共享小工具-未细化/updateSessionMessagingSocketPath.af9ag5c5.js"),
+      await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     S = r.getUdsMessagingSocketPath();
   if (S !== void 0) await _(S, o);
 }
@@ -339,7 +339,7 @@ async function _o(e, o, r, c, m, _, S, k, w, s, T) {
         i("tengu_uds_startup_bind", { durationMs: Math.round(b), bound: !!v }));
     }
   if (process.env.CLAUDE_BG_BACKEND === "daemon") {
-    let { startRendezvousServer: t } = await import("../../02-功能模块/后台任务-Shell管理/clearStartupDialogBlocked.1zrxea5b.js");
+    let { startRendezvousServer: t } = await import("../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js");
     t(s);
   }
   await z_n();
@@ -498,7 +498,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
     try {
       let d = WD(),
         v = d
-          ? await (await import("../../02-功能模块/后台任务-Shell管理/getJobDir.q5d14g0s.js")).readJobState(d, s)
+          ? await (await import("../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js")).readJobState(d, s)
           : null;
       await oe(e, v);
     } catch (d) {
@@ -517,7 +517,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
     T8e(sn(), s);
   }
   if (
-    (import("../Headless-SDK模式/setupPluginHookHotReload.b8npbg0k.js").then((t) => {
+    (import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((t) => {
       if (!Y)
         (t.loadPluginHooks(s, T).catch((d) => {
           n(`plugin hooks prefetch: ${l(d)}`);
@@ -527,7 +527,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
     !uo())
   ) {
     if (
-      (import("../../02-功能模块/Memory-CLAUDE.md/isMemoryFileAccess.qp28e8kz.js").then((t) =>
+      (import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((t) =>
         t.registerSessionFileAccessHooks(),
       ),
       import("../../02-功能模块/Hooks钩子/registerUltrareviewPostCommitHook.t2cxwtta.js").then((t) =>
@@ -535,7 +535,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
       ),
       !Nn() && Bo())
     )
-      import("../../01-核心基础设施/共享小工具-未细化/startMemoryWatcher.vp74yq2e.js").then((t) => t.startMemoryWatcher(s, T));
+      import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((t) => t.startMemoryWatcher(s, T));
   }
   (jtn(),
     i("tengu_started", {
@@ -629,8 +629,8 @@ function ho(e) {
   if (Nn() || !Bo()) return;
   (async () => {
     let [o, r] = await Promise.all([
-      import("../../01-核心基础设施/共享小工具-未细化/AUTO_MEM_WRITE_ALLOW_REASON.tjdny6p5.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/loadedIndexExclusions.dhdc4t68.js"),
+      import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+      import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
     ]);
     if (
       !process.argv.some(
@@ -646,10 +646,10 @@ function ho(e) {
       o.isIndexRecallEnabled()
     ) {
       let c = await import("../../02-功能模块/Memory-CLAUDE.md/searchMemoryFilesWithIndex.5h247hbm.js"),
-        m = await import("../../01-核心基础设施/共享小工具-未细化/getOrgMemoryServedIdentity.1k01dqaf.js"),
-        _ = await import("../../01-核心基础设施/共享小工具-未细化/isMultiStoreSyncAvailable.mskcay01.js"),
-        S = await import("../../01-核心基础设施/共享小工具-未细化/FIRST_STORE_PULL_WAIT_DEADLINE_MS.xwkzg70n.js"),
-        k = await import("../../01-核心基础设施/共享小工具-未细化/getOrgMemoryPickerData.p4q92bv4.js");
+        m = await import("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js"),
+        _ = await import("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js"),
+        S = await import("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js"),
+        k = await import("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js");
       if (_.isMultiStoreSyncAvailable() || k.hasOrgMemoryDecisionRunStarted()) {
         if (
           (await m.waitForOrgMemoryDecisionSettled(

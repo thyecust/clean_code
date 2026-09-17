@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { mLn, gLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { ye } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-function cit() {
+import { getSettingsForSource as ye } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+function capturePolicySnapshot() {
   gLn(structuredClone(ye("policySettings")));
 }
-function lWe() {
+function hasPolicyDiverged() {
   let t = mLn();
   if (t === void 0) return !0;
   return !Bun.deepEquals(t, ye("policySettings"));
 }
-export { cit, lWe };
+export { capturePolicySnapshot, hasPolicyDiverged };

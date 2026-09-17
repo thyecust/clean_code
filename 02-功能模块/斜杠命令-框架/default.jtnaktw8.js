@@ -12,10 +12,10 @@
 import { lZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { t_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
-import { Lbt } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
+import { BRIEF_TOOL_NAME as t_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { isBriefEntitled as Lbt } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
 import { O, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var r = m(() => c({ enable_slash_command: O() })),
   n = { enable_slash_command: !1 };

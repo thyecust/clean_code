@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession as _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var t = {
     type: "local-jsx",
     name: "stop",

@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-var yun = "SearchMcpRegistry",
-  Sun =
+var SEARCH_MCP_REGISTRY_TOOL_NAME = "SearchMcpRegistry",
+  DESCRIPTION =
     "Search the MCP connector registry by keyword to discover connectors that might help complete the task.",
-  bun = `Search the MCP connector registry by keyword. Call this when connecting to an MCP server might help complete the task \u2014 whether or not the user named a specific product.
+  PROMPT = `Search the MCP connector registry by keyword. Call this when connecting to an MCP server might help complete the task \u2014 whether or not the user named a specific product.
 
 Named-product examples:
 - "check my Asana tasks" \u2192 keywords ["asana", "tasks", "todo"]
@@ -21,4 +21,4 @@ Intent-based examples (no product named):
 - "pull up the design mockups" \u2192 keywords ["design", "figma", "mockup"]
 
 Returns a ranked list with directoryUuid, name, description, sample tool names, installState (org-level), and enabledInChat (this session). Results include the org's custom connectors (ones the org configured that are not in the public directory) when they match the keywords. enabledInChat: false with installState: "connected" means the connector is authenticated but toggled off for this chat \u2014 its tools are not in your tool list; tell the user to enable it in this chat's connector settings. If a result looks relevant and is not installed, tell the user they could connect it via claude.ai; this tool does not itself connect anything.`;
-export { yun, Sun, bun };
+export { SEARCH_MCP_REGISTRY_TOOL_NAME, DESCRIPTION, PROMPT };

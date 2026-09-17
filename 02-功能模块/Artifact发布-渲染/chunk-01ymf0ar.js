@@ -11,16 +11,16 @@ import { Ie, po, ac, Dr, Xo } from "../../00-第三方库/lodash/lodash.207999qb
 import { Xn, j, Gt, B, K, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { l, A, Jg, AZ, GW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u, we, Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, x, us, oe, Wc, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { nS, aBe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { rae, St, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { rae, St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   NCt,
   TUe,
@@ -31,17 +31,17 @@ import {
   KQe,
   mKt,
   Lor,
-  _t,
-  mq,
-  qD,
-  $T,
-  Ss,
-  gt,
-  kRn,
-  WUe,
-  vn,
-  mh,
-  qn,
+  isBgSession as _t,
+  isWIFDispatchAuth as mq,
+  getClaudeAIOAuthTokenOrigin as qD,
+  getClaudeAIOAuthTokenOriginAsync as $T,
+  checkAndRefreshOAuthTokenIfNeeded as Ss,
+  isClaudeAISubscriber as gt,
+  hasUsableClaudeAILogin as kRn,
+  getStoredOAuthSubscriptionType as WUe,
+  getOauthAccountInfo as vn,
+  getStoredOauthAccountInfo as mh,
+  getSubscriptionType as qn,
   H,
   RU,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -63,46 +63,46 @@ import {
   AL,
   xPn,
 } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { zT, ye, W5t, Rd, vBe, pie, dS } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { G5, KU, bkt, o_ } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { projectSettingsAliasesUserSettings as zT, getSettingsForSource as ye, getLegacyLocalSettingsOverlay as W5t, getAllPolicyTierSettings as Rd, getAdminTierEnvValue as vBe, getDurablePolicyTierSettings as pie, getPolicySettingsOrigin as dS } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { isCancel as qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { G5, KU, bkt, getUsableProxyUrl as o_ } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import {
   Vo,
   YZe,
-  _r,
-  Ikn,
-  Oe,
-  fr,
-  L6,
-  YD,
-  Mkn,
-  EQ,
-  fBe,
-  Gd,
-  Wt,
-  T5t,
-  sie,
-  iie,
-  e_,
-  d1,
-  O5,
-  QC,
-  sS,
-  mBe,
-  bge,
-  Bvt,
-  jvt,
-  Ml,
-  p1,
-  Pa,
-  Gkn,
-  fet,
+  ARTIFACT_TOOL_NAME as _r,
+  notAnArtifactUrlMessage as Ikn,
+  ArtifactInputError as Oe,
+  ARTIFACT_SLUG_RE as fr,
+  ARTIFACT_VERSION_SAFE_RE as L6,
+  ARTIFACT_MAX_RESULT_SIZE_CHARS as YD,
+  ARTIFACT_PAGE_INLINE_RESULT_CAP as Mkn,
+  ARTIFACT_DB_READ_MAX_RESULT_SIZE_CHARS as EQ,
+  ARTIFACT_STUB_URL_PREFIX as fBe,
+  getArtifactPublishStubDir as Gd,
+  parseArtifactUrl as Wt,
+  artifactViewerPath as T5t,
+  artifactContentOriginUrlFor as sie,
+  vetForeignFavicon as iie,
+  sanitizeArtifactTitle as e_,
+  QUOTE_HOMOGLYPHS as d1,
+  SINGLE_QUOTE_RUNS as O5,
+  INVISIBLE_BLANKS as QC,
+  isDecisionSurfaceControl as sS,
+  INVISIBLE_BLANK_CODE_POINT as mBe,
+  isJoinerOrEmojiSelector as bge,
+  rideStateAfter as Bvt,
+  selectorOrJoinerRides as jvt,
+  scrubArtifactEnvelopeTags as Ml,
+  scrubServerLine as p1,
+  sweepAskCopy as Pa,
+  MODEL_TEXT_PUNCT_CODE_POINT as Gkn,
+  sweepMarkerLookalikes as fet,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { go, vge } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { Zi } from "../Teammates团队/chunk-811z9z0t.js";
-import { Txt, ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { isTeammate as Zi } from "../Teammates团队/chunk-811z9z0t.js";
+import { isTransportError as Txt, externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import {
   yme,
   hAn,
@@ -137,7 +137,7 @@ import {
   ose,
   MJe,
 } from "../图表-Mermaid/chunk-743atbtj.js";
-import { Yy } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { parseRetryAfterHeader as Yy } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import {
   xN,
   ne,
@@ -157,9 +157,9 @@ import {
   jer,
 } from "./chunk-rr78st95.js";
 import { bFe, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import { WH } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { lA, KJ, Mt, Cme, ch } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { xYe } from "../权限系统/chunk-1y2g140m.js";
+import { DANGEROUS_FILES_LC as WH } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isPolicyLimitsEligible as lA, getPolicyLimitsIneligibleReason as KJ, isPolicyAllowed as Mt, isPolicyRouteMissing as Cme, getResponseFromCache as ch } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { getRemoteControlSessionCompatId as xYe } from "../权限系统/chunk-1y2g140m.js";
 import { xC, moe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { Fu, RJ } from "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
 import { jy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
@@ -171,41 +171,41 @@ import { P } from "../../01-核心基础设施/核心工具-路径与平台/chun
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var oc = 8,
-  pR = /^[A-Za-z0-9._-]{1,64}$/,
+  VER_SHAPE = /^[A-Za-z0-9._-]{1,64}$/,
   ss = { ownVers: {}, inFlight: {} },
-  eFe = n6("ownPublishes", ss);
-function pyr() {
+  makeOwnPublishesStore = n6("ownPublishes", ss);
+function makeLocalOwnPublishesStore() {
   return cnr(ss);
 }
-function tFe(e, t, r) {
-  if (!pR.test(r)) return;
+function recordOwnPublish(e, t, r) {
+  if (!VER_SHAPE.test(r)) return;
   e.set((o) => {
     let d = o.ownVers[t] ?? [];
     if (d.includes(r)) return o;
     return { ...o, ownVers: { ...o.ownVers, [t]: [...d, r].slice(-oc) } };
   });
 }
-function nFe(e, t, r) {
+function isOwnPublishedVer(e, t, r) {
   return e.get().ownVers[t]?.includes(r) ?? !1;
 }
-function xwn(e, t, r) {
-  return nFe(e, t, r) ? "self-session" : "unverified";
+function headAuthorship(e, t, r) {
+  return isOwnPublishedVer(e, t, r) ? "self-session" : "unverified";
 }
-async function gqt(e, t, r) {
-  hqt(e, t);
+async function withPublishInFlight(e, t, r) {
+  markPublishInFlight(e, t);
   try {
     return await r();
   } finally {
-    _qt(e, t);
+    clearPublishInFlight(e, t);
   }
 }
-function hqt(e, t) {
+function markPublishInFlight(e, t) {
   e.set((r) => ({
     ...r,
     inFlight: { ...r.inFlight, [t]: (r.inFlight[t] ?? 0) + 1 },
   }));
 }
-function _qt(e, t) {
+function clearPublishInFlight(e, t) {
   e.set((r) => {
     let o = r.inFlight[t] ?? 0;
     if (o === 0) return r;
@@ -216,7 +216,7 @@ function _qt(e, t) {
     return { ...r, inFlight: { ...r.inFlight, [t]: o - 1 } };
   });
 }
-function Hwn(e, t) {
+function isPublishInFlight(e, t) {
   return (e.get().inFlight[t] ?? 0) > 0;
 }
 function SCe(e) {
@@ -6369,56 +6369,56 @@ function eYe() {
   Ef.giveBack();
 }
 var ha = null,
-  Cm = 16777216,
+  MAX_ARTIFACT_BYTES = 16777216,
   Rf = "/api/frame/contract/latest";
-function AN() {
+function isFrameBaseVersionEnabled() {
   return H("tengu_cobalt_plinth_fern", !0);
 }
-function Pwn() {
+function isFrameStaleGuardAutoReadEnabled() {
   return H("tengu_cobalt_plinth_moss", !0);
 }
-function Own() {
+function isFrameGuardOwnVersionProceedEnabled() {
   return H("tengu_cobalt_plinth_teasel", !0);
 }
-function Zwt() {
+function artifactPageInlineResultCap() {
   let e = H("tengu_cobalt_plinth_sill", null);
   return typeof e === "number" && Number.isFinite(e) && e >= 0
     ? Math.min(Math.floor(e), EQ)
     : Mkn;
 }
-function HT() {
+function isArtifactConflictLegacy() {
   return H("tengu_slate_quoin", !1);
 }
-function Dwn() {
+function isArtifactLangEnabled() {
   return H("tengu_cobalt_plinth_laurel", !1);
 }
-function Sqt() {
+function isFrameListSharedScopeKilled() {
   return H("tengu_cobalt_plinth_osier", !1);
 }
-function fR() {
+function isFrameMultiFileEnabled() {
   return (
     a.CLAUDE_CODE_ARTIFACT_MULTI_FILE ?? H("tengu_cobalt_plinth_bracken", !1)
   );
 }
-function woe() {
+function isFrameCopyFromEnabled() {
   return H("tengu_cobalt_plinth_samphire", !1);
 }
-function per() {
+function isFramePublicReadEnabled() {
   return H("tengu_cobalt_plinth_sedge", !1);
 }
-function Lwn() {
+function isFrameSameChannelRawReadEnabled() {
   return H("tengu_cobalt_plinth_tansy", !1);
 }
-function kK() {
+function isFrameLiveSubscribeEnabled() {
   return H("tengu_slate_lantern", !1);
 }
-function CG() {
+function isFrameLiveTokenLeaseEnabled() {
   return H("tengu_slate_lantern_ember", !1);
 }
 function Tf() {
   return H("tengu_amber_quill_moth", !1);
 }
-function CN() {
+function isFrameDeclaredThumbnailEnabled() {
   return H("tengu_cobalt_plinth_campion", !1) === !0;
 }
 var Pf = m(() =>
@@ -6482,7 +6482,7 @@ async function Pi(e, t, r) {
     ...(typeof d === "string" && { missingCapsHeader: d }),
   };
 }
-async function Toe(e) {
+async function resolveContract(e) {
   if (e.version !== void 0 && !Mj.test(e.version))
     return { err: "invalid contract version", cause: "malformed" };
   let t = await Pi(
@@ -6495,7 +6495,7 @@ async function Toe(e) {
     return { err: "malformed contract response", cause: "malformed" };
   return r.data;
 }
-async function Mwn(e, t, r) {
+async function fetchContractDefs(e, t, r) {
   if (!Mj.test(e) || !Nj.test(t))
     return {
       err: "invalid contract version or capability name",
@@ -6510,7 +6510,7 @@ async function Mwn(e, t, r) {
     return { err: "empty or non-text defs body", cause: "malformed" };
   return { dts: o.body };
 }
-async function Nwn(e, t) {
+async function fetchContractPrompt(e, t) {
   if (!Mj.test(e))
     return { err: "invalid contract version", cause: "malformed" };
   let r = await Pi(`/api/frame/contract/${e}/prompt`, t, {
@@ -6530,7 +6530,7 @@ async function Nwn(e, t) {
           .filter((d) => Nj.test(d));
   return { promptMd: r.body, missingCaps: o };
 }
-function vG(e) {
+function derivePublishContextFrom(e) {
   let t = Vd(),
     r = !e.isNonInteractiveSession || t === "claude-vscode" || Hd(),
     o =
@@ -6547,7 +6547,7 @@ function vG(e) {
                 : "print";
   return { hasInteractiveUI: r, publishContext: o };
 }
-function P$(e) {
+function artifactReadObservationIn(e) {
   return (t) => {
     let r = e();
     return {
@@ -6556,7 +6556,7 @@ function P$(e) {
     };
   };
 }
-function O$(e, t, r) {
+function observationStamp(e, t, r) {
   return (
     `${e ?? "main"}
 ${t ?? ""}` +
@@ -6567,7 +6567,7 @@ ${r}`)
   );
 }
 var ga = { page_data: 0, summary: 1, source: 2 };
-function Fwn(e, t, r, o) {
+function sourcelessObservation(e, t, r, o) {
   let d = ne().readDeliveries.get(xN(e, t));
   return d !== void 0 &&
     o !== void 0 &&
@@ -6578,23 +6578,23 @@ function Fwn(e, t, r, o) {
     ? d.kind
     : void 0;
 }
-function vfe(e, t, r) {
+function observedWithoutSource(e, t, r) {
   let o = ne().readDeliveries.get(xN(e, t));
   return o !== void 0 && o.ver === r && !o.sourced;
 }
 var Ca = "\x00own-mint";
-function vCe(e) {
+function ownMintStamp(e) {
   return `${e ?? "main"}
 ${Ca}`;
 }
-function $wn(e, t) {
+function versionHeldAsOwnMint(e, t) {
   return (
     e.ver === t &&
     e.observers !== void 0 &&
     Object.values(e.observers).includes("")
   );
 }
-function D$(e, t) {
+function mainObservedArtifactVersion(e, t) {
   return Oa({
     ver: e.artifactReadVersions?.[t],
     observers: e.artifactReadObservers?.[t],
@@ -6604,10 +6604,10 @@ function Oa(e) {
   let { ver: t, observers: r } = e;
   return r === void 0 || Object.hasOwn(r, "main") ? t : void 0;
 }
-function Uwn(e, t) {
+function makeMainObservedVersionReader(e, t) {
   return () => Oa(e(t));
 }
-function Rfe(e) {
+function makeSetArtifactReadVersion(e) {
   return (t, r, o) => {
     if (r !== void 0 && !L6.test(r)) return;
     let d =
@@ -6649,7 +6649,7 @@ function Rfe(e) {
         F?.sourceless !== void 0 &&
         !C &&
         r !== void 0 &&
-        (F.live === void 0 || r === F.live || (dFe(r, F.live) ?? -1) > 0)
+        (F.live === void 0 || r === F.live || (compareArtifactVersions(r, F.live) ?? -1) > 0)
       )
         (delete F.sourceless, (F.live ??= r));
     }
@@ -6675,7 +6675,7 @@ function Rfe(e) {
     });
   };
 }
-function Bwn(e, t, r, o) {
+function artifactVersionObserved(e, t, r, o) {
   let d = e?.[t];
   if (d === void 0) return { observed: !0, siblingInFlight: !1 };
   let p = r ?? "main",
@@ -6683,7 +6683,7 @@ function Bwn(e, t, r, o) {
     w = _ !== void 0 && _ !== "" && _ === o;
   return { observed: _ !== void 0 && !w, siblingInFlight: w };
 }
-function kfe(e) {
+function makeSetArtifactContractTarget(e) {
   return (t, r, o) =>
     e((d) => {
       let p = wD(r),
@@ -6714,7 +6714,7 @@ function kfe(e) {
       };
     });
 }
-function xfe(e) {
+function makeGetArtifactContractTarget(e) {
   return () => {
     let t = e().artifactRefs ?? [],
       r = {};
@@ -6755,18 +6755,18 @@ var Nf =
         .max(1e6)
         .optional()
         .catch(void 0),
-      paths: v(s().max(eTt))
-        .max(tTt)
+      paths: v(s().max(MAX_ECHO_MANIFEST_PATH))
+        .max(MAX_ECHO_MANIFEST_ENTRIES)
         .optional()
         .catch(void 0),
     }),
   ),
-  eTt = 1024,
-  tTt = 512,
+  MAX_ECHO_MANIFEST_PATH = 1024,
+  MAX_ECHO_MANIFEST_ENTRIES = 512,
   $a = m(() =>
     it({
       manifest: fe(
-        s().max(eTt),
+        s().max(MAX_ECHO_MANIFEST_PATH),
         it({
           src: it({}).nullish(),
           doc: s()
@@ -6774,10 +6774,10 @@ var Nf =
             .nullish()
             .catch(void 0),
         }),
-      ).refine((e) => Object.keys(e).length <= tTt),
+      ).refine((e) => Object.keys(e).length <= MAX_ECHO_MANIFEST_ENTRIES),
     }),
   );
-function bqt(e) {
+function splitManifestPaths(e) {
   let t = $a().safeParse(e);
   if (!t.success) return;
   let r = [],
@@ -6786,7 +6786,7 @@ function bqt(e) {
     (p.src != null ? o : r).push(d);
   return { own: r.sort(), type: o.sort() };
 }
-function wqt(e) {
+function typeLockFromWire(e) {
   if (e == null) return;
   let t = Df().safeParse(e);
   if (!t.success) return;
@@ -6842,8 +6842,8 @@ function La(e) {
         comment_id: e.autoEditAttribution.commentId,
       },
     }),
-    ...(CN() && e.thumbnail && { thumbnail: e.thumbnail.toString("base64") }),
-    ...(CN() &&
+    ...(isFrameDeclaredThumbnailEnabled() && e.thumbnail && { thumbnail: e.thumbnail.toString("base64") }),
+    ...(isFrameDeclaredThumbnailEnabled() &&
       e.thumbnailDark && {
         thumbnail_dark: e.thumbnailDark.toString("base64"),
       }),
@@ -6881,7 +6881,7 @@ async function Hf(e) {
       return { fields: { contract: D, capabilities: F.caps } };
     },
     R = async (C) => {
-      let M = await Toe({ credentials: _ });
+      let M = await resolveContract({ credentials: _ });
       if ("err" in M)
         return (
           f("artifact_publish", "contract_fetch_failed", {
@@ -6896,7 +6896,7 @@ async function Hf(e) {
     };
   if (o !== null) {
     if (t !== void 0) {
-      let C = await Toe({ version: o, credentials: _ });
+      let C = await resolveContract({ version: o, credentials: _ });
       if (!("err" in C)) return E(t, C, o);
     }
     return {
@@ -6904,7 +6904,7 @@ async function Hf(e) {
     };
   }
   if (t !== void 0 && r !== null) {
-    let C = await Toe({ version: r, credentials: _ });
+    let C = await resolveContract({ version: r, credentials: _ });
     if ("err" in C) return { fields: { contract: r, capabilities: Jr(t) } };
     return E(t, C, r);
   }
@@ -6931,9 +6931,9 @@ async function Hf(e) {
   return { fields: {} };
 }
 var Ci = 8192,
-  tYe = 300000,
+  FRAME_RUNTIME_MAX_SPAN = 300000,
   ya = 'window.__FRAME_PREAMBLE={"v":1';
-function Tqt(e) {
+function hasFramePreambleLead(e) {
   return e.startsWith(ya) && ",}".includes(e[ya.length] ?? " ");
 }
 var Uf = new RegExp(
@@ -6954,7 +6954,7 @@ function _a(e) {
     let d = rse(t, 7);
     if (d < 0) return !1;
     let p = t.slice(d);
-    if (!o && (tAt(t, 0) !== d || !Tqt(p))) return !1;
+    if (!o && (tAt(t, 0) !== d || !hasFramePreambleLead(p))) return !1;
     o = !0;
     let _ = yAn(p);
     if (_ < 0) return !1;
@@ -6968,12 +6968,12 @@ function Fa(e) {
     return _a(t.slice(6, -7));
   return _a(t);
 }
-function jwn(e, t = () => !0) {
+function exciseFrameAssetServeBlock(e, t = () => !0) {
   let r = 4,
     o = e.indexOf(VG);
   while (o >= 0 && o < Ci && r > 0) {
     let d = o + VG.length,
-      p = e.subarray(0, o + tYe + YK.length).indexOf(YK, d);
+      p = e.subarray(0, o + FRAME_RUNTIME_MAX_SPAN + YK.length).indexOf(YK, d);
     if (p >= 0 && Fa(e.toString("utf8", d, p))) {
       let _ = Buffer.concat([e.subarray(0, o), e.subarray(p + YK.length)]);
       if (t(_)) return _;
@@ -7031,7 +7031,7 @@ function _i(e, t, r) {
     } else d++;
   }
 }
-function Eqt(e) {
+function stripStaleInjections(e) {
   return Da(e, Ba, Na(Gf, "blocks"));
 }
 var Gf = 64,
@@ -7041,10 +7041,10 @@ function Na(e, t) {
   return { spent: 0, cap: e, exhausted: t };
 }
 function Ia(e) {
-  if (e.spent === e.cap) throw new aFe(e.exhausted, e.spent);
+  if (e.spent === e.cap) throw new StripUnsettledError(e.exhausted, e.spent);
   e.spent++;
 }
-class aFe extends Oe {
+class StripUnsettledError extends Oe {
   passes;
   constructor(e = "blocks", t) {
     super(qf[e], Kf[e]);
@@ -7084,7 +7084,7 @@ function Ba(e) {
       if (((_ = e.indexOf(YK, w)), _ < 0)) break;
     }
     let E = e.indexOf(VG, w);
-    if ((E < 0 || E > _) && _ - p < tYe && Fa(e.slice(w, _))) {
+    if ((E < 0 || E > _) && _ - p < FRAME_RUNTIME_MAX_SPAN && Fa(e.slice(w, _))) {
       let R = _ + YK.length;
       if (
         e[R] ===
@@ -7102,7 +7102,7 @@ function Ba(e) {
     e.replace(zf, "").replace(/\sdata-frame-runtime="[^">]*"/gi, "")
   );
 }
-function Wwn(e) {
+function strippedAuthorBody(e) {
   return ja(e).body;
 }
 function ja(e) {
@@ -7122,26 +7122,26 @@ function ja(e) {
     ...(p.hoistedCommentsDropped && { hoistedCommentsDropped: !0 }),
   };
 }
-function Gwn(e) {
+function servedPageLooksNested(e) {
   let t;
   try {
-    t = Eqt(e);
+    t = stripStaleInjections(e);
   } catch (o) {
-    if (o instanceof aFe) return !1;
+    if (o instanceof StripUnsettledError) return !1;
     throw o;
   }
   let r = tl(t);
   return r !== null && nl(r.body);
 }
 var Ua = /^[A-Za-z]{2,3}(-[A-Za-z0-9]{1,8})*$/;
-function nYe(e) {
+function isValidArtifactLang(e) {
   return e.length <= 35 && Ua.test(e);
 }
 async function za(e) {
-  if (!e.includes(In) || Buffer.byteLength(e, "utf8") > Cm || _J(e)) return e;
+  if (!e.includes(In) || Buffer.byteLength(e, "utf8") > MAX_ARTIFACT_BYTES || _J(e)) return e;
   return As(e);
 }
-async function nTt(e, t = {}) {
+async function prepareArtifactBody(e, t = {}) {
   let {
       injectDiagramRuntime: r,
       injectHighlightRuntime: o,
@@ -7277,7 +7277,7 @@ function Va(e, t) {
   return ZEt(e, r);
 }
 var Wa = 2097152;
-async function oP(e, t, r) {
+async function readFrameDecl(e, t, r) {
   let o = performance.now();
   try {
     let d = await Nd.get(`/api/frame/read/${encodeURIComponent(e)}`, {
@@ -7294,7 +7294,7 @@ async function oP(e, t, r) {
     if (d.status === 404) return null;
     if (d.status < 200 || d.status >= 300)
       return (
-        n(`[artifact] read-back ${d.status}: ${lg(d.data)}`),
+        n(`[artifact] read-back ${d.status}: ${errBody(d.data)}`),
         { err: `read-back HTTP ${d.status}`, status: d.status }
       );
     let p = If().safeParse(d.data);
@@ -7304,7 +7304,7 @@ async function oP(e, t, r) {
         { err: "malformed read-back body", status: d.status }
       );
     let { contract: _, capabilities: w } = p.data,
-      E = wqt(p.data.type);
+      E = typeLockFromWire(p.data.type);
     return {
       contract: _,
       ...(w != null && { capabilities: w }),
@@ -7320,7 +7320,7 @@ async function oP(e, t, r) {
 async function Ga(e, t, r, o) {
   let d = await e;
   if (d.err !== null || t === void 0) return d;
-  let p = await oP(t, o, r);
+  let p = await readFrameDecl(t, o, r);
   if (p === null || "err" in p) {
     if (p !== null) n(`[artifact] read-back skipped: ${p.err}`);
     return d;
@@ -7582,21 +7582,21 @@ var Ot = "<!doctype html>",
 `,
   dr = `
 </body></html>`,
-  qwn = new RegExp(
+  SERVED_SPLICE_PREFIX_RE = new RegExp(
     `^(?:${Ot}|${Ot.replace("doctype", "DOCTYPE")})?${Oi}(?: lang="(?=[^"]{1,35}")${Ua.source.slice(1, -1)}")?(?:${tU})?><head(?:${tU})?>$`,
   );
-function rTt(e, t) {
-  let r = t !== void 0 && nYe(t) ? ` lang="${t}"` : "";
+function composeArtifactPage(e, t) {
+  let r = t !== void 0 && isValidArtifactLang(t) ? ` lang="${t}"` : "";
   return `${pr}${r}><head>${Qa}${Nf}${el}${e}${dr}`;
 }
 function mi(e, t, r) {
   return rse(e, t) === r;
 }
-function rYe(e) {
+function startsWithSkeletonOpen(e) {
   return yp.test(e) && e.startsWith(Oi, Ot.length);
 }
 function tl(e) {
-  if (!rYe(e)) return null;
+  if (!startsWithSkeletonOpen(e)) return null;
   if (!e.startsWith(Ot)) e = Ot + e.slice(Ot.length);
   let t = e.match(
     /^<!doctype html><html(?=[\t\n\f\r >])([^>]*)><head(?=[\t\n\f\r >])[^>]*>/,
@@ -7645,7 +7645,7 @@ function tl(e) {
   let D = t[1].match(/[\t\n\f\r ]lang="([^"]*)"/)?.[1];
   return {
     body: e.slice(R, M),
-    ...(D !== void 0 && nYe(D) && { lang: D }),
+    ...(D !== void 0 && isValidArtifactLang(D) && { lang: D }),
     ...(C.commentsDropped && { hoistedCommentsDropped: !0 }),
   };
 }
@@ -7683,7 +7683,7 @@ function wp(e, t, r, o) {
     Ia(o);
     let w = kp(e);
     if (w !== null) {
-      if (d === Ma) throw new aFe("levels", o.spent);
+      if (d === Ma) throw new StripUnsettledError("levels", o.spent);
       ((e = w.body), (t = w.lang ?? t), d++, (p = !1));
       continue;
     }
@@ -7696,12 +7696,12 @@ function wp(e, t, r, o) {
   return { body: e, lang: t, outcome: _ };
 }
 function nl(e) {
-  if (!rYe(e)) return !1;
+  if (!startsWithSkeletonOpen(e)) return !1;
   let t = e.indexOf(VG);
   return t !== -1 && t < Ci;
 }
 function kp(e) {
-  if (!rYe(e)) return null;
+  if (!startsWithSkeletonOpen(e)) return null;
   let t = pr.length,
     r = (w) => {
       if (!e.startsWith(w, t)) return !1;
@@ -7710,11 +7710,11 @@ function kp(e) {
     o;
   if (r(' lang="')) {
     let w = e.indexOf('"', t);
-    if (w === -1 || !nYe(e.slice(t, w))) return null;
+    if (w === -1 || !isValidArtifactLang(e.slice(t, w))) return null;
     ((o = e.slice(t, w)), (t = w + 1));
   }
   if (!r("><head>" + VG)) return null;
-  let d = t + tYe,
+  let d = t + FRAME_RUNTIME_MAX_SPAN,
     p = 0;
   while (p < 2 && r("<script>")) {
     let w = e.indexOf("</script>", t);
@@ -7731,11 +7731,11 @@ function kp(e) {
   if (e.length - t < dr.length || !e.endsWith(dr)) return null;
   return { body: e.slice(t, e.length - dr.length), lang: o };
 }
-function zwn(e) {
+function mintRoundTripPublishSignal(e) {
   let t = Object.freeze({ slug: e });
   return (ne().mintedRoundTripPublishSignals.add(t), t);
 }
-function Vwn(e) {
+function isMintedRoundTripPublishSignal(e) {
   return (
     typeof e === "object" &&
     e !== null &&
@@ -7751,7 +7751,7 @@ function $i(e, t = "supporting file") {
           `${t} "${r.path}": contentType ${b(r.contentType)} is not servable (nothing was published). Supporting files are assets the page itself loads \u2014 scripts, styles, images, media, JSON \u2014 and only standard web media types are served, so re-encode a data asset into one (e.g. JSON) or inline it. If the intent was instead to hand the viewer a file to keep, note that neither a served file nor a data:/blob: download link does that (the viewer blocks page-initiated downloads); offering a file to save is a runtime capability where available.`,
         )
       );
-    if (SJ.has(r.contentType)) {
+    if (MANIFEST_TEXT_TYPES.has(r.contentType)) {
       if (
         typeof r.content === "string"
           ? r.content.includes("\x1B")
@@ -7805,7 +7805,7 @@ function $i(e, t = "supporting file") {
     }
     if (
       typeof r.content !== "string" &&
-      SJ.has(r.contentType) &&
+      MANIFEST_TEXT_TYPES.has(r.contentType) &&
       r.content.length >= 2 &&
       ((r.content[0] === 255 && r.content[1] === 254) ||
         (r.content[0] === 254 && r.content[1] === 255))
@@ -7820,7 +7820,7 @@ function $i(e, t = "supporting file") {
     let o =
       typeof r.content === "string"
         ? r.content
-        : SJ.has(r.contentType)
+        : MANIFEST_TEXT_TYPES.has(r.contentType)
           ? r.content.toString("utf8")
           : null;
     if (o !== null && _J(o, { parsedAsMarkup: ose.has(c6(r.contentType)) }))
@@ -7833,16 +7833,16 @@ function $i(e, t = "supporting file") {
   }
   return null;
 }
-async function Aqt(...e) {
+async function publishArtifact(...e) {
   let t = Gd();
   if (t !== null) {
     let o = Buffer.byteLength(e[0], "utf8");
-    if (o > Cm)
+    if (o > MAX_ARTIFACT_BYTES)
       return ie(
-        `too large: page is ${Math.ceil(o / 1024 / 1024)}MB (max ${Cm / 1024 / 1024}MB)`,
+        `too large: page is ${Math.ceil(o / 1024 / 1024)}MB (max ${MAX_ARTIFACT_BYTES / 1024 / 1024}MB)`,
       );
     let d = await za(e[0]),
-      p = Buffer.byteLength(d, "utf8") > Cm ? e[0] : d;
+      p = Buffer.byteLength(d, "utf8") > MAX_ARTIFACT_BYTES ? e[0] : d;
     if (e[1].verifyWorkshopHtml !== void 0) {
       let { verifyWorkshopHtml: R } = await import("./extractInlineScriptHashes.segwcp5c.js"),
         C = R(p, await br(), e[1].verifyWorkshopHtml);
@@ -7868,7 +7868,7 @@ async function Aqt(...e) {
   }
   let r = e[1].slug;
   if (!r) return ka(...e);
-  return gqt(e[1].ownPublishes, r, () => ka(...e));
+  return withPublishInFlight(e[1].ownPublishes, r, () => ka(...e));
 }
 async function ka(e, t) {
   let r = performance.now(),
@@ -7902,7 +7902,7 @@ async function ka(e, t) {
     );
   let ae = !!o,
     ue = R !== void 0,
-    V = AN(),
+    V = isFrameBaseVersionEnabled(),
     J = t.force === !0,
     U =
       (t.files?.length ?? 0) > 0 ||
@@ -7948,17 +7948,17 @@ async function ka(e, t) {
       composedPrReview: t.composedPrReview,
       expectRoundTrippedPage: t.expectRoundTrippedPage,
     },
-    q = await nTt(e, ce),
-    ge = rTt(q.body, t.lang ?? q.roundTripLang),
+    q = await prepareArtifactBody(e, ce),
+    ge = composeArtifactPage(q.body, t.lang ?? q.roundTripLang),
     pe = Buffer.byteLength(ge, "utf8");
-  if (pe > Cm && q.blockIdBytes > 0 && pe - q.blockIdBytes <= Cm)
+  if (pe > MAX_ARTIFACT_BYTES && q.blockIdBytes > 0 && pe - q.blockIdBytes <= MAX_ARTIFACT_BYTES)
     (g("artifact_publish", "block_ids_over_cap"),
-      (q = await nTt(e, {
+      (q = await prepareArtifactBody(e, {
         ...ce,
         docBlockIds: !1,
         expectRoundTrippedPage: !1,
       })),
-      (ge = rTt(q.body, t.lang ?? q.roundTripLang)),
+      (ge = composeArtifactPage(q.body, t.lang ?? q.roundTripLang)),
       (pe = Buffer.byteLength(ge, "utf8")));
   let {
       body: Le,
@@ -7967,8 +7967,8 @@ async function ka(e, t) {
       unnested: Me,
       hoistedCommentsDropped: De,
     } = q,
-    Ne = ep(Le) ? [fR() ? tp : np] : [];
-  if (pe > Cm)
+    Ne = ep(Le) ? [isFrameMultiFileEnabled() ? tp : np] : [];
+  if (pe > MAX_ARTIFACT_BYTES)
     return (
       f("artifact_publish", "too_large", {
         page_bytes: pe,
@@ -7977,7 +7977,7 @@ async function ka(e, t) {
         block_id_bytes: q.blockIdBytes,
       }),
       ie(
-        `too large: rendered page is ${Math.ceil(pe / 1024 / 1024)}MB (max ${Cm / 1024 / 1024}MB)` +
+        `too large: rendered page is ${Math.ceil(pe / 1024 / 1024)}MB (max ${MAX_ARTIFACT_BYTES / 1024 / 1024}MB)` +
           (Te
             ? " \u2014 includes the inline syntax-highlight runtime (~0.6MB), added because the page contains fenced code"
             : ""),
@@ -8157,7 +8157,7 @@ async function ka(e, t) {
     let xe = [
         e,
         ...(t.files ?? []).flatMap((Ye) =>
-          SJ.has(Ye.contentType) ? [pl(Ye.content)] : [],
+          MANIFEST_TEXT_TYPES.has(Ye.contentType) ? [pl(Ye.content)] : [],
         ),
       ],
       st = ee.servers.length > 0 ? yo(xe, ee.servers, 64) : [];
@@ -8192,7 +8192,7 @@ async function ka(e, t) {
     Ft = o && !Lt ? t.storedPin : null,
     wt;
   if (o && !Lt && Ft === void 0) {
-    let L = await oP(o, void 0, t.credentials);
+    let L = await readFrameDecl(o, void 0, t.credentials);
     if (
       L !== null &&
       "err" in L &&
@@ -8201,7 +8201,7 @@ async function ka(e, t) {
     ) {
       let de = gi(L);
       if ((await Z(ba, t.signal), !t.signal?.aborted))
-        ((L = await oP(o, t.signal, t.credentials)),
+        ((L = await readFrameDecl(o, t.signal, t.credentials)),
           g("artifact_publish", "pin_readback_retried", {
             page_bytes: pe,
             ...de,
@@ -8233,10 +8233,10 @@ async function ka(e, t) {
     Object.keys(R ?? {}).length > 0 &&
     t.composedPrReview !== !0
   ) {
-    let L = await oP(o, void 0, t.credentials);
+    let L = await readFrameDecl(o, void 0, t.credentials);
     if (L !== null && "err" in L && t.contract === void 0 && ma(L)) {
       if ((await Z(ba, t.signal), !t.signal?.aborted))
-        L = await oP(o, void 0, t.credentials);
+        L = await readFrameDecl(o, void 0, t.credentials);
     }
     if (L !== null && "err" in L) {
       if (t.contract === void 0)
@@ -8326,7 +8326,7 @@ async function ka(e, t) {
           "artifact-pr-review pages are single-file: supporting files are not allowed alongside a review page (nothing was published)",
         )
       );
-    if (!fR())
+    if (!isFrameMultiFileEnabled())
       return (
         f("artifact_publish", "multifile_flag_off", {
           n_files: Dt.length + N.length,
@@ -8338,7 +8338,7 @@ async function ka(e, t) {
             : "Supporting files can't be published right now, so nothing was published. Publish the page as a single file instead: inline what it needs and omit `files`.",
         )
       );
-    if (N.length > 0 && !woe())
+    if (N.length > 0 && !isFrameCopyFromEnabled())
       return (
         f("artifact_publish", "copy_from_flag_off", { n_copied: N.length }),
         ie(Fi)
@@ -8458,12 +8458,12 @@ async function bi(e, t) {
       }
     : _;
 }
-function Kwn() {
+function surfacedViaForEntrypoint() {
   if (Vd() === "claude-vscode") return "epitaxy_pane";
   if (Hd()) return "desktop_pane";
   return "terminal_link";
 }
-async function Cqt(e, t) {
+async function trackFrameEvent(e, t) {
   try {
     let r = await Nd.post(
       "/api/frame/track",
@@ -8482,7 +8482,7 @@ async function Cqt(e, t) {
     );
     if (!r.ok) n(`[artifact] /track skipped: ${r.reason}`);
     else if (r.status !== 204)
-      n(`[artifact] /track ${r.status}: ${lg(r.data)}`);
+      n(`[artifact] /track ${r.status}: ${errBody(r.data)}`);
   } catch (r) {
     n(
       `[artifact] /track failed: ${r instanceof Error ? r.message : String(r)}`,
@@ -8501,13 +8501,13 @@ var vp = ["frame_daily_publish_cap_reached", "frame_daily_push_cap_reached"],
     daily_pushes:
       "daily publish limit for your plan reached \u2014 resets at UTC midnight",
   },
-  vqt = "publish 429: ",
+  PUBLISH_CAP_FRAME = "publish 429: ",
   il = "x-frame-push-remaining";
 function sl(e) {
   let t = typeof e === "string" ? e.trim() : "";
   return /^\d{1,9}$/.test(t) ? Number(t) : void 0;
 }
-function lFe(e = Date.now()) {
+function dailyPublishResetEpochSeconds(e = Date.now()) {
   let t = new Date(e);
   return (
     Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate() + 1) / 1000
@@ -8515,7 +8515,7 @@ function lFe(e = Date.now()) {
 }
 function ol(e) {
   let t = typeof e === "string" ? Date.parse(e) : Number.NaN;
-  return lFe(Number.isFinite(t) ? t : Date.now());
+  return dailyPublishResetEpochSeconds(Number.isFinite(t) ? t : Date.now());
 }
 function An(e) {
   let t = Sp().safeParse(e);
@@ -8523,7 +8523,7 @@ function An(e) {
   let r = xp[t.data.error],
     o = p1(t.data.message, 200),
     d = o !== "" ? o : Ap[r];
-  return { capType: r, message: `${vqt}${d}` };
+  return { capType: r, message: `${PUBLISH_CAP_FRAME}${d}` };
 }
 var va = 3,
   Ep = 5000,
@@ -8560,7 +8560,7 @@ async function vi(e, t, r, o) {
     refreshOAuth: !0,
     headers: Fd(),
     streamUpload: { tailFloorMs: Rp, onSettled: o },
-    maxBodyLength: 2 * Cm,
+    maxBodyLength: 2 * MAX_ARTIFACT_BYTES,
     maxContentLength: Wa,
     relayProbe: Rf,
     credentials: r,
@@ -8576,7 +8576,7 @@ async function fl(e, t, r, o, d = !1) {
       try {
         return await e();
       } catch (I) {
-        let N = lg(I instanceof Error ? I.message : String(I));
+        let N = errBody(I instanceof Error ? I.message : String(I));
         throw nP(I)
           ? new yr(Tn(`relay request failed: ${N}`), F, { cause: I })
           : new cl(Tn(`deploy request failed: ${N}`), F, { cause: I });
@@ -8799,7 +8799,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
         f("artifact_publish", "relay_error", { ...F, deploy_status: q.status }),
         Xt(ie(Ri(q.status)), N, ue, ae)
       );
-    if (((U ?? o) || te || (AN() && !HT())) && q.status === 409) {
+    if (((U ?? o) || te || (isFrameBaseVersionEnabled() && !isArtifactConflictLegacy())) && q.status === 409) {
       let _e = yl(q.data);
       if (_e)
         return (
@@ -8834,7 +8834,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
       let je = _e.code === "path_is_live" ? kl(q.data) : void 0;
       return Xt(
         {
-          ...Ei(_e, `deploy ${q.status}: ${lg(q.data)}`),
+          ...Ei(_e, `deploy ${q.status}: ${errBody(q.data)}`),
           ...(je !== void 0 && { refusedLivePath: je }),
         },
         N,
@@ -8877,7 +8877,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
       Ue = sl(q.response?.headers?.[il]),
       Je = ol(q.response?.headers?.date);
     return (
-      tFe(_, Le, Ge),
+      recordOwnPublish(_, Le, Ge),
       y("artifact_publish", {
         ...F,
         e2e_ms: Math.round(performance.now() - p.t0),
@@ -8886,7 +8886,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
         push_remaining_seen: Ue !== void 0,
       }),
       {
-        url: rm(Le),
+        url: artifactViewerUrl(Le),
         slug: Le,
         version: Ge,
         err: null,
@@ -8915,7 +8915,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
     );
   }
 }
-var Hfe = 4;
+var MAX_COPY_SOURCES = 4;
 function pl(e) {
   return typeof e === "string" ? e : e.toString("utf8");
 }
@@ -8949,7 +8949,7 @@ async function Li(e, t, r, o = "sidecar file") {
   }
   return null;
 }
-var SJ = new Set([
+var MANIFEST_TEXT_TYPES = new Set([
     "text/html",
     "text/css",
     "text/plain",
@@ -8964,7 +8964,7 @@ var SJ = new Set([
     "image/svg+xml",
   ]),
   hl = new Set([
-    ...SJ,
+    ...MANIFEST_TEXT_TYPES,
     "application/wasm",
     "image/png",
     "image/jpeg",
@@ -8989,14 +8989,14 @@ var SJ = new Set([
     "application/pdf",
   ]),
   Tp = new Set(["image/svg+xml", "text/xml", "application/xml"]),
-  RCe = 67108864,
-  Rqt = 15728640,
+  MANIFEST_TOTAL_BUDGET = 67108864,
+  BINARY_FILE_MAX_BYTES = 15728640,
   Si = 12582912,
   yi = 20971520,
   gr = 256,
   Sa = /\b(manifest|mode)\b/;
 function Rn(e) {
-  if (SJ.has(e.contentType))
+  if (MANIFEST_TEXT_TYPES.has(e.contentType))
     return typeof e.content === "string"
       ? e.content
       : e.content.toString("utf8");
@@ -9007,10 +9007,10 @@ function Rn(e) {
 function gl(e) {
   let t =
     (e.thumbnail !== void 0 ? 1 : 0) + (e.thumbnailDark !== void 0 ? 1 : 0);
-  return t > 0 && CN() ? { thumbnails: t } : {};
+  return t > 0 && isFrameDeclaredThumbnailEnabled() ? { thumbnails: t } : {};
 }
 function Aa(e) {
-  return e !== void 0 && CN() ? Math.ceil(e.length / 3) * 4 : 0;
+  return e !== void 0 && isFrameDeclaredThumbnailEnabled() ? Math.ceil(e.length / 3) * 4 : 0;
 }
 function Pp(e) {
   return typeof e.content === "string"
@@ -9058,15 +9058,15 @@ function wr(e, t, r) {
         `${b(E.path)} is listed more than once in \`files\`. List each path once.`,
       );
     if (
-      (_.add(E.path), typeof E.content === "string" && !SJ.has(E.contentType))
+      (_.add(E.path), typeof E.content === "string" && !MANIFEST_TEXT_TYPES.has(E.contentType))
     )
       return o(
         `file ${b(E.path)}: contentType ${b(E.contentType)} ` +
           "is binary \u2014 pass its content as a Buffer (raw bytes), not a string",
       );
-    let R = SJ.has(E.contentType),
+    let R = MANIFEST_TEXT_TYPES.has(E.contentType),
       C = Pp(E),
-      M = R ? Cm : Rqt;
+      M = R ? MAX_ARTIFACT_BYTES : BINARY_FILE_MAX_BYTES;
     if (C > M)
       return d(
         `file ${b(E.path)} is ${Math.ceil(C / 1024 / 1024)}MB (per-file max ${M / 1024 / 1024}MB${R ? "" : " for binary files, which must fit an upload request base64-encoded"})`,
@@ -9089,10 +9089,10 @@ function wr(e, t, r) {
     }
     w += C;
   }
-  if (w > RCe)
+  if (w > MANIFEST_TOTAL_BUDGET)
     return d(
       `total content is ${Math.ceil(w / 1024 / 1024)}MB \u2014 a version's ` +
-        `files may total at most ${RCe / 1024 / 1024}MB`,
+        `files may total at most ${MANIFEST_TOTAL_BUDGET / 1024 / 1024}MB`,
     );
   return null;
 }
@@ -9124,14 +9124,14 @@ function Mi(e, t, r, o) {
     }
     _.add(`${w.from.slug}@${w.from.ver ?? ""}`);
   }
-  if (_.size > Hfe)
-    return `files copy from ${_.size} source artifact versions; at most ${Hfe} per publish`;
+  if (_.size > MAX_COPY_SOURCES)
+    return `files copy from ${_.size} source artifact versions; at most ${MAX_COPY_SOURCES} per publish`;
   return null;
 }
-async function Xwn(e, t, r) {
+async function filesOnlyPublishProblem(e, t, r) {
   let o = $i(e, "file");
   if (o !== null) return o.err;
-  if (t.length > 0 && !woe())
+  if (t.length > 0 && !isFrameCopyFromEnabled())
     return (
       f("artifact_publish", "copy_from_flag_off", { n_copied: t.length }),
       Fi
@@ -9140,13 +9140,13 @@ async function Xwn(e, t, r) {
   if (d !== null || r === void 0) return d;
   return (await Li(e, await br(), 0, "file"))?.err ?? null;
 }
-async function Ywn(e, t) {
+async function publishInstanceFiles(e, t) {
   if (Gd() !== null)
     return ie(
       "publishing to an Artifact created from an Artifact type is not available in eval stub mode",
     );
   let r = t.copiedFiles ?? [];
-  if (!(ne().frozenArtifactTypes?.typesOn ?? fR())) {
+  if (!(ne().frozenArtifactTypes?.typesOn ?? isFrameMultiFileEnabled())) {
     let _ = t.removeFiles ?? [];
     return (
       f("artifact_publish", "multifile_flag_off", {
@@ -9161,7 +9161,7 @@ async function Ywn(e, t) {
       )
     );
   }
-  if (r.length > 0 && !woe())
+  if (r.length > 0 && !isFrameCopyFromEnabled())
     return (
       f("artifact_publish", "copy_from_flag_off", { n_copied: r.length }),
       ie(Fi)
@@ -9185,7 +9185,7 @@ async function Ywn(e, t) {
       autoEditAttribution: t.autoEditAttribution,
     }),
   };
-  return gqt(t.ownPublishes, t.slug, () =>
+  return withPublishInFlight(t.ownPublishes, t.slug, () =>
     Ga(
       Ni(
         null,
@@ -9218,9 +9218,9 @@ async function Ywn(e, t) {
     ),
   );
 }
-async function Jwn(e) {
+async function publishLiveDocVersion(e) {
   if (Gd() !== null) return ie("invalid publish options");
-  if (!fR())
+  if (!isFrameMultiFileEnabled())
     return (
       f("artifact_publish", "multifile_flag_off", { n_files: 0, n_removed: 0 }),
       ie("invalid publish options")
@@ -9234,7 +9234,7 @@ async function Jwn(e) {
     ...(e.label !== void 0 && { label: e.label }),
     ...(e.publishContext !== void 0 && { publishContext: e.publishContext }),
   };
-  return gqt(e.ownPublishes, e.slug, () =>
+  return withPublishInFlight(e.ownPublishes, e.slug, () =>
     Ni(
       null,
       [],
@@ -9486,7 +9486,7 @@ async function Ni(e, t, r, o, d, p, _) {
       return xe;
     },
     It = (L, de, ee) => {
-      if (de) n(`[artifact] manifest publish refused (HTTP ${L}): ${lg(de)}`);
+      if (de) n(`[artifact] manifest publish refused (HTTP ${L}): ${errBody(de)}`);
       let xe = ee?.maybeGone
         ? ", or the artifact no longer exists or isn't yours to update"
         : "";
@@ -9594,7 +9594,7 @@ async function Ni(e, t, r, o, d, p, _) {
           Ae = {
             status: We.status,
             why: We.fromFrame
-              ? `preflight ${We.status}: ${lg(We.data)}`
+              ? `preflight ${We.status}: ${errBody(We.data)}`
               : `preflight relay HTTP ${We.status}`,
           };
           break;
@@ -9661,7 +9661,7 @@ async function Ni(e, t, r, o, d, p, _) {
               ),
               ie(
                 (Ve.fromFrame
-                  ? `file upload ${Ve.status} after the preflight: ${lg(Ve.data)}`
+                  ? `file upload ${Ve.status} after the preflight: ${errBody(Ve.data)}`
                   : `file upload failed after the preflight (relay HTTP ${Ve.status})`) +
                   ` \u2014 the publish was NOT completed. Retry publishing to slug ${L}.`,
               )
@@ -9691,7 +9691,7 @@ async function Ni(e, t, r, o, d, p, _) {
               be.fromFrame ? "copy_upload_failed" : "copy_upload_relay_error",
               { ...N, upload_status: be.status },
             );
-            let nn = lg(be.data),
+            let nn = errBody(be.data),
               dt = /^files\[(\d+)\]: (.*)$/.exec(nn),
               Mn = dt !== null ? tt[Number(dt[1])]?.c : void 0,
               is = dt !== null ? dt[2] : nn;
@@ -9789,7 +9789,7 @@ async function Ni(e, t, r, o, d, p, _) {
           kr(ut.data) === void 0 &&
           !(Ue.liveKey && typeof ut.data === "string")
         ) {
-          nt = lg(ut.data);
+          nt = errBody(ut.data);
           continue;
         }
         if (ut.ok && ut.status === 200 && !ut.data?.version)
@@ -9879,7 +9879,7 @@ async function Ni(e, t, r, o, d, p, _) {
             deploy_status: Re.status,
             ...Ae.extra,
           });
-        return Ei(Ae, `deploy ${Re.status}: ${lg(Re.data)}`);
+        return Ei(Ae, `deploy ${Re.status}: ${errBody(Re.data)}`);
       }
       let qe = Ai().safeParse(Re.data);
       if (!qe.success)
@@ -9893,7 +9893,7 @@ async function Ni(e, t, r, o, d, p, _) {
           preferredContract: qe.data.preferredContract,
           capabilities: qe.data.capabilities,
         }),
-        tFe(_.ownPublishes, L, de),
+        recordOwnPublish(_.ownPublishes, L, de),
         (Ee = ` (The artifact was created with its inline files: to add the remaining files, fix the problem and publish again to slug ${L}.)`));
     }
     if (!xe && De.length > 0) {
@@ -9928,7 +9928,7 @@ async function Ni(e, t, r, o, d, p, _) {
             ),
             ie(
               Ae.fromFrame
-                ? `file upload ${Ae.status}: ${lg(Ae.data)}.${Ee}`
+                ? `file upload ${Ae.status}: ${errBody(Ae.data)}.${Ee}`
                 : `file upload failed (relay HTTP ${Ae.status}).${Ee}`,
             )
           );
@@ -10010,7 +10010,7 @@ async function Ni(e, t, r, o, d, p, _) {
         );
     }
     if (
-      (w !== void 0 || de !== void 0 || (AN() && !HT())) &&
+      (w !== void 0 || de !== void 0 || (isFrameBaseVersionEnabled() && !isArtifactConflictLegacy())) &&
       ee.status === 409
     ) {
       let ve = yl(ee.data);
@@ -10045,7 +10045,7 @@ async function Ni(e, t, r, o, d, p, _) {
         });
       let Re = ve.code === "path_is_live" ? kl(ee.data) : void 0;
       return {
-        ...Ei(ve, `deploy ${ee.status}: ${lg(ee.data)}`, Ee),
+        ...Ei(ve, `deploy ${ee.status}: ${errBody(ee.data)}`, Ee),
         ...(Re !== void 0 && { refusedLivePath: Re }),
         ...(d.slug === void 0 &&
           L !== void 0 &&
@@ -10086,7 +10086,7 @@ async function Ni(e, t, r, o, d, p, _) {
       ts = ki(ee.data) ?? Ye,
       Rr = sl(ee.response?.headers?.[il]),
       rc = ol(ee.response?.headers?.date);
-    (tFe(_.ownPublishes, ze, jt),
+    (recordOwnPublish(_.ownPublishes, ze, jt),
       y("artifact_publish", {
         ...N,
         e2e_ms: Math.round(performance.now() - R.t0),
@@ -10095,9 +10095,9 @@ async function Ni(e, t, r, o, d, p, _) {
         push_remaining_seen: Rr !== void 0,
         staged_files: De.length,
       }));
-    let ns = e === null ? bqt(ee.data) : void 0;
+    let ns = e === null ? splitManifestPaths(ee.data) : void 0;
     return {
-      url: rm(ze),
+      url: artifactViewerUrl(ze),
       slug: ze,
       version: jt,
       err: null,
@@ -10128,14 +10128,14 @@ async function Ni(e, t, r, o, d, p, _) {
     );
   }
 }
-function rm(e) {
+function artifactViewerUrl(e) {
   return new URL(T5t(e), YZe() ?? Vt().CLAUDE_AI_ORIGIN).toString();
 }
-var cFe = ["mine", "shared"];
-function oYe(e) {
-  return cFe.includes(e);
+var ARTIFACT_LIST_RELS = ["mine", "shared"];
+function isKnownRel(e) {
+  return ARTIFACT_LIST_RELS.includes(e);
 }
-var sYe = ["mine", "shared", "all"],
+var ARTIFACT_LIST_SCOPES = ["mine", "shared", "all"],
   $p = m(() =>
     c({
       frames: v(se()).nullable(),
@@ -10147,13 +10147,13 @@ var sYe = ["mine", "shared", "all"],
   Lp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
 function Fp(e, t) {
   let r = e === "" || (typeof e === "string" && Pt.test(e)) ? e : void 0,
-    o = t === "" || (typeof t === "string" && pR.test(t)) ? t : void 0;
+    o = t === "" || (typeof t === "string" && VER_SHAPE.test(t)) ? t : void 0;
   return { read: t === void 0 || o !== void 0 ? r : void 0, shared: o };
 }
 var Ai = m(() =>
   c({
     slug: s().regex(fr),
-    version: s().regex(pR),
+    version: s().regex(VER_SHAPE),
     read: se().optional(),
     shared: se().optional(),
     kind: s()
@@ -10215,9 +10215,9 @@ var Mp = m(() =>
   ),
   Ea = 200,
   Np = 4194304;
-async function Qwn(e, t) {
+async function listArtifacts(e, t) {
   let { scope: r = "mine", pins: o = !1, signal: d, credentials: p } = t;
-  if (r !== "mine" && Sqt())
+  if (r !== "mine" && isFrameListSharedScopeKilled())
     return (
       f("artifact_list", "scope_disabled"),
       { err: "shared-scope listing is disabled", reason: "scope_disabled" }
@@ -10307,12 +10307,12 @@ async function Qwn(e, t) {
         starred: U,
       } = I.data,
       te = iie(I.data.favicon);
-    if (J === !0 || !oYe(ue)) continue;
+    if (J === !0 || !isKnownRel(ue)) continue;
     if (r !== "all" && ue !== r) continue;
     let re = yw(ae ?? "") ?? "Untitled";
     C.push({
       title: re,
-      url: rm(N),
+      url: artifactViewerUrl(N),
       ...(te !== void 0 && ue === "mine" && { favicon: te }),
       ...(V !== void 0 && { updatedAt: V }),
       ...(r !== "mine" && { rel: ue }),
@@ -10338,7 +10338,7 @@ async function Qwn(e, t) {
     ...(o && { pinsEnabled: R }),
   };
 }
-function Zwn(e, t) {
+function sidecarHistoryWith(e, t) {
   if (
     t.err !== null ||
     t.refusedClassSidecarTypes === void 0 ||
@@ -10347,7 +10347,7 @@ function Zwn(e, t) {
     return null;
   return { ...(e ?? {}), [t.slug]: t.refusedClassSidecarTypes };
 }
-function eTn(e, t) {
+function refusedSidecarHistoryFor(e, t) {
   return e?.[t] ?? [];
 }
 function Ip(e, t) {
@@ -10365,14 +10365,14 @@ function Ip(e, t) {
     };
   return null;
 }
-function kCe(e, t) {
+function workshopVerifiedSlugsWith(e, t) {
   if (t.err !== null || t.workshopSurface !== !0) return null;
   if ((e ?? []).includes(t.slug)) return null;
   return [...(e ?? []), t.slug];
 }
-async function oTt(e, t, r, o) {
+async function publishPlanArtifact(e, t, r, o) {
   let { html: d, title: p, templated: _ } = await fa(e),
-    w = await Aqt(d, {
+    w = await publishArtifact(d, {
       ownPublishes: r,
       title: p,
       favicon: "\uD83D\uDCCB",
@@ -10385,18 +10385,18 @@ async function oTt(e, t, r, o) {
   if (w.err === null) hi(w.slug, "plan");
   return w;
 }
-var kqt = "conflict: nothing was published \u2014 ",
-  uFe =
+var PUBLISH_CONFLICT_LEAD = "conflict: nothing was published \u2014 ",
+  FORCE_REFUSED_SENTENCE =
     " The server refuses force:true over a version saved from inside the page; only a publish built on that version is accepted.";
 function bl(e) {
   let { readRemedy: t, forceAdvisory: r, contentReadsBlocked: o } = Efe();
   return (
-    `${kqt}${sTt(e)} is live and this publish was not built on it. ` +
+    `${PUBLISH_CONFLICT_LEAD}${conflictSubject(e)} is live and this publish was not built on it. ` +
     (o ?? `Re-read it (${t}), merge your edits on top, then publish again.`) +
-    (e.forceRefused ? uFe : r)
+    (e.forceRefused ? FORCE_REFUSED_SENTENCE : r)
   );
 }
-function sTt(e) {
+function conflictSubject(e) {
   return (
     `a newer version (${e.live})` +
     (e.liveEntry === "page" || e.liveEntry === "editor"
@@ -10424,7 +10424,7 @@ function Ii(e, t) {
     slug: t.slug,
     ...("live" in t &&
       typeof t.live === "string" &&
-      pR.test(t.live) && { live: t.live }),
+      VER_SHAPE.test(t.live) && { live: t.live }),
     ...("kind" in t &&
       typeof t.kind === "string" &&
       Pt.test(t.kind) && { kind: t.kind }),
@@ -10446,7 +10446,7 @@ function Xt(e, t, r, o) {
           err: `${e.err} \u2014 the new version was recorded but its content was not stored${d}.`,
           ...(t.live !== void 0 && { liveVersion: e.liveVersion ?? t.live }),
         };
-  let p = rm(t.slug);
+  let p = artifactViewerUrl(t.slug);
   if (t.kind !== void 0)
     return {
       ...e,
@@ -10523,7 +10523,7 @@ function Ei(e, t, r = "") {
     ...(e.code === "thumbnail_rejected" && { thumbnailRejected: e.msg ?? t }),
   };
 }
-function dFe(e, t) {
+function compareArtifactVersions(e, t) {
   let r = /^(\d{1,15})-/.exec(e)?.[1],
     o = /^(\d{1,15})-/.exec(t)?.[1];
   return r === void 0 || o === void 0 ? null : Number(r) - Number(o);
@@ -10551,7 +10551,7 @@ function yl(e) {
     ...(t.forceRefused === !0 && { forceRefused: !0 }),
   };
 }
-function bJ(e) {
+function denyPolicyBody(e) {
   if (
     e &&
     typeof e === "object" &&
@@ -10563,7 +10563,7 @@ function bJ(e) {
     return { error: e.error, reason: e.reason };
   return null;
 }
-var iTt = "publish denied: ",
+var PUBLISH_DENIED_FRAME = "publish denied: ",
   Bp = [
     "compliance_restricted",
     "org_mismatch",
@@ -10572,18 +10572,18 @@ var iTt = "publish denied: ",
     "user_entitlement_denied",
     "write_gate_disabled",
   ],
-  iYe =
+  SLUG_GONE_MSG =
     "the artifact you're updating was deleted, or you no longer have write access to it";
 function Ri(e) {
   return Tn(`relay HTTP ${e}`);
 }
-var xqt = "publish outcome unknown (";
+var PUBLISH_OUTCOME_UNKNOWN_FRAME = "publish outcome unknown (";
 function Tn(e) {
-  return `${xqt}${e}) \u2014 it may have published; check the artifact list before publishing again`;
+  return `${PUBLISH_OUTCOME_UNKNOWN_FRAME}${e}) \u2014 it may have published; check the artifact list before publishing again`;
 }
-var aYe = "this file belongs to the artifact's type and can't be changed here";
+var TYPE_FILE_WRITE_REFUSAL = "this file belongs to the artifact's type and can't be changed here";
 function _l(e) {
-  return Jt(e).includes(aYe);
+  return Jt(e).includes(TYPE_FILE_WRITE_REFUSAL);
 }
 var jp =
   " \u2014 this Artifact was created from an Artifact type: its page (index.html) and the type's other files can't be changed on it. Publish only its own files (`file_path` naming one, more in `files`, with this `url`); to change the page, publish a new Artifact instead.";
@@ -10596,37 +10596,37 @@ function Ti(e, t, r, o, d = !1) {
       /^thumbnail/i.test(_.trimStart()) ||
       (hr.test(_) && /["']thumbnail(?:_dark)?["']/.test(_))
     )
-      return { code: "thumbnail_rejected", msg: `deploy 400: ${lg(t)}` };
+      return { code: "thumbnail_rejected", msg: `deploy 400: ${errBody(t)}` };
   }
   if (Ii(e, t)) return { code: "publish_stranded" };
   if (e === 422 && _l(t))
     return {
       code: "type_locked",
-      msg: `deploy 422: ${lg(t)}${ne().frozenArtifactTypes?.typesOn ? jp : ""}`,
+      msg: `deploy 422: ${errBody(t)}${ne().frozenArtifactTypes?.typesOn ? jp : ""}`,
     };
   if (e === 422 && o !== void 0)
     return {
       code: "contract_echo_rejected",
       extra: { echo_declared_caps: o.declaredCaps },
       msg:
-        `deploy ${e}: ${lg(t)} \u2014 this republish echoed the artifact's stored ` +
+        `deploy ${e}: ${errBody(t)} \u2014 this republish echoed the artifact's stored ` +
         `contract pin (${o.pin}). If the reason above says the pin was yanked, pass contract: 'latest' to move the artifact to the current contract (this changes the page's runtime semantics). If the reason concerns the capability declaration ` +
         "itself, fix the declaration instead \u2014 upgrading will not " +
         "resolve it.",
     };
   if (e === 403) {
-    let _ = bJ(t);
+    let _ = denyPolicyBody(t);
     if (_) {
       let w = Bp.find((R) => R === _.reason),
         E = w ? u(w) : void 0;
       return {
         code: "publish_denied",
         ...(E && { extra: { deny_reason: E } }),
-        msg: iTt + p1(_.error, 300),
+        msg: PUBLISH_DENIED_FRAME + p1(_.error, 300),
       };
     }
   }
-  if (e === 404 && r && hoe(t)) return { code: "slug_gone", msg: iYe };
+  if (e === 404 && r && hoe(t)) return { code: "slug_gone", msg: SLUG_GONE_MSG };
   if (e === 429) {
     let _ = An(t);
     if (_)
@@ -10658,31 +10658,31 @@ function Hp(e) {
 function Up(e, t, r) {
   let o = kr(t);
   if (e === 409 && o === "path_is_live")
-    return { code: "path_is_live", msg: `deploy 409: ${lg(t)}` };
+    return { code: "path_is_live", msg: `deploy 409: ${errBody(t)}` };
   if (e === 422 && o === "one_live_path")
-    return { code: "one_live_path", msg: `deploy 422: ${lg(t)}` };
+    return { code: "one_live_path", msg: `deploy 422: ${errBody(t)}` };
   if (e === 422 && o === "live_path_cap") {
     let d = Hp(t);
-    return { code: "live_path_cap", msg: `deploy 422: ${lg(t)}` };
+    return { code: "live_path_cap", msg: `deploy 422: ${errBody(t)}` };
   }
   if (e === 422 && o === "live_path_delete")
-    return { code: "live_path_delete", msg: `deploy 422: ${lg(t)}` };
+    return { code: "live_path_delete", msg: `deploy 422: ${errBody(t)}` };
   if (e === 422 && o === "render_over_budget")
-    return { code: "live_over_budget", msg: `deploy 422: ${lg(t)}` };
+    return { code: "live_over_budget", msg: `deploy 422: ${errBody(t)}` };
   if (e === 422 && o === "render_unavailable")
-    return { code: "render_unavailable", msg: `deploy 422: ${lg(t)}` };
+    return { code: "render_unavailable", msg: `deploy 422: ${errBody(t)}` };
   if (e === 422 && o === "live_over_budget")
     return {
       code: "live_over_budget",
       msg:
         typeof t === "string"
           ? `deploy 422: ${p1(t.trimEnd().replace(wl, ""), 500)}`
-          : `deploy 422: ${lg(t)}`,
+          : `deploy 422: ${errBody(t)}`,
     };
   if (e === 422 && typeof t === "string" && zp.test(t))
     return { code: "live_over_budget", msg: `deploy 422: ${p1(t, 500)}` };
   if (e === 503 && o === "render_busy")
-    return { code: "render_busy", msg: `deploy 503: ${lg(t)}` };
+    return { code: "render_busy", msg: `deploy 503: ${errBody(t)}` };
   return;
 }
 var zp = /exceeds the live-editing budget/;
@@ -10692,7 +10692,7 @@ function Ra(e, t) {
 function Ta(e, t) {
   return (t.liveKey && Cp.test(e)) || (t.emptyPatch && Op.test(e));
 }
-function lg(e) {
+function errBody(e) {
   return p1(Jt(e), 200);
 }
 function Jt(e) {
@@ -10707,20 +10707,20 @@ function Jt(e) {
   }
   return "";
 }
-function Cn(e) {
+function getShareEntry(e) {
   return ne().shareStatus.bySlug.get(e);
 }
-function cYe(e) {
+function storedGrantObserved(e) {
   return (
     e !== void 0 && (e.capabilities !== void 0 || e.lastCapsIssuedAt !== void 0)
   );
 }
-function mFe(e) {
+function getShareEntryForPath(e) {
   let { bySlug: t, filePathToSlug: r } = ne().shareStatus,
     o = r.get(e);
   return o !== void 0 ? t.get(o) : void 0;
 }
-function Eoe(e, t) {
+function setShareEntry(e, t) {
   let { bySlug: r } = ne().shareStatus,
     o = r.get(e);
   r.set(e, {
@@ -10764,7 +10764,7 @@ function Eoe(e, t) {
     ...t,
   });
 }
-function gFe(e, t, r) {
+function setEffectiveCapabilities(e, t, r) {
   let { bySlug: o } = ne().shareStatus,
     d = o.get(e) ?? { mode: "owner", isSharedLive: !1 },
     {
@@ -10804,17 +10804,17 @@ function gFe(e, t, r) {
     }),
   });
 }
-function xCe(e, t) {
+function linkPathToSlug(e, t) {
   ne().shareStatus.filePathToSlug.set(e, t);
 }
-function Fj(e) {
+function unlinkPath(e) {
   ne().shareStatus.filePathToSlug.delete(e);
 }
-function uYe(e) {
+function retainPathLinks(e) {
   let t = ne().shareStatus.filePathToSlug;
   for (let r of [...t.keys()]) if (!e.has(r)) t.delete(r);
 }
-function sTn(e, t) {
+function recordPublishShareEcho(e, t) {
   let { bySlug: r } = ne().shareStatus,
     o = r.get(e) ?? t,
     { lastProbeAt: d, lastProbeLandedAt: p, ..._ } = o;
@@ -10826,37 +10826,37 @@ function Di(e, t) {
     isSharedLive: e.isSharedLive || t.isSharedLive,
   };
 }
-function Iqt(e, t, r) {
+function orderReadAgainstEntry(e, t, r) {
   let o = t !== void 0 && e < t,
     d = o || e === t || (r !== void 0 && e <= r);
   return { olderIssued: o, overlapped: d, joinedIssuedAt: Math.max(e, t ?? e) };
 }
-function iTn(e, t, r) {
+function foldShareProbe(e, t, r) {
   let o =
       r.consumedByCheck && r.toolUseId !== void 0
         ? { lastProbeToolUseId: r.toolUseId }
         : {},
-    d = TJ(r.issuedAt)
+    d = issuedUnderDepartedAccount(r.issuedAt)
       ? { err: "the signed-in account changed while probing", errorCode: Vp }
       : t,
-    p = Cn(e),
+    p = getShareEntry(e),
     {
       olderIssued: _,
       overlapped: w,
       joinedIssuedAt: E,
-    } = Iqt(r.issuedAt, p?.lastProbeIssuedAt, p?.lastProbeLandedAt),
+    } = orderReadAgainstEntry(r.issuedAt, p?.lastProbeIssuedAt, p?.lastProbeLandedAt),
     R = Date.now();
   if (d.err !== null) {
     if (
       (n(`[artifact] ${r.debugLabel} share probe failed: ${d.err}`),
       _ && p !== void 0)
     ) {
-      if (o.lastProbeToolUseId !== void 0) Eoe(e, { ...p, ...o });
+      if (o.lastProbeToolUseId !== void 0) setShareEntry(e, { ...p, ...o });
       if (r.consumedByCheck) vl(p);
       return;
     }
     if (r.consumedByCheck) f("artifact_share_status", d.errorCode);
-    Eoe(e, {
+    setShareEntry(e, {
       mode: p?.mode ?? "owner",
       isSharedLive: p?.isSharedLive ?? !1,
       probeFailed: !0,
@@ -10868,7 +10868,7 @@ function iTn(e, t, r) {
     });
     return;
   }
-  let C = pYe(d.mode, d.shared),
+  let C = deriveShareStatus(d.mode, d.shared),
     M = typeof d.title === "string" ? { title: d.title } : {},
     D =
       !w || p === void 0
@@ -10894,53 +10894,53 @@ function iTn(e, t, r) {
             lastProbeIssuedAt: E,
           };
   if (r.consumedByCheck) vl(D);
-  Eoe(e, D);
+  setShareEntry(e, D);
 }
-function lTt(e, t) {
+function foldBootKind(e, t) {
   if (typeof t !== "string" || !Pt.test(t)) return;
-  let r = Cn(e);
-  Eoe(e, {
+  let r = getShareEntry(e);
+  setShareEntry(e, {
     mode: r?.mode ?? "owner",
     isSharedLive: r?.isSharedLive ?? !1,
     ...(r?.probeFailed && { probeFailed: !0 }),
     artifactKind: t,
   });
 }
-function cTt(e, t) {
+function foldBootCowritten(e, t) {
   if (t !== !0) return;
-  let r = Cn(e);
+  let r = getShareEntry(e);
   if (r?.cowritten === !0) return;
-  Eoe(e, {
+  setShareEntry(e, {
     mode: r?.mode ?? "owner",
     isSharedLive: r?.isSharedLive ?? !1,
     ...(r?.probeFailed && { probeFailed: !0 }),
     cowritten: !0,
   });
 }
-function uTt(e, t) {
-  let r = Cn(e);
+function typeLockedFor(e, t) {
+  let r = getShareEntry(e);
   return (
     (t != null && typeof t === "object") ||
     r?.typeLocked === !0 ||
     r?.typeLock != null
   );
 }
-function hFe(e, t) {
+function foldBootTypeLocked(e, t) {
   if (t === null || typeof t !== "object") return;
-  let r = Cn(e);
+  let r = getShareEntry(e);
   if (r?.typeLocked === !0) return;
-  Eoe(e, {
+  setShareEntry(e, {
     mode: r?.mode ?? "owner",
     isSharedLive: r?.isSharedLive ?? !1,
     ...(r?.probeFailed && { probeFailed: !0 }),
     typeLocked: !0,
   });
 }
-function dYe(e, t, r = Date.now()) {
-  if (t === void 0 || TJ(r)) return;
-  let o = Cn(e);
+function foldBootDocs(e, t, r = Date.now()) {
+  if (t === void 0 || issuedUnderDepartedAccount(r)) return;
+  let o = getShareEntry(e);
   if (o?.livePathsIssuedAt !== void 0 && r < o.livePathsIssuedAt) return;
-  Eoe(e, {
+  setShareEntry(e, {
     mode: o?.mode ?? "owner",
     isSharedLive: o?.isSharedLive ?? !1,
     ...(o?.probeFailed && { probeFailed: !0 }),
@@ -10948,8 +10948,8 @@ function dYe(e, t, r = Date.now()) {
     livePathsIssuedAt: r,
   });
 }
-function Pqt(e) {
-  let t = Cn(e);
+function probedLivePaths(e) {
+  let t = getShareEntry(e);
   if (t?.livePaths !== void 0) return t.livePaths;
   return t?.artifactKind === NH ? [Soe] : [];
 }
@@ -10961,7 +10961,7 @@ function vl(e) {
     g("artifact_share_status", "unknown_share_role");
   else y("artifact_share_status");
 }
-function pYe(e, t) {
+function deriveShareStatus(e, t) {
   if (e === void 0 || e === "" || e === "owner")
     return { mode: "owner", isSharedLive: !1 };
   if (e === "users" || e === "org")
@@ -10971,13 +10971,13 @@ function pYe(e, t) {
     return { mode: "agent_scoped", isSharedLive: (t ?? "") === "" };
   return { mode: "unknown", isSharedLive: !0 };
 }
-function Oqt(e) {
+function audienceViewNote(e) {
   if (e === "live") return "viewers see updates immediately";
   if (e === "pinned-current")
     return "viewers currently see this version, but will not see future publishes until the share pin is moved";
   return "viewers see a pinned earlier version, not this live version";
 }
-function mR(e) {
+function shareAudience(e) {
   if (e === "org") return "your organization";
   if (e === "users") return "specific users";
   if (e === "public") return "anyone with the link";
@@ -10997,48 +10997,48 @@ function xl(e) {
     return e;
   return "unknown";
 }
-function rl(e) {
+function ownershipTag(e) {
   if (e === void 0) return "";
   if (e.probeFailed || e.role === void 0 || e.role === "unknown")
     return " (ownership unconfirmed)";
   return e.role === "owner" ? "" : " (someone else's artifact)";
 }
-var fYe = "boot_org_mismatch",
+var BOOT_ORG_MISMATCH_CODE = "boot_org_mismatch",
   Vp = "account_changed";
-function TJ(e) {
+function issuedUnderDepartedAccount(e) {
   let { accountBoundaryAt: t } = ne().shareStatus;
   return t !== void 0 && e <= t;
 }
-function aTn(e) {
-  return e?.probeFailed === !0 && e.probeErrorCode === fYe;
+function probedOtherOrg(e) {
+  return e?.probeFailed === !0 && e.probeErrorCode === BOOT_ORG_MISMATCH_CODE;
 }
-function gR(e) {
-  let t = rl(e);
+function ownershipClassifierMark(e) {
+  let t = ownershipTag(e);
   if (t === "") return "";
   return t === " (someone else's artifact)"
     ? " [ownership: someone else's]"
     : " [ownership: unconfirmed]";
 }
-function Of(e) {
+function shareAudienceMark(e) {
   if (e?.probeFailed) return " [shared: unknown]";
   return e !== void 0 && e.mode !== "owner" ? ` [shared: ${e.mode}]` : "";
 }
-function EJ(e) {
+function shareAudienceSentence(e) {
   if (e?.probeFailed) return "share status unconfirmed";
   return e !== void 0 && e.mode !== "owner"
-    ? `visible to ${mR(e.mode)}`
+    ? `visible to ${shareAudience(e.mode)}`
     : "visible to viewers of the artifact";
 }
-function $j(e) {
+function shareAudienceParenthetical(e) {
   if (e?.probeFailed) return " (share status unconfirmed)";
   return e !== void 0 && e.mode !== "owner"
-    ? ` (shared with ${mR(e.mode)})`
+    ? ` (shared with ${shareAudience(e.mode)})`
     : "";
 }
-function Fh(e) {
+function ownedByUser(e) {
   return e !== void 0 && !e.probeFailed && e.role === "owner";
 }
-function xK(e) {
+function isSomeoneElses(e) {
   return (
     e !== void 0 &&
     !e.probeFailed &&
@@ -11047,12 +11047,12 @@ function xK(e) {
     e.role !== "owner"
   );
 }
-function lTn(e) {
-  return xK(e)
+function dbReadConsentMessage(e) {
+  return isSomeoneElses(e)
     ? "Claude wants to read this artifact's database \u2014 someone else's artifact, written by its collaborators. Covers this artifact for the rest of the conversation."
     : "Claude wants to read this artifact's database \u2014 written by its collaborators, and ownership couldn't be confirmed. Covers this artifact for the rest of the conversation.";
 }
-function mYe(e, t = "their database", r = "write into") {
+function ownershipAskNote(e, t = "their database", r = "write into") {
   if (e === void 0) return "";
   if (e.probeFailed || e.role === void 0 || e.role === "unknown")
     return " Couldn't confirm whether this artifact is yours.";
@@ -11060,13 +11060,13 @@ function mYe(e, t = "their database", r = "write into") {
     ? ""
     : ` This artifact belongs to someone else \u2014 approving will ${r} ${t}.`;
 }
-function hR(e) {
+function markAutoReactNoticePending(e) {
   ne().shareStatus.pendingNoticeSlugs.add(e);
 }
-function _R(e) {
+function hasAutoReactNoticePending(e) {
   return ne().shareStatus.pendingNoticeSlugs.has(e);
 }
-function vN(e) {
+function clearAutoReactNoticePending(e) {
   ne().shareStatus.pendingNoticeSlugs.delete(e);
 }
 var xr = 8192,
@@ -11568,14 +11568,14 @@ async function nTn(e, t, r, o) {
         return {
           errMsg: `files: ${JSON.stringify(I)} has more than one hard link`,
         };
-      if (re.size > Cm)
+      if (re.size > MAX_ARTIFACT_BYTES)
         return {
-          errMsg: `files: ${JSON.stringify(I)} is ${Math.ceil(re.size / 1024 / 1024)}MB (per-file max ${Cm / 1024 / 1024}MB)`,
+          errMsg: `files: ${JSON.stringify(I)} is ${Math.ceil(re.size / 1024 / 1024)}MB (per-file max ${MAX_ARTIFACT_BYTES / 1024 / 1024}MB)`,
           tooLarge: !0,
         };
-      if (((C += re.size), C > RCe))
+      if (((C += re.size), C > MANIFEST_TOTAL_BUDGET))
         return {
-          errMsg: `files: total content exceeds ${RCe / 1024 / 1024}MB at ${JSON.stringify(I)} \u2014 a version's files may total at most that`,
+          errMsg: `files: total content exceeds ${MANIFEST_TOTAL_BUDGET / 1024 / 1024}MB at ${JSON.stringify(I)} \u2014 a version's files may total at most that`,
         };
       if (((te = M.contentType ?? GJ(F)), te === void 0))
         return {
@@ -11708,7 +11708,7 @@ function $l(e) {
   return E;
 }
 function Dqt(e) {
-  if (!kK()) return;
+  if (!isFrameLiveSubscribeEnabled()) return;
   if (e.syncClient === !0)
     return typeof e.syncToken === "string" && e.syncToken !== ""
       ? { transport: "sync", token: e.syncToken }
@@ -11745,7 +11745,7 @@ function gh(e) {
   return (
     typeof e === "object" &&
     e !== null &&
-    bJ(e)?.reason === "org_mismatch" &&
+    denyPolicyBody(e)?.reason === "org_mismatch" &&
     "owner_org" in e &&
     typeof e.owner_org === "string" &&
     Xn(e.owner_org) !== null
@@ -11833,7 +11833,7 @@ async function Mqt(
     };
   }
   if (N.status === 403 && gh(N.data))
-    return { err: bh, status: 403, otherOrg: !0, errorCode: fYe };
+    return { err: bh, status: 403, otherOrg: !0, errorCode: BOOT_ORG_MISMATCH_CODE };
   if (N.status === 403) {
     let ge = yh().safeParse(N.data);
     if (ge.success && ge.data.reason === "agent_not_added")
@@ -11878,10 +11878,10 @@ async function Mqt(
       errorCode: "boot_bad_ver",
     };
   return (
-    lTt(e, te.artifactKind),
-    dYe(e, nr(te), ae),
-    cTt(e, te.cowritten),
-    hFe(e, te.type),
+    foldBootKind(e, te.artifactKind),
+    foldBootDocs(e, nr(te), ae),
+    foldBootCowritten(e, te.cowritten),
+    foldBootTypeLocked(e, te.type),
     { err: null, data: te, ver: re, assetToken: ce || void 0 }
   );
 }
@@ -11918,7 +11918,7 @@ async function IC(
       }
     );
   let M = C;
-  if (o && M.assetToken === void 0 && !per())
+  if (o && M.assetToken === void 0 && !isFramePublicReadEnabled())
     return (
       R(t, "public_read_disabled"),
       {
@@ -12016,8 +12016,8 @@ async function hYe(e, t, r) {
     ...(typeof o.data.title === "string" && { title: o.data.title }),
   };
 }
-var Bl = Cm + tYe + Ol + 65536,
-  Ofe = qk + tYe + 1,
+var Bl = MAX_ARTIFACT_BYTES + FRAME_RUNTIME_MAX_SPAN + Ol + 65536,
+  Ofe = qk + FRAME_RUNTIME_MAX_SPAN + 1,
   Ll = {
     relayed: !1,
     why: "the session gateway declined an artifact read a few minutes ago, so this read did not retry it",
@@ -12185,7 +12185,7 @@ async function jl(e, t, r, o, d) {
           ? { source_fallback_status: C.fellBack }
           : void 0,
     { title: D, favicon: F, perm: I, cowritten: N } = _.data,
-    ae = _.data.artifactKind === NH || Cn(e.slug)?.artifactKind === NH,
+    ae = _.data.artifactKind === NH || getShareEntry(e.slug)?.artifactKind === NH,
     ue = E === void 0 ? "public" : I?.mode,
     V =
       I?.role === "owner"
@@ -12211,13 +12211,13 @@ async function jl(e, t, r, o, d) {
         raw: le,
         role: V,
         ...(Ce && { source: !0 }),
-        cowritten: N === !0 || ae || Cn(e.slug)?.cowritten === !0,
+        cowritten: N === !0 || ae || getShareEntry(e.slug)?.cowritten === !0,
         publicRead: E === void 0,
         sameChannel: I?.sameChannel === !0 && V === "writer",
-        typeLocked: uTt(e.slug, _.data.type),
+        typeLocked: typeLockedFor(e.slug, _.data.type),
         ...(ue !== void 0 &&
           (() => {
-            let _e = pYe(ue, _.data.shared),
+            let _e = deriveShareStatus(ue, _.data.shared),
               je = Dl(I?.role);
             return {
               audience: _e.mode,
@@ -12534,7 +12534,7 @@ function Ter(e) {
 var Ul = 3000,
   Sh = 600000,
   Ah = 262144;
-function Eer(e) {
+function artifactHostUnreachable(e) {
   let t = ne();
   return (
     t.contentHostEgressDenied.has(e.env) ||
@@ -12545,7 +12545,7 @@ function Eh(e) {
   let t = ne().contentHostEgressProbed.get(e);
   return t !== void 0 && Date.now() - t < Sh;
 }
-async function Dfe(e, t) {
+async function probeArtifactHostEgress(e, t) {
   let r = ne(),
     o = sie(e);
   if (r.contentHostEgressDenied.has(e.env)) {
@@ -12557,7 +12557,7 @@ async function Dfe(e, t) {
   if (d !== void 0)
     return d.catch((_) => {
       if (t.aborted) throw _;
-      return Dfe(e, t);
+      return probeArtifactHostEgress(e, t);
     });
   let p = Rh(e, o, t).finally(() => {
     r.contentHostEgressInFlight.delete(o);
@@ -12684,11 +12684,11 @@ var Gl = {
   envDisableVar: "CLAUDE_CODE_DISABLE_ARTIFACT",
   defaultOn: !0,
 };
-function yFe() {
+function resolveArtifactEnableSetting() {
   return Wl(Gl);
 }
 function Ar() {
-  return !yFe().enabled;
+  return !resolveArtifactEnableSetting().enabled;
 }
 function $h() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
@@ -12697,25 +12697,25 @@ function $h() {
 function Yl(e) {
   return e === "local-agent" || e?.startsWith("claude-coworker") === !0;
 }
-function FH() {
+function isCoworkFramePublishSession() {
   return N1() === "local-agent" && Eg() && !AL() && xPn();
 }
-function Uj() {
-  return (txe() && Cxt()) || FH();
+function isCoworkHostSession() {
+  return (txe() && Cxt()) || isCoworkFramePublishSession();
 }
-function Coe() {
+function othersArtifactReadConsentSurface() {
   return txe();
 }
-function kN(e) {
-  return e !== void 0 && Coe() && Eer(e);
+function othersArtifactReadIsUserOnly(e) {
+  return e !== void 0 && othersArtifactReadConsentSurface() && artifactHostUnreachable(e);
 }
 function Lh() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
-  if (e === "local-agent" && FH()) return !1;
+  if (e === "local-agent" && isCoworkFramePublishSession()) return !1;
   return Yl(e);
 }
-function _Ye() {
-  return Yl(N1()) && !FH();
+function isArtifactReadOnlySurface() {
+  return Yl(N1()) && !isCoworkFramePublishSession();
 }
 function Mh() {
   return M1e() && Nh();
@@ -12740,7 +12740,7 @@ function Xl() {
   if (Lh()) return "surface_excluded";
   return Kl();
 }
-function fyr() {
+function isArtifactToolEligible() {
   if (Ar()) return !1;
   return ql();
 }
@@ -12762,19 +12762,19 @@ function Ql() {
   if (dn() || Qi()) return null;
   return "admin_policy";
 }
-function yR() {
-  if (Gd() !== null) return sP();
-  return M1e() && sP() && Qi();
+function isArtifactToolEnabled() {
+  if (Gd() !== null) return isArtifactToolRegistered();
+  return M1e() && isArtifactToolRegistered() && Qi();
 }
-function sP() {
-  return Nqt() === null;
+function isArtifactToolRegistered() {
+  return artifactToolWithholdingGate() === null;
 }
-function Nqt() {
+function artifactToolWithholdingGate() {
   if (Ar()) return "switched_off";
   if (Gd() !== null) return null;
   return Xl() ?? Ql();
 }
-function myr() {
+function isArtifactReadEnabled() {
   if (Ar()) return !1;
   if (!Mh()) return !1;
   return Zl();
@@ -12783,7 +12783,7 @@ function Ji() {
   let e = new Set(),
     t = !1,
     r = !1;
-  for (let d of yFe().offSources)
+  for (let d of resolveArtifactEnableSetting().offSources)
     switch (d.layer) {
       case "env":
         e.add("env");
@@ -12809,7 +12809,7 @@ function Ji() {
 function Bh() {
   return Ji() !== null && ql() && Zl();
 }
-function dTn() {
+function maybeLogArtifactDisabledSession() {
   let e = ne();
   if (e.artifactDisabledSessionEvaluated) return;
   if (Pw() === null) return;
@@ -12824,7 +12824,7 @@ function dTn() {
         : S("noninteractive"),
   });
 }
-function pTn(e) {
+function maybeLogArtifactToolWithheld(e) {
   if (!xPn() || N1() !== "local-agent" || AL()) return;
   let t = ne();
   if (e === null) {
@@ -12862,17 +12862,17 @@ function jh(e) {
       return e;
   }
 }
-function Fqt() {
+function getArtifactDefaultOn() {
   return Gl.defaultOn;
 }
 function Hh() {
   return Xi() && Dh();
 }
-function yYe() {
-  return Hh() && yFe().userControllable;
+function isArtifactConfigToggleable() {
+  return Hh() && resolveArtifactEnableSetting().userControllable;
 }
 function Qi() {
-  if (dn()) return dTt() === null;
+  if (dn()) return artifactYieldAdminRefusal() === null;
   if (!ec(qn())) return !1;
   return Mt("allow_cobalt_plinth");
 }
@@ -12885,7 +12885,7 @@ function ec(e) {
     e == null
   );
 }
-function dTt() {
+function artifactYieldAdminRefusal() {
   if (!dn()) return null;
   let e = WUe();
   if (e === null) return "plan_unreadable";
@@ -12895,70 +12895,70 @@ function dTt() {
   if (ch() !== null) return "org_denied";
   return Cme() ? "policy_route_missing" : "cache_miss";
 }
-function voe() {
+function isPlanArtifactEnabled() {
   return !1;
 }
-function $H() {
-  return yR() && H("tengu_gable_onyx_sluice", !1);
+function isWorkshopEnabled() {
+  return isArtifactToolEnabled() && H("tengu_gable_onyx_sluice", !1);
 }
-jer($H);
-function fTn() {
-  return sP() && H("tengu_gable_onyx_sluice", !1);
+jer(isWorkshopEnabled);
+function isWorkshopSchemaEnabled() {
+  return isArtifactToolRegistered() && H("tengu_gable_onyx_sluice", !1);
 }
-function mTn() {
+function isWhiteboardEnabled() {
   return !1;
 }
-function gTn() {
+function isWhiteboardLiveEnabled() {
   return !1;
 }
-function $qt() {
+function isPrototypeEnabled() {
   return !1;
 }
-function hTn() {
-  return yR() && H("tengu_ethereal_nova", !0);
+function isDesignCanvasEnabled() {
+  return isArtifactToolEnabled() && H("tengu_ethereal_nova", !0);
 }
-function _Tn() {
+function isPlanWorkshopOfferEnabled() {
   return (
-    $H() &&
+    isWorkshopEnabled() &&
     !jy() &&
     !H("tengu_cedar_transom", !1) &&
     H("tengu_larch_pavise", !1)
   );
 }
-function yTn() {
-  return $qt() && !jy();
+function isPlanPrototypeOfferEnabled() {
+  return isPrototypeEnabled() && !jy();
 }
-function STn() {
+function isMdArtifactStylingEnabled() {
   return !1;
 }
-function bTn() {
+function isArtifactTemplateSkillsEnabled() {
   return !1;
 }
-function SYe() {
+function isRepublishInlinePromptEnabled() {
   return H("tengu_cobalt_plinth_thrift", !1) === !0;
 }
 var Uh = "tengu_russet_pergola";
-function wTn() {
+function isProductivitySkillsEnabled() {
   return !1;
 }
-function Uqt() {
+function isArtifactPrReviewEnabled() {
   return !1;
 }
-function TTn() {
-  return Uqt() && H("tengu_walnut_sconce", !1);
+function isArtifactPrReviewComposeEnabled() {
+  return isArtifactPrReviewEnabled() && H("tengu_walnut_sconce", !1);
 }
 function zh() {
   return !1;
 }
-function Roe() {
+function isArtifactPrReviewComposeLatched() {
   let e = ne();
   if (e.prReviewComposeLatch === null) e.prReviewComposeLatch = zh();
   return e.prReviewComposeLatch;
 }
-function Lfe() {
-  return yR();
+function isPublishToolEnabled() {
+  return isArtifactToolEnabled();
 }
-function SFe() {
+function isResumeFrameSeedEligible() {
   return !Ar() && Xi();
 }
 export {
@@ -13081,16 +13081,16 @@ export {
   mqt,
   ZZn,
   jg,
-  pR,
-  eFe,
-  pyr,
-  tFe,
-  nFe,
-  xwn,
-  gqt,
-  hqt,
-  _qt,
-  Hwn,
+  VER_SHAPE,
+  makeOwnPublishesStore,
+  makeLocalOwnPublishesStore,
+  recordOwnPublish,
+  isOwnPublishedVer,
+  headAuthorship,
+  withPublishInFlight,
+  markPublishInFlight,
+  clearPublishInFlight,
+  isPublishInFlight,
   Ha,
   XXe,
   eer,
@@ -13128,87 +13128,87 @@ export {
   uer,
   der,
   eYe,
-  Cm,
-  AN,
-  Pwn,
-  Own,
-  Zwt,
-  HT,
-  Dwn,
-  Sqt,
-  fR,
-  woe,
-  per,
-  Lwn,
-  kK,
-  CG,
-  CN,
-  Toe,
-  Mwn,
-  Nwn,
-  vG,
-  P$,
-  O$,
-  Fwn,
-  vfe,
-  vCe,
-  $wn,
-  D$,
-  Uwn,
-  Rfe,
-  Bwn,
-  kfe,
-  xfe,
-  eTt,
-  tTt,
-  bqt,
-  wqt,
-  tYe,
-  Tqt,
-  jwn,
-  Eqt,
-  aFe,
-  Wwn,
-  Gwn,
-  nYe,
-  nTt,
-  oP,
-  qwn,
-  rTt,
-  rYe,
-  zwn,
-  Vwn,
-  Aqt,
-  Kwn,
-  Cqt,
-  vqt,
-  lFe,
-  Hfe,
-  SJ,
-  RCe,
-  Rqt,
-  Xwn,
-  Ywn,
-  Jwn,
-  rm,
-  cFe,
-  oYe,
-  sYe,
-  Qwn,
-  Zwn,
-  eTn,
-  kCe,
-  oTt,
-  kqt,
-  uFe,
-  sTt,
-  dFe,
-  bJ,
-  iTt,
-  iYe,
-  xqt,
-  aYe,
-  lg,
+  MAX_ARTIFACT_BYTES,
+  isFrameBaseVersionEnabled,
+  isFrameStaleGuardAutoReadEnabled,
+  isFrameGuardOwnVersionProceedEnabled,
+  artifactPageInlineResultCap,
+  isArtifactConflictLegacy,
+  isArtifactLangEnabled,
+  isFrameListSharedScopeKilled,
+  isFrameMultiFileEnabled,
+  isFrameCopyFromEnabled,
+  isFramePublicReadEnabled,
+  isFrameSameChannelRawReadEnabled,
+  isFrameLiveSubscribeEnabled,
+  isFrameLiveTokenLeaseEnabled,
+  isFrameDeclaredThumbnailEnabled,
+  resolveContract,
+  fetchContractDefs,
+  fetchContractPrompt,
+  derivePublishContextFrom,
+  artifactReadObservationIn,
+  observationStamp,
+  sourcelessObservation,
+  observedWithoutSource,
+  ownMintStamp,
+  versionHeldAsOwnMint,
+  mainObservedArtifactVersion,
+  makeMainObservedVersionReader,
+  makeSetArtifactReadVersion,
+  artifactVersionObserved,
+  makeSetArtifactContractTarget,
+  makeGetArtifactContractTarget,
+  MAX_ECHO_MANIFEST_PATH,
+  MAX_ECHO_MANIFEST_ENTRIES,
+  splitManifestPaths,
+  typeLockFromWire,
+  FRAME_RUNTIME_MAX_SPAN,
+  hasFramePreambleLead,
+  exciseFrameAssetServeBlock,
+  stripStaleInjections,
+  StripUnsettledError,
+  strippedAuthorBody,
+  servedPageLooksNested,
+  isValidArtifactLang,
+  prepareArtifactBody,
+  readFrameDecl,
+  SERVED_SPLICE_PREFIX_RE,
+  composeArtifactPage,
+  startsWithSkeletonOpen,
+  mintRoundTripPublishSignal,
+  isMintedRoundTripPublishSignal,
+  publishArtifact,
+  surfacedViaForEntrypoint,
+  trackFrameEvent,
+  PUBLISH_CAP_FRAME,
+  dailyPublishResetEpochSeconds,
+  MAX_COPY_SOURCES,
+  MANIFEST_TEXT_TYPES,
+  MANIFEST_TOTAL_BUDGET,
+  BINARY_FILE_MAX_BYTES,
+  filesOnlyPublishProblem,
+  publishInstanceFiles,
+  publishLiveDocVersion,
+  artifactViewerUrl,
+  ARTIFACT_LIST_RELS,
+  isKnownRel,
+  ARTIFACT_LIST_SCOPES,
+  listArtifacts,
+  sidecarHistoryWith,
+  refusedSidecarHistoryFor,
+  workshopVerifiedSlugsWith,
+  publishPlanArtifact,
+  PUBLISH_CONFLICT_LEAD,
+  FORCE_REFUSED_SENTENCE,
+  conflictSubject,
+  compareArtifactVersions,
+  denyPolicyBody,
+  PUBLISH_DENIED_FRAME,
+  SLUG_GONE_MSG,
+  PUBLISH_OUTCOME_UNKNOWN_FRAME,
+  TYPE_FILE_WRITE_REFUSAL,
+  errBody,
   TD,
   RG,
   HC,
@@ -13226,41 +13226,41 @@ export {
   rTn,
   oTn,
   her,
-  Cn,
-  cYe,
-  mFe,
-  Eoe,
-  gFe,
-  xCe,
-  Fj,
-  uYe,
-  sTn,
-  Iqt,
-  iTn,
-  lTt,
-  cTt,
-  uTt,
-  hFe,
-  dYe,
-  Pqt,
-  pYe,
-  Oqt,
-  mR,
-  rl,
-  fYe,
-  TJ,
-  aTn,
-  gR,
-  Of,
-  EJ,
-  $j,
-  Fh,
-  xK,
-  lTn,
-  mYe,
-  hR,
-  _R,
-  vN,
+  getShareEntry,
+  storedGrantObserved,
+  getShareEntryForPath,
+  setShareEntry,
+  setEffectiveCapabilities,
+  linkPathToSlug,
+  unlinkPath,
+  retainPathLinks,
+  recordPublishShareEcho,
+  orderReadAgainstEntry,
+  foldShareProbe,
+  foldBootKind,
+  foldBootCowritten,
+  typeLockedFor,
+  foldBootTypeLocked,
+  foldBootDocs,
+  probedLivePaths,
+  deriveShareStatus,
+  audienceViewNote,
+  shareAudience,
+  ownershipTag,
+  BOOT_ORG_MISMATCH_CODE,
+  issuedUnderDepartedAccount,
+  probedOtherOrg,
+  ownershipClassifierMark,
+  shareAudienceMark,
+  shareAudienceSentence,
+  shareAudienceParenthetical,
+  ownedByUser,
+  isSomeoneElses,
+  dbReadConsentMessage,
+  ownershipAskNote,
+  markAutoReactNoticePending,
+  hasAutoReactNoticePending,
+  clearAutoReactNoticePending,
   Dqt,
   Sw,
   AJ,
@@ -13284,40 +13284,40 @@ export {
   _Fe,
   wer,
   Ter,
-  Eer,
-  Dfe,
-  yFe,
-  FH,
-  Uj,
-  Coe,
-  kN,
-  _Ye,
-  fyr,
-  yR,
-  sP,
-  Nqt,
-  myr,
-  dTn,
-  pTn,
-  Fqt,
-  yYe,
-  dTt,
-  voe,
-  $H,
-  fTn,
-  mTn,
-  gTn,
-  $qt,
-  hTn,
-  _Tn,
-  yTn,
-  STn,
-  bTn,
-  SYe,
-  wTn,
-  Uqt,
-  TTn,
-  Roe,
-  Lfe,
-  SFe,
+  artifactHostUnreachable,
+  probeArtifactHostEgress,
+  resolveArtifactEnableSetting,
+  isCoworkFramePublishSession,
+  isCoworkHostSession,
+  othersArtifactReadConsentSurface,
+  othersArtifactReadIsUserOnly,
+  isArtifactReadOnlySurface,
+  isArtifactToolEligible,
+  isArtifactToolEnabled,
+  isArtifactToolRegistered,
+  artifactToolWithholdingGate,
+  isArtifactReadEnabled,
+  maybeLogArtifactDisabledSession,
+  maybeLogArtifactToolWithheld,
+  getArtifactDefaultOn,
+  isArtifactConfigToggleable,
+  artifactYieldAdminRefusal,
+  isPlanArtifactEnabled,
+  isWorkshopEnabled,
+  isWorkshopSchemaEnabled,
+  isWhiteboardEnabled,
+  isWhiteboardLiveEnabled,
+  isPrototypeEnabled,
+  isDesignCanvasEnabled,
+  isPlanWorkshopOfferEnabled,
+  isPlanPrototypeOfferEnabled,
+  isMdArtifactStylingEnabled,
+  isArtifactTemplateSkillsEnabled,
+  isRepublishInlinePromptEnabled,
+  isProductivitySkillsEnabled,
+  isArtifactPrReviewEnabled,
+  isArtifactPrReviewComposeEnabled,
+  isArtifactPrReviewComposeLatched,
+  isPublishToolEnabled,
+  isResumeFrameSeedEligible,
 };

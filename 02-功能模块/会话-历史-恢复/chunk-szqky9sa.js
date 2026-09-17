@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { l, W, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { We, z, Is, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, T_e } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { uxe, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { uxe, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { kA, Yie } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Sl } from "../插件系统/chunk-7s6mt1vg.js";
 import { Gcr, _n, O1, Ce, Vcr } from "../Teammates团队/chunk-qe04h4c5.js";
@@ -41,13 +41,13 @@ import {
   Emn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { myn, Hpe, Hs } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { wvn, QN, H, s1, Ns } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Pm } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { Mm, qke, V7t, Rnt, aPn } from "./chunk-mkmy4cx2.js";
+import { readJobStateFreshOrNull as myn, readPinnedJobIds as Hpe, isSettled as Hs } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { wvn, QN, H, getMemoryBaseDir as s1, getAutoMemPath as Ns } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSameProcessAsync as Pm } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { LITE_READ_BUF_SIZE as Mm, extractFieldFromFirstEntryStrict as qke, extractFieldFromLastEntryStrict as V7t, readHeadAndTail as Rnt, anchorOffsetTail as aPn } from "./chunk-mkmy4cx2.js";
 import { The, lcr, txt, xIn, ccr, Ehe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { kPn } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { ye, bn, Nxn, xq, hx, kBe } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye, getSettings_DEPRECATED as bn, anyAdminPolicyTierGovernsRetention as Nxn, getPolicySettingsLoadErrors as xq, getSecuritySensitiveSetting as hx, rawSettingsKeyPresence as kBe } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pm } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { Apt } from "../../01-核心基础设施/共享小工具-未细化/chunk-5pc36v8n.js";
@@ -69,11 +69,11 @@ import { tOe, wan } from "../Skills技能/chunk-wwgqvtfr.js";
 import { FG, jK, zo } from "../MCP客户端/chunk-3kmsshb6.js";
 import { k9n, yan, W4 } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { Pl } from "../Teammates团队/chunk-thxapyam.js";
-import { gJe } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { resetPlanFileCacheToUnknown as gJe } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { Gyn } from "../图片-截图-ComputerUse/chunk-b8jsase9.js";
 import { Mpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
 import { fze } from "../跨会话消息(UDS)/chunk-qvnte9zp.js";
-import { Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import * as A from "fs/promises";
 import { homedir as fr, tmpdir as _e } from "os";

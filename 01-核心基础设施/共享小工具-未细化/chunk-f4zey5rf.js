@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ACn, Srr, ht, vn, qn, Te, ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { ACn, Srr, ht, getOauthAccountInfo as vn, getSubscriptionType as qn, Te, ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var l = 14;
-function $It() {
+function getProTrialDurationDays() {
   return vn()?.claudeCodeTrialDurationDays ?? null;
 }
 var s = { status: "ineligible", daysRemaining: null };
-function dit() {
+function getProTrialState() {
   let e = ACn();
   if (e) return o(!0, e.endsAt);
   let t = vn();
@@ -24,7 +24,7 @@ function dit() {
   let r = t.ccOnboardingFlags?.e10 === !0;
   return o(r, t.claudeCodeTrialEndsAt ?? null);
 }
-async function UIt(e, t) {
+async function startProTrial(e, t) {
   return Sr("api_pro_trial_start", async () => {
     if (ACn()) {
       let i = new Date(Date.now() + l * 24 * 60 * 60 * 1000).toISOString();
@@ -48,11 +48,11 @@ async function UIt(e, t) {
     );
   });
 }
-function sZt() {
-  if (dit().status !== "expired") return !1;
+function shouldAutoOpenProTrialExpired() {
+  if (getProTrialState().status !== "expired") return !1;
   return ee().cachedExtraUsageDisabledReason !== null;
 }
-function BIt(e) {
+function formatTrialBadge(e) {
   switch (e.status) {
     case "active": {
       let t = e.daysRemaining ?? 0;
@@ -84,4 +84,4 @@ function u(e, t) {
     };
   }, t);
 }
-export { $It, dit, UIt, sZt, BIt };
+export { getProTrialDurationDays, getProTrialState, startProTrial, shouldAutoOpenProTrialExpired, formatTrialBadge };

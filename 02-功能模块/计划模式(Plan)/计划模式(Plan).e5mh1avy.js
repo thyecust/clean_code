@@ -10,35 +10,35 @@
 import { RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B, K, sc, ke, g8, _8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Yhe, Xg, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { kd } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { C5t, het, xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { posix as te } from "path";
 var { dirname: I, isAbsolute: ne, join: T, normalize: ie } = te,
-  Ztr = "/mnt/user-data/uploads",
-  gyr = T(I(Ztr), "outputs"),
-  EEt = ".stage-tmp.";
+  DEFAULT_STAGE_FILE_ROOT = "/mnt/user-data/uploads",
+  DEFAULT_OUTPUTS_ROOT = T(I(DEFAULT_STAGE_FILE_ROOT), "outputs"),
+  STAGE_TMP_PREFIX = ".stage-tmp.";
 function re(t) {
-  if (!t) return Ztr;
+  if (!t) return DEFAULT_STAGE_FILE_ROOT;
   if (!ne(t)) throw Error("CLAUDE_STAGE_FILE_ROOT must be an absolute path");
   return ie(t);
 }
-function Goe() {
+function getStageFileRoot() {
   return re(a.CLAUDE_STAGE_FILE_ROOT);
 }
-function i$e() {
-  return T(I(Goe()), "outputs");
+function getOutputsRoot() {
+  return T(I(getStageFileRoot()), "outputs");
 }
 import { lstat as se, readdir as oe } from "fs/promises";
 import {
@@ -448,17 +448,17 @@ var ue = new j(() => new X());
 function L() {
   return B().host;
 }
-function Lf() {
+function planFiles() {
   return ue.of(L());
 }
-function WK(t, e) {
-  Lf().notePlanFileWritten(t, e);
+function notePlanFileWritten(t, e) {
+  planFiles().notePlanFileWritten(t, e);
 }
-function Cp(t) {
-  Lf().notePlanFileForgotten(t);
+function notePlanFileForgotten(t) {
+  planFiles().notePlanFileForgotten(t);
 }
-function gJe() {
-  Lf().resetPlanFileCacheToUnknown();
+function resetPlanFileCacheToUnknown() {
+  planFiles().resetPlanFileCacheToUnknown();
 }
 async function fe(t) {
   let e = [];
@@ -495,7 +495,7 @@ async function fe(t) {
 async function de(t, e) {
   let i = await fe(t);
   if (e !== C()) return;
-  if (i !== null) (Lf().activatePlanFileCache(t), Lf().commitPlanListing(e, i));
+  if (i !== null) (planFiles().activatePlanFileCache(t), planFiles().commitPlanListing(e, i));
 }
 async function x(t, e) {
   let i = hr(),
@@ -512,14 +512,14 @@ async function x(t, e) {
     r
   );
 }
-async function NEn() {
-  let t = Lf();
+async function settlePlanFileCachePrime() {
+  let t = planFiles();
   if (t.primeInFlight !== null) await x(t.primeInFlight, t.waitCapMs);
 }
-async function lh(t) {
+async function primePlanSlugCollisions(t) {
   let e = C();
   if (t && e === P()) {
-    let i = Lf(),
+    let i = planFiles(),
       r = de(t, e);
     i.primeInFlight = r;
     try {
@@ -532,16 +532,16 @@ async function lh(t) {
   try {
     let i = await oe(e);
     if (e !== C()) return;
-    Lf().commitPlanListing(e, i);
+    planFiles().commitPlanListing(e, i);
   } catch (i) {
     if (!W(i) && !Rt(i)) h(i);
     if (e !== C()) return;
-    if (W(i)) Lf().commitPlanListing(e, []);
+    if (W(i)) planFiles().commitPlanListing(e, []);
   }
 }
 function C() {
   if (!ke() && !g8()) return P();
-  return Ea();
+  return getPlansDirectory();
 }
 function P() {
   return d(be(), "plans");
@@ -555,29 +555,29 @@ function y(t) {
 var w = { publishDiscipline: "inPlace" };
 async function N(t) {
   try {
-    let e = await se(d(Ea(), `${t}.md`));
+    let e = await se(d(getPlansDirectory(), `${t}.md`));
     return { ...w, mode: e.mode & 511 };
   } catch {
     return w;
   }
 }
 function g() {
-  return Ea() === P();
+  return getPlansDirectory() === P();
 }
 function F(t) {
   return [`${t}.md`, `${t}.workshop.md`];
 }
-function LN(t, e) {
-  return Lf().getPlanSlug(t ?? K(), e);
+function getPlanSlug(t, e) {
+  return planFiles().getPlanSlug(t ?? K(), e);
 }
-function GK(t) {
+function peekPlanSlug(t) {
   return _8().get(t ?? K());
 }
-function $zt(t, e) {
-  (_8().set(t, e), Lf().exemptSlugFromRevalidation(t, e));
+function setPlanSlug(t, e) {
+  (_8().set(t, e), planFiles().exemptSlugFromRevalidation(t, e));
 }
-function FEn() {
-  Lf().clearAllPlanSlugs();
+function clearAllPlanSlugs() {
+  planFiles().clearAllPlanSlugs();
 }
 class z {
   #e = void 0;
@@ -599,7 +599,7 @@ class z {
   }
 }
 var G = new j(() => new z()),
-  Ea = Object.assign(
+  getPlansDirectory = Object.assign(
     function () {
       return G.of(L()).directory();
     },
@@ -626,7 +626,7 @@ function pe(t, e) {
   }
 }
 async function m(t) {
-  let e = Ea();
+  let e = getPlansDirectory();
   try {
     await qt().mkdir(e);
   } catch (i) {
@@ -634,7 +634,7 @@ async function m(t) {
   }
   return e;
 }
-async function lme(t, e) {
+async function saveRejectedUltraplan(t, e) {
   if (e && g()) {
     let r = `${C5t()}-ultraplan`,
       s = d(await m(e), `${r}.md`),
@@ -649,12 +649,12 @@ async function lme(t, e) {
   let i = d(await m(), `${C5t()}-ultraplan.md`);
   return (await qt().write(i, t), i);
 }
-async function $En(t, e, i) {
+async function persistPlanEdit(t, e, i) {
   try {
     await m(i);
     let r = v(t, ".md"),
       s =
-        i !== void 0 && g() && A(t) === Ea() && kd(p(r)) === void 0
+        i !== void 0 && g() && A(t) === getPlansDirectory() && kd(p(r)) === void 0
           ? p(r)
           : void 0;
     if (i !== void 0 && s !== void 0) {
@@ -664,23 +664,23 @@ async function $En(t, e, i) {
         return;
       }
     } else await qt().write(t, e);
-    WK(t, e);
+    notePlanFileWritten(t, e);
   } catch (r) {
     H(t, r instanceof Error ? r.message : String(r));
   }
 }
 function H(t, e) {
-  (Cp(t), n(`Failed to persist plan to ${t}: ${e}`, { level: "error" }));
+  (notePlanFileForgotten(t), n(`Failed to persist plan to ${t}: ${e}`, { level: "error" }));
 }
-function Gh(t) {
+function getPlanFilePath(t) {
   let e = K(),
-    i = LN(e);
-  if ((Lf().markPlanPathServed(e), !t)) return d(Ea(), `${i}.md`);
-  return d(Ea(), `${i}-agent-${t}.md`);
+    i = getPlanSlug(e);
+  if ((planFiles().markPlanPathServed(e), !t)) return d(getPlansDirectory(), `${i}.md`);
+  return d(getPlansDirectory(), `${i}-agent-${t}.md`);
 }
-function qoe() {
-  let t = LN(K());
-  return d(Ea(), `${t}.workshop.md`);
+function getPlanWorkshopDocPath() {
+  let t = getPlanSlug(K());
+  return d(getPlansDirectory(), `${t}.workshop.md`);
 }
 async function D(t, e, i) {
   let r = await t.read([p(e)]);
@@ -688,9 +688,9 @@ async function D(t, e, i) {
   let s = r.value.items[0];
   return s.found ? Buffer.from(s.value).toString("utf-8") : null;
 }
-async function UEn(t) {
-  if (t && g()) return D(t, `${LN(K())}.workshop`, "getPlanWorkshopDoc");
-  let e = qoe();
+async function getPlanWorkshopDoc(t) {
+  if (t && g()) return D(t, `${getPlanSlug(K())}.workshop`, "getPlanWorkshopDoc");
+  let e = getPlanWorkshopDocPath();
   try {
     return await ae().readFile(e, { encoding: "utf-8" });
   } catch (i) {
@@ -700,63 +700,63 @@ async function UEn(t) {
     return (h(i), null);
   }
 }
-function CEt() {
-  let t = Lf().planFileCache;
+function planWorkshopDocExists() {
+  let t = planFiles().planFileCache;
   if (t !== null && g()) {
-    let e = t.get(`${LN(K())}.workshop.md`);
+    let e = t.get(`${getPlanSlug(K())}.workshop.md`);
     if (e !== void 0) return e !== null;
   }
   try {
-    return ae().existsSync(qoe());
+    return ae().existsSync(getPlanWorkshopDocPath());
   } catch {
     return !1;
   }
 }
-async function BEn(t) {
-  if (t === void 0 || !g()) return CEt();
-  let e = `${LN(K())}.workshop`;
-  await Lf().settlePlanFile(`${e}.md`);
-  let i = Lf().planFileCache?.get(`${e}.md`);
+async function planWorkshopDocExistsAsync(t) {
+  if (t === void 0 || !g()) return planWorkshopDocExists();
+  let e = `${getPlanSlug(K())}.workshop`;
+  await planFiles().settlePlanFile(`${e}.md`);
+  let i = planFiles().planFileCache?.get(`${e}.md`);
   if (i !== void 0) return i !== null;
   return (await t.statMeta(p(e))).ok;
 }
-function MN(t) {
-  let e = Gh(t),
-    i = Lf().planFileCache;
+function getPlan(t) {
+  let e = getPlanFilePath(t),
+    i = planFiles().planFileCache;
   if (i !== null && g()) {
-    if (t) Lf().watchAgentPlanFile(LN(K()), v(e));
+    if (t) planFiles().watchAgentPlanFile(getPlanSlug(K()), v(e));
     let r = i.get(v(e));
     if (r !== void 0) return r;
   }
   return J(e);
 }
-async function tve(t, e) {
-  if (e === void 0 || !g()) return MN(t);
+async function getPlanAsync(t, e) {
+  if (e === void 0 || !g()) return getPlan(t);
   let i = q(t);
-  await Lf().settlePlanFile(i);
-  let r = Lf().planFileCache?.get(i);
+  await planFiles().settlePlanFile(i);
+  let r = planFiles().planFileCache?.get(i);
   if (r !== void 0) return r;
   return D(e, y(i), "getPlan");
 }
 function q(t) {
-  let e = v(Gh(t)),
-    i = Lf();
-  if (t && i.planFileCache !== null) i.watchAgentPlanFile(LN(K()), e);
+  let e = v(getPlanFilePath(t)),
+    i = planFiles();
+  if (t && i.planFileCache !== null) i.watchAgentPlanFile(getPlanSlug(K()), e);
   return e;
 }
-async function jEn(t, e) {
-  if (e === void 0 || !g()) return MN(t) !== null;
+async function planExistsAsync(t, e) {
+  if (e === void 0 || !g()) return getPlan(t) !== null;
   let i = q(t);
-  await Lf().settlePlanFile(i);
-  let r = Lf().planFileCache?.get(i);
+  await planFiles().settlePlanFile(i);
+  let r = planFiles().planFileCache?.get(i);
   if (r !== void 0) return r !== null;
   return (await e.statMeta(p(y(i)))).ok;
 }
-async function WEn(t) {
-  let e = Gh();
+async function readPlanFileFresh(t) {
+  let e = getPlanFilePath();
   if (M() && t !== void 0 && g()) {
     let i = v(e),
-      r = Lf(),
+      r = planFiles(),
       s = r.planFileWatches.get(i);
     if (s !== void 0) {
       if (!(await x(r.refreshPlanFile(i, s), r.waitCapMs)))
@@ -792,7 +792,7 @@ function Y(t) {
 async function V(t, e, i) {
   if (mJe() === null) return;
   if (i && g()) return ge(i, t, e).catch(h);
-  let r = d(Ea(), `${e}.workshop.md`);
+  let r = d(getPlansDirectory(), `${e}.workshop.md`);
   try {
     await qt().read(r);
     return;
@@ -804,7 +804,7 @@ async function V(t, e, i) {
     }
   }
   let s = E(t.messages, "workshop");
-  if (!s || s.content.length === 0 || s.content.length > hJe) return;
+  if (!s || s.content.length === 0 || s.content.length > WORKSHOP_DOC_SNAPSHOT_MAX_CHARS) return;
   try {
     (await m(),
       await qt().write(r, s.content),
@@ -819,13 +819,13 @@ async function V(t, e, i) {
     }
     h(o);
   } finally {
-    Cp(r);
+    notePlanFileForgotten(r);
   }
 }
 async function ge(t, e, i) {
   let r = `${i}.workshop.md`,
     s = p(`${i}.workshop`),
-    o = Lf().observePlanFile(r),
+    o = planFiles().observePlanFile(r),
     l = await t.read([s]);
   if (!l.ok) {
     n(`recoverWorkshopDocForResume: v5 read failed for ${i}: ${l.error.code}`);
@@ -833,7 +833,7 @@ async function ge(t, e, i) {
   }
   let u = l.value.items[0];
   if (
-    (Lf().notePlanFileObserved(
+    (planFiles().notePlanFileObserved(
       r,
       u?.found ? Buffer.from(u.value).toString("utf-8") : null,
       o,
@@ -842,8 +842,8 @@ async function ge(t, e, i) {
   )
     return;
   let c = E(e.messages, "workshop");
-  if (!c || c.content.length === 0 || c.content.length > hJe) return;
-  let f = d(Ea(), r),
+  if (!c || c.content.length === 0 || c.content.length > WORKSHOP_DOC_SNAPSHOT_MAX_CHARS) return;
+  let f = d(getPlansDirectory(), r),
     k = !1;
   try {
     await m(t);
@@ -858,16 +858,16 @@ async function ge(t, e, i) {
         { level: "info" },
       ));
   } finally {
-    if (k) WK(f, c.content);
-    else Cp(f);
+    if (k) notePlanFileWritten(f, c.content);
+    else notePlanFileForgotten(f);
   }
 }
-async function a$e(t, e, i) {
+async function copyPlanForResume(t, e, i) {
   let r = Y(t);
   if (!r) return !1;
   let s = e ?? K();
-  if (($zt(s, r), i && g())) return Fe(i, t, r).catch((l) => (h(l), !1));
-  let o = d(Ea(), `${r}.md`);
+  if ((setPlanSlug(s, r), i && g())) return Fe(i, t, r).catch((l) => (h(l), !1));
+  let o = d(getPlansDirectory(), `${r}.md`);
   await V(t, r).catch(h);
   try {
     return (await qt().read(o), !0);
@@ -897,7 +897,7 @@ async function a$e(t, e, i) {
         if (Rt(f)) return (n(`Plan recovery write failed for ${o}: ${f}`), !1);
         return (h(f), !1);
       } finally {
-        Cp(o);
+        notePlanFileForgotten(o);
       }
     return (
       n(
@@ -909,7 +909,7 @@ async function a$e(t, e, i) {
 }
 async function me(t, e) {
   let i = `${e}.workshop.md`,
-    r = Lf();
+    r = planFiles();
   if (r.planFileWatches.has(i)) {
     await r.settlePlanFile(i);
     return;
@@ -931,7 +931,7 @@ async function me(t, e) {
 async function Fe(t, e, i) {
   await V(e, i, t).catch(h);
   let r = `${i}.md`,
-    s = Lf().observePlanFile(r),
+    s = planFiles().observePlanFile(r),
     o = await t.read([p(i)]);
   if (!o.ok)
     return (
@@ -940,7 +940,7 @@ async function Fe(t, e, i) {
     );
   let l = o.value.items[0];
   if (
-    (Lf().notePlanFileObserved(
+    (planFiles().notePlanFileObserved(
       r,
       l?.found ? Buffer.from(l.value).toString("utf-8") : null,
       s,
@@ -963,7 +963,7 @@ async function Fe(t, e, i) {
       level: "info",
     });
   if (c) {
-    let f = d(Ea(), r),
+    let f = d(getPlansDirectory(), r),
       k = !1;
     try {
       await m(t);
@@ -972,8 +972,8 @@ async function Fe(t, e, i) {
         return (n(`Plan recovery write failed for ${i}: ${S.error.code}`), !1);
       return ((k = !0), !0);
     } finally {
-      if (k) WK(f, c);
-      else Cp(f);
+      if (k) notePlanFileWritten(f, c);
+      else notePlanFileForgotten(f);
     }
   }
   return (
@@ -983,14 +983,14 @@ async function Fe(t, e, i) {
     !1
   );
 }
-async function GEn(t, e, i) {
+async function copyPlanForFork(t, e, i) {
   let r = Y(t);
   if (!r) return !1;
-  let s = Ea(),
+  let s = getPlansDirectory(),
     o = d(s, `${r}.md`),
-    l = LN(e),
+    l = getPlanSlug(e),
     u = d(s, `${l}.md`);
-  if ((Lf().exemptSlugFromRevalidation(e, l), i && g()))
+  if ((planFiles().exemptSlugFromRevalidation(e, l), i && g()))
     return Pe(i, r, l).catch((c) => (h(c), !1));
   await m();
   try {
@@ -1000,7 +1000,7 @@ async function GEn(t, e, i) {
       if (Rt(c)) n(`copyPlanForFork: workshop sibling copy failed: ${c}`);
       else h(c);
   } finally {
-    Cp(d(s, `${l}.workshop.md`));
+    notePlanFileForgotten(d(s, `${l}.workshop.md`));
   }
   try {
     return (await qt().copy(o, u), !0);
@@ -1009,11 +1009,11 @@ async function GEn(t, e, i) {
     if (Rt(c)) return (n(`copyPlanForFork: copy failed for ${o}: ${c}`), !1);
     return (h(c), !1);
   } finally {
-    Cp(u);
+    notePlanFileForgotten(u);
   }
 }
 async function Pe(t, e, i) {
-  let r = d(Ea(), `${i}.workshop.md`),
+  let r = d(getPlansDirectory(), `${i}.workshop.md`),
     s;
   try {
     await m(t);
@@ -1028,10 +1028,10 @@ async function Pe(t, e, i) {
       else s = Buffer.from(c).toString("utf-8");
     }
   } finally {
-    if (s !== void 0) WK(r, s);
-    else Cp(r);
+    if (s !== void 0) notePlanFileWritten(r, s);
+    else notePlanFileForgotten(r);
   }
-  let o = d(Ea(), `${i}.md`),
+  let o = d(getPlansDirectory(), `${i}.md`),
     l;
   try {
     let u = await t.read([p(e)]);
@@ -1050,8 +1050,8 @@ async function Pe(t, e, i) {
       );
     return ((l = Buffer.from(c).toString("utf-8")), !0);
   } finally {
-    if (l !== void 0) WK(o, l);
-    else Cp(o);
+    if (l !== void 0) notePlanFileWritten(o, l);
+    else notePlanFileForgotten(o);
   }
 }
 function ee(t) {
@@ -1112,45 +1112,45 @@ function E(t, e) {
   }
   return;
 }
-var hJe = 2000000,
-  Uzt = hJe;
+var WORKSHOP_DOC_SNAPSHOT_MAX_CHARS = 2000000,
+  PLAN_SNAPSHOT_MAX_CHARS = WORKSHOP_DOC_SNAPSHOT_MAX_CHARS;
 function b(t) {
-  return typeof t === "string" && t.length > 0 && t.length <= Uzt;
+  return typeof t === "string" && t.length > 0 && t.length <= PLAN_SNAPSHOT_MAX_CHARS;
 }
 export {
   Wh,
   Jc,
-  Ztr,
-  gyr,
-  EEt,
-  Goe,
-  i$e,
+  DEFAULT_STAGE_FILE_ROOT,
+  DEFAULT_OUTPUTS_ROOT,
+  STAGE_TMP_PREFIX,
+  getStageFileRoot,
+  getOutputsRoot,
   mJe,
   AEt,
-  Lf,
-  WK,
-  Cp,
-  gJe,
-  NEn,
-  lh,
-  LN,
-  GK,
-  $zt,
-  FEn,
-  Ea,
-  lme,
-  $En,
-  Gh,
-  qoe,
-  UEn,
-  CEt,
-  BEn,
-  MN,
-  tve,
-  jEn,
-  WEn,
-  a$e,
-  GEn,
-  hJe,
-  Uzt,
+  planFiles,
+  notePlanFileWritten,
+  notePlanFileForgotten,
+  resetPlanFileCacheToUnknown,
+  settlePlanFileCachePrime,
+  primePlanSlugCollisions,
+  getPlanSlug,
+  peekPlanSlug,
+  setPlanSlug,
+  clearAllPlanSlugs,
+  getPlansDirectory,
+  saveRejectedUltraplan,
+  persistPlanEdit,
+  getPlanFilePath,
+  getPlanWorkshopDocPath,
+  getPlanWorkshopDoc,
+  planWorkshopDocExists,
+  planWorkshopDocExistsAsync,
+  getPlan,
+  getPlanAsync,
+  planExistsAsync,
+  readPlanFileFresh,
+  copyPlanForResume,
+  copyPlanForFork,
+  WORKSHOP_DOC_SNAPSHOT_MAX_CHARS,
+  PLAN_SNAPSHOT_MAX_CHARS,
 };

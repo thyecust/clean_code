@@ -12,7 +12,7 @@
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { Yb } from "./chunk-sr4920wy.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { $i, jQn, cbn } from "./chunk-t899nada.js";
 import { s, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var h = 1e4,

@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { $6 } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { Uh, MTt, NTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { yve, JEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
-import { gd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { hasPermissionsToUseTool as gd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { v9, Fdt, $dt, Rqe } from "./chunk-bkcg0nbj.js";
 import { Mdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-1n8w0wz0.js";
 import { Vf } from "./chunk-cd542wve.js";

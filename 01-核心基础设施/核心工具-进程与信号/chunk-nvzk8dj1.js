@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Dt } from "../共享小工具-未细化/chunk-510m1t2d.js";
-import { Fp } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { setBgExitCause as Fp } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Xhe, gxe, jxt, Yu, o8, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { eb, Il, Pc, YE } from "./chunk-w78brv7j.js";
 import { Gke } from "../共享小工具-未细化/chunk-7beprh8k.js";
 import {
@@ -23,14 +23,14 @@ import {
   xn,
   Zun,
   Ht,
-  il,
-  yhn,
-  ST,
-  KEe,
-  kc,
-  bT,
+  getMaterializedSessionFile as il,
+  hasRecordedUserPrompt as yhn,
+  recordTranscript as ST,
+  persistLeafCheckpoint as KEe,
+  flushSessionStorage as kc,
+  isLoggableMessage as bT,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { y0 } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { drainRegisteredWriteQueues as y0 } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { ll } from "../../02-功能模块/Teammates团队/chunk-thxapyam.js";
 import { rd, pD } from "../共享小工具-未细化/chunk-7dzh4mjq.js";
 import { jlt, Wlt, Tee } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";

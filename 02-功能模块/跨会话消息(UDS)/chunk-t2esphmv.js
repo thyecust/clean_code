@@ -12,9 +12,9 @@ import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chu
 import { ud, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { a, Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { xRe, hkn, bvt, Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { env as a, udsEnv as Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getProcessStartTokenLinuxSync as xRe, getAncestorPidsLinuxSync as hkn, getAncestorPidsCheckedAsync as bvt, getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import {
   wor,
   hU,
@@ -31,7 +31,7 @@ import {
   qor,
   Kor,
   Xor,
-  Lse,
+  isRegistrySweepPermitted as Lse,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { BS, rzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -45,15 +45,15 @@ import {
   IJn,
   CSn,
   vSn,
-  HSn,
-  K3t,
-  ISn,
-  PSn,
-  sG,
-  E7e,
-  OSn,
+  creditPacerForHeldSend as HSn,
+  debitPacerForReleasedSend as K3t,
+  admitReceiptForOutstandingSend as ISn,
+  admitDroppedIdsByDestination as PSn,
+  sendControlToUdsSocket as sG,
+  registeredLivePeerForSocket as E7e,
+  registeredInboxesOfPids as OSn,
 } from "./chunk-ddtmwhn7.js";
-import { rh, dSn } from "./chunk-9kzxq41e.js";
+import { getSessionNamingState as rh, noteVettedCorrespondent as dSn } from "./chunk-9kzxq41e.js";
 import { OJn, DJn, v7e } from "../后台任务-Shell管理/chunk-djserjj5.js";
 import {
   kPe,

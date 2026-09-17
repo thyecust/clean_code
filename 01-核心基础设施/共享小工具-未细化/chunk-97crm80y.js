@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { XC, $f, H, od } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 var o = "tengu_violin_pegbox";
 function n() {
   return a.CLAUDE_CODE_ENTRYPOINT === "remote_desktop";
@@ -41,27 +41,27 @@ function u() {
     return !1;
   }
 }
-async function Su() {
+async function isViolinWoodEnabled() {
   try {
     return (await od("tengu_violin_wood")) && (!n() || (await r()));
   } catch {
     return !1;
   }
 }
-function ri() {
+function isViolinWoodEnabledCached() {
   try {
     return H("tengu_violin_wood", !1) && (!n() || i());
   } catch {
     return !1;
   }
 }
-async function LD() {
-  return (await Su()) && (await l());
+async function isSettingsToCloudEnabled() {
+  return (await isViolinWoodEnabled()) && (await l());
 }
-function aU() {
-  return ri() && u();
+function isSettingsToCloudEnabledCached() {
+  return isViolinWoodEnabledCached() && u();
 }
-function cQe() {
+function isViolinWoodServedOff() {
   try {
     let { value: e, source: t } = $f("tengu_violin_wood", !1);
     return e === !1 && s(t);
@@ -84,32 +84,32 @@ function s(e) {
 function c(e) {
   return s($f(e, !1).source);
 }
-function Pyr(e) {
+function isAccountGateServed(e) {
   try {
     return c(e) && (e !== "tengu_violin_wood" || !n() || c(o));
   } catch {
     return !1;
   }
 }
-async function xfr() {
+async function isViolinAmatiEnabled() {
   try {
     return await od("tengu_violin_amati");
   } catch {
     return !1;
   }
 }
-function nVt() {
+function isViolinAmatiEnabledCached() {
   try {
     return H("tengu_violin_amati", !1);
   } catch {
     return !1;
   }
 }
-function uQe() {
-  return ri() && nVt();
+function isCloudPluginForwardingEnabledCached() {
+  return isViolinWoodEnabledCached() && isViolinAmatiEnabledCached();
 }
-async function j$e() {
-  let [e, t] = await Promise.all([Su(), xfr()]);
+async function isCloudPluginForwardingFlagOn() {
+  let [e, t] = await Promise.all([isViolinWoodEnabled(), isViolinAmatiEnabled()]);
   return e && t;
 }
-export { Su, ri, LD, aU, cQe, Pyr, xfr, nVt, uQe, j$e };
+export { isViolinWoodEnabled, isViolinWoodEnabledCached, isSettingsToCloudEnabled, isSettingsToCloudEnabledCached, isViolinWoodServedOff, isAccountGateServed, isViolinAmatiEnabled, isViolinAmatiEnabledCached, isCloudPluginForwardingEnabledCached, isCloudPluginForwardingFlagOn };

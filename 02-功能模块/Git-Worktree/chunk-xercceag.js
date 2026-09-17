@@ -28,30 +28,30 @@ import { An, my, gp, pl, li, $m, jf, Xo, FW } from "../../00-第三方库/lodash
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import {
   QJ,
-  Rr,
-  Mf,
-  xR,
-  Rse,
-  am,
-  Ue,
-  wt,
+  isModelAllowed as Rr,
+  getUserSpecifiedModelSetting as Mf,
+  isModeDependentModelSetting as xR,
+  isEnvDefaultModelGoverning as Rse,
+  isExemptDefaultResolvingPick as am,
+  getCanonicalName as Ue,
+  parseUserSpecifiedModel as wt,
   tc,
   GC,
   Ia,
   a5t,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Bur, WP, iae, Xg, Sh, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { nB, Che } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Mp } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { reanchorGitFileWatcher as nB, clearIsGitMemo as Che } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getProjectDir as Mp } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { gf } from "../权限系统/chunk-e4pfvp7x.js";
-import { er, tar, Ca } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { parsePermissionMode as gf } from "../权限系统/chunk-e4pfvp7x.js";
+import { er, tar, usesFirstPartyModelIds as Ca } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Pl, lP } from "../Teammates团队/chunk-thxapyam.js";
 import { oF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vz37aa8z.js";
 import {
@@ -61,13 +61,13 @@ import {
   Mmt,
   bDe,
   vO,
-  Lue,
-  SE,
-  HVe,
+  rebuildAgentDefinitions as Lue,
+  getAgentDefinitionsWithOverrides as SE,
+  fileHistoryRestoreStateFromLog as HVe,
   pu,
   LTe,
-  _Ke,
-  ELe,
+  logResumeInterruptedTurn as _Ke,
+  removeInterruptedMessage as ELe,
   jKn,
   U_,
   VO,
@@ -80,28 +80,28 @@ import {
   fMe,
   jde,
   Ht,
-  hl,
-  KV,
-  XM,
-  XV,
-  YV,
-  are,
-  EH,
-  ure,
-  mC,
+  isTranscriptPersistenceDisabled as hl,
+  recordContentReplacement as KV,
+  resetSessionFilePointer as XM,
+  adoptResumedSessionFile as XV,
+  adoptResumedSessionFileAsync as YV,
+  adoptForkSessionMetadata as are,
+  restoreSessionMetadata as EH,
+  saveMode as ure,
+  saveWorktreeState as mC,
   PY,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { fc, w_ } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { Yi } from "../权限系统/chunk-1y2g140m.js";
-import { Uu, r6 } from "../Skills技能/chunk-sapykxw7.js";
+import { getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
+import { isRestrictedToPluginOnly as Uu, isSourceAdminTrusted as r6 } from "../Skills技能/chunk-sapykxw7.js";
 import { Doe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { X_ } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { XS } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { lh, Ea } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { primePlanSlugCollisions as lh, getPlansDirectory as Ea } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import { Vre } from "../后台任务-Shell管理/chunk-x3txegas.js";
-import { Gpe } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
-import { uue } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
+import { reclaimSessionNameOnResume as Gpe } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { CLAUDE_AGENT as uue } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import {
   appendFile as Me,
@@ -138,7 +138,7 @@ function ne(e, o, t) {
   };
 }
 var ie = new Gt(() => new H());
-async function Nst(e, o) {
+async function renameRecordingForSession(e, o) {
   let t = ie.of(e),
     r = t.filePath;
   if (!r || t.timestamp === 0) return;
@@ -241,7 +241,7 @@ function EHe(e, o, t, r) {
     });
   if (
     (import.meta
-      .require("../../01-核心基础设施/共享小工具-未细化/restoreGoalFromTranscript.z2ke48tn.js")
+      .require("../../01-核心基础设施/共享小工具-未细化/chunk-wdns14nh.js")
       .restoreGoalFromTranscript(e.messages, o, t),
     !X_() && e.messages && e.messages.length > 0)
   ) {
@@ -359,12 +359,12 @@ async function me(e, o) {
   if (t === "plan" || t === "bypassPermissions") return;
   if (t === "default") {
     let { isAutoModeFromFallback: r, setProvisionalStartupMode: s } =
-      await import("./setProvisionalStartupMode.7jr1mv9x.js");
+      await import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js");
     if ((s(void 0), r())) return "default";
     return;
   }
   if (t === "auto") {
-    let { isAutoModeGateEnabled: r } = await import("../权限系统/overlyBroadShellAllowsStrippedByEverySession.dr9tct78.js");
+    let { isAutoModeGateEnabled: r } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
     if (!r()) return;
   }
   return t;
@@ -492,7 +492,7 @@ function T(e, o) {
   i("tengu_resume_model_restore", { outcome: u(e), is_eap: Doe(o) });
 }
 function V(e, o) {
-  import("../../01-核心基础设施/共享小工具-未细化/refreshBootstrapData.0091ys3y.js").then((t) => t.fetchBootstrapData(e, o));
+  import("../上下文压缩-Compact/chunk-npckj9cm.js").then((t) => t.fetchBootstrapData(e, o));
 }
 function PZ(e, o, t, r, s) {
   if (!ge(e, o)) return (ad(o), V(r, s), T("restored", o), o);
@@ -870,7 +870,7 @@ async function $st(e, o, t) {
   );
   if (s)
     ($p(s, "resume", o.transcriptPath ? q(o.transcriptPath) : null),
-      await Nst(t.session, t.storageV5),
+      await renameRecordingForSession(t.session, t.storageV5),
       await XM());
   if (d) {
     if (
@@ -914,7 +914,7 @@ async function $st(e, o, t) {
   (OZ(e.messages, d), kHe(e.messages, { fork: d, startup: !0 }));
   let R;
   if (y) {
-    let { transitionPermissionMode: f } = await import("../权限系统/overlyBroadShellAllowsStrippedByEverySession.dr9tct78.js"),
+    let { transitionPermissionMode: f } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
       B = t.initialState.toolPermissionContext;
     try {
       R = { ...f(B.mode, y, B), mode: y };
@@ -953,7 +953,7 @@ async function $st(e, o, t) {
   let _ = t.initialState,
     N = T2();
   return (
-    import.meta.require("../../01-核心基础设施/共享小工具-未细化/restoreGoalFromTranscript.z2ke48tn.js").restoreGoalFromTranscript(
+    import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-wdns14nh.js").restoreGoalFromTranscript(
       e.messages,
       (f) => {
         _ = f(_);
@@ -1000,7 +1000,7 @@ function kHe(e, o) {}
 export {
   THe,
   zae,
-  Nst,
+  renameRecordingForSession,
   Vae,
   gQt,
   EHe,

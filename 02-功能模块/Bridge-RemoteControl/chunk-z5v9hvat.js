@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
 import {
@@ -26,7 +26,7 @@ import {
   MT,
   XEt,
 } from "../权限系统/chunk-t3b7pg2x.js";
-import { v4t } from "./chunk-9estzwf5.js";
+import { isBridgeEffortSyncEnabled as v4t } from "./chunk-9estzwf5.js";
 function A9(e, r) {
   let o = MT(e, r);
   return typeof o === "string" ? o : null;

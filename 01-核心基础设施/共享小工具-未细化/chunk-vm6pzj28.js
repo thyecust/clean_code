@@ -11,7 +11,7 @@ import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { vJ, HCe, xoe, ICe, PCe } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
 import { yk, Qwe, n3, Hy, Wue } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Joe } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
-import { _fe } from "../../02-功能模块/Skills技能/chunk-1zy5c8mf.js";
+import { runBundledSkillSessionResets as _fe } from "../../02-功能模块/Skills技能/chunk-1zy5c8mf.js";
 import { Jx } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { nye } from "./chunk-ps79w9dv.js";
 function nWe(o, e, r, i) {

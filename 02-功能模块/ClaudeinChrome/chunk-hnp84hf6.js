@@ -9,13 +9,13 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ja, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Fe, Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { vd } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME as vd } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { readdir as V, stat as R } from "fs/promises";
 import { homedir as T, platform as N, userInfo as z } from "os";
@@ -183,8 +183,8 @@ var G = new j(() => new E());
 function yd() {
   return G.of(B().host);
 }
-var BI = `mcp__${vd}__`,
-  Nre = "ClaudeInChromeDomain",
+var CFC_TOOL_PREFIX = `mcp__${vd}__`,
+  CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL = "ClaudeInChromeDomain",
   g = {
     chrome: {
       name: "Google Chrome",
@@ -349,7 +349,7 @@ var BI = `mcp__${vd}__`,
     },
   },
   C = ["chrome", "brave", "arc", "edge", "chromium", "vivaldi", "opera"];
-function qyn() {
+function getAllNativeMessagingHostsDirs() {
   let e = P(),
     s = T(),
     r = [];
@@ -371,7 +371,7 @@ function qyn() {
   }
   return r;
 }
-function zyn() {
+function getAllWindowsRegistryKeys() {
   let e = [];
   for (let s of C) {
     let r = g[s];
@@ -380,7 +380,7 @@ function zyn() {
   }
   return e;
 }
-async function x3t() {
+async function detectAvailableBrowser() {
   let e = P();
   for (let s of C) {
     let r = g[s];
@@ -423,12 +423,12 @@ async function x3t() {
   return null;
 }
 var q = 200;
-function Vyn(e) {
+function trackClaudeInChromeTabId(e) {
   let s = yd().trackedTabIds;
   if (s.size >= q && !s.has(e)) s.clear();
   s.add(e);
 }
-function Kyn(e) {
+function isTrackedClaudeInChromeTabId(e) {
   return yd().trackedTabIds.has(e);
 }
 function w(e) {
@@ -442,11 +442,11 @@ function w(e) {
           : S("spawn_failed_or_killed"),
   };
 }
-async function WY(e) {
+async function openInChrome(e) {
   if (!/^https?:\/\//i.test(e))
     return (f("chrome_open_url", "invalid_url"), !1);
   let s = P(),
-    r = await x3t();
+    r = await detectAvailableBrowser();
   if (!r)
     return (
       n("[Claude in Chrome] No compatible browser found"),
@@ -513,17 +513,17 @@ async function WY(e) {
       return (f("chrome_open_url", "exec_failed"), !1);
   }
 }
-function Q8e() {
+function getSocketDir() {
   return `/tmp/claude-mcp-browser-bridge-${U()}`;
 }
-function Z8e() {
+function getSecureSocketPath() {
   if (N() === "win32") return `\\\\.\\pipe\\${H()}`;
-  return l(Q8e(), `${process.pid}.sock`);
+  return l(getSocketDir(), `${process.pid}.sock`);
 }
-async function Xyn() {
+async function getAllSocketPaths() {
   if (N() === "win32") return [`\\\\.\\pipe\\${H()}`];
   let e = [],
-    s = Q8e();
+    s = getSocketDir();
   try {
     let r = await V(s);
     for (let o of r) if (o.endsWith(".sock")) e.push(l(s, o));
@@ -540,4 +540,4 @@ function U() {
     return a.USER || a.USERNAME || "default";
   }
 }
-export { yd, BI, Nre, qyn, zyn, x3t, Vyn, Kyn, WY, Q8e, Z8e, Xyn };
+export { yd, CFC_TOOL_PREFIX, CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL, getAllNativeMessagingHostsDirs, getAllWindowsRegistryKeys, detectAvailableBrowser, trackClaudeInChromeTabId, isTrackedClaudeInChromeTabId, openInChrome, getSocketDir, getSecureSocketPath, getAllSocketPaths };

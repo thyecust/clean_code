@@ -20,12 +20,12 @@ import {
   jP,
   Mxt,
 } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, us, oe, Yg } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { a, Wn } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a, antEnv as Wn } from "../设置-配置/chunk-zqr5ctyf.js";
 import { mx } from "../共享小工具-未细化/chunk-0ypv8gq2.js";
-import { bet } from "../共享小工具-未细化/chunk-q599wyee.js";
+import { BRIEF_ENFORCE_SENTINEL as bet } from "../共享小工具-未细化/chunk-q599wyee.js";
 import { KRe, Cge, Xvt, Yvt, P5t, vq, iar } from "../核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { JQ } from "../共享小工具-未细化/chunk-q35gycf9.js";
 import { G, Y } from "../共享小工具-未细化/chunk-d16fhdtx.js";
@@ -278,43 +278,43 @@ function jir(t) {
 function h() {
   return T?.("tengu_cobalt_plinth_lovage", !1) === !0;
 }
-var _r = "Artifact",
-  Zh = "ArtifactComments",
-  CP = "ArtifactData",
-  XD = "ArtifactCheck",
-  nie = [_r, Zh, CP, XD],
-  Hp = /^[0-9a-f]{32}$/,
-  Wir = " \u2014 live version; raw HTML follows]",
-  ret =
+var ARTIFACT_TOOL_NAME = "Artifact",
+  ARTIFACT_COMMENTS_TOOL_NAME = "ArtifactComments",
+  ARTIFACT_DATA_TOOL_NAME = "ArtifactData",
+  ARTIFACT_CHECK_TOOL_NAME = "ArtifactCheck",
+  ARTIFACT_FAMILY_TOOL_NAMES = [ARTIFACT_TOOL_NAME, ARTIFACT_COMMENTS_TOOL_NAME, ARTIFACT_DATA_TOOL_NAME, ARTIFACT_CHECK_TOOL_NAME],
+  ASSET_ID_RE = /^[0-9a-f]{32}$/,
+  STALE_GUARD_CONTENT_HEADER_SUFFIX = " \u2014 live version; raw HTML follows]",
+  STALE_GUARD_REJECTION_PREFIX =
     "You hadn't viewed the live version of this artifact, so the publish was refused.",
-  xkn =
+  STALE_GUARD_REJECTION_PREFIX_LEGACY =
     "This session hadn't viewed the live version of this artifact, so the publish was refused.",
-  Hkn = (t) => `[Artifact ${t}${Wir}`,
-  oet = new RegExp(`\\n\\[Artifact [\\w-]{1,64}${iu(Wir)}\\n`),
-  rie = "Publish refused \u2014 nothing was merged or published:",
-  P5 = {
+  STALE_GUARD_CONTENT_HEADER = (t) => `[Artifact ${t}${STALE_GUARD_CONTENT_HEADER_SUFFIX}`,
+  STALE_GUARD_CONTENT_HEADER_LINE_RE = new RegExp(`\\n\\[Artifact [\\w-]{1,64}${iu(STALE_GUARD_CONTENT_HEADER_SUFFIX)}\\n`),
+  CONFLICT_REJECTION_PREFIX = "Publish refused \u2014 nothing was merged or published:",
+  PR_REVIEW_SECURITY_WALL = {
     republishForceRefused: "pr_review_republish_force_refused",
     decisionsProvenance: "pr_review_decisions_provenance",
     republishAnchor: "pr_review_republish_anchor",
     republishStamp: "pr_review_republish_stamp",
     overwriteRefused: "pr_review_overwrite_refused",
   };
-function set() {
+function artifactLinkShapeHint() {
   return h() ? "\u2026/artifact/<id>" : "\u2026/code/artifact/<uuid>";
 }
-function Ikn(t) {
-  return `not an artifact URL: ${t} \u2014 pass the artifact's ${set()} link (action: "list" shows them).`;
+function notAnArtifactUrlMessage(t) {
+  return `not an artifact URL: ${t} \u2014 pass the artifact's ${artifactLinkShapeHint()} link (action: "list" shows them).`;
 }
-var Pkn =
+var ARTIFACT_LOGIN_REQUIRED_MESSAGE =
     'Artifacts need a claude.ai login. Run /login and select "Claude account with subscription", then retry \u2014 the "Anthropic Console account" option does not provide claude.ai credentials.',
-  Okn =
+  ARTIFACT_LOGIN_PROXIED_MESSAGE =
     'Artifacts need a claude.ai login, and this remote session authenticates through the machine that launched it, which is not signed in to claude.ai. Sign in to claude.ai on that machine (/login, "Claude account with subscription"), then reconnect this session.',
-  Dkn =
+  ARTIFACT_LOGIN_HOST_MANAGED_MESSAGE =
     "Artifacts need a claude.ai login, but this session authenticates with a credential injected by its host environment, which takes precedence and cannot be changed here. Start a session that is signed in to claude.ai to publish or read artifacts.";
-function Lkn(t) {
+function artifactLoginEnvQuadMessage(t) {
   return `Artifacts need a claude.ai login. This session's API access is set up by ${t ? "your organization's managed settings" : "the ANTHROPIC_FEDERATION_RULE_ID / ANTHROPIC_ORGANIZATION_ID environment variables"}, which stays active for everything else \u2014 artifacts also use a claude.ai account. Run /login and select "Claude account with subscription", then retry.`;
 }
-function w5t(t) {
+function artifactPolicyBlockedMessage(t) {
   switch (t) {
     case "org_policy_unverifiable":
       return "Artifacts can't check the signed-in Claude account's organization settings from this session: the account belongs to a Claude organization (Team or Enterprise), and this session's API access uses a different credential that can't read those settings. Run /login with a personal Claude account (Pro or Max), then retry.";
@@ -335,10 +335,10 @@ function w5t(t) {
       return "Artifacts can't check the organization settings that apply to this session: the session's configuration (such as a custom ANTHROPIC_BASE_URL) prevents the policy lookup. Remove that configuration, then retry.";
   }
 }
-function iet(t, e) {
+function artifactLoginBlockedByCredentialMessage(t, e) {
   return `Artifacts need a claude.ai login, and this session is authenticating with ${t}, which takes precedence over a claude.ai account. ${e} Then run /login and select "Claude account with subscription".`;
 }
-class Oe extends Error {
+class ArtifactInputError extends Error {
   reasonCode;
   maxErrorChars;
   constructor(t, e, r) {
@@ -358,17 +358,17 @@ function S(t, e = !1) {
   if (t.length !== y) return t;
   return e ? null : tie(t);
 }
-var fr = new RegExp(`^${g}$`),
-  L6 = /^[\w-]{1,64}$/,
-  YD = 16000,
-  Mkn = u1,
-  EQ = 300000,
-  fBe = "eval-stub://artifact/";
-function Gd() {
+var ARTIFACT_SLUG_RE = new RegExp(`^${g}$`),
+  ARTIFACT_VERSION_SAFE_RE = /^[\w-]{1,64}$/,
+  ARTIFACT_MAX_RESULT_SIZE_CHARS = 16000,
+  ARTIFACT_PAGE_INLINE_RESULT_CAP = u1,
+  ARTIFACT_DB_READ_MAX_RESULT_SIZE_CHARS = 300000,
+  ARTIFACT_STUB_URL_PREFIX = "eval-stub://artifact/";
+function getArtifactPublishStubDir() {
   let t = Wn.CLAUDE_CODE_EVAL_ARTIFACT_STUB_DIR;
   return typeof t === "string" && t.length > 0 ? t : null;
 }
-function Wt(t) {
+function parseArtifactUrl(t) {
   return M(t, !1);
 }
 function M(t, e) {
@@ -405,7 +405,7 @@ function R(t, e, r) {
     ?.slice(3);
   return c !== void 0 && ut.test(c) ? { ...o, sk: c } : o;
 }
-function aet(t) {
+function artifactUrlSubPath(t) {
   let e = YZe(),
     r =
       t.match(new RegExp(`^https://(?:[a-z0-9-]+\\.)?claude\\.ai${w}`))?.[1] ??
@@ -415,7 +415,7 @@ function aet(t) {
         : void 0);
   return r === void 0 || r === "" ? void 0 : r;
 }
-function Cq(t) {
+function canonicalizeArtifactUrlInput(t) {
   try {
     let e = new URL(t);
     if (e.protocol === "http:") e.protocol = "https:";
@@ -425,26 +425,26 @@ function Cq(t) {
     return t;
   }
 }
-function JD(t) {
-  return typeof t === "string" ? Wt(Cq(t)) : null;
+function parseArtifactUrlInput(t) {
+  return typeof t === "string" ? parseArtifactUrl(canonicalizeArtifactUrlInput(t)) : null;
 }
-function _ge(t) {
-  let e = Cq(t);
-  return Wt(e) ?? M(e.toLowerCase(), !0);
+function parseArtifactUrlAnyCase(t) {
+  let e = canonicalizeArtifactUrlInput(t);
+  return parseArtifactUrl(e) ?? M(e.toLowerCase(), !0);
 }
-var ct = new RegExp(`^${iu(fBe)}(${g})(?:[/?#]|$)`);
-function yge(t) {
+var ct = new RegExp(`^${iu(ARTIFACT_STUB_URL_PREFIX)}(${g})(?:[/?#]|$)`);
+function parseStubArtifactUrl(t) {
   let e = t.match(ct);
   return e?.[1] ? { slug: e[1] } : null;
 }
-var oie = "artifact-deleted",
-  Nkn = new RegExp(`^<${oie} url="([^"]+)"/>`);
-function Fi(t) {
-  let e = Wt(t)?.slug;
+var ARTIFACT_DELETED_NOTE_TAG = "artifact-deleted",
+  ARTIFACT_DELETED_NOTE_RE = new RegExp(`^<${ARTIFACT_DELETED_NOTE_TAG} url="([^"]+)"/>`);
+function uuidSlugFromUrl(t) {
+  let e = parseArtifactUrl(t)?.slug;
   if (e !== void 0) return e;
-  return Gd() !== null ? (yge(t)?.slug ?? null) : null;
+  return getArtifactPublishStubDir() !== null ? (parseStubArtifactUrl(t)?.slug ?? null) : null;
 }
-function T5t(t) {
+function artifactViewerPath(t) {
   if (h()) {
     let e = A(t);
     if (e !== null) return `/artifact/${e}`;
@@ -456,10 +456,10 @@ function H(t) {
   if (e && t === Vo()) return e;
   return "https://claude.ai";
 }
-function br(t) {
-  return `${H(t.env)}${T5t(t.slug)}`;
+function artifactViewerUrlFor(t) {
+  return `${H(t.env)}${artifactViewerPath(t.slug)}`;
 }
-function cet(t) {
+function artifactViewerUrlSpellings(t) {
   let e = H(t.env),
     r = A(t.slug);
   return [
@@ -467,20 +467,20 @@ function cet(t) {
     ...(r !== null ? [`${e}/artifact/${r}`] : []),
   ];
 }
-function sie(t) {
+function artifactContentOriginUrlFor(t) {
   return `https://${t.slug}.frame.${t.env === "staging" ? "staging." : ""}claudeusercontent.com`;
 }
-function ls(t, e) {
-  let r = typeof t === "string" ? Wt(t) : null;
-  return r ? br(r) : e;
+function canonicalArtifactTargetFor(t, e) {
+  let r = typeof t === "string" ? parseArtifactUrl(t) : null;
+  return r ? artifactViewerUrlFor(r) : e;
 }
-function E5t(t) {
+function isCanonicalArtifactViewerUrl(t) {
   let r = t.match(new RegExp(`^https://claude\\.ai${I}(${C})/?$`));
   return S(r?.[1]) !== null;
 }
-var Sge = 8192,
-  Fkn = Sge * 4,
-  $vt = 280,
+var TITLE_SCAN_CHARS = 8192,
+  TITLE_SCAN_BYTES = TITLE_SCAN_CHARS * 4,
+  TITLE_MAX_RUNES = 280,
   ft = /&(#x[0-9a-f]+|#\d+|[a-z]+);/gi,
   _ = {
     amp: "&",
@@ -519,11 +519,11 @@ function K(t) {
   return t.replace(/<!--[\s\S]*?(?:-->|$)/g, "");
 }
 function m(t) {
-  let e = K(t.slice(0, Sge)),
+  let e = K(t.slice(0, TITLE_SCAN_CHARS)),
     r = e.search(/<svg/i);
   return r === -1 ? e : e.slice(0, r);
 }
-function $Re(t) {
+function decodeHtmlEntities(t) {
   return t.replace(ft, (e, r) => {
     if (r.startsWith("#")) {
       let i =
@@ -565,18 +565,18 @@ function At(t) {
       else if (p === "media") u ??= d;
     }
     if (!(o ?? "").toLowerCase().split(/\s+/).includes(X)) continue;
-    let s = $Re(u ?? "").trim(),
+    let s = decodeHtmlEntities(u ?? "").trim(),
       l = gt.test(s),
       c = s === "" || Et.test(s);
     e.push({
-      ...(i !== void 0 && { href: $Re(i).trim() }),
+      ...(i !== void 0 && { href: decodeHtmlEntities(i).trim() }),
       dark: l,
       ...(!l && !c && { badMedia: s }),
     });
   }
   return e;
 }
-function $kn(t) {
+function extractThumbnailLinks(t) {
   let e = { pastWindow: !1 },
     r = m(t).replace(N, "");
   for (let { href: i, dark: u, badMedia: s, oversize: l } of At(r))
@@ -588,7 +588,7 @@ function $kn(t) {
   let o = (i) => i.match(z)?.length ?? 0;
   return ((e.pastWindow = t.includes(X) && o(K(t).replace(N, "")) > o(r)), e);
 }
-var Ukn = /[<>&"']/,
+var FAVICON_MARKUP_RE = /[<>&"']/,
   Tt = [
     ["'", "'"],
     ['"', '"'],
@@ -596,7 +596,7 @@ var Ukn = /[<>&"']/,
     ["\u201C", "\u201D"],
     ["`", "`"],
   ];
-function Uvt(t) {
+function sanitizeFavicon(t) {
   let e = t;
   for (let r = 0; r < 4; r++) {
     let o = e.trim();
@@ -609,7 +609,7 @@ function Uvt(t) {
         o = o.slice(i.length, o.length - u.length);
         break;
       }
-    if (((o = $Re(o)), o === e)) break;
+    if (((o = decodeHtmlEntities(o)), o === e)) break;
     e = o;
   }
   return e;
@@ -619,21 +619,21 @@ var U = String.raw`\p{Extended_Pictographic}[\ufe0e\ufe0f]?\p{Emoji_Modifier}?`,
   Rt = String.raw`(?:[#*0-9]\ufe0f?\u20e3|\p{Regional_Indicator}{2}|${ht}|${U}(?:\u200d${U}){0,3})`,
   St = new RegExp(`^${Rt}{1,4}$`, "u"),
   It = /\p{Regional_Indicator}{2}.*\p{Regional_Indicator}/u;
-function iie(t) {
+function vetForeignFavicon(t) {
   if (typeof t !== "string" || t.length > 32) return;
-  let e = Uvt(t);
+  let e = sanitizeFavicon(t);
   return St.test(e) && !It.test(e) ? e : void 0;
 }
-function uet(t) {
-  let e = iie(t);
+function faviconClause(t) {
+  let e = vetForeignFavicon(t);
   return e === void 0 ? "" : ` \u2014 favicon ${e}`;
 }
-function det(t) {
+function extractHtmlTitle(t) {
   let r = m(t).match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1];
   if (r === void 0) return null;
-  return e_($Re(r));
+  return sanitizeArtifactTitle(decodeHtmlEntities(r));
 }
-function e_(t) {
+function sanitizeArtifactTitle(t) {
   let r = Array.from(t, (i) => {
     let u = i.codePointAt(0) ?? 0;
     return u <= 31 || (u >= 127 && u <= 159) ? " " : i;
@@ -643,15 +643,15 @@ function e_(t) {
     .trim();
   if (r === "") return null;
   let o = Array.from(r);
-  return o.length > $vt ? o.slice(0, $vt).join("") : r;
+  return o.length > TITLE_MAX_RUNES ? o.slice(0, TITLE_MAX_RUNES).join("") : r;
 }
-var d1 =
+var QUOTE_HOMOGLYPHS =
     /[\u201C\u201D\u201E\u201F\u2E42\uFF02\u02F5\u02F6\u2033\u2034\u2036\u2037\u02BA\u02DD\u02EE\u05F4\u3003\u301D-\u301F\u275D\u275E\u2760\u{1F676}-\u{1F678}]/gu,
-  O5 =
+  SINGLE_QUOTE_RUNS =
     /['\u0060\u00B4\u02B9\u02BB\u02BC\u02BD\u02BE\u02BF\u02C8\u02CA\u02CB\u0374\u0384\u055A\u05F3\u07F4\u07F5\u1FBD\u1FBF\u1FEF\u1FFD\u1FFE\u2018\u2019\u201A\u201B\u2032\u2035\u275B\u275C\u275F\uA78B\uA78C\uFF07\uFF40]{2,}/g,
-  QC =
+  INVISIBLE_BLANKS =
     /[\p{Default_Ignorable_Code_Point}\u2800\u{1D159}\u{13441}\u{13442}\uFFFC]/gu;
-function sS(t) {
+function isDecisionSurfaceControl(t) {
   return (
     t <= 31 ||
     (t >= 127 && t <= 159) ||
@@ -668,7 +668,7 @@ function sS(t) {
     (t >= 917504 && t <= 917999)
   );
 }
-var mBe =
+var INVISIBLE_BLANK_CODE_POINT =
   /^[\p{Default_Ignorable_Code_Point}\u2800\u{1D159}\u{13441}\u{13442}\uFFFC]$/u;
 function Ct(t) {
   return t === 8204 || t === 8205;
@@ -676,11 +676,11 @@ function Ct(t) {
 function V(t) {
   return (t >= 65024 && t <= 65039) || (t >= 917760 && t <= 917999);
 }
-function bge(t) {
+function isJoinerOrEmojiSelector(t) {
   return Ct(t) || V(t);
 }
-function Gir(t) {
-  return !bge(t) && (sS(t) || (t > 127 && mBe.test(String.fromCodePoint(t))));
+function isResultLineControl(t) {
+  return !isJoinerOrEmojiSelector(t) && (isDecisionSurfaceControl(t) || (t > 127 && INVISIBLE_BLANK_CODE_POINT.test(String.fromCodePoint(t))));
 }
 var mt = /^[\p{Extended_Pictographic}\p{Emoji_Modifier}]$/u,
   bt = 8,
@@ -689,7 +689,7 @@ var mt = /^[\p{Extended_Pictographic}\p{Emoji_Modifier}]$/u,
   Lt =
     /^[\p{Script=Arabic}\p{Script=Syriac}\p{Script=Mongolian}\p{Script=Devanagari}\p{Script=Bengali}\p{Script=Gurmukhi}\p{Script=Gujarati}\p{Script=Oriya}\p{Script=Tamil}\p{Script=Telugu}\p{Script=Kannada}\p{Script=Malayalam}\p{Script=Sinhala}\p{Script=Myanmar}\p{Script=Tibetan}\p{Script=Khmer}]$/u,
   yt = /^[\n\r\t\v\f\u0085\u2028\u2029]$/;
-function Bvt(t) {
+function rideStateAfter(t) {
   if ((t.codePointAt(0) ?? 0) < 128) return F.test(t) ? "keycap" : "plain";
   return mt.test(t)
     ? "pictograph"
@@ -701,7 +701,7 @@ function Bvt(t) {
           ? "joining"
           : "plain";
 }
-function jvt(t, e) {
+function selectorOrJoinerRides(t, e) {
   if (V(t)) {
     let o =
       t <= 65039
@@ -717,7 +717,7 @@ function jvt(t, e) {
     after: "none",
   };
 }
-function Wvt(t, e, { joiners: r } = { joiners: !0 }) {
+function sweepResultLine(t, e, { joiners: r } = { joiners: !0 }) {
   let o = Yg(t),
     i = [],
     u = 0,
@@ -730,21 +730,21 @@ function Wvt(t, e, { joiners: r } = { joiners: !0 }) {
       break;
     }
     let p = f.codePointAt(0) ?? 0;
-    if (!r && bge(p)) c = "none";
-    else if (bge(p)) {
-      let d = jvt(p, c);
+    if (!r && isJoinerOrEmojiSelector(p)) c = "none";
+    else if (isJoinerOrEmojiSelector(p)) {
+      let d = selectorOrJoinerRides(p, c);
       if (d.rides && l < bt) (i.push(f), l++, (c = d.after));
       else c = "none";
     } else if (yt.test(f)) {
       if (i.length > 0 && i.at(-1) !== " ") i.push(" ");
       c = "none";
-    } else if (!Gir(p)) (i.push(f), (c = Bvt(f)));
+    } else if (!isResultLineControl(p)) (i.push(f), (c = rideStateAfter(f)));
     else c = "none";
   }
   if (i.length > e) s = !0;
-  return { kept: Ml(i.slice(0, s ? e - 1 : e).join("")), cut: s };
+  return { kept: scrubArtifactEnvelopeTags(i.slice(0, s ? e - 1 : e).join("")), cut: s };
 }
-function Bkn(t) {
+function revealPageInvisibles(t) {
   let e = "",
     r = "none";
   for (let o of Yg(t)) {
@@ -755,25 +755,25 @@ function Bkn(t) {
 }
 function Ot(t, e) {
   let r = t.codePointAt(0) ?? 0;
-  if (bge(r)) {
-    let o = jvt(r, e);
+  if (isJoinerOrEmojiSelector(r)) {
+    let o = selectorOrJoinerRides(r, e);
     return { shown: o.rides ? t : "\uFFFD", after: o.after };
   }
   if (r === 10 || r === 13 || r === 9) return { shown: t, after: "none" };
-  if (Gir(r)) return { shown: "\uFFFD", after: "none" };
-  return { shown: t, after: Bvt(t) };
+  if (isResultLineControl(r)) return { shown: "\uFFFD", after: "none" };
+  return { shown: t, after: rideStateAfter(t) };
 }
-function gBe(t, e) {
-  let { kept: r, cut: o } = Wvt(t, e);
+function sweepResultLineField(t, e) {
+  let { kept: r, cut: o } = sweepResultLine(t, e);
   return o ? `${r}\u2026` : r;
 }
-function h0(t, e) {
-  let { kept: r, cut: o } = Wvt(t, e, { joiners: !1 });
+function sweepResultLineText(t, e) {
+  let { kept: r, cut: o } = sweepResultLine(t, e, { joiners: !1 });
   return o ? `${r}\u2026` : r;
 }
-var JSr = 500,
-  jkn = 600;
-function QSr(t) {
+var MAX_REFUSAL_CHARS = 500,
+  MAX_SIZE_CLAUSE_CHARS = 600;
+function isPublishShapedArtifactAction(t) {
   let e = t?.action;
   return (
     e === void 0 ||
@@ -783,9 +783,9 @@ function QSr(t) {
     e === "version"
   );
 }
-var URe = 25,
-  aie = 50;
-function D5(t) {
+var DEFAULT_LIST_LIMIT = 25,
+  LIST_LIMIT_MAX = 50;
+function listScopeFrom(t) {
   let e = t.scope;
   return e === "shared" || e === "all" ? e : "mine";
 }
@@ -844,63 +844,63 @@ class W {
     );
   }
 }
-var smr = new j(() => new W());
+var artifactTagPatterns = new j(() => new W());
 function q() {
-  return smr.of(B().host);
+  return artifactTagPatterns.of(B().host);
 }
-function Wkn() {
+function artifactLeadScrubPattern() {
   return q().lead;
 }
 var Z = [gc, _b];
-function A5t(t) {
+function containsInterruptLiteral(t) {
   return Z.some((e) => t.includes(e));
 }
 var wt = new RegExp(
   Z.map((t) => `${iu(t.slice(0, 1))}(?=${iu(t.slice(1))})`).join("|"),
   "g",
 );
-function imr(t) {
+function markInterruptLiterals(t) {
   return t.replace(wt, (e) => `${e}\\`);
 }
-function Ml(t, e = "all") {
+function scrubArtifactEnvelopeTags(t, e = "all") {
   let r = q(),
     o = t;
   for (let i of e === "page" ? r.page : r.envelopes)
     o = o.replace(i, (u) => `${u}\\`);
-  return e === "page" ? o : imr(o);
+  return e === "page" ? o : markInterruptLiterals(o);
 }
-function pet(t, e, r = "all") {
-  let o = Ml(oe(t, e), r);
-  return o.length > e ? Ml(oe(t, e - 1), r) : o;
+function scrubbedHead(t, e, r = "all") {
+  let o = scrubArtifactEnvelopeTags(oe(t, e), r);
+  return o.length > e ? scrubArtifactEnvelopeTags(oe(t, e - 1), r) : o;
 }
-function p1(t, e) {
-  return Ml(
+function scrubServerLine(t, e) {
+  return scrubArtifactEnvelopeTags(
     us(
-      Array.from(oe(t, e * 4), (r) => (sS(r.codePointAt(0) ?? 0) ? " " : r))
+      Array.from(oe(t, e * 4), (r) => (isDecisionSurfaceControl(r.codePointAt(0) ?? 0) ? " " : r))
         .join("")
-        .replace(QC, " ")
+        .replace(INVISIBLE_BLANKS, " ")
         .replace(/\s+/g, " ")
         .trim(),
       e,
     ),
   );
 }
-function Pa(t) {
+function sweepAskCopy(t) {
   return (
-    Array.from(t, (e) => (sS(e.codePointAt(0) ?? 0) ? " " : e))
+    Array.from(t, (e) => (isDecisionSurfaceControl(e.codePointAt(0) ?? 0) ? " " : e))
       .join("")
-      .replace(QC, " ")
+      .replace(INVISIBLE_BLANKS, " ")
       .replace(/"/g, "'")
-      .replace(d1, "'")
-      .replace(O5, "'")
+      .replace(QUOTE_HOMOGLYPHS, "'")
+      .replace(SINGLE_QUOTE_RUNS, "'")
       .replace(/\s+/g, " ")
       .trim() || null
   );
 }
-var amr = String.raw`\u002b\u003d\u005e\u007c\u007e\u00a2-\u00a5\u00a8\u00ac\u00af\u00b1\u00b4\u00b8\u00d7\u00f7\u02c2-\u02c5\u02d2-\u02df\u02e5-\u02eb\u02ed\u02ef-\u02ff\u0375\u0384\u0385\u03f6\u058f\u0606-\u0608\u060b\u07fe\u07ff\u0888\u09f2\u09f3\u09fb\u0af1\u0bf9\u0e3f\u17db\u1fbd\u1fbf-\u1fc1\u1fcd-\u1fcf\u1fdd-\u1fdf\u1fed-\u1fef\u1ffd\u1ffe\u2044\u2052\u207a-\u207c\u208a-\u208c\u20a0-\u20c1\u2118\u2140-\u2144\u214b\u2190-\u2194\u219a\u219b\u21a0\u21a3\u21a6\u21ae\u21ce\u21cf\u21d2\u21d4\u21f4-\u22ff\u2320\u2321\u237c\u239b-\u23b3\u23dc-\u23e1\u25b7\u25c1\u25f8-\u25ff\u266f\u27c0-\u27c4\u27c7-\u27e5\u27f0-\u27ff\u2900-\u2982\u2999-\u29d7\u29dc-\u29fb\u29fe-\u2aff\u2b30-\u2b44\u2b47-\u2b4c\u309b\u309c\ua700-\ua716\ua720\ua721\ua789\ua78a\ua838\uab5b\uab6a\uab6b\ufb29\ufbb2-\ufbc2\ufdfc\ufe62\ufe64-\ufe66\ufe69\uff04\uff0b\uff1c-\uff1e\uff3e\uff40\uff5c\uff5e\uffe0-\uffe3\uffe5\uffe6\uffe9-\uffec\u{10d8e}\u{10d8f}\u{11fdd}-\u{11fe0}\u{1cef0}\u{1d6c1}\u{1d6db}\u{1d6fb}\u{1d715}\u{1d735}\u{1d74f}\u{1d76f}\u{1d789}\u{1d7a9}\u{1d7c3}\u{1e2ff}\u{1ecb0}\u{1eef0}\u{1eef1}\u{1f3fb}-\u{1f3ff}\u{1f8d0}-\u{1f8d8}`,
-  v = `[\\p{So}${amr}\\p{Pd}\\p{Pc}\\p{Mn}\\p{Me}${KRe}\\u02c9\\u02cd\\u2017\\u2053\\u203e\\ufe49-\\ufe4c\\u0640\\u07fa\\u1173\\u1428\\u180a\\u2e0f\\u2f00\\u3127\\u3161\\u3192\\u31d0\\u4e00\\ua4ff\\ua7f7\\ua8fb\\uffda]`,
+var ARROW_SHAFT_SYMBOLS = String.raw`\u002b\u003d\u005e\u007c\u007e\u00a2-\u00a5\u00a8\u00ac\u00af\u00b1\u00b4\u00b8\u00d7\u00f7\u02c2-\u02c5\u02d2-\u02df\u02e5-\u02eb\u02ed\u02ef-\u02ff\u0375\u0384\u0385\u03f6\u058f\u0606-\u0608\u060b\u07fe\u07ff\u0888\u09f2\u09f3\u09fb\u0af1\u0bf9\u0e3f\u17db\u1fbd\u1fbf-\u1fc1\u1fcd-\u1fcf\u1fdd-\u1fdf\u1fed-\u1fef\u1ffd\u1ffe\u2044\u2052\u207a-\u207c\u208a-\u208c\u20a0-\u20c1\u2118\u2140-\u2144\u214b\u2190-\u2194\u219a\u219b\u21a0\u21a3\u21a6\u21ae\u21ce\u21cf\u21d2\u21d4\u21f4-\u22ff\u2320\u2321\u237c\u239b-\u23b3\u23dc-\u23e1\u25b7\u25c1\u25f8-\u25ff\u266f\u27c0-\u27c4\u27c7-\u27e5\u27f0-\u27ff\u2900-\u2982\u2999-\u29d7\u29dc-\u29fb\u29fe-\u2aff\u2b30-\u2b44\u2b47-\u2b4c\u309b\u309c\ua700-\ua716\ua720\ua721\ua789\ua78a\ua838\uab5b\uab6a\uab6b\ufb29\ufbb2-\ufbc2\ufdfc\ufe62\ufe64-\ufe66\ufe69\uff04\uff0b\uff1c-\uff1e\uff3e\uff40\uff5c\uff5e\uffe0-\uffe3\uffe5\uffe6\uffe9-\uffec\u{10d8e}\u{10d8f}\u{11fdd}-\u{11fe0}\u{1cef0}\u{1d6c1}\u{1d6db}\u{1d6fb}\u{1d715}\u{1d735}\u{1d74f}\u{1d76f}\u{1d789}\u{1d7a9}\u{1d7c3}\u{1e2ff}\u{1ecb0}\u{1eef0}\u{1eef1}\u{1f3fb}-\u{1f3ff}\u{1f8d0}-\u{1f8d8}`,
+  v = `[\\p{So}${ARROW_SHAFT_SYMBOLS}\\p{Pd}\\p{Pc}\\p{Mn}\\p{Me}${KRe}\\u02c9\\u02cd\\u2017\\u2053\\u203e\\ufe49-\\ufe4c\\u0640\\u07fa\\u1173\\u1428\\u180a\\u2e0f\\u2f00\\u3127\\u3161\\u3192\\u31d0\\u4e00\\ua4ff\\ua7f7\\ua8fb\\uffda]`,
   Nt = new RegExp(`(?<!${v})${v}+>`, "gu");
-function yb(t) {
+function sweepProvenanceMarker(t) {
   return t
     .replace(
       /[\u00bb\u02c2-\u02c5\u02ef-\u02ff\u1405\u1406\u1409\u1433\u1434\u1450\u1451\u15d2\u2023\u203a\u204d\u20d0-\u20ef\u2044\u2190-\u21ff\u2215\u226b\u227b\u227d\u227f\u2283\u22b1\u22b3\u22d7\u22d9\u2571\u2572\u2303-\u2304\u232a\u2344\u2348\u23e9-\u23ef\u23f5\u25b6-\u25bb\u261b\u261e\u276d\u276f\u2771\u2794-\u27bf\u27e9\u27eb\u27f0-\u27ff\u2900-\u297f\u29a8-\u29af\u2992\u2994\u29c1\u29d0\u29f5\u29f8\u29fd\u2a20\u2a7a\u2aa2\u2aa7\u2aa9\u2aab\u2aad\u2ab0\u2ab2\u2ab4\u2ab6\u2ab8\u2aba\u2abc\u2af8\u2b00-\u2bff\u3009\u300b\ue000-\uf8ff\ufe65\ufe68\uff0f\uff1e\uff3c\uffe9-\uffec\u{1f449}\u{1f599}\u{1f59b}\u{1f59d}\u{1f782}\u{1f800}-\u{1f8ff}\u{1faf1}\u{1fbc1}-\u{1fbc3}\u{1fbb0}-\u{1fbb8}\u{f0000}-\u{ffffd}\u{100000}-\u{10fffd}]/gu,
@@ -909,33 +909,33 @@ function yb(t) {
     .replace(Nt, "?");
 }
 var P = `(?![(){}])[\\p{Ps}\\p{Pe}${Zse}]`,
-  Sb = new RegExp(`(?<!\\s)\\s*${P}(?:\\s|${P})*`, "gu"),
+  DECISION_SURFACE_BRACKETS_RE = new RegExp(`(?<!\\s)\\s*${P}(?:\\s|${P})*`, "gu"),
   J =
     /[:\u02D0\u02D1\u05C3\u2D42\u2D53\u2D57\uA4FD\uA789\u{10781}\u{10782}]|(?![\p{L}\p{N}\p{Zs}])[^\x00-\x7F]/gu,
-  Gkn = new RegExp(`^(?:${J.source})$`, "u");
-function fet(t) {
+  MODEL_TEXT_PUNCT_CODE_POINT = new RegExp(`^(?:${J.source})$`, "u");
+function sweepMarkerLookalikes(t) {
   return t
-    .replace(Sb, " ")
+    .replace(DECISION_SURFACE_BRACKETS_RE, " ")
     .replace(J, " ")
     .replace(/ {2,}/g, " ")
     .replace(/sources\s+under/giu, "sources-under")
     .replace(/stored\s+connector\s+grant/giu, "stored-connector-grant")
     .replace(/published\s+by\s+this\s+session/giu, "published-by-this-session");
 }
-var qkn = " [artifact published by this session]",
-  zkn =
+var SESSION_PUBLISHED_CLASSIFIER_MARK = " [artifact published by this session]",
+  CHAIN_REPUBLISH_ALLOW_REASON =
     "Automatic edit of an Artifact this session watches, requested by a writer's comment on it; the server re-checks the writer, the thread's edit grant, single-file, size and rate limits";
-function met(t) {
-  return yb(Pa(t) ?? "").replace(Sb, " ");
+function sweptAskPath(t) {
+  return sweepProvenanceMarker(sweepAskCopy(t) ?? "").replace(DECISION_SURFACE_BRACKETS_RE, " ");
 }
 var Ut =
     /<meta[^>]+name=["']description["'][^>]+content=(["'])((?:(?!\1).)*)\1/is,
   Ft = /<title[^>]*>([\s\S]*?)<\/title>/i,
   Dt = /<h1[^>]*>([\s\S]*?)<\/h1>/i,
   k = new Set(["", "index", "untitled", "document"]);
-function Vkn(t, e) {
+function deriveDescription(t, e) {
   let r = m(t),
-    o = (p) => e_($Re(p ?? "")) ?? "",
+    o = (p) => sanitizeArtifactTitle(decodeHtmlEntities(p ?? "")) ?? "",
     i = o(r.match(Ut)?.[2]);
   if (i.length >= 10) return i;
   let u = (p) => o(r.match(p)?.[1]?.replace(/<[^>]+>/g, "")),
@@ -947,7 +947,7 @@ function Vkn(t, e) {
   if (f === s.toLowerCase() || k.has(f) || f === e) return s;
   return l;
 }
-function get(t) {
+function splitWatchRows(t) {
   let e = G(t, (r) => "rail" in r && r.rail === "live_stopped");
   return { watching: t.length - e, stopped: e };
 }
@@ -1010,96 +1010,96 @@ export {
   b5t,
   tie,
   jir,
-  _r,
-  Zh,
-  CP,
-  XD,
-  nie,
-  Hp,
-  Wir,
-  ret,
-  xkn,
-  Hkn,
-  oet,
-  rie,
-  P5,
-  set,
-  Ikn,
-  Pkn,
-  Okn,
-  Dkn,
-  Lkn,
-  w5t,
-  iet,
-  Oe,
-  fr,
-  L6,
-  YD,
-  Mkn,
-  EQ,
-  fBe,
-  Gd,
-  Wt,
-  aet,
-  Cq,
-  JD,
-  _ge,
-  yge,
-  oie,
-  Nkn,
-  Fi,
-  T5t,
-  br,
-  cet,
-  sie,
-  ls,
-  E5t,
-  Sge,
-  Fkn,
-  $vt,
-  $Re,
-  $kn,
-  Ukn,
-  Uvt,
-  iie,
-  uet,
-  det,
-  e_,
-  d1,
-  O5,
-  QC,
-  sS,
-  mBe,
-  bge,
-  Gir,
-  Bvt,
-  jvt,
-  Wvt,
-  Bkn,
-  gBe,
-  h0,
-  JSr,
-  jkn,
-  QSr,
-  URe,
-  aie,
-  D5,
-  smr,
-  Wkn,
-  A5t,
-  imr,
-  Ml,
-  pet,
-  p1,
-  Pa,
-  amr,
-  yb,
-  Sb,
-  Gkn,
-  fet,
-  qkn,
-  zkn,
-  met,
-  Vkn,
-  get,
+  ARTIFACT_TOOL_NAME,
+  ARTIFACT_COMMENTS_TOOL_NAME,
+  ARTIFACT_DATA_TOOL_NAME,
+  ARTIFACT_CHECK_TOOL_NAME,
+  ARTIFACT_FAMILY_TOOL_NAMES,
+  ASSET_ID_RE,
+  STALE_GUARD_CONTENT_HEADER_SUFFIX,
+  STALE_GUARD_REJECTION_PREFIX,
+  STALE_GUARD_REJECTION_PREFIX_LEGACY,
+  STALE_GUARD_CONTENT_HEADER,
+  STALE_GUARD_CONTENT_HEADER_LINE_RE,
+  CONFLICT_REJECTION_PREFIX,
+  PR_REVIEW_SECURITY_WALL,
+  artifactLinkShapeHint,
+  notAnArtifactUrlMessage,
+  ARTIFACT_LOGIN_REQUIRED_MESSAGE,
+  ARTIFACT_LOGIN_PROXIED_MESSAGE,
+  ARTIFACT_LOGIN_HOST_MANAGED_MESSAGE,
+  artifactLoginEnvQuadMessage,
+  artifactPolicyBlockedMessage,
+  artifactLoginBlockedByCredentialMessage,
+  ArtifactInputError,
+  ARTIFACT_SLUG_RE,
+  ARTIFACT_VERSION_SAFE_RE,
+  ARTIFACT_MAX_RESULT_SIZE_CHARS,
+  ARTIFACT_PAGE_INLINE_RESULT_CAP,
+  ARTIFACT_DB_READ_MAX_RESULT_SIZE_CHARS,
+  ARTIFACT_STUB_URL_PREFIX,
+  getArtifactPublishStubDir,
+  parseArtifactUrl,
+  artifactUrlSubPath,
+  canonicalizeArtifactUrlInput,
+  parseArtifactUrlInput,
+  parseArtifactUrlAnyCase,
+  parseStubArtifactUrl,
+  ARTIFACT_DELETED_NOTE_TAG,
+  ARTIFACT_DELETED_NOTE_RE,
+  uuidSlugFromUrl,
+  artifactViewerPath,
+  artifactViewerUrlFor,
+  artifactViewerUrlSpellings,
+  artifactContentOriginUrlFor,
+  canonicalArtifactTargetFor,
+  isCanonicalArtifactViewerUrl,
+  TITLE_SCAN_CHARS,
+  TITLE_SCAN_BYTES,
+  TITLE_MAX_RUNES,
+  decodeHtmlEntities,
+  extractThumbnailLinks,
+  FAVICON_MARKUP_RE,
+  sanitizeFavicon,
+  vetForeignFavicon,
+  faviconClause,
+  extractHtmlTitle,
+  sanitizeArtifactTitle,
+  QUOTE_HOMOGLYPHS,
+  SINGLE_QUOTE_RUNS,
+  INVISIBLE_BLANKS,
+  isDecisionSurfaceControl,
+  INVISIBLE_BLANK_CODE_POINT,
+  isJoinerOrEmojiSelector,
+  isResultLineControl,
+  rideStateAfter,
+  selectorOrJoinerRides,
+  sweepResultLine,
+  revealPageInvisibles,
+  sweepResultLineField,
+  sweepResultLineText,
+  MAX_REFUSAL_CHARS,
+  MAX_SIZE_CLAUSE_CHARS,
+  isPublishShapedArtifactAction,
+  DEFAULT_LIST_LIMIT,
+  LIST_LIMIT_MAX,
+  listScopeFrom,
+  artifactTagPatterns,
+  artifactLeadScrubPattern,
+  containsInterruptLiteral,
+  markInterruptLiterals,
+  scrubArtifactEnvelopeTags,
+  scrubbedHead,
+  scrubServerLine,
+  sweepAskCopy,
+  ARROW_SHAFT_SYMBOLS,
+  sweepProvenanceMarker,
+  DECISION_SURFACE_BRACKETS_RE,
+  MODEL_TEXT_PUNCT_CODE_POINT,
+  sweepMarkerLookalikes,
+  SESSION_PUBLISHED_CLASSIFIER_MARK,
+  CHAIN_REPUBLISH_ALLOW_REASON,
+  sweptAskPath,
+  deriveDescription,
+  splitWatchRows,
 };

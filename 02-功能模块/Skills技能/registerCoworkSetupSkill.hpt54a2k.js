@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 101 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { eo } from "./chunk-1zy5c8mf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { registerBundledSkill as eo } from "./chunk-1zy5c8mf.js";
 var i =
   "Guided setup \u2014 pick a role, install a matching plugin, try a skill, connect tools. Use when: set up claude, setup claude, set up cowork, setup cowork, get started with claude, claude onboarding.";
 function l() {

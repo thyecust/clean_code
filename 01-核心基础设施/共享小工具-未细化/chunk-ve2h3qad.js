@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { fi } from "./chunk-z5tdbda7.js";
-async function SCn(n, e, t) {
+async function buildGitSessionContext(n, e, t) {
   let u = { revisionGuessUsed: !1 };
   if (!n) return { sources: [], outcomes: [], report: u };
   let {
@@ -16,7 +16,7 @@ async function SCn(n, e, t) {
       parseGitRemote: G,
       parseGitHubRepository: y,
     } = await import("./parseGitHubRepository.3ng6714h.js"),
-    { getDefaultBranch: h } = await import("../../02-功能模块/Bridge-RemoteControl/snapshotGitEvidenceForBridge.6msfz0pr.js");
+    { getDefaultBranch: h } = await import("../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js");
   if (e === "HEAD") e = "";
   let p = !1,
     r = e || t || void 0;
@@ -56,4 +56,4 @@ async function SCn(n, e, t) {
   }
   return { sources: [], outcomes: [], report: u };
 }
-export { SCn };
+export { buildGitSessionContext };

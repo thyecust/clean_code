@@ -13,15 +13,15 @@ import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-a
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { jn, Pt, Ks, tr, lt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { jn, Pt, Ks, findGitRoot as tr, gitExe as lt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { OP, Vet, Ket } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { kJ, MK, UTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { dUt, t3, Qqn, uX, Sa, D_n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { dUt, t3, Qqn, uX, createBaseHookInput as Sa, executeFileSuggestionCommand as D_n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var w = pe(kJ(), 1);
@@ -47,8 +47,8 @@ function M() {
     indexBuildComplete: Le(),
   };
 }
-var k4 = M();
-function wrn(e) {
+var globalFileIndexCache = M();
+function resetFileIndexCache(e) {
   ((e.fileIndex = null),
     (e.fileListRefreshPromise = null),
     e.cacheGeneration++,
@@ -335,7 +335,7 @@ function B(e, r) {
   while (t < s && e[t] === r[t]) t++;
   return e.substring(0, t);
 }
-function Trn(e) {
+function findLongestCommonPrefix(e) {
   if (e.length === 0) return "";
   let r = e.map((t) => t.displayText),
     s = r[0];
@@ -355,7 +355,7 @@ function I(e, r) {
 var S = 15,
   z = 5000,
   q = 1000;
-function Ylt(e, r) {
+function startBackgroundCacheRefresh(e, r) {
   if (e.fileListRefreshPromise) return;
   let s = G();
   if (e.fileIndex) {
@@ -417,7 +417,7 @@ async function O() {
     );
   }
 }
-async function U3e(e, r, s = !1, t) {
+async function generateFileSuggestions(e, r, s = !1, t) {
   if (Pt()) {
     if (!r && !s) return [];
     return U(r);
@@ -430,12 +430,12 @@ async function U3e(e, r, s = !1, t) {
   }
   if (r === "" || r === "." || r === "./") {
     let g = await O();
-    return (Ylt(e, t), g.slice(0, S).map(I));
+    return (startBackgroundCacheRefresh(e, t), g.slice(0, S).map(I));
   }
   let o = Date.now();
   try {
     let g = e.fileListRefreshPromise !== null;
-    Ylt(e, t);
+    startBackgroundCacheRefresh(e, t);
     let c = r,
       u = "." + m.sep;
     if (r.startsWith(u)) c = r.substring(2);
@@ -471,7 +471,7 @@ async function U(e) {
     return (n(`[FileIndex] remote file_suggestions RPC failed: ${l(s)}`), []);
   }
 }
-function Jlt({
+function applyFileSuggestion({
   suggestion: e,
   input: r,
   partialPath: s,
@@ -529,4 +529,4 @@ function H(e, r, s, t) {
       e.untrackedFetchPromise = null;
     });
 }
-export { k4, wrn, Trn, Ylt, U3e, Jlt };
+export { globalFileIndexCache, resetFileIndexCache, findLongestCommonPrefix, startBackgroundCacheRefresh, generateFileSuggestions, applyFileSuggestion };

@@ -15,21 +15,21 @@ import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { jn, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { ho, bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource as ho, getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import {
-  Y4e,
+  checkWindowsSandboxStatusAsync as Y4e,
   r3,
   xDe,
   L2,
-  gX,
-  Fue,
-  kBt,
-  ene,
-  eTe,
-  tpn,
-  st,
+  resolveWindowsTlsTerminateCaSource as gX,
+  willSandboxTlsTerminate as Fue,
+  isInstalledWindowsTlsCaCurrent as kBt,
+  shouldAllowManagedSandboxDomainsOnly as ene,
+  shouldForceSandboxOn as eTe,
+  addToExcludedCommands as tpn,
+  SandboxManager as st,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";

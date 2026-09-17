@@ -35,10 +35,10 @@ function u() {
     },
   };
 }
-var Y0t = new Gt(u);
-function J0t(i) {
+var deviceToolNotices = new Gt(u);
+function deviceToolNoticesTo(i) {
   return (e, o) => {
-    (n(`[remote-tools] ${e}: ${o}`), Y0t.of(i).emit(e, o));
+    (n(`[remote-tools] ${e}: ${o}`), deviceToolNotices.of(i).emit(e, o));
   };
 }
-export { Y0t, J0t };
+export { deviceToolNotices, deviceToolNoticesTo };

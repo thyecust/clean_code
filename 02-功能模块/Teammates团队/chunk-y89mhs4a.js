@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { Zh, CP, XD } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { Uj, SYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { Bi } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { ARTIFACT_COMMENTS_TOOL_NAME as Zh, ARTIFACT_DATA_TOOL_NAME as CP, ARTIFACT_CHECK_TOOL_NAME as XD } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { isCoworkHostSession as Uj, isRepublishInlinePromptEnabled as SYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { TOOL_SEARCH_TOOL_NAME as Bi } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { so, mme } from "../权限系统/chunk-fjrcf22x.js";
-import { Uln, n$t, o$t, yft, zze, Vze, owe, Kze } from "../Artifact发布-渲染/chunk-pdd7kz7p.js";
+import { PIN_CORE_BULLET as Uln, HEAD_PARAGRAPH as n$t, DELIVERABLE_PARAGRAPH as o$t, FILE_LOCATION_SENTENCE as yft, langPromptParagraph as zze, FILES_PROMPT_PARAGRAPH as Vze, COMMENTS_OFF_SENTENCE as owe, ROOM_PROMPT_PARAGRAPH as Kze } from "../Artifact发布-渲染/chunk-pdd7kz7p.js";
 import {
   Iut,
   Put,
@@ -27,11 +27,11 @@ import {
   kjn,
 } from "../Artifact发布-渲染/chunk-yrjr7v83.js";
 import { FS } from "../Artifact发布-渲染/chunk-qpgskeea.js";
-import { E9, bce, bm, UGe, BGe } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
+import { artifactSchemaGates as E9, artifactLiveEditPromptGateOpen as bce, artifactLivePathsSchemaOpen as bm, artifactTypesPromptParagraph as UGe, artifactTypeCatalogPromptParagraph as BGe } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
 import { pN, JAe, QY } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 var h = null,
   p = null;
-function FGe(e, t) {
+function respell(e, t) {
   let a = e;
   for (let [s, i] of t) {
     if (!a.includes(s))
@@ -62,7 +62,7 @@ function d(e) {
   let t = new Set(e.map((a) => a.name));
   return t.has(so) || t.has(mme(pN));
 }
-function Ihr(e) {
+function artifactCorePromptCacheKeyBit(e) {
   if (!FS()) return "";
   let t = u(e);
   return `A${[d(e) && "S", t.comments && "C", t.data && "D", t.check && "K"].filter(Boolean).join("")}:`;
@@ -164,7 +164,7 @@ function R(e) {
   if (t.length === 0) return "";
   return `**Separate tools**: ${t.join(", ")} \u2014 ${t.length === 1 ? "a separate tool" : "separate tools"}; load one with ${Bi} when you need it.`;
 }
-function Don(e) {
+function corePrompt(e) {
   let t = E9(),
     a = u(e),
     s = ne().frozenArtifactTypes,
@@ -195,9 +195,9 @@ ${l}${t.multiFileOn ? Vze : ""}${P(t)}`,
   if (o) n.push(kjn());
   if (r !== "") n.push(r.trim());
   if (t.handlersOn && p) n.push(p.HANDLERS_PROMPT_PARAGRAPH);
-  if (t.roomOn) n.push(FGe(Kze, a.comments ? w : g));
+  if (t.roomOn) n.push(respell(Kze, a.comments ? w : g));
   if (t.typeCreateOn) n.push(UGe(t.typeCatalogOn));
-  if (t.typeCatalogOn) n.push(FGe(BGe(t.typeCreateOn), m));
+  if (t.typeCatalogOn) n.push(respell(BGe(t.typeCreateOn), m));
   let c = R(a);
   if (c !== "") n.push(c);
   return (
@@ -207,4 +207,4 @@ ${l}${t.multiFileOn ? Vze : ""}${P(t)}`,
 `)
   );
 }
-export { FGe, Ihr, Don };
+export { respell, artifactCorePromptCacheKeyBit, corePrompt };

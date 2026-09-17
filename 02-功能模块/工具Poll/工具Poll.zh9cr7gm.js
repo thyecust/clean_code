@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { tYt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";

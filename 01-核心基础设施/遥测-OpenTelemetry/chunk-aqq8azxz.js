@@ -25,20 +25,20 @@ import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { ud, YR, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { w_e } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { pur, a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { pur, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import {
   Or,
-  pRn,
+  populateOAuthAccountInfoIfNeeded as pRn,
   Nse,
-  gZe,
-  lvt,
-  dvt,
-  vRn,
-  R5,
-  RZe,
+  restoreGatewayAuth as gZe,
+  primeStoredLogin as lvt,
+  startupReadsStoredLogin as dvt,
+  primeStoredLoginCopy as vRn,
+  getForcedLoginMethod as R5,
+  adminPolicyUnreadable as RZe,
   LRn,
   MRn,
   H,
@@ -50,16 +50,16 @@ import {
   CRe,
   QRn,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { da, Stt } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { da, primeRemoteManagedSettingsCache as Stt } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { SRt } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
-import { ye } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Pie, qq, x0n, Oie, Lie, W8t, vb, Vq } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Jir, Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getSettingsForSource as ye } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { loadExtraCACerts as Pie, loadMTLSClientMaterial as qq, configureGlobalMTLS as x0n, getProxyUrlWithSource as Oie, parseProxyUrl as Lie, describeInvalidProxyUrl as W8t, configureGlobalAgents as vb, clearProxyCache as Vq } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { Jir, getAPIProvider as Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { hir } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { She, fnt } from "../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
-import { Jxn } from "../../02-功能模块/认证-OAuth登录/chunk-y7b7kf5n.js";
-import { oAn } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { primeWindowsCredManBackendEnabled as Jxn } from "../../02-功能模块/认证-OAuth登录/chunk-y7b7kf5n.js";
+import { assertScrubSandboxAvailable as oAn } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
 import {
   rw,
   Uv,
@@ -72,19 +72,19 @@ import {
   lVn,
   NXn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { eA, KFe } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isScratchpadEnabled as eA, ensureScratchpadDir as KFe } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { MAe } from "./chunk-5qbcynds.js";
-import { lA } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyLimitsEligible as lA } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Bk, Ys } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { $An, UAn } from "../设置-配置/chunk-b536v45y.js";
-import { lh } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { seedUserSettings as $An, primeSettings as UAn } from "../设置-配置/chunk-b536v45y.js";
+import { primePlanSlugCollisions as lh } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { goe, dR } from "./chunk-x7kby92q.js";
 import { K0n } from "../共享小工具-未细化/chunk-5ss8pwgq.js";
 import { Iv } from "../共享小工具-未细化/chunk-bfth4n1b.js";
-import { h4t } from "../共享小工具-未细化/chunk-bgf8jybv.js";
+import { primeWorkspaceRoots as h4t } from "../共享小工具-未细化/chunk-bgf8jybv.js";
 import { WAn, qAn, zAn } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { vnn, Rnn, c3e } from "../设置-配置/chunk-1pbaa558.js";
-import { T$e } from "../共享小工具-未细化/chunk-fpak7ean.js";
+import { primeFileDescriptorCredentials as T$e } from "../共享小工具-未细化/chunk-fpak7ean.js";
 import { Tw } from "../../02-功能模块/认证-OAuth登录/chunk-s51acx6w.js";
 import { wot } from "../共享小工具-未细化/chunk-w7rbejjf.js";
 import { I$ } from "../共享小工具-未细化/chunk-6eskfcpn.js";
@@ -192,7 +192,7 @@ async function T(t = {}) {
       pRn(m, o).catch(h),
       Br("init_after_oauth_populate"),
       lh(o),
-      import("../设置-配置/UNATTENDED_SERVING_CONSENT_VERSION.jgpzj3cc.js")
+      import("../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js")
         .then((i) => i.primeUnattendedServingConsent())
         .catch(() => {}),
       fnt({ trustProbe: Bo }),
@@ -231,7 +231,7 @@ async function T(t = {}) {
         // PLACEHOLDER_CREDENTIAL_KEYS，这里直接用实现模块的原始名。
         let { _gr: i, ygr: d } =
             await import("../HTTP-网络层/HTTP-网络层.pfw3b51q.js"),
-          { registerAgentProxyEnvFn: b } = await import("./registerAgentProxyEnvFn.84gxhdny.js");
+          { registerAgentProxyEnvFn: b } = await import("../核心工具-进程与信号/chunk-ckrdhhqd.js");
         (b(d), await i());
       } catch (i) {
         n(
@@ -255,7 +255,7 @@ Or set CLAUDE_CODE_GIT_BASH_PATH to your bash.exe location.`),
     if (
       (Et(R4n),
       Et(async () => {
-        let { cleanupSessionTeams: i } = await import("../../02-功能模块/Teammates团队/getTeamFilePath.za7qp6df.js");
+        let { cleanupSessionTeams: i } = await import("../../02-功能模块/Teammates团队/chunk-6b13bhw1.js");
         await i(o);
       }),
       eA())
@@ -334,7 +334,7 @@ function Qxe(t) {
           ),
             dR());
           let { captureAdmin3PSteeringSnapshot: e } =
-            await import("../共享小工具-未细化/TIER_LABELS.mfc616v6.js");
+            await import("../../02-功能模块/Bedrock-Vertex/chunk-bnft4099.js");
           e();
           let [s, c] = await Promise.all([Pie(), qq()]);
           if (s || c.changed) (Vq(), vb());

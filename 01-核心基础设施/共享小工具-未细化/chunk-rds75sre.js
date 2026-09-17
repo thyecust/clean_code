@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { M } from "./chunk-h62vxw7j.js";
-import { pr } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { sessionIdBody as pr } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "./chunk-km6n9zrg.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
@@ -46,7 +46,7 @@ function x(r, o) {
   let t = Date.parse(r);
   return Number.isNaN(t) || t < o.getTime();
 }
-async function Xhr(r, o, t) {
+async function rememberUnboundCreate(r, o, t) {
   try {
     let e = pr(r),
       a = [
@@ -62,7 +62,7 @@ async function Xhr(r, o, t) {
     n(`[deviceBind] unbound create not recorded (${l(e)})`);
   }
 }
-async function Han(r, o, t) {
+async function unboundCreateReason(r, o, t) {
   try {
     let e = pr(r),
       i = (await f(t)).find((a) => pr(a.id) === e);
@@ -72,7 +72,7 @@ async function Han(r, o, t) {
     return;
   }
 }
-function Ian(r) {
+function productionUnboundCreatesDeps(r) {
   let o = M() && r !== void 0 ? r : void 0,
     t = Ce.state(u);
   return {
@@ -106,4 +106,4 @@ function Ian(r) {
     },
   };
 }
-export { Xhr, Han, Ian };
+export { rememberUnboundCreate, unboundCreateReason, productionUnboundCreatesDeps };

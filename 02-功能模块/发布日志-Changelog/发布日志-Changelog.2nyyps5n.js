@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
@@ -17,7 +17,7 @@ import { cf, ph, sQ, Hse, Te, ee } from "../认证-OAuth登录/认证-OAuth登�
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { C8e } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";

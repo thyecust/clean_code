@@ -10,21 +10,21 @@
 import { j, B, ze, dl, PDn, yrt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, gxe, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ZU } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { gm, i_ } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Wi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ri, hW } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Zsr } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { RRe, $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { Yi } from "../权限系统/chunk-1y2g140m.js";
+import { getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
 import { _M, tue } from "../../01-核心基础设施/共享小工具-未细化/chunk-dhg3raay.js";
-import { Ti, Mi, Zn, TAe, AAe, xf, Ipe, xre } from "./chunk-7wsy8vxb.js";
+import { writeStateAtomic as Ti, logJobWriteError as Mi, readJobState as Zn, withOwnJobStateWrite as TAe, SEED_DETAIL as AAe, IDLE_NEEDS as xf, isOverlayNeeds as Ipe, PRE_BOOT_STATES as xre } from "./chunk-7wsy8vxb.js";
 import { Du, BS, tVn, Jgt, zS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ln, Mze } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
 import { ws } from "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
@@ -500,7 +500,7 @@ function G() {
 function P() {
   return ue.of(G());
 }
-async function Zhr(e) {
+async function startRendezvousServer(e) {
   let t = a.CLAUDE_BG_RENDEZVOUS_SOCK,
     r = P();
   if (!t || r.server) return;
@@ -508,7 +508,7 @@ async function Zhr(e) {
     i = [];
   (tVn((u) => {
     let l = { type: "interactive-mark", ...u };
-    if (J4(l)) return !0;
+    if (sendRv(l)) return !0;
     return (i.push(l), !0);
   }),
     delete process.env.CLAUDE_BG_RENDEZVOUS_SOCK);
@@ -524,11 +524,11 @@ async function Zhr(e) {
   let R = r.server;
   Et(() => R.promptStash.flush());
 }
-function J4(e) {
+function sendRv(e) {
   return P().server?.send(e) ?? !1;
 }
 function pe(e, t) {
-  J4({ type: "shutting-down" });
+  sendRv({ type: "shutting-down" });
   let r = Yi(),
     o = [],
     i = a.CLAUDE_JOB_DIR;
@@ -554,7 +554,7 @@ function ce() {
   \x1B[2mSession can't redraw right now \u2014 Ctrl+Z to detach\x1B[0m
 `,
     );
-  J4({ type: "repaint-done" });
+  sendRv({ type: "repaint-done" });
 }
 function le(e) {
   if (C(G(), e.text)) {
@@ -573,7 +573,7 @@ function le(e) {
 }
 var w = "stuck on a startup dialog",
   k = "open this session to continue setup";
-function uln() {
+function disarmStartupWedgeWatchdog() {
   P().server?.disarmStartupWedgeWatchdog();
 }
 async function q(e, t, r, o) {
@@ -593,7 +593,7 @@ async function q(e, t, r, o) {
       },
       o,
     ),
-    J4({ type: "state", patch: { tempo: "blocked", detail: r, needs: t } }),
+    sendRv({ type: "state", patch: { tempo: "blocked", detail: r, needs: t } }),
     {
       kind: "wrote",
       prior: { tempo: i.tempo, needs: i.needs, detail: i.detail },
@@ -604,34 +604,34 @@ async function K(e, t, r, o) {
   let i = await Zn(e, o);
   if (!i || i.tempo !== "blocked" || i.needs !== t) return;
   (await Ti(e, { ...i, ...r, updatedAt: new Date().toISOString() }, o),
-    J4({
+    sendRv({
       type: "state",
       patch: { tempo: r.tempo, needs: r.needs, detail: r.detail },
     }));
 }
-async function e_r(e, t) {
+async function markStartupDialogBlocked(e, t) {
   let r = a.CLAUDE_JOB_DIR;
   if (!r || P().server?.wedgeDisarmed) return;
   let o = e ? `${w} (${e})` : w,
     i = await q(r, k, o, t);
   return i.kind === "wrote" ? i.prior : void 0;
 }
-async function t_r(e, t) {
+async function clearStartupDialogBlocked(e, t) {
   let r = a.CLAUDE_JOB_DIR;
   if (!r) return;
   await K(r, k, e, t);
 }
-async function dln(e, t, r) {
+async function markCommandParkBlocked(e, t, r) {
   let o = a.CLAUDE_JOB_DIR;
   if (!o) return { kind: "refused" };
   return TAe(() => q(o, e, t, r));
 }
-async function pln(e, t, r) {
+async function clearCommandParkBlocked(e, t, r) {
   let o = a.CLAUDE_JOB_DIR;
   if (!o) return;
   await TAe(() => K(o, e, t, r));
 }
-async function fln(e) {
+async function markReplayNoOp(e) {
   let t = a.CLAUDE_JOB_DIR;
   if (!t || a.CLAUDE_CODE_SESSION_KIND !== "bg") return;
   let r = await Zn(t, e);
@@ -641,7 +641,7 @@ async function fln(e) {
     { ...r, tempo: "blocked", needs: xf, updatedAt: new Date().toISOString() },
     e,
   ),
-    J4({ type: "state", patch: { tempo: "blocked", needs: xf } }));
+    sendRv({ type: "state", patch: { tempo: "blocked", needs: xf } }));
 }
 var Y = ".prompt-draft",
   Q = 262144;
@@ -659,4 +659,4 @@ async function fe(e, t, r) {
     r,
   );
 }
-export { Pze, Zhr, J4, uln, e_r, t_r, dln, pln, fln };
+export { Pze, startRendezvousServer, sendRv, disarmStartupWedgeWatchdog, markStartupDialogBlocked, clearStartupDialogBlocked, markCommandParkBlocked, clearCommandParkBlocked, markReplayNoOp };

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { R, mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { Cz, lZ, ML, mv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import {
@@ -20,9 +20,9 @@ import {
   db,
   pb,
   QH,
-  Rr,
-  Cse,
-  WC,
+  isModelAllowed as Rr,
+  isFableAvailable as Cse,
+  modelDisplayString as WC,
   fq,
   H,
   Te,
@@ -33,14 +33,14 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { xg } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { a } from "./chunk-zqr5ctyf.js";
+import { env as a } from "./chunk-zqr5ctyf.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Nr, XBe } from "./设置-配置.aqbb35ee.js";
 import { Pt } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ge, Jt, Hq, eke, Let, tke } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings as Ge, updateSettingsForSource as Jt, getSecuritySensitiveSettingWithSources as Hq, getAskUserQuestionTimeout as eke, getDialogExpiry as Let, getModelProposedGoalsSettingParsed as tke } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { xb } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
-import { ly, DP, E1, _c, Eb } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { PERMISSION_MODES as ly, DP, E1, _c, Eb } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { NU, ARt, Mge, CRt, jet } from "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
 import { RP } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { XH } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
@@ -58,26 +58,26 @@ import {
   Vv,
   Ym,
   Qht,
-  QKe,
+  transitionPlanAutoMode as QKe,
   rgn,
   z_t,
   hpe,
   Tpe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Xr } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
-import { aU } from "../共享小工具-未细化/chunk-97crm80y.js";
+import { isCustomizationDisabled as Xr } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
+import { isSettingsToCloudEnabledCached as aU } from "../共享小工具-未细化/chunk-97crm80y.js";
 import { Qn } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { KG, lb, E4t, FAn } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isRemoteControlHardDisabled as KG, isBridgeEnabled as lb, getRemoteControlPolicyLockReason as E4t, applyRemoteControlToAppState as FAn } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { Qbt } from "../../02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js";
-import { yFe, Fqt } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { resolveArtifactEnableSetting as yFe, getArtifactDefaultOn as Fqt } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { zs } from "../共享小工具-未细化/chunk-k2rb4dgd.js";
 import { zr } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
 import { ny } from "../共享小工具-未细化/chunk-6smvq03f.js";
-import { JDt, C3e, Kle, hSe, QDt, ZDt } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
+import { JDt, writeUnattendedServingConsent as C3e, unattendedServingConsentView as Kle, managedSettingsForbidUnattendedServing as hSe, unattendedServingForbiddenBy as QDt, unattendedServingConsentMayHoldYes as ZDt } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
 import { Zb } from "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
 import { Ult } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { Vnn } from "../../02-功能模块/推送通知(Push)/推送通知(Push).8ab67cqd.js";
-import { Pft, Iun, Pun } from "../../02-功能模块/Teammates团队/chunk-88ybhavr.js";
+import { DEFAULT_TEAMMATE_MODE as Pft, getCliTeammateModeOverride as Iun, clearCliTeammateModeOverride as Pun } from "../../02-功能模块/Teammates团队/chunk-88ybhavr.js";
 import { c4e } from "../../02-功能模块/Teammates团队/chunk-qy9488g9.js";
 import { Xnn } from "../核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import { A4 } from "./chunk-992erern.js";

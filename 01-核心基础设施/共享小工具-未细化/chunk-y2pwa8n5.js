@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Mo } from "./chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled as Mo } from "./chunk-rfb3s38d.js";
 var hO = 31457280,
   uI = 16;
 function rOe() {

@@ -12,7 +12,7 @@
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { $I, V3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
 import { aft } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { mw, _d } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { gBn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ewa397cg.js";

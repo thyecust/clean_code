@@ -12,7 +12,7 @@ import { V2e, HPn } from "./chunk-an83zrbx.js";
 import {
   GAt,
   qrr,
-  rt,
+  getMainLoopModel as rt,
   tKt,
   FQe,
   HUe,

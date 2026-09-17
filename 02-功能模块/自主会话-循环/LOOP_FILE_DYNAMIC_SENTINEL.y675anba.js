@@ -13,7 +13,7 @@ import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { cR, oJ } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";

@@ -12,29 +12,29 @@ import { Xn, j, Si, B, K, Ec, vz, _B } from "../../00-第三方库/lodash/lodash
 import { Ie, Xo, Fb } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, dt, ge, l, A, Jr, Jg, WW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u, we, Ga, Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we, fromEnumArr as Ga, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { ou, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { $U, PRt, ORt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Yq } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { QJ, wt, Xvn, SKt, a0, si, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { QJ, parseUserSpecifiedModel as wt, Xvn, SKt, a0, si, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Ri, hW, Xke, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { le, Xu, nt, hm } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { zI, YY } from "./chunk-djserjj5.js";
 import { KI } from "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
-import { mkn, Pm } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { isExitedProcessAsync as mkn, isSameProcessAsync as Pm } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { uoe } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
-import { zke } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { isUuidShaped as zke } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { B8e } from "../权限系统/chunk-8rrcddth.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { _ve } from "../权限系统/chunk-t3b7pg2x.js";
-import { Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { Dm } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
 import { s, T, O, se, v, c, it, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -273,22 +273,22 @@ var Oe = ["shell", "slash", "fleet", "spare", "respawn"];
 function cYn(e) {
   return Oe.includes(e);
 }
-var ba = 1,
-  x8e = 1,
-  FI = /^[a-f0-9]{8}$/,
-  y$ = "\x1B_cc-daemon-detach\x1B\\",
+var BG_PROTO = 1,
+  BG_PROTO_MIN = 1,
+  SHORT_RE = /^[a-f0-9]{8}$/,
+  DAEMON_DETACH_APC = "\x1B_cc-daemon-detach\x1B\\",
   ie = "\x1B\\",
   ze = "\x1B_cc-detach-msg;",
-  vSt = "\x1B_cc-daemon-hint\x1B\\";
-function mAe(e) {
-  return vSt + e + vSt;
+  DAEMON_HINT_APC = "\x1B_cc-daemon-hint\x1B\\";
+function wrapDaemonHint(e) {
+  return DAEMON_HINT_APC + e + DAEMON_HINT_APC;
 }
 var pe = "\x1B_cc-d-imark;",
   kt = Buffer.from(pe, "latin1");
-function d3t(e) {
+function interactiveMarkApc(e) {
   return pe + b(e) + ie;
 }
-function syn(e, t, r) {
+function extractInteractiveMarks(e, t, r) {
   let o = r?.maxPayload ?? 512,
     d = e.length > 0 ? Buffer.concat([e, t]) : t,
     g = [],
@@ -344,9 +344,9 @@ function syn(e, t, r) {
           )
             g.push({
               kind: U.kind,
-              msgsLoaded: gAe(U.msgsLoaded),
-              msgsInJsonl: gAe(U.msgsInJsonl),
-              msgsRenderedAtFirstPaint: gAe(U.msgsRenderedAtFirstPaint),
+              msgsLoaded: boundedMarkCountOrUndefined(U.msgsLoaded),
+              msgsInJsonl: boundedMarkCountOrUndefined(U.msgsInJsonl),
+              msgsRenderedAtFirstPaint: boundedMarkCountOrUndefined(U.msgsRenderedAtFirstPaint),
             });
         }
       } catch {}
@@ -372,7 +372,7 @@ function syn(e, t, r) {
     }
   );
 }
-function gAe(e) {
+function boundedMarkCountOrUndefined(e) {
   return typeof e === "number" && Number.isInteger(e) && e >= 0 && e <= Me
     ? e
     : void 0;
@@ -395,7 +395,7 @@ var Me = 1e9,
       msgsRenderedAtFirstPaint: ae(),
     }),
   );
-function iyn(e) {
+function parseInteractiveMarkRv(e) {
   let t = St().safeParse(e);
   if (!t.success) return null;
   return {
@@ -405,11 +405,11 @@ function iyn(e) {
     msgsRenderedAtFirstPaint: t.data.msgsRenderedAtFirstPaint,
   };
 }
-function Sj(e) {
-  if (!e) return y$;
-  return ze + e + ie + y$;
+function daemonDetachApc(e) {
+  if (!e) return DAEMON_DETACH_APC;
+  return ze + e + ie + DAEMON_DETACH_APC;
 }
-function ayn(e) {
+function parseDetachMsg(e) {
   let t = e.indexOf(ze);
   if (t < 0) return;
   let r = t + ze.length,
@@ -417,11 +417,11 @@ function ayn(e) {
   if (o < 0) return;
   return e.subarray(r, o).toString("utf8");
 }
-var RSt = m(() =>
+var BgDispatchSchema = m(() =>
     c({
-      proto: T().int().min(x8e).max(ba),
-      short: s().regex(FI),
-      nonce: s().regex(FI).optional(),
+      proto: T().int().min(BG_PROTO_MIN).max(BG_PROTO),
+      short: s().regex(SHORT_RE),
+      nonce: s().regex(SHORT_RE).optional(),
       sessionId: s().transform(Fb),
       createdAt: T(),
       source: X(Oe).catch("fleet"),
@@ -459,22 +459,22 @@ var RSt = m(() =>
       rows: T().int().positive().max(YY).optional(),
     }),
   ),
-  H8e = /ERESPAWNING|ESTARTING/,
-  I8e = /\bE(?:NOENT|CONNREFUSED|CONNRESET)\b|control socket closed/,
-  hAe = "ERESPAWNING",
-  yNe = "updated Claude Code",
-  kpe = "stalled",
-  P8e = "legacy",
-  O8e = "EHOSTDEAD",
-  xpe = "terminal host process died \u2014 press Enter to restart",
-  _Ae = "This session's terminal host process died (the conversation is saved)",
-  SNe =
+  TRANSIENT_ATTACH_CODE = /ERESPAWNING|ESTARTING/,
+  RACED_SOCKET_GAP = /\bE(?:NOENT|CONNREFUSED|CONNRESET)\b|control socket closed/,
+  RESPAWNING_ATTACH_CODE = "ERESPAWNING",
+  RESPAWN_REASON_UPGRADE = "updated Claude Code",
+  RESPAWN_REASON_STALL = "stalled",
+  RESPAWN_REASON_LEGACY = "legacy",
+  HOST_DEAD_ATTACH_CODE = "EHOSTDEAD",
+  HOST_DIED_DETAIL = "terminal host process died \u2014 press Enter to restart",
+  HOST_DIED_ATTACH_MESSAGE = "This session's terminal host process died (the conversation is saved)",
+  HOST_DIED_EXEC_DETAIL =
     "terminal host process died \u2014 its output is gone; the command was not run again",
-  yAe =
+  HOST_DIED_EXEC_ATTACH_MESSAGE =
     "This command's terminal host process died \u2014 its output is gone and the command was not run again",
-  D8e = /ESTALLED|EUNVERIFIED|EHOSTDEAD/,
-  SAe = /^EKICKED:\s*/,
-  L8e = /^E[A-Z]+:/;
+  FATAL_ATTACH_CODE = /ESTALLED|EUNVERIFIED|EHOSTDEAD/,
+  KICKED_ATTACH_CODE = /^EKICKED:\s*/,
+  SUPERVISOR_DETACH_CODE = /^E[A-Z]+:/;
 function Re() {
   return s().refine(a0, "remote IPC path");
 }
@@ -491,7 +491,7 @@ var je = m(() =>
     attempt: T(),
     cwd: s().transform(Fb),
     worktreePath: s().transform(Fb).optional(),
-    dispatch: RSt(),
+    dispatch: BgDispatchSchema(),
     pendingRespawn: k("upgrade").optional(),
     decModes: v(T()).optional(),
     firedInteractiveMarks: v(se())
@@ -511,23 +511,23 @@ var je = m(() =>
     replProcStart: s().optional(),
   }),
 );
-function p3t(e) {
+function rosterEntryExtras(e) {
   let t = je().shape,
     r = {};
   for (let [o, d] of Object.entries(e)) if (!(o in t)) r[o] = d;
   return r;
 }
-var uYn = m(() =>
+var RosterSchema = m(() =>
     it({
-      proto: T().int().min(x8e).max(ba),
+      proto: T().int().min(BG_PROTO_MIN).max(BG_PROTO),
       supervisorPid: T().catch(0),
       updatedAt: T().catch(0),
-      workers: fe(s().regex(FI), je()),
+      workers: fe(s().regex(SHORT_RE), je()),
     }),
   ),
-  lyn = m(() => {
-    let e = s().regex(FI),
-      t = T().int().min(x8e).max(ba);
+  ControlRequestSchema = m(() => {
+    let e = s().regex(SHORT_RE),
+      t = T().int().min(BG_PROTO_MIN).max(BG_PROTO);
     return Ko("op", [
       c({ proto: t, op: k("ping") }),
       c({ proto: t, op: k("nudge") }),
@@ -548,7 +548,7 @@ var uYn = m(() =>
       c({
         proto: t,
         op: k("dispatch"),
-        d: RSt(),
+        d: BgDispatchSchema(),
         timeoutMs: T(),
         auth: s().optional(),
       }),
@@ -621,7 +621,7 @@ var uYn = m(() =>
       c({ proto: t, op: k("shutdown"), reapWorkers: O().optional() }),
     ]);
   }),
-  cyn = ["cli-bg-dispatch", "claude agents"];
+  DAEMON_LEASE_LABELS = ["cli-bg-dispatch", "claude agents"];
 import {
   lstat as Et,
   mkdir as At,
@@ -706,18 +706,18 @@ var It = new Set([
     "attachStallRespawns",
   ]),
   Te = 8388608;
-function bNe() {
+function rosterKey() {
   return Ce.daemon(["roster.json"]);
 }
 function Y() {
   return {
-    proto: ba,
+    proto: BG_PROTO,
     supervisorPid: process.pid,
     updatedAt: Date.now(),
     workers: {},
   };
 }
-async function IE(e, t) {
+async function readRoster(e, t) {
   if (t) {
     let { roster: o, inspectFailed: d } = await Ke(t, e);
     return d ? { ...o, inspectFailed: !0 } : o;
@@ -762,7 +762,7 @@ async function IE(e, t) {
 async function qe(e, t, r) {
   let o;
   try {
-    o = uYn().safeParse(e);
+    o = RosterSchema().safeParse(e);
   } catch (d) {
     if (!t?.silent)
       (h(d),
@@ -815,7 +815,7 @@ async function me(e) {
     return;
   }
   let t = await e
-    .move(bNe(), Ce.daemon([`roster.json.corrupt.${Date.now()}`]))
+    .move(rosterKey(), Ce.daemon([`roster.json.corrupt.${Date.now()}`]))
     .catch(() => {
       return;
     });
@@ -874,7 +874,7 @@ function Ve(e, t, r) {
 }
 async function Pt(e, t) {
   let r = await e
-    .read([{ key: bNe(), offset: 0, length: Te + 1 }])
+    .read([{ key: rosterKey(), offset: 0, length: Te + 1 }])
     .catch(() => {
       return;
     });
@@ -933,7 +933,7 @@ async function Pt(e, t) {
   return { roster: await qe(d, t, e), inspectFailed: !1 };
 }
 async function zt(e) {
-  let t = await e.delete(bNe()).catch(() => {
+  let t = await e.delete(rosterKey()).catch(() => {
     return;
   });
   if (t === void 0 || !t.ok)
@@ -951,8 +951,8 @@ function Ge(e) {
       .join("."),
   );
 }
-function AT(e) {
-  return FI.test(e) ? Ln(e) : S("invalid");
+function bgShort(e) {
+  return SHORT_RE.test(e) ? Ln(e) : S("invalid");
 }
 function Je(e) {
   let t = e !== null && typeof e === "object" ? e.workers : void 0;
@@ -963,7 +963,7 @@ function Je(e) {
 async function Tt(e, t) {
   let { parseFailed: r, inspectFailed: o, ...d } = e;
   if (t) {
-    let p = await t.write(bNe(), b(d, null, 2), { mode: 384 });
+    let p = await t.write(rosterKey(), b(d, null, 2), { mode: 384 });
     if (!p.ok) {
       let y = p.error,
         w = "telemetryCode" in y ? y.telemetryCode : void 0;
@@ -990,7 +990,7 @@ async function Tt(e, t) {
     }));
 }
 var Ct = Dm();
-function S$(e, t) {
+function updateRoster(e, t) {
   return Ct.run("roster", async () => {
     let r = await Ft(t),
       o = e(r) ?? r;
@@ -1000,7 +1000,7 @@ function S$(e, t) {
   });
 }
 async function Ft(e) {
-  if (!e) return IE();
+  if (!e) return readRoster();
   let t = await Ke(e);
   if (t.inspectFailed)
     throw new R(
@@ -1168,20 +1168,20 @@ function Ye(e) {
     .filter((t) => !Xo(t.path))
     .map((t) => t.path);
 }
-var PE = "(ungrouped)",
-  G_ = "(earlier)",
+var UNGROUPED = "(ungrouped)",
+  EARLIER = "(earlier)",
   Nt = 64,
-  Dt = new Set(["pinned", "ungrouped", PE, "past", G_]);
-function N8e(e) {
+  Dt = new Set(["pinned", "ungrouped", UNGROUPED, "past", EARLIER]);
+function isReservedGroupName(e) {
   return Dt.has(e.toLowerCase());
 }
-function g3t(e) {
+function sanitizeGroupName(e) {
   return Yq(e).slice(0, Nt);
 }
 function Ee(e) {
   if (e === void 0) return;
-  let t = g3t(e);
-  return t && !N8e(t) ? t : void 0;
+  let t = sanitizeGroupName(e);
+  return t && !isReservedGroupName(t) ? t : void 0;
 }
 class Ze {
   #e = new Map();
@@ -1443,7 +1443,7 @@ var Ae = m(() =>
         }),
         tempo: o,
         ...(t.lastTerminalAt === void 0 &&
-          Hf(t.state) !== null &&
+          terminalOutcome(t.state) !== null &&
           o !== "active" && {
             lastTerminalAt: t.firstTerminalAt || t.updatedAt,
           }),
@@ -1452,13 +1452,13 @@ var Ae = m(() =>
   ),
   ee = "state.json",
   V = 8388608;
-function OE() {
+function getJobsDir() {
   return Xvn();
 }
-function rr(e) {
-  return J(OE(), e);
+function getJobDir(e) {
+  return J(getJobsDir(), e);
 }
-function gu() {
+function getOwnJobShortId() {
   let e = a.CLAUDE_JOB_DIR;
   if (e) return q(e);
   let t = Jh();
@@ -1468,14 +1468,14 @@ function gu() {
 function st(e, t) {
   return _n(e) ? Ce.job(e, t) : void 0;
 }
-function bAe(e, t) {
+function jobKeyFor(e, t) {
   return SKt(e, t);
 }
-function wAe(e) {
+function jobStateKey(e) {
   return Ce.job(e, [ee]);
 }
-function fyn(e, t) {
-  let r = J(rr(e), ee),
+function watchJobDirOnce(e, t) {
+  let r = J(getJobDir(e), ee),
     o = !1,
     d = Number.NaN;
   function g(_) {
@@ -1502,18 +1502,18 @@ function fyn(e, t) {
   }
   return f;
 }
-function y3t() {
+function isOwnStateWriteInFlight() {
   return KI().ownStateWriteDepth > 0;
 }
-async function Ti(e, t, r) {
+async function writeStateAtomic(e, t, r) {
   let o = t.inFlight?.kinds.includes("session_cron") === !0,
     d =
       o && !t.selfWake && Xe(t.inFlight)
         ? { ...t, selfWake: !0 }
-        : !o && t.selfWake && Hs(t)
+        : !o && t.selfWake && isSettled(t)
           ? { ...t, selfWake: void 0 }
           : t,
-    p = Hs(d)
+    p = isSettled(d)
       ? d.lastTerminalAt
         ? d
         : { ...d, lastTerminalAt: d.updatedAt }
@@ -1521,7 +1521,7 @@ async function Ti(e, t, r) {
         ? { ...d, lastTerminalAt: void 0 }
         : d,
     { pinned: y, sortOrder: w, stateSortOrder: f, group: _, ...C } = p,
-    F = r ? bAe(e, [ee]) : void 0,
+    F = r ? jobKeyFor(e, [ee]) : void 0,
     E = KI();
   E.ownStateWriteDepth++;
   try {
@@ -1542,10 +1542,10 @@ async function Ti(e, t, r) {
       }
     } else await On(J(e, ee), b(C, null, 2), 384);
   } finally {
-    (E.ownStateWriteDepth--, xc(e));
+    (E.ownStateWriteDepth--, invalidateJobStateCache(e));
   }
 }
-function Mi(e) {
+function logJobWriteError(e) {
   let t = A(e);
   if (t && (WW.has(t) || t === "ENOENT")) {
     n(`[jobs] state write failed (${t}): ${l(e)}`, { level: "error" });
@@ -1553,7 +1553,7 @@ function Mi(e) {
   }
   h(e);
 }
-function F8e(e, t) {
+function resolveBridgeHandoffIdentity(e, t) {
   let r = t !== void 0 && t.id === e?.bridgeSessionId;
   return {
     ownerAccountUuid: r ? t.ownerAccountUuid : void 0,
@@ -1562,7 +1562,7 @@ function F8e(e, t) {
       e?.noHistoryBackfill || (t !== void 0 && !r ? !0 : t?.noHistoryBackfill),
   };
 }
-function oK(e, t, r, o, d) {
+function buildBridgeReattachEnv(e, t, r, o, d) {
   if (!e) return;
   let g = { CLAUDE_BRIDGE_REATTACH_SESSION: e };
   if (t !== void 0 && t > 0) g.CLAUDE_BRIDGE_REATTACH_SEQ = String(t);
@@ -1623,14 +1623,14 @@ function tt(e, t, r) {
     n(`[jobs] skipping ${q(e)}: state.json is ${r}`, { level: "warn" });
   return (N().noteRejected(e, `rejected:${t}`), null);
 }
-function xc(e) {
+function invalidateJobStateCache(e) {
   N().invalidate(e);
 }
 async function qt(e, t, r) {
   let o = q(t),
     d = N().peek(t);
   if (d === void 0 || d.mtimeKey.startsWith("rejected:")) {
-    let x = await e.statMeta(wAe(o));
+    let x = await e.statMeta(jobStateKey(o));
     if (!x.ok) {
       if (x.error.code === "NotFound") return (N().noteAbsent(t), null);
       let L = ve(x.error);
@@ -1647,7 +1647,7 @@ async function qt(e, t, r) {
       return null;
     }
   }
-  let g = wAe(o),
+  let g = jobStateKey(o),
     y = await Wt(t, () =>
       e.read([
         g,
@@ -1760,14 +1760,14 @@ function Kt(e, t, r, o, d, g, p, y) {
     return _e(p, y);
   }
 }
-async function myn(e, t) {
+async function readJobStateFreshOrNull(e, t) {
   return lt(e, t, { onReadFailure: "null" });
 }
-async function Zn(e, t) {
+async function readJobState(e, t) {
   return lt(e, t, void 0);
 }
 async function lt(e, t, r) {
-  if (t !== void 0 && bAe(e, [ee]) !== void 0) return qt(t, e, r);
+  if (t !== void 0 && jobKeyFor(e, [ee]) !== void 0) return qt(t, e, r);
   let o = J(e, ee),
     d = J(e, "order"),
     g = J(e, "stateOrder"),
@@ -1859,9 +1859,9 @@ async function lt(e, t, r) {
     return _e(f, r);
   }
 }
-async function xSt(e, t) {
-  xc(e);
-  let r = await Zn(e, t).catch(() => null);
+async function readJobStateAfterSettle(e, t) {
+  invalidateJobStateCache(e);
+  let r = await readJobState(e, t).catch(() => null);
   if (
     r !== null &&
     r.state !== "done" &&
@@ -1869,14 +1869,14 @@ async function xSt(e, t) {
     r.state !== "blocked" &&
     r.state !== "failed"
   )
-    (await Z(50), xc(e), (r = (await Zn(e, t).catch(() => null)) ?? r));
+    (await Z(50), invalidateJobStateCache(e), (r = (await readJobState(e, t).catch(() => null)) ?? r));
   return r;
 }
 function Q() {
-  return J(OE(), "pins.json");
+  return J(getJobsDir(), "pins.json");
 }
 var Vt = 5000;
-async function Hpe(e) {
+async function readPinnedJobIds(e) {
   if (e) return Xt(e);
   try {
     let t = await ne(Q());
@@ -1889,7 +1889,7 @@ async function Hpe(e) {
     if (W(t))
       return (
         await On(Q(), b([])).catch((r) => {
-          if (!W(r)) Mi(r);
+          if (!W(r)) logJobWriteError(r);
         }),
         new Set()
       );
@@ -1927,56 +1927,56 @@ async function ke(e) {
     return !1;
   return (await ue(Q(), { recursive: !0, force: !0 }).catch(() => {}), !0);
 }
-async function b$(e, t, r, o, d) {
-  let g = rr(e),
-    p = await Zn(g, o);
+async function syncJobName(e, t, r, o, d) {
+  let g = getJobDir(e),
+    p = await readJobState(g, o);
   if (!p) return !1;
   if (p.name === t) return !0;
-  xc(g);
-  let y = (await Zn(g, o)) ?? p;
+  invalidateJobStateCache(g);
+  let y = (await readJobState(g, o)) ?? p;
   if (y.name === t || (r === "auto" && y.name)) return !0;
   if (!ct(y, d)) return !1;
-  return Ti(
+  return writeStateAtomic(
     g,
     { ...y, name: t, nameSource: r, updatedAt: new Date().toISOString() },
     o,
   ).then(
     () => !0,
     (w) => {
-      if (!W(w)) Mi(w);
+      if (!W(w)) logJobWriteError(w);
       return !1;
     },
   );
 }
-async function $8e(e, t, r) {
-  let o = rr(e),
-    d = await Zn(o, r);
+async function syncJobColor(e, t, r) {
+  let o = getJobDir(e),
+    d = await readJobState(o, r);
   if (!d) return !1;
   if (d.color === t) return !0;
-  xc(o);
-  let g = (await Zn(o, r)) ?? d;
+  invalidateJobStateCache(o);
+  let g = (await readJobState(o, r)) ?? d;
   if (g.color === t) return !0;
-  return Ti(o, { ...g, color: t, updatedAt: new Date().toISOString() }, r).then(
+  return writeStateAtomic(o, { ...g, color: t, updatedAt: new Date().toISOString() }, r).then(
     () => !0,
     (p) => {
-      if (!W(p)) Mi(p);
+      if (!W(p)) logJobWriteError(p);
       return !1;
     },
   );
 }
-function S3t() {
+function getBgRelocatedCwd() {
   return KI().relocatedCwd;
 }
-async function gyn(e, t) {
+async function relocateBgSessionCwd(e, t) {
   let r = a.CLAUDE_JOB_DIR;
   if (!r || a.CLAUDE_CODE_SESSION_KIND !== "bg") return;
-  ((KI().relocatedCwd = e), xc(r));
-  let o = await Zn(r, t),
+  ((KI().relocatedCwd = e), invalidateJobStateCache(r));
+  let o = await readJobState(r, t),
     d = o?.worktreePath ? o.originCwd : e;
   if (!o || (o.cwd === e && o.originCwd === d)) return;
-  xc(r);
-  let g = (await Zn(r, t)) ?? o;
-  await Ti(
+  invalidateJobStateCache(r);
+  let g = (await readJobState(r, t)) ?? o;
+  await writeStateAtomic(
     r,
     {
       ...g,
@@ -1986,18 +1986,18 @@ async function gyn(e, t) {
     },
     t,
   ).catch((p) => {
-    if (!W(p)) Mi(p);
+    if (!W(p)) logJobWriteError(p);
   });
 }
-async function hyn(e, t, r) {
+async function syncJobResumeSessionId(e, t, r) {
   let o = a.CLAUDE_JOB_DIR;
   if (!o || a.CLAUDE_CODE_SESSION_KIND !== "bg") return;
-  xc(o);
-  let d = await Zn(o, r);
+  invalidateJobStateCache(o);
+  let d = await readJobState(o, r);
   if (!d || (d.resumeSessionId === e && d.linkScanPath === t)) return;
-  xc(o);
-  let g = (await Zn(o, r)) ?? d;
-  await Ti(
+  invalidateJobStateCache(o);
+  let g = (await readJobState(o, r)) ?? d;
+  await writeStateAtomic(
     o,
     {
       ...g,
@@ -2008,16 +2008,16 @@ async function hyn(e, t, r) {
     },
     r,
   ).catch((p) => {
-    if (!W(p)) Mi(p);
+    if (!W(p)) logJobWriteError(p);
   });
 }
-async function kre(e, t) {
+async function syncLiveInFlightSnapshot(e, t) {
   let r = a.CLAUDE_JOB_DIR;
   if (!r || a.CLAUDE_CODE_SESSION_KIND !== "bg") return;
-  await TAe(async () => {
-    xc(r);
-    let o = await Zn(r, t);
-    if (!o?.inFlight || Hs(o) || o.tempo === "active") return;
+  await withOwnJobStateWrite(async () => {
+    invalidateJobStateCache(r);
+    let o = await readJobState(r, t);
+    if (!o?.inFlight || isSettled(o) || o.tempo === "active") return;
     let d = o.inFlight;
     if (
       e.count === d.tasks &&
@@ -2026,7 +2026,7 @@ async function kre(e, t) {
       e.kinds.every((g) => d.kinds.includes(g))
     )
       return;
-    await Ti(
+    await writeStateAtomic(
       r,
       {
         ...o,
@@ -2044,7 +2044,7 @@ async function kre(e, t) {
       },
       t,
     ).catch((g) => {
-      if (!W(g)) Mi(g);
+      if (!W(g)) logJobWriteError(g);
     });
   });
 }
@@ -2053,12 +2053,12 @@ function ct(e, t) {
   if (e.nameSource === "auto" || e.nameSource === "collision") return !0;
   return t.includes(si(e.name));
 }
-async function sR(e, t, r, o, d, g, p) {
+async function syncRespawnFlag(e, t, r, o, d, g, p) {
   let y = a.CLAUDE_JOB_DIR;
   if (!y || a.CLAUDE_CODE_SESSION_KIND !== "bg") return;
-  await TAe(async () => {
-    xc(y);
-    let w = await Zn(y, d);
+  await withOwnJobStateWrite(async () => {
+    invalidateJobStateCache(y);
+    let w = await readJobState(y, d);
     if (!w?.respawnFlags) return;
     if (p && !p(w.respawnFlags)) return;
     let f = [e, ...t],
@@ -2081,12 +2081,12 @@ async function sR(e, t, r, o, d, g, p) {
       C.every((P, D) => P === w.respawnFlags[D])
     )
       return;
-    xc(y);
-    let F = (await Zn(y, d)) ?? w,
+    invalidateJobStateCache(y);
+    let F = (await readJobState(y, d)) ?? w,
       E = F.respawnFlags ?? w.respawnFlags;
     if (p && !p(E)) return;
     let I = ct(F, g);
-    await Ti(
+    await writeStateAtomic(
       y,
       {
         ...F,
@@ -2096,23 +2096,23 @@ async function sR(e, t, r, o, d, g, p) {
       },
       d,
     ).catch((P) => {
-      if (!W(P)) Mi(P);
+      if (!W(P)) logJobWriteError(P);
     });
   });
 }
-async function _yn(e, t, r) {
+async function appendRespawnFlag(e, t, r) {
   let o = a.CLAUDE_JOB_DIR;
   if (!o || a.CLAUDE_CODE_SESSION_KIND !== "bg") return;
-  await TAe(async () => {
-    xc(o);
-    let d = await Zn(o, r);
+  await withOwnJobStateWrite(async () => {
+    invalidateJobStateCache(o);
+    let d = await readJobState(o, r);
     if (!d?.respawnFlags) return;
     let g = W_(e, t);
     for (let y = 0; y <= d.respawnFlags.length - g.length; y++)
       if (g.every((w, f) => d.respawnFlags[y + f] === w)) return;
-    xc(o);
-    let p = (await Zn(o, r)) ?? d;
-    await Ti(
+    invalidateJobStateCache(o);
+    let p = (await readJobState(o, r)) ?? d;
+    await writeStateAtomic(
       o,
       {
         ...p,
@@ -2121,7 +2121,7 @@ async function _yn(e, t, r) {
       },
       r,
     ).catch((y) => {
-      if (!W(y)) Mi(y);
+      if (!W(y)) logJobWriteError(y);
     });
   });
 }
@@ -2150,22 +2150,22 @@ async function De(e, t, r) {
     );
   }
 }
-async function yyn(e, t, r) {
-  let o = M() && r ? bAe(e, ["order"]) : void 0;
+async function writeSortOrder(e, t, r) {
+  let o = M() && r ? jobKeyFor(e, ["order"]) : void 0;
   if (r && o) await De(r, o, String(t));
   else await Ne(J(e, "order"), String(t));
-  xc(e);
+  invalidateJobStateCache(e);
 }
-async function Syn(e, t, r) {
-  let o = M() && r ? bAe(e, ["stateOrder"]) : void 0;
+async function writeStateSortOrder(e, t, r) {
+  let o = M() && r ? jobKeyFor(e, ["stateOrder"]) : void 0;
   if (r && o) await De(r, o, String(t));
   else await Ne(J(e, "stateOrder"), String(t));
-  xc(e);
+  invalidateJobStateCache(e);
 }
-async function HSt(e, t, r) {
+async function writeJobGroup(e, t, r) {
   let o = J(e, "group"),
     d = Ee(t),
-    g = M() && r ? bAe(e, ["group"]) : void 0;
+    g = M() && r ? jobKeyFor(e, ["group"]) : void 0;
   if (r && g)
     if (d) await De(r, g, d);
     else {
@@ -2178,11 +2178,11 @@ async function HSt(e, t, r) {
     }
   else if (d) await Ne(o, d);
   else await ue(o, { force: !0 });
-  xc(e);
+  invalidateJobStateCache(e);
 }
-async function byn(e) {
-  let t = J(OE(), ".order");
-  await Fe(OE(), { recursive: !0 });
+async function withSortOrderLock(e) {
+  let t = J(getJobsDir(), ".order");
+  await Fe(getJobsDir(), { recursive: !0 });
   await using r = await Cs(t, {
     realpath: !1,
     stale: 5000,
@@ -2196,10 +2196,10 @@ async function byn(e) {
   return await e();
 }
 var pt = Dm();
-function TAe(e) {
+function withOwnJobStateWrite(e) {
   return pt.run("own-state.json", e);
 }
-function ISt(e, t, r) {
+function writeJobPinned(e, t, r) {
   return pt.run("pins.json", async () => {
     if (M() && r) return Yt(e, t, r);
     let o = Q();
@@ -2214,15 +2214,15 @@ function ISt(e, t, r) {
           { level: "error" },
         ),
     });
-    let g = await Hpe();
+    let g = await readPinnedJobIds();
     if (t ? g.has(e) : !g.has(e)) return;
     if (t) g.add(e);
     else
       (g.delete(e),
-        await ue(J(rr(e), "order")).catch((p) => {
+        await ue(J(getJobDir(e), "order")).catch((p) => {
           if (!W(p)) throw p;
         }),
-        xc(rr(e)));
+        invalidateJobStateCache(getJobDir(e)));
     await On(o, b([...g], null, 2));
   });
 }
@@ -2256,30 +2256,30 @@ async function Yt(e, t, r) {
           { level: "warn" },
         );
     } else
-      await ue(J(rr(e), "order")).catch((f) => {
+      await ue(J(getJobDir(e), "order")).catch((f) => {
         if (!W(f))
           n(`[jobs] order sidecar release failed after unpin: ${l(f)}`, {
             level: "warn",
           });
       });
-    xc(rr(e));
+    invalidateJobStateCache(getJobDir(e));
   }
 }
-async function q_(e, t) {
+async function listJobs(e, t) {
   if (t) return Qt(t, e);
   let r;
   try {
-    r = await Lt(OE(), { withFileTypes: !0 });
+    r = await Lt(getJobsDir(), { withFileTypes: !0 });
   } catch {
     return [];
   }
   let [o, d] = await Promise.all([
-      Hpe(),
+      readPinnedJobIds(),
       Promise.all(
         r
           .filter((p) => p.isDirectory())
           .map(async (p) => {
-            let y = await Zn(J(OE(), p.name));
+            let y = await readJobState(J(getJobsDir(), p.name));
             return y ? { id: p.name, state: y } : null;
           }),
       ),
@@ -2289,7 +2289,7 @@ async function q_(e, t) {
       .map((p) =>
         o.has(p.id) ? { ...p, state: { ...p.state, pinned: !0 } } : p,
       );
-  return e ? EAe(g, e) : g;
+  return e ? markCrashed(g, e) : g;
 }
 async function Zt(e) {
   let t = [],
@@ -2318,10 +2318,10 @@ async function Qt(e, t) {
   if (!r.ok) return [];
   let o = r.ids,
     [d, g] = await Promise.all([
-      Hpe(e),
+      readPinnedJobIds(e),
       Promise.all(
         o.map(async (y) => {
-          let w = await Zn(rr(y), e);
+          let w = await readJobState(getJobDir(y), e);
           return w ? { id: y, state: w } : null;
         }),
       ),
@@ -2331,12 +2331,12 @@ async function Qt(e, t) {
       .map((y) =>
         d.has(y.id) ? { ...y, state: { ...y.state, pinned: !0 } } : y,
       );
-  return t ? EAe(p, t) : p;
+  return t ? markCrashed(p, t) : p;
 }
-function EAe(e, t) {
+function markCrashed(e, t) {
   let r = Date.now();
   return e.map((o) => {
-    if (Hs(o.state)) return o;
+    if (isSettled(o.state)) return o;
     if (t.has(o.id)) return o;
     if (r - Date.parse(o.state.createdAt) < en) return o;
     return { ...o, state: tn(o.state) };
@@ -2344,7 +2344,7 @@ function EAe(e, t) {
 }
 var en = 5000;
 function tn(e) {
-  if (TNe(e)) return { ...e, tempo: "blocked", inFlight: void 0 };
+  if (hasOutstandingAsk(e)) return { ...e, tempo: "blocked", inFlight: void 0 };
   return {
     ...e,
     state: "failed",
@@ -2355,20 +2355,20 @@ function tn(e) {
     detail: e.detail.replace(/; respawning$/, ""),
   };
 }
-var AAe = "starting\u2026",
-  xf = "send a prompt to start";
-function Ipe(e) {
+var SEED_DETAIL = "starting\u2026",
+  IDLE_NEEDS = "send a prompt to start";
+function isOverlayNeeds(e) {
   return e.needs !== void 0 && e.needsOverlay === e.needs;
 }
-var Ppe = `(idle \u2014 ${xf})`,
-  xre = ["starting", "resuming", "adopted", "crashed"],
-  wNe = 172800000,
+var IDLE_DETAIL = `(idle \u2014 ${IDLE_NEEDS})`,
+  PRE_BOOT_STATES = ["starting", "resuming", "adopted", "crashed"],
+  ABANDONED_WORKER_MS = 172800000,
   nn = "ended while the background service was off";
-function sK(e) {
+function makeInitialState(e) {
   let t = new Date().toISOString();
   return {
     state: "working",
-    detail: e.detail !== void 0 ? qr(e.detail) : AAe,
+    detail: e.detail !== void 0 ? qr(e.detail) : SEED_DETAIL,
     tempo: e.tempo ?? "active",
     needs: e.needs,
     inFlight: e.inFlight,
@@ -2411,7 +2411,7 @@ function sK(e) {
     backend: "daemon",
   };
 }
-async function wyn(e, t, r) {
+async function adoptRosterOrphans(e, t, r) {
   if (t.length === 0) return e;
   let o = new Set(e.map((f) => f.id)),
     d = t.filter(
@@ -2419,7 +2419,7 @@ async function wyn(e, t, r) {
         ot.test(f.short) && !o.has(f.short) && f.source !== "spare" && !f.dying,
     );
   if (d.length === 0) return e;
-  let g = await IE({ silent: !0 }, r),
+  let g = await readRoster({ silent: !0 }, r),
     p = await Promise.all(
       d.map((f) => {
         let _ = g.workers[f.short];
@@ -2438,17 +2438,17 @@ async function wyn(e, t, r) {
   if (y.length === 0) return e;
   let w = y.map((f) => {
     let _ = {
-        ...sK({
+        ...makeInitialState({
           template: { name: f.agent ?? "bg", description: "" },
           routine: f.routine,
           intent: f.intent,
           name: f.name,
           detail: f.detail,
           ...(f.tempo === "active" &&
-          (f.state === "running" || xre.includes(f.state))
+          (f.state === "running" || PRE_BOOT_STATES.includes(f.state))
             ? f.routine
               ? { tempo: "idle" }
-              : { tempo: "blocked", needs: xf }
+              : { tempo: "blocked", needs: IDLE_NEEDS }
             : { tempo: f.tempo, needs: f.needs }),
           sessionId: Fb(f.sessionId),
           cwd: Fb(f.cwd),
@@ -2456,17 +2456,17 @@ async function wyn(e, t, r) {
         }),
         createdAt: new Date(f.createdAt ?? f.startedAt).toISOString(),
         daemonShort: f.short,
-        state: xre.includes(f.state) ? "working" : f.state,
-        ...(DE(f.state) && { inFlight: { tasks: 0, queued: 0, kinds: [] } }),
+        state: PRE_BOOT_STATES.includes(f.state) ? "working" : f.state,
+        ...(isTerminal(f.state) && { inFlight: { tasks: 0, queued: 0, kinds: [] } }),
       },
-      C = rr(f.short),
+      C = getJobDir(f.short),
       F = r ? st(f.short, [ee]) : void 0;
     if (r && F)
       r.write(F, b(_), { precondition: { type: "ifAbsent" }, mode: 384 }).then(
         (E) => {
           if (E.ok) i("tengu_bg_roster_orphan_adopted", {});
           else if (E.error.code !== "AlreadyExists")
-            Mi(
+            logJobWriteError(
               new R(
                 `[jobs] v5 orphan seed write failed: ${E.error.code}`,
                 "[jobs] v5 orphan seed write failed",
@@ -2479,70 +2479,70 @@ async function wyn(e, t, r) {
         .then(() => Xke(J(C, "state.json"), b(_), 384))
         .then(() => i("tengu_bg_roster_orphan_adopted", {}))
         .catch((E) => {
-          if (A(E) !== "EEXIST") Mi(E);
+          if (A(E) !== "EEXIST") logJobWriteError(E);
         });
     return { id: f.short, state: _ };
   });
   return [...e, ...w];
 }
-function Hf(e) {
+function terminalOutcome(e) {
   if (e === "done") return "success";
   if (e === "failed") return "failure";
   if (e === "stopped") return "stopped";
   return null;
 }
-function DE(e) {
-  return Hf(e) !== null;
+function isTerminal(e) {
+  return terminalOutcome(e) !== null;
 }
-function Hs(e) {
-  return DE(e.state) && e.tempo !== "active";
+function isSettled(e) {
+  return isTerminal(e.state) && e.tempo !== "active";
 }
-function KS(e) {
+function isExecLaunch(e) {
   return e.template === "exec" && e.respawnFlags.length === 0;
 }
-function TNe(e) {
-  return e.state === "blocked" && !KS(e);
+function hasOutstandingAsk(e) {
+  return e.state === "blocked" && !isExecLaunch(e);
 }
-function PSt(e) {
-  return e.backend === "daemon" && !KS(e);
+function isLocalDaemonAgent(e) {
+  return e.backend === "daemon" && !isExecLaunch(e);
 }
-function wj(e) {
+function spawnOrigin(e) {
   let t =
     e.originCwd ||
     (e.cwd.match(/^(.+?)[/\\]\.claude[/\\]worktrees[/\\]/)?.[1] ?? e.cwd);
   return Fb(t);
 }
-function U8e(e, t) {
+function jobMatchesCwd(e, t) {
   if (e.backend === "remote") return !0;
-  let r = jt(t, wj(e));
+  let r = jt(t, spawnOrigin(e));
   return r.split(/[/\\]/, 1)[0] !== ".." && !rt(r);
 }
-function CAe(e) {
+function isLoopJob(e) {
   let t = (r) => r?.trim().toLowerCase().startsWith("/loop") ?? !1;
   return t(e.intent) || t(e.initialPrompt);
 }
-function dD(e) {
+function isSelfDriving(e) {
   return (
     e.routine !== void 0 ||
     e.selfWake === !0 ||
     (e.inFlight?.kinds.includes("session_cron") ?? !1) ||
-    CAe(e)
+    isLoopJob(e)
   );
 }
-function Ope(e, t, r, o, d) {
-  let g = rr(e);
-  return Zn(g, d)
+function writeReapedTerminalState(e, t, r, o, d) {
+  let g = getJobDir(e);
+  return readJobState(g, d)
     .then(async (p) => {
-      if (!p || Hs(p) || (t === "failed" && TNe(p))) return "none";
+      if (!p || isSettled(p) || (t === "failed" && hasOutstandingAsk(p))) return "none";
       let y = Date.now(),
         w = new Date(y).toISOString(),
         f =
           o?.resumable === "auto-resume" &&
           t === "failed" &&
-          !KS(p) &&
-          y - Date.parse(p.updatedAt) > wNe;
+          !isExecLaunch(p) &&
+          y - Date.parse(p.updatedAt) > ABANDONED_WORKER_MS;
       return (
-        await Ti(
+        await writeStateAtomic(
           g,
           {
             ...p,
@@ -2573,7 +2573,7 @@ function Ope(e, t, r, o, d) {
         f ? "dead-epoch" : "settled"
       );
     })
-    .catch((p) => (Mi(p), "none"));
+    .catch((p) => (logJobWriteError(p), "none"));
 }
 var rn = m(() =>
     nt({
@@ -3252,43 +3252,43 @@ export {
   k8e,
   oyn,
   cYn,
-  ba,
-  x8e,
-  FI,
-  y$,
-  vSt,
-  mAe,
-  d3t,
-  syn,
-  gAe,
-  iyn,
-  Sj,
-  ayn,
-  RSt,
-  H8e,
-  I8e,
-  hAe,
-  yNe,
-  kpe,
-  P8e,
-  O8e,
-  xpe,
-  _Ae,
-  SNe,
-  yAe,
-  D8e,
-  SAe,
-  L8e,
-  p3t,
-  uYn,
-  lyn,
-  cyn,
+  BG_PROTO,
+  BG_PROTO_MIN,
+  SHORT_RE,
+  DAEMON_DETACH_APC,
+  DAEMON_HINT_APC,
+  wrapDaemonHint,
+  interactiveMarkApc,
+  extractInteractiveMarks,
+  boundedMarkCountOrUndefined,
+  parseInteractiveMarkRv,
+  daemonDetachApc,
+  parseDetachMsg,
+  BgDispatchSchema,
+  TRANSIENT_ATTACH_CODE,
+  RACED_SOCKET_GAP,
+  RESPAWNING_ATTACH_CODE,
+  RESPAWN_REASON_UPGRADE,
+  RESPAWN_REASON_STALL,
+  RESPAWN_REASON_LEGACY,
+  HOST_DEAD_ATTACH_CODE,
+  HOST_DIED_DETAIL,
+  HOST_DIED_ATTACH_MESSAGE,
+  HOST_DIED_EXEC_DETAIL,
+  HOST_DIED_EXEC_ATTACH_MESSAGE,
+  FATAL_ATTACH_CODE,
+  KICKED_ATTACH_CODE,
+  SUPERVISOR_DETACH_CODE,
+  rosterEntryExtras,
+  RosterSchema,
+  ControlRequestSchema,
+  DAEMON_LEASE_LABELS,
   f3t,
   m3t,
-  bNe,
-  IE,
-  AT,
-  S$,
+  rosterKey,
+  readRoster,
+  bgShort,
+  updateRoster,
   kSt,
   M8e,
   bj,
@@ -3300,63 +3300,63 @@ export {
   Rre,
   W_,
   pyn,
-  PE,
-  G_,
-  N8e,
-  g3t,
+  UNGROUPED,
+  EARLIER,
+  isReservedGroupName,
+  sanitizeGroupName,
   h3t,
   _3t,
-  OE,
-  rr,
-  gu,
-  bAe,
-  wAe,
-  fyn,
-  y3t,
-  Ti,
-  Mi,
-  F8e,
-  oK,
-  xc,
-  myn,
-  Zn,
-  xSt,
-  Hpe,
-  b$,
-  $8e,
-  S3t,
-  gyn,
-  hyn,
-  kre,
-  sR,
-  _yn,
-  yyn,
-  Syn,
-  HSt,
-  byn,
-  TAe,
-  ISt,
-  q_,
-  EAe,
-  AAe,
-  xf,
-  Ipe,
-  Ppe,
-  xre,
-  wNe,
-  sK,
-  wyn,
-  Hf,
-  DE,
-  Hs,
-  KS,
-  TNe,
-  PSt,
-  wj,
-  U8e,
-  CAe,
-  dD,
-  Ope,
+  getJobsDir,
+  getJobDir,
+  getOwnJobShortId,
+  jobKeyFor,
+  jobStateKey,
+  watchJobDirOnce,
+  isOwnStateWriteInFlight,
+  writeStateAtomic,
+  logJobWriteError,
+  resolveBridgeHandoffIdentity,
+  buildBridgeReattachEnv,
+  invalidateJobStateCache,
+  readJobStateFreshOrNull,
+  readJobState,
+  readJobStateAfterSettle,
+  readPinnedJobIds,
+  syncJobName,
+  syncJobColor,
+  getBgRelocatedCwd,
+  relocateBgSessionCwd,
+  syncJobResumeSessionId,
+  syncLiveInFlightSnapshot,
+  syncRespawnFlag,
+  appendRespawnFlag,
+  writeSortOrder,
+  writeStateSortOrder,
+  writeJobGroup,
+  withSortOrderLock,
+  withOwnJobStateWrite,
+  writeJobPinned,
+  listJobs,
+  markCrashed,
+  SEED_DETAIL,
+  IDLE_NEEDS,
+  isOverlayNeeds,
+  IDLE_DETAIL,
+  PRE_BOOT_STATES,
+  ABANDONED_WORKER_MS,
+  makeInitialState,
+  adoptRosterOrphans,
+  terminalOutcome,
+  isTerminal,
+  isSettled,
+  isExecLaunch,
+  hasOutstandingAsk,
+  isLocalDaemonAgent,
+  spawnOrigin,
+  jobMatchesCwd,
+  isLoopJob,
+  isSelfDriving,
+  writeReapedTerminalState,
   Ep,
   pYn,
   al,

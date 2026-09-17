@@ -8,38 +8,38 @@
 
 // Version: 2.1.263
 import { YP, Ve, zi, yt, dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { bh, K, sn, Nb, Rg, TB, Oxe, Rje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Id, pp, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { Id, pp, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { uz, y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { nq, rQ, mc, o0, _t, wl, Ms } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { cmdFeature as uz, logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { nq, inlineSkillModelOverride as rQ, mc, o0, isBgSession as _t, wl, Ms } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { C_ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { nxt, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { Rir, kir, TQ } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { fm, zu } from "../权限系统/chunk-ynkf3yy4.js";
+import { validateBridgeId as fm, toCompatSessionId as zu } from "../权限系统/chunk-ynkf3yy4.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { Uu, r6 } from "../Skills技能/chunk-sapykxw7.js";
-import { Mt, op, DD } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isRestrictedToPluginOnly as Uu, isSourceAdminTrusted as r6 } from "../Skills技能/chunk-sapykxw7.js";
+import { isPolicyAllowed as Mt, policyDeniedReason as op, policyDenyKind as DD } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { CSt } from "../Hooks钩子/chunk-z3433nr6.js";
-import { poe } from "../Skills技能/chunk-1zy5c8mf.js";
+import { getBundledSkills as poe } from "../Skills技能/chunk-1zy5c8mf.js";
 import { iA, Xy } from "../权限系统/chunk-t3b7pg2x.js";
-import { so, ce, Qc } from "../权限系统/chunk-fjrcf22x.js";
-import { qK, ob } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { so, getToolPermissionContext as ce, getEffortValue as Qc } from "../权限系统/chunk-fjrcf22x.js";
+import { isSilentAbortReason as qK, shutdownInterruptStamp as ob } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   Nft,
-  qo,
-  zp,
+  getCommandName as qo,
+  isCommandEnabled as zp,
   Y$t,
   pue,
-  Di,
+  findCommand as Di,
   oV,
-  gue,
+  getCommand as gue,
   XGn,
   $S,
   gr,
@@ -52,9 +52,9 @@ import {
   cX,
   Gdn,
   UBt,
-  gd,
-  HM,
-  Tk,
+  hasPermissionsToUseTool as gd,
+  isSkillExcludedFromModel as HM,
+  isSkillOff as Tk,
   wV,
   qVe,
   Ck,
@@ -64,8 +64,8 @@ import {
   X2,
   UTe,
   wLe,
-  wht,
-  Tht,
+  prepareForkedCommandContext as wht,
+  extractResultText as Tht,
   VKe,
   I6t,
   O6t,
@@ -74,12 +74,12 @@ import {
   Kne,
   jmn,
   C_t,
-  dw,
+  runAgent as dw,
   EE,
   dEe,
   Lde,
-  Jne,
-  pn,
+  getAttachmentMessages as Jne,
+  createAttachmentMessage as pn,
   tg,
   MEe,
   Re,
@@ -93,12 +93,12 @@ import {
   Ht,
   em,
   $l,
-  LI,
-  LY,
-  lAe,
-  ype,
-  _C,
-  gSt,
+  builtInCommandNames as LI,
+  shippedCommandNames as LY,
+  getBuiltinCommands as lAe,
+  meetsAvailabilityRequirement as ype,
+  attributionSkillName as _C,
+  deriveRequires as gSt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { sp, Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { f7e, bo } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
@@ -238,7 +238,7 @@ function Ae(e, o) {
   return l ? l({ remoteSessionId: t }) : void 0;
 }
 var We = new Set(["clear", "resume", "help", "exit", "feedback"]);
-function Kqe(e, o) {
+function isSlashCommandBlockedByEndedByModel(e, o) {
   if (!o) return !1;
   return !(e && e.type !== "prompt" && We.has(e.name));
 }
@@ -434,7 +434,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
         messages: [
           R,
           Re({
-            content: `<local-command-stderr>${Nt(Fce(J, e.name, t.session))}</local-command-stderr>`,
+            content: `<local-command-stderr>${Nt(commandThrowTextForTranscript(J, e.name, t.session))}</local-command-stderr>`,
           }),
         ],
         shouldQuery: !1,
@@ -554,7 +554,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
       messages: [
         R,
         Re({
-          content: `<local-command-stderr>${Nt(Fce(Q, e.name, t.session))}</local-command-stderr>`,
+          content: `<local-command-stderr>${Nt(commandThrowTextForTranscript(Q, e.name, t.session))}</local-command-stderr>`,
         }),
         ...J.messages,
       ],
@@ -608,10 +608,10 @@ function qe(e, o, { interactive: t }) {
   if (v === null || _ === null) return;
   return { command: l, reason: v, kind: _ };
 }
-function Xqe(e) {
+function looksLikeCommand(e) {
   return /^[a-zA-Z0-9_][a-zA-Z0-9:_-]*$/.test(e);
 }
-function Fce(e, o, t) {
+function commandThrowTextForTranscript(e, o, t) {
   let m = gr(o, 200),
     l = Qn(o);
   if (yt(e)) {
@@ -626,7 +626,7 @@ function Fce(e, o, t) {
     );
   return $S(String(e));
 }
-async function Uhr(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z) {
+async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z) {
   function te() {
     let w = oe(),
       L = MEe(o) ? void 0 : w;
@@ -717,7 +717,7 @@ async function Uhr(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z) {
   }
   if (b?.loadedFrom === "syncedSkills" && wV()) b = void 0;
   let C = LI().has(d);
-  if (Kqe(b, l.getAppState().endedByModel)) {
+  if (isSlashCommandBlockedByEndedByModel(b, l.getAppState().endedByModel)) {
     let w = Mk(
       "Claude ended this conversation. Start a new session (or /clear) to continue.",
     );
@@ -731,7 +731,7 @@ async function Uhr(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z) {
     try {
       (await ae().stat(`/${d}`), (w = !0));
     } catch {}
-    if ((Xqe(d) || I) && !w) {
+    if ((looksLikeCommand(d) || I) && !w) {
       let L = qe(d, l.options.commands, {
         interactive: !l.options.isNonInteractiveSession,
       });
@@ -1189,7 +1189,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                     uuid: v,
                   }),
                   em(
-                    `<local-command-stderr>${Nt($S(Fce(r, s.name, t.session)))}</local-command-stderr>`,
+                    `<local-command-stderr>${Nt($S(commandThrowTextForTranscript(r, s.name, t.session)))}</local-command-stderr>`,
                   ),
                 ],
                 shouldQuery: !1,
@@ -1306,7 +1306,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                 : M instanceof Error
                   ? M.message || r
                   : r
-              : Fce(M, s.name, t.session),
+              : commandThrowTextForTranscript(M, s.name, t.session),
             C = em(`<${b}>${Nt($S(k))}</${b}>`);
           if (A)
             return Ne(t, p, { messages: [C], shouldQuery: !1, command: s });
@@ -1497,7 +1497,7 @@ Original prompt: ${E}`;
               (h(dt(ge(E), "stacked slash command expansion threw")),
                 k.messages.push(
                   Ht(
-                    `Stacked skill /${Qn(C.name)} failed to load: ${Fce(E, C.name, t.session)}`,
+                    `Stacked skill /${Qn(C.name)} failed to load: ${commandThrowTextForTranscript(E, C.name, t.session)}`,
                     "warning",
                   ),
                 ));
@@ -1541,7 +1541,7 @@ Original prompt: ${E}`;
                   uuid: v,
                 }),
                 Re({
-                  content: `<local-command-stderr>${Nt(Fce(r, s.name, t.session))}</local-command-stderr>`,
+                  content: `<local-command-stderr>${Nt(commandThrowTextForTranscript(r, s.name, t.session))}</local-command-stderr>`,
                 }),
               ],
               shouldQuery: !1,
@@ -1615,7 +1615,7 @@ function Xe(e, o, t, m) {
   }
   return { stacked: l, trailingArgs: c, capped: v };
 }
-function ppr(e, o = "loading") {
+function formatSkillLoadingMetadata(e, o = "loading") {
   return [
     `<${pp}>${e}</${pp}>`,
     `<${Id}>${e}</${Id}>`,
@@ -1640,7 +1640,7 @@ function Ue(e, o) {
     e.loadedFrom === "mcp" ||
     e.loadedFrom === "memoryStore"
   )
-    return ppr(e.name, e.progressMessage);
+    return formatSkillLoadingMetadata(e.name, e.progressMessage);
   return Fe(e.name, o);
 }
 async function De(e, o, t) {
@@ -1714,7 +1714,7 @@ Original prompt: ${l}`;
   }
   return { hookMessages: m };
 }
-async function Bhr(e, o, t, m, l = !1) {
+async function processPromptSlashCommand(e, o, t, m, l = !1) {
   let c = Di(e, t);
   if (!c) throw new YP(`Unknown command: ${Qn(e)}`);
   if (c.type !== "prompt")
@@ -1888,4 +1888,4 @@ function Ne(e, o, t) {
 function be(e) {
   return e.map((o) => (o.type === "user" ? { ...o, turnCompanion: !0 } : o));
 }
-export { Kqe, Xqe, Fce, Uhr, ppr, Bhr };
+export { isSlashCommandBlockedByEndedByModel, looksLikeCommand, commandThrowTextForTranscript, processSlashCommand, formatSkillLoadingMetadata, processPromptSlashCommand };

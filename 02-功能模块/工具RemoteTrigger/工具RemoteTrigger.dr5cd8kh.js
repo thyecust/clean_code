@@ -9,21 +9,21 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 71 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { yc } from "../权限系统/chunk-ynkf3yy4.js";
-import { Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { toInfraSessionId as yc } from "../权限系统/chunk-ynkf3yy4.js";
+import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { wa, E$, SJn, bJn, m7e, Xpe, CJn } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, cd, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ht, gt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { I1 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { ht, isClaudeAISubscriber as gt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { formatRelativeTime as I1 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { gM } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
 import { jh } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";

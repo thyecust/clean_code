@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { QNe } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { te, uy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, formatRelativeTimeAgo as uy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 var yBn = 30000,
   ik = "bridge-failed",

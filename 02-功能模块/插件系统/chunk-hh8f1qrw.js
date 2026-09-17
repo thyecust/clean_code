@@ -10,9 +10,9 @@
 import { Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Pp, Yge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { Pp, isRemoteManagedSettingsVerifiedAndConsented as Yge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { fi, Dhe, Do, Jie, Lhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { ye, dS } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye, getPolicySettingsOrigin as dS } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { RIn } from "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
 function bd(e) {
   return ye("policySettings")?.enabledPlugins?.[e] === !1;

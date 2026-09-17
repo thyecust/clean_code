@@ -30,18 +30,18 @@ import { Le, li, Xo, BL, RS } from "../../00-第三方库/lodash/lodash.207999qb
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { R, A, Jg } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { q2e, Ri, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { We, Et, dv, b, z, WP, Wur, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { lr, le, Zt, Io, cr, nt, Cu, ru, Rmr } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { OP, yi, zl, r8t, ts, fke, Oa, jHn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { rr, gu, q_, xf, Hf, Hs, dD } from "./chunk-7wsy8vxb.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { OP, yi, zl, r8t, ts, fke, Oa, hasPolicySettingsNotified as jHn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getJobDir as rr, getOwnJobShortId as gu, listJobs as q_, IDLE_NEEDS as xf, terminalOutcome as Hf, isSettled as Hs, isSelfDriving as dD } from "./chunk-7wsy8vxb.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
   pi,
@@ -50,24 +50,24 @@ import {
   pb,
   JN,
   Jh,
-  Ja,
-  WD,
+  isActingAsBgJob as Ja,
+  getBgJobDir as WD,
   pge,
   eu,
   QUe,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Xse } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { captureProcessStartTimeAsync as Xse } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { dy } from "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
 import { v7t } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { ye, Ge, bn, B6 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye, getInitialSettings as Ge, getSettings_DEPRECATED as bn, isAdminPolicyUnreadable as B6 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { iA } from "../权限系统/chunk-t3b7pg2x.js";
 import { Pl, lP, bEt, Ud } from "../Teammates团队/chunk-thxapyam.js";
 import { iP, OG, rEt, tme, Oc, $d, bR, ZYe, iEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { PD } from "../Skills技能/chunk-sapykxw7.js";
+import { updateHooksConfigSnapshot as PD } from "../Skills技能/chunk-sapykxw7.js";
 import { rf } from "../权限系统/chunk-qdy0h5k2.js";
-import { yu } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { cG, $k, Sd } from "./chunk-x3txegas.js";
+import { userAbortReason as yu } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { cG, $k, evictTaskOutput as Sd } from "./chunk-x3txegas.js";
 import {
   K$t,
   T2,
@@ -79,7 +79,7 @@ import {
   kl,
   tVe,
   lTe,
-  pVe,
+  syncPermissionRulesFromDisk as pVe,
   bp,
   td,
   u3,
@@ -98,25 +98,25 @@ import {
   P6t,
   XKe,
   L6t,
-  M6t,
-  Vmn,
-  Xmn,
-  R_t,
-  F6t,
-  QKe,
+  addDirsAreLauncherNamed as M6t,
+  isAutoModeDisabledByPolicySettings as Vmn,
+  createDisabledBypassPermissionsContext as Xmn,
+  isAutoModeInUse as R_t,
+  createDisabledAutoModeContext as F6t,
+  transitionPlanAutoMode as QKe,
   Ws,
-  D5e,
-  Yp,
-  Uo,
-  kc,
-  rR,
+  suppressedConnectorsEqual as D5e,
+  mcpDialBlockCause as Yp,
+  isMcpServerDisabled as Uo,
+  flushSessionStorage as kc,
+  clearCommandMemoizationCaches as rR,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Jn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
 import { PAe, MNe } from "../图片-截图-ComputerUse/chunk-b8jsase9.js";
 import { $h, $fe, ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { DYn, hw, ONe, FYn, $pe, LNe, X3 } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { k7 } from "../Workflow编排/chunk-va9cgbfs.js";
+import { pauseWorkflowTask as k7 } from "../Workflow编排/chunk-va9cgbfs.js";
 import { ize } from "../Artifact发布-渲染/chunk-5gz5xvw9.js";
 import { y9e, Gye } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import {
@@ -161,7 +161,7 @@ import { Pbe, lte, Spt, eOe, bpt } from "../../01-核心基础设施/共享小�
 import { Qt, re, De, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 import { zK, Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
-import { ey } from "../权限系统/chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled as ey } from "../权限系统/chunk-pcxn6gwz.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -175,7 +175,7 @@ function Cr(t) {
 function zo(t) {
   return Hs(t) && !(Hf(t.state) === "success" && dD(t));
 }
-class jye {
+class FleetNudgeStore {
   #e;
   #f;
   #s = void 0;
@@ -292,12 +292,12 @@ class jye {
     (this.#u(), (this.#l = !1), (this.#a = !1));
   }
 }
-function kgr(t, o) {
-  return ((t.fleetNudgeStore ??= new jye({ storageV5: o })), t.fleetNudgeStore);
+function ensureFleetNudgeStore(t, o) {
+  return ((t.fleetNudgeStore ??= new FleetNudgeStore({ storageV5: o })), t.fleetNudgeStore);
 }
-var OOt = Qt(null);
-function k0e() {
-  let t = De(OOt);
+var FleetNudgeStoreContext = Qt(null);
+function useFleetNudgeStore() {
+  let t = De(FleetNudgeStoreContext);
   if (!t)
     throw ReferenceError(
       "useFleetNudgeStore cannot be called outside of a FleetNudgeStoreContext provider (mounted by <AppStateProvider />)",
@@ -330,9 +330,9 @@ import {
   relative as ln,
   sep as Jt,
 } from "path";
-var Wye = 120000,
-  zdr = 60000,
-  Oen = 4000,
+var STALE_THRESHOLD_MS = 120000,
+  CLOCK_SKEW_ALLOWANCE_MS = 60000,
+  TAKEOVER_ADOPT_WAIT_MS = 4000,
   Ir = 250,
   ct = /^[\w-]+$/;
 function kt(t) {
@@ -443,7 +443,7 @@ function fn(t) {
   return un(cn(() => [bR(), ...o]));
 }
 var Yt = 67108864;
-async function Den(t, o) {
+async function detachAndSerializeShell(t, o) {
   let r = t.shellCommand?.detach?.();
   if (r === void 0) return null;
   let s = t.shellCommand.taskOutput.path,
@@ -579,7 +579,7 @@ async function Den(t, o) {
     agentId: t.agentId,
   };
 }
-async function Len(t, o = {}) {
+async function serializeAdoptAgent(t, o = {}) {
   let r = o.derivedTranscriptPath ?? Ud(oo(t.agentId));
   return {
     agentId: t.agentId,
@@ -595,7 +595,7 @@ async function Len(t, o = {}) {
     forkedSkillName: t.forkedSkillName,
   };
 }
-async function Men(t, o = {}) {
+async function serializeAdoptWorkflow(t, o = {}) {
   let r = o.derivedTranscriptDir ?? eH(t.workflowRunId);
   return {
     taskId: t.id,
@@ -610,24 +610,24 @@ async function Men(t, o = {}) {
     transcriptDir: await ke(r).catch(() => r),
   };
 }
-function tM(t) {
+function isCarriedFrameLiveWatch(t) {
   return a7() && a$(t) && t.frameLive !== void 0;
 }
-function i4(t) {
+function carriedFrameLiveSlugs(t) {
   let o = new Set();
   if (!a7()) return o;
   for (let r of Object.values(t))
-    if (tM(r) && r.frameLive !== void 0) o.add(r.frameLive.slug);
+    if (isCarriedFrameLiveWatch(r) && r.frameLive !== void 0) o.add(r.frameLive.slug);
   for (let r of Pbe()) o.add(r);
   for (let r of lte()) o.add(r);
   return o;
 }
-function DOt(t) {
+function collectFrameLiveConsent(t) {
   let { supervisors: o, bootingWiredArms: r } = ne().live,
     s = lte(),
     l = [],
     k = Date.now();
-  for (let c of i4(t)) {
+  for (let c of carriedFrameLiveSlugs(t)) {
     let v = o.get(c),
       w = s.has(c) ? r.get(c) : void 0;
     if (v === void 0 && w === void 0) continue;
@@ -637,29 +637,29 @@ function DOt(t) {
   }
   return l;
 }
-async function _at(t, o) {
-  let r = iF(t),
-    s = Object.values(t).filter((x) => Zen(x, r)),
-    l = Object.values(t).filter((x) => etn(x, r)),
-    k = Object.values(t).filter((x) => NOt(x, r)),
-    c = kg().filter((x) => tee(x, r));
+async function serializeAdoptable(t, o) {
+  let r = computeAdoptability(t),
+    s = Object.values(t).filter((x) => isAdoptableShellTask(x, r)),
+    l = Object.values(t).filter((x) => isAdoptableAgentTask(x, r)),
+    k = Object.values(t).filter((x) => isAdoptableWorkflowTask(x, r)),
+    c = kg().filter((x) => isAdoptableCron(x, r));
   if (
     s.length === 0 &&
     l.length === 0 &&
     k.length === 0 &&
     c.length === 0 &&
-    DOt(t).length === 0
+    collectFrameLiveConsent(t).length === 0
   )
     return null;
   let v = (
-      await Promise.all(s.map((x) => Den(x, { rerootOutputsTo: bR() })))
+      await Promise.all(s.map((x) => detachAndSerializeShell(x, { rerootOutputsTo: bR() })))
     ).filter((x) => x !== null),
-    w = await Promise.all(l.map((x) => Len(x))),
-    T = await Promise.all(k.map((x) => Men(x))),
-    L = DOt(t),
+    w = await Promise.all(l.map((x) => serializeAdoptAgent(x))),
+    T = await Promise.all(k.map((x) => serializeAdoptWorkflow(x))),
+    L = collectFrameLiveConsent(t),
     D = new Set(L.map((x) => x.slug)),
     O = Object.values(t)
-      .filter((x) => tM(x) && x.frameLive !== void 0 && D.has(x.frameLive.slug))
+      .filter((x) => isCarriedFrameLiveWatch(x) && x.frameLive !== void 0 && D.has(x.frameLive.slug))
       .map((x) => x.id);
   if (
     v.length === 0 &&
@@ -759,7 +759,7 @@ async function _at(t, o) {
     },
   };
 }
-function Nen(t) {
+function dedupFrameLiveNewest(t) {
   let o = new Map();
   for (let r of t)
     for (let s of r.entries) {
@@ -791,7 +791,7 @@ function Wr(t, o) {
     agents: r(t.agents ?? [], o.agents ?? [], (s) => s.agentId),
     workflows: r(t.workflows ?? [], o.workflows ?? [], (s) => s.taskId),
     ...(((t.frameLive?.length ?? 0) > 0 || (o.frameLive?.length ?? 0) > 0) && {
-      frameLive: Nen([
+      frameLive: dedupFrameLiveNewest([
         { entries: t.frameLive ?? [], fallbackBasis: t.writtenAtMs },
         { entries: o.frameLive ?? [], fallbackBasis: o.writtenAtMs },
       ]),
@@ -806,7 +806,7 @@ async function Ur(t, o) {
   if (!s.found) return null;
   return Buffer.from(s.value).toString("utf8");
 }
-async function x0e(t, o, r = {}, s) {
+async function writeAdoptJson(t, o, r = {}, s) {
   let l = Ae(t, "adopt.json"),
     k = Qe(t),
     c = M() && s !== void 0 && _n(k) && t === rr(k) ? s : void 0,
@@ -850,7 +850,7 @@ async function x0e(t, o, r = {}, s) {
   }
   await On(l, b(v));
 }
-async function Fen(t, o = {}) {
+async function readAndConsumeAdoptJson(t, o = {}) {
   if (!t) return null;
   let r = Ae(t, "adopt.json"),
     s = `${r}.${process.pid}`,
@@ -891,7 +891,7 @@ async function Fen(t, o = {}) {
         null
       );
     let D = c - L.data.writtenAtMs;
-    if (L.data.origin !== "exit" && D > Wye) {
+    if (L.data.origin !== "exit" && D > STALE_THRESHOLD_MS) {
       n(`[adopt] stale (age ${D}ms)`, { level: "warn" });
       let O = L.data.frameLive ?? [];
       if (O.length === 0)
@@ -919,7 +919,7 @@ async function Fen(t, o = {}) {
       let O = L.data.frameLive.map((H) => {
           let W = H.writtenAtMs ?? L.data.writtenAtMs,
             x = c - W;
-          return x >= -zdr && x <= Wye
+          return x >= -CLOCK_SKEW_ALLOWANCE_MS && x <= STALE_THRESHOLD_MS
             ? { ...H, writtenAtMs: W }
             : { ...H, writtenAtMs: W, stale: !0 };
         }),
@@ -947,7 +947,7 @@ async function Fen(t, o = {}) {
     await me(s).catch(() => {});
   }
 }
-function $en(t, o, r, s) {
+function recordUnresumedAdopt(t, o, r, s) {
   let l = A2();
   if (o.length === 0 && r.length === 0) {
     l.unresumedAdopt.delete(t);
@@ -955,12 +955,12 @@ function $en(t, o, r, s) {
   }
   l.unresumedAdopt.set(t, { agents: o, workflows: r, owner: s });
 }
-function Uen(t, o) {
+function takeUnresumedAdopt(t, o) {
   if (A2().unresumedAdopt.get(t)?.owner !== o)
     return { agents: [], workflows: [] };
-  return Ben(t);
+  return drainUnresumedAdopt(t);
 }
-function Ben(t) {
+function drainUnresumedAdopt(t) {
   let o = A2(),
     r = o.unresumedAdopt.get(t);
   return (
@@ -968,7 +968,7 @@ function Ben(t) {
     { agents: r?.agents ?? [], workflows: r?.workflows ?? [] }
   );
 }
-function jen(t, o, r) {
+function recordUnresumedFrameLive(t, o, r) {
   let s = A2();
   if (o.length === 0) {
     s.unresumedFrameLive.delete(t);
@@ -979,22 +979,22 @@ function jen(t, o, r) {
     owner: r,
   });
 }
-function Wen(t, o) {
+function takeUnresumedFrameLive(t, o) {
   if (A2().unresumedFrameLive.get(t)?.owner !== o) return [];
-  return LOt(t);
+  return drainUnresumedFrameLive(t);
 }
-function LOt(t) {
+function drainUnresumedFrameLive(t) {
   let o = A2(),
     r = o.unresumedFrameLive.get(t);
   return (o.unresumedFrameLive.delete(t), r?.entries ?? []);
 }
-function Gen(t, o, r) {
+function reparkUnresumedFrameLive(t, o, r) {
   let s = A2(),
     l = s.unresumedFrameLive.get(t);
   if (o.length === 0 || (l !== void 0 && l.owner !== r)) return;
   s.unresumedFrameLive.set(t, { entries: [...o], owner: r });
 }
-function qen(t, o, r) {
+function releaseReparkedFrameLive(t, o, r) {
   let s = A2(),
     l = s.unresumedFrameLive.get(t);
   if (l === void 0 || l.owner !== r) return;
@@ -1002,10 +1002,10 @@ function qen(t, o, r) {
   if (k.length > 0) s.unresumedFrameLive.set(t, { entries: k, owner: r });
   else s.unresumedFrameLive.delete(t);
 }
-function BUn(t, o) {
+function recordExitRetryFrameLive(t, o) {
   if (o.length > 0) A2().exitRetryFrameLive.set(t, [...o]);
 }
-function jUn(t) {
+function takeExitRetryFrameLive(t) {
   if (t === void 0) return [];
   let o = A2(),
     r = o.exitRetryFrameLive.get(t) ?? [];
@@ -1130,7 +1130,7 @@ async function Xt(t, o, r, s, l) {
     ? { method: "kept", created: null }
     : { ...T, created: v === "created" ? w : null };
 }
-async function zen(t, { storageV5: o, linkFn: r = on } = {}) {
+async function linkAdoptedAgentTranscript(t, { storageV5: o, linkFn: r = on } = {}) {
   if (o === void 0) return qr(t);
   try {
     let s = await Yr(t, r);
@@ -1342,7 +1342,7 @@ function gn(t, o) {
   if (s.length < 3 || s[2] !== "subagents") return null;
   return { session: Ae(s[0], s[1]), depth: s.length };
 }
-async function Ven({ storageV5: t, linkFn: o = on } = {}) {
+async function relinkAdoptedAgentSymlinks({ storageV5: t, linkFn: o = on } = {}) {
   if (t === void 0) return;
   try {
     await ei(bEt(), o);
@@ -1583,10 +1583,10 @@ async function ri(t, o) {
 async function Zo(t, o) {
   return (await Xt(t.linkPath, t.real, t.gate, o, !0)).method;
 }
-function Ken(t) {
+function killOrphanedAdoptedShell(t) {
   return Gye(t.pid, t.startTimeTicks, t.procStart);
 }
-async function Xen(t) {
+async function linkAdoptedWorkflowDir(t) {
   let o = eH(t.workflowRunId);
   if (o === t.transcriptDir) return;
   if (
@@ -1609,7 +1609,7 @@ async function Xen(t) {
   }
   await sn(t.transcriptDir, o, void 0);
 }
-function yat(t, o, r) {
+function emitAdoptWorkflowFailed(t, o, r) {
   let s =
       t.scriptPath !== void 0
         ? ` To resume manually: Workflow({scriptPath: '${Nt(t.scriptPath)}', resumeFromRunId: '${Nt(t.workflowRunId)}'}).`
@@ -1628,7 +1628,7 @@ function lt(t, o, r, s = ze()) {
   }),
     pi(t, "failed", { summary: o }));
 }
-function Yen(t) {
+function resolveAdoptedScriptPath(t) {
   let o = kt(() => [Pl()]).safeParse(t);
   if (!o.success)
     throw new R(
@@ -1637,18 +1637,18 @@ function Yen(t) {
     );
   return o.data;
 }
-function MOt(t) {
+function mcpSettledForAdopt(t) {
   return (
     t.mcp.clientsInitialized === !0 &&
     !t.mcp.clients.some((o) => o.type === "pending")
   );
 }
-function Jen(t) {
+function classifyAdoptLinkFailure(t) {
   let o = t.parentAgentId !== void 0,
     r = t.forkedSkillName !== void 0;
   return { emit: o || r, excludeFromReconcile: !o && r };
 }
-function Sat(t, o, r, s) {
+function emitAdoptAgentFailed(t, o, r, s) {
   let l =
       t.parentAgentId !== void 0 && nr(r.get(t.parentAgentId))
         ? oo(t.parentAgentId)
@@ -1656,12 +1656,12 @@ function Sat(t, o, r, s) {
     k = `Background agent "${Nt(t.description ?? t.agentId)}" was checkpointed for the background fork but could not be resumed (${Nt(o)}).`;
   lt(t.agentId, k, s, l);
 }
-function Qen(t, o) {
+function adoptCron(t, o) {
   let r = new Set(kg().map((s) => s.id));
   for (let s of t) if (!r.has(s.id)) (m8(s), r.add(s.id));
   for (let s = 0; s < (o ?? 0); s++) Lrt();
 }
-function iF(t) {
+function computeAdoptability(t) {
   let o = new Map();
   if (!a7()) return o;
   let r = (c) =>
@@ -1722,36 +1722,36 @@ function iF(t) {
   }
   return o;
 }
-function Zen(t, o) {
+function isAdoptableShellTask(t, o) {
   return bp(t) && (o.get(t.id) ?? !1);
 }
-function tee(t, o) {
+function isAdoptableCron(t, o) {
   return a7() && (t.agentId === void 0 || (o.get(t.agentId) ?? !1));
 }
-function etn(t, o) {
+function isAdoptableAgentTask(t, o) {
   return nr(t) && (o.get(t.id) ?? !1);
 }
-function NOt(t, o) {
+function isAdoptableWorkflowTask(t, o) {
   return o2t(t) && (o.get(t.id) ?? !1);
 }
-function Tle(t, o) {
+function isAdoptableTask(t, o) {
   return o.get(t.id) ?? !1;
 }
-function H0e(t, o = iF(t)) {
-  let r = i4(t);
+function countAdoptable(t, o = computeAdoptability(t)) {
+  let r = carriedFrameLiveSlugs(t);
   return (
-    G(Object.values(t), (s) => Tle(s, o)) + G(kg(), (s) => tee(s, o)) + r.size
+    G(Object.values(t), (s) => isAdoptableTask(s, o)) + G(kg(), (s) => isAdoptableCron(s, o)) + r.size
   );
 }
-function I0e(t, o = iF(t)) {
-  return Rv(t).count - H0e(t, o);
+function countAbandonable(t, o = computeAdoptability(t)) {
+  return Rv(t).count - countAdoptable(t, o);
 }
-function Ele(t, o = iF(t)) {
+function countLiveWorkflowAgents(t, o = computeAdoptability(t)) {
   let r = 0,
     s = 0,
     l = 0;
   for (let k of Object.values(t)) {
-    if (!NOt(k, o)) continue;
+    if (!isAdoptableWorkflowTask(k, o)) continue;
     let c = 1 / 0;
     for (let v of k.workflowProgress)
       if (v.type === "workflow_agent" && v.state === "error")
@@ -1771,15 +1771,15 @@ function Ele(t, o = iF(t)) {
   }
   return { running: r, finished: s, rerun: l };
 }
-function ttn(t, o = iF(t)) {
-  return I0e(t, o) > 0 || i4(t).size > 0 || Ele(t, o).running > 0;
+function leftArrowNeedsInterstitial(t, o = computeAdoptability(t)) {
+  return countAbandonable(t, o) > 0 || carriedFrameLiveSlugs(t).size > 0 || countLiveWorkflowAgents(t, o).running > 0;
 }
-function P0e(t, o) {
+function countCarriedSince(t, o) {
   let r = 0;
-  for (let s of i4(t)) if (!o.has(s)) r++;
+  for (let s of carriedFrameLiveSlugs(t)) if (!o.has(s)) r++;
   return r;
 }
-function ntn(t) {
+function carriesTasks(t) {
   return (
     t.shells.length > 0 ||
     (t.agents?.length ?? 0) > 0 ||
@@ -1787,7 +1787,7 @@ function ntn(t) {
     t.cron.length > 0
   );
 }
-function bat(t) {
+function adoptedCounts(t) {
   return {
     adopted_shells: t?.shells.length ?? 0,
     adopted_agents: t?.agents?.length ?? 0,
@@ -1797,7 +1797,7 @@ function bat(t) {
   };
 }
 function aF() {
-  let t = import.meta.require("../Teammates团队/isModelDrivenSession.g8xbasha.js"),
+  let t = import.meta.require("../Teammates团队/chunk-811z9z0t.js"),
     o = t.isTeammate() && t.isPlanModeRequired() ? "plan" : "default";
   return {
     sessionNoticesPoll: { pendingDeliveryUuids: [] },
@@ -1898,12 +1898,12 @@ function aF() {
     classifierApprovals: { approvals: new Map(), checking: new Set() },
     teammateColors: { assignments: new Map(), index: 0 },
     webBrowser: import.meta
-      .require("../../01-核心基础设施/共享小工具-未细化/getDefaultWebBrowserState.npnteap1.js")
+      .require("../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js")
       .getDefaultWebBrowserState(),
   };
 }
-var FOt = { accountKey: null, ownMessageIds: [], wireAccountId: null };
-function _9e() {
+var EMPTY_PROJECTS_SELF_IDENTITY = { accountKey: null, ownMessageIds: [], wireAccountId: null };
+function getDefaultAppState() {
   return {
     ...aF(),
     taskDecorations: {},
@@ -1920,7 +1920,7 @@ function _9e() {
     footerSelection: null,
     footerLinks: [],
     remoteSessionUrl: void 0,
-    projectsSelfIdentity: FOt,
+    projectsSelfIdentity: EMPTY_PROJECTS_SELF_IDENTITY,
     remoteConnectionStatus: "connecting",
     remoteBootstrap: null,
     remoteBackgroundTasks: [],
@@ -3282,7 +3282,7 @@ function Yn(t) {
   if (!o || a.CLAUDE_CODE_DISABLE_BG_EXIT_HANDOFF) {
     if (o) {
       let O = ne().live;
-      if ((LOt(o), O.bootingWiredArms.size > 0))
+      if ((drainUnresumedFrameLive(o), O.bootingWiredArms.size > 0))
         g("artifact_live_subscribe", "booting_consent_uncarried");
       Spt(O.inFlightSubscribes);
     }
@@ -3301,18 +3301,18 @@ function Yn(t) {
       mergeShellOutputReadRoots: qn(),
     };
   }
-  let r = iF(t),
+  let r = computeAdoptability(t),
     s = Object.values(t),
-    l = s.filter((O) => NOt(O, r)),
-    k = s.filter((O) => etn(O, r)),
-    c = Ben(o),
+    l = s.filter((O) => isAdoptableWorkflowTask(O, r)),
+    k = s.filter((O) => isAdoptableAgentTask(O, r)),
+    c = drainUnresumedAdopt(o),
     v = (O) => !ne().autoReact.userDisarmed && !Xp(O.slug),
-    w = LOt(o),
+    w = drainUnresumedFrameLive(o),
     T = ns(
-      Nen([
-        { entries: DOt(t), fallbackBasis: Date.now() },
+      dedupFrameLiveNewest([
+        { entries: collectFrameLiveConsent(t), fallbackBasis: Date.now() },
         { entries: w.filter(v), fallbackBasis: Date.now() },
-        { entries: jUn(o).filter(v), fallbackBasis: Date.now() },
+        { entries: takeExitRetryFrameLive(o).filter(v), fallbackBasis: Date.now() },
       ]),
     ),
     L = new Set(T.map((O) => O.slug)),
@@ -3322,7 +3322,7 @@ function Yn(t) {
   return (
     Spt(new Set([...L, ...D.inFlightSubscribes])),
     {
-      shells: s.filter((O) => Zen(O, r) && O.agentId === void 0),
+      shells: s.filter((O) => isAdoptableShellTask(O, r) && O.agentId === void 0),
       workflows: l,
       agents: k,
       unresumedAgents: c.agents,
@@ -3330,7 +3330,7 @@ function Yn(t) {
       frameLive: T,
       frameLiveTaskIds: Object.values(t)
         .filter(
-          (O) => tM(O) && O.frameLive !== void 0 && L.has(O.frameLive.slug),
+          (O) => isCarriedFrameLiveWatch(O) && O.frameLive !== void 0 && L.has(O.frameLive.slug),
         )
         .map((O) => O.id),
       jobDir: o,
@@ -3385,16 +3385,16 @@ function Qn(
           }));
       }
       U = await Promise.all(
-        r.map((x) => Len(x, { derivedTranscriptPath: v[x.agentId] })),
+        r.map((x) => serializeAdoptAgent(x, { derivedTranscriptPath: v[x.agentId] })),
       );
     }
     U.push(...s);
     let H = (
-        await Promise.all(t.map((x) => Den(x, { rerootOutputsTo: T })))
+        await Promise.all(t.map((x) => detachAndSerializeShell(x, { rerootOutputsTo: T })))
       ).filter((x) => x !== null),
       W = [
         ...(await Promise.all(
-          o.map((x) => Men(x, { derivedTranscriptDir: w[x.workflowRunId] })),
+          o.map((x) => serializeAdoptWorkflow(x, { derivedTranscriptDir: w[x.workflowRunId] })),
         )),
         ...l,
       ];
@@ -3405,7 +3405,7 @@ function Qn(
       return;
     try {
       if (
-        (await x0e(
+        (await writeAdoptJson(
           c,
           {
             writtenAtMs: Date.now(),
@@ -3442,7 +3442,7 @@ function Qn(
       if (o.length > 0) f("task_local_workflow_exit_handoff", "write_failed");
       if (U.length > 0) f("task_local_agent_exit_handoff", "write_failed");
       if (k.length > 0 && c !== void 0)
-        (BUn(c, k), f("artifact_live_subscribe", "consent_exit_write_failed"));
+        (recordExitRetryFrameLive(c, k), f("artifact_live_subscribe", "consent_exit_write_failed"));
       n(`exit handoff: adopt.json write failed: ${x}`, { level: "warn" });
     }
   })();
@@ -3715,7 +3715,7 @@ function qt(jp) {
   }
   let ds;
   if (te[0] !== Xn || te[1] !== Zn)
-    ((ds = () => Xa(Xn ?? _9e(), Zn)),
+    ((ds = () => Xa(Xn ?? getDefaultAppState(), Zn)),
       (te[0] = Xn),
       (te[1] = Zn),
       (te[2] = ds));
@@ -3739,7 +3739,7 @@ function qt(jp) {
   let [ar] = d(us),
     ps;
   if (te[8] !== er || te[9] !== be)
-    ((ps = () => er ?? new jye({ storageV5: be })),
+    ((ps = () => er ?? new FleetNudgeStore({ storageV5: be })),
       (te[8] = er),
       (te[9] = be),
       (te[10] = ps));
@@ -3875,7 +3875,7 @@ function qt(jp) {
   else To = te[55];
   let Ro;
   if (te[56] !== dr || te[57] !== To)
-    ((Ro = e(OOt.Provider, { value: dr, children: To })),
+    ((Ro = e(FleetNudgeStoreContext.Provider, { value: dr, children: To })),
       (te[56] = dr),
       (te[57] = To),
       (te[58] = Ro));
@@ -3945,7 +3945,7 @@ function qt(jp) {
   else Is = te[82];
   return Is;
 }
-function zm(ff) {
+function AppRoot(ff) {
   let Oe = _(29),
     {
       session: fr,
@@ -4074,56 +4074,56 @@ export {
   hat,
   sF,
   wle,
-  jye,
-  kgr,
-  OOt,
-  k0e,
-  Wye,
-  zdr,
-  Oen,
-  Den,
-  Len,
-  Men,
-  tM,
-  i4,
-  DOt,
-  _at,
-  Nen,
-  x0e,
-  Fen,
-  $en,
-  Uen,
-  Ben,
-  jen,
-  Wen,
-  LOt,
-  Gen,
-  qen,
-  BUn,
-  jUn,
-  zen,
-  Ven,
-  Ken,
-  Xen,
-  yat,
-  Yen,
-  MOt,
-  Jen,
-  Sat,
-  Qen,
-  iF,
-  Zen,
-  tee,
-  etn,
-  NOt,
-  Tle,
-  H0e,
-  I0e,
-  Ele,
-  ttn,
-  P0e,
-  ntn,
-  bat,
+  FleetNudgeStore,
+  ensureFleetNudgeStore,
+  FleetNudgeStoreContext,
+  useFleetNudgeStore,
+  STALE_THRESHOLD_MS,
+  CLOCK_SKEW_ALLOWANCE_MS,
+  TAKEOVER_ADOPT_WAIT_MS,
+  detachAndSerializeShell,
+  serializeAdoptAgent,
+  serializeAdoptWorkflow,
+  isCarriedFrameLiveWatch,
+  carriedFrameLiveSlugs,
+  collectFrameLiveConsent,
+  serializeAdoptable,
+  dedupFrameLiveNewest,
+  writeAdoptJson,
+  readAndConsumeAdoptJson,
+  recordUnresumedAdopt,
+  takeUnresumedAdopt,
+  drainUnresumedAdopt,
+  recordUnresumedFrameLive,
+  takeUnresumedFrameLive,
+  drainUnresumedFrameLive,
+  reparkUnresumedFrameLive,
+  releaseReparkedFrameLive,
+  recordExitRetryFrameLive,
+  takeExitRetryFrameLive,
+  linkAdoptedAgentTranscript,
+  relinkAdoptedAgentSymlinks,
+  killOrphanedAdoptedShell,
+  linkAdoptedWorkflowDir,
+  emitAdoptWorkflowFailed,
+  resolveAdoptedScriptPath,
+  mcpSettledForAdopt,
+  classifyAdoptLinkFailure,
+  emitAdoptAgentFailed,
+  adoptCron,
+  computeAdoptability,
+  isAdoptableShellTask,
+  isAdoptableCron,
+  isAdoptableAgentTask,
+  isAdoptableWorkflowTask,
+  isAdoptableTask,
+  countAdoptable,
+  countAbandonable,
+  countLiveWorkflowAgents,
+  leftArrowNeedsInterstitial,
+  countCarriedSince,
+  carriesTasks,
+  adoptedCounts,
   wat,
   Tat,
   WUn,
@@ -4135,7 +4135,7 @@ export {
   Cat,
   VB,
   aF,
-  FOt,
-  _9e,
-  zm,
+  EMPTY_PROJECTS_SELF_IDENTITY,
+  getDefaultAppState,
+  AppRoot,
 };

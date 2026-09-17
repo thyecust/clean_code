@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { py } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { mg, Gl, bg, wu, gq, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Pe, fo } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Mt, q4t, ch } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { CLAUDE_AI_INFERENCE_SCOPE as py } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { mg, getAuthTokenSource as Gl, getConfiguredApiKeyHelper as bg, hasStoredOAuthToken as wu, hasOAuthScope as gq, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getAPIProvider as Pe, isFirstPartyAnthropicBaseUrl as fo } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isPolicyAllowed as Mt, areComplianceTaintsSettled as q4t, getResponseFromCache as ch } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { pe } from "./chunk-2c9tjhwd.js";
 var r = pe(pg(), 1);

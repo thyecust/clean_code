@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { dnr } from "../Skills技能/chunk-sapykxw7.js";
-import { ce } from "./chunk-fjrcf22x.js";
+import { getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
 function l(e) {
   return {
     get agentId() {

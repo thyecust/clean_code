@@ -9,14 +9,14 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 224 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { _r, Zh, CP, XD, Oe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { ARTIFACT_TOOL_NAME as _r, ARTIFACT_COMMENTS_TOOL_NAME as Zh, ARTIFACT_DATA_TOOL_NAME as CP, ARTIFACT_CHECK_TOOL_NAME as XD, ArtifactInputError as Oe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { Wze, Xze, Yze, Jze } from "./chunk-pdd7kz7p.js";
+import { PREVIEW_PROMPT_PARAGRAPH as Wze, commentsPromptParagraphs as Xze, DB_PROMPT_PARAGRAPH as Yze, VERIFY_PROMPT_PARAGRAPH as Jze } from "./chunk-pdd7kz7p.js";
 import { gI, lwe, Tte } from "./chunk-qpgskeea.js";
 import "./chunk-x29r16ke.js";
 import { swe, iwe, Qze } from "./chunk-01jnk0v2.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0ghshta0.js";
-import { E9 } from "./chunk-b6k1z7an.js";
+import { artifactSchemaGates as E9 } from "./chunk-b6k1z7an.js";
 import "./chunk-fx5ekm7e.js";
 import {
   hjn,
@@ -35,7 +35,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js"
 import "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
 import { Out, Fon } from "./chunk-yrjr7v83.js";
 import "./chunk-5gvg7p5p.js";
-import { FGe } from "../Teammates团队/chunk-y89mhs4a.js";
+import { respell as FGe } from "../Teammates团队/chunk-y89mhs4a.js";
 var l = {
     comments: [
       [/action:? "comments"/g, 'action "read"'],

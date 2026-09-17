@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { $Be } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { qe, YC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

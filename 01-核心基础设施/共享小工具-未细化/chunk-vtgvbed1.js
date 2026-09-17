@@ -7,6 +7,6 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-var ab = "EndConversation",
-  wAn = "tengu_umber_kestrel";
-export { ab, wAn };
+var END_CONVERSATION_TOOL_NAME = "EndConversation",
+  END_CONVERSATION_GB_FLAG = "tengu_umber_kestrel";
+export { END_CONVERSATION_TOOL_NAME, END_CONVERSATION_GB_FLAG };

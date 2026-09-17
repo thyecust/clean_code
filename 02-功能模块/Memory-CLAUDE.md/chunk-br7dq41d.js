@@ -9,38 +9,38 @@
 // Version: 2.1.263
 import { he, VR, ES, Dx, Aje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Tr, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Cd, P6, XUe, Gse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isWorkspacePersistedTrusted as Cd, P6, XUe, Gse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { nB, vA, D2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { reanchorGitFileWatcher as nB, findCanonicalGitRootUncached as vA, clearIsGitMemoFor as D2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ot, pf } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { Yi } from "../权限系统/chunk-1y2g140m.js";
-import { gyn } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { JYe, ON, Df, JCe, t$e, hEt } from "./Memory-CLAUDE.md.vx19drc8.js";
+import { getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
+import { relocateBgSessionCwd as gyn } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { JYe, ON, Df, relativePath as JCe, patternWithRoot as t$e, normalizeTrustedSymlink as hEt } from "./Memory-CLAUDE.md.vx19drc8.js";
 import {
   gV,
   kl,
-  st,
-  ine,
+  SandboxManager as st,
+  permissionRuleSourceDisplayString as ine,
   QBt,
   pu,
   y5e,
   Na,
-  LMe,
+  relocateSessionTranscript as LMe,
   ZMe,
   eNe,
   Ny,
   bXn,
   U9t,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { PD } from "../Skills技能/chunk-sapykxw7.js";
+import { updateHooksConfigSnapshot as PD } from "../Skills技能/chunk-sapykxw7.js";
 import { iM } from "../文件监听-Watch/chunk-mmg1rsp2.js";
 import { R8, $z } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Ic } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
@@ -98,7 +98,7 @@ function x(e) {
   }
   return new RegExp(`${t}$`, "i");
 }
-async function XWe(e, t) {
+async function recordDirectoryTrust(e, t) {
   if (await E(e)) {
     (Dx(!0), Aje(!0));
     return;
@@ -115,7 +115,7 @@ async function E(e) {
   };
   return (await t(e)) === (await t(T()));
 }
-async function NPt(e, t) {
+async function validateCdTarget(e, t) {
   let o = ot(e);
   try {
     if (!(await j(o)).isDirectory())
@@ -138,7 +138,7 @@ async function NPt(e, t) {
     return { result: "blocked_by_rule", directory: c, check: l };
   return { result: "ok", directory: c };
 }
-function FPt(e, t, o = (s) => s, c) {
+function cdRuleRefusalMessage(e, t, o = (s) => s, c) {
   let s = c?.terminalAffordances !== !1,
     l = c?.display ?? ((r) => r);
   if (((e = l(e)), t.result === "blockedByRule")) {
@@ -169,7 +169,7 @@ async function N(e, t, o) {
     d.push(...(await U9t(m, t, c, { skipProject: eNe(m, r) })));
   return bXn(d);
 }
-async function $Pt(e, t, o, c) {
+async function relocateSession(e, t, o, c) {
   let s = Q(),
     l = he(),
     r = Y([l, s]),
@@ -290,10 +290,10 @@ async function $Pt(e, t, o, c) {
     departedAdditionalDirectories: d,
   };
 }
-function UPt() {
+function reapplyProjectSettingsAfterTrustChange() {
   (Gse(), PD(), kl.notifyChange("projectSettings", { trustFlip: !0 }));
 }
-function BPt(e) {
+function withGatedGrantsApplied(e) {
   if (e.gatedNotice === "") return e.modelMessage;
   return e.modelMessage.replace(
     e.gatedNotice,
@@ -304,10 +304,10 @@ function BPt(e) {
 }
 var k =
   /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Default_Ignorable_Code_Point}\u2800]|(?!\u0020)\p{Zs}/u;
-function Wdr(e, t) {
+function safeWireMessage(e, t) {
   return k.test(e) ? t : e;
 }
-async function hgr(e, t) {
+async function handleSetCwdControlRequest(e, t) {
   if (t.isBusy())
     return {
       kind: "response",
@@ -351,7 +351,7 @@ async function hgr(e, t) {
           "The target is a network path or an obfuscated spelling, which cannot be set as the working directory from a remote host. The path is deliberately not echoed back.",
       },
     };
-  let s = await NPt(e.path.trim(), t.toolPermissionContext),
+  let s = await validateCdTarget(e.path.trim(), t.toolPermissionContext),
     l = "directory" in s ? s.directory : s.path;
   if (k.test(l))
     return {
@@ -401,8 +401,8 @@ async function hgr(e, t) {
       response: {
         status: "rejected",
         reason: "blocked_by_rule",
-        message: Wdr(
-          FPt(s.directory, s.check, void 0, { terminalAffordances: !1 }),
+        message: safeWireMessage(
+          cdRuleRefusalMessage(s.directory, s.check, void 0, { terminalAffordances: !1 }),
           "A Cd permission rule blocks this directory. The rule text contains control or invisible characters, so it is not echoed here \u2014 check the Cd(...) entries in your settings.",
         ),
       },
@@ -437,7 +437,7 @@ async function hgr(e, t) {
             ? { status: "needs_trust", directory: r, trust_root: w }
             : { status: "needs_trust", directory: r },
       };
-    await XWe(r, t.storageV5);
+    await recordDirectoryTrust(r, t.storageV5);
   }
   if (t.isBusy())
     return {
@@ -453,7 +453,7 @@ async function hgr(e, t) {
     modelMessage: d,
     transcriptRelocated: m,
     departedAdditionalDirectories: y,
-  } = await $Pt(t.session, r, "set_cwd", t.storageV5);
+  } = await relocateSession(t.session, r, "set_cwd", t.storageV5);
   try {
     t.retireDepartedAdditionalDirectories?.(y);
   } catch (f) {
@@ -480,4 +480,4 @@ async function hgr(e, t) {
     },
   };
 }
-export { XWe, NPt, FPt, $Pt, UPt, BPt, Wdr, hgr };
+export { recordDirectoryTrust, validateCdTarget, cdRuleRefusalMessage, relocateSession, reapplyProjectSettingsAfterTrustChange, withGatedGrantsApplied, safeWireMessage, handleSetCwdControlRequest };

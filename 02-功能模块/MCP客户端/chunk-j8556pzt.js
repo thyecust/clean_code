@@ -8,22 +8,22 @@
 
 // Version: 2.1.263
 import {
-  WQ,
-  Xq,
-  xo,
-  GQ,
-  Dkt,
-  Lkt,
-  V5,
-  v1,
-  Cx,
-  snt,
-  p7t,
-  fhe,
-  v2e,
-  Fie,
-  _7t,
-  _o,
+  LATEST_PROTOCOL_VERSION as WQ,
+  SUPPORTED_PROTOCOL_VERSIONS as Xq,
+  ErrorCode as xo,
+  EmptyResultSchema as GQ,
+  InitializeRequestSchema as Dkt,
+  InitializedNotificationSchema as Lkt,
+  CreateTaskResultSchema as V5,
+  CallToolResultSchema as v1,
+  CallToolRequestSchema as Cx,
+  LoggingLevelSchema as snt,
+  SetLevelRequestSchema as p7t,
+  CreateMessageResultSchema as fhe,
+  CreateMessageResultWithToolsSchema as v2e,
+  ElicitResultSchema as Fie,
+  ListRootsResultSchema as _7t,
+  McpError as _o,
 } from "./chunk-tv3jbp8f.js";
 import { uhe, C1, C2e, Xtt, xkt, Ytt, Hkt, Ikt } from "./chunk-98spw152.js";
 class g {

@@ -13,21 +13,21 @@ import { Si, K, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z, Xrt, gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { zl, Oa, rc, fS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { i2e, xie, Hie } from "../权限系统/chunk-e4pfvp7x.js";
+import { CAN_USE_TOOL_STREAM_CLOSED_REASON as i2e, CAN_USE_TOOL_INVALID_RESULT_REASON as xie, CAN_USE_TOOL_REQUEST_FAILED_REASON as Hie } from "../权限系统/chunk-e4pfvp7x.js";
 import { Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { Tn, Rp, qe, Bt, tt, Mn, co, ro, Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { gc, _b, oS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { vP } from "../Teammates团队/chunk-811z9z0t.js";
-import { ce, Bd, hme } from "../权限系统/chunk-fjrcf22x.js";
+import { isModelDrivenSession as vP } from "../Teammates团队/chunk-811z9z0t.js";
+import { getToolPermissionContext as ce, getMainLoopModel as Bd, applyContextLayers as hme } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt, ID } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   vo,
@@ -53,17 +53,17 @@ import {
   DBt,
   cTe,
   $De,
-  uVe,
-  ane,
-  zBt,
-  VBt,
-  bpn,
-  Gue,
-  mTe,
-  jv,
+  isAutoModeConsentFlowEnabled as uVe,
+  isChainOnAllowActive as ane,
+  recordAutoModeDenial as zBt,
+  enforceAutoModeDenialLimits as VBt,
+  recordAutoModeSuccess as bpn,
+  isAskRuleDrivenReason as Gue,
+  PERMISSION_CHECK_CRASHED_REASON as mTe,
+  checkRuleBasedPermissions as jv,
   zue,
-  vX,
-  Iy,
+  isRemoteToolForwardingEnabled as vX,
+  isRemoteToolForwardingSwitchOn as Iy,
   RX,
   P4n,
   O4n,
@@ -77,7 +77,7 @@ import {
   DVe,
   S6t,
   _Ee,
-  pn,
+  createAttachmentMessage as pn,
   p$,
   Ok,
   $3,
@@ -90,10 +90,10 @@ import {
   G5e,
   NEe,
   $l,
-  Li,
+  pinSessionId as Li,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { V_ } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { vEt, Ua, ob } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { PromptScopedAbortController as vEt, unwrapAbortReason as Ua, shutdownInterruptStamp as ob } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { no, sf } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
 import { Fy } from "../会话-历史-恢复/chunk-m1xj4s02.js";
 import { h7e } from "../工具结果持久化/工具结果持久化.jj43r39n.js";

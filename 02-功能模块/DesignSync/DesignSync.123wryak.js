@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 82 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { xw, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOAuthHeaders as xw, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, dt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { YA, tT, wdt, $Pe, UPe, Tdt, C6n, Edt } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
 import { mqe, Vee, C9, NPe, gqe, Msn, Kee } from "./chunk-20rab5yy.js";

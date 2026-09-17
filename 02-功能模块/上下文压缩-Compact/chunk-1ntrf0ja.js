@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { zjn } from "../../01-核心基础设施/共享小工具-未细化/chunk-f7n720sn.js";
-import { Arn } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
+import { getDefaultWebBrowserState as Arn } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import {
   jut,
   Wut,

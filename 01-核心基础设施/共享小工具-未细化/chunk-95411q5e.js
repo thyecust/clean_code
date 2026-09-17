@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { o_, As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { fme } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { getUsableProxyUrl as o_, getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { agentProxyEnv as fme } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { readFile as i } from "fs/promises";
 async function Z4(t) {
   if (!o_()) {

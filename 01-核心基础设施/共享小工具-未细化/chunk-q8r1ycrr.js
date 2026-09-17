@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "./chunk-an83zrbx.js";
-import { u } from "./chunk-w76kejwn.js";
-import { Ba } from "../核心工具-进程与信号/chunk-qjqntsq2.js";
+import { fromEnum as u } from "./chunk-w76kejwn.js";
+import { getProcessStartTimeAsync as Ba } from "../核心工具-进程与信号/chunk-qjqntsq2.js";
 import { Uy } from "./chunk-sp33tdvc.js";
 import { readFile as a } from "fs/promises";
 class n {

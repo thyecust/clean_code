@@ -15,7 +15,7 @@ import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { lr, le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { Mp } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { getProjectDir as Mp } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { lP } from "../Teammates团队/chunk-thxapyam.js";
 import { ESn, RJn } from "./chunk-tznd4407.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";

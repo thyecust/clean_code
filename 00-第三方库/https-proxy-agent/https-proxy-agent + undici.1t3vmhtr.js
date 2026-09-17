@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { j, B, ke } from "../lodash/lodash.2x3q7cfh.js";
 import { Ie, po, rs } from "../lodash/lodash.207999qb.js";
-import { y, f, g } from "../lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../lodash/lodash.0vqzb8ad.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { kje } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Mnt, at } from "../axios/axios.t0fczzmz.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { Mnt, default as at } from "../axios/axios.t0fczzmz.js";
 import { a_ } from "../which-isexe/ isexe.knmpyrza.js";
 import { ZT } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
 import { JQ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q35gycf9.js";
@@ -1376,7 +1376,7 @@ var St = new j(() => new Te());
 function re() {
   return St.of(B().host);
 }
-var Pie = ZT(async () => {
+var loadExtraCACerts = ZT(async () => {
   let e = re(),
     t = a.NODE_EXTRA_CA_CERTS;
   if (!t) {
@@ -1449,7 +1449,7 @@ function vt(e) {
   }
   return s;
 }
-function MP() {
+function getCACertificates() {
   return re().certificates();
 }
 function bt(e) {
@@ -1528,7 +1528,7 @@ function bt(e) {
     });
   return l;
 }
-function C0n() {
+function clearCACertsCache() {
   ne(re());
 }
 function ne(e) {
@@ -1555,7 +1555,7 @@ function we(e) {
   let o = e.slice(t + oe.length, r);
   return e.includes(`-----END ${o}-----`, r);
 }
-var Skt = /-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g;
+var PEM_CERT_BLOCK_RE = /-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g;
 function Ht(e, t) {
   let r;
   try {
@@ -1570,7 +1570,7 @@ function Ht(e, t) {
   }
   let o = !1,
     s = !1;
-  for (let i of e.match(Skt) ?? [])
+  for (let i of e.match(PEM_CERT_BLOCK_RE) ?? [])
     try {
       if (new Lt(i).checkPrivateKey(r)) return !1;
       o = !0;
@@ -1622,7 +1622,7 @@ async function ve(e, t) {
     return (n(`mTLS: Failed to load ${t}: ${r}`, { level: "error" }), null);
   }
 }
-var qq = ZT(async () => {
+var loadMTLSClientMaterial = ZT(async () => {
   let e = K(),
     t = a.CLAUDE_CODE_CLIENT_CERT,
     r = a.CLAUDE_CODE_CLIENT_KEY,
@@ -1648,11 +1648,11 @@ var qq = ZT(async () => {
   if (((e.clientCert = l), (e.clientKey = d), p)) Re(e);
   return { changed: p, readFailed: u, mismatched: c };
 });
-function k0n() {
+function getLoadedMTLSPaths() {
   let e = K();
   return { certPath: e.clientCert?.path, keyPath: e.clientKey?.path };
 }
-function JT() {
+function getMTLSConfig() {
   return K().config();
 }
 function kt(e) {
@@ -1677,10 +1677,10 @@ function kt(e) {
   if (Object.keys(t).length === 0) return;
   return t;
 }
-function Utt() {
+function getMTLSAgent() {
   let e = K(),
-    t = JT(),
-    r = MP();
+    t = getMTLSConfig(),
+    r = getCACertificates();
   if (e.agentCache && e.agentCache.config === t && e.agentCache.ca === r)
     return e.agentCache.agent;
   let o;
@@ -1690,19 +1690,19 @@ function Utt() {
   }
   return ((e.agentCache = { config: t, ca: r, agent: o }), o);
 }
-function Ab() {
-  let e = JT(),
-    t = MP();
+function getWebSocketTLSOptions() {
+  let e = getMTLSConfig(),
+    t = getCACertificates();
   if (!e && !t) return;
   return { ...e, ...(t && { ca: t }) };
 }
-function Btt() {
-  let e = JT(),
-    t = MP();
+function getTLSFetchOptions() {
+  let e = getMTLSConfig(),
+    t = getCACertificates();
   if (!e && !t) return {};
   return { tls: { ...e, ...(t && { ca: t }) } };
 }
-function j8t() {
+function clearMTLSCache() {
   Re(K());
 }
 function Re(e) {
@@ -1710,8 +1710,8 @@ function Re(e) {
     (e.agentCache = null),
     n("Cleared mTLS configuration cache"));
 }
-function x0n() {
-  if (!JT()) return;
+function configureGlobalMTLS() {
+  if (!getMTLSConfig()) return;
   if (a.NODE_EXTRA_CA_CERTS)
     n(
       "NODE_EXTRA_CA_CERTS detected - Node.js will automatically append to built-in CAs",
@@ -1964,7 +1964,7 @@ var er = new j(() => new Et());
 function D() {
   return er.of(B().host);
 }
-function I0n() {
+function disableKeepAlive() {
   D().keepAliveDisabled = !0;
 }
 function tr(e) {
@@ -1983,15 +1983,15 @@ function tr(e) {
   }
 }
 var nr = ["https_proxy", "HTTPS_PROXY", "http_proxy", "HTTP_PROXY"];
-function Oie(e = process.env) {
+function getProxyUrlWithSource(e = process.env) {
   let t = nr.find((o) => e[o]),
     r = t ? e[t] : void 0;
   return t && r ? { value: r, source: t } : void 0;
 }
-function Die(e = process.env) {
-  return Oie(e)?.value;
+function getProxyUrl(e = process.env) {
+  return getProxyUrlWithSource(e)?.value;
 }
-function Lie(e) {
+function parseProxyUrl(e) {
   try {
     let t = new URL(e);
     return t.host ? t : void 0;
@@ -1999,33 +1999,33 @@ function Lie(e) {
     return;
   }
 }
-function W8t(e, t) {
+function describeInvalidProxyUrl(e, t) {
   let r = t.replace(/\p{Cc}/gu, "");
   return `Invalid proxy URL in ${e}: "${r}" cannot be parsed as a URL.
 Proxy settings must be a complete URL including the scheme, e.g. "http://proxy.example.com:8080".
 Fix or unset ${e} and restart Claude Code.`;
 }
 var Ct = id(new Set(), (e) => e.clear());
-function o_(e = process.env) {
-  let t = Oie(e);
+function getUsableProxyUrl(e = process.env) {
+  let t = getProxyUrlWithSource(e);
   if (!t) return;
-  if (!Lie(t.value)) {
+  if (!parseProxyUrl(t.value)) {
     let r = `${t.source}=${t.value}`;
-    if (!Ct.has(r)) (Ct.add(r), console.error(W8t(t.source, t.value)));
+    if (!Ct.has(r)) (Ct.add(r), console.error(describeInvalidProxyUrl(t.source, t.value)));
     return;
   }
   return t.value;
 }
-function G8t(e) {
+function noProxyUnion(e) {
   let { no_proxy: t, NO_PROXY: r } = e;
   if (t && r && t !== r) return `${t},${r}`;
   return t || r;
 }
-function d2e(e = process.env) {
+function getNoProxy(e = process.env) {
   if (e.no_proxy === "*" || e.NO_PROXY === "*") return "*";
-  return G8t(e);
+  return noProxyUnion(e);
 }
-function QT(e, t = d2e()) {
+function shouldBypassProxy(e, t = getNoProxy()) {
   if (!t) return !1;
   if (t === "*") return !0;
   try {
@@ -2050,7 +2050,7 @@ function QT(e, t = d2e()) {
   }
 }
 function xt(e, t) {
-  if (QT(e, t)) return !0;
+  if (shouldBypassProxy(e, t)) return !0;
   if (!t) return !1;
   let r;
   try {
@@ -2070,8 +2070,8 @@ function xt(e, t) {
     });
 }
 function At(e) {
-  let t = JT(),
-    r = MP(),
+  let t = getMTLSConfig(),
+    r = getCACertificates(),
     o = {
       ...(t && { cert: t.cert, key: t.key, passphrase: t.passphrase }),
       ...(r && { ca: r }),
@@ -2089,12 +2089,12 @@ function rr(e) {
 }
 function or(e) {
   let t = Ae("undici"),
-    r = JT(),
-    o = MP(),
+    r = getMTLSConfig(),
+    o = getCACertificates(),
     s = {
       httpProxy: e,
       httpsProxy: e,
-      noProxy: d2e({ no_proxy: a.no_proxy, NO_PROXY: a.NO_PROXY }),
+      noProxy: getNoProxy({ no_proxy: a.no_proxy, NO_PROXY: a.NO_PROXY }),
     };
   if (r || o) {
     let i = {
@@ -2105,33 +2105,33 @@ function or(e) {
   }
   return new t.EnvHttpProxyAgent(s);
 }
-function Cb(e) {
-  let t = o_();
+function getWebSocketProxyUrl(e) {
+  let t = getUsableProxyUrl();
   if (!t) return;
   try {
     if (JQ(new URL(e).hostname)) return;
   } catch {}
-  if (QT(e)) return;
+  if (shouldBypassProxy(e)) return;
   return t;
 }
 var sr = 300000;
-function P0n(e) {
+function _setProxyAuthHelperConfig(e) {
   D().proxyAuthHelperConfig = e;
 }
-function p2e() {
+function getConfiguredProxyAuthHelper() {
   if (!a.CLAUDE_CODE_ENABLE_PROXY_AUTH_HELPER) return;
   return D().proxyAuthHelperConfig.helper;
 }
 function _t(e) {
-  return p2e() !== void 0 && e.proxyAuthHelperConfig.fromProjectOrLocal;
+  return getConfiguredProxyAuthHelper() !== void 0 && e.proxyAuthHelperConfig.fromProjectOrLocal;
 }
 function ir() {
   let e = a.CLAUDE_CODE_PROXY_AUTH_HELPER_TTL_MS;
   if (e !== void 0 && e >= 0) return e;
   return sr;
 }
-async function f2e() {
-  let e = p2e();
+async function getProxyAuthFromHelper() {
+  let e = getConfiguredProxyAuthHelper();
   if (!e) return null;
   let t = D();
   if (_t(t) && !ke() && !t.proxyAuthHelperConfig.trustAccepted())
@@ -2146,7 +2146,7 @@ async function f2e() {
   if (!r && t.proxyAuthCache && Date.now() - t.proxyAuthCache.timestamp < ir())
     return t.proxyAuthCache.value;
   t.proxyAuthPendingChallenge = void 0;
-  let o = Die(),
+  let o = getProxyUrl(),
     s;
   try {
     s = o ? new URL(o).hostname : void 0;
@@ -2182,17 +2182,17 @@ async function f2e() {
 function cr() {
   return D().proxyAuthCache?.value ?? null;
 }
-function O0n(e) {
+function clearProxyAuthHelperCache(e) {
   let t = D();
   ((t.proxyAuthCache = null), (t.proxyAuthPendingChallenge = e));
 }
-function D0n() {
-  if (!p2e()) return;
+function prefetchProxyAuthFromHelperIfSafe() {
+  if (!getConfiguredProxyAuthHelper()) return;
   let e = D();
   if (_t(e) && !e.proxyAuthHelperConfig.trustAccepted()) return;
-  f2e();
+  getProxyAuthFromHelper();
 }
-function As(e) {
+function getProxyFetchOptions(e) {
   let t = process.env.API_FORCE_IDLE_TIMEOUT,
     r = e.forAnthropicAPI && !Ie(t) && (e.hasBodyIdleWatchdog || po(t)),
     o = {
@@ -2203,20 +2203,20 @@ function As(e) {
     let i = a.ANTHROPIC_UNIX_SOCKET;
     if (i) return { ...o, unix: i };
   }
-  let s = o_();
+  let s = getUsableProxyUrl();
   if (s) {
-    if (e.url && QT(e.url)) return { ...o, ...Btt() };
+    if (e.url && shouldBypassProxy(e.url)) return { ...o, ...getTLSFetchOptions() };
     let i = cr();
     return {
       ...o,
       proxy: i ? { url: s, headers: { "Proxy-Authorization": i } } : s,
-      ...Btt(),
+      ...getTLSFetchOptions(),
     };
   }
   if (e.fallbackProxy) {
-    if (e.url && (xt(e.url, e.fallbackProxy.noProxy) || xt(e.url, d2e())))
-      return { ...o, ...Btt() };
-    let i = Btt();
+    if (e.url && (xt(e.url, e.fallbackProxy.noProxy) || xt(e.url, getNoProxy())))
+      return { ...o, ...getTLSFetchOptions() };
+    let i = getTLSFetchOptions();
     return {
       ...o,
       proxy: e.fallbackProxy.url,
@@ -2225,14 +2225,14 @@ function As(e) {
         : i),
     };
   }
-  return { ...o, ...Btt() };
+  return { ...o, ...getTLSFetchOptions() };
 }
 var ee,
   xe = !1;
-function vb() {
-  let e = Oie(),
-    t = o_(),
-    r = Utt();
+function configureGlobalAgents() {
+  let e = getProxyUrlWithSource(),
+    t = getUsableProxyUrl(),
+    r = getMTLSAgent();
   if (ee !== void 0) (at.interceptors.request.eject(ee), (ee = void 0));
   if (
     ((at.defaults.proxy = void 0),
@@ -2244,7 +2244,7 @@ function vb() {
   if (t) {
     let o = At(t);
     ((ee = at.interceptors.request.use((s) => {
-      if (s.url && QT(s.url))
+      if (s.url && shouldBypassProxy(s.url))
         if (((s.httpsAgent ??= r), s.httpsAgent)) s.httpAgent = void 0;
         else (delete s.httpsAgent, delete s.httpAgent);
       else ((s.httpsAgent = o), (s.httpAgent = o));
@@ -2260,15 +2260,15 @@ function vb() {
     if (r) at.defaults.httpsAgent = r;
   }
 }
-function she(e) {
+function resolveStsEndpointForProxyUrl(e) {
   return (
     a.AWS_ENDPOINT_URL_STS ||
     a.AWS_ENDPOINT_URL ||
     `https://sts.${e}.amazonaws.com`
   );
 }
-async function ihe(e) {
-  let t = await zq(e);
+async function getAWSClientProxyConfig(e) {
+  let t = await getAWSProxyRequestHandler(e);
   if (!t) return {};
   let { defaultProvider: r } = await import("../_未识别/第三方库-HTTP代理/defaultProvider.27d886dy.js");
   return {
@@ -2282,21 +2282,21 @@ async function ihe(e) {
     }),
   };
 }
-async function zq(e) {
-  let t = o_(),
+async function getAWSProxyRequestHandler(e) {
+  let t = getUsableProxyUrl(),
     r = e.requestTimeoutMs !== void 0 && {
       requestTimeout: e.requestTimeoutMs,
       throwOnRequestTimeout: !0,
     };
-  if (!t || (e.url && QT(e.url))) {
-    let s = Utt();
+  if (!t || (e.url && shouldBypassProxy(e.url))) {
+    let s = getMTLSAgent();
     if (!s) return null;
     return new Ee.NodeHttpHandler({ httpsAgent: s, ...r });
   }
   let o = At(t);
   return new Ee.NodeHttpHandler({ httpAgent: o, httpsAgent: o, ...r });
 }
-function Vq() {
+function clearProxyCache() {
   (D().agents.cache.clear?.(), n("Cleared proxy agent cache"));
 }
 export {
@@ -2306,9 +2306,9 @@ export {
   A0n,
   EA,
   id,
-  Pie,
-  MP,
-  C0n,
+  loadExtraCACerts,
+  getCACertificates,
+  clearCACertsCache,
   c2e,
   u2e,
   qlr,
@@ -2316,39 +2316,39 @@ export {
   v0n,
   R0n,
   $tt,
-  Skt,
-  qq,
-  k0n,
-  JT,
-  Utt,
-  Ab,
-  Btt,
-  j8t,
-  x0n,
+  PEM_CERT_BLOCK_RE,
+  loadMTLSClientMaterial,
+  getLoadedMTLSPaths,
+  getMTLSConfig,
+  getMTLSAgent,
+  getWebSocketTLSOptions,
+  getTLSFetchOptions,
+  clearMTLSCache,
+  configureGlobalMTLS,
   H0n,
   Hke,
   G5,
   KU,
   bkt,
-  I0n,
-  Oie,
-  Die,
-  Lie,
-  W8t,
-  o_,
-  G8t,
-  d2e,
-  QT,
-  Cb,
-  P0n,
-  p2e,
-  f2e,
-  O0n,
-  D0n,
-  As,
-  vb,
-  she,
-  ihe,
-  zq,
-  Vq,
+  disableKeepAlive,
+  getProxyUrlWithSource,
+  getProxyUrl,
+  parseProxyUrl,
+  describeInvalidProxyUrl,
+  getUsableProxyUrl,
+  noProxyUnion,
+  getNoProxy,
+  shouldBypassProxy,
+  getWebSocketProxyUrl,
+  _setProxyAuthHelperConfig,
+  getConfiguredProxyAuthHelper,
+  getProxyAuthFromHelper,
+  clearProxyAuthHelperCache,
+  prefetchProxyAuthFromHelperIfSafe,
+  getProxyFetchOptions,
+  configureGlobalAgents,
+  resolveStsEndpointForProxyUrl,
+  getAWSClientProxyConfig,
+  getAWSProxyRequestHandler,
+  clearProxyCache,
 };

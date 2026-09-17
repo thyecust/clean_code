@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { at, Nnt } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at, AxiosError as Nnt } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Ie, po, Le, rs, zn, An, my, ku, SZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, Dt, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { Iz, tl, be, Lxe, uo, Hr, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { py, dB, Bc, Z5, DPn, zhe, nae, Vt } from "./chunk-9g2q4bjq.js";
+import { CLAUDE_AI_INFERENCE_SCOPE as py, CLAUDE_AI_PROFILE_SCOPE as dB, OAUTH_BETA_HEADER as Bc, CLAUDE_AI_OAUTH_SCOPES as Z5, ALL_OAUTH_SCOPES as DPn, preservableScopesFrom as zhe, ALLOWED_OAUTH_BASE_URLS as nae, getOauthConfig as Vt } from "./chunk-9g2q4bjq.js";
 import {
   Mb,
   Xn,
@@ -81,8 +81,8 @@ import {
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Zt, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { Pi, kxt, Unt, fXt, TW, a, Wn, Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { S, u, we, Yr, Ln, Gf, Mz } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { getGlobalClaudeFile as Pi, kxt, getHostPlatformForAnalytics as Unt, getShellForAnalytics as fXt, TW, env as a, antEnv as Wn, udsEnv as Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we, fromNumber as Yr, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln, mcpNameForAnalytics_GATE_EVALUATED as Gf, agentTypeForAnalytics_GATE_EVALUATED as Mz } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import {
   ud,
   YR,
@@ -119,11 +119,11 @@ import {
   AW,
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, oe, Yg, wZ, Vxe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { mz, St, U1, dxe, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { EL } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { mz, St, U1, dxe, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { resolveExecutableSafely as EL } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { V2e, i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g, wn, Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, logFeatureBadAsync as wn, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   ea,
   da,
@@ -137,67 +137,67 @@ import {
   Vn,
   Js,
   Oa,
-  jR,
-  YT,
+  isRemoteManagedSettingsVerified as jR,
+  getRemoteSettingsPathOverride as YT,
   X6,
-  T0,
-  T1,
+  getRelativeSettingsFilePathForSource as T0,
+  isAdminPolicyOrigin as T1,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { y1, Kxn, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { RA, yh } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { sanitizePath as RA, getProjectKey as yh } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { Jcr, wS, Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { fn, YQ, Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { fn, execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING as YQ, execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import {
   Pt,
   Ks,
   sxt,
-  ixt,
-  k0,
-  M7t,
-  $r,
-  vA,
-  axt,
-  QIn,
+  getCachedHead as ixt,
+  findGitRootUncached as k0,
+  findGitRootThroughBackendUncached as M7t,
+  findCanonicalGitRoot as $r,
+  findCanonicalGitRootUncached as vA,
+  readGitConfigValue as axt,
+  getRepoRemoteHash as QIn,
 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Xe, Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth as Xe, formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { cs, xt, ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { aXt, Vd, Hd, sur, N1, Eg } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Ee, Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import {
-  cie,
-  ye,
-  N5,
-  vxn,
-  Ge,
-  bn,
-  VT,
-  bb,
-  dS,
-  Lxn,
-  fie,
-  B6,
-  Jt,
-  Hq,
+  registerWriteQueueDrain as cie,
+  getSettingsForSource as ye,
+  getPairedPolicyModelOverrides as N5,
+  getHostManagedModelPricing as vxn,
+  getInitialSettings as Ge,
+  getSettings_DEPRECATED as bn,
+  getEffectiveSettingSource as VT,
+  getSettingsWithErrors as bb,
+  getPolicySettingsOrigin as dS,
+  getHostPolicyForceLoginMethod as Lxn,
+  getFatalAdminPolicyLoadErrors as fie,
+  isAdminPolicyUnreadable as B6,
+  updateSettingsForSource as Jt,
+  getSecuritySensitiveSettingWithSources as Hq,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { ZU, Sn, xb, eB } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { mf, gf, a0n, Gq } from "../权限系统/chunk-e4pfvp7x.js";
+import { normalizePermissionModeAlias as mf, parsePermissionMode as gf, PERMISSION_DECISION_REASON_TYPES as a0n, Gq } from "../权限系统/chunk-e4pfvp7x.js";
 import { N8t, the, ikt } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import {
   EA,
   id,
-  MP,
-  JT,
-  Die,
-  o_,
-  QT,
-  As,
-  she,
-  ihe,
-  zq,
+  getCACertificates as MP,
+  getMTLSConfig as JT,
+  getProxyUrl as Die,
+  getUsableProxyUrl as o_,
+  shouldBypassProxy as QT,
+  getProxyFetchOptions as As,
+  resolveStsEndpointForProxyUrl as she,
+  getAWSClientProxyConfig as ihe,
+  getAWSProxyRequestHandler as zq,
 } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
   R5t,
@@ -228,17 +228,17 @@ import {
   g1,
   F6,
   zvt,
-  Pe,
-  In,
-  Tl,
-  Ca,
-  HP,
-  nxn,
-  fx,
-  Wu,
-  fo,
-  ev,
-  GT,
+  getAPIProvider as Pe,
+  isFirstPartyProvider as In,
+  getProviderForModel as Tl,
+  usesFirstPartyModelIds as Ca,
+  isClaudePlatformProvider as HP,
+  usesFirstPartyPricing as nxn,
+  hasFirstPartyCapabilities as fx,
+  isFirstPartyApiBackend as Wu,
+  isFirstPartyAnthropicBaseUrl as fo,
+  isActualFirstPartyAnthropicBaseUrl as ev,
+  isFirstPartyAnthropicHost as GT,
 } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import {
   dir,
@@ -264,24 +264,24 @@ import { iir } from "../../01-核心基础设施/核心工具-进程与信号/ch
 import { Zvt, aar, IU, gx, D5t, TBe, U6, Gi } from "./chunk-7rf7w8yf.js";
 import { whe } from "../Git-Worktree/chunk-bk9696gx.js";
 import { dz } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
-import { hc, IQ, yn } from "./chunk-y7b7kf5n.js";
+import { hc, IQ, getSecureStorage as yn } from "./chunk-y7b7kf5n.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { A_, Sx, tv, wA, jar } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
 import { Y5t, J5t } from "../../01-核心基础设施/共享小工具-未细化/chunk-1bqqnyc1.js";
-import { t_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
-import { jir, _r } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { BRIEF_TOOL_NAME as t_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { jir, ARTIFACT_TOOL_NAME as _r } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { YRe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { BT } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
-import { pr } from "../权限系统/chunk-ynkf3yy4.js";
-import { aS, lS, ii, Zi, BRe } from "../Teammates团队/chunk-811z9z0t.js";
+import { SEND_USER_FILE_TOOL_NAME as BT } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { getParentSessionId as aS, getAgentId as lS, getTeamName as ii, isTeammate as Zi, isNestedInteractiveClaudeSession as BRe } from "../Teammates团队/chunk-811z9z0t.js";
 import { het } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { Vg, gkn, BZe, gA, jT, kU, Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { wq, $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { isProcessProvablyGone as Vg, looksLikeFullHostProcessTable as gkn, startTokensEqualOrCrossFormat as BZe, ownProcStartAsync as gA, procIdentityOf as jT, procIdentityFields as kU, getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { ownPidDomain as wq, $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { FR, H5 } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
-import { JC, tir } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { isClaudeInChromeMCPServer as JC, tir } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { xp, Kr } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
-import { IRe, Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { IRe, isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { px } from "../上下文压缩-Compact/chunk-qbdgst52.js";
 import { cp, fs } from "../Teammates团队/chunk-enjekn9t.js";
 import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
@@ -317,7 +317,7 @@ import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/ch
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { JQ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q35gycf9.js";
 import { P, rxe, Hxt, gur } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { va, Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { va, getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { pe, w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Mh = w(function (wh) {
@@ -6169,9 +6169,9 @@ async function r_() {
       }),
     };
   if (!r && !a.AWS_BEARER_TOKEN_BEDROCK)
-    if (Fc()) d.credentials = v6("Bedrock").credentials;
+    if (isHostManagedProviderAuth()) d.credentials = hostManagedAwsSdkCredentials("Bedrock").credentials;
     else {
-      let p = await AU();
+      let p = await refreshAndGetAwsCredentials();
       if (p)
         d.credentials = {
           accessKeyId: p.accessKeyId,
@@ -6179,7 +6179,7 @@ async function r_() {
           sessionToken: p.sessionToken,
         };
       else if (!a.CLAUDE_CODE_SKIP_AWS_CRED_CACHE)
-        d.credentials = async (_) => (await p0(t))(_);
+        d.credentials = async (_) => (await getDefaultAwsProviderChain(t))(_);
     }
   return new e(d);
 }
@@ -6214,9 +6214,9 @@ async function grr() {
       }),
     };
   if (!r && !a.AWS_BEARER_TOKEN_BEDROCK)
-    if (Fc()) d.credentials = v6("Bedrock").credentials;
+    if (isHostManagedProviderAuth()) d.credentials = hostManagedAwsSdkCredentials("Bedrock").credentials;
     else {
-      let p = await AU();
+      let p = await refreshAndGetAwsCredentials();
       if (p)
         d.credentials = {
           accessKeyId: p.accessKeyId,
@@ -6224,7 +6224,7 @@ async function grr() {
           sessionToken: p.sessionToken,
         };
       else if (!a.CLAUDE_CODE_SKIP_AWS_CRED_CACHE)
-        d.credentials = async (_) => (await p0(t))(_);
+        d.credentials = async (_) => (await getDefaultAwsProviderChain(t))(_);
     }
   return new e(d);
 }
@@ -9503,16 +9503,16 @@ class Rh {
         p;
       if (e) {
         if (
-          ((o = qn() ?? void 0),
-          (d = UT() ?? void 0),
+          ((o = getSubscriptionType() ?? void 0),
+          (d = getRateLimitTier() ?? void 0),
           o && r.claudeCodeFirstTokenDate)
         ) {
           let D = new Date(r.claudeCodeFirstTokenDate).getTime();
           if (!isNaN(D)) p = D;
         }
       }
-      let _ = zD(),
-        E = _ ?? vn(),
+      let _ = getAuthenticatedAccountInfo(),
+        E = _ ?? getOauthAccountInfo(),
         C = vh(E?.organizationUuid),
         I = vh(E?.accountUuid);
       return {
@@ -12360,7 +12360,7 @@ function Jy(e) {
   return dU(e) === null;
 }
 function Hx() {
-  return hb()
+  return isExtraUsageAllowed()
     ? "Fast mode requires usage credits \xB7 /usage-credits to turn them on"
     : "Fast mode requires usage credits";
 }
@@ -12384,9 +12384,9 @@ function GN(e) {
   if (!Mr())
     return Pe() !== "firstParty" ? "not_first_party" : "disabled_by_env";
   if (H("tengu_penguins_off", null) !== null) return "unknown";
-  if (!Rr(Q$e())) {
-    let r = e !== void 0 ? (e ?? dh()) : rt();
-    if (!(!Ks() && af(r) && Rr(r))) return "model_not_allowed";
+  if (!isModelAllowed(Q$e())) {
+    let r = e !== void 0 ? (e ?? getDefaultMainLoopModelSetting()) : getMainLoopModel();
+    if (!(!Ks() && af(r) && isModelAllowed(r))) return "model_not_allowed";
   }
   let t = ye("flagSettings")?.fastMode === !0;
   if (ke() && Rrt() && !t) return "sdk_opt_in_required";
@@ -12425,14 +12425,14 @@ function fee(e) {
     case "preference":
     case "extra_usage_disabled":
     case "network_error":
-      return Bx(e, Yt() !== null ? "oauth" : "api-key");
+      return Bx(e, getClaudeAIOAuthTokens() !== null ? "oauth" : "api-key");
   }
 }
 function RR() {
   return "Opus 5";
 }
 function Q$e() {
-  return "opus" + (vw() ? "[1m]" : "");
+  return "opus" + (isOpus1mMergeEnabled() ? "[1m]" : "");
 }
 function FCn(e, t) {
   if (!Mr()) return !1;
@@ -12452,9 +12452,9 @@ function $Cn(e) {
 }
 function af(e) {
   if (!Mr()) return !1;
-  let t = e ?? dh(),
-    r = wt(t);
-  if (dm(Ue(r), "fast_mode", r)) return !0;
+  let t = e ?? getDefaultMainLoopModelSetting(),
+    r = parseUserSpecifiedModel(t);
+  if (dm(getCanonicalName(r), "fast_mode", r)) return !0;
   let o = r.toLowerCase();
   return o.includes("opus-4-8") || o.includes("opus-5");
 }
@@ -12737,8 +12737,8 @@ async function bse(e, t) {
       n("Fast mode prefetch in progress, returning in-flight promise"),
       Nc.inflightPrefetch
     );
-  let r = gb();
-  if (!(Yt()?.accessToken && lp()) && !r) {
+  let r = getAnthropicApiKeySafe();
+  if (!(getClaudeAIOAuthTokens()?.accessToken && hasProfileScope()) && !r) {
     if (TVt()) return;
     let E = !1,
       C = ee().penguinModeOrgEnabled === !0;
@@ -12754,9 +12754,9 @@ async function bse(e, t) {
     return;
   }
   let d = async () => {
-    let E = Yt(),
+    let E = getClaudeAIOAuthTokens(),
       C =
-        E?.accessToken && lp()
+        E?.accessToken && hasProfileScope()
           ? { accessToken: E.accessToken }
           : r
             ? { apiKey: r }
@@ -12777,8 +12777,8 @@ async function bse(e, t) {
               typeof I.response?.data === "string" &&
               I.response.data.includes("OAuth token has been revoked")))
         ) {
-          let x = Yt()?.accessToken;
-          if (x) (await cm(x, t, e), (E = await d()));
+          let x = getClaudeAIOAuthTokens()?.accessToken;
+          if (x) (await handleOAuth401Error(x, t, e), (E = await d()));
           else throw I;
         } else throw I;
       }
@@ -12918,8 +12918,8 @@ function bee() {
   return e;
 }
 var wse = Object.assign(Object.create(null), {
-  [Yh(_Be.firstParty)]: Ua,
-  [Yh(ear.firstParty)]: Ua,
+  [firstPartyNameToCanonical(_Be.firstParty)]: Ua,
+  [firstPartyNameToCanonical(ear.firstParty)]: Ua,
   ...bee(),
 });
 function Aee(e, t) {
@@ -12961,8 +12961,8 @@ var Cee = m(() => {
   });
 });
 function EVt(e, t) {
-  let r = Ue(e),
-    o = Ue(e, { identity: !0 });
+  let r = getCanonicalName(e),
+    o = getCanonicalName(e, { identity: !0 });
   if (o !== r) {
     let E = ee().additionalModelCostsCache,
       C = Kx(E, Xt(e)) ?? Kx(E, Xt(o));
@@ -12977,7 +12977,7 @@ function EVt(e, t) {
   let p = ee().additionalModelCostsCache,
     _ = p ? (Ad(p, e) ?? Ad(p, r)) : void 0;
   if (_) return _;
-  return (Oee(e, r), wse[Ue(ol())] ?? eUe);
+  return (Oee(e, r), wse[getCanonicalName(getDefaultMainLoopModel())] ?? eUe);
 }
 function Oee(e, t) {
   (i("tengu_unknown_model_cost", { model: bt(e), shortName: bt(t) }), POn());
@@ -13074,7 +13074,7 @@ function fp(e, t) {
     e.exact.get(er(t).toLowerCase()) ??
     (e.builtin.size > 0
       ? e.builtin.get(
-          Ue(t, { overridesMap: e.adminOverrides ?? N5() ?? {}, identity: !0 }),
+          getCanonicalName(t, { overridesMap: e.adminOverrides ?? N5() ?? {}, identity: !0 }),
         )
       : void 0)
   );
@@ -13097,7 +13097,7 @@ function Irr(e, t) {
   return { usd: qve(eUe, t) * o, pricing: "default" };
 }
 function Tse(e) {
-  let t = Ue(e);
+  let t = getCanonicalName(e);
   if (wse[t] !== void 0) return !0;
   let r = ee().additionalModelCostsCache;
   return !!r && (Ad(r, e) !== void 0 || Ad(r, t) !== void 0);
@@ -13138,7 +13138,7 @@ function Ese(e) {
   return `${jx(e.inputTokens)}/${jx(e.outputTokens)} per Mtok`;
 }
 function Orr(e) {
-  let t = Ue(e),
+  let t = getCanonicalName(e),
     r = wse[t];
   if (!r) return;
   return Ese(r);
@@ -13160,7 +13160,7 @@ function Drr(e) {
   return zve(o, p) + (t && d ? zve(d, t) : 0);
 }
 function Pee(e) {
-  let t = Ue(e),
+  let t = getCanonicalName(e),
     r = wse[t];
   if (r) return r;
   let o = ee().additionalModelCostsCache;
@@ -13942,10 +13942,10 @@ async function Frr(e) {
     let t = a.ANTHROPIC_BASE_URL;
     if (!t) return;
     let r = a.ANTHROPIC_AUTH_TOKEN,
-      o = yRn(),
-      d = r || !o ? void 0 : (await ige(ke()))?.trim(),
+      o = isApiKeyHelperSafeToInvoke(),
+      d = r || !o ? void 0 : (await getApiKeyFromApiKeyHelper(ke()))?.trim(),
       p = r || d,
-      _ = gb()?.trim() || d;
+      _ = getAnthropicApiKeySafe()?.trim() || d;
     if (!p && !_) {
       n(
         o
@@ -13978,7 +13978,7 @@ async function Frr(e) {
     AVt({
       apiKey: D.has("x-api-key") ? null : _ || null,
       getApiKeySource: () => {
-        let { source: te } = kp({ skipRetrievingKeyFromApiKeyHelper: !0 });
+        let { source: te } = getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 });
         return te !== "none" ? te : d ? "apiKeyHelper" : "unknown";
       },
       authToken: null,
@@ -14146,11 +14146,11 @@ var vN = {
   },
 };
 function gi(e) {
-  let t = Ue(Xt(e), { identity: !0 }),
+  let t = getCanonicalName(Xt(e), { identity: !0 }),
     r = Pe(),
     o = e.trim().toLowerCase(),
     d = tc(o) ? Xt(o).trim() : o,
-    p = Ca() && qme(d) && dUe(),
+    p = Ca() && isLegacyOpusFirstParty(d) && isLegacyModelRemapEnabled(),
     _ = Object.hasOwn(vN, t) ? vN[t] : void 0;
   if (_) {
     let E = _.retirementDates[r];
@@ -14174,7 +14174,7 @@ function RN(e) {
   return gi(e).isDeprecated;
 }
 function QJ(e) {
-  if (Ca() && qme(Ue(Xt(e), { identity: !0 })) && dUe()) return !0;
+  if (Ca() && isLegacyOpusFirstParty(getCanonicalName(Xt(e), { identity: !0 })) && isLegacyModelRemapEnabled()) return !0;
   let t = gi(e);
   if (!t.isDeprecated) return !1;
   switch (t.copy.kind) {
@@ -14209,8 +14209,8 @@ function UAt(e) {
   if (!e) return null;
   let t = gi(e);
   if (!t.isDeprecated || t.copy.kind !== "remap") return jCn(e);
-  let r = Ll(),
-    o = bu(r) ?? r;
+  let r = getDefaultOpusModel(),
+    o = getMarketingNameForModel(r) ?? r;
   return `\u26A0 ${t.modelName.replace(/^Claude /, "")} remaps to ${o}. CLAUDE_CODE_DISABLE_LEGACY_MODEL_REMAP=1 opts out`;
 }
 function jCn(e) {
@@ -14219,8 +14219,8 @@ function jCn(e) {
   if (!t.isDeprecated) return null;
   switch (t.copy.kind) {
     case "remap": {
-      let r = Ll(),
-        o = bu(r) ?? r;
+      let r = getDefaultOpusModel(),
+        o = getMarketingNameForModel(r) ?? r;
       return `\u26A0 ${e.trim()} is automatically remapped to ${o} (${t.copy.remappedTo}). Set CLAUDE_CODE_DISABLE_LEGACY_MODEL_REMAP=1 to keep the requested model.`;
     }
     case "retirement": {
@@ -14652,7 +14652,7 @@ function $N(e, t) {
     : void 0;
 }
 function rL(e) {
-  return Ue(Xt(e.trim().toLowerCase()), { identity: !0 });
+  return getCanonicalName(Xt(e.trim().toLowerCase()), { identity: !0 });
 }
 function VCn(e) {
   let t = new Set();
@@ -14678,41 +14678,41 @@ function $ne(e, t) {
   }
   return !1;
 }
-function hP(e, t) {
+function isModelDenied(e, t) {
   if (t.size === 0) return !1;
   let r = Xt(e.trim().toLowerCase());
-  return (so(r) ? [r, Xt(wt(r))] : [r]).some(
-    (d) => t.has(Ue(d, { identity: !0 })) || $ne(d, t),
+  return (so(r) ? [r, Xt(parseUserSpecifiedModel(r))] : [r]).some(
+    (d) => t.has(getCanonicalName(d, { identity: !0 })) || $ne(d, t),
   );
 }
-function _P() {
+function getModelEntitlementDenySet() {
   let e = Pe();
   if (e !== "firstParty" && e !== "gateway") return new Set();
-  return VCn(hZe());
+  return VCn(getModelAccessCache());
 }
-function nUe() {
+function isEntitlementOverlayUnavailable() {
   return (
     Pe() === "firstParty" &&
-    wu() &&
-    !lp() &&
-    gb() === null &&
-    hZe().length === 0
+    hasStoredOAuthToken() &&
+    !hasProfileScope() &&
+    getAnthropicApiKeySafe() === null &&
+    getModelAccessCache().length === 0
   );
 }
 function Ume() {
   if (Pe() !== "firstParty") return null;
   if (mU()) return null;
-  return _Ze();
+  return getOrgModelDefaultCache();
 }
 function Krr() {
   if (Pe() !== "firstParty") return null;
-  return _Ze()?.updated_at ?? null;
+  return getOrgModelDefaultCache()?.updated_at ?? null;
 }
 function qAt(e) {
   let t = Object.keys(to);
   for (let r = t.length - 1; r >= 0; r--) {
     let o = to[t[r]].firstParty;
-    if (Dp(Ue(o), e) && Rr(o) && !QJ(o) && !RN(o)) return o;
+    if (Dp(getCanonicalName(o), e) && isModelAllowed(o) && !QJ(o) && !RN(o)) return o;
   }
   return null;
 }
@@ -14726,14 +14726,14 @@ function Dp(e, t) {
   return !1;
 }
 function so(e) {
-  return um(e) || XCn(e);
+  return um(e) || isServedFamilyExpandedSpelling(e);
 }
 function oL(e) {
-  return ovn(e) ?? Jrr(e);
+  return resolveModelAliasEnvFree(e) ?? registryTargetServedFree(e);
 }
 function Yne(e, t, r) {
   if (so(e)) {
-    let o = r ? oL(e) : wt(e).toLowerCase();
+    let o = r ? oL(e) : parseUserSpecifiedModel(e).toLowerCase();
     return o !== null && Dp(o, t);
   }
   return Dp(e, t);
@@ -14743,7 +14743,7 @@ function eL(e, t) {
   return e.length === t.length || e[t.length] === "-";
 }
 function qne(e, t) {
-  let r = so(e) ? Xt(wt(e).toLowerCase()) : e;
+  let r = so(e) ? Xt(parseUserSpecifiedModel(e).toLowerCase()) : e;
   if (eL(r, t)) return !0;
   if (!t.startsWith("claude-") && eL(r, `claude-${t}`)) return !0;
   return !1;
@@ -14763,20 +14763,20 @@ function nL(e, t) {
   return e;
 }
 function qa(e, t) {
-  let r = Xt(wt(e).trim().toLowerCase()),
+  let r = Xt(parseUserSpecifiedModel(e).trim().toLowerCase()),
     o = oL(e);
   if (o !== null && Xt(o) === r) return !0;
   if (um(r)) return !1;
-  return Rr(r, { ...t, envFreeAliasResolution: !0 });
+  return isModelAllowed(r, { ...t, envFreeAliasResolution: !0 });
 }
-function Rr(e, t) {
+function isModelAllowed(e, t) {
   if (t?.allowlist === void 0) {
     try {
       if (B6()) return !1;
     } catch {
       return !1;
     }
-    if (!t?.skipEntitlementDenyOverlay && hP(e, _P())) return !1;
+    if (!t?.skipEntitlementDenyOverlay && isModelDenied(e, getModelEntitlementDenySet())) return !1;
   }
   let r = bn() || {},
     o = t?.allowlist ?? r.availableModels;
@@ -14811,12 +14811,12 @@ function Rr(e, t) {
   for (let C of d)
     if (_A(C) && !tL(C, d) && Yne(E, C, t?.envFreeAliasResolution)) return !0;
   if (so(E)) {
-    let C = Xt(wt(E).toLowerCase());
+    let C = Xt(parseUserSpecifiedModel(E).toLowerCase());
     if (d.includes(C)) return !0;
   }
   for (let C of d)
     if (!_A(C) && um(C)) {
-      let I = ovn(C);
+      let I = resolveModelAliasEnvFree(C);
       if (I !== null && Xt(I) === E) return !0;
     }
   for (let C of d)
@@ -14850,7 +14850,7 @@ function iL() {
   }
 }
 function sL() {
-  return gt() && (!!a.ANTHROPIC_UNIX_SOCKET || fo());
+  return isClaudeAISubscriber() && (!!a.ANTHROPIC_UNIX_SOCKET || fo());
 }
 function ZH() {
   if (XN()) return !1;
@@ -15055,48 +15055,48 @@ function kL() {
     t = _i().state !== "inactive" || bn()?.enforceAvailableModels === !0;
   return e.sonnet && !e.opus && !t;
 }
-function RQe() {
+function hasDedicatedSmallFastModel() {
   if (a.ANTHROPIC_SMALL_FAST_MODEL !== void 0) return !0;
   let e = Pe(),
-    t = (e === "firstParty" && (fo() || bsr())) || HP(e);
+    t = (e === "firstParty" && (fo() || hasAnthropicDirectApiKey())) || HP(e);
   return a.ANTHROPIC_DEFAULT_HAIKU_MODEL !== void 0 || t;
 }
-function xm() {
+function getSmallFastModel() {
   let e = a.ANTHROPIC_SMALL_FAST_MODEL;
   if (e !== void 0) return ub(e);
-  if (!RQe()) {
+  if (!hasDedicatedSmallFastModel()) {
     let t = Pe();
-    if ((t === "bedrock" || t === "vertex") && Mf() == null && !Rse()) {
+    if ((t === "bedrock" || t === "vertex") && getUserSpecifiedModelSetting() == null && !isEnvDefaultModelGoverning()) {
       let r = Fp();
       if (!r.opus || r.sonnet) {
-        let o = Nf();
-        if ((dA(o) ?? Rr(o)) && !hP(o, _P())) return o;
+        let o = getDefaultSonnetModel();
+        if ((isModelAllowedUnderActiveEnforcement(o) ?? isModelAllowed(o)) && !isModelDenied(o, getModelEntitlementDenySet())) return o;
       }
     }
-    return rt();
+    return getMainLoopModel();
   }
-  return f5();
+  return getDefaultHaikuModel();
 }
 function nl(e, t) {
   return Qa(e)?.family === t;
 }
-function Ase(e) {
+function isNonCustomFableModel(e) {
   return nl(e, "fable");
 }
-function sUe(e) {
+function isNonCustomMythosModel(e) {
   return nl(e, "mythos");
 }
-function iUe(e, t) {
+function swapShrinksContextWindow(e, t) {
   let r = Up();
   return vp(t, r) < vp(e, r);
 }
-function DVt(e, t) {
+function preserve1mContextForRefusalFallback(e, t) {
   let r = Up(),
     o = vp(e, r);
   if (vp(t, r) >= o) {
     if (tc(t)) {
       if (!tc(e)) {
-        let p = n0(t);
+        let p = strip1mTag(t);
         return vp(p, r) >= o ? p : void 0;
       }
       if (zL(t)) return;
@@ -15105,35 +15105,35 @@ function DVt(e, t) {
   }
   if (!tc(e)) return;
   let d = Je(t);
-  return sq(d) && vp(d, r) >= o ? d : void 0;
+  return eligible1mSuffixTarget(d) && vp(d, r) >= o ? d : void 0;
 }
-function rq(e) {
+function isNonCustomOpusModel(e) {
   return nl(e, "opus");
 }
-function KCn(e) {
+function isNonCustomSonnetModel(e) {
   return nl(e, "sonnet");
 }
-function Mf() {
+function getUserSpecifiedModelSetting() {
   let e = Ec();
-  if (e !== void 0) return VAt(e);
-  return LVt();
+  if (e !== void 0) return vetUserSpecifiedModel(e);
+  return getBaselineModelSetting();
 }
-function LVt() {
+function getBaselineModelSetting() {
   let e = KR(),
     t = process.env.ANTHROPIC_MODEL,
     r = e !== void 0 ? e : t || bn()?.model || void 0;
-  return VAt(r);
+  return vetUserSpecifiedModel(r);
 }
-function VAt(e) {
-  if (e && !Rr(e)) return Xh(e) ?? void 0;
-  if (e && aUe(e)) return;
+function vetUserSpecifiedModel(e) {
+  if (e && !isModelAllowed(e)) return stepDownRestrictedFamilyAliasPick(e) ?? void 0;
+  if (e && isUnservedFamilySpelling(e)) return;
   return e;
 }
 function nre(e) {
   let t = ao(e);
   if (t === "") return !1;
   return (
-    um(t) || xR(t) || Gp(t) || t === "default" || t === "inherit" || rre(t)
+    um(t) || isModeDependentModelSetting(t) || Gp(t) || t === "default" || t === "inherit" || rre(t)
   );
 }
 function ao(e) {
@@ -15142,32 +15142,32 @@ function ao(e) {
 function rre(e) {
   let t = a.ANTHROPIC_CUSTOM_MODEL_OPTION;
   if (t !== void 0 && ao(t) === e) return !0;
-  if (g5()?.picker.options.some((r) => ao(r.model) === e) ?? !1) return !0;
+  if (getCuratedModelPicker()?.picker.options.some((r) => ao(r.model) === e) ?? !1) return !0;
   for (let r of Object.values(sl() ?? {}))
     if (typeof r === "string" && ao(r) === e) return !0;
-  if (MR().some((r) => typeof r.value === "string" && ao(r.value) === e))
+  if (getAdditionalModelOptionsCache().some((r) => typeof r.value === "string" && ao(r.value) === e))
     return !0;
   for (let r of Or().providerCache.validatedModels) if (ao(r) === e) return !0;
   return !1;
 }
-function aUe(e) {
+function isUnservedFamilySpelling(e) {
   return zp(e)?.kind === "unresolved";
 }
-function XCn(e) {
+function isServedFamilyExpandedSpelling(e) {
   return zp(e)?.kind === "marker";
 }
-function Jrr(e) {
+function registryTargetServedFree(e) {
   return null;
 }
-function rt() {
-  let e = Mf();
-  if (e !== void 0 && e !== null) return wt(e);
-  return ol();
+function getMainLoopModel() {
+  let e = getUserSpecifiedModelSetting();
+  if (e !== void 0 && e !== null) return parseUserSpecifiedModel(e);
+  return getDefaultMainLoopModel();
 }
 var Za = {
   fable: {
-    available: Cse,
-    defaultModel: () => oq(),
+    available: isFableAvailable,
+    defaultModel: () => getDefaultFableModel(),
     builtinDefault: (e) => Bp(e),
   },
 };
@@ -15184,63 +15184,63 @@ function ore() {
     if (r.resolvingBestModel) return t;
     r.resolvingBestModel = !0;
     try {
-      if (Rr(t)) return t;
+      if (isModelAllowed(t)) return t;
     } finally {
       r.resolvingBestModel = !1;
     }
   }
-  return Ll();
+  return getDefaultOpusModel();
 }
-var YCn = "opus46",
-  e0 = "sonnet45",
-  p5 = "haiku45",
-  kQe = "opus5",
-  xQe = "opus5",
-  Yve = "opus5",
-  HQe = "fable51";
-function zN(e) {
+var DEFAULT_3P_OPUS_KEY = "opus46",
+  DEFAULT_3P_SONNET_KEY = "sonnet45",
+  DEFAULT_3P_HAIKU_KEY = "haiku45",
+  DEFAULT_BEDROCK_OPUS_KEY = "opus5",
+  DEFAULT_VERTEX_OPUS_KEY = "opus5",
+  DEFAULT_MANTLE_OPUS_KEY = "opus5",
+  DEFAULT_3P_FABLE_KEY = "fable51";
+function isFableModelValue(e) {
   return e.includes("claude-fable-");
 }
-function IQe(e) {
+function isMythosModelValue(e) {
   return e.includes("claude-mythos-");
 }
-function Cse() {
+function isFableAvailable() {
   if (Ip()) {
-    if (ML(zN, Ue(oq(), { identity: !0 }))) return !1;
+    if (ML(isFableModelValue, getCanonicalName(getDefaultFableModel(), { identity: !0 }))) return !1;
     if (mU()) {
       if (a.ANTHROPIC_DEFAULT_FABLE_MODEL) return !0;
-      return yL(zN);
+      return yL(isFableModelValue);
     }
     if (AL()) return !1;
     if (a.ANTHROPIC_DEFAULT_FABLE_MODEL) return !0;
-    if (XAt()) return bL(zN) || KAt();
-    return yL(zN);
+    if (bootstrapHasAnswered()) return bL(isFableModelValue) || serverProbeAcceptedFable();
+    return yL(isFableModelValue);
   }
   if (AL()) return !1;
   if (a.ANTHROPIC_DEFAULT_FABLE_MODEL) return !0;
   let e = Pe();
   if (e !== "firstParty" && e !== "gateway") return !1;
   if (e === "firstParty" && !fo()) return !1;
-  return bL(zN) || KAt();
+  return bL(isFableModelValue) || serverProbeAcceptedFable();
 }
-function KAt() {
+function serverProbeAcceptedFable() {
   return vAt() === "accepted";
 }
-function XAt() {
-  return MR().length > 0 || Ssr();
+function bootstrapHasAnswered() {
+  return getAdditionalModelOptionsCache().length > 0 || hasBootstrapModelOptions();
 }
 function bL(e) {
-  return MR().some(
+  return getAdditionalModelOptionsCache().some(
     (t) => t.disabled !== !0 && typeof t.value === "string" && e(t.value),
   );
 }
 function AL() {
   if (Pe() !== "firstParty" || !fo()) return !1;
-  let e = MR().filter((r) => typeof r.value === "string" && zN(r.value)),
-    t = Ue(oq(), { identity: !0 });
+  let e = getAdditionalModelOptionsCache().filter((r) => typeof r.value === "string" && isFableModelValue(r.value)),
+    t = getCanonicalName(getDefaultFableModel(), { identity: !0 });
   return PL(
     e,
-    (r) => Ue(String(r.value), { identity: !0 }) === t,
+    (r) => getCanonicalName(String(r.value), { identity: !0 }) === t,
     (r) => r.disabled === !0,
   );
 }
@@ -15254,14 +15254,14 @@ function ML(e, t) {
   let r = io().filter((o) => e(o.id));
   return PL(
     r,
-    (o) => t !== void 0 && Ue(o.id, { identity: !0 }) === t,
+    (o) => t !== void 0 && getCanonicalName(o.id, { identity: !0 }) === t,
     (o) => !d5(o),
   );
 }
-function MVt(e) {
+function isMythosAvailable(e) {
   if (Pe() !== "firstParty" || !fo()) return !1;
-  let t = (p) => (sUe(p) ? p : void 0),
-    r = e === void 0 ? void 0 : t(Ue(e, { identity: !0 })),
+  let t = (p) => (isNonCustomMythosModel(p) ? p : void 0),
+    r = e === void 0 ? void 0 : t(getCanonicalName(e, { identity: !0 })),
     o = (p) => {
       let _ = p.filter((E) => E.canonical === r);
       return (_.length > 0 ? _ : p).some((E) => E.enabled);
@@ -15270,20 +15270,20 @@ function MVt(e) {
       let p = kR();
       return o(
         io().flatMap((_) => {
-          let E = t(Ue(_.id));
+          let E = t(getCanonicalName(_.id));
           return E && p !== null ? [{ canonical: E, enabled: oUe(p, _) }] : [];
         }),
       );
     };
   if (mU()) return d();
   if (Ip()) {
-    if (ML(IQe, r)) return !1;
-    if (!XAt()) return d();
+    if (ML(isMythosModelValue, r)) return !1;
+    if (!bootstrapHasAnswered()) return d();
   }
   return o(
-    MR().flatMap((p) => {
+    getAdditionalModelOptionsCache().flatMap((p) => {
       let _ =
-        typeof p.value === "string" ? t(Ue(p.value, { identity: !0 })) : void 0;
+        typeof p.value === "string" ? t(getCanonicalName(p.value, { identity: !0 })) : void 0;
       return _ ? [{ canonical: _, enabled: p.disabled !== !0 }] : [];
     }),
   );
@@ -15293,25 +15293,25 @@ function yL(e) {
   if (t === null) return !1;
   return io().some((r) => oUe(t, r) && e(r.id));
 }
-function BD(e) {
+function isPinnedFableModel(e) {
   let t = a.ANTHROPIC_DEFAULT_FABLE_MODEL;
   if (!t) return !1;
   return Xt(e) === Xt(t);
 }
-function hg(e, t) {
+function isFableFamilyOrPinnedModel(e, t) {
   return (
-    Ue(e, t?.identity ? { identity: !0 } : void 0).startsWith(
+    getCanonicalName(e, t?.identity ? { identity: !0 } : void 0).startsWith(
       "claude-fable-",
-    ) || BD(e)
+    ) || isPinnedFableModel(e)
   );
 }
 function ire(e) {
-  return Ue(e).startsWith("claude-mythos-");
+  return getCanonicalName(e).startsWith("claude-mythos-");
 }
-function JCn(e) {
-  return Xt(Ue(e)) === "claude-opus-5";
+function isOpus5FamilyModel(e) {
+  return Xt(getCanonicalName(e)) === "claude-opus-5";
 }
-function Qrr(e) {
+function isAntInternalFastModelId(e) {
   return !1;
 }
 function sre(e) {
@@ -15319,16 +15319,16 @@ function sre(e) {
   if (t === void 0) {
     let r = Zl();
     if (((t = r.opus5), Pe() === "firstParty"))
-      t = exn.map((o) => r[o]).find((o) => Rr(o)) ?? r.opus5;
+      t = exn.map((o) => r[o]).find((o) => isModelAllowed(o)) ?? r.opus5;
   }
   return IL(ub(t), e);
 }
 function IL(e, t) {
-  if ((tc(t) || _g(t)) && !tc(e) && !kse(Ue(e))) return ub(e + "[1m]");
+  if ((tc(t) || modelHasNative1MContext(t)) && !tc(e) && !kse(getCanonicalName(e))) return ub(e + "[1m]");
   return e;
 }
 function are(e) {
-  let t = HR(e);
+  let t = strippedCanonicalName(e);
   if (
     t === "claude-sonnet-4-6" ||
     t === "claude-sonnet-4-5" ||
@@ -15340,32 +15340,32 @@ function are(e) {
       r !== void 0 && r === a.CLAUDE_CODE_3P_PROBE_WROTE_SONNET_DEFAULT
         ? void 0
         : r;
-  if (d !== void 0 && !((dA(d) ?? Rr(d)) && !hP(d, _P()))) return;
+  if (d !== void 0 && !((isModelAllowedUnderActiveEnforcement(d) ?? isModelAllowed(d)) && !isModelDenied(d, getModelEntitlementDenySet()))) return;
   if (d === void 0) {
     let p = Zl().sonnet5;
-    if (!Rr(p)) return;
+    if (!isModelAllowed(p)) return;
     d = p;
   }
   return IL(ub(d), e);
 }
-function QCn(e) {
+function getPermissionClassifierExternalDefault(e) {
   return gP(() => are(e));
 }
-function NVt(e) {
-  if (hg(e) || ire(e)) return sre(e);
+function classifierFlagshipRerouteTarget(e) {
+  if (isFableFamilyOrPinnedModel(e) || ire(e)) return sre(e);
   return e;
 }
-function ZCn(e) {
-  return gP(() => NVt(e));
+function getPermissionClassifierFlagshipRerouteTarget(e) {
+  return gP(() => classifierFlagshipRerouteTarget(e));
 }
-function evn() {
+function getActiveOpusLineupIds() {
   let e = Zl();
   return exn.map((t) => e[t]);
 }
-function t0(e, t) {
+function getModelUnavailabilityReason(e, t) {
   if (Pe() !== "firstParty" || !fo()) return null;
-  let r = um(e.toLowerCase().trim()) ? wt(e) : e,
-    o = t?.ignoreModelOverrides ? (I) => Yh(Xt(I.toLowerCase()).trim()) : lre,
+  let r = um(e.toLowerCase().trim()) ? parseUserSpecifiedModel(e) : e,
+    o = t?.ignoreModelOverrides ? (I) => firstPartyNameToCanonical(Xt(I.toLowerCase()).trim()) : lre,
     d = o(e),
     p = o(r),
     _ =
@@ -15382,7 +15382,7 @@ function t0(e, t) {
   if (_ !== void 0 && mL(_.id).status === "unknown")
     return { reason: "disabled", description: PVt, notOffered: !0 };
   if (!mU()) {
-    let I = MR().find(
+    let I = getAdditionalModelOptionsCache().find(
       (D) =>
         D.disabled === !0 &&
         typeof D.value === "string" &&
@@ -15390,34 +15390,34 @@ function t0(e, t) {
     );
     if (I) return { reason: "disabled", description: I.description };
   }
-  let E = t?.ignoreModelOverrides ? Yh(r) : Ue(r, { identity: !0 }),
+  let E = t?.ignoreModelOverrides ? firstPartyNameToCanonical(r) : getCanonicalName(r, { identity: !0 }),
     C = mU()
       ? io().some((I) => d5(I) && (o(I.id) === d || o(I.id) === p))
-      : MR().some(
+      : getAdditionalModelOptionsCache().some(
           (I) =>
             I.disabled !== !0 &&
             typeof I.value === "string" &&
             (o(I.value) === d || o(I.value) === p),
         );
-  if (!C && !Cse() && Ase(E))
-    return { reason: "absent", displayName: IR(r) ?? "That model" };
-  if (!C && !MVt(E) && sUe(E))
-    return { reason: "absent", displayName: IR(r) ?? "That model" };
+  if (!C && !isFableAvailable() && isNonCustomFableModel(E))
+    return { reason: "absent", displayName: getPublicModelDisplayName(r) ?? "That model" };
+  if (!C && !isMythosAvailable(E) && isNonCustomMythosModel(E))
+    return { reason: "absent", displayName: getPublicModelDisplayName(r) ?? "That model" };
   return null;
 }
 function lre(e) {
-  return Ue(Xt(e.toLowerCase()).trim());
+  return getCanonicalName(Xt(e.toLowerCase()).trim());
 }
 function cre(e) {
   return e.toLowerCase().includes("fable");
 }
-function tvn(e) {
+function antUpstreamContextWindow(e) {
   return;
 }
-function Zrr(e) {
+function getAntContextWindow(e) {
   return;
 }
-function YAt(e) {
+function antGrants1MContext(e) {
   return !1;
 }
 var ure = {
@@ -15449,14 +15449,14 @@ function dre(e, t, r) {
 function il(e) {
   return dre(e, Zl(), Pe());
 }
-function oq() {
+function getDefaultFableModel() {
   let e = a.ANTHROPIC_DEFAULT_FABLE_MODEL;
   return ub(e !== void 0 ? DL(e) : Bp());
 }
 function DL(e) {
-  let t = n0(e);
+  let t = strip1mTag(e);
   if (t === e) return e;
-  return Wu() && (_g(t) || pre(t)) ? t : e;
+  return Wu() && (modelHasNative1MContext(t) || pre(t)) ? t : e;
 }
 function pre(e) {
   return !1;
@@ -15465,7 +15465,7 @@ function Bp(e = Zl()) {
   let t = rl("fable", e) ?? e.fable51;
   return DL(t);
 }
-function Ll() {
+function getDefaultOpusModel() {
   let e = a.ANTHROPIC_DEFAULT_OPUS_MODEL;
   if (e !== void 0) return ub(e);
   return il("opus") ?? en();
@@ -15473,10 +15473,10 @@ function Ll() {
 function en(e = Zl()) {
   return rl("opus", e) ?? e.opus5;
 }
-function nvn() {
+function enforcementDefaultOpusModel() {
   return en(Wt());
 }
-function Nf() {
+function getDefaultSonnetModel() {
   let e = a.ANTHROPIC_DEFAULT_SONNET_MODEL;
   if (e !== void 0) return ub(e);
   return il("sonnet") ?? el();
@@ -15484,7 +15484,7 @@ function Nf() {
 function el(e = Zl()) {
   return rl("sonnet", e) ?? e.sonnet46;
 }
-function f5() {
+function getDefaultHaikuModel() {
   let e = a.ANTHROPIC_DEFAULT_HAIKU_MODEL;
   if (e !== void 0) return ub(e);
   return il("haiku") ?? Hp();
@@ -15492,10 +15492,10 @@ function f5() {
 function Hp(e = Zl()) {
   return rl("haiku", e) ?? e.haiku45;
 }
-function xR(e) {
+function isModeDependentModelSetting(e) {
   return e === "opusplan" || e === "haiku";
 }
-function jme(e) {
+function planModeConstituentFamily(e) {
   if (e === "opusplan" || e === "opusplan[1m]") return "opus";
   if (e === "haiku") return "sonnet";
   return null;
@@ -15503,36 +15503,36 @@ function jme(e) {
 function Gp(e) {
   return !1;
 }
-function Xh(e) {
+function stepDownRestrictedFamilyAliasPick(e) {
   let t = e.trim().toLowerCase(),
     r = Xt(t).trim();
   if (!_A(r) || !Ca()) return null;
-  let o = _P();
+  let o = getModelEntitlementDenySet();
   if (!(bn() || {}).availableModels && o.size === 0) return null;
   let d = qAt(r);
-  if (d === null || !(dA(d) ?? Rr(d)) || hP(d, o)) return null;
+  if (d === null || !(isModelAllowedUnderActiveEnforcement(d) ?? isModelAllowed(d)) || isModelDenied(d, o)) return null;
   if (r === t) return d;
-  return (r === "opus" ? ZH() : r === "sonnet" ? UD() : !0) && sq(d)
+  return (r === "opus" ? ZH() : r === "sonnet" ? UD() : !0) && eligible1mSuffixTarget(d)
     ? `${d}[1m]`
     : d;
 }
-function FVt(e) {
-  let t = jme(e);
+function planModeConstituentModel(e) {
+  let t = planModeConstituentFamily(e);
   if (t === null || e === void 0 || e === null) return null;
-  let r = t === "opus" && (e === "opusplan[1m]" || vw()),
-    o = t === "opus" ? (r ? Je(Ll()) : Ll()) : Nf();
-  if ((dA(o) ?? Rr(o)) && !hP(o, _P())) return { model: o, clamp: "none" };
-  let p = Xh(t === "opus" ? (r ? "opus[1m]" : "opus") : "sonnet");
+  let r = t === "opus" && (e === "opusplan[1m]" || isOpus1mMergeEnabled()),
+    o = t === "opus" ? (r ? Je(getDefaultOpusModel()) : getDefaultOpusModel()) : getDefaultSonnetModel();
+  if ((isModelAllowedUnderActiveEnforcement(o) ?? isModelAllowed(o)) && !isModelDenied(o, getModelEntitlementDenySet())) return { model: o, clamp: "none" };
+  let p = stepDownRestrictedFamilyAliasPick(t === "opus" ? (r ? "opus[1m]" : "opus") : "sonnet");
   if (p !== null) return { model: p, clamp: "stepDown" };
-  return { model: wt(e), clamp: "resting" };
+  return { model: parseUserSpecifiedModel(e), clamp: "resting" };
 }
-function ip(e) {
+function getRuntimeMainLoopModel(e) {
   let { permissionMode: t, mainLoopModel: r, exceeds200kTokens: o = !1 } = e;
   if (t !== "plan") return r;
-  let d = Mf(),
-    p = jme(d);
+  let d = getUserSpecifiedModelSetting(),
+    p = planModeConstituentFamily(d);
   if (p === null || (p === "opus" && o)) return r;
-  let _ = FVt(d);
+  let _ = planModeConstituentModel(d);
   if (_ === null) return r;
   if (_.clamp !== "none") {
     let E = p === "opus" ? "opusplan upgrade" : "haiku plan upgrade",
@@ -15547,38 +15547,38 @@ function ip(e) {
 function Je(e) {
   return e.replace(/(\[1m\])+$/i, "") + "[1m]";
 }
-function JAt() {
+function getResolvedOrgDefaultModel() {
   let e = Ume();
   if (!e) return null;
-  if (!QAt(e.name)) {
+  if (!isRecognizedOrgDefaultName(e.name)) {
     let t = `Org default model "${e.name}" is not one this build recognizes; using the standard default instead`;
     if (!st().has(t)) (st().add(t), n(t, { level: "warn" }));
     return null;
   }
   return xL(e.name);
 }
-function $Vt() {
+function getBootstrapOrgDefaultEffect() {
   let e = Ume();
   if (!e) return null;
-  if (QAt(e.name)) {
-    let t = JAt();
+  if (isRecognizedOrgDefaultName(e.name)) {
+    let t = getResolvedOrgDefaultModel();
     return t === null ? null : { model: t, kind: "org" };
   }
   if (Vp()) return null;
   return { model: NL(null).setting, kind: "standard" };
 }
-function QAt(e) {
-  return um(e.toLowerCase()) || yP(e) || UVt(e);
+function isRecognizedOrgDefaultName(e) {
+  return um(e.toLowerCase()) || isRecognizedModel(e) || isDeploymentVouchedModel(e);
 }
-function UVt(e) {
+function isDeploymentVouchedModel(e) {
   return (
     (a.ANTHROPIC_CUSTOM_MODEL_OPTION !== void 0 &&
       _0(a.ANTHROPIC_CUSTOM_MODEL_OPTION, e)) ||
     OVt(e) ||
     gQe(e) !== e ||
-    MR().some((t) => typeof t.value === "string" && _0(t.value, e)) ||
+    getAdditionalModelOptionsCache().some((t) => typeof t.value === "string" && _0(t.value, e)) ||
     Nme().some((t) => typeof t.value === "string" && _0(t.value, e)) ||
-    (g5()?.picker.options.some((t) => _0(t.model.trim(), e)) ?? !1)
+    (getCuratedModelPicker()?.picker.options.some((t) => _0(t.model.trim(), e)) ?? !1)
   );
 }
 function Vp() {
@@ -15588,12 +15588,12 @@ function xL(e) {
   if (Vp()) return null;
   let t = jp(e, null) ?? e,
     r = Kp(t) ?? t;
-  return t0(r, { ignoreModelOverrides: !0 }) === null ? r : null;
+  return getModelUnavailabilityReason(r, { ignoreModelOverrides: !0 }) === null ? r : null;
 }
-function dh() {
-  return _6().setting;
+function getDefaultMainLoopModelSetting() {
+  return resolveDefaultMainLoopModelSetting().setting;
 }
-function ZAt(e) {
+function defaultModelAttributionSuffix(e) {
   switch (e) {
     case "org":
       return " \xB7 Org default";
@@ -15607,7 +15607,7 @@ function ZAt(e) {
       return "";
   }
 }
-function _6() {
+function resolveDefaultMainLoopModelSetting() {
   let e = LL();
   if (e !== null && e.enforced)
     return { setting: e.setting, attribution: e.attribution };
@@ -15616,14 +15616,14 @@ function _6() {
     o;
   if (t) o = null;
   else if (r === void 0) {
-    if (((o = JAt()), o !== null)) l_e(o);
+    if (((o = getResolvedOrgDefaultModel()), o !== null)) l_e(o);
   } else if (r === null) o = null;
   else o = xL(r);
   if (o !== null) return { setting: o, attribution: "org" };
   return NL(e);
 }
 function NL(e) {
-  let t = vse();
+  let t = getEnvDefaultModel();
   if (t !== null) return { setting: t, attribution: "env" };
   let { setting: r, envFamily: o, concreteBaseline: d } = UL();
   if (e !== null && !fre(o))
@@ -15639,12 +15639,12 @@ function LL() {
   let e = jN();
   if (e === void 0) return null;
   if (um(Xt(e.model.trim().toLowerCase()).trim())) return null;
-  let t = new Set([e.model, wt(e.model)]);
+  let t = new Set([e.model, parseUserSpecifiedModel(e.model)]);
   for (let r of t)
     if (
       !TL(r) ||
-      !Rr(r, { ignoreModelOverrides: !0, envFreeAliasResolution: !0 }) ||
-      t0(r, { ignoreModelOverrides: !0 }) !== null
+      !isModelAllowed(r, { ignoreModelOverrides: !0, envFreeAliasResolution: !0 }) ||
+      getModelUnavailabilityReason(r, { ignoreModelOverrides: !0 }) !== null
     )
       return null;
   return {
@@ -15653,12 +15653,12 @@ function LL() {
     enforced: e.enforced,
   };
 }
-function lUe() {
+function getOrgLockedDefaultModel() {
   if (mU()) {
     let e = LL();
     return e !== null && e.enforced ? { model: e.setting, kind: "org" } : null;
   }
-  return Ume()?.override_user_selection ? $Vt() : null;
+  return Ume()?.override_user_selection ? getBootstrapOrgDefaultEffect() : null;
 }
 function fre(e) {
   if (e === null) return !1;
@@ -15666,58 +15666,58 @@ function fre(e) {
   return e === "opus" ? t.opus : t.sonnet;
 }
 function Kp(e) {
-  let t = _P();
-  if (t.size === 0 || !hP(e, t)) return null;
+  let t = getModelEntitlementDenySet();
+  if (t.size === 0 || !isModelDenied(e, t)) return null;
   let r = [
-      { family: "opus", model: Ll() },
-      { family: "sonnet", model: Nf() },
-      { family: "haiku", model: f5() },
+      { family: "opus", model: getDefaultOpusModel() },
+      { family: "sonnet", model: getDefaultSonnetModel() },
+      { family: "haiku", model: getDefaultHaikuModel() },
     ],
-    o = Ue(wt(e)),
+    o = getCanonicalName(parseUserSpecifiedModel(e)),
     d = r.findIndex((_) => o.includes(_.family)),
-    p = d !== -1 ? d : hg(wt(e)) ? 0 : 1;
+    p = d !== -1 ? d : isFableFamilyOrPinnedModel(parseUserSpecifiedModel(e)) ? 0 : 1;
   for (let { family: _, model: E } of r.slice(p)) {
-    if (Rr(E)) return E;
+    if (isModelAllowed(E)) return E;
     let C = qAt(_);
     if (C !== null) return C;
   }
   return null;
 }
-function vse() {
+function getEnvDefaultModel() {
   let e = eDn(),
     t = e === void 0 ? a.ANTHROPIC_DEFAULT_MODEL : e;
   if (t == null) return null;
   let r = t.trim().toLowerCase();
   if (r === "default" || r === "inherit") return null;
-  if (xR(Xt(r))) return null;
+  if (isModeDependentModelSetting(Xt(r))) return null;
   if (Gp(r)) return null;
   if (Vp()) return null;
   if (_i().state !== "inactive" || bn()?.enforceAvailableModels === !0)
     return null;
-  if (!Rr(t)) return null;
-  if (t0(t, { ignoreModelOverrides: !0 }) !== null) return null;
+  if (!isModelAllowed(t)) return null;
+  if (getModelUnavailabilityReason(t, { ignoreModelOverrides: !0 }) !== null) return null;
   return t;
 }
-function Rse() {
-  return Mf() == null && _6().attribution === "env";
+function isEnvDefaultModelGoverning() {
+  return getUserSpecifiedModelSetting() == null && resolveDefaultMainLoopModelSetting().attribution === "env";
 }
 function UL() {
-  if (gt()) {
-    if (nCt()) return { setting: vw() ? Je(Ll()) : Ll(), envFamily: "opus" };
+  if (isClaudeAISubscriber()) {
+    if (isOpusDefaultSubscriber()) return { setting: isOpus1mMergeEnabled() ? Je(getDefaultOpusModel()) : getDefaultOpusModel(), envFamily: "opus" };
   } else if (Ca())
-    return { setting: vw() ? Je(Ll()) : Ll(), envFamily: "opus" };
+    return { setting: isOpus1mMergeEnabled() ? Je(getDefaultOpusModel()) : getDefaultOpusModel(), envFamily: "opus" };
   let e = Pe();
   if (e === "mantle")
     return {
-      setting: Zl()[Yve],
+      setting: Zl()[DEFAULT_MANTLE_OPUS_KEY],
       envFamily: null,
-      concreteBaseline: String(Wt()[Yve]),
+      concreteBaseline: String(Wt()[DEFAULT_MANTLE_OPUS_KEY]),
     };
   if (e === "bedrock" || e === "vertex") {
-    if (kL()) return { setting: Nf(), envFamily: "sonnet" };
-    return { setting: Ll(), envFamily: "opus" };
+    if (kL()) return { setting: getDefaultSonnetModel(), envFamily: "sonnet" };
+    return { setting: getDefaultOpusModel(), envFamily: "opus" };
   }
-  return { setting: Nf(), envFamily: "sonnet" };
+  return { setting: getDefaultSonnetModel(), envFamily: "sonnet" };
 }
 function jp(e, t, r) {
   let o = bn() || {},
@@ -15735,8 +15735,8 @@ function jp(e, t, r) {
   let I = { overridesMap: _, envFreeAliasResolution: !0, allowlist: d },
     D = { overridesMap: _ },
     x = (He) => {
-      let Me = Yh(Xt(He));
-      for (let [De, ve] of Object.entries(_)) if (Yh(Xt(De)) === Me) return ve;
+      let Me = firstPartyNameToCanonical(Xt(He));
+      for (let [De, ve] of Object.entries(_)) if (firstPartyNameToCanonical(Xt(De)) === Me) return ve;
       return;
     },
     N = (He, Me) => {
@@ -15752,19 +15752,19 @@ function jp(e, t, r) {
         if (xe !== null) ve = Ke ? Je(xe) : xe;
         else {
           let Ze = Oe.startsWith("claude-") ? Oe : `claude-${Oe}`;
-          if (qme(Ze) && Ca()) {
+          if (isLegacyOpusFirstParty(Ze) && Ca()) {
             let Cr = en(Wt());
             ve = Ke ? Je(Cr) : Cr;
           }
         }
       }
-      if (t0(Xt(ve), { ignoreModelOverrides: !0 }) !== null) {
+      if (getModelUnavailabilityReason(Xt(ve), { ignoreModelOverrides: !0 }) !== null) {
         let Oe = `enforceAvailableModels: the managed modelOverrides target "${ve}" is server-unavailable; using the unmapped candidate`;
         if (!st().has(Oe)) (st().add(Oe), n(Oe, { level: "warn" }));
         return He;
       }
-      if (De !== He) return sq(ve, D) ? Je(ve) : n0(ve);
-      if (tc(ve) && !sq(ve, D)) return n0(ve);
+      if (De !== He) return eligible1mSuffixTarget(ve, D) ? Je(ve) : strip1mTag(ve);
+      if (tc(ve) && !eligible1mSuffixTarget(ve, D)) return strip1mTag(ve);
       return ve;
     },
     G = null,
@@ -15772,14 +15772,14 @@ function jp(e, t, r) {
     U = Xt(L.trim().toLowerCase()),
     F = tc(e),
     V = U.startsWith("claude-") ? U : `claude-${U}`,
-    te = qme(V) ? en(Wt()) : Xa(U);
+    te = isLegacyOpusFirstParty(V) ? en(Wt()) : Xa(U);
   if (te !== null) {
-    let Me = U !== L.trim().toLowerCase() && sq(te, D) ? Je(te) : Xt(te),
-      De = wt(L);
+    let Me = U !== L.trim().toLowerCase() && eligible1mSuffixTarget(te, D) ? Je(te) : Xt(te),
+      De = parseUserSpecifiedModel(L);
     if (Xt(De) !== Xt(te)) G = Me;
-    if (Rr(Me, I))
+    if (isModelAllowed(Me, I))
       if (Xt(De) !== Xt(te)) {
-        if (t0(Me, { ignoreModelOverrides: !0 }) === null) return N(Me);
+        if (getModelUnavailabilityReason(Me, { ignoreModelOverrides: !0 }) === null) return N(Me);
       } else return null;
   } else {
     let He = Wt(),
@@ -15793,7 +15793,7 @@ function jp(e, t, r) {
           Oe = ve();
         if (typeof Oe === "string" && Xt(Oe).toLowerCase() !== U) {
           let Ke = ve();
-          G = F && sq(Ke, D) ? Je(Ke) : Ke;
+          G = F && eligible1mSuffixTarget(Ke, D) ? Je(Ke) : Ke;
         }
       }
       if (t === null && r !== void 0 && Xt(r).toLowerCase() !== U) G = r;
@@ -15811,12 +15811,12 @@ function jp(e, t, r) {
         if (De !== null && De <= Ke) continue;
         {
           let Ze = xe();
-          G = F && sq(Ze, D) ? Je(Ze) : Ze;
+          G = F && eligible1mSuffixTarget(Ze, D) ? Je(Ze) : Ze;
         }
         break;
       }
     }
-    if (Rr(e, I)) return null;
+    if (isModelAllowed(e, I)) return null;
   }
   let re = [];
   for (let He of d) {
@@ -15826,33 +15826,33 @@ function jp(e, t, r) {
       ve = Xt(De),
       Oe = Xa(ve);
     if (Oe !== null) {
-      let So = De !== ve && sq(Oe, D) ? Je(Oe) : Oe;
-      if (vL(So) && Rr(So, I)) {
-        if (t0(So, { ignoreModelOverrides: !0 }) === null) return N(So);
+      let So = De !== ve && eligible1mSuffixTarget(Oe, D) ? Je(Oe) : Oe;
+      if (vL(So) && isModelAllowed(So, I)) {
+        if (getModelUnavailabilityReason(So, { ignoreModelOverrides: !0 }) === null) return N(So);
         re.push(Me);
       }
       continue;
     }
     let Ke = Xt(De),
       xe = Ke.startsWith("claude-") ? Ke : `claude-${Ke}`;
-    if (qme(xe) && Ca()) {
+    if (isLegacyOpusFirstParty(xe) && Ca()) {
       let jn = en(Wt()),
-        Qm = De !== Ke && sq(jn, D) ? Je(jn) : jn;
-      if (t0(Qm, { ignoreModelOverrides: !0 }) === null) return N(Qm);
+        Qm = De !== Ke && eligible1mSuffixTarget(jn, D) ? Je(jn) : jn;
+      if (getModelUnavailabilityReason(Qm, { ignoreModelOverrides: !0 }) === null) return N(Qm);
       re.push(Me);
       continue;
     }
     let Ze = Pe() !== "foundry" && !De.startsWith("claude-") && ka.test(De),
       Cr = Ze || (Pe() !== "foundry" && De.startsWith("claude-")),
-      nn = wt(Ze ? `claude-${De}` : Cr ? De : Me),
+      nn = parseUserSpecifiedModel(Ze ? `claude-${De}` : Cr ? De : Me),
       Yi = Xt(nn).toLowerCase();
-    if (Cr && !/[-@]\d{8}$/.test(Yi) && Yh(Yi) !== Yi) continue;
+    if (Cr && !/[-@]\d{8}$/.test(Yi) && firstPartyNameToCanonical(Yi) !== Yi) continue;
     if (!vL(nn)) continue;
     let Jm = !Cr || /[-@]\d{8}$/.test(Yi);
-    if (Rr(nn, I)) {
-      if (t0(nn, { ignoreModelOverrides: !0 }) === null) {
-        let jn = n0(nn);
-        if (jn !== nn) return N(sq(nn, D) ? nn : jn, { isConcreteEntry: Jm });
+    if (isModelAllowed(nn, I)) {
+      if (getModelUnavailabilityReason(nn, { ignoreModelOverrides: !0 }) === null) {
+        let jn = strip1mTag(nn);
+        if (jn !== nn) return N(eligible1mSuffixTarget(nn, D) ? nn : jn, { isConcreteEntry: Jm });
         return N(nn, { isConcreteEntry: Jm });
       }
       re.push(Me);
@@ -15875,19 +15875,19 @@ function jp(e, t, r) {
   if (!st().has(ut)) (st().add(ut), n(ut, { level: "warn" }));
   return G !== null ? N(G) : null;
 }
-function sq(e, t) {
+function eligible1mSuffixTarget(e, t) {
   if (zL(e, t)) return !1;
-  let r = Yh(n0(e).trim());
+  let r = firstPartyNameToCanonical(strip1mTag(e).trim());
   if (!r.startsWith("claude-")) return !0;
-  return r.includes("opus") && Ca() ? vw() : !0;
+  return r.includes("opus") && Ca() ? isOpus1mMergeEnabled() : !0;
 }
 function zL(e, t) {
   let r = e.trim(),
-    o = n0(r).trim(),
-    d = Yh(o);
+    o = strip1mTag(r).trim(),
+    d = firstPartyNameToCanonical(o);
   if (d.startsWith("claude-")) return kse(d);
-  if (kse(Ue(o, t))) return !0;
-  return o !== r && t?.overridesMap === void 0 && kse(Ue(r));
+  if (kse(getCanonicalName(o, t))) return !0;
+  return o !== r && t?.overridesMap === void 0 && kse(getCanonicalName(r));
 }
 function gre(e) {
   return [
@@ -15966,7 +15966,7 @@ function _i() {
     return { state: "refused" };
   }
 }
-function dA(e) {
+function isModelAllowedUnderActiveEnforcement(e) {
   let t = _i();
   if (t.state === "refused") return !1;
   if (t.state === "inactive") return null;
@@ -15975,34 +15975,34 @@ function dA(e) {
     overridesMap: t.overridesMap,
     envFreeAliasResolution: !0,
   };
-  if (!Rr(e, r)) return !1;
+  if (!isModelAllowed(e, r)) return !1;
   let o = e.trim().toLowerCase(),
     d = /\[1m\]/i.test(o) ? Xt(o).trim() : o;
-  return !(um(d) || XCn(d) || (Ca() && qme(d))) || qa(d, r);
+  return !(um(d) || isServedFamilyExpandedSpelling(d) || (Ca() && isLegacyOpusFirstParty(d))) || qa(d, r);
 }
-function BVt(e) {
-  return (dA(e) ?? Rr(e)) && !hP(e, _P());
+function isPermittedByOrgModelPolicy(e) {
+  return (isModelAllowedUnderActiveEnforcement(e) ?? isModelAllowed(e)) && !isModelDenied(e, getModelEntitlementDenySet());
 }
 function mre(e) {
-  return Xt(wt(e)).toLowerCase() === Xt(ol()).toLowerCase();
+  return Xt(parseUserSpecifiedModel(e)).toLowerCase() === Xt(getDefaultMainLoopModel()).toLowerCase();
 }
-function am(e) {
+function isExemptDefaultResolvingPick(e) {
   let t = Xt(e.trim().toLowerCase());
-  if (xR(t)) return !1;
+  if (isModeDependentModelSetting(t)) return !1;
   if (t === "best") return !1;
   return mre(e);
 }
-function rvn(e) {
-  if (!am(e)) return !1;
+function isWindowSilentDefaultPick(e) {
+  if (!isExemptDefaultResolvingPick(e)) return !1;
   let t = e.trim().toLowerCase();
-  return wt(e).toLowerCase() === ol().toLowerCase() || (um(t) && t === Xt(t));
+  return parseUserSpecifiedModel(e).toLowerCase() === getDefaultMainLoopModel().toLowerCase() || (um(t) && t === Xt(t));
 }
-function ovn(e) {
+function resolveModelAliasEnvFree(e) {
   let t = Xt(e),
     r = Xa(t);
   if (r !== null) return r.toLowerCase();
   let o = t.startsWith("claude-") ? t : `claude-${t}`;
-  if (Ca() && qme(o)) return en(Wt()).toLowerCase();
+  if (Ca() && isLegacyOpusFirstParty(o)) return en(Wt()).toLowerCase();
   return null;
 }
 var _re = new RegExp(`^((${TW.join("|")})\\.)?(anthropic\\.|claude-)`);
@@ -16034,39 +16034,39 @@ function Xa(e) {
       return Gp(e) ? en(t) : null;
   }
 }
-function svn() {
+function isDefaultModelEnforced() {
   let e = UL();
   if (jp(e.setting, e.envFamily, e.concreteBaseline) !== null) return !0;
   return Kp(e.setting) !== null;
 }
-function ol() {
-  return wt(dh());
+function getDefaultMainLoopModel() {
+  return parseUserSpecifiedModel(getDefaultMainLoopModelSetting());
 }
-function iq() {
+function isNoModelFallbackEnabled() {
   return a.CLAUDE_CODE_NO_MODEL_FALLBACK === !0;
 }
-function eCt() {
+function noModelFallbackTripwire() {
   throw Error(
     "CLAUDE_CODE_NO_MODEL_FALLBACK tripwire: a model-fallback pivot was attempted " +
       "while the no-fallback guarantee is active. This branch should be unreachable \u2014 " +
       "the availability chain must be built via buildAvailabilityFallbackChain() so it collapses to [primary] under the env var. The stack trace identifies the call site.",
   );
 }
-function tCt(e, t) {
-  if (iq()) return [e];
+function buildAvailabilityFallbackChain(e, t) {
+  if (isNoModelFallbackEnabled()) return [e];
   return [e, ...t.filter((r) => r !== e)];
 }
-function m5() {
-  if (iq()) return null;
-  let e = ol();
-  if (!hg(e)) return e;
-  for (let t of [Ll(), Nf(), f5()]) {
-    if (hg(t)) continue;
-    if (dA(t) ?? Rr(t)) return t;
+function getFableDeclineFallbackModel() {
+  if (isNoModelFallbackEnabled()) return null;
+  let e = getDefaultMainLoopModel();
+  if (!isFableFamilyOrPinnedModel(e)) return e;
+  for (let t of [getDefaultOpusModel(), getDefaultSonnetModel(), getDefaultHaikuModel()]) {
+    if (isFableFamilyOrPinnedModel(t)) continue;
+    if (isModelAllowedUnderActiveEnforcement(t) ?? isModelAllowed(t)) return t;
   }
   return null;
 }
-function Yh(e) {
+function firstPartyNameToCanonical(e) {
   e = e.toLowerCase();
   let t = lie(e);
   if (t !== void 0) return t;
@@ -16117,19 +16117,19 @@ function FL() {
   return ["claude-3-opus", "claude-3-sonnet", "claude-3-haiku"];
 }
 var Ere = new Set(FL());
-function Wme(e) {
+function isRecognizedCanonical(e) {
   let t = Xt(e);
   return Qa(t) !== void 0 || Ere.has(t) || t === hBe;
 }
-function yP(e, t = Ue(e)) {
-  return Wme(t);
+function isRecognizedModel(e, t = getCanonicalName(e)) {
+  return isRecognizedCanonical(t);
 }
 function mi(e, t, r) {
   if (e === void 0) return;
   for (let [o, d] of Object.entries(e)) {
     if (!(r ? _0(d, t) : d === t)) continue;
-    let _ = Yh(o);
-    if (yP(_, _)) return _;
+    let _ = firstPartyNameToCanonical(o);
+    if (isRecognizedModel(_, _)) return _;
   }
   return;
 }
@@ -16140,9 +16140,9 @@ function sl() {
     return;
   }
 }
-function Ue(e, t) {
+function getCanonicalName(e, t) {
   let r = OL(e, t);
-  if (t?.identity === !0 || Wme(r) || yP(e, r)) return r;
+  if (t?.identity === !0 || isRecognizedCanonical(r) || isRecognizedModel(e, r)) return r;
   let o = _L(e);
   if (o === e) return r;
   return OL(o, t);
@@ -16157,25 +16157,25 @@ function OL(e, t) {
   if (r !== void 0) return r;
   if (!t?.deterministic && e.includes("application-inference-profile")) {
     let o = OW(er(e));
-    if (o) return Yh(o);
+    if (o) return firstPartyNameToCanonical(o);
   }
-  return Yh(e);
+  return firstPartyNameToCanonical(e);
 }
-function cUe(e, t) {
-  let r = e ?? rt(),
-    o = Xt(Ue(r, { ...t, identity: !0 }));
+function mainModelOverrideKeys(e, t) {
+  let r = e ?? getMainLoopModel(),
+    o = Xt(getCanonicalName(r, { ...t, identity: !0 }));
   return Wp(r) ? [`${o}[1m]`, o] : [o];
 }
-function HR(e) {
-  return Xt(Ue(e, { identity: !0 }));
+function strippedCanonicalName(e) {
+  return Xt(getCanonicalName(e, { identity: !0 }));
 }
-function Gme(e) {
-  return Xt(Ue(e, { overridesMap: N5() ?? {}, identity: !0 }));
+function hookModelMatchKey(e) {
+  return Xt(getCanonicalName(e, { overridesMap: N5() ?? {}, identity: !0 }));
 }
-function uUe(e) {
-  return Wme(e);
+function isRecognizedModelKey(e) {
+  return isRecognizedCanonical(e);
 }
-Dx(() => HR(rt()));
+Dx(() => strippedCanonicalName(getMainLoopModel()));
 var Sre = new Set([
   "claude-3-opus",
   "claude-3-sonnet",
@@ -16192,55 +16192,55 @@ var Sre = new Set([
   "claude-sonnet-4-6",
   "claude-haiku-4-5",
 ]);
-function lf(e) {
+function bytesPerTokenForModel(e) {
   if (!e) return 4;
-  let t = wt(e),
-    r = Xt(Ue(t)).replace(/[._]/g, "-");
+  let t = parseUserSpecifiedModel(e),
+    r = Xt(getCanonicalName(t)).replace(/[._]/g, "-");
   return Sre.has(r) ? 4 : 3;
 }
-function jVt(e = !1) {
-  let { setting: t, attribution: r } = _6();
+function getClaudeAiUserDefaultModelDescription(e = !1) {
+  let { setting: t, attribution: r } = resolveDefaultMainLoopModelSetting();
   if (r === "served") {
-    let d = bu(er(t)) ?? oi(t),
-      p = HN(t) ?? ZJ(t, Ue(wt(t))),
+    let d = getMarketingNameForModel(er(t)) ?? renderModelName(t),
+      p = HN(t) ?? ZJ(t, getCanonicalName(parseUserSpecifiedModel(t))),
       _ =
         p === "opus"
           ? " \xB7 Best for everyday, complex tasks"
           : p === "sonnet"
             ? " \xB7 Efficient for routine tasks"
             : "",
-      E = e && af(t) ? PQe(!0, t) : "";
+      E = e && af(t) ? getModelPricingSuffix(!0, t) : "";
     return `${d}${_}${E}`;
   }
-  if (r !== "tier") return `${bu(er(wt(t))) ?? oi(t)}${ZAt(r)}`;
-  if (nCt()) {
-    let d = Ll(),
-      p = bu(er(d)) ?? "Opus",
+  if (r !== "tier") return `${getMarketingNameForModel(er(parseUserSpecifiedModel(t))) ?? renderModelName(t)}${defaultModelAttributionSuffix(r)}`;
+  if (isOpusDefaultSubscriber()) {
+    let d = getDefaultOpusModel(),
+      p = getMarketingNameForModel(er(d)) ?? "Opus",
       _ = e && af(d);
-    if (vw())
-      return `${p} with 1M context \xB7 Best for everyday, complex tasks${_ ? PQe(!0, d) : ""}`;
-    return `${p} \xB7 Best for everyday, complex tasks${_ ? PQe(!0, d) : ""}`;
+    if (isOpus1mMergeEnabled())
+      return `${p} with 1M context \xB7 Best for everyday, complex tasks${_ ? getModelPricingSuffix(!0, d) : ""}`;
+    return `${p} \xB7 Best for everyday, complex tasks${_ ? getModelPricingSuffix(!0, d) : ""}`;
   }
-  return `${bu(er(Nf())) ?? "Sonnet"} \xB7 Efficient for routine tasks`;
+  return `${getMarketingNameForModel(er(getDefaultSonnetModel())) ?? "Sonnet"} \xB7 Efficient for routine tasks`;
 }
-function y6(e) {
+function renderDefaultModelSetting(e) {
   if (e === "opusplan") return "Opus in plan mode, else Sonnet";
-  return oi(wt(e));
+  return renderModelName(parseUserSpecifiedModel(e));
 }
-function PQe(e, t) {
+function getModelPricingSuffix(e, t) {
   if (!nxn()) return "";
-  let r = Yh(t),
+  let r = firstPartyNameToCanonical(t),
     o = e ? Ese(Gve(r)) : $x(r);
   if (o === void 0) return "";
   return ` \xB7${e ? ` (${Gq})` : ""} ${o}`;
 }
-function nCt() {
-  if (wRe() || pvt() || AZe()) return !0;
-  return uge() && !kL();
+function isOpusDefaultSubscriber() {
+  if (isMaxSubscriber() || isTeamPremiumSubscriber() || isEnterprisePAYGSubscriber()) return !0;
+  return isEnterpriseSubscriber() && !kL();
 }
-function vw() {
-  if (XN() || Bse() || Pe() !== "firstParty") return !1;
-  if (gt() && qn() === null) return !1;
+function isOpus1mMergeEnabled() {
+  if (XN() || isProSubscriber() || Pe() !== "firstParty") return !1;
+  if (isClaudeAISubscriber() && getSubscriptionType() === null) return !1;
   if (a.ANTHROPIC_DEFAULT_OPUS_MODEL === void 0) {
     let e = il("opus");
     if (e !== void 0 && !Tre(e)) return !1;
@@ -16248,18 +16248,18 @@ function vw() {
   return !0;
 }
 function Tre(e) {
-  let t = Ue(e),
+  let t = getCanonicalName(e),
     r = Ya(e, t),
-    o = Ue(e, { identity: !0 }) !== t;
+    o = getCanonicalName(e, { identity: !0 }) !== t;
   if (kse(t) && !(o && r !== void 0)) return !1;
   return r === void 0 || r >= 1e6;
 }
-function VN(e) {
+function renderModelSetting(e) {
   if (e === "opusplan") return "Opus Plan";
-  if (um(e)) return oi(wt(e));
-  return oi(e);
+  if (um(e)) return renderModelName(parseUserSpecifiedModel(e));
+  return renderModelName(e);
 }
-function rCt() {
+function getModelSourceAnnotation() {
   if (Ec() !== void 0) return "";
   if (a.ANTHROPIC_MODEL) return "";
   switch (VT("model")) {
@@ -16271,8 +16271,8 @@ function rCt() {
       return "";
   }
 }
-function IR(e) {
-  return BL(Ue(e, { identity: !0 }), e.endsWith("[1m]"));
+function getPublicModelDisplayName(e) {
+  return BL(getCanonicalName(e, { identity: !0 }), e.endsWith("[1m]"));
 }
 function BL(e, t) {
   let r = Qa(e);
@@ -16280,20 +16280,20 @@ function BL(e, t) {
   let o = t && r.context?.supports_1m_suffix ? " (1M context)" : "";
   return r.display_name + o;
 }
-function WVt(e) {
+function maskModelCodename(e) {
   let [t = "", ...r] = e.split("-");
   return [t.slice(0, 3) + "*".repeat(Math.max(0, t.length - 3)), ...r].join(
     "-",
   );
 }
-function g5() {
+function getCuratedModelPicker() {
   let e = ms(),
     t = Hq("modelPicker").find((r) => e.includes(r.source));
   return t ? { picker: t.value, source: t.source } : void 0;
 }
 function bre(e) {
   let t = e.trim(),
-    r = g5()
+    r = getCuratedModelPicker()
       ?.picker.options.find((o) => o.model.trim() === t)
       ?.label?.trim();
   return r === "" ? void 0 : r;
@@ -16301,73 +16301,73 @@ function bre(e) {
 function Are(e) {
   let t = ec(e);
   if (t === "") return;
-  let r = g5()
+  let r = getCuratedModelPicker()
     ?.picker.options.find((o) => ec(o.model) === t)
     ?.behavesAs?.trim();
   return r === void 0 || r === "" ? void 0 : r;
 }
 function yre() {
   return (
-    g5()?.picker.options.some((e) => (e.behavesAs?.trim() ?? "") !== "") ?? !1
+    getCuratedModelPicker()?.picker.options.some((e) => (e.behavesAs?.trim() ?? "") !== "") ?? !1
   );
 }
 dL({
-  isKnown: (e) => yP(e, Ue(e, { identity: !0 })),
+  isKnown: (e) => isRecognizedModel(e, getCanonicalName(e, { identity: !0 })),
   isModelId: (e) => Qa(e) !== void 0 || lie(e) !== void 0 || !1,
   registryNamesFamily: (e) => !1,
   isClientSpelling: nre,
   clientSpellingGeneration: () =>
-    `${[...Or().providerCache.validatedModels].join(",")}|${MR()
+    `${[...Or().providerCache.validatedModels].join(",")}|${getAdditionalModelOptionsCache()
       .map((e) => (typeof e.value === "string" ? e.value : ""))
       .join(
         ",",
       )}|${a.ANTHROPIC_CUSTOM_MODEL_OPTION ?? ""}|${Object.values(sl() ?? {}).join(",")}`,
-  identitySpelling: (e) => Yh(Xt(e.toLowerCase()).trim()),
+  identitySpelling: (e) => firstPartyNameToCanonical(Xt(e.toLowerCase()).trim()),
   settingsBehavesAs: Are,
   hasSettingsBehavesAs: yre,
   settingsGeneration: () => da().policy,
   knowledgeGeneration: () => null,
 });
 Yir((e, t) => BN(e, ...t));
-function oi(e) {
+function renderModelName(e) {
   let t = bre(e);
   if (t !== void 0) return t;
   let r = er(e);
   if (BR(r) === null) {
-    let d = Xve(r, Ue(r, { identity: !0 }));
+    let d = Xve(r, getCanonicalName(r, { identity: !0 }));
     if (d !== void 0) {
       let C = xb(d.name ?? "");
       if (C) return C;
       if (d.confidential === !0) {
-        let I = xb(WVt(Xt(d.id)));
+        let I = xb(maskModelCodename(Xt(d.id)));
         if (I) return I;
       }
     }
     let p = (C) => typeof C.value === "string" && er(C.value) === r,
       _ = Nme().find(p),
-      E = _ ?? (mU() ? void 0 : MR().find(p));
+      E = _ ?? (mU() ? void 0 : getAdditionalModelOptionsCache().find(p));
     if (E?.label) {
-      if (E === _ && CVt(E)) return pUe(E.value) ?? E.label;
+      if (E === _ && CVt(E)) return nameForUnnamedModelId(E.value) ?? E.label;
       return E.label;
     }
   }
-  let o = IR(e);
+  let o = getPublicModelDisplayName(e);
   if (o) return o;
   return xb(e) || "unknown model";
 }
-function GVt(e) {
+function isFableModelName(e) {
   return typeof e === "string" && (e === "Fable" || e.startsWith("Fable "));
 }
-function Hm(e) {
-  let t = IR(e);
-  return GVt(t) ? t : "Fable";
+function renderFableModelName(e) {
+  let t = getPublicModelDisplayName(e);
+  return isFableModelName(t) ? t : "Fable";
 }
-function oCt(e) {
-  let t = IR(e);
+function getPublicModelName(e) {
+  let t = getPublicModelDisplayName(e);
   if (t) return `Claude ${t}`;
   return `Claude (${e})`;
 }
-function wt(e) {
+function parseUserSpecifiedModel(e) {
   let t = e.trim(),
     r = t.toLowerCase(),
     o = tc(r),
@@ -16375,33 +16375,33 @@ function wt(e) {
   if (um(d))
     switch (d) {
       case "fable": {
-        let p = oq();
+        let p = getDefaultFableModel();
         return ub(p + (o && !Wu() && !tc(p) ? "[1m]" : ""));
       }
       case "opusplan":
-        return o ? ub(Je(Nf())) : Nf();
+        return o ? ub(Je(getDefaultSonnetModel())) : getDefaultSonnetModel();
       case "sonnet":
-        return o ? ub(Je(Nf())) : Nf();
+        return o ? ub(Je(getDefaultSonnetModel())) : getDefaultSonnetModel();
       case "haiku":
-        return o ? ub(Je(f5())) : f5();
+        return o ? ub(Je(getDefaultHaikuModel())) : getDefaultHaikuModel();
       case "opus":
-        return o ? ub(Je(Ll())) : Ll();
+        return o ? ub(Je(getDefaultOpusModel())) : getDefaultOpusModel();
       case "best":
         return ore();
       default:
     }
-  if (Ca() && qme(d) && dUe()) return o ? ub(Je(Ll())) : Ll();
-  if (o && Wu() && cre(d) && _g(d))
+  if (Ca() && isLegacyOpusFirstParty(d) && isLegacyModelRemapEnabled()) return o ? ub(Je(getDefaultOpusModel())) : getDefaultOpusModel();
+  if (o && Wu() && cre(d) && modelHasNative1MContext(d))
     return ub(t.replace(/(\[1m\])+$/i, "").trim());
   if (o) return ub(t.replace(/(\[1m\])+$/i, "").trim() + "[1m]");
   return ub(t);
 }
-function rQ(e) {
+function inlineSkillModelOverride(e) {
   return e === "inherit" ? void 0 : e;
 }
-function OQe(e, t) {
-  let r = wt(e);
-  if (!am(r) && !Rr(r))
+function resolveSkillModelOverride(e, t) {
+  let r = parseUserSpecifiedModel(e);
+  if (!isExemptDefaultResolvingPick(r) && !isModelAllowed(r))
     return (
       n(
         `Skill/command model "${e}" is not in the availableModels allowlist; keeping the session model`,
@@ -16409,11 +16409,11 @@ function OQe(e, t) {
       ),
       t
     );
-  let o = tc(t) || _g(t) || YAt(t);
+  let o = tc(t) || modelHasNative1MContext(t) || antGrants1MContext(t);
   if (tc(e) || !o) return e;
-  let d = wt(e);
-  if (_g(d)) return d;
-  if (YAt(d)) return d;
+  let d = parseUserSpecifiedModel(e);
+  if (modelHasNative1MContext(d)) return d;
+  if (antGrants1MContext(d)) return d;
   if (GC(d)) return e + "[1m]";
   return e;
 }
@@ -16423,18 +16423,18 @@ var vre = [
   "claude-opus-4-0",
   "claude-opus-4-1",
 ];
-function qme(e) {
+function isLegacyOpusFirstParty(e) {
   return vre.includes(e);
 }
-function dUe() {
+function isLegacyModelRemapEnabled() {
   return !a.CLAUDE_CODE_DISABLE_LEGACY_MODEL_REMAP;
 }
-function WC(e) {
+function modelDisplayString(e) {
   if (e === null) {
-    if (gt()) return `Default (${jVt()})`;
-    return `Default (${ol()})`;
+    if (isClaudeAISubscriber()) return `Default (${getClaudeAiUserDefaultModelDescription()})`;
+    return `Default (${getDefaultMainLoopModel()})`;
   }
-  let t = wt(e);
+  let t = parseUserSpecifiedModel(e);
   return xb(e === t ? t : `${e} (${t})`) || "unknown model";
 }
 var Rre = new Set([
@@ -16451,7 +16451,7 @@ var Rre = new Set([
     ["claude-3-5-sonnet", "Claude 3.5 Sonnet"],
     ["claude-3-5-haiku", "Claude 3.5 Haiku"],
   ]);
-function pUe(e) {
+function nameForUnnamedModelId(e) {
   if (Pe() === "foundry") return;
   let t = e.trim(),
     r = t.toLowerCase();
@@ -16471,14 +16471,14 @@ function pUe(e) {
     /-fast(?![a-z0-9])/.test(d.slice(d.lastIndexOf(p.base) + p.base.length))
   )
     return;
-  return IR(tc(d) ? d : Xt(d)) ?? void 0;
+  return getPublicModelDisplayName(tc(d) ? d : Xt(d)) ?? void 0;
 }
 function Ore(e) {
   return mi(sl(), e, !1) ?? mi(N5(), e, !0);
 }
-function bu(e) {
+function getMarketingNameForModel(e) {
   if (Pe() === "foundry") return;
-  let t = Ue(e, { identity: !0 }),
+  let t = getCanonicalName(e, { identity: !0 }),
     r = Cre.get(t);
   if (r !== void 0) return r;
   let o = Qa(t);
@@ -16487,11 +16487,11 @@ function bu(e) {
     ? `${o.display_name} (1M context)`
     : o.display_name;
 }
-function ivn(e) {
+function modelSettingResolvesThroughModelStrings(e) {
   let t = er(e).trim().toLowerCase();
   return um(t) || Object.hasOwn(QD, t);
 }
-function PR(e) {
+function toProviderWireModelId(e) {
   let t = er(e),
     r = t.toLowerCase();
   if (!Object.hasOwn(QD, r)) return t;
@@ -16511,7 +16511,7 @@ function PR(e) {
     D;
   if (E === void 0) ((I = Zl()[o]), (D = I !== d));
   else {
-    if (!Rr(r, { allowlist: E, overridesMap: C, envFreeAliasResolution: !0 }))
+    if (!isModelAllowed(r, { allowlist: E, overridesMap: C, envFreeAliasResolution: !0 }))
       return t;
     let N = kre(C, o);
     ((I = N ?? d), (D = N !== void 0));
@@ -16525,7 +16525,7 @@ function kre(e, t) {
     if (Object.hasOwn(QD, r) && QD[r] === t && o) return o;
   return;
 }
-function n0(e) {
+function strip1mTag(e) {
   return e.replace(/\[1m\]/gi, "");
 }
 import { readFileSync as wre } from "fs";
@@ -16667,10 +16667,10 @@ function Wp(e) {
 }
 function YL(e) {
   let t = Xt(e),
-    r = Ue(t);
+    r = getCanonicalName(t);
   if ($L(r)) return r;
   if (t === e) return;
-  let o = Ue(e);
+  let o = getCanonicalName(e);
   if ($L(o)) return o;
   return;
 }
@@ -16686,14 +16686,14 @@ function ror(e) {
   return qL(e);
 }
 function qL(e) {
-  let t = wt(e),
+  let t = parseUserSpecifiedModel(e),
     r = er(t),
-    o = Ue(r);
-  if (Wme(o) || (r !== t && Wme(Ue(t)))) return !1;
+    o = getCanonicalName(r);
+  if (isRecognizedCanonical(o) || (r !== t && isRecognizedCanonical(getCanonicalName(t)))) return !1;
   let d = r.toLowerCase();
   return !d.startsWith("claude-") || d !== o;
 }
-function _g(e) {
+function modelHasNative1MContext(e) {
   if (XN()) return !1;
   let t = YL(e);
   if (t === void 0) return !1;
@@ -16726,7 +16726,7 @@ function kse(e) {
 }
 function GC(e) {
   if (XN()) return !1;
-  let t = Ue(e);
+  let t = getCanonicalName(e);
   if (kse(t)) return !1;
   if (Qa(t)?.context?.supports_1m_beta) return !0;
   return fx(Tl(e));
@@ -16737,15 +16737,15 @@ function vp(e, t) {
   if (lvn(e, t)) return KN;
   return JL(e, t);
 }
-function avn(e, t = Ue(e)) {
+function avn(e, t = getCanonicalName(e)) {
   let r = Ya(e, t);
   if (r === void 0) return;
   if (r > zme && !Nre(e)) return { declared: r, believed: zme };
   return { declared: r, believed: r };
 }
 function Nre(e) {
-  if (_g(e)) return !0;
-  let t = Zrr(e);
+  if (modelHasNative1MContext(e)) return !0;
+  let t = getAntContextWindow(e);
   return t !== void 0 && t > zme;
 }
 function XL() {
@@ -16763,7 +16763,7 @@ function JL(e, t) {
   if (wQe(t)?.includes(fP.header) && GC(e)) return 1e6;
   let r = avn(e);
   if (r !== void 0) return iCt(e) ?? r.believed;
-  if (_g(e)) return 1e6;
+  if (modelHasNative1MContext(e)) return 1e6;
   let o = iCt(e);
   if (o !== null) return o;
   let d = a.CLAUDE_CODE_MAX_CONTEXT_TOKENS;
@@ -16781,7 +16781,7 @@ var Lre = 1e6;
 function iCt(e) {
   if (XN()) return null;
   if (tc(e)) return null;
-  if (Ue(e) !== "claude-sonnet-4-6") return null;
+  if (getCanonicalName(e) !== "claude-sonnet-4-6") return null;
   let t = okn()?.kelp_forest_sonnet;
   if (typeof t !== "string") return null;
   let r = parseInt(t, 10);
@@ -16808,7 +16808,7 @@ function Ure(e) {
 function h5(e) {
   let t,
     r,
-    o = Ue(e),
+    o = getCanonicalName(e),
     d = FN(e, o),
     p = Qa(o)?.max_output_tokens;
   if (d !== void 0) ((r = d), (t = Math.min(p?.default ?? WL, d)));
@@ -16872,7 +16872,7 @@ function Fre(e, t) {
   }
   return;
 }
-class aor {
+class AutoModeState {
   #t = !1;
   #i = !1;
   #n = !1;
@@ -16940,66 +16940,66 @@ class aor {
       (this.#a = !1));
   }
 }
-var Hfr = new j(() => new aor());
-function YN() {
-  return Hfr.of(B().host);
+var autoModeStates = new j(() => new AutoModeState());
+function getAutoModeState() {
+  return autoModeStates.of(B().host);
 }
-function qC(e) {
-  YN().setActive(e);
+function setAutoModeActive(e) {
+  getAutoModeState().setActive(e);
 }
-function fb() {
-  return YN().active;
+function isAutoModeActive() {
+  return getAutoModeState().active;
 }
-function cvn(e) {
+function isAutoModePermissionSurface(e) {
   return (
     e.mode === "auto" ||
-    (e.mode === "plan" && fb() && !e.isBypassPermissionsModeAvailable)
+    (e.mode === "plan" && isAutoModeActive() && !e.isBypassPermissionsModeAvailable)
   );
 }
-function yg(e) {
-  return e === "auto" || (e === "plan" && fb());
+function isAutoClassifierActive(e) {
+  return e === "auto" || (e === "plan" && isAutoModeActive());
 }
-function uvn(e) {
-  YN().setFlagCli(e);
+function setAutoModeFlagCli(e) {
+  getAutoModeState().setFlagCli(e);
 }
-function dvn() {
-  return YN().flagCli;
+function getAutoModeFlagCli() {
+  return getAutoModeState().flagCli;
 }
-function aCt(e) {
-  YN().setCircuitBroken(e);
+function setAutoModeCircuitBroken(e) {
+  getAutoModeState().setCircuitBroken(e);
 }
-function DQe() {
-  return YN().circuitBroken;
+function isAutoModeCircuitBroken() {
+  return getAutoModeState().circuitBroken;
 }
-function pvn(e) {
-  YN().setFastModeBreakerReason(e);
+function setAutoModeFastModeBreakerReason(e) {
+  getAutoModeState().setFastModeBreakerReason(e);
 }
-function fvn() {
-  return YN().fastModeBreakerReason;
+function getAutoModeFastModeBreakerReason() {
+  return getAutoModeState().fastModeBreakerReason;
 }
-function VVt(e) {
-  YN().setFromFallback(e);
+function setAutoModeFromFallback(e) {
+  getAutoModeState().setFromFallback(e);
 }
-function aq() {
-  return YN().fromFallback;
+function isAutoModeFromFallback() {
+  return getAutoModeState().fromFallback;
 }
-function fUe(e) {
-  YN().setProvisionalStartupMode(e);
+function setProvisionalStartupMode(e) {
+  getAutoModeState().setProvisionalStartupMode(e);
 }
-function mvn() {
-  return YN().provisionalStartupMode;
+function getProvisionalStartupMode() {
+  return getAutoModeState().provisionalStartupMode;
 }
-function lCt() {
-  return YN().envOnboardingEligible;
+function getAutoModeEnvOnboardingEligible() {
+  return getAutoModeState().envOnboardingEligible;
 }
-function Jve(e) {
-  YN().setEnvOnboardingEligible(e);
+function setAutoModeEnvOnboardingEligible(e) {
+  getAutoModeState().setEnvOnboardingEligible(e);
 }
-function KVt() {
-  return YN().envOnboardingShownLogged;
+function getAutoModeEnvOnboardingShownLogged() {
+  return getAutoModeState().envOnboardingShownLogged;
 }
-function XVt(e) {
-  YN().setEnvOnboardingShownLogged(e);
+function setAutoModeEnvOnboardingShownLogged(e) {
+  getAutoModeState().setEnvOnboardingShownLogged(e);
 }
 function cCt() {
   return Ge().showThinkingSummaries ?? !1;
@@ -17091,10 +17091,10 @@ function zC(e, t = !1) {
 function _vn(e) {
   let t = oQ(e, "thinking");
   if (t !== void 0) return t;
-  return !Ue(e).includes("claude-3-");
+  return !getCanonicalName(e).includes("claude-3-");
 }
 function gUe(e) {
-  let t = Ue(e);
+  let t = getCanonicalName(e);
   if (
     t.includes("claude-3-") ||
     t === "claude-opus-4-0" ||
@@ -17131,7 +17131,7 @@ function YVt({ runtimeOverride: e, resolvedModel: t, canonicalModel: r }) {
 function MQe(e) {
   let t = oQ(e, "adaptive_thinking");
   if (t !== void 0) return t;
-  let r = Ue(e);
+  let r = getCanonicalName(e);
   if (
     r.includes("claude-3-") ||
     r === "claude-opus-4-0" ||
@@ -17170,7 +17170,7 @@ function Gre(e) {
 }
 function dor(e) {
   if (!e || e.length === 0) return;
-  if (gt()) {
+  if (isClaudeAISubscriber()) {
     console.warn(
       "Warning: Custom betas are only available for API key users. Ignoring provided betas.",
     );
@@ -17186,7 +17186,7 @@ function dor(e) {
 function uCt(e) {
   let t = oQ(e, "interleaved_thinking");
   if (t !== void 0) return t;
-  let r = Ue(e),
+  let r = getCanonicalName(e),
     o = Tl(e);
   if (o === "foundry") return !0;
   if (fx(o)) return !r.includes("claude-3-");
@@ -17214,14 +17214,14 @@ function Vre(e) {
   );
 }
 function Kre(e) {
-  let t = Ue(e),
+  let t = getCanonicalName(e),
     r = Tl(e);
   if (r === "foundry") return !0;
   if (fx(r)) return !t.includes("claude-3-");
   return dm(t, "context_management", e) || t === "claude-mythos-5";
 }
 function dCt(e) {
-  let t = Ue(e),
+  let t = getCanonicalName(e),
     r = Tl(e);
   if (!fx(r)) return !1;
   if (
@@ -17257,12 +17257,12 @@ function Qve(e) {
 function NQe(e) {
   if (!Kh() || !Qve(e)) return !1;
   if (a.CLAUDE_CODE_FORCE_MID_CONVERSATION_SYSTEM) return !0;
-  let t = Ue(e);
+  let t = getCanonicalName(e);
   if (EMn(t)) return !1;
   return (
     dm(t, "mid_conv_tool_change") === !0 ||
     t === "claude-mythos-5" ||
-    Qa(n0(t)) === void 0
+    Qa(strip1mTag(t)) === void 0
   );
 }
 function Wre() {
@@ -17273,7 +17273,7 @@ function $re(e) {
   if (a.CLAUDE_CODE_FORCE_MID_CONVERSATION_SYSTEM) return !0;
   let t = oQ(e, "mid_conversation_system");
   if (t !== void 0) return t;
-  let r = Ue(e);
+  let r = getCanonicalName(e);
   if (
     r.includes("claude-3-") ||
     r === "claude-opus-4-0" ||
@@ -17291,12 +17291,12 @@ function $re(e) {
   return fx(Tl(e));
 }
 function JVt(e) {
-  return Ue(e) === "claude-sonnet-5";
+  return getCanonicalName(e) === "claude-sonnet-5";
 }
 function QVt(e) {
   let t = oQ(e, "temperature");
   if (t !== void 0) return t;
-  let r = Ue(e);
+  let r = getCanonicalName(e);
   if (
     r.includes("claude-3-") ||
     r === "claude-opus-4-0" ||
@@ -17312,7 +17312,7 @@ function QVt(e) {
   return !1;
 }
 function Yre(e) {
-  let t = Ue(e);
+  let t = getCanonicalName(e);
   if (
     t.includes("claude-3-") ||
     t === "claude-opus-4-0" ||
@@ -17335,7 +17335,7 @@ function Svn() {
   return Kh() || ZVt();
 }
 function xse(e) {
-  let t = Ue(e),
+  let t = getCanonicalName(e),
     r = Pe();
   if (
     t.includes("claude-3-") ||
@@ -17358,13 +17358,13 @@ function xse(e) {
   return !0;
 }
 function bvn({ model: e, fastMode: t, disableFastMode: r }) {
-  let o = r && (t || Qrr(e));
+  let o = r && (t || isAntInternalFastModelId(e));
   return { supported: xse(e) && !o, disableFastModeBreakerFires: o };
 }
 function Zve({ skillModel: e, mode: t, fastMode: r }) {
-  if (!yg(t)) return !0;
+  if (!isAutoClassifierActive(t)) return !0;
   let { supported: o, disableFastModeBreakerFires: d } = bvn({
-    model: wt(e),
+    model: parseUserSpecifiedModel(e),
     fastMode: r,
     disableFastMode: !!H("tengu_auto_mode_config", {})?.disableFastMode,
   });
@@ -17405,12 +17405,12 @@ function Xp(e) {
 }
 function qre(e) {
   let t = [],
-    r = Ue(e),
+    r = getCanonicalName(e),
     o = r.includes("haiku"),
     d = Pe(),
     p = Kh();
   if (!o) t.push(Qn);
-  if (gt() || (ks() && !rvt() && Zc())) t.push(Fve);
+  if (isClaudeAISubscriber() || (ks() && !hasAnthropicApiKey() && shouldUseWIFAuth())) t.push(Fve);
   if (tc(e)) t.push(fP);
   if (!a.DISABLE_INTERLEAVED_THINKING && uCt(e)) t.push(xr);
   if (p && uCt(e) && !ke() && !cCt()) t.push(OAt);
@@ -17469,7 +17469,7 @@ function pCt(e, t) {
   if (t?.isAgenticQuery) {
     if (!r.includes(Qn)) r.push(Qn);
   }
-  if (MAt(e, Ue(e)) && !r.includes(JH)) r.push(JH);
+  if (MAt(e, getCanonicalName(e)) && !r.includes(JH)) r.push(JH);
   if (Wre() && NQe(e) && !r.includes(Cw)) r.push(Cw);
   let o = Up();
   if (!o || o.length === 0) return r;
@@ -23733,25 +23733,25 @@ var RCt = "Session not found:",
   iKt = "invalid session ID";
 var vz = [2000, 4000, 8000, 16000],
   Bg = vz.length,
-  pKt = "ccr-byoc-2025-07-29";
-function $vn(e, t, r) {
+  CCR_BYOC_BETA = "ccr-byoc-2025-07-29";
+function sessionsApiWire(e, t, r) {
   return e === "v1alpha2"
-    ? { url: `${t}/v1/code/sessions`, headers: xw(r) }
-    : { url: `${t}/v1/sessions`, headers: { ...xw(r), "anthropic-beta": pKt } };
+    ? { url: `${t}/v1/code/sessions`, headers: getOAuthHeaders(r) }
+    : { url: `${t}/v1/sessions`, headers: { ...getOAuthHeaders(r), "anthropic-beta": CCR_BYOC_BETA } };
 }
-function SUe(e) {
+function isTransientNetworkError(e) {
   if (!at.isAxiosError(e)) return !1;
   if (!e.response) return !0;
   if (e.response.status >= 500) return !0;
   return !1;
 }
-async function xor(e, t) {
+async function axiosGetWithRetry(e, t) {
   let r;
   for (let o = 0; o <= Bg; o++)
     try {
       return await at.get(e, t);
     } catch (d) {
-      if (((r = d), !SUe(d))) throw d;
+      if (((r = d), !isTransientNetworkError(d))) throw d;
       if (o >= Bg)
         throw (
           n(`Teleport request failed after ${o + 1} attempts: ${l(d)}`),
@@ -23766,7 +23766,7 @@ async function xor(e, t) {
   throw r;
 }
 var Rz = ["bridge", "anthropic_cloud", "byoc", "snap"];
-function GQe(e) {
+function isCCREnvironmentKind(e) {
   return Rz.some((t) => t === e);
 }
 var mle = 120000;
@@ -23849,33 +23849,33 @@ var bPe = m(() =>
     environment_kind: X(Rz).optional(),
   }),
 );
-function Lyr() {
+function sessionsApiBearerFingerprint() {
   if (!In()) return;
-  let e = Yt()?.accessToken;
+  let e = getClaudeAIOAuthTokens()?.accessToken;
   return e === void 0
     ? void 0
     : gle("sha256").update(e).digest("hex").slice(0, 24);
 }
-async function Myr({ refresh: e, credentials: t }) {
+async function primeSessionsApiBearer({ refresh: e, credentials: t }) {
   if (!In()) return;
   if (!e) {
-    let r = Yt();
-    if (r && n1(r.expiresAt)) return;
+    let r = getClaudeAIOAuthTokens();
+    if (r && isOAuthTokenExpired(r.expiresAt)) return;
   }
-  await Ss({ credentials: t });
+  await checkAndRefreshOAuthTokenIfNeeded({ credentials: t });
 }
-async function ox(e) {
+async function prepareApiRequest(e) {
   if (!In())
     throw Error(
       "Cloud sessions are only available on the first-party Anthropic API provider.",
     );
-  await Ss({ credentials: e });
-  let t = Yt()?.accessToken;
+  await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
+  let t = getClaudeAIOAuthTokens()?.accessToken;
   if (t === void 0)
     throw Error(
       "Claude Code web sessions require authentication with a Claude.ai account. API key authentication is not sufficient. Please run /login to authenticate, or check your authentication status with /status.",
     );
-  let r = await GD();
+  let r = await getOrganizationUUID();
   if (!r) throw Error("Unable to get organization UUID");
   return { accessToken: t, orgUUID: r };
 }
@@ -23887,12 +23887,12 @@ function Sle(e) {
   if (!r || !o) return null;
   return { name: o, owner: { login: r }, default_branch: e.revision || void 0 };
 }
-async function Uvn() {
+async function fetchCodeSessionsFromSessionsAPI() {
   return Sr("teleport_sessions_list", async () => {
-    let { accessToken: e } = await ox(),
+    let { accessToken: e } = await prepareApiRequest(),
       t = `${Vt().BASE_API_URL}/v1/code/sessions`;
     try {
-      let r = await xor(t, { headers: xw(e) });
+      let r = await axiosGetWithRetry(t, { headers: getOAuthHeaders(e) });
       if (r.status !== 200)
         throw Error(`Failed to fetch code sessions: ${r.statusText}`);
       return r.data.data.map((d) => {
@@ -23921,7 +23921,7 @@ async function Uvn() {
     }
   });
 }
-function xw(e) {
+function getOAuthHeaders(e) {
   return {
     Authorization: `Bearer ${e}`,
     "Content-Type": "application/json",
@@ -23929,16 +23929,16 @@ function xw(e) {
     "anthropic-client-platform": Um(),
   };
 }
-async function w6(e, t, r) {
+async function fetchSession(e, t, r) {
   if (!In())
     throw new Iu(
       "Cloud sessions are only available on the first-party Anthropic API provider.",
       "Cloud sessions are only available on the first-party Anthropic API provider.",
     );
-  let { accessToken: o } = t ?? (await ox(r)),
+  let { accessToken: o } = t ?? (await prepareApiRequest(r)),
     d = `${Vt().BASE_API_URL}/v1/code/sessions/${e}`,
     p = await at.get(d, {
-      headers: xw(o),
+      headers: getOAuthHeaders(o),
       timeout: 15000,
       validateStatus: (C) => C < 500,
     });
@@ -23961,34 +23961,34 @@ async function w6(e, t, r) {
   let E = Date.parse(String(p.headers?.date ?? ""));
   return Ele(_, { serverNow: Number.isFinite(E) ? E : void 0 });
 }
-function fKt(e) {
+function getBranchFromSession(e) {
   return e.session_context.outcomes?.find((r) => r.type === "git_repository")
     ?.git_info?.branches[0];
 }
-async function bUe(e) {
-  return { ...xw(e), ...(await wUe()) };
+async function getSessionRequestHeaders(e) {
+  return { ...getOAuthHeaders(e), ...(await trustedDeviceHeaders()) };
 }
 async function Tle(e, t, r) {
   if (e.status !== 403) return e;
-  let { isViolinWoodEnabled: o } = await import("../../01-核心基础设施/共享小工具-未细化/isSettingsToCloudEnabled.hz5nctxq.js");
+  let { isViolinWoodEnabled: o } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js");
   if (!(await o().catch(() => !1))) return e;
   let [{ classifyElevatedAuthError: d }, { extractErrorDetail: p }] =
     await Promise.all([
-      import("../../01-核心基础设施/共享小工具-未细化/getCodeSession.7vm8hzrd.js"),
-      import("./parseRetryAfterHeader.4bshgbgh.js"),
+      import("../Bridge-RemoteControl/chunk-mxsfy35q.js"),
+      import("../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js"),
     ]);
   if (d(e.data, p(e.data)) !== "untrusted_device") return e;
-  let { withUntrustedDeviceRecovery: _ } = await import("../Bridge-RemoteControl/getTrustedDeviceToken.xdsmf5rh.js");
+  let { withUntrustedDeviceRecovery: _ } = await import("../Bridge-RemoteControl/chunk-tyce0p0b.js");
   return (
     (await _(t, r, void 0).catch(() => {
       return;
     })) ?? e
   );
 }
-async function wUe() {
-  let { isViolinWoodEnabled: e } = await import("../../01-核心基础设施/共享小工具-未细化/isSettingsToCloudEnabled.hz5nctxq.js");
+async function trustedDeviceHeaders() {
+  let { isViolinWoodEnabled: e } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js");
   if (!(await e().catch(() => !1))) return {};
-  let { getTrustedDeviceToken: t } = await import("../Bridge-RemoteControl/getTrustedDeviceToken.xdsmf5rh.js"),
+  let { getTrustedDeviceToken: t } = await import("../Bridge-RemoteControl/chunk-tyce0p0b.js"),
     r = await t().catch(() => {
       return;
     });
@@ -24003,9 +24003,9 @@ async function yl(e, t, r, o) {
       cause: "not_first_party",
     };
   try {
-    let { accessToken: d } = await ox(),
+    let { accessToken: d } = await prepareApiRequest(),
       p = `${Vt().BASE_API_URL}/v1/code/sessions/${e}/events`,
-      _ = await bUe(d);
+      _ = await getSessionRequestHeaders(d);
     n(`${r} Sending event to session ${e}`);
     let E = await oKt(o, e, t),
       C = (x) =>
@@ -24015,7 +24015,7 @@ async function yl(e, t, r, o) {
           { headers: x, validateStatus: (N) => N < 500, timeout: 30000 },
         ),
       I = await Tle(await C(_), _["X-Trusted-Device-Token"], async (x) =>
-        C({ ...xw((await ox()).accessToken), "X-Trusted-Device-Token": x }),
+        C({ ...getOAuthHeaders((await prepareApiRequest()).accessToken), "X-Trusted-Device-Token": x }),
       );
     if (I.status === 200 || I.status === 201)
       return (
@@ -24052,7 +24052,7 @@ async function yl(e, t, r, o) {
     );
   }
 }
-async function Jme(e, t, r) {
+async function sendEventToRemoteSession(e, t, r) {
   return yl(
     e,
     {
@@ -24067,7 +24067,7 @@ async function Jme(e, t, r) {
     r?.eventSigner,
   );
 }
-async function Bvn(e, t, r) {
+async function sendControlRequestToRemoteSession(e, t, r) {
   return yl(
     e,
     { uuid: Al(), ...t },
@@ -24075,14 +24075,14 @@ async function Bvn(e, t, r) {
     r?.eventSigner,
   );
 }
-async function jvn(e, t, r) {
+async function sendControlResponseToRemoteSession(e, t, r) {
   return yl(
     e,
     { uuid: Al(), ..._Ue(t, r) },
     "[sendControlResponseToRemoteSession]",
   );
 }
-async function Wvn(e, t, r) {
+async function sendBashCommandToRemoteSession(e, t, r) {
   return yl(
     e,
     {
@@ -24096,15 +24096,15 @@ async function Wvn(e, t, r) {
     r?.eventSigner,
   );
 }
-async function qQe(e, t) {
+async function updateSessionTitle(e, t) {
   try {
-    let { accessToken: r } = await ox(),
+    let { accessToken: r } = await prepareApiRequest(),
       o = `${Vt().BASE_API_URL}/v1/code/sessions/${e}`;
     n(`[updateSessionTitle] Updating title for session ${e}: "${t}"`);
     let d = await at.put(
       o,
       { title: t },
-      { headers: await bUe(r), validateStatus: (p) => p < 500 },
+      { headers: await getSessionRequestHeaders(r), validateStatus: (p) => p < 500 },
     );
     if (d.status === 200)
       return (
@@ -24119,12 +24119,12 @@ async function qQe(e, t) {
     return (n(`[updateSessionTitle] Error: ${l(r)}`), !1);
   }
 }
-async function zQe(e, t) {
+async function markSessionRead(e, t) {
   try {
-    let { accessToken: r } = await ox(),
+    let { accessToken: r } = await prepareApiRequest(),
       o = `${Vt().BASE_API_URL}/v1/code/sessions/${e}/mark_read`,
       d = await at.post(o, t ? { event_id: t } : {}, {
-        headers: xw(r),
+        headers: getOAuthHeaders(r),
         timeout: 1e4,
         validateStatus: (p) => p < 500,
       });
@@ -24153,30 +24153,30 @@ var ble = m(() =>
       bl(),
     ]),
   );
-function Ose() {
+function getAccessTokenWithCcrFallback() {
   return (
-    Yt()?.accessToken ??
+    getClaudeAIOAuthTokens()?.accessToken ??
     (a.CLAUDE_CODE_REMOTE
       ? a.CLAUDE_CODE_OAUTH_TOKEN || gx() || void 0
       : void 0)
   );
 }
-async function S5(e, t, r) {
+async function pollRemoteSessionEvents(e, t, r) {
   if (!In())
     throw Error(
       "Cloud sessions are only available on the first-party Anthropic API provider.",
     );
-  await Ss({ credentials: r.credentials });
-  let o = Ose();
+  await checkAndRefreshOAuthTokenIfNeeded({ credentials: r.credentials });
+  let o = getAccessTokenWithCcrFallback();
   if (!o) throw Error("No access token for polling");
-  let d = await bUe(o),
+  let d = await getSessionRequestHeaders(o),
     p = `${Vt().BASE_API_URL}/v1/code/sessions/${e}/events`,
     _ = 50,
     E = [],
     C = [],
     I = t;
   for (let L = 0; L < _; L++) {
-    let U = await xor(p, {
+    let U = await axiosGetWithRetry(p, {
       headers: d,
       params: { sort_order: "asc", ...(I && { cursor: I }) },
       timeout: 30000,
@@ -24204,8 +24204,8 @@ async function S5(e, t, r) {
   if (r.skipMetadata) return { newEvents: E, controlFrames: C, lastEventId: I };
   let D, x, N, G;
   try {
-    let L = await w6(e, { accessToken: o });
-    ((D = fKt(L)), (x = L.session_status), (N = L.startup_failure));
+    let L = await fetchSession(e, { accessToken: o });
+    ((D = getBranchFromSession(L)), (x = L.session_status), (N = L.startup_failure));
   } catch (L) {
     ((G = l(L)),
       n(`teleport: failed to fetch session ${e} metadata: ${L}`, {
@@ -24222,20 +24222,20 @@ async function S5(e, t, r) {
     metadataFetchError: G,
   };
 }
-async function LR(e, t = 1e4) {
+async function archiveRemoteSession(e, t = 1e4) {
   if (!In())
     return (
       n(`[archiveRemoteSession] ${e} skipped: non-first-party provider`),
       !1
     );
-  let r = Ose();
+  let r = getAccessTokenWithCcrFallback();
   if (!r) return !1;
   let o = `${Vt().BASE_API_URL}/v1/code/sessions/${e}/archive`;
   try {
     let d = await at.post(
       o,
       {},
-      { headers: await bUe(r), timeout: t, validateStatus: (p) => p < 500 },
+      { headers: await getSessionRequestHeaders(r), timeout: t, validateStatus: (p) => p < 500 },
     );
     if (d.status === 200 || d.status === 409)
       return (n(`[archiveRemoteSession] archived ${e}`), !0);
@@ -24376,9 +24376,9 @@ function TUe(e) {
   return Rle("sha256").update(e).digest("hex");
 }
 function Ior() {
-  let e = Yt(),
+  let e = getClaudeAIOAuthTokens(),
     t = e?.accessToken;
-  if (!EZe(e) || !t) return null;
+  if (!isUsableClaudeAILoginRecord(e) || !t) return null;
   return TUe(`Bearer ${t}`);
 }
 function Dz(e) {
@@ -24401,8 +24401,8 @@ async function Er(e, t, r, o = {}, d = !1) {
     C = null;
   if (o.auth === "teleport-org") {
     if (
-      (await Ss({ credentials: o.credentials, storageV5: o.storageV5 }),
-      await f0(o.credentials))
+      (await checkAndRefreshOAuthTokenIfNeeded({ credentials: o.credentials, storageV5: o.storageV5 }),
+      await isOAuthRefreshKnownDeadAsync(o.credentials))
     )
       return {
         ok: !1,
@@ -24410,15 +24410,15 @@ async function Er(e, t, r, o = {}, d = !1) {
         detail:
           "OAuth refresh token is no longer valid; run /login to re-authenticate",
       };
-    if (!Yt()?.accessToken)
+    if (!getClaudeAIOAuthTokens()?.accessToken)
       return {
         ok: !1,
         reason: "no-auth",
         detail: "No OAuth token in keychain",
       };
-    let { accessToken: F, orgUUID: V } = await ox(o.credentials);
+    let { accessToken: F, orgUUID: V } = await prepareApiRequest(o.credentials);
     ((C = F),
-      (_ = { ...xw(F), "x-organization-uuid": V }),
+      (_ = { ...getOAuthHeaders(F), "x-organization-uuid": V }),
       (E = t.replace(":orgUUID", V)));
   } else if (o.auth === "session-jwt") {
     let F = Gi();
@@ -24427,14 +24427,14 @@ async function Er(e, t, r, o = {}, d = !1) {
     _ = { Authorization: `Bearer ${F}` };
   } else if (o.auth === "claude-ai-oauth") {
     await kz(o);
-    let F = Yt(),
+    let F = getClaudeAIOAuthTokens(),
       V = F?.accessToken;
-    if (!EZe(F) || !V)
+    if (!isUsableClaudeAILoginRecord(F) || !V)
       return { ok: !1, reason: "no-auth", detail: "no claude.ai login" };
     _ = { Authorization: `Bearer ${V}`, "anthropic-beta": Bc };
   } else if (o.auth !== "none") {
     await kz(o);
-    let F = o.auth === "async" ? await tx() : l5();
+    let F = o.auth === "async" ? await getAuthHeadersAsync() : getAuthHeaders();
     if (F.error && o.auth !== "optional")
       return { ok: !1, reason: "no-auth", detail: F.error };
     _ = F.headers;
@@ -24449,7 +24449,7 @@ async function Er(e, t, r, o = {}, d = !1) {
     let F = rRe();
     if (F.auth === "none") _ = F.headers ?? {};
   }
-  let I = { "User-Agent": ex(), ..._, ...o.headers };
+  let I = { "User-Agent": getUserAgent(), ..._, ...o.headers };
   if (o.frameTunnel) {
     for (let F of Object.keys(I)) if (Ole.has(F.toLowerCase())) delete I[F];
   }
@@ -24548,7 +24548,7 @@ async function Er(e, t, r, o = {}, d = !1) {
 async function kz(e) {
   if (!e.refreshOAuth) return;
   try {
-    await Ss({ credentials: e.credentials, storageV5: e.storageV5 });
+    await checkAndRefreshOAuthTokenIfNeeded({ credentials: e.credentials, storageV5: e.storageV5 });
   } catch (t) {
     n(
       `firstPartyApi: refreshOAuth failed (${t instanceof Error ? t.message : t}); proceeding with cached token`,
@@ -24592,8 +24592,8 @@ function vl(e) {
   if (e instanceof Cle) e.destroy();
 }
 async function wz(e, t, r) {
-  if (await cm(e, t, r)) return "retry";
-  if (await f0(t))
+  if (await handleOAuth401Error(e, t, r)) return "retry";
+  if (await isOAuthRefreshKnownDeadAsync(t))
     return {
       ok: !1,
       reason: "no-auth",
@@ -26166,18 +26166,18 @@ function Zor(e) {
 function esr(e) {
   Kt().markIsolationUnavailable(e);
 }
-var rRn = 600000,
-  CKt = 3,
+var FORMER_NAME_HINT_TTL_MS = 600000,
+  MAX_FORMER_NAMES = 3,
   oue = 1e4,
-  vKt = 1,
-  RKt = "notify_idle",
-  kKt = "artifact_yield";
+  PEER_PROTOCOL = 1,
+  NOTIFY_IDLE_PEER_FEATURE = "notify_idle",
+  ARTIFACT_YIELD_PEER_FEATURE = "artifact_yield";
 function iue() {
   if (P() === "windows") return !1;
   return typeof Bun < "u" && typeof Bun.ant?.getPeerPid === "function";
 }
 function sue() {
-  return [RKt, ...(iue() ? [Jg] : []), kKt];
+  return [NOTIFY_IDLE_PEER_FEATURE, ...(iue() ? [Jg] : []), ARTIFACT_YIELD_PEER_FEATURE];
 }
 var tm = m(() =>
   nt({
@@ -26222,7 +26222,7 @@ class CF {
       this.formerNames = [
         { name: r.name, until: o },
         ...this.formerNames.filter((_) => yr(_.name) !== p),
-      ].slice(0, CKt);
+      ].slice(0, MAX_FORMER_NAMES);
     }
     this.registeredName = { name: e, source: t, since: o };
   }
@@ -26268,37 +26268,37 @@ var aue = new j(() => new CF());
 function yt() {
   return aue.of(B().host);
 }
-function Nyr() {
+function getHeldSessionNames() {
   return yt().heldNames;
 }
-function mb() {
+function getRegisteredSessionName() {
   return yt().registeredName;
 }
-function rZe() {
+function whenSessionRegistered() {
   let e = yt();
   return e.registration ?? Promise.resolve(e.registered);
 }
-function E6() {
+function envSessionKind() {
   let e = a.CLAUDE_CODE_SESSION_KIND;
   if (e === "bg" || e === "daemon" || e === "daemon-worker") return e;
   return;
 }
-function _t() {
-  return E6() === "bg";
+function isBgSession() {
+  return envSessionKind() === "bg";
 }
-function Sg() {
-  return ic() || _t() || f8() !== void 0;
+function isUnattendedInteractiveSession() {
+  return ic() || isBgSession() || f8() !== void 0;
 }
-function ap() {
-  return _t() && !dl();
+function isUnattendedBgSession() {
+  return isBgSession() && !dl();
 }
-function Ja() {
-  return _t() || Jh() !== null;
+function isActingAsBgJob() {
+  return isBgSession() || Jh() !== null;
 }
-function WD() {
+function getBgJobDir() {
   return Jh()?.jobDir ?? a.CLAUDE_JOB_DIR;
 }
-function pq() {
+function isDaemonBgWorker() {
   return a.CLAUDE_BG_BACKEND === "daemon";
 }
 var Nl = ".fleetview-heartbeat",
@@ -26309,7 +26309,7 @@ function om() {
 function xl() {
   return Ce.session(`${process.pid}.json`);
 }
-async function oRn(e) {
+async function touchFleetViewHeartbeat(e) {
   if (e) {
     try {
       let t = await e.write(om(), String(Date.now()), {
@@ -26326,7 +26326,7 @@ async function oRn(e) {
     await rm(It(e1(), Nl), String(Date.now()));
   } catch {}
 }
-async function sRn(e) {
+async function clearFleetViewHeartbeat(e) {
   if (e) {
     try {
       await e.delete(om());
@@ -26342,7 +26342,7 @@ function kF(e, t) {
   let { watchedCache: r } = e;
   return r && t - r.at < lue ? r.value : void 0;
 }
-function oZe() {
+function isBeingWatched() {
   let e = yt(),
     t = Date.now(),
     r = kF(e, t);
@@ -26356,7 +26356,7 @@ function oZe() {
   }
   return (e.setWatchedCache({ at: t, value: o }), o);
 }
-async function sZe(e) {
+async function isBeingWatchedV5(e) {
   let t = yt(),
     r = Date.now(),
     o = kF(t, r);
@@ -26376,7 +26376,7 @@ async function sZe(e) {
   if (!E || E.at < r) t.setWatchedCache({ at: p, value: _ });
   return _;
 }
-function iRn(e) {
+function registerSession(e) {
   let t = yt(),
     r = cue(t, e);
   return ((t.registration = r), r);
@@ -26385,7 +26385,7 @@ async function cue(e, t) {
   if (!wF()) return !1;
   let r = Promise.withResolvers();
   e.setPidFileWriteChain(r.promise);
-  let o = E6() ?? "interactive";
+  let o = envSessionKind() ?? "interactive";
   e.bornSpare = o === "bg" && a.CLAUDE_BG_SOURCE === "spare";
   let d = e.bornSpare && !(await MF(t)),
     p = a.CLAUDE_CODE_SESSION_NAME
@@ -26436,7 +26436,7 @@ async function cue(e, t) {
             "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
           DD_SOURCEMAP_GROUP: "darwin",
         }.VERSION,
-        peerProtocol: vKt,
+        peerProtocol: PEER_PROTOCOL,
         peerFeatures: sue(),
         kind: o,
         entrypoint: a.CLAUDE_CODE_ENTRYPOINT,
@@ -26525,7 +26525,7 @@ async function hn(e, t) {
     d
   );
 }
-async function t1(e, t, r = "user") {
+async function updateSessionName(e, t, r = "user") {
   if (!e) return !1;
   let o = yt();
   o.setRegisteredName(e, r);
@@ -26550,19 +26550,19 @@ async function t1(e, t, r = "user") {
 function wF() {
   return lS() == null && !BRe();
 }
-async function Fyr(e, t) {
+async function updateSessionMessagingSocketPath(e, t) {
   await hn({ messagingSocketPath: e, updatedAt: Date.now() }, t);
 }
-async function KCt(e, t) {
+async function updateSessionBridgeId(e, t) {
   await hn({ bridgeSessionId: e }, t);
 }
-async function aRn(e, t) {
+async function markSessionParked(e, t) {
   await hn({ parkedJobId: e, updatedAt: Date.now() }, t);
 }
-async function XCt(e) {
+async function clearSessionParked(e) {
   await hn({ parkedJobId: void 0, updatedAt: Date.now() }, e);
 }
-async function xUe(e, t) {
+async function updateSessionActivity(e, t) {
   let r = Date.now(),
     o = yt(),
     d = o.bornSpare && e.status === "busy",
@@ -26586,7 +26586,7 @@ async function uue(e) {
   return hn({ spare: void 0, updatedAt: Date.now() }, e);
 }
 async function MF(e) {
-  let t = WD();
+  let t = getBgJobDir();
   if (!t) return !1;
   if (M() && e !== void 0) {
     let r = SKt(t, ["state.json"]);
@@ -26653,13 +26653,13 @@ async function IF(e) {
       ),
   });
 }
-function Lse() {
+function isRegistrySweepPermitted() {
   return yt().isRegistrySweepPermitted();
 }
 function gue(e) {
   return P() === "windows" && e !== void 0 && e.startsWith("/");
 }
-async function xKt(e, t, r, o) {
+async function reapKeysOfReapedRecord(e, t, r, o) {
   if (M() && o !== void 0) {
     let p = await IF(o);
     if (p === void 0) return;
@@ -26691,7 +26691,7 @@ async function vF(e, t, r, o, d) {
     }),
   );
 }
-function YCt(e, t, r = []) {
+function mayReapRecordFromThisDomain(e, t, r = []) {
   let o = P(),
     d = !ld();
   if (e === null) {
@@ -26710,7 +26710,7 @@ function YCt(e, t, r = []) {
       return !0;
   }
 }
-async function iZe(e) {
+async function countConcurrentSessions(e) {
   let t = e1(),
     r;
   if (e) {
@@ -26774,7 +26774,7 @@ async function iZe(e) {
       L === null
         ? await Promise.all((I.get(x) ?? []).map((V) => ki(It(t, V))))
         : [];
-    if (!YCt(L, p, U)) {
+    if (!mayReapRecordFromThisDomain(L, p, U)) {
       E.add(x);
       continue;
     }
@@ -26837,7 +26837,7 @@ async function iZe(e) {
   if (d) o.setUncleanExitsScanned(!0);
   return _;
 }
-var HKt = /^[A-Za-z0-9_.-]{1,64}:@?\d{1,6}\.%?\d{1,6}$/;
+var TMUX_LOCATION_RE = /^[A-Za-z0-9_.-]{1,64}:@?\d{1,6}\.%?\d{1,6}$/;
 async function mue() {
   let e = a.TMUX_PANE;
   if (!a.TMUX || !e) return;
@@ -27496,7 +27496,7 @@ async function Iue() {
     ...(process.env.CLAUDE_CODE_TAGS && { tags: process.env.CLAUDE_CODE_TAGS }),
     isGithubAction: Ie(process.env.GITHUB_ACTIONS),
     isClaudeCodeAction: Ie(process.env.CLAUDE_CODE_ACTION),
-    isClaudeAiAuth: gt(),
+    isClaudeAiAuth: isClaudeAISubscriber(),
     version: {
       ISSUES_EXPLAINER:
         "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -27592,7 +27592,7 @@ function Due(e) {
   }
 }
 async function Vl(e = {}) {
-  let t = e.model ? String(e.model) : rt(),
+  let t = e.model ? String(e.model) : getMainLoopModel(),
     r = typeof e.betas === "string" ? e.betas : jC(b6(t)).join(","),
     o = fZ(),
     d = BF.of(B().host);
@@ -27600,7 +27600,7 @@ async function Vl(e = {}) {
   let [p, _, E] = await Promise.all([d.envContext, QIn(), ixt(), FQe()]),
     C = GAt(t),
     I = Due(d),
-    D = E6(),
+    D = envSessionKind(),
     x = D ? (dl() ? "1" : "0") : void 0,
     N = Trt(),
     G = a.CLAUDE_AGENT_SDK_VERSION;
@@ -27621,9 +27621,9 @@ async function Vl(e = {}) {
     sweBenchInstanceId: process.env.SWE_BENCH_INSTANCE_ID || "",
     sweBenchTaskId: process.env.SWE_BENCH_TASK_ID || "",
     ...Mue(),
-    ...(qn() && { subscriptionType: qn() }),
+    ...(getSubscriptionType() && { subscriptionType: getSubscriptionType() }),
     ...(_ && { rh: _ }),
-    ...(E && x6() && { head_sha: E }),
+    ...(E && isConsumerSubscriber() && { head_sha: E }),
     ...(N && { rendererMode: N }),
     ...(o && { promptId: o }),
   };
@@ -28254,9 +28254,9 @@ class gm {
       (this.cancelBackoff(), (this.cancelBackoff = null));
   }
   async refreshExpiredOAuthTokenOnce() {
-    if (!gt() || !lp()) return;
-    let e = Yt();
-    if (!e || !n1(e.expiresAt)) return;
+    if (!isClaudeAISubscriber() || !hasProfileScope()) return;
+    let e = getClaudeAIOAuthTokens();
+    if (!e || !isOAuthTokenExpired(e.expiresAt)) return;
     if (this.refreshAttemptedFor === e.accessToken) {
       if (this.inflightRefresh)
         await kt(this.inflightRefresh, this.oauthRefreshTimeoutMs);
@@ -28264,7 +28264,7 @@ class gm {
     }
     this.refreshAttemptedFor = e.accessToken;
     let t = Promise.resolve()
-      .then(() => Ss())
+      .then(() => checkAndRefreshOAuthTokenIfNeeded())
       .then(
         () => {},
         (r) => {
@@ -28281,23 +28281,23 @@ class gm {
   shouldSkipAuthForSend(e) {
     if (this.skipAuth || !e) return !0;
     if (!GT(this.endpoint) || !fm(this.endpoint)) return !0;
-    if (!gt()) return !1;
-    let t = Yt();
-    if (!lp() && !this.shouldAttachAuthWithoutProfileScope()) return !0;
-    if (t && n1(t.expiresAt)) return !0;
+    if (!isClaudeAISubscriber()) return !1;
+    let t = getClaudeAIOAuthTokens();
+    if (!hasProfileScope() && !this.shouldAttachAuthWithoutProfileScope()) return !0;
+    if (t && isOAuthTokenExpired(t.expiresAt)) return !0;
     return !1;
   }
   shouldAttachAuthWithoutProfileScope() {
     if (!this.attachAuthWithoutProfileScope() || !ev()) return !1;
-    let e = qD();
+    let e = getClaudeAIOAuthTokenOrigin();
     if (e === "store") return !0;
-    if (e === "env" || e === "fd") return !mh();
+    if (e === "env" || e === "fd") return !getStoredOauthAccountInfo();
     return !1;
   }
   async authHeadersForSend() {
-    if (!(gb() === null && Zc())) return tx();
+    if (!(getAnthropicApiKeySafe() === null && shouldUseWIFAuth())) return getAuthHeadersAsync();
     let { getResolvedWIFBaseUrlSnapshot: t } =
-        await import("../../01-核心基础设施/共享小工具-未细化/getWIFTokenCache.zrnj7q4r.js"),
+        await import("./chunk-x3rm9w4b.js"),
       r = jF(t());
     if (r === void 0 || r !== WF(this.endpoint) || !fm(this.endpoint))
       return {
@@ -28309,7 +28309,7 @@ class gm {
         headers: {},
         error: "workload-identity mint failed recently; not retried yet",
       };
-    let o = await tx();
+    let o = await getAuthHeadersAsync();
     if (o.error) {
       if (o.reasonCode === "wif_error") this.wifMintRetryAt = Date.now() + Hue;
       return o;
@@ -28339,8 +28339,8 @@ class gm {
     )
       await this.refreshExpiredOAuthTokenOnce();
     let d = this.shouldSkipAuthForSend(o);
-    if (!d && !this.isShutdown && !this.finalFlush && ev() && !gt() && Fse()) {
-      let x = Tsr();
+    if (!d && !this.isShutdown && !this.finalFlush && ev() && !isClaudeAISubscriber() && isApiKeyHelperTheActiveCredential()) {
+      let x = getColdApiKeyHelperRun();
       if (x)
         await kt(
           Promise.race([x.catch(() => null), this.finalFlushSignal]),
@@ -28507,9 +28507,9 @@ function jF(e) {
   return e === null ? "api.anthropic.com" : WF(e);
 }
 function Gue(e) {
-  if (fZe() || uo()) return;
+  if (isFirstPartyManagedOAuthContext() || uo()) return;
   if (!ev() || !GT(e) || !fm(e)) return;
-  let t = d0();
+  let t = effectiveAuthTokenEnv();
   if (!t || !t.startsWith("sk-ant-")) return;
   let r = t.slice(7, 10);
   if (r === "api") return { headers: { "x-api-key": t } };
@@ -28803,8 +28803,8 @@ function ft() {
       isEnabled: () => CU(),
       isDiskCacheReadableWhileDisabled: () => rde(),
       hasWorkspaceTrust: () => nde(),
-      getAuthHeaders: () => tx(),
-      refreshOAuthTokenIfNeeded: (t, r) => Ss({ credentials: t, storageV5: r }),
+      getAuthHeaders: () => getAuthHeadersAsync(),
+      refreshOAuthTokenIfNeeded: (t, r) => checkAndRefreshOAuthTokenIfNeeded({ credentials: t, storageV5: r }),
       getUserAttributes: () => Usr(),
       rereadUserAttributes: () => (Tkn(), lU(), pVt(), Usr()),
       readGlobalConfig: () => ee(),
@@ -29070,11 +29070,11 @@ function RU(e, t, r) {
   }
   return !1;
 }
-function ua() {
+function isAutoMemoryEnabled() {
   if (AS()) return !1;
-  return gvt();
+  return isAutoMemoryEnabledIgnoringPause();
 }
-function gvt() {
+function isAutoMemoryEnabledIgnoringPause() {
   if (Hr()) return !1;
   if (pv()) return !1;
   let e = process.env.CLAUDE_CODE_DISABLE_AUTO_MEMORY;
@@ -29087,22 +29087,22 @@ function gvt() {
     !a.CLAUDE_COWORK_MEMORY_PATH_OVERRIDE
   )
     return !1;
-  if (hvt()) return !1;
+  if (isAutoMemoryDisabledForCurrentMainLoopModel()) return !1;
   let t = Ge();
   if (t.autoMemoryEnabled !== void 0) return t.autoMemoryEnabled;
   return !0;
 }
-function VUe() {
+function isIndexRecallEnabled() {
   return H("tengu_mill_orange", !1);
 }
-function o1() {
+function isMemoryRecallEnabled() {
   if (H("tengu_moth_copse", !1)) return !0;
-  return PZe();
+  return isStoreMountedRecall();
 }
-function PZe() {
+function isStoreMountedRecall() {
   return !!process.env.CLAUDE_MEMORY_STORES?.trim();
 }
-function hvt() {
+function isAutoMemoryDisabledForCurrentMainLoopModel() {
   let e = H("tengu_sepia_cormorant", null);
   if (!Array.isArray(e) || e.length === 0) return !1;
   let t = Ec(),
@@ -29110,11 +29110,11 @@ function hvt() {
   if (typeof r !== "string" || !gVt(r, e)) return !1;
   return H("tengu_umber_petrel", !1);
 }
-function OZe() {
+function isExtractModeActive() {
   if (!H("tengu_passport_quail", !1)) return !1;
   return !ke() || H("tengu_slate_thimble", !1);
 }
-function s1() {
+function getMemoryBaseDir() {
   if (process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR)
     return process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR;
   return be();
@@ -29169,10 +29169,10 @@ function sB() {
   }
   return { dir: void 0, source: void 0 };
 }
-function BRn() {
-  return i1().resolveEntry().source;
+function getAutoMemPathSettingSource() {
+  return getAutoMemPathState().resolveEntry().source;
 }
-function fQ() {
+function hasAutoMemPathOverride() {
   return mm() !== void 0;
 }
 class aB {
@@ -29207,7 +29207,7 @@ class aB {
     return `${e}|${I6()}|${this.canonicalWcRootForProject(e) ?? ""}`;
   }
   defaultPath() {
-    let e = s1(),
+    let e = getMemoryBaseDir(),
       t = jl(e, "projects"),
       r = sn(),
       d = this.canonicalWcRootForProject(r) ?? $r(r) ?? r,
@@ -29224,14 +29224,14 @@ class aB {
   }
 }
 var hde = new j(() => new aB());
-function i1() {
+function getAutoMemPathState() {
   return hde.of(B().host);
 }
-function Ns() {
-  return i1().resolve();
+function getAutoMemPath() {
+  return getAutoMemPathState().resolve();
 }
 var Ede = 8;
-function jRn(e) {
+function activeSessionLogExcluder(e) {
   let t;
   try {
     t = (e ?? K()).slice(0, Ede);
@@ -29244,14 +29244,14 @@ function jRn(e) {
     return o === `${t}.md` || o.startsWith(`${t}-`);
   };
 }
-function mQ() {
-  return jl(Ns(), mde);
+function getAutoMemEntrypoint() {
+  return jl(getAutoMemPath(), mde);
 }
-function a1(e) {
-  return $l(e).startsWith(Ns());
+function isAutoMemPath(e) {
+  return $l(e).startsWith(getAutoMemPath());
 }
-var DZe = "auto memory files are allowed for writing";
-function gQ(e, t = Ns()) {
+var AUTO_MEM_WRITE_ALLOW_REASON = "auto memory files are allowed for writing";
+function isAutoMemPathSafeForCarveout(e, t = getAutoMemPath()) {
   if (!t.endsWith(Yl) || iB(t.replace(/[/\\]+$/, ""))) return !1;
   let r = $l(e);
   if (!r.startsWith(t)) return !1;
@@ -29803,7 +29803,7 @@ function I6() {
   if (ke()) return !0;
   return Bo();
 }
-function Cd(e) {
+function isWorkspacePersistedTrusted(e) {
   return a5t(e ?? he());
 }
 function a5t(e) {
@@ -29813,7 +29813,7 @@ function MZe(e) {
   if (qDn(e)) return !1;
   return ee().projects?.[e]?.hasTrustDialogAccepted === !0;
 }
-function tS(e) {
+function getWorkspacePersistedTrustKey(e) {
   return KUe(e ?? he());
 }
 function KUe(e) {
@@ -29913,7 +29913,7 @@ function wde(e) {
   try {
     let r = Ae("child_process"),
       d = import.meta
-        .require("../../01-核心基础设施/共享小工具-未细化/findExecutableWindows.45hrtnft.js")
+        .require("../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js")
         .resolveExecutableSafely("git");
     if (d === null) return "untracked";
     let p = r.spawnSync(
@@ -29958,7 +29958,7 @@ function wde(e) {
 function Pde() {
   if (a.CLAUDE_CODE_SANDBOXED) return !0;
   if (g8()) return !0;
-  if (_t()) return !0;
+  if (isBgSession()) return !0;
   let e = ee(),
     t = JUe();
   if (e.projects?.[t]?.hasTrustDialogAccepted) return !0;
@@ -29985,11 +29985,11 @@ function yB(e, t, r) {
 function P6(e, { advisoryNoFsProbe: t = !1 } = {}) {
   let r = ee();
   if (t) return yB(r, zn(lt(e)), null);
-  if (r.projects?.[tS(e)]?.hasTrustDialogAccepted === !0) return !0;
+  if (r.projects?.[getWorkspacePersistedTrustKey(e)]?.hasTrustDialogAccepted === !0) return !0;
   return AB(r, e);
 }
 function XUe(e, t) {
-  let r = tS(e);
+  let r = getWorkspacePersistedTrustKey(e);
   return Te((o) => {
     if (o.projects?.[r]?.hasTrustDialogAccepted) return o;
     return {
@@ -30617,7 +30617,7 @@ function YUe() {
   return l5t().value;
 }
 function l5t() {
-  let e = import.meta.require("../../01-核心基础设施/设置-配置/getSettingsWithErrors.2xnfq00s.js"),
+  let e = import.meta.require("../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js"),
     t = e.projectSettingsAliasesUserSettings()
       ? void 0
       : e.getSettingsForSource("projectSettings")?.remoteControlAtStartup,
@@ -30646,7 +30646,7 @@ var Bde = {
 function yq() {
   let e = YUe();
   if (e !== void 0) return e;
-  return import.meta.require("../Bridge-RemoteControl/isCcrV2BridgeCreateEnabled.dv2d0ycr.js").getCcrAutoConnectDefault();
+  return import.meta.require("../Bridge-RemoteControl/chunk-9estzwf5.js").getCcrAutoConnectDefault();
 }
 function c5t() {
   let e = process.env.CLAUDE_CODE_DAEMON_COLD_START;
@@ -31995,7 +31995,7 @@ function _Q(e) {
     case "Managed":
       return Ve(Tb(), "CLAUDE.md");
     case "AutoMem":
-      return mQ();
+      return getAutoMemEntrypoint();
   }
 }
 function eBe() {
@@ -32556,7 +32556,7 @@ function Spe(e, { isTrustedAnt: t, onAnthropicHost: r }) {
   if (t) return e;
   if (e === tQ && r) return e;
   if (!e.toLowerCase().includes("claude")) return null;
-  let o = Ue(Xt(e), { identity: !0 });
+  let o = getCanonicalName(Xt(e), { identity: !0 });
   return o in wse ? o : "other";
 }
 async function tBe(e, t) {
@@ -32762,7 +32762,7 @@ function qB(e) {
 }
 async function dsr() {
   let t = ee().oauthAccount?.accountUuid,
-    r = A5();
+    r = getAnthropicApiKey();
   if (!t || !r) return;
   let o = `${Vt().BASE_API_URL}/api/claude_cli_profile`;
   try {
@@ -32825,18 +32825,18 @@ async function PUe(e) {
 }
 var vpe = 86400000,
   Rpe = 2592000000;
-function DKt(e, t) {
+function resolveRefreshTokenExpiresAt(e, t) {
   if (typeof e === "number") return Date.now() + e * 1000;
   return t ? Date.now() + Rpe : void 0;
 }
-function lx(e) {
+function shouldUseClaudeAIAuth(e) {
   return Array.isArray(e) && e.includes(py);
 }
-function QCt(e) {
+function parseScopes(e) {
   if (typeof e !== "string") return [];
   return e.split(" ").filter(Boolean);
 }
-function LKt({
+function buildAuthUrl({
   codeChallenge: e,
   state: t,
   port: r,
@@ -32870,7 +32870,7 @@ function LKt({
   if (C) x.searchParams.append("login_method", C);
   return x.toString();
 }
-async function uRn(
+async function exchangeCodeForTokens(
   e,
   {
     state: t,
@@ -32916,7 +32916,7 @@ async function uRn(
     C.data
   );
 }
-async function wU(
+async function refreshOAuthToken(
   e,
   {
     scopes: t,
@@ -32945,11 +32945,11 @@ async function wU(
     let D = I.data,
       { access_token: x, refresh_token: N = e, expires_in: G } = D,
       L = Date.now() + G * 1000,
-      U = DKt(D.refresh_token_expires_in, !1),
-      F = QCt(D.scope);
+      U = resolveRefreshTokenExpiresAt(D.refresh_token_expires_in, !1),
+      F = parseScopes(D.scope);
     (i("tengu_oauth_token_refresh_success", {}), y("oauth_token_refresh"));
     let V = ee(),
-      te = d ? null : Yt(),
+      te = d ? null : getClaudeAIOAuthTokens(),
       re =
         V.oauthAccount?.billingType !== void 0 &&
         V.oauthAccount?.accountCreatedAt !== void 0 &&
@@ -32957,7 +32957,7 @@ async function wU(
         V.oauthAccount?.ccOnboardingFlags !== void 0 &&
         te?.subscriptionType != null &&
         te?.rateLimitTier != null,
-      ce = d || re ? null : await MKt(x);
+      ce = d || re ? null : await fetchProfileInfo(x);
     if (ce && V.oauthAccount) {
       let _e = {};
       if (ce.displayName !== void 0) _e.displayName = ce.displayName;
@@ -33008,19 +33008,19 @@ async function wU(
     if (
       (i("tengu_oauth_token_refresh_failure", {
         ...lm(I),
-        ...Ifr(I),
+        ...extractOAuthErrorFields(I),
         ...(_ && { context: u(_) }),
       }),
-      NKt(I))
+      isAccountOnHoldError(I))
     )
       f("oauth_token_refresh", "oauth_refresh_account_on_hold");
-    else if (TU(I)) f("oauth_token_refresh", "oauth_refresh_invalid_grant");
+    else if (isInvalidGrantError(I)) f("oauth_token_refresh", "oauth_refresh_invalid_grant");
     else if (!p?.aborted && !_)
       g("oauth_token_refresh", "oauth_refresh_request_failed");
     throw I;
   }
 }
-async function eS(e, t) {
+async function revokeOAuthToken(e, t) {
   try {
     (await at.post(
       `${Vt().TOKEN_URL}/revoke`,
@@ -33040,7 +33040,7 @@ async function eS(e, t) {
       g("oauth_token_revoke", `http_${o ?? "network"}`));
   }
 }
-async function uZe(e, t) {
+async function fetchAndStoreUserRoles(e, t) {
   let r = await at.get(Vt().ROLES_URL, {
     headers: { Authorization: `Bearer ${e}` },
   });
@@ -33074,7 +33074,7 @@ async function uZe(e, t) {
     }),
     y("oauth_fetch_roles"));
 }
-async function dRn(e, t) {
+async function createAndStoreApiKey(e, t) {
   try {
     let r = await at.post(Vt().API_KEY_URL, null, {
         headers: { Authorization: `Bearer ${e}` },
@@ -33082,7 +33082,7 @@ async function dRn(e, t) {
       o = r.data?.raw_key;
     if (o)
       return (
-        await vsr(o, t),
+        await saveApiKey(o, t),
         i("tengu_oauth_api_key", {
           status: S("success"),
           statusCode: r.status,
@@ -33099,7 +33099,7 @@ async function dRn(e, t) {
     );
   }
 }
-function n1(e) {
+function isOAuthTokenExpired(e) {
   if (e === null) return !1;
   let t = 300000;
   return Date.now() + t >= e;
@@ -33110,7 +33110,7 @@ var Cpe = new Map([
   ["claude_enterprise", "enterprise"],
   ["claude_team", "team"],
 ]);
-async function MKt(e) {
+async function fetchProfileInfo(e) {
   let t = await rge(e),
     r = t?.organization?.organization_type,
     d = {
@@ -33131,18 +33131,18 @@ async function MKt(e) {
     d.subscriptionCreatedAt = t.organization.subscription_created_at;
   return (i("tengu_oauth_profile_fetch_success", {}), { ...d, rawProfile: t });
 }
-async function GD() {
+async function getOrganizationUUID() {
   let e = a.CLAUDE_CODE_ORGANIZATION_UUID;
   if (e) return e;
   let r = ee().oauthAccount?.organizationUuid;
   if (r) return r;
-  let o = Yt()?.accessToken;
-  if (o === void 0 || !lp()) return null;
+  let o = getClaudeAIOAuthTokens()?.accessToken;
+  if (o === void 0 || !hasProfileScope()) return null;
   let p = (await rge(o))?.organization?.uuid;
   if (!p) return null;
   return p;
 }
-async function pRn(e, t) {
+async function populateOAuthAccountInfoIfNeeded(e, t) {
   let r = a.CLAUDE_CODE_ACCOUNT_UUID,
     o = a.CLAUDE_CODE_USER_EMAIL,
     d = a.CLAUDE_CODE_ORGANIZATION_UUID,
@@ -33150,8 +33150,8 @@ async function pRn(e, t) {
       r && o && d
         ? { accountUuid: r, emailAddress: o, organizationUuid: d }
         : null;
-  if (p && !ee().oauthAccount) dZe(p, t);
-  await Ss({ credentials: e, storageV5: t });
+  if (p && !ee().oauthAccount) storeOAuthAccountInfo(p, t);
+  await checkAndRefreshOAuthTokenIfNeeded({ credentials: e, storageV5: t });
   let _ = ee(),
     E = _.oauthAccount?.profileFetchedAt,
     C = E !== void 0 && Date.now() - E < vpe;
@@ -33162,11 +33162,11 @@ async function pRn(e, t) {
       _.oauthAccount.subscriptionCreatedAt !== void 0 &&
       _.oauthAccount.ccOnboardingFlags !== void 0 &&
       C) ||
-    !gt() ||
-    !lp()
+    !isClaudeAISubscriber() ||
+    !hasProfileScope()
   )
     return !1;
-  let I = Yt();
+  let I = getClaudeAIOAuthTokens();
   if (!I?.accessToken) return !1;
   let D = await rge(I.accessToken);
   if (!D?.account || !D.organization) return !1;
@@ -33175,7 +33175,7 @@ async function pRn(e, t) {
       level: "info",
     });
   return (
-    dZe(
+    storeOAuthAccountInfo(
       {
         accountUuid: D.account.uuid,
         emailAddress: D.account.email,
@@ -33198,7 +33198,7 @@ async function pRn(e, t) {
     !0
   );
 }
-function dZe(
+function storeOAuthAccountInfo(
   {
     accountUuid: e,
     emailAddress: t,
@@ -33266,16 +33266,16 @@ function Ac(e) {
     description: t.error_description,
   };
 }
-function NKt(e) {
+function isAccountOnHoldError(e) {
   if (!at.isAxiosError(e) || !e.response) return !1;
   let t = e.response.status;
   if (t !== 400 && t !== 401 && t !== 403) return !1;
   return WZe(e.response.data) !== null;
 }
-function psr(e) {
+function getAccountOnHoldErrorUrl(e) {
   return (at.isAxiosError(e) ? WZe(e.response?.data) : null)?.url ?? sBe;
 }
-function TU(e) {
+function isInvalidGrantError(e) {
   if (!at.isAxiosError(e) || !e.response) return !1;
   let t = e.response.status;
   if (t !== 400 && t !== 401) return !1;
@@ -33284,12 +33284,12 @@ function TU(e) {
     WZe(e.response.data) === null
   );
 }
-function fsr(e) {
+function isInvalidScopeError(e) {
   if (!at.isAxiosError(e) || e.response?.status !== 400) return !1;
   return Ac(e.response.data).code === "invalid_scope";
 }
 var Ope = new Set(["invalid_client", "invalid_scope", "unauthorized_client"]);
-function msr(e) {
+function isExpectedOAuthTokenError(e) {
   if (!at.isAxiosError(e) || e.response?.status !== 400) return !1;
   let { code: t } = Ac(e.response.data);
   return typeof t === "string" && Ope.has(t);
@@ -33301,7 +33301,7 @@ var kpe = [
   "No account associated with this token",
   PRe,
 ];
-function Ifr(e) {
+function extractOAuthErrorFields(e) {
   if (!at.isAxiosError(e) || !e.response) return {};
   let { code: t, description: r } = Ac(e.response.data);
   return {
@@ -34054,10 +34054,10 @@ var ife = 300000,
 function vr() {
   return a.CLAUDE_CODE_REMOTE || Hd();
 }
-function Fc() {
+function isHostManagedProviderAuth() {
   return a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST;
 }
-function nvt(
+function hostManagedNoCredsError(
   e,
   t = "The app may have quit or its credential file is stale \u2014 restart the desktop app.",
 ) {
@@ -34066,7 +34066,7 @@ function nvt(
     "host-managed provider credentials unavailable \u2014 restart desktop app",
   );
 }
-function Lfr(e) {
+function hostManagedAwsProviderChain(e) {
   return async () => {
     let {
       accessKeyId: t,
@@ -34096,7 +34096,7 @@ function Lfr(e) {
         ignoreCache: !0,
       });
     }
-    throw nvt(e, G0);
+    throw hostManagedNoCredsError(e, G0);
   };
 }
 var G0 =
@@ -34180,14 +34180,14 @@ class K0 {
             import("./GetRoleCredentialsCommand.yevt2x6r.js"),
             zq({
               url: `https://portal.sso.${o}.amazonaws.com`,
-              requestTimeoutMs: $se,
+              requestTimeoutMs: AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS,
             }),
           ]),
         D = new E({
           region: o,
-          requestHandler: I ?? new Cc.FetchHttpHandler({ requestTimeout: $se }),
+          requestHandler: I ?? new Cc.FetchHttpHandler({ requestTimeout: AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS }),
         }),
-        { roleCredentials: x } = await Asr(
+        { roleCredentials: x } = await resolveWithStallGuard(
           D.send(
             new C({
               accessToken: p.data.accessToken,
@@ -34244,9 +34244,9 @@ class K0 {
     ((t.cache = e), (this.defaultChain = t));
   }
 }
-var pZe = new j(() => new K0());
+var awsCredentialMemos = new j(() => new K0());
 async function dfe(e, t, r) {
-  let o = pZe.of(B().host);
+  let o = awsCredentialMemos.of(B().host);
   try {
     let d = await o.ssoProfile(e, t, r);
     if (!d) return null;
@@ -34266,12 +34266,12 @@ async function dfe(e, t, r) {
     );
   }
 }
-function v6(e) {
-  if (!afe()) throw nvt(e, G0);
-  let t = Lfr(e);
+function hostManagedAwsSdkCredentials(e) {
+  if (!afe()) throw hostManagedNoCredsError(e, G0);
+  let t = hostManagedAwsProviderChain(e);
   return { providerChainResolver: t, credentials: async (r) => (await t())(r) };
 }
-function fZe() {
+function isFirstPartyManagedOAuthContext() {
   return (
     vr() &&
     !a.CLAUDE_CODE_HOST_AUTH_ENV_VAR &&
@@ -34282,7 +34282,7 @@ class j0 {
   implicitProfileSkippedLogged = !1;
   profileAuthSelectedLogged = !1;
 }
-var Mfr = new j(() => new j0());
+var wifAuthDebugNotices = new j(() => new j0());
 function pfe(e) {
   if (e.implicitProfileSkippedLogged) return;
   (n(
@@ -34303,26 +34303,26 @@ function ffe(e) {
   ),
     (e.profileAuthSelectedLogged = !0));
 }
-function UKt(e = {}) {
+function isProfileAuthShadowed(e = {}) {
   return Boolean(
     uo() ||
     a.ANTHROPIC_UNIX_SOCKET ||
     vr() ||
-    Fc() ||
+    isHostManagedProviderAuth() ||
     a.ANTHROPIC_AUTH_TOKEN ||
     a.CLAUDE_CODE_OAUTH_TOKEN ||
     gx() ||
-    (e.skipApiKeyHelper ? !1 : bg()) ||
+    (e.skipApiKeyHelper ? !1 : getConfiguredApiKeyHelper()) ||
     !In(),
   );
 }
-function Zc(e = {}) {
+function shouldUseWIFAuth(e = {}) {
   if (!pir()) return !1;
-  if (UKt(e)) return !1;
-  let t = e.skipApiKeyHelper ? void 0 : Mfr.of(B().host);
+  if (isProfileAuthShadowed(e)) return !1;
+  let t = e.skipApiKeyHelper ? void 0 : wifAuthDebugNotices.of(B().host);
   if (nS() === "profile-implicit") {
-    let r = Yt();
-    if (EZe(r) && GZe()) {
+    let r = getClaudeAIOAuthTokens();
+    if (isUsableClaudeAILoginRecord(r) && GZe()) {
       if (t) pfe(t);
       return !1;
     }
@@ -34330,19 +34330,19 @@ function Zc(e = {}) {
   if (t) ffe(t);
   return !0;
 }
-function mq() {
-  return A5() === null && Zc();
+function isWIFDispatchAuth() {
+  return getAnthropicApiKey() === null && shouldUseWIFAuth();
 }
-function NUe() {
+function isProfileRemoteSettingsCredential() {
   return (
     nS() !== "env-quad" &&
     Cvt() === "user_oauth" &&
-    Zc({ skipApiKeyHelper: !0 }) &&
-    kp({ skipRetrievingKeyFromApiKeyHelper: !0 }).key === null
+    shouldUseWIFAuth({ skipApiKeyHelper: !0 }) &&
+    getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }).key === null
   );
 }
-var mZe = new Set(["claude-desktop", "local-agent", "claude-vscode"]);
-async function gZe(e) {
+var SDK_OAUTH_REFRESH_ENTRYPOINTS = new Set(["claude-desktop", "local-agent", "claude-vscode"]);
+async function restoreGatewayAuth(e) {
   if (Rc()) return;
   if (a.CLAUDE_CODE_USE_GATEWAY && !a.ANTHROPIC_AUTH_TOKEN && Zvt()) {
     if ((await aar(), Rc())) return;
@@ -34351,7 +34351,7 @@ async function gZe(e) {
         "CLAUDE_CODE_USE_GATEWAY is set but the credential hand-off file is still locked by another process (an antivirus scan?). Try again.",
       );
   }
-  if (Fc()) return;
+  if (isHostManagedProviderAuth()) return;
   try {
     let t = await yn().readAsync(e),
       r = t?.enterpriseGateway;
@@ -34397,25 +34397,25 @@ async function gZe(e) {
     h(t);
   }
 }
-function cl() {
+function isAnthropicAuthEnabled() {
   if (uo()) return !1;
   if (a.ANTHROPIC_UNIX_SOCKET) return !!a.CLAUDE_CODE_OAUTH_TOKEN;
-  if (Zc()) return !1;
+  if (shouldUseWIFAuth()) return !1;
   let e = !In(),
     r = (bn() || {}).apiKeyHelper,
-    o = d0(),
+    o = effectiveAuthTokenEnv(),
     d;
   try {
-    d = qg({ skipRetrievingKeyFromApiKeyHelper: !0 }).source;
+    d = getAnthropicApiKeyWithSource({ skipRetrievingKeyFromApiKeyHelper: !0 }).source;
   } catch {
     return !1;
   }
   let p = d === "ANTHROPIC_API_KEY" || d === "apiKeyHelper",
     _ = IU("CLAUDE_CODE_API_KEY_FILE_DESCRIPTOR"),
-    E = ((o || p) && !fZe()) || ((r || _) && !vr());
+    E = ((o || p) && !isFirstPartyManagedOAuthContext()) || ((r || _) && !vr());
   return !(e || E);
 }
-function E5(e) {
+function describeHowToDisableAuthTokenSource(e) {
   switch (e) {
     case "claude.ai":
       return "claude /logout to sign out of claude.ai.";
@@ -34431,15 +34431,15 @@ function E5(e) {
       return `Unset the ${e} environment variable.`;
   }
 }
-function d0() {
+function effectiveAuthTokenEnv() {
   return xg() ? void 0 : a.ANTHROPIC_AUTH_TOKEN;
 }
-function Gl() {
+function getAuthTokenSource() {
   if (uo()) {
-    if (bg()) return { source: "apiKeyHelper", hasToken: !0 };
+    if (getConfiguredApiKeyHelper()) return { source: "apiKeyHelper", hasToken: !0 };
     return { source: "none", hasToken: !1 };
   }
-  if (d0() && !fZe()) return { source: "ANTHROPIC_AUTH_TOKEN", hasToken: !0 };
+  if (effectiveAuthTokenEnv() && !isFirstPartyManagedOAuthContext()) return { source: "ANTHROPIC_AUTH_TOKEN", hasToken: !0 };
   if (a.CLAUDE_CODE_OAUTH_TOKEN)
     return { source: "CLAUDE_CODE_OAUTH_TOKEN", hasToken: !0 };
   if (gx()) {
@@ -34450,49 +34450,49 @@ function Gl() {
       };
     return { source: "CCR_OAUTH_TOKEN_FILE", hasToken: !0 };
   }
-  if (bg() && !vr()) return { source: "apiKeyHelper", hasToken: !0 };
-  if (Zc()) return { source: "profile", hasToken: !0 };
-  let r = Yt();
-  if (lx(r?.scopes) && r?.accessToken)
+  if (getConfiguredApiKeyHelper() && !vr()) return { source: "apiKeyHelper", hasToken: !0 };
+  if (shouldUseWIFAuth()) return { source: "profile", hasToken: !0 };
+  let r = getClaudeAIOAuthTokens();
+  if (shouldUseClaudeAIAuth(r?.scopes) && r?.accessToken)
     return { source: "claude.ai", hasToken: !0 };
   return { source: "none", hasToken: !1 };
 }
-function A5() {
-  let { key: e } = qg();
+function getAnthropicApiKey() {
+  let { key: e } = getAnthropicApiKeyWithSource();
   return e;
 }
-function gb() {
+function getAnthropicApiKeySafe() {
   try {
-    return A5();
+    return getAnthropicApiKey();
   } catch {
     return null;
   }
 }
-function hRn() {
-  return kp().source;
+function getApiKeySourceSafe() {
+  return getAnthropicApiKeyWithSourceSafe().source;
 }
-function kp(e = {}) {
+function getAnthropicApiKeyWithSourceSafe(e = {}) {
   try {
-    return qg(e);
+    return getAnthropicApiKeyWithSource(e);
   } catch {
     return { key: null, source: "none" };
   }
 }
-function Fse() {
+function isApiKeyHelperTheActiveCredential() {
   return (
     !vr() &&
-    kp({ skipRetrievingKeyFromApiKeyHelper: !0 }).source === "apiKeyHelper"
+    getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }).source === "apiKeyHelper"
   );
 }
 var w0 = new WeakMap();
-function Ssr() {
+function hasBootstrapModelOptions() {
   let e = ee();
   return (
     Array.isArray(e.additionalModelOptionsCache) &&
     typeof e.additionalModelOptionsAnsweredAt === "number"
   );
 }
-function MR() {
+function getAdditionalModelOptionsCache() {
   let e = ee().additionalModelOptionsCache;
   if (!Array.isArray(e)) return [];
   let t = w0.get(e);
@@ -34517,7 +34517,7 @@ function MR() {
     }));
   return (w0.set(e, r), r);
 }
-function hZe() {
+function getModelAccessCache() {
   let e = ee().modelAccessCache;
   return (Array.isArray(e) ? e : []).filter(
     (t) =>
@@ -34527,7 +34527,7 @@ function hZe() {
       typeof t.entitled === "boolean",
   );
 }
-function _Ze() {
+function getOrgModelDefaultCache() {
   let e = ee(),
     t = e.orgModelDefaultCache;
   if (
@@ -34544,18 +34544,18 @@ function _Ze() {
   let o = t.name.replace(/[\x00-\x1f\x7f-\x9f]/g, "");
   return o === t.name ? t : { ...t, name: o };
 }
-function bsr() {
+function hasAnthropicDirectApiKey() {
   if (a.ANTHROPIC_AUTH_TOKEN) return !1;
   try {
-    let { key: e, source: t } = qg();
+    let { key: e, source: t } = getAnthropicApiKeyWithSource();
     if (!e || t === "/login managed key") return !1;
     return e.startsWith("sk-ant-") && e.slice(7, 10) === "api";
   } catch {
     return !1;
   }
 }
-function _Rn() {
-  let e = kp().key;
+function getApiKeyPrefixBucket() {
+  let e = getAnthropicApiKeyWithSourceSafe().key;
   if (!e || !e.trim()) return "none";
   if (!e.startsWith("sk-ant-")) return "non_sk_ant";
   let t = e.slice(7, 12);
@@ -34564,24 +34564,24 @@ function _Rn() {
   if (t === "admin") return "sk_ant_admin";
   return "sk_ant_other";
 }
-function BKt() {
+function hasAnthropicApiKeyAuth() {
   try {
-    let { key: e, source: t } = qg({ skipRetrievingKeyFromApiKeyHelper: !0 });
+    let { key: e, source: t } = getAnthropicApiKeyWithSource({ skipRetrievingKeyFromApiKeyHelper: !0 });
     return e !== null && t !== "none";
   } catch {
     return !1;
   }
 }
-function rvt() {
-  return gb() != null;
+function hasAnthropicApiKey() {
+  return getAnthropicApiKeySafe() != null;
 }
-function qg(e = {}) {
+function getAnthropicApiKeyWithSource(e = {}) {
   if (uo()) {
     if (a.ANTHROPIC_API_KEY)
       return { key: a.ANTHROPIC_API_KEY, source: "ANTHROPIC_API_KEY" };
-    if (bg())
+    if (getConfiguredApiKeyHelper())
       return {
-        key: e.skipRetrievingKeyFromApiKeyHelper ? null : WKt(),
+        key: e.skipRetrievingKeyFromApiKeyHelper ? null : getApiKeyFromApiKeyHelperCached(),
         source: "apiKeyHelper",
       };
     return { key: null, source: "none" };
@@ -34597,7 +34597,7 @@ function qg(e = {}) {
       !a.CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR &&
       !gx() &&
       !a.ANTHROPIC_AUTH_TOKEN &&
-      !Zc() &&
+      !shouldUseWIFAuth() &&
       In()
     )
       throw Error(
@@ -34610,56 +34610,56 @@ function qg(e = {}) {
     return { key: t, source: "ANTHROPIC_API_KEY" };
   let r = U6();
   if (r) return { key: r, source: "ANTHROPIC_API_KEY" };
-  if (bg()) {
+  if (getConfiguredApiKeyHelper()) {
     if (e.skipRetrievingKeyFromApiKeyHelper)
       return { key: null, source: "apiKeyHelper" };
-    return { key: WKt(), source: "apiKeyHelper" };
+    return { key: getApiKeyFromApiKeyHelperCached(), source: "apiKeyHelper" };
   }
-  let d = qKt();
+  let d = getApiKeyFromConfigOrMacOSKeychain();
   if (d) return d;
   return { key: null, source: "none" };
 }
-function yZe() {
+function getUnapprovedCustomApiKey() {
   let e = a.ANTHROPIC_API_KEY;
   if (!e || xg() || !In()) return;
   let t = fq(e);
   return Xsr(t) === "new" ? t : void 0;
 }
-function bg() {
+function getConfiguredApiKeyHelper() {
   if (uo()) return ye("flagSettings")?.apiKeyHelper;
-  if (Fc()) return;
+  if (isHostManagedProviderAuth()) return;
   return (bn() || {}).apiKeyHelper;
 }
 function W0() {
-  let e = bg();
+  let e = getConfiguredApiKeyHelper();
   if (!e) return !1;
   let t = ye("projectSettings"),
     r = ye("localSettings");
   return t?.apiKeyHelper === e || r?.apiKeyHelper === e;
 }
-function C5() {
-  if (Fc()) return;
+function getConfiguredAwsAuthRefresh() {
+  if (isHostManagedProviderAuth()) return;
   return (bn() || {}).awsAuthRefresh;
 }
-function sge() {
-  let e = C5();
+function isAwsAuthRefreshFromProjectSettings() {
+  let e = getConfiguredAwsAuthRefresh();
   if (!e) return !1;
   let t = ye("projectSettings"),
     r = ye("localSettings");
   return t?.awsAuthRefresh === e || r?.awsAuthRefresh === e;
 }
 function Wm() {
-  if (Fc()) return;
+  if (isHostManagedProviderAuth()) return;
   return (bn() || {}).awsCredentialExport;
 }
-function wsr() {
+function isAwsCredentialExportFromProjectSettings() {
   let e = Wm();
   if (!e) return !1;
   let t = ye("projectSettings"),
     r = ye("localSettings");
   return t?.awsCredentialExport === e || r?.awsCredentialExport === e;
 }
-function Nfr() {
+function calculateApiKeyHelperTTL() {
   let e = a.CLAUDE_CODE_API_KEY_HELPER_TTL_MS;
   if (e !== void 0) {
     if (e >= 0) return e;
@@ -34670,14 +34670,14 @@ function Nfr() {
   }
   return ife;
 }
-var SZe = new j(() => ({
+var apiKeyHelperStates = new j(() => ({
   cache: null,
   inflight: null,
   epoch: 0,
   lastFailure: null,
 }));
-function jKt() {
-  let e = SZe.of(B().host).inflight?.startedAt;
+function getApiKeyHelperElapsedMs() {
+  let e = apiKeyHelperStates.of(B().host).inflight?.startedAt;
   return e ? Date.now() - e : 0;
 }
 function gfe(e) {
@@ -34691,20 +34691,20 @@ function mfe(e) {
   let t = FR(e);
   return t === null || Date.now() < t * 1000 - H0;
 }
-function Tsr() {
-  let e = SZe.of(B().host).inflight;
+function getColdApiKeyHelperRun() {
+  let e = apiKeyHelperStates.of(B().host).inflight;
   return e?.startedAt ? e.promise : null;
 }
-async function ige(e) {
-  if (!bg()) return null;
-  let t = Nfr(),
-    r = SZe.of(B().host),
+async function getApiKeyFromApiKeyHelper(e) {
+  if (!getConfiguredApiKeyHelper()) return null;
+  let t = calculateApiKeyHelperTTL(),
+    r = apiKeyHelperStates.of(B().host),
     o = () => (
       (r.inflight = { promise: P0(r, e, !0, r.epoch), startedAt: Date.now() }),
       r.inflight.promise
     );
   if (r.cache) {
-    if (!gfe(r.cache) && In() && Fse() && !d0()) {
+    if (!gfe(r.cache) && In() && isApiKeyHelperTheActiveCredential() && !effectiveAuthTokenEnv()) {
       if (r.inflight) {
         if (!r.inflight.startedAt) r.inflight.startedAt = Date.now();
         let d = await r.inflight.promise;
@@ -34738,7 +34738,7 @@ async function P0(e, t, r, o) {
       !r && e.cache && e.cache.value !== " ")
     )
       return ((e.cache = { ...e.cache, timestamp: Date.now() }), e.cache.value);
-    if (((e.lastFailure = p), Fse())) {
+    if (((e.lastFailure = p), isApiKeyHelperTheActiveCredential())) {
       let _ = EU.getInstance();
       (_.startAuthentication(),
         _.setError(`apiKeyHelper failed: ${p}`),
@@ -34750,7 +34750,7 @@ async function P0(e, t, r, o) {
   }
 }
 async function _fe(e) {
-  let t = bg();
+  let t = getConfiguredApiKeyHelper();
   if (!t) return null;
   if (W0()) {
     if (!Bo() && !e) {
@@ -34782,23 +34782,23 @@ async function _fe(e) {
   }
   return o;
 }
-function WKt() {
-  return SZe.of(B().host).cache?.value ?? null;
+function getApiKeyFromApiKeyHelperCached() {
+  return apiKeyHelperStates.of(B().host).cache?.value ?? null;
 }
-function ovt() {
-  if (!bg()) return null;
-  return SZe.of(B().host).lastFailure;
+function getApiKeyHelperLastFailure() {
+  if (!getConfiguredApiKeyHelper()) return null;
+  return apiKeyHelperStates.of(B().host).lastFailure;
 }
-function hRe() {
-  let e = SZe.of(B().host);
+function clearApiKeyHelperCache() {
+  let e = apiKeyHelperStates.of(B().host);
   (e.epoch++, (e.cache = null), (e.inflight = null));
 }
-function yRn() {
+function isApiKeyHelperSafeToInvoke() {
   return !(W0() && !Bo());
 }
-function SRn(e) {
-  if (!yRn()) return;
-  ige(e);
+function prefetchApiKeyFromApiKeyHelperIfSafe(e) {
+  if (!isApiKeyHelperSafeToInvoke()) return;
+  getApiKeyFromApiKeyHelper(e);
 }
 var hfe = 3600000,
   I0 = 300000,
@@ -34809,13 +34809,13 @@ class $0 {
   inFlight = null;
   epoch = 0;
 }
-var Esr = new j(() => new $0());
+var awsAuthRefreshStates = new j(() => new $0());
 async function Tfe() {
-  let e = Esr.of(B().host),
-    t = C5(),
+  let e = awsAuthRefreshStates.of(B().host),
+    t = getConfiguredAwsAuthRefresh(),
     r = e.epoch;
   if (!t) return !1;
-  if (sge()) {
+  if (isAwsAuthRefreshFromProjectSettings()) {
     if (!Bo() && !ke()) {
       let d = Error(
         `Security: awsAuthRefresh executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
@@ -34842,7 +34842,7 @@ async function Tfe() {
     return (
       (e.inFlight = (async () => {
         try {
-          return await svt(t);
+          return await refreshAwsAuth(t);
         } finally {
           if (r === e.epoch) e.lastRefreshAt = Date.now();
           e.inFlight = null;
@@ -34853,7 +34853,7 @@ async function Tfe() {
   }
 }
 var D0 = 180000;
-function svt(e, t) {
+function refreshAwsAuth(e, t) {
   n("Running AWS auth refresh command");
   let r = EU.getInstance();
   return (
@@ -34923,7 +34923,7 @@ function svt(e, t) {
 async function bfe() {
   let e = Wm();
   if (!e) return null;
-  if (wsr()) {
+  if (isAwsCredentialExportFromProjectSettings()) {
     if (!Bo() && !ke()) {
       let r = Error(
         `Security: awsCredentialExport executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
@@ -34977,8 +34977,8 @@ async function Afe(e) {
     o
   );
 }
-function AU() {
-  return pZe.of(B().host).helper();
+function refreshAndGetAwsCredentials() {
+  return awsCredentialMemos.of(B().host).helper();
 }
 function Bm(e) {
   let t = e === void 0 ? void 0 : e - Date.now();
@@ -34986,8 +34986,8 @@ function Bm(e) {
   return t - I0;
 }
 var Oc = 30000,
-  $se = 30000;
-async function Asr(e, t = a.CLAUDE_CODE_AWS_CHAIN_RESOLVE_TIMEOUT_MS ?? 60000) {
+  AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS = 30000;
+async function resolveWithStallGuard(e, t = a.CLAUDE_CODE_AWS_CHAIN_RESOLVE_TIMEOUT_MS ?? 60000) {
   let r;
   try {
     return await Promise.race([
@@ -35016,21 +35016,21 @@ async function yfe(e) {
       n(`[API:auth] resolving default AWS provider chain (region: ${e})`);
       let [{ fromNodeProviderChain: r }, o] = await Promise.all([
           import("../../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js"),
-          zq({ url: she(e), requestTimeoutMs: $se }),
+          zq({ url: she(e), requestTimeoutMs: AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS }),
         ]),
         d = r({
           ignoreCache: !0,
           parentClientConfig: {
             region: e,
             requestHandler:
-              o ?? new Cc.FetchHttpHandler({ requestTimeout: $se }),
+              o ?? new Cc.FetchHttpHandler({ requestTimeout: AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS }),
           },
           clientConfig: {
             requestHandler:
-              o ?? new Cc.FetchHttpHandler({ requestTimeout: $se }),
+              o ?? new Cc.FetchHttpHandler({ requestTimeout: AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS }),
           },
         });
-      return Asr(d());
+      return resolveWithStallGuard(d());
     },
     (r) => Bm(r.expiration?.getTime()),
     (r, o) => {
@@ -35042,17 +35042,17 @@ async function yfe(e) {
   );
   return () => t();
 }
-function p0(e) {
-  return pZe.of(B().host).defaultChain(e);
+function getDefaultAwsProviderChain(e) {
+  return awsCredentialMemos.of(B().host).defaultChain(e);
 }
 function Y0(e) {
   return `${a.AWS_PROFILE ?? ""}\x00${e}`;
 }
 var vfe = 1e4;
-function FUe(e) {
+function invalidateDefaultAwsProviderChainDebounced(e) {
   let t = Y0(e),
     r = Date.now(),
-    o = pZe.of(B().host);
+    o = awsCredentialMemos.of(B().host);
   if (r - (o.chainEvictionAt.get(t) ?? 0) < vfe) return !1;
   return (
     o.chainEvictionAt.set(t, r),
@@ -35062,34 +35062,34 @@ function FUe(e) {
     !0
   );
 }
-function R6() {
-  let e = pZe.of(B().host);
+function clearAwsCredentialsCache() {
+  let e = awsCredentialMemos.of(B().host);
   (e.helper.cache.clear(),
     e.defaultChain.cache.clear(),
     e.ssoRole.cache.clear(),
     e.ssoProfile.cache.clear(),
     e.chainEvictionAt.clear());
 }
-function bRn() {
-  pZe.of(B().host).helper.cache.clear();
+function clearAwsHelperCredentialsCache() {
+  awsCredentialMemos.of(B().host).helper.cache.clear();
 }
-function _Re() {
-  let e = Esr.of(B().host);
+function resetAwsAuthRefreshCooldown() {
+  let e = awsAuthRefreshStates.of(B().host);
   ((e.lastRefreshAt = null), e.epoch++);
 }
-function bZe() {
-  if (Fc()) return;
+function getConfiguredGcpAuthRefresh() {
+  if (isHostManagedProviderAuth()) return;
   return (bn() || {}).gcpAuthRefresh;
 }
-function ivt() {
-  let e = bZe();
+function isGcpAuthRefreshFromProjectSettings() {
+  let e = getConfiguredGcpAuthRefresh();
   if (!e) return !1;
   let t = ye("projectSettings"),
     r = ye("localSettings");
   return t?.gcpAuthRefresh === e || r?.gcpAuthRefresh === e;
 }
 var Rfe = 5000;
-function $Ue() {
+function getConfiguredVertexProjectId() {
   return (
     a.GCLOUD_PROJECT ||
     a.GOOGLE_CLOUD_PROJECT ||
@@ -35098,13 +35098,13 @@ function $Ue() {
     a.ANTHROPIC_VERTEX_PROJECT_ID
   );
 }
-async function Ffr() {
+async function checkGcpCredentialsValid() {
   let e = Date.now();
   try {
     let { GoogleAuth: t } = await import("./GoogleAuth.nmzn09n1.js").then((m) =>
         pe(m.default, 1),
       ),
-      r = $Ue() || a.ANTHROPIC_GOOGLE_CLOUD_PROJECT,
+      r = getConfiguredVertexProjectId() || a.ANTHROPIC_GOOGLE_CLOUD_PROJECT,
       o = new t({
         scopes: ["https://www.googleapis.com/auth/cloud-platform"],
         ...(r && { projectId: r }),
@@ -35128,15 +35128,15 @@ async function Ffr() {
     return (n(`GCP credentials check failed after ${r}ms: ${l(t)}`), "invalid");
   }
 }
-var wRn = new j(() => ({ rejectedByApi: !1 }));
-function TRn() {
-  (SRe(), (wRn.of(B().host).rejectedByApi = !0));
+var gcpCredentialRejections = new j(() => ({ rejectedByApi: !1 }));
+function markGcpCredentialsRejected() {
+  (clearGcpCredentialsCache(), (gcpCredentialRejections.of(B().host).rejectedByApi = !0));
 }
 var Cfe = 3600000;
 async function Ofe() {
-  let e = bZe();
+  let e = getConfiguredGcpAuthRefresh();
   if (!e) return !1;
-  if (ivt()) {
+  if (isGcpAuthRefreshFromProjectSettings()) {
     if (!Bo() && !ke()) {
       let p = Error(
         `Security: gcpAuthRefresh executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
@@ -35148,12 +35148,12 @@ async function Ofe() {
       );
     }
   }
-  let t = wRn.of(B().host),
+  let t = gcpCredentialRejections.of(B().host),
     r = t.rejectedByApi;
   switch (
     ((t.rejectedByApi = !1),
     n("Checking GCP credentials validity for auth refresh"),
-    await Ffr())
+    await checkGcpCredentialsValid())
   ) {
     case "valid":
       return (
@@ -35172,10 +35172,10 @@ async function Ofe() {
     case "invalid":
       break;
   }
-  return $fr(e);
+  return refreshGcpAuth(e);
 }
 var kfe = 180000;
-function $fr(e) {
+function refreshGcpAuth(e) {
   n("Running GCP auth refresh command");
   let t = EU.getInstance();
   return (
@@ -35211,32 +35211,32 @@ function $fr(e) {
     })
   );
 }
-var Csr = new j(() => cB(async () => await Ofe(), Cfe));
-function yRe() {
-  return Csr.of(B().host)();
+var gcpRefreshMemos = new j(() => cB(async () => await Ofe(), Cfe));
+function refreshGcpCredentialsIfNeeded() {
+  return gcpRefreshMemos.of(B().host)();
 }
-function SRe() {
+function clearGcpCredentialsCache() {
   let e = B().host;
-  (Csr.of(e).cache.clear(), (wRn.of(e).rejectedByApi = !1));
+  (gcpRefreshMemos.of(e).cache.clear(), (gcpCredentialRejections.of(e).rejectedByApi = !1));
 }
-function GKt() {
-  if (!bZe()) return;
-  if (ivt()) {
+function prefetchGcpCredentialsIfSafe() {
+  if (!getConfiguredGcpAuthRefresh()) return;
+  if (isGcpAuthRefreshFromProjectSettings()) {
     if (!Bo() && !ke()) return;
   }
-  yRe();
+  refreshGcpCredentialsIfNeeded();
 }
-function avt() {
-  let e = C5(),
+function prefetchAwsCredentialsAndBedRockInfoIfSafe() {
+  let e = getConfiguredAwsAuthRefresh(),
     t = Wm();
   if (!e && !t) return;
-  if (sge() || wsr()) {
+  if (isAwsAuthRefreshFromProjectSettings() || isAwsCredentialExportFromProjectSettings()) {
     if (!Bo() && !ke()) return;
   }
-  (AU(), Zl());
+  (refreshAndGetAwsCredentials(), Zl());
 }
 function wfe() {
-  if (uo() || Fc()) return null;
+  if (uo() || isHostManagedProviderAuth()) return null;
   {
     let t = Y5t();
     if (t) {
@@ -35264,11 +35264,11 @@ class q0 {
     ((this.value = void 0), (this.promise = null));
   }
 }
-var Ufr = new j(() => new q0());
+var loginManagedKeyMemos = new j(() => new q0());
 function $i() {
-  return Ufr.of(B().host);
+  return loginManagedKeyMemos.of(B().host);
 }
-function qKt() {
+function getApiKeyFromConfigOrMacOSKeychain() {
   let e = $i();
   if (e.value !== void 0) return e.value;
   let t = wfe();
@@ -35277,7 +35277,7 @@ function qKt() {
 function Pfe(e) {
   return /^[a-zA-Z0-9-_]+$/.test(e);
 }
-async function vsr(e, t) {
+async function saveApiKey(e, t) {
   if (!Pfe(e))
     throw Error(
       "Invalid API key format. API key must contain only alphanumeric characters, dashes, and underscores.",
@@ -35323,7 +35323,7 @@ async function vsr(e, t) {
     r.clear(),
     J5t());
 }
-async function ERn(e) {
+async function removeApiKey(e) {
   let t = $i();
   (await X0(),
     await Te((r) => ({ ...r, primaryApiKey: void 0 }), e),
@@ -35351,13 +35351,13 @@ function J0(e, t) {
     clientId: t.clientId,
   };
 }
-async function UUe({
+async function saveRefreshedOAuthTokensRespectingLock({
   isCompromised: e,
   postedRefreshToken: t,
   refreshedTokens: r,
   credentials: o,
 }) {
-  if (lx(r.scopes) && r.refreshToken && r.expiresAt) {
+  if (shouldUseClaudeAIAuth(r.scopes) && r.refreshToken && r.expiresAt) {
     let p = e();
     if (p) i("tengu_oauth_token_refresh_lock_compromised_post_post", {});
     let _ = {
@@ -35398,11 +35398,11 @@ async function UUe({
       }
       if (E || I.success) break;
     }
-    if (D) Hw();
+    if (D) clearOAuthTokenCache();
     else {
       let N = M() && o !== void 0 ? o : void 0,
-        G = N && age.of(B().host).promise;
-      if ((iH(), N !== void 0)) await lvt(N, G);
+        G = N && oauthTokenReadMemos.of(B().host).promise;
+      if ((iH(), N !== void 0)) await primeStoredLogin(N, G);
     }
     if (D)
       i("tengu_oauth_tokens_save_exception", { storageBackend: C, ...lm(x) });
@@ -35424,14 +35424,14 @@ async function UUe({
     if (E) return (Rn(), "adopted_sibling");
     return I.success ? "saved" : "save_failed";
   }
-  let d = await zKt(r, o);
-  return (Hw(), d.success ? "saved" : "save_failed");
+  let d = await saveOAuthTokensIfNeeded(r, o);
+  return (clearOAuthTokenCache(), d.success ? "saved" : "save_failed");
 }
 function Q0() {
   return yn().name;
 }
-async function zKt(e, t) {
-  if (!lx(e.scopes))
+async function saveOAuthTokensIfNeeded(e, t) {
+  if (!shouldUseClaudeAIAuth(e.scopes))
     return (i("tengu_oauth_tokens_not_claude_ai", {}), { success: !0 });
   if (!e.refreshToken || !e.expiresAt)
     return (i("tengu_oauth_tokens_inference_only", {}), { success: !0 });
@@ -35465,8 +35465,8 @@ async function zKt(e, t) {
     if (D.success) i("tengu_oauth_tokens_saved", { storageBackend: I });
     else i("tengu_oauth_tokens_save_failed", { storageBackend: I });
     let x = M() && t !== void 0 ? t : void 0,
-      N = x && age.of(B().host).promise;
-    if ((Use(), $m(), x !== void 0)) await lvt(x, N);
+      N = x && oauthTokenReadMemos.of(B().host).promise;
+    if ((clearOAuthTokenMemos(), $m(), x !== void 0)) await primeStoredLogin(x, N);
     return D;
   } catch (D) {
     return (
@@ -35479,10 +35479,10 @@ async function zKt(e, t) {
 var Ki = id(new Set(), (e) => e.clear()),
   Eo = id(new Set(), (e) => e.clear()),
   Mfe = 32;
-function ARn(e) {
+function hasAttemptedScopeExpansion(e) {
   return Eo.has(e);
 }
-function VKt(e) {
+function recordScopeExpansionAttempt(e) {
   if (Eo.size >= Mfe) {
     let t = Eo.values().next().value;
     if (t !== void 0) Eo.delete(t);
@@ -35490,16 +35490,16 @@ function VKt(e) {
   Eo.add(e);
 }
 var Vi = id(new Map(), (e) => e.clear());
-function bRe() {
-  let e = Yt()?.refreshToken;
+function getOAuthAccountOnHold() {
+  let e = getClaudeAIOAuthTokens()?.refreshToken;
   if (!e) return null;
   let t = Vi.get(e);
   return t === void 0 ? null : { url: t };
 }
-function Byr() {
+function __resetKnownDeadRefreshTokensForTest() {
   (Ki.clear(), Eo.clear(), Vi.clear());
 }
-async function BUe(e, t) {
+async function markRefreshTokenDeadAfterInvalidGrant(e, t) {
   (Ki.add(e), i("tengu_oauth_refresh_token_marked_dead_invalid_grant", {}));
   try {
     let r = !1,
@@ -35528,8 +35528,8 @@ async function BUe(e, t) {
     n(`OAuth dead-token disk clear failed: ${l(r)}`, { level: "error" });
   }
 }
-function wZe() {
-  let e = Z0(Yt());
+function isOAuthRefreshKnownDead() {
+  let e = Z0(getClaudeAIOAuthTokens());
   if (e !== void 0) return e;
   try {
     return eH(yn().read());
@@ -35537,8 +35537,8 @@ function wZe() {
     return !1;
   }
 }
-async function f0(e) {
-  let t = Z0(await Qi(e));
+async function isOAuthRefreshKnownDeadAsync(e) {
+  let t = Z0(await getClaudeAIOAuthTokensAsync(e));
   if (t !== void 0) return t;
   try {
     return eH(await yn().readAsync(e));
@@ -35551,7 +35551,7 @@ function Z0(e) {
     let t = e.refreshToken;
     return t === "" || (!!t && Ki.has(t));
   }
-  if (Fc()) return !1;
+  if (isHostManagedProviderAuth()) return !1;
   return;
 }
 function eH(e) {
@@ -35582,8 +35582,8 @@ function Dfe() {
       subscriptionType: a.CLAUDE_CODE_SUBSCRIPTION_TYPE || null,
       rateLimitTier: a.CLAUDE_CODE_RATE_LIMIT_TIER || null,
     });
-  if (e && (!dZ() || Fc())) return t(e);
-  if (Fc()) return null;
+  if (e && (!dZ() || isHostManagedProviderAuth())) return t(e);
+  if (isHostManagedProviderAuth()) return null;
   try {
     let d = yn().read({ fromStoreCopy: !0 })?.claudeAiOauth;
     if (d?.accessToken) return d;
@@ -35610,34 +35610,34 @@ class tH {
       (this.lastKeychainAccessToken = null));
   }
 }
-var age = new j(() => new tH());
-function Yt() {
-  let e = age.of(B().host);
+var oauthTokenReadMemos = new j(() => new tH());
+function getClaudeAIOAuthTokens() {
+  let e = oauthTokenReadMemos.of(B().host);
   if (e.value !== void 0) return e.value;
   let t = Dfe();
   return ((e.value = t), t);
 }
-function Use() {
-  age.of(B().host).clear();
+function clearOAuthTokenMemos() {
+  oauthTokenReadMemos.of(B().host).clear();
 }
-function qD() {
+function getClaudeAIOAuthTokenOrigin() {
   let e = nH();
   if (typeof e === "string") return e;
   let t = yn().read()?.claudeAiOauth?.accessToken;
   return rH(e, t);
 }
-async function $T(e) {
+async function getClaudeAIOAuthTokenOriginAsync(e) {
   let t = nH();
   if (typeof t === "string") return t;
   let r = (await yn().readAsync(e))?.claudeAiOauth?.accessToken;
   return rH(t, r);
 }
 function nH() {
-  let e = Yt();
+  let e = getClaudeAIOAuthTokens();
   if (!e?.accessToken) return "none";
   if (a.CLAUDE_CODE_OAUTH_TOKEN) return "env";
   let t = gx();
-  if (t && (!dZ() || Fc())) return "fd";
+  if (t && (!dZ() || isHostManagedProviderAuth())) return "fd";
   return { bearer: e.accessToken, fdToken: t };
 }
 function rH({ bearer: e, fdToken: t }, r) {
@@ -35646,26 +35646,26 @@ function rH({ bearer: e, fdToken: t }, r) {
   return "none";
 }
 function oH() {
-  if ((Use(), wA(), M())) IQ();
+  if ((clearOAuthTokenMemos(), wA(), M())) IQ();
 }
 function $m() {
   (gU(), C0());
 }
 function iH() {
-  (Use(), wA(), $m());
+  (clearOAuthTokenMemos(), wA(), $m());
 }
-function Hw() {
+function clearOAuthTokenCache() {
   if ((iH(), M())) IQ();
 }
-function CRn() {
-  if ((Use(), $i().clear(), hRe(), R6(), _Re(), SRe(), gU(), T5(), M())) IQ();
+function resetEnvDerivedAuthCaches() {
+  if ((clearOAuthTokenMemos(), $i().clear(), clearApiKeyHelperCache(), clearAwsCredentialsCache(), resetAwsAuthRefreshCooldown(), clearGcpCredentialsCache(), gU(), T5(), M())) IQ();
 }
-function jyr() {
-  age.of(B().host).resetChangeCheck();
+function _resetCredentialsChangeCheckForTesting() {
+  oauthTokenReadMemos.of(B().host).resetChangeCheck();
 }
-async function lvt(e, t) {
-  if (!dvt()) return;
-  let r = age.of(B().host),
+async function primeStoredLogin(e, t) {
+  if (!startupReadsStoredLogin()) return;
+  let r = oauthTokenReadMemos.of(B().host),
     o;
   try {
     let _ = await e.probeCredentials();
@@ -35706,19 +35706,19 @@ async function Nfe(e, t) {
     let r = await t.probeCredentials();
     if (r.state !== "present") return L0(e, t);
     if (r.version !== e.lastCredentialsVersion)
-      ((e.lastCredentialsVersion = r.version), Hw());
+      ((e.lastCredentialsVersion = r.version), clearOAuthTokenCache());
     return;
   }
   try {
     let { mtimeMs: r } = await Km(jm(A_(), ".credentials.json"));
-    if (r !== e.lastCredentialsMtimeMs) ((e.lastCredentialsMtimeMs = r), Hw());
+    if (r !== e.lastCredentialsMtimeMs) ((e.lastCredentialsMtimeMs = r), clearOAuthTokenCache());
   } catch {
     await L0(e, t);
   }
 }
 async function L0(e, t) {
   if ((e.clear(), M())) IQ();
-  let o = (await Qi(t))?.accessToken ?? null;
+  let o = (await getClaudeAIOAuthTokensAsync(t))?.accessToken ?? null;
   if (o !== e.lastKeychainAccessToken) ((e.lastKeychainAccessToken = o), $m());
 }
 var kc = ["bare", "store", "backend"];
@@ -35728,7 +35728,7 @@ function U0(e, t) {
 function sH(e, t) {
   if (!(M() && e !== void 0) || uo() || a.CLAUDE_CODE_OAUTH_TOKEN)
     return "bare";
-  if (gx() && (!dZ() || Fc())) return "bare";
+  if (gx() && (!dZ() || isHostManagedProviderAuth())) return "bare";
   return t !== void 0 ? "backend" : "store";
 }
 function aH(e, t) {
@@ -35746,8 +35746,8 @@ function lH(e, t) {
   }
   return;
 }
-function cm(e, t, r) {
-  let o = age.of(B().host),
+function handleOAuth401Error(e, t, r) {
+  let o = oauthTokenReadMemos.of(B().host),
     d = sH(t, r),
     p = (x) => o.pending401Handlers.get(U0(e, x)),
     _ = aH(p, d);
@@ -35760,7 +35760,7 @@ function cm(e, t, r) {
     });
   return (o.pending401Handlers.set(E, D), D);
 }
-async function Bfr(e) {
+async function waitForRotatedEnvToken(e) {
   let t = e.pollMs ?? 2000,
     r = e.readToken ?? (() => a.CLAUDE_CODE_OAUTH_TOKEN ?? gx() ?? void 0),
     o = e.sleeper ?? ((_) => Z(_)),
@@ -35784,10 +35784,10 @@ function Lfe() {
 class cH {
   firstUnrecoveredAtMs = null;
 }
-var Rsr = new j(() => new cH());
-function cvt(e) {
+var authFailureClocks = new j(() => new cH());
+function noteAuthRecoveryOutcome(e) {
   let t = e.nowMs ?? Date.now(),
-    r = Rsr.of(B().host);
+    r = authFailureClocks.of(B().host);
   if (e.recovered) return ((r.firstUnrecoveredAtMs = null), "continue");
   if (!(e.isRemoteChild ?? Ym())) return "continue";
   let d = e.thresholdMs ?? a.CLAUDE_CODE_AUTH_FAIL_EXIT_MS ?? 600000;
@@ -35797,15 +35797,15 @@ function cvt(e) {
   if (t - r.firstUnrecoveredAtMs >= d) return "exit";
   return "continue";
 }
-function uvt() {
-  Rsr.of(B().host).firstUnrecoveredAtMs = null;
+function resetAuthFailureTracking() {
+  authFailureClocks.of(B().host).firstUnrecoveredAtMs = null;
 }
 function Rn() {
   p8(null);
 }
 async function Ufe(e, t, r) {
-  Hw();
-  let o = await Qi(t);
+  clearOAuthTokenCache();
+  let o = await getClaudeAIOAuthTokensAsync(t);
   if (!o?.refreshToken) {
     let d = kxe();
     if (d)
@@ -35814,11 +35814,11 @@ async function Ufe(e, t, r) {
         if (E && E !== e)
           return (
             (process.env.CLAUDE_CODE_OAUTH_TOKEN = E),
-            Hw(),
+            clearOAuthTokenCache(),
             Rn(),
             i("tengu_oauth_401_sdk_callback_refreshed", {}),
             y("oauth_401_recovery"),
-            cvt({ recovered: !0 }),
+            noteAuthRecoveryOutcome({ recovered: !0 }),
             !0
           );
         n(
@@ -35835,7 +35835,7 @@ async function Ufe(e, t, r) {
           ));
       }
     let p = !1;
-    if (!Fc()) {
+    if (!isHostManagedProviderAuth()) {
       if (
         ((p =
           Boolean(a.CLAUDE_CODE_OAUTH_TOKEN) &&
@@ -35850,17 +35850,17 @@ async function Ufe(e, t, r) {
       else if (a.CLAUDE_CODE_OAUTH_TOKEN || gx())
         try {
           let E = (await yn().readAsync(t))?.claudeAiOauth;
-          if (E?.accessToken && E.accessToken !== e && !n1(E.expiresAt)) {
+          if (E?.accessToken && E.accessToken !== e && !isOAuthTokenExpired(E.expiresAt)) {
             if (a.CLAUDE_CODE_OAUTH_TOKEN)
               process.env.CLAUDE_CODE_OAUTH_TOKEN = E.accessToken;
             if (M() && t !== void 0 ? await D5t(t) : gx())
               (N0(E.accessToken), Sje(E.scopes));
             return (
-              Hw(),
+              clearOAuthTokenCache(),
               Rn(),
               i("tengu_oauth_401_recovered_from_disk", {}),
               y("oauth_401_recovery"),
-              cvt({ recovered: !0 }),
+              noteAuthRecoveryOutcome({ recovered: !0 }),
               !0
             );
           }
@@ -35876,18 +35876,18 @@ async function Ufe(e, t, r) {
           (n(
             `OAuth 401 recovery: waiting up to ${E}ms for a rotated env token`,
           ),
-          await Bfr({ failedAccessToken: e, timeoutMs: E }))
+          await waitForRotatedEnvToken({ failedAccessToken: e, timeoutMs: E }))
         ) {
           if (M() && t !== void 0 ? await D5t(t) : gx()) {
             let C = a.CLAUDE_CODE_OAUTH_TOKEN;
             if (C) N0(C);
           }
           return (
-            Hw(),
+            clearOAuthTokenCache(),
             Rn(),
             i("tengu_oauth_401_recovered_from_rotation", {}),
             y("oauth_401_recovery"),
-            cvt({ recovered: !0 }),
+            noteAuthRecoveryOutcome({ recovered: !0 }),
             !0
           );
         }
@@ -35902,7 +35902,7 @@ async function Ufe(e, t, r) {
             ? "oauth_401_no_refresh_token_bg_worker"
             : "oauth_401_no_refresh_token_interactive",
       ),
-      cvt({ recovered: !1 }) === "exit")
+      noteAuthRecoveryOutcome({ recovered: !1 }) === "exit")
     )
       (i("tengu_oauth_401_zombie_exit", {}),
         n(
@@ -35917,13 +35917,13 @@ async function Ufe(e, t, r) {
       Rn(),
       i("tengu_oauth_401_recovered_from_keychain", {}),
       y("oauth_401_recovery"),
-      cvt({ recovered: !0 }),
+      noteAuthRecoveryOutcome({ recovered: !0 }),
       !0
     );
-  return Ss({ force: !0, entryAccessToken: e, credentials: t, storageV5: r });
+  return checkAndRefreshOAuthTokenIfNeeded({ force: !0, entryAccessToken: e, credentials: t, storageV5: r });
 }
-function Qi(e) {
-  let t = age.of(B().host);
+function getClaudeAIOAuthTokensAsync(e) {
+  let t = oauthTokenReadMemos.of(B().host);
   if (t.promise) return t.promise;
   let r = zfe(e);
   return (
@@ -35936,50 +35936,50 @@ function Qi(e) {
 }
 async function zfe(e) {
   if (uo()) return null;
-  if (a.CLAUDE_CODE_OAUTH_TOKEN) return Yt();
+  if (a.CLAUDE_CODE_OAUTH_TOKEN) return getClaudeAIOAuthTokens();
   let t = M() && e !== void 0 ? await D5t(e) : gx();
-  if (t && (!dZ() || Fc())) return Yt();
-  if (Fc()) return null;
+  if (t && (!dZ() || isHostManagedProviderAuth())) return getClaudeAIOAuthTokens();
+  if (isHostManagedProviderAuth()) return null;
   try {
     let d = (await yn().readAsync(e))?.claudeAiOauth;
     if (d?.accessToken) return d;
   } catch (r) {
     h(r);
   }
-  if (t) return Yt();
+  if (t) return getClaudeAIOAuthTokens();
   return null;
 }
-async function dQ(e) {
-  return (oH(), (await Qi(e))?.accessToken);
+async function readFreshOAuthAccessToken(e) {
+  return (oH(), (await getClaudeAIOAuthTokensAsync(e))?.accessToken);
 }
-function dvt() {
+function startupReadsStoredLogin() {
   if (
     uo() ||
     a.CLAUDE_CODE_OAUTH_TOKEN ||
     a.CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR ||
-    Fc()
+    isHostManagedProviderAuth()
   )
     return !1;
   return !(uZ() && !dZ());
 }
-async function vRn(e) {
-  if (!dvt()) return;
+async function primeStoredLoginCopy(e) {
+  if (!startupReadsStoredLogin()) return;
   try {
     await yn().readAsync(e);
   } catch (t) {
     h(t);
   }
 }
-function wg(e, t) {
+function sameOwnerAccount(e, t) {
   return (
     Boolean(e?.accountUuid) &&
     e?.accountUuid === t?.accountUuid &&
     (e?.organizationUuid || void 0) === (t?.organizationUuid || void 0)
   );
 }
-async function v5(e, t) {
+async function readFreshOAuthCredentialSnapshot(e, t) {
   oH();
-  let [r, o] = await Promise.all([Qi(t), cl() ? sy(e) : void 0]);
+  let [r, o] = await Promise.all([getClaudeAIOAuthTokensAsync(t), isAnthropicAuthEnabled() ? sy(e) : void 0]);
   if (!r?.accessToken) return;
   return {
     accessToken: r.accessToken,
@@ -35996,7 +35996,7 @@ async function Fm(e, t) {
         ? e.file
         : void 0,
     o = r === void 0 || O0(r) === O0(t),
-    d = o ? RRn(t).lockfilePath : r,
+    d = o ? oauthRefreshLockOptions(t).lockfilePath : r,
     p,
     _;
   try {
@@ -36020,7 +36020,7 @@ function F0(e, t) {
     e.mtimeMs === t.mtimeMs
   );
 }
-function RRn(e, t) {
+function oauthRefreshLockOptions(e, t) {
   return {
     lockfilePath: jm(e, ".oauth_refresh.lock"),
     realpath: !1,
@@ -36032,7 +36032,7 @@ function RRn(e, t) {
     },
   };
 }
-class lge extends Error {
+class OAuthRefreshLockContendedError extends Error {
   constructor(e) {
     super(
       `Lock acquisition failed after ${e} attempts: another process is refreshing`,
@@ -36040,17 +36040,17 @@ class lge extends Error {
     this.name = "OAuthRefreshLockContendedError";
   }
 }
-async function ksr(e) {
+async function acquireOAuthRefreshLock(e) {
   let t = !1,
     r = new AbortController(),
     o = () => {
       ((t = !0), r.abort());
     },
-    d = await Cs(e, RRn(e, o)),
+    d = await Cs(e, oauthRefreshLockOptions(e, o)),
     _ = `${await rfe(e).catch(() => e)}.lock`,
     E = null;
   try {
-    E = await Cs(_, { ...RRn(e, o), lockfilePath: _ });
+    E = await Cs(_, { ...oauthRefreshLockOptions(e, o), lockfilePath: _ });
   } catch (C) {
     if (C.code === "ELOCKED")
       throw (
@@ -36078,7 +36078,7 @@ async function ksr(e) {
   };
 }
 var Ffe = 5;
-async function TZe(e, t) {
+async function withOAuthRefreshLock(e, t) {
   let r = A_();
   await ae().mkdir(r);
   let o,
@@ -36086,21 +36086,21 @@ async function TZe(e, t) {
   while (!o) {
     d++;
     try {
-      o = await ksr(r);
+      o = await acquireOAuthRefreshLock(r);
     } catch (p) {
       if (p.code === "ELOCKED") {
         if (d < Ffe) {
           await Z(1000 + Math.random() * 1000);
           continue;
         }
-        throw new lge(d);
+        throw new OAuthRefreshLockContendedError(d);
       }
       throw p;
     }
   }
   try {
-    if ((Hw(), (await yn().readAsyncStrict?.(t)) === hc)) throw new lge(d);
-    let _ = await Qi(t);
+    if ((clearOAuthTokenCache(), (await yn().readAsyncStrict?.(t)) === hc)) throw new OAuthRefreshLockContendedError(d);
+    let _ = await getClaudeAIOAuthTokensAsync(t);
     return await e({
       lockedTokens: _,
       lockAttempts: d,
@@ -36117,17 +36117,17 @@ async function TZe(e, t) {
     }
   }
 }
-function Ss(e = {}) {
-  return jUe(e).then((t) => t === "refreshed");
+function checkAndRefreshOAuthTokenIfNeeded(e = {}) {
+  return checkAndRefreshOAuthTokenIfNeededWithOutcome(e).then((t) => t === "refreshed");
 }
-function jUe({
+function checkAndRefreshOAuthTokenIfNeededWithOutcome({
   retryCount: e = 0,
   force: t = !1,
   entryAccessToken: r,
   credentials: o,
   storageV5: d,
 } = {}) {
-  let p = age.of(B().host);
+  let p = oauthTokenReadMemos.of(B().host);
   if (e === 0 && !t) {
     let _ = sH(o, d),
       E = (N) => p.pendingRefreshChecks[N],
@@ -36151,23 +36151,23 @@ function jUe({
   }
   return Gm(p, e, 0, void 0, t, r, o, d);
 }
-function jfr(e, { isDefaultFirstPartyClient: t }) {
-  return TU(e) || NKt(e) || (!t && msr(e)) || cc(e);
+function isExpectedOAuthRefreshError(e, { isDefaultFirstPartyClient: t }) {
+  return isInvalidGrantError(e) || isAccountOnHoldError(e) || (!t && isExpectedOAuthTokenError(e)) || cc(e);
 }
 async function Gm(e, t, r, o, d, p, _, E) {
   await Nfe(e, _);
-  let I = await Qi(_);
+  let I = await getClaudeAIOAuthTokensAsync(_);
   if (!d) {
-    if (I && !n1(I.expiresAt)) return "not_needed";
+    if (I && !isOAuthTokenExpired(I.expiresAt)) return "not_needed";
     if (!I?.refreshToken) return "no_refresh_token";
   }
   if (!I?.refreshToken) return "no_refresh_token";
   if (Ki.has(I.refreshToken)) return "known_dead_refresh_token";
   if (Vi.has(I.refreshToken)) return "account_on_hold";
-  if (!lx(I.scopes) && !I.subscriptionType) return "not_refreshable";
+  if (!shouldUseClaudeAIAuth(I.scopes) && !I.subscriptionType) return "not_refreshable";
   let D = p ?? I.accessToken;
-  Hw();
-  let x = await Qi(_);
+  clearOAuthTokenCache();
+  let x = await getClaudeAIOAuthTokensAsync(_);
   if (!x?.refreshToken) return "no_refresh_token";
   if (x.accessToken !== D)
     return (
@@ -36175,13 +36175,13 @@ async function Gm(e, t, r, o, d, p, _, E) {
       i("tengu_oauth_token_refresh_race_resolved", {}),
       "refreshed"
     );
-  if (!d && !n1(x.expiresAt)) return "not_needed";
+  if (!d && !isOAuthTokenExpired(x.expiresAt)) return "not_needed";
   let N = A_();
   await ae().mkdir(N);
   let G;
   try {
     (i("tengu_oauth_token_refresh_lock_acquiring", {}),
-      (G = await ksr(N)),
+      (G = await acquireOAuthRefreshLock(N)),
       i("tengu_oauth_token_refresh_lock_acquired", {}));
   } catch (F) {
     if (F.code === "ELOCKED") {
@@ -36223,13 +36223,13 @@ async function Gm(e, t, r, o, d, p, _, E) {
   let L = null,
     U = !0;
   try {
-    if ((Hw(), (await yn().readAsyncStrict?.(_)) === hc))
+    if ((clearOAuthTokenCache(), (await yn().readAsyncStrict?.(_)) === hc))
       return (
         i("tengu_oauth_token_refresh_locked_read_failed", {}),
         g("oauth_token_refresh", "oauth_refresh_locked_read_failed"),
         "lock_error"
       );
-    let V = await Qi(_);
+    let V = await getClaudeAIOAuthTokensAsync(_);
     if (!V?.refreshToken) return "no_refresh_token";
     if (((L = V.refreshToken), V.accessToken !== D))
       return (
@@ -36237,7 +36237,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
         i("tengu_oauth_token_refresh_race_resolved", {}),
         "refreshed"
       );
-    if (!d && !n1(V.expiresAt)) return "not_needed";
+    if (!d && !isOAuthTokenExpired(V.expiresAt)) return "not_needed";
     if (Ki.has(V.refreshToken)) return "known_dead_refresh_token";
     if (Vi.has(V.refreshToken)) return "account_on_hold";
     if (G.isCompromised())
@@ -36247,11 +36247,11 @@ async function Gm(e, t, r, o, d, p, _, E) {
         "lock_compromised"
       );
     (i("tengu_oauth_token_refresh_starting", {}),
-      (U = Boolean((lx(V.scopes) || V.subscriptionType) && !V.clientId)));
+      (U = Boolean((shouldUseClaudeAIAuth(V.scopes) || V.subscriptionType) && !V.clientId)));
     let te = U ? Y([...Z5, ...zhe(V.scopes)]) : V.scopes,
       re;
     try {
-      re = await wU(V.refreshToken, {
+      re = await refreshOAuthToken(V.refreshToken, {
         scopes: te,
         clientId: V.clientId,
         signal: G.signal,
@@ -36260,14 +36260,14 @@ async function Gm(e, t, r, o, d, p, _, E) {
     } catch (ce) {
       if (
         !U ||
-        !fsr(ce) ||
+        !isInvalidScopeError(ce) ||
         !Array.isArray(V.scopes) ||
         V.scopes.length === 0 ||
-        !lx(V.scopes)
+        !shouldUseClaudeAIAuth(V.scopes)
       )
         throw ce;
       (i("tengu_oauth_refresh_invalid_scope_fallback", {}),
-        (re = await wU(V.refreshToken, {
+        (re = await refreshOAuthToken(V.refreshToken, {
           scopes: V.scopes,
           clientId: V.clientId,
           signal: G.signal,
@@ -36275,7 +36275,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
         })));
     }
     return (
-      await UUe({
+      await saveRefreshedOAuthTokensRespectingLock({
         isCompromised: G.isCompromised,
         postedRefreshToken: L,
         refreshedTokens: re,
@@ -36289,8 +36289,8 @@ async function Gm(e, t, r, o, d, p, _, E) {
         level: "error",
       }),
         i("tengu_oauth_token_refresh_lock_compromised_in_catch", {}),
-        Hw());
-      let te = await Qi(_);
+        clearOAuthTokenCache());
+      let te = await getClaudeAIOAuthTokensAsync(_);
       if (te && te.accessToken !== D)
         return (
           Rn(),
@@ -36302,25 +36302,25 @@ async function Gm(e, t, r, o, d, p, _, E) {
         "lock_compromised"
       );
     }
-    if (jfr(F, { isDefaultFirstPartyClient: U }))
+    if (isExpectedOAuthRefreshError(F, { isDefaultFirstPartyClient: U }))
       n(`OAuth refresh failed (expected): ${l(F)}`, { level: "error" });
     else h(F);
-    Hw();
-    let V = await Qi(_);
+    clearOAuthTokenCache();
+    let V = await getClaudeAIOAuthTokensAsync(_);
     if (V && V.accessToken !== D)
       return (
         Rn(),
         i("tengu_oauth_token_refresh_race_recovered", {}),
         "refreshed"
       );
-    if (TU(F) && L) await BUe(L, _);
-    if (NKt(F) && L)
+    if (isInvalidGrantError(F) && L) await markRefreshTokenDeadAfterInvalidGrant(L, _);
+    if (isAccountOnHoldError(F) && L)
       return (
-        Vi.set(L, psr(F)),
+        Vi.set(L, getAccountOnHoldErrorUrl(F)),
         i("tengu_oauth_refresh_token_account_on_hold", {}),
         "account_on_hold"
       );
-    return TU(F) ? "known_dead_refresh_token" : "refresh_failed";
+    return isInvalidGrantError(F) ? "known_dead_refresh_token" : "refresh_failed";
   } finally {
     i("tengu_oauth_token_refresh_lock_releasing", {});
     try {
@@ -36331,32 +36331,32 @@ async function Gm(e, t, r, o, d, p, _, E) {
     }
   }
 }
-function gt() {
-  if (!cl()) return !1;
-  return lx(Yt()?.scopes);
+function isClaudeAISubscriber() {
+  if (!isAnthropicAuthEnabled()) return !1;
+  return shouldUseClaudeAIAuth(getClaudeAIOAuthTokens()?.scopes);
 }
-function kRn() {
-  return EZe(Yt());
+function hasUsableClaudeAILogin() {
+  return isUsableClaudeAILoginRecord(getClaudeAIOAuthTokens());
 }
-function Wyr() {
-  return EZe(yn().read()?.claudeAiOauth ?? null);
+function hasStoredUsableClaudeAILogin() {
+  return isUsableClaudeAILoginRecord(yn().read()?.claudeAiOauth ?? null);
 }
-function EZe(e) {
-  return lx(e?.scopes) && !!e?.accessToken;
+function isUsableClaudeAILoginRecord(e) {
+  return shouldUseClaudeAIAuth(e?.scopes) && !!e?.accessToken;
 }
-function lp() {
-  let e = Yt()?.scopes;
+function hasProfileScope() {
+  let e = getClaudeAIOAuthTokens()?.scopes;
   return Array.isArray(e) && e.includes(dB);
 }
-function wu() {
-  return Yt()?.accessToken != null;
+function hasStoredOAuthToken() {
+  return getClaudeAIOAuthTokens()?.accessToken != null;
 }
-function gq(e) {
-  let t = Yt()?.scopes;
+function hasOAuthScope(e) {
+  let t = getClaudeAIOAuthTokens()?.scopes;
   return Array.isArray(t) && t.includes(e);
 }
-function KKt() {
-  let e = Yt()?.scopes;
+function canAuthenticateChromeBridge() {
+  let e = getClaudeAIOAuthTokens()?.scopes;
   return (
     Array.isArray(e) &&
     (e.includes(dB) ||
@@ -36364,28 +36364,28 @@ function KKt() {
       e.includes("user:ccr_inference"))
   );
 }
-function XKt() {
-  return Yt()?.expiresAt ?? null;
+function getStoredOAuthTokenExpiresAt() {
+  return getClaudeAIOAuthTokens()?.expiresAt ?? null;
 }
-function WUe() {
-  return Yt()?.subscriptionType ?? null;
+function getStoredOAuthSubscriptionType() {
+  return getClaudeAIOAuthTokens()?.subscriptionType ?? null;
 }
-function xRn() {
-  return Yt()?.refreshToken != null;
+function hasStoredOAuthRefreshToken() {
+  return getClaudeAIOAuthTokens()?.refreshToken != null;
 }
-function cge() {
+function is1PApiCustomer() {
   if (!In()) return !1;
-  if (gt()) return !1;
+  if (isClaudeAISubscriber()) return !1;
   return !0;
 }
-function vn() {
-  return cl() ? ee().oauthAccount : void 0;
+function getOauthAccountInfo() {
+  return isAnthropicAuthEnabled() ? ee().oauthAccount : void 0;
 }
-function zD() {
-  if (!cl()) return;
+function getAuthenticatedAccountInfo() {
+  if (!isAnthropicAuthEnabled()) return;
   return cHt() ?? void 0;
 }
-function mh() {
+function getStoredOauthAccountInfo() {
   return ee().oauthAccount;
 }
 var uH = new Set([
@@ -36397,18 +36397,18 @@ var uH = new Set([
   "apple_subscription",
   "google_play_subscription",
 ]);
-function Wfr() {
-  let e = vn()?.billingType;
-  if (!gt() || !e) return !1;
+function isOverageProvisioningAllowed() {
+  let e = getOauthAccountInfo()?.billingType;
+  if (!isClaudeAISubscriber() || !e) return !1;
   return uH.has(e);
 }
-function hb() {
+function isExtraUsageAllowed() {
   if (a.DISABLE_EXTRA_USAGE_COMMAND) return !1;
   if (Aw() !== null) return !0;
-  return Wfr();
+  return isOverageProvisioningAllowed();
 }
-function Gyr() {
-  let e = qn();
+function hasOpusAccess() {
+  let e = getSubscriptionType();
   return (
     e === "max" ||
     e === "enterprise" ||
@@ -36417,10 +36417,10 @@ function Gyr() {
     e === null
   );
 }
-function qn() {
+function getSubscriptionType() {
   if (Hc()) return zc();
-  if (!cl()) return null;
-  let e = Yt();
+  if (!isAnthropicAuthEnabled()) return null;
+  let e = getClaudeAIOAuthTokens();
   if (!e) return null;
   return e.subscriptionType ?? dH() ?? null;
 }
@@ -36440,41 +36440,41 @@ function dH() {
   }
 }
 function qm() {
-  if (uo() || a.CLAUDE_CODE_OAUTH_TOKEN || Fc()) return !1;
+  if (uo() || a.CLAUDE_CODE_OAUTH_TOKEN || isHostManagedProviderAuth()) return !1;
   return !(uZ() && !dZ());
 }
-function HRn() {
-  if (!cl()) return { subscriptionType: null, rateLimitTier: null };
-  let e = Yt();
+function ownStoredLoginPlanAttributes() {
+  if (!isAnthropicAuthEnabled()) return { subscriptionType: null, rateLimitTier: null };
+  let e = getClaudeAIOAuthTokens();
   if (!e || !qm()) return { subscriptionType: null, rateLimitTier: null };
   return {
     subscriptionType: e.subscriptionType ?? null,
     rateLimitTier: e.rateLimitTier ?? null,
   };
 }
-function wRe() {
-  return qn() === "max";
+function isMaxSubscriber() {
+  return getSubscriptionType() === "max";
 }
-function qyr() {
-  return qn() === "team";
+function isTeamSubscriber() {
+  return getSubscriptionType() === "team";
 }
-function pvt() {
-  return qn() === "team" && UT() === "default_claude_max_5x";
+function isTeamPremiumSubscriber() {
+  return getSubscriptionType() === "team" && getRateLimitTier() === "default_claude_max_5x";
 }
-function uge() {
-  return qn() === "enterprise";
+function isEnterpriseSubscriber() {
+  return getSubscriptionType() === "enterprise";
 }
-function AZe() {
-  return qn() === "enterprise" && Gfr() === "enterprise_usage_based";
+function isEnterprisePAYGSubscriber() {
+  return getSubscriptionType() === "enterprise" && getSeatTier() === "enterprise_usage_based";
 }
-function Bse() {
-  return qn() === "pro";
+function isProSubscriber() {
+  return getSubscriptionType() === "pro";
 }
-function UT() {
+function getRateLimitTier() {
   let e = Lc();
   if (e !== null) return e;
-  if (!cl()) return null;
-  let t = Yt();
+  if (!isAnthropicAuthEnabled()) return null;
+  let t = getClaudeAIOAuthTokens();
   if (!t) return null;
   return t.rateLimitTier ?? pH() ?? null;
 }
@@ -36484,11 +36484,11 @@ function pH() {
   let e = Akn().rateLimitTier;
   return e !== void 0 && Bfe.test(e) ? e : null;
 }
-function Gfr() {
-  return vn()?.seatTier ?? null;
+function getSeatTier() {
+  return getOauthAccountInfo()?.seatTier ?? null;
 }
-function YKt() {
-  switch (qn()) {
+function getSubscriptionName() {
+  switch (getSubscriptionType()) {
     case "enterprise":
       return "Claude Enterprise";
     case "team":
@@ -36501,46 +36501,46 @@ function YKt() {
       return "Claude API";
   }
 }
-function k6() {
+function isUsing3PServices() {
   return !In();
 }
 function Xm() {
   if (Hr()) return ye("policySettings")?.otelHeadersHelper;
   return (bn() || {}).otelHeadersHelper;
 }
-function qfr() {
+function isOtelHeadersHelperFromProjectOrLocalSettings() {
   let e = Xm();
   if (!e) return !1;
   let t = ye("projectSettings"),
     r = ye("localSettings");
   return t?.otelHeadersHelper === e || r?.otelHeadersHelper === e;
 }
-var IRn = new j(() => ({
+var otelHeadersHelperStates = new j(() => ({
     cache: null,
     timestamp: 0,
     inflight: null,
     lastFailure: null,
   })),
   Hfe = 1740000;
-function PRn() {
+function getOtelHeadersHelperLastFailure() {
   if (!Xm()) return null;
-  return IRn.of(B().host).lastFailure;
+  return otelHeadersHelperStates.of(B().host).lastFailure;
 }
-function zyr() {
-  let e = IRn.of(B().host);
+function clearOtelHeadersCache() {
+  let e = otelHeadersHelperStates.of(B().host);
   ((e.cache = null),
     (e.timestamp = 0),
     (e.inflight = null),
     (e.lastFailure = null));
 }
-async function ORn() {
+async function getOtelHeadersFromHelper() {
   let e = Xm();
   if (!e) return {};
   let t = Lxe(process.env.CLAUDE_CODE_OTEL_HEADERS_HELPER_DEBOUNCE_MS, Hfe),
-    r = IRn.of(B().host);
+    r = otelHeadersHelperStates.of(B().host);
   if (r.cache && Date.now() - r.timestamp < t) return r.cache;
   if (r.inflight) return r.inflight;
-  if (qfr()) {
+  if (isOtelHeadersHelperFromProjectOrLocalSettings()) {
     if (!Bo()) return {};
   }
   return (
@@ -36628,33 +36628,33 @@ async function ORn() {
 function fH(e) {
   return e === "max" || e === "pro";
 }
-function x6() {
-  let e = qn();
-  return gt() && e !== null && fH(e);
+function isConsumerSubscriber() {
+  let e = getSubscriptionType();
+  return isClaudeAISubscriber() && e !== null && fH(e);
 }
-function pQ() {
+function getAccountInformation() {
   if (Pe() !== "firstParty") return;
-  let { source: t } = Gl(),
+  let { source: t } = getAuthTokenSource(),
     r = {};
   if (
     t === "CLAUDE_CODE_OAUTH_TOKEN" ||
     t === "CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR"
   )
     r.tokenSource = t;
-  else if (gt()) r.subscription = YKt();
+  else if (isClaudeAISubscriber()) r.subscription = getSubscriptionName();
   else if (t !== "profile") r.tokenSource = t;
-  let { key: o, source: d } = kp();
+  let { key: o, source: d } = getAnthropicApiKeyWithSourceSafe();
   if (o) r.apiKeySource = d;
   if (t === "claude.ai" || d === "/login managed key") {
-    let _ = vn()?.organizationName;
+    let _ = getOauthAccountInfo()?.organizationName;
     if (_) r.organization = _;
   }
-  let p = vn()?.emailAddress;
+  let p = getOauthAccountInfo()?.emailAddress;
   if ((t === "claude.ai" || d === "/login managed key") && p) r.email = p;
   return r;
 }
-function CZe() {
-  let e = pQ();
+function toAccountInfo() {
+  let e = getAccountInformation();
   return {
     email: e?.email,
     organization: e?.organization,
@@ -36664,7 +36664,7 @@ function CZe() {
     apiProvider: Pe(),
   };
 }
-function zfr() {
+function getApiKeyFromConfigOrMacOSKeychainAsync() {
   let e = $i();
   if (e.promise) return e.promise;
   let t = Gfe();
@@ -36677,7 +36677,7 @@ function zfr() {
   );
 }
 async function Gfe() {
-  if (uo() || Fc()) return null;
+  if (uo() || isHostManagedProviderAuth()) return null;
   {
     let t = Y5t();
     if (t) {
@@ -36707,13 +36707,13 @@ async function Gfe() {
   if (!e.primaryApiKey) return null;
   return { key: e.primaryApiKey, source: "/login managed key" };
 }
-async function JKt(e = {}) {
+async function getAnthropicApiKeyWithSourceAsync(e = {}) {
   if (uo()) {
     if (a.ANTHROPIC_API_KEY)
       return { key: a.ANTHROPIC_API_KEY, source: "ANTHROPIC_API_KEY" };
-    if (bg())
+    if (getConfiguredApiKeyHelper())
       return {
-        key: e.skipRetrievingKeyFromApiKeyHelper ? null : WKt(),
+        key: e.skipRetrievingKeyFromApiKeyHelper ? null : getApiKeyFromApiKeyHelperCached(),
         source: "apiKeyHelper",
       };
     return { key: null, source: "none" };
@@ -36729,7 +36729,7 @@ async function JKt(e = {}) {
       !a.CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR &&
       !gx() &&
       !a.ANTHROPIC_AUTH_TOKEN &&
-      !Zc() &&
+      !shouldUseWIFAuth() &&
       In()
     )
       throw Error(
@@ -36742,29 +36742,29 @@ async function JKt(e = {}) {
     return { key: t, source: "ANTHROPIC_API_KEY" };
   let r = U6();
   if (r) return { key: r, source: "ANTHROPIC_API_KEY" };
-  if (bg()) {
+  if (getConfiguredApiKeyHelper()) {
     if (e.skipRetrievingKeyFromApiKeyHelper)
       return { key: null, source: "apiKeyHelper" };
-    return { key: WKt(), source: "apiKeyHelper" };
+    return { key: getApiKeyFromApiKeyHelperCached(), source: "apiKeyHelper" };
   }
-  let d = await zfr();
+  let d = await getApiKeyFromConfigOrMacOSKeychainAsync();
   if (d) return d;
   return { key: null, source: "none" };
 }
-async function Vyr() {
-  let { key: e } = await JKt();
+async function getAnthropicApiKeyAsync() {
+  let { key: e } = await getAnthropicApiKeyWithSourceAsync();
   return e;
 }
-async function QKt(e = {}) {
+async function getAnthropicApiKeyWithSourceAsyncSafe(e = {}) {
   try {
-    return await JKt(e);
+    return await getAnthropicApiKeyWithSourceAsync(e);
   } catch {
     return { key: null, source: "none" };
   }
 }
-async function Kyr() {
+async function hasAnthropicApiKeyAuthAsync() {
   try {
-    let { key: e, source: t } = await JKt({
+    let { key: e, source: t } = await getAnthropicApiKeyWithSourceAsync({
       skipRetrievingKeyFromApiKeyHelper: !0,
     });
     return e !== null && t !== "none";
@@ -36772,30 +36772,30 @@ async function Kyr() {
     return !1;
   }
 }
-async function ZKt() {
+async function isAnthropicAuthEnabledAsync() {
   if (uo()) return !1;
   if (a.ANTHROPIC_UNIX_SOCKET) return !!a.CLAUDE_CODE_OAUTH_TOKEN;
-  if (Zc()) return !1;
+  if (shouldUseWIFAuth()) return !1;
   let e = !In(),
     r = (bn() || {}).apiKeyHelper,
-    o = d0(),
+    o = effectiveAuthTokenEnv(),
     d;
   try {
-    d = (await JKt({ skipRetrievingKeyFromApiKeyHelper: !0 })).source;
+    d = (await getAnthropicApiKeyWithSourceAsync({ skipRetrievingKeyFromApiKeyHelper: !0 })).source;
   } catch {
     return !1;
   }
   let p = d === "ANTHROPIC_API_KEY" || d === "apiKeyHelper",
     _ = IU("CLAUDE_CODE_API_KEY_FILE_DESCRIPTOR"),
-    E = ((o || p) && !fZe()) || ((r || _) && !vr());
+    E = ((o || p) && !isFirstPartyManagedOAuthContext()) || ((r || _) && !vr());
   return !(e || E);
 }
-async function e5t(e) {
+async function getAuthTokenSourceAsync(e) {
   if (uo()) {
-    if (bg()) return { source: "apiKeyHelper", hasToken: !0 };
+    if (getConfiguredApiKeyHelper()) return { source: "apiKeyHelper", hasToken: !0 };
     return { source: "none", hasToken: !1 };
   }
-  if (d0() && !fZe()) return { source: "ANTHROPIC_AUTH_TOKEN", hasToken: !0 };
+  if (effectiveAuthTokenEnv() && !isFirstPartyManagedOAuthContext()) return { source: "ANTHROPIC_AUTH_TOKEN", hasToken: !0 };
   if (a.CLAUDE_CODE_OAUTH_TOKEN)
     return { source: "CLAUDE_CODE_OAUTH_TOKEN", hasToken: !0 };
   if (gx()) {
@@ -36806,43 +36806,43 @@ async function e5t(e) {
       };
     return { source: "CCR_OAUTH_TOKEN_FILE", hasToken: !0 };
   }
-  if (bg() && !vr()) return { source: "apiKeyHelper", hasToken: !0 };
-  if (Zc()) return { source: "profile", hasToken: !0 };
-  let o = await Qi(e);
-  if (lx(o?.scopes) && o?.accessToken)
+  if (getConfiguredApiKeyHelper() && !vr()) return { source: "apiKeyHelper", hasToken: !0 };
+  if (shouldUseWIFAuth()) return { source: "profile", hasToken: !0 };
+  let o = await getClaudeAIOAuthTokensAsync(e);
+  if (shouldUseClaudeAIAuth(o?.scopes) && o?.accessToken)
     return { source: "claude.ai", hasToken: !0 };
   return { source: "none", hasToken: !1 };
 }
-async function jse(e) {
-  if (!(await ZKt())) return !1;
-  return lx((await Qi(e))?.scopes);
+async function isClaudeAISubscriberAsync(e) {
+  if (!(await isAnthropicAuthEnabledAsync())) return !1;
+  return shouldUseClaudeAIAuth((await getClaudeAIOAuthTokensAsync(e))?.scopes);
 }
-async function Xyr(e) {
-  let t = (await Qi(e))?.scopes;
+async function hasProfileScopeAsync(e) {
+  let t = (await getClaudeAIOAuthTokensAsync(e))?.scopes;
   return Array.isArray(t) && t.includes(dB);
 }
-async function Yyr(e) {
+async function is1PApiCustomerAsync(e) {
   if (!In()) return !1;
-  if (await jse(e)) return !1;
+  if (await isClaudeAISubscriberAsync(e)) return !1;
   return !0;
 }
-async function t5t() {
-  return (await ZKt()) ? ee().oauthAccount : void 0;
+async function getOauthAccountInfoAsync() {
+  return (await isAnthropicAuthEnabledAsync()) ? ee().oauthAccount : void 0;
 }
-async function Jyr(e) {
-  let t = (await t5t())?.billingType;
-  if (!(await jse(e)) || !t) return !1;
+async function isOverageProvisioningAllowedAsync(e) {
+  let t = (await getOauthAccountInfoAsync())?.billingType;
+  if (!(await isClaudeAISubscriberAsync(e)) || !t) return !1;
   return uH.has(t);
 }
-async function dge(e) {
+async function getSubscriptionTypeAsync(e) {
   if (Hc()) return zc();
-  if (!(await ZKt())) return null;
-  let t = await Qi(e);
+  if (!(await isAnthropicAuthEnabledAsync())) return null;
+  let t = await getClaudeAIOAuthTokensAsync(e);
   if (!t) return null;
   return t.subscriptionType ?? dH() ?? null;
 }
-async function Qyr(e) {
-  let t = await dge(e);
+async function hasOpusAccessAsync(e) {
+  let t = await getSubscriptionTypeAsync(e);
   return (
     t === "max" ||
     t === "enterprise" ||
@@ -36851,42 +36851,42 @@ async function Qyr(e) {
     t === null
   );
 }
-async function Vfr(e) {
+async function getRateLimitTierAsync(e) {
   let t = Lc();
   if (t !== null) return t;
-  if (!(await ZKt())) return null;
-  let r = await Qi(e);
+  if (!(await isAnthropicAuthEnabledAsync())) return null;
+  let r = await getClaudeAIOAuthTokensAsync(e);
   if (!r) return null;
   return r.rateLimitTier ?? pH() ?? null;
 }
-async function Kfr() {
-  return (await t5t())?.seatTier ?? null;
+async function getSeatTierAsync() {
+  return (await getOauthAccountInfoAsync())?.seatTier ?? null;
 }
-async function Zyr(e) {
-  return (await dge(e)) === "max";
+async function isMaxSubscriberAsync(e) {
+  return (await getSubscriptionTypeAsync(e)) === "max";
 }
-async function eSr(e) {
-  return (await dge(e)) === "team";
+async function isTeamSubscriberAsync(e) {
+  return (await getSubscriptionTypeAsync(e)) === "team";
 }
-async function tSr(e) {
+async function isTeamPremiumSubscriberAsync(e) {
   return (
-    (await dge(e)) === "team" && (await Vfr(e)) === "default_claude_max_5x"
+    (await getSubscriptionTypeAsync(e)) === "team" && (await getRateLimitTierAsync(e)) === "default_claude_max_5x"
   );
 }
-async function nSr(e) {
-  return (await dge(e)) === "enterprise";
+async function isEnterpriseSubscriberAsync(e) {
+  return (await getSubscriptionTypeAsync(e)) === "enterprise";
 }
-async function rSr(e) {
+async function isEnterprisePAYGSubscriberAsync(e) {
   return (
-    (await dge(e)) === "enterprise" &&
-    (await Kfr()) === "enterprise_usage_based"
+    (await getSubscriptionTypeAsync(e)) === "enterprise" &&
+    (await getSeatTierAsync()) === "enterprise_usage_based"
   );
 }
-async function oSr(e) {
-  return (await dge(e)) === "pro";
+async function isProSubscriberAsync(e) {
+  return (await getSubscriptionTypeAsync(e)) === "pro";
 }
-async function Xfr(e) {
-  switch (await dge(e)) {
+async function getSubscriptionNameAsync(e) {
+  switch (await getSubscriptionTypeAsync(e)) {
     case "enterprise":
       return "Claude Enterprise";
     case "team":
@@ -36899,45 +36899,45 @@ async function Xfr(e) {
       return "Claude API";
   }
 }
-async function sSr(e) {
-  let t = await dge(e);
-  return (await jse(e)) && t !== null && fH(t);
+async function isConsumerSubscriberAsync(e) {
+  let t = await getSubscriptionTypeAsync(e);
+  return (await isClaudeAISubscriberAsync(e)) && t !== null && fH(t);
 }
-async function iSr(e) {
+async function getAccountInformationAsync(e) {
   if (Pe() !== "firstParty") return;
-  let { source: r } = await e5t(e),
+  let { source: r } = await getAuthTokenSourceAsync(e),
     o = {};
   if (
     r === "CLAUDE_CODE_OAUTH_TOKEN" ||
     r === "CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR"
   )
     o.tokenSource = r;
-  else if (await jse(e)) o.subscription = await Xfr(e);
+  else if (await isClaudeAISubscriberAsync(e)) o.subscription = await getSubscriptionNameAsync(e);
   else if (r !== "profile") o.tokenSource = r;
-  let { key: d, source: p } = await QKt();
+  let { key: d, source: p } = await getAnthropicApiKeyWithSourceAsyncSafe();
   if (d) o.apiKeySource = p;
   if (r === "claude.ai" || p === "/login managed key") {
-    let E = (await t5t())?.organizationName;
+    let E = (await getOauthAccountInfoAsync())?.organizationName;
     if (E) o.organization = E;
   }
-  let _ = (await t5t())?.emailAddress;
+  let _ = (await getOauthAccountInfoAsync())?.emailAddress;
   if ((r === "claude.ai" || p === "/login managed key") && _) o.email = _;
   return o;
 }
 function Vfe() {
   if (
-    BKt() ||
+    hasAnthropicApiKeyAuth() ||
     !!a.ANTHROPIC_AUTH_TOKEN ||
     IU("CLAUDE_CODE_API_KEY_FILE_DESCRIPTOR") ||
     !!TBe() ||
-    !!bg()
+    !!getConfiguredApiKeyHelper()
   )
     return !0;
-  return Pe() === "firstParty" && !Zc() && !cl();
+  return Pe() === "firstParty" && !shouldUseWIFAuth() && !isAnthropicAuthEnabled();
 }
 var gH = ["EACCES", "EPERM", "EBUSY", "EIO", "EISDIR", "ELOOP"],
   Kfe = new RegExp(`\\b(${gH.join("|")})\\b`);
-async function cx(e) {
+async function validateForceLoginOrg(e) {
   let t = ye("policySettings"),
     r = t?.forceLoginOrgUUID,
     o = r !== void 0 || t?.forceLoginMethod !== void 0;
@@ -36946,16 +36946,16 @@ async function cx(e) {
     return { valid: !0 };
   }
   if (a.ANTHROPIC_UNIX_SOCKET) {
-    let x = { api_provider: u(Pe()), auth_token_source: u(Gl().source) };
-    if (!cl() && o) g("auth_force_login_org", "unix_socket_3p_under_pin", x);
-    else if (cl() && r !== void 0)
+    let x = { api_provider: u(Pe()), auth_token_source: u(getAuthTokenSource().source) };
+    if (!isAnthropicAuthEnabled() && o) g("auth_force_login_org", "unix_socket_3p_under_pin", x);
+    else if (isAnthropicAuthEnabled() && r !== void 0)
       g("auth_force_login_org", "unix_socket_ssh_under_pin", x);
     else if (B6())
       g("auth_force_login_org", "unix_socket_unreadable_policy", x);
     else y("auth_force_login_org");
     return { valid: !0 };
   }
-  if (!cl()) {
+  if (!isAnthropicAuthEnabled()) {
     if (o && Vfe())
       return {
         valid: !1,
@@ -37014,10 +37014,10 @@ Contact your administrator.`,
     d.length === 1
       ? `organization ${d[0]}`
       : `one of these organizations: ${d.join(", ")}`;
-  await Ss({ credentials: e });
-  let _ = Yt();
+  await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
+  let _ = getClaudeAIOAuthTokens();
   if (!_) return { valid: !0 };
-  let { source: E } = Gl(),
+  let { source: E } = getAuthTokenSource(),
     C =
       E === "CLAUDE_CODE_OAUTH_TOKEN" ||
       E === "CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR",
@@ -37051,29 +37051,29 @@ but this machine requires ${p}.
 Please log in with a permitted organization: claude auth login`,
   };
 }
-function R5() {
+function getForcedLoginMethod() {
   if (LUe()) return "gateway";
   let e = Ge()?.forceLoginMethod;
   return e === "gateway" ? void 0 : e;
 }
-function vZe() {
+function gatewaySignInScreenConfigured() {
   if (LUe()) return !0;
   let { forceLoginMethod: e, forceLoginGatewayUrl: t } = $Kt();
   return e === void 0 && t !== void 0;
 }
-function RZe() {
+function adminPolicyUnreadable() {
   return fie().length > 0;
 }
-function DRn() {
+function policyUnreadableForEnforcement() {
   return B6();
 }
-function Wse(e) {
+function validateForceLoginMethod(e) {
   if (a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST) {
-    if (R5() !== void 0)
+    if (getForcedLoginMethod() !== void 0)
       g("auth_force_login_org", "managed_by_host_under_method_pin");
     return { valid: !0 };
   }
-  let t = R5();
+  let t = getForcedLoginMethod();
   if (t === void 0) return { valid: !0 };
   if (t === "gateway")
     return {
@@ -37104,7 +37104,7 @@ function fVt() {
 function IAt(e, t) {
   return mH.run({ workload: e }, t);
 }
-function ex() {
+function getUserAgent() {
   let e = process.env.CLAUDE_AGENT_SDK_VERSION
       ? `, agent-sdk/${process.env.CLAUDE_AGENT_SDK_VERSION}`
       : "",
@@ -37115,7 +37115,7 @@ function ex() {
     o = r ? `, workload/${r}` : "";
   return `claude-cli/${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION} (external, ${a.CLAUDE_CODE_ENTRYPOINT ?? "cli"}${e}${t}${o})`;
 }
-function pP() {
+function getMCPUserAgent() {
   let e = [];
   if (a.CLAUDE_CODE_ENTRYPOINT) e.push(a.CLAUDE_CODE_ENTRYPOINT);
   if (process.env.CLAUDE_AGENT_SDK_VERSION)
@@ -37125,14 +37125,14 @@ function pP() {
   let t = e.length > 0 ? ` (${e.join(", ")})` : "";
   return `claude-code/${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}${t}`;
 }
-function CCn() {
+function getWebFetchUserAgent() {
   return `Claude-User (${va()}; +https://support.anthropic.com/)`;
 }
-async function tx() {
-  if (!gb() && Zc())
+async function getAuthHeadersAsync() {
+  if (!getAnthropicApiKeySafe() && shouldUseWIFAuth())
     try {
       let { getWIFCredentials: e, getWIFTokenCache: t } =
-          await import("../../01-核心基础设施/共享小工具-未细化/getWIFTokenCache.zrnj7q4r.js"),
+          await import("./chunk-x3rm9w4b.js"),
         [r, o] = await Promise.all([t(), e()]);
       if (r !== null)
         return {
@@ -37155,17 +37155,17 @@ async function tx() {
         }
       );
     }
-  return l5();
+  return getAuthHeaders();
 }
-function l5() {
-  if (k6())
+function getAuthHeaders() {
+  if (isUsing3PServices())
     return {
       headers: {},
       error: "Anthropic auth not used on third-party providers",
       reasonCode: "third_party",
     };
-  if (gt()) {
-    let t = Yt();
+  if (isClaudeAISubscriber()) {
+    let t = getClaudeAIOAuthTokens();
     if (!t?.accessToken)
       return {
         headers: {},
@@ -37185,7 +37185,7 @@ function l5() {
       error: "Not available when using a Cloud gateway",
       reasonCode: "gateway",
     };
-  let e = gb();
+  let e = getAnthropicApiKeySafe();
   if (!e)
     return {
       headers: {},
@@ -37194,11 +37194,11 @@ function l5() {
     };
   return { headers: { "x-api-key": e } };
 }
-async function T_(e, t) {
+async function withOAuth401Retry(e, t) {
   let r;
   if (t?.gateToSessionOAuthCredential) {
-    let o = Yt(),
-      d = await tx();
+    let o = getClaudeAIOAuthTokens(),
+      d = await getAuthHeadersAsync();
     r =
       o?.accessToken &&
       o.refreshToken &&
@@ -37221,21 +37221,21 @@ async function T_(e, t) {
       throw o;
     if (t?.gateToSessionOAuthCredential) {
       if (!r) throw o;
-      let E = Yt()?.accessToken;
+      let E = getClaudeAIOAuthTokens()?.accessToken;
       if (E && E !== r) return await e();
       let C = t.oauthRefreshLatch;
       if (C?.attempted) throw o;
       if (C) C.attempted = !0;
-      await cm(r, t?.credentials);
-      let I = Yt()?.accessToken;
+      await handleOAuth401Error(r, t?.credentials);
+      let I = getClaudeAIOAuthTokens()?.accessToken;
       if (!I || I === r) throw o;
       let D = await e();
       if (C) C.attempted = !1;
       return D;
     }
-    let _ = Yt()?.accessToken;
+    let _ = getClaudeAIOAuthTokens()?.accessToken;
     if (!_) throw o;
-    return (await cm(_, t?.credentials), await e());
+    return (await handleOAuth401Error(_, t?.credentials), await e());
   }
 }
 export {
@@ -37291,12 +37291,12 @@ export {
   g6,
   fVt,
   IAt,
-  ex,
-  pP,
-  CCn,
-  tx,
-  l5,
-  T_,
+  getUserAgent,
+  getMCPUserAgent,
+  getWebFetchUserAgent,
+  getAuthHeadersAsync,
+  getAuthHeaders,
+  withOAuth401Retry,
   PAt,
   wrr,
   mVt,
@@ -37470,13 +37470,13 @@ export {
   HVt,
   Vrr,
   VCn,
-  hP,
-  _P,
-  nUe,
+  isModelDenied,
+  getModelEntitlementDenySet,
+  isEntitlementOverlayUnavailable,
   Ume,
   Krr,
   qAt,
-  Rr,
+  isModelAllowed,
   ZH,
   UD,
   IVt,
@@ -37490,112 +37490,112 @@ export {
   vQe,
   Yrr,
   OVt,
-  RQe,
-  xm,
-  Ase,
-  sUe,
-  iUe,
-  DVt,
-  rq,
-  KCn,
-  Mf,
-  LVt,
-  VAt,
-  aUe,
-  XCn,
-  Jrr,
-  rt,
-  YCn,
-  e0,
-  p5,
-  kQe,
-  xQe,
-  Yve,
-  HQe,
-  zN,
-  IQe,
-  Cse,
-  KAt,
-  XAt,
-  MVt,
-  BD,
-  hg,
-  JCn,
-  Qrr,
-  QCn,
-  NVt,
-  ZCn,
-  evn,
-  t0,
-  tvn,
-  Zrr,
-  YAt,
-  oq,
-  Ll,
-  nvn,
-  Nf,
-  f5,
-  xR,
-  jme,
-  Xh,
-  FVt,
-  ip,
-  JAt,
-  $Vt,
-  QAt,
-  UVt,
-  dh,
-  ZAt,
-  _6,
-  lUe,
-  vse,
-  Rse,
-  sq,
-  dA,
-  BVt,
-  am,
-  rvn,
-  ovn,
-  svn,
-  ol,
-  iq,
-  eCt,
-  tCt,
-  m5,
-  Yh,
-  Wme,
-  yP,
-  Ue,
-  cUe,
-  HR,
-  Gme,
-  uUe,
-  lf,
-  jVt,
-  y6,
-  PQe,
-  nCt,
-  vw,
-  VN,
-  rCt,
-  IR,
-  WVt,
-  g5,
-  oi,
-  GVt,
-  Hm,
-  oCt,
-  wt,
-  rQ,
-  OQe,
-  qme,
-  dUe,
-  WC,
-  pUe,
-  bu,
-  ivn,
-  PR,
-  n0,
+  hasDedicatedSmallFastModel,
+  getSmallFastModel,
+  isNonCustomFableModel,
+  isNonCustomMythosModel,
+  swapShrinksContextWindow,
+  preserve1mContextForRefusalFallback,
+  isNonCustomOpusModel,
+  isNonCustomSonnetModel,
+  getUserSpecifiedModelSetting,
+  getBaselineModelSetting,
+  vetUserSpecifiedModel,
+  isUnservedFamilySpelling,
+  isServedFamilyExpandedSpelling,
+  registryTargetServedFree,
+  getMainLoopModel,
+  DEFAULT_3P_OPUS_KEY,
+  DEFAULT_3P_SONNET_KEY,
+  DEFAULT_3P_HAIKU_KEY,
+  DEFAULT_BEDROCK_OPUS_KEY,
+  DEFAULT_VERTEX_OPUS_KEY,
+  DEFAULT_MANTLE_OPUS_KEY,
+  DEFAULT_3P_FABLE_KEY,
+  isFableModelValue,
+  isMythosModelValue,
+  isFableAvailable,
+  serverProbeAcceptedFable,
+  bootstrapHasAnswered,
+  isMythosAvailable,
+  isPinnedFableModel,
+  isFableFamilyOrPinnedModel,
+  isOpus5FamilyModel,
+  isAntInternalFastModelId,
+  getPermissionClassifierExternalDefault,
+  classifierFlagshipRerouteTarget,
+  getPermissionClassifierFlagshipRerouteTarget,
+  getActiveOpusLineupIds,
+  getModelUnavailabilityReason,
+  antUpstreamContextWindow,
+  getAntContextWindow,
+  antGrants1MContext,
+  getDefaultFableModel,
+  getDefaultOpusModel,
+  enforcementDefaultOpusModel,
+  getDefaultSonnetModel,
+  getDefaultHaikuModel,
+  isModeDependentModelSetting,
+  planModeConstituentFamily,
+  stepDownRestrictedFamilyAliasPick,
+  planModeConstituentModel,
+  getRuntimeMainLoopModel,
+  getResolvedOrgDefaultModel,
+  getBootstrapOrgDefaultEffect,
+  isRecognizedOrgDefaultName,
+  isDeploymentVouchedModel,
+  getDefaultMainLoopModelSetting,
+  defaultModelAttributionSuffix,
+  resolveDefaultMainLoopModelSetting,
+  getOrgLockedDefaultModel,
+  getEnvDefaultModel,
+  isEnvDefaultModelGoverning,
+  eligible1mSuffixTarget,
+  isModelAllowedUnderActiveEnforcement,
+  isPermittedByOrgModelPolicy,
+  isExemptDefaultResolvingPick,
+  isWindowSilentDefaultPick,
+  resolveModelAliasEnvFree,
+  isDefaultModelEnforced,
+  getDefaultMainLoopModel,
+  isNoModelFallbackEnabled,
+  noModelFallbackTripwire,
+  buildAvailabilityFallbackChain,
+  getFableDeclineFallbackModel,
+  firstPartyNameToCanonical,
+  isRecognizedCanonical,
+  isRecognizedModel,
+  getCanonicalName,
+  mainModelOverrideKeys,
+  strippedCanonicalName,
+  hookModelMatchKey,
+  isRecognizedModelKey,
+  bytesPerTokenForModel,
+  getClaudeAiUserDefaultModelDescription,
+  renderDefaultModelSetting,
+  getModelPricingSuffix,
+  isOpusDefaultSubscriber,
+  isOpus1mMergeEnabled,
+  renderModelSetting,
+  getModelSourceAnnotation,
+  getPublicModelDisplayName,
+  maskModelCodename,
+  getCuratedModelPicker,
+  renderModelName,
+  isFableModelName,
+  renderFableModelName,
+  getPublicModelName,
+  parseUserSpecifiedModel,
+  inlineSkillModelOverride,
+  resolveSkillModelOverride,
+  isLegacyOpusFirstParty,
+  isLegacyModelRemapEnabled,
+  modelDisplayString,
+  nameForUnnamedModelId,
+  getMarketingNameForModel,
+  modelSettingResolvesThroughModelStrings,
+  toProviderWireModelId,
+  strip1mTag,
   eor,
   qVt,
   tor,
@@ -37606,7 +37606,7 @@ export {
   tc,
   sCt,
   ror,
-  _g,
+  modelHasNative1MContext,
   kse,
   GC,
   vp,
@@ -37619,27 +37619,27 @@ export {
   h5,
   ior,
   oQ,
-  aor,
-  Hfr,
-  YN,
-  qC,
-  fb,
-  cvn,
-  yg,
-  uvn,
-  dvn,
-  aCt,
-  DQe,
-  pvn,
-  fvn,
-  VVt,
-  aq,
-  fUe,
-  mvn,
-  lCt,
-  Jve,
-  KVt,
-  XVt,
+  AutoModeState,
+  autoModeStates,
+  getAutoModeState,
+  setAutoModeActive,
+  isAutoModeActive,
+  isAutoModePermissionSurface,
+  isAutoClassifierActive,
+  setAutoModeFlagCli,
+  getAutoModeFlagCli,
+  setAutoModeCircuitBroken,
+  isAutoModeCircuitBroken,
+  setAutoModeFastModeBreakerReason,
+  getAutoModeFastModeBreakerReason,
+  setAutoModeFromFallback,
+  isAutoModeFromFallback,
+  setProvisionalStartupMode,
+  getProvisionalStartupMode,
+  getAutoModeEnvOnboardingEligible,
+  setAutoModeEnvOnboardingEligible,
+  getAutoModeEnvOnboardingShownLogged,
+  setAutoModeEnvOnboardingShownLogged,
   cCt,
   gvn,
   hvn,
@@ -37784,29 +37784,29 @@ export {
   WQe,
   o0,
   Fvn,
-  pKt,
-  $vn,
-  SUe,
-  xor,
-  GQe,
-  Lyr,
-  Myr,
-  ox,
-  Uvn,
-  xw,
-  w6,
-  fKt,
-  bUe,
-  wUe,
-  Jme,
-  Bvn,
-  jvn,
-  Wvn,
-  qQe,
-  zQe,
-  Ose,
-  S5,
-  LR,
+  CCR_BYOC_BETA,
+  sessionsApiWire,
+  isTransientNetworkError,
+  axiosGetWithRetry,
+  isCCREnvironmentKind,
+  sessionsApiBearerFingerprint,
+  primeSessionsApiBearer,
+  prepareApiRequest,
+  fetchCodeSessionsFromSessionsAPI,
+  getOAuthHeaders,
+  fetchSession,
+  getBranchFromSession,
+  getSessionRequestHeaders,
+  trustedDeviceHeaders,
+  sendEventToRemoteSession,
+  sendControlRequestToRemoteSession,
+  sendControlResponseToRemoteSession,
+  sendBashCommandToRemoteSession,
+  updateSessionTitle,
+  markSessionRead,
+  getAccessTokenWithCcrFallback,
+  pollRemoteSessionEvents,
+  archiveRemoteSession,
   MCt,
   aQ,
   rRe,
@@ -37941,37 +37941,37 @@ export {
   Qor,
   Zor,
   esr,
-  rRn,
-  CKt,
-  vKt,
-  RKt,
-  kKt,
-  Nyr,
-  mb,
-  rZe,
-  E6,
-  _t,
-  Sg,
-  ap,
-  Ja,
-  WD,
-  pq,
-  oRn,
-  sRn,
-  oZe,
-  sZe,
-  iRn,
-  t1,
-  Fyr,
-  KCt,
-  aRn,
-  XCt,
-  xUe,
-  Lse,
-  xKt,
-  YCt,
-  iZe,
-  HKt,
+  FORMER_NAME_HINT_TTL_MS,
+  MAX_FORMER_NAMES,
+  PEER_PROTOCOL,
+  NOTIFY_IDLE_PEER_FEATURE,
+  ARTIFACT_YIELD_PEER_FEATURE,
+  getHeldSessionNames,
+  getRegisteredSessionName,
+  whenSessionRegistered,
+  envSessionKind,
+  isBgSession,
+  isUnattendedInteractiveSession,
+  isUnattendedBgSession,
+  isActingAsBgJob,
+  getBgJobDir,
+  isDaemonBgWorker,
+  touchFleetViewHeartbeat,
+  clearFleetViewHeartbeat,
+  isBeingWatched,
+  isBeingWatchedV5,
+  registerSession,
+  updateSessionName,
+  updateSessionMessagingSocketPath,
+  updateSessionBridgeId,
+  markSessionParked,
+  clearSessionParked,
+  updateSessionActivity,
+  isRegistrySweepPermitted,
+  reapKeysOfReapedRecord,
+  mayReapRecordFromThisDomain,
+  countConcurrentSessions,
+  TMUX_LOCATION_RE,
   wl,
   aZe,
   wP,
@@ -38016,26 +38016,26 @@ export {
   dsr,
   rge,
   PUe,
-  DKt,
-  lx,
-  QCt,
-  LKt,
-  uRn,
-  wU,
-  eS,
-  uZe,
-  dRn,
-  n1,
-  MKt,
-  GD,
-  pRn,
-  dZe,
-  NKt,
-  psr,
-  TU,
-  fsr,
-  msr,
-  Ifr,
+  resolveRefreshTokenExpiresAt,
+  shouldUseClaudeAIAuth,
+  parseScopes,
+  buildAuthUrl,
+  exchangeCodeForTokens,
+  refreshOAuthToken,
+  revokeOAuthToken,
+  fetchAndStoreUserRoles,
+  createAndStoreApiKey,
+  isOAuthTokenExpired,
+  fetchProfileInfo,
+  getOrganizationUUID,
+  populateOAuthAccountInfoIfNeeded,
+  storeOAuthAccountInfo,
+  isAccountOnHoldError,
+  getAccountOnHoldErrorUrl,
+  isInvalidGrantError,
+  isInvalidScopeError,
+  isExpectedOAuthTokenError,
+  extractOAuthErrorFields,
   fq,
   EU,
   FKt,
@@ -38065,183 +38065,183 @@ export {
   Dfr,
   MUe,
   T5,
-  Fc,
-  nvt,
-  Lfr,
-  pZe,
-  v6,
-  fZe,
-  Mfr,
-  UKt,
-  Zc,
-  mq,
-  NUe,
-  mZe,
-  gZe,
-  cl,
-  E5,
-  d0,
-  Gl,
-  A5,
-  gb,
-  hRn,
-  kp,
-  Fse,
-  Ssr,
-  MR,
-  hZe,
-  _Ze,
-  bsr,
-  _Rn,
-  BKt,
-  rvt,
-  qg,
-  yZe,
-  bg,
-  C5,
-  sge,
-  wsr,
-  Nfr,
-  SZe,
-  jKt,
-  Tsr,
-  ige,
-  WKt,
-  ovt,
-  hRe,
-  yRn,
-  SRn,
-  Esr,
-  svt,
-  AU,
-  $se,
-  Asr,
-  p0,
-  FUe,
-  R6,
-  bRn,
-  _Re,
-  bZe,
-  ivt,
-  $Ue,
-  Ffr,
-  wRn,
-  TRn,
-  $fr,
-  Csr,
-  yRe,
-  SRe,
-  GKt,
-  avt,
-  Ufr,
-  qKt,
-  vsr,
-  ERn,
-  UUe,
-  zKt,
-  ARn,
-  VKt,
-  bRe,
-  Byr,
-  BUe,
-  wZe,
-  f0,
-  age,
-  Yt,
-  Use,
-  qD,
-  $T,
-  Hw,
-  CRn,
-  jyr,
-  lvt,
-  cm,
-  Bfr,
-  Rsr,
-  cvt,
-  uvt,
-  Qi,
-  dQ,
-  dvt,
-  vRn,
-  wg,
-  v5,
-  RRn,
-  lge,
-  ksr,
-  TZe,
-  Ss,
-  jUe,
-  jfr,
-  gt,
-  kRn,
-  Wyr,
-  EZe,
-  lp,
-  wu,
-  gq,
-  KKt,
-  XKt,
-  WUe,
-  xRn,
-  cge,
-  vn,
-  zD,
-  mh,
-  Wfr,
-  hb,
-  Gyr,
-  qn,
-  HRn,
-  wRe,
-  qyr,
-  pvt,
-  uge,
-  AZe,
-  Bse,
-  UT,
-  Gfr,
-  YKt,
-  k6,
-  qfr,
-  IRn,
-  PRn,
-  zyr,
-  ORn,
-  x6,
-  pQ,
-  CZe,
-  zfr,
-  JKt,
-  Vyr,
-  QKt,
-  Kyr,
-  ZKt,
-  e5t,
-  jse,
-  Xyr,
-  Yyr,
-  t5t,
-  Jyr,
-  dge,
-  Qyr,
-  Vfr,
-  Kfr,
-  Zyr,
-  eSr,
-  tSr,
-  nSr,
-  rSr,
-  oSr,
-  Xfr,
-  sSr,
-  iSr,
-  cx,
-  R5,
-  vZe,
-  RZe,
-  DRn,
-  Wse,
+  isHostManagedProviderAuth,
+  hostManagedNoCredsError,
+  hostManagedAwsProviderChain,
+  awsCredentialMemos,
+  hostManagedAwsSdkCredentials,
+  isFirstPartyManagedOAuthContext,
+  wifAuthDebugNotices,
+  isProfileAuthShadowed,
+  shouldUseWIFAuth,
+  isWIFDispatchAuth,
+  isProfileRemoteSettingsCredential,
+  SDK_OAUTH_REFRESH_ENTRYPOINTS,
+  restoreGatewayAuth,
+  isAnthropicAuthEnabled,
+  describeHowToDisableAuthTokenSource,
+  effectiveAuthTokenEnv,
+  getAuthTokenSource,
+  getAnthropicApiKey,
+  getAnthropicApiKeySafe,
+  getApiKeySourceSafe,
+  getAnthropicApiKeyWithSourceSafe,
+  isApiKeyHelperTheActiveCredential,
+  hasBootstrapModelOptions,
+  getAdditionalModelOptionsCache,
+  getModelAccessCache,
+  getOrgModelDefaultCache,
+  hasAnthropicDirectApiKey,
+  getApiKeyPrefixBucket,
+  hasAnthropicApiKeyAuth,
+  hasAnthropicApiKey,
+  getAnthropicApiKeyWithSource,
+  getUnapprovedCustomApiKey,
+  getConfiguredApiKeyHelper,
+  getConfiguredAwsAuthRefresh,
+  isAwsAuthRefreshFromProjectSettings,
+  isAwsCredentialExportFromProjectSettings,
+  calculateApiKeyHelperTTL,
+  apiKeyHelperStates,
+  getApiKeyHelperElapsedMs,
+  getColdApiKeyHelperRun,
+  getApiKeyFromApiKeyHelper,
+  getApiKeyFromApiKeyHelperCached,
+  getApiKeyHelperLastFailure,
+  clearApiKeyHelperCache,
+  isApiKeyHelperSafeToInvoke,
+  prefetchApiKeyFromApiKeyHelperIfSafe,
+  awsAuthRefreshStates,
+  refreshAwsAuth,
+  refreshAndGetAwsCredentials,
+  AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS,
+  resolveWithStallGuard,
+  getDefaultAwsProviderChain,
+  invalidateDefaultAwsProviderChainDebounced,
+  clearAwsCredentialsCache,
+  clearAwsHelperCredentialsCache,
+  resetAwsAuthRefreshCooldown,
+  getConfiguredGcpAuthRefresh,
+  isGcpAuthRefreshFromProjectSettings,
+  getConfiguredVertexProjectId,
+  checkGcpCredentialsValid,
+  gcpCredentialRejections,
+  markGcpCredentialsRejected,
+  refreshGcpAuth,
+  gcpRefreshMemos,
+  refreshGcpCredentialsIfNeeded,
+  clearGcpCredentialsCache,
+  prefetchGcpCredentialsIfSafe,
+  prefetchAwsCredentialsAndBedRockInfoIfSafe,
+  loginManagedKeyMemos,
+  getApiKeyFromConfigOrMacOSKeychain,
+  saveApiKey,
+  removeApiKey,
+  saveRefreshedOAuthTokensRespectingLock,
+  saveOAuthTokensIfNeeded,
+  hasAttemptedScopeExpansion,
+  recordScopeExpansionAttempt,
+  getOAuthAccountOnHold,
+  __resetKnownDeadRefreshTokensForTest,
+  markRefreshTokenDeadAfterInvalidGrant,
+  isOAuthRefreshKnownDead,
+  isOAuthRefreshKnownDeadAsync,
+  oauthTokenReadMemos,
+  getClaudeAIOAuthTokens,
+  clearOAuthTokenMemos,
+  getClaudeAIOAuthTokenOrigin,
+  getClaudeAIOAuthTokenOriginAsync,
+  clearOAuthTokenCache,
+  resetEnvDerivedAuthCaches,
+  _resetCredentialsChangeCheckForTesting,
+  primeStoredLogin,
+  handleOAuth401Error,
+  waitForRotatedEnvToken,
+  authFailureClocks,
+  noteAuthRecoveryOutcome,
+  resetAuthFailureTracking,
+  getClaudeAIOAuthTokensAsync,
+  readFreshOAuthAccessToken,
+  startupReadsStoredLogin,
+  primeStoredLoginCopy,
+  sameOwnerAccount,
+  readFreshOAuthCredentialSnapshot,
+  oauthRefreshLockOptions,
+  OAuthRefreshLockContendedError,
+  acquireOAuthRefreshLock,
+  withOAuthRefreshLock,
+  checkAndRefreshOAuthTokenIfNeeded,
+  checkAndRefreshOAuthTokenIfNeededWithOutcome,
+  isExpectedOAuthRefreshError,
+  isClaudeAISubscriber,
+  hasUsableClaudeAILogin,
+  hasStoredUsableClaudeAILogin,
+  isUsableClaudeAILoginRecord,
+  hasProfileScope,
+  hasStoredOAuthToken,
+  hasOAuthScope,
+  canAuthenticateChromeBridge,
+  getStoredOAuthTokenExpiresAt,
+  getStoredOAuthSubscriptionType,
+  hasStoredOAuthRefreshToken,
+  is1PApiCustomer,
+  getOauthAccountInfo,
+  getAuthenticatedAccountInfo,
+  getStoredOauthAccountInfo,
+  isOverageProvisioningAllowed,
+  isExtraUsageAllowed,
+  hasOpusAccess,
+  getSubscriptionType,
+  ownStoredLoginPlanAttributes,
+  isMaxSubscriber,
+  isTeamSubscriber,
+  isTeamPremiumSubscriber,
+  isEnterpriseSubscriber,
+  isEnterprisePAYGSubscriber,
+  isProSubscriber,
+  getRateLimitTier,
+  getSeatTier,
+  getSubscriptionName,
+  isUsing3PServices,
+  isOtelHeadersHelperFromProjectOrLocalSettings,
+  otelHeadersHelperStates,
+  getOtelHeadersHelperLastFailure,
+  clearOtelHeadersCache,
+  getOtelHeadersFromHelper,
+  isConsumerSubscriber,
+  getAccountInformation,
+  toAccountInfo,
+  getApiKeyFromConfigOrMacOSKeychainAsync,
+  getAnthropicApiKeyWithSourceAsync,
+  getAnthropicApiKeyAsync,
+  getAnthropicApiKeyWithSourceAsyncSafe,
+  hasAnthropicApiKeyAuthAsync,
+  isAnthropicAuthEnabledAsync,
+  getAuthTokenSourceAsync,
+  isClaudeAISubscriberAsync,
+  hasProfileScopeAsync,
+  is1PApiCustomerAsync,
+  getOauthAccountInfoAsync,
+  isOverageProvisioningAllowedAsync,
+  getSubscriptionTypeAsync,
+  hasOpusAccessAsync,
+  getRateLimitTierAsync,
+  getSeatTierAsync,
+  isMaxSubscriberAsync,
+  isTeamSubscriberAsync,
+  isTeamPremiumSubscriberAsync,
+  isEnterpriseSubscriberAsync,
+  isEnterprisePAYGSubscriberAsync,
+  isProSubscriberAsync,
+  getSubscriptionNameAsync,
+  isConsumerSubscriberAsync,
+  getAccountInformationAsync,
+  validateForceLoginOrg,
+  getForcedLoginMethod,
+  gatewaySignInScreenConfigured,
+  adminPolicyUnreadable,
+  policyUnreadableForEnforcement,
+  validateForceLoginMethod,
   fvt,
   zg,
   xsr,
@@ -38291,23 +38291,23 @@ export {
   IZe,
   nc,
   RU,
-  ua,
-  gvt,
-  VUe,
-  o1,
-  PZe,
-  hvt,
-  OZe,
-  s1,
-  BRn,
-  fQ,
-  i1,
-  Ns,
-  jRn,
-  mQ,
-  a1,
-  DZe,
-  gQ,
+  isAutoMemoryEnabled,
+  isAutoMemoryEnabledIgnoringPause,
+  isIndexRecallEnabled,
+  isMemoryRecallEnabled,
+  isStoreMountedRecall,
+  isAutoMemoryDisabledForCurrentMainLoopModel,
+  isExtractModeActive,
+  getMemoryBaseDir,
+  getAutoMemPathSettingSource,
+  hasAutoMemPathOverride,
+  getAutoMemPathState,
+  getAutoMemPath,
+  activeSessionLogExcluder,
+  getAutoMemEntrypoint,
+  isAutoMemPath,
+  AUTO_MEM_WRITE_ALLOW_REASON,
+  isAutoMemPathSafeForCarveout,
   s5t,
   Bsr,
   _vt,
@@ -38328,10 +38328,10 @@ export {
   LZe,
   Bo,
   I6,
-  Cd,
+  isWorkspacePersistedTrusted,
   a5t,
   MZe,
-  tS,
+  getWorkspacePersistedTrustKey,
   KUe,
   Vsr,
   Qfr,

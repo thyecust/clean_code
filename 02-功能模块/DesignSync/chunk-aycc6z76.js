@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { eZ, Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { DESIGN_OAUTH_SCOPES as eZ, getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { wU, eS, n1, TU } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { refreshOAuthToken as wU, revokeOAuthToken as eS, isOAuthTokenExpired as n1, isInvalidGrantError as TU } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSecureStorage as yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { A_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
 import { ck } from "../认证-OAuth登录/chunk-5bg9xwqx.js";

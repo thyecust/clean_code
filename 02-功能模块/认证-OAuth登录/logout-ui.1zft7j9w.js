@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { _t } from "./认证-OAuth登录.419zdfz3.js";
+import { isBgSession as _t } from "./认证-OAuth登录.419zdfz3.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Pr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { zY } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
-import { c9 } from "./chunk-9g86t9bp.js";
+import { performLogout as c9 } from "./chunk-9g86t9bp.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 async function l(n, o) {
   let r = _t();

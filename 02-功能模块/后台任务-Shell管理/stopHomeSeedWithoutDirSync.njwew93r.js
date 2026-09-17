@@ -13,7 +13,7 @@ import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import {
   rV,
@@ -29,22 +29,22 @@ import {
   Gjt,
   wde,
   QVn,
-  EKe,
-  kk,
-  Hne,
-  Q2,
-  Ine,
-  HLe,
+  SYNCED_FILE_ROOT as EKe,
+  shouldIgnore as kk,
+  putSyncedFile as Hne,
+  getSyncedFile as Q2,
+  SYNCED_FILE_WRITE_MODE as Ine,
+  writeUnderSyncDir as HLe,
   SXn,
   nR,
   ET,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { D1, mn, fi } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
@@ -53,10 +53,10 @@ import { Rp, $Ct, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认�
 import { Js, rc, bie, Ske, XT, NQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Cet, tRt, nRt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { _r, nie } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { e$e } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { LD, aU } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { ARTIFACT_TOOL_NAME as _r, ARTIFACT_FAMILY_TOOL_NAMES as nie } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { patternWithRootFor as e$e } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isSettingsToCloudEnabled as LD, isSettingsToCloudEnabledCached as aU } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { Cr, Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import {
   zHt,
@@ -74,7 +74,7 @@ import {
 } from "../Memory-CLAUDE.md/chunk-3ehd7vx0.js";
 import { ale, GZt, Z$n } from "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
 import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
-import { vd, eir } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME as vd, eir } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { s, ocr, vx, O, se, v, c, Qe, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";

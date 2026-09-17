@@ -10,13 +10,13 @@
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { qAe, oh, Aj, Jpe, lG, Nh, vT, dN, TC } from "./chunk-djserjj5.js";
-import { IE, S$, Ope, Ep, al } from "./chunk-7wsy8vxb.js";
+import { readRoster as IE, updateRoster as S$, writeReapedTerminalState as Ope, Ep, al } from "./chunk-7wsy8vxb.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { Wi, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { I5, Tq, Xse } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { sigtermThenKill as I5, reapDetachedRepl as Tq, captureProcessStartTimeAsync as Xse } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";

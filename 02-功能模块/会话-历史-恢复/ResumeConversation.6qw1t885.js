@@ -13,11 +13,11 @@ import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { j1, K, $p } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dt, ge, z0 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { $1, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { $1, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import {
   xn,
@@ -25,29 +25,29 @@ import {
   Cgt,
   LX,
   Jf,
-  PV,
+  loadConversationForResume as PV,
   YLe,
   Ht,
-  ipe,
-  KV,
-  XM,
-  XV,
-  YV,
-  Q5e,
-  FMe,
-  are,
-  Li,
-  EH,
-  Kc,
-  UMe,
-  tAe,
-  mre,
+  isCustomTitleEnabled as ipe,
+  recordContentReplacement as KV,
+  resetSessionFilePointer as XM,
+  adoptResumedSessionFile as XV,
+  adoptResumedSessionFileAsync as YV,
+  applyEndedByModelOnResume as Q5e,
+  buildForkAdoptionMeta as FMe,
+  adoptForkSessionMetadata as are,
+  pinSessionId as Li,
+  restoreSessionMetadata as EH,
+  getSessionIdFromLog as Kc,
+  loadAllProjectsMessageLogsProgressive as UMe,
+  loadSameRepoMessageLogsProgressive as tAe,
+  enrichLogs as mre,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Gpe } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { reclaimSessionNameOnResume as Gpe } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
 import { xH } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { Vre } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { wQt } from "../../01-核心基础设施/共享小工具-未细化/chunk-wdns14nh.js";
+import { restoreGoalFromTranscript as wQt } from "../../01-核心基础设施/共享小工具-未细化/chunk-wdns14nh.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { gi, o, t, n7, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -59,12 +59,12 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js"
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { j8 } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
+import { resetReplTabToConvo as j8 } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../Vim模式/Vim模式.nnewe0gf.js";
 import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
 import {
   THe,
-  Nst,
+  renameRecordingForSession as Nst,
   AHe,
   Gz,
   HZ,
@@ -459,7 +459,7 @@ function Ut({
       v = "processing_error";
       {
         let B = import.meta
-          .require("../Teammates团队/getCoordinatorSystemPrompt.geqa52wg.js")
+          .require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js")
           .matchSessionMode(n.mode);
         if (B) {
           let Ao = await O8(x.project.originalCwd, [], g);
@@ -505,8 +505,8 @@ function Ut({
         });
       kHe(n.messages, { fork: b, startup: !0 });
       {
-        let { saveMode: l } = import.meta.require("./getTranscriptPathForSession.yb7s8f31.js"),
-          { isCoordinatorMode: B } = import.meta.require("../Teammates团队/getCoordinatorSystemPrompt.geqa52wg.js");
+        let { saveMode: l } = import.meta.require("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
+          { isCoordinatorMode: B } = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js");
         l(B() ? "coordinator" : "normal");
       }
       let Ie = AHe(n.agentName, n.agentColor),

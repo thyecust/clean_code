@@ -9,12 +9,12 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 71 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { EEt, Goe, i$e, AEt } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { STAGE_TMP_PREFIX as EEt, getStageFileRoot as Goe, getOutputsRoot as i$e, AEt } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { VQe, Hor, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createWriteStream as G } from "fs";
 import {
@@ -143,7 +143,7 @@ async function ke(t) {
         }
       );
     let { stageSyncedFile: p, SYNCED_FILE_ROOT: j } =
-      await import("../../01-核心基础设施/共享小工具-未细化/SYNCED_FILE_ROOT.j08b0ggt.js");
+      await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
     return p(
       {
         mount_path: t.mount_path,

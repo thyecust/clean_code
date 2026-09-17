@@ -13,7 +13,7 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { Ie, Uxe } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, Dt, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { Nx, be, uo } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   Xn,
   sOn,
@@ -87,7 +87,7 @@ import {
   wae,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { S, u, we, Yr, Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we, fromNumber as Yr, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import {
   Lt,
   yt,
@@ -107,11 +107,11 @@ import {
 import { Et, b, z, aae, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Kn, fB, bXt } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { oe, kr, kae } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Id, K2e, I0, vu, Ag, h, hz, J } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { Id, K2e, I0, vu, Ag, logError as h, getInMemoryErrors as hz, logMCPDebug as J } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
-  qo,
+  getCommandName as qo,
   wwe,
-  B9,
+  hasCommand as B9,
   $v,
   jft,
   T2,
@@ -161,10 +161,10 @@ import {
   dX,
   yDe,
   vO,
-  xa,
-  qF,
-  SE,
-  X4e,
+  isBuiltInAgent as xa,
+  getActiveAgentsFromList as qF,
+  getAgentDefinitionsWithOverrides as SE,
+  parseAgentsFromJson as X4e,
   jdn,
   _Bt,
   vDe,
@@ -178,7 +178,7 @@ import {
   Xte,
   nh,
   kl,
-  st,
+  SandboxManager as st,
   dT,
   s3,
   N2,
@@ -192,8 +192,8 @@ import {
   agt,
   l3,
   UDe,
-  qBt,
-  gd,
+  consultPermissionRequestHooksForUnpromptableAsk as qBt,
+  hasPermissionsToUseTool as gd,
   bp,
   td,
   xM,
@@ -210,20 +210,20 @@ import {
   SVe,
   TVe,
   a4n,
-  PO,
+  filterToolsByDenyRules as PO,
   g4n,
   XDe,
   KF,
   _a,
   ode,
-  EV,
-  iw,
-  AX,
-  kVe,
-  xVe,
-  QDe,
-  Iy,
-  YF,
+  reduceFileHistoryState as EV,
+  fileHistoryEnabled as iw,
+  fileHistoryMakeSnapshot as AX,
+  fileHistoryRewind as kVe,
+  fileHistoryCanRestore as xVe,
+  fileHistoryGetDiffStats as QDe,
+  isRemoteToolForwardingSwitchOn as Iy,
+  isSessionChannelDisabled as YF,
   RX,
   I4n,
   jpn,
@@ -240,7 +240,7 @@ import {
   Z2t,
   GVe,
   yne,
-  Zo,
+  asSystemPrompt as Zo,
   z2,
   V2,
   Zgt,
@@ -269,15 +269,15 @@ import {
   Ly,
   FM,
   Hfn,
-  BO,
+  getLastCacheSafeParams as BO,
   Ppr,
   Mfn,
   WVn,
-  Aht,
-  _Ke,
-  ELe,
-  ALe,
-  PV,
+  getResumePrompt as Aht,
+  logResumeInterruptedTurn as _Ke,
+  removeInterruptedMessage as ELe,
+  dedupeSessionStartHookMessages as ALe,
+  loadConversationForResume as PV,
   wde,
   UM,
   fH,
@@ -317,12 +317,12 @@ import {
   qKe,
   E_t,
   A_t,
-  Ik,
-  sMe,
-  mH,
-  ij,
-  cC,
-  eY,
+  transitionPermissionMode as Ik,
+  guardPermissionModeChange as sMe,
+  setPermissionModeWithGuards as mH,
+  getAutoModeUnavailableNotification as ij,
+  isAutoModeGateEnabled as cC,
+  getAutoModeUnavailableReason as eY,
   aj,
   zM,
   Ode,
@@ -355,7 +355,7 @@ import {
   QO,
   K_t,
   mgn,
-  VM,
+  resetSentSkillNames as VM,
   Wde,
   hH,
   Ql,
@@ -367,18 +367,18 @@ import {
   Vde,
   xI,
   fY,
-  eR,
-  yyt,
-  yH,
-  d$,
-  Yp,
-  byt,
-  F3,
-  vE,
-  Zm,
-  M5e,
-  Uo,
-  kEe,
+  emptyServerMap as eR,
+  isBuiltinInProcessMcpServer as yyt,
+  filterMcpServersByPolicy as yH,
+  isMcpDialBlockedByPolicy as d$,
+  mcpDialBlockCause as Yp,
+  MCP_SETTINGS_SCOPE_SET as byt,
+  getMcpConfigByName as F3,
+  getAllMcpConfigs as vE,
+  doesEnterpriseMcpConfigExist as Zm,
+  headlessSyncsClaudeAiConnectors as M5e,
+  isMcpServerDisabled as Uo,
+  setMcpServerEnabled as kEe,
   HEe,
   Ygn,
   Jgn,
@@ -416,65 +416,65 @@ import {
   Dyt,
   Lyt,
   Myt,
-  hhn,
-  spe,
-  V5e,
-  il,
-  hl,
-  vhn,
-  ST,
-  KEe,
-  Uyt,
-  Y5e,
-  KV,
-  XM,
-  XV,
-  YV,
-  kc,
-  Phn,
-  Dhn,
-  DI,
-  pj,
-  YEe,
-  are,
-  lpe,
-  bY,
-  mj,
-  sD,
-  mu,
-  EH,
-  QEe,
-  h$,
-  ure,
-  ZV,
-  s8e,
-  Kc,
-  QM,
-  Jyt,
-  i8e,
-  bT,
-  Qyt,
-  A9t,
-  VMe,
-  gC,
-  v_n,
-  IY,
+  setTranscriptLocalGcEnabled as hhn,
+  isChainParticipant as spe,
+  transcriptCursorEnd as V5e,
+  getMaterializedSessionFile as il,
+  isTranscriptPersistenceDisabled as hl,
+  addSessionMirror as vhn,
+  recordTranscript as ST,
+  persistLeafCheckpoint as KEe,
+  mirrorLeafCheckpointToRemote as Uyt,
+  removeTranscriptMessage as Y5e,
+  recordContentReplacement as KV,
+  resetSessionFilePointer as XM,
+  adoptResumedSessionFile as XV,
+  adoptResumedSessionFileAsync as YV,
+  flushSessionStorage as kc,
+  hydrateRemoteSession as Phn,
+  hydrateFromCCRv2InternalEvents as Dhn,
+  saveCustomTitle as DI,
+  saveAiGeneratedTitle as pj,
+  saveBridgeSession as YEe,
+  adoptForkSessionMetadata as are,
+  registerLiveSuppressionProbe as lpe,
+  isCompactPairWithheldFromRemote as bY,
+  clearBridgeSession as mj,
+  getCurrentSessionBridge as sD,
+  getCurrentSessionTitle as mu,
+  restoreSessionMetadata as EH,
+  saveAgentSetting as QEe,
+  cacheSessionTitle as h$,
+  saveMode as ure,
+  saveIsolationLatch as ZV,
+  getCurrentSessionIsolationLatch as s8e,
+  getSessionIdFromLog as Kc,
+  searchSessionsByCustomTitle as QM,
+  doesMessageExistInSession as Jyt,
+  isMessageTurnUnanswered as i8e,
+  isLoggableMessage as bT,
+  findUnresolvedToolUse as Qyt,
+  findUnresolvedToolUses as A9t,
+  executeDirectoryAddedHooks as VMe,
+  executeNotificationHooks as gC,
+  flushPendingAsyncRewakeHooks as v_n,
+  getUserPromptSubmitHookBlockingMessage as IY,
   nR,
   ET,
-  kf,
-  xE,
-  HE,
-  bpe,
-  wpe,
-  MY,
-  hSt,
-  NY,
+  getCommands as kf,
+  clearCommandsCache as xE,
+  getSkillToolCommands as HE,
+  getSlashCommandToolSkills as bpe,
+  filterCommandsForHeadless as wpe,
+  formatDescriptionWithSource as MY,
+  advertisedSlashCommands as hSt,
+  toSlashCommands as NY,
   $Y,
   q_n,
   A8e,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   xAt,
   mg,
@@ -497,20 +497,20 @@ import {
   pU,
   Z$e,
   Ad,
-  Rr,
-  Mf,
-  LVt,
-  rt,
-  Xh,
-  ip,
-  dA,
-  am,
-  ol,
-  Ue,
-  wt,
-  WC,
-  ivn,
-  aq,
+  isModelAllowed as Rr,
+  getUserSpecifiedModelSetting as Mf,
+  getBaselineModelSetting as LVt,
+  getMainLoopModel as rt,
+  stepDownRestrictedFamilyAliasPick as Xh,
+  getRuntimeMainLoopModel as ip,
+  isModelAllowedUnderActiveEnforcement as dA,
+  isExemptDefaultResolvingPick as am,
+  getDefaultMainLoopModel as ol,
+  getCanonicalName as Ue,
+  parseUserSpecifiedModel as wt,
+  modelDisplayString as WC,
+  modelSettingResolvesThroughModelStrings as ivn,
+  isAutoModeFromFallback as aq,
   MQe,
   JN,
   xse,
@@ -534,20 +534,20 @@ import {
   wP,
   lm,
   EU,
-  mZe,
-  Hw,
-  wg,
-  vn,
-  pQ,
-  cx,
-  Wse,
+  SDK_OAUTH_REFRESH_ENTRYPOINTS as mZe,
+  clearOAuthTokenCache as Hw,
+  sameOwnerAccount as wg,
+  getOauthAccountInfo as vn,
+  getAccountInformation as pQ,
+  validateForceLoginOrg as cx,
+  validateForceLoginMethod as Wse,
   df,
   $f,
   H,
   vU,
-  OZe,
-  fQ,
-  i1,
+  isExtractModeActive as OZe,
+  hasAutoMemPathOverride as fQ,
+  getAutoMemPathState as i1,
   Te,
   ee,
   sy,
@@ -575,31 +575,31 @@ import { q, U2e } from "../../01-核心基础设施/共享小工具-未细化/ch
 import { CA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Ee, CPn, Db, vPn, M1, Br } from "../CLI入口-Commander/chunk-6rfqqsva.js";
-import { Ge, bn, Oxn, bb, Fxn, Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings as Ge, getSettings_DEPRECATED as bn, getSettingsWithSources as Oxn, getSettingsWithErrors as bb, surfaceManagedSettingsErrorsHeadless as Fxn, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import {
-  gf,
-  Rie,
-  Att,
-  c0n,
-  u0n,
-  Htt,
-  p0n,
-  Rke,
+  parsePermissionMode as gf,
+  UNRECOGNIZED_PERMISSION_MODE_ERROR as Rie,
+  isRecordableDenial as Att,
+  NO_APPROVAL_SURFACE_DENY_REASON as c0n,
+  PROMPT_TOOL_ALLOW_FLAGGED_MCP_DENY_REASON as u0n,
+  CAN_USE_TOOL_INVALID_RESULT_DENY_REASON as Htt,
+  CAN_USE_TOOL_PROMPT_TOOL_GONE_DENY_REASON as p0n,
+  CAN_USE_TOOL_ABORTED_DENY_REASON as Rke,
   E1,
   _c,
   l2e,
 } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { fkn } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
 import { c1, jt, g0 } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { $6, bBe, Rq, AQ, Gi, ZD, eRt } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
 import { mnt } from "../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
-import { iy, gc, _b, oS, eie, dBe, WT, Cq, Fi } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { iy, gc, _b, oS, eie, dBe, WT, canonicalizeArtifactUrlInput as Cq, uuidSlugFromUrl as Fi } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { pr } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
-import { vP, jRe, ZC, WRe, v5t, Kkn } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
-import { Mt, ch } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { sessionIdBody as pr } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { isModelDrivenSession as vP, hasNonLeadTeammate as jRe, isTeamLead as ZC, hasActiveInProcessTeammates as WRe, hasWorkingInProcessTeammates as v5t, waitForTeammatesToBecomeIdle as Kkn } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
+import { isPolicyAllowed as Mt, getResponseFromCache as ch } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import {
   GEt,
   im,
@@ -617,27 +617,27 @@ import {
   iA,
   MT,
 } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
-import { so, uP, ce } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { so, uP, getToolPermissionContext as ce } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { Kt, ar } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import {
   HYe,
-  Bi,
+  TOOL_SEARCH_TOOL_NAME as Bi,
   OK,
   jYe,
   Ni,
   Oc,
   bR,
   ni,
-  eA,
-  GH,
-  Ap,
-  vi,
+  isScratchpadEnabled as eA,
+  getScratchpadDir as GH,
+  pathInWorkingPath as Ap,
+  matchingRuleForInput as vi,
 } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { tA, qy, DT } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { ive, vm, K$, $t } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
-import { hr, qh, yu, ob, UG } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController as hr, createChildAbortController as qh, userAbortReason as yu, shutdownInterruptStamp as ob, isServerFallbackDiscard as UG } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Jc } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { j$e } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isCloudPluginForwardingFlagOn as j$e } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import {
   tXe,
   pGt,
@@ -666,12 +666,12 @@ import {
   CC,
 } from "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { GE } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { HT, P$, Rfe, kfe, xfe, SFe } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { isArtifactConflictLegacy as HT, artifactReadObservationIn as P$, makeSetArtifactReadVersion as Rfe, makeSetArtifactContractTarget as kfe, makeGetArtifactContractTarget as xfe, isResumeFrameSeedEligible as SFe } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { no, a5 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
 import { Vre } from "../../02-功能模块/后台任务-Shell管理/chunk-x3txegas.js";
 import { CK } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { bo } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
-import { w$e } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isProjectsHumanOriginEnabled as w$e } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Nu, b7e } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { Fy, MSt } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { Ts, _St, WXn, qXn, zXn, XXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
@@ -696,8 +696,8 @@ import {
   xme,
   yAt,
 } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { dCe, mfe, pJ, fJ, coe, mJ, awn } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
-import { RAn, UC, ZK, iAt, MAn, BJe, VJ, jJe, WJe } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
+import { dCe, readUnreadMessages as mfe, MARK_READ_FAILURE_CAP as pJ, markMessagesAsRead as fJ, formatTeammateMessages as coe, isShutdownApproved as mJ, isHeadlessLeadDisplayableMessage as awn } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
+import { isRemoteControlDeploymentAvailable as RAn, isRunningInRemoteEnvironment as UC, isBridgeStateFramesEnabled as ZK, isSdkBridgeStateAnnounceEnabled as iAt, isQuotaRejectedReemitEnabled as MAn, getCcrAutoConnectDefault as BJe, isPersistentRemoteSessionEnabled as VJ, isRemoteControlInternalEventsEnabled as jJe, getBridgeSubagentFrameGate as WJe } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { wK } from "../../02-功能模块/插件系统/chunk-hh8f1qrw.js";
 import { PAe, MNe } from "../../02-功能模块/图片-截图-ComputerUse/chunk-b8jsase9.js";
 import { LE, ME, Nyn, OYn, E3t, UI } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
@@ -705,9 +705,9 @@ import { Jn, CH, Q3, zYn, VYn, XYn } from "../../01-核心基础设施/共享小
 import { Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { ne } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
 import { kG } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import { pfe } from "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
+import { removeTeammateFromTeamFile as pfe } from "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
 import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
-import { RYe, bw, Ioe, FTn, TFe, xG, kYe } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";
+import { setSdkHostedBridgeHandle as RYe, getSdkHostedBridgeHandle as bw, reportBridgePermissionMode as Ioe, setSupervisedBridgeSession as FTn, reportBridgeCrossSessionInbound as TFe, reportBridgeModel as xG, ownBridgePeerAddress as kYe } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import {
   YYn,
   sSn,
@@ -800,7 +800,7 @@ import "../../02-功能模块/远程工具执行/chunk-66axrkvh.js";
 import { I0t, j1n, lHe, W1n, P0t, O0t, Uz, FJt } from "../../02-功能模块/远程工具执行/chunk-31b8kd0f.js";
 import { lsn } from "../../02-功能模块/Bridge-RemoteControl/chunk-znhfst8k.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
-import { fQt, M6e, N6e } from "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
+import { withoutStaticMcpShadows as fQt, mergeAndFilterTools as M6e, stripSoleNonDeniableTool as N6e } from "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
 import {
   nFn,
@@ -851,23 +851,23 @@ import {
   Tst,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-n6g2zfwn.js";
 import { Ou, d2, KSe, uM, y9, S9 } from "../../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
-import { R9, Oin } from "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
+import { isChannelsEnabled as R9, isChannelAllowlisted as Oin } from "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
 import { VPe, KPe, ste, XPe } from "../../02-功能模块/插件系统/chunk-4k4dssd9.js";
 import { r2, Aee, ak, x4 } from "../../02-功能模块/MCP客户端/chunk-z2a573sr.js";
-import { bIe } from "../../02-功能模块/上下文压缩-Compact/chunk-40jcpbzh.js";
+import { collectContextData as bIe } from "../../02-功能模块/上下文压缩-Compact/chunk-40jcpbzh.js";
 import { Qqe, tze, ran, MWn, UWn } from "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
-import { F4 } from "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
+import { killAutoReactSubscriptions as F4 } from "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
 import { xBn, mnn, S4 } from "../../02-功能模块/会话-历史-恢复/chunk-ybcvb652.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-wm4s322b.js";
-import { tce } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
+import { makeSetWebBrowserSlice as tce } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import { Ole, Dle, i7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
 import { _Dt, Qtn } from "../../02-功能模块/上下文压缩-Compact/chunk-86azyf7z.js";
 import { NGe, ebe } from "../../02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
 import "../../02-功能模块/跨会话消息(UDS)/chunk-qvnte9zp.js";
 import { dIt } from "../../02-功能模块/图片-截图-ComputerUse/chunk-2xnaevpn.js";
-import { l0e } from "../../02-功能模块/权限系统/chunk-qjqc5vxm.js";
-import { $le } from "../../02-功能模块/CodeReview/CodeReview.ddrd6y06.js";
+import { runSideQuestion as l0e } from "../../02-功能模块/权限系统/chunk-qjqc5vxm.js";
+import { runUltrareviewHeadless as $le } from "../../02-功能模块/CodeReview/CodeReview.ddrd6y06.js";
 import {
   nO,
   IOt,
@@ -880,9 +880,9 @@ import {
   Aat,
   Cat,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
-import { AQt, CQt } from "../../01-核心基础设施/设置-配置/chunk-wdr27rwr.js";
+import { shouldShowAutoDefaultNudge as AQt, handleAutoDefaultNudgeEventFromHost as CQt } from "../../01-核心基础设施/设置-配置/chunk-wdr27rwr.js";
 import { dSe, qBn } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
-import { c9 } from "../../02-功能模块/认证-OAuth登录/chunk-9g86t9bp.js";
+import { performLogout as c9 } from "../../02-功能模块/认证-OAuth登录/chunk-9g86t9bp.js";
 import {
   Act,
   Cct,
@@ -940,7 +940,7 @@ import {
 } from "../../02-功能模块/权限系统/chunk-4tar9p3n.js";
 import { _on } from "../../01-核心基础设施/共享小工具-未细化/chunk-mybtnk9f.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js";
-import { cen } from "../../02-功能模块/Bridge-RemoteControl/chunk-x2kwwph8.js";
+import { bridgeSlashLineBuildsRequest as cen } from "../../02-功能模块/Bridge-RemoteControl/chunk-x2kwwph8.js";
 import { Tot, kNn } from "../../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js";
 import { I8, kB, xB } from "./chunk-bgtc75cc.js";
 import { q1n } from "../../01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js";
@@ -2808,7 +2808,7 @@ function Cu(e) {
 function ia({ proactivityLevel: e, toolPermissionContext: t }) {
   return;
 }
-var Gp = import.meta.require("../../02-功能模块/Teammates团队/getCoordinatorSystemPrompt.geqa52wg.js").getCoordinatorUserContext;
+var Gp = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js").getCoordinatorUserContext;
 function Pl({ userSpecifiedModel: e, permissionMode: t, thinkingConfig: o }) {
   let d = e && (am(e) || Rr(e)) ? wt(e) : rt(),
     _ = ip({ permissionMode: t, mainLoopModel: d });
@@ -6468,14 +6468,14 @@ function __(e, t, o, d) {
     return `update_settings values must be strings (deletion is not supported): ${I.sort().join(", ")}`;
   return null;
 }
-var cf = import.meta.require("../../01-核心基础设施/共享小工具-未细化/sinksFor.zc38gf61.js"),
-  jo = import.meta.require("../../02-功能模块/Teammates团队/getCoordinatorSystemPrompt.geqa52wg.js"),
-  y_ = import.meta.require("../../01-核心基础设施/共享小工具-未细化/createCronScheduler.j2xgavz8.js"),
-  h_ = import.meta.require("../../01-核心基础设施/共享小工具-未细化/getCronJitterConfig.156pkdk6.js"),
-  uf = import.meta.require("../../01-核心基础设施/共享小工具-未细化/CRON_DELETE_DESCRIPTION.q1v9k9bg.js"),
+var cf = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js"),
+  jo = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js"),
+  y_ = import.meta.require("../../02-功能模块/工具AskUserQuestion/工具AskUserQuestion.72ht85nd.js"),
+  h_ = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js"),
+  uf = import.meta.require("../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js"),
   mf = import.meta.require("../../02-功能模块/自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
   S_ = import.meta.require("../../02-功能模块/Skills技能/fetchMcpSkillsForClient.er0bhc4y.js"),
-  k_ = import.meta.require("../../02-功能模块/权限系统/createAutoMemCanUseTool.nph0m6gc.js"),
+  k_ = import.meta.require("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
   ff = null,
   Ma = import.meta.require("../../02-功能模块/云会话-Teleport/bootTeleportFromTranscript.pyxed80h.js");
 function Pi() {
@@ -7011,7 +7011,7 @@ async function pN(e, t, o, d, _, E, I, O, v, C) {
     a.CLAUDE_CODE_ENVIRONMENT_KIND === void 0 &&
     !a.CLAUDE_CODE_DISABLE_WORKING_SYNC;
   if (xe)
-    import("../../01-核心基础设施/共享小工具-未细化/SYNCED_FILE_ROOT.j08b0ggt.js")
+    import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js")
       .then((Oe) => Oe.startSyncedFileSyncer(Oe.SYNCED_FILE_ROOT))
       .catch(() => q("warn", "working_sync_import_failed", {}));
   if (C.sdkUrl && a.CLAUDE_CODE_REMOTE_SESSION_ID && Fu()) {
@@ -7658,7 +7658,7 @@ ${zn.result}`;
   (await v_n(),
     await Promise.race([
       Promise.all([
-        import("../../01-核心基础设施/共享小工具-未细化/SYNCED_FILE_ROOT.j08b0ggt.js")
+        import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js")
           .then((Oe) => Oe.drainSyncedFiles())
           .catch(() => {}),
         ve?.then((Oe) => Oe?.drain()).catch(() => {}),
@@ -9977,7 +9977,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         }
         try {
           let { setupPluginHookHotReload: r } =
-            await import("./setupPluginHookHotReload.b8npbg0k.js");
+            await import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
           r(w.storageV5, w.credentials);
         } catch (r) {
           h(r);
@@ -10725,7 +10725,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 (po(), Ut.abort(yu("remote-cancel")));
               if (!Ut.signal.aborted) Zn();
               let Mn = void 0;
-              (import("../../01-核心基础设施/共享小工具-未细化/SYNCED_FILE_ROOT.j08b0ggt.js")
+              (import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js")
                 .then((pe) => pe.flushSyncedFiles())
                 .catch(() => {}),
                 await sp);
@@ -11002,7 +11002,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     ? void 0
                     : { userMessageUuid: Kr, outcome: ie },
                 ),
-                import("../../01-核心基础设施/共享小工具-未细化/SYNCED_FILE_ROOT.j08b0ggt.js")
+                import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js")
                   .then((pe) => pe.flushSyncedFiles())
                   .catch(() => {}),
                 w.workerDirSync?.then((pe) =>
@@ -11562,7 +11562,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       r(() => Cyt(ct)));
     {
       let { registerReplyYieldHolder: W, notifyModelOfReplyYield: Se } =
-        import.meta.require("../../02-功能模块/Artifact发布-渲染/requestReplyTakeover.7rwzdb24.js");
+        import.meta.require("../../02-功能模块/Artifact发布-渲染/chunk-54kz7amv.js");
       W({
         yielded: (Ce) => {
           (n(
@@ -12537,7 +12537,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               let D = r.request;
               try {
                 let { handleSetCwdControlRequest: F } =
-                    await import("./safeWireMessage.cqk1dzsd.js"),
+                    await import("../../02-功能模块/Memory-CLAUDE.md/chunk-br7dq41d.js"),
                   ue = await F(D, {
                     session: e,
                     isBusy: () =>
@@ -12624,7 +12624,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               } catch (F) {
                 let ue = null;
                 try {
-                  ue = (await import("./safeWireMessage.cqk1dzsd.js")).safeWireMessage;
+                  ue = (await import("../../02-功能模块/Memory-CLAUDE.md/chunk-br7dq41d.js")).safeWireMessage;
                 } catch {
                   ue = null;
                 }
@@ -13200,7 +13200,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             } else if (r.request.subtype === "read_file")
               try {
                 let { readFileForRemote: D } =
-                    await import("./readHandleBounded.xe9ahsmx.js"),
+                    await import("../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js"),
                   F = await D(
                     r.request.path,
                     r.request.max_bytes,
@@ -13217,7 +13217,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               Mn(async () => {
                 try {
                   let { buildWorkspaceDiffResponse: F } =
-                    await import("./buildWorkspaceDiffResponse.9a2qvze8.js");
+                    await import("../../02-功能模块/Git-Worktree/chunk-qdn32vbw.js");
                   Xe(D, await F(e.host, v().toolPermissionContext));
                 } catch (F) {
                   Yn(D, "get_workspace_diff", F);
@@ -13230,7 +13230,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     getPlanAsync: F,
                     getPlanFilePath: ue,
                     notePlanFileForgotten: ie,
-                  } = await import("../../01-核心基础设施/共享小工具-未细化/getPlanFilePath.t2ddc0h6.js"),
+                  } = await import("../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js"),
                   Me = D();
                 if (Me !== void 0) ie(ue());
                 let Ae = Me !== void 0 ? await F(void 0, w.storageV5) : null;
@@ -13287,7 +13287,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             } else if (r.request.subtype === "file_suggestions")
               try {
                 let { generateFileSuggestions: D, globalFileIndexCache: F } =
-                    await import("./globalFileIndexCache.4s2ty027.js"),
+                    await import("../../02-功能模块/工具Glob-Grep-搜索/chunk-57axeagj.js"),
                   ue = await D(F, r.request.query, !0, w.storageV5);
                 Xe(r, {
                   suggestions: ue.map((ie) => ({ path: ie.displayText })),
@@ -13318,7 +13318,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       bindCanonicalPathToHandle: Me,
                       isCanonicalPathContained: Ae,
                       readHandleBounded: Le,
-                    } = await import("./readHandleBounded.xe9ahsmx.js"),
+                    } = await import("../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js"),
                     pe = await f_(D, ie);
                   try {
                     let _e = await pe.stat({ bigint: !0 }),
@@ -16713,7 +16713,7 @@ async function Ay(e, t, o, d) {
         processMessagesForTeleportResume: v,
         teleportResumeCodeSession: C,
         validateGitState: re,
-      } = await import("../../02-功能模块/云会话-Teleport/teleportResumeCodeSession.sn404ggd.js");
+      } = await import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
       await re();
       let B = await C(d.teleport),
         { branchError: w } = await O(B.branch);
@@ -16854,11 +16854,11 @@ ${le}`,
               try {
                 n(`[resume-from] Hydrating from source session ${ve}`);
                 let { prepareApiRequest: je } =
-                    await import("../../01-核心基础设施/共享小工具-未细化/CCR_BYOC_BETA.422dq0ss.js"),
+                    await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
                   { teleportFromSessionsAPI: ut } =
-                    await import("../../02-功能模块/云会话-Teleport/teleportResumeCodeSession.sn404ggd.js"),
+                    await import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
                   { deserializeMessages: Tt } =
-                    await import("../../02-功能模块/Hooks钩子/deserializeMessages.vsax3dt6.js"),
+                    await import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
                   { accessToken: en, orgUUID: Ne } = await je(d.credentials),
                   { log: gt } = await ut(ve, Ne, en);
                 ((fe = Tt(gt)),

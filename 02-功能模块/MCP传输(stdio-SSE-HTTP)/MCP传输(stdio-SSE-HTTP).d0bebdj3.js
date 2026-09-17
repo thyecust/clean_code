@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { eIn, Xq, fL, aW, Dke, GR, i7t } from "../MCP客户端/chunk-tv3jbp8f.js";
+import { DEFAULT_NEGOTIATED_PROTOCOL_VERSION as eIn, SUPPORTED_PROTOCOL_VERSIONS as Xq, isJSONRPCRequest as fL, isJSONRPCResultResponse as aW, isJSONRPCErrorResponse as Dke, JSONRPCMessageSchema as GR, isInitializeRequest as i7t } from "../MCP客户端/chunk-tv3jbp8f.js";
 class R {
   constructor(e = {}) {
     ((this._started = !1),

@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Iy, H4n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-function UQt() {
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isRemoteToolForwardingSwitchOn as Iy, H4n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+function registerToolHosts() {
   let t,
     o = !1,
     r = () => {
@@ -35,4 +35,4 @@ function UQt() {
   )
     r();
 }
-export { UQt };
+export { registerToolHosts };

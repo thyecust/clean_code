@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { JQ } from "./chunk-q35gycf9.js";
 import h from "ws";
 class i extends Error {
