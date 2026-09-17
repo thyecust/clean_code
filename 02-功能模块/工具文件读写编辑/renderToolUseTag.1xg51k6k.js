@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { gMe, Lr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getTaskIdFromOutputPath, extractTagContent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ao, yx } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { _i, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -22,7 +22,7 @@ import { formatFileSize } from "../../01-核心基础设施/共享小工具-未�
 import { basename } from "path";
 function renderToolUseMessage({ file_path: o, offset: n, limit: s, pages: l }, { verbose: c }) {
   if (!o) return null;
-  if (gMe(o)) return "";
+  if (getTaskIdFromOutputPath(o)) return "";
   let i = c ? o : Ao(o);
   if (l)
     return r(N, {
@@ -41,7 +41,7 @@ function renderToolUseMessage({ file_path: o, offset: n, limit: s, pages: l }, {
   return e(TruncatedFilePath, { filePath: o, children: i });
 }
 function renderToolUseTag({ file_path: o }) {
-  let n = o ? gMe(o) : null;
+  let n = o ? getTaskIdFromOutputPath(o) : null;
   if (!n) return null;
   return r(t, { dimColor: !0, children: [" ", n] });
 }
@@ -122,7 +122,7 @@ function renderToolUseErrorMessage(o, { verbose: n }) {
       return e(ToolResultRow, {
         children: e(t, { color: "error", children: "File not found" }),
       });
-    if (Lr(o, "tool_use_error"))
+    if (extractTagContent(o, "tool_use_error"))
       return e(ToolResultRow, {
         children: e(t, { color: "error", children: "Error reading file" }),
       });

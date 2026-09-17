@@ -31,7 +31,7 @@ import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js"
 import { jn, Ks } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
-import { aKe, UO, Jf, Ym, eg, xMe, HMe, wT } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getConfiguredSessionModel, hasPreModelSwitchHooks, recordModelSwitchIfChanged, enqueueSessionTask, formatInlineCode, FAST_MODE_ON_LABEL, MODEL_SET_SUFFIX, ControlRequestTimeoutError } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { applyFlagSettingsPatch } from "../../02-功能模块/上下文压缩-Compact/apply-flag-settings.js";
 import { getThemeColor } from "../共享小工具-未细化/theme-color.js";
 import { P_, Rl, rI } from "../模型目录-ModelCatalog/chunk-qgx6a5a0.js";
@@ -45,13 +45,13 @@ function renderFastModeIndicator(t = !0, e = !1) {
 var FAST_MODE_HOOK_TIMEOUT_MS = 8000,
   FAST_MODE_CANCELLED_MESSAGE = "Fast mode unchanged (cancelled)";
 function getFastModeTargetModel(t) {
-  if (af(aKe({ ...t, toolPermissionContext: { mode: "default" } }))) return;
+  if (af(getConfiguredSessionModel({ ...t, toolPermissionContext: { mode: "default" } }))) return;
   let e = Q$e();
   return parseUserSpecifiedModel(e) === parseUserSpecifiedModel(getDefaultMainLoopModelSetting()) ? null : e;
 }
 async function vetFastModeTargetModel(t, e, o) {
   let m = getFastModeTargetModel(e());
-  if (m === void 0 || Ks() || !UO(t)) return { vetted: UNVETTED_FAST_MODE_TARGET, messages: [] };
+  if (m === void 0 || Ks() || !hasPreModelSwitchHooks(t)) return { vetted: UNVETTED_FAST_MODE_TARGET, messages: [] };
   let a = await P_(t, e, m, "command", { signal: o });
   if (a.decision === "proceed")
     return { vetted: { target: m }, messages: a.messages };
@@ -90,7 +90,7 @@ function applyFastModeSetting(t, e, o, m = !0, a, f = UNVETTED_FAST_MODE_TARGET)
           if (s === void 0) return r;
           if (!("unvetted" in f) && f.target !== s) return r;
           return (
-            Jf(t, r, s, "command"),
+            recordModelSwitchIfChanged(t, r, s, "command"),
             { ...r, mainLoopModel: s, mainLoopModelForSession: null }
           );
         });
@@ -111,7 +111,7 @@ function applyFastModeSetting(t, e, o, m = !0, a, f = UNVETTED_FAST_MODE_TARGET)
         n(`fast mode: workspace did not accept apply_flag_settings: ${l(s)}`, {
           level: "error",
         }),
-        s instanceof wT
+        s instanceof ControlRequestTimeoutError
           ? { kind: "timeout" }
           : { kind: "refused", reason: Rl(l(s)) }
       ),
@@ -132,7 +132,7 @@ function applyFastModeSetting(t, e, o, m = !0, a, f = UNVETTED_FAST_MODE_TARGET)
   return (c(), Promise.resolve(void 0));
 }
 async function runFastModeToggle(t, e, o, m, a, f = !0, S, c, r, s) {
-  let d = await Ym(t, async () => {
+  let d = await enqueueSessionTask(t, async () => {
     if (c) await withDeadline(c(), FAST_MODE_HOOK_TIMEOUT_MS);
     if (r?.aborted) return { kind: "refused", refusal: FAST_MODE_CANCELLED_MESSAGE };
     let M = dU();
@@ -163,7 +163,7 @@ async function runFastModeToggle(t, e, o, m, a, f = !0, S, c, r, s) {
     e)
   ) {
     let M = renderFastModeIndicator(!0),
-      F = d.willPromote ? `${HMe}${eg(RR())}` : "",
+      F = d.willPromote ? `${MODEL_SET_SUFFIX}${formatInlineCode(RR())}` : "",
       p = getMainLoopModel(),
       h = af(p) ? getCanonicalName(p) : "claude-opus-5",
       k = Ese(Gve(h)),
@@ -174,7 +174,7 @@ async function runFastModeToggle(t, e, o, m, a, f = !0, S, c, r, s) {
 ${d.hookMessages.map(Rl).join(`
 `)}`
           : "";
-    return `${M} ${xMe}${F} \xB7 ${k}${g}${w}`;
+    return `${M} ${FAST_MODE_ON_LABEL}${F} \xB7 ${k}${g}${w}`;
   } else return `Fast mode OFF${f ? "" : " (this session only)"}`;
 }
 export { renderFastModeIndicator, FAST_MODE_HOOK_TIMEOUT_MS, FAST_MODE_CANCELLED_MESSAGE, getFastModeTargetModel, vetFastModeTargetModel, UNVETTED_FAST_MODE_TARGET, formatFastModeRemoteResult, applyFastModeSetting, runFastModeToggle };

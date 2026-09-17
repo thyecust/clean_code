@@ -17,20 +17,20 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
-  A3,
-  OLe,
-  Dne,
-  nn,
-  Mne,
-  $_,
-  lC,
-  XTe,
-  YTe,
-  C3,
-  GX,
-  Ade,
-  zO,
-  Ght,
+  DEPENDENCY_DIR_NAMES,
+  isUnderDependencyDir,
+  readExactBytes,
+  GIT_OBJECT_ID_REGEX,
+  isNonZeroObjectId,
+  MAX_LISTED_COMMITS,
+  MAX_LISTED_SKIPPED_FILES,
+  MAX_LISTED_CONFLICTED_COMMITS,
+  MAX_CONFLICT_CODE_UNITS,
+  MAX_LISTED_APPLIED_TURNS,
+  MAX_LISTED_FAST_FORWARDS,
+  MAX_REF_NAME_CODE_UNITS,
+  isValidGitBranchName,
+  isKnownSyncSkipReason,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { MAX_ETAG_LENGTH, HALT_REASONS, getResolvedBundleSchema, isSyncableRelativePath, getWithheldCountsSchema } from "../文件同步-Sync/sync-journal.js";
 import { parseSessionSyncState, parseSessionSeedNote } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
@@ -65,7 +65,7 @@ function en(e) {
   let t = e.split("/"),
     r = t.at(-1) ?? "",
     a = t.slice(0, -1);
-  if (t.includes(".git") || t.includes(Qe) || OLe(e) || A3.has(r) || r === Ze)
+  if (t.includes(".git") || t.includes(Qe) || isUnderDependencyDir(e) || DEPENDENCY_DIR_NAMES.has(r) || r === Ze)
     return { kind: "drop" };
   if (r.endsWith(".tmp") || r.endsWith(".swp") || r.endsWith("~"))
     return a.length === 0
@@ -781,7 +781,7 @@ async function Oe(e, t) {
       let p = await a.stat({ bigint: !0 });
       if (p.dev !== r.dev || p.ino !== r.ino || !p.isFile() || p.size > j)
         return { kind: "unreadable" };
-      return { kind: "ok", content: await Dne(a, Number(p.size)) };
+      return { kind: "ok", content: await readExactBytes(a, Number(p.size)) };
     } finally {
       await a.close();
     }
@@ -849,11 +849,11 @@ function f3n(e) {
       return [];
   }
 }
-var F = createLazyValue(() => s().regex(nn).refine(Mne)),
+var F = createLazyValue(() => s().regex(GIT_OBJECT_ID_REGEX).refine(isNonZeroObjectId)),
   V = createLazyValue(() => s().refine(isSyncableRelativePath)),
   De = createLazyValue(() =>
     $e([
-      c({ head: F(), branch: s().max(Ade).nullable().catch(null) }),
+      c({ head: F(), branch: s().max(MAX_REF_NAME_CODE_UNITS).nullable().catch(null) }),
       F().transform((e) => ({ head: e, branch: null })),
     ]),
   ),
@@ -866,11 +866,11 @@ var F = createLazyValue(() => s().regex(nn).refine(Mne)),
             path: V(),
             reason: s()
               .max(64)
-              .transform((e) => (Ght(e) ? e : "other")),
+              .transform((e) => (isKnownSyncSkipReason(e) ? e : "other")),
           }),
           V().transform((e) => ({ path: e, reason: "other" })),
         ]),
-      ).max(lC),
+      ).max(MAX_LISTED_SKIPPED_FILES),
       truncated: O(),
     }),
   ),
@@ -878,22 +878,22 @@ var F = createLazyValue(() => s().regex(nn).refine(Mne)),
     c({
       generation: T().int().positive(),
       head: F(),
-      branch: s().max(Ade).refine(zO).nullable().catch(null),
+      branch: s().max(MAX_REF_NAME_CODE_UNITS).refine(isValidGitBranchName).nullable().catch(null),
       indexCommit: F(),
       worktreeCommit: F(),
       indexTree: F(),
       worktreeTree: F(),
       bundle: getResolvedBundleSchema().nullable(),
       withheldCounts: getWithheldCountsSchema(),
-      conflicted: v(s().max(4 * YTe))
-        .max(XTe)
+      conflicted: v(s().max(4 * MAX_CONFLICT_CODE_UNITS))
+        .max(MAX_LISTED_CONFLICTED_COMMITS)
         .optional(),
-      downApplied: v(Ge()).max(C3),
+      downApplied: v(Ge()).max(MAX_LISTED_APPLIED_TURNS),
       fastForwardedTo: v(De())
-        .max(GX)
+        .max(MAX_LISTED_FAST_FORWARDS)
         .default(() => []),
-      fastForwardedOn: v(s().max(Ade).nullable().catch(null))
-        .max(GX)
+      fastForwardedOn: v(s().max(MAX_REF_NAME_CODE_UNITS).nullable().catch(null))
+        .max(MAX_LISTED_FAST_FORWARDS)
         .optional(),
       sentAtMs: T().int().nonnegative(),
     }),
@@ -935,10 +935,10 @@ var F = createLazyValue(() => s().regex(nn).refine(Mne)),
       journalEtag: s().min(1).max(MAX_ETAG_LENGTH).nullable(),
       announcementToken: s().min(1).max(64).nullable().optional(),
       announcementEtag: s().min(1).max(MAX_ETAG_LENGTH).nullable().optional(),
-      acked: v(F()).max($_),
+      acked: v(F()).max(MAX_LISTED_COMMITS),
       received: v(
         c({ generation: T().int().positive(), worktreeCommit: F() }),
-      ).max($_),
+      ).max(MAX_LISTED_COMMITS),
       appliedGeneration: T().int().nonnegative(),
       installedSinceUpload: v(
         c({
@@ -959,14 +959,14 @@ var F = createLazyValue(() => s().regex(nn).refine(Mne)),
       parkedRemovalsOverflow: O()
         .optional()
         .transform((e) => e ?? !1),
-      downApplied: v(Ge()).max(C3),
+      downApplied: v(Ge()).max(MAX_LISTED_APPLIED_TURNS),
       peerNeed: F().nullable(),
       peerBasedOn: F().nullable().default(null),
       fastForwardedTo: v(De())
-        .max(GX)
+        .max(MAX_LISTED_FAST_FORWARDS)
         .default(() => []),
-      fastForwardedOn: v(s().max(Ade).nullable().catch(null))
-        .max(GX)
+      fastForwardedOn: v(s().max(MAX_REF_NAME_CODE_UNITS).nullable().catch(null))
+        .max(MAX_LISTED_FAST_FORWARDS)
         .optional(),
       generationSpent: T().int().nonnegative().default(0),
       ended: c({
@@ -1087,7 +1087,7 @@ function tft(e, t) {
   return ge(t) && t > e.generationSpent ? { ...e, generationSpent: t } : e;
 }
 function g3n(e) {
-  return HFt(e).length < C3 && e.installedSinceUpload.length < kze;
+  return HFt(e).length < MAX_LISTED_APPLIED_TURNS && e.installedSinceUpload.length < kze;
 }
 function HFt(e) {
   let t = new Map();
@@ -1100,7 +1100,7 @@ function HFt(e) {
 }
 function h3n(e) {
   let t = gn(e).map((r) => r.head);
-  return dedupe(t.reverse()).reverse().slice(-GX);
+  return dedupe(t.reverse()).reverse().slice(-MAX_LISTED_FAST_FORWARDS);
 }
 function gn(e) {
   return [
@@ -1121,10 +1121,10 @@ function _3n(e, t) {
 }
 function y3n(e, t, r = null) {
   let a = e.fastForwardedTo.at(-1);
-  if (!nn.test(t) || !Mne(t) || (a?.head === t && a.branch === r)) return e;
-  let p = r !== null && zO(r) ? r : null,
+  if (!GIT_OBJECT_ID_REGEX.test(t) || !isNonZeroObjectId(t) || (a?.head === t && a.branch === r)) return e;
+  let p = r !== null && isValidGitBranchName(r) ? r : null,
     f = e.fastForwardedTo.filter((d) => !(d.head === t && d.branch === p));
-  return { ...e, fastForwardedTo: wn([...f, { head: t, branch: p }], GX) };
+  return { ...e, fastForwardedTo: wn([...f, { head: t, branch: p }], MAX_LISTED_FAST_FORWARDS) };
 }
 function wn(e, t) {
   if (e.length <= t) return e;
@@ -1136,9 +1136,9 @@ function wn(e, t) {
   return d.length <= t ? d : d.slice(-t);
 }
 function S3n(e, t) {
-  let r = dedupe(t.holds.filter((w) => nn.test(w))).slice(0, $_),
-    a = t.need !== null && nn.test(t.need) ? t.need : null,
-    p = t.basedOn != null && nn.test(t.basedOn) ? t.basedOn : null,
+  let r = dedupe(t.holds.filter((w) => GIT_OBJECT_ID_REGEX.test(w))).slice(0, MAX_LISTED_COMMITS),
+    a = t.need !== null && GIT_OBJECT_ID_REGEX.test(t.need) ? t.need : null,
+    p = t.basedOn != null && GIT_OBJECT_ID_REGEX.test(t.basedOn) ? t.basedOn : null,
     f = t.installsBankedThrough ?? 0,
     d = (w) => w.turn > f,
     g =
@@ -1170,7 +1170,7 @@ function S3n(e, t) {
   };
 }
 function b3n(e, t) {
-  if (!ge(t.generation) || !nn.test(t.worktreeCommit)) return e;
+  if (!ge(t.generation) || !GIT_OBJECT_ID_REGEX.test(t.worktreeCommit)) return e;
   let r = e.received.find((a) => a.worktreeCommit === t.worktreeCommit);
   if (r !== void 0 && r.generation >= t.generation) return e;
   return {
@@ -1178,16 +1178,16 @@ function b3n(e, t) {
     received: [
       t,
       ...e.received.filter((a) => a.worktreeCommit !== t.worktreeCommit),
-    ].slice(0, $_),
+    ].slice(0, MAX_LISTED_COMMITS),
   };
 }
 function w3n(e, t) {
   let r = e.downApplied.find((h) => h.turn === t.turn);
-  if (!ge(t.turn) || (r === void 0 && e.downApplied.length >= C3)) return e;
+  if (!ge(t.turn) || (r === void 0 && e.downApplied.length >= MAX_LISTED_APPLIED_TURNS)) return e;
   let a = t.installed.filter(
       (h) =>
         isSyncableRelativePath(h.path) &&
-        (h.blobId === null || (nn.test(h.blobId) && Mne(h.blobId))) &&
+        (h.blobId === null || (GIT_OBJECT_ID_REGEX.test(h.blobId) && isNonZeroObjectId(h.blobId))) &&
         Number.isSafeInteger(h.mode) &&
         h.mode >= 0,
     ),
@@ -1203,13 +1203,13 @@ function w3n(e, t) {
     ].filter((h) => !p.has(h.path)),
     S = {
       turn: t.turn,
-      notInstalled: w.slice(0, lC),
+      notInstalled: w.slice(0, MAX_LISTED_SKIPPED_FILES),
       truncated:
         (!g && (r?.truncated ?? !1)) ||
         t.truncated ||
         a.length !== t.installed.length ||
         d.length !== t.notInstalled.length ||
-        w.length > lC ||
+        w.length > MAX_LISTED_SKIPPED_FILES ||
         f.size > kze,
     },
     x = new Map(e.installedEarlier.map((h) => [h.path, h])),
@@ -1236,7 +1236,7 @@ function Sn(e) {
 }
 function tln(e, t, r) {
   if (t.generation !== X4(e)) return e;
-  let a = t.branch !== null && zO(t.branch) ? t.branch : null;
+  let a = t.branch !== null && isValidGitBranchName(t.branch) ? t.branch : null;
   return {
     ...e,
     sent: He(

@@ -17,7 +17,7 @@ import { LU } from "../../01-核心基础设施/核心工具-路径与平台/chu
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { gi, ree, o, t, jr, pd, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _$ } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
-import { cne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { highlightLanguageRegistry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { Mit, Rye, lle, VZt } from "./chunk-hqp2e8nr.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
@@ -29,7 +29,7 @@ F();
 import { extname } from "path";
 var Qt = 500;
 function K(s, i, m, f) {
-  let u = hashPairWithBun(`${f}\x00${cne.pluginGrammarGeneration}`, m),
+  let u = hashPairWithBun(`${f}\x00${highlightLanguageRegistry.pluginGrammarGeneration}`, m),
     l = s.get(u);
   if (l !== void 0) return (s.delete(u), s.set(u, l), l);
   let c = i.highlight(m, { language: f });
@@ -126,7 +126,7 @@ function mt(Er) {
   else Jt = Mt[0];
   let St = Jt,
     { highlightedCode: it } = ree(),
-    grammarGeneration = cne.pluginGrammarGeneration,
+    grammarGeneration = highlightLanguageRegistry.pluginGrammarGeneration,
     J;
   if (Mt[1] !== Ct || Mt[2] !== it || Mt[3] !== I) {
     bb0: {

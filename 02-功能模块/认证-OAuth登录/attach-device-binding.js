@@ -12,7 +12,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { LKn, Xht, Yht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isUnboundCreateReason, formatCreatedUnboundNotice, formatUnboundNotice } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { unboundCreateReason, productionUnboundCreatesDeps } from "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
 import { isViolinWoodEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { c6e } from "../Bridge-RemoteControl/chunk-2m80582f.js";
@@ -31,7 +31,7 @@ async function resolveAttachDeviceBinding(e) {
   if (r.session.archived) return { status: "disabled" };
   if (r.session.boundDeviceId === void 0) {
     let o = await (
-      e.readUnboundCreateReason ?? ((b) => unboundCreateReason(b, LKn, productionUnboundCreatesDeps(e.storageV5)))
+      e.readUnboundCreateReason ?? ((b) => unboundCreateReason(b, isUnboundCreateReason, productionUnboundCreatesDeps(e.storageV5)))
     )(e.sessionId).catch(() => {
       return;
     });
@@ -114,9 +114,9 @@ function registerAttachedDevice(e) {
       serving: s.then(() => d?.serving),
       notice: s.then((t) =>
         t.status === "unbound"
-          ? Yht(t.reason)
+          ? formatUnboundNotice(t.reason)
           : t.status === "created_unbound"
-            ? Xht(t.reason)
+            ? formatCreatedUnboundNotice(t.reason)
             : void 0,
       ),
       stop: async () => {

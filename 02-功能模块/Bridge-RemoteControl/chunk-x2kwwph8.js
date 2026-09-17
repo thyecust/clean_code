@@ -14,11 +14,11 @@ import {
   getCommandName,
   isCommandEnabled,
   findCommand,
-  oV,
-  WF,
-  I2,
-  Re,
-  em,
+  isSensitiveCommandInput,
+  buildSkillNameInfo,
+  isOfficialMarketplacePlugin,
+  createUserMessage,
+  createLocalCommandMessage,
   builtInCommandNames,
   isBridgeSafeCommand,
   findBridgeFallback,
@@ -53,13 +53,13 @@ function resolveBridgeSlashOverride(l) {
         },
       },
     };
-  let { sanitizedName: g, skillNameHash: v } = WF({
+  let { sanitizedName: g, skillNameHash: v } = buildSkillNameInfo({
     rawName: e.name,
     canonicalName: e.name,
     isMcp: e.loadedFrom === "mcp",
     isBuiltIn: builtInCommandNames().has(e.name),
     isBundled: e.type === "prompt" && e.source === "bundled",
-    isOfficial: e.type === "prompt" && I2(e),
+    isOfficial: e.type === "prompt" && isOfficialMarketplacePlugin(e),
   });
   (logEvent("tengu_slash_command_unavailable", {
     command_name: g,
@@ -72,13 +72,13 @@ function resolveBridgeSlashOverride(l) {
       ? `/${getCommandName(e)} ${o.consumedToken} isn't available over Remote Control.`
       : `/${getCommandName(d)} isn't available over Remote Control.`,
     C =
-      oV(e, s.args) || oV(d, o ? o.args : s.args) ? `/${s.commandName} ***` : t;
+      isSensitiveCommandInput(e, s.args) || isSensitiveCommandInput(d, o ? o.args : s.args) ? `/${s.commandName} ***` : t;
   return {
     kind: "blocked",
     result: {
       messages: [
-        Re({ content: C, uuid: r, origin: m }),
-        em(`<local-command-stdout>${u}</local-command-stdout>`),
+        createUserMessage({ content: C, uuid: r, origin: m }),
+        createLocalCommandMessage(`<local-command-stdout>${u}</local-command-stdout>`),
       ],
       shouldQuery: !1,
       resultText: u,

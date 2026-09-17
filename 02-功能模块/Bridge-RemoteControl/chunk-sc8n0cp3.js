@@ -27,7 +27,7 @@ import { uD } from "../Hooks钩子/chunk-z3433nr6.js";
 import { YC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { toe, ig } from "../插件系统/chunk-ajtn749s.js";
 import { areLocalPluginDirsAllowedByPolicy, isMarketplaceRestrictionPolicyActive, isSourceAllowedByPolicy } from "../插件系统/plugin-source-policy.js";
-import { iH, isRemoteToolServingMuted, onServingMuteRecheck, pT, an, wEe, Ql, pY, tD, nD } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isTrustedBuiltinPlugin, isRemoteToolServingMuted, onServingMuteRecheck, CLOUD_SESSION_CONSENT_MESSAGES, sanitizeForDisplay, isPersistedWorkspaceTrusted, getKnownMarketplacesOrEmpty, getReservedMarketplaceNameError, getInstalledPluginsViaStorage, isInstallationInCurrentScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY, PLUGIN_FORWARDING_DISABLED_MESSAGE } from "../插件系统/plugin-forwarding.js";
 import { isLocalHostname, isPrivateAddress } from "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
@@ -657,8 +657,8 @@ function Q(e, t) {
 }
 async function rPt(e) {
   let t = ms().map((a) => [a, getSettingsForSource(a)]),
-    [o, r] = await Promise.all([Ql(e), tD(e)]),
-    d = wEe(),
+    [o, r] = await Promise.all([getKnownMarketplacesOrEmpty(e), getInstalledPluginsViaStorage(e)]),
+    d = isPersistedWorkspaceTrusted(),
     w = t
       .filter(([a]) => d || !Ow.has(a))
       .flatMap(([, a]) =>
@@ -691,12 +691,12 @@ async function rPt(e) {
     trustedOnlyBuiltinIds: new Set(
       [...getHostStateStore().builtinPlugins.keys()]
         .map((a) => `${a}@${BUILTIN_PLUGIN_SOURCE}`)
-        .filter(iH)
+        .filter(isTrustedBuiltinPlugin)
         .map((a) => a.toLowerCase()),
     ),
     installedPluginIds: new Set(
       Object.entries(r.plugins)
-        .filter(([, a]) => a.some(nD))
+        .filter(([, a]) => a.some(isInstallationInCurrentScope))
         .map(([a]) => a),
     ),
     policyRefusedMarketplaces: new Set(
@@ -705,7 +705,7 @@ async function rPt(e) {
     marketplaceRestrictionPolicyActive: isMarketplaceRestrictionPolicyActive(),
     reservedNameConflicts: new Set([
       ...Object.entries(o)
-        .filter(([a, E]) => pY(a, E) !== null)
+        .filter(([a, E]) => getReservedMarketplaceNameError(a, E) !== null)
         .map(([a]) => a),
       ...w
         .filter(([a, E]) => !Object.hasOwn(o, a) && gke(a, E) !== null)
@@ -1440,7 +1440,7 @@ function wZt(e) {
   };
 }
 function Rt(e) {
-  let t = an(WZ());
+  let t = sanitizeForDisplay(WZ());
   return `The saved answer about your plugins is not used for this cloud session, because ${e === "in_launch_dir" ? `the session itself can change ${t} from the folder or repository it runs in` : e === "in_sync_root" ? `the session itself can change ${t} through the folder it syncs` : e === "in_other_root" ? `the session itself can change ${t} through a folder it may write on this machine (an added directory or a settings write grant)` : `it could not be checked that the session cannot change ${t}`}; run /cloud-plugins to decide for this session.`;
 }
 function Ct(e, t) {
@@ -1621,7 +1621,7 @@ function k$n(e) {
 function aPt(e) {
   return e.whileClosed === void 0
     ? void 0
-    : pT[`while_closed.${e.whileClosed}`];
+    : CLOUD_SESSION_CONSENT_MESSAGES[`while_closed.${e.whileClosed}`];
 }
 function x$n(e, t) {
   return e.whileClosed === t.whileClosed && nn.every((o) => Mt(e[o], t[o]));

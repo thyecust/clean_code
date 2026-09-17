@@ -15,7 +15,7 @@ import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSlackEntrypoint, isTeamsEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Pse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { R4e, Dwe, QOe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { MCP_SEND_MESSAGE_ORIGIN, SLACK_BOT_ORIGIN, HEARTH_AGENT_ORIGIN } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { N3t } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, O, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var M = createLazyValue(() =>
@@ -77,13 +77,13 @@ function resolveTriggerPriority(e, r, t) {
 }
 var x = new Set(["claude-in-slack", "claude_in_slack"]),
   P = "slack_human",
-  B = new Set([Dwe]),
+  B = new Set([SLACK_BOT_ORIGIN]),
   b = "claude-in-teams",
   w = "teams_human",
   H = "owner_relay",
   C = "hearth_human";
 function j(e) {
-  if (e === C || e === QOe) return !0;
+  if (e === C || e === HEARTH_AGENT_ORIGIN) return !0;
   return !1;
 }
 var K = new Set(["trigger_fire", "plugin_fire"]),
@@ -156,7 +156,7 @@ function classifyInboundOrigin(e, r, t, a, d, o) {
   if (!l && t === void 0 && r && h.has(r)) return { kind: "human" };
   if (!l && isHumanRelayTurn(r, t)) return { kind: "human" };
   if (!l && r && N.has(r)) return p(t);
-  if (t === R4e && a)
+  if (t === MCP_SEND_MESSAGE_ORIGIN && a)
     return { kind: "task-notification", subkind: "peer-send-message" };
   n(
     `[bridge] demoting unwrapped inbound message to peer origin: client_platform=${r || "(absent)"}`,
@@ -167,7 +167,7 @@ function classifyInboundOrigin(e, r, t, a, d, o) {
     : r.startsWith("claude_code")
       ? "claude_code"
       : x.has(r)
-        ? t === Dwe && L()
+        ? t === SLACK_BOT_ORIGIN && L()
           ? "slack_bot_observation"
           : "slack_relay"
         : r === b
@@ -200,8 +200,8 @@ function classifyRemoteIngressOrigin(e, r, t, a, d, o = !1, f = !1) {
       if (o) logFeatureOk("bridge_projects_human_origin");
       else logFeatureSad("bridge_projects_human_origin", "disabled_by_flag");
     if (isHumanRelayOrigin(t, o)) return { kind: "human" };
-    if (t === QOe && f) return { kind: "task-notification", subkind: U };
-    if (t === R4e && a)
+    if (t === HEARTH_AGENT_ORIGIN && f) return { kind: "task-notification", subkind: U };
+    if (t === MCP_SEND_MESSAGE_ORIGIN && a)
       return { kind: "task-notification", subkind: "peer-send-message" };
     return p(t);
   }

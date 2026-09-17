@@ -15,35 +15,35 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import {
-  Ds,
-  Ct,
-  vLe,
+  createConcurrencyLimiter,
+  isSignalAborted,
+  areLinkedWorktreesServed,
   readGitLayout,
-  YVn,
-  r$,
+  MAX_REMOVED_ROWS,
+  checkSeedPath,
   MAX_WORKING_FILE_BYTES,
-  T3,
-  WTe,
-  GTe,
-  eKn,
-  xl,
-  OV,
-  xk,
-  tKn,
-  o$,
-  Hk,
-  AKe,
-  CKe,
-  nKn,
-  rKn,
-  oKn,
-  sKn,
-  iKn,
-  TE,
-  Lne,
-  pH,
-  nn,
-  vKn,
+  toCaseFoldKey,
+  DEFAULT_SEED_ROW_BUDGET,
+  MAX_SEED_TOTAL_BYTES,
+  getSeedInventoryVersion,
+  runPinnedGit,
+  partitionSeedPaths,
+  resolveRealPath,
+  readGitHeadSha,
+  readSeedFile,
+  allUnlessAborted,
+  reportInventoryFailure,
+  reportInventoryRefusal,
+  reportInventorySuccess,
+  listUntrackedFileHashes,
+  formatOverBytesNote,
+  formatOverRowsNote,
+  formatTooManyUntrackedNote,
+  hasWindowsReservedPathComponent,
+  looksLikeWindowsShortName,
+  createPathWithholdClassifier,
+  GIT_OBJECT_ID_REGEX,
+  parseLsTreeFiles,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { pI, a3n, l3n, SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import "../文件同步-Sync/sync-journal.js";
@@ -216,11 +216,11 @@ async function qe(e, t) {
 async function ve(e, t, r) {
   let i = De(e),
     o = Ye(e),
-    s = Ds(
+    s = createConcurrencyLimiter(
       J,
       async (f) => (r?.throwIfAborted(), [f.path, await Ke(e, f.path, i, o)]),
     ),
-    u = await Hk(
+    u = await allUnlessAborted(
       t.filter((f) => f.status === "D" && f.oldMode !== W).map(s),
       r,
     );
@@ -250,7 +250,7 @@ async function Me(e, t, r, i) {
   if (r.length === 0) return new Set();
   let o = new Set();
   for (let s of re(r, ne)) {
-    let u = await xl(
+    let u = await runPinnedGit(
       e,
       [
         ...v,
@@ -267,14 +267,14 @@ async function Me(e, t, r, i) {
       D,
     );
     if (u.code !== 0) return null;
-    vKn(u.stdout).forEach((f) => o.add(f.path));
+    parseLsTreeFiles(u.stdout).forEach((f) => o.add(f.path));
   }
   return o;
 }
 async function Ce(e, t, r) {
   if (t.length === 0) return new Set();
   let i = new Map(t.map((f) => [`./${f}`, f])),
-    o = await xl(
+    o = await runPinnedGit(
       e,
       [...v, "check-ignore", "-z", "--stdin", "--no-index"],
       r,
@@ -339,7 +339,7 @@ async function Ee(e, t, r) {
   if (t.length === 0) return new Set();
   let i = t.map((m) => m.path),
     [o, s, u] = await Promise.all([X(e, i, Xe, r), rt(e, r), tt(e, i, r)]);
-  if (Ct(r)) return null;
+  if (isSignalAborted(r)) return null;
   if (o === null || u === null) return new Set();
   let f = t.filter((m) => u.get(m.path) === m.base),
     g = f.filter(
@@ -351,7 +351,7 @@ async function Ee(e, t, r) {
     c = new Set(g.map((m) => m.path)),
     y = f.filter((m) => !c.has(m.path) && Qe(o.get(m.path))),
     w = y.length === 0 ? new Set() : await Te(e, r);
-  if (Ct(r)) return null;
+  if (isSignalAborted(r)) return null;
   let p =
       w === null
         ? []
@@ -361,7 +361,7 @@ async function Ee(e, t, r) {
       p.map((m) => m.path),
       r,
     );
-  if (Ct(r)) return null;
+  if (isSignalAborted(r)) return null;
   return new Set([
     ...c,
     ...p.flatMap((m) => (b?.get(m.path) === m.base ? [m.path] : [])),
@@ -393,7 +393,7 @@ async function Pe(e, t, r) {
     let u = await Promise.all(s.map(o)),
       f = s.filter((p, b) => u[b] !== null);
     if (f.length === 0) continue;
-    let g = await xl(
+    let g = await runPinnedGit(
         e,
         [...v, ...et, "hash-object", "--", ...f],
         r,
@@ -413,7 +413,7 @@ async function Pe(e, t, r) {
       w = await Promise.all(f.map(o));
     c.forEach((p, b) => {
       let m = f[b];
-      if (m !== void 0 && nn.test(p) && w[b] !== null && w[b] === y.get(m))
+      if (m !== void 0 && GIT_OBJECT_ID_REGEX.test(p) && w[b] !== null && w[b] === y.get(m))
         i.set(m, p);
     });
   }
@@ -436,7 +436,7 @@ async function Ie(e, t, r, i) {
     r.map((y) => `:(icase,literal)${y.path}`),
     ne,
   )) {
-    let y = await xl(
+    let y = await runPinnedGit(
       e,
       [...v, "ls-files", "-z", "--full-name", "--", ...c],
       i,
@@ -445,14 +445,14 @@ async function Ie(e, t, r, i) {
     );
     if (y.code !== 0) return null;
     for (let w of y.stdout.split("\x00").filter((p) => p !== "")) {
-      let p = T3(w);
+      let p = toCaseFoldKey(w);
       o.set(p, (o.get(p) ?? new Set()).add(w));
     }
   }
   let s = [...o.values()].filter((c) => c.size > 1);
   if (s.length === 0) return new Set();
   let u = new Set(s.flatMap((c) => ([...c].some((y) => !pI(y)) ? [...c] : []))),
-    f = Ds(J, (c) =>
+    f = createConcurrencyLimiter(J, (c) =>
       u.has(c) ? Promise.resolve({ path: c, identity: null }) : a3n(t, c),
     ),
     g = l3n(await Promise.all(s.flatMap((c) => [...c]).map(f)));
@@ -461,7 +461,7 @@ async function Ie(e, t, r, i) {
   );
 }
 async function Te(e, t) {
-  let r = await xl(
+  let r = await runPinnedGit(
     e,
     [
       ...v,
@@ -478,7 +478,7 @@ async function Te(e, t) {
   );
   if (r.code !== 0) return null;
   let i = r.stdout.split("\x00").filter((u) => u !== ""),
-    o = Ds(J, (u) =>
+    o = createConcurrencyLimiter(J, (u) =>
       pI(u)
         ? lstat(K(e, u)).then(
             (f) => f.isFile(),
@@ -494,7 +494,7 @@ async function Te(e, t) {
 async function tt(e, t, r) {
   let i = new Map();
   for (let o of re(t, ne)) {
-    let s = await xl(
+    let s = await runPinnedGit(
       e,
       [
         ...v,
@@ -522,7 +522,7 @@ async function tt(e, t, r) {
 var nt = /^[0-7]{6} ([0-9a-f]{40}(?:[0-9a-f]{24})?) ([0-3])\t(.+)$/s;
 async function X(e, t, r, i, o) {
   if (t.length === 0) return new Map();
-  let s = await xl(
+  let s = await runPinnedGit(
     e,
     [
       ...v,
@@ -540,7 +540,7 @@ async function X(e, t, r, i, o) {
   return s.code === 0 ? Se(s.stdout) : null;
 }
 async function Oe(e, t) {
-  let r = await xl(
+  let r = await runPinnedGit(
     e,
     [...v, "config", "--bool", "--default", "true", "--get", "core.filemode"],
     t,
@@ -550,7 +550,7 @@ async function Oe(e, t) {
   return r.code === 0 && r.stdout.trim() === "true";
 }
 async function rt(e, t) {
-  let r = await xl(e, [...v, "config", "--get", "core.autocrlf"], t, void 0, D);
+  let r = await runPinnedGit(e, [...v, "config", "--get", "core.autocrlf"], t, void 0, D);
   return r.code === 0 ? _e(r.stdout) : null;
 }
 var ne = 24000;
@@ -578,7 +578,7 @@ function oe(e) {
     ["M", "A", "D"].includes(e.status) &&
     t &&
     pI(e.path) &&
-    r$(e.path) === null &&
+    checkSeedPath(e.path) === null &&
     !e.path.split("/").some(EFt)
   );
 }
@@ -595,7 +595,7 @@ async function Fe(e, t, r, i, o, s) {
       for (let b of te(p)) if (!(await f(b).catch(() => !1))) return !1;
       return !0;
     },
-    c = Ds(J, async (p) => {
+    c = createConcurrencyLimiter(J, async (p) => {
       s?.throwIfAborted();
       let b = { unchanged: !1, checkin: null };
       if (!u(p)) return b;
@@ -610,7 +610,7 @@ async function Fe(e, t, r, i, o, s) {
           return { unchanged: computeGitBlobId(k, o) === p.oldId, checkin: null };
         }
       } else if (!Q.has(p.oldMode)) return b;
-      let m = await o$(e, t, p.path, r);
+      let m = await readSeedFile(e, t, p.path, r);
       if (m.kind !== "read") return b;
       return computeGitBlobId(m.content, o) === p.oldId
         ? { unchanged: !0, checkin: null }
@@ -619,7 +619,7 @@ async function Fe(e, t, r, i, o, s) {
             checkin: p.oldMode === W ? null : ie(p, m.content, o),
           };
     }),
-    y = await Hk(i.map(c), s);
+    y = await allUnlessAborted(i.map(c), s);
   if (y === null) return null;
   let w = await Ee(
     e,
@@ -653,15 +653,15 @@ async function at({
   uploadFilter: u,
   platform: f,
 }) {
-  if (!nn.test(i) || !nn.test(o) || o.length !== i.length)
+  if (!GIT_OBJECT_ID_REGEX.test(i) || !GIT_OBJECT_ID_REGEX.test(o) || o.length !== i.length)
     return { kind: "failed", reason: "diff_index_failed" };
   let [g, c] = await Promise.all([
-      xl(e, [...v, ...ge(i)], s, void 0, D),
-      xl(e, [...v, "ls-files", "--unmerged", "-z"], s, void 0, D),
+      runPinnedGit(e, [...v, ...ge(i)], s, void 0, D),
+      runPinnedGit(e, [...v, "ls-files", "--unmerged", "-z"], s, void 0, D),
     ]),
     y = g.code === 0 ? ye(g.stdout) : null;
   if (y === null || c.code !== 0)
-    return { kind: "failed", reason: Ct(s) ? "aborted" : "diff_index_failed" };
+    return { kind: "failed", reason: isSignalAborted(s) ? "aborted" : "diff_index_failed" };
   let w = inferHashAlgorithmFromDigestLength(i);
   if (y.some((a) => a.oldId.length !== i.length))
     return { kind: "failed", reason: "diff_index_failed" };
@@ -671,7 +671,7 @@ async function at({
         .filter((a) => a !== "")
         .map((a) => a.slice(a.indexOf("\t") + 1)),
     ),
-    b = (a) => a.status === "D" && f === "windows" && TE(a.path),
+    b = (a) => a.status === "D" && f === "windows" && hasWindowsReservedPathComponent(a.path),
     m = (a) => {
       if (a.status === "D") return !1;
       let x = u(a.path, !0);
@@ -687,7 +687,7 @@ async function at({
       s,
     ),
     C = k === null ? null : [...k, ...R.filter(m)];
-  if (C === null || Ct(s)) return { kind: "failed", reason: "aborted" };
+  if (C === null || isSignalAborted(s)) return { kind: "failed", reason: "aborted" };
   let N = await Ie(
     e,
     t,
@@ -695,11 +695,11 @@ async function at({
     s,
   );
   if (N === null)
-    return { kind: "failed", reason: Ct(s) ? "aborted" : "diff_index_failed" };
+    return { kind: "failed", reason: isSignalAborted(s) ? "aborted" : "diff_index_failed" };
   let F = p.size + countMatching(C, (a) => !m(a) && (!oe(a) || N.has(a.path)));
   if (F > 0) return se("tracked_unrepresentable", F);
   let M = await ve(e, C, s);
-  if (M === null || Ct(s)) return { kind: "failed", reason: "aborted" };
+  if (M === null || isSignalAborted(s)) return { kind: "failed", reason: "aborted" };
   let B = await ot({
     gitRoot: e,
     records: C,
@@ -712,7 +712,7 @@ async function at({
   if (B.kind !== "classified") return B;
   let { carried: L, setAside: I, bytesVerdict: _ } = B,
     T = await Oe(e, s),
-    U = Ds(J, async (a) => {
+    U = createConcurrencyLimiter(J, async (a) => {
       if ((s?.throwIfAborted(), a.status === "D" && a.oldMode === W))
         return { kind: "unchanged", path: a.path, resurfaced: !1 };
       let x = a.status === "D" ? (M.get(a.path) ?? "unreadable") : null;
@@ -722,7 +722,7 @@ async function at({
       let H = x === "file",
         pe = H ? (_.get(a.path) ?? null) : null;
       if (pe !== null) return { kind: "aside", record: a, reason: pe };
-      let O = await o$(e, t, a.path, r);
+      let O = await readSeedFile(e, t, a.path, r);
       if (O.kind === "skip") {
         if (
           (H ||
@@ -763,7 +763,7 @@ async function at({
     }),
     j = (a) =>
       a.record.status === "M" && a.record.newId === null && !Be(a.reason),
-    d = await Hk(
+    d = await allUnlessAborted(
       I.filter(j).map((a) => U(a.record)),
       s,
     ),
@@ -771,9 +771,9 @@ async function at({
   if (S === null) return { kind: "failed", reason: "aborted" };
   let ue = new Set(S.flatMap((a) => (a.kind === "unchanged" ? [a.path] : []))),
     fe = I.filter((a) => !ue.has(a.record.path)),
-    ce = await Hk(L.map(U), s),
+    ce = await allUnlessAborted(L.map(U), s),
     V = ce === null ? null : await ae(e, ce, s);
-  if (V === null || Ct(s)) return { kind: "failed", reason: "aborted" };
+  if (V === null || isSignalAborted(s)) return { kind: "failed", reason: "aborted" };
   let Z = V.flatMap((a) => (a.kind === "skip" ? [a.reason] : []));
   if (Z.length > 0) {
     let a = it(Z);
@@ -824,13 +824,13 @@ async function ot({
             s,
           );
   if (g === null)
-    return { kind: "failed", reason: Ct(s) ? "aborted" : "pin_tree_failed" };
+    return { kind: "failed", reason: isSignalAborted(s) ? "aborted" : "pin_tree_failed" };
   let c = f.filter((d) => g.has(d.path)),
     y = t.filter((d) => d.status === "A" || !g.has(d.path)),
-    w = OV(
+    w = partitionSeedPaths(
       y,
       (d) => d.path,
-      (d) => u(d.path, !1) ?? (Lne(d.path) ? "sensitive" : null),
+      (d) => u(d.path, !1) ?? (looksLikeWindowsShortName(d.path) ? "sensitive" : null),
       (d) => d.status !== "A",
     ),
     p = c.map((d) => u(d.path, !0));
@@ -856,13 +856,13 @@ async function ot({
     ]),
     E =
       N === null ? null : new Set(R.filter((d) => k(d).some((S) => N.has(S))));
-  if (F !== null && M === null && !Ct(s))
+  if (F !== null && M === null && !isSignalAborted(s))
     writeDiagnosticsEvent("warn", "dir_sync_overlay_pin_attrs_unread", {});
   let B = M ?? new Map();
   if (E === null || F === null)
     return {
       kind: "failed",
-      reason: Ct(s)
+      reason: isSignalAborted(s)
         ? "aborted"
         : E === null
           ? "check_ignore_failed"
@@ -912,7 +912,7 @@ function st(e, t, r) {
         ...e.skipped,
         ...e.eligiblePaths.map((c) => ({ path: c, reason: "left_behind" })),
       ],
-      note: iKn(e.eligiblePaths.length),
+      note: formatTooManyUntrackedNote(e.eligiblePaths.length),
       leftBehind: "too_many",
     };
   let { files: i, skipped: o } = e,
@@ -922,7 +922,7 @@ function st(e, t, r) {
     return {
       files: i,
       skipped: o,
-      note: u > 0 ? sKn(u, r) : null,
+      note: u > 0 ? formatOverRowsNote(u, r) : null,
       leftBehind: u > 0 ? "over_rows" : "none",
     };
   let { kept: f } = i.reduce(
@@ -941,7 +941,7 @@ function st(e, t, r) {
         .filter((c) => !g.has(c.path))
         .map((c) => ({ path: c.path, reason: "over_budget" })),
     ],
-    note: oKn(s, t),
+    note: formatOverBytesNote(s, t),
     leftBehind: "over_bytes",
   };
 }
@@ -957,11 +957,11 @@ async function Ge({
 }) {
   let g = Date.now(),
     { bundle: c, headCommit: y, pinnedCommit: w } = t;
-  if (c !== null && c.size > MAX_WORKING_FILE_BYTES) return CKe("overlay_too_large", 1, t, g, f);
-  let p = await xk(e);
-  if (p === null) return AKe("root_unresolvable", t, g, f);
-  let b = await tKn(e, r);
-  if (b === null) return AKe(Ct(r) ? "aborted" : "rev_parse_failed", t, g, f);
+  if (c !== null && c.size > MAX_WORKING_FILE_BYTES) return reportInventoryRefusal("overlay_too_large", 1, t, g, f);
+  let p = await resolveRealPath(e);
+  if (p === null) return reportInventoryFailure("root_unresolvable", t, g, f);
+  let b = await readGitHeadSha(e, r);
+  if (b === null) return reportInventoryFailure(isSignalAborted(r) ? "aborted" : "rev_parse_failed", t, g, f);
   let m = o ?? i(e, { realRoot: p });
   await using R = await SO(s, { gitRoot: e, realRoot: p }).catch(
     (_) => (
@@ -969,7 +969,7 @@ async function Ge({
       null
     ),
   );
-  if (R === null) return AKe("anchor_unavailable", t, g, f);
+  if (R === null) return reportInventoryFailure("anchor_unavailable", t, g, f);
   let k = await at({
     gitRoot: e,
     realRoot: p,
@@ -980,15 +980,15 @@ async function Ge({
     uploadFilter: m,
     platform: s.platform(),
   });
-  if (k.kind === "failed") return AKe(k.reason, t, g, f);
-  if (k.kind === "refused") return CKe(k.refusal, k.count, t, g, f);
+  if (k.kind === "failed") return reportInventoryFailure(k.reason, t, g, f);
+  if (k.kind === "refused") return reportInventoryRefusal(k.refusal, k.count, t, g, f);
   let C = k.rows.reduce((_, T) => _ + T.size, 0);
-  if (k.rows.length > WTe || C > GTe)
-    return CKe("tracked_over_budget", k.rows.length, t, g, f);
+  if (k.rows.length > DEFAULT_SEED_ROW_BUDGET || C > MAX_SEED_TOTAL_BYTES)
+    return reportInventoryRefusal("tracked_over_budget", k.rows.length, t, g, f);
   let N = C + (c?.size ?? 0);
-  if (N > GTe) return CKe("overlay_over_budget", k.rows.length, t, g, f);
-  if (k.removed.length > YVn)
-    return CKe("too_many_removed", k.removed.length, t, g, f);
+  if (N > MAX_SEED_TOTAL_BYTES) return reportInventoryRefusal("overlay_over_budget", k.rows.length, t, g, f);
+  if (k.removed.length > MAX_REMOVED_ROWS)
+    return reportInventoryRefusal("too_many_removed", k.removed.length, t, g, f);
   let F =
       u === void 0
         ? void 0
@@ -1006,25 +1006,25 @@ async function Ge({
                   ),
                 ]);
           },
-    M = await rKn({
+    M = await listUntrackedFileHashes({
       gitRoot: e,
       realRoot: p,
       anchor: R,
       signal: r,
       uploadFilter: m,
-      rowBudget: WTe - k.rows.length,
+      rowBudget: DEFAULT_SEED_ROW_BUDGET - k.rows.length,
       filterAttributed: F,
       alreadyJudged: new Set([
         ...k.resurfaced,
         ...k.removed.map((_) => _.path),
       ]),
     });
-  if (M.kind === "failed") return AKe(M.reason, t, g, f);
-  let E = st(M, GTe - N, Math.max(0, WTe - k.rows.length)),
+  if (M.kind === "failed") return reportInventoryFailure(M.reason, t, g, f);
+  let E = st(M, MAX_SEED_TOTAL_BYTES - N, Math.max(0, DEFAULT_SEED_ROW_BUDGET - k.rows.length)),
     B = [...k.rows, ...E.files],
     L = c === null ? void 0 : { ...c, head: y, pin: w },
     I = {
-      version: eKn({ overlay: L, files: B, removed: k.removed }),
+      version: getSeedInventoryVersion({ overlay: L, files: B, removed: k.removed }),
       gitRoot: e,
       headSha: b,
       originKind: "overlay",
@@ -1034,7 +1034,7 @@ async function Ge({
       skipped: [...k.skipped, ...E.skipped],
     };
   return (
-    nKn(
+    reportInventorySuccess(
       I,
       {
         untrackedCount: M.untrackedCount,
@@ -1066,8 +1066,8 @@ async function planOverlay({ gitRoot: e, pin: t, head: r, signal: i }) {
       de,
     );
   if (s === void 0 || s.kind === "failed")
-    return { kind: "not_planned", whyNot: Ct(i) ? "aborted" : "unavailable" };
-  if (s.kind !== "read" || (s.layout.gitDir !== s.layout.commonDir && !vLe()))
+    return { kind: "not_planned", whyNot: isSignalAborted(i) ? "aborted" : "unavailable" };
+  if (s.kind !== "read" || (s.layout.gitDir !== s.layout.commonDir && !areLinkedWorktreesServed()))
     return { kind: "not_planned", whyNot: "layout_unsupported" };
   let u = await dt({ gitRoot: e, pin: t, head: r, signal: i });
   if (u.kind === "not_planned") return u;
@@ -1087,7 +1087,7 @@ async function planOverlay({ gitRoot: e, pin: t, head: r, signal: i }) {
               : { sha256: u.bundle.sha256, size: u.bundle.sizeBytes },
         },
         signal: c,
-        createUploadFilter: pH,
+        createUploadFilter: createPathWithholdClassifier,
         filterAttributed: Xbe(e),
         purpose: "create_check",
       }).catch((w) => (logError(w), { ok: !1, reason: "aborted" })),
@@ -1103,7 +1103,7 @@ async function planOverlay({ gitRoot: e, pin: t, head: r, signal: i }) {
       whyNot: "inventory_refused",
       refusal: y.refusal,
     };
-  return Ct(i)
+  return isSignalAborted(i)
     ? { kind: "not_planned", whyNot: "aborted" }
     : g.aborted || Date.now() - f >= OVERLAY_CHECK_DEADLINE_MS
       ? { kind: "not_planned", whyNot: "inventory_cut" }
@@ -1141,7 +1141,7 @@ async function dt({ gitRoot: e, pin: t, head: r, signal: i }) {
   }
 }
 async function ut(e, t, r) {
-  let i = await xl(
+  let i = await runPinnedGit(
     e,
     [...v, "rev-parse", "-q", "--verify", "HEAD^{commit}"],
     r,

@@ -57,72 +57,72 @@ import {
 import { isPluginBlockedByPolicy, areLocalPluginDirsAllowedByPolicy, localPluginDirsBlockedMessage, areCommandPluginSourcesDisabledByPolicy, headersHelperPolicyRefusal, isHeadersHelperDisabledByPolicy, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, isSourceDisallowedOrUnverifiable, isSourceAllowedByPolicy } from "./plugin-source-policy.js";
 import { p$e, Aa, rA, ive, NC, $t, Koe } from "./chunk-7s6mt1vg.js";
 import {
-  w4e,
-  KOe,
-  Pte,
-  qwe,
-  Hdn,
-  iH,
-  cBt,
-  j4e,
-  Lqn,
-  xmt,
-  Uqn,
-  Bqn,
-  Hmt,
-  Imt,
-  uBt,
-  Wqn,
-  Pmt,
-  Gqn,
-  Kwe,
-  Ldn,
-  Kqn,
-  dBt,
-  Oue,
-  Due,
-  Dmt,
-  fu,
-  cY,
-  Qne,
-  Zne,
-  hH,
-  pC,
-  gl,
-  Ql,
-  pw,
-  Jv,
-  E5e,
-  Qv,
-  eD,
-  CWt,
-  UV,
-  cyt,
-  EEe,
-  uyt,
-  vWt,
-  RWt,
-  Cf,
-  kWt,
-  hT,
-  Zv,
-  kgn,
-  c7n,
-  Ign,
-  dyt,
-  C5e,
-  u$,
-  ere,
-  qde,
-  zde,
-  v5e,
-  L3,
-  R5e,
-  k5e,
-  Fgn,
-  $gn,
-  Ph,
-  ei,
+  deletePluginOptions,
+  getPolicyPluginEntries,
+  resolvePolicyPluginAccess,
+  reloadPluginDirsFromDisk,
+  resolveTrustedBuiltinPluginId,
+  isTrustedBuiltinPlugin,
+  initPluginUsage,
+  deletePluginUsage,
+  touchPluginUsage,
+  getEnabledPluginsBySettingsSource,
+  filterEnablementRecordsToTrustedSources,
+  getPluginEnablementRecords,
+  intersectVersionRanges,
+  formatDependencyVersionMismatch,
+  formatNoMatchingGitTag,
+  collectDependencyRequirementsOn,
+  findDependentPluginNames,
+  collectTransitiveDependents,
+  getEnabledPluginIdsForSource,
+  formatRequiredByWarning,
+  resolvePluginDependencyClosure,
+  statLocalMarketplacePath,
+  getMarketplaceTrustedRoots,
+  loadLocalMarketplace,
+  describeMarketplaceLoadFailure,
+  refreshPluginState,
+  markVersionOrphaned,
+  findTrustedMarketplaceAuth,
+  findSettingsDeclaredEntryAuth,
+  getDeclaredMarketplaces,
+  getOperatorDeclaredMarketplaces,
+  getKnownMarketplaces,
+  getKnownMarketplacesOrEmpty,
+  findContainingSeedDir,
+  loadMarketplace,
+  findCachedPluginEntry,
+  findPluginEntry,
+  refreshMarketplace,
+  formatShortHash,
+  resolvePluginVersion,
+  resolveInstallPathGitSha,
+  getSourceCloneUrl,
+  getMarketplaceSourceUrl,
+  resolveSubdirSource,
+  resolveVersionRange,
+  getInstalledPlugins,
+  removePluginInstallation,
+  readInstalledPluginsFile,
+  readInstalledPluginsViaStorage,
+  updateInstalledPluginRecord,
+  clearPluginAutoInstallFlag,
+  formatDependencyResolutionError,
+  isPluginInstalledOnDisk,
+  installPluginWithDependencies,
+  getVersionedCachePath,
+  cacheDirHasPluginContentStrict,
+  getVersionedZipCachePath,
+  copyPluginToVersionedCache,
+  cachePlugin,
+  loadPluginManifest,
+  entryDeclaredComponentPaths,
+  entryDeclaresComponents,
+  syncedPluginMintedName,
+  localCopyShadowingSynced,
+  loadAllPlugins,
+  loadAllPluginsCacheOnly,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { uD, _j, ASt, v8e } from "../Hooks钩子/chunk-z3433nr6.js";
 import { checkEnabledPlugins, getPluginEditableScopes } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
@@ -158,10 +158,10 @@ import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chu
 async function bUn(e, t, s) {
   if (bq()) return "ineligible";
   if (!t?.source || !isSourceAllowedByPolicy(t.source)) return "ineligible";
-  if (!MQ(e, t, hH()[e]?.autoUpdate)) return "ineligible";
+  if (!MQ(e, t, getDeclaredMarketplaces()[e]?.autoUpdate)) return "ineligible";
   try {
     return (
-      await eD(e, s, void 0, { skipIfRecent: !0 }),
+      await refreshMarketplace(e, s, void 0, { skipIfRecent: !0 }),
       $t().marketplaces.delete(e),
       "refreshed"
     );
@@ -184,7 +184,7 @@ function dle(e) {
 async function d0e(e, t, s) {
   if (isEssentialTrafficOnly()) return { outcome: "ineligible" };
   if (!t?.source || !isSourceAllowedByPolicy(t.source)) return { outcome: "ineligible" };
-  if (t.installLocation && pw(t.installLocation))
+  if (t.installLocation && findContainingSeedDir(t.installLocation))
     return { outcome: "ineligible" };
   let r = t.source.source;
   if (r !== "github" && r !== "git" && r !== "url" && r !== "claudeai") {
@@ -193,7 +193,7 @@ async function d0e(e, t, s) {
   }
   try {
     return (
-      await eD(e, s, void 0, { skipIfRecent: !0 }),
+      await refreshMarketplace(e, s, void 0, { skipIfRecent: !0 }),
       $t().marketplaces.delete(e),
       { outcome: "refreshed" }
     );
@@ -230,7 +230,7 @@ function Ce(e, t, s) {
 }
 function ze(e, t) {
   let { name: s } = parsePluginId(e),
-    r = Pte(KOe(), s, t);
+    r = resolvePolicyPluginAccess(getPolicyPluginEntries(), s, t);
   return r.outcome === "locked" ? r.entry.name : void 0;
 }
 function Ge(e) {
@@ -288,7 +288,7 @@ var Ie = {
   claudeai_identity_changed: "sad",
 };
 function s9e(e) {
-  let t = Cf(),
+  let t = getInstalledPlugins(),
     s = findKeyIgnoringCase(Object.keys(t.plugins), e);
   if (s) return s;
   for (let r of ["local", "project", "user"]) {
@@ -300,7 +300,7 @@ function s9e(e) {
   return e;
 }
 function p0e(e, t, s) {
-  return findPluginEnablementEntry(e, Uqn(e, s))?.enabled ?? t.defaultEnabled !== !1;
+  return findPluginEnablementEntry(e, filterEnablementRecordsToTrustedSources(e, s))?.enabled ?? t.defaultEnabled !== !1;
 }
 function Re(e, t = ["local", "project", "user"]) {
   let s = e.includes("@"),
@@ -327,7 +327,7 @@ function je(e, t) {
 }
 function Ke(e, t, s) {
   let { name: r } = splitPluginId(e),
-    i = Cf(),
+    i = getInstalledPlugins(),
     o = Object.keys(i.plugins),
     p = findKeyIgnoringCase(o, e);
   if (p && i.plugins[p]?.length) return { pluginId: p, pluginName: r };
@@ -343,7 +343,7 @@ function Ke(e, t, s) {
   return null;
 }
 function rOt(e) {
-  let t = Cf(),
+  let t = getInstalledPlugins(),
     s = findKeyIgnoringCase(Object.keys(t.plugins), e),
     r = s ? t.plugins[s] : void 0;
   if (!r || r.length === 0) return { scope: "user" };
@@ -357,7 +357,7 @@ function rOt(e) {
   return { scope: r[0].scope, projectPath: r[0].projectPath };
 }
 async function fen(e, t, s) {
-  if (!(await dyt(e, t, s))) return !1;
+  if (!(await isPluginInstalledOnDisk(e, t, s))) return !1;
   return !(await getDependencyErrorsForPlugin(e, s)).some(
     (i) => i.type !== "dependency-unsatisfied" || i.reason !== "not-found",
   );
@@ -380,14 +380,14 @@ async function EUn(
     c = !1,
     _ = !1;
   if (k) {
-    let I = (await gl(o))[k],
+    let I = (await getKnownMarketplaces(o))[k],
       b = I !== void 0 && isSourceAllowedByPolicy(I.source);
     c = I !== void 0 && !b;
     let z = i ?? (await d0e(k, I, o));
     if ((dle(z.outcome), z.outcome === "refreshed")) X = !0;
     else if (z.outcome === "refresh-failed")
       ((_ = !0), (A = `marketplace not refreshed (${z.errorMessage})`));
-    let j = await Qv(e, o);
+    let j = await findPluginEntry(e, o);
     if (j) ((P = j.entry), (S = k), (w = j.marketplaceInstallLocation));
   } else {
     let m = await sOt(p, o);
@@ -422,7 +422,7 @@ async function EUn(
     });
   else logFeatureOk("plugin_marketplace_resolve", { scoped: k !== void 0 });
   if (await fen(D, t, o)) {
-    let m = await c7n(D, t, o9e(t), o),
+    let m = await clearPluginAutoInstallFlag(D, t, o9e(t), o),
       I = await buildMissingDependencyNotice(D, o);
     return {
       success: !0,
@@ -440,7 +440,7 @@ async function EUn(
 This install runs that command; confirm it by running \`claude plugin install\` in a terminal (or with -y/--yes).`,
       "entry_helper_unconfirmed",
     );
-  let C = await C5e({
+  let C = await installPluginWithDependencies({
     pluginId: D,
     entry: N,
     scope: t,
@@ -454,7 +454,7 @@ This install runs that command; confirm it by running \`claude plugin install\` 
         : Ye(
             D,
             N.source,
-            (isHoverRestEnabled() && o !== void 0 ? await Zv(o) : hT()).plugins[D],
+            (isHoverRestEnabled() && o !== void 0 ? await readInstalledPluginsViaStorage(o) : readInstalledPluginsFile()).plugins[D],
           ),
     storageV5: o,
   });
@@ -471,7 +471,7 @@ This install runs that command; confirm it by running \`claude plugin install\` 
           message: `Failed to update settings: ${C.message}`,
         };
       case "resolution-failed":
-        return { success: !1, message: Ign(C.resolution) };
+        return { success: !1, message: formatDependencyResolutionError(C.resolution) };
       case "blocked-by-policy":
         return {
           success: !1,
@@ -496,12 +496,12 @@ This install runs that command; confirm it by running \`claude plugin install\` 
         let m = C.dep === D ? "Plugin" : "Dependency";
         return {
           success: !1,
-          message: Imt(m, C.dep, C.ranges, C.why, C.installed),
+          message: formatDependencyVersionMismatch(m, C.dep, C.ranges, C.why, C.installed),
         };
       }
       case "no-matching-tag": {
         let m = C.dep === D ? "Plugin" : "Dependency";
-        return { success: !1, message: uBt(m, C.dep, C.range) };
+        return { success: !1, message: formatNoMatchingGitTag(m, C.dep, C.range) };
       }
     }
   let ce = Aa("plugin enable", D),
@@ -526,14 +526,14 @@ async function r4(e, t = "user", s = !0, r) {
   (De(t), (e = normalizePluginId(e)));
   let i = Ce(e, parsePluginId(e).marketplace, "uninstall");
   if (i !== void 0) return { success: !1, message: i };
-  let { enabled: o, disabled: p } = await Ph(r),
+  let { enabled: o, disabled: p } = await loadAllPlugins(r),
     k = [...o, ...p],
     a = je(e, k),
     P = getSettingsSourceForScope(t),
     S = getSettingsForSource(P),
     w,
     X,
-    A = Cf(),
+    A = getInstalledPlugins(),
     c = Object.keys(A.plugins),
     _ = o9e(t);
   if (a) {
@@ -604,16 +604,16 @@ async function r4(e, t = "user", s = !0, r) {
     void 0,
     r,
   ),
-    fu(r),
-    await kWt(w, t, _, r));
-  let ce = Cf().plugins[w],
+    refreshPluginState(r),
+    await removePluginInstallation(w, t, _, r));
+  let ce = getInstalledPlugins().plugins[w],
     d = !ce || ce.length === 0;
-  if (d && U) await cY(U, r);
+  if (d && U) await markVersionOrphaned(U, r);
   if (d) {
-    if ((await w4e(w, r), j4e([w], r), s)) await p$e(w);
+    if ((await deletePluginOptions(w, r), deletePluginUsage([w], r), s)) await p$e(w);
   }
-  let F = Pmt(w, k),
-    h = Ldn(F);
+  let F = findDependentPluginNames(w, k),
+    h = formatRequiredByWarning(F);
   return {
     success: !0,
     message: `Successfully uninstalled plugin: ${X} (scope: ${t})${h}`,
@@ -631,9 +631,9 @@ async function $e(e, t, s, r, i) {
   if (a === void 0 && !_j(e)) {
     let F = formatPluginId(e, BUILTIN_PLUGIN_SOURCE),
       h = Re(e, ["user"])?.pluginId;
-    if (iH(F) && h !== void 0 && !_j(h)) return $e(h, t, s, r, i);
-    if (iH(F)) {
-      let I = await Ph(i);
+    if (isTrustedBuiltinPlugin(F) && h !== void 0 && !_j(h)) return $e(h, t, s, r, i);
+    if (isTrustedBuiltinPlugin(F)) {
+      let I = await loadAllPlugins(i);
       if (
         ![...I.enabled, ...I.disabled].some(
           (z) => isEqualIgnoringCase(z.name, e) && !_j(z.source),
@@ -646,11 +646,11 @@ async function $e(e, t, s, r, i) {
       };
     }
     let m = Re(e)?.pluginId;
-    if (m !== void 0 && (isNonMarketplacePluginSource(getPluginMarketplace(m)) || iH(m))) return $e(m, t, s, r, i);
+    if (m !== void 0 && (isNonMarketplacePluginSource(getPluginMarketplace(m)) || isTrustedBuiltinPlugin(m))) return $e(m, t, s, r, i);
   }
   if (_j(e) || isNonMarketplacePluginSource(a)) {
     let F = "user",
-      h = Hdn(e) ?? e,
+      h = resolveTrustedBuiltinPluginId(e) ?? e,
       m = en(h, t);
     if (m !== void 0) return Le(h, t, m, h);
     let I,
@@ -661,7 +661,7 @@ async function $e(e, t, s, r, i) {
       T = !1,
       de = "";
     if (isNonMarketplacePluginSource(a)) {
-      let O = await Ph(i),
+      let O = await loadAllPlugins(i),
         v = je(
           e,
           [...O.enabled, ...O.disabled].filter((K) => getPluginMarketplace(K.source) === a),
@@ -679,7 +679,7 @@ async function $e(e, t, s, r, i) {
       if (
         ((j =
           v !== void 0 &&
-          Pte(KOe(), parsePluginId(h).name, v.attributedMarketplaceName).outcome ===
+          resolvePolicyPluginAccess(getPolicyPluginEntries(), parsePluginId(h).name, v.attributedMarketplaceName).outcome ===
             "admitted"),
         t && j && v !== void 0)
       )
@@ -691,7 +691,7 @@ async function $e(e, t, s, r, i) {
         );
       if (t && a === SYNCED_PLUGIN_SOURCE) {
         let K = new Set(O.errors.filter(ive).map((q) => q.source)),
-          ue = $gn(k, [
+          ue = localCopyShadowingSynced(k, [
             ...O.enabled.filter((q) => !q.isBuiltin),
             ...O.disabled
               .filter((q) => K.has(q.source))
@@ -780,7 +780,7 @@ async function $e(e, t, s, r, i) {
       !t &&
       isNonMarketplacePluginSource(a) &&
       F === "project" &&
-      (KOe()?.some((O) => O.enabled && normalizeLookupKey(O.name) === normalizeLookupKey(parsePluginId(h).name)) ?? !1)
+      (getPolicyPluginEntries()?.some((O) => O.enabled && normalizeLookupKey(O.name) === normalizeLookupKey(parsePluginId(h).name)) ?? !1)
     ) {
       let { error: O } = await ve("userSettings", h, !1, {}, i);
       if (O)
@@ -807,7 +807,7 @@ async function $e(e, t, s, r, i) {
     );
     if (H)
       return { success: !1, message: `Failed to ${o} plugin: ${H.message}` };
-    fu(i);
+    refreshPluginState(i);
     let { name: ne } = splitPluginIdOnLastAt(h);
     return {
       success: !0,
@@ -858,15 +858,15 @@ async function $e(e, t, s, r, i) {
     };
   let N;
   if (!t) {
-    let { enabled: F, disabled: h } = await Ph(i),
+    let { enabled: F, disabled: h } = await loadAllPlugins(i),
       m = [...F, ...h],
-      I = Pmt(P, m);
+      I = findDependentPluginNames(P, m);
     if (I.length > 0) N = I;
     let b = mXe() ? m : m.filter((j) => getPluginMarketplace(j.source) !== SYNCED_PLUGIN_SOURCE),
-      z = Pmt(P, b);
+      z = findDependentPluginNames(P, b);
     if (z.length > 0 && !r?.bypassDependentsBlock) {
       let { name: j } = splitPluginId(P),
-        T = [...Gqn(P, b), P].map((oe) => Aa("plugin disable", oe)),
+        T = [...collectTransitiveDependents(P, b), P].map((oe) => Aa("plugin disable", oe)),
         de = T.every((oe) => oe !== null)
           ? `, or disable everything together: ${T.join(" && ")}`
           : ", or disable them together in /plugin.";
@@ -879,8 +879,8 @@ async function $e(e, t, s, r, i) {
   }
   let D = [];
   if (t) {
-    let { enabled: F, disabled: h } = await Ph(i),
-      { closure: m, missing: I } = Kqn(P, [...F, ...h]);
+    let { enabled: F, disabled: h } = await loadAllPlugins(i),
+      { closure: m, missing: I } = resolvePluginDependencyClosure(P, [...F, ...h]);
     if (I.length > 0) {
       let { name: E } = splitPluginId(P),
         H = I.map((O) => Aa("plugin install", O)),
@@ -896,7 +896,7 @@ async function $e(e, t, s, r, i) {
       z = new Map(
         [...F, ...h].filter((E) => isNonMarketplacePluginSource(getPluginMarketplace(E.source))).map((E) => [E.source, E]),
       ),
-      j = xmt().map(({ record: E }) => E),
+      j = getEnabledPluginsBySettingsSource().map(({ record: E }) => E),
       ee = m.filter(
         (E) =>
           isNonMarketplacePluginSource(getPluginMarketplace(E)) &&
@@ -947,7 +947,7 @@ async function $e(e, t, s, r, i) {
         message: `${E} depends on ${H}, which ${pluralize(le.length, "is", "are")} disabled there. Enable ${pluralize(le.length, "it", "them")} at that scope${O}.`,
       };
     }
-    let ge = Kwe(X);
+    let ge = getEnabledPluginIdsForSource(X);
     D = T.filter((E) => !ge.has(E));
   }
   let { error: U } = await updateSettingsForSourceWithTransform(
@@ -963,9 +963,9 @@ async function $e(e, t, s, r, i) {
     i,
   );
   if (U) return { success: !1, message: `Failed to ${o} plugin: ${U.message}` };
-  if ((fu(i), t)) (cBt([P, ...D], i), Lqn([P, ...D], i));
+  if ((refreshPluginState(i), t)) (initPluginUsage([P, ...D], i), touchPluginUsage([P, ...D], i));
   let { name: C } = splitPluginId(P),
-    ce = Ldn(N),
+    ce = formatRequiredByWarning(N),
     d =
       D.length > 0
         ? ` (also enabled ${D.length} ${pluralize(D.length, "dependency", "dependencies")}: ${D.map((F) => splitPluginId(F).name).join(", ")})`
@@ -987,10 +987,10 @@ async function m0e(e, t, s) {
 }
 async function AUn(e) {
   let t = getPluginEditableScopes();
-  await qwe();
-  let s = await Promise.all(y_e().map((_) => Fgn(_, e))),
+  await reloadPluginDirsFromDisk();
+  let s = await Promise.all(y_e().map((_) => syncedPluginMintedName(_, e))),
     r = dedupe(s.filter((_) => _ !== void 0).map((_) => `${_}@${SYNCED_PLUGIN_SOURCE}`)),
-    i = xmt(),
+    i = getEnabledPluginsBySettingsSource(),
     p = ((_) =>
       new Set(_.flatMap(({ record: N }) => Object.keys(N ?? {}).map(normalizeLookupKey))))(i),
     k = r.filter((_) => !p.has(normalizeLookupKey(_))),
@@ -999,7 +999,7 @@ async function AUn(e) {
     S = a(i.filter(({ source: _ }) => uD.includes(_))),
     w = v8e()
       .enabled.map((_) => _.source)
-      .filter((_) => !(iH(_) ? S : P).has(_)),
+      .filter((_) => !(isTrustedBuiltinPlugin(_) ? S : P).has(_)),
     X = [...k, ...w];
   if (t.size === 0 && X.length === 0)
     return { success: !0, message: "No enabled plugins to disable" };
@@ -1020,7 +1020,7 @@ async function AUn(e) {
     if (N) c.push(wr(`${_}: ${N.message}`));
     else A.push(_);
   }
-  if (X.length > 0) fu(e);
+  if (X.length > 0) refreshPluginState(e);
   if (c.length > 0)
     return {
       success: !1,
@@ -1103,7 +1103,7 @@ async function qe(
     };
   let A = w,
     c = A ? `${S}@${A}` : e,
-    _ = isHoverRestEnabled() && a !== void 0 ? await Zv(a) : hT(),
+    _ = isHoverRestEnabled() && a !== void 0 ? await readInstalledPluginsViaStorage(a) : readInstalledPluginsFile(),
     N = findKeyIgnoringCase(Object.keys(_.plugins), c);
   if (N === void 0 && A === void 0) {
     let u = filterPluginIdsByName(Object.keys(_.plugins), S).filter(
@@ -1138,7 +1138,7 @@ async function qe(
       failureCode: "plugin_policy_blocked",
     };
   if (A) {
-    let L = (await gl(a))[A]?.source;
+    let L = (await getKnownMarketplaces(a))[A]?.source;
     if (isSourceDisallowedOrUnverifiable(L))
       return {
         outcome: "failed",
@@ -1156,7 +1156,7 @@ async function qe(
         L.source === "claudeai")
     )
       try {
-        await eD(A, a, void 0, { skipIfRecent: !0 });
+        await refreshMarketplace(A, a, void 0, { skipIfRecent: !0 });
       } catch (G) {
         ((C = G instanceof Ui),
           (U = C
@@ -1168,7 +1168,7 @@ async function qe(
           ));
       }
   }
-  let ce = s ? await E5e(c, a) : await Qv(c, a);
+  let ce = s ? await findCachedPluginEntry(c, a) : await findPluginEntry(c, a);
   if (!ce)
     return {
       outcome: "failed",
@@ -1235,19 +1235,19 @@ async function qe(
   }
   let ee = ae(),
     T = b.version,
-    { enabled: de, disabled: oe } = s ? await ei(a) : await Ph(a),
-    le = Wqn(c, [...de, ...oe]),
+    { enabled: de, disabled: oe } = s ? await loadAllPluginsCacheOnly(a) : await loadAllPlugins(a),
+    le = collectDependencyRequirementsOn(c, [...de, ...oe]),
     ge = le.filter((u) => u.constraint.version !== void 0),
     E = le.map((u) => u.constraint.version).filter((u) => u !== void 0),
     H,
     ne = "",
-    O = await gl(a);
+    O = await getKnownMarketplaces(a);
   if (E.length > 0) {
-    let u = Hmt(E);
+    let u = intersectVersionRanges(E);
     if (!u.ok)
       return {
         outcome: "skipped",
-        message: `Skipped \u2014 ${Imt("Plugin", c, E, u.reason)}`,
+        message: `Skipped \u2014 ${formatDependencyVersionMismatch("Plugin", c, E, u.reason)}`,
         pluginId: c,
         scope: t,
         blockedBy: ge.map((Z) => Z.plugin.source),
@@ -1255,9 +1255,9 @@ async function qe(
         skipReason: "pinner_blocked",
       };
     let L = O[A ?? ""]?.source,
-      G = EEe(d.source) ?? (typeof d.source === "string" ? uyt(L) : null);
+      G = getSourceCloneUrl(d.source) ?? (typeof d.source === "string" ? getMarketplaceSourceUrl(L) : null);
     if (G !== null && u.range !== "*") {
-      let Z = await RWt(G, d.name, u.range);
+      let Z = await resolveVersionRange(G, d.name, u.range);
       if (Z === null)
         n(
           `updatePluginOp(${c}): no ${d.name}--v* tag satisfying ${u.range}; falling back to HEAD + post-fetch guard`,
@@ -1278,7 +1278,7 @@ async function qe(
         (ne = ` (highest tag satisfying ${E.join(", ")} from ${ge.map((Q) => Q.plugin.name).join(", ")})`),
         typeof d.source === "string")
       ) {
-        let Q = vWt(L, d.source);
+        let Q = resolveSubdirSource(L, d.source);
         if (Q !== null) d = { ...d, source: Q };
       }
     }
@@ -1318,7 +1318,7 @@ async function qe(
           : u,
       G = O[A ?? ""]?.source,
       Z = yD(c),
-      Q = Zne(Z, d.name),
+      Q = findSettingsDeclaredEntryAuth(Z, d.name),
       se =
         u.source === "archive"
           ? noe({
@@ -1357,7 +1357,7 @@ async function qe(
       let ke =
         d.version ??
         (u.source === "archive" && u.sha256 !== void 0
-          ? CWt(u.sha256)
+          ? formatShortHash(u.sha256)
           : void 0);
       if (ke !== void 0 && ke === T) {
         let Me = `${S} is already at the latest version (${T}).`;
@@ -1424,7 +1424,7 @@ async function qe(
         refreshRefusedByPolicy: C || void 0,
       };
     }
-    let V = await v5e(L, {
+    let V = await cachePlugin(L, {
       manifest: { name: d.name },
       storageV5: a,
       archiveAuth: await b1e({
@@ -1432,13 +1432,13 @@ async function qe(
         pluginName: d.name,
         marketplaceName: A,
         marketplaceSource: G,
-        trustedMarketplaceAuth: Qne(G, Z),
+        trustedMarketplaceAuth: findTrustedMarketplaceAuth(G, Z),
         trustedSettingsEntryAuth: Q,
         entry: d,
         runEntryHelper: P,
       }),
-      entryDeclaresComponents: k5e(d),
-      declaredComponentPaths: R5e(d),
+      entryDeclaresComponents: entryDeclaresComponents(d),
+      declaredComponentPaths: entryDeclaredComponentPaths(d),
       commandSourceConsent:
         j !== void 0
           ? { kind: "shown", command: j, pluginId: c }
@@ -1454,7 +1454,7 @@ async function qe(
       (ue = !0),
       (q = H?.sha ?? V.gitCommitSha),
       (K = V.manifest?.version));
-    let Ee = await UV(
+    let Ee = await resolvePluginVersion(
       c,
       d.source,
       V.manifest,
@@ -1468,11 +1468,11 @@ async function qe(
         ? `${Ee}-${H.sha.substring(0, 12)}`
         : Ee;
   } else {
-    let u = pw(F) !== void 0 ? "system" : "workspace",
-      L = await Due(c, F, d.source, O, pC(), a, u);
+    let u = findContainingSeedDir(F) !== void 0 ? "system" : "workspace",
+      L = await loadLocalMarketplace(c, F, d.source, O, getOperatorDeclaredMarketplaces(), a, u);
     if (L.kind === "location-error") throw L.error;
     if (L.kind !== "ok") {
-      let se = Dmt(L, F, d.source);
+      let se = describeMarketplaceLoadFailure(L, F, d.source);
       return {
         outcome: "failed",
         message: se.message,
@@ -1485,7 +1485,7 @@ async function qe(
     let G = O[A ?? ""],
       Z = G !== void 0 && Om(G.source);
     try {
-      if (Z) await dBt(a, v, u);
+      if (Z) await statLocalMarketplacePath(a, v, u);
       else await ee.stat(v);
     } catch (se) {
       if (W(se))
@@ -1500,11 +1500,11 @@ async function qe(
     }
     let Q;
     try {
-      Q = (await L3(v, d.name, d.source)).manifest;
+      Q = (await loadPluginManifest(v, d.name, d.source)).manifest;
     } catch {}
     ((K = Q?.version),
-      (q = (await cyt(v)) ?? void 0),
-      (B = await UV(c, d.source, Q, v, d.version)));
+      (q = (await resolveInstallPathGitSha(v)) ?? void 0),
+      (B = await resolvePluginVersion(c, d.source, Q, v, d.version)));
   }
   try {
     if (H === void 0 && E.length > 0) {
@@ -1528,13 +1528,13 @@ async function qe(
           skipReason: "pinner_blocked",
         };
     }
-    let u = u$(c, B),
+    let u = getVersionedCachePath(c, B),
       L = B === "unknown",
-      G = qde(c, B),
+      G = getVersionedZipCachePath(c, B),
       Z = !L && (b.version === B || b.installPath === u || b.installPath === G),
       Q = !1;
     if (Z && typeof d.source === "object" && d.source.source === "command") {
-      let re = NC(b.installPath, { trustedRoots: Oue(c, O, pC()) }),
+      let re = NC(b.installPath, { trustedRoots: getMarketplaceTrustedRoots(c, O, getOperatorDeclaredMarketplaces()) }),
         ie = re.absolute;
       Q =
         re.suspect ||
@@ -1542,7 +1542,7 @@ async function qe(
           ? cXe(ie)
           : ie.endsWith(".zip")
             ? El(ie)
-            : ere(ie, a))) ||
+            : cacheDirHasPluginContentStrict(ie, a))) ||
         (R$(d.source)
           ? await Qe(ie, J ?? b.sourceProducerPath)
           : await cXe(ie, { unclassifiableIsFarm: !0 }));
@@ -1554,7 +1554,7 @@ async function qe(
         (b.sourceCommand !== vC(d.source) ||
           (J !== void 0 && b.sourceProducerPath !== J))
       )
-        (await kgn(
+        (await updateInstalledPluginRecord(
           c,
           t,
           z,
@@ -1583,10 +1583,10 @@ async function qe(
         refreshRefusedByPolicy: C || void 0,
       };
     }
-    u = await zde(v, c, B, d, we, { forceOverwrite: L, storageV5: a });
+    u = await copyPluginToVersionedCache(v, c, B, d, we, { forceOverwrite: L, storageV5: a });
     let se = b.installPath;
     if (
-      (await kgn(
+      (await updateInstalledPluginRecord(
         c,
         t,
         z,
@@ -1609,13 +1609,13 @@ async function qe(
     )
       Koe();
     if (se && se !== u) {
-      let re = isHoverRestEnabled() && a !== void 0 ? await Zv(a) : hT();
+      let re = isHoverRestEnabled() && a !== void 0 ? await readInstalledPluginsViaStorage(a) : readInstalledPluginsFile();
       if (
         !Object.values(re.plugins).some((V) =>
           V.some((Ee) => Ee.installPath === se),
         )
       )
-        await cY(se, a);
+        await markVersionOrphaned(se, a);
     }
     let me = z ? `${t} (${z})` : t,
       Pe =
@@ -1633,17 +1633,17 @@ async function qe(
       refreshRefusedByPolicy: C || void 0,
     };
   } finally {
-    let u = u$(c, B);
+    let u = getVersionedCachePath(c, B);
     if (ue && v !== u && !resolve(u).startsWith(resolve(v) + He))
       await ee.rm(v, { recursive: !0, force: !0 });
   }
 }
 async function g0e(e, t, s) {
-  let r = t ?? (await E5e(e, s))?.entry;
+  let r = t ?? (await findCachedPluginEntry(e, s))?.entry;
   if (!r || typeof r.source !== "object" || r.source.source !== "archive")
     return null;
   if (isPluginBlockedByPolicy(e)) return null;
-  let i = await Ql(s),
+  let i = await getKnownMarketplacesOrEmpty(s),
     o = yD(e);
   if (o !== void 0 && isSourceDisallowedOrUnverifiable(i[o]?.source)) return null;
   let p = lJ(e, i),
@@ -1653,7 +1653,7 @@ async function g0e(e, t, s) {
       entry: r,
       archiveUrl: r.source.url,
       marketplaceSource: p,
-      trustedSettingsEntryAuth: Zne(o, r.name),
+      trustedSettingsEntryAuth: findSettingsDeclaredEntryAuth(o, r.name),
     });
   } catch (a) {
     if (a instanceof k$) return null;
@@ -1685,12 +1685,12 @@ function Ye(e, t, s) {
   };
 }
 async function sOt(e, t) {
-  let s = await gl(t),
+  let s = await getKnownMarketplaces(t),
     r;
   for (let [i, o] of Object.entries(s)) {
     if (!isSourceAllowedByPolicy(o.source)) continue;
     try {
-      let k = (await Jv(i, t)).plugins.find((a) => a.name === e);
+      let k = (await loadMarketplace(i, t)).plugins.find((a) => a.name === e);
       if (k)
         return {
           entry: k,
@@ -1739,7 +1739,7 @@ function Je(e, t, s) {
       break;
     }
   }
-  let i = Bqn(e),
+  let i = getPluginEnablementRecords(e),
     o = findPluginEnablementEntry(
       e,
       i.map(({ record: k }) => (k === void 0 ? void 0 : s(k))),
@@ -1778,7 +1778,7 @@ function Le(e, t, s, r) {
   };
 }
 function en(e, t) {
-  if (!iH(e)) return;
+  if (!isTrustedBuiltinPlugin(e)) return;
   let s = new Set(ms());
   for (let r of ["policySettings", "flagSettings"]) {
     if (!s.has(r)) continue;

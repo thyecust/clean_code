@@ -23,7 +23,7 @@ import { hasDisableClaudeAiConnectors } from "../../01-核心基础设施/核心
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isNestedGitLabProject, detectCurrentRepositoryWithHost, parseGitRemote } from "../Git-Worktree/git-repository-detection.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
-import { MM, hne, Q4n, jgn, getMcpServerSignature, shouldSkipClaudeAiFetchForEnterpriseLockdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { fetchRemoteEnvironments, createDefaultRemoteEnvironment, checkGithubAccess, normalizeClaudeAiServerId, getMcpServerSignature, shouldSkipClaudeAiFetchForEnterpriseLockdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getSuppressedClaudeAiConnectors } from "../权限系统/chunk-fjrcf22x.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
@@ -37,7 +37,7 @@ function M() {
 }
 var O = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 function z(s) {
-  let t = jgn(s),
+  let t = normalizeClaudeAiServerId(s),
     i = "mcpsrv_";
   if (!t.startsWith("mcpsrv_")) return null;
   let r = t.slice(7).slice(2),
@@ -428,7 +428,7 @@ function registerScheduleRemoteAgentsSkill() {
         );
       else {
         try {
-          i = await MM(void 0, t.storageV5, t.credentials);
+          i = await fetchRemoteEnvironments(void 0, t.storageV5, t.credentials);
         } catch (l) {
           return (
             n(`[schedule] Failed to fetch environments: ${l}`, {
@@ -444,7 +444,7 @@ function registerScheduleRemoteAgentsSkill() {
         }
         if (i.length === 0)
           try {
-            ((p = await hne()), (i = [p]));
+            ((p = await createDefaultRemoteEnvironment()), (i = [p]));
           } catch (l) {
             return (
               n(`[schedule] Failed to create environment: ${l}`, {
@@ -464,7 +464,7 @@ function registerScheduleRemoteAgentsSkill() {
             "Not in a git repo \u2014 you'll need to specify a repo URL manually (or skip repos entirely).",
           );
         else if (isGitHubHost(e.host)) {
-          let { hasAccess: l, transient: w } = await Q4n(e.owner, e.name);
+          let { hasAccess: l, transient: w } = await checkGithubAccess(e.owner, e.name);
           if (!l) {
             h = !0;
             let D = M(),

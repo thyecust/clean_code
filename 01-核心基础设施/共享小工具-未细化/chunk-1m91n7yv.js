@@ -13,7 +13,7 @@ import { BRIEF_TOOL_NAME } from "./chunk-q599wyee.js";
 import { SEND_USER_FILE_TOOL_NAME } from "./chunk-a5errgr8.js";
 import { compareToolNames, matchesAnyToolName } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import { qtr } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { xF, pc, nh, Kp, dWt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { partition, uniqBy, isMcpTool, isToolFromMcpServer, filterToolsForRemoteDevice } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { qbt } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { isCoordinatorCommsMcpTool } from "./chunk-qg9n8r78.js";
 var p = new Set([BRIEF_TOOL_NAME, SEND_USER_FILE_TOOL_NAME]),
@@ -24,7 +24,7 @@ function c(o) {
 function withoutStaticMcpShadows(o, t) {
   if (t.length === 0) return o;
   let e = t.map((n) => [n, Oa(n)]),
-    r = o.filter((n) => !e.some(([l, i]) => Kp(n, l, i)));
+    r = o.filter((n) => !e.some(([l, i]) => isToolFromMcpServer(n, l, i)));
   return r.length === o.length ? o : r;
 }
 function f(o) {
@@ -50,7 +50,7 @@ function applyCoordinatorToolFilter(o) {
   );
 }
 function mergeAndFilterTools(o, t, e, r) {
-  let [n, l] = xF(dWt(pc([...o, ...t], "name"), r), nh),
+  let [n, l] = partition(filterToolsForRemoteDevice(uniqBy([...o, ...t], "name"), r), isMcpTool),
     i = [...l.sort(compareToolNames), ...n.sort(compareToolNames)];
   if (s) {
     if (s.isCoordinatorMode()) return applyCoordinatorToolFilter(i);

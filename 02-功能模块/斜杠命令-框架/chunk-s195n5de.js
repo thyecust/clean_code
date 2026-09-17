@@ -32,67 +32,67 @@ import { iA, Xy } from "../权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
 import { isSilentAbortReason, shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
-  Nft,
+  getCloudReviewEntitlementMessage,
   getCommandName,
   isCommandEnabled,
-  Y$t,
-  pue,
+  getCommandContext,
+  isCommandImmediate,
   findCommand,
-  oV,
+  isSensitiveCommandInput,
   getCommand,
-  XGn,
-  $S,
-  gr,
-  cT,
-  W4e,
-  lX,
-  WF,
-  I2,
-  kmt,
-  cX,
-  Gdn,
-  UBt,
+  buildForkedSkillLaunchTag,
+  escapeForkedSkillLaunchTag,
+  sanitizeDisplayTextWithoutRedaction,
+  recordPluginUsage,
+  emitSkillActivatedEvent,
+  buildSkillSourceFields,
+  buildSkillNameInfo,
+  isOfficialMarketplacePlugin,
+  getPluginNameFields,
+  getServerAttributionFields,
+  applySkillPromptHook,
+  getMessageContentLength,
   hasPermissionsToUseTool,
   isSkillExcludedFromModel,
   isSkillOff,
-  wV,
-  qVe,
-  Ck,
-  cjt,
-  nht,
-  wne,
-  X2,
-  UTe,
-  wLe,
+  isSkillsSyncVetoed,
+  getCommandDisplayInfo,
+  recordPluginActivity,
+  inferWakeupSource,
+  recordSkillInvocation,
+  compactionResultToMessages,
+  ensureWebFetchToolAvailable,
+  collectAsyncIterable,
+  getSkillVerificationCommand,
   prepareForkedCommandContext,
   extractResultText,
-  VKe,
-  I6t,
-  O6t,
-  D6t,
-  Vne,
-  Kne,
-  jmn,
-  C_t,
+  getTeamArtifactTipAnalytics,
+  createModelRestrictedNotificationHandler,
+  shouldRunSkillInBackground,
+  spawnForkedSkillAgent,
+  findClosestName,
+  damerauLevenshteinDistance,
+  executeUserPromptExpansionHooks,
+  buildSkillScopedVariantNote,
   runAgent,
-  EE,
-  dEe,
-  Lde,
+  resolveAgentTools,
+  isTerminalApiErrorMessage,
+  adoptPublishArmsForSubagent,
   getAttachmentMessages,
   createAttachmentMessage,
-  tg,
-  MEe,
-  Re,
-  m$,
-  PI,
-  GV,
-  qV,
-  wp,
-  YWt,
-  B_,
-  Ht,
-  em,
-  $l,
+  findLastAssistantMessage,
+  contentHasToolResult,
+  createUserMessage,
+  prependPrecedingInputBlocks,
+  createInterruptedMessage,
+  createLocalCommandCaveatMessage,
+  buildCommandTags,
+  normalizeMessageBlocks,
+  isLocalCommandMessage,
+  getMessageContentText,
+  createSystemInfoMessage,
+  createLocalCommandMessage,
+  isCompactBoundaryMessage,
   builtInCommandNames,
   shippedCommandNames,
   getBuiltinCommands,
@@ -272,7 +272,7 @@ async function Pe(e, o, t) {
       }
       if (T.blockingError)
         (m.push(
-          Re({ content: t.getStopHookMessage(T.blockingError), isMeta: !0 }),
+          createUserMessage({ content: t.getStopHookMessage(T.blockingError), isMeta: !0 }),
         ),
           (l = !0));
       if (T.additionalContexts && T.additionalContexts.length > 0)
@@ -287,7 +287,7 @@ async function Pe(e, o, t) {
         ),
           (l = !0));
     }
-    if (v.length > 0) m.push(Ht(`Stop hook error: ${v.join("; ")}`, "warning"));
+    if (v.length > 0) m.push(createSystemInfoMessage(`Stop hook error: ${v.join("; ")}`, "warning"));
   } catch (_) {
     n(`Forked command Stop hooks failed: ${String(_)}`, { level: "error" });
   }
@@ -314,24 +314,24 @@ async function Pe(e, o, t) {
 }
 async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
   let x = bh(),
-    { sanitizedName: V, skillNameHash: q } = WF({
+    { sanitizedName: V, skillNameHash: q } = buildSkillNameInfo({
       rawName: e.name,
       canonicalName: e.name,
       isMcp: e.loadedFrom === "mcp",
       isBuiltIn: builtInCommandNames().has(e.name),
       isBundled: e.source === "bundled",
-      isOfficial: I2(e),
+      isOfficial: isOfficialMarketplacePlugin(e),
     });
   logEvent("tengu_slash_command_forked", {
     command_name: V,
     ...q,
     _PROTO_skill_name: e.name,
     invocation_trigger: S("user-slash"),
-    ...lX(e.source, e.loadedFrom, e.kind, e.createdBy),
-    ...VKe(e.source, e.name),
-    ...cX(e),
+    ...buildSkillSourceFields(e.source, e.loadedFrom, e.kind, e.createdBy),
+    ...getTeamArtifactTipAnalytics(e.source, e.name),
+    ...getServerAttributionFields(e),
   });
-  let Z = O6t(e, T),
+  let Z = shouldRunSkillInBackground(e, T),
     te = Z
       ? {
           agentId: x,
@@ -366,14 +366,14 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
     E =
       p.length > 0 ? [...(t.permissionLayers ?? []), ...p] : t.permissionLayers;
   if (l.length > 0 || m.length > 0)
-    I.push(Re({ content: [...l, ...m], isMeta: !0 }));
+    I.push(createUserMessage({ content: [...l, ...m], isMeta: !0 }));
   if (B && B.length > 0) I.push(createAttachmentMessage({ type: "inlined_image_paths", paths: B }));
-  let H = await C_t(e, sn(), {
+  let H = await buildSkillScopedVariantNote(e, sn(), {
     options: {
-      tools: EE(
+      tools: resolveAgentTools(
         M,
         k
-          ? X2(M, r, getToolPermissionContext(t), {
+          ? ensureWebFetchToolAvailable(M, r, getToolPermissionContext(t), {
               activeAgents: t.options.agentDefinitions.activeAgents,
             })
           : r,
@@ -387,8 +387,8 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
   I.push(...v);
   let j = e.getEffort?.(o, t) ?? e.getDefaultEffort?.(o, t)?.value ?? e.effort,
     O = j !== void 0 ? { ...M, effort: j } : M,
-    R = Re({
-      content: m$({
+    R = createUserMessage({
+      content: prependPrecedingInputBlocks({
         inputString: `/${getCommandName(e)} ${o}`.trim(),
         precedingInputBlocks: l.length > 0 ? [...l, ...m] : m,
       }),
@@ -403,7 +403,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
     P?.markTurnActive(T ? void 0 : `/${getCommandName(e)} ${o}`.trim());
     let Q;
     try {
-      Q = await D6t({
+      Q = await spawnForkedSkillAgent({
         agentId: x,
         agentDefinition: O,
         command: e,
@@ -424,7 +424,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
     } catch (J) {
       if ((await P?.settleTurnEnd(null), yt(J)))
         return {
-          messages: [R, PI({ toolUse: !1 })],
+          messages: [R, createInterruptedMessage({ toolUse: !1 })],
           shouldQuery: !1,
           command: e,
           aborted: !0,
@@ -433,7 +433,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
       return {
         messages: [
           R,
-          Re({
+          createUserMessage({
             content: `<local-command-stderr>${Nt(commandThrowTextForTranscript(J, e.name, t.session))}</local-command-stderr>`,
           }),
         ],
@@ -449,10 +449,10 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
         {
           messages: [
             R,
-            em(
-              `<local-command-stdout>Running in the background as @${$S(Qn(Q.name))}</local-command-stdout>
+            createLocalCommandMessage(
+              `<local-command-stdout>Running in the background as @${escapeForkedSkillLaunchTag(Qn(Q.name))}</local-command-stdout>
 ` +
-                XGn({
+                buildForkedSkillLaunchTag({
                   agentId: Q.agentId,
                   skillName: e.name,
                   description: `/${getCommandName(e)} ${o}`.trim(),
@@ -502,7 +502,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
     for await (let Q of runAgent({
       agentDefinition: O,
       promptMessages: I,
-      onModelRestricted: I6t(attributionSkillName(e), t.onQueryEvent),
+      onModelRestricted: createModelRestrictedNotificationHandler(attributionSkillName(e), t.onQueryEvent),
       toolUseContext: { ...t, getAppState: d, permissionLayers: E },
       canUseTool: c,
       isAsync: !1,
@@ -522,9 +522,9 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
       )
         continue;
       N.push(Q);
-      let J = wp([Q]);
+      let J = normalizeMessageBlocks([Q]);
       if (Q.type === "assistant") {
-        let Y = UBt(Q);
+        let Y = getMessageContentLength(Q);
         if (Y > 0)
           t.onQueryEvent?.({ type: "response_length", op: "add", delta: Y });
         let fe = J[0];
@@ -535,13 +535,13 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
         if (Y && Y.type === "user") (D.push(de(Y)), se());
       }
     }
-    if (!dEe(tg(N))) Lde(x, t);
+    if (!isTerminalApiErrorMessage(findLastAssistantMessage(N))) adoptPublishArmsForSubagent(x, t);
   } catch (Q) {
     if (yt(Q))
       return (
         await P?.settleTurnEnd(null),
         {
-          messages: [R, PI({ toolUse: !1 })],
+          messages: [R, createInterruptedMessage({ toolUse: !1 })],
           shouldQuery: !1,
           command: e,
           aborted: !0,
@@ -553,7 +553,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
     return {
       messages: [
         R,
-        Re({
+        createUserMessage({
           content: `<local-command-stderr>${Nt(commandThrowTextForTranscript(Q, e.name, t.session))}</local-command-stderr>`,
         }),
         ...J.messages,
@@ -573,7 +573,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
   return {
     messages: [
       R,
-      em(`<local-command-stdout>${$S(pe)}</local-command-stdout>`),
+      createLocalCommandMessage(`<local-command-stdout>${escapeForkedSkillLaunchTag(pe)}</local-command-stdout>`),
       ...F.messages,
     ],
     shouldQuery: F.requestQuery,
@@ -612,24 +612,24 @@ function looksLikeCommand(e) {
   return /^[a-zA-Z0-9_][a-zA-Z0-9:_-]*$/.test(e);
 }
 function commandThrowTextForTranscript(e, o, t) {
-  let m = gr(o, 200),
+  let m = sanitizeDisplayTextWithoutRedaction(o, 200),
     l = Qn(o);
   if (yt(e)) {
     if (mayHaveRemoteClient(t)) return (n(`${l} aborted: ${String(e)}`), "Interrupted");
-    return $S(e instanceof Error ? e.message || "Interrupted" : "Interrupted");
+    return escapeForkedSkillLaunchTag(e instanceof Error ? e.message || "Interrupted" : "Interrupted");
   }
-  if (e instanceof YP) return $S(e.message);
+  if (e instanceof YP) return escapeForkedSkillLaunchTag(e.message);
   if (mayHaveRemoteClient(t))
     return (
       n(`${l} threw: ${String(e)}`, { level: "error" }),
       `${m} failed (detail withheld on this connection)`
     );
-  return $S(String(e));
+  return escapeForkedSkillLaunchTag(String(e));
 }
 async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z) {
   function te() {
     let w = randomUUID(),
-      L = MEe(o) ? void 0 : w;
+      L = contentHasToolResult(o) ? void 0 : w;
     if (L !== void 0) Rje(L);
     let z = Xy(l.options.mainLoopModel, getEffortValue(l));
     logEvent("tengu_input_prompt", {
@@ -646,8 +646,8 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       }),
       {
         messages: [
-          Re({
-            content: m$({ inputString: e, precedingInputBlocks: o }),
+          createUserMessage({
+            content: prependPrecedingInputBlocks({ inputString: e, precedingInputBlocks: o }),
             uuid: ee,
             promptSource: T,
             promptId: L,
@@ -667,9 +667,9 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
     let w = "Commands are in the form `/command [args]`";
     return {
       messages: [
-        GV(),
+        createLocalCommandCaveatMessage(),
         ...m,
-        Re({ content: m$({ inputString: w, precedingInputBlocks: o }) }),
+        createUserMessage({ content: prependPrecedingInputBlocks({ inputString: w, precedingInputBlocks: o }) }),
       ],
       shouldQuery: !1,
       resultText: w,
@@ -710,21 +710,21 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
           (d = w.targetName),
           (p = w.remainingArgs));
       else if (b.name === CODE_REVIEW_SKILL_NAME) {
-        let z = Nft();
-        if (z) r = Ht(`${z} Running a local review instead.`, "warning");
+        let z = getCloudReviewEntitlementMessage();
+        if (z) r = createSystemInfoMessage(`${z} Running a local review instead.`, "warning");
       }
     }
   }
-  if (b?.loadedFrom === "syncedSkills" && wV()) b = void 0;
+  if (b?.loadedFrom === "syncedSkills" && isSkillsSyncVetoed()) b = void 0;
   let C = builtInCommandNames().has(d);
   if (isSlashCommandBlockedByEndedByModel(b, l.getAppState().endedByModel)) {
     let w = appendEndedByModelSuffix(
       "Claude ended this conversation. Start a new session (or /clear) to continue.",
     );
-    return { messages: [Ht(w, "warning")], shouldQuery: !1, resultText: w };
+    return { messages: [createSystemInfoMessage(w, "warning")], shouldQuery: !1, resultText: w };
   }
   let E = b?.type === "prompt" && b.source === "bundled",
-    H = b?.type === "prompt" && I2(b),
+    H = b?.type === "prompt" && isOfficialMarketplacePlugin(b),
     j = A || (b?.type === "prompt" && b.source === "mcp");
   if (!b) {
     let w = !1;
@@ -746,14 +746,14 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
             "cmd_dispatch",
             re === "stale_list" ? "cmd_stale_list" : `cmd_policy_${re}`,
           ));
-        let me = $S(Qn(d)),
-          ue = !p ? "" : oV(X, p) ? "***" : $S(nq(p));
+        let me = escapeForkedSkillLaunchTag(Qn(d)),
+          ue = !p ? "" : isSensitiveCommandInput(X, p) ? "***" : escapeForkedSkillLaunchTag(nq(p));
         if (l.options.isNonInteractiveSession)
           return {
             messages: [
               ...m,
-              em(`/${me}${ue ? ` ${ue}` : ""}`),
-              em(`<local-command-stdout>${ne}</local-command-stdout>`),
+              createLocalCommandMessage(`/${me}${ue ? ` ${ue}` : ""}`),
+              createLocalCommandMessage(`<local-command-stdout>${ne}</local-command-stdout>`),
             ],
             shouldQuery: !1,
             resultText: ne,
@@ -761,9 +761,9 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
         return {
           messages: [
             ...m,
-            Ht(ne, "warning"),
+            createSystemInfoMessage(ne, "warning"),
             ...(ue && ue !== "***"
-              ? [Ht(`Args from /${me}: ${ue}`, "warning")]
+              ? [createSystemInfoMessage(`Args from /${me}: ${ue}`, "warning")]
               : []),
           ],
           shouldQuery: !1,
@@ -772,25 +772,25 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       }
       if (l.options.isNonInteractiveSession && builtInCommandNames().has(d)) {
         let X = getBuiltinCommands(),
-          ne = Ae(d, X) ?? `/${$S(Qn(d))} isn't available in this environment.`;
+          ne = Ae(d, X) ?? `/${escapeForkedSkillLaunchTag(Qn(d))} isn't available in this environment.`;
         (logEvent("tengu_input_slash_invalid", {
           input_length: d.length,
           had_suggestion: !1,
         }),
           logFeatureBad("cmd_dispatch", "cmd_unavailable_headless"));
         let re = findCommand(d, X),
-          me = !p ? "" : re !== void 0 && oV(re, p) ? "***" : $S(nq(p));
+          me = !p ? "" : re !== void 0 && isSensitiveCommandInput(re, p) ? "***" : escapeForkedSkillLaunchTag(nq(p));
         return {
           messages: [
             ...m,
-            em(`/${$S(Qn(d))}${me ? ` ${me}` : ""}`),
-            em(`<local-command-stdout>${ne}</local-command-stdout>`),
+            createLocalCommandMessage(`/${escapeForkedSkillLaunchTag(Qn(d))}${me ? ` ${me}` : ""}`),
+            createLocalCommandMessage(`<local-command-stdout>${ne}</local-command-stdout>`),
           ],
           shouldQuery: !1,
           resultText: ne,
         };
       }
-      let z = Vne(
+      let z = findClosestName(
         d,
         l.options.commands
           .filter(
@@ -807,11 +807,11 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
         input_length: d.length,
         is_mcp_template_unmatched: I,
         had_suggestion: Boolean(z),
-        suggestion_distance: z ? Kne(d, z) : void 0,
+        suggestion_distance: z ? damerauLevenshteinDistance(d, z) : void 0,
       }),
         logFeatureBad("cmd_dispatch", "cmd_unknown"));
-      let ee = gr(d, 512),
-        he = z ? gr(z, 200) : void 0,
+      let ee = sanitizeDisplayTextWithoutRedaction(d, 512),
+        he = z ? sanitizeDisplayTextWithoutRedaction(z, 200) : void 0,
         ye = z
           ? `Unknown command: /${ee}. Did you mean /${he}?`
           : `Unknown command: /${ee}`;
@@ -819,8 +819,8 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
         return {
           messages: [
             ...m,
-            em(`/${ee}${p ? ` ${$S(nq(p))}` : ""}`),
-            em(`<local-command-stdout>${ye}</local-command-stdout>`),
+            createLocalCommandMessage(`/${ee}${p ? ` ${escapeForkedSkillLaunchTag(nq(p))}` : ""}`),
+            createLocalCommandMessage(`<local-command-stdout>${ye}</local-command-stdout>`),
           ],
           shouldQuery: !1,
           resultText: ye,
@@ -828,8 +828,8 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       return {
         messages: [
           ...m,
-          Ht(ye, "warning"),
-          ...(p ? [Ht(`Args from unknown skill: ${nq(p)}`, "warning")] : []),
+          createSystemInfoMessage(ye, "warning"),
+          ...(p ? [createSystemInfoMessage(`Args from unknown skill: ${nq(p)}`, "warning")] : []),
         ],
         shouldQuery: !1,
         resultText: ye,
@@ -845,7 +845,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
               (b.source === "bundled" || b.source === "builtin"))
           ? "builtin"
           : "custom",
-    R = oV(b, p) ? `/${d} ***` : e;
+    R = isSensitiveCommandInput(b, p) ? `/${d} ***` : e;
   if (!(l.deferSlashToEngine?.(b) ?? !1)) {
     let w = randomUUID();
     (Rje(w),
@@ -873,12 +873,12 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
     settledInPlace: Qe,
   } = await Ke(d, p, l, o, t, _, v, c, U, P, M, k, B, T, x, V, q, Z);
   if (F.type === "prompt" && F.pluginInfo)
-    Ck(
+    recordPluginActivity(
       F.pluginInfo.repository,
       "command",
-      qVe(F, F.pluginInfo.pluginManifest.name),
+      getCommandDisplayInfo(F, F.pluginInfo.pluginManifest.name),
     );
-  let { sanitizedName: He, skillNameHash: Be } = WF({
+  let { sanitizedName: He, skillNameHash: Be } = buildSkillNameInfo({
     rawName: d,
     canonicalName: F.name,
     isMcp: j || F.loadedFrom === "mcp",
@@ -889,21 +889,21 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
   function Te() {
     let w = { input: He, ...Be };
     if (F.type === "prompt" && F.pluginInfo) {
-      Object.assign(w, kmt(F));
+      Object.assign(w, getPluginNameFields(F));
       let L = F.pluginInfo.pluginManifest.version;
-      if (L && I2(F)) w.plugin_version = Ms(L);
+      if (L && isOfficialMarketplacePlugin(F)) w.plugin_version = Ms(L);
     }
-    if (F.type === "prompt") Object.assign(w, cX(F));
+    if (F.type === "prompt") Object.assign(w, getServerAttributionFields(F));
     logEvent("tengu_input_command", {
       ...w,
       invocation_trigger: S("user-slash"),
-      ...lX(
+      ...buildSkillSourceFields(
         F.type === "prompt" ? F.source : void 0,
         F.loadedFrom,
         F.kind,
         F.type === "prompt" ? F.createdBy : void 0,
       ),
-      ...VKe(F.type === "prompt" ? F.source : void 0, d),
+      ...getTeamArtifactTipAnalytics(F.type === "prompt" ? F.source : void 0, d),
       ...(F.type === "prompt" && { command_content_chars: F.contentLength }),
       ...(F.type === "prompt" && { _PROTO_skill_name: F.name }),
       ...!1,
@@ -940,7 +940,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       }),
         logFeatureBad("cmd_dispatch", "cmd_unknown"));
     return {
-      messages: [GV(), ...D],
+      messages: [createLocalCommandCaveatMessage(), ...D],
       shouldQuery: G,
       allowedTools: le,
       disallowedTools: de,
@@ -948,19 +948,19 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
     };
   }
   if (!Y) (logFeatureOk("cmd_dispatch"), Te());
-  let Le = D.length > 0 && D[0] && $l(D[0]),
+  let Le = D.length > 0 && D[0] && isCompactBoundaryMessage(D[0]),
     Ie =
       G ||
       D.every(
         (w) =>
-          YWt(w) ||
+          isLocalCommandMessage(w) ||
           (w.type === "system" && w.subtype === "informational") ||
           (w.type === "user" && w.isMeta),
       ) ||
       Le ||
       Y
         ? D
-        : [GV(), ...D];
+        : [createLocalCommandCaveatMessage(), ...D];
   return {
     messages: r && G ? [...Ie, r] : Ie,
     shouldQuery: G,
@@ -979,8 +979,8 @@ function Se(e, o) {
   let t = `/${getCommandName(e)} opens an interactive panel and isn't available in this environment. Run it from the Claude Code terminal instead.`;
   return {
     messages: [
-      em(we(e, o)),
-      em(`<local-command-stdout>${t}</local-command-stdout>`),
+      createLocalCommandMessage(we(e, o)),
+      createLocalCommandMessage(`<local-command-stdout>${t}</local-command-stdout>`),
     ],
     shouldQuery: !1,
     command: e,
@@ -992,19 +992,19 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
     d = cmdFeature(shippedCommandNames().has(e) ? e : "custom");
   if (!isCommandEnabled(s)) {
     logFeatureBad(d, "cmd_policy_disabled");
-    let p = `/${$S(Qn(e))} isn't available in this session.`;
+    let p = `/${escapeForkedSkillLaunchTag(Qn(e))} isn't available in this session.`;
     if (t.options.isNonInteractiveSession)
       return {
         messages: [
-          em(we(s, o)),
-          em(`<local-command-stdout>${p}</local-command-stdout>`),
+          createLocalCommandMessage(we(s, o)),
+          createLocalCommandMessage(`<local-command-stdout>${p}</local-command-stdout>`),
         ],
         shouldQuery: !1,
         command: s,
         resultText: p,
       };
     return {
-      messages: [Ht(p, "warning")],
+      messages: [createSystemInfoMessage(p, "warning")],
       shouldQuery: !1,
       command: s,
       resultText: p,
@@ -1012,23 +1012,23 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
   }
   if (isSkillOff(s)) {
     if ((logFeatureBad(d, "cmd_skill_override_off"), t.options.isNonInteractiveSession)) {
-      let M = `Skill "${gr(s.name, 200)}" is disabled via skillOverrides. Remove the override from your settings to run it.`;
+      let M = `Skill "${sanitizeDisplayTextWithoutRedaction(s.name, 200)}" is disabled via skillOverrides. Remove the override from your settings to run it.`;
       return {
         messages: [
-          em(we(s, o)),
-          em(`<local-command-stdout>${M}</local-command-stdout>`),
+          createLocalCommandMessage(we(s, o)),
+          createLocalCommandMessage(`<local-command-stdout>${M}</local-command-stdout>`),
         ],
         shouldQuery: !1,
         command: s,
         resultText: M,
       };
     }
-    let p = `Skill "${gr(s.name, 200)}" is disabled via skillOverrides. Re-enable it in /skills or remove the override from your settings to run it.`,
-      A = !o ? "" : oV(s, o) ? "***" : $S(nq(o));
+    let p = `Skill "${sanitizeDisplayTextWithoutRedaction(s.name, 200)}" is disabled via skillOverrides. Re-enable it in /skills or remove the override from your settings to run it.`,
+      A = !o ? "" : isSensitiveCommandInput(s, o) ? "***" : escapeForkedSkillLaunchTag(nq(o));
     return {
       messages: [
-        Ht(p, "warning"),
-        ...(o ? [Ht(`Args from disabled skill: ${A}`, "warning")] : []),
+        createSystemInfoMessage(p, "warning"),
+        ...(o ? [createSystemInfoMessage(`Args from disabled skill: ${A}`, "warning")] : []),
       ],
       shouldQuery: !1,
       command: s,
@@ -1036,8 +1036,8 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
     };
   }
   if (s.type === "prompt" && s.userInvocable !== !1)
-    nht(t.session, s.name, t.storageV5);
-  if (s.type === "prompt" && s.pluginInfo) cT(s.pluginInfo.repository);
+    recordSkillInvocation(t.session, s.name, t.storageV5);
+  if (s.type === "prompt" && s.pluginInfo) recordPluginUsage(s.pluginInfo.repository);
   if (!t.deferSlashToEngine?.(s))
     _e({
       commandName: s.name,
@@ -1051,11 +1051,11 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
       logFeatureBad(d, "cmd_not_user_invocable"),
       {
         messages: [
-          Re({
-            content: m$({ inputString: `/${Qn(e)}`, precedingInputBlocks: m }),
+          createUserMessage({
+            content: prependPrecedingInputBlocks({ inputString: `/${Qn(e)}`, precedingInputBlocks: m }),
             uuid: v,
           }),
-          Re({
+          createUserMessage({
             content: `This skill can only be invoked by Claude, not directly by users. Ask Claude to use the "${Qn(e)}" skill for you.`,
           }),
         ],
@@ -1083,7 +1083,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                 return;
               }
               let C = (k?.metaMessages ?? []).map((H) =>
-                  Re({ content: H, isMeta: !0 }),
+                  createUserMessage({ content: H, isMeta: !0 }),
                 ),
                 E =
                   t.presentation === "fullscreen" &&
@@ -1095,25 +1095,25 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                     ? E
                       ? C
                       : [
-                          em(ie(s, o)),
-                          em(
-                            `<local-command-stdout>${$S(String(r))}</local-command-stdout>`,
+                          createLocalCommandMessage(ie(s, o)),
+                          createLocalCommandMessage(
+                            `<local-command-stdout>${escapeForkedSkillLaunchTag(String(r))}</local-command-stdout>`,
                           ),
                           ...C,
                         ]
                     : [
-                        Re({
-                          content: m$({
+                        createUserMessage({
+                          content: prependPrecedingInputBlocks({
                             inputString: ie(s, o),
                             precedingInputBlocks: m,
                           }),
                           uuid: v,
                         }),
                         r
-                          ? Re({
+                          ? createUserMessage({
                               content: `<local-command-stdout>${r}</local-command-stdout>`,
                             })
-                          : Re({
+                          : createUserMessage({
                               content: `<local-command-stdout>${sp}</local-command-stdout>`,
                             }),
                         ...C,
@@ -1129,7 +1129,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
             (logFeatureBad(d, "cmd_local_jsx_no_dialog_resolution"), p(Se(s, o)));
             return;
           }
-          let b = pue(s, o, t.presentation ?? "inline");
+          let b = isCommandImmediate(s, o, t.presentation ?? "inline");
           I()
             .then((r) =>
               r.call(
@@ -1181,15 +1181,15 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
               }
               p({
                 messages: [
-                  Re({
-                    content: m$({
+                  createUserMessage({
+                    content: prependPrecedingInputBlocks({
                       inputString: ie(s, o),
                       precedingInputBlocks: m,
                     }),
                     uuid: v,
                   }),
-                  em(
-                    `<local-command-stderr>${Nt($S(commandThrowTextForTranscript(r, s.name, t.session)))}</local-command-stderr>`,
+                  createLocalCommandMessage(
+                    `<local-command-stderr>${Nt(escapeForkedSkillLaunchTag(commandThrowTextForTranscript(r, s.name, t.session)))}</local-command-stderr>`,
                   ),
                 ],
                 shouldQuery: !1,
@@ -1200,8 +1200,8 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
       case "local": {
         if (t.deferSlashToEngine?.(s)) {
           let M = `/${getCommandName(s)} ${o}`.trim(),
-            I = Re({
-              content: m$({ inputString: M, precedingInputBlocks: m }),
+            I = createUserMessage({
+              content: prependPrecedingInputBlocks({ inputString: M, precedingInputBlocks: m }),
               uuid: v,
             });
           return {
@@ -1211,14 +1211,14 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
             engineDeferredSlash: { text: M, messageUuid: I.uuid },
           };
         }
-        let p = Re({
-            content: m$({ inputString: ie(s, o), precedingInputBlocks: m }),
+        let p = createUserMessage({
+            content: prependPrecedingInputBlocks({ inputString: ie(s, o), precedingInputBlocks: m }),
             uuid: v,
           }),
           A = Pt() && deriveRequires(s).workspace;
         if (A) t.applyMessageOp({ type: "append", messages: [p] });
         try {
-          let M = GV(),
+          let M = createLocalCommandCaveatMessage(),
             b = (await s.load()).call(o, { ...t, submissionOrigin: q }, W ?? e),
             r = A
               ? await raceWithAbortSignal(b, t.abortController.signal, () => new Ve())
@@ -1234,8 +1234,8 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                 p,
                 ...(r.displayText
                   ? [
-                      Re({
-                        content: `<local-command-stdout>${$S(r.displayText)}</local-command-stdout>`,
+                      createUserMessage({
+                        content: `<local-command-stdout>${escapeForkedSkillLaunchTag(r.displayText)}</local-command-stdout>`,
                         timestamp: new Date(Date.now() + 100).toISOString(),
                       }),
                     ]
@@ -1245,19 +1245,19 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                 ...r.compactionResult,
                 messagesToKeep: [...r.compactionResult.messagesToKeep, ...E],
               };
-            return { messages: wne(H), shouldQuery: !1, command: s };
+            return { messages: compactionResultToMessages(H), shouldQuery: !1, command: s };
           }
           if (r.type === "query")
             return {
               messages: [
                 p,
-                em(
-                  `<local-command-stdout>${$S(r.value)}</local-command-stdout>`,
+                createLocalCommandMessage(
+                  `<local-command-stdout>${escapeForkedSkillLaunchTag(r.value)}</local-command-stdout>`,
                 ),
                 ...(r.metaMessages ?? []).map((E) =>
-                  Re({ content: E, isMeta: !0 }),
+                  createUserMessage({ content: E, isMeta: !0 }),
                 ),
-                Re({ content: r.prompt, isMeta: !0 }),
+                createUserMessage({ content: r.prompt, isMeta: !0 }),
               ],
               shouldQuery: !0,
               command: s,
@@ -1267,7 +1267,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
               r.level === "error"
                 ? "local-command-stderr"
                 : "local-command-stdout",
-            C = em(`<${k}>${$S(r.value)}</${k}>`, {
+            C = createLocalCommandMessage(`<${k}>${escapeForkedSkillLaunchTag(r.value)}</${k}>`, {
               contextUsage: r.contextUsage,
             });
           if (A)
@@ -1282,7 +1282,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
               p,
               C,
               ...(r.metaMessages ?? []).map((E) =>
-                Re({ content: E, isMeta: !0 }),
+                createUserMessage({ content: E, isMeta: !0 }),
               ),
             ],
             shouldQuery: !1,
@@ -1307,14 +1307,14 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                   ? M.message || r
                   : r
               : commandThrowTextForTranscript(M, s.name, t.session),
-            C = em(`<${b}>${Nt($S(k))}</${b}>`);
+            C = createLocalCommandMessage(`<${b}>${Nt(escapeForkedSkillLaunchTag(k))}</${b}>`);
           if (A)
             return Ne(t, p, { messages: [C], shouldQuery: !1, command: s });
           return { messages: [p, C], shouldQuery: !1, command: s };
         }
       }
       case "prompt": {
-        if (!(s.isMcp && s.loadedFrom !== "mcp")) W4e(s.name, s, "user-slash");
+        if (!(s.isMcp && s.loadedFrom !== "mcp")) emitSkillActivatedEvent(s.name, s, "user-slash");
         let {
             stacked: p,
             trailingArgs: A,
@@ -1336,11 +1336,11 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
               iA(t.storageV5);
             else {
               let C = s.getDefaultEffort?.(I, t)?.notice;
-              if (C) b = Ht(C, "notice");
+              if (C) b = createSystemInfoMessage(C, "notice");
             }
-          if (Y$t(s, I, t) === "fork" && !isCoordinatorMainSession(t)) {
+          if (getCommandContext(s, I, t) === "fork" && !isCoordinatorMainSession(t)) {
             let C = `/${e} ${o}`.trim(),
-              E = B_([...m, { type: "text", text: C }]) ?? C;
+              E = getMessageContentText([...m, { type: "text", text: C }]) ?? C;
             if (!V)
               throw Error("Forked dispatch requires forkDispatchHookExecutors");
             let H = [],
@@ -1349,7 +1349,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
               E,
               getToolPermissionContext(t).mode,
               t,
-              cjt({ promptSource: x ?? "typed" }),
+              inferWakeupSource({ promptSource: x ?? "typed" }),
             )) {
               if (R.message?.type === "progress") continue;
               if (R.message?.type === "attachment") {
@@ -1372,7 +1372,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
 
 Original prompt: ${E}`;
                 return {
-                  messages: [Ht(D, "warning", void 0, !0)],
+                  messages: [createSystemInfoMessage(D, "warning", void 0, !0)],
                   shouldQuery: !1,
                   resultText: D,
                   command: s,
@@ -1387,8 +1387,8 @@ Original prompt: ${E}`;
                   logFeatureBad(d, "cmd_prompt_submit_hook_stopped"),
                   {
                     messages: [
-                      Re({ content: N }),
-                      Ht(N, "warning", void 0, !0),
+                      createUserMessage({ content: N }),
+                      createSystemInfoMessage(N, "warning", void 0, !0),
                     ],
                     shouldQuery: !1,
                     resultText: N,
@@ -1425,7 +1425,7 @@ Original prompt: ${E}`;
             );
             if (j.length > 0)
               O.messages.push(
-                Ht(`UserPromptSubmit hook error: ${j.join("; ")}`, "warning"),
+                createSystemInfoMessage(`UserPromptSubmit hook error: ${j.join("; ")}`, "warning"),
               );
             if (O.aborted) logFeatureBad(d, "cmd_prompt_aborted");
             else if (O.threw) logFeatureBad(d, "cmd_prompt_threw");
@@ -1443,7 +1443,7 @@ Original prompt: ${E}`;
               let E = await De(C, A, t);
               if ("blocked" in E) {
                 k.messages.push(
-                  Ht(
+                  createSystemInfoMessage(
                     `Stacked skill /${Qn(C.name)} blocked by UserPromptExpansion hook`,
                     "warning",
                   ),
@@ -1455,7 +1455,7 @@ Original prompt: ${E}`;
                   iA(t.storageV5);
                 else {
                   let O = C.getDefaultEffort?.(A, t)?.notice;
-                  if (O) k.messages.push(Ht(O, "notice"));
+                  if (O) k.messages.push(createSystemInfoMessage(O, "notice"));
                 }
               if (
                 (_e({
@@ -1467,17 +1467,17 @@ Original prompt: ${E}`;
                   setAppState: t.setAppState,
                   credentials: t.credentials,
                 }),
-                nht(t.session, C.name, t.storageV5),
+                recordSkillInvocation(t.session, C.name, t.storageV5),
                 C.pluginInfo)
               )
-                (cT(C.pluginInfo.repository),
-                  Ck(
+                (recordPluginUsage(C.pluginInfo.repository),
+                  recordPluginActivity(
                     C.pluginInfo.repository,
                     "command",
-                    qVe(C, C.pluginInfo.pluginManifest.name),
+                    getCommandDisplayInfo(C, C.pluginInfo.pluginManifest.name),
                   ));
               if (!(C.isMcp && C.loadedFrom !== "mcp"))
-                W4e(C.name, C, "user-slash");
+                emitSkillActivatedEvent(C.name, C, "user-slash");
               let H = await ve(C, A, t, [], [], void 0, E.hookMessages, T, q),
                 j = H.messages[0];
               if (j?.type === "user" && !j.isMeta) j.stackedExpansion = !0;
@@ -1496,7 +1496,7 @@ Original prompt: ${E}`;
               if (E instanceof Ve) throw E;
               (logError(dt(ge(E), "stacked slash command expansion threw")),
                 k.messages.push(
-                  Ht(
+                  createSystemInfoMessage(
                     `Stacked skill /${Qn(C.name)} failed to load: ${commandThrowTextForTranscript(E, C.name, t.session)}`,
                     "warning",
                   ),
@@ -1504,7 +1504,7 @@ Original prompt: ${E}`;
             }
           if (M)
             k.messages.push(
-              Ht(
+              createSystemInfoMessage(
                 `Stacked command limit (${Oe}) reached \u2014 remaining input passed as arguments`,
                 "warning",
               ),
@@ -1515,14 +1515,14 @@ Original prompt: ${E}`;
           if (yt(r)) {
             logFeatureBad(d, "cmd_prompt_aborted");
             let k = [
-              Re({
-                content: m$({ inputString: ie(s, o), precedingInputBlocks: m }),
+              createUserMessage({
+                content: prependPrecedingInputBlocks({ inputString: ie(s, o), precedingInputBlocks: m }),
                 uuid: v,
               }),
             ];
             if (!isSilentAbortReason(t.abortController.signal.reason))
               k.push(
-                PI({
+                createInterruptedMessage({
                   toolUse: !1,
                   interruptedByShutdown: shutdownInterruptStamp(t.abortController.signal),
                 }),
@@ -1533,14 +1533,14 @@ Original prompt: ${E}`;
             logFeatureBad(d, "cmd_prompt_threw"),
             {
               messages: [
-                Re({
-                  content: m$({
+                createUserMessage({
+                  content: prependPrecedingInputBlocks({
                     inputString: ie(s, o),
                     precedingInputBlocks: m,
                   }),
                   uuid: v,
                 }),
-                Re({
+                createUserMessage({
                   content: `<local-command-stderr>${Nt(commandThrowTextForTranscript(r, s.name, t.session))}</local-command-stderr>`,
                 }),
               ],
@@ -1557,8 +1557,8 @@ Original prompt: ${E}`;
         logFeatureBad(d, "cmd_malformed"),
         {
           messages: [
-            Re({
-              content: m$({ inputString: p.message, precedingInputBlocks: m }),
+            createUserMessage({
+              content: prependPrecedingInputBlocks({ inputString: p.message, precedingInputBlocks: m }),
             }),
           ],
           shouldQuery: !1,
@@ -1569,10 +1569,10 @@ Original prompt: ${E}`;
   }
 }
 function ie(e, o) {
-  return qV(getCommandName(e), oV(e, o) ? "***" : o);
+  return buildCommandTags(getCommandName(e), isSensitiveCommandInput(e, o) ? "***" : o);
 }
 function we(e, o) {
-  return qV(Qn(getCommandName(e)), oV(e, o) ? "***" : nq(o));
+  return buildCommandTags(Qn(getCommandName(e)), isSensitiveCommandInput(e, o) ? "***" : nq(o));
 }
 var Oe = 5;
 function Xe(e, o, t, m) {
@@ -1647,7 +1647,7 @@ async function De(e, o, t) {
   let m = [],
     l = o ? `/${e.name} ${o}` : `/${e.name}`;
   try {
-    for await (let c of jmn(
+    for await (let c of executeUserPromptExpansionHooks(
       e.source === "mcp" ? "mcp_prompt" : "slash_command",
       e.name,
       o,
@@ -1667,7 +1667,7 @@ ${c.blockingError.blockingError}`,
 Original prompt: ${l}`;
         return {
           blocked: {
-            messages: [Ht(v, "warning", void 0, !0)],
+            messages: [createSystemInfoMessage(v, "warning", void 0, !0)],
             shouldQuery: !1,
             resultText: v,
             command: e,
@@ -1679,8 +1679,8 @@ Original prompt: ${l}`;
         return {
           blocked: {
             messages: [
-              Re({ content: _, isMeta: !0 }),
-              Ht(_, "warning", void 0, !0),
+              createUserMessage({ content: _, isMeta: !0 }),
+              createSystemInfoMessage(_, "warning", void 0, !0),
             ],
             shouldQuery: !1,
             resultText: _,
@@ -1724,7 +1724,7 @@ async function processPromptSlashCommand(e, o, t, m, l = !1) {
   return ve(c, o, m, [], [], void 0, [], void 0, void 0, void 0, l);
 }
 async function ve(e, o, t, m = [], l = [], c, _ = [], v, T, U, P = !1) {
-  if (e.loadedFrom === "syncedSkills" && wV())
+  if (e.loadedFrom === "syncedSkills" && isSkillsSyncVetoed())
     throw new YP(`Unknown command: ${Qn(e.name)}`);
   if (isCoordinatorMainSession(t) && !P) {
     let r = Ue(e, o),
@@ -1764,8 +1764,8 @@ Do not instruct workers to invoke this via the ${SKILL_TOOL_NAME} tool \u2014 it
       ];
       return {
         messages: [
-          Re({ content: r, uuid: c, origin: T }),
-          ...be([Re({ content: Ce(l, m, N), isMeta: !0 }), ..._]),
+          createUserMessage({ content: r, uuid: c, origin: T }),
+          ...be([createUserMessage({ content: Ce(l, m, N), isMeta: !0 }), ..._]),
         ],
         shouldQuery: !0,
         disallowedTools: splitToolRuleList(e.disallowedTools ?? []),
@@ -1791,15 +1791,15 @@ Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" 
     ];
     return {
       messages: [
-        Re({ content: r, uuid: c, origin: T }),
-        ...be([Re({ content: Ce(l, m, j), isMeta: !0 }), ..._]),
+        createUserMessage({ content: r, uuid: c, origin: T }),
+        ...be([createUserMessage({ content: Ce(l, m, j), isMeta: !0 }), ..._]),
       ],
       shouldQuery: !0,
       disallowedTools: splitToolRuleList(e.disallowedTools ?? []),
       command: e,
     };
   }
-  let W = await Gdn(
+  let W = await applySkillPromptHook(
       e.name,
       await e.getPromptForCommand(
         o,
@@ -1830,7 +1830,7 @@ Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" 
     V = W.filter((r) => r.type === "text").map((r) => r.text).join(`
 
 `),
-    q = wLe(e.name);
+    q = getSkillVerificationCommand(e.name);
   if (!(P && q !== null)) TB(e.name, x, V, t.agentId ?? null);
   if (q && !P) t.applyAttributionOp({ kind: "recordVerification", method: q });
   t.options.activeSkill = attributionSkillName(e);
@@ -1842,7 +1842,7 @@ Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" 
     M =
       isModelInvocable(e) || P || v
         ? []
-        : await UTe(
+        : await collectAsyncIterable(
             getAttachmentMessages(
               W.filter((r) => r.type === "text")
                 .map((r) => r.text)
@@ -1856,11 +1856,11 @@ Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" 
               { planSlugSeed: o },
             ),
           ),
-    I = await C_t(e, sn(), t);
+    I = await buildSkillScopedVariantNote(e, sn(), t);
   return {
     messages: [
-      Re({ content: te, uuid: c, origin: T }),
-      ...be([Re({ content: p, isMeta: !0 }), ...(I ? [I] : []), ...M, ..._]),
+      createUserMessage({ content: te, uuid: c, origin: T }),
+      ...be([createUserMessage({ content: p, isMeta: !0 }), ...(I ? [I] : []), ...M, ..._]),
       createAttachmentMessage({ type: "command_permissions", allowedTools: s, model: inlineSkillModelOverride(e.model) }),
     ],
     shouldQuery: !0,

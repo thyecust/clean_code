@@ -21,7 +21,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { attachDetachableAbortRelay } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { ha } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { enqueuePendingNotification } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "./chunk-tv3jbp8f.js";
 import "../认证-OAuth登录/pkce-challenge.js";
 import "../认证-OAuth登录/chunk-j990pwax.js";
@@ -137,7 +137,7 @@ async function callMcpToolWithAutoBackground({
     else if (b === "aborted") logFeatureSad("mcp_auto_background", "aborted");
     else logFeatureBad("mcp_auto_background", "call_failed");
     try {
-      ha(
+      enqueuePendingNotification(
         {
           value: p().buildMcpTaskNotification({
             registryId: o,
@@ -160,7 +160,7 @@ async function callMcpToolWithAutoBackground({
     } catch (c) {
       logError(c);
       try {
-        ha(
+        enqueuePendingNotification(
           {
             value: `MCP task ${o} ${t}; the result could not be rendered.`,
             mode: "task-notification",

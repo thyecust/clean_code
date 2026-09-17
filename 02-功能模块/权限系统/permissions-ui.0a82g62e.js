@@ -38,19 +38,19 @@ import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import {
   SandboxManager,
-  ep,
-  sgt,
-  igt,
-  B2,
-  oC,
-  Nzn,
+  DEFAULTS_SLOT_MARKER,
+  AUTO_MODE_ENV_EDIT_FILE_PREFIX,
+  AUTO_MODE_BUILTINS_FILE_PREFIX,
+  isBuiltinPermissionsTemplateEnabled,
+  getAutoModeTemplateRules,
+  resolveSidecarFilePath,
   permissionRuleSourceDisplayString,
   deletePermissionRule,
   WebFetchTool,
-  an,
-  Lo,
-  E7n,
-  OY,
+  sanitizeForDisplay,
+  BashTool,
+  createPermissionRetryMessage,
+  isAutoModeSetupCommandEnabled,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -134,7 +134,7 @@ var ri = [
   }),
   ad = /[\u200b\u200e\u200f\u2060\ufeff]/g;
 function Xl(i) {
-  return an(i.replace(ad, "\uFFFD"));
+  return sanitizeForDisplay(i.replace(ad, "\uFFFD"));
 }
 async function ql(i, u) {
   try {
@@ -160,7 +160,7 @@ async function ql(i, u) {
     }
     return { kind: "read", rules: a, skippedFiles: f.errors?.length ?? 0 };
   } catch (f) {
-    return { kind: "unreadable", reason: an(l(f)) };
+    return { kind: "unreadable", reason: sanitizeForDisplay(l(f)) };
   }
 }
 function li(eg) {
@@ -411,7 +411,7 @@ function go(Rg) {
   let Io = _(13),
     { ruleValue: at } = Rg;
   switch (at.toolName) {
-    case Lo.name: {
+    case BashTool.name: {
       if (at.ruleContent) {
         if (at.ruleContent.endsWith(":*") || at.ruleContent.endsWith(" *")) {
           let We;
@@ -703,7 +703,7 @@ function or(ly) {
         kd,
         e(t, {
           bold: !0,
-          children: formatPermissionRule({ toolName: Lo.name, ruleContent: "ls *" }),
+          children: formatPermissionRule({ toolName: BashTool.name, ruleContent: "ls *" }),
         }),
       ],
     })),
@@ -1073,7 +1073,7 @@ function bm(gb) {
   return gb.path;
 }
 function vm(yb) {
-  return an(yb);
+  return sanitizeForDisplay(yb);
 }
 function fr(cb) {
   let kt = _(31),
@@ -1140,7 +1140,7 @@ function fr(cb) {
   } else dm = kt[13];
   let $i = dm,
     fm;
-  if (kt[14] !== Pa) ((fm = an(Pa)), (kt[14] = Pa), (kt[15] = fm));
+  if (kt[14] !== Pa) ((fm = sanitizeForDisplay(Pa)), (kt[14] = Pa), (kt[15] = fm));
   else fm = kt[15];
   const Da = `-  ${fm}`;
   let Di;
@@ -1219,7 +1219,7 @@ function Re() {
       let S = g.data[w];
       if (!S) continue;
       S.forEach((P, B) => {
-        if (P === ep) return;
+        if (P === DEFAULTS_SLOT_MARKER) return;
         if (w === "environment" && P.startsWith("### ")) {
           u.push({ text: P, section: w, source: f, index: B, structure: !0 });
           return;
@@ -1280,7 +1280,7 @@ function Ma(i) {
   return { entries: u, problem: null };
 }
 function Ce() {
-  if (!B2()) {
+  if (!isBuiltinPermissionsTemplateEnabled()) {
     let g = { enabled: !0, control: "internalTemplate" };
     return { allow: g, soft_deny: g, hard_deny: g, environment: g };
   }
@@ -1306,14 +1306,14 @@ function Ce() {
       continue;
     }
     if (g === "environment") {
-      let I = w.find((W) => W.values.includes(ep));
+      let I = w.find((W) => W.values.includes(DEFAULTS_SLOT_MARKER));
       a[g] = I
         ? { enabled: !0, control: "otherSource", source: I.source }
         : { enabled: !1, control: "otherSource", source: w[0].source };
       continue;
     }
     let S = f.userSettings?.[g] ?? [],
-      P = w.find((I) => I.source !== "userSettings" && I.values.includes(ep)),
+      P = w.find((I) => I.source !== "userSettings" && I.values.includes(DEFAULTS_SLOT_MARKER)),
       B = g === "soft_deny" && u.has("userSettings");
     if (!P && B) {
       a[g] = { enabled: !0, control: "otherSource", source: "userSettings" };
@@ -1324,7 +1324,7 @@ function Ce() {
       continue;
     }
     if (S.length > 0) {
-      a[g] = { enabled: S.includes(ep), control: "user" };
+      a[g] = { enabled: S.includes(DEFAULTS_SLOT_MARKER), control: "user" };
       continue;
     }
     a[g] = { enabled: !1, control: "otherSource", source: w[0].source };
@@ -1339,7 +1339,7 @@ async function Ni(i, u, f) {
       Sn(
         i,
         (g) => {
-          if (!B2())
+          if (!isBuiltinPermissionsTemplateEnabled())
             return {
               refuse:
                 "Built-in rules cannot be disabled on internal-template sessions \u2014 they are always in effect.",
@@ -1349,8 +1349,8 @@ async function Ni(i, u, f) {
               refuse:
                 "The environment is a single replaceable document \u2014 write your own version to replace the built-in default, or delete your entries to restore it.",
             };
-          let w = g.filter((S) => S !== ep);
-          if (u) return [ep, ...w];
+          let w = g.filter((S) => S !== DEFAULTS_SLOT_MARKER);
+          if (u) return [DEFAULTS_SLOT_MARKER, ...w];
           if (w.length === 0 && !a)
             return {
               refuse:
@@ -1418,7 +1418,7 @@ async function Sn(i, u, f) {
             : [],
           fe = u(ne);
         if (fe !== null && !Array.isArray(fe)) return ((I = fe.refuse), null);
-        let Oe = (Ae) => Ae.length - (Ae.includes(ep) ? 1 : 0);
+        let Oe = (Ae) => Ae.length - (Ae.includes(DEFAULTS_SLOT_MARKER) ? 1 : 0);
         if (fe !== null && Oe(fe) > m7 && Oe(fe) > Oe(ne))
           return ((P = Oe(ne)), null);
         if (fe === null) return ((S = !0), null);
@@ -1456,10 +1456,10 @@ function Vo(i, u) {
   }
 }
 function Ui(i, u) {
-  if (u === ep)
+  if (u === DEFAULTS_SLOT_MARKER)
     throw new Ze(
       "invalid_input",
-      `"${ep}" is reserved \u2014 it splices the built-in rules in and cannot be added as a rule.`,
+      `"${DEFAULTS_SLOT_MARKER}" is reserved \u2014 it splices the built-in rules in and cannot be added as a rule.`,
     );
   if (u.length > SSe)
     throw new Ze(
@@ -1486,12 +1486,12 @@ async function wm(i, u, f) {
     Sn(
       i,
       (g) => {
-        if (i === "environment" && B2())
+        if (i === "environment" && isBuiltinPermissionsTemplateEnabled())
           return {
             refuse:
               "The environment is edited as a document \u2014 use Edit environment on the Auto mode tab.",
           };
-        return i !== "environment" && g.length === 0 ? [ep, a] : [...g, a];
+        return i !== "environment" && g.length === 0 ? [DEFAULTS_SLOT_MARKER, a] : [...g, a];
       },
       f,
     )
@@ -1507,9 +1507,9 @@ async function Sm(i, u, f, a, g) {
     Sn(
       i,
       (S) => {
-        if (f === ep)
+        if (f === DEFAULTS_SLOT_MARKER)
           return {
-            refuse: `"${ep}" is splice plumbing, not an editable rule.`,
+            refuse: `"${DEFAULTS_SLOT_MARKER}" is splice plumbing, not an editable rule.`,
           };
         if (i === "environment" && f.startsWith("### "))
           return {
@@ -1531,8 +1531,8 @@ async function Cm(i, u, f, a) {
   return Sn(
     i,
     (g) => {
-      if (f === ep)
-        return { refuse: `"${ep}" is splice plumbing, not a deletable rule.` };
+      if (f === DEFAULTS_SLOT_MARKER)
+        return { refuse: `"${DEFAULTS_SLOT_MARKER}" is splice plumbing, not a deletable rule.` };
       if (i === "environment" && f.startsWith("### "))
         return {
           refuse:
@@ -1602,7 +1602,7 @@ function qi() {
   let jb = _(1),
     Am;
   if (jb[0] === MEMO_CACHE_SENTINEL) {
-    let Wb = oC();
+    let Wb = getAutoModeTemplateRules();
     Am = Object.fromEntries(tt.map((Pm) => [Pm, Wb[Pm]?.length ?? 0]));
     jb[0] = Am;
   } else Am = jb[0];
@@ -1728,7 +1728,7 @@ function xr(Vb) {
     } = Vb,
     pr = qi(),
     km;
-  if (dt[0] === MEMO_CACHE_SENTINEL) ((km = oC().environment ?? []), (dt[0] = km));
+  if (dt[0] === MEMO_CACHE_SENTINEL) ((km = getAutoModeTemplateRules().environment ?? []), (dt[0] = km));
   else km = dt[0];
   let Yb = km,
     xn = a0e(),
@@ -2080,7 +2080,7 @@ function Lf(aw) {
   return `- ${aw}`;
 }
 async function vc(i, u) {
-  let f = join(getClaudeTempDir(), `${igt}${i}-${Nf(8).toString("hex")}.md`),
+  let f = join(getClaudeTempDir(), `${AUTO_MODE_BUILTINS_FILE_PREFIX}${i}-${Nf(8).toString("hex")}.md`),
     a = await Of(f, Dr.O_WRONLY | Dr.O_CREAT | Dr.O_EXCL | Dr.O_NOFOLLOW, 384);
   try {
     await a.writeFile(u, "utf8");
@@ -2325,7 +2325,7 @@ function _r(ow) {
       ((xe =
         j.source !== "userSettings"
           ? `It is delivered by ${Le(j.source)} and cannot be modified here.`
-          : OY()
+          : isAutoModeSetupCommandEnabled()
             ? "Re-run /auto-mode-setup to restructure, or edit your settings file directly."
             : "Edit your settings file directly to restructure."),
         (Z[15] = j.source),
@@ -2532,7 +2532,7 @@ function _r(ow) {
         italic: !0,
         children: [
           "Environment entries describe this machine and project for the classifier.",
-          OY() ? " Re-run /auto-mode-setup to rebuild them from scratch." : "",
+          isAutoModeSetupCommandEnabled() ? " Re-run /auto-mode-setup to rebuild them from scratch." : "",
         ],
       })),
       (Z[64] = j.section),
@@ -2617,7 +2617,7 @@ function Mr(rw) {
     Te[3] !== ge.control ||
     Te[4] !== ge.enabled
   ) {
-    Ro = oC()[jt] ?? [];
+    Ro = getAutoModeTemplateRules()[jt] ?? [];
     let Ko;
     if (Te[18] === MEMO_CACHE_SENTINEL)
       ((Ko = e(InputGuide, { children: e(KeybindingHint, { chord: "esc", action: "cancel" }) })),
@@ -3011,7 +3011,7 @@ function Dc(i) {
   }
 }
 function Qs(i) {
-  let u = Nzn(`${sgt}${sp(8).toString("hex")}.md`);
+  let u = resolveSidecarFilePath(`${AUTO_MODE_ENV_EDIT_FILE_PREFIX}${sp(8).toString("hex")}.md`);
   if (u === null) return { content: null, problem: null };
   try {
     mkdirSync(dirname(u), { recursive: !0, mode: 448 });
@@ -4107,7 +4107,7 @@ function Fl(NR) {
       ((H = e(Nr, {
         onCancel: O,
         onPick: (uh) => {
-          if (uh === "environment" && B2()) {
+          if (uh === "environment" && isBuiltinPermissionsTemplateEnabled()) {
             Xn();
             return;
           }
@@ -4133,7 +4133,7 @@ function Fl(NR) {
     else ((O = R[56]), (H = R[57]));
     let Q;
     if (R[58] !== lo)
-      ((Q = () => lo(oC().environment ?? [], [])), (R[58] = lo), (R[59] = Q));
+      ((Q = () => lo(getAutoModeTemplateRules().environment ?? [], [])), (R[58] = lo), (R[59] = Q));
     else Q = R[59];
     let pe;
     if (R[60] === MEMO_CACHE_SENTINEL) ((pe = () => be(null)), (R[60] = pe));
@@ -4419,7 +4419,7 @@ function Fl(NR) {
           .then(() => {
             let Uu = Re();
             (zt(Uu), Yt(Ce()));
-            let LS = B2() ? Uu.filter(Mh) : Uu;
+            let LS = isBuiltinPermissionsTemplateEnabled() ? Uu.filter(Mh) : Uu;
             let dh = Nt(LS);
             let mh = dh[Math.min(Math.max(IS, 0), dh.length - 1)];
             (gl(mh ? Ut(mh) : void 0),
@@ -4542,7 +4542,7 @@ function Fl(NR) {
           DG(ph, Be).catch(logError);
         (Ge((KS) => [
           ...KS,
-          `Added directory ${chalk.bold(an(fh))} to workspace${Lu ? " and saved to local settings" : " for this session"}`,
+          `Added directory ${chalk.bold(sanitizeForDisplay(fh))} to workspace${Lu ? " and saved to local settings" : " for this session"}`,
         ]),
           su(!1));
       }),
@@ -4887,7 +4887,7 @@ var bC = async (i, u) => {
   return e(Fl, {
     onExit: i,
     onRetryDenials: (f) => {
-      u.applyMessageOp({ type: "append", messages: [E7n(f)] });
+      u.applyMessageOp({ type: "append", messages: [createPermissionRetryMessage(f)] });
     },
   });
 };

@@ -36,7 +36,7 @@ import {
   mainObservedArtifactVersion,
   artifactViewerUrl,
 } from "./chunk-01ymf0ar.js";
-import { Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createUserMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { subscribeFrameLiveOnAttach } from "./chunk-kshc4v5t.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -1341,7 +1341,7 @@ function lr(Xo) {
       (_Pe(sn, { updateAppState: ne, context: Q }),
         Q.applyMessageOp({
           type: "append",
-          messages: [Re({ content: Kon(artifactViewerUrl(sn)), isMeta: !0 })],
+          messages: [createUserMessage({ content: Kon(artifactViewerUrl(sn)), isMeta: !0 })],
         }));
     }),
       (Ee[8] = Q),

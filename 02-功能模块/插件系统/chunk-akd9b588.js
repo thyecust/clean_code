@@ -52,7 +52,7 @@ import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js"
 import { qE, _N, iwt, aJ, Obn } from "./chunk-ajtn749s.js";
 import { FRONTMATTER_PATTERN, parseFrontmatterYaml } from "../MCP客户端/chunk-3kmsshb6.js";
 import { pfr } from "../Hooks钩子/chunk-z3433nr6.js";
-import { Pue, Kne, i7n, SMe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { validatePluginManifest, damerauLevenshteinDistance, buildVersionTagName, resolvePluginRenameChain } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isNonMarketplacePluginSource, hasNonMarketplacePluginSource, getNonMarketplacePluginSource, splitPluginIdOnLastAt, getPluginMarketplace, isEqualIgnoringCase } from "./chunk-33bdfgmx.js";
 import { eer, YXe, JXe, CCe, yqt, Ywt } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
@@ -380,7 +380,7 @@ function mt(e, t) {
   for (let f of t) {
     if (Math.abs(f.length - e.length) > a) continue;
     if (f.toLowerCase() === r) return f;
-    let u = Kne(e, f);
+    let u = damerauLevenshteinDistance(e, f);
     if (u < i) ((i = u), (o = f));
   }
   return o;
@@ -465,7 +465,7 @@ async function He(e, t) {
       fileType: "plugin",
     };
   }
-  let i = Pue(o, "plugin-json", {
+  let i = validatePluginManifest(o, "plugin-json", {
     pluginName: h.basename(h.dirname(h.dirname(e))),
     manifestPath: e,
   });
@@ -810,7 +810,7 @@ async function kt(e) {
   if (p.success && p.data.renames) {
     let d = new Set(p.data.plugins.map((g) => g.name));
     for (let g of Object.keys(p.data.renames)) {
-      let P = SMe(g, p.data.renames, d);
+      let P = resolvePluginRenameChain(g, p.data.renames, d);
       if (P?.kind === "unresolved")
         t.push({
           path: `renames.${g}`,
@@ -1855,7 +1855,7 @@ ${g}`,
       error: `Version "${S}" is not valid semver. Dependency resolution (resolveVersionRange) ignores tags whose suffix doesn't parse as semver, so this tag would never be selected.`,
       warnings: a,
     };
-  let E = i7n(w, S);
+  let E = buildVersionTagName(w, S);
   if (!CS(E))
     return {
       ok: !1,

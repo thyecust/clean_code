@@ -24,7 +24,7 @@ import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getSettingsForSource, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
-import { Pr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gracefulShutdownSync } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hN } from "../插件系统/chunk-ajtn749s.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -295,7 +295,7 @@ To update, please run:
 
 This will ensure you have access to the latest features and improvements.
 `),
-        Pr(1));
+        gracefulShutdownSync(1));
   } catch (e) {
     logError(e);
   }

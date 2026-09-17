@@ -12,44 +12,44 @@ import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { truncateToCodePoints, isWellFormed, toWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
-  xht,
-  qfn,
-  zfn,
-  $M,
-  r$,
+  MAX_DIRECT_BUNDLE_BYTES,
+  MAX_SEED_ROWS,
+  SEED_RESERVED_ROWS,
+  isSafeRelativePath,
+  checkSeedPath,
   MAX_WORKING_FILE_BYTES,
-  Pht,
-  ILe,
-  Oht,
-  ej,
-  TE,
-  emn,
-  Lne,
-  nn,
-  Mne,
-  qO,
-  Wht,
-  $_,
-  aw,
-  xKe,
+  hasCaseFoldHazard,
+  hasCompatibilityVariantLetter,
+  isIgnoredOrDependencyPath,
+  isWindowsLikePlatform,
+  hasWindowsReservedPathComponent,
+  normalizeWindowsPathComponent,
+  looksLikeWindowsShortName,
+  GIT_OBJECT_ID_REGEX,
+  isNonZeroObjectId,
+  isClaudeSessionRef,
+  GIT_SHA1_HEX_REGEX,
+  MAX_LISTED_COMMITS,
+  MAX_REPORT_ENTRIES,
+  MAX_TEXT_CODE_UNITS,
   rmn,
-  lC,
-  XTe,
-  YTe,
-  C3,
-  GX,
-  omn,
-  Ade,
-  kKn,
-  zO,
-  smn,
+  MAX_LISTED_SKIPPED_FILES,
+  MAX_LISTED_CONFLICTED_COMMITS,
+  MAX_CONFLICT_CODE_UNITS,
+  MAX_LISTED_APPLIED_TURNS,
+  MAX_LISTED_FAST_FORWARDS,
+  SYNC_SKIP_REASONS,
+  MAX_REF_NAME_CODE_UNITS,
+  MAX_FILE_ID_LENGTH,
+  isValidGitBranchName,
+  isValidGitRefName,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, O, se, v, c, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var h = 1,
   JOURNAL_VERSION_WITH_NOTE = 2,
-  MAX_JOURNAL_ENTRIES = qfn - zfn,
+  MAX_JOURNAL_ENTRIES = MAX_SEED_ROWS - SEED_RESERVED_ROWS,
   MAX_ETAG_LENGTH = 256,
   SHA256_HEX_RE = /^[0-9a-f]{64}$/,
   N = 512,
@@ -89,7 +89,7 @@ function formatHaltLine(e) {
 }
 var H = createLazyValue(() =>
     c({
-      path: s().refine((e) => r$(e) === null),
+      path: s().refine((e) => checkSeedPath(e) === null),
       sha256: s().regex(SHA256_HEX_RE),
       size: T().int().nonnegative(),
       mode: T().int().nonnegative().transform(normalizeFileMode),
@@ -100,44 +100,44 @@ var H = createLazyValue(() =>
   getAgreedBlobSchema = createLazyValue(() =>
     Ko("kind", [
       c({ kind: k("sha256"), sha256: s().regex(SHA256_HEX_RE) }),
-      c({ kind: k("git_blob"), blobId: s().regex(Wht) }),
+      c({ kind: k("git_blob"), blobId: s().regex(GIT_SHA1_HEX_REGEX) }),
     ]),
   ),
   U = createLazyValue(() =>
     c({
-      path: s().refine((e) => r$(e) === null),
+      path: s().refine((e) => checkSeedPath(e) === null),
       agreed: getAgreedBlobSchema(),
       generation: T().int().nonnegative(),
       peerSeen: T().int().nonnegative().optional(),
     }),
   ),
-  u = createLazyValue(() => s().regex(nn).refine(Mne)),
+  u = createLazyValue(() => s().regex(GIT_OBJECT_ID_REGEX).refine(isNonZeroObjectId)),
   x = createLazyValue(() =>
     v(u())
-      .max($_)
+      .max(MAX_LISTED_COMMITS)
       .refine((e) => new Set(e).size === e.length),
   ),
   R = createLazyValue(() =>
     s()
-      .max(Ade)
-      .refine(smn)
-      .transform((e) => (zO(e) ? e : null))
+      .max(MAX_REF_NAME_CODE_UNITS)
+      .refine(isValidGitRefName)
+      .transform((e) => (isValidGitBranchName(e) ? e : null))
       .nullable(),
   ),
   B = /^[A-Za-z0-9_-]+$/,
   F = 104857600,
-  z = { row: MAX_WORKING_FILE_BYTES, file: F, direct: xht },
+  z = { row: MAX_WORKING_FILE_BYTES, file: F, direct: MAX_DIRECT_BUNDLE_BYTES },
   getBundleSchema = createLazyValue(() =>
     c({
       via: s().min(1).max(32),
-      fileId: s().max(kKn).regex(B).optional(),
+      fileId: s().max(MAX_FILE_ID_LENGTH).regex(B).optional(),
       sha256: s().regex(SHA256_HEX_RE),
       size: T().int().positive(),
-      tipRef: s().refine(qO),
+      tipRef: s().refine(isClaudeSessionRef),
       prerequisites: x(),
     })
       .refine((e) => (e.via === "file") === (e.fileId !== void 0))
-      .refine((e) => e.size <= (Object.hasOwn(z, e.via) ? z[e.via] : xht))
+      .refine((e) => e.size <= (Object.hasOwn(z, e.via) ? z[e.via] : MAX_DIRECT_BUNDLE_BYTES))
       .transform(({ via: e, fileId: n, ...t }) =>
         e === "file" && n !== void 0
           ? { via: e, fileId: n, ...t }
@@ -153,7 +153,7 @@ var H = createLazyValue(() =>
 function isSyncableRelativePath(e) {
   return (
     e.length <= 2 * rmn &&
-    $M(e) &&
+    isSafeRelativePath(e) &&
     !W.test(e) &&
     !e.split("/").some(G) &&
     isWellFormed(e) &&
@@ -164,10 +164,10 @@ function G(e) {
   let n = nc(e);
   return n === ".git" || /^git~\d+$/.test(n);
 }
-var V = createLazyValue(() => v(s().refine(isSyncableRelativePath)).max(lC)),
+var V = createLazyValue(() => v(s().refine(isSyncableRelativePath)).max(MAX_LISTED_SKIPPED_FILES)),
   K = createLazyValue(() =>
     s()
-      .refine((e) => Array.from(e).length <= xKe)
+      .refine((e) => Array.from(e).length <= MAX_TEXT_CODE_UNITS)
       .transform(f),
   ),
   I = () => ({
@@ -186,19 +186,19 @@ var V = createLazyValue(() => v(s().refine(isSyncableRelativePath)).max(lC)),
       downApplied: v(
         c({ turn: T().int().positive(), notInstalled: q(), truncated: O() }),
       )
-        .max(C3)
+        .max(MAX_LISTED_APPLIED_TURNS)
         .refine((e) => e.reduce((n, t) => n + t.notInstalled.length, 0) <= g),
       withheldCounts: getWithheldCountsSchema(),
       conflicted: v(
         s()
-          .refine((e) => Array.from(e).length <= YTe)
+          .refine((e) => Array.from(e).length <= MAX_CONFLICT_CODE_UNITS)
           .transform(f),
       )
-        .max(XTe)
+        .max(MAX_LISTED_CONFLICTED_COMMITS)
         .optional()
         .catch(void 0),
       fastForwardedTo: v(u())
-        .max(GX)
+        .max(MAX_LISTED_FAST_FORWARDS)
         .refine((e) => new Set(e).size === e.length)
         .default(() => []),
       origin: s()
@@ -218,9 +218,9 @@ var V = createLazyValue(() => v(s().refine(isSyncableRelativePath)).max(lC)),
   getSkipReasonSchema = createLazyValue(() =>
     s()
       .max(64)
-      .transform((e) => (omn.includes(e) ? e : "other")),
+      .transform((e) => (SYNC_SKIP_REASONS.includes(e) ? e : "other")),
   ),
-  q = createLazyValue(() => v(c({ path: s().refine(isSyncableRelativePath), reason: getSkipReasonSchema() })).max(lC)),
+  q = createLazyValue(() => v(c({ path: s().refine(isSyncableRelativePath), reason: getSkipReasonSchema() })).max(MAX_LISTED_SKIPPED_FILES)),
   C = createLazyValue(() =>
     c({
       ...I(),
@@ -232,7 +232,7 @@ var V = createLazyValue(() => v(s().refine(isSyncableRelativePath)).max(lC)),
       notTaken: V(),
       notTakenTruncated: O(),
       need: u().nullable(),
-      report: v(K()).max(aw),
+      report: v(K()).max(MAX_REPORT_ENTRIES),
       agentHead: u(),
       agentHeadContainsBasis: O().nullable(),
       recreatedAfterTurn: T().int().nonnegative().optional(),
@@ -327,10 +327,10 @@ var getWithheldCountsSchema = createLazyValue(() =>
   }),
 );
 function isPathEligibleForSync(e) {
-  let n = ej(),
-    t = n ? e.path.split("/").map(emn).join("/") : e.path;
+  let n = isWindowsLikePlatform(),
+    t = n ? e.path.split("/").map(normalizeWindowsPathComponent).join("/") : e.path;
   return (
-    !Oht(t, !0) && !(n && TE(e.path)) && !(n && Lne(t)) && !Pht(t) && !ILe(t)
+    !isIgnoredOrDependencyPath(t, !0) && !(n && hasWindowsReservedPathComponent(e.path)) && !(n && looksLikeWindowsShortName(t)) && !hasCaseFoldHazard(t) && !hasCompatibilityVariantLetter(t)
   );
 }
 function parseSyncJournal(e, n, { engine: t }) {
@@ -431,7 +431,7 @@ function ne(e) {
   return e
     .toSorted((t, i) => i.generation - t.generation || compareByPath(t, i))
     .filter((t) => {
-      let i = r$(t.path) === null && !n.has(t.path);
+      let i = checkSeedPath(t.path) === null && !n.has(t.path);
       return (n.add(t.path), i);
     })
     .slice(0, y);
@@ -440,20 +440,20 @@ function compareByPath(e, n) {
   return e.path < n.path ? -1 : e.path > n.path ? 1 : 0;
 }
 function te(e) {
-  let n = (o) => truncateToCodePoints(o, xKe),
+  let n = (o) => truncateToCodePoints(o, MAX_TEXT_CODE_UNITS),
     t = {
-      holds: dedupe(e.holds).slice(0, $_),
+      holds: dedupe(e.holds).slice(0, MAX_LISTED_COMMITS),
       branch: R().safeParse(e.branch).data ?? null,
       bundle:
         e.bundle === null
           ? null
           : {
               ...e.bundle,
-              prerequisites: dedupe(e.bundle.prerequisites).slice(0, $_),
+              prerequisites: dedupe(e.bundle.prerequisites).slice(0, MAX_LISTED_COMMITS),
             },
     },
     i = (o, a, r = g) => {
-      let d = o.filter((l) => isSyncableRelativePath(a(l))).slice(0, Math.max(0, Math.min(lC, r)));
+      let d = o.filter((l) => isSyncableRelativePath(a(l))).slice(0, Math.max(0, Math.min(MAX_LISTED_SKIPPED_FILES, r)));
       return { kept: d, truncated: d.length !== o.length };
     };
   if ("report" in e) {
@@ -463,10 +463,10 @@ function te(e) {
       ...t,
       notTaken: o.kept,
       notTakenTruncated: e.notTakenTruncated || o.truncated,
-      report: e.report.slice(0, aw).map(n),
+      report: e.report.slice(0, MAX_REPORT_ENTRIES).map(n),
     };
   }
-  let p = e.downApplied.slice(-C3).reduceRight(
+  let p = e.downApplied.slice(-MAX_LISTED_APPLIED_TURNS).reduceRight(
     (o, a) => {
       let r = i(a.notInstalled, (d) => d.path, o.left);
       return {
@@ -492,7 +492,7 @@ function te(e) {
     downApplied: p.turns,
     fastForwardedTo: dedupe([...e.fastForwardedTo].reverse())
       .reverse()
-      .slice(-GX),
+      .slice(-MAX_LISTED_FAST_FORWARDS),
   };
 }
 export {

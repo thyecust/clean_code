@@ -12,7 +12,7 @@
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { _4e, O3, v9t, R9t, s_n, GMe, ng } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getHookCgroupOptions, hookOutputSchema, installDeviceHooks, removeDeviceHooks, truncateDisplayText, normalizeHookOutput, isHookOutputBlocking } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { assertSafeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
@@ -93,7 +93,7 @@ function C(o, r, e, t) {
         stdio: ["pipe", "pipe", "pipe"],
         detached: !0,
         windowsHide: !0,
-        ..._4e(e.hook_event_name),
+        ...getHookCgroupOptions(e.hook_event_name),
       });
     } catch (d) {
       k({
@@ -168,7 +168,7 @@ function N(o) {
   if (!r.startsWith("{"))
     return r === "" ? { kind: "silent" } : { kind: "unreadable" };
   try {
-    let e = O3().safeParse(z(r));
+    let e = hookOutputSchema().safeParse(z(r));
     if (!e.success) return { kind: "unreadable" };
     let t = e.data;
     return "async" in t
@@ -263,10 +263,10 @@ function ne(o, r, e, t, s, l) {
             status: null,
             timedOut: !1,
           },
-      y = Z({ ...m, stderr: s_n(m.stderr, 2000).text }),
-      { answer: w, report: g } = GMe(y, e.event),
+      y = Z({ ...m, stderr: truncateDisplayText(m.stderr, 2000).text }),
+      { answer: w, report: g } = normalizeHookOutput(y, e.event),
       h = f ? ee(m, k?.aborted === !0) : "interpreter_untrusted",
-      D = h === "ok" && ng(w) ? "blocked" : h;
+      D = h === "ok" && isHookOutputBlocking(w) ? "blocked" : h;
     if (
       (t({
         outcome: D,
@@ -403,8 +403,8 @@ function productionDeviceHookTemplateRunner(o) {
         o,
       );
     },
-    install: (a, p, k) => v9t(a, p, "templates", k),
-    remove: (a) => R9t(a, "templates"),
+    install: (a, p, k) => installDeviceHooks(a, p, "templates", k),
+    remove: (a) => removeDeviceHooks(a, "templates"),
   };
 }
 async function oe(o, r, e) {

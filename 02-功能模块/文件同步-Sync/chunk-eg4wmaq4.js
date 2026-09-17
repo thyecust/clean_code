@@ -11,21 +11,21 @@ import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { truncateToCodePoints, isWellFormed, toWellFormed, ANY_CONTROL_CHAR_REGEX } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { kJ, $Tt, MK } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
-  Ds,
-  Ct,
-  $M,
+  createConcurrencyLimiter,
+  isSignalAborted,
+  isSafeRelativePath,
   shouldIgnore,
-  qjt,
-  A3,
-  PLe,
-  qTe,
-  Dne,
-  Hk,
-  ej,
-  TE,
-  Nne,
-  imn,
-  o6t,
+  isOnCaseInsensitiveFs,
+  DEPENDENCY_DIR_NAMES,
+  pathWithUnicodeVariants,
+  getFileSkipReason,
+  readExactBytes,
+  allUnlessAborted,
+  isWindowsLikePlatform,
+  hasWindowsReservedPathComponent,
+  GIT_DIR_ENTRY_NAMES,
+  looksLikeGitDirEntries,
+  isGitDirectoryAtPath,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { vze } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import { isPathEligibleForSync, compareByPath } from "./sync-journal.js";
@@ -51,7 +51,7 @@ function ee(e) {
     e.length > 0 &&
     e.length <= x &&
     Buffer.byteLength(e, "utf8") <= x &&
-    $M(e) &&
+    isSafeRelativePath(e) &&
     !J.test(e) &&
     !e.includes("\\") &&
     !ANY_CONTROL_CHAR_REGEX.test(e) &&
@@ -74,14 +74,14 @@ function oe(e) {
   return w(e) === null;
 }
 function qbe(e, t) {
-  let n = PLe(e).flatMap((r) =>
+  let n = pathWithUnicodeVariants(e).flatMap((r) =>
     r
       .split("/")
       .map((o, s, i) => ({ part: o, holdsEntries: t || s < i.length - 1 })),
   );
   return n.some(({ part: r }) => r.length === 0 || shouldIgnore(r))
     ? "filtered"
-    : n.some(({ part: r, holdsEntries: o }) => o && A3.has(r))
+    : n.some(({ part: r, holdsEntries: o }) => o && DEPENDENCY_DIR_NAMES.has(r))
       ? "dependency_dir"
       : null;
 }
@@ -98,7 +98,7 @@ function Fan(e) {
         let s = p(e, r);
         ((o = lstat(p(s, U)).then(
           () => !0,
-          () => o6t(s),
+          () => isGitDirectoryAtPath(s),
         )),
           t.set(r, o));
       }
@@ -116,7 +116,7 @@ var ae = ".gitignore",
   le = 4 * vze,
   Qhr = () => null;
 function iOe(e) {
-  return qjt(e);
+  return isOnCaseInsensitiveFs(e);
 }
 function wze(e, { ignoreCase: t }) {
   let n = (o) => (t ? o.normalize("NFC") : o),
@@ -173,7 +173,7 @@ async function Tze(e) {
       let o = await r.stat({ bigint: !0 });
       if (!o.isFile() || o.dev !== n.dev || o.ino !== n.ino || o.nlink !== 1n)
         return m("linked");
-      let s = await Dne(r, F + 1);
+      let s = await readExactBytes(r, F + 1);
       if (s.length > F) return m("too_large");
       return Me(
         s
@@ -422,7 +422,7 @@ async function Te(e, t, n, r, o) {
       return { kind: "unreadable" };
     let s = [];
     for await (let i of await opendir(p(e, n))) {
-      if (r.remaining <= 0 || Ct(o)) return { kind: "too_many" };
+      if (r.remaining <= 0 || isSignalAborted(o)) return { kind: "too_many" };
       if ((r.remaining--, n !== "" && i.name === U))
         return { kind: "nested_repository" };
       s.push({ path: n === "" ? i.name : n + "/" + i.name, dirent: i });
@@ -436,7 +436,7 @@ async function Te(e, t, n, r, o) {
 async function Oe(e, t, n) {
   let r = n.filter(
     ({ dirent: s }) =>
-      s.name === Nne.head || s.name === Nne.objects || s.name === Nne.refs,
+      s.name === GIT_DIR_ENTRY_NAMES.head || s.name === GIT_DIR_ENTRY_NAMES.objects || s.name === GIT_DIR_ENTRY_NAMES.refs,
   );
   if (r.length < 3) return !1;
   let o = r.map(({ dirent: s }) => ({
@@ -445,7 +445,7 @@ async function Oe(e, t, n) {
     isSymbolicLink: s.isSymbolicLink(),
     typeKnown: s.isFile() || s.isDirectory() || s.isSymbolicLink(),
   }));
-  return o.every((s) => s.typeKnown) ? imn(o) : o6t(p(e, t));
+  return o.every((s) => s.typeKnown) ? looksLikeGitDirEntries(o) : isGitDirectoryAtPath(p(e, t));
 }
 var V = "\uFFFD";
 function Pe(e, t, n) {
@@ -453,7 +453,7 @@ function Pe(e, t, n) {
     !e.includes("/") &&
     !e.includes(V) &&
     ee(t) &&
-    !(ej() && TE(e)) &&
+    !(isWindowsLikePlatform() && hasWindowsReservedPathComponent(e)) &&
     isPathEligibleForSync({ path: t }) &&
     !(n ? Z9n(t) : Vpt(t))
   );
@@ -520,7 +520,7 @@ async function He(e, t) {
         skipped: { path: t, reason: "changed" },
         mayHoldFiles: !0,
       };
-    let o = qTe(r);
+    let o = getFileSkipReason(r);
     if (o !== null)
       return {
         kind: "skip",
@@ -567,11 +567,11 @@ async function Uan({
     S = await realpath(e).catch(() => null);
   if (S === null) return { ok: !1, reason: "root_unreadable" };
   let y = [""],
-    _ = Ds(D, (a) => Te(e, S, a, c, r));
+    _ = createConcurrencyLimiter(D, (a) => Te(e, S, a, c, r));
   while (y.length > 0) {
-    if (Ct(r)) return { ok: !1, reason: "aborted" };
+    if (isSignalAborted(r)) return { ok: !1, reason: "aborted" };
     let a = y,
-      C = await Hk(a.map(_), r);
+      C = await allUnlessAborted(a.map(_), r);
     if (C === null) return { ok: !1, reason: "aborted" };
     y = [];
     for (let [Z, R] of C.entries()) {
@@ -583,7 +583,7 @@ async function Uan({
         continue;
       }
       if (R.kind === "too_many")
-        return { ok: !1, reason: Ct(r) ? "aborted" : "too_many_files" };
+        return { ok: !1, reason: isSignalAborted(r) ? "aborted" : "too_many_files" };
       for (let f of R.entries) {
         let N = await We(e, f),
           b = Be(f, N, t, n);
@@ -608,9 +608,9 @@ async function Uan({
       if (l.length > o) return { ok: !1, reason: "too_many_files" };
     }
   }
-  let I = Ds(D, (a) => (Ct(r) ? Promise.resolve({ kind: "gone" }) : He(e, a))),
-    u = await Hk(l.map(I), r);
-  if (u === null || Ct(r)) return { ok: !1, reason: "aborted" };
+  let I = createConcurrencyLimiter(D, (a) => (isSignalAborted(r) ? Promise.resolve({ kind: "gone" }) : He(e, a))),
+    u = await allUnlessAborted(l.map(I), r);
+  if (u === null || isSignalAborted(r)) return { ok: !1, reason: "aborted" };
   return {
     ok: !0,
     listing: {

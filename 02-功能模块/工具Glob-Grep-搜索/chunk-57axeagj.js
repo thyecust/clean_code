@@ -21,7 +21,7 @@ import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { OP, Vet, Ket } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { kJ, MK, UTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { dUt, t3, Qqn, uX, createBaseHookInput, executeFileSuggestionCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getEffectiveFileSuggestion, runRipgrepSearch, MARKDOWN_SUBDIRS, getMarkdownFiles, createBaseHookInput, executeFileSuggestionCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var w = toESM(kJ(), 1);
@@ -258,7 +258,7 @@ function L(e, r, s, t) {
   }
 }
 async function A(e, r) {
-  return (await Promise.all(Qqn.map((t) => uX(t, e, r)))).flatMap((t) =>
+  return (await Promise.all(MARKDOWN_SUBDIRS.map((t) => getMarkdownFiles(t, e, r)))).flatMap((t) =>
     t.map((a) => a.filePath),
   );
 }
@@ -291,7 +291,7 @@ async function E(e, r, s) {
       "!.sl/",
     ];
     if (!s) d.push("--no-ignore-vcs");
-    c = await t3(d, o, r);
+    c = await runRipgrepSearch(d, o, r);
   }
   let u = c.map((d) => m.relative(o, d)),
     f = Date.now() - a;
@@ -423,7 +423,7 @@ async function generateFileSuggestions(e, r, s = !1, t) {
     return U(r);
   }
   if (!r && !s) return [];
-  if (dUt(getInitialSettings().fileSuggestion)?.type === "command") {
+  if (getEffectiveFileSuggestion(getInitialSettings().fileSuggestion)?.type === "command") {
     let g = { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
       c = { ...createBaseHookInput(g, getCwd()), query: r };
     return (await executeFileSuggestionCommand(g, c)).slice(0, S).map(I);

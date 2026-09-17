@@ -42,7 +42,7 @@ import {
   formatOwnSessionMessage,
 } from "../Teammates团队/peer-target-guard.js";
 import { ni, sm, READ_PATH_PROBE, readPermissionDecisionForPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Ds, i3, gzn, hzn, x3, getCurrentSessionPeerNameFor } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createConcurrencyLimiter, SEND_FILE_TOOL_NAME, SEND_FILE_TOOL_DESCRIPTION, buildSendFileToolPrompt, BoundedTtlCache, getCurrentSessionPeerNameFor } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { $Ae, UAe, z3t, BAe, xSn, mD } from "./chunk-ddtmwhn7.js";
 import { LIST_AGENTS_TOOL_NAME } from "../Teammates团队/list-agents-tool-constants.js";
 import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, isSendFileEnabled, FILE_TRANSFER_ERROR_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
@@ -99,8 +99,8 @@ var Q = createLazyValue(() =>
   ),
   Z = "Cross-session file transfer is not available in this session.",
   ne = 4,
-  pe = Ds(ne, (e) => e()),
-  ge = Ds(ne, (e) => e());
+  pe = createConcurrencyLimiter(ne, (e) => e()),
+  ge = createConcurrencyLimiter(ne, (e) => e());
 function ee(e) {
   if (e === void 0 || e === 0) return;
   return ` (note: ${e} other live ${pluralize(e, "agent now shares", "agents now share")} this name)`;
@@ -275,12 +275,12 @@ ${C}`,
     default:
       return {
         kind: "refused",
-        message: `'${e}' is an agent in this session \u2014 it already shares your filesystem, so there is nothing to transfer. Use ${SEND_MESSAGE_TOOL_NAME} and reference the file as @<path> instead. ${i3} is for OTHER Claude Code sessions (a peer session on this machine, or a Remote Control / cloud session).`,
+        message: `'${e}' is an agent in this session \u2014 it already shares your filesystem, so there is nothing to transfer. Use ${SEND_MESSAGE_TOOL_NAME} and reference the file as @<path> instead. ${SEND_FILE_TOOL_NAME} is for OTHER Claude Code sessions (a peer session on this machine, or a Remote Control / cloud session).`,
       };
   }
 }
-class V extends x3 {}
-class q extends x3 {}
+class V extends BoundedTtlCache {}
+class q extends BoundedTtlCache {}
 function K(e) {
   return [e.to, e.message ?? null, e.files.toSorted()];
 }
@@ -322,7 +322,7 @@ function Ne(e) {
   return e?.type === "rule" && e.rule?.ruleBehavior === "ask";
 }
 var SendFileTool = buildTool({
-  name: i3,
+  name: SEND_FILE_TOOL_NAME,
   searchHint: "send files to another Claude Code session",
   ruleContentField: "files",
   maxResultSizeChars: 1e5,
@@ -438,7 +438,7 @@ var SendFileTool = buildTool({
     if (a.mode === "plan")
       return {
         behavior: "ask",
-        message: `${i3} would send file contents to another session \u2014 approve the plan first.`,
+        message: `${SEND_FILE_TOOL_NAME} would send file contents to another session \u2014 approve the plan first.`,
         decisionReason: { type: "mode", mode: "plan" },
       };
     if (a.mode === "auto")
@@ -480,10 +480,10 @@ var SendFileTool = buildTool({
     return { result: !0 };
   },
   async description() {
-    return gzn;
+    return SEND_FILE_TOOL_DESCRIPTION;
   },
   async prompt() {
-    return hzn(MAX_TRANSFER_FILE_COUNT, MAX_TRANSFER_SIZE_BYTES / 1048576);
+    return buildSendFileToolPrompt(MAX_TRANSFER_FILE_COUNT, MAX_TRANSFER_SIZE_BYTES / 1048576);
   },
   mapToolResultToToolResultBlockParam(e, o) {
     let a = e.files.filter((t) => t.error !== void 0),

@@ -15,7 +15,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "./chunk-w0pgmfvw.js";
 import { renderWorkflowAuthoringSkillBody } from "../../01-核心基础设施/共享小工具-未细化/workflow-authoring-skill.js";
-import { ZVe, Re, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { findSkillContentSource, createUserMessage, sliceFromLastCompactBoundary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";
 import { WORKFLOW_AUTHORING_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 async function getWorkflowAuthoringAutoloadMessages(t, o, l) {
@@ -36,7 +36,7 @@ async function getWorkflowAuthoringAutoloadMessages(t, o, l) {
 
 `),
     d = `:${WORKFLOW_AUTHORING_SKILL_NAME}`;
-  if (ZVe(ya([...(o ?? [])]), n) !== null) {
+  if (findSkillContentSource(sliceFromLastCompactBoundary([...(o ?? [])]), n) !== null) {
     if (EB().get(d)?.content !== n) TB(WORKFLOW_AUTHORING_SKILL_NAME, `bundled:${WORKFLOW_AUTHORING_SKILL_NAME}`, n, null);
     return [];
   }
@@ -45,8 +45,8 @@ async function getWorkflowAuthoringAutoloadMessages(t, o, l) {
     logFeatureOk("workflow_authoring_autoload"));
   let { formatSkillLoadingMetadata: f } = await import("../斜杠命令-框架/chunk-s195n5de.js");
   return [
-    Re({ content: f(WORKFLOW_AUTHORING_SKILL_NAME), isMeta: !0, turnCompanion: !0 }),
-    Re({ content: s, isMeta: !0, turnCompanion: !0 }),
+    createUserMessage({ content: f(WORKFLOW_AUTHORING_SKILL_NAME), isMeta: !0, turnCompanion: !0 }),
+    createUserMessage({ content: s, isMeta: !0, turnCompanion: !0 }),
   ];
 }
 function m(t, o, l) {

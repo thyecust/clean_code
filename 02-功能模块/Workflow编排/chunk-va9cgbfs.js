@@ -16,17 +16,17 @@ import { XZe } from "../../01-核心基础设施/核心工具-常量与消息/�
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { getTaskOutputPath, evictTaskOutput, writeTaskOutputSnapshot, initTaskOutput } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import {
-  pUt,
-  eh,
-  E4e,
-  Ote,
-  Jl,
-  ha,
-  KF,
-  _a,
-  fT,
-  bE,
-  lLe,
+  hasTaskEverBeenRegistered,
+  isTaskLoopSettled,
+  onTaskLoopSettled,
+  startKillEscalation,
+  truncateMiddleWithMarker,
+  enqueuePendingNotification,
+  claimTaskNotification,
+  buildTaskNotification,
+  TASK_EVICT_GRACE_MS,
+  removeKeepaliveReason,
+  resolveNotificationTargetAgentId,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isTerminalTaskStatus, createPendingTask } from "../Teammates团队/chunk-mrfx53ye.js";
 var I = 500;
@@ -152,7 +152,7 @@ function updateWorkflowProgressBatch(e, r, o) {
 }
 function A(e, r, o, t) {
   let s = null,
-    a = eh(e);
+    a = isTaskLoopSettled(e);
   if (
     (r.update(e, (l) => {
       if (l.status !== "running") return l;
@@ -161,25 +161,25 @@ function A(e, r, o, t) {
         k =
           t.terminal?.summary === void 0
             ? t.terminal
-            : { ...t.terminal, summary: Jl(t.terminal.summary) };
+            : { ...t.terminal, summary: truncateMiddleWithMarker(t.terminal.summary) };
       return {
         ...l,
         ...t,
         ...(t.terminal && { terminal: k }),
-        ...(t.error !== void 0 && { error: Jl(t.error) }),
+        ...(t.error !== void 0 && { error: truncateMiddleWithMarker(t.error) }),
         status: o,
         endTime: u,
-        ...(isTerminalTaskStatus(o) && a && { evictAfter: u + fT }),
+        ...(isTerminalTaskStatus(o) && a && { evictAfter: u + TASK_EVICT_GRACE_MS }),
         abortController: void 0,
         agentControllers: void 0,
       };
     }),
     s && isTerminalTaskStatus(o) && !a)
   )
-    E4e(e, () => {
+    onTaskLoopSettled(e, () => {
       r.update(e, (l) => {
         if (!isTerminalTaskStatus(l.status) || l.evictAfter !== void 0) return l;
-        return { ...l, evictAfter: Date.now() + fT };
+        return { ...l, evictAfter: Date.now() + TASK_EVICT_GRACE_MS };
       });
     });
   return s;
@@ -223,7 +223,7 @@ function failWorkflowTask(e, r, o, t, s, a) {
 function pauseWorkflowTask(e, r) {
   let o = A(e, r, "paused", { notified: !0 });
   if (o)
-    (o.v2Run?.kill("pause"), bE(o.ownerAgentId, `workflow:${e}`, r), Ote(e));
+    (o.v2Run?.kill("pause"), removeKeepaliveReason(o.ownerAgentId, `workflow:${e}`, r), startKillEscalation(e));
   return o !== null;
 }
 function buildResumePrompt(e) {
@@ -231,15 +231,15 @@ function buildResumePrompt(e) {
   return `Resume the paused workflow by calling: Workflow({scriptPath: '${e.scriptPath}', resumeFromRunId: '${e.workflowRunId}'${r}}) \u2014 completed agents return cached results.`;
 }
 function killWorkflowTask(e, r, o) {
-  if (r.get(e)?.status === "running" && eh(e) && !pUt(e))
+  if (r.get(e)?.status === "running" && isTaskLoopSettled(e) && !hasTaskEverBeenRegistered(e))
     logFeatureSad("task_kill_missing_loop_entry", "local_workflow");
   let t = A(e, r, "killed", { notified: !0 });
   if (t)
     (t.v2Run?.kill(o),
-      bE(t.ownerAgentId, `workflow:${e}`, r),
+      removeKeepaliveReason(t.ownerAgentId, `workflow:${e}`, r),
       evictTaskOutput(e),
       pi(e, "stopped", { toolUseId: t.toolUseId, summary: t.description }),
-      Ote(e));
+      startKillEscalation(e));
   return t !== null;
 }
 function j(e, r, o, t) {
@@ -288,20 +288,20 @@ function enqueueWorkflowNotification({
   args: _,
   workflowProgress: h,
 }) {
-  let { claimed: C, task: V } = KF(e, i),
-    U = lLe({
+  let { claimed: C, task: V } = claimTaskNotification(e, i),
+    U = resolveNotificationTargetAgentId({
       ownerAgentId: V?.ownerAgentId,
       keepaliveReason: `workflow:${e}`,
       delivering: C,
       taskRegistry: i,
     });
   if (!C) return;
-  let P = Jl(Nt(r ?? "Dynamic workflow")),
-    K = Jl(
+  let P = truncateMiddleWithMarker(Nt(r ?? "Dynamic workflow")),
+    K = truncateMiddleWithMarker(
       o === "completed"
         ? `Dynamic workflow "${P}" completed`
         : o === "failed"
-          ? `Dynamic workflow "${P}" failed: ${a ? Jl(Nt(a)) : "Unknown error"}`
+          ? `Dynamic workflow "${P}" failed: ${a ? truncateMiddleWithMarker(Nt(a)) : "Unknown error"}`
           : `Dynamic workflow "${P}" was stopped`,
       3 * XZe,
     ),
@@ -363,7 +363,7 @@ function enqueueWorkflowNotification({
   }
   let X = s?.length
       ? `
-<failures>${Jl(
+<failures>${truncateMiddleWithMarker(
           Nt(
             s.join(`
 `),
@@ -389,9 +389,9 @@ function enqueueWorkflowNotification({
   }
   let B = `
 <usage><agent_count>${l}</agent_count>${O}<subagent_tokens>${u}</subagent_tokens><tool_uses>${k}</tool_uses><duration_ms>${T}</duration_ms></usage>`;
-  ha(
+  enqueuePendingNotification(
     {
-      value: _a({
+      value: buildTaskNotification({
         taskId: e,
         toolUseId: p,
         outputFile: x,

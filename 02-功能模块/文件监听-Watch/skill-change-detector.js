@@ -20,12 +20,12 @@ import { Vj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import {
   clearAgentDefinitionsCache,
-  Rk,
-  mMe,
-  _5e,
-  $V,
-  F8n,
-  Q_t,
+  skillsChangedEmitter,
+  getSettingsSourcePath,
+  getSkillDirCommands,
+  invalidateSkillDirCaches,
+  onDynamicSkillsLoaded,
+  reloadDynamicSkills,
   evictSentSkillNames,
   clearCommandMemoizationCaches,
   clearCommandsCache,
@@ -43,9 +43,9 @@ var re = 1000,
   ue = 2000,
   U = !0;
 async function de(o) {
-  let c = await _5e(sn(), o),
+  let c = await getSkillDirCommands(sn(), o),
     s = he(),
-    p = s !== sn() ? await _5e(s, o) : [],
+    p = s !== sn() ? await getSkillDirCommands(s, o) : [],
     m = new Map();
   for (let g of [...c, ...p])
     m.set(g.name, g.type === "prompt" ? (g.contentHash ?? "") : "");
@@ -61,7 +61,7 @@ function fe(o) {
     T = o?.now ?? Date.now,
     A = o?.lastInteractionTime ?? Nm,
     e = Le(),
-    w = Rk.subscribe(() => e.emit()),
+    w = skillsChangedEmitter.subscribe(() => e.emit()),
     u = null,
     y = null,
     v = null,
@@ -78,7 +78,7 @@ function fe(o) {
   async function V(t, r) {
     if (N || k) return;
     if (((N = !0), (B = t), (g = r), !L))
-      L = F8n(() => {
+      L = onDynamicSkillsLoaded(() => {
         (clearCommandMemoizationCaches(), e.emit());
       });
     let d = ++E,
@@ -189,7 +189,7 @@ function fe(o) {
           return;
         }
       }
-      $V();
+      invalidateSkillDirCaches();
       let a = await D().catch(() => null);
       if (a === null) {
         (clearCommandsCache(), clearAgentDefinitionsCache(), q());
@@ -206,7 +206,7 @@ function fe(o) {
       if (
         (clearCommandsCache(),
         clearAgentDefinitionsCache(),
-        await Q_t().catch((f) =>
+        await reloadDynamicSkills().catch((f) =>
           n(
             `[skills] re-reading the moved directory's skills failed: ${l(f)}`,
             { level: "warn" },
@@ -245,7 +245,7 @@ function fe(o) {
   }
   function ne() {
     if (k) return;
-    (w(), (w = Rk.subscribe(() => e.emit())));
+    (w(), (w = skillsChangedEmitter.subscribe(() => e.emit())));
   }
   return {
     initialize: V,
@@ -261,7 +261,7 @@ var skillChangeDetector = fe();
 async function X(o) {
   let c = ae(),
     s = [],
-    p = mMe("userSettings", "skills");
+    p = getSettingsSourcePath("userSettings", "skills");
   if (p)
     try {
       (await c.stat(p), s.push(p));
@@ -272,12 +272,12 @@ async function X(o) {
       (await c.stat(e), s.push(e));
     } catch {}
   }
-  let m = mMe("userSettings", "commands");
+  let m = getSettingsSourcePath("userSettings", "commands");
   if (m)
     try {
       (await c.stat(m), s.push(m));
     } catch {}
-  let g = mMe("projectSettings", "skills");
+  let g = getSettingsSourcePath("projectSettings", "skills");
   if (g)
     try {
       let e = b.resolve(g);
@@ -285,7 +285,7 @@ async function X(o) {
         if (await O(o, e)) s.push(e);
       } else (await c.stat(e), s.push(e));
     } catch {}
-  let D = mMe("projectSettings", "commands");
+  let D = getSettingsSourcePath("projectSettings", "commands");
   if (D)
     try {
       let e = b.resolve(D);
@@ -293,12 +293,12 @@ async function X(o) {
         if (await O(o, e)) s.push(e);
       } else (await c.stat(e), s.push(e));
     } catch {}
-  let T = mMe("userSettings", "agents");
+  let T = getSettingsSourcePath("userSettings", "agents");
   if (T)
     try {
       (await c.stat(T), s.push(T));
     } catch {}
-  let A = mMe("projectSettings", "agents");
+  let A = getSettingsSourcePath("projectSettings", "agents");
   if (A)
     try {
       let e = b.resolve(A);

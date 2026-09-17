@@ -61,16 +61,16 @@ import { detectCurrentRepository, setRepoDetectionGuards } from "../../02-功能
 import { primeWindowsCredManBackendEnabled } from "../../02-功能模块/认证-OAuth登录/secure-storage.js";
 import { assertScrubSandboxAvailable } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
 import {
-  rw,
-  Uv,
-  jGn,
-  Jun,
-  Pr,
-  uqn,
-  Dqn,
-  R4n,
-  lVn,
-  NXn,
+  isDetailedTracingEnabled,
+  getPowerShellPath,
+  subscribeToResetStreamNoEventsLatch,
+  setupGracefulShutdown,
+  gracefulShutdownSync,
+  subscribePromptCacheResetOnSessionChange,
+  registerStorageFlushHandlers,
+  shutdownLspServerManager,
+  installHostCredentials,
+  registerKeepForeignThinkingReset,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isScratchpadEnabled, ensureScratchpadDir } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { buildOtelResourceAttributes } from "./otel-events.js";
@@ -159,7 +159,7 @@ async function T(t = {}) {
       await assertScrubSandboxAvailable(),
       applyNodeExtraCaCertsFromConfig(),
       await Promise.all([loadExtraCACerts(), loadMTLSClientMaterial(), primePlatformDetection(), pur()]),
-      await lVn(),
+      await installHostCredentials(),
       await restoreGatewayAuth(e?.backend !== void 0 && isSameAsConfigDir(e.configHome) ? c : void 0),
       ns())
     )
@@ -181,8 +181,8 @@ async function T(t = {}) {
     if (
       (await WAn(o),
       NR(o),
-      Dqn(o),
-      Jun({ storageV5: o, credentials: m }),
+      registerStorageFlushHandlers(o),
+      setupGracefulShutdown({ storageV5: o, credentials: m }),
       profileCheckpoint("init_after_graceful_shutdown"),
       Promise.all([import("../共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js")]).then(([d]) => {
         d.onGrowthBookRefresh(() => {});
@@ -245,7 +245,7 @@ async function T(t = {}) {
   - Install Git for Windows: https://git-scm.com/downloads/win, or
   - Remove CLAUDE_CODE_USE_POWERSHELL_TOOL from your environment or settings.`),
           process.exit(1));
-      if ((await Uv()) === null)
+      if ((await getPowerShellPath()) === null)
         (console.error(`Claude Code on Windows requires either Git for Windows (for bash) or PowerShell. Install one of:
   - Git for Windows: https://git-scm.com/downloads/win
   - PowerShell 7: https://aka.ms/powershell
@@ -253,7 +253,7 @@ Or set CLAUDE_CODE_GIT_BASH_PATH to your bash.exe location.`),
           process.exit(1));
     }
     if (
-      (Et(R4n),
+      (Et(shutdownLspServerManager),
       Et(async () => {
         let { cleanupSessionTeams: i } = await import("../../02-功能模块/Teammates团队/team-file-store.js");
         await i(o);
@@ -283,9 +283,9 @@ Or set CLAUDE_CODE_GIT_BASH_PATH to your bash.exe location.`),
             }),
           );
       }),
-      jGn(),
-      uqn(),
-      NXn(),
+      subscribeToResetStreamNoEventsLatch(),
+      subscribePromptCacheResetOnSessionChange(),
+      registerKeepForeignThinkingReset(),
       writeDiagnosticsEvent("info", "init_completed", { duration_ms: Date.now() - r }),
       profileCheckpoint("init_function_end"),
       o
@@ -294,7 +294,7 @@ Or set CLAUDE_CODE_GIT_BASH_PATH to your bash.exe location.`),
     if (s instanceof ud) {
       (process.stderr.write(`${s.message}
 `),
-        Pr(1));
+        gracefulShutdownSync(1));
       return;
     }
     if (s instanceof YR) {
@@ -304,7 +304,7 @@ Or set CLAUDE_CODE_GIT_BASH_PATH to your bash.exe location.`),
       }
       (process.stderr.write(`Configuration error in ${s.filePath}: ${s.message}
 `),
-        Pr(1));
+        gracefulShutdownSync(1));
       return;
     } else throw s;
   }
@@ -315,7 +315,7 @@ function initializeApp(t) {
 function initializeTelemetryAfterTrust(t) {
   let r = y();
   if (Rnn()) {
-    if (ke() && rw())
+    if (ke() && isDetailedTracingEnabled())
       _(r, t).catch((e) => {
         try {
           n(

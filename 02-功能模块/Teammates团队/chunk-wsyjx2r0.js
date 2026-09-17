@@ -31,7 +31,7 @@ import {
   lRe,
   RUe,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { nr, rMe, $6t, fWt, cgn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isLocalAgentTask, findNearNameMatches, isMainSessionLocalAgent, loadLivePeerSessions, getBridgeSessionListing } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { readTeamFileAsync } from "./team-file-store.js";
 import { DAe, nbt, rbt, i7e, obt, a7e, GNe, jpe } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
@@ -228,9 +228,9 @@ async function OGe(e, i, o, s, t, r) {
       if (!tge(h) && slugify(h) === a) return X(s, p, h);
     let A = ne;
     if (A) {
-      let [h, p] = await Promise.all([fWt(), jpe(e, r)]),
+      let [h, p] = await Promise.all([loadLivePeerSessions(), jpe(e, r)]),
         F = h.sessions,
-        W = await de(e, s.sendMessagePins, slugify(A.name), p, a, cgn(e), r),
+        W = await de(e, s.sendMessagePins, slugify(A.name), p, a, getBridgeSessionListing(e), r),
         { rows: G, unavailable: Re } = W,
         S = bP(s, { teamFile: d, sessions: F, cloud: p.sessions, bridge: G }),
         T = slugify(A.name),
@@ -332,9 +332,9 @@ async function OGe(e, i, o, s, t, r) {
     if (l0(i)) return L(a, bP(s, { teamFile: d, sessions: [] }));
     return { kind: "mailbox", recipientName: i };
   }
-  let [u, c] = await Promise.all([fWt(), jpe(e, r)]),
+  let [u, c] = await Promise.all([loadLivePeerSessions(), jpe(e, r)]),
     v = u.sessions,
-    z = await de(e, s.sendMessagePins, a, c, a, cgn(e), r),
+    z = await de(e, s.sendMessagePins, a, c, a, getBridgeSessionListing(e), r),
     { rows: I, unavailable: O, truncated: j } = z,
     Q = RUe(v),
     K = () => ({
@@ -634,7 +634,7 @@ function ue(e, i, o, { remoteTruncated: s }) {
 }
 function X(e, i, o) {
   let s = e.tasks[i];
-  if (nr(s) && !$6t(s)) {
+  if (isLocalAgentTask(s) && !isMainSessionLocalAgent(s)) {
     if (s.status === "running")
       return { kind: "agent-live", agentId: i, agentName: o };
     if (s.stoppedByUser) return { kind: "agent-stopped-by-user", agentName: o };
@@ -692,7 +692,7 @@ function L(e, i, o) {
     t = dedupe(s.map((a) => slugify(a.name)));
   return {
     kind: "not-found",
-    closest: rMe(e, t, be).map((a) => s.find((l) => slugify(l.name) === a)),
+    closest: findNearNameMatches(e, t, be).map((a) => s.find((l) => slugify(l.name) === a)),
   };
 }
 function pe(e, i, o, s, t, r = !1) {

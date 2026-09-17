@@ -18,18 +18,18 @@ import { formatResetTime } from "../../01-核心基础设施/核心工具-字符
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import {
-  z9,
-  LF,
-  Km,
-  kO,
-  md,
-  lVe,
-  QVe,
-  dde,
-  Gs,
-  aAe,
-  tN,
-  z3,
+  shouldShowUpgradeCommand,
+  getLowPriorityCopy,
+  canSelfManageUsageCredits,
+  fetchUsageUtilization,
+  getCurrentLimits,
+  emitLimitStatusChange,
+  updateOverageSpendLimit,
+  fetchPrepaidBalance,
+  formatCurrencyAmount,
+  UPGRADE_COMMAND,
+  USAGE_CREDITS_COMMAND,
+  getSessionLimitResetCopy,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { Zle, wee, xIe, orn, R4, Jx } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
@@ -116,7 +116,7 @@ function Ge(bn) {
     ri;
   if (b[1] === MEMO_CACHE_SENTINEL) {
     let Ln = si === "max" && getRateLimitTier() === "default_claude_max_20x";
-    ri = !Ln && z9();
+    ri = !Ln && shouldShowUpgradeCommand();
     b[1] = ri;
   } else ri = b[1];
   let Cn = ri,
@@ -137,7 +137,7 @@ function Ge(bn) {
       }
       let Pt = !1;
       return (
-        kO(v.credentials)
+        fetchUsageUtilization(v.credentials)
           .then((mi) => {
             if (Pt) {
               return;
@@ -180,7 +180,7 @@ function Ge(bn) {
     q = G !== void 0,
     Xe;
   if (b[7] !== j || b[8] !== q || b[9] !== G)
-    ((Xe = !q ? "\u2026" : G === null ? "Unlimited" : Gs(G, j, "fit")),
+    ((Xe = !q ? "\u2026" : G === null ? "Unlimited" : formatCurrencyAmount(G, j, "fit")),
       (b[7] = j),
       (b[8] = q),
       (b[9] = G),
@@ -261,7 +261,7 @@ function Ge(bn) {
       }
       Tt(!0);
       let pt = G ?? null;
-      let z = await QVe(pt, j, v.credentials);
+      let z = await updateOverageSpendLimit(pt, j, v.credentials);
       if (!z.ok) {
         (Tt(!1),
           Y(
@@ -290,23 +290,23 @@ function Ge(bn) {
           ),
           Y(
             z.usedCredits !== null
-              ? `You've already used ${Gs(z.usedCredits, j, "fit")} this month \u2014 set your limit above that.`
+              ? `You've already used ${formatCurrencyAmount(z.usedCredits, j, "fit")} this month \u2014 set your limit above that.`
               : "Your current spend is still over the new limit. Raise it higher or remove it.",
           ));
         return;
       }
       Y(null);
-      let ft = { ...md(), isUsingOverage: !0 };
+      let ft = { ...getCurrentLimits(), isUsingOverage: !0 };
       if ((delete ft.overageDisabledReason, ft.status === "rejected"))
         ft.status = "allowed";
-      if ((lVe(ft), pt === null))
+      if ((emitLimitStatusChange(ft), pt === null))
         S(getThemeColor("success", st)("Removed monthly spend limit"));
       else
         S(
           getThemeColor(
             "success",
             st,
-          )(`Increased monthly spend limit to ${Gs(pt, j, "fit")}`),
+          )(`Increased monthly spend limit to ${formatCurrencyAmount(pt, j, "fit")}`),
         );
     }),
       (b[23] = v.credentials),
@@ -401,7 +401,7 @@ function Ge(bn) {
   }
   let bi;
   if (b[43] !== ot.amount || b[44] !== j)
-    ((bi = Gs(ot.amount, j)), (b[43] = ot.amount), (b[44] = j), (b[45] = bi));
+    ((bi = formatCurrencyAmount(ot.amount, j)), (b[43] = ot.amount), (b[44] = j), (b[45] = bi));
   else bi = b[45];
   const Jt = `Usage credit balance: ${bi}`,
     Xt = !J;
@@ -547,8 +547,8 @@ function zt(co) {
       Ro &&
       !Et &&
       n.overageDisabledReason === "org_level_disabled_until" &&
-      Km() &&
-      tN.isEnabled()),
+      canSelfManageUsageCredits() &&
+      USAGE_CREDITS_COMMAND.isEnabled()),
       (l[15] = n.overageDisabledReason),
       (l[16] = Ii));
   else Ii = l[16];
@@ -566,7 +566,7 @@ function zt(co) {
       }
       let Ji = !1;
       return (
-        dde(g.credentials)
+        fetchPrepaidBalance(g.credentials)
           .then((Gt) => {
             if (Ji || !Gt) {
               return;
@@ -601,7 +601,7 @@ function zt(co) {
       Z = [];
       let Lo = Ye !== void 0;
       if (XIt(Ye)) {
-        let Co = Km();
+        let Co = canSelfManageUsageCredits();
         let Mo = Et && !Co;
         let $i = Pi ? "usage" : "usage credits";
         let qt;
@@ -615,8 +615,8 @@ function zt(co) {
       }
       if (
         Lo
-          ? Ye.includes("upgrade_plan") && aAe.isEnabled()
-          : !_o && !Et && aAe.isEnabled()
+          ? Ye.includes("upgrade_plan") && UPGRADE_COMMAND.isEnabled()
+          : !_o && !Et && UPGRADE_COMMAND.isEnabled()
       ) {
         let N;
         if (l[26] === MEMO_CACHE_SENTINEL)
@@ -657,7 +657,7 @@ function zt(co) {
       if (X) {
         let R;
         if (l[37] === MEMO_CACHE_SENTINEL)
-          ((R = { label: z3().label, value: "juniper-tide" }), (l[37] = R));
+          ((R = { label: getSessionLimitResetCopy().label, value: "juniper-tide" }), (l[37] = R));
         else R = l[37];
         A.push(R);
       } else if (xe !== void 0) {
@@ -673,7 +673,7 @@ function zt(co) {
       if (Re) {
         let R;
         if (l[40] === MEMO_CACHE_SENTINEL)
-          ((R = { label: LF().label, value: "low-priority" }), (l[40] = R));
+          ((R = { label: getLowPriorityCopy().label, value: "low-priority" }), (l[40] = R));
         else R = l[40];
         A.push(R);
       }
@@ -786,7 +786,7 @@ function zt(co) {
               h(Oo.text);
             })
             .catch(() => {
-              h(z3().unavailableLine);
+              h(getSessionLimitResetCopy().unavailableLine);
             }));
       }),
         (l[73] = g.credentials),

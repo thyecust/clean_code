@@ -62,7 +62,7 @@ import {
 import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { enableTerminalMode, HIDE_CURSOR } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
 import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { Uv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getPowerShellPath } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { HJn } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { o0e, aE } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
@@ -689,7 +689,7 @@ async function It(t, e) {
   } catch (d) {
     return { ok: !1, reason: l(d) };
   }
-  let c = await Uv();
+  let c = await getPowerShellPath();
   if (!c) return { ok: !1, reason: "no-powershell" };
   let s = Buffer.from(o, "utf16le").toString("base64");
   return new Promise((d) => {

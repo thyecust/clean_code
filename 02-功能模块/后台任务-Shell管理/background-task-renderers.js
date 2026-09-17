@@ -11,7 +11,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { y2t, zM, Yne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { parseCommandTitleComment, backgroundAllForegroundTasks, parseSedInPlaceCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { shouldUseFullscreen } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { gw, Ej } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
@@ -82,7 +82,7 @@ function BackgroundHint(b) {
     A;
   if (T[2] !== x || T[3] !== C)
     ((A = () => {
-      (zM(C), x?.());
+      (backgroundAllForegroundTasks(C), x?.());
     }),
       (T[2] = x),
       (T[3] = C),
@@ -127,13 +127,13 @@ function BackgroundHint(b) {
 function renderToolUseMessage(l, { verbose: s, theme: u }) {
   let { command: n } = l;
   if (!n) return null;
-  let g = Yne(n);
+  let g = parseSedInPlaceCommand(n);
   if (g) return s ? g.filePath : Ao(g.filePath);
   if (!s) {
     let c = n.split(`
 `);
     if (shouldUseFullscreen()) {
-      let m = y2t(n);
+      let m = parseCommandTitleComment(n);
       if (m) return m.length > h ? m.slice(0, h) + "\u2026" : m;
     }
     let i = c.length > B,

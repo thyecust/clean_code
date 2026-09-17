@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Xm } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getCommandQueueInstance } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -26,6 +26,6 @@ function CommandQueueProvider(f) {
   return n;
 }
 function useCommandQueue() {
-  return De(t) ?? Xm();
+  return De(t) ?? getCommandQueueInstance();
 }
 export { CommandQueueProvider, useCommandQueue };

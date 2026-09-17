@@ -51,14 +51,14 @@ import { retireBridgeHandle, setSelfBridgeTitle } from "../权限系统/chunk-1y
 import {
   getBridgeSession,
   updateBridgeSessionColorTag,
-  Ly,
-  SLe,
-  XKn,
-  f$,
-  B_,
-  $l,
-  ya,
-  ZWt,
+  isSessionTeleported,
+  applyResolvedSessionName,
+  serializeTranscriptMessages,
+  isNoContentMessage,
+  getMessageContentText,
+  isCompactBoundaryMessage,
+  sliceFromLastCompactBoundary,
+  streamTranscriptLinesBackward,
   isSyncedTranscriptEntry,
   getMaterializedSessionFile,
   setInternalEventWriter,
@@ -256,7 +256,7 @@ async function Tt(d, c, s, r, h) {
     );
   for (let E of T)
     d("transcript", E, {
-      ...($l(E) && {
+      ...(isCompactBoundaryMessage(E) && {
         isCompaction: !0,
         preservedEventIds: E.compactMetadata?.preservedMessages?.uuids,
       }),
@@ -282,7 +282,7 @@ async function Tt(d, c, s, r, h) {
     }
     for (let D of x)
       d("transcript", D, {
-        ...($l(D) && {
+        ...(isCompactBoundaryMessage(D) && {
           isCompaction: !0,
           preservedEventIds: D.compactMetadata?.preservedMessages?.uuids,
         }),
@@ -315,7 +315,7 @@ async function bt(d, c, s = !0, r, h) {
     F = !1;
   try {
     let f = 0,
-      b = r && p ? ZWt(r, p) : nje(d);
+      b = r && p ? streamTranscriptLinesBackward(r, p) : nje(d);
     for await (let w of b) {
       if (matchesHistorySuppressionLine(w))
         return (
@@ -343,7 +343,7 @@ async function bt(d, c, s = !0, r, h) {
       if (!isSyncedTranscriptEntry(S)) continue;
       if (isRowForeignToBridgeSession(S, h)) continue;
       if (!c.has(S.uuid)) k.push(S);
-      if ($l(S)) {
+      if (isCompactBoundaryMessage(S)) {
         if (!s) break;
         F = !0;
       }
@@ -1022,8 +1022,8 @@ async function initReplBridge(d) {
     else if (de && de.length > 0)
       for (let o = de.length - 1; o >= 0; o--) {
         let m = de[o];
-        if (!F$e(m) || f$(m)) continue;
-        let _ = B_(m.message.content);
+        if (!F$e(m) || isNoContentMessage(m)) continue;
+        let _ = getMessageContentText(m.message.content);
         if (!_) continue;
         let H = Cn(_);
         if (!H) continue;
@@ -1060,7 +1060,7 @@ async function initReplBridge(d) {
     xe = (e, t, o, m) => {
       let _ = () => m && (isBridgeBindingForeign() || be()),
         H = () => !Ue;
-      if (J || _() || Ly(t)) return !1;
+      if (J || _() || isSessionTeleported(t)) return !1;
       return (
         (Z = !0),
         (V = e),
@@ -1073,7 +1073,7 @@ async function initReplBridge(d) {
             getAccessToken: getBridgeAccessToken,
             shouldSend: () => {
               if (J || _() || !H()) return !1;
-              return !Ly(t);
+              return !isSessionTeleported(t);
             },
           })
           .catch(() => {}),
@@ -1134,7 +1134,7 @@ async function initReplBridge(d) {
       if (!isTeammate() && !o)
         st = st.then(async () => {
           try {
-            await SLe(t, "user", O);
+            await applyResolvedSessionName(t, "user", O);
           } catch (_) {
             n(`onRenameSession: name propagation failed: ${l(_)}`);
           }
@@ -1192,7 +1192,7 @@ async function initReplBridge(d) {
       if (((Ae = t), X++, X === 1 && !Z)) at(e, t, !1);
       else if (X === 3) {
         let m = I || isBridgeBindingForeign() || be() ? void 0 : xt?.(),
-          _ = m ? collectConversationText(ya(m)) : e;
+          _ = m ? collectConversationText(sliceFromLastCompactBoundary(m)) : e;
         at(_, t, m !== void 0);
       }
       return (X >= 3 && (Z || N)) || X >= 8;
@@ -1309,7 +1309,7 @@ async function initReplBridge(d) {
       onProactiveRefresh: async () => {
         await checkAndRefreshOAuthTokenIfNeeded({ credentials: U, storageV5: O });
       },
-      toSDKMessages: (e) => XKn(e, h?.()),
+      toSDKMessages: (e) => serializeTranscriptMessages(e, h?.()),
       initialHistoryCap: rn,
       initialMessages: I ? void 0 : de,
       gitRepoUrl: ln,

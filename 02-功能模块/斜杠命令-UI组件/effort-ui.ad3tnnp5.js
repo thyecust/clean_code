@@ -30,7 +30,7 @@ import {
   tse,
   NT,
 } from "../权限系统/chunk-t3b7pg2x.js";
-import { QF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isPromptCacheWarm } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { gw } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, tn, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -112,7 +112,7 @@ function mn(bl) {
     Ee[6] !== $e ||
     Ee[7] !== B
   )
-    ((wn = () => B !== null && tse(B.value, xe, $e, Po, QF(Eo()))),
+    ((wn = () => B !== null && tse(B.value, xe, $e, Po, isPromptCacheWarm(Eo()))),
       (Ee[3] = Po),
       (Ee[4] = xe),
       (Ee[5] = Eo),
@@ -565,7 +565,7 @@ function go(Ll) {
       }
       let Et = s.levels[I];
       let Fl = Et.value === "ultracode" ? "xhigh" : Et.value;
-      if (tse(Fl, Le, H, To, QF(Fo()))) {
+      if (tse(Fl, Le, H, To, isPromptCacheWarm(Fo()))) {
         Jn({ level: Et.value, persistAsDefault: Un });
         return;
       }
@@ -1211,7 +1211,7 @@ function po(Jl) {
       if (Je.current) {
         return;
       }
-      if (tse(oo === "ultracode" ? "xhigh" : oo, eo, j, Yo, QF(Ko()))) {
+      if (tse(oo === "ultracode" ? "xhigh" : oo, eo, j, Yo, isPromptCacheWarm(Ko()))) {
         gr(oo);
         return;
       }

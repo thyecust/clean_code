@@ -14,23 +14,23 @@ import { Ve, R, q0, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48k
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import {
-  p_,
-  Dg,
-  cfn,
-  eKe,
-  ufn,
-  _jt,
-  HV,
-  rKe,
-  Tjt,
-  $O,
-  Ejt,
-  sKe,
-  pfn,
-  Cjt,
-  ya,
+  getKeybindingChord,
+  estimateTokensForMessages,
+  consumePrecomputedCompact,
+  logManualPrecomputedCompactConsumed,
+  getMessagesAfterUuid,
+  logPrecomputedCompactDiscarded,
+  runPostCompactCleanup,
+  NOT_ENOUGH_MESSAGES_TO_COMPACT,
+  throwIfCompactionBlockedByHook,
+  CompactionError,
+  mergeCustomInstructions,
+  markContextRecentlyCompacted,
+  runCompaction,
+  finalizeCompaction,
+  sliceFromLastCompactBoundary,
   executePreCompactHooks,
-  ET,
+  invalidateUserContext,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { emitCompactionEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
@@ -47,14 +47,14 @@ var H = async (s, e) => {
       ),
       "Claude ended this conversation",
     );
-  if (((o = ya(o)), o.length === 0)) throw Error("No messages to compact");
+  if (((o = sliceFromLastCompactBoundary(o)), o.length === 0)) throw Error("No messages to compact");
   let m = s.trim();
   try {
     return await E(o, e, m);
   } catch (r) {
     if (n.signal.aborted) throw new Ve("Compaction canceled.");
-    else if (q0(r, rKe)) return { type: "text", value: rKe };
-    else if (r instanceof $O)
+    else if (q0(r, NOT_ENOUGH_MESSAGES_TO_COMPACT)) return { type: "text", value: NOT_ENOUGH_MESSAGES_TO_COMPACT };
+    else if (r instanceof CompactionError)
       return { type: "text", value: r.message, level: "error" };
     else
       throw (
@@ -75,7 +75,7 @@ async function E(s, e, n) {
   let o = performance.now(),
     m = zP(),
     r,
-    p = Dg(s),
+    p = estimateTokensForMessages(s),
     t,
     i;
   try {
@@ -92,8 +92,8 @@ async function E(s, e, n) {
         mainThreadAgentDefinition: void 0,
       }),
     ]);
-    Tjt(a, (d) => e.onQueryEvent?.({ type: "notification", notification: d }));
-    let C = Ejt(n, a.newCustomInstructions);
+    throwIfCompactionBlockedByHook(a, (d) => e.onQueryEvent?.({ type: "notification", notification: d }));
+    let C = mergeCustomInstructions(n, a.newCustomInstructions);
     (e.onCompactEvent?.({ type: "stream_mode", mode: "requesting" }),
       e.onQueryEvent?.({ type: "response_length", op: "reset" }),
       e.onCompactEvent?.({
@@ -111,13 +111,13 @@ async function E(s, e, n) {
     i = c.reuse;
     let u = await (
       c.hit
-        ? Cjt({
+        ? finalizeCompaction({
             ...c.finalize,
             startTime: o,
             cacheSafeParams: g,
             mainChainTailAtStart: m,
           })
-        : pfn(s, g, {
+        : runCompaction(s, g, {
             customInstructions: C,
             trigger: "manual",
             manualPrecomputeReuse: c.reuse,
@@ -129,28 +129,28 @@ async function E(s, e, n) {
     if (!u.ok)
       switch (u.reason) {
         case "too_few_groups":
-          throw Error(rKe);
+          throw Error(NOT_ENOUGH_MESSAGES_TO_COMPACT);
         case "aborted":
           throw Error(hA);
         case "exhausted":
-          throw new $O(
+          throw new CompactionError(
             "Compaction failed \xB7 conversation could not be reduced below the context limit",
           );
         case "media_unstrippable":
-          throw new $O(
+          throw new CompactionError(
             "Compaction failed \xB7 attached media exceeds size limits",
           );
         case "error":
-          throw new $O(
+          throw new CompactionError(
             `Error during compaction: ${u.detail || "unknown error"}`,
           );
       }
     let f = u.result.boundaryMarker;
     if (f.subtype === "compact_boundary" && "compactMetadata" in f)
       t = f.compactMetadata.postTokens;
-    (HV(e.session, void 0, e.setAppState, void 0, void 0, void 0, e.storageV5),
-      sKe(),
-      ET(e.session, "compaction"));
+    (runPostCompactCleanup(e.session, void 0, e.setAppState, void 0, void 0, void 0, e.storageV5),
+      markContextRecentlyCompacted(),
+      invalidateUserContext(e.session, "compaction"));
     let y =
       [a.userDisplayMessage, u.result.userDisplayMessage].filter(Boolean).join(`
 `) || void 0;
@@ -194,17 +194,17 @@ async function _(s, e, n, o, m, r) {
   if (e) return { hit: !1, reuse: "miss_custom_instructions" };
   if (n) return { hit: !1, reuse: "miss_hook" };
   let p = performance.now(),
-    t = await cfn(s, void 0, m, r),
+    t = await consumePrecomputedCompact(s, void 0, m, r),
     i = performance.now() - p;
   if (t === null)
     return (
-      eKe("none", t, i),
+      logManualPrecomputedCompactConsumed("none", t, i),
       { hit: !1, reuse: "miss_not_ready", precomputedKind: "none" }
     );
-  if (t.kind === "turn_aborted") throw (eKe("aborted", t, i), Error(hA));
+  if (t.kind === "turn_aborted") throw (logManualPrecomputedCompactConsumed("aborted", t, i), Error(hA));
   if (t.kind === "failed")
     return (
-      eKe("failed", t, i),
+      logManualPrecomputedCompactConsumed("failed", t, i),
       {
         hit: !1,
         reuse: "miss_not_ready",
@@ -212,15 +212,15 @@ async function _(s, e, n, o, m, r) {
         precomputedFailureCause: t.failure.cause,
       }
     );
-  let a = ufn(o, t.ready.precomputedAtUuid);
+  let a = getMessagesAfterUuid(o, t.ready.precomputedAtUuid);
   if (a === null)
     return (
-      eKe("none", t, i),
-      _jt(t.ready, "boundary_uuid_missing", void 0),
+      logManualPrecomputedCompactConsumed("none", t, i),
+      logPrecomputedCompactDiscarded(t.ready, "boundary_uuid_missing", void 0),
       { hit: !1, reuse: "miss_not_ready", precomputedKind: "none" }
     );
   return (
-    eKe("applied", t, i),
+    logManualPrecomputedCompactConsumed("applied", t, i),
     {
       hit: !0,
       reuse: "hit",
@@ -237,7 +237,7 @@ async function _(s, e, n, o, m, r) {
           leadMs: p - t.ready.startedAt,
           totalMs: t.ready.readyDurationMs,
           borrowed: !1,
-          messagesSinceTokens: Dg(a),
+          messagesSinceTokens: estimateTokensForMessages(a),
         },
       },
     }
@@ -245,7 +245,7 @@ async function _(s, e, n, o, m, r) {
 }
 function w(s, e) {
   let n = get1MContextSuggestion("tip"),
-    o = p_("app:toggleTranscript", "Global", "ctrl+o"),
+    o = getKeybindingChord("app:toggleTranscript", "Global", "ctrl+o"),
     m = [
       ...(s.options.verbose ? [] : [`(${o} to see full summary)`]),
       ...(e ? [e] : []),

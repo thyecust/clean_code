@@ -18,7 +18,7 @@ import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { parseWorkflowScript, isValidWorkflowScript } from "./workflow-script.js";
 import { vm, $t, MEt } from "../插件系统/chunk-7s6mt1vg.js";
 import { ax } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { gV, ei } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getProjectDirsUpToHome, loadAllPluginsCacheOnly } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Uh } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getBundledWorkflows } from "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
 import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
@@ -92,7 +92,7 @@ function P(o) {
   let s = $t();
   return (
     (s.workflows ??= (async () => {
-      let { enabled: t, errors: i } = await ei(o),
+      let { enabled: t, errors: i } = await loadAllPluginsCacheOnly(o),
         d = [];
       if (i.length > 0)
         n(`Plugin loading errors: ${i.map((e) => vm(e)).join(", ")}`);
@@ -175,7 +175,7 @@ function getUserWorkflowsDir() {
 }
 async function T(o, s) {
   try {
-    return await gV("workflows", o);
+    return await getProjectDirsUpToHome("workflows", o);
   } catch (t) {
     if (Po(t))
       return (

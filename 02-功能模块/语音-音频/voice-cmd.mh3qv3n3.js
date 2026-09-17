@@ -14,7 +14,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { isAnthropicAuthEnabled, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { p_, _8e, rNe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getKeybindingChord, isVoiceEnabled, isVoiceModeAvailable } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 var V = 2;
 function L(s) {
   let e = s.trim().toLowerCase();
@@ -23,7 +23,7 @@ function L(s) {
   return "invalid";
 }
 var I = async (s, e) => {
-  if (!rNe()) {
+  if (!isVoiceModeAvailable()) {
     if (!isAnthropicAuthEnabled())
       return {
         type: "text",
@@ -35,7 +35,7 @@ var I = async (s, e) => {
     return { type: "text", value: "Voice mode is not available." };
   }
   let a = getInitialSettings(),
-    v = _8e(a),
+    v = isVoiceEnabled(a),
     o = L(s);
   if (o === "invalid")
     return {
@@ -118,7 +118,7 @@ Install SoX manually for audio recording.`
         "Failed to update settings. Check your settings file for syntax errors.",
     };
   logEvent("tengu_voice_toggled", { enabled: !0, tap_mode: l === "tap" });
-  let g = p_("voice:pushToTalk", "Chat", "space"),
+  let g = getKeybindingChord("voice:pushToTalk", "Chat", "space"),
     w =
       l === "tap"
         ? `Tap ${g} (with input empty) to start, tap again to send.`

@@ -12,7 +12,7 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ep, yjt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { DEFAULTS_SLOT_MARKER, mapKeys } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { eJe, DC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { qe, Bt, Mn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, O, se, v, c, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -910,7 +910,7 @@ function on(e) {
       let u = (_ ?? [])
           .flatMap((y) => y.split(/\r?\n/))
           .map((y) => fE(y.replace(/\s+/g, " "), WDt).trim())
-          .filter((y) => y.length > 0 && y !== ep),
+          .filter((y) => y.length > 0 && y !== DEFAULTS_SLOT_MARKER),
         E = p === "last" ? u.slice(-j) : u.slice(0, j);
       return E.length > 0 ? E : void 0;
     },
@@ -964,7 +964,7 @@ function l(e) {
   if (Array.isArray(e)) return e.map(l);
   if (e !== null && typeof e === "object")
     return Si(
-      yjt(e, (o, t) => l(t)),
+      mapKeys(e, (o, t) => l(t)),
       l,
     );
   return e;

@@ -45,7 +45,7 @@ import { consentAskCanReachUser, planConsentMustDeny, artifactFilesConsentMarked
 import { gcn, G3n } from "./chunk-01jnk0v2.js";
 import { registerHandoverRead, handoverPersistTarget, refreshHandoverCopy, handoverCoverageNote } from "./chunk-x29r16ke.js";
 import { Nv } from "./chunk-stvynqrz.js";
-import { lht, Ene, Dy, hLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { FETCHED_CONTENT_CHAR_BUDGET, getHttpStatusText, persistBinaryContent, buildArtifactFileName } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { createHash } from "crypto";
 function ye() {
@@ -144,7 +144,7 @@ async function ucn({
         output: {
           bytes: 0,
           code: 404,
-          codeText: Ene(404),
+          codeText: getHttpStatusText(404),
           result: `Artifact ${t.slug}: no file is published at ${x} in the served version (a single-page artifact has only its page).${P ? ` The ${ARTIFACT_TOOL_NAME} tool's list_files action, with this artifact's URL, shows the published paths.` : ""}`,
           durationMs: Date.now() - R,
           url: r,
@@ -157,7 +157,7 @@ async function ucn({
       output: {
         bytes: 0,
         code: e.status,
-        codeText: Ene(e.status),
+        codeText: getHttpStatusText(e.status),
         result: `Artifact ${t.slug}: ${s}`,
         durationMs: Date.now() - R,
         url: r,
@@ -166,7 +166,7 @@ async function ucn({
   }
   let u = e.role === "writer" && e.sameChannel === !0 && !e.publicRead && isFrameSameChannelRawReadEnabled(),
     i = M === void 0,
-    D = () => `${hLe(t.slug, e.ver)}-${Le(M ?? "")}`,
+    D = () => `${buildArtifactFileName(t.slug, e.ver)}-${Le(M ?? "")}`,
     le =
       i && P && !e.publicRead && e.fileCount !== void 0 && e.fileCount > 1
         ? `
@@ -182,7 +182,7 @@ async function ucn({
       output: {
         bytes: 0,
         code: 403,
-        codeText: Ene(403),
+        codeText: getHttpStatusText(403),
         result: `Artifact ${t.slug}: the files of a public artifact read from outside its organization are not readable this way.`,
         durationMs: Date.now() - R,
         url: r,
@@ -223,7 +223,7 @@ async function ucn({
     if (!w)
       if (E) d = `${c}; not text, and not saved: ${v}]`;
       else {
-        let h = await Dy(
+        let h = await persistBinaryContent(
           l.raw,
           l.contentType,
           D(),
@@ -249,7 +249,7 @@ async function ucn({
         ),
         A = E
           ? void 0
-          : await Dy(
+          : await persistBinaryContent(
               l.raw,
               l.contentType,
               D(),
@@ -278,10 +278,10 @@ ${_.length > y ? `${scrubbedHead(_, Math.max(0, y - Y.length))}${Y}` : _}`),
 ${ARTIFACT_FILE_CONTENT_OUTRO}`,
         H = e.role === "reader" && !u ? "all" : "page",
         _ = scrubArtifactEnvelopeTags(e.html, H),
-        T = a - (u1 - lht),
+        T = a - (u1 - FETCHED_CONTENT_CHAR_BUDGET),
         y = c.length + h.length + A.length + 200;
       if (_.length + y > T) {
-        let oe = await Dy(
+        let oe = await persistBinaryContent(
             l.raw,
             l.contentType,
             D(),
@@ -370,12 +370,12 @@ ${_e}`;
         credentials: o.credentials,
       }),
       { persistId: w, editedCopy: v } = i
-        ? await handoverPersistTarget(t.slug, e.ver, hLe(t.slug, e.ver))
+        ? await handoverPersistTarget(t.slug, e.ver, buildArtifactFileName(t.slug, e.ver))
         : { persistId: D(), editedCopy: void 0 },
       E = !i && S === "none",
       d = E
         ? { error: "withheld" }
-        : await Dy(
+        : await persistBinaryContent(
             Buffer.from(e.html),
             "text/html",
             w,
@@ -495,13 +495,13 @@ ${p}`));
     f = "set",
     z,
     B = isArtifactConflictLegacy(),
-    ke = a - (u1 - lht);
+    ke = a - (u1 - FETCHED_CONTENT_CHAR_BUDGET);
   if (W.length + X.length + Z.length > ke) {
     let s = (u || e.cowritten) && !e.typeLocked,
       { persistId: p, editedCopy: F } = i
-        ? await handoverPersistTarget(t.slug, e.ver, hLe(t.slug, e.ver))
+        ? await handoverPersistTarget(t.slug, e.ver, buildArtifactFileName(t.slug, e.ver))
         : { persistId: D(), editedCopy: void 0 },
-      L = await Dy(
+      L = await persistBinaryContent(
         Buffer.from(e.html),
         "text/html",
         p,

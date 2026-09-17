@@ -15,26 +15,26 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { $J } from "../插件系统/chunk-7s6mt1vg.js";
 import {
-  wM,
+  discoverPluginMcpServers,
   getAgentDefinitionsWithOverrides,
   SandboxManager,
-  rde,
-  xgt,
-  x2t,
-  Dpn,
-  ode,
-  Hgt,
-  U4n,
-  W4n,
+  readPluginLspConfig,
+  findLspExtensionConflicts,
+  loadPluginLspServers,
+  shouldDeferLspServerManagerStart,
+  hasLspServerManagerEverConnected,
+  reinitializeLspServerManager,
+  clearOrphanedVersionGlobCache,
+  resetShellProviderCache,
   loadPluginHooks,
-  Rk,
-  dMe,
-  bEe,
-  syt,
-  fu,
-  a7n,
-  Ph,
-  myt,
+  skillsChangedEmitter,
+  isLspEnabled,
+  getPluginCommands,
+  getPluginSkills,
+  refreshPluginState,
+  clearInstalledPluginsCache,
+  loadAllPlugins,
+  loadAllPluginsForPreview,
   getConnectablePluginMcpServerNames,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isVertexModelUnsupportedForToolSearch, isToolSearchSupportedModel, isToolSearchEnabled } from "../工具ToolSearch/tool-search-enablement.js";
@@ -44,18 +44,18 @@ async function EDt(r, o) {
 }
 async function refreshActivePlugins(r, o, m, p = {}) {
   let d = p.applyStagedInstalls ?? !0;
-  if ((n("refreshActivePlugins: clearing all plugin caches"), d)) a7n();
-  if ((fu(o, m), d)) U4n();
-  let g = await Ph(o, m);
-  (W4n(), SandboxManager.refreshConfig());
-  let [f, y, c] = await Promise.all([bEe(o), syt(o), getAgentDefinitionsWithOverrides(he(), o)]),
+  if ((n("refreshActivePlugins: clearing all plugin caches"), d)) clearInstalledPluginsCache();
+  if ((refreshPluginState(o, m), d)) clearOrphanedVersionGlobCache();
+  let g = await loadAllPlugins(o, m);
+  (resetShellProviderCache(), SandboxManager.refreshConfig());
+  let [f, y, c] = await Promise.all([getPluginCommands(o), getPluginSkills(o), getAgentDefinitionsWithOverrides(he(), o)]),
     { enabled: t, disabled: u, errors: w, warnings: s } = g,
     k = [],
     [L, F] = await Promise.all([
       Promise.all(
         t.map(async (e) => {
           if (e.mcpServers) return Object.keys(e.mcpServers).length;
-          let a = await wM(e, k, o);
+          let a = await discoverPluginMcpServers(e, k, o);
           if (a) e.mcpServers = a;
           return a ? Object.keys(a).length : 0;
         }),
@@ -63,7 +63,7 @@ async function refreshActivePlugins(r, o, m, p = {}) {
       Promise.all(
         t.map(async (e) => {
           if (e.lspServers) return Object.keys(e.lspServers).length;
-          let a = await rde(e, k, o);
+          let a = await readPluginLspConfig(e, k, o);
           if (a) e.lspServers = a;
           return a ? Object.keys(a).length : 0;
         }),
@@ -72,7 +72,7 @@ async function refreshActivePlugins(r, o, m, p = {}) {
     S = L.reduce((e, a) => e + a, 0),
     _ = F.reduce((e, a) => e + a, 0);
   await EDt(t, k);
-  let P = [...s, ...xgt(t)],
+  let P = [...s, ...findLspExtensionConflicts(t)],
     b = [...w, ...k];
   (r.applyRefresh({
     enabled: t,
@@ -82,7 +82,7 @@ async function refreshActivePlugins(r, o, m, p = {}) {
     warnings: P,
     agentDefinitions: c,
   }),
-    Hgt(o, m));
+    reinitializeLspServerManager(o, m));
   let A = !1;
   try {
     await loadPluginHooks(o, m);
@@ -102,7 +102,7 @@ async function refreshActivePlugins(r, o, m, p = {}) {
     );
   }, 0);
   return (
-    Rk.emit(),
+    skillsChangedEmitter.emit(),
     n(
       `refreshActivePlugins: ${t.length} enabled, ${f.length} commands, ${y.length} skills, ${c.allAgents.length} agents, ${j} hooks, ${S} MCP, ${_} LSP`,
     ),
@@ -130,7 +130,7 @@ async function getPluginReloadCacheImpact(r) {
         .map((s) => s.name),
     ),
     m,
-    p = () => (m ??= myt(r.storageV5)),
+    p = () => (m ??= loadAllPluginsForPreview(r.storageV5)),
     d = await getConnectablePluginMcpServerNames(r.dynamicMcpConfig ?? {}, r.storageV5, p),
     g = [...d].filter((s) => !o.has(s)).sort(),
     f = [...o].filter((s) => !d.has(s)).sort(),
@@ -138,8 +138,8 @@ async function getPluginReloadCacheImpact(r) {
     c = isToolSearchEnabled() && isToolSearchSupportedModel(r.model) && !isVertexModelUnsupportedForToolSearch(r.model),
     t = jc() > 0,
     u = null;
-  if (dMe() && !c && t && !isCustomizationDisabled("lspServers")) {
-    let s = Dpn()
+  if (isLspEnabled() && !c && t && !isCustomizationDisabled("lspServers")) {
+    let s = shouldDeferLspServerManagerStart()
       ? {
           hasServers: !1,
           loaderFailed: !1,
@@ -147,7 +147,7 @@ async function getPluginReloadCacheImpact(r) {
           derivationFailed: !1,
         }
       : await O(p, r.storageV5, r.credentials);
-    if (!ode()) {
+    if (!hasLspServerManagerEverConnected()) {
       if (s.hasServers) u = "adds";
       else if (s.loaderFailedApplyHealable) u = "may-add";
     } else if (!s.hasServers && !s.derivationFailed) {
@@ -179,7 +179,7 @@ async function O(r, o, m) {
   for (let t of p) {
     let u = [];
     try {
-      let w = await x2t(t, u, o, m);
+      let w = await loadPluginLspServers(t, u, o, m);
       if (w !== void 0 && Object.keys(w).length > 0) g = !0;
     } catch {
       c = !0;

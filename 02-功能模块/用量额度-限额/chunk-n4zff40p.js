@@ -21,19 +21,19 @@ import { withOAuth401Retry, ht, hasProfileScope, getOauthAccountInfo } from "../
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import {
-  MF,
-  yk,
-  Ymt,
-  kO,
-  md,
-  LDe,
-  lVe,
-  Zmt,
-  iNe,
-  fSt,
-  OXn,
-  z3,
-  J9t,
+  isLowPriorityActive,
+  endLowPriorityMode,
+  hasUsageUtilizationWindows,
+  fetchUsageUtilization,
+  getCurrentLimits,
+  getAccountEpoch,
+  emitLimitStatusChange,
+  probeQuotaStatusWithSmallModel,
+  isSessionLimitResetEnabled,
+  getSessionLimitResetConfigVersion,
+  isSessionLimitResetAutoContinueEnabled,
+  getSessionLimitResetCopy,
+  formatSessionLimitResetLine,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { v4, IIe, Jx, D3e } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { isContinuableUsageLimitWall, getSubscriptionTier, sendAutoContinuationPrompt } from "../../01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js";
@@ -181,8 +181,8 @@ function U(e) {
 async function R(e) {
   try {
     if (!hasProfileScope()) return { kind: "no_profile_scope" };
-    let t = await kO(e, { atWall: !0 });
-    if (!Ymt(t))
+    let t = await fetchUsageUtilization(e, { atWall: !0 });
+    if (!hasUsageUtilizationWindows(t))
       return (
         n(
           "[juniper-tide] status fetch returned a fieldless or non-object body (in-band error)",
@@ -270,7 +270,7 @@ var N = 3,
   Q = 12000,
   G = 35000;
 function J(e, t) {
-  return t.resetsAt === e.wallResetsAt && e.accountEpoch === LDe();
+  return t.resetsAt === e.wallResetsAt && e.accountEpoch === getAccountEpoch();
 }
 function x(e) {
   let t = oM();
@@ -290,8 +290,8 @@ function oIe(e, t = Date.now()) {
     r.available &&
     e.resetsAt !== void 0 &&
     e.resetsAt * 1000 > t &&
-    !MF() &&
-    iNe()
+    !isLowPriorityActive() &&
+    isSessionLimitResetEnabled()
   );
 }
 function sIe(e, t = Date.now()) {
@@ -305,10 +305,10 @@ function sIe(e, t = Date.now()) {
     r.nextAvailableAt === null ||
     e.resetsAt === void 0 ||
     e.resetsAt * 1000 <= t ||
-    !iNe()
+    !isSessionLimitResetEnabled()
   )
     return;
-  return J9t(z3().spentLine, S(r.nextAvailableAt));
+  return formatSessionLimitResetLine(getSessionLimitResetCopy().spentLine, S(r.nextAvailableAt));
 }
 function S(e) {
   if (e === null) return;
@@ -316,16 +316,16 @@ function S(e) {
   return Number.isFinite(t) ? formatResetTime(Math.floor(t / 1000), !1, !0, !0) : void 0;
 }
 function ABn(e, t) {
-  if (!iNe() || !isContinuableUsageLimitWall(e)) return;
+  if (!isSessionLimitResetEnabled() || !isContinuableUsageLimitWall(e)) return;
   let r = b();
   (ie(r), (r.continuableWallResetsAt = e.resetsAt ?? null), w(e, t, "wall"));
 }
 function w(e, t, r) {
-  if (!iNe() || !isContinuableUsageLimitWall(e)) return Promise.resolve();
+  if (!isSessionLimitResetEnabled() || !isContinuableUsageLimitWall(e)) return Promise.resolve();
   let a = e.resetsAt;
   if (a === void 0) return Promise.resolve();
   let d = b(),
-    o = LDe(),
+    o = getAccountEpoch(),
     l = d.state,
     v = 0;
   if (l.phase !== "idle" && J(l, e))
@@ -391,7 +391,7 @@ function C({
       attempt: r + 1,
       eligible: l?.eligible ?? !1,
       ineligible_reason: fromEnumOpt(l?.ineligibleReason) ?? void 0,
-      config_version: fSt(),
+      config_version: getSessionLimitResetConfigVersion(),
     }),
     l === null || !l.eligible)
   )
@@ -402,8 +402,8 @@ function C({
     available: l.available,
     tier: fromEnum(getSubscriptionTier()),
     auto_armed: d,
-    low_priority_active: MF(),
-    config_version: fSt(),
+    low_priority_active: isLowPriorityActive(),
+    config_version: getSessionLimitResetConfigVersion(),
     surface: fromEnumOpt(l.eventProps?.surface) ?? void 0,
     server_tier: fromEnumOpt(l.eventProps?.tier) ?? void 0,
     tenure_bucket: fromEnumOpt(l.eventProps?.tenureBucket) ?? void 0,
@@ -421,7 +421,7 @@ function q9e(e, t) {
   logEvent("tengu_juniper_tide_shown", {
     arm: fromEnumOpt(d?.arm) ?? void 0,
     surface: fromEnum(t),
-    config_version: fSt(),
+    config_version: getSessionLimitResetConfigVersion(),
   });
 }
 function nnn(e, t) {
@@ -431,17 +431,17 @@ async function z9e(e, t) {
   try {
     return await K(e, t);
   } catch (r) {
-    return (logError(ge(r)), { outcome: "unavailable", text: z3().unavailableLine });
+    return (logError(ge(r)), { outcome: "unavailable", text: getSessionLimitResetCopy().unavailableLine });
   }
 }
 async function K(e, t) {
   let r = b(),
-    a = z3();
-  if (x(md()) === void 0) {
+    a = getSessionLimitResetCopy();
+  if (x(getCurrentLimits()) === void 0) {
     let f = r.pendingAsk !== null;
-    if ((await w(md(), t, e), f && k(md()))) await w(md(), t, e);
+    if ((await w(getCurrentLimits(), t, e), f && k(getCurrentLimits()))) await w(getCurrentLimits(), t, e);
   }
-  let d = md();
+  let d = getCurrentLimits();
   if (!oIe(d) || d.resetsAt === void 0) {
     let f = sIe(d);
     if (f !== void 0) return { outcome: "spent", text: f };
@@ -451,7 +451,7 @@ async function K(e, t) {
   }
   if (r.claiming) return { outcome: "unavailable", text: V };
   let o = d.resetsAt,
-    l = fSt();
+    l = getSessionLimitResetConfigVersion();
   logEvent("tengu_juniper_tide_selected", {
     entry: fromEnum(e),
     auto_armed: v4(),
@@ -491,9 +491,9 @@ async function K(e, t) {
     case "reset":
     case "not_limited": {
       r.unsettledClaimWallResetsAt = null;
-      let f = OXn() && r.continuableWallResetsAt === o;
+      let f = isSessionLimitResetAutoContinueEnabled() && r.continuableWallResetsAt === o;
       ((r.continuableWallResetsAt = null), Y(r, o, e, f));
-      let A = J9t(
+      let A = formatSessionLimitResetLine(
         a.successLine,
         p.result === "reset" ? S(p.nextAvailableAt) : void 0,
       );
@@ -505,7 +505,7 @@ async function K(e, t) {
     case "already_used": {
       if ((te(o, p.nextAvailableAt), r.unsettledClaimWallResetsAt === o))
         ((r.unsettledClaimWallResetsAt = null), ee(t));
-      return { outcome: "spent", text: J9t(a.spentLine, S(p.nextAvailableAt)) };
+      return { outcome: "spent", text: formatSessionLimitResetLine(a.spentLine, S(p.nextAvailableAt)) };
     }
     case "ineligible":
       return (ne(o), { outcome: "not_offered", text: P });
@@ -526,7 +526,7 @@ function Y(e, t, r, a) {
   let d = [
     () => Jx("juniper_tide"),
     () => {
-      yk("reset");
+      endLowPriorityMode("reset");
     },
     () => Z(t),
     () => {
@@ -546,21 +546,21 @@ function Y(e, t, r, a) {
     }
 }
 function Z(e) {
-  let t = md();
+  let t = getCurrentLimits();
   if (
     t.status !== "rejected" ||
     t.rateLimitType !== "five_hour" ||
     t.resetsAt !== e
   )
     return;
-  lVe({ ...t, status: "allowed", rateLimitType: void 0, resetsAt: void 0 });
+  emitLimitStatusChange({ ...t, status: "allowed", rateLimitType: void 0, resetsAt: void 0 });
 }
 function ee(e) {
   if (v4()) {
     IIe();
     return;
   }
-  Zmt(e, void 0).catch((t) => {
+  probeQuotaStatusWithSmallModel(e, void 0).catch((t) => {
     logError(ge(t));
   });
 }

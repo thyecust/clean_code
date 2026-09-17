@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { vJ, HCe, xoe, ICe, PCe } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
-import { yk, Qwe, n3, Hy, Wue } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { endLowPriorityMode, advancePasteIdsFromMessages, isPassiveCommand, removeCommandsByFilter, clearHostContextRegistry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { listGoalStopHooks } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import { runBundledSkillSessionResets } from "../../02-功能模块/Skills技能/bundled-skills.js";
 import { Jx } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { transcriptReplacedBus } from "./transcript-replaced-bus.js";
 function resetConversation(o, e, r, i) {
   (Jx("conversation_reset"),
-    yk("conversation_reset"),
-    Hy(n3),
+    endLowPriorityMode("conversation_reset"),
+    removeCommandsByFilter(isPassiveCommand),
     ICe(),
     xoe(),
     vJ(),
@@ -28,8 +28,8 @@ function resetConversation(o, e, r, i) {
   for (let t of listGoalStopHooks(o.sessionHooksRegistry, s))
     o.sessionHooksRegistry.remove(s, "Stop", t);
   (r(),
-    Wue(),
-    Qwe(e),
+    clearHostContextRegistry(),
+    advancePasteIdsFromMessages(e),
     transcriptReplacedBus.of(i).emit(
       s,
       e.map((t) => t.uuid),

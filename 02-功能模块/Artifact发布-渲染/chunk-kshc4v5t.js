@@ -44,67 +44,67 @@ import { formatDuration } from "../../01-核心基础设施/核心工具-字符�
 import { pCn, gAt, dse } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
-  ha,
-  Hy,
-  _a,
-  Rjt,
-  kjt,
-  xjt,
-  Hjt,
-  aht,
-  Ijt,
-  Gne,
-  R3,
-  QLe,
-  WM,
-  h_t,
+  enqueuePendingNotification,
+  removeCommandsByFilter,
+  buildTaskNotification,
+  MAX_ARM_OUTCOMES,
+  MAX_ANNOUNCED_ARM_FAILURES,
+  DEFAULT_WATCH_ADVICE,
+  setBoundedMapEntry,
+  addBoundedSetEntry,
+  deletePrefixedSetEntries,
+  getWakeState,
+  resetWakeState,
+  bumpScanGeneration,
+  getStopGeneration,
+  stopSlug,
   __t,
-  Dd,
-  Xp,
-  sEe,
-  Ld,
-  p5n,
-  Xv,
-  XX,
-  h5n,
-  A6t,
-  b5n,
-  w5n,
-  Lmn,
-  T5n,
-  kI,
-  E5n,
-  A5n,
-  v6t,
-  C5n,
-  ZLe,
-  GKe,
-  b_t,
-  v5n,
-  R5n,
-  k5n,
-  x5n,
-  Fmn,
-  $mn,
-  H5n,
-  I5n,
-  eMe,
-  aEe,
-  tMe,
-  P5n,
-  Yv,
-  x6t,
-  lEe,
-  nMe,
-  D5n,
-  L5n,
-  M5n,
-  $5n,
-  Qf,
-  U5n,
-  w_t,
-  XO,
-  j5n,
+  isSlugStopped,
+  isSlugStopLatched,
+  stopSlugAndSweep,
+  isSlugSwept,
+  forgetYieldedSlug,
+  isSlugYielded,
+  isSlugSweptOrYielded,
+  formatAutoRepliesReenabledSummary,
+  formatAutoRepliesResumedSummary,
+  formatWatchStoppedSummary,
+  formatNotWatchingArtifactSummary,
+  enqueueCoalescedArtifactNotice,
+  markPriorNoticeSuppressed,
+  refreshSummonArmForSlug,
+  forgetSummonDeclaredAndRefresh,
+  clearSummonDeclaredFlag,
+  LIVE_TOKEN_LEASE_MS,
+  SESSION_EXPIRED_CLOSE_CODE,
+  SERVICE_UNAVAILABLE_CLOSE_CODE,
+  REVOKED_CLOSE_CODE,
+  SYNC_TOKEN_LEASE_MS,
+  MIN_TOKEN_LEASE_MS,
+  MAX_CAP_STRIKES,
+  createTokenLease,
+  updateTokenLease,
+  shouldRetryLeaseDial,
+  isLeaseValidWithMargin,
+  computeReconnectDelay,
+  computeSeedDeferMs,
+  TOKEN_BUCKET_CAPACITY,
+  TOKEN_BUCKET_REFILL_MS,
+  createTokenBucket,
+  ARMED_VIA_VALUES,
+  isMonitorWsTask,
+  isAutoReactArmedTask,
+  isMonitorTaskLeaseLive,
+  isMonitorSocketOpen,
+  setFrameLiveUserStopObserver,
+  setAutoReactHumanTurnObserver,
+  setArtifactPresenceStopObserver,
+  setAutoReactDeliberateStopObserver,
+  killMonitorTask,
+  tearDownAutoReactForSlug,
+  pauseAutoRepliesForSlug,
+  emitAutoReactStopNotification,
+  closeAllMonitorSockets,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
@@ -254,12 +254,12 @@ function In(e) {
 }
 function Mn(e, t, r) {
   if (e.disposed) return;
-  if ((On(e), e.activitySenders.set(t, r), E5n(e, t), In(e)))
+  if ((On(e), e.activitySenders.set(t, r), forgetSummonDeclaredAndRefresh(e, t), In(e)))
     (En(e, r, yn), Tt(e));
 }
 function Pn(e, t, r) {
   if (e.activitySenders.get(t) === r)
-    (e.activitySenders.delete(t), A5n(e, t), Wn(e));
+    (e.activitySenders.delete(t), clearSummonDeclaredFlag(e, t), Wn(e));
 }
 function Ye(e, t, r) {
   if (e.disposed) return;
@@ -361,11 +361,11 @@ async function Vn(e, t) {
   );
 }
 function Xr(e) {
-  return { cap: e, exp: Je(e) ?? Math.floor((Date.now() + b_t) / 1000) };
+  return { cap: e, exp: Je(e) ?? Math.floor((Date.now() + SYNC_TOKEN_LEASE_MS) / 1000) };
 }
 function Nn(e, t) {
   let r = Date.now(),
-    i = Math.min(r + b_t, Math.max(r + v5n, t.exp * 1000));
+    i = Math.min(r + SYNC_TOKEN_LEASE_MS, Math.max(r + MIN_TOKEN_LEASE_MS, t.exp * 1000));
   ((e.storedCap = { cap: t.cap, exp: Math.floor(i / 1000) }),
     (e.capStrikes = 0));
 }
@@ -391,7 +391,7 @@ function Qr(e, t, r) {
   if (t()) return;
   if (e.taskId !== void 0)
     try {
-      Qf(e.taskId, e.context.taskRegistry, { quiet: !0 });
+      killMonitorTask(e.taskId, e.context.taskRegistry, { quiet: !0 });
     } catch {}
   r("error");
 }
@@ -407,7 +407,7 @@ function et(e) {
     let t = e.taskId;
     e.taskId = void 0;
     try {
-      Qf(t, e.context.taskRegistry, { quiet: !0 });
+      killMonitorTask(t, e.context.taskRegistry, { quiet: !0 });
     } catch {}
   }
 }
@@ -426,10 +426,10 @@ function $n(e, t, r) {
         return t.elapsedMs >= r.stallThresholdMs ? "unavailable" : "dropped";
       return "refused";
     case "socket": {
-      if (t.detail === GKe) return "revoked";
+      if (t.detail === REVOKED_CLOSE_CODE) return "revoked";
       if (t.opened) {
         if (t.uptimeMs >= r.stallThresholdMs) return "dropped";
-        if (t.detail === ZLe && !e.rebootNeeded) return "unavailable";
+        if (t.detail === SERVICE_UNAVAILABLE_CLOSE_CODE && !e.rebootNeeded) return "unavailable";
         return Zr(t.detail) ? "refused" : "dropped";
       }
       let i = v7(t.detail);
@@ -452,7 +452,7 @@ function Hn(e, t, r) {
   if (i === "revoked" || i === "refused") e.storedCap = void 0;
   else if (i === "dropped" && r.on !== "boot" && e.storedCap !== void 0) {
     let o = r.on === "socket" && r.opened && r.uptimeMs >= t.minUptimeMs;
-    if (((e.capStrikes = o ? 0 : e.capStrikes + 1), e.capStrikes >= R5n))
+    if (((e.capStrikes = o ? 0 : e.capStrikes + 1), e.capStrikes >= MAX_CAP_STRIKES))
       e.storedCap = void 0;
   }
   if (i === "revoked") return { next: "end", reason: "revoked" };
@@ -570,7 +570,7 @@ async function Bn(e, t, r, i) {
     );
     if (((e.taskId = R.data.taskId), !i()))
       return (
-        Qf(R.data.taskId, e.context.taskRegistry, { quiet: !0 }),
+        killMonitorTask(R.data.taskId, e.context.taskRegistry, { quiet: !0 }),
         { outcome: "stale" }
       );
     return { outcome: "armed" };
@@ -656,7 +656,7 @@ function ni(e, t, r, i) {
     abort: new AbortController(),
   };
   (e.conns.set(t, d),
-    M5n(ri),
+    setArtifactPresenceStopObserver(ri),
     Yn(d, "initial").catch((o) => {
       (n(
         `[artifactPresence] connect threw slug=${t}: ${o instanceof Error ? o.name : "error"}`,
@@ -741,7 +741,7 @@ async function si(e, t) {
         },
         onEnded: (p, _) => {
           if (_.opened) {
-            if (p !== ZLe && p !== GKe)
+            if (p !== SERVICE_UNAVAILABLE_CLOSE_CODE && p !== REVOKED_CLOSE_CODE)
               logFeatureSad("artifact_presence", `closed_${p ?? "unknown"}`);
           } else {
             let S = v7(p);
@@ -997,7 +997,7 @@ var vi = new Set([
   "invalid_slug",
 ]);
 function f1t(e) {
-  return vi.has(e) ? null : xjt;
+  return vi.has(e) ? null : DEFAULT_WATCH_ADVICE;
 }
 function U6n(e) {
   let { armsInFlight: t } = ne().durable;
@@ -1024,7 +1024,7 @@ function B6n(e, t) {
       ...(_ !== void 0 && { serverMessage: _ }),
     };
   return (
-    Hjt(r.armOutcomes, e, { ...S, at: Date.now() }, Rjt),
+    setBoundedMapEntry(r.armOutcomes, e, { ...S, at: Date.now() }, MAX_ARM_OUTCOMES),
     i > 0 ? { settled: "pending", ...S } : { settled: "unregistered", ...S }
   );
 }
@@ -1036,10 +1036,10 @@ function j6n(e) {
 }
 function Vsn(e) {
   let t = ne().durable;
-  (t.armOutcomes.delete(e), Ijt(t.announcedArmFailures, e));
+  (t.armOutcomes.delete(e), deletePrefixedSetEntries(t.announcedArmFailures, e));
 }
 function rr(e, t) {
-  return aht(ne().durable.announcedArmFailures, `${e}:${t}`, kjt);
+  return addBoundedSetEntry(ne().durable.announcedArmFailures, `${e}:${t}`, MAX_ANNOUNCED_ARM_FAILURES);
 }
 function W6n(e) {
   let t = ne().durable,
@@ -1068,7 +1068,7 @@ function nr(e, t, r) {
   );
 }
 var Ai = "frame-live.v1",
-  ar = { enqueuePendingNotification: (e) => ha(e) },
+  ar = { enqueuePendingNotification: (e) => enqueuePendingNotification(e) },
   Ri = 25000,
   ki = 90000,
   Ht =
@@ -1080,13 +1080,13 @@ function Ti(e, t, r) {
   if (i !== void 0) i.explicit = !1;
   for (let d of Object.values(r.all()))
     if (
-      Yv(d) &&
+      isMonitorWsTask(d) &&
       d.status === "running" &&
       d.frameLive?.slug === t &&
       d.frameLive.explicit
     )
       r.update(d.id, (o) =>
-        Yv(o) && o.frameLive !== void 0
+        isMonitorWsTask(o) && o.frameLive !== void 0
           ? {
               ...o,
               description: Kt(
@@ -1105,7 +1105,7 @@ function Ei(e, t) {
   rpt(i);
   let d;
   if (t.taskStop) {
-    if ((ne().durable.stopLatches.confirmStop(e), !Xv(e)))
+    if ((ne().durable.stopLatches.confirmStop(e), !isSlugYielded(e)))
       (Ibe(e, { storageV5: i }),
         import("./chunk-54kz7amv.js").then((l) =>
           l.notifyTakenOverSlugStopped(e),
@@ -1115,7 +1115,7 @@ function Ei(e, t) {
       taskRegistry: t.taskRegistry,
       announce: !t.running,
       killRow: (l) => {
-        if (l.id !== t.taskId) Qf(l.id, t.taskRegistry, { userStop: !0 });
+        if (l.id !== t.taskId) killMonitorTask(l.id, t.taskRegistry, { userStop: !0 });
       },
     });
     d = o;
@@ -1131,9 +1131,9 @@ function ur(e) {
     i = ne().live,
     d = i.supervisors.get(t),
     o = (d !== void 0 && !d.stopped) || i.inFlightSubscribes.has(t);
-  if (d?.autoReactWiring !== void 0) U5n(t);
+  if (d?.autoReactWiring !== void 0) tearDownAutoReactForSlug(t);
   let l = Object.values(r.all()).filter(
-    (p) => Yv(p) && p.status === "running" && p.frameLive?.slug === t,
+    (p) => isMonitorWsTask(p) && p.status === "running" && p.frameLive?.slug === t,
   );
   if (
     e.announce &&
@@ -1145,7 +1145,7 @@ function ur(e) {
     it(i, d, "watching this artifact was stopped just now");
   else te(i, t);
   for (let p of l) ((o = !0), e.killRow(p));
-  if (o && Ld(t)) w_t(t);
+  if (o && isSlugSwept(t)) pauseAutoRepliesForSlug(t);
   return (Xin(t), { wasWatching: o });
 }
 function xi(e, t, r) {
@@ -1197,7 +1197,7 @@ function sr(e, t) {
         ((r.watchedSince = Date.now()), (r.armedVia = t.armedVia), V1t(t.slug));
       else if (t.armedVia === "publish") r.armedVia = "publish";
       else if (r.armedVia === "mcp_write") r.armedVia = t.armedVia;
-      if (d && r.armedVia !== "mcp_write") kI(e, t.slug);
+      if (d && r.armedVia !== "mcp_write") refreshSummonArmForSlug(e, t.slug);
     }
     if (((r.explicit = r.explicit || t.explicit), t.autoReactWiring !== void 0))
       r.autoReactWiring = we(
@@ -1233,7 +1233,7 @@ function Ci(e, t, r, i) {
 function Wi(e, t) {
   let { rewatchTiming: r } = e;
   if (r.idleTtlMs <= 0) return !1;
-  let i = t.autoReactWiring !== void 0 && Zu() && (!Dd(t.slug) || Ld(t.slug));
+  let i = t.autoReactWiring !== void 0 && Zu() && (!isSlugStopped(t.slug) || isSlugSwept(t.slug));
   return (
     !t.explicit &&
     !i &&
@@ -1248,7 +1248,7 @@ function labelledArmedVia(e, t) {
   return e ? "watch" : t === "watch" ? "watch_stopped" : t;
 }
 function parseArmedVia(e) {
-  return P5n.find((t) => t === e) ?? "publish";
+  return ARMED_VIA_VALUES.find((t) => t === e) ?? "publish";
 }
 function armedViaWording(e) {
   switch (e) {
@@ -1391,13 +1391,13 @@ function jt(e, t, r) {
       (v7(r.closeCode)?.cfMitigated === !0 ||
         !v ||
         p.lease === void 0 ||
-        !$mn(p.lease, l, ne().accountEpoch, Date.now() + l.stallMinMs)),
+        !isLeaseValidWithMargin(p.lease, l, ne().accountEpoch, Date.now() + l.stallMinMs)),
     L =
       i > 0 &&
       i >= l.minUptimeMs &&
       r.closeCode !== void 0 &&
       !(r.expired === !0 && p.transport !== "sync"),
-    x = H5n({
+    x = computeReconnectDelay({
       timing: l,
       consecutiveFailures: p.consecutiveFailures,
       leaseMode: v,
@@ -1430,10 +1430,10 @@ function he(
   if (l !== void 0) ((t.resumeAnnounce = void 0), l.onGiveUp());
   if (t.armedVia === "mcp_write") return;
   let p = H7(() => t.autoReactWiring?.title, t.url);
-  ha({
-    value: _a({
+  enqueuePendingNotification({
+    value: buildTaskNotification({
       taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
-      summary: Nt(b5n(p, i)),
+      summary: Nt(formatWatchStoppedSummary(p, i)),
       body: `
 <event>${Nt(`Watch on ${t.url} ended \u2014 ${r}. This session will no longer hear when it is republished; ${d}.`)}</event>`,
     }),
@@ -1489,7 +1489,7 @@ async function dr(e, t) {
     (logFeatureSad("artifact_live_subscribe", "stop_latched"), it(e, r));
     return;
   }
-  if (r.autoReactWiring !== void 0 && Dd(t) && !Ld(t)) delete r.autoReactWiring;
+  if (r.autoReactWiring !== void 0 && isSlugStopped(t) && !isSlugSwept(t)) delete r.autoReactWiring;
   logFeatureOk("artifact_live_subscribe", { rewatch_attempt: !0 });
   let i = await pe(e, {
     slug: r.slug,
@@ -1553,8 +1553,8 @@ async function Pi(e, t) {
     (logFeatureSad("artifact_live_subscribe", `read_stopped_${p}`),
       he(e, r, frameLiveSkipReasonPhrase(p) ?? p, Qt[p] ?? p, { advice: noRewatchAdvice(p) }));
     for (let _ of Object.values(r.context.taskRegistry.all()))
-      if (Yv(_) && _.status === "running" && _.frameLive?.slug === t)
-        Qf(_.id, r.context.taskRegistry, { quiet: !0 });
+      if (isMonitorWsTask(_) && _.status === "running" && _.frameLive?.slug === t)
+        killMonitorTask(_.id, r.context.taskRegistry, { quiet: !0 });
     return;
   }
   let o = d.err === null ? "tokenless" : (d.status ?? d.errorCode);
@@ -1586,7 +1586,7 @@ function Di(e) {
   }
   if (e.seedSurfacedVer !== void 0 && !_.includes(e.seedSurfacedVer))
     S(e.seedSurfacedVer);
-  let v = tMe(eMe, aEe),
+  let v = createTokenBucket(TOKEN_BUCKET_CAPACITY, TOKEN_BUCKET_REFILL_MS),
     E = !1,
     L = !1;
   function x() {
@@ -1628,7 +1628,7 @@ function Di(e) {
       return;
     }
     if (!v.tryConsume()) {
-      if ((T5n(t, "artifact-changed"), !L))
+      if ((markPriorNoticeSuppressed(t, "artifact-changed"), !L))
         ((L = !0),
           logFeatureSad("artifact_live_subscribe", "ver_rate_suppressed", { ...U }));
       return;
@@ -1639,7 +1639,7 @@ function Di(e) {
     } catch {}
     logFeatureOk("artifact_live_subscribe", { notified: !0, ...U });
     let ot = `Artifact ${r} appears to have been republished elsewhere (by another session, or by someone saving from the page itself) \u2014 it is now version ${A}. Your copy is stale; re-read before editing or republishing (${qwt()}).`;
-    Lmn({
+    enqueueCoalescedArtifactNotice({
       queue: ar,
       slug: t,
       family: "artifact-changed",
@@ -1713,46 +1713,46 @@ function Ui(e, t, r) {
 function pr(e, t, r, i, d, o) {
   if (!o(e, r)) return "dead";
   return i &&
-    (Dd(t)
-      ? d && (e.autoReactArmed !== !0 || !Ld(t) || XX(t))
+    (isSlugStopped(t)
+      ? d && (e.autoReactArmed !== !0 || !isSlugSwept(t) || isSlugSweptOrYielded(t))
       : e.autoReactArmed !== !0)
     ? "replace"
     : "keep";
 }
 function $i(e, t) {
-  return nMe(e.id) && lEe(e, t);
+  return isMonitorSocketOpen(e.id) && isMonitorTaskLeaseLive(e, t);
 }
 function Gi(e, t, r, i) {
   let d = Date.now(),
     o = null;
   for (let l of Object.values(e.taskRegistry.all())) {
-    if (!Yv(l) || l.status !== "running" || l.frameLive?.slug !== t) continue;
-    let p = pr(l, t, d, r, i, lEe);
+    if (!isMonitorWsTask(l) || l.status !== "running" || l.frameLive?.slug !== t) continue;
+    let p = pr(l, t, d, r, i, isMonitorTaskLeaseLive);
     if (p !== "dead") {
       if (p === "replace") {
-        Qf(l.id, e.taskRegistry, { quiet: !0 });
+        killMonitorTask(l.id, e.taskRegistry, { quiet: !0 });
         continue;
       }
       o = l.id;
       continue;
     }
-    Qf(l.id, e.taskRegistry, { quiet: !0, connectionLost: !0 });
+    killMonitorTask(l.id, e.taskRegistry, { quiet: !0, connectionLost: !0 });
   }
   return o;
 }
 function mr(e, t) {
   return Object.values(e.all()).some(
-    (r) => Yv(r) && r.status === "running" && r.frameLive?.slug === t,
+    (r) => isMonitorWsTask(r) && r.status === "running" && r.frameLive?.slug === t,
   );
 }
 function Hi(e) {
-  return x6t(e, Zu, { includeStopLatched: !0 });
+  return isAutoReactArmedTask(e, Zu, { includeStopLatched: !0 });
 }
 function isClaimableAutoReactSubscription(e) {
-  return x6t(e, Zu);
+  return isAutoReactArmedTask(e, Zu);
 }
 function killAutoReactSubscriptions(e, t) {
-  (rpt(t?.storageV5), R3(), QLe());
+  (rpt(t?.storageV5), resetWakeState(), bumpScanGeneration());
   let r = ne().live,
     i = t?.durable !== !1,
     d = 0,
@@ -1761,42 +1761,42 @@ function killAutoReactSubscriptions(e, t) {
     if (Hi(l)) {
       let p =
         l.autoReactSlug !== void 0 &&
-        Dd(l.autoReactSlug) &&
-        (!Ld(l.autoReactSlug) || Xv(l.autoReactSlug));
+        isSlugStopped(l.autoReactSlug) &&
+        (!isSlugSwept(l.autoReactSlug) || isSlugYielded(l.autoReactSlug));
       if (i) {
         if (
-          (Qf(l.id, e, { quiet: !0, userStop: !0 }), l.autoReactSlug !== void 0)
+          (killMonitorTask(l.id, e, { quiet: !0, userStop: !0 }), l.autoReactSlug !== void 0)
         )
           (oze(l.autoReactSlug), o.add(l.autoReactSlug));
       } else if (l.autoReactSlug !== void 0) o.add(l.autoReactSlug);
-      if (!p && !(l.autoReactSlug !== void 0 && !i && Dd(l.autoReactSlug))) {
+      if (!p && !(l.autoReactSlug !== void 0 && !i && isSlugStopped(l.autoReactSlug))) {
         if ((d++, !i && l.autoReactSlug !== void 0))
-          (sEe(l.autoReactSlug), kI(r, l.autoReactSlug));
+          (stopSlugAndSweep(l.autoReactSlug), refreshSummonArmForSlug(r, l.autoReactSlug));
       }
     }
   for (let l of r.supervisors.values()) {
     if (l.autoReactWiring === void 0) continue;
     if (i) delete l.autoReactWiring;
-    if (i && Zu() && (!Dd(l.slug) || o.has(l.slug)))
+    if (i && Zu() && (!isSlugStopped(l.slug) || o.has(l.slug)))
       if (mr(e, l.slug) || r.inFlightSubscribes.has(l.slug)) Ti(r, l.slug, e);
       else (te(r, l.slug), q1t(l.slug, l.context.storageV5));
-    if (!o.has(l.slug) && Zu() && !Dd(l.slug))
-      if ((o.add(l.slug), d++, i)) (oze(l.slug), h_t(l.slug));
-      else sEe(l.slug);
+    if (!o.has(l.slug) && Zu() && !isSlugStopped(l.slug))
+      if ((o.add(l.slug), d++, i)) (oze(l.slug), stopSlug(l.slug));
+      else stopSlugAndSweep(l.slug);
   }
   if (i) fpt({ storageV5: t?.storageV5 });
   else if (d > 0) x7({ flush: !0, storageV5: t?.storageV5 });
   return d;
 }
 function zt(e, t, r, i) {
-  if (!Ld(t) || XX(t) || !Zu()) return null;
+  if (!isSlugSwept(t) || isSlugSweptOrYielded(t) || !Zu()) return null;
   let d = hr(e, t);
   if (d === void 0) return null;
   i?.();
   let { live: o, wakes: l } = ne();
-  (__t(t), l.liftedAtScanGeneration.set(t, l.scanGeneration), kI(o, t));
-  let p = Gne(t).lastWakeArgs;
-  if (!nMe(d.id) || p === null) return "cleared";
+  (__t(t), l.liftedAtScanGeneration.set(t, l.scanGeneration), refreshSummonArmForSlug(o, t));
+  let p = getWakeState(t).lastWakeArgs;
+  if (!isMonitorSocketOpen(d.id) || p === null) return "cleared";
   return (
     r?.(p),
     x9({
@@ -1815,11 +1815,11 @@ function zt(e, t, r, i) {
 function hr(e, t) {
   return Object.values(e.all()).find(
     (r) =>
-      Yv(r) &&
+      isMonitorWsTask(r) &&
       r.status === "running" &&
       r.autoReactArmed === !0 &&
       r.autoReactSlug === t &&
-      lEe(r),
+      isMonitorTaskLeaseLive(r),
   );
 }
 function Bi(e) {
@@ -1841,7 +1841,7 @@ function frameLiveWatchRows(e, t) {
     l = o.autoReact.userDisarmed;
   for (let p of Object.values(e.taskRegistry.all())) {
     if (
-      !Yv(p) ||
+      !isMonitorWsTask(p) ||
       p.status !== "running" ||
       p.frameLive === void 0 ||
       (t !== void 0 && p.frameLive.slug !== t)
@@ -1853,14 +1853,14 @@ function frameLiveWatchRows(e, t) {
       taskId: p.id,
       since: p.frameLive.watchedSince,
       explicit: _?.explicit ?? p.frameLive.explicit,
-      connected: lEe(p),
+      connected: isMonitorTaskLeaseLive(p),
       tokenExpiresAt:
         _?.lease?.expMs ??
-        p.frameLive.armedAt + (_?.transport === "sync" ? b_t : v6t),
+        p.frameLive.armedAt + (_?.transport === "sync" ? SYNC_TOKEN_LEASE_MS : LIVE_TOKEN_LEASE_MS),
       armedVia: _?.armedVia ?? p.frameLive.armedVia,
       autoReply:
         p.autoReactArmed !== !0
-          ? Xp(p.frameLive.slug)
+          ? isSlugStopLatched(p.frameLive.slug)
             ? l
               ? "disarmed"
               : d()
@@ -1871,9 +1871,9 @@ function frameLiveWatchRows(e, t) {
             ? "disarmed"
             : !d()
               ? "none"
-              : p.autoReactSlug !== void 0 && Xp(p.autoReactSlug)
-                ? Ld(p.autoReactSlug)
-                  ? Xv(p.autoReactSlug)
+              : p.autoReactSlug !== void 0 && isSlugStopLatched(p.autoReactSlug)
+                ? isSlugSwept(p.autoReactSlug)
+                  ? isSlugYielded(p.autoReactSlug)
                     ? "yielded"
                     : "paused"
                   : "stopped"
@@ -1910,7 +1910,7 @@ function frameLiveStoppedRows(e, t) {
         explicit: v.explicit,
         armedVia: v.armedVia,
       }),
-      stopKind: Ld(_) ? (Xv(_) ? "yielded" : "interrupt") : "user",
+      stopKind: isSlugSwept(_) ? (isSlugYielded(_) ? "yielded" : "interrupt") : "user",
       autoReply: i.userDisarmed ? "disarmed" : "stopped",
     });
   }
@@ -1946,7 +1946,7 @@ function nt(e, t) {
 }
 function gr(e, t, r, i) {
   let d = e.supervisors.get(t.slug);
-  if ((Qf(t.taskId, r.taskRegistry, { quiet: !0 }), d !== void 0 && !d.stopped))
+  if ((killMonitorTask(t.taskId, r.taskRegistry, { quiet: !0 }), d !== void 0 && !d.stopped))
     he(
       e,
       d,
@@ -1963,7 +1963,7 @@ function Bt(e, t) {
   if (r === void 0 || r.stopped) return !1;
   return (
     r.explicit ||
-    (r.autoReactWiring !== void 0 && Zu() && (!Dd(t) || Ld(t))) ||
+    (r.autoReactWiring !== void 0 && Zu() && (!isSlugStopped(t) || isSlugSwept(t))) ||
     cr(e, r)
   );
 }
@@ -1985,14 +1985,14 @@ function teardownFrameLiveForProcessHandoff() {
     fae(Zqe(_B())),
     x7({ flush: !0 }),
     AWn(),
-    R3(),
-    QLe());
+    resetWakeState(),
+    bumpScanGeneration());
   for (let t of [...e.supervisors.keys()]) te(e, t);
-  (e.armOutcomes.clear(), e.announcedArmFailures.clear(), j5n());
+  (e.armOutcomes.clear(), e.announcedArmFailures.clear(), closeAllMonitorSockets());
 }
 function ji(e) {
   let t = ne().live;
-  ((t.handoffGeneration += 1), R3(), QLe());
+  ((t.handoffGeneration += 1), resetWakeState(), bumpScanGeneration());
   let r = 0;
   for (let o of [...t.supervisors.values()]) {
     if (!o.stopped) r++;
@@ -2002,9 +2002,9 @@ function ji(e) {
     }
     (delete o.autoReactWiring, te(t, o.slug));
     for (let l of Object.values(o.context.taskRegistry.all())) {
-      if (!Yv(l) || l.status !== "running" || l.frameLive?.slug !== o.slug)
+      if (!isMonitorWsTask(l) || l.status !== "running" || l.frameLive?.slug !== o.slug)
         continue;
-      Qf(l.id, o.context.taskRegistry, { quiet: !0 });
+      killMonitorTask(l.id, o.context.taskRegistry, { quiet: !0 });
     }
   }
   if ((t.armOutcomes.clear(), t.announcedArmFailures.clear(), r === 0))
@@ -2015,8 +2015,8 @@ function ji(e) {
         ? "Those watches were opened as the account that signed out: this session no longer hears when those artifacts are republished or commented on, and their comment auto-replies are off. A publish or watch of yours once someone is signed in opens a fresh watch; do not re-watch just to resume listening unless the user asks."
         : "Those watches were opened as the previous account: this session no longer hears when those artifacts are republished or commented on, and their comment auto-replies are off. A publish or watch of yours opens a fresh watch as the current account; do not re-watch just to resume listening unless the user asks.";
   return (
-    ha({
-      value: _a({
+    enqueuePendingNotification({
+      value: buildTaskNotification({
         taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
         summary: Nt(
           `Stopped watching ${i} (${e === "signed_out" ? "signed out" : "the signed-in account changed"})`,
@@ -2061,7 +2061,7 @@ function Sr(e, t) {
       killRow: (o) => {
         let l = o.autoReactArmed === !0;
         if (
-          (Qf(
+          (killMonitorTask(
             o.id,
             t.taskRegistry,
             l ? { quiet: !0, userStop: !0, modelOrigin: !0 } : { quiet: !0 },
@@ -2124,7 +2124,7 @@ async function watchFrameLive(e) {
     L &&
     R.outcome === "armed" &&
     R.degraded === void 0 &&
-    !(Dd(t) && !Ld(t)) &&
+    !(isSlugStopped(t) && !isSlugSwept(t)) &&
     Me()
   )
     hpt(t, { title: x, storageV5: o.storageV5 });
@@ -2260,7 +2260,7 @@ async function resumeFrameLiveAutoReplies(e) {
   if (!isSocketHoldingPublishContext(i)) return { outcome: "skipped", reason: "publish_context" };
   if (!e.commentVerbsInSchema)
     return { outcome: "skipped", reason: "comments_off" };
-  if (!Dd(t)) return { outcome: "skipped", reason: "not_stopped" };
+  if (!isSlugStopped(t)) return { outcome: "skipped", reason: "not_stopped" };
   if (!Zu()) return { outcome: "skipped", reason: "not_enabled" };
   let l = ne().live;
   if (o.abortController.signal.aborted)
@@ -2272,7 +2272,7 @@ async function resumeFrameLiveAutoReplies(e) {
       (S) => {
         (markAutoReactNoticePending(t),
           S.notify({
-            summary: A6t(H7(S.getTitle, r)),
+            summary: formatAutoRepliesResumedSummary(H7(S.getTitle, r)),
             detail: `Auto-replies on artifact ${r} were resumed by a resume_replies request \u2014 they had been paused when the user interrupted the session (Ctrl+C or Stop). ${Ht}`,
           }));
       },
@@ -2444,11 +2444,11 @@ async function maybeSubscribeFrameLive(e) {
           ? "bare_watch_session_disarmed"
           : !rze()
             ? "bare_watch_autoreact_off"
-            : Dd(t) &&
+            : isSlugStopped(t) &&
                 !x &&
                 !(
-                  Ld(t) &&
-                  !XX(t) &&
+                  isSlugSwept(t) &&
+                  !isSlugSweptOrYielded(t) &&
                   F.humanTurnAtScanGeneration === F.scanGeneration
                 )
               ? "bare_watch_slug_stopped"
@@ -2503,7 +2503,7 @@ function frameLivePublishFindsConnected(e) {
     o = Date.now();
   for (let l of Object.values(t.taskRegistry.all()))
     if (
-      Yv(l) &&
+      isMonitorWsTask(l) &&
       l.status === "running" &&
       l.frameLive?.slug === r &&
       pr(l, r, o, i, d, $i) === "keep"
@@ -2686,7 +2686,7 @@ async function pe(e, t) {
       if (C !== void 0) {
         let Q = Kt(i, C.explicit, C.armedVia);
         l.taskRegistry.update(ae, (P) => {
-          if (!Yv(P) || P.frameLive === void 0) return P;
+          if (!isMonitorWsTask(P) || P.frameLive === void 0) return P;
           if (
             P.description === Q &&
             P.frameLive.explicit === C.explicit &&
@@ -2720,7 +2720,7 @@ async function pe(e, t) {
           Q || C === void 0
             ? {
                 scanGeneration: ne().wakes.scanGeneration,
-                stopGeneration: WM(r),
+                stopGeneration: getStopGeneration(r),
               }
             : {
                 scanGeneration: C.scanGeneration,
@@ -2772,13 +2772,13 @@ async function pe(e, t) {
       J(e, r, t.machineArm, "watch_cap", X)
     );
   let Re = ne().wakes.scanGeneration,
-    Pe = WM(r),
+    Pe = getStopGeneration(r),
     Zt = t.machineArm ? e.supervisors.get(r)?.lastActivityAt : void 0,
     en = e.handoffGeneration;
   if (
-    (D5n(Ei),
-    $5n(Xin),
-    L5n(() => Bi(l.taskRegistry)),
+    (setFrameLiveUserStopObserver(Ei),
+    setAutoReactDeliberateStopObserver(Xin),
+    setAutoReactHumanTurnObserver(() => Bi(l.taskRegistry)),
     e.inFlightSubscribes.add(r),
     e.inFlightGenerations.set(r, en),
     t.autoReactWiring !== void 0)
@@ -2811,7 +2811,7 @@ async function pe(e, t) {
       D =
         ge !== void 0 &&
         (ge.transport === "live" || at) &&
-        $mn(ge, e.rewatchTiming, P)
+        isLeaseValidWithMargin(ge, e.rewatchTiming, P)
           ? ge
           : void 0;
     if (D !== void 0 && D.transport === "sync") {
@@ -2924,7 +2924,7 @@ async function pe(e, t) {
       I =
         D ??
         (Q
-          ? k5n({
+          ? createTokenLease({
               transport: q,
               token: Te,
               ver: on,
@@ -3047,7 +3047,7 @@ async function pe(e, t) {
       Dr =
         Z?.wiring.humanTurnSnapshot === !0 &&
         (ut?.humanTurnSnapshot !== !0 || Z.wiring.context !== ut.context);
-    if (Z !== void 0 && (de === void 0 || Dr) && Z.stopGeneration === WM(r)) {
+    if (Z !== void 0 && (de === void 0 || Dr) && Z.stopGeneration === getStopGeneration(r)) {
       let w = e.supervisors.get(r);
       if (w !== void 0 && !w.stopped)
         w.autoReactWiring = we(
@@ -3083,7 +3083,7 @@ async function pe(e, t) {
               },
               notify: (w) => {
                 if ("coalesce" in w) {
-                  Lmn({
+                  enqueueCoalescedArtifactNotice({
                     queue: ar,
                     slug: r,
                     family: w.coalesce.family,
@@ -3094,8 +3094,8 @@ async function pe(e, t) {
                   });
                   return;
                 }
-                ha({
-                  value: _a({
+                enqueuePendingNotification({
+                  value: buildTaskNotification({
                     taskType: "artifact-auto-react",
                     summary: Nt(w.summary),
                     body: `
@@ -3161,7 +3161,7 @@ ${Nt(w.detail)}`,
               ? Ui($e, r, {
                   onTokenRefresh: (Y, V) => {
                     if (I !== void 0 && sameOwnerAccount(me(I.token), me(Y)))
-                      x5n(I, {
+                      updateTokenLease(I, {
                         token: Y,
                         expUnixSeconds: V,
                         receivedAtMs: Date.now(),
@@ -3217,7 +3217,7 @@ ${Nt(w.detail)}`,
                 R.isStopped(r) &&
                 k.taskId !== void 0
               ) {
-                (Qf(k.taskId, l.taskRegistry, { quiet: !0 }),
+                (killMonitorTask(k.taskId, l.taskRegistry, { quiet: !0 }),
                   te(e, r),
                   logFeatureSad("artifact_live_subscribe", "stop_latched"));
                 return;
@@ -3241,21 +3241,21 @@ ${Nt(w.detail)}`,
                 ...(tn && { token_renewed: !0 }),
               });
               let wn = W !== void 0 && ne().wakes.scanGeneration !== Re,
-                Gr = WM(r) !== Pe,
+                Gr = getStopGeneration(r) !== Pe,
                 { wakes: ce } = ne(),
                 Hr =
                   ce.liftedAtScanGeneration.get(r) === ce.scanGeneration ||
                   ce.humanTurnAtScanGeneration === ce.scanGeneration;
-              if (wn && !Hr && !Dd(r) && Zu())
-                (sEe(r),
-                  XO(1, [], {
+              if (wn && !Hr && !isSlugStopped(r) && Zu())
+                (stopSlugAndSweep(r),
+                  emitAutoReactStopNotification(1, [], {
                     catchUp: !1,
                     nameChordGesture: !ke(),
                     passive: !ke(),
                   }),
                   x7({ flush: !0 }));
               if (A !== void 0 && !v.aborted) R.clearByApprovedRewatch(r, A);
-              if (W !== void 0) Gne(r).lastWakeArgs = { slug: r, url: i, ...W };
+              if (W !== void 0) getWakeState(r).lastWakeArgs = { slug: r, url: i, ...W };
               let vn = ee && F();
               if (ee && W !== void 0 && !v.aborted && !vn && Me()) {
                 let N = e.supervisors.get(r)?.autoReactWiring;
@@ -3265,35 +3265,35 @@ ${Nt(w.detail)}`,
               else if (W !== void 0)
                 if (
                   !ee &&
-                  Ld(r) &&
-                  !XX(r) &&
+                  isSlugSwept(r) &&
+                  !isSlugSweptOrYielded(r) &&
                   ce.humanTurnAtScanGeneration === ce.scanGeneration
                 )
                   (__t(r),
                     ce.liftedAtScanGeneration.set(r, ce.scanGeneration),
-                    kI(e, r),
+                    refreshSummonArmForSlug(e, r),
                     x9({ slug: r, url: i, ...W, seed: !1 }));
-                else if (Dd(r) && (wn || Gr || vn || !(gn || ee)));
-                else if (Dd(r)) {
-                  let N = Ld(r),
-                    fe = Xv(r);
+                else if (isSlugStopped(r) && (wn || Gr || vn || !(gn || ee)));
+                else if (isSlugStopped(r)) {
+                  let N = isSlugSwept(r),
+                    fe = isSlugYielded(r);
                   if (Zu() && (ee || !N || fe))
                     (markAutoReactNoticePending(r),
                       W.notify({
-                        summary: (ee ? A6t : h5n)(H7(W.getTitle, i)),
+                        summary: (ee ? formatAutoRepliesResumedSummary : formatAutoRepliesReenabledSummary)(H7(W.getTitle, i)),
                         detail: `Auto-replies on artifact ${i} were ${ee ? "resumed by a resume_replies request" : "re-enabled by this publish"} \u2014 they had been ${fe ? "handed to another session of this conversation that resumed it or published there" : N ? "paused when the user interrupted the session (Ctrl+C or Stop) and the watch had since dropped" : "stopped when their live-updates task was killed"}. ${N && !fe ? Ht : yi}`,
                       }));
                   if (!N || fe) oze(r);
-                  (p5n(r),
+                  (forgetYieldedSlug(r),
                     dropDeliveredSlug(r),
                     __t(r),
-                    kI(e, r),
+                    refreshSummonArmForSlug(e, r),
                     x9({ slug: r, url: i, ...W, seed: !0 }));
                 } else {
                   if (ce.pendingResumeDisclosure.delete(r))
                     (markAutoReactNoticePending(r),
                       W.notify({
-                        summary: A6t(H7(W.getTitle, i)),
+                        summary: formatAutoRepliesResumedSummary(H7(W.getTitle, i)),
                         detail: `Auto-replies on artifact ${i} were resumed by a resume_replies request \u2014 they had been paused when the user interrupted the session (Ctrl+C or Stop); the watch has now connected. ${Ht}`,
                       }));
                   x9({
@@ -3305,7 +3305,7 @@ ${Nt(w.detail)}`,
                       t.machineArm !== !0 && { pickUpRecentSummons: !0 }),
                     ...(t.machineArm === !0 &&
                       xe &&
-                      isFrameLiveTokenLeaseEnabled() && { deferMs: I5n(e.rewatchTiming) }),
+                      isFrameLiveTokenLeaseEnabled() && { deferMs: computeSeedDeferMs(e.rewatchTiming) }),
                   });
                 }
               let Be = e.supervisors.get(r),
@@ -3315,7 +3315,7 @@ ${Nt(w.detail)}`,
                 let { autoReact: N } = ne(),
                   fe =
                     W !== void 0 &&
-                    !Xp(r) &&
+                    !isSlugStopLatched(r) &&
                     !N.userDisarmed &&
                     N.enabledMemo === !0;
                 if (
@@ -3332,7 +3332,7 @@ ${Nt(w.detail)}`,
                 !mn &&
                 !v.aborted &&
                 !R.isStopped(r) &&
-                !Xp(r) &&
+                !isSlugStopLatched(r) &&
                 !ne().autoReact.userDisarmed &&
                 ne().autoReact.enabledMemo === !0
               ) {
@@ -3368,8 +3368,8 @@ ${Nt(w.detail)}`,
                     ).yielded.has(r),
                     Rn = !Rt && (N?.lost.has(r) ?? !1),
                     qe = H7(() => Ue(), i);
-                  ha({
-                    value: _a({
+                  enqueuePendingNotification({
+                    value: buildTaskNotification({
                       taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
                       summary: Nt(
                         Rt
@@ -3402,12 +3402,12 @@ ${Nt(w.detail)}`,
               St = !re && Ii(V),
               _t =
                 q === "sync"
-                  ? V === ZLe &&
+                  ? V === SERVICE_UNAVAILABLE_CLOSE_CODE &&
                     (hn || (I !== void 0 && Date.now() >= I.expMs - ki))
-                  : V === C5n,
+                  : V === SESSION_EXPIRED_CLOSE_CODE,
               He =
                 q === "sync" &&
-                ((re && V === ZLe && !_t) || (!re && v7(V)?.status === 404)),
+                ((re && V === SERVICE_UNAVAILABLE_CLOSE_CODE && !_t) || (!re && v7(V)?.status === 404)),
               wt = He || (!re && (St || Oi(V, $r, e.rewatchTiming))),
               vt = re || wt ? void 0 : Nr,
               z = e.supervisors.get(r);
@@ -3425,7 +3425,7 @@ ${Nt(w.detail)}`,
             if (
               z !== void 0 &&
               q === "sync" &&
-              V === GKe &&
+              V === REVOKED_CLOSE_CODE &&
               I !== void 0 &&
               z.lease === I
             )
@@ -3436,7 +3436,7 @@ ${Nt(w.detail)}`,
               (!isFrameLiveTokenLeaseEnabled() ||
                 (!St &&
                   !He &&
-                  !Fmn(I, {
+                  !shouldRetryLeaseDial(I, {
                     expired: _t,
                     refused: vt !== void 0,
                     healthy: re && Ge >= e.rewatchTiming.minUptimeMs,
@@ -3484,19 +3484,19 @@ ${Nt(w.detail)}`,
       let G = e.supervisors.get(r);
       if (G === void 0 || G !== k)
         return (
-          Qf(w.data.taskId, l.taskRegistry, { quiet: !0 }),
+          killMonitorTask(w.data.taskId, l.taskRegistry, { quiet: !0 }),
           Yt(e, r, t.machineArm),
           { outcome: "skipped", reason: "cancelled" }
         );
       if (C())
         return (
-          Qf(w.data.taskId, l.taskRegistry, { quiet: !0 }),
+          killMonitorTask(w.data.taskId, l.taskRegistry, { quiet: !0 }),
           te(e, r),
           { outcome: "skipped", reason: "cancelled" }
         );
       if (F()) {
         if (
-          (Qf(w.data.taskId, l.taskRegistry, { quiet: !0 }),
+          (killMonitorTask(w.data.taskId, l.taskRegistry, { quiet: !0 }),
           logFeatureSad("artifact_live_subscribe", "stop_latched"),
           e.armOutcomes.delete(r),
           qt(e, r),
@@ -3509,13 +3509,13 @@ ${Nt(w.detail)}`,
       let be = ee && v.aborted;
       if (be && A !== void 0 && R.isStopped(r))
         return (
-          Qf(w.data.taskId, l.taskRegistry, { quiet: !0 }),
+          killMonitorTask(w.data.taskId, l.taskRegistry, { quiet: !0 }),
           te(e, r),
           { outcome: "skipped", reason: "cancelled" }
         );
       if ((e.armOutcomes.delete(r), qt(e, r), be))
         return { outcome: "skipped", reason: "cancelled" };
-      if (ee && (ne().wakes.scanGeneration !== Re || WM(r) !== Pe))
+      if (ee && (ne().wakes.scanGeneration !== Re || getStopGeneration(r) !== Pe))
         return { outcome: "skipped", reason: "stopped_again" };
       if (fn && de !== void 0) {
         let Y = e.supervisors.get(r);
@@ -3527,13 +3527,13 @@ ${Nt(w.detail)}`,
           );
       }
       let ue = oe ? void 0 : e.pendingInFlightWiring.get(r),
-        Sn = Dd(r),
+        Sn = isSlugStopped(r),
         Ur = Sn || (W !== void 0 && ne().wakes.scanGeneration !== Re),
         _n =
           ue !== void 0 &&
           ue.freshPublishWiring &&
           ue.scanGeneration === ne().wakes.scanGeneration &&
-          ue.stopGeneration === WM(r);
+          ue.stopGeneration === getStopGeneration(r);
       if (
         ue === void 0 ||
         v.aborted ||
@@ -3546,7 +3546,7 @@ ${Nt(w.detail)}`,
         };
       (e.pendingInFlightWiring.delete(r),
         (Fe = ue),
-        Qf(w.data.taskId, l.taskRegistry, { quiet: !0 }));
+        killMonitorTask(w.data.taskId, l.taskRegistry, { quiet: !0 }));
     } catch {
       let w = e.supervisors.get(r);
       if (Or && w === k && !(w !== void 0 && w.explicit && !S)) te(e, r);
@@ -3556,7 +3556,7 @@ ${Nt(w.detail)}`,
         if (((w.armedVia = "mcp_write"), dn === void 0))
           delete w.autoReactWiring;
         else w.autoReactWiring = dn;
-        kI(e, r);
+        refreshSummonArmForSlug(e, r);
       }
       if (w !== void 0 && w === k && w.wake === $e)
         if (bn === void 0) delete w.wake;
@@ -3565,7 +3565,7 @@ ${Nt(w.detail)}`,
       if (
         I !== void 0 &&
         w?.lease === I &&
-        !Fmn(I, { expired: !1, refused: !1, healthy: !1 })
+        !shouldRetryLeaseDial(I, { expired: !1, refused: !1, healthy: !1 })
       ) {
         if ((delete w.lease, !I.opened)) delete w.renewable;
       }
@@ -3611,7 +3611,7 @@ ${Nt(w.detail)}`,
   });
 }
 function vr(e, t, r, i) {
-  Hjt(e.armOutcomes, t, { outcome: r, reason: i, at: Date.now() }, Rjt);
+  setBoundedMapEntry(e.armOutcomes, t, { outcome: r, reason: i, at: Date.now() }, MAX_ARM_OUTCOMES);
 }
 function Zi(e, t, r, i, d) {
   if (r || e.handoffGeneration !== d.handoffGen || e.retiredInFlightArms.has(t))
@@ -3676,10 +3676,10 @@ var kr = "connection lost",
     watch_cap: "watch limit reached",
   };
 function qt(e, t) {
-  (Ijt(e.announcedArmFailures, t), pullStaleWatchLifecycleNotices(t));
+  (deletePrefixedSetEntries(e.announcedArmFailures, t), pullStaleWatchLifecycleNotices(t));
 }
 function pullStaleWatchLifecycleNotices(e) {
-  Hy(
+  removeCommandsByFilter(
     (t) =>
       t.origin?.kind === "task-notification" &&
       t.origin.source === ARTIFACT_WATCH_LIFECYCLE_ORIGIN &&
@@ -3688,9 +3688,9 @@ function pullStaleWatchLifecycleNotices(e) {
   );
 }
 function is(e, t, r, i) {
-  if (!aht(e.announcedArmFailures, `${t}:${i}`, kjt)) return;
+  if (!addBoundedSetEntry(e.announcedArmFailures, `${t}:${i}`, MAX_ANNOUNCED_ARM_FAILURES)) return;
   let d = frameLiveSkipReasonPhrase(i) ?? i,
-    o = noRewatchAdvice(i) ?? xjt;
+    o = noRewatchAdvice(i) ?? DEFAULT_WATCH_ADVICE;
   Er({
     slug: t,
     artifactName: H7(r.getTitle, r.url),
@@ -3699,10 +3699,10 @@ function is(e, t, r, i) {
   });
 }
 function Er(e) {
-  ha({
-    value: _a({
+  enqueuePendingNotification({
+    value: buildTaskNotification({
       taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
-      summary: Nt(w5n(e.artifactName, e.shortReason)),
+      summary: Nt(formatNotWatchingArtifactSummary(e.artifactName, e.shortReason)),
       body: `
 <event>${Nt(e.event)}</event>`,
     }),
@@ -3738,13 +3738,13 @@ function onDurablePublishArmSettled(e) {
   });
 }
 function isFrameLiveRowConnecting(e) {
-  return e.connected && !nMe(e.taskId);
+  return e.connected && !isMonitorSocketOpen(e.taskId);
 }
 function frameLiveArmRows(e, t) {
   let r = ne().live,
     i = new Set();
   for (let S of Object.values(e.taskRegistry.all()))
-    if (Yv(S) && S.status === "running" && S.frameLive !== void 0)
+    if (isMonitorWsTask(S) && S.status === "running" && S.frameLive !== void 0)
       i.add(S.frameLive.slug);
   let d = ne().durable.stopLatches,
     o = (S) => (t === void 0 || S === t) && !i.has(S) && !d.isStopped(S),

@@ -36,7 +36,7 @@ import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, isFirstPartyAnthropicHost 
 import { ORe, KD } from "./chunk-wk0e3dz4.js";
 import { SECURE_STORAGE_READ_FAILED_SENTINEL, withSecureStorageWriteLock, runSecureStorageWriteWithoutLock, invalidateCredentialsCopyCache, getSecureStorage } from "./secure-storage.js";
 import { clearTrustedDeviceTokenCache } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
-import { tqn, yk, xzn, Izn, Pzn, ET } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { clearLowPriorityBudgetSpent, endLowPriorityMode, resetObservedLimits, resetLimitGraceState, resetNearLimitHintState, invalidateUserContext } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { clearOrgMemoryCredential } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { emitAuthEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { Der, Ler } from "../Artifact发布-渲染/chunk-rr78st95.js";
@@ -529,18 +529,18 @@ async function clearAuthRelatedCaches(
     Der(t, i),
     githubConnectionStatusStore.of(c.host).clear(),
     lU(),
-    ET(c, "account_change"),
+    invalidateUserContext(c, "account_change"),
     _q(),
     getGroveConfig.cache?.clear?.(),
     getAccountSettings.cache?.clear?.(),
     await hlt(e),
     await XAn(),
-    Izn(),
-    Pzn(),
+    resetLimitGraceState(),
+    resetNearLimitHintState(),
     !o)
   )
-    (Jx("account_switch"), yk("account_switch"), tqn());
-  xzn();
+    (Jx("account_switch"), endLowPriorityMode("account_switch"), clearLowPriorityBudgetSpent());
+  resetObservedLimits();
 }
 async function fleetHostLogout({
   exit: e,

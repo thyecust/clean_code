@@ -11,7 +11,7 @@ import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { WindowsSandboxError, ensurePersistentWindowsCa, installWindowsSandboxAsync, ABt, xDe, L2, resolveWindowsTlsTerminateCaSource, willSandboxTlsTerminate, SandboxManager } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { WindowsSandboxError, ensurePersistentWindowsCa, installWindowsSandboxAsync, WINDOWS_SANDBOX_USER_NAME, getSrtWinLaunchConfig, formatWindowsSandboxErrorMessage, resolveWindowsTlsTerminateCaSource, willSandboxTlsTerminate, SandboxManager } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 class d {
   inFlight = void 0;
   run(e) {
@@ -29,7 +29,7 @@ function runWindowsSandboxInstall(e) {
 }
 async function c() {
   try {
-    let e = await installWindowsSandboxAsync({ sandboxUser: ABt, srtWin: xDe() });
+    let e = await installWindowsSandboxAsync({ sandboxUser: WINDOWS_SANDBOX_USER_NAME, srtWin: getSrtWinLaunchConfig() });
     if (e.cancelled) {
       if (e.user.provisioned && e.user.credPresent) {
         if (resolveWindowsTlsTerminateCaSource().source === "managed" && willSandboxTlsTerminate()) {
@@ -111,7 +111,7 @@ async function c() {
     SandboxManager.invalidateDependencyCache();
     let t = l(e);
     n(`/sandbox install failed: ${t}`, { level: "error" });
-    let a = L2(t, { omitCcRemedy: !0 }).replace(/\.$/, "");
+    let a = formatWindowsSandboxErrorMessage(t, { omitCcRemedy: !0 }).replace(/\.$/, "");
     if (e instanceof WindowsSandboxError && e.code === "install_timeout")
       return (
         logFeatureSad("sandbox_windows_install", "uac_timeout"),
@@ -148,13 +148,13 @@ async function c() {
 }
 async function i(e) {
   try {
-    await ensurePersistentWindowsCa({ status: e, srtWin: xDe() });
+    await ensurePersistentWindowsCa({ status: e, srtWin: getSrtWinLaunchConfig() });
   } catch (t) {
     let a = l(t);
     n(`/sandbox install: managed sandbox CA step failed: ${a}`, {
       level: "error",
     });
-    let s = L2(a, { omitCcRemedy: !0 }).replace(/\.$/, "");
+    let s = formatWindowsSandboxErrorMessage(a, { omitCcRemedy: !0 }).replace(/\.$/, "");
     if (
       t instanceof WindowsSandboxError &&
       (t.code === "trust_ca_failed" ||

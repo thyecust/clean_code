@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { s$ } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { classifyMcpErrorSource } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aq } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 var d = new j(() => ({ degraded: !1 }));
 function t() {
@@ -21,7 +21,7 @@ function recordReplyDegradedState(n, r) {
     e.degraded = !1;
     return;
   }
-  let o = s$(r);
+  let o = classifyMcpErrorSource(r);
   if (o === "downstream_unreachable") e.degraded = !0;
   else if (o === "downstream_error") e.degraded = !1;
 }

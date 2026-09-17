@@ -19,22 +19,22 @@ import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
-  Ds,
-  q2,
-  LM,
-  Ct,
-  yde,
-  jTe,
-  xk,
-  Hk,
-  Jfn,
-  VTe,
-  Xjt,
-  pH,
-  LLe,
-  Fne,
-  Kht,
-  FLe,
+  createConcurrencyLimiter,
+  isSelfHostedPoolId,
+  getDefaultRemoteEnvironment,
+  isSignalAborted,
+  isFolderSyncEnabled,
+  readDirSyncGitPins,
+  resolveRealPath,
+  allUnlessAborted,
+  listUntrackedCandidates,
+  isFolderEligibleForDirSync,
+  hasUnreadableGitEntry,
+  createPathWithholdClassifier,
+  isInsideBareGitRepository,
+  isDirSyncPullSupported,
+  getMaxBundleBytes,
+  probeRepositorySize,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { vze, Rze, pI } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import { LOCAL_DIVERGENCE_DEADLINE_MS, probeLocalDivergence, unservedLayout, failureCause, runProbeGit, countProbeGitOutput, listPathsChangedFromHead, nullOnAbort } from "../Git-Worktree/local-divergence-probe.js";
@@ -112,7 +112,7 @@ async function T({
   let d = Date.now(),
     m;
   try {
-    let f = q2(o ?? LM().id);
+    let f = isSelfHostedPoolId(o ?? getDefaultRemoteEnvironment().id);
     m = createLinkedAbortSignal(t, { timeoutMs: r, refTimer: !0 });
     let p = m,
       c = await nullOnAbort(
@@ -130,7 +130,7 @@ async function T({
         p.signal,
       ),
       y =
-        c === null || Ct(p.signal) ? k(failureCause(t, p.signal, "deadline")) : c.offer;
+        c === null || isSignalAborted(p.signal) ? k(failureCause(t, p.signal, "deadline")) : c.offer;
     return {
       key: KHt(y),
       reason: y.reason,
@@ -191,9 +191,9 @@ async function G(
         : od("tengu_ccr_bundle_seed_enabled"),
       f === null ? Promise.resolve(null) : H(l, r),
     ]);
-  if (Ct(r)) return { offer: k("aborted"), facts: null, forecast: null };
+  if (isSignalAborted(r)) return { offer: k("aborted"), facts: null, forecast: null };
   if (c === null) {
-    let v = await nullOnAbort(jTe(l), r);
+    let v = await nullOnAbort(readDirSyncGitPins(l), r);
     if (v === null) return { offer: k("aborted"), facts: null, forecast: null };
     if (unservedLayout(v) !== null)
       return {
@@ -202,11 +202,11 @@ async function G(
         forecast: { kind: "deferred", why: "layout_unserved" },
       };
   }
-  let y = f === null || c?.diverged === !0 ? await FLe() : null,
+  let y = f === null || c?.diverged === !0 ? await probeRepositorySize() : null,
     w = {
       host: f,
       bundlingAvailable: p,
-      pullSupported: Fne(),
+      pullSupported: isDirSyncPullSupported(),
       repositoryTooLarge: y?.tooLarge === !0,
       verdict: c,
       overlayAvailable: !0,
@@ -231,12 +231,12 @@ async function G(
       let v = { gitRoot: l, signal: r, timeoutMs: B },
         [_, F] = await Promise.all([
           C.kind === "bundle"
-            ? U(v, Kht())
+            ? U(v, getMaxBundleBytes())
             : Promise.resolve({ kind: "not_needed" }),
           j(v),
         ]);
       if (_.kind === "failed" || F === null)
-        return b(k(Ct(r) ? "aborted" : "git"));
+        return b(k(isSignalAborted(r) ? "aborted" : "git"));
       if (_.kind === "blocked") return b(O("index_state", void 0));
       if (_.kind === "unborn") return b(O("unborn", void 0));
       if (_.kind === "measured" && D(_.seed) === "too_large")
@@ -333,9 +333,9 @@ async function U(e, o) {
     ),
     z(e),
   ]);
-  if (Ct(e.signal)) return { kind: "failed" };
+  if (isSignalAborted(e.signal)) return { kind: "failed" };
   if (s === null || (!t.overLimit && t.exitCode !== 0)) {
-    if (!Ct(e.signal) && (await I(e))) return { kind: "unborn" };
+    if (!isSignalAborted(e.signal) && (await I(e))) return { kind: "unborn" };
     return (
       n(
         `dir-sync: seed measurement failed (pack-objects ${t.overLimit ? "stopped at the limit" : (t.exitCode ?? "killed")}, changed tracked files ${s === null ? "unreadable" : "read"})`,
@@ -359,7 +359,7 @@ async function U(e, o) {
 async function z(e) {
   let o = await listPathsChangedFromHead(e);
   if (o === null) return null;
-  let t = await Hk(
+  let t = await allUnlessAborted(
     o.paths.map((s) => A(e, s)),
     e.signal,
   );
@@ -372,25 +372,25 @@ async function z(e) {
       };
 }
 async function j(e) {
-  let o = await xk(e.gitRoot),
+  let o = await resolveRealPath(e.gitRoot),
     t =
       o === null
         ? null
-        : await Jfn({
+        : await listUntrackedCandidates({
             gitRoot: e.gitRoot,
             realRoot: o,
             signal: e.signal,
-            uploadFilter: pH(e.gitRoot, { realRoot: o }),
+            uploadFilter: createPathWithholdClassifier(e.gitRoot, { realRoot: o }),
             filterAttributed: Xbe(e.gitRoot),
           });
   if (t === null || t.kind === "failed") {
-    if (!Ct(e.signal))
+    if (!isSignalAborted(e.signal))
       n("dir-sync: untracked survey failed before consent", { level: "warn" });
     return null;
   }
   let s =
     t.kind === "too_many_untracked"
-      ? await Hk(
+      ? await allUnlessAborted(
           t.eligiblePaths.map((r) => A(e, r)),
           e.signal,
         )
@@ -402,7 +402,7 @@ async function j(e) {
         seedBytes: s.reduce((r, l) => r + l, 0),
       };
 }
-var A = Ds(x, async (e, o) => {
+var A = createConcurrencyLimiter(x, async (e, o) => {
   if ((e.signal.throwIfAborted(), !pI(o))) return 0;
   try {
     let t = await lstat(R(e.gitRoot, o));
@@ -459,7 +459,7 @@ async function V(
   { explicitRef: e, selfHostedPool: o, onMeasuring: t, maxFiles: s = vze },
   r,
 ) {
-  if (!yde() || !VTe(getCwd()))
+  if (!isFolderSyncEnabled() || !isFolderEligibleForDirSync(getCwd()))
     return {
       offer: { offer: !1, reason: "folder_not_opted_in", line: null },
       facts: null,
@@ -469,7 +469,7 @@ async function V(
     ? "self_hosted_pool"
     : e !== void 0
       ? "named_revision"
-      : !Fne()
+      : !isDirSyncPullSupported()
         ? "pull_unsupported"
         : null;
   if (l !== null)
@@ -479,7 +479,7 @@ async function V(
       forecast: { kind: "deferred", why: l },
     };
   let d = getCwd();
-  if (await LLe(d))
+  if (await isInsideBareGitRepository(d))
     return {
       offer: {
         offer: !1,
@@ -489,7 +489,7 @@ async function V(
       facts: null,
       forecast: null,
     };
-  if (await Xjt(d))
+  if (await hasUnreadableGitEntry(d))
     return {
       offer: {
         offer: !1,
@@ -519,7 +519,7 @@ async function V(
             signal: r,
             maxFiles: s,
           });
-  if (Ct(r)) return { offer: k("aborted"), facts: null, forecast: null };
+  if (isSignalAborted(r)) return { offer: k("aborted"), facts: null, forecast: null };
   if (!P.ok)
     return {
       offer:

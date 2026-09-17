@@ -17,7 +17,7 @@ import { ui, $o, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Pr, an, Qht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gracefulShutdownSync, sanitizeForDisplay, setRemoteHomeSettingsMode } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
@@ -44,7 +44,7 @@ function x(_, { selfOpened: m, onCancelled: l }) {
       if (s.current) return;
       s.current = !0;
       let b = n.current;
-      ((n.current = !0), l(b), Pr(1));
+      ((n.current = !0), l(b), gracefulShutdownSync(1));
     },
     void 0,
     m && !c,
@@ -91,7 +91,7 @@ function RemoteHomeSettingsDialog({ configHome: _, storageV5: m, origin: l, onDo
       (logFeatureSad("ccr_home_seed_mode_prompt", "dismissed"), n.handBack(a));
       return;
     }
-    Qht(a, m).then(
+    setRemoteHomeSettingsMode(a, m).then(
       (s) => {
         if (n.settled()) return;
         if (s === "refused") logFeatureBad("ccr_home_seed_mode_prompt", "not_written");
@@ -138,7 +138,7 @@ function RemoteHomeSettingsDialog({ configHome: _, storageV5: m, origin: l, onDo
         flexDirection: "column",
         gap: 1,
         children: [
-          e(t, { bold: !0, children: an(_) }),
+          e(t, { bold: !0, children: sanitizeForDisplay(_) }),
           e(t, {
             children:
               "Send the CLAUDE.md, rules, output styles, and preferences in this folder, plus the permission rules that don't name paths on this machine, into each cloud session you start with claude --cloud, so it follows the same instructions and preferences. It skips credential files and anything your Read rules or sandbox settings deny, never sends hooks, environment variables, MCP servers, or plugins, and sends nothing outside this folder, even through a link or an @import. What is sent is encrypted at rest, and each launch tells you what it sent.",

@@ -13,7 +13,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -142,7 +142,7 @@ function J(Oo) {
           .sendControlRequest({ subtype: "stop_task", task_id: u })
           .then(
             () => jo((qo) => new Set(qo).add(u)),
-            (Mo) => po(`Couldn't stop it: ${an(l(Mo))}`),
+            (Mo) => po(`Couldn't stop it: ${sanitizeForDisplay(l(Mo))}`),
           )
           .finally(() =>
             io((Uo) => {
@@ -176,7 +176,7 @@ function J(Oo) {
           options: c.map((h) => ({
             value: h.id,
             label:
-              (h.description || an(h.id)) +
+              (h.description || sanitizeForDisplay(h.id)) +
               (ro.has(h.id) ? " \xB7 stopping\u2026" : ""),
             description: h.taskType?.replace(/^local_/, ""),
           })),

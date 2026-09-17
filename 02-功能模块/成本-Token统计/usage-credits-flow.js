@@ -13,7 +13,7 @@ import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Km, Xmt, kO } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { canSelfManageUsageCredits, USAGE_SETTINGS_URL, fetchUsageUtilization } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 async function d(t, r) {
   return withFeatureTelemetry("api_admin_request_create", async () => {
@@ -121,10 +121,10 @@ function canBuyUsageCreditsInApp() {
 async function resolveExtraUsageOutcome(t, r) {
   let e = getSubscriptionType(),
     i = e === "team" || e === "enterprise";
-  if (!Km() && i) {
+  if (!canSelfManageUsageCredits() && i) {
     let s;
     try {
-      s = (await kO(r))?.extra_usage;
+      s = (await fetchUsageUtilization(r))?.extra_usage;
     } catch (u) {
       n(
         `extra-usage: fetchUtilization failed, falling through to ask user: ${u}`,
@@ -179,7 +179,7 @@ async function resolveExtraUsageOutcome(t, r) {
     }
     return { type: "confirm-admin-request", extraUsage: s };
   }
-  let a = i ? "https://claude.ai/admin-settings/usage" : Xmt;
+  let a = i ? "https://claude.ai/admin-settings/usage" : USAGE_SETTINGS_URL;
   if (!t.openInBrowser || isBgSession())
     return { type: "browser-opened", url: a, opened: !1 };
   try {

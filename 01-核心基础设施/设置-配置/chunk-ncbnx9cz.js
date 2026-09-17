@@ -20,7 +20,7 @@ import { wb } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { qe, Ut } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ike } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { sC, l2t, addMcpConfig, userScopeMcpServerExists, readRawMcpJsonServersFromCwd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { escapeShellCommandMarkers, findSkillShellCommands, addMcpConfig, userScopeMcpServerExists, readRawMcpJsonServersFromCwd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { G$ } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { stringifyYaml } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { MAX_SKILL_FILE_BYTES } from "../共享小工具-未细化/chunk-7wm8t84g.js";
@@ -378,7 +378,7 @@ Relevant Claude Code config locations:
 - Skills: \`~/.claude/skills/<name>/SKILL.md\`
 - Hooks: the \`hooks\` key in settings.json (PreToolUse/PostToolUse/UserPromptSubmit/\u2026)
 `;
-  (await mkdir(o, { recursive: !0 }), await writeFile(u, sC(S), "utf8"));
+  (await mkdir(o, { recursive: !0 }), await writeFile(u, escapeShellCommandMarkers(S), "utf8"));
   let N = k.length > 0 ? " (merged with existing sections)" : "";
   return `wrote \`${u}\`${N}`;
 }
@@ -1134,7 +1134,7 @@ function wt(e) {
       untranslatable:
         "Its translated body contains a `` !`cmd` `` shell-exec marker that wasn't a `!{\u2026}` block in the Gemini prompt (inert there, live in Claude Code). Port it manually.",
     };
-  let d = l2t(o).map((h) => h.command),
+  let d = findSkillShellCommands(o).map((h) => h.command),
     p = [...d];
   for (let h of a) {
     let S = p.indexOf(h);

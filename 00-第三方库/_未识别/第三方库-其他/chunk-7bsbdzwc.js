@@ -23,7 +23,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../lodash/lodash.
 import { lke } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { replaceControlChars } from "../../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { sEt } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { bM, CO, Mdn } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { buildCredentialBlankLists, expandEnvVars, formatTrustKeyJson } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { swt } from "../../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import {
   $c,
@@ -1198,7 +1198,7 @@ async function zr(e, t) {
     if (s.reason === "missing_trust") {
       let o = VR()
         ? "not available to a session rooted at the home directory without a person present (home trust is session-only): run Claude Code interactively here and accept the trust dialog for that session, or work from a project directory you have trusted"
-        : `accept the trust dialog here once interactively, or set projects[${Mdn(getWorkspacePersistedTrustKey())}].hasTrustDialogAccepted in ${getGlobalClaudeFile()}`;
+        : `accept the trust dialog here once interactively, or set projects[${formatTrustKeyJson(getWorkspacePersistedTrustKey())}].hasTrustDialogAccepted in ${getGlobalClaudeFile()}`;
       if (
         (logMCPDebug(
           e,
@@ -1241,9 +1241,9 @@ function Br(e, t) {
 async function fct(e, t) {
   let r = {},
     a = [],
-    s = bM();
+    s = buildCredentialBlankLists();
   for (let [u, d] of Object.entries(t.headers ?? {})) {
-    let { expanded: c, missingVars: h } = CO(d, void 0, void 0, {
+    let { expanded: c, missingVars: h } = expandEnvVars(d, void 0, void 0, {
       remoteSink: !0,
       blankList: s,
     });

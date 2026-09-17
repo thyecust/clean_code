@@ -22,7 +22,7 @@ import { readStoredTrustedDeviceToken, clearTrustedDeviceToken, enrollTrustedDev
 import { REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "./remote-control-messages.js";
 import { Oer } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { IF, xn, relatchTenguSandboxGbConfig, tg, Ht, fhn, isTranscriptPersistenceDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getConversationMessages, gracefulShutdown, relatchTenguSandboxGbConfig, findLastAssistantMessage, createSystemInfoMessage, stripThinkingBlocks, isTranscriptPersistenceDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { jj, clearOrgMemoryCredential, onOrgMemoryAuthCompletion, clearOrgMemoryDiscoveryCaches, clearOrgMemoryDiscoveryAccountState } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getToolPermissionContext, getSessionEffort } from "../权限系统/chunk-fjrcf22x.js";
 import { dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
@@ -53,7 +53,7 @@ function Pdr() {
 }
 async function N8(o, s, i) {
   if (
-    (o.onChangeAPIKey(), o.applyMessageOp({ type: "update", updater: fhn }), !s)
+    (o.onChangeAPIKey(), o.applyMessageOp({ type: "update", updater: stripThinkingBlocks }), !s)
   )
     return { bridgeDisconnected: !1, accountSwitched: !1, relaunching: !1 };
   let u = ns(),
@@ -177,7 +177,7 @@ async function le(o, s, i) {
   let c = !isTranscriptPersistenceDisabled();
   if (c) await persistTranscriptLeafCheckpoint(o.messages, o.storageV5);
   return (
-    await xn(0, "other", {
+    await gracefulShutdown(0, "other", {
       finalMessage: `${i}
 This session is ending so that nothing from that gateway stays half-applied. Start claude again${c ? " to continue (your conversation can be resumed)" : ""} and sign in once that is fixed.`,
     }),
@@ -250,8 +250,8 @@ function Ldr(o, s, i, u, c = !isTranscriptPersistenceDisabled()) {
 }
 async function fe(o, s, i) {
   if (isExiting()) return;
-  let u = (m) => xn(0, "other", { finalMessage: i(m) });
-  if ((await persistTranscriptLeafCheckpoint(IF(o), o.storageV5), isExiting())) return;
+  let u = (m) => gracefulShutdown(0, "other", { finalMessage: i(m) });
+  if ((await persistTranscriptLeafCheckpoint(getConversationMessages(o), o.storageV5), isExiting())) return;
   if (isBgSession())
     return u(
       "a background session cannot restart itself (sign in from a session started directly with `claude`)",
@@ -295,7 +295,7 @@ function MHe(o, s, i, { envTokenWasSet: u = !1, envWarningOnce: c } = {}) {
     });
   if (y === "out-of-band" && c && !c.delivered)
     ((c.delivered = !0),
-      o.applyMessageOp({ type: "append", messages: [Ht(p$n, "notice")] }));
+      o.applyMessageOp({ type: "append", messages: [createSystemInfoMessage(p$n, "notice")] }));
   return [
     Udr(s, {
       bridgeDisconnected: i.bridgeDisconnected,
@@ -306,7 +306,7 @@ function MHe(o, s, i, { envTokenWasSet: u = !1, envWarningOnce: c } = {}) {
 }
 function Mdr(o, s) {
   if (s.accountSwitched || s.relaunching) return;
-  let i = tg(o.messages);
+  let i = findLastAssistantMessage(o.messages);
   if (i?.isApiErrorMessage && i.error === "authentication_failed")
     return { display: "system", shouldQuery: !0 };
   return;
@@ -365,7 +365,7 @@ async function ngr(o, s) {
       if (T) {
         let [O] = v;
         if (O)
-          s.applyMessageOp({ type: "append", messages: [Ht(O, "notice")] });
+          s.applyMessageOp({ type: "append", messages: [createSystemInfoMessage(O, "notice")] });
         return;
       }
       o(...v);

@@ -28,17 +28,17 @@ import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import {
-  Nue,
-  BS,
-  Hy,
+  getCommandQueue,
+  enqueueCommand,
+  removeCommandsByFilter,
   asSystemPrompt,
   getLastCacheSafeParams,
-  Vc,
-  Re,
-  ya,
-  j_,
-  hC,
-  VS,
+  createAssistantMessage,
+  createUserMessage,
+  sliceFromLastCompactBoundary,
+  getSystemContext,
+  getUserContext,
+  buildDefaultSystemPrompt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -249,8 +249,8 @@ function ve({
     ) {
       (a.preventDefault(), (K.current = !0), Me(!0));
       let f = [
-          Re({ content: i }),
-          Vc({
+          createUserMessage({ content: i }),
+          createAssistantMessage({
             content: te
               ? `\u26A0 ${te}
 
@@ -572,15 +572,15 @@ function Rt(i) {
   i.clearPendingReopen();
   for (let u of i.pendingBesidesTop()) j(i, u);
   if (i.reopenNow()) {
-    Hy(ee);
+    removeCommandsByFilter(ee);
     return;
   }
-  if (Nue().some(ee)) return;
-  BS({ ...ce, agentId: ze() });
+  if (getCommandQueue().some(ee)) return;
+  enqueueCommand({ ...ce, agentId: ze() });
 }
 function _e(i, u) {
   if ((i.clearPendingReopen(u), !i.inFlight && i.exchanges.length === 0))
-    Hy(ee);
+    removeCommandsByFilter(ee);
 }
 var ce = {
   value: "/btw",
@@ -735,7 +735,7 @@ function St(i) {
   return i;
 }
 async function Je(i) {
-  let u = ya(St(i.messages)),
+  let u = sliceFromLastCompactBoundary(St(i.messages)),
     h = getLastCacheSafeParams();
   if (h)
     return {
@@ -747,9 +747,9 @@ async function Je(i) {
       advisorModel: i.getAdvisorSetting(),
     };
   let [B, x, b] = await Promise.all([
-    VS(i.options.tools, i.options.mainLoopModel, []),
-    hC(i.session, i.storageV5, i.credentials),
-    j_(i.session, i.options.cacheBreakerPhrase),
+    buildDefaultSystemPrompt(i.options.tools, i.options.mainLoopModel, []),
+    getUserContext(i.session, i.storageV5, i.credentials),
+    getSystemContext(i.session, i.options.cacheBreakerPhrase),
   ]);
   return {
     systemPrompt: asSystemPrompt(B),
@@ -768,7 +768,7 @@ async function dr(i, u, h) {
       w = b.exchanges.at(-1);
     if ((R || w) && Ke())
       return (j(b, w ?? R ?? b), i(void 0, { display: "skip" }), null);
-    if ((Hy(ee), R))
+    if ((removeCommandsByFilter(ee), R))
       return e(ve, {
         question: R.question,
         inFlight: R,
@@ -791,7 +791,7 @@ async function dr(i, u, h) {
   )
     return (vt(B, u), i(void 0, { display: "skip" }), null);
   let x = u.session.btwHistory.inFlight;
-  if (x === null || x.question === B) Hy(ee);
+  if (x === null || x.question === B) removeCommandsByFilter(ee);
   return e(ve, { question: B, context: u, onDone: i });
 }
 function Ke() {

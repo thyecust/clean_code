@@ -22,7 +22,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getSessionAccessToken, getSessionAuthHeaders } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { recordStartupPhase } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
-import { GGn, Dzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { stripVolatileMessageFields, isAutoModeClassifierDumpEntry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isReplyDegraded } from "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
 import { setActivityCallback, clearActivityCallback, getMainLoopRefcount } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { SSEParser } from "../../01-核心基础设施/共享小工具-未细化/sse-parser.js";
@@ -2575,7 +2575,7 @@ class pM {
         (p = p.slice(-N)));
     let _ = E ?? t;
     if (this.currentUploadTrim().envelope === !0) {
-      let M = GGn(_);
+      let M = stripVolatileMessageFields(_);
       if (M !== _ && !this.loggedTranscriptEnvelopeStrip)
         ((this.loggedTranscriptEnvelopeStrip = !0),
           logFeatureOk("ccr_worker_envelope_strip"));
@@ -2884,7 +2884,7 @@ class pM {
         }
         return null;
       }
-      for (let P of B.data ?? []) if (!Dzn(P.payload)) E.push(P);
+      for (let P of B.data ?? []) if (!isAutoModeClassifierDumpEntry(P.payload)) E.push(P);
       _ = B.next_cursor;
     } while (_);
     return (

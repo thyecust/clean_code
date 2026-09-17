@@ -15,7 +15,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { eu } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { MAX_VISIBLE_LIST_ITEMS } from "../../01-核心基础设施/共享小工具-未细化/max-visible-list-items.js";
@@ -29,7 +29,7 @@ function fe() {
 function he(Ue, Pe) {
   return r(
     t,
-    { dimColor: !0, wrap: "truncate-middle", children: ["  ", an(Ue.path)] },
+    { dimColor: !0, wrap: "truncate-middle", children: ["  ", sanitizeForDisplay(Ue.path)] },
     Pe,
   );
 }

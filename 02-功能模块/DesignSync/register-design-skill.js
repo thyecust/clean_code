@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { registerBundledSkill } from "../Skills技能/bundled-skills.js";
 import { isDesignSyncEnabled } from "../../01-核心基础设施/共享小工具-未细化/design-feature-gates.js";
-import { NV, lj } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { CLAUDE_DESIGN_TOOL_NAME, CLAUDE_DESIGN_LIST_OPERATION } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { DESIGN_SYNC_POLICY_GATE } from "./design-sync-tool-metadata.js";
 function s(t) {
-  return `${NV}({operation: "${t}"})`;
+  return `${CLAUDE_DESIGN_TOOL_NAME}({operation: "${t}"})`;
 }
 var i = [
   {
@@ -55,11 +55,11 @@ function r(t) {
     "You are handling a `/design` command for Claude Design (claude.ai/design).",
     "",
     "First, call `" +
-      NV +
+      CLAUDE_DESIGN_TOOL_NAME +
       '({operation: "' +
-      lj +
+      CLAUDE_DESIGN_LIST_OPERATION +
       '"})` to load the available Claude Design operations and their argument schemas. If the `' +
-      NV +
+      CLAUDE_DESIGN_TOOL_NAME +
       "` tool is not available, tell the user to run `/design login` and stop \u2014 do not guess at Claude Design behaviour without the tools.",
     "",
     "If the tools are available, dispatch on the first word of the arguments:",
@@ -112,7 +112,7 @@ function registerDesignSkill() {
       "Work with Claude Design (claude.ai/design) \u2014 create, import, export, sync, login",
     description: () =>
       "Hub for Claude Design (claude.ai/design): routes `sync`/`login` to their dedicated commands and maps `import`/`export`/`status`/free-form prompts to the native `" +
-      NV +
+      CLAUDE_DESIGN_TOOL_NAME +
       "` tool. Always fetches the live Claude Design instructions via `" +
       s("get_claude_design_prompt") +
       "` rather than shipping a vendored copy.",

@@ -30,7 +30,7 @@ import { jt } from "./chunk-wk0e3dz4.js";
 import { SR, UH, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import { authLostEmitter } from "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
 import { Pu, FIe, gE } from "../MCP客户端/chunk-g4gdwpa0.js";
-import { Rde, QTe, Fg } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { McpCredentialStoreUnavailableError, MCP_DOWNSTREAM_UNREACHABLE_CODES, getMcpServerBaseUrl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { renderOAuthCallbackPage, getFirstParamValue, buildOAuthCallbackUrl, pickOAuthCallbackPort } from "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
 import { redactHeaders, redactSearchParams, redactParamValue, redactUrl, formatMcpSdkError, rethrowFetchError } from "./url-and-error-redaction.js";
 import { getCachedIdpIdToken, clearIdpIdToken, getIdpClientSecret, discoverOidc, acquireIdpIdToken } from "./xaa-idp-login.js";
@@ -365,7 +365,7 @@ ${t.message}`
   if (n.includes("Issuer mismatch in authorization response"))
     return "issuer_response_mismatch";
   let r = A(t) ?? A(t instanceof Error ? t.cause : void 0);
-  if (r && QTe.has(r)) return "network_failed";
+  if (r && MCP_DOWNSTREAM_UNREACHABLE_CODES.has(r)) return "network_failed";
   return "sdk_auth_failed";
 }
 var ge = 5;
@@ -589,7 +589,7 @@ function _ct({
     _ = o === "enforce" && p !== "same_origin";
   try {
     let h = r === void 0 ? ["issuer_missing"] : ft(n, r),
-      v = d ? Fg(d) : void 0,
+      v = d ? getMcpServerBaseUrl(d) : void 0,
       k = d ? mcpNameForAnalytics_GATE_EVALUATED(e, oy(e, d)) : void 0;
     logEvent("tengu_mcp_oauth_issuer_echo_mismatch", {
       site: fromEnum(t),
@@ -924,7 +924,7 @@ function De(e, t, n, r) {
   let d = r ? "mutate_rejected" : "storage_write_failed",
     p = r ? l(r) : (n?.warning ?? "storage write failed");
   logMCPDebug(e, `Token persist failed: ${p}`);
-  let o = Fg(t);
+  let o = getMcpServerBaseUrl(t);
   logEvent("tengu_mcp_oauth_token_persist_failed", {
     transportType: fromEnum(t.type),
     ...(o && { mcpServerBaseUrl: o }),
@@ -1076,7 +1076,7 @@ async function lhr(e, t, n, r, d) {
       isOAuthFlow: !0,
       authMethod: S("xaa"),
       transportType: fromEnum(t.type),
-      ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
+      ...(getMcpServerBaseUrl(t) && { mcpServerBaseUrl: getMcpServerBaseUrl(t) }),
     }),
       await _t(e, t, n, r, d?.skipBrowserOpen));
     return;
@@ -1103,7 +1103,7 @@ async function lhr(e, t, n, r, d) {
     flowAttemptId: sanitizeAnalyticsId(M),
     isOAuthFlow: !0,
     transportType: fromEnum(t.type),
-    ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
+    ...(getMcpServerBaseUrl(t) && { mcpServerBaseUrl: getMcpServerBaseUrl(t) }),
   });
   let D = !1;
   try {
@@ -1362,7 +1362,7 @@ async function lhr(e, t, n, r, d) {
       (logEvent("tengu_mcp_oauth_flow_success", {
         flowAttemptId: sanitizeAnalyticsId(M),
         transportType: fromEnum(t.type),
-        ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
+        ...(getMcpServerBaseUrl(t) && { mcpServerBaseUrl: getMcpServerBaseUrl(t) }),
       }),
         logFeatureOk("mcp_oauth_flow"));
     } else
@@ -1455,7 +1455,7 @@ async function lhr(e, t, n, r, d) {
       error_code: I === void 0 ? void 0 : spr(I),
       http_status: fromNumberOpt(K),
       transportType: fromEnum(t.type),
-      ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
+      ...(getMcpServerBaseUrl(t) && { mcpServerBaseUrl: getMcpServerBaseUrl(t) }),
     });
     let ne = formatMcpSdkError(C, t.url);
     throw ne === l(C) ? C : Error(ne, { cause: C });
@@ -1568,7 +1568,7 @@ class z3e {
           this.serverName,
           "Credential store read failed; not reporting credentials as absent",
         ),
-        new Rde(this.serverName)
+        new McpCredentialStoreUnavailableError(this.serverName)
       );
     return e;
   }
@@ -2417,7 +2417,7 @@ class z3e {
   async _doRefresh(e) {
     this._presented.record(e);
     let t = 3,
-      n = Fg(this.serverConfig),
+      n = getMcpServerBaseUrl(this.serverConfig),
       r = (d, p) => {
         logEvent(
           d === "success"
@@ -2587,7 +2587,7 @@ class z3e {
             ));
           return;
         }
-        let _ = o instanceof Rde,
+        let _ = o instanceof McpCredentialStoreUnavailableError,
           h =
             o instanceof Error &&
             /timeout|timed out|etimedout|econnreset/i.test(o.message),

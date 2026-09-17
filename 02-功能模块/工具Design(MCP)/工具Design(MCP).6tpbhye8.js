@@ -22,7 +22,7 @@ import { Tn, ht, isHostManagedProviderAuth, getAuthTokenSource, getClaudeAIOAuth
 import { isFirstPartyAnthropicHost } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { NV, lj, agn, hasHookForEvent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { CLAUDE_DESIGN_TOOL_NAME, CLAUDE_DESIGN_LIST_OPERATION, CLAUDE_DESIGN_TOOL_DESCRIPTION, hasHookForEvent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   DesignSessionState,
   deletePlansForProject,
@@ -390,7 +390,7 @@ var Re = createLazyValue(() =>
       operation: s()
         .regex(/^[\w.-]{1,64}$/)
         .describe(
-          `Claude Design action to perform. Call with "${lj}" first to discover the available operations and their argument schemas.`,
+          `Claude Design action to perform. Call with "${CLAUDE_DESIGN_LIST_OPERATION}" first to discover the available operations and their argument schemas.`,
         ),
       arguments: fe(s(), se())
         .default({})
@@ -510,7 +510,7 @@ async function Te(e, t, n, r) {
   }
 }
 var DesignTool = buildTool({
-    name: NV,
+    name: CLAUDE_DESIGN_TOOL_NAME,
     searchHint: "work with Claude Design (claude.ai/design) projects",
     maxResultSizeChars: 1e5,
     get inputSchema() {
@@ -521,18 +521,18 @@ var DesignTool = buildTool({
     },
     isEnabled: isDesignSyncEnabled,
     isConcurrencySafe(e) {
-      if (e.operation === lj) return !0;
+      if (e.operation === CLAUDE_DESIGN_LIST_OPERATION) return !0;
       return (L(e.operation) ?? K(e.operation))?.readOnly === !0;
     },
     isReadOnly(e) {
-      if (e.operation === lj) return !0;
+      if (e.operation === CLAUDE_DESIGN_LIST_OPERATION) return !0;
       return (L(e.operation) ?? K(e.operation))?.readOnly === !0;
     },
     async description() {
-      return agn;
+      return CLAUDE_DESIGN_TOOL_DESCRIPTION;
     },
     async prompt() {
-      return agn;
+      return CLAUDE_DESIGN_TOOL_DESCRIPTION;
     },
     userFacingName(e) {
       let t = De(e?.operation);
@@ -572,7 +572,7 @@ var DesignTool = buildTool({
     },
     async checkPermissions(e, t) {
       let n = t.toolState.get(DesignSessionState),
-        r = e.operation === lj ? null : await wouldNeedDesignConsent(n, t.credentials),
+        r = e.operation === CLAUDE_DESIGN_LIST_OPERATION ? null : await wouldNeedDesignConsent(n, t.credentials),
         d = {
           ...e,
           __consentBitShown: r,
@@ -596,7 +596,7 @@ var DesignTool = buildTool({
           },
         };
       let p =
-          e.operation === lj
+          e.operation === CLAUDE_DESIGN_LIST_OPERATION
             ? { readOnly: !0, destructive: !1 }
             : (L(e.operation) ?? K(e.operation)),
         _ = p?.readOnly !== !0,
@@ -1325,8 +1325,8 @@ function Be(e) {
 async function Se(e, t, n, r, d, o, p) {
   try {
     let _ = null;
-    if (t === lj || pe(t)) _ = await Ue(e, r, d, p);
-    if (t === lj) {
+    if (t === CLAUDE_DESIGN_LIST_OPERATION || pe(t)) _ = await Ue(e, r, d, p);
+    if (t === CLAUDE_DESIGN_LIST_OPERATION) {
       let w = (_ ?? []).map((f) => ({
           name: f.name,
           description: f.description,
@@ -1345,8 +1345,8 @@ async function Se(e, t, n, r, d, o, p) {
           catalog_unchanged: !0,
           catalog_hash: I,
           note:
-            `The operation catalog is unchanged since the earlier "${lj}" result in this conversation (hash ${I}) \u2014 full descriptions and argument schemas are in that result. ` +
-            `If it is no longer in context, call ${NV}({operation: "${lj}", arguments: {full: true}}) for the full catalog.`,
+            `The operation catalog is unchanged since the earlier "${CLAUDE_DESIGN_LIST_OPERATION}" result in this conversation (hash ${I}) \u2014 full descriptions and argument schemas are in that result. ` +
+            `If it is no longer in context, call ${CLAUDE_DESIGN_TOOL_NAME}({operation: "${CLAUDE_DESIGN_LIST_OPERATION}", arguments: {full: true}}) for the full catalog.`,
           operations: w.map((S) => ({
             name: S.name,
             summary: Be(S.description),
@@ -1363,7 +1363,7 @@ async function Se(e, t, n, r, d, o, p) {
         content: [
           {
             type: "text",
-            text: `Unknown Claude Design operation "${t}". Call ${NV}({operation: "${lj}"}) to see the available operations.`,
+            text: `Unknown Claude Design operation "${t}". Call ${CLAUDE_DESIGN_TOOL_NAME}({operation: "${CLAUDE_DESIGN_LIST_OPERATION}"}) to see the available operations.`,
           },
         ],
         isError: !0,

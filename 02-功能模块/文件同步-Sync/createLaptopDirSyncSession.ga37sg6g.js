@@ -23,25 +23,25 @@ import { getProjectsDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import {
   laptopDirSyncRegistries,
-  CLe,
-  yde,
-  DLe,
-  zTe,
-  Kjt,
-  VTe,
-  Yjt,
-  vKe,
-  RKe,
-  Nht,
-  _Kn,
-  Jjt,
-  Fht,
-  EKn,
-  AKn,
-  CKn,
-  Zfn,
-  an,
-  LLe,
+  isDirSyncEnabled,
+  isFolderSyncEnabled,
+  TYPED_AHEAD_GRACE_MS,
+  getGitRootRemoteFileMode,
+  getDirectoryRemoteFileMode,
+  isFolderEligibleForDirSync,
+  ENGINE_OPEN_TIMEOUT_MS,
+  DEFAULT_SHUTDOWN_TIMEOUT_MS,
+  SYNC_RECORD_UNREADABLE_MESSAGE,
+  ENGINE_UNSUPPORTED_MESSAGE,
+  ENGINE_DISABLED_BY_ENV_MESSAGE,
+  getDirSyncFeatureFlag,
+  createStoppedEngine,
+  createNotArmedEngine,
+  createSilentStoppedEngine,
+  createNotOptedInEngine,
+  anyPromiseSettled,
+  sanitizeForDisplay,
+  isInsideBareGitRepository,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "./sync-journal.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
@@ -116,18 +116,18 @@ function createLaptopDirSyncSession({
                 "folder",
               )
             : r.kind === "not_armed"
-              ? EKn(r.reason, r.line)
+              ? createNotArmedEngine(r.reason, r.line)
               : r.kind === "off"
-                ? CKn(r.withholdFirstSend)
+                ? createNotOptedInEngine(r.withholdFirstSend)
                 : r.silent === !0
-                  ? AKn(r.reason, r.line, r.withholdFirstSend)
-                  : Fht(o.publish, r.reason, r.line, r.level),
+                  ? createSilentStoppedEngine(r.reason, r.line, r.withholdFirstSend)
+                  : createStoppedEngine(o.publish, r.reason, r.line, r.level),
       ...(s !== void 0 && { createFacts: s }),
     };
-  return (k.hold(m, vKe), m);
+  return (k.hold(m, DEFAULT_SHUTDOWN_TIMEOUT_MS), m);
 }
 async function O() {
-  return (await Jjt()) === "on" ? "given" : "switched_off";
+  return (await getDirSyncFeatureFlag()) === "on" ? "given" : "switched_off";
 }
 function N(a, w, d, p) {
   let s = null,
@@ -183,7 +183,7 @@ function N(a, w, d, p) {
     m = (e) => withDeadline(i, e).then((t) => t ?? null),
     _ = p3n(
       i.then((e) => (k ? null : (e?.streaming ?? null))),
-      Yjt,
+      ENGINE_OPEN_TIMEOUT_MS,
     );
   return {
     state: () =>
@@ -196,7 +196,7 @@ function N(a, w, d, p) {
             : { state: "seeding" },
     messageSent: (e) => o((t) => t.messageSent(e)),
     beforeSend: async (e) => {
-      await (await m(Yjt))?.beforeSend(e);
+      await (await m(ENGINE_OPEN_TIMEOUT_MS))?.beforeSend(e);
     },
     seedGate: async (e) => {
       let t = await Promise.race([
@@ -204,10 +204,10 @@ function N(a, w, d, p) {
         e.released.then(() => null),
         e.withdrawn.then(() => null),
       ]);
-      if (await Zfn(e.released, e.withdrawn)) return;
+      if (await anyPromiseSettled(e.released, e.withdrawn)) return;
       if (t !== null) return t.seedGate?.(e);
       let E = Date.now();
-      if (!k && p !== void 0 && (r === null || E - r < DLe))
+      if (!k && p !== void 0 && (r === null || E - r < TYPED_AHEAD_GRACE_MS))
         return ((r ??= E), { go: !1, reason: p.reason });
       return;
     },
@@ -236,7 +236,7 @@ function N(a, w, d, p) {
     afterDisconnect: () => o((e) => e.afterDisconnect()),
     holdInstalls: async (e) => {
       D.add(e);
-      let t = await m(Yjt);
+      let t = await m(ENGINE_OPEN_TIMEOUT_MS);
       if (t === null) {
         o((E) => {
           if (D.delete(e)) E.holdInstalls?.(e);
@@ -259,7 +259,7 @@ function N(a, w, d, p) {
       );
     },
     shutdown: async (e) => {
-      let t = e ?? vKe,
+      let t = e ?? DEFAULT_SHUTDOWN_TIMEOUT_MS,
         E = Date.now(),
         b = s !== null;
       k = !0;
@@ -284,9 +284,9 @@ async function attachLaptopDirSyncSession(
         ? await sleep(G).then(() => mte(b.path, S, b.v5))
         : P;
     },
-    i = async (E) => VTe(E) && !(await LLe(E)),
+    i = async (E) => isFolderEligibleForDirSync(E) && !(await isInsideBareGitRepository(E)),
     o =
-      D !== null && D !== k && (await Kjt(k)) === "container_sync"
+      D !== null && D !== k && (await getDirectoryRemoteFileMode(k)) === "container_sync"
         ? await r(k)
         : null,
     m =
@@ -296,7 +296,7 @@ async function attachLaptopDirSyncSession(
         o.kind === "unreadable"),
     _ = m ? k : (D ?? Y(k));
   if (_ === null) return;
-  if (!m && (await zTe(_)) !== "container_sync") return;
+  if (!m && (await getGitRootRemoteFileMode(_)) !== "container_sync") return;
   let c = m && o !== null ? o : await r(_);
   if (c.kind === "absent") return;
   let e = () => (
@@ -310,7 +310,7 @@ async function attachLaptopDirSyncSession(
       engine: {
         kind: "stopped",
         reason: "engine_declined",
-        line: _Kn,
+        line: ENGINE_DISABLED_BY_ENV_MESSAGE,
         level: "info",
       },
       registry: laptopDirSyncRegistries.of(p),
@@ -319,8 +319,8 @@ async function attachLaptopDirSyncSession(
   );
   if (
     D === null || m || (c.kind === "git" && c.record.start.kind === "folder")
-      ? !yde()
-      : !CLe()
+      ? !isFolderSyncEnabled()
+      : !isDirSyncEnabled()
   )
     return e();
   if (c.kind === "git" && c.record.start.kind === "folder")
@@ -350,7 +350,7 @@ async function attachLaptopDirSyncSession(
         boundToThisMachine: Promise.resolve(!1),
         createFacts: void 0,
         credentials: d,
-        engine: { kind: "stopped", reason: "engine_unsupported", line: Nht },
+        engine: { kind: "stopped", reason: "engine_unsupported", line: ENGINE_UNSUPPORTED_MESSAGE },
         registry: laptopDirSyncRegistries.of(p),
         storageV5: s,
       })
@@ -365,7 +365,7 @@ async function attachLaptopDirSyncSession(
           boundToThisMachine: Promise.resolve(!1),
           createFacts: void 0,
           credentials: d,
-          engine: { kind: "stopped", reason: "store_unreadable", line: RKe },
+          engine: { kind: "stopped", reason: "store_unreadable", line: SYNC_RECORD_UNREADABLE_MESSAGE },
           registry: laptopDirSyncRegistries.of(p),
           storageV5: s,
         })
@@ -395,14 +395,14 @@ async function attachLaptopDirSyncSession(
       boundToThisMachine: Promise.resolve(!1),
       createFacts: void 0,
       credentials: d,
-      engine: { kind: "stopped", reason: "store_unreadable", line: RKe },
+      engine: { kind: "stopped", reason: "store_unreadable", line: SYNC_RECORD_UNREADABLE_MESSAGE },
       registry: laptopDirSyncRegistries.of(p),
       storageV5: s,
     })
   );
 }
 function Y(a) {
-  return VTe(a) ? a : null;
+  return isFolderEligibleForDirSync(a) ? a : null;
 }
 var q = 4000,
   v = 16,
@@ -464,7 +464,7 @@ async function dirSyncElsewhereLookup(a, w, d = q) {
   }
 }
 function dirSyncElsewhereLine() {
-  return `File sync for this session was set up from another directory on this machine, not ${an(he())}: edits here are not uploaded, and Claude's changes are not written here. Attaching from that directory resumes it if sync is still on there.`;
+  return `File sync for this session was set up from another directory on this machine, not ${sanitizeForDisplay(he())}: edits here are not uploaded, and Claude's changes are not written here. Attaching from that directory resumes it if sync is still on there.`;
 }
 async function X(a, w, d, p) {
   try {

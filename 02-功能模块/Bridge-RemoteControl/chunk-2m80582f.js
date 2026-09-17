@@ -29,21 +29,21 @@ import {
   isRemoteToolServingMuted,
   onServingMuteRecheck,
   remoteToolServingOffReason,
-  Z7n,
-  i_n,
-  eXn,
-  tXn,
-  nXn,
-  Zyt,
-  a_n,
-  rXn,
-  eSt,
-  oXn,
-  sXn,
-  l_n,
-  k9t,
-  c_n,
-  x9t,
+  HEARTBEAT_FRAME,
+  HANDSHAKE_TIMEOUT_MS,
+  MAX_RECONNECT_ATTEMPTS,
+  STABLE_MARK_DELAY_MS,
+  SUPERSEDED_CLOSE_CODE,
+  REANNOUNCE_DELAY_MS,
+  DEFAULT_BRIDGE_TIMINGS,
+  isSlotContentionReason,
+  TOOL_ANNOTATION_KEYS,
+  buildConnectFrame,
+  parseBridgeFrame,
+  computeBridgeTimers,
+  computeReconnectDelayMs,
+  toSlug,
+  sanitizeDeviceName,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { pE, sM, vlt } from "../远程工具执行/chunk-66axrkvh.js";
 import { DEVICE_PASSTHROUGH_META_KEY, parseDevicePassthroughMeta } from "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
@@ -61,7 +61,7 @@ class se {
   onTransportEvent;
   started = !1;
   stopping = !1;
-  timers = l_n(a_n);
+  timers = computeBridgeTimers(DEFAULT_BRIDGE_TIMINGS);
   lastAckAt = 0;
   reconnectAttempts = 0;
   consecutiveSlotContention = 0;
@@ -94,7 +94,7 @@ class se {
   }
   requestReannounce(e) {
     if (!this.started || this.stopping) return;
-    let t = Zyt[e];
+    let t = REANNOUNCE_DELAY_MS[e];
     switch (this.reannounce.phase) {
       case "draining":
       case "rotating":
@@ -182,13 +182,13 @@ class se {
   handleAuthenticated(e, t) {
     if (this.stopping) return;
     if (
-      ((this.timers = l_n(t)),
+      ((this.timers = computeBridgeTimers(t)),
       (this.lastAckAt = this.now()),
       this.clearKeepaliveTimer(),
       this.endRotation() === void 0 || this.stableTimer === void 0)
     )
       (this.clearStableTimer(),
-        (this.stableTimer = setTimeout(this.markStable, tXn)));
+        (this.stableTimer = setTimeout(this.markStable, STABLE_MARK_DELAY_MS)));
     if (this.announced.hasUnservedChange())
       this.requestReannounce("connected_stale");
     if (e < 1) {
@@ -223,7 +223,7 @@ class se {
     this.sendHeartbeat();
   };
   sendHeartbeat() {
-    this.transport.sendRaw(Z7n);
+    this.transport.sendRaw(HEARTBEAT_FRAME);
   }
   markStable = () => {
     if (
@@ -251,7 +251,7 @@ class se {
   nextDelayMs(e) {
     let t = this.lastFailureWasContention;
     if (((this.lastFailureWasContention = !1), e))
-      return k9t(0, 1, this.timers.slotContentionFastAttempts, this.random);
+      return computeReconnectDelayMs(0, 1, this.timers.slotContentionFastAttempts, this.random);
     if (t) {
       if (
         (this.consecutiveSlotContention++,
@@ -264,7 +264,7 @@ class se {
             kind: "slot_contention_backoff",
             consecutive: this.consecutiveSlotContention,
           }));
-      return k9t(
+      return computeReconnectDelayMs(
         0,
         this.consecutiveSlotContention,
         this.timers.slotContentionFastAttempts,
@@ -274,7 +274,7 @@ class se {
     if (
       ((this.consecutiveSlotContention = 0),
       (this.contentionBackoffNotified = !1),
-      this.reconnectAttempts >= eXn)
+      this.reconnectAttempts >= MAX_RECONNECT_ATTEMPTS)
     ) {
       ((this.reconnectAttempts = 0),
         this.emit({ kind: "reconnect_exhausted" }));
@@ -284,7 +284,7 @@ class se {
         n(`[deviceBridge] transport onerror listener threw: ${ge(r).message}`);
       }
     }
-    let o = k9t(
+    let o = computeReconnectDelayMs(
       this.reconnectAttempts,
       0,
       this.timers.slotContentionFastAttempts,
@@ -613,7 +613,7 @@ class ce {
     if (
       ((this.ws = a),
       (this.pendingToken = t),
-      (this.handshakeTimer = setTimeout(this.handleHandshakeTimeout, i_n)),
+      (this.handshakeTimer = setTimeout(this.handleHandshakeTimeout, HANDSHAKE_TIMEOUT_MS)),
       a.addEventListener("open", this.handleOpen),
       a.addEventListener("message", this.handleMessage),
       a.addEventListener("close", this.handleClose),
@@ -630,7 +630,7 @@ class ce {
       let t = await Promise.race([
         Promise.resolve(this.options.getAccessToken()),
         new Promise((o) => {
-          e = setTimeout((r) => r(ke), i_n, o);
+          e = setTimeout((r) => r(ke), HANDSHAKE_TIMEOUT_MS, o);
         }),
       ]);
       if (t === ke) {
@@ -691,7 +691,7 @@ class ce {
     try {
       e.send(
         b(
-          oXn({
+          buildConnectFrame({
             oauthToken: t,
             tools: this.options.getTools(),
             deviceId: this.options.getDeviceId?.(),
@@ -721,7 +721,7 @@ class ce {
         }));
       return;
     }
-    let o = sXn(t.text);
+    let o = parseBridgeFrame(t.text);
     switch (o.kind) {
       case "ignored":
         if (this.authenticated)
@@ -783,7 +783,7 @@ class ce {
         reason: e,
         status: t,
         detail: o,
-        slotContention: r && rXn(e),
+        slotContention: r && isSlotContentionReason(e),
       }));
   }
   deliver(e) {
@@ -824,7 +824,7 @@ class ce {
         phase: t,
         code: o,
         reason: r,
-        superseded: o === nXn,
+        superseded: o === SUPERSEDED_CLOSE_CODE,
       }));
   };
   handleSocketError = () => {
@@ -957,10 +957,10 @@ function Qe({
   return Object.keys(a).length > 0 ? a : void 0;
 }
 function en(e) {
-  let t = e[eSt.searchHint],
-    o = e[eSt.alwaysLoad],
-    r = e[eSt.maxResultSizeChars],
-    a = e[eSt.requiresUserInteraction],
+  let t = e[TOOL_ANNOTATION_KEYS.searchHint],
+    o = e[TOOL_ANNOTATION_KEYS.alwaysLoad],
+    r = e[TOOL_ANNOTATION_KEYS.maxResultSizeChars],
+    a = e[TOOL_ANNOTATION_KEYS.requiresUserInteraction],
     l = {
       ...(typeof t === "string" && { search_hint: t }),
       ...(o === !0 && { always_load: !0 }),
@@ -1001,8 +1001,8 @@ var tn = "wss://bridge.claudeusercontent.com",
         }.VERSION
       : "unknown";
 function rn(e, t) {
-  let o = x9t(e),
-    r = c_n(sessionIdBody(t).slice(-Ce), Ce);
+  let o = sanitizeDeviceName(e),
+    r = toSlug(sessionIdBody(t).slice(-Ce), Ce);
   return r ? `${o}-cc-${r}` : o;
 }
 function sn(e, t, o, r) {

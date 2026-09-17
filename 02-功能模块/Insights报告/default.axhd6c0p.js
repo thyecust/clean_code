@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 197 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { vTe, asSystemPrompt, U3, LEe, xr, getSessionIdFromLog, getSessionFilesWithMtime, loadAllLogsFromSessionFile, UY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { diffLines, asSystemPrompt, isHumanUserMessage, isUserQueuedCommandAttachment, joinTextBlocks, getSessionIdFromLog, getSessionFilesWithMtime, loadAllLogsFromSessionFile, runCallerSpecifiedModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -61,7 +61,7 @@ function ve(e, t) {
       a.type === "attachment" &&
       typeof a.attachment === "object" &&
       a.attachment !== null &&
-      LEe(a)
+      isUserQueuedCommandAttachment(a)
     ) {
       let l = a.attachment.type === "queued_command" ? a.attachment.prompt : "",
         p = a.attachment.source_uuid;
@@ -80,7 +80,7 @@ function ve(e, t) {
           );
         continue;
       }
-      if (!U3(a) || (typeof a.uuid === "string" && i.has(a.uuid))) continue;
+      if (!isHumanUserMessage(a) || (typeof a.uuid === "string" && i.has(a.uuid))) continue;
       for (let l of ce(a.message.content))
         o.push(`[User]: ${truncateToCodeUnits(l, t.userTextChars)}`);
     } else if (a.type === "assistant" && a.message) {
@@ -368,7 +368,7 @@ function Qe(e) {
               if (C === "Edit") {
                 let L = te(S.old_string),
                   K = te(S.new_string);
-                for (let Z of vTe(L, K)) {
+                for (let Z of diffLines(L, K)) {
                   if (Z.added) E += Z.count || 0;
                   if (Z.removed) x += Z.count || 0;
                 }
@@ -546,7 +546,7 @@ TRANSCRIPT CHUNK:
 `;
 async function tt(e, t) {
   try {
-    let o = await UY({
+    let o = await runCallerSpecifiedModelQuery({
       systemPrompt: asSystemPrompt([]),
       userPrompt: et + e,
       signal: new AbortController().signal,
@@ -563,7 +563,7 @@ async function tt(e, t) {
       },
     });
     if (o.isApiErrorMessage) return e.slice(0, 2000);
-    return xr(o.message.content) || e.slice(0, 2000);
+    return joinTextBlocks(o.message.content) || e.slice(0, 2000);
   } catch {
     return e.slice(0, 2000);
   }
@@ -746,7 +746,7 @@ RESPOND WITH ONLY A VALID JSON OBJECT matching this schema:
   "primary_success": "none|fast_accurate_search|correct_code_edits|good_explanations|proactive_help|multi_file_changes|good_debugging",
   "brief_summary": "One sentence: what user wanted and whether they got it"
 }`,
-      l = await UY({
+      l = await runCallerSpecifiedModelQuery({
         systemPrompt: asSystemPrompt([]),
         userPrompt: a,
         signal: new AbortController().signal,
@@ -762,7 +762,7 @@ RESPOND WITH ONLY A VALID JSON OBJECT matching this schema:
           credentials: o,
         },
       }),
-      r = xr(l.message.content).match(/\{[\s\S]*\}/);
+      r = joinTextBlocks(l.message.content).match(/\{[\s\S]*\}/);
     if (!r) return null;
     let g = z(r[0]);
     if (!he(g)) return null;
@@ -1073,7 +1073,7 @@ Find something genuinely interesting or amusing from the session summaries.`,
 ];
 async function Se(e, t, o) {
   try {
-    let i = await UY({
+    let i = await runCallerSpecifiedModelQuery({
         systemPrompt: asSystemPrompt([]),
         userPrompt:
           e.prompt +
@@ -1095,7 +1095,7 @@ DATA:
           credentials: o,
         },
       }),
-      a = xr(i.message.content);
+      a = joinTextBlocks(i.message.content);
     if (a) {
       let l = a.match(/\{[\s\S]*\}/);
       if (l)

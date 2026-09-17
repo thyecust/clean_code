@@ -25,7 +25,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { GITHUB_HOST, isGitHubHost, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { Yqn, t3, ep, oC, lgt, Lpn, isFileReadDenied } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { streamRipgrepSearch, runRipgrepSearch, DEFAULTS_SLOT_MARKER, getAutoModeTemplateRules, getPermissionRuleLabel, isPathWithinDir, isFileReadDenied } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { n_, jq } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsFilePathForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
@@ -1195,7 +1195,7 @@ ${bn(b(t))}`;
 }
 async function rt(e, t, r, o = 4, s) {
   try {
-    let l = await t3(
+    let l = await runRipgrepSearch(
       [
         "--files",
         "--hidden",
@@ -2202,7 +2202,7 @@ async function an(
         continue;
       }
       let ue = we;
-      if (oe(ue, Ve, o.projectsDir, i, l) || !Lpn(ue, Ve)) {
+      if (oe(ue, Ve, o.projectsDir, i, l) || !isPathWithinDir(ue, Ve)) {
         I++;
         continue;
       }
@@ -2212,7 +2212,7 @@ async function an(
           noFollow: !0,
           requireNlink1: !0,
           verifyHandlePath: (Q) =>
-            Q === ue || (!oe(Q, Ve, o.projectsDir, i, l) && Lpn(Q, Ve)),
+            Q === ue || (!oe(Q, Ve, o.projectsDir, i, l) && isPathWithinDir(Q, Ve)),
         }),
         ot,
       ]);
@@ -2355,7 +2355,7 @@ async function Qr(e, t = Yr) {
     i = AbortSignal.any([l, s.signal]),
     d = !1;
   try {
-    let m = await Yqn(
+    let m = await streamRipgrepSearch(
       [
         "-o",
         "-H",
@@ -2608,8 +2608,8 @@ ${d.map((c) => `- ${q(c)}`).join(`
   );
 }
 function ro() {
-  let e = oC(),
-    t = (r) => r.map(lgt);
+  let e = getAutoModeTemplateRules(),
+    t = (r) => r.map(getPermissionRuleLabel);
   return k(
     "Shipped default auto-mode rule labels",
     [
@@ -2665,8 +2665,8 @@ function drn(e) {
       return "autoMode.environment is empty \u2014 nothing to save.";
     let s = TSe("environment", t.environment);
     if (s) return s;
-    if (t.environment.some((l) => oI(l) === ep))
-      return `autoMode.environment must not contain "${ep}" \u2014 skipped slots get their shipped default text written verbatim instead.`;
+    if (t.environment.some((l) => oI(l) === DEFAULTS_SLOT_MARKER))
+      return `autoMode.environment must not contain "${DEFAULTS_SLOT_MARKER}" \u2014 skipped slots get their shipped default text written verbatim instead.`;
     for (let l of zlt) {
       let i = t[l];
       if (i === void 0) continue;
@@ -2674,8 +2674,8 @@ function drn(e) {
         return `autoMode.${l} is empty \u2014 omit the key when nothing was accepted for it.`;
       let d = TSe(l, i);
       if (d) return d;
-      if (!i.includes(ep))
-        return `autoMode.${l} is missing the literal entry "${ep}" \u2014 without it the array replaces the shipped rules instead of extending them.`;
+      if (!i.includes(DEFAULTS_SLOT_MARKER))
+        return `autoMode.${l} is missing the literal entry "${DEFAULTS_SLOT_MARKER}" \u2014 without it the array replaces the shipped rules instead of extending them.`;
     }
   }
   let r = e.removeFromPermissionsAllow;
@@ -2840,12 +2840,12 @@ function lo(e, t) {
   return (u(), o);
 }
 function co(e, t, r) {
-  let o = e !== "allow" || t.length === 0 || t.some((i) => oI(i) === ep),
+  let o = e !== "allow" || t.length === 0 || t.some((i) => oI(i) === DEFAULTS_SLOT_MARKER),
     s = new Set(),
     l = [];
-  for (let i of [ep, ...t, ...r]) {
+  for (let i of [DEFAULTS_SLOT_MARKER, ...t, ...r]) {
     let d = oI(i);
-    if (d === ep && !o) continue;
+    if (d === DEFAULTS_SLOT_MARKER && !o) continue;
     if (s.has(d)) continue;
     (s.add(d), l.push(i));
   }

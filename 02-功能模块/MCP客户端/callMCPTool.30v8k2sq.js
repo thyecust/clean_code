@@ -107,59 +107,59 @@ import { uBe } from "../../01-核心基础设施/核心工具-常量与消息/�
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import {
-  $v,
-  Sue,
-  Wft,
-  nw,
+  mapWithConcurrency,
+  isMcpServerUsedByHooks,
+  trackMcpServerProcess,
+  truncateOtelContent,
   W9,
-  wue,
-  zft,
-  Xf,
-  eC,
-  mmt,
-  US,
-  ka,
-  wI,
-  rH,
-  Wwe,
-  cT,
-  nC,
-  BF,
-  jF,
-  xy,
-  TI,
-  PDe,
-  nne,
-  zF,
-  Rgt,
-  Ck,
-  Ka,
-  Dy,
-  b3,
-  cKe,
-  _Le,
-  cht,
-  UM,
-  fH,
-  $ne,
-  BLe,
-  rj,
-  s$,
-  Fg,
-  Ws,
-  AE,
-  gEe,
-  JO,
-  uC,
-  X_t,
-  Y_t,
-  EMe,
-  H5e,
-  AMe,
+  getCurrentTraceparent,
+  runInOtelSpan,
+  getPolicyPluginNames,
+  listMcpResourcesTool,
+  registerLoggableMcpServer,
+  THIRD_PARTY_PLUGIN_LABEL,
+  sanitizeDisplayText,
+  sanitizeMessageText,
+  MCP_BLOCKED_BY_POLICY_MESSAGE,
+  MCP_DISABLED_IN_MCP_MESSAGE,
+  recordPluginUsage,
+  getPluginIdHash,
+  getPluginScope,
+  isOfficialPluginScope,
+  buildPluginTelemetryFieldsFromId,
+  MAX_MCP_TEXT_LENGTH,
+  TOOL_CALL_INTERRUPTED_MESSAGE,
+  MAX_MCP_HTTP_BODY_BYTES,
+  sanitizeLogValue,
+  notifyIdeConnected,
+  recordPluginActivity,
+  getImageLimitsForModel,
+  persistBinaryContent,
+  formatBinaryContentSavedMessage,
+  isMcpSubagentPromptEnabled,
+  getPersistedFormatLabel,
+  formatTruncatedResultMessage,
+  McpAuthError,
+  McpSessionExpiredError,
+  McpToolCallError,
+  McpResponseSchemaError,
+  CCR_NEEDS_APPROVAL_ERROR_CODE,
+  classifyMcpErrorSource,
+  getMcpServerBaseUrl,
+  isDiscoveryCacheEnabled,
+  isDiscoveryCacheUsable,
+  isAccountTokenUnresolved,
+  readMcpResourceDirTool,
+  readMcpResourceTool,
+  logMcpToolCallXmlInDescriptions,
+  stripTrailingInvokeSuffixFromArgs,
+  getMcpClientCapabilities,
+  isMcpStatelessSkipInitEnabled,
+  markClaudeAiServerConnected,
   isMcpServerBlockedAtConnectTime,
   getAllMcpConfigs,
   isMcpServerDisabled,
-  Tyt,
+  matchCodeIndexingToolByServerName,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { getPluginToolStagingDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
@@ -1082,7 +1082,7 @@ class Ct {
 import { randomUUID } from "crypto";
 import { Readable as jr } from "stream";
 import { pathToFileURL } from "url";
-var $r = nne,
+var $r = MAX_MCP_HTTP_BODY_BYTES,
   St = "without an SSE event boundary";
 class zt extends Error {
   constructor(e) {
@@ -1193,13 +1193,13 @@ class Ke extends Ct {
   overflowError;
   constructor(e) {
     super(e);
-    this._readBuffer = new Wt(nne, (t) => {
+    this._readBuffer = new Wt(MAX_MCP_HTTP_BODY_BYTES, (t) => {
       ((this.overflowError = t), queueMicrotask(() => void this.close()));
     });
   }
 }
 function Je(e) {
-  return e.type === "claudeai-proxy" && e.stateless === !0 && H5e();
+  return e.type === "claudeai-proxy" && e.stateless === !0 && isMcpStatelessSkipInitEnabled();
 }
 function Gt(e) {
   if (!Je(e) || e.type !== "claudeai-proxy") return;
@@ -1213,7 +1213,7 @@ function Gt(e) {
   }
   if (!SUPPORTED_PROTOCOL_VERSIONS.includes(t.data.protocolVersion)) {
     n(
-      `[claudeai-mcp] cached_init_response for ${e.id} carries unsupported protocolVersion ${zF(t.data.protocolVersion)} \u2014 falling back to real initialize`,
+      `[claudeai-mcp] cached_init_response for ${e.id} carries unsupported protocolVersion ${sanitizeLogValue(t.data.protocolVersion)} \u2014 falling back to real initialize`,
     );
     return;
   }
@@ -1285,7 +1285,7 @@ import { dirname } from "path";
 var qe = import.meta.require("../Skills技能/fetchMcpSkillsForClient.er0bhc4y.js");
 var Tt = import.meta.require("./getMcpAutoBackgroundMs.7m99c5cf.js");
 function isMcpSessionExpiredError(e) {
-  if (e instanceof fH) return !0;
+  if (e instanceof McpSessionExpiredError) return !0;
   if (e instanceof McpError) return !1;
   let t = "code" in e ? e.code : void 0;
   if (t === 404)
@@ -1304,9 +1304,9 @@ function capMcpInstructions(e, t) {
   return yr(e, "Server instructions", t);
 }
 function yr(e, t, r) {
-  if (e.length <= TI) return e;
-  if (r !== void 0) logMCPDebug(r, `${t} truncated from ${e.length} to ${TI} chars`);
-  return truncateToCodeUnits(e, TI) + "\u2026 [truncated]";
+  if (e.length <= MAX_MCP_TEXT_LENGTH) return e;
+  if (r !== void 0) logMCPDebug(r, `${t} truncated from ${e.length} to ${MAX_MCP_TEXT_LENGTH} chars`);
+  return truncateToCodeUnits(e, MAX_MCP_TEXT_LENGTH) + "\u2026 [truncated]";
 }
 function isTerminalConnectionError(e) {
   if (e.name === "AbortError") return !0;
@@ -1486,7 +1486,7 @@ function removeMcpAuthCacheEntry(e, t) {
   return ((r.authCacheWriteChain = o), o);
 }
 function evictAllMcpMemosOnIdentityChange(e = new Set(), t = !0) {
-  if (!Ws()) return;
+  if (!isDiscoveryCacheEnabled()) return;
   if (t) Q3e();
   J3e();
   let r = (o) => {
@@ -1501,7 +1501,7 @@ function evictAllMcpMemosOnIdentityChange(e = new Set(), t = !0) {
     qe.invalidateMcpSkillsExcept(e));
 }
 function Le(e, t) {
-  let r = Fg(e),
+  let r = getMcpServerBaseUrl(e),
     o = t ? { mcpServerKeyHash: wP(t) } : {};
   if (r) return { mcpServerBaseUrl: r, ...o };
   return o;
@@ -1509,7 +1509,7 @@ function Le(e, t) {
 function emitMcpServerConnectionEvent(e, t, r) {
   let o = wl(),
     c = t.pluginSource ? splitPluginId(t.pluginSource) : void 0,
-    d = c && (jF(BF(c.name, c.marketplace, null)) || o);
+    d = c && (isOfficialPluginScope(getPluginScope(c.name, c.marketplace, null)) || o);
   emitOtelEvent("mcp_server_connection", {
     status: r.status,
     transport_type: t.type ?? "stdio",
@@ -1517,8 +1517,8 @@ function emitMcpServerConnectionEvent(e, t, r) {
     duration_ms: String(Math.round(r.durationMs)),
     is_plugin: c !== void 0,
     ...(c && {
-      plugin_id_hash: nC(c.name, c.marketplace),
-      "plugin.name": d ? c.name : US,
+      plugin_id_hash: getPluginIdHash(c.name, c.marketplace),
+      "plugin.name": d ? c.name : THIRD_PARTY_PLUGIN_LABEL,
     }),
     ...(r.errorCode && { error_code: String(sanitizeConnectErrorCodeForTelemetry(r.errorCode)) }),
     ...(o && { server_name: e, ...(r.error && { error: r.error }) }),
@@ -1543,7 +1543,7 @@ async function Sr(e, t, r, o, c, d, p) {
   let L = c && (t.type === "http" || t.type === "sse") && (await AUe(e, t)),
     W = d === void 0 || mE(d);
   if (W) Lt(e, t.type === "claudeai-proxy" ? t.id : void 0, L ? so : void 0, p);
-  if (AE())
+  if (isDiscoveryCacheUsable())
     if (W) await i2(UIe(e, t));
     else
       logMCPDebug(
@@ -1664,7 +1664,7 @@ async function rr({
   if (!(o instanceof XA || (o instanceof AA && d) || c === 401 || c === 403))
     return;
   if (p) {
-    let D = wI(o.message);
+    let D = sanitizeMessageText(o.message);
     return at({
       name: e,
       serverRef: t,
@@ -1678,7 +1678,7 @@ async function rr({
     });
   }
   if (_) {
-    let D = wI(o.message);
+    let D = sanitizeMessageText(o.message);
     return at({
       name: e,
       serverRef: t,
@@ -2033,7 +2033,7 @@ function wrapFetchWithTimeout(e, t) {
     let p = new Headers(c?.headers);
     if (!p.has("accept")) p.set("accept", ko);
     if (shouldPropagateTraceContext()) {
-      let A = wue();
+      let A = getCurrentTraceparent();
       if (A && !p.has("traceparent")) p.set("traceparent", A);
     }
     let _ = new AbortController(),
@@ -2400,7 +2400,7 @@ var connectToServer = lct(
               name: e,
               type: "failed",
               config: t,
-              error: rH,
+              error: MCP_BLOCKED_BY_POLICY_MESSAGE,
               errorCode: "POLICY_BLOCKED",
             }
           );
@@ -2443,7 +2443,7 @@ var connectToServer = lct(
             args: te,
             pending: Se,
             capped: Pe,
-          } = Sue(e)
+          } = isMcpServerUsedByHooks(e)
             ? { command: w, args: O, pending: !1, capped: !1 }
             : yxt("mcp", w, O);
         ((L = Se), (W = Pe));
@@ -2506,7 +2506,7 @@ var connectToServer = lct(
           description: "Anthropic's agentic coding tool",
           websiteUrl: Wre,
         },
-        { capabilities: EMe() },
+        { capabilities: getMcpClientCapabilities() },
       );
       if (t.type === "http") logMCPDebug(e, "Client created, setting up request handler");
       if (
@@ -2595,8 +2595,8 @@ var connectToServer = lct(
           ),
           (t.type === "stdio" || !t.type) && I instanceof Ke && I.pid)
         ) {
-          if ((registerChildProcess("mcp_stdio", I.pid), L)) Qie("mcp", I.pid, () => Sue(e));
-          if (W || L) Wft(e, I.pid);
+          if ((registerChildProcess("mcp_stdio", I.pid), L)) Qie("mcp", I.pid, () => isMcpServerUsedByHooks(e));
+          if (W || L) trackMcpServerProcess(e, I.pid);
         }
       } catch (w) {
         let O = Date.now() - d;
@@ -2723,7 +2723,7 @@ var connectToServer = lct(
           connectionDurationMs: w,
           serverVersion: Ms(de?.version),
         }),
-          Rgt(U).catch((O) => {
+          notifyIdeConnected(U).catch((O) => {
             logMCPError(e, `Failed to send ide_connected notification: ${formatConnectionError(O, t)}`);
           }));
       }
@@ -3150,7 +3150,7 @@ function dt(e, t, r) {
       name: e,
       type: "failed",
       config: t,
-      error: r === "policy" ? rH : Wwe,
+      error: r === "policy" ? MCP_BLOCKED_BY_POLICY_MESSAGE : MCP_DISABLED_IN_MCP_MESSAGE,
       errorCode: r === "policy" ? "POLICY_BLOCKED" : "DISABLED",
     },
     !1,
@@ -3208,7 +3208,7 @@ async function clearServerCache(e, t) {
   Nt(r);
 }
 function detachAndCloseConnection(e) {
-  if (((asMcpSdkClient(e.client).onclose = void 0), Ws())) {
+  if (((asMcpSdkClient(e.client).onclose = void 0), isDiscoveryCacheEnabled())) {
     let t = getMcpServerConfigCacheKey(e.name, e.config),
       r = connectToServer.cache?.get?.(t);
     if (r !== void 0)
@@ -3238,7 +3238,7 @@ async function dropDiscoveryEntry(e, t) {
 }
 async function discardMemoizedConnectResult(e, t) {
   let r = getMcpServerConfigCacheKey(e, t);
-  if (!Ws()) return (ur().connections.delete(r), !0);
+  if (!isDiscoveryCacheEnabled()) return (ur().connections.delete(r), !0);
   let o = ur().connections.get(r);
   if (o !== void 0) {
     let c = await Be(o);
@@ -3279,7 +3279,7 @@ async function ensureConnectedClient(e, t) {
     );
   }
   if (
-    Ws() &&
+    isDiscoveryCacheEnabled() &&
     isMcpServerDisabled(e.name) &&
     (await peekSettledConnection(e.name, e.config))?.type !== "connected"
   ) {
@@ -3314,11 +3314,11 @@ async function ensureConnectedClient(e, t) {
     let d = c.type === "failed" ? c.errorCode : void 0;
     throw Object.assign(
       new R(
-        `MCP server "${e.name}" is not connected${Ws() && c.type === "failed" && c.error ? `: ${ka(c.error)}` : ""}`,
+        `MCP server "${e.name}" is not connected${isDiscoveryCacheEnabled() && c.type === "failed" && c.error ? `: ${sanitizeDisplayText(c.error)}` : ""}`,
         "MCP server not connected",
       ),
       {
-        mcpErrorSource: s$(
+        mcpErrorSource: classifyMcpErrorSource(
           Object.assign(Error("MCP dial failed"), {
             code: d !== void 0 && /^-?\d+$/.test(d) ? Number(d) : d,
           }),
@@ -3415,7 +3415,7 @@ function sanitizeConnectErrorCodeForTelemetry(e) {
 var br = {
   [ErrorCode.ConnectionClosed]: "connection_closed",
   [ErrorCode.RequestTimeout]: "request_timeout",
-  [rj]: "ccr_needs_approval",
+  [CCR_NEEDS_APPROVAL_ERROR_CODE]: "ccr_needs_approval",
   [ErrorCode.ParseError]: "parse_error",
   [ErrorCode.InvalidRequest]: "invalid_request",
   [ErrorCode.MethodNotFound]: "method_not_found",
@@ -3447,7 +3447,7 @@ function getDiscoveryFetchError(e) {
 function Ar() {
   ensureDiscoveryCacheAccount();
   let e = y7();
-  return gEe(e) ? void 0 : e.token;
+  return isAccountTokenUnresolved(e) ? void 0 : e.token;
 }
 function seedMcpIdentityCheck() {
   let e = jt();
@@ -3465,17 +3465,17 @@ function mcpIdentityChangedSinceLastCheck() {
   return ((t.identityBaseline = e), !0);
 }
 function recordRawToolsForResult(e, t) {
-  if (!Ws()) return;
+  if (!isDiscoveryCacheEnabled()) return;
   let r = jt();
   (r.rawToolsByResult.set(e, t), r.rawFetchedAtByResult.set(e, Date.now()));
 }
 function recordRawCommandsForResult(e, t) {
-  if (!Ws()) return;
+  if (!isDiscoveryCacheEnabled()) return;
   let r = jt();
   (r.rawCommandsByResult.set(e, t), r.rawFetchedAtByResult.set(e, Date.now()));
 }
 function recordRawResourcesForResult(e, t) {
-  if (!Ws()) return;
+  if (!isDiscoveryCacheEnabled()) return;
   let r = jt();
   (r.rawResourcesByResult.set(e, t), r.rawFetchedAtByResult.set(e, Date.now()));
 }
@@ -3556,7 +3556,7 @@ async function persistRefreshedToolsIfPresent(e, t, r) {
   });
 }
 async function persistLiveListing(e, t) {
-  if (!Ws() || !S7(e.config) || isMcpServerDisabled(e.name) || isMcpServerBlockedAtConnectTime(e.name, e.config)) return;
+  if (!isDiscoveryCacheEnabled() || !S7(e.config) || isMcpServerDisabled(e.name) || isMcpServerBlockedAtConnectTime(e.name, e.config)) return;
   try {
     let r = !!e.capabilities?.resources;
     if (!r) recordRawResourcesForResult(t.resources, []);
@@ -3625,7 +3625,7 @@ function discoverySourceForMiss(e) {
 }
 function hydrateToolsFromListing(e, t, r, o, c) {
   let d = sanitizeDeep(t),
-    p = Fg(e.config),
+    p = getMcpServerBaseUrl(e.config),
     _ = Le(e.config, e.name),
     T = mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), oy(e.name, e.config));
   if (d.length === 0 && o === "live")
@@ -3775,10 +3775,10 @@ ${k.description}`
       ..._,
     });
   let E = () => oy(e.name, e.config);
-  X_t(C, e.name, E(), p, e.instructions);
+  logMcpToolCallXmlInDescriptions(C, e.name, E(), p, e.instructions);
   let F = isFirstPartyDesignServerConfig(e.config),
     U = getOfficialPluginPromptOverrides(e.config),
-    ne = e.config.pluginSource ? xy(e.config.pluginSource, Xf()) : void 0,
+    ne = e.config.pluginSource ? buildPluginTelemetryFieldsFromId(e.config.pluginSource, getPolicyPluginNames()) : void 0,
     Y = rS(e.config),
     fe = C.map((k) => {
       let ae = rc(e.name, k.name),
@@ -3921,7 +3921,7 @@ ${k.description}`
                       args: z,
                       meta: re,
                       signal: we,
-                      imageLimits: Ka(B.options.mainLoopModel),
+                      imageLimits: getImageLimitsForModel(B.options.mainLoopModel),
                       toolExecution: k.execution,
                       taskRegistry: B.taskRegistry,
                       toolUseId: ue,
@@ -3947,7 +3947,7 @@ ${k.description}`
                             }
                           : void 0,
                     });
-                    if (Re.interrupted) throw new Ve(PDe);
+                    if (Re.interrupted) throw new Ve(TOOL_CALL_INTERRUPTED_MESSAGE);
                     if (
                       (Ae({
                         type: "mcp_progress",
@@ -3979,7 +3979,7 @@ ${k.description}`
                       }),
                     };
                   } catch (_e) {
-                    if (_e instanceof fH && Me < 1) {
+                    if (_e instanceof McpSessionExpiredError && Me < 1) {
                       (logFeatureSad("mcp_session_recovery", _e.expiryKind),
                         logMCPDebug(
                           e.name,
@@ -3987,7 +3987,7 @@ ${k.description}`
                         ));
                       continue;
                     }
-                    if (_e instanceof fH)
+                    if (_e instanceof McpSessionExpiredError)
                       logFeatureBad("mcp_session_recovery", "session_retry_exhausted");
                     else if (Me > 0 && !we.aborted)
                       logFeatureBad("mcp_session_recovery", "retry_failed_other");
@@ -4004,7 +4004,7 @@ ${k.description}`
                       recordReplyDegradedState(e.name, _e);
                     if (_e instanceof Error && !(_e instanceof R)) {
                       let Re = _e.constructor.name,
-                        Ue = () => (we.aborted ? "other" : s$(_e));
+                        Ue = () => (we.aborted ? "other" : classifyMcpErrorSource(_e));
                       if (Re === "Error") {
                         let tt = formatConnectionError(_e, e.config);
                         throw Object.assign(new R(tt, tt.slice(0, 200)), {
@@ -4121,15 +4121,15 @@ ${k.description}`
             (B.options.activeMcpTool = k.name),
             e.config.pluginSource)
           )
-            (cT(e.config.pluginSource),
-              Ck(e.config.pluginSource, "mcp", {
+            (recordPluginUsage(e.config.pluginSource),
+              recordPluginActivity(e.config.pluginSource, "mcp", {
                 kind: "mcp-server",
                 name: e.name,
               }));
           let ue = E();
-          if (ue) mmt(e.name);
+          if (ue) registerLoggableMcpServer(e.name);
           return Ce(
-            Y_t(
+            stripTrailingInvokeSuffixFromArgs(
               z,
               k.name,
               e.name,
@@ -4443,7 +4443,7 @@ function hydrateCommandsFromListing(e, t) {
               name: p.name,
               arguments: ict(T, I),
             }),
-            X = Ka(L.options.mainLoopModel),
+            X = getImageLimitsForModel(L.options.mainLoopModel),
             me = await Promise.all(
               ee.messages.map((V) => transformResultContent(V.content, j.name, X, L.storageV5)),
             );
@@ -4500,7 +4500,7 @@ function inertReconnectShape(e, t) {
   );
 }
 async function reconnectMcpServerDistrusted(e, t, r, o) {
-  if (!AE()) return reconnectMcpServerImpl(e, t, r, o);
+  if (!isDiscoveryCacheUsable()) return reconnectMcpServerImpl(e, t, r, o);
   let c = ir();
   if ((await i2(dropDiscoveryEntry(e, t)), xh(t) && ir() !== c)) return inertReconnectShape(e, t);
   return reconnectMcpServerImpl(e, t, r, o);
@@ -4524,7 +4524,7 @@ async function reconnectMcpServerImpl(e, t, r, o) {
       )
         return _();
       let me = getMcpServerConfigCacheKey(e, t);
-      if (!Ws() || ur().connections.get(me) === T) ur().connections.delete(me);
+      if (!isDiscoveryCacheEnabled() || ur().connections.get(me) === T) ur().connections.delete(me);
       h = await connectToServer(e, t, void 0, r, o);
     }
     if (p()) {
@@ -4540,7 +4540,7 @@ async function reconnectMcpServerImpl(e, t, r, o) {
     if (t.type === "http" || t.type === "sse") await CLt(e, t);
     gE(e);
     let A;
-    if (Ws()) A = await Qx(e, t);
+    if (isDiscoveryCacheEnabled()) A = await Qx(e, t);
     if (p()) return (await detachAndCloseConnection(h), _());
     let L = !!h.capabilities?.resources,
       [W, I, D, j] = await Promise.all([
@@ -4565,7 +4565,7 @@ async function reconnectMcpServerImpl(e, t, r, o) {
       !h.toolsListError &&
       !h.discoveryBearerRejected
     )
-      AMe(e, r);
+      markClaudeAiServerConnected(e, r);
     persistLiveListing(h, {
       tools: W,
       commands: I,
@@ -4576,8 +4576,8 @@ async function reconnectMcpServerImpl(e, t, r, o) {
     let ee = [...I, ...D],
       X = [];
     if (L) {
-      if (![eC, uC].some((V) => W.some((ie) => matchesToolName(ie, V.name))))
-        X.push(eC, uC, JO);
+      if (![listMcpResourcesTool, readMcpResourceTool].some((V) => W.some((ie) => matchesToolName(ie, V.name))))
+        X.push(listMcpResourcesTool, readMcpResourceTool, readMcpResourceDirTool);
     }
     if (h.discoveryBearerRejected)
       logFeatureSad("mcp_reconnect", "mcp_reconnect_bearer_rejected");
@@ -4604,7 +4604,7 @@ async function reconnectMcpServerImpl(e, t, r, o) {
   }
 }
 async function pr(e, t, r) {
-  await $v(e, r, { concurrency: t });
+  await mapWithConcurrency(e, r, { concurrency: t });
 }
 async function awaitEachWithDeadline(e, t) {
   if (e.length === 0) return 0;
@@ -4677,7 +4677,7 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
         if (isMcpServerBlockedAtConnectTime(C, E)) {
           (logMCPDebug(C, "Skipping connection (blocked by managed policy)"),
             p({
-              client: { name: C, type: "failed", config: E, error: rH },
+              client: { name: C, type: "failed", config: E, error: MCP_BLOCKED_BY_POLICY_MESSAGE },
               tools: [],
               commands: [],
             }));
@@ -4752,7 +4752,7 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
             De = (k.templates ?? []).map((Ce) => ({ ...Ce, server: C })),
             Te = !!k.capabilities.resources || ke.length > 0,
             Q = [];
-          if (Te && !_) ((_ = !0), Q.push(eC, uC, JO));
+          if (Te && !_) ((_ = !0), Q.push(listMcpResourcesTool, readMcpResourceTool, readMcpResourceDirTool));
           if (
             (logEvent("tengu_mcp_discovery_source", {
               source: S(U.kind === "fresh" ? "cache_fresh" : "cache_stale"),
@@ -4905,7 +4905,7 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
         let ne = connectToServer(C, E, me, r, o),
           Y = await ne,
           fe = connectToServer.cache?.get?.(getMcpServerConfigCacheKey(C, E)) === ne;
-        if (Ws() && isCacheOutcomeMiss(U))
+        if (isDiscoveryCacheEnabled() && isCacheOutcomeMiss(U))
           logEvent("tengu_mcp_discovery_source", {
             source: S(discoverySourceForMiss(U)),
             transportType: fromEnum(E.type ?? "stdio"),
@@ -4933,7 +4933,7 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
               let k = !!Y.capabilities?.resources;
               gE(C);
               let ae = await Qx(C, E);
-              if (Ws() && (isDialDisposed(ne) || d(E))) {
+              if (isDiscoveryCacheEnabled() && (isDialDisposed(ne) || d(E))) {
                 if (!isDialDisposed(ne) && je(ne, C, E)) detachAndCloseConnection(Y);
                 return;
               }
@@ -4950,8 +4950,8 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
                 if (je(ne, C, E)) detachAndCloseConnection(Y);
                 return;
               }
-              if (Ws() && isDialDisposed(ne)) return;
-              if (Ws() && fe && je(ne, C, E)) {
+              if (isDiscoveryCacheEnabled() && isDialDisposed(ne)) return;
+              if (isDiscoveryCacheEnabled() && fe && je(ne, C, E)) {
                 if (
                   connectToServer.cache?.get?.(getMcpServerConfigCacheKey(C, E)) === void 0 &&
                   asMcpSdkClient(Y.client).onclose !== void 0
@@ -4985,12 +4985,12 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
                 !Y.toolsListError &&
                 !Y.discoveryBearerRejected
               )
-                AMe(C, r);
+                markClaudeAiServerConnected(C, r);
               let Te = [...se, ...ve];
               if (!k) recordRawResourcesForResult(ke, []);
               let Q = getDiscoveryFetchError(De) === void 0 ? De : void 0,
                 z =
-                  !Ws() ||
+                  !isDiscoveryCacheEnabled() ||
                   isDialDisposed(ne) ||
                   je(ne, C, E) ||
                   ir() !== c ||
@@ -5006,7 +5006,7 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
                         grantLeg: ae,
                       }),
                 B = [];
-              if (k && !_) ((_ = !0), B.push(eC, uC, JO));
+              if (k && !_) ((_ = !0), B.push(listMcpResourcesTool, readMcpResourceTool, readMcpResourceDirTool));
               (p({
                 client: Y,
                 tools: [...de, ...B],
@@ -5155,7 +5155,7 @@ async function transformResultContent(e, t, r, o, c = !1) {
 }
 async function Rt(e, t, r, o, c) {
   let d = `mcp-${normalizeMcpName(r)}-blob-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    p = await Dy(e, t, d, void 0, c);
+    p = await persistBinaryContent(e, t, d, void 0, c);
   if ("error" in p)
     return [
       {
@@ -5163,7 +5163,7 @@ async function Rt(e, t, r, o, c) {
         text: `${o}Binary content (${t || "unknown type"}, ${e.length} bytes) could not be saved to disk: ${p.error}`,
       },
     ];
-  return [{ type: "text", text: b3(p.filepath, t, p.size, o) }];
+  return [{ type: "text", text: formatBinaryContentSavedMessage(p.filepath, t, p.size, o) }];
 }
 function inferCompactSchema(e, t = 2) {
   if (e === null) return "null";
@@ -5249,7 +5249,7 @@ async function processMCPResult(e, t, r, o, c, d, p) {
   let L = Date.now(),
     W = `mcp-${normalizeMcpName(r)}-${normalizeMcpName(t)}-${L}`,
     I = stripTextBlockMeta(_),
-    D = cKe() || H("tengu_mcp_singleton_unwrap", !0),
+    D = isMcpSubagentPromptEnabled() || H("tengu_mcp_singleton_unwrap", !0),
     j = Array.isArray(I) ? I.length : void 0,
     ee =
       D &&
@@ -5293,8 +5293,8 @@ async function processMCPResult(e, t, r, o, c, d, p) {
     blockCount: j,
     persistedAs: fromEnum(V),
   });
-  let E = ee !== void 0 ? _Le("toolResult") : _Le(T, h);
-  return cht(C.filepath, C.originalSize, E, void 0, ie);
+  let E = ee !== void 0 ? getPersistedFormatLabel("toolResult") : getPersistedFormatLabel(T, h);
+  return formatTruncatedResultMessage(C.filepath, C.originalSize, E, void 0, ie);
 }
 function extractUrlElicitationsFromMcpError(e) {
   let t = e.data;
@@ -5351,11 +5351,11 @@ async function callMCPToolWithUrlElicitationRetry({
       else {
         let F;
         try {
-          F = nw(b(o)).content;
+          F = truncateOtelContent(b(o)).content;
         } catch {
           F = void 0;
         }
-        E = await zft(
+        E = await runInOtelSpan(
           "claude_code.mcp.rpc",
           {
             spanType: "mcp.rpc",
@@ -5370,7 +5370,7 @@ async function callMCPToolWithUrlElicitationRetry({
             isExpectedError: (U) =>
               U instanceof McpError &&
               (U.code === ErrorCode.UrlElicitationRequired ||
-                (U.code === rj &&
+                (U.code === CCR_NEEDS_APPROVAL_ERROR_CODE &&
                   typeof U.data === "object" &&
                   U.data !== null &&
                   "args_sha256" in U.data &&
@@ -5386,12 +5386,12 @@ async function callMCPToolWithUrlElicitationRetry({
       return E;
     } catch (C) {
       if (!(C instanceof McpError)) {
-        if (V && !(C instanceof fH))
+        if (V && !(C instanceof McpSessionExpiredError))
           logFeatureBad("mcp_ccr_needs_approval", "retry_failed");
         throw C;
       }
       if (
-        C.code === rj &&
+        C.code === CCR_NEEDS_APPROVAL_ERROR_CODE &&
         typeof C.data === "object" &&
         C.data !== null &&
         "args_sha256" in C.data &&
@@ -5455,7 +5455,7 @@ async function callMCPToolWithUrlElicitationRetry({
       }
       if (C.code !== ErrorCode.UrlElicitationRequired) {
         if (V) logFeatureBad("mcp_ccr_needs_approval", "retry_failed");
-        else if (C.code === rj && j)
+        else if (C.code === CCR_NEEDS_APPROVAL_ERROR_CODE && j)
           logFeatureBad("mcp_ccr_needs_approval", "arm_not_fired");
         throw C;
       }
@@ -5536,7 +5536,7 @@ function dn(e, t) {
   } else if ("error" in e) r = String(e.error);
   logMCPError(t, r);
   let o = stripReservedMetaKeys(e._meta);
-  throw new $ne(r, "MCP tool returned error", o ? { _meta: o } : void 0);
+  throw new McpToolCallError(r, "MCP tool returned error", o ? { _meta: o } : void 0);
 }
 function discoveryWireSchemas() {
   return {
@@ -5685,7 +5685,7 @@ async function callMCPTool({
             ? `${Math.floor(ve / 1000)}s`
             : `${Math.floor(ve / 60000)}m ${Math.floor((ve % 60000) / 1000)}s`;
     logMCPDebug(t, `Tool '${c}' completed successfully in ${ke}`);
-    let De = Tyt(t);
+    let De = matchCodeIndexingToolByServerName(t);
     if (De)
       logEvent("tengu_code_indexing_tool_used", {
         tool: fromEnum(De),
@@ -5808,7 +5808,7 @@ async function callMCPTool({
               t,
               `Auth reconnect returned '${le.type}'; falling through to needs-auth`,
             ),
-            Ws() && le.type !== "needs-auth")
+            isDiscoveryCacheEnabled() && le.type !== "needs-auth")
           ) {
             let ue = connectToServer.cache?.get?.(Te);
             if (
@@ -5849,7 +5849,7 @@ async function callMCPTool({
             mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(t), Ce),
             mcpToolName: uQ(normalizeMcpName(t), normalizeMcpName(c), Ce),
           }),
-          new UM(
+          new McpAuthError(
             t,
             Te
               ? `MCP server "${t}" needs to be connected in claude.ai (run /mcp to connect it)`
@@ -5880,7 +5880,7 @@ async function callMCPTool({
             mcpToolName: Ce,
           }),
           await clearServerCache(t, r),
-          new fH(t, ke ? "session_expired_404" : "connection_closed_http")
+          new McpSessionExpiredError(t, ke ? "session_expired_404" : "connection_closed_http")
         );
       }
     }
@@ -5890,9 +5890,9 @@ async function callMCPTool({
       ((ne?.name === "ZodError" || ne?.name === "$ZodError") &&
         Array.isArray(ne?.issues))
     )
-      throw new BLe(t, F);
+      throw new McpResponseSchemaError(t, F);
     if (!(F instanceof Error) || F.name !== "AbortError") throw F;
-    return { content: PDe, interrupted: !0, isError: !0 };
+    return { content: TOOL_CALL_INTERRUPTED_MESSAGE, interrupted: !0, isError: !0 };
   } finally {
     if (C !== void 0) clearInterval(C);
   }
@@ -5984,7 +5984,7 @@ async function setupSdkMcpClients(e, t, r) {
         c.push(...T.value.tools),
         d.push(...T.value.commands));
   if (o.some((T) => T.type === "connected" && !!T.capabilities?.resources)) {
-    if (![eC, uC].some((h) => c.some((A) => matchesToolName(A, h.name)))) c.push(eC, uC, JO);
+    if (![listMcpResourcesTool, readMcpResourceTool].some((h) => c.some((A) => matchesToolName(A, h.name)))) c.push(listMcpResourcesTool, readMcpResourceTool, readMcpResourceDirTool);
   }
   return { clients: o, tools: c, commands: d };
 }

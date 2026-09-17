@@ -26,12 +26,12 @@ import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细�
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { getEnvVarCaseInsensitive, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import {
-  Ds,
-  Ct,
+  createConcurrencyLimiter,
+  isSignalAborted,
   rootLaptopDirSyncRegistry,
-  SKe,
-  qVn,
-  vht,
+  isCheckoutLayoutSupported,
+  isDirSyncFastForwardEnabled,
+  isDirSyncStreamingEnabled,
   builderGit,
   readGitLayout,
   layoutStillHolds,
@@ -39,73 +39,73 @@ import {
   hardenedSpawnEnv,
   reachRootsOf,
   BuilderGitProbes,
-  bde,
-  r$,
+  SEED_WORKER_JOURNAL_PATH,
+  checkSeedPath,
   MAX_WORKING_FILE_BYTES,
-  Xfn,
-  GO,
-  E3,
-  WX,
-  xl,
-  OV,
-  xk,
-  DLe,
-  cKn,
-  uKn,
-  dKn,
-  pKn,
-  fKn,
-  mKn,
-  vKe,
-  Qfn,
-  gKn,
-  hKn,
-  RKe,
-  Nht,
-  yKn,
-  SKn,
-  bKn,
-  wKn,
-  jht,
-  ej,
-  TE,
-  pH,
-  nn,
-  tj,
-  qO,
-  tmn,
-  nmn,
-  $_,
-  xKe,
-  lC,
-  XTe,
-  YTe,
-  C3,
-  zO,
-  Ght,
-  qht,
-  zht,
-  s6t,
-  Vht,
-  HKe,
-  Cde,
-  amn,
-  nj,
-  MLe,
-  i6t,
-  IKe,
-  qX,
-  PKe,
-  JTe,
-  NLe,
-  a6t,
-  OKe,
-  cmn,
-  umn,
-  l6t,
-  dmn,
-  Fne,
-  c6t,
+  isSensitivePath,
+  isSensitivePathVariant,
+  normalizeUnicodeForm,
+  isSensitivePathAnySpelling,
+  runPinnedGit,
+  partitionSeedPaths,
+  resolveRealPath,
+  TYPED_AHEAD_GRACE_MS,
+  WEDGED_MS,
+  RESULT_SETTLE_MS,
+  POLL_WINDOW_MS,
+  POLL_STEP_MS,
+  MAX_PEER_REPUBLISH_ATTEMPTS,
+  PEER_CLAIM_GRACE_MS,
+  DEFAULT_SHUTDOWN_TIMEOUT_MS,
+  PULL_UNBOUND_MESSAGE,
+  getSyncDirection,
+  SYNC_RECORD_REMOVED_MESSAGE,
+  SYNC_RECORD_UNREADABLE_MESSAGE,
+  ENGINE_UNSUPPORTED_MESSAGE,
+  describeDirSyncWithdrawn,
+  getGitRootDirSyncConsent,
+  stripFileSyncPrefix,
+  formatFileSyncStoppedLine,
+  createSyncedFileLaneClient,
+  isWindowsLikePlatform,
+  hasWindowsReservedPathComponent,
+  createPathWithholdClassifier,
+  GIT_OBJECT_ID_REGEX,
+  CLAUDE_REF_PREFIX,
+  isClaudeSessionRef,
+  parseLsTreeOutput,
+  FIRST_UPLOAD_RETRY_LADDER_MS,
+  MAX_LISTED_COMMITS,
+  MAX_TEXT_CODE_UNITS,
+  MAX_LISTED_SKIPPED_FILES,
+  MAX_LISTED_CONFLICTED_COMMITS,
+  MAX_CONFLICT_CODE_UNITS,
+  MAX_LISTED_APPLIED_TURNS,
+  isValidGitBranchName,
+  isKnownSyncSkipReason,
+  MAX_HELD_BASES,
+  stageChangedPaths,
+  areStagedCopiesIntact,
+  isGitAttributesPath,
+  collectGitAttributesPaths,
+  checkAncestorSymlinks,
+  GIT_USAGE_EXIT_CODE,
+  GIT_PATHSPEC_ENV,
+  GIT_STASH_IDENTITY_ENV,
+  seedIndexFromTreePaths,
+  chunkPathsForArgv,
+  createHardenedGitRunner,
+  parseDiffTreeRawOutput,
+  isPathGitWouldWrite,
+  isWindowsShortNameAlias,
+  isSameAttributesSnapshot,
+  readGitInfoAttributesFile,
+  excludeDirectoryPaths,
+  formatBranchWithSubject,
+  stageIndexRemovals,
+  getSkipWorktreePaths,
+  isDirSyncPullSupported,
+  formatUnreadableSettingsSuffix,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { JOURNAL_VERSION_WITH_NOTE, MAX_USER_EVENT_UUIDS, parseSyncJournal, normalizeFileMode, encodeSyncJournal } from "../文件同步-Sync/sync-journal.js";
 import { computeGitBlobId } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
@@ -262,7 +262,7 @@ async function Vl(e, t) {
     ]))
   )
     return se("unreadable_path", "an attributes file is not a regular file");
-  let f = qX(o, s, d, void 0, t),
+  let f = createHardenedGitRunner(o, s, d, void 0, t),
     p = await f(["rev-parse", "-q", "--verify", "HEAD^{commit}"]);
   if (p.code !== 0)
     return p.exitCode === 1
@@ -328,7 +328,7 @@ async function Jl(e, t, r) {
     E = ce(a, "..", "attrs.git"),
     R = (await Yi(a, _)) ?? (await Yi(E, { ..._, attributes: null }));
   if (R !== null) return se("git_error", R);
-  let N = qX(
+  let N = createHardenedGitRunner(
       o,
       {
         gitDir: a,
@@ -413,7 +413,7 @@ async function Jl(e, t, r) {
         Ge,
         fe,
       ]),
-      Xe = vt.code === 0 ? PKe(vt.stdout) : null;
+      Xe = vt.code === 0 ? parseDiffTreeRawOutput(vt.stdout) : null;
     if (Xe === null)
       return se(
         "git_error",
@@ -423,15 +423,15 @@ async function Jl(e, t, r) {
       Wt = dedupe(e.scopePaths.filter((I) => I.endsWith("/"))),
       tt = dedupe(e.scopePaths.filter((I) => !I.endsWith("/"))),
       Q = dedupe([...tt, ...Xe.map(({ path: I }) => I)]),
-      ze = Q.filter((I) => !JTe(I) || NLe(I) || Ji(I, wt) || Qi(I, wt));
+      ze = Q.filter((I) => !isPathGitWouldWrite(I) || isWindowsShortNameAlias(I) || Ji(I, wt) || Qi(I, wt));
     if (ze.length > 0) return se("forged_paths", ze.slice(0, 10).join(", "));
     let bt = Q.filter(
         (I) =>
           I.includes("\uFFFD") || Buffer.from(I, "utf8").toString("utf8") !== I,
       ).sort(),
       Ut = new Set(bt),
-      ft = Q.filter((I) => !Ut.has(I) && GO(I)).sort(),
-      Lt = qX(
+      ft = Q.filter((I) => !Ut.has(I) && isSensitivePathVariant(I)).sort(),
+      Lt = createHardenedGitRunner(
         o,
         {
           gitDir: E,
@@ -443,14 +443,14 @@ async function Jl(e, t, r) {
         k,
         r,
       ),
-      _t = Q.filter((I) => !Ut.has(I) && !GO(I)),
+      _t = Q.filter((I) => !Ut.has(I) && !isSensitivePathVariant(I)),
       jt = dedupe([
-        ...HKe(_t),
+        ...collectGitAttributesPaths(_t),
         ..._t.filter((I) => I.split("/").at(-1) === ".gitattributes"),
       ]);
     if (getCurrentPlatform() === "windows") {
       for (let I of jt)
-        if ((await Cde(s.workTree, I)) === "symlink")
+        if ((await checkAncestorSymlinks(s.workTree, I)) === "symlink")
           return se("unreadable_path", "an attributes file lies beyond a link");
     }
     let sn = [
@@ -459,7 +459,7 @@ async function Jl(e, t, r) {
     ];
     if (!(await ls(sn)))
       return se("unreadable_path", "an attributes file is not a regular file");
-    let ht = await OKe(s.commonDir);
+    let ht = await readGitInfoAttributesFile(s.commonDir);
     if (ht.kind !== "none")
       return se(
         "info_attributes",
@@ -501,7 +501,7 @@ async function Jl(e, t, r) {
     );
     if (Je.length !== zt.length)
       return se("git_error", "could not read the filter attributes");
-    if (!a6t(ht, await OKe(s.commonDir)))
+    if (!isSameAttributesSnapshot(ht, await readGitInfoAttributesFile(s.commonDir)))
       return se(
         "momentary",
         ".git/info/attributes changed while the attributes were read",
@@ -515,11 +515,11 @@ async function Jl(e, t, r) {
             "git_error",
             `could not verify the committed entries of the ${he}`,
           );
-        let ut = await i6t(te, D, Ge, I);
+        let ut = await seedIndexFromTreePaths(te, D, Ge, I);
         if (ut.code !== 0) return se("git_error", st(ut.stderr));
         let Ye = new Map();
-        for (let Ze of IKe(I)) {
-          let rt = await te(["ls-files", "-s", "-z", "--", ...Ze], nj);
+        for (let Ze of chunkPathsForArgv(I)) {
+          let rt = await te(["ls-files", "-s", "-z", "--", ...Ze], GIT_PATHSPEC_ENV);
           if (rt.code !== 0) return se("git_error", st(rt.stderr));
           rt.stdout
             .split("\x00")
@@ -549,12 +549,12 @@ async function Jl(e, t, r) {
       if (he.code !== 0) return se("index_state", st(he.stderr || he.stdout));
       ae = he.stdout.trim();
     }
-    let Tt = await cmn(s.workTree, tt),
+    let Tt = await excludeDirectoryPaths(s.workTree, tt),
       me = new Set(Tt),
       At = Tt.filter((I) => !St.has(I) && !Ut.has(I)),
       xe = ce(O, "stage");
     await Un(xe, { recursive: !0, mode: 448 });
-    let nt = await zht(s.workTree, xe, At, e.byteCap, e.stageHooks);
+    let nt = await stageChangedPaths(s.workTree, xe, At, e.byteCap, e.stageHooks);
     if ("refused" in nt)
       return se(
         nt.tooLarge
@@ -574,7 +574,7 @@ async function Jl(e, t, r) {
         .filter((I) => I.kind === "hardlinked" && q.has(I.path))
         .map(({ path: I }) => I)
         .sort(),
-      Ke = nt.entries.find((I) => I.kind === "changed" && Vht(I.path));
+      Ke = nt.entries.find((I) => I.kind === "changed" && isGitAttributesPath(I.path));
     if (Ke !== void 0)
       return se("unreadable_path", `${Ke.path}: changed while being read`);
     let Ot = nt.entries
@@ -627,17 +627,17 @@ async function Jl(e, t, r) {
       Dt = nt.entries.flatMap((I) =>
         I.kind === "absent" && q.has(I.path) ? [I.path] : [],
       ),
-      Ce = await dmn(te, void 0, Dt);
+      Ce = await getSkipWorktreePaths(te, void 0, Dt);
     if (Ce === null) return se("git_error", "could not list the index entries");
     let xt = Dt.filter((I) => !Ce.has(I)),
-      En = await l6t(te, void 0, Ge, xt);
+      En = await stageIndexRemovals(te, void 0, Ge, xt);
     if (En.code !== 0) return se("git_error", st(En.stderr));
     let $t = new Set(Dt),
       qt = At.filter((I) => !De.has(I) && !kn.has(I) && !$t.has(I));
     if (qt.length > 0) {
       let I = new Set(qt),
         he = dd(t.settings)
-          ? await dmn(te, void 0, qt).then((rt) =>
+          ? await getSkipWorktreePaths(te, void 0, qt).then((rt) =>
               rt === null ? null : new Set([...rt].filter((Le) => I.has(Le))),
             )
           : new Set();
@@ -651,7 +651,7 @@ async function Jl(e, t, r) {
         );
         if (rt.code !== 0) return se("git_error", st(rt.stderr));
       }
-      let Qe = qX(
+      let Qe = createHardenedGitRunner(
           o,
           { gitDir: a, commonDir: a, workTree: xe, configPins: s.configPins },
           d,
@@ -674,9 +674,9 @@ async function Jl(e, t, r) {
             qt.map((Le) => `${Le}\x00`).join(""),
           ),
         Ye = await ut(["--ignore-skip-worktree-entries"]),
-        Ze = Ye.exitCode === amn ? await ut([]) : Ye;
+        Ze = Ye.exitCode === GIT_USAGE_EXIT_CODE ? await ut([]) : Ye;
       if (Ze.code !== 0) return se("git_error", st(Ze.stderr));
-      if (!(await s6t(xe, nt.copies)))
+      if (!(await areStagedCopiesIntact(xe, nt.copies)))
         return se("momentary", "the staged copies changed while git read them");
     }
     let dt = await te(["write-tree", "--missing-ok"]);
@@ -684,7 +684,7 @@ async function Jl(e, t, r) {
     let Bt = dt.stdout.trim();
     for (let I of dedupe([Bt, ae])) {
       let he = await re(["diff-tree", "-r", "-z", "--no-renames", Ge, I]),
-        Qe = he.code === 0 ? PKe(he.stdout) : null;
+        Qe = he.code === 0 ? parseDiffTreeRawOutput(he.stdout) : null;
       if (Qe === null)
         return se(
           "git_error",
@@ -695,9 +695,9 @@ async function Jl(e, t, r) {
           Ze !== "D" &&
           (St.has(Ye) ||
             De.has(Ye) ||
-            GO(Ye) ||
-            !JTe(Ye) ||
-            NLe(Ye) ||
+            isSensitivePathVariant(Ye) ||
+            !isPathGitWouldWrite(Ye) ||
+            isWindowsShortNameAlias(Ye) ||
             Ji(Ye, wt) ||
             Qi(Ye, wt)),
       );
@@ -710,8 +710,8 @@ async function Jl(e, t, r) {
             .join(", "),
         );
     }
-    let Pn = await umn(f, p),
-      pt = await re(["commit-tree", ae, "-p", p, "-m", `index on ${Pn}`], MLe);
+    let Pn = await formatBranchWithSubject(f, p),
+      pt = await re(["commit-tree", ae, "-p", p, "-m", `index on ${Pn}`], GIT_STASH_IDENTITY_ENV);
     if (pt.code !== 0) return se("git_error", st(pt.stderr));
     let Rn = await re(
       [
@@ -726,7 +726,7 @@ async function Jl(e, t, r) {
         "-m",
         `WIP on ${Pn}`,
       ],
-      MLe,
+      GIT_STASH_IDENTITY_ENV,
     );
     if (Rn.code !== 0) return se("git_error", st(Rn.stderr));
     return {
@@ -1010,8 +1010,8 @@ async function sd(e, t, r, o) {
   let s = new Set(o),
     a = [],
     d = { stdout: "", stderr: "", code: 0 };
-  for (let p of IKe(o)) {
-    if (((d = await e(["ls-files", "-s", "-z", "--", ...p], nj)), d.code !== 0))
+  for (let p of chunkPathsForArgv(o)) {
+    if (((d = await e(["ls-files", "-s", "-z", "--", ...p], GIT_PATHSPEC_ENV)), d.code !== 0))
       return d;
     a.push(
       ...d.stdout
@@ -1389,14 +1389,14 @@ async function Zi(e, t, r, o) {
 }
 async function gd(e, t, r, o) {
   let s = dedupe([
-      ...HKe(o),
+      ...collectGitAttributesPaths(o),
       ...o.filter((E) => E.split("/").at(-1) === ".gitattributes"),
     ]),
     a = new Map(),
     d = new Map();
-  for (let E of IKe(s)) {
+  for (let E of chunkPathsForArgv(s)) {
     let R = await e(["ls-files", "-s", "-z", "--", ...E], {
-      ...nj,
+      ...GIT_PATHSPEC_ENV,
       GIT_INDEX_FILE: r,
     });
     if (R.code !== 0) return null;
@@ -1682,7 +1682,7 @@ var Cd = "claude: fast-forward to the cloud session",
   Io = /[\r\n\0\uFFFD]/,
   Nd = 1024;
 async function gs(e, t) {
-  let r = await xl(e, ["config", "-z", "--list", "--name-only"], t);
+  let r = await runPinnedGit(e, ["config", "-z", "--list", "--name-only"], t);
   if (r.code !== 0) return null;
   let a = r.stdout
     .split("\x00")
@@ -1760,12 +1760,12 @@ async function _s({
   recheck: p,
 }) {
   let y = (K, ee = {}) =>
-    xl(e, ["-c", "submodule.recurse=false", ...K], void 0, void 0, vFt(f, ee));
+    runPinnedGit(e, ["-c", "submodule.recurse=false", ...K], void 0, void 0, vFt(f, ee));
   if (
-    !nn.test(o) ||
-    !nn.test(s) ||
+    !GIT_OBJECT_ID_REGEX.test(o) ||
+    !GIT_OBJECT_ID_REGEX.test(s) ||
     !r.startsWith("refs/heads/") ||
-    !zO(r.slice(11))
+    !isValidGitBranchName(r.slice(11))
   )
     return V(
       "bad_arguments",
@@ -2036,7 +2036,7 @@ function ks(e, t) {
   );
 }
 async function jd(e, t) {
-  let r = await xl(
+  let r = await runPinnedGit(
     e,
     ["config", "-z", "--name-only", "--get-regexp", "^hook\\."],
     void 0,
@@ -2063,7 +2063,7 @@ async function jd(e, t) {
   ]);
 }
 async function zd(e, t) {
-  let r = await xl(
+  let r = await runPinnedGit(
     e,
     ["config", "-z", "--name-only", "--get-regexp", "^filter\\."],
     void 0,
@@ -2103,7 +2103,7 @@ function xo(e, t, r) {
     : `\`git update-ref --no-deref refs/heads/<your branch> ${t} ${r}\` (with your branch's name in place) puts it back`;
 }
 async function Kd(e, t, r, o) {
-  let s = (f) => xl(e, f, void 0, void 0, { ...o }),
+  let s = (f) => runPinnedGit(e, f, void 0, void 0, { ...o }),
     [a, d] = await Promise.all([
       s(["symbolic-ref", "-q", "HEAD"]),
       s(["rev-parse", "-q", "--verify", "HEAD^{commit}"]),
@@ -2162,13 +2162,13 @@ async function Fo(e, t) {
       ),
       Promise.all(
         Es.filter(([a]) => a.endsWith("_HEAD")).map(async ([a, d]) => {
-          let f = await xl(
+          let f = await runPinnedGit(
             t,
             ["rev-parse", "-q", "--verify", "--end-of-options", a],
             void 0,
           );
           if (f.exitCode !== 0) return f.exitCode === 1 ? null : void 0;
-          return (await xl(t, ["show-ref", "--exists", a], void 0)).exitCode ===
+          return (await runPinnedGit(t, ["show-ref", "--exists", a], void 0)).exitCode ===
             2
             ? null
             : d;
@@ -2191,7 +2191,7 @@ async function Os({
   let d = await Rs(t);
   if (d === null) return null;
   let f = (C, O = []) =>
-      xl(
+      runPinnedGit(
         e,
         ["config", ...O, "--bool", "--default", "false", "--get", C],
         s,
@@ -2302,7 +2302,7 @@ async function Do(e, t, r, o) {
   if (s > 0) return s;
   let a = t.filter((J) => J.kind === "file"),
     f = (
-      await xl(e, ["config", "--type=bool", "--get", "core.filemode"], void 0)
+      await runPinnedGit(e, ["config", "--type=bool", "--get", "core.filemode"], void 0)
     ).stdout.trim(),
     p = f === "" ? getCurrentPlatform() !== "windows" : f !== "false",
     y = new Map(),
@@ -2353,7 +2353,7 @@ async function Do(e, t, r, o) {
       ...(r === void 0 ? [] : [r]),
       AbortSignal.timeout(Qd),
     ]),
-    O = Ds(Ss, (J) =>
+    O = createConcurrencyLimiter(Ss, (J) =>
       vs(C, () =>
         nu(
           yn(e, J.path),
@@ -2379,7 +2379,7 @@ async function Do(e, t, r, o) {
               C,
             ),
           )),
-    ge = Ds(Ss, (J) =>
+    ge = createConcurrencyLimiter(Ss, (J) =>
       vs(C, async () => {
         let fe = await ru({ anchor: N, rel: J.path }, tu, C);
         return fe === null ? null : te(J.path, fe, C).catch(() => null);
@@ -2478,7 +2478,7 @@ async function ru(e, t, r) {
 }
 async function Is(e, t, r) {
   if (t.length === 0) return 0;
-  let o = await xl(e, ["ls-files", "-s", "-z"], r, eu);
+  let o = await runPinnedGit(e, ["ls-files", "-s", "-z"], r, eu);
   if (o.code !== 0) return null;
   let s = new Set(t.map((d) => d.path)),
     a = o.stdout.split("\x00").reduce((d, f) => {
@@ -2712,16 +2712,16 @@ async function fu({
   checkoutEnv: N,
   signal: C,
 }) {
-  let O = (q) => xl(e, q, C, void 0, { ...N });
-  if (!nn.test(s))
+  let O = (q) => runPinnedGit(e, q, C, void 0, { ...N });
+  if (!GIT_OBJECT_ID_REGEX.test(s))
     return V("bad_arguments", "expectedHead is not an object id");
   let D = `refs/claude/sessions/${r}/head`,
     pe = buildSessionRefName(r, lu),
     re = buildSessionRefName(r, "x")?.replace(/x$/, "");
-  if (!qO(D) || pe === null || re === void 0)
+  if (!isClaudeSessionRef(D) || pe === null || re === void 0)
     return V("bad_arguments", "the session id cannot name a ref");
   let te = (q) => (C?.aborted === !0 ? { kind: "aborted" } : q);
-  if (!qO(o) || !o.startsWith(re) || o === pe)
+  if (!isClaudeSessionRef(o) || !o.startsWith(re) || o === pe)
     return V("bad_arguments", "the received ref is not one of this session");
   let ge = await on(t, [
       "rev-parse",
@@ -2731,7 +2731,7 @@ async function fu({
       o + "^1",
     ]),
     le = ge.stdout.trim();
-  if (ge.exitCode !== 0 || !nn.test(le))
+  if (ge.exitCode !== 0 || !GIT_OBJECT_ID_REGEX.test(le))
     return te(
       V(
         "objects_unavailable",
@@ -2930,7 +2930,7 @@ async function fu({
     );
   let ne = await d();
   if (ne.kind === "refused") return te(V("not_vouched", ne.detail));
-  if (ne.worktreeCommit !== null && !nn.test(ne.worktreeCommit))
+  if (ne.worktreeCommit !== null && !GIT_OBJECT_ID_REGEX.test(ne.worktreeCommit))
     return V("bad_arguments", "the vouching snapshot is not an object id");
   let ae = await Ns(t, jt, ne.worktreeCommit);
   if (ae !== 0)
@@ -3055,7 +3055,7 @@ async function hu(e, t, r, o = () => !1) {
 `,
     )
     .filter((_) => _ !== "");
-  if (!p.every((_) => nn.test(_))) return null;
+  if (!p.every((_) => GIT_OBJECT_ID_REGEX.test(_))) return null;
   if (p.length > Us) return "too_many_merges";
   let y = Hs(
     d.stdout.split("\x00").filter((_) => _ !== ""),
@@ -3130,7 +3130,7 @@ async function mu(e, t, r, o) {
     du,
     uu,
   )) {
-    let d = await xl(
+    let d = await runPinnedGit(
       e,
       [
         "diff",
@@ -3301,7 +3301,7 @@ async function Go(e, t, r) {
   let o = Q9n(t, r),
     s = dedupe(o.colliding.map((w) => w.collidesWith)),
     a = Tu(e),
-    d = Ds(Au, async (w) => ({ spelling: w, present: await a(w) })),
+    d = createConcurrencyLimiter(Au, async (w) => ({ spelling: w, present: await a(w) })),
     p = (await Promise.all(s.map(d))).flatMap((w) =>
       w.present ? [] : [w.spelling],
     ),
@@ -3369,7 +3369,7 @@ function Yu(e) {
           ? "held_delete"
           : a === void 0
             ? "other"
-            : Ght(a)
+            : isKnownSyncSkipReason(a)
               ? a
               : (qu[a] ?? "other");
     return { path: s, reason: d };
@@ -3406,8 +3406,8 @@ function jo(e) {
   return (
     Buffer.byteLength(e) > Fu ||
     e.includes("\uFFFD") ||
-    r$(e) === "unsupported_characters" ||
-    (ej() && TE(e))
+    checkSeedPath(e) === "unsupported_characters" ||
+    (isWindowsLikePlatform() && hasWindowsReservedPathComponent(e))
   );
 }
 var Xu = { maxPaths: Iu, maxBytes: Nu, maxDeletes: xu };
@@ -3513,7 +3513,7 @@ function ua(e, t = Lr) {
           { paths: p.paths, blobIds: p.blobIds }
         );
       };
-      if (r === null || !nn.test(d)) return f();
+      if (r === null || !GIT_OBJECT_ID_REGEX.test(d)) return f();
       if (r.commit !== d) {
         let p = r,
           y = await Zs(a, p.commit, d);
@@ -3644,7 +3644,7 @@ async function Qu({
     ft = [...Xe]
       .filter(([m, U]) => U.blobId !== null && Ut(m)?.blobId !== U.blobId)
       .map(([m]) => m),
-    Lt = Ds(Ho, async (m) => (await Wo(o, m)) !== null),
+    Lt = createConcurrencyLimiter(Ho, async (m) => (await Wo(o, m)) !== null),
     _t = await Promise.all(ft.map(Lt)),
     jt = ft.filter((m, U) => _t[U]).toSorted(),
     sn = new Map([...ze].map(([m, U]) => [m, U.before])),
@@ -3709,7 +3709,7 @@ async function Qu({
     Ot = await t.trackedHere([...xe, ...Ke], te);
   if (Ot === null) return ur(a.report);
   let De = (m) => Ot.get(m) === "present",
-    qe = Ds(Ho, async (m) => ia(m, await Kpt(o, s, m, De(m)))),
+    qe = createConcurrencyLimiter(Ho, async (m) => ia(m, await Kpt(o, s, m, De(m)))),
     _n = await Promise.all(xe.map(qe)),
     An = new Map(
       xe.flatMap((m, U) => {
@@ -3718,7 +3718,7 @@ async function Qu({
       }),
     ),
     Kt = xe.filter((m) => !An.has(m)),
-    Cn = Ds(
+    Cn = createConcurrencyLimiter(
       Ho,
       async (m) =>
         ia(m, await Kpt(o, s, m, De(m))) ?? (Xce(m) ? "name_refused" : null),
@@ -3744,7 +3744,7 @@ async function Qu({
     dt =
       xe.length === 0 && Ke.length === 0
         ? () => null
-        : (re.withheldOf ?? pH(o, { realRoot: s })),
+        : (re.withheldOf ?? createPathWithholdClassifier(o, { realRoot: s })),
     Bt = kn.paths,
     Pn =
       Kt.length === 0 && Ke.length === 0
@@ -3798,8 +3798,8 @@ async function Qu({
       ...ne,
       roundSkipped: Le === null ? null : "anchor_degraded",
       roundCapped: Le === null,
-      notInstalled: ae.slice(0, lC),
-      notInstalledTruncated: ae.length > lC,
+      notInstalled: ae.slice(0, MAX_LISTED_SKIPPED_FILES),
+      notInstalledTruncated: ae.length > MAX_LISTED_SKIPPED_FILES,
       notTaken: [...a.notTaken],
     };
   }
@@ -4122,13 +4122,13 @@ async function Qu({
       ne.roundCapped ||
       Yt ||
       (er.length > 0 && ne.installed.length + ne.trashed.length > 0),
-    notInstalled: ae.slice(0, lC),
-    notInstalledTruncated: ae.length > lC,
+    notInstalled: ae.slice(0, MAX_LISTED_SKIPPED_FILES),
+    notInstalledTruncated: ae.length > MAX_LISTED_SKIPPED_FILES,
     notTaken: [...a.notTaken],
   };
 }
 async function Zu(e, t) {
-  let r = await xl(
+  let r = await runPinnedGit(
     e,
     ["config", "--bool", "--default", "true", "--get", "core.filemode"],
     t,
@@ -4192,7 +4192,7 @@ async function Qs({
   };
 }
 async function Zs(e, t, r) {
-  if (!nn.test(t) || !nn.test(r)) return null;
+  if (!GIT_OBJECT_ID_REGEX.test(t) || !GIT_OBJECT_ID_REGEX.test(r)) return null;
   let o = await on(
     e,
     [
@@ -4230,14 +4230,14 @@ async function Zs(e, t, r) {
   return a;
 }
 async function ec(e, t, r, o = {}) {
-  if (!nn.test(t)) return null;
+  if (!GIT_OBJECT_ID_REGEX.test(t)) return null;
   let { pastChunks: s = da, maxBufferBytes: a = Lr } = o,
     d = new Map(r.map((k) => [k, null])),
     f = (k) => {
       let _ = k.indexOf("\t"),
         [E = "", R = "", N = ""] = k.slice(0, _).split(" "),
         C = k.slice(_ + 1);
-      if (_ < 0 || !nn.test(N)) return !1;
+      if (_ < 0 || !GIT_OBJECT_ID_REGEX.test(N)) return !1;
       if (d.has(C) && R !== "tree")
         d.set(C, { mode: parseInt(E, 8), blobId: N });
       return !0;
@@ -4276,7 +4276,7 @@ async function ec(e, t, r, o = {}) {
   return d;
 }
 async function tc(e, t) {
-  if (!nn.test(t)) return "none";
+  if (!GIT_OBJECT_ID_REGEX.test(t)) return "none";
   let r = await on(e, ["rev-parse", `${t}^{commit}`, `${t}^@`]);
   if (r.exitCode === void 0) return "unknown";
   if (r.exitCode !== 0) return "none";
@@ -4286,10 +4286,10 @@ async function tc(e, t) {
 `,
     )
     .filter((a) => a !== "");
-  return o === t && s.every((a) => nn.test(a)) ? s : "none";
+  return o === t && s.every((a) => GIT_OBJECT_ID_REGEX.test(a)) ? s : "none";
 }
 async function rc(e, t) {
-  if (!nn.test(t)) return !1;
+  if (!GIT_OBJECT_ID_REGEX.test(t)) return !1;
   let r = await on(e, ["cat-file", "-e", `${t}^{commit}`]);
   return r.exitCode === void 0 ? "unknown" : r.exitCode === 0;
 }
@@ -4300,13 +4300,13 @@ async function oc(e, t) {
     : { paths: r.paths, blobIds: r.blobIds };
 }
 async function fa(e, t, r) {
-  if (!nn.test(t)) return null;
+  if (!GIT_OBJECT_ID_REGEX.test(t)) return null;
   let o = await on(e, ["ls-tree", "-r", "-z", "--full-tree", `${t}^{tree}`], {
     maxBuffer: r,
   });
   if (o.maxBufferExceeded) return "too_large";
   if (o.exitCode !== 0) return null;
-  let s = tmn(o.stdout),
+  let s = parseLsTreeOutput(o.stdout),
     a = s.files.reduce(
       (d, f) => d.set(f.blobId, (d.get(f.blobId) ?? 0) + 1),
       new Map(),
@@ -4367,7 +4367,7 @@ function ic(e, t, r) {
   return { commit: t, paths: y, blobIds: o, holders: s, listedBytes: f };
 }
 async function sc(e, t, r) {
-  if (!nn.test(t) || !nn.test(r)) return "unknown";
+  if (!GIT_OBJECT_ID_REGEX.test(t) || !GIT_OBJECT_ID_REGEX.test(r)) return "unknown";
   let o = await on(e, ["merge-base", "--is-ancestor", t, r]);
   return o.exitCode === 0 ? !0 : o.exitCode === 1 ? !1 : "unknown";
 }
@@ -4425,7 +4425,7 @@ async function lc({
     content: o,
     targets: new Map([[r.bundle.tipRef, f]]),
     heldBases: s,
-    heldRefs: { glob: `${tj}${t}/*` },
+    heldRefs: { glob: `${CLAUDE_REF_PREFIX}${t}/*` },
   });
   if (!p.ok) return { kind: "refused", reason: p.reason };
   let y =
@@ -4444,7 +4444,7 @@ async function ra(e, t, r = []) {
     o === "none" ||
     o[0] !== t.head ||
     o[1] !== t.indexCommit ||
-    s.length > qht ||
+    s.length > MAX_HELD_BASES ||
     (s.length > 0 && t.basedOn === null) ||
     !s.every((a) => r.includes(a))
   )
@@ -4453,7 +4453,7 @@ async function ra(e, t, r = []) {
 }
 async function dc(e, t, r, o, s) {
   let a = new Set(),
-    d = t.filter((R) => nn.test(R));
+    d = t.filter((R) => GIT_OBJECT_ID_REGEX.test(R));
   if (d.length === 0) return { vouched: a, unprobed: a };
   let f = await e.heldInOwnRight(d);
   if (f === null) return null;
@@ -4463,7 +4463,7 @@ async function dc(e, t, r, o, s) {
   if (y === null) return null;
   let w = new Set([...f, ...p.filter((R) => y.has(R))]),
     k = p.filter((R) => !w.has(R)),
-    _ = s.filter((R) => nn.test(R));
+    _ = s.filter((R) => GIT_OBJECT_ID_REGEX.test(R));
   if (_.length === 0) return { vouched: w, unprobed: a };
   let E = new Set(k.slice(Js));
   for (let R of k.slice(0, Js)) {
@@ -4474,7 +4474,7 @@ async function dc(e, t, r, o, s) {
   return { vouched: w, unprobed: E };
 }
 async function uc(e, t, r) {
-  if (!nn.test(t) || r.length === 0 || !r.every((a) => nn.test(a)))
+  if (!GIT_OBJECT_ID_REGEX.test(t) || r.length === 0 || !r.every((a) => GIT_OBJECT_ID_REGEX.test(a)))
     return "unknown";
   let o = await on(
       { ...e, timeoutMs: $u },
@@ -4503,7 +4503,7 @@ async function uc(e, t, r) {
       .filter((a) => a !== "");
   return o.exitCode !== 0
     ? "unknown"
-    : nn.test(s[0] ?? "") && s.every((a) => a === s[0])
+    : GIT_OBJECT_ID_REGEX.test(s[0] ?? "") && s.every((a) => a === s[0])
       ? "found"
       : "not_found";
 }
@@ -4527,7 +4527,7 @@ async function fc(e, t) {
           `
 `,
         )
-        .filter((a) => nn.test(a)),
+        .filter((a) => GIT_OBJECT_ID_REGEX.test(a)),
     ),
     s = new Set();
   for (let a of o) {
@@ -4538,7 +4538,7 @@ async function fc(e, t) {
   return s;
 }
 async function hc(e, t) {
-  let r = t.filter((f) => nn.test(f));
+  let r = t.filter((f) => GIT_OBJECT_ID_REGEX.test(f));
   if (r.length === 0) return new Set();
   let o = Tn(e.gitDir, "objects"),
     s = await Promise.all(
@@ -4572,7 +4572,7 @@ async function mc(e, t, r) {
         return;
       }
       f += 1;
-      let _ = await xl(
+      let _ = await runPinnedGit(
         e,
         ["check-ignore", "--no-index", "-z", "--stdin"],
         r,
@@ -4656,12 +4656,12 @@ async function zo(
     y = rootLaptopDirSyncRegistry(),
     w = `index:${s}:${e}`;
   if (p.length > o && !y.wholeListingOutgrew(w)) {
-    let k = await xl(e, ["ls-files", "-z", "-t", "-c"], r, s);
+    let k = await runPinnedGit(e, ["ls-files", "-z", "-t", "-c"], r, s);
     if (k.maxBufferExceeded) y.noteWholeListingOutgrew(w);
     else if (k.code === 0) return (f(k.stdout), a);
   }
   for (let k of p) {
-    let _ = await xl(
+    let _ = await runPinnedGit(
       e,
       [
         "-c",
@@ -4767,7 +4767,7 @@ function _c(e, t) {
 function ia(e, t) {
   if (t === null) return null;
   if (t === "place") return "outside_checkout";
-  let r = dedupe([e, E3(e)]).map((o) => o.split("/"));
+  let r = dedupe([e, normalizeUnicodeForm(e)]).map((o) => o.split("/"));
   return r.some((o) => aOe(o, "file"))
     ? "protected_name"
     : r.some((o) => o.some((s) => s.startsWith(".")))
@@ -4922,7 +4922,7 @@ function Ic(e, t) {
 }
 function ba(e, t) {
   return (
-    t !== null && HFt(e).length < C3 - 1 && e.installedSinceUpload.length < kze
+    t !== null && HFt(e).length < MAX_LISTED_APPLIED_TURNS - 1 && e.installedSinceUpload.length < kze
   );
 }
 function _a(e, t, r, o, s = null) {
@@ -5014,7 +5014,7 @@ async function Sa({ record: e, deps: t }) {
 async function Nc(e, t) {
   let { repository: r, sessionId: o, transport: s } = t,
     a = await co(r, e);
-  if (a === null && Ct(r.signal)) return { kind: "aborted", record: e };
+  if (a === null && isSignalAborted(r.signal)) return { kind: "aborted", record: e };
   let d = Yo(e, a),
     f = a?.basis ?? null,
     p = { signal: r.signal, ...r.snapshotPin },
@@ -5042,7 +5042,7 @@ async function Nc(e, t) {
   let { snapshot: E } = k,
     R = a ?? (await co(r, e));
   if (R === null)
-    return Ct(r.signal)
+    return isSignalAborted(r.signal)
       ? { kind: "aborted", record: d }
       : bn(
           d,
@@ -5057,7 +5057,7 @@ async function Nc(e, t) {
     C = Yo(e, R),
     O = await r.readTrees([E.indexCommit, E.worktreeCommit]);
   if (O === null)
-    return Ct(r.signal)
+    return isSignalAborted(r.signal)
       ? { kind: "aborted", record: C }
       : bn(
           C,
@@ -5087,7 +5087,7 @@ async function Nc(e, t) {
   if (ge === null)
     return bn(C, "refs", "git_error", "the session id cannot name a ref");
   if (!(await r.writeRefs([{ name: ge, id: E.worktreeCommit }])))
-    return Ct(r.signal)
+    return isSignalAborted(r.signal)
       ? { kind: "aborted", record: C }
       : bn(C, "refs", "git_error", "the outbound ref could not be written");
   if (t.boundaryUnchanged !== void 0 && !(await t.boundaryUnchanged()))
@@ -5461,13 +5461,13 @@ function Lc(e, t) {
     indexCommit: t.indexCommit,
     worktreeCommit: t.worktreeCommit,
     bundle: t.bundle,
-    holds: e.received.map((r) => r.worktreeCommit).slice(0, $_),
+    holds: e.received.map((r) => r.worktreeCommit).slice(0, MAX_LISTED_COMMITS),
     downApplied: HFt(e)
-      .slice(-C3)
+      .slice(-MAX_LISTED_APPLIED_TURNS)
       .map((r) => ({
         turn: r.turn,
-        notInstalled: r.notInstalled.slice(0, lC),
-        truncated: r.truncated || r.notInstalled.length > lC,
+        notInstalled: r.notInstalled.slice(0, MAX_LISTED_SKIPPED_FILES),
+        truncated: r.truncated || r.notInstalled.length > MAX_LISTED_SKIPPED_FILES,
       })),
     fastForwardedTo: h3n(e),
     withheldCounts: t.withheldCounts,
@@ -5487,7 +5487,7 @@ async function co(e, t) {
     f = t.sent[0]?.worktreeCommit ?? null,
     p = await e.presentCommits(
       dedupe([...d, ...a, ...s, ...(f === null ? [] : [f])]).filter((R) =>
-        nn.test(R),
+        GIT_OBJECT_ID_REGEX.test(R),
       ),
     );
   if (p === null) return null;
@@ -5597,7 +5597,7 @@ async function Dc(e, t) {
   return new Set(t.filter((s, a) => o[a] === "commit"));
 }
 function va(e) {
-  return e !== null && zO(e) ? e : null;
+  return e !== null && isValidGitBranchName(e) ? e : null;
 }
 async function Fr(e, t, r) {
   let o = await t.transport.readOwnJournal(t.repository.signal);
@@ -5652,7 +5652,7 @@ async function $c(e, t) {
   return o;
 }
 function Bc(e) {
-  return (e.conflicted ?? []).slice(0, XTe).map((t) => truncateToCodePoints(t, YTe));
+  return (e.conflicted ?? []).slice(0, MAX_LISTED_CONFLICTED_COMMITS).map((t) => truncateToCodePoints(t, MAX_CONFLICT_CODE_UNITS));
 }
 function Mc(e) {
   return {
@@ -5747,7 +5747,7 @@ function ni(e, t) {
   }
 }
 async function Na(e, t) {
-  let r = await xl(e, ["symbolic-ref", "-q", "HEAD"], t);
+  let r = await runPinnedGit(e, ["symbolic-ref", "-q", "HEAD"], t);
   if (r.code === 0) {
     let s = r.stdout.trim();
     return s.startsWith("refs/heads/")
@@ -5755,13 +5755,13 @@ async function Na(e, t) {
       : { kind: "unknown" };
   }
   if (r.exitCode !== 1) return { kind: "unknown" };
-  let o = await xl(e, ["rev-parse", "-q", "--verify", "HEAD^{commit}"], t);
+  let o = await runPinnedGit(e, ["rev-parse", "-q", "--verify", "HEAD^{commit}"], t);
   return o.code === 0
     ? { kind: "detached", head: o.stdout.trim() }
     : { kind: "unknown" };
 }
 async function La(e, t) {
-  let r = await xl(e, ["ls-files", "-u", "-z"], t);
+  let r = await runPinnedGit(e, ["ls-files", "-u", "-z"], t);
   if (r.code !== 0) return null;
   return dedupe(
     r.stdout
@@ -5772,7 +5772,7 @@ async function La(e, t) {
 }
 var Fa = new Set(["aborted", "git_error"]);
 function Oe(e) {
-  return formatSingleLineText(e, { maxCodeUnits: xKe }).trim();
+  return formatSingleLineText(e, { maxCodeUnits: MAX_TEXT_CODE_UNITS }).trim();
 }
 function Da(e, t, r, o, s = !1) {
   logEvent("tengu_dir_sync_push", {
@@ -6011,7 +6011,7 @@ function Kc(e) {
   return jc.has(e);
 }
 function Xa(e) {
-  return [e, E3(e)].map((t) => t.split("/"));
+  return [e, normalizeUnicodeForm(e)].map((t) => t.split("/"));
 }
 function qc(e) {
   return Xa(e).some((t) => t.some((r) => r.startsWith(".")));
@@ -6292,29 +6292,29 @@ function hFt({
   onStatus: p,
   boundToThisMachine: y,
   initialPass: w = "none",
-  wedgedMs: k = cKn,
+  wedgedMs: k = WEDGED_MS,
   firstUploadProgressMs: _ = df,
-  firstUploadRetryLadderMs: E = nmn,
+  firstUploadRetryLadderMs: E = FIRST_UPLOAD_RETRY_LADDER_MS,
   uploadHeartbeatMs: R = wf,
   localWaitRecheckMs: N = mf,
   uploadSubject: C = bf,
   offlineRepublishMs: O = Cf,
   endedEarlier: D,
-  peerClaimGraceMs: pe = mKn,
+  peerClaimGraceMs: pe = PEER_CLAIM_GRACE_MS,
   writerLock: re,
   onPeerSilent: te,
   onPeerAnswered: ge,
   lines: { peerQuiet: le = Ca, peerSilent: J = Oa } = {},
-  consent: fe = () => SKn(t),
+  consent: fe = () => getGitRootDirSyncConsent(t),
   checkoutBranch: K,
   heldStateProbe: ee = async (ze) =>
     ze === "unmerged_index" ? ((await La(t))?.length ?? 0) > 0 : null,
   fastForward: ye,
   branchRetryMs: Ge = rf,
-  pullSupported: at = Fne,
-  pollWindowMs: je = dKn,
-  pollStepMs: Ae = pKn,
-  resultSettleMs: vt = uKn,
+  pullSupported: at = isDirSyncPullSupported,
+  pollWindowMs: je = POLL_WINDOW_MS,
+  pollStepMs: Ae = POLL_STEP_MS,
+  resultSettleMs: vt = RESULT_SETTLE_MS,
   lockRetryJitterMs: Xe = cf,
   changeFeed: wt,
   debouncePolicy: Wt,
@@ -6429,7 +6429,7 @@ function hFt({
     yo = !1,
     nr = null,
     bi = (c) => {
-      if (((nr = c), !c && at() && !Be())) Fe("pull-unbound", Qfn, "info");
+      if (((nr = c), !c && at() && !Be())) Fe("pull-unbound", PULL_UNBOUND_MESSAGE, "info");
     };
   y.then(bi, () => bi(!1));
   let bo = null,
@@ -6481,7 +6481,7 @@ function hFt({
     let L = { reason: c, line: v };
     if (
       ((pt = L),
-      (xe = { reason: c, line: c === "offline" ? b : wKn(bKn(Oe(b))) }),
+      (xe = { reason: c, line: c === "offline" ? b : formatFileSyncStoppedLine(stripFileSyncPrefix(Oe(b))) }),
       Ie(xe.line, "warning"),
       logEvent("tengu_dir_sync_git_ended", {
         reason: fromEnum(c),
@@ -6889,7 +6889,7 @@ function hFt({
       );
     if (c === "given") return ((rt = null), !0);
     if (rt !== null && rt.answer === c && rt.pass !== Ye)
-      return (Gt(c, yKn(c), "info"), !1);
+      return (Gt(c, describeDirSyncWithdrawn(c), "info"), !1);
     if (rt === null || rt.answer !== c) rt = { answer: c, pass: Ye };
     return (
       (Ze =
@@ -6909,11 +6909,11 @@ function hFt({
       }
       return me;
     }
-    if (b.kind === "unsupported") return (Gt("engine_unsupported", Nht), null);
+    if (b.kind === "unsupported") return (Gt("engine_unsupported", ENGINE_UNSUPPORTED_MESSAGE), null);
     if (((Ne[c] += 1), b.kind === "absent" || Ne[c] >= Qo))
       Gt(
         b.kind === "absent" ? "store_removed" : "store_unreadable",
-        b.kind === "absent" ? hKn : RKe,
+        b.kind === "absent" ? SYNC_RECORD_REMOVED_MESSAGE : SYNC_RECORD_UNREADABLE_MESSAGE,
       );
     return null;
   }
@@ -7017,7 +7017,7 @@ function hFt({
         ),
         !1
       );
-    if (nr === !1) Fe("pull-unbound", Qfn, "info");
+    if (nr === !1) Fe("pull-unbound", PULL_UNBOUND_MESSAGE, "info");
     return nr === !0;
   }
   function Nn(c) {
@@ -8603,7 +8603,7 @@ function hFt({
         : {
             state: "armed",
             engine: "git",
-            direction: gKn(nr, at()),
+            direction: getSyncDirection(nr, at()),
             firstUpload: w !== "send" ? null : qe || Pe ? "landed" : "pending",
             syncedFiles: Vt,
             writerElsewhere: dt,
@@ -8623,7 +8623,7 @@ function hFt({
         if (Be()) return;
         if (Si.has(c)) return;
         if ((Si.add(c), Wi(c), !jr)) $n += 1;
-        ((Qt = c), (br = fKn), en.delete("peer-journal-failed"));
+        ((Qt = c), (br = MAX_PEER_REPUBLISH_ATTEMPTS), en.delete("peer-journal-failed"));
         let b = (Zt += 1);
         if (Ur) Hi(b);
         ((Ur = !1), (jr = !1));
@@ -8632,7 +8632,7 @@ function hFt({
       }
     },
     async seedGate({ messageUuid: c, released: b, withdrawn: T }) {
-      if (nt !== null && Q() - nt < DLe) return { go: !1, reason: ai(On()) };
+      if (nt !== null && Q() - nt < TYPED_AHEAD_GRACE_MS) return { go: !1, reason: ai(On()) };
       if (ve) return xe === null ? { go: !1, reason: $r } : void 0;
       if (At !== void 0 && !Yt) Eo();
       if (Xn === "owed" && I === null) Fe("offline-end-owed", li, "info");
@@ -8951,7 +8951,7 @@ function hFt({
     },
     laneChanged(c) {
       try {
-        if (Be() || (c.path !== null && c.path !== bde)) return;
+        if (Be() || (c.path !== null && c.path !== SEED_WORKER_JOURNAL_PATH)) return;
         (et.peerAlive(), Hn("peer_changed").catch(Te));
       } catch (b) {
         Te(b);
@@ -9081,7 +9081,7 @@ function hFt({
       while (T === !0 && v !== Je);
       return T === !0;
     },
-    async shutdown(c = vKe) {
+    async shutdown(c = DEFAULT_SHUTDOWN_TIMEOUT_MS) {
       if (ve) return;
       if (((ve = !0), Vn !== null)) (clearTimeout(Vn), (Vn = null));
       if (((Zt += 1), $t.abort(), qt.abort(), (Qt = null), Ue !== null))
@@ -9155,7 +9155,7 @@ function Za(e, t = !1) {
       );
     }) &&
     !Vpt(e, t) &&
-    !WX(e)
+    !isSensitivePathAnySpelling(e)
   );
 }
 async function el(e, t) {
@@ -9248,7 +9248,7 @@ async function nl({ root: e, trashDir: t, file: r, through: o }) {
   if (!Za(s.path, a)) return "refused";
   let d = ci(e),
     f = ci(t),
-    p = await xk(e);
+    p = await resolveRealPath(e);
   if (p === null) return "stayed";
   if (!pi(d, f)) return "refused";
   if ((await el(e, s.path)) || !(await zf(p, fn(e, s.path), a ? s.path : null)))
@@ -9357,7 +9357,7 @@ async function th(e, t, r, o, s, a) {
     if (d.sha256 !== a.sha256) return "stayed";
     if (await nh(r, s)) return "unreachable";
     await fi(s, { recursive: !0, mode: Br });
-    let f = await xk(s);
+    let f = await resolveRealPath(s);
     if (f === null) return "stayed";
     if (jn(r, f) !== null || !pi(r, f)) return "unreachable";
     let p = await tl(f, mr(a.path));
@@ -9457,7 +9457,7 @@ async function ih(e, t, r, o, s) {
     d = jn(r, o);
   if (d !== null && !(await qf(r, d))) return "stayed";
   let f = await fi(o, { recursive: !0, mode: Br }).then(
-    () => xk(o),
+    () => resolveRealPath(o),
     () => null,
   );
   if (f === null || !pi(t, f) || !Yf(d, t, f)) return "stayed";
@@ -9575,14 +9575,14 @@ async function Jhr({
   endedEarlier: p,
   storageV5: y,
 }) {
-  let w = qVn();
+  let w = isDirSyncFastForwardEnabled();
   logEvent("tengu_dir_sync_git_open", { branch_rule: w, upload_at_open: f });
   let k = await canonicalizePath(t, createHoverRestOptions(y)),
     _ = getSideGitDirPath(getProjectDir(k)),
     E = { gitDir: _, timeoutMs: Aze },
     R = await getDirSyncRecordPath(t, e, y),
     N = await lh(t),
-    C = jht({ sessionId: e, credentials: a });
+    C = createSyncedFileLaneClient({ sessionId: e, credentials: a });
   return hFt({
     sessionId: e,
     gitRoot: t,
@@ -9614,7 +9614,7 @@ async function Jhr({
     initialPass: f ? "send" : "none",
     ...(p !== void 0 && { endedEarlier: p }),
     writerLock: (O) => mFt({ recordPath: R, lockPath: fs(_, e), onLost: O }),
-    ...(vht() && { changeFeed: () => Jpt({ root: t }), streamingScope: bh(t) }),
+    ...(isDirSyncStreamingEnabled() && { changeFeed: () => Jpt({ root: t }), streamingScope: bh(t) }),
     ...(!w
       ? {}
       : {
@@ -9633,7 +9633,7 @@ async function Jhr({
                 gs(t, J),
               ]),
               ee =
-                fe.kind === "read" && !SKe(fe.layout.checkout)
+                fe.kind === "read" && !isCheckoutLayoutSupported(fe.layout.checkout)
                   ? {
                       kind: "tampered",
                       misplaced: "linked_worktree",
@@ -9697,9 +9697,9 @@ function bh(e, t = go) {
     let d = AbortSignal.timeout(yh),
       f = await o(d).catch(() => null);
     if (f === null) return !0;
-    let y = await ul(qX(e, f, d))(
+    let y = await ul(createHardenedGitRunner(e, f, d))(
       ["check-ignore", "-z", "--stdin"],
-      { ...nj, GIT_LITERAL_PATHSPECS: "0" },
+      { ...GIT_PATHSPEC_ENV, GIT_LITERAL_PATHSPECS: "0" },
       a.map((k) => `./${k}\x00`).join(""),
     ).catch(() => null);
     if (y === null || y.code !== 0) return !0;
@@ -9719,17 +9719,17 @@ function _h(e) {
         : new Set([...o].flatMap(([s, a]) => (a === "present" ? [s] : [])));
     },
     neverRemovedByName: (t) =>
-      [t, E3(t)].some((r) => r.split("/").some((o) => o.startsWith("."))),
+      [t, normalizeUnicodeForm(t)].some((r) => r.split("/").some((o) => o.startsWith("."))),
   };
 }
 function ol(e) {
-  return [e, E3(e)].some((t) => {
+  return [e, normalizeUnicodeForm(e)].some((t) => {
     let r = t.split("/");
-    return aOe(r, "file") || r.some(Gan) || Xce(t) || GO(t);
+    return aOe(r, "file") || r.some(Gan) || Xce(t) || isSensitivePathVariant(t);
   });
 }
 function kh(e, t) {
-  let r = pH(e, { realRoot: t });
+  let r = createPathWithholdClassifier(e, { realRoot: t });
   return (o) => {
     let s = r(o, !0);
     return s === "rules_unreadable" ? null : s !== null;
@@ -9737,7 +9737,7 @@ function kh(e, t) {
 }
 async function Sh(e, t, r) {
   let o = buildSessionRefName(t, "in/0")?.replace(/0$/, "") ?? null;
-  if (o === null || !nn.test(r)) return { kind: "none" };
+  if (o === null || !GIT_OBJECT_ID_REGEX.test(r)) return { kind: "none" };
   let s = await on(e, [
     "for-each-ref",
     "--format=%(refname)",
@@ -9776,7 +9776,7 @@ function Ph(e, t, r = go) {
 }
 async function Rh(e, t, r) {
   let o = await r(e, void 0);
-  if (o.kind !== "read" || !SKe(o.layout.checkout))
+  if (o.kind !== "read" || !isCheckoutLayoutSupported(o.layout.checkout))
     throw Error("the checkout has no plain, readable git directory");
   let s = yi(e, o.layout.commonDir),
     a = Gr(s, mh, sanitizePathSegment(t)),
@@ -9835,7 +9835,7 @@ function Ah({
   realRoot: t,
   sideGitDir: r,
   pinCommit: o,
-  uploadFilter: s = () => pH(e, { realRoot: t }),
+  uploadFilter: s = () => createPathWithholdClassifier(e, { realRoot: t }),
   readLayout: a = go,
 }) {
   return async ({
@@ -9863,7 +9863,7 @@ function Ah({
             ? _.detail
             : `the checkout's git directory is not where git keeps it (${_.misplaced})`,
       };
-    if (!SKe(_.layout.checkout))
+    if (!isCheckoutLayoutSupported(_.layout.checkout))
       return {
         kind: "refused",
         reason: "git_error",
@@ -9873,7 +9873,7 @@ function Ah({
     try {
       let R = s(),
         N = reachRootsOf(_.layout),
-        C = il(qX(e, _.layout, p, N, k)),
+        C = il(createHardenedGitRunner(e, _.layout, p, N, k)),
         O = await xh(ul(C), R);
       if (O === null)
         return {
@@ -9885,7 +9885,7 @@ function Ah({
         return {
           kind: "refused",
           reason: "unreadable",
-          detail: `your Read rules or sandbox settings could not be read${c6t(R.unreadableSettingsFiles)}; nothing syncs until they can be`,
+          detail: `your Read rules or sandbox settings could not be read${formatUnreadableSettingsSuffix(R.unreadableSettingsFiles)}; nothing syncs until they can be`,
         };
       let D = (Ae) => ({
           kind: "refused",
@@ -9965,7 +9965,7 @@ function Ah({
         };
       if (!(await E.unchanged())) return ee();
       let Ge = il(
-          qX(
+          createHardenedGitRunner(
             e,
             {
               gitDir: r,
@@ -10059,7 +10059,7 @@ async function xh(e, t) {
     n(
       `dir-sync: ${d.length} untracked nested repositories left out of the snapshot`,
     );
-  let f = OV(
+  let f = partitionSeedPaths(
       a.filter((_) => !_.endsWith("/")),
       (_) => _,
       (_) => t(_, !1),
@@ -10173,7 +10173,7 @@ function cl(e, t) {
 }
 function fl(e) {
   return (
-    Xfn(e) &&
+    isSensitivePath(e) &&
     /^[\x20-\x7e]+$/.test(e) &&
     !/~\d/.test(e) &&
     !/[. ](?:[\\/]|$)|[:\\]/.test(e)

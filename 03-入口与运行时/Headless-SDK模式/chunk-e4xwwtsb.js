@@ -48,14 +48,14 @@ import { Kk, nme, RD } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUD
 import { turnAbortControllerOf } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Wh } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import {
-  dV,
-  Xte,
+  getUserDialogTimeoutMs,
+  getDecisionReasonText,
   isMisleadingConsentHost,
   consentHostEntry,
   SandboxManager,
-  nVe,
-  o3,
-  l3,
+  buildCommandRuleSuggestions,
+  pickAllowedToolInputProps,
+  SANDBOX_NETWORK_ACCESS_TOOL_NAME,
   stripWholeToolGrantsForAsk,
   withoutGrantsForRemoteScope,
   guardHookUpdatedInput,
@@ -63,15 +63,15 @@ import {
   hookUpdatedInputSatisfiesInteraction,
   checkRuleBasedPermissions,
   findSafetyCheckReason,
-  fVe,
+  NOTIFICATION_DELAY_MS,
   executePermissionRequestHooks,
-  e4n,
-  c2t,
-  jM,
-  rEe,
-  i$,
-  O3,
-  gre,
+  logPermissionRequestShown,
+  logPermissionDecisionFromHostAnswer,
+  permissionUpdateSchema,
+  isBridgeToolNameMismatch,
+  formatToolDisplayName,
+  hookOutputSchema,
+  stringifyJsonSafe,
   executeNotificationHooks,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
@@ -102,7 +102,7 @@ var Je = createLazyValue(() =>
     c({
       behavior: k("allow"),
       updatedInput: fe(s(), se()).optional(),
-      updatedPermissions: v(jM())
+      updatedPermissions: v(permissionUpdateSchema())
         .optional()
         .catch((t) => {
           n(
@@ -151,7 +151,7 @@ function L0t(t, e, r, o, l = e, d = !1) {
     let g =
       t.updatedInput && Object.keys(t.updatedInput).length > 0
         ? t.updatedInput
-        : o3(l.name, r);
+        : pickAllowedToolInputProps(l.name, r);
     return { ...t, updatedInput: g, decisionReason: p };
   } else if (t.behavior === "deny" && t.interrupt)
     (n(
@@ -178,7 +178,7 @@ function x(t, e, r) {
         { storageV5: d, credentials: p },
       ).catch(() => {});
     },
-    fVe,
+    NOTIFICATION_DELAY_MS,
     t,
     e,
     r,
@@ -206,9 +206,9 @@ function ye(t, e) {
     case Wh:
       return { label: "Plan", body: "Plan ready for review" };
     case u1e:
-      return { label: i$(t.name), body: "" };
+      return { label: formatToolDisplayName(t.name), body: "" };
     default:
-      return { label: i$(t.name), body: "" };
+      return { label: formatToolDisplayName(t.name), body: "" };
   }
 }
 function ne(t, e, r, o, l) {
@@ -236,7 +236,7 @@ function ne(t, e, r, o, l) {
         : qr(B(t, e));
   return {
     tool_name: t.name,
-    display_tool_name: i$(t.name),
+    display_tool_name: formatToolDisplayName(t.name),
     action_description: f,
     raw_command: p,
     tool_use_id: r,
@@ -272,7 +272,7 @@ function re(t) {
       _?.length &&
       !_.some((w) => w.destination !== "session")
     )
-      _ = [...nVe(g.command), ..._];
+      _ = [...buildCommandRuleSuggestions(g.command), ..._];
     let y = new AbortController(),
       R = o.abortController.signal,
       E = R.aborted && !isExiting(),
@@ -305,7 +305,7 @@ function re(t) {
             : B(e, g)) ||
           void 0,
         Q =
-          Xte(A) ??
+          getDecisionReasonText(A) ??
           (A?.type === "subcommandResults" && T
             ? (findSafetyCheckReason(
                 A,
@@ -316,13 +316,13 @@ function re(t) {
               (T.circuitBreaker === "outsideReadsBlocked" ? void 0 : T.reason))
             : void 0),
         V = f.localDisplayOnly ? ps(stripAnsi(Q ?? "")) || G : G,
-        Y = x(i$(e.name), o.storageV5, o.credentials),
+        Y = x(formatToolDisplayName(e.name), o.storageV5, o.credentials),
         N = t
           .request(
             {
               subtype: "can_use_tool",
               tool_name: e.name,
-              display_name: i$(e.name),
+              display_name: formatToolDisplayName(e.name),
               input: g,
               ...(V && { description: V }),
               permission_suggestions: _,
@@ -366,14 +366,14 @@ function re(t) {
           },
           shownAtMs: Date.now(),
         }),
-          e4n(D.logContext, A?.type));
+          logPermissionRequestShown(D.logContext, A?.type));
       N.then(Y, Y);
       let C = await Promise.race([w, N]);
       if (C.source === "hook") {
         if (C.outcome) {
           if (isExiting() && !E) await getNeverResolvingPromise();
           if ((y.abort(), D))
-            c2t(
+            logPermissionDecisionFromHostAnswer(
               D.logContext,
               {
                 kind: "hook",
@@ -392,7 +392,7 @@ function re(t) {
         }
       }
       let Z = C.source === "hook" ? (await N).result : C.result;
-      if (D) c2t(D.logContext, { kind: "host_answer", answer: Z }, D.shownAtMs);
+      if (D) logPermissionDecisionFromHostAnswer(D.logContext, { kind: "host_answer", answer: Z }, D.shownAtMs);
       return L0t(Z, e, g, o, e, f.suppressAlwaysAllowRule === !0);
     } catch (w) {
       if (isExiting() && t.isPending(U)) await getNeverResolvingPromise();
@@ -419,7 +419,7 @@ function re(t) {
       else if (w instanceof zi) T = CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON;
       else if (yt(w) && R.aborted) {
         if (((A = "Tool permission request aborted"), (T = CAN_USE_TOOL_ABORTED_DENY_REASON), D))
-          c2t(D.logContext, { kind: "turn_aborted" }, D.shownAtMs);
+          logPermissionDecisionFromHostAnswer(D.logContext, { kind: "turn_aborted" }, D.shownAtMs);
       }
       return {
         behavior: "deny",
@@ -515,7 +515,7 @@ function ie(t) {
 }
 var ae = 512;
 function ue(t) {
-  let e = O3().safeParse(t);
+  let e = hookOutputSchema().safeParse(t);
   if (!e.success) return null;
   return (typeof t === "object" && t !== null ? Object.keys(t).length : 0) >
     0 && Object.keys(e.data).length === 0
@@ -871,7 +871,7 @@ class Fae {
   hasCanUseToolNameMismatch(t, e) {
     let r = t.request.request;
     if (r.subtype !== "can_use_tool" || e.subtype !== "success") return !1;
-    return rEe(e.response?.toolName, r.tool_name, e.request_id);
+    return isBridgeToolNameMismatch(e.response?.toolName, r.tool_name, e.request_id);
   }
   injectControlResponse(t) {
     let e = t.response?.request_id;
@@ -1226,7 +1226,7 @@ class Fae {
   async write(t) {
     (this.trackWrite(t),
       writeToStdout(
-        gre(t) +
+        stringifyJsonSafe(t) +
           `
 `,
       ));
@@ -1300,7 +1300,7 @@ class Fae {
       tool_use_id: e,
       agent_id: r,
       decision_reason_type: l?.type,
-      decision_reason: Xte(l),
+      decision_reason: getDecisionReasonText(l),
       message: o.message,
       uuid: M(),
       session_id: K(),
@@ -1358,7 +1358,7 @@ class Fae {
               input: o,
               tool_use_id: l || void 0,
             },
-            O3(),
+            hookOutputSchema(),
             d,
           );
         } catch (p) {
@@ -1570,7 +1570,7 @@ class Fae {
       this.sessionState.notifyStateChanged("requires_action", l),
       this.onUserDialogParked?.(l),
       logEvent("tengu_request_user_dialog_requires_action", { dialog_kind: Tn(t) }));
-    let d = dV(),
+    let d = getUserDialogTimeoutMs(),
       p;
     if (d > 0)
       ((p = setTimeout(
@@ -1646,14 +1646,14 @@ class Fae {
               behavior: "allow",
               destination: "localSettings",
             },
-            f = x(i$(l3), e, r),
+            f = x(formatToolDisplayName(SANDBOX_NETWORK_ACCESS_TOOL_NAME), e, r),
             g;
           try {
             g = await this.sendRequest(
               {
                 subtype: "can_use_tool",
-                tool_name: l3,
-                display_name: i$(l3),
+                tool_name: SANDBOX_NETWORK_ACCESS_TOOL_NAME,
+                display_name: formatToolDisplayName(SANDBOX_NETWORK_ACCESS_TOOL_NAME),
                 input: { host: d },
                 permission_suggestions: [p],
                 tool_use_id: M(),

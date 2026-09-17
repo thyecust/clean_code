@@ -45,18 +45,18 @@ import {
 import { jn, Pt, Ks, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Xt, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import {
-  gdn,
-  QF,
-  e$,
-  zv,
-  Jf,
-  Ym,
-  eg,
-  tre,
-  nre,
-  qWt,
-  zWt,
-  wT,
+  toModelPickerOption,
+  isPromptCacheWarm,
+  getEffectiveSessionModel,
+  getActiveModelForState,
+  recordModelSwitchIfChanged,
+  enqueueSessionTask,
+  formatInlineCode,
+  SET_MODEL_PREFIX,
+  KEPT_MODEL_PREFIX,
+  CLOUD_SWITCH_NO_RESPONSE_PREFIX,
+  CLOUD_SWITCH_FAILED_PREFIX,
+  ControlRequestTimeoutError,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { VH, Yk, Ya, ese, tse, zG } from "../权限系统/chunk-t3b7pg2x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -291,7 +291,7 @@ function io({
   function A() {
     logEvent("tengu_model_command_menu", { action: S("cancel") });
     let s = Zg(x);
-    t(`${nre}${eg(s)}`, { display: "system" });
+    t(`${KEPT_MODEL_PREFIX}${formatInlineCode(s)}`, { display: "system" });
   }
   function v(s, w, ne = !1) {
     if (!ne && rLt(s)) {
@@ -304,7 +304,7 @@ function io({
     let se = new AbortController();
     ((Ee.current = se),
       Z(!0),
-      Ym(T, () => P_(T, c.getState, s, "picker", { signal: se.signal }))
+      enqueueSessionTask(T, () => P_(T, c.getState, s, "picker", { signal: se.signal }))
         .then((L) => {
           if ((Z(!1), se.signal.aborted)) return;
           if (((Q.current = L.messages), L.decision === "block")) {
@@ -318,7 +318,7 @@ function io({
               pick: Y,
               kind: "model",
               hookReason: L.reason ?? "Confirm switching the model",
-              vettedFrom: zv(c.getState()),
+              vettedFrom: getActiveModelForState(c.getState()),
               saveAsDefault: N,
             });
             return;
@@ -340,27 +340,27 @@ function io({
         N.mainLoopModel,
         N.mainLoopModelForSession,
         N.cacheMissAckedAtOutputTokens,
-        QF(r()),
+        isPromptCacheWarm(r()),
       )
     ) {
       k({
         model: s,
         pick: w,
         kind: "model",
-        vettedFrom: zv(c.getState()),
+        vettedFrom: getActiveModelForState(c.getState()),
         saveAsDefault: Y,
       });
       return;
     }
     if (
       w !== void 0 &&
-      tse(w.level, Ya(N), t2(s), N.cacheMissAckedAtOutputTokens, QF(r()))
+      tse(w.level, Ya(N), t2(s), N.cacheMissAckedAtOutputTokens, isPromptCacheWarm(r()))
     ) {
       k({
         model: s,
         pick: w,
         kind: "effort",
-        vettedFrom: zv(c.getState()),
+        vettedFrom: getActiveModelForState(c.getState()),
         saveAsDefault: Y,
       });
       return;
@@ -382,7 +382,7 @@ function io({
     let Y = !1,
       N = !1;
     if (Mr()) QH();
-    (Jf(T, c.getState(), s, "picker"),
+    (recordModelSwitchIfChanged(T, c.getState(), s, "picker"),
       ee(
         (ve) => (
           (Y = !!ve.fastMode),
@@ -403,10 +403,10 @@ function io({
     let se = ne;
     if (se) kIe(s, o);
     (logFeatureOk("model_switch"), Ze(s, de));
-    let L = `${tre}${eg(Zg(s))}${se ? " and saved as your default for new sessions" : " for this session only"}`;
+    let L = `${SET_MODEL_PREFIX}${formatInlineCode(Zg(s))}${se ? " and saved as your default for new sessions" : " for this session only"}`;
     if (w !== void 0) {
       let ve = w.ultracode ? "ultracode" : w.level;
-      if (((L += ` with ${eg(ve)} effort`), w.fromUltracode && se))
+      if (((L += ` with ${formatInlineCode(ve)} effort`), w.fromUltracode && se))
         L += w.ultracode
           ? " (ultracode applies to this session only)"
           : " (the effort applies to this session only)";
@@ -441,7 +441,7 @@ ${Q.current.map(Rl).join(`
           return;
         }
         ((oe.current = !1),
-          t(N ?? `${nre}${eg(Zg(x))}`, { display: "system" }));
+          t(N ?? `${KEPT_MODEL_PREFIX}${formatInlineCode(Zg(x))}`, { display: "system" }));
       },
     });
   }
@@ -461,7 +461,7 @@ ${Q.current.map(Rl).join(`
       effort: D.pick?.level,
       hookReason: D.hookReason,
       onConfirm: () => {
-        if (D.vettedFrom !== void 0 && zv(c.getState()) !== D.vettedFrom) {
+        if (D.vettedFrom !== void 0 && getActiveModelForState(c.getState()) !== D.vettedFrom) {
           (k(null),
             t("The model changed while you were confirming; pick again", {
               display: "system",
@@ -520,7 +520,7 @@ function Rt(yn) {
             if (at || ue.signal.aborted) {
               return;
             }
-            let Dt = kn.models.map(gdn).filter(co);
+            let Dt = kn.models.map(toModelPickerOption).filter(co);
             (logEvent("tengu_remote_model_picker", {
               outcome: S("opened"),
               model_count: Dt.length,
@@ -532,7 +532,7 @@ function Rt(yn) {
               return;
             }
             (logEvent("tengu_remote_model_picker", {
-              outcome: S(An instanceof wT ? "timeout" : "fallback"),
+              outcome: S(An instanceof ControlRequestTimeoutError ? "timeout" : "fallback"),
             }),
               V(Ft, { display: "system" }));
           }),
@@ -632,7 +632,7 @@ function Rt(yn) {
         V(
           G === null
             ? "Kept the workspace\u2019s current model"
-            : `${nre}${eg(Zg(G))}`,
+            : `${KEPT_MODEL_PREFIX}${formatInlineCode(Zg(G))}`,
           { display: "system" },
         ));
     }),
@@ -735,10 +735,10 @@ ${qt.map(Rl).join(`
           yt.mainLoopModel,
           yt.mainLoopModelForSession,
           yt.cacheMissAckedAtOutputTokens,
-          QF(ct()),
+          isPromptCacheWarm(ct()),
         )
       ) {
-        Wt({ model: ht, substitutedFrom: Zt, vettedFrom: zv(R.getState()) });
+        Wt({ model: ht, substitutedFrom: Zt, vettedFrom: getActiveModelForState(R.getState()) });
         return;
       }
       Oe(ht, Zt);
@@ -755,7 +755,7 @@ ${qt.map(Rl).join(`
       let Je = new AbortController();
       ((Vt.current = Je),
         Ge(!0),
-        Ym(ae, () => P_(ae, R.getState, xe, "command", { signal: Je.signal }))
+        enqueueSessionTask(ae, () => P_(ae, R.getState, xe, "command", { signal: Je.signal }))
           .then((Se) => {
             if ((Ge(!1), Je.signal.aborted)) {
               return;
@@ -770,7 +770,7 @@ ${qt.map(Rl).join(`
                 model: xe,
                 substitutedFrom: eo,
                 hookReason: Se.reason ?? "Confirm switching the model",
-                vettedFrom: zv(R.getState()),
+                vettedFrom: getActiveModelForState(R.getState()),
               });
               return;
             }
@@ -831,7 +831,7 @@ ${qt.map(Rl).join(`
                 (be(
                   (qe) => (
                     (Mt = Mr() && !!qe.fastMode && !db(z, qe.fastMode)),
-                    Jf(ae, qe, z, "command"),
+                    recordModelSwitchIfChanged(ae, qe, z, "command"),
                     {
                       ...qe,
                       mainLoopModel: z,
@@ -869,20 +869,20 @@ ${qt.map(Rl).join(`
                 b(
                   z === null
                     ? "Reset model to the workspace default"
-                    : `${tre}${eg(Zg(z))}`,
+                    : `${SET_MODEL_PREFIX}${formatInlineCode(Zg(z))}`,
                 ));
             })
             .catch((kt) => {
               if ((n(`[remote] set_model rejected: ${l(kt)}`), Ke.current)) {
                 return;
               }
-              let ro = kt instanceof wT;
+              let ro = kt instanceof ControlRequestTimeoutError;
               (logFeatureBad("model_switch", ro ? "timeout" : "remote_rejected"),
                 (Le.current = !0),
                 b(
                   ro
-                    ? `${qWt}${eg(J)} may still have been applied`
-                    : `${zWt}${eg(J)}: ${Rl(l(kt))}`,
+                    ? `${CLOUD_SWITCH_NO_RESPONSE_PREFIX}${formatInlineCode(J)} may still have been applied`
+                    : `${CLOUD_SWITCH_FAILED_PREFIX}${formatInlineCode(J)}: ${Rl(l(kt))}`,
                   { display: "system" },
                 ));
             });
@@ -985,7 +985,7 @@ ${qt.map(Rl).join(`
           he(Te, At);
           return;
         }
-        b(Nn ?? `${nre}${eg(Zg(e$(R.getState())))}`, { display: "system" });
+        b(Nn ?? `${KEPT_MODEL_PREFIX}${formatInlineCode(Zg(getEffectiveSessionModel(R.getState())))}`, { display: "system" });
       }),
         (W[41] = Te),
         (W[42] = b),
@@ -1014,7 +1014,7 @@ ${qt.map(Rl).join(`
       W[55] !== R
     )
       ((j = () => {
-        if (I.vettedFrom !== void 0 && zv(R.getState()) !== I.vettedFrom) {
+        if (I.vettedFrom !== void 0 && getActiveModelForState(R.getState()) !== I.vettedFrom) {
           b("The model changed while you were confirming; pick again", {
             display: "system",
           });
@@ -1033,7 +1033,7 @@ ${qt.map(Rl).join(`
     let K;
     if (W[57] !== b || W[58] !== R)
       ((K = () =>
-        b(`${nre}${eg(Zg(e$(R.getState())))}`, { display: "system" })),
+        b(`${KEPT_MODEL_PREFIX}${formatInlineCode(Zg(getEffectiveSessionModel(R.getState())))}`, { display: "system" })),
         (W[57] = b),
         (W[58] = R),
         (W[59] = K));

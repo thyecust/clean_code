@@ -30,43 +30,43 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _se, brr, getMainLoopModel, Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import {
-  Xf,
-  xn,
-  wM,
-  pDe,
-  qwe,
-  xue,
-  Hue,
-  kdn,
-  hDe,
-  zwe,
-  aX,
-  Gte,
-  Vwe,
-  mV,
-  UF,
-  TM,
-  Tmt,
-  tC,
-  Emt,
-  xy,
-  P2,
-  fu,
-  c$,
-  D3,
-  iyt,
-  vgn,
-  T5e,
-  gl,
-  Ql,
-  dY,
-  TEe,
-  r7n,
-  eD,
-  tD,
-  _H,
-  AEe,
-  Ph,
+  getPolicyPluginNames,
+  gracefulShutdown,
+  discoverPluginMcpServers,
+  parseMarketplaceSource,
+  reloadPluginDirsFromDisk,
+  listClaudeAiMarketplaces,
+  filterUnconfiguredMarketplaces,
+  matchMarketplaceByName,
+  formatMarketplaceRowLabel,
+  formatBrowseOnlyMarketplace,
+  formatMarketplaceScopeLabel,
+  formatMarketplaceSource,
+  formatCatalogStatusMessage,
+  loadClaudeAiMarketplace,
+  readClaudeAiMarketplaceRegistry,
+  isClaudeAiMarketplaceSource,
+  formatClaudeAiMarketplaceLabel,
+  ClaudeAiMarketplaceError,
+  addClaudeAiMarketplace,
+  buildPluginTelemetryFieldsFromId,
+  formatDependencyCountSuffix,
+  refreshPluginState,
+  formatPluginId as c$,
+  loadMarketplaces,
+  getMarketplaceUpdateStatusIcon,
+  formatMarketplaceRefreshFailure,
+  declareMarketplaceInSettings,
+  getKnownMarketplaces,
+  getKnownMarketplacesOrEmpty,
+  addMarketplace,
+  removeMarketplace,
+  refreshAllMarketplaces,
+  refreshMarketplace,
+  getInstalledPluginsViaStorage,
+  isPluginInstalledInCurrentScope,
+  displaySkillsDirPath,
+  loadAllPlugins,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dle, jB, n9e, f0e } from "./chunk-q8w2zntw.js";
 import {
@@ -132,7 +132,7 @@ function Le(a, o, s, d = 0) {
   let c = a - o.length - s.length,
     p = [];
   if (o.length > 0) p.push(marketplacesRefusedByPolicyClause(o.length, o));
-  if (s.length > 0) p.push(vgn(s.length, s));
+  if (s.length > 0) p.push(formatMarketplaceRefreshFailure(s.length, s));
   if (d > 0)
     p.push(
       `${d} ${pluralize(d, "marketplace")} skipped (nothing to refresh: declared in settings, managed, or not allowed)`,
@@ -140,7 +140,7 @@ function Le(a, o, s, d = 0) {
   return { messages: p, summary: Be(c, o.length, s.length) };
 }
 function Be(a, o, s) {
-  let d = iyt({ failedCount: s, updatedCount: a, policyRefusedCount: o }),
+  let d = getMarketplaceUpdateStatusIcon({ failedCount: s, updatedCount: a, policyRefusedCount: o }),
     c =
       s > 0
         ? a > 0
@@ -369,8 +369,8 @@ async function pluginInitHandler(a, o, s, d) {
   let H = `${o}@${SKILLS_DIR_PLUGIN_SOURCE}`;
   c.push(`${figures.tick} Created plugin "${o}" at ${Gu(v)}`);
   let E = getSettings_DEPRECATED().enabledPlugins ?? {},
-    B = Xf()?.has(o) ?? !1,
-    Y = await Ql(d),
+    B = getPolicyPluginNames()?.has(o) ?? !1,
+    Y = await getKnownMarketplacesOrEmpty(d),
     T = Object.keys(E).find((D) => {
       let J = splitPluginId(D);
       return (
@@ -408,13 +408,13 @@ async function pluginInitHandler(a, o, s, d) {
 async function pluginListHandler(a, o, s, d) {
   if (o.cowork) SB(!0);
   (Rot(), logEvent("tengu_plugin_list_command", {}));
-  let c = await tD(s),
+  let c = await getInstalledPluginsViaStorage(s),
     { getPluginEditableScopes: p, editableScopeOf: k } =
       await import("../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js"),
     w = p(),
     v = Object.keys(c.plugins);
-  await qwe();
-  let { enabled: P, disabled: R, errors: C, warnings: N } = await Ph(s, d),
+  await reloadPluginDirsFromDisk();
+  let { enabled: P, disabled: R, errors: C, warnings: N } = await loadAllPlugins(s, d),
     A = [...P, ...R],
     m = new Map(A.map((T) => [T.source, T])),
     H = { plugins: A, errors: C, warnings: N },
@@ -442,7 +442,7 @@ async function pluginListHandler(a, o, s, d) {
         scopeOf: (T) => T.scope ?? "user",
         standaloneErrorScope: "user",
         standaloneWarningScope: "project",
-        pathOf: AEe,
+        pathOf: displaySkillsDirPath,
         showScope: !0,
         ...ue(SKILLS_DIR_PLUGIN_SOURCE, H),
       },
@@ -461,7 +461,7 @@ async function pluginListHandler(a, o, s, d) {
         if (J) {
           let I =
             J.mcpServers ||
-            (await wM(J, void 0, s, void 0, { readOnlyListing: !0 }));
+            (await discoverPluginMcpServers(J, void 0, s, void 0, { readOnlyListing: !0 }));
           if (I && Object.keys(I).length > 0) q = I;
         }
         T.push({
@@ -484,13 +484,13 @@ async function pluginListHandler(a, o, s, d) {
     if (o.available) {
       let U = [];
       try {
-        let [D, J] = await Promise.all([gl(s), c0e(s)]),
-          { marketplaces: W } = await D3(D, s);
+        let [D, J] = await Promise.all([getKnownMarketplaces(s), c0e(s)]),
+          { marketplaces: W } = await loadMarketplaces(D, s);
         for (let { name: G, data: K } of W)
           if (K)
             for (let V of K.plugins) {
               let q = c$(V.name, G);
-              if (!_H(q))
+              if (!isPluginInstalledInCurrentScope(q))
                 U.push({
                   pluginId: q,
                   name: V.name,
@@ -575,7 +575,7 @@ async function marketplaceAddHandler(a, o, s, d, c) {
   }
   let p, k, w;
   try {
-    let P = await pDe(o);
+    let P = await parseMarketplaceSource(o);
     if (!P)
       return (
         await logFeatureBadAsync("cli_marketplace_add", "cli_marketplace_add_invalid_source"),
@@ -615,16 +615,16 @@ async function marketplaceAddHandler(a, o, s, d, c) {
           name: R,
           alreadyMaterialized: C,
           resolvedSource: N,
-        } = await dY(
+        } = await addMarketplace(
           p,
           (E) => {
             P.push(E);
           },
           d,
         ),
-        { error: A } = await T5e(R, { source: N }, k, d);
+        { error: A } = await declareMarketplaceInSettings(R, { source: N }, k, d);
       if (A) throw A;
-      (fu(d, c),
+      (refreshPluginState(d, c),
         await logEventAsync("tengu_marketplace_added", {
           _PROTO_marketplace_name: R,
           source_type: fromEnum(p.source),
@@ -634,13 +634,13 @@ async function marketplaceAddHandler(a, o, s, d, c) {
         await logFeatureOkAsync("cli_marketplace_add"));
       let m = [];
       try {
-        m = (await resolveMissingDependencies((await Ph(d, c)).errors, d)).installed;
+        m = (await resolveMissingDependencies((await loadAllPlugins(d, c)).errors, d)).installed;
       } catch (E) {
         n(`marketplace add: dep auto-resolve skipped: ${l(E)}`, {
           level: "warn",
         });
       }
-      let H = P2(m);
+      let H = formatDependencyCountSuffix(m);
       return (
         P.push(
           C
@@ -668,26 +668,26 @@ async function marketplaceAddHandler(a, o, s, d, c) {
 async function Ne(a, o, s, d) {
   let c = (async () => {
     try {
-      let p = await gl(s),
-        k = await xue(d).catch(() => null);
+      let p = await getKnownMarketplaces(s),
+        k = await listClaudeAiMarketplaces(d).catch(() => null);
       if (k === null)
-        throw new tC(
+        throw new ClaudeAiMarketplaceError(
           "claude.ai marketplaces are not available here \u2014 sign in to claude.ai (claude /login) with plugin sync on, then run: claude plugin marketplace list",
           "tier_unavailable",
         );
-      let w = kdn(k.hosted, o);
+      let w = matchMarketplaceByName(k.hosted, o);
       if (w.kind === "ambiguous")
-        throw new tC(
+        throw new ClaudeAiMarketplaceError(
           `claude.ai hosts more than one marketplace called "${o}" for this account \u2014 add it by its unique name instead: ${w.localNames.join(", ")} (claude plugin marketplace list)`,
           "ambiguous_name",
         );
       if (w.kind === "none") {
-        if (kdn(k.policyBlocked, o).kind !== "none")
-          throw new tC(
+        if (matchMarketplaceByName(k.policyBlocked, o).kind !== "none")
+          throw new ClaudeAiMarketplaceError(
             `"${o}" is hosted on claude.ai for this account but not allowed by your organization's marketplace policy (personal claude.ai uploads and blocked hosts are not admitted)`,
             "policy_blocked",
           );
-        throw new tC(
+        throw new ClaudeAiMarketplaceError(
           `claude.ai hosts no marketplace named "${o}" for this account \u2014 run: claude plugin marketplace list`,
           "not_listed",
         );
@@ -697,18 +697,18 @@ async function Ne(a, o, s, d) {
           name: P,
           marketplace: R,
           status: C,
-        } = await Emt(v, { configured: p, credentials: d });
-      (fu(s, d),
+        } = await addClaudeAiMarketplace(v, { configured: p, credentials: d });
+      (refreshPluginState(s, d),
         await logEventAsync("tengu_marketplace_added", { source_type: S("claudeai") }),
         await logFeatureOkAsync("cli_marketplace_add"));
-      let N = Vwe(C),
+      let N = formatCatalogStatusMessage(C),
         A = R.plugins.length;
       return [
-        `${figures.tick} Successfully added marketplace: ${hDe(v)} \u2014 hosted on claude.ai, ${aX(v.scope)} \u2014 ${A} ${pluralize(A, "plugin")}${N ? ` (${N})` : ""}`,
+        `${figures.tick} Successfully added marketplace: ${formatMarketplaceRowLabel(v)} \u2014 hosted on claude.ai, ${formatMarketplaceScopeLabel(v.scope)} \u2014 ${A} ${pluralize(A, "plugin")}${N ? ` (${N})` : ""}`,
         `  Install its plugins with: claude plugin install <plugin>@${P}`,
       ];
     } catch (p) {
-      if (p instanceof tC)
+      if (p instanceof ClaudeAiMarketplaceError)
         (await logFeatureBadAsync(
           "cli_marketplace_add",
           `cli_marketplace_add_claudeai_${p.code}`,
@@ -732,7 +732,7 @@ async function marketplaceListHandler(a, o, s) {
   if (o.cowork) SB(!0);
   let d;
   try {
-    d = await gl(s);
+    d = await getKnownMarketplaces(s);
   } catch (A) {
     return (
       await logFeatureBadAsync("cli_marketplace_list", "cli_marketplace_list_load_failed"),
@@ -741,17 +741,17 @@ async function marketplaceListHandler(a, o, s) {
     );
   }
   let c = Object.keys(d),
-    p = await xue().catch(() => null),
-    { available: k, hosted: w } = Hue(p, d),
+    p = await listClaudeAiMarketplaces().catch(() => null),
+    { available: k, hosted: w } = filterUnconfiguredMarketplaces(p, d),
     v = p?.browseOnly ?? [],
-    P = await UF(),
+    P = await readClaudeAiMarketplaceRegistry(),
     R = new Map();
   for (let A of c) {
     let m = d[A]?.source;
-    if (TM(m))
+    if (isClaudeAiMarketplaceSource(m))
       R.set(
         A,
-        (await mV(A, m, { mode: "cache-only", credentials: void 0 })).status,
+        (await loadClaudeAiMarketplace(A, m, { mode: "cache-only", credentials: void 0 })).status,
       );
   }
   if (o.json) {
@@ -811,9 +811,9 @@ async function marketplaceListHandler(a, o, s) {
           else if (E.source === "file") A.push(`    Source: File (${E.path})`);
           else if (E.source === "claudeai") {
             let B = R.get(m),
-              Y = B === void 0 ? void 0 : Vwe(B);
+              Y = B === void 0 ? void 0 : formatCatalogStatusMessage(B);
             A.push(
-              `    Source: ${Tmt(P[m])}${Y === void 0 ? "" : ` \u2014 ${Y}`}`,
+              `    Source: ${formatClaudeAiMarketplaceLabel(P[m])}${Y === void 0 ? "" : ` \u2014 ${Y}`}`,
             );
           }
         }
@@ -827,19 +827,19 @@ async function marketplaceListHandler(a, o, s) {
         `  ${figures.pointer} ${m.name} (available from claude.ai${m.scope ? `, ${m.scope}` : ""} \u2014 not added)`,
       ),
         A.push(
-          `    Source: ${m.source.source === "github" ? "GitHub" : "Git"} (${Gte(m.source)})`,
+          `    Source: ${m.source.source === "github" ? "GitHub" : "Git"} (${formatMarketplaceSource(m.source)})`,
         ),
         A.push(""));
     for (let m of w)
       (A.push(
-        `  ${figures.pointer} ${hDe(m)} \u2014 hosted on claude.ai, ${aX(m.scope)} \xB7 not added`,
+        `  ${figures.pointer} ${formatMarketplaceRowLabel(m)} \u2014 hosted on claude.ai, ${formatMarketplaceScopeLabel(m.scope)} \xB7 not added`,
       ),
         A.push(
           `    Add: claude plugin marketplace add --claudeai ${V$(m.name) ? m.name : "<name>"}`,
         ),
         A.push(""));
     for (let m of v)
-      (A.push(`  ${figures.pointer} ${zwe(m)} (browse on claude.ai)`), A.push(""));
+      (A.push(`  ${figures.pointer} ${formatBrowseOnlyMarketplace(m)} (browse on claude.ai)`), A.push(""));
     C = e(t, { children: X(A) });
   }
   logFeatureOk("cli_marketplace_list");
@@ -858,8 +858,8 @@ async function marketplaceRemoveHandler(a, o, s, d) {
     c = getSettingsSourceForScope(p);
   }
   try {
-    (await TEe(o, c, d),
-      fu(d),
+    (await removeMarketplace(o, c, d),
+      refreshPluginState(d),
       logEvent("tengu_marketplace_removed", { marketplace_name: o }));
   } catch (p) {
     (await logFeatureBadAsync("cli_marketplace_remove", "cli_marketplace_remove_failed"),
@@ -912,12 +912,12 @@ async function marketplaceUpdateHandler(a, o, s, d) {
   if (o) {
     c = `Updating marketplace: ${o}...`;
     let w = [];
-    k = eD(o, d, (v) => {
+    k = refreshMarketplace(o, d, (v) => {
       w.push(v);
     })
       .then(
         async () => (
-          fu(d),
+          refreshPluginState(d),
           await logEventAsync("tengu_marketplace_updated", { marketplace_name: o }),
           await logFeatureOkAsync("cli_marketplace_update"),
           {
@@ -939,7 +939,7 @@ async function marketplaceUpdateHandler(a, o, s, d) {
   } else {
     let w;
     try {
-      w = await gl(d);
+      w = await getKnownMarketplaces(d);
     } catch (P) {
       return (
         await ee(
@@ -957,11 +957,11 @@ async function marketplaceUpdateHandler(a, o, s, d) {
       return;
     }
     ((c = "Updating marketplaces..."),
-      (k = r7n(d)
+      (k = refreshAllMarketplaces(d)
         .then(async ({ policyRefused: P, failed: R, attempted: C }) => {
           if (
             ((p = R.length > 0 ? 1 : 0),
-            fu(d),
+            refreshPluginState(d),
             await logEventAsync("tengu_marketplace_updated_all", {
               count: v.length,
               attempted: C,
@@ -1066,7 +1066,7 @@ async function pluginInstallHandler(a, o, s, d) {
     if (p) dle(p.outcome);
     (logFeatureSad("cli_plugin_install", "command_source_declined"),
       await renderAndWaitForExit(a, e(t, { children: "Aborted." })),
-      await xn(1));
+      await gracefulShutdown(1));
     return;
   }
   let P = v?.grantKey,
@@ -1083,7 +1083,7 @@ async function pluginInstallHandler(a, o, s, d) {
     )
       dle(p.outcome);
     (await renderAndWaitForExit(a, e(t, { children: "Aborted \u2014 the command was not run." })),
-      await xn(1));
+      await gracefulShutdown(1));
     return;
   }
   let C = $Nn(o, c, s.config, P, R, d, p).then(
@@ -1096,7 +1096,7 @@ async function pluginInstallHandler(a, o, s, d) {
     }),
   ),
     await a.waitUntilExit(),
-    await xn(0));
+    await gracefulShutdown(0));
 }
 async function pluginUninstallHandler(a, o, s, d) {
   if (s.cowork) SB(!0);
@@ -1122,14 +1122,14 @@ async function pluginEnableHandler(a, o, s, d) {
   ae("tengu_plugin_enable_command", o, fromEnum(c ?? "auto"));
   let p;
   try {
-    if ((await qwe(), Rot(), (p = await f0e(o, c, d)), !p.success))
+    if ((await reloadPluginDirsFromDisk(), Rot(), (p = await f0e(o, c, d)), !p.success))
       throw new Dae(p.message);
   } catch (k) {
     return await Lae(k, "enable", o);
   }
   (await renderAndWaitForExit(a, r(t, { children: [figures.tick, " ", ff(p.message)] })),
     await logEventAsync("tengu_plugin_enabled_cli", {
-      ...xy(p.pluginId || o, Xf()),
+      ...buildPluginTelemetryFieldsFromId(p.pluginId || o, getPolicyPluginNames()),
       scope: fromEnumOpt(p.scope),
     }),
     await logFeatureOkAsync("cli_plugin_enable"),
@@ -1147,7 +1147,7 @@ async function pluginDisableHandler(a, o, s, d) {
   } else {
     let p = Ie(s);
     (ae("tengu_plugin_disable_command", o, fromEnum(p ?? "auto")),
-      await qwe(),
+      await reloadPluginDirsFromDisk(),
       Rot(),
       (c = await jNn(o, p, d)));
   }
@@ -1176,8 +1176,8 @@ async function pluginDetailsHandler(a, o, s, d, c) {
       scaleCharsToTokens: w,
     } = await import("../MCP客户端/chunk-4xr0rjb4.js"),
     { formatTokenEstimate: v } = await import("../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js");
-  await qwe();
-  let { enabled: P, disabled: R } = await Ph(isHoverRestEnabled() ? d : void 0, c),
+  await reloadPluginDirsFromDisk();
+  let { enabled: P, disabled: R } = await loadAllPlugins(isHoverRestEnabled() ? d : void 0, c),
     C = parsePluginId(o),
     N = C.marketplace ? formatPluginId(C.name, C.marketplace) : C.name,
     A = isNonMarketplacePluginSource(C.marketplace) ? (I) => normalizeLookupKey(I) === normalizeLookupKey(N) : (I) => isEqualIgnoringCase(I, N),
@@ -1378,7 +1378,7 @@ async function Ue(a, o) {
   for (let d of a.plugins) {
     let c =
         d.mcpServers ||
-        (await wM(d, void 0, o, void 0, { readOnlyListing: !0 })),
+        (await discoverPluginMcpServers(d, void 0, o, void 0, { readOnlyListing: !0 })),
       p = a.errors.filter((w) => ZPt(w, d)).map(vm),
       k = a.warnings.filter((w) => eOt(w, d)).map(K$);
     s.push({

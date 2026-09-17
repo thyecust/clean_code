@@ -17,7 +17,7 @@ import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { The, txt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
-import { Ds, Ct, Dne, o$, nn, Mne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createConcurrencyLimiter, isSignalAborted, readExactBytes, readSeedFile, GIT_OBJECT_ID_REGEX, isNonZeroObjectId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { compareByPath } from "../文件同步-Sync/sync-journal.js";
 import { computeGitBlobId, isMtimeSettled } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { iOe, wze, $an, Tze, Uan } from "../文件同步-Sync/chunk-eg4wmaq4.js";
@@ -46,7 +46,7 @@ function Q(e) {
   return e === "sha256" ? 32 : 20;
 }
 function z4(e, t) {
-  return e.length === 2 * Q(t) && nn.test(e) && Mne(e);
+  return e.length === 2 * Q(t) && GIT_OBJECT_ID_REGEX.test(e) && isNonZeroObjectId(e);
 }
 function J(e, t, r) {
   return {
@@ -141,7 +141,7 @@ function Fpt(e, t) {
 }
 function Me(e, t, r) {
   let a = e.startsWith(`${t} `) ? e.slice(t.length + 1) : "";
-  return a.length === 2 * Q(r) && nn.test(a) ? a : null;
+  return a.length === 2 * Q(r) && GIT_OBJECT_ID_REGEX.test(a) ? a : null;
 }
 function je({ name: e, email: t, unixSeconds: r, utcOffsetMinutes: a }) {
   return (
@@ -1645,7 +1645,7 @@ var xe = 1,
       T().int().nonnegative(),
       T().nonnegative(),
       T(),
-      s().regex(nn),
+      s().regex(GIT_OBJECT_ID_REGEX),
     ]),
   ),
   $n = createLazyValue(() => c({ version: k(xe), entries: v(se()).max(mt) }));
@@ -1726,7 +1726,7 @@ async function Wn(e) {
     try {
       let r = await t.stat();
       if (!r.isFile() || r.size > pt) return [];
-      let a = await Dne(t, r.size),
+      let a = await readExactBytes(t, r.size),
         o = $n().safeParse(xt(a.toString("utf8"), !1));
       return o.success
         ? o.data.entries.flatMap((d) => {
@@ -1867,7 +1867,7 @@ async function Man({
       through: y,
       signal: g,
     });
-  if (Ct(g)) return K("aborted", "the sync point was abandoned");
+  if (isSignalAborted(g)) return K("aborted", "the sync point was abandoned");
   let N = p() - C,
     D = new Map(j.skipped.map((U) => [U.path, U.reason])),
     z = ur(R, B, D),
@@ -1922,7 +1922,7 @@ async function Man({
     through: y,
     signal: g,
   });
-  if (Ct(g)) return K("aborted", "the sync point was abandoned");
+  if (isSignalAborted(g)) return K("aborted", "the sync point was abandoned");
   let I = await r.writeTree(F.commitFiles);
   if (!I.ok)
     return K(
@@ -2075,7 +2075,7 @@ function q9n({
         await S?.close();
       }
     } catch (C) {
-      if (Ct(B)) return K("aborted", "the sync point was abandoned");
+      if (isSignalAborted(B)) return K("aborted", "the sync point was abandoned");
       return (
         n(`folder sync: snapshot failed: ${String(C)}`),
         K("git_error", "this folder could not be written into its local store")
@@ -2180,7 +2180,7 @@ async function cr({
   signal: d,
 }) {
   let i = 0,
-    l = Ds(Zn, async (y) => {
+    l = createConcurrencyLimiter(Zn, async (y) => {
       let g = y.ctimeMs !== void 0 && y.ino !== void 0,
         p = {
           size: y.size,
@@ -2196,8 +2196,8 @@ async function cr({
           file: { stat: y, blobId: f, kept: null },
           hashed: !1,
         };
-      if (Ct(d)) return { kind: "skip", path: y.path, reason: "unreadable" };
-      let u = await o$(t, r, y.path, o);
+      if (isSignalAborted(d)) return { kind: "skip", path: y.path, reason: "unreadable" };
+      let u = await readSeedFile(t, r, y.path, o);
       if (u.kind === "skip")
         return { kind: "skip", path: y.path, reason: u.skipped.reason };
       let E = computeGitBlobId(u.content),
@@ -2273,7 +2273,7 @@ async function fr({
     if (C === void 0 || C.blobId !== M.blobId) continue;
     if (R.has(M.blobId) || i(M.blobId) || (await l.store.hasHere(M.blobId)))
       continue;
-    if (Ct(p)) break;
+    if (isSignalAborted(p)) break;
     let N = r.get(B)?.kept ?? null ?? (await mr(h, y, B, g));
     if (N === null || computeGitBlobId(N) !== M.blobId) {
       d.forget(B);
@@ -2297,7 +2297,7 @@ async function fr({
   return { commitFiles: f, slipped: u, blobsStored: E };
 }
 async function mr(e, t, r, a) {
-  let o = await o$(e, t, r, a);
+  let o = await readSeedFile(e, t, r, a);
   return o.kind === "read" ? o.content : null;
 }
 var yt = new Set(["unreadable", "changed", "too_large"]),

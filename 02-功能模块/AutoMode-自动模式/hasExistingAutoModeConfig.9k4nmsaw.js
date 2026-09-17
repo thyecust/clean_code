@@ -14,7 +14,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Ht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettingsForSource, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -667,7 +667,7 @@ async function we(n) {
     await Ee(n);
   } catch (a) {
     (n.appendSystemMessage?.(
-      Ht(
+      createSystemInfoMessage(
         `Auto-mode setup hit an unexpected error and stopped: ${l(a)}. Re-run /auto-mode-setup to try again.`,
         "warning",
       ),
@@ -731,7 +731,7 @@ async function De(n, a, s) {
       return;
     }
     (X(a, w, "failed"),
-      T?.(Ht(`Auto-mode setup scan failed: ${m.reason}`, "warning")),
+      T?.(createSystemInfoMessage(`Auto-mode setup scan failed: ${m.reason}`, "warning")),
       H("error", "background_scan"));
     return;
   }
@@ -743,7 +743,7 @@ async function De(n, a, s) {
   let b = await M(p6e, { ...m.proposal, mode: n.mode }, { place: "under" });
   if (b !== "accept") {
     (T?.(
-      Ht(
+      createSystemInfoMessage(
         "Auto-mode proposal discarded \u2014 nothing was saved. Re-run /auto-mode-setup anytime.",
         "notice",
       ),
@@ -756,7 +756,7 @@ async function De(n, a, s) {
     I = await v({ mode: n.mode, autoMode: J(m.proposal) }, n.storageV5);
   } catch (C) {
     (T?.(
-      Ht(
+      createSystemInfoMessage(
         `Auto-mode setup couldn\u2019t save: ${l(C)}. Re-run /auto-mode-setup to try again.`,
         "warning",
       ),
@@ -787,7 +787,7 @@ async function De(n, a, s) {
         };
       } catch (P) {
         (T?.(
-          Ht(
+          createSystemInfoMessage(
             `${K(I, { removed: 0, skipped: 0 })}
 Note: removing the flagged permissions.allow entries failed: ${l(P)}`,
             "warning",
@@ -797,7 +797,7 @@ Note: removing the flagged permissions.allow entries failed: ${l(P)}`,
         return;
       }
   }
-  (T?.(Ht(K(I, z), "notice")), H("saved", "background", n.mode));
+  (T?.(createSystemInfoMessage(K(I, z), "notice")), H("saved", "background", n.mode));
 }
 var Vo = async (n, a, s) => {
   if (s.trim() !== "")

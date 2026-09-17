@@ -20,7 +20,7 @@ import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _6e, B0t, Q1n } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { resolveEditorCommand, editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
-import { Ng, prepareContextForPlanMode, Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getIdeDisplayName, prepareContextForPlanMode, createUserMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Oc } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { notePlanFileForgotten, peekPlanSlug, getPlanFilePath, getPlanAsync } from "./计划模式(Plan).e5mh1avy.js";
 import { renderToPlainText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -125,7 +125,7 @@ async function me(a, l, m) {
           null
         );
       }
-      let p = Re({ content: i, origin: { kind: "human" } });
+      let p = createUserMessage({ content: i, origin: { kind: "human" } });
       if (
         (l.setMessages((u) => [...u, p]),
         !(await s.sendMessage(i, { uuid: p.uuid })))
@@ -260,7 +260,7 @@ async function me(a, l, m) {
     return null;
   }
   let N = resolveEditorCommand(),
-    H = N ? Ng(N) : void 0,
+    H = N ? getIdeDisplayName(N) : void 0,
     k = mayHaveRemoteClient(l.session),
     q = (s) =>
       e(A, {

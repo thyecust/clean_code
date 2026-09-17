@@ -16,7 +16,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Ct, vht, xk, TKn, Fht, jht, pH, tj, $_ } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isSignalAborted, isDirSyncStreamingEnabled, resolveRealPath, getDirectoryDirSyncConsent, createStoppedEngine, createSyncedFileLaneClient, createPathWithholdClassifier, CLAUDE_REF_PREFIX, MAX_LISTED_COMMITS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import "../文件同步-Sync/sync-journal.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
@@ -118,7 +118,7 @@ function N({
     },
     p = async ({ content: r, targets: o, heldBases: c, heldRefs: b }) => {
       let F = m();
-      if (Ct(h)) return { ok: !1, reason: "aborted" };
+      if (isSignalAborted(h)) return { ok: !1, reason: "aborted" };
       if (r.length > I9)
         return { ok: !1, reason: "too_large", sizeBytes: r.length };
       let E = Qan(r, { refNames: [...o.keys()] });
@@ -188,7 +188,7 @@ function N({
           reason: "unpack_failed",
           detail: `the pack carries ${D.type} ${D.id}, which none of its tips reaches`,
         };
-      if (Ct(h)) return { ok: !1, reason: "aborted" };
+      if (isSignalAborted(h)) return { ok: !1, reason: "aborted" };
       for (let w of ["blob", "tree", "commit"])
         for (let L of O.objects)
           if (L.type === w) await e.store.put(L.type, L.body);
@@ -284,7 +284,7 @@ function N({
       let o = !1;
       return {
         read: async (b) => {
-          if (o || Ct(h) || !z4(b, y)) return { kind: "unavailable" };
+          if (o || isSignalAborted(h) || !z4(b, y)) return { kind: "unavailable" };
           if (e.store.deflatedSize(b) === null) return { kind: "unavailable" };
           let k = (await R(!1, () => e.store.hasHere(b)))
             ? await R({ kind: "absent" }, () => e.store.get(b))
@@ -453,7 +453,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
         } catch (f) {
           return (
             n(`folder sync: bundle failed: ${String(f)}`),
-            Ct(d)
+            isSignalAborted(d)
               ? { ok: !1, reason: "aborted" }
               : A("range", `the local store could not be read: ${String(f)}`)
           );
@@ -467,7 +467,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
       },
     },
     R = async ({ tips: p, prerequisites: f, maxBytes: r }) => {
-      if (Ct(d)) return { ok: !1, reason: "aborted" };
+      if (isSignalAborted(d)) return { ok: !1, reason: "aborted" };
       let o = p.map((a) => ({ name: a, id: t.read(a) })),
         c = o.find((a) => a.id === null);
       if (c !== void 0 || o.length === 0)
@@ -477,7 +477,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
       );
       if (!f.every((a) => z4(a, m)))
         return A("arguments", "a prerequisite is not an object id");
-      if (f.length > $_)
+      if (f.length > MAX_LISTED_COMMITS)
         return {
           ok: !1,
           reason: "too_many_prerequisites",
@@ -513,7 +513,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
           return { ok: !1, reason: "too_large", sizeBytes: j.bytesEstimate };
         O += j.ids.commits.length;
         for (let B of [...j.ids.commits, ...j.ids.trees, ...j.ids.blobs]) {
-          if (Ct(d)) return { ok: !1, reason: "aborted" };
+          if (isSignalAborted(d)) return { ok: !1, reason: "aborted" };
           let D = await e.store.getDeflated(B);
           if (D.kind !== "ok")
             return A(
@@ -565,7 +565,7 @@ function U() {
     remove(t) {
       for (let s of t) e.delete(s);
     },
-    list: (t) => Y(e, `${tj}${t}/`),
+    list: (t) => Y(e, `${CLAUDE_REF_PREFIX}${t}/`),
     matching: (t) => (t.endsWith("/*") ? Y(e, t.slice(0, -1)) : []),
   };
 }
@@ -602,7 +602,7 @@ async function openFolderGitSync({
   storageV5: p,
   endedEarlier: f,
 }) {
-  let r = await xk(t);
+  let r = await resolveRealPath(t);
   if (r === null) throw Error("launch folder cannot be resolved");
   let o = toInfraSessionId(e),
     c = await resolveDirSyncRecordLocation(t, o, p),
@@ -639,7 +639,7 @@ async function openFolderGitSync({
     let a = _.kind;
     return (
       logEvent("tengu_dir_sync_folder_store_lost", { reason: fromEnum(a), at_create: b }),
-      Fht(
+      createStoppedEngine(
         y,
         _.kind === "seed_not_stored" ? "store_unwritable" : "store_unreadable",
         _.kind === "seed_not_stored" ? ce : de,
@@ -670,7 +670,7 @@ async function openFolderGitSync({
     throw (await v(), a);
   }
   function T(a, j, B) {
-    let D = jht({ sessionId: o, credentials: g }),
+    let D = createSyncedFileLaneClient({ sessionId: o, credentials: g }),
       I = hFt({
         sessionId: o,
         gitRoot: t,
@@ -701,14 +701,14 @@ async function openFolderGitSync({
         codec: yFt,
         onStatus: y,
         boundToThisMachine: m,
-        consent: R ?? (() => TKn(t)),
+        consent: R ?? (() => getDirectoryDirSyncConsent(t)),
         checkoutBranch: j.checkoutBranch,
         initialPass: b ? "send" : "none",
         ...(f !== void 0 && { endedEarlier: f }),
         writerLock: (w) =>
           mFt({ recordPath: c.path, lockPath: q(E, re), onLost: w }),
         onPeerSilent: () => {},
-        ...(vht() && {
+        ...(isDirSyncStreamingEnabled() && {
           changeFeed: () => Jpt({ root: t }),
           streamingScope: async (w) => w.some(le),
         }),
@@ -802,7 +802,7 @@ async function ue({
           ...(g !== void 0 && { lastSentCommit: g }),
           ...(R !== void 0 && { ackedOf: R }),
           maxBytes: r,
-          withheldOf: p ?? (() => pH(e, { realRoot: t })),
+          withheldOf: p ?? (() => createPathWithholdClassifier(e, { realRoot: t })),
           anchor: () =>
             SO(uk(), { gitRoot: e, realRoot: t }).catch(
               (a) => (n(`folder sync: tree anchor not opened (${l(a)})`), null),

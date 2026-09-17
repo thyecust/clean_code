@@ -13,7 +13,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t, ct, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Pr, $s } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gracefulShutdownSync, isShuttingDown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -34,7 +34,7 @@ function BypassPermissionsModeDialog(T) {
     h;
   if (s[1] !== d || s[2] !== m)
     ((h = function n(V) {
-      if (l.current || $s()) {
+      if (l.current || isShuttingDown()) {
         return;
       }
       bb10: switch (((l.current = !0), V)) {
@@ -50,7 +50,7 @@ function BypassPermissionsModeDialog(T) {
           break bb10;
         }
         case "decline": {
-          Pr(1);
+          gracefulShutdownSync(1);
         }
       }
     }),
@@ -62,7 +62,7 @@ function BypassPermissionsModeDialog(T) {
     k;
   if (s[4] === MEMO_CACHE_SENTINEL)
     ((k = () => {
-      ((l.current = !0), Pr(0));
+      ((l.current = !0), gracefulShutdownSync(0));
     }),
       (s[4] = k));
   else k = s[4];

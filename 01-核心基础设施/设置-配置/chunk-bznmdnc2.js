@@ -48,21 +48,21 @@ import { OYe, DCe, jfe, vTt, Xer, Yer } from "../../02-功能模块/Memory-CLAUD
 import { areWorkflowsEnabled, isWorkflowsEnabledByDefault } from "../共享小工具-未细化/workflow-feature-gates.js";
 import { Yk, iA, zG } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import {
-  lqn,
-  dmt,
-  hV,
-  lH,
-  pLe,
-  UO,
-  Jf,
-  Vv,
-  Ym,
-  Qht,
+  SWITCH_MODELS_ON_FLAG_LABEL,
+  isRefusalFallbackSettingVisible,
+  BUILT_IN_OUTPUT_STYLES,
+  isSupportedIdeTerminal,
+  isPrecomputeCompactionEnabledByDefault,
+  hasPreModelSwitchHooks,
+  recordModelSwitchIfChanged,
+  sessionTaskQueueStore,
+  enqueueSessionTask,
+  setRemoteHomeSettingsMode,
   transitionPlanAutoMode,
-  rgn,
-  z_t,
-  hpe,
-  Tpe,
+  isFeedbackDraftRelayEnabled,
+  setFeedbackDraftsSetting,
+  isExpandedSettingsUiEnabled,
+  OUTPUT_STYLE_SECTION_NAME,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCustomizationDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import { isSettingsToCloudEnabledCached } from "../共享小工具-未细化/chunk-97crm80y.js";
@@ -87,7 +87,7 @@ import { isProposeGoalEnabled } from "../共享小工具-未细化/propose-goal-
 import { WORKFLOW_SIZE_GUIDELINE_VALUES, parseWorkflowSizeGuideline, resolveWorkflowSizeGuideline } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import { getLanguageDisplayNames } from "../共享小工具-未细化/intl-text-utils.js";
 function F(l, r) {
-  return hpe() ? r : l;
+  return isExpandedSettingsUiEnabled() ? r : l;
 }
 function YDt(l) {
   switch (l) {
@@ -276,9 +276,9 @@ function gSe(l) {
       c = "";
     if (C) {
       let { session: T, readState: N } = C;
-      if (UO(T) || Vv.of(T).pending > 0) {
+      if (hasPreModelSwitchHooks(T) || sessionTaskQueueStore.of(T).pending > 0) {
         let te = ++C.latestPick.current,
-          P = await Ym(T, () => P_(T, N, e, "command"));
+          P = await enqueueSessionTask(T, () => P_(T, N, e, "command"));
         if (te !== C.latestPick.current) return;
         if (P.decision !== "proceed")
           return (
@@ -299,7 +299,7 @@ function gSe(l) {
         if (P.messages.length > 0)
           c = ` \xB7 ${P.messages.map(Rl).join(" \xB7 ")}`;
       }
-      Jf(T, N(), e, "command");
+      recordModelSwitchIfChanged(T, N(), e, "command");
     }
     if (s?.fromUltracode) iA(v);
     else if (s !== void 0) zG(s.level, t2(e), void 0, v);
@@ -490,7 +490,7 @@ function gSe(l) {
                 t = r.remoteHomeSettingsMode;
               return (
                 p((s) => ({ ...s, remoteHomeSettingsMode: o })),
-                Qht(o, isHoverRestEnabled() ? v : void 0).then((s) => {
+                setRemoteHomeSettingsMode(o, isHoverRestEnabled() ? v : void 0).then((s) => {
                   switch (s) {
                     case "written":
                       return;
@@ -559,11 +559,11 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(dmt()
+    ...(isRefusalFallbackSettingVisible()
       ? [
           {
             id: "switchModelsOnFlag",
-            label: lqn,
+            label: SWITCH_MODELS_ON_FLAG_LABEL,
             value: f?.switchModelsOnFlag ?? !0,
             type: "boolean",
             onChange(e) {
@@ -586,7 +586,7 @@ function gSe(l) {
           logEvent("tengu_tips_setting_changed", { enabled: e }));
       },
     },
-    ...(rgn()
+    ...(isFeedbackDraftRelayEnabled()
       ? [
           {
             id: "feedbackDrafts",
@@ -596,7 +596,7 @@ function gSe(l) {
             type: "enum",
             onChange(e) {
               let o = e;
-              (z_t(o, { storageV5: v, via: "config" }),
+              (setFeedbackDraftsSetting(o, { storageV5: v, via: "config" }),
                 m((t) => ({ ...t, feedbackDrafts: o })));
             },
           },
@@ -660,7 +660,7 @@ function gSe(l) {
                   A((b) => {
                     let _ = getFastModeTargetModel(b),
                       O = _ !== void 0 && (!s || _ === t);
-                    if (O && C) Jf(C.session, b, _, "command");
+                    if (O && C) recordModelSwitchIfChanged(C.session, b, _, "command");
                     return (
                       (c = O ? _ : void 0),
                       {
@@ -681,12 +681,12 @@ function gSe(l) {
                   d ? { messageSuffix: d } : void 0
                 );
               };
-              if (e && C && (UO(C.session) || Vv.of(C.session).pending > 0)) {
+              if (e && C && (hasPreModelSwitchHooks(C.session) || sessionTaskQueueStore.of(C.session).pending > 0)) {
                 let { session: t, readState: s } = C,
                   d = ++C.latestFastPick.current;
-                return Ym(t, async () => {
+                return enqueueSessionTask(t, async () => {
                   let c = getFastModeTargetModel(s());
-                  if (c === void 0 || !UO(t)) {
+                  if (c === void 0 || !hasPreModelSwitchHooks(t)) {
                     if (d !== C.latestFastPick.current) return;
                     return o(void 0, !1, "");
                   }
@@ -725,8 +725,8 @@ function gSe(l) {
                     A((s) => ({ ...s, fastMode: !1 })),
                     w((s) => ({ ...s, "Fast mode": "OFF" })));
                 };
-                if (C && Vv.of(C.session).pending > 0)
-                  await Ym(C.session, async () => t());
+                if (C && sessionTaskQueueStore.of(C.session).pending > 0)
+                  await enqueueSessionTask(C.session, async () => t());
                 else t();
               }
             },
@@ -935,7 +935,7 @@ function gSe(l) {
           {
             id: "precomputeCompactionEnabled",
             label: "Precompute compaction",
-            value: f?.precomputeCompactionEnabled ?? pLe(),
+            value: f?.precomputeCompactionEnabled ?? isPrecomputeCompactionEnabledByDefault(),
             type: "boolean",
             onChange(e) {
               (h({ precomputeCompactionEnabled: e }),
@@ -1108,7 +1108,7 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(hpe()
+    ...(isExpandedSettingsUiEnabled()
       ? isAgentsFleetEnabled() || isAgentsViewAvailable()
         ? [
             {
@@ -1182,7 +1182,7 @@ function gSe(l) {
       optionsHint: "For custom themes, use /theme.",
       onChange: Ae,
     },
-    ...(hpe()
+    ...(isExpandedSettingsUiEnabled()
       ? [
           {
             id: "notifChannel",
@@ -1229,15 +1229,15 @@ function gSe(l) {
       id: "outputStyle",
       label: "Output style",
       value:
-        isCustomizationDisabled("outputStyles") && !Object.hasOwn(hV, I)
+        isCustomizationDisabled("outputStyles") && !Object.hasOwn(BUILT_IN_OUTPUT_STYLES, I)
           ? `${I} (disabled in safe mode)`
           : I,
       type: "managedEnum",
-      options: Object.keys(hV),
+      options: Object.keys(BUILT_IN_OUTPUT_STYLES),
       optionsHint: "For custom styles, open /config.",
       async onChange(e) {
         (m((t) => ({ ...t, outputStyle: e })),
-          ML().delete(Tpe),
+          ML().delete(OUTPUT_STYLE_SECTION_NAME),
           mv("output_style"));
         let o = await L({ outputStyle: e });
         if (o?.error) return { error: o.error };
@@ -1420,7 +1420,7 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(!lH()
+    ...(!isSupportedIdeTerminal()
       ? [
           {
             id: "autoConnectIde",
@@ -1438,7 +1438,7 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(lH()
+    ...(isSupportedIdeTerminal()
       ? [
           {
             id: "autoInstallIdeExtension",

@@ -47,12 +47,12 @@ import {
   PT,
 } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
-  ka,
-  jUt,
+  sanitizeDisplayText,
+  redactSecrets,
   rTe,
-  DBt,
-  cTe,
-  $De,
+  enqueueClassifiedCall,
+  runAutoModeClassifier,
+  createToolUseMessage,
   isAutoModeConsentFlowEnabled,
   isChainOnAllowActive,
   recordAutoModeDenial,
@@ -61,35 +61,35 @@ import {
   isAskRuleDrivenReason,
   PERMISSION_CHECK_CRASHED_REASON,
   checkRuleBasedPermissions,
-  zue,
+  formatZodValidationError,
   isRemoteToolForwardingEnabled,
   isRemoteToolForwardingSwitchOn,
-  RX,
-  P4n,
-  O4n,
-  D4n,
-  L4n,
-  M4n,
-  pne,
-  N4n,
-  O2t,
-  g3,
-  DVe,
-  S6t,
-  _Ee,
+  RemoteToolCallRegistry,
+  matchesRemoteHostEpoch,
+  formatCallStillRunningAfterRestart,
+  formatApprovalWithdrawnAfterRestart,
+  formatApprovalWithdrawalUnconfirmed,
+  formatPermissionDecisionUnsettled,
+  formatRestartUncertaintyMessage,
+  formatCallNeverReceivedAfterRestart,
+  getDirSyncCopyCleared,
+  ToolHostRegistry,
+  FILE_EDIT_TOOL_NAMES,
+  startToolHeartbeatTimer,
+  getAbortedToolResult,
   createAttachmentMessage,
-  p$,
-  Ok,
-  $3,
-  gY,
-  VWt,
-  KWt,
-  B5e,
-  XWt,
-  Re,
-  G5e,
-  NEe,
-  $l,
+  appendAutoMemoryReminder,
+  USER_REJECTED_TOOL_USE_PREFIX,
+  PERMISSION_DENIED_PREFIX,
+  getDontAskModeDeniedMessage,
+  getPermissionPromptUnavailableMessage,
+  buildAutoModeClassifierDenialMessage,
+  buildAutoModeUnavailableMessage,
+  buildAutoModeNoVerdictMessage,
+  createUserMessage,
+  createProgressMessage,
+  createErrorToolResult,
+  isCompactBoundaryMessage,
   pinSessionId,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { V_ } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
@@ -252,7 +252,7 @@ var Ko =
   Vo = 2500;
 async function An(e, o, t) {
   if (!(await isRemoteToolForwardingEnabled())) return [];
-  let r = e.toolState.get(g3),
+  let r = e.toolState.get(ToolHostRegistry),
     s = new AbortController(),
     a = gIe(e, r, t).finally(() => s.abort());
   if (t === "attachment_scan")
@@ -263,7 +263,7 @@ async function An(e, o, t) {
   let d = r.hosts(),
     c = qo(d, {
       replMode: V_(),
-      copyCleared: O2t(e.session),
+      copyCleared: getDirSyncCopyCleared(e.session),
       subagent: e.agentId !== void 0,
     });
   if (
@@ -780,7 +780,7 @@ var jn = 512;
 import { randomUUID } from "crypto";
 var kt = new Set([tt, co, ro]);
 function wt(e, o) {
-  let t = DVe.has(e.name);
+  let t = FILE_EDIT_TOOL_NAMES.has(e.name);
   return dedupe([
     e.name,
     ...(t ? [Bt] : []),
@@ -870,8 +870,8 @@ async function Ue({
           name: s.name,
           ruleMessage: T
             ? b.mode === "dontAsk"
-              ? gY(e.name)
-              : VWt(w.message)
+              ? getDontAskModeDeniedMessage(e.name)
+              : getPermissionPromptUnavailableMessage(w.message)
             : REMOTE_APPROVAL_MESSAGES["ask_first.host_rule.cannot_ask"]({ name: s.name, rules: O }),
         }),
       };
@@ -1177,7 +1177,7 @@ function Ct(e) {
     .replace(/[<\u2329\u27E8\u27EA\u3008\u300A]/g, "\u2039")
     .replace(/[>\u232A\u27E9\u27EB\u3009\u300B]/g, "\u203A")
     .trim();
-  return truncateToCodeUnits(jUt(o), WDt);
+  return truncateToCodeUnits(redactSecrets(o), WDt);
 }
 async function so({
   tool: e,
@@ -1261,9 +1261,9 @@ async function Mt(e, o) {
       adoption: v,
       ...(T !== void 0 && { reconcile: T }),
     });
-  if (!P4n(o, r)) return m("host_restarted", pne(c, o), "instance_gone");
+  if (!matchesRemoteHostEpoch(o, r)) return m("host_restarted", formatRestartUncertaintyMessage(c, o), "instance_gone");
   let k = ao(t, r);
-  if (k === void 0) return m("unreachable", pne(c, o), "unknown");
+  if (k === void 0) return m("unreachable", formatRestartUncertaintyMessage(c, o), "unknown");
   let p = e.checkInTiming,
     P = await je({
       host: r,
@@ -1293,7 +1293,7 @@ async function Mt(e, o) {
     case "late":
     case "answer": {
       let { transported: _ } = R;
-      if (_.kind !== "result") return m("unreachable", pne(c, o), "unknown", w);
+      if (_.kind !== "result") return m("unreachable", formatRestartUncertaintyMessage(c, o), "unknown", w);
       let { envelope: A } = _;
       if (A?.outcome === "needs_approval") return It(e, o, k.wire, A.ask_id, w);
       return {
@@ -1303,12 +1303,12 @@ async function Mt(e, o) {
       };
     }
     case "ask_lost":
-      return m("still_running", M4n(c), "ask_in_flight", w);
+      return m("still_running", formatPermissionDecisionUnsettled(c), "ask_in_flight", w);
     case "not_received":
-      return m("not_received", N4n(c), "never_received", w);
+      return m("not_received", formatCallNeverReceivedAfterRestart(c), "never_received", w);
     case "host_restarted":
     case "gone":
-      return m("host_restarted", pne(c, o), "instance_gone", w);
+      return m("host_restarted", formatRestartUncertaintyMessage(c, o), "instance_gone", w);
     case "host_unresponsive":
       return (
         r.transport.markUnresponsive?.(),
@@ -1341,7 +1341,7 @@ async function Mt(e, o) {
       return { outcome: HHe(d), adoption: "interrupted", reconcile: w };
     case "unreachable":
     case "unknown":
-      return m("unreachable", pne(c, o), "unknown", w);
+      return m("unreachable", formatRestartUncertaintyMessage(c, o), "unknown", w);
   }
 }
 async function It(e, o, t, r, s) {
@@ -1400,7 +1400,7 @@ async function It(e, o, t, r, s) {
       outcome: {
         kind: "error",
         code: "still_running",
-        message: O4n(p),
+        message: formatCallStillRunningAfterRestart(p),
         host: k,
       },
       adoption: "still_running",
@@ -1411,7 +1411,7 @@ async function It(e, o, t, r, s) {
     outcome: {
       kind: "error",
       code: "approval_not_received",
-      message: _ ? D4n(p) : L4n(p),
+      message: _ ? formatApprovalWithdrawnAfterRestart(p) : formatApprovalWithdrawalUnconfirmed(p),
       host: k,
     },
     adoption: _ ? "ask_withdrawn" : "unknown",
@@ -1420,7 +1420,7 @@ async function It(e, o, t, r, s) {
 }
 async function $t(e) {
   let o,
-    t = e.toolUseContext.toolState.get(RX),
+    t = e.toolUseContext.toolState.get(RemoteToolCallRegistry),
     r = (p) => {
       if (p !== void 0)
         e.toolUseContext.sessionState?.notifyInternalMetadataChanged({
@@ -1511,7 +1511,7 @@ async function Nt({
       outcome: {
         kind: "error",
         code: "invalid_input",
-        message: zue(e.name, T.error),
+        message: formatZodValidationError(e.name, T.error),
         host: _,
       },
     };
@@ -1599,7 +1599,7 @@ async function Nt({
     },
     ye = o.transport.limits.defaultDeadlineMs,
     To = Math.max(1, ye - to),
-    Ao = s.agentId === void 0 ? s.messages.findLast($l)?.uuid : void 0,
+    Ao = s.agentId === void 0 ? s.messages.findLast(isCompactBoundaryMessage)?.uuid : void 0,
     sn,
     ne = (E) => {
       let C = io(s, e.name);
@@ -1631,7 +1631,7 @@ async function Nt({
         .then((N) => (Je(o, N), N))
         .catch((N) => ({
           kind: "transport_error",
-          detail: `send failed: ${ka(l(N))}`,
+          detail: `send failed: ${sanitizeDisplayText(l(N))}`,
         }))
     ),
     dn = (E) => {
@@ -2719,7 +2719,7 @@ async function qt(e, o, t, r, s) {
       message: _It({ requested: o, attached: [] }),
     };
   if (!(await isRemoteToolForwardingEnabled())) return { kind: "error", code: "gate_off", message: aEt() };
-  let a = r.toolState.get(g3);
+  let a = r.toolState.get(ToolHostRegistry);
   await ue(s, r, a);
   let d = a.resolve(o);
   if (
@@ -2818,7 +2818,7 @@ function uo(e, o) {
 async function zt(e, o, t, r) {
   if (t.remoteCall !== void 0 || !(await isRemoteToolForwardingEnabled()))
     return { kind: "local", input: o };
-  let s = t.toolState.get(g3);
+  let s = t.toolState.get(ToolHostRegistry);
   await ue(r, t, s);
   let a = uo(e, s);
   if (
@@ -2998,7 +2998,7 @@ function createRemoteToolHostsRuntime() {
   };
 }
 function rr(e) {
-  let o = e.toolState.get(g3),
+  let o = e.toolState.get(ToolHostRegistry),
     t = "resolve";
   return {
     refresh: (r) => gIe(r, o, "resolve"),
@@ -3105,7 +3105,7 @@ function sr({
         insteadOfRejection: {
           message:
             _.mode === "dontAsk"
-              ? gY(e.name)
+              ? getDontAskModeDeniedMessage(e.name)
               : `${d.host.name} asked for approval, and this context cannot show a permission prompt; the call did not run.`,
           denialKind: "permission-rule",
         },
@@ -3216,7 +3216,7 @@ async function ar({
     ),
     m = `runs on ${o.host.name} (another machine, not this one) in ${o.host.working_dir}; that machine's Claude Code gave this reason for asking (its words, unverified): "${c}"`,
     k = o.input.command,
-    p = $De(
+    p = createToolUseMessage(
       e.name,
       Wtr(
         {
@@ -3245,10 +3245,10 @@ ${k}`,
     },
     A = pinSessionId(K());
   try {
-    let v = await DBt(
+    let v = await enqueueClassifiedCall(
         t.agentId ?? "main",
         () =>
-          cTe(P, p, R, getToolPermissionContext(t), t.abortController.signal, {
+          runAutoModeClassifier(P, p, R, getToolPermissionContext(t), t.abortController.signal, {
             isSubagentLoop: isModelDrivenSession(t.agentId),
             recordPresumed: t.agentId === void 0,
             severityEligible: !0,
@@ -3308,7 +3308,7 @@ ${k}`,
       if (enforceAutoModeDenialLimits(t, recordAutoModeDenial(t), e, s)) return { kind: "no_verdict" };
       return {
         kind: "block",
-        message: KWt(v.reason, { autoModeConsentFlow: isAutoModeConsentFlowEnabled(t) }),
+        message: buildAutoModeClassifierDenialMessage(v.reason, { autoModeConsentFlow: isAutoModeConsentFlowEnabled(t) }),
         denialKind: "automode-blocked",
       };
     }
@@ -3328,21 +3328,21 @@ ${k}`,
         );
       return {
         kind: "block",
-        message: B5e(v.reason, { refused: !0 }),
+        message: buildAutoModeUnavailableMessage(v.reason, { refused: !0 }),
         denialKind: "automode-unavailable",
       };
     }
     if (v.unavailable)
       return {
         kind: "block",
-        message: XWt(e.name, v.model, v.httpStatus, v.errorKind),
+        message: buildAutoModeNoVerdictMessage(e.name, v.model, v.httpStatus, v.errorKind),
         denialKind: "automode-unavailable",
       };
     if (v.failureMode !== void 0) {
       if (enforceAutoModeDenialLimits(t, recordAutoModeDenial(t), e, s)) return { kind: "no_verdict" };
       return {
         kind: "block",
-        message: B5e(v.reason, { refused: !1 }),
+        message: buildAutoModeUnavailableMessage(v.reason, { refused: !1 }),
         denialKind: "automode-parsing-error",
       };
     }
@@ -3366,7 +3366,7 @@ ${k}`,
 var dr = 300;
 function lr(e) {
   let o = e.message.trim();
-  for (let t of [Ok, $3])
+  for (let t of [USER_REJECTED_TOOL_USE_PREFIX, PERMISSION_DENIED_PREFIX])
     if (o.startsWith(t.trim())) return tn(o.slice(t.trim().length));
   return e.decisionReason?.type === "permissionPromptTool" && o !== ur
     ? tn(o)
@@ -3391,7 +3391,7 @@ async function* mr({
 }) {
   if (t.kind === "error") {
     if (!s.abortController.signal.aborted) Ge(e, "executor", t.code, o.id);
-    let c = s.toolState.get(RX),
+    let c = s.toolState.get(RemoteToolCallRegistry),
       m = c.adopted(o.id);
     if (m !== void 0)
       (c.takeAdopted(o.id),
@@ -3401,7 +3401,7 @@ async function* mr({
           route_code: fromEnum(t.code),
           parked_at_restart: m.parkedAtRestart === !0,
         }));
-    let k = m === void 0 ? t.message : pne({ host: m.host }, m);
+    let k = m === void 0 ? t.message : formatRestartUncertaintyMessage({ host: m.host }, m);
     yield {
       message: s.abortController.signal.aborted
         ? ho({
@@ -3411,7 +3411,7 @@ async function* mr({
             signal: s.abortController.signal,
             now: d,
           })
-        : Re({
+        : createUserMessage({
             content: [en(k, o.id)],
             toolUseResult: `Error: ${k}`,
             sourceToolAssistantUUID: r.uuid,
@@ -3428,14 +3428,14 @@ async function* mr({
     let c = new AsyncQueue(),
       m = s.agentId
         ? () => {}
-        : S6t({
+        : startToolHeartbeatTimer({
             toolName: e.name,
             toolUseID: o.id,
             abortSignal: s.abortController.signal,
             onProgress: (R) => {
               if (R.type === "progress")
                 c.enqueue({
-                  message: G5e({
+                  message: createProgressMessage({
                     toolUseID: R.toolUseID,
                     parentToolUseID: R.parentToolUseID ?? o.id,
                     data: R.data,
@@ -3530,7 +3530,7 @@ async function pr({
 }) {
   let d = await h7e(lo(e, o, t), e, yS(s.session), s.storageV5),
     c = fr(o.disposition);
-  return Re({
+  return createUserMessage({
     content: [d],
     toolUseResult:
       s.agentId &&
@@ -3552,10 +3552,10 @@ function ho({
 }) {
   switch (e.code) {
     case "cancelled": {
-      let a = NEe(o),
-        d = _Ee(r);
-      return Re({
-        content: [{ ...a, content: p$(d) }],
+      let a = createErrorToolResult(o),
+        d = getAbortedToolResult(r);
+      return createUserMessage({
+        content: [{ ...a, content: appendAutoMemoryReminder(d) }],
         toolUseResult: d,
         toolDenialKind: "cancelled",
         interruptedByShutdown: shutdownInterruptStamp(r),
@@ -3565,7 +3565,7 @@ function ho({
     }
     case "interrupted": {
       let a = Ro(r);
-      return Re({
+      return createUserMessage({
         content: [
           { type: "tool_result", content: a, is_error: !0, tool_use_id: o },
         ],
@@ -3577,8 +3577,8 @@ function ho({
       });
     }
     case "rejected_in_session":
-      return Re({
-        content: [{ ...NEe(o), content: e.message }],
+      return createUserMessage({
+        content: [{ ...createErrorToolResult(o), content: e.message }],
         toolUseResult: e.message,
         toolDenialKind: e.denialKind ?? "user-rejected",
         sourceToolAssistantUUID: t.uuid,
@@ -3586,7 +3586,7 @@ function ho({
       });
     default: {
       let { denialKind: a } = jle[e.code];
-      return Re({
+      return createUserMessage({
         content: [en(e.message, o)],
         toolUseResult: `Error: ${e.message}`,
         ...(a !== void 0 && { toolDenialKind: a }),
@@ -3610,7 +3610,7 @@ async function hr({
   toolUseId: d,
 }) {
   if (r.abortController.signal.aborted)
-    return { kind: "error", message: _Ee(r.abortController.signal) };
+    return { kind: "error", message: getAbortedToolResult(r.abortController.signal) };
   if (o.kind === "error")
     return (Ge(e, "repl", o.code, d), { kind: "error", message: o.message });
   try {
@@ -3655,7 +3655,7 @@ var wo = 2000;
 function gr(e, o) {
   switch (e.code) {
     case "cancelled":
-      return _Ee(o);
+      return getAbortedToolResult(o);
     case "interrupted":
       return Ro(o);
     default:

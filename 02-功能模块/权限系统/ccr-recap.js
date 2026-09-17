@@ -17,7 +17,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { hasCcrSurface } from "../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js";
 import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { getLastCacheSafeParams, runForkedAgent, Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getLastCacheSafeParams, runForkedAgent, createUserMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function isAwaySummaryEnabled() {
   let e = process.env.CLAUDE_CODE_ENABLE_AWAY_SUMMARY;
   if (po(e)) return !1;
@@ -84,7 +84,7 @@ async function generateCcrRecap(e, t) {
   e.addEventListener("abort", () => o.abort(), { once: !0 });
   try {
     let { messages: i } = await runForkedAgent({
-      promptMessages: [Re({ content: k })],
+      promptMessages: [createUserMessage({ content: k })],
       cacheSafeParams: r,
       overrides: { abortController: o },
       canUseTool: async () => ({

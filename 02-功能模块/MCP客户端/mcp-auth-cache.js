@@ -21,13 +21,13 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
-  gr,
-  BUt,
-  ka,
-  XVe,
-  YVe,
-  x8n,
-  H8n,
+  sanitizeDisplayTextWithoutRedaction,
+  sanitizeDisplayTextWithRedaction,
+  sanitizeDisplayText,
+  AUTHENTICATE_TOOL_NAME,
+  COMPLETE_AUTHENTICATION_TOOL_NAME,
+  setDiscoveryCacheKillSwitch,
+  hasDiscoveryCacheKillSwitch,
   isMcpDialBlockedByPolicy,
   mcpDialBlockCause,
   isMcpServerDisabled,
@@ -145,15 +145,15 @@ function O(t) {
 function j(t, e) {
   let r = e.type ?? "stdio",
     g = wQ(e),
-    p = g ? `${r} at ${BUt(g, 256)}` : r,
+    p = g ? `${r} at ${sanitizeDisplayTextWithRedaction(g, 256)}` : r,
     f =
-      `The "${gr(t)}" MCP server (${p}) is installed but requires authentication. ` +
+      `The "${sanitizeDisplayTextWithoutRedaction(t)}" MCP server (${p}) is installed but requires authentication. ` +
       "Call this tool to start the OAuth flow \u2014 you'll receive an authorization URL to share with the user. " +
       `Once the user completes authorization in their browser, the server's real tools will become ${k()}.`;
   return {
-    name: rc(t, XVe),
+    name: rc(t, AUTHENTICATE_TOOL_NAME),
     isMcp: !0,
-    mcpInfo: { serverName: t, toolName: XVe, serverType: r, isAuthStub: !0 },
+    mcpInfo: { serverName: t, toolName: AUTHENTICATE_TOOL_NAME, serverType: r, isAuthStub: !0 },
     isEnabled: () => !0,
     isConcurrencySafe: () => !1,
     isReadOnly: () => !1,
@@ -186,7 +186,7 @@ function j(t, e) {
         return {
           data: {
             status: "error",
-            message: `MCP server ${gr(t)} is disabled. Ask the user to enable it in /mcp before authenticating.`,
+            message: `MCP server ${sanitizeDisplayTextWithoutRedaction(t)} is disabled. Ask the user to enable it in /mcp before authenticating.`,
           },
         };
       if (y === "project-approval")
@@ -201,19 +201,19 @@ function j(t, e) {
         return {
           data: {
             status: "unsupported",
-            message: `This is a claude.ai MCP connector. Ask the user to run /mcp and select "${gr(t)}" to authenticate.`,
+            message: `This is a claude.ai MCP connector. Ask the user to run /mcp and select "${sanitizeDisplayTextWithoutRedaction(t)}" to authenticate.`,
           },
         };
       if (d.kind === "unsupported-transport")
         return {
           data: {
             status: "unsupported",
-            message: `Server "${gr(t)}" uses ${r} transport which does not support OAuth from this tool. Ask the user to run /mcp and authenticate manually.`,
+            message: `Server "${sanitizeDisplayTextWithoutRedaction(t)}" uses ${r} transport which does not support OAuth from this tool. Ask the user to run /mcp and authenticate manually.`,
           },
         };
       if (d.kind === "anthropic-hosted")
         return {
-          data: { status: "unsupported", message: ka(d.message, 1024, "none") },
+          data: { status: "unsupported", message: sanitizeDisplayText(d.message, 1024, "none") },
         };
       let u,
         _ = new Promise((o) => {
@@ -272,7 +272,7 @@ function j(t, e) {
       try {
         let o = await Promise.race([_, R.then(() => null)]);
         if (o) {
-          let A = rc(t, YVe),
+          let A = rc(t, COMPLETE_AUTHENTICATION_TOOL_NAME),
             S = x(o),
             C = I()
               ? `
@@ -285,7 +285,7 @@ If the browser shows a connection error on the redirect page, ask the user to pa
             data: {
               status: "auth_url",
               authUrl: o,
-              message: `Ask the user to open this URL in their browser to authorize the ${gr(t)} MCP server:
+              message: `Ask the user to open this URL in their browser to authorize the ${sanitizeDisplayTextWithoutRedaction(t)} MCP server:
 
 ${o}
 
@@ -296,14 +296,14 @@ Once they complete the flow, the server's tools will become ${k(i.options.tools)
         return {
           data: {
             status: "auth_url",
-            message: `Authentication completed silently for ${gr(t)}. ${O(i.options.tools)}`,
+            message: `Authentication completed silently for ${sanitizeDisplayTextWithoutRedaction(t)}. ${O(i.options.tools)}`,
           },
         };
       } catch (o) {
         return {
           data: {
             status: "error",
-            message: `Failed to start OAuth flow for ${gr(t)}: ${BUt(l(o), 200)}. Ask the user to run /mcp and authenticate manually.`,
+            message: `Failed to start OAuth flow for ${sanitizeDisplayTextWithoutRedaction(t)}: ${sanitizeDisplayTextWithRedaction(l(o), 200)}. Ask the user to run /mcp and authenticate manually.`,
           },
         };
       }
@@ -314,17 +314,17 @@ Once they complete the flow, the server's tools will become ${k(i.options.tools)
   };
 }
 function B(t, e) {
-  let r = rc(t, XVe),
+  let r = rc(t, AUTHENTICATE_TOOL_NAME),
     g =
-      `Complete an in-progress OAuth flow for the "${gr(t)}" MCP server by submitting the callback URL. Call \`${r}\` first to start the flow and get the authorization URL. ` +
+      `Complete an in-progress OAuth flow for the "${sanitizeDisplayTextWithoutRedaction(t)}" MCP server by submitting the callback URL. Call \`${r}\` first to start the flow and get the authorization URL. ` +
       "After the user authorizes in their browser, the browser is redirected to a `http://localhost:<port>/callback?code=...&state=...` URL \u2014 " +
       "on remote sessions that page fails to load, but the URL in the address bar is still valid. Pass that full URL here as `callback_url`.";
   return {
-    name: rc(t, YVe),
+    name: rc(t, COMPLETE_AUTHENTICATION_TOOL_NAME),
     isMcp: !0,
     mcpInfo: {
       serverName: t,
-      toolName: YVe,
+      toolName: COMPLETE_AUTHENTICATION_TOOL_NAME,
       serverType: e.type ?? "stdio",
       isAuthStub: !0,
     },
@@ -354,7 +354,7 @@ function B(t, e) {
         return {
           data: {
             status: "error",
-            message: `No OAuth flow is in progress for ${gr(t)}. Call \`${r}\` first, then retry with the callback URL.`,
+            message: `No OAuth flow is in progress for ${sanitizeDisplayTextWithoutRedaction(t)}. Call \`${r}\` first, then retry with the callback URL.`,
           },
         };
       let y = !1;
@@ -378,7 +378,7 @@ function B(t, e) {
           {
             data: {
               status: "success",
-              message: `Authentication complete for ${gr(t)}. ${O(f.options.tools)}`,
+              message: `Authentication complete for ${sanitizeDisplayTextWithoutRedaction(t)}. ${O(f.options.tools)}`,
             },
           }
         );
@@ -387,13 +387,13 @@ function B(t, e) {
           return {
             data: {
               status: "error",
-              message: `The OAuth flow for ${gr(t)} was cancelled (a newer attempt may have superseded it). Call \`${r}\` again to restart.`,
+              message: `The OAuth flow for ${sanitizeDisplayTextWithoutRedaction(t)} was cancelled (a newer attempt may have superseded it). Call \`${r}\` again to restart.`,
             },
           };
         return {
           data: {
             status: "error",
-            message: `Authentication failed for ${gr(t)}: ${BUt(l(u), 200)}`,
+            message: `Authentication failed for ${sanitizeDisplayTextWithoutRedaction(t)}: ${sanitizeDisplayTextWithRedaction(l(u), 200)}`,
           },
         };
       }
@@ -404,10 +404,10 @@ function B(t, e) {
   };
 }
 function initMcpDiscoveryCacheKillSwitch() {
-  if (H8n()) return;
+  if (hasDiscoveryCacheKillSwitch()) return;
   let t = !1,
     e;
-  x8n(() => {
+  setDiscoveryCacheKillSwitch(() => {
     if (!t)
       ((t = !0), (e = H("tengu_mcp_discovery_cache_enable", null) ?? void 0));
     return e;

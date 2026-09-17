@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ts } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { gr, rH, gqn, ow } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeDisplayTextWithoutRedaction, MCP_BLOCKED_BY_POLICY_MESSAGE, MCP_NOT_APPROVED_MESSAGE, isUnconfiguredMcpServer } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { V$ } from "../插件系统/chunk-7s6mt1vg.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function getMcpServerType(e) {
@@ -32,19 +32,19 @@ function getBlockingMcpServerState(e) {
   }
 }
 function formatServerDisabledHint(e) {
-  return `"${gr(e)}" is disabled \u2014 enable it in /mcp first`;
+  return `"${sanitizeDisplayTextWithoutRedaction(e)}" is disabled \u2014 enable it in /mcp first`;
 }
 function formatServerDisabledBeforeAction(e, n) {
-  return `MCP server ${gr(e)} is disabled \u2014 enable it (mcp_toggle) before ${n}`;
+  return `MCP server ${sanitizeDisplayTextWithoutRedaction(e)} is disabled \u2014 enable it (mcp_toggle) before ${n}`;
 }
 function formatServerNotApprovedBeforeAction(e, n) {
-  return `MCP server ${gr(e)} is not approved for this project \u2014 approve it in /mcp before ${n}`;
+  return `MCP server ${sanitizeDisplayTextWithoutRedaction(e)} is not approved for this project \u2014 approve it in /mcp before ${n}`;
 }
 function formatDisabledElsewhereMessage(e) {
-  return `"${gr(e)}" was disabled in another session \u2014 disable and re-enable it in /mcp, or restart, to reconnect`;
+  return `"${sanitizeDisplayTextWithoutRedaction(e)}" was disabled in another session \u2014 disable and re-enable it in /mcp, or restart, to reconnect`;
 }
 function formatDisableNotPersistedMessage(e) {
-  let n = gr(e),
+  let n = sanitizeDisplayTextWithoutRedaction(e),
     t = `"${e}" was re-enabled in another session, so this disable didn't persist \u2014 /mcp enable ${e} then /mcp disable ${e} makes it stick. Left alone, it connects on the next launch.`;
   return V$(e) && [...t].length <= 1024
     ? t
@@ -67,7 +67,7 @@ function formatBulkTogglePersistWarning(e, n, t) {
   );
   if (o.length === 0) return null;
   let i = countMatching(o, ts),
-    c = countMatching(o, (r) => !ts(r) && ow(r)),
+    c = countMatching(o, (r) => !ts(r) && isUnconfiguredMcpServer(r)),
     p = o.length - i - c,
     a = [];
   if (p > 0)
@@ -85,10 +85,10 @@ function formatBulkTogglePersistWarning(e, n, t) {
   return a.join(" ");
 }
 function formatPolicyBlockedMessage(e) {
-  return `"${gr(e)}" is blocked by your organization's managed policy \u2014 it can't be authenticated or reconnected here`;
+  return `"${sanitizeDisplayTextWithoutRedaction(e)}" is blocked by your organization's managed policy \u2014 it can't be authenticated or reconnected here`;
 }
 function formatProjectApprovalMessage(e) {
-  return `"${gr(e)}" is a project-scope MCP server (.mcp.json) that is not approved for this project \u2014 approve it via /mcp first, then authenticate or reconnect it`;
+  return `"${sanitizeDisplayTextWithoutRedaction(e)}" is a project-scope MCP server (.mcp.json) that is not approved for this project \u2014 approve it via /mcp first, then authenticate or reconnect it`;
 }
 function formatMcpServerBlockedMessage(e, n, t) {
   return n === "project-approval" ? formatProjectApprovalMessage(e) : (t ?? formatPolicyBlockedMessage(e));
@@ -100,11 +100,11 @@ function createMcpServerBlockedError(e, n, t) {
 }
 function getBlockedServerErrorFields(e) {
   return e === "project-approval"
-    ? { error: gqn, errorCode: "APPROVAL_REQUIRED" }
-    : { error: rH, errorCode: "POLICY_BLOCKED" };
+    ? { error: MCP_NOT_APPROVED_MESSAGE, errorCode: "APPROVAL_REQUIRED" }
+    : { error: MCP_BLOCKED_BY_POLICY_MESSAGE, errorCode: "POLICY_BLOCKED" };
 }
 function formatStaleDisableMessage(e) {
-  return `"${gr(e)}" is still available in this session, but another session disabled it \u2014 it keeps working here and won't reconnect after the next launch. Disable and re-enable it in /mcp to persist the re-enable.`;
+  return `"${sanitizeDisplayTextWithoutRedaction(e)}" is still available in this session, but another session disabled it \u2014 it keeps working here and won't reconnect after the next launch. Disable and re-enable it in /mcp to persist the re-enable.`;
 }
 function assertMcpServerReconnectable(e, n) {
   if (n === "ide")
@@ -118,8 +118,8 @@ function assertMcpServerReconnectable(e, n) {
       o === "disabled"
         ? formatServerDisabledHint(n)
         : o === "pending"
-          ? `"${gr(n)}" is already reconnecting \u2014 retries can take a few minutes when a server keeps failing`
-          : `"${gr(n)}" is pending approval \u2014 approve it in the terminal first`,
+          ? `"${sanitizeDisplayTextWithoutRedaction(n)}" is already reconnecting \u2014 retries can take a few minutes when a server keeps failing`
+          : `"${sanitizeDisplayTextWithoutRedaction(n)}" is pending approval \u2014 approve it in the terminal first`,
     );
 }
 export {

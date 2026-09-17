@@ -25,7 +25,7 @@ import { useClock } from "../../01-核心基础设施/共享小工具-未细化/
 import { AGENT_COLOR_THEME_KEYS } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { isAgentSwarmsEnabled } from "../Teammates团队/agent-swarms-enablement.js";
 import { Ya, IJe } from "../权限系统/chunk-t3b7pg2x.js";
-import { LF, mpn, NBt, hd, Vp, Ggt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getLowPriorityCopy, getRateLimitTypeLabel, getStatusPageHint, isInProcessTeammateTask, isLiveBackgroundTask, summarizeRecentActivities } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { iat, _le, by, lat, PS, wy, Wb } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { nF, QL, La, QZ, jA } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -125,10 +125,10 @@ function We({ tasks: n, isStandalone: s = !1 }) {
     T = new Set();
   if (isAgentSwarmsEnabled()) {
     for (let m of Object.values(l))
-      if (hd(m) && m.status === "running") {
+      if (isInProcessTeammateTask(m) && m.status === "running") {
         (T.add(m.identity.agentName), T.add(m.identity.agentId));
         let Y = m.progress?.recentActivities,
-          z = (Y && Ggt(Y)) ?? m.progress?.lastActivity?.activityDescription;
+          z = (Y && summarizeRecentActivities(Y)) ?? m.progress?.lastActivity?.activityDescription;
         if (z) ((K[m.identity.agentName] = z), (K[m.identity.agentId] = z));
       }
   }
@@ -1434,7 +1434,7 @@ function Xit(Yc) {
     Nn = Math.max(0, Math.ceil((nt.deadline - Date.now()) / 1000)) * 1000,
     oi;
   if (Q[0] !== nt.kind)
-    ((oi = nt.kind === "low_priority_waiting" ? LF().waitBanner : null),
+    ((oi = nt.kind === "low_priority_waiting" ? getLowPriorityCopy().waitBanner : null),
       (Q[0] = nt.kind),
       (Q[1] = oi));
   else oi = Q[1];
@@ -1613,7 +1613,7 @@ function Xit(Yc) {
       Gt,
     Rt;
   if (Q[39] !== Gt || Q[40] !== Wo || Q[41] !== nt.error.formatted) {
-    let li = Gt?.rateLimitType ? mpn(Gt.rateLimitType) : "usage limit";
+    let li = Gt?.rateLimitType ? getRateLimitTypeLabel(Gt.rateLimitType) : "usage limit";
     Rt = !Wo
       ? "API error"
       : Gt
@@ -1699,13 +1699,13 @@ function Fi(el) {
   return el.remoteConnectionStatus;
 }
 function Ui(Pi) {
-  return countMatching(Object.values(Pi.tasks), Vp) + Pi.remoteBackgroundTasks.length;
+  return countMatching(Object.values(Pi.tasks), isLiveBackgroundTask) + Pi.remoteBackgroundTasks.length;
 }
 function qi(ol) {
   return ol.remoteConnectionStatus;
 }
 function zi(Li) {
-  return countMatching(Object.values(Li.tasks), Vp) + Li.remoteBackgroundTasks.length;
+  return countMatching(Object.values(Li.tasks), isLiveBackgroundTask) + Li.remoteBackgroundTasks.length;
 }
 function Xi(cl) {
   return cl.settings.prefersReducedMotion;
@@ -1886,7 +1886,7 @@ function dr({
         T.error.status === 529 ||
         T.error.formatted.toLowerCase().includes("overload"),
       ft = T.attempt >= Math.min(3, T.maxRetries);
-    if (J && ft) St = NBt().trim();
+    if (J && ft) St = getStatusPageHint().trim();
   }
   return r(o, {
     flexDirection: "column",

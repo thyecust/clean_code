@@ -111,104 +111,104 @@ import { DotSeparatedList } from "../../../01-核心基础设施/共享小工具
 import { Oye } from "./chunk-jjqazdgg.js";
 import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
-  _I,
-  bO,
-  TUt,
-  TO,
-  z9,
-  Lte,
-  eDe,
+  isModelFallbackBlock,
+  isExcludedMemoryPath,
+  isExternalSourceMessage,
+  extractTextContent,
+  shouldShowUpgradeCommand,
+  isAdvisorRefusal,
+  getAdvisorRefusalText,
   imt,
-  RUt,
-  H4e,
-  Nte,
-  cV,
-  Km,
-  bI,
-  _dn,
-  ydn,
-  MUt,
-  O2,
-  gBt,
-  qdn,
-  M2,
-  F2,
-  $2,
-  bk,
-  i3,
-  rVe,
-  SV,
-  spn,
-  ipn,
-  oTe,
-  aVe,
-  upn,
-  MBt,
-  Jmt,
-  md,
-  yX,
-  _pn,
-  xO,
-  wk,
-  tgt,
-  NDe,
-  Bue,
-  ngt,
-  rgt,
-  FDe,
-  ogt,
-  sTe,
-  iTe,
-  aTe,
-  fgt,
-  AI,
-  Vp,
-  zzn,
-  bVe,
-  ETe,
-  xX,
-  OTe,
-  LVe,
-  fne,
-  j2t,
-  rLe,
-  jgt,
-  mne,
-  G2t,
-  Ggt,
-  Oy,
-  Qgt,
-  aVn,
-  zVe,
-  rfn,
-  tht,
+  formatDurationAsClockTime,
+  parseTaskStatusMessage,
+  getFindGrepToolNames,
+  LIST_MCP_RESOURCES_TOOL_NAME,
+  canSelfManageUsageCredits,
+  isRefusalFallbackEnabled,
+  OPUS_5_SUPPORT_ARTICLE_URL,
+  FABLE_SUPPORT_ARTICLE_URL,
+  DEFAULT_SUPPORT_ARTICLE_URL,
+  GENERAL_PURPOSE_AGENT,
+  parseReportWithHarnessNotes,
+  getSlashCommandSubmitter,
+  LSP_TOOL_NAME,
+  READ_MCP_RESOURCE_DIR_TOOL_NAME,
+  READ_MCP_RESOURCE_TOOL_NAME,
+  REPORT_FINDINGS_TOOL_NAME,
+  SEND_FILE_TOOL_NAME,
+  SHOW_ONBOARDING_ROLE_PICKER_TOOL_NAME,
+  createClassifierApprovalsUpdater,
+  getClassifierApproval,
+  deleteClassifierApproval,
+  isKnownContentBlockType,
+  ORG_OVERAGE_DISABLED_REASONS,
+  isUsageLimitStatusMessage,
+  getRateLimitDisplayInfo,
+  VELLUM_ANCHOR_FLAG,
+  getCurrentLimits,
+  subscribeToLimitStatusChanges,
+  isCredentialErrorMessage,
+  isAuthenticationErrorMessage,
+  PROMPT_TOO_LONG_MESSAGE,
+  CREDIT_BALANCE_TOO_LOW_MESSAGE,
+  NOT_LOGGED_IN_MESSAGE,
+  INVALID_API_KEY_MESSAGE,
+  API_KEY_ORG_DISABLED_UNSET_MESSAGE,
+  API_KEY_ORG_DISABLED_UPDATE_MESSAGE,
+  OAUTH_TOKEN_REVOKED_MESSAGE,
+  GATEWAY_AUTH_ERROR_MESSAGE,
+  OPUS_HIGH_LOAD_MESSAGE,
+  FABLE_HIGH_LOAD_MESSAGE,
+  REQUEST_TIMED_OUT_MESSAGE,
+  isInterruptedToolResultMessage,
+  renderEngineModule,
+  isLiveBackgroundTask,
+  isAmbientMonitorTask,
+  isValidPrUrl,
+  getToolCallRemoteHost,
+  isReplVerboseEnabled,
+  getFrontmatterDescription,
+  getMemoryFileDisplayName,
+  sanitizeToolInput,
+  MAX_THOUGHT_DURATION_MS,
+  resolveToolByName,
+  getToolUseCollapseState,
+  collectToolUseIds,
+  formatActivitySummary,
+  summarizeRecentActivities,
+  isSubagentTask,
+  isSupportedServerToolName,
+  messageOriginFromStored,
+  messageOriginModule,
+  isAutoCompactDisabledByUserSetting,
+  EXPECTED_ABSENT_TOOL_NAMES,
   WebFetchTool,
-  t$,
-  pKe,
-  uht,
-  zKe,
-  V6t,
-  t5e,
-  egn,
-  L8n,
-  Qm,
-  eyt,
-  wWt,
-  _T,
-  Ok,
-  Eyt,
-  ehn,
-  thn,
-  Vc,
-  Lr,
-  tR,
-  PMe,
-  OMe,
-  Rf,
-  Ht,
-  GEe,
-  tNe,
-  tN,
+  isBuiltInWebFetchAgentType,
+  isBuiltInWebFetchAgentToolInput,
+  isBuiltInWebFetchAgentProgress,
+  getTeamArtifactAuthor,
+  getAgentToolUserFacingName,
+  getAgentToolUserFacingBackgroundColor,
+  getAgentToolInputSchema,
+  STOP_HOOK_SUMMARY_MIN_DURATION_MS,
+  ReadTool,
+  parseDiagnosticsFiles,
+  getDiagnosticSeverityGlyph,
+  USER_REJECTED_TOOL_USE_MESSAGE,
+  USER_REJECTED_TOOL_USE_PREFIX,
+  PLAN_REJECTED_MESSAGE,
+  isAutoModeClassifierDenial,
+  getAutoModeClassifierDenialReason,
+  createAssistantMessage,
+  extractTagContent,
+  EMPTY_TOOL_USE_LOOKUPS,
+  collectToolUseLookupsWithInProgress,
+  isBlankText,
+  getUserMessageText,
+  createSystemInfoMessage,
+  getPluginDisplayName,
+  shouldInjectMemoryFile,
+  USAGE_CREDITS_COMMAND,
 } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Td, PC, $a, U$, UCe, zfe, qj, UYe, Ni } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { ps } from "../../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
@@ -515,7 +515,7 @@ function jd(Oq) {
     { message: eh, screen: vq } = Oq,
     ur = vq === "transcript",
     cL;
-  if (Pr[0] !== eh) ((cL = Rf(eh) || ""), (Pr[0] = eh), (Pr[1] = cL));
+  if (Pr[0] !== eh) ((cL = getUserMessageText(eh) || ""), (Pr[0] = eh), (Pr[1] = cL));
   else cL = Pr[1];
   let ru = cL,
     ea = eh.summarizeMetadata;
@@ -780,9 +780,9 @@ function Fd(dH) {
     return gL;
   }
   let na;
-  if (Lte(po)) {
+  if (isAdvisorRefusal(po)) {
     let Ko;
-    if (Go[22] !== po) ((Ko = eDe(po)), (Go[22] = po), (Go[23] = Ko));
+    if (Go[22] !== po) ((Ko = getAdvisorRefusalText(po)), (Go[22] = po), (Go[23] = Ko));
     else Ko = Go[23];
     let sa = Ko;
     let nu;
@@ -916,11 +916,11 @@ F();
 var fWe = "tengu_pewter_summit";
 F();
 function QR() {
-  let [l, f] = d({ ...md() });
+  let [l, f] = d({ ...getCurrentLimits() });
   return (
     E(
       () =>
-        yX((g) => {
+        subscribeToLimitStatusChanges((g) => {
           f({ ...g });
         }),
       [],
@@ -948,7 +948,7 @@ function qx(l, f, g, T, y) {
   }, [g, l, f, T, y, R, k]);
 }
 function XIt(l) {
-  return tN.isEnabled() && (l === void 0 || l.includes("overage"));
+  return USAGE_CREDITS_COMMAND.isEnabled() && (l === void 0 || l.includes("overage"));
 }
 function iu(l) {
   let f = getSubscriptionType(),
@@ -1031,7 +1031,7 @@ function uu(l, f, g) {
   return l.phase === "armed" && !f && g;
 }
 function gS() {
-  return iu(md().upgradePaths);
+  return iu(getCurrentLimits().upgradePaths);
 }
 function hS() {
   return e(RS, {});
@@ -1069,7 +1069,7 @@ function QIt(o2) {
     { storageV5: aa, credentials: sS } = useStorageV5Context(),
     iS = qA(),
     la = LB(),
-    aS = At(yX, gS),
+    aS = At(subscribeToLimitStatusChanges, gS),
     t2 = la.phase === "armed" || la.phase === "stale",
     lS = Fn(la);
   qx(cS, "high", t2 || null, hS, Hd);
@@ -1095,7 +1095,7 @@ function QIt(o2) {
   E(PL, CL);
   let wL;
   if (au[7] !== nS)
-    ((wL = (r2, n2) => nS.replace((s2) => [...s2, Ht(r2, n2)])),
+    ((wL = (r2, n2) => nS.replace((s2) => [...s2, createSystemInfoMessage(r2, n2)])),
       (au[7] = nS),
       (au[8] = wL));
   else wL = au[8];
@@ -1303,15 +1303,15 @@ function tp(v2) {
   else FL = ho[6];
   let kS = FL,
     $L;
-  if (ho[7] === MEMO_CACHE_SENTINEL) (($L = z9()), (ho[7] = $L));
+  if (ho[7] === MEMO_CACHE_SENTINEL) (($L = shouldShowUpgradeCommand()), (ho[7] = $L));
   else $L = ho[7];
   let WL = $L,
     qL;
-  if (ho[8] === MEMO_CACHE_SENTINEL) ((qL = tN.isEnabled()), (ho[8] = qL));
+  if (ho[8] === MEMO_CACHE_SENTINEL) ((qL = USAGE_CREDITS_COMMAND.isEnabled()), (ho[8] = qL));
   else qL = ho[8];
   let bS = qL,
     HL;
-  if (ho[9] === MEMO_CACHE_SENTINEL) ((HL = Km()), (ho[9] = HL));
+  if (ho[9] === MEMO_CACHE_SENTINEL) ((HL = canSelfManageUsageCredits()), (ho[9] = HL));
   else HL = ho[9];
   let GL = HL,
     zL;
@@ -1360,7 +1360,7 @@ function tp(v2) {
     eO;
   if (ho[18] !== Ke.overageDisabledReason)
     ((eO =
-      Ke.overageDisabledReason !== void 0 && aVe.has(Ke.overageDisabledReason)),
+      Ke.overageDisabledReason !== void 0 && ORG_OVERAGE_DISABLED_REASONS.has(Ke.overageDisabledReason)),
       (ho[18] = Ke.overageDisabledReason),
       (ho[19] = eO));
   else eO = ho[19];
@@ -1398,7 +1398,7 @@ function tp(v2) {
   else oO = ho[28];
   let SS = oO,
     nO;
-  if (ho[29] !== SS) ((nO = SS && H(Jmt, !1)), (ho[29] = SS), (ho[30] = nO));
+  if (ho[29] !== SS) ((nO = SS && H(VELLUM_ANCHOR_FLAG, !1)), (ho[29] = SS), (ho[30] = nO));
   else nO = ho[30];
   let Xd = nO,
     Qd = useRateLimitCheckpointResult(),
@@ -1478,7 +1478,7 @@ function tp(v2) {
     CS = un.phase !== "armed" || un.resetsAtSeconds === Ke.resetsAt,
     cu;
   if (ho[45] !== Ke || ho[46] !== ep || ho[47] !== CS)
-    ((cu = ep && CS ? MBt(Ke) : null),
+    ((cu = ep && CS ? getRateLimitDisplayInfo(Ke) : null),
       (ho[45] = Ke),
       (ho[46] = ep),
       (ho[47] = CS),
@@ -1764,7 +1764,7 @@ function _h(l) {
           l.totalDurationMs ??
           l.hookInfos.reduce((A, O) => A + (O.durationMs ?? 0), 0),
         S = !1;
-      if (g.length === 0 && T.length === 0 && !y && (!S || k < L8n))
+      if (g.length === 0 && T.length === 0 && !y && (!S || k < STOP_HOOK_SUMMARY_MIN_DURATION_MS))
         return { kind: "hidden" };
       let P = ga(
         [
@@ -1805,8 +1805,8 @@ function Sh(l, f) {
   };
 }
 function Ph(l) {
-  let f = Lr(l, LOCAL_COMMAND_STDOUT_TAG),
-    g = Lr(l, LOCAL_COMMAND_STDERR_TAG),
+  let f = extractTagContent(l, LOCAL_COMMAND_STDOUT_TAG),
+    g = extractTagContent(l, LOCAL_COMMAND_STDERR_TAG),
     T = f === null ? "" : SA(f),
     y = g === null ? "" : SA(g),
     R = T.trim() !== "" && T.trim() !== sp,
@@ -1954,7 +1954,7 @@ function DO(sz) {
   return sz.remoteAutocompactState;
 }
 var ip = 1000,
-  nP = new Set([Bue, rgt, ngt, ogt, FDe]);
+  nP = new Set([INVALID_API_KEY_MESSAGE, API_KEY_ORG_DISABLED_UPDATE_MESSAGE, API_KEY_ORG_DISABLED_UNSET_MESSAGE, GATEWAY_AUTH_ERROR_MESSAGE, OAUTH_TOKEN_REVOKED_MESSAGE]);
 function Hh() {
   let oz = _(1);
   if (!kn(isKeychainLocked())) {
@@ -1982,7 +1982,7 @@ function Gh() {
     rz = useAppStateSelector(DO) !== void 0,
     nz = useIsInsideToolResultRow(),
     Nh =
-      !rz && !nz && rfn()
+      !rz && !nz && isAutoCompactDisabledByUserSetting()
         ? " \xB7 auto-compact is off \xB7 /config to turn it on"
         : "";
   const KS = Nh || zS ? void 0 : 1;
@@ -2013,7 +2013,7 @@ function zh() {
   let kO = _(2),
     _O;
   if (kO[0] === MEMO_CACHE_SENTINEL)
-    ((_O = e(t, { color: "error", children: NDe })), (kO[0] = _O));
+    ((_O = e(t, { color: "error", children: NOT_LOGGED_IN_MESSAGE })), (kO[0] = _O));
   else _O = kO[0];
   let SO;
   if (kO[1] === MEMO_CACHE_SENTINEL)
@@ -2074,7 +2074,7 @@ function Kh(az) {
     { text: Be } = lz,
     mz = useIsInsideToolResultRow(),
     Ih = jA(Oh) && !mz;
-  if (OMe(Be)) {
+  if (isBlankText(Be)) {
     return null;
   }
   if (Ih && Be === hA) {
@@ -2100,7 +2100,7 @@ function Kh(az) {
     else Po = lo[7];
     return Po;
   }
-  if (upn(Be)) {
+  if (isUsageLimitStatusMessage(Be)) {
     let pe;
     if (lo[8] !== QS || lo[9] !== JS || lo[10] !== Be)
       ((pe = e(tp, {
@@ -2119,13 +2119,13 @@ function Kh(az) {
     case ER: {
       return null;
     }
-    case wk: {
+    case PROMPT_TOO_LONG_MESSAGE: {
       let pe;
       if (lo[12] === MEMO_CACHE_SENTINEL) ((pe = e(Gh, {})), (lo[12] = pe));
       else pe = lo[12];
       return pe;
     }
-    case tgt: {
+    case CREDIT_BALANCE_TOO_LOW_MESSAGE: {
       let pe;
       if (lo[13] === MEMO_CACHE_SENTINEL)
         ((pe = e(ToolResultRow, {
@@ -2140,26 +2140,26 @@ function Kh(az) {
       else pe = lo[13];
       return pe;
     }
-    case NDe: {
+    case NOT_LOGGED_IN_MESSAGE: {
       let pe;
       if (lo[14] === MEMO_CACHE_SENTINEL) ((pe = e(zh, {})), (lo[14] = pe));
       else pe = lo[14];
       return pe;
     }
-    case Bue: {
+    case INVALID_API_KEY_MESSAGE: {
       let pe;
       if (lo[15] === MEMO_CACHE_SENTINEL)
         ((pe = e(ToolResultRow, {
           height: 1,
-          children: e(t, { color: "error", children: Bue }),
+          children: e(t, { color: "error", children: INVALID_API_KEY_MESSAGE }),
         })),
           (lo[15] = pe));
       else pe = lo[15];
       return pe;
     }
-    case rgt:
-    case ngt:
-    case ogt: {
+    case API_KEY_ORG_DISABLED_UPDATE_MESSAGE:
+    case API_KEY_ORG_DISABLED_UNSET_MESSAGE:
+    case GATEWAY_AUTH_ERROR_MESSAGE: {
       let pe;
       if (lo[16] !== Be)
         ((pe = e(ToolResultRow, { children: e(t, { color: "error", children: Be }) })),
@@ -2168,18 +2168,18 @@ function Kh(az) {
       else pe = lo[17];
       return pe;
     }
-    case FDe: {
+    case OAUTH_TOKEN_REVOKED_MESSAGE: {
       let pe;
       if (lo[18] === MEMO_CACHE_SENTINEL)
         ((pe = e(ToolResultRow, {
           height: 1,
-          children: e(t, { color: "error", children: FDe }),
+          children: e(t, { color: "error", children: OAUTH_TOKEN_REVOKED_MESSAGE }),
         })),
           (lo[18] = pe));
       else pe = lo[18];
       return pe;
     }
-    case aTe: {
+    case REQUEST_TIMED_OUT_MESSAGE: {
       let pe;
       if (lo[19] === MEMO_CACHE_SENTINEL)
         ((pe = e(ToolResultRow, {
@@ -2187,7 +2187,7 @@ function Kh(az) {
           children: r(t, {
             color: "error",
             children: [
-              aTe,
+              REQUEST_TIMED_OUT_MESSAGE,
               process.env.API_TIMEOUT_MS &&
                 r(N, {
                   children: [
@@ -2204,7 +2204,7 @@ function Kh(az) {
       else pe = lo[19];
       return pe;
     }
-    case sTe: {
+    case OPUS_HIGH_LOAD_MESSAGE: {
       let pe;
       if (lo[20] === MEMO_CACHE_SENTINEL)
         ((pe = e(t, {
@@ -2236,7 +2236,7 @@ function Kh(az) {
       else Po = lo[21];
       return Po;
     }
-    case iTe: {
+    case FABLE_HIGH_LOAD_MESSAGE: {
       let pe;
       if (lo[22] === MEMO_CACHE_SENTINEL) ((pe = e(Yh, {})), (lo[22] = pe));
       else pe = lo[22];
@@ -2249,7 +2249,7 @@ function Kh(az) {
       return pe;
     }
     default: {
-      if (Be.startsWith(`${wk} \xB7 `)) {
+      if (Be.startsWith(`${PROMPT_TOO_LONG_MESSAGE} \xB7 `)) {
         let pe;
         if (lo[24] === MEMO_CACHE_SENTINEL) ((pe = get1MContextSuggestion("warning")), (lo[24] = pe));
         else pe = lo[24];
@@ -2271,7 +2271,7 @@ function Kh(az) {
         else Po = lo[26];
         return Po;
       }
-      if (_pn(Be)) {
+      if (isCredentialErrorMessage(Be)) {
         if (Ih) {
           let pe;
           if (lo[27] !== Be) ((pe = ei(Be)), (lo[27] = Be), (lo[28] = pe));
@@ -2293,7 +2293,7 @@ function Kh(az) {
         else pe = lo[33];
         return pe;
       }
-      if (uz || xO(Be) || wkn(Be)) {
+      if (uz || isAuthenticationErrorMessage(Be) || wkn(Be)) {
         if (Ih) {
           let pe;
           if (lo[34] !== Be) ((pe = ei(Be)), (lo[34] = Be), (lo[35] = pe));
@@ -2673,7 +2673,7 @@ var Ra = "    ",
   wP = "\u258C";
 function mp(mT) {
   let Xz = _(2);
-  if (!xX() || mT.param.name !== Ni) {
+  if (!isReplVerboseEnabled() || mT.param.name !== Ni) {
     return null;
   }
   let $O;
@@ -3734,8 +3734,8 @@ function gp(ZV) {
   return Pa;
 }
 function ty(l, { verbose: f }) {
-  if (!f && typeof l === "string" && Lr(l, "tool_use_error")) {
-    if (Lr(l, "tool_use_error")?.includes(yx))
+  if (!f && typeof l === "string" && extractTagContent(l, "tool_use_error")) {
+    if (extractTagContent(l, "tool_use_error")?.includes(yx))
       return e(ToolResultRow, {
         children: e(t, { color: "error", children: "File not found" }),
       });
@@ -3885,7 +3885,7 @@ function ZP(uX) {
   return wa;
 }
 function eC(l, { verbose: f }) {
-  if (!f && typeof l === "string" && Lr(l, "tool_use_error"))
+  if (!f && typeof l === "string" && extractTagContent(l, "tool_use_error"))
     return e(ToolResultRow, {
       children: e(t, { color: "error", children: "LSP operation failed" }),
     });
@@ -4226,7 +4226,7 @@ function MC() {
   return e(ToolResultRow, { children: e(t, { color: "warning", children: "Rejected" }) });
 }
 function bC(l, f) {
-  if (xX()) return e(Nl, {});
+  if (isReplVerboseEnabled()) return e(Nl, {});
   return e(ToolResultRow, {
     children: e(t, {
       color: "error",
@@ -4655,7 +4655,7 @@ function xp(D7) {
   let Hu = _(13),
     { command: hn } = D7,
     GI;
-  if (Hu[0] === MEMO_CACHE_SENTINEL) ((GI = qdn()), (Hu[0] = GI));
+  if (Hu[0] === MEMO_CACHE_SENTINEL) ((GI = getSlashCommandSubmitter()), (Hu[0] = GI));
   else GI = Hu[0];
   let zI = GI,
     [GC, KI] = d(!1);
@@ -4935,7 +4935,7 @@ var _y = {
       renderToolUseProgressMessage: jHe,
       renderToolUseRejectedMessage: T$n,
       renderToolUseTag: w$n,
-      userFacingNameBackgroundColor: t5e,
+      userFacingNameBackgroundColor: getAgentToolUserFacingBackgroundColor,
     },
     get [qe]() {
       let l = import.meta.require("../../../02-功能模块/工具UI渲染/BackgroundHint.nne14pfp.js");
@@ -5017,7 +5017,7 @@ var _y = {
     [co]: { renderToolResultMessage: ry, renderToolUseErrorMessage: ty },
     [Cr]: { renderToolResultMessage: renderWebFetchResultMessage, renderToolUseProgressMessage: renderWebFetchProgressMessage },
     [_D]: { renderToolResultMessage: BC, renderToolUseProgressMessage: DC },
-    [bk]: { renderToolResultMessage: EC },
+    [REPORT_FINDINGS_TOOL_NAME]: { renderToolResultMessage: EC },
     get [SKILL_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/工具UI渲染/renderToolUseErrorMessage.gg04apb2.js");
       return {
@@ -5027,7 +5027,7 @@ var _y = {
         renderToolUseErrorMessage: l.renderToolUseErrorMessage,
       };
     },
-    [M2]: { renderToolResultMessage: oC, renderToolUseErrorMessage: eC },
+    [LSP_TOOL_NAME]: { renderToolResultMessage: oC, renderToolUseErrorMessage: eC },
     [Ni]: {
       renderToolUseErrorMessage: bC,
       renderToolUseProgressMessage: RC,
@@ -5039,9 +5039,9 @@ var _y = {
       renderToolUseErrorMessage: Bu.renderToolUseErrorMessage,
       renderToolUseProgressMessage: Bu.renderToolUseProgressMessage,
     },
-    [cV]: { renderToolResultMessage: qC },
-    [F2]: { renderToolResultMessage: KC },
-    [$2]: { renderToolResultMessage: YC },
+    [LIST_MCP_RESOURCES_TOOL_NAME]: { renderToolResultMessage: qC },
+    [READ_MCP_RESOURCE_DIR_TOOL_NAME]: { renderToolResultMessage: KC },
+    [READ_MCP_RESOURCE_TOOL_NAME]: { renderToolResultMessage: YC },
     [ENTER_PLAN_MODE_TOOL_NAME]: { renderToolResultMessage: jC, renderToolUseRejectedMessage: FC },
     [lR]: { renderToolResultMessage: $C },
     [Xre]: { renderToolResultMessage: WC },
@@ -5057,11 +5057,11 @@ var _y = {
     },
     [MONITOR_TOOL_NAME]: { renderToolResultMessage: HC },
     [SEND_USER_FILE_TOOL_NAME]: { renderToolResultMessage: ow },
-    [i3]: { renderToolResultMessage: ew },
+    [SEND_FILE_TOOL_NAME]: { renderToolResultMessage: ew },
     [eJ]: { renderToolResultMessage: rw },
     [PUSH_NOTIFICATION_TOOL_NAME]: { renderToolResultMessage: zC },
     [SEND_MESSAGE_TOOL_NAME]: { renderToolResultMessage: ZC },
-    [rVe]: { renderToolResultMessage: tw },
+    [SHOW_ONBOARDING_ROLE_PICKER_TOOL_NAME]: { renderToolResultMessage: tw },
     ...(_y && {
       [_y.name]: { renderToolResultMessage: _y.ui.renderToolResultMessage },
     }),
@@ -5211,7 +5211,7 @@ function Ep(Dy) {
     fD;
   if (Ku[6] !== zu.toolResultByToolUseID || Ku[7] !== eo.id)
     ((jy = zu.toolResultByToolUseID.get(eo.id)),
-      (fD = AI.isInterruptedCall(jy)),
+      (fD = renderEngineModule.isInterruptedCall(jy)),
       (Ku[6] = zu.toolResultByToolUseID),
       (Ku[7] = eo.id),
       (Ku[8] = jy),
@@ -5339,8 +5339,8 @@ function qy(S4) {
           Ue.name.startsWith("eval_registered__") ||
           Ue.name === ti ||
           Ue.name === "WebBrowser" ||
-          tht.has(Ue.name) ||
-          Nte().has(Ue.name) ||
+          EXPECTED_ABSENT_TOOL_NAMES.has(Ue.name) ||
+          getFindGrepToolNames().has(Ue.name) ||
           findToolByName(getRegisteredTools() ?? [], Ue.name) !== void 0
             ? "expected-absent"
             : "unknown";
@@ -5356,7 +5356,7 @@ function qy(S4) {
       wp = {
         tool: Ba,
         input: aw,
-        remoteHost: ETe(Ba, lw),
+        remoteHost: getToolCallRemoteHost(Ba, lw),
         userFacingToolName: sw ?? Ba.userFacingName(lw, { activeAgents: Yo }),
         userFacingToolNameBackgroundColor: hp(
           Ba,
@@ -5596,7 +5596,7 @@ function qy(S4) {
                 isTranscriptMode: Xt,
                 activeAgents: Yo,
                 commands: Ea,
-                teammateAuthorOf: (P4, w4) => zKe(yn, P4, w4),
+                teammateAuthorOf: (P4, w4) => getTeamArtifactAuthor(yn, P4, w4),
                 toolUseResult: MD,
               })
             : null;
@@ -6080,7 +6080,7 @@ function ND(yi, X4) {
         wrap: "wrap",
         children: [
           "  ",
-          wWt(yi.severity),
+          getDiagnosticSeverityGlyph(yi.severity),
           " [Line ",
           yi.range.start.line + 1,
           ":",
@@ -6134,7 +6134,7 @@ function vp(K4) {
   if (Rw[0] !== hw.files || Rw[1] !== yw || Rw[2] !== Tw) {
     Lp = EARLY_RETURN_SENTINEL;
     bb0: {
-      let Hy = eyt(hw.files);
+      let Hy = parseDiagnosticsFiles(hw.files);
       if (Hy.length === 0) {
         Lp = null;
         break bb0;
@@ -6227,7 +6227,7 @@ var Vy = 1e4,
 function Xy(l, f) {
   let g = Cw(l, f);
   if (g === "" || g.startsWith("..")) return !0;
-  return bO(g.split(Wa).join("/"));
+  return isExcludedMemoryPath(g.split(Wa).join("/"));
 }
 async function $D(l) {
   let f = [],
@@ -6250,7 +6250,7 @@ async function $D(l) {
             P.kind === "key" && P.key.namespace === "memory"
               ? P.key.relPath.join("/")
               : void 0;
-          if (A !== void 0 && bO(A)) continue;
+          if (A !== void 0 && isExcludedMemoryPath(A)) continue;
           if (g >= Vy) {
             T = !0;
             return;
@@ -6284,8 +6284,8 @@ async function WD(l) {
       if (R.isSymbolicLink()) continue;
       let k = T === "" ? R.name : `${T}/${R.name}`;
       if (R.isDirectory()) {
-        if (!bO(k)) g.push(k);
-      } else if (R.isFile() && R.name.endsWith(".md") && !bO(k)) {
+        if (!isExcludedMemoryPath(k)) g.push(k);
+      } else if (R.isFile() && R.name.endsWith(".md") && !isExcludedMemoryPath(k)) {
         if (f.length >= Vy) return { files: f, truncated: !0 };
         f.push(k);
       }
@@ -6561,7 +6561,7 @@ function VD(l) {
         source: "recalled",
       }));
   if (l.type !== "user") return [];
-  let f = Qm.outputSchema.safeParse(l.toolUseResult);
+  let f = ReadTool.outputSchema.safeParse(l.toolUseResult);
   if (!f.success || f.data.type !== "text" || !jp(f.data.file.filePath))
     return [];
   return [
@@ -6592,7 +6592,7 @@ function Jy(l, f) {
 }
 function h$n(l) {
   return l
-    .filter((f) => f.type === "AutoMemPinned" && tNe(f) && jp(f.path))
+    .filter((f) => f.type === "AutoMemPinned" && shouldInjectMemoryFile(f) && jp(f.path))
     .map((f) => ({
       path: resolve(f.path),
       content: f.rawContent ?? f.content,
@@ -6650,7 +6650,7 @@ function Ri(v3) {
           : eR
             ? "Remembering"
             : "Remembered";
-      let D3 = truncateToWidth(Mm(LVe($p.path, Lw($p, I3, Nw)), !1), Aw - Rm - te(`${QD} `));
+      let D3 = truncateToWidth(Mm(getMemoryFileDisplayName($p.path, Lw($p, I3, Nw)), !1), Aw - Rm - te(`${QD} `));
       return r(
         t,
         {
@@ -6708,13 +6708,13 @@ function Lw(l, f, g) {
   if (l.label !== void 0) return l.label;
   if (l.kind === "write") return;
   let T = f.get(l.path);
-  if (T !== void 0) return OTe(T);
+  if (T !== void 0) return getFrontmatterDescription(T);
   if (l.toolUseId === void 0) return;
   let y = g?.toolResultByToolUseID.get(l.toolUseId);
   if (y?.type !== "user") return;
-  let R = Qm.outputSchema.safeParse(y.toolUseResult);
+  let R = ReadTool.outputSchema.safeParse(y.toolUseResult);
   return R.success && R.data.type === "text"
-    ? OTe(Jy(R.data.file.content, y.message.content))
+    ? getFrontmatterDescription(Jy(R.data.file.content, y.message.content))
     : void 0;
 }
 function Mm(l, f) {
@@ -7712,7 +7712,7 @@ function S0(l) {
   }
 }
 function P0(l) {
-  let f = H4e(l);
+  let f = parseTaskStatusMessage(l);
   return f?.status === "completed"
     ? f.result.content.map((g) => g.text).join(`
 `)
@@ -7745,17 +7745,17 @@ function Ai(s8) {
   ) {
     RM = EARLY_RETURN_SENTINEL;
     bb0: {
-      let VB = Lr(tl, "summary");
+      let VB = extractTagContent(tl, "summary");
       Lm = VB === null ? null : SA(VB);
       if (!Lm) {
         RM = null;
         break bb0;
       }
-      let XB = Lr(tl, "status");
+      let XB = extractTagContent(tl, "status");
       yM = S0(XB);
       let Om;
       if (Nr[11] !== tl)
-        ((Om = Lr(tl, "duration_ms")), (Nr[11] = tl), (Nr[12] = Om));
+        ((Om = extractTagContent(tl, "duration_ms")), (Nr[11] = tl), (Nr[12] = Om));
       else Om = Nr[12];
       let vm = Number(Om);
       let rl;
@@ -7882,7 +7882,7 @@ function UHe(p8) {
     { param: f8, addMargin: g8 } = p8,
     { text: C0 } = f8,
     JB;
-  if (xM[0] !== C0) ((JB = Lr(C0, "bash-input")), (xM[0] = C0), (xM[1] = JB));
+  if (xM[0] !== C0) ((JB = extractTagContent(C0, "bash-input")), (xM[0] = C0), (xM[1] = JB));
   else JB = xM[1];
   let _M = JB;
   if (!_M) {
@@ -7916,10 +7916,10 @@ function fye(l) {
   return l.startsWith("<bash-stdout") || l.startsWith("<bash-stderr");
 }
 function CM(l) {
-  let f = Lr(l, "bash-stdout") ?? "";
+  let f = extractTagContent(l, "bash-stdout") ?? "";
   return {
-    stdout: Lr(f, "persisted-output") ?? SA(f),
-    stderr: SA(Lr(l, "bash-stderr") ?? ""),
+    stdout: extractTagContent(f, "persisted-output") ?? SA(f),
+    stderr: SA(extractTagContent(l, "bash-stderr") ?? ""),
   };
 }
 function hZt(l, f) {
@@ -7948,14 +7948,14 @@ function nf(L8) {
     { addMargin: r1, param: O8 } = L8,
     { text: il } = O8,
     n1;
-  if (us[0] !== il) ((n1 = Lr(il, COMMAND_MESSAGE_TAG)), (us[0] = il), (us[1] = n1));
+  if (us[0] !== il) ((n1 = extractTagContent(il, COMMAND_MESSAGE_TAG)), (us[0] = il), (us[1] = n1));
   else n1 = us[1];
   let al = n1,
     s1;
-  if (us[2] !== il) ((s1 = Lr(il, "command-args")), (us[2] = il), (us[3] = s1));
+  if (us[2] !== il) ((s1 = extractTagContent(il, "command-args")), (us[2] = il), (us[3] = s1));
   else s1 = us[3];
   let A0 = s1,
-    v8 = Lr(il, "skill-format") === "true";
+    v8 = extractTagContent(il, "skill-format") === "true";
   if (!al) {
     return null;
   }
@@ -8049,8 +8049,8 @@ function pf(rJ) {
     { content: UM } = rJ,
     sf;
   if (nJ[0] !== UM) {
-    let l1 = Lr(UM, "local-command-stdout");
-    let u1 = Lr(UM, "local-command-stderr");
+    let l1 = extractTagContent(UM, "local-command-stdout");
+    let u1 = extractTagContent(UM, "local-command-stderr");
     let L0 = l1 === null ? null : SA(l1);
     let m1 = u1 === null ? null : SA(u1);
     sf = [];
@@ -8341,7 +8341,7 @@ function ff(RJ) {
     { text: W0, addMargin: MJ } = RJ,
     b1;
   if (Fm[0] !== W0)
-    ((b1 = Lr(W0, "user-memory-input")), (Fm[0] = W0), (Fm[1] = b1));
+    ((b1 = extractTagContent(W0, "user-memory-input")), (Fm[0] = W0), (Fm[1] = b1));
   else b1 = Fm[1];
   let tk = b1,
     x1;
@@ -8438,7 +8438,7 @@ function fl(Or) {
   if ($m[0] !== sk || $m[1] !== ik || $m[2] !== dl)
     ((U1 = () => ({
       requestId: sk,
-      props: { text: dl, origin: zVe.ofStoredOrigin(ik) },
+      props: { text: dl, origin: messageOriginModule.ofStoredOrigin(ik) },
     })),
       (N1 = [dl, sk, ik]),
       ($m[0] = sk),
@@ -8478,7 +8478,7 @@ function fl(Or) {
       ($m[9] = v1));
   else v1 = $m[9];
   let lk;
-  if ($m[10] !== Oi) ((lk = GEe(Oi)), ($m[10] = Oi), ($m[11] = lk));
+  if ($m[10] !== Oi) ((lk = getPluginDisplayName(Oi)), ($m[10] = Oi), ($m[11] = lk));
   else lk = $m[11];
   let uk;
   if ($m[12] !== lk)
@@ -8686,20 +8686,20 @@ function y$n(l, f) {
 function mye(l) {
   if (!l || l.trim() === sp) return !0;
   if (isAgentSwarmsEnabled() && hWe(l)) return b0(l);
-  if (TUt(l)) return !1;
+  if (isExternalSourceMessage(l)) return !1;
   if (aoe(l)) return !1;
-  if (Lr(l, TICK_TAG) !== null) return !0;
+  if (extractTagContent(l, TICK_TAG) !== null) return !0;
   if (l.includes(`<${LOCAL_COMMAND_CAVEAT_TAG}>`)) return !0;
   if (l.startsWith(`<${LOCAL_COMMAND_STDOUT_TAG}`) || l.startsWith(`<${LOCAL_COMMAND_STDERR_TAG}`)) {
-    let f = Lr(l, LOCAL_COMMAND_STDOUT_TAG)?.trim(),
-      g = Lr(l, LOCAL_COMMAND_STDERR_TAG)?.trim();
+    let f = extractTagContent(l, LOCAL_COMMAND_STDOUT_TAG)?.trim(),
+      g = extractTagContent(l, LOCAL_COMMAND_STDERR_TAG)?.trim();
     return !((f && f !== sp) || g);
   }
   if (l.startsWith(`<${BASH_STDOUT_TAG}`) || l.startsWith(`<${BASH_STDERR_TAG}`)) return !1;
-  if (l.includes("<bash-input>")) return !Lr(l, "bash-input");
-  if (l.includes(`<${COMMAND_MESSAGE_TAG}>`)) return !Lr(l, COMMAND_MESSAGE_TAG);
-  if (l.includes("<user-memory-input>")) return !Lr(l, "user-memory-input");
-  if (l.includes(`<${TASK_NOTIFICATION_TAG}`)) return !Lr(l, "summary") || ef(l);
+  if (l.includes("<bash-input>")) return !extractTagContent(l, "bash-input");
+  if (l.includes(`<${COMMAND_MESSAGE_TAG}>`)) return !extractTagContent(l, COMMAND_MESSAGE_TAG);
+  if (l.includes("<user-memory-input>")) return !extractTagContent(l, "user-memory-input");
+  if (l.includes(`<${TASK_NOTIFICATION_TAG}`)) return !extractTagContent(l, "summary") || ef(l);
   if (l.includes("<mcp-resource-update") || l.includes("<mcp-polling-update"))
     return gf(l).length === 0;
   return !1;
@@ -8759,7 +8759,7 @@ function Jz(jZ) {
     else Re = jo[8];
     return Re;
   }
-  if (TUt(fe.text)) {
+  if (isExternalSourceMessage(fe.text)) {
     let { UserChannelMessage: FZ } = import.meta.require("../../../02-功能模块/Teammates团队/UserChannelMessage.t71awb1k.js");
     let Re;
     if (jo[9] !== Ae || jo[10] !== fe || jo[11] !== fs)
@@ -8835,7 +8835,7 @@ function Jz(jZ) {
     else Re = jo[27];
     return Re;
   }
-  if (Lr(fe.text, TICK_TAG)) {
+  if (extractTagContent(fe.text, TICK_TAG)) {
     return null;
   }
   if (fe.text.includes(`<${LOCAL_COMMAND_CAVEAT_TAG}>`)) {
@@ -9383,7 +9383,7 @@ function Cf(Pee) {
       else Te = X[52];
       const uo = w.durationSec ?? 0;
       let It;
-      if (X[53] !== uo) ((It = RUt(uo)), (X[53] = uo), (X[54] = It));
+      if (X[53] !== uo) ((It = formatDurationAsClockTime(uo)), (X[53] = uo), (X[54] = It));
       else It = X[54];
       const rr = w.wordCount ?? 0;
       const Br = w.wordCount ?? 0;
@@ -9686,7 +9686,7 @@ function Cf(Pee) {
     case "queued_command": {
       let _k, q, _f;
       if (X[132] !== w.imagePasteIds || X[133] !== w.prompt || X[134] !== iU)
-        ((_f = TO(w.prompt).trim()),
+        ((_f = extractTextContent(w.prompt).trim()),
           (_k = w.imagePasteIds && w.imagePasteIds.length > 0),
           (q = iU && mye(_f)),
           (X[132] = w.imagePasteIds),
@@ -10682,10 +10682,10 @@ function ji(Eoe) {
     else Dt = Sn[0];
     return Dt;
   }
-  if (typeof $o.content === "string" && $o.content.startsWith(Eyt)) {
+  if (typeof $o.content === "string" && $o.content.startsWith(PLAN_REJECTED_MESSAGE)) {
     let Dt;
     if (Sn[1] !== $o.content)
-      ((Dt = $o.content.substring(Eyt.length)),
+      ((Dt = $o.content.substring(PLAN_REJECTED_MESSAGE.length)),
         (Sn[1] = $o.content),
         (Sn[2] = Dt));
     else Dt = Sn[2];
@@ -10695,13 +10695,13 @@ function ji(Eoe) {
     else Ef = Sn[4];
     return Ef;
   }
-  if (typeof $o.content === "string" && $o.content.startsWith(Ok)) {
+  if (typeof $o.content === "string" && $o.content.startsWith(USER_REJECTED_TOOL_USE_PREFIX)) {
     let Dt;
     if (Sn[5] === MEMO_CACHE_SENTINEL) ((Dt = e(Af, {})), (Sn[5] = Dt));
     else Dt = Sn[5];
     return Dt;
   }
-  if (typeof $o.content === "string" && ehn($o.content)) {
+  if (typeof $o.content === "string" && isAutoModeClassifierDenial($o.content)) {
     let Dt;
     if (Sn[6] === MEMO_CACHE_SENTINEL)
       ((Dt = e(ct, {
@@ -10712,7 +10712,7 @@ function ji(Eoe) {
     let Loe = Dt;
     let Ef;
     if (Sn[7] !== $o.content)
-      ((Ef = thn(stripAnsi($o.content))), (Sn[7] = $o.content), (Sn[8] = Ef));
+      ((Ef = getAutoModeClassifierDenialReason(stripAnsi($o.content))), (Sn[7] = $o.content), (Sn[8] = Ef));
     else Ef = Sn[8];
     let Fk = Ef;
     let Uj;
@@ -10893,7 +10893,7 @@ function Ob(Wk) {
     vj;
   if (pc[6] !== oo.id || pc[7] !== dc.toolResultByToolUseID)
     ((qk = dc.toolResultByToolUseID.get(oo.id)),
-      (vj = AI.isInterruptedCall(qk)),
+      (vj = renderEngineModule.isInterruptedCall(qk)),
       (pc[6] = oo.id),
       (pc[7] = dc.toolResultByToolUseID),
       (pc[8] = qk),
@@ -11009,7 +11009,7 @@ function vb(Hte) {
   ) {
     Jk = EARLY_RETURN_SENTINEL;
     bb0: {
-      jt = rLe(kl, He.name);
+      jt = resolveToolByName(kl, He.name);
       if (!jt || jt.isTransparentWrapper?.()) {
         Jk = null;
         break bb0;
@@ -11046,7 +11046,7 @@ function vb(Hte) {
       let Hj = Wj?.success ? Wj.data : void 0;
       let Gj = parseToolInput(jt, He.input);
       let Mc = Gj.success ? Gj.data : void 0;
-      let zj = ETe(jt, Mc);
+      let zj = getToolCallRemoteHost(jt, Mc);
       let Kj = LU ?? jt.userFacingName(Mc, { activeAgents: Of });
       let Yj;
       if (bl[33] !== He.input)
@@ -11245,8 +11245,8 @@ function Ib(Yte) {
       }
       Jj =
         (typeof Tr.content === "string" &&
-          (Tr.content.startsWith(_T) ||
-            (Tr.content.startsWith(Ok) &&
+          (Tr.content.startsWith(USER_REJECTED_TOOL_USE_MESSAGE) ||
+            (Tr.content.startsWith(USER_REJECTED_TOOL_USE_PREFIX) &&
               hp(Cn, "renderToolUseRejectedMessage") !== void 0))) ||
         Tr.content === gc ||
         Tr.content === _b;
@@ -11378,7 +11378,7 @@ function Yf(ob) {
           input: _c.input,
           running: $i.has(_c.id),
           errored: Un.erroredToolUseIDs.has(_c.id),
-          interrupted: AI.isInterruptedCall(BU),
+          interrupted: renderEngineModule.isInterruptedCall(BU),
           output: BU?.type === "user" ? BU.toolUseResult : void 0,
         };
       }),
@@ -11467,7 +11467,7 @@ function Db(ere) {
     } = se,
     [FU] = useTheme(),
     { columns: $U } = useTerminalSize(),
-    lb = mne(se),
+    lb = collectToolUseIds(se),
     mF;
   if (Fe[0] !== $t)
     ((mF = (sre) => $t.erroredToolUseIDs.has(sre)), (Fe[0] = $t), (Fe[1] = mF));
@@ -11475,7 +11475,7 @@ function Db(ere) {
   let WU = lb.some(mF),
     dF;
   if (Fe[2] !== $t)
-    ((dF = (ire) => AI.isInterruptedCall($t.toolResultByToolUseID.get(ire))),
+    ((dF = (ire) => renderEngineModule.isInterruptedCall($t.toolResultByToolUseID.get(ire))),
       (Fe[2] = $t),
       (Fe[3] = dF));
   else dF = Fe[3];
@@ -11593,7 +11593,7 @@ function Db(ere) {
         Ol?.type === "repl_tool_call" &&
         (Ol.phase === "start" || Ol.phase === "executing")
       ) {
-        let cb = fne(Ol.toolInput);
+        let cb = sanitizeToolInput(Ol.toolInput);
         Ll =
           EN(
             cb.file_path ??
@@ -12005,7 +12005,7 @@ function Db(ere) {
         bo(
           `pr-${Gr.action}-${Gr.number}`,
           yre[Gr.action],
-          Gr.url && bVe(Gr.url)
+          Gr.url && isValidPrUrl(Gr.url)
             ? e(PullRequestBadge, {
                 number: Gr.number,
                 url: Gr.url,
@@ -12440,7 +12440,7 @@ function jb(Cre) {
   bs(SN !== null ? 1000 : null);
   let Ure =
     SN !== null
-      ? BF + Math.min(j2t, Math.max(0, Date.now() - Math.max(SN, wre)))
+      ? BF + Math.min(MAX_THOUGHT_DURATION_MS, Math.max(0, Date.now() - Math.max(SN, wre)))
       : BF;
   const PN = Math.max(1000, Ure);
   let Ab;
@@ -12767,7 +12767,7 @@ function c$(WN) {
   let { index: xne } = WN;
   return xne !== -1;
 }
-var GN = [ydn, MUt, _dn].map((l) => ({ url: l, marker: `learn more: ${l}` }));
+var GN = [FABLE_SUPPORT_ARTICLE_URL, DEFAULT_SUPPORT_ARTICLE_URL, OPUS_5_SUPPORT_ARTICLE_URL].map((l) => ({ url: l, marker: `learn more: ${l}` }));
 function $8(WN) {
   let Fl = _(33),
     { children: Mr, color: Cs, bold: ws } = WN,
@@ -12900,17 +12900,17 @@ function gye(l) {
   if (l.awaitingPlanApproval) return "awaiting approval";
   if (l.isIdle) return "idle";
   return (
-    (l.progress?.recentActivities && Ggt(l.progress.recentActivities)) ??
+    (l.progress?.recentActivities && summarizeRecentActivities(l.progress.recentActivities)) ??
     l.progress?.lastActivity?.activityDescription ??
     "working"
   );
 }
 function B8(l) {
   return (
-    Vp(l) &&
+    isLiveBackgroundTask(l) &&
     l.type !== "local_workflow" &&
-    !zzn(l) &&
-    !(ym() && (Oy(l) || l.type === "in_process_teammate"))
+    !isAmbientMonitorTask(l) &&
+    !(ym() && (isSubagentTask(l) || l.type === "in_process_teammate"))
   );
 }
 var nx = [
@@ -12932,7 +12932,7 @@ function tle({ tasks: l, queuedCommands: f = [] }) {
   let g = new Set(),
     T = new Set(),
     y = (R) => {
-      if (Oy(R) && R.isBackgrounded) g.add(R.id);
+      if (isSubagentTask(R) && R.isBackgrounded) g.add(R.id);
       else if (R.type === "local_workflow") T.add(R.id);
     };
   for (let R of Object.values(l))
@@ -13091,7 +13091,7 @@ function ig(Rse) {
   if (he.subtype === "model_refusal_no_fallback") {
     return null;
   }
-  if (bI() && he.subtype === "model_refusal_fallback") {
+  if (isRefusalFallbackEnabled() && he.subtype === "model_refusal_fallback") {
     const Ee = mo ? 1 : 0;
     let Oo;
     if (xo[14] === MEMO_CACHE_SENTINEL)
@@ -14174,7 +14174,7 @@ function dg(Bie) {
     Bs = useAppState(),
     rW;
   if (Xi[0] !== Bs || Xi[1] !== Mt)
-    ((rW = () => spn(Bs.getState(), Mt)),
+    ((rW = () => getClassifierApproval(Bs.getState(), Mt)),
       (Xi[0] = Bs),
       (Xi[1] = Mt),
       (Xi[2] = rW));
@@ -14183,7 +14183,7 @@ function dg(Bie) {
     nW;
   if (Xi[3] !== Bs.setState || Xi[4] !== Mt)
     ((nW = () => {
-      ipn(SV(Bs.setState), Mt);
+      deleteClassifierApproval(createClassifierApprovalsUpdater(Bs.setState), Mt);
     }),
       (Xi[3] = Bs.setState),
       (Xi[4] = Mt),
@@ -14433,8 +14433,8 @@ function y_(gae) {
     Zl = qt;
   } else if (
     (typeof on.content === "string" &&
-      (on.content.startsWith(_T) ||
-        (on.content.startsWith(Ok) &&
+      (on.content.startsWith(USER_REJECTED_TOOL_USE_MESSAGE) ||
+        (on.content.startsWith(USER_REJECTED_TOOL_USE_PREFIX) &&
           Bo.tool != null &&
           hp(Bo.tool, "renderToolUseRejectedMessage") !== void 0))) ||
     on.content === gc ||
@@ -14594,7 +14594,7 @@ function FE(nle) {
       if (J.attachment.type === "queued_command" && pse(J.attachment.origin)) {
         let be;
         if (to[0] !== J.attachment.prompt)
-          ((be = TO(J.attachment.prompt)),
+          ((be = extractTextContent(J.attachment.prompt)),
             (to[0] = J.attachment.prompt),
             (to[1] = be));
         else be = to[1];
@@ -15288,12 +15288,12 @@ function U_(yle) {
 }
 var vE = new Set(["tool_search_tool_regex", "tool_search_tool_bm25"]);
 function IE(l) {
-  return "name" in l && Qgt(l.name) ? l.name : "non-allowlisted";
+  return "name" in l && isSupportedServerToolName(l.name) ? l.name : "non-allowlisted";
 }
 function DE(l) {
   let f = "type" in l ? l.type : void 0;
   if (typeof f !== "string") return "non-allowlisted (non-string)";
-  return oTe(f) ? f : `non-allowlisted (${f.length} chars)`;
+  return isKnownContentBlockType(f) ? f : `non-allowlisted (${f.length} chars)`;
 }
 function IW(l) {
   if ("id" in l && typeof l.id === "string") return `${l.type}:${l.id}`;
@@ -15345,7 +15345,7 @@ function N_(_le) {
       (Ys[2] = vW));
   else vW = Ys[2];
   let C_ = useAppStateSelectorUnchecked(vW);
-  if (_I(Je)) {
+  if (isModelFallbackBlock(Je)) {
     return null;
   }
   switch (Je.type) {
@@ -15645,12 +15645,12 @@ function YE(l) {
 function VE(l, f, g) {
   if (!Wo(l.data)) return null;
   let T = l.data.message;
-  if (T.type === "assistant") return jgt(T.message.content[0], f);
+  if (T.type === "assistant") return getToolUseCollapseState(T.message.content[0], f);
   if (T.type === "user") {
     let y = T.message.content[0];
     if (y?.type === "tool_result") {
       let R = g.get(y.tool_use_id);
-      if (R) return jgt(R, f);
+      if (R) return getToolUseCollapseState(R, f);
     }
   }
   return null;
@@ -15721,7 +15721,7 @@ function XE(cue) {
     { progressMessages: Ud, tools: Eg, verbose: Lg } = cue,
     zW;
   if (E_[0] !== Ud)
-    ((zW = PMe(Ud.filter(nq).map(sq))), (E_[0] = Ud), (E_[1] = zW));
+    ((zW = collectToolUseLookupsWithInProgress(Ud.filter(nq).map(sq))), (E_[0] = Ud), (E_[1] = zW));
   else zW = E_[1];
   let { lookups: Og, inProgressToolUseIDs: vg } = zW,
     L_;
@@ -15816,7 +15816,7 @@ function b$n(
           height: 1,
           children: r(t, {
             children: [
-              !R && uht(f, S, pKe(k, S))
+              !R && isBuiltInWebFetchAgentProgress(f, S, isBuiltInWebFetchAgentToolInput(k, S))
                 ? "Fetching in background"
                 : "Backgrounded agent",
               !R &&
@@ -15847,8 +15847,8 @@ function b$n(
     });
   }
   if (l.status !== "completed") return null;
-  if (!R && uht(f, S, t$(l.agentType, S))) {
-    let { report: ce } = gBt(l.content),
+  if (!R && isBuiltInWebFetchAgentProgress(f, S, isBuiltInWebFetchAgentType(l.agentType, S))) {
+    let { report: ce } = parseReportWithHarnessNotes(l.content),
       ie = ce.reduce((ye, Ze) => ye + Buffer.byteLength(Ze.text), 0),
       Oe = e(ReceivedBytesStatus, { bytes: ie });
     return T
@@ -15876,7 +15876,7 @@ function b$n(
       prompt: W,
     } = l,
     de = `Done (${[O === 1 ? "1 tool use" : `${O} tool uses`, formatNumber(I) + " tokens", formatDuration(A)].join(" \xB7 ")})`,
-    Le = Vc({
+    Le = createAssistantMessage({
       content: de,
       usage: {
         ...B,
@@ -15912,7 +15912,7 @@ function b$n(
         height: 1,
         children: e(VL, {
           message: Le,
-          lookups: tR,
+          lookups: EMPTY_TOOL_USE_LOOKUPS,
           addMargin: !1,
           tools: g,
           commands: [],
@@ -15932,7 +15932,7 @@ function b$n(
 function rgr(l, f) {
   let { description: g, prompt: T, subagent_type: y } = l;
   if (!g || !T) return null;
-  if (!f.isTranscriptMode && t$(y, f.activeAgents)) {
+  if (!f.isTranscriptMode && isBuiltInWebFetchAgentType(y, f.activeAgents)) {
     let R = Skn(T) ?? Skn(g);
     if (R !== void 0) return WebFetchTool.renderToolUseMessage({ url: R }, f);
   }
@@ -16018,7 +16018,7 @@ function jHe(
 ) {
   if (!l.length)
     return e(ToolResultRow, { height: 1, children: e(t, { dimColor: !0, children: zE }) });
-  if (!R && uht(l, k)) return renderWebFetchProgressMessage();
+  if (!R && isBuiltInWebFetchAgentProgress(l, k)) return renderWebFetchProgressMessage();
   let S = (y ?? 1) * QW + JW,
     P = !R && T && T.rows && T.rows < S,
     A = () => {
@@ -16082,7 +16082,7 @@ function jHe(
     ne = W && Wo(W) ? W.prompt : void 0;
   if (I.length === 0 && !(R && ne))
     return e(ToolResultRow, { height: 1, children: e(t, { dimColor: !0, children: zE }) });
-  let { lookups: de, inProgressToolUseIDs: Le } = PMe(
+  let { lookups: de, inProgressToolUseIDs: Le } = collectToolUseLookupsWithInProgress(
     l.filter((ce) => Wo(ce.data)).map((ce) => ce.data),
   );
   return e(ToolResultRow, {
@@ -16096,7 +16096,7 @@ function jHe(
               e(o, { marginBottom: 1, children: e(hye, { prompt: ne }) }),
             I.map((ce) => {
               if (ce.type === "summary") {
-                let ie = G2t(
+                let ie = formatActivitySummary(
                   ce.searchCount,
                   ce.readCount,
                   ce.isActive,
@@ -16149,7 +16149,7 @@ function T$n(
     activeAgents: R,
   },
 ) {
-  if (!y && t$(l, R)) return e(bf, {});
+  if (!y && isBuiltInWebFetchAgentType(l, R)) return e(bf, {});
   return r(N, {
     children: [
       jHe(f, { tools: g, verbose: T, isTranscriptMode: y, activeAgents: R }),
@@ -16168,7 +16168,7 @@ function E$n(
     activeAgents: k,
   },
 ) {
-  if (!y && uht(f, k, pKe(R, k))) return e(ToolErrorMessage, { result: l, verbose: T });
+  if (!y && isBuiltInWebFetchAgentProgress(f, k, isBuiltInWebFetchAgentToolInput(R, k))) return e(ToolErrorMessage, { result: l, verbose: T });
   return r(N, {
     children: [
       jHe(f, { tools: g, verbose: T, isTranscriptMode: y, activeAgents: k }),
@@ -16209,7 +16209,7 @@ function A$n(l, f) {
       }) => {
         let Le = tq(ne),
           ce = Bdr(ne, T),
-          ie = egn().safeParse(B.input),
+          ie = getAgentToolInputSchema().safeParse(B.input),
           Oe = de?.output?.status === "teammate_spawned",
           ye,
           Ze,
@@ -16223,11 +16223,11 @@ function A$n(l, f) {
             (Me = ie.data.description?.replace(/\s+/g, " ").trim() || void 0),
             (We = KE(Ct) ? getAgentTypeColorThemeKey(Ct) : void 0));
         } else
-          ((ye = ie.success ? V6t(ie.data) : "Agent"),
+          ((ye = ie.success ? getAgentToolUserFacingName(ie.data) : "Agent"),
             (Ze = ie.success
               ? ie.data.description?.replace(/\s+/g, " ").trim() || void 0
               : void 0),
-            (Ro = ie.success ? t5e(ie.data) : void 0),
+            (Ro = ie.success ? getAgentToolUserFacingBackgroundColor(ie.data) : void 0),
             (Me = void 0));
         let no =
             ie.success &&
@@ -16358,7 +16358,7 @@ function Bdr(l, f) {
       }
     } else break;
   }
-  if (T + y >= 2) return G2t(T, y, !0);
+  if (T + y >= 2) return formatActivitySummary(T, y, !0);
   let R = l.findLast((k) => {
     if (!Wo(k.data)) return !1;
     let S = k.data.message;
@@ -16392,7 +16392,7 @@ function Bdr(l, f) {
   return null;
 }
 function KE(l) {
-  return !!l && l !== O2.agentType && l !== WORKER_AGENT_TYPE;
+  return !!l && l !== GENERAL_PURPOSE_AGENT.agentType && l !== WORKER_AGENT_TYPE;
 }
 export {
   $8,

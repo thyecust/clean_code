@@ -20,7 +20,7 @@ import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { WZ, v$n, WHe, _ye, yWe, rPt } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import { z_e } from "../Hooks钩子/chunk-6wg4v2yj.js";
@@ -183,7 +183,7 @@ var No = async (s, a) => {
   return e(B, {
     forwarded: g.forwarded,
     stayed: g.stayed,
-    consentLocation: an(WZ()),
+    consentLocation: sanitizeForDisplay(WZ()),
     onDone: (w) => {
       decideCloudPlugins(w, { deps: d, memory: m }).then((y) => s(y));
     },
@@ -220,7 +220,7 @@ async function decideCloudPlugins(s, { deps: a, memory: d }) {
       : `Left as it was: ${g}.`;
   }
   if (!(await v$n(s, a)))
-    return `Couldn\u2019t save that: ${an(WZ())} could not be written, so nothing changed \u2014 ${g}. Check that the folder is writable, then run /cloud-plugins again.`;
+    return `Couldn\u2019t save that: ${sanitizeForDisplay(WZ())} could not be written, so nothing changed \u2014 ${g}. Check that the folder is writable, then run /cloud-plugins again.`;
   return (
     (d.consentPin.value = Promise.resolve(s)),
     (d.consentPin.given = !0),

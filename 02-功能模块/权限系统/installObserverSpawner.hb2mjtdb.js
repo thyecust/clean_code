@@ -19,18 +19,18 @@ import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import {
   isBuiltInAgent,
   isPluginAgent,
-  nh,
-  p3,
-  c4n,
-  CI,
-  RV,
-  cH,
-  zne,
+  isMcpTool,
+  formatAgentQuerySource,
+  setObserverSpawner,
+  markTaskNotified,
+  registerBackgroundAgentTask,
+  resolveSubagentModel,
+  createModelRestrictedSystemMessageHandler,
   runAgent,
-  EE,
-  k3,
-  QO,
-  Re,
+  resolveAgentTools,
+  runAsyncAgent,
+  buildSessionTools,
+  createUserMessage,
   writeAgentMetadata,
   readAgentMetadata,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -60,15 +60,15 @@ var b = {
       m = getToolPermissionContext(t),
       g = clampPermissionMode(r.armingPermissionMode, m.mode) ?? m.mode,
       c = { ...m, mode: g },
-      w = t.options.tools.filter(nh),
+      w = t.options.tools.filter(isMcpTool),
       l = `${e.agentType}@${r.observedEnvelopeName}`,
       i = mc(t.agentContext) + 1,
       A = gNt(
-        EE(e, QO(c, excludeCoordinatorCommsMcpTools(w), { skipReplFilter: !0 }), !0, !1, !1, i)
+        resolveAgentTools(e, buildSessionTools(c, excludeCoordinatorCommsMcpTools(w), { skipReplFilter: !0 }), !0, !1, !1, i)
           .resolvedTools,
       ),
-      u = cH(e.model, t.options.mainLoopModel, void 0, c.mode),
-      y = RV({
+      u = resolveSubagentModel(e.model, t.options.mainLoopModel, void 0, c.mode),
+      y = registerBackgroundAgentTask({
         agentId: s,
         ownerAgentId: ze(),
         spawnDepth: i,
@@ -81,7 +81,7 @@ var b = {
         isObserver: !0,
         sessionScratch: t.session.sessionScratch,
       });
-    CI(s, p);
+    markTaskNotified(s, p);
     let T = {
         prompt: o,
         resolvedAgentModel: u,
@@ -107,26 +107,26 @@ var b = {
       };
     await kw(k, () =>
       runWithCwdOrDefault(d.project.cwd, () =>
-        k3({
+        runAsyncAgent({
           taskId: s,
           abortController: y.abortController,
           makeStream: (S, I, M) =>
             runAgent({
               agentDefinition: e,
               promptMessages: [
-                Re({ content: o }),
-                Re({ content: a, origin: { kind: "observer-activity" } }),
+                createUserMessage({ content: o }),
+                createUserMessage({ content: a, origin: { kind: "observer-activity" } }),
               ],
               toolUseContext: t,
               canUseTool: f,
               isAsync: !0,
-              querySource: p3(e.agentType, isBuiltInAgent(e)),
+              querySource: formatAgentQuerySource(e.agentType, isBuiltInAgent(e)),
               availableTools: A,
               useExactTools: !0,
               session: d,
               spawnMode: g,
               override: { agentId: oo(s), abortController: y.abortController },
-              onModelRestricted: zne(e.agentType, t.appendSystemMessage),
+              onModelRestricted: createModelRestrictedSystemMessageHandler(e.agentType, t.appendSystemMessage),
               onCacheSafeParams: S,
               onQueryProgress: I,
               onStreamTokenEstimate: M,
@@ -162,7 +162,7 @@ var b = {
 };
 function installObserverSpawner(e) {
   try {
-    c4n(e, b);
+    setObserverSpawner(e, b);
   } catch (r) {
     n(`[agentObserver] spawner registration failed: ${r}`);
   }

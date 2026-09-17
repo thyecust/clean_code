@@ -20,7 +20,7 @@ import { toCompatSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4
 import { isCcrV2SendEventsEnabled, isCcrV2SessionCrudEnabled } from "./chunk-9estzwf5.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { classifyElevatedAuthError } from "./code-session-api.js";
-import { cLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { buildSessionEventsRequest } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createMessageEnvelope } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { isTrustedDeviceGateEnabled, CLOUD_CANNOT_REACH_ELEVATED_HINT, getTrustedDeviceToken, recoverFromUntrustedDevice, untrustedDeviceHint } from "./chunk-tyce0p0b.js";
 import { adoptSelfBridgeTitleFromRoster, getSelfBridgeCompatId, getSelfBridgeTitle } from "../权限系统/chunk-1y2g140m.js";
@@ -219,7 +219,7 @@ async function postInterClaudeMessage(t, i, u, w, P, k, x) {
       uuid: randomUUID(),
       ...((w?.length ?? 0) > 0 && { file_attachments: w }),
     },
-    { url: h, body: E } = cLe(p().BASE_API_URL, o, [c], isCcrV2SendEventsEnabled()),
+    { url: h, body: E } = buildSessionEventsRequest(p().BASE_API_URL, o, [c], isCcrV2SendEventsEnabled()),
     T = {
       ...C(v),
       "anthropic-beta": b,

@@ -51,14 +51,14 @@ import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chal
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Eq, Hvt, Pvt, Ovt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import {
-  EBt,
-  m4n,
-  vgt,
-  cLe,
-  nEe,
-  KLe,
-  sj,
-  v3,
+  ensureBridgeSpawnRootDir,
+  REMOTE_CONTROL_CLI_TAG,
+  REMOTE_CONTROL_AUTO_TAG,
+  buildSessionEventsRequest,
+  createAgentWorktree,
+  getAgentWorktreeChanges,
+  unlockAgentWorktree,
+  removeAgentWorktree,
   MCP_SETTINGS_SCOPES,
   getMcpConfigsByScope,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -328,7 +328,7 @@ function Xt(e) {
     },
     async sendPermissionResponseEvent(w, _, T) {
       validateBridgeId(w, "sessionId");
-      let { url: E, body: W } = cLe(
+      let { url: E, body: W } = buildSessionEventsRequest(
         e.baseUrl,
         w,
         [_],
@@ -1039,7 +1039,7 @@ async function pn(e, t) {
 async function gn(e) {
   for (let t = 0; ; t++)
     try {
-      let o = await EBt(),
+      let o = await ensureBridgeSpawnRootDir(),
         d = await lstat(o);
       if (!d.isDirectory()) throw Error("bridge spawn root is not a directory");
       if (getCurrentPlatform() !== "windows") {
@@ -2604,7 +2604,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           if (lt === "worktree" && (_ === void 0 || !sessionIdsMatch(U, _))) {
             let ve = Date.now();
             try {
-              let Ne = await nEe(`bridge-${Rt(U)}`, { storageV5: e.storageV5 });
+              let Ne = await createAgentWorktree(`bridge-${Rt(U)}`, { storageV5: e.storageV5 });
               ((pt = Date.now() - ve),
                 Ae.set(U, {
                   worktreePath: Ne.worktreePath,
@@ -3171,7 +3171,7 @@ async function nr(e, t, o) {
       gitError: C,
     } = d
       ? { dirty: !1, commitsAhead: 0, gitError: !1 }
-      : await KLe(e.worktreePath, e.headCommit, { hookBased: e.hookBased });
+      : await getAgentWorktreeChanges(e.worktreePath, e.headCommit, { hookBased: e.hookBased });
   if (p || r > 0) {
     let _ = `${r} ${pluralize(r, "commit")}`,
       T = C
@@ -3181,7 +3181,7 @@ async function nr(e, t, o) {
           : p
             ? "uncommitted changes"
             : _;
-    if (e.gitRoot) await sj(e.worktreePath, e.gitRoot);
+    if (e.gitRoot) await unlockAgentWorktree(e.worktreePath, e.gitRoot);
     (t.logStatus(`kept worktree ${e.worktreePath} \xB7 ${T}`),
       n(
         `[bridge:worktree] kept ${e.worktreePath} dirty=${p} commitsAhead=${r} gitError=${!!C}`,
@@ -3190,7 +3190,7 @@ async function nr(e, t, o) {
   }
   switch (
     (
-      await v3(
+      await removeAgentWorktree(
         e.worktreePath,
         e.worktreeBranch,
         e.gitRoot,
@@ -4147,7 +4147,7 @@ The session may still be resumable \u2014 try running the same command again.`,
           getAccessToken: xe ? () => _e : fe,
           credentials: o,
           permissionMode: _,
-          tags: [m4n],
+          tags: [REMOTE_CONTROL_CLI_TAG],
         })),
         mt)
       ) {
@@ -4483,7 +4483,7 @@ async function runBridgeHeadless(e, t) {
         baseUrl: I,
         getAccessToken: e.getAccessToken,
         permissionMode: e.permissionMode,
-        tags: [vgt],
+        tags: [REMOTE_CONTROL_AUTO_TAG],
       });
       if (Ee) ((Ce = Ee), d(`created initial session ${Ee}`));
     } catch (Ee) {

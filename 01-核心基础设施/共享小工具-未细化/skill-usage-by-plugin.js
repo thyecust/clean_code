@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { TDe, Ywe, EDe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getSkillListingMaxDescChars, getSkillListingCharBudget, getSkillListingDescription } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function h(s) {
-  let o = EDe(s),
-    a = Math.min(o.length, TDe());
+  let o = getSkillListingDescription(s),
+    a = Math.min(o.length, getSkillListingMaxDescChars());
   return 2 + s.name.length + 2 + a + 1;
 }
 function computeSkillUsageByPlugin(s, o, a) {
@@ -38,7 +38,7 @@ function computeSkillUsageByPlugin(s, o, a) {
       })
       .sort((n, t) => t.chars - n.chars),
     c = m.reduce((n, t) => n + t.chars, 0),
-    i = Ywe(a, o),
+    i = getSkillListingCharBudget(a, o),
     l = c > i,
     g = l ? i : c;
   return {

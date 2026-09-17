@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { cw, qLe, Bne, getMcpScopeConflicts, isOrganizationProvidedMcpScope, getMcpConfigsByScope, doesEnterpriseMcpConfigExist } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { formatMcpScopeLocation, formatMcpScopeDescription, getMcpServerApprovalStatus, getMcpScopeConflicts, isOrganizationProvidedMcpScope, getMcpConfigsByScope, doesEnterpriseMcpConfigExist } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isRestrictedToPluginOnly } from "../Skills技能/chunk-sapykxw7.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -58,7 +58,7 @@ function Se(ee) {
   };
 }
 function ye(Xe) {
-  return Bne(Xe) === "approved";
+  return getMcpServerApprovalStatus(Xe) === "approved";
 }
 function Ee(S) {
   let { config: Ye } = S;
@@ -102,7 +102,7 @@ function O(ze) {
     return null;
   }
   let ie;
-  if (c[0] !== w) ((ie = cw(w)), (c[0] = w), (c[1] = ie));
+  if (c[0] !== w) ((ie = formatMcpScopeLocation(w)), (c[0] = w), (c[1] = ie));
   else ie = c[1];
   let X = ie,
     ne;
@@ -131,7 +131,7 @@ function O(ze) {
       (c[10] = z));
   else z = c[10];
   let q;
-  if (c[11] !== w) ((q = qLe(w)), (c[11] = w), (c[12] = q));
+  if (c[11] !== w) ((q = formatMcpScopeDescription(w)), (c[11] = w), (c[12] = q));
   else q = c[12];
   let C;
   if (c[13] !== q) ((C = e(t, { children: q })), (c[13] = q), (c[14] = C));

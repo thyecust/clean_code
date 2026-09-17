@@ -20,7 +20,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { sme } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { ka, vM, isRemoteToolForwardingEnabled, isSessionChannelDisabled, rj, s$, aY, lY, MV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeDisplayText, getMcpClients, isRemoteToolForwardingEnabled, isSessionChannelDisabled, CCR_NEEDS_APPROVAL_ERROR_CODE, classifyMcpErrorSource, REMOTE_DEVICES_SERVER_NAME, DEVICE_LOCAL_TOOL_NAMES, BRIDGE_PLUMBING_TOOL_NAMES } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   pE,
   yee,
@@ -132,7 +132,7 @@ function z(t, e) {
   };
 }
 async function Te(t, e, r, o, s) {
-  if (!MV.has(r)) throw Error("callPlumbing: not a bridge plumbing tool");
+  if (!BRIDGE_PLUMBING_TOOL_NAMES.has(r)) throw Error("callPlumbing: not a bridge plumbing tool");
   let d = Date.now(),
     g = u7(s.deadlineMs),
     p = await C(
@@ -166,7 +166,7 @@ async function Te(t, e, r, o, s) {
   if (s.signal.aborted) return { kind: "cancelled" };
   switch (p.kind) {
     case "connect_failed":
-      return { kind: "unreachable", detail: ka(l(p.error)) };
+      return { kind: "unreachable", detail: sanitizeDisplayText(l(p.error)) };
     case "expired_twice":
       return {
         kind: "unreachable",
@@ -216,7 +216,7 @@ async function Ee(t, e, r, o, s, d) {
   if (d.signal.aborted) return { kind: "cancelled" };
   switch (f.kind) {
     case "connect_failed":
-      return { kind: "unreachable", detail: ka(l(f.error)) };
+      return { kind: "unreachable", detail: sanitizeDisplayText(l(f.error)) };
     case "expired_twice":
       return {
         kind: "unreachable",
@@ -292,9 +292,9 @@ function Re(t) {
 function q(t, e, r) {
   if (V(t) === ue || A(t) === "REQUEST_TIMEOUT")
     return { kind: "timed_out", capMs: e };
-  let o = ka(l(t));
-  if (V(t) === rj && Me(t, r)) return { kind: "approval_unverified" };
-  if (s$(t) !== "downstream_unreachable")
+  let o = sanitizeDisplayText(l(t));
+  if (V(t) === CCR_NEEDS_APPROVAL_ERROR_CODE && Me(t, r)) return { kind: "approval_unverified" };
+  if (classifyMcpErrorSource(t) !== "downstream_unreachable")
     return { kind: "transport_error", detail: o };
   return Ce.has(A(t) ?? "")
     ? { kind: "unreachable", detail: o }
@@ -338,10 +338,10 @@ var ke = "attached-machine";
 function X(t, e, r) {
   let o = e.map((c) => ({ ...c, name: sanitizeDeep(c.name) })),
     s = o
-      .filter((c) => lY.has(c.name))
+      .filter((c) => DEVICE_LOCAL_TOOL_NAMES.has(c.name))
       .map((c) => ({ toolName: c.name, meta: Ae(c), raw: c._meta?.[sM] })),
     d = o.filter(
-      (c) => !lY.has(c.name) && isNonDeviceToolName(c.name) && c._meta?.[DEVICE_PASSTHROUGH_META_KEY] !== void 0,
+      (c) => !DEVICE_LOCAL_TOOL_NAMES.has(c.name) && isNonDeviceToolName(c.name) && c._meta?.[DEVICE_PASSTHROUGH_META_KEY] !== void 0,
     ),
     g = d.flatMap((c) => {
       let R = Pe(c);
@@ -352,7 +352,7 @@ function X(t, e, r) {
     f = m.size,
     _ = countMatching(s, (c) => c.meta === void 0),
     b = new Set(s.map((c) => c.toolName)),
-    y = new Set(o.filter((c) => MV.has(c.name)).map((c) => c.name)),
+    y = new Set(o.filter((c) => BRIDGE_PLUMBING_TOOL_NAMES.has(c.name)).map((c) => c.name)),
     v = new Map(
       g.map(({ bridgeName: c, marker: R }) => [c, { localName: R.tool }]),
     ),
@@ -514,7 +514,7 @@ function e2n(t, e) {
   );
 }
 async function Ue(t, e, r, o) {
-  let s = vM(t),
+  let s = getMcpClients(t),
     d = Ye(s);
   if (d === void 0) {
     if (_U(t.agentContext)) return;
@@ -579,7 +579,7 @@ async function Ue(t, e, r, o) {
       trigger: fromEnum(o),
       tool_count: f.value.tools.length,
       truncated: f.value.truncated,
-      has_served_name: f.value.tools.some((v) => lY.has(v.name)),
+      has_served_name: f.value.tools.some((v) => DEVICE_LOCAL_TOOL_NAMES.has(v.name)),
       marker_count: countMatching(f.value.tools, (v) => v._meta?.[DEVICE_PASSTHROUGH_META_KEY] !== void 0),
       stub: f.value.stub,
     }),
@@ -636,7 +636,7 @@ function je(t) {
   return e.includes("timed out") || e.includes("timeout");
 }
 function I(t) {
-  return vM(t).some(
+  return getMcpClients(t).some(
     (e) => Z(e) && e.type !== "disabled" && e.type !== "needs-auth",
   );
 }
@@ -706,13 +706,13 @@ function Ke(t) {
   return e - t.at >= M;
 }
 function Ge(t, e, r) {
-  let o = t.filter((d) => d.name === aY);
+  let o = t.filter((d) => d.name === REMOTE_DEVICES_SERVER_NAME);
   if (o.length === 0 || e.reportedUnmatched) return;
   let s = o.map(ze);
   if (s.every((d) => d === "connecting")) return;
   ((e.reportedUnmatched = !0),
     n(
-      `[remote-tools] a '${aY}' MCP entry exists but was not adopted as the device bridge: ${o.map((d, g) => `${s[g]} (type=${d.type}, scope=${d.config.scope})`).join("; ")}`,
+      `[remote-tools] a '${REMOTE_DEVICES_SERVER_NAME}' MCP entry exists but was not adopted as the device bridge: ${o.map((d, g) => `${s[g]} (type=${d.type}, scope=${d.config.scope})`).join("; ")}`,
       { level: "warn" },
     ),
     logEvent("tengu_remote_tool_targets", {
@@ -745,7 +745,7 @@ function Ye(t) {
 }
 function Z(t) {
   return (
-    t.name === aY &&
+    t.name === REMOTE_DEVICES_SERVER_NAME &&
     !ee(t) &&
     "url" in t.config &&
     typeof t.config.url === "string" &&
@@ -772,7 +772,7 @@ function ne(t) {
     return (
       e.searchParams.getAll("mcp_url").length === 1 &&
       (r.length === 0 ||
-        (r.length === 1 && (s === aY || (o !== void 0 && s === We(o)))))
+        (r.length === 1 && (s === REMOTE_DEVICES_SERVER_NAME || (o !== void 0 && s === We(o)))))
     );
   } catch {
     return !1;
@@ -781,7 +781,7 @@ function ne(t) {
 var qe = "00000000-0000-0000-0000-000000000000";
 function We(t) {
   let e = mB(t, qe);
-  return mB(aY, e);
+  return mB(REMOTE_DEVICES_SERVER_NAME, e);
 }
 function Q(
   t,

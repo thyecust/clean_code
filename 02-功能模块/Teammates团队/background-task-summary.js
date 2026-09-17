@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { LOZENGE_OUTLINE_GLYPH, LOZENGE_FILLED_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { a$ } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isTaskAutoReactArmed } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function formatBackgroundTaskSummary(r) {
   let n = r[0];
@@ -62,7 +62,7 @@ function formatBackgroundTaskSummary(r) {
           : `${e} background dynamic workflows`;
       case "monitor_mcp":
       case "monitor_ws": {
-        if (r.every(a$))
+        if (r.every(isTaskAutoReactArmed))
           return e === 1
             ? "1 Artifact comment monitor"
             : `${e} Artifact comment monitors`;

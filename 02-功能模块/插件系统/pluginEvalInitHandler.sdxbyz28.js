@@ -45,42 +45,42 @@ import {
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
-  xF,
-  SM,
-  C4e,
-  xn,
-  FUt,
-  lDe,
-  wM,
-  Tdn,
-  Pue,
-  Oue,
-  Jl,
+  partition,
+  isMcpbFile,
+  markPrintModeSignalHandlersRegistered,
+  gracefulShutdown,
+  hasCustomAuthorizationHeader,
+  parseCustomHeadersFromEnv,
+  discoverPluginMcpServers,
+  prefixPluginMcpServerNames,
+  validatePluginManifest,
+  getMarketplaceTrustedRoots,
+  truncateMiddleWithMarker,
   SandboxManager,
-  M2,
-  Que,
+  LSP_TOOL_NAME,
+  PLUGIN_MANIFEST_ERROR_CODES,
   asSystemPrompt,
-  Ka,
-  TE,
-  pC,
-  Ql,
-  Cf,
-  tD,
-  nD,
-  Hgn,
-  L3,
-  CEe,
-  x5e,
-  pyt,
-  Ngn,
-  PWt,
+  getImageLimitsForModel,
+  hasWindowsReservedPathComponent,
+  getOperatorDeclaredMarketplaces,
+  getKnownMarketplacesOrEmpty,
+  getInstalledPlugins,
+  getInstalledPluginsViaStorage,
+  isInstallationInCurrentScope,
+  parsePluginId,
+  loadPluginManifest,
+  createPluginFromPath,
+  CANONICAL_MANIFEST_RELPATH,
+  isPluginArchivePath,
+  MANIFEST_IDENTITY_READ_RELPATHS,
+  loadSkillsAsPlugins,
   expandMcpPolicyPredicates,
   isMcpServerBlockedAtConnectTime,
   doesEnterpriseMcpConfigExist,
-  WV,
-  xr,
-  yC,
-  UY,
+  isApiErrorCarrierMessage,
+  joinTextBlocks,
+  runSmallFastModelQuery,
+  runCallerSpecifiedModelQuery,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   lr,
@@ -257,15 +257,15 @@ async function $i({
         credentials: p,
       },
       C = d
-        ? await UY({
+        ? await runCallerSpecifiedModelQuery({
             systemPrompt: E,
             userPrompt: _,
             signal: h,
             options: { ...S, model: d },
           })
-        : await yC({ systemPrompt: E, userPrompt: _, signal: h, options: S }),
-      L = xr(C.message.content).trim();
-    if (WV(C)) return Ni("model_call", L, Sr() - w);
+        : await runSmallFastModelQuery({ systemPrompt: E, userPrompt: _, signal: h, options: S }),
+      L = joinTextBlocks(C.message.content).trim();
+    if (isApiErrorCarrierMessage(C)) return Ni("model_call", L, Sr() - w);
     let D = gc(L, xi(r.abortWhen));
     return { ...D, text: Li(D.text, Kn), costUsd: Sr() - w };
   } catch (E) {
@@ -1314,7 +1314,7 @@ function Hc(e) {
 var rt = "evals",
   Lr = 1048576;
 function Mr(e) {
-  if (!TE(e)) return;
+  if (!hasWindowsReservedPathComponent(e)) return;
   return e.endsWith(".") || e.endsWith(" ")
     ? 'ends in "." or a space, which Windows treats as another name'
     : e.includes(":")
@@ -1648,7 +1648,7 @@ async function ks(e, t, r) {
   }
 }
 function Jc(e, t, r) {
-  return Pue(e, t, {
+  return validatePluginManifest(e, t, {
     pluginName:
       Ue.basename(Ue.dirname(r)) === ".claude-plugin"
         ? Ue.basename(Ue.dirname(Ue.dirname(r)))
@@ -2910,8 +2910,8 @@ async function Xs(e, t, r) {
       p = ne.basename(u),
       h = null,
       w = !1,
-      E = pyt(u);
-    for (let _ of E ? [] : Ngn) {
+      E = isPluginArchivePath(u);
+    for (let _ of E ? [] : MANIFEST_IDENTITY_READ_RELPATHS) {
       let S = ne.join(u, _),
         C = { link: !1 },
         L = await sa(u, _, d, void 0, C);
@@ -2934,7 +2934,7 @@ async function Xs(e, t, r) {
           break;
         }
         if (F === "ENOENT" || F === "ENOTDIR") {
-          if (_ === x5e) w = !0;
+          if (_ === CANONICAL_MANIFEST_RELPATH) w = !0;
           continue;
         }
         h = `${_}: ${l(N)} \u2014 not read here`;
@@ -3000,7 +3000,7 @@ async function Xs(e, t, r) {
       continue;
     }
     try {
-      let { manifest: _ } = await L3(u, p, "plugin eval", [], {
+      let { manifest: _ } = await loadPluginManifest(u, p, "plugin eval", [], {
         noTelemetry: !0,
       });
       i.push({
@@ -3015,7 +3015,7 @@ async function Xs(e, t, r) {
         name: p,
         path: u,
         problem:
-          S === Que.jsonInvalid || S === Que.schemaInvalid
+          S === PLUGIN_MANIFEST_ERROR_CODES.jsonInvalid || S === PLUGIN_MANIFEST_ERROR_CODES.schemaInvalid
             ? "manifest_invalid"
             : "identity_unverified",
         problemDetail: l(_),
@@ -3552,7 +3552,7 @@ async function ca(e) {
   let t = new Map();
   for (let r of e) {
     let i = basename(r),
-      { plugin: o } = await CEe(r, `${i}@${INLINE_PLUGIN_SOURCE}`, !0, i, !0),
+      { plugin: o } = await createPluginFromPath(r, `${i}@${INLINE_PLUGIN_SOURCE}`, !0, i, !0),
       u = id(o.manifest.mcpServers);
     if (u.length > 0)
       throw new R(
@@ -3560,13 +3560,13 @@ async function ca(e) {
         "mocks: plugin uses MCPB",
       );
     let d = [],
-      p = (await wM(o, d)) ?? {};
+      p = (await discoverPluginMcpServers(o, d)) ?? {};
     if (d.length > 0)
       throw new R(
         `mocks: could not enumerate the MCP servers ${o.name} declares \u2014 ${d.map(vm).join("; ")}`,
         "mocks: plugin MCP servers unreadable",
       );
-    for (let h of Object.keys(Tdn(p, o.name, o.source, r))) {
+    for (let h of Object.keys(prefixPluginMcpServerNames(p, o.name, o.source, r))) {
       let w = h.slice(`plugin:${o.name}:`.length);
       t.set(h, { pluginName: o.name, serverName: w });
     }
@@ -3670,7 +3670,7 @@ function ua(e, t) {
 }
 function id(e) {
   return (Array.isArray(e) ? e : [e]).filter(
-    (r) => typeof r === "string" && SM(r),
+    (r) => typeof r === "string" && isMcpbFile(r),
   );
 }
 function un(e, t) {
@@ -3997,7 +3997,7 @@ import {
 import br from "path";
 var ya = 300000;
 async function _a(e, t) {
-  let r = FUt();
+  let r = hasCustomAuthorizationHeader();
   {
     let d = ns();
     if (d) {
@@ -4026,7 +4026,7 @@ async function _a(e, t) {
     effectiveAuthTokenEnv() ||
     a.ANTHROPIC_UNIX_SOCKET ||
     getConfiguredApiKeyHelper() ||
-    Object.keys(lDe()).some((d) => d.toLowerCase() === "x-api-key") ||
+    Object.keys(parseCustomHeadersFromEnv()).some((d) => d.toLowerCase() === "x-api-key") ||
     shouldUseWIFAuth()
   )
     return null;
@@ -4270,7 +4270,7 @@ function jn(e, t, r = {}) {
     let p = splitToolRuleList([d]);
     if (p.length === 0) continue;
     if (p.every(Aa)) {
-      let [h, w] = xF(p, (E) => el.includes(parsePermissionRule(E).toolName));
+      let [h, w] = partition(p, (E) => el.includes(parsePermissionRule(E).toolName));
       (o.push(...h), i.push(...w), u.push(...w.map(parsePermissionRule)));
     } else o.push(d);
   }
@@ -5470,7 +5470,7 @@ function Md(e, t) {
   let o = t.flatMap((u) => dedupe([Bt, ...r]).map((d) => `${d}(${it(u)}/**)`));
   return dedupe([...i, ...o]);
 }
-var ai = new Set([tt, co, ro, M2]),
+var ai = new Set([tt, co, ro, LSP_TOOL_NAME]),
   jd = `${tt}(//proc/**)`;
 function Fd(e, t) {
   return e.map((r) => {
@@ -9207,7 +9207,7 @@ ${e.criteria}`,
     let { block: E, dimensions: _ } = await Bg({
       data: r.bytes,
       mediaType: r.mediaType,
-      limits: Ka(hr(t.judgeModel) ?? getSmallFastModel()),
+      limits: getImageLimitsForModel(hr(t.judgeModel) ?? getSmallFastModel()),
     });
     if (E.type !== "image" || E.source.type !== "base64")
       return Lt(
@@ -9352,20 +9352,20 @@ async function qp(e, t) {
     },
     u = hr(t.judgeModel),
     d = u
-      ? await UY({
+      ? await runCallerSpecifiedModelQuery({
           systemPrompt: r,
           userPrompt: e,
           signal: t.signal,
           options: { ...o, model: u },
         })
-      : await yC({
+      : await runSmallFastModelQuery({
           systemPrompt: r,
           userPrompt: e,
           signal: t.signal,
           options: o,
         }),
-    p = xr(d.message.content);
-  if (WV(d))
+    p = joinTextBlocks(d.message.content);
+  if (isApiErrorCarrierMessage(d))
     throw new R(
       `judge call failed: ${p}${i !== void 0 ? ` (after the attached image was rejected: ${i})` : ""}`,
       "plugin eval judge call failed",
@@ -9960,7 +9960,7 @@ function bm(e) {
 }
 function bi(e, t) {
   let r = e.trim();
-  return t === "tool_error" ? Jl(r) : r;
+  return t === "tool_error" ? truncateMiddleWithMarker(r) : r;
 }
 function vi(e) {
   return Ml("sha256").update(Bn(e)).digest("hex");
@@ -10999,21 +10999,21 @@ function Mm(e, t, r) {
 }
 async function ic(e, t) {
   if (e.includes(Ee.sep) || e.includes("/")) return { kind: "path", root: e };
-  let r = Hgn(e);
+  let r = parsePluginId(e);
   if (!r && e.includes("@")) return { kind: "path", root: e };
   if (r && r.marketplace !== SKILLS_DIR_PLUGIN_SOURCE) {
-    let p = (isHoverRestEnabled() && t !== void 0 ? await tD(t) : Cf()).plugins[e];
+    let p = (isHoverRestEnabled() && t !== void 0 ? await getInstalledPluginsViaStorage(t) : getInstalledPlugins()).plugins[e];
     if (!p || p.length === 0) return { kind: "path", root: e };
-    let h = p.filter(nD),
+    let h = p.filter(isInstallationInCurrentScope),
       w = h.length > 0 ? h : p,
-      E = Oue(e, await Ql(t), pC());
+      E = getMarketplaceTrustedRoots(e, await getKnownMarketplacesOrEmpty(t), getOperatorDeclaredMarketplaces());
     for (let _ of w) {
       let { absolute: S, suspect: C } = NC(_.installPath, { trustedRoots: E });
       if (!C) return { kind: "plugin", root: S, pluginId: e };
     }
     return { kind: "refused", pluginId: e };
   }
-  let o = (await PWt(isHoverRestEnabled() ? t : void 0)).plugins.find(
+  let o = (await loadSkillsAsPlugins(isHoverRestEnabled() ? t : void 0)).plugins.find(
     (p) => p.name === (r ? r.name : e),
   );
   if (r)
@@ -11021,8 +11021,8 @@ async function ic(e, t) {
       ? { kind: "plugin", root: o.path, pluginId: o.source }
       : { kind: "path", root: e };
   let d = [
-    ...Object.keys((isHoverRestEnabled() && t !== void 0 ? await tD(t) : Cf()).plugins).filter(
-      (p) => Hgn(p)?.name === e,
+    ...Object.keys((isHoverRestEnabled() && t !== void 0 ? await getInstalledPluginsViaStorage(t) : getInstalledPlugins()).plugins).filter(
+      (p) => parsePluginId(p)?.name === e,
     ),
     ...(o ? [o.source] : []),
   ];
@@ -11191,7 +11191,7 @@ Terminated \u2014 finishing up\u2026
 `),
           ie.abort());
     };
-  (C4e(), process.on("SIGINT", He), process.on("SIGTERM", ge));
+  (markPrintModeSignalHandlersRegistered(), process.on("SIGINT", He), process.on("SIGTERM", ge));
   let Te = t.noScaffold ?? !0;
   if (t.noScaffold === !1)
     process.stderr
@@ -11824,7 +11824,7 @@ async function Bm(e, t, r) {
 }
 async function ec(e) {
   (await logFeatureSadAsync("cli_plugin_eval", e === "SIGTERM" ? "terminated" : "interrupted"),
-    await xn(e === "SIGTERM" ? 143 : 130));
+    await gracefulShutdown(e === "SIGTERM" ? 143 : 130));
 }
 async function Wm(e, t, r) {
   let i = Ee.resolve(getCwd(), e);

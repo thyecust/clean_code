@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ze, mp, Hz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn, Dr, vS, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { SandboxManager, an, recordSessionAlias, executeDirectoryAddedHooks, persistHookOutput, nR, ET } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { SandboxManager, sanitizeForDisplay, recordSessionAlias, executeDirectoryAddedHooks, persistHookOutput, clearMemoryFilesForSession, invalidateUserContext } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
@@ -26,7 +26,7 @@ import { resolve } from "path";
 function u(e, o) {
   let r = mp();
   if (r.some((m) => zn(resolve(m)) === o)) return !1;
-  return (Hz([...r, o]), nR(e), ET(e, "directory_added"), reloadSkills(), !0);
+  return (Hz([...r, o]), clearMemoryFilesForSession(e), invalidateUserContext(e, "directory_added"), reloadSkills(), !0);
 }
 async function addWorkingDirectory(e, o, r) {
   let s = {
@@ -101,7 +101,7 @@ function explainAlreadyAccessibleDirectory(e, o) {
   let m = ae(),
     { resolvedPath: s, isCanonical: d } = Ro(m, o.absolutePath),
     { resolvedPath: g, isCanonical: t } = Ro(m, o.workingDir),
-    l = chalk.bold(an(o.directoryPath));
+    l = chalk.bold(sanitizeForDisplay(o.directoryPath));
   if (!d || !t) {
     if ([o.absolutePath, o.workingDir].some((i) => Xo(i) || Dr(i) || vS(i)))
       return null;
@@ -111,13 +111,13 @@ function explainAlreadyAccessibleDirectory(e, o) {
     !pathInAllowedWorkingPath(o.absolutePath, { ...r, additionalWorkingDirectories: new Map() }) ||
     !pathInWorkingPath(s, g, { caseFold: !1, skipPrivateAlias: !0, uncShapeParity: !0 })
   ) {
-    let i = an(s);
+    let i = sanitizeForDisplay(s);
     return s === o.absolutePath
       ? `${l} leads outside the working directory, so its skills, commands, and agents weren't loaded. Add that location with /add-dir to grant access to it.`
       : `${l} leads outside the working directory through a link (it resolves to ${chalk.bold(i)}), so its skills, commands, and agents weren't loaded. Run /add-dir ${i} to grant access to it.`;
   }
   if (s === g) return null;
-  let a = `${l} is inside the current working directory ${chalk.bold(an(o.workingDir))}`;
+  let a = `${l} is inside the current working directory ${chalk.bold(sanitizeForDisplay(o.workingDir))}`;
   if (
     isCustomizationDisabled("skills", { explicitlyRequested: !0 }) ||
     !Nr("projectSettings") ||

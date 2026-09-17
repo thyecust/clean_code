@@ -12,7 +12,7 @@
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Ia, isBgSession } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { IF, due, I3, YO } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getConversationMessages, isResponseStreaming, listQueuedFeedbackDrafts, isSendFeedbackEnabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-jfk5mpe1.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-xmxjyg29.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
@@ -185,8 +185,8 @@ async function Be(s, o) {
               onBeforeExit: g,
             })
         : null;
-  if (YO()) {
-    let { queued: g } = await I3({ lightweight: !0 }, o.storageV5).catch(
+  if (isSendFeedbackEnabled()) {
+    let { queued: g } = await listQueuedFeedbackDrafts({ lightweight: !0 }, o.storageV5).catch(
         () => ({ queued: [], expired: [] }),
       ),
       b = g.filter((v) => v.source_session_id === K());
@@ -196,14 +196,14 @@ async function Be(s, o) {
         messages: [...o.messages],
         renderExitFlow: y,
         onExit: () => {
-          (s(L()), handlePromptInputExit(IF(o), { responseStreaming: due(o) }, o.storageV5));
+          (s(L()), handlePromptInputExit(getConversationMessages(o), { responseStreaming: isResponseStreaming(o) }, o.storageV5));
         },
       });
   }
   if (y) return y();
   return (
     s(L()),
-    await handlePromptInputExit(IF(o), { responseStreaming: due(o) }, o.storageV5),
+    await handlePromptInputExit(getConversationMessages(o), { responseStreaming: isResponseStreaming(o) }, o.storageV5),
     null
   );
 }

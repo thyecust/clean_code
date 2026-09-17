@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Yue, nY, Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { appendTranscriptMessage, findTeammateTaskByAgentId, createUserMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isTerminalTaskStatus } from "./chunk-mrfx53ye.js";
 function appendMessageToTaskTranscript(e, a, s) {
   if (s.get(e)?.status !== "running") return;
-  s.updateTranscript(e, (t) => ({ ...t, messages: Yue(t.messages, a) }));
+  s.updateTranscript(e, (t) => ({ ...t, messages: appendTranscriptMessage(t.messages, a) }));
 }
 function queueTeammateUserMessage(e, a, s, t) {
   let m = s.get(e);
@@ -27,11 +27,11 @@ function queueTeammateUserMessage(e, a, s, t) {
   })),
     s.updateTranscript(e, (r) => ({
       ...r,
-      messages: Yue(r.messages, Re({ content: a, origin: t })),
+      messages: appendTranscriptMessage(r.messages, createUserMessage({ content: a, origin: t })),
     })));
 }
 function wakeTeammateTask(e, a, s) {
-  let t = nY(ix(a, s), e);
+  let t = findTeammateTaskByAgentId(ix(a, s), e);
   if (t?.status === "running") t.retryWake?.emit();
 }
 export { appendMessageToTaskTranscript, queueTeammateUserMessage, wakeTeammateTask };

@@ -35,16 +35,16 @@ import {
   ee,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
-  Uwe,
-  DUt,
+  isOtherBlockingDialogShowing,
+  subscribeBlockingDialog,
   SandboxManager,
-  dT,
-  lzn,
-  czn,
-  hX,
-  bzn,
-  wzn,
-  aH,
+  checkPathPermission,
+  markAutoModeOutsideReadPromptSeen,
+  enableBlockReadsOutsideWorkingDirs,
+  finishClassifierCheck,
+  setDenialLimitFallbackDeadline,
+  clearDenialLimitFallbackDeadline,
+  getConnectedIdeClient,
   resetDenialStreakAfterUserApproval,
   stripWholeToolGrantsForAsk,
   withoutGrantsForRemoteScope,
@@ -52,45 +52,45 @@ import {
   hasPermissionsToUseTool,
   checkRuleBasedPermissions,
   executePermissionRequestHooks,
-  zDe,
-  t4n,
-  ATe,
-  v2t,
-  R2t,
-  RTe,
-  Wpn,
-  F4n,
-  Py,
-  ITe,
-  F_,
-  Ek,
-  Ak,
-  Wv,
-  Vpn,
-  kX,
+  resolveLanguageNameFromPath,
+  logAndRecordPermissionDecision,
+  hasConnectedIdeClient,
+  getConnectedIdeDisplayName,
+  invokeIdeRpc,
+  computeStructuredPatchFromContents,
+  applyEditsToFileContents,
+  convertHunksToEdits,
+  FileEditTool,
+  MAX_READABLE_FILE_BYTES,
+  WriteTool,
+  GlobTool,
+  GrepTool,
+  MAX_NOTEBOOK_FILE_BYTES,
+  resolveNotebookCellSource,
+  NotebookEditTool,
   WebFetchTool,
-  yht,
-  Y2,
-  zS,
-  uH,
-  an,
-  oMe,
-  uEe,
-  QX,
+  formatAskUserQuestionNeeds,
+  formatNeedsText,
+  sessionNeedsStore,
+  sanitizeSubagentText,
+  sanitizeForDisplay,
+  hasSubstantiveText,
+  resolveRetractedMessages,
+  toolPermissionContextChangeSignal,
   setPermissionModeWithGuards,
-  aj,
-  Yne,
-  a8n,
-  Mde,
-  K6t,
-  n5e,
-  Qm,
-  Lo,
-  p$,
-  _T,
-  Ok,
-  II,
-  $3,
+  exitPlanModeTool,
+  parseSedInPlaceCommand,
+  applySedEdit,
+  askUserQuestionTool,
+  enterPlanModeTool,
+  SkillTool,
+  ReadTool,
+  BashTool,
+  appendAutoMemoryReminder,
+  USER_REJECTED_TOOL_USE_MESSAGE,
+  USER_REJECTED_TOOL_USE_PREFIX,
+  PERMISSION_DENIED_MESSAGE,
+  PERMISSION_DENIED_PREFIX,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
@@ -184,7 +184,7 @@ function Uqe(e, r, o, t, s, k, R) {
   let c = t.message.id,
     _ = getToolPermissionContext(o).mode;
   function d(b, p) {
-    t4n(
+    logAndRecordPermissionDecision(
       {
         tool: e,
         input: p?.input ?? r,
@@ -216,7 +216,7 @@ function Uqe(e, r, o, t, s, k, R) {
       else
         (o.setSessionToolPermissionContext((p) => Kk(p, b)),
           setImmediate(() => {
-            QX.emit();
+            toolPermissionContextChangeSignal.emit();
           }));
       return b.some((p) => nme(p.destination));
     },
@@ -229,8 +229,8 @@ function Uqe(e, r, o, t, s, k, R) {
     },
     cancelAndAbort(b, p, F, A) {
       let D = !!o.agentId,
-        v = b ? `${D ? $3 : Ok}${b}` : D ? II : _T,
-        T = D ? v : p$(v);
+        v = b ? `${D ? PERMISSION_DENIED_PREFIX : USER_REJECTED_TOOL_USE_PREFIX}${b}` : D ? PERMISSION_DENIED_MESSAGE : USER_REJECTED_TOOL_USE_MESSAGE,
+        T = D ? v : appendAutoMemoryReminder(v);
       if (p || x1t({ feedback: b, contentBlocks: F, isSubagent: D }))
         (n(
           `Aborting: tool=${e.name} isAbort=${p} hasFeedback=${!!b} isSubagent=${D}`,
@@ -364,7 +364,7 @@ function Uqe(e, r, o, t, s, k, R) {
 }
 function ze(e) {
   let r = e.input;
-  if (e.tool.name === ASK_USER_QUESTION_TOOL_NAME) return yht(r);
+  if (e.tool.name === ASK_USER_QUESTION_TOOL_NAME) return formatAskUserQuestionNeeds(r);
   if (e.tool.name === Wh) return { text: "approve plan" };
   let o = e.tool.userFacingName(e.input).trim(),
     t =
@@ -377,7 +377,7 @@ function ze(e) {
             : "",
     s = o || e.tool.name;
   return {
-    text: t && !s.includes(t) ? Y2(`approve ${s}: ${t}`) : `approve ${s}`,
+    text: t && !s.includes(t) ? formatNeedsText(`approve ${s}: ${t}`) : `approve ${s}`,
   };
 }
 var Sbe = defineDialog({
@@ -602,7 +602,7 @@ function Xe(e) {
 }
 function Je(e) {
   let r = Lv(e),
-    o = Mde.inputSchema.safeParse(e.input),
+    o = askUserQuestionTool.inputSchema.safeParse(e.input),
     t = o.success ? (o.data.questions ?? []) : [],
     s = o.success ? o.data.metadata?.source : void 0;
   return { ...r, questions: t, metadataSource: s };
@@ -817,12 +817,12 @@ function k1t(e) {
 var ne = 200000;
 function zdt(e) {
   switch (e) {
-    case Py:
-    case F_:
-    case kX:
-    case Ek:
-    case Ak:
-    case Qm:
+    case FileEditTool:
+    case WriteTool:
+    case NotebookEditTool:
+    case GlobTool:
+    case GrepTool:
+    case ReadTool:
       return !0;
     default:
       return !1;
@@ -830,9 +830,9 @@ function zdt(e) {
 }
 function Z6n(e) {
   switch (e) {
-    case Py:
-    case F_:
-    case kX:
+    case FileEditTool:
+    case WriteTool:
+    case NotebookEditTool:
       return !0;
     default:
       return !1;
@@ -860,15 +860,15 @@ function io(e, r, o) {
   }
 }
 function Ce(e, r) {
-  return an(r ? e : relative(getCwd(), e));
+  return sanitizeForDisplay(r ? e : relative(getCwd(), e));
 }
 function ke(e, r) {
-  return an(r ? posix.basename(e) : Co(e));
+  return sanitizeForDisplay(r ? posix.basename(e) : Co(e));
 }
 async function Fo(e) {
   let { tool: r, input: o, remoteWorkspace: t, remoteOldContent: s } = e;
-  if (r === Py) {
-    let c = Py.inputSchema.parse(o),
+  if (r === FileEditTool) {
+    let c = FileEditTool.inputSchema.parse(o),
       _ = c.old_string.length > ne || c.new_string.length > ne,
       d = !_ && (Jk(c.old_string) || Jk(c.new_string)),
       w = _ || d;
@@ -908,8 +908,8 @@ async function Fo(e) {
       contentWithheld: w,
     };
   }
-  if (r === F_) {
-    let c = F_.inputSchema.parse(o),
+  if (r === WriteTool) {
+    let c = WriteTool.inputSchema.parse(o),
       _ = "",
       d = !1,
       w = !1,
@@ -964,15 +964,15 @@ async function Fo(e) {
             ? {
                 kind: "no-changes",
                 message: d
-                  ? `Existing file is too large to preview \u2014 approving will overwrite ${an(c.file_path)}.`
+                  ? `Existing file is too large to preview \u2014 approving will overwrite ${sanitizeForDisplay(c.file_path)}.`
                   : t
-                    ? `The remote file could not be checked \u2014 approving will write to ${an(c.file_path)}.`
-                    : `File is on a network path that cannot be previewed \u2014 approving will write to ${an(c.file_path)}.`,
+                    ? `The remote file could not be checked \u2014 approving will write to ${sanitizeForDisplay(c.file_path)}.`
+                    : `File is on a network path that cannot be previewed \u2014 approving will write to ${sanitizeForDisplay(c.file_path)}.`,
               }
             : v
               ? {
                   kind: "no-changes",
-                  message: `Current contents of ${an(c.file_path)} cannot be shown in full \u2014 the overwrite cannot be reviewed, so approval is one-time only (deny unless expected).`,
+                  message: `Current contents of ${sanitizeForDisplay(c.file_path)} cannot be shown in full \u2014 the overwrite cannot be reviewed, so approval is one-time only (deny unless expected).`,
                 }
               : {
                   kind: "file-write-diff",
@@ -981,14 +981,14 @@ async function Fo(e) {
                   fileExists: d,
                   oldContent: _,
                   ...(T && {
-                    notice: `Current contents of ${an(c.file_path)} cannot be shown in full \u2014 the overwrite cannot be fully reviewed, so approval is one-time only (deny unless expected).`,
+                    notice: `Current contents of ${sanitizeForDisplay(c.file_path)} cannot be shown in full \u2014 the overwrite cannot be fully reviewed, so approval is one-time only (deny unless expected).`,
                   }),
                 },
       contentWithheld: x,
     };
   }
-  if (r === kX) {
-    let c = kX.inputSchema.parse(o),
+  if (r === NotebookEditTool) {
+    let c = NotebookEditTool.inputSchema.parse(o),
       _ =
         c.edit_mode === "insert"
           ? "insert this cell into"
@@ -1002,7 +1002,7 @@ async function Fo(e) {
     if (w)
       if (t)
         if (typeof s === "string") {
-          let A = Vpn(s, c.cell_id);
+          let A = resolveNotebookCellSource(s, c.cell_id);
           if (A.kind === "found")
             if (A.source.length > ne || Jk(A.source))
               p = "the current cell contents cannot be shown in full";
@@ -1022,10 +1022,10 @@ async function Fo(e) {
           if (!(await ae().stat(c.notebook_path)).isFile())
             p = "the notebook could not be read";
           else {
-            let D = await ae().readFileBytes(c.notebook_path, Wv + 1);
-            if (D.length > Wv) p = "the notebook is too large to preview";
+            let D = await ae().readFileBytes(c.notebook_path, MAX_NOTEBOOK_FILE_BYTES + 1);
+            if (D.length > MAX_NOTEBOOK_FILE_BYTES) p = "the notebook is too large to preview";
             else {
-              let v = Vpn(D.toString("utf-8"), c.cell_id);
+              let v = resolveNotebookCellSource(D.toString("utf-8"), c.cell_id);
               if (v.kind === "found")
                 if (v.source.length > ne || Jk(v.source))
                   p = "the current cell contents cannot be shown in full";
@@ -1119,23 +1119,23 @@ async function wbe(e) {
   };
 }
 function no(e, r, o) {
-  if (e === Py)
-    return { completion_type: "str_replace_single", language_name: zDe(o) };
-  if (e === F_)
-    return { completion_type: "write_file_single", language_name: zDe(o) };
-  if (e === kX)
+  if (e === FileEditTool)
+    return { completion_type: "str_replace_single", language_name: resolveLanguageNameFromPath(o) };
+  if (e === WriteTool)
+    return { completion_type: "write_file_single", language_name: resolveLanguageNameFromPath(o) };
+  if (e === NotebookEditTool)
     return {
       completion_type: "tool_use_single",
       language_name: r.cell_type === "markdown" ? "markdown" : "python",
     };
-  return { completion_type: "tool_use_single", language_name: zDe(o) };
+  return { completion_type: "tool_use_single", language_name: resolveLanguageNameFromPath(o) };
 }
 async function xe(e) {
   let r = Lv(e),
     o = e.sedInfo.filePath,
     t = ot(o),
     s = ((An(o) || An(t)) && !(Oi(o) || Oi(t))) || Dr(o) || Dr(t),
-    k = !dT(t, { ...e.toolPermissionContext, mode: "acceptEdits" }, "write")
+    k = !checkPathPermission(t, { ...e.toolPermissionContext, mode: "acceptEdits" }, "write")
       .allowed,
     R =
       k &&
@@ -1161,7 +1161,7 @@ async function xe(e) {
     p = c.length > ne;
   if (!p)
     try {
-      w = a8n(c, e.sedInfo);
+      w = applySedEdit(c, e.sedInfo);
     } catch {
       b = !0;
     }
@@ -1212,10 +1212,10 @@ async function xe(e) {
   };
 }
 function ro(e) {
-  return { completion_type: "str_replace_single", language_name: zDe(e) };
+  return { completion_type: "str_replace_single", language_name: resolveLanguageNameFromPath(e) };
 }
 function ye(e) {
-  return truncateWithCharCount(an(e), Mo);
+  return truncateWithCharCount(sanitizeForDisplay(e), Mo);
 }
 var Mo = 160;
 var Mqe = defineDialog({
@@ -1307,11 +1307,11 @@ import { randomUUID as Wo } from "crypto";
 import { basename as qo } from "path";
 function lo(e, r, o, t) {
   let s = t === "single",
-    k = RTe({ filePath: e, oldContent: r, newContent: o, singleHunk: s });
+    k = computeStructuredPatchFromContents({ filePath: e, oldContent: r, newContent: o, singleHunk: s });
   if (k.length === 0) return [];
   if (s && k.length > 1)
     logError(Error(`Unexpected number of hunks: ${k.length}. Expected 1 hunk.`));
-  return F4n(k);
+  return convertHunksToEdits(k);
 }
 async function ao(e, r, o, t, s) {
   let k = !1,
@@ -1342,15 +1342,15 @@ async function ao(e, r, o, t, s) {
   }
   (o.abortController.signal.addEventListener("abort", d),
     process.on("beforeExit", d));
-  let w = aH(o.options.mcpClients);
+  let w = getConnectedIdeClient(o.options.mcpClients);
   try {
-    let { updatedFile: b } = Wpn({ filePath: R, fileContents: c, edits: r });
+    let { updatedFile: b } = applyEditsToFileContents({ filePath: R, fileContents: c, edits: r });
     if (!w || w.type !== "connected") throw Error("IDE client not available");
     let p = R,
       F = w.config.ideRunningInWindows === !0;
     if (getCurrentPlatform() === "wsl" && F && a.WSL_DISTRO_NAME)
       ((p = await new LAe(a.WSL_DISTRO_NAME).toIDEPath(R)), _());
-    let A = await R2t(
+    let A = await invokeIdeRpc(
         "openDiff",
         {
           old_file_path: p,
@@ -1377,7 +1377,7 @@ async function ao(e, r, o, t, s) {
 async function Fe(e, r) {
   try {
     if (!r || r.type !== "connected") throw Error("IDE client not available");
-    (await R2t("close_tab", { tab_name: e }, r), logFeatureOk("ide_close_diff_tab"));
+    (await invokeIdeRpc("close_tab", { tab_name: e }, r), logFeatureOk("ide_close_diff_tab"));
   } catch (o) {
     (n(
       `Failed to close diff tab in IDE: ${o instanceof Error ? o.message : String(o)}`,
@@ -1422,8 +1422,8 @@ function mo(e) {
   return S("nonconforming");
 }
 function $o(e, r) {
-  if (e === Py) {
-    let o = Py.inputSchema.parse(r);
+  if (e === FileEditTool) {
+    let o = FileEditTool.inputSchema.parse(r);
     return {
       filePath: o.file_path,
       edits: [
@@ -1435,8 +1435,8 @@ function $o(e, r) {
       ],
     };
   }
-  if (e === F_) {
-    let o = F_.inputSchema.parse(r),
+  if (e === WriteTool) {
+    let o = WriteTool.inputSchema.parse(r),
       t = ot(o.file_path),
       s = "";
     if (
@@ -1445,7 +1445,7 @@ function $o(e, r) {
       !Dr(t)
     )
       try {
-        s = readFileSyncText(t, ITe);
+        s = readFileSyncText(t, MAX_READABLE_FILE_BYTES);
       } catch (k) {
         if (isFileTooLargeError(k)) return null;
         if (!W(k) && !isNotRegularFileError(k)) throw k;
@@ -1460,22 +1460,22 @@ function $o(e, r) {
 function Ho(e, r, o) {
   let t = o[0];
   if (!t) return r;
-  if (e === Py)
+  if (e === FileEditTool)
     return {
       ...r,
       old_string: t.old_string,
       new_string: t.new_string,
       replace_all: t.replace_all || !1,
     };
-  if (e === F_) return { ...r, content: t.new_string };
+  if (e === WriteTool) return { ...r, content: t.new_string };
   return r;
 }
 function co(e, r, o) {
-  if (e !== Py && e !== F_) return null;
+  if (e !== FileEditTool && e !== WriteTool) return null;
   if (o.forRemoteExecution === !0) return null;
   if (Wg(r)) return null;
   let t = o.options.mcpClients;
-  if (!ATe(t)) return null;
+  if (!hasConnectedIdeClient(t)) return null;
   if (ee().diffTool !== "auto") return null;
   let s = $o(e, r);
   if (s === null) return null;
@@ -1487,10 +1487,10 @@ function co(e, r, o) {
   )
     return null;
   if (kQ(s.filePath) || kQ(k)) return null;
-  let R = aH(t);
+  let R = getConnectedIdeClient(t);
   if (!R) return null;
   return {
-    ideName: v2t(t) ?? "IDE",
+    ideName: getConnectedIdeDisplayName(t) ?? "IDE",
     ideClient: R,
     filePath: s.filePath,
     edits: s.edits,
@@ -1657,7 +1657,7 @@ function uo(e) {
         logFeatureSad("permission_bridge_relay", "updated_permissions_malformed");
       else logFeatureOk("permission_bridge_relay");
       if (x) q.removeEventListener("abort", x);
-      if ((hX(v, r.toolUseID), M?.(), U.behavior === "allow")) {
+      if ((finishClassifierCheck(v, r.toolUseID), M?.(), U.behavior === "allow")) {
         let B =
           r.tool.suppressesAllPermissionUpdates?.(s) === !0
             ? withoutGrantsForRemoteScope(U.updatedPermissions ?? [])
@@ -1721,7 +1721,7 @@ function uo(e) {
         me = D.onResponse(I, (K) => {
           if (!d()) return;
           if (
-            (logFeatureOk("permission_channel_relay"), M?.(), hX(v, r.toolUseID), A && T)
+            (logFeatureOk("permission_channel_relay"), M?.(), finishClassifierCheck(v, r.toolUseID), A && T)
           )
             A.cancelRequest(T);
           if ((x?.(), K.behavior === "allow"))
@@ -1779,7 +1779,7 @@ function uo(e) {
             continue;
           }
           if (q || !d()) return;
-          if ((hX(v, r.toolUseID), A && T)) A.cancelRequest(T);
+          if ((finishClassifierCheck(v, r.toolUseID), A && T)) A.cancelRequest(T);
           (x?.(),
             M?.(),
             logFeatureOk("permission_server_approval_watch"),
@@ -1811,7 +1811,7 @@ function uo(e) {
       );
       if (I && "reprompted" in I) {
         if (w()) return;
-        if ((hX(v, r.toolUseID), A && T)) (A.cancelRequest(T), (T = void 0));
+        if ((finishClassifierCheck(v, r.toolUseID), A && T)) (A.cancelRequest(T), (T = void 0));
         (x?.(),
           M?.(),
           E?.(),
@@ -1846,10 +1846,10 @@ function J(e) {
 var Go = [
   J({ matches: (e) => e === WebFetchTool, dialog: $qe, build: Xe }),
   J({ matches: (e) => e.name.startsWith(CFC_TOOL_PREFIX), dialog: Oqe, build: Ge }),
-  J({ matches: (e) => e === Mde, dialog: Sbe, build: Je }),
-  J({ matches: (e) => e === K6t, dialog: Dqe, build: Lv }),
-  J({ matches: (e) => e === aj, dialog: Lqe, build: to }),
-  J({ matches: (e) => e === n5e, dialog: Fqe, build: eo }),
+  J({ matches: (e) => e === askUserQuestionTool, dialog: Sbe, build: Je }),
+  J({ matches: (e) => e === enterPlanModeTool, dialog: Dqe, build: Lv }),
+  J({ matches: (e) => e === exitPlanModeTool, dialog: Lqe, build: to }),
+  J({ matches: (e) => e === SkillTool, dialog: Fqe, build: eo }),
   ...[],
   J({ matches: (e) => e.name === Ut, dialog: Nqe, build: oo }),
   J({ matches: (e) => e === Qo, dialog: Mqe, build: Ke }),
@@ -1999,10 +1999,10 @@ async function Bqe(e, r) {
     F();
     return;
   }
-  if (o.tool === Lo) {
+  if (o.tool === BashTool) {
     let D = s.updatedInput ?? o.input,
       v = typeof D.command === "string" ? D.command : "",
-      T = o.toolUseContext.forRemoteExecution === !0 || Wg(D) ? null : Yne(v);
+      T = o.toolUseContext.forRemoteExecution === !0 || Wg(D) ? null : parseSedInPlaceCommand(v);
     if (T !== null) {
       let M = await xe({
         ...p,
@@ -2019,7 +2019,7 @@ async function Bqe(e, r) {
           if (E?.isReprompted() !== !0) return { ...M, permissionResult: j };
           return (async function* () {
             let G = typeof V.command === "string" ? V.command : "",
-              I = Yne(G);
+              I = parseSedInPlaceCommand(G);
             if (I === null) {
               if (
                 (n(
@@ -2163,7 +2163,7 @@ function Pe(e, r, o) {
     });
   }
   function me() {
-    (j?.abort(), zS.clearHookFailure(t.toolUseID), zS.emit(null), Te(), G());
+    (j?.abort(), sessionNeedsStore.clearHookFailure(t.toolUseID), sessionNeedsStore.emit(null), Te(), G());
   }
   let K = 0,
     { notifyBridgeAndTeardown: Y } = uo({
@@ -2211,7 +2211,7 @@ function Pe(e, r, o) {
       if (re || w()) return;
       if ((_e?.(), de !== void 0)) Ae?.({ ...de, permissionResult: E });
     },
-    Te = QX.subscribe(() => {
+    Te = toolPermissionContextChangeSignal.subscribe(() => {
       if (w()) return;
       if (_e !== void 0 && !re && !isAutoClassifierActive(sx(t.tool, getToolPermissionContext(t.toolUseContext)))) Me();
       if (t.tool.requiresUserInteraction?.()) return;
@@ -2227,8 +2227,8 @@ function Pe(e, r, o) {
           (Te(),
             Y(),
             j?.abort(),
-            zS.clearHookFailure(t.toolUseID),
-            zS.emit(null),
+            sessionNeedsStore.clearHookFailure(t.toolUseID),
+            sessionNeedsStore.emit(null),
             G(),
             t.logDecision({ decision: "accept", source: "config" }),
             d(
@@ -2298,7 +2298,7 @@ function Pe(e, r, o) {
       },
     };
     (B(),
-      zS.emit({ ...ze({ tool: t.tool, input: x }), toolUseID: t.toolUseID }));
+      sessionNeedsStore.emit({ ...ze({ tool: t.tool, input: x }), toolUseID: t.toolUseID }));
     let $e = se !== void 0 && !D && !re,
       He = () => {
         ((Ne = !0), ie?.({ value: void 0, done: !0 }), (ie = void 0));
@@ -2321,13 +2321,13 @@ function Pe(e, r, o) {
   }
   function _o(C) {
     switch (
-      (zS.clearHookFailure(t.toolUseID), zS.emit(null), Te(), G(), C.behavior)
+      (sessionNeedsStore.clearHookFailure(t.toolUseID), sessionNeedsStore.emit(null), Te(), G(), C.behavior)
     ) {
       case "allow": {
         if (k.denialLimitFallback !== void 0)
           (resetDenialStreakAfterUserApproval(t.toolUseContext),
             logFeatureOk("permission_auto_mode_denial_fallback", { autoDenied: !1 }));
-        if (E.offersBlockOutsideReads === !0) lzn(t.toolUseContext);
+        if (E.offersBlockOutsideReads === !0) markAutoModeOutsideReadPromptSeen(t.toolUseContext);
         (Y({
           behavior: "allow",
           updatedInput: C.updatedInput,
@@ -2380,7 +2380,7 @@ function Pe(e, r, o) {
                       : " Tell the user: the setting is saved, but sandboxed commands may not be fenced until the settings change is picked up."),
                 decisionReason: { type: "other", reason: OUTSIDE_READS_BLOCKED_DENY_REASON },
               });
-            czn(t.toolUseContext)
+            enableBlockReadsOutsideWorkingDirs(t.toolUseContext)
               .then(({ error: H, sandboxRefreshed: te }) => O(H, te))
               .catch((H) => O(ge(H), !1));
             return;
@@ -2417,7 +2417,7 @@ function Pe(e, r, o) {
           ),
           D)
         ) {
-          d({ behavior: "ask", message: II });
+          d({ behavior: "ask", message: PERMISSION_DENIED_MESSAGE });
           return;
         }
         if (k.askEnded?.() === !0) {
@@ -2441,11 +2441,11 @@ function Pe(e, r, o) {
   function Oe(C, O) {
     if (pe === void 0) return;
     (clearTimeout(ue),
-      (E = { ...E, denialLimitFallback: bzn(E.denialLimitFallback, O) }));
+      (E = { ...E, denialLimitFallback: setDenialLimitFallbackDeadline(E.denialLimitFallback, O) }));
     let H = Math.max(0, O - Date.now()),
       te = pe.message;
     ((ue = setTimeout(() => {
-      if (Uwe(o.dialog.kind)) {
+      if (isOtherBlockingDialogShowing(o.dialog.kind)) {
         Ue();
         return;
       }
@@ -2476,7 +2476,7 @@ function Pe(e, r, o) {
       (_e = () => {
         ((re = !0), clearTimeout(ue));
         let O = E.denialLimitFallback;
-        if (O !== void 0) E = { ...E, denialLimitFallback: wzn(O) };
+        if (O !== void 0) E = { ...E, denialLimitFallback: clearDenialLimitFallbackDeadline(O) };
       }),
       Re?.(),
       (Re = so.subscribe(() => {
@@ -2484,9 +2484,9 @@ function Pe(e, r, o) {
       })),
       N.push(() => Re?.()),
       he?.());
-    let C = Uwe(o.dialog.kind);
-    ((he = DUt(() => {
-      let O = Uwe(o.dialog.kind);
+    let C = isOtherBlockingDialogShowing(o.dialog.kind);
+    ((he = subscribeBlockingDialog(() => {
+      let O = isOtherBlockingDialogShowing(o.dialog.kind);
       if (C && !O) Ue();
       C = O;
     })),
@@ -2512,7 +2512,7 @@ function Pe(e, r, o) {
     je());
 }
 function wo(e, r) {
-  let { live: o, notice: t } = uEe(e, { suppressDropTelemetry: !0 }),
+  let { live: o, notice: t } = resolveRetractedMessages(e, { suppressDropTelemetry: !0 }),
     s = getLastPeerDmSummary(o),
     k = -1;
   for (let _ = o.length - 1; _ >= 0; _--) {
@@ -2560,13 +2560,13 @@ function wo(e, r) {
         logFeatureSad("swarm_idle_result_delivery", "suppressed_lead_dm");
       return { result: void 0, summary: s };
     }
-    if (!oMe(d.message.content)) continue;
+    if (!hasSubstantiveText(d.message.content)) continue;
     let b = d.message.content.flatMap((p) =>
       p.type === "text" && typeof p.text === "string" ? [p.text] : [],
     ).join(`
 `);
     if (b) {
-      let p = uH(b).sanitized;
+      let p = sanitizeSubagentText(b).sanitized;
       return {
         result: t
           ? `\u26A0 ${t.content}

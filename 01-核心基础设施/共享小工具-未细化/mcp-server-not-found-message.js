@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Vne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { findClosestName } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function formatMcpServerNotFoundMessage(r, t) {
   let e = [...t].sort(),
-    n = Vne(
+    n = findClosestName(
       r,
       e.map((a) => ({ name: a })),
       { maxEditDistance: 2 },

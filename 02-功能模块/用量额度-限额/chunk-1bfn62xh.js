@@ -14,7 +14,7 @@ import { le, Io, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht, isClaudeAISubscriber, getOauthAccountInfo, getSubscriptionType, isConsumerSubscriber, Qh, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { mue, Km } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { parseSlashCommandInput as mue, canSelfManageUsageCredits } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function parseReplacementMetadata(e) {
   if (
@@ -324,7 +324,7 @@ function E(e) {
   if (isConsumerSubscriber()) return "claimant";
   if (t === "team") {
     if (!getOauthAccountInfo()?.organizationRole) return "excluded";
-    return Km() ? "claimant" : "viewer";
+    return canSelfManageUsageCredits() ? "claimant" : "viewer";
   }
   return "excluded";
 }

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { createLazyValue } from "./lazy-value.js";
-import { $M, nn, Wht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isSafeRelativePath, GIT_OBJECT_ID_REGEX, GIT_SHA1_HEX_REGEX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hashSha256 } from "./git-host-utils.js";
 import { MAX_JOURNAL_ENTRIES, MAX_ETAG_LENGTH, SHA256_HEX_RE, getAgreedBlobSchema } from "../../02-功能模块/文件同步-Sync/sync-journal.js";
 import { s, T, v, c, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -30,11 +30,11 @@ function stripSentField(e) {
 var g = createLazyValue(() =>
     Ko("kind", [
       c({ kind: k("sha256"), sha256: s().regex(SHA256_HEX_RE) }),
-      c({ kind: k("git_blob"), blobId: s().regex(Wht) }),
+      c({ kind: k("git_blob"), blobId: s().regex(GIT_SHA1_HEX_REGEX) }),
       c({ kind: k("unknown") }),
     ]),
   ),
-  a = createLazyValue(() => s().refine($M)),
+  a = createLazyValue(() => s().refine(isSafeRelativePath)),
   h = createLazyValue(() =>
     c({
       agreed: g(),
@@ -79,7 +79,7 @@ var g = createLazyValue(() =>
       version: $e([k(o), k(l), k(d)]),
       sessionId: s().min(1),
       armedAtMs: T().int().nonnegative(),
-      pinnedTreeish: s().regex(nn).nullable(),
+      pinnedTreeish: s().regex(GIT_OBJECT_ID_REGEX).nullable(),
       publishedGeneration: T().int().nonnegative(),
       publishedEtag: s().min(1).max(MAX_ETAG_LENGTH).nullable(),
       peerGenerationSeen: T().int().nonnegative(),

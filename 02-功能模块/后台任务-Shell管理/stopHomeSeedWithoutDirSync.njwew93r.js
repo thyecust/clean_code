@@ -16,28 +16,28 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
-  rV,
-  Lmt,
-  dX,
-  yDe,
-  kl,
-  M2,
-  i3,
-  CV,
-  BTe,
-  RLe,
-  Gjt,
-  wde,
-  QVn,
+  resetPromptStateAfterInvalidation,
+  clearOutputStylesCache,
+  getAllOutputStyles,
+  clearAllOutputStylesCache,
+  settingsChangeDetector,
+  LSP_TOOL_NAME,
+  SEND_FILE_TOOL_NAME,
+  DirSyncNoticeStore,
+  SEED_MANIFEST_PATH,
+  SEED_HOME_PACK_PATH,
+  SEED_HOME_READY_PATH,
+  getErrorName,
+  seedVerdictStore,
   SYNCED_FILE_ROOT,
   shouldIgnore,
   putSyncedFile,
   getSyncedFile,
   SYNCED_FILE_WRITE_MODE,
   writeUnderSyncDir,
-  SXn,
-  nR,
-  ET,
+  getMemoryFileIncludePaths,
+  clearMemoryFilesForSession,
+  invalidateUserContext,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -340,10 +340,10 @@ var Br = [
     tt,
     ro,
     co,
-    M2,
+    LSP_TOOL_NAME,
     ...ARTIFACT_FAMILY_TOOL_NAMES,
     WORKFLOW_TOOL_NAME,
-    i3,
+    SEND_FILE_TOOL_NAME,
     ...eir.map((e) => rc(CLAUDE_IN_CHROME_MCP_SERVER_NAME, e)),
     "NotebookRead",
     "LS",
@@ -1248,7 +1248,7 @@ function Hn(e, t) {
     let p = t.now();
     er(!l, p)
       .catch((H) => {
-        (writeDiagnosticsEvent("error", "home_seed_recovery_threw", { name: wde(H) }),
+        (writeDiagnosticsEvent("error", "home_seed_recovery_threw", { name: getErrorName(H) }),
           ke("threw", 0, p));
       })
       .finally(() => {
@@ -1257,7 +1257,7 @@ function Hn(e, t) {
   }
   async function er(l, p) {
     if ((K++, l)) {
-      let ee = await t.pullRow(BTe);
+      let ee = await t.pullRow(SEED_MANIFEST_PATH);
       if (Ye(p)) return;
       if (ee.kind !== "ok" && ee.kind !== "not_found") {
         let ae = ct(ee);
@@ -1271,7 +1271,7 @@ function Hn(e, t) {
         return;
       }
     }
-    let H = await t.pullRow(Gjt);
+    let H = await t.pullRow(SEED_HOME_READY_PATH);
     if (Ye(p)) return;
     if (H.kind !== "ok") {
       if (H.kind === "not_found") ne("no_ready_row", 0, p, !1);
@@ -1293,7 +1293,7 @@ function Hn(e, t) {
       return;
     }
     let R = E.ready.generation,
-      C = await t.pullRow(RLe);
+      C = await t.pullRow(SEED_HOME_PACK_PATH);
     if (Ye(p)) return;
     if (C.kind !== "ok") {
       let ee = C.kind === "not_found" ? "not_found" : ct(C);
@@ -1500,7 +1500,7 @@ function Hn(e, t) {
     ((U = !0),
       or(l)
         .catch((p) => {
-          writeDiagnosticsEvent("error", "home_seed_run_threw", { name: wde(p) });
+          writeDiagnosticsEvent("error", "home_seed_run_threw", { name: getErrorName(p) });
         })
         .finally(() => {
           ((U = !1), (pe = void 0), ge(), Le());
@@ -1527,7 +1527,7 @@ function Hn(e, t) {
           if (p) l.readyWritten = !0;
         })
         .catch((p) => {
-          writeDiagnosticsEvent("error", "home_seed_run_threw", { name: wde(p) });
+          writeDiagnosticsEvent("error", "home_seed_run_threw", { name: getErrorName(p) });
         })
         .finally(() => {
           ((U = !1), ge(), Le());
@@ -1554,7 +1554,7 @@ function Hn(e, t) {
     }
     let E = "verdict_wake";
     if (!l) {
-      let oe = await Kt(BTe);
+      let oe = await Kt(SEED_MANIFEST_PATH);
       if (oe.kind === "deaf") return;
       if (
         ((E = sr(oe.kind)), oe.kind === "refused" || oe.kind === "rejected")
@@ -1573,7 +1573,7 @@ function Hn(e, t) {
         return;
       }
     }
-    let R = await Kt(RLe);
+    let R = await Kt(SEED_HOME_PACK_PATH);
     switch (R.kind) {
       case "deaf":
         return;
@@ -1761,11 +1761,11 @@ function Hn(e, t) {
       H = !1;
     for (let E = 1; ; E++) {
       if (r || d) return !1;
-      let R = await t.putRow(Gjt, l, ve);
+      let R = await t.putRow(SEED_HOME_READY_PATH, l, ve);
       if (R.kind === "ok") return ((ve = R.content_sha256), !0);
       if (R.kind === "conflict" && !H) {
         if (((H = !0), r || d)) return !1;
-        let N = await t.pullRow(Gjt);
+        let N = await t.pullRow(SEED_HOME_READY_PATH);
         ve = N.kind === "ok" ? N.content_sha256 : void 0;
         continue;
       }
@@ -2190,7 +2190,7 @@ function ue(e, t) {
 import { isAbsolute, join as mi, relative as pi, sep as Nn } from "path";
 function In(e, t) {
   try {
-    return SXn(
+    return getMemoryFileIncludePaths(
       t.content.toString("utf8"),
       mi(e, ...t.path.split("/")),
       "User",
@@ -3002,18 +3002,18 @@ function startWorkerHomeSeed({
   storageV5: o,
 }) {
   let d = {
-    reloadUserSettings: () => kl.notifyChange("userSettings"),
-    clearMemoryFiles: () => nR(e),
-    clearUserContext: () => ET(e, "settings_sync"),
-    clearSystemPromptSections: rV,
+    reloadUserSettings: () => settingsChangeDetector.notifyChange("userSettings"),
+    clearMemoryFiles: () => clearMemoryFilesForSession(e),
+    clearUserContext: () => invalidateUserContext(e, "settings_sync"),
+    clearSystemPromptSections: resetPromptStateAfterInvalidation,
     clearOutputStyles: () => {
-      (Lmt(), yDe());
+      (clearOutputStylesCache(), clearAllOutputStylesCache());
     },
   };
   return Hn(
     { configHome: n, repoRoot: r, settingsPath: Pi(n, SETTINGS_FILE_NAME) },
     {
-      verdicts: { subscribe: QVn.subscribe },
+      verdicts: { subscribe: seedVerdictStore.subscribe },
       announcements: {
         remembered: t.announcements,
         subscribe: t.announced.subscribe,
@@ -3028,7 +3028,7 @@ function startWorkerHomeSeed({
       afterApply: (_, h) => xi(_, h, d),
       telemetry: Zn(),
       notifyAgent: (_) => {
-        let h = CV.of(e);
+        let h = DirSyncNoticeStore.of(e);
         (h.openGate(), h.stage(_));
       },
       now: () => Date.now(),
@@ -3038,7 +3038,7 @@ function startWorkerHomeSeed({
       },
       sleep: sleep,
       epochGt1: (a.CLAUDE_CODE_WORKER_EPOCH ?? 1) > 1,
-      outputStyleAvailable: async (_) => Object.hasOwn(await dX(getCwd(), o), _),
+      outputStyleAvailable: async (_) => Object.hasOwn(await getAllOutputStyles(getCwd(), o), _),
       enabled: isSettingsToCloudEnabled,
       enabledNow: isSettingsToCloudEnabledCached,
       limits: {

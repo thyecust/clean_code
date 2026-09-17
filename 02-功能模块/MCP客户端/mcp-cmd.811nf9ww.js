@@ -23,7 +23,7 @@ import { ts, Js, Oa } from "../../01-核心基础设施/设置-配置/设置-配
 import { Rp } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { V$ } from "../插件系统/chunk-7s6mt1vg.js";
-import { gr, ka, ow, g3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeDisplayTextWithoutRedaction, sanitizeDisplayText, isUnconfiguredMcpServer, ToolHostRegistry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../远程工具执行/chunk-66axrkvh.js";
 import "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
 import { gIe } from "../Bridge-RemoteControl/chunk-qp3gv3vk.js";
@@ -92,7 +92,7 @@ async function Oe(t, c) {
   if (!g || INFO_SUBCOMMAND_ALIASES.includes(S)) {
     let o = ke();
     if (o && Boolean(a.CLAUDE_CODE_REMOTE) && !mayHaveRemoteClient(c.session)) {
-      let v = c.toolState.get(g3);
+      let v = c.toolState.get(ToolHostRegistry);
       if (
         (await Promise.race([
           gIe(c, v, "resolve"),
@@ -108,7 +108,7 @@ ${j}`);
     let R = countMatching(r, (v) => v.type === "connected"),
       P = countMatching(r, (v) => v.type === "cached"),
       E = countMatching(r, (v) => v.type === "pending"),
-      k = countMatching(r, ow),
+      k = countMatching(r, isUnconfiguredMcpServer),
       h = countMatching(r, I),
       M = countMatching(r, (v) => v.type === "disabled"),
       O = r.length - R - P - E - M - k;
@@ -177,7 +177,7 @@ ${j}`),
       P = e === "all" ? formatBulkTogglePersistWarning(d, !0, b) : null;
     if (R.length === 0) {
       let h = countMatching(d, (v) => v.type === "disabled"),
-        M = countMatching(d, (v) => ow(v) && !b(v.name));
+        M = countMatching(d, (v) => isUnconfiguredMcpServer(v) && !b(v.name));
       if (h === 0 && P === null && M > 0)
         return s(
           `${M} MCP server(s) aren't configured yet, so there's nothing to reconnect. The rest are already connected or connecting.`,
@@ -305,7 +305,7 @@ ${j}`),
   );
 }
 function m(t) {
-  return gr(t);
+  return sanitizeDisplayTextWithoutRedaction(t);
 }
 function W(t, c, g) {
   let r = `${t}${c}`;
@@ -325,7 +325,7 @@ function ne(t, c, g) {
             .map((p) => {
               let N = Oa(p.name),
                 b = countMatching(c, (A) => A.name.startsWith(N)),
-                f = ow(p) ? "not configured" : B[getMcpServerType(p)];
+                f = isUnconfiguredMcpServer(p) ? "not configured" : B[getMcpServerType(p)];
               return `  ${_(m(p.name))}  ${_(f)}  ${p.config.type ?? "stdio"}${X(b)}`;
             }),
     e = w.map((p) => {
@@ -369,7 +369,7 @@ function X(t) {
   return t > 0 ? ` \xB7 ${t} ${pluralize(t, "tool")}` : "";
 }
 function z(t, c, g, r) {
-  if (g instanceof mi) return s(ka(l(g), void 0, "none"));
+  if (g instanceof mi) return s(sanitizeDisplayText(l(g), void 0, "none"));
   if (r.persistsOffBox)
     return (
       n(`mcp ${t} refused for ${Qn(c)}: ${l(g)}`, { level: "error" }),
@@ -378,11 +378,11 @@ function z(t, c, g, r) {
       )
     );
   return s(
-    `Couldn't ${t} "${m(c)}" \u2014 ${ka(l(g))}. Run \`/mcp\` in the terminal to check.`,
+    `Couldn't ${t} "${m(c)}" \u2014 ${sanitizeDisplayText(l(g))}. Run \`/mcp\` in the terminal to check.`,
   );
 }
 function I(t) {
-  return (t.type === "failed" && !ow(t)) || t.type === "needs-auth";
+  return (t.type === "failed" && !isUnconfiguredMcpServer(t)) || t.type === "needs-auth";
 }
 function J(t, c) {
   return I(t) && !c(t.name);

@@ -11,7 +11,7 @@ import { ge, l, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ASt } from "../Hooks钩子/chunk-z3433nr6.js";
-import { vc, Ute, uDe, qte, dgn, Jv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { estimateTokens, countMessageTokens, resolvePluginRelativePath, extractMarkdownTitle, buildSkillSearchText, loadMarketplace } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { parseFrontmatter, parseOptionalString } from "./chunk-3kmsshb6.js";
 import { isNonMarketplacePluginSource, isProjectSkillsDirPlugin, splitPluginId } from "../插件系统/chunk-33bdfgmx.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -32,7 +32,7 @@ async function getPluginInventory(t, e) {
   }
   let s = isNonMarketplacePluginSource(e),
     o = splitPluginId(t.source).name || t.name,
-    r = s ? void 0 : (await Jv(e)).plugins.find((d) => d.name === o);
+    r = s ? void 0 : (await loadMarketplace(e)).plugins.find((d) => d.name === o);
   if (!r && !s) throw Error(`Plugin ${o} not found in marketplace ${e}`);
   let [a, i, u] = await Promise.all([
       C([t.commandsPath, ...(t.commandsPaths ?? [])]),
@@ -88,7 +88,7 @@ async function computePluginTokenCost(t, e, s) {
 }
 function scaleCharsToTokens(t, e, s, o = 4) {
   if (s !== void 0 && e > 0) return Math.round((t / e) * s);
-  return vc(" ".repeat(t), o);
+  return estimateTokens(" ".repeat(t), o);
 }
 var E = 1048576;
 function b(t, e) {
@@ -104,10 +104,10 @@ async function w(t, e) {
     return (v(t, f), { alwaysOn: "", onInvoke: "" });
   }
   let { frontmatter: o, content: r } = parseFrontmatter(s, t, { normalizeKeys: !0 }),
-    a = parseOptionalString(o.description, e) ?? qte(r, "Skill"),
+    a = parseOptionalString(o.description, e) ?? extractMarkdownTitle(r, "Skill"),
     i = o.when_to_use != null ? String(o.when_to_use) : void 0;
   return {
-    alwaysOn: dgn({ name: e, description: a, whenToUse: i }),
+    alwaysOn: buildSkillSearchText({ name: e, description: a, whenToUse: i }),
     onInvoke: r.trim(),
   };
 }
@@ -135,7 +135,7 @@ function S(t, e) {
 }
 async function j(t, e) {
   if (!t) return 0;
-  return Ute([{ role: "user", content: t }], [], e);
+  return countMessageTokens([{ role: "user", content: t }], [], e);
 }
 function P(t) {
   return [t]
@@ -170,7 +170,7 @@ async function L(t) {
   }
 }
 async function O(t, e) {
-  return isProjectSkillsDirPlugin(t) ? uDe(t, e) : m.join(t.path, e);
+  return isProjectSkillsDirPlugin(t) ? resolvePluginRelativePath(t, e) : m.join(t.path, e);
 }
 async function C(t) {
   let e = [],

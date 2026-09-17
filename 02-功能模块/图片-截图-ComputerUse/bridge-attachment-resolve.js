@@ -20,7 +20,7 @@ import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT } from "../../01-核�
 import { sanitizePeerFileName, peerFileFailureNote, peerFileCountCapNote, verifyPeerFileIntegrity, emitPeerFileReceiveTelemetry, injectPeerFilePrefix } from "../跨会话消息(UDS)/peer-file-transfer.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { parseFileAttachments, dropEmptyTextBlocks } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
-import { Ds, bTe, Vzn, Kzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createConcurrencyLimiter, getUploadsDirectory, buildUploadFileName, cacheFileHash } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { KNe, iJn } from "./chunk-0dcnsftb.js";
 import { randomUUID } from "crypto";
 import { mkdir, realpath, writeFile } from "fs/promises";
@@ -82,8 +82,8 @@ async function D(e, s, l, m, p) {
     h = (
       u ? randomUUID().slice(0, 8) : e.file_uuid.slice(0, 8) || randomUUID().slice(0, 8)
     ).replace(/[^a-zA-Z0-9_-]/g, "_"),
-    k = bTe(),
-    _ = Vzn(h, d),
+    k = getUploadsDirectory(),
+    _ = buildUploadFileName(h, d),
     c = L(k, _),
     B = K();
   if (isHoverRestEnabled() && m !== void 0 && isValidPathSegment(B) && isValidPathSegment(_)) {
@@ -100,7 +100,7 @@ async function D(e, s, l, m, p) {
     }
   if (s && e.sha256 === void 0)
     try {
-      Kzn(await realpath(c), hashSha256(r));
+      cacheFileHash(await realpath(c), hashSha256(r));
     } catch {
       a(`registration skipped for ${c}`);
     }
@@ -161,7 +161,7 @@ async function H(e, s, l, m, p) {
     d = d.slice(0, MAX_TRANSFER_FILE_COUNT);
   }
   let k = s && l,
-    _ = Ds(4, (t) => D(t, s, k, m, p)),
+    _ = createConcurrencyLimiter(4, (t) => D(t, s, k, m, p)),
     c = await Promise.all(d.map((t) => _(t))),
     B = [],
     o = [],

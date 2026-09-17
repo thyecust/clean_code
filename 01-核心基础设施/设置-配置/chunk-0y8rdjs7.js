@@ -10,20 +10,20 @@
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getSettingsForSource, getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { uD, a3t } from "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
-import { iH, Iue } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isTrustedBuiltinPlugin, collectAddDirEnabledPlugins } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isInlineOrSyncedPluginId, normalizeLookupKey } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 async function checkEnabledPlugins() {
   let o = getInitialSettings(),
     t = [],
-    r = Iue();
+    r = collectAddDirEnabledPlugins();
   for (let [e, i] of Object.entries(r)) {
-    if (iH(e)) continue;
+    if (isTrustedBuiltinPlugin(e)) continue;
     if (e.includes("@") && i) t.push(e);
   }
   if (o.enabledPlugins)
     for (let [e, i] of Object.entries(o.enabledPlugins)) {
       if (!e.includes("@")) continue;
-      let c = iH(e) ? a3t(e) : i,
+      let c = isTrustedBuiltinPlugin(e) ? a3t(e) : i,
         s = t.indexOf(e);
       if (c) {
         if (s === -1) t.push(e);
@@ -33,10 +33,10 @@ async function checkEnabledPlugins() {
 }
 function getPluginEditableScopes() {
   let o = new Map(),
-    t = Iue();
+    t = collectAddDirEnabledPlugins();
   for (let [e, i] of Object.entries(t)) {
     if (!e.includes("@")) continue;
-    if (iH(e)) continue;
+    if (isTrustedBuiltinPlugin(e)) continue;
     if (i === !0) o.set(e, "flag");
     else if (i === !1) o.delete(e);
   }
@@ -54,7 +54,7 @@ function getPluginEditableScopes() {
       if (!s.includes("@")) continue;
       if (s in t && t[s] !== u)
         n(`Plugin ${s} from --add-dir (${t[s]}) overridden by ${i} (${u})`);
-      if (!uD.includes(i) && iH(s)) continue;
+      if (!uD.includes(i) && isTrustedBuiltinPlugin(s)) continue;
       if (u === !0) o.set(s, e);
       else if (u === !1) o.delete(s);
     }

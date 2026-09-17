@@ -25,7 +25,7 @@ import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { y3, _ht, PVn, RESTRICTED_SESSION_CLOUD_REFUSAL, Ht, clearBridgeSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isSelfHostedPool, markSessionTeleported, clearSessionTeleported, RESTRICTED_SESSION_CLOUD_REFUSAL, createSystemInfoMessage, clearBridgeSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
@@ -239,12 +239,12 @@ async function P(s) {
       }
     );
   }
-  let R = (p) => p.kind !== "bridge" && !y3(p),
+  let R = (p) => p.kind !== "bridge" && !isSelfHostedPool(p),
     w =
       T.selectedTarget && R(T.selectedTarget)
         ? T.selectedTarget
         : T.availableTargets.find(R);
-  if (!w || y3(w)) {
+  if (!w || isSelfHostedPool(w)) {
     if (T.environmentsError)
       return (
         logFeatureBad("teleport_to_cloud", "env_lookup_failed"),
@@ -259,14 +259,14 @@ async function P(s) {
         kind: "precondition",
         message:
           "No cloud environment available. Create one from the web UI (or run /web-setup), then try again." +
-          (y3(T.selectedTarget)
+          (isSelfHostedPool(T.selectedTarget)
             ? " Your default target is a self-hosted environment \u2014 continuing in the cloud needs a managed environment."
             : ""),
       }
     );
   }
   (logEvent("tengu_teleport_to_cloud", { action: S("start") }),
-    _ht(c),
+    markSessionTeleported(c),
     s.beforeMove?.(),
     await a.settleUploadsBeforeHandoff?.());
   let v = await U({
@@ -279,7 +279,7 @@ async function P(s) {
   });
   if (!v.ok) {
     if (v.mayHaveCommitted) logFeatureSad("teleport_to_cloud", "maybe_committed");
-    else (logFeatureBad("teleport_to_cloud", "request_failed"), PVn(c));
+    else (logFeatureBad("teleport_to_cloud", "request_failed"), clearSessionTeleported(c));
     return (
       logEvent("tengu_teleport_to_cloud", {
         action: S(v.mayHaveCommitted ? "maybe_committed" : "failed"),
@@ -363,7 +363,7 @@ async function V(s) {
     c = await P({
       beforeMove: () => {
         if (((a = Wlt("cloud_handoff")), a))
-          s.setMessages((h) => [...h, Ht(jlt.cloud_handoff, "warning")]);
+          s.setMessages((h) => [...h, createSystemInfoMessage(jlt.cloud_handoff, "warning")]);
       },
       credentials: s.credentials,
       storageV5: s.storageV5,
@@ -377,7 +377,7 @@ async function V(s) {
     case "server-error": {
       if (c.failure.mayHaveCommitted)
         return (
-          _ht(c.sessionId),
+          markSessionTeleported(c.sessionId),
           clearBridgeSession(void 0, void 0, void 0, s.storageV5),
           setTimeout(H, L, s, !0),
           appendCancelledContinueNotice(
@@ -389,7 +389,7 @@ ${x}`,
       return appendCancelledContinueNotice(`Couldn\u2019t teleport: ${c.failure.message}`, a);
     }
     case "ok": {
-      (_ht(c.success.sessionId), clearBridgeSession(void 0, void 0, void 0, s.storageV5));
+      (markSessionTeleported(c.success.sessionId), clearBridgeSession(void 0, void 0, void 0, s.storageV5));
       let h = c.sessionUrl,
         m = A(c.success.sessionId);
       if (m.kind === "disconnect")

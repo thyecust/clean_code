@@ -14,16 +14,16 @@ import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱�
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { COMMAND_MESSAGE_TAG, LOCAL_COMMAND_CAVEAT_TAG, TICK_TAG, TASK_NOTIFICATION_TAG, TEAMMATE_MESSAGE_TAG, CHANNEL_SOURCE_OPEN_TAG, FORK_BOILERPLATE_TAG, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
-  C2,
-  JVn,
-  aKn,
-  jM,
-  W5e,
-  eK,
-  wT,
-  hre,
-  uXn,
-  dXn,
+  EXTERNAL_MESSAGE_PREFIX,
+  stripWorkingPrefix,
+  createHomeSeedGate,
+  permissionUpdateSchema,
+  MODEL_SWITCH_STDOUT_PREFIX,
+  parseDeviceHookId,
+  ControlRequestTimeoutError,
+  ControlRequestNotDeliveredError,
+  withControlRequestTelemetry,
+  createControlResponseError,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dJ, Ij, aoe } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -412,7 +412,7 @@ function EFn(e) {
         (delete e[o], t.push(o));
     if (e.permission_suggestions !== void 0) {
       let o = e.permission_suggestions,
-        r = Array.isArray(o) ? o.filter((a) => jM().safeParse(a).success) : [];
+        r = Array.isArray(o) ? o.filter((a) => permissionUpdateSchema().safeParse(a).success) : [];
       if (!Array.isArray(o) || r.length !== o.length)
         if (
           (t.push(
@@ -473,7 +473,7 @@ function _e(e) {
     return !0;
   if (aoe(e)) return !0;
   if (
-    (e.startsWith(C2) || e.startsWith(dJ)) &&
+    (e.startsWith(EXTERNAL_MESSAGE_PREFIX) || e.startsWith(dJ)) &&
     e.startsWith(
       "<",
       e.indexOf(`
@@ -552,7 +552,7 @@ function tt(e) {
 `);
   return (
     (t === -1 || t === e.length - 1) &&
-    (e.startsWith(C2) ||
+    (e.startsWith(EXTERNAL_MESSAGE_PREFIX) ||
       e.startsWith(dJ) ||
       Ij.some((o) => e.startsWith(o.trimEnd())))
   );
@@ -1735,7 +1735,7 @@ class D6e {
           e.response.subtype === "success")
         )
           d.resolve(e.response.response);
-        else d.reject(dXn(e.response));
+        else d.reject(createControlResponseError(e.response));
       else {
         let S = this.pendingPermissionRequests.get(r);
         if (S) {
@@ -1795,7 +1795,7 @@ class D6e {
       "isReplay" in e &&
       e.isReplay === !0 &&
       typeof e.message?.content === "string" &&
-      e.message.content.startsWith(W5e)
+      e.message.content.startsWith(MODEL_SWITCH_STDOUT_PREFIX)
     ) {
       let [r] = this.pendingModelSwitchIds;
       (this.pendingModelSwitchIds.delete(r),
@@ -2110,7 +2110,7 @@ class D6e {
   }
   gateSendsOnSettings(e) {
     let t = () => {},
-      o = aKn(e, {
+      o = createHomeSeedGate(e, {
         retire: () => t(),
         noticeAfterMs: this.config.homeSeedWaitNoticeMs,
         typedAheadGraceMs: this.config.homeSeedTypedAheadGraceMs,
@@ -2715,7 +2715,7 @@ class D6e {
           this.awaitControlResponse(d.requestId, e, t)
         );
       },
-      p = t?.answerExpected === !1 ? a() : uXn("remote_control_rpc", a);
+      p = t?.answerExpected === !1 ? a() : withControlRequestTelemetry("remote_control_rpc", a);
     return { posted: o, response: p };
   }
   awaitControlResponse(e, t, o) {
@@ -2751,7 +2751,7 @@ class D6e {
         `[RemoteSessionManager] control_request ${e} (${t.subtype}) was not delivered \u2014 failing it`,
         { level: "warn" },
       ),
-      t.reject(new hre(t.subtype)));
+      t.reject(new ControlRequestNotDeliveredError(t.subtype)));
   };
   onControlRequestTimeout = (e, t, o) => {
     this.pendingModelSwitchIds.delete(e);
@@ -2759,7 +2759,7 @@ class D6e {
     if (!r) return;
     (this.pendingControlRequests.delete(e),
       r.removeAbortListener?.(),
-      r.reject(new wT(t, o)));
+      r.reject(new ControlRequestTimeoutError(t, o)));
   };
   cancelControlRequest(e) {
     let t = this.pendingControlRequests.get(e);
@@ -2827,7 +2827,7 @@ function At(e) {
     return null;
   let t = "path" in e ? e.path : void 0;
   if (typeof t !== "string") return { path: null };
-  let o = JVn(t);
+  let o = stripWorkingPrefix(t);
   return o === null ? null : { path: o };
 }
 function It(e) {
@@ -2835,7 +2835,7 @@ function It(e) {
     typeof e.callback_id === "string" &&
     (typeof e.issued_at === "number" ||
       typeof e.deadline_ms === "number" ||
-      eK(e.callback_id) !== null)
+      parseDeviceHookId(e.callback_id) !== null)
   );
 }
 function Ot(e) {

@@ -13,7 +13,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { ExpandedTranscriptProvider, OverflowHint, ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
-import { PMe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { collectToolUseLookupsWithInProgress } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { bf, VL } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
@@ -89,7 +89,7 @@ function renderToolUseProgressMessage(s, { tools: l, verbose: n }) {
     return e(ToolResultRow, { height: 1, children: e(t, { dimColor: !0, children: f }) });
   let a = n ? s : s.slice(-p),
     g = s.length - a.length,
-    { lookups: d, inProgressToolUseIDs: c } = PMe(s.map((i) => i.data));
+    { lookups: d, inProgressToolUseIDs: c } = collectToolUseLookupsWithInProgress(s.map((i) => i.data));
   return e(ToolResultRow, {
     children: r(o, {
       flexDirection: "column",

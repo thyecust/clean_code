@@ -14,7 +14,7 @@ import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Pr, pT, Lht, an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gracefulShutdownSync, CLOUD_SESSION_CONSENT_MESSAGES, setRemoteFileMode, sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useKeybinding } from "../共享小工具-未细化/keybinding-hooks.js";
@@ -31,7 +31,7 @@ function RemoteFileModeDialog({ repositoryRoot: _, onDone: a, storageV5: w }) {
     p = useGlobalExitKeybinding(
       () => {
         if (c.current) return;
-        ((c.current = !0), logFeatureSad("ccr_dir_sync_mode_prompt", "cancelled"), Pr(1));
+        ((c.current = !0), logFeatureSad("ccr_dir_sync_mode_prompt", "cancelled"), gracefulShutdownSync(1));
       },
       void 0,
       !s,
@@ -54,7 +54,7 @@ function RemoteFileModeDialog({ repositoryRoot: _, onDone: a, storageV5: w }) {
       (logFeatureSad("ccr_dir_sync_mode_prompt", "dismissed"), a(n));
       return;
     }
-    Lht(n, w).then(
+    setRemoteFileMode(n, w).then(
       (l) => {
         if (!l) logFeatureBad("ccr_dir_sync_mode_prompt", "not_written");
         else if (n === "container_sync") logFeatureOk("ccr_dir_sync_mode_prompt");
@@ -68,7 +68,7 @@ function RemoteFileModeDialog({ repositoryRoot: _, onDone: a, storageV5: w }) {
   }
   if (s) return null;
   return r(de, {
-    title: pT["consent.sync.title"],
+    title: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.title"],
     onCancel: () => m("not_now"),
     isCancelActive: !1,
     inputGuide: p.pending
@@ -89,9 +89,9 @@ function RemoteFileModeDialog({ repositoryRoot: _, onDone: a, storageV5: w }) {
         flexDirection: "column",
         gap: 1,
         children: [
-          e(t, { bold: !0, children: an(_) }),
-          e(t, { children: pT["consent.sync.body"] }),
-          e(t, { dimColor: !0, children: pT["consent.sync.detail"] }),
+          e(t, { bold: !0, children: sanitizeForDisplay(_) }),
+          e(t, { children: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.body"] }),
+          e(t, { dimColor: !0, children: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.detail"] }),
         ],
       }),
       e(ve, {

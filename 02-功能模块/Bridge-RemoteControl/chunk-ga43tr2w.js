@@ -27,7 +27,7 @@ import { buildBearerAuthHeader, setSessionAccessToken } from "../认证-OAuth登
 import { FRe, WT } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isProcessProvablyGone, isSameProcessAsync, ownProcStartAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { REMOTE_CONTROL_MALFORMED_RESPONSE_MESSAGE, REMOTE_CONTROL_SIGNED_IN_ACCOUNT_CHANGED_MESSAGE, REMOTE_CONTROL_HOST_SIGNED_OUT_MESSAGE, REMOTE_CONTROL_HOST_ACCOUNT_CHANGED_MESSAGE, REMOTE_CONTROL_PREVIOUS_SESSION_UNAVAILABLE_MESSAGE } from "./remote-control-messages.js";
-import { fmt, wgt, i4n, getBridgeSessionOrStatus, Ly, QWt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createGzipRequestBodyFetch, setPullRequestSubscription, recordCreatedPullRequest, getBridgeSessionOrStatus, isSessionTeleported, findResumedThinkingGroupRanges } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import {
@@ -828,7 +828,7 @@ async function Yjn(t) {
     zi = "Signed out of Claude \u2014 run /login, then /remote-control",
     ut = !1,
     ft = !1;
-  if (je && Ly(je)) {
+  if (je && isSessionTeleported(je)) {
     if (I)
       return (
         n(
@@ -1090,7 +1090,7 @@ async function Yjn(t) {
     return H("tengu_ccr_skip_redundant_heartbeat", !1);
   }
   let wr = rdt(),
-    ro = fmt("ccr_worker", Ee);
+    ro = createGzipRequestBodyFetch("ccr_worker", Ee);
   function ln() {
     return {
       heartbeatIntervalMs: D.heartbeat_interval_ms,
@@ -1350,7 +1350,7 @@ async function Yjn(t) {
       Jr = !0;
   }
   function yn(e) {
-    if (Ly(b)) return;
+    if (isSessionTeleported(b)) return;
     let r = Y === void 0 ? void 0 : ui(Y.code, Y.cause);
     if (se !== void 0 || Y === void 0 || r === void 0 || (Tr && fi(r))) return;
     if (
@@ -1448,7 +1448,7 @@ async function Yjn(t) {
       In(),
       Pn(),
       mt?.stop(),
-      Ly(b))
+      isSessionTeleported(b))
     ) {
       (n(
         `[remote-bridge] Signed-in account changed under teleported session ${b} (${e}) \u2014 latched only`,
@@ -1795,7 +1795,7 @@ async function Yjn(t) {
             Je = !0;
           return;
         }
-        if (Ly(e)) {
+        if (isSessionTeleported(e)) {
           n(
             `[remote-bridge] Proactive refresh suppressed for teleported session ${e}`,
           );
@@ -1869,7 +1869,7 @@ async function Yjn(t) {
                 C = { leg: "sad", code: "refresh_deferred_transient" };
               At = r;
               let ne = et < Ro;
-              if (Ly(e)) ne = !1;
+              if (isSessionTeleported(e)) ne = !1;
               if (ne) (et++, Ue.scheduleFromExpiresIn(e, 0));
               writeDiagnosticsEvent("info", "bridge_repl_v2_proactive_refresh_unreachable", {
                 early_retry: et,
@@ -1980,7 +1980,7 @@ async function Yjn(t) {
           let A = Y;
           Y = void 0;
           let U = E;
-          if (Ly(e)) U = !0;
+          if (isSessionTeleported(e)) U = !0;
           if (U) {
             if (A !== void 0 && !R) J("Session teleported to cloud");
           } else if (A !== void 0 && !d && !R && !X) {
@@ -2254,7 +2254,7 @@ async function Yjn(t) {
     return C;
   }
   async function Ot(e, r, o, a, d) {
-    if (Ly(b))
+    if (isSessionTeleported(b))
       return (
         n(`[remote-bridge] Rebuild suppressed for teleported session ${b}`),
         "suppressed_teleported"
@@ -2349,7 +2349,7 @@ async function Yjn(t) {
         let j = Math.min(Yn * 2 ** (C - 1), Nt);
         if ((await sleep(Math.max(Math.random() * j, Xn)), R)) break;
         if (V !== r) return { creds: null, attempts: _ };
-        if (((ir = Date.now()), Ly(b)))
+        if (((ir = Date.now()), isSessionTeleported(b)))
           return (
             J("Session teleported to cloud"),
             writeDiagnosticsEvent("info", "bridge_repl_v2_remint_loop_teleported"),
@@ -2510,7 +2510,7 @@ async function Yjn(t) {
   }
   async function wo(e) {
     let r = X;
-    if (Ly(b)) {
+    if (isSessionTeleported(b)) {
       J("Session teleported to cloud");
       return;
     }
@@ -2550,7 +2550,7 @@ async function Yjn(t) {
         if (!R) await Hn("recovery", o, r);
         return;
       }
-      if (Ly(b)) {
+      if (isSessionTeleported(b)) {
         J("Session teleported to cloud");
         return;
       }
@@ -2579,7 +2579,7 @@ async function Yjn(t) {
           if (R || V !== o) return;
           let Se = ye !== void 0 && ye !== (a ?? "") ? ye : void 0;
           if (!Se) continue;
-          if (((A = !0), Ly(b))) {
+          if (((A = !0), isSessionTeleported(b))) {
             J("Session teleported to cloud");
             return;
           }
@@ -2789,18 +2789,18 @@ async function Yjn(t) {
     yn("teardown");
     let e = Me ?? lr;
     if (e !== void 0) {
-      if (!Ly(b)) {
+      if (!isSessionTeleported(b)) {
         let j = Me === void 0 ? Tn() : void 0;
         if (j !== void 0 && Ye && isBridgeHostDeclinedEndEnabled()) De(j);
         else te(e);
       }
       ((Me = void 0), (lr = void 0), (xe = void 0));
-    } else if (!X && Y?.code === 403 && !Ly(b)) yt(Y.detail);
+    } else if (!X && Y?.code === 403 && !isSessionTeleported(b)) yt(Y.detail);
     else if (
       !X &&
       ((sr > 0 && ($e !== void 0 || ue)) ||
         (Y !== void 0 && Y.code !== 4090)) &&
-      !Ly(b)
+      !isSessionTeleported(b)
     )
       te("recovery_abandoned_at_teardown");
     if (
@@ -3064,7 +3064,7 @@ async function Yjn(t) {
       let a = `${e}#${r}`,
         d = hr.get(a);
       if (o) hr.set(a, { agentId: o, repo: e, prNumber: r });
-      let _ = await wgt("subscribe", {
+      let _ = await setPullRequestSubscription("subscribe", {
         sessionId: b,
         repo: e,
         prNumber: r,
@@ -3079,7 +3079,7 @@ async function Yjn(t) {
     },
     async unsubscribePR(e, r) {
       if (z) return { ok: !1, reason: "owner_changed" };
-      let o = await wgt("unsubscribe", {
+      let o = await setPullRequestSubscription("unsubscribe", {
         sessionId: b,
         repo: e,
         prNumber: r,
@@ -3093,7 +3093,7 @@ async function Yjn(t) {
     async recordCreatedPR(e, r) {
       if (R) return { ok: !1, skipped: "no_bridge" };
       if (z) return { ok: !1, skipped: "owner_changed" };
-      return i4n({
+      return recordCreatedPullRequest({
         sessionUrl: buildSessionApiUrl(cn, b),
         workerToken: pt,
         ...e,
@@ -3303,7 +3303,7 @@ function _i(t, p) {
                   : "ok";
 }
 async function Ze(t, p, v, w, I, S, L) {
-  if (Ly(t))
+  if (isSessionTeleported(t))
     return (
       n(`[remote-bridge] Archive suppressed for teleported session ${t}`),
       Ir(t, L),
@@ -3390,7 +3390,7 @@ async function Yo(t, p, v, w, I, S, L) {
 function Xo(t, p) {
   if (p <= 0 || t.length <= p) return t;
   let v = t.length - p;
-  for (let { fromIdx: w, toIdx: I } of QWt(t))
+  for (let { fromIdx: w, toIdx: I } of findResumedThinkingGroupRanges(t))
     if (v > w && v <= I) {
       v = w;
       break;

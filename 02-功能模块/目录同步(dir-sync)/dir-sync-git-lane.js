@@ -11,17 +11,17 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { The } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { SHA256_HEX_REGEX, hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import {
-  xne,
-  bde,
-  wKe,
-  TKe,
-  XVn,
-  $ht,
-  Uht,
-  Bht,
-  nn,
-  tj,
-  qO,
+  SEED_LAPTOP_JOURNAL_PATH,
+  SEED_WORKER_JOURNAL_PATH,
+  SEED_LAPTOP_BUNDLE_PATH,
+  SEED_WORKER_BUNDLE_PATH,
+  MAX_LANE_FILE_BYTES,
+  createCommitRouteMemo,
+  uploadObjectDirect,
+  downloadObjectDirect,
+  GIT_OBJECT_ID_REGEX,
+  CLAUDE_REF_PREFIX,
+  isClaudeSessionRef,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { on, I9 } from "../Git-Worktree/chunk-v967hawf.js";
 import { basename, dirname, isAbsolute, join as p } from "path";
@@ -32,12 +32,12 @@ function getSideGitDirPath(o) {
   return p(o, The, R);
 }
 function buildSessionRefName(o, a) {
-  let e = `${tj}${o}/${a}`;
-  return m.test(o) && g.test(a) && qO(e) ? e : null;
+  let e = `${CLAUDE_REF_PREFIX}${o}/${a}`;
+  return m.test(o) && g.test(a) && isClaudeSessionRef(e) ? e : null;
 }
 async function listSessionRefs(o, a) {
   if (!m.test(a)) return null;
-  let e = `${tj}${a}/`,
+  let e = `${CLAUDE_REF_PREFIX}${a}/`,
     u = await on(o, ["for-each-ref", "--format=%(objectname) %(refname)", e]);
   if (u.exitCode !== 0) return null;
   let t = u.stdout
@@ -50,8 +50,8 @@ async function listSessionRefs(o, a) {
       let [c = "", r = ""] = i.split(" ");
       return { name: r, id: c };
     })
-    .filter((i) => i.name.startsWith(e) && qO(i.name));
-  return t.every((i) => nn.test(i.id)) ? t : null;
+    .filter((i) => i.name.startsWith(e) && isClaudeSessionRef(i.name));
+  return t.every((i) => GIT_OBJECT_ID_REGEX.test(i.id)) ? t : null;
 }
 var UNREADABLE_CARRIER_STATUS = 422,
   d = { kind: "failed", status: UNREADABLE_CARRIER_STATUS };
@@ -67,12 +67,12 @@ function createDirSyncJournalTransport({
         o.putLaneRow(r, l, { ifMatchSha256: s, signal: f, oneTryIfLong: !0 }),
       get: (r, l, s) => o.getLaneFile(r, l, s),
     },
-    c = $ht();
+    c = createCommitRouteMemo();
   return {
     putOutbound: (r, { ifMatchEtag: l, signal: s }) =>
-      Uht({
+      uploadObjectDirect({
         client: a,
-        rel: wKe,
+        rel: SEED_LAPTOP_BUNDLE_PATH,
         content: r,
         ifMatchEtag: l,
         signal: s,
@@ -84,9 +84,9 @@ function createDirSyncJournalTransport({
     async getInbound(r, l) {
       switch (r.via) {
         case "direct": {
-          let s = await Bht({
+          let s = await downloadObjectDirect({
             client: a,
-            rel: TKe,
+            rel: SEED_WORKER_BUNDLE_PATH,
             object: r,
             maxBytes: e,
             signal: l,
@@ -100,7 +100,7 @@ function createDirSyncJournalTransport({
               : s;
         }
         case "row":
-          return O(i, TKe, r, l);
+          return O(i, SEED_WORKER_BUNDLE_PATH, r, l);
         case "file":
         case "unknown":
           return (
@@ -112,9 +112,9 @@ function createDirSyncJournalTransport({
       }
     },
     publishJournal: (r, { ifMatchEtag: l, createOnly: s, signal: f }) =>
-      s === !0 && l === null ? i.put(xne, r, void 0, f) : E(i, xne, r, l, f),
-    readPeerJournal: (r) => i.get(bde, r),
-    readOwnJournal: (r) => i.get(xne, r),
+      s === !0 && l === null ? i.put(SEED_LAPTOP_JOURNAL_PATH, r, void 0, f) : E(i, SEED_LAPTOP_JOURNAL_PATH, r, l, f),
+    readPeerJournal: (r) => i.get(SEED_WORKER_JOURNAL_PATH, r),
+    readOwnJournal: (r) => i.get(SEED_LAPTOP_JOURNAL_PATH, r),
   };
 }
 async function E(o, a, e, u, t) {
@@ -130,7 +130,7 @@ async function O(o, a, e, u) {
     !SHA256_HEX_REGEX.test(e.sha256) ||
     !Number.isSafeInteger(e.size) ||
     e.size < 0 ||
-    e.size > XVn
+    e.size > MAX_LANE_FILE_BYTES
   )
     return d;
   let t = await o.get(a, u, e.size);

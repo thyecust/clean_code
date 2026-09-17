@@ -28,7 +28,7 @@ import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { getCommandName, an, J_t, clearCommandMemoizationCaches } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getCommandName, sanitizeForDisplay, estimateSkillTokenCount, clearCommandMemoizationCaches } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -78,7 +78,7 @@ function et(ss) {
   return ss.workerInventory?.skills;
 }
 function ot(Yo) {
-  return { value: Yo, label: `/${an(Yo)}` };
+  return { value: Yo, label: `/${sanitizeForDisplay(Yo)}` };
 }
 function tt() {}
 function Oe(ts) {
@@ -183,7 +183,7 @@ function At(ae) {
   );
 }
 function Xt(Mt) {
-  return [Mt, J_t(Mt)];
+  return [Mt, estimateSkillTokenCount(Mt)];
 }
 function _t(xo, Oo) {
   return (
@@ -734,7 +734,7 @@ function Ne(Zs) {
     T = Lo[Ys],
     Bt;
   if (z[0] !== Po || z[1] !== O)
-    ((Bt = formatTokenEstimate(J_t(O, Po))), (z[0] = Po), (z[1] = O), (z[2] = Bt));
+    ((Bt = formatTokenEstimate(estimateSkillTokenCount(O, Po))), (z[0] = Po), (z[1] = O), (z[2] = Bt));
   else Bt = z[2];
   let Ro = `${Bt} tok`,
     Ee;

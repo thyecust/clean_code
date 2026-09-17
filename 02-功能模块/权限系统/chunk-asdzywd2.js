@@ -15,17 +15,17 @@ import { getParentSessionId } from "../Teammates团队/teammate-context.js";
 import {
   FORK_AGENT,
   buildChildMessage,
-  p3,
-  RV,
-  yne,
-  cH,
-  MO,
-  zne,
+  formatAgentQuerySource,
+  registerBackgroundAgentTask,
+  getSkillsPersistencePrompt,
+  resolveSubagentModel,
+  getMainThreadSystemPrompt,
+  createModelRestrictedSystemMessageHandler,
   runAgent,
-  k3,
-  Q6t,
-  Re,
-  VS,
+  runAsyncAgent,
+  buildReplayLogFromMessages,
+  createUserMessage,
+  buildDefaultSystemPrompt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { Cj } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
@@ -47,7 +47,7 @@ async function spawnForkFromDirective(t, e, a, m, p) {
         let c = e.agentId ?? Cj,
           i = e.toolState.get(CC).get(c)?.replayLog;
         if (i) return [...i];
-        if (e.replHydration?.kind === "resume") return Q6t(e.messages);
+        if (e.replHydration?.kind === "resume") return buildReplayLogFromMessages(e.messages);
         return [];
       })(),
     },
@@ -58,8 +58,8 @@ async function spawnForkFromDirective(t, e, a, m, p) {
     { taskRegistry: s } = e,
     T = Date.now(),
     d = mc(e.agentContext) + 1,
-    S = cH(FORK_AGENT.model, e.options.mainLoopModel, "inherit", getToolPermissionContext(e).mode),
-    u = RV({
+    S = resolveSubagentModel(FORK_AGENT.model, e.options.mainLoopModel, "inherit", getToolPermissionContext(e).mode),
+    u = registerBackgroundAgentTask({
       agentId: n,
       ownerAgentId: ze(),
       spawnDepth: d,
@@ -107,23 +107,23 @@ async function spawnForkFromDirective(t, e, a, m, p) {
     P = s.takeConcurrencySlot();
   return (
     kw(A, () =>
-      k3({
+      runAsyncAgent({
         taskId: u.agentId,
         abortController: k,
         makeStream: (c, i, b) =>
           runAgent({
             onQueryProgress: i,
             onStreamTokenEstimate: b,
-            onModelRestricted: zne(FORK_AGENT.agentType, e.appendSystemMessage),
+            onModelRestricted: createModelRestrictedSystemMessageHandler(FORK_AGENT.agentType, e.appendSystemMessage),
             agentDefinition: FORK_AGENT,
             promptMessages: [
               ...(m ?? []),
-              Re({ content: [{ type: "text", text: buildChildMessage(t) }] }),
+              createUserMessage({ content: [{ type: "text", text: buildChildMessage(t) }] }),
             ],
             toolUseContext: e,
             canUseTool: a,
             isAsync: !0,
-            querySource: p3(FORK_AGENT.agentType, !0),
+            querySource: formatAgentQuerySource(FORK_AGENT.agentType, !0),
             forkOrigin: p,
             spawnedBySkill: e.options.spawnedBySkill ?? e.options.activeSkill,
             spawnedByForkedSkill: e.options.spawnedByForkedSkill,
@@ -162,14 +162,14 @@ async function _(t) {
       ? e.agentDefinitions.activeAgents.find((o) => o.agentType === e.agent)
       : void 0,
     m = Array.from(getToolPermissionContext(t).additionalWorkingDirectories.keys()),
-    p = await VS(t.options.tools, t.options.mainLoopModel, m);
-  return MO({
+    p = await buildDefaultSystemPrompt(t.options.tools, t.options.mainLoopModel, m);
+  return getMainThreadSystemPrompt({
     mainThreadAgentDefinition: a,
     toolUseContext: t,
     customSystemPrompt: t.options.customSystemPrompt,
     defaultSystemPrompt: p,
     appendSystemPrompt: t.options.appendSystemPrompt,
-    skillsPersistencePrompt: yne(t.options.tools),
+    skillsPersistencePrompt: getSkillsPersistencePrompt(t.options.tools),
   });
 }
 function h(t) {

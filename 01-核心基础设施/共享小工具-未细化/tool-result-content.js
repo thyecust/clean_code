@@ -18,7 +18,7 @@ import { VirtualScrollViewportContext } from "./virtual-scroll-viewport-context.
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatHyperlink } from "./format-hyperlink.js";
 import { Qt, De, V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { cdn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { formatToolResultPreview } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
 F();
 F();
@@ -96,7 +96,7 @@ function ToolResultContent(mr) {
     }
     let n;
     if (p[5] !== x || p[6] !== a || p[7] !== y)
-      ((n = u(cdn(a, x, y))), (p[5] = x), (p[6] = a), (p[7] = y), (p[8] = n));
+      ((n = u(formatToolResultPreview(a, x, y))), (p[5] = x), (p[6] = a), (p[7] = y), (p[8] = n));
     else n = p[8];
     L = n;
   }

@@ -16,16 +16,16 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { gc, oS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
-  ka,
-  gfn,
-  xne,
-  kLe,
-  D8n,
-  p$,
-  _T,
-  Ok,
-  II,
-  $3,
+  sanitizeDisplayText,
+  registerSessionVisitor,
+  SEED_LAPTOP_JOURNAL_PATH,
+  rowStagedBus,
+  setLocalWriteListener,
+  appendAutoMemoryReminder,
+  USER_REJECTED_TOOL_USE_MESSAGE,
+  USER_REJECTED_TOOL_USE_PREFIX,
+  PERMISSION_DENIED_MESSAGE,
+  PERMISSION_DENIED_PREFIX,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { qe, Bt, tt, Mn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -745,7 +745,7 @@ function H(e) {
   return iE(e).trim();
 }
 function iE(e, t) {
-  return ka(e, t)
+  return sanitizeDisplayText(e, t)
     .replace(/[\p{Ps}\u2308\u230A\u231C\u231E\u23A1-\u23A3\u02F9\u02FB]/gu, "(")
     .replace(
       /[\p{Pe}\u2309\u230B\u231D\u231F\u23A4-\u23A6\u02FA\u02FC\u02FD]/gu,
@@ -760,8 +760,8 @@ function V6e(e) {
 }
 function LQt(e, t) {
   if (e.agentId !== void 0)
-    return t !== void 0 && t.trim() !== "" ? `${$3}${t}` : II;
-  return p$(t !== void 0 && t.trim() !== "" ? `${Ok}${t}` : _T);
+    return t !== void 0 && t.trim() !== "" ? `${PERMISSION_DENIED_PREFIX}${t}` : PERMISSION_DENIED_MESSAGE;
+  return appendAutoMemoryReminder(t !== void 0 && t.trim() !== "" ? `${USER_REJECTED_TOOL_USE_PREFIX}${t}` : USER_REJECTED_TOOL_USE_MESSAGE);
 }
 function IHe(e) {
   return typeof e === "string"
@@ -962,17 +962,17 @@ var Ze = new Gt(() => new pe());
 function A() {
   return Ze.of(B());
 }
-function Jmr(e, t = kLe.subscribe) {
+function Jmr(e, t = rowStagedBus.subscribe) {
   let r = A();
   (r.register(e),
-    D8n(() => r.noteLocalWrite()),
+    setLocalWriteListener(() => r.noteLocalWrite()),
     e.then(
       (o) => {
         if (o === null) return;
         (t((a) => {
-          if (a === xne) o.laptopJournalStaged?.();
+          if (a === SEED_LAPTOP_JOURNAL_PATH) o.laptopJournalStaged?.();
         }),
-          gfn(
+          registerSessionVisitor(
             "take_in",
             {
               pending: () =>
@@ -986,7 +986,7 @@ function Jmr(e, t = kLe.subscribe) {
           ));
         let { streaming: d } = o;
         if (d !== void 0)
-          gfn(
+          registerSessionVisitor(
             "publish",
             { pending: () => d.publishDue(Date.now()), visit: (a) => Qe(d, a) },
             B(),

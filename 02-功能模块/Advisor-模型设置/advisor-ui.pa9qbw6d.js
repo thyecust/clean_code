@@ -17,7 +17,7 @@ import { er } from "../../01-核心基础设施/模型目录-ModelCatalog/模型
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { K9, tDe, X9, Mte, DF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { baseModelSupportsAdvisor, tDe, getAdvisorModelAliases, isValidAdvisorModel, DF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
@@ -49,7 +49,7 @@ function K(Lo) {
     w,
     Q;
   if (a[0] !== l) {
-    let Y = X9();
+    let Y = getAdvisorModelAliases();
     let Z = l?.toLowerCase();
     w = Z ? Y.find((To) => Z.includes(To)) : void 0;
     g = l && !w && tDe(l) ? { label: stripAnsi(Zg(l)), value: l } : void 0;
@@ -91,7 +91,7 @@ function K(Lo) {
   let O;
   if (a[15] !== h)
     ((O =
-      !K9(h) &&
+      !baseModelSupportsAdvisor(h) &&
       r(t, {
         color: "warning",
         children: [
@@ -210,12 +210,12 @@ var Bo = async (s, m, d) => {
   let c = parseUserSpecifiedModel(n),
     v = await Yle(c, { credentials: m.credentials });
   if (!v.valid) return (s(`Invalid advisor model: ${v.error}`), null);
-  if (!Mte(c))
+  if (!isValidAdvisorModel(c))
     return (
       s(
         DF(c)
           ? formatAdvisorConsentHint(c)
-          : `${n} cannot be used as an advisor. Valid options: ${[...X9(), "off"].join(", ")}`,
+          : `${n} cannot be used as an advisor. Valid options: ${[...getAdvisorModelAliases(), "off"].join(", ")}`,
       ),
       null
     );

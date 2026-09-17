@@ -10,12 +10,12 @@
 import { l0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { hd, G2, GS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isInProcessTeammateTask, IDLE_WINDOW_KEEPALIVE_REASON, isAgentParkedOnKeepalive } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isTerminalTaskStatus } from "./chunk-mrfx53ye.js";
 function f(r, i) {
   if (Object.hasOwn(r, i)) return r[i];
   return Object.values(r).find(
-    (t) => hd(t) && t.identity.resumableAgentId === i,
+    (t) => isInProcessTeammateTask(t) && t.identity.resumableAgentId === i,
   );
 }
 function pruneAgentNameRegistry(r, i) {
@@ -25,10 +25,10 @@ function pruneAgentNameRegistry(r, i) {
       if (e === void 0) return !1;
       if (!isTerminalTaskStatus(e.status)) return !0;
       return (
-        GS(e) &&
+        isAgentParkedOnKeepalive(e) &&
         "keepaliveReasons" in e &&
         e.keepaliveReasons !== void 0 &&
-        [...e.keepaliveReasons].some((s) => s !== G2)
+        [...e.keepaliveReasons].some((s) => s !== IDLE_WINDOW_KEEPALIVE_REASON)
       );
     }),
   );

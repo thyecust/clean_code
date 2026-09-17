@@ -32,7 +32,7 @@ import { loadFastPathPolicy } from "../../01-核心基础设施/设置-配置/fa
 import { isPolicyAllowedInResponse } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { jAn } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
-import { HI } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { CLAUDE_IN_CHROME_URL } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSecureSocketPath, getAllSocketPaths } from "./claude-in-chrome-host.js";
 import { logChromeBridgeConnected, logChromeExtensionConnected, logChromeToolCallDisconnected } from "../Hooks钩子/chrome-telemetry-events.js";
 import { StdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
@@ -92,7 +92,7 @@ function createChromeContext(e, r) {
       if (o) logChromeToolCallDisconnected(p);
       if (p)
         return `Browser extension is not connected: the OAuth token Claude Code is using belongs to a different claude.ai account than the one Claude Code is logged in as. If CLAUDE_CODE_OAUTH_TOKEN is set in your shell or CI profile, unset it (or re-mint it for this account), then run /logout and /login in Claude Code and make sure the browser extension is signed into the same claude.ai account. If you continue to experience issues, please report a bug: ${P}`;
-      return `Browser extension is not connected. Please ensure the Claude browser extension is installed and running (${HI}), and that you are logged into claude.ai with the same account as Claude Code. If this is your first time connecting to Chrome, you may need to restart Chrome for the installation to take effect. If you continue to experience issues, please report a bug: ${P}`;
+      return `Browser extension is not connected. Please ensure the Claude browser extension is installed and running (${CLAUDE_IN_CHROME_URL}), and that you are logged into claude.ai with the same account as Claude Code. If this is your first time connecting to Chrome, you may need to restart Chrome for the installation to take effect. If you continue to experience issues, please report a bug: ${P}`;
     },
     onExtensionPaired: (t, s) => {
       if (o) logChromeExtensionConnected();

@@ -23,36 +23,36 @@ import { NOTIFICATION_TYPES } from "../图片-截图-ComputerUse/settings-option
 import { getSettingsFilePathForSource, getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { findGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
-  Ih,
-  Awe,
-  Cwe,
-  vwe,
-  $X,
-  Sde,
-  vne,
-  an,
-  dC,
-  vY,
-  t_n,
-  RY,
-  n_n,
-  r_n,
-  o_n,
-  WMe,
-  rAe,
-  tSt,
-  nSt,
-  rSt,
-  p_n,
-  oAe,
+  isAnyPathWithinRoots,
+  resolveReachableRoots,
+  mergeChildProcessEnv,
+  getHomeDirFromEnv,
+  getWriteEntriesForSource,
+  getCommonWriteRoots,
+  getScopedWriteRoots,
+  sanitizeForDisplay,
+  getBuiltinToolsForContext,
+  getDeviceHooksConsentFilePath,
+  writeConsentToStore,
+  createConsentStore,
+  setConsentAnswerGiven,
+  readConsentAnswer,
+  emitConsentAnswer,
+  isConsentStoreInReach,
+  getRealFileSystemAccess,
+  captureHookSettings,
+  createHookSettingsAccessor,
+  resolveStandingLapse,
+  isAnySettingsSourceInReach,
+  hasCapturedHooks,
   deviceHooksProcessMemories,
-  hj,
-  Lk,
-  fXn,
-  f_n,
-  oSt,
-  m_n,
-  mXn,
+  formatHookTarget,
+  formatHookLabel,
+  listConfiguredHooks,
+  getHookSourceDescription,
+  getHookSourceHeader,
+  getHookSourceInlineLabel,
+  sortHookEventsBySource,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { oBe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
@@ -104,7 +104,7 @@ var hs =
       "not offered right now \u2014 remote tool serving was turned off by Anthropic (emergency switch); offered again when it is turned back on",
   };
 function ps(n, a, s) {
-  let g = rSt({ standing: n, lapsesUnusedAt: a }, s);
+  let g = resolveStandingLapse({ standing: n, lapsesUnusedAt: a }, s);
   if (g !== null)
     return { standing: g === "dormant" ? Ao.dormant : hs, standingIsIdle: !0 };
   switch (n.kind) {
@@ -214,10 +214,10 @@ function ys(n, a, s) {
     a !== null &&
     a.kind === "captured" &&
     s &&
-    oAe(a)
+    hasCapturedHooks(a)
   )
     return { captured: a, kept: "launch_hooks" };
-  if (a?.kind === "none" && a.reason === "disabled_by_settings" && oAe(n))
+  if (a?.kind === "none" && a.reason === "disabled_by_settings" && hasCapturedHooks(n))
     return { captured: ks, kept: "off" };
   return { captured: n };
 }
@@ -229,19 +229,19 @@ async function Fo({
   senderMemory: k,
   processMemory: w,
 }) {
-  let c = vY();
+  let c = getDeviceHooksConsentFilePath();
   if (s !== "cloud") return { consent: s, consentLocation: c, rows: [] };
-  let y = RY(a),
+  let y = createConsentStore(a),
     S = () => ps(k.standing, k.lapsesUnusedAt, Date.now()),
     R = g,
     I = async (q) =>
       R.current?.origin === "given" ? R.current.value.catch(() => "unset") : q;
   try {
-    let { stored: q, origin: xe } = await r_n(R, y),
+    let { stored: q, origin: xe } = await readConsentAnswer(R, y),
       Te = q,
-      De = tSt(nSt()),
+      De = captureHookSettings(createHookSettingsAccessor()),
       Ee = findGitRootUncached(n) ?? n,
-      ie = await Awe({
+      ie = await resolveReachableRoots({
         stickyRoots: new Set(k.stickyRoots),
         pinnedScopes: new Set(k.pinnedScopes),
         pinnedRoots: new Map(k.pinnedRoots),
@@ -251,19 +251,19 @@ async function Fo({
           Ee,
           await realpath(Ee).catch(() => Ee),
         ],
-        reachBaseline: k.reachBaseline ?? new Map(yi.map((b) => [b, $X(b, n)])),
+        reachBaseline: k.reachBaseline ?? new Map(yi.map((b) => [b, getWriteEntriesForSource(b, n)])),
         scopeSettingsFile: (b) => getSettingsFilePathForSource(b) ?? null,
         realpath: realpath,
-        commonRoots: () => k.commonRoots ?? Sde(n),
-        scopeRoots: (b, K) => vne(n, b, K),
+        commonRoots: () => k.commonRoots ?? getCommonWriteRoots(n),
+        scopeRoots: (b, K) => getScopedWriteRoots(n, b, K),
       });
-    if (xe === "read" && Te !== "unset" && (await WMe(c, ie, realpath)) !== !1)
+    if (xe === "read" && Te !== "unset" && (await isConsentStoreInReach(c, ie, realpath)) !== !1)
       Te = "unset";
     let { captured: z, kept: oo } = ys(
       De,
       k.baseline,
       De.kind === "none" && De.reason === "disabled_by_settings"
-        ? await p_n(ie, De.switchSources ?? ["user", "flag"], {
+        ? await isAnySettingsSourceInReach(ie, De.switchSources ?? ["user", "flag"], {
             realpath: realpath,
             scopeSettingsFile: (b) => getSettingsFilePathForSource(b) ?? null,
             everInReach: k.everInReach,
@@ -279,7 +279,7 @@ async function Fo({
         unavailableReason: oo === "off" ? ws : _s[z.reason],
       };
     let to = subprocessEnv(),
-      no = Cwe({
+      no = mergeChildProcessEnv({
         attached: to,
         beforeSettings: xC(),
         ownEnv: oIt(k, P6e(w)),
@@ -303,8 +303,8 @@ async function Fo({
         },
         {
           realpath: realpath,
-          open: rAe().openNoFollow,
-          home: vwe(no),
+          open: getRealFileSystemAccess().openNoFollow,
+          home: getHomeDirFromEnv(no),
           defaultShell: hD(),
           shellPrefix: rIt(no),
         },
@@ -327,7 +327,7 @@ async function Fo({
         await realpath(K).catch(() => K),
         ...(k.knownSpellings.get(b) ?? []),
       ]);
-      if (Ih(No, ie)) He.add(b);
+      if (isAnyPathWithinRoots(No, ie)) He.add(b);
     }
     return {
       consent: await I(Te),
@@ -889,7 +889,7 @@ function zo(n, a) {
       MessageDisplay: {},
     },
     g = bo(a);
-  fXn(n).forEach((w) => {
+  listConfiguredHooks(n).forEach((w) => {
     let c = s[w.event];
     if (c) {
       let y = g[w.event].matcherMetadata !== void 0 ? w.matcher || "" : "";
@@ -922,7 +922,7 @@ function zo(n, a) {
 }
 function Ko(n, a) {
   let s = Object.keys(n[a] || {});
-  return mXn(s, n, a);
+  return sortHookEventsBySource(s, n, a);
 }
 function Xo(n, a, s) {
   let g = s ?? "";
@@ -1114,7 +1114,7 @@ function wt(na) {
     { summary: Q } = na,
     Ds;
   if (fe[0] !== Q.consentLocation)
-    ((Ds = an(Q.consentLocation)), (fe[0] = Q.consentLocation), (fe[1] = Ds));
+    ((Ds = sanitizeForDisplay(Q.consentLocation)), (fe[0] = Q.consentLocation), (fe[1] = Ds));
   else Ds = fe[1];
   let so = Ds;
   switch (Q.consent) {
@@ -1488,12 +1488,12 @@ function Mo(pa) {
 }
 function Vs(qe, Oa) {
   return {
-    label: `[${qe.config.type}] ${Lk(qe.config)}`,
+    label: `[${qe.config.type}] ${formatHookLabel(qe.config)}`,
     value: Oa.toString(),
     description:
       qe.source === "pluginHook" && qe.pluginName
-        ? `${oSt(qe.source)} (${escapeAllControlCharacters(qe.pluginName)})`
-        : oSt(qe.source),
+        ? `${getHookSourceHeader(qe.source)} (${escapeAllControlCharacters(qe.pluginName)})`
+        : getHookSourceHeader(qe.source),
   };
 }
 function Oo(Ha) {
@@ -1592,7 +1592,7 @@ function Zs(Ya) {
   return Ya.source;
 }
 function ei(uo) {
-  let Va = uo.sources.map(m_n).join(", ");
+  let Va = uo.sources.map(getHookSourceInlineLabel).join(", ");
   let za = uo.matcher ? escapeAllControlCharacters(uo.matcher) : "(all)";
   return {
     label: `[${Va}] ${za}`,
@@ -1736,7 +1736,7 @@ function To(rc) {
   else ii = M[11];
   let Jt;
   if (M[12] !== v.source)
-    ((Jt = f_n(v.source)), (M[12] = v.source), (M[13] = Jt));
+    ((Jt = getHookSourceDescription(v.source)), (M[12] = v.source), (M[13] = Jt));
   else Jt = M[13];
   let jt;
   if (M[14] !== Jt)
@@ -1804,7 +1804,7 @@ function To(rc) {
     ((Gt =
       v.config.type === "script"
         ? (v.config.file ?? v.config.script ?? "")
-        : hj(v.config)),
+        : formatHookTarget(v.config)),
       (M[31] = v.config),
       (M[32] = Gt));
   else Gt = M[32];
@@ -2338,7 +2338,7 @@ function dn(Bc) {
       const E = l.offer.templateNames;
       const O = l.current;
       let W;
-      if (m[95] === MEMO_CACHE_SENTINEL) ((W = an(vY())), (m[95] = W));
+      if (m[95] === MEMO_CACHE_SENTINEL) ((W = sanitizeForDisplay(getDeviceHooksConsentFilePath())), (m[95] = W));
       else W = m[95];
       let Pe;
       if (m[96] !== Ce || m[97] !== Xt || m[98] !== po)
@@ -2351,9 +2351,9 @@ function dn(Bc) {
             return;
           }
           let Ji = deviceHooksProcessMemories.of(Ce);
-          (n_n(Ji.consentPin, yo),
-            o_n(Ji.consentAnnounced, yo),
-            t_n(yo, RY(po)).then((Qc) => {
+          (setConsentAnswerGiven(Ji.consentPin, yo),
+            emitConsentAnswer(Ji.consentAnnounced, yo),
+            writeConsentToStore(yo, createConsentStore(po)).then((Qc) => {
               ($c(
                 `${Qc ? "Saved" : "For this session only (the answer could not be written to disk)"}: ${yo === "accepted" ? "cloud sessions started from this machine may run its hooks" : "this machine's hooks stay on this machine"}.`,
               ),
@@ -2509,7 +2509,7 @@ function dn(Bc) {
 var wd = async (n, a) => {
   logEvent("tengu_hooks_command", {});
   let s = getToolPermissionContext(a),
-    g = J1n(dC(s), s).map((k) => k.name);
+    g = J1n(getBuiltinToolsForContext(s), s).map((k) => k.name);
   return e(dn, { toolNames: g, onExit: n });
 };
 export { wd as call };

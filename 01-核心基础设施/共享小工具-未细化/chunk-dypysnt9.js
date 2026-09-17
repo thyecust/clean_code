@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isRemoteToolForwardingSwitchOn, H4n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isRemoteToolForwardingSwitchOn, registerHostRuntime } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function registerToolHosts() {
   let t,
     o = !1,
@@ -25,7 +25,7 @@ function registerToolHosts() {
             }));
     };
   if (
-    (H4n({
+    (registerHostRuntime({
       get remote() {
         if (!o) r();
         return t;

@@ -38,9 +38,9 @@ import { bQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getSessionAuthHeaders } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { getBridgePollIntervalConfig } from "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
 import {
-  BGn,
-  xn,
-  fmt,
+  initRepoCheckoutTracking,
+  gracefulShutdown,
+  createGzipRequestBodyFetch,
   isRemoteToolForwardingSwitchOn,
   isSessionChannelDisabled,
   setInternalEventWriter,
@@ -49,7 +49,7 @@ import {
   updateCCRTipFromAckedBatch,
   getValidatedCCRTip,
   readTranscriptTailForTip,
-  gre,
+  stringifyJsonSafe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getAttestationFilterPolicy } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { isProjectsHumanOriginEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
@@ -506,7 +506,7 @@ class Uz extends Fae {
       skipRedundantHeartbeats: H("tengu_ccr_skip_redundant_heartbeat", !1),
       uploadTrim: () => H("tengu_ccr_upload_trim", {}),
       adoptRefreshedAuth: C,
-      gzipRequestBodyFetch: fmt("ccr_worker", d),
+      gzipRequestBodyFetch: createGzipRequestBodyFetch("ccr_worker", d),
       getAuthHeaders: o,
       reportParkAtInit: ae,
     })),
@@ -536,7 +536,7 @@ class Uz extends Fae {
           let c = `CCRClient initialization failed: ${l(r)}`;
           if (Jjn(r)) n(c, { level: "error" });
           else logError(Error(c));
-          (R?.(`worker registration failed (${u}), exiting`), xn(1, "other"));
+          (R?.(`worker registration failed (${u}), exiting`), gracefulShutdown(1, "other"));
         },
       ),
       this.ccrClient.registerShutdownCleanup(),
@@ -624,7 +624,7 @@ class Uz extends Fae {
       if (this.teeStdout && !this.isBridge)
         try {
           this.teeActivity(
-            gre({
+            stringifyJsonSafe({
               type: "system",
               subtype: "session_state_changed",
               state: r,
@@ -646,7 +646,7 @@ class Uz extends Fae {
         if (this.teeStdout && !this.isBridge)
           try {
             this.teeActivity(
-              gre({
+              stringifyJsonSafe({
                 type: "system",
                 subtype: "turn_starting",
                 mode: r,
@@ -666,7 +666,7 @@ class Uz extends Fae {
       (this.sessionState.onInternalMetadataChanged = (r) => {
         this.ccrClient.reportInternalMetadata(r);
       }),
-      BGn((r) => this.sessionState.notifyMetadataChanged(r)),
+      initRepoCheckoutTracking((r) => this.sessionState.notifyMetadataChanged(r)),
       S)
     )
       S.then(
@@ -860,7 +860,7 @@ class Uz extends Fae {
       if (t !== void 0)
         try {
           this.teeActivity(
-            gre(t) +
+            stringifyJsonSafe(t) +
               `
 `,
           );
@@ -869,7 +869,7 @@ class Uz extends Fae {
     if ((await this.ccrClient.writeEvent(e), this.isBridge)) {
       if (e.type === "control_request" || this.isDebug)
         writeToStdout(
-          gre(e) +
+          stringifyJsonSafe(e) +
             `
 `,
         );

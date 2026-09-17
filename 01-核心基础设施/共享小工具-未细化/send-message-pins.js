@@ -13,7 +13,7 @@ import { getTeamName } from "../../02-功能模块/Teammates团队/teammate-cont
 import { readTeamFileAsync } from "../../02-功能模块/Teammates团队/team-file-store.js";
 import { maxSlugLength, slugify, b5, jD, bP, aRe, lRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jpe } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
-import { pWt, lgn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { listPeerSessions, getBridgeSessionRows } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SEND_MESSAGE_TOOL_NAME } from "./send-message-constants.js";
 import { s, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 async function resolveSendMessagePin({
@@ -38,12 +38,12 @@ async function resolveSendMessagePin({
       return { kind: "proceed", pin: void 0 };
     if (!y) {
       let S = getTeamName(n.teamContext),
-        [P, M, R] = await Promise.all([S ? readTeamFileAsync(S, a) : null, pWt(), jpe(e, l)]),
+        [P, M, R] = await Promise.all([S ? readTeamFileAsync(S, a) : null, listPeerSessions(), jpe(e, l)]),
         x = bP(n, {
           teamFile: P,
           sessions: M,
           cloud: R.sessions,
-          bridge: lgn(e),
+          bridge: getBridgeSessionRows(e),
         }),
         f = aRe(x.byName, g);
       return {

@@ -11,7 +11,7 @@ import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.4
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { truncateToCodePoints, truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { vc, Ute } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { estimateTokens, countMessageTokens } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { cJn } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
 var C = 0.5,
   l = 1600,
@@ -49,10 +49,10 @@ function p(e) {
 }
 function estimateContentTokens(e) {
   if (!e) return 0;
-  if (typeof e === "string") return vc(e);
+  if (typeof e === "string") return estimateTokens(e);
   if (!Array.isArray(e)) return 0;
   return e.reduce((n, t) => {
-    if (f(t)) return n + vc(t.text);
+    if (f(t)) return n + estimateTokens(t.text);
     else if (p(t)) return n + l;
     return n;
   }, 0);
@@ -108,7 +108,7 @@ async function shouldTruncateOutput(e, n) {
   if (t <= u() * C) return !1;
   try {
     return (
-      ((await Ute(
+      ((await countMessageTokens(
         typeof e === "string"
           ? [{ role: "user", content: e }]
           : [{ role: "user", content: e }],

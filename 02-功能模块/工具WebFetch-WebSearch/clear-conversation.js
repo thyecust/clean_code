@@ -26,23 +26,23 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
-  Mft,
-  Rte,
-  tmt,
-  n3,
-  Hy,
-  kM,
-  lTe,
-  bp,
-  hd,
-  yVe,
-  Cgt,
-  pu,
-  nr,
-  Yf,
-  V2,
-  K2,
-  IV,
+  contextBudgetTracker,
+  getTotalTokensReminderMode,
+  endCacheHeartbeatEpisode,
+  isPassiveCommand,
+  removeCommandsByFilter,
+  getLastAssistantTotalTokens,
+  createInitialAttributionState,
+  isLocalBashTask,
+  isInProcessTeammateTask,
+  AGENT_TASK_TYPES,
+  clearObserverPairings,
+  setSessionCwd,
+  isLocalAgentTask,
+  isCompletedWithKeepalive,
+  resetMemoryRelevanceState,
+  recordConversationEditKind,
+  runSessionStartHooks,
   getMaterializedSessionFile,
   resetSessionFilePointer,
   saveCustomTitle,
@@ -99,7 +99,7 @@ async function* clearConversation({
   storageV5: o,
   credentials: I,
 }) {
-  (Cgt(t), Hy(n3), ICe(), xoe(), vJ());
+  (clearObserverPairings(t), removeCommandsByFilter(isPassiveCommand), ICe(), xoe(), vJ());
   let H = getSessionEndHookTimeoutMs();
   (await executeSessionEndHooks(t, "clear", {
     sessionHooks: U,
@@ -108,43 +108,43 @@ async function* clearConversation({
     storageV5: o,
     credentials: I,
   }),
-    tmt("conversation_clear"));
+    endCacheHeartbeatEpisode("conversation_clear"));
   let c = new Set(),
     E = [];
   if (s)
     for (let e of Object.values(s().tasks)) {
       if (C(e)) continue;
-      if (nr(e)) (c.add(e.agentId), E.push(e));
-      else if (hd(e)) c.add(e.identity.agentId);
+      if (isLocalAgentTask(e)) (c.add(e.agentId), E.push(e));
+      else if (isInProcessTeammateTask(e)) c.add(e.identity.agentId);
     }
-  (K2("clear"),
+  (recordConversationEditKind("clear"),
     m((e) => {
-      if (Rte() === "padded-countdown")
-        Mft.of(t).rollOverContext("main", kM(e));
+      if (getTotalTokensReminderMode() === "padded-countdown")
+        contextBudgetTracker.of(t).rollOverContext("main", getLastAssistantTotalTokens(e));
       return [];
     }));
   let B = s
     ? Object.values(s().tasks).some(
         (e) =>
           !C(e) &&
-          yVe.has(e.type) &&
-          (e.status === "running" || (nr(e) && Yf(e))),
+          AGENT_TASK_TYPES.has(e.type) &&
+          (e.status === "running" || (isLocalAgentTask(e) && isCompletedWithKeepalive(e))),
       )
     : !1;
   clearSessionCaches(t, c, k, M, o, B);
   let O = he();
   try {
-    pu(O);
+    setSessionCwd(O);
   } catch {
     n(`/clear: originalCwd "${O}" no longer exists; falling back`);
     let e = sn();
     if (e !== O)
       try {
-        pu(e);
+        setSessionCwd(e);
       } catch {}
   }
   if ((L.clear(), v)) for (let e of Object.keys(v)) delete v[e];
-  if ((j?.clear(), V2(N), d && c.size === 0)) d.current = null;
+  if ((j?.clear(), resetMemoryRelevanceState(N), d && c.size === 0)) d.current = null;
   if (s) closeAllWebViews(s);
   let l = getCurrentSessionTitle(K()),
     A = getCurrentSessionAgentName(),
@@ -165,7 +165,7 @@ async function* clearConversation({
           }
           try {
             if (i.status === "running") {
-              if (bp(i)) (i.shellCommand?.kill(), i.shellCommand?.cleanup());
+              if (isLocalBashTask(i)) (i.shellCommand?.kill(), i.shellCommand?.cleanup());
               if ("abortController" in i) i.abortController?.abort();
             }
           } catch (Q) {
@@ -181,7 +181,7 @@ async function* clearConversation({
             tasks: r,
             runningSubagents: p === 0 ? 0 : e.runningSubagents,
             ...{ endedByModel: !1 },
-            attribution: lTe(),
+            attribution: createInitialAttributionState(),
             cacheBreakerPhrase: void 0,
             sendMessagePins: {},
             agentNameRegistry: pruneAgentNameRegistry(e.agentNameRegistry, r),
@@ -249,7 +249,7 @@ async function* clearConversation({
   let R = Ia();
   if (R) saveWorktreeState(R, o);
   if (d?.current) saveIsolationLatch(d.current, o);
-  let D = await IV(t, "clear", { storageV5: o, credentials: I });
+  let D = await runSessionStartHooks(t, "clear", { storageV5: o, credentials: I });
   if (D.length > 0) m(() => D);
 }
 function C(t) {
@@ -258,7 +258,7 @@ function C(t) {
 var Y = new Set(["local_bash", "monitor_mcp", "monitor_ws", "mcp_task"]);
 function hasAgentTaskSurvivingClear(t) {
   return Object.values(t).some(
-    (m) => !C(m) && yVe.has(m.type) && !isTerminalTaskStatus(m.status),
+    (m) => !C(m) && AGENT_TASK_TYPES.has(m.type) && !isTerminalTaskStatus(m.status),
   );
 }
 export { clearConversation, hasAgentTaskSurvivingClear };

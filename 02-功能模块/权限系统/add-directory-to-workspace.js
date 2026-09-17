@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, nk } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { YX, JX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { validateWorkingDirectory, formatDirectoryValidationMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -185,7 +185,7 @@ function AddDirectoryToWorkspaceDialog(bo) {
     Ge;
   if (l[8] !== f || l[9] !== me || l[10] !== ge)
     ((Ge = async (Co) => {
-      let S = await YX(Co, ge);
+      let S = await validateWorkingDirectory(Co, ge);
       if (S.resultType === "success") {
         f(S.absolutePath, !1);
         return;
@@ -197,7 +197,7 @@ function AddDirectoryToWorkspaceDialog(bo) {
       ) {
         return;
       }
-      Ie(JX(S));
+      Ie(formatDirectoryValidationMessage(S));
     }),
       (l[8] = f),
       (l[9] = me),

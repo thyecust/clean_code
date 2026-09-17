@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { Lr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { extractTagContent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { _i, jd, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -134,7 +134,7 @@ function renderToolUseRejectedMessage(s, { verbose: i }) {
   });
 }
 function renderToolUseErrorMessage(s, { verbose: i }) {
-  if (!i && typeof s === "string" && Lr(s, "tool_use_error"))
+  if (!i && typeof s === "string" && extractTagContent(s, "tool_use_error"))
     return e(ToolResultRow, {
       children: e(t, { color: "error", children: "Error editing notebook" }),
     });

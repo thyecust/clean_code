@@ -16,7 +16,7 @@ import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js"
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { Or, QN } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSettingsFilePathForSource, getLocalSettingsValidationErrors, getSettingsWithErrors } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { cw, MCP_SETTINGS_SCOPES, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { formatMcpScopeLocation, MCP_SETTINGS_SCOPES, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { s, T, c, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { mkdir, open as I } from "fs/promises";
 import { join as d } from "path";
@@ -207,7 +207,7 @@ async function P() {
 function getSettingsWithMcpErrors() {
   let e = getSettingsWithErrors(),
     t = MCP_SETTINGS_SCOPES.flatMap((r) =>
-      getMcpConfigsByScope(r).errors.map((o) => (o.file ? o : { ...o, file: cw(r) })),
+      getMcpConfigsByScope(r).errors.map((o) => (o.file ? o : { ...o, file: formatMcpScopeLocation(r) })),
     );
   return { settings: e.settings, errors: [...e.errors, ...t] };
 }

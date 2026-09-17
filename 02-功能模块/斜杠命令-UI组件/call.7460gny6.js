@@ -14,7 +14,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { YX, JX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { validateWorkingDirectory, formatDirectoryValidationMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { AddDirectoryToWorkspaceDialog } from "../权限系统/add-directory-to-workspace.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
@@ -66,11 +66,11 @@ async function T(s, a, m) {
         s("Did not add a working directory.");
       },
     });
-  let i = await YX(y, d);
+  let i = await validateWorkingDirectory(y, d);
   if (i.resultType !== "success") {
     let n =
       (i.resultType === "alreadyInWorkingDirectory" ? explainAlreadyAccessibleDirectory(a, i) : null) ??
-      JX(i);
+      formatDirectoryValidationMessage(i);
     return e(D, { message: n, args: m ?? "", onDone: () => s(n) });
   }
   return e(AddDirectoryToWorkspaceDialog, {

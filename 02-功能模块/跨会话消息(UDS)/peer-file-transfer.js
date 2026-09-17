@@ -17,7 +17,7 @@ import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, FILE_TRANSFER_ERROR_MESSAGE, RECEIVED_FILES_MAX_AGE_DAYS } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
-import { bTe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getUploadsDirectory } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { YNe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { randomUUID } from "crypto";
@@ -105,7 +105,7 @@ function peerTransferSpoolDir() {
   return F(getClaudeConfigDir(), k);
 }
 function G() {
-  return bTe();
+  return getUploadsDirectory();
 }
 var V = /^[0-9a-f]{64}$/,
   Z = createLazyValue(() =>

@@ -11,14 +11,14 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { tp, VVe, qS, dLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isAutoCompactEnabled, parseAutoCompactWindowSetting, resolveAutoCompactWindow, isUserConfiguredWindowSource } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function g(r, e) {
-  let { window: n, configured: o, source: s } = qS(r, e),
+  let { window: n, configured: o, source: s } = resolveAutoCompactWindow(r, e),
     t = o > n ? ` \xB7 capped to ${formatTokens(n)} by model` : "",
     a = [
       `Auto-compact window: ${s === "auto" ? "auto" : s === "experiment" || s === "clientdata" ? `auto (${formatTokens(o)} tokens)${t}` : s === "env" ? `${formatTokens(o)} tokens (from CLAUDE_CODE_AUTO_COMPACT_WINDOW)${t}` : s === "unknown-model" ? `${formatTokens(o)} tokens (default for an unrecognized model)${t}` : s === "model-default" ? `${formatTokens(o)} tokens (default for this model)${t}` : `${formatTokens(o)} tokens (from settings)${t}`}`,
     ];
-  if (!tp()) a.push("Auto-compact is currently disabled (see /config)");
+  if (!isAutoCompactEnabled()) a.push("Auto-compact is currently disabled (see /config)");
   if (
     (a.push(
       "Auto-compact summarizes the conversation when context usage approaches this limit. The actual threshold is the minimum of this setting and your model's maximum context window.",
@@ -26,7 +26,7 @@ function g(r, e) {
     a.push(
       "The auto setting picks a window tuned for your model and is strongly recommended for the best cost and performance.",
     ),
-    dLe(s))
+    isUserConfiguredWindowSource(s))
   )
     a.push(
       "Overriding auto may result in high token usage, especially when resuming long sessions.",
@@ -36,10 +36,10 @@ function g(r, e) {
 }
 async function applyAutoCompactWindow(r, e) {
   let n = e.options.mainLoopModel;
-  if (qS(n, void 0).source === "env")
+  if (resolveAutoCompactWindow(n, void 0).source === "env")
     return "CLAUDE_CODE_AUTO_COMPACT_WINDOW is set and takes precedence. Unset it to change this setting.";
   let o = r.trim().toLowerCase(),
-    t = o === "reset" || o === "unset" || o === "default" ? "auto" : VVe(o);
+    t = o === "reset" || o === "unset" || o === "default" ? "auto" : parseAutoCompactWindowSetting(o);
   if (t === void 0)
     return `Couldn't parse '${r}'. Expected 'auto' or 100k\u20131M tokens (e.g. 500k, 200000, or 200 as shorthand)`;
   let u = t === "auto" ? void 0 : t,
@@ -51,7 +51,7 @@ async function applyAutoCompactWindow(r, e) {
     );
   if (a) return `Couldn't save setting: ${a.message}`;
   let m = getInitialSettings().autoCompactWindow,
-    { window: d, source: l } = qS(n, m),
+    { window: d, source: l } = resolveAutoCompactWindow(n, m),
     c = l === "env" || m !== u,
     f = c ? m : u;
   if (

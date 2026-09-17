@@ -25,7 +25,7 @@ import { readSocketTokenFile, timingSafeStringEqual } from "../../01-核心基�
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { getPromptInputStore, setPromptInputValue } from "../../01-核心基础设施/共享小工具-未细化/prompt-input-store.js";
 import { writeStateAtomic, logJobWriteError, readJobState, withOwnJobStateWrite, SEED_DETAIL, IDLE_NEEDS, isOverlayNeeds, PRE_BOOT_STATES } from "./chunk-7wsy8vxb.js";
-import { Du, BS, tVn, Jgt, zS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { parsePastedPlaceholders, enqueueCommand, setSessionHostSender, parseForkSourceAlive, sessionNeedsStore } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { markAttached, markDetached } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { hasEarlyInput, seedEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
@@ -116,7 +116,7 @@ function re(e) {
     R = new Set(i),
     u = "",
     l = 0;
-  for (let S of Du(p))
+  for (let S of parsePastedPlaceholders(p))
     if (R.has(S.id))
       ((u += p.slice(l, S.index)), (l = S.index + S.match.length));
   if (((u += p.slice(l)), u.trim() === "")) return null;
@@ -373,14 +373,14 @@ class H {
       let t = await readJobState(e, this.storageV5);
       if (!t) return;
       if (!t.forkSourceAlive) {
-        let o = Jgt(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE);
+        let o = parseForkSourceAlive(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE);
         if (o)
           (await writeStateAtomic(e, { ...t, ...o }, this.storageV5), Object.assign(t, o));
       }
       if (t.state === "working" && t.detail === SEED_DETAIL)
         this.armStartupWedgeWatchdog(e);
       let r = (o) => {
-        let i = zS.current();
+        let i = sessionNeedsStore.current();
         return (
           o.tempo === "blocked" &&
           isOverlayNeeds(o) &&
@@ -506,7 +506,7 @@ async function startRendezvousServer(e) {
   if (!t || r.server) return;
   let o = a.BROWSER,
     i = [];
-  (tVn((u) => {
+  (setSessionHostSender((u) => {
     let l = { type: "interactive-mark", ...u };
     if (sendRv(l)) return !0;
     return (i.push(l), !0);
@@ -562,7 +562,7 @@ function le(e) {
     return;
   }
   let t = getDraftMode(e.text);
-  (BS({
+  (enqueueCommand({
     agentId: ze(),
     mode: t,
     value: getDraftValue(e.text),

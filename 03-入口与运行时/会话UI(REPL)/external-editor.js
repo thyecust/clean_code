@@ -12,7 +12,7 @@ import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工
 import { Jhe, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { qR, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { wS, tXt } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { K7, hue, j9, Ng } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { countLineBreaks, formatPastedTextPlaceholder, expandPastedContents, getIdeDisplayName } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createTempFilePath } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { Td } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { spawn, spawnSync as S } from "child_process";
@@ -155,7 +155,7 @@ function editFileInExternalEditor(t) {
         i = x(d, [...s, t], { stdio: "inherit" });
     }
     if (i.error || i.signal || (i.status !== null && i.status !== 0)) {
-      let c = Ng(o);
+      let c = getIdeDisplayName(o);
       return {
         content: null,
         error: i.error
@@ -182,8 +182,8 @@ function L(t, e, r) {
       if (u.unavailable || d === "") continue;
       let s = o.indexOf(d);
       if (s !== -1) {
-        let i = K7(d),
-          f = hue(p, i);
+        let i = countLineBreaks(d),
+          f = formatPastedTextPlaceholder(p, i);
         o = o.slice(0, s) + f + o.slice(s + d.length);
       }
     }
@@ -216,7 +216,7 @@ function editTextInExternalEditor(t, e, r) {
   let o = ae(),
     l = createTempFilePath();
   try {
-    let u = e ? j9(t, e) : t,
+    let u = e ? expandPastedContents(t, e) : t,
       p = r ? N(r) + u : u;
     Jhe(l, p, { encoding: "utf-8", flush: !0 });
     let d = editFileInExternalEditor(l);

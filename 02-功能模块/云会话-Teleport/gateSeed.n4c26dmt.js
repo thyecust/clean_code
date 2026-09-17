@@ -29,7 +29,7 @@ import {
   V_e,
   Mst,
 } from "../Bridge-RemoteControl/chunk-x379yyxb.js";
-import { Ht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../远程工具执行/chunk-66axrkvh.js";
 import { w6e, mHe, VJt, kZ, jae } from "../../03-入口与运行时/Headless-SDK模式/chunk-ph7v431y.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
@@ -401,7 +401,7 @@ function gateSeed(e) {
   return e;
 }
 function partialSeedNotice(e) {
-  return Ht(
+  return createSystemInfoMessage(
     `Showing recent messages \xB7 full history at ${wa(e, void 0, { from: "cli", m: "0" })}`,
     "notice",
   );

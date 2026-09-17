@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { getRuntimeMainLoopModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { MO, getLastCacheSafeParamsForSameModel, j_, hC, VS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getMainThreadSystemPrompt, getLastCacheSafeParamsForSameModel, getSystemContext, getUserContext, buildDefaultSystemPrompt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 async function buildCacheSafeParams({
   toolUseContext: e,
@@ -32,19 +32,19 @@ async function buildCacheSafeParams({
 async function i(e, t) {
   let [o, s, r] = await Promise.all([
     e.renderedSystemPrompt ?? n(e, t),
-    hC(e.session, e.storageV5, e.credentials),
-    j_(e.session, e.options.cacheBreakerPhrase),
+    getUserContext(e.session, e.storageV5, e.credentials),
+    getSystemContext(e.session, e.options.cacheBreakerPhrase),
   ]);
   return { systemPrompt: o, userContext: s, systemContext: r };
 }
 async function n(e, t) {
   let o = getToolPermissionContext(e),
-    s = await VS(
+    s = await buildDefaultSystemPrompt(
       e.options.tools,
       getRuntimeMainLoopModel({ permissionMode: o.mode, mainLoopModel: e.options.mainLoopModel }),
       Array.from(o.additionalWorkingDirectories.keys()),
     );
-  return MO({
+  return getMainThreadSystemPrompt({
     mainThreadAgentDefinition: t,
     toolUseContext: e,
     customSystemPrompt: e.options.customSystemPrompt,

@@ -14,23 +14,23 @@ import { hU, Zy, ARTIFACT_YIELD_PEER_FEATURE } from "../认证-OAuth登录/认�
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
-  ha,
-  _a,
-  Gne,
-  R3,
-  m_t,
-  Dd,
-  Ld,
-  Omn,
-  c5n,
-  u5n,
-  d5n,
-  f5n,
-  m5n,
-  Xv,
-  XX,
-  kI,
-  nMe,
+  enqueuePendingNotification,
+  buildTaskNotification,
+  getWakeState,
+  resetWakeState,
+  bumpSlugEpoch,
+  isSlugStopped,
+  isSlugSwept,
+  recordSlugYield,
+  markYieldedSlugAnnounced,
+  isYieldedSlugAnnounced,
+  releaseYieldedSlugMessage,
+  markYieldedSlugStoppedElsewhere,
+  isYieldedSlugStoppedElsewhere,
+  isSlugYielded,
+  isSlugSweptOrYielded,
+  refreshSummonArmForSlug,
+  isMonitorSocketOpen,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { createMessageEnvelope } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
@@ -122,7 +122,7 @@ async function ee(e) {
           ]);
         if (
           e.alreadyReplying &&
-          (X.userDisarmed || V.stopLatches.isStopped(d) || (Dd(d) && !Ld(d)))
+          (X.userDisarmed || V.stopLatches.isStopped(d) || (isSlugStopped(d) && !isSlugSwept(d)))
         )
           notifyTakenOverSlugStopped(d, u);
       }
@@ -289,7 +289,7 @@ async function ee(e) {
 }
 function q(e, o, r, a) {
   let s = r.get(e);
-  return (s !== void 0 && s === hU(o.sock)) || (!a && !Xv(e));
+  return (s !== void 0 && s === hU(o.sock)) || (!a && !isSlugYielded(e));
 }
 function notifyTakenOverSlugStopped(e, o = sendControlToUdsSocket) {
   j(e, !0, o);
@@ -300,7 +300,7 @@ function handBackTakenOverSlug(e, o = sendControlToUdsSocket) {
 function j(e, o, r) {
   let { wakes: a } = ne(),
     s = a.takenFrom.get(e);
-  if (s === void 0 || Xv(e)) return;
+  if (s === void 0 || isSlugYielded(e)) return;
   a.takenFrom.delete(e);
   for (let l of s) {
     let f = {
@@ -368,8 +368,8 @@ function notifyModelOfReplyYield(e, o) {
           ? `Comment replies on ${o} Artifact(s) are back with this session`
           : `Comment replies on ${o} Artifact(s) were stopped in the other session`,
     a = e === "yielded" ? te : e === "reverted" ? ie : oe;
-  ha({
-    value: _a({
+  enqueuePendingNotification({
+    value: buildTaskNotification({
       taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
       summary: Nt(r),
       body: `
@@ -397,21 +397,21 @@ function registerReplyYieldHolder(e) {
           notHeld: r.notHeld,
           ...(a.length > 0 && {
             onDelivered: () => {
-              let s = a.filter((l) => Xv(l));
-              for (let l of s) c5n(l);
+              let s = a.filter((l) => isSlugYielded(l));
+              for (let l of s) markYieldedSlugAnnounced(l);
               if (s.length > 0) e.yielded(s, o.reason, o.requester);
             },
           }),
         };
       },
       (o, r, a) => {
-        for (let u of r) if (a?.stopped?.has(u) ?? !1) f5n(u, o);
-        let s = new Set(r.filter((u) => m5n(u))),
-          l = new Set(r.filter((u) => u5n(u))),
+        for (let u of r) if (a?.stopped?.has(u) ?? !1) markYieldedSlugStoppedElsewhere(u, o);
+        let s = new Set(r.filter((u) => isYieldedSlugStoppedElsewhere(u))),
+          l = new Set(r.filter((u) => isYieldedSlugAnnounced(u))),
           f = re(o, r),
           h = f.filter(
             (u) =>
-              l.has(u) && !Dd(u) && E(u) && !(a?.transferring?.has(u) ?? !1),
+              l.has(u) && !isSlugStopped(u) && E(u) && !(a?.transferring?.has(u) ?? !1),
           );
         if (h.length > 0) e.reverted(h);
         let c = f.filter((u) => l.has(u) && s.has(u));
@@ -428,22 +428,22 @@ function se(e, o) {
     f = [],
     h = [];
   for (let c of e) {
-    if (Xv(c)) {
-      (Omn(c, o), l.push(c));
+    if (isSlugYielded(c)) {
+      (recordSlugYield(c, o), l.push(c));
       continue;
     }
     let u = E(c),
-      I = Ld(c) && !XX(c),
+      I = isSlugSwept(c) && !isSlugSweptOrYielded(c),
       T =
         a.enabledMemo !== !1 &&
         !a.userDisarmed &&
         !s.stopLatches.isStopped(c) &&
-        (!Dd(c) || I);
+        (!isSlugStopped(c) || I);
     if (!u || !T) {
       f.push(c);
       continue;
     }
-    (Omn(c, o), R3(c), m_t(c), kI(r, c), l.push(c), h.push(c));
+    (recordSlugYield(c, o), resetWakeState(c), bumpSlugEpoch(c), refreshSummonArmForSlug(r, c), l.push(c), h.push(c));
   }
   return { yielded: l, notHeld: f, newlyYielded: h };
 }
@@ -460,13 +460,13 @@ function re(e, o) {
   let { live: r } = ne(),
     a = [];
   for (let s of o) {
-    if (!d5n(s, e)) continue;
-    if ((kI(r, s), Dd(s) && !Ld(s))) (Ibe(s), notifyTakenOverSlugStopped(s));
+    if (!releaseYieldedSlugMessage(s, e)) continue;
+    if ((refreshSummonArmForSlug(r, s), isSlugStopped(s) && !isSlugSwept(s))) (Ibe(s), notifyTakenOverSlugStopped(s));
     a.push(s);
     let l = r.supervisors.get(s);
-    if (!Dd(s) && !E(s)) handBackTakenOverSlug(s);
-    let f = Gne(s).lastWakeArgs;
-    if (!Dd(s) && E(s) && l?.taskId !== void 0 && nMe(l.taskId) && f !== null)
+    if (!isSlugStopped(s) && !E(s)) handBackTakenOverSlug(s);
+    let f = getWakeState(s).lastWakeArgs;
+    if (!isSlugStopped(s) && E(s) && l?.taskId !== void 0 && isMonitorSocketOpen(l.taskId) && f !== null)
       x9({
         ...f,
         seed: !1,

@@ -10,7 +10,7 @@
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getFileStatus, stashToCleanState } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Pr, Kgt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gracefulShutdownSync, getCloudSessionBlockers } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -130,7 +130,7 @@ function k({ onStashAndContinue: h, onCancel: m }) {
   });
 }
 function le() {
-  Pr(0);
+  gracefulShutdownSync(0);
 }
 var J = new Set();
 function TeleportError(We) {
@@ -145,7 +145,7 @@ function TeleportError(We) {
     j;
   if (c[0] !== H || c[1] !== W || c[2] !== M)
     ((j = async () => {
-      let qe = await Kgt(H);
+      let qe = await getCloudSessionBlockers(H);
       let K = new Set(Array.from(qe).filter((ze) => !W.has(ze)));
       if (K.size === 0) {
         M();

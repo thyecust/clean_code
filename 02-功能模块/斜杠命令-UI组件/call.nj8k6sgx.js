@@ -18,7 +18,7 @@ import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash
 import { Bf } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { MM, hne, jV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { fetchRemoteEnvironments, createDefaultRemoteEnvironment, getClaudeAiConnectorsUrl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -239,7 +239,7 @@ function ot(Vt) {
       }
       let Q;
       try {
-        Q = (await MM(void 0, P, x)).length === 0;
+        Q = (await fetchRemoteEnvironments(void 0, P, x)).length === 0;
       } catch {
         Q = !0;
       }
@@ -248,7 +248,7 @@ function ot(Vt) {
       }
       if (Q) {
         try {
-          await hne();
+          await createDefaultRemoteEnvironment();
         } catch (L) {
           let Qt = L;
           n(`[web-setup] Failed to create default environment: ${Qt}`, {
@@ -324,7 +324,7 @@ function ot(Vt) {
           children: [
             "You're already connected via the GitHub App. Continuing replaces your authentication credential for Claude Code on the web. Your repository access will change to reflect your local token's scopes. You can reconnect the GitHub App from",
             " ",
-            jV(),
+            getClaudeAiConnectorsUrl(),
             " later.",
           ],
         }),

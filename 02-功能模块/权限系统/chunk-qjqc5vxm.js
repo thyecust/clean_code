@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Xl } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { createAbortController, createChildAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { runForkedAgent, uEe, Vc, Re, xr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { runForkedAgent, resolveRetractedMessages, createAssistantMessage, createUserMessage, joinTextBlocks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { of } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 var b = /^\/btw\b/gi;
 function findBtwTriggerPositions(t) {
@@ -49,8 +49,8 @@ ${t}`,
     y = n ? createChildAbortController(n) : createAbortController(),
     c = s ? r.toolUseContext.session.btwHistory : null,
     h = (a ?? c?.exchanges ?? []).flatMap((o) => [
-      Re({ content: o.question }),
-      Vc({
+      createUserMessage({ content: o.question }),
+      createAssistantMessage({
         content: o.fallbackNotice
           ? `\u26A0 ${o.fallbackNotice}
 
@@ -60,7 +60,7 @@ ${o.response}`
     ]);
   try {
     let o = await runForkedAgent({
-        promptMessages: [...h, Re({ content: f })],
+        promptMessages: [...h, createUserMessage({ content: f })],
         cacheSafeParams: r,
         canUseTool: async () => ({
           behavior: "deny",
@@ -85,7 +85,7 @@ ${o.response}`
             }
           : void 0,
       }),
-      { live: g, notice: l } = uEe(o.messages),
+      { live: g, notice: l } = resolveRetractedMessages(o.messages),
       { response: u, synthetic: p } = w(g),
       d = l && {
         originalModel: l.originalModel,
@@ -108,7 +108,7 @@ ${o.response}`
 function w(t) {
   let r = t.flatMap((e) => (e.type === "assistant" ? e.message.content : []));
   if (r.length > 0) {
-    let e = xr(
+    let e = joinTextBlocks(
       r,
       `
 

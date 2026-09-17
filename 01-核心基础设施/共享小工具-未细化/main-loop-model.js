@@ -12,10 +12,10 @@ import { getDefaultMainLoopModelSetting, parseUserSpecifiedModel } from "../../0
 import { useFeatureFlagVersion } from "./feature-flag-version.js";
 import { useSettings } from "./use-settings.js";
 import { V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { gLe, Tne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { resolveAllowedModel, getSessionModelOverride } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
 function resolveMainLoopModelSetting(o, n) {
-  return gLe(o) ?? gLe(n) ?? getDefaultMainLoopModelSetting();
+  return resolveAllowedModel(o) ?? resolveAllowedModel(n) ?? getDefaultMainLoopModelSetting();
 }
 function resolveMainLoopModel(o) {
   return parseUserSpecifiedModel(resolveMainLoopModelSetting(o.mainLoopModelForSession, o.mainLoopModel));
@@ -25,7 +25,7 @@ function useMainLoopModelOverride() {
     n = useAppStateSelector((e) => e.mainLoopModelForSession),
     i = useFeatureFlagVersion(),
     s = useSettings();
-  return V(() => Tne(n, o), [n, o, i, s]);
+  return V(() => getSessionModelOverride(n, o), [n, o, i, s]);
 }
 function useMainLoopModelSetting() {
   let o = useAppStateSelector((e) => e.mainLoopModel),

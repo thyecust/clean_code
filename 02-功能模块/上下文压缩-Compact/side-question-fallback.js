@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { getMainLoopModel, getRuntimeMainLoopModel, JN, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Tm, asSystemPrompt, fEe, j_, hC, VS, e3t } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createTaskRegistry, asSystemPrompt, createQueuedNotificationsRegistry, getSystemContext, getUserContext, buildDefaultSystemPrompt, collectExcludedDynamicSections } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { artifactReadObservationIn, makeSetArtifactReadVersion, makeSetArtifactContractTarget, makeGetArtifactContractTarget } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
@@ -31,10 +31,10 @@ async function fetchSystemPromptParts({
   let [o, t, a, y] = await Promise.all([
     m !== void 0
       ? Promise.resolve([])
-      : VS(f, n, l, { excludeDynamicSections: r, analysisOnly: d }),
-    hC(s, g, e),
-    m !== void 0 ? Promise.resolve({}) : j_(s, c),
-    r && m === void 0 ? e3t(n, l, { analysisOnly: d }) : Promise.resolve({}),
+      : buildDefaultSystemPrompt(f, n, l, { excludeDynamicSections: r, analysisOnly: d }),
+    getUserContext(s, g, e),
+    m !== void 0 ? Promise.resolve({}) : getSystemContext(s, c),
+    r && m === void 0 ? collectExcludedDynamicSections(n, l, { analysisOnly: d }) : Promise.resolve({}),
   ]);
   if (r)
     return {
@@ -134,8 +134,8 @@ async function buildSideQuestionFallbackParams({
       getProactivityLevel: () => e().proactivityLevel,
       getWebBrowser: () => e().webBrowser,
       ...makeToolPermissionContextSetters(o),
-      taskRegistry: Tm(e, o),
-      queuedNotificationsRegistry: fEe(e, o, s),
+      taskRegistry: createTaskRegistry(e, o),
+      queuedNotificationsRegistry: createQueuedNotificationsRegistry(e, o, s),
       sessionHooksRegistry: g,
       setWebBrowserSlice: makeSetWebBrowserSlice(o),
       setArtifactReadVersion: makeSetArtifactReadVersion(o),

@@ -26,7 +26,7 @@ import { ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { zj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { gV, Rf, isTranscriptMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getProjectDirsUpToHome, getUserMessageText, isTranscriptMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ti } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { buildResumePrompt } from "./chunk-va9cgbfs.js";
 import { parseWorkflowScript } from "./workflow-script.js";
@@ -81,7 +81,7 @@ async function Wn(s, a) {
     if (S === void 0 || S.type !== "user" || S.isMeta === !0) break;
     h = S;
   }
-  let v = (h && Rf(h)) ?? "",
+  let v = (h && getUserMessageText(h)) ?? "",
     C = [],
     W = "";
   for (let k of m) {
@@ -227,7 +227,7 @@ async function ll(s, a) {
   if (s === "user") return getUserWorkflowsDir();
   let l = findGitRoot(a);
   if (l === null) return En(a, ".claude", "workflows");
-  let c = (await gV("workflows", a))[0];
+  let c = (await getProjectDirsUpToHome("workflows", a))[0];
   if (c !== void 0) return c;
   return En(l, ".claude", "workflows");
 }

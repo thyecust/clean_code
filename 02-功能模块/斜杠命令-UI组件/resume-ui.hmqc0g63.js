@@ -18,7 +18,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import {
-  q9,
+  listGitWorktrees,
   isCustomTitleEnabled,
   getSessionIdFromLog,
   isLiteLog,
@@ -166,7 +166,7 @@ function te({ onDone: s, onResume: g }) {
     );
   E(() => {
     async function u() {
-      let i = await q9(he());
+      let i = await listGitWorktrees(he());
       if (S.current) return;
       (O(i), x(!1, i));
     }
@@ -294,7 +294,7 @@ var Fe = async (s, g, v) => {
     },
     m = v?.trim();
   if (!m) return e(te, { onDone: s, onResume: T }, Date.now());
-  let O = await q9(he()),
+  let O = await listGitWorktrees(he()),
     b = await loadSameRepoMessageLogs(O, void 0, void 0, g.storageV5);
   if (b.length === 0)
     return e(j, {

@@ -91,7 +91,7 @@ import {
   DB_BATCH_OP,
 } from "./chunk-pdd7kz7p.js";
 import { invokeMcpToolRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { N5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { leaveArtifactRoom } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { e9n, t9n, I7, n9n, H9, _pt } from "./chunk-5gz5xvw9.js";
 import { U6n, B6n, j6n, Vsn, endFrameLiveWatchOfDeletedArtifact } from "./chunk-kshc4v5t.js";
 import { Ccn, N9, F9 } from "./chunk-stvynqrz.js";
@@ -1034,7 +1034,7 @@ function _Pe(e, r) {
     u.delete(e),
     endFrameLiveWatchOfDeletedArtifact(e, r.context),
     ne().liveDocWatch.stop?.(e),
-    N5n(e),
+    leaveArtifactRoom(e),
     a.CLAUDE_CODE_REMOTE || hPe(e) !== void 0)
   )
     HNt({ slug: e, context: r.context }).catch(logError);

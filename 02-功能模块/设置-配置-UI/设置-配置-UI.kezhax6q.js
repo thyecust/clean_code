@@ -81,27 +81,27 @@ import { useAppStateSession, useAppStateSelector, useSetAppState, useAppState } 
 import { useMainLoopModelOverride } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { fc } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
-  fV,
-  uT,
-  hV,
-  dX,
-  VF,
-  cpn,
-  iVe,
-  rne,
-  RM,
-  MDe,
-  ATe,
-  f5e,
+  formatCostSummary,
+  DEFAULT_OUTPUT_STYLE_NAME,
+  BUILT_IN_OUTPUT_STYLES,
+  getAllOutputStyles,
+  getOverageIncludedModels,
+  getRateLimitPromoNotices,
+  hasWeeklyScopedModelLimits,
+  getModelWeeklyLimitRows,
+  getUnifiedRateLimitWindows,
+  haveLimitsBeenObserved,
+  hasConnectedIdeClient,
+  getFeedbackDraftsSetting,
   isTranscriptMessage,
   getCurrentSessionDisplayTitle,
-  Ny,
-  h8e,
-  M_n,
-  hpe,
-  Gs,
-  tN,
-  Tpe,
+  getSessionMemoryFiles,
+  getExternalInstructionIncludes,
+  hasExternalInstructionIncludes,
+  isExpandedSettingsUiEnabled,
+  formatCurrencyAmount,
+  USAGE_CREDITS_COMMAND,
+  OUTPUT_STYLE_SECTION_NAME,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { areWorkflowsAvailable } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
@@ -766,7 +766,7 @@ function Pr(qb) {
 }
 F();
 function rg() {
-  return ii(hV);
+  return ii(BUILT_IN_OUTPUT_STYLES);
 }
 var sg = "Default",
   ig =
@@ -790,7 +790,7 @@ function Fr(dC) {
     { storageV5: cd } = useStorageV5Context(),
     Qf;
   if (ni[0] !== ld.project.cwd || ni[1] !== cd)
-    ((Qf = () => dX(ld.project.cwd, cd).then(ii).catch(rg)),
+    ((Qf = () => getAllOutputStyles(ld.project.cwd, cd).then(ii).catch(rg)),
       (ni[0] = ld.project.cwd),
       (ni[1] = cd),
       (ni[2] = Qf));
@@ -1398,11 +1398,11 @@ function ga({
     [me, he] = d(() => ({
       ...getInitialSettings(),
       ...Olt(),
-      feedbackDrafts: f5e(),
+      feedbackDrafts: getFeedbackDraftsSetting(),
       autoContinueAtUsageLimit: Ult(),
     })),
     Re = C(getInitialSettings()),
-    [Ie, qe] = d(me?.outputStyle || uT),
+    [Ie, qe] = d(me?.outputStyle || DEFAULT_OUTPUT_STYLE_NAME),
     ke = C(Ie),
     [Xe, Et] = d(() => es().hasClaudeMdExternalIncludesApproved === !0),
     [mt, Kt] = d(me?.language),
@@ -1466,7 +1466,7 @@ function ga({
   E(() => {
     T(_u);
   }, [_u, T]);
-  let Xp = ATe(c.options.mcpClients),
+  let Xp = hasConnectedIdeClient(c.options.mcpClients),
     Jp = !a.CLAUDE_CODE_DISABLE_FILE_CHECKPOINTING,
     Pu = resolveSetting("disableWorkflows", !1),
     Ou = resolveSetting("enableWorkflows", !1),
@@ -1477,8 +1477,8 @@ function ga({
     Zp = !isWorkflowSizeGuidelineConfigured(),
     ef = Blt(),
     tf = isArtifactConfigToggleable(),
-    Lu = kn(Ny(B, !0, A, H)),
-    of = M_n(Lu),
+    Lu = kn(getSessionMemoryFiles(B, !0, A, H)),
+    of = hasExternalInstructionIncludes(Lu),
     bt = hQ(),
     rr = isPushNotificationsEnabled() && !isEssentialTrafficOnly() && hasStoredOAuthToken(),
     {
@@ -1528,7 +1528,7 @@ function ga({
       setSettingsData: he,
       setChanges: Gp,
     }),
-    ot = hpe(),
+    ot = isExpandedSettingsUiEnabled(),
     we = V(() => {
       let k = ot ? Pd(Po) : Po;
       if (!Yt) return k;
@@ -2165,7 +2165,7 @@ function ga({
                           De(null),
                           m(!1));
                       },
-                      externalIncludes: h8e(Lu),
+                      externalIncludes: getExternalInstructionIncludes(Lu),
                     }),
                     e(t, {
                       dimColor: !0,
@@ -2189,14 +2189,14 @@ function ga({
                       e(Fr, {
                         initialStyle: Ie,
                         onComplete: (k) => {
-                          (qe(k ?? uT),
+                          (qe(k ?? DEFAULT_OUTPUT_STYLE_NAME),
                             De(null),
                             m(!1),
-                            ML().delete(Tpe),
+                            ML().delete(OUTPUT_STYLE_SECTION_NAME),
                             mv("output_style"),
                             updateSettingsForSource("localSettings", { outputStyle: k }, void 0, A),
                             logEvent("tengu_output_style_changed", {
-                              style: k ?? uT,
+                              style: k ?? DEFAULT_OUTPUT_STYLE_NAME,
                               source: S("config_panel"),
                               settings_source: S("localSettings"),
                             }));
@@ -4344,7 +4344,7 @@ function Ol(M0) {
   let cl = _(6),
     { maxWidth: hm } = M0,
     Gh;
-  if (cl[0] === MEMO_CACHE_SENTINEL) ((Gh = RM()), (cl[0] = Gh));
+  if (cl[0] === MEMO_CACHE_SENTINEL) ((Gh = getUnifiedRateLimitWindows()), (cl[0] = Gh));
   else Gh = cl[0];
   let Sm = Gh.overage,
     ul;
@@ -4359,7 +4359,7 @@ function Ol(M0) {
           maxWidth: hm,
           alwaysShowDateInReset: !0,
         })
-      : MDe()
+      : haveLimitsBeenObserved()
         ? null
         : e(t, {
             dimColor: !0,
@@ -4393,7 +4393,7 @@ function Ll(E0) {
   let Ri = _(10),
     { isThinClient: dl } = E0,
     Yh;
-  if (Ri[0] === MEMO_CACHE_SENTINEL) ((Yh = stripAnsi(fV())), (Ri[0] = Yh));
+  if (Ri[0] === MEMO_CACHE_SENTINEL) ((Yh = stripAnsi(formatCostSummary())), (Ri[0] = Yh));
   else Yh = Ri[0];
   let A0 = Yh,
     qh;
@@ -4529,7 +4529,7 @@ function $l(wm) {
                 Ve.seedSource === "persisted"
                   ? `Showing last-known usage${sy === "persisted" ? _m(iy, O0) : ""}${Ve.rateLimitedVia !== null ? " (rate limited \u2014 try again in a moment)" : " (could not refresh)"}`
                   : Ve.rateLimitedVia !== null
-                    ? iVe(Ve.utilization.limits)
+                    ? hasWeeklyScopedModelLimits(Ve.utilization.limits)
                       ? "Partial usage data (rate limited \u2014 try again in a moment)"
                       : "Per-model breakdown unavailable (rate limited \u2014 try again in a moment)"
                     : "Could not refresh usage data",
@@ -4677,7 +4677,7 @@ function $l(wm) {
     $e[27] !== Oe.seven_day ||
     $e[28] !== Oe.seven_day_sonnet
   ) {
-    let N0 = cpn();
+    let N0 = getRateLimitPromoNotices();
     let F0 = (B0) =>
       N0.filter(($0) => $0.bar.toLowerCase() === B0.toLowerCase()).map(by);
     let U0 = [
@@ -4703,7 +4703,7 @@ function $l(wm) {
             },
           ]
         : []),
-      ...rne(Oe.limits, VF()).map(Cy),
+      ...getModelWeeklyLimitRows(Oe.limits, getOverageIncludedModels()).map(Cy),
     ];
     Sl = o;
     no = "column";
@@ -4847,7 +4847,7 @@ function Fl(K0) {
     return null;
   }
   if (!Ke.is_enabled) {
-    if (Em && tN.isEnabled()) {
+    if (Em && USAGE_CREDITS_COMMAND.isEnabled()) {
       let Wt;
       if (wo[0] === MEMO_CACHE_SENTINEL)
         ((Wt = e(TitleWithSubtitle, {
@@ -4874,7 +4874,7 @@ function Fl(K0) {
     }
     let Wt;
     if (wo[2] !== ko || wo[3] !== Ke.used_credits)
-      ((Wt = Gs(Ke.used_credits, ko)),
+      ((Wt = formatCurrencyAmount(Ke.used_credits, ko)),
         (wo[2] = ko),
         (wo[3] = Ke.used_credits),
         (wo[4] = Wt));
@@ -4898,7 +4898,7 @@ function Fl(K0) {
         : 100),
     Wt;
   if (wo[7] !== ko || wo[8] !== Ke.used_credits)
-    ((Wt = Gs(Ke.used_credits, ko)),
+    ((Wt = formatCurrencyAmount(Ke.used_credits, ko)),
       (wo[7] = ko),
       (wo[8] = Ke.used_credits),
       (wo[9] = Wt));
@@ -4906,7 +4906,7 @@ function Fl(K0) {
   let z0 = Wt,
     Ds;
   if (wo[10] !== ko || wo[11] !== Ke.monthly_limit)
-    ((Ds = Gs(Ke.monthly_limit, ko)),
+    ((Ds = formatCurrencyAmount(Ke.monthly_limit, ko)),
       (wo[10] = ko),
       (wo[11] = Ke.monthly_limit),
       (wo[12] = Ds));

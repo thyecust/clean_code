@@ -21,7 +21,7 @@ import { ja, $nt, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { NONINTERACTIVE_GIT_ENV, applyGitConfigEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { GITHUB_HOST, GITHUB_SSH_URL_PREFIXES } from "../共享小工具-未细化/git-host-utils.js";
-import { Lft, $s, adn, ldn, eqn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { setAgentProxyNote, isShuttingDown, MAX_PROXY_FAILURE_HISTORY, setAgentProxyStatusUrl, recordAgentProxyFailure } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { kIn } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { c2e, u2e, qlr, zlr, PEM_CERT_BLOCK_RE, getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
@@ -289,7 +289,7 @@ function E(t, e, o, r) {
     detail: o.replace(de, "?"),
     host: r?.replace(de, "?"),
   };
-  if ((t.failures.push(s), t.failures.length > adn)) t.failures.shift();
+  if ((t.failures.push(s), t.failures.length > MAX_PROXY_FAILURE_HISTORY)) t.failures.shift();
   t.onFailure?.(s);
 }
 function R(t) {
@@ -1870,14 +1870,14 @@ class wt {
   activate(t, e) {
     ((this.state = t),
       (this.relay = e),
-      ldn(`${$e(e.port)}/__agentproxy/status`));
+      setAgentProxyStatusUrl(`${$e(e.port)}/__agentproxy/status`));
   }
   reset() {
     (this.generation++,
       (this.state = { enabled: !1, noProxy: Se }),
-      Lft(void 0),
+      setAgentProxyNote(void 0),
       Swn(void 0),
-      ldn(void 0),
+      setAgentProxyStatusUrl(void 0),
       this.relay?.stop(),
       (this.relay = void 0));
   }
@@ -1998,7 +1998,7 @@ var ct = 300000,
   Rn = 3600000;
 function bt(t, e) {
   if (t.generation !== e || t.state.enabled || Yhe()) return "exit";
-  return $s() ? "defer" : null;
+  return isShuttingDown() ? "defer" : null;
 }
 function Bn(t, e) {
   return Math.min(computeRetryDelayMs(t - 1, e, ct), ct);
@@ -2084,7 +2084,7 @@ async function Tt(t, e) {
           gitConfigInjection: Ee(),
           gitSshRewrite: Ee() && Oe(),
         }),
-        onFailure: eqn,
+        onFailure: recordAgentProxyFailure,
       }),
       q = Et(async () => P.stop()),
       H = {
@@ -2147,11 +2147,11 @@ async function Tt(t, e) {
     if (
       (n(`[agent-proxy] enabled on 127.0.0.1:${P.port}`),
       logFeatureOk("agent_proxy_init", { attempts: e }),
-      Lft(xe(m, void 0)),
+      setAgentProxyNote(xe(m, void 0)),
       Ae(X, Gn(P.port, m), "utf8")
         .then(() => {
           if (o.state !== H) return;
-          Lft(xe(m, X));
+          setAgentProxyNote(xe(m, X));
         })
         .catch((C) => {
           if (
@@ -2161,7 +2161,7 @@ async function Tt(t, e) {
             o.state !== H)
           )
             return;
-          Lft(xe(m, void 0));
+          setAgentProxyNote(xe(m, void 0));
         }),
       Mn()
         .then((C) => {

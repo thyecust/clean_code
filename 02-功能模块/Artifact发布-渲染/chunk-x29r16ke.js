@@ -14,7 +14,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { xN, ne } from "./chunk-rr78st95.js";
 import { observationStamp, observedWithoutSource, compareArtifactVersions } from "./chunk-01ymf0ar.js";
-import { rDe, j2, y4n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { estimateTokensForContent, getDefaultFileReadingLimits, removeWebFetchSavedFile } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createHash } from "crypto";
 import { readFile, stat as G, unlink } from "fs/promises";
 function versionHeldBy(e, r, n) {
@@ -42,7 +42,7 @@ async function registerHandoverRead(
   l,
 ) {
   let a = l.agentId ?? "main",
-    F = l.fileReadingLimits?.maxTokens ?? j2().maxTokens,
+    F = l.fileReadingLimits?.maxTokens ?? getDefaultFileReadingLimits().maxTokens,
     b = !0,
     m = 0,
     f = 0;
@@ -53,7 +53,7 @@ async function registerHandoverRead(
         f,
       ),
       P = M === -1 ? n.length : M;
-    if (rDe(n.slice(f, P), "html") > F / 4) {
+    if (estimateTokensForContent(n.slice(f, P), "html") > F / 4) {
       b = !1;
       break;
     }
@@ -220,7 +220,7 @@ function U(e, r) {
 }
 async function discardHandoverCopy(e, r) {
   (ne().pendingHandoverReads.delete(ot(e)),
-    y4n(r, e),
+    removeWebFetchSavedFile(r, e),
     await unlink(e).catch(() => {}));
 }
 var w = {

@@ -31,17 +31,17 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSecuritySensitiveSetting, getSecuritySensitiveSettingWithSources, rawSettingsKeyPresence } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import {
-  Mue,
+  isMainThreadPromptCommand,
   Kte,
-  Nue,
-  BS,
-  Hy,
-  wBt,
-  kl,
-  VF,
-  md,
-  Qmt,
-  Hzn,
+  getCommandQueue,
+  enqueueCommand,
+  removeCommandsByFilter,
+  someInFlightDrainCommand,
+  settingsChangeDetector,
+  getOverageIncludedModels,
+  getCurrentLimits,
+  subscribeToQuotaRejected,
+  probeQuotaStatusForModel,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { randomUUID } from "crypto";
 var J = "later",
@@ -199,7 +199,7 @@ function R2n() {
   return e.state.phase === "armed" && e.episodeArmOrigin === "auto";
 }
 function F(e) {
-  let t = md();
+  let t = getCurrentLimits();
   if (t.status === "rejected" && t.resetsAt !== void 0)
     e.armedResetKeys.add(t.resetsAt);
 }
@@ -215,12 +215,12 @@ function d(e) {
     e.state.phase === "stale" ||
     e.activeTurnClaim !== null ||
     e.dispatchingTakeoverUuids.size > 0 ||
-    Nue().some((t) => _(e, t)) ||
-    wBt((t) => _(e, t))
+    getCommandQueue().some((t) => _(e, t)) ||
+    someInFlightDrainCommand((t) => _(e, t))
   );
 }
 function fe(e) {
-  return Mue(e) && Kte(e);
+  return isMainThreadPromptCommand(e) && Kte(e);
 }
 function _(e, t) {
   return (
@@ -242,7 +242,7 @@ function xIe() {
 }
 function x(e) {
   let t = e.pendingContinuationUuid;
-  return t !== null && Nue().some((n) => n.uuid === t);
+  return t !== null && getCommandQueue().some((n) => n.uuid === t);
 }
 function aLt(e) {
   return e !== void 0 && e === a().pendingContinuationUuid;
@@ -278,7 +278,7 @@ function G(e, t, n, o, s) {
     e.takeoverUuids.clear(),
     e.dispatchingTakeoverUuids.clear(),
     e.queuedBeforeArmUuids.clear());
-  for (let r of Nue())
+  for (let r of getCommandQueue())
     if (fe(r) || (r.mode === "bash" && Kte(r)))
       ((r.uuid ??= randomUUID()), e.queuedBeforeArmUuids.add(r.uuid));
   return (
@@ -348,7 +348,7 @@ async function Re(e) {
         return;
       let t = getMainLoopModel(),
         n = e.state,
-        o = await Hzn(t, void 0, e.storageV5);
+        o = await probeQuotaStatusForModel(t, void 0, e.storageV5);
       if (e.state.phase !== "armed" || p(e)) return;
       if (e.recheckRequestedWhileConfirming || getMainLoopModel() !== t || e.state !== n)
         continue;
@@ -452,7 +452,7 @@ function Glt(e, { dispatching: t = !1 } = {}) {
 function w(e, { keepIfDrained: t = !1 } = {}) {
   if (e.pendingContinuationUuid === null) return !1;
   let n = e.pendingContinuationUuid,
-    o = Hy((s) => s.uuid === n).length > 0;
+    o = removeCommandsByFilter((s) => s.uuid === n).length > 0;
   if (o || !t) ((e.pendingContinuationUuid = null), e.changed.emit());
   return o;
 }
@@ -524,7 +524,7 @@ function V(e, t = L) {
   ((e.pendingContinuationUuid = n),
     (e.activeTurnClaim = null),
     e.changed.emit(),
-    BS({
+    enqueueCommand({
       agentId: ze(),
       mode: "prompt",
       priority: J,
@@ -639,7 +639,7 @@ function I2n(e, t) {
       ((n.activeTurnClaim = null), n.changed.emit(), n.state.phase !== "idle")
     )
       return;
-    if (Nue().some((r) => _(n, r))) return;
+    if (getCommandQueue().some((r) => _(n, r))) return;
     if ((C(n), e.kind === "continuation" && !e.queried)) D(n);
     return;
   }
@@ -649,7 +649,7 @@ function I2n(e, t) {
     (o || t.some((r) => n.takeoverUuids.has(r))) &&
     n.state.phase === "idle" &&
     n.activeTurnClaim === null &&
-    !Nue().some((r) => _(n, r))
+    !getCommandQueue().some((r) => _(n, r))
   ) {
     if ((C(n), o)) D(n);
   }
@@ -745,7 +745,7 @@ function R(e, t) {
       let n = getPublicModelDisplayName(parseUserSpecifiedModel(t));
       if (n === null) return !1;
       let o = n.toLowerCase();
-      return VF().some((s) => s.toLowerCase() === o);
+      return getOverageIncludedModels().some((s) => s.toLowerCase() === o);
     }
     case void 0:
       return !1;
@@ -759,9 +759,9 @@ function X(e, t) {
   if (e.limitsSubscriptionStarted) return;
   ((e.limitsSubscriptionStarted = !0),
     (e.storageV5 = t),
-    (e.unsubscribeQuotaRejected = Qmt((n, o) => ye(e, n, o))),
+    (e.unsubscribeQuotaRejected = subscribeToQuotaRejected((n, o) => ye(e, n, o))),
     A(e),
-    (e.unsubscribeSettingsChanges = kl.subscribe(() => {
+    (e.unsubscribeSettingsChanges = settingsChangeDetector.subscribe(() => {
       A(e);
     })),
     (e.unsubscribeSessionSwitch = sc((n, o) => {

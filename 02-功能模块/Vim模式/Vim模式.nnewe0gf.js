@@ -54,7 +54,7 @@ import {
 import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { shouldShowNotification, useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
-import { aH, _8e, z9t, V9t } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getConnectedIdeClient, isVoiceEnabled, hasVoiceAuth, isVoiceModeAllowed } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { registerMcpNotificationHandler } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
@@ -3486,7 +3486,7 @@ var Wa = "at_mentioned",
     }),
   );
 function J6e(l, b) {
-  let x = V(() => aH(l), [l]),
+  let x = V(() => getConnectedIdeClient(l), [l]),
     O = C(void 0);
   E(() => {
     if (((O.current = x), !x)) return;
@@ -3522,21 +3522,21 @@ function Y6e() {
   return useStoreSelector(OHe.of(l), (b) => b.loginCompleted);
 }
 function JR() {
-  let l = useAppStateSelector((O) => _8e(O.settings)),
+  let l = useAppStateSelector((O) => isVoiceEnabled(O.settings)),
     b = Y6e(),
-    x = V(() => l && z9t(), [b, l]);
+    x = V(() => l && hasVoiceAuth(), [b, l]);
   return (
     E(() => {
       if (!getClaimRegistry().claim("voice_init_gate")) return;
       logEvent("tengu_voice_init_gate", {
         user_intent_store: l,
-        user_intent_disk: _8e(getInitialSettings()),
-        has_voice_auth: z9t(),
-        voice_mode_allowed: V9t(),
+        user_intent_disk: isVoiceEnabled(getInitialSettings()),
+        has_voice_auth: hasVoiceAuth(),
+        voice_mode_allowed: isVoiceModeAllowed(),
         auth_version: b,
       });
     }, []),
-    x && V9t()
+    x && isVoiceModeAllowed()
   );
 }
 F();
