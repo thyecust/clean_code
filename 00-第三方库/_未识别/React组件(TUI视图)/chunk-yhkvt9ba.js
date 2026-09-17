@@ -12,7 +12,7 @@ import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport, useVirt
 import { useTerminalSize } from "../../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { te } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { ScrollBox } from "../../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
-import { _p } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { useCursorDeclaration } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { o, t, zye, Od } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { BackgroundText } from "../../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -337,7 +337,7 @@ function JWe(oo) {
   if (me[0] !== on)
     ((dt = { line: 0, column: 1, active: on }), (me[0] = on), (me[1] = dt));
   else dt = me[1];
-  let rn = _p(dt),
+  let rn = useCursorDeclaration(dt),
     sn = pe && P && at,
     ct,
     ut;

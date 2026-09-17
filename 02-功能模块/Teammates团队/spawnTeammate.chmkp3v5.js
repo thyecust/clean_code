@@ -31,7 +31,7 @@ import { isCustomAgent, apn, getProactivityAdjustedPermissionMode, getSubagentMo
 import { writeToMailbox, clearMailbox, PROTOCOL_FRAME_PROMPT_ERROR, isStructuredProtocolMessage } from "./chunk-g6nvp9mm.js";
 import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { SwarmPaneError, containsControlCharacter, assertNoControlCharacters, supportsPaneKill, sanitizeName, sanitizeAgentName, updateTeamFile, removeTeamMember } from "./team-file-store.js";
-import { bj, dYn } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { isCarriableCliToken, isRestrictedModeEnabled } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import "../权限系统/chunk-jsd70b22.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
@@ -144,7 +144,7 @@ function G() {
   return t.join(" ");
 }
 function O(t, e) {
-  return bj(e) ? `${t} ${jo([e])}` : `${t}=${jo([e])}`;
+  return isCarriableCliToken(e) ? `${t} ${jo([e])}` : `${t}=${jo([e])}`;
 }
 function F(t) {
   return t ?? getMainLoopModel();
@@ -262,7 +262,7 @@ function ee(t) {
   let d = S_e();
   if (d === !0) r.push("--chrome");
   else if (d === !1) r.push("--no-chrome");
-  if (dYn()) r.push("--restricted");
+  if (isRestrictedModeEnabled()) r.push("--restricted");
   return r.join(" ");
 }
 async function W(t, e, o, i, c, m) {

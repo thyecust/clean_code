@@ -2710,20 +2710,20 @@ import {
   h1e,
 } from "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import {
-  dJ,
-  R1e,
-  wZn,
-  qbn,
-  k1e,
-  X_,
-  zE,
-  vZn,
-  EK,
-  loe,
-  UGt,
-  RC,
-  Vbn,
-  dCe,
+  CROSS_SESSION_MESSAGE_PREFIX,
+  annotateReceivedMessage,
+  formatCoordinatorMessage,
+  formatObserverReport,
+  TaskStatusSchema,
+  areTasksEnabled,
+  getTaskListId,
+  createTask,
+  readTask,
+  updateTask,
+  deleteTask,
+  readAllTasks,
+  addTaskDependency,
+  unassignAgentTasks,
   readUnreadMessages,
   writeToMailbox,
   messageIdentityKey,
@@ -2931,7 +2931,7 @@ import { isPewterOwlTool } from "../../01-核心基础设施/共享小工具-未
 import { isBriefEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
 import { getBridgeTokenOverride, getBridgeBaseUrlOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { buildGitSessionContext } from "../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js";
-import { getJobDir, getOwnJobShortId, writeStateAtomic, logJobWriteError, invalidateJobStateCache, readJobState, syncJobName, syncRespawnFlag, Ep, al } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { getJobDir, getOwnJobShortId, writeStateAtomic, logJobWriteError, invalidateJobStateCache, readJobState, syncJobName, syncRespawnFlag, MAX_DETAIL_CHARS, clipWithEllipsis } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { scheduleDynamicWakeup, stopLoopWakeups } from "../../02-功能模块/语音-音频/loop-wakeup-scheduler.js";
 import { iN, hw, zSt, Fpe, IAe, rg } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { _$, Ere, o3t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
@@ -41316,7 +41316,7 @@ function isEnhancedTelemetryBetaEnabled() {
 function tT() {
   return isEnhancedTelemetryBetaEnabled() || isDetailedTracingEnabled();
 }
-function W9() {
+function isMcpRpcTracingEnabled() {
   return !1;
 }
 function Tee(e, t) {
@@ -41711,7 +41711,7 @@ function qIt(e, t) {
   return e === void 0 ? t() : otelContextManager.with(e, t);
 }
 function Cee(e, t) {
-  if (!W9()) return;
+  if (!isMcpRpcTracingEnabled()) return;
   return uk().startSpan(
     e,
     { attributes: { ...buildOtelResourceAttributes(), "span.type": t.spanType, ...t.attrs } },
@@ -41737,7 +41737,7 @@ async function runInOtelSpan(e, t, r) {
   });
 }
 function VIt(e) {
-  if (!W9()) return;
+  if (!isMcpRpcTracingEnabled()) return;
   let t = yw(),
     r = mW("subagent.spawn", {
       agent_id: e.agentId,
@@ -41764,7 +41764,7 @@ function KIt(e, t) {
   (e.end(), P$(LIt, r));
 }
 function YIt() {
-  return isDetailedTracingEnabled() || W9();
+  return isDetailedTracingEnabled() || isMcpRpcTracingEnabled();
 }
 function XIt(e, t, r, o) {
   if (!YIt()) return Mp.trace.getActiveSpan() || uk().startSpan("dummy");
@@ -42359,7 +42359,7 @@ function classifyPowerShellCommand(e) {
   if (/[.\\/]/.test(e)) return "application";
   return "unknown";
 }
-function uUt(e) {
+function getPowerShellCommandName(e) {
   let t = e.lastIndexOf("\\");
   if (t < 0) return e;
   if (
@@ -42392,7 +42392,7 @@ function nMt(e) {
       ).replace(/^['"]|['"]$/g, "");
     if (/[\u0080-\uFFFF]/.test(U)) E = "application";
     else E = classifyPowerShellCommand(U);
-    ((r = normalizeDashCharacters(uUt(U))), d.push(Aee(D.type, D.expressionType)));
+    ((r = normalizeDashCharacters(getPowerShellCommandName(U))), d.push(Aee(D.type, D.expressionType)));
     for (let V = 1; V < t.length; V++) {
       let re = t[V],
         ue =
@@ -64085,7 +64085,7 @@ function ZXt() {
 function readHistoryEntries(e) {
   return GN().readEntries(e);
 }
-function Z$t(e) {
+function isHistoryReaderFailure(e) {
   let t = e instanceof Error ? e.cause : void 0;
   if (mxe(t) && t.code === "Unavailable" && vB(t.telemetryCode) === void 0)
     return !0;
@@ -64367,7 +64367,7 @@ function v6r(e) {
 function isMainThreadPromptCommand(e) {
   return isFromCurrentAgent(e) && e.mode === "prompt";
 }
-function Kte(e) {
+function isEditableQueuedCommand(e) {
   return isEditableCommand(e);
 }
 function C6r(e) {
@@ -67831,7 +67831,7 @@ function parseValidRows(e, t) {
   }
   return r;
 }
-function tBt(e, t, r, o) {
+function mergeRowsTrackingAttribution(e, t, r, o) {
   let d = new Map(t.map((E) => [r(E), E])),
     p = !1;
   return {
@@ -68604,7 +68604,7 @@ async function U8e(e, t) {
     for (let un of ut) vt.delete(un);
     if (Me.length === 0 && xe.length === 0) {
       (use(re), await D8e(re, je), use(re), __e(wG(ue, Ke)), (D = !0));
-      let un = tBt(
+      let un = mergeRowsTrackingAttribution(
         Se?.plugins ?? [],
         Oe,
         (kn) => kn.pluginId,
@@ -80525,14 +80525,14 @@ function recordFableOverageConsent(e) {
   }
   GJr(t, e);
 }
-function ZOe() {
+function isOverageBillingEnabledFromCache() {
   let e = getGlobalConfig().cachedExtraUsageDisabledReason;
   if (e === void 0) return !1;
   if (e === null) return !0;
   return isCreditsExhaustedReason(e);
 }
 function EXe() {
-  if (hasFableOverageConsent() && ZOe()) return !0;
+  if (hasFableOverageConsent() && isOverageBillingEnabledFromCache()) return !0;
   if (isUsageCreditsExempt()) return !0;
   return !isFableUsageCreditsRequired();
 }
@@ -80545,13 +80545,13 @@ function TCe(e) {
   let o = r.block;
   return typeof o === "string" && o.trim() !== "";
 }
-function Mwe() {
+function isFableBlockedByUsageCredits() {
   if (isCreditsOnlyTierSubscription()) return !1;
   return !EXe();
 }
-function ZGn() {
+function isFableBlockedByCreditsOrOverage() {
   if (isCreditsOnlyTierSubscription()) return !1;
-  if (Mwe()) return !0;
+  if (isFableBlockedByUsageCredits()) return !0;
   return isFableUsageCreditsRequired() && !isUsageCreditsExempt() && WJr();
 }
 var zJr = [
@@ -80634,13 +80634,13 @@ function baseModelSupportsAdvisor(e) {
   return RXe(e) !== void 0;
 }
 var YJr = ["fable", "opus", "sonnet"];
-function tDe(e) {
+function isValidAdvisorModelString(e) {
   return isValidAdvisorModel(er(parseUserSpecifiedModel(e)));
 }
 function getAdvisorModelAliases() {
   return YJr.filter((e) => {
     let t = er(parseUserSpecifiedModel(e));
-    return tDe(e) || DF(t);
+    return isValidAdvisorModelString(e) || isAdvisorModelPendingCreditsConsent(t);
   });
 }
 function xtn(e) {
@@ -80651,12 +80651,12 @@ function xtn(e) {
 function isValidAdvisorModel(e) {
   let t = parseUserSpecifiedModel(e);
   if (!isModelAllowed(e)) return !1;
-  if (isFableFamilyOrPinnedModel(t) && Mwe()) return !1;
+  if (isFableFamilyOrPinnedModel(t) && isFableBlockedByUsageCredits()) return !1;
   return xtn(e);
 }
-function DF(e) {
+function isAdvisorModelPendingCreditsConsent(e) {
   let t = parseUserSpecifiedModel(e);
-  if (!isFableFamilyOrPinnedModel(t) || !Mwe()) return !1;
+  if (!isFableFamilyOrPinnedModel(t) || !isFableBlockedByUsageCredits()) return !1;
   if (!isModelAllowed(e)) return !1;
   if (TCe(getCanonicalName(t))) return !1;
   return xtn(e);
@@ -99384,7 +99384,7 @@ function shouldUseTodoTools() {
   return getFeatureValue_CACHED_MAY_BE_STALE(elo, !1) === !0;
 }
 function hasTaskListTools() {
-  return X_() && shouldUseTodoTools();
+  return areTasksEnabled() && shouldUseTodoTools();
 }
 function sanitizeToolInput(e) {
   if (typeof e !== "object" || e === null) return {};
@@ -123741,7 +123741,7 @@ function Pvn(e) {
   return !0;
 }
 function nq(e, t) {
-  return isFableFamilyOrPinnedModel(e) && !TCe(getCanonicalName(e)) && Mwe() && Pvn(t);
+  return isFableFamilyOrPinnedModel(e) && !TCe(getCanonicalName(e)) && isFableBlockedByUsageCredits() && Pvn(t);
 }
 function Ivn(e) {
   return e.isMainThread && Pvn(e.requestDialog);
@@ -123788,7 +123788,7 @@ async function ensureOverageBillingEnabled({ skipLiveCheck: e = !1, credentials:
   return o;
 }
 async function Ovn(e, t) {
-  if ((recordFableOverageConsent(e), !ZOe())) await fetchOverageStatus(t, e);
+  if ((recordFableOverageConsent(e), !isOverageBillingEnabledFromCache())) await fetchOverageStatus(t, e);
   return EXe();
 }
 var YIe = "memdir_relevance";
@@ -151534,7 +151534,7 @@ var FIRST_UPLOAD_RETRY_LADDER_MS = [2000, 5000, 1e4, 20000, 40000, 60000],
   MAX_LISTED_COMMITS = 16,
   MAX_REPORT_ENTRIES = 32,
   MAX_TEXT_CODE_UNITS = 512,
-  rmn = 1024,
+  MAX_SYNC_PATH_CODE_UNITS = 1024,
   MAX_LISTED_SKIPPED_FILES = 64,
   MAX_LISTED_CONFLICTED_COMMITS = 12,
   MAX_CONFLICT_CODE_UNITS = 200,
@@ -161923,7 +161923,7 @@ function hasDisplayableContent(e, t = null) {
   }
   return t === "end_turn";
 }
-function t5n(e, t) {
+function getAssistantResultText(e, t) {
   let r = lastArrayElement(e.message.content),
     o = lastArrayElement(t?.message.content);
   return r?.type === "text" && !NO_CONTENT_MESSAGE_TEXTS.has(r.text) && o?.type === "text"
@@ -162702,7 +162702,7 @@ function PUn(e, t) {
     return runGuardedFetch(d, p);
   };
 }
-function s5n(e, t) {
+function resolveAutoCompactWindowSetting(e, t) {
   if (e === void 0) return t;
   return e === "auto" ? void 0 : e;
 }
@@ -180921,7 +180921,7 @@ var eVo = createLazyValue(() => Qe({ todos: todoItemsSchema().describe("The upda
     },
     shouldDefer: !0,
     isEnabled() {
-      return !X_() && shouldUseTodoTools();
+      return !areTasksEnabled() && shouldUseTodoTools();
     },
     toAutoClassifierInput(e) {
       return `${e.todos.length} items`;
@@ -187102,8 +187102,8 @@ var x4o = createLazyValue(() =>
       _,
       E,
     ) {
-      let C = await vZn(
-          zE(),
+      let C = await createTask(
+          getTaskListId(),
           {
             subject: e,
             description: t,
@@ -187137,7 +187137,7 @@ var x4o = createLazyValue(() =>
       }
       if (I.length > 0)
         throw (
-          await UGt(zE(), C, d.storageV5),
+          await deleteTask(getTaskListId(), C, d.storageV5),
           Error(
             I.join(`
 `),
@@ -187189,7 +187189,7 @@ var R4o = createLazyValue(() =>
         id: s(),
         subject: s(),
         description: s(),
-        status: k1e(),
+        status: TaskStatusSchema(),
         blocks: v(s()),
         blockedBy: v(s()),
       }).nullable(),
@@ -187233,8 +187233,8 @@ var R4o = createLazyValue(() =>
     create({ storageV5: e }) {
       return {
         async call({ taskId: t }) {
-          let r = zE(),
-            o = await EK(r, t, e);
+          let r = getTaskListId(),
+            o = await readTask(r, t, e);
           if (!o) return { data: { task: null } };
           return {
             data: {
@@ -187353,7 +187353,7 @@ Set up task dependencies:
 \`\`\`
 `;
 var I4o = createLazyValue(() => {
-    let e = k1e().or(k("deleted"));
+    let e = TaskStatusSchema().or(k("deleted"));
     return Qe({
       taskId: s().describe("The ID of the task to update"),
       subject: s().optional().describe("New subject for the task"),
@@ -187437,10 +187437,10 @@ var I4o = createLazyValue(() => {
       N,
       F,
     ) {
-      let U = zE();
+      let U = getTaskListId();
       F?.({ type: "set_expanded_view", expandedView: "tasks" });
       let V = I.storageV5,
-        re = await EK(U, e, V);
+        re = await readTask(U, e, V);
       if (!re)
         return {
           data: {
@@ -187472,7 +187472,7 @@ var I4o = createLazyValue(() => {
       }
       if (d !== void 0) {
         if (d === "deleted") {
-          let _e = await UGt(U, e, V);
+          let _e = await deleteTask(U, e, V);
           return {
             data: {
               success: _e,
@@ -187518,7 +187518,7 @@ var I4o = createLazyValue(() => {
           ((de.status = d), ue.push("status"));
         }
       }
-      if (Object.keys(de).length > 0) await loe(U, e, de, V);
+      if (Object.keys(de).length > 0) await updateTask(U, e, de, V);
       if (de.owner && isAgentSwarmsEnabled()) {
         let _e = getAgentName() || "team-lead",
           Se = getTeammateColor(),
@@ -187544,12 +187544,12 @@ var I4o = createLazyValue(() => {
       }
       if (_ && _.length > 0) {
         let _e = _.filter((Se) => !re.blocks.includes(Se));
-        for (let Se of _e) await Vbn(U, e, Se, V);
+        for (let Se of _e) await addTaskDependency(U, e, Se, V);
         if (_e.length > 0) ue.push("blocks");
       }
       if (E && E.length > 0) {
         let _e = E.filter((Se) => !re.blockedBy.includes(Se));
-        for (let Se of _e) await Vbn(U, Se, e, V);
+        for (let Se of _e) await addTaskDependency(U, Se, e, V);
         if (_e.length > 0) ue.push("blockedBy");
       }
       return {
@@ -187634,7 +187634,7 @@ var O4o = createLazyValue(() => Qe({})),
         c({
           id: s(),
           subject: s(),
-          status: k1e(),
+          status: TaskStatusSchema(),
           owner: s().optional(),
           blockedBy: v(s()),
         }),
@@ -187676,8 +187676,8 @@ var O4o = createLazyValue(() => Qe({})),
     create({ storageV5: e }) {
       return {
         async call(t) {
-          let r = zE(),
-            o = (await RC(r, e)).filter((_) => !_.metadata?._internal),
+          let r = getTaskListId(),
+            o = (await readAllTasks(r, e)).filter((_) => !_.metadata?._internal),
             d = new Set(
               o.filter((_) => _.status === "completed").map((_) => _.id),
             );
@@ -187841,7 +187841,7 @@ function getBuiltinToolDefinitions() {
     ...(e ? [e] : []),
     W4o,
     ...(g6n ? [g6n] : []),
-    ...(X_() ? [pGn, hGn, bGn, TGn] : []),
+    ...(areTasksEnabled() ? [pGn, hGn, bGn, TGn] : []),
     ...(f6n ? [f6n] : []),
     ...q4o(),
     ...(p6n ? [p6n] : []),
@@ -189373,7 +189373,7 @@ ${ur}`;
     e.name,
     o.agentContext,
     vt,
-    W9() || (isDetailedTracingEnabled() && isToolDetailsLoggingEnabled()) ? b(Me) : void 0,
+    isMcpRpcTracingEnabled() || (isDetailedTracingEnabled() && isToolDetailsLoggingEnabled()) ? b(Me) : void 0,
     t,
   );
   jIt();
@@ -189751,7 +189751,7 @@ This is a configuration issue in your canUseTool callback, PermissionRequest hoo
       });
     XWe({ success: !0 });
     let At =
-      W9() || (isDetailedTracingEnabled() && isToolContentLoggingEnabled())
+      isMcpRpcTracingEnabled() || (isDetailedTracingEnabled() && isToolContentLoggingEnabled())
         ? Cn.data && typeof Cn.data === "object"
           ? b(Cn.data)
           : String(Cn.data ?? "")
@@ -200338,8 +200338,8 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
         wn = getTeamName() ?? "",
         un,
         kn = "",
-        on = zE(),
-        $n = (await RC(on, p.storageV5)).filter(
+        on = getTaskListId(),
+        $n = (await readAllTasks(on, p.storageV5)).filter(
           (Cn) => Cn.status === "in_progress" && Cn.owner === Qt,
         );
       for (let Cn of $n) {
@@ -204410,7 +204410,7 @@ async function* Oer(e, t, r) {
         try {
           jr = await At.requestDialog(
             FABLE_OVERAGE_CONSENT_DIALOG,
-            { overagesEnabled: ZOe(), modelName: renderFableModelName(Wa) },
+            { overagesEnabled: isOverageBillingEnabledFromCache(), modelName: renderFableModelName(Wa) },
             { signal: uc.signal },
           );
         } finally {
@@ -208536,7 +208536,7 @@ function Dtr(e) {
 async function fes(e) {
   let t = getBuiltInSkillAvailability(e);
   if (!qle()) return "";
-  let r = X_() ? TASK_CREATE_TOOL_NAME : TODO_WRITE_TOOL_NAME,
+  let r = areTasksEnabled() ? TASK_CREATE_TOOL_NAME : TODO_WRITE_TOOL_NAME,
     { commit: o, pr: d } = await xpt(),
     p = Dtr("bash_full"),
     _ = null,
@@ -232949,7 +232949,7 @@ ${OS(It.ask.text)}`,
                   type: "text",
                   text:
                     It.authority === "peer-agent"
-                      ? R1e(OS(gn), { midTurn: !1 })
+                      ? annotateReceivedMessage(OS(gn), { midTurn: !1 })
                       : Sj(OS(gn)),
                 },
               ],
@@ -240823,7 +240823,7 @@ async function Pfs(e, t, r, o, d, p, _) {
   let de = (() => {
       let Oe;
       return () =>
-        (Oe ??= shouldUseTodoTools() ? (X_() ? xps(d, t) : vps(d, t)) : Promise.resolve([]));
+        (Oe ??= shouldUseTodoTools() ? (areTasksEnabled() ? xps(d, t) : vps(d, t)) : Promise.resolve([]));
     })(),
     _e = isRemoteToolForwardingSwitchOn() ? I8().remote?.noticeAttachment : void 0,
     Se = [
@@ -242744,14 +242744,14 @@ function Cps(e) {
   return { turnsSinceLastTaskManagement: o, turnsSinceLastReminder: d };
 }
 async function xps(e, t) {
-  if (!X_()) return [];
+  if (!areTasksEnabled()) return [];
   if (nge && t.options.tools.some((d) => matchesToolName(d, nge))) return [];
   if (!t.options.tools.some((d) => matchesToolName(d, TASK_UPDATE_TOOL_NAME))) return [];
   if (!e || e.length === 0) return [];
   if (Zfr() === "off") return [];
   let { turnsSinceLastTaskManagement: r, turnsSinceLastReminder: o } = Cps(e);
   if (r >= O1e.TURNS_SINCE_WRITE && o >= O1e.TURNS_BETWEEN_REMINDERS) {
-    let d = await RC(zE(), t.storageV5);
+    let d = await readAllTasks(getTaskListId(), t.storageV5);
     return [{ type: "task_reminder", content: d, itemCount: d.length }];
   }
   return [];
@@ -244050,7 +244050,7 @@ function formatAskUserQuestionNeeds(e) {
   };
 }
 function formatNeedsText(e) {
-  return al(e.replace(/\s+/g, " ").trim(), Ep);
+  return clipWithEllipsis(e.replace(/\s+/g, " ").trim(), MAX_DETAIL_CHARS);
 }
 var oms = [
     "elicitation",
@@ -244077,7 +244077,7 @@ var oms = [
       d = 240,
       p = new Map();
     function _(I) {
-      return al(
+      return clipWithEllipsis(
         I.replace(/[^\x20-\x7e]/g, " ")
           .replace(/ {2,}/g, " ")
           .trim(),
@@ -247185,7 +247185,7 @@ async function* ymr({
     return;
   }
   let ut = isDetailedTracingEnabled() && isToolDetailsLoggingEnabled(),
-    Wt = ut || W9() ? b(egs(Ke)) : "[]",
+    Wt = ut || isMcpRpcTracingEnabled() ? b(egs(Ke)) : "[]",
     en = Zms(_e, d);
   if (!N)
     emitOtelEvent("hook_execution_start", {
@@ -250564,7 +250564,7 @@ function pgr(e) {
 function qgs(e) {
   return e.replaceAll("</audio-transcript>", "<\\/audio-transcript>");
 }
-var imt = 300;
+var MAX_AUDIO_TRANSCRIPT_CODE_UNITS = 300;
 function formatDurationAsClockTime(e) {
   let t = Math.max(0, Math.round(e)),
     r = Math.floor(t / 60),
@@ -251281,7 +251281,7 @@ function isDirectUserMessage(e) {
     t.indexOf(`<${TASK_NOTIFICATION_TAG}>`) !== -1 ||
     t.indexOf(`<${TICK_TAG}>`) !== -1 ||
     t.startsWith(`<${TEAMMATE_MESSAGE_TAG} `) ||
-    (t.startsWith(dJ) &&
+    (t.startsWith(CROSS_SESSION_MESSAGE_PREFIX) &&
       t.startsWith(
         `<${TEAMMATE_MESSAGE_TAG} `,
         t.indexOf(`
@@ -254844,7 +254844,7 @@ ${o}`,
       ]);
     }
     case "todo_reminder": {
-      if (X_() || !shouldUseTodoTools()) return [];
+      if (areTasksEnabled() || !shouldUseTodoTools()) return [];
       let o = e.content.map((p, _) => `${_ + 1}. [${p.status}] ${p.content}`)
           .join(`
 `),
@@ -256590,11 +256590,11 @@ function formatMessageForOrigin(e, t, r) {
             ? prefixBackgroundTaskNotificationInUserTurn(e)
             : prefixBackgroundTaskNotification(e);
     case "coordinator":
-      return wZn(e);
+      return formatCoordinatorMessage(e);
     case "channel":
       return vys(e, t.server, { midTurn: !0 });
     case "peer":
-      return R1e(e, {
+      return annotateReceivedMessage(e, {
         midTurn: !0,
         activityObservation: t.activityObservation,
         ...(t.hostInjected && !isDesktopHostSession() && { hostInjected: !0 }),
@@ -256603,7 +256603,7 @@ function formatMessageForOrigin(e, t, r) {
     case "slack-ping":
       return Sj(e);
     case "observer":
-      return qbn(e, t.from, { midTurn: !0 });
+      return formatObserverReport(e, t.from, { midTurn: !0 });
     case "unclassified":
       return Sj(e);
     case "observer-activity":
@@ -256679,14 +256679,14 @@ function applyOriginPrefixToMessage(e, t) {
   if (t.kind === "channel") return;
   else if (t.kind === "peer")
     r = (d) =>
-      R1e(d, {
+      annotateReceivedMessage(d, {
         midTurn: !1,
         activityObservation: t.activityObservation,
         ...(t.hostInjected && !isDesktopHostSession() && { hostInjected: !0 }),
         ...(t.senderTaskId !== void 0 && { lineage: "descendant" }),
       });
   else if (t.kind === "slack-ping") r = (d) => Sj(d);
-  else if (t.kind === "observer") r = (d) => qbn(d, t.from, { midTurn: !1 });
+  else if (t.kind === "observer") r = (d) => formatObserverReport(d, t.from, { midTurn: !1 });
   else if (t.kind === "plugin") return;
   else if (t.kind === "unclassified") r = Sj;
   if (!r) return;
@@ -266699,7 +266699,7 @@ export {
   findLatestPasteExpansion,
   HISTORY_PICKER_SCOPES,
   readHistoryEntries,
-  Z$t,
+  isHistoryReaderFailure,
   readTimestampedHistory,
   countHistoryEntriesForProject,
   readHistoryEntriesForProject,
@@ -266762,7 +266762,7 @@ export {
   registerPerfettoAgent,
   unregisterPerfettoAgent,
   isEnhancedTelemetryBetaEnabled,
-  W9,
+  isMcpRpcTracingEnabled,
   runWithInteractionContext,
   endInteractionSpan,
   getCurrentTraceparent,
@@ -266774,7 +266774,7 @@ export {
   getPowerShellEdition,
   normalizeDashCharacters,
   classifyPowerShellCommand,
-  uUt,
+  getPowerShellCommandName,
   parsePowerShellCommand,
   POWERSHELL_COMMAND_ALIASES,
   getLowercaseCommandNames,
@@ -266889,23 +266889,23 @@ export {
   getUpgradeUpsell,
   hasFableOverageConsent,
   recordFableOverageConsent,
-  ZOe,
-  Mwe,
-  ZGn,
+  isOverageBillingEnabledFromCache,
+  isFableBlockedByUsageCredits,
+  isFableBlockedByCreditsOrOverage,
   isAdvisorRefusal,
   getAdvisorRefusalText,
   isAdvisorToolEnabled,
   baseModelSupportsAdvisor,
-  tDe,
+  isValidAdvisorModelString,
   getAdvisorModelAliases,
   isValidAdvisorModel,
-  DF,
+  isAdvisorModelPendingCreditsConsent,
   getAdvisorCreditsNotice,
   isAdvisorCapableForBaseModel,
   resolveAdvisorModel,
   getConfiguredAdvisorModel,
   getAdvisorModelFromSettings,
-  imt,
+  MAX_AUDIO_TRANSCRIPT_CODE_UNITS,
   formatDurationAsClockTime,
   getBashDefaultTimeoutMs,
   getBashMaxTimeoutMs,
@@ -267076,7 +267076,7 @@ export {
   mergeKeyedRowsPreferFirst,
   mergeStringListsExcluding,
   parseValidRows,
-  tBt,
+  mergeRowsTrackingAttribution,
   omitKeys,
   readFileTextOrNull,
   parseJsonWithSchema,
@@ -267249,7 +267249,7 @@ export {
   isPassiveCommand,
   isSlashCommandEntry,
   isMainThreadPromptCommand,
-  Kte,
+  isEditableQueuedCommand,
   createCommandQueue,
   installCommandQueue,
   getCommandQueueInstance,
@@ -268352,7 +268352,7 @@ export {
   MAX_LISTED_COMMITS,
   MAX_REPORT_ENTRIES,
   MAX_TEXT_CODE_UNITS,
-  rmn,
+  MAX_SYNC_PATH_CODE_UNITS,
   MAX_LISTED_SKIPPED_FILES,
   MAX_LISTED_CONFLICTED_COMMITS,
   MAX_CONFLICT_CODE_UNITS,
@@ -268531,7 +268531,7 @@ export {
   toRateLimitMirrorInfo,
   createRateLimitEventMessage,
   hasDisplayableContent,
-  t5n,
+  getAssistantResultText,
   getInMemoryErrorsSince,
   buildResultDiagnostics,
   isAgentProgressMessage,
@@ -268542,7 +268542,7 @@ export {
   handleOrphanedPermission,
   extractReadFilesFromMessages,
   collectRewoundFileTrackingPaths,
-  s5n,
+  resolveAutoCompactWindowSetting,
   E6t,
   setPolicyColdStartWaiter,
   awaitPolicyColdStart,

@@ -72,7 +72,7 @@ import { loadCustomThemes } from "../../02-功能模块/状态栏-主题/custom-
 import "../../02-功能模块/自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../../02-功能模块/自动更新-安装/chunk-2g5h49pk.js";
 import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
-import { yOt } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { checkAndRestoreTerminalBackup } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -364,7 +364,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
         );
     }
     try {
-      let t = await yOt(s);
+      let t = await checkAndRestoreTerminalBackup(s);
       if (t.status === "restored")
         console.log(
           chalk.yellow(

@@ -289,7 +289,7 @@ function Te(e, t) {
   } catch {}
   return Function.prototype[Symbol.hasInstance].call(e, t);
 }
-var l2 = (function (e) {
+var OAuthErrorCode = (function (e) {
     return (
       (e.InvalidRequest = "invalid_request"),
       (e.InvalidClient = "invalid_client"),
@@ -312,7 +312,7 @@ var l2 = (function (e) {
       e
     );
   })({}),
-  aI = class e extends Error {
+  OAuthError = class e extends Error {
     static {
       Object.defineProperty(this, "mcpBrand", { value: "mcp.OAuthError" });
     }
@@ -342,7 +342,7 @@ var l2 = (function (e) {
       return new e(t.error, t.error_description ?? t.error, t.error_uri);
     }
   },
-  ao = (function (e) {
+  ProtocolErrorCode = (function (e) {
     return (
       (e.NotConnected = "NOT_CONNECTED"),
       (e.AlreadyConnected = "ALREADY_CONNECTED"),
@@ -368,7 +368,7 @@ var l2 = (function (e) {
       e
     );
   })({}),
-  So = class extends Error {
+  SdkError = class extends Error {
     static {
       Object.defineProperty(this, "mcpBrand", { value: "mcp.SdkError" });
     }
@@ -390,7 +390,7 @@ var l2 = (function (e) {
         et(this, new.target));
     }
   },
-  Cy = class extends So {
+  SdkHttpError = class extends SdkError {
     static {
       Object.defineProperty(this, "mcpBrand", { value: "mcp.SdkHttpError" });
     }
@@ -2090,7 +2090,7 @@ function Zs(e) {
 function Qs(e) {
   return e === "public" || e === "private";
 }
-var Go = (function (e) {
+var ErrorCode = (function (e) {
     return (
       (e[(e.ParseError = -32700)] = "ParseError"),
       (e[(e.InvalidRequest = -32600)] = "InvalidRequest"),
@@ -2106,7 +2106,7 @@ var Go = (function (e) {
       e
     );
   })({}),
-  Ki = class e extends Error {
+  ProtocolError = class e extends Error {
     static {
       Object.defineProperty(this, "mcpBrand", { value: "mcp.ProtocolError" });
     }
@@ -2128,24 +2128,24 @@ var Go = (function (e) {
         et(this, new.target));
     }
     static fromError(t, r, a) {
-      if (t === Go.UrlElicitationRequired && a) {
+      if (t === ErrorCode.UrlElicitationRequired && a) {
         let o = a;
         if (o.elicitations) return new ta(o.elicitations, r);
       }
-      if (t === Go.UnsupportedProtocolVersion && a) {
+      if (t === ErrorCode.UnsupportedProtocolVersion && a) {
         let o = a;
         if (Array.isArray(o.supported) && typeof o.requested === "string")
           return new wr({ supported: o.supported, requested: o.requested }, r);
       }
-      if (t === Go.InvalidParams || t === Go.ResourceNotFound) {
+      if (t === ErrorCode.InvalidParams || t === ErrorCode.ResourceNotFound) {
         let o = a;
         if (
           typeof o?.uri === "string" &&
-          (t === Go.ResourceNotFound || Object.keys(o).length === 1)
+          (t === ErrorCode.ResourceNotFound || Object.keys(o).length === 1)
         )
           return new ea(o.uri, r);
       }
-      if (t === Go.MissingRequiredClientCapability && a) {
+      if (t === ErrorCode.MissingRequiredClientCapability && a) {
         let o = a;
         if (
           o.requiredCapabilities !== null &&
@@ -2157,40 +2157,40 @@ var Go = (function (e) {
       return new e(t, r, a);
     }
   },
-  ea = class extends Ki {
+  ea = class extends ProtocolError {
     static {
       Object.defineProperty(this, "mcpBrand", {
         value: "mcp.ResourceNotFoundError",
       });
     }
     constructor(e, t = `Resource not found: ${e}`) {
-      super(Go.InvalidParams, t, { uri: e });
+      super(ErrorCode.InvalidParams, t, { uri: e });
     }
     get uri() {
       return this.data.uri;
     }
   },
-  ta = class extends Ki {
+  ta = class extends ProtocolError {
     static {
       Object.defineProperty(this, "mcpBrand", {
         value: "mcp.UrlElicitationRequiredError",
       });
     }
     constructor(e, t = `URL elicitation${e.length > 1 ? "s" : ""} required`) {
-      super(Go.UrlElicitationRequired, t, { elicitations: e });
+      super(ErrorCode.UrlElicitationRequired, t, { elicitations: e });
     }
     get elicitations() {
       return this.data?.elicitations ?? [];
     }
   },
-  wr = class extends Ki {
+  wr = class extends ProtocolError {
     static {
       Object.defineProperty(this, "mcpBrand", {
         value: "mcp.UnsupportedProtocolVersionError",
       });
     }
     constructor(e, t = `Unsupported protocol version: ${e.requested}`) {
-      super(Go.UnsupportedProtocolVersion, t, e);
+      super(ErrorCode.UnsupportedProtocolVersion, t, e);
     }
     get supported() {
       return this.data.supported;
@@ -2199,7 +2199,7 @@ var Go = (function (e) {
       return this.data.requested;
     }
   },
-  ra = class extends Ki {
+  ra = class extends ProtocolError {
     static {
       Object.defineProperty(this, "mcpBrand", {
         value: "mcp.MissingRequiredClientCapabilityError",
@@ -2209,7 +2209,7 @@ var Go = (function (e) {
       e,
       t = `Missing required client capabilities: ${Object.keys(e.requiredCapabilities).join(", ")}`,
     ) {
-      super(Go.MissingRequiredClientCapability, t, e);
+      super(ErrorCode.MissingRequiredClientCapability, t, e);
     }
     get requiredCapabilities() {
       return this.data.requiredCapabilities;
@@ -2223,8 +2223,8 @@ function xo(e, t) {
   if (r === void 0) return { ...t, resultType: "complete" };
   if (r === "complete") return t;
   if (Fo.includes(e)) return t;
-  throw new Ki(
-    Go.InternalError,
+  throw new ProtocolError(
+    ErrorCode.InternalError,
     `Handler for ${e} returned resultType '${String(r)}', but results of ${e} only support 'complete' on protocol revision 2026-07-28`,
   );
 }
@@ -2435,8 +2435,8 @@ var ts = {
       if (!xt(t))
         return {
           kind: "invalid",
-          error: new So(
-            ao.InvalidResult,
+          error: new SdkError(
+            ProtocolErrorCode.InvalidResult,
             `Invalid result for ${e}: not an object`,
             { method: e },
           ),
@@ -2445,8 +2445,8 @@ var ts = {
       if (r === void 0)
         return {
           kind: "invalid",
-          error: new So(
-            ao.InvalidResult,
+          error: new SdkError(
+            ProtocolErrorCode.InvalidResult,
             `Invalid result for ${e}: missing required resultType \u2014 servers implementing protocol revision 2026-07-28 MUST include it (the absent-means-complete bridge applies only to earlier-revision servers)`,
             { method: e, violation: "missing-resultType" },
           ),
@@ -2454,8 +2454,8 @@ var ts = {
       if (typeof r !== "string")
         return {
           kind: "invalid",
-          error: new So(
-            ao.InvalidResult,
+          error: new SdkError(
+            ProtocolErrorCode.InvalidResult,
             `Invalid result for ${e}: non-string resultType`,
             { method: e, resultType: r },
           ),
@@ -2467,8 +2467,8 @@ var ts = {
         if (Object.keys(u).length === 0 && typeof l !== "string")
           return {
             kind: "invalid",
-            error: new So(
-              ao.InvalidResult,
+            error: new SdkError(
+              ProtocolErrorCode.InvalidResult,
               `Invalid result for ${e}: input_required carries neither inputRequests nor requestState (every input_required result must include at least one of the two)`,
               { method: e, violation: "input-required-missing-both" },
             ),
@@ -2483,8 +2483,8 @@ var ts = {
       if (r !== "complete")
         return {
           kind: "invalid",
-          error: new So(
-            ao.UnsupportedResultType,
+          error: new SdkError(
+            ProtocolErrorCode.UnsupportedResultType,
             `Unsupported result type '${r}' for ${e}`,
             { resultType: r, method: e },
           ),
@@ -2496,8 +2496,8 @@ var ts = {
         if (!i.success)
           return {
             kind: "invalid",
-            error: new So(
-              ao.InvalidResult,
+            error: new SdkError(
+              ProtocolErrorCode.InvalidResult,
               `Invalid result for ${e}: ${i.error}`,
               { method: e },
             ),
@@ -2720,10 +2720,10 @@ var ca = [Zr, ts],
     UntitledMultiSelectEnumSchemaSchema: () => aut,
     UntitledSingleSelectEnumSchemaSchema: () => out,
   });
-var D4 = (e) => Wct.safeParse(e).success,
-  xLt = (e) => Gct.safeParse(e).success,
-  kee = (e) => iGe.safeParse(e).success,
-  lce = (e) => aGe.safeParse(e).success;
+var isJSONRPCRequest = (e) => Wct.safeParse(e).success,
+  isJSONRPCNotification = (e) => Gct.safeParse(e).success,
+  isJSONRPCResultResponse = (e) => iGe.safeParse(e).success,
+  isJSONRPCErrorResponse = (e) => aGe.safeParse(e).success;
 var la = (e) =>
   typeof e === "object" &&
   e !== null &&
@@ -2877,7 +2877,7 @@ var ft = -32020,
       rung: "jsonrpc-shape",
       order: 2,
       evaluatedAt: "edge",
-      codes: [Go.InvalidRequest],
+      codes: [ErrorCode.InvalidRequest],
       conformance: ["server-stateless"],
       rationale:
         "The body must be a JSON-RPC request or notification: posted responses and batch arrays containing a modern or invalid element are rejected before classification (element-wise batch rule); all-legacy arrays stay legacy traffic.",
@@ -2886,7 +2886,7 @@ var ft = -32020,
       rung: "era-classification",
       order: 3,
       evaluatedAt: "edge",
-      codes: [ft, Go.UnsupportedProtocolVersion],
+      codes: [ft, ErrorCode.UnsupportedProtocolVersion],
       conformance: [
         "server-stateless",
         "http-header-validation",
@@ -2899,7 +2899,7 @@ var ft = -32020,
       rung: "envelope",
       order: 4,
       evaluatedAt: "edge",
-      codes: [Go.InvalidParams],
+      codes: [ErrorCode.InvalidParams],
       conformance: ["server-stateless"],
       rationale:
         "A present envelope claim with a malformed envelope \u2014 and a missing envelope on a request whose protocol-version header names a modern revision \u2014 is an invalid-params rejection naming the offending or missing key(s); never a silent fall back to legacy handling. This is the only place an invalid-params rejection maps to HTTP 400.",
@@ -2908,7 +2908,7 @@ var ft = -32020,
       rung: "method-registry",
       order: 5,
       evaluatedAt: "dispatch",
-      codes: [Go.MethodNotFound],
+      codes: [ErrorCode.MethodNotFound],
       conformance: ["server-stateless"],
       rationale:
         "Method existence outranks parameter validity: a method absent from the negotiated revision\u2019s registry (or with no handler installed) answers method-not-found before params or capabilities are looked at.",
@@ -2917,7 +2917,7 @@ var ft = -32020,
       rung: "request-params",
       order: 6,
       evaluatedAt: "dispatch",
-      codes: [Go.InvalidParams],
+      codes: [ErrorCode.InvalidParams],
       conformance: [],
       rationale:
         "Per-method params validation; emitted in-band by the dispatch layer (HTTP 200), never via the ladder status table.",
@@ -2935,7 +2935,7 @@ var ft = -32020,
       rung: "client-capabilities",
       order: 8,
       evaluatedAt: "pre-dispatch",
-      codes: [Go.MissingRequiredClientCapability],
+      codes: [ErrorCode.MissingRequiredClientCapability],
       conformance: ["server-stateless"],
       rationale:
         "The capability requirement is checked by the HTTP entry, pre-dispatch, against the validated envelope the classifier produced \u2014 pinning the spec-mandated HTTP 400 independently of how dispatch- and handler-produced errors are mapped. The documented order (after method resolution and params validation) is preserved observably only while the requirement table is empty: once a served method gains a requirement entry, a request that is missing the capability and would also fail a dispatch rung is answered by this gate first, so the entry must consult the method registry before the gate if the documented precedence is to stay observable.",
@@ -2951,11 +2951,11 @@ var ft = -32020,
     },
   ],
   Il = {
-    [Go.ParseError]: 400,
-    [Go.InvalidRequest]: 400,
-    [Go.MethodNotFound]: 404,
-    [Go.UnsupportedProtocolVersion]: 400,
-    [Go.MissingRequiredClientCapability]: 400,
+    [ErrorCode.ParseError]: 400,
+    [ErrorCode.InvalidRequest]: 400,
+    [ErrorCode.MethodNotFound]: 404,
+    [ErrorCode.UnsupportedProtocolVersion]: 400,
+    [ErrorCode.MissingRequiredClientCapability]: 400,
     [ft]: 400,
   };
 function Pr(e, t) {
@@ -3075,8 +3075,8 @@ function kn(e) {
     return wn(e, "input");
   } catch (t) {
     let r = t instanceof Error ? t.message : String(t);
-    throw new Ki(
-      Go.InvalidParams,
+    throw new ProtocolError(
+      ErrorCode.InvalidParams,
       `Elicitation requestedSchema must describe an object with flat primitive properties: ${r}`,
     );
   }
@@ -3134,8 +3134,8 @@ function Mn(e, t) {
     else if (In.has(o)) r[o] = n;
     else if (!as(o)) a.push(o);
   if (a.length > 0)
-    throw new Ki(
-      Go.InvalidParams,
+    throw new ProtocolError(
+      ErrorCode.InvalidParams,
       `Elicitation requestedSchema contains unsupported JSON Schema constraint(s) after Standard Schema conversion: ${a.join(", ")}`,
     );
   return r;
@@ -3164,22 +3164,22 @@ function An(e) {
     r = Mn(kn(e.requestedSchema), t),
     a = Pr(hGe.shape.requestedSchema, r);
   if (!a.success)
-    throw new Ki(
-      Go.InvalidParams,
+    throw new ProtocolError(
+      ErrorCode.InvalidParams,
       `Elicitation requestedSchema only supports flat primitive properties (string, number, integer, boolean, and string enums): ${jn(r, a.error.message)}`,
     );
   let o = Br(r, a.data);
   if (o.length > 0)
-    throw new Ki(
-      Go.InvalidParams,
+    throw new ProtocolError(
+      ErrorCode.InvalidParams,
       `Elicitation requestedSchema contains unsupported JSON Schema constraint(s) after Standard Schema conversion: ${o.join(", ")}`,
     );
   let n = (a.data.required ?? []).filter(
     (i) => !Object.prototype.hasOwnProperty.call(a.data.properties, i),
   );
   if (n.length > 0)
-    throw new Ki(
-      Go.InvalidParams,
+    throw new ProtocolError(
+      ErrorCode.InvalidParams,
       `Elicitation requestedSchema lists required properties that are not defined in properties: ${n.join(", ")}`,
     );
   return { ...e, mode: "form", requestedSchema: a.data };
@@ -3202,7 +3202,7 @@ var Ol = Object.assign(Ln, {
     try {
       return { method: "elicitation/create", params: An(e) };
     } catch (t) {
-      throw t instanceof Ki ? TypeError(t.message, { cause: t }) : t;
+      throw t instanceof ProtocolError ? TypeError(t.message, { cause: t }) : t;
     }
   },
   elicitUrl(e) {
@@ -3237,9 +3237,9 @@ function xn(e, t) {
   return new Promise((r, a) => {
     if (t?.aborted) {
       a(
-        t.reason instanceof So
+        t.reason instanceof SdkError
           ? t.reason
-          : new So(ao.RequestTimeout, String(t.reason)),
+          : new SdkError(ProtocolErrorCode.RequestTimeout, String(t.reason)),
       );
       return;
     }
@@ -3249,9 +3249,9 @@ function xn(e, t) {
       n = () => {
         (clearTimeout(o),
           a(
-            t?.reason instanceof So
+            t?.reason instanceof SdkError
               ? t.reason
-              : new So(ao.RequestTimeout, String(t?.reason)),
+              : new SdkError(ProtocolErrorCode.RequestTimeout, String(t?.reason)),
           ));
       };
     t?.addEventListener("abort", n, { once: !0 });
@@ -3282,7 +3282,7 @@ async function Jn(e) {
     d = 0;
   while (!0) {
     if (((d += 1), d > t.maxRounds))
-      throw new So(ao.InputRequiredRoundsExceeded, Hn(r, t.maxRounds), {
+      throw new SdkError(ProtocolErrorCode.InputRequiredRoundsExceeded, Hn(r, t.maxRounds), {
         rounds: t.maxRounds,
         lastResult: {
           inputRequests: l.inputRequests,
@@ -3317,7 +3317,7 @@ async function Jn(e) {
       let y = Date.now() - u,
         b = o.maxTotalTimeout - y;
       if (b <= 0)
-        throw new So(ao.RequestTimeout, "Maximum total timeout exceeded", {
+        throw new SdkError(ProtocolErrorCode.RequestTimeout, "Maximum total timeout exceeded", {
           maxTotalTimeout: o.maxTotalTimeout,
           totalElapsed: y,
         });
@@ -3626,8 +3626,8 @@ var Qn = os(void 0),
     }
     _resolveNonCompleteResult(e, t) {
       return Promise.reject(
-        new So(
-          ao.UnsupportedResultType,
+        new SdkError(
+          ProtocolErrorCode.UnsupportedResultType,
           `Unsupported result type '${e.kind}' for ${t.request.method}`,
           { resultType: e.kind, method: t.request.method },
         ),
@@ -3659,7 +3659,7 @@ var Qn = os(void 0),
       if (t.maxTotalTimeout && r >= t.maxTotalTimeout)
         throw (
           this._timeoutInfo.delete(e),
-          new So(ao.RequestTimeout, "Maximum total timeout exceeded", {
+          new SdkError(ProtocolErrorCode.RequestTimeout, "Maximum total timeout exceeded", {
             maxTotalTimeout: t.maxTotalTimeout,
             totalElapsed: r,
           })
@@ -3690,9 +3690,9 @@ var Qn = os(void 0),
       };
       let a = this._transport?.onmessage;
       ((this._transport.onmessage = (o, n) => {
-        if ((a?.(o, n), kee(o) || lce(o))) this._onresponse(o);
-        else if (D4(o)) this._onrequest(o, n);
-        else if (xLt(o)) this._onnotification(o, n);
+        if ((a?.(o, n), isJSONRPCResultResponse(o) || isJSONRPCErrorResponse(o))) this._onresponse(o);
+        else if (isJSONRPCRequest(o)) this._onrequest(o, n);
+        else if (isJSONRPCNotification(o)) this._onnotification(o, n);
         else this._onerror(Error(`Unknown message type: ${JSON.stringify(o)}`));
       }),
         e.setSupportedProtocolVersions?.(this._supportedProtocolVersions),
@@ -3707,7 +3707,7 @@ var Qn = os(void 0),
       this._timeoutInfo.clear();
       let t = this._requestHandlerAbortControllers;
       this._requestHandlerAbortControllers = new Map();
-      let r = new So(ao.ConnectionClosed, "Connection closed");
+      let r = new SdkError(ProtocolErrorCode.ConnectionClosed, "Connection closed");
       this._transport = void 0;
       try {
         this.onclose?.();
@@ -3780,7 +3780,7 @@ var Qn = os(void 0),
           );
           let f = t.classification.revision ?? b;
           i(
-            Go.UnsupportedProtocolVersion,
+            ErrorCode.UnsupportedProtocolVersion,
             `Unsupported protocol version: ${f}`,
             { supported: this._supportedProtocolVersions, requested: f },
           );
@@ -3788,18 +3788,18 @@ var Qn = os(void 0),
         }
       }
       if (Vr(r.method) && !o.hasRequestMethod(r.method)) {
-        i(Go.MethodNotFound, "Method not found");
+        i(ErrorCode.MethodNotFound, "Method not found");
         return;
       }
       let u =
         this._requestHandlers.get(r.method) ?? this.fallbackRequestHandler;
       if (u === void 0) {
-        i(Go.MethodNotFound, "Method not found");
+        i(ErrorCode.MethodNotFound, "Method not found");
         return;
       }
       let l = o.checkInboundEnvelope(a);
       if (l !== void 0) {
-        i(Go.InvalidParams, l);
+        i(ErrorCode.InvalidParams, l);
         return;
       }
       let d = (b, f) =>
@@ -3859,7 +3859,7 @@ var Qn = os(void 0),
               (this._onerror(
                 Error(`Failed to encode result for ${r.method}: ${g}`),
               ),
-                i(Go.InternalError, "Internal error"));
+                i(ErrorCode.InternalError, "Internal error"));
               return;
             }
             let h = { result: f, jsonrpc: "2.0", id: r.id };
@@ -3867,7 +3867,7 @@ var Qn = os(void 0),
           },
           async (b) => {
             if (_.signal.aborted) return;
-            let f = Number.isSafeInteger(b.code) ? b.code : Go.InternalError,
+            let f = Number.isSafeInteger(b.code) ? b.code : ErrorCode.InternalError,
               h = {
                 jsonrpc: "2.0",
                 id: r.id,
@@ -3927,10 +3927,10 @@ var Qn = os(void 0),
         (this._responseHandlers.delete(t),
         this._cleanupTimeout(t),
         this._progressHandlers.delete(t),
-        kee(e))
+        isJSONRPCResultResponse(e))
       )
         r(e);
-      else r(Ki.fromError(e.error.code, e.error.message, e.error.data));
+      else r(ProtocolError.fromError(e.error.code, e.error.message, e.error.data));
     }
     get transport() {
       return this._transport;
@@ -3965,8 +3965,8 @@ var Qn = os(void 0),
     _assertOutboundRequestInEra(e, t) {
       if (t.startsWith("tasks/")) return;
       if (Vr(t) && !e.hasRequestMethod(t))
-        throw new So(
-          ao.MethodNotSupportedByProtocolVersion,
+        throw new SdkError(
+          ProtocolErrorCode.MethodNotSupportedByProtocolVersion,
           `Method '${t}' is not supported by the negotiated protocol version (wire era ${e.era})`,
           { method: t, era: e.era },
         );
@@ -4005,7 +4005,7 @@ var Qn = os(void 0),
           }
         if (a?.signal?.aborted) {
           let R = a.signal.reason;
-          throw R instanceof So ? R : new So(ao.RequestTimeout, String(R));
+          throw R instanceof SdkError ? R : new SdkError(ProtocolErrorCode.RequestTimeout, String(R));
         }
         let y =
             e.era === $r && this._transport.hasPerRequestStream === !0
@@ -4042,7 +4042,7 @@ var Qn = os(void 0),
                   this._onerror(Error(`Failed to send cancellation: ${S}`)),
                 );
             else y.abort();
-            P(R instanceof So ? R : new So(ao.RequestTimeout, String(R)));
+            P(R instanceof SdkError ? R : new SdkError(ProtocolErrorCode.RequestTimeout, String(R)));
           };
         (this._responseHandlers.set(b, (R) => {
           if (a?.signal?.aborted) return;
@@ -4062,8 +4062,8 @@ var Qn = os(void 0),
             )
               return _(S.result);
             return P(
-              new So(
-                ao.UnsupportedResultType,
+              new SdkError(
+                ProtocolErrorCode.UnsupportedResultType,
                 `Unsupported result type 'task' for ${t.method}`,
                 { method: t.method },
               ),
@@ -4094,8 +4094,8 @@ var Qn = os(void 0),
             if (L.success) _(L.data);
             else
               P(
-                new So(
-                  ao.InvalidResult,
+                new SdkError(
+                  ProtocolErrorCode.InvalidResult,
                   `Invalid result for ${t.method}: ${L.error}`,
                 ),
               );
@@ -4105,7 +4105,7 @@ var Qn = os(void 0),
           a?.signal?.addEventListener("abort", d, { once: !0 }));
         let w = a?.timeout ?? Tr,
           C = () =>
-            p(new So(ao.RequestTimeout, "Request timed out", { timeout: w }));
+            p(new SdkError(ProtocolErrorCode.RequestTimeout, "Request timed out", { timeout: w }));
         (this._setupTimeout(
           b,
           w,
@@ -4138,10 +4138,10 @@ var Qn = os(void 0),
       );
     }
     async _notificationViaCodec(e, t, r) {
-      if (!this._transport) throw new So(ao.NotConnected, "Not connected");
+      if (!this._transport) throw new SdkError(ProtocolErrorCode.NotConnected, "Not connected");
       if (Fr(t.method) && !e.hasNotificationMethod(t.method))
-        throw new So(
-          ao.MethodNotSupportedByProtocolVersion,
+        throw new SdkError(
+          ProtocolErrorCode.MethodNotSupportedByProtocolVersion,
           `Notification '${t.method}' is not supported by the negotiated protocol version (wire era ${e.era})`,
           { method: t.method, era: e.era },
         );
@@ -4183,8 +4183,8 @@ var Qn = os(void 0),
             u = i.validateInputRequest(e, o);
           if (!u.ok) {
             if (u.reason === "not-in-era")
-              throw new Ki(
-                Go.InternalError,
+              throw new ProtocolError(
+                ErrorCode.InternalError,
                 `No wire schema for ${e} in the resolved era`,
               );
             throw Error(u.message);
@@ -4195,8 +4195,8 @@ var Qn = os(void 0),
         a = async (o, n) => {
           let i = await Hr(t.params, { ...o.params });
           if (!i.success)
-            throw new Ki(
-              Go.InvalidParams,
+            throw new ProtocolError(
+              ErrorCode.InvalidParams,
               `Invalid params for ${e}: ${i.error}`,
             );
           return r(i.data, n);
@@ -4227,8 +4227,8 @@ var Qn = os(void 0),
           let n = o.validateNotification(e, a);
           if (!n.ok) {
             if (n.reason === "not-in-era")
-              throw new Ki(
-                Go.InternalError,
+              throw new ProtocolError(
+                ErrorCode.InternalError,
                 `No wire schema for ${e} in the resolved era`,
               );
             throw Error(n.message);
@@ -4241,8 +4241,8 @@ var Qn = os(void 0),
       this._notificationHandlers.set(e, async (a) => {
         let o = await Hr(t.params, { ...a.params });
         if (!o.success)
-          throw new Ki(
-            Go.InvalidParams,
+          throw new ProtocolError(
+            ErrorCode.InvalidParams,
             `Invalid params for notification ${e}: ${o.error}`,
           );
         await r(o.data, a);
@@ -4283,8 +4283,8 @@ function ti(e) {
   return { accepted: t, droppedKeys: r };
 }
 function Ds(e) {
-  throw new So(
-    ao.SendFailed,
+  throw new SdkError(
+    ProtocolErrorCode.SendFailed,
     `ctx.mcpReq.${e} is not available while fulfilling an embedded input request: the request is fulfilled locally and has no related peer request`,
   );
 }
@@ -4304,22 +4304,22 @@ function ri(e, t, r, a, o) {
 }
 async function si(e, t, r, a, o) {
   if (!Rr(a) || typeof a.method !== "string")
-    throw new So(
-      ao.InvalidResult,
+    throw new SdkError(
+      ProtocolErrorCode.InvalidResult,
       `Invalid input request '${r}': each inputRequests entry must be an embedded request object with a method`,
       { key: r },
     );
   let n = a.method;
   if (!t.hasInputRequestMethod(n))
-    throw new So(
-      ao.InvalidResult,
+    throw new SdkError(
+      ProtocolErrorCode.InvalidResult,
       `Invalid input request '${r}': '${n}' is not an embedded request the ${t.era} revision defines (expected elicitation/create, sampling/createMessage, or roots/list)`,
       { key: r, method: n },
     );
   let i = e.getRequestHandler(n);
   if (i === void 0)
-    throw new So(
-      ao.CapabilityNotSupported,
+    throw new SdkError(
+      ProtocolErrorCode.CapabilityNotSupported,
       `Cannot fulfil input request '${r}': no handler is registered for '${n}' on this client. Declare the corresponding capability and register a handler, or handle input_required results manually.`,
       { key: r, method: n },
     );
@@ -4440,7 +4440,7 @@ function wa(e) {
   }
 }
 var $a = 10485760,
-  Mrn = class {
+  ReadBuffer = class {
     _buffer;
     _maxBufferSize;
     constructor(e) {
@@ -4464,7 +4464,7 @@ var $a = 10485760,
         let t = this._buffer.toString("utf8", 0, e).replace(/\r$/, "");
         this._buffer = this._buffer.subarray(e + 1);
         try {
-          return HLt(t);
+          return deserializeMessage(t);
         } catch (r) {
           if (r instanceof SyntaxError) continue;
           throw r;
@@ -4476,10 +4476,10 @@ var $a = 10485760,
       this._buffer = void 0;
     }
   };
-function HLt(e) {
+function deserializeMessage(e) {
   return c2.parse(JSON.parse(e));
 }
-function Nrn(e) {
+function serializeMessage(e) {
   return (
     JSON.stringify(e) +
     `
@@ -4492,7 +4492,7 @@ function Gt(e) {
   if (Array.isArray(e)) return Object.fromEntries(e);
   return { ...e };
 }
-function tGe(e = fetch, t) {
+function createFetchWithInit(e = fetch, t) {
   if (!t) return e;
   return async (r, a) =>
     e(r, {
@@ -11593,7 +11593,7 @@ function Rc() {
   });
   return (bc(e), e);
 }
-var nGe = class {
+var AjvJsonSchemaValidator = class {
     _ajv;
     _userAjv;
     constructor(e) {
@@ -11648,7 +11648,7 @@ var Xt = class extends Error {
       ((this.name = new.target.name), et(this, new.target));
     }
   },
-  RSe = class extends Xt {
+  IssuerMismatchError = class extends Xt {
     static {
       Object.defineProperty(this, "mcpBrand", {
         value: "mcp.IssuerMismatchError",
@@ -11664,7 +11664,7 @@ var Xt = class extends Error {
       ((this.kind = e), (this.expected = t), (this.received = r));
     }
   },
-  ILt = class extends Xt {
+  RegistrationRejectedError = class extends Xt {
     static {
       Object.defineProperty(this, "mcpBrand", {
         value: "mcp.RegistrationRejectedError",
@@ -11755,7 +11755,7 @@ function io(e) {
 async function wc(e, t, r) {
   let { resourceMetadataUrl: a, scope: o } = tt(t.response);
   if (
-    (await WIe(e, {
+    (await auth(e, {
       serverUrl: t.serverUrl,
       resourceMetadataUrl: a,
       scope: o,
@@ -11763,7 +11763,7 @@ async function wc(e, t, r) {
       ...r,
     })) !== "AUTHORIZED"
   )
-    throw new zA();
+    throw new UnauthorizedError();
 }
 function co(e, t) {
   return {
@@ -11771,7 +11771,7 @@ function co(e, t) {
     onUnauthorized: async (r) => wc(e, r, t),
   };
 }
-var zA = class extends Error {
+var UnauthorizedError = class extends Error {
   static {
     Object.defineProperty(this, "mcpBrand", { value: "mcp.UnauthorizedError" });
   }
@@ -11796,10 +11796,10 @@ function Ar(e) {
 function Lr({ iss: e, expectedIssuer: t, issParameterSupported: r }) {
   if (t === void 0) return;
   if (e === void 0) {
-    if (r) throw new RSe("authorization_response", t, void 0);
+    if (r) throw new IssuerMismatchError("authorization_response", t, void 0);
     return;
   }
-  if (e !== t) throw new RSe("authorization_response", t, e);
+  if (e !== t) throw new IssuerMismatchError("authorization_response", t, e);
 }
 function us(...e) {
   let t = new Set();
@@ -11823,23 +11823,23 @@ async function lo(e, t, r, a, o) {
   let u = (await r.discoveryState?.())?.authorizationServerMetadata;
   if (!u)
     try {
-      u = (await OLt(a, o)).authorizationServerMetadata;
+      u = (await discoverOAuthServerInfo(a, o)).authorizationServerMetadata;
     } catch {
       u = void 0;
     }
   if (!u)
-    throw new zA(
+    throw new UnauthorizedError(
       "Authorization callback failed and the issuer could not be verified",
     );
   Lr({ iss: n, expectedIssuer: u.issuer, issParameterSupported: Ar(u) });
   let l = e.get("error");
   if (l)
-    throw new aI(
+    throw new OAuthError(
       l,
       e.get("error_description") ?? l,
       e.get("error_uri") ?? void 0,
     );
-  throw new zA("Authorization callback contained neither `code` nor `error`");
+  throw new UnauthorizedError("Authorization callback contained neither `code` nor `error`");
 }
 function Ec(e) {
   return ["client_secret_basic", "client_secret_post", "none"].includes(e);
@@ -11927,24 +11927,24 @@ async function Ja(e) {
     r = e instanceof Response ? await e.text() : e;
   try {
     let a = jSe.parse(JSON.parse(r));
-    return aI.fromResponse(a);
+    return OAuthError.fromResponse(a);
   } catch (a) {
     let o = `${t ? `HTTP ${t}: ` : ""}Invalid OAuth error response: ${a}. Raw body: ${r}`;
-    return new aI(l2.ServerError, o);
+    return new OAuthError(OAuthErrorCode.ServerError, o);
   }
 }
-async function WIe(e, t) {
+async function auth(e, t) {
   try {
     return await ms(e, t);
   } catch (r) {
-    if (r instanceof aI) {
-      if (r.code === l2.InvalidClient || r.code === l2.UnauthorizedClient)
+    if (r instanceof OAuthError) {
+      if (r.code === OAuthErrorCode.InvalidClient || r.code === OAuthErrorCode.UnauthorizedClient)
         return (
           await e.invalidateCredentials?.("client"),
           await e.invalidateCredentials?.("tokens"),
           await ms(e, t)
         );
-      else if (r.code === l2.InvalidGrant)
+      else if (r.code === OAuthErrorCode.InvalidGrant)
         return (await e.invalidateCredentials?.("tokens"), await ms(e, t));
     }
     throw r;
@@ -11994,11 +11994,11 @@ async function ms(
       (_ = m.resourceMetadata),
       (z =
         m.authorizationServerMetadata ??
-        (await GIe(P, { fetchFn: i, skipIssuerValidation: u }))),
+        (await discoverAuthorizationServerMetadata(P, { fetchFn: i, skipIssuerValidation: u }))),
       !_)
     )
       try {
-        _ = await PLt(t, { resourceMetadataUrl: b }, i);
+        _ = await discoverOAuthProtectedResourceMetadata(t, { resourceMetadataUrl: b }, i);
       } catch (j) {
         if (j instanceof TypeError) throw j;
       }
@@ -12010,7 +12010,7 @@ async function ms(
         authorizationServerMetadata: z,
       });
   } else {
-    let j = await OLt(t, {
+    let j = await discoverOAuthServerInfo(t, {
       resourceMetadataUrl: b,
       fetchFn: i,
       skipIssuerMetadataValidation: u,
@@ -12063,8 +12063,8 @@ async function ms(
     let j = z?.client_id_metadata_document_supported === !0,
       F = e.clientMetadataUrl;
     if (F && !Mc(F))
-      throw new aI(
-        l2.InvalidClientMetadata,
+      throw new OAuthError(
+        OAuthErrorCode.InvalidClientMetadata,
         `clientMetadataUrl must be a valid HTTPS URL with a non-root pathname, got: ${F}`,
       );
     if (j && F)
@@ -12106,7 +12106,7 @@ async function ms(
     ((S = { ...S, issuer: f }), await e.saveTokens(S, h));
   if (S?.refresh_token && !l)
     try {
-      let j = await $rn(P, {
+      let j = await refreshAuthorization(P, {
         metadata: z,
         clientInformation: C,
         refreshToken: S.refresh_token,
@@ -12117,11 +12117,11 @@ async function ms(
       return (await e.saveTokens({ ...j, issuer: f }, h), "AUTHORIZED");
     } catch (j) {
       if (j instanceof oo) throw j;
-      if (!(j instanceof aI) || j.code === l2.ServerError);
+      if (!(j instanceof OAuthError) || j.code === OAuthErrorCode.ServerError);
       else throw j;
     }
   let q = e.state ? await e.state() : void 0,
-    { authorizationUrl: L, codeVerifier: x } = await Frn(P, {
+    { authorizationUrl: L, codeVerifier: x } = await startAuthorization(P, {
       metadata: z,
       clientInformation: C,
       state: q,
@@ -12181,7 +12181,7 @@ function Nr(e, t) {
   }
   return null;
 }
-async function PLt(e, t, r = fetch) {
+async function discoverOAuthProtectedResourceMetadata(e, t, r = fetch) {
   let a = await Uc(e, "oauth-protected-resource", r, {
     protocolVersion: t?.protocolVersion,
     metadataUrl: t?.resourceMetadataUrl,
@@ -12281,7 +12281,7 @@ function Dc(e) {
     a
   );
 }
-async function GIe(
+async function discoverAuthorizationServerMetadata(
   e,
   {
     fetchFn: t = fetch,
@@ -12309,16 +12309,16 @@ async function GIe(
     if (!a) {
       let m = typeof e === "string" ? e : e.href;
       if (!(d.issuer === m || (m.endsWith("/") && d.issuer === m.slice(0, -1))))
-        throw new RSe("metadata", m, d.issuer);
+        throw new IssuerMismatchError("metadata", m, d.issuer);
     }
     return d;
   }
 }
-async function OLt(e, t) {
+async function discoverOAuthServerInfo(e, t) {
   let r, a;
   try {
     if (
-      ((r = await PLt(
+      ((r = await discoverOAuthProtectedResourceMetadata(
         e,
         { resourceMetadataUrl: t?.resourceMetadataUrl },
         t?.fetchFn,
@@ -12330,7 +12330,7 @@ async function OLt(e, t) {
     if (n instanceof TypeError) throw n;
   }
   if (!a) a = String(new URL("/", e));
-  let o = await GIe(a, {
+  let o = await discoverAuthorizationServerMetadata(a, {
     fetchFn: t?.fetchFn,
     skipIssuerValidation: t?.skipIssuerMetadataValidation,
   });
@@ -12340,7 +12340,7 @@ async function OLt(e, t) {
     resourceMetadata: r,
   };
 }
-async function Frn(
+async function startAuthorization(
   e,
   {
     metadata: t,
@@ -12424,7 +12424,7 @@ async function gs(
     throw _;
   }
 }
-async function V2n(
+async function exchangeAuthorization(
   e,
   {
     metadata: t,
@@ -12450,7 +12450,7 @@ async function V2n(
     })
   );
 }
-async function $rn(
+async function refreshAuthorization(
   e,
   {
     metadata: t,
@@ -12528,7 +12528,7 @@ async function Fc(e, { metadata: t, clientMetadata: r, scope: a, fetchFn: o }) {
       body: JSON.stringify(i),
     });
   if (!u.ok)
-    throw new ILt({
+    throw new RegistrationRejectedError({
       status: u.status,
       body: await u.text(),
       submittedMetadata: i,
@@ -12798,8 +12798,8 @@ function Wc(e, t) {
       if (t.transportKind === "stdio") return { kind: "legacy" };
       return {
         kind: "error",
-        error: new So(
-          ao.RequestTimeout,
+        error: new SdkError(
+          ProtocolErrorCode.RequestTimeout,
           `Version negotiation probe timed out after ${e.timeoutMs}ms`,
           { timeout: e.timeoutMs },
         ),
@@ -12848,8 +12848,8 @@ function Ba(e, t) {
   if (t.environment === "browser" && Zc(e)) return { kind: "legacy" };
   return {
     kind: "error",
-    error: new So(
-      ao.EraNegotiationFailed,
+    error: new SdkError(
+      ProtocolErrorCode.EraNegotiationFailed,
       `Version negotiation probe failed: ${Qc(e)}`,
       { cause: e },
     ),
@@ -12942,8 +12942,8 @@ var ol = class e {
       ((a._transportKind = r),
         (t.onmessage = (o) => {
           let n = a._pending;
-          if (n !== void 0 && (kee(o) || lce(o)) && o.id === n.id) {
-            if (((a._pending = void 0), kee(o)))
+          if (n !== void 0 && (isJSONRPCResultResponse(o) || isJSONRPCErrorResponse(o)) && o.id === n.id) {
+            if (((a._pending = void 0), isJSONRPCResultResponse(o)))
               n.resolve({ kind: "response", result: o.result });
             else n.resolve({ kind: "response", error: o.error });
             return;
@@ -12951,7 +12951,7 @@ var ol = class e {
           if (
             n !== void 0 &&
             a._transportKind === "http" &&
-            (kee(o) || lce(o)) &&
+            (isJSONRPCResultResponse(o) || isJSONRPCErrorResponse(o)) &&
             !a._issuedIds.has(o.id)
           ) {
             a._pending = void 0;
@@ -13108,7 +13108,7 @@ function il(e, t) {
         : { kind: "rpc-error", ...e.error };
     case "send-error": {
       let r = e.error;
-      if (r instanceof Cy) {
+      if (r instanceof SdkHttpError) {
         let a = r.data?.text;
         return {
           kind: "http-error",
@@ -13117,7 +13117,7 @@ function il(e, t) {
         };
       }
       if (
-        r instanceof zA ||
+        r instanceof UnauthorizedError ||
         (r instanceof Error && r.name === "UnauthorizedError")
       )
         return { kind: "auth-required", error: r };
@@ -13182,22 +13182,22 @@ async function po(e, t) {
                 ? "the connection closed during the server/discover probe"
                 : void 0;
             if (e.kind === "pin")
-              throw new So(
-                ao.EraNegotiationFailed,
+              throw new SdkError(
+                ProtocolErrorCode.EraNegotiationFailed,
                 b === void 0
                   ? `Version negotiation failed: the server did not offer pinned protocol version ${e.version} via server/discover (no fallback in pin mode)`
                   : `Version negotiation failed: ${b} before the server offered pinned protocol version ${e.version} (no fallback in pin mode)`,
               );
             if (!e.fallbackAvailable)
-              throw new So(
-                ao.EraNegotiationFailed,
+              throw new SdkError(
+                ProtocolErrorCode.EraNegotiationFailed,
                 b === void 0
                   ? "Version negotiation failed: the server gave no modern evidence and this client supports no pre-2026-07-28 protocol version to fall back to"
                   : `Version negotiation failed: ${b} and this client supports no pre-2026-07-28 protocol version to fall back to`,
               );
             if (b !== void 0 && t.disposableProbe !== !0)
-              throw new So(
-                ao.EraNegotiationFailed,
+              throw new SdkError(
+                ProtocolErrorCode.EraNegotiationFailed,
                 `Version negotiation failed: ${b} (this transport probed in place \u2014 the disposable sibling probe requires the SDK's base StdioClientTransport)`,
               );
             return { era: "legacy" };
@@ -13251,8 +13251,8 @@ async function ll(e, t, r, a) {
   return m;
 }
 function eo() {
-  return new So(
-    ao.EraNegotiationFailed,
+  return new SdkError(
+    ProtocolErrorCode.EraNegotiationFailed,
     "Version negotiation failed: the transport was closed during the server/discover probe",
   );
 }
@@ -13301,8 +13301,8 @@ function hl(e) {
       return e;
     if (e.kind === "modern" && xee.safeParse(e.discover).success) return e;
   }
-  throw new So(
-    ao.EraNegotiationFailed,
+  throw new SdkError(
+    ProtocolErrorCode.EraNegotiationFailed,
     "connect({ prior }): unrecognized prior \u2014 expected { kind: 'modern', discover } or { kind: 'legacy' }",
   );
 }
@@ -13315,7 +13315,7 @@ var ro = {
     ],
   },
   ml = 64,
-  Urn = class extends ya {
+  Client = class extends ya {
     _serverCapabilities;
     _serverVersion;
     _capabilities;
@@ -13344,8 +13344,8 @@ var ro = {
         (this._autoOpenedSubscription = void 0),
         this._listenState.size > 0)
       ) {
-        let e = new So(
-          ao.ConnectionClosed,
+        let e = new SdkError(
+          ProtocolErrorCode.ConnectionClosed,
           "subscriptions/listen: client reconnected or closed; subscription state from the previous connection was reset",
         );
         for (let t of this._listenState.values())
@@ -13368,7 +13368,7 @@ var ro = {
       if (
         ((this._clientInfo = e),
         (this._capabilities = t?.capabilities ? { ...t.capabilities } : {}),
-        (this._jsonSchemaValidator = t?.jsonSchemaValidator ?? new nGe()),
+        (this._jsonSchemaValidator = t?.jsonSchemaValidator ?? new AjvJsonSchemaValidator()),
         (this._enforceStrictCapabilities = t?.enforceStrictCapabilities ?? !1),
         (this._versionNegotiation = t?.versionNegotiation),
         (this._supportedProtocolVersionsOption = t?.supportedProtocolVersions),
@@ -13392,7 +13392,7 @@ var ro = {
       if (
         this._negotiatedProtocolVersion !== void 0 &&
         Ae(this._negotiatedProtocolVersion) &&
-        D4(e)
+        isJSONRPCRequest(e)
       )
         return "drop";
     }
@@ -13408,8 +13408,8 @@ var ro = {
     _resolveNonCompleteResult(e, t) {
       if (!this._inputRequiredDriverConfig.autoFulfill)
         return Promise.reject(
-          new So(
-            ao.UnsupportedResultType,
+          new SdkError(
+            ProtocolErrorCode.UnsupportedResultType,
             `Unsupported result type 'input_required' for ${t.request.method}: multi-round-trip auto-fulfilment is not enabled on this instance \u2014 pass allowInputRequired: true to handle it manually, or enable inputRequired.autoFulfill`,
             { resultType: "input_required", method: t.request.method },
           ),
@@ -13474,8 +13474,8 @@ var ro = {
           if (!n.ok && n.reason === "not-in-era")
             n = o.validateInputRequest("elicitation/create", r);
           if (!n.ok)
-            throw new Ki(
-              n.reason === "not-in-era" ? Go.InternalError : Go.InvalidParams,
+            throw new ProtocolError(
+              n.reason === "not-in-era" ? ErrorCode.InternalError : ErrorCode.InvalidParams,
               n.reason === "not-in-era"
                 ? "No wire schema for elicitation/create in the resolved era"
                 : `Invalid elicitation request: ${n.message}`,
@@ -13486,13 +13486,13 @@ var ro = {
             this._capabilities.elicitation,
           );
           if (i.mode === "form" && !u)
-            throw new Ki(
-              Go.InvalidParams,
+            throw new ProtocolError(
+              ErrorCode.InvalidParams,
               "Client does not support form-mode elicitation requests",
             );
           if (i.mode === "url" && !l)
-            throw new Ki(
-              Go.InvalidParams,
+            throw new ProtocolError(
+              ErrorCode.InvalidParams,
               "Client does not support URL-mode elicitation requests",
             );
           let d = await t(r, a),
@@ -13500,8 +13500,8 @@ var ro = {
           if (!m.ok && m.reason === "not-in-era")
             m = o.validateInputResponse("elicitation/create", d);
           if (!m.ok)
-            throw new Ki(
-              m.reason === "not-in-era" ? Go.InternalError : Go.InvalidParams,
+            throw new ProtocolError(
+              m.reason === "not-in-era" ? ErrorCode.InternalError : ErrorCode.InvalidParams,
               m.reason === "not-in-era"
                 ? "No wire schema for elicitation/create in the resolved era"
                 : `Invalid elicitation result: ${m.message}`,
@@ -13527,8 +13527,8 @@ var ro = {
           if (!n.ok && n.reason === "not-in-era")
             n = o.validateInputRequest("sampling/createMessage", r);
           if (!n.ok)
-            throw new Ki(
-              n.reason === "not-in-era" ? Go.InternalError : Go.InvalidParams,
+            throw new ProtocolError(
+              n.reason === "not-in-era" ? ErrorCode.InternalError : ErrorCode.InvalidParams,
               n.reason === "not-in-era"
                 ? "No wire schema for sampling/createMessage in the resolved era"
                 : `Invalid sampling request: ${n.message}`,
@@ -13540,8 +13540,8 @@ var ro = {
           if (!d.ok && d.reason === "not-in-era")
             d = o.validateInputResponse("sampling/createMessage", u);
           if (!d.ok)
-            throw new Ki(
-              d.reason === "not-in-era" ? Go.InternalError : Go.InvalidParams,
+            throw new ProtocolError(
+              d.reason === "not-in-era" ? ErrorCode.InternalError : ErrorCode.InvalidParams,
               d.reason === "not-in-era"
                 ? "No result schema for sampling/createMessage in the resolved era"
                 : `Invalid sampling result: ${d.message}`,
@@ -13552,8 +13552,8 @@ var ro = {
     }
     assertCapability(e, t) {
       if (!this._serverCapabilities?.[e])
-        throw new So(
-          ao.CapabilityNotSupported,
+        throw new SdkError(
+          ProtocolErrorCode.CapabilityNotSupported,
           `Server does not support ${e} (required for ${t})`,
         );
     }
@@ -13579,8 +13579,8 @@ var ro = {
       try {
         let a = r[0];
         if (a === void 0)
-          throw new So(
-            ao.EraNegotiationFailed,
+          throw new SdkError(
+            ProtocolErrorCode.EraNegotiationFailed,
             "Cannot run the initialize handshake: supportedProtocolVersions contains no pre-2026-07-28 protocol version",
           );
         let o = await this.request(
@@ -13708,8 +13708,8 @@ var ro = {
           a.supportedVersions.includes(i),
         );
       if (n === void 0)
-        throw new So(
-          ao.EraNegotiationFailed,
+        throw new SdkError(
+          ProtocolErrorCode.EraNegotiationFailed,
           "connect({ prior }) with a modern verdict requires a 2026-07-28+ mutual protocol version; the supplied DiscoverResult and this client's supportedProtocolVersions have no modern overlap. For a server known to be legacy, pass prior: { kind: 'legacy' } to skip the probe and initialize directly, or use versionNegotiation: { mode: 'auto' } to re-probe with legacy fallback.",
         );
       if (
@@ -13761,16 +13761,16 @@ var ro = {
       switch (e) {
         case "logging/setLevel":
           if (!this._serverCapabilities?.logging)
-            throw new So(
-              ao.CapabilityNotSupported,
+            throw new SdkError(
+              ProtocolErrorCode.CapabilityNotSupported,
               `Server does not support logging (required for ${e})`,
             );
           break;
         case "prompts/get":
         case "prompts/list":
           if (!this._serverCapabilities?.prompts)
-            throw new So(
-              ao.CapabilityNotSupported,
+            throw new SdkError(
+              ProtocolErrorCode.CapabilityNotSupported,
               `Server does not support prompts (required for ${e})`,
             );
           break;
@@ -13780,31 +13780,31 @@ var ro = {
         case "resources/subscribe":
         case "resources/unsubscribe":
           if (!this._serverCapabilities?.resources)
-            throw new So(
-              ao.CapabilityNotSupported,
+            throw new SdkError(
+              ProtocolErrorCode.CapabilityNotSupported,
               `Server does not support resources (required for ${e})`,
             );
           if (
             e === "resources/subscribe" &&
             !this._serverCapabilities.resources.subscribe
           )
-            throw new So(
-              ao.CapabilityNotSupported,
+            throw new SdkError(
+              ProtocolErrorCode.CapabilityNotSupported,
               `Server does not support resource subscriptions (required for ${e})`,
             );
           break;
         case "tools/call":
         case "tools/list":
           if (!this._serverCapabilities?.tools)
-            throw new So(
-              ao.CapabilityNotSupported,
+            throw new SdkError(
+              ProtocolErrorCode.CapabilityNotSupported,
               `Server does not support tools (required for ${e})`,
             );
           break;
         case "completion/complete":
           if (!this._serverCapabilities?.completions)
-            throw new So(
-              ao.CapabilityNotSupported,
+            throw new SdkError(
+              ProtocolErrorCode.CapabilityNotSupported,
               `Server does not support completions (required for ${e})`,
             );
           break;
@@ -13820,8 +13820,8 @@ var ro = {
       switch (e) {
         case "notifications/roots/list_changed":
           if (!this._capabilities.roots?.listChanged)
-            throw new So(
-              ao.CapabilityNotSupported,
+            throw new SdkError(
+              ProtocolErrorCode.CapabilityNotSupported,
               `Client does not support roots list changed notifications (required for ${e})`,
             );
           break;
@@ -13837,22 +13837,22 @@ var ro = {
       switch (e) {
         case "sampling/createMessage":
           if (!this._capabilities.sampling)
-            throw new So(
-              ao.CapabilityNotSupported,
+            throw new SdkError(
+              ProtocolErrorCode.CapabilityNotSupported,
               `Client does not support sampling capability (required for ${e})`,
             );
           break;
         case "elicitation/create":
           if (!this._capabilities.elicitation)
-            throw new So(
-              ao.CapabilityNotSupported,
+            throw new SdkError(
+              ProtocolErrorCode.CapabilityNotSupported,
               `Client does not support elicitation capability (required for ${e})`,
             );
           break;
         case "roots/list":
           if (!this._capabilities.roots)
-            throw new So(
-              ao.CapabilityNotSupported,
+            throw new SdkError(
+              ProtocolErrorCode.CapabilityNotSupported,
               `Client does not support roots capability (required for ${e})`,
             );
           break;
@@ -13955,8 +13955,8 @@ var ro = {
         m = 1;
       while (l !== void 0 && !d.has(l)) {
         if (this._listMaxPages !== 0 && m >= this._listMaxPages)
-          throw new So(
-            ao.ListPaginationExceeded,
+          throw new SdkError(
+            ProtocolErrorCode.ListPaginationExceeded,
             `${e}: exceeded listMaxPages (${this._listMaxPages}); server pagination did not terminate`,
             { method: e, listMaxPages: this._listMaxPages },
           );
@@ -13988,7 +13988,7 @@ var ro = {
       if (a !== void 0) {
         if (r?.signal?.aborted) {
           let o = r.signal.reason;
-          throw o instanceof So ? o : new So(ao.RequestTimeout, String(o));
+          throw o instanceof SdkError ? o : new SdkError(ProtocolErrorCode.RequestTimeout, String(o));
         }
         return a.value;
       }
@@ -14033,17 +14033,17 @@ var ro = {
     }
     async listen(e, t) {
       if (this.transport === void 0)
-        throw new So(ao.NotConnected, "Not connected");
+        throw new SdkError(ProtocolErrorCode.NotConnected, "Not connected");
       let r = this._negotiatedProtocolVersion;
       if (r === void 0 || !Ae(r))
-        throw new So(
-          ao.MethodNotSupportedByProtocolVersion,
+        throw new SdkError(
+          ProtocolErrorCode.MethodNotSupportedByProtocolVersion,
           `subscriptions/listen requires a 2026-07-28-era connection (negotiated: ${r ?? "none"}). On a 2025-era connection, change notifications are delivered unsolicited: use ClientOptions.listChanged and resources/subscribe instead.`,
           { method: "subscriptions/listen", protocolVersion: r },
         );
       if (t?.signal?.aborted) {
         let g = t.signal.reason;
-        throw g instanceof So ? g : new So(ao.RequestTimeout, String(g));
+        throw g instanceof SdkError ? g : new SdkError(ProtocolErrorCode.RequestTimeout, String(g));
       }
       let a = new AbortController(),
         o = `listen:${this._nextListenId++}`,
@@ -14073,8 +14073,8 @@ var ro = {
           if ((this._listenState.delete(o), a.abort(), _(g.cause), p))
             d(
               g.error ??
-                new So(
-                  ao.ConnectionClosed,
+                new SdkError(
+                  ProtocolErrorCode.ConnectionClosed,
                   "subscriptions/listen closed before the server acknowledged",
                 ),
             );
@@ -14096,8 +14096,8 @@ var ro = {
         ((i = setTimeout(() => {
           (z({
             cause: "remote",
-            error: new So(
-              ao.RequestTimeout,
+            error: new SdkError(
+              ProtocolErrorCode.RequestTimeout,
               "subscriptions/listen ack timed out",
               { timeout: f },
             ),
@@ -14184,16 +14184,16 @@ var ro = {
       let t = e.id,
         r = typeof t === "string" ? this._listenState.get(t) : void 0;
       if (r !== void 0) {
-        if (lce(e))
+        if (isJSONRPCErrorResponse(e))
           r.settle({
             cause: "remote",
-            error: Ki.fromError(e.error.code, e.error.message, e.error.data),
+            error: ProtocolError.fromError(e.error.code, e.error.message, e.error.data),
           });
         else
           r.settle({
             cause: "graceful",
-            error: new So(
-              ao.ConnectionClosed,
+            error: new SdkError(
+              ProtocolErrorCode.ConnectionClosed,
               "subscriptions/listen: server closed the subscription gracefully before acknowledging",
             ),
           });
@@ -14203,7 +14203,7 @@ var ro = {
     }
     _onclose() {
       if (this._listenState.size > 0) {
-        let e = new So(ao.ConnectionClosed, "Connection closed");
+        let e = new SdkError(ProtocolErrorCode.ConnectionClosed, "Connection closed");
         for (let t of this._listenState.values())
           t.settle({ cause: "remote", error: e });
         this._listenState.clear();
@@ -14236,8 +14236,8 @@ var ro = {
           if (o === void 0 || o.ok) return;
           let l = o.compileError,
             d = (l instanceof Error ? l.message : String(l)).slice(0, 200);
-          throw new Ki(
-            Go.InvalidParams,
+          throw new ProtocolError(
+            ErrorCode.InvalidParams,
             `Tool '${e.name}' has an invalid outputSchema: ${d}`,
           );
         };
@@ -14246,7 +14246,7 @@ var ro = {
       try {
         i = await this.request({ method: "tools/call", params: e }, await a());
       } catch (l) {
-        let d = l instanceof Ki && l.code === ft;
+        let d = l instanceof ProtocolError && l.code === ft;
         if (!r || !d || t?.toolDefinition !== void 0) throw l;
         let m = {
           signal: t?.signal,
@@ -14270,22 +14270,22 @@ var ro = {
       let u = o !== void 0 && o.ok ? o.validator : void 0;
       if (u) {
         if (i.structuredContent === void 0 && !i.isError)
-          throw new Ki(
-            Go.InvalidRequest,
+          throw new ProtocolError(
+            ErrorCode.InvalidRequest,
             `Tool ${e.name} has an output schema but did not return structured content`,
           );
         if (i.structuredContent !== void 0 && !i.isError)
           try {
             let l = u(i.structuredContent);
             if (!l.valid)
-              throw new Ki(
-                Go.InvalidParams,
+              throw new ProtocolError(
+                ErrorCode.InvalidParams,
                 `Structured content does not match the tool's output schema: ${l.errorMessage}`,
               );
           } catch (l) {
-            if (l instanceof Ki) throw l;
-            throw new Ki(
-              Go.InvalidParams,
+            if (l instanceof ProtocolError) throw l;
+            throw new ProtocolError(
+              ErrorCode.InvalidParams,
               `Failed to validate structured content: ${l instanceof Error ? l.message : String(l)}`,
             );
           }
@@ -14388,7 +14388,7 @@ var fl = class extends Error {
       ((this.code = e), (this.event = r), et(this, new.target));
     }
   },
-  Brn = class {
+  SSEClientTransport = class {
     _eventSource;
     _endpoint;
     _abortController;
@@ -14422,7 +14422,7 @@ var fl = class extends Error {
           })));
       else this._authProvider = t?.authProvider;
       ((this._fetch = t?.fetch),
-        (this._fetchWithInit = tGe(t?.fetch, t?.requestInit)));
+        (this._fetchWithInit = createFetchWithInit(t?.fetch, t?.requestInit)));
     }
     _last401Response;
     async _commonHeaders() {
@@ -14475,7 +14475,7 @@ var fl = class extends Error {
                     ));
                 return;
               }
-              let n = new zA();
+              let n = new UnauthorizedError();
               (r(n), this.onerror?.(n));
               return;
             }
@@ -14521,7 +14521,7 @@ var fl = class extends Error {
     }
     async finishAuth(e, t) {
       if (!this._oauthProvider)
-        throw new zA("finishAuth requires an OAuthClientProvider");
+        throw new UnauthorizedError("finishAuth requires an OAuthClientProvider");
       let { authorizationCode: r, iss: a } = await lo(
         e,
         t,
@@ -14533,7 +14533,7 @@ var fl = class extends Error {
         },
       );
       if (
-        (await WIe(this._oauthProvider, {
+        (await auth(this._oauthProvider, {
           serverUrl: this._url,
           authorizationCode: r,
           iss: a,
@@ -14543,7 +14543,7 @@ var fl = class extends Error {
           skipIssuerMetadataValidation: this._skipIssuerMetadataValidation,
         })) !== "AUTHORIZED"
       )
-        throw new zA("Failed to authorize");
+        throw new UnauthorizedError("Failed to authorize");
     }
     async close() {
       (this._abortController?.abort(),
@@ -14554,7 +14554,7 @@ var fl = class extends Error {
       return this._send(e, !1);
     }
     async _send(e, t) {
-      if (!this._endpoint) throw new So(ao.NotConnected, "Not connected");
+      if (!this._endpoint) throw new SdkError(ProtocolErrorCode.NotConnected, "Not connected");
       try {
         let r = await this._commonHeaders();
         r.set("content-type", "application/json");
@@ -14583,12 +14583,12 @@ var fl = class extends Error {
                 this._send(e, !0)
               );
             if ((await o.text?.().catch(() => {}), t))
-              throw new Cy(
-                ao.ClientHttpAuthentication,
+              throw new SdkHttpError(
+                ProtocolErrorCode.ClientHttpAuthentication,
                 "Server returned 401 after re-authentication",
                 { status: 401, statusText: o.statusText },
               );
-            throw new zA();
+            throw new UnauthorizedError();
           }
           let n = await o.text?.().catch(() => null);
           throw Error(`Error POSTing to endpoint (HTTP ${o.status}): ${n}`);
@@ -14637,7 +14637,7 @@ function so(e, t) {
     r.signal
   );
 }
-var jrn = class {
+var StreamableHTTPClientTransport = class {
   _abortController;
   _url;
   _resourceMetadataUrl;
@@ -14675,7 +14675,7 @@ var jrn = class {
         })));
     else this._authProvider = t?.authProvider;
     ((this._fetch = t?.fetch),
-      (this._fetchWithInit = tGe(t?.fetch, t?.requestInit)),
+      (this._fetchWithInit = createFetchWithInit(t?.fetch, t?.requestInit)),
       (this._sessionId = t?.sessionId),
       (this._protocolVersion = t?.protocolVersion),
       (this._reconnectionOptions = t?.reconnectionOptions ?? Sl),
@@ -14697,8 +14697,8 @@ var jrn = class {
         errorDescription: e.errorDescription,
       });
     if (t >= this._maxStepUpRetries)
-      throw new Cy(
-        ao.ClientHttpForbidden,
+      throw new SdkHttpError(
+        ProtocolErrorCode.ClientHttpForbidden,
         `Server returned 403 insufficient_scope after step-up re-authorization (retry limit ${this._maxStepUpRetries} reached)`,
         { status: 403, statusText: e.statusText ?? "Forbidden", text: e.text },
       );
@@ -14708,7 +14708,7 @@ var jrn = class {
       a = us(this._scope, r?.scope, e.scope);
     this._scope = a;
     let o = $c(a, r?.scope);
-    return WIe(this._oauthProvider, {
+    return auth(this._oauthProvider, {
       serverUrl: this._url,
       resourceMetadataUrl: this._resourceMetadataUrl,
       scope: a,
@@ -14728,7 +14728,7 @@ var jrn = class {
     return new Headers({ ...e, ...r });
   }
   _applyBodyDerivedHeaders(e, t) {
-    if (Array.isArray(t) || !D4(t)) return;
+    if (Array.isArray(t) || !isJSONRPCRequest(t)) return;
     let r = t.params?._meta?.[cce];
     if (typeof r !== "string") return;
     (e.set("mcp-protocol-version", r), e.set("mcp-method", t.method));
@@ -14749,7 +14749,7 @@ var jrn = class {
     if (n !== void 0) e.set("mcp-name", Er(n));
   }
   _isModernEnvelopedRequest(e) {
-    if (Array.isArray(e) || !D4(e)) return !1;
+    if (Array.isArray(e) || !isJSONRPCRequest(e)) return !1;
     let t = e.params?._meta?.[cce];
     return typeof t === "string" && Ae(t);
   }
@@ -14794,12 +14794,12 @@ var jrn = class {
               this._startOrAuthSse(e, !0, r)
             );
           if ((await m.text?.().catch(() => {}), t))
-            throw new Cy(
-              ao.ClientHttpAuthentication,
+            throw new SdkHttpError(
+              ProtocolErrorCode.ClientHttpAuthentication,
               "Server returned 401 after re-authentication",
               { status: 401, statusText: m.statusText },
             );
-          throw new zA();
+          throw new UnauthorizedError();
         }
         if (m.status === 403) {
           let {
@@ -14822,7 +14822,7 @@ var jrn = class {
                 r,
               )) !== "AUTHORIZED"
             )
-              throw new zA();
+              throw new UnauthorizedError();
             return this._startOrAuthSse(e, t, r + 1);
           }
         }
@@ -14830,8 +14830,8 @@ var jrn = class {
           e.onRequestStreamEnd?.();
           return;
         }
-        throw new Cy(
-          ao.ClientHttpFailedToOpenStream,
+        throw new SdkHttpError(
+          ProtocolErrorCode.ClientHttpFailedToOpenStream,
           `Failed to open SSE stream: ${m.statusText}`,
           { status: m.status, statusText: m.statusText },
         );
@@ -14922,7 +14922,7 @@ var jrn = class {
           if (!z.event || z.event === "message")
             try {
               let b = c2.parse(JSON.parse(z.data));
-              if (kee(b) || lce(b)) {
+              if (isJSONRPCResultResponse(b) || isJSONRPCErrorResponse(b)) {
                 if (((m = !0), o !== void 0)) b.id = o;
               }
               this.onmessage?.(b);
@@ -14980,7 +14980,7 @@ var jrn = class {
   }
   async finishAuth(e, t) {
     if (!this._oauthProvider)
-      throw new zA("finishAuth requires an OAuthClientProvider");
+      throw new UnauthorizedError("finishAuth requires an OAuthClientProvider");
     let { authorizationCode: r, iss: a } = await lo(
       e,
       t,
@@ -14992,7 +14992,7 @@ var jrn = class {
       },
     );
     if (
-      (await WIe(this._oauthProvider, {
+      (await auth(this._oauthProvider, {
         serverUrl: this._url,
         authorizationCode: r,
         iss: a,
@@ -15002,7 +15002,7 @@ var jrn = class {
         skipIssuerMetadataValidation: this._skipIssuerMetadataValidation,
       })) !== "AUTHORIZED"
     )
-      throw new zA("Failed to authorize");
+      throw new UnauthorizedError("Failed to authorize");
   }
   async close() {
     try {
@@ -15022,7 +15022,7 @@ var jrn = class {
       if (o) {
         this._startOrAuthSse({
           resumptionToken: o,
-          replayMessageId: D4(e) ? e.id : void 0,
+          replayMessageId: isJSONRPCRequest(e) ? e.id : void 0,
           requestSignal: t?.requestSignal,
         }).catch((f) => this.onerror?.(f));
         return;
@@ -15079,12 +15079,12 @@ var jrn = class {
               this._send(e, t, !0, a)
             );
           if ((await P.text?.().catch(() => {}), r))
-            throw new Cy(
-              ao.ClientHttpAuthentication,
+            throw new SdkHttpError(
+              ProtocolErrorCode.ClientHttpAuthentication,
               "Server returned 401 after re-authentication",
               { status: 401, statusText: P.statusText },
             );
-          throw new zA();
+          throw new UnauthorizedError();
         }
         let f = await P.text?.().catch(() => null);
         if (P.status === 403) {
@@ -15107,7 +15107,7 @@ var jrn = class {
                 a,
               )) !== "AUTHORIZED"
             )
-              throw new zA();
+              throw new UnauthorizedError();
             return this._send(e, t, r, a + 1);
           }
         }
@@ -15118,14 +15118,14 @@ var jrn = class {
         )
           try {
             let h = c2.parse(JSON.parse(f)),
-              g = (Array.isArray(e) ? e : [e]).filter((p) => D4(p));
-            if (lce(h) && g.some((p) => p.id === h.id)) {
+              g = (Array.isArray(e) ? e : [e]).filter((p) => isJSONRPCRequest(p));
+            if (isJSONRPCErrorResponse(h) && g.some((p) => p.id === h.id)) {
               this.onmessage?.(h);
               return;
             }
           } catch {}
-        throw new Cy(
-          ao.ClientHttpNotImplemented,
+        throw new SdkHttpError(
+          ProtocolErrorCode.ClientHttpNotImplemented,
           `Error POSTing to endpoint: ${f}`,
           { status: P.status, statusText: P.statusText, text: f },
         );
@@ -15160,8 +15160,8 @@ var jrn = class {
         } else
           throw (
             await P.text?.().catch(() => {}),
-            new So(
-              ao.ClientHttpUnexpectedContent,
+            new SdkError(
+              ProtocolErrorCode.ClientHttpUnexpectedContent,
               `Unexpected content type: ${y}`,
               { contentType: y },
             )
@@ -15187,8 +15187,8 @@ var jrn = class {
         },
         r = await (this._fetch ?? fetch)(this._url, t);
       if ((await r.text?.().catch(() => {}), !r.ok && r.status !== 405))
-        throw new Cy(
-          ao.ClientHttpFailedToTerminateSession,
+        throw new SdkHttpError(
+          ProtocolErrorCode.ClientHttpFailedToTerminateSession,
           `Failed to terminate session: ${r.statusText}`,
           { status: r.status, statusText: r.statusText },
         );
@@ -15211,33 +15211,33 @@ var jrn = class {
   }
 };
 export {
-  l2,
-  aI,
-  ao,
-  So,
-  Cy,
-  Go,
-  Ki,
-  D4,
-  xLt,
-  kee,
-  lce,
-  Mrn,
-  HLt,
-  Nrn,
-  tGe,
-  nGe,
-  RSe,
-  ILt,
-  zA,
-  WIe,
-  PLt,
-  GIe,
-  OLt,
-  Frn,
-  V2n,
-  $rn,
-  Urn,
-  Brn,
-  jrn,
+  OAuthErrorCode,
+  OAuthError,
+  ProtocolErrorCode,
+  SdkError,
+  SdkHttpError,
+  ErrorCode,
+  ProtocolError,
+  isJSONRPCRequest,
+  isJSONRPCNotification,
+  isJSONRPCResultResponse,
+  isJSONRPCErrorResponse,
+  ReadBuffer,
+  deserializeMessage,
+  serializeMessage,
+  createFetchWithInit,
+  AjvJsonSchemaValidator,
+  IssuerMismatchError,
+  RegistrationRejectedError,
+  UnauthorizedError,
+  auth,
+  discoverOAuthProtectedResourceMetadata,
+  discoverAuthorizationServerMetadata,
+  discoverOAuthServerInfo,
+  startAuthorization,
+  exchangeAuthorization,
+  refreshAuthorization,
+  Client,
+  SSEClientTransport,
+  StreamableHTTPClientTransport,
 };

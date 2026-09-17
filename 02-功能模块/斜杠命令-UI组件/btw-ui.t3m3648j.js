@@ -49,7 +49,7 @@ import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未
 import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { $8 } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
 import { FleetAgentNudge, detachToBackgroundDaemon } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { oat, sat, EOt, AOt, COt, vOt, ROt } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { LEFT_ARROW_HINT_TIMEOUT_MS, DETACH_CONFIRM_HINT, AMBIGUOUS_LEFT_ARROW_HINT, createLeftArrowGestureState, resolveLeftArrowGesture, applyLeftArrowGestureState, logLeftArrowBlocked } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
 import { ScrollBox } from "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { runSideQuestion } from "../权限系统/chunk-qjqc5vxm.js";
@@ -115,7 +115,7 @@ function ve({
     [Ie, Me] = d(!1),
     P = C(null),
     [Q, Pe] = d(null),
-    [Ne] = d(AOt),
+    [Ne] = d(createLeftArrowGestureState),
     [G, me] = d(null),
     X = C(!1),
     oe = C(B ?? null),
@@ -131,7 +131,7 @@ function ve({
     J = isBgSession() && !ye;
   (ko(() => st((a) => a + 1), T || ne ? null : 80),
     Un(() => Ee(0), ge ? 2000 : null, [ge]),
-    Un(() => me(null), G ? oat : null, [G]));
+    Un(() => me(null), G ? LEFT_ARROW_HINT_TIMEOUT_MS : null, [G]));
   let ae = re(() => {
     if (R.current) return;
     switch (ie.current) {
@@ -202,16 +202,16 @@ function ve({
       }
       if (J && a.name === "left" && !(a.ctrl || a.meta || a.fn || a.superKey)) {
         let f = Date.now(),
-          S = COt(Ne, f, a.soloKeypress);
-        switch ((vOt(Ne, S, f), ROt(S, f), S)) {
+          S = resolveLeftArrowGesture(Ne, f, a.soloKeypress);
+        switch ((applyLeftArrowGestureState(Ne, S, f), logLeftArrowBlocked(S, f), S)) {
           case "fire":
             (ae(), detachToBackgroundDaemon());
             return;
           case "arm":
-            me({ text: sat });
+            me({ text: DETACH_CONFIRM_HINT });
             return;
           case "attach-arm":
-            me({ text: EOt });
+            me({ text: AMBIGUOUS_LEFT_ARROW_HINT });
             return;
           case "absorb":
           case "attach-absorb":

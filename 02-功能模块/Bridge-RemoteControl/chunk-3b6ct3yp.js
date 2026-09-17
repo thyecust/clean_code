@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { OHe } from "../Vim模式/Vim模式.nnewe0gf.js";
+import { authStateStore } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { qP, Tz, c_e, ns, bje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { REMOTE_CALLOUT_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import { resetUserData, isBgSession, removeDiscardedGatewayCredential, sameOwnerAccount, getOauthAccountInfo, getScreenReaderEnvOverrides, refreshGrowthBookAfterAuthChange } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -26,7 +26,7 @@ import { getConversationMessages, gracefulShutdown, relatchTenguSandboxGbConfig,
 import { getOrgMemoryIdentity, clearOrgMemoryCredential, onOrgMemoryAuthCompletion, clearOrgMemoryDiscoveryCaches, clearOrgMemoryDiscoveryAccountState } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getToolPermissionContext, getSessionEffort } from "../权限系统/chunk-fjrcf22x.js";
 import { dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
-import { vre, rK, Rre } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { buildCarriableSessionFlags, collectUncarriableLaunchReasons, buildCarriableRuleFlags } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { zJe } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { Ann, KBn, hlt, mIe, xnn } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
 import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
@@ -89,7 +89,7 @@ async function N8(o, s, i) {
   } else mIe(showStandaloneSecurityDialog, o.storageV5, o.credentials);
   (c_e(), zJe(), resetUserData(), refreshGrowthBookAfterAuthChange());
   let { setAppState: g } = i,
-    y = OHe.of(o.session),
+    y = authStateStore.of(o.session),
     m = () => y.credentialsPersisted(),
     w = i.previousAccount,
     E = getOauthAccountInfo(),
@@ -257,7 +257,7 @@ async function fe(o, s, i) {
       "a background session cannot restart itself (sign in from a session started directly with `claude`)",
     );
   let c = getToolPermissionContext(o),
-    g = rK(c, qP());
+    g = collectUncarriableLaunchReasons(c, qP());
   if (g.length > 0)
     return u(
       `this session has restrictions a restart can't carry over (${g.join("; ")})`,
@@ -270,7 +270,7 @@ async function fe(o, s, i) {
     await relaunchClaudeCode(
       {
         freshIfNoTranscript: !0,
-        extraArgs: [...vre(c, getSessionEffort(o)), ...Rre(c, Tz())],
+        extraArgs: [...buildCarriableSessionFlags(c, getSessionEffort(o)), ...buildCarriableRuleFlags(c, Tz())],
         proactivity: y,
         env: getScreenReaderEnvOverrides(),
         preSpawn: () =>

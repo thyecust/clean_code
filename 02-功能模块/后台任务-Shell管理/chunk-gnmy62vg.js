@@ -12,7 +12,7 @@ import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getPtySocketDir, getPtySocketPath, getSparePtyDir, getPtyPidDir, getPtyPidFilePath, getPtyHostStderrPath, getPtyLateOutputPath, getPtyExecExitPath, encodeControlFrame } from "./chunk-djserjj5.js";
-import { readRoster, updateRoster, writeReapedTerminalState, Ep, al } from "./chunk-7wsy8vxb.js";
+import { readRoster, updateRoster, writeReapedTerminalState, MAX_DETAIL_CHARS, clipWithEllipsis } from "./chunk-7wsy8vxb.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { readBoundedFile, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -43,7 +43,7 @@ async function readExecExitStatus(e, t) {
           )
           .findLast((w) => w.trim())
           ?.trim() ?? "",
-      c = al(qr(s), Ep);
+      c = clipWithEllipsis(qr(s), MAX_DETAIL_CHARS);
     if (r.code === 0)
       return { state: "done", detail: c || "(no output)", code: 0 };
     let l = typeof r.signal === "string" ? r.signal : void 0;

@@ -19,15 +19,15 @@ import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp
 import { artifactSchemaGates } from "./chunk-b6k1z7an.js";
 import "./chunk-fx5ekm7e.js";
 import {
-  hjn,
-  _jn,
-  yjn,
-  xon,
-  Hon,
-  Sjn,
-  Rut,
-  MS,
-  MGe,
+  artifactCommentsInputSchema,
+  artifactDataInputSchema,
+  artifactCheckInputSchema,
+  getMatchingAskRule,
+  buildPermissionCheckFailureDecision,
+  applyAskRuleToDecision,
+  mapDecisionUpdatedInput,
+  artifactLegacyHost,
+  artifactRuleTargetInput,
 } from "./chunk-pvztfdrb.js";
 import "../Teammates团队/chunk-weg7y2ya.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
@@ -153,66 +153,66 @@ function i(e) {
       return g(e);
     },
     shouldDefer: !0,
-    briefStandalone: MS.briefStandalone,
+    briefStandalone: artifactLegacyHost.briefStandalone,
     familyParentToolName: ARTIFACT_TOOL_NAME,
     toFamilyParentInput: (t) => a(t),
-    ruleContentField: MS.ruleContentField,
-    getPath: (t) => MS.getPath(a(t)),
-    maxResultSizeChars: MS.maxResultSizeChars,
-    persistenceThresholdCeiling: MS.persistenceThresholdCeiling,
-    skipAggregateToolResultBudget: MS.skipAggregateToolResultBudget,
-    preserveToolUseResultInSubagents: MS.preserveToolUseResultInSubagents,
-    stripToolUseResultAtCreation: MS.stripToolUseResultAtCreation,
-    stripForStorage: MS.stripForStorage,
+    ruleContentField: artifactLegacyHost.ruleContentField,
+    getPath: (t) => artifactLegacyHost.getPath(a(t)),
+    maxResultSizeChars: artifactLegacyHost.maxResultSizeChars,
+    persistenceThresholdCeiling: artifactLegacyHost.persistenceThresholdCeiling,
+    skipAggregateToolResultBudget: artifactLegacyHost.skipAggregateToolResultBudget,
+    preserveToolUseResultInSubagents: artifactLegacyHost.preserveToolUseResultInSubagents,
+    stripToolUseResultAtCreation: artifactLegacyHost.stripToolUseResultAtCreation,
+    stripForStorage: artifactLegacyHost.stripForStorage,
     userFacingName: () => ARTIFACT_TOOL_NAME,
     get inputSchema() {
       return e.inputSchema();
     },
     get outputSchema() {
-      return MS.outputSchema;
+      return artifactLegacyHost.outputSchema;
     },
     isEnabled: () => Qze(e.addon),
-    isConcurrencySafe: (t) => MS.isConcurrencySafe(a(t)),
-    isReadOnly: (t) => MS.isReadOnly(a(t)),
-    isDestructive: (t) => MS.isDestructive(a(t)),
-    ignoresWholeToolAllowRule: (t) => MS.ignoresWholeToolAllowRule(a(t)),
-    suppressesAlwaysAllowRule: (t) => MS.suppressesAlwaysAllowRule(a(t)),
+    isConcurrencySafe: (t) => artifactLegacyHost.isConcurrencySafe(a(t)),
+    isReadOnly: (t) => artifactLegacyHost.isReadOnly(a(t)),
+    isDestructive: (t) => artifactLegacyHost.isDestructive(a(t)),
+    ignoresWholeToolAllowRule: (t) => artifactLegacyHost.ignoresWholeToolAllowRule(a(t)),
+    suppressesAlwaysAllowRule: (t) => artifactLegacyHost.suppressesAlwaysAllowRule(a(t)),
     permissionCheckFailureDecision: (t, o) => {
       let n = a(t);
-      return Rut(
-        Hon(
+      return mapDecisionUpdatedInput(
+        buildPermissionCheckFailureDecision(
           e.name,
-          () => MS.permissionCheckFailureDecision(n, o),
+          () => artifactLegacyHost.permissionCheckFailureDecision(n, o),
           n,
           n,
           o,
-          MGe,
+          artifactRuleTargetInput,
         ),
         r,
       );
     },
     async checkPermissions(t, o) {
       let n = a(t);
-      return Rut(
-        await Sjn(await MS.checkPermissions(n, o), xon(o, n, MGe), () =>
-          MS.description(n),
+      return mapDecisionUpdatedInput(
+        await applyAskRuleToDecision(await artifactLegacyHost.checkPermissions(n, o), getMatchingAskRule(o, n, artifactRuleTargetInput), () =>
+          artifactLegacyHost.description(n),
         ),
         r,
       );
     },
-    toAutoClassifierInput: (t) => MS.toAutoClassifierInput(a(t)),
-    description: (t, ...o) => MS.description(a(t), ...o),
-    getToolUseSummary: (t) => MS.getToolUseSummary(a(t)),
+    toAutoClassifierInput: (t) => artifactLegacyHost.toAutoClassifierInput(a(t)),
+    description: (t, ...o) => artifactLegacyHost.description(a(t), ...o),
+    getToolUseSummary: (t) => artifactLegacyHost.getToolUseSummary(a(t)),
     prompt: async () => e.prompt(artifactSchemaGates()),
     async validateInput(t, o) {
       let n = e.contradiction?.(t);
       if (n !== void 0) return { result: !1, message: n, errorCode: 8 };
-      let s = await MS.validateInput(a(t), o);
+      let s = await artifactLegacyHost.validateInput(a(t), o);
       return s.result ? s : { ...s, message: c(e.addon, s.message) };
     },
     async call(t, ...o) {
       try {
-        return await MS.call(a(t), ...o);
+        return await artifactLegacyHost.call(a(t), ...o);
       } catch (n) {
         if (n instanceof ArtifactInputError) n.message = c(e.addon, n.message);
         throw n;
@@ -226,7 +226,7 @@ function i(e) {
         ? null
         : `action "${o}" is spelled ${s} in this tool.`;
     },
-    mapToolResultToToolResultBlockParam: MS.mapToolResultToToolResultBlockParam,
+    mapToolResultToToolResultBlockParam: artifactLegacyHost.mapToolResultToToolResultBlockParam,
   });
 }
 var R = i({
@@ -234,7 +234,7 @@ var R = i({
     name: ARTIFACT_COMMENTS_TOOL_NAME,
     searchHint:
       "read and reply to comment threads on a published artifact; watch it for republishes",
-    inputSchema: hjn,
+    inputSchema: artifactCommentsInputSchema,
     prompt: m,
     contradiction: (e) =>
       e.action === "watch" && e.on === !1 && e.replies === !0
@@ -245,14 +245,14 @@ var R = i({
     addon: "data",
     name: ARTIFACT_DATA_TOOL_NAME,
     searchHint: "read and write a published artifact's shared database",
-    inputSchema: _jn,
+    inputSchema: artifactDataInputSchema,
     prompt: f,
   }),
   y = i({
     addon: "check",
     name: ARTIFACT_CHECK_TOOL_NAME,
     searchHint: "preview a page locally and read viewers' runtime diagnostics",
-    inputSchema: yjn,
+    inputSchema: artifactCheckInputSchema,
     prompt: w,
     offersLegacyVerb: (e) => (e === "verify" ? swe() : iwe()),
   }),

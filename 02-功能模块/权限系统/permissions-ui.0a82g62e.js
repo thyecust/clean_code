@@ -65,7 +65,7 @@ import "../../01-核心基础设施/共享小工具-未细化/queued-message-con
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, a0e, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { useAutoModeDenials } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
+import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
@@ -1986,7 +1986,7 @@ ${" ".repeat(Pe)}\u2026 (+${Ja} more ${Ja === 1 ? "line" : "lines"})`,
       marginBottom: 1,
       marginTop: 1,
       flexDirection: "column",
-      children: e(Xd, {
+      children: e(SearchInput, {
         query: Tt,
         isFocused: Pn,
         isTerminalFocused: Ba,
@@ -3528,7 +3528,7 @@ function Ml(BR) {
     ((ll = e(o, {
       marginBottom: 1,
       flexDirection: "column",
-      children: e(Xd, {
+      children: e(SearchInput, {
         query: Nc,
         isFocused: zc,
         isTerminalFocused: Uc,
@@ -3778,7 +3778,7 @@ function Fl(NR) {
       cursorOffset: Hn,
       handleKeyDown: gu,
       handlePaste: yu,
-    } = jp(Lp),
+    } = useVimModeInput(Lp),
     Wp;
   if (R[21] !== nt || R[22] !== Yn || R[23] !== gu || R[24] !== Cl)
     ((Wp = (mt) => {

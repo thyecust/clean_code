@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 240 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { uCe, NGt, Ij } from "./chunk-g6nvp9mm.js";
+import { PEER_LANE_SUFFIX_VARIANTS, HOST_INJECTED_LANE_SUFFIX_VARIANTS, CROSS_SESSION_OPENER_PREFIXES } from "./chunk-g6nvp9mm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { shouldExpandContent } from "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import { sanitizeDisplayName, parsePeerAddress } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -30,7 +30,7 @@ import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具
 var g = "</cross-session-message>",
   B = "peer";
 function v(s) {
-  let a = Ij.find((N) => s.startsWith(N)),
+  let a = CROSS_SESSION_OPENER_PREFIXES.find((N) => s.startsWith(N)),
     h =
       (a ? s.slice(a.length) : s).match(
         /^<cross-session-message\b([^>]*)>/,
@@ -59,7 +59,7 @@ function UserCrossSessionMessage(se) {
     F;
   if (i[0] !== W || i[1] !== u) {
     let d = u;
-    let O = Ij.find((ce) => d.startsWith(ce));
+    let O = CROSS_SESSION_OPENER_PREFIXES.find((ce) => d.startsWith(ce));
     if (O) d = d.slice(O.length);
     let n;
     if (i[4] !== u) ((n = v(u)), (i[4] = u), (i[5] = n));
@@ -68,7 +68,7 @@ function UserCrossSessionMessage(se) {
     let j = d.lastIndexOf(g) + g.length;
     if (j > g.length - 1) {
       let q = d.slice(j);
-      if (uCe.includes(q) || (W === !0 && NGt.includes(q))) d = d.slice(0, j);
+      if (PEER_LANE_SUFFIX_VARIANTS.includes(q) || (W === !0 && HOST_INJECTED_LANE_SUFFIX_VARIANTS.includes(q))) d = d.slice(0, j);
     }
     let x;
     if (i[6] === MEMO_CACHE_SENTINEL) ((x = /\n<\/cross-session-message>$/), (i[6] = x));

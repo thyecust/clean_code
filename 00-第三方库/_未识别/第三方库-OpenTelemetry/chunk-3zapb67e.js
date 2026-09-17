@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { pO, tI, mF } from "../../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
+import { otlpExporterBaseModule, otlpTransformerModule, otlpHttpExporterBaseModule } from "../../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
 import { bee } from "./第三方库-OpenTelemetry.fy6ebeyr.js";
 import { otelApiModule, otelCoreModule } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -35,7 +35,7 @@ var u = commonJS(function (O) {
   var f = otelCoreModule(),
     r = bee(),
     E = a(),
-    v = pO(),
+    v = otlpExporterBaseModule(),
     R = otelApiModule(),
     C = () => r.AggregationTemporality.CUMULATIVE;
   O.CumulativeTemporalitySelector = C;
@@ -118,8 +118,8 @@ var S = commonJS(function (M) {
   Object.defineProperty(M, "__esModule", { value: !0 });
   M.OTLPMetricExporter = void 0;
   var N = u(),
-    q = tI(),
-    _ = mF();
+    q = otlpTransformerModule(),
+    _ = otlpHttpExporterBaseModule();
   class L extends N.OTLPMetricExporterBase {
     constructor(e) {
       super(

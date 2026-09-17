@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Hee } from "./chunk-5wa92x7d.js";
-import { Go, Ki } from "./chunk-78r8f7dw.js";
+import { ErrorCode, ProtocolError } from "./chunk-78r8f7dw.js";
 import "../认证-OAuth登录/pkce-challenge.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { MCP_SKILLS_EXTENSION_ID } from "./mcp-skills-extension.js";
@@ -46,7 +46,7 @@ async function readMcpDirectory(r, e) {
         { timeout: getMcpTimeoutMs() },
       );
     } catch (n) {
-      if (s === 0 || !(n instanceof Ki && n.code === Go.InvalidParams)) throw n;
+      if (s === 0 || !(n instanceof ProtocolError && n.code === ErrorCode.InvalidParams)) throw n;
       return (
         logMCPDebug(
           r.name,

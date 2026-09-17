@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 38 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K, he, TYt, QLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { AGENT_COLOR_NAMES } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
-import { TZn, Wk, CXe } from "./chunk-g6nvp9mm.js";
+import { setLeaderTeamName, getTaskListDir, ensureTaskListStorage } from "./chunk-g6nvp9mm.js";
 import { getTeamFilePath, readTeamFileAsync, logTeamFileWriteFailure, writeTeamFileAsync, registerTeamForSessionCleanup } from "./team-file-store.js";
 import { buildAgentId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
@@ -53,10 +53,10 @@ async function initializeSessionTeam(t, n) {
     };
     await writeTeamFileAsync(e, r, n).catch((T) => logTeamFileWriteFailure(e, T));
   }
-  TZn(e);
+  setLeaderTeamName(e);
   let o = K();
-  if (e !== o) await rename(Wk(o), Wk(e)).catch(() => {});
-  (await CXe(e, n), registerTeamForSessionCleanup(e));
+  if (e !== o) await rename(getTaskListDir(o), getTaskListDir(e)).catch(() => {});
+  (await ensureTaskListStorage(e, n), registerTeamForSessionCleanup(e));
   let s = AGENT_COLOR_NAMES[0];
   return {
     teamContext: {

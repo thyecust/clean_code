@@ -54,11 +54,11 @@ import {
   getControlSocketPath,
 } from "./chunk-djserjj5.js";
 import {
-  Cre,
+  sanitizeRespawnFlags,
   BG_PROTO,
   BgDispatchSchema,
-  f3t,
-  m3t,
+  inspectRegularFileForRead,
+  isReadRefusedError,
   readRoster,
   bgShort,
   updateRoster,
@@ -346,7 +346,7 @@ async function Ke(t, e, o, r) {
 }
 async function wt(t, e, o) {
   let r = STORAGE_KEYS.daemon(["dispatch", e]),
-    a = await f3t(Ne(getDispatchDir(), e));
+    a = await inspectRegularFileForRead(Ne(getDispatchDir(), e));
   if (a.kind === "refused") {
     if (a.symlink) {
       (logFeatureBad("daemon_bg_dispatch_ingest", "symlink"),
@@ -368,7 +368,7 @@ async function wt(t, e, o) {
   if (p === void 0 || !p.ok) {
     if (
       (logFeatureBad("daemon_bg_dispatch_ingest", "read_failed"),
-      p !== void 0 && m3t(p.error))
+      p !== void 0 && isReadRefusedError(p.error))
     )
       return Ke(t, e, S("v5_read_failed"), void 0);
     Te(e, S("v5_read_failed"));
@@ -1323,7 +1323,7 @@ function qe(t, e, o, r, a, p) {
                     ? "exec"
                     : (e.dispatch.agent ?? e.dispatch.routine ?? "bg"),
                 routine: e.dispatch.routine,
-                respawnFlags: Cre([...e.dispatch.respawnFlags]),
+                respawnFlags: sanitizeRespawnFlags([...e.dispatch.respawnFlags]),
                 intent: e.record.intent,
                 name: e.record.name,
                 sessionId: e.record.sessionId,

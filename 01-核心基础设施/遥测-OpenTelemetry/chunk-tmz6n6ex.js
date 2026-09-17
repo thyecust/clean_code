@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { klt } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/chunk-3zapb67e.js";
 import { m3e } from "../../00-第三方库/@grpc/grpc-js/grpc-js.5zkynjxh.js";
-import { tI } from "./遥测-OpenTelemetry.0xhcvej6.js";
+import { otlpTransformerModule } from "./遥测-OpenTelemetry.0xhcvej6.js";
 import "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { commonJS } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var i = commonJS(function (c) {
@@ -17,7 +17,7 @@ var i = commonJS(function (c) {
   c.OTLPMetricExporter = void 0;
   var s = klt(),
     t = m3e(),
-    u = tI();
+    u = otlpTransformerModule();
   class o extends s.OTLPMetricExporterBase {
     constructor(r) {
       super(

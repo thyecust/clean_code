@@ -25,7 +25,7 @@ import {
   withControlRequestTelemetry,
   createControlResponseError,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { dJ, Ij, aoe } from "../Teammates团队/chunk-g6nvp9mm.js";
+import { CROSS_SESSION_MESSAGE_PREFIX, CROSS_SESSION_OPENER_PREFIXES, isCrossSessionMessage } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -471,9 +471,9 @@ function _e(e) {
     e.startsWith(`<${TEAMMATE_MESSAGE_TAG}>`)
   )
     return !0;
-  if (aoe(e)) return !0;
+  if (isCrossSessionMessage(e)) return !0;
   if (
-    (e.startsWith(EXTERNAL_MESSAGE_PREFIX) || e.startsWith(dJ)) &&
+    (e.startsWith(EXTERNAL_MESSAGE_PREFIX) || e.startsWith(CROSS_SESSION_MESSAGE_PREFIX)) &&
     e.startsWith(
       "<",
       e.indexOf(`
@@ -481,7 +481,7 @@ function _e(e) {
     )
   )
     return !0;
-  let t = Ij.find((o) => e.startsWith(o));
+  let t = CROSS_SESSION_OPENER_PREFIXES.find((o) => e.startsWith(o));
   if (t !== void 0 && e.startsWith("<", t.length)) return !0;
   if (et(e)) return !0;
   return (
@@ -553,8 +553,8 @@ function tt(e) {
   return (
     (t === -1 || t === e.length - 1) &&
     (e.startsWith(EXTERNAL_MESSAGE_PREFIX) ||
-      e.startsWith(dJ) ||
-      Ij.some((o) => e.startsWith(o.trimEnd())))
+      e.startsWith(CROSS_SESSION_MESSAGE_PREFIX) ||
+      CROSS_SESSION_OPENER_PREFIXES.some((o) => e.startsWith(o.trimEnd())))
   );
 }
 import { randomUUID as _t } from "crypto";

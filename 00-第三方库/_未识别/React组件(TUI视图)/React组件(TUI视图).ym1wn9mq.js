@@ -118,7 +118,7 @@ import {
   shouldShowUpgradeCommand,
   isAdvisorRefusal,
   getAdvisorRefusalText,
-  imt,
+  MAX_AUDIO_TRANSCRIPT_CODE_UNITS,
   formatDurationAsClockTime,
   parseTaskStatusMessage,
   getFindGrepToolNames,
@@ -222,11 +222,11 @@ import { isViolinWoodEnabledCached } from "../../../01-核心基础设施/共享
 import { GET_TASK_TOOL_NAME, isGetTaskToolEnabled, WEB_SEARCH_TOOL_NAME, REPL_REGISTERED_TOOL_UI_TABLE_KEY, TASK_OUTPUT_TOOL_NAME, ENTER_WORKTREE_TOOL_NAME, STRUCTURED_OUTPUT_TOOL_NAME, getStructuredOutputText, PROPOSE_SKILLS_TOOL_NAME, EXIT_WORKTREE_TOOL_NAME } from "../../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { sp, ER, pse, hAt } from "../../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
-  dJ,
-  uCe,
-  Gbn,
-  Ij,
-  aoe,
+  CROSS_SESSION_MESSAGE_PREFIX,
+  PEER_LANE_SUFFIX_VARIANTS,
+  DESCENDANT_LANE_SUFFIX_VARIANTS,
+  CROSS_SESSION_OPENER_PREFIXES,
+  isCrossSessionMessage,
   IdleNotificationMessageSchema,
   capFrameFieldForDisplay,
   capFailureReasonForDisplay,
@@ -7164,7 +7164,7 @@ var dM = `</${TEAMMATE_MESSAGE_TAG}>`;
 function hWe(l) {
   if (l.startsWith(`<${TEAMMATE_MESSAGE_TAG} `)) return !0;
   return (
-    l.startsWith(dJ) &&
+    l.startsWith(CROSS_SESSION_MESSAGE_PREFIX) &&
     l.startsWith(
       `<${TEAMMATE_MESSAGE_TAG} `,
       l.indexOf(`
@@ -7173,12 +7173,12 @@ function hWe(l) {
   );
 }
 function pM(l) {
-  for (let y of uCe)
+  for (let y of PEER_LANE_SUFFIX_VARIANTS)
     if (l.endsWith(y)) {
       l = l.slice(0, -y.length);
       break;
     }
-  for (let y of Ij)
+  for (let y of CROSS_SESSION_OPENER_PREFIXES)
     if (l.startsWith(y) && l.startsWith(`<${TEAMMATE_MESSAGE_TAG} `, y.length)) {
       l = l.slice(y.length);
       break;
@@ -8687,7 +8687,7 @@ function mye(l) {
   if (!l || l.trim() === sp) return !0;
   if (isAgentSwarmsEnabled() && hWe(l)) return b0(l);
   if (isExternalSourceMessage(l)) return !1;
-  if (aoe(l)) return !1;
+  if (isCrossSessionMessage(l)) return !1;
   if (extractTagContent(l, TICK_TAG) !== null) return !0;
   if (l.includes(`<${LOCAL_COMMAND_CAVEAT_TAG}>`)) return !0;
   if (l.startsWith(`<${LOCAL_COMMAND_STDOUT_TAG}`) || l.startsWith(`<${LOCAL_COMMAND_STDERR_TAG}`)) {
@@ -8771,7 +8771,7 @@ function Jz(jZ) {
     else Re = jo[12];
     return Re;
   }
-  if (aoe(fe.text)) {
+  if (isCrossSessionMessage(fe.text)) {
     let { UserCrossSessionMessage: $Z } = import.meta.require(
       "../../../02-功能模块/Teammates团队/UserCrossSessionMessage.tkya3krn.js",
     );
@@ -9358,10 +9358,10 @@ function Cf(Pee) {
         return Te;
       }
       let kf = w.transcript ?? "";
-      let ec = hl || kf.length <= imt;
+      let ec = hl || kf.length <= MAX_AUDIO_TRANSCRIPT_CODE_UNITS;
       let q;
       if (X[46] !== ec || X[47] !== kf)
-        ((q = ec ? kf : truncateToCodeUnits(kf, imt)), (X[46] = ec), (X[47] = kf), (X[48] = q));
+        ((q = ec ? kf : truncateToCodeUnits(kf, MAX_AUDIO_TRANSCRIPT_CODE_UNITS)), (X[46] = ec), (X[47] = kf), (X[48] = q));
       else q = X[48];
       let kk = q;
       let Z, ae;
@@ -13978,12 +13978,12 @@ function DA(l) {
 }
 function lg(l) {
   let f = l,
-    g = Ij.find((y) => f.startsWith(y));
+    g = CROSS_SESSION_OPENER_PREFIXES.find((y) => f.startsWith(y));
   if (g) f = f.slice(g.length);
   let T = f.lastIndexOf(e_) + e_.length;
   if (T > e_.length - 1) {
     let y = f.slice(T);
-    if (uCe.includes(y) || Gbn.includes(y)) f = f.slice(0, T);
+    if (PEER_LANE_SUFFIX_VARIANTS.includes(y) || DESCENDANT_LANE_SUFFIX_VARIANTS.includes(y)) f = f.slice(0, T);
   }
   return f
     .replace(/^<agent-message[^>]*>\n/, "")

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { USe } from "../MCP客户端/chunk-5wa92x7d.js";
-import { Frn, V2n } from "../MCP客户端/chunk-78r8f7dw.js";
+import { startAuthorization, exchangeAuthorization } from "../MCP客户端/chunk-78r8f7dw.js";
 import { R, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -271,7 +271,7 @@ async function acquireIdpIdToken(n) {
         client_id: e,
         ...(n.idpClientSecret && { client_secret: n.idpClientSecret }),
       },
-      { authorizationUrl: g, codeVerifier: p } = await Frn(t, {
+      { authorizationUrl: g, codeVerifier: p } = await startAuthorization(t, {
         metadata: i,
         clientInformation: m,
         redirectUrl: c,
@@ -283,7 +283,7 @@ async function acquireIdpIdToken(n) {
           (logMCPDebug("xaa", "Opening browser to IdP authorization endpoint"),
             tryOpenUrlInBrowser(g.toString()));
       }),
-      d = await V2n(t, {
+      d = await exchangeAuthorization(t, {
         metadata: i,
         clientInformation: m,
         authorizationCode: I.code,

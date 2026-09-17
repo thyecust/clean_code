@@ -56,7 +56,7 @@ import {
   getPowerShellPath,
   getPowerShellEdition,
   classifyPowerShellCommand,
-  uUt,
+  getPowerShellCommandName,
   parsePowerShellCommand,
   POWERSHELL_COMMAND_ALIASES,
   getLowercaseCommandNames,
@@ -3389,10 +3389,10 @@ function pt(e, t, o, r) {
   }
   function b(_) {
     if (r === "allow") return _;
-    return uUt(_);
+    return getPowerShellCommandName(_);
   }
   let p = a.split(Swe)[0] ?? "",
-    I = uUt(p),
+    I = getPowerShellCommandName(p),
     x = Ef(I),
     y = a.slice(p.length).replace(/^[\s\u0085\u180e]+/, " "),
     L = x + y;

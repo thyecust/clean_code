@@ -32,7 +32,7 @@ import {
 import { getSecuritySensitiveSetting, getSecuritySensitiveSettingWithSources, rawSettingsKeyPresence } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import {
   isMainThreadPromptCommand,
-  Kte,
+  isEditableQueuedCommand,
   getCommandQueue,
   enqueueCommand,
   removeCommandsByFilter,
@@ -220,7 +220,7 @@ function d(e) {
   );
 }
 function fe(e) {
-  return isMainThreadPromptCommand(e) && Kte(e);
+  return isMainThreadPromptCommand(e) && isEditableQueuedCommand(e);
 }
 function _(e, t) {
   return (
@@ -279,7 +279,7 @@ function G(e, t, n, o, s) {
     e.dispatchingTakeoverUuids.clear(),
     e.queuedBeforeArmUuids.clear());
   for (let r of getCommandQueue())
-    if (fe(r) || (r.mode === "bash" && Kte(r)))
+    if (fe(r) || (r.mode === "bash" && isEditableQueuedCommand(r)))
       ((r.uuid ??= randomUUID()), e.queuedBeforeArmUuids.add(r.uuid));
   return (
     (e.armedAtMs = n),

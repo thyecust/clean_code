@@ -17,7 +17,7 @@ import { useSession } from "../../01-核心基础设施/共享小工具-未细�
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { M8 } from "../Vim模式/Vim模式.nnewe0gf.js";
+import { SuggestionList } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { getDirectoryCompletions } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
@@ -110,7 +110,7 @@ function X(yo) {
       O.length > 0 &&
       e(o, {
         marginBottom: 1,
-        children: e(M8, { suggestions: O, selectedSuggestion: ae, noPad: !0 }),
+        children: e(SuggestionList, { suggestions: O, selectedSuggestion: ae, noPad: !0 }),
       })),
       (w[5] = ae),
       (w[6] = O),

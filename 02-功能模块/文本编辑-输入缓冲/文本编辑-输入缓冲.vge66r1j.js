@@ -116,7 +116,7 @@ async function ht(e) {
     return (logError(s), null);
   }
 }
-async function yOt(e) {
+async function checkAndRestoreTerminalBackup(e) {
   let { inProgress: t, backupPath: r } = ir();
   if (!t) return { status: "no_backup" };
   if (!r) return (await $e(e), { status: "no_backup" });
@@ -699,7 +699,7 @@ async function dr(e, t) {
       `Terminal.app setup failed: ${o instanceof Error ? o.message : String(o)}`,
       { level: "error" },
     );
-    let l = await yOt(t),
+    let l = await checkAndRestoreTerminalBackup(t),
       m = r
         ? "Failed to disable the audio bell for Terminal.app."
         : "Failed to enable Option as Meta key for Terminal.app.";
@@ -881,12 +881,12 @@ async function mr(e) {
     );
   }
 }
-var oat = 3000,
-  sat = "Press \u2190 again to go back to agents",
-  EOt = "Ambiguous \u2190, press again to detach",
+var LEFT_ARROW_HINT_TIMEOUT_MS = 3000,
+  DETACH_CONFIRM_HINT = "Press \u2190 again to go back to agents",
+  AMBIGUOUS_LEFT_ARROW_HINT = "Ambiguous \u2190, press again to detach",
   Tt = 1000,
   hr = 150;
-function AOt() {
+function createLeftArrowGestureState() {
   return {
     editedEmptyAtMs: 0,
     armedAtMs: 0,
@@ -894,7 +894,7 @@ function AOt() {
     attachConfirmArmedAtMs: 0,
   };
 }
-function COt(
+function resolveLeftArrowGesture(
   e,
   t,
   r,
@@ -916,7 +916,7 @@ function COt(
   if (m(e.armedAtMs) && t - e.armedAtMs <= 3000) return "fire";
   return m(e.editedEmptyAtMs) && t - e.editedEmptyAtMs < 2000 ? "arm" : "fire";
 }
-function vOt(e, t, r) {
+function applyLeftArrowGestureState(e, t, r) {
   switch (t) {
     case "fire":
       ((e.armedAtMs = 0),
@@ -938,7 +938,7 @@ function vOt(e, t, r) {
       return;
   }
 }
-function ROt(e, t) {
+function logLeftArrowBlocked(e, t) {
   let r = t - getAttachStampMs();
   switch (e) {
     case "fire":
@@ -974,7 +974,7 @@ function ROt(e, t) {
   }
 }
 F();
-function dd(e, t, r = !1) {
+function useFocusTrap(e, t, r = !1) {
   E(() => {
     let s = e.current;
     if (!s) return;
@@ -1005,7 +1005,7 @@ function dd(e, t, r = !1) {
   }, [t, e, r]);
 }
 F();
-function _p({ line: e, column: t, active: r, visible: s = !1 }) {
+function useCursorDeclaration({ line: e, column: t, active: r, visible: s = !1 }) {
   let o = De(ZOt),
     l = C(null),
     m = re((c) => {
@@ -1035,10 +1035,10 @@ var pr = /^[\p{L}\p{N}\p{M}_]$/u,
   br = new RegExp(nt + "$"),
   wr = new RegExp("^" + nt),
   yr = new RegExp(nt, "g"),
-  hle = (e) => pr.test(e),
-  TOt = (e) => Ce.test(e),
-  Nye = (e) => e.length > 0 && !TOt(e) && !hle(e);
-class Zs {
+  isWordChar = (e) => pr.test(e),
+  isWhitespace = (e) => Ce.test(e),
+  isPunctuation = (e) => e.length > 0 && !isWhitespace(e) && !isWordChar(e);
+class TextCursor {
   measuredText;
   selection;
   offset;
@@ -1048,7 +1048,7 @@ class Zs {
     this.offset = Math.max(0, Math.min(this.text.length, t));
   }
   static fromText(e, t, r = 0, s = 0) {
-    return new Zs(new $t(e, t - 1), r, s);
+    return new TextCursor(new $t(e, t - 1), r, s);
   }
   getViewportStartLine(e) {
     if (e === void 0 || e <= 0) return 0;
@@ -1151,16 +1151,16 @@ class Zs {
   left() {
     if (this.offset === 0) return this;
     let e = this.placeholderEndingAt(this.offset);
-    if (e) return new Zs(this.measuredText, e.start);
+    if (e) return new TextCursor(this.measuredText, e.start);
     let t = this.measuredText.prevOffset(this.offset);
-    return new Zs(this.measuredText, t);
+    return new TextCursor(this.measuredText, t);
   }
   right() {
     if (this.offset >= this.text.length) return this;
     let e = this.placeholderStartingAt(this.offset);
-    if (e) return new Zs(this.measuredText, e.end);
+    if (e) return new TextCursor(this.measuredText, e.end);
     let t = this.measuredText.nextOffset(this.offset);
-    return new Zs(this.measuredText, Math.min(t, this.text.length));
+    return new TextCursor(this.measuredText, Math.min(t, this.text.length));
   }
   placeholderEndingAt(e) {
     if (this.text[e - 1] !== "]") return null;
@@ -1194,10 +1194,10 @@ class Zs {
     let s = te(r);
     if (t > s) {
       let l = this.getOffset({ line: e - 1, column: s });
-      return new Zs(this.measuredText, l, 0);
+      return new TextCursor(this.measuredText, l, 0);
     }
     let o = this.getOffset({ line: e - 1, column: t });
-    return new Zs(this.measuredText, o, 0);
+    return new TextCursor(this.measuredText, o, 0);
   }
   down() {
     let { line: e, column: t } = this.getPosition();
@@ -1207,19 +1207,19 @@ class Zs {
     let s = te(r);
     if (t > s) {
       let l = this.getOffset({ line: e + 1, column: s });
-      return new Zs(this.measuredText, l, 0);
+      return new TextCursor(this.measuredText, l, 0);
     }
     let o = this.getOffset({ line: e + 1, column: t });
-    return new Zs(this.measuredText, o, 0);
+    return new TextCursor(this.measuredText, o, 0);
   }
   startOfCurrentLine() {
     let { line: e } = this.getPosition();
-    return new Zs(this.measuredText, this.getOffset({ line: e, column: 0 }), 0);
+    return new TextCursor(this.measuredText, this.getOffset({ line: e, column: 0 }), 0);
   }
   startOfLine() {
     let { line: e, column: t } = this.getPosition();
     if (t === 0 && e > 0)
-      return new Zs(
+      return new TextCursor(
         this.measuredText,
         this.getOffset({ line: e - 1, column: 0 }),
         0,
@@ -1231,7 +1231,7 @@ class Zs {
       r = (this.measuredText.getWrappedText()[e] || "").match(/^\s*\S/),
       s = r?.index ? r.index + r[0].length - 1 : 0,
       o = this.getOffset({ line: e, column: s });
-    return new Zs(this.measuredText, o, 0);
+    return new TextCursor(this.measuredText, o, 0);
   }
   endOfLine() {
     let { line: e, column: t } = this.getPosition(),
@@ -1239,10 +1239,10 @@ class Zs {
     if (t >= r && e < this.measuredText.lineCount - 1) {
       let o = this.measuredText.getLineLength(e + 1),
         l = this.getOffset({ line: e + 1, column: o });
-      return new Zs(this.measuredText, l, 0);
+      return new TextCursor(this.measuredText, l, 0);
     }
     let s = this.getOffset({ line: e, column: r });
-    return new Zs(this.measuredText, s, 0);
+    return new TextCursor(this.measuredText, s, 0);
   }
   findLogicalLineStart(e = this.offset) {
     if (e === 0) return 0;
@@ -1272,29 +1272,29 @@ class Zs {
       o = Math.min(r, s),
       l = e + o,
       m = this.measuredText.snapToGraphemeBoundary(l);
-    return new Zs(this.measuredText, m, 0);
+    return new TextCursor(this.measuredText, m, 0);
   }
   endOfLogicalLine() {
-    return new Zs(this.measuredText, this.findLogicalLineEnd(), 0);
+    return new TextCursor(this.measuredText, this.findLogicalLineEnd(), 0);
   }
   lastCharInLogicalLine() {
     let e = this.findLogicalLineStart(),
       t = this.findLogicalLineEnd(),
       r = t > e ? this.measuredText.prevOffset(t) : e;
-    return new Zs(this.measuredText, r, 0);
+    return new TextCursor(this.measuredText, r, 0);
   }
   startOfLogicalLine() {
-    return new Zs(this.measuredText, this.findLogicalLineStart(), 0);
+    return new TextCursor(this.measuredText, this.findLogicalLineStart(), 0);
   }
   firstNonBlankInLogicalLine() {
     let { start: e, end: t } = this.getLogicalLineBounds(),
       s = this.text.slice(e, t).match(/\S/),
       o = e + (s?.index ?? 0);
-    return new Zs(this.measuredText, o, 0);
+    return new TextCursor(this.measuredText, o, 0);
   }
   upLogicalLine() {
     let { start: e } = this.getLogicalLineBounds();
-    if (e === 0) return new Zs(this.measuredText, 0, 0);
+    if (e === 0) return new TextCursor(this.measuredText, 0, 0);
     let t = this.offset - e,
       r = e - 1,
       s = this.findLogicalLineStart(r);
@@ -1303,7 +1303,7 @@ class Zs {
   downLogicalLine() {
     let { start: e, end: t } = this.getLogicalLineBounds();
     if (t >= this.text.length)
-      return new Zs(this.measuredText, this.text.length, 0);
+      return new TextCursor(this.measuredText, this.text.length, 0);
     let r = this.offset - e,
       s = t + 1,
       o = this.findLogicalLineEnd(s);
@@ -1314,29 +1314,29 @@ class Zs {
     let e =
       this.placeholderStartingAt(this.offset) ??
       this.placeholderContaining(this.offset);
-    if (e) return new Zs(this.measuredText, e.end);
+    if (e) return new TextCursor(this.measuredText, e.end);
     for (let t of this.measuredText.getReadlineWordBoundaries())
       if (t.end > this.offset) {
         let r = this.snapOutOfPlaceholder(t.end, "end");
-        return new Zs(this.measuredText, r);
+        return new TextCursor(this.measuredText, r);
       }
-    return new Zs(this.measuredText, this.text.length);
+    return new TextCursor(this.measuredText, this.text.length);
   }
   backwardWord() {
     if (this.isAtStart()) return this;
     let e =
       this.placeholderEndingAt(this.offset) ??
       this.placeholderContaining(this.offset);
-    if (e) return new Zs(this.measuredText, e.start);
+    if (e) return new TextCursor(this.measuredText, e.start);
     let t = this.measuredText.getReadlineWordBoundaries();
     for (let r = t.length - 1; r >= 0; r--) {
       let s = t[r];
       if (s.start < this.offset) {
         let o = this.snapOutOfPlaceholder(s.start, "start");
-        return new Zs(this.measuredText, o);
+        return new TextCursor(this.measuredText, o);
       }
     }
-    return new Zs(this.measuredText, 0);
+    return new TextCursor(this.measuredText, 0);
   }
   killWord() {
     let e = this.forwardWord();
@@ -1357,18 +1357,18 @@ class Zs {
       let o = e.end;
       while (o < this.text.length && Ce.test(this.graphemeAt(o)))
         o = this.measuredText.nextOffset(o);
-      return new Zs(this.measuredText, o);
+      return new TextCursor(this.measuredText, o);
     }
     let t = this.offset,
       r = (o) => this.measuredText.nextOffset(o),
       s = this.graphemeAt(t);
     if (!s) return this;
-    if (hle(s))
-      while (t < this.text.length && hle(this.graphemeAt(t))) t = r(t);
-    else if (Nye(s))
-      while (t < this.text.length && Nye(this.graphemeAt(t))) t = r(t);
+    if (isWordChar(s))
+      while (t < this.text.length && isWordChar(this.graphemeAt(t))) t = r(t);
+    else if (isPunctuation(s))
+      while (t < this.text.length && isPunctuation(this.graphemeAt(t))) t = r(t);
     while (t < this.text.length && Ce.test(this.graphemeAt(t))) t = r(t);
-    return new Zs(this.measuredText, this.snapOutOfPlaceholder(t, "end"));
+    return new TextCursor(this.measuredText, this.snapOutOfPlaceholder(t, "end"));
   }
   endOfVimWord() {
     if (this.isAtEnd()) return this;
@@ -1376,57 +1376,57 @@ class Zs {
       this.placeholderStartingAt(this.offset) ??
       this.placeholderContaining(this.offset);
     if (e && this.offset < e.end - 1)
-      return new Zs(this.measuredText, e.end - 1);
+      return new TextCursor(this.measuredText, e.end - 1);
     let t = this.text,
       r = this.offset,
       s = (m) => this.measuredText.nextOffset(m);
     if (this.graphemeAt(r) === "") return this;
     r = s(r);
     while (r < t.length && Ce.test(this.graphemeAt(r))) r = s(r);
-    if (r >= t.length) return new Zs(this.measuredText, t.length);
+    if (r >= t.length) return new TextCursor(this.measuredText, t.length);
     let o = this.graphemeAt(r);
-    if (hle(o))
+    if (isWordChar(o))
       while (r < t.length) {
         let m = s(r);
-        if (m >= t.length || !hle(this.graphemeAt(m))) break;
+        if (m >= t.length || !isWordChar(this.graphemeAt(m))) break;
         r = m;
       }
-    else if (Nye(o))
+    else if (isPunctuation(o))
       while (r < t.length) {
         let m = s(r);
-        if (m >= t.length || !Nye(this.graphemeAt(m))) break;
+        if (m >= t.length || !isPunctuation(this.graphemeAt(m))) break;
         r = m;
       }
     let l = this.placeholderStartingAt(r) ?? this.placeholderContaining(r);
     if (l) r = l.end - 1;
-    return new Zs(this.measuredText, r);
+    return new TextCursor(this.measuredText, r);
   }
   prevVimWord() {
     if (this.isAtStart()) return this;
     let e = this.placeholderEndingAt(this.offset);
-    if (e) return new Zs(this.measuredText, e.start);
+    if (e) return new TextCursor(this.measuredText, e.start);
     let t = this.placeholderContaining(this.offset);
-    if (t) return new Zs(this.measuredText, t.start);
+    if (t) return new TextCursor(this.measuredText, t.start);
     let r = this.offset,
       s = (l) => this.measuredText.prevOffset(l);
     r = s(r);
     while (r > 0 && Ce.test(this.graphemeAt(r))) r = s(r);
     if (r === 0 && Ce.test(this.graphemeAt(0)))
-      return new Zs(this.measuredText, 0);
+      return new TextCursor(this.measuredText, 0);
     let o = this.graphemeAt(r);
-    if (hle(o))
+    if (isWordChar(o))
       while (r > 0) {
         let l = s(r);
-        if (!hle(this.graphemeAt(l))) break;
+        if (!isWordChar(this.graphemeAt(l))) break;
         r = l;
       }
-    else if (Nye(o))
+    else if (isPunctuation(o))
       while (r > 0) {
         let l = s(r);
-        if (!Nye(this.graphemeAt(l))) break;
+        if (!isPunctuation(this.graphemeAt(l))) break;
         r = l;
       }
-    return new Zs(this.measuredText, this.snapOutOfPlaceholder(r, "start"));
+    return new TextCursor(this.measuredText, this.snapOutOfPlaceholder(r, "start"));
   }
   nextWORD() {
     let e = this;
@@ -1440,7 +1440,7 @@ class Zs {
       this.placeholderStartingAt(this.offset) ??
       this.placeholderContaining(this.offset);
     if (e && this.offset < e.end - 1)
-      return new Zs(this.measuredText, e.end - 1);
+      return new TextCursor(this.measuredText, e.end - 1);
     let t = this;
     if (
       !t.isOverWhitespace() &&
@@ -1450,7 +1450,7 @@ class Zs {
     if (t.isOverWhitespace()) {
       t = t.nextWORD();
       let s = t.placeholderStartingAt(t.offset);
-      if (s) return new Zs(this.measuredText, s.end - 1);
+      if (s) return new TextCursor(this.measuredText, s.end - 1);
     }
     while (!t.right().isOverWhitespace() && !t.isAtEnd()) t = t.right();
     return t;
@@ -1467,7 +1467,7 @@ class Zs {
     let r = this.offset,
       s = e.offset,
       o = this.text.slice(0, r) + t + this.text.slice(s);
-    return Zs.fromText(o, this.columns, r + t.normalize("NFC").length);
+    return TextCursor.fromText(o, this.columns, r + t.normalize("NFC").length);
   }
   insert(e) {
     return this.modifyText(this, e);
@@ -1524,8 +1524,8 @@ class Zs {
   killRange(e, t) {
     let r = this.snapOutOfPlaceholder(e, "start"),
       s = this.snapOutOfPlaceholder(t, "end"),
-      o = new Zs(this.measuredText, r),
-      l = new Zs(this.measuredText, s);
+      o = new TextCursor(this.measuredText, r),
+      l = new TextCursor(this.measuredText, s);
     return { cursor: o.modifyText(l), killed: this.text.slice(r, s) };
   }
   graphemeAt(e) {
@@ -1547,13 +1547,13 @@ class Zs {
     return this.offset >= this.text.length;
   }
   startOfFirstLine() {
-    return new Zs(this.measuredText, 0, 0);
+    return new TextCursor(this.measuredText, 0, 0);
   }
   startOfLastLine() {
     let e = this.text.lastIndexOf(`
 `);
     if (e === -1) return this.startOfLine();
-    return new Zs(this.measuredText, e + 1, 0);
+    return new TextCursor(this.measuredText, e + 1, 0);
   }
   goToLine(e) {
     let t = this.text.split(`
@@ -1561,10 +1561,10 @@ class Zs {
       r = Math.min(Math.max(0, e - 1), t.length - 1),
       s = 0;
     for (let o = 0; o < r; o++) s += (t[o]?.length ?? 0) + 1;
-    return new Zs(this.measuredText, s, 0);
+    return new TextCursor(this.measuredText, s, 0);
   }
   endOfFile() {
-    return new Zs(this.measuredText, this.text.length, 0);
+    return new TextCursor(this.measuredText, this.text.length, 0);
   }
   get text() {
     return this.measuredText.text;
@@ -1945,7 +1945,7 @@ var Er = new Set([
   "f11",
   "f12",
 ]);
-function xen() {
+function isAppleTerminalShiftPressed() {
   return a.terminal === "Apple_Terminal" && Ct("shift");
 }
 function At(e) {
@@ -1954,7 +1954,7 @@ function At(e) {
     return (t.get(r) ?? $r)(r);
   };
 }
-function m9e({
+function useTextInput({
   value: e,
   onChange: t,
   onSubmit: r,
@@ -1995,7 +1995,7 @@ function m9e({
   if (a.terminal === "Apple_Terminal") Et();
   let he = oe,
     ce = q,
-    w = Zs.fromText(e, O, he),
+    w = TextCursor.fromText(e, O, he),
     Ve = !1,
     Ye;
   function we(u) {
@@ -2003,7 +2003,7 @@ function m9e({
   }
   let { addNotification: Ie, removeNotification: ze } = useNotificationQueue(),
     { storageV5: qe } = useStorageV5Context(),
-    [ye] = d(AOt),
+    [ye] = d(createLeftArrowGestureState),
     We = "left-arrow-again-for-agents",
     _t = useDoublePressConfirm(
       (u) => {
@@ -2117,7 +2117,7 @@ function m9e({
       Qt = N + xe.length;
     return (
       le.dispatch({ type: "updateYankLength", length: xe.length }),
-      Zs.fromText(Zt, O, Qt)
+      TextCursor.fromText(Zt, O, Qt)
     );
   }
   let Gt = At([
@@ -2155,7 +2155,7 @@ function m9e({
         we(`
 `),
       );
-    if (xen())
+    if (isAppleTerminalShiftPressed())
       return w.insert(
         we(`
 `),
@@ -2213,8 +2213,8 @@ function m9e({
         if (u.ctrl || u.meta || u.fn) return w.backwardWord();
         if (c && !u.shift && w.text === "") {
           let N = Date.now(),
-            pe = COt(ye, N, u.soloKeypress);
-          switch ((vOt(ye, pe, N), ROt(pe, N), pe)) {
+            pe = resolveLeftArrowGesture(ye, N, u.soloKeypress);
+          switch ((applyLeftArrowGestureState(ye, pe, N), logLeftArrowBlocked(pe, N), pe)) {
             case "fire":
               return (ze(We), c(), w);
             case "arm":
@@ -2224,7 +2224,7 @@ function m9e({
                   kind: "feedback",
                   text: x ?? "Press \u2190 again",
                   priority: "immediate",
-                  timeoutMs: oat,
+                  timeoutMs: LEFT_ARROW_HINT_TIMEOUT_MS,
                 }),
                 w
               );
@@ -2235,9 +2235,9 @@ function m9e({
                 Ie({
                   key: We,
                   kind: "feedback",
-                  text: EOt,
+                  text: AMBIGUOUS_LEFT_ARROW_HINT,
                   priority: "immediate",
-                  timeoutMs: oat,
+                  timeoutMs: LEFT_ARROW_HINT_TIMEOUT_MS,
                 }),
                 w
               );
@@ -2328,7 +2328,7 @@ function m9e({
       (ce(N.offset), (w = N));
     }
     if (Ve) {
-      if (((Ve = !1), K)) w = Zs.fromText("", O, 0);
+      if (((Ve = !1), K)) w = TextCursor.fromText("", O, 0);
     }
   }
   let qt =
@@ -2356,35 +2356,35 @@ var it = ["\xB7", "\u2722", "\u2733", "\u2736", "\u273B", "\u273B"],
   Cr = [...it, ...it.toReversed()],
   Ar = [...st, ...st.toReversed()],
   _i = [...kt, ...kt.toReversed()];
-function iat() {
+function getSpinnerFrames() {
   if (a.TERM === "xterm-ghostty") return it;
   return st;
 }
-function _le() {
+function getSpinnerPingPongFrames() {
   if (a.TERM === "xterm-ghostty") return Cr;
   return Ar;
 }
 var Ot = 8;
-function by(e) {
+function quantizeToEighth(e) {
   return Math.round(e * Ot) / Ot;
 }
-function aat(e) {
-  return by(e / 360) * 360;
+function quantizeHueAngle(e) {
+  return quantizeToEighth(e / 360) * 360;
 }
-function lat(e, t) {
+function getPulseProgress(e, t) {
   return (1 - Math.cos((2 * Math.PI * e) / t)) / 2;
 }
-function PS(e, t, r) {
+function interpolateColor(e, t, r) {
   return {
     r: Math.round(e.r + (t.r - e.r) * r),
     g: Math.round(e.g + (t.g - e.g) * r),
     b: Math.round(e.b + (t.b - e.b) * r),
   };
 }
-function wy(e) {
+function formatRgbColor(e) {
   return `rgb(${e.r},${e.g},${e.b})`;
 }
-function cat(e) {
+function hueToRgb(e) {
   let t = ((e % 360) + 360) % 360,
     r = 0.7,
     s = 0.6,
@@ -2406,7 +2406,7 @@ function cat(e) {
     b: Math.round((T + m) * 255),
   };
 }
-function Wb(e) {
+function parseRgbColor(e) {
   let t = e.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
   return t
     ? { r: parseInt(t[1], 10), g: parseInt(t[2], 10), b: parseInt(t[3], 10) }
@@ -2416,7 +2416,7 @@ var ot = " \u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588",
   kr = 0.7,
   Or = 1.8,
   Lr = 0.15;
-function T0e() {
+function useVoiceLevelMeter() {
   let e = useAppStateSelector((M) => shouldReduceMotion(M.settings.prefersReducedMotion)),
     t = useVoiceLevelSmoother(),
     r = useVoiceSelector((M) => M.voiceState) === "recording",
@@ -2430,8 +2430,8 @@ function T0e() {
     R = Math.max(1, Math.min(Math.round(T * (ot.length - 1)), ot.length - 1)),
     L = c < Lr,
     I = ((m / 1000) * 90) % 360,
-    D = Zd() ? aat(I) : I,
-    { r: J, g: K, b: Y } = L ? { r: 128, g: 128, b: 128 } : cat(D),
+    D = Zd() ? quantizeHueAngle(I) : I,
+    { r: J, g: K, b: Y } = L ? { r: 128, g: 128, b: 128 } : hueToRgb(D),
     _ = `#${((J << 16) | (K << 8) | Y).toString(16).padStart(6, "0")}`;
   return [l, { char: ot[R], hex: _ }];
 }
@@ -2441,7 +2441,7 @@ var _r = 50;
 function Pt() {
   return getImageLimitsForModel(getMainLoopModel());
 }
-function Fye({
+function usePasteHandler({
   onPaste: e,
   handleKeyDown: t,
   onImagePaste: r,
@@ -2625,10 +2625,10 @@ function Fye({
   return { handleKeyDown: G, handlePaste: de, isPasting: l };
 }
 export {
-  dd,
-  _p,
+  useFocusTrap,
+  useCursorDeclaration,
   shouldOfferTerminalSetup,
-  yOt,
+  checkAndRestoreTerminalBackup,
   Cen,
   getNativeCSIuTerminalDisplayName,
   setupTerminal,
@@ -2641,28 +2641,28 @@ export {
   readVSCodeScrollSensitivity,
   vscodeUserDirectories,
   installVSCodeGpuAccelerationOff,
-  hle,
-  TOt,
-  Nye,
-  Zs,
-  oat,
-  sat,
-  EOt,
-  AOt,
-  COt,
-  vOt,
-  ROt,
-  xen,
-  m9e,
-  iat,
-  _le,
-  by,
-  aat,
-  lat,
-  PS,
-  wy,
-  cat,
-  Wb,
-  T0e,
-  Fye,
+  isWordChar,
+  isWhitespace,
+  isPunctuation,
+  TextCursor,
+  LEFT_ARROW_HINT_TIMEOUT_MS,
+  DETACH_CONFIRM_HINT,
+  AMBIGUOUS_LEFT_ARROW_HINT,
+  createLeftArrowGestureState,
+  resolveLeftArrowGesture,
+  applyLeftArrowGestureState,
+  logLeftArrowBlocked,
+  isAppleTerminalShiftPressed,
+  useTextInput,
+  getSpinnerFrames,
+  getSpinnerPingPongFrames,
+  quantizeToEighth,
+  quantizeHueAngle,
+  getPulseProgress,
+  interpolateColor,
+  formatRgbColor,
+  hueToRgb,
+  parseRgbColor,
+  useVoiceLevelMeter,
+  usePasteHandler,
 };

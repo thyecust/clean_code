@@ -31,25 +31,25 @@ import {
   nPe,
 } from "./chunk-5wa92x7d.js";
 import {
-  aI,
-  ao,
-  So,
-  Cy,
-  Go,
-  Ki,
-  D4,
-  xLt,
-  kee,
-  lce,
-  Mrn,
-  HLt,
-  Nrn,
-  tGe,
-  nGe,
-  zA,
-  Urn,
-  Brn,
-  jrn,
+  OAuthError,
+  ProtocolErrorCode,
+  SdkError,
+  SdkHttpError,
+  ErrorCode,
+  ProtocolError,
+  isJSONRPCRequest,
+  isJSONRPCNotification,
+  isJSONRPCResultResponse,
+  isJSONRPCErrorResponse,
+  ReadBuffer,
+  deserializeMessage,
+  serializeMessage,
+  createFetchWithInit,
+  AjvJsonSchemaValidator,
+  UnauthorizedError,
+  Client,
+  SSEClientTransport,
+  StreamableHTTPClientTransport,
 } from "./chunk-78r8f7dw.js";
 import "../认证-OAuth登录/pkce-challenge.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -126,7 +126,7 @@ import {
   isMcpServerUsedByHooks,
   trackMcpServerProcess,
   truncateOtelContent,
-  W9,
+  isMcpRpcTracingEnabled,
   getCurrentTraceparent,
   runInOtelSpan,
   getPolicyPluginNames,
@@ -306,7 +306,7 @@ var pn = class {
   constructor(e) {
     if (
       ((this._serverParams = e),
-      (this._readBuffer = new Mrn({ maxBufferSize: e.maxBufferSize })),
+      (this._readBuffer = new ReadBuffer({ maxBufferSize: e.maxBufferSize })),
       e.stderr === "pipe" || e.stderr === "overlapped")
     )
       this._stderrStream = new PassThrough();
@@ -445,8 +445,8 @@ var pn = class {
   }
   send(e) {
     return new Promise((t) => {
-      if (!this._process?.stdin) throw new So(ao.NotConnected, "Not connected");
-      let o = Nrn(e);
+      if (!this._process?.stdin) throw new SdkError(ProtocolErrorCode.NotConnected, "Not connected");
+      let o = serializeMessage(e);
       if (this._process.stdin.write(o)) t();
       else this._process.stdin.once("drain", t);
     });
@@ -556,7 +556,7 @@ class hn {
     return (
       (this.chunks = p.length > 0 ? [p] : []),
       (this.byteLength = p.length),
-      HLt(d)
+      deserializeMessage(d)
     );
   }
   clear() {
@@ -690,7 +690,7 @@ function gn(e, t, o) {
   let r = e.send.bind(e);
   e.send = async (d, p) => {
     if (
-      D4(d) &&
+      isJSONRPCRequest(d) &&
       d.method === "server/discover" &&
       (o !== void 0 || t !== void 0)
     ) {
@@ -705,12 +705,12 @@ function gn(e, t, o) {
       queueMicrotask(() => e.onmessage?.(h));
       return;
     }
-    if (t !== void 0 && D4(d) && d.method === "initialize") {
+    if (t !== void 0 && isJSONRPCRequest(d) && d.method === "initialize") {
       let h = { jsonrpc: "2.0", id: d.id, result: t };
       queueMicrotask(() => e.onmessage?.(h));
       return;
     }
-    if (xLt(d) && d.method === "notifications/initialized") return;
+    if (isJSONRPCNotification(d) && d.method === "notifications/initialized") return;
     return r(d, p);
   };
 }
@@ -742,15 +742,15 @@ var yn = null,
   _n = import.meta.require("./getMcpAutoBackgroundMs.7m99c5cf.js");
 function Po(e) {
   return (
-    e instanceof Cy &&
-    (e.code === ao.ClientHttpFailedToOpenStream ||
+    e instanceof SdkHttpError &&
+    (e.code === ProtocolErrorCode.ClientHttpFailedToOpenStream ||
       e.message.includes("Failed to open SSE stream"))
   );
 }
 function isMcpSessionExpiredError(e) {
   if (e instanceof McpSessionExpiredError) return !0;
-  if (e instanceof Ki) return !1;
-  let t = e instanceof Cy ? e.status : "code" in e ? e.code : void 0;
+  if (e instanceof ProtocolError) return !1;
+  let t = e instanceof SdkHttpError ? e.status : "code" in e ? e.code : void 0;
   if (t === 404) return !Po(e);
   return (
     t === 400 &&
@@ -791,26 +791,26 @@ function isRetryableListError(e) {
   if (e instanceof iI) return !1;
   if (isClaudeAiBearerRejectedError(e)) return !1;
   if (e instanceof DOMException && e.name === "TimeoutError") return !1;
-  if (e instanceof Cy && e.status >= 400 && e.status < 500) return !1;
+  if (e instanceof SdkHttpError && e.status >= 400 && e.status < 500) return !1;
   if (
     e instanceof Error &&
-    !(e instanceof Ki) &&
+    !(e instanceof ProtocolError) &&
     "code" in e &&
     typeof e.code === "number" &&
     e.code >= 400 &&
     e.code < 500
   )
     return !1;
-  if (e instanceof So && e.code === ao.RequestTimeout) return !1;
-  if (e instanceof So && e.code === ao.ListPaginationExceeded) return !1;
-  if (e instanceof Ki)
+  if (e instanceof SdkError && e.code === ProtocolErrorCode.RequestTimeout) return !1;
+  if (e instanceof SdkError && e.code === ProtocolErrorCode.ListPaginationExceeded) return !1;
+  if (e instanceof ProtocolError)
     return (
       e.code !== -32001 &&
-      e.code !== Go.MethodNotFound &&
-      e.code !== Go.InvalidRequest &&
-      e.code !== Go.InvalidParams &&
-      e.code !== Go.UnsupportedProtocolVersion &&
-      e.code !== Go.MissingRequiredClientCapability
+      e.code !== ErrorCode.MethodNotFound &&
+      e.code !== ErrorCode.InvalidRequest &&
+      e.code !== ErrorCode.InvalidParams &&
+      e.code !== ErrorCode.UnsupportedProtocolVersion &&
+      e.code !== ErrorCode.MissingRequiredClientCapability
     );
   return !0;
 }
@@ -879,7 +879,7 @@ async function Pr(e, t, o) {
     } catch (d) {
       let p = ko[r];
       if (p === void 0 || !isRetryableListError(d)) {
-        if (d instanceof So && d.code === ao.ListPaginationExceeded)
+        if (d instanceof SdkError && d.code === ProtocolErrorCode.ListPaginationExceeded)
           Jt("tools/list", void 0, 0, "capped", "aggregate");
         throw d;
       }
@@ -1341,11 +1341,11 @@ async function lo({
   roundEpoch: Q,
   storageV5: O,
 }) {
-  if (!(r instanceof zA || (r instanceof AA && p) || d === 401 || d === 403))
+  if (!(r instanceof UnauthorizedError || (r instanceof AA && p) || d === 401 || d === 403))
     return;
   if (h) {
     let le = sanitizeMessageText(
-      r instanceof Cy && typeof r.data?.text === "string"
+      r instanceof SdkHttpError && typeof r.data?.text === "string"
         ? r.data.text
         : r.message,
     );
@@ -1387,7 +1387,7 @@ async function lo({
       message: `Server rejected the session credential (HTTP ${d ?? 401}). It will be retried when the session credential is refreshed.`,
     });
   if (w) return Gr(F ?? "none", e, t, o, d, z);
-  return Do(e, t, o, r, r instanceof zA || d === 401, Q, z, O);
+  return Do(e, t, o, r, r instanceof UnauthorizedError || d === 401, Q, z, O);
 }
 function createCcrProxyFetch(e) {
   return async (t, o) => {
@@ -1819,7 +1819,7 @@ function notifyMcpRootsListChanged() {
       n(`MCP: failed to send roots/list_changed: ${formatErrorWithCode(t)}`);
     });
 }
-var Ps = new Set(Object.values(ao)),
+var Ps = new Set(Object.values(ProtocolErrorCode)),
   ws = new Set([
     "http://json-schema.org/draft-04/schema",
     "https://json-schema.org/draft-04/schema",
@@ -1833,7 +1833,7 @@ var Ps = new Set(Object.values(ao)),
     "https://json-schema.org/schema",
   ]);
 class LegacyDialectToleratingValidator {
-  inner = new nGe();
+  inner = new AjvJsonSchemaValidator();
   getValidator(e) {
     let t = e.$schema;
     if (t !== void 0 && ws.has(t.replace(/#$/, ""))) {
@@ -1987,17 +1987,17 @@ function Ot(e) {
 }
 function Ho(e, t) {
   if (
-    e === Go.UnsupportedProtocolVersion ||
-    e === Go.MissingRequiredClientCapability
+    e === ErrorCode.UnsupportedProtocolVersion ||
+    e === ErrorCode.MissingRequiredClientCapability
   )
     return "rpc_era";
-  if (e === Go.InvalidRequest || (e === Go.MethodNotFound && Ot(t)))
+  if (e === ErrorCode.InvalidRequest || (e === ErrorCode.MethodNotFound && Ot(t)))
     return "rpc_session";
   return;
 }
 function listingPriorRejectionReason(e, t) {
-  if (e instanceof Ki) return Ho(e.code, t);
-  if (e instanceof Cy) {
+  if (e instanceof ProtocolError) return Ho(e.code, t);
+  if (e instanceof SdkHttpError) {
     if (e.status === 400 || ((e.status === 404 || e.status === 405) && Ot(t)))
       return "http_4xx";
   }
@@ -2139,7 +2139,7 @@ var connectToServer = lct(
         let D = ae || Ie || Ce || ue ? void 0 : new z3e(e, t);
         F = D;
         let _ = await resolveProxyFetchOptions(t.url),
-          U = vt(En(tGe(void 0, _)));
+          U = vt(En(createFetchWithInit(void 0, _)));
         if (D) U = yct(U, D);
         if (((U = wrapFetchWithTimeout(U, t)), Ce)) U = createFirstPartyApiMcpFetch(U, d, Be);
         let Y = {
@@ -2169,7 +2169,7 @@ var connectToServer = lct(
         ((Y.eventSourceInit = {
           fetch: vt(D ? yct(Re, D) : Ce ? createFirstPartyApiMcpFetch(Re, d, Be) : Re),
         }),
-          (O = new Brn(new URL(t.url), Y)),
+          (O = new SSEClientTransport(new URL(t.url), Y)),
           logMCPDebug(e, "SSE transport initialized, awaiting connection"));
       } else if (t.type === "sse-ide") {
         logMCPDebug(e, `Setting up SSE-IDE transport to ${redactUrl(t.url)}`);
@@ -2179,7 +2179,7 @@ var connectToServer = lct(
             headers: { "User-Agent": getMCPUserAgent(), "Accept-Encoding": "identity" },
           },
         };
-        O = new Brn(new URL(t.url), D);
+        O = new SSEClientTransport(new URL(t.url), D);
       } else if (t.type === "ws-ide") {
         let D = getWebSocketTLSOptions();
         Pu().record(t.authToken);
@@ -2230,7 +2230,7 @@ var connectToServer = lct(
         let D = ae || Ie || Ce || ue ? void 0 : new z3e(e, t);
         F = D;
         let _ = await resolveProxyFetchOptions(t.url),
-          U = vt(En(tGe(void 0, _)));
+          U = vt(En(createFetchWithInit(void 0, _)));
         if (D) U = yct(U, D);
         if (((U = wrapFetchWithTimeout(U, t)), Ce)) U = createFirstPartyApiMcpFetch(U, d, Be);
         if (E) U = createCcrProxyFetch(U);
@@ -2253,7 +2253,7 @@ var connectToServer = lct(
           e,
           `HTTP transport options: ${b({ url: redactUrl(t.url), headers: fe, hasAuthProvider: !!D, timeoutMs: getArmedRequestTimeoutMs(t) })}`,
         ),
-          (le = () => new jrn(new URL(t.url), Y)),
+          (le = () => new StreamableHTTPClientTransport(new URL(t.url), Y)),
           (O = le()),
           logMCPDebug(e, "HTTP transport created successfully"));
       } else if (t.type === "sdk")
@@ -2284,7 +2284,7 @@ var connectToServer = lct(
               },
             },
           };
-        ((le = () => new jrn(new URL(U), qe)),
+        ((le = () => new StreamableHTTPClientTransport(new URL(U), qe)),
           (O = le()),
           logMCPDebug(e, "claude.ai proxy transport created successfully"));
       } else if (isStdioMcpServer(t) && isClaudeInChromeMCPServer(e)) {
@@ -2395,7 +2395,7 @@ var connectToServer = lct(
         )),
         (Me = ie.mode === "auto" ? getListingDiscoverPrior(t) : void 0));
       let de = (D) => {
-          let _ = new Urn(
+          let _ = new Client(
             {
               name: "claude-code",
               title: "Claude Code",
@@ -2501,9 +2501,9 @@ var connectToServer = lct(
         gn(O, Pe, be);
       }
       let Ee = (D) => {
-        let _ = D instanceof Cy ? D.status : void 0;
+        let _ = D instanceof SdkHttpError ? D.status : void 0;
         return (
-          D instanceof zA ||
+          D instanceof UnauthorizedError ||
           (D instanceof Error && D.name === "UnauthorizedError") ||
           (D instanceof AA && F?.sawAuthChallenge === !0) ||
           D instanceof iI ||
@@ -2586,12 +2586,12 @@ var connectToServer = lct(
         } catch (_) {
           let U =
               ie?.mode === "auto" &&
-              _ instanceof So &&
-              _.code === ao.EraNegotiationFailed,
+              _ instanceof SdkError &&
+              _.code === ProtocolErrorCode.EraNegotiationFailed,
             Y =
               ie?.mode === "auto" &&
-              _ instanceof So &&
-              _.code === ao.RequestTimeout &&
+              _ instanceof SdkError &&
+              _.code === ProtocolErrorCode.RequestTimeout &&
               O?._anthropicProbeTimedOut === !0;
           if (U) {
             let He = _.data;
@@ -2610,7 +2610,7 @@ var connectToServer = lct(
                   _,
                   Me.kind === "modern" ? "subscriptions/listen" : "initialize",
                 ) ??
-                (_ instanceof So && _.code === ao.EraNegotiationFailed
+                (_ instanceof SdkError && _.code === ProtocolErrorCode.EraNegotiationFailed
                   ? "rpc_era"
                   : void 0),
               lt = truncateToCodeUnits(formatConnectionError(_, t), 200);
@@ -2714,15 +2714,15 @@ var connectToServer = lct(
               );
             }
             let cn =
-              He instanceof So &&
-              He.code === ao.RequestTimeout &&
+              He instanceof SdkError &&
+              He.code === ProtocolErrorCode.RequestTimeout &&
               Ke._anthropicProbeTimedOut === !0;
             if (
               L &&
               !Rt &&
               !lt &&
-              He instanceof So &&
-              (He.code === ao.EraNegotiationFailed || cn)
+              He instanceof SdkError &&
+              (He.code === ProtocolErrorCode.EraNegotiationFailed || cn)
             ) {
               if (!I) throw _;
               throw (
@@ -2759,7 +2759,7 @@ var connectToServer = lct(
       } catch (D) {
         W();
         let _ = D;
-        if (_ instanceof So && _.code === ao.EraNegotiationFailed) {
+        if (_ instanceof SdkError && _.code === ProtocolErrorCode.EraNegotiationFailed) {
           let fe = _.data,
             Re =
               typeof fe === "object" && fe !== null && "cause" in fe
@@ -2792,7 +2792,7 @@ var connectToServer = lct(
             serverRef: t,
             transportType: "sse",
             error: _,
-            statusCode: _ instanceof Cy ? _.status : _.code,
+            statusCode: _ instanceof SdkHttpError ? _.status : _.code,
             sawAuthChallenge: F?.sawAuthChallenge === !0,
             hasUserAuthHeader: ae,
             helperMintsAuthHeader: Ie,
@@ -2816,7 +2816,7 @@ var connectToServer = lct(
             serverRef: t,
             transportType: "http",
             error: _,
-            statusCode: _ instanceof Cy ? _.status : _.code,
+            statusCode: _ instanceof SdkHttpError ? _.status : _.code,
             sawAuthChallenge: F?.sawAuthChallenge === !0,
             hasUserAuthHeader: ae,
             helperMintsAuthHeader: Ie,
@@ -2837,7 +2837,7 @@ var connectToServer = lct(
             !isClaudeAiBearerRejectedError(_))
           )
             logMCPError(e, redactErrorForLogging(_, t));
-          let fe = _ instanceof Cy ? _.status : _.code;
+          let fe = _ instanceof SdkHttpError ? _.status : _.code;
           if (isClaudeAiBearerRejectedError(_)) {
             (logEvent("tengu_mcp_server_connection_failed", {
               transportType: S("claudeai-proxy"),
@@ -2969,7 +2969,7 @@ var connectToServer = lct(
         let D = V.transport,
           _ = D.send.bind(D);
         D.send = async (U, Y) => {
-          let fe = _t && D4(U) ? U : void 0;
+          let fe = _t && isJSONRPCRequest(U) ? U : void 0;
           if (fe !== void 0) {
             if ((bt.set(fe.id, fe.method), Ot(fe.method))) Vn();
           }
@@ -3054,7 +3054,7 @@ var connectToServer = lct(
           if (
             (_ === "http" || _ === "claudeai-proxy") &&
             V.transport?.sessionId !== void 0 &&
-            D instanceof Cy &&
+            D instanceof SdkHttpError &&
             D.status === 404 &&
             Po(D)
           )
@@ -3091,10 +3091,10 @@ var connectToServer = lct(
         let D = V.transport.onmessage;
         V.transport.onmessage = (_, U) => {
           if (Ae.consecutiveErrors !== 0) Ae.consecutiveErrors = 0;
-          if (_t && (kee(_) || lce(_)) && _.id !== void 0) {
+          if (_t && (isJSONRPCResultResponse(_) || isJSONRPCErrorResponse(_)) && _.id !== void 0) {
             let Y = bt.get(_.id);
             if (Y !== void 0)
-              if ((bt.delete(_.id), kee(_))) {
+              if ((bt.delete(_.id), isJSONRPCResultResponse(_))) {
                 if (Ot(Y)) $t();
               } else {
                 let fe = zn(Ho(_.error.code, Y));
@@ -3102,7 +3102,7 @@ var connectToServer = lct(
                   (D?.(_, U), qn(fe, Y, `JSON-RPC ${_.error.code}`));
                   return;
                 }
-                Kn(Y, isRetryableListError(new Ki(_.error.code, _.error.message)));
+                Kn(Y, isRetryableListError(new ProtocolError(_.error.code, _.error.message)));
               }
           }
           D?.(_, U);
@@ -3300,7 +3300,7 @@ var connectToServer = lct(
         ae = formatConnectionError(E, t),
         se = E instanceof Error ? E.cause : void 0,
         Ie =
-          (E instanceof Cy ? E.status : void 0) ??
+          (E instanceof SdkHttpError ? E.status : void 0) ??
           (E && typeof E === "object" && "code" in E ? E.code : void 0) ??
           (se && typeof se === "object" && "code" in se ? se.code : void 0),
         Ce =
@@ -3310,8 +3310,8 @@ var connectToServer = lct(
               ? String(Ie)
               : void 0;
       if (
-        E instanceof So &&
-        E.code === ao.RequestTimeout &&
+        E instanceof SdkError &&
+        E.code === ProtocolErrorCode.RequestTimeout &&
         getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_connect_timeout_retry", !0)
       )
         Ce = "CONNECT_TIMEOUT";
@@ -3725,17 +3725,17 @@ function sanitizeConnectErrorCodeForTelemetry(e) {
   return mTt(e) ?? S("other");
 }
 var Vo = {
-  [ao.ConnectionClosed]: "connection_closed",
-  [ao.RequestTimeout]: "request_timeout",
-  [ao.ListPaginationExceeded]: "list_pagination_exceeded",
+  [ProtocolErrorCode.ConnectionClosed]: "connection_closed",
+  [ProtocolErrorCode.RequestTimeout]: "request_timeout",
+  [ProtocolErrorCode.ListPaginationExceeded]: "list_pagination_exceeded",
   [-32000]: "connection_closed",
   [-32001]: "request_timeout",
   [CCR_NEEDS_APPROVAL_ERROR_CODE]: "ccr_needs_approval",
-  [Go.ParseError]: "parse_error",
-  [Go.InvalidRequest]: "invalid_request",
-  [Go.MethodNotFound]: "method_not_found",
-  [Go.InvalidParams]: "invalid_params",
-  [Go.InternalError]: "internal_error",
+  [ErrorCode.ParseError]: "parse_error",
+  [ErrorCode.InvalidRequest]: "invalid_request",
+  [ErrorCode.MethodNotFound]: "method_not_found",
+  [ErrorCode.InvalidParams]: "invalid_params",
+  [ErrorCode.InternalError]: "internal_error",
 };
 function mcpToolInputToAutoClassifierInput(e, t) {
   let o = Object.keys(e);
@@ -4537,7 +4537,7 @@ var fetchToolsForClient = h7(
       let h = e.config.type === "claudeai-proxy" && isClaudeAiBearerRejectedError(d),
         C = h
           ? "mcp_list_tools_claudeai_bearer_rejected"
-          : (d instanceof Ki || d instanceof So) && !(d instanceof Cy)
+          : (d instanceof ProtocolError || d instanceof SdkError) && !(d instanceof SdkHttpError)
             ? `mcp_list_tools_${Vo[d.code] ?? "mcperr_other"}`
             : p.includes("timed out")
               ? "mcp_list_tools_timeout"
@@ -4574,7 +4574,7 @@ function Xo(e, t, o, r, d, p) {
     ? `${o}_needs_auth`
     : A
       ? `${o}_claudeai_bearer_rejected`
-      : (t instanceof Ki || t instanceof So) && !(t instanceof Cy)
+      : (t instanceof ProtocolError || t instanceof SdkError) && !(t instanceof SdkHttpError)
         ? `${o}_${Vo[t.code] ?? "mcperr_other"}`
         : h.includes("timed out")
           ? `${o}_timeout`
@@ -4617,7 +4617,7 @@ var fetchResourcesForClient = h7(
         ),
           ur().resourceLists.delete(getMcpServerConfigCacheKey(e.name, e.config)));
         let o = [];
-        if (t instanceof Ki && t.code === Go.MethodNotFound) recordRawResourcesForResult(o, []);
+        if (t instanceof ProtocolError && t.code === ErrorCode.MethodNotFound) recordRawResourcesForResult(o, []);
         else jt().discoveryFetchErrors.set(o, ge(t));
         return o;
       }
@@ -4649,7 +4649,7 @@ var fetchResourcesForClient = h7(
         (ur().resourceTemplateLists.delete(getMcpServerConfigCacheKey(e.name, e.config)),
           logMCPDebug(e.name, `Failed to fetch resource templates: ${formatConnectionError(t, e.config)}`));
         let o = [];
-        if (!(t instanceof Ki && t.code === Go.MethodNotFound))
+        if (!(t instanceof ProtocolError && t.code === ErrorCode.MethodNotFound))
           jt().discoveryFetchErrors.set(o, ge(t));
         return o;
       }
@@ -4716,7 +4716,7 @@ var fetchCommandsForClient = h7(
       ),
         ur().commandLists.delete(getMcpServerConfigCacheKey(e.name, e.config)));
       let o = [];
-      if (t instanceof Ki && t.code === Go.MethodNotFound) recordRawCommandsForResult(o, []);
+      if (t instanceof ProtocolError && t.code === ErrorCode.MethodNotFound) recordRawCommandsForResult(o, []);
       else jt().discoveryFetchErrors.set(o, ge(t));
       return o;
     }
@@ -5690,7 +5690,7 @@ async function callMCPToolWithUrlElicitationRetry({
             disallowTasks: N,
           }),
         _e;
-      if (!W9()) _e = await ie();
+      if (!isMcpRpcTracingEnabled()) _e = await ie();
       else {
         let ee;
         try {
@@ -5711,7 +5711,7 @@ async function callMCPToolWithUrlElicitationRetry({
               ...(ee !== void 0 && { mcp_args: ee }),
             },
             isExpectedError: (W) =>
-              W instanceof Ki && (W.code === Go.UrlElicitationRequired || L(W)),
+              W instanceof ProtocolError && (W.code === ErrorCode.UrlElicitationRequired || L(W)),
           },
           ie,
         );
@@ -5719,7 +5719,7 @@ async function callMCPToolWithUrlElicitationRetry({
       if (I) logFeatureOk("mcp_ccr_needs_approval");
       return _e;
     } catch (ie) {
-      if (!(ie instanceof Ki)) {
+      if (!(ie instanceof ProtocolError)) {
         if (I && !(ie instanceof McpSessionExpiredError))
           logFeatureBad("mcp_ccr_needs_approval", "retry_failed");
         throw ie;
@@ -5785,7 +5785,7 @@ async function callMCPToolWithUrlElicitationRetry({
           )
         );
       }
-      if (ie.code !== Go.UrlElicitationRequired) {
+      if (ie.code !== ErrorCode.UrlElicitationRequired) {
         if (I) logFeatureBad("mcp_ccr_needs_approval", "retry_failed");
         else if (ie.code === CCR_NEEDS_APPROVAL_ERROR_CODE && le)
           logFeatureBad("mcp_ccr_needs_approval", "arm_not_fired");
@@ -6267,9 +6267,9 @@ async function callMCPTool({
       logMCPDebug(N, `Tool '${t}' failed after ${Math.floor(E / 1000)}s: ${formatConnectionError(W, re)}`);
     if (W instanceof Error) {
       let ae =
-          W instanceof Ki
+          W instanceof ProtocolError
             ? void 0
-            : W instanceof Cy
+            : W instanceof SdkHttpError
               ? W.status
               : "code" in W && typeof W.code === "number"
                 ? W.code
@@ -6279,7 +6279,7 @@ async function callMCPTool({
           !!re.headersHelper,
         Ie = Jse(re),
         Ce =
-          W instanceof aI
+          W instanceof OAuthError
             ? W.code
             : "errorCode" in W && typeof W.errorCode === "string"
               ? W.errorCode
@@ -6290,7 +6290,7 @@ async function callMCPTool({
             Ce,
           ) &&
           /^HTTP 40[13]\b/.test(W.message),
-        De = ae === 401 || W instanceof zA || Be || (ae === 403 && se),
+        De = ae === 401 || W instanceof UnauthorizedError || Be || (ae === 403 && se),
         Oe =
           (re.type === "http" || re.type === "sse") &&
           !re.headersHelper &&
@@ -6318,8 +6318,8 @@ async function callMCPTool({
         );
         let je =
           te !== void 0 &&
-          ((W instanceof So && W.code === ao.ConnectionClosed) ||
-            (W instanceof Ki && W.code === -32000));
+          ((W instanceof SdkError && W.code === ProtocolErrorCode.ConnectionClosed) ||
+            (W instanceof ProtocolError && W.code === -32000));
         if ((je || (De && se) || (De && Ie) || Fe) && !isMcpServerDisabled(N) && !isMcpServerBlockedAtConnectTime(N, re)) {
           if (
             (logMCPDebug(
@@ -6442,8 +6442,8 @@ async function callMCPTool({
       }
       let X = isMcpSessionExpiredError(W),
         de =
-          ((W instanceof So && W.code === ao.ConnectionClosed) ||
-            (W instanceof Ki &&
+          ((W instanceof SdkError && W.code === ProtocolErrorCode.ConnectionClosed) ||
+            (W instanceof ProtocolError &&
               W.code === -32000 &&
               W.message.includes("Connection closed"))) &&
           (re.type === "http" || re.type === "claudeai-proxy");
@@ -6470,7 +6470,7 @@ async function callMCPTool({
     }
     let ue = W;
     if (
-      (W instanceof So && W.code === ao.InvalidResult) ||
+      (W instanceof SdkError && W.code === ProtocolErrorCode.InvalidResult) ||
       W instanceof AA ||
       ((ue?.name === "ZodError" || ue?.name === "$ZodError") &&
         Array.isArray(ue?.issues))
@@ -6478,7 +6478,7 @@ async function callMCPTool({
       throw new McpResponseSchemaError(N, W);
     if (
       !(W instanceof Error && W.name === "AbortError") &&
-      !(d?.aborted === !0 && W instanceof So)
+      !(d?.aborted === !0 && W instanceof SdkError)
     )
       throw W;
     return { content: TOOL_CALL_INTERRUPTED_MESSAGE, interrupted: !0, isError: !0 };
@@ -6498,7 +6498,7 @@ async function setupSdkMcpClients(e, t, o) {
   let h = await Promise.allSettled(
     Object.entries(e).map(async ([A, w]) => {
       let F = new SdkMcpClientTransport(A, t),
-        z = new Urn(
+        z = new Client(
           {
             name: "claude-code",
             title: "Claude Code",

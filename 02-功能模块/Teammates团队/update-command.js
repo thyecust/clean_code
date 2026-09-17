@@ -20,7 +20,7 @@ import { Z4t } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { isTeammate } from "./teammate-context.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
-import { vre, rK, Rre, getOwnJobShortId, resolveBridgeHandoffIdentity, buildBridgeReattachEnv } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { buildCarriableSessionFlags, collectUncarriableLaunchReasons, buildCarriableRuleFlags, getOwnJobShortId, resolveBridgeHandoffIdentity, buildBridgeReattachEnv } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { getProjectDir } from "./transcript-paths.js";
 import { getMaterializedSessionFile, isTranscriptPersistenceDisabled, flushSessionStorage, getCurrentSessionBridge } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getToolPermissionContext, getSessionEffort } from "../权限系统/chunk-fjrcf22x.js";
@@ -91,7 +91,7 @@ var runUpdateCommand = async (d, t) => {
       );
     },
     w = (e) => {
-      let r = rK(getToolPermissionContext(t), qP());
+      let r = collectUncarriableLaunchReasons(getToolPermissionContext(t), qP());
       if (r.length === 0) return g(e);
       let u = c();
       logEvent("tengu_update_refused", { uncarriable: !0, comment_monitor: u });
@@ -159,7 +159,7 @@ var runUpdateCommand = async (d, t) => {
   let _ = w(!0);
   if (_ !== void 0) return { type: "text", value: _ };
   let v = getToolPermissionContext(t),
-    A = [...vre(v, getSessionEffort(t)), ...Rre(v, Tz())],
+    A = [...buildCarriableSessionFlags(v, getSessionEffort(t)), ...buildCarriableRuleFlags(v, Tz())],
     b = isTeammate() ? void 0 : t.getAppState().teamContext?.teamName;
   await assertLauncherRunnable();
   let R = w(!0);

@@ -43,33 +43,33 @@ import { MAX_PREVIEW_WIDTHS, MAX_REPORTED_DROPPED_ISSUES, MAX_PREVIEW_SHOTS, MAX
 import "./chunk-x29r16ke.js";
 import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
 import {
-  mO,
-  Mee,
-  gO,
-  vut,
-  M4,
-  Nee,
-  pPe,
-  YSe,
-  JSe,
-  QSe,
-  b9,
-  w9,
-  Xb,
-  fPe,
-  yce,
-  E7,
-  mPe,
-  gjn,
-  kon,
-  Fee,
-  DGe,
-  ZSe,
-  LGe,
-  CNt,
-  Ion,
-  Pon,
-  kut,
+  parseArtifactReplyInput,
+  parseArtifactAssetInput,
+  ARTIFACT_ASSET_TARGET_PIN,
+  ARTIFACT_DELETE_TARGET,
+  ARTIFACT_DISPLAY_TARGET,
+  truncateArtifactTitle,
+  formatOwnershipParenthetical,
+  resolveArtifactAssetPath,
+  parseArtifactFilePathInput,
+  resolveArtifactReadDestination,
+  parseArtifactDbInput,
+  parseArtifactDbBatchWrites,
+  getArtifactTypeUrl,
+  getArtifactTypeName,
+  resolveArtifactDbReadDir,
+  formatArtifactPayloadPreview,
+  formatArtifactReplyText,
+  describeArtifactDbWriteOp,
+  describeArtifactLocalFiles,
+  isListArtifactsByType,
+  getArtifactListScope,
+  parseArtifactRoomSendInput,
+  formatArtifactRoomTopic,
+  getArtifactResultKind,
+  dbBatchPayloadsForConsent,
+  dbBatchFileSpellings,
+  publishInputJoinsRoom,
 } from "./chunk-pvztfdrb.js";
 import "../Teammates团队/chunk-weg7y2ya.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
@@ -165,13 +165,13 @@ function renderToolUseMessage(s, m) {
       ],
     });
   if (n.action === "list") {
-    if (Fee(n)) {
-      let a = DGe(n),
-        c = fPe(n),
+    if (isListArtifactsByType(n)) {
+      let a = getArtifactListScope(n),
+        c = getArtifactTypeName(n),
         f =
           c !== void 0
             ? `"${sweepAskCopy(truncateToCodeUnits(c, 200)) ?? ""}"`
-            : canonicalArtifactTargetFor(Xb(n), "(unrecognized address)");
+            : canonicalArtifactTargetFor(getArtifactTypeUrl(n), "(unrecognized address)");
       return r(t, {
         children: [
           "list",
@@ -207,7 +207,7 @@ function renderToolUseMessage(s, m) {
       children: [
         "describe type",
         " ",
-        e(t, { dimColor: !0, children: canonicalArtifactTargetFor(Xb(n), "(unrecognized address)") }),
+        e(t, { dimColor: !0, children: canonicalArtifactTargetFor(getArtifactTypeUrl(n), "(unrecognized address)") }),
       ],
     });
   if (
@@ -218,7 +218,7 @@ function renderToolUseMessage(s, m) {
     let d = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
       a =
         n.action === "reply" && m?.verbose === !0
-          ? mPe(mO(n).replyText)
+          ? formatArtifactReplyText(parseArtifactReplyInput(n).replyText)
           : void 0,
       c =
         (n.action === "reply" || n.action === "resolve") &&
@@ -261,13 +261,13 @@ function renderToolUseMessage(s, m) {
           : n.action === "write_db"
             ? "write database"
             : n.action === "room_send"
-              ? `room send ${LGe(ZSe(n).topic)}`
+              ? `room send ${formatArtifactRoomTopic(parseArtifactRoomSendInput(n).topic)}`
               : n.action === "resume_replies"
                 ? "resume auto-replies"
                 : n.action;
     if ((n.action === "status" || n.action === "verify") && n.url === void 0)
       return e(t, { children: d });
-    let a = n.action === "read_db" ? yce(n) : void 0,
+    let a = n.action === "read_db" ? resolveArtifactDbReadDir(n) : void 0,
       c =
         a?.kind === "dir"
           ? ` \u2192 ${truncatePathMiddle(sweepAskCopy(a.dir) ?? "(unprintable path)", 1024)}`
@@ -278,16 +278,16 @@ function renderToolUseMessage(s, m) {
       let f = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
         g = f !== null ? getShareEntry(f.slug) : void 0,
         p = shareAudienceParenthetical(g),
-        { opLabel: T, docTarget: y } = gjn(n),
-        { data: C, filePath: F } = b9(n),
+        { opLabel: T, docTarget: y } = describeArtifactDbWriteOp(n),
+        { data: C, filePath: F } = parseArtifactDbInput(n),
         z =
           T === DB_BATCH_OP
-            ? [Ion(w9(n)), kon(Pon(w9(n)))]
+            ? [dbBatchPayloadsForConsent(parseArtifactDbBatchWrites(n)), describeArtifactLocalFiles(dbBatchFileSpellings(parseArtifactDbBatchWrites(n)))]
                 .filter((B) => B !== "")
                 .join(" \u2014 ")
             : F !== void 0
               ? `from ${truncatePathMiddle(sweepAskCopy(F) ?? "(unprintable path)", 1024)}`
-              : E7(C),
+              : formatArtifactPayloadPreview(C),
         N = ownershipTag(g);
       return r(t, {
         children: [
@@ -307,7 +307,7 @@ function renderToolUseMessage(s, m) {
       let f = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
         g = f !== null ? getShareEntry(f.slug) : void 0,
         p = shareAudienceParenthetical(g),
-        T = E7(ZSe(n).data),
+        T = formatArtifactPayloadPreview(parseArtifactRoomSendInput(n).data),
         y = ownershipTag(g);
       return r(t, {
         children: [
@@ -403,7 +403,7 @@ function renderToolUseMessage(s, m) {
       p = Array.isArray(g) ? g.length : 0,
       T = n.from_url,
       y = typeof T === "string" ? parseArtifactUrl(T) : null,
-      C = c ? pPe(y !== null ? getShareEntry(y.slug) : void 0, "assets") : "";
+      C = c ? formatOwnershipParenthetical(y !== null ? getShareEntry(y.slug) : void 0, "assets") : "";
     return r(t, {
       children: [
         "copy ",
@@ -430,10 +430,10 @@ function renderToolUseMessage(s, m) {
       g = "list files",
       p = "";
     if (n.action === "read_file") {
-      let { path: T } = JSe(n);
+      let { path: T } = parseArtifactFilePathInput(n);
       g = `save file ${T !== void 0 ? truncatePathMiddle(sweepAskCopy(T) ?? "(unprintable path)", 256) : "(no path)"}`;
-      let y = n[gO] != null,
-        C = QSe(n, { outDirJudged: y });
+      let y = n[ARTIFACT_ASSET_TARGET_PIN] != null,
+        C = resolveArtifactReadDestination(n, { outDirJudged: y });
       p = ` \u2192 ${"dest" in C ? truncatePathMiddle(sweepAskCopy(C.dest) ?? "(unprintable path)", 1024) : "(no destination)"}`;
     }
     return r(t, {
@@ -449,9 +449,9 @@ function renderToolUseMessage(s, m) {
   }
   if (n.action === "pin" || n.action === "unpin") {
     let d = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
-      a = n[M4],
+      a = n[ARTIFACT_DISPLAY_TARGET],
       c = isRecord(a) ? a.title : void 0,
-      f = Nee(
+      f = truncateArtifactTitle(
         (d !== null ? getShareEntry(d.slug)?.title : void 0) ||
           (typeof c === "string" ? c : ""),
       );
@@ -471,9 +471,9 @@ function renderToolUseMessage(s, m) {
       a = d !== null ? getShareEntry(d.slug) : void 0,
       c = m?.verbose === !0,
       f = c ? ownershipTag(a) : "",
-      g = n[vut],
+      g = n[ARTIFACT_DELETE_TARGET],
       p = isRecord(g) ? g.title : void 0,
-      T = Nee(a?.title || (typeof p === "string" ? p : ""));
+      T = truncateArtifactTitle(a?.title || (typeof p === "string" ? p : ""));
     return r(t, {
       children: [
         "delete",
@@ -495,9 +495,9 @@ function renderToolUseMessage(s, m) {
       a = d !== null ? getShareEntry(d.slug) : void 0,
       c = m?.verbose === !0,
       f = c ? ownershipTag(a) : "",
-      { assetId: g } = Mee(n),
+      { assetId: g } = parseArtifactAssetInput(n),
       p = g !== void 0 && ASSET_ID_RE.test(g) ? g : "(no id)",
-      T = n.action === "read_asset" ? YSe(n) : void 0,
+      T = n.action === "read_asset" ? resolveArtifactAssetPath(n) : void 0,
       y =
         n.action === "delete_asset"
           ? `delete asset ${p}`
@@ -517,8 +517,8 @@ function renderToolUseMessage(s, m) {
   }
   let { file_path: b, url: w } = n,
     i = m?.verbose === !0,
-    l = i && isArtifactRoomFeatureEnabled() && kut(n) ? ROOM_CONSENT_CLAUSE.trimStart() : void 0,
-    u = Xb(n);
+    l = i && isArtifactRoomFeatureEnabled() && publishInputJoinsRoom(n) ? ROOM_CONSENT_CLAUSE.trimStart() : void 0,
+    u = getArtifactTypeUrl(n);
   if (u !== void 0) {
     let d = canonicalArtifactTargetFor(u, "(unrecognized address)"),
       a = b !== void 0 ? sweepProvenanceMarker(sweepAskCopy(b) ?? "(unprintable path)") : void 0;
@@ -578,13 +578,13 @@ function renderToolUseProgressMessage(s) {
   });
 }
 function X(s) {
-  let m = CNt(s);
+  let m = getArtifactResultKind(s);
   return (
     m === "handlers_doc" || m === "handler_result" || m === "script_result"
   );
 }
 function J(s) {
-  return "preview" in s && CNt(s) === "preview";
+  return "preview" in s && getArtifactResultKind(s) === "preview";
 }
 function renderToolResultMessage(s, m, n) {
   if (J(s)) {

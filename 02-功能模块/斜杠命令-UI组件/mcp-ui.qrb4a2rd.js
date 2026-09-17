@@ -39,7 +39,7 @@ import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
 import { Table, DimParenthetical, useMcpReconnect, useMcpToggleEnabled } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { _p } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { useCursorDeclaration } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -754,7 +754,7 @@ function wo(qr) {
   if (mt[0] !== Ge)
     ((qo = { line: 0, column: 0, active: Ge }), (mt[0] = Ge), (mt[1] = qo));
   else qo = mt[1];
-  let to = _p(qo);
+  let to = useCursorDeclaration(qo);
   const oo = Ge ? "suggestion" : void 0,
     no = Ge ? `${figures.pointer} ` : "  ",
     ro = Kr ? figures.arrowDown : figures.arrowRight;
@@ -793,7 +793,7 @@ function To(Nr) {
   if (q[0] !== fe)
     ((No = { line: 0, column: 0, active: fe }), (q[0] = fe), (q[1] = No));
   else No = q[1];
-  let so = _p(No),
+  let so = useCursorDeclaration(No),
     O,
     P;
   if (A.client.type === "disabled") {
@@ -968,7 +968,7 @@ function Ao(Yr) {
   if (ke[0] !== we)
     ((tn = { line: 0, column: 0, active: we }), (ke[0] = we), (ke[1] = tn));
   else tn = ke[1];
-  let uo = _p(tn),
+  let uo = useCursorDeclaration(tn),
     on;
   if (ke[2] !== Ie.needsAuth || ke[3] !== bt)
     ((on = Ie.needsAuth

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { BMn, jMn, $0, XMn, YMn, JMn, Dz } from "./chunk-0t0sve49.js";
+import { encodeMatcherTable, setHooksLogger, linkAbortSignal, getErrorMessage, formatNotAwaitedFailure, createHooksManager, takeFromMap } from "./chunk-0t0sve49.js";
 import { errorMessage } from "./chunk-h4f48kbj.js";
 import "./analytics-fields.js";
 import { formatAbortReason, HooksError, getErrorCauseString } from "./chunk-bzqqe6xh.js";
@@ -22,8 +22,8 @@ var H = (t) => ({
 });
 function g(t, n) {
   let e = t.opFailureOf(n);
-  if (!e) return XMn(n);
-  return YMn(e);
+  if (!e) return getErrorMessage(n);
+  return formatNotAwaitedFailure(e);
 }
 var O = (t, n) => {
   process.on("unhandledRejection", (e) =>
@@ -54,7 +54,7 @@ var x = ({
       (t.delete(n), p(new HooksError(d(r))));
       return;
     }
-    o = $0(c, { abort: u });
+    o = linkAbortSignal(c, { abort: u });
   });
 var T = (t, n) => (e, u) => {
   let c = ++t.nextCounter;
@@ -110,11 +110,11 @@ function R(t) {
   let n = H(t),
     { post: e, ports: u, pendingNext: c } = n,
     d = new Map();
-  jMn({
+  setHooksLogger({
     log: (p, o) => e({ type: "log", text: p, level: o }),
     hookFailed: (p) => e({ type: "hook_failed", ...p }),
   });
-  let a = JMn((p) => I(n, p), E(workerData));
+  let a = createHooksManager((p) => I(n, p), E(workerData));
   (O(n, a),
     (t.onmessage = (p) => {
       let o = p.data;
@@ -132,7 +132,7 @@ function R(t) {
                 i.postMessage({ type: "flushed", flushId: s.flushId });
                 return;
               }
-              let k = Dz(f, s.opId);
+              let k = takeFromMap(f, s.opId);
               s.type === "op_result"
                 ? k?.resolve(s.value)
                 : k?.reject(new HooksError(s.error));
@@ -143,7 +143,7 @@ function R(t) {
                   type: "loaded",
                   environmentId: r,
                   events: m.events,
-                  matchers: BMn(m.matchers),
+                  matchers: encodeMatcherTable(m.matchers),
                 });
               },
               (m) => {
@@ -161,7 +161,7 @@ function R(t) {
         }
         case "unload": {
           a.unload(o.environmentId);
-          let r = Dz(u, o.environmentId);
+          let r = takeFromMap(u, o.environmentId);
           if (r) (r.port.close(), w(r));
           return;
         }
@@ -242,7 +242,7 @@ function R(t) {
           return;
         case "next_result":
         case "next_error": {
-          let r = Dz(c, `${o.id}:${o.nextId}`);
+          let r = takeFromMap(c, `${o.id}:${o.nextId}`);
           o.type === "next_result"
             ? r?.resolve(o.result)
             : r?.reject(new HooksError(o.error));

@@ -60,16 +60,16 @@ import {
 } from "./chunk-jfk5mpe1.js";
 import { redactDaemonNonce, readControlKey, getDispatchDir, ATTACH_JOURNAL_NAMESPACE, getAttachJournalDir, getHostManagedDir, getHostManagedMarkerPath, getPtySocketPath, getControlSocketPath } from "./chunk-djserjj5.js";
 import {
-  Are,
-  hNe,
-  _Ne,
-  R8e,
-  c3t,
-  ryn,
-  Cre,
-  yj,
-  u3t,
-  k8e,
+  VALUE_TAKING_RESPAWN_FLAGS,
+  VALUE_TAKING_FLAGS,
+  MULTI_VALUE_FLAGS,
+  BOOLEAN_RESPAWN_FLAGS,
+  BOOLEAN_ENV_KEYS,
+  ALLOWED_PROVIDER_ENV_KEYS,
+  sanitizeRespawnFlags,
+  normalizeCliArgPaths,
+  VALUELESS_SHORT_FLAGS,
+  withReplyOnResumeFlag,
   BG_PROTO,
   SHORT_RE,
   DAEMON_DETACH_APC,
@@ -93,10 +93,10 @@ import {
   SUPERVISOR_DETACH_CODE,
   readRoster,
   updateRoster,
-  kSt,
-  M8e,
-  bj,
-  W_,
+  getProcessLiveness,
+  isProcessConfirmedLive,
+  isCarriableCliToken,
+  buildCarriableFlagPair,
   getJobsDir,
   getJobDir,
   jobStateKey,
@@ -115,8 +115,8 @@ import {
   isSettled,
   isExecLaunch,
   hasOutstandingAsk,
-  Ep,
-  al,
+  MAX_DETAIL_CHARS,
+  clipWithEllipsis,
 } from "./chunk-7wsy8vxb.js";
 import { controlRequest, openDaemonLease, subscribeControl } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { getLauncherConfigError, getLauncherErrorMessage, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
@@ -2100,10 +2100,10 @@ async function di(e, t, o, r, s, c, d) {
     De = r?.forkBoundaryAt,
     ge = r?.forkSessionId,
     He = r?.forkParentSessionId,
-    Ue = Cre(k >= 0 ? pe : Ii(pe));
+    Ue = sanitizeRespawnFlags(k >= 0 ? pe : Ii(pe));
   if (t === "shell") {
     let me = o ?? getCwd(),
-      re = yj(pe),
+      re = normalizeCliArgPaths(pe),
       _e = [
         ...pe.filter((wt, bt) => re[bt] !== wt),
         ...(BL(me) ? [me] : []),
@@ -2617,7 +2617,7 @@ async function pi({ jobId: e, state: t, prompt: o }, r, s, c) {
             ? void 0
             : /^(--?[A-Za-z][A-Za-z0-9-]{0,40})(?:=|$)/.exec(k)?.[1],
         )
-        .filter((k) => k !== void 0 && (R8e.has(k) || Are.has(k))),
+        .filter((k) => k !== void 0 && (BOOLEAN_RESPAWN_FLAGS.has(k) || VALUE_TAKING_RESPAWN_FLAGS.has(k))),
     );
   if (E.length > 0)
     process.stderr
@@ -2705,10 +2705,10 @@ function Ar(e) {
         if (!Ge(c)) r++;
         continue;
       }
-      if (d.length > 2 && (/^-r./.test(d) || Are.has(d.slice(0, 2)))) continue;
+      if (d.length > 2 && (/^-r./.test(d) || VALUE_TAKING_RESPAWN_FLAGS.has(d.slice(0, 2)))) continue;
       if (
-        (R8e.has(s) && s !== "--remote-control" && s !== "--rc") ||
-        u3t.has(d)
+        (BOOLEAN_RESPAWN_FLAGS.has(s) && s !== "--remote-control" && s !== "--rc") ||
+        VALUELESS_SHORT_FLAGS.has(d)
       )
         continue;
       if (!t.has(r + 1) && !Ge(c)) r++;
@@ -3552,7 +3552,7 @@ async function rmHandler(e, t, o = Tr(process.argv.slice(2))) {
 function Je(e) {
   let t = [],
     o = e;
-  while (/^-[a-zA-Z]./.test(o) && u3t.has(o.slice(0, 2)))
+  while (/^-[a-zA-Z]./.test(o) && VALUELESS_SHORT_FLAGS.has(o.slice(0, 2)))
     (t.push(o.slice(0, 2)), (o = `-${o.slice(2)}`));
   return { peeled: t, rest: o };
 }
@@ -3607,7 +3607,7 @@ function rewriteDispatchFlagValue(e, t, o, r) {
     if (v === "--") break;
     if (v === t || (o !== void 0 && v === o)) {
       if (e[p + 1] !== void 0) {
-        if (!bj(r)) ((c[p] = `${t}=${r}`), (c[p + 1] = null), (d = !0));
+        if (!isCarriableCliToken(r)) ((c[p] = `${t}=${r}`), (c[p + 1] = null), (d = !0));
         else if (e[p + 1] !== r) ((c[p + 1] = r), (d = !0));
         p++;
       }
@@ -3625,7 +3625,7 @@ function rewriteDispatchFlagValue(e, t, o, r) {
         continue;
       }
       if (E.length > 0 && k === o && e[p + 1] !== void 0) {
-        if (!bj(r))
+        if (!isCarriableCliToken(r))
           ((c[p] = `-${E.map((w) => w.slice(1)).join("")}`),
             (c[p + 1] = `${t}=${r}`),
             (d = !0));
@@ -3655,8 +3655,8 @@ function Se(e) {
       t.add(o + 1);
       continue;
     }
-    if (!s.includes("=") && hNe.has(s) && e[o + 1] !== void 0) {
-      if ((t.add(o + 1), _Ne.has(s))) {
+    if (!s.includes("=") && VALUE_TAKING_FLAGS.has(s) && e[o + 1] !== void 0) {
+      if ((t.add(o + 1), MULTI_VALUE_FLAGS.has(s))) {
         let c = o + 2;
         while (e[c] !== void 0 && !(e[c].length > 1 && e[c].startsWith("-")))
           (t.add(c), c++);
@@ -3856,11 +3856,11 @@ function Ii(e) {
       continue;
     }
     let { rest: c } = Je(s);
-    if (Are.has(c)) {
+    if (VALUE_TAKING_RESPAWN_FLAGS.has(c)) {
       o.push(s);
       continue;
     }
-    if (R8e.has(s)) {
+    if (BOOLEAN_RESPAWN_FLAGS.has(s)) {
       o.push(s);
       continue;
     }
@@ -3875,10 +3875,10 @@ function Ii(e) {
 }
 function callerProviderEnv() {
   let e = {};
-  for (let t of ryn) {
+  for (let t of ALLOWED_PROVIDER_ENV_KEYS) {
     let o = process.env[t];
     if (o === void 0) continue;
-    if (c3t.has(t)) {
+    if (BOOLEAN_ENV_KEYS.has(t)) {
       if (Ie(o)) e[t] = "1";
       continue;
     }
@@ -3904,7 +3904,7 @@ function Oi(e) {
   return t;
 }
 function Er(e) {
-  return al(
+  return clipWithEllipsis(
     stripAnsi(e)
       .replace(/[\s\x00-\x1f\x7f-\x9f]+/g, " ")
       .trim(),
@@ -4024,17 +4024,17 @@ function getDispatchExtraArgs() {
 function formatDispatchDefaultFlags(e) {
   if (!e) return [];
   return [
-    ...W_("--model", e.model),
-    ...W_("--effort", e.effort),
-    ...W_(
+    ...buildCarriableFlagPair("--model", e.model),
+    ...buildCarriableFlagPair("--effort", e.effort),
+    ...buildCarriableFlagPair(
       e.permissionModeInherited
         ? "--inherit-permission-mode"
         : "--permission-mode",
       e.permissionMode,
     ),
     ...(e.allowBypass ? ["--allow-dangerously-skip-permissions"] : []),
-    ...W_("--json-schema", e.jsonSchema),
-    ...W_("--append-system-prompt", e.appendSystemPrompt),
+    ...buildCarriableFlagPair("--json-schema", e.jsonSchema),
+    ...buildCarriableFlagPair("--append-system-prompt", e.appendSystemPrompt),
   ];
 }
 function dispatchAgentJob(e, t, o, r) {
@@ -4057,7 +4057,7 @@ async function Li(e, t, o, r) {
   n("[PERF:bg-dispatch-start]");
   let v = s.slice(0, 8),
     E = c ?? getCwd(),
-    k = d ? W_("--routine", d) : W_("--agent", e.name),
+    k = d ? buildCarriableFlagPair("--routine", d) : buildCarriableFlagPair("--agent", e.name),
     w = [...Qe().extraArgs, ...k, ...formatDispatchDefaultFlags(_)],
     O = getJobDir(v);
   try {
@@ -4247,7 +4247,7 @@ class xr {
             (clearAgentDefinitionsCache(), (p = await listCustomAgents(_, s).catch(() => [])));
           let v = resolveAgentTemplate(o, p).name,
             E = await spawnBgSession(
-              [...this.extraArgs, ...W_("--agent", v), ...formatDispatchDefaultFlags(o)],
+              [...this.extraArgs, ...buildCarriableFlagPair("--agent", v), ...formatDispatchDefaultFlags(o)],
               c,
               "spare",
               _,
@@ -4340,7 +4340,7 @@ async function claimSpareJob(e, t, o) {
       template: s,
       respawnFlags: [
         ...Qe().extraArgs,
-        ...W_("--agent", s.name),
+        ...buildCarriableFlagPair("--agent", s.name),
         ...formatDispatchDefaultFlags(r.defaults),
       ],
       intent: e,
@@ -4617,9 +4617,9 @@ async function respawnJob(e, t, o) {
       : ze.length > 0
         ? ze
         : d.routine
-          ? W_("--routine", d.routine)
+          ? buildCarriableFlagPair("--routine", d.routine)
           : d.template !== "bg"
-            ? W_("--agent", d.template)
+            ? buildCarriableFlagPair("--agent", d.template)
             : [],
     Pe = ye.findIndex((X) => X === "--agent" || X.startsWith("--agent=")),
     Oe = Pe !== -1 && ye[Pe] === "--agent",
@@ -4633,8 +4633,8 @@ async function respawnJob(e, t, o) {
       fe = resolveAgentTemplate({ agent: X }, ue).name;
     if (fe !== X)
       ye = Oe
-        ? ye.toSpliced(Pe, 2, ...W_("--agent", fe))
-        : ye.toSpliced(Pe, 1, ...W_("--agent", fe));
+        ? ye.toSpliced(Pe, 2, ...buildCarriableFlagPair("--agent", fe))
+        : ye.toSpliced(Pe, 1, ...buildCarriableFlagPair("--agent", fe));
   }
   let it = C,
     Ae = ge
@@ -4660,7 +4660,7 @@ ${t.initialPrompt}`
     });
   let Ne = [
       ...(Ue ? ["--resume", D] : []),
-      ...(t?.replyOnResume && Ue && !Ae ? k8e(ye) : ye),
+      ...(t?.replyOnResume && Ue && !Ae ? withReplyOnResumeFlag(ye) : ye),
       ...(Ae ? ["--", Ae] : []),
     ],
     Le = buildBridgeReattachEnv(
@@ -4893,7 +4893,7 @@ async function killJob(e, t, o, r) {
         let E = await readRoster({ silent: !0 }, r),
           k = E.workers[e];
         if (k !== void 0) {
-          let w = await kSt(k.pid, k.procStart);
+          let w = await getProcessLiveness(k.pid, k.procStart);
           if (w === "zombie")
             if (
               k.procStart !== void 0 &&
@@ -4942,7 +4942,7 @@ async function killOrphanedWorker(e, t) {
         } catch {}
       let p = Date.now() + 3000,
         v = !0;
-      while ((v = await M8e(_.pid, _.procStart)) && Date.now() < p)
+      while ((v = await isProcessConfirmedLive(_.pid, _.procStart)) && Date.now() < p)
         await sleep(100);
       if (v) {
         logEvent("tengu_bg_killjob_ctrl_fallback", { ctrlSent: o });
@@ -4950,7 +4950,7 @@ async function killOrphanedWorker(e, t) {
           process.kill(_.pid, "SIGTERM");
         } catch {}
         let E = Date.now() + 500;
-        while ((v = await M8e(_.pid, _.procStart)) && Date.now() < E)
+        while ((v = await isProcessConfirmedLive(_.pid, _.procStart)) && Date.now() < E)
           await sleep(100);
       }
       if (v) s = !1;
@@ -4966,7 +4966,7 @@ async function listAliveDaemonJobs(e) {
     };
   let o = await readRoster({ silent: !0 }, e),
     r = Object.entries(o.workers),
-    s = await Promise.all(r.map(([, c]) => M8e(c.pid, c.procStart)));
+    s = await Promise.all(r.map(([, c]) => isProcessConfirmedLive(c.pid, c.procStart)));
   return {
     shorts: new Set(r.filter((c, d) => s[d]).map(([c]) => c)),
     records: [],
@@ -4977,7 +4977,7 @@ async function probeDaemonJob(e, t) {
   if (o.ok && o.op === "has")
     return { alive: o.alive, present: o.present ?? o.alive, daemonUp: !0 };
   let r = (await readRoster({ silent: !0 }, t)).workers[e],
-    s = r !== void 0 && (await M8e(r.pid, r.procStart));
+    s = r !== void 0 && (await isProcessConfirmedLive(r.pid, r.procStart));
   return { alive: s, present: s, daemonUp: !1 };
 }
 async function isDaemonJobPresent(e) {
@@ -4988,7 +4988,7 @@ function applyReplyPatch(e, t) {
   return {
     ...e,
     ...(hasOutstandingAsk(e) && { state: "working" }),
-    detail: al(qr(t).replace(/\s+/g, " ").trim(), Ep),
+    detail: clipWithEllipsis(qr(t).replace(/\s+/g, " ").trim(), MAX_DETAIL_CHARS),
     tempo: "active",
     needs: void 0,
     block: void 0,
@@ -5101,7 +5101,7 @@ async function replyToJob(e, t, o, r, s, c) {
   if (w.code === "ENOCONN" || w.code === "ETIMEOUT") {
     if (!r && w.code === "ENOCONN") {
       let D = (await readRoster({ silent: !0 }, c)).workers[v?.daemonShort ?? e];
-      if (D && !(await M8e(D.pid, D.procStart)))
+      if (D && !(await isProcessConfirmedLive(D.pid, D.procStart)))
         return (
           logFeatureSad("job_reply", "job_reply_not_running"),
           _("sad", "job_reply_not_running"),

@@ -41,8 +41,8 @@ import { getVersionTarget, hasVersionTarget, parseVersionTimestamp } from "./chu
 import { terminateProcessGracefully, getDaemonLockPath, readDaemonLock, LOCK_VERIFY_ATTEMPTS, verifyProcessStartTime, classifyDaemonLockStaleness, isProcessIdentityKnown, getVerifiedDaemonLock, describeStopFailure } from "./daemon-lock.js";
 import { hasUidCollapse, redactDaemonNonce, readOrCreateControlKey, ensureDaemonRuntimeDir, UID_COLLAPSE_REFUSAL_MESSAGE, getControlSocketPath } from "./chunk-djserjj5.js";
 import {
-  k8e,
-  oyn,
+  withReplyOnResumeFlag,
+  withoutReplyOnResumeFlag,
   BG_PROTO,
   BG_PROTO_MIN,
   wrapDaemonHint,
@@ -1428,7 +1428,7 @@ function vn(t, e, o, c, s, d) {
               sessionId: E,
               transcriptPath: T.path,
               fork: !1,
-              flagArgs: ne ? k8e(I) : oyn(I),
+              flagArgs: ne ? withReplyOnResumeFlag(I) : withoutReplyOnResumeFlag(I),
             }
           : E !== m.sessionId
             ? { mode: "prompt", args: ["--session-id", E, ...I] }
@@ -2024,8 +2024,8 @@ async function Pn(t, e, o, c) {
                     fork: !1,
                     flagArgs:
                       F?.tempo === "active"
-                        ? k8e(F?.respawnFlags ?? D.respawnFlags)
-                        : oyn(F?.respawnFlags ?? D.respawnFlags),
+                        ? withReplyOnResumeFlag(F?.respawnFlags ?? D.respawnFlags)
+                        : withoutReplyOnResumeFlag(F?.respawnFlags ?? D.respawnFlags),
                   }
                 : me !== D.sessionId
                   ? {

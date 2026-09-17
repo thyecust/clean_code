@@ -39,7 +39,7 @@ import { createKeyedSerialQueue } from "../../01-核心基础设施/共享小工
 import { s, T, O, se, v, c, it, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { isAbsolute as bt } from "path";
-var Are = new Set([
+var VALUE_TAKING_RESPAWN_FLAGS = new Set([
     "--exec",
     "--model",
     "-m",
@@ -94,8 +94,8 @@ var Are = new Set([
     "--remote-control-session-name-prefix",
     "--json-schema",
   ]),
-  hNe = new Set([...Are, "--resume-session-at", "--resume-drops-turn"]),
-  _Ne = new Set([
+  VALUE_TAKING_FLAGS = new Set([...VALUE_TAKING_RESPAWN_FLAGS, "--resume-session-at", "--resume-drops-turn"]),
+  MULTI_VALUE_FLAGS = new Set([
     "--allowed-tools",
     "--allowedTools",
     "--disallowed-tools",
@@ -108,7 +108,7 @@ var Are = new Set([
     "--channels",
   ]),
   gt = new Set(["--plugin-dir", "--plugin-dir-no-mcp", "--plugin-url"]),
-  R8e = new Set([
+  BOOLEAN_RESPAWN_FLAGS = new Set([
     "--dangerously-skip-permissions",
     "--allow-dangerously-skip-permissions",
     "--strict-mcp-config",
@@ -125,12 +125,12 @@ var Are = new Set([
     "--remote-control",
     "--rc",
   ]),
-  c3t = new Set(["CLAUDE_CODE_SUBAGENT_MODEL_FORCE"]),
-  nyn = [...MODEL_ENV_VARS, ...CUSTOM_MODEL_OPTION_ENV_VARS, ...c3t],
-  ryn = new Set([
+  BOOLEAN_ENV_KEYS = new Set(["CLAUDE_CODE_SUBAGENT_MODEL_FORCE"]),
+  MODEL_ENV_KEYS = [...MODEL_ENV_VARS, ...CUSTOM_MODEL_OPTION_ENV_VARS, ...BOOLEAN_ENV_KEYS],
+  ALLOWED_PROVIDER_ENV_KEYS = new Set([
     "CLAUDE_CONFIG_DIR",
     "CLAUDE_INTERNAL_FC_OVERRIDES",
-    ...nyn,
+    ...MODEL_ENV_KEYS,
     ...PROVIDER_CONFIG_ENV_VARS,
     "AWS_REGION",
     "AWS_DEFAULT_REGION",
@@ -148,7 +148,7 @@ function Le(e) {
   let t = {},
     r = [];
   for (let [o, d] of Object.entries(e))
-    if (ryn.has(o) && (!c3t.has(o) || Ie(d))) t[o] = d;
+    if (ALLOWED_PROVIDER_ENV_KEYS.has(o) && (!BOOLEAN_ENV_KEYS.has(o) || Ie(d))) t[o] = d;
     else r.push(o);
   if (r.length === 0) return e;
   return (
@@ -159,7 +159,7 @@ function Le(e) {
     Object.keys(t).length > 0 ? t : void 0
   );
 }
-function Cre(e) {
+function sanitizeRespawnFlags(e) {
   let t = [],
     r = [];
   for (let o = 0; o < e.length; o++) {
@@ -170,15 +170,15 @@ function Cre(e) {
     }
     let g = d.indexOf("="),
       p = g === -1 ? d : d.slice(0, g);
-    if (g !== -1 && !Are.has(p) && R8e.has(p)) {
+    if (g !== -1 && !VALUE_TAKING_RESPAWN_FLAGS.has(p) && BOOLEAN_RESPAWN_FLAGS.has(p)) {
       (t.push(p), r.push(d));
       continue;
     }
-    let y = g === -1 && Are.has(p),
-      w = g === -1 ? R8e.has(p) || (y && e[o + 1] !== void 0) : Are.has(p),
+    let y = g === -1 && VALUE_TAKING_RESPAWN_FLAGS.has(p),
+      w = g === -1 ? BOOLEAN_RESPAWN_FLAGS.has(p) || (y && e[o + 1] !== void 0) : VALUE_TAKING_RESPAWN_FLAGS.has(p),
       f = w ? t : r;
     if ((f.push(d), y && e[o + 1] !== void 0)) f.push(e[++o]);
-    if (!w || (y && _Ne.has(p)))
+    if (!w || (y && MULTI_VALUE_FLAGS.has(p)))
       while (e[o + 1] !== void 0 && !e[o + 1].startsWith("-")) f.push(e[++o]);
   }
   if (r.length > 0)
@@ -195,8 +195,8 @@ function ft(e) {
       g = d.indexOf("="),
       p = g === -1 ? d : d.slice(0, g),
       y = [d];
-    if (g === -1 && Are.has(p) && e[o + 1] !== void 0) {
-      if ((y.push(e[++o]), _Ne.has(p)))
+    if (g === -1 && VALUE_TAKING_RESPAWN_FLAGS.has(p) && e[o + 1] !== void 0) {
+      if ((y.push(e[++o]), MULTI_VALUE_FLAGS.has(p)))
         while (e[o + 1] !== void 0 && !e[o + 1].startsWith("-")) y.push(e[++o]);
     }
     t.push({ name: p, toks: y });
@@ -204,12 +204,12 @@ function ft(e) {
   let r = new Map();
   for (let o = 0; o < t.length; o++) {
     let d = t[o];
-    if (Are.has(d.name) && !_Ne.has(d.name) && !gt.has(d.name))
+    if (VALUE_TAKING_RESPAWN_FLAGS.has(d.name) && !MULTI_VALUE_FLAGS.has(d.name) && !gt.has(d.name))
       r.set(d.name, o);
   }
   return t.filter((o, d) => (r.get(o.name) ?? d) === d).flatMap((o) => o.toks);
 }
-function yj(e) {
+function normalizeCliArgPaths(e) {
   let t = [];
   for (let r = 0; r < e.length; r++) {
     let o = e[r];
@@ -218,29 +218,29 @@ function yj(e) {
       break;
     }
     let d = o.startsWith("--") ? o.indexOf("=") : -1;
-    if (d !== -1 && (hNe.has(o.slice(0, d)) || ce.has(o.slice(0, d)))) {
+    if (d !== -1 && (VALUE_TAKING_FLAGS.has(o.slice(0, d)) || ce.has(o.slice(0, d)))) {
       t.push(o.slice(0, d + 1) + oe(o.slice(0, d), o.slice(d + 1)));
       continue;
     }
     if (/^-[a-zA-Z].+/.test(o)) {
       let g = 1;
-      while (g < o.length - 1 && u3t.has(`-${o[g]}`)) g++;
+      while (g < o.length - 1 && VALUELESS_SHORT_FLAGS.has(`-${o[g]}`)) g++;
       let p = `-${o[g]}`;
-      if (o.length > g + 1 && (hNe.has(p) || ce.has(p))) {
+      if (o.length > g + 1 && (VALUE_TAKING_FLAGS.has(p) || ce.has(p))) {
         t.push(o.slice(0, g + 1) + oe(p, o.slice(g + 1)));
         continue;
       }
-      if (o.length === g + 1 && g > 1 && (hNe.has(p) || ce.has(p))) {
-        if ((t.push(o), hNe.has(p) && e[r + 1] !== void 0)) {
-          if ((t.push(oe(p, e[++r])), _Ne.has(p)))
+      if (o.length === g + 1 && g > 1 && (VALUE_TAKING_FLAGS.has(p) || ce.has(p))) {
+        if ((t.push(o), VALUE_TAKING_FLAGS.has(p) && e[r + 1] !== void 0)) {
+          if ((t.push(oe(p, e[++r])), MULTI_VALUE_FLAGS.has(p)))
             while (e[r + 1] !== void 0 && !Se(e[r + 1])) t.push(oe(p, e[++r]));
         } else if (ce.has(p) && e[r + 1] !== void 0 && !Se(e[r + 1]))
           t.push(Fb(e[++r]));
         continue;
       }
     }
-    if ((t.push(o), hNe.has(o) && e[r + 1] !== void 0)) {
-      if ((t.push(oe(o, e[++r])), _Ne.has(o)))
+    if ((t.push(o), VALUE_TAKING_FLAGS.has(o) && e[r + 1] !== void 0)) {
+      if ((t.push(oe(o, e[++r])), MULTI_VALUE_FLAGS.has(o)))
         while (e[r + 1] !== void 0 && !Se(e[r + 1])) t.push(oe(o, e[++r]));
     } else if (ce.has(o) && e[r + 1] !== void 0 && !Se(e[r + 1]))
       t.push(Fb(e[++r]));
@@ -259,18 +259,18 @@ function oe(e, t) {
   return mt.has(e) ? t : Fb(t);
 }
 var ce = new Set(["-r", "--resume"]),
-  u3t = new Set(["-c", "-p", "-h", "-v"]);
+  VALUELESS_SHORT_FLAGS = new Set(["-c", "-p", "-h", "-v"]);
 function Se(e) {
   return e.length > 1 && e.startsWith("-");
 }
-function k8e(e) {
+function withReplyOnResumeFlag(e) {
   return e.includes("--reply-on-resume") ? [...e] : [...e, "--reply-on-resume"];
 }
-function oyn(e) {
+function withoutReplyOnResumeFlag(e) {
   return e.filter((t) => t !== "--reply-on-resume");
 }
 var Oe = ["shell", "slash", "fleet", "spare", "respawn"];
-function cYn(e) {
+function isBgDispatchSource(e) {
   return Oe.includes(e);
 }
 var BG_PROTO = 1,
@@ -429,7 +429,7 @@ var BgDispatchSchema = createLazyValue(() =>
       launch: Ko("mode", [
         c({
           mode: k("prompt"),
-          args: v(s()).transform(yj),
+          args: v(s()).transform(normalizeCliArgPaths),
           restoresTranscript: O().optional(),
         }),
         c({
@@ -437,7 +437,7 @@ var BgDispatchSchema = createLazyValue(() =>
           sessionId: s().transform(Fb),
           transcriptPath: s().transform(Fb).optional(),
           fork: O(),
-          flagArgs: v(s()).transform(yj),
+          flagArgs: v(s()).transform(normalizeCliArgPaths),
           restoresTranscript: O().optional(),
         }),
         c({
@@ -450,7 +450,7 @@ var BgDispatchSchema = createLazyValue(() =>
       reattachEnv: fe(s(), s()).optional(),
       worktree: c({ path: s().transform(Fb), ownershipToken: s() }).optional(),
       isolation: X(["none", "worktree"]).default("none"),
-      respawnFlags: v(s()).default([]).transform(yj),
+      respawnFlags: v(s()).default([]).transform(normalizeCliArgPaths),
       attachStallRespawns: T().int().optional(),
       agent: s().optional(),
       routine: s().optional(),
@@ -631,7 +631,7 @@ import {
 } from "fs/promises";
 import { dirname as xt } from "path";
 import { lstat as Rt } from "fs/promises";
-async function f3t(e) {
+async function inspectRegularFileForRead(e) {
   try {
     let t = await Rt(e);
     return t.isFile()
@@ -641,7 +641,7 @@ async function f3t(e) {
     return W(t) ? { kind: "proceed" } : { kind: "error", error: t };
   }
 }
-function m3t(e) {
+function isReadRefusedError(e) {
   return (
     e?.code === "Failed" &&
     (e.telemetryCode === "ENXIO" ||
@@ -842,7 +842,7 @@ async function Ue(e, t, r, o) {
   return { ...Y(), parseFailed: !0 };
 }
 async function Ke(e, t) {
-  let r = await f3t(getRosterFilePath());
+  let r = await inspectRegularFileForRead(getRosterFilePath());
   if (r.kind === "refused") {
     if (!t?.silent)
       (logError(Error("roster.json is not a regular file \u2014 removing")),
@@ -879,7 +879,7 @@ async function Pt(e, t) {
       return;
     });
   if (r === void 0 || !r.ok) {
-    if (r !== void 0 && m3t(r.error))
+    if (r !== void 0 && isReadRefusedError(r.error))
       return {
         roster: await Ue(
           e,
@@ -1030,11 +1030,11 @@ function Xe(e) {
   if (t === void 0) return !0;
   return t.fires >= 1 && t.keepalive !== !0;
 }
-function vpe(e) {
+function getBudgetProgressBucket(e) {
   if (!e || e.target <= 0) return -1;
   return Math.floor((20 * e.spent) / e.target);
 }
-function Rpe(e) {
+function getFanItemsFingerprint(e) {
   if (!e || e.length === 0) return "";
   return e
     .map((t) => {
@@ -1043,7 +1043,7 @@ function Rpe(e) {
     })
     .join("|");
 }
-function mNe() {
+function getInFlightCounters() {
   let {
     tasks: e,
     queued: t,
@@ -1059,42 +1059,42 @@ function mNe() {
     ...(d !== void 0 && { wake: d }),
   };
 }
-function tyn(e) {
+function publishInFlightSnapshot(e) {
   getBgJobRuntimeState().publishInFlightSnapshot(e);
 }
-function gNe() {
+function getInFlightSnapshot() {
   return { ...getBgJobRuntimeState().inFlightSnapshot };
 }
-function lYn(e) {
+function subscribeInFlightSnapshot(e) {
   return getBgJobRuntimeState().inFlightSnapshotChanged.subscribe(e);
 }
-async function kSt(e, t) {
+async function getProcessLiveness(e, t) {
   if (!isProcessRunning(e)) return "dead_pid";
   if (!(await isSameProcessAsync(e, t))) return "procstart_mismatch";
   if (await isExitedProcessAsync(e)) return "zombie";
   return "live";
 }
-async function M8e(e, t) {
-  return (await kSt(e, t)) === "live";
+async function isProcessConfirmedLive(e, t) {
+  return (await getProcessLiveness(e, t)) === "live";
 }
 var Bt = /^-|^[A-Za-z][A-Za-z0-9+.-]+:\/\//;
-function bj(e) {
+function isCarriableCliToken(e) {
   return !Bt.test(e) && !e.includes("\x00");
 }
-function uyn() {
+function getCarriableModelArg() {
   let e = Ec();
   if (e === void 0 || getAPIProvider() === "mantle") return;
   if (e === null) return "default";
   if (!e) return;
   if (isModelRetiredOrRemapped(parseUserSpecifiedModel(e))) return;
   if (vz()?.fallbackModel === e) return;
-  if (!bj(e)) return;
+  if (!isCarriableCliToken(e)) return;
   return e;
 }
-function dYn() {
+function isRestrictedModeEnabled() {
   return _B().includes("--restricted");
 }
-function vre(e, t) {
+function buildCarriableSessionFlags(e, t) {
   let r = Ye(e.additionalWorkingDirectories),
     o = [],
     d = !1;
@@ -1103,7 +1103,7 @@ function vre(e, t) {
     else if (w === "--add-dir") d = !0;
     else o.push(w);
   let g = _ve(t),
-    p = uyn(),
+    p = getCarriableModelArg(),
     y =
       e.isBypassPermissionsModeAvailable &&
       !o.includes("--allow-dangerously-skip-permissions");
@@ -1117,11 +1117,11 @@ function vre(e, t) {
     e.mode,
   ];
 }
-function dyn(e) {
+function isCarriableToolRule(e) {
   let t = splitToolRuleList([e]);
-  return t.length === 1 && t[0] === e && bj(e);
+  return t.length === 1 && t[0] === e && isCarriableCliToken(e);
 }
-function rK(e, t) {
+function collectUncarriableLaunchReasons(e, t) {
   return [
     ...(t ? [`launch flags: ${FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION}`] : []),
     ...((e.alwaysDenyRules.session ?? []).length > 0 ||
@@ -1134,32 +1134,32 @@ function rK(e, t) {
     ...([
       ...(e.alwaysAllowRules.cliArg ?? []),
       ...(e.alwaysDenyRules.cliArg ?? []),
-    ].some((r) => !dyn(r))
+    ].some((r) => !isCarriableToolRule(r))
       ? ["permission rules a command line cannot carry intact"]
       : []),
-    ...(Ye(e.additionalWorkingDirectories).some((r) => !bj(r))
+    ...(Ye(e.additionalWorkingDirectories).some((r) => !isCarriableCliToken(r))
       ? ["added directories a command line cannot carry intact"]
       : []),
   ];
 }
-function Rre(e, t) {
+function buildCarriableRuleFlags(e, t) {
   return [
     ...(e.alwaysAllowRules.cliArg ?? []).flatMap((r) => ["--allowed-tools", r]),
     ...(e.alwaysDenyRules.cliArg ?? []).flatMap((r) => [
       "--disallowed-tools",
       r,
     ]),
-    ...W_("--agent", t.agent),
-    ...W_("--agents", t.agents),
-    ...W_("--append-system-prompt", t.appendSystemPrompt),
-    ...W_("--system-prompt-snapshot", pyn(t.systemPromptSnapshot)),
+    ...buildCarriableFlagPair("--agent", t.agent),
+    ...buildCarriableFlagPair("--agents", t.agents),
+    ...buildCarriableFlagPair("--append-system-prompt", t.appendSystemPrompt),
+    ...buildCarriableFlagPair("--system-prompt-snapshot", formatBooleanFlagValue(t.systemPromptSnapshot)),
   ];
 }
-function W_(e, t) {
+function buildCarriableFlagPair(e, t) {
   if (!t) return [];
-  return bj(t) ? [e, t] : [`${e}=${t}`];
+  return isCarriableCliToken(t) ? [e, t] : [`${e}=${t}`];
 }
-function pyn(e) {
+function formatBooleanFlagValue(e) {
   return e === void 0 ? void 0 : e ? "on" : "off";
 }
 function Ye(e) {
@@ -1236,8 +1236,8 @@ class et {
   drafts = new Map();
   pins = new Map();
 }
-var h3t = new j(() => new et());
-async function _3t(e, t, { cap: r, screens: o, screenKey: d, heal: g }) {
+var jobDraftStore = new j(() => new et());
+async function readJobDraftText(e, t, { cap: r, screens: o, screenKey: d, heal: g }) {
   if (o.get(d) !== "ok") {
     let w = await e.statMeta(t);
     if (!w.ok) {
@@ -1343,7 +1343,7 @@ var Ae = createLazyValue(() =>
       routine: s().optional(),
       respawnFlags: v(s())
         .default([])
-        .transform((e) => yj(Cre(e))),
+        .transform((e) => normalizeCliArgPaths(sanitizeRespawnFlags(e))),
       bgIsolation: X(["none", "worktree"])
         .optional()
         .catch(void 0),
@@ -1897,7 +1897,7 @@ async function readPinnedJobIds(e) {
   }
 }
 async function Xt(e) {
-  let t = await _3t(e, STORAGE_KEYS.jobPins(), {
+  let t = await readJobDraftText(e, STORAGE_KEYS.jobPins(), {
     cap: V,
     screens: ut(),
     screenKey: Q(),
@@ -1906,7 +1906,7 @@ async function Xt(e) {
   return Be(t ?? void 0);
 }
 function ut() {
-  return h3t.of(B().host).pins;
+  return jobDraftStore.of(B().host).pins;
 }
 function Be(e) {
   if (e === void 0 || e.length > V) return new Set();
@@ -2073,7 +2073,7 @@ async function syncRespawnFlag(e, t, r, o, d, g, p) {
           D.push(L);
         }
         if (r === null) return D;
-        return [...D, ...W_(e, r)];
+        return [...D, ...buildCarriableFlagPair(e, r)];
       },
       C = _(w.respawnFlags);
     if (
@@ -2107,7 +2107,7 @@ async function appendRespawnFlag(e, t, r) {
     invalidateJobStateCache(o);
     let d = await readJobState(o, r);
     if (!d?.respawnFlags) return;
-    let g = W_(e, t);
+    let g = buildCarriableFlagPair(e, t);
     for (let y = 0; y <= d.respawnFlags.length - g.length; y++)
       if (g.every((w, f) => d.respawnFlags[y + f] === w)) return;
     invalidateJobStateCache(o);
@@ -2423,7 +2423,7 @@ async function adoptRosterOrphans(e, t, r) {
     p = await Promise.all(
       d.map((f) => {
         let _ = g.workers[f.short];
-        return kSt(f.pid, _?.pid === f.pid ? _.procStart : void 0);
+        return getProcessLiveness(f.pid, _?.pid === f.pid ? _.procStart : void 0);
       }),
     );
   for (let [f, _] of d.entries())
@@ -2597,10 +2597,10 @@ var rn = createLazyValue(() =>
     result:
       "one short sentence naming the finished deliverable \u2014 no sub-clauses or bullet summaries",
   },
-  Ep = 800,
-  pYn = 2000,
+  MAX_DETAIL_CHARS = 800,
+  CLASSIFY_TAIL_CHARS = 2000,
   an = new Set(["done", "failed", "stopped"]);
-function al(e, t) {
+function clipWithEllipsis(e, t) {
   if (e.length <= t) return e;
   let r = t - 1,
     o = e.charCodeAt(r - 1);
@@ -2634,7 +2634,7 @@ function te(e, t) {
   }
   return r !== null;
 }
-function fYn(e, t = "", r) {
+function classifyApiErrorToStatus(e, t = "", r) {
   if (r === "dlp_request_denied")
     return { state: "failed", needs: "API error" };
   switch (e) {
@@ -2703,7 +2703,7 @@ function pn(e, t, r) {
     }
   return o;
 }
-function mYn(e) {
+function classifyClosingShape(e) {
   let t = e.trim();
   if (!t) return "empty";
   if (te(t, t.length)) return "code-fence";
@@ -2718,7 +2718,7 @@ function mYn(e) {
   if (/(?:^|\n)\s*(?:[-*\u2022]|\d+\.|[|])\s/.test(d)) return "list-or-table";
   return "declarative";
 }
-function OSt(e) {
+function preclassifyStatusFromMarkers(e) {
   let t = e.trim();
   if (!t) return null;
   let r = t.slice(-800),
@@ -2733,7 +2733,7 @@ function OSt(e) {
   }
   let p = pn(t, d, g);
   if (o && !p) {
-    let E = al(o[1], Ep);
+    let E = clipWithEllipsis(o[1], MAX_DETAIL_CHARS);
     if (
       [...d.matchAll(/(?:^|\n)\s*next:\s*\S/gi)].some(
         (P) => !te(t, g + P.index),
@@ -2759,7 +2759,7 @@ function OSt(e) {
       branch: "failed-marker",
       state: "failed",
       tempo: "idle",
-      detail: al(p.capture, Ep),
+      detail: clipWithEllipsis(p.capture, MAX_DETAIL_CHARS),
       output: {},
     };
   if (p?.state === "blocked") {
@@ -2770,7 +2770,7 @@ function OSt(e) {
         d,
       )
     ) {
-      let I = al(p.capture, Ep);
+      let I = clipWithEllipsis(p.capture, MAX_DETAIL_CHARS);
       return {
         branch: "blocked-marker",
         state: "blocked",
@@ -2780,7 +2780,7 @@ function OSt(e) {
       };
     }
     if (o) {
-      let I = al(o[1], Ep);
+      let I = clipWithEllipsis(o[1], MAX_DETAIL_CHARS);
       return {
         branch: "blocked-disclaimed",
         state: "done",
@@ -2800,7 +2800,7 @@ function OSt(e) {
       r.lastIndexOf("? ", r.length - 2),
     );
     if (!te(t, t.length - r.length + E)) {
-      let I = al(r.slice(E + 1).trim(), Ep);
+      let I = clipWithEllipsis(r.slice(E + 1).trim(), MAX_DETAIL_CHARS);
       if (gn.test(I)) return null;
       return {
         branch: "trailing-q",
@@ -2830,7 +2830,7 @@ function OSt(e) {
       branch: "wait-external",
       state: "working",
       tempo: "idle",
-      detail: al(_[0], Ep),
+      detail: clipWithEllipsis(_[0], MAX_DETAIL_CHARS),
       output: {},
     };
   let C =
@@ -2838,7 +2838,7 @@ function OSt(e) {
       w,
     );
   if (C && !f) {
-    let E = al(w.slice(C.index).trim(), Ep);
+    let E = clipWithEllipsis(w.slice(C.index).trim(), MAX_DETAIL_CHARS);
     return {
       branch: "awaiting-user",
       state: "blocked",
@@ -2852,7 +2852,7 @@ function OSt(e) {
       w,
     );
   if (F && !f) {
-    let E = al(w.slice(F.index).trim(), Ep);
+    let E = clipWithEllipsis(w.slice(F.index).trim(), MAX_DETAIL_CHARS);
     return {
       branch: "ask-verb",
       state: "blocked",
@@ -2871,7 +2871,7 @@ function OSt(e) {
       branch: "auth-prose",
       state: "blocked",
       tempo: "blocked",
-      needs: al(w, Ep),
+      needs: clipWithEllipsis(w, MAX_DETAIL_CHARS),
       detail: "authentication required",
     };
   if (!f && fn.test(w) && !mn.test(w))
@@ -2879,7 +2879,7 @@ function OSt(e) {
       branch: "working-verb",
       state: "working",
       tempo: "active",
-      detail: al(w, Ep),
+      detail: clipWithEllipsis(w, MAX_DETAIL_CHARS),
       output: {},
     };
   if (!f && hn.test(w))
@@ -2887,17 +2887,17 @@ function OSt(e) {
       branch: "agents-status",
       state: "working",
       tempo: "idle",
-      detail: al(w, Ep),
+      detail: clipWithEllipsis(w, MAX_DETAIL_CHARS),
     };
   if (!f && bn.test(w))
     return {
       branch: "will-check-back",
       state: "working",
       tempo: "idle",
-      detail: al(w, Ep),
+      detail: clipWithEllipsis(w, MAX_DETAIL_CHARS),
     };
   if (!f && wn.test(w)) {
-    let E = al(w, Ep);
+    let E = clipWithEllipsis(w, MAX_DETAIL_CHARS);
     return {
       branch: "cant-proceed",
       state: "blocked",
@@ -2911,10 +2911,10 @@ function OSt(e) {
       branch: "giving-up",
       state: "failed",
       tempo: "idle",
-      detail: al(w, Ep),
+      detail: clipWithEllipsis(w, MAX_DETAIL_CHARS),
     };
   if (!f && yn.test(w)) {
-    let E = al(w, Ep);
+    let E = clipWithEllipsis(w, MAX_DETAIL_CHARS);
     return {
       branch: "pushed-committed",
       state: "done",
@@ -2928,10 +2928,10 @@ function OSt(e) {
       branch: "ready-for",
       state: "done",
       tempo: "idle",
-      detail: al(w, Ep),
+      detail: clipWithEllipsis(w, MAX_DETAIL_CHARS),
     };
   if (!f && Rn.test(w)) {
-    let E = al(w, Ep);
+    let E = clipWithEllipsis(w, MAX_DETAIL_CHARS);
     return {
       branch: "verdict-marker",
       state: "done",
@@ -2941,7 +2941,7 @@ function OSt(e) {
     };
   }
   if (!f && En.test(w)) {
-    let E = al(w, Ep);
+    let E = clipWithEllipsis(w, MAX_DETAIL_CHARS);
     return {
       branch: "please-do-x",
       state: "blocked",
@@ -2951,7 +2951,7 @@ function OSt(e) {
     };
   }
   if (!f && An.test(w)) {
-    let E = al(w, Ep);
+    let E = clipWithEllipsis(w, MAX_DETAIL_CHARS);
     return {
       branch: "stopping-here",
       state: "blocked",
@@ -2962,7 +2962,7 @@ function OSt(e) {
   }
   return null;
 }
-function Tyn(e) {
+function classifyStatusFromTail(e) {
   let t = e
     .split(
       `
@@ -2974,7 +2974,7 @@ function Tyn(e) {
     branch: "heuristic",
     state: "working",
     tempo: "idle",
-    detail: t ? al(t, Ep) : "\u2014",
+    detail: t ? clipWithEllipsis(t, MAX_DETAIL_CHARS) : "\u2014",
   };
 }
 var gn = /\b(?:want|like) me to\b|\b(?:shall|should) I also\b/i,
@@ -2997,7 +2997,7 @@ var gn = /\b(?:want|like) me to\b|\b(?:shall|should) I also\b/i,
     /^Please (?:start|run|provide|grant|export|add|install|configure|give me|paste|point me|set (?:the |up |`?[A-Z][A-Z0-9_]+\b))/,
   An =
     /^(?:Stopping here|I've stopped here|Parked (?:the|this) branch|Paused here)(?:\.|$| \u2014| -| until| pending| since| because)/i,
-  gYn = `A user kicked off a Claude Code agent to do a coding task and walked away. Read the tail of what the agent just said and decide which of four states it's in, so the system knows whether to notify the user.
+  STATUS_CLASSIFIER_SYSTEM_PROMPT = `A user kicked off a Claude Code agent to do a coding task and walked away. Read the tail of what the agent just said and decide which of four states it's in, so the system knows whether to notify the user.
 
 The classification drives a phone notification: "blocked" pings the user to come back; everything else doesn't. So the question you're really answering is: does the user need to come back right now, and if not, is the work finished or still going? A false "blocked" is an annoying interruption for nothing. A false "done" or "working" when the agent is actually stuck waiting on the user means the work sits idle until they happen to check.
 
@@ -3176,7 +3176,7 @@ OUTPUT \u2014 respond with ONLY this JSON, no code fences:
 
 "output.result": one-sentence headline naming a finished deliverable (direct answer, URL/path the agent produced, command the user should run). If the tail has \`result:\` on its own line, that line IS the result. Omit ({}) when still working, or when it would just restate the state.
 `;
-function hYn(e) {
+function buildStatusClassifierPrompt(e) {
   let { tail: t, prev: r, latestAsk: o, toolSummary: d, minsInState: g } = e;
   return `Current state: ${r} (for ${g}m)
 Tool calls so far: ${d || "none"}${
@@ -3189,7 +3189,7 @@ User's most recent ask: "${o}"`
 Assistant message tail (last ${t.length} chars):
 ${t}`;
 }
-function _Yn(e) {
+function parseStatusClassifierResponse(e) {
   let t = e.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, ""),
     r = t.indexOf("{"),
     o = t.lastIndexOf("}");
@@ -3206,7 +3206,7 @@ function _Yn(e) {
 function ye(e) {
   return typeof e === "string" && e ? e : void 0;
 }
-function DSt(e, t, r) {
+function normalizeStatusClassification(e, t, r) {
   let o = ye(e.state),
     d = o && Object.hasOwn(on, o) ? o : (r?.state ?? t),
     g = ye(e.tempo),
@@ -3220,7 +3220,7 @@ function DSt(e, t, r) {
   if (w && typeof w === "object")
     for (let [_, C] of Object.entries(w)) {
       let F = ye(C);
-      if (F && Object.hasOwn(sn, _)) y[_] = al(F, Ep);
+      if (F && Object.hasOwn(sn, _)) y[_] = clipWithEllipsis(F, MAX_DETAIL_CHARS);
     }
   let f = ye(e.needs) ?? (p === "blocked" ? r?.needs : void 0);
   return {
@@ -3233,25 +3233,25 @@ function DSt(e, t, r) {
   };
 }
 export {
-  vpe,
-  Rpe,
-  mNe,
-  tyn,
-  gNe,
-  lYn,
-  Are,
-  hNe,
-  _Ne,
-  R8e,
-  c3t,
-  nyn,
-  ryn,
-  Cre,
-  yj,
-  u3t,
-  k8e,
-  oyn,
-  cYn,
+  getBudgetProgressBucket,
+  getFanItemsFingerprint,
+  getInFlightCounters,
+  publishInFlightSnapshot,
+  getInFlightSnapshot,
+  subscribeInFlightSnapshot,
+  VALUE_TAKING_RESPAWN_FLAGS,
+  VALUE_TAKING_FLAGS,
+  MULTI_VALUE_FLAGS,
+  BOOLEAN_RESPAWN_FLAGS,
+  BOOLEAN_ENV_KEYS,
+  MODEL_ENV_KEYS,
+  ALLOWED_PROVIDER_ENV_KEYS,
+  sanitizeRespawnFlags,
+  normalizeCliArgPaths,
+  VALUELESS_SHORT_FLAGS,
+  withReplyOnResumeFlag,
+  withoutReplyOnResumeFlag,
+  isBgDispatchSource,
   BG_PROTO,
   BG_PROTO_MIN,
   SHORT_RE,
@@ -3283,29 +3283,29 @@ export {
   RosterSchema,
   ControlRequestSchema,
   DAEMON_LEASE_LABELS,
-  f3t,
-  m3t,
+  inspectRegularFileForRead,
+  isReadRefusedError,
   rosterKey,
   readRoster,
   bgShort,
   updateRoster,
-  kSt,
-  M8e,
-  bj,
-  uyn,
-  dYn,
-  vre,
-  dyn,
-  rK,
-  Rre,
-  W_,
-  pyn,
+  getProcessLiveness,
+  isProcessConfirmedLive,
+  isCarriableCliToken,
+  getCarriableModelArg,
+  isRestrictedModeEnabled,
+  buildCarriableSessionFlags,
+  isCarriableToolRule,
+  collectUncarriableLaunchReasons,
+  buildCarriableRuleFlags,
+  buildCarriableFlagPair,
+  formatBooleanFlagValue,
   UNGROUPED,
   EARLIER,
   isReservedGroupName,
   sanitizeGroupName,
-  h3t,
-  _3t,
+  jobDraftStore,
+  readJobDraftText,
   getJobsDir,
   getJobDir,
   getOwnJobShortId,
@@ -3357,15 +3357,15 @@ export {
   isLoopJob,
   isSelfDriving,
   writeReapedTerminalState,
-  Ep,
-  pYn,
-  al,
-  fYn,
-  mYn,
-  OSt,
-  Tyn,
-  gYn,
-  hYn,
-  _Yn,
-  DSt,
+  MAX_DETAIL_CHARS,
+  CLASSIFY_TAIL_CHARS,
+  clipWithEllipsis,
+  classifyApiErrorToStatus,
+  classifyClosingShape,
+  preclassifyStatusFromMarkers,
+  classifyStatusFromTail,
+  STATUS_CLASSIFIER_SYSTEM_PROMPT,
+  buildStatusClassifierPrompt,
+  parseStatusClassifierResponse,
+  normalizeStatusClassification,
 };

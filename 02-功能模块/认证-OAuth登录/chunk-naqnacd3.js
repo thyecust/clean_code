@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { gce, BSe, jSe } from "../MCP客户端/chunk-5wa92x7d.js";
-import { l2, aI, RSe, ILt, WIe, PLt, GIe, OLt, $rn } from "../MCP客户端/chunk-78r8f7dw.js";
+import { OAuthErrorCode, OAuthError, IssuerMismatchError, RegistrationRejectedError, auth, discoverOAuthProtectedResourceMetadata, discoverAuthorizationServerMetadata, discoverOAuthServerInfo, refreshAuthorization } from "../MCP客户端/chunk-78r8f7dw.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { MCP_CLIENT_METADATA_URL } from "./chunk-9g2q4bjq.js";
@@ -99,7 +99,7 @@ var Ke = createLazyValue(() =>
 async function Ve(e, t) {
   let n;
   try {
-    n = await PLt(e, void 0, t?.fetchFn ?? de);
+    n = await discoverOAuthProtectedResourceMetadata(e, void 0, t?.fetchFn ?? de);
   } catch (r) {
     if (yt(r)) throw r;
     let d = r instanceof Error ? /^HTTP (\d{3}) /.exec(r.message)?.[1] : void 0;
@@ -123,7 +123,7 @@ async function Ve(e, t) {
 async function qe(e, t) {
   let n;
   try {
-    n = await GIe(e, { fetchFn: t?.fetchFn ?? de, skipIssuerValidation: !0 });
+    n = await discoverAuthorizationServerMetadata(e, { fetchFn: t?.fetchFn ?? de, skipIssuerValidation: !0 });
   } catch (r) {
     if (yt(r)) throw r;
     let d = r instanceof Error ? /^HTTP (\d{3}) /.exec(r.message)?.[1] : void 0;
@@ -330,9 +330,9 @@ function ve(e) {
     Array.isArray(t?.issues)
   );
 }
-var ot = new Set(Object.values(l2)),
+var ot = new Set(Object.values(OAuthErrorCode)),
   ct = ["authorization_pending", "expired_token", "slow_down"],
-  dt = [...Object.values(l2), ...ct];
+  dt = [...Object.values(OAuthErrorCode), ...ct];
 function spr(e) {
   let t = dt.find((n) => n === e);
   return fromEnumOpt(t) ?? S("other");
@@ -344,14 +344,14 @@ function ipr(e, t) {
 ${t.message}`
       : e;
   if (t instanceof iI) return "issuer_echo_denied";
-  if (t instanceof RSe)
+  if (t instanceof IssuerMismatchError)
     return t.kind === "metadata"
       ? "issuer_echo_mismatch"
       : "issuer_response_mismatch";
-  if (t instanceof ILt) return "dcr_rejected";
+  if (t instanceof RegistrationRejectedError) return "dcr_rejected";
   if (
     n.includes("dynamic client registration") ||
-    (t instanceof aI && t.code === "invalid_client_metadata")
+    (t instanceof OAuthError && t.code === "invalid_client_metadata")
   )
     return "dcr_failed";
   if (
@@ -359,7 +359,7 @@ ${t.message}`
     n.includes("Incompatible auth server")
   )
     return "discovery_failed";
-  if (t instanceof aI) return "dcr_rejected";
+  if (t instanceof OAuthError) return "dcr_rejected";
   if (n.includes("Issuer mismatch in authorization server metadata"))
     return "issuer_echo_mismatch";
   if (n.includes("Issuer mismatch in authorization response"))
@@ -470,7 +470,7 @@ async function he(e, t, n) {
   }
   try {
     let { authorizationServerUrl: v, authorizationServerMetadata: k } =
-      await OLt(t, {
+      await discoverOAuthServerInfo(t, {
         fetchFn: _,
         ...(p && { resourceMetadataUrl: p }),
         skipIssuerMetadataValidation: !0,
@@ -493,7 +493,7 @@ async function he(e, t, n) {
   let h = new URL(t);
   if (h.pathname === "/") return;
   try {
-    let v = await GIe(h, { fetchFn: _, skipIssuerValidation: !0 });
+    let v = await discoverAuthorizationServerMetadata(h, { fetchFn: _, skipIssuerValidation: !0 });
     if (v)
       _ct({
         serverName: e,
@@ -1227,7 +1227,7 @@ async function lhr(e, t, n, r, d) {
         let Te = async () => {
           try {
             (logMCPDebug(e, "Starting SDK auth"), logMCPDebug(e, `Server URL: ${redactUrl(t.url)}`));
-            let N = await WIe(W, {
+            let N = await auth(W, {
               serverUrl: t.url,
               scope: E.scope,
               resourceMetadataUrl: E.resourceMetadataUrl,
@@ -1345,7 +1345,7 @@ async function lhr(e, t, n, r, d) {
     ((D = !0),
       logMCPDebug(e, "Completing auth flow with authorization code"),
       Pu().record(Ae));
-    let fe = await WIe(W, {
+    let fe = await auth(W, {
       serverUrl: t.url,
       authorizationCode: Ae,
       iss: Fe,
@@ -1376,9 +1376,9 @@ async function lhr(e, t, n, r, d) {
       O = C instanceof Error ? C.cause : void 0;
     if (C instanceof q3e) T = "cancelled";
     else if (C instanceof iI || O instanceof iI) T = "issuer_echo_denied";
-    else if (C instanceof RSe || O instanceof RSe)
+    else if (C instanceof IssuerMismatchError || O instanceof IssuerMismatchError)
       T =
-        [C, O].find((x) => x instanceof RSe)?.kind === "metadata"
+        [C, O].find((x) => x instanceof IssuerMismatchError)?.kind === "metadata"
           ? "issuer_echo_mismatch"
           : "issuer_response_mismatch";
     else if (/AADSTS\d/.test(U)) T = "entra_specific";
@@ -1396,14 +1396,14 @@ async function lhr(e, t, n, r, d) {
     )
       T = "port_unavailable";
     else if (U.includes("SDK auth failed")) T = ipr(U, O);
-    let G = [O, C].find((B) => B instanceof ILt),
+    let G = [O, C].find((B) => B instanceof RegistrationRejectedError),
       W = (
         O instanceof Error ? O : C instanceof Error ? C : null
       )?.message.match(/^HTTP (\d{3})\b/);
     if (G) K = G.status;
     else if (W) K = Number(W[1]);
-    if (O instanceof aI) I = O.code;
-    if (C instanceof aI) {
+    if (O instanceof OAuthError) I = O.code;
+    if (C instanceof OAuthError) {
       if (
         ((I = C.code),
         C.code === "invalid_client" || C.code === "unauthorized_client")
@@ -2447,7 +2447,7 @@ class z3e {
             );
             let w = k.authorizationServerUrl;
             if (
-              ((h = await GIe(w, { fetchFn: o, skipIssuerValidation: !0 })), h)
+              ((h = await discoverAuthorizationServerMetadata(w, { fetchFn: o, skipIssuerValidation: !0 })), h)
             )
               _ct({
                 serverName: this.serverName,
@@ -2482,7 +2482,7 @@ class z3e {
             logFeatureBad("mcp_oauth_refresh", "mcp_oauth_refresh_no_client_info"));
           return;
         }
-        let v = await $rn(new URL(this.serverConfig.url), {
+        let v = await refreshAuthorization(new URL(this.serverConfig.url), {
           metadata: h,
           clientInformation: p,
           refreshToken: e,
@@ -2511,7 +2511,7 @@ class z3e {
             logFeatureBad("mcp_oauth_refresh", "mcp_oauth_refresh_issuer_echo_denied"));
           return;
         }
-        if (o instanceof aI && o.code === l2.InvalidGrant) {
+        if (o instanceof OAuthError && o.code === OAuthErrorCode.InvalidGrant) {
           logMCPDebug(
             this.serverName,
             `Token refresh failed with invalid_grant: ${o.message}`,
@@ -2533,7 +2533,7 @@ class z3e {
           return;
         }
         if (
-          o instanceof aI &&
+          o instanceof OAuthError &&
           (o.code === "invalid_client" || o.code === "unauthorized_client")
         ) {
           logMCPDebug(
@@ -2592,10 +2592,10 @@ class z3e {
             o instanceof Error &&
             /timeout|timed out|etimedout|econnreset/i.test(o.message),
           v =
-            o instanceof aI &&
-            (o.code === l2.ServerError ||
-              o.code === l2.TemporarilyUnavailable ||
-              o.code === l2.TooManyRequests ||
+            o instanceof OAuthError &&
+            (o.code === OAuthErrorCode.ServerError ||
+              o.code === OAuthErrorCode.TemporarilyUnavailable ||
+              o.code === OAuthErrorCode.TooManyRequests ||
               !ot.has(o.code)),
           k = h || v || _;
         if (!k || d >= t) {

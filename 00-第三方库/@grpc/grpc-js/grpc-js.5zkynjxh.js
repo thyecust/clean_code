@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import {
-  pO,
-  jnn,
-  zDt,
-  See,
-  VDt,
-  KDt,
-  Wnn,
-  Gnn,
-  qnn,
-  mF,
+  otlpExporterBaseModule,
+  createAsPromise,
+  longModule,
+  protobufUtilModule,
+  protobufWriterModule,
+  protobufReaderModule,
+  protobufRpcModule,
+  protobufRootsModule,
+  protobufMinimalModule,
+  otlpHttpExporterBaseModule,
 } from "../../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
 import { otelApiModule, otelCoreModule } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -4248,7 +4248,7 @@ var Uc = commonJS(function (exports, module) {
     try {
       var mod =
         moduleName === "long"
-          ? zDt()
+          ? longModule()
           : moduleName === "buffer"
             ? importMetaRequire("buffer")
             : moduleName === "fs"
@@ -4261,7 +4261,7 @@ var Uc = commonJS(function (exports, module) {
 });
 var zc = commonJS(function (tA, Bc) {
   Bc.exports = br;
-  var G_ = jnn(),
+  var G_ = createAsPromise(),
     $_ = Uc(),
     yn = $_("fs");
   function br(e, t, r) {
@@ -4718,7 +4718,7 @@ var Ii = commonJS(function (oA, Zc) {
     "Service";
   var Rn = Mi(),
     Jt = Z(),
-    K_ = Wnn(),
+    K_ = protobufRpcModule(),
     J_ = Jt.patterns.reservedRe;
   function ge(e, t) {
     (Qe.call(this, e, t), (this.methods = {}), (this._methodsArray = null));
@@ -4820,7 +4820,7 @@ var Ii = commonJS(function (oA, Zc) {
 });
 var xi = commonJS(function (lA, eu) {
   eu.exports = qe;
-  var X_ = See();
+  var X_ = protobufUtilModule();
   function qe(e) {
     if (e)
       for (var t = Object.keys(e), r = 0; r < t.length; ++r) {
@@ -5447,8 +5447,8 @@ var Li = commonJS(function (fA, lu) {
     oS = Ni(),
     lS = Ii(),
     xn = xi(),
-    kn = KDt(),
-    cS = VDt(),
+    kn = protobufReaderModule(),
+    cS = protobufWriterModule(),
     se = Z(),
     uS = Ln(),
     dS = bn(),
@@ -5929,8 +5929,8 @@ var Bi = commonJS(function (pA, du) {
   };
 });
 var Z = commonJS(function (gA, pu) {
-  var W = (pu.exports = See()),
-    hu = Gnn(),
+  var W = (pu.exports = protobufUtilModule()),
+    hu = protobufRootsModule(),
     Bn,
     zn;
   W.codegen = qc();
@@ -6722,7 +6722,7 @@ var Ln = commonJS(function (CA, bu) {
   }
 });
 var wu = commonJS(function (EA, Ou) {
-  var D = (Ou.exports = qnn());
+  var D = (Ou.exports = protobufMinimalModule());
   D.build = "light";
   function wS(e, t, r) {
     if (typeof t === "function") ((r = t), (t = new D.Root()));
@@ -9298,7 +9298,7 @@ var ta = commonJS(function (cd) {
     We = Gi(),
     Zn = Yu(),
     ea = id(),
-    SC = zDt();
+    SC = longModule();
   cd.Long = SC;
   function CC(e) {
     return "@type" in e && typeof e["@type"] === "string";
@@ -20239,7 +20239,7 @@ var Sg = commonJS(function (yg) {
     yg.mergeOtlpGrpcConfigurationWithDefaults =
     yg.validateAndNormalizeUrl =
       void 0;
-  var mg = pO(),
+  var mg = otlpExporterBaseModule(),
     ni = si(),
     XO = importMetaRequire("url"),
     pg = otelApiModule();
@@ -20297,7 +20297,7 @@ var wg = commonJS(function (bg) {
   bg.getOtlpGrpcConfigurationFromEnv = void 0;
   var Cg = otelCoreModule(),
     ai = si(),
-    rw = mF(),
+    rw = otlpHttpExporterBaseModule(),
     iw = importMetaRequire("fs"),
     sw = importMetaRequire("path"),
     Tg = otelApiModule();
@@ -20430,7 +20430,7 @@ var Mg = commonJS(function (Pg) {
 var kg = commonJS(function (Ig) {
   Object.defineProperty(Ig, "__esModule", { value: !0 });
   Ig.createOtlpGrpcExportDelegate = void 0;
-  var vw = pO(),
+  var vw = otlpExporterBaseModule(),
     yw = si();
   function _w(e, t, r, i) {
     return (0, vw.createOtlpNetworkExportDelegate)(
