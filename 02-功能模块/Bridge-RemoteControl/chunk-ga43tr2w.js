@@ -14,7 +14,7 @@ import { isInProtectedNamespace } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { registerCleanup, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -50,7 +50,7 @@ import { isNonOriginSource, describeNonOriginSource, isCreateSessionFailure, cre
 import { reseedBridgePermissionMode, reseedBridgeCrossSessionInbound, reseedBridgeModel } from "../权限系统/chunk-1y2g140m.js";
 import { getBridgeBaseUrlOverride, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { buildPendingActionsList } from "./chunk-1yq098a7.js";
-import { VGe, KGe, Qjn, pM, rdt } from "./chunk-znhfst8k.js";
+import { SSETransport, DEFAULT_STREAM_EVENT_FLUSH_INTERVAL_MS, CLOSE_CODE_BY_TERMINAL_CONDITION, CCRClient, createIdleTracker } from "./chunk-znhfst8k.js";
 import { isHumanTurnEvent } from "./bridge-inbound-origin.js";
 import { buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
 import { buildPendingActionDetail, isUserActivityRequest, isHumanInputRequest } from "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
@@ -111,7 +111,7 @@ async function Dt() {
     p = Mo().safeParse(t);
   return p.success ? p.data : Vn;
 }
-async function ndt() {
+async function getBridgeVersionRequirementMessage() {
   let t = await Dt();
   if (
     t.min_version &&
@@ -235,7 +235,7 @@ function oi(t, p) {
     }, p);
   });
 }
-async function Xjn() {
+async function countLiveBridgeReplSessions() {
   try {
     let t = Object.values(getGlobalConfig().replBridgePlaceholders ?? {}),
       p = 1,
@@ -411,7 +411,7 @@ async function xt(t) {
   );
   let F = new URL(p);
   F.pathname = F.pathname.replace(/\/$/, "") + "/worker/events/stream";
-  let Q = new VGe(
+  let Q = new SSETransport(
       F,
       {},
       { sessionId: w, initialSequenceNum: I, getAuthHeaders: L },
@@ -446,7 +446,7 @@ async function xt(t) {
       logError(me);
     }
   }
-  let W = new pM(Q, new URL(p), {
+  let W = new CCRClient(Q, new URL(p), {
     getAuthHeaders: L,
     heartbeatIntervalMs: t.heartbeatIntervalMs,
     heartbeatJitterFraction: t.heartbeatJitterFraction,
@@ -465,7 +465,7 @@ async function xt(t) {
     nonOrigin403Transient: ce,
     internalEventUploader: t.internalEventUploader,
     onEpochMismatch: (M) => {
-      let oe = t.causeTypedCloseCodes ? Qjn[M] : 4090;
+      let oe = t.causeTypedCloseCodes ? CLOSE_CODE_BY_TERMINAL_CONDITION[M] : 4090;
       throw (
         logForDebugging(
           `[bridge:repl] CCR v2: terminal request-path condition (${M}) \u2014 closing with ${oe} for ${oe === 4094 ? "auth recovery" : "poll-loop recovery"}`,
@@ -624,7 +624,7 @@ var di = 300,
   qo = 8,
   Go = 1048576,
   Wo = 30000;
-async function Yjn(t) {
+async function createBridgeSessionHandle(t) {
   let {
       baseUrl: p,
       orgUUID: v,
@@ -889,7 +889,7 @@ async function Yjn(t) {
           ? { terminal: !0, reason: "request_rejected", status: 403 }
           : { terminal: !0, reason: e.reason };
       return (
-        _e?.("failed", A7(o), Le(o)),
+        _e?.("failed", buildBridgeFailureHint(o), Le(o)),
         logBridgeSkip("v2_reattach_elevated_auth", void 0, !0),
         logFeatureBad("bridge_connect", "bridge_connect_reattach_elevated_auth"),
         null
@@ -1028,7 +1028,7 @@ async function Yjn(t) {
             : "Remote credentials fetch failed \u2014 see debug log"
           : isCredentialsRejection(K)
             ? Wi
-            : A7(K),
+            : buildBridgeFailureHint(K),
       r = K === null ? (L ? "auth" : "terminal") : isCredentialsRejection(K) ? "auth" : Le(K),
       o =
         K === null
@@ -1069,7 +1069,7 @@ async function Yjn(t) {
     return getFeatureValue_CACHED_MAY_BE_STALE("tengu_dazzling_garden", !0);
   }
   function Yi() {
-    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_stream_event_flush_ms", KGe);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_stream_event_flush_ms", DEFAULT_STREAM_EVENT_FLUSH_INTERVAL_MS);
   }
   function dn() {
     return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_no_subscriber_flush_ms", 0);
@@ -1089,7 +1089,7 @@ async function Yjn(t) {
   function eo() {
     return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_skip_redundant_heartbeat", !1);
   }
-  let wr = rdt(),
+  let wr = createIdleTracker(),
     ro = createGzipRequestBodyFetch("ccr_worker", Ee);
   function ln() {
     return {
@@ -1905,7 +1905,7 @@ async function Yjn(t) {
             }
             if (isCredentialsFailure(pe)) {
               ((C = { leg: "bad", code: `post_refresh_credentials_${Le(pe)}` }),
-                j(A7(pe), Le(pe), st("refresh", pe)));
+                j(buildBridgeFailureHint(pe), Le(pe), st("refresh", pe)));
               return;
             }
             if (pe === null || isCredentialsRejection(pe)) {
@@ -1951,7 +1951,7 @@ async function Yjn(t) {
           }
           if (isCredentialsFailure(fe)) {
             ((C = { leg: "bad", code: `credentials_${Le(fe)}` }),
-              j(A7(fe), Le(fe), st("refresh", fe)));
+              j(buildBridgeFailureHint(fe), Le(fe), st("refresh", fe)));
             return;
           }
           Br(r);
@@ -2412,7 +2412,7 @@ async function Yjn(t) {
           );
         }
         if (isCredentialsFailure(A)) {
-          if ((J(A7(A), Le(A)), !o)) te(st("recovery", A));
+          if ((J(buildBridgeFailureHint(A), Le(A)), !o)) te(st("recovery", A));
           return (
             writeDiagnosticsEvent("info", "bridge_repl_v2_remint_loop_denied"),
             { creds: null, attempts: _ }
@@ -2655,7 +2655,7 @@ async function Yjn(t) {
       }
       if (isCredentialsFailure(E)) {
         if (!R) {
-          if ((J(A7(E), Le(E)), !r)) te(st("recovery", E));
+          if ((J(buildBridgeFailureHint(E), Le(E)), !r)) te(st("recovery", E));
         }
         return;
       }
@@ -2995,7 +2995,7 @@ async function Yjn(t) {
             _ = { label: r.display_name ?? r.tool_name, body: "" };
           let P =
               d && typeof r.input?.command === "string"
-                ? qr(r.input.command)
+                ? redactSecretsFromText(r.input.command)
                 : void 0,
             O =
               d && typeof r.input?.description === "string"
@@ -3005,7 +3005,7 @@ async function Yjn(t) {
             tool_name: r.tool_name,
             display_tool_name: _?.label ?? r.display_name ?? r.tool_name,
             action_description:
-              _?.body ?? qr(r.description || O || (P && truncate(P, 120)) || ""),
+              _?.body ?? redactSecretsFromText(r.description || O || (P && truncate(P, 120)) || ""),
             raw_command: _ ? void 0 : P,
             tool_use_id: r.tool_use_id,
             request_id: _ ? "" : e.request_id,
@@ -3231,7 +3231,7 @@ function ci(t) {
       return "transport_closed_403";
   }
 }
-function A7(t) {
+function buildBridgeFailureHint(t) {
   switch (t.reason) {
     case "untrusted_device":
       return untrustedDeviceHint();
@@ -3409,4 +3409,4 @@ function hi(t) {
     ? INTERRUPT_MESSAGE_PREFIXES.includes(p)
     : p.every((v) => v.type !== "text" || INTERRUPT_MESSAGE_PREFIXES.includes(v.text));
 }
-export { Xjn, ndt, Yjn, A7 };
+export { countLiveBridgeReplSessions, getBridgeVersionRequirementMessage, createBridgeSessionHandle, buildBridgeFailureHint };

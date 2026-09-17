@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 264 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { WIt, fit } from "../成本-Token统计/chunk-adrc9xt1.js";
+import { WIt, PlainAwait as fit } from "../成本-Token统计/chunk-adrc9xt1.js";
 import "../../03-入口与运行时/会话UI(REPL)/clawd-mascot.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";

@@ -12,7 +12,7 @@ import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { resolvePath, getFileMtimeMs } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { xN, getArtifactState } from "./chunk-rr78st95.js";
+import { buildAgentArtifactKey, getArtifactState } from "./chunk-rr78st95.js";
 import { observationStamp, observedWithoutSource, compareArtifactVersions } from "./chunk-01ymf0ar.js";
 import { estimateTokensForContent, getDefaultFileReadingLimits, removeWebFetchSavedFile } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createHash } from "crypto";
@@ -320,7 +320,7 @@ function E(e, r) {
   return n !== void 0 && n[0] <= 0 && n[1] >= r;
 }
 function D(e, r, n) {
-  let t = getArtifactState().refusedPublishBodies.get(xN(r, e.slug)),
+  let t = getArtifactState().refusedPublishBodies.get(buildAgentArtifactKey(r, e.slug)),
     i = e.confirmsResendFor.get(n);
   return i !== void 0 && (t === void 0 || t.batch !== i) ? void 0 : t;
 }

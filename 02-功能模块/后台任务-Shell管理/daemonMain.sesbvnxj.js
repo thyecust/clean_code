@@ -14,7 +14,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { lit as S, fromEnum, fromNumber, concatSafe } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, ge, l, A, Jr, Po, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { describeStorageError, jsonStringify, jsonParse, changeWorkingDirectory, qr, initDefaultDebugLog, getDebugFilePath, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, changeWorkingDirectory, redactSecretsFromText, initDefaultDebugLog, getDebugFilePath, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -71,7 +71,7 @@ import {
   writeReapedTerminalState,
 } from "./chunk-7wsy8vxb.js";
 import "../自动更新-安装/install-diagnostics.js";
-import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
+import { lockCurrentVersion } from "../自动更新-安装/native-installer.js";
 import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
 import { runFastPathPolicyHelper } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
 import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
@@ -111,29 +111,29 @@ import {
   describeUnknownOriginLock,
 } from "./daemon-lock.js";
 import {
-  ole,
-  OZt,
-  OWe,
-  XHe,
-  vPt,
-  DWe,
-  V$n,
-  RPt,
-  tF,
-  vit,
-  K$n,
-  K0,
-  YHe,
-  kPt,
-  Rit,
-  kit,
-  LWe,
+  isDaemonServiceControlSupported,
+  getInstalledBinaryPath,
+  installDaemonService,
+  uninstallDaemonService,
+  startDaemonService,
+  stopDaemonService,
+  restartDaemonService,
+  checkDaemonServiceStaleness,
+  isDaemonServiceInstalled,
+  spawnDaemonProcess,
+  serveDaemonControlSocket,
+  DAEMON_START_TIMEOUT_MS,
+  waitForDaemonReady,
+  waitForServiceDaemonLock,
+  ensureHostManagedScope,
+  writeHostManagedMarker,
+  deleteHostManagedMarker,
 } from "./chunk-jfk5mpe1.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
-import { YYt, JYt, E8, qW, QYt, ZYt, eJt } from "./chunk-9mmyv6hf.js";
+import { formatCwdUnavailableMessage, createDefaultSpawnPty, isProviderManagedByHost, BgSessionWorker, spawnSpare, claimSpare, reapOrphanSpares } from "./bg-session-worker.js";
 import { createDaemonAuth, WORKER_KINDS } from "../认证-OAuth登录/daemon-worker-runtime.js";
 import "../权限系统/chunk-3kjwvb3e.js";
 import { getDefaultDaemonConfig, loadDaemonConfig, watchDaemonConfigFile, diffDaemonConfigs } from "../../01-核心基础设施/设置-配置/daemon-config.js";
@@ -166,7 +166,7 @@ async function Le(t) {
     w = !1;
   return {
     write(d, k) {
-      let D = `[${new Date().toISOString()}] [${d}] ${qr(k)}
+      let D = `[${new Date().toISOString()}] [${d}] ${redactSecretsFromText(k)}
 `;
       if (e) process.stdout.write(D);
       if (w) return;
@@ -511,7 +511,7 @@ async function St(t, e = {}) {
     a = new Map(),
     p = async () => {
       let w = new Set(),
-        d = e.spawnPty ?? JYt(),
+        d = e.spawnPty ?? createDefaultSpawnPty(),
         k = e.onKeepAliveChange ?? (() => {}),
         D = (m, T, K) => o?.noteSettledDispatch(m, T, K),
         _ = !1,
@@ -537,7 +537,7 @@ async function St(t, e = {}) {
           N = !0;
           let m = null,
             T = !1;
-          QYt({
+          spawnSpare({
             log: t,
             launcherNotRunnableEpisode: C,
             credentials: e.credentials,
@@ -601,7 +601,7 @@ async function St(t, e = {}) {
             if (_) return "closed";
           }
           if (le && !a.has(m.short)) {
-            let c = YYt(m.cwd);
+            let c = formatCwdUnavailableMessage(m.cwd);
             if (
               (t(`bg refused ${m.short} (${m.source}): ${c}`),
               logEvent("tengu_bg_spawn_cwd_gone", {
@@ -616,10 +616,10 @@ async function St(t, e = {}) {
             return "refused";
           }
           let ce = !1;
-          if (E8(m) && !a.has(m.short))
+          if (isProviderManagedByHost(m) && !a.has(m.short))
             try {
               if ((await pr(e.storageV5), e.storageV5))
-                await kit(e.storageV5, m.short);
+                await writeHostManagedMarker(e.storageV5, m.short);
               else await writeFile(getHostManagedMarkerPath(m.short), "");
               ce = !0;
             } catch (c) {
@@ -641,8 +641,8 @@ async function St(t, e = {}) {
               return (await sleep(100), Y(m, T + 1, K, le));
             }
             let c = de.isKilling || de.isRetiring || de.record.outcome;
-            if (ce && !E8(de.dispatch))
-              if (e.storageV5) await LWe(e.storageV5, m.short);
+            if (ce && !isProviderManagedByHost(de.dispatch))
+              if (e.storageV5) await deleteHostManagedMarker(e.storageV5, m.short);
               else await te(getHostManagedMarkerPath(m.short)).catch(() => {});
             if (
               (t(
@@ -658,8 +658,8 @@ async function St(t, e = {}) {
               );
             return (logFeatureOk("daemon_bg_session_create"), "dup-live");
           }
-          if (!E8(m))
-            if (e.storageV5) LWe(e.storageV5, m.short);
+          if (!isProviderManagedByHost(m))
+            if (e.storageV5) deleteHostManagedMarker(e.storageV5, m.short);
             else te(getHostManagedMarkerPath(m.short)).catch(() => {});
           let { lowMem: me, level: Se } = getLowMemoryStatus();
           if (me && a.size > 0) {
@@ -715,7 +715,7 @@ async function St(t, e = {}) {
             let c = v;
             v = null;
             try {
-              let I = ZYt(
+              let I = claimSpare(
                 m,
                 c,
                 d,
@@ -756,7 +756,7 @@ async function St(t, e = {}) {
               (logEvent("tengu_bg_spare_claim_fail", { reason: fromEnum(ae) }), c.dispose());
             }
           }
-          let $e = qW.spawn(
+          let $e = BgSessionWorker.spawn(
             m,
             d,
             e.getAuthSnapshot,
@@ -784,7 +784,7 @@ async function St(t, e = {}) {
           return T;
         };
       (await ensureDaemonRuntimeDir(), await ensureDaemonDirSecure());
-      let L = await K$n(
+      let L = await serveDaemonControlSocket(
         a,
         Y,
         e.onNudge ?? (async () => ({ restarting: !1, upgradePending: !1 })),
@@ -825,7 +825,7 @@ async function St(t, e = {}) {
           Object.entries(X.workers).map(async ([m, T]) => {
             let K;
             try {
-              K = await qW.adopt(
+              K = await BgSessionWorker.adopt(
                 m,
                 T,
                 d,
@@ -845,7 +845,7 @@ async function St(t, e = {}) {
             ) {
               T.procStart = await getProcessStartTimeAsync(T.pid);
               try {
-                K = await qW.adopt(
+                K = await BgSessionWorker.adopt(
                   m,
                   T,
                   d,
@@ -856,7 +856,7 @@ async function St(t, e = {}) {
               } catch (ee) {
                 (logError(redactDaemonNonceFromError(ee)), (K = null));
               }
-              K ??= qW.unverified(m, T, e.storageV5, e.credentials);
+              K ??= BgSessionWorker.unverified(m, T, e.storageV5, e.credentials);
             }
             if (K)
               (a.set(m, K),
@@ -976,7 +976,7 @@ async function St(t, e = {}) {
           `bg: skipped post-adopt sweeps + roster rewrite \u2014 daemon.lock is ${pe ? `held by pid ${pe.pid}` : "absent"} (yield/handover in flight)`,
         );
       if (be && !X.parseFailed) cr(a, t, { storageV5: e.storageV5 });
-      if (be && !X.parseFailed) await eJt(a, t);
+      if (be && !X.parseFailed) await reapOrphanSpares(a, t);
       if (be && !X.inspectFailed)
         await updateRoster((m) => {
           m.workers = {};
@@ -1578,7 +1578,7 @@ async function cr(t, e, o = {}) {
 var ur = { namespace: "daemon", relPath: ["pty-pids"] };
 async function pr(t) {
   if (isHoverRestEnabled() && t !== void 0) {
-    await Rit(t);
+    await ensureHostManagedScope(t);
     return;
   }
   await je(getHostManagedDir(), { recursive: !0, mode: 448 });
@@ -2048,7 +2048,7 @@ var Ar = 60000,
   Cr = 100,
   Ct = 5000,
   Ir = 1800000,
-  Tr = K0 + Ct;
+  Tr = DAEMON_START_TIMEOUT_MS + Ct;
 async function At(t) {
   try {
     let e = await realpath(t),
@@ -2145,7 +2145,7 @@ async function It(t) {
     return (await s.close(), { upgradeDetected: !1, exitCode: 1 });
   }
   let O = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
-    V = isRunningInstalledBinary() ? OZt() : O.target,
+    V = isRunningInstalledBinary() ? getInstalledBinaryPath() : O.target,
     q = await At(V).catch((c) => {
       if (Po(c))
         logForDebugging(`binaryIdentity(${V}) failed at startup: ${c.code}`, {
@@ -2665,7 +2665,7 @@ async function It(t) {
     await $e(),
     ve)
   )
-    await XHe();
+    await uninstallDaemonService();
   return (
     await s.close(),
     ne.dispose(),
@@ -2868,7 +2868,7 @@ function Wt(t, e) {
   return `${t} refused: ${describeUnknownOriginLock(e)}. Stop it (\`claude daemon stop\`) and retry.`;
 }
 function Nt(t) {
-  return `warning: the service manager accepted the ${t}, but the installed daemon is not reachable after ${K0 / 1000}s \u2014 the first start after an update can be slow. Check \`claude daemon status\` and \`claude daemon logs\`; if the service file points at a binary or launcher that no longer exists, \`claude daemon install\` rewrites it from the current settings.`;
+  return `warning: the service manager accepted the ${t}, but the installed daemon is not reachable after ${DAEMON_START_TIMEOUT_MS / 1000}s \u2014 the first start after an update can be slow. Check \`claude daemon status\` and \`claude daemon logs\`; if the service file points at a binary or launcher that no longer exists, \`claude daemon install\` rewrites it from the current settings.`;
 }
 async function se(t) {
   (await Promise.race([
@@ -2957,7 +2957,7 @@ async function daemonMain(t, e) {
       try {
         changeWorkingDirectory(homedir());
       } catch {}
-      q4();
+      lockCurrentVersion();
       let E = new AbortController(),
         v = !1,
         s = () => {
@@ -3003,7 +3003,7 @@ async function daemonMain(t, e) {
           await logFirstPartyEventAsync("tengu_daemon_install", { ok: !1, disabled: !0 }),
           se(1)
         );
-      if (!(await ole()))
+      if (!(await isDaemonServiceControlSupported()))
         return (
           U(
             `Service install isn't available on ${"darwin"} \u2014 the daemon still runs on demand when a client connects.`,
@@ -3066,7 +3066,7 @@ async function daemonMain(t, e) {
           se(1)
         );
       if (B.kind === "stopped") F(`stopped detached daemon (pid ${B.pid})`);
-      let E = await OWe({ jsonPath: r, logPath: a });
+      let E = await installDaemonService({ jsonPath: r, logPath: a });
       if (!E.ok) {
         if (
           (await logFirstPartyEventAsync("tengu_daemon_install", { ok: !1 }),
@@ -3078,7 +3078,7 @@ async function daemonMain(t, e) {
         return se(1);
       }
       (logFeatureOk("daemon_service_install"), F(`installed: ${E.servicePath}`));
-      let v = await kPt(K0, D);
+      let v = await waitForServiceDaemonLock(DAEMON_START_TIMEOUT_MS, D);
       if (
         (await logFirstPartyEventAsync("tengu_daemon_install", { ok: !0, reachable: v !== null }), v)
       )
@@ -3087,7 +3087,7 @@ async function daemonMain(t, e) {
         );
       else
         U(
-          `warning: service installed but the daemon is not running as the installed service within ${K0 / 1000}s \u2014 check \`claude daemon logs\``,
+          `warning: service installed but the daemon is not running as the installed service within ${DAEMON_START_TIMEOUT_MS / 1000}s \u2014 check \`claude daemon logs\``,
         );
       return se(0);
     }
@@ -3101,7 +3101,7 @@ async function daemonMain(t, e) {
           await logFirstPartyEventAsync("tengu_daemon_install", { ok: !1, disabled: !0 }),
           se(1)
         );
-      if (!(await ole()))
+      if (!(await isDaemonServiceControlSupported()))
         (U(
           `\`claude daemon ${k}\` isn't available on ${"darwin"} (no launchd/systemd) \u2014 the daemon runs on demand instead.`,
         ),
@@ -3111,7 +3111,7 @@ async function daemonMain(t, e) {
           "the launchd/systemd unit is a per-user singleton for the default config dir",
         ),
           process.exit(1));
-      if (!(await tF()))
+      if (!(await isDaemonServiceInstalled()))
         (U("service not installed \u2014 run `claude daemon install` first"),
           process.exit(1));
       let _ = await getLauncherErrorMessage();
@@ -3175,15 +3175,15 @@ async function daemonMain(t, e) {
           se(1)
         );
       if (B.kind === "stopped") F(`stopped detached daemon (pid ${B.pid})`);
-      let E = await RPt();
+      let E = await checkDaemonServiceStaleness();
       if (E.execPathStale || E.launcherPrefixDead) {
         F(
           E.execPathStale
             ? "service binary missing \u2014 regenerating service file"
             : "installed service starts through a launcher that was deleted or is no longer executable \u2014 regenerating the service file from the current settings",
         );
-        let C = await OWe({ jsonPath: r, logPath: a }),
-          N = C.ok && (await kPt(K0, D)) !== null;
+        let C = await installDaemonService({ jsonPath: r, logPath: a }),
+          N = C.ok && (await waitForServiceDaemonLock(DAEMON_START_TIMEOUT_MS, D)) !== null;
         if (
           (await logFirstPartyEventAsync("tengu_daemon_control", {
             op_start: k === "start",
@@ -3199,7 +3199,7 @@ async function daemonMain(t, e) {
         else U(`regenerate failed: ${C.error}`);
         return se(C.ok ? 0 : 1);
       }
-      let v = await (k === "start" ? vPt() : V$n());
+      let v = await (k === "start" ? startDaemonService() : restartDaemonService());
       if (!v.ok)
         return (
           await logFirstPartyEventAsync("tengu_daemon_control", {
@@ -3210,7 +3210,7 @@ async function daemonMain(t, e) {
           U(`${k} failed: ${v.error}`),
           se(1)
         );
-      let s = (await kPt(K0, D)) !== null;
+      let s = (await waitForServiceDaemonLock(DAEMON_START_TIMEOUT_MS, D)) !== null;
       if (
         (await logFirstPartyEventAsync("tengu_daemon_control", {
           op_start: k === "start",
@@ -3226,7 +3226,7 @@ async function daemonMain(t, e) {
     }
     case "uninstall": {
       Re(d, []);
-      let _ = await XHe();
+      let _ = await uninstallDaemonService();
       if (
         (await logFirstPartyEventAsync("tengu_daemon_control", { op_uninstall: !0, ok: _.ok }), _.ok)
       )
@@ -3262,7 +3262,7 @@ async function daemonMain(t, e) {
             se(L ? 0 : 1)
           );
         },
-        s = await tF(),
+        s = await isDaemonServiceInstalled(),
         C = await getVerifiedDaemonLock(1, D),
         N = C && isProcessIdentityKnown(C) ? C : null,
         O = C,
@@ -3296,7 +3296,7 @@ async function daemonMain(t, e) {
         E(L.kept);
         let X = Math.max(q.reaped, L.reaped);
         if (s) {
-          let ne = await DWe();
+          let ne = await stopDaemonService();
           if (!ne.ok) return (U(`stop failed: ${ne.error}`), v(!1, X));
         }
         if ((F(B(X)), !s))
@@ -3307,7 +3307,7 @@ async function daemonMain(t, e) {
       }
       let re = !1;
       if (s) {
-        let L = await DWe();
+        let L = await stopDaemonService();
         if (!L.ok) return (U(`stop failed: ${L.error}`), v(!1, 0));
         re = !0;
       } else if (N && getCurrentPlatform() !== "windows")
@@ -3459,7 +3459,7 @@ async function daemonMain(t, e) {
           F(
             `warning: running daemon is ${_.version}, but this claude is ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}`,
           ));
-        let Y = (await tF())
+        let Y = (await isDaemonServiceInstalled())
           ? "claude daemon stop"
           : "claude daemon stop --any";
         F(`  run \`${Y}\` to pick up the new version`);
@@ -3476,7 +3476,7 @@ async function daemonMain(t, e) {
   }
 }
 async function en(t, e, o, r) {
-  let { err: a, stderrPath: p } = await vit([
+  let { err: a, stderrPath: p } = await spawnDaemonProcess([
       "daemon",
       "run",
       "--json-path",
@@ -3489,9 +3489,9 @@ async function en(t, e, o, r) {
     ]),
     w = a
       ? `failed to spawn: ${l(a)}`
-      : (await YHe(K0))
+      : (await waitForDaemonReady(DAEMON_START_TIMEOUT_MS))
         ? null
-        : `spawned but never became reachable within ${K0 / 1000}s`;
+        : `spawned but never became reachable within ${DAEMON_START_TIMEOUT_MS / 1000}s`;
   if (w !== null) {
     let d = p ? redactDaemonNonce(((await readBoundedFile(p, 1048576)) ?? "").trim()).slice(-2000) : "",
       k = await Le(e).catch(() => null);

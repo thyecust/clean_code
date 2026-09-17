@@ -17,7 +17,7 @@ import { isSemverGreaterThan, isSemverAtLeast, isSemverLessThan, isSemverAtMost,
 import { TZ, dt, l, A, Jr, Jg, W, Nz, Rt, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { RENAME_FALLBACK_ERRNOS, renameWithRetry, PARTIAL_WRITE_ERRNOS } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
@@ -25,7 +25,7 @@ import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getSettingsForSource, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { gracefulShutdownSync } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { hN } from "../插件系统/chunk-ajtn749s.js";
+import { claudeDownloadsHttpClient } from "../插件系统/chunk-ajtn749s.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -530,7 +530,7 @@ function re() {
     (t && e.startsWith(t + "/install/global/"))
   )
     return "bun";
-  return a.isRunningWithBun() && !bc() ? "bun" : "npm";
+  return a.isRunningWithBun() && !isBunStandaloneExecutable() ? "bun" : "npm";
 }
 async function ke() {
   let e = re() === "bun",
@@ -630,7 +630,7 @@ async function fetchVersionFromGcs(e) {
     let r = await runWithRetry(
       (o) => (
         t++,
-        hN.get(`${He}/${e}`, { timeout: ge, responseType: "text", signal: o })
+        claudeDownloadsHttpClient.get(`${He}/${e}`, { timeout: ge, responseType: "text", signal: o })
       ),
       {
         attempts: he,
@@ -887,7 +887,7 @@ To fix this issue:
           }.PACKAGE_URL,
       R =
         getCurrentPlatform() === "windows" &&
-        bc() &&
+        isBunStandaloneExecutable() &&
         process.execPath
           .replace(/\\/g, "/")
           .includes("/node_modules/@anthropic-ai/"),
@@ -1075,7 +1075,7 @@ To fix this issue:
         (logEvent("tengu_auto_updater_npm_failure", {
           npm_exit_code: E.code,
           package_manager: fromEnum(s),
-          is_bundled_mode: bc(),
+          is_bundled_mode: isBunStandaloneExecutable(),
           platform: getPlatformForAnalytics(getCurrentPlatform()),
           windows_self_rename: fromEnum(C),
           stderr_signature: fromEnum(w),

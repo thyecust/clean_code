@@ -24,7 +24,7 @@ import { assignValue } from "../../../01-核心基础设施/设置-配置/设置
 import { replaceControlChars } from "../../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { isFirstTimeForKey } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { buildCredentialBlankLists, expandEnvVars, formatTrustKeyJson } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { swt } from "../../../02-功能模块/插件系统/chunk-ajtn749s.js";
+import { runHeadersHelperCommand } from "../../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import {
   $c,
   Lp,
@@ -1168,7 +1168,7 @@ async function zr(e, t) {
     let a =
         t.scope !== void 0 &&
         Vr({ scope: t.scope, agentSource: t.agentSource }),
-      s = await swt({
+      s = await runHeadersHelperCommand({
         command: t.headersHelper,
         isRepoResidentConfig: a,
         repoResidentOrigin: t.declaredIn,

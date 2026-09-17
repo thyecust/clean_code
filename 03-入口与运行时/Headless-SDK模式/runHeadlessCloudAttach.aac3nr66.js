@@ -104,34 +104,34 @@ import {
 } from "../../02-功能模块/权限系统/chunk-z0pt04s8.js";
 import { isUnattendedServingEnabled, UNATTENDED_SERVING_CONSENT_VERSION, UNATTENDED_SERVING_CONSENT_TERMS, unattendedServingMachineName, readUnattendedServingConsent, writeUnattendedServingConsent, managedSettingsForbidUnattendedServing, primeUnattendedServingConsent } from "../../02-功能模块/AutoMode-自动模式/unattended-serving-consent.js";
 import {
-  z_e,
-  sIt,
-  Est,
-  Ast,
-  Cst,
-  vst,
-  Gae,
-  Rst,
-  Wz,
-  kst,
-  xst,
-  Hst,
-  Ist,
-} from "../../02-功能模块/Hooks钩子/chunk-6wg4v2yj.js";
+  cloudPluginsForwarderMemories,
+  setUnrefTimer,
+  isHookForwardingEnabled,
+  createConsentReachJudge,
+  reachMemories,
+  createDeviceHooksServingRuntime,
+  UNVERIFIED_SENDER_REASON,
+  openServedChannel,
+  CLOUD_SYNC_OFFLINE_DIALOG,
+  buildSyncOfflineDialogPayload,
+  pushCreatePermissionMode,
+  CLOUD_SESSION_UNRESPONSIVE_MESSAGE,
+  getResponseTimeoutMs,
+} from "../../02-功能模块/Hooks钩子/device-hooks-serving.js";
 import { DEFAULT_REMOTE_TOOL_LIMITS, WITHDRAWN_FEEDBACK, parseToolCallResult } from "../../02-功能模块/远程工具执行/remote-tool-protocol.js";
 import { normalizeDeclaredDialogKinds } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
-  Pst,
-  qae,
-  wHe,
+  getWorkerEpoch,
+  hasMachineGeneratedContent,
+  hasNonTextContentBlocks,
   aQt,
   lQt,
-  Ost,
-  O6e,
-  Dst,
-  D6e,
-  V_e,
-  Lst,
+  SEND_REASON_CANCELLED,
+  SEND_REASON_WITHDRAWN,
+  describeUndeliveredSend,
+  RemoteSessionManager,
+  getSessionRequestTarget,
+  fetchLatestSessionEvents,
 } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
 import { startDeviceRegistration } from "../../02-功能模块/Bridge-RemoteControl/device-bridge-registration.js";
@@ -531,7 +531,7 @@ function at(e) {
           if (M.kind === "announced")
             k({ at: M.status === "announced" ? "on" : "withdrawn" });
           else if (M.kind === "refused")
-            k({ at: M.reason === Gae ? "unverified" : "refused" });
+            k({ at: M.reason === UNVERIFIED_SENDER_REASON ? "unverified" : "refused" });
           else if (M.kind === "unsupported") k({ at: "refused" });
           I?.(M, U);
         },
@@ -649,8 +649,8 @@ function it(e) {
 }
 var dn = 5000;
 function dt(e) {
-  let t = e.enabled ?? Est,
-    o = e.setTimer ?? sIt,
+  let t = e.enabled ?? isHookForwardingEnabled,
+    o = e.setTimer ?? setUnrefTimer,
     r = e.now ?? Date.now;
   return async (d) => {
     if (!t()) return;
@@ -679,7 +679,7 @@ function dt(e) {
       I,
       O = null,
       A = !1,
-      R = vst({
+      R = createDeviceHooksServingRuntime({
         launchDir: k,
         cloudSessionId: d.sessionId,
         memory: _,
@@ -1072,7 +1072,7 @@ function ut(e) {
   };
 }
 function Ie(e) {
-  return e === ie.kind || e === Wz.kind || e === re.kind;
+  return e === ie.kind || e === CLOUD_SYNC_OFFLINE_DIALOG.kind || e === re.kind;
 }
 function ct({ io: e, declaredKinds: t, clock: o }) {
   return async function (d, p, _) {
@@ -1272,7 +1272,7 @@ class Ae {
       case "system":
         if (o.subtype === "init") {
           ((this.initCount += 1), (this.initSinceWorkerUp = !0));
-          let d = Pst(o);
+          let d = getWorkerEpoch(o);
           return (
             this.ports.onWorkerInit?.({
               ordinal: this.initCount,
@@ -1349,7 +1349,7 @@ class Ae {
       case "not_own":
         break;
     }
-    if (t === "worker" || qae(e)) {
+    if (t === "worker" || hasMachineGeneratedContent(e)) {
       this.emitAfterInit(e);
       return;
     }
@@ -1646,7 +1646,7 @@ function Fn(e) {
       `
 `,
       " ",
-    ].some((o) => qae({ message: { content: t.join(o) } }))
+    ].some((o) => hasMachineGeneratedContent({ message: { content: t.join(o) } }))
   );
 }
 function An(e) {
@@ -1925,7 +1925,7 @@ class Te {
   }
   armWatchdog() {
     this.clearWatchdog();
-    let e = Ist(this.compacting);
+    let e = getResponseTimeoutMs(this.compacting);
     this.cancelWatchdog = this.ports.clock.setTimeout(() => {
       if (((this.cancelWatchdog = null), this.stopped)) return;
       ((this.watchdogFires += 1),
@@ -1933,7 +1933,7 @@ class Te {
           timeout: fromEnum(this.compacting ? "compacting" : "response"),
         }),
         logForDebugging("[headlessCloudClient] response timeout; reconnecting"),
-        this.line("warning", Hst),
+        this.line("warning", CLOUD_SESSION_UNRESPONSIVE_MESSAGE),
         this.ports.reconnect());
     }, e);
   }
@@ -2593,7 +2593,7 @@ class Ne {
         this.logSend(e.kind, "closed");
       return "refused";
     }
-    if (e.kind === "message" && wHe({ message: { content: e.content } }))
+    if (e.kind === "message" && hasNonTextContentBlocks({ message: { content: e.content } }))
       return (
         this.failItem(e, Ue),
         this.logSend(e.kind, "malformed"),
@@ -2916,7 +2916,7 @@ class Ne {
       }
     }
     if (!this.postsInFlight.delete(e)) {
-      let w = !d.ok && d.withheld === !0 && d.reason === O6e;
+      let w = !d.ok && d.withheld === !0 && d.reason === SEND_REASON_WITHDRAWN;
       this.contained(() =>
         this.logSend(e.kind, w ? "withdrawn_held" : "abandoned", {
           renewed: p,
@@ -2940,7 +2940,7 @@ class Ne {
     } else if (d.withheld === !0)
       this.failItem(
         e,
-        d.reason === Ost || d.reason === O6e
+        d.reason === SEND_REASON_CANCELLED || d.reason === SEND_REASON_WITHDRAWN
           ? "it was still waiting for the cloud session to take your local changes or this machine's settings when it was let go (Stop, or the session ended)"
           : d.reason,
         { posted: !0, unconfirmed: !1 },
@@ -3478,7 +3478,7 @@ class It {
         ),
         !1
       );
-    if (Array.isArray(r) && wHe({ message: { content: r } }))
+    if (Array.isArray(r) && hasNonTextContentBlocks({ message: { content: r } }))
       return (
         this.emit(
           buildErrorResultMessage(
@@ -3790,7 +3790,7 @@ class It {
             if (this.undeliveredKindsTold.size === 0)
               queueMicrotask(() => this.undeliveredKindsTold.clear());
             (this.undeliveredKindsTold.add(F),
-              this.emit(buildInformationalSystemMessage(this.stampedSessionId, "warning", Dst(F, H))));
+              this.emit(buildInformationalSystemMessage(this.stampedSessionId, "warning", describeUndeliveredSend(F, H))));
           }),
         onError: (R) => logForDebugging(`[headlessCloudClient] stream error: ${R.message}`),
       }),
@@ -3818,7 +3818,7 @@ class It {
               preflightCheck: e.preflightCheck,
             }),
       },
-      w = e.createManager ? e.createManager(_, d) : new D6e(_, d),
+      w = e.createManager ? e.createManager(_, d) : new RemoteSessionManager(_, d),
       C = r.sendWait();
     if (C !== null)
       w.addSendGate(
@@ -3842,7 +3842,7 @@ class It {
     let E = e.entry === "create" ? e.requestedPermissionMode : void 0;
     if (E !== void 0)
       this.outbound.holdLaterSendsBehind(
-        xst({
+        pushCreatePermissionMode({
           manager: w,
           mode: E,
           surface: "headless",
@@ -4246,11 +4246,11 @@ async function Dt(e, { folder: t, attempts: o, lastError: r, signal: d }) {
     else logFeatureSad("remote_sync_offline_dialog", _);
   };
   try {
-    if (e === void 0 || !e.kinds.has(Wz.kind) || !me(t))
+    if (e === void 0 || !e.kinds.has(CLOUD_SYNC_OFFLINE_DIALOG.kind) || !me(t))
       return (p("not_shown"), { acknowledged: !1 });
     let { answer: _, answered: w } = await e.request(
-        Wz,
-        kst({
+        CLOUD_SYNC_OFFLINE_DIALOG,
+        buildSyncOfflineDialogPayload({
           folder: t,
           attempts: o,
           ...(r !== void 0 && { lastError: ws(r) }),
@@ -4439,7 +4439,7 @@ function Ft(e) {
         syncRoot: () => getDirSyncRoot(_.dirSync),
         syncElsewhere: w ? (_.dirSyncElsewhere ?? "unknown") : !1,
       },
-      I = e.reach?.(E) ?? Ast({ ...E, memory: e.reachMemory.reachFor(D) }),
+      I = e.reach?.(E) ?? createConsentReachJudge({ ...E, memory: e.reachMemory.reachFor(D) }),
       O = createConsentStoreTrustProbe(I),
       A = await Es(C.consentPin, k, O, _.signal, r);
     if (A === "declined")
@@ -5059,9 +5059,9 @@ function Gt(e, t) {
       forwardHomeSettings: e.forwardHomeSettings,
       ...(e.homeSettingsConsent && { consentMode: e.homeSettingsConsent }),
     }),
-    Ft({ memory: z_e.of(t), reachMemory: Cst.of(t) }),
+    Ft({ memory: cloudPluginsForwarderMemories.of(t), reachMemory: reachMemories.of(t) }),
     dt({ getTools: () => e.tools, memory: deviceHooksProcessMemories.of(t) }),
-    at({ openChannel: Rst }),
+    at({ openChannel: openServedChannel }),
   ];
 }
 async function zs(
@@ -5664,7 +5664,7 @@ async function eo(e, t, o, r, d) {
 }
 async function to(e, t) {
   let o = t.latestSequenceNum,
-    r = o === void 0 ? await V_e(e, void 0).then((d) => () => no(d)) : o;
+    r = o === void 0 ? await getSessionRequestTarget(e, void 0).then((d) => () => no(d)) : o;
   return r().catch(
     async (d) => (
       logForDebugging(`[headlessCloud] stream position unreadable, retrying once: ${l(d)}`),
@@ -5674,7 +5674,7 @@ async function to(e, t) {
   );
 }
 async function no(e) {
-  let t = await Lst(e, 1, { reportFeatureHealth: !1 });
+  let t = await fetchLatestSessionEvents(e, 1, { reportFeatureHealth: !1 });
   if (t === null) throw Error("the session history could not be read");
   let o = t.newestSequenceNum ?? t.events.at(-1)?.sequenceNum;
   if (o) return o;

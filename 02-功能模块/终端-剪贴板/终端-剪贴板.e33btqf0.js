@@ -10,7 +10,7 @@
 import { j, B, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ja, JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePathAsync, JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { ESCAPE_CHARACTER, BELL_CHARACTER, PARAM_SEPARATOR, CONTROL_INTRODUCER_CODES } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isLocalAddress } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -134,16 +134,16 @@ class L {
     )
       return;
     let { display: t, waylandDisplay: e } = O();
-    if (e && (await ja("wl-copy"))) {
+    if (e && (await resolveExecutablePathAsync("wl-copy"))) {
       this.tool = "wl-copy";
       return;
     }
     if (t) {
-      if (await ja("xclip")) {
+      if (await resolveExecutablePathAsync("xclip")) {
         this.tool = "xclip";
         return;
       }
-      if (await ja("xsel")) {
+      if (await resolveExecutablePathAsync("xsel")) {
         this.tool = "xsel";
         return;
       }

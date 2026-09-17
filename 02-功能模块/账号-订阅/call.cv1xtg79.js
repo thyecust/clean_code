@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 286 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Lwe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isIdleAmberFinchEnabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import "../认证-OAuth登录/console-profile-auth.js";
@@ -21,7 +21,7 @@ import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../Bedrock-Vertex/bedrock-setup-wizard.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -68,7 +68,7 @@ function x(M) {
   let R;
   if (n[0] === MEMO_CACHE_SENTINEL)
     ((R = [
-      ...(Lwe() ? [] : [{ label: "Upgrade to Max", value: "upgrade" }]),
+      ...(isIdleAmberFinchEnabled() ? [] : [{ label: "Upgrade to Max", value: "upgrade" }]),
       {
         label: "Add funds to continue with usage credits",
         value: "extra-usage",
@@ -112,7 +112,7 @@ function x(M) {
   else C = n[8];
   let g;
   if (n[9] !== u || n[10] !== C)
-    ((g = e(ve, { options: U, onCancel: u, onChange: C })),
+    ((g = e(Select, { options: U, onCancel: u, onChange: C })),
       (n[9] = u),
       (n[10] = C),
       (n[11] = g));

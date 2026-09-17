@@ -20,7 +20,7 @@ import { getSettingsForSource, updateSettingsForSource } from "../../01-核心�
 import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { isSelfHostedPool, getEnvironmentOrPoolId, getDefaultRemoteEnvironment } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -375,7 +375,7 @@ function me(Pn) {
     ((ce =
       Ee === "updating"
         ? e(SpinnerMessageLine, { message: "Updating\u2026" })
-        : e(ve, {
+        : e(Select, {
             options: Te,
             defaultValue: getEnvironmentOrPoolId(w),
             onChange: le,

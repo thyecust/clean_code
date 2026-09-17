@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, A, Jr, w8, H_e, I_e, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getTelemetryCode, jsonStringify, jsonParse, Is, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getTelemetryCode, jsonStringify, jsonParse, jsonParseUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, takeLastCodeUnits, CONTROL_CHARS_REGEX, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -24,7 +24,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { PROCESS_WRAPPER_ENV_VAR, getProcessWrapperState, getLauncherArgv, getLauncherConfigError, isLauncherRunnable, isExecutableFile, getAbsoluteLauncherPaths, getLauncherErrorMessage, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { removeGuiHostEntrypoint, g4, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
+import { removeGuiHostEntrypoint, removeRestrictedEnvVars, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import { PROVIDER_CONFIG_ENV_VARS, BASE_URL_ENV_VARS, API_KEY_ENV_VARS, TOKEN_FD_ENV_VARS, clearAwsEnvVars, getHostAuthEnvVarName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { resolveWrappedClaudeInvocation, resolveClaudeInvocation, getInstalledClaudePath, applyProcessWrapper, findInstalledVersionBinary } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
@@ -88,11 +88,11 @@ import { homedir as Ct } from "os";
 import { join as Ge } from "path";
 import { setTimeout as gr } from "timers/promises";
 var be = "com.anthropic.claude-daemon";
-async function ole() {
+async function isDaemonServiceControlSupported() {
   return !0;
 }
-function OZt() {
-  if (!bc()) return process.argv[1];
+function getInstalledBinaryPath() {
+  if (!isBunStandaloneExecutable()) return process.argv[1];
   return Ge(getLocalBinDir(), "claude");
 }
 function Te(t) {
@@ -107,7 +107,7 @@ function Tt() {
 function Ke() {
   return `${Tt()}/${be}`;
 }
-async function OWe(t) {
+async function installDaemonService(t) {
   let { jsonPath: e, logPath: o } = t,
     c = await getLauncherErrorMessage();
   if (c)
@@ -117,7 +117,7 @@ async function OWe(t) {
       serviceId: be,
       servicePath: "",
     };
-  let s = [...getLauncherArgv(), OZt()],
+  let s = [...getLauncherArgv(), getInstalledBinaryPath()],
     d = a.PATH || "/usr/local/bin:/usr/bin:/bin";
   {
     let m = at();
@@ -177,7 +177,7 @@ ${s.map((E) => `    <string>${Te(E)}</string>`).join(`
     servicePath: "",
   };
 }
-async function XHe() {
+async function uninstallDaemonService() {
   {
     let t = at();
     await execFileNoThrow("launchctl", ["bootout", Ke()], { useCwd: !1 });
@@ -190,13 +190,13 @@ async function XHe() {
   }
   return { ok: !1, error: "service uninstall not available on darwin" };
 }
-async function vPt() {
+async function startDaemonService() {
   return st("start");
 }
-async function DWe() {
+async function stopDaemonService() {
   return st("stop");
 }
-async function V$n() {
+async function restartDaemonService() {
   return st("restart");
 }
 async function st(t) {
@@ -270,7 +270,7 @@ function Pt(t) {
     .replaceAll("&lt;", "<")
     .replaceAll("&amp;", "&");
 }
-async function RPt() {
+async function checkDaemonServiceStaleness() {
   let t = { execPathStale: !1, launcherPrefixDead: !1 },
     e = await hr();
   if (!e) return t;
@@ -290,7 +290,7 @@ async function RPt() {
     }
   return t;
 }
-async function tF() {
+async function isDaemonServiceInstalled() {
   {
     let { code: t } = await execFileNoThrow("launchctl", ["print", Ke()], {
       useCwd: !1,
@@ -341,7 +341,7 @@ var Rr = new Set([
   "EUNKNOWN",
   "EPERM",
 ]);
-async function vit(t, e) {
+async function spawnDaemonProcess(t, e) {
   let o = getLauncherConfigError();
   if (o)
     return (
@@ -769,7 +769,7 @@ function Br(t) {
     delete e.CLAUDE_CODE_CHROME_MCP_ORG_DENIED,
     delete e.CLAUDE_CODE_EVAL_INTERVIEW_SESSION,
     delete e.CLAUDE_CODE_BRIDGE_SESSION_ID,
-    g4(e),
+    removeRestrictedEnvVars(e),
     removeBgDispatcherPlanEnvVars(e),
     removeGuiHostEntrypoint(e));
   let o = new Set(
@@ -817,7 +817,7 @@ class Lt {
   }
 }
 var Hr = new j(() => new Lt());
-function _v() {
+function getBackgroundSupervisorState() {
   return Hr.of(B().host);
 }
 import { setTimeout as Wr } from "timers/promises";
@@ -980,7 +980,7 @@ function jt(t) {
 var Ur = 64,
   Fr =
     /^\x1b(?:$|\[(?:[<?>]?\d*(?:;\d*)*\$?|M[\s\S]{0,2})$|P(?:$|[>01][^\x1b]*\x1b?$)|\](?:$|\d[^\x07\x1b]*\x1b?$))/;
-function z$n() {
+function createEscapeSequenceOnlyDetector() {
   let t = "";
   return (e) => {
     let o = t + e;
@@ -1155,7 +1155,7 @@ function _t(t, e) {
 function un(t) {
   let e;
   try {
-    e = Is(t);
+    e = jsonParseUntraced(t);
   } catch {
     return [];
   }
@@ -1440,7 +1440,7 @@ function vn(t, e, o, c, s, d) {
 }
 var Et = 1e4,
   xn = 2500;
-async function K$n(
+async function serveDaemonControlSocket(
   t,
   e,
   o,
@@ -2459,8 +2459,8 @@ function kn(t) {
     return { label: e.label, cwd: e.cwd, pid: e.pid };
   return null;
 }
-var K0 = 45000;
-async function YHe(t) {
+var DAEMON_START_TIMEOUT_MS = 45000;
+async function waitForDaemonReady(t) {
   let e = Date.now() + t;
   while (Date.now() < e) {
     if ((await controlRequest({ proto: BG_PROTO, op: "ping" })).ok) return !0;
@@ -2468,13 +2468,13 @@ async function YHe(t) {
   }
   return !1;
 }
-async function kPt(t, e) {
+async function waitForServiceDaemonLock(t, e) {
   let o = Date.now() + t,
     c = 0;
   while (!0) {
     let s = o - Date.now();
     if (s <= 0) return null;
-    if (await YHe(Math.min(s, 1000))) {
+    if (await waitForDaemonReady(Math.min(s, 1000))) {
       let d = Date.now();
       if (d >= c) {
         c = d + 1000;
@@ -2566,7 +2566,7 @@ async function Dn(t, e) {
     "down"
   );
 }
-async function KL(t = {}, e) {
+async function ensureDaemonRunning(t = {}, e) {
   if (getCurrentPlatform() !== "windows" && hasUidCollapse())
     return (
       logFeatureBad("daemon_ensure_running", "uid_collapse"),
@@ -2590,7 +2590,7 @@ async function or(t, e, o) {
   let d = Date.now(),
     m = d - c > 40000,
     _ = await ir(),
-    w = _ ? await RPt() : { execPathStale: !1, launcherPrefixDead: !1 },
+    w = _ ? await checkDaemonServiceStaleness() : { execPathStale: !1, launcherPrefixDead: !1 },
     k = _ && (w.execPathStale || w.launcherPrefixDead);
   if (k)
     (logEvent("tengu_bg_daemon_service_stale_exec", {
@@ -2611,8 +2611,8 @@ async function or(t, e, o) {
         logFeatureBad("daemon_ensure_running", U.code),
         { ok: !1, reason: U.reason, causeCode: U.causeCode }
       );
-    let J = await vPt(),
-      he = await YHe(5000);
+    let J = await startDaemonService(),
+      he = await waitForDaemonReady(5000);
     if (
       (logEvent("tengu_bg_daemon_install", {
         outcome_ok: he,
@@ -2666,7 +2666,7 @@ async function or(t, e, o) {
         { ok: !1, reason: J.reason, causeCode: J.causeCode }
       );
   }
-  let v = _v(),
+  let v = getBackgroundSupervisorState(),
     N =
       v.lastTransientSpawnAt === null
         ? null
@@ -2675,7 +2675,7 @@ async function or(t, e, o) {
   let T = jsonStringify({ label: Mn(), cwd: getCwd(), pid: process.pid }),
     V = Date.now(),
     I = ["daemon", "run", "--origin", "transient", "--spawned-by", T],
-    ne = await vit(I),
+    ne = await spawnDaemonProcess(I),
     {
       err: Y,
       child: q,
@@ -2716,7 +2716,7 @@ async function or(t, e, o) {
   if (!x && !M)
     x = await $e(
       r,
-      Math.max(Date.now() + (K0 - 30000), r.spawnIssuedAt + K0),
+      Math.max(Date.now() + (DAEMON_START_TIMEOUT_MS - 30000), r.spawnIssuedAt + DAEMON_START_TIMEOUT_MS),
       !0,
     );
   let fe = !1,
@@ -2736,7 +2736,7 @@ async function or(t, e, o) {
       (K = !U.recovered && U.installInProgressAtEnd),
       U.recovered)
     ) {
-      let J = await vit(I);
+      let J = await spawnDaemonProcess(I);
       if (J.err === null) {
         if (((fe = !0), (O = 0), p))
           Ze(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
@@ -2751,7 +2751,7 @@ async function or(t, e, o) {
           logForDebugging(
             `daemon: ${tt()} was being reinstalled when the first daemon was spawned (it exited at once); restarted it after ${U.waitedMs}ms`,
           ),
-          (x = await $e(r, r.spawnIssuedAt + K0, !0)));
+          (x = await $e(r, r.spawnIssuedAt + DAEMON_START_TIMEOUT_MS, !0)));
       } else if (
         (logForDebugging(
           `daemon: respawn after the npm reinstall window failed: ${l(J.err)}`,
@@ -2767,7 +2767,7 @@ async function or(t, e, o) {
         Ze(dirname(J.stderrPath), { recursive: !0, force: !0 }).catch(() => {});
     }
   }
-  let X = r.budgetExtended ? mt : K0,
+  let X = r.budgetExtended ? mt : DAEMON_START_TIMEOUT_MS,
     re = !x && !M && Date.now() - r.spawnIssuedAt - O > X + 60000,
     le = !x && (M || re) && !o && !(await ht(r)),
     de = !1,
@@ -2995,7 +2995,7 @@ async function On(t, e, o, c, s) {
     V = await terminateProcessGracefully(E.pid);
   }
   if (V !== "exited") return !1;
-  if (T) _v().prefixAxis = "took-over";
+  if (T) getBackgroundSupervisorState().prefixAxis = "took-over";
   return (
     logForDebugging(
       N
@@ -3014,7 +3014,7 @@ async function On(t, e, o, c, s) {
 }
 function Nn(t, e) {
   if (getLauncherCommandString() === "" || t) return !1;
-  let c = _v();
+  let c = getBackgroundSupervisorState();
   if (c.prefixAxis === "took-over") {
     if (e) return !1;
     if (!c.prefixContractViolationLogged)
@@ -3113,8 +3113,8 @@ async function nr(t) {
   );
 }
 async function ir() {
-  if (process.env.CLAUDE_CONFIG_DIR || !(await ole())) return !1;
-  return tF().catch(() => !1);
+  if (process.env.CLAUDE_CONFIG_DIR || !(await isDaemonServiceControlSupported())) return !1;
+  return isDaemonServiceInstalled().catch(() => !1);
 }
 function Mn() {
   let t = process.argv.slice(2);
@@ -3142,13 +3142,13 @@ function ar(t) {
   else logFeatureSad("agent_launcher", "served_by_skewed_wrapper");
 }
 async function sr() {
-  return isDaemonServiceInstallEnabled() && (await ole()) && !process.env.CLAUDE_CONFIG_DIR && isDaemonCliEnabled();
+  return isDaemonServiceInstallEnabled() && (await isDaemonServiceControlSupported()) && !process.env.CLAUDE_CONFIG_DIR && isDaemonCliEnabled();
 }
-function xPt(t) {
+function getHostManagedMarkerKey(t) {
   return STORAGE_KEYS.daemon(["host-managed", t]);
 }
 var $n = { namespace: "daemon", relPath: ["host-managed"] };
-async function Rit(t) {
+async function ensureHostManagedScope(t) {
   let e = await t.ensureScope($n);
   if (!e.ok)
     throw lr(
@@ -3156,38 +3156,38 @@ async function Rit(t) {
       e.error,
     );
 }
-async function kit(t, e) {
-  let o = await t.write(xPt(e), "", { publishDiscipline: "inPlace" });
+async function writeHostManagedMarker(t, e) {
+  let o = await t.write(getHostManagedMarkerKey(e), "", { publishDiscipline: "inPlace" });
   if (!o.ok)
     throw lr(Error("host tombstone write failed", { cause: o.error }), o.error);
 }
-async function LWe(t, e) {
-  await t.delete(xPt(e)).catch(() => {});
+async function deleteHostManagedMarker(t, e) {
+  await t.delete(getHostManagedMarkerKey(e)).catch(() => {});
 }
 function lr(t, e) {
   let o = getTelemetryCode(e);
   return Object.assign(t, o !== void 0 ? { code: o } : {});
 }
 export {
-  _v,
-  z$n,
-  ole,
-  OZt,
-  OWe,
-  XHe,
-  vPt,
-  DWe,
-  V$n,
-  RPt,
-  tF,
-  vit,
-  K$n,
-  K0,
-  YHe,
-  kPt,
-  KL,
-  xPt,
-  Rit,
-  kit,
-  LWe,
+  getBackgroundSupervisorState,
+  createEscapeSequenceOnlyDetector,
+  isDaemonServiceControlSupported,
+  getInstalledBinaryPath,
+  installDaemonService,
+  uninstallDaemonService,
+  startDaemonService,
+  stopDaemonService,
+  restartDaemonService,
+  checkDaemonServiceStaleness,
+  isDaemonServiceInstalled,
+  spawnDaemonProcess,
+  serveDaemonControlSocket,
+  DAEMON_START_TIMEOUT_MS,
+  waitForDaemonReady,
+  waitForServiceDaemonLock,
+  ensureDaemonRunning,
+  getHostManagedMarkerKey,
+  ensureHostManagedScope,
+  writeHostManagedMarker,
+  deleteHostManagedMarker,
 };

@@ -116,7 +116,7 @@ import { githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49
 import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { cE, qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { flattenNodeText, useStateWithGetter, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { Table, ModelPicker, SelectableRow } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
@@ -742,7 +742,7 @@ function Pr(qb) {
   else Rr = Lo[9];
   let _r;
   if (Lo[10] !== ei || Lo[11] !== Rr)
-    ((_r = e(ve, { options: Rr, onChange: ei })),
+    ((_r = e(Select, { options: Rr, onChange: ei })),
       (Lo[10] = ei),
       (Lo[11] = Rr),
       (Lo[12] = _r));
@@ -882,7 +882,7 @@ function $r(mC) {
   else Nr = si[7];
   let Br;
   if (si[8] !== lo || si[9] !== Xn || si[10] !== Nr)
-    ((Br = e(ve, {
+    ((Br = e(Select, {
       options: Xn,
       onChange: Nr,
       visibleOptionCount: 10,
@@ -1407,7 +1407,7 @@ function ga({
     [Xe, Et] = d(() => getCurrentProjectConfig().hasClaudeMdExternalIncludesApproved === !0),
     [mt, Kt] = d(me?.language),
     tr = C(mt),
-    [fe, He, Je] = qm(0),
+    [fe, He, Je] = useStateWithGetter(0),
     [, Rt] = d(0),
     rt = C(null),
     ft = C(""),
@@ -2344,7 +2344,7 @@ function ga({
                               onCancel: fr,
                               hideBorder: !0,
                               hideInputGuide: !0,
-                              children: e(ve, {
+                              children: e(Select, {
                                 options: on.options.map((k) => ({
                                   label: k,
                                   value: k,
@@ -2402,7 +2402,7 @@ function ga({
                                         }),
                                     ],
                                   })
-                                : e(ve, {
+                                : e(Select, {
                                     options: [
                                       {
                                         label: "Enable with latest channel",
@@ -3141,7 +3141,7 @@ function Vg(s, c) {
   if (s.id === "workflowSizeGuideline") return formatWorkflowSizeGuidelineLabel(m, s.isDefaultValue ?? !1);
   if (s.id === "autoUpdatesChannel" && c.autoUpdaterDisabledReason)
     return `disabled (${formatAutoUpdaterDisabledReason(c.autoUpdaterDisabledReason)})`;
-  if (s.id === "notifChannel" && !c.revampSections) return cE(ha({ value: m }));
+  if (s.id === "notifChannel" && !c.revampSections) return flattenNodeText(ha({ value: m }));
   return m;
 }
 function fa(Nk) {
@@ -7592,7 +7592,7 @@ function vS(s) {
 function US() {
   return [];
 }
-function n4(cx) {
+function SettingsDialog(cx) {
   let Gt = _(34),
     { onClose: _o, context: ze, defaultTab: Mp } = cx,
     [$s, ux] = d(Mp),
@@ -7745,4 +7745,4 @@ function n4(cx) {
   else FS = Gt[33];
   return FS;
 }
-export { n4 };
+export { SettingsDialog };

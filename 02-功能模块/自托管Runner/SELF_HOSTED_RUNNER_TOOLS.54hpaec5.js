@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { bc } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
@@ -603,7 +603,7 @@ var H = buildTool({
         log_path: a,
       }),
       y = process.execPath,
-      _ = bc() ? [] : [process.argv[1]],
+      _ = isBunStandaloneExecutable() ? [] : [process.argv[1]],
       h = spawn(y, [..._, ...g], {
         detached: !0,
         stdio: "ignore",

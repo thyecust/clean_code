@@ -21,7 +21,7 @@ import { resolveSetting, saveUserIntentSetting } from "../上下文压缩-Compac
 import { areWorkflowsAvailable } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
 import { DEFAULT_OUTPUT_STYLE_NAME, hasConnectedIdeClient, getEffectiveSessionModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { sanitizeForRelay } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { ensurePolicyLimitsLoadedForDiagnostic } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { isPushNotificationsEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 import { isArtifactConfigToggleable } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
@@ -90,7 +90,7 @@ async function w(n, o, t) {
     return {
       ok: !1,
       kind: "refusal",
-      message: `${Qn(n)} isn't a /config setting. Run /config to see what's available.`,
+      message: `${sanitizeForRelay(n)} isn't a /config setting. Run /config to see what's available.`,
     };
   let s = "searchText" in e ? e.searchText : e.label;
   if (m(e, o))
@@ -121,7 +121,7 @@ async function w(n, o, t) {
         return {
           ok: !1,
           kind: "refusal",
-          message: `${s} takes true or false, not "${Qn(o)}".`,
+          message: `${s} takes true or false, not "${sanitizeForRelay(o)}".`,
         };
       let r = await e.onChange(d);
       if (r?.error) {
@@ -163,7 +163,7 @@ async function w(n, o, t) {
           kind: "refusal",
           message: e.options
             ? `${s} takes one of: ${e.options.join(", ")}.${r}`
-            : `${s} doesn't accept "${Qn(o)}".${r}`,
+            : `${s} doesn't accept "${sanitizeForRelay(o)}".${r}`,
         };
       }
       let l = await e.onChange(d);
@@ -183,7 +183,7 @@ async function w(n, o, t) {
       return {
         ok: !0,
         kind: "refusal",
-        message: `Set ${s} to ${Qn(d)}${l?.messageSuffix ?? ""}`,
+        message: `Set ${s} to ${sanitizeForRelay(d)}${l?.messageSuffix ?? ""}`,
       };
     }
   }

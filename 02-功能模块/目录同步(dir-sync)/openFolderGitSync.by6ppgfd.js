@@ -23,29 +23,29 @@ import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.
 import { createDirChangeFeed, createGitSessionRecord, readGitSessionRecord, writeGitSessionRecord } from "./chunk-zbxyj64j.js";
 import { DEFAULT_MAX_BUNDLE_BYTES, formatBundleHeader, validateBundleForRefs } from "../Git-Worktree/dir-sync-git-repository.js";
 import "../文件同步-Sync/chunk-tqwnv5vj.js";
-import { mFt, gFt, hFt, _Ft, yFt } from "../云目录同步-Git/云目录同步-Git.tksek4c2.js";
+import { acquireGitSyncWriterLock, createGitDirSyncApplyDown, createGitDirSyncEngine, sessionTrashPort, gitJournalCodec } from "../云目录同步-Git/云目录同步-Git.tksek4c2.js";
 import { segmentScopeSkip, createNestedRepositoryCheck, platformIgnoresCase, ignoreMatcherFrom, readRootIgnoreLines } from "../文件同步-Sync/sync-folder-scan.js";
 import {
-  z4,
-  fFt,
-  Npt,
-  Fpt,
-  $pt,
-  Upt,
-  B9n,
-  jbe,
-  j9n,
-  Bpt,
-  jpt,
-  yze,
-  Wpt,
-  Wbe,
-  q9n,
-  z9n,
-  Gpt,
-  V9n,
-  qpt,
-} from "./chunk-gbhqtdpn.js";
+  isValidObjectId,
+  buildTreeObject,
+  parseTreeEntries,
+  parseCommitBody,
+  createDirSyncRepo,
+  buildPackfile,
+  parsePackfile,
+  MAX_OBJECT_BYTES,
+  openDirSyncObjectStore,
+  loadStatCache,
+  DIR_SYNC_GIT_IDENTITY,
+  MAX_SYNC_BYTES,
+  MAX_STORE_BUDGET_BYTES,
+  DIR_SYNC_LOG_EVENTS,
+  createSnapshotPort,
+  TRASH_DIR_NAME,
+  resolveDirSyncStoreRoot,
+  getDirSyncSessionDir,
+  getStatCachePath,
+} from "./dir-sync-git-store.js";
 import { createDirSyncJournalTransport } from "./dir-sync-git-lane.js";
 import "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
 import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
@@ -97,7 +97,7 @@ function N({
 }) {
   let y = e.store.objectFormat,
     g = async (r) => {
-      if (!z4(r, y)) return null;
+      if (!isValidObjectId(r, y)) return null;
       try {
         let o = await e.listingOf(r);
         return o.kind === "ok"
@@ -135,7 +135,7 @@ function N({
           missingCount: _.length,
           missing: _,
         };
-      let O = await B9n(r.subarray(k.packOffset), {
+      let O = await parsePackfile(r.subarray(k.packOffset), {
         objectFormat: y,
         maxInflatedBytes: X,
         maxObjects: K,
@@ -155,7 +155,7 @@ function N({
           reason: "unpack_failed",
           detail: `${v.type} ${v.id} is not one git would accept`,
         };
-      let T = O.objects.find((w) => w.body.length > jbe);
+      let T = O.objects.find((w) => w.body.length > MAX_OBJECT_BYTES);
       if (T !== void 0)
         return {
           ok: !1,
@@ -276,7 +276,7 @@ function N({
     async heldInOwnRight(r) {
       return R(null, async () => {
         let o = new Set();
-        for (let c of r) if (z4(c, y) && (await e.store.hasHere(c))) o.add(c);
+        for (let c of r) if (isValidObjectId(c, y) && (await e.store.hasHere(c))) o.add(c);
         return o;
       });
     },
@@ -284,7 +284,7 @@ function N({
       let o = !1;
       return {
         read: async (b) => {
-          if (o || isSignalAborted(h) || !z4(b, y)) return { kind: "unavailable" };
+          if (o || isSignalAborted(h) || !isValidObjectId(b, y)) return { kind: "unavailable" };
           if (e.store.deflatedSize(b) === null) return { kind: "unavailable" };
           let k = (await R(!1, () => e.store.hasHere(b)))
             ? await R({ kind: "absent" }, () => e.store.get(b))
@@ -313,13 +313,13 @@ function H(e) {
 function Q(e, t) {
   switch (e.type) {
     case "tree": {
-      let s = Npt(e.body, t);
+      let s = parseTreeEntries(e.body, t);
       if (s === null) return !1;
-      let d = fFt(s, t);
+      let d = buildTreeObject(s, t);
       return d.ok && d.tree.id === e.id;
     }
     case "commit":
-      return Fpt(e.body, t) !== null && Z(e.body);
+      return parseCommitBody(e.body, t) !== null && Z(e.body);
     case "blob":
       return !0;
     case "tag":
@@ -354,7 +354,7 @@ async function ee(e, t, s, d, h) {
     let p = R.pop();
     if (m.has(p.id)) continue;
     m.add(p.id);
-    let f = Fpt(p.body, h);
+    let f = parseCommitBody(p.body, h);
     if (f === null) return { unaccounted: p.id, reached: m };
     g.push(f.tree);
     for (let r of f.parents) {
@@ -372,7 +372,7 @@ async function ee(e, t, s, d, h) {
     if (f !== void 0) m.add(p);
     let r = f?.type === "tree" ? f.body : await te(e, p);
     if (r === null) return { unaccounted: p, reached: m };
-    for (let o of Npt(r, h) ?? []) {
+    for (let o of parseTreeEntries(r, h) ?? []) {
       if (o.kind === "directory") {
         g.push(o.id);
         continue;
@@ -420,7 +420,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
         return y(null, async () => {
           let f = new Set();
           for (let r of p) {
-            if (!z4(r, m) || !(await e.store.hasHere(r))) continue;
+            if (!isValidObjectId(r, m) || !(await e.store.hasHere(r))) continue;
             let o = await e.commitParents(r);
             if (o === "unknown") {
               logForDebugging(
@@ -475,7 +475,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
       let b = o.flatMap((a) =>
         a.id === null ? [] : [{ name: a.name, id: a.id }],
       );
-      if (!f.every((a) => z4(a, m)))
+      if (!f.every((a) => isValidObjectId(a, m)))
         return A("arguments", "a prerequisite is not an object id");
       if (f.length > MAX_LISTED_COMMITS)
         return {
@@ -523,7 +523,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
           _.push(D.object);
         }
       }
-      let v = await Upt(_, m),
+      let v = await buildPackfile(_, m),
         T = Buffer.concat([
           formatBundleHeader({
             version: m === "sha1" ? 2 : 3,
@@ -607,9 +607,9 @@ async function openFolderGitSync({
   let o = toInfraSessionId(e),
     c = await resolveDirSyncRecordLocation(t, o, p),
     b = d !== void 0,
-    F = await Gpt(t, p),
-    E = V9n(F, o),
-    k = q(E, z9n);
+    F = await resolveDirSyncStoreRoot(t, p),
+    E = getDirSyncSessionDir(F, o),
+    k = q(E, TRASH_DIR_NAME);
   await mkdir(k, { recursive: !0, mode: se });
   let C = he(y),
     _ = await ue({
@@ -671,14 +671,14 @@ async function openFolderGitSync({
   }
   function T(a, j, B) {
     let D = createSyncedFileLaneClient({ sessionId: o, credentials: g }),
-      I = hFt({
+      I = createGitDirSyncEngine({
         sessionId: o,
         gitRoot: t,
         push: j.push,
         recordPath: c.path,
         snapshot: j.snapshot,
         transport: createDirSyncJournalTransport({ client: D, direct: D }),
-        applyDown: gFt({
+        applyDown: createGitDirSyncApplyDown({
           gitRoot: t,
           realRoot: a,
           sessionId: o,
@@ -686,7 +686,7 @@ async function openFolderGitSync({
           checkout: j.checkout,
           deps: {
             now: () => new Date(),
-            trash: _Ft(
+            trash: sessionTrashPort(
               t,
               a,
               async () => k,
@@ -698,7 +698,7 @@ async function openFolderGitSync({
             ),
           },
         }),
-        codec: yFt,
+        codec: gitJournalCodec,
         onStatus: y,
         boundToThisMachine: m,
         consent: R ?? (() => getDirectoryDirSyncConsent(t)),
@@ -706,7 +706,7 @@ async function openFolderGitSync({
         initialPass: b ? "send" : "none",
         ...(f !== void 0 && { endedEarlier: f }),
         writerLock: (w) =>
-          mFt({ recordPath: c.path, lockPath: q(E, re), onLost: w }),
+          acquireGitSyncWriterLock({ recordPath: c.path, lockPath: q(E, re), onLost: w }),
         onPeerSilent: () => {},
         ...(isDirSyncStreamingEnabled() && {
           changeFeed: () => createDirChangeFeed({ root: t }),
@@ -738,11 +738,11 @@ async function ue({
   ackedOf: R,
   withheldOf: p,
   onPassStats: f = () => {},
-  maxBytes: r = yze,
-  budgetBytes: o = Wpt,
+  maxBytes: r = MAX_SYNC_BYTES,
+  budgetBytes: o = MAX_STORE_BUDGET_BYTES,
   signal: c,
 }) {
-  let b = await j9n({
+  let b = await openDirSyncObjectStore({
     root: d,
     sessionId: sanitizePathSegment(s),
     objectFormat: "sha1",
@@ -765,7 +765,7 @@ async function ue({
           { kind: "seed_not_stored", detail: a }
         );
     }
-    let C = $pt({ store: k, identity: jpt }),
+    let C = createDirSyncRepo({ store: k, identity: DIR_SYNC_GIT_IDENTITY }),
       _ = await C.listingOf(h.pin);
     if (_.kind !== "ok")
       return (
@@ -778,7 +778,7 @@ async function ue({
               : `${_.kind} ${_.id} at ${_.at || "/"}`,
         }
       );
-    let O = await Bpt(qpt(d)),
+    let O = await loadStatCache(getStatCachePath(d)),
       v = U();
     return {
       kind: "ok",
@@ -792,7 +792,7 @@ async function ue({
           onPass: (a) => f({ kind: "push", ...a }),
           ...(c !== void 0 && { signal: c }),
         }),
-        snapshot: q9n({
+        snapshot: createSnapshotPort({
           folder: e,
           realRoot: t,
           repo: C,
@@ -828,7 +828,7 @@ async function ue({
 function fe(e) {
   switch (e.kind) {
     case "tree":
-      logEvent(Wbe.repoPass, {
+      logEvent(DIR_SYNC_LOG_EVENTS.repoPass, {
         pass: S("tree"),
         listed_paths: e.listedPaths,
         hashed_files: e.hashedFiles,
@@ -843,7 +843,7 @@ function fe(e) {
       });
       return;
     case "push":
-      logEvent(Wbe.repoPass, {
+      logEvent(DIR_SYNC_LOG_EVENTS.repoPass, {
         pass: S("push"),
         objects: e.objects,
         pack_bytes: e.packBytes,
@@ -851,7 +851,7 @@ function fe(e) {
       });
       return;
     case "receive":
-      logEvent(Wbe.repoPass, {
+      logEvent(DIR_SYNC_LOG_EVENTS.repoPass, {
         pass: S("receive"),
         objects_read: e.objectsRead,
         decode_ms: e.decodeMs,

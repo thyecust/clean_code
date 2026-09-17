@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import {
-  Err,
+  canUsePerTurnControl,
   isActiveCatalogFromServer,
   getModelEffortLevels,
   getModelDefaultEffort,
@@ -398,7 +398,7 @@ function unpinLaunchEffortLevels(e) {
     e,
   );
 }
-function ese(e, t) {
+function releaseLaunchEffortPins(e, t) {
   if (e) unpinLaunchEffortLevels(t);
   else if (!ke()) Xxt();
 }
@@ -435,7 +435,7 @@ function shouldConfirmEffortChangeOnWarmCache(e, t, o, r, u) {
   if (
     typeof resolveModelEffortLevel(o, e) !== "number" &&
     typeof resolveModelEffortLevel(o, t) !== "number" &&
-    Err(o, getCanonicalName(o))
+    canUsePerTurnControl(o, getCanonicalName(o))
   )
     return !1;
   if (isLaunchEffortPinned(o)) {
@@ -458,7 +458,7 @@ async function applyEffortLevelChange(e, t, o = !0, r) {
     let d = await saveEffortLevelForModel(u, t, r);
     if (d.error) return d.error;
   }
-  ese(o, r);
+  releaseLaunchEffortPins(o, r);
   return;
 }
 function buildInitialEffortState(e) {
@@ -1030,7 +1030,7 @@ export {
   getSessionEffortLevel,
   getCarriableEffortLevel,
   unpinLaunchEffortLevels,
-  ese,
+  releaseLaunchEffortPins,
   resolveModelEffortLevel,
   resolveEffortLevelForRemoteSession,
   getDefaultEffortLevelForModel,

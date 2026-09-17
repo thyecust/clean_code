@@ -21,7 +21,7 @@ import { UP_ARROW_GLYPH, DOWN_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { sanitizeDisplayTextWithoutRedaction, sanitizeDisplayText, isUnconfiguredMcpServer, formatNeedsText, getMcpServerTools, formatMcpScopeLocation, collectAgentMcpServers, getClaudeAiMcpEverConnectedSet } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { buildCliCommand } from "../插件系统/plugin-system-core.js";
-import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { sanitizeForRelay } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { useAppStateSession, useAppStateSelector, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -40,7 +40,7 @@ import "../插件系统/channel-gate.js";
 import { Table, DimParenthetical, useMcpReconnect, useMcpToggleEnabled } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { useCursorDeclaration } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { useStateWithGetter, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -50,7 +50,7 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import { oye, MIt, sye, sit, sWe, iWe } from "../插件系统/chunk-jwm9gdkd.js";
+import { buildCachedMcpServerStatus, MCP_AUTH_UNATTENDED_SESSION_MESSAGE, McpRemoteServerDialog, McpStdioServerDialog, McpToolDetailDialog, McpServerToolsDialog } from "../插件系统/chunk-jwm9gdkd.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { McpConfigDiagnostics } from "../MCP客户端/mcp-config-diagnostics.js";
 import "../后台任务-Shell管理/bg-rendezvous-server.js";
@@ -93,7 +93,7 @@ function Nt() {
   return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js").mcpAuthModule();
 }
 function rt({ agentServer: s, onCancel: i, onComplete: l }) {
-  let f = re((S, ...T) => l(typeof S === "string" ? Qn(S) : S, ...T), [l]),
+  let f = re((S, ...T) => l(typeof S === "string" ? sanitizeForRelay(S) : S, ...T), [l]),
     [u] = useTheme(),
     [m, w] = d(!1),
     [b, J] = d(null),
@@ -106,7 +106,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
   useKeybinding("confirm:no", oe, { context: "Confirmation", isActive: m });
   let c = re(async () => {
       if (isUnattendedBgSession()) {
-        J(MIt);
+        J(MCP_AUTH_UNATTENDED_SESSION_MESSAGE);
         return;
       }
       if (
@@ -278,7 +278,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
         }),
         b && e(Box, { children: e(ErrorMessage, { error: b }) }),
         e(Box, {
-          children: e(ve, {
+          children: e(Select, {
             options: k,
             onChange: async (S) => {
               switch (S) {
@@ -462,7 +462,7 @@ function wt({
   showUnusedConnectors: b,
   onToggleUnusedConnectors: J,
 }) {
-  let [X, j, I] = qm(0),
+  let [X, j, I] = useStateWithGetter(0),
     { rows: oe } = useVirtualScrollViewportSize(useTerminalSize()),
     c = useHasVirtualScrollViewport(),
     v = V(() => {
@@ -848,7 +848,7 @@ function To(Nr) {
     else ((O = q[19]), (P = q[20]));
   } else if (A.client.type === "cached") {
     if (q[21] !== A.client.cacheSavedAt || q[22] !== R || q[23] !== be) {
-      let io = oye(A.client.cacheSavedAt, be);
+      let io = buildCachedMcpServerStatus(A.client.cacheSavedAt, be);
       ((O = getThemeColor(io.tone, R)(io.glyph)), (P = io.statusText));
       ((q[21] = A.client.cacheSavedAt),
         (q[22] = R),
@@ -1268,7 +1268,7 @@ function He(fs) {
           B[46] !== ne ||
           B[47] !== y.server
         )
-          ((Te = e(sit, {
+          ((Te = e(McpStdioServerDialog, {
             server: y.server,
             serverToolsCount: Ue.length,
             onViewTools: z,
@@ -1304,7 +1304,7 @@ function He(fs) {
           B[56] !== ne ||
           B[57] !== y.server
         )
-          ((Te = e(sye, {
+          ((Te = e(McpRemoteServerDialog, {
             server: y.server,
             serverToolsCount: Ue.length,
             onViewTools: z,
@@ -1333,7 +1333,7 @@ function He(fs) {
       else ((Z = B[60]), (z = B[61]));
       let ne;
       if (B[62] !== Z || B[63] !== z || B[64] !== y.server)
-        ((ne = e(iWe, { server: y.server, onSelectTool: Z, onBack: z })),
+        ((ne = e(McpServerToolsDialog, { server: y.server, onSelectTool: Z, onBack: z })),
           (B[62] = Z),
           (B[63] = z),
           (B[64] = y.server),
@@ -1350,7 +1350,7 @@ function He(fs) {
       else Z = B[67];
       let z;
       if (B[68] !== Z || B[69] !== y.server || B[70] !== y.tool)
-        ((z = e(sWe, { tool: y.tool, server: y.server, onBack: Z })),
+        ((z = e(McpToolDetailDialog, { tool: y.tool, server: y.server, onBack: Z })),
           (B[68] = Z),
           (B[69] = y.server),
           (B[70] = y.tool),
@@ -1386,7 +1386,7 @@ function Ft(oi) {
   if (ge[0] !== Bo)
     ((Tn = (Lo, ...It) => {
       let ni = It;
-      return Bo(typeof Lo === "string" ? Qn(Lo) : Lo, ...ni);
+      return Bo(typeof Lo === "string" ? sanitizeForRelay(Lo) : Lo, ...ni);
     }),
       (ge[0] = Bo),
       (ge[1] = Tn));
@@ -1468,7 +1468,7 @@ function Ft(oi) {
           let Ut = Lt instanceof Error ? Lt.message : String(Lt);
           if ((Je(Ut), ze(!1), Lt instanceof mi)) le(sanitizeDisplayText(Ut));
           else if (mayHaveRemoteClient(Et))
-            (logForDebugging(`mcp reconnect (typed) error for ${Qn(W)}: ${Ut}`, {
+            (logForDebugging(`mcp reconnect (typed) error for ${sanitizeForRelay(W)}: ${Ut}`, {
               level: "error",
             }),
               le(
@@ -1677,7 +1677,7 @@ async function Vo(s, i) {
   s(l ? zn : Hn, { display: "system" });
 }
 function Qe(s) {
-  return (i, l) => s(typeof i === "string" ? Qn(i) : i, l);
+  return (i, l) => s(typeof i === "string" ? sanitizeForRelay(i) : i, l);
 }
 async function Ei(s, i, l) {
   if (l) {

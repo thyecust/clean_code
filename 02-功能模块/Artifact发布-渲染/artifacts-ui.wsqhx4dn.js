@@ -30,7 +30,7 @@ import {
   getArtifactReadInstruction,
   normalizeArtifactTitle,
   sanitizeEditableTitle,
-  zZn,
+  sanitizeArtifactTitleInput,
   sanitizeFaviconText,
   buildFrameHeaders,
   mainObservedArtifactVersion,
@@ -1202,7 +1202,7 @@ function we(i) {
   return i.title || i.label || i.slug;
 }
 function en(i) {
-  return zZn(collapseToSingleLine(i));
+  return sanitizeArtifactTitleInput(collapseToSingleLine(i));
 }
 function Te(i, l) {
   for (let [p, h] of getNonOpenedFrameUrlEntries(i)) if (!isCreatedFrameKey(p) && uuidSlugFromUrl(h.url) === l) return p;

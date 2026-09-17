@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 99 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Gmr, QYt, ZYt, eJt } from "../../02-功能模块/后台任务-Shell管理/chunk-9mmyv6hf.js";
+import { runBgSpare as Gmr, spawnSpare as QYt, claimSpare as ZYt, reapOrphanSpares as eJt } from "../../02-功能模块/后台任务-Shell管理/bg-session-worker.js";
 import "./spare-session-claim.js";
 import "./session-ingress-token.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-gnmy62vg.js";

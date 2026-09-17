@@ -11,13 +11,13 @@
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { URL_HANDLER_BUNDLE_ID } from "../../02-功能模块/深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
 import { getRepoLastFetchTime, getTrackedRepoPaths, filterExistingRepoPaths } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { CUn } from "../../02-功能模块/插件系统/chunk-q8w2zntw.js";
+import { parseDeepLinkUri } from "../../02-功能模块/插件系统/chunk-q8w2zntw.js";
 import { realpath } from "fs/promises";
 import { homedir } from "os";
 import { spawn } from "child_process";
@@ -84,23 +84,23 @@ async function F() {
 async function A() {
   let r = a.TERMINAL;
   if (r) {
-    let e = await ja(r);
+    let e = await resolveExecutablePathAsync(r);
     if (e) return { name: basename(r), command: e };
   }
-  let t = await ja("x-terminal-emulator");
+  let t = await resolveExecutablePathAsync("x-terminal-emulator");
   if (t) return { name: "x-terminal-emulator", command: t };
   for (let e of I) {
-    let s = await ja(e);
+    let s = await resolveExecutablePathAsync(e);
     if (s) return { name: e, command: s };
   }
   return null;
 }
 async function S() {
-  let r = await ja("wt.exe");
+  let r = await resolveExecutablePathAsync("wt.exe");
   if (r) return { name: "Windows Terminal", command: r };
-  let t = await ja("pwsh.exe");
+  let t = await resolveExecutablePathAsync("pwsh.exe");
   if (t) return { name: "PowerShell", command: t };
-  let e = await ja("powershell.exe");
+  let e = await resolveExecutablePathAsync("powershell.exe");
   if (e) return { name: "PowerShell", command: e };
   return {
     name: "Command Prompt",
@@ -349,7 +349,7 @@ async function handleDeepLinkUri(r) {
   logForDebugging(`Handling deep link URI: ${r}`);
   let t;
   try {
-    t = CUn(r);
+    t = parseDeepLinkUri(r);
   } catch (m) {
     let c = m instanceof Error ? m.message : String(m);
     return (

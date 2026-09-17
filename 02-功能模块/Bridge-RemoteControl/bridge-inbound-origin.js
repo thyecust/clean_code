@@ -120,7 +120,7 @@ function R(e, r) {
 function isHumanOriginTurn(e, r, t) {
   return e ? e.kind === "human" : R(r, t);
 }
-function r6n(e, r, t, a) {
+function isHumanIngressTurn(e, r, t, a) {
   if (e) return e.kind === "human";
   if (!r) return !0;
   return R(t, a) || getClaudeCodeHumanOrigin(t, a) !== void 0;
@@ -325,7 +325,7 @@ export {
   getActivityObservation,
   isHumanRelayTurn,
   isHumanOriginTurn,
-  r6n,
+  isHumanIngressTurn,
   isHumanTurnEvent,
   isHumanRelayOrigin,
   buildRelayTurnFields,

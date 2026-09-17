@@ -14,7 +14,7 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getPermissionModeTitle } from "./chunk-e4pfvp7x.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -285,7 +285,7 @@ function ScheduledTaskDetail(st) {
   else Ce = m[65];
   let xe;
   if (m[66] !== P || m[67] !== k || m[68] !== qe || m[69] !== Ce)
-    ((xe = e(ve, { options: qe, isDisabled: P, onChange: Ce, onCancel: k })),
+    ((xe = e(Select, { options: qe, isDisabled: P, onChange: Ce, onCancel: k })),
       (m[66] = P),
       (m[67] = k),
       (m[68] = qe),

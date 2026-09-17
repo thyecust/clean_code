@@ -18,7 +18,7 @@ import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { bc, ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable, resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { getOtelHeadersHelperLastFailure, getGlobalConfig, formatAutoUpdaterDisabledReason, getAutoUpdaterDisabledReason } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -248,7 +248,7 @@ function re() {
 }
 async function ce() {
   let [e, t] = re();
-  if (bc()) {
+  if (isBunStandaloneExecutable()) {
     let l =
       getClaudeConfigDir().replace(/\\/g, "/").replace(/\/+$/, "") + "/local/node_modules/";
     if (t.startsWith(l)) return "npm-local";
@@ -295,12 +295,12 @@ async function detectInstallType() {
   return ((X.of(B().host).attempted = !0), await ce());
 }
 async function ue() {
-  if (bc()) {
+  if (isBunStandaloneExecutable()) {
     try {
       return await realpath(process.execPath);
     } catch {}
     try {
-      let e = await ja("claude");
+      let e = await resolveExecutablePathAsync("claude");
       if (e) return e;
     } catch {}
     try {
@@ -319,7 +319,7 @@ async function ue() {
 }
 function de() {
   try {
-    if (bc()) return process.execPath || "unknown";
+    if (isBunStandaloneExecutable()) return process.execPath || "unknown";
     return process.argv[1] || "unknown";
   } catch {
     return "unknown";
@@ -514,7 +514,7 @@ async function fe(e) {
   let l = await findClaudeAliasTarget(),
     h = await findInstalledClaudeAliasTarget();
   if (e === "npm-local") {
-    if (!(await ja("claude")) && !h)
+    if (!(await resolveExecutablePathAsync("claude")) && !h)
       if (l)
         t.push({
           issue: "Local installation not accessible",

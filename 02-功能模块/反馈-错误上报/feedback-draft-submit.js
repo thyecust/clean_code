@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { startSlowOperationSpan, Tc, Is, readTailBytes, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { startSlowOperationSpan, jsonStringifyUntraced, jsonParseUntraced, readTailBytes, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
@@ -40,11 +40,11 @@ import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Comma
 import { hasThirdPartyTranscriptMarkers, anyTranscriptEntryHasThirdPartyMarkers, MAX_RAW_TRANSCRIPT_BYTES, MAX_FEEDBACK_PAYLOAD_BYTES, measureFeedbackPayloadBytes, findRecentEntriesWithinByteBudget, postFeedbackRequest } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 var J = 65536;
 function H(e) {
-  return Buffer.byteLength(Tc(Tc(e)).slice(1, -1));
+  return Buffer.byteLength(jsonStringifyUntraced(jsonStringifyUntraced(e)).slice(1, -1));
 }
 function L(e) {
-  let s = Tc(e).slice(1, -1);
-  return Buffer.byteLength(Tc(s).slice(1, -1));
+  let s = jsonStringifyUntraced(e).slice(1, -1);
+  return Buffer.byteLength(jsonStringifyUntraced(s).slice(1, -1));
 }
 function O(e) {
   let s = measureFeedbackPayloadBytes(e);
@@ -173,7 +173,7 @@ function Y(e) {
     if (!c) continue;
     let t;
     try {
-      t = Is(c);
+      t = jsonParseUntraced(c);
     } catch {
       continue;
     }

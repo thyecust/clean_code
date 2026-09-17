@@ -19,7 +19,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { isClaudeAISubscriber, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { CLAUDE_IN_CHROME_URL, CHROME_EXTENSION_RECONNECT_URL, isChromeExtensionInstalled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -202,7 +202,7 @@ function ce(jo) {
   else De = x[28];
   let Ee;
   if (x[29] !== ie || x[30] !== We || x[31] !== De)
-    ((Ee = e(ve, {
+    ((Ee = e(Select, {
       options: We,
       onChange: ie,
       onCancel: De,
@@ -232,7 +232,7 @@ function W(en) {
   else uo = Ue[0];
   let Re;
   if (Ue[1] !== Ie)
-    ((Re = e(ve, {
+    ((Re = e(Select, {
       options: uo,
       onChange: () => Ie(),
       onCancel: () => Ie(),
@@ -499,7 +499,7 @@ function Je(Sn) {
                   if ((go("menu"), Be(Mo), Eo)) Z(Eo);
                 },
               })
-            : e(ve, { options: K, onChange: me, hideIndexes: !0 }, Ve),
+            : e(Select, { options: K, onChange: me, hideIndexes: !0 }, Ve),
           je &&
             r(Text, {
               color: "warning",

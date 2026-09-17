@@ -19,7 +19,7 @@ import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小�
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator, shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
@@ -1056,7 +1056,7 @@ function PowerupsBrowser(cs) {
   else Me = f[34];
   let Ue;
   if (f[35] !== To || f[36] !== ko || f[37] !== Ae || f[38] !== Me)
-    ((Ue = e(ve, {
+    ((Ue = e(Select, {
       options: To,
       hideIndexes: !0,
       visibleOptionCount: POWERUP_LESSONS.length,

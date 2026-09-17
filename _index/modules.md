@@ -55,7 +55,7 @@
 
 - [`02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js`](../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js) — 1141.5 KB
 - [`02-功能模块/认证-OAuth登录/chunk-naqnacd3.js`](../02-功能模块/认证-OAuth登录/chunk-naqnacd3.js) — 82.0 KB
-- [`02-功能模块/认证-OAuth登录/chunk-nsedtefh.js`](../02-功能模块/认证-OAuth登录/chunk-nsedtefh.js) — 73.0 KB
+- [`02-功能模块/认证-OAuth登录/mcp-oauth-provider.js`](../02-功能模块/认证-OAuth登录/mcp-oauth-provider.js) — 73.0 KB
 - [`02-功能模块/认证-OAuth登录/chunk-xvt7fc9t.js`](../02-功能模块/认证-OAuth登录/chunk-xvt7fc9t.js) — 54.9 KB
 - [`02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js`](../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js) — 23.3 KB
 - [`02-功能模块/认证-OAuth登录/oauth-client.js`](../02-功能模块/认证-OAuth登录/oauth-client.js) — 22.3 KB
@@ -226,7 +226,7 @@
 - [`02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js`](../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js) — 106.9 KB
 - [`02-功能模块/后台任务-Shell管理/chunk-n6g2zfwn.js`](../02-功能模块/后台任务-Shell管理/chunk-n6g2zfwn.js) — 105.3 KB
 - [`02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js`](../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js) — 100.6 KB
-- [`02-功能模块/后台任务-Shell管理/chunk-9mmyv6hf.js`](../02-功能模块/后台任务-Shell管理/chunk-9mmyv6hf.js) — 94.7 KB
+- [`02-功能模块/后台任务-Shell管理/bg-session-worker.js`](../02-功能模块/后台任务-Shell管理/bg-session-worker.js) — 94.7 KB
 - [`02-功能模块/后台任务-Shell管理/chunk-jfk5mpe1.js`](../02-功能模块/后台任务-Shell管理/chunk-jfk5mpe1.js) — 92.0 KB
 - [`02-功能模块/后台任务-Shell管理/stopHomeSeedWithoutDirSync.njwew93r.js`](../02-功能模块/后台任务-Shell管理/stopHomeSeedWithoutDirSync.njwew93r.js) — 87.7 KB
 - [`02-功能模块/后台任务-Shell管理/task-output.js`](../02-功能模块/后台任务-Shell管理/task-output.js) — 39.3 KB
@@ -610,7 +610,7 @@
 - [`01-核心基础设施/共享小工具-未细化/FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION.etv8bjdx.js`](../01-核心基础设施/共享小工具-未细化/FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION.etv8bjdx.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js`](../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/noop-session-hooks-registry.js`](../01-核心基础设施/共享小工具-未细化/noop-session-hooks-registry.js) — 0.9 KB
-- [`01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js`](../01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js) — 0.9 KB
+- [`01-核心基础设施/共享小工具-未细化/define-lazy-property.js`](../01-核心基础设施/共享小工具-未细化/define-lazy-property.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/federation-cache-dir.js`](../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/get-default-shell.js`](../01-核心基础设施/共享小工具-未细化/get-default-shell.js) — 0.9 KB
 - [`01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js`](../01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js) — 0.9 KB
@@ -840,7 +840,7 @@
 ## Workflow 编排  <sub>02-功能模块 · 24 个文件 · 0.62 MB</sub>
 
 - [`02-功能模块/Workflow编排/chunk-0t0sve49.js`](../02-功能模块/Workflow编排/chunk-0t0sve49.js) — 127.7 KB
-- [`02-功能模块/Workflow编排/chunk-bkcg0nbj.js`](../02-功能模块/Workflow编排/chunk-bkcg0nbj.js) — 116.8 KB
+- [`02-功能模块/Workflow编排/workflow-runtime.js`](../02-功能模块/Workflow编排/workflow-runtime.js) — 116.8 KB
 - [`02-功能模块/Workflow编排/WorkflowTool.b1s7beta.js`](../02-功能模块/Workflow编排/WorkflowTool.b1s7beta.js) — 88.1 KB
 - [`02-功能模块/Workflow编排/workflow-dialogs.js`](../02-功能模块/Workflow编排/workflow-dialogs.js) — 58.8 KB
 - [`02-功能模块/Workflow编排/initBundledWorkflows.qzxf1256.js`](../02-功能模块/Workflow编排/initBundledWorkflows.qzxf1256.js) — 28.2 KB
@@ -1108,7 +1108,7 @@
 ## Hooks 钩子  <sub>02-功能模块 · 15 个文件 · 0.28 MB</sub>
 
 - [`02-功能模块/Hooks钩子/hooks-ui.zqb5agde.js`](../02-功能模块/Hooks钩子/hooks-ui.zqb5agde.js) — 81.0 KB
-- [`02-功能模块/Hooks钩子/chunk-6wg4v2yj.js`](../02-功能模块/Hooks钩子/chunk-6wg4v2yj.js) — 74.7 KB
+- [`02-功能模块/Hooks钩子/device-hooks-serving.js`](../02-功能模块/Hooks钩子/device-hooks-serving.js) — 74.7 KB
 - [`02-功能模块/Hooks钩子/chunk-z3433nr6.js`](../02-功能模块/Hooks钩子/chunk-z3433nr6.js) — 37.3 KB
 - [`02-功能模块/Hooks钩子/createDeviceHooksWorker.h3jwv9db.js`](../02-功能模块/Hooks钩子/createDeviceHooksWorker.h3jwv9db.js) — 19.4 KB
 - [`02-功能模块/Hooks钩子/productionDeviceHookTemplateRunner.z0gca878.js`](../02-功能模块/Hooks钩子/productionDeviceHookTemplateRunner.z0gca878.js) — 14.8 KB
@@ -1249,7 +1249,7 @@
 
 ## 自动更新 / 安装  <sub>02-功能模块 · 8 个文件 · 0.17 MB</sub>
 
-- [`02-功能模块/自动更新-安装/chunk-2g5h49pk.js`](../02-功能模块/自动更新-安装/chunk-2g5h49pk.js) — 67.3 KB
+- [`02-功能模块/自动更新-安装/native-installer.js`](../02-功能模块/自动更新-安装/native-installer.js) — 67.3 KB
 - [`02-功能模块/自动更新-安装/auto-updater.js`](../02-功能模块/自动更新-安装/auto-updater.js) — 35.7 KB
 - [`02-功能模块/自动更新-安装/install-diagnostics.js`](../02-功能模块/自动更新-安装/install-diagnostics.js) — 28.3 KB
 - [`02-功能模块/自动更新-安装/install.914sz9hm.js`](../02-功能模块/自动更新-安装/install.914sz9hm.js) — 17.6 KB
@@ -1345,7 +1345,7 @@
 
 ## 目录同步 (dir-sync)  <sub>02-功能模块 · 5 个文件 · 0.13 MB</sub>
 
-- [`02-功能模块/目录同步(dir-sync)/chunk-gbhqtdpn.js`](../02-功能模块/目录同步(dir-sync)/chunk-gbhqtdpn.js) — 63.3 KB
+- [`02-功能模块/目录同步(dir-sync)/dir-sync-git-store.js`](../02-功能模块/目录同步(dir-sync)/dir-sync-git-store.js) — 63.3 KB
 - [`02-功能模块/目录同步(dir-sync)/chunk-zbxyj64j.js`](../02-功能模块/目录同步(dir-sync)/chunk-zbxyj64j.js) — 33.9 KB
 - [`02-功能模块/目录同步(dir-sync)/openFolderGitSync.by6ppgfd.js`](../02-功能模块/目录同步(dir-sync)/openFolderGitSync.by6ppgfd.js) — 32.2 KB
 - [`02-功能模块/目录同步(dir-sync)/LOCAL_DIVERGENCE_DEADLINE_MS.9y8d6e21.js`](../02-功能模块/目录同步(dir-sync)/LOCAL_DIVERGENCE_DEADLINE_MS.9y8d6e21.js) — 4.2 KB

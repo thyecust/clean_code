@@ -24,7 +24,7 @@ import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-�
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -33,7 +33,7 @@ import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小�
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
-import { NIt, iye } from "../插件系统/chunk-jwm9gdkd.js";
+import { useIsFocusedListItem, SelectList } from "../插件系统/chunk-jwm9gdkd.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -130,7 +130,7 @@ function Oe(ts) {
               hint: "Skills come from the repo's .claude/skills and the plugins the session loaded",
               children: "No skills loaded in the cloud session",
             })
-          : e(ve, {
+          : e(Select, {
               options: h.map(ot),
               visibleOptionCount: 10,
               hideIndexes: !0,
@@ -622,7 +622,7 @@ function Ae(Es) {
             children: e(EmptyStateMessage, { children: `No skills match "${u}"` }),
           })
         : e(
-            iye,
+            SelectList,
             {
               visibleCount: go,
               isDisabled: v,
@@ -631,7 +631,7 @@ function Ae(Es) {
               onFocus: (Vs) => Ks(g[Vs]),
               children: g.map((le) =>
                 e(
-                  iye.Item,
+                  SelectList.Item,
                   {
                     children: e(Ne, {
                       skill: le,
@@ -730,7 +730,7 @@ function Ae(Es) {
 function Ne(Zs) {
   let z = _(23),
     { skill: O, lock: ge, state: Ys, bytesPerToken: Po } = Zs,
-    en = NIt(),
+    en = useIsFocusedListItem(),
     T = Lo[Ys],
     Bt;
   if (z[0] !== Po || z[1] !== O)

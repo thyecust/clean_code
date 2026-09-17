@@ -10,7 +10,7 @@
 import { j, B, K, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { ud, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { registerCleanup, Is, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonParseUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -743,7 +743,7 @@ function tn(e) {
       }
       let F;
       try {
-        F = Is(L);
+        F = jsonParseUntraced(L);
       } catch {
         if (
           (logForDebugging(`[uds-messaging] Failed to parse JSON line: ${formatRedactedErrorDetail(L)}`, {
@@ -767,7 +767,7 @@ function tn(e) {
         let S,
           R = !1;
         try {
-          ((S = Is(u)), (R = !0));
+          ((S = jsonParseUntraced(u)), (R = !0));
         } catch {
           if (
             (logForDebugging(`[uds-messaging] Failed to parse final buffer: ${formatRedactedErrorDetail(u)}`, {

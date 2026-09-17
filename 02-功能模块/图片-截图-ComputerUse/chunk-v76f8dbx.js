@@ -4928,7 +4928,7 @@ function Sr(e) {
   if (!o) ((o = new Map()), Cn.set(e, o));
   return o;
 }
-function con(e, o, t) {
+function bindSessionContext(e, o, t) {
   let { logger: r, serverName: i } = e,
     s,
     a = t.skipFirstRequestWarnings === !0,
@@ -5408,7 +5408,7 @@ function con(e, o, t) {
     }
   };
 }
-function X2n(e, o, t) {
+function createComputerUseMcpServer(e, o, t) {
   let { serverName: r, logger: i } = e,
     s = new McpServer(
       { name: r, version: "0.2.0" },
@@ -5421,7 +5421,7 @@ function X2n(e, o, t) {
     ),
     t)
   ) {
-    let u = con(e, o, t);
+    let u = bindSessionContext(e, o, t);
     return (
       s.setRequestHandler(CallToolRequestSchema, async (c) => {
         let {
@@ -5473,7 +5473,7 @@ class An {
     logForDebugging(format(e, ...o), { level: "error" });
   }
 }
-function put() {
+function getComputerUseHostAdapter() {
   let e = getComputerUseSession();
   if (e.hostAdapter) return e.hostAdapter;
   return (
@@ -5500,4 +5500,4 @@ function put() {
     e.hostAdapter
   );
 }
-export { con, X2n, put };
+export { bindSessionContext, createComputerUseMcpServer, getComputerUseHostAdapter };

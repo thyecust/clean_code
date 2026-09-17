@@ -23,7 +23,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sanitizeForDisplay, sanitizeMultilineForDisplay, getPluginDisplayName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { formatPathWithTilde } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Ui, mXe } from "./chunk-ajtn749s.js";
+import { PluginSourceError, isClaudeAiPluginSyncEnabled } from "./chunk-ajtn749s.js";
 import { areLocalPluginDirsAllowedByPolicy, localPluginDirsBlockedMessage, marketplacesRefusedByPolicyClause } from "./plugin-source-policy.js";
 import { isValidCliNameToken, buildCliCommand, formatPluginError, formatPluginWarning } from "./plugin-system-core.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -68,19 +68,19 @@ import {
   displaySkillsDirPath,
   loadAllPlugins,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { dle, jB, n9e, f0e } from "./chunk-q8w2zntw.js";
+import { logPluginInstallRefreshOutcome, INSTALLABLE_SCOPES, ALL_PLUGIN_SCOPES, enablePlugin } from "./chunk-q8w2zntw.js";
 import {
-  ZPt,
-  eOt,
-  z8,
-  c0e,
-  SUn,
-  ek,
-  pen,
-  ZWe,
-  e9e,
-  t9e,
-  u0e,
+  isErrorForPlugin,
+  isWarningForPlugin,
+  isDiagnosticForPlugin,
+  fetchPluginInstallCounts,
+  summarizeValidationResults,
+  sanitizeDiagnosticText,
+  validatePluginPath,
+  resolvePluginManifestAndContents,
+  buildPluginTagPlan,
+  createPluginVersionTag,
+  buildVersionTagMessage,
 } from "./chunk-akd9b588.js";
 import { RenderOnceAndExit, renderAndWaitForExit } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { cliError, writeStdoutAndDrain, flushAnalyticsBeforeExit, exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
@@ -124,7 +124,7 @@ import {
 F();
 import { join as ce, relative, resolve } from "path";
 async function ee(a, o, s) {
-  if (o instanceof Ui) await logFeatureSadAsync(a, "command_source_refused");
+  if (o instanceof PluginSourceError) await logFeatureSadAsync(a, "command_source_refused");
   else await logFeatureBadAsync(a, s);
   await flushAnalyticsBeforeExit();
 }
@@ -154,7 +154,7 @@ function Be(a, o, s) {
   return d === null ? c : `${d} ${c}`;
 }
 function Z(a, o) {
-  if (a instanceof Ui)
+  if (a instanceof PluginSourceError)
     return (logForDebugging(`${o} refused: ${a.message}`), cliError(sanitizeMultilineForDisplay(a.message)));
   (logForDebugging(`Failed to ${o}: ${l(a)}`, { level: "error" }),
     cliError(sanitizeMultilineForDisplay(`${figures.cross} Failed to ${o}: ${l(a)}`)));
@@ -190,21 +190,21 @@ async function pluginValidateHandler(a, o, s) {
   if (s.cowork) SB(!0);
   let d;
   try {
-    d = await ZWe(o);
+    d = await resolvePluginManifestAndContents(o);
   } catch (C) {
     if (Rt(C))
       logForDebugging(`Plugin validation failed for ${o}: ${l(C)}`, { level: "error" });
     else logError(C);
     return (
       console.error(
-        `${figures.cross} Unexpected error during validation: ${ek(l(C), 200)}`,
+        `${figures.cross} Unexpected error during validation: ${sanitizeDiagnosticText(l(C), 200)}`,
       ),
       await logFeatureBadAsync("cli_plugin_validate", "cli_plugin_validate_exception"),
       exitAfterAnalyticsFlush(2)
     );
   }
   let { manifest: c, contents: p } = d,
-    { allSuccess: k, noErrors: w, hasWarnings: v } = SUn(c ? [c, ...p] : p, s),
+    { allSuccess: k, noErrors: w, hasWarnings: v } = summarizeValidationResults(c ? [c, ...p] : p, s),
     P = () =>
       k
         ? logFeatureOkAsync("cli_plugin_validate")
@@ -240,7 +240,7 @@ async function pluginValidateHandler(a, o, s) {
   );
 }
 async function pluginTagHandler(a, o, s) {
-  let d = await e9e(o ?? ".", { force: s.force }),
+  let d = await buildPluginTagPlan(o ?? ".", { force: s.force }),
     c = [];
   for (let C of d.warnings) c.push(`${figures.warning} ${C}`);
   if (!d.ok) {
@@ -266,7 +266,7 @@ async function pluginTagHandler(a, o, s) {
   c.push(`Tag:     ${p.tag}`, "");
   let k = s.remote ?? "origin",
     w = s.force ?? !1,
-    v = u0e(p, s.message),
+    v = buildVersionTagMessage(p, s.message),
     P = `git -C ${p.gitRoot} push ${w ? "--force " : ""}${k} refs/tags/${p.tag}`;
   if (s.dryRun) {
     (logFeatureOk("cli_plugin_tag"),
@@ -278,7 +278,7 @@ async function pluginTagHandler(a, o, s) {
       z(a, c, 0));
     return;
   }
-  let R = await t9e(p, {
+  let R = await createPluginVersionTag(p, {
     push: s.push ?? !1,
     force: w,
     message: s.message,
@@ -359,7 +359,7 @@ async function pluginInitHandler(a, o, s, d) {
     return;
   }
   for (let D of A) c.push(`  kept existing ${D} (use --force to overwrite)`);
-  let m = await pen(v);
+  let m = await validatePluginPath(v);
   if (!m.success || m.warnings.length > 0) c.push(...de(m));
   if (!m.success) {
     (logFeatureBad("cli_plugin_init", "self_validate_failed"), z(a, c, 1));
@@ -429,7 +429,7 @@ async function pluginListHandler(a, o, s, d) {
         ...ue(INLINE_PLUGIN_SOURCE, H),
       },
       {
-        header: `Synced from claude.ai${mXe() ? "" : " \u2014 sync is off in this shell; these load only in a synced session"}:`,
+        header: `Synced from claude.ai${isClaudeAiPluginSyncEnabled() ? "" : " \u2014 sync is off in this shell; these load only in a synced session"}:`,
         scopeOf: () => "synced",
         standaloneErrorScope: "synced",
         standaloneWarningScope: "synced",
@@ -454,8 +454,8 @@ async function pluginListHandler(a, o, s, d) {
       if (!D || D.length === 0) continue;
       let J = m.get(U),
         W = J?.name ?? splitPluginId(U).name,
-        G = C.filter((V) => z8(V, U, W)).map(formatPluginError),
-        K = N.filter((V) => z8(V, U, W)).map(formatPluginWarning);
+        G = C.filter((V) => isDiagnosticForPlugin(V, U, W)).map(formatPluginError),
+        K = N.filter((V) => isDiagnosticForPlugin(V, U, W)).map(formatPluginWarning);
       for (let V of D) {
         let q;
         if (J) {
@@ -484,7 +484,7 @@ async function pluginListHandler(a, o, s, d) {
     if (o.available) {
       let U = [];
       try {
-        let [D, J] = await Promise.all([getKnownMarketplaces(s), c0e(s)]),
+        let [D, J] = await Promise.all([getKnownMarketplaces(s), fetchPluginInstallCounts(s)]),
           { marketplaces: W } = await loadMarketplaces(D, s);
         for (let { name: G, data: K } of W)
           if (K)
@@ -522,8 +522,8 @@ async function pluginListHandler(a, o, s, d) {
     let O = c.plugins[T];
     if (!O || O.length === 0) continue;
     let U = m.get(T)?.name ?? splitPluginId(T).name,
-      D = C.filter((W) => z8(W, T, U)),
-      J = N.filter((W) => z8(W, T, U));
+      D = C.filter((W) => isDiagnosticForPlugin(W, T, U)),
+      J = N.filter((W) => isDiagnosticForPlugin(W, T, U));
     for (let W of O) {
       let G = k(w, T) !== void 0,
         K =
@@ -1010,19 +1010,19 @@ function ve(Pa) {
   return Oe;
 }
 function Ee(a) {
-  return jB.some((o) => o === a);
+  return INSTALLABLE_SCOPES.some((o) => o === a);
 }
 function me(a) {
   let o = a.scope || "user";
   if (a.cowork && o !== "user") cliError("--cowork can only be used with user scope");
-  if (!Ee(o)) cliError(`Invalid scope: ${o}. Must be one of: ${jB.join(", ")}.`);
+  if (!Ee(o)) cliError(`Invalid scope: ${o}. Must be one of: ${INSTALLABLE_SCOPES.join(", ")}.`);
   return o;
 }
 function Ie(a) {
   let o;
   if (a.scope) {
     if (!Ee(a.scope))
-      cliError(`Invalid scope "${a.scope}". Valid scopes: ${jB.join(", ")}`);
+      cliError(`Invalid scope "${a.scope}". Valid scopes: ${INSTALLABLE_SCOPES.join(", ")}`);
     o = a.scope;
   }
   if (a.cowork && o !== void 0 && o !== "user")
@@ -1045,7 +1045,7 @@ async function pluginInstallHandler(a, o, s, d) {
   let p,
     k,
     w = (N) => {
-      if (p) dle(p.outcome);
+      if (p) logPluginInstallRefreshOutcome(p.outcome);
       return handlePluginCommandError(N, "install", o);
     },
     v = await reviewPluginCommandSource(
@@ -1063,7 +1063,7 @@ async function pluginInstallHandler(a, o, s, d) {
       d,
     ).catch(w);
   if (v?.kind === "declined") {
-    if (p) dle(p.outcome);
+    if (p) logPluginInstallRefreshOutcome(p.outcome);
     (logFeatureSad("cli_plugin_install", "command_source_declined"),
       await renderAndWaitForExit(a, e(Text, { children: "Aborted." })),
       await gracefulShutdown(1));
@@ -1081,7 +1081,7 @@ async function pluginInstallHandler(a, o, s, d) {
       ),
       p)
     )
-      dle(p.outcome);
+      logPluginInstallRefreshOutcome(p.outcome);
     (await renderAndWaitForExit(a, e(Text, { children: "Aborted \u2014 the command was not run." })),
       await gracefulShutdown(1));
     return;
@@ -1122,7 +1122,7 @@ async function pluginEnableHandler(a, o, s, d) {
   ae("tengu_plugin_enable_command", o, fromEnum(c ?? "auto"));
   let p;
   try {
-    if ((await reloadPluginDirsFromDisk(), ensureBuiltinPluginsRegistered(), (p = await f0e(o, c, d)), !p.success))
+    if ((await reloadPluginDirsFromDisk(), ensureBuiltinPluginsRegistered(), (p = await enablePlugin(o, c, d)), !p.success))
       throw new PluginOperationFailedError(p.message);
   } catch (k) {
     return await handlePluginCommandError(k, "enable", o);
@@ -1160,8 +1160,8 @@ async function pluginUpdateHandler(a, o, s) {
   ae("tengu_plugin_update_command", a);
   let d = "user";
   if (o.scope) {
-    if (!n9e.includes(o.scope))
-      cliError(`Invalid scope "${o.scope}". Valid scopes: ${n9e.join(", ")}`);
+    if (!ALL_PLUGIN_SCOPES.includes(o.scope))
+      cliError(`Invalid scope "${o.scope}". Valid scopes: ${ALL_PLUGIN_SCOPES.join(", ")}`);
     d = o.scope;
   }
   if (o.cowork && d !== "user") cliError("--cowork can only be used with user scope");
@@ -1312,8 +1312,8 @@ function ue(a, o) {
     plugins: d,
     errors: c,
     warnings: p,
-    standaloneErrorRows: c.filter((k) => !d.some((w) => ZPt(k, w))),
-    standaloneWarningRows: p.filter((k) => !d.some((w) => eOt(k, w))),
+    standaloneErrorRows: c.filter((k) => !d.some((w) => isErrorForPlugin(k, w))),
+    standaloneWarningRows: p.filter((k) => !d.some((w) => isWarningForPlugin(k, w))),
   };
 }
 function Re(a) {
@@ -1329,8 +1329,8 @@ function He(a) {
     d = [a.header, ""];
   for (let c of s) d.push(`  ${figures.warning} ${formatPluginWarning(c)}`, "");
   for (let c of a.plugins) {
-    let p = a.errors.filter((v) => ZPt(v, c)),
-      k = a.warnings.filter((v) => eOt(v, c)),
+    let p = a.errors.filter((v) => isErrorForPlugin(v, c)),
+      k = a.warnings.filter((v) => isWarningForPlugin(v, c)),
       w =
         c.enabled === !1
           ? `${figures.cross} disabled`
@@ -1379,8 +1379,8 @@ async function Ue(a, o) {
     let c =
         d.mcpServers ||
         (await discoverPluginMcpServers(d, void 0, o, void 0, { readOnlyListing: !0 })),
-      p = a.errors.filter((w) => ZPt(w, d)).map(formatPluginError),
-      k = a.warnings.filter((w) => eOt(w, d)).map(formatPluginWarning);
+      p = a.errors.filter((w) => isErrorForPlugin(w, d)).map(formatPluginError),
+      k = a.warnings.filter((w) => isWarningForPlugin(w, d)).map(formatPluginWarning);
     s.push({
       id: d.source,
       version: d.manifest.version ?? "unknown",

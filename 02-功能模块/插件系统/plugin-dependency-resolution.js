@@ -10,7 +10,7 @@
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isDependencyError } from "./plugin-system-core.js";
-import { aJ, noe, lJ, yD } from "./chunk-ajtn749s.js";
+import { hasHeadersHelper, resolveTrustedEntryAuth, lookupMarketplaceSource, getMarketplaceNameFromPluginId } from "./chunk-ajtn749s.js";
 import { isSourceAllowedByPolicy } from "./plugin-source-policy.js";
 import { getEnabledPluginIdsForSource, formatDependencyCountSuffix, formatUnresolvedDependenciesNotice, findSettingsDeclaredEntryAuth, getKnownMarketplacesOrEmpty, loadCachedMarketplaceCatalog, findPluginEntry, installPluginWithDependencies, loadAllPluginsCacheOnly } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { splitPluginId, getSettingsSourceForScope } from "./chunk-33bdfgmx.js";
@@ -75,12 +75,12 @@ async function resolveMissingDependencies(a, r) {
       if (
         typeof p === "object" &&
         p.source === "archive" &&
-        aJ(
-          noe({
+        hasHeadersHelper(
+          resolveTrustedEntryAuth({
             entry: o.entry,
             archiveUrl: p.url,
-            marketplaceSource: lJ(e, s),
-            trustedSettingsEntryAuth: findSettingsDeclaredEntryAuth(yD(e), o.entry.name),
+            marketplaceSource: lookupMarketplaceSource(e, s),
+            trustedSettingsEntryAuth: findSettingsDeclaredEntryAuth(getMarketplaceNameFromPluginId(e), o.entry.name),
           }).entry,
         )
       ) {

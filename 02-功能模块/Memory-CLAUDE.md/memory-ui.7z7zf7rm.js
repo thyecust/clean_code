@@ -94,7 +94,7 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { SelectListRow, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { sessionStateStore } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { openFileInEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
@@ -413,7 +413,7 @@ function Rt(Vn) {
   else De = We[10];
   let Lo;
   if (We[11] !== Xt || We[12] !== re || We[13] !== De)
-    ((Lo = e(ve, {
+    ((Lo = e(Select, {
       options: re,
       visibleOptionCount: 10,
       hideIndexes: !0,
@@ -1162,7 +1162,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
           flexDirection: "column",
           marginBottom: 1,
           children: [
-            e(nl, {
+            e(SelectListRow, {
               isFocused: oe === 0,
               children: r(Text, {
                 children: [
@@ -1189,7 +1189,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
               }),
             }),
             ye &&
-              e(nl, {
+              e(SelectListRow, {
                 isFocused: oe === 1,
                 styled: !1,
                 children: e(Text, {
@@ -1210,7 +1210,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                 }),
               }),
             ht &&
-              e(nl, {
+              e(SelectListRow, {
                 isFocused: oe === Qe,
                 styled: !1,
                 children: r(Text, {
@@ -1234,7 +1234,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                 }),
               }),
             dt !== null &&
-              e(nl, {
+              e(SelectListRow, {
                 isFocused: !1,
                 styled: !1,
                 children: r(Text, {
@@ -1252,7 +1252,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
               scope: "Confirmation",
               claimFocus: !0,
               bindings: [{ action: "confirm:no", run: () => ce(!1) }],
-              children: e(ve, {
+              children: e(Select, {
                 defaultFocusValue: ko,
                 options: [
                   {
@@ -1351,7 +1351,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                 onCancel: () => ce(!1),
               }),
             })
-          : e(ve, {
+          : e(Select, {
               defaultFocusValue: qe ? Pt : Co,
               options: ut,
               isDisabled: Je || fo,

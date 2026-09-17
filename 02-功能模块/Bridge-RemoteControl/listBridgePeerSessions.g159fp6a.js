@@ -25,7 +25,7 @@ import { createMessageEnvelope } from "../../01-核心基础设施/共享小工�
 import { isTrustedDeviceGateEnabled, CLOUD_CANNOT_REACH_ELEVATED_HINT, getTrustedDeviceToken, recoverFromUntrustedDevice, untrustedDeviceHint } from "./chunk-tyce0p0b.js";
 import { adoptSelfBridgeTitleFromRoster, getSelfBridgeCompatId, getSelfBridgeTitle } from "../权限系统/chunk-1y2g140m.js";
 import { parseInboundAvailability } from "./chunk-1yq098a7.js";
-import { A7 } from "./chunk-ga43tr2w.js";
+import { buildBridgeFailureHint } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
 import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
 import "./bridge-inbound-origin.js";
@@ -263,7 +263,7 @@ async function postInterClaudeMessage(t, i, u, w, P, k, x) {
   if (r.status === 403 && classifyElevatedAuthError(r.data, extractErrorDetail(r.data)) === "session_stale_relogin")
     return {
       ok: !1,
-      error: `auth: ${A7({ terminal: !0, reason: "session_stale_relogin" })}`,
+      error: `auth: ${buildBridgeFailureHint({ terminal: !0, reason: "session_stale_relogin" })}`,
     };
   if (!B(r.status)) {
     if (r.status === 401 && a.CLAUDE_CODE_REMOTE === !0)

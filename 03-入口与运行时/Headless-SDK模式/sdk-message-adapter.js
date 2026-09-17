@@ -16,7 +16,7 @@ import { INTERRUPTED_BY_USER_MARKER, INTERRUPTED_FOR_TOOL_USE_MARKER } from "../
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { sanitizeMachineName } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { formatRefusalFallbackSwitchMessage, deserializeCompactMetadata, createAttachmentMessage, createAssistantMessage, createUserMessage, isExternalMessageOrigin } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { xZ, Pst } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
+import { conformWireFrame, getWorkerEpoch } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
 import { isSameRemoteAutocompactState } from "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
 import { AGENT_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -249,7 +249,7 @@ function parseSdkInitFrame(e) {
     plugins: d,
     mcpServers: l,
     tools: c,
-    workerEpoch: Pst(e),
+    workerEpoch: getWorkerEpoch(e),
   };
 }
 function parseActiveGoalState(e) {
@@ -341,7 +341,7 @@ function applyRemoteAutocompactState(e, s, r) {
   });
 }
 function adaptSdkMessageFrame(e, s) {
-  if (!xZ(e)) return { type: "ignored" };
+  if (!conformWireFrame(e)) return { type: "ignored" };
   switch (e.type) {
     case "control_request":
     case "control_response":

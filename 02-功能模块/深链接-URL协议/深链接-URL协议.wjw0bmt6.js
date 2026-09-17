@@ -13,11 +13,11 @@ import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { ja } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePathAsync } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getInstalledClaudePath } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { WB } from "../插件系统/chunk-q8w2zntw.js";
+import { DEEP_LINK_SCHEME } from "../插件系统/chunk-q8w2zntw.js";
 import { getXdgDataHome } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { promises } from "fs";
 import * as g from "os";
@@ -31,7 +31,7 @@ var URL_HANDLER_BUNDLE_ID = "com.anthropic.claude-code-url-handler",
 function d() {
   return o.join(getXdgDataHome(), "applications", w);
 }
-var u = `HKEY_CURRENT_USER\\Software\\Classes\\${WB}`,
+var u = `HKEY_CURRENT_USER\\Software\\Classes\\${DEEP_LINK_SCHEME}`,
   h = `${u}\\shell\\open\\command`,
   m = 86400000;
 function k(e) {
@@ -71,7 +71,7 @@ async function D(e) {
       <string>Claude Code Deep Link</string>
       <key>CFBundleURLSchemes</key>
       <array>
-        <string>${WB}</string>
+        <string>${DEEP_LINK_SCHEME}</string>
       </array>
     </dict>
   </array>
@@ -84,22 +84,22 @@ async function D(e) {
       ["-R", c],
       { useCwd: !1 },
     ),
-    logForDebugging(`Registered ${WB}:// protocol handler at ${c}`));
+    logForDebugging(`Registered ${DEEP_LINK_SCHEME}:// protocol handler at ${c}`));
 }
 async function _(e) {
   await promises.mkdir(o.dirname(d()), { recursive: !0 });
   let t = `[Desktop Entry]
 Name=${p}
-Comment=Handle ${WB}:// deep links for Claude Code
+Comment=Handle ${DEEP_LINK_SCHEME}:// deep links for Claude Code
 ${k(e)}
 Type=Application
 NoDisplay=true
-MimeType=x-scheme-handler/${WB};
+MimeType=x-scheme-handler/${DEEP_LINK_SCHEME};
 `;
   await promises.writeFile(d(), t);
-  let r = await ja("xdg-mime");
+  let r = await resolveExecutablePathAsync("xdg-mime");
   if (r) {
-    let { code: i } = await execFileNoThrow(r, ["default", w, `x-scheme-handler/${WB}`], {
+    let { code: i } = await execFileNoThrow(r, ["default", w, `x-scheme-handler/${DEEP_LINK_SCHEME}`], {
       useCwd: !1,
     });
     if (i !== 0)
@@ -107,7 +107,7 @@ MimeType=x-scheme-handler/${WB};
         code: "XDG_MIME_FAILED",
       });
   }
-  logForDebugging(`Registered ${WB}:// protocol handler at ${d()}`);
+  logForDebugging(`Registered ${DEEP_LINK_SCHEME}:// protocol handler at ${d()}`);
 }
 async function F(e) {
   for (let t of [
@@ -121,7 +121,7 @@ async function F(e) {
         code: "REG_FAILED",
       });
   }
-  logForDebugging(`Registered ${WB}:// protocol handler in Windows registry`);
+  logForDebugging(`Registered ${DEEP_LINK_SCHEME}:// protocol handler in Windows registry`);
 }
 async function L(e) {
   let t = e ?? (await E());

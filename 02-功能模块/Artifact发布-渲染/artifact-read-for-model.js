@@ -32,7 +32,7 @@ import {
   MANIFEST_TEXT_TYPES,
   escapeUnprintableForMessage,
   validateReadableFilePath,
-  rTn,
+  buildArtifactOriginNote,
   audienceViewNote,
   shareAudience,
   readArtifactContent,
@@ -353,7 +353,7 @@ ${h}${_}${A}`;
         (s && e.typeLocked && i
           ? await buildArtifactTypePublishNote(t.slug, I.signal, o.credentials)
           : "") + le,
-      F = s && !e.publicRead ? rTn(e.origin, a) : "",
+      F = s && !e.publicRead ? buildArtifactOriginNote(e.origin, a) : "",
       L = (b, K) => {
         let N = scrubArtifactEnvelopeTags(K),
           we = Math.max(0, a - b.length - 1),
@@ -476,7 +476,7 @@ ${_e}`;
             ])
           ).join("")
         : "") + le,
-    Z = i ? rTn(e.origin, a) : "",
+    Z = i ? buildArtifactOriginNote(e.origin, a) : "",
     J = "",
     Q = "",
     W = scrubArtifactEnvelopeTags(e.html, "page");

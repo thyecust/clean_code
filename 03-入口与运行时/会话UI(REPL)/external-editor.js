@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { j, B, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
-import { Jhe, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { qR, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { writeFileSyncTraced, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { resolveExecutablePath, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { wS, tXt } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { countLineBreaks, formatPastedTextPlaceholder, expandPastedContents, getIdeDisplayName } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createTempFilePath } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
@@ -18,7 +18,7 @@ import { stripMemoryTags } from "../../02-功能模块/Memory-CLAUDE.md/Memory-C
 import { spawn, spawnSync as S } from "child_process";
 import { basename } from "path";
 function O(t) {
-  return !!qR(t);
+  return !!resolveExecutablePath(t);
 }
 var b = new Set(["start", "cmd", "cmd.exe"]);
 function w(t) {
@@ -218,7 +218,7 @@ function editTextInExternalEditor(t, e, r) {
   try {
     let u = e ? expandPastedContents(t, e) : t,
       p = r ? N(r) + u : u;
-    Jhe(l, p, { encoding: "utf-8", flush: !0 });
+    writeFileSyncTraced(l, p, { encoding: "utf-8", flush: !0 });
     let d = editFileInExternalEditor(l);
     if (d.content === null) return d;
     let s = d.content;

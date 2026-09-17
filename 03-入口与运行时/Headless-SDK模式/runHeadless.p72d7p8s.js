@@ -685,7 +685,7 @@ import {
   parseBackgroundTasksToolUseId,
   BACKGROUND_TASKS_TOOL_USE_ID_TYPE_ERROR,
   normalizeDeclaredDialogKinds,
-  Qn,
+  sanitizeForRelay,
   sanitizeRelayableText,
   formatElicitationUrls,
   isHumanOrUnstampedOrigin,
@@ -781,7 +781,7 @@ import {
   getActivityObservation,
   isHumanRelayTurn,
   isHumanOriginTurn,
-  r6n,
+  isHumanIngressTurn,
   isHumanRelayOrigin,
   buildRelayTurnFields,
   classifyInboundOrigin,
@@ -798,7 +798,7 @@ import {
 import "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
 import "../../02-功能模块/远程工具执行/remote-tool-protocol.js";
 import { isSubagentSkipOnDeltaEnabled, isTranscriptLocalGcEnabled, MANAGED_CLOUD_WORKER_ENTRYPOINTS, getDirSyncWorkerDecision, getHookForwardingAdmission, getPluginForwardingAdmission, RemoteIO, hasResumeFlag } from "../../02-功能模块/远程工具执行/chunk-31b8kd0f.js";
-import { lsn } from "../../02-功能模块/Bridge-RemoteControl/chunk-znhfst8k.js";
+import { getWorkerEpoch } from "../../02-功能模块/Bridge-RemoteControl/chunk-znhfst8k.js";
 import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
 import { withoutStaticMcpShadows, mergeAndFilterTools, stripSoleNonDeniableTool } from "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
@@ -9026,7 +9026,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         name: p,
         type: "failed",
         config: T.client.config,
-        error: r ? `Server status: ${r.type}` : `Server not found: ${Qn(p)}`,
+        error: r ? `Server status: ${r.type}` : `Server not found: ${sanitizeForRelay(p)}`,
       };
     },
     ep = (p, T) => {
@@ -11669,7 +11669,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     },
     Yn = function (p, T, x) {
       (logError(dt(ge(x), `${T}: handler failed`)),
-        Be(p, x instanceof mi ? Qn(l(x)) : withholdDetailIfRemote(e, l(x), `${T} failed`)));
+        Be(p, x instanceof mi ? sanitizeForRelay(l(x)) : withholdDetailIfRemote(e, l(x), `${T} failed`)));
     },
     No = new Map(),
     ll,
@@ -11785,7 +11785,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       }
       if (!V.allowed)
         throw new R(
-          `register_repo_root: ${Qn(T.directory)} ${V.reason}`,
+          `register_repo_root: ${sanitizeForRelay(T.directory)} ${V.reason}`,
           "register_repo_root: target is not a directory",
         );
       let W = await _m(v().toolPermissionContext.additionalWorkingDirectories),
@@ -11797,12 +11797,12 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         );
       if (!Se.allowed)
         throw new R(
-          `register_repo_root: ${Qn(T.directory)} ${Se.reason}`,
+          `register_repo_root: ${sanitizeForRelay(T.directory)} ${Se.reason}`,
           "register_repo_root: directory is outside the allowed registration scope",
         );
       if (v().toolPermissionContext.additionalWorkingDirectories.has(L))
         throw new R(
-          `register_repo_root: ${Qn(T.directory)} is already a registered working directory`,
+          `register_repo_root: ${sanitizeForRelay(T.directory)} is already a registered working directory`,
           "register_repo_root: directory is already a registered working directory",
         );
       C((Ye) => ({
@@ -12808,7 +12808,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     if (looksLikeReservedEventKind(D))
                       return (
                         logFeatureBad("poll_event_delivery", "reserved_kind"),
-                        `kind "${Qn(D)}" is reserved for a server-authored producer`
+                        `kind "${sanitizeForRelay(D)}" is reserved for a server-authored producer`
                       );
                     let pe = Buffer.byteLength(F, "utf8");
                     if (pe > MAX_EVENT_ENVELOPE_BYTES)
@@ -12825,7 +12825,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     if (_e.kind !== D)
                       return (
                         logFeatureBad("poll_event_delivery", "kind_mismatch"),
-                        `element kind "${Qn(_e.kind)}" does not match declared kind "${Qn(D)}"`
+                        `element kind "${sanitizeForRelay(_e.kind)}" does not match declared kind "${sanitizeForRelay(D)}"`
                       );
                     return;
                   })();
@@ -13489,11 +13489,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 { serverName: F } = r.request,
                 ue = Ps(F) ?? kn.find((Me) => Me.name === F)?.config ?? null,
                 ie = ue ? mcpDialBlockCause(F, ue) : null;
-              if (!ue) Be(r, `Server not found: ${Qn(F)}`);
+              if (!ue) Be(r, `Server not found: ${sanitizeForRelay(F)}`);
               else if (ie === "managed-policy")
                 Be(
                   r,
-                  `MCP server ${Qn(F)} is blocked by enterprise managed policy`,
+                  `MCP server ${sanitizeForRelay(F)} is blocked by enterprise managed policy`,
                 );
               else if (isMcpServerDisabled(F)) Be(r, formatServerDisabledBeforeAction(F, "reconnecting"));
               else if (ie) Be(r, formatServerNotApprovedBeforeAction(F, "reconnecting"));
@@ -13522,7 +13522,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               }
               let ie = parseMcpToolName(D);
               if (!ie || !ie.toolName)
-                Be(r, `Not a fully-qualified MCP tool name: ${Qn(D)}`);
+                Be(r, `Not a fully-qualified MCP tool name: ${sanitizeForRelay(D)}`);
               else {
                 let Me =
                     r.request.input_files !== void 0 ||
@@ -13553,19 +13553,19 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       if (_e.signal.aborted) {
                         Be(
                           r,
-                          `mcp_call cancelled by client: ${Qn(ie.serverName)}`,
+                          `mcp_call cancelled by client: ${sanitizeForRelay(ie.serverName)}`,
                         );
                         return;
                       }
                       if (Me) logFeatureBad("ccr_mcp_call_staged", "not_connected");
-                      Be(r, `MCP server not connected: ${Qn(ie.serverName)}`);
+                      Be(r, `MCP server not connected: ${sanitizeForRelay(ie.serverName)}`);
                       return;
                     }
                     if (Ze.config.type === "sdk") {
                       Be(
                         r,
                         "mcp_call does not support SDK MCP servers. " +
-                          `SDK servers are caller-provided \u2014 invoke ${Qn(ie.serverName)} directly.`,
+                          `SDK servers are caller-provided \u2014 invoke ${sanitizeForRelay(ie.serverName)} directly.`,
                       );
                       return;
                     }
@@ -13607,7 +13607,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                     content: [
                                       {
                                         type: "text",
-                                        text: `MCP session expired for ${Qn(ie.serverName)} \u2014 send mcp_reconnect and retry: ${Qn(_n instanceof Error ? _n.message : String(_n))}`,
+                                        text: `MCP session expired for ${sanitizeForRelay(ie.serverName)} \u2014 send mcp_reconnect and retry: ${sanitizeForRelay(_n instanceof Error ? _n.message : String(_n))}`,
                                       },
                                     ],
                                   }
@@ -13665,7 +13665,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     else if (ft.interrupted)
                       Be(
                         r,
-                        `mcp_call cancelled by client: ${Qn(ie.serverName)}`,
+                        `mcp_call cancelled by client: ${sanitizeForRelay(ie.serverName)}`,
                       );
                     else
                       Xe(r, {
@@ -13687,14 +13687,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       "(detail withheld)",
                     );
                     if (Ze instanceof McpAuthError)
-                      ((We = `MCP server ${Qn(Ze.serverName)} requires authentication \u2014 send mcp_authenticate and retry mcp_call: ${Qn(We)}`),
+                      ((We = `MCP server ${sanitizeForRelay(Ze.serverName)} requires authentication \u2014 send mcp_authenticate and retry mcp_call: ${sanitizeForRelay(We)}`),
                         Be(
                           r,
                           We.slice(0, 2000).replace(/[\uD800-\uDBFF]$/, ""),
                         ));
                     else if (Ze instanceof McpSessionExpiredError)
                       (logFeatureBad("mcp_session_recovery", "session_expired_no_retry"),
-                        (We = `MCP session expired for ${Qn(ie.serverName)} \u2014 send mcp_reconnect and retry mcp_call: ${Qn(We)}`),
+                        (We = `MCP session expired for ${sanitizeForRelay(ie.serverName)} \u2014 send mcp_reconnect and retry mcp_call: ${sanitizeForRelay(We)}`),
                         Be(
                           r,
                           We.slice(0, 2000).replace(/[\uD800-\uDBFF]$/, ""),
@@ -13728,7 +13728,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   kn.find((Le) => Le.name === F)?.config ??
                   (ue ? null : (ie?.config ?? null)),
                 Ae = Me ? mcpDialBlockCause(F, Me) : null;
-              if (!Me) Be(r, `Server not found: ${Qn(F)}`);
+              if (!Me) Be(r, `Server not found: ${sanitizeForRelay(F)}`);
               else if (!ue) {
                 setMcpServerEnabled(F, !1, w.storageV5);
                 let Le = [...o, ...kn, ...At.clients, ...D.mcp.clients].find(
@@ -13768,7 +13768,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 Be(
                   r,
                   Ae === "managed-policy"
-                    ? `MCP server ${Qn(F)} is blocked by enterprise managed policy`
+                    ? `MCP server ${sanitizeForRelay(F)} is blocked by enterprise managed policy`
                     : formatServerNotApprovedBeforeAction(F, "enabling"),
                 );
               else {
@@ -13800,8 +13800,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 Be(
                   r,
                   Me
-                    ? `Cannot pin MCP server '${Qn(D)}' to auto: ${getAutoModeUnavailableNotification(Me)}`
-                    : `Cannot pin MCP server '${Qn(D)}' to auto`,
+                    ? `Cannot pin MCP server '${sanitizeForRelay(D)}' to auto: ${getAutoModeUnavailableNotification(Me)}`
+                    : `Cannot pin MCP server '${sanitizeForRelay(D)}' to auto`,
                 );
               } else {
                 let Me = ie.override;
@@ -13830,8 +13830,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     : {
                         warning:
                           Me === void 0
-                            ? `MCP server '${Qn(D)}' is not known; no override was present to clear.`
-                            : `MCP server '${Qn(D)}' is not yet known; override stored but will not apply until a server with that exact name connects.`,
+                            ? `MCP server '${sanitizeForRelay(D)}' is not known; no override was present to clear.`
+                            : `MCP server '${sanitizeForRelay(D)}' is not yet known; override stored but will not apply until a server with that exact name connects.`,
                       },
                 );
               }
@@ -13849,11 +13849,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 ue = Ps(D) ?? kn.find((Ae) => Ae.name === D)?.config ?? null,
                 ie = ue ? classifyMcpServerAuth(D, ue) : null,
                 Me = ue ? mcpDialBlockCause(D, ue) : null;
-              if (!ue || !ie) Be(r, `Server not found: ${Qn(D)}`);
+              if (!ue || !ie) Be(r, `Server not found: ${sanitizeForRelay(D)}`);
               else if (Me === "managed-policy")
                 Be(
                   r,
-                  `MCP server ${Qn(D)} is blocked by enterprise managed policy`,
+                  `MCP server ${sanitizeForRelay(D)} is blocked by enterprise managed policy`,
                 );
               else if (isMcpServerDisabled(D)) Be(r, formatServerDisabledBeforeAction(D, "authenticating"));
               else if (Me) Be(r, formatServerNotApprovedBeforeAction(D, "authenticating"));
@@ -13876,7 +13876,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   r,
                   `Server type "${ie.transport}" does not support OAuth authentication`,
                 );
-              else if (ie.kind === "anthropic-hosted") Be(r, Qn(ie.message));
+              else if (ie.kind === "anthropic-hosted") Be(r, sanitizeForRelay(ie.message));
               else
                 try {
                   let Ae = (tt) => {
@@ -13962,7 +13962,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     }
                     if (!Ps(D)) {
                       logForDebugging(
-                        `MCP server ${Qn(D)}: OAuth completed for a server that is no longer configured; not reconnecting`,
+                        `MCP server ${sanitizeForRelay(D)}: OAuth completed for a server that is no longer configured; not reconnecting`,
                       );
                       return;
                     }
@@ -14015,7 +14015,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     }
                   else Xe(r);
                 }
-              } else Be(r, `No active OAuth flow for server: ${Qn(D)}`);
+              } else Be(r, `No active OAuth flow for server: ${sanitizeForRelay(D)}`);
             } else if (r.request.subtype === "claude_authenticate") {
               let { loginWithClaudeAi: D } = r.request,
                 F = validateForceLoginMethod(D ?? !0);
@@ -14185,7 +14185,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         Be(
                           r,
                           F instanceof mi
-                            ? Qn(l(F))
+                            ? sanitizeForRelay(l(F))
                             : withholdDetailIfRemote(e, l(F), "claude_oauth_callback failed"),
                         ));
                     },
@@ -14209,7 +14209,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   )
                     await js().revokeServerTokens(D, ue);
                 };
-              if (!ie) Be(r, `Server not found: ${Qn(D)}`);
+              if (!ie) Be(r, `Server not found: ${sanitizeForRelay(D)}`);
               else if (ie.type !== "sse" && ie.type !== "http")
                 Be(r, `Cannot clear auth for server type "${ie.type}"`);
               else if (!F || isMcpDialBlockedByPolicy(D, ie) || isMcpServerDisabled(D)) {
@@ -15455,7 +15455,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             } else
               Be(
                 r,
-                `Unsupported control request subtype: ${Qn(String(r.request.subtype))}`,
+                `Unsupported control request subtype: ${sanitizeForRelay(String(r.request.subtype))}`,
               );
           } finally {
             if (L && !St) t.onCommandLifecycle?.(L, "completed");
@@ -15771,7 +15771,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         let { content: Bo, inlinedImagePaths: ro } = await resolveAndPrepend(
             r,
             z_(Se, V, W),
-            !Ye && r6n(Je, V, Ce, r.inbound_origin),
+            !Ye && isHumanIngressTurn(Je, V, Ce, r.inbound_origin),
             w.storageV5,
             w.credentials,
           ),
@@ -16360,12 +16360,12 @@ function My(e, t, o, d, _) {
   let E = (te) => d.enqueue(buildControlErrorResponse(e, te)),
     I = o.find((te) => te.name === t && te.type === "connected");
   if (!I || I.type !== "connected")
-    return E(`server ${Qn(t)} is not connected`);
+    return E(`server ${sanitizeForRelay(t)} is not connected`);
   let O = I.config.pluginSource,
     v = O ? parsePluginIdIgnoringReservedMarketplace(O) : void 0;
   if (!v?.marketplace)
     return E(
-      `server ${Qn(t)} is not plugin-sourced; channel_enable requires a marketplace plugin`,
+      `server ${sanitizeForRelay(t)} is not plugin-sourced; channel_enable requires a marketplace plugin`,
     );
   let C = { kind: "plugin", name: v.name, marketplace: v.marketplace },
     re = ym(),
@@ -17109,7 +17109,7 @@ function Oy(e, t) {
       getAuthHeaders: getSessionAuthHeaders,
       rereadMissingAuthHeaders: _ ? recoverSessionIngressToken : void 0,
       sessionId: K(),
-      workerEpoch: lsn(),
+      workerEpoch: getWorkerEpoch(),
       environmentKind: d,
       isResume: hasResumeFlag(process.argv),
       earlyHydrateReads: t.earlyHydrateReads,
@@ -17310,7 +17310,7 @@ function By(e, t) {
   let o = isRemoteTransportPersistent(e),
     d = Object.create(null);
   for (let [_, E] of Object.entries(t)) {
-    let I = o ? Qn(_) : _;
+    let I = o ? sanitizeForRelay(_) : _;
     if (o && Object.hasOwn(d, I)) {
       let O = 2;
       while (Object.hasOwn(d, `${I}#${O}`)) O++;

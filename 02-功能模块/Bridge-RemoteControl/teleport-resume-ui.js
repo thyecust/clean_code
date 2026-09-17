@@ -25,7 +25,7 @@ import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import { TeleportError } from "../云会话-Teleport/teleport-errors.js";
@@ -303,7 +303,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
               ],
             }),
           }),
-          e(ve, {
+          e(Select, {
             visibleOptionCount: U,
             options: ce,
             onChange: (s) => {

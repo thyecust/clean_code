@@ -19,7 +19,7 @@ import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
-import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { sanitizeForRelay } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import "../权限系统/cross-session-inbound-gate.js";
 import "../Teammates团队/peer-idle-notices.js";
 import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
@@ -27,10 +27,10 @@ import "../跨会话消息(UDS)/uds-messaging.js";
 import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import "../Skills技能/mcp-skill-cache.js";
 import "../自动更新-安装/install-diagnostics.js";
-import "../自动更新-安装/chunk-2g5h49pk.js";
+import "../自动更新-安装/native-installer.js";
 import "../会话-历史-恢复/retention-cleanup.js";
 import "../跨会话消息(UDS)/peer-file-transfer.js";
-import { n4 } from "../设置-配置-UI/设置-配置-UI.kezhax6q.js";
+import { SettingsDialog } from "../设置-配置-UI/设置-配置-UI.kezhax6q.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
@@ -79,7 +79,7 @@ import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/Rea
 F();
 var J = async (t, o, r) => {
   let s = r?.trim() || "";
-  if (!s) return e(n4, { onClose: t, context: o, defaultTab: "Config" });
+  if (!s) return e(SettingsDialog, { onClose: t, context: o, defaultTab: "Config" });
   let n = s.toLowerCase();
   if (HELP_FLAGS.includes(n) || INFO_SUBCOMMAND_ALIASES.includes(n)) {
     t(
@@ -91,7 +91,7 @@ ${listConfigKeys(o)}`,
   }
   let i = parseConfigShorthand(s);
   if (!i) {
-    t(`Expected key=value, got "${Qn(s)}". Run /config to open settings.`, {
+    t(`Expected key=value, got "${sanitizeForRelay(s)}". Run /config to open settings.`, {
       display: "system",
     });
     return;

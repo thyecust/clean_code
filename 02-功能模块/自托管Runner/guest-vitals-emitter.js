@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -59,7 +59,7 @@ async function _({ binaryResolution: e, log: r }) {
         );
       return { binary: t, viaFallback: !1 };
     case "search": {
-      let i = t || (await ja(T));
+      let i = t || (await resolveExecutablePathAsync(T));
       return i
         ? { binary: i, viaFallback: !1 }
         : { binary: E, viaFallback: !0 };

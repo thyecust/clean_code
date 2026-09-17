@@ -74,7 +74,7 @@ import {
 } from "../Memory-CLAUDE.md/chunk-3ehd7vx0.js";
 import { isLocalHostname, isLoopbackHostname, isPrivateDomain } from "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, eir } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, CLAUDE_IN_CHROME_FILE_UPLOAD_TOOL_NAMES } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
 import { s, ocr, vx, O, se, v, c, Qe, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -344,7 +344,7 @@ var Br = [
     ...ARTIFACT_FAMILY_TOOL_NAMES,
     WORKFLOW_TOOL_NAME,
     SEND_FILE_TOOL_NAME,
-    ...eir.map((e) => buildMcpToolName(CLAUDE_IN_CHROME_MCP_SERVER_NAME, e)),
+    ...CLAUDE_IN_CHROME_FILE_UPLOAD_TOOL_NAMES.map((e) => buildMcpToolName(CLAUDE_IN_CHROME_MCP_SERVER_NAME, e)),
     "NotebookRead",
     "LS",
     ...TOOL_RULE_VALIDATION.bashPrefixTools,

@@ -942,14 +942,14 @@ function V(e) {
     ? e
     : [];
 }
-function c2n(e) {
+function getProtocolVersionsFromForeignEnvelope(e) {
   if (e === void 0) return;
   let o = x(e);
   if (o === void 0) return [];
   if (o.v === A) return;
   return "protocol_versions" in o ? V(o.protocol_versions) : [];
 }
-function u2n(e) {
+function getProtocolVersionsFromCurrentEnvelope(e) {
   let o = x(e);
   return o !== void 0 && o.v === A && "protocol_versions" in o
     ? V(o.protocol_versions)
@@ -1319,8 +1319,8 @@ export {
   isWithinDepth,
   parseHostEpoch,
   parseMachineDescription,
-  c2n,
-  u2n,
+  getProtocolVersionsFromForeignEnvelope,
+  getProtocolVersionsFromCurrentEnvelope,
   parseToolDescriptor,
   parseToolAnnouncement,
   parseRemoteToolCallRequest,

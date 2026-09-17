@@ -91,7 +91,7 @@ var NON_INHERITED_ENV_VARS = [
   "CLAUDE_CODE_SSE_PORT",
   "FORCE_CODE_TERMINAL",
 ];
-function g4(E) {
+function removeRestrictedEnvVars(E) {
   for (let _ of Object.keys(E)) if (S.has(_.toUpperCase())) delete E[_];
 }
 var D = new Set(BG_DISPATCHER_ENV_VARS);
@@ -105,4 +105,4 @@ var S = new Set([
   "CLAUDE_CODE_EVAL_ALLOW_ARTIFACT_PUBLISH",
   "CLAUDE_CODE_EVAL_ALLOW_FLAG_OVERRIDES",
 ]);
-export { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS, g4, removeBgDispatcherPlanEnvVars };
+export { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS, removeRestrictedEnvVars, removeBgDispatcherPlanEnvVars };

@@ -14,7 +14,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { logFeatureOk, logFeatureBad } from "../lodash/lodash.0vqzb8ad.js";
 import { R, A, Jr } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { qR, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePath, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { getProcStartTime, getProcParentPid } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -1974,7 +1974,7 @@ function yxt(e, t, r) {
   let o = B(e);
   if (o === void 0)
     return { command: t, args: [...r], pending: exe(), capped: !1 };
-  if (qR(t) === null)
+  if (resolveExecutablePath(t) === null)
     return { command: t, args: [...r], pending: !0, capped: !1 };
   return {
     pending: !1,

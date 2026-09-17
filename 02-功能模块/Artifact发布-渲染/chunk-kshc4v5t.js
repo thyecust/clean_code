@@ -10,7 +10,7 @@
 import { Gt, B, K, ze, _B, fae, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { jsonStringify, Is, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParseUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { MAX_ARTIFACT_WATCHES, stopArtifactSupervisor, getArtifactState, getArtifactPresence, disposePresenceSlug, retirePresenceSlug, isPresenceDeclined } from "./chunk-rr78st95.js";
 import { ARTIFACT_WATCH_LIFECYCLE_ORIGIN, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
@@ -152,16 +152,16 @@ class kn {
   userPrompt = createStore({ pending: !1 });
 }
 var je = new Gt(() => new kn());
-function xdt(e, t) {
+function setSessionWorking(e, t) {
   je.of(e).working.setState((r) => (r.working === t ? r : { working: t }));
 }
-function Hdt(e) {
+function isSessionWorking(e) {
   return je.of(e).working.getState().working;
 }
-function d1t(e, t) {
+function subscribeSessionWorking(e, t) {
   return je.of(e).working.subscribe(t);
 }
-function Idt(e, t) {
+function setSessionUserPromptPending(e, t) {
   je.of(e).userPrompt.setState((r) => (r.pending === t ? r : { pending: t }));
 }
 var yt = 120,
@@ -238,9 +238,9 @@ function Ln() {
 function On(e) {
   if (e.activityUnsubscribe !== void 0) return;
   let t = Ln();
-  e.activityUnsubscribe = d1t(t, () => {
+  e.activityUnsubscribe = subscribeSessionWorking(t, () => {
     try {
-      qr(e, Hdt(t));
+      qr(e, isSessionWorking(t));
     } catch (r) {
       logError(r);
     }
@@ -248,7 +248,7 @@ function On(e) {
 }
 function In(e) {
   return (
-    (Hdt(Ln()) && e.activityOnsetTimer === void 0) ||
+    (isSessionWorking(Ln()) && e.activityOnsetTimer === void 0) ||
     e.activityClearTimer !== void 0
   );
 }
@@ -816,7 +816,7 @@ function oi(e, t) {
   if (e.stopped || t.charCodeAt(0) !== 123) return;
   let r;
   try {
-    r = Is(t);
+    r = jsonParseUntraced(t);
   } catch {
     return;
   }
@@ -864,7 +864,7 @@ function ci(e, t) {
     if ((et(r), e.conns.get(r.slug) === r)) e.conns.delete(r.slug);
   }
 }
-function p1t(e, t) {
+function isSlugNamedByStrictHumanTurn(e, t) {
   return Vt(e, t) >= 0;
 }
 function Vt(e, t) {
@@ -967,13 +967,13 @@ var Si =
       "The request was cancelled before the registration finished, and the webhook trigger minted for it could not be released \u2014 it counts against this session until the session ends.",
   },
   wi = new Map(Object.entries(_i));
-function Pdt(e, t) {
+function formatArmFailureReason(e, t) {
   let r = wi.get(e) ?? Si;
   if (t === void 0) return r;
   let i = /[.!?]['")\]]*$/.test(t) ? "" : ".";
   return `${r} Server said: "${t}"${i}`;
 }
-function zsn(e) {
+function describeHttpFailureOrigin(e) {
   if (e.status === void 0) return;
   if (e.relayed)
     return e.fromGateway
@@ -996,26 +996,26 @@ var vi = new Set([
   "subscribe_forbidden",
   "invalid_slug",
 ]);
-function f1t(e) {
+function getArmFailureAdvice(e) {
   return vi.has(e) ? null : DEFAULT_WATCH_ADVICE;
 }
-function U6n(e) {
+function markArmInFlight(e) {
   let { armsInFlight: t } = getArtifactState().durable;
   t.set(e, (t.get(e) ?? 0) + 1);
 }
-function B6n(e, t) {
+function settleArmAttempt(e, t) {
   let r = getArtifactState().durable,
     i = (r.armsInFlight.get(e) ?? 1) - 1;
   if (i > 0) r.armsInFlight.set(e, i);
   else r.armsInFlight.delete(e);
   if (t?.outcome === "subscribed" || t?.outcome === "already_watching")
-    return (Vsn(e), { settled: "registered" });
+    return (forgetArmFailuresForSlug(e), { settled: "registered" });
   let d = t === void 0 ? "arm_threw" : t.reason;
   if (d === "stop_latched" || r.stopLatches.isStopped(e))
     return { settled: "stopped" };
   let o = r.armOutcomes.get(e),
     l = t?.outcome === "failed" && t.latched && o?.reason === d ? o : void 0,
-    p = (t?.outcome === "failed" ? zsn(t) : void 0) ?? l?.detail,
+    p = (t?.outcome === "failed" ? describeHttpFailureOrigin(t) : void 0) ?? l?.detail,
     _ =
       (t?.outcome === "failed" ? t.serverMessage : void 0) ?? l?.serverMessage,
     S = {
@@ -1028,20 +1028,20 @@ function B6n(e, t) {
     i > 0 ? { settled: "pending", ...S } : { settled: "unregistered", ...S }
   );
 }
-function j6n(e) {
+function clearArmFailuresByReason(e) {
   let t = getArtifactState().durable;
   for (let [r, i] of t.armOutcomes) if (i.reason === e) t.armOutcomes.delete(r);
   for (let r of t.announcedArmFailures)
     if (r.endsWith(`:${e}`)) t.announcedArmFailures.delete(r);
 }
-function Vsn(e) {
+function forgetArmFailuresForSlug(e) {
   let t = getArtifactState().durable;
   (t.armOutcomes.delete(e), deletePrefixedSetEntries(t.announcedArmFailures, e));
 }
 function rr(e, t) {
   return addBoundedSetEntry(getArtifactState().durable.announcedArmFailures, `${e}:${t}`, MAX_ANNOUNCED_ARM_FAILURES);
 }
-function W6n(e) {
+function durableWakeArmRows(e) {
   let t = getArtifactState().durable,
     r = [],
     i = new Set();
@@ -1655,7 +1655,7 @@ function Vi(e) {
     if (!t.startsWith("{")) return null;
     let r;
     try {
-      r = Is(t);
+      r = jsonParseUntraced(t);
     } catch {
       return null;
     }
@@ -1674,7 +1674,7 @@ function Ui(e, t, r) {
     if (i.charCodeAt(0) !== 123) return null;
     let d;
     try {
-      d = Is(i);
+      d = jsonParseUntraced(i);
     } catch {
       return null;
     }
@@ -2091,7 +2091,7 @@ async function watchFrameLive(e) {
       ? void 0
       : !isUserDrivenTurn(o.messages)
         ? "unattended_turn"
-        : !p1t(o.messages, t) || !hasStrictHumanDecider(o.messages)
+        : !isSlugNamedByStrictHumanTurn(o.messages, t) || !hasStrictHumanDecider(o.messages)
           ? "not_named_by_user"
           : _.repliesConsent.declined.has(t)
             ? "declined"
@@ -3729,12 +3729,12 @@ function onDurablePublishArmSettled(e) {
     _ =
       i ??
       `This session will NOT be woken when ${isArtifactCommentsAvailable() ? "it is republished or a comment on it is sent to Claude" : "it is republished"}`,
-    S = f1t(o);
+    S = getArmFailureAdvice(o);
   Er({
     slug: t,
     artifactName: formatArtifactDisplayName(e.getTitle, r),
     shortReason: "wake subscription not registered",
-    event: `The durable wake subscription for ${r} was not registered (${o}${l !== void 0 ? `: ${l}` : ""}) \u2014 ${Pdt(o, p)} ${_}${S === null ? "" : `; ${S}`} \u2014 do not claim to be subscribed to it meanwhile.`,
+    event: `The durable wake subscription for ${r} was not registered (${o}${l !== void 0 ? `: ${l}` : ""}) \u2014 ${formatArmFailureReason(o, p)} ${_}${S === null ? "" : `; ${S}`} \u2014 do not claim to be subscribed to it meanwhile.`,
   });
 }
 function isFrameLiveRowConnecting(e) {
@@ -3790,19 +3790,19 @@ function frameLiveArmRows(e, t) {
   return p;
 }
 export {
-  xdt,
-  Hdt,
-  d1t,
-  Idt,
-  p1t,
-  Pdt,
-  zsn,
-  f1t,
-  U6n,
-  B6n,
-  j6n,
-  Vsn,
-  W6n,
+  setSessionWorking,
+  isSessionWorking,
+  subscribeSessionWorking,
+  setSessionUserPromptPending,
+  isSlugNamedByStrictHumanTurn,
+  formatArmFailureReason,
+  describeHttpFailureOrigin,
+  getArmFailureAdvice,
+  markArmInFlight,
+  settleArmAttempt,
+  clearArmFailuresByReason,
+  forgetArmFailuresForSlug,
+  durableWakeArmRows,
   labelledArmedVia,
   parseArmedVia,
   armedViaWording,

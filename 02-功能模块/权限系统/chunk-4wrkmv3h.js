@@ -14,7 +14,7 @@ import { An, ac, li, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js"
 import { K, fy } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { readFileHardened, isNotFoundError, rawPointerPathIsUnsafe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { jsonStringify, jsonParse, Is, resolvePathInfo, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, jsonParseUntraced, resolvePathInfo, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -142,7 +142,7 @@ async function Lt(e) {
     i = e?.maxRepos ?? Ln,
     d = e?.maxRepoDepth ?? jn,
     m = e?.timeoutMs ?? Mn;
-  if (ece(r)) return { repos: [], limit: "network-home" };
+  if (isNetworkPath(r)) return { repos: [], limit: "network-home" };
   let c = [],
     p = "none",
     u = !1,
@@ -153,7 +153,7 @@ async function Lt(e) {
         p = "home-unreadable";
         return;
       }
-      if (ece(w)) {
+      if (isNetworkPath(w)) {
         p = "network-home";
         return;
       }
@@ -282,7 +282,7 @@ function dt() {
     return null;
   }
 }
-function ece(e) {
+function isNetworkPath(e) {
   return (An(e) && !Oi(e)) || li(e);
 }
 function jt(e, t) {
@@ -538,7 +538,7 @@ function Bt(e, t) {
   return !1;
 }
 var ze = /^(?!\.{1,2}$)[A-Za-z0-9_.][A-Za-z0-9_.-]*$/,
-  N3e = "Repo visibility & branch protection (via gh)",
+  REPO_VISIBILITY_SECTION_HEADING = "Repo visibility & branch protection (via gh)",
   zt = 4000,
   te = "not queryable here",
   Gt = /^[\w.][\w ./-]{0,119}$/;
@@ -773,13 +773,13 @@ _${c}_`
 }
 var gt = "Infer visibility from the remote hostname in Repo facts, or ask.";
 function et(e) {
-  return `### ${N3e}
+  return `### ${REPO_VISIBILITY_SECTION_HEADING}
 
 ${e.trim()}
 `;
 }
 var nt = Object.freeze({ allProjects: !1, shellHistory: !1, homeRepos: !1 });
-function OIe(e) {
+function resolveAutoModeReconScope(e) {
   if (e === void 0 || (e.scope !== "all" && e.scope !== "project")) return nt;
   let t = e.scope === "all";
   switch (e.depth) {
@@ -1008,7 +1008,7 @@ async function J(e, t) {
     );
   }
 }
-async function P2n(e, t = nt, r, o) {
+async function gatherAutoModeRecon(e, t = nt, r, o) {
   let s = bt(e),
     l = jr(s),
     i = fy(),
@@ -1018,7 +1018,7 @@ async function P2n(e, t = nt, r, o) {
       ...(await Promise.all([
         J("CLAUDE.md files and project docs", () => Nr(s, o)),
         J("Repo facts", async () => (await l).rendered),
-        J(N3e, () => Wt(t.allProjects, s)),
+        J(REPO_VISIBILITY_SECTION_HEADING, () => Wt(t.allProjects, s)),
         J(ne, () => Lr(t.allProjects, s)),
         J("Existing auto-mode settings (selective read)", () =>
           Mr(s, void 0, o),
@@ -1235,9 +1235,9 @@ function q(e) {
     ? e
     : "(unusual name redacted)";
 }
-var crn =
+var IGNORED_PERMISSION_ENTRIES_HEADING =
     "#### permissions.allow entries auto mode ignores (classifier-bypassing, in your user settings)",
-  urn =
+  DESTRUCTIVE_PERMISSION_ENTRIES_HEADING =
     "#### Destructive permissions.allow entries (honored at runtime \u2014 auto-approved with no prompt, in your user settings)";
 function Te(e) {
   return q(e) === e && e.trim() === e && e.replace(mn, "://") === e;
@@ -1416,7 +1416,7 @@ var ne = "Sibling repo docs (via gh \u2014 unverified provenance)",
   Or = new Map([
     ["CLAUDE.md files and project docs", S("docs")],
     ["Repo facts", S("repo_facts")],
-    [N3e, S("repo_visibility")],
+    [REPO_VISIBILITY_SECTION_HEADING, S("repo_visibility")],
     [ne, S("sibling_docs")],
     ["Existing auto-mode settings (selective read)", S("settings")],
     ["Recent usage in this project (names only)", S("transcripts")],
@@ -1672,14 +1672,14 @@ _Note: classifyAllShell is active, so at runtime auto mode ignores every Bash/Po
 ${o}${p}`,
       s.length
         ? `
-${crn}
+${IGNORED_PERMISSION_ENTRIES_HEADING}
 ${s.map((_) => `- \`${q(_)}\``).join(`
 `)}${h(i)}${u}`
         : `
 No classifier-bypassing entries in user-settings permissions.allow.${u}`,
       l.length
         ? `
-${urn}
+${DESTRUCTIVE_PERMISSION_ENTRIES_HEADING}
 ${l.map((_) => `- \`${q(_)}\``).join(`
 `)}${h(d)}`
         : `
@@ -1754,7 +1754,7 @@ async function Wr(e) {
         T = w.includes(Br);
       if (!E && !T) continue;
       try {
-        let O = Is(w).message?.content;
+        let O = jsonParseUntraced(w).message?.content;
         if (!Array.isArray(O)) continue;
         for (let D of O) {
           if (
@@ -1856,7 +1856,7 @@ async function on(e, t, r) {
     xdgDataHome: a.XDG_DATA_HOME,
     histFile: a.HISTFILE,
   };
-  if (ece(s.homeDir)) return k(he, rn);
+  if (isNetworkPath(s.homeDir)) return k(he, rn);
   let l = new AbortController(),
     i;
   try {
@@ -1896,14 +1896,14 @@ async function Kr(e, t, r) {
     d = performance.now() + _t(e.platform) - 50,
     m = await M.realpath(e.homeDir).catch((p) => (isNotFoundError(p) ? e.homeDir : null));
   if (m === null) return { words: [], filesRead: [], partial: !0 };
-  if (ece(m)) return { words: [], filesRead: [], partial: !0, networkHome: !0 };
+  if (isNetworkPath(m)) return { words: [], filesRead: [], partial: !0, networkHome: !0 };
   let c = (p) => isFileReadDenied(p, t);
   for (let p of en(e)) {
     if (r.aborted || performance.now() > d) {
       i = !0;
       break;
     }
-    if (ece(p.path) || oe(p.path, e.homeDir, m, c, e.platform)) {
+    if (isNetworkPath(p.path) || oe(p.path, e.homeDir, m, c, e.platform)) {
       i = !0;
       continue;
     }
@@ -1912,7 +1912,7 @@ async function Kr(e, t, r) {
       i = !0;
       continue;
     }
-    if (u !== p.path && (ece(u) || oe(u, m, e.homeDir, c, e.platform))) {
+    if (u !== p.path && (isNetworkPath(u) || oe(u, m, e.homeDir, c, e.platform))) {
       i = !0;
       continue;
     }
@@ -2231,7 +2231,7 @@ async function an(
 `)) {
         if (!Q.includes(fn)) continue;
         try {
-          let Oe = Is(Q).message?.content;
+          let Oe = jsonParseUntraced(Q).message?.content;
           if (!Array.isArray(Oe)) continue;
           for (let Le of Oe)
             if (
@@ -2626,26 +2626,26 @@ ${t(e.soft_deny).map((r) => `- ${r}`).join(`
 `),
   );
 }
-var zlt = ["allow", "soft_deny", "hard_deny"],
-  m7 = 200,
-  SSe = 1e4,
+var AUTO_MODE_PERMISSION_BUCKETS = ["allow", "soft_deny", "hard_deny"],
+  MAX_AUTO_MODE_ENTRIES = 200,
+  MAX_PERMISSION_RULE_LENGTH = 1e4,
   oo = MAX_SETTINGS_FILE_BYTES / 4,
   so = 200,
   io = 50000;
-class bSe extends Error {
+class AutoModeSetupWriteError extends Error {
   code;
   constructor(e, t) {
     super(t);
     ((this.name = "AutoModeSetupWriteError"), (this.code = e));
   }
 }
-async function wSe(e, t) {
+async function writeAutoModeSetup(e, t) {
   let r;
   try {
     r = await ao(e, t);
   } catch (o) {
     throw (
-      logFeatureBad("auto_mode_setup_write", o instanceof bSe ? o.code : "unknown"),
+      logFeatureBad("auto_mode_setup_write", o instanceof AutoModeSetupWriteError ? o.code : "unknown"),
       o
     );
   }
@@ -2654,7 +2654,7 @@ async function wSe(e, t) {
   else logFeatureOk("auto_mode_setup_write");
   return r;
 }
-function drn(e) {
+function validateAutoModeSetupPayload(e) {
   let { autoMode: t } = e;
   if (t === void 0 && (e.removeFromPermissionsAllow ?? []).length === 0)
     return "Nothing to save.";
@@ -2663,16 +2663,16 @@ function drn(e) {
     if (!o.success) return `autoMode block failed validation: ${Sn(o.error)}`;
     if (!t.environment || t.environment.length === 0)
       return "autoMode.environment is empty \u2014 nothing to save.";
-    let s = TSe("environment", t.environment);
+    let s = validateAutoModeEntries("environment", t.environment);
     if (s) return s;
-    if (t.environment.some((l) => oI(l) === DEFAULTS_SLOT_MARKER))
+    if (t.environment.some((l) => stripVariationSelectors(l) === DEFAULTS_SLOT_MARKER))
       return `autoMode.environment must not contain "${DEFAULTS_SLOT_MARKER}" \u2014 skipped slots get their shipped default text written verbatim instead.`;
-    for (let l of zlt) {
+    for (let l of AUTO_MODE_PERMISSION_BUCKETS) {
       let i = t[l];
       if (i === void 0) continue;
       if (i.length === 0)
         return `autoMode.${l} is empty \u2014 omit the key when nothing was accepted for it.`;
-      let d = TSe(l, i);
+      let d = validateAutoModeEntries(l, i);
       if (d) return d;
       if (!i.includes(DEFAULTS_SLOT_MARKER))
         return `autoMode.${l} is missing the literal entry "${DEFAULTS_SLOT_MARKER}" \u2014 without it the array replaces the shipped rules instead of extending them.`;
@@ -2682,8 +2682,8 @@ function drn(e) {
   if (r !== void 0) {
     if (!Array.isArray(r))
       return "removeFromPermissionsAllow must be an array of rule strings.";
-    if (r.length > m7)
-      return `removeFromPermissionsAllow has ${r.length} entries; the maximum is ${m7}.`;
+    if (r.length > MAX_AUTO_MODE_ENTRIES)
+      return `removeFromPermissionsAllow has ${r.length} entries; the maximum is ${MAX_AUTO_MODE_ENTRIES}.`;
     for (let [o, s] of r.entries())
       if (typeof s !== "string" || !Te(s))
         return `removeFromPermissionsAllow[${o}] is not a rule string the removal offer could have produced.`;
@@ -2691,11 +2691,11 @@ function drn(e) {
   return null;
 }
 async function ao(e, t) {
-  let r = drn(e);
-  if (r) throw new bSe("invalid_input", r);
+  let r = validateAutoModeSetupPayload(e);
+  if (r) throw new AutoModeSetupWriteError("invalid_input", r);
   let o = getSettingsFilePathForSource("userSettings");
   if (!o)
-    throw new bSe(
+    throw new AutoModeSetupWriteError(
       "no_user_settings_path",
       "Could not resolve the user settings file path.",
     );
@@ -2726,7 +2726,7 @@ async function ao(e, t) {
             let j = En(C?.environment);
             ((p = j.length), (N = { environment: lo(j, s.environment) }));
           } else N = { environment: s.environment };
-          for (let j of zlt) {
+          for (let j of AUTO_MODE_PERMISSION_BUCKETS) {
             let Ne = s[j];
             if (Ne === void 0) continue;
             N[j] = co(j, En(C?.[j]), Ne);
@@ -2764,11 +2764,11 @@ async function ao(e, t) {
       void 0,
       t,
     );
-  if (u) throw new bSe("invalid_merged", u);
+  if (u) throw new AutoModeSetupWriteError("invalid_merged", u);
   if (_) {
     logForDebugging(`auto-mode setup write failed: ${_.message}`, { level: "error" });
-    let w = F3e(_, o, "setup");
-    throw new bSe(w.code, w.message);
+    let w = describeAutoModeWriteError(_, o, "setup");
+    throw new AutoModeSetupWriteError(w.code, w.message);
   }
   return {
     filePath: o,
@@ -2780,12 +2780,12 @@ async function ao(e, t) {
     warnings: h,
   };
 }
-function prn(e, t) {
+function formatInvalidSettingsJsonMessage(e, t) {
   return `The settings file at ${e} contains invalid JSON \u2014 fix or remove it, then re-run ${t}.`;
 }
-function F3e(e, t, r) {
+function describeAutoModeWriteError(e, t, r) {
   if (e.message.includes("Invalid JSON syntax"))
-    return { code: "settings_file_invalid", message: prn(t, r) };
+    return { code: "settings_file_invalid", message: formatInvalidSettingsJsonMessage(t, r) };
   return {
     code: "write_failed",
     message: `Could not write ${t} \u2014 check file permissions and disk space (run with --debug for the underlying error).`,
@@ -2802,14 +2802,14 @@ function En(e) {
 function lo(e, t) {
   let r = (h) => h.startsWith("### "),
     o = [...e],
-    s = (h, _) => `${h}\x00${oI(_)}`,
+    s = (h, _) => `${h}\x00${stripVariationSelectors(_)}`,
     l = new Set(),
     i = new Set();
   {
     let h = "";
     for (let _ of e)
-      if (r(_)) h = oI(_);
-      else (l.add(s(h, _)), i.add(oI(_)));
+      if (r(_)) h = stripVariationSelectors(_);
+      else (l.add(s(h, _)), i.add(stripVariationSelectors(_)));
   }
   let d = o.length,
     m = "",
@@ -2823,8 +2823,8 @@ function lo(e, t) {
     };
   for (let h of t) {
     if (r(h)) {
-      (u(), (m = oI(h)));
-      let w = o.findIndex((E) => oI(E) === m);
+      (u(), (m = stripVariationSelectors(h)));
+      let w = o.findIndex((E) => stripVariationSelectors(E) === m);
       if (w === -1) (o.push(h), (c = o.length - 1), (d = o.length));
       else {
         let E = w + 1;
@@ -2833,18 +2833,18 @@ function lo(e, t) {
       }
       continue;
     }
-    let _ = oI(h);
+    let _ = stripVariationSelectors(h);
     if (l.has(s(m, h)) || l.has(s("", h)) || (m === "" && i.has(_))) continue;
     if ((o.splice(d++, 0, h), l.add(s(m, h)), i.add(_), c !== -1)) p = !0;
   }
   return (u(), o);
 }
 function co(e, t, r) {
-  let o = e !== "allow" || t.length === 0 || t.some((i) => oI(i) === DEFAULTS_SLOT_MARKER),
+  let o = e !== "allow" || t.length === 0 || t.some((i) => stripVariationSelectors(i) === DEFAULTS_SLOT_MARKER),
     s = new Set(),
     l = [];
   for (let i of [DEFAULTS_SLOT_MARKER, ...t, ...r]) {
-    let d = oI(i);
+    let d = stripVariationSelectors(i);
     if (d === DEFAULTS_SLOT_MARKER && !o) continue;
     if (s.has(d)) continue;
     (s.add(d), l.push(i));
@@ -2852,21 +2852,21 @@ function co(e, t, r) {
   return l;
 }
 function uo(e) {
-  let t = { environment: e.environment.map(oI) };
-  for (let r of zlt) {
+  let t = { environment: e.environment.map(stripVariationSelectors) };
+  for (let r of AUTO_MODE_PERMISSION_BUCKETS) {
     let o = e[r];
-    if (o !== void 0) t[r] = o.map(oI);
+    if (o !== void 0) t[r] = o.map(stripVariationSelectors);
   }
   return t;
 }
-function TSe(e, t) {
-  if (t.length > m7)
-    return `${e} has ${t.length} entries; the maximum is ${m7}.`;
+function validateAutoModeEntries(e, t) {
+  if (t.length > MAX_AUTO_MODE_ENTRIES)
+    return `${e} has ${t.length} entries; the maximum is ${MAX_AUTO_MODE_ENTRIES}.`;
   for (let r of t) {
-    let o = oI(r);
+    let o = stripVariationSelectors(r);
     if (o.trim() === "") return `${e} contains an empty entry.`;
-    if (o.length > SSe)
-      return `${e} contains an entry of ${o.length} characters; the maximum is ${SSe}.`;
+    if (o.length > MAX_PERMISSION_RULE_LENGTH)
+      return `${e} contains an entry of ${o.length} characters; the maximum is ${MAX_PERMISSION_RULE_LENGTH}.`;
     if (fo(o))
       return `${e} contains an entry with a control character; entries must be single-line text.`;
     if (po(o))
@@ -2897,24 +2897,24 @@ function po(e) {
   return mo.test(e);
 }
 var go = /[\uFE00-\uFE0F\u{E0100}-\u{E01EF}]/gu;
-function oI(e) {
+function stripVariationSelectors(e) {
   return e.replace(go, "");
 }
 export {
-  ece,
-  N3e,
-  OIe,
-  P2n,
-  crn,
-  urn,
-  zlt,
-  m7,
-  SSe,
-  bSe,
-  wSe,
-  drn,
-  prn,
-  F3e,
-  TSe,
-  oI,
+  isNetworkPath,
+  REPO_VISIBILITY_SECTION_HEADING,
+  resolveAutoModeReconScope,
+  gatherAutoModeRecon,
+  IGNORED_PERMISSION_ENTRIES_HEADING,
+  DESTRUCTIVE_PERMISSION_ENTRIES_HEADING,
+  AUTO_MODE_PERMISSION_BUCKETS,
+  MAX_AUTO_MODE_ENTRIES,
+  MAX_PERMISSION_RULE_LENGTH,
+  AutoModeSetupWriteError,
+  writeAutoModeSetup,
+  validateAutoModeSetupPayload,
+  formatInvalidSettingsJsonMessage,
+  describeAutoModeWriteError,
+  validateAutoModeEntries,
+  stripVariationSelectors,
 };

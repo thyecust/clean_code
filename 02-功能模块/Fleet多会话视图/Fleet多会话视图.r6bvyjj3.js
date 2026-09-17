@@ -24,12 +24,12 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js"
 import "../Teammates团队/chunk-88ybhavr.js";
 import "../../01-核心基础设施/共享小工具-未细化/alt-screen-container.js";
 import "../../01-核心基础设施/共享小工具-未细化/fleet-view-screen.js";
-import { BQt } from "../会话选择器-AgentsUI/会话选择器-AgentsUI.jta2pccx.js";
+import { mountFleetView } from "../会话选择器-AgentsUI/会话选择器-AgentsUI.jta2pccx.js";
 import "../Vim模式/Vim模式.nnewe0gf.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import "../GitHub集成/chunk-bfz9rjjm.js";
 import "../自动更新-安装/install-diagnostics.js";
-import "../自动更新-安装/chunk-2g5h49pk.js";
+import "../自动更新-安装/native-installer.js";
 import "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import "../Teammates团队/update-command.js";
 import "../../03-入口与运行时/会话UI(REPL)/clawd-mascot.js";
@@ -43,6 +43,6 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 async function mountFleetViewWithComposerBack(e, o) {
   let t = { ...o, host: o?.host ?? createFleetViewHost() };
-  await BQt(e, t);
+  await mountFleetView(e, t);
 }
 export { mountFleetViewWithComposerBack };

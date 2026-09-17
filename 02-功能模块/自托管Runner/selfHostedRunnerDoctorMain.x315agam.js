@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 81 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { jsonStringify, initDefaultDebugLog } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
@@ -217,7 +217,7 @@ Any extra args are passed to the underlying Claude Code session.`);
     (n({ storageV5: o }), await p(u(o)), await d(o), await seedInstallIDs(o));
   }
   let s = l(resolveApiBaseUrl()),
-    h = bc() ? [] : [process.argv[1]],
+    h = isBunStandaloneExecutable() ? [] : [process.argv[1]],
     c = e.length > 0 && !e[0].startsWith("-") ? [] : [m],
     i = [
       ...h,

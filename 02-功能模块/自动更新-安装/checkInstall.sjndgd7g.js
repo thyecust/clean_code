@@ -10,17 +10,17 @@
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  G4,
-  Ipt,
-  gze,
-  Bce,
-  jce,
-  q4,
-  oFt,
-  nOe,
-  Can,
-  van,
-} from "./chunk-2g5h49pk.js";
+  getPlatform as G4,
+  getBinaryName as Ipt,
+  StagedBinaryChecksumError as gze,
+  checkInstall as Bce,
+  installLatest as jce,
+  lockCurrentVersion as q4,
+  cleanupOldVersions as oFt,
+  removeInstalledSymlink as nOe,
+  cleanupShellAliases as Can,
+  cleanupNpmInstallations as van,
+} from "./native-installer.js";
 import "./install-diagnostics.js";
 export {
   gze as StagedBinaryChecksumError,

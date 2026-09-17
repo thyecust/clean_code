@@ -33,7 +33,7 @@ import "../../01-核心基础设施/共享小工具-未细化/request-delivery-e
 import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 import { getReconnectMcpServer, getToggleMcpServer, getIsMcpServerDisabled } from "../../01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js";
 import { getMcpServerType, getBlockingMcpServerState, formatDisabledElsewhereMessage, formatDisableNotPersistedMessage, formatBulkTogglePersistWarning, formatStaleDisableMessage } from "./mcp-server-state-messages.js";
-import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { sanitizeForRelay } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function U(t) {
   let c = new Map(),
@@ -372,7 +372,7 @@ function z(t, c, g, r) {
   if (g instanceof mi) return s(sanitizeDisplayText(l(g), void 0, "none"));
   if (r.persistsOffBox)
     return (
-      logForDebugging(`mcp ${t} refused for ${Qn(c)}: ${l(g)}`, { level: "error" }),
+      logForDebugging(`mcp ${t} refused for ${sanitizeForRelay(c)}: ${l(g)}`, { level: "error" }),
       s(
         `Couldn't ${t} "${m(c)}" (detail withheld on this connection). Run \`/mcp\` in the terminal to check.`,
       )

@@ -18,7 +18,7 @@ import { updateSettingsForSource } from "../../01-核心基础设施/核心工�
 import { Box, Text, useTimeout, render } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { rT, Bce, jce, Can, van } from "./chunk-2g5h49pk.js";
+import { ManifestSignatureError, checkInstall, installLatest, cleanupShellAliases, cleanupNpmInstallations } from "./native-installer.js";
 import "./install-diagnostics.js";
 import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { getAutoUpdatesChannel } from "./auto-updates-channel.js";
@@ -86,7 +86,7 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
             logForDebugging(
               `Install: Calling installLatest(channelOrVersion=${f}, forceReinstall=${m})`,
             ));
-          let u = await jce(f, m, v);
+          let u = await installLatest(f, m, v);
           if (
             (logForDebugging(
               `Install: installLatest returned version=${u.latestVersion}, wasUpdated=${u.wasUpdated}, lockFailed=${u.lockFailed}`,
@@ -127,17 +127,17 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
           }
           if (!u.wasUpdated) logForDebugging("Install: Already up to date");
           h({ type: "setting-up" });
-          let x = await Bce(!0);
+          let x = await checkInstall(!0);
           if (
             (logForDebugging(`Install: Setup launcher completed with ${x.length} messages`),
             x.length > 0)
           )
             x.forEach((g) => logForDebugging(`Install: Setup message: ${g.message}`));
           logForDebugging("Install: Cleaning up npm installations after successful install");
-          let { removed: R, errors: B, warnings: O } = await van();
+          let { removed: R, errors: B, warnings: O } = await cleanupNpmInstallations();
           if (R > 0) logForDebugging(`Cleaned up ${R} npm installation(s)`);
           if (B.length > 0) logForDebugging(`Cleanup errors: ${B.join(", ")}`);
-          let I = await Can();
+          let I = await cleanupShellAliases();
           if (I.length > 0)
             logForDebugging(`Shell alias cleanup: ${I.map((g) => g.message).join("; ")}`);
           logEvent("tengu_claude_install_command", {
@@ -168,7 +168,7 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
             h({
               type: "error",
               message: l(f),
-              forceMayHelp: !(f instanceof rT),
+              forceMayHelp: !(f instanceof ManifestSignatureError),
             }));
         }
       }

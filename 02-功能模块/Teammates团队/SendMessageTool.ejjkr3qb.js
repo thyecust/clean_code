@@ -51,7 +51,7 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getAgentId, getAgentName, getTeamName, isTeammate, getTeammateColor, isTeamLead } from "./teammate-context.js";
 import { formatUnreachablePeerRefusal, formatCannotReceiveRefusal, isPeerInboundUnconfirmed } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
-import { ps, sanitizePlainText } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { sanitizeTextForDisplay, sanitizePlainText } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, findToolByName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { scrubRestoredTranscriptMetadata } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
@@ -1277,7 +1277,7 @@ var SendMessageTool = buildTool({
             }),
             {
               behavior: "deny",
-              message: ps(d),
+              message: sanitizeTextForDisplay(d),
               decisionReason: {
                 type: "other",
                 reason:
@@ -1296,7 +1296,7 @@ var SendMessageTool = buildTool({
             }),
             {
               behavior: "deny",
-              message: ps(_),
+              message: sanitizeTextForDisplay(_),
               decisionReason: {
                 type: "other",
                 reason:
@@ -1308,7 +1308,7 @@ var SendMessageTool = buildTool({
           ue(t, e, null),
           {
             behavior: "ask",
-            message: ps(
+            message: sanitizeTextForDisplay(
               `Send a message to Remote Control session ${e.to}? It reaches the receiving Claude (possibly another machine) via Anthropic's servers as a cross-session message \u2014 marked as from another Claude session, not from its user.`,
             ),
             decisionReason: {
@@ -1341,7 +1341,7 @@ var SendMessageTool = buildTool({
             ue(t, e, null),
             {
               behavior: "ask",
-              message: ps(
+              message: sanitizeTextForDisplay(
                 `Send a message to '${e.to}'? Its destination could not be resolved just now, so it is unknown whether this name is a Claude session on another machine (isolatePeerMachines is enabled).`,
               ),
               decisionReason: {
@@ -1358,7 +1358,7 @@ var SendMessageTool = buildTool({
           if (isOwnSessionId(d.sessionId))
             return {
               behavior: "deny",
-              message: ps(formatOwnSessionMessage(e.to, isTeammateContext(t))),
+              message: sanitizeTextForDisplay(formatOwnSessionMessage(e.to, isTeammateContext(t))),
               decisionReason: { type: "other", reason: SELF_TARGET_REASON },
             };
           let {
@@ -1375,7 +1375,7 @@ var SendMessageTool = buildTool({
               }),
               {
                 behavior: "deny",
-                message: ps(i(d.displayName)),
+                message: sanitizeTextForDisplay(i(d.displayName)),
                 decisionReason: {
                   type: "other",
                   reason:
@@ -1394,7 +1394,7 @@ var SendMessageTool = buildTool({
               }),
               {
                 behavior: "deny",
-                message: ps(w),
+                message: sanitizeTextForDisplay(w),
                 decisionReason: {
                   type: "other",
                   reason:
@@ -1406,7 +1406,7 @@ var SendMessageTool = buildTool({
             ue(t, e, d),
             {
               behavior: "ask",
-              message: ps(
+              message: sanitizeTextForDisplay(
                 d.via === "cloud"
                   ? `Send a message to cloud session '${d.displayName}'? It reaches the receiving Claude (running in the cloud) via Anthropic's servers as a cross-session message \u2014 marked as from another Claude session, not from its user.`
                   : `Send a message to Remote Control session '${d.displayName}'? It reaches the receiving Claude (on another machine) via Anthropic's servers as a cross-session message \u2014 marked as from another Claude session, not from its user.`,
@@ -1438,7 +1438,7 @@ var SendMessageTool = buildTool({
             .join(" and ");
           return {
             behavior: "ask",
-            message: ps(
+            message: sanitizeTextForDisplay(
               `Send a message to '${e.to}'? Just now ${_}, so it is unknown whether this name is a Claude session on another machine (isolatePeerMachines is enabled).`,
             ),
             decisionReason: {
@@ -2829,7 +2829,7 @@ ${V.display}`
           r > 200
             ? `${splitGraphemes(p).slice(0, 200).join("")}\u2026 [${r} chars total]`
             : p;
-      return ps(`${t(e.to)} \u2190 "${d}"`);
+      return sanitizeTextForDisplay(`${t(e.to)} \u2190 "${d}"`);
     }
     if (typeof e.message !== "object" || e.message === null) return null;
     if (e.message.type === "plan_approval_response")

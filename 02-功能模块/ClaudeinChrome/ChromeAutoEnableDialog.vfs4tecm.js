@@ -18,7 +18,7 @@ import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
-import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { useIsMountRecent, useMountTime, useSettleAfterChange, useRefusedInputWindow } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
@@ -40,8 +40,8 @@ function ChromeAutoEnableDialog(Co) {
   else X = n[0];
   E(no, X);
   let Z = C(!1),
-    I = ui(REFUSE_INPUT_WINDOW_MS),
-    { refusedWithin: A, noteRefused: B, epoch: xo } = $o(),
+    I = useIsMountRecent(REFUSE_INPUT_WINDOW_MS),
+    { refusedWithin: A, noteRefused: B, epoch: xo } = useRefusedInputWindow(),
     G;
   if (n[1] !== I || n[2] !== B || n[3] !== A)
     ((G = function a() {
@@ -56,8 +56,8 @@ function ChromeAutoEnableDialog(Co) {
       (n[4] = G));
   else G = n[4];
   let a = G,
-    O = Gm(),
-    L = fa(xo, REFUSE_INPUT_WINDOW_MS),
+    O = useMountTime(),
+    L = useSettleAfterChange(xo, REFUSE_INPUT_WINDOW_MS),
     R;
   if (n[5] !== v || n[6] !== a || n[7] !== x)
     ((R = function s(m) {

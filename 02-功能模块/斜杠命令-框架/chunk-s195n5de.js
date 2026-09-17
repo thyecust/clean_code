@@ -100,7 +100,7 @@ import {
   attributionSkillName,
   deriveRequires,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { NO_CONTENT_PLACEHOLDER, Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { NO_CONTENT_PLACEHOLDER, sanitizeForRelay } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { redactPromptUnlessEnabled, emitOtelEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
@@ -450,7 +450,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
           messages: [
             R,
             createLocalCommandMessage(
-              `<local-command-stdout>Running in the background as @${escapeForkedSkillLaunchTag(Qn(Q.name))}</local-command-stdout>
+              `<local-command-stdout>Running in the background as @${escapeForkedSkillLaunchTag(sanitizeForRelay(Q.name))}</local-command-stdout>
 ` +
                 buildForkedSkillLaunchTag({
                   agentId: Q.agentId,
@@ -613,7 +613,7 @@ function looksLikeCommand(e) {
 }
 function commandThrowTextForTranscript(e, o, t) {
   let m = sanitizeDisplayTextWithoutRedaction(o, 200),
-    l = Qn(o);
+    l = sanitizeForRelay(o);
   if (yt(e)) {
     if (mayHaveRemoteClient(t)) return (logForDebugging(`${l} aborted: ${String(e)}`), "Interrupted");
     return escapeForkedSkillLaunchTag(e instanceof Error ? e.message || "Interrupted" : "Interrupted");
@@ -746,7 +746,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
             "cmd_dispatch",
             re === "stale_list" ? "cmd_stale_list" : `cmd_policy_${re}`,
           ));
-        let me = escapeForkedSkillLaunchTag(Qn(d)),
+        let me = escapeForkedSkillLaunchTag(sanitizeForRelay(d)),
           ue = !p ? "" : isSensitiveCommandInput(X, p) ? "***" : escapeForkedSkillLaunchTag(redactSecretsInText(p));
         if (l.options.isNonInteractiveSession)
           return {
@@ -772,7 +772,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       }
       if (l.options.isNonInteractiveSession && builtInCommandNames().has(d)) {
         let X = getBuiltinCommands(),
-          ne = Ae(d, X) ?? `/${escapeForkedSkillLaunchTag(Qn(d))} isn't available in this environment.`;
+          ne = Ae(d, X) ?? `/${escapeForkedSkillLaunchTag(sanitizeForRelay(d))} isn't available in this environment.`;
         (logEvent("tengu_input_slash_invalid", {
           input_length: d.length,
           had_suggestion: !1,
@@ -783,7 +783,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
         return {
           messages: [
             ...m,
-            createLocalCommandMessage(`/${escapeForkedSkillLaunchTag(Qn(d))}${me ? ` ${me}` : ""}`),
+            createLocalCommandMessage(`/${escapeForkedSkillLaunchTag(sanitizeForRelay(d))}${me ? ` ${me}` : ""}`),
             createLocalCommandMessage(`<local-command-stdout>${ne}</local-command-stdout>`),
           ],
           shouldQuery: !1,
@@ -992,7 +992,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
     d = cmdFeature(shippedCommandNames().has(e) ? e : "custom");
   if (!isCommandEnabled(s)) {
     logFeatureBad(d, "cmd_policy_disabled");
-    let p = `/${escapeForkedSkillLaunchTag(Qn(e))} isn't available in this session.`;
+    let p = `/${escapeForkedSkillLaunchTag(sanitizeForRelay(e))} isn't available in this session.`;
     if (t.options.isNonInteractiveSession)
       return {
         messages: [
@@ -1052,11 +1052,11 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
       {
         messages: [
           createUserMessage({
-            content: prependPrecedingInputBlocks({ inputString: `/${Qn(e)}`, precedingInputBlocks: m }),
+            content: prependPrecedingInputBlocks({ inputString: `/${sanitizeForRelay(e)}`, precedingInputBlocks: m }),
             uuid: v,
           }),
           createUserMessage({
-            content: `This skill can only be invoked by Claude, not directly by users. Ask Claude to use the "${Qn(e)}" skill for you.`,
+            content: `This skill can only be invoked by Claude, not directly by users. Ask Claude to use the "${sanitizeForRelay(e)}" skill for you.`,
           }),
         ],
         shouldQuery: !1,
@@ -1444,7 +1444,7 @@ Original prompt: ${E}`;
               if ("blocked" in E) {
                 k.messages.push(
                   createSystemInfoMessage(
-                    `Stacked skill /${Qn(C.name)} blocked by UserPromptExpansion hook`,
+                    `Stacked skill /${sanitizeForRelay(C.name)} blocked by UserPromptExpansion hook`,
                     "warning",
                   ),
                 );
@@ -1497,7 +1497,7 @@ Original prompt: ${E}`;
               (logError(dt(ge(E), "stacked slash command expansion threw")),
                 k.messages.push(
                   createSystemInfoMessage(
-                    `Stacked skill /${Qn(C.name)} failed to load: ${commandThrowTextForTranscript(E, C.name, t.session)}`,
+                    `Stacked skill /${sanitizeForRelay(C.name)} failed to load: ${commandThrowTextForTranscript(E, C.name, t.session)}`,
                     "warning",
                   ),
                 ));
@@ -1572,7 +1572,7 @@ function ie(e, o) {
   return buildCommandTags(getCommandName(e), isSensitiveCommandInput(e, o) ? "***" : o);
 }
 function we(e, o) {
-  return buildCommandTags(Qn(getCommandName(e)), isSensitiveCommandInput(e, o) ? "***" : redactSecretsInText(o));
+  return buildCommandTags(sanitizeForRelay(getCommandName(e)), isSensitiveCommandInput(e, o) ? "***" : redactSecretsInText(o));
 }
 var Oe = 5;
 function Xe(e, o, t, m) {
@@ -1716,7 +1716,7 @@ Original prompt: ${l}`;
 }
 async function processPromptSlashCommand(e, o, t, m, l = !1) {
   let c = findCommand(e, t);
-  if (!c) throw new YP(`Unknown command: ${Qn(e)}`);
+  if (!c) throw new YP(`Unknown command: ${sanitizeForRelay(e)}`);
   if (c.type !== "prompt")
     throw Error(
       `Unexpected ${c.type} command. Expected 'prompt' command. Use /${e} directly in the main conversation.`,
@@ -1725,7 +1725,7 @@ async function processPromptSlashCommand(e, o, t, m, l = !1) {
 }
 async function ve(e, o, t, m = [], l = [], c, _ = [], v, T, U, P = !1) {
   if (e.loadedFrom === "syncedSkills" && isSkillsSyncVetoed())
-    throw new YP(`Unknown command: ${Qn(e.name)}`);
+    throw new YP(`Unknown command: ${sanitizeForRelay(e.name)}`);
   if (isCoordinatorMainSession(t) && !P) {
     let r = Ue(e, o),
       k = e.isMcp && e.loadedFrom !== "mcp",
@@ -1733,8 +1733,8 @@ async function ve(e, o, t, m = [], l = [], c, _ = [], v, T, U, P = !1) {
     if (e.disableModelInvocation || k || C) {
       let O = [
         k
-          ? `"/${Qn(e.name)}" is an MCP prompt and cannot run in coordinator mode: the coordinator does not load prompt content, and workers cannot invoke MCP prompts via the ${SKILL_TOOL_NAME} tool.`
-          : `Skill "/${Qn(e.name)}" is user-invocable only (${e.disableModelInvocation ? "disable-model-invocation" : "disabled for model invocation in settings"}) and cannot run in coordinator mode: the coordinator does not load skill content, and workers cannot invoke it via the ${SKILL_TOOL_NAME} tool.`,
+          ? `"/${sanitizeForRelay(e.name)}" is an MCP prompt and cannot run in coordinator mode: the coordinator does not load prompt content, and workers cannot invoke MCP prompts via the ${SKILL_TOOL_NAME} tool.`
+          : `Skill "/${sanitizeForRelay(e.name)}" is user-invocable only (${e.disableModelInvocation ? "disable-model-invocation" : "disabled for model invocation in settings"}) and cannot run in coordinator mode: the coordinator does not load skill content, and workers cannot invoke it via the ${SKILL_TOOL_NAME} tool.`,
       ];
       if (e.description) O.push(`Description: ${e.description}`);
       let R = Object.entries(e.subcommands ?? {})
@@ -1751,10 +1751,10 @@ async function ve(e, o, t, m = [], l = [], c, _ = [], v, T, U, P = !1) {
         .map(([D]) => D);
       if (R.length > 0)
         O.push(
-          `Note: the subcommands ${R.map((D) => `"/${Qn(e.name)} ${Qn(D)}"`).join(", ")} route to their own dedicated commands and DO still work when the user types them directly in the terminal (remote-control clients gate some commands separately).`,
+          `Note: the subcommands ${R.map((D) => `"/${sanitizeForRelay(e.name)} ${sanitizeForRelay(D)}"`).join(", ")} route to their own dedicated commands and DO still work when the user types them directly in the terminal (remote-control clients gate some commands separately).`,
         );
       O.push(`
-Do not instruct workers to invoke this via the ${SKILL_TOOL_NAME} tool \u2014 it will be refused. Tell the user that ${R.length > 0 ? `/${Qn(e.name)} itself (beyond the subcommands above) is` : `the /${Qn(e.name)} command is`} unavailable in coordinator mode. If \u2014 and only if \u2014 the underlying task is achievable with the tools workers actually hold, you may brief a worker to do that work directly; do not promise this otherwise.`);
+Do not instruct workers to invoke this via the ${SKILL_TOOL_NAME} tool \u2014 it will be refused. Tell the user that ${R.length > 0 ? `/${sanitizeForRelay(e.name)} itself (beyond the subcommands above) is` : `the /${sanitizeForRelay(e.name)} command is`} unavailable in coordinator mode. If \u2014 and only if \u2014 the underlying task is achievable with the tools workers actually hold, you may brief a worker to do that work directly; do not promise this otherwise.`);
       let N = [
         {
           type: "text",
@@ -1772,16 +1772,16 @@ Do not instruct workers to invoke this via the ${SKILL_TOOL_NAME} tool \u2014 it
         command: e,
       };
     }
-    let E = [`Skill "/${Qn(e.name)}" is available for workers.`];
+    let E = [`Skill "/${sanitizeForRelay(e.name)}" is available for workers.`];
     if (e.description) E.push(`Description: ${e.description}`);
     if (e.whenToUse) E.push(`When to use: ${e.whenToUse}`);
     let H = e.allowedTools ?? [];
     if (H.length > 0)
       E.push(
-        `This skill grants workers additional tool permissions: ${H.map(Qn).join(", ")}`,
+        `This skill grants workers additional tool permissions: ${H.map(sanitizeForRelay).join(", ")}`,
       );
     E.push(`
-Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" in your Agent prompt. The worker has access to the Skill tool and will receive the skill's content and permissions when it invokes it.`);
+Instruct a worker to use this skill by including "Use the /${sanitizeForRelay(e.name)} skill" in your Agent prompt. The worker has access to the Skill tool and will receive the skill's content and permissions when it invokes it.`);
     let j = [
       {
         type: "text",

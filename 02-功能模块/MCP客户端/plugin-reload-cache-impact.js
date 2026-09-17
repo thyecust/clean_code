@@ -13,7 +13,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
-import { $J } from "../插件系统/plugin-system-core.js";
+import { isSignificantPluginError } from "../插件系统/plugin-system-core.js";
 import {
   discoverPluginMcpServers,
   getAgentDefinitionsWithOverrides,
@@ -166,10 +166,10 @@ async function getPluginReloadCacheImpact(r) {
 async function O(r, o, m) {
   let { enabled: p, errors: d } = await r(),
     g = !1,
-    f = d.some($J),
+    f = d.some(isSignificantPluginError),
     y = d.some(
       (t) =>
-        $J(t) &&
+        isSignificantPluginError(t) &&
         !(t.type === "plugin-not-installed" && t.registryReadFailed !== !0) &&
         !(t.type === "marketplace-not-found" && t.registryReadFailed !== !0) &&
         t.type !== "dependency-version-unsatisfied" &&

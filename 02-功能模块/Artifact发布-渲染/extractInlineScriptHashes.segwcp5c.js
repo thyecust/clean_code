@@ -18,7 +18,7 @@ import {
   getAttributeValue,
   DECISION_ID_PATTERN,
   ANCHOR_VALUE_PATTERN,
-  DTn,
+  DELIVERABLE_KIND_ATTRIBUTE,
   tallyDeliverableKinds,
   DECISION_ISLAND_OPEN_TAG_END,
   findIslandOpenTagSpans,
@@ -199,7 +199,7 @@ function G(e, t, h, s) {
   }
   let p = getAttributeValue(e, "data-ws-state");
   if (p !== void 0) t.banners.push({ value: p, node: e });
-  let f = getAttributeValue(e, DTn);
+  let f = getAttributeValue(e, DELIVERABLE_KIND_ATTRIBUTE);
   if (f !== void 0) t.deliverableKinds.push(f);
   let g =
     !r &&

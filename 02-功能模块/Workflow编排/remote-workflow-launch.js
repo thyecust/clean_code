@@ -16,7 +16,7 @@ import { MAX_WORKFLOW_SCRIPT_BYTES, MAX_SERVER_AUTHORED_WORKFLOW_SCRIPT_BYTES, p
 import { hasNoControlCharacters } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { areWorkflowsDisabledBySettings, isWorkflowsAllowedByPolicy } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { hasPermissionsToUseTool } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { v9, Fdt, $dt, Rqe } from "./chunk-bkcg0nbj.js";
+import { compileWorkflowScript, sanitizeWorkflowNameForTelemetry, sanitizeWorkflowDescriptionForTelemetry, launchWorkflowTask } from "./workflow-runtime.js";
 import { usesNondeterministicApi } from "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
 import { parseWorkflowScript } from "./workflow-script.js";
 import { getWorkflowTranscriptDir } from "./workflow-snapshots.js";
@@ -77,13 +77,13 @@ async function launchWorkflow({
       "nondeterminism",
       "workflow scripts must be deterministic: Date.now()/Math.random()/new Date() are unavailable (breaks resume). Stamp results after the workflow returns, or pass timestamps via args.",
     );
-  let k = v9(n.scriptBody);
+  let k = compileWorkflowScript(n.scriptBody);
   if (!k.ok) return s("compile", `workflow script compile failed: ${k.error}`);
   let f = `wf_${randomUUID().slice(0, 12)}`,
     y = generateTaskId("local_workflow"),
     x = persistWorkflowScript(n.meta.name, f, t, p.storageV5),
-    C = Fdt(n.meta.name, void 0, !1),
-    R = $dt(n.meta.description, void 0, !1);
+    C = sanitizeWorkflowNameForTelemetry(n.meta.name, void 0, !1),
+    R = sanitizeWorkflowDescriptionForTelemetry(n.meta.description, void 0, !1);
   logEvent("tengu_workflow_launched", {
     invocation_mode: fromEnum(d),
     workflow_source: fromEnum(d),
@@ -94,7 +94,7 @@ async function launchWorkflow({
     script_size_chars: t.length,
   });
   let r = await new Promise((l) => {
-    Rqe({
+    launchWorkflowTask({
       taskId: y,
       workflowRunId: f,
       script: t,

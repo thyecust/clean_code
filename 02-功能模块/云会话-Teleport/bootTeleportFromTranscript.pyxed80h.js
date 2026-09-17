@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 205 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { jsonParse, Is, readTailBytes, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, jsonParseUntraced, readTailBytes, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -78,7 +78,7 @@ function d(e) {
 var w = 67108864;
 function C(e) {
   try {
-    let a = Is(e),
+    let a = jsonParseUntraced(e),
       t = O().safeParse(a);
     return t.success ? t.data : null;
   } catch {

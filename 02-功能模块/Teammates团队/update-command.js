@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { K, qP, Tz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -34,7 +34,7 @@ import { realpath } from "fs/promises";
 import { homedir } from "os";
 import { basename, join as D } from "path";
 async function resolveLauncher() {
-  let d = await ja("claude"),
+  let d = await resolveExecutablePathAsync("claude"),
     t = getLauncherArgv()[0],
     [o, c] = await Promise.all([
       d ? realpath(d).catch(() => d) : null,

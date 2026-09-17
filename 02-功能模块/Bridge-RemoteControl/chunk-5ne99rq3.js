@@ -65,7 +65,7 @@ function Z(e) {
 }
 var w =
   /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Default_Ignorable_Code_Point}\u2800]|(?!\u0020)\p{Zs}/gu;
-function Qn(e) {
+function sanitizeForRelay(e) {
   if (typeof e !== "string") return "";
   let t = e.length > 4096 ? e.slice(0, 4096) : e;
   for (let r = 0; r < 64; r++) {
@@ -621,8 +621,8 @@ var Pe = new Set(["effortLevel", "ultracode"]),
     "mcp_status",
   ]);
 function Ge(e, t) {
-  if (t instanceof mi) return Qn(l(t));
-  if (yt(t)) return Qn(l(t));
+  if (t instanceof mi) return sanitizeForRelay(l(t));
+  if (yt(t)) return sanitizeForRelay(l(t));
   return (logForDebugging(`${e} failed: ${l(t)}`, { level: "error" }), `${e} failed`);
 }
 function assertMcpReconnectSucceeded(e) {
@@ -665,7 +665,7 @@ function je(e, t, r, s, d = Ve) {
         t.write({
           type: "system",
           subtype: "informational",
-          content: Qn(E),
+          content: sanitizeForRelay(E),
           level: "notice",
           uuid: randomUUID(),
           session_id: r,
@@ -693,7 +693,7 @@ function je(e, t, r, s, d = Ve) {
             response: {
               subtype: "error",
               request_id: e.request_id,
-              error: Qn(E.error),
+              error: sanitizeForRelay(E.error),
             },
           };
     })
@@ -875,7 +875,7 @@ function handleBridgeControlRequest(e, t) {
           response: {
             subtype: "error",
             request_id: e.request_id,
-            error: Qn(_.error),
+            error: sanitizeForRelay(_.error),
           },
         };
       else
@@ -931,7 +931,7 @@ function handleBridgeControlRequest(e, t) {
           response: {
             subtype: "error",
             request_id: e.request_id,
-            error: Qn(_.error),
+            error: sanitizeForRelay(_.error),
           },
         };
       break;
@@ -964,7 +964,7 @@ function handleBridgeControlRequest(e, t) {
           response: {
             subtype: "error",
             request_id: e.request_id,
-            error: Qn(_.error),
+            error: sanitizeForRelay(_.error),
           },
         };
       break;
@@ -986,7 +986,7 @@ function handleBridgeControlRequest(e, t) {
           response: {
             subtype: "error",
             request_id: e.request_id,
-            error: Qn(o.error),
+            error: sanitizeForRelay(o.error),
           },
         };
       break;
@@ -1231,7 +1231,7 @@ function handleBridgeControlRequest(e, t) {
             response: {
               subtype: "error",
               request_id: e.request_id,
-              error: Qn(D.error),
+              error: sanitizeForRelay(D.error),
             },
           };
       break;
@@ -1323,7 +1323,7 @@ function handleBridgeControlRequest(e, t) {
         response: {
           subtype: "error",
           request_id: e.request_id,
-          error: `REPL bridge does not handle control_request subtype: ${Qn(String(e.request.subtype))}`,
+          error: `REPL bridge does not handle control_request subtype: ${sanitizeForRelay(String(e.request.subtype))}`,
         },
       };
   }
@@ -1854,7 +1854,7 @@ export {
   normalizeRequestIdFields,
   MAX_DECLARED_DIALOG_KINDS,
   normalizeDeclaredDialogKinds,
-  Qn,
+  sanitizeForRelay,
   replaceInvisibleCharsWithSpace,
   sanitizeRelayableText,
   formatElicitationUrls,

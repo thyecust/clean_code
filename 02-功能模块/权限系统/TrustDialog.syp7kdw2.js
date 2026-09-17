@@ -23,7 +23,7 @@ import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-�
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { gracefulShutdownSync, isShuttingDown, sanitizeForDisplay, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { shouldOfferTrustBackstop, getRepoHelperSources, getMarketplaceHelperSources } from "../../01-核心基础设施/设置-配置/marketplace-helper-sources.js";
-import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { useIsMountRecent, useMountTime, useSettleAfterChange, useRefusedInputWindow } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -188,8 +188,8 @@ function TrustDialog(wo) {
   else ((_t = s[18]), (Tt = s[19]));
   E(_t, Tt);
   let K = C(!1),
-    l = ui(),
-    { refusedWithin: u, noteRefused: d, epoch: Ho } = $o(),
+    l = useIsMountRecent(),
+    { refusedWithin: u, noteRefused: d, epoch: Ho } = useRefusedInputWindow(),
     jt;
   if (s[20] !== l || s[21] !== d || s[22] !== u)
     ((jt = function q() {
@@ -204,8 +204,8 @@ function TrustDialog(wo) {
       (s[23] = jt));
   else jt = s[23];
   let q = jt,
-    Ee = Gm(),
-    Ie = fa(Ho),
+    Ee = useMountTime(),
+    Ie = useSettleAfterChange(Ho),
     At;
   if (
     s[24] !== g ||

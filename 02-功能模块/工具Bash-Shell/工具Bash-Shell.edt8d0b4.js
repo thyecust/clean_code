@@ -17,7 +17,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { dur } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { getDetectedBuildTools } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, G0, R, dt, ge, l, Ub, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { resolvePathInfo, resolveSymlinkTargetSync, expandPathAliases, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { TruncatingOutputBuffer } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -4186,7 +4186,7 @@ async function Yt() {
   let e = Ls(),
     t = Ms(),
     o = await getPowerShellEdition(),
-    r = getFeatureValue_CACHED_MAY_BE_STALE("tengu_brass_sled", !1) ? await dur() : [],
+    r = getFeatureValue_CACHED_MAY_BE_STALE("tengu_brass_sled", !1) ? await getDetectedBuildTools() : [],
     a =
       getCurrentPlatform() === "windows"
         ? "\n   - Exception: the MSVC toolchain (`cl`, `nmake`, `msbuild`) is only on PATH inside a Visual Studio developer shell, so it may be installed even if not listed. Environment changes do NOT persist between commands, so initialize and build in ONE command: `cmd /c '\"C:\\Program Files\\Microsoft Visual Studio\\<year>\\<edition>\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64 && <build command>'`"

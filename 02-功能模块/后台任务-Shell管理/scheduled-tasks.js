@@ -12,7 +12,7 @@ import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isConfigDirPath } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { rL, assertDirChainReal, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { ATOMIC_WRITE_STAGING_DIR_NAME, assertDirChainReal, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 var x = [
@@ -317,7 +317,7 @@ async function writeScheduledTasks(e, s) {
       encoding: "utf-8",
       allowSymlink: !t,
       checkParentDir: t,
-      stagingDir: S(r, ".claude", rL),
+      stagingDir: S(r, ".claude", ATOMIC_WRITE_STAGING_DIR_NAME),
     },
   );
 }

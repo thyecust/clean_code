@@ -66,7 +66,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCustomizationDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import { isSettingsToCloudEnabledCached } from "../共享小工具-未细化/chunk-97crm80y.js";
-import { Qn } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { sanitizeForRelay } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { isRemoteControlHardDisabled, isBridgeEnabled, getRemoteControlPolicyLockReason, applyRemoteControlToAppState } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { isInputNeededPushEnabled } from "../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
 import { resolveArtifactEnableSetting, getArtifactDefaultOn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
@@ -177,7 +177,7 @@ var Ie = new Map([
   ["tw", "zh-Hant"],
 ]);
 function De(l) {
-  let r = Qn(l).trim();
+  let r = sanitizeForRelay(l).trim();
   if (!r || r.toLowerCase() === "default") return "default";
   if (r.length <= 3) {
     let f = r.toLowerCase(),

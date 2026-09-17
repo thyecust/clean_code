@@ -38,13 +38,13 @@ import {
   clearPluginCache,
   touchSessionTranscript,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { _1e, vC, Ui, w1e } from "./chunk-ajtn749s.js";
+import { isPluginCommandSourceRefreshEnabled, getSourceCommandKey, PluginSourceError, canSyncPluginsFromClaudeAi } from "./chunk-ajtn749s.js";
 import { isPluginBlockedByPolicy, areCommandPluginSourcesDisabledByPolicy, policyTierCommandsMayRun, isSourceDisallowedOrUnverifiable, isSourceAllowedByPolicy } from "./plugin-source-policy.js";
-import { oFt } from "../自动更新-安装/chunk-2g5h49pk.js";
+import { cleanupOldVersions } from "../自动更新-安装/native-installer.js";
 import { isCleanupQuietFsErrno, healRefusedSentinelLeaf, reapStaleHousekeepingStagingFiles, cleanupOldMessageFilesInBackground } from "../会话-历史-恢复/retention-cleanup.js";
 import { ensureDeepLinkHandlerRegistered } from "../深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
 import { checkEnabledPlugins } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
-import { Pye } from "./chunk-q8w2zntw.js";
+import { updatePlugin } from "./chunk-q8w2zntw.js";
 import { resolveMissingDependencies } from "./plugin-dependency-resolution.js";
 import { splitPluginId } from "./chunk-33bdfgmx.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -71,7 +71,7 @@ async function F(t) {
     s = new Set();
   for (let [p, o] of Object.entries(e)) {
     if (!isSourceAllowedByPolicy(o.source)) continue;
-    if (isClaudeAiMarketplaceSource(o.source) && !w1e()) continue;
+    if (isClaudeAiMarketplaceSource(o.source) && !canSyncPluginsFromClaudeAi()) continue;
     if (shouldAutoUpdateMarketplace(p, o, c[p]?.autoUpdate)) s.add(p.toLowerCase());
   }
   return s;
@@ -83,7 +83,7 @@ async function L(t, e, c, s, p) {
     k = null;
   for (let { scope: m } of e)
     try {
-      let a = await Pye(t, m, s ?? {}, p);
+      let a = await updatePlugin(t, m, s ?? {}, p);
       switch (a.outcome) {
         case "updated":
           ((o = !0),
@@ -211,7 +211,7 @@ async function I(t) {
       failedCount: 0,
     },
     c = areCommandPluginSourcesDisabledByPolicy(),
-    s = !_1e();
+    s = !isPluginCommandSourceRefreshEnabled();
   if (c || s)
     logForDebugging(
       c
@@ -255,7 +255,7 @@ async function I(t) {
           );
           continue;
         }
-        let R = vC(P.source),
+        let R = getSourceCommandKey(P.source),
           E = f.filter((C) => C.sourceCommand !== R);
         if (E.length > 0) {
           let C = E.every((w) => w.sourceCommand === void 0),
@@ -383,7 +383,7 @@ function N(t) {
                 "refreshed"
               );
             } catch (f) {
-              if (f instanceof Ui)
+              if (f instanceof PluginSourceError)
                 return (
                   logForDebugging(
                     `Plugin autoupdate: marketplace ${d} not refreshed (managed policy): ${l(f)}`,
@@ -526,7 +526,7 @@ async function runBackgroundHousekeeping(t, e) {
       setTimeout(p, A).unref();
       return;
     }
-    await oFt();
+    await cleanupOldVersions();
   }
   function p() {
     return s().catch((o) =>

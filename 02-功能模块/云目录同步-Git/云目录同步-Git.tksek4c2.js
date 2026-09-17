@@ -1579,7 +1579,7 @@ function Rd(e, t, r = !1) {
 function fs(e, t) {
   return Sd(cs(e), Ed, `${sanitizePathSegment(t)}.writer`);
 }
-async function mFt({ recordPath: e, lockPath: t, onLost: r, staleMs: o = Ir }) {
+async function acquireGitSyncWriterLock({ recordPath: e, lockPath: t, onLost: r, staleMs: o = Ir }) {
   let s,
     a = !1,
     d = !1,
@@ -3411,7 +3411,7 @@ function jo(e) {
   );
 }
 var Xu = { maxPaths: Iu, maxBytes: Nu, maxDeletes: xu };
-function gFt({
+function createGitDirSyncApplyDown({
   gitRoot: e,
   realRoot: t,
   sessionId: r,
@@ -6280,7 +6280,7 @@ function ho(e) {
   let t = e?.sent[0];
   return { generation: t?.generation ?? 0, tree: t?.worktreeCommit ?? null };
 }
-function hFt({
+function createGitDirSyncEngine({
   sessionId: e,
   gitRoot: t,
   push: r,
@@ -9521,7 +9521,7 @@ function ph(e, t = go) {
 function yi(e, t) {
   return dl(t) ? t : hh(e, t);
 }
-async function Yhr({
+async function armGitSession({
   sessionId: e,
   gitRoot: t,
   start: r,
@@ -9563,7 +9563,7 @@ function wh(e) {
     r = e.length === 1;
   return `${r ? "1 file with a credential-like name" : `${e.length} files with credential-like names`} (${t}${e.length > 3 ? ", \u2026" : ""}) ${r ? "is" : "are"} in commits this machine would upload and the cloud session does not have; sync will not carry those commits while any of them contains ${r ? "that file" : "those files"} \u2014 amend or reset the commits (deleting the file in a later commit is not enough)`;
 }
-async function Jhr({
+async function openLaptopGitSync({
   sessionId: e,
   gitRoot: t,
   start: r,
@@ -9583,14 +9583,14 @@ async function Jhr({
     R = await getDirSyncRecordPath(t, e, y),
     N = await lh(t),
     C = createSyncedFileLaneClient({ sessionId: e, credentials: a });
-  return hFt({
+  return createGitDirSyncEngine({
     sessionId: e,
     gitRoot: t,
     push: Ra({ ...E, checkoutShallowFile: ph(t) }),
     recordPath: R,
     snapshot: Ah({ gitRoot: t, realRoot: N, sideGitDir: _, pinCommit: gh(r) }),
     transport: createDirSyncJournalTransport({ client: C, direct: C }),
-    applyDown: gFt({
+    applyDown: createGitDirSyncApplyDown({
       gitRoot: t,
       realRoot: N,
       sessionId: e,
@@ -9598,7 +9598,7 @@ async function Jhr({
       checkout: ca(t),
       deps: {
         now: () => new Date(),
-        trash: _Ft(t, N, Ph(t, e), (O) =>
+        trash: sessionTrashPort(t, N, Ph(t, e), (O) =>
           s(
             `When Claude deletes or replaces a file in the cloud, your copy is moved to ${formatSingleLineText(O, { maxCodeUnits: 512 })} on this machine, not discarded`,
             "info",
@@ -9606,14 +9606,14 @@ async function Jhr({
         ),
       },
     }),
-    codec: yFt,
+    codec: gitJournalCodec,
     onStatus: s,
     boundToThisMachine: o,
     ...(d !== void 0 && { consent: d }),
     checkoutBranch: (O) => Na(t, O),
     initialPass: f ? "send" : "none",
     ...(p !== void 0 && { endedEarlier: p }),
-    writerLock: (O) => mFt({ recordPath: R, lockPath: fs(_, e), onLost: O }),
+    writerLock: (O) => acquireGitSyncWriterLock({ recordPath: R, lockPath: fs(_, e), onLost: O }),
     ...(isDirSyncStreamingEnabled() && { changeFeed: () => createDirChangeFeed({ root: t }), streamingScope: bh(t) }),
     ...(!w
       ? {}
@@ -9804,7 +9804,7 @@ function Th(e) {
     t
   );
 }
-function _Ft(e, t, r, o = () => {}) {
+function sessionTrashPort(e, t, r, o = () => {}) {
   let s = !1;
   return async (a, d, f, p, y) => {
     let w;
@@ -10192,7 +10192,7 @@ async function gi(e, t, r) {
     return cl(a, t(a, !0));
   });
 }
-var yFt = {
+var gitJournalCodec = {
   encodeLaptop(e) {
     return encodeSyncJournal({
       version: JOURNAL_VERSION_WITH_NOTE,
@@ -10262,4 +10262,4 @@ var yFt = {
       : null;
   },
 };
-export { mFt, gFt, hFt, Yhr, Jhr, _Ft, yFt };
+export { acquireGitSyncWriterLock, createGitDirSyncApplyDown, createGitDirSyncEngine, armGitSession, openLaptopGitSync, sessionTrashPort, gitJournalCodec };

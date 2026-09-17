@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Tc, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringifyUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { DEVICE_REGISTRY_KID_PREFIX } from "../Bridge-RemoteControl/device-bind.js";
 import { loadDeviceKey } from "../Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
 import { resolveAccountIdentity } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
@@ -21,7 +21,7 @@ function h(r) {
     i = [],
     s = (e) => {
       if (e === null || typeof e === "boolean" || typeof e === "string")
-        t.push(Tc(e));
+        t.push(jsonStringifyUntraced(e));
       else if (typeof e === "number") {
         if (!Number.isFinite(e))
           throw Error("canonicalJson: non-finite number");
@@ -49,7 +49,7 @@ function h(r) {
       continue;
     }
     if (e.next > 0) t.push(",");
-    if (e.names) t.push(`${Tc(e.names[e.next])}:`);
+    if (e.names) t.push(`${jsonStringifyUntraced(e.names[e.next])}:`);
     let o = e.values[e.next];
     ((e.next += 1), s(o));
   }

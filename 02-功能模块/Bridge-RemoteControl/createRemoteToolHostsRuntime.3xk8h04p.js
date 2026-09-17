@@ -119,55 +119,55 @@ import { isNonDeviceToolName } from "../../01-核心基础设施/共享小工具
 import { forgetRemoteToolListing, refreshRemoteToolHosts, getBridgeListingState, isBridgeReached, isBridgeListingUnavailable, getListingProvisionalReason, awaitRemoteHostAnnounce } from "./device-bridge-remote-tools.js";
 import "./session-event-transport.js";
 import {
-  _It,
-  vQt,
-  RQt,
-  HFn,
-  IFn,
-  PFn,
-  OFn,
-  DFn,
-  W6e,
-  yIt,
-  LFn,
-  SIt,
-  MFn,
-  NFn,
-  Gst,
-  bIt,
-  wIt,
-  FFn,
-  TIt,
-  kQt,
-  $Fn,
-  UFn,
-  xQt,
-  EIt,
-  AIt,
-  CIt,
-  G6e,
-  HQt,
-  IQt,
-  BFn,
-  PQt,
-  jFn,
-  WFn,
-  xHe,
-  OQt,
-  vIt,
-  X_e,
-  DQt,
-  q6e,
-  z6e,
-  iE,
-  HHe,
-  V6e,
-  LQt,
-  IHe,
-  MQt,
-  RIt,
-  NQt,
-  FQt,
+  formatUnknownHostMessage,
+  formatIncompatibleProtocolMessage,
+  formatHostUnreachableMessage,
+  formatToolsNotReadableMessage,
+  formatReannounceTimeoutMessage,
+  formatReannounceTimeoutRepeatMessage,
+  formatHostServesNoToolsMessage,
+  formatHostNeverConnectedMessage,
+  formatHostOfflineMessage,
+  formatHostUnreachableReasonMessage,
+  formatUnreadableToolMessage,
+  formatToolNotServedMessage,
+  formatToolRunsOnlyOnHostMessage,
+  formatToolNotServedWithAlternativesMessage,
+  formatDeniedByRuleMessage,
+  formatRequestTooLargeMessage,
+  formatHostTimeoutMessage,
+  formatApprovalUploadUnconfirmedMessage,
+  formatStillRunningMessage,
+  formatApprovalNotReceivedMessage,
+  formatHostRestartedMessage,
+  formatCallNotReceivedMessage,
+  formatReconnectingCheckinMessage,
+  formatDeliveredAfterReconnectNote,
+  formatReplayedResultNote,
+  formatForwardingFailureMessage,
+  formatRefusedByHostResult,
+  formatRanOnHostNote,
+  abbreviateHomePath,
+  formatAutoApprovalRejectedMessage,
+  formatApprovalTakenBackMessage,
+  formatApprovalQueuedTimeoutMessage,
+  formatLivenessCheckTimeoutMessage,
+  MAX_RESULT_TEXT_CHARS,
+  MAX_RESULT_IMAGE_BYTES,
+  MAX_RESULT_BLOCKS,
+  buildResultFromResponse,
+  formatHostNotesLines,
+  MAX_APPROVAL_MESSAGE_CHARS,
+  buildHostDescriptor,
+  sanitizeHostText,
+  buildInterruptedOutcome,
+  buildCancelledOutcome,
+  formatRejectedInSessionMessage,
+  extractContentText,
+  heardSyncAnswer,
+  hostSyncsMidTurn,
+  clearForwardToMachine,
+  settleAfterMachineCommand,
 } from "../远程工具执行/远程工具执行.6bj9ddx2.js";
 import "../AutoMode-自动模式/unattended-serving-consent.js";
 import { ForwardedToolCallRegistry } from "./forwarded-tool-call-registry.js";
@@ -186,7 +186,7 @@ var hn =
   xe =
     "The user's own files outside the checkout, installed applications, disk usage and running processes are HERE, not in this session's environment \u2014 reach for it only when a request is about something that lives only on this machine (a simulator, Docker Desktop, Downloads, the clipboard, a local server the user started, Homebrew, VS Code\u2026); its own Claude Code decides what may run there and may ask the user first";
 function kn(e, o) {
-  return !RIt(e) ? "turn_end" : o ? "after_task" : "mid_turn";
+  return !hostSyncsMidTurn(e) ? "turn_end" : o ? "after_task" : "mid_turn";
 }
 function Do(e) {
   return `${e} (it may ask the person first); its project folder holds the same files this session's synced copy holds (except files git ignores, and anything changed there that has not arrived here yet \u2014 see File sync timing below) \u2014 so work on the project here, without "${HOST_FIELD_NAME}"`;
@@ -427,7 +427,7 @@ function Jo(e, o, t, r) {
       `${En(e.platform, e.os_version)}${e.arch && q(e.arch) ? ` (${q(e.arch)})` : ""}`,
       ...(e.shell && q(e.shell) ? [q(e.shell)] : []),
       ...(a ? [`home ${a}`] : []),
-      Qo(e.project_sync, d === "" ? "an unknown directory" : s ? d : IQt(d, a)),
+      Qo(e.project_sync, d === "" ? "an unknown directory" : s ? d : abbreviateHomePath(d, a)),
     ]
       .filter((P) => P !== "")
       .join(", "),
@@ -443,7 +443,7 @@ function Jo(e, o, t, r) {
           : "",
     p =
       e.notes && q(e.notes)
-        ? ` Its Claude Code notes: "${iE(e.notes, MAX_NOTES_LENGTH)}"`
+        ? ` Its Claude Code notes: "${sanitizeHostText(e.notes, MAX_NOTES_LENGTH)}"`
         : "";
   return `${c}.${k}${p}`;
 }
@@ -468,7 +468,7 @@ function En(e, o) {
   return o && q(o) ? `${r} ${q(o)}` : r;
 }
 function q(e) {
-  return iE(e).trim();
+  return sanitizeHostText(e).trim();
 }
 function Zo(e, o) {
   let t = o.findLast(
@@ -808,7 +808,7 @@ async function Ue({
     return {
       kind: "refuse",
       code: "denied_by_session_rule",
-      message: Gst({
+      message: formatDeniedByRuleMessage({
         name: s.name,
         ruleMessage: `${formatRuleDeniedMessage(e.name, m)}${vt(m, e)}`,
       }),
@@ -820,7 +820,7 @@ async function Ue({
     return {
       kind: "refuse",
       code: "denied_by_session_rule",
-      message: Gst({
+      message: formatDeniedByRuleMessage({
         name: s.name,
         ruleMessage:
           P.ruleValue.ruleContent === void 0
@@ -840,7 +840,7 @@ async function Ue({
     return {
       kind: "refuse",
       code: "denied_by_session_rule",
-      message: Gst({
+      message: formatDeniedByRuleMessage({
         name: s.name,
         ruleMessage: _
           ? `This session could not evaluate its permission rules for this ${e.name} call (internal error).`
@@ -852,7 +852,7 @@ async function Ue({
     return {
       kind: "refuse",
       code: "request_too_large",
-      message: bIt({ name: s.name, requestBytes: t, capBytes: A }),
+      message: formatRequestTooLargeMessage({ name: s.name, requestBytes: t, capBytes: A }),
     };
   let v = e.mcpInfo?.effectiveMaxPermission === "ask",
     T =
@@ -866,7 +866,7 @@ async function Ue({
       return {
         kind: "refuse",
         code: "denied_by_session_rule",
-        message: Gst({
+        message: formatDeniedByRuleMessage({
           name: s.name,
           ruleMessage: T
             ? b.mode === "dontAsk"
@@ -1254,7 +1254,7 @@ var Ot = {
 async function Mt(e, o) {
   let { tool: t, host: r, signal: s } = e,
     a = e.call.callId,
-    d = z6e(r),
+    d = buildHostDescriptor(r),
     c = { host: o.host },
     m = (_, A, v, T) => ({
       outcome: { kind: "error", code: _, message: A, host: d },
@@ -1275,7 +1275,7 @@ async function Mt(e, o) {
       timing: p,
       onAttempt: (_) =>
         e.onStatus?.(
-          _ ? REMOTE_APPROVAL_MESSAGES["in_progress.checkin"](r.name) : xQt(r.name),
+          _ ? REMOTE_APPROVAL_MESSAGES["in_progress.checkin"](r.name) : formatReconnectingCheckinMessage(r.name),
           2 * p.intervalMs,
         ),
     }),
@@ -1299,7 +1299,7 @@ async function Mt(e, o) {
       return {
         reconcile: w,
         adoption: "after_reconnect",
-        ...X_e(t, r, { ..._, metaCopy: void 0 }, { afterReconnect: !0 }),
+        ...buildResultFromResponse(t, r, { ..._, metaCopy: void 0 }, { afterReconnect: !0 }),
       };
     }
     case "ask_lost":
@@ -1338,7 +1338,7 @@ async function Mt(e, o) {
         )
       );
     case "cancelled":
-      return { outcome: HHe(d), adoption: "interrupted", reconcile: w };
+      return { outcome: buildInterruptedOutcome(d), adoption: "interrupted", reconcile: w };
     case "unreachable":
     case "unknown":
       return m("unreachable", formatRestartUncertaintyMessage(c, o), "unknown", w);
@@ -1347,7 +1347,7 @@ async function Mt(e, o) {
 async function It(e, o, t, r, s) {
   let { tool: a, host: d, toolUseContext: c } = e,
     m = e.call.callId,
-    k = z6e(d),
+    k = buildHostDescriptor(d),
     p = { host: o.host },
     P = d.transport.limits.defaultDeadlineMs,
     R = await raceWithAbortSignal(
@@ -1376,7 +1376,7 @@ async function It(e, o, t, r, s) {
       return;
     });
   if (e.signal.aborted)
-    return { outcome: HHe(k), adoption: "interrupted", reconcile: s };
+    return { outcome: buildInterruptedOutcome(k), adoption: "interrupted", reconcile: s };
   let w = R?.kind === "result" ? R.envelope : void 0;
   if (
     R?.kind === "result" &&
@@ -1389,7 +1389,7 @@ async function It(e, o, t, r, s) {
     return {
       reconcile: s,
       adoption: "after_reconnect",
-      ...X_e(a, d, { ...R, metaCopy: void 0 }, { afterReconnect: !0 }),
+      ...buildResultFromResponse(a, d, { ...R, metaCopy: void 0 }, { afterReconnect: !0 }),
     };
   if (
     R?.kind === "result" &&
@@ -1460,7 +1460,7 @@ async function $t(e) {
   if (c.outcome.kind !== "completed" || !isSuccessfulDisposition(c.outcome.disposition)) return c;
   let m =
       c.outcome.dirSync !== void 0
-        ? await FQt({
+        ? await settleAfterMachineCommand({
             host: e.host,
             word: c.outcome.dirSync,
             signal: e.signal,
@@ -1502,7 +1502,7 @@ async function Nt({
   onFirstSend: R,
   onAddressed: w,
 }) {
-  let _ = z6e(o),
+  let _ = buildHostDescriptor(o),
     A = a.callId,
     { dispatchEpoch: v } = a,
     T = e.inputSchema.safeParse(t);
@@ -1521,7 +1521,7 @@ async function Nt({
       outcome: {
         kind: "error",
         code: "not_served",
-        message: SIt({ name: o.name, toolName: e.name }),
+        message: formatToolNotServedMessage({ name: o.name, toolName: e.name }),
         host: _,
       },
     };
@@ -1680,7 +1680,7 @@ async function Nt({
           host: _,
         },
       };
-    if (d.aborted) return { outcome: V6e(_), requestBytes: D };
+    if (d.aborted) return { outcome: buildCancelledOutcome(_), requestBytes: D };
     (($e = getToolPermissionContext(s).mode === "plan"),
       (X = b),
       (b = x(b)),
@@ -1725,10 +1725,10 @@ async function Nt({
               message: `This session could not raise its permission prompt for ${o.name}; the call did not run.`,
               host: _,
             }
-          : V6e(_),
+          : buildCancelledOutcome(_),
       };
     if (d.aborted && C.decision !== "deny")
-      return { outcome: V6e(_), requestBytes: D };
+      return { outcome: buildCancelledOutcome(_), requestBytes: D };
     if (C.decision === "unanswerable")
       return {
         requestBytes: D,
@@ -1747,7 +1747,7 @@ async function Nt({
         outcome: {
           kind: "error",
           code: "rejected_in_session",
-          message: C.insteadOfRejection?.message ?? LQt(s, C.feedback),
+          message: C.insteadOfRejection?.message ?? formatRejectedInSessionMessage(s, C.feedback),
           ...(C.insteadOfRejection !== void 0 && {
             denialKind: C.insteadOfRejection.denialKind,
           }),
@@ -1791,7 +1791,7 @@ async function Nt({
       try {
         C = e.isReadOnly(b);
       } catch {}
-      let N = await NQt({ host: o, readOnly: C, signal: d, onStatus: m });
+      let N = await clearForwardToMachine({ host: o, readOnly: C, signal: d, onStatus: m });
       if (N.kind === "hold")
         return {
           outcome: {
@@ -1830,7 +1830,7 @@ async function Nt({
               },
               requestBytes: D,
             };
-      if (d.aborted) return { outcome: V6e(_), requestBytes: D };
+      if (d.aborted) return { outcome: buildCancelledOutcome(_), requestBytes: D };
       if (isExiting()) await getNeverResolvingPromise();
       return (R?.(), an(ne()));
     }).then((C) => {
@@ -1838,7 +1838,7 @@ async function Nt({
       return C;
     });
   }
-  if (_e === void 0) return { outcome: V6e(_), requestBytes: D };
+  if (_e === void 0) return { outcome: buildCancelledOutcome(_), requestBytes: D };
   if ("outcome" in _e) return _e;
   let J = await O(_e);
   if (J.kind === "ended")
@@ -1852,7 +1852,7 @@ async function Nt({
     return {
       requestBytes: D,
       reconcile: J.trace,
-      ...X_e(e, o, me, {
+      ...buildResultFromResponse(e, o, me, {
         afterReconnect: J.kind === "answered",
         call: { input: b, editedByApproval: W },
       }),
@@ -1862,7 +1862,7 @@ async function Nt({
     if (c === void 0)
       return (
         V(I.ask_id),
-        { requestBytes: D, approval: "no_handler", ...X_e(e, o, me) }
+        { requestBytes: D, approval: "no_handler", ...buildResultFromResponse(e, o, me) }
       );
     let E =
       jsonByteLength(I.input) <= Se(o) ? e.inputSchema.safeParse(I.input) : { success: !1 };
@@ -1875,7 +1875,7 @@ async function Nt({
           outcome: {
             kind: "error",
             code: "refused_by_host",
-            message: G6e({
+            message: formatRefusedByHostResult({
               name: o.name,
               message:
                 "it asked for approval of a call this session could not read; nothing ran",
@@ -1915,12 +1915,12 @@ async function Nt({
               host: _,
               tool: e.name,
               input: I.input,
-              message: iE(I.message, q6e),
+              message: sanitizeHostText(I.message, MAX_APPROVAL_MESSAGE_CHARS),
               decisionReason:
                 I.decision_reason === void 0
                   ? void 0
-                  : iE(I.decision_reason, q6e),
-              suggestions: (I.suggestions ?? []).map((M) => iE(M, Et)),
+                  : sanitizeHostText(I.decision_reason, MAX_APPROVAL_MESSAGE_CHARS),
+              suggestions: (I.suggestions ?? []).map((M) => sanitizeHostText(M, Et)),
               classifierEligible: G,
               keepsStandingApprovals: Ln(o),
               ...(G &&
@@ -1959,7 +1959,7 @@ async function Nt({
             host: _,
           },
         };
-      return { outcome: HHe(_), requestBytes: D, approval: "withdrawn" };
+      return { outcome: buildInterruptedOutcome(_), requestBytes: D, approval: "withdrawn" };
     }
     if (H.decision === "unanswerable")
       return (
@@ -2003,7 +2003,7 @@ async function Nt({
           outcome: {
             kind: "error",
             code: "rejected_in_session",
-            message: H.insteadOfRejection?.message ?? LQt(s, ie),
+            message: H.insteadOfRejection?.message ?? formatRejectedInSessionMessage(s, ie),
             ...(H.insteadOfRejection !== void 0 && {
               denialKind: H.insteadOfRejection.denialKind,
             }),
@@ -2046,7 +2046,7 @@ async function Nt({
           outcome: {
             kind: "error",
             code: "request_too_large",
-            message: bIt({ name: o.name, requestBytes: z, capBytes: mn }),
+            message: formatRequestTooLargeMessage({ name: o.name, requestBytes: z, capBytes: mn }),
             host: _,
           },
         }
@@ -2112,7 +2112,7 @@ async function Nt({
             outcome: {
               kind: "error",
               code: "approval_not_received",
-              message: kQt(o.name, B, !0),
+              message: formatApprovalNotReceivedMessage(o.name, B, !0),
               host: _,
             },
           };
@@ -2127,14 +2127,14 @@ async function Nt({
         )
           return {
             approval: Te,
-            ...X_e(e, o, L, { afterReconnect: !0, call: Le }),
+            ...buildResultFromResponse(e, o, L, { afterReconnect: !0, call: Le }),
           };
         return {
           approval: "withdrawn",
           outcome: {
             kind: "error",
             code: "approval_not_received",
-            message: kQt(o.name, B, !1),
+            message: formatApprovalNotReceivedMessage(o.name, B, !1),
             host: _,
           },
         };
@@ -2165,10 +2165,10 @@ async function Nt({
               code: L.takenBack ? "stalled_unsent" : "stalled",
               message:
                 L.request === "probe"
-                  ? WFn({ name: o.name, capMs: L.capMs })
+                  ? formatLivenessCheckTimeoutMessage({ name: o.name, capMs: L.capMs })
                   : L.takenBack
-                    ? PQt({ name: o.name, capMs: L.capMs })
-                    : jFn({ name: o.name, capMs: L.capMs }),
+                    ? formatApprovalTakenBackMessage({ name: o.name, capMs: L.capMs })
+                    : formatApprovalQueuedTimeoutMessage({ name: o.name, capMs: L.capMs }),
               host: _,
             },
           };
@@ -2179,7 +2179,7 @@ async function Nt({
             outcome: {
               kind: "error",
               code: "approval_unverified",
-              message: BFn(o.name, e.name),
+              message: formatAutoApprovalRejectedMessage(o.name, e.name),
               host: _,
             },
           };
@@ -2187,9 +2187,9 @@ async function Nt({
           ? {
               requestBytes: z,
               approval: "withdrawn",
-              ...X_e(e, o, L, { call: Le }),
+              ...buildResultFromResponse(e, o, L, { call: Le }),
             }
-          : { outcome: HHe(_), requestBytes: D, approval: "withdrawn" };
+          : { outcome: buildInterruptedOutcome(_), requestBytes: D, approval: "withdrawn" };
       }
       let B = await O(L, { byClassifier: ve, releaseAsk: () => V(I.ask_id) });
       if (B.kind === "ended") {
@@ -2212,7 +2212,7 @@ async function Nt({
           outcome: {
             kind: "error",
             code: "stalled_unsent",
-            message: PQt({ name: o.name, capMs: M.capMs }),
+            message: formatApprovalTakenBackMessage({ name: o.name, capMs: M.capMs }),
             host: _,
           },
         };
@@ -2263,7 +2263,7 @@ async function Nt({
           outcome: {
             kind: "error",
             code: "dropped",
-            message: FFn(o.name),
+            message: formatApprovalUploadUnconfirmedMessage(o.name),
             host: _,
           },
         };
@@ -2271,7 +2271,7 @@ async function Nt({
         requestBytes: z,
         approval: Te,
         reconcile: B.trace,
-        ...X_e(e, o, M, { afterReconnect: B.kind === "answered", call: Le }),
+        ...buildResultFromResponse(e, o, M, { afterReconnect: B.kind === "answered", call: Le }),
       };
     })(await Io());
   })();
@@ -2312,7 +2312,7 @@ async function Lt({
     };
   if (w === void 0)
     return (A("no_epoch"), { kind: "as_is", transported: e, trace: void 0 });
-  let v = z6e(o),
+  let v = buildHostDescriptor(o),
     T = R === void 0 ? "in_progress" : xt(R, k),
     j = await je({
       host: o,
@@ -2326,7 +2326,7 @@ async function Lt({
       onAttempt: (U) =>
         m?.(
           _ === void 0 && P === void 0 && !U
-            ? xQt(o.name)
+            ? formatReconnectingCheckinMessage(o.name)
             : REMOTE_APPROVAL_MESSAGES["in_progress.checkin"](o.name),
           2 * c.intervalMs,
         ),
@@ -2366,7 +2366,7 @@ async function Lt({
           outcome: {
             kind: "error",
             code: "host_restarted",
-            message: $Fn(o.name, T),
+            message: formatHostRestartedMessage(o.name, T),
             host: v,
           },
         }
@@ -2382,7 +2382,7 @@ async function Lt({
               outcome: {
                 kind: "error",
                 code: "not_received",
-                message: UFn(o.name, T),
+                message: formatCallNotReceivedMessage(o.name, T),
                 host: v,
               },
             }
@@ -2396,7 +2396,7 @@ async function Lt({
           outcome: {
             kind: "error",
             code: "still_running",
-            message: TIt({
+            message: formatStillRunningMessage({
               name: o.name,
               state: "awaiting_approval",
               cause: T,
@@ -2443,7 +2443,7 @@ async function Lt({
         }
       );
     case "cancelled":
-      return (A(O.kind), { kind: "ended", trace: b, outcome: HHe(v) });
+      return (A(O.kind), { kind: "ended", trace: b, outcome: buildInterruptedOutcome(v) });
     case "gone":
       return { kind: "as_is", transported: O.transported, trace: b };
     case "unreachable":
@@ -2475,7 +2475,7 @@ async function Lt({
         outcome: {
           kind: "error",
           code: "timed_out",
-          message: wIt({ name: o.name, capMs: e.capMs, left: !0 }),
+          message: formatHostTimeoutMessage({ name: o.name, capMs: e.capMs, left: !0 }),
           host: v,
         },
       };
@@ -2547,7 +2547,7 @@ function io(e, o) {
 function Je(e, o) {
   if (o.kind === "result" && o.dirSync !== void 0)
     try {
-      MQt(e, o.dirSync);
+      heardSyncAnswer(e, o.dirSync);
     } catch {}
 }
 function ao(e, o) {
@@ -2579,11 +2579,11 @@ function Qe(e, o) {
   let t = isSuccessfulDisposition(o.disposition) && o.envelope === "present",
     r = !t && nn(o);
   return [
-    ...DQt(o.notes, o.host.name),
+    ...formatHostNotesLines(o.notes, o.host.name),
     ...(o.truncated ? [`(${o.host.name} truncated this result)`] : []),
     ...(o.cutHere && t
       ? [
-          `(this session cut ${o.host.name}'s result to its own limits: ${xHe.toLocaleString("en-US")} characters of text, inline images up to ${OQt / 1048576} MiB, ${vIt} blocks)`,
+          `(this session cut ${o.host.name}'s result to its own limits: ${MAX_RESULT_TEXT_CHARS.toLocaleString("en-US")} characters of text, inline images up to ${MAX_RESULT_IMAGE_BYTES / 1048576} MiB, ${MAX_RESULT_BLOCKS} blocks)`,
         ]
       : []),
     ...(r || (o.cutHere === !0 && !t)
@@ -2603,7 +2603,7 @@ function Ht(e) {
     : e.disposition === "unrecognized"
       ? "failed"
       : "refused";
-  return e.delivery === "replayed" ? [AIt(e.servedAt, o)] : [EIt(o)];
+  return e.delivery === "replayed" ? [formatReplayedResultNote(e.servedAt, o)] : [formatDeliveredAfterReconnectNote(o)];
 }
 function Ce(e) {
   let o = e.host.name;
@@ -2612,7 +2612,7 @@ function Ce(e) {
   switch (e.disposition) {
     case void 0:
     case "ran":
-      return HQt(e.host, e.homeDir);
+      return formatRanOnHostNote(e.host, e.homeDir);
     case "hook_blocked":
       return `[blocked on ${o} before it ran (hook or deny rule) \u2014 not run]`;
     case "denied_by_rule":
@@ -2624,7 +2624,7 @@ function Ce(e) {
     case "duplicate_call":
       return `[not re-run on ${o}]`;
     case "approved_by_session":
-      return HQt(e.host, e.homeDir);
+      return formatRanOnHostNote(e.host, e.homeDir);
     case "denied_by_session":
       return `[refused on ${o} \u2014 not run]`;
     case "asked_in_session":
@@ -2639,9 +2639,9 @@ function Oe(e, o) {
   if (!isSuccessfulDisposition(o.disposition)) return;
   if (o.output !== void 0) return o.output;
   if (o.isError || e.name !== BASH_TOOL_NAME || !Ft(o.content)) return;
-  let t = IHe(o.content),
+  let t = extractContentText(o.content),
     r = e.outputSchema?.safeParse({
-      stdout: o.envelope === "present" ? t : iE(t, Pe),
+      stdout: o.envelope === "present" ? t : sanitizeHostText(t, Pe),
       stderr: "",
       interrupted: !1,
     });
@@ -2687,10 +2687,10 @@ ${t}`,
     : { ...e, content: [{ type: "text", text: o }, ...t] };
 }
 function Wt(e) {
-  return iE(IHe(e), Pe);
+  return sanitizeHostText(extractContentText(e), Pe);
 }
 function nn(e) {
-  return iE(IHe(e.content), Number.MAX_SAFE_INTEGER).length > Pe;
+  return sanitizeHostText(extractContentText(e.content), Number.MAX_SAFE_INTEGER).length > Pe;
 }
 var Pe = 2000;
 function Vt(e, o) {
@@ -2716,7 +2716,7 @@ async function qt(e, o, t, r, s) {
     return {
       kind: "error",
       code: "unknown_host",
-      message: _It({ requested: o, attached: [] }),
+      message: formatUnknownHostMessage({ requested: o, attached: [] }),
     };
   if (!(await isRemoteToolForwardingEnabled())) return { kind: "error", code: "gate_off", message: getMachineForwardingDisabledMessage() };
   let a = r.toolState.get(ToolHostRegistry);
@@ -2763,7 +2763,7 @@ async function qt(e, o, t, r, s) {
     case "local":
     case "unknown":
       return s.listingUnavailable(r, a)
-        ? { kind: "error", code: "host_offline", message: RQt() }
+        ? { kind: "error", code: "host_offline", message: formatHostUnreachableMessage() }
         : (Zt(
             s.listingProvisional?.(r),
             a,
@@ -2773,7 +2773,7 @@ async function qt(e, o, t, r, s) {
           ) ?? {
             kind: "error",
             code: "unknown_host",
-            message: _It({
+            message: formatUnknownHostMessage({
               requested: o,
               attached: a
                 .hosts()
@@ -2787,18 +2787,18 @@ async function qt(e, o, t, r, s) {
     case "remote": {
       let { host: m } = d;
       if (m.status === "offline" && m.source !== "session")
-        return { kind: "error", code: "host_offline", message: W6e(m.name) };
+        return { kind: "error", code: "host_offline", message: formatHostOfflineMessage(m.name) };
       if (m.protocol.kind === "incompatible")
         return {
           kind: "error",
           code: "incompatible",
-          message: vQt({ name: m.name, announced: m.protocol.announced }),
+          message: formatIncompatibleProtocolMessage({ name: m.name, announced: m.protocol.announced }),
         };
       if (!m.servedTools.has(e.name))
         return {
           kind: "error",
           code: "not_served",
-          message: NFn({
+          message: formatToolNotServedWithAlternativesMessage({
             name: m.name,
             toolName: e.name,
             served: [...m.servedTools],
@@ -2833,7 +2833,7 @@ async function zt(e, o, t, r) {
     (await ue(r, t, s), (a = uo(e, s)));
   if (a === void 0) {
     if (r.listingUnavailable(t, s))
-      return { kind: "error", code: "host_offline", message: RQt() };
+      return { kind: "error", code: "host_offline", message: formatHostUnreachableMessage() };
     let k = Yt(s),
       p = e.mcpInfo?.toolName ?? e.name;
     if (k === void 0 || !isNonDeviceToolName(p)) return { kind: "local", input: o };
@@ -2843,28 +2843,28 @@ async function zt(e, o, t, r) {
         code: "host_offline",
         message:
           k.source === "session"
-            ? yIt(
+            ? formatHostUnreachableReasonMessage(
                 k.name,
                 "it did not answer a liveness check; the next call naming it checks again",
               )
-            : W6e(k.name),
+            : formatHostOfflineMessage(k.name),
       };
     return {
       kind: "error",
       code: "not_served",
       message:
         k.rejectedPassthroughTools?.has(p) === !0
-          ? LFn({ name: k.name, toolName: e.name })
-          : SIt({ name: k.name, toolName: e.name }),
+          ? formatUnreadableToolMessage({ name: k.name, toolName: e.name })
+          : formatToolNotServedMessage({ name: k.name, toolName: e.name }),
     };
   }
   if (a.status === "offline")
-    return { kind: "error", code: "host_offline", message: W6e(a.name) };
+    return { kind: "error", code: "host_offline", message: formatHostOfflineMessage(a.name) };
   if (a.protocol.kind === "incompatible")
     return {
       kind: "error",
       code: "incompatible",
-      message: vQt({
+      message: formatIncompatibleProtocolMessage({
         name: a.name,
         announced: a.protocol.announced,
         runsOnlyThere: e.name,
@@ -2875,7 +2875,7 @@ async function zt(e, o, t, r) {
     return {
       kind: "error",
       code: "unknown_host",
-      message: MFn({ name: a.name, toolName: e.name }),
+      message: formatToolRunsOnlyOnHostMessage({ name: a.name, toolName: e.name }),
     };
   let { requested: c, input: m } = extractRequestedMachine(Xt(o));
   return c === void 0 || c === a.name
@@ -2883,7 +2883,7 @@ async function zt(e, o, t, r) {
     : {
         kind: "error",
         code: "unknown_host",
-        message: _It({ requested: c, attached: [a.name] }),
+        message: formatUnknownHostMessage({ requested: c, attached: [a.name] }),
       };
 }
 function Gt(e, o) {
@@ -2939,15 +2939,15 @@ function Zt(e, o, t, r, s) {
 function er(e, o, t, r) {
   switch (e) {
     case "connecting":
-      return HFn(o);
+      return formatToolsNotReadableMessage(o);
     case "not_connected":
-      return DFn();
+      return formatHostNeverConnectedMessage();
     case "serves_nothing":
-      return OFn(o);
+      return formatHostServesNoToolsMessage(o);
     case "not_reannounced":
       return t?.kind === "gave_up_earlier"
-        ? PFn(o, t.waitedMs, r)
-        : IFn(o, t?.kind === "gave_up" ? t.waitedMs : 0, r);
+        ? formatReannounceTimeoutRepeatMessage(o, t.waitedMs, r)
+        : formatReannounceTimeoutMessage(o, t?.kind === "gave_up" ? t.waitedMs : 0, r);
   }
 }
 async function ue(e, o, t) {
@@ -3636,7 +3636,7 @@ ${rn(m)}`,
       logError(c),
       {
         kind: "error",
-        message: CIt({
+        message: formatForwardingFailureMessage({
           name: o.host.name,
           detail: "internal error while forwarding",
         }),
@@ -3648,8 +3648,8 @@ function ko(e) {
   return rn(e);
 }
 function rn(e) {
-  let o = IHe(e.content);
-  return isSuccessfulDisposition(e.disposition) && e.envelope === "present" ? o : iE(o, wo);
+  let o = extractContentText(e.content);
+  return isSuccessfulDisposition(e.disposition) && e.envelope === "present" ? o : sanitizeHostText(o, wo);
 }
 var wo = 2000;
 function gr(e, o) {
@@ -3667,7 +3667,7 @@ function Ro(e) {
 }
 function yr(e, o) {
   let { name: t, working_dir: r } = o.host,
-    s = (o.notes ?? []).map((m) => iE(m, wo)),
+    s = (o.notes ?? []).map((m) => sanitizeHostText(m, wo)),
     a = o.sessionNotes ?? [],
     d = r === "" ? t : `${t}:${r}`,
     c = {

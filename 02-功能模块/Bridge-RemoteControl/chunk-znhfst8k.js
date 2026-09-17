@@ -12,7 +12,7 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { registerCleanup, registerPreExitFlush, jsonStringify, Tc, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, registerPreExitFlush, jsonStringify, jsonStringifyUntraced, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -47,10 +47,10 @@ var Ee = 1000,
 function Ae() {
   return !0;
 }
-var asn = new Set(["workflow_launch", "queued_notification", "session_notice"]),
+var SERVER_AUTHORED_ONLY_PAYLOAD_TYPES = new Set(["workflow_launch", "queued_notification", "session_notice"]),
   Ce = createLazyValue(() => c({ event_type: s() })),
   Ie = "heartbeat_probe";
-class VGe {
+class SSETransport {
   url;
   state = "idle";
   onData;
@@ -379,7 +379,7 @@ class VGe {
         writeDiagnosticsEvent("warn", "cli_sse_event_filtered");
       else if (
         typeof o.type === "string" &&
-        asn.has(o.type) &&
+        SERVER_AUTHORED_ONLY_PAYLOAD_TYPES.has(o.type) &&
         r.event_type !== o.type
       )
         (writeDiagnosticsEvent("warn", "cli_sse_server_only_event_type_mismatch", {
@@ -663,7 +663,7 @@ function re(e) {
       continue;
     }
     let { event: p, deltaType: E, chunk: _, estimatedTokens: R } = d,
-      k = Buffer.byteLength(Tc(_)) - 2;
+      k = Buffer.byteLength(jsonStringifyUntraced(_)) - 2;
     if (
       r !== null &&
       r.firstEvent.index === p.index &&
@@ -1120,7 +1120,7 @@ var le = {},
   ce = 1.5,
   We = 3,
   Ge = new Set([401, 403, 404, 429]),
-  KGe = 100;
+  DEFAULT_STREAM_EVENT_FLUSH_INTERVAL_MS = 100;
 function U(e) {
   return e === 400 || e === 413 || e === 422;
 }
@@ -1139,7 +1139,7 @@ function j(e) {
     return e.name;
   return;
 }
-class sbe extends Error {
+class CCRClientInitError extends Error {
   reason;
   httpStatus;
   constructor(e, t) {
@@ -1148,15 +1148,15 @@ class sbe extends Error {
     this.httpStatus = t;
   }
 }
-function Jjn(e) {
+function isTransientWorkerRegisterFailure(e) {
   return (
-    e instanceof sbe &&
+    e instanceof CCRClientInitError &&
     e.reason === "worker_register_failed" &&
     !U(e.httpStatus)
   );
 }
 var Je = 10,
-  Qjn = {
+  CLOSE_CODE_BY_TERMINAL_CONDITION = {
     epoch_conflict: 4090,
     superseded_by_worker: 4090,
     session_not_active: 4090,
@@ -1285,16 +1285,16 @@ function ct(e, t) {
       (Array.isArray(r) && r.length > 0),
   };
 }
-function lsn() {
+function getWorkerEpoch() {
   return a.CLAUDE_CODE_WORKER_EPOCH ?? NaN;
 }
-function csn(e, t) {
+function createSessionReadSourceBase(e, t) {
   if (e.protocol !== "http:" && e.protocol !== "https:")
     throw Error(`CCRClient: Expected http(s) URL, got ${e.protocol}`);
   let r = e.pathname.replace(/\/$/, "");
   return { sessionBaseUrl: `${e.protocol}//${e.host}${r}`, getAuthHeaders: t };
 }
-class pM {
+class CCRClient {
   workerEpoch = 0;
   heartbeatIntervalMs;
   heartbeatJitterFraction;
@@ -1399,7 +1399,7 @@ class pM {
       (this.streamEventFlushIntervalMs = X(
         "streamEventFlushIntervalMs",
         r?.streamEventFlushIntervalMs,
-        KGe,
+        DEFAULT_STREAM_EVENT_FLUSH_INTERVAL_MS,
       )),
       (this.getAuthHeaders = r?.getAuthHeaders ?? getSessionAuthHeaders),
       (this.onDiagnostic = r?.onDiagnostic),
@@ -1409,7 +1409,7 @@ class pM {
       (this.reportParkAtInit = r?.reportParkAtInit ?? !1),
       (this.initStateGetOrderingBoundMs = r?.initStateGetOrderingBoundMs ?? tt),
       (this.readSource = {
-        ...csn(t, this.getAuthHeaders),
+        ...createSessionReadSourceBase(t, this.getAuthHeaders),
         isClosed: () => this.closed,
         onConflict: (d) => this.handleEpochMismatch(d),
       }),
@@ -1646,9 +1646,9 @@ class pM {
   async initialize(e) {
     let t = Date.now();
     if (Object.keys(this.getAuthHeaders()).length === 0)
-      throw new sbe("no_auth_headers");
-    if (e === void 0) e = lsn();
-    if (isNaN(e)) throw new sbe("missing_epoch");
+      throw new CCRClientInitError("no_auth_headers");
+    if (e === void 0) e = getWorkerEpoch();
+    if (isNaN(e)) throw new CCRClientInitError("missing_epoch");
     this.workerEpoch = e;
     let r = this.getWorkerState(),
       o = await Promise.race([
@@ -1717,7 +1717,7 @@ class pM {
           this.onDiagnostic?.(
             `PUT /worker retries exhausted: ${M} attempts over ${Math.round((Date.now() - t) / 1000)}s, errors=[${[...R].join(",") || "unknown"}]`,
           ));
-      throw new sbe("worker_register_failed", _.status);
+      throw new CCRClientInitError("worker_register_failed", _.status);
     }
     if (
       ((this.currentState = d?.status ?? "idle"),
@@ -1761,7 +1761,7 @@ class pM {
         projectsAssertion: void 0,
         durationMs: 0,
       };
-    let d = await pM.getWithRetry(
+    let d = await CCRClient.getWithRetry(
       this.readSource,
       `${this.sessionBaseUrl}/worker${vt(t)}`,
       o,
@@ -2800,10 +2800,10 @@ class pM {
     return this.droppedWorkerStatePatchCount;
   }
   async readInternalEvents(e) {
-    return pM.readInternalEventsFrom(this.readSource, e);
+    return CCRClient.readInternalEventsFrom(this.readSource, e);
   }
   static readInternalEventsFrom(e, t) {
-    return pM.paginatedGet(
+    return CCRClient.paginatedGet(
       e,
       "/worker/internal-events",
       { limit: "1000", ...(t && { after_event_id: t }) },
@@ -2811,10 +2811,10 @@ class pM {
     );
   }
   async readSubagentInternalEvents() {
-    return pM.readSubagentInternalEventsFrom(this.readSource);
+    return CCRClient.readSubagentInternalEventsFrom(this.readSource);
   }
   static readSubagentInternalEventsFrom(e) {
-    return pM.paginatedGet(
+    return CCRClient.paginatedGet(
       e,
       "/worker/internal-events",
       { subagents: "true", limit: "1000" },
@@ -2822,7 +2822,7 @@ class pM {
     );
   }
   async readAgentInternalEvents(e, t) {
-    return pM.paginatedGet(
+    return CCRClient.paginatedGet(
       this.readSource,
       "/worker/internal-events",
       { session_agent_id: e, limit: "1000" },
@@ -2846,7 +2846,7 @@ class pM {
           w.searchParams.delete("after_event_id"));
       let T = !_ && r.after_event_id !== void 0,
         C,
-        B = await pM.getWithRetry(
+        B = await CCRClient.getWithRetry(
           e,
           w.toString(),
           p,
@@ -2878,7 +2878,7 @@ class pM {
               { context: o },
             ));
           let { after_event_id: P, ...I } = r,
-            D = await pM.paginatedGet(e, t, I, o, d);
+            D = await CCRClient.paginatedGet(e, t, I, o, d);
           if (!D) return null;
           return { ...D, anchorFallback: C };
         }
@@ -3137,7 +3137,7 @@ function vt(e) {
 function mt(e) {
   return;
 }
-function rdt(e) {
+function createIdleTracker(e) {
   let t = e?.isTurnRunning ?? (() => getMainLoopRefcount() > 0),
     r = Le(),
     o = Date.now();
@@ -3158,4 +3158,4 @@ function rdt(e) {
     onActivity: r.subscribe,
   };
 }
-export { asn, VGe, KGe, sbe, Jjn, Qjn, lsn, csn, pM, rdt };
+export { SERVER_AUTHORED_ONLY_PAYLOAD_TYPES, SSETransport, DEFAULT_STREAM_EVENT_FLUSH_INTERVAL_MS, CCRClientInitError, isTransientWorkerRegisterFailure, CLOSE_CODE_BY_TERMINAL_CONDITION, getWorkerEpoch, createSessionReadSourceBase, CCRClient, createIdleTracker };

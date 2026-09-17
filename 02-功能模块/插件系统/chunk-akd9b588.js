@@ -49,7 +49,7 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { qE, _N, iwt, aJ, Obn } from "./chunk-ajtn749s.js";
+import { logPluginRemoteFetch, classifyNetworkErrorKind, MAX_MARKETPLACE_CATALOG_BYTES, hasHeadersHelper, isRequestRoutingHeader } from "./chunk-ajtn749s.js";
 import { FRONTMATTER_PATTERN, parseFrontmatterYaml } from "../MCP客户端/chunk-3kmsshb6.js";
 import { analyzeHooksModule } from "../Hooks钩子/chunk-z3433nr6.js";
 import { validatePluginManifest, damerauLevenshteinDistance, buildVersionTagName, resolvePluginRenameChain } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -61,17 +61,17 @@ import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function de(e, t, a) {
-  if (QPt(e)) return !1;
+  if (isOrphanPluginEntry(e)) return !1;
   if (e.source === t) return !0;
   return "plugin" in e && e.plugin === a && getNonMarketplacePluginSource(e.source) === getNonMarketplacePluginSource(t);
 }
-function QPt(e) {
+function isOrphanPluginEntry(e) {
   return "orphan" in e && e.orphan === !0;
 }
-function ZPt(e, t) {
+function isErrorForPlugin(e, t) {
   return de(e, t.source, t.name);
 }
-function eOt(e, t) {
+function isWarningForPlugin(e, t) {
   return de(e, t.source, t.name);
 }
 function Xe(e, t, a) {
@@ -80,11 +80,11 @@ function Xe(e, t, a) {
   let r = getPluginMarketplace(e.source);
   return "plugin" in e && e.plugin === a && (r === void 0 || r === getPluginMarketplace(t));
 }
-function z8(e, t, a) {
-  return isNonMarketplacePluginSource(getPluginMarketplace(t)) ? de(e, t, a) : Xe(e, t, a) && !QPt(e);
+function isDiagnosticForPlugin(e, t, a) {
+  return isNonMarketplacePluginSource(getPluginMarketplace(t)) ? de(e, t, a) : Xe(e, t, a) && !isOrphanPluginEntry(e);
 }
-function yUn(e, t) {
-  let a = t.filter((k) => z8(e, k.source, k.name)),
+function resolvePluginIdentity(e, t) {
+  let a = t.filter((k) => isDiagnosticForPlugin(e, k.source, k.name)),
     r = a.length === 1 ? a[0] : a.find((k) => isEqualIgnoringCase(k.source, e.source));
   if (r) return { name: r.name, marketplace: getPluginMarketplace(r.source) };
   let [o] = a;
@@ -196,12 +196,12 @@ async function ot() {
   logForDebugging(`Fetching plugin catalog from ${Z}`);
   let e = performance.now();
   try {
-    let t = await externalHttp.get(Z, { timeout: 1e4, maxContentLength: iwt }),
+    let t = await externalHttp.get(Z, { timeout: 1e4, maxContentLength: MAX_MARKETPLACE_CATALOG_BYTES }),
       a = Ae().safeParse(t.data);
     if (!a.success) throw Error("Invalid response format from plugin catalog");
-    return (qE("plugin_catalog", Z, "success", performance.now() - e), a.data);
+    return (logPluginRemoteFetch("plugin_catalog", Z, "success", performance.now() - e), a.data);
   } catch (t) {
-    throw (qE("plugin_catalog", Z, "failure", performance.now() - e, _N(t)), t);
+    throw (logPluginRemoteFetch("plugin_catalog", Z, "failure", performance.now() - e, classifyNetworkErrorKind(t)), t);
   }
 }
 class xe {
@@ -218,7 +218,7 @@ function Me(e) {
   let t = it.of(B().host);
   return t.load(async () => {
     let a = await st(e);
-    if (a) return (qE("plugin_catalog", Z, "cache_hit", 0), a.catalog);
+    if (a) return (logPluginRemoteFetch("plugin_catalog", Z, "cache_hit", 0), a.catalog);
     try {
       let r = await ot();
       return (
@@ -237,7 +237,7 @@ function Me(e) {
     }
   });
 }
-async function c0e(e) {
+async function fetchPluginInstallCounts(e) {
   let t = await Me(e);
   if (!t) return null;
   let a = new Map();
@@ -245,13 +245,13 @@ async function c0e(e) {
     if (typeof o.unique_installs === "number") a.set(r, o.unique_installs);
   return a;
 }
-async function tOt(e, t) {
+async function getPluginCatalogEntry(e, t) {
   return (await Me(t))?.plugins[e];
 }
-var uen = 2000,
+var PLUGIN_CONTEXT_COST_WARNING_THRESHOLD = 2000,
   Re = 3;
-async function den(e, t, a) {
-  let r = await tOt(e, a);
+async function estimatePluginContextCost(e, t, a) {
+  let r = await getPluginCatalogEntry(e, a);
   if (!r) return null;
   let o = r.tokens[t];
   if (o)
@@ -271,7 +271,7 @@ async function den(e, t, a) {
     isEstimate: !0,
   };
 }
-function nOt(e) {
+function formatCompactCount(e) {
   if (e < 1000) return String(e);
   if (e < 1e6) {
     let a = (e / 1000).toFixed(1);
@@ -341,7 +341,7 @@ var ct = new Set([
     "evals",
     "syntaxHighlighting",
   ]);
-function SUn(e, t) {
+function summarizeValidationResults(e, t) {
   let a = e.every((o) => o.success),
     r = e.some((o) => o.warnings.length > 0);
   return { noErrors: a, hasWarnings: r, allSuccess: t.strict ? a && !r : a };
@@ -907,18 +907,18 @@ async function kt(e) {
             message: `Duplicate plugin name "${g.name}" found in marketplace`,
           });
         let O = typeof g.source === "object" && g.source.source === "archive";
-        if (O && aJ(g) && g.strict !== !1)
+        if (O && hasHeadersHelper(g) && g.strict !== !1)
           t.push({
             path: `plugins[${P}].headersHelper`,
             message: `Plugin "${removeInvisibleChars(g.name)}" sets headersHelper but is not "strict": false. An entry with headersHelper must inline its full manifest (strict: false, with commands/agents/hooks/mcpServers declared in the entry) so users can review what it ships before the command runs; Claude Code refuses to run the helper otherwise.`,
           });
-        if ((g.headers !== void 0 || aJ(g)) && !O)
+        if ((g.headers !== void 0 || hasHeadersHelper(g)) && !O)
           a.push({
-            path: `plugins[${P}].${aJ(g) ? "headersHelper" : "headers"}`,
+            path: `plugins[${P}].${hasHeadersHelper(g) ? "headersHelper" : "headers"}`,
             message: `Plugin "${removeInvisibleChars(g.name)}" sets headers/headersHelper, which only apply to "archive" sources; they have no effect on this entry.`,
           });
         else if (
-          aJ(g) &&
+          hasHeadersHelper(g) &&
           typeof g.source === "object" &&
           g.source.source === "archive" &&
           !g.source.sha256
@@ -928,7 +928,7 @@ async function kt(e) {
             message: `Plugin "${removeInvisibleChars(g.name)}" fetches its archive with a headersHelper but sets no sha256 pin. Consider pinning the digest so the bytes users install are exactly the ones you reviewed (omit it only if you rely on digest-versioned updates).`,
           });
         for (let F of O ? Object.keys(g.headers ?? {}) : [])
-          if (Obn(F))
+          if (isRequestRoutingHeader(F))
             a.push({
               path: `plugins[${P}].headers.${removeInvisibleChars(F)}`,
               message: `Header "${removeInvisibleChars(F)}" is a request-routing/identity header that catalog entries may not set; Claude Code drops it at download time.`,
@@ -1026,7 +1026,7 @@ async function kt(e) {
     fileType: "marketplace",
   };
 }
-function ek(e, t) {
+function sanitizeDiagnosticText(e, t) {
   return normalizeWhitespace(truncateWithCharCount(stripInvisibleChars(e), t));
 }
 function q(e) {
@@ -1034,14 +1034,14 @@ function q(e) {
     ...e,
     errors: e.errors.map((t) => ({
       ...t,
-      path: ek(t.path, 200),
-      message: ek(t.message, 1000),
+      path: sanitizeDiagnosticText(t.path, 200),
+      message: sanitizeDiagnosticText(t.message, 1000),
     })),
     warnings: e.warnings.map((t) => ({
-      path: ek(t.path, 200),
-      message: ek(t.message, 1000),
+      path: sanitizeDiagnosticText(t.path, 200),
+      message: sanitizeDiagnosticText(t.message, 1000),
     })),
-    ...(e.notes !== void 0 && { notes: e.notes.map((t) => ek(t, 1000)) }),
+    ...(e.notes !== void 0 && { notes: e.notes.map((t) => sanitizeDiagnosticText(t, 1000)) }),
   };
 }
 function wt(e, t, a, r) {
@@ -1070,7 +1070,7 @@ function wt(e, t, a, r) {
     return (
       o.push({
         path: "frontmatter",
-        message: `YAML frontmatter failed to parse: ${ek(k.error, 200)}. ` + p,
+        message: `YAML frontmatter failed to parse: ${sanitizeDiagnosticText(k.error, 200)}. ` + p,
       }),
       { success: !1, errors: o, warnings: i, filePath: e, fileType: a }
     );
@@ -1144,7 +1144,7 @@ function wt(e, t, a, r) {
         if (S !== "bash" && S !== "powershell")
           o.push({
             path: "shell",
-            message: `shell must be 'bash' or 'powershell', got '${ek(p, 64)}'.`,
+            message: `shell must be 'bash' or 'powershell', got '${sanitizeDiagnosticText(p, 64)}'.`,
           });
       }
   }
@@ -1309,7 +1309,7 @@ async function bt(e, t) {
                 .join(", ");
       S.push(`${E} hooks: ${F}`, `${E} calls: ${L}`);
     } catch (P) {
-      p.push({ path: `modules.${E}`, message: ek(l(P), 400) });
+      p.push({ path: `modules.${E}`, message: sanitizeDiagnosticText(l(P), 400) });
     }
   }
   return {
@@ -1465,7 +1465,7 @@ async function re(e, t, a) {
       y = 0,
       p = 0;
     for (let R of k) {
-      let E = ek(R, 256),
+      let E = sanitizeDiagnosticText(R, 256),
         d;
       try {
         d = await readTextFileCapped(R);
@@ -1473,7 +1473,7 @@ async function re(e, t, a) {
         r.push({
           success: !1,
           errors: [
-            { path: "file", message: `Failed to read: ${ek(l(P), 200)}` },
+            { path: "file", message: `Failed to read: ${sanitizeDiagnosticText(l(P), 200)}` },
           ],
           warnings: [],
           filePath: E,
@@ -1598,7 +1598,7 @@ async function Ce(e) {
           message: `${i.name} at the plugin root is not loaded as project context. ${u}`,
         },
       ],
-      filePath: h.join(e, ek(i.name, 64)),
+      filePath: h.join(e, sanitizeDiagnosticText(i.name, 64)),
       fileType: "plugin",
     });
   }
@@ -1610,7 +1610,7 @@ async function Ce(e) {
     t.map(q)
   );
 }
-async function pen(e) {
+async function validatePluginPath(e) {
   return q(await Et(e));
 }
 async function Et(e) {
@@ -1670,8 +1670,8 @@ async function Et(e) {
     }
   }
 }
-async function ZWe(e) {
-  let t = await pen(e),
+async function resolvePluginManifestAndContents(e) {
+  let t = await validatePluginPath(e),
     a = t.filePath;
   if (t.errors.some((i) => i.code === Ke)) {
     let i = await Ct(a);
@@ -1708,8 +1708,8 @@ function ke(e, t, a) {
     if (!f || typeof f.command !== "string") continue;
     let k = f.command.match(/^\$\{CLAUDE_PLUGIN_ROOT\}\/bin\/([^/\\]+)$/)?.[1];
     if (k === void 0 || t.has(k) || a.has(k)) continue;
-    let C = ek(o, 64),
-      w = ek(k, 64);
+    let C = sanitizeDiagnosticText(o, 64),
+      w = sanitizeDiagnosticText(k, 64);
     r.push({
       path: `mcpServers.${C}`,
       message:
@@ -1778,7 +1778,7 @@ async function Rt(e) {
       let O = ie(N);
       if (!O) continue;
       let F = te(O.mcpServers || O);
-      if (F) C(h.join(e, ek(d, 128)), ke(F, u, i));
+      if (F) C(h.join(e, sanitizeDiagnosticText(d, 128)), ke(F, u, i));
       continue;
     }
     let g = te(d);
@@ -1795,7 +1795,7 @@ import {
   resolve,
   sep as Ue,
 } from "path";
-async function e9e(e, t = {}) {
+async function buildPluginTagPlan(e, t = {}) {
   let a = [],
     r = await Tt(e);
   if (!r.ok) return { ok: !1, error: r.error, warnings: a };
@@ -1916,10 +1916,10 @@ ${g}`,
     },
   };
 }
-async function t9e(e, t) {
+async function createPluginVersionTag(e, t) {
   let a = ["-C", e.gitRoot, "tag"];
   if (t.force) a.push("-f");
-  a.push("-a", e.tag, "-m", u0e(e, t.message), "HEAD");
+  a.push("-a", e.tag, "-m", buildVersionTagMessage(e, t.message), "HEAD");
   let r = await execFileNoThrow("git", a);
   if (r.code !== 0)
     return {
@@ -1943,7 +1943,7 @@ async function t9e(e, t) {
     };
   return { ok: !0, pushed: !0 };
 }
-function u0e(e, t) {
+function buildVersionTagMessage(e, t) {
   return t === void 0
     ? `${e.pluginName} ${e.version}`
     : t.replaceAll("%s", e.version);
@@ -2055,21 +2055,21 @@ async function Ot(e, t) {
   return a.code === 0 && a.stdout.trim() === t;
 }
 export {
-  QPt,
-  ZPt,
-  eOt,
-  z8,
-  yUn,
-  c0e,
-  tOt,
-  uen,
-  den,
-  nOt,
-  SUn,
-  ek,
-  pen,
-  ZWe,
-  e9e,
-  t9e,
-  u0e,
+  isOrphanPluginEntry,
+  isErrorForPlugin,
+  isWarningForPlugin,
+  isDiagnosticForPlugin,
+  resolvePluginIdentity,
+  fetchPluginInstallCounts,
+  getPluginCatalogEntry,
+  PLUGIN_CONTEXT_COST_WARNING_THRESHOLD,
+  estimatePluginContextCost,
+  formatCompactCount,
+  summarizeValidationResults,
+  sanitizeDiagnosticText,
+  validatePluginPath,
+  resolvePluginManifestAndContents,
+  buildPluginTagPlan,
+  createPluginVersionTag,
+  buildVersionTagMessage,
 };

@@ -79,7 +79,7 @@ import {
   applyGlobalUpdate,
 } from "../自动更新-安装/auto-updater.js";
 import { recordUpdateResult, getHomebrewCaskName, getPackageManager, hasDetectedInstallType, detectInstallType } from "../自动更新-安装/install-diagnostics.js";
-import { rT, mze, gze, jce, nOe } from "../自动更新-安装/chunk-2g5h49pk.js";
+import { ManifestSignatureError, StallTimeoutError, StagedBinaryChecksumError, installLatest, removeInstalledSymlink } from "../自动更新-安装/native-installer.js";
 import { StatusIndicator, shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
@@ -4339,7 +4339,7 @@ function Ro({
       ne.installMethod !== "native" &&
       !Ie(process.env.DISABLE_INSTALLATION_CHECKS)
     )
-      await nOe();
+      await removeInstalledSymlink();
     let be = await detectInstallType();
     if (
       (logForDebugging(`AutoUpdater: Detected installation type: ${be}`),
@@ -4639,12 +4639,12 @@ function Ro({
 }
 F();
 function Eu(l) {
-  if (l instanceof rT) return "signature_verification";
-  if (l instanceof gze) return "checksum_mismatch";
+  if (l instanceof ManifestSignatureError) return "signature_verification";
+  if (l instanceof StagedBinaryChecksumError) return "checksum_mismatch";
   let b = l instanceof Error ? l.message : String(l),
     x = A(l);
   if (
-    l instanceof mze ||
+    l instanceof StallTimeoutError ||
     x === "ETIMEDOUT" ||
     x === "ECONNABORTED" ||
     b.includes("Download timed out") ||
@@ -4759,7 +4759,7 @@ function wo({
     let oe = Date.now();
     logEvent("tengu_native_auto_updater_start", {});
     try {
-      let J = await jce(B, !1, R),
+      let J = await installLatest(B, !1, R),
         ye = {
           ISSUES_EXPLAINER:
             "report the issue at https://github.com/anthropics/claude-code/issues",

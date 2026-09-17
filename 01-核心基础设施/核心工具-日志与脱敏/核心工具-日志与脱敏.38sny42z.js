@@ -383,7 +383,7 @@ function jsonStringifyLine(e) {
 `
   );
 }
-function Tc(e) {
+function jsonStringifyUntraced(e) {
   return JSON.stringify(e);
 }
 function jsonlJoin(e) {
@@ -400,14 +400,14 @@ var jsonParse = (e, t) => {
   using r = startSlowOperationSpan`JSON.parse(${e})`;
   return typeof t > "u" ? JSON.parse(e) : JSON.parse(e, t);
 };
-function Is(e) {
+function jsonParseUntraced(e) {
   return JSON.parse(e);
 }
 function deepClone(e, t) {
   using r = startSlowOperationSpan`structuredClone(${e})`;
   return structuredClone(e, t);
 }
-function Jhe(e, t, r) {
+function writeFileSyncTraced(e, t, r) {
   using i = startSlowOperationSpan`fs.writeFileSync(${e}, ${t})`;
   writeFileSync(e, t, r);
 }
@@ -1535,7 +1535,7 @@ var V = new Oe();
 function scanForSecrets(e) {
   return V.scan(e);
 }
-function qr(e) {
+function redactSecretsFromText(e) {
   return V.redact(e);
 }
 var Rt = /[$\x60|;&<>()\s]/,
@@ -1548,7 +1548,7 @@ function Ft(e, t) {
 function redactForDisplay(e) {
   return V.redactForDisplay(e);
 }
-function redactDeep(e, t = qr) {
+function redactDeep(e, t = redactSecretsFromText) {
   if (typeof e === "string") return t(e);
   if (Array.isArray(e)) return e.map((r) => redactDeep(r, t));
   if (e !== null && typeof e === "object") {
@@ -1768,7 +1768,7 @@ class Te {
   log(e, { level: t } = { level: "debug" }) {
     if (X[t] < X[this.minLevel]) return;
     if (!this.shouldLog(e)) return;
-    let r = qr(e.trim());
+    let r = redactSecretsFromText(e.trim());
     if (
       r.includes(`
 `)
@@ -2243,12 +2243,12 @@ export {
   startSlowOperationSpan,
   jsonStringify,
   jsonStringifyLine,
-  Tc,
+  jsonStringifyUntraced,
   jsonlJoin,
   jsonParse,
-  Is,
+  jsonParseUntraced,
   deepClone,
-  Jhe,
+  writeFileSyncTraced,
   UNVERIFIED_ANCESTRY_SENTINEL,
   hasNetworkPathSpelling,
   hasNetworkPathSpellingAsync,
@@ -2272,7 +2272,7 @@ export {
   streamFileLines,
   streamFileLinesBackward,
   scanForSecrets,
-  qr,
+  redactSecretsFromText,
   redactForDisplay,
   redactDeep,
   redactSensitiveKeys,

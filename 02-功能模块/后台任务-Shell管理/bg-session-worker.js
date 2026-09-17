@@ -14,7 +14,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, Jr, Gw, lNn, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { jsonStringify, jsonParse, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { BG_EXIT_CAUSE_SESSION_IN_USE, setBgExitCause, readAndClearBgExitCause, readAndClearBgExitDetail } from "./chunk-z5vtnzjg.js";
 import { normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -42,7 +42,7 @@ import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscrip
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { readLinuxProcState, sigtermThenKill, reapDetachedRepl, getProcessStartTime, isSameProcess, getProcessStartTimeAsync, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { readSocketTokenFile } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS, g4, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
+import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS, removeRestrictedEnvVars, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import {
   MODEL_ENV_KEYS,
   normalizeCliArgPaths,
@@ -127,7 +127,7 @@ function Se(e, t) {
     o = "",
     c = !1;
   function g(k, v) {
-    let _ = clipWithEllipsis(qr(s), ne),
+    let _ = clipWithEllipsis(redactSecretsFromText(s), ne),
       w = `${k}|${v}|${_}`;
     if (w === o) return;
     ((o = w),
@@ -187,7 +187,7 @@ function Se(e, t) {
         ((c = !0), clearInterval(m));
       },
       get lastLine() {
-        return clipWithEllipsis(qr(s), ne);
+        return clipWithEllipsis(redactSecretsFromText(s), ne);
       },
     }
   );
@@ -703,7 +703,7 @@ var kt =
   he = 200,
   We =
     "session ID already belongs to another conversation \u2014 open again to start with a new ID";
-function YYt(e) {
+function formatCwdUnavailableMessage(e) {
   return `working directory no longer exists or is not accessible: ${e}`;
 }
 var ke = 5000,
@@ -715,7 +715,7 @@ var ke = 5000,
   tt = ["local_bash", "in_process_teammate", "dream", "auto_mode_scan"],
   bt = 3600000,
   je = 4096;
-function JYt() {
+function createDefaultSpawnPty() {
   return (e, t, r) => {
     let { cmd: s, prefixArgs: p } = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
       d = [
@@ -805,19 +805,19 @@ function Xe(e, t, r, s, p) {
   if (process.env.CLAUDE_CONFIG_DIR)
     o.CLAUDE_CONFIG_DIR = process.env.CLAUDE_CONFIG_DIR;
   for (let m of NON_INHERITED_ENV_VARS) if (!e.env?.[m]) delete o[m];
-  if ((g4(o), removeBgDispatcherPlanEnvVars(o), !e.env?.CLAUDE_CODE_ENTRYPOINT)) removeGuiHostEntrypoint(o);
+  if ((removeRestrictedEnvVars(o), removeBgDispatcherPlanEnvVars(o), !e.env?.CLAUDE_CODE_ENTRYPOINT)) removeGuiHostEntrypoint(o);
   if (e.isolation === "worktree") o.CLAUDE_BG_ISOLATION = "worktree";
   for (let m of le) if (!e.env?.[m]) delete o[m];
   for (let m of Object.keys(o))
     if (VERTEX_REGION_ENV_PREFIXES.some((k) => m.startsWith(k)) && !e.env?.[m]) delete o[m];
-  if (hasHostManagedAuth(d) || E8(e)) {
+  if (hasHostManagedAuth(d) || isProviderManagedByHost(e)) {
     for (let v of API_KEY_ENV_VARS) delete o[v];
-    if (E8(e) || Ie(d.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST)) clearAwsEnvVars(o, e.env);
+    if (isProviderManagedByHost(e) || Ie(d.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST)) clearAwsEnvVars(o, e.env);
     let m = getHostAuthEnvVarName(d);
     if (m) (te(o, [m]), delete o[m]);
     let k =
       e.env?.CLAUDE_CODE_HOST_CREDS_FILE ??
-      (E8(e) ? d.CLAUDE_CODE_HOST_CREDS_FILE : void 0);
+      (isProviderManagedByHost(e) ? d.CLAUDE_CODE_HOST_CREDS_FILE : void 0);
     if (k) o.CLAUDE_CODE_HOST_CREDS_FILE = k;
     for (let v of ALL_BASE_URL_ENV_VARS) delete o[v];
   } else {
@@ -910,7 +910,7 @@ var le = [
     ...HOST_AUTH_ENV_VARS,
     "CLAUDE_CODE_HOST_CREDS_FILE",
   ],
-  E8 = (e) => Ie(e.env?.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST),
+  isProviderManagedByHost = (e) => Ie(e.env?.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST),
   Tt = new Map(
     [...NON_INHERITED_ENV_VARS, ...le, ...ALL_BASE_URL_ENV_VARS, ...API_KEY_ENV_VARS, ...AWS_ENV_VARS].map((e) => [e.toUpperCase(), e]),
   );
@@ -975,7 +975,7 @@ function It(e, t) {
       return !0;
   }
 }
-class qW {
+class BgSessionWorker {
   dispatch;
   spawnPty;
   getAuthSnapshot;
@@ -1269,7 +1269,7 @@ class qW {
     if (this.isTransitioning) return { retired: !1, reason: "in-progress" };
     if (this.record.outcome) return { retired: !1, reason: "no-state" };
     if (this.attachers.size > 0) return { retired: !1, reason: "attached" };
-    if (E8(this.dispatch)) return { retired: !1, reason: "host-managed" };
+    if (isProviderManagedByHost(this.dispatch)) return { retired: !1, reason: "host-managed" };
     if (t?.has(this.dispatch.short)) return { retired: !1, reason: "pinned" };
     if (this.adoptedAt && Date.now() - this.adoptedAt < Je)
       return { retired: !1, reason: "recent-adopt" };
@@ -1572,7 +1572,7 @@ class qW {
     if (e.rows) this.ptyRows = e.rows;
   }
   static spawn(e, t, r, s, p, d) {
-    let o = new qW(e, t ?? JYt(), r, "cold", void 0, p, d);
+    let o = new BgSessionWorker(e, t ?? createDefaultSpawnPty(), r, "cold", void 0, p, d);
     if (s?.afterUpgrade)
       return (
         (o.attempt = 1),
@@ -1585,7 +1585,7 @@ class qW {
     return (o.doSpawn(e.reattachEnv).catch(logError), o);
   }
   static claim(e, t) {
-    let r = new qW(
+    let r = new BgSessionWorker(
       e,
       t.spawnPty,
       t.getAuthSnapshot,
@@ -1645,7 +1645,7 @@ class qW {
       p = Xe(e, s, t, getRendezvousSocketPath(e.short), r);
     if ((delete p.CLAUDE_BG_PTY_AUTH, e.reattachEnv))
       Object.assign(p, e.reattachEnv);
-    (g4(p), qe(p, e));
+    (removeRestrictedEnvVars(p), qe(p, e));
     let d = Ye(e, 1, !1, e.sessionId, void 0, e.respawnFlags);
     return { env: p, argv: d };
   }
@@ -1662,7 +1662,7 @@ class qW {
     if (!isProcessRunning(t.pid)) return null;
     let o = await getProcessStartTimeAsync(t.pid, { skipCache: !0 });
     if (o && t.procStart !== o) return null;
-    let c = new qW(
+    let c = new BgSessionWorker(
       t.dispatch,
       r,
       s,
@@ -1781,7 +1781,7 @@ class qW {
     return c;
   }
   static unverified(e, t, r, s) {
-    let p = new qW(
+    let p = new BgSessionWorker(
       t.dispatch,
       void 0,
       void 0,
@@ -2087,7 +2087,7 @@ class qW {
       return (this.pushRing(R), this.onStream.emit(R), this.settle("crashed"));
     }
     let d =
-        r.launch.mode === "exec" || E8(r)
+        r.launch.mode === "exec" || isProviderManagedByHost(r)
           ? void 0
           : await Ee(r.short, this.getAuthSnapshot?.()),
       o = await Ae(
@@ -2204,7 +2204,7 @@ class qW {
       (delete B.CLAUDE_BG_RV_AUTH,
         delete B.CLAUDE_BG_PTY_AUTH,
         (B.CLAUDE_BG_SOCKET_TOKENS_PATH = o));
-    (g4(B), qe(B, r));
+    (removeRestrictedEnvVars(B), qe(B, r));
     let T = this.ptyCols || (r.cols ?? 200),
       U = this.ptyRows || (r.rows ?? 50),
       N;
@@ -2596,7 +2596,7 @@ class qW {
     return this.doSpawn();
   }
   settleCwdGone(e, t = this.dispatch.cwd) {
-    let r = YYt(t);
+    let r = formatCwdUnavailableMessage(t);
     (logEvent("tengu_bg_spawn_cwd_gone", {
       short: bgShort(this.dispatch.short),
       attempt: this.attempt,
@@ -2834,7 +2834,7 @@ class qW {
       (this.stalledLogged = !1));
   }
 }
-async function Gmr(e) {
+async function runBgSpare(e) {
   let t = e[0];
   if (!t)
     (process.stderr.write(`[bg-spare] missing claim sock path
@@ -2910,7 +2910,7 @@ async function Nt() {
   return r?.claimAuth ?? e;
 }
 var xt = 2000;
-async function QYt(e) {
+async function spawnSpare(e) {
   if (getCurrentPlatform() === "windows") return null;
   if (getLauncherConfigError()) return null;
   if (!(await isLauncherRunnable())) {
@@ -3052,7 +3052,7 @@ function Mt(e) {
   let t = { ...process.env };
   te(t);
   for (let r of NON_INHERITED_ENV_VARS) delete t[r];
-  if ((g4(t), removeBgDispatcherPlanEnvVars(t), removeGuiHostEntrypoint(t), hasHostManagedAuth(t))) {
+  if ((removeRestrictedEnvVars(t), removeBgDispatcherPlanEnvVars(t), removeGuiHostEntrypoint(t), hasHostManagedAuth(t))) {
     let r = getHostAuthEnvVarName(t);
     if (r) (te(t, [r]), delete t[r]);
     for (let s of API_KEY_ENV_VARS) delete t[s];
@@ -3076,9 +3076,9 @@ function Mt(e) {
     t
   );
 }
-function ZYt(e, t, r, s, p, d) {
+function claimSpare(e, t, r, s, p, d) {
   t.claimed = !0;
-  let o = qW.claim(e, {
+  let o = BgSessionWorker.claim(e, {
     pid: t.hostPid,
     ptySockPath: t.ptySock,
     spawnPty: r,
@@ -3088,7 +3088,7 @@ function ZYt(e, t, r, s, p, d) {
     credentials: d,
   });
   return (
-    Ee(e.short, E8(e) ? void 0 : s?.())
+    Ee(e.short, isProviderManagedByHost(e) ? void 0 : s?.())
       .then((c) => Bt(t.claimSock, Vt(e, c, o.socketAuth(), t.claimAuth)))
       .catch((c) => {
         (logEvent("tengu_bg_sendclaim_failed", {
@@ -3107,7 +3107,7 @@ function ZYt(e, t, r, s, p, d) {
   );
 }
 function Vt(e, t, r, s) {
-  let { env: p, argv: d } = qW.buildClaimFrame(e, t, r);
+  let { env: p, argv: d } = BgSessionWorker.buildClaimFrame(e, t, r);
   return { cwd: e.cwd, env: p, argv: d, sessionId: e.sessionId, auth: s };
 }
 var it = [50, 100, 150, 200, 250, 300, 400, 500, 500, 500];
@@ -3140,7 +3140,7 @@ function Ht(e, t) {
       }));
   });
 }
-async function eJt(e, t) {
+async function reapOrphanSpares(e, t) {
   if (getCurrentPlatform() === "windows") return;
   let r = new Set();
   for (let d of e.values()) {
@@ -3180,4 +3180,4 @@ async function eJt(e, t) {
   }
   if (p) t(`bg orphan-spare reap: ${p}`);
 }
-export { YYt, JYt, E8, qW, Gmr, QYt, ZYt, eJt };
+export { formatCwdUnavailableMessage, createDefaultSpawnPty, isProviderManagedByHost, BgSessionWorker, runBgSpare, spawnSpare, claimSpare, reapOrphanSpares };

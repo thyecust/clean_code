@@ -17,7 +17,7 @@ import { writeFileAtomic } from "../安全文件系统(FS加固)/atomic-file-wri
 import { registerCleanup, isCleanupDrainStarted, jsonStringify, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize, truncateToCodeUnits, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
-import { ja, $nt, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePathAsync, findCommandsOnPath, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { NONINTERACTIVE_GIT_ENV, applyGitConfigEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { GITHUB_HOST, GITHUB_SSH_URL_PREFIXES } from "../共享小工具-未细化/git-host-utils.js";
@@ -1530,7 +1530,7 @@ async function st(t) {
     );
   }
   let s = await rt(t.keytoolBin, pn),
-    p = await rt(t.certutilBin, () => ja("certutil"));
+    p = await rt(t.certutilBin, () => resolveExecutablePathAsync("certutil"));
   if (
     (await Promise.all([
       (async () => {
@@ -1587,7 +1587,7 @@ async function rt(t, e) {
 }
 async function pn() {
   let t = [
-      await ja("keytool"),
+      await resolveExecutablePathAsync("keytool"),
       a.JAVA_HOME ? U(a.JAVA_HOME, "bin", "keytool") : void 0,
     ],
     e;
@@ -1886,7 +1886,7 @@ var vn = new j(() => new wt());
 function re() {
   return vn.of(B().host);
 }
-async function _gr(t) {
+async function initAgentProxy(t) {
   let e = re(),
     o = process.env.AGENT_PROXY_URL,
     r = process.env.AGENT_PROXY_AUTH_TOKEN;
@@ -2249,9 +2249,9 @@ var Re = [
     },
   ],
   dt = Re.flatMap((t) => t.clis).sort(),
-  qit = Re.flatMap((t) => Object.keys(t.placeholders)),
+  PLACEHOLDER_CREDENTIAL_KEYS = Re.flatMap((t) => Object.keys(t.placeholders)),
   xt = 1000;
-function ygr() {
+function getAgentProxyEnv() {
   let t = re().state;
   if (!t.enabled || !t.port || !t.caBundlePath) {
     if (process.env.HTTPS_PROXY && process.env.SSL_CERT_FILE) {
@@ -2263,7 +2263,7 @@ function ygr() {
         "no_proxy",
         ...CA_BUNDLE_ENV_VARS,
         ...Object.keys(SYSTEM_CA_TRUST_ENV_DEFAULTS),
-        ...qit,
+        ...PLACEHOLDER_CREDENTIAL_KEYS,
       ])
         if (process.env[s]) r[s] = process.env[s];
       return r;
@@ -2394,7 +2394,7 @@ async function Nn(t, e) {
 async function Dn() {
   let t = new Set();
   try {
-    await withTimeout($nt(dt, t), xt, "installed-CLI PATH sweep timed out");
+    await withTimeout(findCommandsOnPath(dt, t), xt, "installed-CLI PATH sweep timed out");
   } catch (e) {
     (logForDebugging(`[agent-proxy] ${l(e)}; naming only the CLIs resolved so far`, {
       level: "warn",
@@ -2839,4 +2839,4 @@ function Ct(t, e) {
     e
   );
 }
-export { _gr, qit, ygr };
+export { initAgentProxy, PLACEHOLDER_CREDENTIAL_KEYS, getAgentProxyEnv };

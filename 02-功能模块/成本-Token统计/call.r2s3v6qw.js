@@ -16,7 +16,7 @@ import { getOverageBillingOverride, getOauthAccountInfo, getSubscriptionType, ge
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import {
   shouldShowUpgradeCommand,
   getLowPriorityCopy,
@@ -923,7 +923,7 @@ function zt(co) {
   }
   let M;
   if (l[95] !== He || l[96] !== Mt)
-    ((M = e(ve, { options: Mt, onChange: He, visibleOptionCount: Mt.length })),
+    ((M = e(Select, { options: Mt, onChange: He, visibleOptionCount: Mt.length })),
       (l[95] = He),
       (l[96] = Mt),
       (l[97] = M));

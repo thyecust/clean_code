@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 123 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { rg } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { sanitizeSingleLineDisplayText } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useElapsedDuration } from "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
@@ -72,11 +72,11 @@ function McpTaskDetailDialog(so) {
   else g = s[15];
   let C;
   if (s[16] !== n.serverName)
-    ((C = rg(n.serverName) ?? ""), (s[16] = n.serverName), (s[17] = C));
+    ((C = sanitizeSingleLineDisplayText(n.serverName) ?? ""), (s[16] = n.serverName), (s[17] = C));
   else C = s[17];
   let v;
   if (s[18] !== n.toolName)
-    ((v = rg(n.toolName) ?? ""), (s[18] = n.toolName), (s[19] = v));
+    ((v = sanitizeSingleLineDisplayText(n.toolName) ?? ""), (s[18] = n.toolName), (s[19] = v));
   else v = s[19];
   let T;
   if (s[20] !== C || s[21] !== v)
@@ -116,7 +116,7 @@ function McpTaskDetailDialog(so) {
   if (s[34] !== n.statusMessage)
     ((h =
       n.statusMessage &&
-      r(Text, { dimColor: !0, children: [" ", "\xB7 ", rg(n.statusMessage)] })),
+      r(Text, { dimColor: !0, children: [" ", "\xB7 ", sanitizeSingleLineDisplayText(n.statusMessage)] })),
       (s[34] = n.statusMessage),
       (s[35] = h));
   else h = s[35];

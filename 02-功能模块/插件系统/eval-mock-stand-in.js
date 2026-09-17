@@ -529,9 +529,9 @@ function be(e) {
 `);
     switch (f.verdict) {
       case "ok":
-        return { content: [{ type: "text", text: Rkt(f.text) }] };
+        return { content: [{ type: "text", text: escapeHarnessErrorSignature(f.text) }] };
       case "tool_error":
-        return { content: [{ type: "text", text: Rkt(f.text) }], isError: !0 };
+        return { content: [{ type: "text", text: escapeHarnessErrorSignature(f.text) }], isError: !0 };
       case "abort":
         return {
           content: [
@@ -641,7 +641,7 @@ async function J(e, t) {
   }
   return r.subarray(0, o);
 }
-function Rkt(e) {
+function escapeHarnessErrorSignature(e) {
   return ke.test(e.trimStart()) ? `${xe}${e.trimStart()}` : e;
 }
 var xe = "| ",
@@ -668,4 +668,4 @@ async function ve(e) {
     await t.close();
   }
 }
-export { formatForDisplay, formatValueForDisplay, assertPathIsLocal, findExpectViolation, lintExpectSpec, renderPromptTemplate, EVAL_ABORTED_BY_MOCK_MESSAGE, MOCK_AGENT_RESPONDER_FAILED_MESSAGE, serveMockStandIn, readMockFixtureFile, MAX_INTERPOLATED_TEXT_CHARS, Rkt };
+export { formatForDisplay, formatValueForDisplay, assertPathIsLocal, findExpectViolation, lintExpectSpec, renderPromptTemplate, EVAL_ABORTED_BY_MOCK_MESSAGE, MOCK_AGENT_RESPONDER_FAILED_MESSAGE, serveMockStandIn, readMockFixtureFile, MAX_INTERPOLATED_TEXT_CHARS, escapeHarnessErrorSignature };

@@ -17,7 +17,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { describeStorageError, jsonStringify, jsonStringifyLine, jsonParse, Is, deepClone, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonStringifyLine, jsonParse, jsonParseUntraced, deepClone, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, countOccurrences, stripInvisibleCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -37,23 +37,23 @@ import { getProjectKeyFromDir, getProjectDir } from "../Teammates团队/transcri
 import { withVmTimeout, makeVmErrorExtractor, makePlainError, wrapSyncHostFunction, wrapAsyncHostFunction } from "./chunk-0t0sve49.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import {
-  min,
-  Ndt,
-  Aqe,
-  E1t,
-  hin,
-  v9,
-  _in,
-  yin,
-  Sin,
-  bin,
-  Cqe,
-  A1t,
-  vqe,
-  Fdt,
-  $dt,
-  Rqe,
-} from "./chunk-bkcg0nbj.js";
+  getWorkflowScriptAccessError,
+  readWorkflowScriptFileHardened,
+  DEFAULT_WORKFLOW_SYNC_TIMEOUT_MS,
+  makeVmTimers,
+  WORKFLOW_WORDS_GLOBAL_NAME,
+  compileWorkflowScript,
+  resolveChildWorkflowSource,
+  createChildWorkflowVmContext,
+  rejectNestedWorkflowCall,
+  createUniqueLabeler,
+  SpawnMemoBypass,
+  createWorkflowVmHarness,
+  isVerbatimBuiltInWorkflow,
+  sanitizeWorkflowNameForTelemetry,
+  sanitizeWorkflowDescriptionForTelemetry,
+  launchWorkflowTask,
+} from "./workflow-runtime.js";
 import { usesNondeterministicApi } from "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
 import { parseWorkflowScript } from "./workflow-script.js";
 import { getWorkflowToolPromptText } from "./workflow-tool-prompt.js";
@@ -685,7 +685,7 @@ import * as Mr from "vm";
 async function nr(e, r) {
   let t;
   try {
-    let a = e.runInContext(r.vmContext, withVmTimeout(Aqe));
+    let a = e.runInContext(r.vmContext, withVmTimeout(DEFAULT_WORKFLOW_SYNC_TIMEOUT_MS));
     t = await r.settle(a);
   } catch (a) {
     let p = r.errorInfo(a);
@@ -751,7 +751,7 @@ function Vr(e) {
   let { ctx: r, world: t, killSignal: d } = e,
     o = r.childWorkflow,
     { clone: a } = r.vmBoundary,
-    p = bin(),
+    p = createUniqueLabeler(),
     w = new Map(),
     _ = new Map();
   function I() {
@@ -839,21 +839,21 @@ function Vr(e) {
       let le, de, ye, Ne, H;
       try {
         if (be) throw be.error;
-        let Oe = await _in(o, Y);
+        let Oe = await resolveChildWorkflowSource(o, Y);
         if (ie.signal.aborted) return;
-        let Re = v9(Oe.scriptBody);
+        let Re = compileWorkflowScript(Oe.scriptBody);
         if (!Re.ok) {
           let Me = `workflow('${Oe.childName}'): ${Re.error}`;
           throw Error(Me);
         }
         ((de = Oe.childName), (Ne = Re.vmScript), (ye = p(de)));
-        let _e = E1t(
+        let _e = makeVmTimers(
           o.abortSignal
             ? AbortSignal.any([o.abortSignal, ie.signal])
             : ie.signal,
         );
         (e.registerTimers(_e),
-          (H = yin(o, de, ye, _e)),
+          (H = createChildWorkflowVmContext(o, de, ye, _e)),
           (le = H.errorInfo),
           _e.bindVMInvoke(Mr.runInContext("(fn => { fn() })", H.childCtx)));
         for (let [Me, Ae] of [
@@ -1232,10 +1232,10 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     });
   }
   function Ve(P) {
-    if (P.memo === "none") return new Cqe();
+    if (P.memo === "none") return new SpawnMemoBypass();
     if (a !== void 0) return a;
     let C = r.rows[t];
-    return C === void 0 || C.status === "pending" ? void 0 : new Cqe();
+    return C === void 0 || C.status === "pending" ? void 0 : new SpawnMemoBypass();
   }
   let Be = () => N;
   e.childSpawnMemoRef.get = () => Ve(N);
@@ -1272,7 +1272,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     ["agent", mt],
     ["v", ht],
     ["atleast", gt],
-    [hin, wrapSyncHostFunction(() => Pr(N))],
+    [WORKFLOW_WORDS_GLOBAL_NAME, wrapSyncHostFunction(() => Pr(N))],
   ])
     Object.defineProperty(F, P, {
       value: C,
@@ -1282,7 +1282,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     });
   let Or = new Set(),
     { workflow: kt, cut: bt } = o
-      ? { workflow: () => Sin(), cut: () => {} }
+      ? { workflow: () => rejectNestedWorkflowCall(), cut: () => {} }
       : Vr({
           ctx: e,
           world: r,
@@ -1791,7 +1791,7 @@ class sr {
         logFeatureBad("workflow_steer", "no_context", { verb: S("script") }),
         { error: "run has no context yet" }
       );
-    let r = v9(e, { bindWords: !0 });
+    let r = compileWorkflowScript(e, { bindWords: !0 });
     if (!r.ok)
       return (
         logFeatureBad("workflow_steer", "compile_failed", { verb: S("script") }),
@@ -1848,7 +1848,7 @@ class sr {
   }
   found(e, r, t, d) {
     let o = { ...e, abortController: this.controller },
-      a = A1t(
+      a = createWorkflowVmHarness(
         o,
         r,
         (w) => {
@@ -2211,7 +2211,7 @@ function Yr(e) {
     if (!o) continue;
     let a;
     try {
-      a = Is(o);
+      a = jsonParseUntraced(o);
     } catch {
       d++;
       continue;
@@ -2520,7 +2520,7 @@ async function dt(e, r, t) {
     let d, o;
     if (e.script) ((d = e.script), (o = resolve(getCwd(), e.scriptPath)));
     else {
-      let a = await Ndt(e.scriptPath, r);
+      let a = await readWorkflowScriptFileHardened(e.scriptPath, r);
       if ("error" in a) return a;
       ((d = a.script), (o = a.path));
     }
@@ -2632,7 +2632,7 @@ name: ${e.name}`;
           };
       }
       if (e.scriptPath) {
-        let o = min(e.scriptPath, r);
+        let o = getWorkflowScriptAccessError(e.scriptPath, r);
         if (o !== null) return { result: !1, message: o, errorCode: 15 };
       }
       let t = await dt(e, r, r.storageV5);
@@ -2683,7 +2683,7 @@ name: ${e.name}`;
       let _ = e;
       if (d);
       else if (e.scriptPath) {
-        let B = await Ndt(e.scriptPath, r);
+        let B = await readWorkflowScriptFileHardened(e.scriptPath, r);
         if ("error" in B)
           return {
             behavior: "deny",
@@ -2782,7 +2782,7 @@ name: ${e.name}`;
         B = generateTaskId("local_workflow"),
         U = x.meta.description,
         j = x.meta.name,
-        J = v9(x.scriptBody);
+        J = compileWorkflowScript(x.scriptBody);
       if (!J.ok)
         return (
           logFeatureBad("task_local_workflow", "compile_failed"),
@@ -2802,8 +2802,8 @@ name: ${e.name}`;
         ne = _ ?? persistWorkflowScript(j, F, p, r.storageV5),
         q = e.scriptPath ? void 0 : w,
         Y = e.scriptPath ? "scriptPath" : (w ?? "inline"),
-        be = Fdt(j, q, I),
-        we = $dt(x.meta.description, q, I);
+        be = sanitizeWorkflowNameForTelemetry(j, q, I),
+        we = sanitizeWorkflowDescriptionForTelemetry(x.meta.description, q, I);
       if (
         (logEvent("tengu_workflow_launched", {
           invocation_mode: S(
@@ -2823,7 +2823,7 @@ name: ${e.name}`;
         Jr({
           toolState: r.toolState,
           taskRegistry: r.taskRegistry,
-          name: vqe(q, I) ? Cr(j) : void 0,
+          name: isVerbatimBuiltInWorkflow(q, I) ? Cr(j) : void 0,
           runId: F,
         });
       let ie = {
@@ -2851,7 +2851,7 @@ name: ${e.name}`;
         if (D) throw (logFeatureBad("task_local_workflow", "resume_collision"), new De(D));
       }
       return (
-        Rqe({ ...ie, taskId: B, isResume: e.resumeFromRunId != null }),
+        launchWorkflowTask({ ...ie, taskId: B, isResume: e.resumeFromRunId != null }),
         {
           data: {
             status: "async_launched",

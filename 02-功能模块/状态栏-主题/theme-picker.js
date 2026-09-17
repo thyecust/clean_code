@@ -22,7 +22,7 @@ import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小�
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { gracefulShutdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { getSyntaxHighlightOverrideSource, getSyntaxThemeDescriptor } from "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import { StructuredDiff } from "../Diff引擎/structured-diff.js";
@@ -251,7 +251,7 @@ function ThemePicker(Bt) {
     i[54] !== X ||
     i[55] !== C
   )
-    ((E = e(ve, {
+    ((E = e(Select, {
       options: X,
       onFocus: Y,
       onChange: j,

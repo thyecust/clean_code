@@ -29,7 +29,7 @@ import { resolveRemoteUrl } from "../Git-Worktree/git-repository-detection.js";
 import { Box, Text, Link, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -1222,7 +1222,7 @@ function Bt(Kc) {
   if (We[8] !== js || We[9] !== Xs)
     ((Go = e(Box, {
       flexDirection: "column",
-      children: e(ve, { options: Dc, onChange: Xs, onCancel: js }),
+      children: e(Select, { options: Dc, onChange: Xs, onCancel: js }),
     })),
       (We[8] = js),
       (We[9] = Xs),
@@ -1928,7 +1928,7 @@ function Ft(Bu) {
         xn,
         e(Box, {
           flexDirection: "column",
-          children: e(ve, { options: Gu, onChange: dr, onCancel: pr }),
+          children: e(Select, { options: Gu, onChange: dr, onCancel: pr }),
         }),
       ],
     })),

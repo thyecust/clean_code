@@ -15,7 +15,7 @@ import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.
 import { getCwd } from "../共享小工具-未细化/cwd-context.js";
 import { createInvalidArgumentError, OTHER_NAMES_TELEMETRY_CODE, LEAF_MOVED_TELEMETRY_CODE, HARDENING_UNAVAILABLE_TELEMETRY_CODE, createOkResult, createErrorResult, pathSpaces, registerCleanup, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
-import { qR } from "../设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePath } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { GIT_HARDENED_ARGS, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -2118,7 +2118,7 @@ async function getGitWorktreeName(e) {
 var RAW_BLOB_DIFF_FLAGS = ["--no-ext-diff", "--no-textconv"];
 function gitExe() {
   let e = getGitRepoCache();
-  return ((e.gitExecutable ??= qR("git") || "git"), e.gitExecutable);
+  return ((e.gitExecutable ??= resolveExecutablePath("git") || "git"), e.gitExecutable);
 }
 var Ct = new Gt(() => new Map());
 async function Or() {

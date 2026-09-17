@@ -20,7 +20,7 @@ import { R, J1, x_e, ge, l, A, Jr, W, Rt } from "../../00-第三方库/@anthropi
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isRunningWithBun, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -277,7 +277,7 @@ class We {
     this.options.resume = e;
   }
   getDefaultExecutable() {
-    return Hx() ? "bun" : "node";
+    return isRunningWithBun() ? "bun" : "node";
   }
   spawnLocalProcess(e) {
     let { command: t, args: r, cwd: o, env: d, signal: p } = e,
@@ -2394,7 +2394,7 @@ function Gt(e, t) {
       disallowedTools: ne = [],
       tools: Oe,
       env: K,
-      executable: Ue = Hx() ? "bun" : "node",
+      executable: Ue = isRunningWithBun() ? "bun" : "node",
       executableArgs: ie = [],
       extraArgs: me = {},
       fallbackModel: je,

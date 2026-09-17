@@ -30,7 +30,7 @@ import { useClock } from "../../01-核心基础设施/共享小工具-未细化/
 import { findSafetyCheckReason, sanitizeForDisplay, permissionUpdateSchema, setPermissionModeWithGuards, getAutoModeUnavailableText } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   GRAPHEME_TRUNCATION_MARKER_PATTERN,
-  ps,
+  sanitizeTextForDisplay,
   hasInvisibleCharacters,
   sanitizeUntrustedText,
   needsMultilineGutter,
@@ -42,14 +42,14 @@ import {
   buildUniqueLabelMap,
   prepareDisplayText,
   formatWithholdableValue,
-  N4t,
+  formatListEntryForDisplay,
   toUniqueDisplayLabels,
   replaceLineBreaks,
 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { NO_COMMITTED_ROW, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useKeybindingChordText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -174,7 +174,7 @@ function vD(u) {
     u.trim() !== u ||
     u === "" ||
     hasInvisibleCharacters(u) ||
-    ps(u) !== u ||
+    sanitizeTextForDisplay(u) !== u ||
     /[\t\n]/.test(u) ||
     getStringWidth(u) === 0
   );
@@ -263,12 +263,12 @@ function hasAllowRuleForTool(u, s, n) {
   return !1;
 }
 function sanitizeCommandPrefix(u) {
-  return u !== void 0 && ps(u) === u && !/[\t\n\u2028\u2029]/.test(u) && !hasInvisibleCharacters(u)
+  return u !== void 0 && sanitizeTextForDisplay(u) === u && !/[\t\n\u2028\u2029]/.test(u) && !hasInvisibleCharacters(u)
     ? nir(u)
     : void 0;
 }
 function formatRuleContentForDisplay(u) {
-  return N4t(u);
+  return formatListEntryForDisplay(u);
 }
 function renderSessionConsentLabel(u, s, n, a) {
   if (!Array.isArray(u)) return null;
@@ -527,7 +527,7 @@ function createAddDirectoriesRow(u) {
   let a = dedupe(n);
   if (a.length === 0) return null;
   if (a.length > MAX_PERMISSION_RULE_ENTRIES) return null;
-  let l = toUniqueDisplayLabels(a, (A) => N4t(A));
+  let l = toUniqueDisplayLabels(a, (A) => formatListEntryForDisplay(A));
   if (getStringWidth(l.join(", ")) > MAX_CONSENT_LABEL_WIDTH) return null;
   let c = $e([
     { type: "addDirectories", destination: "session", directories: a },
@@ -1382,8 +1382,8 @@ function ConfirmationPrompt({
     flexDirection: "column",
     children: [
       typeof a === "string" ? e(Text, { children: a }) : a,
-      e(ve, {
-        selectedValue: vs,
+      e(Select, {
+        selectedValue: NO_COMMITTED_ROW,
         options: J,
         defaultFocusValue: f,
         hideIndexes: A,

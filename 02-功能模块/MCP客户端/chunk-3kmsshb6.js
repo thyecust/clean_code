@@ -13,7 +13,7 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { normalizeKeyName, buildKeyNameLookup } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { Ghe } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { PROMPT_CACHE_TTL_VALUES } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { normalize } from "path";
 var FILE_STATE_MAX_ENTRIES = 5000,
@@ -476,7 +476,7 @@ function getExperimentalCacheTtl(e) {
   let t = e.experimental;
   if (typeof t !== "object" || t === null) return;
   let r = Object.entries(t).find(([o]) => normalizeKeyName(o) === "cachettl")?.[1];
-  return Ghe.find((o) => o === r);
+  return PROMPT_CACHE_TTL_VALUES.find((o) => o === r);
 }
 function parseOptionalString(e, t, r) {
   if (e == null) return null;

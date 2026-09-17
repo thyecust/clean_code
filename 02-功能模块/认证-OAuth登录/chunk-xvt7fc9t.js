@@ -54,7 +54,7 @@ import { externalHttp } from "../../01-核心基础设施/共享小工具-未细
 import { formatAccountOnHoldSignInMessage, sanitizeAccountOnHoldUrl, OAuthCallbackError, isAccountOnHoldCallbackError } from "./chunk-wk0e3dz4.js";
 import { getSecureStorage } from "./secure-storage.js";
 import { getProactivityBaselineState } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ps } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { sanitizeTextForDisplay } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getMouseMode, isFullscreenActive } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { getNativeCopyModifierKey } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { kG } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
@@ -73,7 +73,7 @@ import { AuthenticationStatusBox } from "../../01-核心基础设施/共享小�
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { Sv } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { BedrockSetupWizard } from "../Bedrock-Vertex/bedrock-setup-wizard.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import { VertexSetupWizard } from "../Bedrock-Vertex/vertex-setup-wizard.js";
@@ -914,9 +914,9 @@ function OAuthLoginScreen({
             return;
           } catch (L) {
             if (!(L instanceof ye) || !L.fallbackCures) throw L;
-            let ne = ps(l(L));
+            let ne = sanitizeTextForDisplay(l(L));
             (tt({
-              cause: L.causeSummary !== null ? ps(L.causeSummary) : ne,
+              cause: L.causeSummary !== null ? sanitizeTextForDisplay(L.causeSummary) : ne,
               message: ne,
             }),
               logForDebugging(
@@ -1310,7 +1310,7 @@ function Ut(on) {
       let ue;
       if (u[8] !== Dt || u[9] !== pe || u[10] !== Ce || u[11] !== k)
         ((ue = e(Box, {
-          children: e(ve, {
+          children: e(Select, {
             options: ie,
             onChange: (Ao) => {
               if (Ao === "platform")
@@ -1492,7 +1492,7 @@ function Ut(on) {
             a,
             b,
             e(Box, {
-              children: e(ve, { options: ae, onCancel: ce, onChange: ie }),
+              children: e(Select, { options: ae, onCancel: ce, onChange: ie }),
             }),
           ],
         })),
@@ -1574,7 +1574,7 @@ function Ut(on) {
       else ce = u[48];
       let ie;
       if (u[49] !== k)
-        ((ie = e(ve, {
+        ((ie = e(Select, {
           options: ce,
           onChange: (nn) => {
             bb97: switch (nn) {

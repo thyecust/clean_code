@@ -14,7 +14,7 @@ import { qP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isSimpleMode, isSafeMode } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { qr } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { redactSecretsFromText } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -133,7 +133,7 @@ function W(Pe) {
               ...(s.relocatedFrom && { relocated_from: fromEnum(s.relocatedFrom) }),
               ...(s.sessionId && { child_session_hash: hashForTelemetry(s.sessionId) }),
             }));
-          let De = s.name ? fZt(qr(normalizeWhitespace(s.name))) : void 0;
+          let De = s.name ? fZt(redactSecretsFromText(normalizeWhitespace(s.name))) : void 0;
           let Ee = c ? git : mWe;
           let z = s.relocatedTo
             ? "runs in the origin tree"
@@ -147,7 +147,7 @@ function W(Pe) {
             chips: z ? [z] : [],
           });
           let Q = isCrossSessionMessagingEnabled()
-            ? `The fork runs as its own separate session \u2014 nothing it does arrives in this conversation, and it does not see what happens here after the fork point. If you need to coordinate with it, it appears in the ${LIST_AGENTS_TOOL_NAME} listing as '${qr(normalizeWhitespace(s.rosterName))}' (it may be renamed later) and ${SEND_MESSAGE_TOOL_NAME} can message it there; it can message this session the same way.`
+            ? `The fork runs as its own separate session \u2014 nothing it does arrives in this conversation, and it does not see what happens here after the fork point. If you need to coordinate with it, it appears in the ${LIST_AGENTS_TOOL_NAME} listing as '${redactSecretsFromText(normalizeWhitespace(s.rosterName))}' (it may be renamed later) and ${SEND_MESSAGE_TOOL_NAME} can message it there; it can message this session the same way.`
             : void 0;
           d(Xe, {
             display: "system",

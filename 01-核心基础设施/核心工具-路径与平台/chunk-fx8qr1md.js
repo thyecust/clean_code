@@ -218,7 +218,7 @@ import {
   resolve as Y,
   sep as T,
 } from "path";
-var rL = ".cc-writes";
+var ATOMIC_WRITE_STAGING_DIR_NAME = ".cc-writes";
 class ie {
   identities = new Map();
   record(e, t, r, i) {
@@ -956,7 +956,7 @@ async function isFileSizeWithinLimit(e, t = DEFAULT_MAX_FILE_READ_BYTES) {
     return !1;
   }
 }
-function pf(e) {
+function canonicalizePathForComparison(e) {
   let t = getCurrentPlatform() === "windows",
     r = Se(e),
     i = t ? /[\\/]+$/ : /\/+$/,
@@ -964,7 +964,7 @@ function pf(e) {
   return t ? s.replaceAll("/", "\\").toLowerCase() : s;
 }
 function isSamePath(e, t) {
-  return pf(e) === pf(t);
+  return canonicalizePathForComparison(e) === canonicalizePathForComparison(t);
 }
 export {
   getShellConfig,
@@ -981,7 +981,7 @@ export {
   formatPathWithTilde,
   toForwardSlashPath,
   isJupyterNotebookPath,
-  rL,
+  ATOMIC_WRITE_STAGING_DIR_NAME,
   recordFileIdentity,
   SymlinkWriteRefusedError,
   SymlinkReadRefusedError,
@@ -1015,6 +1015,6 @@ export {
   writeFileAndFlush,
   getDesktopPath,
   isFileSizeWithinLimit,
-  pf,
+  canonicalizePathForComparison,
   isSamePath,
 };

@@ -13,7 +13,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Box, Text, useIsScreenReaderEnabled, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { ui, $o, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { useIsMountRecent, useRefusedInputWindow, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -33,8 +33,8 @@ function x(_, { selfOpened: m, onCancelled: l }) {
     R = useTimeout(m ? REFUSE_INPUT_WINDOW_MS : null),
     w = !m || R,
     k = useIsScreenReaderEnabled() ? !0 : !1,
-    H = ui(REFUSE_INPUT_WINDOW_MS),
-    { refusedWithin: B, noteRefused: A } = $o();
+    H = useIsMountRecent(REFUSE_INPUT_WINDOW_MS),
+    { refusedWithin: B, noteRefused: A } = useRefusedInputWindow();
   function N() {
     if (m && (H() || B(REFUSE_INPUT_WINDOW_MS))) return (A(), !0);
     return !1;
@@ -150,7 +150,7 @@ function RemoteHomeSettingsDialog({ configHome: _, storageV5: m, origin: l, onDo
           }),
         ],
       }),
-      e(ve, {
+      e(Select, {
         options: [
           { label: "Yes, send my settings", value: "forward" },
           { label: "No, keep them on this machine", value: "keep_local" },

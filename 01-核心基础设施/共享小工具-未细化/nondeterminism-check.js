@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { gin } from "../../02-功能模块/Workflow编排/chunk-bkcg0nbj.js";
+import { acornWalkModule } from "../../02-功能模块/Workflow编排/workflow-runtime.js";
 import { fAe } from "../../00-第三方库/acorn/acorn.pk8w19yv.js";
 function usesNondeterministicApi(o) {
   let { parse: i } = fAe(),
-    s = gin(),
+    s = acornWalkModule(),
     t = !1;
   try {
     let a = i(o, {

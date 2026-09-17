@@ -34,7 +34,7 @@ import {
 } from "./chunk-bzqqe6xh.js";
 import { fAe } from "../../00-第三方库/acorn/acorn.pk8w19yv.js";
 import { INLINE_PLUGIN_SOURCE, BUILTIN_PLUGIN_SOURCE } from "../插件系统/chunk-33bdfgmx.js";
-import { Sfe, Fwt } from "../../01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js";
+import { defineLazyProperty, Fwt } from "../../01-核心基础设施/共享小工具-未细化/define-lazy-property.js";
 var PLUGIN_HOOKS_MODULES_FLAG = "tengu_plugin_hooks_modules";
 var M = () => !1;
 var isFunctionHooksEnabled = () => a.CLAUDE_CODE_ENABLE_FUNCTION_HOOKS ?? getFeatureValue_CACHED_MAY_BE_STALE(PLUGIN_HOOKS_MODULES_FLAG, M());
@@ -1272,9 +1272,9 @@ function ut(e) {
       getArgumentCompletions: e.getArgumentCompletions,
     };
   return (
-    Sfe(i, "description", e.description),
-    Sfe(i, "argumentHint", e.argumentHint),
-    Sfe(i, "whenToUse", e.whenToUse),
+    defineLazyProperty(i, "description", e.description),
+    defineLazyProperty(i, "argumentHint", e.argumentHint),
+    defineLazyProperty(i, "whenToUse", e.whenToUse),
     Fwt(i, "disableModelInvocation", e.disableModelInvocation),
     i
   );

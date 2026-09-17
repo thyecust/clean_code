@@ -11,7 +11,7 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../共享小工具-未细化/async-timeout-utils.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFsSurface } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Rxt } from "../设置-配置/chunk-zqr5ctyf.js";
+import { resolveCommandInPath } from "../设置-配置/chunk-zqr5ctyf.js";
 import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { getProcStartTime, getProcState, isExitedProcessState } from "../共享小工具-未细化/linux-proc-stat.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
@@ -268,7 +268,7 @@ async function captureProcessStartTimeAsync(e) {
 async function m(e, t) {
   let n = t === void 0 ? {} : { env: t, extendEnv: !1 };
   try {
-    let r = t === void 0 ? "ps" : Rxt("ps", getEnvVarCaseInsensitive(t, "PATH") ?? "");
+    let r = t === void 0 ? "ps" : resolveCommandInPath("ps", getEnvVarCaseInsensitive(t, "PATH") ?? "");
     if (r === null) return;
     let o = await execFileNoThrowWithCwd(r, ["-o", "lstart=", "-p", String(e)], {
       timeout: 1000,

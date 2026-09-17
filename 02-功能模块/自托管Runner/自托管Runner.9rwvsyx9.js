@@ -16,7 +16,7 @@ import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { bc, getGlobalClaudeFile, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { isBunStandaloneExecutable, getGlobalClaudeFile, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_GLOBAL_FILE_SUFFIXES, fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -31,7 +31,7 @@ import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { GITHUB_HOST, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { MAX_SETTINGS_FILE_BYTES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { resolvePath, rL } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath, ATOMIC_WRITE_STAGING_DIR_NAME } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getProxyFetchOptions, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { provenSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
@@ -40,7 +40,7 @@ import { normalizePathForCompare, getResolvedClaudeTempDir, getResolvedChildProc
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { SYNTHETIC_MODEL_NAME } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import "../自动更新-安装/install-diagnostics.js";
-import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
+import { lockCurrentVersion } from "../自动更新-安装/native-installer.js";
 import {
   RUNNER_VERSION,
   POLL_WORK_TIMEOUT_MS,
@@ -729,7 +729,7 @@ var Bi = new Set([
   "logs",
   "backups",
   ".session_ingress_token",
-  rL,
+  ATOMIC_WRITE_STAGING_DIR_NAME,
 ]);
 async function bs(e, t) {
   let n =
@@ -5921,7 +5921,7 @@ function Pa(e) {
   if (e) return { execPath: e, execArgs: [] };
   return {
     execPath: process.execPath,
-    execArgs: bc() ? [] : [process.argv[1]],
+    execArgs: isBunStandaloneExecutable() ? [] : [process.argv[1]],
   };
 }
 async function selfHostedRunnerMain(e) {
@@ -6138,7 +6138,7 @@ Debug:
       process.env.SELF_HOSTED_RUNNER_HOOKS_DIR)
     )
       assertFeatureSupportedOnPlatform("--hooks-dir");
-    (xa(t.baseDirSource), q4(), (n = await Da(t)), await Pr(t.baseDir));
+    (xa(t.baseDirSource), lockCurrentVersion(), (n = await Da(t)), await Pr(t.baseDir));
   } catch (v) {
     (console.error(`error: ${redactSecrets(l(v))}
 Run 'claude self-hosted-runner --help' for usage.`),

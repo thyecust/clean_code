@@ -825,8 +825,8 @@
   "kb": 4.3,
   "confidence": "medium"
  },
- "chunk-2g5h49pk.js": {
-  "path": "02-功能模块/自动更新-安装/chunk-2g5h49pk.js",
+ "native-installer.js": {
+  "path": "02-功能模块/自动更新-安装/native-installer.js",
   "module": "自动更新 / 安装",
   "tier": 2,
   "kb": 67.3,
@@ -2183,8 +2183,8 @@
   "kb": 66.6,
   "confidence": "high"
  },
- "chunk-6wg4v2yj.js": {
-  "path": "02-功能模块/Hooks钩子/chunk-6wg4v2yj.js",
+ "device-hooks-serving.js": {
+  "path": "02-功能模块/Hooks钩子/device-hooks-serving.js",
   "module": "Hooks 钩子",
   "tier": 2,
   "kb": 74.7,
@@ -3037,8 +3037,8 @@
   "kb": 0.7,
   "confidence": "low"
  },
- "chunk-9mmyv6hf.js": {
-  "path": "02-功能模块/后台任务-Shell管理/chunk-9mmyv6hf.js",
+ "bg-session-worker.js": {
+  "path": "02-功能模块/后台任务-Shell管理/bg-session-worker.js",
   "module": "后台任务 / Shell 管理",
   "tier": 2,
   "kb": 94.7,
@@ -3548,8 +3548,8 @@
   "kb": 8.2,
   "confidence": "high"
  },
- "chunk-bkcg0nbj.js": {
-  "path": "02-功能模块/Workflow编排/chunk-bkcg0nbj.js",
+ "workflow-runtime.js": {
+  "path": "02-功能模块/Workflow编排/workflow-runtime.js",
   "module": "Workflow 编排",
   "tier": 2,
   "kb": 116.8,
@@ -4941,8 +4941,8 @@
   "kb": 100.0,
   "confidence": "high"
  },
- "chunk-gbhqtdpn.js": {
-  "path": "02-功能模块/目录同步(dir-sync)/chunk-gbhqtdpn.js",
+ "dir-sync-git-store.js": {
+  "path": "02-功能模块/目录同步(dir-sync)/dir-sync-git-store.js",
   "module": "目录同步 (dir-sync)",
   "tier": 2,
   "kb": 63.3,
@@ -6663,8 +6663,8 @@
   "kb": 15.2,
   "confidence": "medium"
  },
- "chunk-nsedtefh.js": {
-  "path": "02-功能模块/认证-OAuth登录/chunk-nsedtefh.js",
+ "mcp-oauth-provider.js": {
+  "path": "02-功能模块/认证-OAuth登录/mcp-oauth-provider.js",
   "module": "认证 / OAuth 登录",
   "tier": 2,
   "kb": 73.0,
@@ -7895,8 +7895,8 @@
   "kb": 7.2,
   "confidence": "low"
  },
- "chunk-smrdr8gc.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js",
+ "define-lazy-property.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/define-lazy-property.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 0.9,

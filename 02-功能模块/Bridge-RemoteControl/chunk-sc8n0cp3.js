@@ -13,7 +13,7 @@ import { getFileStorage } from "../../01-核心基础设施/共享小工具-未�
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { jsonStringify, Tc, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonStringifyUntraced, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isSuspiciousUrl } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -25,7 +25,7 @@ import { getSettingsForSource } from "../../01-核心基础设施/核心工具-�
 import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { TRUSTED_PLUGIN_SETTINGS_SOURCES } from "../Hooks钩子/chunk-z3433nr6.js";
 import { isLocalSettingsGitTracked } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { toe, ig } from "../插件系统/chunk-ajtn749s.js";
+import { OFFICIAL_MARKETPLACE_SOURCE, OFFICIAL_MARKETPLACE_NAME } from "../插件系统/chunk-ajtn749s.js";
 import { areLocalPluginDirsAllowedByPolicy, isMarketplaceRestrictionPolicyActive, isSourceAllowedByPolicy } from "../插件系统/plugin-source-policy.js";
 import { isTrustedBuiltinPlugin, isRemoteToolServingMuted, onServingMuteRecheck, CLOUD_SESSION_CONSENT_MESSAGES, sanitizeForDisplay, isPersistedWorkspaceTrusted, getKnownMarketplacesOrEmpty, getReservedMarketplaceNameError, getInstalledPluginsViaStorage, isInstallationInCurrentScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY, PLUGIN_FORWARDING_DISABLED_MESSAGE } from "../插件系统/plugin-forwarding.js";
@@ -191,7 +191,7 @@ var Ue = ["userSettings", "projectSettings", "localSettings", "flagSettings"],
   Tn = 16,
   On = 128,
   Dn = 262144,
-  xn = new Set([ig, "claude-code-marketplace"]),
+  xn = new Set([OFFICIAL_MARKETPLACE_NAME, "claude-code-marketplace"]),
   Nn = new Set(["https:", "ssh:", "git+ssh:", "git+https:"]),
   Le = new Set(["http:", "git:", "git+http:"]),
   Ln = new Set(["ssh:", "git+ssh:"]),
@@ -404,7 +404,7 @@ function Jn(e, t, o) {
   if (o.byPolicy.has(r)) return { kind: "drop", reason: "blocked_by_policy" };
   let d = Qn(e, t),
     w = RESERVED_MARKETPLACE_NAMES.has(r);
-  if (d === void 0 && t.marketplaceRestrictionPolicyActive && r !== ig)
+  if (d === void 0 && t.marketplaceRestrictionPolicyActive && r !== OFFICIAL_MARKETPLACE_NAME)
     return { kind: "drop", reason: w ? "blocked_by_policy" : Ie(e, t) };
   if (w)
     return o.asReserved.has(r)
@@ -586,7 +586,7 @@ function dt(e, t, o) {
     if (w !== void 0) {
       let O = d.toLowerCase(),
         S = r.get(O) ?? new Set();
-      (S.add(Tc(sortObjectKeysDeep(w))), r.set(O, S));
+      (S.add(jsonStringifyUntraced(sortObjectKeysDeep(w))), r.set(O, S));
     }
   return e.filter(({ id: d, marketplace: w, declaration: O }) => {
     if (O === void 0 || (r.get(w.toLowerCase())?.size ?? 0) <= 1) return !0;
@@ -669,7 +669,7 @@ async function collectCloudPluginsForwardingInputs(e) {
     O = [
       ...w,
       ...Object.entries(o).map(([a, { source: E }]) => [a, E]),
-      [ig, toe],
+      [OFFICIAL_MARKETPLACE_NAME, OFFICIAL_MARKETPLACE_SOURCE],
     ],
     S = t.find(([a]) => a === "localSettings")?.[1]?.enabledPlugins;
   return {

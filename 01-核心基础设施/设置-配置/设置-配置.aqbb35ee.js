@@ -68,7 +68,7 @@ import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, deepC
 import { getClaudeConfigDir, isSameAsConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { capitalize, pluralize, truncateToCodeUnits, isWellFormed, removeLoneSurrogates, beforeFirst, countOccurrences, escapeAllControlCharacters } from "../核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
-import { Ghe, env as a } from "./chunk-zqr5ctyf.js";
+import { PROMPT_CACHE_TTL_VALUES, env as a } from "./chunk-zqr5ctyf.js";
 import { INVISIBLE_CHAR_CLASS, replaceInvisibleChars, replaceControlChars } from "../共享小工具-未细化/text-sanitization.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { EXTERNAL_PERMISSION_MODES, PERMISSION_MODES, normalizePermissionModeAlias } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
@@ -7423,13 +7423,13 @@ function buildSettingsSchema(e, { strictPolicyHelperKeys: t = !1 } = {}) {
       .describe(
         "Whether /rename updates the terminal tab title (defaults to true). Set to false to keep auto-generated topic titles.",
       ),
-    promptCacheTtl: X(Ghe)
+    promptCacheTtl: X(PROMPT_CACHE_TTL_VALUES)
       .optional()
       .catch(void 0)
       .describe(
         'Prompt cache TTL for the main conversation (interactive, -p and SDK turns, plus the helpers that run inline with it): "5m" or "1h". Unset = automatic: 1 hour on a Claude subscription within its usage limits, 5 minutes on an API key, Bedrock, Vertex or Foundry. 1-hour cache writes are billed at a higher rate; the cache stays warm across longer breaks. The CLAUDE_CODE_PROMPT_CACHE_TTL environment variable takes precedence.',
       ),
-    subagentPromptCacheTtl: X(Ghe)
+    subagentPromptCacheTtl: X(PROMPT_CACHE_TTL_VALUES)
       .optional()
       .catch(void 0)
       .describe(

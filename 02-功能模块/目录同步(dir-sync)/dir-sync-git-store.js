@@ -45,7 +45,7 @@ var Ie = {
 function Q(e) {
   return e === "sha256" ? 32 : 20;
 }
-function z4(e, t) {
+function isValidObjectId(e, t) {
   return e.length === 2 * Q(t) && GIT_OBJECT_ID_REGEX.test(e) && isNonZeroObjectId(e);
 }
 function J(e, t, r) {
@@ -67,7 +67,7 @@ function pe({ name: e, kind: t, id: r }, a) {
     return "gitmodules_not_regular_file";
   if ((t === "directory" || t === "gitlink") && he(e))
     return "gitattributes_directory";
-  if (!z4(r, a)) return "bad_id";
+  if (!isValidObjectId(r, a)) return "bad_id";
   return null;
 }
 function ge(e) {
@@ -76,7 +76,7 @@ function ge(e) {
 function he(e) {
   return be(e).some((t) => t === ".gitattributes" || Ft.test(t));
 }
-function fFt(e, t) {
+function buildTreeObject(e, t) {
   let r = new Set();
   for (let o of e) {
     let d = r.has(o.name) ? "duplicate_name" : pe(o, t);
@@ -94,7 +94,7 @@ function fFt(e, t) {
     .toSorted((o, d) => Buffer.compare(o.sortKey, d.sortKey));
   return { ok: !0, tree: J("tree", Buffer.concat(a.map((o) => o.bytes)), t) };
 }
-function Npt(e, t) {
+function parseTreeEntries(e, t) {
   let r = Q(t),
     a = [],
     o = new Set(),
@@ -115,7 +115,7 @@ function Npt(e, t) {
   return a;
 }
 function Ae({ tree: e, parents: t, author: r, committer: a, message: o }, d) {
-  if (![e, ...t].every((l) => z4(l, d))) return { ok: !1, reason: "bad_id" };
+  if (![e, ...t].every((l) => isValidObjectId(l, d))) return { ok: !1, reason: "bad_id" };
   if (!je(r) || !je(a)) return { ok: !1, reason: "bad_signature" };
   if (o.includes("\x00")) return { ok: !1, reason: "nul_in_message" };
   let i = [
@@ -129,7 +129,7 @@ function Ae({ tree: e, parents: t, author: r, committer: a, message: o }, d) {
 `);
   return { ok: !0, commit: J("commit", Buffer.from(i), d) };
 }
-function Fpt(e, t) {
+function parseCommitBody(e, t) {
   let [r = "", ...a] = e.toString("latin1").split(`
 `),
     o = Me(r, "tree", t),
@@ -185,7 +185,7 @@ var ve = 128,
     gitlink: 57344,
   },
   At = ["file", "executable", "symlink", "gitlink"];
-function $pt({ store: e, identity: t }) {
+function createDirSyncRepo({ store: e, identity: t }) {
   let r = e.objectFormat,
     a = new Map(),
     o = new Map(),
@@ -194,14 +194,14 @@ function $pt({ store: e, identity: t }) {
     let u = await e.get(f);
     if (u.kind !== "ok")
       return u.kind === "absent" ? { kind: "absent" } : { kind: "unreadable" };
-    let E = u.object.type === "commit" ? Fpt(u.object.body, r) : null;
+    let E = u.object.type === "commit" ? parseCommitBody(u.object.body, r) : null;
     return E === null ? { kind: "unreadable" } : { kind: "ok", ...E };
   }
   async function l(f) {
     let u = await e.get(f);
     if (u.kind !== "ok")
       return u.kind === "absent" ? { kind: "absent" } : { kind: "unreadable" };
-    let E = u.object.type === "tree" ? Npt(u.object.body, r) : null;
+    let E = u.object.type === "tree" ? parseTreeEntries(u.object.body, r) : null;
     return E === null ? { kind: "unreadable" } : { kind: "ok", entries: E };
   }
   async function h(f) {
@@ -462,7 +462,7 @@ async function Le(e, t, r, a) {
     if (g === null) return { ok: !1, reason: "bad_mode", path: y };
     o.push({ name: l, kind: g, id: h.blobId });
   }
-  let d = fFt(o, a.objectFormat);
+  let d = buildTreeObject(o, a.objectFormat);
   if (!d.ok)
     return {
       ok: !1,
@@ -508,7 +508,7 @@ var $e = "PACK",
   Ge = 8388608,
   Kt = Ye(vt),
   Xt = Ye(inflate);
-async function Upt(e, t) {
+async function buildPackfile(e, t) {
   let r = new Set(),
     a = e.filter((l) => (r.has(l.id) ? !1 : Boolean(r.add(l.id)))),
     o = Buffer.alloc(le);
@@ -525,7 +525,7 @@ async function Upt(e, t) {
   }
   return Buffer.concat([...d, i.digest()]);
 }
-async function B9n(e, { objectFormat: t, maxInflatedBytes: r, maxObjects: a }) {
+async function parsePackfile(e, { objectFormat: t, maxInflatedBytes: r, maxObjects: a }) {
   try {
     return await Vt(Buffer.from(e.buffer, e.byteOffset, e.length), t, r, a);
   } catch (o) {
@@ -772,7 +772,7 @@ import { deflate as un, deflateSync as fn } from "zlib";
 var Re = "store",
   nt = /^([A-Za-z0-9][A-Za-z0-9_-]{0,127})\.(\d{6,12})-([0-9a-f]{8})\.seg$/,
   rt = 1,
-  jbe = 134217728,
+  MAX_OBJECT_BYTES = 134217728,
   ot = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/,
   ne = Buffer.from("ccobjs", "latin1"),
   Je = ne.length + 2,
@@ -796,7 +796,7 @@ var Re = "store",
 function Tn(e, t) {
   return ot.test(t) ? ee(e, t, Re) : null;
 }
-async function j9n({
+async function openDirSyncObjectStore({
   root: e,
   sessionId: t,
   budgetBytes: r,
@@ -862,7 +862,7 @@ async function j9n({
     }),
   };
 }
-function W9n({
+function createMemoryObjectStore({
   objectFormat: e = "sha1",
   budgetBytes: t = Number.POSITIVE_INFINITY,
 } = {}) {
@@ -906,7 +906,7 @@ function W9n({
       },
       async putDeflated(i, l, h, y) {
         if (r.has(i)) return !0;
-        let g = z4(i, e) ? await ue(y, h) : null;
+        let g = isValidObjectId(i, e) ? await ue(y, h) : null;
         if (g === null || J(l, g, e).id !== i) return !1;
         return (r.set(i, { id: i, type: l, size: h, deflated: y }), !0);
       },
@@ -1043,7 +1043,7 @@ function Rn({
     return R(async () => {
       if (f) throw Error("the object store is closed");
       if (i.get(S)?.segment.own && !u.has(S)) return;
-      if (O.length > jbe) throw Error("an object larger than the store takes");
+      if (O.length > MAX_OBJECT_BYTES) throw Error("an object larger than the store takes");
       let I = await C(),
         H = Ze({ type: w, kept: F, size: _, deflatedSize: O.length, id: S });
       try {
@@ -1144,7 +1144,7 @@ function Rn({
     deflatedSize: (S) => (f ? null : (i.get(S)?.deflatedSize ?? null)),
     async put(S, w) {
       if (f) throw Error("the object store is closed");
-      if (w.length > jbe) throw Error("an object larger than the store takes");
+      if (w.length > MAX_OBJECT_BYTES) throw Error("an object larger than the store takes");
       let { id: _ } = J(S, w, e),
         O = i.get(_);
       if (
@@ -1164,11 +1164,11 @@ function Rn({
     async putDeflated(S, w, _, O) {
       if (f) throw Error("the object store is closed");
       if (
-        !z4(S, e) ||
+        !isValidObjectId(S, e) ||
         !Number.isSafeInteger(_) ||
         _ < 0 ||
-        _ > jbe ||
-        O.length > jbe
+        _ > MAX_OBJECT_BYTES ||
+        O.length > MAX_OBJECT_BYTES
       )
         return !1;
       let F = await ue(O, _);
@@ -1459,8 +1459,8 @@ function jn(e, t) {
     o === void 0 ||
     d === null ||
     i === null ||
-    d.value > jbe ||
-    i.value > jbe ||
+    d.value > MAX_OBJECT_BYTES ||
+    i.value > MAX_OBJECT_BYTES ||
     (o === "adopt" && (d.value !== 0 || i.value !== 0)) ||
     i.next + t > e.length
   )
@@ -1649,7 +1649,7 @@ var xe = 1,
     ]),
   ),
   $n = createLazyValue(() => c({ version: k(xe), entries: v(se()).max(mt) }));
-async function Bpt(e, { maxEntries: t = mt } = {}) {
+async function loadStatCache(e, { maxEntries: t = mt } = {}) {
   let r = new Map();
   for (let [a, o, d, i, l, h, y, g] of await Wn(e))
     r.set(a, {
@@ -1742,11 +1742,11 @@ async function Wn(e) {
   }
 }
 var gt = "main",
-  jpt = { name: "Claude Code file sync", email: "noreply@anthropic.com" },
-  G9n = "refs/seed/root",
-  yze = 104857600,
-  Wpt = 2147483648,
-  Wbe = {
+  DIR_SYNC_GIT_IDENTITY = { name: "Claude Code file sync", email: "noreply@anthropic.com" },
+  SEED_ROOT_REF = "refs/seed/root",
+  MAX_SYNC_BYTES = 104857600,
+  MAX_STORE_BUDGET_BYTES = 2147483648,
+  DIR_SYNC_LOG_EVENTS = {
     repoPass: "tengu_dir_sync_folder_repo",
     seed: "tengu_dir_sync_folder_seed",
   };
@@ -1810,7 +1810,7 @@ var Xn = 33188,
   tr = 1048576,
   nr = 160,
   bt = "sync";
-async function Man({
+async function buildFolderSeed({
   folder: e,
   realRoot: t,
   repo: r,
@@ -1955,7 +1955,7 @@ async function Man({
     report: fe,
   };
 }
-function q9n({
+function createSnapshotPort({
   folder: e,
   realRoot: t,
   repo: r,
@@ -2027,7 +2027,7 @@ function q9n({
         );
       let S = await g(B);
       try {
-        let w = await Man({
+        let w = await buildFolderSeed({
           folder: e,
           realRoot: t,
           repo: r,
@@ -2342,41 +2342,41 @@ function St(e) {
   return null;
 }
 import { join as Pe } from "path";
-var z9n = "trash",
+var TRASH_DIR_NAME = "trash",
   hr = "stat-cache.json";
-async function Gpt(e, t) {
+async function resolveDirSyncStoreRoot(e, t) {
   return br(getProjectDir(await canonicalizePath(e, createHoverRestOptions(t))));
 }
 function br(e) {
   return Pe(e, CLOUD_SNAPSHOTS_DIR_NAME, FOLDER_SYNC_DIR_NAME);
 }
-function V9n(e, t) {
+function getDirSyncSessionDir(e, t) {
   return Pe(e, sanitizePathSegment(toInfraSessionId(t)));
 }
-function qpt(e) {
+function getStatCachePath(e) {
   return Pe(e, hr);
 }
 export {
-  z4,
-  fFt,
-  Npt,
-  Fpt,
-  $pt,
-  Upt,
-  B9n,
-  jbe,
-  j9n,
-  W9n,
-  Bpt,
-  jpt,
-  G9n,
-  yze,
-  Wpt,
-  Wbe,
-  Man,
-  q9n,
-  z9n,
-  Gpt,
-  V9n,
-  qpt,
+  isValidObjectId,
+  buildTreeObject,
+  parseTreeEntries,
+  parseCommitBody,
+  createDirSyncRepo,
+  buildPackfile,
+  parsePackfile,
+  MAX_OBJECT_BYTES,
+  openDirSyncObjectStore,
+  createMemoryObjectStore,
+  loadStatCache,
+  DIR_SYNC_GIT_IDENTITY,
+  SEED_ROOT_REF,
+  MAX_SYNC_BYTES,
+  MAX_STORE_BUDGET_BYTES,
+  DIR_SYNC_LOG_EVENTS,
+  buildFolderSeed,
+  createSnapshotPort,
+  TRASH_DIR_NAME,
+  resolveDirSyncStoreRoot,
+  getDirSyncSessionDir,
+  getStatCachePath,
 };

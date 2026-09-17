@@ -17,7 +17,7 @@ import { getBgJobRuntimeState } from "../../01-核心基础设施/共享小工�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { isAbsentParentFailure, describeStorageError, jsonStringify, jsonParse, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { isAbsentParentFailure, describeStorageError, jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, takeLastCodeUnits, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -195,7 +195,7 @@ function je(e, r, t) {
 }
 function captureIntent(e, r) {
   if (e.capturedIntent || !r) return e.capturedIntent;
-  return ((e.capturedIntent = truncateToCodePoints(qr(ce(r)), 500)), e.capturedIntent);
+  return ((e.capturedIntent = truncateToCodePoints(redactSecretsFromText(ce(r)), 500)), e.capturedIntent);
 }
 function findLatestRealUserAsk(e) {
   let r = e.findLast(
@@ -212,7 +212,7 @@ function findLatestRealUserAsk(e) {
 }
 function captureLatestAsk(e, r) {
   if (!r) return;
-  e.latestAsk = truncateToCodePoints(qr(ce(r)), 300);
+  e.latestAsk = truncateToCodePoints(redactSecretsFromText(ce(r)), 300);
 }
 function ce(e) {
   let t = e.lastIndexOf("</system-reminder>");
@@ -301,9 +301,9 @@ async function ve(e, r, t) {
   )
     return;
   let d = new Date().toISOString(),
-    c = r ? qr(ce(r)).replace(/\s+/g, " ").trim() : "",
+    c = r ? redactSecretsFromText(ce(r)).replace(/\s+/g, " ").trim() : "",
     f = [o.intent, o.initialPrompt].some(
-      (w) => !!w && qr(w).replace(/\s+/g, " ").trim() === c,
+      (w) => !!w && redactSecretsFromText(w).replace(/\s+/g, " ").trim() === c,
     ),
     _ = c && !f ? clipWithEllipsis(c, MAX_DETAIL_CHARS) : void 0;
   if (
@@ -513,7 +513,7 @@ async function markApiFailure(e, r, t, s, o) {
       .replace(/^Failed to authenticate\. /, "")
       .replace(/ \u00B7 Please run \/login$/, "")
       .replace(/^Not logged in$/, ""),
-    f = truncate(qr(c.replace(/\s+/g, " ").trim()), MAX_DETAIL_CHARS),
+    f = truncate(redactSecretsFromText(c.replace(/\s+/g, " ").trim()), MAX_DETAIL_CHARS),
     _ = `${l.needs}${f ? ` \xB7 ${f}` : ""}`,
     w = isActingAsBgJob();
   ((e.bridgeWriteChain = e.bridgeWriteChain
@@ -681,7 +681,7 @@ function Ze(e, r) {
     for (let l = s.length - 1; l >= 0; l--) {
       let d = s[l];
       if (d.type === "text") {
-        let c = qr(d.text).replace(/\s+/g, " ").trim();
+        let c = redactSecretsFromText(d.text).replace(/\s+/g, " ").trim();
         if (c.length > 8) return clipWithEllipsis(c, MAX_DETAIL_CHARS);
       }
       if (d.type === "tool_use" && o === void 0) {
@@ -693,7 +693,7 @@ function Ze(e, r) {
               : void 0,
           _ = typeof c?.description === "string" ? c.description : "",
           w = f ?? tryConjugateVerbPhrase(_)?.running ?? (_ || (r?.(d.name, c ?? {}) ?? ""));
-        o = w ? clipWithEllipsis(qr(w).replace(/\s+/g, " ").trim(), MAX_DETAIL_CHARS) : "";
+        o = w ? clipWithEllipsis(redactSecretsFromText(w).replace(/\s+/g, " ").trim(), MAX_DETAIL_CHARS) : "";
       }
     }
     if (o !== void 0) return o;
@@ -736,7 +736,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
           (e.midturnLlmIntervalMs = Math.min(e.midturnLlmIntervalMs * 2, v)));
         let Re = e.midturnLlmEpoch,
           Be = e.lastMsgCount < A ? e.lastMsgCount : 0,
-          pe = qr(
+          pe = redactSecretsFromText(
             o
               .slice(Be)
               .filter((T) => !T.isApiErrorMessage)
@@ -790,7 +790,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
         source: "no-text-turn",
       };
     } else
-      ((C = qr(F)),
+      ((C = redactSecretsFromText(F)),
         (m = await classify(C, {
           prev: e.prevState || "working",
           latestAsk: e.latestAsk,
@@ -965,7 +965,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
         .map(getAssistantMessageText)
         .find(Boolean),
       F = D ? "" : summarizeToolCalls(o),
-      v = truncateToCodePoints(qr(D ?? (F ? `[calling ${F}]` : "")), 500);
+      v = truncateToCodePoints(redactSecretsFromText(D ?? (F ? `[calling ${F}]` : "")), 500);
     ((e.nameInFlight = !0),
       Xe(e, w, ge, v)
         .catch(logJobWriteError)

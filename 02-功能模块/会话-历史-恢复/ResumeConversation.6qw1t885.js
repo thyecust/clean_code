@@ -142,7 +142,7 @@ import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-sta
 import "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
 import "../Bridge-RemoteControl/client-presence.js";
-import "../Hooks钩子/chunk-6wg4v2yj.js";
+import "../Hooks钩子/device-hooks-serving.js";
 import "../AutoMode-自动模式/unattended-serving-consent.js";
 import "../远程工具执行/remote-tool-protocol.js";
 import "../斜杠命令-框架/chunk-s195n5de.js";
@@ -154,7 +154,7 @@ import "../../01-核心基础设施/共享小工具-未细化/send-message-pins.
 import "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
-import "../Workflow编排/chunk-bkcg0nbj.js";
+import "../Workflow编排/workflow-runtime.js";
 import "../Workflow编排/workflow-script.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js";
 import "../../01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js";
@@ -167,7 +167,7 @@ import "../Workflow编排/workflow-progress-ui.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-aqawy2mp.js";
 import "../Workflow编排/workflow-dialogs.js";
 import "../自动更新-安装/install-diagnostics.js";
-import "../自动更新-安装/chunk-2g5h49pk.js";
+import "../自动更新-安装/native-installer.js";
 import "../权限系统/chunk-qjqc5vxm.js";
 import "../Teammates团队/chunk-88ybhavr.js";
 import "../Teammates团队/backend-registry.js";

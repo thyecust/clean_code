@@ -189,11 +189,11 @@ function getInvisibleCharsPattern() {
 function escapeControlAndInvisibleChars(u) {
   return escapeControlChars(u).replace(getInvisibleCharsPattern(), toUnicodeEscape);
 }
-function Age(u, d) {
+function buildCharClassCaptureBackref(u, d) {
   return `(?=([${u}]*))(?:\\${d})`;
 }
-function Kvt(u) {
-  return Age(L, u);
+function buildNonPrintingCaptureBackref(u) {
+  return buildCharClassCaptureBackref(L, u);
 }
 var p = new Map(),
   z = 64;
@@ -214,11 +214,11 @@ function R(u, d) {
 function I({ tags: u, closeOnly: d, fillerClass: e, spell: a, tail: f }) {
   let { open: b, slash: r } = t,
     o = 0,
-    s = d ? `${Age(`${e}${r}`, ++o)}[${r}]${Age(e, ++o)}` : Age(e, ++o),
+    s = d ? `${buildCharClassCaptureBackref(`${e}${r}`, ++o)}[${r}]${buildCharClassCaptureBackref(e, ++o)}` : buildCharClassCaptureBackref(e, ++o),
     g = u.map((E) =>
-      [...E].map((x, c) => (c === 0 ? "" : Kvt(++o)) + a(x)).join(""),
+      [...E].map((x, c) => (c === 0 ? "" : buildNonPrintingCaptureBackref(++o)) + a(x)).join(""),
     ),
-    l = f === void 0 ? D : `${Kvt(++o)}${f}`;
+    l = f === void 0 ? D : `${buildNonPrintingCaptureBackref(++o)}${f}`;
   return new RegExp(`[${b}](?!\\\\)(?=${s}(?:${g.join("|")})${l})`, "giu");
 }
 function neutralizeClosingTags(u, d) {
@@ -450,7 +450,7 @@ var F = `[^${OPEN_BRACKET_CHARS_CLASS}${N}\\r\\n]{0,119}?(?:(?![${X}])[\\p{L}\\p
 function buildBracketedLeadScrubPattern(u) {
   let d = 0,
     e = () => B(++d),
-    a = () => Age(`\\r\\n${L}`, ++d),
+    a = () => buildCharClassCaptureBackref(`\\r\\n${L}`, ++d),
     f = () => `(?=[${S}${O}])` + e(),
     b = () => `(?=[${P}]{0,${h}}[${S}${DASH_CHARS_CLASS}])` + e(),
     r = `0-9\\uff10-\\uff19\\u{1d7ce}-\\u{1d7ff}\\u2070\\u00b9\\u00b2\\u00b3\\u2074-\\u2079\\u2080-\\u2089${[..."abcdef"].map(buildLatinLetterConfusableClass).join("")}`,
@@ -527,8 +527,8 @@ export {
   TAG_DELIMITER_CHARS,
   getInvisibleCharsPattern,
   escapeControlAndInvisibleChars,
-  Age,
-  Kvt,
+  buildCharClassCaptureBackref,
+  buildNonPrintingCaptureBackref,
   neutralizeClosingTags,
   neutralizeOpeningTags,
   normalizeTagDelimiterLookalikes,

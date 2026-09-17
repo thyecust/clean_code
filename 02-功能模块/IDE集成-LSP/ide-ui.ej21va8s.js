@@ -19,7 +19,7 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { Box, Text, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { ui, fa, $o, vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { useIsMountRecent, useSettleAfterChange, useRefusedInputWindow, NO_COMMITTED_ROW, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { isJetBrainsIde, isJetBrainsTerminal, isSupportedIdeTerminal, discoverIdeServers, identifyVscodeFork, resolveVscodeCommand, detectRunningIdes, getIdeDisplayName } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -42,9 +42,9 @@ function ne(_o) {
   let O = _(20),
     { onComplete: X } = _o,
     { storageV5: $e } = useStorageV5Context(),
-    Ae = ui(REFUSE_INPUT_WINDOW_MS),
-    { refusedWithin: je, noteRefused: Me, epoch: ko } = $o(),
-    We = fa(ko, REFUSE_INPUT_WINDOW_MS),
+    Ae = useIsMountRecent(REFUSE_INPUT_WINDOW_MS),
+    { refusedWithin: je, noteRefused: Me, epoch: ko } = useRefusedInputWindow(),
+    We = useSettleAfterChange(ko, REFUSE_INPUT_WINDOW_MS),
     Le = C(!1),
     ht;
   if (O[0] !== Ae || O[1] !== Me || O[2] !== je)
@@ -115,14 +115,14 @@ function ne(_o) {
     he;
   if (O[12] !== Oe || O[13] !== We.remountKey || O[14] !== M)
     ((he = e(
-      ve,
+      Select,
       {
         hideIndexes: !0,
         refuseInput: M,
         options: jo,
         onChange: Oe,
         defaultFocusValue: "no",
-        selectedValue: vs,
+        selectedValue: NO_COMMITTED_ROW,
       },
       We.remountKey,
     )),
@@ -359,7 +359,7 @@ https://code.claude.com/docs/en/jetbrains`
           })
         : r(N, {
             children: [
-              e(ve, {
+              e(Select, {
                 defaultValue: Y,
                 defaultFocusValue: Y,
                 options: He,
@@ -493,7 +493,7 @@ function ut(Cn) {
   else be = q[10];
   let Se;
   if (q[11] !== Ge || q[12] !== Ee || q[13] !== be)
-    ((Se = e(ve, {
+    ((Se = e(Select, {
       defaultValue: Ee,
       defaultFocusValue: Ee,
       options: Ge,
@@ -554,7 +554,7 @@ function pt(Sn) {
   else xe = te[7];
   let Ne;
   if (te[8] !== it || te[9] !== ot || te[10] !== xe)
-    ((Ne = e(ve, { defaultFocusValue: ot, options: it, onChange: xe })),
+    ((Ne = e(Select, { defaultFocusValue: ot, options: it, onChange: xe })),
       (te[8] = it),
       (te[9] = ot),
       (te[10] = xe),

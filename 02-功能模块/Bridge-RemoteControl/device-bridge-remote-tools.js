@@ -29,8 +29,8 @@ import {
   TOOL_USE_ID_META_KEY,
   resolveProtocolCompatibility,
   buildElicitationResult,
-  c2n,
-  u2n,
+  getProtocolVersionsFromForeignEnvelope,
+  getProtocolVersionsFromCurrentEnvelope,
   parseToolDescriptor,
   parseToolCallResult,
   normalizeDurationMs,
@@ -376,8 +376,8 @@ function X(t, e, r) {
   let L = s.find((c) => c.meta)?.meta,
     B = L?.target ?? g[0]?.marker.target,
     x = L === void 0 ? s.map((c) => c.raw) : [],
-    N = x.map(c2n).find((c) => c !== void 0),
-    se = x.map(u2n).find((c) => c !== void 0);
+    N = x.map(getProtocolVersionsFromForeignEnvelope).find((c) => c !== void 0),
+    se = x.map(getProtocolVersionsFromCurrentEnvelope).find((c) => c !== void 0);
   return {
     hosts: [
       {

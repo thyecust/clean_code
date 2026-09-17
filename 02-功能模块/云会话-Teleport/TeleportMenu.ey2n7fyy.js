@@ -22,7 +22,7 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { findGitRoot, getBranch, getIsHeadOnRemote, hasUnpushedCommits, getIsClean } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { isSelfHostedPool, markSessionTeleported, clearSessionTeleported, RESTRICTED_SESSION_CLOUD_REFUSAL, createSystemInfoMessage, clearBridgeSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -466,7 +466,7 @@ function TeleportMenu({
       e(Box, {
         flexDirection: "column",
         marginTop: 1,
-        children: e(ve, {
+        children: e(Select, {
           options: [
             {
               label: "Continue this session in the cloud",

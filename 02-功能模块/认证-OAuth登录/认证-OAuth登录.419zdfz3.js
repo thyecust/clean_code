@@ -81,7 +81,7 @@ import {
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { getGlobalClaudeFile, kxt, getHostPlatformForAnalytics, getShellForAnalytics, TW, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { getGlobalClaudeFile, isDockerenvPresent, getHostPlatformForAnalytics, getShellForAnalytics, BEDROCK_INFERENCE_PROFILE_PREFIXES, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromSanitizer_SANITIZER_OUTPUT_ONLY, mcpNameForAnalytics_GATE_EVALUATED, agentTypeForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import {
   ud,
@@ -113,7 +113,7 @@ import {
   isCleanupDrainStarted,
   jsonStringify,
   jsonParse,
-  Is,
+  jsonParseUntraced,
   getFsSurface,
   logForDebugging,
   logAntError,
@@ -269,7 +269,7 @@ import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8
 import { getSecureStorageDir, getKeychainServiceName, getKeychainAccountName, invalidateKeychainCache, classifyKeychainError } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { getLegacyApiKeyPrefetchResult, clearLegacyApiKeyPrefetch } from "../../01-核心基础设施/共享小工具-未细化/keychain-prefetch.js";
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
-import { jir, ARTIFACT_TOOL_NAME } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { setFeatureValueGetter, ARTIFACT_TOOL_NAME } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { neutralizeClosingTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { SEND_USER_FILE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
@@ -6295,7 +6295,7 @@ function getArnResourceName(e) {
 }
 function getInferenceProfilePrefixFromModelId(e) {
   let t = getArnResourceName(e);
-  for (let r of TW) if (t.startsWith(`${r}.anthropic.`)) return r;
+  for (let r of BEDROCK_INFERENCE_PROFILE_PREFIXES) if (t.startsWith(`${r}.anthropic.`)) return r;
   return;
 }
 function applyInferenceProfilePrefix(e, t) {
@@ -6320,7 +6320,7 @@ async function i_() {
   let e = await import("./chunk-v3686d7w.js").then((m) => toESM(m.default, 1));
   return e.NoAuthSigner ?? e.default?.NoAuthSigner;
 }
-function ub(e) {
+function asModelId(e) {
   return e;
 }
 var Dc = Object.keys(MODEL_CONFIGS_BY_KEY);
@@ -6330,7 +6330,7 @@ function bo(e, t) {
     d = {};
   for (let p of Dc) {
     let _ = MODEL_CONFIGS_BY_KEY[p][e] ?? (r ? MODEL_CONFIGS_BY_KEY[r][e] : MODEL_CONFIGS_BY_KEY[p].firstParty);
-    d[p] = ub(o ? applyInferenceProfilePrefix(_, o) : _);
+    d[p] = asModelId(o ? applyInferenceProfilePrefix(_, o) : _);
   }
   return d;
 }
@@ -6365,7 +6365,7 @@ async function bH() {
   for (let C of Dc) {
     let I = MODEL_CONFIGS_BY_KEY[C].firstParty,
       D = findInferenceProfileForModel(p, I, t) || o[C];
-    if (((_[C] = ub(D)), t !== r && !D.startsWith(`${t}.`))) E.push(I);
+    if (((_[C] = asModelId(D)), t !== r && !D.startsWith(`${t}.`))) E.push(I);
   }
   if (E.length > 0)
     logForDebugging(
@@ -6380,7 +6380,7 @@ function s_(e) {
   let r = { ...e };
   for (let [o, d] of Object.entries(t)) {
     let p = MODEL_KEY_BY_FIRST_PARTY_ID[o];
-    if (p && d) r[p] = ub(d);
+    if (p && d) r[p] = asModelId(d);
   }
   return r;
 }
@@ -9486,7 +9486,7 @@ function supportsPerTurnEffort(e, t) {
   if (modelHasCapability(t, "per_turn_effort", e) !== !0 && Eh?.(t, e) !== !0) return !1;
   return Th?.() !== !0;
 }
-function Err(e, t) {
+function canUsePerTurnControl(e, t) {
   if (!supportsPerTurnEffort(e, t)) return !1;
   let r = pa();
   return !x_(r, PER_TURN_CONTROL_BETA) && !x_(r, MID_CONVERSATION_SYSTEM_BETA);
@@ -11570,10 +11570,10 @@ function containsAnyIgnoreCase(e, t) {
       return !0;
   return !1;
 }
-var v7 = new RegExp(`^(?:${TW.join("|")})\\.(anthropic\\..+)$`);
+var v7 = new RegExp(`^(?:${BEDROCK_INFERENCE_PROFILE_PREFIXES.join("|")})\\.(anthropic\\..+)$`);
 function R7(e) {
   let t = v7.exec(e)?.[1] ?? e;
-  return [t, ...TW.map((r) => `${r}.${t}`)];
+  return [t, ...BEDROCK_INFERENCE_PROFILE_PREFIXES.map((r) => `${r}.${t}`)];
 }
 var Tx = "claude-";
 function C7(e) {
@@ -11968,7 +11968,7 @@ var tee = new j(
   () =>
     new Mx({
       platform: "darwin",
-      isDockerenvPresent: kxt,
+      isDockerenvPresent: isDockerenvPresent,
       isBubblewrapEnvSet: () => a.CLAUDE_CODE_BUBBLEWRAP,
       isSandboxEnvSet: () => process.env.IS_SANDBOX === "1",
       getuid: () =>
@@ -13063,7 +13063,7 @@ function kee(e, t) {
 }
 function wee(e) {
   if (pp(e)) return e;
-  let t = TW.find((o) => o !== "us" && e.startsWith(`${o}.anthropic.`)),
+  let t = BEDROCK_INFERENCE_PROFILE_PREFIXES.find((o) => o !== "us" && e.startsWith(`${o}.anthropic.`)),
     r =
       getCatalogIdByProviderId(t ? `us${e.slice(t.length)}` : e) ??
       (e.startsWith("anthropic.") ? getCatalogIdByProviderId(`us.${e}`) : void 0);
@@ -13323,7 +13323,7 @@ var _p = {
     /:\s{0,512}Basic\s{1,512}(?=[A-Za-z0-9+/=]{16})(?=[A-Za-z0-9+/=]{0,64}[0-9=])/i,
     /\bsk-(?=[A-Za-z0-9_-]{20})(?=[A-Za-z0-9_-]{0,64}[0-9])/,
   ],
-  Lrr = 4096;
+  MAX_SECRET_LENGTH = 4096;
 var Qye = new RegExp(
     `(?:\\b(?:xox[abe-z](?:\\.xox[a-z])?|xapp|xwfp)-${no("[A-Za-z0-9+/=%_-]")}|\\bxox[cd]-|(?:xox[abe-z](?:\\.xox[a-z])?|xapp|xwfp)-(?=[0-9])|xox[cd]-${no("[A-Za-z0-9+/=%_-]")}(?=[A-Za-z0-9+/=%_-]{16}))`,
     "i",
@@ -15063,7 +15063,7 @@ function hasDedicatedSmallFastModel() {
 }
 function getSmallFastModel() {
   let e = a.ANTHROPIC_SMALL_FAST_MODEL;
-  if (e !== void 0) return ub(e);
+  if (e !== void 0) return asModelId(e);
   if (!hasDedicatedSmallFastModel()) {
     let t = getAPIProvider();
     if ((t === "bedrock" || t === "vertex") && getUserSpecifiedModelSetting() == null && !isEnvDefaultModelGoverning()) {
@@ -15321,10 +15321,10 @@ function sre(e) {
     if (((t = r.opus5), getAPIProvider() === "firstParty"))
       t = OPUS_LINEUP_KEYS.map((o) => r[o]).find((o) => isModelAllowed(o)) ?? r.opus5;
   }
-  return IL(ub(t), e);
+  return IL(asModelId(t), e);
 }
 function IL(e, t) {
-  if ((hasLongContextSuffix(t) || modelHasNative1MContext(t)) && !hasLongContextSuffix(e) && !lacks1mContextSupport(getCanonicalName(e))) return ub(e + "[1m]");
+  if ((hasLongContextSuffix(t) || modelHasNative1MContext(t)) && !hasLongContextSuffix(e) && !lacks1mContextSupport(getCanonicalName(e))) return asModelId(e + "[1m]");
   return e;
 }
 function are(e) {
@@ -15346,7 +15346,7 @@ function are(e) {
     if (!isModelAllowed(p)) return;
     d = p;
   }
-  return IL(ub(d), e);
+  return IL(asModelId(d), e);
 }
 function getPermissionClassifierExternalDefault(e) {
   return withServedCatalogSuppressed(() => are(e));
@@ -15444,14 +15444,14 @@ function dre(e, t, r) {
   if (o === void 0) return;
   let d = o.toLowerCase(),
     p = Object.hasOwn(MODEL_KEY_BY_FIRST_PARTY_ID, d) ? MODEL_KEY_BY_FIRST_PARTY_ID[d] : void 0;
-  return p !== void 0 ? t[p] : ub(o);
+  return p !== void 0 ? t[p] : asModelId(o);
 }
 function il(e) {
   return dre(e, getEffectiveModelStrings(), getAPIProvider());
 }
 function getDefaultFableModel() {
   let e = a.ANTHROPIC_DEFAULT_FABLE_MODEL;
-  return ub(e !== void 0 ? DL(e) : Bp());
+  return asModelId(e !== void 0 ? DL(e) : Bp());
 }
 function DL(e) {
   let t = strip1mTag(e);
@@ -15467,7 +15467,7 @@ function Bp(e = getEffectiveModelStrings()) {
 }
 function getDefaultOpusModel() {
   let e = a.ANTHROPIC_DEFAULT_OPUS_MODEL;
-  if (e !== void 0) return ub(e);
+  if (e !== void 0) return asModelId(e);
   return il("opus") ?? en();
 }
 function en(e = getEffectiveModelStrings()) {
@@ -15478,7 +15478,7 @@ function enforcementDefaultOpusModel() {
 }
 function getDefaultSonnetModel() {
   let e = a.ANTHROPIC_DEFAULT_SONNET_MODEL;
-  if (e !== void 0) return ub(e);
+  if (e !== void 0) return asModelId(e);
   return il("sonnet") ?? el();
 }
 function el(e = getEffectiveModelStrings()) {
@@ -15486,7 +15486,7 @@ function el(e = getEffectiveModelStrings()) {
 }
 function getDefaultHaikuModel() {
   let e = a.ANTHROPIC_DEFAULT_HAIKU_MODEL;
-  if (e !== void 0) return ub(e);
+  if (e !== void 0) return asModelId(e);
   return il("haiku") ?? Hp();
 }
 function Hp(e = getEffectiveModelStrings()) {
@@ -16005,7 +16005,7 @@ function resolveModelAliasEnvFree(e) {
   if (usesFirstPartyModelIds() && isLegacyOpusFirstParty(o)) return en(Wt()).toLowerCase();
   return null;
 }
-var _re = new RegExp(`^((${TW.join("|")})\\.)?(anthropic\\.|claude-)`);
+var _re = new RegExp(`^((${BEDROCK_INFERENCE_PROFILE_PREFIXES.join("|")})\\.)?(anthropic\\.|claude-)`);
 function vL(e) {
   let t = e.toLowerCase();
   if (_re.test(t)) return !0;
@@ -16070,7 +16070,7 @@ function firstPartyNameToCanonical(e) {
   e = e.toLowerCase();
   let t = getCatalogIdByProviderId(e);
   if (t !== void 0) return t;
-  for (let o of TW)
+  for (let o of BEDROCK_INFERENCE_PROFILE_PREFIXES)
     if (o !== "us" && e.startsWith(`${o}.anthropic.`)) {
       let d = getCatalogIdByProviderId(`us${e.slice(o.length)}`);
       if (d !== void 0) return d;
@@ -16376,25 +16376,25 @@ function parseUserSpecifiedModel(e) {
     switch (d) {
       case "fable": {
         let p = getDefaultFableModel();
-        return ub(p + (o && !isFirstPartyApiBackend() && !hasLongContextSuffix(p) ? "[1m]" : ""));
+        return asModelId(p + (o && !isFirstPartyApiBackend() && !hasLongContextSuffix(p) ? "[1m]" : ""));
       }
       case "opusplan":
-        return o ? ub(Je(getDefaultSonnetModel())) : getDefaultSonnetModel();
+        return o ? asModelId(Je(getDefaultSonnetModel())) : getDefaultSonnetModel();
       case "sonnet":
-        return o ? ub(Je(getDefaultSonnetModel())) : getDefaultSonnetModel();
+        return o ? asModelId(Je(getDefaultSonnetModel())) : getDefaultSonnetModel();
       case "haiku":
-        return o ? ub(Je(getDefaultHaikuModel())) : getDefaultHaikuModel();
+        return o ? asModelId(Je(getDefaultHaikuModel())) : getDefaultHaikuModel();
       case "opus":
-        return o ? ub(Je(getDefaultOpusModel())) : getDefaultOpusModel();
+        return o ? asModelId(Je(getDefaultOpusModel())) : getDefaultOpusModel();
       case "best":
         return ore();
       default:
     }
-  if (usesFirstPartyModelIds() && isLegacyOpusFirstParty(d) && isLegacyModelRemapEnabled()) return o ? ub(Je(getDefaultOpusModel())) : getDefaultOpusModel();
+  if (usesFirstPartyModelIds() && isLegacyOpusFirstParty(d) && isLegacyModelRemapEnabled()) return o ? asModelId(Je(getDefaultOpusModel())) : getDefaultOpusModel();
   if (o && isFirstPartyApiBackend() && cre(d) && modelHasNative1MContext(d))
-    return ub(t.replace(/(\[1m\])+$/i, "").trim());
-  if (o) return ub(t.replace(/(\[1m\])+$/i, "").trim() + "[1m]");
-  return ub(t);
+    return asModelId(t.replace(/(\[1m\])+$/i, "").trim());
+  if (o) return asModelId(t.replace(/(\[1m\])+$/i, "").trim() + "[1m]");
+  return asModelId(t);
 }
 function inlineSkillModelOverride(e) {
   return e === "inherit" ? void 0 : e;
@@ -25950,7 +25950,7 @@ async function ki(e) {
   try {
     let t = await readBoundedFile(e, Dl);
     if (t === null) return;
-    let r = _F().safeParse(Is(t));
+    let r = _F().safeParse(jsonParseUntraced(t));
     return r.success ? r.data.pidDomain : void 0;
   } catch {
     return;
@@ -26016,7 +26016,7 @@ async function resolveMessagingKey(e, t, r) {
     let x = isHoverRestEnabled() && t !== void 0 ? await $ce(t, D) : await readBoundedFile(go(o, D), Dl);
     if (x === null) return;
     try {
-      let N = _F().safeParse(Is(x));
+      let N = _F().safeParse(jsonParseUntraced(x));
       return N.success ? N.data : void 0;
     } catch {
       return;
@@ -29017,7 +29017,7 @@ sh(getFeatureValueWithSource_CACHED_MAY_BE_STALE);
 dir(getFeatureValue_CACHED_MAY_BE_STALE);
 _h(getFeatureValue_CACHED_MAY_BE_STALE);
 Jcr(getFeatureValue_CACHED_MAY_BE_STALE, onGrowthBookRefresh);
-jir(getFeatureValue_CACHED_MAY_BE_STALE);
+setFeatureValueGetter(getFeatureValue_CACHED_MAY_BE_STALE);
 bh(() => getFeatureValue_CACHED_MAY_BE_STALE(Sh, !1));
 function getCachedGitRoot(e) {
   return null;
@@ -37261,7 +37261,7 @@ export {
   applyInferenceProfilePrefix,
   getInferenceProfilePrefixForRegion,
   resolveInferenceProfilePrefix,
-  ub,
+  asModelId,
   getModelOverrideSourceId,
   getEffectiveModelStrings,
   resolveModelStrings,
@@ -37356,7 +37356,7 @@ export {
   Bve,
   registerPerTurnEffortCapabilityResolver,
   supportsPerTurnEffort,
-  Err,
+  canUsePerTurnControl,
   getMainLoopCanonical,
   getModelForAnalytics,
   getModelListForAnalytics,
@@ -37419,7 +37419,7 @@ export {
   SESSION_ID_HEADER_NAME,
   InvalidRequestHeaderValueError,
   validateRequestHeaders,
-  Lrr,
+  MAX_SECRET_LENGTH,
   redactSecretsInText,
   containsSecret,
   redactKnownPaths,

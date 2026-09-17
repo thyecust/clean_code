@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { isTainted } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { jsonStringify, Is, streamFileLines, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParseUntraced, streamFileLines, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { formatTruncatedText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { BASH_STDOUT_TAG, BASH_STDERR_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, LOCAL_COMMAND_CAVEAT_TAG, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { listedProjectKey, getProjectsDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
@@ -168,7 +168,7 @@ function x(e, t, o, s, r) {
   let u = e.toString("utf8", c, a);
   if (m) u = u.replace(/(^|[^\\])((?:\\\\)*)\\u[0-9a-fA-F]{0,3}$/, "$1$2");
   try {
-    let g = Is(`"${u}"`);
+    let g = jsonParseUntraced(`"${u}"`);
     return typeof g === "string" ? g : void 0;
   } catch {
     return;

@@ -132,7 +132,7 @@ import {
   hasNetworkPathSpelling,
   getFsSurface,
   changeWorkingDirectory,
-  qr,
+  redactSecretsFromText,
   redactDeep,
   isDebugMode,
   isDebugToStdErr,
@@ -158,7 +158,7 @@ import {
 } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import {
   COMMAND_MESSAGE_TAG,
@@ -583,8 +583,8 @@ import {
   extractTextContent,
   isSyntheticPromptText,
   escapeForkedSkillLaunchTag,
-  Lwe,
-  QGn,
+  isIdleAmberFinchEnabled,
+  isQuietSlateWrenEnabled,
   requiresUsageCredits,
   isUsageCreditsExempt,
   getUpgradeUpsell,
@@ -705,7 +705,7 @@ import {
   isShellWrapperCommand,
   getSingleTokenCommandPrefix,
   shouldUseSandbox,
-  mzn,
+  getPowerShellDestructiveCommandWarning,
   REOPEN_REFETCH_REASON,
   MAX_MCP_RECONNECT_ATTEMPTS,
   getMcpReconnectDelayMs,
@@ -1344,7 +1344,7 @@ import {
   getMonitoringNotice,
   subscribeMonitoringNotice,
   monitoringNoticeStore,
-  ps,
+  sanitizeTextForDisplay,
   hasInvisibleCharacters,
   sanitizeUntrustedText,
   sanitizeInvisibleText,
@@ -1365,7 +1365,7 @@ import {
   toDisplayLabelString,
   formatDisplayLabel,
   isBlankDisplayText,
-  uAt,
+  formatToolNameForDisplay,
   formatDisplayTextOrDefault,
   prepareDisplayText,
   tryFormatShortDisplayValue,
@@ -1402,7 +1402,7 @@ import {
   extractMemoryCitations,
   MEMORY_INDEX_FILE_NAME,
   parseMemoryDocument,
-  Loe,
+  isStoneShellRecallEnabled,
   REPL_TOOL_NAME,
   isManagedPermissionRulesOnlyEnabled,
   areUserPermissionRulesAllowed,
@@ -1424,7 +1424,7 @@ import {
   generateSuggestions,
 } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { FILE_STATE_MAX_ENTRIES, normalizeFileContent, createFileStateCache, mergeFileStateCache } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
-import { $J, getPluginRegistryState } from "../../02-功能模块/插件系统/plugin-system-core.js";
+import { isSignificantPluginError, getPluginRegistryState } from "../../02-功能模块/插件系统/plugin-system-core.js";
 import { shouldAllowManagedHooksOnly, shouldDisableAllHooksIncludingManaged, logGoalCleared } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import { areWorkflowsEnabled, isWorkflowKeywordTriggerEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import {
@@ -1448,7 +1448,7 @@ import {
   getSessionEffortLevel,
   getCarriableEffortLevel,
   unpinLaunchEffortLevels,
-  ese,
+  releaseLaunchEffortPins,
   getDefaultEffortLevelForModel,
   saveEffortLevelForModel,
   applyEffortLevelChange,
@@ -1521,7 +1521,7 @@ import {
 import {
   SYNTHETIC_MODEL_NAME,
   SKIPPED_TRACKED_PATHS_REASON,
-  Qn,
+  sanitizeForRelay,
   isHumanOrUnstampedOrigin,
   isPeerOrObserverOrigin,
   isPeerOrSlackPingOrigin,
@@ -1579,7 +1579,7 @@ import {
 } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
 import { isBridgeEnabled, getRemoteControlPolicyVerdict, isPolicyLimitsCacheLoaded, isBridgeAuthReviveEnabled, getCcrAutoConnectDefault, isPersistentRemoteSessionEnabled, isRemoteControlInternalEventsEnabled, getBridgeSubagentFrameGate } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
-import { toe, ig, Ui, cwt, lJ } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
+import { OFFICIAL_MARKETPLACE_SOURCE, OFFICIAL_MARKETPLACE_NAME, PluginSourceError, describePluginFailure, lookupMarketplaceSource } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import { isPluginBlockedByPolicy, isSourceAllowedByPolicy } from "../../02-功能模块/插件系统/plugin-source-policy.js";
 import { AGENT_COLOR_THEME_KEYS, AGENT_COLOR_NAMES, isAgentColorName, resolveAgentColorName, getAgentTypeColorThemeKey } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { JNe } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
@@ -1639,7 +1639,7 @@ import {
   isOptionGlyphKey,
   getKeybindingPlatform,
   findActionForKeyInContext,
-  rg,
+  sanitizeSingleLineDisplayText,
 } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { sliceAnsi } from "../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import { getComputerUseNativeModule } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
@@ -1738,7 +1738,7 @@ import {
   isFullscreen,
   reportStylePoolHealth,
   Box,
-  F0e,
+  HoverHighlightContext,
   Text,
   Link,
   Ansi,
@@ -1779,7 +1779,7 @@ import {
   hueToRgb,
   parseRgbColor,
 } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { cE, ui, Gm, fa, c9e, $o, nl, qm, vs, ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
+import { flattenNodeText, useIsMountRecent, useMountTime, useSettleAfterChange, useAttemptEpoch, useRefusedInputWindow, SelectListRow, useStateWithGetter, NO_COMMITTED_ROW, Select } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { DEFAULT_RECENT_WINDOW_MS, REFUSE_INPUT_WINDOW_MS, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport, useVirtualScrollViewportSize, useScrollViewport, useClaimScrollBox } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -1967,10 +1967,10 @@ import {
   disarmArtifactAutoReact,
 } from "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
 import {
-  xdt,
-  Hdt,
-  d1t,
-  Idt,
+  setSessionWorking,
+  isSessionWorking,
+  subscribeSessionWorking,
+  setSessionUserPromptPending,
   isClaimableAutoReactSubscription,
   killAutoReactSubscriptions,
   hasStoppableAutoReactSupervision,
@@ -2074,13 +2074,13 @@ import {
   NotificationSegments,
   CurrentNotification,
 } from "../../02-功能模块/Vim模式/Vim模式.nnewe0gf.js";
-import { xIt, XQt, JQt, QQt, r$n } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
+import { CHANGELOG_DOCS_URL, CHANGELOG_DOCS_URL_LABEL, getBundledChangelogText, getReleaseNotesBetweenVersions, getLatestReleaseNotes } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import { useFeatureFlagVersion, useFeatureFlagValue } from "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { resolveMainLoopModelSetting, resolveMainLoopModel, useMainLoopModelSetting, useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { getProTrialState, shouldAutoOpenProTrialExpired, formatTrialBadge } from "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
 import { VirtualScrollViewportContext } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { OffscreenFrozenContent } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
-import { pit, YW, F8, jIt, WIt, fit } from "../../02-功能模块/成本-Token统计/chunk-adrc9xt1.js";
+import { getForcedFirstLaunchOverride, isNewerVersionAvailable, AnimatedClawdMascot, useClawdEntranceSequence, WIt, PlainAwait } from "../../02-功能模块/成本-Token统计/chunk-adrc9xt1.js";
 import { getSessionAnnouncementState } from "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import { POWERUP_DISCOVERY_COPY, resolvePowerupDiscoveryArm } from "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
 import { isChannelsEnabled } from "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
@@ -2237,7 +2237,7 @@ import { mergeAndFilterTools, stripSoleNonDeniableTool } from "../../01-核心�
 import { activeTimeTracker } from "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import { checkEnabledPlugins } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { buildAutoModeGateNotification, runAutoModeGateCheck, rearmAutoModeCheck } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
-import { xZ, EFn, Dst, D6e, V_e, Lst, Mst } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
+import { conformWireFrame, sanitizeCanUseToolRequest, describeUndeliveredSend, RemoteSessionManager, getSessionRequestTarget, fetchLatestSessionEvents, fetchOlderSessionEvents } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
 import {
   isForwardableSdkFrame,
   parseSdkInitFrame,
@@ -2282,22 +2282,22 @@ import {
   tryBuildIdleNotification,
   permissionContextSetterStore,
 } from "../../02-功能模块/权限系统/chunk-jsd70b22.js";
-import { Xjn, A7 } from "../../02-功能模块/Bridge-RemoteControl/chunk-ga43tr2w.js";
+import { countLiveBridgeReplSessions, buildBridgeFailureHint } from "../../02-功能模块/Bridge-RemoteControl/chunk-ga43tr2w.js";
 import { resolveTriggerPriority, isHumanRelayTurn, isHumanOriginTurn, classifyInboundOrigin, getInboundOriginOverride, parseInboundUserEvent, hasPeerEnvelope } from "../../02-功能模块/Bridge-RemoteControl/bridge-inbound-origin.js";
 import { createClientPresenceReporter } from "../../02-功能模块/Bridge-RemoteControl/client-presence.js";
 import {
-  z_e,
-  Est,
-  Ast,
-  Cst,
-  vst,
-  Rst,
-  Wz,
-  kst,
-  xst,
-  Hst,
-  Ist,
-} from "../../02-功能模块/Hooks钩子/chunk-6wg4v2yj.js";
+  cloudPluginsForwarderMemories,
+  isHookForwardingEnabled,
+  createConsentReachJudge,
+  reachMemories,
+  createDeviceHooksServingRuntime,
+  openServedChannel,
+  CLOUD_SYNC_OFFLINE_DIALOG,
+  buildSyncOfflineDialogPayload,
+  pushCreatePermissionMode,
+  CLOUD_SESSION_UNRESPONSIVE_MESSAGE,
+  getResponseTimeoutMs,
+} from "../../02-功能模块/Hooks钩子/device-hooks-serving.js";
 import { isSlashCommandBlockedByEndedByModel, looksLikeCommand, commandThrowTextForTranscript } from "../../02-功能模块/斜杠命令-框架/chunk-s195n5de.js";
 import { globalFileIndexCache, findLongestCommonPrefix, startBackgroundCacheRefresh, generateFileSuggestions, applyFileSuggestion } from "../../02-功能模块/工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { dropBashPromptSkillListingPin } from "../../02-功能模块/工具WebFetch-WebSearch/clear-session-caches.js";
@@ -2307,7 +2307,7 @@ import { getSendMessagePinsIfChanged } from "../../01-核心基础设施/共享�
 import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import { ResumeAgentStateError, AgentResumeTransientError, AgentResumePermanentlyRefusedError, AgentStoppedByUserError, AgentResumeInProgressError, AgentStillStoppingError, resumeAgentWithNotification } from "../../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
-import { G6n } from "../../02-功能模块/Workflow编排/chunk-bkcg0nbj.js";
+import { adoptWorkflowRun } from "../../02-功能模块/Workflow编排/workflow-runtime.js";
 import { transcriptReplacedBus } from "../../01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js";
 import { repliesYieldedLine, repliesYieldRevertedLine, repliesStoppedElsewhereLine, registerReplyYieldHolder } from "../../02-功能模块/Artifact发布-渲染/chunk-54kz7amv.js";
 import {
@@ -2334,7 +2334,7 @@ import { recordTipShown, getTipLifetimeShownCount, getPluginSuggestionShownCount
 import { WorkflowDetailDialog } from "../../02-功能模块/Workflow编排/workflow-dialogs.js";
 import { detectCurrentShell } from "../../02-功能模块/自动更新-安装/auto-updater.js";
 import { readUpdateResult } from "../../02-功能模块/自动更新-安装/install-diagnostics.js";
-import { Bce } from "../../02-功能模块/自动更新-安装/chunk-2g5h49pk.js";
+import { checkInstall } from "../../02-功能模块/自动更新-安装/native-installer.js";
 import { findBtwTriggerPositions } from "../../02-功能模块/权限系统/chunk-qjqc5vxm.js";
 import {
   detectPythonPackageManager,
@@ -2350,7 +2350,7 @@ import {
 } from "../../02-功能模块/Teammates团队/backend-registry.js";
 import { useTaskBackgroundKeybinding, BackgroundHint } from "../../02-功能模块/后台任务-Shell管理/background-task-renderers.js";
 import { ManagedSettingsApprovalDialog } from "../../01-核心基础设施/设置-配置/managed-settings-approval-dialog.js";
-import { K6e, X6e } from "../../02-功能模块/Skills技能/Skills技能.dpy2ket5.js";
+import { CHROME_INSTALL_UPSELL_DIALOG, CHROME_INSTALL_SETUP_DIALOG } from "../../02-功能模块/Skills技能/Skills技能.dpy2ket5.js";
 import { COMPUTER_USE_APPROVAL_DIALOG } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-approval-dialog.js";
 import { MCP_URL_ELICITATION_DIALOG, clearMcpNeedsAuthCache, createMcpAuthStubTools, initMcpDiscoveryCacheKillSwitch } from "../../02-功能模块/MCP客户端/mcp-auth-cache.js";
 import { CodeBlock } from "../../02-功能模块/语法高亮-Markdown渲染/code-block.js";
@@ -2550,7 +2550,7 @@ function f$t(w, I) {
     if (slugify(He.base) === pe) xe = Math.max(xe, He.generation);
   }
   if (!be.has(ne)) return w;
-  let Ae = qr(normalizeWhitespace(me));
+  let Ae = redactSecretsFromText(normalizeWhitespace(me));
   for (let Oe = xe + 1; ; Oe++) {
     let He = ` (${Oe})`,
       Ke = `${truncateToCodeUnits(Ae, maxSlugLength - He.length)}${He}`;
@@ -2704,7 +2704,7 @@ async function spawnBackgroundFork(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
   if (He?.keepParent && isCoordinatorModeEnabled())
     return { ok: !1, error: COORDINATOR_FORK_REFUSAL, queued: !1, reason: "coordinator_mode" };
   let Ke = _B(),
-    Je = He?.keepParent ? truncateToCodeUnits(qr(normalizeWhitespace(I ?? "")), 60) : "",
+    Je = He?.keepParent ? truncateToCodeUnits(redactSecretsFromText(normalizeWhitespace(I ?? "")), 60) : "",
     Qe = w.name
       ? `${w.name} ${FORK_GLYPH}${Je ? ` ${Je}` : ""}`
       : Je
@@ -4410,7 +4410,7 @@ function KJe(IQo) {
       return (
         (async () => {
           if (Nx && Nx.toLowerCase().replace(/[^a-z]/g, "") !== VJe) {
-            let FQo = qr(Nx).slice(0, GJe);
+            let FQo = redactSecretsFromText(Nx).slice(0, GJe);
             await logFirstPartyEventAsync("tengu_tui_optout_reason", {
               reason: FQo,
               from_entry_path: fromEnum(pG),
@@ -7838,10 +7838,10 @@ function p9(Zpe) {
   else _Vt = Jb[2];
   let F6o = _Vt !== void 0,
     tfe = isFullscreen(),
-    y3e = jIt(I6o && tfe),
+    y3e = useClawdEntranceSequence(I6o && tfe),
     xVt;
   if (Jb[3] !== y3e || Jb[4] !== tfe)
-    ((xVt = tfe ? e(F8, { sequence: y3e, delayMs: 100 }) : e(ClawdMascot, {})),
+    ((xVt = tfe ? e(AnimatedClawdMascot, { sequence: y3e, delayMs: 100 }) : e(ClawdMascot, {})),
       (Jb[3] = y3e),
       (Jb[4] = tfe),
       (Jb[5] = xVt));
@@ -8050,19 +8050,19 @@ function WVt(
   }.VERSION,
 ) {
   try {
-    let I = pit();
+    let I = getForcedFirstLaunchOverride();
     if (I) {
-      let me = JQt();
+      let me = getBundledChangelogText();
       return A3e({
         entries:
           I.pretendLastSeen === void 0
-            ? r$n(me)
-            : QQt(me, I.pretendLastSeen, w),
+            ? getLatestReleaseNotes(me)
+            : getReleaseNotesBetweenVersions(me, I.pretendLastSeen, w),
       });
     }
     let ne = getGlobalConfig().lastReleaseNotesSeen;
-    if (!isSemverString(ne) || !YW(ne, w)) return null;
-    return A3e({ entries: QQt(JQt(), ne, w) });
+    if (!isSemverString(ne) || !isNewerVersionAvailable(ne, w)) return null;
+    return A3e({ entries: getReleaseNotesBetweenVersions(getBundledChangelogText(), ne, w) });
   } catch (I) {
     return (
       logForDebugging(`computeUpdateSummary: ${ge(I).message}`, { level: "error" }),
@@ -8073,7 +8073,7 @@ function WVt(
 function dfe() {
   if (appStateStore.startupUpdateSummary === void 0) {
     let w = WVt();
-    if (((appStateStore.startupUpdateSummary = w), w !== null && !pit()))
+    if (((appStateStore.startupUpdateSummary = w), w !== null && !getForcedFirstLaunchOverride()))
       logFeatureOk("startup_update_summary");
   }
   return appStateStore.startupUpdateSummary;
@@ -8099,7 +8099,7 @@ function Bu(w, I, { enabled: ne = !0 } = {}) {
   }, [ne, me, w, I]);
 }
 function JVt(F3e) {
-  if (!YW(F3e.lastReleaseNotesSeen)) {
+  if (!isNewerVersionAvailable(F3e.lastReleaseNotesSeen)) {
     return F3e;
   }
   return {
@@ -8143,7 +8143,7 @@ function g9() {
     QVt;
   if ($G[5] !== p0 || $G[6] !== ffe)
     ((GVt = () => {
-      if (p0 || !YW(getGlobalConfig().lastReleaseNotesSeen)) {
+      if (p0 || !isNewerVersionAvailable(getGlobalConfig().lastReleaseNotesSeen)) {
         return;
       }
       saveGlobalConfig(JVt, ffe);
@@ -8171,7 +8171,7 @@ function g9() {
           e(Text, { bold: !0, children: hfe }),
           r(Text, {
             dimColor: !0,
-            children: [e(Link, { url: xIt, children: XQt }), " for details"],
+            children: [e(Link, { url: CHANGELOG_DOCS_URL, children: CHANGELOG_DOCS_URL_LABEL }), " for details"],
           }),
         ],
       })),
@@ -9179,8 +9179,8 @@ async function c4e() {
   if (isClaudeAISubscriber()) return null;
   let w = await fetchOAuthProfileWithApiKey();
   if (!w) return null;
-  if (w.account.has_claude_max && !Lwe()) return "Max";
-  if (w.account.has_claude_pro && !QGn()) return "Pro";
+  if (w.account.has_claude_max && !isIdleAmberFinchEnabled()) return "Max";
+  if (w.account.has_claude_pro && !isQuietSlateWrenEnabled()) return "Pro";
   return null;
 }
 function u4e() {
@@ -12074,7 +12074,7 @@ function bQt({
     onMouseEnter: be ? () => Ae(w) : void 0,
     onMouseLeave: be ? () => Oe(w) : void 0,
     hoverIgnoresBlankCells: !me,
-    children: e(F0e.Provider, { value: pe && !me, children: He }),
+    children: e(HoverHighlightContext.Provider, { value: pe && !me, children: He }),
   });
 }
 function khe({
@@ -16108,7 +16108,7 @@ function I7(nun) {
   else Ibe = pA[14];
   let Dbe;
   if (pA[15] !== N_ || pA[16] !== Ibe)
-    ((Dbe = e(ve, { options: QXt, onChange: N_, onCancel: Ibe })),
+    ((Dbe = e(Select, { options: QXt, onChange: N_, onCancel: Ibe })),
       (pA[15] = N_),
       (pA[16] = Ibe),
       (pA[17] = Dbe));
@@ -18351,7 +18351,7 @@ async function g6t(w, I = mtt) {
         me.flatMap((Oe) =>
           (Oe.type === "marketplace-load-failed" ||
             Oe.type === "marketplace-not-found") &&
-          $J(Oe)
+          isSignificantPluginError(Oe)
             ? [Oe.marketplace]
             : [],
         ),
@@ -19819,7 +19819,7 @@ function c4t(w) {
   return PERMISSION_RULE_SOURCES.includes(w);
 }
 function ISe(w) {
-  return ps(stripAnsi(w));
+  return sanitizeTextForDisplay(stripAnsi(w));
 }
 class x2 {
   inputs;
@@ -19840,7 +19840,7 @@ class x2 {
         ),
         !1
       );
-    if (!EFn(w.request)) {
+    if (!sanitizeCanUseToolRequest(w.request)) {
       let Je = w.request.tool_use_id;
       return (
         logForDebugging(
@@ -19898,9 +19898,9 @@ class x2 {
                 source: ne.matched_ask_rule.source,
                 ruleBehavior: "ask",
                 ruleValue: {
-                  toolName: ps(stripAnsi(ne.matched_ask_rule.tool_name)),
+                  toolName: sanitizeTextForDisplay(stripAnsi(ne.matched_ask_rule.tool_name)),
                   ...(ne.matched_ask_rule.rule_content !== void 0 && {
-                    ruleContent: ps(stripAnsi(ne.matched_ask_rule.rule_content)),
+                    ruleContent: sanitizeTextForDisplay(stripAnsi(ne.matched_ask_rule.rule_content)),
                   }),
                 },
               },
@@ -19912,17 +19912,17 @@ class x2 {
                 ne.decision_reason_type === "subcommandResults"
                   ? {
                       type: "safetyCheck",
-                      reason: ps(stripAnsi(ne.decision_reason)),
+                      reason: sanitizeTextForDisplay(stripAnsi(ne.decision_reason)),
                       classifierApprovable: ne.classifier_approvable ?? !1,
                     }
                   : {
                       type: "other",
                       reason:
                         ne.decision_reason_type === "hook"
-                          ? `A hook configured in the remote workspace requires confirmation: ${ps(stripAnsi(ne.decision_reason))}`
+                          ? `A hook configured in the remote workspace requires confirmation: ${sanitizeTextForDisplay(stripAnsi(ne.decision_reason))}`
                           : ne.decision_reason_type === "classifier"
-                            ? `An automated safety classifier requires confirmation: ${ps(stripAnsi(ne.decision_reason))}`
-                            : ps(stripAnsi(ne.decision_reason)),
+                            ? `An automated safety classifier requires confirmation: ${sanitizeTextForDisplay(stripAnsi(ne.decision_reason))}`
+                            : sanitizeTextForDisplay(stripAnsi(ne.decision_reason)),
                     },
             }),
         },
@@ -20375,7 +20375,7 @@ function aZ({
       let So = He ? new D0() : void 0,
         Go = jo({
           onMessage: (Fn) => {
-            if (!xZ(Fn)) return;
+            if (!conformWireFrame(Fn)) return;
             if (Fn.type === "active_goal") {
               let Sn = parseActiveGoalState(Fn.value);
               (ho((Mn) =>
@@ -20880,7 +20880,7 @@ function $tt({
     to = useSession(),
     zt = C(void 0),
     ao = vr(() => pe),
-    co = vr((zn) => ne(Wz, kst(zn), { signal: zn.signal, place: "under" })),
+    co = vr((zn) => ne(CLOUD_SYNC_OFFLINE_DIALOG, buildSyncOfflineDialogPayload(zn), { signal: zn.signal, place: "under" })),
     { columns: go } = useTerminalSize(),
     fo = vr(() => go),
     ro = re(
@@ -21300,7 +21300,7 @@ function $tt({
         Tl = (() => {
           if (w.servedTools === void 0 || w.viewerOnly || !isViolinWoodEnabledCached()) return null;
           try {
-            let Wn = Rst({
+            let Wn = openServedChannel({
               sessionId: w.sessionId,
               manager: () => wi,
               ...w.servedTools,
@@ -21321,9 +21321,9 @@ function $tt({
           }
         })(),
         ll = (() => {
-          if (vl === null || w.viewerOnly || !Est()) return null;
+          if (vl === null || w.viewerOnly || !isHookForwardingEnabled()) return null;
           try {
-            return vst({
+            return createDeviceHooksServingRuntime({
               launchDir: he(),
               cloudSessionId: w.sessionId,
               memory: deviceHooksProcessMemories.of(Tt),
@@ -21350,9 +21350,9 @@ function $tt({
         };
       So.current = ll;
       let Hl = new Set(),
-        Fa = new D6e(zl, {
+        Fa = new RemoteSessionManager(zl, {
           onMessage: (Wn) => {
-            if (!xZ(Wn)) return;
+            if (!conformWireFrame(Wn)) return;
             let di = [`type=${Wn.type}`];
             if ("subtype" in Wn) di.push(`subtype=${Wn.subtype}`);
             if (Wn.type === "user") {
@@ -21830,7 +21830,7 @@ function $tt({
           onResponseUndelivered: (Wn, di, Ds) => {
             if (Hl.has(di)) return;
             if (Hl.size === 0) queueMicrotask(() => Hl.clear());
-            (Hl.add(di), xe((Ba) => [...Ba, createSystemInfoMessage(Dst(di, Ds), "warning")]));
+            (Hl.add(di), xe((Ba) => [...Ba, createSystemInfoMessage(describeUndeliveredSend(di, Ds), "warning")]));
           },
           onCatchUpTruncated: () => {
             if (
@@ -21867,9 +21867,9 @@ function $tt({
                 }
               })();
               async function di() {
-                let Ds = await V_e(Wn, eo);
+                let Ds = await getSessionRequestTarget(Wn, eo);
                 if (ai.current !== Fa) return "stale";
-                let Ba = await Lst(Ds, void 0, { reportFeatureHealth: !1 }),
+                let Ba = await fetchLatestSessionEvents(Ds, void 0, { reportFeatureHealth: !1 }),
                   Pl = 0,
                   hs = 0;
                 while (Ba && hs < jtt) {
@@ -21884,7 +21884,7 @@ function $tt({
                     })),
                     (Ba =
                       hs < jtt && Ba.hasMore && Ba.firstId
-                        ? await Mst(Ds, Ba.firstId)
+                        ? await fetchOlderSessionEvents(Ds, Ba.firstId)
                         : null));
                 }
                 if (ai.current !== Fa) return "stale";
@@ -21906,7 +21906,7 @@ function $tt({
             )
               xe((di) => [
                 ...di,
-                createSystemInfoMessage(A7({ terminal: !0, reason: Wn }), "warning"),
+                createSystemInfoMessage(buildBridgeFailureHint({ terminal: !0, reason: Wn }), "warning"),
               ]);
             (jo(),
               vo("disconnected"),
@@ -21952,7 +21952,7 @@ function $tt({
           }
           Ju.pushed = !0;
           let { mode: di } = Ju,
-            Ds = xst({
+            Ds = pushCreatePermissionMode({
               manager: Fa,
               mode: di,
               surface: "terminal",
@@ -22083,15 +22083,15 @@ function $tt({
                 sessionId: w.sessionId,
                 reattach: Boolean(w.isAttachToExisting),
                 manager: Fa,
-                memory: z_e.of(Tt),
+                memory: cloudPluginsForwarderMemories.of(Tt),
                 storageV5: jt,
-                reach: Ast({
+                reach: createConsentReachJudge({
                   launchDir: he(),
                   syncRoot: Wa,
                   syncElsewhere: w.isAttachToExisting
                     ? (w.dirSyncElsewhere ?? "unknown")
                     : !1,
-                  memory: Cst.of(Tt).reachFor(he()),
+                  memory: reachMemories.of(Tt).reachFor(he()),
                 }),
                 say: ({ line: Wn, level: di }) => {
                   if (di === "debug") logForDebugging(`[useRemoteSession] plugins: ${Wn}`);
@@ -22348,10 +22348,10 @@ function $tt({
             !1
           );
         if ((Vr(zn), !w?.viewerOnly && no.current === ns)) {
-          let Pa = Ist(Ln.current);
+          let Pa = getResponseTimeoutMs(Ln.current);
           Kn.current = Wo.setTimeout(() => {
             logForDebugging("[useRemoteSession] Response timeout - attempting reconnect");
-            let yc = createSystemInfoMessage(Hst, "warning");
+            let yc = createSystemInfoMessage(CLOUD_SESSION_UNRESPONSIVE_MESSAGE, "warning");
             (xe((zu) => [...zu, yc]), Ri.reconnect());
           }, Pa);
         }
@@ -22792,7 +22792,7 @@ class LSe {
         let He = Oe ? LOCAL_COMMAND_STDOUT_TAG : LOCAL_COMMAND_STDERR_TAG,
           Ke = xe
             ? commandThrowTextForTranscript(Ae, w.name, xe)
-            : `${escapeForkedSkillLaunchTag(Qn(w.name))} failed (detail withheld on this connection)`;
+            : `${escapeForkedSkillLaunchTag(sanitizeForRelay(w.name))} failed (detail withheld on this connection)`;
         be((Je) => [...Je, createLocalCommandMessage(buildCommandTags(ne, I)), createLocalCommandMessage(`<${He}>${escapeHtmlText(Ke)}</${He}>`)]);
       }
     })();
@@ -25871,7 +25871,7 @@ class fZ {
         }
         let { canUseTool: Oe } = this._requireHost();
         for (let He of I)
-          G6n({
+          adoptWorkflowRun({
             taskId: He.taskId,
             workflowRunId: He.workflowRunId,
             scriptPath: He.scriptPath,
@@ -26735,7 +26735,7 @@ ${l(Br)}`
                     e(Text, { children: "Summarizing\u2026" }),
                   ],
                 })
-              : e(ve, {
+              : e(Select, {
                   isDisabled: on,
                   options: Kn(!!Gn),
                   defaultFocusValue: Gn ? "both" : "conversation",
@@ -27608,7 +27608,7 @@ function useListCursor({
   edge: xe = "clamp",
 }) {
   let Ae = C(null),
-    [Oe, He, Ke] = qm(0),
+    [Oe, He, Ke] = useStateWithGetter(0),
     Je = useHasFocus(Ae),
     Qe = Math.max(0, w - 1),
     it = oa(Oe, 0, Qe);
@@ -34692,7 +34692,7 @@ function SearchablePickerDialog(EUn) {
     lto;
   if (Vu[0] === MEMO_CACHE_SENTINEL) ((lto = { focus: 0, window: 0 }), (Vu[0] = lto));
   else lto = Vu[0];
-  let [FUn, bh, gCe] = qm(lto),
+  let [FUn, bh, gCe] = useStateWithGetter(lto),
     { focus: hCe, window: IH } = FUn,
     [BUn, Qee] = d(void 0),
     yCe = Boolean(cCe),
@@ -35162,7 +35162,7 @@ function NCe(GUn) {
         let Bto = iat === 0 && BH > 0;
         let Uto = iat === FH.length - 1 && BH + eT < Zee;
         return e(
-          nl,
+          SelectListRow,
           {
             isFocused: Fto,
             showScrollUp: UH === "up" ? Uto : Bto,
@@ -35531,7 +35531,7 @@ function ModelPicker({
     Tt = V(() => getSessionModelOverride(I, w), [I, w, eo, jt]),
     to = Tt ?? w,
     zt = to === null ? Qw : (resolveModelOptionValue(Ct, to) ?? to),
-    [ao, co, go] = qm(zt),
+    [ao, co, go] = useStateWithGetter(zt),
     [fo] = d({ current: to, value: zt, sessionOverride: Tt }),
     [ro] = useTheme(),
     ho = useTerminalFocus(),
@@ -35552,7 +35552,7 @@ function ModelPicker({
     Sr = zo ? 3 : 0,
     Kn = Tt !== null ? 3 : 0,
     nn = Math.max(2, Math.min(10, Math.floor((it - tlt - vo - Sr - Kn) / 2))),
-    [no, jo, Cn] = qm(!1),
+    [no, jo, Cn] = useStateWithGetter(!1),
     un = useSessionEffortLevel(),
     lr = useAppStateSelector((Ki) => Ki.ultracode),
     [Io, So] = d(lr ? "ultracode" : un !== void 0 ? sanitizeEffortLevel(un) : void 0),
@@ -35790,7 +35790,7 @@ function ModelPicker({
                 }),
               e(Box, {
                 flexDirection: "column",
-                children: e(ve, {
+                children: e(Select, {
                   defaultValue: zt,
                   selectedValue: zt,
                   defaultFocusValue: Qo,
@@ -36105,7 +36105,7 @@ function bte(v$n) {
           : e(Box, {
               flexDirection: "column",
               marginBottom: 1,
-              children: e(ve, {
+              children: e(Select, {
                 defaultValue: ej ? "true" : "false",
                 defaultFocusValue: ej ? "true" : "false",
                 options: w$n,
@@ -37275,13 +37275,13 @@ function Ute(WVn) {
       else rc = nc[76];
       let bc;
       if (nc[77] !== Qi.serverName)
-        ((bc = rg(Qi.serverName) ?? ""),
+        ((bc = sanitizeSingleLineDisplayText(Qi.serverName) ?? ""),
           (nc[77] = Qi.serverName),
           (nc[78] = bc));
       else bc = nc[78];
       let Pu;
       if (nc[79] !== Qi.toolName)
-        ((Pu = rg(Qi.toolName) ?? ""), (nc[79] = Qi.toolName), (nc[80] = Pu));
+        ((Pu = sanitizeSingleLineDisplayText(Qi.toolName) ?? ""), (nc[79] = Qi.toolName), (nc[80] = Pu));
       else Pu = nc[80];
       const Mc = `${bc}/${Pu}`;
       let Wd;
@@ -37301,7 +37301,7 @@ function Ute(WVn) {
       let aj;
       if (nc[87] !== Qi.statusMessage)
         ((aj = Qi.statusMessage
-          ? r(Text, { dimColor: !0, children: [" ", rg(Qi.statusMessage)] })
+          ? r(Text, { dimColor: !0, children: [" ", sanitizeSingleLineDisplayText(Qi.statusMessage)] })
           : null),
           (nc[87] = Qi.statusMessage),
           (nc[88] = aj));
@@ -38345,7 +38345,7 @@ function iut(CKn) {
   else Fxe = cd[65];
   let Bxe;
   if (cd[66] !== Oxe || cd[67] !== Fxe)
-    ((Bxe = e(ve, { options: Oxe, onChange: Fxe })),
+    ((Bxe = e(Select, { options: Oxe, onChange: Fxe })),
       (cd[66] = Oxe),
       (cd[67] = Fxe),
       (cd[68] = Bxe));
@@ -38503,7 +38503,7 @@ function sut(OKn) {
           gap: 1,
           children: [
             roe,
-            e(ve, {
+            e(Select, {
               options: kQ,
               onChange: (UKn) => {
                 if (UKn === "stop") (SQ?.(), tI());
@@ -38639,7 +38639,7 @@ function sut(OKn) {
   else Xxe = Am[44];
   let eRe;
   if (Am[45] !== Xct || Am[46] !== Jct)
-    ((eRe = e(ve, { options: Jct, onChange: Xct })),
+    ((eRe = e(Select, { options: Jct, onChange: Xct })),
       (Am[45] = Xct),
       (Am[46] = Jct),
       (Am[47] = eRe));
@@ -38872,7 +38872,7 @@ function goe(w, I, ne) {
   return e(Text, { dimColor: I.dim && !ne, bold: I.bold || ne, children: w });
 }
 function mut(w) {
-  return getStringWidth(cE(w));
+  return getStringWidth(flattenNodeText(w));
 }
 function put(w, I, ne, me) {
   let pe = w.length,
@@ -39437,7 +39437,7 @@ function BackgroundTasksDialog(Kzn) {
   else zro = ha[2];
   let [oy, Dut] = d(zro),
     Nut = C(oy.mode === "detail"),
-    [EQ, yR, DQ] = qm(0);
+    [EQ, yR, DQ] = useStateWithGetter(0);
   useActiveOverlay("background-tasks-dialog");
   let Yro;
   if (ha[3] !== CS) {
@@ -43045,7 +43045,7 @@ function Cne($6n) {
     Vj = useAppStateSelector(lco),
     W6n = useAppStateSelector(cco),
     [q6n, nco] = d(!1);
-  if (!Loe() || Vj === 0) {
+  if (!isStoneShellRecallEnabled() || Vj === 0) {
     return null;
   }
   let TAe = W6n || q6n;
@@ -44146,7 +44146,7 @@ function qpt({
     { columns: zt } = useTerminalSize(),
     ao = Ae ?? zt,
     co = useAppStateSelector((ki) => U8(ki.sessionMemories)),
-    go = Loe() && co > 0,
+    go = isStoneShellRecallEnabled() && co > 0,
     fo = useAppStateSelector((ki) => ki.footerSelection === "memories");
   useFeatureFlagVersion();
   let ro = getFeatureValue_CACHED_MAY_BE_STALE("tengu_copper_thistle", !1),
@@ -47035,7 +47035,7 @@ async function smo(w, I) {
       `[spellcheck] ignoring language "${I}" (not a plain dictionary name); the checker's default dictionary applies`,
     );
   for (let me of ne) {
-    let pe = await ja(me);
+    let pe = await resolveExecutablePathAsync(me);
     if (pe) return { command: pe, args: buildSpellcheckerArgs(me, I) };
   }
   return (
@@ -48271,7 +48271,7 @@ function _bt(Wsr) {
     ((ppo = areWorkflowsEnabled() && isWorkflowKeywordTriggerEnabled() ? findUltracodeMentions(Cu) : []), (Ts[57] = Cu), (Ts[58] = ppo));
   else ppo = Ts[58];
   let TI = ppo,
-    [U$, H$, uC] = qm(!1),
+    [U$, H$, uC] = useStateWithGetter(!1),
     fpo,
     gpo;
   if (Ts[59] !== bi || Ts[60] !== uC || Ts[61] !== Lm || Ts[62] !== H$)
@@ -50450,8 +50450,8 @@ function Okt(pmr) {
     LS = useSession(),
     qI = C(null),
     gL = TR(),
-    [FS, zc] = qm(!1),
-    [, Wbt, qbt] = qm(null),
+    [FS, zc] = useStateWithGetter(!1),
+    [, Wbt, qbt] = useStateWithGetter(null),
     z$ = gL && O0e !== "NORMAL",
     Zgo,
     eho;
@@ -50665,7 +50665,7 @@ function Okt(pmr) {
     mSt = useAppStateSelector(SSo),
     Iho;
   if ($i[54] !== J$ || $i[55] !== n1 || $i[56] !== Hp || $i[57] !== mSt)
-    ((Iho = Loe() && mSt > 0 && Hp === "prompt" && !J$.show && !n1),
+    ((Iho = isStoneShellRecallEnabled() && mSt > 0 && Hp === "prompt" && !J$.show && !n1),
       ($i[54] = J$),
       ($i[55] = n1),
       ($i[56] = Hp),
@@ -52223,7 +52223,7 @@ function Okt(pmr) {
     ((nie = (TL, Cbo, MNe, N5) => {
       let iie = !1;
       let sie = !1;
-      if (N5?.fromUltracode) ese(MNe, cp);
+      if (N5?.fromUltracode) releaseLaunchEffortPins(MNe, cp);
       else if (N5 !== void 0) applyEffortLevelChange(N5.level, parseModelOrDefault(TL), MNe, cp);
       if ((Cz(), isFastModeEnabled())) clearFastModeCooldown();
       if (
@@ -55119,7 +55119,7 @@ async function FLe(w, I, ne, me) {
         try {
           return jsonStringify(redactDeep(jsonParse(to)));
         } catch {
-          return qr(to);
+          return redactSecretsFromText(to);
         }
       }).join(`
 `),
@@ -57892,7 +57892,7 @@ function MOe(w, I) {
       [ne],
     );
   (E(() => {
-    if (!Loe()) return;
+    if (!isStoneShellRecallEnabled()) return;
     let He = (me.current ??= new Set());
     if (be && pe.current !== void 0) (He.clear(), (pe.current = void 0));
     let Ke = w.filter((Je) => {
@@ -58276,7 +58276,7 @@ F();
 F();
 var E_o = 200;
 function GR(w) {
-  return clipWithEllipsis(qr(w).replace(/\s+/g, " ").trim(), E_o);
+  return clipWithEllipsis(redactSecretsFromText(w).replace(/\s+/g, " ").trim(), E_o);
 }
 var D_o = new Set(["failed", "cancelled", "killed", "error"]);
 function jOe(w) {
@@ -58364,7 +58364,7 @@ function jOe(w) {
           kind: "mcp",
           label: GR(
             ne.statusMessage ??
-              `${rg(ne.serverName) ?? ""} \xB7 ${rg(ne.toolName) ?? ""}`,
+              `${sanitizeSingleLineDisplayText(ne.serverName) ?? ""} \xB7 ${sanitizeSingleLineDisplayText(ne.toolName) ?? ""}`,
           ),
           startedAt: ne.startTime,
           doneAt: ne.endTime,
@@ -58512,7 +58512,7 @@ function nFe(JTr) {
   (zy("impression", q_o), useGlobalExitKeybinding());
   let XL = useAnswerRefusalState(XTr),
     [g_t] = d(X_o),
-    { refusedWithin: h_t, noteRefused: y_t } = $o(),
+    { refusedWithin: h_t, noteRefused: y_t } = useRefusedInputWindow(),
     V_o;
   if (dE[2] !== g_t || dE[3] !== y_t || dE[4] !== h_t)
     ((V_o = () => {
@@ -58596,7 +58596,7 @@ function nFe(JTr) {
           z_o,
           e(Box, {
             children: e(
-              ve,
+              Select,
               {
                 defaultFocusValue: b_t,
                 hideIndexes: !0,
@@ -58694,7 +58694,7 @@ function RFe(Axr) {
   else eTo = RC[9];
   let mE = useAnswerRefusalState(eTo),
     [TJ] = d(iTo),
-    { refusedWithin: w_t, noteRefused: C_t } = $o(),
+    { refusedWithin: w_t, noteRefused: C_t } = useRefusedInputWindow(),
     tTo;
   if (RC[10] !== TJ || RC[11] !== C_t || RC[12] !== w_t)
     ((tTo = () => {
@@ -58946,7 +58946,7 @@ function q_t(w, I) {
 ${be}`;
 }
 function V_t(w) {
-  return ps(Gbe(w));
+  return sanitizeTextForDisplay(Gbe(w));
 }
 function G_t(w, I) {
   return Math.max(1, w - I);
@@ -59141,7 +59141,7 @@ function FFe(Jxr) {
   let OFe;
   if (Jg[28] !== Cse || Jg[29] !== eTt || Jg[30] !== LFe)
     ((OFe = e(Box, {
-      children: e(ve, {
+      children: e(Select, {
         options: oRr,
         isDisabled: eTt,
         onChange: Cse,
@@ -59199,7 +59199,7 @@ function HFe(uRr) {
   else vTo = BFe[1];
   let UFe;
   if (BFe[2] !== PJ)
-    ((UFe = e(ve, { options: vTo, onChange: PJ })),
+    ((UFe = e(Select, { options: vTo, onChange: PJ })),
       (BFe[2] = PJ),
       (BFe[3] = UFe));
   else UFe = BFe[3];
@@ -59254,8 +59254,8 @@ function UsageCreditsAdminRequestDialog(IRr) {
     { credentials: sTt } = useStorageV5Context(),
     [ERr, DRr] = d(!1),
     jFe = C(!1),
-    fE = ui(),
-    { refusedWithin: hE, noteRefused: yE, epoch: NRr } = $o(),
+    fE = useIsMountRecent(),
+    { refusedWithin: hE, noteRefused: yE, epoch: NRr } = useRefusedInputWindow(),
     TTo;
   if (XR[0] !== fE || XR[1] !== yE || XR[2] !== hE)
     ((TTo = function Tse() {
@@ -59270,8 +59270,8 @@ function UsageCreditsAdminRequestDialog(IRr) {
       (XR[3] = TTo));
   else TTo = XR[3];
   let Tse = TTo,
-    aTt = Gm(),
-    lTt = fa(NRr),
+    aTt = useMountTime(),
+    lTt = useSettleAfterChange(NRr),
     xTo;
   if (XR[4] === MEMO_CACHE_SENTINEL) ((xTo = []), (XR[4] = xTo));
   else xTo = XR[4];
@@ -59462,10 +59462,10 @@ function ExtraUsageDialog(w) {
     [it, at] = d(0),
     Zt = useAnswerRefusalState(() => be());
   if (Je !== He.s) (Qe(He.s), at(Date.now()));
-  let Ct = ui(),
-    { refusedWithin: eo, noteRefused: jt, epoch: Tt } = $o(),
+  let Ct = useIsMountRecent(),
+    { refusedWithin: eo, noteRefused: jt, epoch: Tt } = useRefusedInputWindow(),
     to = C(!1),
-    zt = fa(`${it}:${Tt}`);
+    zt = useSettleAfterChange(`${it}:${Tt}`);
   function ao() {
     return (it !== 0 && isRecent(it)) || eo();
   }
@@ -59690,14 +59690,14 @@ function ExtraUsageDialog(w) {
                   })
                 : e(LearnMoreLink, { url: EXTRA_USAGE_HELP_URL }),
             e(
-              ve,
+              Select,
               {
                 options: [
                   { label: on, value: "switch" },
                   { label: Gn, value: "confirm" },
                   ...(Sn ? [Sn] : []),
                 ],
-                selectedValue: vs,
+                selectedValue: NO_COMMITTED_ROW,
                 refuseInput: co,
                 hideIndexes: !0,
                 defaultFocusValue: "switch",
@@ -59751,7 +59751,7 @@ function ExtraUsageDialog(w) {
         title: vo,
         color: "warning",
         onCancel: Wo,
-        children: e(fit, {
+        children: e(PlainAwait, {
           message: "Turning on usage credits\u2026",
           work: He.work,
           failure: !1,
@@ -60139,7 +60139,7 @@ function iBe(HPr) {
   let rBe;
   if (mp[32] !== Rse || mp[33] !== kTt || mp[34] !== nBe)
     ((rBe = e(Box, {
-      children: e(ve, {
+      children: e(Select, {
         options: WPr,
         isDisabled: kTt,
         onChange: Rse,
@@ -60246,7 +60246,7 @@ function Mse(ZPr) {
         children: [
           cxo,
           e(Box, {
-            children: e(ve, {
+            children: e(Select, {
               defaultFocusValue: CTt,
               options: tMr,
               isDisabled: _Tt,
@@ -60304,7 +60304,7 @@ function uBe(uMr) {
   else fxo = K1[7];
   let cBe;
   if (K1[8] !== IJ)
-    ((cBe = e(ve, { options: fxo, onChange: (mMr) => IJ(mMr) })),
+    ((cBe = e(Select, { options: fxo, onChange: (mMr) => IJ(mMr) })),
       (K1[8] = IJ),
       (K1[9] = cBe));
   else cBe = K1[9];
@@ -62503,8 +62503,8 @@ function aUe(lIr) {
 function iUe(uIr) {
   let xv = _(39),
     { tccState: vO, onDone: WJ, wouldTakeAnswer: uxt } = uIr,
-    ME = ui(),
-    { refusedWithin: IE, noteRefused: DE } = $o(),
+    ME = useIsMountRecent(),
+    { refusedWithin: IE, noteRefused: DE } = useRefusedInputWindow(),
     dRo;
   if (xv[0] !== ME || xv[1] !== DE || xv[2] !== IE)
     ((dRo = function cae() {
@@ -62652,10 +62652,10 @@ function iUe(uIr) {
   else gRo = xv[27];
   let $Be;
   if (xv[28] !== wO || xv[29] !== uae || xv[30] !== dxt || xv[31] !== cae)
-    (($Be = e(ve, {
+    (($Be = e(Select, {
       hideIndexes: !0,
       refuseInput: cae,
-      selectedValue: vs,
+      selectedValue: NO_COMMITTED_ROW,
       options: dxt,
       onChange: uae,
       onCancel: wO,
@@ -62799,8 +62799,8 @@ function sUe(mIr) {
       (Gu[24] = NE));
   else NE = Gu[24];
   let pW = NE,
-    qJ = ui(),
-    { refusedWithin: GJ, noteRefused: KJ, epoch: yIr } = $o(),
+    qJ = useIsMountRecent(),
+    { refusedWithin: GJ, noteRefused: KJ, epoch: yIr } = useRefusedInputWindow(),
     fae;
   if (Gu[25] !== qJ || Gu[26] !== KJ || Gu[27] !== GJ)
     ((fae = function hae() {
@@ -62815,7 +62815,7 @@ function sUe(mIr) {
       (Gu[28] = fae));
   else fae = Gu[28];
   let hae = fae,
-    hxt = fa(yIr),
+    hxt = useSettleAfterChange(yIr),
     kRo;
   if (Gu[29] === MEMO_CACHE_SENTINEL)
     ((kRo = {
@@ -63055,10 +63055,10 @@ function sUe(mIr) {
     Gu[68] !== tUe
   )
     ((oUe = e(
-      ve,
+      Select,
       {
         hideIndexes: !0,
-        selectedValue: vs,
+        selectedValue: NO_COMMITTED_ROW,
         options: bxt,
         refuseInput: hae,
         defaultFocusValue: "deny",
@@ -63314,7 +63314,7 @@ function yUe(XIr) {
   )
     ((gUe = e(Box, {
       children: e(
-        ve,
+        Select,
         {
           defaultFocusValue: xxt,
           options: Rxt,
@@ -63371,7 +63371,7 @@ function CUe(bEr) {
     KT = Math.min(jxt, Math.max(1, Math.floor(vEr / 2) - $xt)),
     HRo;
   if (DC[0] !== Lxt || DC[1] !== Ext)
-    ((HRo = Vm(ps(Ext), Math.max(1, Lxt - 4), "wrap").split(`
+    ((HRo = Vm(sanitizeTextForDisplay(Ext), Math.max(1, Lxt - 4), "wrap").split(`
 `)),
       (DC[0] = Lxt),
       (DC[1] = Ext),
@@ -63514,7 +63514,7 @@ function CUe(bEr) {
   let wUe;
   if (DC[31] !== Nxt || DC[32] !== Dxt || DC[33] !== Hxt)
     ((wUe = e(
-      ve,
+      Select,
       { defaultFocusValue: Hxt, options: YRo, onChange: Dxt },
       Nxt,
     )),
@@ -63593,8 +63593,8 @@ function HUe(KEr) {
     ((ePo = () => (tX ? resolveBundleSeedViability().catch(pPo) : null)), (FO[2] = tX), (FO[3] = ePo));
   else ePo = FO[3];
   let [Yxt] = d(ePo),
-    Jxt = ui(),
-    { refusedWithin: Xxt, noteRefused: Zxt } = $o(),
+    Jxt = useIsMountRecent(),
+    { refusedWithin: Xxt, noteRefused: Zxt } = useRefusedInputWindow(),
     tPo;
   if (FO[4] !== Kxt)
     ((tPo = function BO(zEr) {
@@ -63697,8 +63697,8 @@ function UUe(YEr) {
   if (Iv[2] !== eRt) ((aPo = zR(eRt)), (Iv[2] = eRt), (Iv[3] = aPo));
   else aPo = Iv[3];
   let lPo = aPo,
-    nRt = ui(),
-    { refusedWithin: rRt, noteRefused: iRt } = $o(),
+    nRt = useIsMountRecent(),
+    { refusedWithin: rRt, noteRefused: iRt } = useRefusedInputWindow(),
     cPo;
   if (Iv[4] !== nRt || Iv[5] !== iRt || Iv[6] !== rRt)
     ((cPo = function HO() {
@@ -63821,7 +63821,7 @@ function UUe(YEr) {
   else FUe = Iv[32];
   let BUe;
   if (Iv[33] !== OUe || Iv[34] !== FUe || Iv[35] !== DUe)
-    ((BUe = e(ve, {
+    ((BUe = e(Select, {
       refuseInput: DUe,
       selectedValue: "cancelled",
       options: OUe,
@@ -63860,8 +63860,8 @@ function QHe(gDr) {
     [hDr, yDr] = d(Fc),
     [jUe, bDr] = d(0);
   if (hDr !== Fc) (yDr(Fc), bDr(Date.now()));
-  let NC = ui(),
-    { refusedWithin: kb, noteRefused: vb } = $o(),
+  let NC = useIsMountRecent(),
+    { refusedWithin: kb, noteRefused: vb } = useRefusedInputWindow(),
     gPo;
   if (fp[0] !== jUe)
     ((gPo = () => jUe !== 0 && isRecent(jUe)), (fp[0] = jUe), (fp[1] = gPo));
@@ -64338,10 +64338,10 @@ function DHe(kDr) {
         DPo,
         e(Box, {
           marginTop: 1,
-          children: e(ve, {
+          children: e(Select, {
             refuseInput: kRt,
             hideIndexes: !0,
-            selectedValue: vs,
+            selectedValue: NO_COMMITTED_ROW,
             options: cX,
             onChange: XUe,
             onCancel: lX,
@@ -64486,10 +64486,10 @@ function HHe(CDr) {
   if (uP[14] !== uX || uP[15] !== dX || uP[16] !== PRt || uP[17] !== vHe)
     ((wHe = e(Box, {
       marginTop: 1,
-      children: e(ve, {
+      children: e(Select, {
         refuseInput: PRt,
         hideIndexes: !0,
-        selectedValue: vs,
+        selectedValue: NO_COMMITTED_ROW,
         options: dX,
         onChange: vHe,
         onCancel: uX,
@@ -64709,10 +64709,10 @@ function zHe(ADr) {
   if (YT[14] !== mX || YT[15] !== pX || YT[16] !== DRt || YT[17] !== MHe)
     ((IHe = e(Box, {
       marginTop: 1,
-      children: e(ve, {
+      children: e(Select, {
         refuseInput: DRt,
         hideIndexes: !0,
-        selectedValue: vs,
+        selectedValue: NO_COMMITTED_ROW,
         options: pX,
         onChange: MHe,
         onCancel: mX,
@@ -66061,10 +66061,10 @@ function Jae(FNr) {
                       $u.key,
                     )
                   : e(
-                      ve,
+                      Select,
                       {
                         options: SAo,
-                        selectedValue: ZO[$u.key]?.selectedValue ?? vs,
+                        selectedValue: ZO[$u.key]?.selectedValue ?? NO_COMMITTED_ROW,
                         onChange: (Oje) => {
                           if (!Ov()) {
                             return !1;
@@ -67376,12 +67376,12 @@ function FlaggedItemsRemoveDialog({
   onCancel: xe,
   hideIndexes: Ae,
 }) {
-  let { epoch: Oe, noteAttempt: He } = c9e(),
-    Ke = fa(Oe, REFUSE_INPUT_WINDOW_MS),
+  let { epoch: Oe, noteAttempt: He } = useAttemptEpoch(),
+    Ke = useSettleAfterChange(Oe, REFUSE_INPUT_WINDOW_MS),
     [Je, Qe] = d(I),
-    it = fa(Je, REFUSE_INPUT_WINDOW_MS),
+    it = useSettleAfterChange(Je, REFUSE_INPUT_WINDOW_MS),
     at = useIsScreenReaderEnabled(),
-    { refusedWithin: Zt, noteRefused: Ct } = $o();
+    { refusedWithin: Zt, noteRefused: Ct } = useRefusedInputWindow();
   function eo() {
     if (!it.settled || Zt(REFUSE_INPUT_WINDOW_MS)) return (Ct(), !0);
     return !1;
@@ -67452,10 +67452,10 @@ function FlaggedItemsRemoveDialog({
             "Removed entries can be restored by re-adding them verbatim.",
         }),
         e(
-          ve,
+          Select,
           {
             refuseInput: jt,
-            selectedValue: vs,
+            selectedValue: NO_COMMITTED_ROW,
             defaultFocusValue: "all",
             hideIndexes: Ae,
             options: [
@@ -67493,8 +67493,8 @@ function AutoModeSetupReviewDialog(xFr) {
       onDecline: qMt,
       onCancel: qX,
     } = xFr,
-    { epoch: RFr, noteAttempt: XE } = c9e(),
-    f$e = fa(RFr, REFUSE_INPUT_WINDOW_MS),
+    { epoch: RFr, noteAttempt: XE } = useAttemptEpoch(),
+    f$e = useSettleAfterChange(RFr, REFUSE_INPUT_WINDOW_MS),
     YIo;
   if (Bh[0] !== f$e.settled || Bh[1] !== XE)
     ((YIo = function cle() {
@@ -67639,10 +67639,10 @@ function AutoModeSetupReviewDialog(xFr) {
     Bh[37] !== M$e
   )
     ((A$e = e(
-      ve,
+      Select,
       {
         refuseInput: cle,
-        selectedValue: vs,
+        selectedValue: NO_COMMITTED_ROW,
         options: ZIo,
         hideIndexes: jMt,
         defaultFocusValue: p$e,
@@ -68323,10 +68323,10 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
               }),
             }),
           e(
-            ve,
+            Select,
             {
               defaultFocusValue: no,
-              selectedValue: vs,
+              selectedValue: NO_COMMITTED_ROW,
               options: Kn,
               inlineDescriptions: !0,
               onChange: nn.answer,
@@ -68518,8 +68518,8 @@ function s1e(lUr) {
   else o1e = $v[23];
   let n1e;
   if ($v[24] !== pAt || $v[25] !== aAt || $v[26] !== gAt)
-    ((n1e = e(ve, {
-      selectedValue: vs,
+    ((n1e = e(Select, {
+      selectedValue: NO_COMMITTED_ROW,
       options: gAt,
       onChange: aAt,
       onCancel: pAt,
@@ -68593,9 +68593,9 @@ function y1e(SUr) {
       (nD[0] = DEo));
   else DEo = nD[0];
   let kUr = DEo,
-    vAt = ui(),
-    { refusedWithin: wAt, noteRefused: CAt, epoch: vUr } = $o(),
-    TAt = fa(vUr),
+    vAt = useIsMountRecent(),
+    { refusedWithin: wAt, noteRefused: CAt, epoch: vUr } = useRefusedInputWindow(),
+    TAt = useSettleAfterChange(vUr),
     NEo;
   if (nD[1] !== vAt || nD[2] !== CAt || nD[3] !== wAt)
     ((NEo = function rD() {
@@ -68686,9 +68686,9 @@ function y1e(SUr) {
     ((h1e = e(Box, {
       marginTop: 1,
       children: e(
-        ve,
+        Select,
         {
-          selectedValue: vs,
+          selectedValue: NO_COMMITTED_ROW,
           options: kUr,
           defaultFocusValue: MAt,
           hideIndexes: !0,
@@ -68735,7 +68735,7 @@ function EAt({ payload: w, answer: I }) {
   let { phase: ne, installPageOpened: me } = w,
     pe = C(ne),
     be = C(Date.now()),
-    { refusedWithin: xe, noteRefused: Ae } = $o();
+    { refusedWithin: xe, noteRefused: Ae } = useRefusedInputWindow();
   if (pe.current !== ne) ((pe.current = ne), (be.current = Date.now()));
   function Oe() {
     if (isRecent(be.current, REFUSE_INPUT_WINDOW_MS) || xe(REFUSE_INPUT_WINDOW_MS)) return (Ae(), !0);
@@ -68845,10 +68845,10 @@ function EAt({ payload: w, answer: I }) {
           ],
         }),
         e(
-          ve,
+          Select,
           {
             hideIndexes: !0,
-            selectedValue: vs,
+            selectedValue: NO_COMMITTED_ROW,
             options: Qe,
             refuseInput: Oe,
             onChange: He,
@@ -68960,7 +68960,7 @@ function x1e(KUr) {
   else VEo = xb[25];
   let T1e;
   if (xb[26] !== NAt || xb[27] !== XX)
-    ((T1e = e(ve, { options: VEo, onChange: NAt, onCancel: XX })),
+    ((T1e = e(Select, { options: VEo, onChange: NAt, onCancel: XX })),
       (xb[26] = NAt),
       (xb[27] = XX),
       (xb[28] = T1e));
@@ -69013,7 +69013,7 @@ function P1e(lHr) {
   if ($W[1] === MEMO_CACHE_SENTINEL) ((zEo = Date.now()), ($W[1] = zEo));
   else zEo = $W[1];
   let cHr = C(zEo),
-    { refusedWithin: HAt, noteRefused: jAt, epoch: uHr } = $o(),
+    { refusedWithin: HAt, noteRefused: jAt, epoch: uHr } = useRefusedInputWindow(),
     QEo;
   if ($W[2] !== jAt || $W[3] !== HAt)
     ((QEo = function yF() {
@@ -69040,7 +69040,7 @@ function P1e(lHr) {
       ($W[7] = YEo));
   else YEo = $W[7];
   let bF = YEo,
-    $At = fa(uHr, REFUSE_INPUT_WINDOW_MS),
+    $At = useSettleAfterChange(uHr, REFUSE_INPUT_WINDOW_MS),
     JEo;
   if ($W[8] === MEMO_CACHE_SENTINEL)
     ((JEo = e(Text, {
@@ -69072,10 +69072,10 @@ function P1e(lHr) {
           e(Box, {
             marginTop: 1,
             children: e(
-              ve,
+              Select,
               {
                 hideIndexes: !0,
-                selectedValue: vs,
+                selectedValue: NO_COMMITTED_ROW,
                 refuseInput: yF,
                 defaultFocusValue: "not_now",
                 options: WAt,
@@ -69128,8 +69128,8 @@ function JAt(w, I) {
 function L1e(EHr) {
   let lD = _(27),
     { payload: VAt, answer: GAt, wouldTakeAnswer: KAt } = EHr,
-    t3 = ui(),
-    { refusedWithin: o3, noteRefused: r3, epoch: DHr } = $o(),
+    t3 = useIsMountRecent(),
+    { refusedWithin: o3, noteRefused: r3, epoch: DHr } = useRefusedInputWindow(),
     eDo;
   if (lD[0] !== t3 || lD[1] !== r3 || lD[2] !== o3)
     ((eDo = function fle() {
@@ -69144,8 +69144,8 @@ function L1e(EHr) {
       (lD[3] = eDo));
   else eDo = lD[3];
   let fle = eDo,
-    zAt = Gm(),
-    QAt = fa(DHr),
+    zAt = useMountTime(),
+    QAt = useSettleAfterChange(DHr),
     YAt = useAppStateSelector(lDo),
     tDo;
   if (lD[4] === MEMO_CACHE_SENTINEL) ((tDo = createSetModeRow("plan")), (lD[4] = tDo));
@@ -69655,9 +69655,9 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     Oi = Fr ? getIdeDisplayName(Fr) : null,
     rs = C(!1),
     Fi = C(Date.now()),
-    Wi = ui(),
+    Wi = useIsMountRecent(),
     qs = C(null),
-    { refusedWithin: ta, noteRefused: Ki } = $o();
+    { refusedWithin: ta, noteRefused: Ki } = useRefusedInputWindow();
   function qi() {
     let ur = qs.current,
       Pi = ur === null ? DEFAULT_RECENT_WINDOW_MS : eq;
@@ -70060,9 +70060,9 @@ ${_o}${wi}${Ms}${da}`,
           e(Text, { children: "Claude wants to exit plan mode" }),
           e(Box, {
             marginTop: 1,
-            children: e(ve, {
+            children: e(Select, {
               refuseInput: qi,
-              selectedValue: vs,
+              selectedValue: NO_COMMITTED_ROW,
               options: [
                 { label: jo !== null ? jo.node : "Yes", value: "yes" },
                 { label: "No", value: "no" },
@@ -70137,9 +70137,9 @@ ${_o}${wi}${Ms}${da}`,
                   }),
                   e(Box, {
                     marginTop: 1,
-                    children: e(ve, {
+                    children: e(Select, {
                       refuseInput: qi,
-                      selectedValue: vs,
+                      selectedValue: NO_COMMITTED_ROW,
                       options: LIt,
                       onChange: oc,
                       onCancel: Ko,
@@ -70164,9 +70164,9 @@ ${_o}${wi}${Ms}${da}`,
                   }),
                   e(Box, {
                     marginTop: 1,
-                    children: e(ve, {
+                    children: e(Select, {
                       refuseInput: qi,
-                      selectedValue: vs,
+                      selectedValue: NO_COMMITTED_ROW,
                       options: un,
                       defaultFocusValue: Io,
                       onChange: (ur) => void hc(ur),
@@ -71266,8 +71266,8 @@ function vEt({ payload: w, answer: I }) {
                     kind: "file",
                   }),
                 }),
-              e(ve, {
-                selectedValue: vs,
+              e(Select, {
+                selectedValue: NO_COMMITTED_ROW,
                 options: ro,
                 inlineDescriptions: !0,
                 onChange: po,
@@ -71313,15 +71313,15 @@ function qWe(yqr) {
     bqr = OWe(),
     yNo;
   if (sx[0] !== _Et.condition)
-    ((yNo = ps(_Et.condition)), (sx[0] = _Et.condition), (sx[1] = yNo));
+    ((yNo = sanitizeTextForDisplay(_Et.condition)), (sx[0] = _Et.condition), (sx[1] = yNo));
   else yNo = sx[1];
   let xEt = yNo,
     bNo;
   if (sx[2] === MEMO_CACHE_SENTINEL) ((bNo = Date.now()), (sx[2] = bNo));
   else bNo = sx[2];
   let SNo = C(bNo),
-    { refusedWithin: y3, noteRefused: b3, epoch: Sqr } = $o(),
-    REt = Gm(),
+    { refusedWithin: y3, noteRefused: b3, epoch: Sqr } = useRefusedInputWindow(),
+    REt = useMountTime(),
     kNo;
   if (sx[3] !== b3 || sx[4] !== y3)
     ((kNo = function jle() {
@@ -71350,7 +71350,7 @@ function qWe(yqr) {
       (sx[9] = vNo));
   else vNo = sx[9];
   let k3 = vNo,
-    PEt = fa(Sqr, REFUSE_INPUT_WINDOW_MS),
+    PEt = useSettleAfterChange(Sqr, REFUSE_INPUT_WINDOW_MS),
     wNo;
   if (sx[10] === MEMO_CACHE_SENTINEL)
     ((wNo = e(Text, {
@@ -71926,9 +71926,9 @@ var fk = {
         text: "A message from another session needs your approval",
       },
     },
-    [K6e.kind]: { notification: { text: "Claude wants to use your browser" } },
-    [X6e.kind]: { notification: { text: "Setting up Claude in Chrome" } },
-    [Wz.kind]: {
+    [CHROME_INSTALL_UPSELL_DIALOG.kind]: { notification: { text: "Claude wants to use your browser" } },
+    [CHROME_INSTALL_SETUP_DIALOG.kind]: { notification: { text: "Setting up Claude in Chrome" } },
+    [CLOUD_SYNC_OFFLINE_DIALOG.kind]: {
       waitingFor: "dialog open",
       needs: "acknowledge: file sync offline notice",
       notification: {
@@ -72247,7 +72247,7 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     _o = V(() => {
       if (ho || !getFeatureValue_CACHED_MAY_BE_STALE("tengu_destructive_command_warning", !1)) return null;
       let on = typeof w.input.command === "string" ? w.input.command : pe;
-      return mzn(on);
+      return getPowerShellDestructiveCommandWarning(on);
     }, [pe, w.input, ho]),
     Ho =
       findSafetyCheckReason(
@@ -72347,8 +72347,8 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
               children: e(Text, { color: "warning", children: _o }),
             }),
           e(Text, { children: "Do you want to proceed?" }),
-          e(ve, {
-            selectedValue: vs,
+          e(Select, {
+            selectedValue: NO_COMMITTED_ROW,
             options: xo,
             inlineDescriptions: !0,
             onChange: Wo,
@@ -72512,8 +72512,8 @@ function Iqe(UGr) {
   if (ax[29] !== C3 || ax[30] !== zEt || ax[31] !== wD)
     ((Rqe = e(Box, {
       marginTop: 1,
-      children: e(ve, {
-        selectedValue: vs,
+      children: e(Select, {
+        selectedValue: NO_COMMITTED_ROW,
         options: zEt,
         onChange: C3,
         onCancel: wD,
@@ -73081,8 +73081,8 @@ function SVe(yKr) {
   else dLo = of[41];
   let pVe;
   if (of[42] !== kDt || of[43] !== SDt || of[44] !== CDt)
-    ((pVe = e(ve, {
-      selectedValue: vs,
+    ((pVe = e(Select, {
+      selectedValue: NO_COMMITTED_ROW,
       options: CDt,
       onChange: SDt,
       onCancel: kDt,
@@ -73438,9 +73438,9 @@ var VVe = {
   ...fl(FABLE_OVERAGE_CONSENT_DIALOG, e0t),
   ...fl(BROWSER_PERMISSION_DIALOG, s1e),
   ...fl(G_, y1e),
-  ...fl(K6e, P1e),
-  ...fl(X6e, EAt),
-  ...fl(Wz, x1e),
+  ...fl(CHROME_INSTALL_UPSELL_DIALOG, P1e),
+  ...fl(CHROME_INSTALL_SETUP_DIALOG, EAt),
+  ...fl(CLOUD_SYNC_OFFLINE_DIALOG, x1e),
   ...(HDt && jDt ? fl(jDt, HDt) : {}),
   ...($Dt && WDt ? fl(WDt, $Dt) : {}),
   ...(qDt && VDt ? fl(VDt, qDt) : {}),
@@ -73939,7 +73939,7 @@ function dce(AQr) {
     DOo;
   if (cx[16] !== Ry || cx[17] !== tGe)
     ((EOo = () => {
-      xdt(Ry, tGe);
+      setSessionWorking(Ry, tGe);
     }),
       (DOo = [Ry, tGe]),
       (cx[16] = Ry),
@@ -73950,7 +73950,7 @@ function dce(AQr) {
   E(EOo, DOo);
   let NOo, LOo;
   if (cx[20] !== Ry)
-    ((NOo = () => () => xdt(Ry, !1)),
+    ((NOo = () => () => setSessionWorking(Ry, !1)),
       (LOo = [Ry]),
       (cx[20] = Ry),
       (cx[21] = NOo),
@@ -73962,7 +73962,7 @@ function dce(AQr) {
     FOo;
   if (cx[23] !== Ry || cx[24] !== oGe)
     ((OOo = () => {
-      Idt(Ry, oGe);
+      setSessionUserPromptPending(Ry, oGe);
     }),
       (FOo = [Ry, oGe]),
       (cx[23] = Ry),
@@ -73973,7 +73973,7 @@ function dce(AQr) {
   E(OOo, FOo);
   let BOo, UOo;
   if (cx[27] !== Ry)
-    ((BOo = () => () => Idt(Ry, !1)),
+    ((BOo = () => () => setSessionUserPromptPending(Ry, !1)),
       (UOo = [Ry]),
       (cx[27] = Ry),
       (cx[28] = BOo),
@@ -78821,7 +78821,7 @@ function SLt(w, I) {
   }, [w, I]);
 }
 function kLt(w) {
-  (w ? Promise.resolve(0) : Xjn())
+  (w ? Promise.resolve(0) : countLiveBridgeReplSessions())
     .then((I) => {
       if (I >= 2)
         logFeatureBad("bridge_repl", "multi_session_crash", {
@@ -82486,7 +82486,7 @@ function XKe(Boi) {
   else YKe = QF[17];
   let JKe;
   if (QF[18] !== YKe || QF[19] !== ZLt || QF[20] !== QKe)
-    ((JKe = r(F0e.Provider, { value: ZLt, children: [QKe, YKe] })),
+    ((JKe = r(HoverHighlightContext.Provider, { value: ZLt, children: [QKe, YKe] })),
       (QF[18] = YKe),
       (QF[19] = ZLt),
       (QF[20] = QKe),
@@ -82995,7 +82995,7 @@ class r2e {
       if (xo && !Ae && !Oe)
         showNotification(
           {
-            message: `${iOt(xo.name)} needs permission for ${typeof xo.tool === "string" ? uAt(xo.tool) : "(unnamed tool)"}`,
+            message: `${iOt(xo.name)} needs permission for ${typeof xo.tool === "string" ? formatToolNameForDisplay(xo.tool) : "(unnamed tool)"}`,
             notificationType: "worker_permission_prompt",
           },
           pe,
@@ -83708,7 +83708,7 @@ function Sue(gri) {
   else T2e = tw[37];
   let x2e;
   if (tw[38] !== fue || tw[39] !== T2e)
-    ((x2e = e(ve, { options: T2e, onChange: fue })),
+    ((x2e = e(Select, { options: T2e, onChange: fue })),
       (tw[38] = fue),
       (tw[39] = T2e),
       (tw[40] = x2e));
@@ -84098,7 +84098,7 @@ function Mue(Kri) {
     tii = OHo ? "keep-with-tmux" : "keep",
     Pq;
   if (nw[28] !== JF || nw[29] !== NOt)
-    ((Pq = e(ve, { defaultFocusValue: tii, options: NOt, onChange: JF })),
+    ((Pq = e(Select, { defaultFocusValue: tii, options: NOt, onChange: JF })),
       (nw[28] = JF),
       (nw[29] = NOt),
       (nw[30] = Pq));
@@ -86664,7 +86664,7 @@ function Lze(Pli) {
               Eli.map((Qjo, Dli) => {
                 let LFt = Gjo + Dli === Vjo;
                 return e(
-                  nl,
+                  SelectListRow,
                   {
                     isFocused: LFt,
                     declareCursor: !qq,
@@ -86966,7 +86966,7 @@ function Wze() {
         if (!isCacheHeartbeatEnabled()) return;
         let { mode: be, isCompacting: xe } = ne.get();
         updateCacheHeartbeatWorkKind({
-          working: Hdt(w),
+          working: isSessionWorking(w),
           spinnerMode: be,
           isCompacting: xe,
           delegatedWorkRunning: hasActiveAgentTask(I.getState().tasks),
@@ -86976,7 +86976,7 @@ function Wze() {
       }
     }
     (setCacheHeartbeatInteractive(!0), me());
-    let pe = [ne.subscribe(me), d1t(w, me), I.subscribe(me)];
+    let pe = [ne.subscribe(me), subscribeSessionWorking(w, me), I.subscribe(me)];
     return () => {
       for (let be of pe) be();
       setCacheHeartbeatInteractive(!1);
@@ -87576,7 +87576,7 @@ var gBt = {
 var bBt = { id: "install-issues", setup: () => p$o };
 function p$o() {
   if (Nn()) return;
-  Bce()
+  checkInstall()
     .then((w) => {
       let I = 0;
       for (let ne of w)
@@ -87807,9 +87807,9 @@ async function wBt(w) {
         }),
         { installed: !1, skipped: !0, reason: "policy_blocked" }
       );
-    if ((await getKnownMarketplaces(w))[ig])
+    if ((await getKnownMarketplaces(w))[OFFICIAL_MARKETPLACE_NAME])
       return (
-        logForDebugging(`Official marketplace '${ig}' already installed, skipping`),
+        logForDebugging(`Official marketplace '${OFFICIAL_MARKETPLACE_NAME}' already installed, skipping`),
         await saveGlobalConfig(
           (He) => ({
             ...He,
@@ -87824,7 +87824,7 @@ async function wBt(w) {
         ),
         { installed: !1, skipped: !0, reason: "already_installed" }
       );
-    if (!isSourceAllowedByPolicy(toe))
+    if (!isSourceAllowedByPolicy(OFFICIAL_MARKETPLACE_SOURCE))
       return (
         logForDebugging("Official marketplace blocked by enterprise policy, skipping"),
         await saveGlobalConfig(
@@ -87844,16 +87844,16 @@ async function wBt(w) {
         { installed: !1, skipped: !0, reason: "policy_blocked" }
       );
     let pe = getMarketplacesDir(),
-      be = v$o(pe, ig);
+      be = v$o(pe, OFFICIAL_MARKETPLACE_NAME);
     if ((await fetchOfficialMarketplaceFromGcs(be, pe, w)) !== null)
       return (
         logFeatureOk("plugin_official_marketplace_fetch"),
         await updateKnownMarketplaces((He) => {
-          let Ke = He[ig];
+          let Ke = He[OFFICIAL_MARKETPLACE_NAME];
           if (Ke && findContainingSeedDir(Ke.installLocation)) return null;
           return (
-            (He[ig] = {
-              source: toe,
+            (He[OFFICIAL_MARKETPLACE_NAME] = {
+              source: OFFICIAL_MARKETPLACE_SOURCE,
               installLocation: be,
               lastUpdated: new Date().toISOString(),
             }),
@@ -87939,7 +87939,7 @@ async function wBt(w) {
       );
     }
     (logForDebugging("Attempting to auto-install official marketplace"),
-      await addMarketplace(toe, void 0, w),
+      await addMarketplace(OFFICIAL_MARKETPLACE_SOURCE, void 0, w),
       logForDebugging("Successfully auto-installed official marketplace"));
     let Oe = I.officialMarketplaceAutoInstallRetryCount || 0;
     return (
@@ -89473,7 +89473,7 @@ async function SUt(w, I) {
   if (pe !== void 0)
     return (logForDebugging(`[binaryCheck] Cache hit for '${ne}': ${pe}`), pe);
   let be = !1;
-  if (await ja(ne).catch(() => null)) be = !0;
+  if (await resolveExecutablePathAsync(ne).catch(() => null)) be = !0;
   return (
     me.remember(ne, be),
     logForDebugging(`[binaryCheck] Binary '${ne}' ${be ? "found" : "not found"}`),
@@ -89660,7 +89660,7 @@ async function E6(w, I, ne, me, pe, be) {
       }),
       logFeatureOk("plugin_recommendation_install"));
   } catch (Ae) {
-    if (Ae instanceof Ui) {
+    if (Ae instanceof PluginSourceError) {
       (logForDebugging(`Plugin ${w} not installed: ${Ae.message}`),
         me({
           key: `${ne}-install-refused`,
@@ -89669,7 +89669,7 @@ async function E6(w, I, ne, me, pe, be) {
           priority: "immediate",
           timeoutMs: 8000,
         }));
-      let { code: Oe, kind: He } = cwt(Ae);
+      let { code: Oe, kind: He } = describePluginFailure(Ae);
       if (He === "bad") logFeatureBad("plugin_recommendation_install", Oe);
       else logFeatureSad("plugin_recommendation_install", Oe);
       return;
@@ -89813,7 +89813,7 @@ function DUt({ pluginId: w, pluginName: I }, ne, me, pe) {
             void 0,
             void 0,
             be.marketplaceInstallLocation,
-            lJ(w, xe),
+            lookupMarketplaceSource(w, xe),
             void 0,
             pe,
             { explicitInstall: !1 },
@@ -89875,7 +89875,7 @@ async function fQe(w, I) {
   try {
     be = await findPluginEntry(ne, I);
   } catch (xe) {
-    if (xe instanceof Ui)
+    if (xe instanceof PluginSourceError)
       return (logForDebugging(`Plugin hint ${ne} not resolvable: ${l(xe)}`), null);
     throw xe;
   }

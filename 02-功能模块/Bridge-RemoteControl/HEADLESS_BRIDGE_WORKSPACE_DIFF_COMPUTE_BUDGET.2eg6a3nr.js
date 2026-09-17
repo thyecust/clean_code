@@ -109,7 +109,7 @@ import { waitForPolicyLimitsToLoad } from "../策略限制(PolicyLimits)/policy-
 import { readFileForRemote } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { buildWorkspaceDiffResponse } from "../Git-Worktree/chunk-qdn32vbw.js";
 import { collectConversationText, generateSessionTitle } from "../会话-历史-恢复/session-title.js";
-import { ndt, Yjn } from "./chunk-ga43tr2w.js";
+import { getBridgeVersionRequirementMessage, createBridgeSessionHandle } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
 import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
 import "./bridge-inbound-origin.js";
@@ -1212,7 +1212,7 @@ async function initReplBridge(d) {
       credentials: U,
     }),
     an = await gt(O, U),
-    ct = await ndt();
+    ct = await getBridgeVersionRequirementMessage();
   if (ct)
     return (
       logBridgeSkip("version_too_old", `[bridge:repl] Skipping: ${ct}`, !0),
@@ -1277,7 +1277,7 @@ async function initReplBridge(d) {
     un = 0,
     pn = createDefaultToolPermissionContext(),
     he,
-    L = (Y = await Yjn({
+    L = (Y = await createBridgeSessionHandle({
       titleWriter: q,
       noHistoryBackfill: I && ue?.uncertaintyOnly !== !0,
       neutralFallbackTitle: it,

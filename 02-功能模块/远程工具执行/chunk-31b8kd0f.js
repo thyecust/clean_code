@@ -57,7 +57,7 @@ import { setMainLoopRefcountListener, setNestedChainDropListener, getMainLoopRef
 import { recordStartupPhase, markHydratePrefetchSettled } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { StructuredIO } from "../../03-入口与运行时/Headless-SDK模式/structured-io.js";
 import { CURRENT_PROTOCOL_VERSION, SENDER_BELOW_FLOOR_FLAG, parseToolCallResult, buildToolCallResult } from "./remote-tool-protocol.js";
-import { asn, VGe, KGe, sbe, Jjn, csn, pM, rdt } from "../Bridge-RemoteControl/chunk-znhfst8k.js";
+import { SERVER_AUTHORED_ONLY_PAYLOAD_TYPES, SSETransport, DEFAULT_STREAM_EVENT_FLUSH_INTERVAL_MS, CCRClientInitError, isTransientWorkerRegisterFailure, createSessionReadSourceBase, CCRClient, createIdleTracker } from "../Bridge-RemoteControl/chunk-znhfst8k.js";
 import { isHermeticModeEnabled } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { TOKEN_FILE_RETRY_DELAYS_MS } from "../../01-核心基础设施/共享小工具-未细化/session-ingress-token.js";
 import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY } from "../插件系统/plugin-forwarding.js";
@@ -330,7 +330,7 @@ function re(e, t = {}, i = {}) {
   let s = normalizeUrlSchemeToHttp(new ye(e.href));
   return (
     (s.pathname = s.pathname.replace(/\/$/, "") + "/worker/events/stream"),
-    new VGe(s, t, i)
+    new SSETransport(s, t, i)
   );
 }
 function be(e) {
@@ -347,7 +347,7 @@ function be(e) {
         return !0;
       }
       let o = typeof d === "object" && d !== null ? d.type : void 0;
-      if (typeof o === "string" && asn.has(o))
+      if (typeof o === "string" && SERVER_AUTHORED_ONLY_PAYLOAD_TYPES.has(o))
         return (
           writeDiagnosticsEvent("warn", "cli_stdin_server_only_type_dropped", { payload_type: o }),
           logForDebugging(
@@ -383,7 +383,7 @@ class RemoteIO extends StructuredIO {
   teeStdout = !1;
   activityFd;
   ccrClient;
-  idleTracker = rdt();
+  idleTracker = createIdleTracker();
   keepAliveTimer = null;
   inboundLanesDroppedAfterClose = new Set();
   unsubscribeGrowthBookRefresh;
@@ -485,7 +485,7 @@ class RemoteIO extends StructuredIO {
         };
     if (R) this.transport.setOnDiagnostic?.(R);
     let N = isRemoteToolForwardingSwitchOn();
-    ((this.ccrClient = new pM(this.transport, this.url, {
+    ((this.ccrClient = new CCRClient(this.transport, this.url, {
       onDiagnostic: R,
       ...(N && {
         onDurableEventsDropped: (r, u) => {
@@ -497,7 +497,7 @@ class RemoteIO extends StructuredIO {
           if (c.length > 0) this.noteRequestsUpload(c, u);
         },
       }),
-      streamEventFlushIntervalMs: getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_stream_event_flush_ms", KGe),
+      streamEventFlushIntervalMs: getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_stream_event_flush_ms", DEFAULT_STREAM_EVENT_FLUSH_INTERVAL_MS),
       noSubscriberStreamEventFlushIntervalMs: ne(),
       advertiseHeartbeatProbeSupport: getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_idle_heartbeat", !1),
       beatOnStaleReconnect: getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_reconnect_beat", !1),
@@ -529,12 +529,12 @@ class RemoteIO extends StructuredIO {
       P.then(
         () => R?.("worker registered"),
         (r) => {
-          let u = r instanceof sbe ? r.reason : l(r);
+          let u = r instanceof CCRClientInitError ? r.reason : l(r);
           writeDiagnosticsEvent("error", "cli_worker_lifecycle_init_failed", {
-            reason: r instanceof sbe ? r.reason : "unknown",
+            reason: r instanceof CCRClientInitError ? r.reason : "unknown",
           });
           let c = `CCRClient initialization failed: ${l(r)}`;
-          if (Jjn(r)) logForDebugging(c, { level: "error" });
+          if (isTransientWorkerRegisterFailure(r)) logForDebugging(c, { level: "error" });
           else logError(Error(c));
           (R?.(`worker registration failed (${u}), exiting`), gracefulShutdown(1, "other"));
         },
@@ -1007,15 +1007,15 @@ function startEarlyHydrateReads(e, t) {
     if (Object.keys(getSessionAuthHeaders()).length === 0) return;
     let i = !1,
       s = {
-        ...csn(normalizeUrlSchemeToHttp(new ie(e)), getSessionAuthHeaders),
+        ...createSessionReadSourceBase(normalizeUrlSchemeToHttp(new ie(e)), getSessionAuthHeaders),
         onConflict: () => {
           i = !0;
         },
       };
     addStartupContext({ early_hydrate_prefetch: 1 });
     let d = await oe(
-      (o) => pM.readInternalEventsFrom(s, o),
-      () => pM.readSubagentInternalEventsFrom(s),
+      (o) => CCRClient.readInternalEventsFrom(s, o),
+      () => CCRClient.readSubagentInternalEventsFrom(s),
       D(),
       t,
     );

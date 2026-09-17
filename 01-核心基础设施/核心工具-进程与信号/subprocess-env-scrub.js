@@ -10,7 +10,7 @@
 import { j, B, he, z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { getBridgeCarrierEnvVarsToScrub, BG_DISPATCHER_ENV_VARS } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { qR, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePath, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { jsonParse } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   isRegistryIndexVar,
@@ -52,8 +52,8 @@ function getConfiguredSocatPath() {
 }
 function U() {
   let e = getConfiguredBwrapPath();
-  if (e) return qR(e);
-  return qR("bwrap");
+  if (e) return resolveExecutablePath(e);
+  return resolveExecutablePath("bwrap");
 }
 var Q = /[ \t\n\v\f\r'"]/,
   PROXY_INJECTED_ENV_VAR_NAMES = [

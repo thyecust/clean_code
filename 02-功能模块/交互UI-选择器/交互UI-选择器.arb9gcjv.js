@@ -39,25 +39,25 @@ import { readClipboardImage } from "../图片-截图-ComputerUse/chunk-0dcnsftb.
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
-function ui(l = DEFAULT_RECENT_WINDOW_MS) {
+function useIsMountRecent(l = DEFAULT_RECENT_WINDOW_MS) {
   let s = C(Date.now());
   return re(() => isRecent(s.current, l), [l]);
 }
-function Gm() {
+function useMountTime() {
   return C(Date.now()).current;
 }
-function fa(l, s = DEFAULT_RECENT_WINDOW_MS) {
+function useSettleAfterChange(l, s = DEFAULT_RECENT_WINDOW_MS) {
   let a = useTimeout(s, l);
   return { remountKey: a ? "settled" : "held", settled: a };
 }
-function c9e() {
+function useAttemptEpoch() {
   let [l, s] = d(0),
     a = re(() => s((u) => u + 1), []);
   return { epoch: l, noteAttempt: a };
 }
-function $o() {
+function useRefusedInputWindow() {
   let l = C(null),
-    { epoch: s, noteAttempt: a } = c9e(),
+    { epoch: s, noteAttempt: a } = useAttemptEpoch(),
     u = re((v = DEFAULT_RECENT_WINDOW_MS) => l.current !== null && isRecent(l.current, v), []),
     c = re(() => {
       ((l.current = Date.now()), a());
@@ -66,12 +66,12 @@ function $o() {
 }
 F();
 F();
-function cE(l) {
+function flattenNodeText(l) {
   if (typeof l === "string") return l;
   if (typeof l === "number") return String(l);
   if (!l) return "";
-  if (Array.isArray(l)) return l.map(cE).join("");
-  if (L_(l)) return cE(l.props.children);
+  if (Array.isArray(l)) return l.map(flattenNodeText).join("");
+  if (L_(l)) return flattenNodeText(l.props.children);
   return "";
 }
 function ea(kf) {
@@ -248,7 +248,7 @@ function ml(l) {
 function wr(No, Ns) {
   let Wo = _(17),
     kn = Ns === void 0 ? DEFAULT_RECENT_WINDOW_MS : Ns,
-    Mi = ui(kn),
+    Mi = useIsMountRecent(kn),
     Ws;
   if (Wo[0] !== No || Wo[1] !== Mi || Wo[2] !== kn)
     ((Ws = No === void 0 ? Mi : () => isRecent(No, kn)),
@@ -258,7 +258,7 @@ function wr(No, Ns) {
       (Wo[3] = Ws));
   else Ws = Wo[3];
   let It = Ws,
-    { refusedWithin: Ct, noteRefused: kt } = $o(),
+    { refusedWithin: Ct, noteRefused: kt } = useRefusedInputWindow(),
     $s;
   if (Wo[4] !== It || Wo[5] !== kt || Wo[6] !== Ct || Wo[7] !== kn)
     (($s = () => {
@@ -298,7 +298,7 @@ function wr(No, Ns) {
   else Us = Wo[16];
   return Us;
 }
-function X8(wf) {
+function ScreenReaderSelect(wf) {
   let mn = _(63),
     {
       options: Te,
@@ -517,7 +517,7 @@ function X8(wf) {
     mn[31] !== Te.length
   )
     ((ou = $e
-      ? `Enter text for option ${ut} (${cE($e.label)}), or Escape for the list: ${Uo}`
+      ? `Enter text for option ${ut} (${flattenNodeText($e.label)}), or Escape for the list: ${Uo}`
       : `Select with numbers [1-${Te.length}]${Ai ? " or up / down arrow keys" : ""}. Then ${mo(["Enter to submit", ...(st ? ["Escape to cancel"] : [])])}: ${Uo}`),
       (mn[27] = Uo),
       (mn[28] = $e),
@@ -609,7 +609,7 @@ function X8(wf) {
   else lu = mn[62];
   return lu;
 }
-function fOt(Df) {
+function MultiSelect(Df) {
   let ke = _(91),
     {
       options: ie,
@@ -976,7 +976,7 @@ function fOt(Df) {
     ke[56] !== En
   )
     ((Pu = Pe
-      ? `Enter text for option ${Ye?.index} (${cE(Pe.label)}), or Escape for the list: ${Xo}`
+      ? `Enter text for option ${Ye?.index} (${flattenNodeText(Pe.label)}), or Escape for the list: ${Xo}`
       : `Select with numbers [1-${ie.length}] (comma- or space-separated for several)${so ? " or up / down arrow keys" : ""}. Then ${mo([...(so ? ["Space to toggle"] : []), `Enter to ${Ui ?? "submit"}`, ...(vn.length > 0 && En === null ? ["bare Enter for defaults"] : []), ...(ft ? ["Escape to cancel"] : [])])}: ${Xo}`),
       (ke[49] = Xo),
       (ke[50] = vn),
@@ -1090,7 +1090,7 @@ function jt(_f) {
   let Qi = useCursorDeclaration(Lu),
     Uu;
   if ($t[2] !== Wt.label)
-    ((Uu = cE(Wt.label)), ($t[2] = Wt.label), ($t[3] = Uu));
+    ((Uu = flattenNodeText(Wt.label)), ($t[2] = Wt.label), ($t[3] = Uu));
   else Uu = $t[3];
   let Bf = Uu,
     Kf = Wt.description ? ` \u2014 ${Wt.description}` : "";
@@ -1124,7 +1124,7 @@ function jt(_f) {
   else Ku = $t[15];
   return Ku;
 }
-function mOt(zf) {
+function ScreenReaderConfirmPrompt(zf) {
   let an = _(43),
     {
       confirmLabel: il,
@@ -1234,14 +1234,14 @@ function mOt(zf) {
   else Yu = an[21];
   let pl = useCursorDeclaration(Yu),
     br;
-  if (an[22] !== il) ((br = cE(il)), (an[22] = il), (an[23] = br));
+  if (an[22] !== il) ((br = flattenNodeText(il)), (an[22] = il), (an[23] = br));
   else br = an[23];
   let xr;
   if (an[24] !== br)
     ((xr = r(Text, { children: ["y. ", br] })), (an[24] = br), (an[25] = xr));
   else xr = an[25];
   let hr;
-  if (an[26] !== ll) ((hr = cE(ll)), (an[26] = ll), (an[27] = hr));
+  if (an[26] !== ll) ((hr = flattenNodeText(ll)), (an[26] = ll), (an[27] = hr));
   else hr = an[27];
   let gr;
   if (an[28] !== hr)
@@ -1287,7 +1287,7 @@ function mOt(zf) {
   return Qu;
 }
 F();
-function nl(lp) {
+function SelectListRow(lp) {
   let gn = _(42),
     {
       isFocused: ht,
@@ -1568,7 +1568,7 @@ function vo(Ip) {
   else Tt = Wr[14];
   return Tt;
 }
-function qB(Ap) {
+function OptionRow(Ap) {
   let Rp = _(9),
     {
       isFocused: wl,
@@ -1591,7 +1591,7 @@ function qB(Ap) {
     Rp[6] !== Ml ||
     Rp[7] !== Dl
   )
-    ((sc = e(nl, {
+    ((sc = e(SelectListRow, {
       isFocused: wl,
       isSelected: Il,
       description: kl,
@@ -1621,7 +1621,7 @@ function Hl(l, s, a, u) {
   let c = 2 + s + 2;
   return Math.max(1, l - c - a - u);
 }
-function Y8(Qp) {
+function EditableOptionRow(Qp) {
   let me = _(103),
     {
       option: le,
@@ -1985,7 +1985,7 @@ function Y8(Qp) {
     me[81] !== Fl ||
     me[82] !== ei
   )
-    ((ni = e(qB, {
+    ((ni = e(OptionRow, {
       isFocused: se,
       isSelected: qt,
       shouldShowDownArrow: Rl,
@@ -2295,7 +2295,7 @@ F();
 F();
 import { isDeepStrictEqual } from "util";
 F();
-function qm(l) {
+function useStateWithGetter(l) {
   let [s] = d(() => ({ value: Lc(l) ? l() : l })),
     [a, u] = d(s.value),
     c = re(
@@ -2484,13 +2484,13 @@ var jc = (l, s) => {
       visibleToIndex: w,
     };
   };
-function gOt({
+function useOptionListFocus({
   visibleOptionCount: l = 5,
   options: s,
   onFocus: a,
   focusValue: u,
 }) {
-  let [c, v, h] = qm(() =>
+  let [c, v, h] = useStateWithGetter(() =>
       Jl({ visibleOptionCount: l, options: s, initialFocusValue: u }),
     ),
     T = re(
@@ -2602,7 +2602,7 @@ function si({
   focusValue: T,
 }) {
   let [g, w] = d(a),
-    A = gOt({ visibleOptionCount: l, options: s, onFocus: h, focusValue: T }),
+    A = useOptionListFocus({ visibleOptionCount: l, options: s, onFocus: h, focusValue: T }),
     { getFocusedValue: W } = A,
     ae = re(() => {
       w(W());
@@ -2619,7 +2619,7 @@ F();
 function Bc(l, s, a) {
   return l.isWindowActivation || a - s < v9e;
 }
-function u9e() {
+function useStrayClickGuard() {
   let l = useClock(),
     [s] = d(() => l.now());
   return re(
@@ -2669,12 +2669,12 @@ function Zd(nb) {
 function ef(tb) {
   return tb.type === "image";
 }
-var vs = Symbol("NO_COMMITTED_ROW");
-function ve(ne) {
+var NO_COMMITTED_ROW = Symbol("NO_COMMITTED_ROW");
+function Select(ne) {
   let Kc = _(11);
   if (useIsScreenReaderEnabled()) {
     const Qt =
-      ne.selectedValue === vs
+      ne.selectedValue === NO_COMMITTED_ROW
         ? ne.defaultValue
         : (ne.selectedValue ?? ne.defaultValue);
     let zc;
@@ -2688,7 +2688,7 @@ function ve(ne) {
       Kc[6] !== ne.refuseInput ||
       Kc[7] !== Qt
     )
-      ((zc = e(X8, {
+      ((zc = e(ScreenReaderSelect, {
         options: ne.options,
         onChange: ne.onChange,
         onFocus: ne.onFocus,
@@ -2798,7 +2798,7 @@ function Ii(Qm) {
   E(od, rd);
   let tv = Zt === "compact" && !Ln && !Z.some(zd) && Z.some(Gd),
     { columns: Co } = useVirtualScrollViewportSize(useTerminalSize());
-  const rs = d9e(Zm, tv ? "compact-vertical" : Zt);
+  const rs = useVisibleOptionCount(Zm, tv ? "compact-vertical" : Zt);
   let sd;
   if (
     Ue[7] !== Zl ||
@@ -2832,7 +2832,7 @@ function Ii(Qm) {
   else sd = Ue[15];
   let b = si(sd),
     [is, ud] = d(!0),
-    ls = u9e(),
+    ls = useStrayClickGuard(),
     ad;
   if (Ue[16] !== ai || Ue[17] !== nn || Ue[18] !== ls || Ue[19] !== b)
     ((ad = (pi) =>
@@ -2987,7 +2987,7 @@ function Ii(Qm) {
                 ? on.get(de.value)
                 : de.initialValue || "";
               return e(
-                Y8,
+                EditableOptionRow,
                 {
                   option: de,
                   onClick: On(de),
@@ -3049,7 +3049,7 @@ function Ii(Qm) {
                 flexDirection: "column",
                 flexShrink: 0,
                 children: [
-                  e(qB, {
+                  e(OptionRow, {
                     isFocused: cs,
                     isSelected: ds,
                     shouldShowDownArrow: bd && vd,
@@ -3099,7 +3099,7 @@ function Ii(Qm) {
                 ? on.get(fe.value)
                 : fe.initialValue || "";
               return e(
-                Y8,
+                EditableOptionRow,
                 {
                   option: fe,
                   onClick: On(fe),
@@ -3160,7 +3160,7 @@ function Ii(Qm) {
                 flexDirection: "column",
                 flexShrink: 0,
                 children: [
-                  e(qB, {
+                  e(OptionRow, {
                     isFocused: hi,
                     isSelected: gi,
                     shouldShowDownArrow: wd && Sd,
@@ -3239,7 +3239,7 @@ function Ii(Qm) {
                   return 0;
                 }
                 let Tv = b.value === xs.value ? 2 : 0;
-                return 2 + ot + getStringWidth(cE(xs.label)) + Tv;
+                return 2 + ot + getStringWidth(flattenNodeText(xs.label)) + Tv;
               }),
                 (Ue[86] = ot),
                 (Ue[87] = b.value),
@@ -3267,7 +3267,7 @@ function Ii(Qm) {
           let Ad = b.value === it.value;
           let Dv = it.disabled === !0;
           let Rd = Ad ? 2 : 0;
-          let Vo = cE(it.label);
+          let Vo = flattenNodeText(it.label);
           let eo = it.label;
           let Fd = Mo - 2 - ot - Rd;
           if (getStringWidth(Vo) > Fd) ((Vo = truncateToWidth(Vo, Fd)), (eo = Vo));
@@ -3385,7 +3385,7 @@ function Ii(Qm) {
           let Wv = !nn && b.focusedValue === J.value;
           let $v = b.value === J.value;
           return e(
-            Y8,
+            EditableOptionRow,
             {
               option: J,
               onClick: On(J),
@@ -3448,7 +3448,7 @@ function Ii(Qm) {
         let Ts = b.value === J.value;
         let Ao = J.disabled === !0;
         return r(
-          qB,
+          OptionRow,
           {
             isFocused: ys,
             isSelected: Ts,
@@ -3551,7 +3551,7 @@ function Ii(Qm) {
 }
 var Ds = 8,
   Vs = 0.6;
-function d9e(ob, Ud) {
+function useVisibleOptionCount(ob, Ud) {
   let _d = Ud === void 0 ? "compact" : Ud,
     { rows: rb } = useVirtualScrollViewportSize(useTerminalSize()),
     ib = _d === "expanded" ? 3 : _d === "compact" ? 1 : 2,
@@ -3638,22 +3638,22 @@ function Ci(sb) {
   return Kd;
 }
 export {
-  cE,
-  ui,
-  Gm,
-  fa,
-  c9e,
-  $o,
-  X8,
-  fOt,
-  mOt,
-  nl,
-  qB,
-  Y8,
-  qm,
-  gOt,
-  u9e,
-  vs,
-  ve,
-  d9e,
+  flattenNodeText,
+  useIsMountRecent,
+  useMountTime,
+  useSettleAfterChange,
+  useAttemptEpoch,
+  useRefusedInputWindow,
+  ScreenReaderSelect,
+  MultiSelect,
+  ScreenReaderConfirmPrompt,
+  SelectListRow,
+  OptionRow,
+  EditableOptionRow,
+  useStateWithGetter,
+  useOptionListFocus,
+  useStrayClickGuard,
+  NO_COMMITTED_ROW,
+  Select,
+  useVisibleOptionCount,
 };

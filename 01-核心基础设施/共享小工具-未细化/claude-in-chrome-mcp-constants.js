@@ -20,7 +20,7 @@ function isClaudeInChromeMcpLaunch(e) {
     (e.command?.includes(t) ?? !1) || (e.args?.some((r) => r.includes(t)) ?? !1)
   );
 }
-var eir = ["file_upload", "browser_batch"],
+var CLAUDE_IN_CHROME_FILE_UPLOAD_TOOL_NAMES = ["file_upload", "browser_batch"],
   CLAUDE_IN_CHROME_TOOL_NAMES = [
     JAVASCRIPT_TOOL_NAME,
     "read_page",
@@ -45,4 +45,4 @@ var eir = ["file_upload", "browser_batch"],
     "list_connected_browsers",
     "select_browser",
   ];
-export { CLAUDE_IN_CHROME_MCP_SERVER_NAME, JAVASCRIPT_TOOL_NAME, isClaudeInChromeMCPServer, isClaudeInChromeMcpLaunch, eir, CLAUDE_IN_CHROME_TOOL_NAMES };
+export { CLAUDE_IN_CHROME_MCP_SERVER_NAME, JAVASCRIPT_TOOL_NAME, isClaudeInChromeMCPServer, isClaudeInChromeMcpLaunch, CLAUDE_IN_CHROME_FILE_UPLOAD_TOOL_NAMES, CLAUDE_IN_CHROME_TOOL_NAMES };

@@ -12,7 +12,7 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getBundledSkillsRoot } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Sfe, Fwt } from "../../01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js";
+import { defineLazyProperty, Fwt } from "../../01-核心基础设施/共享小工具-未细化/define-lazy-property.js";
 import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import { join as P } from "path";
 import { constants } from "fs";
@@ -172,9 +172,9 @@ function registerBundledSkill(e) {
       onUserTypedArgs: e.onUserTypedArgs,
       getArgumentCompletions: e.getArgumentCompletions,
     };
-  (Sfe(t, "description", e.description),
-    Sfe(t, "argumentHint", e.argumentHint),
-    Sfe(t, "whenToUse", e.whenToUse),
+  (defineLazyProperty(t, "description", e.description),
+    defineLazyProperty(t, "argumentHint", e.argumentHint),
+    defineLazyProperty(t, "whenToUse", e.whenToUse),
     Fwt(t, "disableModelInvocation", e.disableModelInvocation));
   let l = getHostStateStore();
   if (e.survivesBundledKillSwitch) l.bundledSkillKillSwitchSurvivors.add(t);

@@ -38,7 +38,7 @@ import { toHostDescription } from "../../01-核心基础设施/共享小工具-�
 import { INT32_MAX, hasMutualTakeAgreement } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
 import { s, T, O, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-function _It({ requested: e, attached: t }) {
+function formatUnknownHostMessage({ requested: e, attached: t }) {
   let r = sanitizeMachineName(e),
     o = e.trim().replace(/\s+\(offline\)$/i, "");
   if (isReservedMachineName(o.toLowerCase()) && !isReservedMachineName(e))
@@ -59,7 +59,7 @@ function _It({ requested: e, attached: t }) {
         : "";
   return `No machine named "${r}"${g} is attached to this session. ${f}`;
 }
-function vQt({ name: e, announced: t, runsOnlyThere: r }) {
+function formatIncompatibleProtocolMessage({ name: e, announced: t, runsOnlyThere: r }) {
   let o = SUPPORTED_PROTOCOL_VERSIONS.map((p) => `v${p}`).join("/"),
     d = Math.max(...SUPPORTED_PROTOCOL_VERSIONS),
     a =
@@ -78,10 +78,10 @@ function vQt({ name: e, announced: t, runsOnlyThere: r }) {
         : `${r} exists only on ${e}, so it cannot run from this session until then.`;
   return `${e} is attached but the two Claude Code builds share no remote-tool protocol version (${a}); the call did not run; ${f}. ${g}`;
 }
-function RQt() {
+function formatHostUnreachableMessage() {
   return "The attached machine could not be reached through the device bridge right now; the call did not run. Try again shortly.";
 }
-function HFn(e) {
+function formatToolsNotReadableMessage(e) {
   return `The attached machine's tools could not be read yet \u2014 it may still be connecting (or serving is switched off on it, or its announcement could not be verified by this session), so "${sanitizeMachineName(e)}" cannot be matched right now; the call did not run. Try again in a few seconds.`;
 }
 function Y(e, t) {
@@ -91,47 +91,47 @@ function Y(e, t) {
 }
 var L =
   "it may be asleep, offline, not running, serving may be switched off on it, or its announcement could not be verified by this session";
-function IFn(e, t, r = !0) {
+function formatReannounceTimeoutMessage(e, t, r = !0) {
   return `This call waited ${Math.round(t / 1000)} s ${Y(e, r)}; it did not \u2014 ${L}. Nothing was sent. Ask the user to check Claude Code on their machine rather than retrying immediately.`;
 }
-function PFn(e, t, r = !0) {
+function formatReannounceTimeoutRepeatMessage(e, t, r = !0) {
   return `This session already waited ${Math.round(t / 1000)} s earlier ${Y(e, r)}, and it still has not \u2014 ${L}. Nothing was sent. Ask the user to check Claude Code on their machine.`;
 }
-function OFn(e) {
+function formatHostServesNoToolsMessage(e) {
   return `The attached machine's Claude Code last announced that it serves no tools to this session (it withdrew them, or serving is switched off on it), so "${sanitizeMachineName(e)}" cannot run anything right now; nothing was sent. Ask the user to check Claude Code on their machine.`;
 }
-function DFn() {
+function formatHostNeverConnectedMessage() {
   return `A machine is bound to this session but its Claude Code has not connected \u2014 ${L}; the call did not run. Ask the user to check Claude Code on their machine.`;
 }
-function W6e(e) {
+function formatHostOfflineMessage(e) {
   return `${e} could not be reached through the device bridge right now \u2014 most often because its Claude Code is not connected (the machine may be offline or asleep, or reconnecting after another session used it); the call did not run. Try again shortly, or ask the user to check Claude Code on ${e}.`;
 }
-function yIt(e, t) {
+function formatHostUnreachableReasonMessage(e, t) {
   return `${e} could not be reached from this session (${t}); the call did not run. If its Claude Code is not running or not attached to this session, ask the user to check it; a call that was too large to deliver will not succeed on a retry.`;
 }
-function LFn({ name: e, toolName: t }) {
+function formatUnreadableToolMessage({ name: e, toolName: t }) {
   return `${e} announced ${t} in a form this session cannot read (a version or naming mismatch between the two Claude Code builds \u2014 update whichever is older); nothing ran.`;
 }
-function SIt({ name: e, toolName: t }) {
+function formatToolNotServedMessage({ name: e, toolName: t }) {
   return `${e} does not serve ${t} right now (its MCP server may have disconnected there); nothing ran.`;
 }
-function MFn({ name: e, toolName: t }) {
+function formatToolRunsOnlyOnHostMessage({ name: e, toolName: t }) {
   return `${t} runs only on ${e}; omit "${HOST_FIELD_NAME}".`;
 }
-function NFn({ name: e, toolName: t, served: r }) {
+function formatToolNotServedWithAlternativesMessage({ name: e, toolName: t, served: r }) {
   let o =
     r.length === 0
       ? ""
       : ` \u2014 or do it on ${e} through a tool it does serve there (${r.join(", ")})`;
   return `${e} does not serve ${t} right now (its Claude Code may be an older version); omit "${HOST_FIELD_NAME}" to run it ${te()}${o}.`;
 }
-function Gst({ name: e, ruleMessage: t }) {
+function formatDeniedByRuleMessage({ name: e, ruleMessage: t }) {
   return `${t} ${e} was not contacted.`;
 }
-function bIt({ name: e, requestBytes: t, capBytes: r }) {
+function formatRequestTooLargeMessage({ name: e, requestBytes: t, capBytes: r }) {
   return `This call's input is ${K(t)} MiB, over the ${K(r)} MiB limit for calls to ${e}; it was not sent.`;
 }
-function wIt({ name: e, capMs: t, left: r = !1 }) {
+function formatHostTimeoutMessage({ name: e, capMs: t, left: r = !1 }) {
   return r
     ? `${e} did not answer within ${Math.round(t / 1000)}s, and what became of the call could not be learned from it afterwards; the request was left with ${e}, so the command may have run or may still be running there. Check its effect on ${e} before repeating it.`
     : `${e} did not answer within ${Math.round(t / 1000)}s, and what became of the call could not be learned from it afterwards, so it was withdrawn there; it may have partially run. Check its effect on ${e} before repeating it.`;
@@ -160,13 +160,13 @@ function U(e, t) {
 function Z(e) {
   return `This call may or may not have reached ${e}: this session's connection to the service was backed up and the upload carrying it could not be confirmed in time, and what became of it could not be learned from ${e} afterwards. This is not a problem with ${e}. Check whether the command took effect before re-running it.`;
 }
-function FFn(e) {
+function formatApprovalUploadUnconfirmedMessage(e) {
   return `This session's upload of your approval could not be confirmed in time (its connection to the service was backed up); whether ${e} received it and ran the command could not be learned from it afterwards. This is not a problem with ${e}. Check whether the command ran before retrying it.`;
 }
 function Q(e) {
   return `A sender this session could not verify reported this call refused, and ${e} could not be asked what became of it; whether it ran there is not confirmed. Check its effect before re-running it.`;
 }
-function TIt({ name: e, state: t, cause: r }) {
+function formatStillRunningMessage({ name: e, state: t, cause: r }) {
   let o =
     r === "unasked"
       ? `${e} answered that this call is still under way there`
@@ -180,7 +180,7 @@ function TIt({ name: e, state: t, cause: r }) {
       return `${o}${r === "unasked" ? " \u2014" : ""} it was waiting for a permission decision and nothing had run, but it no longer accepts an answer to that question, so check on its effect before retrying it, or ask the user.`;
   }
 }
-function kQt(e, t, r) {
+function formatApprovalNotReceivedMessage(e, t, r) {
   let o =
       t === "dropped"
         ? `The connection to ${e} dropped before your approval reached it`
@@ -201,16 +201,16 @@ function kQt(e, t, r) {
     ? `${o}; the request was withdrawn there and nothing ran. ${d}`
     : `${o}; the request was then withdrawn, but whether a delayed copy of the approval reached it first is not known. Check whether the command ran before retrying it.`;
 }
-function $Fn(e, t) {
+function formatHostRestartedMessage(e, t) {
   return `${U(e, t)}, and Claude Code on ${e} has restarted since: the command was lost with it. It may have partially run before the restart \u2014 check its effect before repeating it.`;
 }
-function UFn(e, t) {
+function formatCallNotReceivedMessage(e, t) {
   return `${U(e, t)}, and ${e} reports it never received it: it did not run. It is safe to retry.`;
 }
-function xQt(e) {
+function formatReconnectingCheckinMessage(e) {
   return `Reconnecting to ${e} to learn what happened to the call\u2026`;
 }
-function EIt(e = "completed") {
+function formatDeliveredAfterReconnectNote(e = "completed") {
   switch (e) {
     case "completed":
       return "(delivered after reconnect \u2014 the first reply was lost; this is the recorded result, the command was not run again)";
@@ -220,7 +220,7 @@ function EIt(e = "completed") {
       return "(delivered after reconnect \u2014 the first reply was lost; this is how the call ended, it was not run again)";
   }
 }
-function AIt(e, t = "completed") {
+function formatReplayedResultNote(e, t = "completed") {
   let r =
     e === void 0 || !Number.isFinite(e) || Math.abs(e) > 8640000000000000
       ? "earlier"
@@ -239,10 +239,10 @@ function ye(e) {
     .map((t) => String(t).padStart(2, "0"))
     .join(":");
 }
-function CIt({ name: e, detail: t }) {
+function formatForwardingFailureMessage({ name: e, detail: t }) {
   return `The call to ${e} failed in transit (${F(t, P)}); it may not have run.`;
 }
-function G6e({ name: e, message: t }) {
+function formatRefusedByHostResult({ name: e, message: t }) {
   return `[refused by ${sanitizeMachineName(e)}] ${F(t, P)}`;
 }
 function ee({ name: e, message: t }) {
@@ -253,12 +253,12 @@ function ne({ name: e, message: t }) {
 }
 var we = 256,
   P = 8192;
-function HQt(e, t) {
+function formatRanOnHostNote(e, t) {
   let r =
-    e.working_dir === "" ? "unknown directory" : _e(IQt(e.working_dir, t), we);
+    e.working_dir === "" ? "unknown directory" : _e(abbreviateHomePath(e.working_dir, t), we);
   return `[ran on ${sanitizeMachineName(e.name)} \xB7 ${r}]`;
 }
-function IQt(e, t) {
+function abbreviateHomePath(e, t) {
   let r = t?.replace(/[\\/]$/, "");
   if (!r) return e;
   if (e === r) return "~";
@@ -289,7 +289,7 @@ function te() {
 function N(e) {
   return `The approval for this call could not be verified as the user's own answer, so ${e} did not run it and nothing ran (its earlier permission request for this call may stay open there; that is harmless). To proceed, send the call again and have the user approve from the terminal or desktop prompt, unedited.`;
 }
-function BFn(e, t) {
+function formatAutoApprovalRejectedMessage(e, t) {
   return `This session's automatic check approved this ${t} call, but for ${t} on ${e} only a person's approval counts in this session, so it was not cleared to run and nothing ran. Send the call again and ask the user to approve it from the terminal or desktop prompt.`;
 }
 function re(e) {
@@ -301,13 +301,13 @@ function se({ name: e, capMs: t }) {
 function ae({ name: e, capMs: t }) {
   return `Nothing ran on ${e}: the call could not be sent within ${Math.round(t / 1000)}s \u2014 this session's connection to the service was backed up \u2014 and it was taken back before it left this session, so ${e} never received it. This is not a problem with ${e}; try the call again.`;
 }
-function PQt({ name: e, capMs: t }) {
+function formatApprovalTakenBackMessage({ name: e, capMs: t }) {
   return `The call had reached ${e} and asked for approval there, but the user's approval could not be sent within ${Math.round(t / 1000)}s \u2014 this session's connection to the service was backed up \u2014 and it was taken back before it left this session, so ${e} never received it and nothing ran; the pending request on ${e} is withdrawn. This is not a problem with ${e}; send the call again and the user will be asked once more.`;
 }
-function jFn({ name: e, capMs: t }) {
+function formatApprovalQueuedTimeoutMessage({ name: e, capMs: t }) {
   return `The user's approval could not be sent to ${e} within ${Math.round(t / 1000)}s \u2014 this session's connection to the service was backed up \u2014 so it was withdrawn while still queued here, and the pending request on ${e} with it. Most likely nothing ran: if the approval still reaches ${e} late, its cancellation arrives with it (for a command with side effects, check before repeating it). This is not a problem with ${e}; send the call again and the user will be asked once more.`;
 }
-function WFn({ name: e, capMs: t }) {
+function formatLivenessCheckTimeoutMessage({ name: e, capMs: t }) {
   return `The call had reached ${e} and asked for approval there, but the check that ${e} is still connected could not be sent within ${Math.round(t / 1000)}s \u2014 this session's connection to the service was backed up \u2014 so the user's approval was never sent and the pending request on ${e} is withdrawn; nothing ran. This is not a problem with ${e}; send the call again and the user will be asked once more.`;
 }
 function ie({ name: e, capMs: t }) {
@@ -322,20 +322,20 @@ function de({ name: e, why: t, unsent: r }) {
     ? `${o} before this call reached it; nothing ran there, and no result will arrive for it.`
     : `The call was interrupted: ${o} while the call was with it, so no result will arrive for it. It may have partially run \u2014 check its effects on ${e} before repeating it.`;
 }
-var xHe = 262144,
-  OQt = 8388608,
+var MAX_RESULT_TEXT_CHARS = 262144,
+  MAX_RESULT_IMAGE_BYTES = 8388608,
   be = 8388608,
-  vIt = 100;
+  MAX_RESULT_BLOCKS = 100;
 function ke(e) {
   let t = ue(e);
   return { content: t.content, truncated: !1, ...(t.cut && { cutHere: !0 }) };
 }
 function ue(e) {
   if (typeof e === "string")
-    return e.length > xHe
-      ? { content: truncateToCodeUnits(e, xHe), cut: !0 }
+    return e.length > MAX_RESULT_TEXT_CHARS
+      ? { content: truncateToCodeUnits(e, MAX_RESULT_TEXT_CHARS), cut: !0 }
       : { content: e, cut: !1 };
-  let { blocks: t, cut: r } = e.slice(0, vIt).reduce(
+  let { blocks: t, cut: r } = e.slice(0, MAX_RESULT_BLOCKS).reduce(
     (o, d) => {
       if (d.type === "text") {
         let a = truncateToCodeUnits(d.text, Math.max(0, o.text));
@@ -360,7 +360,7 @@ function ue(e) {
       }
       return (o.blocks.push(d), o);
     },
-    { blocks: [], text: xHe, image: OQt, cut: e.length > vIt },
+    { blocks: [], text: MAX_RESULT_TEXT_CHARS, image: MAX_RESULT_IMAGE_BYTES, cut: e.length > MAX_RESULT_BLOCKS },
   );
   return { content: r || t.length !== e.length ? t : e, cut: r };
 }
@@ -413,12 +413,12 @@ function Se(e) {
         }
       );
     },
-    { entries: [], remaining: xHe, cut: !1 },
+    { entries: [], remaining: MAX_RESULT_TEXT_CHARS, cut: !1 },
   );
   return { output: r ? Object.fromEntries(t) : e, truncated: r };
 }
-function X_e(e, t, r, { afterReconnect: o = !1, call: d } = {}) {
-  let a = z6e(t),
+function buildResultFromResponse(e, t, r, { afterReconnect: o = !1, call: d } = {}) {
+  let a = buildHostDescriptor(t),
     f = t.name;
   switch (r.kind) {
     case "result":
@@ -441,7 +441,7 @@ function X_e(e, t, r, { afterReconnect: o = !1, call: d } = {}) {
           outcome: {
             kind: "error",
             code: "transport_error",
-            message: Re({ name: f, detail: iE(IHe(r.content)) }),
+            message: Re({ name: f, detail: sanitizeHostText(extractContentText(r.content)) }),
             host: a,
           },
           responseBytes: r.responseBytes,
@@ -467,7 +467,7 @@ function X_e(e, t, r, { afterReconnect: o = !1, call: d } = {}) {
         outcome: {
           kind: "error",
           code: "unreachable",
-          message: t.transport.kind === "session" ? yIt(f, r.detail) : W6e(f),
+          message: t.transport.kind === "session" ? formatHostUnreachableReasonMessage(f, r.detail) : formatHostOfflineMessage(f),
           host: a,
         },
       };
@@ -485,7 +485,7 @@ function X_e(e, t, r, { afterReconnect: o = !1, call: d } = {}) {
         outcome: {
           kind: "error",
           code: "timed_out",
-          message: wIt({ name: f, capMs: r.capMs }),
+          message: formatHostTimeoutMessage({ name: f, capMs: r.capMs }),
           host: a,
         },
       };
@@ -522,7 +522,7 @@ function X_e(e, t, r, { afterReconnect: o = !1, call: d } = {}) {
         },
       };
     case "cancelled":
-      return { outcome: HHe(a) };
+      return { outcome: buildInterruptedOutcome(a) };
     case "transport_error":
       return {
         outcome: {
@@ -531,7 +531,7 @@ function X_e(e, t, r, { afterReconnect: o = !1, call: d } = {}) {
           message:
             r.unreadableResult === !0
               ? xe(f)
-              : CIt({ name: f, detail: iE(r.detail) }),
+              : formatForwardingFailureMessage({ name: f, detail: sanitizeHostText(r.detail) }),
           host: a,
           ...(r.unreadableResult === !0 && { unreadableResult: !0 }),
         },
@@ -540,11 +540,11 @@ function X_e(e, t, r, { afterReconnect: o = !1, call: d } = {}) {
 }
 var Me = 2000,
   D = 8;
-function DQt(e, t) {
-  let r = e.slice(0, D).map((o) => `[note from ${t}] ${iE(o, Me)}`);
+function formatHostNotesLines(e, t) {
+  let r = e.slice(0, D).map((o) => `[note from ${t}] ${sanitizeHostText(o, Me)}`);
   return e.length > D ? [...r, `(${e.length - D} more notes omitted)`] : r;
 }
-var q6e = 2000;
+var MAX_APPROVAL_MESSAGE_CHARS = 2000;
 function xe(e) {
   return `${e} answered in a result format this session cannot read (Claude Code version mismatch?); the command probably ran there \u2014 check its effect before repeating it.`;
 }
@@ -565,16 +565,16 @@ function Ee(e, t, r, { afterReconnect: o = !1, dirSync: d, call: a } = {}) {
       (r.outcome === "refused" || r.outcome === "failed") &&
       r.notes !== void 0 &&
       r.notes.length > 0
-        ? [y, ...DQt(r.notes, t.name)].join(`
+        ? [y, ...formatHostNotesLines(r.notes, t.name)].join(`
 `)
         : y,
     p =
       r.outcome !== "refused" && r.outcome !== "failed"
         ? ""
         : o
-          ? ` ${EIt(r.outcome)}`
+          ? ` ${formatDeliveredAfterReconnectNote(r.outcome)}`
           : r.replayed === !0
-            ? ` ${AIt(r.served_at, r.outcome)}`
+            ? ` ${formatReplayedResultNote(r.served_at, r.outcome)}`
             : "";
   switch (r.outcome) {
     case "completed": {
@@ -611,11 +611,11 @@ function Ee(e, t, r, { afterReconnect: o = !1, dirSync: d, call: a } = {}) {
           message: g(`${N(t.name)}${p}`),
           host: f,
         };
-      let y = t.transport.kind === "session" ? ee : G6e;
+      let y = t.transport.kind === "session" ? ee : formatRefusedByHostResult;
       return {
         kind: "error",
         code: "refused_by_host",
-        message: g(`${y({ name: t.name, message: iE(r.message, q6e) })}${p}`),
+        message: g(`${y({ name: t.name, message: sanitizeHostText(r.message, MAX_APPROVAL_MESSAGE_CHARS) })}${p}`),
         host: f,
       };
     }
@@ -623,28 +623,28 @@ function Ee(e, t, r, { afterReconnect: o = !1, dirSync: d, call: a } = {}) {
       return {
         kind: "error",
         code: "failed_on_host",
-        message: g(`${ne({ name: t.name, message: iE(r.message, q6e) })}${p}`),
+        message: g(`${ne({ name: t.name, message: sanitizeHostText(r.message, MAX_APPROVAL_MESSAGE_CHARS) })}${p}`),
         host: f,
       };
     case "in_progress":
       return {
         kind: "error",
         code: "still_running",
-        message: TIt({ name: t.name, state: r.state, cause: "unasked" }),
+        message: formatStillRunningMessage({ name: t.name, state: r.state, cause: "unasked" }),
         host: f,
       };
     case "needs_approval":
       return {
         kind: "error",
         code: "refused_by_host",
-        message: G6e({ name: t.name, message: iE(r.message, q6e) }),
+        message: formatRefusedByHostResult({ name: t.name, message: sanitizeHostText(r.message, MAX_APPROVAL_MESSAGE_CHARS) }),
         host: f,
       };
     case "acknowledged":
       return {
         kind: "error",
         code: "refused_by_host",
-        message: G6e({
+        message: formatRefusedByHostResult({
           name: t.name,
           message:
             "the machine acknowledged a decision for a call this session did not ask about",
@@ -711,7 +711,7 @@ function Ue(e) {
   if (!Array.isArray(e) || e.length > Oe) return !1;
   if (!e.every(Ne)) return !1;
   let t = e.flatMap((r) => r.lines);
-  return t.length <= Fe && t.reduce((r, o) => r + o.length, 0) <= xHe;
+  return t.length <= Fe && t.reduce((r, o) => r + o.length, 0) <= MAX_RESULT_TEXT_CHARS;
 }
 function Ne(e) {
   if (typeof e !== "object" || e === null) return !1;
@@ -733,7 +733,7 @@ function Ne(e) {
   let f = (g) => countMatching(a, (p) => g.includes(p[0]));
   return f(" -") === r && f(" +") === d;
 }
-function z6e(e) {
+function buildHostDescriptor(e) {
   let t = toHostDescription(e);
   return { name: t.name, working_dir: H(t.working_dir) };
 }
@@ -742,9 +742,9 @@ function ce(e) {
   return t === void 0 ? void 0 : H(t);
 }
 function H(e) {
-  return iE(e).trim();
+  return sanitizeHostText(e).trim();
 }
-function iE(e, t) {
+function sanitizeHostText(e, t) {
   return sanitizeDisplayText(e, t)
     .replace(/[\p{Ps}\u2308\u230A\u231C\u231E\u23A1-\u23A3\u02F9\u02FB]/gu, "(")
     .replace(
@@ -752,18 +752,18 @@ function iE(e, t) {
       ")",
     );
 }
-function HHe(e) {
+function buildInterruptedOutcome(e) {
   return { kind: "error", code: "interrupted", message: INTERRUPTED_FOR_TOOL_USE_MARKER, host: e };
 }
-function V6e(e) {
+function buildCancelledOutcome(e) {
   return { kind: "error", code: "cancelled", message: USER_REFUSED_ACTION_MARKER, host: e };
 }
-function LQt(e, t) {
+function formatRejectedInSessionMessage(e, t) {
   if (e.agentId !== void 0)
     return t !== void 0 && t.trim() !== "" ? `${PERMISSION_DENIED_PREFIX}${t}` : PERMISSION_DENIED_MESSAGE;
   return appendAutoMemoryReminder(t !== void 0 && t.trim() !== "" ? `${USER_REJECTED_TOOL_USE_PREFIX}${t}` : USER_REJECTED_TOOL_USE_MESSAGE);
 }
-function IHe(e) {
+function extractContentText(e) {
   return typeof e === "string"
     ? e
     : e.flatMap((t) => (t.type === "text" ? [t.text] : [])).join(`
@@ -962,7 +962,7 @@ var Ze = new Gt(() => new pe());
 function A() {
   return Ze.of(B());
 }
-function Jmr(e, t = rowStagedBus.subscribe) {
+function registerWorkerDirSyncForMidTurn(e, t = rowStagedBus.subscribe) {
   let r = A();
   (r.register(e),
     setLocalWriteListener(() => r.noteLocalWrite()),
@@ -1053,12 +1053,12 @@ async function nn(e, t) {
     }),
   });
 }
-function MQt(e, t, r = Date.now()) {
+function heardSyncAnswer(e, t, r = Date.now()) {
   let o = W(t);
   if (o !== null) A().ledger.heard(e, o.frame, r);
   return o;
 }
-function RIt(e) {
+function hostSyncsMidTurn(e) {
   return e.plumbingTools?.has(me) === !0 && e.transport.callPlumbing !== void 0;
 }
 var tn = [
@@ -1104,7 +1104,7 @@ var tn = [
   ],
   E = (e) => (t) => (e.includes(t) ? t : "other"),
   q = (e) =>
-    iE(
+    sanitizeHostText(
       sanitizeDeep(e)
         .replace(/[\p{Cc}\p{Cf}]/gu, " ")
         .replace(/:\/\/[^/\s@]*@/g, "://***@"),
@@ -1215,9 +1215,9 @@ async function un(e, t, r, o) {
     }
   }
 }
-async function NQt({ host: e, readOnly: t, signal: r, onStatus: o }) {
+async function clearForwardToMachine({ host: e, readOnly: t, signal: r, onStatus: o }) {
   let d = A();
-  if (!RIt(e)) {
+  if (!hostSyncsMidTurn(e)) {
     if (!d.countedTooOld.has(e.name))
       (d.countedTooOld.add(e.name),
         d.engine().then((f) => {
@@ -1595,7 +1595,7 @@ function bn(e) {
       return { kind: "not_attempted" };
   }
 }
-async function FQt({
+async function settleAfterMachineCommand({
   host: e,
   word: t,
   signal: r,
@@ -1761,54 +1761,54 @@ function vn(e, t) {
   }
 }
 export {
-  _It,
-  vQt,
-  RQt,
-  HFn,
-  IFn,
-  PFn,
-  OFn,
-  DFn,
-  W6e,
-  yIt,
-  LFn,
-  SIt,
-  MFn,
-  NFn,
-  Gst,
-  bIt,
-  wIt,
-  FFn,
-  TIt,
-  kQt,
-  $Fn,
-  UFn,
-  xQt,
-  EIt,
-  AIt,
-  CIt,
-  G6e,
-  HQt,
-  IQt,
-  BFn,
-  PQt,
-  jFn,
-  WFn,
-  xHe,
-  OQt,
-  vIt,
-  X_e,
-  DQt,
-  q6e,
-  z6e,
-  iE,
-  HHe,
-  V6e,
-  LQt,
-  IHe,
-  Jmr,
-  MQt,
-  RIt,
-  NQt,
-  FQt,
+  formatUnknownHostMessage,
+  formatIncompatibleProtocolMessage,
+  formatHostUnreachableMessage,
+  formatToolsNotReadableMessage,
+  formatReannounceTimeoutMessage,
+  formatReannounceTimeoutRepeatMessage,
+  formatHostServesNoToolsMessage,
+  formatHostNeverConnectedMessage,
+  formatHostOfflineMessage,
+  formatHostUnreachableReasonMessage,
+  formatUnreadableToolMessage,
+  formatToolNotServedMessage,
+  formatToolRunsOnlyOnHostMessage,
+  formatToolNotServedWithAlternativesMessage,
+  formatDeniedByRuleMessage,
+  formatRequestTooLargeMessage,
+  formatHostTimeoutMessage,
+  formatApprovalUploadUnconfirmedMessage,
+  formatStillRunningMessage,
+  formatApprovalNotReceivedMessage,
+  formatHostRestartedMessage,
+  formatCallNotReceivedMessage,
+  formatReconnectingCheckinMessage,
+  formatDeliveredAfterReconnectNote,
+  formatReplayedResultNote,
+  formatForwardingFailureMessage,
+  formatRefusedByHostResult,
+  formatRanOnHostNote,
+  abbreviateHomePath,
+  formatAutoApprovalRejectedMessage,
+  formatApprovalTakenBackMessage,
+  formatApprovalQueuedTimeoutMessage,
+  formatLivenessCheckTimeoutMessage,
+  MAX_RESULT_TEXT_CHARS,
+  MAX_RESULT_IMAGE_BYTES,
+  MAX_RESULT_BLOCKS,
+  buildResultFromResponse,
+  formatHostNotesLines,
+  MAX_APPROVAL_MESSAGE_CHARS,
+  buildHostDescriptor,
+  sanitizeHostText,
+  buildInterruptedOutcome,
+  buildCancelledOutcome,
+  formatRejectedInSessionMessage,
+  extractContentText,
+  registerWorkerDirSyncForMidTurn,
+  heardSyncAnswer,
+  hostSyncsMidTurn,
+  clearForwardToMachine,
+  settleAfterMachineCommand,
 };

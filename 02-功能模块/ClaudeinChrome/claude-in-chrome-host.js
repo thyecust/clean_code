@@ -13,7 +13,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -398,7 +398,7 @@ async function detectAvailableBrowser() {
       case "wsl":
       case "linux": {
         for (let o of r.linux.binaries)
-          if (await ja(o).catch(() => null))
+          if (await resolveExecutablePathAsync(o).catch(() => null))
             return (logForDebugging(`[Claude in Chrome] Detected browser: ${r.name}`), s);
         break;
       }

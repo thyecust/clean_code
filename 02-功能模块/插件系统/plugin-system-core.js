@@ -75,11 +75,11 @@ function F(e) {
   let t = O(E(), e).split(U);
   return hasValidPathSegments(t) && L(E(), ...t) === e ? t : null;
 }
-function jzt(e) {
+function toUserSkillsStorageKey(e) {
   let t = F(e);
   return t === null ? null : STORAGE_KEYS.userConfigDir("skills", t);
 }
-function enr(e) {
+function toUserSkillsStorageScope(e) {
   let t = F(e);
   return t === null
     ? null
@@ -135,7 +135,7 @@ function oe(e, t) {
   return STORAGE_KEYS.pluginCache(r, o, u, d);
 }
 function resolvePathStorageScope(e, t) {
-  return oe(e, t) ?? jzt(e);
+  return oe(e, t) ?? toUserSkillsStorageKey(e);
 }
 function getPluginRegistryFileScope(e, t) {
   return A(t) ? STORAGE_KEYS.pluginRegistry(e) : null;
@@ -317,7 +317,7 @@ var NOT_RECORDED_INSTALL_PATH = "(not recorded)",
     "dependency-unsatisfied": !0,
     "dependency-version-unsatisfied": !0,
   };
-function $J(e) {
+function isSignificantPluginError(e) {
   if (e.type === "path-not-found")
     return e.plugin === void 0 && e.errno !== void 0;
   if (e.type === "plugin-not-installed")
@@ -345,7 +345,7 @@ function getErrorPluginId(e) {
   if (t > 0) return e.source.slice(0, t);
   return;
 }
-function UJ(e) {
+function isAutoupdateSkippedError(e) {
   return (
     e.type === "autoupdate-deferred-entry-helper" ||
     e.type === "autoupdate-disabled-by-policy"
@@ -947,8 +947,8 @@ export {
   PLUGIN_LINK_MARKER_FILENAME,
   getPluginLinkMarkerSchema,
   LINK_MODE_COMMAND_SUFFIX,
-  jzt,
-  enr,
+  toUserSkillsStorageKey,
+  toUserSkillsStorageScope,
   ORPHANED_AT_MARKER_FILENAME,
   IN_USE_MARKER_FILENAME,
   GCS_SHA_FILENAME,
@@ -986,10 +986,10 @@ export {
   getInstallationPreferenceSchema,
   parseInstallationPreference,
   NOT_RECORDED_INSTALL_PATH,
-  $J,
+  isSignificantPluginError,
   isDependencyError,
   getErrorPluginId,
-  UJ,
+  isAutoupdateSkippedError,
   formatPluginError,
   formatPluginWarning,
   formatPluginWarningGuidance,
