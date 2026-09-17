@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";

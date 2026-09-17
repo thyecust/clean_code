@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 185 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import {
   resetPromptStateAfterInvalidation,
   clearOutputStylesCache,
@@ -43,11 +43,11 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { SHA256_HEX_REGEX, hashSha256, GITHUB_HOST } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { SHA256_HEX_REGEX, hashSha256, GITHUB_HOST } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { containsWildcard, matchesToolNameGlob, parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { REMOTE_DEVICES_MCP_SERVER_NAME, REMOTE_DEVICE_BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseMcpToolName, buildMcpToolName, TOOL_RULE_VALIDATION, validatePermissionRule, getSettingsSchema, sortObjectKeysDeep } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -55,8 +55,8 @@ import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js"
 import { INTERNAL_WRITE_SUPPRESSION_MS, markInternalWrite, consumeInternalWrite } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { ARTIFACT_TOOL_NAME, ARTIFACT_FAMILY_TOOL_NAMES } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { patternWithRootFor } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { isSettingsToCloudEnabled, isSettingsToCloudEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { isSettingsToCloudEnabled, isSettingsToCloudEnabledCached } from "../目录同步-dir-sync/chunk-97crm80y.js";
+import { WORKFLOW_TOOL_NAME } from "../编排-Workflow/chunk-7fcxwgtq.js";
 import { WEB_FETCH_TOOL_NAME, getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import {
   MAX_HOME_SEED_FILES,
@@ -72,12 +72,12 @@ import {
   parseMemoryDestination,
   MAX_ETAG_LENGTH,
 } from "../记忆-CLAUDE.md/chunk-3ehd7vx0.js";
-import { isLocalHostname, isLoopbackHostname, isPrivateDomain } from "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
-import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, CLAUDE_IN_CHROME_FILE_UPLOAD_TOOL_NAMES } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
+import { isLocalHostname, isLoopbackHostname, isPrivateDomain } from "../../01-核心基础设施/核心工具-路径与平台/private-host-detection.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, CLAUDE_IN_CHROME_FILE_UPLOAD_TOOL_NAMES } from "../浏览器集成-ClaudeinChrome/claude-in-chrome-mcp-constants.js";
 import { s, ocr, vx, O, se, v, c, Qe, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { join as Pi } from "path";
 var Yt = 1,
   Xt = 2147483648,

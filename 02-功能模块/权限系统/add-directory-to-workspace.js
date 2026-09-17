@@ -10,22 +10,22 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text, useDebouncedCallback } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { validateWorkingDirectory, formatDirectoryValidationMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
 import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
-import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import { useKeybinding } from "../键位绑定-Keybindings/keybinding-hooks.js";
+import { useSession } from "../../01-核心基础设施/核心工具-未归类/session-context.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { SuggestionList } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { getDirectoryCompletions } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
-import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
-import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
-import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { FocusableBox } from "../../01-核心基础设施/UI组件-TUI/focusable-box.js";
+import { ErrorMessage } from "../../01-核心基础设施/UI组件-TUI/error-message.js";
+import { ActionKeybindingHint } from "../键位绑定-Keybindings/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function Ue() {}
 var Q = [

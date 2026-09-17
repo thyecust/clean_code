@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { B, l_e, N0, kW, p8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE } from "./chunk-9g2q4bjq.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
@@ -27,7 +27,7 @@ import {
   refreshGrowthBookAfterAuthChange,
   saveGlobalConfig,
 } from "./认证-OAuth登录.419zdfz3.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Iae, _dr, lot, R, l, A, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -46,7 +46,7 @@ import { clearMeIdResolutionCache } from "../制品发布-Artifact/artifact-db.j
 import { cancelAutoResume } from "../状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
 import { clearPolicyLimitsCache } from "../策略限制-PolicyLimits/policy-limits-client.js";
 import { clearRemoteManagedSettings } from "../../01-核心基础设施/设置-配置/remote-managed-settings.js";
-import { SUBSCRIPTION_SWITCH_NOTICE_ID } from "../../01-核心基础设施/共享小工具-未细化/announcement-notices.js";
+import { SUBSCRIPTION_SWITCH_NOTICE_ID } from "../../01-核心基础设施/核心工具-未归类/announcement-notices.js";
 import { s, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import {
   mkdir,

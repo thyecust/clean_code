@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { sleep, fullJitterBackoffMs } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { sleep, fullJitterBackoffMs } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { j, MA, d8, mp } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { registerCleanup, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getCloudPluginsConsentPath, createCloudPluginsConsentPin } from "../远程控制-Bridge/chunk-sc8n0cp3.js";
-import { runWithCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { runWithCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getGlobalClaudeFile, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -84,14 +84,14 @@ import {
   formatScriptHookLabel,
   evaluateHookIfCondition,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { formatSingleLineText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { findGitRootUncached } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { getSettingsFilePathForSource, getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isProjectScopeTrustAccepted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isViolinWoodEnabledCached, isViolinAmatiEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabledCached, isViolinAmatiEnabledCached } from "../目录同步-dir-sync/chunk-97crm80y.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { getPreferredShellToolName } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { untrustedDeviceHint } from "../远程控制-Bridge/chunk-tyce0p0b.js";
@@ -99,15 +99,15 @@ import { primeUnattendedServingConsent } from "../自动模式-AutoMode/unattend
 import { parseRemoteToolCallRequest, parsePlumbingCallRequest } from "../远程工具执行/remote-tool-protocol.js";
 import { peekPreSettingsEnvSnapshot, getAppliedGlobalConfigEnv } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 import { formatLogValue } from "../远程控制-Bridge/chunk-x379yyxb.js";
-import { NOT_HELD_STATE } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
+import { NOT_HELD_STATE } from "../../01-核心基础设施/终端与时钟/chunk-hkdjw6ht.js";
 import { findTemplateByDigest, getHookTemplateById } from "./hook-template-catalog.js";
-import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
-import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
-import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
+import { parseThinClientReply } from "../../01-核心基础设施/核心工具-未归类/parse-thin-client-reply.js";
+import { logRemoteToolsEvent } from "../../01-核心基础设施/核心工具-未归类/remote-tools-logger.js";
+import { truncateWithEllipsis } from "../../01-核心基础设施/核心工具-字符串与文本/truncate-with-ellipsis.js";
 import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, T, v, c, it, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function Ke() {
   let e = new Map();
   return {

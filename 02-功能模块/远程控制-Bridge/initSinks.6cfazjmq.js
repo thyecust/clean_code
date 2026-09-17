@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { initSinks as jtn } from "../../01-核心基础设施/共享小工具-未细化/init-sinks.js";
+import { initSinks as jtn } from "../../01-核心基础设施/遥测-OpenTelemetry/init-sinks.js";
 import "../MCP客户端/error-log-sink.js";
-import "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-sink.js";
 export { jtn as initSinks };

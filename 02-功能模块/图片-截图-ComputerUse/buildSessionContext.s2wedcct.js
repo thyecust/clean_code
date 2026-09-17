@@ -20,8 +20,8 @@ import { getComputerUseSession, registerComputerUseEscapeHotkey } from "./comput
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import "./computer-use-cli-executor.js";
 import { bindSessionContext, getComputerUseHostAdapter } from "./chunk-v76f8dbx.js";
-import { getFrozenCoordinateMode } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
-import { DEFAULT_GRANT_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
+import { getFrozenCoordinateMode } from "./computer-use-config.js";
+import { DEFAULT_GRANT_FLAGS } from "../../01-核心基础设施/核心工具-未归类/app-permission-categories.js";
 import "./computer-use-input-native.js";
 function c(t) {
   return t ? `(${t[0]}, ${t[1]})` : "";

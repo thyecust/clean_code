@@ -11,7 +11,7 @@ import { klt } from "../../00-第三方库/@opentelemetry/chunk-3zapb67e.js";
 import { m3e } from "../../00-第三方库/@grpc/grpc-js/grpc-js.5zkynjxh.js";
 import { otlpTransformerModule } from "./遥测-OpenTelemetry.0xhcvej6.js";
 import "../../00-第三方库/@opentelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
-import { commonJS } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var i = commonJS(function (c) {
   Object.defineProperty(c, "__esModule", { value: !0 });
   c.OTLPMetricExporter = void 0;

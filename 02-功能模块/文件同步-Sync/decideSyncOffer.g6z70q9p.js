@@ -13,8 +13,8 @@ import { forecastKeyOf as KHt, decideSyncOffer as lJt } from "./sync-offer-probe
 import "../云会话-Teleport/overlay-bundle.js";
 import "../工作树-Git/local-divergence-probe.js";
 import "../工作树-Git/dir-sync-git-repository.js";
-import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
+import "../../01-核心基础设施/核心工具-类型与数值/to-integer.js";
 import "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
-import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import "../目录同步-dir-sync/sync-state-schema.js";
 import "./sync-journal.js";
 export { lJt as decideSyncOffer, KHt as forecastKeyOf };

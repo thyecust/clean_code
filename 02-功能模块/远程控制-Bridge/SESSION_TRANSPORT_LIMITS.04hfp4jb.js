@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 87 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { SESSION_TRANSPORT_LIMITS as jDt, createSessionEventTransport as zgr } from "./session-event-transport.js";
-import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
-import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
+import "../../01-核心基础设施/核心工具-未归类/request-delivery-errors.js";
+import "../../01-核心基础设施/核心工具-未归类/remote-tools-logger.js";
 import "../远程工具执行/remote-tool-protocol.js";
 export { jDt as SESSION_TRANSPORT_LIMITS, zgr as createSessionEventTransport };

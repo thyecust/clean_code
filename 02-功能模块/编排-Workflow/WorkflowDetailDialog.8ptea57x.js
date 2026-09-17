@@ -11,11 +11,11 @@
 // [preload stripped] 原本在此预载 261 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { WorkflowDetailDialog as eye } from "./workflow-dialogs.js";
 import "./workflow-progress-ui.js";
-import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
-import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
-import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
+import "../../01-核心基础设施/UI组件-TUI/focusable-box.js";
+import "../../01-核心基础设施/UI组件-TUI/empty-state-message.js";
+import "../../01-核心基础设施/UI组件-TUI/error-message.js";
+import "../../01-核心基础设施/核心工具-未归类/summarize-tool-input.js";
 import "./workflow-registry.js";
 import "./workflow-script.js";
-import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
+import "./bundled-workflows.js";
 export { eye as WorkflowDetailDialog };

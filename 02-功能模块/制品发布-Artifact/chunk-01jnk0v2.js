@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify, jsonStringifyUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { ARTIFACT_TYPE_INSTRUCTIONS_TAG, ARTIFACT_TYPE_INSTRUCTIONS_INTRO, ARTIFACT_TYPE_INSTRUCTIONS_FOUND_INTRO, ARTIFACT_TYPE_INSTRUCTIONS_OUTRO } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -66,14 +66,14 @@ import {
   getSafeArtifactReadError,
   isArtifactToolRegistered,
 } from "./chunk-01ymf0ar.js";
-import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { parseRetryAfterHeader } from "../远程控制-Bridge/chunk-x4q0245z.js";
 import { TOOL_SEARCH_TOOL_NAME } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { ARTIFACT_ACTION_FAMILIES, isArtifactActionName, isArtifactCommentsEnabled, isArtifactToolsetEnabled } from "./chunk-qpgskeea.js";
 import { isArtifactDbEnabled } from "./artifact-db.js";
-import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
-import { isAnthropicHostedEnvironment, isByocEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js";
+import { isAnthropicHostedEnvironment, isByocEnvironment } from "../../01-核心基础设施/核心工具-未归类/environment-kind.js";
 import { lW, s, T, O, se, v, c, it, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 function isArtifactVerifyEnabled() {
   if (a.CLAUDE_CODE_REMOTE) return !1;
   return a.CLAUDE_CODE_ARTIFACT_VERIFY ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_osier_pylon_trace", !1);

@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
@@ -22,8 +22,8 @@ import { yieldToEventLoop, YIELD_BUDGET_MS, FuzzyFilePathIndex } from "../../01-
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { nodeIgnoreModule, filterCompilableIgnorePatterns, splitNonEmptyLines } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { getEffectiveFileSuggestion, runRipgrepSearch, MARKDOWN_SUBDIRS, getMarkdownFiles, createBaseHookInput, executeFileSuggestionCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var w = toESM(nodeIgnoreModule(), 1);
 import { statSync } from "fs";
 import * as m from "path";

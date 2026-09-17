@@ -8,33 +8,33 @@
 
 // Version: 2.1.263
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { jsonStringify, jsonStringifyUntraced, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { isSuspiciousUrl } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { isSuspiciousUrl } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
+import { formatSingleLineText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { SETTINGS_SOURCE_ORDER, getEnabledSettingsSources, PROJECT_SCOPED_SETTINGS_SOURCE_SET, RESERVED_MARKETPLACE_NAMES, looksLikeOfficialMarketplaceName, getReservedMarketplaceNameError as gke, getPluginIdSchema, getSettingsSchema, sortObjectKeysDeep } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
+import { getHostStateStore } from "../../01-核心基础设施/文件存储-原子写入/host-state-store.js";
 import { TRUSTED_PLUGIN_SETTINGS_SOURCES } from "../Hooks钩子/chunk-z3433nr6.js";
 import { isLocalSettingsGitTracked } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { OFFICIAL_MARKETPLACE_SOURCE, OFFICIAL_MARKETPLACE_NAME } from "../插件系统/chunk-ajtn749s.js";
 import { areLocalPluginDirsAllowedByPolicy, isMarketplaceRestrictionPolicyActive, isSourceAllowedByPolicy } from "../插件系统/plugin-source-policy.js";
 import { isTrustedBuiltinPlugin, isRemoteToolServingMuted, onServingMuteRecheck, CLOUD_SESSION_CONSENT_MESSAGES, sanitizeForDisplay, isPersistedWorkspaceTrusted, getKnownMarketplacesOrEmpty, getReservedMarketplaceNameError, getInstalledPluginsViaStorage, isInstallationInCurrentScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY, PLUGIN_FORWARDING_DISABLED_MESSAGE } from "../插件系统/plugin-forwarding.js";
-import { isLocalHostname, isPrivateAddress } from "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
+import { isLocalHostname, isPrivateAddress } from "../../01-核心基础设施/核心工具-路径与平台/private-host-detection.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { INLINE_PLUGIN_SOURCE, SKILLS_DIR_PLUGIN_SOURCE, BUILTIN_PLUGIN_SOURCE, getPluginMarketplace } from "../插件系统/chunk-33bdfgmx.js";
 import { s, T, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { hostname } from "os";
 import { dirname, join as hn } from "path";
 var mn = createLazyValue(() =>

@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { wrapInCodeFence } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { K, sn, bB, Prt, kg, HL } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { getProcessStartTime, isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
@@ -31,8 +31,8 @@ import {
   filterOverdueTasks,
 } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { resolveGitDir, getCommonDir } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { getClaimRegistry } from "../../01-核心基础设施/核心工具-未归类/host-claim-registry.js";
+import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import {
   mkdir as _e,

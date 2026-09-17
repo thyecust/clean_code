@@ -15,15 +15,15 @@ import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getPermissionModeTitle } from "./chunk-e4pfvp7x.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
+import { StatusIndicator } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/UI组件-TUI/confirm-prompt.js";
 import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { XL } from "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import { formatCronSchedule, parseScheduleInput } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { VALID_PERMISSION_MODES, addScheduledTask, removeScheduledTask, readScheduledTasks } from "./chunk-3kjwvb3e.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 import { basename, resolve } from "path";
 function qo() {

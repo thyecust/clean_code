@@ -11,14 +11,14 @@
 // [preload stripped] 原本在此预载 213 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { WORKFLOW_LAUNCH_DIGEST_ENV as $gr, createWorkflowLaunchState as Ugr, readWorkflowLaunchRecord as Bgr, workflowLaunchHandoffs as TDt, handleWorkflowLaunchEvent as jgr, resumeWorkflowLaunch as Wgr } from "./workflow-launch.js";
 import "./remote-workflow-launch.js";
-import "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
+import "../../01-核心基础设施/核心工具-未归类/nondeterminism-check.js";
 import "./workflow-runtime.js";
-import "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
-import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
-import "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
+import "../../01-核心基础设施/核心工具-未归类/structured-output-retry-errors.js";
+import "../../01-核心基础设施/核心工具-未归类/summarize-tool-input.js";
+import "../../01-核心基础设施/核心工具-路径与平台/fd-real-path.js";
 import "./workflow-registry.js";
 import "./workflow-script.js";
-import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
+import "./bundled-workflows.js";
 export {
   $gr as WORKFLOW_LAUNCH_DIGEST_ENV,
   Ugr as createWorkflowLaunchState,

@@ -11,7 +11,7 @@ import { gL, cy } from "./chunk-dm9sg03f.js";
 import { Lm } from "./chunk-w3axq133.js";
 import { defaultProvider } from "../../02-功能模块/模型接入-Bedrock-Vertex/aws-credential-provider-node.js";
 import "./chunk-z7ktsccq.js";
-import { getNodeConfigProviderModule } from "../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
+import { getNodeConfigProviderModule } from "../../01-核心基础设施/核心工具-未归类/node-config-provider.js";
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
   Q6,
@@ -35,9 +35,9 @@ import "./chunk-zdrvwe5r.js";
 import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "./chunk-jtb5q5xr.js";
 import { utilUtf8Module, utilBase64Module } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-p991cddr.js";
-import { smithyContextModule } from "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
-import { getUrlParserModule } from "../../01-核心基础设施/共享小工具-未细化/url-parser.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { smithyContextModule } from "../../01-核心基础设施/核心工具-未归类/smithy-context-module.js";
+import { getUrlParserModule } from "../../01-核心基础设施/核心工具-字符串与文本/url-parser.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var P = toESM(Q6()),
   We = toESM(Z6()),
   Oe = toESM(eW()),

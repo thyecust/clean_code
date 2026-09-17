@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
-import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { readEmbeddedAssetSync } from "../../01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js";
+import { commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var c = commonJS(function (ie, b) {
   b.exports = importMetaRequire("./detect.mjs-4ep12q1p.txt");
 });
@@ -34,29 +34,29 @@ var n = readEmbeddedAssetSync(r, import.meta.dirname);
 var i = "./SKILL-76b8b2a9.md.zst";
 var a = readEmbeddedAssetSync(i, import.meta.dirname);
 var e = (t) => (typeof t === "string" ? t : t.default),
-  R = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.db4qa869.js"),
-  C = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.fwytydyr.js"),
-  P = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.p2z54ya1.js"),
+  R = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.db4qa869.js"),
+  C = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.fwytydyr.js"),
+  P = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.p2z54ya1.js"),
   L = c(),
-  F = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.nt7z2p7z.js"),
-  T = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.k012ypzf.js"),
-  I = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.re66yep0.js"),
-  O = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.zjf86jvg.js"),
+  F = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.nt7z2p7z.js"),
+  T = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.k012ypzf.js"),
+  I = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.re66yep0.js"),
+  O = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.zjf86jvg.js"),
   j = l(),
-  _ = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.66rbt254.js"),
+  _ = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.66rbt254.js"),
   E = p(),
-  M = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.pm7hyz3j.js"),
-  D = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.k8j35a02.js"),
+  M = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.pm7hyz3j.js"),
+  D = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.k8j35a02.js"),
   N = m(),
-  A = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.vkv8kr1s.js"),
-  B = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.0zd1ebnt.js"),
+  A = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.vkv8kr1s.js"),
+  B = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.0zd1ebnt.js"),
   G = d(),
   H = f(),
-  X = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.0z426rj0.js"),
-  q = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.ak8awsa2.js"),
-  Z = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.1fkyc6ha.js"),
-  U = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.am6q7e7t.js"),
-  Q = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.rm15mpjf.js"),
+  X = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.0z426rj0.js"),
+  q = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.ak8awsa2.js"),
+  Z = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.1fkyc6ha.js"),
+  U = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.am6q7e7t.js"),
+  Q = import.meta.require("../../01-核心基础设施/核心工具-未归类/default.rm15mpjf.js"),
   SKILL_MD = n,
   SKILL_FILES = {
     "storybook/SKILL.md": a,

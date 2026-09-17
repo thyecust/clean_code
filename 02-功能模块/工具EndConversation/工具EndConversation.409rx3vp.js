@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSessionEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { END_CONVERSATION_TOOL_NAME, END_CONVERSATION_GB_FLAG } from "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
-import { isEndConversationDisabled, appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
+import { END_CONVERSATION_TOOL_NAME, END_CONVERSATION_GB_FLAG } from "../../01-核心基础设施/核心工具-未归类/chunk-vtgvbed1.js";
+import { isEndConversationDisabled, appendEndedByModelSuffix } from "../../01-核心基础设施/核心工具-未归类/ended-by-model.js";
 import { isModelVersionAtLeast, isToolSearchEnabled } from "../工具ToolSearch/tool-search-enablement.js";
 var DESCRIPTION = `End the current conversation. Use only for sustained user abuse or when the user explicitly requests a demonstration of this tool. This will close the conversation and prevent any further messages from being sent.
 

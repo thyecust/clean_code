@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { otelApiModule } from "./认证-OAuth登录.419zdfz3.js";
-import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var d = commonJS(function (t) {
   Object.defineProperty(t, "__esModule", { value: !0 });
   t.getMachineId = void 0;

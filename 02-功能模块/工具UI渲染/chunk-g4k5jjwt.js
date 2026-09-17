@@ -11,14 +11,14 @@ import { truncateToCodeUnits, takeLastCodeUnits, removeLoneSurrogates, countOccu
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { isUltrathinkEnabled, hasUltrathinkTrigger, findUltrathinkMatches, pickRainbowColor } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useQueuedMessageContext } from "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
+import { useQueuedMessageContext } from "../../01-核心基础设施/核心工具-未归类/queued-message-context.js";
 import { Markdown } from "../语法高亮-Markdown渲染/markdown-renderer.js";
-import { Divider } from "../../01-核心基础设施/共享小工具-未细化/divider.js";
+import { Divider } from "../../01-核心基础设施/UI组件-TUI/divider.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getSystemLocale, getTimeFormatConfig, formatDateWithPreset, formatDateWithPattern } from "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { withTimeZone, getDateTimeFormat } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
-import { EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { withTimeZone, getDateTimeFormat } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
+import { EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var se = /(?![\u200C\u200D])[\p{Cf}\u2028\u2029]/gu,
   he = /[\u001b\u0080-\u009f]/g,
   ye = 8;

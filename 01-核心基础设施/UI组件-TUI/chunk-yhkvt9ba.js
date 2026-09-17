@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport, useVirtualScrollViewportSize, useScrollViewport, useClaimScrollBox } from "../共享小工具-未细化/virtual-scroll-viewport-state.js";
-import { useTerminalSize } from "../共享小工具-未细化/use-terminal-size.js";
+import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport, useVirtualScrollViewportSize, useScrollViewport, useClaimScrollBox } from "./virtual-scroll-viewport-state.js";
+import { useTerminalSize } from "./use-terminal-size.js";
 import { getStringWidth } from "../核心工具-字符串与文本/ansi-text-utils.js";
 import { ScrollBox } from "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
 import { useCursorDeclaration } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { Box, Text, useFocus, measureElement } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useKeybindings } from "../共享小工具-未细化/keybinding-hooks.js";
-import { BackgroundText } from "../共享小工具-未细化/background-text.js";
+import { useKeybindings } from "../../02-功能模块/键位绑定-Keybindings/keybinding-hooks.js";
+import { BackgroundText } from "./background-text.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, re, De, dn, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function wt(en) {
   return [en.props.id ?? en.props.title, en.props.title];

@@ -10,26 +10,26 @@
 
 // [preload stripped] 原本在此预载 99 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Le, Ije } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { useVoiceStore } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
+import { useVoiceStore } from "./voice-state-provider.js";
 import { j, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { useTerminalFocus } from "../../01-核心基础设施/终端与时钟/clock-and-terminal-focus.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { getSanitizedShortCode } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getBranch } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { useClock } from "../../01-核心基础设施/终端与时钟/use-clock.js";
 import { probeVoiceConnectivity, isVoiceStreamAvailable, connectVoiceStream } from "./chunk-6098r6ax.js";
-import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
+import { useSession } from "../../01-核心基础设施/核心工具-未归类/session-context.js";
+import { useStoreSelector } from "../../01-核心基础设施/核心工具-未归类/use-store-selector.js";
 import { E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { getResolvedLanguage } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
+import { getResolvedLanguage } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
 F();
 var w = 1e4,
   I = 3;

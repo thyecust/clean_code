@@ -8,26 +8,26 @@
 
 // Version: 2.1.263
 import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { isBunStandaloneExecutable, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { R, l, A, Jr, w8, H_e, I_e, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getTelemetryCode, jsonStringify, jsonParse, jsonParseUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, takeLastCodeUnits, CONTROL_CHARS_REGEX, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { wS } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PROCESS_WRAPPER_ENV_VAR, getProcessWrapperState, getLauncherArgv, getLauncherConfigError, isLauncherRunnable, isExecutableFile, getAbsoluteLauncherPaths, getLauncherErrorMessage, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { removeGuiHostEntrypoint, removeRestrictedEnvVars, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
+import { removeGuiHostEntrypoint, removeRestrictedEnvVars, removeBgDispatcherPlanEnvVars } from "../守护服务-Daemon/session-env-scrubbing.js";
 import { PROVIDER_CONFIG_ENV_VARS, BASE_URL_ENV_VARS, API_KEY_ENV_VARS, TOKEN_FD_ENV_VARS, clearAwsEnvVars, getHostAuthEnvVarName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
-import { resolveWrappedClaudeInvocation, resolveClaudeInvocation, getInstalledClaudePath, applyProcessWrapper, findInstalledVersionBinary } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
+import { resolveWrappedClaudeInvocation, resolveClaudeInvocation, getInstalledClaudePath, applyProcessWrapper, findInstalledVersionBinary } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
 import { readBoundedFile, getVersionForAnalytics, getFeatureValue_CACHED_MAY_BE_STALE, getGlobalConfig, getDaemonColdStart } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getStringWidth, CURSOR_HOME_SEQUENCE, ERASE_ENTIRE_LINE, ERASE_SCREEN_SEQUENCE, wrapAnsi, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { quarantineJobTranscript, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
@@ -35,8 +35,8 @@ import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { CLAUDE_BULLET_GLYPH, THEREFORE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { procIdentityOf } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { isDaemonCliEnabled, isDaemonServiceInstallEnabled, bgSupervisorNoun } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
+import { timingSafeStringEqual } from "../守护服务-Daemon/chunk-035vf5et.js";
+import { isDaemonCliEnabled, isDaemonServiceInstallEnabled, bgSupervisorNoun } from "../多会话视图-Fleet/agent-view-feature-gates.js";
 import { getVersionTarget, hasVersionTarget, parseVersionTimestamp } from "./chunk-gnmy62vg.js";
 import { terminateProcessGracefully, getDaemonLockPath, readDaemonLock, LOCK_VERIFY_ATTEMPTS, verifyProcessStartTime, classifyDaemonLockStaleness, isProcessIdentityKnown, getVerifiedDaemonLock, describeStopFailure } from "./daemon-lock.js";
 import { hasUidCollapse, redactDaemonNonce, readOrCreateControlKey, ensureDaemonRuntimeDir, UID_COLLAPSE_REFUSAL_MESSAGE, getControlSocketPath } from "./chunk-djserjj5.js";
@@ -59,23 +59,23 @@ import {
   getJobDir,
   readJobState,
 } from "./chunk-7wsy8vxb.js";
-import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
-import { enableTerminalMode, HIDE_CURSOR } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
+import { controlRequest } from "../守护服务-Daemon/chunk-9fpz6abc.js";
+import { enableTerminalMode, HIDE_CURSOR } from "../终端环境探测-TUI-tmux/terminal-mode-sequences.js";
 import { markdownParser } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { getPowerShellPath } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
+import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js";
 import { getPeerUidRefusalReason } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 import { ensureMarkdownExtensionsRegistered, renderMarkdownToken } from "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
-import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import { fromJobState } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
+import { getThemeColor } from "../../01-核心基础设施/UI组件-TUI/theme-color.js";
+import { fromJobState } from "../守护服务-Daemon/chunk-tpraq69b.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { createBackendHandle, createTranscriptSource } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
-import { getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
+import { createBackendHandle, createTranscriptSource } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
+import { getLocalBinDir } from "../../01-核心基础设施/核心工具-路径与平台/user-directories.js";
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
-import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
-import { CONTROL_PROMPT_PREFIX_RE } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
+import { getGraphemeSegmenter } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
+import { CONTROL_PROMPT_PREFIX_RE } from "../../01-核心基础设施/核心工具-未归类/user-prompt-text.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import {
   access as dr,
   mkdir,

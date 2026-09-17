@@ -11,7 +11,7 @@ import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { testAndSetResolvedPath, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getOrCompute, getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
+import { getOrCompute, getHostStateStore } from "../../01-核心基础设施/文件存储-原子写入/host-state-store.js";
 import { isSettingsSourceEnabled } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
@@ -20,9 +20,9 @@ import { formatPluginError, getPluginRegistryState, clearPluginWorkflowsCache } 
 import { readBoundedFileWithFs } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectDirsUpToHome, loadAllPluginsCacheOnly } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { MAX_WORKFLOW_SCRIPT_BYTES } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { getBundledWorkflows } from "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
-import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
-import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { getBundledWorkflows } from "./bundled-workflows.js";
+import { areBundledSkillsDisabled } from "../Skills技能/disable-bundled-skills.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 var REMOTE_WORKFLOW_SCRIPT_ENV = "CLAUDE_REMOTE_WORKFLOW_SCRIPT",
   REMOTE_WORKFLOW_ARGS_ENV = "CLAUDE_REMOTE_WORKFLOW_ARGS",
   WORKFLOW_NAME_ONLY_ENV = "CLAUDE_WORKFLOW_NAME_ONLY";

@@ -24,11 +24,11 @@ import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, truncateToCodePoints, truncateToCodeUnits, toWellFormed } from "../核心工具-字符串与文本/string-utils.js";
 import { env as a, antEnv } from "../设置-配置/chunk-zqr5ctyf.js";
-import { getComplianceTaints } from "../共享小工具-未细化/compliance-taints-store.js";
-import { BRIEF_ENFORCE_SENTINEL } from "../共享小工具-未细化/chunk-q599wyee.js";
+import { getComplianceTaints } from "../核心工具-未归类/compliance-taints-store.js";
+import { BRIEF_ENFORCE_SENTINEL } from "../核心工具-未归类/chunk-q599wyee.js";
 import { DASH_CHARS_CLASS, buildConfusableTagScrubPattern, buildChannelSourceTagPattern, buildModelLayerTagPattern, LEAD_HEX_ID_SYMBOL, LEAD_SPAN_SYMBOL, buildBracketedLeadScrubPattern } from "../核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { isLoopbackHostname } from "../共享小工具-未细化/is-loopback-hostname.js";
-import { countMatching, dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { isLoopbackHostname } from "../核心工具-路径与平台/is-loopback-hostname.js";
+import { countMatching, dedupe } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
 var DEFAULT_MAX_RESULT_SIZE_CHARS = 50000,
   OUTPUT_MAX_CHARS_FLOOR = 4000,
   OUTPUT_MAX_CHARS_CEILING = 128000,

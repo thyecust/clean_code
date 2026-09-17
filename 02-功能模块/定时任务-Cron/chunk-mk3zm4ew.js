@@ -11,7 +11,7 @@ import { getFeatureValue_CACHED_WITH_REFRESH } from "../认证-OAuth登录/认�
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { DEFAULT_CRON_JITTER_CONFIG } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { isMonitorToolEnabled } from "../工具Monitor/monitor-tool-description.js";
-import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
 var CRON_CREATE_TOOL_NAME = "CronCreate",
   CRON_DELETE_TOOL_NAME = "CronDelete",
   CRON_LIST_TOOL_NAME = "CronList";

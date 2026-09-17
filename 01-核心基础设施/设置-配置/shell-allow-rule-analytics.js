@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js";
 import { parsePermissionRule } from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
 import { isDangerousBashPermission, isDangerousPowerShellPermission } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { BASH_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

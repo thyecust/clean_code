@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { nu, A0n } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var isArrayBufferModule = commonJS(function (M) {
   var D = (e) =>
     (typeof ArrayBuffer === "function" && e instanceof ArrayBuffer) ||

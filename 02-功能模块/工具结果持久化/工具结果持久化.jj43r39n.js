@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { httpClient, getSanitizedToolName, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { ge, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getTelemetryCode, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { getSidecarKeyForToolResultFile, ensureToolResultsDirectory, assertSafeDirectoryPath, removeSymlinkAtWriteTarget } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { DEFAULT_MAX_RESULT_SIZE_CHARS, BYTES_PER_TOKEN, DEFAULT_TOOL_RESULT_PERSIST_THRESHOLD, DEFAULT_AGGREGATE_TOOL_RESULT_BUDGET } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 var CLAUDE_CODE_URL = "https://claude.com/claude-code";
 function O(t, e) {
   return t?.includes("_staging_") === !0 || e?.includes("staging") === !0;

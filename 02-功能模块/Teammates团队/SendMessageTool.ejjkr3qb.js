@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 175 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { oo, parseShortId, ze, Dxe } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -21,7 +21,7 @@ import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCa
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -83,11 +83,11 @@ import {
   getAgentTranscript,
   getParentPromptId,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
 import { DEFAULT_PEER_GUARD_LIMITS, isMessageTooLargeError, isSenderPacedError, isRegistryUnreadableRefusal, classifySendFailure, formatStaleSocketHint, formatBusySocketHint, UdsSendRefusedError } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 import { getCleanMessageSplit, repairSendMessageInput, writeToMailbox, createShutdownRequestMessage, createShutdownApprovedMessage, createShutdownRejectedMessage, isStructuredProtocolMessage, markMessagesAsReadByPredicate } from "./chunk-g6nvp9mm.js";
 import { isAgentSwarmsEnabled } from "./agent-swarms-enablement.js";
-import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
+import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/核心工具-未归类/max-subagent-spawn-depth.js";
 import { primePeerIdentityOwner, getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
 import { readTeamFileAsync, updateTeamFile } from "./team-file-store.js";
 import { restoreContentReplacementState } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
@@ -106,11 +106,11 @@ import {
   classifySelfNameMatch,
   formatOwnSessionMessage,
 } from "./peer-target-guard.js";
-import { resolveSendMessagePin } from "../../01-核心基础设施/共享小工具-未细化/send-message-pins.js";
+import { resolveSendMessagePin } from "../../01-核心基础设施/核心工具-未归类/send-message-pins.js";
 import { isHarborKiteModeEmitEnabled, classifyPermissionMode } from "../权限系统/cross-session-inbound-gate.js";
 import { isResumedInlineError, ResumeAgentStateError, AgentStoppedByUserError, AgentResumeInProgressError, AgentStillStoppingError, resumeAgentReply } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
-import { RESUMED_AGENT_REPORT_OMITTED_MESSAGE, RESUMED_AGENT_REPORT_FOLLOWS_JSON_MESSAGE, formatResumedAgentResult, parseHandbackDisplayText } from "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
-import { getPlanApprovalPermissionMode } from "../../01-核心基础设施/共享小工具-未细化/plan-approval-permission-mode.js";
+import { RESUMED_AGENT_REPORT_OMITTED_MESSAGE, RESUMED_AGENT_REPORT_FOLLOWS_JSON_MESSAGE, formatResumedAgentResult, parseHandbackDisplayText } from "../会话-历史-恢复/resumed-agent-handback.js";
+import { getPlanApprovalPermissionMode } from "../../01-核心基础设施/核心工具-未归类/plan-approval-permission-mode.js";
 import {
   checkCrossSessionSendPermission,
   pinSendMessageRecipient,
@@ -129,15 +129,15 @@ import {
   resolveMessageRecipient,
 } from "./message-recipient-resolution.js";
 import { wakeTeammateTask } from "./teammate-task-messages.js";
-import { buildBooleanFromStringSchema, parseStringBoolean } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
-import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
-import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_SUMMARY_MAX_LENGTH } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { buildBooleanFromStringSchema, parseStringBoolean } from "../../01-核心基础设施/核心工具-类型与数值/boolean-from-string-schema.js";
+import { getRemoteSessionCompatId } from "../../01-核心基础设施/核心工具-未归类/remote-session-compat-id.js";
+import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_SUMMARY_MAX_LENGTH } from "../../01-核心基础设施/核心工具-未归类/send-message-constants.js";
 import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 import { MAIN_CONVERSATION_NAME, formatAgentMessage, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
-import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
+import { normalizeMcpName } from "../MCP客户端/mcp-name-normalization.js";
 import { s, O, c, $e, Ko, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countGraphemes, splitGraphemes } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countGraphemes, splitGraphemes } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 var Be = /^local_[0-9a-f-]{8,}$/,
   xe = "ccd_session_mgmt",
   Le = "send_message",

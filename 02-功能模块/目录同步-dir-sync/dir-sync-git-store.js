@@ -11,7 +11,7 @@ import { isWellFormed, beforeFirst } from "../../01-核心基础设施/核心工
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
@@ -19,14 +19,14 @@ import { CLOUD_SNAPSHOTS_DIR_NAME, FOLDER_SYNC_DIR_NAME } from "../../01-核心�
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { createConcurrencyLimiter, isSignalAborted, readExactBytes, readSeedFile, GIT_OBJECT_ID_REGEX, isNonZeroObjectId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { compareByPath } from "../文件同步-Sync/sync-journal.js";
-import { computeGitBlobId, isMtimeSettled } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import { computeGitBlobId, isMtimeSettled } from "./sync-state-schema.js";
 import { platformIgnoresCase, ignoreMatcherFrom, rootIgnoreRefusalClause, readRootIgnoreLines, listFolderCandidates } from "../文件同步-Sync/sync-folder-scan.js";
-import { sanitizePathSegment } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
-import { createHoverRestOptions } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { sanitizePathSegment } from "./dir-sync-record-path.js";
+import { createHoverRestOptions } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
 import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { s, T, se, v, c, uW, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { createHash as _t } from "crypto";
 var Ie = {
     file: "100644",

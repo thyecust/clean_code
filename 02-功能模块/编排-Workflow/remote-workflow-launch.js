@@ -7,17 +7,17 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isReviewOriginSession } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { MAX_WORKFLOW_SCRIPT_BYTES, MAX_SERVER_AUTHORED_WORKFLOW_SCRIPT_BYTES, persistWorkflowScript } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { hasNoControlCharacters } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
-import { areWorkflowsDisabledBySettings, isWorkflowsAllowedByPolicy } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
+import { areWorkflowsDisabledBySettings, isWorkflowsAllowedByPolicy } from "./workflow-feature-gates.js";
 import { hasPermissionsToUseTool } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { compileWorkflowScript, sanitizeWorkflowNameForTelemetry, sanitizeWorkflowDescriptionForTelemetry, launchWorkflowTask } from "./workflow-runtime.js";
-import { usesNondeterministicApi } from "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
+import { usesNondeterministicApi } from "../../01-核心基础设施/核心工具-未归类/nondeterminism-check.js";
 import { parseWorkflowScript } from "./workflow-script.js";
 import { getWorkflowTranscriptDir } from "./workflow-snapshots.js";
 import { generateTaskId } from "../Teammates团队/chunk-mrfx53ye.js";

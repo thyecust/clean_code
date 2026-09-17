@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { startSlowOperationSpan, jsonStringifyUntraced, jsonParseUntraced, readTailBytes, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -34,7 +34,7 @@ import {
   decrementSessionDraftCount,
   prepareApiMessages,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { hasThirdPartyTranscriptMarkers, anyTranscriptEntryHasThirdPartyMarkers, MAX_RAW_TRANSCRIPT_BYTES, MAX_FEEDBACK_PAYLOAD_BYTES, measureFeedbackPayloadBytes, findRecentEntriesWithinByteBudget, postFeedbackRequest } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";

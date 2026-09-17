@@ -7,29 +7,29 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { CLAUDE_BULLET_GLYPH, EFFORT_MEDIUM_GLYPH, PAUSE_GLYPH, AUTO_ACCEPT_GLYPH, LOZENGE_OUTLINE_GLYPH, LOZENGE_FILLED_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { Box, Text, useAnimationFrame, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybindingDisplayText } from "../键位绑定-Keybindings/use-keybinding-display-text.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
-import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useKeybindings } from "../键位绑定-Keybindings/keybinding-hooks.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { StatusIndicator, shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
-import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { StatusIndicator, shouldReduceMotion } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
+import { ProgressBar } from "../../01-核心基础设施/UI组件-TUI/progress-bar.js";
+import { useSettings } from "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import { Qr } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { pickRandom } from "../Hooks钩子/spinner-store.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { splitTextForShimmer } from "../远程控制-Bridge/remote-control-ui-strings.js";
 import { V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function Go(Wt) {
   return Wt.split(

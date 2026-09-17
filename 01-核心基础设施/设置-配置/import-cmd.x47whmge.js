@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 207 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { IMPORT_NO_MANUAL_CONFIG_INSTRUCTION } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { sanitizeImportField, sanitizeImportMessage, writeImportFallbackSkill, scanImportSources } from "./agent-import.js";
-import { isAutoImportableItem, classifyImportItem } from "../共享小工具-未细化/import-items.js";
-import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { isAutoImportableItem, classifyImportItem } from "../核心工具-未归类/import-items.js";
+import { countMatching } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
 import { createHash } from "crypto";
 function scanDigest(d) {
   let p = createHash("sha256");

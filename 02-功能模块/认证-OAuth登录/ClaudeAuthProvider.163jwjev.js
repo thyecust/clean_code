@@ -34,8 +34,8 @@ import {
   isEntraLoginUrl as dpr,
 } from "./mcp-oauth-provider.js";
 import "./xaa-idp-auth.js";
-import "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
-import "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
+import "../../01-核心基础设施/核心工具-并发与缓存/lazy-event-emitters.js";
+import "./oauth-callback.js";
 import "./url-and-error-redaction.js";
 import "./oauth-client.js";
 import "./pkce-challenge.js";

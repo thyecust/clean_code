@@ -11,11 +11,11 @@
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { BASH_STDOUT_TAG, BASH_STDERR_TAG, BASH_EXIT_CODE_TAG } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { execFileNoThrowWithCwd } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { getDefaultShell } from "../../01-核心基础设施/共享小工具-未细化/get-default-shell.js";
-import { getBashSpawnFailureDetail } from "../../01-核心基础设施/共享小工具-未细化/bash-spawn-failure-detail.js";
+import { getDefaultShell } from "../../02-功能模块/终端环境探测-TUI-tmux/get-default-shell.js";
+import { getBashSpawnFailureDetail } from "../../01-核心基础设施/核心工具-未归类/bash-spawn-failure-detail.js";
 import { randomUUID } from "crypto";
 async function runHeadlessBashCommand(e) {
   let { command: s } = e,

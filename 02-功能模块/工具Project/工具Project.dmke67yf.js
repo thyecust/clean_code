@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 77 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Xn, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, l, A, FA } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isStorageError, getTelemetryCode, jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -35,7 +35,7 @@ import {
   safeInline,
 } from "../GoogleDrive集成/GoogleDrive集成.f0ersdj8.js";
 import { s, T, O, se, v, c, Qe, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 import { constants } from "fs";
 import { open as J, realpath, stat as U } from "fs/promises";
 import { join as K, sep as F, resolve } from "path";

@@ -19,7 +19,7 @@ import {
   WSL_REG_EXE_PATH,
   isRunningOnWsl,
   getManagedPreferencesPaths,
-} from "../共享小工具-未细化/mdm-policy-paths.js";
+} from "./mdm-policy-paths.js";
 import { execFile } from "child_process";
 import {
   accessSync,

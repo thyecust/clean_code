@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { K, fy, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { lr, le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { getProjectKeyFromDir } from "../Teammates团队/transcript-paths.js";
 import { MAX_MCP_TASK_ID_LENGTH, MCP_TASK_ID_PATTERN } from "./mcp-task-id.js";
-import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 import { dirname, join as f } from "path";
 var x = /^k[0-9a-z]{8}$/,
   d = 256,

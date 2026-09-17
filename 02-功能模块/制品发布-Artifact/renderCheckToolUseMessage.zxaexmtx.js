@@ -33,15 +33,15 @@ import {
 import { formatArtifactTitle, sanitizeDisplayText, getShareEntry, ownershipTag, shareAudienceParenthetical } from "./chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
+import "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-context.js";
 import { ToolErrorMessage } from "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
-import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { ToolResultRow } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import { stripRejectNotice } from "./chunk-fx5ekm7e.js";
 import { toLegacyVerbInput, toFamilyParentInput, isArtifactToolsetEnabled } from "./chunk-qpgskeea.js";
 import { ROOM_CONSENT_CLAUSE, DB_BATCH_OP, replayedPublishesRemaining, replayedPublishesResetAt, publishesRemainingLine } from "./chunk-pdd7kz7p.js";
 import { MAX_PREVIEW_WIDTHS, MAX_REPORTED_DROPPED_ISSUES, MAX_PREVIEW_SHOTS, MAX_PREVIEW_ISSUES, normalizePreviewWidths, normalizePreviewThemes, isArtifactRoomFeatureEnabled, artifactLivePathsSchemaOpen } from "./chunk-b6k1z7an.js";
 import "./chunk-x29r16ke.js";
-import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
+import "../浏览器集成-ClaudeinChrome/claude-browser-mcp-server.js";
 import {
   parseArtifactReplyInput,
   parseArtifactAssetInput,
@@ -72,16 +72,16 @@ import {
   publishInputJoinsRoom,
 } from "./chunk-pvztfdrb.js";
 import "../Teammates团队/chunk-weg7y2ya.js";
-import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/whiteboard-telemetry.js";
+import "../../01-核心基础设施/核心工具-未归类/chunk-dgth8ahx.js";
 import "../远程控制-Bridge/bridge-inbound-origin.js";
 import "./artifact-read-for-model.js";
 import "../Teammates团队/chunk-y89mhs4a.js";
-import { ReceivedBytesStatus } from "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
+import { ReceivedBytesStatus } from "../../01-核心基础设施/核心工具-未归类/webfetch-tool-messages.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function R(ee) {
   let D = _(8),
     { name: A, url: E, iconColor: q } = ee,

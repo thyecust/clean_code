@@ -37,8 +37,8 @@ import {
   isEntraLoginUrl as lpr,
 } from "./chunk-naqnacd3.js";
 import "./xaa-idp-login.js";
-import "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
-import "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
+import "../../01-核心基础设施/核心工具-并发与缓存/lazy-event-emitters.js";
+import "./oauth-callback.js";
 import "./url-and-error-redaction.js";
 import "../MCP客户端/chunk-78r8f7dw.js";
 import "../MCP客户端/mcp-protocol-schemas.js";

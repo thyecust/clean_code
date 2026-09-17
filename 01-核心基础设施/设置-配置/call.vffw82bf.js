@@ -9,27 +9,27 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 106 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
+import { withTimeout } from "../核心工具-并发与缓存/async-timeout-utils.js";
 import { oa, Dat, aee, Ttn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { isWindsurfOrDevinPath, env as a } from "./chunk-zqr5ctyf.js";
 import { repeatString, pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Av, iDt, j0e } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useStorageV5Context } from "../共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../核心工具-未归类/storage-v5-context.js";
 import { getVersionForAnalytics } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { formatPathWithTilde } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsFilePathForSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { readVSCodeScrollSensitivity } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { FocusableBox } from "../共享小工具-未细化/focusable-box.js";
+import { FocusableBox } from "../UI组件-TUI/focusable-box.js";
 import { sanitizeTerminalName } from "../../02-功能模块/通知-Notifications/通知-Notifications.g4xng0pg.js";
 import { Qr } from "../UI组件-TUI/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { getPlatformDisplayName } from "../核心工具-路径与平台/platform-detection.js";
-import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function ut() {
   return process.env[y];

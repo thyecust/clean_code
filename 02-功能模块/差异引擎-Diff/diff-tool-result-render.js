@@ -7,17 +7,17 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { TranscriptExpandHint, OverflowHint } from "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
-import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { DiffHunks } from "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
+import { ToolResultRow } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
+import { DiffHunks } from "../../01-核心基础设施/核心工具-未归类/diff-hunks.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { relative } from "path";
 var T = 10;
 function RejectedToolUseDiff(Dt) {

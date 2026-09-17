@@ -9,17 +9,17 @@
 // Version: 2.1.263
 import { isSemverLessThan, getCredentialInvalidation, getCredentialInvalidationGeneration, BASH_TOOL_NAME, POWERSHELL_TOOL_NAME, onGrowthBookRefresh, getFeatureValue_DEPRECATED, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { hB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { isInProtectedNamespace } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { generateAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { getSessionRuntimeState, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
@@ -44,22 +44,22 @@ import {
   isEventRejectedByAttestation,
 } from "./chunk-5ne99rq3.js";
 import { isBridgeAuthReviveEnabled, isBridgeNonOrigin403RetryEnabled, isBridgeOwnerPinnedEndEnabled, isBridgeHostDeclinedEndEnabled, isBridgeSignedOutNeutralEnabled, isCcrV2SessionCrudEnabled } from "./chunk-9estzwf5.js";
-import { logBridgeSkip } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { logBridgeSkip } from "./chunk-x4q0245z.js";
 import { isProactiveEnrollmentDisabled, isTrustedDeviceGateEnabled, getTrustedDeviceToken, withUntrustedDeviceRecovery, untrustedDeviceHint } from "./chunk-tyce0p0b.js";
 import { isNonOriginSource, describeNonOriginSource, isCreateSessionFailure, createCodeSession, isCredentialsFailure, isCredentialsRejection, fetchRemoteCredentials, archiveCodeSession, unarchiveCodeSession } from "./code-session-api.js";
 import { reseedBridgePermissionMode, reseedBridgeCrossSessionInbound, reseedBridgeModel } from "../权限系统/chunk-1y2g140m.js";
-import { getBridgeBaseUrlOverride, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getBridgeBaseUrlOverride, getBridgeSessionNamePrefix } from "./chunk-203p0p9a.js";
 import { buildPendingActionsList } from "./chunk-1yq098a7.js";
 import { SSETransport, DEFAULT_STREAM_EVENT_FLUSH_INTERVAL_MS, CLOSE_CODE_BY_TERMINAL_CONDITION, CCRClient, createIdleTracker } from "./chunk-znhfst8k.js";
 import { isHumanTurnEvent } from "./bridge-inbound-origin.js";
-import { buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
+import { buildSessionApiUrl, registerWorker } from "../守护服务-Daemon/work-secret.js";
 import { buildPendingActionDetail, isUserActivityRequest, isHumanInputRequest } from "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { reseedBridgeEffort } from "./bridge-effort-sync.js";
-import { getCooContextProperties } from "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
+import { getCooContextProperties } from "../../01-核心基础设施/核心工具-未归类/coo-context-properties.js";
 import { createTokenRefreshScheduler } from "./chunk-4zd60pbm.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 var Vn = {
     init_retry_max_attempts: 3,
     init_retry_base_delay_ms: 500,
@@ -203,7 +203,7 @@ var Bo = 300000,
 async function ni() {
   if (isEssentialTrafficOnly()) return !1;
   let { getFeatureValue_CACHED_MAY_BE_STALE: t } =
-    await import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js");
+    await import("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js");
   return t("tengu_bridge_placeholder_sweep", !0);
 }
 function ii(t) {
@@ -737,7 +737,7 @@ async function createBridgeSessionHandle(t) {
       r = async () => {
         if (We) {
           let { buildGitSessionContext: d } =
-              await import("../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js"),
+              await import("../../01-核心基础设施/核心工具-未归类/chunk-ve2h3qad.js"),
             { reportGitSessionContext: _ } =
               await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
             { report: P } = await d(We, Kt, Jt ?? void 0);
@@ -1550,7 +1550,7 @@ async function createBridgeSessionHandle(t) {
           isNestedGitLabProject: e,
           parseGitRemote: r,
           parseGitHubRepository: o,
-        } = await import("../../01-核心基础设施/共享小工具-未细化/parseGitHubRepository.3ng6714h.js"),
+        } = await import("../../01-核心基础设施/核心工具-未归类/parseGitHubRepository.3ng6714h.js"),
         {
           addWatchedRepo: a,
           removeWatchedRepo: d,

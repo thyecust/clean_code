@@ -8,29 +8,29 @@
 
 // Version: 2.1.263
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify, jsonStringifyUntraced, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isConfigDirPath } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { CLAUDE_BULLET_GLYPH, DOTTED_CIRCLE_GLYPH, UP_ARROW_GLYPH, DOWN_ARROW_GLYPH, RETURN_KEY_GLYPH, HORIZONTAL_LINE_GLYPH, ROUNDED_BOX_CORNER_GLYPHS, EN_DASH_GLYPH, TREE_CONNECTOR_GLYPHS } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useActiveOverlay } from "../多会话视图-Fleet/overlay-registry.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { formatPathWithTilde, assertDirChainReal, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth, truncateToWidth, splitTextByWidth, formatDuration, formatBarElapsed, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Box, Text, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useKeybinding, useKeybindings } from "../键位绑定-Keybindings/keybinding-hooks.js";
 import { slugifyWorkflowName } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { getProjectDirsUpToHome, getUserMessageText, isTranscriptMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { STRUCTURED_OUTPUT_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { buildResumePrompt } from "./chunk-va9cgbfs.js";
 import { parseWorkflowScript } from "./workflow-script.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
 import {
   formatModelLabel,
   useWorkflowDialogLayout,
@@ -42,22 +42,22 @@ import {
   getWorkflowDescription,
   buildWorkflowHeaderProps,
 } from "./workflow-progress-ui.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
 import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
-import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import { useSession } from "../../01-核心基础设施/核心工具-未归类/session-context.js";
 import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
-import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
-import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { FocusableBox } from "../../01-核心基础设施/UI组件-TUI/focusable-box.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/UI组件-TUI/empty-state-message.js";
+import { ErrorMessage } from "../../01-核心基础设施/UI组件-TUI/error-message.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { summarizeToolInput } from "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
+import { summarizeToolInput } from "../../01-核心基础设施/核心工具-未归类/summarize-tool-input.js";
 import { getWorkflowTranscriptDir } from "./workflow-snapshots.js";
 import { getUserWorkflowsDir, clearWorkflowCaches } from "./workflow-registry.js";
 import { E, V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { expandTabs } from "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { expandTabs } from "../../01-核心基础设施/核心工具-字符串与文本/expand-tabs.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 import { join as nl } from "path";
 async function Wn(s, a) {

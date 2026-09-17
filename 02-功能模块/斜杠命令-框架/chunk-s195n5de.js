@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { YP, Ve, zi, yt, dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { bh, K, sn, Nb, Rg, TB, Oxe, Rje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { raceWithAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { COMMAND_NAME_TAG, COMMAND_MESSAGE_TAG, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { redactSecretsInText, inlineSkillModelOverride, getAgentDepth, getWorkflowRunMetadata, isBgSession, isToolDetailsLoggingEnabled, getVersionForAnalytics } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { HOOK_EVENT_NAMES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -23,7 +23,7 @@ import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.j
 import { policyCacheMissRestartMessage, staleCommandReason, OPERATION_STOPPED_BY_HOOK_MESSAGE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { validateBridgeId, toCompatSessionId } from "../权限系统/chunk-ynkf3yy4.js";
-import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
 import { isRestrictedToPluginOnly, isSourceAdminTrusted } from "../Skills技能/chunk-sapykxw7.js";
 import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { getBuiltinPluginSkills } from "../Hooks钩子/chunk-z3433nr6.js";
@@ -116,11 +116,11 @@ import {
   claimFotwCredit,
   markFotwUpsellFulfilled,
 } from "../用量额度-限额/chunk-1bfn62xh.js";
-import { appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
+import { appendEndedByModelSuffix } from "../../01-核心基础设施/核心工具-未归类/ended-by-model.js";
 import { isMcpSkillsEnabled } from "../MCP客户端/mcp-skills-extension.js";
-import { CODE_REVIEW_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
-import { isCoordinatorMainSession } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
-import { isModelInvocable } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import { CODE_REVIEW_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
+import { isCoordinatorMainSession } from "../../01-核心基础设施/核心工具-未归类/coordinator-mode.js";
+import { isModelInvocable } from "../../01-核心基础设施/核心工具-未归类/chunk-339z9efw.js";
 import { randomUUID } from "crypto";
 function Me(e, o, t, m, l) {
   let c = 0;

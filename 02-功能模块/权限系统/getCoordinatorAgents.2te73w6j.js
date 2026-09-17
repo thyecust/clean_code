@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 18 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
-import { WORKER_AGENT_TYPE } from "../../01-核心基础设施/共享小工具-未细化/worker-agent-type.js";
+import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/核心工具-未归类/max-subagent-spawn-depth.js";
+import { WORKER_AGENT_TYPE } from "../../01-核心基础设施/核心工具-未归类/worker-agent-type.js";
 import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 function e() {
   return `You are a worker agent executing a task assigned by the coordinator.

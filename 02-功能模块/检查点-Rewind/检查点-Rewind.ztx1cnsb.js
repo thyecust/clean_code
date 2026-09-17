@@ -11,19 +11,19 @@
 // [preload stripped] 原本在此预载 68 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { isConfigDirPath } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { assertDirChainReal, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isRemoteActive, findGitRoot, gitExe, getGitDir, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { areTasksEnabled, getTaskListId, readAllTasks } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
-import { publishRateLimitCheckpointResult, getInFlightRateLimitCheckpoint, setInFlightRateLimitCheckpoint } from "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
+import { publishRateLimitCheckpointResult, getInFlightRateLimitCheckpoint, setInFlightRateLimitCheckpoint } from "../用量额度-限额/chunk-pkw2prc7.js";
 import {
   appendFile,
   lstat,

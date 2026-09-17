@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { HA } from "../../00-第三方库/@aws-sdk/chunk-z7ktsccq.js";
-import { awsSdkCoreClientModule } from "../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
+import { awsSdkCoreClientModule } from "../../01-核心基础设施/核心工具-未归类/aws-sdk-core-client.js";
 import { getPropertyProviderModule } from "./smithy-property-provider.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var d = toESM(awsSdkCoreClientModule()),
   a = toESM(getPropertyProviderModule()),
   m = toESM(HA());

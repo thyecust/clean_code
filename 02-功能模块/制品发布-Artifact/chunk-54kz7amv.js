@@ -32,15 +32,15 @@ import {
   refreshSummonArmForSlug,
   isMonitorSocketOpen,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { createMessageEnvelope } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
+import { isCrossSessionMessagingEnabled } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
+import { createMessageEnvelope } from "../远程控制-Bridge/bridge-state-containers.js";
 import { formatRedactedPreview, formatRedactedErrorDetail, isRetryableSendError, sendControlToUdsSocket, sendStampedControlToUdsSocket, listRegisteredSessionRecords, ownMessagingSocket } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 import { getArtifactState } from "./chunk-rr78st95.js";
 import { isArtifactReplyYieldEnabled, MAX_YIELD_SLUGS, unrefTimers, waitForYieldAnswer, cancelOutstandingYieldWait, setReplyYieldHolder } from "./artifact-reply-yield.js";
 import { isBackgroundSessionKind, describeHolderSession, scheduleArtifactAutoReactWake } from "./chunk-p1dkvpxj.js";
 import { stopArtifactCommentMonitor } from "./artifact-comment-monitor-intent.js";
-import { getBootingAutoReactArmSlugs } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { getBootingAutoReactArmSlugs } from "../../01-核心基础设施/核心工具-未归类/auto-react-state.js";
+import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 var z = 1000,
   Q = 200,

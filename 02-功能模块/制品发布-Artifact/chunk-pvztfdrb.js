@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { j, Si, K, EB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { po, FL, zn, gp, UL, Dr, ku, tdr, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum, fromNumber } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum, fromNumber } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, yt, R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonStringify, jsonParse, expandPathAliases, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -20,7 +20,7 @@ import { pluralize, truncateToCodePoints, truncateToCodeUnits, isWellFormed, bef
 import { G5, KU } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { COWRITTEN_ARTIFACT_HTML_TAG, COWRITTEN_ARTIFACT_HTML_INTRO, COWRITTEN_ARTIFACT_HTML_OUTRO, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import {
   formatNoGatewayCredentialMessage,
   hasGatewayCredential,
@@ -238,11 +238,11 @@ import {
   isArtifactPrReviewComposeLatched,
 } from "./chunk-01ymf0ar.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
+import { externalHttp } from "../../01-核心基础设施/HTTP-网络层/external-http.js";
 import { le, Zt, nt, hm } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getAuthPrecedenceSource } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { RENAME_FALLBACK_ERRNOS, buildTempFilePath, renameWithRetry } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { resolvePath, SymlinkWriteRefusedError, takeApprovedPathForWrite, getFileMtimeMs, findSimilarFile, CWD_NOTE_PREFIX, getSuggestedPathOutsideCwd } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { hasCredentialDescriptor, getApiKey } from "../认证-OAuth登录/credential-file-descriptors.js";
@@ -263,10 +263,10 @@ import {
   getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { SW } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { O_NONBLOCK_FLAG, O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
+import { O_NONBLOCK_FLAG, O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/核心工具-其他/open-flags.js";
 import { isErrnoCode, openFileReadOnlyHardened, getToolResultsDirForSession, getCurrentToolResultsDir, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, writeBytesExclusiveHardened } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { getEnvEntrypoint, isDesktopHostEntrypoint, isClaudeDesktopAppSession, isDesktopHostSession, isVsCodeExtensionSession, isClaudecodeEnv } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionRule, formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
@@ -611,8 +611,8 @@ import {
   resolveCommentThreadViaSession,
   isArtifactToolsetEnabled,
 } from "./chunk-qpgskeea.js";
-import { artifactUrlRule } from "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
-import { EMPTY_ARTIFACT_ROOM_JOIN_CONSENT_SLUGS } from "../../01-核心基础设施/共享小工具-未细化/empty-artifact-consent-slugs.js";
+import { artifactUrlRule } from "../../01-核心基础设施/核心工具-未归类/chunk-d8c3rz29.js";
+import { EMPTY_ARTIFACT_ROOM_JOIN_CONSENT_SLUGS } from "../../01-核心基础设施/核心工具-未归类/empty-artifact-consent-slugs.js";
 import {
   versionHeldBy,
   registerHandoverRead,
@@ -688,7 +688,7 @@ import {
   parseArtifactInstructions,
   formatArtifactInstructions,
 } from "./chunk-01jnk0v2.js";
-import { isClaudeBrowserMcpServerName } from "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
+import { isClaudeBrowserMcpServerName } from "../浏览器集成-ClaudeinChrome/claude-browser-mcp-server.js";
 import {
   isArtifactPinEnabled,
   ARTIFACT_PIN_UNAVAILABLE_MESSAGE,
@@ -759,9 +759,9 @@ import {
 } from "./chunk-b6k1z7an.js";
 import { MAX_REJECT_NOTICE_LENGTH, withArtifactRejectBreaker, collectUsedMcpServerNames } from "./chunk-fx5ekm7e.js";
 import { subagentPublishAdopter, stageSubagentPublishArm } from "../Teammates团队/chunk-weg7y2ya.js";
-import { logWorkshopTurn, logWorkshopPublish } from "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
-import { recordWhiteboardPublish } from "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
-import { warmShareEntry } from "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
+import { logWorkshopTurn, logWorkshopPublish } from "../../01-核心基础设施/遥测-OpenTelemetry/workshop-telemetry.js";
+import { recordWhiteboardPublish } from "../../01-核心基础设施/遥测-OpenTelemetry/whiteboard-telemetry.js";
+import { warmShareEntry } from "../../01-核心基础设施/核心工具-未归类/chunk-dgth8ahx.js";
 import { isClaudeAiClientPlatform } from "../远程控制-Bridge/bridge-inbound-origin.js";
 import {
   THUMBNAIL_DECLARATION_PARAGRAPH,
@@ -778,13 +778,13 @@ import {
 import { isCoworkFrameConsentDenied, isArtifactFilesConsentMarked, DEFAULT_ARTIFACT_READ_PROMPT, readArtifactForModel } from "./artifact-read-for-model.js";
 import { corePrompt } from "../Teammates团队/chunk-y89mhs4a.js";
 import { verifyPrReviewPublishTarget, getCurrentIsoTimestamp } from "../代码审查/pr-review-target.js";
-import { CREATED_FRAME_URL_PREFIX, isCreatedFrameKey, OPENED_FRAME_URL_PREFIX, hasFrameUrlPrefix, getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
+import { CREATED_FRAME_URL_PREFIX, isCreatedFrameKey, OPENED_FRAME_URL_PREFIX, hasFrameUrlPrefix, getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/核心工具-未归类/frame-url-prefixes.js";
 import { openUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { loadImageProcessor } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { ARTIFACT_DESIGN_SKILL_NAME, WORKSHOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
-import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
-import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
-import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
+import { ARTIFACT_DESIGN_SKILL_NAME, WORKSHOP_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js";
+import { isCoordinatorModeEnabled } from "../../01-核心基础设施/核心工具-未归类/coordinator-mode.js";
+import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/核心工具-未归类/environment-kind.js";
 import {
   s,
   T,
@@ -801,10 +801,10 @@ import {
   X,
   k,
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { createHash as K_, randomUUID as X_ } from "crypto";
 import {
   lstat as qh,
@@ -14097,7 +14097,7 @@ class sh {
 }
 var L_ = new j(() => new sh());
 async function oh(e, t) {
-  let { parse: o, parseFragment: r } = await import("../../01-核心基础设施/共享小工具-未细化/parse.4jce22r9.js"),
+  let { parse: o, parseFragment: r } = await import("../../01-核心基础设施/核心工具-未归类/parse.4jce22r9.js"),
     d = t === "document" ? asDocument(o(e)) : asDocumentFragment(r(e)),
     w = (E) =>
       E.replaceAll("&", "&amp;")
@@ -14204,7 +14204,7 @@ var U_ = ["stylesheet", "stale-banner", "stamp-control"];
 function j_() {
   let e = getArtifactState().prReviewTemplate;
   return (
-    (e.parts ??= Promise.all([import("../../01-核心基础设施/共享小工具-未细化/SKILL_COMPOSED_MD.93smkgn7.js"), getPrReviewTemplateChrome()]).then(
+    (e.parts ??= Promise.all([import("../../01-核心基础设施/内嵌资源与模块互操作/SKILL_COMPOSED_MD.93smkgn7.js"), getPrReviewTemplateChrome()]).then(
       ([t, o]) => {
         let r = t.SKILL_FILES["template.html"] ?? "",
           d = new Map(extractScriptBlocks(r).map((p) => [hashSha256(p), p])),
@@ -14265,7 +14265,7 @@ async function ch(e, t, o, r) {
     });
   if (!_.every((D) => e.includes(D.bytes)))
     try {
-      let { nestingBudgetExceeded: D } = await import("../../01-核心基础设施/共享小工具-未细化/RAWTEXT_MODES.4tes4m4a.js");
+      let { nestingBudgetExceeded: D } = await import("../../01-核心基础设施/核心工具-未归类/RAWTEXT_MODES.4tes4m4a.js");
       if (D(e)) return p("its markup nests too deeply to parse");
       let I = await oh(e, "document");
       for (let N of _)

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { CLOUD_SNAPSHOTS_DIR_NAME } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { SHA256_HEX_REGEX, hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { SHA256_HEX_REGEX, hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import {
   SEED_LAPTOP_JOURNAL_PATH,
   SEED_WORKER_JOURNAL_PATH,

@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { nu, E0n } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { hexEncodingModule } from "../../01-核心基础设施/共享小工具-未细化/hex-encoding-module.js";
+import { hexEncodingModule } from "../../01-核心基础设施/核心工具-类型与数值/hex-encoding-module.js";
 import { isArrayBufferModule, utilUtf8Module } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-p991cddr.js";
-import { smithyContextModule } from "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
-import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { smithyContextModule } from "../../01-核心基础设施/核心工具-未归类/smithy-context-module.js";
+import { commonJS } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var lhe = commonJS(function (Re) {
   var f = hexEncodingModule(),
     d = utilUtf8Module(),

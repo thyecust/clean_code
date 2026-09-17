@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { escapeControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { escapeControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 var s =
   "To reattach to a cloud session, pass its id: `claude --cloud <session-id>` (find IDs at claude.ai/code).";

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { dl } from "../lodash/lodash.2x3q7cfh.js";
 import { oXt } from "../axios/axios.t0fczzmz.js";
-import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var y = commonJS(function (k, I) {
   var N = importMetaRequire("os"),
     d = importMetaRequire("tty"),

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   _je,
@@ -26,7 +26,7 @@ import {
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { readBoundedSync, readInheritedFdSync, isSocketFd } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { MAX_CREDENTIAL_FILE_BYTES } from "../../01-核心基础设施/共享小工具-未细化/max-credential-file-bytes.js";
+import { MAX_CREDENTIAL_FILE_BYTES } from "../../01-核心基础设施/核心工具-其他/max-credential-file-bytes.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 function isReviewOriginSession() {
   return a.CLAUDE_CODE_REMOTE_SESSION_ORIGIN === "review";

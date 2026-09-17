@@ -10,7 +10,7 @@
 import { yt, R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { tf } from "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
 import { countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 var N = 8;
 var B = /^v?\d+(?:[._-]\d+)*$/i;
 var S = new RegExp("^[A-Za-z0-9._~+/=%-]+$"),

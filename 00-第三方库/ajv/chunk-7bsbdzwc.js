@@ -8,20 +8,20 @@
 
 // Version: 2.1.263
 import { he, VR, u_e, ke } from "../lodash/lodash.2x3q7cfh.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getGlobalClaudeFile } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge, l } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeToStderr } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logMCPError, logMCPDebug } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { getMcpClientState } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getAnthropicApiKeyWithSource, hasStoredOAuthToken, getOauthAccountInfo, getFeatureValue_CACHED_MAY_BE_STALE, getWorkspacePersistedTrustKey } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../lodash/lodash.0vqzb8ad.js";
 import { assignValue } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { isFirstTimeForKey } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { buildCredentialBlankLists, expandEnvVars, formatTrustKeyJson } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { runHeadersHelperCommand } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
@@ -44,9 +44,9 @@ import {
   dIn,
 } from "./ajv.2q22bct4.js";
 import { Ku, lz } from "../lru-cache/lru-cache.8crev50p.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { toESM, commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { toESM, commonJS } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var T = commonJS(function (Z) {
   Object.defineProperty(Z, "__esModule", { value: !0 });
   Z.dynamicAnchor = void 0;

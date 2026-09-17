@@ -8,24 +8,24 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useVoiceSelector } from "../共享小工具-未细化/voice-state-provider.js";
-import { useTerminalFocus } from "../共享小工具-未细化/clock-and-terminal-focus.js";
-import { useClock } from "../共享小工具-未细化/use-clock.js";
+import { useVoiceSelector } from "../../02-功能模块/语音-音频/voice-state-provider.js";
+import { useTerminalFocus } from "../终端与时钟/clock-and-terminal-focus.js";
+import { useClock } from "../终端与时钟/use-clock.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { invertText, chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
 import { useTheme } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
-import { stripAnsi } from "../共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../核心工具-字符串与文本/text-sanitization.js";
 import { Box, Text, Ansi, useIsScreenReaderEnabled, useAnimationFrame } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { lF } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { ansiCodesToString, reduceAnsiCodes, undoAnsiCodes, tokenizeAnsiString } from "../ANSI-样式-布局原语/ansi-text-primitives.js";
 import { useFocusTrap, useCursorDeclaration, useTextInput, useVoiceLevelMeter, usePasteHandler } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { getKeybindingChord } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { NO_ANIMATION_INDEX, useReducedMotion } from "../共享小工具-未细化/reduced-motion.js";
+import { NO_ANIMATION_INDEX, useReducedMotion } from "./reduced-motion.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { getThemeColor } from "../共享小工具-未细化/theme-color.js";
+import { getThemeColor } from "./theme-color.js";
 import { E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { hasClipboardImage } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function nat(i, a) {
   let [c] = d(() =>

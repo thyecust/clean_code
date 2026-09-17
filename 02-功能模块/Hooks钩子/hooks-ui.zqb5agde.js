@@ -9,16 +9,16 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 231 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useAppStateSelector } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
 import { useOnSettingsChange, useSessionHooksRegistry } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { he, MA, LL, Mx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { getClaudeConfigDir, isSafeMode, getSafeModeExitHint } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { capitalize, pluralize, escapeInvisibleCharacters, escapeAllControlCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { SESSION_END_REASONS, SETTINGS_SOURCE_ORDER } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { formatSingleLineText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { NOTIFICATION_TYPES } from "../图片-截图-ComputerUse/settings-option-values.js";
 import { getSettingsFilePathForSource, getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { findGitRootUncached } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
@@ -62,23 +62,23 @@ import { peekPreSettingsEnvSnapshot } from "../../01-核心基础设施/遥测-O
 import { buildHookInventory, getShellPrefixFromEnv, getLegacyConfigFileState, computeHookOwnEnv } from "./device-hooks-serving.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { Box, Text, Link, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { NO_COMMITTED_ROW, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { StatusIndicator } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
+import { useKeybinding } from "../键位绑定-Keybindings/keybinding-hooks.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
 import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
-import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import { useSession } from "../../01-核心基础设施/核心工具-未归类/session-context.js";
 import { Table, hasPolicySettings, addEnabledDefaultTools } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
-import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/UI组件-TUI/empty-state-message.js";
+import { ActionKeybindingHint } from "../键位绑定-Keybindings/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 import { realpath } from "fs/promises";
 import { basename } from "path";

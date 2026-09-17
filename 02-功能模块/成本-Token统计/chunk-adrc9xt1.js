@@ -8,28 +8,28 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { getOverageBillingOverride, getMainLoopModel, isFableFamilyOrPinnedModel, isSemverGreaterThan, isSemverString, getSanitizedShortCode, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { Box, Text, useIsScreenReaderEnabled, Decorative, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { appStateStore } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
-import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { appStateStore } from "../../01-核心基础设施/终端与时钟/terminal-focus-state.js";
+import { useClock } from "../../01-核心基础设施/终端与时钟/use-clock.js";
 import { useIsMountRecent, useMountTime, useSettleAfterChange, useRefusedInputWindow, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { DEFAULT_RECENT_WINDOW_MS, useIsKeyRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
-import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { shouldReduceMotion } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
+import { DEFAULT_RECENT_WINDOW_MS, useIsKeyRecent } from "../../01-核心基础设施/核心工具-未归类/recent-window.js";
+import { useKeybindings } from "../键位绑定-Keybindings/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
 import {
   requiresUsageCredits,
   isCreditsOnlyTierSubscription,
@@ -54,18 +54,18 @@ import {
   formatCurrencyAmount,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
-import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/UI组件-TUI/confirm-prompt.js";
 import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
-import { ReserveHeightBox } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { ReserveHeightBox } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import { ClawdMascot } from "../../03-入口与运行时/会话UI-REPL/clawd-mascot.js";
-import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
-import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
-import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import { FocusableBox } from "../../01-核心基础设施/UI组件-TUI/focusable-box.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/UI组件-TUI/spinner-message-line.js";
+import { ProgressBar } from "../../01-核心基础设施/UI组件-TUI/progress-bar.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { E, vr, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { stripVTControlCharacters } from "util";
 F();
 F();

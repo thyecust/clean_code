@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSafeMode, getSafeModeExitHint } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { capitalize, pluralize, beforeFirst, truncateWithCharCount, formatShortText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError, logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   getMainLoopModel,
@@ -63,24 +63,24 @@ import {
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource, getSettings_DEPRECATED, updateSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { UP_ARROW_GLYPH, DOWN_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
-import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useTerminalFocus } from "../../01-核心基础设施/终端与时钟/clock-and-terminal-focus.js";
+import { useClock } from "../../01-核心基础设施/终端与时钟/use-clock.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
 import { useFocusTrap } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { StatusIndicator } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
+import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-state.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
+import { useKeybinding, useKeybindings } from "../键位绑定-Keybindings/keybinding-hooks.js";
 import { qp, ss } from "../../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js";
-import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
-import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
-import { useMcpConnections, useActivePlugins, useAppStateSession, useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useGlobalExitKeybinding } from "../键位绑定-Keybindings/exit-keybinding-hooks.js";
+import { useStoreSelector } from "../../01-核心基础设施/核心工具-未归类/use-store-selector.js";
+import { useMcpConnections, useActivePlugins, useAppStateSession, useAppStateSelector, useSetAppState } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
 import {
   getPluginsDir,
   getPluginDataDir,
@@ -178,7 +178,7 @@ import { sanitizeForRelay } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import { stripBom, parseYaml, FRONTMATTER_PATTERN } from "../MCP客户端/chunk-3kmsshb6.js";
 import { OFFICIAL_MARKETPLACE_NAME, LINK_MODE_WINDOWS_UNSUPPORTED_MESSAGE, getSourceCommandKey, describeSourceMode, PluginSourceError } from "./chunk-ajtn749s.js";
 import { isPluginBlockedByPolicy, areCommandPluginSourcesDisabledByPolicy, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, getPluginTrustMessage, getPluginSuggestionMarketplaces, isMarketplaceSourceDeclaredByPolicy } from "./plugin-source-policy.js";
-import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
 import { getPluginEditableScopes, editableScopeOf } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
@@ -219,31 +219,31 @@ import { redactManagedMcpConfig, normalizePluginRelevanceSignals, matchPluginRel
 import { SelectListRow, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useListCursor, Table, SelectableRow, DimParenthetical, StatusLine, useMcpReconnect, useMcpToggleEnabled } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { getIdentityEpoch, isRemoteTransport, awaitDiscoveryCacheFlush } from "../MCP客户端/mcp-discovery-cache.js";
-import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
+import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../终端-剪贴板/clipboard-copy.js";
 import { getFlaggedPlugins, markFlaggedPluginsSeen, clearFlaggedPlugin } from "../后台任务-Shell管理/chunk-n6g2zfwn.js";
 import { getPluginInventory } from "../MCP客户端/chunk-4xr0rjb4.js";
 import { useOnSettingsChange } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { getSkillTokenCountsAccess } from "../成本-Token统计/usage-transcript-scan.js";
 import { runPluginAutoupdateForMarketplaces, publishPluginAutoUpdateNotification } from "./plugin-autoupdate.js";
-import { computeSkillUsageByPlugin } from "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
-import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
-import { BackgroundText } from "../../01-核心基础设施/共享小工具-未细化/background-text.js";
-import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import { computeSkillUsageByPlugin } from "../Skills技能/skill-usage-by-plugin.js";
+import { FocusableBox } from "../../01-核心基础设施/UI组件-TUI/focusable-box.js";
+import { BackgroundText } from "../../01-核心基础设施/UI组件-TUI/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/UI组件-TUI/empty-state-message.js";
 import { getMcpClientFailureDetail, buildMcpReconnectResult, formatMcpReconnectError, formatMcpToggleError } from "../MCP客户端/mcp-error-messages.js";
-import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
-import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
-import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
-import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
+import { ErrorMessage } from "../../01-核心基础设施/UI组件-TUI/error-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/UI组件-TUI/spinner-message-line.js";
+import { ActionKeybindingHint } from "../键位绑定-Keybindings/action-keybinding-hint.js";
+import { BulletItem } from "../../01-核心基础设施/UI组件-TUI/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { refreshActivePlugins, getPluginReloadCacheImpact } from "../MCP客户端/plugin-reload-cache-impact.js";
 import { resolveMissingDependencies, buildMissingDependencyNotice } from "./plugin-dependency-resolution.js";
 import { getPluginSuggestionDiscoverShownCount, recordPluginSuggestionDiscoverShown } from "../代码审查/ultrareview-tips.js";
 import { padEndToWidth, padStartToWidth, buildSkillTableLayout, SkillDoctorStageError, collectSkillUsageData } from "../MCP客户端/skill-doctor-data.js";
 import { getDisusedPlugins, getPluginDaysSinceLastUse } from "./plugin-disuse.js";
-import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
+import { getThemeColor } from "../../01-核心基础设施/UI组件-TUI/theme-color.js";
+import { classifyMcpServerAuth } from "../MCP客户端/mcp-hosted-oauth-gate.js";
 import { formatServerDisabledHint, formatDisabledElsewhereMessage, formatMcpServerBlockedMessage } from "../MCP客户端/mcp-server-state-messages.js";
-import { hasFirstPartyDesignAuth } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
+import { hasFirstPartyDesignAuth } from "../设计同步/chunk-jhs1bd0k.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import {
   ew,
@@ -280,8 +280,8 @@ import {
 } from "./chunk-33bdfgmx.js";
 import { s, O, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 async function Bl(a, k, v, b) {
   let w = await gy(a, k, v, b);

@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { pluralize } from "./string-utils.js";
-import { getGraphemeSegmenter, getRelativeTimeFormat, getResolvedTimeZone, getNumberFormat } from "../共享小工具-未细化/intl-text-utils.js";
-import { formatFileSize } from "../共享小工具-未细化/chunk-7axvc6rn.js";
+import { getGraphemeSegmenter, getRelativeTimeFormat, getResolvedTimeZone, getNumberFormat } from "../核心工具-日期与本地化/intl-text-utils.js";
+import { formatFileSize } from "./chunk-7axvc6rn.js";
 var O = { ambiguousIsNarrow: !0 };
 function getStringWidth(t) {
   return Bun.stringWidth(t, O);

@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 111 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { LOCAL_DIVERGENCE_DEADLINE_MS as Oan, probeLocalDivergence as Dan, unservedLayout as dFt, failureCause as _ze, runProbeGit as Jb, countProbeGitOutput as pFt, listPathsChangedFromHead as Lan, nullOnAbort as Kce } from "../工作树-Git/local-divergence-probe.js";
 import "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
-import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import "./sync-state-schema.js";
 import "../文件同步-Sync/sync-journal.js";
 export {
   Oan as LOCAL_DIVERGENCE_DEADLINE_MS,

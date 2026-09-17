@@ -10,7 +10,7 @@
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { isSubagentSession, parsePeerAddress, isDefinitelySamePath, isPossiblySamePath, slugify, parseAgentDisplayName, normalizeUsableRecipientName, isEntityRefPrefix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
-import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
+import { getRemoteSessionCompatId } from "../../01-核心基础设施/核心工具-未归类/remote-session-compat-id.js";
 import { MAIN_CONVERSATION_NAME } from "./chunk-enjekn9t.js";
 var SELF_TARGET_REASON =
     "target is this session itself \u2014 there is no one else to send to",

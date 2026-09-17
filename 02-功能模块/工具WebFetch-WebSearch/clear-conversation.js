@@ -69,17 +69,17 @@ import { evictTaskOutput, initTaskOutputAsSymlink } from "../后台任务-Shell�
 import { retainPathLinks } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { isBridgeStateFramesEnabled } from "../远程控制-Bridge/chunk-9estzwf5.js";
 import { getCcrSessionId } from "../插件系统/chunk-ajtn749s.js";
-import { setMcpClientOnClose } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { setMcpClientOnClose } from "../MCP客户端/chunk-7wm8t84g.js";
 import { rearmWatchNoticeBudgets, clearRefusedPublishBodies, disposeArtifactRoom, retireLiveDocWatches, resetArtifactConversationState } from "../制品发布-Artifact/chunk-rr78st95.js";
 import { runBundledSkillSessionResets } from "../Skills技能/bundled-skills.js";
 import { syncJobResumeSessionId } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
+import { GOAL_PROPOSAL_DIALOG } from "../目标模式-Goal/goal-proposal-dialog.js";
 import { resetTransientSessionState, closeAllWebViews } from "../上下文压缩-Compact/chunk-1ntrf0ja.js";
-import { sessionAnnouncementStateStore } from "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
+import { sessionAnnouncementStateStore } from "../../01-核心基础设施/核心工具-未归类/session-announcement-state.js";
 import { clearSessionCaches } from "./clear-session-caches.js";
 import { pruneAgentNameRegistry } from "../Teammates团队/agent-lifecycle.js";
 import { isTerminalTaskStatus } from "../Teammates团队/chunk-mrfx53ye.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 async function* clearConversation({
   session: t,

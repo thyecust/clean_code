@@ -24,14 +24,14 @@ import {
   gHt,
   HL,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { FIVE_MINUTES_MS } from "../后台任务-Shell管理/scheduled-tasks.js";
-import { getCronJitterConfig } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
+import { getCronJitterConfig } from "../../01-核心基础设施/核心工具-未归类/chunk-52kaw3c1.js";
 var w = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
   _ = 60,
   b = 3600,

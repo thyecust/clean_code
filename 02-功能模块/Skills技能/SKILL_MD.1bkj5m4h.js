@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 80 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { isFunctionHooksEnabled, registerBuiltinPlugin } from "../Hooks钩子/chunk-z3433nr6.js";
 import { parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
-import { SKILL_MD } from "../../01-核心基础设施/共享小工具-未细化/chunk-ngp4wa3z.js";
-import { defineExportGetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { SKILL_MD } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-ngp4wa3z.js";
+import { defineExportGetters } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var s = {};
 defineExportGetters(s, {
   SKILL: () => SKILL,
@@ -48,7 +48,7 @@ var SKILL = Object.freeze({
   menuDescription: "Write a plugin made of function hooks",
   userInvocable: !0,
   async getPromptForCommand(t) {
-    let { SKILL_MD: o } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-ngp4wa3z.js");
+    let { SKILL_MD: o } = await import("../../01-核心基础设施/内嵌资源与模块互操作/chunk-ngp4wa3z.js");
     return [{ type: "text", text: skillPromptOf(o, t) }];
   },
 });

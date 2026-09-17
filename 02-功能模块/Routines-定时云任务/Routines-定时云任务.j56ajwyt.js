@@ -18,7 +18,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isClaudeAISubscriber, hasStoredOAuthToken, hasOAuthScope } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getRemoteUrl } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { isGitHubHost } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { hasDisableClaudeAiConnectors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isNestedGitLabProject, detectCurrentRepositoryWithHost, parseGitRemote } from "../工作树-Git/git-repository-detection.js";
@@ -29,9 +29,9 @@ import { getSuppressedClaudeAiConnectors } from "../权限系统/chunk-fjrcf22x.
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { registerBundledSkill } from "../Skills技能/bundled-skills.js";
 import { REMOTE_TRIGGER_TOOL_NAME } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
-import { SCHEDULE_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/核心工具-未归类/routines-policy.js";
+import { SCHEDULE_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function M() {
   return !isEssentialTrafficOnly() && isPolicyAllowed("allow_quick_web_setup");
 }

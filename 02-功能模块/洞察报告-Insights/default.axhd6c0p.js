@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 197 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { diffLines, asSystemPrompt, isHumanUserMessage, isUserQueuedCommandAttachment, joinTextBlocks, getSessionIdFromLog, getSessionFilesWithMtime, loadAllLogsFromSessionFile, runCallerSpecifiedModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { R, dt, ge, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -22,10 +22,10 @@ import { getDefaultOpusModel, createMainAgentContext } from "../认证-OAuth登�
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { escapeHtmlAttribute } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
-import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
+import { createJsonFileStore } from "../../01-核心基础设施/文件存储-原子写入/json-file-store.js";
 import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 import { s, T, O, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 import {
   mkdir,
   readdir,

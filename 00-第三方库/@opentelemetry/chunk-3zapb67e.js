@@ -10,7 +10,7 @@
 import { otlpExporterBaseModule, otlpTransformerModule, otlpHttpExporterBaseModule } from "../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
 import { bee } from "./第三方库-OpenTelemetry.fy6ebeyr.js";
 import { otelApiModule, otelCoreModule } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var a = commonJS(function (m) {
   Object.defineProperty(m, "__esModule", { value: !0 });
   m.AggregationTemporalityPreference = void 0;

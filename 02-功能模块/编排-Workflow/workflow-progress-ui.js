@@ -14,16 +14,16 @@ import { getStringWidth, truncateToWidth, formatDuration, formatBarElapsed, form
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { isFullscreenActive } from "../终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
 import { Box, Text, useInterval } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { StatusIndicator } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
+import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-state.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
 import { parseWorkflowScript } from "./workflow-script.js";
-import { useReducedMotion } from "../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
+import { useReducedMotion } from "../../01-核心基础设施/UI组件-TUI/reduced-motion.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Nl, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { isTerminalTaskStatus, figures, sanitizeDisplayName } from "../Teammates团队/chunk-mrfx53ye.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 function formatModelLabel(n, i) {
   let a = (s) => getMarketingNameForModel(s) ?? sanitizeDisplayName(s);
   if (i != null) return `${n == null ? "" : `${a(n)} `}${RIGHT_ARROW_GLYPH} ${a(i)}`;

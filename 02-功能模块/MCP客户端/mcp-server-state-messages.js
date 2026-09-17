@@ -11,7 +11,7 @@ import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isConnectedMcpServer } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { sanitizeDisplayTextWithoutRedaction, MCP_BLOCKED_BY_POLICY_MESSAGE, MCP_NOT_APPROVED_MESSAGE, isUnconfiguredMcpServer } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isValidCliNameToken } from "../插件系统/plugin-system-core.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function getMcpServerType(e) {
   return e.type;
 }

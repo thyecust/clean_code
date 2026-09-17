@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 111 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { segmentScopeSkip as qbe, createNestedRepositoryCheck as Fan, NOTHING_WITHHELD as Qhr, platformIgnoresCase as iOe, ignoreMatcherFrom as wze, rootIgnoreRefusalClause as $an, readRootIgnoreLines as Tze, listFolderCandidates as Uan } from "./sync-folder-scan.js";
 import "./chunk-tqwnv5vj.js";
-import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
-import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import "../../01-核心基础设施/核心工具-类型与数值/to-integer.js";
+import "../目录同步-dir-sync/sync-state-schema.js";
 import "./sync-journal.js";
 export {
   Qhr as NOTHING_WITHHELD,

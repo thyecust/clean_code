@@ -12,13 +12,13 @@
 import { dbBatchPayloadsForConsent as Ion, dbBatchFileSpellings as Pon, publishInputJoinsRoom as kut, ArtifactTool as lk, artifactLegacyHost as MS, artifactRuleTargetInput as MGe } from "./chunk-pvztfdrb.js";
 import "./chunk-fx5ekm7e.js";
 import "../Teammates团队/chunk-y89mhs4a.js";
-import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
-import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/whiteboard-telemetry.js";
+import "../浏览器集成-ClaudeinChrome/claude-browser-mcp-server.js";
 import "../远程控制-Bridge/bridge-inbound-origin.js";
 import "../Teammates团队/chunk-weg7y2ya.js";
 import "./artifact-read-for-model.js";
 import "./chunk-x29r16ke.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
+import "../../01-核心基础设施/核心工具-未归类/chunk-dgth8ahx.js";
 export {
   lk as ArtifactTool,
   MS as artifactLegacyHost,

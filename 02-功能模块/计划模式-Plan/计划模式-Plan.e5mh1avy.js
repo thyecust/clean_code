@@ -8,22 +8,22 @@
 
 // Version: 2.1.263
 import { RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B, K, sc, ke, g8, _8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { R, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, isCleanupDrainStarted, resolveSymlinkAncestrySync, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { validateStorageKey } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { generateAdjectiveVerbNounName, slugifyText, generateAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 import { posix } from "path";
 var { dirname: I, isAbsolute: ne, join: T, normalize: ie } = posix,
   DEFAULT_STAGE_FILE_ROOT = "/mnt/user-data/uploads",

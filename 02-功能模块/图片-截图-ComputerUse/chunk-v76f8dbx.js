@@ -14,9 +14,9 @@ import { getComputerUseSession, getComputerUseNativeModule } from "./computer-us
 import { createCliExecutor } from "./computer-use-cli-executor.js";
 import { COMPUTER_USE_MCP_SERVER_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { buildComputerUseToolDefinitions } from "./computer-use-tool-definitions.js";
-import { isComputerUseEnabled, getComputerUseSubGates } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
-import { DEFAULT_GRANT_FLAGS, isKnownAppBundleId } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
-import { IMAGE_TOKEN_BUDGET, fitSizeToTokenBudget, DEFAULT_IMAGE_SCALE, validateImageScale, formatScaleCoordinateFrameNote, scaleImageDimensions } from "../../01-核心基础设施/共享小工具-未细化/image-scaling.js";
+import { isComputerUseEnabled, getComputerUseSubGates } from "./computer-use-config.js";
+import { DEFAULT_GRANT_FLAGS, isKnownAppBundleId } from "../../01-核心基础设施/核心工具-未归类/app-permission-categories.js";
+import { IMAGE_TOKEN_BUDGET, fitSizeToTokenBudget, DEFAULT_IMAGE_SCALE, validateImageScale, formatScaleCoordinateFrameNote, scaleImageDimensions } from "./image-scaling.js";
 function Sn(e) {
   if (e === "browser" || e === "trading") return "read";
   if (e === "terminal" || e === "shell") return "click";

@@ -10,24 +10,24 @@
 
 // [preload stripped] 原本在此预载 184 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Gt, K, sc, fy, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonStringifyLine, jsonParse, jsonParseUntraced, deepClone, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, countOccurrences, stripInvisibleCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { validateStorageKey } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth, formatOverflowHint } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { READ_ONLY_AUTO_ALLOW_REASON, LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { hasNoControlCharacters } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
-import { areWorkflowsDisabledBySettings, areWorkflowsEnabled, isJadeCompassEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
+import { areWorkflowsDisabledBySettings, areWorkflowsEnabled, isJadeCompassEnabled } from "./workflow-feature-gates.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isAgentStopPending, isTaskLoopSettled, truncateMiddleWithMarker, formatErrorSummary, getParentPromptId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -35,7 +35,7 @@ import { MAX_WORKFLOW_SCRIPT_BYTES, persistWorkflowScript, collectRulesByContent
 import { isServerFallbackDiscard } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { getProjectKeyFromDir, getProjectDir } from "../Teammates团队/transcript-paths.js";
 import { withVmTimeout, makeVmErrorExtractor, makePlainError, wrapSyncHostFunction, wrapAsyncHostFunction } from "./chunk-0t0sve49.js";
-import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { WORKFLOW_TOOL_NAME } from "./chunk-7fcxwgtq.js";
 import {
   getWorkflowScriptAccessError,
   readWorkflowScriptFileHardened,
@@ -54,19 +54,19 @@ import {
   sanitizeWorkflowDescriptionForTelemetry,
   launchWorkflowTask,
 } from "./workflow-runtime.js";
-import { usesNondeterministicApi } from "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
+import { usesNondeterministicApi } from "../../01-核心基础设施/核心工具-未归类/nondeterminism-check.js";
 import { parseWorkflowScript } from "./workflow-script.js";
 import { getWorkflowToolPromptText } from "./workflow-tool-prompt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js";
-import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";
-import "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
-import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
-import "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
+import "../../01-核心基础设施/核心工具-未归类/chunk-kaxe7rw8.js";
+import { isWorkflowAuthoringSkillAvailable } from "./is-workflow-authoring-skill-available.js";
+import "../../01-核心基础设施/核心工具-未归类/structured-output-retry-errors.js";
+import "../../01-核心基础设施/核心工具-未归类/summarize-tool-input.js";
+import "../../01-核心基础设施/核心工具-路径与平台/fd-real-path.js";
 import { getWorkflowTranscriptDir } from "./workflow-snapshots.js";
 import { WORKFLOW_NAME_ONLY_ENV, isWorkflowNameOnlyEnabled, getAllWorkflows, getWorkflowByName } from "./workflow-registry.js";
-import { getBundledWorkflows } from "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
+import { getBundledWorkflows } from "./bundled-workflows.js";
 import { generateTaskId, getWorkflowSizeGuidelinePromptText } from "../Teammates团队/chunk-mrfx53ye.js";
-import { WORKFLOW_AUTHORING_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { WORKFLOW_AUTHORING_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
 import { TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import {
   s,
@@ -86,8 +86,8 @@ import {
   k,
   Hb,
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 import { basename as st, resolve } from "path";
 var yt = [

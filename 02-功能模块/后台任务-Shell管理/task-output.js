@@ -18,9 +18,9 @@ import { getSessionStateStore, getBgTakeover } from "../认证-OAuth登录/认�
 import { SymlinkWriteRefusedError, SymlinkReadRefusedError } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getResolvedClaudeTempDir, getCurrentProjectTempDir, normalizeCaseForComparison } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { decodeTaggedId } from "../远程控制-Bridge/chunk-4zd60pbm.js";
-import { readFileHandleWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
+import { readFileHandleWithMetadata } from "../../01-核心基础设施/安全文件系统-FS加固/safe-file-read.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function ft(t) {
   if (!j1(t)) return !1;
   if (Xn(t)) return !0;

@@ -12,7 +12,7 @@
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { resolveEmbeddedAssetPath, readEmbeddedAsset, readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
+import { resolveEmbeddedAssetPath, readEmbeddedAsset, readEmbeddedAssetSync } from "../../01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js";
 var D = "./SKILL-59d7da6d.md.zst";
 var E = readEmbeddedAssetSync(D, import.meta.dirname);
 var H = "./payload.template.html.asset";

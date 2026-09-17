@@ -21,7 +21,7 @@ import {
   g_e,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../核心工具-路径与平台/chunk-h62vxw7j.js";
 import { ud, YR, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSameAsConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -52,7 +52,7 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getHostSettingsStore, primeRemoteManagedSettingsCache } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { setupGitBashShellEnv } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
-import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../核心工具-日志与脱敏/diagnostics-log.js";
 import { getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { loadExtraCACerts, loadMTLSClientMaterial, configureGlobalMTLS, getProxyUrlWithSource, parseProxyUrl, describeInvalidProxyUrl, configureGlobalAgents, clearProxyCache } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { setFeatureGateLookup, getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -79,15 +79,15 @@ import { isPowerShellToolEnabled, isBashToolAvailable } from "../提示词-Syste
 import { seedUserSettings, primeSettings } from "../设置-配置/chunk-b536v45y.js";
 import { primePlanSlugCollisions } from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { applySafeConfigEnvironmentVariables, applyConfigEnvironmentVariables } from "./settings-env-application.js";
-import { pinStorageV5FromEnv } from "../共享小工具-未细化/storage-v5-env-pin.js";
-import { pinStorageV5 } from "../共享小工具-未细化/pin-storage-v5.js";
-import { primeWorkspaceRoots } from "../共享小工具-未细化/chunk-bgf8jybv.js";
+import { pinStorageV5FromEnv } from "../核心工具-未归类/storage-v5-env-pin.js";
+import { pinStorageV5 } from "../核心工具-未归类/pin-storage-v5.js";
+import { primeWorkspaceRoots } from "../核心工具-未归类/chunk-bgf8jybv.js";
 import { primePolicyLimitsCache, composePolicyLimitsClient, initializePolicyLimitsLoadingPromise } from "../../02-功能模块/策略限制-PolicyLimits/policy-limits-client.js";
 import { startRemoteSettingsLoadBarrier, isRemoteSettingsLoadEligible, awaitRemoteSettingsFetchSettled } from "../设置-配置/remote-managed-settings.js";
-import { primeFileDescriptorCredentials } from "../共享小工具-未细化/chunk-fpak7ean.js";
+import { primeFileDescriptorCredentials } from "../../02-功能模块/认证-OAuth登录/chunk-fpak7ean.js";
 import { credentialsStoreFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
-import { applyNodeExtraCaCertsFromConfig } from "../共享小工具-未细化/apply-node-extra-ca-certs.js";
-import { resetRemoteSettingsSyncCache } from "../共享小工具-未细化/remote-settings-eligibility.js";
+import { applyNodeExtraCaCertsFromConfig } from "../设置-配置/apply-node-extra-ca-certs.js";
+import { resetRemoteSettingsSyncCache } from "../设置-配置/remote-settings-eligibility.js";
 import { primePlatformDetection, getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 function w() {
   let t = getProviderState().providerCache;
@@ -184,7 +184,7 @@ async function T(t = {}) {
       registerStorageFlushHandlers(o),
       setupGracefulShutdown({ storageV5: o, credentials: m }),
       profileCheckpoint("init_after_graceful_shutdown"),
-      Promise.all([import("../共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js")]).then(([d]) => {
+      Promise.all([import("../核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js")]).then(([d]) => {
         d.onGrowthBookRefresh(() => {});
       }),
       profileCheckpoint("init_after_1p_event_logging"),

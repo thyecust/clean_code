@@ -13,8 +13,8 @@ import { JSONRPCMessageSchema as GR, ListToolsRequestSchema, CallToolRequestSche
 import "../MCP客户端/mcp-protocol.js";
 import { McpServer } from "../MCP客户端/mcp-server.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";

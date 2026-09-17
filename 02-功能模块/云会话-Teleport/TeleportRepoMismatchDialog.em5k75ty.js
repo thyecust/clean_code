@@ -15,21 +15,21 @@ import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
+import "../../01-核心基础设施/UI组件-TUI/one-shot-render.js";
 import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
+import "../../01-核心基础设施/核心工具-未归类/expanded-content-context.js";
+import "../../01-核心基础设施/核心工具-未归类/queued-message-context.js";
 import { doesDirectoryRemoteMatchRepo, removeTrackedRepoPath } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
-import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
-import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { ErrorMessage } from "../../01-核心基础设施/UI组件-TUI/error-message.js";
+import "../../01-核心基础设施/UI组件-TUI/progress-bar.js";
+import "../../01-核心基础设施/UI组件-TUI/linkified-text.js";
+import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
 import { d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function I(G) {
   return {

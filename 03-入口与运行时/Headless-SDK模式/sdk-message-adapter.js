@@ -7,19 +7,19 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { stripAnsi, formatSingleLineText, MAX_DESCRIPTION_LENGTH, MARKDOWN_SYNTAX_CHARS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi, formatSingleLineText, MAX_DESCRIPTION_LENGTH, MARKDOWN_SYNTAX_CHARS } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { INTERRUPTED_BY_USER_MARKER, INTERRUPTED_FOR_TOOL_USE_MARKER } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
+import { getClaimRegistry } from "../../01-核心基础设施/核心工具-未归类/host-claim-registry.js";
 import { sanitizeMachineName } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { formatRefusalFallbackSwitchMessage, deserializeCompactMetadata, createAttachmentMessage, createAssistantMessage, createUserMessage, isExternalMessageOrigin } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { conformWireFrame, getWorkerEpoch } from "../../02-功能模块/远程控制-Bridge/chunk-x379yyxb.js";
-import { isSameRemoteAutocompactState } from "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
+import { isSameRemoteAutocompactState } from "../../01-核心基础设施/核心工具-未归类/remote-autocompact-state.js";
 import { AGENT_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 function isForwardableSdkFrame(e) {
   return (

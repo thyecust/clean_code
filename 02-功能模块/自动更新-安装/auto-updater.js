@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isSemverGreaterThan, isSemverAtLeast, isSemverLessThan, isSemverAtMost, getVersionForAnalytics, getPlatformForAnalytics, getDynamicConfig_BLOCKS_ON_INIT, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { TZ, dt, l, A, Jr, Jg, W, Nz, Rt, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -23,12 +23,12 @@ import { RENAME_FALLBACK_ERRNOS, renameWithRetry, PARTIAL_WRITE_ERRNOS } from ".
 import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getSettingsForSource, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
+import { externalHttp } from "../../01-核心基础设施/HTTP-网络层/external-http.js";
 import { gracefulShutdownSync } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { claudeDownloadsHttpClient } from "../插件系统/chunk-ajtn749s.js";
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { access as Ae, chmod, writeFile as Me } from "fs/promises";
 import { join as N } from "path";
 function G() {

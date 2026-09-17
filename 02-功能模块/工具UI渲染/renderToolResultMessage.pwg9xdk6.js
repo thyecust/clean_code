@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 113 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { getEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
+import { getEndedByModelSuffix } from "../../01-核心基础设施/核心工具-未归类/ended-by-model.js";
 function renderToolResultMessage(n) {
   if (!n.ended) return null;
   let l = getEndedByModelSuffix();

@@ -10,17 +10,17 @@
 
 // [preload stripped] 原本在此预载 98 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { describeStorageError, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getProjectsDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabledCached } from "../目录同步-dir-sync/chunk-97crm80y.js";
 import {
   laptopDirSyncRegistries,
   isDirSyncEnabled,
@@ -44,11 +44,11 @@ import {
   isInsideBareGitRepository,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "./sync-journal.js";
-import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import "../目录同步-dir-sync/sync-state-schema.js";
 import { createLazyDirSyncStreamer, readGitSessionRecord } from "../目录同步-dir-sync/chunk-zbxyj64j.js";
-import { createStatusFeed } from "../../01-核心基础设施/共享小工具-未细化/status-feed.js";
-import { getFileEntryKind } from "../../01-核心基础设施/共享小工具-未细化/file-entry-kind.js";
-import { getDirSyncRecordPath, resolveDirSyncRecordLocation, getDirSyncRecordKey, getDirSyncRecordFileName } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
+import { createStatusFeed } from "../../01-核心基础设施/核心工具-未归类/status-feed.js";
+import { getFileEntryKind } from "../../01-核心基础设施/核心工具-未归类/file-entry-kind.js";
+import { getDirSyncRecordPath, resolveDirSyncRecordLocation, getDirSyncRecordKey, getDirSyncRecordFileName } from "../目录同步-dir-sync/dir-sync-record-path.js";
 import { lstat, readdir } from "fs/promises";
 import { dirname, join as C, resolve } from "path";
 var G = 250,

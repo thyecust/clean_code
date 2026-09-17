@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { PERMISSION_MODE_MANUAL_ALIAS, normalizePermissionModeAlias } from "../权限系统/chunk-e4pfvp7x.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { addRemoteControlEntry, removeRemoteControlEntry } from "../认证-OAuth登录/daemon-worker-runtime.js";
@@ -18,8 +18,8 @@ import { parseScheduleInput } from "../后台任务-Shell管理/scheduled-tasks.
 import { VALID_PERMISSION_MODES, addScheduledTask, removeScheduledTask, readScheduledTasks } from "../权限系统/chunk-3kjwvb3e.js";
 import { loadDaemonConfig } from "../../01-核心基础设施/设置-配置/daemon-config.js";
 import { isDaemonServiceInstalled } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
-import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
-import { createHoverRestOptions } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { getDaemonJsonPath } from "../守护服务-Daemon/daemon-paths.js";
+import { createHoverRestOptions } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
 import { basename, resolve } from "path";
 function u(e) {
   process.stdout.write(

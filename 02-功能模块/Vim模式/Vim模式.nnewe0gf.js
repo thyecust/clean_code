@@ -10,22 +10,22 @@
 import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { j, Gt, uOn, aMn, lMn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { repeatString, countOccurrences, normalizeIdeographicSpaces } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { CLAUDE_BULLET_GLYPH, SEARCH_PREFIX_GLYPH, LOZENGE_OUTLINE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { Zd } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { useResolvedTheme, getCurrentKillRingText, getNextKillRingEntry, useKillRing } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { isSemverGreaterThan, isSemverAtLeast, getVersionForAnalytics, isClaudeAISubscriber, getSubscriptionName, getGlobalConfig, isAutoUpdaterDisabled } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { getStringWidth, wrapAnsi, truncatePathMiddle, truncateToWidth, truncateStartToWidth, truncateToWidthNoEllipsis, truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
@@ -35,8 +35,8 @@ import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-s
 import { Box, Text, Link, useAnimationFrame, useInterval, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getNativeCopyModifierKey, getClipboardCopyStrategy, probeLinuxClipboardTool, getOsc52Utf8PasteWarning } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { lF } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
-import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { getClaimRegistry } from "../../01-核心基础设施/核心工具-未归类/host-claim-registry.js";
+import { useClock } from "../../01-核心基础设施/终端与时钟/use-clock.js";
 import {
   useCursorDeclaration,
   supportsShiftEnter,
@@ -51,16 +51,16 @@ import {
   formatRgbColor,
   useVoiceLevelMeter,
 } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
-import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useStoreSelector } from "../../01-核心基础设施/核心工具-未归类/use-store-selector.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
 import { shouldShowNotification, useNotificationQueue } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { getConnectedIdeClient, isVoiceEnabled, hasVoiceAuth, isVoiceModeAllowed } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useKeybindingContext } from "../键位绑定-Keybindings/keybinding-context.js";
-import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { registerMcpNotificationHandler } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import { useHasNonAutocompleteOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
-import { useVoiceSelector, useVoiceSetState, useVoiceGetState } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
+import { useKeybindings } from "../键位绑定-Keybindings/keybinding-hooks.js";
+import { registerMcpNotificationHandler } from "../MCP客户端/chunk-7wm8t84g.js";
+import { useSession } from "../../01-核心基础设施/核心工具-未归类/session-context.js";
+import { useHasNonAutocompleteOverlay } from "../多会话视图-Fleet/overlay-registry.js";
+import { useVoiceSelector, useVoiceSetState, useVoiceGetState } from "../语音-音频/voice-state-provider.js";
 import { formatKeybindingKeyForPlatform, keybindingStore, getActiveKeybindings, getKeybindingPlatform, isSameKeySpec } from "../键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import {
   applyLocalUpdate,
@@ -80,18 +80,18 @@ import {
 } from "../自动更新-安装/auto-updater.js";
 import { recordUpdateResult, getHomebrewCaskName, getPackageManager, hasDetectedInstallType, detectInstallType } from "../自动更新-安装/install-diagnostics.js";
 import { ManifestSignatureError, StallTimeoutError, StagedBinaryChecksumError, installLatest, removeInstalledSymlink } from "../自动更新-安装/native-installer.js";
-import { StatusIndicator, shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { StatusIndicator, shouldReduceMotion } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/UI组件-TUI/empty-state-message.js";
+import { useSettings } from "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import { getAutoUpdatesChannel } from "../自动更新-安装/auto-updates-channel.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Yl, re, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { s, T, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { getGraphemeSegmenter, getFirstGrapheme, getLastGrapheme, countGraphemes, countWords } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
-import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
-import { toESM, MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { getGraphemeSegmenter, getFirstGrapheme, getLastGrapheme, countGraphemes, countWords } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
+import { getBuildRefName } from "../../01-核心基础设施/核心工具-其他/build-ref-name.js";
+import { toESM, MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 class Wo {
   #e = { credentialsPersisted: 0, loginCompleted: 0 };
   #t = Le();

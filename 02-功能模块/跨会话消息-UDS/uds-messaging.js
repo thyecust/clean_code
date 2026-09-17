@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B, K, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { ud, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonParseUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { jo } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
@@ -36,7 +36,7 @@ import {
 import { formatDisplayText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { enqueueCommand, flushPeerDropReceipts } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getTempBaseDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { isUuidString, getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
+import { isUuidString, getBridgeHostState } from "../远程控制-Bridge/bridge-state-containers.js";
 import {
   formatRedactedPreview,
   formatRedactedErrorDetail,
@@ -80,7 +80,7 @@ import {
   noteParkedAtShutdown,
   sendUnavailableNotice,
 } from "../Teammates团队/peer-idle-notices.js";
-import { isSendFileEnabled } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import { isSendFileEnabled } from "../../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { randomBytes, randomUUID } from "crypto";
 import { unlinkSync } from "fs";

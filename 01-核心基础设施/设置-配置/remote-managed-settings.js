@@ -9,18 +9,18 @@
 // Version: 2.1.263
 import { j, B, ld, ns, fv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep, withTimeout, withDeadline } from "../共享小工具-未细化/async-timeout-utils.js";
-import { getInkInstanceRegistry } from "../共享小工具-未细化/ink-instance-registry.js";
+import { isHoverRestEnabled } from "../核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep, withTimeout, withDeadline } from "../核心工具-并发与缓存/async-timeout-utils.js";
+import { getInkInstanceRegistry } from "../../02-功能模块/多会话视图-Fleet/ink-instance-registry.js";
 import { emitExitMessage, gracefulShutdownSync, isShuttingDown, settingsChangeDetector, setPolicyColdStartWaiter } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getClaudeConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { lit as S } from "../共享小工具-未细化/analytics-fields.js";
+import { lit as S } from "../遥测-OpenTelemetry/analytics-fields.js";
 import { l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, registerCleanup, jsonStringify, jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import {
   getUrlHostname,
   HTTP_LOOPBACK_FINGERPRINT,
@@ -42,8 +42,8 @@ import {
   getStoredOauthAccountInfo,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../共享小工具-未细化/open-flags.js";
-import { getFileStorage } from "../共享小工具-未细化/file-storage.js";
+import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../核心工具-其他/open-flags.js";
+import { getFileStorage } from "../文件存储-原子写入/file-storage.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import {
   invalidateAllSettings,
@@ -81,14 +81,14 @@ import { isHostManagedSettingsEntrypoint } from "../../02-功能模块/运行宿
 import { refreshPolicyHelperFromRemotePayload, reconcileRemoteArmedPolicyHelper } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getProfileAccountInfo, isSettingsBearerRejected, setSettingsBearerRejected } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { commitExit } from "../共享小工具-未细化/exit-commit-state.js";
+import { commitExit } from "../核心工具-未归类/exit-commit-state.js";
 import { getJwtSubject } from "../遥测-OpenTelemetry/otel-events.js";
 import { computeRetryDelayMs, extractSignatureHeader, writeSignatureSidecar, deleteSignatureSidecars, pruneStaleSignatureSidecars } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { AsyncQueue } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { createIntervalPoller, runSignedCacheShadowCheck } from "../../02-功能模块/策略限制-PolicyLimits/policy-limits-client.js";
-import { matchesOAuthBaseUrlHost, resetRemoteSettingsSyncCache, isRemoteSettingsEligible, hasTeamOrEnterpriseSubscription } from "../共享小工具-未细化/remote-settings-eligibility.js";
+import { matchesOAuthBaseUrlHost, resetRemoteSettingsSyncCache, isRemoteSettingsEligible, hasTeamOrEnterpriseSubscription } from "./remote-settings-eligibility.js";
 import { s, T, se, c, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { getClientUserAgent } from "../共享小工具-未细化/user-agent.js";
+import { getClientUserAgent } from "../HTTP-网络层/user-agent.js";
 var Te = 5000;
 class Q {
   updates = new AsyncQueue();

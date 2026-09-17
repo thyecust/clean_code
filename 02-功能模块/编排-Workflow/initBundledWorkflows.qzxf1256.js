@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 78 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { registerBundledWorkflow } from "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
+import { registerBundledWorkflow } from "./bundled-workflows.js";
 var i = "deep-research",
   e = i,
   t =

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { gn, Bx } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { oAt } from "../../00-第三方库/google-auth-library/google-auth-library.m2b2q6sk.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var p = (e) => ((p = Array.isArray), p(e)),
   O = p;
 var R = Symbol.for("brand.privateNullableHeaders");

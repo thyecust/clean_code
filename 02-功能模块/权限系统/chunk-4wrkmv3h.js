@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { An, ac, li, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { K, fy } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { readFileHardened, isNotFoundError, rawPointerPathIsUnsafe } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
@@ -20,11 +20,11 @@ import { pluralize, beforeFirst, countOccurrences } from "../../01-核心基础�
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
-import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { resolveExecutableSafely } from "../../03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { GITHUB_HOST, isGitHubHost, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { GITHUB_HOST, isGitHubHost, isSameHost } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { streamRipgrepSearch, runRipgrepSearch, DEFAULTS_SLOT_MARKER, getAutoModeTemplateRules, getPermissionRuleLabel, isPathWithinDir, isFileReadDenied } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { MAX_SETTINGS_FILE_BYTES, SETTINGS_FILENAMES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsFilePathForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -36,7 +36,7 @@ import { getProjectsDir, getProjectDir } from "../Teammates团队/transcript-pat
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { GIT_HARDENING_ARGS } from "../工作树-Git/git-operations.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import * as Be from "fs/promises";
 import { homedir } from "os";
 import {

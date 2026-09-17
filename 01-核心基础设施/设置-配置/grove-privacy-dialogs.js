@@ -7,20 +7,20 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useStorageV5Context } from "../共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../核心工具-未归类/storage-v5-context.js";
 import { Box, Text, Link } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getAccountSettings, markGroveNoticeViewed, updateGroveSettings, getGroveConfig, isGroveNoticeDue } from "../../02-功能模块/隐私设置-Grove/chunk-a4mdm49v.js";
 import { Select } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
-import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../核心工具-未归类/chunk-ff1hq6qq.js";
 import { de } from "../UI组件-TUI/chunk-92g8hxqw.js";
-import { FocusableBox } from "../共享小工具-未细化/focusable-box.js";
+import { FocusableBox } from "../UI组件-TUI/focusable-box.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function Qe() {
   logEvent("tengu_grove_privacy_settings_viewed", {});

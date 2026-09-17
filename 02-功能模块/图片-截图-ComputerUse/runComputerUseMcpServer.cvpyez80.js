@@ -12,19 +12,19 @@
 import { ListToolsRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/mcp-protocol.js";
 import "../MCP客户端/mcp-server.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { shutdownFirstPartyEventLogging, watchGlobalConfigThroughStorage, seedInstallIDs, shutdownDatadog } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { initDefaultDebugLog, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
-import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
+import { initializeAnalyticsSink } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-sink.js";
+import { pinStorageV5 } from "../../01-核心基础设施/核心工具-未归类/pin-storage-v5.js";
 import { loadFastPathPolicy } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
 import { getComputerUseNativeModule, runComputerUseNativeCall } from "./computer-use-session.js";
 import "./computer-use-cli-executor.js";
 import { createComputerUseMcpServer, getComputerUseHostAdapter } from "./chunk-v76f8dbx.js";
 import { buildComputerUseToolDefinitions } from "./computer-use-tool-definitions.js";
-import { getFrozenCoordinateMode } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
-import { StdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
-import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
+import { getFrozenCoordinateMode } from "./computer-use-config.js";
+import { StdioServerTransport } from "../MCP传输-stdio-SSE-HTTP/stdio-server-transport.js";
+import "../MCP传输-stdio-SSE-HTTP/stdio-message-framing.js";
 import "./computer-use-input-native.js";
 import { homedir } from "os";
 var u = ["/Applications/", "/System/Applications/"],
@@ -154,8 +154,8 @@ async function runComputerUseMcpServer(t) {
     (initDefaultDebugLog({ storageV5: o }), watchGlobalConfigThroughStorage(o));
     let [{ credentialsStoreFor: a }, { primeFastPathCredentials: d }] =
       await Promise.all([
-        import("../../01-核心基础设施/共享小工具-未细化/credentialsStoreFor.r7prg4pg.js"),
-        import("../../01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js"),
+        import("../../01-核心基础设施/核心工具-未归类/credentialsStoreFor.r7prg4pg.js"),
+        import("../认证-OAuth登录/primeFastPathCredentials.eb5w3wem.js"),
       ]);
     (await d(a(o)), await seedInstallIDs(o));
   }

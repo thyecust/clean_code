@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { default as RT } from "../../02-功能模块/文件监听-Watch/文件监听-Watch.3efypmps.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getFileStorage } from "../共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../文件存储-原子写入/file-storage.js";
 import { Qs, Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../核心工具-路径与平台/chunk-h62vxw7j.js";
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { WORKER_KINDS } from "../../02-功能模块/认证-OAuth登录/daemon-worker-runtime.js";
 import { DAEMON_CONFIG_MAX_BYTES, readDaemonConfigContent } from "../../02-功能模块/权限系统/chunk-3kjwvb3e.js";
-import { getDaemonJsonPath } from "../共享小工具-未细化/daemon-paths.js";
+import { getDaemonJsonPath } from "../../02-功能模块/守护服务-Daemon/daemon-paths.js";
 import { s, v, c, $e } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { stat as C } from "fs/promises";

@@ -27,7 +27,7 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getAgentId, getTeamName } from "./teammate-context.js";
-import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
 import { SessionRecordsUnreadableError, ownMessagingSocket, listLivePeerSessions } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 import { getSessionNamingState } from "../跨会话消息-UDS/chunk-9kzxq41e.js";
 import {

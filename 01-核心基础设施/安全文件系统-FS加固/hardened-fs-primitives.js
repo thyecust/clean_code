@@ -11,9 +11,9 @@ import { isSafeRelativePath, SYNCED_FILE_WRITE_MODE, toCaseFoldKey, hasCaseFoldH
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { computeContentDigests } from "../共享小工具-未细化/sync-state-schema.js";
+import { computeContentDigests } from "../../02-功能模块/目录同步-dir-sync/sync-state-schema.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
-import { importMetaRequire } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { importMetaRequire } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { lstat } from "fs/promises";
 import { join as ae } from "path";
 var DEFAULT_MAX_SYNC_FILES = 1e5,

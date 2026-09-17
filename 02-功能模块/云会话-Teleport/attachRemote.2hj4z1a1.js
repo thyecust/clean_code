@@ -12,16 +12,16 @@
 import { identity as _m, K, $p, Bw, s_e, Nn, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { Iu, R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { deviceToolNoticesTo } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { deviceToolNoticesTo } from "../../01-核心基础设施/核心工具-未归类/chunk-sdeyn1dg.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { reportEventSignerLoadFailure, SESSION_NOT_FOUND_PREFIX, INVALID_SESSION_ID_PREFIX } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabledCached } from "../目录同步-dir-sync/chunk-97crm80y.js";
 import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { showScreen } from "../../00-第三方库/_未识别/chunk-cq8x5zt4.js";
 import { isSessionCwdSafeToAdopt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { buildCloudSessionStatusMessage } from "../../01-核心基础设施/共享小工具-未细化/cloud-session-status-message.js";
+import { buildCloudSessionStatusMessage } from "./cloud-session-status-message.js";
 function de(r) {
   if (!(r instanceof Iu)) return null;
   let e = r.formattedMessage;

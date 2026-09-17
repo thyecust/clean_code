@@ -11,19 +11,19 @@
 // [preload stripped] 原本在此预载 240 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { ke, bB, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { archiveRemoteSession, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { findGitRoot, getBranch, getDefaultBranch, hasUnpushedCommits } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { isGitHubHost } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
+import { useKeybindings } from "../键位绑定-Keybindings/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { formatPrUrlWithTemplate, GITHUB_APP_INSTALL_URL, checkCloudSessionEligibility, formatCloudSessionEligibilityError, registerRemoteAgentTask, teleportToRemote, subscribeRemoteSessionToPR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
@@ -33,22 +33,22 @@ import { createScheduledTask, listScheduledTasks } from "../后台任务-Shell�
 import { CRON_DELETE_TOOL_NAME } from "../定时任务-Cron/chunk-mk3zm4ew.js";
 import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
+import "../../01-核心基础设施/UI组件-TUI/one-shot-render.js";
 import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
-import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
-import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
-import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import "../../01-核心基础设施/核心工具-未归类/expanded-content-context.js";
+import "../../01-核心基础设施/核心工具-未归类/queued-message-context.js";
+import { ErrorMessage } from "../../01-核心基础设施/UI组件-TUI/error-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/UI组件-TUI/spinner-message-line.js";
+import "../../01-核心基础设施/UI组件-TUI/progress-bar.js";
+import "../../01-核心基础设施/UI组件-TUI/linkified-text.js";
+import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
 import { E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 var me = {
   checking: "Detecting open PR for current branch\u2026",

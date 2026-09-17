@@ -19,8 +19,8 @@ import { pointerFileIsSuspect, rawPointerPathIsUnsafe, gitExe } from "../../01-�
 import { STORAGE_KEYS } from "./storage-keys.js";
 import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getAgentName, getTeamName, isTeammate } from "./teammate-context.js";
-import { createJitteredBackoffDelay } from "../../01-核心基础设施/共享小工具-未细化/jittered-backoff-delay.js";
-import { isPathSafeToRemove } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
+import { createJitteredBackoffDelay } from "../../01-核心基础设施/核心工具-并发与缓存/jittered-backoff-delay.js";
+import { isPathSafeToRemove } from "../../01-核心基础设施/核心工具-路径与平台/chunk-nfcecy7x.js";
 import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import {
   mkdir,
@@ -511,7 +511,7 @@ async function J(e, t) {
     { isInsideTmux: s },
   ] = await Promise.all([
     import("./getBackendByType.cq91cmh5.js"),
-    import("../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js"),
+    import("../终端环境探测-TUI-tmux/terminal-backend-detection.js"),
   ]);
   await o();
   let c = !(await s());

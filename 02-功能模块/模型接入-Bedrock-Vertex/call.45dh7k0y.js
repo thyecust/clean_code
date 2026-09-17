@@ -9,25 +9,25 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 263 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import "../向导UI-Wizard/向导UI-Wizard.7xe5wk62.js";
 import "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import { BedrockSetupWizard } from "./bedrock-setup-wizard.js";
-import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
+import "../../01-核心基础设施/UI组件-TUI/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
+import "../../01-核心基础设施/UI组件-TUI/one-shot-render.js";
 import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import { RelaunchConfirmationWizard } from "../../01-核心基础设施/共享小工具-未细化/relaunch-confirmation-wizard.js";
-import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
-import "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
-import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
-import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
-import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import "../../01-核心基础设施/核心工具-未归类/expanded-content-context.js";
+import "../../01-核心基础设施/核心工具-未归类/queued-message-context.js";
+import { RelaunchConfirmationWizard } from "../../01-核心基础设施/核心工具-未归类/relaunch-confirmation-wizard.js";
+import "../../01-核心基础设施/UI组件-TUI/error-message.js";
+import "../../01-核心基础设施/UI组件-TUI/input-guide.js";
+import "../../01-核心基础设施/UI组件-TUI/spinner-message-line.js";
+import "../../01-核心基础设施/UI组件-TUI/progress-bar.js";
+import "../../01-核心基础设施/UI组件-TUI/linkified-text.js";
+import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
 async function m(o) {

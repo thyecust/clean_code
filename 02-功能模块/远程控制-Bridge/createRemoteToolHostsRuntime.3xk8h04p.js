@@ -10,18 +10,18 @@
 
 // [preload stripped] 原本在此预载 184 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Si, K, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { sleep, fullJitterBackoffMs, raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep, fullJitterBackoffMs, raceWithAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { omitObjectKeys, getMcpToolPrefix, buildMcpToolName, getFullToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getToolResultsDirForSession } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { CAN_USE_TOOL_STREAM_CLOSED_REASON, CAN_USE_TOOL_INVALID_RESULT_REASON, CAN_USE_TOOL_REQUEST_FAILED_REASON } from "../权限系统/chunk-e4pfvp7x.js";
 import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { hashForTelemetry, REMOTE_DEVICES_MCP_SERVER_NAME, BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, getSanitizedToolName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -94,7 +94,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isReplModeEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { PromptScopedAbortController, unwrapAbortReason, shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
+import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/核心工具-未归类/exit-commit-state.js";
 import { AsyncQueue } from "../会话-历史-恢复/chunk-m1xj4s02.js";
 import { persistToolResultForTool } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
@@ -115,7 +115,7 @@ import {
   WITHDRAWN_FEEDBACK,
   jsonByteLength,
 } from "../远程工具执行/remote-tool-protocol.js";
-import { isNonDeviceToolName } from "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
+import { isNonDeviceToolName } from "../设备注册-Cowork/device-passthrough-meta.js";
 import { forgetRemoteToolListing, refreshRemoteToolHosts, getBridgeListingState, isBridgeReached, isBridgeListingUnavailable, getListingProvisionalReason, awaitRemoteHostAnnounce } from "./device-bridge-remote-tools.js";
 import "./session-event-transport.js";
 import {
@@ -171,15 +171,15 @@ import {
 } from "../远程工具执行/远程工具执行.6bj9ddx2.js";
 import "../自动模式-AutoMode/unattended-serving-consent.js";
 import { ForwardedToolCallRegistry } from "./forwarded-tool-call-registry.js";
-import "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
+import "../目录同步-dir-sync/dir-sync-worker-lane.js";
 import { REMOTE_APPROVAL_MESSAGES } from "./remote-approval-messages.js";
 import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
-import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
-import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
-import { isLocalDisplayOnlyDenialReason } from "../../01-核心基础设施/共享小工具-未细化/local-display-only-denial.js";
-import { toNumber } from "../../01-核心基础设施/共享小工具-未细化/lodash-to-number.js";
+import "../../01-核心基础设施/核心工具-未归类/request-delivery-errors.js";
+import { logRemoteToolsEvent } from "../../01-核心基础设施/核心工具-未归类/remote-tools-logger.js";
+import { isLocalDisplayOnlyDenialReason } from "../../01-核心基础设施/核心工具-未归类/local-display-only-denial.js";
+import { toNumber } from "../../01-核心基础设施/核心工具-类型与数值/lodash-to-number.js";
 import { getPlatformDisplayName } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { dedupe, asStringArray } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe, asStringArray } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { isDeepStrictEqual as go } from "util";
 var hn =
     "The user's downloads, local toolchains and anything not in the repository live here; its own Claude Code decides what may run there and may ask the user first",

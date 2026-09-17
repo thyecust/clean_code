@@ -10,23 +10,23 @@
 
 // [preload stripped] 原本在此预载 241 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { VR, Dx, Aje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getFsSurface } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useKeybinding } from "../键位绑定-Keybindings/keybinding-hooks.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { BASH_TOOL_NAME, checkHasTrustDialogAccepted, saveCurrentProjectConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
+import { useGlobalExitKeybinding } from "../键位绑定-Keybindings/exit-keybinding-hooks.js";
 import { gracefulShutdownSync, isShuttingDown, sanitizeForDisplay, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { shouldOfferTrustBackstop, getRepoHelperSources, getMarketplaceHelperSources } from "../../01-核心基础设施/设置-配置/marketplace-helper-sources.js";
 import { useIsMountRecent, useMountTime, useSettleAfterChange, useRefusedInputWindow } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { StatusIndicator } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
-import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/UI组件-TUI/confirm-prompt.js";
 import {
   getHookSettingsSourceFiles,
   collectAllowRules,
@@ -42,10 +42,10 @@ import {
   getDangerousEnvVarSourceFiles,
 } from "../状态栏-主题/trust-dialog-settings.js";
 import { PermissionDialogFrame } from "./permission-dialog.js";
-import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/共享小工具-未细化/kb-cohesion-fixes.js";
+import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/核心工具-未归类/kb-cohesion-fixes.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, V, C, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function Qt(Mt) {
   return Mt === BASH_TOOL_NAME || Mt.startsWith(BASH_TOOL_NAME + "(");

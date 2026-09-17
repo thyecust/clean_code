@@ -10,7 +10,7 @@
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -19,10 +19,10 @@ import { cs, IBe, Wet, vRt, ike, rHn, qar } from "../../00-第三方库/jsonc-pa
 import { Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
 import { Zd } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { getCurrentKillRingText, getNextKillRingEntry, useKillRing } from "../状态栏-主题/chunk-w5jaj6kg.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { getMainLoopModel, isScreenReaderModeEnabled, queueScreenReaderAnnouncement, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { pickBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { pathExists } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -30,23 +30,23 @@ import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { getStringWidth, wrapAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isFullscreen, useAnimationFrame, useDebouncedCallback } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { XB, ZOt, R9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { getAttachStampMs, isAttachQuietDrainActive } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
-import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
-import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
-import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { getAttachStampMs, isAttachQuietDrainActive } from "../../01-核心基础设施/核心工具-未归类/attach-state-tracking.js";
+import { getClaimRegistry } from "../../01-核心基础设施/核心工具-未归类/host-claim-registry.js";
+import { useClock } from "../../01-核心基础设施/终端与时钟/use-clock.js";
+import { resolveWrappedClaudeInvocation } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
+import { useAppStateSelector } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { addHistoryEntry, getImageLimitsForModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { useDoublePressConfirm } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { useVoiceLevelSmoother, useVoiceSelector } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
-import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import { buildDraftText, isBashModeShortcut } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
+import { useDoublePressConfirm } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
+import { useVoiceLevelSmoother, useVoiceSelector } from "../语音-音频/voice-state-provider.js";
+import { shouldReduceMotion } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
+import { getThemeColor } from "../../01-核心基础设施/UI组件-TUI/theme-color.js";
+import { buildDraftText, isBashModeShortcut } from "../../01-核心基础设施/核心工具-未归类/bash-mode-draft-text.js";
 import { re, De, E, vr, dn, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { LARGE_PASTE_CHAR_THRESHOLD, readClipboardImage, isImageFilePath, readPastedImageFile } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { getGraphemeSegmenter, getFirstGrapheme, getWordSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
+import { getGraphemeSegmenter, getFirstGrapheme, getWordSegmenter } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
 import { getCurrentPlatform, getMacOSMajorVersion } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 import { randomBytes } from "crypto";
 import {
   copyFile,
@@ -1893,12 +1893,12 @@ function Tr() {
 function Et() {
   if (!Tr().claim()) return;
   try {
-    let { prewarm: e } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/prewarm.ea9vpfhv.js");
+    let { prewarm: e } = import.meta.require("../../01-核心基础设施/核心工具-未归类/prewarm.ea9vpfhv.js");
     e();
   } catch {}
 }
 function Ct(e) {
-  let { isModifierPressed: t } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/prewarm.ea9vpfhv.js");
+  let { isModifierPressed: t } = import.meta.require("../../01-核心基础设施/核心工具-未归类/prewarm.ea9vpfhv.js");
   return t(e);
 }
 var $r = () => {};

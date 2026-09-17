@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 205 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { jsonParse, jsonParseUntraced, readTailBytes, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getTranscriptPathForSession, readTranscriptTailV5 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getTeleportCacheState, activateTeleportCache } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
-import { getCcrSessionConfig, getCcrSessionConfigFailureReason, getCcrSessionProfile } from "../../01-核心基础设施/共享小工具-未细化/ccr-session-config.js";
-import { resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { getTeleportCacheState, activateTeleportCache } from "./chunk-qv8z365a.js";
+import { getCcrSessionConfig, getCcrSessionConfigFailureReason, getCcrSessionProfile } from "../../01-核心基础设施/核心工具-未归类/ccr-session-config.js";
+import { resolveTranscriptLocator } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var v = 1,
   L = "upgrade_relay_marker";

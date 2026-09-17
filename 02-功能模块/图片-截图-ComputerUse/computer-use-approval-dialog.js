@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { DEFAULT_GRANT_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { DEFAULT_GRANT_FLAGS } from "../../01-核心基础设施/核心工具-未归类/app-permission-categories.js";
 import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var COMPUTER_USE_APPROVAL_DIALOG = defineDialog({

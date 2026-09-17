@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../核心工具-路径与平台/chunk-h62vxw7j.js";
 import { pathSpaces, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getHostSettingsStore, invalidateAllSettings, getSystemManagedSettingsPathOverride, primeRemoteManagedSettingsCache, getManagedSettingsDirs, logBrokenSettingsSymlink, emptySettingsResult, SETTINGS_FILENAMES } from "./设置-配置.aqbb35ee.js";

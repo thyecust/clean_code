@@ -9,23 +9,23 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 228 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Box, Text, useTimeout, render } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { useClock } from "../../01-核心基础设施/终端与时钟/use-clock.js";
+import { StatusIndicator } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
 import { ManifestSignatureError, checkInstall, installLatest, cleanupShellAliases, cleanupNpmInstallations } from "./native-installer.js";
 import "./install-diagnostics.js";
-import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
+import { BulletItem } from "../../01-核心基础设施/UI组件-TUI/bullet-item.js";
 import { getAutoUpdatesChannel } from "./auto-updates-channel.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
+import "../../01-核心基础设施/核心工具-其他/chunk-j86cs2ar.js";
 import { E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 import { homedir } from "os";
 import { join as L } from "path";

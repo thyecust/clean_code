@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { CS, Le, zn, An, XR, ac, Dr, hZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { O_NONBLOCK_FLAG, O_NOFOLLOW_NONBLOCK_FLAGS } from "../共享小工具-未细化/open-flags.js";
+import { O_NONBLOCK_FLAG, O_NOFOLLOW_NONBLOCK_FLAGS } from "../核心工具-其他/open-flags.js";
 import { R, l, A, Jr, W, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { j, Gt, B, K, he, urt, Mx, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
-import { getCwd } from "../共享小工具-未细化/cwd-context.js";
+import { isHoverRestEnabled } from "../核心工具-路径与平台/chunk-h62vxw7j.js";
+import { getCwd } from "../核心工具-未归类/cwd-context.js";
 import { createInvalidArgumentError, OTHER_NAMES_TELEMETRY_CODE, LEAF_MOVED_TELEMETRY_CODE, HARDENING_UNAVAILABLE_TELEMETRY_CODE, createOkResult, createErrorResult, pathSpaces, registerCleanup, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import { resolveExecutablePath } from "../设置-配置/chunk-zqr5ctyf.js";
@@ -20,13 +20,13 @@ import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chun
 import { GIT_HARDENED_ARGS, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProjectsDir, getProjectKey, getProjectDir, BACKUP_FILE_NAME_PATTERN_WITH_LEGACY } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
-import { getFileStorage } from "../共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../文件存储-原子写入/file-storage.js";
 import { isValidPathSegment, hasValidPathSegments, isJsonlFileName, getNormalizedNames, STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
-import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
-import { GITHUB_HOST, isGitHubHost } from "../共享小工具-未细化/git-host-utils.js";
-import { runPaginatedScan } from "../共享小工具-未细化/paginated-scan.js";
+import { writeDiagnosticsEvent } from "../核心工具-日志与脱敏/diagnostics-log.js";
+import { GITHUB_HOST, isGitHubHost } from "../核心工具-路径与平台/git-host-utils.js";
+import { runPaginatedScan } from "../核心工具-其他/paginated-scan.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { formatFileSize } from "../共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../核心工具-字符串与文本/chunk-7axvc6rn.js";
 import {
   closeSync,
   constants as eo,
@@ -2454,7 +2454,7 @@ async function getGitState() {
   }
 }
 async function getGithubRepo() {
-  let { parseGitRemote: e } = await import("../共享小工具-未细化/parseGitHubRepository.3ng6714h.js"),
+  let { parseGitRemote: e } = await import("../核心工具-未归类/parseGitHubRepository.3ng6714h.js"),
     t = await getRemoteUrl();
   if (!t) return (logForDebugging("Local GitHub repo: unknown"), null);
   let r = e(t);

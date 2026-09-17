@@ -10,15 +10,15 @@
 
 // [preload stripped] 原本在此预载 214 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { SB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { logEvent, logEventAsync } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dt, ge, l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { escapeInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { escapeInvisibleChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sanitizeForDisplay, sanitizeMultilineForDisplay, getPluginDisplayName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -82,8 +82,8 @@ import {
   createPluginVersionTag,
   buildVersionTagMessage,
 } from "./chunk-akd9b588.js";
-import { RenderOnceAndExit, renderAndWaitForExit } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
-import { cliError, writeStdoutAndDrain, flushAnalyticsBeforeExit, exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { RenderOnceAndExit, renderAndWaitForExit } from "../../01-核心基础设施/UI组件-TUI/one-shot-render.js";
+import { cliError, writeStdoutAndDrain, flushAnalyticsBeforeExit, exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js";
 import {
   PluginOperationFailedError,
   handlePluginCommandError,

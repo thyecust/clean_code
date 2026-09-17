@@ -9,21 +9,21 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 207 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { logEventAsync } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { configHasAuthorizationHeader, isFirstPartyDesignUrl, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getClaudeAiConnectorsUrl, buildClaudeAiMcpAuthUrl, getAllMcpConfigs, isMcpServerDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { buildCliCommand } from "../插件系统/plugin-system-core.js";
-import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
-import { exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { stopCapturingEarlyInput } from "../../01-核心基础设施/核心工具-未归类/early-input-capture.js";
+import { exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js";
 import { awaitMcpPolicyColdStart } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { formatHyperlink } from "../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
-import { formatMcpServerNotFoundMessageWithPendingApproval } from "../../01-核心基础设施/共享小工具-未细化/mcp-server-not-found-message.js";
-import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
-import { hasFirstPartyDesignAuth } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
+import { formatHyperlink } from "../../01-核心基础设施/核心工具-字符串与文本/format-hyperlink.js";
+import { formatMcpServerNotFoundMessageWithPendingApproval } from "./mcp-server-not-found-message.js";
+import { classifyMcpServerAuth } from "./mcp-hosted-oauth-gate.js";
+import { hasFirstPartyDesignAuth } from "../设计同步/chunk-jhs1bd0k.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { createInterface } from "readline";
 function y() {

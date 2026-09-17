@@ -13,7 +13,7 @@ import { isScreenReaderModeEnabled, isGrowthBookEnabled, getFeatureValueWithSour
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
-import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { resolveExecutableSafely } from "../../03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js";
 import { getEnvEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";

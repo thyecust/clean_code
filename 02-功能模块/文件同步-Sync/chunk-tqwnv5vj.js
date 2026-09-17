@@ -10,7 +10,7 @@
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { RESERVED_DIRECTORY_NAMES_LC, normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { DANGEROUS_FILES_LC } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import {
   getSeedFilePath,
@@ -33,9 +33,9 @@ import {
 import { readFileWithDigests, READ_ONLY_NONBLOCK_FLAGS, openVerifiedFile, writeFileAtomically, createFileSystemHost } from "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
 import { isBlobIdUnchanged } from "../工作树-Git/dir-sync-git-repository.js";
 import { normalizeFileMode } from "./sync-journal.js";
-import { stripSentField, computeGitBlobId, computeContentDigests, matchesAgreedDigest } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import { stripSentField, computeGitBlobId, computeContentDigests, matchesAgreedDigest } from "../目录同步-dir-sync/sync-state-schema.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { lstat, realpath } from "fs/promises";
 import {
   basename,

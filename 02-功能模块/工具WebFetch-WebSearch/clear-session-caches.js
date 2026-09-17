@@ -32,7 +32,7 @@ import { clearRepositoryCaches } from "../工作树-Git/git-repository-detection
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { sessionDateCache } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { globalFileIndexCache, resetFileIndexCache } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
-import { GoalProposalState } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-state.js";
+import { GoalProposalState } from "../目标模式-Goal/goal-proposal-state.js";
 import { clearSwarmPermissions } from "../权限系统/swarm-permission-poller.js";
 function clearSessionCaches(t, r = new Set(), i, o, l, m = !1) {
   let a = r.size > 0;

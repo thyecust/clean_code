@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 99 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { registerBundledSkill } from "../Skills技能/bundled-skills.js";
 import { readdir } from "fs/promises";
 function l() {

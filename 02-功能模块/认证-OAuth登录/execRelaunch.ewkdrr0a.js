@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 21 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js";
 import { logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PROCESS_WRAPPER_ENV_VAR, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
-import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
-import { RELAUNCH_TERMINAL_SIZE_ENV_VAR, getRelaunchTerminalSizeEnv } from "../../01-核心基础设施/共享小工具-未细化/relaunch-terminal-size.js";
+import { resolveWrappedClaudeInvocation } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
+import { RELAUNCH_TERMINAL_SIZE_ENV_VAR, getRelaunchTerminalSizeEnv } from "../../01-核心基础设施/终端与时钟/relaunch-terminal-size.js";
 import { spawn } from "child_process";
 import { closeSync } from "fs";
 import { constants } from "os";

@@ -8,22 +8,22 @@
 
 // Version: 2.1.263
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PERMISSION_MODE_MANUAL_ALIAS } from "./chunk-e4pfvp7x.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { parseCronExpression, DEFAULT_CRON_JITTER_CONFIG, computeRecurringTaskFireTime } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
-import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
+import { resolveWrappedClaudeInvocation } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
 import { CRON_WORKLOAD_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
-import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
+import { getDaemonJsonPath } from "../守护服务-Daemon/daemon-paths.js";
 import { s, T, O, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var DAEMON_CONFIG_MAX_BYTES = 1048576;
 async function readDaemonConfigContent(o) {
@@ -238,8 +238,8 @@ async function readScheduledStatus(o) {
 }
 var runScheduledWorker = async (o, t, e, r, a) => {
   let { tasks: u, maxConcurrent: f } = scheduledTasksFileSchema().parse(o),
-    { initializeErrorLogSink: y } = await import("../../01-核心基础设施/共享小工具-未细化/initializeErrorLogSink.64dfk6kr.js"),
-    { initializeAnalyticsSink: q } = await import("../../01-核心基础设施/共享小工具-未细化/initializeAnalyticsSink.3hb68836.js");
+    { initializeErrorLogSink: y } = await import("../../01-核心基础设施/遥测-OpenTelemetry/initializeErrorLogSink.64dfk6kr.js"),
+    { initializeAnalyticsSink: q } = await import("../../01-核心基础设施/遥测-OpenTelemetry/initializeAnalyticsSink.3hb68836.js");
   if ((y(), q(), !r.getAccessToken()))
     (e("scheduled worker: not authed \u2014 run `claude auth login`"),
       process.exit(1));

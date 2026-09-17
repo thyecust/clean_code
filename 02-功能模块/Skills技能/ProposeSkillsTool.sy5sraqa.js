@@ -9,22 +9,22 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { sn, Nb } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { findCommand, getDefaultFileReadingLimits, isSkillPlaceholderCurrent, getCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { resolvePath, getFileMtimeMs } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isRemoteCoworkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { PROPOSE_SKILLS_TOOL_NAME, PROPOSE_SKILLS_TOOL_DESCRIPTION, PROPOSE_SKILLS_TOOL_PROMPT } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isFullFileView, matchesFileStateContent, normalizeFileContent } from "../MCP客户端/chunk-3kmsshb6.js";
-import { collapseNewlines, truncateForDisplay } from "../../01-核心基础设施/共享小工具-未细化/text-truncation.js";
+import { collapseNewlines, truncateForDisplay } from "../../01-核心基础设施/核心工具-字符串与文本/text-truncation.js";
 import { s, T, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { join as L } from "path";
 var S = 1024,
   _ = createLazyValue(() =>

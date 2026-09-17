@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Qs, ns, p8, xW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { le, Zt, Io, Xu, cr, nt, hm } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   withOAuth401Retry,
@@ -45,11 +45,11 @@ import {
   setClientDataStaleMatchGetter,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getEnvEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { formatLabelText, formatDescriptionText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { formatLabelText, formatDescriptionText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { stripLongContextTags, findModelConfigByProviderId, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getWIFCredentials, getWIFTokenCache } from "../认证-OAuth登录/wif-credentials.js";
 import { parseCustomHeadersFromEnv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
+import { getClientUserAgent } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
 var X = createLazyValue(() =>
   nt({
     client_data: hm(Xu()).nullish(),

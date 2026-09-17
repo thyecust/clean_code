@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { EAn, E$e } from "../_未识别/第三方库-加密库.z54vzq0y.js";
-import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var Lt = commonJS(function (xd, us) {
   var ht = Object.prototype.hasOwnProperty,
     cs = Object.prototype.toString,

@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { Cje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -20,21 +20,21 @@ import { detectCurrentRepository } from "../工作树-Git/git-repository-detecti
 import { teleportResumeCodeSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useKeybinding } from "../键位绑定-Keybindings/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
-import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
+import { useVirtualScrollViewportSize } from "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-state.js";
+import { useKeybindingDisplayText } from "../键位绑定-Keybindings/use-keybinding-display-text.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import { TeleportError } from "../云会话-Teleport/teleport-errors.js";
-import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
-import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
-import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/共享小工具-未细化/kb-cohesion-fixes.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/UI组件-TUI/spinner-message-line.js";
+import { ActionKeybindingHint } from "../键位绑定-Keybindings/action-keybinding-hint.js";
+import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/核心工具-未归类/kb-cohesion-fixes.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 F();
 function G(de) {

@@ -7,37 +7,37 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, normalizeFullWidthDigits, normalizeIdeographicSpaces } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getMainLoopModel, isScreenReaderArrowNavEnabled } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { getStringWidth, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { Box, Text, Link, Ansi, useIsScreenReaderEnabled, useFocus, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { v9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
-import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { DEFAULT_RECENT_WINDOW_MS, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
-import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
+import { useClock } from "../../01-核心基础设施/终端与时钟/use-clock.js";
+import { DEFAULT_RECENT_WINDOW_MS, isRecent } from "../../01-核心基础设施/核心工具-未归类/recent-window.js";
+import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
+import { useActiveOverlay } from "../多会话视图-Fleet/overlay-registry.js";
 import { useFocusTrap, useCursorDeclaration } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useVirtualScrollViewportSize } from "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-state.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
+import { StatusIndicator } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
+import { useKeybinding, useKeybindings } from "../键位绑定-Keybindings/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
-import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
 import { getImageLimitsForModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
-import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
-import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { toLocalFileUrl } from "../../01-核心基础设施/核心工具-路径与平台/to-local-file-url.js";
+import { ActionKeybindingHint } from "../键位绑定-Keybindings/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { L_, re, E, vr, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { readClipboardImage } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function useIsMountRecent(l = DEFAULT_RECENT_WINDOW_MS) {
   let s = C(Date.now());

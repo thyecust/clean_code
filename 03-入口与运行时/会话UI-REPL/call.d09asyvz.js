@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 113 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { RENAME_NOTICE } from "../../01-核心基础设施/共享小工具-未细化/chunk-57d41trc.js";
+import { RENAME_NOTICE } from "../../02-功能模块/用量额度-限额/chunk-57d41trc.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 var s = async (l, m) => {
   let { call: c } = await import("../../02-功能模块/斜杠命令-UI组件/call.7m7q3j5y.js"),

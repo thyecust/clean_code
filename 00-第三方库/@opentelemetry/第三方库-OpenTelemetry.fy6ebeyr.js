@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { otelApiModule, otelCoreModule, otelResourcesModule } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var H = commonJS(function (Oe) {
   Object.defineProperty(Oe, "__esModule", { value: !0 });
   Oe.AggregationTemporality = void 0;

@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { mB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getMcpServerConfigCacheKey, invokeMcpToolRaw, listMcpToolsRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { getMcpServerConfigCacheKey, invokeMcpToolRaw, listMcpToolsRaw } from "../MCP客户端/chunk-7wm8t84g.js";
 import { bridgeCarrierState, isSessionIngressUrl, isRemoteDevicesProxyUrl } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { isSubagentSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { buildMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { sanitizeDeep } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { isValidMachineName } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { sanitizeDisplayText, getMcpClients, isRemoteToolForwardingEnabled, isSessionChannelDisabled, CCR_NEEDS_APPROVAL_ERROR_CODE, classifyMcpErrorSource, REMOTE_DEVICES_SERVER_NAME, DEVICE_LOCAL_TOOL_NAMES, BRIDGE_PLUMBING_TOOL_NAMES } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
@@ -36,11 +36,11 @@ import {
   normalizeDurationMs,
   jsonByteLength,
 } from "../远程工具执行/remote-tool-protocol.js";
-import { DEVICE_PASSTHROUGH_META_KEY, parseDevicePassthroughMeta, isNonDeviceToolName } from "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
+import { DEVICE_PASSTHROUGH_META_KEY, parseDevicePassthroughMeta, isNonDeviceToolName } from "../设备注册-Cowork/device-passthrough-meta.js";
 import { getDirSyncPayload, SESSION_TRANSPORT_LIMITS } from "./session-event-transport.js";
 import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
-import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { normalizeMcpName } from "../MCP客户端/mcp-name-normalization.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function T() {
   return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js").mcpClientModule();
 }

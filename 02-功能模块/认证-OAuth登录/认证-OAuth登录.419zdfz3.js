@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { default as at, AxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Ie, po, Le, rs, zn, An, my, ku, SZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { parseRegionName, parseConfigInteger, getClaudeConfigDir, parseConfigIntegerOrDefault, isSimpleMode, isSafeMode, xg } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE, OAUTH_BETA_HEADER, CLAUDE_AI_OAUTH_SCOPES, ALL_OAUTH_SCOPES, preservableScopesFrom, ALLOWED_OAUTH_BASE_URLS, getOauthConfig } from "./chunk-9g2q4bjq.js";
 import {
@@ -78,11 +78,11 @@ import {
   fZ,
   ic,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { le, Zt, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { getGlobalClaudeFile, isDockerenvPresent, getHostPlatformForAnalytics, getShellForAnalytics, BEDROCK_INFERENCE_PROFILE_PREFIXES, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromSanitizer_SANITIZER_OUTPUT_ONLY, mcpNameForAnalytics_GATE_EVALUATED, agentTypeForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromSanitizer_SANITIZER_OUTPUT_ONLY, mcpNameForAnalytics_GATE_EVALUATED, agentTypeForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import {
   ud,
   YR,
@@ -120,9 +120,9 @@ import {
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, truncateToCodeUnits, toWellFormed, sanitizeLoneSurrogates, truncateAtWordBoundary } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { CROSS_SESSION_MESSAGE_TAG, isEssentialTrafficOnly, isNonessentialTrafficRestricted, getNonessentialTrafficDisabledEnvVar, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { resolveExecutableSafely } from "../../03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { stripProtoFields, logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { stripProtoFields, logEvent, logEventAsync } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   pickBy,
@@ -146,7 +146,7 @@ import {
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { toForwardSlashPath, writeFileSyncAndFlush, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizePath, getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { Jcr, wS, Bf, a_ } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { GIT_HARDENED_ARGS, execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import {
@@ -162,7 +162,7 @@ import {
   getRepoRemoteHash,
 } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { cs, xt, ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { KNOWN_ENTRYPOINTS, getEnvEntrypoint, isDesktopHostEntrypoint, isNonTerminalEntrypoint, getSessionEntrypoint, isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
@@ -183,7 +183,7 @@ import {
   updateSettingsForSource,
   getSecuritySensitiveSettingWithSources,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { replaceInvisibleChars, replaceControlChars, formatLabelText, formatDescriptionText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { replaceInvisibleChars, replaceControlChars, formatLabelText, formatDescriptionText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { normalizePermissionModeAlias, parsePermissionMode, PERMISSION_DECISION_REASON_TYPES, FAST_MODE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { WORKSPACE_MCP_SERVER_NAME, WORKSPACE_MCP_BASH_TOOL_NAME, WORKSPACE_MCP_WEB_FETCH_TOOL_NAME } from "../工具Bash-Shell/permission-rule-parsing.js";
 import {
@@ -258,34 +258,34 @@ import {
   normalizeMcpServerUrl,
   getBgDispatcherIdentity,
 } from "./chunk-wk0e3dz4.js";
-import { isTainted, areComplianceTaintsSettled } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { isTainted, areComplianceTaintsSettled } from "../../01-核心基础设施/核心工具-未归类/compliance-taints-store.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { sampleChildProcessPeaks } from "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
 import { isBgAuthSnapshotPending, waitForBgAuthSnapshot, hasCredentialDescriptor, getOAuthToken, getOAuthTokenWithBgSnapshot, getGatewayToken, getApiKey, getSessionAccessToken } from "./credential-file-descriptors.js";
 import { parseGitHubRepository } from "../工作树-Git/git-repository-detection.js";
-import { ensureAxiosEgressGuardInstalled } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
+import { ensureAxiosEgressGuardInstalled } from "../../01-核心基础设施/HTTP-网络层/test-egress-guard.js";
 import { SECURE_STORAGE_READ_FAILED_SENTINEL, invalidateCredentialsCopyCache, getSecureStorage } from "./secure-storage.js";
 import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
-import { getSecureStorageDir, getKeychainServiceName, getKeychainAccountName, invalidateKeychainCache, classifyKeychainError } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
-import { getLegacyApiKeyPrefetchResult, clearLegacyApiKeyPrefetch } from "../../01-核心基础设施/共享小工具-未细化/keychain-prefetch.js";
-import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { getSecureStorageDir, getKeychainServiceName, getKeychainAccountName, invalidateKeychainCache, classifyKeychainError } from "./keychain-access.js";
+import { getLegacyApiKeyPrefetchResult, clearLegacyApiKeyPrefetch } from "./keychain-prefetch.js";
+import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
 import { setFeatureValueGetter, ARTIFACT_TOOL_NAME } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { neutralizeClosingTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { SEND_USER_FILE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import { SEND_USER_FILE_TOOL_NAME } from "../远程工具执行/chunk-a5errgr8.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { getParentSessionId, getAgentId, getTeamName, isTeammate, isNestedInteractiveClaudeSession } from "../Teammates团队/teammate-context.js";
 import { slugifyText } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { isProcessProvablyGone, looksLikeFullHostProcessTable, startTokensEqualOrCrossFormat, ownProcStartAsync, procIdentityOf, procIdentityFields, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { ownPidDomain, timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
+import { ownPidDomain, timingSafeStringEqual } from "../守护服务-Daemon/chunk-035vf5et.js";
+import { externalHttp } from "../../01-核心基础设施/HTTP-网络层/external-http.js";
 import { getTokenExpiry, decodeTaggedId } from "../远程控制-Bridge/chunk-4zd60pbm.js";
-import { isClaudeInChromeMCPServer, CLAUDE_IN_CHROME_TOOL_NAMES } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
+import { isClaudeInChromeMCPServer, CLAUDE_IN_CHROME_TOOL_NAMES } from "../浏览器集成-ClaudeinChrome/claude-in-chrome-mcp-constants.js";
 import { customSchema, defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
-import { MAX_SESSION_RECORD_BYTES, isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { MAX_SESSION_RECORD_BYTES, isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { isFlagPresent } from "../上下文压缩-Compact/cli-args.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "../Teammates团队/chunk-enjekn9t.js";
-import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
-import { serializeAsyncCalls, createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
+import { normalizeMcpName } from "../MCP客户端/mcp-name-normalization.js";
+import { serializeAsyncCalls, createKeyedSerialQueue } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
 import { fetchHttpHandlerModule } from "../模型接入-Bedrock-Vertex/chunk-p991cddr.js";
 import {
   lW,
@@ -313,13 +313,13 @@ import {
   Hb,
   ai,
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { isLoopbackHostname } from "../../01-核心基础设施/共享小工具-未细化/is-loopback-hostname.js";
+import { isLoopbackHostname } from "../../01-核心基础设施/核心工具-路径与平台/is-loopback-hostname.js";
 import { getCurrentPlatform, getWslVersion, getLinuxDistroInfo, detectVersionControlSystems } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var Mh = commonJS(function (wh) {
   Object.defineProperty(wh, "__esModule", { value: !0 });
   wh._globalThis = void 0;
@@ -23970,12 +23970,12 @@ async function getSessionRequestHeaders(e) {
 }
 async function Tle(e, t, r) {
   if (e.status !== 403) return e;
-  let { isViolinWoodEnabled: o } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js");
+  let { isViolinWoodEnabled: o } = await import("../目录同步-dir-sync/chunk-97crm80y.js");
   if (!(await o().catch(() => !1))) return e;
   let [{ classifyElevatedAuthError: d }, { extractErrorDetail: p }] =
     await Promise.all([
       import("../远程控制-Bridge/code-session-api.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js"),
+      import("../远程控制-Bridge/chunk-x4q0245z.js"),
     ]);
   if (d(e.data, p(e.data)) !== "untrusted_device") return e;
   let { withUntrustedDeviceRecovery: _ } = await import("../远程控制-Bridge/chunk-tyce0p0b.js");
@@ -23986,7 +23986,7 @@ async function Tle(e, t, r) {
   );
 }
 async function trustedDeviceHeaders() {
-  let { isViolinWoodEnabled: e } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js");
+  let { isViolinWoodEnabled: e } = await import("../目录同步-dir-sync/chunk-97crm80y.js");
   if (!(await e().catch(() => !1))) return {};
   let { getTrustedDeviceToken: t } = await import("../远程控制-Bridge/chunk-tyce0p0b.js"),
     r = await t().catch(() => {
@@ -29671,7 +29671,7 @@ function yde(e, t) {
   }
   return `<${e}>`;
 }
-var Cde = import.meta.require("../../01-核心基础设施/共享小工具-未细化/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js"),
+var Cde = import.meta.require("../多会话视图-Fleet/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js"),
   DEFAULT_PROJECT_CONFIG = {
     allowedTools: [],
     mcpContextUris: [],
@@ -29913,7 +29913,7 @@ function wde(e) {
   try {
     let r = importMetaRequire("child_process"),
       d = import.meta
-        .require("../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js")
+        .require("../../03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js")
         .resolveExecutableSafely("git");
     if (d === null) return "untracked";
     let p = r.spawnSync(
@@ -33432,7 +33432,7 @@ async function E0() {
   try {
     logForDebugging("Clearing AWS credential provider cache");
     let [{ fromIni: e }, t] = await Promise.all([
-        import("../../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js"),
+        import("../../01-核心基础设施/核心工具-未归类/fromIni.7gtjb5bg.js"),
         resolveAwsRegion(),
       ]),
       r = await getAWSProxyRequestHandler({ url: resolveStsEndpointForProxyUrl(t), requestTimeoutMs: g0 }),
@@ -34088,7 +34088,7 @@ function hostManagedAwsProviderChain(e) {
         let E = await dfe(d, p, o);
         if (E) return async () => E;
       }
-      let { fromIni: _ } = await import("../../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js");
+      let { fromIni: _ } = await import("../../01-核心基础设施/核心工具-未归类/fromIni.7gtjb5bg.js");
       return _({
         ...(o && { profile: o }),
         configFilepath: d ?? p,
@@ -35015,7 +35015,7 @@ async function yfe(e) {
     async () => {
       logForDebugging(`[API:auth] resolving default AWS provider chain (region: ${e})`);
       let [{ fromNodeProviderChain: r }, o] = await Promise.all([
-          import("../../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js"),
+          import("../../01-核心基础设施/核心工具-未归类/fromIni.7gtjb5bg.js"),
           getAWSProxyRequestHandler({ url: resolveStsEndpointForProxyUrl(e), requestTimeoutMs: AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS }),
         ]),
         d = r({

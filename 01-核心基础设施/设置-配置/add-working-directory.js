@@ -19,8 +19,8 @@ import { isCustomizationDisabled } from "../../02-功能模块/状态栏-主题/
 import { isRestrictedToPluginOnly } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import { getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { appendRespawnFlag } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { reloadSkills } from "../共享小工具-未细化/reload-skills.js";
-import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { reloadSkills } from "../../02-功能模块/Skills技能/reload-skills.js";
+import { countMatching } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 import { resolve } from "path";
 function u(e, o) {

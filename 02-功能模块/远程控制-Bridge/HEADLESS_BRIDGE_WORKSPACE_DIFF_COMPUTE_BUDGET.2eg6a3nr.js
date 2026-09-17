@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 179 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { R, l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonParse, streamFileLinesBackward, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { stripXmlTags, isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   sanitizeSessionName,
@@ -45,7 +45,7 @@ import { setCseShimGate, toInfraSessionId, sessionIdBody } from "../权限系统
 import { isTeammate } from "../Teammates团队/teammate-context.js";
 import { generateAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { getBridgeTokenOverride, getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getBridgeTokenOverride, getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl, getBridgeSessionNamePrefix } from "./chunk-203p0p9a.js";
 import { normalizeDeclaredDialogKinds, isHumanUserMessage, setBridgeStateFramesGate, setAttestationFilterPolicy } from "./chunk-5ne99rq3.js";
 import { retireBridgeHandle, setSelfBridgeTitle } from "../权限系统/chunk-1y2g140m.js";
 import {
@@ -97,8 +97,8 @@ import { isPolicyAllowed, policyDenyKind, policyDeniedHint } from "../策略限�
 import { getAgentTranscriptPath, listAgentIds } from "../Teammates团队/transcript-paths.js";
 import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
 import { isBridgeEnabledBlocking, describeRemoteControlPolicyDenial, isCseShimEnabled, isBridgeStateFramesEnabled, isBridgeResumeRespectsLocalOwnerEnabled, isBridgeRestoredMatchMintEnabled } from "./chunk-9estzwf5.js";
-import { AGENT_COLOR_NAMES } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
-import { logBridgeSkip } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { AGENT_COLOR_NAMES } from "../多会话视图-Fleet/agent-color-palette.js";
+import { logBridgeSkip } from "./chunk-x4q0245z.js";
 import { isPushNotificationsEnabled } from "./push-notification-tool.js";
 import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE, getAttestationFilterPolicy, preflightTrustedDeviceBlocking } from "./chunk-tyce0p0b.js";
 import { LOGIN_SLASH_COMMAND, REMOTE_CONTROL_ACCOUNT_UNVERIFIED_MESSAGE } from "./remote-control-messages.js";
@@ -111,14 +111,14 @@ import { buildWorkspaceDiffResponse } from "../工作树-Git/chunk-qdn32vbw.js";
 import { collectConversationText, generateSessionTitle } from "../会话-历史-恢复/session-title.js";
 import { getBridgeVersionRequirementMessage, createBridgeSessionHandle } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
-import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
+import "../../01-核心基础设施/核心工具-未归类/reply-degraded-state.js";
 import "./bridge-inbound-origin.js";
-import { WorkSecretShapeError, parseWorkSecret, sessionIdsMatch, buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
+import { WorkSecretShapeError, parseWorkSecret, sessionIdsMatch, buildSessionApiUrl, registerWorker } from "../守护服务-Daemon/work-secret.js";
 import { isBridgeStoreLogin, createBridgeOwnerPin, createBridgeTitleWriter } from "./chunk-1g5kqtqx.js";
 import "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { getTokenSessionId, getTokenExpiry } from "./chunk-4zd60pbm.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
-import { runPaginatedScan, createPageBudget } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
+import { runPaginatedScan, createPageBudget } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 var gn = 3000;
 async function gt(d, c) {
   if (!(await isBridgeStoreLogin(c)) || !getStoredOauthAccountInfo()?.accountUuid) return;

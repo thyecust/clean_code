@@ -10,12 +10,12 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { ToolResultContent } from "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
+import { ToolResultRow } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
+import { ToolResultContent } from "../../01-核心基础设施/UI组件-TUI/tool-result-content.js";
 import { SHELL_CWD_RESET_NOTICE_PATTERN, stripSandboxViolations } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ElapsedTimeoutText } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
+import { ElapsedTimeoutText } from "../../01-核心基础设施/UI组件-TUI/chunk-493670wv.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 function V(n) {
   if (!n.match(/<sandbox_violations>([\s\S]*?)<\/sandbox_violations>/))
     return { cleanedStderr: n };

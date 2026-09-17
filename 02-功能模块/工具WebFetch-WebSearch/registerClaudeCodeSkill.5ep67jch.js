@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 98 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { isSemverAtMost, isUsing3PServices, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { loadChangelogContent, getChangelogEntries, getAvailablePluginSubcommands } from "../发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import { registerBundledSkill } from "../Skills技能/bundled-skills.js";

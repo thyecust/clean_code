@@ -14,7 +14,7 @@ import { hasHeadersHelper, resolveTrustedEntryAuth, lookupMarketplaceSource, get
 import { isSourceAllowedByPolicy } from "./plugin-source-policy.js";
 import { getEnabledPluginIdsForSource, formatDependencyCountSuffix, formatUnresolvedDependenciesNotice, findSettingsDeclaredEntryAuth, getKnownMarketplacesOrEmpty, loadCachedMarketplaceCatalog, findPluginEntry, installPluginWithDependencies, loadAllPluginsCacheOnly } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { splitPluginId, getSettingsSourceForScope } from "./chunk-33bdfgmx.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 var k = ["user", "project", "local"];
 async function resolveMissingDependencies(a, r) {
   let t = new Map();

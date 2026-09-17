@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { isHoverRestEnabled } from "./01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { lit as S } from "./01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { parseDispatchArgs, resolveConfigPaths, buildDispatchArgs, getDaemonCommandArgs, getHandleUriInjectionError } from "./01-核心基础设施/共享小工具-未细化/cli-arg-parsing.js";
-import { getBuildRefName } from "./01-核心基础设施/共享小工具-未细化/build-ref-name.js";
-import { ensureClientAgentEnv } from "./01-核心基础设施/共享小工具-未细化/user-agent.js";
+import { isHoverRestEnabled } from "./01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { lit as S } from "./01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { parseDispatchArgs, resolveConfigPaths, buildDispatchArgs, getDaemonCommandArgs, getHandleUriInjectionError } from "./03-入口与运行时/CLI入口-Commander/cli-arg-parsing.js";
+import { getBuildRefName } from "./01-核心基础设施/核心工具-其他/build-ref-name.js";
+import { ensureClientAgentEnv } from "./01-核心基础设施/HTTP-网络层/user-agent.js";
 function et() {
   try {
     process.cwd();
@@ -127,12 +127,12 @@ async function Lt() {
   }
   let w = et();
   if (w) (console.error(w), process.exit(1));
-  let { profileCheckpoint: m } = await import("./01-核心基础设施/共享小工具-未细化/getBootstrapEntry.4n2kvc7t.js");
+  let { profileCheckpoint: m } = await import("./01-核心基础设施/核心工具-未归类/getBootstrapEntry.4n2kvc7t.js");
   m("cli_entry");
   let n =
     !(t[0] === "--preload" || t[0] === "--bg-spare") &&
     process.env.CLAUDE_CODE_HOVER_REST
-      ? (await import("./01-核心基础设施/共享小工具-未细化/adoptStorageV5EnvPin.xsnaqgwj.js")).pinStorageV5FromEnv()
+      ? (await import("./01-核心基础设施/核心工具-未归类/adoptStorageV5EnvPin.xsnaqgwj.js")).pinStorageV5FromEnv()
       : void 0;
   if (process.argv[2] === "--claude-in-chrome-mcp") {
     m("cli_claude_in_chrome_mcp_path");
@@ -151,18 +151,18 @@ async function Lt() {
     return;
   }
   if (t[0] === "--daemon-worker") {
-    let { loadFastPathPolicy: e } = await import("./01-核心基础设施/共享小工具-未细化/runFastPathPolicyHelper.vgxesh6m.js"),
+    let { loadFastPathPolicy: e } = await import("./01-核心基础设施/核心工具-未归类/runFastPathPolicyHelper.vgxesh6m.js"),
       r = await e(n);
     if (r)
       process.stderr.write(`${r}
 `);
-    let { runDaemonWorker: o } = await import("./01-核心基础设施/共享小工具-未细化/WORKER_KINDS.hp7zdndz.js");
+    let { runDaemonWorker: o } = await import("./01-核心基础设施/核心工具-未归类/WORKER_KINDS.hp7zdndz.js");
     await o(t[1], n);
     return;
   }
   if (t[0] === "--bg-pty-host") {
     let { ensureFastPathSettingsLoaded: e } =
-      await import("./01-核心基础设施/共享小工具-未细化/runFastPathPolicyHelper.vgxesh6m.js");
+      await import("./01-核心基础设施/核心工具-未归类/runFastPathPolicyHelper.vgxesh6m.js");
     try {
       await e(n);
     } catch (o) {
@@ -176,15 +176,15 @@ async function Lt() {
   }
   if (t[0] === "--bg-spare") {
     let { ensureFastPathSettingsLoaded: e } =
-      await import("./01-核心基础设施/共享小工具-未细化/runFastPathPolicyHelper.vgxesh6m.js");
+      await import("./01-核心基础设施/核心工具-未归类/runFastPathPolicyHelper.vgxesh6m.js");
     await e(void 0);
-    let { runBgSpare: r } = await import("./01-核心基础设施/共享小工具-未细化/runBgSpare.jwa5ndmd.js");
+    let { runBgSpare: r } = await import("./02-功能模块/守护服务-Daemon/runBgSpare.jwa5ndmd.js");
     await r(t.slice(1));
     return;
   }
   if (t[0] === "--preload") {
     let { ensureFastPathSettingsLoaded: e } =
-      await import("./01-核心基础设施/共享小工具-未细化/runFastPathPolicyHelper.vgxesh6m.js");
+      await import("./01-核心基础设施/核心工具-未归类/runFastPathPolicyHelper.vgxesh6m.js");
     await e(void 0);
     let { runPreload: r } = await import("./03-入口与运行时/CLI入口-Commander/runPreload.b1nzv31f.js");
     await r(t.slice(1));
@@ -195,7 +195,7 @@ async function Lt() {
     if (e !== null) {
       m("cli_daemon_path");
       let { ensureFastPathSettingsLoaded: r } =
-        await import("./01-核心基础设施/共享小工具-未细化/runFastPathPolicyHelper.vgxesh6m.js");
+        await import("./01-核心基础设施/核心工具-未归类/runFastPathPolicyHelper.vgxesh6m.js");
       await r(n);
       let { initSinks: o } = await import("./02-功能模块/远程控制-Bridge/initSinks.6cfazjmq.js");
       o();
@@ -215,7 +215,7 @@ async function Lt() {
     t.includes("--background")
   ) {
     m("cli_bg_path");
-    let { loadFastPathPolicy: e } = await import("./01-核心基础设施/共享小工具-未细化/runFastPathPolicyHelper.vgxesh6m.js");
+    let { loadFastPathPolicy: e } = await import("./01-核心基础设施/核心工具-未归类/runFastPathPolicyHelper.vgxesh6m.js");
     {
       let i = await e(n),
         u = ["logs", "stop", "kill", "rm"].includes(t[0] ?? "");
@@ -224,11 +224,11 @@ async function Lt() {
           process.stderr.write(`${i}
 `);
         else {
-          let { exitWithError: c } = await import("./01-核心基础设施/共享小工具-未细化/getStdoutDrainBudgetMs.41d1vrrp.js");
+          let { exitWithError: c } = await import("./01-核心基础设施/核心工具-未归类/getStdoutDrainBudgetMs.41d1vrrp.js");
           c(i);
         }
     }
-    let r = await import("./01-核心基础设施/共享小工具-未细化/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js");
+    let r = await import("./02-功能模块/多会话视图-Fleet/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js");
     if ((await r.ensureFleetGateHydrated(), !r.isAgentsFleetEnabled())) {
       let i = t[0],
         u =
@@ -251,7 +251,7 @@ async function Lt() {
         { seedInstallIDs: k, watchGlobalConfigThroughStorage: E },
       ] = await Promise.all([
         import("./02-功能模块/后台任务-Shell管理/spawnBgSession.z23xfr2c.js"),
-        import("./01-核心基础设施/共享小工具-未细化/pinStorageV5.xt5bqpq9.js"),
+        import("./01-核心基础设施/核心工具-未归类/pinStorageV5.xt5bqpq9.js"),
         import("./02-功能模块/云会话-Teleport/logForDebugging.yzt1kswr.js"),
         import("./01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js"),
       ]),
@@ -264,10 +264,10 @@ async function Lt() {
           { composePolicyLimitsClient: C, primePolicyLimitsCache: _ },
           { primeFastPathCredentials: A },
         ] = await Promise.all([
-          import("./01-核心基础设施/共享小工具-未细化/credentialsStoreFor.r7prg4pg.js"),
-          import("./01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
-          import("./01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
-          import("./01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js"),
+          import("./01-核心基础设施/核心工具-未归类/credentialsStoreFor.r7prg4pg.js"),
+          import("./01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
+          import("./01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
+          import("./02-功能模块/认证-OAuth登录/primeFastPathCredentials.eb5w3wem.js"),
         ]),
         O = i(s);
       (u(O),
@@ -289,9 +289,9 @@ async function Lt() {
           { shutdownDatadog: C },
           { sleep: _ },
         ] = await Promise.all([
-          import("./01-核心基础设施/共享小工具-未细化/initializeAnalyticsSink.3hb68836.js"),
-          import("./01-核心基础设施/共享小工具-未细化/DATADOG_CLIENT_TOKEN.kkspbfqc.js"),
-          import("./01-核心基础设施/共享小工具-未细化/withTimeout.0mr4qg1r.js"),
+          import("./01-核心基础设施/遥测-OpenTelemetry/initializeAnalyticsSink.3hb68836.js"),
+          import("./01-核心基础设施/遥测-OpenTelemetry/DATADOG_CLIENT_TOKEN.kkspbfqc.js"),
+          import("./01-核心基础设施/核心工具-并发与缓存/withTimeout.0mr4qg1r.js"),
         ]);
         if ((i(), t[0] === "logs")) await o.logsHandler(t[1], s);
         else if (t[0] === "attach") await o.attachHandler(t[1], s);
@@ -313,10 +313,10 @@ async function Lt() {
           { logEvent: _ },
           { sleep: A },
         ] = await Promise.all([
-          import("./01-核心基础设施/共享小工具-未细化/initializeAnalyticsSink.3hb68836.js"),
-          import("./01-核心基础设施/共享小工具-未细化/DATADOG_CLIENT_TOKEN.kkspbfqc.js"),
-          import("./01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js"),
-          import("./01-核心基础设施/共享小工具-未细化/withTimeout.0mr4qg1r.js"),
+          import("./01-核心基础设施/遥测-OpenTelemetry/initializeAnalyticsSink.3hb68836.js"),
+          import("./01-核心基础设施/遥测-OpenTelemetry/DATADOG_CLIENT_TOKEN.kkspbfqc.js"),
+          import("./01-核心基础设施/遥测-OpenTelemetry/logEvent.q8d8f1jd.js"),
+          import("./01-核心基础设施/核心工具-并发与缓存/withTimeout.0mr4qg1r.js"),
         ]);
         (i(),
           _("tengu_background", { via_flag: !0, via: S("flag") }),
@@ -338,12 +338,12 @@ async function Lt() {
     h = l.hasAgentsPositional && it(U);
   if ((h || (it(t) && process.stdin.isTTY)) && process.stdout.isTTY) {
     let { startCapturingEarlyInput: e, consumeEarlyInput: r } =
-      await import("./01-核心基础设施/共享小工具-未细化/startCapturingEarlyInput.cq2gda4e.js");
+      await import("./01-核心基础设施/核心工具-未归类/startCapturingEarlyInput.cq2gda4e.js");
     e();
     let [{ startMdmRawRead: o }, { startKeychainPrefetch: v }] =
       await Promise.all([
-        import("./01-核心基础设施/共享小工具-未细化/getMdmRawReadPromise.c91w9436.js"),
-        import("./01-核心基础设施/共享小工具-未细化/KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS.1fb6y1wa.js"),
+        import("./01-核心基础设施/核心工具-路径与平台/getMdmRawReadPromise.c91w9436.js"),
+        import("./02-功能模块/认证-OAuth登录/KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS.1fb6y1wa.js"),
       ]);
     (o(), v());
     let {
@@ -360,7 +360,7 @@ async function Lt() {
     } catch {}
     if (s) {
       if (l.config.settings) {
-        let { loadSettingsFromFlag: y } = await import("./01-核心基础设施/共享小工具-未细化/loadSettingsFromFlag.tbz185gf.js");
+        let { loadSettingsFromFlag: y } = await import("./01-核心基础设施/设置-配置/loadSettingsFromFlag.tbz185gf.js");
         y(l.config.settings);
       }
       if (l.config.pluginDir.length > 0 || l.config.pluginDirNoMcp.length > 0) {
@@ -375,10 +375,10 @@ async function Lt() {
           P(l.config.pluginDirNoMcp),
           g("claude agents --plugin-dir"));
       }
-      let { loadFastPathPolicy: u } = await import("./01-核心基础设施/共享小工具-未细化/runFastPathPolicyHelper.vgxesh6m.js"),
+      let { loadFastPathPolicy: u } = await import("./01-核心基础设施/核心工具-未归类/runFastPathPolicyHelper.vgxesh6m.js"),
         c = await u(n);
       if (c) {
-        let { exitWithError: y } = await import("./01-核心基础设施/共享小工具-未细化/getStdoutDrainBudgetMs.41d1vrrp.js");
+        let { exitWithError: y } = await import("./01-核心基础设施/核心工具-未归类/getStdoutDrainBudgetMs.41d1vrrp.js");
         y(c);
       }
       {
@@ -391,7 +391,7 @@ async function Lt() {
           if (l.config.pluginDir.length > 0) g.push("--plugin-dir");
           if (l.config.pluginDirNoMcp.length > 0) g.push("--plugin-dir-no-mcp");
           if (g.length > 0) {
-            let { exitWithError: b } = await import("./01-核心基础设施/共享小工具-未细化/getStdoutDrainBudgetMs.41d1vrrp.js");
+            let { exitWithError: b } = await import("./01-核心基础设施/核心工具-未归类/getStdoutDrainBudgetMs.41d1vrrp.js");
             b(P(g));
           }
         }
@@ -401,7 +401,7 @@ async function Lt() {
         ensureFleetGateHydrated: _,
         fleetGateRejected: A,
         consumeAgentViewRelaunchMarker: O,
-      } = await import("./01-核心基础设施/共享小工具-未细化/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js");
+      } = await import("./02-功能模块/多会话视图-Fleet/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js");
       if ((await _({ kickGrowthBook: !1 }), C())) {
         let [
             { applyFleetViewHostWindowsEnv: y },
@@ -418,13 +418,13 @@ async function Lt() {
             { cliCarriesSessionConfig: lt },
             { pinStorageV5: pt },
           ] = await Promise.all([
-            import("./01-核心基础设施/共享小工具-未细化/FleetViewScreen.w73yzmz1.js"),
+            import("./02-功能模块/多会话视图-Fleet/FleetViewScreen.w73yzmz1.js"),
             import("./02-功能模块/守护服务-Daemon/createRoot.pw1402cq.js"),
             import("./02-功能模块/守护服务-Daemon/getBaseRenderOptions.caxv2veh.js"),
             import("path"),
             import("./02-功能模块/状态管理-AppState/getOriginalCwd.mg2gq0d6.js"),
-            import("./01-核心基础设施/共享小工具-未细化/FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION.etv8bjdx.js"),
-            import("./01-核心基础设施/共享小工具-未细化/pinStorageV5.xt5bqpq9.js"),
+            import("./01-核心基础设施/核心工具-未归类/FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION.etv8bjdx.js"),
+            import("./01-核心基础设施/核心工具-未归类/pinStorageV5.xt5bqpq9.js"),
           ]),
           p = pt(n),
           H;
@@ -434,16 +434,16 @@ async function Lt() {
             { setGrowthBookCredentials: T, setGrowthBookStorageBackend: N },
             { primeFastPathCredentials: q },
           ] = await Promise.all([
-            import("./01-核心基础设施/共享小工具-未细化/credentialsStoreFor.r7prg4pg.js"),
-            import("./01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
-            import("./01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js"),
+            import("./01-核心基础设施/核心工具-未归类/credentialsStoreFor.r7prg4pg.js"),
+            import("./01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
+            import("./02-功能模块/认证-OAuth登录/primeFastPathCredentials.eb5w3wem.js"),
           ]);
           ((H = d(p)), T(H), N(p), await q(H), await E(p));
         }
-        import("./01-核心基础设施/共享小工具-未细化/USER_INTENT_SETTING_KEYS.n7htbc2y.js").then(({ resolveSetting: d }) => {
+        import("./01-核心基础设施/核心工具-未归类/USER_INTENT_SETTING_KEYS.n7htbc2y.js").then(({ resolveSetting: d }) => {
           let { value: T } = d("theme", "dark");
           if (T.startsWith("custom:"))
-            import("./01-核心基础设施/共享小工具-未细化/readThemesFromPathAsync.8qkrh8yt.js").then((N) => N.loadCustomThemes(p));
+            import("./01-核心基础设施/核心工具-未归类/readThemesFromPathAsync.8qkrh8yt.js").then((N) => N.loadCustomThemes(p));
         });
         let dt = O();
         (z(!0),
@@ -464,8 +464,8 @@ async function Lt() {
                 { credentialsStoreFor: d },
                 { composePolicyLimitsClient: T, primePolicyLimitsCache: N },
               ] = await Promise.all([
-                import("./01-核心基础设施/共享小工具-未细化/credentialsStoreFor.r7prg4pg.js"),
-                import("./01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
+                import("./01-核心基础设施/核心工具-未归类/credentialsStoreFor.r7prg4pg.js"),
+                import("./01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
               ]);
               (T({ storageV5: p, credentials: d(p) }), await N(p));
             } catch (d) {
@@ -478,15 +478,15 @@ async function Lt() {
             }
           ((Q = Promise.all([
             import("./01-核心基础设施/核心工具-进程与信号/flushAnalyticsSinks.tbwzvw9n.js"),
-            import("./01-核心基础设施/共享小工具-未细化/initializeErrorLogSink.64dfk6kr.js"),
-            import("./01-核心基础设施/共享小工具-未细化/initializeAnalyticsSink.3hb68836.js"),
-            import("./01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js"),
+            import("./01-核心基础设施/遥测-OpenTelemetry/initializeErrorLogSink.64dfk6kr.js"),
+            import("./01-核心基础设施/遥测-OpenTelemetry/initializeAnalyticsSink.3hb68836.js"),
+            import("./01-核心基础设施/遥测-OpenTelemetry/logEvent.q8d8f1jd.js"),
             import("./02-功能模块/Teammates团队/isAgentSwarmsEnabled.1azwg587.js"),
-            import("./01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
+            import("./01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
             import("./01-核心基础设施/遥测-OpenTelemetry/init.22tn6x0a.js"),
             import("./01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js"),
             import("./01-核心基础设施/设置-配置/getAppliedGlobalConfigEnv.zewdj9m8.js"),
-            import("./01-核心基础设施/共享小工具-未细化/parseGitHubRepository.3ng6714h.js"),
+            import("./01-核心基础设施/核心工具-未归类/parseGitHubRepository.3ng6714h.js"),
             import("./02-功能模块/云会话-Teleport/logForDebugging.yzt1kswr.js"),
           ])
             .then(
@@ -545,7 +545,7 @@ async function Lt() {
             await import("./02-功能模块/权限系统/ensureAgentsWorkspaceTrust.f9t4zxp4.js");
         if ((await ut(K, gt(), p), X(), W))
           await W.ensureAgentsBypassConsent(K, Z, p);
-        let ft = await import("./01-核心基础设施/共享小工具-未细化/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js"),
+        let ft = await import("./02-功能模块/多会话视图-Fleet/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js"),
           wt = {
             cwdFilter: l.cwdFilter,
             dispatchExtraArgs: buildDispatchArgs(resolveConfigPaths(l.config, b)),
@@ -618,7 +618,7 @@ async function Lt() {
     let { enableConfigs: e, seedInstallIDs: r } =
       await import("./01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js");
     await e(isHoverRestEnabled() ? n?.backend : void 0);
-    let { isWorktreeModeEnabled: o } = await import("./01-核心基础设施/共享小工具-未细化/isWorktreeModeEnabled.p77rzdj8.js");
+    let { isWorktreeModeEnabled: o } = await import("./01-核心基础设施/核心工具-未归类/isWorktreeModeEnabled.p77rzdj8.js");
     if (o()) {
       let [
           { execIntoTmuxWorktree: v },
@@ -626,7 +626,7 @@ async function Lt() {
           { initDefaultDebugLog: k },
         ] = await Promise.all([
           import("./02-功能模块/工作树-Git/IDENTITY_CHANGED_SUMMARY.fc8k0hbw.js"),
-          import("./01-核心基础设施/共享小工具-未细化/pinStorageV5.xt5bqpq9.js"),
+          import("./01-核心基础设施/核心工具-未归类/pinStorageV5.xt5bqpq9.js"),
           import("./02-功能模块/云会话-Teleport/logForDebugging.yzt1kswr.js"),
         ]),
         E = R(n),
@@ -638,15 +638,15 @@ async function Lt() {
           { setGrowthBookCredentials: C, setGrowthBookStorageBackend: _ },
           { primeFastPathCredentials: A },
         ] = await Promise.all([
-          import("./01-核心基础设施/共享小工具-未细化/credentialsStoreFor.r7prg4pg.js"),
-          import("./01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
-          import("./01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js"),
+          import("./01-核心基础设施/核心工具-未归类/credentialsStoreFor.r7prg4pg.js"),
+          import("./01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
+          import("./02-功能模块/认证-OAuth登录/primeFastPathCredentials.eb5w3wem.js"),
         ]);
         ((s = c(E)), C(s), _(E), await A(s), await r(E));
       }
       let i = await v(t, E, s);
       if (i.handled) return;
-      let { exitWithError: u } = await import("./01-核心基础设施/共享小工具-未细化/getStdoutDrainBudgetMs.41d1vrrp.js");
+      let { exitWithError: u } = await import("./01-核心基础设施/核心工具-未归类/getStdoutDrainBudgetMs.41d1vrrp.js");
       u(i.error);
     }
   }
@@ -669,13 +669,13 @@ async function Lt() {
     !ot(process.argv.slice(2)) &&
     !rt(process.argv.slice(2))
   ) {
-    let { startCapturingEarlyInput: e } = await import("./01-核心基础设施/共享小工具-未细化/startCapturingEarlyInput.cq2gda4e.js");
+    let { startCapturingEarlyInput: e } = await import("./01-核心基础设施/核心工具-未归类/startCapturingEarlyInput.cq2gda4e.js");
     e();
   }
   let [{ startMdmRawRead: st }, { startKeychainPrefetch: at }] =
     await Promise.all([
-      import("./01-核心基础设施/共享小工具-未细化/getMdmRawReadPromise.c91w9436.js"),
-      import("./01-核心基础设施/共享小工具-未细化/KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS.1fb6y1wa.js"),
+      import("./01-核心基础设施/核心工具-路径与平台/getMdmRawReadPromise.c91w9436.js"),
+      import("./02-功能模块/认证-OAuth登录/KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS.1fb6y1wa.js"),
     ]);
   (st(), at(), m("cli_before_main_import"));
   let { main: nt } = await import("./03-入口与运行时/CLI入口-Commander/main.vdzfymn2.js");

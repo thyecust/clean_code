@@ -10,12 +10,12 @@
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import { McpServer } from "../MCP客户端/mcp-server.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { ac, li, jf, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { jsonStringify, jsonParse, UNVERIFIED_ANCESTRY_SENTINEL, resolveSymlinkAncestry, fsSurface } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { escapeNonPrintableAscii } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { BufferCoercingStdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/buffer-coercing-stdio-transport.js";
+import { escapeNonPrintableAscii } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
+import { BufferCoercingStdioServerTransport } from "../MCP传输-stdio-SSE-HTTP/buffer-coercing-stdio-transport.js";
 import { s, O, se, v, c, $e, Ko, fe, X, k, Hb } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { createHash } from "crypto";

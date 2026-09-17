@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 172 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep, withDeadline, raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep, withDeadline, raceWithAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parseConfigInteger, isInProtectedNamespace } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { normalizePermissionModeAlias, ASCII_SPINNER_FRAMES, CHECK_MARK_GLYPH, CROSS_MARK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
@@ -21,13 +21,13 @@ import { Ve, R, dt, l, A, dot, Ps } from "../../00-第三方库/@anthropic-ai/sd
 import { jsonStringify, jsonParse, changeWorkingDirectory, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, getNonessentialTrafficDisabledEnvVar, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { BUILD_TOOL_COMMANDS, isVerifiablePath, findCommandsOnPath, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
-import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { resolveWrappedClaudeInvocation } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { getStringWidth, truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { ENVIRONMENTS_BETA, readBoundedFile, sanitizeSessionName, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -65,30 +65,30 @@ import {
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { setAttestationFilterPolicy, REMOTE_IO_WARNING_PREFIX } from "./chunk-5ne99rq3.js";
 import { isBridgeEnvReregisterEnabled, isCcrV2SendEventsEnabled, isCcrV2SessionCrudEnabled, isBridgeServerSessionConfigEnabled } from "./chunk-9estzwf5.js";
-import { debugTruncate, debugBody, describeAxiosError, parseRetryAfterHeader, extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { debugTruncate, debugBody, describeAxiosError, parseRetryAfterHeader, extractErrorDetail } from "./chunk-x4q0245z.js";
 import { getAttestationFilterPolicy, getTrustedDeviceToken, withUntrustedDeviceRecovery } from "./chunk-tyce0p0b.js";
-import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeSessionNamePrefix } from "./chunk-203p0p9a.js";
 import { REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE, REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE, BRIDGE_WORK_STATE_QUEUED } from "./remote-control-messages.js";
 import "../自动更新-安装/install-diagnostics.js";
 import { lockCurrentVersion } from "../自动更新-安装/native-installer.js";
-import { removeGuiHostEntrypoint, removeRestrictedEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
+import { removeGuiHostEntrypoint, removeRestrictedEnvVars } from "../守护服务-Daemon/session-env-scrubbing.js";
 import { NESTED_SESSION_MARKER_ENV_VARS, NON_INHERITED_SESSION_ENV_VARS } from "../编排-Workflow/session-env-vars.js";
 import { eI } from "../../00-第三方库/qrcode/chunk-x46ksw6d.js";
-import { getBridgePollIntervalConfig } from "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
-import { parseWorkSecret, sessionIdsMatch, buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
+import { getBridgePollIntervalConfig } from "./bridge-poll-interval-config.js";
+import { parseWorkSecret, sessionIdsMatch, buildSessionApiUrl, registerWorker } from "../守护服务-Daemon/work-secret.js";
 import { resolveBridgeDaemonOwner, createBridgeTitleWriter } from "./chunk-1g5kqtqx.js";
-import { isPlainObject, parsePlist } from "../../01-核心基础设施/共享小工具-未细化/plist-parser.js";
+import { isPlainObject, parsePlist } from "../../01-核心基础设施/核心工具-未归类/plist-parser.js";
 import { RECENT_ACTIVITY_WINDOW_MS, formatClockTime, buildSessionWebUrl, formatCodeAnywhereMessage, formatContinueCodingMessage, RERUN_REMOTE_CONTROL_CLI_MESSAGE, formatTerminalHyperlink } from "./remote-control-ui-strings.js";
-import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
-import { appendClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
-import { getCooContextProperties } from "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
+import { trySetRawMode } from "../终端环境探测-TUI-tmux/try-set-raw-mode.js";
+import { appendClaudeCodeArgs } from "../../03-入口与运行时/CLI入口-Commander/claude-code-args.js";
+import { getCooContextProperties } from "../../01-核心基础设施/核心工具-未归类/coo-context-properties.js";
+import "../../01-核心基础设施/核心工具-其他/chunk-j86cs2ar.js";
 import { REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE } from "./remote-control-policy-messages.js";
 import { createTokenRefreshScheduler } from "./chunk-4zd60pbm.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform, getLinuxDistroInfo } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { getClientUserAgent } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 import { homedir, hostname } from "os";
 import { basename, join as zn, resolve } from "path";
@@ -3432,7 +3432,7 @@ async function as(e) {
 async function ds(e, t, o) {
   try {
     let { getFeatureValue_CACHED_MAY_BE_STALE: d } =
-      await import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js");
+      await import("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js");
     if (!d("tengu_bridge_unarchive_on_resume", !0)) return !1;
     let p = await as(o);
     if (!p) return !1;
@@ -3529,7 +3529,7 @@ async function bridgeMain(e, t, o) {
       console.error(
         `Error: ${p} \u2014 Remote Control sessions are not started unwrapped; fix the launcher, then retry`,
       ));
-    let { exitAfterAnalyticsFlush: B } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js");
+    let { exitAfterAnalyticsFlush: B } = await import("../../01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js");
     return B(1);
   }
   (lockCurrentVersion(), setAttestationFilterPolicy(getAttestationFilterPolicy));
@@ -3586,7 +3586,7 @@ async function bridgeMain(e, t, o) {
       getBridgeAccessToken: fe,
       getBridgeAccessTokenAsync: Ae,
       getBridgeBaseUrl: Oe,
-    } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js"),
+    } = await import("./chunk-203p0p9a.js"),
     xe = isHoverRestEnabled() && o !== void 0;
   if (!(xe ? await Ae(o) : fe())) (console.error(REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE), process.exit(1));
   let {
@@ -3717,7 +3717,7 @@ Spawn mode for this project:
       K = await B(D, void 0, t);
     if (K) {
       let { isProcessRunning: se } =
-        await import("../../01-核心基础设施/共享小工具-未细化/process-record.js"),
+        await import("../守护服务-Daemon/process-record.js"),
       { isSameProcessAsync: Me } =
         await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js");
       if (
@@ -3791,7 +3791,7 @@ Spawn mode for this project:
       se = await B(K, { noClear: !0 }, t);
     if (se?.pid !== void 0 && se.pid !== process.pid) {
       let { isProcessRunning: Bt } =
-        await import("../../01-核心基础设施/共享小工具-未细化/process-record.js"),
+        await import("../守护服务-Daemon/process-record.js"),
       { isSameProcessAsync: Lr } =
         await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js");
       if (Bt(se.pid) && (await Lr(se.pid, se.procStart))) {
@@ -4024,7 +4024,7 @@ Spawn mode for this project:
 The session may still be resumable \u2014 try running the same command again.`,
         );
         let { exitAfterAnalyticsFlush: it } =
-          await import("../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js");
+          await import("../../01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js");
         await it(1);
       }
     }
@@ -4069,7 +4069,7 @@ The session may still be resumable \u2014 try running the same command again.`,
       onChildWarning: (B, oe) => he.logWarning(`${oe} (${B})`),
       ownerIdentity: Ue,
     }),
-    { parseGitHubRepository: qe } = await import("../../01-核心基础设施/共享小工具-未细化/parseGitHubRepository.3ng6714h.js"),
+    { parseGitHubRepository: qe } = await import("../../01-核心基础设施/核心工具-未归类/parseGitHubRepository.3ng6714h.js"),
     pt = ht ? qe(ht) : null,
     ke = pt ? pt.split("/").pop() : basename(D);
   he.setRepoInfo(ke, Et);
@@ -4291,9 +4291,9 @@ async function runBridgeHeadless(e, t) {
   let { getSettingsWithErrors: E } = await import("../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js");
   if (E().settings.disableRemoteControl === !0) throw new BridgeHeadlessPermanentError(REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE);
   let { composePolicyLimitsClient: W, primePolicyLimitsCache: N } =
-    await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
+    await import("../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
   (W({ storageV5: e.storageV5 }), await N(e.storageV5));
-  let { loadPolicyLimits: ue } = await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
+  let { loadPolicyLimits: ue } = await import("../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
     { policyDeniedReason: ne, policyDenyKind: Pe } =
       await import("../策略限制-PolicyLimits/chunk-8sw91yn5.js");
   await ue();
@@ -4309,7 +4309,7 @@ async function runBridgeHeadless(e, t) {
         : `Workspace not trusted: ${o}. Run \`claude\` in that directory first to accept the trust dialog.`,
     );
   if (!e.getAccessToken()) throw Error(REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE);
-  let { getBridgeBaseUrl: ce } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js"),
+  let { getBridgeBaseUrl: ce } = await import("./chunk-203p0p9a.js"),
     I = ce();
   if (
     I.startsWith("http://") &&
@@ -4349,7 +4349,7 @@ async function runBridgeHeadless(e, t) {
       le = await pe(o, void 0, e.storageV5);
     if (le) {
       let { isProcessRunning: Qe } =
-        await import("../../01-核心基础设施/共享小工具-未细化/process-record.js"),
+        await import("../守护服务-Daemon/process-record.js"),
       { isSameProcessAsync: je } =
         await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js");
       if (

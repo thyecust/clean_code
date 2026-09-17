@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/send-message-constants.js";
 var LIST_AGENTS_TOOL_NAME = "ListAgents",
   LIST_AGENTS_TOOL_ALIAS = "ListPeers";
 function e() {

@@ -10,7 +10,7 @@
 import { vg, yz, arrayMap as n_e, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Qt, De, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
+import { createStore } from "../../01-核心基础设施/文件存储-原子写入/state-store.js";
 var { floor: k, random: x } = Math;
 function P(e, i) {
   return e + k(x() * (i - e + 1));

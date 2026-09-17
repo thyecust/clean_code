@@ -11,17 +11,17 @@
 // [preload stripped] 原本在此预载 168 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Si, he, su, ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, Vrt, jf, wh, $W } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { withTimeout, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { Ra, R, l, A, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, xg } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { markStdoutDrainExternallyClocked } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, truncateMiddle, beforeFirst, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { openFileReadOnlyHardened } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { escapeUntrustedText, escapeNonPrintableAscii, replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { escapeUntrustedText, escapeNonPrintableAscii, replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import {
   computeModelCostUsd,
   getSmallFastModel,
@@ -100,7 +100,7 @@ import {
 } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { isBunStandaloneExecutable, isDockerenvPresent, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { jo, Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { GIT_ENV_VARS_TO_CLEAR, GIT_CONFIG_ENTRY_ENV_RE, NONINTERACTIVE_GIT_ENV, execFileNoThrow, execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import {
@@ -147,7 +147,7 @@ import { isModelAlias, getAPIProvider, isFirstPartyProvider } from "../../01-核
 import { getAuthPrecedenceSource, describeProfileAuthSource, getAnthropicConfigDir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { hasCredentialDescriptor, getApiKey } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, ARTIFACT_STUB_URL_PREFIX, parseArtifactUrl, parseStubArtifactUrl } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { timingSafeStringEqual } from "../守护服务-Daemon/chunk-035vf5et.js";
 import { DANGEROUS_FILES, DANGEROUS_DIRECTORIES, normalizeCaseForComparison } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { stripBom, parseYaml, FRONTMATTER_PATTERN } from "../MCP客户端/chunk-3kmsshb6.js";
 import { formatPluginError, UNTRUSTED_PATH_REASON, classifyPathTrust } from "./plugin-system-core.js";
@@ -158,10 +158,10 @@ import { ENTER_WORKTREE_TOOL_NAME, EXIT_WORKTREE_TOOL_NAME } from "../../01-核�
 import { PLUGIN_CONTENT_SUBDIRS, PLUGIN_CONTENT_MARKERS } from "./chunk-ajtn749s.js";
 import { getWIFTokenCache } from "../认证-OAuth登录/wif-credentials.js";
 import { NON_INHERITED_SESSION_ENV_VARS } from "../编排-Workflow/session-env-vars.js";
-import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
+import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS } from "../守护服务-Daemon/session-env-scrubbing.js";
 import { awaitRemoteSettingsLoaded } from "../../01-核心基础设施/设置-配置/remote-managed-settings.js";
-import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/ca-trust-env-vars.js";
-import "../../01-核心基础设施/共享小工具-未细化/protobuf-decoding.js";
+import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/核心工具-未归类/ca-trust-env-vars.js";
+import "../../01-核心基础设施/核心工具-未归类/protobuf-decoding.js";
 import { PLACEHOLDER_CREDENTIAL_KEYS } from "../../01-核心基础设施/HTTP-网络层/HTTP-网络层.pfw3b51q.js";
 import "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/mcp-protocol.js";
@@ -180,25 +180,25 @@ import {
   escapeHarnessErrorSignature,
 } from "./eval-mock-stand-in.js";
 import { computeWeightedScore, computeScoreAndPassRate, formatEvalReportTable, buildEvalReport, getEvalReportSchema, buildEvalReportJson } from "../成本-Token统计/eval-report.js";
-import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
-import { writeStdoutAndDrain, exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/sandbox-unavailable-message.js";
-import { getFdRealPath } from "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
-import { getFileEntryKind } from "../../01-核心基础设施/共享小工具-未细化/file-entry-kind.js";
+import { stopCapturingEarlyInput } from "../../01-核心基础设施/核心工具-未归类/early-input-capture.js";
+import { writeStdoutAndDrain, exitAfterAnalyticsFlush } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js";
+import { SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE } from "../../01-核心基础设施/核心工具-未归类/sandbox-unavailable-message.js";
+import { getFdRealPath } from "../../01-核心基础设施/核心工具-路径与平台/fd-real-path.js";
+import { getFileEntryKind } from "../../01-核心基础设施/核心工具-未归类/file-entry-kind.js";
 import { INLINE_PLUGIN_SOURCE, SKILLS_DIR_PLUGIN_SOURCE } from "./chunk-33bdfgmx.js";
 import { detectImageMediaType, detectBinaryFormat, describeBufferContent, readImageDimensions, buildImageBlock } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { isRemoteSettingsEligible } from "../../01-核心基础设施/共享小工具-未细化/remote-settings-eligibility.js";
-import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
-import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
-import { getFederationCacheDir } from "../../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js";
-import "../../01-核心基础设施/共享小工具-未细化/buffer-coercing-stdio-transport.js";
-import "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
-import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
+import { isRemoteSettingsEligible } from "../../01-核心基础设施/设置-配置/remote-settings-eligibility.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
+import { normalizeMcpName } from "../MCP客户端/mcp-name-normalization.js";
+import { getFederationCacheDir } from "../../01-核心基础设施/核心工具-未归类/federation-cache-dir.js";
+import "../MCP传输-stdio-SSE-HTTP/buffer-coercing-stdio-transport.js";
+import "../MCP传输-stdio-SSE-HTTP/stdio-server-transport.js";
+import "../MCP传输-stdio-SSE-HTTP/stdio-message-framing.js";
 import { s, T, O, se, v, c, $e, fe, X, Hb } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { spawnSync } from "child_process";
 import {
   readdir as Ai,
@@ -11498,7 +11498,7 @@ async function Xl(e) {
             (N = "publish_interrupted"));
       } else {
         let { waitForPolicyLimitsToLoad: J } =
-          await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
+          await import("../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
         await withTimeout(J(), 3000, "policy limits load timed out").catch(() => {});
         let { isArtifactToolEnabled: K } = await import("../制品发布-Artifact/chunk-01ymf0ar.js");
         if (((U = K()), !U && E))

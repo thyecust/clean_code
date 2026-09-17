@@ -10,20 +10,20 @@
 
 // [preload stripped] 原本在此预载 191 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K, Ec, q1, MA, kL, xL, hae, S_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { it2SetupDialog } from "../../01-核心基础设施/共享小工具-未细化/it2-setup-dialog.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { it2SetupDialog } from "../../01-核心基础设施/核心工具-未归类/it2-setup-dialog.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getModelForAnalytics, classifyModelFamily, isModelAllowed, getMainLoopModel, stepDownRestrictedFamilyAliasPick, getCanonicalName, parseUserSpecifiedModel, buildAgentId, isReservedRecipientName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getHostManagedEnvVarsToStrip } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { jo } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { getExternalPermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
 import { getCarriableEffortLevel } from "../权限系统/chunk-t3b7pg2x.js";
-import { isInsideTmux, isTmuxAvailable, isInITerm2 } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
+import { isInsideTmux, isTmuxAvailable, isInITerm2 } from "../终端环境探测-TUI-tmux/terminal-backend-detection.js";
 import { getTeammateModeFromSnapshot } from "./chunk-88ybhavr.js";
 import { detectAndGetBackend, getBackendByType, markInProcessFallback, isInProcessEnabled, resetBackendDetection } from "./backend-registry.js";
 import { respawnPaneWithCommand } from "./chunk-x0by9eq8.js";
@@ -32,7 +32,7 @@ import { writeToMailbox, clearMailbox, PROTOCOL_FRAME_PROMPT_ERROR, isStructured
 import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { SwarmPaneError, containsControlCharacter, assertNoControlCharacters, supportsPaneKill, sanitizeName, sanitizeAgentName, updateTeamFile, removeTeamMember } from "./team-file-store.js";
 import { isCarriableCliToken, isRestrictedModeEnabled } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
+import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
 import "../权限系统/chunk-jsd70b22.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "../插件系统/chunk-rbjz1q03.js";
@@ -40,10 +40,10 @@ import "../插件系统/channel-gate.js";
 import "./chunk-5nnwwahg.js";
 import { startInProcessTeammate } from "./in-process-teammate-runner.js";
 import { spawnInProcessTeammate } from "./chunk-sjd69zy5.js";
-import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/ca-trust-env-vars.js";
+import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/核心工具-未归类/ca-trust-env-vars.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import "../权限系统/swarm-permission-poller.js";
-import "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
+import "../浏览器集成-ClaudeinChrome/browser-tool-verb-phrases.js";
 import "./teammate-task-messages.js";
 import { generateTaskId, createPendingTask } from "./chunk-mrfx53ye.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME, SWARM_TMUX_SESSION_NAME, TMUX_BINARY, PANE_PLACEHOLDER_COMMAND, TEAMMATE_COMMAND_ENV_VAR } from "./chunk-enjekn9t.js";

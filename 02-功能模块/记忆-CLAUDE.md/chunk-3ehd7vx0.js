@@ -10,7 +10,7 @@
 import { isWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { SEED_HOME_PACK_PATH, toCaseFoldKey, hasWindowsReservedPathComponent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 var _ =
   /^\d{4}-\d{2}-\d{2}[Tt ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[zZ]|[+-]\d{2}:?\d{2})$/;
 function parseIsoTimestamp(n) {

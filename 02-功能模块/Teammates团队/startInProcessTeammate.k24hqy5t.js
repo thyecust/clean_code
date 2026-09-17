@@ -16,7 +16,7 @@ import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.
 import "../插件系统/channel-gate.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../权限系统/swarm-permission-poller.js";
-import "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
+import "../浏览器集成-ClaudeinChrome/browser-tool-verb-phrases.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "./teammate-task-messages.js";
 export { Cin as startInProcessTeammate };

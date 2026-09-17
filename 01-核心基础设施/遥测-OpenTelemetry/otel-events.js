@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B, K, hrt, TDn, ke, ns, fv, fZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { Jr, hv, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
@@ -18,7 +18,7 @@ import { otelApiModule, otelCoreModule, runtimeEnvironment, getWorkflowAnalytics
 import { getEnvEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 import { decodeTokenClaims, encodeTaggedId } from "../../02-功能模块/远程控制-Bridge/chunk-4zd60pbm.js";
-import { toESM } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var w = createLazyValue(() =>
   nt({
     sub: le()

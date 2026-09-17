@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep, withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
+import { sleep, withTimeout } from "../核心工具-并发与缓存/async-timeout-utils.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeFileAtomic } from "../安全文件系统-FS加固/atomic-file-write.js";
@@ -20,7 +20,7 @@ import { pluralize, truncateToCodeUnits, beforeFirst } from "../核心工具-字
 import { resolveExecutablePathAsync, findCommandsOnPath, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { NONINTERACTIVE_GIT_ENV, applyGitConfigEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
-import { GITHUB_HOST, GITHUB_SSH_URL_PREFIXES } from "../共享小工具-未细化/git-host-utils.js";
+import { GITHUB_HOST, GITHUB_SSH_URL_PREFIXES } from "../核心工具-路径与平台/git-host-utils.js";
 import { setAgentProxyNote, isShuttingDown, MAX_PROXY_FAILURE_HISTORY, setAgentProxyStatusUrl, recordAgentProxyFailure } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isRetryableFsError } from "../安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { c2e, u2e, qlr, zlr, PEM_CERT_BLOCK_RE, getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
@@ -28,9 +28,9 @@ import { getSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/
 import { PLACEHOLDER_CREDENTIAL_VALUE } from "../核心工具-进程与信号/subprocess-env-scrub.js";
 import { AGENT_PROXY_PATH, setAgentProxyEndpoint } from "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import { computeRetryDelayMs } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
-import { BASE_CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_BUNDLE_ENV_VARS, CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../共享小工具-未细化/ca-trust-env-vars.js";
-import { decodeProtoFields } from "../共享小工具-未细化/protobuf-decoding.js";
-import { getXdgDataHome } from "../共享小工具-未细化/user-directories.js";
+import { BASE_CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_BUNDLE_ENV_VARS, CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../核心工具-未归类/ca-trust-env-vars.js";
+import { decodeProtoFields } from "../核心工具-未归类/protobuf-decoding.js";
+import { getXdgDataHome } from "../核心工具-路径与平台/user-directories.js";
 import { execFile } from "child_process";
 import { constants, statSync } from "fs";
 import {

@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Xn, Lx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerPreExitFlush, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, stripAnsiAndControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -24,7 +24,7 @@ import { isDesktopHostEntrypoint } from "../运行宿主探测/运行宿主探�
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ASSET_ID_RE, ARTIFACT_SLUG_RE, ARTIFACT_DELETED_NOTE_TAG, uuidSlugFromUrl, DEFAULT_LIST_LIMIT, LIST_LIMIT_MAX } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { parseRetryAfterHeader } from "../远程控制-Bridge/chunk-x4q0245z.js";
 import { revokeCodeliveredFollowups, getArtifactState, DECISION_ID_PATTERN, decodeBase64Text, deriveIslandWorkshopState } from "./chunk-rr78st95.js";
 import {
   getStoreBearerOauthAccountInfoAsync,
@@ -90,16 +90,16 @@ import {
   DB_CLAUSES,
   DB_BATCH_OP,
 } from "./chunk-pdd7kz7p.js";
-import { invokeMcpToolRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { invokeMcpToolRaw } from "../MCP客户端/chunk-7wm8t84g.js";
 import { leaveArtifactRoom } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { setArtifactDurableRegistrySink, resetArtifactDurableRegistryPublished, publishArtifactDurableRegistry, parseArtifactDurableWatches, ensureArtifactCommentMonitorState, applyArtifactCommentMonitorStops } from "./artifact-comment-monitor-intent.js";
 import { markArmInFlight, settleArmAttempt, clearArmFailuresByReason, forgetArmFailuresForSlug, endFrameLiveWatchOfDeletedArtifact } from "./chunk-kshc4v5t.js";
 import { isArtifactAssetsEnabled, LIST_CURSOR_PATTERN, MAX_COPY_ASSET_IDS } from "./artifact-asset-store.js";
-import { ARTIFACT_CAPABILITIES_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
-import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
+import { ARTIFACT_CAPABILITIES_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
+import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/核心工具-未归类/environment-kind.js";
 import { s, T, O, Uf, se, v, Qe, $e, uW, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function te(e) {
   let r = [];
   for (let t of e) {

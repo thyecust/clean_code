@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS, CLAUDE_AI_INFERENCE_SCOPE } from "./chunk-9g2q4bjq.js";
-import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   getErrorTelemetryFields,
@@ -42,7 +42,7 @@ import {
   checkHasTrustDialogAccepted,
   saveGlobalConfig,
 } from "./认证-OAuth登录.419zdfz3.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -50,7 +50,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
+import { externalHttp } from "../../01-核心基础设施/HTTP-网络层/external-http.js";
 import { formatAccountOnHoldSignInMessage, sanitizeAccountOnHoldUrl, OAuthCallbackError, isAccountOnHoldCallbackError } from "./chunk-wk0e3dz4.js";
 import { getSecureStorage } from "./secure-storage.js";
 import { getProactivityBaselineState } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -60,21 +60,21 @@ import { getNativeCopyModifierKey } from "../终端-剪贴板/终端-剪贴板.e
 import { kG } from "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
 import { CONSOLE_OAUTH_CLIENT_ID, CONSOLE_PROFILE_OAUTH_SCOPES, doesProfileLoginRefusalPermitFallback, getProfileLoginRefusalCauseSummary, resolveConsoleProfileLoginTarget, saveConsoleProfileLogin, isRefreshTokenStoredInProfile } from "./console-profile-auth.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
+import { useHasVirtualScrollViewport } from "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-state.js";
 import { qA } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { Box, Text, Link, useApp, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { AuthenticationStatusBox } from "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
+import { useClock } from "../../01-核心基础设施/终端与时钟/use-clock.js";
+import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../终端-剪贴板/clipboard-copy.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
+import { useKeybinding } from "../键位绑定-Keybindings/keybinding-hooks.js";
+import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
+import { AuthenticationStatusBox } from "../../01-核心基础设施/核心工具-未归类/authentication-status-box.js";
 import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
 import { Sv } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { BedrockSetupWizard } from "../模型接入-Bedrock-Vertex/bedrock-setup-wizard.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/UI组件-TUI/confirm-prompt.js";
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import { VertexSetupWizard } from "../模型接入-Bedrock-Vertex/vertex-setup-wizard.js";
 import { finalizeOAuthLogin, applyOAuthLoginIdentity, refreshAuthStateAfterLogin } from "./oauth-login-completion.js";
@@ -83,8 +83,8 @@ import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { OAuthLoginFlow } from "./oauth-login-flow.js";
 import { isHeadlessEnvironment, tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { getClientUserAgent } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 class ye extends Error {
   fallbackCures;

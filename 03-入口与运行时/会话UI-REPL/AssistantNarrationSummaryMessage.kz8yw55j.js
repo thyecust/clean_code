@@ -11,19 +11,19 @@
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { CLAUDE_BULLET_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { getCanonicalName, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { useFeatureFlagValue } from "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import { useFeatureFlagValue } from "../../01-核心基础设施/核心工具-未归类/feature-flag-version.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text, NoSelect } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { resolveModelCapability } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../../01-核心基础设施/共享小工具-未细化/protobuf-decoding.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
+import "../../01-核心基础设施/核心工具-未归类/protobuf-decoding.js";
+import "../../01-核心基础设施/核心工具-未归类/use-hyperlink-support.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
+import "../../01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import { Markdown } from "../../02-功能模块/语法高亮-Markdown渲染/markdown-renderer.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { SUMMARIZED_HINT_LABEL } from "../../01-核心基础设施/共享小工具-未细化/narration-signature.js";
+import { SUMMARIZED_HINT_LABEL } from "./narration-signature.js";
 function AssistantNarrationSummaryMessage(N) {
   let n = _(13),
     { param: S, model: i, addMargin: E, shouldShowDot: c } = N,

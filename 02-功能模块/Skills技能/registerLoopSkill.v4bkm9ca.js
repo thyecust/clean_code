@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 100 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { isBgSession, isClaudeAISubscriber } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -21,10 +21,10 @@ import { PUSH_NOTIFICATION_TOOL_NAME, isAgentPushNotificationEnabled } from "../
 import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled } from "../定时任务-Cron/chunk-mk3zm4ew.js";
 import { registerBundledSkill } from "./bundled-skills.js";
 import { SKILL_TOOL_NAME } from "../权限系统/chunk-fjrcf22x.js";
-import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
-import { LOOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/核心工具-未归类/routines-policy.js";
+import { LOOP_SKILL_NAME } from "./bundled-skill-names.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME, AUTONOMOUS_LOOP_SENTINEL, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
 var r = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
   b = "10m";
 function y() {

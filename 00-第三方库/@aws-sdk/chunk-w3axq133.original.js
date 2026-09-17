@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { UQ, nu } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Oke } from "./chunk-jtb5q5xr.js";
-import { smithyContextModule } from "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
-import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { smithyContextModule } from "../../01-核心基础设施/核心工具-未归类/smithy-context-module.js";
+import { commonJS } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var G0n = commonJS(function (B) {
   var N = nu(),
     S = (e, r) => (t, i) => async (n) => {

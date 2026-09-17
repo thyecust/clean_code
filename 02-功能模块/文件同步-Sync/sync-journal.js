@@ -10,7 +10,7 @@
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, isWellFormed, toWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import {
   MAX_DIRECT_BUNDLE_BYTES,
   MAX_SEED_ROWS,
@@ -46,7 +46,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, O, se, v, c, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 var h = 1,
   JOURNAL_VERSION_WITH_NOTE = 2,
   MAX_JOURNAL_ENTRIES = MAX_SEED_ROWS - SEED_RESERVED_ROWS,

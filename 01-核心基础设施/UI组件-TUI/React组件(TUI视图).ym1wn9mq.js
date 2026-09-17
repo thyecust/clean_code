@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { Ie, ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { j, ze, ke, Ox } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../核心工具-路径与平台/chunk-h62vxw7j.js";
 import { dt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum, fromNumber } from "../共享小工具-未细化/analytics-fields.js";
+import { fromEnum, fromNumber } from "../遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { capitalize, pluralize, truncateToCodeUnits, beforeFirst, countOccurrences, normalizeWhitespace } from "../核心工具-字符串与文本/string-utils.js";
 import {
@@ -29,11 +29,11 @@ import {
   isEssentialTrafficOnly,
   logError,
 } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { le, nt, uv } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import {
   shouldAttachRateLimitHeaders,
   getSessionStateStore,
@@ -65,14 +65,14 @@ import {
   getAutoMemPath,
   isAutoMemPath,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getCwd } from "../共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../核心工具-未归类/cwd-context.js";
 import { isRemoteActive } from "../安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth, truncateToWidth, truncateToWidthNoEllipsis, truncate, formatSecondsShort, formatDuration, formatNumber, formatTokens, formatResetTime } from "../核心工具-字符串与文本/ansi-text-utils.js";
 import { hasValidPathSegments, STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { oL, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { parseMcpToolName } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { withPathLock, applyLineEndings, writeTextContent, formatPathForDisplay, CWD_NOTE_PREFIX, stripLineNumberPrefix } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
-import { stripAnsi } from "../共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../核心工具-字符串与文本/text-sanitization.js";
 import {
   CLAUDE_BULLET_GLYPH,
   BULLET_OPERATOR_GLYPH,
@@ -91,23 +91,23 @@ import { unescapeHtmlText, unescapeHtmlAttribute } from "../核心工具-字符�
 import { extractFirstUrl, isAccountOnHoldMessage } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { isKeychainLocked } from "../../02-功能模块/认证-OAuth登录/secure-storage.js";
 import { isGitLabMergeRequestUrl } from "../../02-功能模块/工作树-Git/git-repository-detection.js";
-import { BRIEF_TOOL_NAME } from "../共享小工具-未细化/chunk-q599wyee.js";
+import { BRIEF_TOOL_NAME } from "../核心工具-未归类/chunk-q599wyee.js";
 import { INTERRUPTED_BY_USER_MARKER, INTERRUPTED_FOR_TOOL_USE_MARKER, TOOL_CALL_NOT_COMPLETED_MARKER, API_REQUEST_ABORTED_MESSAGE, isUserRefusalOrSkipMessage } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { SEND_USER_FILE_TOOL_NAME } from "../共享小工具-未细化/chunk-a5errgr8.js";
+import { SEND_USER_FILE_TOOL_NAME } from "../../02-功能模块/远程工具执行/chunk-a5errgr8.js";
 import { sanitizeSingleLineDisplayText } from "../../02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
 import { qA } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { useTheme } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
-import { useStorageV5Context } from "../共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../核心工具-未归类/storage-v5-context.js";
 import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 import { isFullscreen, Box, Text, Link, Ansi, useIsScreenReaderEnabled, NoSelect, useAnimationFrame, useInterval } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { useTerminalFocus, setTimeoutWithCancel, noopSubscribe, ClockContext } from "../共享小工具-未细化/clock-and-terminal-focus.js";
-import { claimRegistriesByHost } from "../共享小工具-未细化/host-claim-registry.js";
+import { useTerminalFocus, setTimeoutWithCancel, noopSubscribe, ClockContext } from "../终端与时钟/clock-and-terminal-focus.js";
+import { claimRegistriesByHost } from "../核心工具-未归类/host-claim-registry.js";
 import { Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
-import { useClock } from "../共享小工具-未细化/use-clock.js";
+import { useClock } from "../终端与时钟/use-clock.js";
 import { ExpandedTranscriptProvider, TranscriptExpandHint, OverflowHint, ToolErrorMessage } from "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
-import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../核心工具-未归类/chunk-ff1hq6qq.js";
 import { Oye } from "./chunk-jjqazdgg.js";
 import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
@@ -218,7 +218,7 @@ import { SKILL_TOOL_NAME } from "../../02-功能模块/权限系统/chunk-fjrcf2
 import { filterOutHookProgressMessages, getRegisteredTools, findToolByName, parseToolInput } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import { EXIT_PLAN_MODE_TOOL_NAME, getPlan } from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { WEB_FETCH_TOOL_NAME } from "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
-import { isViolinWoodEnabledCached } from "../共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabledCached } from "../../02-功能模块/目录同步-dir-sync/chunk-97crm80y.js";
 import { GET_TASK_TOOL_NAME, isGetTaskToolEnabled, WEB_SEARCH_TOOL_NAME, REPL_REGISTERED_TOOL_UI_TABLE_KEY, TASK_OUTPUT_TOOL_NAME, ENTER_WORKTREE_TOOL_NAME, STRUCTURED_OUTPUT_TOOL_NAME, getStructuredOutputText, PROPOSE_SKILLS_TOOL_NAME, EXIT_WORKTREE_TOOL_NAME } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { NO_CONTENT_PLACEHOLDER, NO_RESPONSE_REQUESTED_TEXT, isPeerOrObserverOrigin, getOriginDisplayName } from "../../02-功能模块/远程控制-Bridge/chunk-5ne99rq3.js";
 import {
@@ -250,23 +250,23 @@ import {
   parseFrameForDisplay,
   withShutdownReplyInstructions,
 } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
-import { getAgentTypeColorThemeKey } from "../共享小工具-未细化/agent-color-palette.js";
+import { getAgentTypeColorThemeKey } from "../../02-功能模块/多会话视图-Fleet/agent-color-palette.js";
 import { Bl } from "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
 import { PUSH_NOTIFICATION_TOOL_NAME } from "../../02-功能模块/远程控制-Bridge/push-notification-tool.js";
 import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, CRON_LIST_TOOL_NAME } from "../../02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js";
 import { REMOTE_TRIGGER_TOOL_NAME } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import { CFC_TOOL_PREFIX } from "../../02-功能模块/浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
-import { isFromCurrentAgent } from "../共享小工具-未细化/chunk-6dk85bs6.js";
-import { useTerminalSize } from "../共享小工具-未细化/use-terminal-size.js";
-import { ToolResultRow, useIsInsideToolResultRow } from "../共享小工具-未细化/tool-result-row.js";
-import { AppStateContext, useAppStateSelector, useAppState, useAppStateSelectorUnchecked } from "../共享小工具-未细化/app-state-context.js";
-import { useHyperlinkSupport } from "../共享小工具-未细化/use-hyperlink-support.js";
+import { isFromCurrentAgent } from "../核心工具-未归类/chunk-6dk85bs6.js";
+import { useTerminalSize } from "./use-terminal-size.js";
+import { ToolResultRow, useIsInsideToolResultRow } from "./tool-result-row.js";
+import { AppStateContext, useAppStateSelector, useAppState, useAppStateSelectorUnchecked } from "../核心工具-未归类/app-state-context.js";
+import { useHyperlinkSupport } from "../核心工具-未归类/use-hyperlink-support.js";
 import { Markdown } from "../../02-功能模块/语法高亮-Markdown渲染/markdown-renderer.js";
-import { useSession } from "../共享小工具-未细化/session-context.js";
-import { useMainLoopModel } from "../共享小工具-未细化/main-loop-model.js";
-import { useRateLimitCheckpointResult } from "../共享小工具-未细化/chunk-pkw2prc7.js";
-import { StatusIndicator } from "../共享小工具-未细化/chunk-dsg6bce8.js";
+import { useSession } from "../核心工具-未归类/session-context.js";
+import { useMainLoopModel } from "../核心工具-未归类/main-loop-model.js";
+import { useRateLimitCheckpointResult } from "../../02-功能模块/用量额度-限额/chunk-pkw2prc7.js";
+import { StatusIndicator } from "./chunk-dsg6bce8.js";
 import {
   isQuotaAutoResumeEnabled,
   canOfferQuotaAutoResume,
@@ -279,44 +279,44 @@ import {
   startAutoResumeSubscriptions,
 } from "../../02-功能模块/状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
-import { useKeybindingDisplayText } from "../共享小工具-未细化/use-keybinding-display-text.js";
-import { shouldExpandContent } from "../共享小工具-未细化/expanded-content-context.js";
+import { useKeybindingDisplayText } from "../../02-功能模块/键位绑定-Keybindings/use-keybinding-display-text.js";
+import { shouldExpandContent } from "../核心工具-未归类/expanded-content-context.js";
 import { useRenderHook, useRenderInput, ansiPrimitives, StatusRow, jA } from "../ANSI-样式-布局原语/chunk-v7hyg861.js";
-import { StaticFrameContext } from "../共享小工具-未细化/one-shot-render.js";
-import { useElapsedDuration } from "../共享小工具-未细化/use-elapsed-duration.js";
+import { StaticFrameContext } from "./one-shot-render.js";
+import { useElapsedDuration } from "../终端与时钟/use-elapsed-duration.js";
 import { ToolResultPreviewWidthContext, TruncatedFilePath } from "../../03-入口与运行时/会话UI-REPL/chunk-vpp75aza.js";
-import { MCP_TOOL_UI_TABLE_KEY, MCP_TOOL_OUTPUT_SCHEMA, MCP_TOOL_BASE } from "../共享小工具-未细化/mcp-tool-base.js";
-import { VerboseToolResultProvider, ToolResultContent } from "../共享小工具-未细化/tool-result-content.js";
-import { getHandbackPayloadSchema, getHandbackDisplayText } from "../共享小工具-未细化/resumed-agent-handback.js";
-import { renderToolUseMessageForTool } from "../共享小工具-未细化/tool-use-message-renderers.js";
-import { resolveAgentColor, CollapsedMessagesHint } from "../共享小工具-未细化/chunk-pazpsfq6.js";
+import { MCP_TOOL_UI_TABLE_KEY, MCP_TOOL_OUTPUT_SCHEMA, MCP_TOOL_BASE } from "../../02-功能模块/MCP客户端/mcp-tool-base.js";
+import { VerboseToolResultProvider, ToolResultContent } from "./tool-result-content.js";
+import { getHandbackPayloadSchema, getHandbackDisplayText } from "../../02-功能模块/会话-历史-恢复/resumed-agent-handback.js";
+import { renderToolUseMessageForTool } from "./tool-use-message-renderers.js";
+import { resolveAgentColor, CollapsedMessagesHint } from "../../02-功能模块/多会话视图-Fleet/chunk-pazpsfq6.js";
 import { conjugateVerbPhrase } from "../核心工具-字符串与文本/verb-conjugation.js";
 import { DiffStatLabel, PullRequestBadge } from "../../02-功能模块/GitHub集成/chunk-bfz9rjjm.js";
 import { pickRandom, useSpinnerThinkingStartedAt } from "../../02-功能模块/Hooks钩子/spinner-store.js";
 import { SYNCED_FROM_THIS_COMPUTER_LABEL, SYNC_ROW_LABELS, NOT_SYNCED_MARK, getWhileClosedMessage } from "../../02-功能模块/远程控制-Bridge/chunk-sc8n0cp3.js";
-import { OffscreenFrozenContent, useOffscreenFrozenValue } from "../共享小工具-未细化/chunk-493670wv.js";
-import { useCommandQueue } from "../共享小工具-未细化/command-queue-context.js";
-import { CLOUD_SESSION_ENTRY_LABELS, CLOUD_SESSION_URL_SEPARATOR } from "../共享小工具-未细化/cloud-session-status-message.js";
+import { OffscreenFrozenContent, useOffscreenFrozenValue } from "./chunk-493670wv.js";
+import { useCommandQueue } from "../核心工具-未归类/command-queue-context.js";
+import { CLOUD_SESSION_ENTRY_LABELS, CLOUD_SESSION_URL_SEPARATOR } from "../../02-功能模块/云会话-Teleport/cloud-session-status-message.js";
 import { BashToolOutputView } from "../../02-功能模块/工具Bash-Shell/bash-output-view.js";
 import { formatTimestamp, truncateMiddleText, UserPromptText, TruncatedText } from "../../02-功能模块/工具UI渲染/chunk-g4k5jjwt.js";
-import { renderWebFetchProgressMessage, ReceivedBytesStatus, renderWebFetchResultMessage } from "../共享小工具-未细化/webfetch-tool-messages.js";
-import { DashedBorderBox } from "../共享小工具-未细化/dashed-border-box.js";
-import { BackgroundText } from "../共享小工具-未细化/background-text.js";
-import { EmptyStateMessage } from "../共享小工具-未细化/empty-state-message.js";
+import { renderWebFetchProgressMessage, ReceivedBytesStatus, renderWebFetchResultMessage } from "../核心工具-未归类/webfetch-tool-messages.js";
+import { DashedBorderBox } from "./dashed-border-box.js";
+import { BackgroundText } from "./background-text.js";
+import { EmptyStateMessage } from "./empty-state-message.js";
 import { showNotification } from "../../02-功能模块/通知-Notifications/通知-Notifications.g4xng0pg.js";
-import { TitledBorderBox } from "../共享小工具-未细化/titled-border-box.js";
-import { ProgressBar } from "../共享小工具-未细化/progress-bar.js";
-import { LinkifiedText } from "../共享小工具-未细化/linkified-text.js";
-import { toLocalFileUrl } from "../共享小工具-未细化/to-local-file-url.js";
-import { ActionKeybindingHint } from "../共享小工具-未细化/action-keybinding-hint.js";
-import { Divider } from "../共享小工具-未细化/divider.js";
-import { useReducedMotion } from "../共享小工具-未细化/reduced-motion.js";
+import { TitledBorderBox } from "./titled-border-box.js";
+import { ProgressBar } from "./progress-bar.js";
+import { LinkifiedText } from "./linkified-text.js";
+import { toLocalFileUrl } from "../核心工具-路径与平台/to-local-file-url.js";
+import { ActionKeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/action-keybinding-hint.js";
+import { Divider } from "./divider.js";
+import { useReducedMotion } from "./reduced-motion.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { formatHyperlink } from "../共享小工具-未细化/format-hyperlink.js";
+import { formatHyperlink } from "../核心工具-字符串与文本/format-hyperlink.js";
 import { formatBackgroundTaskSummary } from "../../02-功能模块/Teammates团队/background-task-summary.js";
-import { get1MContextSuggestion } from "../共享小工具-未细化/model-1m-context-suggestion.js";
-import { stripControlChars, SLACK_SEND_TOOL_KEY, getSlackChannelDisplay } from "../共享小工具-未细化/slack-send-tool.js";
-import { estimateContentTokens } from "../共享小工具-未细化/mcp-output-truncation.js";
+import { get1MContextSuggestion } from "../核心工具-未归类/model-1m-context-suggestion.js";
+import { stripControlChars, SLACK_SEND_TOOL_KEY, getSlackChannelDisplay } from "../../02-功能模块/通道集成-Slack/slack-send-tool.js";
+import { estimateContentTokens } from "../../02-功能模块/MCP客户端/mcp-output-truncation.js";
 import { openPathInDefaultApp } from "../核心工具-路径与平台/open-external-url.js";
 import {
   Aln,
@@ -336,18 +336,18 @@ import {
 } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { isTerminalTaskStatus, figures, sanitizeDisplayName } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import { TASK_STOP_TOOL_NAME } from "../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
-import { SEND_MESSAGE_TOOL_NAME } from "../共享小工具-未细化/send-message-constants.js";
-import { WORKER_AGENT_TYPE } from "../共享小工具-未细化/worker-agent-type.js";
-import { MONITOR_TOOL_NAME } from "../共享小工具-未细化/monitor-tool-name.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../核心工具-未归类/send-message-constants.js";
+import { WORKER_AGENT_TYPE } from "../核心工具-未归类/worker-agent-type.js";
+import { MONITOR_TOOL_NAME } from "../核心工具-未归类/monitor-tool-name.js";
 import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
-import { detectLineEndings } from "../共享小工具-未细化/safe-file-read.js";
+import { detectLineEndings } from "../安全文件系统-FS加固/safe-file-read.js";
 import { s, v, c, $e } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { runPaginatedScan } from "../共享小工具-未细化/paginated-scan.js";
+import { runPaginatedScan } from "../核心工具-其他/paginated-scan.js";
 import { xA } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { formatFileSize } from "../共享小工具-未细化/chunk-7axvc6rn.js";
-import { isRecord } from "../共享小工具-未细化/is-record.js";
-import { countMatching, dedupe, asStringArray } from "../共享小工具-未细化/chunk-d16fhdtx.js";
-import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { formatFileSize } from "../核心工具-字符串与文本/chunk-7axvc6rn.js";
+import { isRecord } from "../核心工具-类型与数值/is-record.js";
+import { countMatching, dedupe, asStringArray } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 function Zg(dq) {
   let Zs = _(32),
     {
@@ -4890,19 +4890,19 @@ function rw(l) {
   });
 }
 var _y = {
-    name: import.meta.require("../共享小工具-未细化/chunk-p2wzfbaj.js")
+    name: import.meta.require("../../02-功能模块/MCP连接器-Connector/chunk-p2wzfbaj.js")
       .SEARCH_MCP_REGISTRY_TOOL_NAME,
     ui: import.meta.require("../../02-功能模块/MCP客户端/renderToolResultMessage.k3vkyx31.js"),
   },
   Py = {
-    name: import.meta.require("../共享小工具-未细化/chunk-0mrh424x.js")
+    name: import.meta.require("../../02-功能模块/MCP连接器-Connector/chunk-0mrh424x.js")
       .SUGGEST_CONNECTORS_TOOL_NAME,
     ui: import.meta.require("../../02-功能模块/MCP客户端/renderToolResultMessage.9n29ntaq.js"),
   },
   Cy = null,
   wy = null,
   Uy = {
-    name: import.meta.require("../共享小工具-未细化/chunk-9g3yj4km.js").LIST_CONNECTORS_TOOL_NAME,
+    name: import.meta.require("../../02-功能模块/MCP连接器-Connector/chunk-9g3yj4km.js").LIST_CONNECTORS_TOOL_NAME,
     ui: import.meta.require("../../02-功能模块/MCP客户端/renderToolResultMessage.ddfh23kw.js"),
   },
   Ny = null,
@@ -4911,7 +4911,7 @@ var _y = {
   _p = null,
   Ly = null,
   Gu = {
-    name: import.meta.require("../共享小工具-未细化/chunk-7fcxwgtq.js").WORKFLOW_TOOL_NAME,
+    name: import.meta.require("../../02-功能模块/编排-Workflow/chunk-7fcxwgtq.js").WORKFLOW_TOOL_NAME,
     ui: import.meta.require("../../02-功能模块/编排-Workflow/renderToolResultMessage.ew7kwnxk.js"),
   },
   Sp = null,
@@ -4924,7 +4924,7 @@ var _y = {
     ui: import.meta.require("../../02-功能模块/制品发布-Artifact/renderCheckToolUseMessage.zxaexmtx.js"),
   },
   vy = {
-    name: import.meta.require("../共享小工具-未细化/chunk-vtgvbed1.js").END_CONVERSATION_TOOL_NAME,
+    name: import.meta.require("../核心工具-未归类/chunk-vtgvbed1.js").END_CONVERSATION_TOOL_NAME,
     ui: import.meta.require("../../02-功能模块/工具UI渲染/renderToolResultMessage.pwg9xdk6.js"),
   },
   Iy = {
@@ -14550,7 +14550,7 @@ function y_(gae) {
 function BW(Cle) {
   return Cle.host;
 }
-var wg = import.meta.require("../共享小工具-未细化/isNarrationSummaryBlock.adf7egmq.js").isNarrationSummaryBlock,
+var wg = import.meta.require("../核心工具-未归类/isNarrationSummaryBlock.adf7egmq.js").isNarrationSummaryBlock,
   Ug = import.meta.require(
     "../../03-入口与运行时/会话UI-REPL/AssistantNarrationSummaryMessage.kz8yw55j.js",
   ).AssistantNarrationSummaryMessage,

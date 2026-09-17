@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { areWorkflowsEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
+import { areWorkflowsEnabled } from "../编排-Workflow/workflow-feature-gates.js";
 var o = {
     type: "local-jsx",
     name: "workflows",

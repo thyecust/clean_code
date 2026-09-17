@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { bh, j, B, K, jc, lje, cje, ke, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { describeStorageError, jsonStringify, jsonStringifyLine, jsonParse, jsonParseUntraced, deepClone, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { parseMcpToolName, getFullToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { validateStorageKey, getBranch, isBranchOnOrigin } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
@@ -26,14 +26,14 @@ import { LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { runWithAgentContext, isMainAgentContext, getAgentDepth, archiveRemoteSession, BASH_TOOL_NAME, READ_TOOL_NAME, POWERSHELL_TOOL_NAME, isToolDetailsLoggingEnabled, getFeatureValue_CACHED_MAY_BE_STALE, checkGate_CACHED_OR_BLOCKING } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { stripLongContextTags } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
 import { getParentSessionId, isModelDrivenSession } from "../Teammates团队/teammate-context.js";
 import { coerceEffortLevelValue } from "../权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
 import { MAX_WORKFLOW_SCRIPT_BYTES, readWorkflowScriptFile, getWorkflowScriptPathError, REPL_TOOL_NAME, findExactDenyRule, readAutoAllowedForMutation } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { unwrapAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { WORKFLOW_TOOL_NAME } from "./chunk-7fcxwgtq.js";
 import {
   createConcurrencyLimiter,
   registerTaskLoopChain,
@@ -120,23 +120,23 @@ import {
   toDisplayString,
 } from "./chunk-0t0sve49.js";
 import { mbt } from "../../00-第三方库/zod/chunk-6421ybjb.js";
-import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/核心工具-未归类/chunk-qg9n8r78.js";
 import { registerWorkflowTask, updateWorkflowProgressBatch, completeWorkflowTask, failWorkflowTask, enqueueWorkflowNotification } from "./chunk-va9cgbfs.js";
 import { parseWorkflowScript } from "./workflow-script.js";
-import { DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES, extractToolErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
-import { summarizeToolInput } from "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
-import { getFdRealPath } from "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
+import { DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES, extractToolErrorMessage } from "../../01-核心基础设施/核心工具-未归类/structured-output-retry-errors.js";
+import { summarizeToolInput } from "../../01-核心基础设施/核心工具-未归类/summarize-tool-input.js";
+import { getFdRealPath } from "../../01-核心基础设施/核心工具-路径与平台/fd-real-path.js";
 import { getWorkflowTranscriptDir, getCurrentProjectKey, writeWorkflowSnapshot } from "./workflow-snapshots.js";
 import { isWorkflowNameOnlyEnabled, getAllWorkflows, getWorkflowByName } from "./workflow-registry.js";
 import { isTerminalTaskStatus, formatModelRestrictedMessage } from "../Teammates团队/chunk-mrfx53ye.js";
 import { fAe } from "../../00-第三方库/acorn/acorn.pk8w19yv.js";
-import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
 import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/共享小工具-未细化/max-serialized-array-elements.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/核心工具-其他/max-serialized-array-elements.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { commonJS } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var acornWalkModule = commonJS(function (qt, Un) {
   (function (t, l) {
     typeof qt === "object" && typeof Un < "u"

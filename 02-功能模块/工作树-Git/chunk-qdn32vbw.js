@@ -12,7 +12,7 @@ import { GIT_HARDENED_ARGS, execFileNoThrowWithCwd } from "./git-exec-hardening.
 import { gitExe } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { matchingRuleForInput } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { validateUntrustedPath, getUntrustedPathReason, REMOTE_READ_OPEN_FLAGS, bindCanonicalPathToHandle, isCanonicalPathContained, readHandleBounded } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { constants } from "fs";
 import { open as U, realpath } from "fs/promises";
 import { basename, dirname, isAbsolute, join as z } from "path";

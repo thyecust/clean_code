@@ -13,12 +13,12 @@ import { getTaskIdFromOutputPath, extractTagContent } from "../../03-入口与�
 import { formatPathForDisplay, CWD_NOTE_PREFIX } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizeUntrustedText, replaceLineBreaks } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
+import "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-context.js";
 import { ToolErrorMessage } from "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
-import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { ToolResultRow } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import { TruncatedFilePath } from "../../03-入口与运行时/会话UI-REPL/chunk-vpp75aza.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 import { basename } from "path";
 function renderToolUseMessage({ file_path: o, offset: n, limit: s, pages: l }, { verbose: c }) {
   if (!o) return null;

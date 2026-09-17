@@ -149,7 +149,7 @@ function c() {
 }
 async function primePeerIdentityOwner({ refresh: e, credentials: o }) {
   let { isCrossSessionMessagingEnabled: t } = import.meta.require(
-    "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js",
+    "../跨会话消息-UDS/chunk-rfb3s38d.js",
   );
   if (!t()) return;
   if (!(
@@ -157,7 +157,7 @@ async function primePeerIdentityOwner({ refresh: e, credentials: o }) {
     getSdkHostedBridgeHandle() !== null ||
     getSessionRuntimeState().supervisedBridgeSession !== null
   )) {
-    let { hasCloudPeerAccess: p } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/hasCloudPeerAccess.debnsz8e.js");
+    let { hasCloudPeerAccess: p } = import.meta.require("../../01-核心基础设施/核心工具-未归类/hasCloudPeerAccess.debnsz8e.js");
     if (!p()) return;
   }
   let { primeSessionsApiBearer: r } = import.meta.require(
@@ -168,7 +168,7 @@ async function primePeerIdentityOwner({ refresh: e, credentials: o }) {
     await s;
     return;
   }
-  let { withDeadline: f } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/withTimeout.0mr4qg1r.js");
+  let { withDeadline: f } = import.meta.require("../../01-核心基础设施/核心工具-并发与缓存/withTimeout.0mr4qg1r.js");
   await f(s, g);
 }
 var g = 750;

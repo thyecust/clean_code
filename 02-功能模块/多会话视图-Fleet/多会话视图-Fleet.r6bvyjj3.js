@@ -9,21 +9,21 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 302 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { createFleetViewHost } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import { createFleetViewHost } from "./chunk-6nr84z8c.js";
+import "../守护服务-Daemon/chunk-9fpz6abc.js";
 import "../后台任务-Shell管理/chunk-jfk5mpe1.js";
 import "../后台任务-Shell管理/chunk-xmxjyg29.js";
 import "../后台任务-Shell管理/chunk-gnmy62vg.js";
-import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
+import "../守护服务-Daemon/session-env-scrubbing.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
+import "../../01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
-import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
+import "../后台任务-Shell管理/job-drafts.js";
+import "../会话-历史-恢复/chunk-ds47w88s.js";
 import "../Teammates团队/chunk-88ybhavr.js";
-import "../../01-核心基础设施/共享小工具-未细化/alt-screen-container.js";
-import "../../01-核心基础设施/共享小工具-未细化/fleet-view-screen.js";
+import "./alt-screen-container.js";
+import "./fleet-view-screen.js";
 import { mountFleetView } from "../会话选择器-AgentsUI/会话选择器-AgentsUI.jta2pccx.js";
 import "../Vim模式/Vim模式.nnewe0gf.js";
 import "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
@@ -33,14 +33,14 @@ import "../自动更新-安装/native-installer.js";
 import "../../03-入口与运行时/会话UI-REPL/external-editor.js";
 import "../Teammates团队/update-command.js";
 import "../../03-入口与运行时/会话UI-REPL/clawd-mascot.js";
-import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
-import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import "../../01-核心基础设施/UI组件-TUI/background-text.js";
+import "../../01-核心基础设施/UI组件-TUI/empty-state-message.js";
 import "../通知-Notifications/通知-Notifications.g4xng0pg.js";
-import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import "../../01-核心基础设施/UI组件-TUI/linkified-text.js";
+import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import "../自动更新-安装/auto-updates-channel.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
+import "../../01-核心基础设施/核心工具-其他/chunk-j86cs2ar.js";
+import "../守护服务-Daemon/chunk-tpraq69b.js";
 async function mountFleetViewWithComposerBack(e, o) {
   let t = { ...o, host: o?.host ?? createFleetViewHost() };
   await mountFleetView(e, t);

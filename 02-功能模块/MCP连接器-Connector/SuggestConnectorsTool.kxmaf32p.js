@@ -12,11 +12,11 @@
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { getConnectorSchema, isOptInRequired, ConnectorRegistryUnavailableError, lookupConnectors, logConnectorSuggestFailure } from "../../01-核心基础设施/共享小工具-未细化/connector-registry-api.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { getConnectorSchema, isOptInRequired, ConnectorRegistryUnavailableError, lookupConnectors, logConnectorSuggestFailure } from "./connector-registry-api.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { SUGGEST_CONNECTORS_TOOL_NAME, DESCRIPTION, PROMPT } from "../../01-核心基础设施/共享小工具-未细化/chunk-0mrh424x.js";
-import { isFirstPartyRemoteSession } from "../../01-核心基础设施/共享小工具-未细化/first-party-remote-session.js";
+import { SUGGEST_CONNECTORS_TOOL_NAME, DESCRIPTION, PROMPT } from "./chunk-0mrh424x.js";
+import { isFirstPartyRemoteSession } from "../云会话-Teleport/first-party-remote-session.js";
 import { s, v, c, Qe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var n = createLazyValue(() =>
     Qe({

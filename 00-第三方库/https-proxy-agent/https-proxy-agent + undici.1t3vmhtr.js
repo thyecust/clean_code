@@ -15,10 +15,10 @@ import { hasNodeOption } from "../../02-功能模块/模型接入-Bedrock-Vertex
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Mnt, default as at } from "../axios/axios.t0fczzmz.js";
 import { a_ } from "../which-isexe/isexe.knmpyrza.js";
-import { serializeAsyncCalls } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
-import { isLoopbackHostname } from "../../01-核心基础设施/共享小工具-未细化/is-loopback-hostname.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { serializeAsyncCalls } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
+import { isLoopbackHostname } from "../../01-核心基础设施/核心工具-路径与平台/is-loopback-hostname.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var De = commonJS(function (S) {
   var It =
       (S && S.__createBinding) ||

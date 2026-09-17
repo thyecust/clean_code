@@ -9,30 +9,30 @@
 // Version: 2.1.263
 import { TEAMMATE_MESSAGE_TAG, CROSS_SESSION_MESSAGE_TAG, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l, A, Po, Bp, vB, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { isValidPathSegment, STORAGE_KEYS } from "./storage-keys.js";
 import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, getTeamsDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { escapeHtmlAttribute, neutralizeOpeningTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { isAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { isAgentColorName } from "../多会话视图-Fleet/agent-color-palette.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { Cs, hf } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
-import { createMessageEnvelope, getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
+import { createMessageEnvelope, getBridgeHostState } from "../远程控制-Bridge/bridge-state-containers.js";
 import { externalPermissionModeSchema } from "../权限系统/chunk-e4pfvp7x.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getTeammateContext, getTeamName } from "./teammate-context.js";
-import { createJitteredBackoffDelay } from "../../01-核心基础设施/共享小工具-未细化/jittered-backoff-delay.js";
-import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_SUMMARY_MAX_LENGTH } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { createJitteredBackoffDelay } from "../../01-核心基础设施/核心工具-并发与缓存/jittered-backoff-delay.js";
+import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_SUMMARY_MAX_LENGTH } from "../../01-核心基础设施/核心工具-未归类/send-message-constants.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { s, O, se, v, c, it, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { join as Re } from "path";
 var CROSS_SESSION_MESSAGE_PREFIX = "Another Claude session sent a message",
   pe = `${CROSS_SESSION_MESSAGE_PREFIX} while you were working:`,

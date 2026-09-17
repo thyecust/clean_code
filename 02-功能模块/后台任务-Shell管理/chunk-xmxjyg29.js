@@ -9,42 +9,42 @@
 // Version: 2.1.263
 import { Xn, j, B, he, pv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, zn, An, pl, ac, li, BL } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { readBoundedFile, sanitizeSessionName, ownStoredLoginPlanAttributes, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isRestrictedMode } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { le, Zt, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { R, l, A, Jr, H_e, I_e, WHt, Gw, Jg, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonParse, UNVERIFIED_ANCESTRY_SENTINEL, resolveSymlinkTargetSync, getFsSurface, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isStdinUnusableError, peekForStdinData } from "./chunk-z5vtnzjg.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, beforeFirst, normalizeWhitespace, stripAnsiAndControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent, logEventAsync } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { validateStorageKey, isValidGitSha, findGitRoot, findGitRootVerifyingPositive, gitExe } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { cursorToPosition, CURSOR_HOME_SEQUENCE, ERASE_ENTIRE_LINE, ERASE_SCREEN_SEQUENCE, RESET_SCROLL_REGION, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscript, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { RENAME_CONTENTION_ERRNOS, renameWithRetry, writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { PROVIDER_CONFIG_ENV_VARS, BASE_URL_ENV_GROUPS, hasHostManagedAuth } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { setupGitBashShellEnv } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { hasSkipDangerousModePermissionPrompt, hasAutoModeOptIn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { buildBgDispatcherEnvVars } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { provenSameProcessAsync, ownProcStartAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { bgSupervisorNoun, bgSupervisorNounCap, daemonHint } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
-import { killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
+import { bgSupervisorNoun, bgSupervisorNounCap, daemonHint } from "../多会话视图-Fleet/agent-view-feature-gates.js";
+import { killIfSameProcess } from "../../01-核心基础设施/核心工具-进程与信号/chunk-q8r1ycrr.js";
 import { Itn, nBn, Jye, G0e, Nat, uF } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
-import { enableTerminalMode, disableTerminalMode, DISABLE_SYNCHRONIZED_UPDATE, SHOW_CURSOR, HIDE_CURSOR, DISABLE_WIN32_INPUT_MODE } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
+import { enableTerminalMode, disableTerminalMode, DISABLE_SYNCHRONIZED_UPDATE, SHOW_CURSOR, HIDE_CURSOR, DISABLE_WIN32_INPUT_MODE } from "../终端环境探测-TUI-tmux/terminal-mode-sequences.js";
 import { CLEAR_ITERM2_PROGRESS_SEQUENCE } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import {
   getBackgroundSupervisorState,
@@ -118,7 +118,7 @@ import {
   MAX_DETAIL_CHARS,
   clipWithEllipsis,
 } from "./chunk-7wsy8vxb.js";
-import { controlRequest, openDaemonLease, subscribeControl } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import { controlRequest, openDaemonLease, subscribeControl } from "../守护服务-Daemon/chunk-9fpz6abc.js";
 import { getLauncherConfigError, getLauncherErrorMessage, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { createDecModeTracker, isLowMemory, killPtySocket } from "./chunk-gnmy62vg.js";
 import { getDaemonLockPath, getVerifiedDaemonLock, stopDaemonLockHolder, describeStopFailure, describeUnknownOriginLock } from "./daemon-lock.js";
@@ -146,22 +146,22 @@ import { sendToUdsSocket, listAllLiveSessions } from "../跨会话消息-UDS/chu
 import { wtn, B0e, ktn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { waitForPolicyLimitsToLoad } from "../策略限制-PolicyLimits/policy-limits-client.js";
 import { relaunchClaudeCode } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
-import { writeStdoutAndDrain, exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { CLAUDE_AGENT } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
+import { writeStdoutAndDrain, exitAfterAnalyticsFlush } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js";
+import { CLAUDE_AGENT } from "../../01-核心基础设施/核心工具-未归类/chunk-kyy28ene.js";
 import { getBackgroundFlagConflictMessage, hasRemoteBackendFlag, stripEnvironmentFlags } from "../../03-入口与运行时/Headless-SDK模式/cloud-flag-validation.js";
-import { SESSION_LIVE_ELSEWHERE_MESSAGE, listLiveSessionHolders } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
-import { getDaemonJsonPath, getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
-import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
-import { ALLOW_ROUTINES_POLICY, ROUTINES_POLICY_DENIED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
-import { fromJobState, parseAttachVia, ensureJobDir, ensureJobTmpDir } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { getDraftMode } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
-import { getSystemTheme } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
-import { createHoverRestOptions, createBackendHandle, createTranscriptSource } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
-import { normalizePathForComparison } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
-import { createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
+import { SESSION_LIVE_ELSEWHERE_MESSAGE, listLiveSessionHolders } from "../../01-核心基础设施/核心工具-未归类/session-live-elsewhere.js";
+import { getDaemonJsonPath, getDaemonLogPath } from "../守护服务-Daemon/daemon-paths.js";
+import { trySetRawMode } from "../终端环境探测-TUI-tmux/try-set-raw-mode.js";
+import { ALLOW_ROUTINES_POLICY, ROUTINES_POLICY_DENIED_MESSAGE } from "../../01-核心基础设施/核心工具-未归类/routines-policy.js";
+import { fromJobState, parseAttachVia, ensureJobDir, ensureJobTmpDir } from "../守护服务-Daemon/chunk-tpraq69b.js";
+import { getDraftMode } from "../../01-核心基础设施/核心工具-未归类/bash-mode-draft-text.js";
+import { getSystemTheme } from "../../01-核心基础设施/UI组件-TUI/theme-resolution.js";
+import { createHoverRestOptions, createBackendHandle, createTranscriptSource } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
+import { normalizePathForComparison } from "../../01-核心基础设施/核心工具-路径与平台/chunk-nfcecy7x.js";
+import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
+import { createKeyedSerialQueue } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID as Hi } from "crypto";
 import {
   lstat as Wr,

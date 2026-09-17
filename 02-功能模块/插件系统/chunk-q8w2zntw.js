@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { he, y_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, my, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { shouldSkipPluginAutoupdate } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -32,7 +32,7 @@ import {
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { formatPathWithTilde, pathExists } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { sanitizeUnicodeText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { sanitizeUnicodeText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import {
   isPluginsRootUnreliable,
   getSourceCommandKey,
@@ -153,8 +153,8 @@ import {
   getSettingsSourceForScope,
 } from "./chunk-33bdfgmx.js";
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 async function refreshMarketplaceOnCatalogMiss(e, t, s) {
   if (shouldSkipPluginAutoupdate()) return "ineligible";
   if (!t?.source || !isSourceAllowedByPolicy(t.source)) return "ineligible";

@@ -10,21 +10,21 @@
 
 // [preload stripped] 原本在此预载 91 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, toWellFormed, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { httpClient, normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { clearIsGitMemo } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { SHA256_HEX_REGEX, hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { SHA256_HEX_REGEX, hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getPreSettingsEnvSnapshot } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 import { HOST_FIELD_NAME } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
@@ -108,13 +108,13 @@ import {
   parseSyncJournal,
   encodeSyncJournal,
 } from "../文件同步-Sync/sync-journal.js";
-import { DEFAULT_BEFORE_TURN_CAP_MS, getDirSyncWorkerSessionFile, announceDirSyncVerdict, stageDirSyncNotice, markDirSyncCopyCleared, isDirSyncEnabled } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
+import { DEFAULT_BEFORE_TURN_CAP_MS, getDirSyncWorkerSessionFile, announceDirSyncVerdict, stageDirSyncNotice, markDirSyncCopyCleared, isDirSyncEnabled } from "../目录同步-dir-sync/dir-sync-worker-lane.js";
 import { buildSessionRefName, listSessionRefs, UNREADABLE_CARRIER_STATUS } from "../目录同步-dir-sync/dir-sync-git-lane.js";
-import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
-import { escapeMarkupText, escapePromptText, escapeMarkupAttribute } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import "../../01-核心基础设施/核心工具-类型与数值/to-integer.js";
+import { escapeMarkupText, escapePromptText, escapeMarkupAttribute } from "../../01-核心基础设施/核心工具-未归类/chunk-339z9efw.js";
 import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { s, T, O, v, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { dirname as vu, join as Cr } from "path";
 import { randomUUID as Ed } from "crypto";
 import {

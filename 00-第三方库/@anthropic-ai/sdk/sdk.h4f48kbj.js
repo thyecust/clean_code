@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { lit as S, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { toESM, commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { lit as S, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { toESM, commonJS } from "../../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var xo = commonJS(function (wo) {
   Object.defineProperty(wo, "__esModule", { value: !0 });
   wo.timingSafeEqual = void 0;

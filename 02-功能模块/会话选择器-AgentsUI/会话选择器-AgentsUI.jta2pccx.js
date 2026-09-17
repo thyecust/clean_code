@@ -10,17 +10,17 @@
 import { cz } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { B, he, AOn, HOn, Nm, pv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le, my, jf, Xo, Ju } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
-import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { isTerminalFocused } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
-import { useTerminalFocus, setTimeoutWithCancel } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
-import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { useStoreSelector } from "../../01-核心基础设施/核心工具-未归类/use-store-selector.js";
+import { useAppStateSelector } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
+import { isTerminalFocused } from "../../01-核心基础设施/终端与时钟/terminal-focus-state.js";
+import { useTerminalFocus, setTimeoutWithCancel } from "../../01-核心基础设施/终端与时钟/clock-and-terminal-focus.js";
+import { useClock } from "../../01-核心基础设施/终端与时钟/use-clock.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
-import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
 import { registerCleanup, registerPreExitFlush, jsonParse, resolveSymlinkAncestry, fsSurface, readTailBytes, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   getMainLoopModel,
@@ -37,22 +37,22 @@ import {
   getGlobalConfig,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, w8, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { isSafeMode } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { repeatString, pluralize, beforeFirst, firstLine, countOccurrences, CONTROL_CHARS_REGEX, ANY_CONTROL_CHAR_REGEX, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getLogDisplayTitle, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { formatPathWithTilde } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isRemoteActive, findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth, truncateToWidth, truncateStartToWidth, truncate, formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { getInitialSettings, hasSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { BULLET_OPERATOR_GLYPH, ARTIFACT_MARKER_GLYPH, parsePermissionModeOrDefault, getPermissionModeIndicator, getPermissionModeSymbol, getPermissionModeColor } from "../权限系统/chunk-e4pfvp7x.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { stripTrailingPunctuation } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
@@ -64,7 +64,7 @@ import { useStdin } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { isFullscreenEnabled } from "../终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
 import { Box, Text, Link, useAnimationFrame, useInterval, startClockInterval, useSelection, useTerminalTitle, useTimeout, createRoot } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { formatOscSequence, OSC_CODES } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
+import { getInkInstanceRegistry } from "../多会话视图-Fleet/ink-instance-registry.js";
 import { useKeybindingContext } from "../键位绑定-Keybindings/keybinding-context.js";
 import { DEFAULT_KEYBINDINGS, formatKeybindingChordForPlatform, expandKeybindingBlocks, getKeybindingPlatform, findActionForKeyAcrossContexts, normalizeKeyEvent } from "../键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
@@ -108,9 +108,9 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { parseEffortArgValue } from "../权限系统/chunk-t3b7pg2x.js";
 import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
-import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
 import { sendControlToUdsSocket, listAllLiveSessions } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
-import { AGENT_COLOR_THEME_KEYS, isAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
+import { AGENT_COLOR_THEME_KEYS, isAgentColorName } from "../多会话视图-Fleet/agent-color-palette.js";
 import { isAgentSwarmsEnabled } from "../Teammates团队/agent-swarms-enablement.js";
 import {
   UNGROUPED,
@@ -144,9 +144,9 @@ import {
   isSelfDriving,
   clipWithEllipsis,
 } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { isPastSessionsExperimentEnabled, AGENT_VIEW_RELAUNCH_ENV_KEY } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
-import { useVoiceSelector, useVoiceGetState } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
-import { openDaemonLease } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import { isPastSessionsExperimentEnabled, AGENT_VIEW_RELAUNCH_ENV_KEY } from "../多会话视图-Fleet/agent-view-feature-gates.js";
+import { useVoiceSelector, useVoiceGetState } from "../语音-音频/voice-state-provider.js";
+import { openDaemonLease } from "../守护服务-Daemon/chunk-9fpz6abc.js";
 import { showScreen } from "../../00-第三方库/_未识别/chunk-cq8x5zt4.js";
 import {
   claimAttachBeacon,
@@ -184,16 +184,16 @@ import {
   spawnBgSession,
 } from "../后台任务-Shell管理/chunk-xmxjyg29.js";
 import { relaunchClaudeCode } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
-import { saveJobDraft, writeJobDraft, writeJobDraftSync, deleteJobDraft, readJobDraft, sweepStaleJobDrafts } from "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
-import { CCR_LIST_TARGET_VISIBLE } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
+import { saveJobDraft, writeJobDraft, writeJobDraftSync, deleteJobDraft, readJobDraft, sweepStaleJobDrafts } from "../后台任务-Shell管理/job-drafts.js";
+import { CCR_LIST_TARGET_VISIBLE } from "../会话-历史-恢复/chunk-ds47w88s.js";
 import { registerBuiltinPlugins, registerAllBundledSkills } from "../Skills技能/Skills技能.dpy2ket5.js";
-import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
+import { getBaseRenderOptions } from "../../01-核心基础设施/UI组件-TUI/base-render-options.js";
 import { hasTeammateModeSnapshot, captureTeammateModeSnapshot } from "../Teammates团队/chunk-88ybhavr.js";
-import { createFleetViewHost, useAttachFleetOwners } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
-import { DotSeparatedList, useDoublePressConfirm } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { FleetViewScreen } from "../../01-核心基础设施/共享小工具-未细化/fleet-view-screen.js";
+import { createFleetViewHost, useAttachFleetOwners } from "../多会话视图-Fleet/chunk-6nr84z8c.js";
+import { DotSeparatedList, useDoublePressConfirm } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
+import { FleetViewScreen } from "../多会话视图-Fleet/fleet-view-screen.js";
 import { useFocusTrap, getSpinnerFrames, getSpinnerPingPongFrames, usePasteHandler } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
 import {
   SuggestionList,
   useVimModeInput,
@@ -219,29 +219,29 @@ import {
 import { ScrollBox } from "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
 import { DiffStatLabel, PullRequestBadge } from "../GitHub集成/chunk-bfz9rjjm.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
-import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { shouldReduceMotion } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
 import { editTextInExternalEditor } from "../../03-入口与运行时/会话UI-REPL/external-editor.js";
 import { resolveLauncher } from "../Teammates团队/update-command.js";
 import { ClawdMascot } from "../../03-入口与运行时/会话UI-REPL/clawd-mascot.js";
-import { SESSION_LIVE_ELSEWHERE_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
-import { BackgroundText } from "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { SESSION_LIVE_ELSEWHERE_MESSAGE } from "../../01-核心基础设施/核心工具-未归类/session-live-elsewhere.js";
+import { BackgroundText } from "../../01-核心基础设施/UI组件-TUI/background-text.js";
 import { showNotification } from "../通知-Notifications/通知-Notifications.g4xng0pg.js";
-import { LinkifiedText } from "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
-import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
+import { LinkifiedText } from "../../01-核心基础设施/UI组件-TUI/linkified-text.js";
+import { toLocalFileUrl } from "../../01-核心基础设施/核心工具-路径与平台/to-local-file-url.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
+import { trySetRawMode } from "../终端环境探测-TUI-tmux/try-set-raw-mode.js";
 import { openHyperlink } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
-import { fromJobState } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { buildDraftText, getDraftMode, getDraftValue, isBashModeShortcut } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
+import { fromJobState } from "../守护服务-Daemon/chunk-tpraq69b.js";
+import { buildDraftText, getDraftMode, getDraftValue, isBashModeShortcut } from "../../01-核心基础设施/核心工具-未归类/bash-mode-draft-text.js";
 import { Nl, re, E, dn, V, pk, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { createHoverRestOptions, resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { createHoverRestOptions, resolveTranscriptLocator } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
 import { LARGE_PASTE_CHAR_THRESHOLD, readClipboardImage } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/bypass-permissions-mode-policy.js";
-import { getGraphemeSegmenter, countGraphemes, splitGraphemes } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
+import { getGraphemeSegmenter, countGraphemes, splitGraphemes } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { randomUUID as pu } from "crypto";
 import { resolve } from "path";
 function qu() {
@@ -10553,7 +10553,7 @@ async function mountFleetView(s, c) {
     },
   };
   if (
-    ((await import("../../01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js")).registerToolHosts(),
+    ((await import("../../01-核心基础设施/核心工具-未归类/chunk-dypysnt9.js")).registerToolHosts(),
     registerBuiltinPlugins(),
     registerAllBundledSkills(),
     isAgentSwarmsEnabled() && !hasTeammateModeSnapshot())

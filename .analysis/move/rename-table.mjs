@@ -14,7 +14,7 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
-import { ROOT, short } from "./lib.mjs";
+import { ROOT, short, displayName } from "./lib.mjs";
 
 /** 旧目录名（末级）→ 新目录名（末级）。值等于键表示不改。 */
 export const RENAMES = {
@@ -85,17 +85,6 @@ export const RENAMES = {
   "HTTP-网络层": "HTTP-网络层",
 };
 
-/**
- * 模块显示名：新目录名 `-` → ` / `，并在拉丁词与中文之间补空格。
- * 两处细节：拉丁词内部连字符不拆（`目录同步-dir-sync` → `目录同步 / dir-sync`，
- * 而不是 `目录同步 / dir / sync`）；`会话UI` → `会话 UI`。
- */
-export function displayName(leaf) {
-  return leaf
-    .split(/(?<![A-Za-z0-9])-(?![A-Za-z0-9])|(?<=[A-Za-z0-9])-(?=[一-鿿])|(?<=[一-鿿])-(?=[A-Za-z0-9])/)
-    .map((seg) => seg.replace(/(?<=[一-鿿])(?=[A-Za-z])/g, " ").replace(/(?<=[A-Za-z0-9.])(?=[一-鿿])/g, " "))
-    .join(" / ");
-}
 
 // ---------- 读当前目录 ----------
 

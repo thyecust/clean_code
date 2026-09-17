@@ -7,25 +7,25 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { REFUSE_INPUT_WINDOW_MS } from "../共享小工具-未细化/recent-window.js";
-import { useAnswerRefusalState } from "../共享小工具-未细化/use-answer-refusal-state.js";
+import { REFUSE_INPUT_WINDOW_MS } from "../核心工具-未归类/recent-window.js";
+import { useAnswerRefusalState } from "../核心工具-未归类/use-answer-refusal-state.js";
 import { pluralize, countOccurrences } from "../核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { buildSettingsSummary, hasSettingsSummaryEntries, diffSettingsSummaries, isTelemetryOnlyEnvChange, getManagedSettingsApprovalRows } from "./设置-配置.aqbb35ee.js";
 import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { useKeybinding } from "../共享小工具-未细化/keybinding-hooks.js";
-import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybinding } from "../../02-功能模块/键位绑定-Keybindings/keybinding-hooks.js";
+import { DotSeparatedList } from "../核心工具-未归类/chunk-ff1hq6qq.js";
 import { useIsMountRecent, useMountTime, useSettleAfterChange, useRefusedInputWindow } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { useTerminalSize } from "../共享小工具-未细化/use-terminal-size.js";
+import { useTerminalSize } from "../UI组件-TUI/use-terminal-size.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
-import { ConfirmPrompt } from "../共享小工具-未细化/confirm-prompt.js";
+import { ConfirmPrompt } from "../UI组件-TUI/confirm-prompt.js";
 import { PermissionDialogFrame } from "../../02-功能模块/权限系统/permission-dialog.js";
-import { InputGuide } from "../共享小工具-未细化/input-guide.js";
+import { InputGuide } from "../UI组件-TUI/input-guide.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
-import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function Qt(An) {
   return An + 1;

@@ -9,16 +9,16 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 81 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { getTerminalFocus, subscribeTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
-import { waitForAttachQuietDrainEnd } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { getTerminalFocus, subscribeTerminalFocus } from "../../01-核心基础设施/终端与时钟/terminal-focus-state.js";
+import { waitForAttachQuietDrainEnd } from "../../01-核心基础设施/核心工具-未归类/attach-state-tracking.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { wrapOscForMultiplexer, OSC_CODES } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { createOscQuery } from "../../01-核心基础设施/共享小工具-未细化/terminal-querier.js";
+import { createOscQuery } from "../终端环境探测-TUI-tmux/terminal-querier.js";
 import { isTmuxControlMode } from "../终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
 import { sk } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
-import { setSystemTheme, detectThemeFromColor } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
+import { setSystemTheme, detectThemeFromColor } from "../../01-核心基础设施/UI组件-TUI/theme-resolution.js";
 var v = 2000;
 function watchSystemTheme(e, d, p) {
   let o = !1,

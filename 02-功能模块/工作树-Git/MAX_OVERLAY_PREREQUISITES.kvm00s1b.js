@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 205 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import {
   createConcurrencyLimiter,
   isSignalAborted,
@@ -47,14 +47,14 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isSafePortablePath, getPathIdentity, findSameFileDuplicates, openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
 import "../文件同步-Sync/sync-journal.js";
-import { inferHashAlgorithmFromDigestLength, computeGitBlobId, computeContentDigests } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import { inferHashAlgorithmFromDigestLength, computeGitBlobId, computeContentDigests } from "../目录同步-dir-sync/sync-state-schema.js";
 import "./local-divergence-probe.js";
 import { createFilterAttributedChecker } from "./dir-sync-git-repository.js";
 import { isGitMetadataSegment } from "../文件同步-Sync/chunk-tqwnv5vj.js";
 import { createOverlayBundle } from "../云会话-Teleport/overlay-bundle.js";
-import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
+import "../../01-核心基础设施/核心工具-类型与数值/to-integer.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 var Ue =
     /^:([0-7]{6}) ([0-7]{6}) ([0-9a-f]{40}(?:[0-9a-f]{24})?) ([0-9a-f]{40}(?:[0-9a-f]{24})?) ([A-Z])[0-9]*$/,
   ze = /^0{40}(?:0{24})?$/,

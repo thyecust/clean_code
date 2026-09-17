@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { performRename } from "../Teammates团队/rename-session.js";
-import "../../01-核心基础设施/共享小工具-未细化/standalone-agent-context.js";
+import "../../01-核心基础设施/核心工具-未归类/standalone-agent-context.js";
 async function a(o, t) {
   let { message: e } = await performRename(o, t, !1);
   return { type: "text", value: e };

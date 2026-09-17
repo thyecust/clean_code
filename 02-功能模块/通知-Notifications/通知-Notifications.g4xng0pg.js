@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { K, he, sn, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { NOTIFICATION_CHANNELS } from "../图片-截图-ComputerUse/settings-option-values.js";
 import { executeNotificationHooks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
-import { isPlainObject, parsePlist } from "../../01-核心基础设施/共享小工具-未细化/plist-parser.js";
+import { isPlainObject, parsePlist } from "../../01-核心基础设施/核心工具-未归类/plist-parser.js";
 var m = /^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$/;
 function sanitizeTerminalName(e) {
   if (e == null) return;

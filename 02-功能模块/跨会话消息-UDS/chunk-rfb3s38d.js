@@ -1,0 +1,24 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
+function isCrossSessionMessagingEnabled() {
+  let e = a.CLAUDE_CODE_HARBOR_KITE;
+  if (e !== void 0) return Ie(e);
+  if (getCurrentPlatform() === "windows" && !getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_kite_win", !0)) return !1;
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_kite", !0);
+}
+function isProjectsHumanOriginEnabled() {
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cuddly_willow", !0);
+}
+var CROSS_SESSION_MESSAGING_DISABLED_MESSAGE = "Cross-session messaging is not available in this session.";
+export { isCrossSessionMessagingEnabled, isProjectsHumanOriginEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE };

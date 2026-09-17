@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { gL, cy } from "./chunk-dm9sg03f.js";
 import { Lm } from "./chunk-w3axq133.js";
-import { getNodeConfigProviderModule } from "../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
+import { getNodeConfigProviderModule } from "../../01-核心基础设施/核心工具-未归类/node-config-provider.js";
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { qtt } from "./nested-clients/nested-clients.5meg3znc.js";
 import {
@@ -35,10 +35,10 @@ import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "./chunk-jtb5q5xr.js";
 import { Mie } from "./chunk-cpfawwsx.js";
 import { utilUtf8Module, utilBase64Module } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-p991cddr.js";
-import { smithyContextModule } from "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
-import { getUrlParserModule } from "../../01-核心基础设施/共享小工具-未细化/url-parser.js";
+import { smithyContextModule } from "../../01-核心基础设施/核心工具-未归类/smithy-context-module.js";
+import { getUrlParserModule } from "../../01-核心基础设施/核心工具-字符串与文本/url-parser.js";
 import "./chunk-z7ktsccq.js";
-import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { commonJS } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var O = commonJS(function (N) {
   Object.defineProperty(N, "__esModule", { value: !0 });
   N.resolveHttpAuthSchemeConfig =

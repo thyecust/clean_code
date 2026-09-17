@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { j, B, hB, u8, Nm } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ABSENT_PARENT_TELEMETRY_CODE, describeStorageError, registerCleanup, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   getAuthHeadersAsync,
@@ -72,9 +72,9 @@ import {
   seedSessionCacheFromPrime,
   getResponseFromCache,
 } from "./chunk-8sw91yn5.js";
-import { getErrorReportingPolicyState } from "../../01-核心基础设施/共享小工具-未细化/error-reporting-eligibility.js";
-import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { getErrorReportingPolicyState } from "../反馈-错误上报/error-reporting-eligibility.js";
+import { getClientUserAgent } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { statSync } from "fs";
 import { unlink, utimes, writeFile } from "fs/promises";
 function N(e, t, r = {}) {

@@ -9,21 +9,21 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 85 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { raceWithAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isPolicyAllowed, getPolicyDenyKind, getPolicyDeniedReason } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { isPolicyAllowed, getPolicyDenyKind, getPolicyDeniedReason } from "../../01-核心基础设施/核心工具-未归类/compliance-taints-store.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { ensurePluginsOAuthScope, getApiErrorEnvelopeSchema, listOrganizationPlugins, isPluginsSyncVetoed, isSessionRefsSyncEnabled, sessionRefsManifestStore } from "./chunk-ajtn749s.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { registerSuggestRolloutPinReader, isPluginSkillToolEnabled } from "../../01-核心基础设施/共享小工具-未细化/plugin-skill-tool-gating.js";
-import { fetchOrgSkills } from "../../01-核心基础设施/共享小工具-未细化/org-skills-sync.js";
-import "../../01-核心基础设施/共享小工具-未细化/first-party-remote-session.js";
-import { SEARCH_PLUGINS_TOOL_NAME, SEARCH_SKILLS_TOOL_NAME, SUGGEST_PLUGIN_INSTALL_TOOL_NAME, SUGGEST_SKILLS_TOOL_NAME, LIST_PLUGINS_TOOL_NAME, LIST_SKILLS_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/plugin-skill-tool-names.js";
+import { registerSuggestRolloutPinReader, isPluginSkillToolEnabled } from "../../01-核心基础设施/核心工具-未归类/plugin-skill-tool-gating.js";
+import { fetchOrgSkills } from "../Skills技能/org-skills-sync.js";
+import "../云会话-Teleport/first-party-remote-session.js";
+import { SEARCH_PLUGINS_TOOL_NAME, SEARCH_SKILLS_TOOL_NAME, SUGGEST_PLUGIN_INSTALL_TOOL_NAME, SUGGEST_SKILLS_TOOL_NAME, LIST_PLUGINS_TOOL_NAME, LIST_SKILLS_TOOL_NAME } from "./plugin-skill-tool-names.js";
 import { s, O, v, c, Qe, it, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var z = createLazyValue(() =>
     it({
@@ -388,7 +388,7 @@ Do NOT call this if the suggestion is not relevant, you are unsure it would help
   ie = "tengu_saddle_lantern";
 function Q() {
   return import.meta
-    .require("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js")
+    .require("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js")
     .getFeatureValueWithSource_CACHED_MAY_BE_STALE(ie, !1);
 }
 function J() {

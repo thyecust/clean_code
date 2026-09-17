@@ -12,7 +12,7 @@
 import { FORK_GLYPH } from "./chunk-e4pfvp7x.js";
 import { hasPermissionsToUseTool } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { spawnForkFromDirective } from "./chunk-asdzywd2.js";
-import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
+import { isCoordinatorModeEnabled } from "../../01-核心基础设施/核心工具-未归类/coordinator-mode.js";
 var m = async (s, t, r) => {
   let o = r.trim();
   if (!o) return (s("Usage: /subtask \\<task\\>", { display: "system" }), null);

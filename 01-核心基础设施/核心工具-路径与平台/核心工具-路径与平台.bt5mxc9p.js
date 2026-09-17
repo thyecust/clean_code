@@ -21,12 +21,12 @@ import {
   Irt,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le, yZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
-import { withDeadline } from "../共享小工具-未细化/async-timeout-utils.js";
+import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
+import { withDeadline } from "../核心工具-并发与缓存/async-timeout-utils.js";
 import { truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../共享小工具-未细化/analytics-fields.js";
-import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
+import { lit as S, fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js";
+import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import {
   mergeWith,
   HOOK_EVENT_NAMES,
@@ -111,30 +111,30 @@ import {
   loadSettingsFromDisk,
   stripAnsiControlCharacters,
 } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { UNSUPPORTED_TELEMETRY_CODE, isUnsupportedFailure, pathSpaces, jsonStringify, deepClone, resolvePathInfo, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isConfigDirPath } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { getCwd } from "../共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../核心工具-未归类/cwd-context.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ATOMIC_WRITE_STAGING_DIR_NAME, writeFileAndFlush } from "./chunk-fx8qr1md.js";
-import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../核心工具-日志与脱敏/diagnostics-log.js";
 import { execFileNoThrowWithCwd } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
 import { findCanonicalGitRoot, dirIsInGitRepo } from "../安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
-import { hashSha256 } from "../共享小工具-未细化/git-host-utils.js";
+import { hashSha256 } from "./git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { HKLM_POLICY_REGISTRY_PATH, HKCU_POLICY_REGISTRY_PATH, SETTINGS_REGISTRY_VALUE_NAME, WSL_MANAGED_SETTINGS_DIR, isRunningOnWsl } from "../共享小工具-未细化/mdm-policy-paths.js";
+import { HKLM_POLICY_REGISTRY_PATH, HKCU_POLICY_REGISTRY_PATH, SETTINGS_REGISTRY_VALUE_NAME, WSL_MANAGED_SETTINGS_DIR, isRunningOnWsl } from "./mdm-policy-paths.js";
 import { fireRawRead, getMdmRawReadPromise } from "./mdm-raw-read.js";
-import { decodeBufferText, readFileSyncText, readFileWithMetadata } from "../共享小工具-未细化/safe-file-read.js";
-import { createKeyedSerialQueue } from "../共享小工具-未细化/async-serialization.js";
+import { decodeBufferText, readFileSyncText, readFileWithMetadata } from "../安全文件系统-FS加固/safe-file-read.js";
+import { createKeyedSerialQueue } from "../核心工具-并发与缓存/async-serialization.js";
 import { s, se, v, c, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { lz } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { readProcVersionSync, isWslKernelString, getCurrentPlatform } from "./platform-detection.js";
-import { isRecord } from "../共享小工具-未细化/is-record.js";
-import { countMatching, dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../核心工具-类型与数值/is-record.js";
+import { countMatching, dedupe } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
 class at {
   drains = new Set();
   register(e) {

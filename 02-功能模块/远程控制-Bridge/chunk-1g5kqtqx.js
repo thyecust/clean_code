@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { validateOAuthToken, getClaudeAIOAuthTokenOriginAsync, getClaudeAIOAuthTokensAsync, readFreshOAuthCredentialSnapshot, getOauthAccountInfo, getAuthenticatedAccountInfo, subscribeGlobalConfigInstalled, readFreshOauthAccountFromDisk } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getBridgeTokenOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getBridgeTokenOverride } from "./chunk-203p0p9a.js";
 import { isBridgeFirstParty, isBridgeOwnerPinnedEndEnabled } from "./chunk-9estzwf5.js";
 import { getBridgeSession, updateBridgeSessionTitle } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 async function resolveBridgeDaemonOwner(t) {

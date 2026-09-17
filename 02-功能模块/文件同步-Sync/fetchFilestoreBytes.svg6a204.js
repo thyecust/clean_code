@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 71 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { STAGE_TMP_PREFIX, getStageFileRoot, getOutputsRoot, isManagedRemoteSession } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getTrustedOrigin, getUntrustedOriginReason, httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createWriteStream } from "fs";

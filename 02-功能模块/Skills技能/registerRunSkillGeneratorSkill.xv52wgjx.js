@@ -24,7 +24,7 @@ function registerRunSkillGeneratorSkill() {
     files: async () => {
       let [{ TEMPLATE_MD: t }, { RUN_EXAMPLE_FILES: e }] = await Promise.all([
         import("./SKILL_MD.gbxxyvxk.js"),
-        import("../../01-核心基础设施/共享小工具-未细化/RUN_EXAMPLE_FILES.gz0wcr9k.js"),
+        import("../../01-核心基础设施/内嵌资源与模块互操作/RUN_EXAMPLE_FILES.gz0wcr9k.js"),
       ]);
       return { "template.md": t, ...e };
     },

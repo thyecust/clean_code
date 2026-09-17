@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { registerDeviceHooksRequestSchema, registerDeviceHooksResponseSchema, uploadDeviceHookTemplateRequestSchema } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { jsonStringifyUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { formatSingleLineText, MAX_LABEL_LENGTH } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { formatSingleLineText, MAX_LABEL_LENGTH } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { isSupportedDeviceHookEvent, HOOK_MATCHER_PATTERN, parseDeviceHookId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isPreToolUseHook } from "./hook-template-catalog.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 var ee = 65536,
   te = 600,
   J = 200,
@@ -525,14 +525,14 @@ async function productionDeviceHooksWorkerDeps(t) {
       import("../Skills技能/chunk-sapykxw7.js"),
       import("../状态栏-主题/chunk-dqyc6kge.js"),
       import("../Skills技能/chunk-sapykxw7.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
+      import("../目录同步-dir-sync/chunk-97crm80y.js"),
+      import("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
       import("./createDeviceHookRegistry.hghdtq54.js"),
       import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
       import("./createDeviceHookTemplateStore.947t9qjd.js"),
       import("./productionDeviceHookTemplateRunner.z0gca878.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/analytics-fields.js"),
+      import("../../01-核心基础设施/遥测-OpenTelemetry/logEvent.q8d8f1jd.js"),
+      import("../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js"),
       import("../../00-第三方库/lodash/lodash.0vqzb8ad.js"),
     ]),
     p = I({

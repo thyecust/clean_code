@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { isRemoteActive } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isFastModeEnabled, hashForTelemetry, hasStoredOAuthToken, getAutoUpdaterDisabledReason } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { readUnattendedServingConsent } from "../自动模式-AutoMode/unattended-serving-consent.js";
 import { resolveSetting, saveUserIntentSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
-import { areWorkflowsAvailable } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
+import { areWorkflowsAvailable } from "../编排-Workflow/workflow-feature-gates.js";
 import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
 import { DEFAULT_OUTPUT_STYLE_NAME, hasConnectedIdeClient, getEffectiveSessionModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { sanitizeForRelay } from "../远程控制-Bridge/chunk-5ne99rq3.js";
@@ -28,7 +28,7 @@ import { isArtifactConfigToggleable } from "../制品发布-Artifact/chunk-01ymf
 import { getAutoContinueAtUsageLimitSetting, isAutoContinueSettingUserControlled } from "../状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
 import { getSecuritySensitiveSettings, getEffectiveConfig, noopConfigSetters, createSettingsViewModel } from "../../01-核心基础设施/设置-配置/settings-config-model.js";
 import { isWorkflowSizeGuidelineConfigured } from "../Teammates团队/chunk-mrfx53ye.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function parseConfigShorthand(n) {
   let o = n.trim();
   if (!o || !o.includes("=")) return null;
@@ -298,7 +298,7 @@ function c(n, o) {
     r = !isWorkflowSizeGuidelineConfigured(),
     u = isAutoContinueSettingUserControlled(),
     h = isArtifactConfigToggleable(),
-    C = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js").isBriefEntitled();
+    C = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js").isBriefEntitled();
   return {
     globalConfig: s,
     settingsData: e,

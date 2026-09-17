@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { getDefaultGcpRegion } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { truncateToCodeUnits, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -32,25 +32,25 @@ import { getSettingsSourceTitle, getEnabledSettingsSources } from "../../01-核�
 import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { formatNumber } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isPolicyHelperServingDefaultPayload, getSettingsForSource, getArmedHelperOutput, getMergedPolicySources, getManagedFileSettingsPresence, getPolicySettingsOrigin, getShadowedManagedSources } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { getMTLSConfig, getProxyUrl, parseProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, getSecondaryProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getProfileAccountInfo, describeProfileAuthSource } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getLatchedFallbackModelInfo, formatAutoSwitchedModelNote, isJetBrainsIde, resolveIdeClientDisplayName, getIdeDisplayName, getMemoryFileCharLimit, getSessionMemoryFiles, getOversizedMemoryFiles } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getLauncherConfigError, isLauncherRunnable, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
-import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
+import { resolveWrappedClaudeInvocation } from "../../03-入口与运行时/CLI入口-Commander/claude-launcher-invocation.js";
 import { getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { getInstallationDiagnostics } from "../自动更新-安装/install-diagnostics.js";
 import { checkInstall } from "../自动更新-安装/native-installer.js";
 import { retentionCleanupSkipReason } from "../会话-历史-恢复/retention-cleanup.js";
 import { partitionSettingsErrors } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { getPolicyLimitsStatus, formatPolicyLimitsStatus, shouldReportPolicyLimits } from "../远程控制-Bridge/policy-limits-status.js";
-import { getManagedSettingsStatus, shouldReportManagedSettingsStatus, formatManagedSettingsStatus } from "../../01-核心基础设施/共享小工具-未细化/managed-settings-status.js";
+import { getManagedSettingsStatus, shouldReportManagedSettingsStatus, formatManagedSettingsStatus } from "../../01-核心基础设施/设置-配置/managed-settings-status.js";
 import { r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
+import { getThemeColor } from "../../01-核心基础设施/UI组件-TUI/theme-color.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 function splitAnthropicOnlyStatusSections(s) {
   let e = s.map((l) => l.filter((i) => !i.antOnly));
   return (e.push(s.flatMap((l) => l.filter((i) => i.antOnly))), e);
@@ -280,7 +280,7 @@ async function getLauncherDiagnostics(s) {
   let n = await getVerifiedDaemonLock(1, s).catch(() => null);
   if (!n) return i;
   let [{ controlRequest: u }, { BG_PROTO: p }] = await Promise.all([
-      import("../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js"),
+      import("../守护服务-Daemon/chunk-9fpz6abc.js"),
       import("../后台任务-Shell管理/chunk-7wsy8vxb.js"),
     ]),
     c = await u({ proto: p, op: "nudge" }).catch(() => null),

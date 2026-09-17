@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
+import { areBackgroundTasksDisabled } from "../../01-核心基础设施/核心工具-未归类/host-capability-state.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { parseCommandTitleComment, backgroundAllForegroundTasks, parseSedInPlaceCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -18,15 +18,15 @@ import { parseKeybindingChord, formatKeybindingChordText } from "../键位绑定
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindingContext } from "../键位绑定-Keybindings/keybinding-context.js";
 import { ToolErrorMessage } from "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
-import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
-import { useTaskRegistry } from "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
+import { ToolResultRow } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
+import { useKeybindingDisplayText } from "../键位绑定-Keybindings/use-keybinding-display-text.js";
+import { useTaskRegistry } from "../../01-核心基础设施/核心工具-未归类/use-task-registry.js";
 import { BashToolOutputView } from "../工具Bash-Shell/bash-output-view.js";
 import { ShellOutputView } from "../工具Bash-Shell/shell-output-view.js";
-import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/共享小工具-未细化/kb-cohesion-fixes.js";
+import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/核心工具-未归类/kb-cohesion-fixes.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, vr, V, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 var f = "ctrl+b",
   S = "ctrl+x ctrl+b",

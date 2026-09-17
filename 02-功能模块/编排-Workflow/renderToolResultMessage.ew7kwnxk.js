@@ -14,14 +14,14 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { StatusIndicator } from "../../01-核心基础设施/UI组件-TUI/chunk-dsg6bce8.js";
+import { ToolResultRow } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
+import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
 import { collectWorkflowProgressEvents, WorkflowProgressView, WorkflowStatusBar, lZt, formatCompactPhaseTitle, summarizeWorkflowAgents } from "./workflow-progress-ui.js";
 import "./workflow-script.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getSessionStartWorkflowSizeGuideline } from "../Teammates团队/chunk-mrfx53ye.js";
-import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 function renderToolUseProgressMessage(a, s) {
   let i = collectWorkflowProgressEvents(a.map((l) => l.data));
   if (i.agents.length === 0 && i.logs.length === 0) return null;

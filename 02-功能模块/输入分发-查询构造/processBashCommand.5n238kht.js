@@ -12,15 +12,15 @@
 import { G0 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { INNER_TOOL_USE_ID_SUFFIX, BashTool, createUserMessage, prependPrecedingInputBlocks, createInterruptedMessage, createLocalCommandCaveatMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getToolResultsDirForSession } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { isPowerShellToolEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { PERSISTED_OUTPUT_OPEN_TAG, persistMappedToolResult } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { getDefaultShell } from "../../01-核心基础设施/共享小工具-未细化/get-default-shell.js";
-import { getBashSpawnFailureDetail } from "../../01-核心基础设施/共享小工具-未细化/bash-spawn-failure-detail.js";
+import { getDefaultShell } from "../终端环境探测-TUI-tmux/get-default-shell.js";
+import { getBashSpawnFailureDetail } from "../../01-核心基础设施/核心工具-未归类/bash-spawn-failure-detail.js";
 import { randomUUID } from "crypto";
 async function processBashCommand(t, S, e) {
   let h = isPowerShellToolEnabled() && getDefaultShell() === "powershell",

@@ -12,7 +12,7 @@
 import { deviceEventSignerOnceBoundHere as Ghr, deviceEventSignerFor as Y1t, deviceEventSignerIfBoundHere as qhr } from "../认证-OAuth登录/device-event-signer.js";
 import "../远程控制-Bridge/device-bind.js";
 import "../设备注册-Cowork/设备注册-Cowork.9r92qaht.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
+import "../设备注册-Cowork/chunk-d4kaq0ds.js";
 export {
   Y1t as deviceEventSignerFor,
   qhr as deviceEventSignerIfBoundHere,

@@ -62,3 +62,15 @@ export function sizeOf(p) {
 export function readJson(p) {
   return JSON.parse(readFileSync(p, "utf8"));
 }
+
+/**
+ * 目录名 → 模块显示名：`-` → ` / `，并在拉丁词与中文之间补空格。
+ * 两处细节：拉丁词内部连字符不拆（`目录同步-dir-sync` → `目录同步 / dir-sync`）；
+ * `会话UI` → `会话 UI`。
+ */
+export function displayName(leaf) {
+  return leaf
+    .split(/(?<![A-Za-z0-9])-(?![A-Za-z0-9])|(?<=[A-Za-z0-9])-(?=[\u4e00-\u9fff])|(?<=[\u4e00-\u9fff])-(?=[A-Za-z0-9])/)
+    .map((seg) => seg.replace(/(?<=[\u4e00-\u9fff])(?=[A-Za-z])/g, " ").replace(/(?<=[A-Za-z0-9.])(?=[\u4e00-\u9fff])/g, " "))
+    .join(" / ");
+}

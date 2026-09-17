@@ -12,14 +12,14 @@
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { MAX_WORKFLOW_SCRIPT_BYTES } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import "../编排-Workflow/workflow-runtime.js";
-import "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
+import "../../01-核心基础设施/核心工具-未归类/nondeterminism-check.js";
 import "../编排-Workflow/workflow-script.js";
 import { formatWorkflowErrorLine, getWorkflowDisabledReason, launchWorkflow } from "../编排-Workflow/remote-workflow-launch.js";
-import "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
-import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
-import "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
+import "../../01-核心基础设施/核心工具-未归类/structured-output-retry-errors.js";
+import "../../01-核心基础设施/核心工具-未归类/summarize-tool-input.js";
+import "../../01-核心基础设施/核心工具-路径与平台/fd-real-path.js";
 import { REMOTE_WORKFLOW_SCRIPT_ENV, REMOTE_WORKFLOW_ARGS_ENV } from "../编排-Workflow/workflow-registry.js";
-import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
+import "../编排-Workflow/bundled-workflows.js";
 function e(s, t) {
   return { type: "text", value: formatWorkflowErrorLine(s, t) };
 }

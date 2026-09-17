@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K, he, X1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { ge, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -33,9 +33,9 @@ import {
   primeSessionMessagesCache,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getProjectDir, getSessionTranscriptPath } from "../Teammates团队/transcript-paths.js";
-import { resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
-import { extractUserPromptText } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { resolveTranscriptLocator } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
+import { extractUserPromptText } from "../../01-核心基础设施/核心工具-未归类/user-prompt-text.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 import { randomUUID } from "crypto";
 import { once as N } from "events";
 import { createReadStream, createWriteStream } from "fs";

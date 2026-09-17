@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { pluralize, truncateWithCharCount, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { stripInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { stripInvisibleChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { CS, zrt } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
@@ -42,10 +42,10 @@ import {
   getMarketplaceSchema,
   getPluginIdSchema,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
+import { externalHttp } from "../../01-核心基础设施/HTTP-网络层/external-http.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { getPluginRegistryFileScope, getPluginsDir } from "./plugin-system-core.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -57,9 +57,9 @@ import { isNonMarketplacePluginSource, hasNonMarketplacePluginSource, getNonMark
 import { SUPPORTED_BINARY_TARGETS, stripBinaryTargetSuffix, isExistingDirectory, checkContainedDirectory, readOptionalFileContent, readTextFileCapped } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { s, T, se, v, c, fe, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 function de(e, t, a) {
   if (isOrphanPluginEntry(e)) return !1;
   if (e.source === t) return !0;

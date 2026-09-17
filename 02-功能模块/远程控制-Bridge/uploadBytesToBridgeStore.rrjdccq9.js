@@ -11,17 +11,17 @@
 // [preload stripped] 原本在此预载 69 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { getBridgeBaseUrlOverride, getBridgeAccessToken, getBridgeAccessTokenAsync } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getBridgeBaseUrlOverride, getBridgeAccessToken, getBridgeAccessTokenAsync } from "./chunk-203p0p9a.js";
 import { policyDeniedReason, policyDenyKind } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
-import { MAX_TRANSFER_SIZE_BYTES } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import { MAX_TRANSFER_SIZE_BYTES } from "../../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { randomUUID } from "crypto";
 import { readFile } from "fs/promises";

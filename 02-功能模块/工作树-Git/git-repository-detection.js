@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { GIT_HARDENED_ARGS, execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import { getGitRepoCache, gitExe, redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { getGitProvider, parseRemoteHostname } from "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
+import { isGitHubHost } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
+import { getGitProvider, parseRemoteHostname } from "../../01-核心基础设施/核心工具-路径与平台/git-remote-url.js";
 var REPO_PATH_SEGMENT_PATTERN = String.raw`(?!\.{1,2}(?:/|$))[A-Za-z0-9_.][\w.-]*`,
   HOSTNAME_PATTERN = String.raw`[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)*`,
   GITLAB_MERGE_REQUEST_PATH_PATTERN = `(?:${REPO_PATH_SEGMENT_PATTERN}/)+${REPO_PATH_SEGMENT_PATTERN}/-/merge_requests`,

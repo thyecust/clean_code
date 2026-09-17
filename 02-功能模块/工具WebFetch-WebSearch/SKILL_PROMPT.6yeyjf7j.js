@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { PLUGIN_EVAL_QUICKREF_MD } from "../../01-核心基础设施/共享小工具-未细化/plugin-eval-quickref-asset.js";
-import { readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
-import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { PLUGIN_EVAL_QUICKREF_MD } from "../插件系统/plugin-eval-quickref-asset.js";
+import { readEmbeddedAssetSync } from "../../01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js";
+import { importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var e = importMetaRequire("./claude-tag-dht2qzjm.md");
 var t = importMetaRequire("./live-sources-pvws3ftv.md");
 var a = "./plugin-eval-b6bc95df.md.zst";

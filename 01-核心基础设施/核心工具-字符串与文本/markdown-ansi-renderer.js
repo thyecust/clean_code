@@ -16,18 +16,18 @@ import { MarkdownTokenizer, MarkdownEngine, markdownParser } from "../../02-功�
 import { ARTIFACT_MARKER_GLYPH, withArtifactMarker, BLOCKQUOTE_BAR_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
 import { isCanonicalArtifactViewerUrl, isDecisionSurfaceControl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { stripAnsi } from "../共享小工具-未细化/text-sanitization.js";
-import { getCwd } from "../共享小工具-未细化/cwd-context.js";
+import { stripAnsi } from "./text-sanitization.js";
+import { getCwd } from "../核心工具-未归类/cwd-context.js";
 import { getCachedRepositoryHost } from "../../02-功能模块/工作树-Git/git-repository-detection.js";
 import { getStringWidth } from "./ansi-text-utils.js";
-import { GITHUB_HOST, getCanonicalHostname } from "../共享小工具-未细化/git-host-utils.js";
+import { GITHUB_HOST, getCanonicalHostname } from "../核心工具-路径与平台/git-host-utils.js";
 import { id } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { INVISIBLE_CHAR_CLASS_SOURCE, stripLeadingInvisibleChars, isUnsafePath, isUnsafeFileUrl, decodePercentVariants } from "../共享小工具-未细化/chunk-kk7p3hsm.js";
+import { INVISIBLE_CHAR_CLASS_SOURCE, stripLeadingInvisibleChars, isUnsafePath, isUnsafeFileUrl, decodePercentVariants } from "../核心工具-路径与平台/chunk-kk7p3hsm.js";
 import { stripAnalysisTags } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { toLocalFileUrl } from "../共享小工具-未细化/to-local-file-url.js";
-import { formatHyperlink } from "../共享小工具-未细化/format-hyperlink.js";
-import { getThemeColor } from "../共享小工具-未细化/theme-color.js";
-import { getGitProvider } from "../共享小工具-未细化/git-remote-url.js";
+import { toLocalFileUrl } from "../核心工具-路径与平台/to-local-file-url.js";
+import { formatHyperlink } from "./format-hyperlink.js";
+import { getThemeColor } from "../UI组件-TUI/theme-color.js";
+import { getGitProvider } from "../核心工具-路径与平台/git-remote-url.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 var z = new Set([
   "iTerm.app",

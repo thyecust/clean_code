@@ -12,12 +12,12 @@
 import { BackgroundHint as cPt, renderToolUseMessage as ogr, renderToolUseProgressMessage as sgr, renderToolUseQueuedMessage as igr, renderToolResultMessage as agr, renderToolUseErrorMessage as lgr } from "../后台任务-Shell管理/background-task-renderers.js";
 import "../工具Bash-Shell/bash-output-view.js";
 import "../工具Bash-Shell/shell-output-view.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
-import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
-import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-493670wv.js";
+import "../../01-核心基础设施/UI组件-TUI/tool-result-content.js";
+import "../../01-核心基础设施/核心工具-未归类/use-task-registry.js";
 import "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
-import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-context.js";
+import "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 export {
   cPt as BackgroundHint,
   agr as renderToolResultMessage,

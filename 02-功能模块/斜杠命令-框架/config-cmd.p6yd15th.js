@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 215 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
-import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
 import "../自动模式-AutoMode/unattended-serving-consent.js";
 import { sanitizeForRelay } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import "../推送通知-Push/推送通知-Push.8ab67cqd.js";
@@ -21,7 +21,7 @@ import { parseConfigShorthand, applyConfigShorthand, collapseShorthandResultOffB
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/设置-配置/fast-mode.js";
 import "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
-import "../../01-核心基础设施/共享小工具-未细化/propose-goal-feature-gate.js";
+import "../目标模式-Goal/propose-goal-feature-gate.js";
 async function p(n, o) {
   let t = n.trim(),
     e = t.toLowerCase();
