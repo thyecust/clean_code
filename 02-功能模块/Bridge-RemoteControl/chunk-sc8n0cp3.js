@@ -13,7 +13,7 @@ import { getFileStorage } from "../../01-核心基础设施/共享小工具-未�
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { b, Tc, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, Tc, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isSuspiciousUrl } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -23,7 +23,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
-import { uD } from "../Hooks钩子/chunk-z3433nr6.js";
+import { TRUSTED_PLUGIN_SETTINGS_SOURCES } from "../Hooks钩子/chunk-z3433nr6.js";
 import { isLocalSettingsGitTracked } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { toe, ig } from "../插件系统/chunk-ajtn749s.js";
 import { areLocalPluginDirsAllowedByPolicy, isMarketplaceRestrictionPolicyActive, isSourceAllowedByPolicy } from "../插件系统/plugin-source-policy.js";
@@ -49,7 +49,7 @@ var mn = createLazyValue(() =>
 function De() {
   return STORAGE_KEYS.state(xe);
 }
-function WZ() {
+function getCloudPluginsConsentPath() {
   return hn(getClaudeConfigDir(), "state", `${xe}.json`);
 }
 async function Ne(e) {
@@ -58,13 +58,13 @@ async function Ne(e) {
     t = await e.readText();
   } catch (o) {
     return (
-      n(`cloud-plugins consent: store unreadable (${l(o)})`, { level: "warn" }),
+      logForDebugging(`cloud-plugins consent: store unreadable (${l(o)})`, { level: "warn" }),
       "unreadable"
     );
   }
   if (t === void 0) return "unset";
   try {
-    let o = mn().safeParse(z(t));
+    let o = mn().safeParse(jsonParse(t));
     return o.success && o.data.hostname === e.hostname()
       ? o.data.choice
       : "unset";
@@ -79,11 +79,11 @@ async function _n(e) {
 function wn(e, t) {
   return t === "declined" || (t === "unset" && e) ? "declined" : "accepted";
 }
-async function v$n(e, t) {
+async function saveCloudPluginsConsent(e, t) {
   try {
     return (
       await t.writeText(
-        b(
+        jsonStringify(
           {
             version: 1,
             choice: e,
@@ -100,12 +100,12 @@ async function v$n(e, t) {
     );
   } catch (o) {
     return (
-      n(`cloud-plugins consent: answer not saved (${l(o)})`, { level: "warn" }),
+      logForDebugging(`cloud-plugins consent: answer not saved (${l(o)})`, { level: "warn" }),
       !1
     );
   }
 }
-function WHe(e) {
+function createCloudPluginsConsentStorage(e) {
   return {
     readText: async () => {
       if (e) {
@@ -115,7 +115,7 @@ function WHe(e) {
         return o.found ? o.value : void 0;
       }
       try {
-        return await getFileStorage().read(WZ());
+        return await getFileStorage().read(getCloudPluginsConsentPath());
       } catch (t) {
         if (W(t)) return;
         throw t;
@@ -127,17 +127,17 @@ function WHe(e) {
           throw Error("cloud-plugins consent write failed");
         return;
       }
-      let o = WZ();
+      let o = getCloudPluginsConsentPath();
       (await getFileStorage().mkdir(dirname(o), 448), await getFileStorage().atomicWrite(o, t, 384));
     },
     now: () => new Date(),
     hostname: hostname,
   };
 }
-function R$n() {
+function createCloudPluginsConsentPin() {
   return { value: null, persisted: !1, given: !1 };
 }
-async function _ye(e, t, o) {
+async function resolveCloudPluginsConsent(e, t, o) {
   let { answer: r, given: d } = await yn(e, t);
   if (
     r !== "accepted" ||
@@ -174,7 +174,7 @@ function Pn(e) {
   try {
     e?.();
   } catch (t) {
-    n(`cloud-plugins consent: callback failed (${l(t)})`, { level: "warn" });
+    logForDebugging(`cloud-plugins consent: callback failed (${l(t)})`, { level: "warn" });
   }
 }
 var Ue = ["userSettings", "projectSettings", "localSettings", "flagSettings"],
@@ -225,7 +225,7 @@ var Ue = ["userSettings", "projectSettings", "localSettings", "flagSettings"],
     "over_cap",
     "guard_builtin_not_own_choice",
   ];
-function yWe(e) {
+function computeCloudPluginsForwardPlan(e) {
   let t = ct(),
     o = [],
     r = new Map(),
@@ -295,7 +295,7 @@ function yWe(e) {
   return { patch: a, dropped: o, counts: E };
 }
 function Gn(e) {
-  return b(sortObjectKeysDeep(e));
+  return jsonStringify(sortObjectKeysDeep(e));
 }
 function $e(e) {
   return {
@@ -335,7 +335,7 @@ function Yn(e, t) {
     for (let a of S.slice(0, ve)) {
       let E = w[a];
       if (E === void 0) continue;
-      if (!uD.includes(d) && e.trustedOnlyBuiltinIds.has(a.toLowerCase())) {
+      if (!TRUSTED_PLUGIN_SETTINGS_SOURCES.includes(d) && e.trustedOnlyBuiltinIds.has(a.toLowerCase())) {
         t.guard_builtin_not_own_choice++;
         continue;
       }
@@ -655,7 +655,7 @@ function ct() {
 function Q(e, t) {
   return Object.hasOwn(e, t) ? e[t] : void 0;
 }
-async function rPt(e) {
+async function collectCloudPluginsForwardingInputs(e) {
   let t = getEnabledSettingsSources().map((a) => [a, getSettingsForSource(a)]),
     [o, r] = await Promise.all([getKnownMarketplacesOrEmpty(e), getInstalledPluginsViaStorage(e)]),
     d = isPersistedWorkspaceTrusted(),
@@ -751,7 +751,7 @@ function Ze({
   }
   function ae(p) {
     le(() => O?.(p), ke);
-    let P = b(
+    let P = jsonStringify(
       p.refusedByWorker === void 0
         ? [p.forwarded, p.forwardedDisabled, p.loaded, p.notApplied, p.stayed]
         : ["refused", p.refusedByWorker, p.stayed],
@@ -803,7 +803,7 @@ function Ze({
     );
   }
   function he(p, P) {
-    let C = yWe(P);
+    let C = computeCloudPluginsForwardPlan(P);
     if (
       (logEvent("tengu_cloud_plugins_forwarded", {
         ...$e(C.counts),
@@ -845,7 +845,7 @@ function Ze({
     }
     let j = {
       patch: C.patch,
-      patchKey: b(C.patch),
+      patchKey: jsonStringify(C.patch),
       forwardedEnabledIds: new Set(
         Object.entries(C.patch.enabledPlugins)
           .filter(([, B]) => B)
@@ -1090,9 +1090,9 @@ function _t(e, t) {
     workerErrors: o.data.error_count,
   };
 }
-var SZt = 5000,
+var CLOUD_PLUGINS_READ_TIMEOUT_MS = 5000,
   Te = 6;
-function oPt(e) {
+function getForwardingNoticeReason(e) {
   if (e === void 0) return;
   if (e.refusedByWorker !== void 0) return "refused_by_worker";
   if (e.notApplied) return "not_applied";
@@ -1113,14 +1113,14 @@ function yt(e) {
 function Pt(e) {
   return e === "read_failed" || e === "internal_error" ? e : void 0;
 }
-var bZt = {
+var SYSTEM_CLOCK = {
   now: () => Date.now(),
   setTimeout(e, t) {
     let o = setTimeout(e, t);
     return () => clearTimeout(o);
   },
 };
-function _it(e) {
+function createCloudPluginsForwarder(e) {
   let { sessionId: t, reattach: o, manager: r, memory: d } = e,
     w = (_) => {
       try {
@@ -1129,21 +1129,21 @@ function _it(e) {
         logError(I);
       }
     },
-    O = e.readChoices ?? (() => rPt(e.storageV5)),
-    S = e.clock ?? bZt,
+    O = e.readChoices ?? (() => collectCloudPluginsForwardingInputs(e.storageV5)),
+    S = e.clock ?? SYSTEM_CLOCK,
     a = e.muted ?? isRemoteToolServingMuted,
     E = (_) =>
       new Promise((I, D) => {
         let J = S.setTimeout(
           () => D(Error("a local read for plugin forwarding timed out")),
-          SZt,
+          CLOUD_PLUGINS_READ_TIMEOUT_MS,
         );
         Promise.resolve().then(_).then(I, D).finally(J);
       }),
     H = () => E(O),
-    A = e.consentDeps ?? WHe(e.storageV5),
-    R = e.distrust ?? wZt(e.reach),
-    V = () => E(() => _ye(d.consentPin, A, R)),
+    A = e.consentDeps ?? createCloudPluginsConsentStorage(e.storageV5),
+    R = e.distrust ?? createConsentStoreTrustProbe(e.reach),
+    V = () => E(() => resolveCloudPluginsConsent(d.consentPin, A, R)),
     Z = new AbortController(),
     N = "no_consent",
     ie,
@@ -1285,7 +1285,7 @@ function _it(e) {
     }),
     te = () => {
       if (N !== "admitted") return;
-      _ye(d.consentPin, A, R).then(
+      resolveCloudPluginsConsent(d.consentPin, A, R).then(
         (_) => {
           if (_ !== "accepted") j("declined");
         },
@@ -1347,7 +1347,7 @@ function _it(e) {
     );
     if (I === null)
       return { admission: "no_consent", source: "read_failed", unsent: [] };
-    let D = yWe(I);
+    let D = computeCloudPluginsForwardPlan(I);
     if (D.counts.forwarded === 0 && D.counts.marketplacesDeclared === 0)
       return {
         admission: "no_consent",
@@ -1422,7 +1422,7 @@ var kt =
     "Remote tool serving was turned back on by Anthropic. Your plugins are sent to this cloud session again from this computer.",
   bt =
     "This cloud session restarted without your plugins: they are no longer sent from this machine, because the saved Yes was withdrawn (a No in /cloud-plugins, or the answer was removed). Run /cloud-plugins to change that.";
-function wZt(e) {
+function createConsentStoreTrustProbe(e) {
   let t = null,
     o = null,
     r = null,
@@ -1440,7 +1440,7 @@ function wZt(e) {
   };
 }
 function Rt(e) {
-  let t = sanitizeForDisplay(WZ());
+  let t = sanitizeForDisplay(getCloudPluginsConsentPath());
   return `The saved answer about your plugins is not used for this cloud session, because ${e === "in_launch_dir" ? `the session itself can change ${t} from the folder or repository it runs in` : e === "in_sync_root" ? `the session itself can change ${t} through the folder it syncs` : e === "in_other_root" ? `the session itself can change ${t} through a folder it may write on this machine (an added directory or a settings write grant)` : `it could not be checked that the session cannot change ${t}`}; run /cloud-plugins to decide for this session.`;
 }
 function Ct(e, t) {
@@ -1573,15 +1573,15 @@ var Xe = {
   settings: "your settings file was not applied there",
   part: "part of it was not applied there",
 };
-var sPt = "Synced from this computer:",
-  yye = {
+var SYNCED_FROM_THIS_COMPUTER_LABEL = "Synced from this computer:",
+  SYNC_ROW_LABELS = {
     projectFiles: "Project files",
     settings: "Settings",
     plugins: "Plugins",
   },
   nn = ["projectFiles", "settings", "plugins"],
   Dt = figures.tick,
-  iPt = figures.cross,
+  NOT_SYNCED_MARK = figures.cross,
   xt = "\u2026",
   pe = { mark: "synced" },
   fe = { mark: "pending" };
@@ -1595,7 +1595,7 @@ function Nt(e) {
     case "pending":
       return xt;
     case "not_synced":
-      return iPt;
+      return NOT_SYNCED_MARK;
   }
 }
 function Oe(e, t) {
@@ -1610,26 +1610,26 @@ function Oe(e, t) {
   }
 }
 function Lt(e) {
-  return [sPt, ...nn.map((t) => Oe(yye[t], e[t]))];
+  return [SYNCED_FROM_THIS_COMPUTER_LABEL, ...nn.map((t) => Oe(SYNC_ROW_LABELS[t], e[t]))];
 }
-function k$n(e) {
+function formatCloudSessionSyncLine(e) {
   let [t, ...o] = Lt(e),
     r = `${t} ${o.join(" \xB7 ")}`,
-    d = aPt(e);
+    d = getWhileClosedMessage(e);
   return d === void 0 ? r : `${r}. ${d}`;
 }
-function aPt(e) {
+function getWhileClosedMessage(e) {
   return e.whileClosed === void 0
     ? void 0
     : CLOUD_SESSION_CONSENT_MESSAGES[`while_closed.${e.whileClosed}`];
 }
-function x$n(e, t) {
+function isCloudSessionSyncEqual(e, t) {
   return e.whileClosed === t.whileClosed && nn.every((o) => Mt(e[o], t[o]));
 }
 function Mt(e, t) {
   return Oe("", e) === Oe("", t);
 }
-function H$n(e, t) {
+function describeProjectFilesSync(e, t) {
   switch (e.state) {
     case "seeding":
       return fe;
@@ -1646,7 +1646,7 @@ function H$n(e, t) {
       return F(rn(e.state, e.reason, t));
   }
 }
-function TZt(e, t) {
+function getWhileClosedDirection(e, t) {
   switch (e.state) {
     case "armed":
       if (e.firstUpload === "pending" || e.direction === "pending") return;
@@ -1669,7 +1669,7 @@ var tn = [
   "switched_off",
   "lane_unavailable",
 ];
-function I$n(e) {
+function isProjectFilesSyncPending(e) {
   let t = e.directory_sync;
   if (t.state === "armed") return t.direction === void 0;
   return (
@@ -1679,7 +1679,7 @@ function I$n(e) {
     e.serving?.state === "pending"
   );
 }
-function yit(e) {
+function getUploadOriginFacts(e) {
   return { fromUpload: e?.kind === "bundle" || e?.kind === "folder" };
 }
 var It = [
@@ -1755,7 +1755,7 @@ function rn(e, t, o) {
       : "sync is off for this session")
   );
 }
-function P$n(e) {
+function describeSettingsSync(e) {
   if (e.kind === "absent") return F(ce[e.reason]);
   let { outcome: t, readBack: o } = e;
   if (t === void 0) return fe;
@@ -1841,7 +1841,7 @@ function Ut(e) {
       return "a settings file here has errors";
   }
 }
-function O$n(e, t, o) {
+function createSettingsSeedState(e, t, o) {
   return e === void 0
     ? { kind: "absent", reason: t }
     : { kind: "seed", outcome: e.outcome(), readBack: o };
@@ -1851,7 +1851,7 @@ var Wt = {
   switched_off: "switched off on this machine",
   attach_failed: "could not be sent from this machine",
 };
-function D$n(e) {
+function describePluginsSync(e) {
   if (e.kind === "pending") return fe;
   if (e.kind === "absent") return F(Wt[e.reason]);
   let { state: t } = e;
@@ -1891,7 +1891,7 @@ function dn(e) {
   }
 }
 function jt(e) {
-  let t = oPt(e.notice);
+  let t = getForwardingNoticeReason(e.notice);
   if (t !== void 0) return F(ln[t]);
   return e.notice === void 0 && e.gaveUp !== void 0 ? F(dn(e.gaveUp)) : pe;
 }
@@ -1903,7 +1903,7 @@ var ln = {
   not_installed: "they could not be installed there",
   some_not_installed: "some could not be installed there",
 };
-function L$n(e) {
+function describeCloudSessionSync(e) {
   let t = e.directory_sync;
   return {
     projectFiles:
@@ -1932,7 +1932,7 @@ function $t(e) {
   return e.device.status === "bound" && e.serving.state === "on";
 }
 function Bt(e, t) {
-  let o = TZt(
+  let o = getWhileClosedDirection(
     e.state === "armed"
       ? {
           state: "armed",
@@ -1992,30 +1992,30 @@ var un = {
   could_not_send: "they could not be sent this time",
 };
 export {
-  WZ,
-  v$n,
-  WHe,
-  R$n,
-  _ye,
-  yWe,
-  rPt,
-  SZt,
-  oPt,
-  bZt,
-  _it,
-  wZt,
-  sPt,
-  yye,
-  iPt,
-  k$n,
-  aPt,
-  x$n,
-  H$n,
-  TZt,
-  I$n,
-  yit,
-  P$n,
-  O$n,
-  D$n,
-  L$n,
+  getCloudPluginsConsentPath,
+  saveCloudPluginsConsent,
+  createCloudPluginsConsentStorage,
+  createCloudPluginsConsentPin,
+  resolveCloudPluginsConsent,
+  computeCloudPluginsForwardPlan,
+  collectCloudPluginsForwardingInputs,
+  CLOUD_PLUGINS_READ_TIMEOUT_MS,
+  getForwardingNoticeReason,
+  SYSTEM_CLOCK,
+  createCloudPluginsForwarder,
+  createConsentStoreTrustProbe,
+  SYNCED_FROM_THIS_COMPUTER_LABEL,
+  SYNC_ROW_LABELS,
+  NOT_SYNCED_MARK,
+  formatCloudSessionSyncLine,
+  getWhileClosedMessage,
+  isCloudSessionSyncEqual,
+  describeProjectFilesSync,
+  getWhileClosedDirection,
+  isProjectFilesSyncPending,
+  getUploadOriginFacts,
+  describeSettingsSync,
+  createSettingsSeedState,
+  describePluginsSync,
+  describeCloudSessionSync,
 };

@@ -11,7 +11,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFileStorage } from "./file-storage.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
-import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { isSameProcessAsync, ownProcStart } from "../核心工具-进程与信号/process-identity.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -31,26 +31,26 @@ async function writeDaemonStatus(e, r) {
   };
   if (isHoverRestEnabled() && r !== void 0) {
     try {
-      let t = await r.write(getDaemonStatusStateKey(), b(o, null, 2), {
+      let t = await r.write(getDaemonStatusStateKey(), jsonStringify(o, null, 2), {
         mode: 438 & ~process.umask(),
       });
-      if (!t.ok) n(`writeDaemonStatus: ${t.error.code}`);
+      if (!t.ok) logForDebugging(`writeDaemonStatus: ${t.error.code}`);
     } catch (t) {
-      n(`writeDaemonStatus: ${l(t)}`);
+      logForDebugging(`writeDaemonStatus: ${l(t)}`);
     }
     return;
   }
   try {
-    await getFileStorage().atomicWrite(getDaemonStatusPath(), b(o, null, 2));
+    await getFileStorage().atomicWrite(getDaemonStatusPath(), jsonStringify(o, null, 2));
   } catch {}
 }
 async function removeDaemonStatus(e) {
   if (isHoverRestEnabled() && e !== void 0) {
     try {
       let r = await e.delete(getDaemonStatusStateKey());
-      if (!r.ok) n(`removeDaemonStatus: ${r.error.code}`);
+      if (!r.ok) logForDebugging(`removeDaemonStatus: ${r.error.code}`);
     } catch (r) {
-      n(`removeDaemonStatus: ${l(r)}`);
+      logForDebugging(`removeDaemonStatus: ${l(r)}`);
     }
     return;
   }

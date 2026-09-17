@@ -12,14 +12,14 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { fetchCodeSessionsFromSessionsAPI, sanitizeSessionName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { truncateToWidth, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { detectCurrentRepository } from "../Git-Worktree/git-repository-detection.js";
 import { teleportResumeCodeSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -27,7 +27,7 @@ import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
+import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import { TeleportError } from "../云会话-Teleport/teleport-errors.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
@@ -114,7 +114,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
       try {
         (c(!0), P(null));
         let s = await detectCurrentRepository();
-        (k(s), n(`Current repository: ${s || "not detected"}`));
+        (k(s), logForDebugging(`Current repository: ${s || "not detected"}`));
         let f = await fetchCodeSessionsFromSessionsAPI(),
           S = f;
         if (s)
@@ -122,7 +122,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
             if (!v.repo) return !1;
             return `${v.repo.owner.login}/${v.repo.name}` === s;
           })),
-            n(
+            logForDebugging(
               `Filtered ${S.length} sessions for repo ${s} from ${f.length} total`,
             ));
         let V = [...S].sort((v, J) => {
@@ -132,7 +132,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
         O(V);
       } catch (s) {
         let f = s instanceof Error ? s.message : String(s);
-        (n(`Error loading code sessions: ${f}`), P(Ye(f)));
+        (logForDebugging(`Error loading code sessions: ${f}`), P(Ye(f)));
       } finally {
         (c(!1), ne(!1));
       }
@@ -160,7 +160,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
   }, [ie, W]);
   if (!Le) return e(TeleportError, { onComplete: Pe });
   if (R)
-    return e(o, {
+    return e(Box, {
       flexDirection: "column",
       padding: 1,
       tabIndex: 0,
@@ -175,54 +175,54 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
       }),
     });
   if (b)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       padding: 1,
       tabIndex: 0,
       autoFocus: !0,
       onKeyDown: A,
       children: [
-        e(t, {
+        e(Text, {
           bold: !0,
           color: "error",
           children: "Error loading Claude Code sessions",
         }),
         ze(b),
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "Press ",
-            e(t, { bold: !0, children: "Ctrl+R" }),
+            e(Text, { bold: !0, children: "Ctrl+R" }),
             " to retry \xB7 Press",
             " ",
-            e(t, { bold: !0, children: se }),
+            e(Text, { bold: !0, children: se }),
             " to cancel",
           ],
         }),
       ],
     });
   if (g.length === 0)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       padding: 1,
       tabIndex: 0,
       autoFocus: !0,
       onKeyDown: A,
       children: [
-        r(t, {
+        r(Text, {
           bold: !0,
           children: [
             "No Claude Code sessions found",
-            m && r(t, { children: [" for ", m] }),
+            m && r(Text, { children: [" for ", m] }),
           ],
         }),
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: r(t, {
+          children: r(Text, {
             dimColor: !0,
             children: [
               "Press ",
-              e(t, { bold: !0, children: se }),
+              e(Text, { bold: !0, children: se }),
               " to cancel",
             ],
           }),
@@ -245,7 +245,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
             j &&
               r(N, {
                 children: [
-                  e(t, {
+                  e(Text, {
                     dimColor: !0,
                     children: (V === "bridge" ? Re : "").padEnd(Z, " "),
                   }),
@@ -265,7 +265,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
     ),
     Ge = U + z,
     $e = g.length > U;
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     padding: 1,
     height: Ge,
@@ -273,27 +273,27 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
     autoFocus: !0,
     onKeyDown: A,
     children: [
-      r(t, {
+      r(Text, {
         bold: !0,
         children: [
           "Select a session to resume",
           $e &&
-            r(t, {
+            r(Text, {
               dimColor: !0,
               children: [" ", "(", Me, " of ", g.length, ")"],
             }),
-          m && r(t, { dimColor: !0, children: [" (", m, ")"] }),
+          m && r(Text, { dimColor: !0, children: [" (", m, ")"] }),
           ":",
         ],
       }),
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         marginTop: 1,
         flexGrow: 1,
         children: [
-          e(o, {
+          e(Box, {
             marginLeft: 2 + ae,
-            children: r(t, {
+            children: r(Text, {
               bold: !0,
               children: [
                 he.padEnd(Y, " "),
@@ -317,9 +317,9 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
           }),
         ],
       }),
-      e(o, {
+      e(Box, {
         flexDirection: "row",
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children: r(DotSeparatedList, {
             children: [
@@ -365,47 +365,47 @@ function Ye(h) {
 function ze(h) {
   switch (h) {
     case "network":
-      return e(o, {
+      return e(Box, {
         marginY: 1,
         flexDirection: "column",
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children: "Check your internet connection",
         }),
       });
     case "auth":
-      return r(o, {
+      return r(Box, {
         marginY: 1,
         flexDirection: "column",
         children: [
-          e(t, {
+          e(Text, {
             dimColor: !0,
             children: "Teleport requires a Claude account",
           }),
-          r(t, {
+          r(Text, {
             dimColor: !0,
             children: [
               "Run ",
-              e(t, { bold: !0, children: "/login" }),
+              e(Text, { bold: !0, children: "/login" }),
               ' and select "Claude account with subscription"',
             ],
           }),
         ],
       });
     case "api":
-      return e(o, {
+      return e(Box, {
         marginY: 1,
         flexDirection: "column",
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children: "Sorry, Claude encountered an error",
         }),
       });
     case "other":
-      return e(o, {
+      return e(Box, {
         marginY: 1,
         flexDirection: "row",
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children: "Sorry, Claude Code encountered an error",
         }),
@@ -479,23 +479,23 @@ function TeleportResumeWrapper(et) {
   if ((useKeybinding("confirm:no", H, to), ot && oe)) {
     let B;
     if (T[17] === MEMO_CACHE_SENTINEL)
-      ((B = r(o, {
+      ((B = r(Box, {
         flexDirection: "row",
         children: [
-          e(yo, {}),
-          e(t, { bold: !0, children: "Resuming session\u2026" }),
+          e(SpinnerGlyph, {}),
+          e(Text, { bold: !0, children: "Resuming session\u2026" }),
         ],
       })),
         (T[17] = B));
     else B = T[17];
     let M;
     if (T[18] !== oe.title)
-      ((M = r(o, {
+      ((M = r(Box, {
         flexDirection: "column",
         padding: 1,
         children: [
           B,
-          r(t, { dimColor: !0, children: ['Loading "', oe.title, '"\u2026'] }),
+          r(Text, { dimColor: !0, children: ['Loading "', oe.title, '"\u2026'] }),
         ],
       })),
         (T[18] = oe.title),
@@ -506,7 +506,7 @@ function TeleportResumeWrapper(et) {
   if (x && !w) {
     let B;
     if (T[20] === MEMO_CACHE_SENTINEL)
-      ((B = e(t, {
+      ((B = e(Text, {
         bold: !0,
         color: "error",
         children: "Failed to resume session",
@@ -515,15 +515,15 @@ function TeleportResumeWrapper(et) {
     else B = T[20];
     let M;
     if (T[21] !== x.message)
-      ((M = e(t, { dimColor: !0, children: x.message })),
+      ((M = e(Text, { dimColor: !0, children: x.message })),
         (T[21] = x.message),
         (T[22] = M));
     else M = T[22];
     let ro;
     if (T[23] === MEMO_CACHE_SENTINEL)
-      ((ro = e(o, {
+      ((ro = e(Box, {
         marginTop: 1,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           italic: !0,
           children: e(KeybindingHint, { chord: "escape", action: "cancel" }),
@@ -533,7 +533,7 @@ function TeleportResumeWrapper(et) {
     else ro = T[23];
     let no;
     if (T[24] !== M)
-      ((no = r(o, {
+      ((no = r(Box, {
         flexDirection: "column",
         padding: 1,
         children: [B, M, ro],

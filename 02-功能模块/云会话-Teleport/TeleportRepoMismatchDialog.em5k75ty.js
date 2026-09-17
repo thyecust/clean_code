@@ -10,15 +10,15 @@
 
 // [preload stripped] 原本在此预载 260 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
+import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { doesDirectoryRemoteMatchRepo, removeTrackedRepoPath } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
@@ -33,7 +33,7 @@ import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具
 F();
 function I(G) {
   return {
-    label: r(t, { children: ["Use ", e(t, { bold: !0, children: Ao(G) })] }),
+    label: r(Text, { children: ["Use ", e(Text, { bold: !0, children: formatPathForDisplay(G) })] }),
     value: G,
   };
 }
@@ -65,7 +65,7 @@ function TeleportRepoMismatchDialog(ro) {
       (no(ao),
         q(!1),
         j(
-          `${Ao(c)} no longer contains the correct repository. Select another path.`,
+          `${formatPathForDisplay(c)} no longer contains the correct repository. Select another path.`,
         ));
     }),
       (f[0] = i),
@@ -98,36 +98,36 @@ function TeleportRepoMismatchDialog(ro) {
       i.length > 0
         ? r(N, {
             children: [
-              r(o, {
+              r(Box, {
                 flexDirection: "column",
                 gap: 1,
                 children: [
                   e(ErrorMessage, { error: h }),
-                  r(t, {
+                  r(Text, {
                     children: [
                       "Open Claude Code in ",
-                      e(t, { bold: !0, children: a }),
+                      e(Text, { bold: !0, children: a }),
                       ":",
                     ],
                   }),
                 ],
               }),
               y
-                ? r(o, {
+                ? r(Box, {
                     children: [
-                      e(yo, {}),
-                      e(t, { children: " Validating repository\u2026" }),
+                      e(SpinnerGlyph, {}),
+                      e(Text, { children: " Validating repository\u2026" }),
                     ],
                   })
                 : e(ve, { options: B, onChange: (lo) => void V(lo) }),
             ],
           })
-        : r(o, {
+        : r(Box, {
             flexDirection: "column",
             gap: 1,
             children: [
               e(ErrorMessage, { error: h }),
-              r(t, {
+              r(Text, {
                 dimColor: !0,
                 children: ["Run claude --teleport from a checkout of ", a],
               }),

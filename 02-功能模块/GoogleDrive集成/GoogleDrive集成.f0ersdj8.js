@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_BETA_HEADER, CLAUDE_AI_OAUTH_SCOPES, preservableScopesFrom } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -139,7 +139,7 @@ async function searchProjectKnowledgeBase(e, t, r, i, o) {
 function S(e) {
   if (typeof e === "string")
     try {
-      return z(e);
+      return jsonParse(e);
     } catch {
       return e;
     }
@@ -170,7 +170,7 @@ function E(e) {
   if (e == null) return "";
   if (typeof e === "string") return e ? `: ${e.slice(0, 200)}` : "";
   try {
-    return `: ${b(e).slice(0, 200)}`;
+    return `: ${jsonStringify(e).slice(0, 200)}`;
   } catch {
     return `: ${String(e).slice(0, 200)}`;
   }
@@ -272,7 +272,7 @@ async function getProjectContextBlock(e) {
     return await withTimeout(I(t, e), O, "project context fetch timed out");
   } catch (r) {
     return (
-      n(`project context fetch failed: ${l(r)}`, { level: "warn" }),
+      logForDebugging(`project context fetch failed: ${l(r)}`, { level: "warn" }),
       null
     );
   }
@@ -281,7 +281,7 @@ async function I(e, t) {
   let r = await ensureProjectsAccessToken(t);
   if (!r.ok)
     return (
-      n(`project context skipped: ${r.reason}`, { level: "verbose" }),
+      logForDebugging(`project context skipped: ${r.reason}`, { level: "verbose" }),
       null
     );
   return F(await getProjectDetail(e, void 0, t));
@@ -304,7 +304,7 @@ function C(e) {
 var A = 200;
 function H(e) {
   let t = v[e.type ?? ""] ?? safeInline(e.type ?? "source"),
-    r = safeInline(b(e.config)),
+    r = safeInline(jsonStringify(e.config)),
     i = [...r],
     o = i.length > A ? `${i.slice(0, A).join("")}\u2026` : r;
   return `${t}: \`${o}\``;

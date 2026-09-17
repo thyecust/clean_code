@@ -20,7 +20,7 @@ import "../后台任务-Shell管理/chunk-xmxjyg29.js";
 import "../后台任务-Shell管理/chunk-jfk5mpe1.js";
 import "../后台任务-Shell管理/chunk-gnmy62vg.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -38,7 +38,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js"
 import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import "../自动更新-安装/chunk-2g5h49pk.js";
-import "../自动更新-安装/chunk-brx72pf1.js";
+import "../自动更新-安装/install-diagnostics.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import "../Teammates团队/chunk-88ybhavr.js";
 export { BQt as mountFleetView, YFn as remountClearSeq, Qmr as seedHostJobs };

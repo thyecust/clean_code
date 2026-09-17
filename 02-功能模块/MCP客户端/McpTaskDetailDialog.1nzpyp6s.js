@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 123 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { rg } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useElapsedDuration } from "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -80,30 +80,30 @@ function McpTaskDetailDialog(so) {
   else v = s[19];
   let T;
   if (s[20] !== C || s[21] !== v)
-    ((T = r(t, { bold: !0, children: [C, "/", v] })),
+    ((T = r(Text, { bold: !0, children: [C, "/", v] })),
       (s[20] = C),
       (s[21] = v),
       (s[22] = T));
   else T = s[22];
   let M;
   if (s[23] !== n.id)
-    ((M = r(t, { dimColor: !0, children: [" \xB7 ", n.id] })),
+    ((M = r(Text, { dimColor: !0, children: [" \xB7 ", n.id] })),
       (s[23] = n.id),
       (s[24] = M));
   else M = s[24];
   let y;
   if (s[25] !== M || s[26] !== T)
-    ((y = r(t, { children: [T, M] })), (s[25] = M), (s[26] = T), (s[27] = y));
+    ((y = r(Text, { children: [T, M] })), (s[25] = M), (s[26] = T), (s[27] = y));
   else y = s[27];
   let I;
   if (s[28] !== a)
-    ((I = a && r(t, { dimColor: !0, children: ["server task ", sanitizeMcpTaskId(a)] })),
+    ((I = a && r(Text, { dimColor: !0, children: ["server task ", sanitizeMcpTaskId(a)] })),
       (s[28] = a),
       (s[29] = I));
   else I = s[29];
   let X;
   if (s[30] === MEMO_CACHE_SENTINEL)
-    ((X = e(t, { dimColor: !0, children: "status " })), (s[30] = X));
+    ((X = e(Text, { dimColor: !0, children: "status " })), (s[30] = X));
   else X = s[30];
   let x;
   if (s[31] !== n.mcpStatus || s[32] !== n.status)
@@ -116,13 +116,13 @@ function McpTaskDetailDialog(so) {
   if (s[34] !== n.statusMessage)
     ((h =
       n.statusMessage &&
-      r(t, { dimColor: !0, children: [" ", "\xB7 ", rg(n.statusMessage)] })),
+      r(Text, { dimColor: !0, children: [" ", "\xB7 ", rg(n.statusMessage)] })),
       (s[34] = n.statusMessage),
       (s[35] = h));
   else h = s[35];
   let w;
   if (s[36] !== x || s[37] !== h)
-    ((w = r(t, { children: [X, x, h] })),
+    ((w = r(Text, { children: [X, x, h] })),
       (s[36] = x),
       (s[37] = h),
       (s[38] = w));
@@ -132,7 +132,7 @@ function McpTaskDetailDialog(so) {
     ((N =
       n.mcpStatus === "input_required" &&
       n.status === "running" &&
-      e(t, {
+      e(Text, {
         dimColor: !0,
         children: "waiting for your answer in the elicitation dialog",
       })),
@@ -144,7 +144,7 @@ function McpTaskDetailDialog(so) {
     A = V !== void 0 && ` \xB7 polls every ${V}`;
   let P;
   if (s[42] !== b || s[43] !== z || s[44] !== A)
-    ((P = r(t, { dimColor: !0, children: [z, b, A] })),
+    ((P = r(Text, { dimColor: !0, children: [z, b, A] })),
       (s[42] = b),
       (s[43] = z),
       (s[44] = A),
@@ -155,7 +155,7 @@ function McpTaskDetailDialog(so) {
     ((R =
       n.protocol === "sep2663" &&
       n.status === "running" &&
-      e(t, {
+      e(Text, {
         dimColor: !0,
         children: "runs on the server; survives exiting this session",
       })),
@@ -172,7 +172,7 @@ function McpTaskDetailDialog(so) {
     s[53] !== P ||
     s[54] !== R
   )
-    ((B = r(o, { flexDirection: "column", children: [y, I, w, N, P, R] })),
+    ((B = r(Box, { flexDirection: "column", children: [y, I, w, N, P, R] })),
       (s[49] = y),
       (s[50] = I),
       (s[51] = w),

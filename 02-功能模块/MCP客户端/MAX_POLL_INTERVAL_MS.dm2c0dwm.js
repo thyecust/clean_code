@@ -14,10 +14,10 @@ import { K, ze, Lx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, nt, uv, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { formatErrorWithCode, formatConnectionError } from "../认证-OAuth登录/url-and-error-redaction.js";
 import { TaskStatusNotificationSchema, CallToolResultSchema } from "./chunk-tv3jbp8f.js";
 import { getSessionProjectDir, writeMcpTaskMetadata, deleteMcpTaskMetadata, listMcpTaskMetadata } from "./mcp-task-metadata.js";
@@ -38,14 +38,14 @@ async function C(e, t) {
   try {
     await (t ? deleteMcpTaskMetadata(e, t) : deleteMcpTaskMetadata(e));
   } catch (a) {
-    n(`removeMcpTaskMetadata failed: ${String(a)}`);
+    logForDebugging(`removeMcpTaskMetadata failed: ${String(a)}`);
   }
 }
 async function w(e, t, a, s, r) {
   try {
     (await a, await deleteMcpTaskMetadata(e, t, s, r));
   } catch (u) {
-    n(`removeWatcherSidecar failed: ${String(u)}`);
+    logForDebugging(`removeWatcherSidecar failed: ${String(u)}`);
   }
 }
 function N(e) {
@@ -112,7 +112,7 @@ async function mcpContentToNotificationText(e, t, a, s = MAX_CONTENT_BYTES) {
     let u = await maybeTruncateOutput(r, a),
       i = typeof u === "string" ? u : r,
       c = getMaxOutputChars();
-    if (i === r && (r.length > c || Nt(r).length > c)) i = D(r, c);
+    if (i === r && (r.length > c || escapeHtmlText(r).length > c)) i = D(r, c);
     if (i === r) return { text: r };
     if (r.length > s)
       return {
@@ -200,7 +200,7 @@ async function te(e, t, a) {
     };
   } catch (i) {
     return (
-      n(`persisting MCP task result block failed: ${String(i)}`, {
+      logForDebugging(`persisting MCP task result block failed: ${String(i)}`, {
         level: "error",
       }),
       { text: `[${e.type}]`, bytesPersisted: 0 }
@@ -229,12 +229,12 @@ function buildMcpTaskNotification(e) {
     u = e.resultHint
       ? `
 
-${Nt(e.resultHint)}`
+${escapeHtmlText(e.resultHint)}`
       : "";
   return buildTaskNotification({
     taskId: e.registryId,
     status: e.status,
-    summary: Nt(a),
+    summary: escapeHtmlText(a),
     body: `
 <result>
 ${re(r, getMaxOutputChars() - u.length)}${u}
@@ -242,15 +242,15 @@ ${re(r, getMaxOutputChars() - u.length)}${u}
   });
 }
 function re(e, t) {
-  let a = Nt(e);
+  let a = escapeHtmlText(e);
   if (a.length <= t) return a;
-  return Nt(D(e, t));
+  return escapeHtmlText(D(e, t));
 }
 function D(e, t) {
-  let s = Math.max(0, Math.floor(e.length * (t / Nt(e).length)));
+  let s = Math.max(0, Math.floor(e.length * (t / escapeHtmlText(e).length)));
   for (;;) {
     let r = truncateToCodeUnits(e, s);
-    if (Nt(r).length + 13 <= t || s === 0) return r + "\u2026 [truncated]";
+    if (escapeHtmlText(r).length + 13 <= t || s === 0) return r + "\u2026 [truncated]";
     s = Math.floor(s * 0.9);
   }
 }
@@ -282,7 +282,7 @@ async function ne({
         toolUseId: a.toolUseId,
       },
       r,
-    ).catch((k) => n(`writeMcpTaskMetadata ${i}: ${String(k)}`));
+    ).catch((k) => logForDebugging(`writeMcpTaskMetadata ${i}: ${String(k)}`));
   if (t.get(i)?.status === "running")
     t.update(i, (k) => ({
       ...k,
@@ -308,12 +308,12 @@ async function ne({
         try {
           await e.experimental.tasks.getTaskResult(c, CallToolResultSchema);
         } catch (d) {
-          n(`mcp task ${c} getTaskResult during input_required: ${formatErrorWithCode(d)}`);
+          logForDebugging(`mcp task ${c} getTaskResult during input_required: ${formatErrorWithCode(d)}`);
         }
       if ((await sleep(O), L({ taskRegistry: t, registryId: i, registered: T }))) {
         (e.experimental.tasks
           .cancelTask(c, { signal: AbortSignal.timeout(MCP_TASK_CANCEL_TIMEOUT_MS) })
-          .catch((d) => n(`mcp task ${c} cancel after kill: ${formatErrorWithCode(d)}`)),
+          .catch((d) => logForDebugging(`mcp task ${c} cancel after kill: ${formatErrorWithCode(d)}`)),
           w(i, r, I, v, b));
         return;
       }
@@ -321,7 +321,7 @@ async function ne({
         let d = await e.experimental.tasks.getTask(c);
         ((_ = 0), E(d.status, d.statusMessage));
       } catch (d) {
-        if ((_++, n(`mcp task ${c} poll failed: ${formatErrorWithCode(d)}`), _ >= X)) {
+        if ((_++, logForDebugging(`mcp task ${c} poll failed: ${formatErrorWithCode(d)}`), _ >= X)) {
           ((o = "failed"),
             (g = boundMcpStatusMessage(`Task polling failed repeatedly: ${formatErrorWithCode(d)}`)),
             (x = "poll_failed_repeatedly"));
@@ -343,7 +343,7 @@ async function ne({
     if (L({ taskRegistry: t, registryId: i, registered: T })) {
       (e.experimental.tasks
         .cancelTask(c, { signal: AbortSignal.timeout(MCP_TASK_CANCEL_TIMEOUT_MS) })
-        .catch((d) => n(`mcp task ${c} cancel after kill: ${formatErrorWithCode(d)}`)),
+        .catch((d) => logForDebugging(`mcp task ${c} cancel after kill: ${formatErrorWithCode(d)}`)),
         w(i, r, I, v, b));
       return;
     }
@@ -394,24 +394,24 @@ async function restoreMcpTasks(e) {
     t = await listMcpTaskMetadata(e.storageV5);
   } catch (a) {
     (logFeatureBad("mcp_task_restore", "list_failed"),
-      n(`restoreMcpTasks list failed: ${String(a)}`));
+      logForDebugging(`restoreMcpTasks list failed: ${String(a)}`));
     return;
   }
   for (let a of t) {
     if (a.protocol === "sep2663") {
-      n(
+      logForDebugging(
         `restoreMcpTasks: sep2663 sidecar ${a.taskId} needs the v2 runtime; parked`,
       );
       continue;
     }
     if (a.protocol !== void 0) {
-      n(
+      logForDebugging(
         `restoreMcpTasks: sidecar ${a.taskId} has unknown protocol '${a.protocol}'; parked`,
         { level: "error" },
       );
       continue;
     }
-    ie(a, e).catch((s) => n(`restoreMcpTasks ${a.taskId}: ${formatErrorWithCode(s)}`));
+    ie(a, e).catch((s) => logForDebugging(`restoreMcpTasks ${a.taskId}: ${formatErrorWithCode(s)}`));
   }
   logFeatureOk("mcp_task_restore");
 }
@@ -529,7 +529,7 @@ async function ie(
       p.experimental.tasks
         .cancelTask(e.mcpTaskId, { signal: AbortSignal.timeout(MCP_TASK_CANCEL_TIMEOUT_MS) })
         .catch((o) =>
-          n(`mcp task ${e.mcpTaskId} cancel after kill: ${formatErrorWithCode(o)}`),
+          logForDebugging(`mcp task ${e.mcpTaskId} cancel after kill: ${formatErrorWithCode(o)}`),
         ));
     return;
   }

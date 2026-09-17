@@ -9,21 +9,21 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 113 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
 function renderToolResultMessage(n) {
   if (!n.ended) return null;
   let l = getEndedByModelSuffix();
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     borderStyle: "round",
     borderColor: "subtle",
     paddingX: 1,
     marginTop: 1,
     children: [
-      e(t, { color: "text", children: n.message }),
-      l !== "" && e(t, { color: "subtle", children: l }),
+      e(Text, { color: "text", children: n.message }),
+      l !== "" && e(Text, { color: "subtle", children: l }),
     ],
   });
 }

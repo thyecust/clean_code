@@ -12,11 +12,11 @@ import { Xn, j, Gt, B, K, ke } from "../../00-第三方库/lodash/lodash.2x3q7cf
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A, Jg, AZ, GW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, pluralize, truncateToCodePoints, truncateToCodeUnits, isWellFormed, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { nS, aBe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { getAuthPrecedenceSource, scanSdkUrlFlag } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ARTIFACT_ORIGIN_NOTES_TAG, isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -69,7 +69,7 @@ import { G5, KU, bkt, getUsableProxyUrl } from "../../00-第三方库/https-prox
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import {
-  Vo,
+  getArtifactEnvironment,
   YZe,
   ARTIFACT_TOOL_NAME,
   notAnArtifactUrlMessage,
@@ -100,7 +100,7 @@ import {
   MODEL_TEXT_PUNCT_CODE_POINT,
   sweepMarkerLookalikes,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { go, vge } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { escapeHtmlAttribute, neutralizeTagScopedContent } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { isTeammate } from "../Teammates团队/teammate-context.js";
 import { isTransportError, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import {
@@ -140,27 +140,27 @@ import {
 import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import {
   xN,
-  ne,
-  Ufe,
-  L$,
-  _Tt,
-  Ner,
-  HTn,
-  ITn,
-  PTn,
-  OTn,
-  Fer,
-  $er,
-  Uer,
-  yTt,
-  Ber,
-  jer,
+  getArtifactState,
+  XHTML_NAMESPACE,
+  asDocument,
+  isGetStartedDecision,
+  DECISION_COMMENT_PATTERN,
+  renderDecisionItem,
+  DECISION_ISLAND_SLOT,
+  STATUS_BANNER_SLOT,
+  STATUS_FOOTER_SLOT,
+  renderDecisionIslandScript,
+  renderStatusBanner,
+  renderStatusFooter,
+  tallyDeliverableKinds,
+  extractWorkshopDecisions,
+  registerWorkshopEnabledGate,
 } from "./chunk-rr78st95.js";
 import { bFe, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import { DANGEROUS_FILES_LC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isPolicyLimitsEligible, getPolicyLimitsIneligibleReason, isPolicyAllowed, isPolicyRouteMissing, getResponseFromCache } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getRemoteControlSessionCompatId } from "../权限系统/chunk-1y2g140m.js";
-import { xC, moe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
+import { peekPreSettingsEnvSnapshot, getAppliedGlobalConfigEnv } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 import { isAnthropicHostedEnvironment, isByocEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
 import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import { defineStoreField, createLocalStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
@@ -228,7 +228,7 @@ function hasGatewayCredential() {
   return isClaudeAISubscriber() || os();
 }
 function os() {
-  if (nS() !== "env-quad") return !1;
+  if (getAuthPrecedenceSource() !== "env-quad") return !1;
   try {
     return isWIFDispatchAuth() && hasUsableClaudeAILogin();
   } catch {
@@ -965,7 +965,7 @@ async function Lr() {
   } catch (p) {
     return (logError(p), logFeatureSad("artifact_publish", "hljs_bundle_unreadable"), null);
   }
-  let t = ne().bundleEmbedVerdicts;
+  let t = getArtifactState().bundleEmbedVerdicts;
   if (t.hljs === void 0) t.hljs = uc(e);
   if (t.hljs !== null)
     return (logFeatureSad("artifact_publish", "hljs_bundle_unsafe"), null);
@@ -982,7 +982,7 @@ async function Lr() {
 `;
   if (o.length >= ps)
     return (logFeatureSad("artifact_publish", "hljs_bundle_overspan"), null);
-  let d = ne().blockStripVerdicts;
+  let d = getArtifactState().blockStripVerdicts;
   if (d.hljs === void 0) d.hljs = hs(o);
   if (!d.hljs) return (logFeatureSad("artifact_publish", "hljs_block_unstrippable"), null);
   return (
@@ -1017,7 +1017,7 @@ function wc() {
   return (
     `(function(){
 var CFG=` +
-    b({ palettes: yc }) +
+    jsonStringify({ palettes: yc }) +
     `;
 if(typeof mermaid==='undefined')return;
 var pres=Array.prototype.slice.call(document.querySelectorAll('pre.mermaid')).filter(function(p){if(p.hasAttribute('data-claude-mermaid-claimed'))return false;p.setAttribute('data-claude-mermaid-claimed','1');return true;});
@@ -1215,7 +1215,7 @@ function buildMermaidRuntimeBlock() {
       e +
       `</script>
 `,
-    r = ne().blockStripVerdicts;
+    r = getArtifactState().blockStripVerdicts;
   if (r.mermaid === void 0) r.mermaid = bs(t);
   if (!r.mermaid)
     return (logFeatureSad("artifact_publish", "mermaid_block_unstrippable"), null);
@@ -1276,7 +1276,7 @@ var Fr = (e) => e.attrs?.find((t) => t.name === "id")?.value,
   Lc = (e) => xs(e) === "module",
   Fc = (e) =>
     e.tagName === "script" &&
-    e.namespaceURI === Ufe &&
+    e.namespaceURI === XHTML_NAMESPACE &&
     !Mr(e, "src") &&
     !Mr(e, "nomodule") &&
     $c.has(xs(e)) &&
@@ -1387,7 +1387,7 @@ function Bc(e, t) {
     F = 0;
   for (let I of _) {
     let N = I.tagName.toUpperCase(),
-      ae = I.namespaceURI === Ufe && !/[^a-z0-9]/.test(I.tagName) && Rc.test(N),
+      ae = I.namespaceURI === XHTML_NAMESPACE && !/[^a-z0-9]/.test(I.tagName) && Rc.test(N),
       ue = Fr(I),
       V = ue !== void 0 && w.get(ue) === I;
     if (!ae || (V && ue !== "")) continue;
@@ -1425,25 +1425,25 @@ async function As(e) {
     if (t(e)) return (logFeatureSad("artifact_publish", "block_ids_nesting_budget"), e);
     let { parse: r } = await import("../../01-核心基础设施/共享小工具-未细化/parse.4jce22r9.js"),
       o = ks + e,
-      d = L$(r(o, { sourceCodeLocationInfo: !0 })),
+      d = asDocument(r(o, { sourceCodeLocationInfo: !0 })),
       p = Bc(o, d);
     if (p === null)
       return (
         logFeatureSad("artifact_publish", "block_ids_text_budget"),
-        n("[artifact] doc block ids skipped: too much text to hash"),
+        logForDebugging("[artifact] doc block ids skipped: too much text to hash"),
         e
       );
     return jc(o, p).slice(ks.length);
   } catch (t) {
     return (
       logFeatureSad("artifact_publish", "block_ids_parse_failed"),
-      n(`[artifact] doc block ids skipped: ${String(t)}`),
+      logForDebugging(`[artifact] doc block ids skipped: ${String(t)}`),
       e
     );
   }
 }
 function hasSessionAccessToken() {
-  return aBe().status === "ok" && getSessionAccessToken() !== null;
+  return scanSdkUrlFlag().status === "ok" && getSessionAccessToken() !== null;
 }
 function Dn() {
   let e = getSessionAccessToken();
@@ -1499,7 +1499,7 @@ var AGENT_PROXY_PATH = "/v1/code/agent-proxy",
   Hc = /^\/v1\/code\/sessions\/([^/]+)\/?$/;
 function Cs() {
   if (isByocEnvironment()) {
-    let e = aBe();
+    let e = scanSdkUrlFlag();
     if (e.status === "ok") {
       let t = Hc.exec(new URL(e.url).pathname)?.[1];
       if (t !== void 0) return `/v1/code/sessions/${t}/agent-proxy`;
@@ -1588,7 +1588,7 @@ class Ns {
   warnMalformedOnce(e) {
     if (this.warnedMalformed === e) return;
     ((this.warnedMalformed = e),
-      n(
+      logForDebugging(
         "[frame-tunnel] CCR_AGENT_PROXY_FRAME_HOSTS is malformed; keeping the gateway routes",
         { level: "warn" },
       ));
@@ -1740,7 +1740,7 @@ function canRelayFrameFamily(e = null) {
 function Ws(e) {
   if (!Ir() && !Gs()) return !1;
   if (e !== null && isFrameFamilyRelayGated(e)) return !1;
-  let t = ne().frameRelay;
+  let t = getArtifactState().frameRelay;
   if (!t.botContextNoted)
     ((t.botContextNoted = !0),
       logFeatureSad("artifact_frame_relay", "bot_context_not_served", { hosted: isAnthropicHostedEnvironment() }));
@@ -1769,31 +1769,31 @@ function isFrameFamilyRelayGated(e) {
   return t !== void 0 && isAnthropicHostedEnvironment() && getFeatureValue_CACHED_MAY_BE_STALE(t, !1) && Ps();
 }
 function isFrameFamilyDeclined(e) {
-  return (ne().frameRelay.declinedUntil.get(e) ?? 0) > Date.now();
+  return (getArtifactState().frameRelay.declinedUntil.get(e) ?? 0) > Date.now();
 }
 function declineFrameFamily(e, t = !1) {
-  let r = ne().frameRelay,
+  let r = getArtifactState().frameRelay,
     o = Date.now() + Ur;
   if ((r.declinedUntil.set(e, o), t)) r.hopFailedUntil.set(e, o);
   else r.hopFailedUntil.delete(e);
 }
 function isFrameFamilyHopFailed(e) {
-  return (ne().frameRelay.hopFailedUntil.get(e) ?? 0) > Date.now();
+  return (getArtifactState().frameRelay.hopFailedUntil.get(e) ?? 0) > Date.now();
 }
 function jn(e) {
-  return (ne().frameRelay.servedUntil.get(e) ?? 0) > Date.now();
+  return (getArtifactState().frameRelay.servedUntil.get(e) ?? 0) > Date.now();
 }
 function markFrameFamilyServed(e) {
-  let t = ne().frameRelay;
+  let t = getArtifactState().frameRelay;
   (t.declinedUntil.delete(e),
     t.servedUntil.set(e, Date.now() + Ur),
     t.vouched.add(e));
 }
 function isFrameFamilyVouched(e) {
-  return ne().frameRelay.vouched.has(e);
+  return getArtifactState().frameRelay.vouched.has(e);
 }
 function unvouchFrameFamily(e) {
-  ne().frameRelay.vouched.delete(e);
+  getArtifactState().frameRelay.vouched.delete(e);
 }
 function shouldAbandonFrameRelay(e) {
   if (isHostedFrameRelayEnabled() || !(e === 401 || e === 403 || e === 404)) return !1;
@@ -1809,7 +1809,7 @@ function markArtifactRelayHopFailed(e) {
 }
 var Ys = () => !0;
 function Br(e, t, r) {
-  (ne().frameRelay.tunnelDeclinedUntil.set(e, Date.now() + Ur),
+  (getArtifactState().frameRelay.tunnelDeclinedUntil.set(e, Date.now() + Ur),
     logFeatureSad("artifact_frame_relay", "tunnel_declined", {
       family: e,
       cause: fromEnum(t),
@@ -1822,7 +1822,7 @@ function Bs(e) {
 }
 async function requestViaFrameTunnel(e, t, r, o, d) {
   let _ =
-    (ne().frameRelay.tunnelDeclinedUntil.get(d) ?? 0) > Date.now()
+    (getArtifactState().frameRelay.tunnelDeclinedUntil.get(d) ?? 0) > Date.now()
       ? void 0
       : Is();
   if (_ !== void 0) {
@@ -2130,8 +2130,8 @@ function getArtifactReadInstruction() {
 function buildArtifactReadGuidance(e) {
   let t = e !== "plain" && isArtifactReadAvailable(),
     r = zr(),
-    o = Vo(),
-    d = ne().contentHostEgressDenied.has(o) && !(isFrameRelayEnabled() && !isFrameFamilyDeclined(ARTIFACT_MOUNT_FAMILY)),
+    o = getArtifactEnvironment(),
+    d = getArtifactState().contentHostEgressDenied.has(o) && !(isFrameRelayEnabled() && !isFrameFamilyDeclined(ARTIFACT_MOUNT_FAMILY)),
     p =
       o === "staging"
         ? "*.frame.staging.claudeusercontent.com"
@@ -2151,7 +2151,7 @@ function buildArtifactReadGuidance(e) {
   };
 }
 function getPrReviewTemplateChrome() {
-  let e = ne().prReviewTemplate;
+  let e = getArtifactState().prReviewTemplate;
   return (
     (e.chrome ??= import("../../01-核心基础设施/共享小工具-未细化/SKILL_COMPOSED_MD.93smkgn7.js").then((t) =>
       cu(t.SKILL_FILES["template.html"] ?? ""),
@@ -2651,14 +2651,14 @@ function ro(e, t, r = {}) {
       return _(`the ${U.id} island carries a disallowed character`);
     let ce;
     try {
-      ce = z(re);
+      ce = jsonParse(re);
     } catch {
       return _(`the ${U.id} island is not valid JSON`);
     }
     if (!isRecord(ce)) return _(`the ${U.id} island is not a JSON object`);
     let q = U.validate(ce);
     if (q) return _(q);
-    if (b(ce) !== re)
+    if (jsonStringify(ce) !== re)
       return _(`the ${U.id} island is not in canonical JSON form`);
     if (U.id === PRR_ANCHOR_ISLAND_ID)
       ((D = ce.anchor), (F = ce.live === void 0 ? null : ce.live));
@@ -3610,7 +3610,7 @@ async function $o(e, t, r) {
       }),
         N.push(V));
     } catch (J) {
-      n(`artifact stub: skipping removal of ${V}: ${J}`, { level: "warn" });
+      logForDebugging(`artifact stub: skipping removal of ${V}: ${J}`, { level: "warn" });
     }
   let ae = [];
   for (let V of r.files ?? []) {
@@ -3621,7 +3621,7 @@ async function $o(e, t, r) {
         continue;
       await writeFileExclusive(J, V.content);
     } catch (J) {
-      n(`artifact stub: skipping supporting file ${V.path}: ${J}`, {
+      logForDebugging(`artifact stub: skipping supporting file ${V.path}: ${J}`, {
         level: "warn",
       });
       continue;
@@ -3633,7 +3633,7 @@ async function $o(e, t, r) {
     });
   }
   for (let V of M)
-    n(`artifact stub: not materializing ${V.path}: ${V.reason}`, {
+    logForDebugging(`artifact stub: not materializing ${V.path}: ${V.reason}`, {
       level: "warn",
     });
   let ue = {
@@ -3659,7 +3659,7 @@ async function $o(e, t, r) {
     publishedAtMs: Date.now(),
   };
   return (
-    await writeFileExclusive(Xe.join(_, "manifest.json"), b(ue, null, 2)),
+    await writeFileExclusive(Xe.join(_, "manifest.json"), jsonStringify(ue, null, 2)),
     { url: p, slug: d, version: "1", err: null }
   );
 }
@@ -3667,7 +3667,7 @@ async function readArtifactStubFavicon(e, t) {
   if (!ARTIFACT_SLUG_RE.test(t)) return;
   try {
     let r = await readOptionalFileContent(Xe.join(e, t, "manifest.json")),
-      o = r === void 0 ? void 0 : z(r);
+      o = r === void 0 ? void 0 : jsonParse(r);
     return isRecord(o) ? o.favicon : void 0;
   } catch {
     return;
@@ -5948,11 +5948,11 @@ var ta =
 function ia(e, t) {
   if (((t ?? "").trim().split(/\s+/)[0]?.toLowerCase() ?? "") !== "mermaid")
     return !1;
-  return `<pre class="mermaid">${go(e)}</pre>
+  return `<pre class="mermaid">${escapeHtmlAttribute(e)}</pre>
 `;
 }
 function sa() {
-  let e = ne().marked;
+  let e = getArtifactState().marked;
   if (e.plain) return e.plain;
   let t = new MarkdownEngine({ gfm: !0 });
   return (
@@ -5971,7 +5971,7 @@ async function renderMarkdownArtifactHtml(e, t) {
   return ef + di(e, t);
 }
 function nf() {
-  let e = ne().marked;
+  let e = getArtifactState().marked;
   if (e.inertHtml) return e.inertHtml;
   let t = new MarkdownEngine({ gfm: !0 });
   return (
@@ -5981,19 +5981,19 @@ function nf() {
           return ia(r, o);
         },
         html({ text: r }) {
-          if (Ner.test(r)) return r;
+          if (DECISION_COMMENT_PATTERN.test(r)) return r;
           if (isWellFormedHtmlComment(r)) return "";
-          return go(r);
+          return escapeHtmlAttribute(r);
         },
         link(r) {
           if (isSafeExternalUrl(r.href)) return !1;
-          return `${this.parser.parseInline(r.tokens)} (${go(r.href)})`;
+          return `${this.parser.parseInline(r.tokens)} (${escapeHtmlAttribute(r.href)})`;
         },
         image(r) {
-          if (!isSafeExternalUrl(r.href)) return go(r.text || r.href);
+          if (!isSafeExternalUrl(r.href)) return escapeHtmlAttribute(r.text || r.href);
           return (
-            `<img src="${go(r.href)}" alt="${go(r.text)}"` +
-            (r.title ? ` title="${go(r.title)}"` : "") +
+            `<img src="${escapeHtmlAttribute(r.href)}" alt="${escapeHtmlAttribute(r.text)}"` +
+            (r.title ? ` title="${escapeHtmlAttribute(r.title)}"` : "") +
             ">"
           );
         },
@@ -6189,7 +6189,7 @@ async function fi(e, t) {
       : (await import("../../01-核心基础设施/共享小工具-未细化/PLAN_TEMPLATE.1d4pc3yc.js")).PLAN_TEMPLATE;
   } catch (U) {
     (logFeatureSad("artifact_publish", `${t.feature}_template_load_failed`),
-      n(
+      logForDebugging(
         `${t.feature} artifact: template load failed (${l(U)}); falling back to markdown stylesheet`,
         { level: "warn" },
       ));
@@ -6205,7 +6205,7 @@ async function fi(e, t) {
       t.extractLede && r.length <= cr ? Sf(C) : { summary: "", rest: C },
     F =
       t.extractDecisions && !o
-        ? Ber(D, lr, (U) => (_Tt(U) ? "" : HTn(U)))
+        ? extractWorkshopDecisions(D, lr, (U) => (isGetStartedDecision(U) ? "" : renderDecisionItem(U)))
         : null,
     I = (U) => di(U, { neutralizeRawHtml: t.neutralizeRawHtml }),
     N = F !== null && (F.decisions.length > 0 || F.deliverables.length > 0);
@@ -6240,7 +6240,7 @@ async function fi(e, t) {
   if (V === null)
     return (
       logFeatureSad("artifact_publish", `${t.feature}_template_shape_drift`),
-      n(
+      logForDebugging(
         `${t.feature} artifact: bundled template has no placeholder-section run; falling back to markdown stylesheet`,
         { level: "warn" },
       ),
@@ -6252,7 +6252,7 @@ async function fi(e, t) {
     );
   let J =
     ue && F !== null && F.deliverables.length > 0
-      ? yTt(F.deliverables.map((U) => U.kind))
+      ? tallyDeliverableKinds(F.deliverables.map((U) => U.kind))
       : void 0;
   return {
     html: V,
@@ -6262,27 +6262,27 @@ async function fi(e, t) {
   };
 }
 function wf(e, t) {
-  let r = e.lastIndexOf(ITn);
+  let r = e.lastIndexOf(DECISION_ISLAND_SLOT);
   if (r === -1) {
     if (t.length > 0) logFeatureSad("workshop_decisions", "island_slot_missing");
     return e;
   }
-  let o = Fer(t);
+  let o = renderDecisionIslandScript(t);
   if (t.length > 0 && o === null) logFeatureSad("workshop_decisions", "island_belt_stop");
-  return e.slice(0, r) + (o ?? "") + e.slice(r + ITn.length);
+  return e.slice(0, r) + (o ?? "") + e.slice(r + DECISION_ISLAND_SLOT.length);
 }
 function kf(e, t) {
   let r = e,
-    o = r.indexOf(PTn);
+    o = r.indexOf(STATUS_BANNER_SLOT);
   if (o === -1) logFeatureSad("workshop_decisions", "banner_slot_missing");
-  else r = r.slice(0, o) + $er(t) + r.slice(o + PTn.length);
-  let d = t.find(_Tt),
-    p = r.lastIndexOf(OTn);
+  else r = r.slice(0, o) + renderStatusBanner(t) + r.slice(o + STATUS_BANNER_SLOT.length);
+  let d = t.find(isGetStartedDecision),
+    p = r.lastIndexOf(STATUS_FOOTER_SLOT);
   if (p === -1) {
     if (d !== void 0) logFeatureSad("workshop_decisions", "status_footer_slot_missing");
   } else
     r =
-      r.slice(0, p) + (d === void 0 ? "" : Uer(d, t)) + r.slice(p + OTn.length);
+      r.slice(0, p) + (d === void 0 ? "" : renderStatusFooter(d, t)) + r.slice(p + STATUS_FOOTER_SLOT.length);
   return r;
 }
 var la = /<section\b[\s\S]*<\/section>/;
@@ -6297,7 +6297,7 @@ function vf(e, t) {
   };
   return r
     .replace(/\{\{(TITLE|TAB_TITLE|EYEBROW|SUMMARY)\}\}/g, (d, p) =>
-      go(o[p] ?? ""),
+      escapeHtmlAttribute(o[p] ?? ""),
     )
     .replace(la, () => `<section>${t.body}</section>`);
 }
@@ -6332,15 +6332,15 @@ function sanitizeArtifactVersionForTelemetry(e) {
 function pa(e) {
   return {
     arm() {
-      ne().templateLanes[e] = !0;
+      getArtifactState().templateLanes[e] = !0;
     },
     take() {
-      let t = ne().templateLanes,
+      let t = getArtifactState().templateLanes,
         r = t[e];
       return ((t[e] = !1), r);
     },
     giveBack() {
-      ne().templateLanes[e] = !0;
+      getArtifactState().templateLanes[e] = !0;
     },
   };
 }
@@ -6356,10 +6356,10 @@ function giveBackPrototypeLane() {
   pi.giveBack();
 }
 function hi(e, t) {
-  ne().templateLanes.boundSlugs.set(e, t);
+  getArtifactState().templateLanes.boundSlugs.set(e, t);
 }
 function getTemplateLaneForSlug(e) {
-  return ne().templateLanes.boundSlugs.get(e);
+  return getArtifactState().templateLanes.boundSlugs.get(e);
 }
 function recordPrototypePublish(e, t) {
   (hi(e, "prototype"),
@@ -6568,7 +6568,7 @@ ${r}`)
 }
 var ga = { page_data: 0, summary: 1, source: 2 };
 function sourcelessObservation(e, t, r, o) {
-  let d = ne().readDeliveries.get(xN(e, t));
+  let d = getArtifactState().readDeliveries.get(xN(e, t));
   return d !== void 0 &&
     o !== void 0 &&
     o !== "" &&
@@ -6579,7 +6579,7 @@ function sourcelessObservation(e, t, r, o) {
     : void 0;
 }
 function observedWithoutSource(e, t, r) {
-  let o = ne().readDeliveries.get(xN(e, t));
+  let o = getArtifactState().readDeliveries.get(xN(e, t));
   return o !== void 0 && o.ver === r && !o.sourced;
 }
 var Ca = "\x00own-mint";
@@ -6623,7 +6623,7 @@ function makeSetArtifactReadVersion(e) {
       M = E === Ca,
       D = M ? "" : E;
     if (p !== void 0) {
-      let F = ne().readDeliveries,
+      let F = getArtifactState().readDeliveries,
         I = xN(p, t),
         N = F.get(I),
         ae = C ?? "source",
@@ -6638,7 +6638,7 @@ function makeSetArtifactReadVersion(e) {
         F.set(I, { ver: r, batch: D, kind: ae, sourced: ue });
     }
     if (p !== void 0 && !M) {
-      let F = ne().refusedPublishBodies.get(xN(p, t));
+      let F = getArtifactState().refusedPublishBodies.get(xN(p, t));
       if (
         F !== void 0 &&
         F.observedFrom === void 0 &&
@@ -7294,13 +7294,13 @@ async function readFrameDecl(e, t, r) {
     if (d.status === 404) return null;
     if (d.status < 200 || d.status >= 300)
       return (
-        n(`[artifact] read-back ${d.status}: ${errBody(d.data)}`),
+        logForDebugging(`[artifact] read-back ${d.status}: ${errBody(d.data)}`),
         { err: `read-back HTTP ${d.status}`, status: d.status }
       );
     let p = If().safeParse(d.data);
     if (!p.success)
       return (
-        n(`[artifact] malformed read-back body: ${p.error.message}`),
+        logForDebugging(`[artifact] malformed read-back body: ${p.error.message}`),
         { err: "malformed read-back body", status: d.status }
       );
     let { contract: _, capabilities: w } = p.data,
@@ -7322,7 +7322,7 @@ async function Ga(e, t, r, o) {
   if (d.err !== null || t === void 0) return d;
   let p = await readFrameDecl(t, o, r);
   if (p === null || "err" in p) {
-    if (p !== null) n(`[artifact] read-back skipped: ${p.err}`);
+    if (p !== null) logForDebugging(`[artifact] read-back skipped: ${p.err}`);
     return d;
   }
   let { typeLock: _, ...w } = p,
@@ -7543,7 +7543,7 @@ function Za() {
   return e ? { session_id: e } : {};
 }
 async function br() {
-  let e = ne(),
+  let e = getArtifactState(),
     t =
       e.workshopBlessedHashes ??
       (async () => {
@@ -7564,7 +7564,7 @@ async function br() {
     let { hashes: r, complete: o } = await t;
     if (!o)
       ((e.workshopBlessedHashes = void 0),
-        n(
+        logForDebugging(
           "workshopBlessedScriptHashes: a runtime leg degraded \u2014 returning an incomplete (stricter) allowlist for this call only",
         ));
     return r;
@@ -7733,13 +7733,13 @@ function kp(e) {
 }
 function mintRoundTripPublishSignal(e) {
   let t = Object.freeze({ slug: e });
-  return (ne().mintedRoundTripPublishSignals.add(t), t);
+  return (getArtifactState().mintedRoundTripPublishSignals.add(t), t);
 }
 function isMintedRoundTripPublishSignal(e) {
   return (
     typeof e === "object" &&
     e !== null &&
-    ne().mintedRoundTripPublishSignals.has(e)
+    getArtifactState().mintedRoundTripPublishSignals.has(e)
   );
 }
 function $i(e, t = "supporting file") {
@@ -7748,7 +7748,7 @@ function $i(e, t = "supporting file") {
       return (
         logFeatureBad("artifact_publish", "file_not_servable"),
         ie(
-          `${t} "${r.path}": contentType ${b(r.contentType)} is not servable (nothing was published). Supporting files are assets the page itself loads \u2014 scripts, styles, images, media, JSON \u2014 and only standard web media types are served, so re-encode a data asset into one (e.g. JSON) or inline it. If the intent was instead to hand the viewer a file to keep, note that neither a served file nor a data:/blob: download link does that (the viewer blocks page-initiated downloads); offering a file to save is a runtime capability where available.`,
+          `${t} "${r.path}": contentType ${jsonStringify(r.contentType)} is not servable (nothing was published). Supporting files are assets the page itself loads \u2014 scripts, styles, images, media, JSON \u2014 and only standard web media types are served, so re-encode a data asset into one (e.g. JSON) or inline it. If the intent was instead to hand the viewer a file to keep, note that neither a served file nor a data:/blob: download link does that (the viewer blocks page-initiated downloads); offering a file to save is a runtime capability where available.`,
         )
       );
     if (MANIFEST_TEXT_TYPES.has(r.contentType)) {
@@ -8182,7 +8182,7 @@ async function ka(e, t) {
     return (
       logFeatureBad("artifact_publish", "invalid_contract", { page_bytes: pe }),
       ie(
-        `invalid contract ${b(t.contract)} \u2014 pass 'latest' ` +
+        `invalid contract ${jsonStringify(t.contract)} \u2014 pass 'latest' ` +
           "or a published version like 0.1.0.",
       )
     );
@@ -8265,7 +8265,7 @@ async function ka(e, t) {
   ) {
     logFeatureBad("artifact_publish", "capability_retrofit_refused");
     let L = rt(Tt, 8, ([ee]) => sanitizeDisplayText(ee)),
-      de = sanitizeDisplayText(b({ ...Object.fromEntries(Tt), ...Ue }), { max: 600 });
+      de = sanitizeDisplayText(jsonStringify({ ...Object.fromEntries(Tt), ...Ue }), { max: 600 });
     return ie(
       `your capabilities declaration omits the stored ${pluralize(Tt.length, "capability", "capabilities")} ${L.join(", ")} while adding new ones \u2014 a sent declaration replaces the stored one, so this publish would have silently revoked ${Tt.length === 1 ? "it" : "them"}. To keep ${Tt.length === 1 ? "it" : "them"}, republish declaring the union${de.length < 600 ? `: ${de}` : " (republish with capabilities omitted to read the stored declaration back, then resend it plus your additions)"}. To revoke on purpose, publish that union first, then republish without the revoked names (a declaration that adds no new name goes out as sent); capabilities: {} clears everything.`,
     );
@@ -8480,11 +8480,11 @@ async function trackFrameEvent(e, t) {
         credentials: t.credentials,
       },
     );
-    if (!r.ok) n(`[artifact] /track skipped: ${r.reason}`);
+    if (!r.ok) logForDebugging(`[artifact] /track skipped: ${r.reason}`);
     else if (r.status !== 204)
-      n(`[artifact] /track ${r.status}: ${errBody(r.data)}`);
+      logForDebugging(`[artifact] /track ${r.status}: ${errBody(r.data)}`);
   } catch (r) {
-    n(
+    logForDebugging(
       `[artifact] /track failed: ${r instanceof Error ? r.message : String(r)}`,
     );
   }
@@ -8588,14 +8588,14 @@ async function fl(e, t, r, o, d = !1) {
     R,
     C = (F) => {
       ((R ??= F.status === 429 ? 429 : 503),
-        n(
+        logForDebugging(
           `[artifact] /deploy/direct ${F.status} \u2014 retrying in ${F.delayMs}ms (attempt ${F.attempt} of ${F.maxAttempts})`,
         ),
         t?.(F));
     },
     M = async (F) => {
       if ((await sleep(F, r), r?.aborted))
-        return (n("[artifact] /deploy/direct retry cancelled by user"), !1);
+        return (logForDebugging("[artifact] /deploy/direct retry cancelled by user"), !1);
       return ((w += 1), (E = !0), (_ = await p()), (E = !1), !0);
     },
     D = _.ok && _.fromFrame && _.status === 503 && kr(_.data) === "render_busy";
@@ -8603,7 +8603,7 @@ async function fl(e, t, r, o, d = !1) {
     if (_.ok && _.fromFrame && _.status === 429) {
       if (An(_.data) !== void 0)
         return (
-          n("[artifact] /deploy/direct 429 is a plan cap \u2014 not retrying"),
+          logForDebugging("[artifact] /deploy/direct 429 is a plan cap \u2014 not retrying"),
           _
         );
       let I = parseRetryAfterHeader(_.response?.headers?.["retry-after"]) ?? 2000,
@@ -8701,7 +8701,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
       U = o,
       te = !1,
       re = t;
-    n(
+    logForDebugging(
       `[artifact] publish \u2192 ${R ?? "/api/frame/deploy/direct"}${I !== void 0 ? ` (files: ${Object.keys(I).length})` : ""}`,
     );
     let ce = () =>
@@ -8738,7 +8738,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
         (/\bforce\b/.test(_e) || (U !== void 0 && /\bbaseVersion\b/.test(_e)))
       )
         (logFeatureSad("artifact_publish", "force_field_rejected", F),
-          n(
+          logForDebugging(
             "[artifact] CP rejected force/baseVersion as unknown \u2014 retrying without them",
           ),
           (J = !1),
@@ -8754,7 +8754,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
       /force and baseVersion are mutually exclusive/.test(Jt(q.data))
     )
       (logFeatureSad("artifact_publish", "exclusivity_retry", F),
-        n(
+        logForDebugging(
           "[artifact] pre-relaxation CP rejected force+baseVersion \u2014 retrying without the precondition",
         ),
         (U = void 0),
@@ -8771,7 +8771,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
       return (logFeatureBad("artifact_publish", "deploy_slug_mismatch", F), ie(xi()));
     if (N && N.kind === void 0 && R === void 0 && !M?.aborted) {
       let _e = ll(2, q.response?.headers?.["retry-after"]);
-      (n(
+      (logForDebugging(
         `[artifact] /deploy/direct 503 after commit (${N.slug}) \u2014 retrying against it in ${_e}ms`,
       ),
         C?.({ status: 503, attempt: 2, maxAttempts: 2, delayMs: _e }));
@@ -9018,7 +9018,7 @@ function Pp(e) {
     : e.content.length;
 }
 function Ct(e) {
-  return Buffer.byteLength(b(e), "utf8") - 2;
+  return Buffer.byteLength(jsonStringify(e), "utf8") - 2;
 }
 var Cp = /unknown field "(live|reseed)"/,
   Op = /manifest must not be empty/;
@@ -9039,7 +9039,7 @@ function wr(e, t, r) {
       );
     if (_.has(E))
       return o(
-        `${b(E)} is listed more than once in \`files\`. List each path once.`,
+        `${jsonStringify(E)} is listed more than once in \`files\`. List each path once.`,
       );
     _.add(E);
   }
@@ -9055,13 +9055,13 @@ function wr(e, t, r) {
       );
     if (_.has(E.path))
       return o(
-        `${b(E.path)} is listed more than once in \`files\`. List each path once.`,
+        `${jsonStringify(E.path)} is listed more than once in \`files\`. List each path once.`,
       );
     if (
       (_.add(E.path), typeof E.content === "string" && !MANIFEST_TEXT_TYPES.has(E.contentType))
     )
       return o(
-        `file ${b(E.path)}: contentType ${b(E.contentType)} ` +
+        `file ${jsonStringify(E.path)}: contentType ${jsonStringify(E.contentType)} ` +
           "is binary \u2014 pass its content as a Buffer (raw bytes), not a string",
       );
     let R = MANIFEST_TEXT_TYPES.has(E.contentType),
@@ -9069,12 +9069,12 @@ function wr(e, t, r) {
       M = R ? MAX_ARTIFACT_BYTES : BINARY_FILE_MAX_BYTES;
     if (C > M)
       return d(
-        `file ${b(E.path)} is ${Math.ceil(C / 1024 / 1024)}MB (per-file max ${M / 1024 / 1024}MB${R ? "" : " for binary files, which must fit an upload request base64-encoded"})`,
+        `file ${jsonStringify(E.path)} is ${Math.ceil(C / 1024 / 1024)}MB (per-file max ${M / 1024 / 1024}MB${R ? "" : " for binary files, which must fit an upload request base64-encoded"})`,
       );
     if (R && typeof E.content !== "string") {
       if (!Buffer.from(E.content.toString("utf8"), "utf8").equals(E.content))
         return o(
-          `file ${b(E.path)}: contentType ${b(E.contentType)} ` +
+          `file ${jsonStringify(E.path)}: contentType ${jsonStringify(E.contentType)} ` +
             "is a text type but the Buffer is not valid UTF-8 \u2014 fix the " +
             "encoding, or use a binary contentType",
         );
@@ -9083,7 +9083,7 @@ function wr(e, t, r) {
       let D = Ct(Rn(E));
       if (D > yi)
         return d(
-          `file ${b(E.path)} is ${Math.ceil(D / 1024 / 1024)}MB JSON-encoded on the wire (per-request max ${yi / 1024 / 1024}MB) \u2014 ` +
+          `file ${jsonStringify(E.path)} is ${Math.ceil(D / 1024 / 1024)}MB JSON-encoded on the wire (per-request max ${yi / 1024 / 1024}MB) \u2014 ` +
             "heavily escaped text (quotes, backslashes, control characters) inflates when JSON-encoded; split or shrink the file",
         );
     }
@@ -9112,15 +9112,15 @@ function Mi(e, t, r, o) {
           : 'files must not contain "index.html" \u2014 the page argument is the index'
         : "every file needs a non-empty path";
     if (p.has(w.path))
-      return `${b(w.path)} is listed more than once in \`files\` (once as a copy from another artifact). List each path once.`;
+      return `${jsonStringify(w.path)} is listed more than once in \`files\` (once as a copy from another artifact). List each path once.`;
     if ((p.add(w.path), !ARTIFACT_SLUG_RE.test(w.from.slug) || !w.from.path))
-      return `file ${b(w.path)}: its source must name an artifact and a published path`;
+      return `file ${jsonStringify(w.path)}: its source must name an artifact and a published path`;
     if (w.from.path === "index.html")
-      return `file ${b(w.path)}: another artifact's page (index.html) is not a copyable file \u2014 read it and publish your own content`;
+      return `file ${jsonStringify(w.path)}: another artifact's page (index.html) is not a copyable file \u2014 read it and publish your own content`;
     for (let E of [w.path, w.from.path]) {
       let R = getContentTypeForPath(E);
       if (R !== void 0 && MARKUP_CONTENT_TYPES.has(normalizeContentType(R)))
-        return `file ${b(w.path)}: an HTML, SVG or XML document cannot be copied from another artifact \u2014 read it with action "read_file" and publish it as your own file`;
+        return `file ${jsonStringify(w.path)}: an HTML, SVG or XML document cannot be copied from another artifact \u2014 read it with action "read_file" and publish it as your own file`;
     }
     _.add(`${w.from.slug}@${w.from.ver ?? ""}`);
   }
@@ -9146,7 +9146,7 @@ async function publishInstanceFiles(e, t) {
       "publishing to an Artifact created from an Artifact type is not available in eval stub mode",
     );
   let r = t.copiedFiles ?? [];
-  if (!(ne().frozenArtifactTypes?.typesOn ?? isFrameMultiFileEnabled())) {
+  if (!(getArtifactState().frozenArtifactTypes?.typesOn ?? isFrameMultiFileEnabled())) {
     let _ = t.removeFiles ?? [];
     return (
       logFeatureBad("artifact_publish", "multifile_flag_off", {
@@ -9446,7 +9446,7 @@ async function Ni(e, t, r, o, d, p, _) {
   let mt = async (L) => {
       let de = parseRetryAfterHeader(L) ?? 2000;
       if ((await sleep(Math.min(de, 30000), M), M?.aborted))
-        return (n("[artifact] 429 retry cancelled by user"), !1);
+        return (logForDebugging("[artifact] 429 retry cancelled by user"), !1);
       return !0;
     },
     Et = (L) => {
@@ -9486,7 +9486,7 @@ async function Ni(e, t, r, o, d, p, _) {
       return xe;
     },
     It = (L, de, ee) => {
-      if (de) n(`[artifact] manifest publish refused (HTTP ${L}): ${errBody(de)}`);
+      if (de) logForDebugging(`[artifact] manifest publish refused (HTTP ${L}): ${errBody(de)}`);
       let xe = ee?.maybeGone
         ? ", or the artifact no longer exists or isn't yours to update"
         : "";
@@ -9698,7 +9698,7 @@ async function Ni(e, t, r, o, d, p, _) {
             return ie(
               (be.fromFrame
                 ? Mn !== void 0
-                  ? `copying ${b(Mn.path)} from artifact ${Mn.from.slug} (${b(Mn.from.path)}) was refused (${be.status}: ${is})${/not found/.test(is) ? " \u2014 a source Artifact that does not exist, that this account cannot open, or that is in another organization all answer alike" : ""}`
+                  ? `copying ${jsonStringify(Mn.path)} from artifact ${Mn.from.slug} (${jsonStringify(Mn.from.path)}) was refused (${be.status}: ${is})${/not found/.test(is) ? " \u2014 a source Artifact that does not exist, that this account cannot open, or that is in another organization all answer alike" : ""}`
                   : be.status === 404
                     ? "the server does not recognize this artifact for staging copied files (it may no longer exist, may not be yours to update, or copying is not enabled on this path)"
                     : `staging the copied files was refused (${be.status}: ${nn})`
@@ -9741,7 +9741,7 @@ async function Ni(e, t, r, o, d, p, _) {
             return (
               logFeatureBad("artifact_publish", "copy_refused_document", N),
               ie(
-                `copied file ${b(tn[0].c.path)} is ${tn[0].contentType}: a page, SVG or XML document cannot be copied from another artifact into a publish (its content must pass this tool's checks, which a server-side copy skips) \u2014 read it with action "read_file" and publish it from the local copy instead. Nothing was published.${Ee}`,
+                `copied file ${jsonStringify(tn[0].c.path)} is ${tn[0].contentType}: a page, SVG or XML document cannot be copied from another artifact into a publish (its content must pass this tool's checks, which a server-side copy skips) \u2014 read it with action "read_file" and publish it from the local copy instead. Nothing was published.${Ee}`,
               )
             );
           let rs = (Ke) => EXECUTABLE_CONTENT_TYPES.has(normalizeContentType(getContentTypeForPath(Ke) ?? "")),
@@ -9758,7 +9758,7 @@ async function Ni(e, t, r, o, d, p, _) {
             return (
               logFeatureBad("artifact_publish", "copy_refused_script", N),
               ie(
-                `copied file ${b(Or.c.path)} is ${Or.contentType}: a script its source stores under a name that does not say so cannot be copied into an artifact made from a type (the approval counted it as data) \u2014 copy it to a path with a script extension, or read it with action "read_file" and publish it from the local copy instead. Nothing was published.${Ee}`,
+                `copied file ${jsonStringify(Or.c.path)} is ${Or.contentType}: a script its source stores under a name that does not say so cannot be copied into an artifact made from a type (the approval counted it as data) \u2014 copy it to a path with a script extension, or read it with action "read_file" and publish it from the local copy instead. Nothing was published.${Ee}`,
               )
             );
         }
@@ -10602,7 +10602,7 @@ function Ti(e, t, r, o, d = !1) {
   if (e === 422 && _l(t))
     return {
       code: "type_locked",
-      msg: `deploy 422: ${errBody(t)}${ne().frozenArtifactTypes?.typesOn ? jp : ""}`,
+      msg: `deploy 422: ${errBody(t)}${getArtifactState().frozenArtifactTypes?.typesOn ? jp : ""}`,
     };
   if (e === 422 && o !== void 0)
     return {
@@ -10703,12 +10703,12 @@ function Jt(e) {
         "reason" in e && typeof e.reason === "string" ? ` [${e.reason}]` : "";
       return e.error + t;
     }
-    return b(e) ?? "";
+    return jsonStringify(e) ?? "";
   }
   return "";
 }
 function getShareEntry(e) {
-  return ne().shareStatus.bySlug.get(e);
+  return getArtifactState().shareStatus.bySlug.get(e);
 }
 function storedGrantObserved(e) {
   return (
@@ -10716,12 +10716,12 @@ function storedGrantObserved(e) {
   );
 }
 function getShareEntryForPath(e) {
-  let { bySlug: t, filePathToSlug: r } = ne().shareStatus,
+  let { bySlug: t, filePathToSlug: r } = getArtifactState().shareStatus,
     o = r.get(e);
   return o !== void 0 ? t.get(o) : void 0;
 }
 function setShareEntry(e, t) {
-  let { bySlug: r } = ne().shareStatus,
+  let { bySlug: r } = getArtifactState().shareStatus,
     o = r.get(e);
   r.set(e, {
     ...(o?.artifactKind !== void 0 &&
@@ -10765,7 +10765,7 @@ function setShareEntry(e, t) {
   });
 }
 function setEffectiveCapabilities(e, t, r) {
-  let { bySlug: o } = ne().shareStatus,
+  let { bySlug: o } = getArtifactState().shareStatus,
     d = o.get(e) ?? { mode: "owner", isSharedLive: !1 },
     {
       capabilitiesUnknown: p,
@@ -10805,17 +10805,17 @@ function setEffectiveCapabilities(e, t, r) {
   });
 }
 function linkPathToSlug(e, t) {
-  ne().shareStatus.filePathToSlug.set(e, t);
+  getArtifactState().shareStatus.filePathToSlug.set(e, t);
 }
 function unlinkPath(e) {
-  ne().shareStatus.filePathToSlug.delete(e);
+  getArtifactState().shareStatus.filePathToSlug.delete(e);
 }
 function retainPathLinks(e) {
-  let t = ne().shareStatus.filePathToSlug;
+  let t = getArtifactState().shareStatus.filePathToSlug;
   for (let r of [...t.keys()]) if (!e.has(r)) t.delete(r);
 }
 function recordPublishShareEcho(e, t) {
-  let { bySlug: r } = ne().shareStatus,
+  let { bySlug: r } = getArtifactState().shareStatus,
     o = r.get(e) ?? t,
     { lastProbeAt: d, lastProbeLandedAt: p, ..._ } = o;
   r.set(e, { ..._, ...Di(t, o), lastProbeIssuedAt: Date.now() });
@@ -10848,7 +10848,7 @@ function foldShareProbe(e, t, r) {
     R = Date.now();
   if (d.err !== null) {
     if (
-      (n(`[artifact] ${r.debugLabel} share probe failed: ${d.err}`),
+      (logForDebugging(`[artifact] ${r.debugLabel} share probe failed: ${d.err}`),
       _ && p !== void 0)
     ) {
       if (o.lastProbeToolUseId !== void 0) setShareEntry(e, { ...p, ...o });
@@ -11006,7 +11006,7 @@ function ownershipTag(e) {
 var BOOT_ORG_MISMATCH_CODE = "boot_org_mismatch",
   Vp = "account_changed";
 function issuedUnderDepartedAccount(e) {
-  let { accountBoundaryAt: t } = ne().shareStatus;
+  let { accountBoundaryAt: t } = getArtifactState().shareStatus;
   return t !== void 0 && e <= t;
 }
 function probedOtherOrg(e) {
@@ -11061,13 +11061,13 @@ function ownershipAskNote(e, t = "their database", r = "write into") {
     : ` This artifact belongs to someone else \u2014 approving will ${r} ${t}.`;
 }
 function markAutoReactNoticePending(e) {
-  ne().shareStatus.pendingNoticeSlugs.add(e);
+  getArtifactState().shareStatus.pendingNoticeSlugs.add(e);
 }
 function hasAutoReactNoticePending(e) {
-  return ne().shareStatus.pendingNoticeSlugs.has(e);
+  return getArtifactState().shareStatus.pendingNoticeSlugs.has(e);
 }
 function clearAutoReactNoticePending(e) {
-  ne().shareStatus.pendingNoticeSlugs.delete(e);
+  getArtifactState().shareStatus.pendingNoticeSlugs.delete(e);
 }
 var xr = 8192,
   Wp = 512,
@@ -11194,7 +11194,7 @@ function classifySandboxProxyDenial({ status: e, headers: t, data: r, redact: o,
   let p = Zt(t, r, o),
     _ = Hi(e, p);
   if (_ !== void 0)
-    n(`${d}: sandbox proxy denied, ${_} (${p.reason ?? "no reason"})`);
+    logForDebugging(`${d}: sandbox proxy denied, ${_} (${p.reason ?? "no reason"})`);
   return _;
 }
 var SANDBOX_PROXY_DENIAL_MESSAGES = {
@@ -11668,7 +11668,7 @@ function rTn(e, t) {
 }
 var hh = /[\x00-\x08\x0b-\x1f\x7f-\x9f\u2028\u2029]+/g;
 function wrapArtifactOriginNotes(e) {
-  return scrubArtifactEnvelopeTags(vge(ARTIFACT_ORIGIN_NOTES_TAG, e.replace(hh, " ")));
+  return scrubArtifactEnvelopeTags(neutralizeTagScopedContent(ARTIFACT_ORIGIN_NOTES_TAG, e.replace(hh, " ")));
 }
 var MAX_FRAME_API_RESPONSE_BYTES = 524288,
   Ol = 3149824;
@@ -11721,7 +11721,7 @@ function parseArtifactUrlForSession(e, t = {}) {
   let r = parseArtifactUrl(e);
   if (r === null)
     return { ok: !1, message: t.notUrlMessage ?? notAnArtifactUrlMessage(e), errorCode: 4 };
-  let o = Vo();
+  let o = getArtifactEnvironment();
   if (r.env !== o) {
     let d = t.envHint ? ` \u2014 ${t.envHint(o)}` : "";
     return {
@@ -11762,7 +11762,7 @@ async function fetchArtifactBootResponse(
   d,
   { relayOnly: p = !1, agentPeer: _ = !1, syncLive: w = !1, credentials: E },
 ) {
-  let R = Vo();
+  let R = getArtifactEnvironment();
   if (t !== R)
     return {
       err: `that artifact URL is for ${t} claude.ai, but this session targets ${R}`,
@@ -11929,7 +11929,7 @@ async function readArtifactBoot(
   return M;
 }
 async function readArtifactSubscription(e, t, r, { syncLive: o = !1 } = {}) {
-  let d = Vo(),
+  let d = getArtifactEnvironment(),
     p = await readArtifactBoot({ slug: e, env: d }, "artifact_live_subscribe", t, {
       agentPeer: o,
       syncLive: o,
@@ -12060,7 +12060,7 @@ async function wh(e, t) {
         }
       );
     ((e.source.fellBack = _?.ok ? _.status : 0),
-      n(
+      logForDebugging(
         `[artifact] stored-source read via the gateway fell back (${e.source.fellBack}) slug=${e.slug}`,
       ));
   }
@@ -12243,14 +12243,14 @@ async function jl(e, t, r, o, d) {
       };
     };
   if (ae && o === void 0) {
-    let le = await ne().liveReplicas.renderLevel?.(
+    let le = await getArtifactState().liveReplicas.renderLevel?.(
       e.slug,
       LIVE_DOC_INDEX_PATH,
       _.data.headSeq,
       t,
     );
     if (le !== void 0) {
-      n(
+      logForDebugging(
         `[artifact] read served from the local replica at seq ${le.head} slug=${e.slug}`,
       );
       let he = U(Buffer.from(le.html, "utf8"), "text/html", !1);
@@ -12297,7 +12297,7 @@ async function jl(e, t, r, o, d) {
     pe;
   if (
     E !== void 0 &&
-    ne().contentHostEgressDenied.has(e.env) &&
+    getArtifactState().contentHostEgressDenied.has(e.env) &&
     isFrameRelayEnabled() &&
     !isFrameFamilyDeclined(ARTIFACT_MOUNT_FAMILY)
   ) {
@@ -12312,7 +12312,7 @@ async function jl(e, t, r, o, d) {
         ? `${Ge}${R}`
         : `${Ge}${R}?__frame_t=${encodeURIComponent(E)}`,
     Me = async (le) => {
-      ne().contentHostEgressDenied.add(e.env);
+      getArtifactState().contentHostEgressDenied.add(e.env);
       let he = isFrameRelayEnabled();
       if (E !== void 0 && he) {
         if (pe !== void 0) return q(pe, le);
@@ -12346,7 +12346,7 @@ async function jl(e, t, r, o, d) {
     C !== void 0 &&
     E !== void 0 &&
     C.fellBack === void 0 &&
-    !ne().contentHostEgressDenied.has(e.env)
+    !getArtifactState().contentHostEgressDenied.has(e.env)
   ) {
     let le;
     try {
@@ -12359,7 +12359,7 @@ async function jl(e, t, r, o, d) {
     if (le !== void 0 && le.status === 200)
       return U(Buffer.from(le.data), le.headers?.["content-type"], !0);
     ((C.fellBack = le?.status ?? 0),
-      n(
+      logForDebugging(
         `[artifact] stored-source read fell back (${C.fellBack}) slug=${e.slug}`,
       ));
   }
@@ -12426,7 +12426,7 @@ async function jl(e, t, r, o, d) {
   }
   if (isProxyAllowlistBlocked(Ne.status, Ne.headers)) return Me(!0);
   if (
-    (ne().contentHostEgressDenied.delete(e.env),
+    (getArtifactState().contentHostEgressDenied.delete(e.env),
     Ne.status < 200 || Ne.status >= 300)
   ) {
     let le = Zt(Ne.headers, Ne.data, (Ce) => redactFrameToken(Ce, E));
@@ -12524,29 +12524,29 @@ function Nl(e, t, r) {
 }
 function mintStoredPageProbe(e, t) {
   let r = Object.freeze({ slug: e, html: t });
-  return (ne().mintedStoredPageProbes.add(r), r);
+  return (getArtifactState().mintedStoredPageProbes.add(r), r);
 }
 function isMintedStoredPageProbe(e) {
   return (
-    typeof e === "object" && e !== null && ne().mintedStoredPageProbes.has(e)
+    typeof e === "object" && e !== null && getArtifactState().mintedStoredPageProbes.has(e)
   );
 }
 var Ul = 3000,
   Sh = 600000,
   Ah = 262144;
 function artifactHostUnreachable(e) {
-  let t = ne();
+  let t = getArtifactState();
   return (
     t.contentHostEgressDenied.has(e.env) ||
     t.contentHostEgressUnanswered.has(artifactContentOriginUrlFor(e))
   );
 }
 function Eh(e) {
-  let t = ne().contentHostEgressProbed.get(e);
+  let t = getArtifactState().contentHostEgressProbed.get(e);
   return t !== void 0 && Date.now() - t < Sh;
 }
 async function probeArtifactHostEgress(e, t) {
-  let r = ne(),
+  let r = getArtifactState(),
     o = artifactContentOriginUrlFor(e);
   if (r.contentHostEgressDenied.has(e.env)) {
     (r.contentHostEgressProbed.delete(o), r.contentHostEgressUnanswered.add(o));
@@ -12565,13 +12565,13 @@ async function probeArtifactHostEgress(e, t) {
   return (r.contentHostEgressInFlight.set(o, p), p);
 }
 async function Rh(e, t, r) {
-  let o = ne(),
+  let o = getArtifactState(),
     d = () => {
       (o.contentHostEgressUnanswered.delete(t),
         o.contentHostEgressProbed.set(t, Date.now()));
     },
     p = (R) => {
-      (n(
+      (logForDebugging(
         `[artifact] egress probe of ${t}: ${R}; reading the host as unreachable for this check`,
       ),
         o.contentHostEgressProbed.delete(t),
@@ -12667,7 +12667,7 @@ function Vl(e, t, r, o) {
     e.push({ layer: t, via: "legacyDisableKey" });
 }
 function Oh(e) {
-  if (a[e] || Ie(Ki(xC(), e)) || Ie(getAdminTierEnvValue(e)) || Ie(Ki(moe(), e))) return !0;
+  if (a[e] || Ie(Ki(peekPreSettingsEnvSnapshot(), e)) || Ie(getAdminTierEnvValue(e)) || Ie(Ki(getAppliedGlobalConfigEnv(), e))) return !0;
   for (let t of ["flagSettings", "userSettings"])
     if (isSettingsSourceEnabled(t) && Ie(Ki(getSettingsForSource(t)?.env, e))) return !0;
   return !1;
@@ -12810,7 +12810,7 @@ function Bh() {
   return Ji() !== null && ql() && Zl();
 }
 function maybeLogArtifactDisabledSession() {
-  let e = ne();
+  let e = getArtifactState();
   if (e.artifactDisabledSessionEvaluated) return;
   if (getMergedSettings() === null) return;
   if (((e.artifactDisabledSessionEvaluated = !0), !Bh())) return;
@@ -12826,7 +12826,7 @@ function maybeLogArtifactDisabledSession() {
 }
 function maybeLogArtifactToolWithheld(e) {
   if (!hasCoworkFrameArtifacts() || getSessionEntrypoint() !== "local-agent" || isClaudecodeEnv()) return;
-  let t = ne();
+  let t = getArtifactState();
   if (e === null) {
     t.artifactRegisteredSeen = !0;
     let o = t.artifactWithheldReasonsLogged.at(-1);
@@ -12901,7 +12901,7 @@ function isPlanArtifactEnabled() {
 function isWorkshopEnabled() {
   return isArtifactToolEnabled() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_gable_onyx_sluice", !1);
 }
-jer(isWorkshopEnabled);
+registerWorkshopEnabledGate(isWorkshopEnabled);
 function isWorkshopSchemaEnabled() {
   return isArtifactToolRegistered() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_gable_onyx_sluice", !1);
 }
@@ -12951,7 +12951,7 @@ function zh() {
   return !1;
 }
 function isArtifactPrReviewComposeLatched() {
-  let e = ne();
+  let e = getArtifactState();
   if (e.prReviewComposeLatch === null) e.prReviewComposeLatch = zh();
   return e.prReviewComposeLatch;
 }

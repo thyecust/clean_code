@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ga } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { KUn, KB, XB } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useKeybindingContext } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-context.js";
@@ -120,7 +120,7 @@ function k(t, i) {
   else t.set(i, o);
 }
 function M(t, i, o, a, f) {
-  return b([
+  return jsonStringify([
     t ?? "",
     i,
     o,

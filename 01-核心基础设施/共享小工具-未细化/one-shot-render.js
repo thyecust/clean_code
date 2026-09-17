@@ -10,7 +10,7 @@
 import { Bat } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { stripAnsi } from "./text-sanitization.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { uE, J0 } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { useApp, render } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { N, e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, dn, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
@@ -20,7 +20,7 @@ var StaticFrameContext = Qt(!1);
 function RenderOnceAndExit(k) {
   let u = _(5),
     { children: s } = k,
-    { exit: a } = uE(),
+    { exit: a } = useApp(),
     m,
     p;
   if (u[0] !== a)
@@ -53,7 +53,7 @@ async function renderToAnsiText(r, { columns: t, storageV5: n }) {
       ((c = !0), (i = d.toString()));
     }),
     await (
-      await J0(
+      await render(
         e(RenderOnceAndExit, {
           children: e(StaticFrameContext.Provider, {
             value: !0,

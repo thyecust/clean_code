@@ -13,9 +13,9 @@ import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-key
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { B2e, getProjectsDir, getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { listGitWorktrees, getProjectsDir, getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isSafeBridgeId } from "../权限系统/chunk-ynkf3yy4.js";
 import { s, T, v, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { mkdir, readFile, stat as _, unlink } from "fs/promises";
@@ -55,23 +55,23 @@ async function writeBridgePointer(e, r, t) {
   let i = g(e),
     o = isHoverRestEnabled() && t !== void 0 ? P(e) : null;
   if (isHoverRestEnabled() && t !== void 0 && o) {
-    let l = await t.write(o, b(r), { mode: 438 & ~process.umask() });
+    let l = await t.write(o, jsonStringify(r), { mode: 438 & ~process.umask() });
     if (!l.ok)
       return (
-        n(`[bridge:pointer] write failed: ${We(l.error)}`, { level: "warn" }),
+        logForDebugging(`[bridge:pointer] write failed: ${describeStorageError(l.error)}`, { level: "warn" }),
         !1
       );
-    return (n(`[bridge:pointer] wrote ${i}`), !0);
+    return (logForDebugging(`[bridge:pointer] wrote ${i}`), !0);
   }
   try {
     return (
       await mkdir(dirname(i), { recursive: !0 }),
-      await writeFileAtomic(i, b(r)),
-      n(`[bridge:pointer] wrote ${i}`),
+      await writeFileAtomic(i, jsonStringify(r)),
+      logForDebugging(`[bridge:pointer] wrote ${i}`),
       !0
     );
   } catch (l) {
-    return (n(`[bridge:pointer] write failed: ${l}`, { level: "warn" }), !1);
+    return (logForDebugging(`[bridge:pointer] write failed: ${l}`, { level: "warn" }), !1);
   }
 }
 function createBridgePointerWriteQueue() {
@@ -97,13 +97,13 @@ async function readBridgePointer(e, r, t) {
   let u = N().safeParse(O(o));
   if (!u.success) {
     if (!r?.noClear)
-      (n(`[bridge:pointer] invalid schema, clearing: ${i}`), await clearBridgePointer(e, t));
+      (logForDebugging(`[bridge:pointer] invalid schema, clearing: ${i}`), await clearBridgePointer(e, t));
     return null;
   }
   let a = Math.max(0, Date.now() - l);
   if (a > R) {
     if (!r?.noClear)
-      (n(`[bridge:pointer] stale (>4h mtime), clearing: ${i}`), await clearBridgePointer(e, t));
+      (logForDebugging(`[bridge:pointer] stale (>4h mtime), clearing: ${i}`), await clearBridgePointer(e, t));
     return null;
   }
   return { ...u.data, ageMs: a };
@@ -111,11 +111,11 @@ async function readBridgePointer(e, r, t) {
 async function readBridgePointerAcrossWorktrees(e, r) {
   let t = await readBridgePointer(e, void 0, r);
   if (t) return { pointer: t, dir: e };
-  let i = await B2e(e);
+  let i = await listGitWorktrees(e);
   if (i.length <= 1) return null;
   if (i.length > S)
     return (
-      n(
+      logForDebugging(
         `[bridge:pointer] ${i.length} worktrees exceeds fanout cap ${S}, skipping`,
       ),
       null
@@ -131,7 +131,7 @@ async function readBridgePointerAcrossWorktrees(e, r) {
     u = null;
   for (let a of f) if (a && (!u || a.pointer.ageMs < u.pointer.ageMs)) u = a;
   if (u)
-    n(
+    logForDebugging(
       `[bridge:pointer] fanout found pointer in worktree ${u.dir} (ageMs=${u.pointer.ageMs})`,
     );
   return u;
@@ -141,19 +141,19 @@ async function clearBridgePointer(e, r) {
     i = r ? P(e) : null;
   if (r && i) {
     let o = await r.delete(i);
-    if (o.ok || o.error.code === "NotFound") n(`[bridge:pointer] cleared ${t}`);
-    else n(`[bridge:pointer] clear failed: ${We(o.error)}`, { level: "warn" });
+    if (o.ok || o.error.code === "NotFound") logForDebugging(`[bridge:pointer] cleared ${t}`);
+    else logForDebugging(`[bridge:pointer] clear failed: ${describeStorageError(o.error)}`, { level: "warn" });
     return;
   }
   try {
-    (await unlink(t), n(`[bridge:pointer] cleared ${t}`));
+    (await unlink(t), logForDebugging(`[bridge:pointer] cleared ${t}`));
   } catch (o) {
-    if (!W(o)) n(`[bridge:pointer] clear failed: ${o}`, { level: "warn" });
+    if (!W(o)) logForDebugging(`[bridge:pointer] clear failed: ${o}`, { level: "warn" });
   }
 }
 function O(e) {
   try {
-    return z(e);
+    return jsonParse(e);
   } catch {
     return null;
   }

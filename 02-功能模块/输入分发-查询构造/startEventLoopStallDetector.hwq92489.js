@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 14 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { XUn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -30,7 +30,7 @@ function h() {
     };
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `[event-loop-stall] process.resourceUsage() failed: ${t instanceof Error ? t.message : String(t)}`,
         { level: "error" },
       ),
@@ -48,7 +48,7 @@ function v() {
     };
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `[event-loop-stall] process.memoryUsage() failed: ${t instanceof Error ? t.message : String(t)}`,
         { level: "error" },
       ),
@@ -115,7 +115,7 @@ class b {
   afterTick = (t, s, o, e) => {
     let l = this.sigcontSeen;
     if (((this.sigcontSeen = !1), !t.isStall || s === null)) return;
-    (n(
+    (logForDebugging(
       `[event-loop-stall] blocked for ${t.monotonicStallMs}ms monotonic (wall drift ${t.wallDriftMs}ms, clock jump ${t.clockJumpMs}ms, expected ${this.intervalMs}ms). Total stalls: ${this.totalStalls}, cumulative: ${this.totalMonotonicStallMs}ms monotonic / ${this.totalStallDurationMs}ms wall${t.likelySleep ? " [likely sleep/wake]" : ""} blocked_write=${s.blocked_write}` +
         (s.last_write_ms !== void 0
           ? ` last_write=${s.last_write_ms}ms/${s.last_write_bytes}B`
@@ -152,7 +152,7 @@ class b {
       (this.lastTickMonotonicMs = performance.now()),
       (this.lastResourceSample = h()),
       process.on("SIGCONT", this.onSigcont),
-      n(
+      logForDebugging(
         `[event-loop-stall] detector started (interval=${t}ms, threshold=${M}ms)`,
       ),
       (this.timer = setInterval(() => {

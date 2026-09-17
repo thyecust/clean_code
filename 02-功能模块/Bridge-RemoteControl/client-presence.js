@@ -11,7 +11,7 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { i8, hB, iZ, UOn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -27,7 +27,7 @@ async function A() {
   try {
     return (await I(o), !0);
   } catch (l) {
-    if (!W(l)) n(`[presence] client-presence-marker stat failed: ${l}`);
+    if (!W(l)) logForDebugging(`[presence] client-presence-marker stat failed: ${l}`);
     return !1;
   }
 }
@@ -41,12 +41,12 @@ function createClientPresenceReporter(o, l, H, b = () => Promise.resolve(!1)) {
     g = async (e, t) => {
       let s = await u.getAuthHeaders();
       if (s === null)
-        return (n(`${r} ${e} skipped (no credential to send under)`), null);
+        return (logForDebugging(`${r} ${e} skipped (no credential to send under)`), null);
       if (!isFirstPartyProvider())
-        return (n(`${r} ${e} skipped (non-first-party provider)`), null);
+        return (logForDebugging(`${r} ${e} skipped (non-first-party provider)`), null);
       let E = `${u.baseUrl}/v1/code/sessions/${u.sessionId}/client/presence`;
       return (
-        n(`${r} ${e} \u2192 ${E}`),
+        logForDebugging(`${r} ${e} \u2192 ${E}`),
         at
           .post(
             E,
@@ -63,11 +63,11 @@ function createClientPresenceReporter(o, l, H, b = () => Promise.resolve(!1)) {
           )
           .then(
             (i) => {
-              if (i.status >= 400) n(`${r} ${e} got ${i.status}`);
+              if (i.status >= 400) logForDebugging(`${r} ${e} got ${i.status}`);
               return { status: i.status, sentHeaders: s };
             },
             (i) => (
-              n(
+              logForDebugging(
                 `${r} ${e} failed: ${at.isAxiosError(i) ? (i.code ?? "request_error") : "error"}`,
               ),
               null
@@ -78,15 +78,15 @@ function createClientPresenceReporter(o, l, H, b = () => Promise.resolve(!1)) {
     P = async (e) => {
       let t = e.clear === !0 ? "clear" : "pulse";
       if (!isFirstPartyProvider()) {
-        n(`${r} ${t} skipped (non-first-party provider)`);
+        logForDebugging(`${r} ${t} skipped (non-first-party provider)`);
         return;
       }
       try {
         let s = await g(t, e);
         if (s?.status === 401 && (await u.onUnauthorized(s.sentHeaders)))
-          (n(`${r} ${t} retrying after credential refresh`), await g(t, e));
+          (logForDebugging(`${r} ${t} retrying after credential refresh`), await g(t, e));
       } catch (s) {
-        n(
+        logForDebugging(
           `${r} ${t} skipped (credential unavailable: ${s instanceof Error ? s.name : "error"})`,
         );
       }
@@ -99,7 +99,7 @@ function createClientPresenceReporter(o, l, H, b = () => Promise.resolve(!1)) {
     },
     h = () => {
       if (iZ() === !1) {
-        n(`${r} pulse skipped (terminal blurred)`);
+        logForDebugging(`${r} pulse skipped (terminal blurred)`);
         return;
       }
       if (Date.now() - d < p) return;
@@ -109,14 +109,14 @@ function createClientPresenceReporter(o, l, H, b = () => Promise.resolve(!1)) {
     C = UOn(() => {
       let e = iZ();
       if (
-        (n(
+        (logForDebugging(
           `${r} terminal focus \u2192 ${e === void 0 ? "unknown" : e ? "focused" : "blurred"}`,
         ),
         e === !0)
       )
         h();
     });
-  n(`${r} wired`);
+  logForDebugging(`${r} wired`);
   let f = !1;
   return {
     teardown() {
@@ -129,7 +129,7 @@ function createClientPresenceReporter(o, l, H, b = () => Promise.resolve(!1)) {
       if (f || Date.now() - d < p) return;
       A().then((e) => {
         if (e && !f && Date.now() - d >= p)
-          (n(`${r} client-presence-marker active \u2192 pulse`), v());
+          (logForDebugging(`${r} client-presence-marker active \u2192 pulse`), v());
       });
     },
   };

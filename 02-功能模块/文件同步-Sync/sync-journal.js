@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, isWellFormed, toWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
@@ -408,7 +408,7 @@ function encodeSyncJournal(e) {
       "sync journal note is not one its reader would accept, or rides with rows",
     );
   return Buffer.from(
-    b({
+    jsonStringify({
       ...e,
       version: i ? JOURNAL_VERSION_WITH_NOTE : h,
       uploading: e.side === "laptop" ? e.uploading : void 0,

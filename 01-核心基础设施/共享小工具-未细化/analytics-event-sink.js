@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { stripProtoFields, attachAnalyticsSink } from "./analytics-event-queue.js";
 import {
   maskModelIdIfConfidential,
@@ -46,7 +46,7 @@ function d(t, o, e) {
 var i = !1;
 function u(t, o) {
   if (i) {
-    n(
+    logForDebugging(
       `logEvent reentered while collecting metadata \u2014 dropped ${t}. A getEventMetadata dependency (model/betas/auth) called logEvent synchronously; defer it (queueMicrotask) or move it out of the metadata path.`,
       { level: "error" },
     );

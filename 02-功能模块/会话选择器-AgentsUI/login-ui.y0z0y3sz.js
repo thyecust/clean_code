@@ -10,21 +10,21 @@
 
 // [preload stripped] 原本在此预载 292 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  Pdr,
-  N8,
-  Odr,
-  Ddr,
-  Ldr,
-  MHe,
-  Mdr,
-  Ndr,
-  Fdr,
-  p$n,
-  $dr,
-  Udr,
-  ngr,
-  Kz,
-} from "../Bridge-RemoteControl/chunk-3b6ct3yp.js";
+  runOrgMemoryAuthBoundary as Pdr,
+  runPostLoginHooks as N8,
+  formatGatewayPinMismatchError as Odr,
+  formatGatewayRestartNotice as Ddr,
+  formatGatewayExitNotice as Ldr,
+  loginCompletion as MHe,
+  loginAutoContinueOptions as Mdr,
+  getLoginConsentHandoffMessage as Ndr,
+  getLoginStartingMessage as Fdr,
+  LOGIN_SUCCESS_ENV_OVERRIDE_WARNING as p$n,
+  envTokenWarningRoute as $dr,
+  buildLoginDoneMessage as Udr,
+  call as ngr,
+  Login as Kz,
+} from "../Bridge-RemoteControl/login-flow.js";
 import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import "../../01-核心基础设施/设置-配置/managed-settings-approval-dialog.js";
@@ -35,8 +35,8 @@ import "../../01-核心基础设施/共享小工具-未细化/feature-flag-versi
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../认证-OAuth登录/oauth-login-completion.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
-import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
-import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
+import "../Bedrock-Vertex/bedrock-setup-wizard.js";
+import "../Bedrock-Vertex/vertex-setup-wizard.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
@@ -58,7 +58,7 @@ import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
-import "../认证-OAuth登录/chunk-9g86t9bp.js";
+import "../认证-OAuth登录/console-profile-auth.js";
 import "../认证-OAuth登录/oauth-login-flow.js";
 export {
   p$n as LOGIN_SUCCESS_ENV_OVERRIDE_WARNING,

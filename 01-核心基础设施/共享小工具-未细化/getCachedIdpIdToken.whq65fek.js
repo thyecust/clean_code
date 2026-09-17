@@ -23,7 +23,7 @@ import {
 import "./oauth-callback.js";
 import "../../02-功能模块/认证-OAuth登录/url-and-error-redaction.js";
 import "../../02-功能模块/MCP客户端/chunk-78r8f7dw.js";
-import "../../02-功能模块/MCP客户端/chunk-5wa92x7d.js";
+import "../../02-功能模块/MCP客户端/mcp-protocol-schemas.js";
 import "../../02-功能模块/认证-OAuth登录/pkce-challenge.js";
 export {
   Prn as acquireIdpIdToken,

@@ -11,7 +11,7 @@ import { Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeDiagnosticsEvent } from "./diagnostics-log.js";
 import { getEnvEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { httpClient } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Voe } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
+import { isValidPluginId } from "../../02-功能模块/插件系统/plugin-system-core.js";
 import { iJ, bGt, wGt, gwt } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import { writeFile } from "fs/promises";
 function a(t) {
@@ -22,7 +22,7 @@ function a(t) {
     source: t.source ?? "custom",
     updatedAt: t.updated_at ?? null,
     ...(typeof t.backing_plugin_id === "string" &&
-      Voe(t.backing_plugin_id) && { backingPluginId: t.backing_plugin_id }),
+      isValidPluginId(t.backing_plugin_id) && { backingPluginId: t.backing_plugin_id }),
   };
 }
 function d(t) {

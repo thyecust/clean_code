@@ -10,7 +10,7 @@
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeFileAtomicWithOptions } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { b, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, getFsSurface } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getSecureStorageDir } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { MAX_CREDENTIAL_FILE_BYTES } from "../../01-核心基础设施/共享小工具-未细化/max-credential-file-bytes.js";
 import { constants } from "fs";
@@ -128,7 +128,7 @@ var y = {
   async writeCredentials(e) {
     let { storeDir: r, storePath: n } = f();
     try {
-      (await ae().mkdir(r), await writeFileAtomicWithOptions(n, b(e), { mode: 384, exactMode: 384 }));
+      (await getFsSurface().mkdir(r), await writeFileAtomicWithOptions(n, jsonStringify(e), { mode: 384, exactMode: 384 }));
     } catch (t) {
       return { state: "write-failed", code: A(t) };
     }
@@ -225,7 +225,7 @@ var y = {
 };
 async function R(e) {
   try {
-    return (await ae().unlink(e), { state: "deleted" });
+    return (await getFsSurface().unlink(e), { state: "deleted" });
   } catch (r) {
     let n = A(r);
     if (n === "ENOENT") return { state: "deleted" };

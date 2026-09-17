@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ez } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { iQe } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { lacksHumanOrigin } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 var o = new Set([
     "interrupt",
     "stop_task",
@@ -30,7 +30,7 @@ function markUserInteraction() {
 function isUserDrivenInbound(e, t) {
   switch (e.type) {
     case "user":
-      return !(t?.hostOwnsOrigin === !0 && iQe(e.origin, e.isSynthetic));
+      return !(t?.hostOwnsOrigin === !0 && lacksHumanOrigin(e.origin, e.isSynthetic));
     case "bash_command":
       return !0;
     case "control_request":

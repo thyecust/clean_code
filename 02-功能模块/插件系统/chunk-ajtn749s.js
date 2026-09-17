@@ -41,7 +41,7 @@ import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { yt, R, l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, z, fp, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonParse, sanitizeUrl, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { GITHUB_HOST } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -55,19 +55,19 @@ import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
-  nve,
-  Bzt,
-  SJe,
-  d$e,
-  TJe,
-  Sl,
-  sb,
-  rA,
-  Gzt,
-  X$,
-  $t,
-  dme,
-} from "./chunk-7s6mt1vg.js";
+  PLUGIN_LINK_MARKER_FILENAME,
+  getPluginLinkMarkerSchema,
+  LINK_MODE_COMMAND_SUFFIX,
+  PLUGIN_RESERVED_MARKER_FILES,
+  isReservedOrTempName,
+  getPluginsDir,
+  getResolvedPluginsDir,
+  buildRunCommandHint,
+  parseInstallationPreference,
+  isWithinMaxAge,
+  getPluginRegistryState,
+  markPluginCommandProducerDirDenied,
+} from "./plugin-system-core.js";
 import { isSettingsSourceEnabled, isLoopbackOrMetadataHost, toUrlString, formatDisplayText, formatQuotedDisplayText, MAX_CONSENT_TEXT_LENGTH, ARCHIVE_URL_POLICY_MESSAGE, isAllowedArchiveUrl } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   httpClient,
@@ -108,7 +108,7 @@ import { default as at, isAxiosError } from "../../00-第三方库/axios/axios.t
 import { ensureAxiosEgressGuardInstalled } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
 import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
-import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { areCommandPluginSourcesDisabledByPolicy, policyTierCommandsMayRun, REMOTE_POLICY_UNCONSENTED_MESSAGE, headersHelperPolicyRefusal, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, canonicalFetchSourceUrl } from "./plugin-source-policy.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { isRemoteOrCoworkSession } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
@@ -229,12 +229,12 @@ function V() {
 }
 var ot = 30000;
 function afe() {
-  let e = Sl(),
-    t = Oz(sb());
+  let e = getPluginsDir(),
+    t = Oz(getResolvedPluginsDir());
   if (getCurrentPlatform() === "windows" ? rdr(e) : li(e)) return !0;
-  let r = $t().provenLocalRoots,
+  let r = getPluginRegistryState().provenLocalRoots,
     o = r.get(t);
-  if (o === void 0 || !X$(o, ot)) {
+  if (o === void 0 || !isWithinMaxAge(o, ot)) {
     if (Bxe(t, { allowLocalWsl: !0 })) return (r.delete(t), !0);
     r.set(t, Date.now());
   }
@@ -327,7 +327,7 @@ function Ee(
         windowsHide: !0,
         ...Bs("plugin"),
       }),
-      ie = Et(async () => {
+      ie = registerCleanup(async () => {
         if (!S && k.pid !== void 0) await killProcessTree(k.pid, "SIGKILL");
       });
     function x(E) {
@@ -415,7 +415,7 @@ var mt = 60,
 async function wt(e) {
   let t = (e.timeout ?? mt) * 1000,
     r = formatDisplayText(e.command, 200);
-  n(`Plugin command source: running \`${r}\` (timeout ${t}ms)`);
+  logForDebugging(`Plugin command source: running \`${r}\` (timeout ${t}ms)`);
   let o = await Ee(e.command, {
       cwd: ft(),
       env: subprocessEnv(),
@@ -518,7 +518,7 @@ async function wt(e) {
       `Plugin source command \`${r}\` printed \`${formatDisplayText(d, 200)}\`, but that directory has no plugin content (expected .claude-plugin/ or a commands/, skills/, agents/, hooks/, themes/, output-styles/, monitors/, workflows/, SKILL.md, .mcp.json, or .lsp.json at the top level). Nothing was installed.`,
       "plugin command source directory has no plugin content",
     );
-  return (n(`Plugin command source: resolved plugin directory ${h}`), h);
+  return (logForDebugging(`Plugin command source: resolved plugin directory ${h}`), h);
 }
 async function Me(e, t, r) {
   let o = [],
@@ -580,7 +580,7 @@ async function bt(e) {
 var y1e =
   'This plugin source uses mode "link", which is not supported on Windows yet; the marketplace can use mode "copy" instead.';
 function vC(e) {
-  return e.mode === "link" ? `${e.command}${SJe}` : e.command;
+  return e.mode === "link" ? `${e.command}${LINK_MODE_COMMAND_SUFFIX}` : e.command;
 }
 function aXe(e) {
   return e.mode === "link"
@@ -596,12 +596,12 @@ function At(e, t) {
     c = o ?? "";
   if (t?.kind === "recorded" && t.command !== void 0)
     throw new Ui(
-      `${s}'s marketplace changed the command that installs it, or how its output is used (now \`${r}\`), since it was accepted, so it was not run. Review and accept the new command: ${rA("plugin update", c, { tail: "in a terminal (add `--scope` for a project/local install)", fallback: "an explicit plugin update in a terminal reviews it" })}.`,
+      `${s}'s marketplace changed the command that installs it, or how its output is used (now \`${r}\`), since it was accepted, so it was not run. Review and accept the new command: ${buildRunCommandHint("plugin update", c, { tail: "in a terminal (add `--scope` for a project/local install)", fallback: "an explicit plugin update in a terminal reviews it" })}.`,
       "plugin command source command changed since consent",
     );
   if (t?.kind === "recorded")
     throw new Ui(
-      `${s}'s marketplace entry now installs it by running a command on this machine (\`${r}\`) that has not been reviewed yet, so it was not run. Review and accept it: ${rA("plugin update", c, { tail: "in a terminal (add `--scope` for a project/local install)", fallback: "an explicit plugin update in a terminal reviews it" })}.`,
+      `${s}'s marketplace entry now installs it by running a command on this machine (\`${r}\`) that has not been reviewed yet, so it was not run. Review and accept it: ${buildRunCommandHint("plugin update", c, { tail: "in a terminal (add `--scope` for a project/local install)", fallback: "an explicit plugin update in a terminal reviews it" })}.`,
       "plugin command source never consented for an installed plugin",
     );
   if (t?.kind === "shown")
@@ -610,7 +610,7 @@ function At(e, t) {
       "plugin command source changed between display and run",
     );
   throw new Ui(
-    `${s} is installed by running a command on this machine (\`${r}\`) that has not been reviewed yet, so it was not run. Review and accept it from its /plugin details pane, or in a terminal: ${rA("plugin install", c, { fallback: "an explicit plugin install reviews it" })}.`,
+    `${s} is installed by running a command on this machine (\`${r}\`) that has not been reviewed yet, so it was not run. Review and accept it from its /plugin details pane, or in a terminal: ${buildRunCommandHint("plugin install", c, { fallback: "an explicit plugin install reviews it" })}.`,
     "plugin command source without consent",
   );
 }
@@ -623,7 +623,7 @@ async function Pt(e, t) {
   await mkdir(t, { recursive: !0 });
   for (let { name: c, target: p, isDirectory: d } of o)
     await symlink(p, v(t, c), d ? "dir" : "file");
-  await Ie(v(t, nve), JSON.stringify({ target: e }), { flag: "wx" });
+  await Ie(v(t, PLUGIN_LINK_MARKER_FILENAME), JSON.stringify({ target: e }), { flag: "wx" });
   let s = xe("sha256");
   s.update(`${e}\x00`);
   for (let { name: c, target: p } of o)
@@ -661,8 +661,8 @@ async function Fe(e, t) {
 async function uZn(e, t) {
   let r = resolve(he(), e),
     o = resolve(he(), t),
-    s = await ee(v(r, nve)),
-    c = Bzt().parse(JSON.parse(s)).target;
+    s = await ee(v(r, PLUGIN_LINK_MARKER_FILENAME)),
+    c = getPluginLinkMarkerSchema().parse(JSON.parse(s)).target;
   if (DYt(c))
     throw new Ui(
       "The link farm points at a producer reached through a link that cannot be trusted; refusing to relink it.",
@@ -708,7 +708,7 @@ async function uZn(e, t) {
   try {
     for (let { name: S, target: b, isDirectory: C } of _)
       await symlink(b, v(w, S), C ? "dir" : "file");
-    (await Ie(v(w, nve), s, { flag: "wx" }), await rename(w, o));
+    (await Ie(v(w, PLUGIN_LINK_MARKER_FILENAME), s, { flag: "wx" }), await rename(w, o));
   } catch (S) {
     await Kl(w).catch(() => {});
     let b = A(S);
@@ -726,16 +726,16 @@ async function xbn(e, { keepGit: t }) {
     if (lXe(r) && !(t && Pz(r) === ".git")) await Kl(v(e, r));
 }
 function lXe(e) {
-  return TJe(e, Rt);
+  return isReservedOrTempName(e, Rt);
 }
-var Rt = new Set([...d$e, ".git"]);
+var Rt = new Set([...PLUGIN_RESERVED_MARKER_FILES, ".git"]);
 async function cXe(e, { unclassifiableIsFarm: t = !1 } = {}) {
   let r = await SGt(e);
   return r === "live" || (r === "unclassifiable" && t);
 }
 async function SGt(e) {
   try {
-    Bzt().parse(JSON.parse(await ee(v(e, nve))));
+    getPluginLinkMarkerSchema().parse(JSON.parse(await ee(v(e, PLUGIN_LINK_MARKER_FILENAME))));
   } catch (r) {
     if (A(r) !== void 0) return t(r);
   }
@@ -766,7 +766,7 @@ function Tt(e) {
   return vt.has(t) || t.startsWith("._");
 }
 function Ct(e) {
-  return d$e.has(e);
+  return PLUGIN_RESERVED_MARKER_FILES.has(e);
 }
 async function S1e(e, t) {
   let r = t.replace(/[\\/]+$/, "") + D;
@@ -776,7 +776,7 @@ async function S1e(e, t) {
       let s;
       try {
         let c = await eae(e, o);
-        if (c.isFile && (Tt(o.name) || TJe(o.name, d$e))) continue;
+        if (c.isFile && (Tt(o.name) || isReservedOrTempName(o.name, PLUGIN_RESERVED_MARKER_FILES))) continue;
         if (!c.isSymbolicLink) return !0;
         s = c.linkTarget ?? (await readlink(v(e, o.name)));
       } catch (c) {
@@ -793,7 +793,7 @@ async function S1e(e, t) {
 }
 async function dZn(e) {
   try {
-    return Bzt().parse(JSON.parse(await ee(v(e, nve)))).target;
+    return getPluginLinkMarkerSchema().parse(JSON.parse(await ee(v(e, PLUGIN_LINK_MARKER_FILENAME)))).target;
   } catch {
     return;
   }
@@ -828,7 +828,7 @@ async function pZn(e, t, r, o) {
           `Plugin source command printed the working directory or one of its parents (${formatDisplayText(s, 300)}); refusing to use it as a plugin.`,
           "plugin command source printed cwd or an ancestor",
         );
-      if ((dme(s), e.mode === "link"))
+      if ((markPluginCommandProducerDirDenied(s), e.mode === "link"))
         return { contentSha256: await Pt(s, t), producerDirectory: s };
       return (
         await Me(s),
@@ -881,7 +881,7 @@ async function swt(e) {
   if (t.code !== 0 || !t.stdout) return { ok: !1, reason: "exec_failed" };
   let r;
   try {
-    r = z(t.stdout.trim());
+    r = jsonParse(t.stdout.trim());
   } catch {
     return { ok: !1, reason: "parse_failed" };
   }
@@ -922,9 +922,9 @@ var iJ = 268435456,
   Hbn = "Claude-Code-Plugin-Manager";
 async function fZn(e, t = {}) {
   if (!isAllowedArchiveUrl(e))
-    throw new R(`${ARCHIVE_URL_POLICY_MESSAGE}: ${fp(e)}`, "plugin archive URL policy rejected");
-  let r = fp(e);
-  n(`Downloading plugin archive from ${r}`);
+    throw new R(`${ARCHIVE_URL_POLICY_MESSAGE}: ${sanitizeUrl(e)}`, "plugin archive URL policy rejected");
+  let r = sanitizeUrl(e);
+  logForDebugging(`Downloading plugin archive from ${r}`);
   let o = t.headers ?? {},
     s = { ...o, "User-Agent": Hbn },
     c = isClaudeDownloadsHost(e) ? hN.get : externalHttp.get,
@@ -968,7 +968,7 @@ function De(e, t, r = "plugin archive") {
     for (let d of Object.keys(s.headers))
       if (o.has(d.toLowerCase())) (delete s.headers[d], p++);
     if (p > 0)
-      n(
+      logForDebugging(
         `Fetch of ${r} redirected to a different origin; dropped inherited marketplace headers`,
       );
   };
@@ -981,7 +981,7 @@ function Bt(e, t) {
       throw new R(
         "Plugin archive redirected to a disallowed URL and was refused \u2014 " +
           `every hop must satisfy the archive URL policy (${ARCHIVE_URL_POLICY_MESSAGE.replace(/^Archive URLs must /, "")}): ` +
-          (s ? fp(s) : "(unparseable redirect target)"),
+          (s ? sanitizeUrl(s) : "(unparseable redirect target)"),
         "plugin archive redirect policy rejected",
       );
     r(o);
@@ -998,7 +998,7 @@ function mZn(e, t) {
       throw new R(
         "Marketplace catalog redirected to a disallowed URL and was refused \u2014 " +
           "a server-chosen cross-origin redirect must use https:// and must not point at a loopback, link-local, or cloud-metadata host (only a hop that stays on the origin you started from is exempt): " +
-          (s ? fp(s) : "(unparseable redirect target)"),
+          (s ? sanitizeUrl(s) : "(unparseable redirect target)"),
         "marketplace catalog redirect policy rejected",
       );
     r(o);
@@ -1048,7 +1048,7 @@ function lwt(e, t) {
   return null;
 }
 function He(e) {
-  return canonicalFetchSourceUrl(fp(e));
+  return canonicalFetchSourceUrl(sanitizeUrl(e));
 }
 function dXe(e, t = "lockdown") {
   let r = formatQuotedDisplayText(e);
@@ -1155,7 +1155,7 @@ function noe(e) {
 async function dwt(e, t) {
   if (e?.source !== "url") return {};
   let r = t.trustedDeclaration,
-    o = `marketplace ${formatQuotedDisplayText(t.marketplaceName ?? fp(e.url))}`,
+    o = `marketplace ${formatQuotedDisplayText(t.marketplaceName ?? sanitizeUrl(e.url))}`,
     s = (d, h) =>
       pwt(d, `${o} (${h})`, { operatorAuthored: r?.operatorAuthored === !0 }),
     c = s(
@@ -1169,7 +1169,7 @@ async function dwt(e, t) {
   if (r?.headersHelper === void 0) return c;
   if (!/^https:\/\//i.test(e.url))
     return (
-      n(`${o}: headersHelper not run \u2014 marketplace URL is not https`, {
+      logForDebugging(`${o}: headersHelper not run \u2014 marketplace URL is not https`, {
         level: "warn",
       }),
       c
@@ -1189,7 +1189,7 @@ async function dwt(e, t) {
     );
   if (!V())
     return (
-      n(
+      logForDebugging(
         `${o}: headersHelper not run \u2014 disabled by the plugin command kill switch`,
         { level: "warn" },
       ),
@@ -1207,7 +1207,7 @@ var qt = 60000;
 async function Vt(e, t, r, o) {
   let s = `${e}\x00${t}\x00${r ?? ""}\x00${o ? "operator" : "repo"}`,
     c = Date.now(),
-    { marketplaceHelperMemo: p } = $t(),
+    { marketplaceHelperMemo: p } = getPluginRegistryState(),
     d = p.get(s);
   if (d && d.expiresAt > c) return d.headers;
   let h = Xt(e, t, r, o);
@@ -1300,13 +1300,13 @@ function pwt(e, t, { operatorAuthored: r = !1 } = {}) {
   let o = {};
   for (let [s, c] of Object.entries(e)) {
     if (!en.test(s) || /[\r\n\0]/.test(c)) {
-      n(`Dropping header "${formatQuotedDisplayText(s)}" for ${t}: malformed name or value`, {
+      logForDebugging(`Dropping header "${formatQuotedDisplayText(s)}" for ${t}: malformed name or value`, {
         level: "warn",
       });
       continue;
     }
     if (!r && Obn(s)) {
-      n(
+      logForDebugging(
         `Dropping header "${formatQuotedDisplayText(s)}" for ${t}: request-routing/identity headers are not accepted from non-operator sources`,
         { level: "warn" },
       );
@@ -1548,7 +1548,7 @@ async function sn(e) {
   try {
     await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   } catch (o) {
-    n(`[plugins-scope] pre-ensure token freshen failed: ${l(o)}`);
+    logForDebugging(`[plugins-scope] pre-ensure token freshen failed: ${l(o)}`);
   }
   let t = getClaudeAIOAuthTokens();
   if (!t?.accessToken) return { ok: !1, reason: "no_token" };
@@ -1640,7 +1640,7 @@ function cn(e, t) {
   let s = sn(t)
       .then((p) => {
         if (!p.ok)
-          n(
+          logForDebugging(
             `[plugins-scope] expansion skipped/failed: ${p.reason}${p.detail ? ` (${p.detail})` : ""}`,
           );
         return p;
@@ -1648,12 +1648,12 @@ function cn(e, t) {
       .catch((p) => {
         let d = l(p);
         return (
-          n(`[plugins-scope] unexpected ensure error: ${d}`),
+          logForDebugging(`[plugins-scope] unexpected ensure error: ${d}`),
           { ok: !1, reason: "expand_failed", detail: d }
         );
       })
       .then((p) => (r.settle(s), c(), p)),
-    c = Et(() => withDeadline(s, ln));
+    c = registerCleanup(() => withDeadline(s, ln));
   return (r.begin(s), s);
 }
 var un = 1e4;
@@ -1720,7 +1720,7 @@ var TGt = createLazyValue(() =>
 );
 function gwt(e) {
   try {
-    let t = TGt().safeParse(z(e.toString("utf8", 0, 2048)));
+    let t = TGt().safeParse(jsonParse(e.toString("utf8", 0, 2048)));
     if (t.success) return t.data.error.type ?? "error_envelope_no_type";
   } catch {}
   return "non_json_body";
@@ -1730,7 +1730,7 @@ import { open as fn, rm as je, writeFile as mn } from "fs/promises";
 import { Transform as gn } from "stream";
 import { pipeline } from "stream/promises";
 function Ge(e) {
-  let t = Gzt(e.installation_preference);
+  let t = parseInstallationPreference(e.installation_preference);
   return {
     pluginId: e.id,
     name: e.name,

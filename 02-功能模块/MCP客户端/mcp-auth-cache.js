@@ -13,9 +13,9 @@ import { getFileStorage } from "../../01-核心基础设施/共享小工具-未�
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { ke, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { We, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { jt, wQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { getMcpClientState, getMcpServerOrigin } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -35,7 +35,7 @@ import {
 import { isReplMcpRoutingEnabled, hasReplMcpRouting } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import { formatPolicyBlockedMessage, formatProjectApprovalMessage } from "./mcp-server-state-messages.js";
-import { ir } from "./chunk-g4gdwpa0.js";
+import { getIdentityEpoch } from "./mcp-discovery-cache.js";
 import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, c, qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var MCP_URL_ELICITATION_DIALOG = defineDialog({
@@ -60,14 +60,14 @@ function getMcpNeedsAuthCacheStateKey() {
   return STORAGE_KEYS.state("mcp-needs-auth-cache");
 }
 function readMcpNeedsAuthCache(t) {
-  let e = jt();
+  let e = getMcpClientState();
   if (!e.authCacheRead)
     e.authCacheRead =
       isHoverRestEnabled() && t !== void 0
         ? U(t)
         : getFileStorage()
             .read(getMcpNeedsAuthCachePath())
-            .then((r) => z(r))
+            .then((r) => jsonParse(r))
             .catch(() => ({}));
   return e.authCacheRead;
 }
@@ -77,20 +77,20 @@ async function U(t) {
     if (!e.ok) return {};
     let r = e.value.items[0];
     if (!r.found) return {};
-    return z(Buffer.from(r.value).toString("utf8"));
+    return jsonParse(Buffer.from(r.value).toString("utf8"));
   } catch {
     return {};
   }
 }
 function invalidateMcpNeedsAuthCache() {
-  jt().authCacheRead = null;
+  getMcpClientState().authCacheRead = null;
 }
 function clearMcpNeedsAuthCache(t) {
-  if (((jt().authCacheRead = null), isHoverRestEnabled() && t !== void 0)) {
+  if (((getMcpClientState().authCacheRead = null), isHoverRestEnabled() && t !== void 0)) {
     t.delete(getMcpNeedsAuthCacheStateKey())
       .then((e) => {
         if (!e.ok)
-          n(`mcp needs-auth cache delete failed: ${We(e.error)}`, {
+          logForDebugging(`mcp needs-auth cache delete failed: ${describeStorageError(e.error)}`, {
             level: "error",
           });
       })
@@ -144,7 +144,7 @@ function O(t) {
 }
 function j(t, e) {
   let r = e.type ?? "stdio",
-    g = wQ(e),
+    g = getMcpServerOrigin(e),
     p = g ? `${r} at ${sanitizeDisplayTextWithRedaction(g, 256)}` : r,
     f =
       `The "${sanitizeDisplayTextWithoutRedaction(t)}" MCP server (${p}) is installed but requires authentication. ` +
@@ -223,9 +223,9 @@ function j(t, e) {
           skipBrowserOpen: !0,
         });
       b().setActiveOAuthPromise(t, R);
-      let P = ir();
+      let P = getIdentityEpoch();
       R.then(async () => {
-        if (ir() !== P) {
+        if (getIdentityEpoch() !== P) {
           logMCPDebug(
             t,
             "OAuth completed after an identity change; discarding without reconnecting",
@@ -245,7 +245,7 @@ function j(t, e) {
           i.storageV5,
           i.credentials,
         );
-        if (ir() !== P) {
+        if (getIdentityEpoch() !== P) {
           logMCPDebug(
             t,
             "OAuth completed after an identity change; discarding the stale reconnect",

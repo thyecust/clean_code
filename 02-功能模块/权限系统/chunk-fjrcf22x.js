@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ya } from "./chunk-t3b7pg2x.js";
+import { getSessionEffortLevel } from "./chunk-t3b7pg2x.js";
 import { isBypassPermissionsModeDisabled } from "./bypass-permissions-mode-policy.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function d(e, o) {
@@ -237,7 +237,7 @@ function getEffortLayerOverride(e) {
   return o;
 }
 function getEffortValue(e) {
-  return getEffortLayerOverride(e.permissionLayers) ?? Ya(e.getAppState(), c(e));
+  return getEffortLayerOverride(e.permissionLayers) ?? getSessionEffortLevel(e.getAppState(), c(e));
 }
 function c(e) {
   let o = e.options?.mainLoopModel;

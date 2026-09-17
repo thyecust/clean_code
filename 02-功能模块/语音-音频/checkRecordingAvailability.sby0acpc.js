@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 16 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -42,7 +42,7 @@ function f(e) {
       return (
         r.isNativeAudioAvailable(),
         (e.audioNapi = r),
-        n(`[voice] audio-capture-napi loaded in ${Date.now() - o}ms`),
+        logForDebugging(`[voice] audio-capture-napi loaded in ${Date.now() - o}ms`),
         r
       );
     })()),
@@ -135,7 +135,7 @@ This usually means the host has no microphone (for example, a remote server). Ru
   };
 }
 async function startRecording(e, o, r, s) {
-  n("[voice] startRecording called, platform=darwin");
+  logForDebugging("[voice] startRecording called, platform=darwin");
   let t = l.of(e),
     d = await f(t),
     i = d.isNativeAudioAvailable() && !0,
@@ -191,7 +191,7 @@ function C(e, o, r, s) {
       ((e.activeRecorder = null), r());
     }),
     i.on("error", (c) => {
-      (n(
+      (logForDebugging(
         `[voice] SoX rec spawn failed: ${c instanceof Error ? c.message : String(c)}`,
         { level: "error" },
       ),

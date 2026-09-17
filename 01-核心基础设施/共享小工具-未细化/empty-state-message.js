@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function EmptyStateMessage(x) {
   let d = _(9),
@@ -16,21 +16,21 @@ function EmptyStateMessage(x) {
   if (!R) {
     let c;
     if (d[0] !== a)
-      ((c = e(t, { dimColor: !0, children: a })), (d[0] = a), (d[1] = c));
+      ((c = e(Text, { dimColor: !0, children: a })), (d[0] = a), (d[1] = c));
     else c = d[1];
     return c;
   }
   let c;
   if (d[2] !== a)
-    ((c = e(t, { dimColor: !0, children: a })), (d[2] = a), (d[3] = c));
+    ((c = e(Text, { dimColor: !0, children: a })), (d[2] = a), (d[3] = c));
   else c = d[3];
   let i;
   if (d[4] !== R)
-    ((i = e(t, { dimColor: !0, children: R })), (d[4] = R), (d[5] = i));
+    ((i = e(Text, { dimColor: !0, children: R })), (d[4] = R), (d[5] = i));
   else i = d[5];
   let m;
   if (d[6] !== c || d[7] !== i)
-    ((m = r(o, { flexDirection: "column", children: [c, i] })),
+    ((m = r(Box, { flexDirection: "column", children: [c, i] })),
       (d[6] = c),
       (d[7] = i),
       (d[8] = m));

@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { AGENT_MESSAGE_TAG } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { go, HU } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { escapeHtmlAttribute, neutralizeOpeningTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 var MAIN_CONVERSATION_NAME = "main";
 function formatAgentMessage(t, r) {
-  return `<${AGENT_MESSAGE_TAG} from="${go(t)}">
-${HU(AGENT_MESSAGE_TAG, r)}
+  return `<${AGENT_MESSAGE_TAG} from="${escapeHtmlAttribute(t)}">
+${neutralizeOpeningTags(AGENT_MESSAGE_TAG, r)}
 </${AGENT_MESSAGE_TAG}>`;
 }
 var TEAM_LEAD_AGENT_NAME = "team-lead",

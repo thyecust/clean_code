@@ -13,7 +13,7 @@ import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zq
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, A, Jr, w8, H_e, I_e, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ou, b, z, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getTelemetryCode, jsonStringify, jsonParse, Is, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, takeLastCodeUnits, CONTROL_CHARS_REGEX, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -23,13 +23,13 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PROCESS_WRAPPER_ENV_VAR, getProcessWrapperState, getLauncherArgv, getLauncherConfigError, isLauncherRunnable, isExecutableFile, getAbsoluteLauncherPaths, getLauncherErrorMessage, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { removeGuiHostEntrypoint, g4, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import { PROVIDER_CONFIG_ENV_VARS, BASE_URL_ENV_VARS, API_KEY_ENV_VARS, TOKEN_FD_ENV_VARS, clearAwsEnvVars, getHostAuthEnvVarName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { resolveWrappedClaudeInvocation, resolveClaudeInvocation, getInstalledClaudePath, applyProcessWrapper, findInstalledVersionBinary } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { readBoundedFile, getVersionForAnalytics, getFeatureValue_CACHED_MAY_BE_STALE, getGlobalConfig, getDaemonColdStart } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { te, gm, mW, i_, dp, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, CURSOR_HOME_SEQUENCE, ERASE_ENTIRE_LINE, ERASE_SCREEN_SEQUENCE, wrapAnsi, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { quarantineJobTranscript, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { CLAUDE_BULLET_GLYPH, THEREFORE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
@@ -64,8 +64,8 @@ import { enableTerminalMode, HIDE_CURSOR } from "../../01-核心基础设施/共
 import { markdownParser } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { getPowerShellPath } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import { HJn } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { o0e, aE } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
+import { getPeerUidRefusalReason } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { ensureMarkdownExtensionsRegistered, renderMarkdownToken } from "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { fromJobState } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
@@ -96,7 +96,7 @@ function OZt() {
   return Ge(getLocalBinDir(), "claude");
 }
 function Te(t) {
-  return Nt(t.replace(/[\r\n]/g, " "));
+  return escapeHtmlText(t.replace(/[\r\n]/g, " "));
 }
 function at() {
   return Ge(Ct(), "Library", "LaunchAgents", `${be}.plist`);
@@ -366,7 +366,7 @@ async function vit(t, e) {
     if (getProcessWrapperState().platformIgnored) logFeatureSad("agent_launcher", "platform_unsupported");
     let T = await It(_, w);
     if (T.ok) return { err: null };
-    (n(
+    (logForDebugging(
       `daemon: WMI spawn failed (${T.reason}); falling back to direct spawn \u2014 daemon will not survive SSH/terminal close`,
       { level: "warn" },
     ),
@@ -414,7 +414,7 @@ async function vit(t, e) {
         r.recovered && T.err === null)
       )
         return (
-          n(
+          logForDebugging(
             `daemon: ${m} was being reinstalled (exec ${A(V)}); started it after ${r.waitedMs}ms`,
           ),
           {
@@ -424,7 +424,7 @@ async function vit(t, e) {
             reinstallWaitedMs: Y,
           }
         );
-      n(
+      logForDebugging(
         r.recovered
           ? `daemon: ${m} came back after ${r.waitedMs}ms of an npm reinstall but starting it failed again (exec ${A(T.err)})`
           : `daemon: ${m} not runnable after waiting ${r.waitedMs}ms for an npm reinstall (exec ${A(V)}; install ${r.installInProgressAtEnd ? "still in progress" : r.extended ? "ended" : "not seen"})`,
@@ -1124,7 +1124,7 @@ function cn(t) {
   return e.length > ln ? "" : `\x1B[${e}m`;
 }
 function dn(t, e) {
-  if (te(t) <= e) return [t];
+  if (getStringWidth(t) <= e) return [t];
   let o = [],
     c = "",
     s = 0,
@@ -1136,7 +1136,7 @@ function dn(t, e) {
       continue;
     }
     for (let { segment: _ } of getGraphemeSegmenter().segment(m)) {
-      let w = _.length === 1 && _.charCodeAt(0) < 127 ? 1 : te(_);
+      let w = _.length === 1 && _.charCodeAt(0) < 127 ? 1 : getStringWidth(_);
       if (s > 0 && s + w > e)
         (o.push(d.size > 0 ? c + Yt : c), (c = cn(d)), (s = 0));
       ((c += _), (s += w));
@@ -1145,7 +1145,7 @@ function dn(t, e) {
   return (o.push(c), o);
 }
 function _t(t, e) {
-  return dp(t, e, { hard: !1, trim: !1 })
+  return wrapAnsi(t, e, { hard: !1, trim: !1 })
     .split(
       `
 `,
@@ -1229,12 +1229,12 @@ function zt(t) {
 }
 function fn(t, e) {
   return (
-    o0e(),
+    ensureMarkdownExtensionsRegistered(),
     an(
       markdownParser
         .lexer(t)
         .map((o) =>
-          aE(o, e, {
+          renderMarkdownToken(o, e, {
             listDepth: 0,
             orderedListNumber: null,
             parent: null,
@@ -1251,7 +1251,7 @@ function pn(t, e, o, c) {
     d = c?.colorLevel ?? en,
     m = c?.theme ?? tn,
     _ = (O) => (d > 0 && O !== "" ? Qr + O + Yt : O),
-    w = (O) => Math.max(1, Math.ceil(te(O) / s)),
+    w = (O) => Math.max(1, Math.ceil(getStringWidth(O) / s)),
     k = "\u2500".repeat(s),
     E = ["", k, Kt, k, rn],
     v = E.reduce((O, K) => O + w(K), 0),
@@ -1500,7 +1500,7 @@ async function K$n(
         p.setTimeout(30000, () => p.destroy()),
         E.add(p),
         p.once("close", () => E.delete(p)));
-      let r = HJn(p);
+      let r = getPeerUidRefusalReason(p);
       if (r) {
         (logEvent("tengu_daemon_peer_uid_reject", {}),
           p.once("data", () => C(p, { ok: !1, code: "EPEERUID", error: r })));
@@ -1532,7 +1532,7 @@ async function K$n(
     ae = !1;
   G.on("error", (p) => {
     if (ae) {
-      n(`bg control server bind: ${redactDaemonNonce(l(p))}`, { level: "warn" });
+      logForDebugging(`bg control server bind: ${redactDaemonNonce(l(p))}`, { level: "warn" });
       return;
     }
     logError(p);
@@ -1584,7 +1584,7 @@ async function K$n(
 function C(t, e) {
   if (t.destroyed) return;
   t.end(
-    b(e) +
+    jsonStringify(e) +
       `
 `,
   );
@@ -1596,7 +1596,7 @@ function Be(t, e) {
     return;
   }
   t.write(
-    b(e) +
+    jsonStringify(e) +
       `
 `,
   );
@@ -1714,7 +1714,7 @@ async function Pn(t, e, o, c) {
     } = t,
     q;
   try {
-    q = z(o);
+    q = jsonParse(o);
   } catch {
     return C(e, { ok: !1, error: "bad json", code: "EUNKNOWN" });
   }
@@ -1767,7 +1767,7 @@ async function Pn(t, e, o, c) {
   if (G === "lease") {
     (v(e, kn(q.client)),
       e.write(
-        b({ ok: !0, op: "lease" }) +
+        jsonStringify({ ok: !0, op: "lease" }) +
           `
 `,
       ));
@@ -1953,7 +1953,7 @@ async function Pn(t, e, o, c) {
     }
     case "attach": {
       if (p.auth === void 0)
-        n(
+        logForDebugging(
           "[bg-attach] legacy client (no control key) \u2014 allowed via peerUid",
           { level: "warn" },
         );
@@ -2090,7 +2090,7 @@ async function Pn(t, e, o, c) {
       let O = r.marksCapable ? randomBytes(16).toString("hex") : void 0;
       if (
         (e.write(
-          b({
+          jsonStringify({
             ok: !0,
             op: "attach",
             imarkNonce: O,
@@ -2149,8 +2149,8 @@ async function Pn(t, e, o, c) {
         }),
         M !== null)
       )
-        e.write(i_ + gm + M);
-      let K = gm + mW,
+        e.write(ERASE_SCREEN_SEQUENCE + CURSOR_HOME_SEQUENCE + M);
+      let K = CURSOR_HOME_SEQUENCE + ERASE_ENTIRE_LINE,
         X = 6,
         re = [],
         le = 0,
@@ -2163,8 +2163,8 @@ async function Pn(t, e, o, c) {
         xe = Oe === 0 ? 0 : Math.max(1, Math.ceil((Oe - qt) / St)),
         U = (D) =>
           wrapDaemonHint(
-            i_ +
-              gm +
+            ERASE_SCREEN_SEQUENCE +
+              CURSOR_HOME_SEQUENCE +
               `
   \x1B[2m${D}\x1B[0m
 `,
@@ -2267,9 +2267,9 @@ async function Pn(t, e, o, c) {
           if (e.destroyed) return;
           if (((ve = !0), re !== null)) {
             let F = de + D;
-            if (F.includes(i_) || F.includes(K)) {
+            if (F.includes(ERASE_SCREEN_SEQUENCE) || F.includes(K)) {
               yt();
-              let me = D.includes(i_) || D.includes(K) ? D : F;
+              let me = D.includes(ERASE_SCREEN_SEQUENCE) || D.includes(K) ? D : F;
               if ((ce(), Ae(!1), e.writableLength <= He))
                 (e.write(r.decModeSnapshot().map(enableTerminalMode).join("") + me), rt());
               else e.destroy();
@@ -2326,7 +2326,7 @@ async function Pn(t, e, o, c) {
               colorLevel: p.caps?.colorLevel,
               theme: p.caps?.systemTheme,
             });
-            e.write(i_ + gm + (F ?? ""));
+            e.write(ERASE_SCREEN_SEQUENCE + CURSOR_HOME_SEQUENCE + (F ?? ""));
           }),
             (J = () => {
               ((D.repaint = void 0), (J = void 0));
@@ -2335,7 +2335,7 @@ async function Pn(t, e, o, c) {
       (r.noteActivity(), r.seedFocus(!0), r.sendAttacherCaps(p.caps ?? null));
       let Ve;
       if (r.dispatch.launch.mode === "exec") {
-        let D = wrapDaemonHint(i_ + gm);
+        let D = wrapDaemonHint(ERASE_SCREEN_SEQUENCE + CURSOR_HOME_SEQUENCE);
         e.write(D);
         for (let F of r.ringSnapshot()) e.write(F);
         if (
@@ -2596,7 +2596,7 @@ async function or(t, e, o) {
     (logEvent("tengu_bg_daemon_service_stale_exec", {
       launcher_dead: w.launcherPrefixDead,
     }),
-      n(
+      logForDebugging(
         w.execPathStale
           ? "daemon service exec path is stale (binary deleted) \u2014 falling back to transient spawn. Run 'claude daemon install' to repair."
           : "daemon service unit starts through a launcher that was deleted or is no longer executable \u2014 falling back to transient spawn. Run 'claude daemon install' to repair.",
@@ -2628,7 +2628,7 @@ async function or(t, e, o) {
     )
       return (et(o), { ok: !0 });
     (logEvent("tengu_bg_daemon_service_poll_fallthrough", { sr_ok: J.ok }),
-      n(
+      logForDebugging(
         `daemon service ${H_e} 5s${J.ok ? "" : ` (${J.error})`} \u2014 falling back to transient spawn. Run 'claude daemon install' to repair.`,
         { level: "warn" },
       ));
@@ -2672,7 +2672,7 @@ async function or(t, e, o) {
         ? null
         : Date.now() - v.lastTransientSpawnAt;
   v.lastTransientSpawnAt = Date.now();
-  let T = b({ label: Mn(), cwd: getCwd(), pid: process.pid }),
+  let T = jsonStringify({ label: Mn(), cwd: getCwd(), pid: process.pid }),
     V = Date.now(),
     I = ["daemon", "run", "--origin", "transient", "--spawned-by", T],
     ne = await vit(I),
@@ -2748,12 +2748,12 @@ async function or(t, e, o) {
             wrapperConfigured: getLauncherArgv().length > 0,
             storageV5: e,
           })),
-          n(
+          logForDebugging(
             `daemon: ${tt()} was being reinstalled when the first daemon was spawned (it exited at once); restarted it after ${U.waitedMs}ms`,
           ),
           (x = await $e(r, r.spawnIssuedAt + K0, !0)));
       } else if (
-        (n(
+        (logForDebugging(
           `daemon: respawn after the npm reinstall window failed: ${l(J.err)}`,
           { level: "warn" },
         ),
@@ -2778,7 +2778,7 @@ async function or(t, e, o) {
     let U = await qe(r, !0);
     if (((ye = Wt(U)), U.length > 0)) {
       ((de = !0),
-        n(
+        logForDebugging(
           `daemon: transient spawn stderr:
 ${U}`,
           { level: "error" },
@@ -2833,7 +2833,7 @@ ${U}`,
   }
   if (le)
     return (
-      n(
+      logForDebugging(
         "daemon: the clock jumped during the cold start (machine slept?) and the daemon is still unreachable \u2014 retrying the whole start once",
         { level: "warn" },
       ),
@@ -2942,7 +2942,7 @@ async function On(t, e, o, c, s) {
   if (!E) return !1;
   if (!isProcessIdentityKnown(E))
     return (
-      n(
+      logForDebugging(
         `bg: skipping stale-daemon retire \u2014 lock pid ${E.pid} has no procStart identity`,
       ),
       !1
@@ -2997,7 +2997,7 @@ async function On(t, e, o, c, s) {
   if (V !== "exited") return !1;
   if (T) _v().prefixAxis = "took-over";
   return (
-    n(
+    logForDebugging(
       N
         ? `bg: ${bgSupervisorNoun()} pid ${E.pid} runs ${E.version}; this binary (${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}) is a newer build \u2014 retired the stale ${bgSupervisorNoun()} so new sessions use the current binary`
         : `bg: ${bgSupervisorNoun()} pid ${E.pid} predates CLAUDE_CODE_PROCESS_WRAPPER and spawns sessions unwrapped \u2014 retired it so the replacement runs through the configured launcher`,
@@ -3019,7 +3019,7 @@ function Nn(t, e) {
     if (e) return !1;
     if (!c.prefixContractViolationLogged)
       ((c.prefixContractViolationLogged = !0),
-        n(
+        logForDebugging(
           `bg: a raw ${bgSupervisorNoun()} is running again after this session's launcher-driven restart. Two causes look identical from here: a claude session started BEFORE CLAUDE_CODE_PROCESS_WRAPPER was deployed cold-started it (restart those sessions), or the launcher does not pass that variable through in the environment it hands to \`exec\` (launcher contract #3). Sessions dispatched to it run unwrapped either way; \`claude daemon status\` shows the launcher it records.`,
           { level: "warn" },
         ),
@@ -3078,7 +3078,7 @@ async function nr(t) {
     );
   if (!isProcessIdentityKnown(e))
     return (
-      n(
+      logForDebugging(
         `bg: supervisor lock pid ${e.pid} alive but identity unverifiable (no procStart) \u2014 not signalled`,
         { level: "warn" },
       ),
@@ -3096,7 +3096,7 @@ async function nr(t) {
     );
   } catch {}
   if (
-    (n(
+    (logForDebugging(
       `bg: supervisor pid ${e.pid} alive but control socket unreachable \u2014 signalling restart`,
       { level: "warn" },
     ),
@@ -3127,7 +3127,7 @@ async function Ln() {
   if (t !== "linux" && t !== "wsl") return;
   let e = await Tn("/etc/systemd/logind.conf", "utf8").catch(() => "");
   if (!/^\s*KillUserProcesses\s*=\s*yes\b/im.test(e)) return;
-  n(
+  logForDebugging(
     "logind KillUserProcesses=yes \u2014 SSH disconnect will kill the transient daemon and its background jobs. Run `loginctl enable-linger $USER` or `claude daemon install` to keep it alive across logout.",
     { level: "warn" },
   );
@@ -3165,7 +3165,7 @@ async function LWe(t, e) {
   await t.delete(xPt(e)).catch(() => {});
 }
 function lr(t, e) {
-  let o = ou(e);
+  let o = getTelemetryCode(e);
   return Object.assign(t, o !== void 0 ? { code: o } : {});
 }
 export {

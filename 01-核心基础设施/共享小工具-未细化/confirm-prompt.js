@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { tn } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { useIsScreenReaderEnabled } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { mOt, vs, ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -33,7 +33,7 @@ function ConfirmPrompt(T) {
     U = k === void 0 ? "confirm" : k,
     A = q === void 0 ? !1 : q,
     [E] = d(U);
-  if (tn()) {
+  if (useIsScreenReaderEnabled()) {
     let c;
     if (
       t[0] !== s ||

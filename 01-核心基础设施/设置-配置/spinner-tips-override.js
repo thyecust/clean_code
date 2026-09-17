@@ -10,10 +10,10 @@
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { $W } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { ge, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
-import { ot } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isSettingsSourceEnabled, PROJECT_SCOPED_SETTINGS_SOURCE_SET, getSpinnerTipsSchema, getRemoteManagedSettingsSyncFromCache } from "./设置-配置.aqbb35ee.js";
 import { stripAnsi } from "../共享小工具-未细化/text-sanitization.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -60,7 +60,7 @@ async function V(e) {
       if (!d.isFile())
         return (
           logFeatureBad("tips_org_tips_file_load", "not_regular_file"),
-          n(
+          logForDebugging(
             `spinnerTipsOverride.tipsFile ${e} is not a regular file; ignoring it`,
             { level: "warn" },
           ),
@@ -69,7 +69,7 @@ async function V(e) {
       if (d.size > O)
         return (
           logFeatureBad("tips_org_tips_file_load", "too_large"),
-          n(
+          logForDebugging(
             `spinnerTipsOverride.tipsFile ${e} is larger than ${O} bytes; ignoring it`,
             { level: "warn" },
           ),
@@ -86,12 +86,12 @@ async function V(e) {
     } finally {
       await i.close();
     }
-    let a = Q().safeParse(z(r)),
+    let a = Q().safeParse(jsonParse(r)),
       l = a.success ? getSpinnerTipsSchema().parse(a.data) : void 0;
     if (l === void 0)
       return (
         logFeatureBad("tips_org_tips_file_load", "wrong_shape"),
-        n(
+        logForDebugging(
           `spinnerTipsOverride.tipsFile ${e} must be a JSON array of tips (or {"tips": [...]}); ignoring it`,
           { level: "warn" },
         ),
@@ -109,7 +109,7 @@ async function V(e) {
             : "read_failed";
     return (
       logFeatureBad("tips_org_tips_file_load", r),
-      n(
+      logForDebugging(
         W(t)
           ? `spinnerTipsOverride.tipsFile ${e} does not exist; no file tips loaded`
           : `spinnerTipsOverride.tipsFile ${e} could not be read: ${ge(t).message}`,
@@ -138,7 +138,7 @@ var ee = new j(() => new C());
 function te() {
   if (getRemoteManagedSettingsSyncFromCache()?.spinnerTipsOverride?.tipsFile)
     return (
-      n(
+      logForDebugging(
         "spinnerTipsOverride.tipsFile from remote managed settings is ignored; ship inline tips or install the file path via managed-settings.json",
         { level: "warn" },
       ),
@@ -149,24 +149,24 @@ function te() {
 function ie(e) {
   if (!e) return;
   if (!isAbsolute(e) && e !== "~" && !e.startsWith("~/")) {
-    n(
+    logForDebugging(
       `spinnerTipsOverride.tipsFile must be an absolute or ~/ path (got "${e}"); ignoring it`,
       { level: "warn" },
     );
     return;
   }
   if ($W(e)) {
-    n(
+    logForDebugging(
       "spinnerTipsOverride.tipsFile must be a local path, not a network (UNC) path; ignoring it",
       { level: "warn" },
     );
     return;
   }
   try {
-    let t = ot(e);
+    let t = resolvePath(e);
     return $W(t) ? void 0 : t;
   } catch (t) {
-    n(
+    logForDebugging(
       `spinnerTipsOverride.tipsFile "${e}" is not a usable path: ${ge(t).message}`,
       { level: "warn" },
     );
@@ -203,7 +203,7 @@ async function getOverrideSpinnerTips(e) {
     d = ie(l === "policySettings" && te() ? void 0 : a?.override.tipsFile);
   for (let { source: s, override: o } of i)
     if (o.tipsFile || o.label !== void 0)
-      n(
+      logForDebugging(
         `spinnerTipsOverride.tipsFile/label in ${s} are ignored; set them in user or managed settings`,
         { level: "warn" },
       );
@@ -214,21 +214,21 @@ async function getOverrideSpinnerTips(e) {
       if (T.length >= B) return;
       let h = N(o);
       if (h === "") {
-        n(
+        logForDebugging(
           `spinnerTipsOverride: tip "${s}" is empty after sanitizing; dropped`,
           { level: "warn" },
         );
         return;
       }
       if (h.length > I) {
-        n(
+        logForDebugging(
           `spinnerTipsOverride: tip "${s}" is longer than ${I} characters; dropped`,
           { level: "warn" },
         );
         return;
       }
       if (g.has(s)) {
-        n(`spinnerTipsOverride: duplicate tip id "${s}"; keeping the first`, {
+        logForDebugging(`spinnerTipsOverride: duplicate tip id "${s}"; keeping the first`, {
           level: "warn",
         });
         return;
@@ -255,7 +255,7 @@ async function getOverrideSpinnerTips(e) {
       let _ = `${CUSTOM_TIP_ID_PREFIX}${b++}`;
       if (typeof p === "string") F(p, _, w, S);
       else
-        n(
+        logForDebugging(
           `spinnerTipsOverride: object tip entries in ${s} are ignored; only plain strings are read from project settings`,
           { level: "warn" },
         );
@@ -268,13 +268,13 @@ function F(e, t, i, r) {
     return;
   }
   if (typeof e.text !== "string") {
-    n('spinnerTipsOverride: tip object without a "text" string; dropped', {
+    logForDebugging('spinnerTipsOverride: tip object without a "text" string; dropped', {
       level: "warn",
     });
     return;
   }
   if (typeof e.id !== "string" || !H.test(e.id)) {
-    n(
+    logForDebugging(
       'spinnerTipsOverride: tip object needs an "id" of 1-64 letters, digits, ".", "_" or "-"; dropped',
       { level: "warn" },
     );

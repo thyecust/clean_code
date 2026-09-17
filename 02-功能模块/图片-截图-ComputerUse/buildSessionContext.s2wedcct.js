@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import "../MCP客户端/chunk-tv3jbp8f.js";
-import "../MCP客户端/chunk-98spw152.js";
+import "../MCP客户端/mcp-protocol.js";
 import "../MCP客户端/mcp-server.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { COMPUTER_USE_APPROVAL_DIALOG } from "./computer-use-approval-dialog.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { checkComputerUseLock, acquireComputerUseLock, isComputerUseActiveThisTurn, markComputerUseActiveThisTurn, getComputerUseLockOwner } from "./computer-use-lock.js";
 import { getComputerUseSession, registerComputerUseEscapeHotkey } from "./computer-use-session.js";
-import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import "./computer-use-cli-executor.js";
 import { con, put } from "./chunk-v76f8dbx.js";
 import { getFrozenCoordinateMode } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
@@ -218,10 +218,10 @@ function buildSessionContext() {
       if (markComputerUseActiveThisTurn()) {
         let e = registerComputerUseEscapeHotkey(() => {
           if (getComputerUseSession().callsInFlight === 0) {
-            n("[cu-esc] user escape with no CU call in flight; consumed only");
+            logForDebugging("[cu-esc] user escape with no CU call in flight; consumed only");
             return;
           }
-          (n("[cu-esc] user escape, aborting turn"),
+          (logForDebugging("[cu-esc] user escape, aborting turn"),
             p().abortController.abort());
         });
         getComputerUseSession().currentOnProgress?.({
@@ -256,7 +256,7 @@ function getComputerUseMCPToolOverrides(t) {
       a.callsInFlight--;
     }
     let { telemetry: f, ...m } = u;
-    if (f?.error_kind) n(`[Computer Use MCP] ${t} error_kind=${f.error_kind}`);
+    if (f?.error_kind) logForDebugging(`[Computer Use MCP] ${t} error_kind=${f.error_kind}`);
     return {
       data: Array.isArray(m.content)
         ? m.content.map((i) =>

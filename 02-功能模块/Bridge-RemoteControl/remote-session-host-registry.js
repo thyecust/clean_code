@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { pE, Elt } from "../远程工具执行/chunk-66axrkvh.js";
+import { CURRENT_PROTOCOL_VERSION, resolveProtocolCompatibility } from "../远程工具执行/remote-tool-protocol.js";
 import { DEVICE_LOCAL_TOOL_NAMES, BRIDGE_PLUMBING_TOOL_NAMES } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 class RemoteSessionHostRegistry {
   #e = new Map();
@@ -38,7 +38,7 @@ class RemoteSessionHostRegistry {
     }
     let i = this.#e.get(r),
       u = e.tools.filter((s) => DEVICE_LOCAL_TOOL_NAMES.has(s.name)),
-      a = Elt((u[0] ?? e.tools[0])?.protocol_versions ?? [pE]),
+      a = resolveProtocolCompatibility((u[0] ?? e.tools[0])?.protocol_versions ?? [CURRENT_PROTOCOL_VERSION]),
       p = {
         name: r,
         instanceId: t,

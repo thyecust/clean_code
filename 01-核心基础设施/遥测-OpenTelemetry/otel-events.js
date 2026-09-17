@@ -11,7 +11,7 @@ import { j, B, K, hrt, TDn, ke, ns, fv, fZ } from "../../00-第三方库/lodash/
 import { Ie, rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { Jr, hv, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { otelApiModule, otelCoreModule, runtimeEnvironment, getWorkflowAnalyticsAttributes, getOauthAccountInfo, getAuthenticatedAccountInfo, getOrCreateUserID } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -38,7 +38,7 @@ function S(e) {
   if (t < 0 || r < 0) return null;
   try {
     let i = w().safeParse(
-      z(Buffer.from(e.slice(t + 1, r), "base64url").toString("utf8")),
+      jsonParse(Buffer.from(e.slice(t + 1, r), "base64url").toString("utf8")),
     );
     return i.success ? i.data : null;
   } catch {
@@ -282,7 +282,7 @@ async function emitOtelEvent(e, t = {}, r) {
   }
   if (!TDn(l) && !i.warnedNoEventLogger)
     ((i.warnedNoEventLogger = !0),
-      n(`[3P telemetry] Event dropped (no event logger initialized): ${e}`, {
+      logForDebugging(`[3P telemetry] Event dropped (no event logger initialized): ${e}`, {
         level: "warn",
       }));
 }

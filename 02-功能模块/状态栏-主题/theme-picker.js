@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useActiveKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
@@ -24,7 +24,7 @@ import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施
 import { gracefulShutdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { WWe, KZt } from "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import { getSyntaxHighlightOverrideSource, getSyntaxThemeDescriptor } from "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import { StructuredDiff } from "../Diff引擎/structured-diff.js";
 import { DashedBorderBox } from "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -67,12 +67,12 @@ function ThemePicker(Bt) {
     C = useThemeSetting(),
     { columns: Yt } = useTerminalSize(),
     Oe;
-  if (i[0] === MEMO_CACHE_SENTINEL) ((Oe = WWe()), (i[0] = Oe));
+  if (i[0] === MEMO_CACHE_SENTINEL) ((Oe = getSyntaxHighlightOverrideSource()), (i[0] = Oe));
   else Oe = i[0];
   let ye = Oe,
     Qe;
   if (i[1] !== xe)
-    ((Qe = ye === null ? KZt(xe) : null), (i[1] = xe), (i[2] = Qe));
+    ((Qe = ye === null ? getSyntaxThemeDescriptor(xe) : null), (i[1] = xe), (i[2] = Qe));
   else Qe = i[2];
   let R = Qe,
     { setPreviewTheme: Ce, savePreview: b, cancelPreview: s } = usePreviewTheme(),
@@ -176,14 +176,14 @@ function ThemePicker(Bt) {
     h;
   if (i[30] !== H)
     ((h = H
-      ? e(t, { children: "Let's get started." })
-      : e(t, { bold: !0, color: "permission", children: "Theme" })),
+      ? e(Text, { children: "Let's get started." })
+      : e(Text, { bold: !0, color: "permission", children: "Theme" })),
       (i[30] = H),
       (i[31] = h));
   else h = i[31];
   let gt;
   if (i[32] === MEMO_CACHE_SENTINEL)
-    ((gt = e(t, {
+    ((gt = e(Text, {
       bold: !0,
       children: "Choose the text style that looks best with your terminal",
     })),
@@ -191,14 +191,14 @@ function ThemePicker(Bt) {
   else gt = i[32];
   let z;
   if (i[33] !== m || i[34] !== u)
-    ((z = m && !u && e(t, { dimColor: !0, children: m })),
+    ((z = m && !u && e(Text, { dimColor: !0, children: m })),
       (i[33] = m),
       (i[34] = u),
       (i[35] = z));
   else z = i[35];
   let B;
   if (i[36] !== z)
-    ((B = r(o, { flexDirection: "column", children: [gt, z] })),
+    ((B = r(Box, { flexDirection: "column", children: [gt, z] })),
       (i[36] = z),
       (i[37] = B));
   else B = i[37];
@@ -270,7 +270,7 @@ function ThemePicker(Bt) {
   else E = i[56];
   let J;
   if (i[57] !== h || i[58] !== B || i[59] !== E)
-    ((J = r(o, { flexDirection: "column", gap: 1, children: [h, B, E] })),
+    ((J = r(Box, { flexDirection: "column", gap: 1, children: [h, B, E] })),
       (i[57] = h),
       (i[58] = B),
       (i[59] = E),
@@ -318,20 +318,20 @@ function ThemePicker(Bt) {
           : `Syntax highlighting enabled (${Te} to disable)`;
   let O;
   if (i[64] !== $e)
-    ((O = r(t, { dimColor: !0, children: [" ", $e] })),
+    ((O = r(Text, { dimColor: !0, children: [" ", $e] })),
       (i[64] = $e),
       (i[65] = O));
   else O = i[65];
   let Q;
   if (i[66] !== M || i[67] !== O)
-    ((Q = r(o, { flexDirection: "column", width: "100%", children: [M, O] })),
+    ((Q = r(Box, { flexDirection: "column", width: "100%", children: [M, O] })),
       (i[66] = M),
       (i[67] = O),
       (i[68] = Q));
   else Q = i[68];
   let pt;
   if (i[69] !== J || i[70] !== Q)
-    ((pt = r(o, { flexDirection: "column", gap: 1, children: [J, Q] })),
+    ((pt = r(Box, { flexDirection: "column", gap: 1, children: [J, Q] })),
       (i[69] = J),
       (i[70] = Q),
       (i[71] = pt));
@@ -340,7 +340,7 @@ function ThemePicker(Bt) {
   if (!H) {
     let Z;
     if (i[72] !== W)
-      ((Z = e(o, { flexDirection: "column", children: W })),
+      ((Z = e(Box, { flexDirection: "column", children: W })),
         (i[72] = W),
         (i[73] = Z));
     else Z = i[73];
@@ -349,7 +349,7 @@ function ThemePicker(Bt) {
       ((K =
         u &&
         m &&
-        e(o, { marginLeft: 3, children: e(t, { dimColor: !0, children: m }) })),
+        e(Box, { marginLeft: 3, children: e(Text, { dimColor: !0, children: m }) })),
         (i[74] = m),
         (i[75] = u),
         (i[76] = K));
@@ -364,8 +364,8 @@ function ThemePicker(Bt) {
     )
       ((ee =
         !pe &&
-        e(o, {
-          children: e(t, {
+        e(Box, {
+          children: e(Text, {
             dimColor: !0,
             italic: !0,
             children: I.pending
@@ -388,7 +388,7 @@ function ThemePicker(Bt) {
     else ee = i[82];
     let te;
     if (i[83] !== K || i[84] !== ee)
-      ((te = r(o, { marginTop: 1, children: [K, ee] })),
+      ((te = r(Box, { marginTop: 1, children: [K, ee] })),
         (i[83] = K),
         (i[84] = ee),
         (i[85] = te));

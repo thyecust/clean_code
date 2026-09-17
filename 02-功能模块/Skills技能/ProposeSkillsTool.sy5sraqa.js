@@ -13,11 +13,11 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { sn, Nb } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { findCommand, getDefaultFileReadingLimits, isSkillPlaceholderCurrent, getCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath, getFileMtimeMs } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isRemoteCoworkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { PROPOSE_SKILLS_TOOL_NAME, PROPOSE_SKILLS_TOOL_DESCRIPTION, PROPOSE_SKILLS_TOOL_PROMPT } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
@@ -139,14 +139,14 @@ var S = 1024,
             isSkillPlaceholderCurrent(p)
           )
             continue;
-          let f = ot(L(p.skillRoot, "SKILL.md")),
+          let f = resolvePath(L(p.skillRoot, "SKILL.md")),
             g = await C(f, e.readFileState.get(f), p.contentLength, e);
           if (g === "unread") r.push(`${h} (${f})`);
           else if (g === "stale") d.push(`${h} (${f})`);
         }
       } catch (o) {
         return (
-          n(`propose_skills: skipping the read-before-improve check: ${l(o)}`),
+          logForDebugging(`propose_skills: skipping the read-before-improve check: ${l(o)}`),
           { result: !0 }
         );
       }
@@ -219,17 +219,17 @@ async function C(t, e, u, r) {
 }
 async function k(t, e) {
   try {
-    return (await bA(t)) > e.timestamp;
+    return (await getFileMtimeMs(t)) > e.timestamp;
   } catch (u) {
-    return (n(`propose_skills: cannot stat ${t}: ${l(u)}`), !1);
+    return (logForDebugging(`propose_skills: cannot stat ${t}: ${l(u)}`), !1);
   }
 }
 async function y(t) {
   try {
-    let e = await ae().readFileBytes(t);
+    let e = await getFsSurface().readFileBytes(t);
     return normalizeFileContent(e.toString("utf8"));
   } catch (e) {
-    n(`propose_skills: cannot read ${t}: ${l(e)}`);
+    logForDebugging(`propose_skills: cannot read ${t}: ${l(e)}`);
     return;
   }
 }

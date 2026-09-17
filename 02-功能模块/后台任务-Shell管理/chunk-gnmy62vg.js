@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getPtySocketDir, getPtySocketPath, getSparePtyDir, getPtyPidDir, getPtyPidFilePath, getPtyHostStderrPath, getPtyLateOutputPath, getPtyExecExitPath, encodeControlFrame } from "./chunk-djserjj5.js";
 import { readRoster, updateRoster, writeReapedTerminalState, MAX_DETAIL_CHARS, clipWithEllipsis } from "./chunk-7wsy8vxb.js";
@@ -393,7 +393,7 @@ function I() {
     let e = Bun.ant.memoryPressureLevel();
     return e === null ? void 0 : T[e];
   } catch (e) {
-    n(
+    logForDebugging(
       `bg low-mem: memoryPressureLevel failed: ${e instanceof Error ? e.message : String(e)}`,
       { level: "warn" },
     );

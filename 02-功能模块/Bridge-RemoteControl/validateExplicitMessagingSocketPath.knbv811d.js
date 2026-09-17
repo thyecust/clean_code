@@ -10,24 +10,24 @@
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  xgr,
-  Hgr,
-  fDt,
-  mDt,
-  Igr,
-  gDt,
-  Pgr,
-  hDt,
-  Ogr,
-  Vdr,
-  sBn,
-  Dgr,
-  Kdr,
-  Xdr,
-  iBn,
-  aBn,
-} from "../跨会话消息(UDS)/chunk-t2esphmv.js";
-import "../Teammates团队/chunk-nhk351pe.js";
+  getUdsStartFailureCause as xgr,
+  getUdsStartDegradedCause as Hgr,
+  getUdsInboxUnavailableReason as fDt,
+  setOnRename as mDt,
+  setOnEnableRemoteControl as Igr,
+  setOnPeerMessageStatus as gDt,
+  setOnEnqueue as Pgr,
+  vettedPeerReplyTarget as hDt,
+  getUdsMessagingSocketPath as Ogr,
+  getDefaultUdsSocketPath as Vdr,
+  getPerUidFallbackUdsSocketPath as sBn,
+  startCrossSessionInbox as Dgr,
+  validateExplicitMessagingSocketPath as Kdr,
+  startUdsMessaging as Xdr,
+  currentSenderClass as iBn,
+  unlinkActiveKeyFileSync as aBn,
+} from "../跨会话消息(UDS)/uds-messaging.js";
+import "../Teammates团队/peer-idle-notices.js";
 import "../权限系统/cross-session-inbound-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
 export {

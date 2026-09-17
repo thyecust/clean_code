@@ -16,7 +16,7 @@ import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemet
 import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
 import "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import "../Teammates团队/chunk-weg7y2ya.js";
-import "./chunk-5gvg7p5p.js";
+import "./artifact-read-for-model.js";
 import "./chunk-x29r16ke.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
 export {

@@ -12,14 +12,14 @@
 import { ze, VP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { isBgSession, isUnattendedBgSession, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { formatSingleLineText, MAX_DESCRIPTION_LENGTH, MARKDOWN_SYNTAX_CHARS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { FORK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { o, t, ko, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useInterval, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { isDetachedSinceLastAttach } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -43,18 +43,18 @@ import {
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { stripMemoryTags } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import { Markdown } from "../语法高亮-Markdown渲染/markdown-renderer.js";
 import { $8 } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
 import { FleetAgentNudge, detachToBackgroundDaemon } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { LEFT_ARROW_HINT_TIMEOUT_MS, DETACH_CONFIRM_HINT, AMBIGUOUS_LEFT_ARROW_HINT, createLeftArrowGestureState, resolveLeftArrowGesture, applyLeftArrowGestureState, logLeftArrowBlocked } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
+import "../后台任务-Shell管理/bg-rendezvous-server.js";
 import { ScrollBox } from "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { runSideQuestion } from "../权限系统/chunk-qjqc5vxm.js";
 import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
-import { o4 } from "../状态栏-主题/chunk-jrr487ty.js";
+import { IntensitySpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -129,9 +129,9 @@ function ve({
     { rows: at, columns: lt } = useVirtualScrollViewportSize(useTerminalSize()),
     ye = getRemoteTransport(),
     J = isBgSession() && !ye;
-  (ko(() => st((a) => a + 1), T || ne ? null : 80),
-    Un(() => Ee(0), ge ? 2000 : null, [ge]),
-    Un(() => me(null), G ? LEFT_ARROW_HINT_TIMEOUT_MS : null, [G]));
+  (useInterval(() => st((a) => a + 1), T || ne ? null : 80),
+    useTimeout(() => Ee(0), ge ? 2000 : null, [ge]),
+    useTimeout(() => me(null), G ? LEFT_ARROW_HINT_TIMEOUT_MS : null, [G]));
   let ae = re(() => {
     if (R.current) return;
     switch (ie.current) {
@@ -324,7 +324,7 @@ ${T}`
     )
       de(f.retry);
     if (X.current) (k.setInFlight(g), j(k, g, !0));
-    n(
+    logForDebugging(
       `[btw] panel mounted: ${f ? "adopting the running side question" : "asking"}`,
     );
     async function L() {
@@ -395,7 +395,7 @@ ${T}`
           y = a.signal.aborted ? null : Ge(v);
         }
         if (
-          (n(
+          (logForDebugging(
             `[btw] side question settled: ${y === null ? "cancelled" : "error" in y ? "error" : "answer"}${X.current ? " (panel had stepped aside)" : ""}`,
           ),
           y !== null && "response" in y && !y.synthetic)
@@ -416,7 +416,7 @@ ${T}`
     function He(y) {
       if (((ie.current = "nothing"), X.current))
         (_e(k, g),
-          n(`[btw] side question ${y} after the panel stepped aside`, {
+          logForDebugging(`[btw] side question ${y} after the panel stepped aside`, {
             level: "warn",
           }));
     }
@@ -433,7 +433,7 @@ ${T}`
           return;
         }
         if (ie.current === "pending")
-          (n("[btw] panel torn down undismissed; question handed on"),
+          (logForDebugging("[btw] panel torn down undismissed; question handed on"),
             k.setInFlight(g));
       }
     );
@@ -444,7 +444,7 @@ ${T}`
     ut = we.length + (le > 0 ? 1 : 0),
     Le = Math.max(20, lt - 7),
     ft = Math.max(5, at - wt - bt - ut);
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     paddingLeft: 2,
     marginTop: 1,
@@ -452,11 +452,11 @@ ${T}`
     autoFocus: !0,
     onKeyDown: ct,
     children: [
-      le > 0 && r(t, { dimColor: !0, children: ["(+", le, " earlier /btw)"] }),
+      le > 0 && r(Text, { dimColor: !0, children: ["(+", le, " earlier /btw)"] }),
       we.map((a, A) => {
         let f = le + A;
         return r(
-          t,
+          Text,
           {
             dimColor: Q !== f,
             bold: Q === f,
@@ -465,18 +465,18 @@ ${T}`
           f,
         );
       }),
-      r(t, {
+      r(Text, {
         children: [
-          r(t, {
+          r(Text, {
             color: M ? void 0 : "warning",
             bold: !M,
             dimColor: !!M,
             children: ["/btw", " "],
           }),
-          e(t, { dimColor: !0, children: Be(i, Le) }),
+          e(Text, { dimColor: !0, children: Be(i, Le) }),
         ],
       }),
-      e(o, {
+      e(Box, {
         marginTop: 1,
         marginLeft: 2,
         maxHeight: ft,
@@ -489,7 +489,7 @@ ${T}`
             ? r(N, {
                 children: [
                   M.fallbackNotice && e(Ae, { notice: M.fallbackNotice }),
-                  e(js, { children: M.response }),
+                  e(Markdown, { children: M.response }),
                 ],
               })
             : ne
@@ -498,20 +498,20 @@ ${T}`
                 ? r(N, {
                     children: [
                       te && e(Ae, { notice: te }),
-                      e(js, { children: T }),
+                      e(Markdown, { children: T }),
                     ],
                   })
                 : e(Ve, { frame: ot, retry: nt }),
         }),
       }),
-      r(o, {
+      r(Box, {
         marginTop: 1,
         children: [
           Ie
-            ? e(t, { dimColor: !0, children: "Forking\u2026" })
+            ? e(Text, { dimColor: !0, children: "Forking\u2026" })
             : G
-              ? e(t, { dimColor: !0, children: G.text })
-              : r(t, {
+              ? e(Text, { dimColor: !0, children: G.text })
+              : r(Text, {
                   dimColor: !0,
                   children: [
                     r(DotSeparatedList, {
@@ -530,7 +530,7 @@ ${T}`
                             e(KeybindingHint, { chord: ["up", "down"], action: "scroll" }),
                         (M || T) &&
                           (ge > 0
-                            ? e(t, {
+                            ? e(Text, {
                                 color: "success",
                                 children: "Copied to clipboard",
                               })
@@ -616,7 +616,7 @@ function Ae(pr) {
     { notice: Ue } = pr,
     pt;
   if (mt[0] === MEMO_CACHE_SENTINEL)
-    ((pt = e(t, {
+    ((pt = e(Text, {
       color: "warning",
       bold: !0,
       children: e(StatusIndicator, { status: "warning", withSpace: !0 }),
@@ -625,7 +625,7 @@ function Ae(pr) {
   else pt = mt[0];
   let gt;
   if (mt[1] !== Ue)
-    ((gt = r(o, {
+    ((gt = r(Box, {
       marginBottom: 1,
       children: [pt, e($8, { color: "warning", bold: !0, children: Ue })],
     })),
@@ -659,24 +659,24 @@ function Ve(gr) {
   if (!I) {
     let H;
     if (O[0] !== Z)
-      ((H = e(o4, { frame: Z, messageColor: "warning" })),
+      ((H = e(IntensitySpinnerGlyph, { frame: Z, messageColor: "warning" })),
         (O[0] = Z),
         (O[1] = H));
     else H = O[1];
     let W;
     if (O[2] === MEMO_CACHE_SENTINEL)
-      ((W = e(t, { color: "warning", children: "Answering\u2026" })),
+      ((W = e(Text, { color: "warning", children: "Answering\u2026" })),
         (O[2] = W));
     else W = O[2];
     let q;
-    if (O[3] !== H) ((q = r(o, { children: [H, W] })), (O[3] = H), (O[4] = q));
+    if (O[3] !== H) ((q = r(Box, { children: [H, W] })), (O[3] = H), (O[4] = q));
     else q = O[4];
     return q;
   }
   let We = Math.max(0, Math.ceil((I.retryAt - Date.now()) / 1000)),
     H;
   if (O[5] !== Z)
-    ((H = e(o4, { frame: Z, messageColor: "warning" })),
+    ((H = e(IntensitySpinnerGlyph, { frame: Z, messageColor: "warning" })),
       (O[5] = Z),
       (O[6] = H));
   else H = O[6];
@@ -685,11 +685,11 @@ function Ve(gr) {
   else W = O[8];
   let q;
   if (O[9] !== W)
-    ((q = e(t, { color: "warning", children: W })), (O[9] = W), (O[10] = q));
+    ((q = e(Text, { color: "warning", children: W })), (O[9] = W), (O[10] = q));
   else q = O[10];
   let Ce;
   if (O[11] !== We || O[12] !== I.maxRetries || O[13] !== I.retryAttempt)
-    ((Ce = r(t, {
+    ((Ce = r(Text, {
       dimColor: !0,
       children: [
         " \xB7 retrying in ",
@@ -707,7 +707,7 @@ function Ve(gr) {
   else Ce = O[14];
   let yt;
   if (O[15] !== H || O[16] !== q || O[17] !== Ce)
-    ((yt = r(o, { children: [H, q, Ce] })),
+    ((yt = r(Box, { children: [H, q, Ce] })),
       (O[15] = H),
       (O[16] = q),
       (O[17] = Ce),
@@ -827,7 +827,7 @@ async function vt(i, u) {
     b.landed = h.exchanges.at(-1);
   if ((x(R), h.clearInFlight(b), b.landed)) return;
   (_e(h, b),
-    n(
+    logForDebugging(
       `[btw] unwatched side question ${R === null ? "was cancelled" : "error" in R ? "failed" : "came back synthetic"}`,
       { level: "warn" },
     ));

@@ -12,10 +12,10 @@ import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享�
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { parseCommandTitleComment, backgroundAllForegroundTasks, parseSedInPlaceCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { shouldUseFullscreen } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { gw, Ej } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { parseKeybindingChord, formatKeybindingChordText } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
 import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -30,11 +30,11 @@ import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具
 F();
 var f = "ctrl+b",
   S = "ctrl+x ctrl+b",
-  P = new Set([f, S].map((l) => Ej(gw(l))));
+  P = new Set([f, S].map((l) => formatKeybindingChordText(parseKeybindingChord(l))));
 function v(l) {
   for (let s of l) {
     if (s.context !== "Task") continue;
-    let u = Ej(s.chord);
+    let u = formatKeybindingChordText(s.chord);
     if (s.action === "task:background") {
       if (!P.has(u)) return !0;
     } else if (s.action === null && P.has(u)) return !0;
@@ -107,9 +107,9 @@ function BackgroundHint(b) {
   else U = T[7];
   let z;
   if (T[8] !== M)
-    ((z = e(o, {
+    ((z = e(Box, {
       paddingLeft: 5,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: e(KeybindingHint, {
           chord: M,
@@ -128,7 +128,7 @@ function renderToolUseMessage(l, { verbose: s, theme: u }) {
   let { command: n } = l;
   if (!n) return null;
   let g = parseSedInPlaceCommand(n);
-  if (g) return s ? g.filePath : Ao(g.filePath);
+  if (g) return s ? g.filePath : formatPathForDisplay(g.filePath);
   if (!s) {
     let c = n.split(`
 `);
@@ -144,7 +144,7 @@ function renderToolUseMessage(l, { verbose: s, theme: u }) {
         m = c.slice(0, B).join(`
 `);
       if (m.length > h) m = m.slice(0, h);
-      return r(t, { children: [m.trim(), "\u2026"] });
+      return r(Text, { children: [m.trim(), "\u2026"] });
     }
   }
   return n;
@@ -157,7 +157,7 @@ function renderToolUseProgressMessage(
   if (!c || !c.data)
     return e(ToolResultRow, {
       height: 1,
-      children: e(t, { dimColor: !0, children: "Running\u2026" }),
+      children: e(Text, { dimColor: !0, children: "Running\u2026" }),
     });
   let i = c.data;
   return e(ShellOutputView, {
@@ -174,7 +174,7 @@ function renderToolUseProgressMessage(
 function renderToolUseQueuedMessage() {
   return e(ToolResultRow, {
     height: 1,
-    children: e(t, { dimColor: !0, children: "Waiting\u2026" }),
+    children: e(Text, { dimColor: !0, children: "Waiting\u2026" }),
   });
 }
 function renderToolResultMessage(l, s, { verbose: u, theme: n, tools: g, style: c }) {

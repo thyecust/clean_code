@@ -11,7 +11,7 @@ import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
 import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Xhe, gxe, jxt, Yu, o8, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { CLEANUP_DRAIN_TIMEOUT_MS, drainCleanup, drainPreExitFlush, changeWorkingDirectory, flushDebugLogs, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PROCESS_WRAPPER_ENV_VAR, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "./process-wrapper-launcher.js";
@@ -33,7 +33,7 @@ import {
 import { drainRegisteredWriteQueues } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getProjectDir } from "../../02-功能模块/Teammates团队/transcript-paths.js";
 import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../共享小工具-未细化/claude-launcher-invocation.js";
-import { jlt, Wlt, Tee } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { AUTO_RESUME_CANCEL_MESSAGES, cancelAutoResumeForHandoff, clearHandoffInProgress } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { RELAUNCH_TERMINAL_SIZE_ENV_VAR, getRelaunchTerminalSizeEnv } from "../共享小工具-未细化/relaunch-terminal-size.js";
 import { copyEnvWithoutUndefined } from "../共享小工具-未细化/copy-env-without-undefined.js";
 import { resolveTranscriptLocator } from "../共享小工具-未细化/hover-rest-transcript.js";
@@ -47,19 +47,19 @@ function E(e, t, o, r) {
   if (getCurrentPlatform() === "windows" || !isAbsolute(e)) return;
   let a;
   try {
-    if (r) ((a = process.cwd()), Yu(r));
+    if (r) ((a = process.cwd()), changeWorkingDirectory(r));
     (process.execve(e, t, copyEnvWithoutUndefined(o)),
-      n(`execve(${e}) returned \u2014 falling back to spawn`, {
+      logForDebugging(`execve(${e}) returned \u2014 falling back to spawn`, {
         level: "warn",
       }));
   } catch (s) {
-    n(`execReplaceProcess: ${l(s)} \u2014 falling back to spawn`, {
+    logForDebugging(`execReplaceProcess: ${l(s)} \u2014 falling back to spawn`, {
       level: "warn",
     });
   } finally {
     if (a !== void 0)
       try {
-        Yu(a);
+        changeWorkingDirectory(a);
       } catch {}
   }
 }
@@ -81,23 +81,23 @@ async function v(e, t) {
   try {
     let a = await r.backend.statMeta(r.key);
     if (!a.ok && a.error.code !== "NotFound")
-      n(`transcriptHasBytes: backend statMeta failed: ${a.error.code}`);
+      logForDebugging(`transcriptHasBytes: backend statMeta failed: ${a.error.code}`);
     return a.ok && a.value.size > 0;
   } catch (a) {
     return (logError(a), !1);
   }
 }
 async function recordExitTranscript(e, t, { responseStreaming: o = !1 } = {}, r) {
-  let a = Wlt(t);
+  let a = cancelAutoResumeForHandoff(t);
   if (!a || o) return a;
   try {
     if (
-      (await recordTranscript([...e, createSystemInfoMessage(jlt[t], "warning")], void 0, void 0, void 0, r),
+      (await recordTranscript([...e, createSystemInfoMessage(AUTO_RESUME_CANCEL_MESSAGES[t], "warning")], void 0, void 0, void 0, r),
       t === "relaunch")
     )
       await persistTranscriptLeafCheckpoint(e, r);
   } catch (s) {
-    throw (Tee(), s);
+    throw (clearHandoffInProgress(), s);
   }
   return !0;
 }
@@ -119,7 +119,7 @@ function surfaceCancelledContinueNotice(e, t) {
   return t.includes(p) || t.includes(d) || t.includes(A) ? `${e} ${d}` : e;
 }
 function appendCancelledContinueNotice(e, t, { as: o = "sentence", exitsAfterward: r = !1 } = {}) {
-  if ((Tee(), !t)) return e;
+  if ((clearHandoffInProgress(), !t)) return e;
   if (o === "clause") return `${e} \u2014 ${p}`;
   return `${e}
 ${r ? A : d}`;
@@ -127,7 +127,7 @@ ${r ? A : d}`;
 function relaunchWithErrorNotice(e, t, o) {
   return relaunchClaudeCode(t, o).catch((r) => {
     if (r instanceof Error) r.message = appendCancelledContinueNotice(r.message, e, { as: "clause" });
-    else Tee();
+    else clearHandoffInProgress();
     throw r;
   });
 }
@@ -169,7 +169,7 @@ async function relaunchClaudeCode(e = {}, t) {
     emitScrollTelemetrySummary(),
     await Promise.all([
       withTimeout(flushSessionStorage(), 30000, "flush timeout (relaunch)").catch(() => {}),
-      withTimeout(gxe(), Xhe, "cleanup timeout")
+      withTimeout(drainCleanup(), CLEANUP_DRAIN_TIMEOUT_MS, "cleanup timeout")
         .catch(() => {})
         .then(() => withTimeout(flushAnalyticsSinks(), 1000, "analytics flush timeout").catch(() => {})),
     ]),
@@ -217,9 +217,9 @@ function resolveSessionWorkingDirectory() {
 }
 async function g() {
   await Promise.all([
-    withTimeout(o8(), 2000, "debug flush timeout (relaunch)").catch(() => {}),
+    withTimeout(flushDebugLogs(), 2000, "debug flush timeout (relaunch)").catch(() => {}),
     withTimeout(flushDiagnostics(), 2000, "diag flush timeout (relaunch)").catch(() => {}),
-    withTimeout(jxt(), 2000, "pre-exit flush timeout (relaunch)").catch(() => {}),
+    withTimeout(drainPreExitFlush(), 2000, "pre-exit flush timeout (relaunch)").catch(() => {}),
     withTimeout(drainRegisteredWriteQueues(), 2000, "write queue drain timeout (relaunch)").catch(() => {}),
   ]);
 }

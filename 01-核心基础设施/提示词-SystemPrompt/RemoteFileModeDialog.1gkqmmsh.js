@@ -13,7 +13,7 @@ import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { gracefulShutdownSync, CLOUD_SESSION_CONSENT_MESSAGES, setRemoteFileMode, sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -72,7 +72,7 @@ function RemoteFileModeDialog({ repositoryRoot: _, onDone: a, storageV5: w }) {
     onCancel: () => m("not_now"),
     isCancelActive: !1,
     inputGuide: p.pending
-      ? r(t, { children: ["Press ", p.keyName, " again to exit"] })
+      ? r(Text, { children: ["Press ", p.keyName, " again to exit"] })
       : r(DotSeparatedList, {
           children: [
             e(KeybindingHint, { chord: "enter", action: "confirm" }),
@@ -85,13 +85,13 @@ function RemoteFileModeDialog({ repositoryRoot: _, onDone: a, storageV5: w }) {
           ],
         }),
     children: [
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         gap: 1,
         children: [
-          e(t, { bold: !0, children: sanitizeForDisplay(_) }),
-          e(t, { children: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.body"] }),
-          e(t, { dimColor: !0, children: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.detail"] }),
+          e(Text, { bold: !0, children: sanitizeForDisplay(_) }),
+          e(Text, { children: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.body"] }),
+          e(Text, { dimColor: !0, children: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.detail"] }),
         ],
       }),
       e(ve, {

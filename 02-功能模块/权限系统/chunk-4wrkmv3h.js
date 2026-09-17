@@ -14,7 +14,7 @@ import { An, ac, li, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js"
 import { K, fy } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { readFileHardened, isNotFoundError, rawPointerPathIsUnsafe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { b, z, Is, Ro, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, Is, resolvePathInfo, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -33,8 +33,8 @@ import { BASH_TOOL_NAME, READ_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { extractGitConfigRemoteUrls, getBashParserModule, findCommandNode, extractCommandArguments, shouldClassifyAllShellCommands, isDangerousRuleCached } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getProjectsDir, getProjectDir } from "../Teammates团队/transcript-paths.js";
-import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { gF } from "../Git-Worktree/chunk-33y3h2sy.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
+import { GIT_HARDENING_ARGS } from "../Git-Worktree/git-operations.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import * as Be from "fs/promises";
@@ -561,7 +561,7 @@ async function Wt(e, t) {
     return et(
       `_Not queryable here (nonessential traffic disabled or policy-restricted). ${gt}_`,
     );
-  let r = await execFileNoThrow("git", ["-C", t, ...gF, "remote", "get-url", "origin"], {
+  let r = await execFileNoThrow("git", ["-C", t, ...GIT_HARDENING_ARGS, "remote", "get-url", "origin"], {
       timeout: zt,
       maxBuffer: 65536,
       stripFinalNewline: !1,
@@ -651,7 +651,7 @@ function Vt(e, t) {
 function sr(e) {
   if (e.code !== 0) return te;
   try {
-    let t = z(e.stdout || "{}"),
+    let t = jsonParse(e.stdout || "{}"),
       r = Kt(t.visibility);
     if (r !== null) return r;
     return (logFeatureSad("auto_mode_pregather", "visibility_gh_parse_failed"), te);
@@ -664,7 +664,7 @@ function ir(e) {
   let t,
     r = 0;
   try {
-    let p = z(e.stdout || "[]");
+    let p = jsonParse(e.stdout || "[]");
     if (!Array.isArray(p))
       return (logFeatureSad("auto_mode_pregather", "rulesets_gh_parse_failed"), te);
     let u = p;
@@ -720,7 +720,7 @@ function lr(e) {
   let t,
     r = 0;
   try {
-    let u = z(e.stdout || "[]");
+    let u = jsonParse(e.stdout || "[]");
     if (!Array.isArray(u))
       return (
         logFeatureSad("auto_mode_pregather", "org_list_gh_parse_failed"),
@@ -1064,7 +1064,7 @@ function $r(e, t) {
     if (o === null) return r(0);
     let s;
     try {
-      s = spawn(o, ["-C", e, ...gF, ...t], {
+      s = spawn(o, ["-C", e, ...GIT_HARDENING_ARGS, ...t], {
         cwd: void 0,
         stdio: ["ignore", "pipe", "ignore"],
         timeout: $e,
@@ -1090,7 +1090,7 @@ function $r(e, t) {
   });
 }
 async function pe(e, t) {
-  let { stdout: r, code: o } = await execFileNoThrow("git", ["-C", e, ...gF, ...t], {
+  let { stdout: r, code: o } = await execFileNoThrow("git", ["-C", e, ...GIT_HARDENING_ARGS, ...t], {
     timeout: $e,
     maxBuffer: 8388608,
     stripFinalNewline: !1,
@@ -1119,9 +1119,9 @@ async function gn(e, t, r) {
     : i;
 }
 async function xe(e, t, r = ye) {
-  let o = ae(),
-    s = Ro(o, e),
-    l = Ro(o, L(e, t));
+  let o = getFsSurface(),
+    s = resolvePathInfo(o, e),
+    l = resolvePathInfo(o, L(e, t));
   if (!s.isCanonical || !l.isCanonical) return null;
   let i = s.resolvedPath,
     d = Ar(i, l.resolvedPath);
@@ -1191,7 +1191,7 @@ ${t.trim() || "_nothing found_"}
 }
 function Ke(e, t) {
   return `#### ${q(e)}
-${bn(b(t))}`;
+${bn(jsonStringify(t))}`;
 }
 async function rt(e, t, r, o = 4, s) {
   try {
@@ -1470,7 +1470,7 @@ async function Lr(e, t) {
   }
   let h;
   try {
-    let w = z(u.stdout || "[]");
+    let w = jsonParse(u.stdout || "[]");
     if (!Array.isArray(w))
       return (
         logFeatureSad("auto_mode_pregather", "sibling_gh_parse_failed"),
@@ -1543,7 +1543,7 @@ function wn(e) {
   let t = {};
   for (let r of ["environment", "allow", "soft_deny", "hard_deny", "deny"])
     if (e[r] != null && e[r] !== !1) t[r] = e[r];
-  return bn(b(t, null, 1));
+  return bn(jsonStringify(t, null, 1));
 }
 async function Ir(e) {
   let t = L(e, ".claude"),
@@ -1591,7 +1591,7 @@ Present but SKIPPED: failed the indirection gate (requires a regular non-symlink
   if (d == null) return s("unreadable");
   let m;
   try {
-    let u = z(d);
+    let u = jsonParse(d);
     if (
       u != null &&
       typeof u === "object" &&
@@ -1636,7 +1636,7 @@ async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(getCl
   }
   if (c == null);
   else {
-    let w = z(c);
+    let w = jsonParse(c);
     o = wn(w.autoMode ?? {});
     let E = w.permissions?.allow;
     if (Array.isArray(E)) {
@@ -1775,7 +1775,7 @@ async function Wr(e) {
                 ? D.content
                 : D.content === void 0
                   ? ""
-                  : b(D.content);
+                  : jsonStringify(D.content);
             s.push(...De(I, Ur));
           }
         }
@@ -2555,7 +2555,7 @@ async function no(e) {
     m = [];
   try {
     let c = await xe(e, "package.json", 256000),
-      p = c != null ? z(c) : {};
+      p = c != null ? jsonParse(c) : {};
     m = Object.keys(p.scripts ?? {}).slice(0, B);
   } catch {}
   return k(
@@ -2741,9 +2741,9 @@ async function ao(e, t) {
           let re = Buffer.byteLength(JSON.stringify(N.environment), "utf8");
           if (N.environment.length > so || re > io) {
             let j = `autoMode.environment now has ${N.environment.length} entries (~${Math.round(re / 1024)} KB). It\u2019s spliced into the classifier prompt on every auto-mode decision \u2014 consider pruning stale entries.`;
-            (h.push(j), n(`auto-mode setup: ${j}`, { level: "warn" }));
+            (h.push(j), logForDebugging(`auto-mode setup: ${j}`, { level: "warn" }));
           }
-          let X = Buffer.byteLength(b(U));
+          let X = Buffer.byteLength(jsonStringify(U));
           if (X > oo)
             h.push(
               `The autoMode settings section is ${Math.round(X / 1024)}KB serialized \u2014 the whole settings file stops loading past ${Math.round(MAX_SETTINGS_FILE_BYTES / 1048576)}MiB. Consider trimming rules or environment entries.`,
@@ -2766,7 +2766,7 @@ async function ao(e, t) {
     );
   if (u) throw new bSe("invalid_merged", u);
   if (_) {
-    n(`auto-mode setup write failed: ${_.message}`, { level: "error" });
+    logForDebugging(`auto-mode setup write failed: ${_.message}`, { level: "error" });
     let w = F3e(_, o, "setup");
     throw new bSe(w.code, w.message);
   }

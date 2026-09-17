@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 270 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { he, Mx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -39,10 +39,10 @@ import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
+import "../语法高亮-Markdown渲染/markdown-renderer.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
@@ -90,7 +90,7 @@ import { dirname, extname } from "path";
 function rt(n) {
   let s = extname(n) === "" ? `${n}.txt` : n,
     i = Mx().workspace === "remote" ? he() : void 0;
-  return ot(s, i);
+  return resolvePath(s, i);
 }
 async function b(n, s) {
   let i = rt(n);
@@ -235,16 +235,16 @@ function T(Nt) {
   )
     ((P = !m
       ? e(ve, { options: G, onChange: A, onCancel: C })
-      : r(o, {
+      : r(Box, {
           flexDirection: "column",
           children: [
-            e(t, { children: "Enter filename:" }),
-            r(o, {
+            e(Text, { children: "Enter filename:" }),
+            r(Box, {
               flexDirection: "row",
               gap: 1,
               marginTop: 1,
               children: [
-                e(t, { children: ">" }),
+                e(Text, { children: ">" }),
                 e(hn, {
                   value: E,
                   onChange: Vt,

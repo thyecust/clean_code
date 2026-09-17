@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 113 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { CLAUDE_ASTERISK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -70,7 +70,7 @@ function ne(Qe) {
   useKeybinding("confirm:no", We, ve);
   let Re;
   if (R[8] === MEMO_CACHE_SENTINEL)
-    ((Re = e(t, {
+    ((Re = e(Text, {
       dimColor: !0,
       children: "Loading guest pass information\u2026",
     })),
@@ -79,14 +79,14 @@ function ne(Qe) {
   let I;
   if (R[9] !== b.keyName || R[10] !== b.pending)
     ((I = e(Qr, {
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         gap: 1,
         tabIndex: 0,
         autoFocus: !0,
         children: [
           Re,
-          e(t, {
+          e(Text, {
             dimColor: !0,
             italic: !0,
             children: b.pending
@@ -146,12 +146,12 @@ function re(Ye) {
   if (!T.available) {
     let j;
     if (l[3] === MEMO_CACHE_SENTINEL)
-      ((j = e(t, { children: "Guest passes are not currently available." })),
+      ((j = e(Text, { children: "Guest passes are not currently available." })),
         (l[3] = j));
     else j = l[3];
     let v;
     if (l[4] !== u.keyName || l[5] !== u.pending)
-      ((v = e(t, {
+      ((v = e(Text, {
         dimColor: !0,
         italic: !0,
         children: u.pending
@@ -194,14 +194,14 @@ function re(Ye) {
     M = 1;
     Q = k;
     if (l[24] !== A)
-      ((E = r(t, {
+      ((E = r(Text, {
         color: "permission",
         children: ["Guest passes \xB7 ", A, " left"],
       })),
         (l[24] = A),
         (l[25] = E));
     else E = l[25];
-    K = o;
+    K = Box;
     v = "row";
     w = 2;
     H = es.slice(0, 3).map(Be);
@@ -238,7 +238,7 @@ function re(Ye) {
   else W = l[30];
   let Y;
   if (l[31] !== h)
-    ((Y = h && e(o, { marginLeft: 2, children: e(t, { children: h }) })),
+    ((Y = h && e(Box, { marginLeft: 2, children: e(Text, { children: h }) })),
       (l[31] = h),
       (l[32] = Y));
   else Y = l[32];
@@ -255,16 +255,16 @@ function re(Ye) {
     : "https://support.claude.com/en/articles/12875061-claude-code-guest-passes";
   let se;
   if (l[35] !== de)
-    ((se = e(ct, { url: de, children: "Terms apply." })),
+    ((se = e(Link, { url: de, children: "Terms apply." })),
       (l[35] = de),
       (l[36] = se));
   else se = l[36];
   let ae;
   if (l[37] !== Z || l[38] !== se)
-    ((ae = e(o, {
+    ((ae = e(Box, {
       flexDirection: "column",
       marginLeft: 2,
-      children: r(t, { dimColor: !0, children: [Z, se] }),
+      children: r(Text, { dimColor: !0, children: [Z, se] }),
     })),
       (l[37] = Z),
       (l[38] = se),
@@ -272,8 +272,8 @@ function re(Ye) {
   else ae = l[39];
   let oe;
   if (l[40] !== u.keyName || l[41] !== u.pending)
-    ((oe = e(o, {
-      children: e(t, {
+    ((oe = e(Box, {
+      children: e(Text, {
         dimColor: !0,
         italic: !0,
         children: u.pending
@@ -324,17 +324,17 @@ function ie(ts) {
   if (!rs.isAvailable) {
     let J;
     if (fe[0] === MEMO_CACHE_SENTINEL)
-      ((J = r(o, {
+      ((J = r(Box, {
         flexDirection: "column",
         marginRight: 1,
         children: [
-          e(t, {
+          e(Text, {
             dimColor: !0,
             children:
               "\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2571",
           }),
-          e(t, { dimColor: !0, children: ` ) CC ${CLAUDE_ASTERISK_GLYPH} \u250A\u2571` }),
-          e(t, {
+          e(Text, { dimColor: !0, children: ` ) CC ${CLAUDE_ASTERISK_GLYPH} \u250A\u2571` }),
+          e(Text, {
             dimColor: !0,
             children: "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2571",
           }),
@@ -346,7 +346,7 @@ function ie(ts) {
   }
   let J;
   if (fe[1] === MEMO_CACHE_SENTINEL)
-    ((J = e(t, {
+    ((J = e(Text, {
       children:
         "\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510",
     })),
@@ -354,19 +354,19 @@ function ie(ts) {
   else J = fe[1];
   let we;
   if (fe[2] === MEMO_CACHE_SENTINEL)
-    ((we = r(o, {
+    ((we = r(Box, {
       flexDirection: "column",
       marginRight: 1,
       children: [
         J,
-        r(t, {
+        r(Text, {
           children: [
             " ) CC ",
-            e(t, { color: "claude", children: CLAUDE_ASTERISK_GLYPH }),
+            e(Text, { color: "claude", children: CLAUDE_ASTERISK_GLYPH }),
             " \u250A ( ",
           ],
         }),
-        e(t, {
+        e(Text, {
           children:
             "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518",
         }),
@@ -388,7 +388,7 @@ async function ge(m, g) {
       P = await fetchReferralRedemptions(y, m);
     } catch (a) {
       return (
-        n(`Failed to fetch referral redemptions: ${a}`, { level: "error" }),
+        logForDebugging(`Failed to fetch referral redemptions: ${a}`, { level: "error" }),
         { available: !1 }
       );
     }
@@ -407,7 +407,7 @@ async function ge(m, g) {
     };
   } catch (s) {
     return (
-      n(
+      logForDebugging(
         `Failed to load guest pass eligibility: ${s instanceof Error ? (s.stack ?? s.message) : s}`,
         { level: "error" },
       ),

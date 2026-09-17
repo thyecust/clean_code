@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { execFileNoThrowWithCwd } from "./git-exec-hardening.js";
@@ -26,7 +26,7 @@ import {
   readSeedFile,
   allUnlessAborted,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { pI, SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
+import { isSafePortablePath, openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
 import { computeGitBlobId } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { readlink } from "fs/promises";
@@ -214,9 +214,9 @@ async function L(e, { headSha: i, headRecords: r, realRoot: t }, o) {
   await using k =
     y.length === 0
       ? null
-      : await SO(uk(), { gitRoot: a, realRoot: t }).catch(
+      : await openTreeAnchor(createFileSystemHost(), { gitRoot: a, realRoot: t }).catch(
           (g) => (
-            n(`dirSync divergence: tree anchor not opened (${A(g) ?? l(g)})`),
+            logForDebugging(`dirSync divergence: tree anchor not opened (${A(g) ?? l(g)})`),
             null
           ),
         );
@@ -236,7 +236,7 @@ async function L(e, { headSha: i, headRecords: r, realRoot: t }, o) {
   let T = new Map(M),
     I = X(i, m, s, b !== "false");
   if (I.placement === "unknown")
-    n(
+    logForDebugging(
       `dir-sync: placement of HEAD unknown (merge-base ${s?.exitCode ?? "killed"}, shallow ${b ?? "unread"})`,
       { level: "warn" },
     );
@@ -275,7 +275,7 @@ async function Z(e, i, r) {
     let o = await L(e, i, t.sha);
     if ("detail" in o)
       return (
-        n(`dir-sync: default-branch comparison abandoned (${o.detail})`, {
+        logForDebugging(`dir-sync: default-branch comparison abandoned (${o.detail})`, {
           level: "warn",
         }),
         null
@@ -321,7 +321,7 @@ async function Q(e, i) {
 }
 function B(e) {
   return (
-    n(`dir-sync: local divergence probe failed (${e})`, { level: "warn" }),
+    logForDebugging(`dir-sync: local divergence probe failed (${e})`, { level: "warn" }),
     _("git")
   );
 }
@@ -393,7 +393,7 @@ async function countProbeGitOutput(
     return { bytes: d, overLimit: u, exitCode: f ? p.exitCode : void 0 };
   } catch (s) {
     if (!isSignalAborted(i))
-      n(`dir-sync: could not run git to count its output (${l(s)})`, {
+      logForDebugging(`dir-sync: could not run git to count its output (${l(s)})`, {
         level: "error",
       });
     return { bytes: d, overLimit: u };
@@ -407,9 +407,9 @@ async function listPathsChangedFromHead(e) {
   await using a =
     o.length === 0
       ? null
-      : await SO(uk(), { gitRoot: e.gitRoot, realRoot: r }).catch(
+      : await openTreeAnchor(createFileSystemHost(), { gitRoot: e.gitRoot, realRoot: r }).catch(
           (f) => (
-            n(`dirSync divergence: tree anchor not opened (${A(f) ?? l(f)})`),
+            logForDebugging(`dirSync divergence: tree anchor not opened (${A(f) ?? l(f)})`),
             null
           ),
         );
@@ -500,7 +500,7 @@ async function nullOnAbort(e, i) {
   }
 }
 async function F(e, i, r, t, o) {
-  if (!pI(r)) return null;
+  if (!isSafePortablePath(r)) return null;
   if (t === J)
     try {
       return computeGitBlobId(await readlink(U(e, r), "buffer"));

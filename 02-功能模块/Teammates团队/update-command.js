@@ -16,7 +16,7 @@ import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chal
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { isBgSession, isDaemonBgWorker, getScreenReaderEnvOverrides } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Z4t } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { createSyntheticAssistantTextMessage } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { isTeammate } from "./teammate-context.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
@@ -24,7 +24,7 @@ import { buildCarriableSessionFlags, collectUncarriableLaunchReasons, buildCarri
 import { getProjectDir } from "./transcript-paths.js";
 import { getMaterializedSessionFile, isTranscriptPersistenceDisabled, flushSessionStorage, getCurrentSessionBridge } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getToolPermissionContext, getSessionEffort } from "../权限系统/chunk-fjrcf22x.js";
-import { BG_WORKER_IDENTITY_ENV_VARS } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { BG_WORKER_IDENTITY_ENV_VARS } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { getLauncherArgv } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { recordExitTranscript, surfaceCancelledContinueNotice, relaunchWithErrorNotice, persistTranscriptLeafCheckpoint, assertLauncherRunnable, resolveSessionWorkingDirectory } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
@@ -174,7 +174,7 @@ var runUpdateCommand = async (d, t) => {
       e.replBridgeSkipNextArchive ? e : { ...e, replBridgeSkipNextArchive: !0 },
     ),
       n.writeSdkMessages([
-        Z4t("Switching to latest Claude Code\u2026 reconnecting", K()),
+        createSyntheticAssistantTextMessage("Switching to latest Claude Code\u2026 reconnecting", K()),
       ]),
       await withTimeout(n.flush(), 2000, "bridge flush").catch(() => {}),
       await n.teardown({ skipArchive: !0 }));

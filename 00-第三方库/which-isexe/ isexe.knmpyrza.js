@@ -13,7 +13,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad } from "../lodash/lodash.0vqzb8ad.js";
 import { R, A, Jr } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { qR, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { getProcStartTime, getProcParentPid } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
@@ -1871,7 +1871,7 @@ function ze() {
     let c = ui(o, totalmem());
     if (c === void 0) {
       ((e.dir = null),
-        n("tool cgroup: disabled (host too small for the default cap)"),
+        logForDebugging("tool cgroup: disabled (host too small for the default cap)"),
         logEvent("tengu_tool_cgroup", { status: S("host_too_small") }));
       return;
     }
@@ -1879,7 +1879,7 @@ function ze() {
       (e.dir = s.dir),
       (e.layout = s),
       (e.limit = c),
-      n(
+      logForDebugging(
         `tool cgroup: ${s.dir} ${s.reuse ? "(nested: already capped, reusing our own)" : `limit=${c}`}`,
       ),
       logFeatureOk("shell_memory_cgroup"),
@@ -1891,7 +1891,7 @@ function ze() {
       ));
   } catch (s) {
     ((e.dir = null),
-      n(`tool cgroup: disabled (${A(s) ?? s})`),
+      logForDebugging(`tool cgroup: disabled (${A(s) ?? s})`),
       logFeatureBad("shell_memory_cgroup", Jr(s) ?? "no_hierarchy"),
       logEvent("tengu_tool_cgroup", { status: S("disabled") }));
   }
@@ -1922,13 +1922,13 @@ function Ho(
       throw Error("enclosing tool cgroup is gone");
     return (
       Dn(e.layout, e.limit, t),
-      n(`tool cgroup: ${e.dir} vanished; re-created`),
+      logForDebugging(`tool cgroup: ${e.dir} vanished; re-created`),
       logEvent("tengu_tool_cgroup", { status: S("recreated") }),
       e.dir
     );
   } catch (r) {
     ((e.dir = null),
-      n(`tool cgroup: disabled (dir vanished: ${A(r) ?? r})`),
+      logForDebugging(`tool cgroup: disabled (dir vanished: ${A(r) ?? r})`),
       logEvent("tengu_tool_cgroup", { status: S("vanished") }));
     return;
   }
@@ -2013,13 +2013,13 @@ function Qie(e, t, r, o = Sxt) {
       return;
     }
     if ((Nn(s, o), s.pendingPids.size >= Zo)) {
-      n(`tool cgroup: pending pid ${t} not parked (full)`);
+      logForDebugging(`tool cgroup: pending pid ${t} not parked (full)`);
       return;
     }
     (s.pendingPids.set(t, d),
       (s.pendingUnsubscribe ??= F.subscribeRefresh?.(() => Qo())));
   } catch (s) {
-    n(`tool cgroup: pending pid not parked (${s})`);
+    logForDebugging(`tool cgroup: pending pid not parked (${s})`);
   }
 }
 function Qo(e = Sxt) {
@@ -2031,7 +2031,7 @@ function Qo(e = Sxt) {
     }
     if (t.dir !== null) for (let [r, o] of t.pendingPids) Ln(r, o, e);
   } catch (r) {
-    n(`tool cgroup: late attach skipped (${r})`);
+    logForDebugging(`tool cgroup: late attach skipped (${r})`);
   }
   (t.pendingPids.clear(),
     t.pendingUnsubscribe?.(),
@@ -2042,7 +2042,7 @@ function Ln(e, { cls: t, starttime: r, shouldStayUncapped: o }, s) {
   if (c === void 0 || s.readStarttime(e) !== r) return;
   try {
     if (o?.()) {
-      n(`tool cgroup: ${t} pid ${e} left uncapped`);
+      logForDebugging(`tool cgroup: ${t} pid ${e} left uncapped`);
       return;
     }
     let d = posix.join(c, "cgroup.procs");
@@ -2050,11 +2050,11 @@ function Ln(e, { cls: t, starttime: r, shouldStayUncapped: o }, s) {
     let l = 1,
       p = bi(T).layout;
     if (p !== void 0 && !p.reuse) l += Mn(e, p.selfDir, d, s, "attached");
-    n(
+    logForDebugging(
       `tool cgroup: late-attached ${t} pid ${e} (${l} process${l === 1 ? "" : "es"})`,
     );
   } catch (d) {
-    n(`tool cgroup: late attach of pid ${e} failed (${A(d) ?? d})`);
+    logForDebugging(`tool cgroup: late attach of pid ${e} failed (${A(d) ?? d})`);
   }
 }
 function Nn(e, t) {
@@ -2123,7 +2123,7 @@ function jn(e, t = K, r) {
     if (s === void 0) return;
     let c = e.oomKillsSeen;
     if (((e.oomKillsSeen = s), c === void 0 || s <= c)) return;
-    (n(
+    (logForDebugging(
       `tool cgroup: OOM killer fired ${s - c} time(s) in ${o.dir} since last check`,
     ),
       logEvent("tengu_tool_cgroup", {
@@ -2132,7 +2132,7 @@ function jn(e, t = K, r) {
         cgroup_v2: o.v2,
       }));
   } catch (o) {
-    n(`tool cgroup: oom_kill check skipped (${o})`);
+    logForDebugging(`tool cgroup: oom_kill check skipped (${o})`);
   }
 }
 function eur(e, t = K) {
@@ -2154,7 +2154,7 @@ function bxt(e, t, r = Sxt) {
       if (o.pendingPids.get(e)?.starttime !== t) return !1;
       return (
         o.pendingPids.delete(e),
-        n(`tool cgroup: unparked pid ${e}; it stays uncapped`),
+        logForDebugging(`tool cgroup: unparked pid ${e}; it stays uncapped`),
         !0
       );
     }
@@ -2165,21 +2165,21 @@ function bxt(e, t, r = Sxt) {
     r.writeFileSync(c, String(e));
     let d = 1 + Mn(e, s.dir, c, r, "released");
     return (
-      n(
+      logForDebugging(
         `tool cgroup: released pid ${e} (${d} process${d === 1 ? "" : "es"}) to ${s.selfDir}`,
       ),
       logEvent("tengu_tool_cgroup", { status: S("released"), released_count: d }),
       !0
     );
   } catch (o) {
-    return (n(`tool cgroup: release of pid ${e} failed (${A(o) ?? o})`), !1);
+    return (logForDebugging(`tool cgroup: release of pid ${e} failed (${A(o) ?? o})`), !1);
   }
 }
 function Mn(e, t, r, o, s) {
   let c = 0;
   for (let { pid: d, starttime: l } of ri(e, t, o)) {
     if (o.readStarttime(d) !== l) {
-      n(
+      logForDebugging(
         `tool cgroup: descendant ${d} of pid ${e} exited or was recycled; skipped`,
       );
       continue;
@@ -2187,7 +2187,7 @@ function Mn(e, t, r, o, s) {
     try {
       (o.writeFileSync(r, String(d)), c++);
     } catch (p) {
-      n(`tool cgroup: descendant ${d} of pid ${e} not ${s} (${A(p) ?? p})`);
+      logForDebugging(`tool cgroup: descendant ${d} of pid ${e} not ${s} (${A(p) ?? p})`);
     }
   }
   return c;
@@ -2198,7 +2198,7 @@ function ri(e, t, r) {
     o = r.readCgroupPids(t);
   } catch (l) {
     return (
-      n(
+      logForDebugging(
         `tool cgroup: members of ${t} unreadable (${A(l) ?? l}); moving pid ${e} alone`,
       ),
       []
@@ -2294,7 +2294,7 @@ function Kn(e) {
       }
     return r.dir;
   } catch (r) {
-    n(`tool cgroup: keeper dir unavailable (${A(r) ?? r})`);
+    logForDebugging(`tool cgroup: keeper dir unavailable (${A(r) ?? r})`);
     return;
   }
 }
@@ -2304,9 +2304,9 @@ function wS(e, t = Bn) {
   if (r === void 0) return;
   try {
     (t.writeFileSync(posix.join(r, "cgroup.procs"), String(e)),
-      n(`tool cgroup: keeper pid ${e} moved to ${r}`));
+      logForDebugging(`tool cgroup: keeper pid ${e} moved to ${r}`));
   } catch (o) {
-    n(`tool cgroup: keeper pid ${e} not moved (${A(o) ?? o})`);
+    logForDebugging(`tool cgroup: keeper pid ${e} not moved (${A(o) ?? o})`);
   }
 }
 function tXt(e = Bn) {

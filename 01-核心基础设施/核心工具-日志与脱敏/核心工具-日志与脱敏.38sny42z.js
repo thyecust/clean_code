@@ -43,34 +43,34 @@ import {
   unlink as J,
 } from "fs/promises";
 import { dirname, isAbsolute, join as v, resolve } from "path";
-function hs(e, t) {
+function createInvalidArgumentError(e, t) {
   return {
     code: "InvalidArgument",
     argument: e,
     ...(t !== void 0 && { reason: t }),
   };
 }
-var Wnt = "OtherNames";
-var Gnt = "LeafMoved",
-  Dur = "HardeningUnavailable",
-  WPn = "RemoteLink",
-  Lur = "AsideStranded";
-var SXt = "Unsupported";
-function fxe(e) {
-  return mxe(e) && e.code === "Failed" && e.telemetryCode === SXt;
+var OTHER_NAMES_TELEMETRY_CODE = "OtherNames";
+var LEAF_MOVED_TELEMETRY_CODE = "LeafMoved",
+  HARDENING_UNAVAILABLE_TELEMETRY_CODE = "HardeningUnavailable",
+  REMOTE_LINK_TELEMETRY_CODE = "RemoteLink",
+  ASIDE_STRANDED_TELEMETRY_CODE = "AsideStranded";
+var UNSUPPORTED_TELEMETRY_CODE = "Unsupported";
+function isUnsupportedFailure(e) {
+  return isStorageError(e) && e.code === "Failed" && e.telemetryCode === UNSUPPORTED_TELEMETRY_CODE;
 }
 var He = "ByteViewUnsupported";
-function tje(e) {
+function isByteViewUnsupportedFailure(e) {
   return e.code === "Failed" && "telemetryCode" in e && e.telemetryCode === He;
 }
 var Be = "StoreFenced";
-function GPn(e) {
+function isStoreFencedFailure(e) {
   return e.code === "Failed" && "telemetryCode" in e && e.telemetryCode === Be;
 }
-var Mur = "SourceNotRegular",
-  Nur = "SourceTooLarge",
-  Fur = "SourceShared",
-  $ur = "SourceOutside";
+var SOURCE_NOT_REGULAR_TELEMETRY_CODE = "SourceNotRegular",
+  SOURCE_TOO_LARGE_TELEMETRY_CODE = "SourceTooLarge",
+  SOURCE_SHARED_TELEMETRY_CODE = "SourceShared",
+  SOURCE_OUTSIDE_TELEMETRY_CODE = "SourceOutside";
 var Ue = new Set([
   "InvalidArgument",
   "NotFound",
@@ -81,7 +81,7 @@ var Ue = new Set([
   "Failed",
   "ScopeNotFound",
 ]);
-function mxe(e) {
+function isStorageError(e) {
   return (
     typeof e === "object" &&
     e !== null &&
@@ -90,16 +90,16 @@ function mxe(e) {
     Ue.has(e.code)
   );
 }
-var qPn = "AbsentParent";
-function rZ(e) {
-  return e.code === "Failed" && "telemetryCode" in e && e.telemetryCode === qPn;
+var ABSENT_PARENT_TELEMETRY_CODE = "AbsentParent";
+function isAbsentParentFailure(e) {
+  return e.code === "Failed" && "telemetryCode" in e && e.telemetryCode === ABSENT_PARENT_TELEMETRY_CODE;
 }
-function ou(e) {
-  if (rZ(e)) return "ENOENT";
+function getTelemetryCode(e) {
+  if (isAbsentParentFailure(e)) return "ENOENT";
   return "telemetryCode" in e ? e.telemetryCode : void 0;
 }
-var Uur = "TooLarge";
-function We(e) {
+var TOO_LARGE_TELEMETRY_CODE = "TooLarge";
+function describeStorageError(e) {
   return (
     e.code +
     ("failureClass" in e ? ` ${e.failureClass}` : "") +
@@ -110,10 +110,10 @@ function We(e) {
 function Me(e) {
   return e instanceof Error ? e.message : String(e);
 }
-function CL(e) {
+function createOkResult(e) {
   return { ok: !0, value: e };
 }
-function Cg(e) {
+function createErrorResult(e) {
   return { ok: !1, error: e };
 }
 class ee extends Error {
@@ -123,11 +123,11 @@ class ee extends Error {
       Object.defineProperty(this, "error", { value: e, enumerable: !1 }));
   }
 }
-function Bur(e) {
+function unwrapResult(e) {
   if (e.ok) return e.value;
   throw new ee(e.error);
 }
-var wc = {
+var pathSpaces = {
   home: (e) => ({ space: "home", path: e }),
   workspace: (e) => ({ space: "workspace", path: e }),
   system: (e) => ({ space: "system", path: e }),
@@ -200,7 +200,7 @@ function T({
     },
   };
 }
-function jur({
+function createStringBatchWriter({
   writeFn: e,
   flushIntervalMs: t,
   maxBufferSize: r,
@@ -259,20 +259,20 @@ var ze = new j(() => new ne());
 function R() {
   return bi(ze);
 }
-var Xhe = 2000;
-function Et(e) {
+var CLEANUP_DRAIN_TIMEOUT_MS = 2000;
+function registerCleanup(e) {
   return R().cleanup.register(e);
 }
-async function gxe() {
+async function drainCleanup() {
   await R().cleanup.drain();
 }
-function Yhe() {
+function isCleanupDrainStarted() {
   return R().cleanup.drainStarted;
 }
-function dv(e) {
+function registerPreExitFlush(e) {
   return R().preExitFlush.register(e);
 }
-async function jxt() {
+async function drainPreExitFlush() {
   await R().preExitFlush.drain();
 }
 class ie {
@@ -371,12 +371,12 @@ var Ze = { [Symbol.dispose]() {} };
 function Je() {
   return Ze;
 }
-var Np = Je;
-function b(e, t, r) {
-  using i = Np`JSON.stringify(${e})`;
+var startSlowOperationSpan = Je;
+function jsonStringify(e, t, r) {
+  using i = startSlowOperationSpan`JSON.stringify(${e})`;
   return JSON.stringify(e, t, r);
 }
-function t8(e) {
+function jsonStringifyLine(e) {
   return (
     JSON.stringify(e) +
     `
@@ -386,8 +386,8 @@ function t8(e) {
 function Tc(e) {
   return JSON.stringify(e);
 }
-function Wxt(e) {
-  using t = Np`jsonlJoin(${e.length})`;
+function jsonlJoin(e) {
+  using t = startSlowOperationSpan`jsonlJoin(${e.length})`;
   let r = "";
   for (let i = 0; i < e.length; i++)
     r +=
@@ -396,19 +396,19 @@ function Wxt(e) {
 `;
   return r;
 }
-var z = (e, t) => {
-  using r = Np`JSON.parse(${e})`;
+var jsonParse = (e, t) => {
+  using r = startSlowOperationSpan`JSON.parse(${e})`;
   return typeof t > "u" ? JSON.parse(e) : JSON.parse(e, t);
 };
 function Is(e) {
   return JSON.parse(e);
 }
-function Ru(e, t) {
-  using r = Np`structuredClone(${e})`;
+function deepClone(e, t) {
+  using r = startSlowOperationSpan`structuredClone(${e})`;
   return structuredClone(e, t);
 }
 function Jhe(e, t, r) {
-  using i = Np`fs.writeFileSync(${e}, ${t})`;
+  using i = startSlowOperationSpan`fs.writeFileSync(${e}, ${t})`;
   writeFileSync(e, t, r);
 }
 var ct = "\u2192";
@@ -441,14 +441,14 @@ function le(e, t, r) {
   }
   return f.join(e, ...t);
 }
-var n8 = "\x00unverified-ancestry";
+var UNVERIFIED_ANCESTRY_SENTINEL = "\x00unverified-ancestry";
 function fe(e, t, r = !1) {
   if (t?.unreadableAncestry !== "unverified") return;
   let i =
     e !== void 0 && typeof e === "object" && "errno" in e ? e.errno : void 0;
   if (i === "ENOENT" || i === "ENOTDIR") return;
   if (i === "ENAMETOOLONG" && !r) return;
-  return n8;
+  return UNVERIFIED_ANCESTRY_SENTINEL;
 }
 function B(e) {
   return hZ(e);
@@ -463,35 +463,35 @@ function pe(e) {
   if (e?.anchors !== void 0 && e.anchors.length > 0) return e.anchors;
   return e?.anchor !== void 0 ? [e.anchor] : void 0;
 }
-function WP(e) {
-  return my(e) || Xo(e) || li(e) || $m(e) || Xg(Sh, e) !== void 0;
+function hasNetworkPathSpelling(e) {
+  return my(e) || Xo(e) || li(e) || $m(e) || resolveSymlinkAncestrySync(fsSurface, e) !== void 0;
 }
-async function zPn(e) {
-  return my(e) || Xo(e) || li(e) || $m(e) || (await hxe(Sh, e)) !== void 0;
+async function hasNetworkPathSpellingAsync(e) {
+  return my(e) || Xo(e) || li(e) || $m(e) || (await resolveSymlinkAncestry(fsSurface, e)) !== void 0;
 }
-function Wur(e, t = Sh) {
+function hasUnverifiableAncestrySync(e, t = fsSurface) {
   return (
     my(e) ||
     Xo(e) ||
     li(e) ||
     $m(e) ||
-    Xg(t, e, { surfaceNetworkRaw: !0, unreadableAncestry: "unverified" }) !==
+    resolveSymlinkAncestrySync(t, e, { surfaceNetworkRaw: !0, unreadableAncestry: "unverified" }) !==
       void 0
   );
 }
-async function iae(e, t = Sh) {
+async function hasUnverifiableAncestry(e, t = fsSurface) {
   return (
     my(e) ||
     Xo(e) ||
     li(e) ||
     $m(e) ||
-    (await hxe(t, e, {
+    (await resolveSymlinkAncestry(t, e, {
       surfaceNetworkRaw: !0,
       unreadableAncestry: "unverified",
     })) !== void 0
   );
 }
-async function aae(e, t, r = Sh) {
+async function hasUnverifiableAncestryWithAnchor(e, t, r = fsSurface) {
   if (my(e)) return !0;
   if (Xo(e)) return !0;
   if (li(e)) {
@@ -500,14 +500,14 @@ async function aae(e, t, r = Sh) {
   }
   if ($m(e)) return !0;
   return (
-    (await hxe(r, e, {
+    (await resolveSymlinkAncestry(r, e, {
       ...(t === null ? {} : { anchor: t }),
       unreadableAncestry: "unverified",
       surfaceNetworkRaw: !0,
     })) !== void 0
   );
 }
-function Xg(e, t, r) {
+function resolveSymlinkAncestrySync(e, t, r) {
   return ht(he(t, r), (i) => {
     if (i.kind === "lstat") return e.lstatSync(i.path);
     if (i.kind === "opendirNofollow")
@@ -515,7 +515,7 @@ function Xg(e, t, r) {
     return e.readlinkSync(i.path);
   });
 }
-function hxe(e, t, r) {
+function resolveSymlinkAncestry(e, t, r) {
   return mt(he(t, r), async (i) => {
     if (i.kind === "lstat") return e.lstat(i.path);
     if (i.kind === "opendirNofollow")
@@ -607,14 +607,14 @@ function* he(e, t) {
     let q = f.parse(h).root || f.sep;
     ((s = q), (a = [...h.slice(q.length).split(H).filter(Boolean), ...a]));
   }
-  if (a.length > 0 && t?.surfaceNetworkRaw) return n8;
+  if (a.length > 0 && t?.surfaceNetworkRaw) return UNVERIFIED_ANCESTRY_SENTINEL;
   if (u > 0 && $m(s)) return s;
   return;
 }
-function Ro(e, t) {
+function resolvePathInfo(e, t) {
   if ((An(t) && !Oi(t)) || Dr(t) || vS(t))
     return { resolvedPath: t, isSymlink: !1, isCanonical: !1 };
-  let r = Xg(e, t);
+  let r = resolveSymlinkAncestrySync(e, t);
   if (r !== void 0) return { resolvedPath: r, isSymlink: !0, isCanonical: !1 };
   try {
     let i = e.realpathSync(t);
@@ -623,8 +623,8 @@ function Ro(e, t) {
     return { resolvedPath: t, isSymlink: !1, isCanonical: !1 };
   }
 }
-function r8(e, t, r) {
-  let { resolvedPath: i } = Ro(e, t);
+function testAndSetResolvedPath(e, t, r) {
+  let { resolvedPath: i } = resolvePathInfo(e, t);
   if (r.has(i)) return !0;
   return (r.add(i), !1);
 }
@@ -638,14 +638,14 @@ function yt(e, t = "darwin") {
   if (t === "win32" && /^[A-Za-z]:$/.test(r)) return r + e[2];
   return r;
 }
-function D0(e, t, r) {
+function resolveSymlinkTargetSync(e, t, r) {
   let i = pe(r);
   if ((An(t) && !Oi(t)) || Dr(t) || vS(t)) {
     if (i !== void 0 && ((Dr(t) && !D(t, i)) || (An(t) && !Oi(t) && !F(t, i))))
-      return Xg(e, t, { anchors: i, surfaceNetworkRaw: r?.surfaceNetworkRaw });
+      return resolveSymlinkAncestrySync(e, t, { anchors: i, surfaceNetworkRaw: r?.surfaceNetworkRaw });
     return t;
   }
-  let o = Xg(
+  let o = resolveSymlinkAncestrySync(
     e,
     t,
     r?.surfaceNetworkRaw === !0
@@ -727,7 +727,7 @@ function D0(e, t, r) {
           }
           ((m = h), E++);
         }
-        if (E >= S && r?.surfaceNetworkRaw === !0) return n8;
+        if (E >= S && r?.surfaceNetworkRaw === !0) return UNVERIFIED_ANCESTRY_SENTINEL;
         return r?.surfaceNetworkRaw === !0 &&
           a.length > 0 &&
           ((An(m) && !Oi(m)) || Dr(m) || vS(m) || pl(m))
@@ -752,10 +752,10 @@ function D0(e, t, r) {
 function ge(e) {
   return (An(e) && !Oi(e)) || li(e) || UL(e);
 }
-function VPn(e) {
+function getRealPath(e) {
   return me(e, !1) ?? e;
 }
-function Gur(e) {
+function tryGetRealPath(e) {
   return me(e, !0);
 }
 function me(e, t) {
@@ -782,14 +782,14 @@ function me(e, t) {
     ((i = i === "" ? f.basename(r) : f.basename(r) + f.sep + i), (r = o));
   }
 }
-function Tr(e) {
+function expandPathAliases(e) {
   let t = e;
   if (t === "~") t = homedir().normalize("NFC");
   else if (t.startsWith("~/")) t = f.join(homedir().normalize("NFC"), t.slice(2));
   let r = new Set(),
-    i = ae();
+    i = getFsSurface();
   if ((r.add(t), (An(t) && !Oi(t)) || Dr(t) || vS(t))) return Array.from(r);
-  let o = Xg(i, t, { onCollapsedLanding: (u) => r.add(u) });
+  let o = resolveSymlinkAncestrySync(i, t, { onCollapsedLanding: (u) => r.add(u) });
   if (o !== void 0) return (r.add(o), Array.from(r));
   try {
     let u = t,
@@ -807,7 +807,7 @@ function Tr(e) {
       if (g === void 0) {
         if (m === "ENOENT") {
           if (u === t) {
-            let S = D0(i, t);
+            let S = resolveSymlinkTargetSync(i, t);
             if (S !== void 0) r.add(S);
           }
         }
@@ -818,16 +818,16 @@ function Tr(e) {
       u = E;
     }
   } catch {}
-  let { resolvedPath: s, isSymlink: a } = Ro(i, t);
+  let { resolvedPath: s, isSymlink: a } = resolvePathInfo(i, t);
   if (a && s !== t) r.add(s);
   return Array.from(r);
 }
-var Sh = {
+var fsSurface = {
   cwd() {
     return process.cwd();
   },
   existsSync(e) {
-    using t = Np`fs.existsSync(${e})`;
+    using t = startSlowOperationSpan`fs.existsSync(${e})`;
     return l.existsSync(e);
   },
   async stat(e) {
@@ -907,19 +907,19 @@ var Sh = {
     return chmod(e, t);
   },
   statSync(e) {
-    using t = Np`fs.statSync(${e})`;
+    using t = startSlowOperationSpan`fs.statSync(${e})`;
     return l.statSync(e);
   },
   lstatSync(e) {
-    using t = Np`fs.lstatSync(${e})`;
+    using t = startSlowOperationSpan`fs.lstatSync(${e})`;
     return l.lstatSync(e);
   },
   readFileSync(e, t) {
-    using r = Np`fs.readFileSync(${e})`;
+    using r = startSlowOperationSpan`fs.readFileSync(${e})`;
     return l.readFileSync(e, { encoding: t.encoding });
   },
   readSync(e, t) {
-    using r = Np`fs.readSync(${e}, ${t.length} bytes)`;
+    using r = startSlowOperationSpan`fs.readSync(${e}, ${t.length} bytes)`;
     let i = void 0;
     try {
       i = l.openSync(e, "r");
@@ -937,7 +937,7 @@ var Sh = {
     }
   },
   appendFileSync(e, t, r) {
-    using i = Np`fs.appendFileSync(${e}, ${t.length} chars)`;
+    using i = startSlowOperationSpan`fs.appendFileSync(${e}, ${t.length} chars)`;
     if (r?.mode !== void 0)
       try {
         let o = l.openSync(e, "ax", r.mode);
@@ -953,23 +953,23 @@ var Sh = {
     l.appendFileSync(e, t);
   },
   unlinkSync(e) {
-    using t = Np`fs.unlinkSync(${e})`;
+    using t = startSlowOperationSpan`fs.unlinkSync(${e})`;
     l.unlinkSync(e);
   },
   renameSync(e, t) {
-    using r = Np`fs.renameSync(${e} ${ct} ${t})`;
+    using r = startSlowOperationSpan`fs.renameSync(${e} ${ct} ${t})`;
     l.renameSync(e, t);
   },
   readlinkSync(e) {
-    using t = Np`fs.readlinkSync(${e})`;
+    using t = startSlowOperationSpan`fs.readlinkSync(${e})`;
     return l.readlinkSync(e);
   },
   realpathSync(e) {
-    using t = Np`fs.realpathSync(${e})`;
+    using t = startSlowOperationSpan`fs.realpathSync(${e})`;
     return zn(l.realpathSync(e));
   },
   mkdirSync(e, t) {
-    using r = Np`fs.mkdirSync(${e})`;
+    using r = startSlowOperationSpan`fs.mkdirSync(${e})`;
     let i = { recursive: !0 };
     if (t?.mode !== void 0) i.mode = t.mode;
     try {
@@ -979,11 +979,11 @@ var Sh = {
     }
   },
   readdirSync(e) {
-    using t = Np`fs.readdirSync(${e})`;
+    using t = startSlowOperationSpan`fs.readdirSync(${e})`;
     return l.readdirSync(e, { withFileTypes: !0 });
   },
   rmSync(e, t) {
-    using r = Np`fs.rmSync(${e})`;
+    using r = startSlowOperationSpan`fs.rmSync(${e})`;
     l.rmSync(e, t);
   },
   createWriteStream(e) {
@@ -999,7 +999,7 @@ var Sh = {
     );
     try {
       if (!(await r.stat()).isFile()) return Buffer.alloc(0);
-      return await KPn(r, t, "file");
+      return await readBytesFromFileHandle(r, t, "file");
     } finally {
       await r.close();
     }
@@ -1034,16 +1034,16 @@ var Sh = {
     }
   },
 };
-function ae() {
-  return Sh;
+function getFsSurface() {
+  return fsSurface;
 }
-function Yu(e) {
+function changeWorkingDirectory(e) {
   process.chdir(e);
   try {
     process.cwd();
   } catch {}
 }
-async function Qhe(e, t, r) {
+async function readBytesAtOffset(e, t, r) {
   await using i = typeof e === "string" ? await x(e, "r") : null;
   let o = typeof e === "string" ? i : e,
     s = (await o.stat()).size;
@@ -1058,7 +1058,7 @@ async function Qhe(e, t, r) {
   }
   return { content: u.toString("utf8", 0, d), bytesRead: d, bytesTotal: s };
 }
-async function KPn(e, t, r) {
+async function readBytesFromFileHandle(e, t, r) {
   let i = r !== void 0 ? r === "file" : (await e.stat()).isFile(),
     o = [],
     s = 0;
@@ -1070,7 +1070,7 @@ async function KPn(e, t, r) {
   }
   return Buffer.concat(o, s);
 }
-async function k_(e, t) {
+async function readTailBytes(e, t) {
   await using r = typeof e === "string" ? await x(e, "r") : null;
   let i = typeof e === "string" ? r : e,
     o = (await i.stat()).size;
@@ -1086,7 +1086,7 @@ async function k_(e, t) {
   }
   return { content: u.toString("utf8", 0, d), bytesRead: d, bytesTotal: o };
 }
-async function* qur(e, t = 65536) {
+async function* streamFileLines(e, t = 65536) {
   let r = await x(e, "r"),
     i = Buffer.alloc(t),
     o = 0,
@@ -1118,7 +1118,7 @@ async function* qur(e, t = 65536) {
   }
   if (a > 0) yield s.length === 1 ? s[0] : Buffer.concat(s, a);
 }
-async function* nje(e) {
+async function* streamFileLinesBackward(e) {
   let r = await x(e, "r");
   try {
     let o = (await r.stat()).size,
@@ -1532,7 +1532,7 @@ class Oe {
   }
 }
 var V = new Oe();
-function qnt(e) {
+function scanForSecrets(e) {
   return V.scan(e);
 }
 function qr(e) {
@@ -1545,12 +1545,12 @@ function Ft(e, t) {
   if (Rt.test(r) || Dt.test(r)) return e;
   return Ae(e, t);
 }
-function Zhe(e) {
+function redactForDisplay(e) {
   return V.redactForDisplay(e);
 }
-function B1(e, t = qr) {
+function redactDeep(e, t = qr) {
   if (typeof e === "string") return t(e);
-  if (Array.isArray(e)) return e.map((r) => B1(r, t));
+  if (Array.isArray(e)) return e.map((r) => redactDeep(r, t));
   if (e !== null && typeof e === "object") {
     let r = Object.create(null);
     for (let [i, o] of Object.entries(e))
@@ -1558,17 +1558,17 @@ function B1(e, t = qr) {
         let s = `${i}: `,
           a = t(s + o);
         r[i] = a.startsWith(s) ? a.slice(s.length) : t(o);
-      } else r[i] = B1(o, t);
+      } else r[i] = redactDeep(o, t);
     return r;
   }
   return e;
 }
-function zur(e) {
+function redactSensitiveKeys(e) {
   let t = Object.create(null);
   for (let [r, i] of Object.entries(e)) t[r] = xe.test(r) ? "[REDACTED]" : i;
   return t;
 }
-function fp(e) {
+function sanitizeUrl(e) {
   if (!e) return e;
   try {
     let t = new URL(e);
@@ -1634,7 +1634,7 @@ function Le(e, t, r, i) {
   };
 }
 function Y(e) {
-  return wc.userNamed(isAbsolute(e) ? e : resolve(e));
+  return pathSpaces.userNamed(isAbsolute(e) ? e : resolve(e));
 }
 function Ht(e) {
   return e.code === "Failed" && e.telemetryCode === "ENOENT";
@@ -1773,7 +1773,7 @@ class Te {
       r.includes(`
 `)
     )
-      r = b(r);
+      r = jsonStringify(r);
     let o = `${new Date().toISOString()} [${t.toUpperCase()}] ${r}
 `;
     if (this.toStderr) {
@@ -1975,18 +1975,18 @@ class Te {
       let o = r ? t : this.logPath(),
         s = i.map((a) => a.content).join("");
       try {
-        ae().mkdirSync(dirname(o));
+        getFsSurface().mkdirSync(dirname(o));
       } catch {}
       try {
-        ae().appendFileSync(o, s);
+        getFsSurface().appendFileSync(o, s);
       } catch (a) {
         if (Nz(a))
           try {
-            if (!r) ae().appendFileSync(this.resolveDirToFile(o), s);
+            if (!r) getFsSurface().appendFileSync(this.resolveDirToFile(o), s);
             else {
               let u = (p, g) => {
                   try {
-                    ae().appendFileSync(v(o, `${p}.txt`), g);
+                    getFsSurface().appendFileSync(v(o, `${p}.txt`), g);
                   } catch {}
                 },
                 d = i[0]?.sessionId,
@@ -2126,7 +2126,7 @@ function Q(e, t) {
       process.on("exit", r);
     },
     registerCleanup: (r) => {
-      Et(r);
+      registerCleanup(r);
     },
     writeToStderr: (r) => {
       writeToStderr(r);
@@ -2141,7 +2141,7 @@ function Q(e, t) {
     syncExitDrain: e.init.syncExitDrain,
   });
 }
-function zR(e) {
+function initDefaultDebugLog(e) {
   let t = _();
   t.setInit({
     storageV5: e.storageV5,
@@ -2154,7 +2154,7 @@ function zR(e) {
     (t.setInstance(i), i.succeed(r));
   }
   if (e.syncExitDrain === !1 && !w().drainsSyncAtExit())
-    n(
+    logForDebugging(
       "Sync exit drain off for this process: debug lines still queued at exit are dropped, so this log may end short",
     );
 }
@@ -2165,130 +2165,130 @@ function w() {
   let r = Q(e);
   return (e.setInstance(r), r);
 }
-function Gxt() {
+function getMinDebugLogLevel() {
   return w().minLevel;
 }
-function pB() {
+function isDebugMode() {
   return w().isDebugMode();
 }
-function vL() {
+function isDebugToStdErr() {
   return w().toStderr;
 }
-function XPn() {
+function getDebugFilePath() {
   return w().filePath;
 }
-function YPn() {
+function enableDebugLogging() {
   return w().enableDebugLogging();
 }
-function JPn() {
+function resetDebugCaches() {
   let e = _(),
     t = e.instance;
   if (!t) return;
   let r = Q(e);
   (e.setInstance(r), r.succeed(t));
 }
-function rje(e) {
+function setHasFormattedOutput(e) {
   w().hasFormattedOutput = e;
 }
-function QPn() {
+function getHasFormattedOutput() {
   return w().hasFormattedOutput;
 }
-async function o8() {
+async function flushDebugLogs() {
   await _().instance?.flush();
 }
-function n(e, t = { level: "debug" }) {
+function logForDebugging(e, t = { level: "debug" }) {
   w().log(e, t);
 }
-function s8() {
+function getDebugLogPath() {
   return w().logPath();
 }
-function ZPn(e, t) {
+function isDefaultDebugLogPath(e, t) {
   return e === w().defaultLogPath(t);
 }
-function AW(e, t) {
+function logAntError(e, t) {
   return;
 }
 export {
-  hs,
-  Wnt,
-  Gnt,
-  Dur,
-  WPn,
-  Lur,
-  SXt,
-  fxe,
-  tje,
-  GPn,
-  Mur,
-  Nur,
-  Fur,
-  $ur,
-  mxe,
-  qPn,
-  rZ,
-  ou,
-  Uur,
-  We,
-  CL,
-  Cg,
-  Bur,
-  wc,
-  jur,
-  Xhe,
-  Et,
-  gxe,
-  Yhe,
-  dv,
-  jxt,
-  Np,
-  b,
-  t8,
+  createInvalidArgumentError,
+  OTHER_NAMES_TELEMETRY_CODE,
+  LEAF_MOVED_TELEMETRY_CODE,
+  HARDENING_UNAVAILABLE_TELEMETRY_CODE,
+  REMOTE_LINK_TELEMETRY_CODE,
+  ASIDE_STRANDED_TELEMETRY_CODE,
+  UNSUPPORTED_TELEMETRY_CODE,
+  isUnsupportedFailure,
+  isByteViewUnsupportedFailure,
+  isStoreFencedFailure,
+  SOURCE_NOT_REGULAR_TELEMETRY_CODE,
+  SOURCE_TOO_LARGE_TELEMETRY_CODE,
+  SOURCE_SHARED_TELEMETRY_CODE,
+  SOURCE_OUTSIDE_TELEMETRY_CODE,
+  isStorageError,
+  ABSENT_PARENT_TELEMETRY_CODE,
+  isAbsentParentFailure,
+  getTelemetryCode,
+  TOO_LARGE_TELEMETRY_CODE,
+  describeStorageError,
+  createOkResult,
+  createErrorResult,
+  unwrapResult,
+  pathSpaces,
+  createStringBatchWriter,
+  CLEANUP_DRAIN_TIMEOUT_MS,
+  registerCleanup,
+  drainCleanup,
+  isCleanupDrainStarted,
+  registerPreExitFlush,
+  drainPreExitFlush,
+  startSlowOperationSpan,
+  jsonStringify,
+  jsonStringifyLine,
   Tc,
-  Wxt,
-  z,
+  jsonlJoin,
+  jsonParse,
   Is,
-  Ru,
+  deepClone,
   Jhe,
-  n8,
-  WP,
-  zPn,
-  Wur,
-  iae,
-  aae,
-  Xg,
-  hxe,
-  Ro,
-  r8,
-  D0,
-  VPn,
-  Gur,
-  Tr,
-  Sh,
-  ae,
-  Yu,
-  Qhe,
-  KPn,
-  k_,
-  qur,
-  nje,
-  qnt,
+  UNVERIFIED_ANCESTRY_SENTINEL,
+  hasNetworkPathSpelling,
+  hasNetworkPathSpellingAsync,
+  hasUnverifiableAncestrySync,
+  hasUnverifiableAncestry,
+  hasUnverifiableAncestryWithAnchor,
+  resolveSymlinkAncestrySync,
+  resolveSymlinkAncestry,
+  resolvePathInfo,
+  testAndSetResolvedPath,
+  resolveSymlinkTargetSync,
+  getRealPath,
+  tryGetRealPath,
+  expandPathAliases,
+  fsSurface,
+  getFsSurface,
+  changeWorkingDirectory,
+  readBytesAtOffset,
+  readBytesFromFileHandle,
+  readTailBytes,
+  streamFileLines,
+  streamFileLinesBackward,
+  scanForSecrets,
   qr,
-  Zhe,
-  B1,
-  zur,
-  fp,
-  zR,
-  Gxt,
-  pB,
-  vL,
-  XPn,
-  YPn,
-  JPn,
-  rje,
-  QPn,
-  o8,
-  n,
-  s8,
-  ZPn,
-  AW,
+  redactForDisplay,
+  redactDeep,
+  redactSensitiveKeys,
+  sanitizeUrl,
+  initDefaultDebugLog,
+  getMinDebugLogLevel,
+  isDebugMode,
+  isDebugToStdErr,
+  getDebugFilePath,
+  enableDebugLogging,
+  resetDebugCaches,
+  setHasFormattedOutput,
+  getHasFormattedOutput,
+  flushDebugLogs,
+  logForDebugging,
+  getDebugLogPath,
+  isDefaultDebugLogPath,
+  logAntError,
 };

@@ -13,14 +13,14 @@ import { CLAUDE_BULLET_GLYPH } from "../../02-功能模块/权限系统/chunk-e4
 import { getCanonicalName, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { useFeatureFlagValue } from "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, pd } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, NoSelect } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { resolveModelCapability } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/protobuf-decoding.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import { js } from "../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
+import { Markdown } from "../../02-功能模块/语法高亮-Markdown渲染/markdown-renderer.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { SUMMARIZED_HINT_LABEL } from "../../01-核心基础设施/共享小工具-未细化/narration-signature.js";
@@ -42,10 +42,10 @@ function AssistantNarrationSummaryMessage(N) {
   if (n[2] !== c)
     ((m =
       c &&
-      e(pd, {
+      e(NoSelect, {
         fromLeftEdge: !0,
         minWidth: 2,
-        children: e(t, {
+        children: e(Text, {
           "aria-label": "claude:",
           color: "text",
           children: CLAUDE_BULLET_GLYPH,
@@ -60,10 +60,10 @@ function AssistantNarrationSummaryMessage(N) {
   else f = n[5];
   let p;
   if (n[6] !== h || n[7] !== f)
-    ((p = e(o, {
+    ((p = e(Box, {
       flexDirection: "column",
       flexGrow: 1,
-      children: e(js, { hint: h, children: f }),
+      children: e(Markdown, { hint: h, children: f }),
     })),
       (n[6] = h),
       (n[7] = f),
@@ -71,7 +71,7 @@ function AssistantNarrationSummaryMessage(N) {
   else p = n[8];
   let T;
   if (n[9] !== d || n[10] !== m || n[11] !== p)
-    ((T = r(o, {
+    ((T = r(Box, {
       flexDirection: "row",
       marginTop: d,
       width: "100%",

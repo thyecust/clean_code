@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 function u() {
   let i = Le(),
     e = new Map(),
@@ -38,7 +38,7 @@ function u() {
 var deviceToolNotices = new Gt(u);
 function deviceToolNoticesTo(i) {
   return (e, o) => {
-    (n(`[remote-tools] ${e}: ${o}`), deviceToolNotices.of(i).emit(e, o));
+    (logForDebugging(`[remote-tools] ${e}: ${o}`), deviceToolNotices.of(i).emit(e, o));
   };
 }
 export { deviceToolNotices, deviceToolNoticesTo };

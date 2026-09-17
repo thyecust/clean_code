@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 213 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Cin } from "./chunk-8jtd54px.js";
+import { startInProcessTeammate as Cin } from "./in-process-teammate-runner.js";
 import "./chunk-5nnwwahg.js";
 import "../权限系统/chunk-jsd70b22.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";

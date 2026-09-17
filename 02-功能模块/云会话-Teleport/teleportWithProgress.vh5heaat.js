@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 256 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useAnimationFrame } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { processMessagesForTeleportResume, checkOutTeleportedSessionBranch, teleportResumeCodeSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
@@ -28,7 +28,7 @@ var i = ["\u25D0", "\u25D3", "\u25D1", "\u25D2"],
 function O(N) {
   let p = _(16),
     { currentStep: W, sessionId: T } = N,
-    [j, E] = bs(100),
+    [j, E] = useAnimationFrame(100),
     R = Math.floor(E / 100) % i.length,
     V;
   if (p[0] !== W) ((V = (ee) => ee.key === W), (p[0] = W), (p[1] = V));
@@ -37,9 +37,9 @@ function O(N) {
   const G = i[R];
   let P;
   if (p[2] !== G)
-    ((P = e(o, {
+    ((P = e(Box, {
       marginBottom: 1,
-      children: r(t, {
+      children: r(Text, {
         bold: !0,
         color: "claude",
         children: [G, " Teleporting session\u2026"],
@@ -52,7 +52,7 @@ function O(N) {
   if (p[4] !== T)
     ((C =
       T &&
-      e(o, { marginBottom: 1, children: e(t, { dimColor: !0, children: T }) })),
+      e(Box, { marginBottom: 1, children: e(Text, { dimColor: !0, children: T }) })),
       (p[4] = T),
       (p[5] = C));
   else C = p[5];
@@ -68,15 +68,15 @@ function O(N) {
       else if (Y) ((v = i[R]), (w = "claude"));
       else ((v = figures.circle), (w = void 0));
       return r(
-        o,
+        Box,
         {
           flexDirection: "row",
           children: [
-            e(o, {
+            e(Box, {
               width: 2,
-              children: e(t, { color: w, dimColor: q, children: v }),
+              children: e(Text, { color: w, dimColor: q, children: v }),
             }),
-            e(t, { dimColor: q, bold: Y, children: X.label }),
+            e(Text, { dimColor: q, bold: Y, children: X.label }),
           ],
         },
         X.key,
@@ -88,13 +88,13 @@ function O(N) {
   else x = p[8];
   let B;
   if (p[9] !== x)
-    ((B = e(o, { flexDirection: "column", marginLeft: 2, children: x })),
+    ((B = e(Box, { flexDirection: "column", marginLeft: 2, children: x })),
       (p[9] = x),
       (p[10] = B));
   else B = p[10];
   let z;
   if (p[11] !== j || p[12] !== P || p[13] !== C || p[14] !== B)
-    ((z = r(o, {
+    ((z = r(Box, {
       ref: j,
       flexDirection: "column",
       paddingX: 1,

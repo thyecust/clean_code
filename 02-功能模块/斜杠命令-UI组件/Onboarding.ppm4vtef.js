@@ -21,7 +21,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { getUserAgent, isAnthropicAuthEnabled, getUnapprovedCustomApiKey, gatewaySignInScreenConfigured, adminPolicyUnreadable, isScreenReaderModeEnabled } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProxyUrlWithSource, getProxyAuthFromHelper, getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { o, t, zb, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Newline, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { shouldOfferTerminalSetup, setupTerminal } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -31,22 +31,22 @@ import { kG } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
+import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { ApproveApiKey } from "../../01-核心基础设施/共享小工具-未细化/approve-api-key.js";
-import "../认证-OAuth登录/chunk-9g86t9bp.js";
+import "../认证-OAuth登录/console-profile-auth.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
-import { V8 } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
+import "../Bedrock-Vertex/bedrock-setup-wizard.js";
+import { OAuthLoginScreen } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
+import "../Bedrock-Vertex/vertex-setup-wizard.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
 import { ThemePicker } from "../状态栏-主题/theme-picker.js";
 import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
@@ -60,7 +60,7 @@ import "../../01-核心基础设施/共享小工具-未细化/spinner-message-li
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
-import { zB } from "../../03-入口与运行时/CLI入口-Commander/chunk-nhpr06js.js";
+import { WelcomeBanner } from "../../03-入口与运行时/CLI入口-Commander/welcome-banner.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../认证-OAuth登录/oauth-login-flow.js";
@@ -136,7 +136,7 @@ function z(Ge) {
     [l, Ve] = d(null),
     [I, Xe] = d(!0),
     ye = getProxyUrlWithSource()?.source,
-    ie = Un(1000) && I,
+    ie = useTimeout(1000) && I,
     Se,
     Ce;
   if (B[0] === MEMO_CACHE_SENTINEL)
@@ -165,54 +165,54 @@ function z(Ge) {
   if (B[5] !== w || B[6] !== l)
     ((Re = [l, w]), (B[5] = w), (B[6] = l), (B[7] = Re));
   else Re = B[7];
-  (E(ke, Re), Un(be, l && !l.success ? 100 : null));
+  (E(ke, Re), useTimeout(be, l && !l.success ? 100 : null));
   let q;
   if (B[8] !== I || B[9] !== l || B[10] !== ie)
     ((q =
       I && ie
-        ? r(o, {
+        ? r(Box, {
             paddingLeft: 1,
             children: [
-              e(yo, {}),
-              e(t, { children: "Checking connectivity..." }),
+              e(SpinnerGlyph, {}),
+              e(Text, { children: "Checking connectivity..." }),
             ],
           })
         : !l?.success &&
           !I &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             gap: 1,
             children: [
-              e(t, {
+              e(Text, {
                 color: "error",
                 children: "Unable to connect to Anthropic services",
               }),
-              e(t, { color: "error", children: l?.error }),
+              e(Text, { color: "error", children: l?.error }),
               l?.sslHint
-                ? r(o, {
+                ? r(Box, {
                     flexDirection: "column",
                     gap: 1,
                     children: [
-                      e(t, { children: l.sslHint }),
-                      e(t, {
+                      e(Text, { children: l.sslHint }),
+                      e(Text, {
                         color: "suggestion",
                         children:
                           "See https://code.claude.com/docs/en/network-config",
                       }),
                     ],
                   })
-                : r(o, {
+                : r(Box, {
                     flexDirection: "column",
                     gap: 1,
                     children: [
                       ye && l?.usedProxy
-                        ? r(t, {
+                        ? r(Text, {
                             children: [
                               "A proxy is configured via ",
                               ye,
                               ". Check that it allows connections to the host above.",
                               " ",
-                              e(t, {
+                              e(Text, {
                                 color: "suggestion",
                                 children:
                                   "See https://code.claude.com/docs/en/network-config",
@@ -220,15 +220,15 @@ function z(Ge) {
                             ],
                           })
                         : null,
-                      e(t, {
+                      e(Text, {
                         children:
                           "Please check your internet connection and network settings.",
                       }),
-                      r(t, {
+                      r(Text, {
                         children: [
                           "Note: Claude Code might not be available in your country. Check supported countries at",
                           " ",
-                          e(t, {
+                          e(Text, {
                             color: "suggestion",
                             children:
                               "https://anthropic.com/supported-countries",
@@ -246,7 +246,7 @@ function z(Ge) {
   else q = B[11];
   let Pe;
   if (B[12] !== q)
-    ((Pe = e(o, {
+    ((Pe = e(Box, {
       flexDirection: "column",
       gap: 1,
       paddingLeft: 1,
@@ -261,11 +261,11 @@ function J() {
   let tt = _(1),
     Te;
   if (tt[0] === MEMO_CACHE_SENTINEL)
-    ((Te = r(t, {
+    ((Te = r(Text, {
       color: "permission",
       children: [
         "Press ",
-        e(t, { bold: !0, children: "Enter" }),
+        e(Text, { bold: !0, children: "Enter" }),
         " to continue\u2026",
       ],
     })),
@@ -283,17 +283,17 @@ function P(at) {
     { marker: me } = De(L),
     Q;
   if (le[0] !== me)
-    ((Q = e(t, { dimColor: !0, children: me })), (le[0] = me), (le[1] = Q));
+    ((Q = e(Text, { dimColor: !0, children: me })), (le[0] = me), (le[1] = Q));
   else Q = le[1];
   let Z;
   if (le[2] !== pe)
-    ((Z = e(o, { flexDirection: "column", children: pe })),
+    ((Z = e(Box, { flexDirection: "column", children: pe })),
       (le[2] = pe),
       (le[3] = Z));
   else Z = le[3];
   let ve;
   if (le[4] !== Q || le[5] !== Z)
-    ((ve = r(o, { gap: 1, children: [Q, Z] })),
+    ((ve = r(Box, { gap: 1, children: [Q, Z] })),
       (le[4] = Q),
       (le[5] = Z),
       (le[6] = ve));
@@ -337,7 +337,7 @@ function oe(gt) {
   } else ee = de[3];
   let K;
   if (de[7] !== ee)
-    ((K = e(o, { flexDirection: "column", children: ee })),
+    ((K = e(Box, { flexDirection: "column", children: ee })),
       (de[7] = ee),
       (de[8] = K));
   else K = de[8];
@@ -371,7 +371,7 @@ function Yt({ host: s, onDone: c }) {
     (b(v), n());
   }
   let A = useGlobalExitKeybinding(),
-    fe = e(o, {
+    fe = e(Box, {
       marginX: 1,
       children: e(ThemePicker, {
         onThemeSelect: Y,
@@ -381,35 +381,35 @@ function Yt({ host: s, onDone: c }) {
         skipExitHandling: !0,
       }),
     }),
-    he = r(o, {
+    he = r(Box, {
       flexDirection: "column",
       gap: 1,
       paddingLeft: 1,
       children: [
-        e(t, { bold: !0, children: "Security notes:" }),
-        e(o, {
+        e(Text, { bold: !0, children: "Security notes:" }),
+        e(Box, {
           flexDirection: "column",
           width: 70,
           children: r(W, {
             children: [
               r(W.Item, {
                 children: [
-                  e(t, { children: "Claude can make mistakes." }),
-                  r(t, {
+                  e(Text, { children: "Claude can make mistakes." }),
+                  r(Text, {
                     dimColor: !0,
                     wrap: "wrap",
                     children: [
                       "You're responsible for Claude's actions and should always",
-                      e(zb, {}),
+                      e(Newline, {}),
                       "review them, especially when running code.",
-                      e(zb, {}),
+                      e(Newline, {}),
                     ],
                   }),
                 ],
               }),
               r(W.Item, {
                 children: [
-                  e(t, {
+                  e(Text, {
                     children:
                       "Due to prompt injection risks, only use it with code you trust",
                   }),
@@ -438,31 +438,31 @@ function Yt({ host: s, onDone: c }) {
   if (m)
     k.push({
       id: "oauth",
-      component: e(o, {
+      component: e(Box, {
         flexDirection: "column",
         gap: 1,
         paddingLeft: 1,
-        children: e(V8, { onDone: n, urlOutdent: 1 }),
+        children: e(OAuthLoginScreen, { onDone: n, urlOutdent: 1 }),
       }),
     });
   if ((k.push({ id: "security", component: he }), shouldOfferTerminalSetup()))
     k.push({
       id: "terminal-setup",
-      component: r(o, {
+      component: r(Box, {
         flexDirection: "column",
         gap: 1,
         paddingLeft: 1,
         children: [
-          e(t, { bold: !0, children: "Use Claude Code's terminal setup?" }),
-          r(o, {
+          e(Text, { bold: !0, children: "Use Claude Code's terminal setup?" }),
+          r(Box, {
             flexDirection: "column",
             width: 70,
             gap: 1,
             children: [
-              r(t, {
+              r(Text, {
                 children: [
                   "For the optimal coding experience, enable the recommended settings",
-                  e(zb, {}),
+                  e(Newline, {}),
                   "for your terminal:",
                   " ",
                   a.terminal === "Apple_Terminal"
@@ -487,7 +487,7 @@ function Yt({ host: s, onDone: c }) {
                     .finally(n),
                 onCancel: n,
               }),
-              e(t, {
+              e(Text, {
                 dimColor: !0,
                 children: A.pending
                   ? r(N, { children: ["Press ", A.keyName, " again to exit"] })
@@ -516,19 +516,19 @@ function Yt({ host: s, onDone: c }) {
       { "confirm:no": ne },
       { context: "Confirmation", isActive: G?.id === "terminal-setup" },
     ),
-    r(o, {
+    r(Box, {
       flexDirection: "column",
       children: [
-        e(zB, {}),
-        r(o, {
+        e(WelcomeBanner, {}),
+        r(Box, {
           flexDirection: "column",
           marginTop: 1,
           children: [
             G?.component,
             A.pending &&
-              e(o, {
+              e(Box, {
                 padding: 1,
-                children: r(t, {
+                children: r(Text, {
                   dimColor: !0,
                   children: ["Press ", A.keyName, " again to exit"],
                 }),

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { zn, _Z } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { getClaudeConfigDir, getConfiguredProjectDirName } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { tje } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { isByteViewUnsupportedFailure } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hashString } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
@@ -31,7 +31,7 @@ import { createInterface } from "readline";
 import { execFile } from "child_process";
 import { promisify } from "util";
 var se = promisify(execFile);
-async function B2e(e) {
+async function listGitWorktrees(e) {
   let n = resolveExecutableSafely("git");
   if (n === null) return [];
   try {
@@ -899,7 +899,7 @@ async function findProjectDir(e, n) {
 }
 async function te(e, n) {
   let r = [];
-  for (let t of await B2e(e)) {
+  for (let t of await listGitWorktrees(e)) {
     if (t === e) continue;
     let a = await findProjectDirs(t, n);
     if (n !== void 0 && n.hoverRestOn) {
@@ -1213,7 +1213,7 @@ async function readTranscriptForLoad(e, n, r) {
     while (p < n) {
       let f = await u.read([{ key: s, offset: p, length: Math.min(a, n - p) }]);
       if (!f.ok) {
-        if (p === 0 && tje(f.error)) {
+        if (p === 0 && isByteViewUnsupportedFailure(f.error)) {
           await Fe(u, s, n, l);
           break;
         }
@@ -1278,7 +1278,7 @@ function buildHistorySuppressionEntry(e, n, r) {
   };
 }
 export {
-  B2e,
+  listGitWorktrees,
   LITE_READ_BUF_SIZE,
   PROGRAMMATIC_ENTRYPOINTS,
   isHiddenFromSessionPicker,

@@ -8,22 +8,22 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function TitleWithSubtitle(x) {
   let f = _(7),
     { children: p, subtitle: c } = x,
     a;
   if (f[0] !== p)
-    ((a = e(t, { bold: !0, children: p })), (f[0] = p), (f[1] = a));
+    ((a = e(Text, { bold: !0, children: p })), (f[0] = p), (f[1] = a));
   else a = f[1];
   let R;
   if (f[2] !== c)
-    ((R = c && e(t, { dimColor: !0, children: c })), (f[2] = c), (f[3] = R));
+    ((R = c && e(Text, { dimColor: !0, children: c })), (f[2] = c), (f[3] = R));
   else R = f[3];
   let l;
   if (f[4] !== a || f[5] !== R)
-    ((l = r(o, { flexDirection: "column", children: [a, R] })),
+    ((l = r(Box, { flexDirection: "column", children: [a, R] })),
       (f[4] = a),
       (f[5] = R),
       (f[6] = l));

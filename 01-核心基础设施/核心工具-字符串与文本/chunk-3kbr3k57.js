@@ -114,16 +114,16 @@ var C = new Map([
     "zZ\uFF3A\uFF5A\uD835\uDC19\uD835\uDC33\uD835\uDC4D\uD835\uDC67\uD835\uDC81\uD835\uDC9B\uD835\uDCB5\uD835\uDCCF\uD835\uDCE9\uD835\uDD03\uD835\uDD1D\uD835\uDD37\uD835\uDD51\uD835\uDD6B\uD835\uDD85\uD835\uDD9F\uD835\uDDB9\uD835\uDDD3\uD835\uDDED\uD835\uDE07\uD835\uDE21\uD835\uDE3B\uD835\uDE55\uD835\uDE6F\uD835\uDE89\uD835\uDEA3\u24CF\u24E9\u2124\u2128\u0396\u1D22\uAB93\uA4DC\u2C8D\u13C3\u2C8C\u0179\u017A\u017B\u017C\u017D\u017E\u1E90\u1E91\u1E92\u1E93\u1E94\u1E95\uD835\uDC19\uD835\uDC33\uD835\uDC4D\uD835\uDC67\uD835\uDC81\uD835\uDC9B\uD835\uDCB5\uD835\uDCCF\uD835\uDCE9\uD835\uDD03\uD835\uDD37\uD835\uDD6B\uD835\uDD85\uD835\uDD9F\uD835\uDDB9\uD835\uDDD3\uD835\uDDED\uD835\uDE07\uD835\uDE21\uD835\uDE3B\uD835\uDE55\uD835\uDE6F\uD835\uDE89\uD835\uDEA3\uD835\uDEAD\uD835\uDEE7\uD835\uDF21\uD835\uDF5B\uD835\uDF95\u1DBB",
   ],
 ]);
-function Nt(u) {
+function escapeHtmlText(u) {
   return u
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
 }
-function go(u) {
-  return Nt(u).replaceAll('"', "&quot;").replaceAll("'", "&apos;");
+function escapeHtmlAttribute(u) {
+  return escapeHtmlText(u).replaceAll('"', "&quot;").replaceAll("'", "&apos;");
 }
-var I5t =
+var INVISIBLE_CHARS_CLASS =
     "\\u00ad\\u034f\\u0600-\\u0605\\u061c\\u06dd\\u070f\\u0890\\u0891\\u08e2\\u115f\\u1160\\u17b4\\u17b5\\u180b-\\u180f\\u200b-\\u200f\\u202a-\\u202e\\u2060-\\u206f\\u3164\\ufe00-\\ufe0f\\ufeff\\uffa0\\ufff0-\\ufffb\\u{110bd}\\u{110cd}\\u{13430}-\\u{1343f}\\u{1bca0}-\\u{1bca3}\\u{1d173}-\\u{1d17a}\\u{e0000}-\\u{e0fff}",
   _ = {
     "\uFF1C": "<",
@@ -162,13 +162,13 @@ var I5t =
   },
   w =
     "\\u0300-\\u0344\\u0346-\\u036f\\u0483-\\u0489\\u0591-\\u05bd\\u05bf\\u05c1\\u05c2\\u05c4\\u05c5\\u05c7\\u0610-\\u061a\\u064b-\\u065f\\u0670\\u06d6-\\u06dc\\u06df-\\u06e4\\u06e7\\u06e8\\u06ea-\\u06ed\\u1ab0-\\u1aff\\u1dc0-\\u1dff\\u20d0-\\u20ff\\u3099\\u309a\\ufe20-\\ufe2f",
-  L = `${I5t}${w}\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f-\\x9f\\u2028\\u2029`,
+  L = `${INVISIBLE_CHARS_CLASS}${w}\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f-\\x9f\\u2028\\u2029`,
   T = "A-Za-z0-9_\\-",
   D = `(?:[^${T}]|$)`,
-  KRe = "\\p{Pd}\\u2212\\u207b\\u208b\\u02d7\\u2796\\u2043\\u30fc\\uff70",
-  Vvt =
+  DASH_CHARS_CLASS = "\\p{Pd}\\u2212\\u207b\\u208b\\u02d7\\u2796\\u2043\\u30fc\\uff70",
+  COLON_CHARS_CLASS =
     ":\\uff1a\\ufe55\\ufe13\\ua789\\u2236\\u02d0\\u02f8\\u05c3\\u0589\\u0703\\u0704\\u16ec\\u1803\\u1809\\u205a\\ua4fd\\ufe30",
-  j = `_\\p{Pc}\\u2017\\u02cd\\u07fa\\u0640${KRe}`,
+  j = `_\\p{Pc}\\u2017\\u02cd\\u07fa\\u0640${DASH_CHARS_CLASS}`,
   t = (() => {
     let u = { "<": "<", ">": ">", "/": "/" };
     for (let [d, e] of Object.entries(_)) u[e] += d;
@@ -178,16 +178,16 @@ var I5t =
       slash: u["/"],
       filler: `^${T}${u["<"]}${u[">"]}`,
       lookalikePattern: new RegExp(`[${Object.keys(_).join("")}]`, "g"),
-      invisiblePattern: new RegExp(`[${I5t}]`, "gu"),
-      dashPattern: new RegExp(`[${KRe}]`, "gu"),
+      invisiblePattern: new RegExp(`[${INVISIBLE_CHARS_CLASS}]`, "gu"),
+      dashPattern: new RegExp(`[${DASH_CHARS_CLASS}]`, "gu"),
     };
   })(),
-  sar = { open: t.open, close: t.close, slash: t.slash };
-function XRe() {
+  TAG_DELIMITER_CHARS = { open: t.open, close: t.close, slash: t.slash };
+function getInvisibleCharsPattern() {
   return t.invisiblePattern;
 }
-function rxn(u) {
-  return escapeControlChars(u).replace(XRe(), toUnicodeEscape);
+function escapeControlAndInvisibleChars(u) {
+  return escapeControlChars(u).replace(getInvisibleCharsPattern(), toUnicodeEscape);
 }
 function Age(u, d) {
   return `(?=([${u}]*))(?:\\${d})`;
@@ -221,13 +221,13 @@ function I({ tags: u, closeOnly: d, fillerClass: e, spell: a, tail: f }) {
     l = f === void 0 ? D : `${Kvt(++o)}${f}`;
   return new RegExp(`[${b}](?!\\\\)(?=${s}(?:${g.join("|")})${l})`, "giu");
 }
-function YRe(u, d) {
+function neutralizeClosingTags(u, d) {
   return d.replace(R(u, !0), "<\\");
 }
-function HU(u, d) {
+function neutralizeOpeningTags(u, d) {
   return d.replace(R(u, !1), "<\\");
 }
-function yBe(u) {
+function normalizeTagDelimiterLookalikes(u) {
   return u.replace(t.lookalikePattern, (d) => _[d] ?? d);
 }
 var m = {
@@ -384,7 +384,7 @@ var m = {
       pattern: new RegExp(`[${Object.keys(u).join("")}]`, "gu"),
     };
   })();
-function oxn(u) {
+function normalizeConfusables(u) {
   let { table: d, pattern: e } = M,
     a = (f) => f.replace(e, (b) => d[b] ?? b);
   return a(v(a(u)).normalize("NFKC"));
@@ -393,49 +393,49 @@ function v(u) {
   return u.normalize("NFKD").replace(/\p{M}+/gu, "");
 }
 var G = "abcdefghijklmnopqrstuvwxyz";
-function SBe(u) {
+function buildLatinLetterConfusableClass(u) {
   if (!/^[a-z]$/.test(u))
     throw Error(
       "latinLetterConfusableClass: expected one ASCII lowercase letter",
     );
   return C.get(u) ?? u;
 }
-function Cge(u, d) {
+function buildConfusableTagScrubPattern(u, d) {
   let e = t;
   return I({
     tags: u,
     closeOnly: !1,
-    fillerClass: `${e.filler}${[...G].map(SBe).join("")}`,
+    fillerClass: `${e.filler}${[...G].map(buildLatinLetterConfusableClass).join("")}`,
     spell: (a) => {
-      if (/^[a-z]$/.test(a)) return `[${SBe(a)}]`;
-      if (a === "-") return `[${KRe}]`;
+      if (/^[a-z]$/.test(a)) return `[${buildLatinLetterConfusableClass(a)}]`;
+      if (a === "-") return `[${DASH_CHARS_CLASS}]`;
       if (a === "_") return `[${j}]`;
       if (/^[0-9]$/.test(a)) return a;
       throw Error(
         "confusableTagScrubPattern: tag names are lowercase [a-z0-9_-]",
       );
     },
-    tail: d?.({ name: T, close: e.close, colon: Vvt }),
+    tail: d?.({ name: T, close: e.close, colon: COLON_CHARS_CLASS }),
   });
 }
-function Xvt() {
-  return Cge(
+function buildChannelSourceTagPattern() {
+  return buildConfusableTagScrubPattern(
     ["channel"],
     ({ name: u, close: d }) => `(?![${u}])[^${d}]{0,120}(?<![\\w-])source\\s*=`,
   );
 }
 var K = "antml";
-function Yvt() {
-  return Cge([K], ({ colon: u }) => `[${u}]`);
+function buildModelLayerTagPattern() {
+  return buildConfusableTagScrubPattern([K], ({ colon: u }) => `[${u}]`);
 }
-var Jvt =
+var OPEN_BRACKET_CHARS_CLASS =
     "\\[\\uff3b\\ufe47\\u27e6\\u301a\\u2045\\u298b\\u298d\\u298f\\u3010\\u3014\\ufe5d\\u3016\\u3018\\u2772\\u27ec\\ufe17\\ufe39\\ufe3b",
   N =
     "\\]\\uff3d\\ufe48\\u27e7\\u301b\\u2046\\u298c\\u2990\\u298e\\u3011\\u3015\\ufe5e\\u3017\\u3019\\u2773\\u27ed\\ufe18\\ufe3a\\ufe3c",
-  Qvt = `\\t\\v\\f \\u00a0\\u1680\\u2000-\\u200a\\u202f\\u205f\\u3000\\u2800${L}`,
-  S = `\\r\\n${Qvt}`,
-  P = `\\p{Pc}\\u2017.\\u00b7\\u0387\\u2022\\u2219\\u22c5\\u2024\\u2026\\u2027\\u30fb\\ufe52\\uff65\\uff0e/\\u2044\\u2215\\uff0f\\\\\\u2216\\ufe68\\uff3c|\\u00a6\\uff5c~\\u223c\\uff5e${Vvt};\\u037e\\ufe54\\uff1b`,
-  O = `${KRe}${P}`,
+  WHITESPACE_CHARS_CLASS = `\\t\\v\\f \\u00a0\\u1680\\u2000-\\u200a\\u202f\\u205f\\u3000\\u2800${L}`,
+  S = `\\r\\n${WHITESPACE_CHARS_CLASS}`,
+  P = `\\p{Pc}\\u2017.\\u00b7\\u0387\\u2022\\u2219\\u22c5\\u2024\\u2026\\u2027\\u30fb\\ufe52\\uff65\\uff0e/\\u2044\\u2215\\uff0f\\\\\\u2216\\ufe68\\uff3c|\\u00a6\\uff5c~\\u223c\\uff5e${COLON_CHARS_CLASS};\\u037e\\ufe54\\uff1b`,
+  O = `${DASH_CHARS_CLASS}${P}`,
   X = "\\u30fc\\uff70\\u115f\\u1160\\u3164\\uffa0",
   h = 4;
 function B(u) {
@@ -444,21 +444,21 @@ function B(u) {
   for (let a = 0; a < h; a++) e = `(?:[${O}]${d}${e})?`;
   return `(?=(${d}${e}))(?:\\${u})`;
 }
-var F = `[^${Jvt}${N}\\r\\n]{0,119}?(?:(?![${X}])[\\p{L}\\p{N}]|(?![${N}])["')\\u2019\\u201d\\uff09\\p{Pe}\\p{Pf}])`,
-  P5t = Symbol("LEAD_HEX_ID"),
-  vq = Symbol("LEAD_SPAN");
-function iar(u) {
+var F = `[^${OPEN_BRACKET_CHARS_CLASS}${N}\\r\\n]{0,119}?(?:(?![${X}])[\\p{L}\\p{N}]|(?![${N}])["')\\u2019\\u201d\\uff09\\p{Pe}\\p{Pf}])`,
+  LEAD_HEX_ID_SYMBOL = Symbol("LEAD_HEX_ID"),
+  LEAD_SPAN_SYMBOL = Symbol("LEAD_SPAN");
+function buildBracketedLeadScrubPattern(u) {
   let d = 0,
     e = () => B(++d),
     a = () => Age(`\\r\\n${L}`, ++d),
     f = () => `(?=[${S}${O}])` + e(),
-    b = () => `(?=[${P}]{0,${h}}[${S}${KRe}])` + e(),
-    r = `0-9\\uff10-\\uff19\\u{1d7ce}-\\u{1d7ff}\\u2070\\u00b9\\u00b2\\u00b3\\u2074-\\u2079\\u2080-\\u2089${[..."abcdef"].map(SBe).join("")}`,
+    b = () => `(?=[${P}]{0,${h}}[${S}${DASH_CHARS_CLASS}])` + e(),
+    r = `0-9\\uff10-\\uff19\\u{1d7ce}-\\u{1d7ff}\\u2070\\u00b9\\u00b2\\u00b3\\u2074-\\u2079\\u2080-\\u2089${[..."abcdef"].map(buildLatinLetterConfusableClass).join("")}`,
     o = (c) => {
       if (!/^[a-z]+$/.test(c))
         throw Error("bracketedLeadScrubPattern: words are lowercase ASCII");
       return [...c]
-        .map((i, n) => (n === 0 ? "" : a()) + `[${SBe(i)}]`)
+        .map((i, n) => (n === 0 ? "" : a()) + `[${buildLatinLetterConfusableClass(i)}]`)
         .join("");
     },
     s = (c) =>
@@ -466,7 +466,7 @@ function iar(u) {
         "",
       ) +
       a() +
-      `[${KRe}]`,
+      `[${DASH_CHARS_CLASS}]`,
     g = () => s(8) + e() + s(4) + e() + s(4),
     l = "(?![0-9A-Za-z_])",
     E = e(),
@@ -478,22 +478,22 @@ function iar(u) {
               ? ""
               : typeof n !== "string"
                 ? e()
-                : c[A - 1] === vq
+                : c[A - 1] === LEAD_SPAN_SYMBOL
                   ? b()
                   : f()) +
-            (n === P5t
+            (n === LEAD_HEX_ID_SYMBOL
               ? g()
-              : n === vq
+              : n === LEAD_SPAN_SYMBOL
                 ? F
-                : o(n) + (c[A + 1] === vq ? l : "")),
+                : o(n) + (c[A + 1] === LEAD_SPAN_SYMBOL ? l : "")),
         )
         .join("");
-      return c.at(-1) === P5t ? i : `${i}${l}`;
+      return c.at(-1) === LEAD_HEX_ID_SYMBOL ? i : `${i}${l}`;
     });
-  return new RegExp(`[${Jvt}](?!\\\\)(?=${E}(?:${x.join("|")}))`, "giu");
+  return new RegExp(`[${OPEN_BRACKET_CHARS_CLASS}](?!\\\\)(?=${E}(?:${x.join("|")}))`, "giu");
 }
-function vge(u, d) {
-  let e = HU(u, yBe(stripInvisibleChars(d).replace(XRe(), "")));
+function neutralizeTagScopedContent(u, d) {
+  let e = neutralizeOpeningTags(u, normalizeTagDelimiterLookalikes(stripInvisibleChars(d).replace(getInvisibleCharsPattern(), "")));
   if (y(e) === e) return e;
   let a = R(u, !1);
   return e
@@ -506,43 +506,43 @@ function vge(u, d) {
     .join("<");
 }
 function y(u) {
-  return oxn(u).replace(t.dashPattern, "-");
+  return normalizeConfusables(u).replace(t.dashPattern, "-");
 }
 var q = /&(?:amp|lt|gt);/g,
   k = { "&amp;": "&", "&lt;": "<", "&gt;": ">" };
-function SA(u) {
+function unescapeHtmlText(u) {
   return u.replace(q, (d) => k[d] ?? d);
 }
 var U = /&(?:amp|lt|gt|quot|apos);/g,
   H = { ...k, "&quot;": '"', "&apos;": "'" };
-function M5(u) {
+function unescapeHtmlAttribute(u) {
   return u.replace(U, (d) => H[d] ?? d);
 }
 export {
-  Nt,
-  go,
-  I5t,
-  KRe,
-  Vvt,
-  sar,
-  XRe,
-  rxn,
+  escapeHtmlText,
+  escapeHtmlAttribute,
+  INVISIBLE_CHARS_CLASS,
+  DASH_CHARS_CLASS,
+  COLON_CHARS_CLASS,
+  TAG_DELIMITER_CHARS,
+  getInvisibleCharsPattern,
+  escapeControlAndInvisibleChars,
   Age,
   Kvt,
-  YRe,
-  HU,
-  yBe,
-  oxn,
-  SBe,
-  Cge,
-  Xvt,
-  Yvt,
-  Jvt,
-  Qvt,
-  P5t,
-  vq,
-  iar,
-  vge,
-  SA,
-  M5,
+  neutralizeClosingTags,
+  neutralizeOpeningTags,
+  normalizeTagDelimiterLookalikes,
+  normalizeConfusables,
+  buildLatinLetterConfusableClass,
+  buildConfusableTagScrubPattern,
+  buildChannelSourceTagPattern,
+  buildModelLayerTagPattern,
+  OPEN_BRACKET_CHARS_CLASS,
+  WHITESPACE_CHARS_CLASS,
+  LEAD_HEX_ID_SYMBOL,
+  LEAD_SPAN_SYMBOL,
+  buildBracketedLeadScrubPattern,
+  neutralizeTagScopedContent,
+  unescapeHtmlText,
+  unescapeHtmlAttribute,
 };

@@ -13,7 +13,7 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { splitIntoSanitizedLines, formatMemoryWriteSummary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { MAX_ERROR_MESSAGE_LINES, ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -48,7 +48,7 @@ function h(K) {
   if (u[4] !== g || u[5] !== R)
     ((p =
       R.length > 0
-        ? e(t, {
+        ? e(Text, {
             color: g,
             dimColor: g === void 0,
             children: R.map(B).join(`
@@ -63,7 +63,7 @@ function h(K) {
   if (u[7] !== f)
     ((d =
       f > 0
-        ? r(t, { dimColor: !0, children: ["\u2026 +", f, " more lines"] })
+        ? r(Text, { dimColor: !0, children: ["\u2026 +", f, " more lines"] })
         : null),
       (u[7] = f),
       (u[8] = d));
@@ -82,10 +82,10 @@ function isResultTruncated(n) {
 function renderToolResultMessage(n, i, { verbose: s }) {
   if (n.outcome !== "ok") return null;
   return e(ToolResultRow, {
-    children: r(o, {
+    children: r(Box, {
       flexDirection: "column",
       children: [
-        e(t, { children: formatMemoryWriteSummary(n) }),
+        e(Text, { children: formatMemoryWriteSummary(n) }),
         e(h, { lines: splitIntoSanitizedLines(n.content ?? ""), verbose: s, maxLines: C }),
       ],
     }),
@@ -99,10 +99,10 @@ function renderToolUseErrorMessage(n, { verbose: i }) {
     c = replaceControlChars(l === -1 ? s : s.slice(0, l)),
     a = l === -1 ? [] : splitIntoSanitizedLines(s.slice(l + 1));
   return e(ToolResultRow, {
-    children: r(o, {
+    children: r(Box, {
       flexDirection: "column",
       children: [
-        e(t, { color: "error", children: c }),
+        e(Text, { color: "error", children: c }),
         e(h, { lines: a, verbose: i, maxLines: MAX_ERROR_MESSAGE_LINES - 1, color: "error" }),
       ],
     }),

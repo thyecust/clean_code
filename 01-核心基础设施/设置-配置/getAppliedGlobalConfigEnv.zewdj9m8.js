@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { CK, xC, moe, gwn, Dj, goe, dR } from "../遥测-OpenTelemetry/chunk-x7kby92q.js";
+import { getPreSettingsEnvSnapshot as CK, peekPreSettingsEnvSnapshot as xC, getAppliedGlobalConfigEnv as moe, dropPreSettingsEnvSnapshot as gwn, filterPolicyPredicateEnv as Dj, applySafeConfigEnvironmentVariables as goe, applyConfigEnvironmentVariables as dR } from "../遥测-OpenTelemetry/settings-env-application.js";
 export {
   dR as applyConfigEnvironmentVariables,
   goe as applySafeConfigEnvironmentVariables,

@@ -10,8 +10,8 @@
 import { HORIZONTAL_LINE_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { useTerminalSize } from "./use-terminal-size.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { te } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
-import { t, jr, n9 } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { getStringWidth } from "../核心工具-字符串与文本/ansi-text-utils.js";
+import { Text, Ansi, Decorative } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function Divider(I) {
   let a = _(27),
@@ -24,7 +24,7 @@ function Divider(I) {
     q;
   if (a[0] !== o || a[1] !== i)
     ((q = i
-      ? e(t, { color: o, dimColor: !o, children: e(jr, { children: i }) })
+      ? e(Text, { color: o, dimColor: !o, children: e(Ansi, { children: i }) })
       : null),
       (a[0] = o),
       (a[1] = i),
@@ -32,7 +32,7 @@ function Divider(I) {
   else q = a[2];
   let y = q;
   if (i) {
-    let Q = te(i) + 2;
+    let Q = getStringWidth(i) + 2;
     let C = Math.max(0, l - Q);
     let u = L === "start" ? Math.min(4, C) : Math.floor(C / 2);
     let M = C - u;
@@ -43,7 +43,7 @@ function Divider(I) {
     else n = a[5];
     let f;
     if (a[6] !== i)
-      ((f = e(t, { dimColor: !0, children: e(jr, { children: i }) })),
+      ((f = e(Text, { dimColor: !0, children: e(Ansi, { children: i }) })),
         (a[6] = i),
         (a[7] = f));
     else f = a[7];
@@ -53,7 +53,7 @@ function Divider(I) {
     else W = a[10];
     let g;
     if (a[11] !== o || a[12] !== d || a[13] !== n || a[14] !== f || a[15] !== W)
-      ((g = r(t, { color: o, dimColor: d, children: [n, " ", f, " ", W] })),
+      ((g = r(Text, { color: o, dimColor: d, children: [n, " ", f, " ", W] })),
         (a[11] = o),
         (a[12] = d),
         (a[13] = n),
@@ -63,7 +63,7 @@ function Divider(I) {
     else g = a[16];
     let z;
     if (a[17] !== y || a[18] !== g)
-      ((z = e(n9, { fallback: y, children: g })),
+      ((z = e(Decorative, { fallback: y, children: g })),
         (a[17] = y),
         (a[18] = g),
         (a[19] = z));
@@ -77,7 +77,7 @@ function Divider(I) {
   else n = a[22];
   let f;
   if (a[23] !== o || a[24] !== d || a[25] !== n)
-    ((f = e(n9, { children: e(t, { color: o, dimColor: d, children: n }) })),
+    ((f = e(Decorative, { children: e(Text, { color: o, dimColor: d, children: n }) })),
       (a[23] = o),
       (a[24] = d),
       (a[25] = n),

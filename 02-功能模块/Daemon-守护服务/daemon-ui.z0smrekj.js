@@ -17,8 +17,8 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { isPathTrusted, setPathTrusted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, truncateStartToWidth, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { getStringWidth, truncateStartToWidth, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text, useInterval } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -36,7 +36,7 @@ import { bgSupervisorNoun } from "../../01-核心基础设施/共享小工具-�
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import { D9e, L9e } from "../认证-OAuth登录/chunk-n76cf9e6.js";
+import { addRemoteControlEntry, removeRemoteControlEntry } from "../认证-OAuth登录/daemon-worker-runtime.js";
 import { loadDaemonConfig } from "../../01-核心基础设施/设置-配置/daemon-config.js";
 import { loadScheduledTasks, ScheduledTaskDetail, ScheduledTaskForm } from "../权限系统/scheduled-task-ui.js";
 import { readDaemonStatus } from "../../01-核心基础设施/共享小工具-未细化/daemon-status.js";
@@ -87,7 +87,7 @@ function _e(Zo) {
       _o(!0);
       try {
         if (tn === "remove")
-          (await L9e(K.dir, void 0, kt),
+          (await removeRemoteControlEntry(K.dir, void 0, kt),
             await St(),
             Be(`Removed remote-control server for ${K.dir}.`, {
               display: "system",
@@ -166,13 +166,13 @@ function _e(Zo) {
   let on = Ce,
     ge;
   if (J[17] !== K.dir)
-    ((ge = r(t, { dimColor: !0, children: ["Directory ", K.dir] })),
+    ((ge = r(Text, { dimColor: !0, children: ["Directory ", K.dir] })),
       (J[17] = K.dir),
       (J[18] = ge));
   else ge = J[18];
   let ae;
   if (J[19] !== K.spawnMode)
-    ((ae = r(t, { dimColor: !0, children: ["Spawn mode ", K.spawnMode] })),
+    ((ae = r(Text, { dimColor: !0, children: ["Spawn mode ", K.spawnMode] })),
       (J[19] = K.spawnMode),
       (J[20] = ae));
   else ae = J[20];
@@ -184,14 +184,14 @@ function _e(Zo) {
   const De = K.isRunning ? "running" : "not running";
   let re;
   if (J[23] !== ne || J[24] !== De)
-    ((re = r(t, { dimColor: !0, children: ["Status", "     ", ne, De] })),
+    ((re = r(Text, { dimColor: !0, children: ["Status", "     ", ne, De] })),
       (J[23] = ne),
       (J[24] = De),
       (J[25] = re));
   else re = J[25];
   let be;
   if (J[26] !== ge || J[27] !== ae || J[28] !== re)
-    ((be = r(o, {
+    ((be = r(Box, {
       flexDirection: "column",
       marginBottom: 1,
       children: [ge, ae, re],
@@ -349,7 +349,7 @@ function tt(nn) {
       let ln = Y.name?.trim() || basename(It);
       let cn = Y.spawnMode ?? "same-dir";
       try {
-        (await D9e({ dir: It, name: ln, spawnMode: cn }, void 0, Te),
+        (await addRemoteControlEntry({ dir: It, name: ln, spawnMode: cn }, void 0, Te),
           Dt(It, void 0));
       } catch (Ge) {
         let dn = Ge;
@@ -516,7 +516,7 @@ function DaemonHub({ initialData: n, modelOptions: s, onDone: i, storageV5: k })
     H(I);
   }
   let X = C(0);
-  ko(
+  useInterval(
     () => {
       if ((b(T.wall + (R.now() - T.clock)), X.current++ % 2 === 0)) v();
     },
@@ -726,12 +726,12 @@ function ht(Wn) {
       (O[16] = wo));
   else wo = O[16];
   let G = wo;
-  const $t = o,
+  const $t = Box,
     Qn = "column",
     Lt = "  " + G.header;
   let ot;
   if (O[17] !== Lt)
-    ((ot = e(t, { dimColor: !0, children: Lt })), (O[17] = Lt), (O[18] = ot));
+    ((ot = e(Text, { dimColor: !0, children: Lt })), (O[17] = Lt), (O[18] = ot));
   else ot = O[18];
   let nt;
   if (O[19] !== q.length || O[20] !== me)
@@ -753,14 +753,14 @@ function ht(Wn) {
       ((Me = (_, it) => {
         let Vt = !ee && w === it;
         return r(
-          o,
+          Box,
           {
             children: [
-              r(t, {
+              r(Text, {
                 color: Vt ? "suggestion" : void 0,
                 children: [Vt ? figures.pointer : " ", " "],
               }),
-              e(t, { bold: Vt, children: G.rows[it].text }),
+              e(Text, { bold: Vt, children: G.rows[it].text }),
               G.rows[it].suffix,
             ],
           },
@@ -785,7 +785,7 @@ function ht(Wn) {
     Ht = `+ Add new ${He[me]}\u2026`;
   let st;
   if (O[33] !== Me || O[34] !== Ht)
-    ((st = e(o, {
+    ((st = e(Box, {
       marginTop: 1,
       children: e(Fe, { isFocused: Me, label: Ht }),
     })),
@@ -793,7 +793,7 @@ function ht(Wn) {
       (O[34] = Ht),
       (O[35] = st));
   else st = O[35];
-  const Kt = o,
+  const Kt = Box,
     Zn = 1,
     _n = "column",
     er = "single",
@@ -803,15 +803,15 @@ function ht(Wn) {
     rr = !0;
   let So, Co;
   if (O[36] === MEMO_CACHE_SENTINEL)
-    ((So = e(t, { bold: !0, children: "Daemon service" })),
-      (Co = e(t, { dimColor: !0, children: " \xB7 " })),
+    ((So = e(Text, { bold: !0, children: "Daemon service" })),
+      (Co = e(Text, { dimColor: !0, children: " \xB7 " })),
       (O[36] = So),
       (O[37] = Co));
   else ((So = O[36]), (Co = O[37]));
   const Et = fo ? "working\u2026" : qn;
   let at;
   if (O[38] !== ie || O[39] !== Et)
-    ((at = r(o, { children: [So, Co, e(bt, { data: ie, message: Et })] })),
+    ((at = r(Box, { children: [So, Co, e(bt, { data: ie, message: Et })] })),
       (O[38] = ie),
       (O[39] = Et),
       (O[40] = at));
@@ -857,9 +857,9 @@ function ht(Wn) {
   else Do = O[49];
   let xo;
   if (O[50] === MEMO_CACHE_SENTINEL)
-    ((xo = e(o, {
+    ((xo = e(Box, {
       marginTop: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: r(DotSeparatedList, {
           children: [
@@ -899,7 +899,7 @@ function Fe(sr) {
   const Wt = Se ? void 0 : ar;
   let ct;
   if (Ao[0] !== Se || Ao[1] !== jt || Ao[2] !== Wt)
-    ((ct = e(t, { bold: Se, color: Wt, children: jt })),
+    ((ct = e(Text, { bold: Se, color: Wt, children: jt })),
       (Ao[0] = Se),
       (Ao[1] = jt),
       (Ao[2] = Wt),
@@ -960,15 +960,15 @@ function zt(n, s, i, k) {
         ];
       })));
   }
-  let A = R.map((g, a) => Math.max(te(g), ...T.map((y) => te(y[a] ?? "")))),
-    u = (g, a) => g + " ".repeat(Math.max(0, A[a] - te(g))),
+  let A = R.map((g, a) => Math.max(getStringWidth(g), ...T.map((y) => getStringWidth(y[a] ?? "")))),
+    u = (g, a) => g + " ".repeat(Math.max(0, A[a] - getStringWidth(g))),
     W = R.map(u).join("  "),
     j = T.map((g) => ({
       text: g.slice(0, b).map(u).join("  ") + "  ",
       suffix: r(N, {
         children: [
           Mo(g[b], A[b]),
-          e(t, {
+          e(Text, {
             children: g
               .slice(b + 1)
               .map((a, y) => "  " + u(a, b + 1 + y))
@@ -980,10 +980,10 @@ function zt(n, s, i, k) {
   return { header: W, rows: j, keys: m };
 }
 function Mo(n, s) {
-  let i = n + " ".repeat(Math.max(0, s - te(n)));
+  let i = n + " ".repeat(Math.max(0, s - getStringWidth(n)));
   return n === "running"
-    ? e(t, { color: "success", children: i })
-    : e(t, { dimColor: !0, children: i });
+    ? e(Text, { color: "success", children: i })
+    : e(Text, { dimColor: !0, children: i });
 }
 function Fo(n, s) {
   let i = parseCronExpression(n);
@@ -1004,14 +1004,14 @@ function bt(lr) {
   if (dt) {
     let U;
     if (Q[0] !== dt)
-      ((U = e(t, { dimColor: !0, children: dt })), (Q[0] = dt), (Q[1] = U));
+      ((U = e(Text, { dimColor: !0, children: dt })), (Q[0] = dt), (Q[1] = U));
     else U = Q[1];
     return U;
   }
   if (!S.serviceSupported) {
     let U;
     if (Q[2] === MEMO_CACHE_SENTINEL)
-      ((U = e(t, {
+      ((U = e(Text, {
         dimColor: !0,
         children:
           "service install not available on this platform \u2014 runs on demand",
@@ -1026,7 +1026,7 @@ function bt(lr) {
       : "not installed (runs on demand)";
     let Ve;
     if (Q[3] !== U)
-      ((Ve = e(t, { dimColor: !0, children: U })), (Q[3] = U), (Q[4] = Ve));
+      ((Ve = e(Text, { dimColor: !0, children: U })), (Q[3] = U), (Q[4] = Ve));
     else Ve = Q[4];
     return Ve;
   }
@@ -1055,7 +1055,7 @@ function bt(lr) {
   let qt = U,
     Ve;
   if (Q[8] === MEMO_CACHE_SENTINEL)
-    ((Ve = e(t, { color: "success", children: "running" })), (Q[8] = Ve));
+    ((Ve = e(Text, { color: "success", children: "running" })), (Q[8] = Ve));
   else Ve = Q[8];
   let ut;
   if (Q[9] !== S.lock.pid)
@@ -1086,7 +1086,7 @@ function bt(lr) {
   else ft = Q[16];
   let gt;
   if (Q[17] !== qt)
-    ((gt = qt && e(t, { color: "warning", children: "restart to update" })),
+    ((gt = qt && e(Text, { color: "warning", children: "restart to update" })),
       (Q[17] = qt),
       (Q[18] = gt));
   else gt = Q[18];
@@ -1098,7 +1098,7 @@ function bt(lr) {
     Q[22] !== ft ||
     Q[23] !== gt
   )
-    ((No = e(t, {
+    ((No = e(Text, {
       dimColor: !0,
       children: r(DotSeparatedList, { children: [Ve, ut, mt, pt, ft, gt] }),
     })),

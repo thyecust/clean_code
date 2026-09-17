@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { te } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth } from "../核心工具-字符串与文本/ansi-text-utils.js";
 import { PROPORTION_GLYPH, THINKING_SPINNER_FRAMES } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { o, t, ct, iO } from "./chunk-k8hr56nm.js";
+import { Box, Text, Link, Button } from "./chunk-k8hr56nm.js";
 import { ENGINE_ORIGIN } from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
 import { HooksError } from "../../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js";
 import {
@@ -100,14 +100,14 @@ function de(s, p) {
 var ee = 12;
 F();
 F();
-var JZ = Qt(null);
+var FocusedPress = Qt(null);
 F();
-var Jit = Qt(null);
+var InputFields = Qt(null);
 function re(v) {
   let Q = _(30),
     { plugin: D, handle: ce, element: K, placeholder: xe } = v,
-    Xe = De(JZ),
-    O = De(Jit),
+    Xe = De(FocusedPress),
+    O = De(InputFields),
     { columns: Ge } = useTerminalSize(),
     Er;
   if (Q[0] !== K || Q[1] !== O || Q[2] !== D || Q[3] !== v.value)
@@ -137,7 +137,7 @@ function re(v) {
   E(kr, Ir);
   let ye;
   if (Q[8] !== R || Q[9] !== N)
-    ((ye = N !== "" && e(t, { bold: R, children: N })),
+    ((ye = N !== "" && e(Text, { bold: R, children: N })),
       (Q[8] = R),
       (Q[9] = N),
       (Q[10] = ye));
@@ -161,7 +161,7 @@ function re(v) {
           value: I,
           onChange: (zo) => O.edit({ plugin: D, handle: ce, element: K }, zo),
           placeholder: xe,
-          columns: Math.max(ee, Ge - te(N) - te(X)),
+          columns: Math.max(ee, Ge - getStringWidth(N) - getStringWidth(X)),
           cursorOffset: Math.min(We, I.length),
           onChangeCursorOffset: wr,
           focus: !0,
@@ -169,7 +169,7 @@ function re(v) {
           multiline: !1,
           disableEscapeDoublePress: !0,
         })
-      : e(t, {
+      : e(Text, {
           dimColor: I === "",
           wrap: "truncate-end",
           children: I === "" ? (xe ?? "") : I,
@@ -189,14 +189,14 @@ function re(v) {
   else ge = Q[22];
   let Te;
   if (Q[23] !== X || Q[24] !== R)
-    ((Te = R && e(t, { dimColor: !0, children: X })),
+    ((Te = R && e(Text, { dimColor: !0, children: X })),
       (Q[23] = X),
       (Q[24] = R),
       (Q[25] = Te));
   else Te = Q[25];
   let Sr;
   if (Q[26] !== ye || Q[27] !== ge || Q[28] !== Te)
-    ((Sr = r(o, {
+    ((Sr = r(Box, {
       flexDirection: "row",
       flexShrink: 0,
       children: [ye, ge, Te],
@@ -211,38 +211,38 @@ function re(v) {
 F();
 var S = (s, p) =>
   p.catch((i) => {
-    n(`${s}: ${l(i)}`, { level: "error" });
+    logForDebugging(`${s}: ${l(i)}`, { level: "error" });
     return;
   });
-var Qit = (s) =>
+var pressFromTerminal = (s) =>
   void S(`ui.press ${s.plugin}`, handlePluginPressEvent({ ...s, surface: "terminal" }));
 function Re({ plugin: s, handle: p, label: i, hotkey: f, plain: u }) {
-  let a = De(JZ),
+  let a = De(FocusedPress),
     m = a !== null && a.plugin === s && a.handle === p;
-  return Ry(iO, {
+  return Ry(Button, {
     tabIndex: -1,
     flexShrink: 0,
     alignSelf: "flex-start",
-    onAction: () => Qit({ plugin: s, handle: p }),
+    onAction: () => pressFromTerminal({ plugin: s, handle: p }),
     children: ({ focused: x, hovered: c }) => {
       let y = x || c || m,
         g = u === !0,
         T = f === void 0;
       return g
         ? Ry(
-            t,
+            Text,
             { inverse: y },
-            T ? i : Ry(t, { color: "suggestion" }, f),
+            T ? i : Ry(Text, { color: "suggestion" }, f),
             T ? "" : ": ",
             T ? "" : i,
           )
-        : Ry(t, { inverse: y, bold: !0 }, `[ ${i} ]`);
+        : Ry(Text, { inverse: y, bold: !0 }, `[ ${i} ]`);
     },
   });
 }
 F();
 var oe = 8;
-function Zit(s, p) {
+function listWindow(s, p) {
   let i = Math.max(0, p - oe + 1),
     f = Math.max(0, Math.min(oe, s - i)),
     u = s - i - f;
@@ -250,12 +250,12 @@ function Zit(s, p) {
 }
 F();
 F();
-var eat = Qt(null);
+var SelectFields = Qt(null);
 function fe(G) {
   let b = _(40),
     { plugin: ne, handle: $r, element: ze, options: L } = G,
-    Ye = De(JZ),
-    be = De(eat),
+    Ye = De(FocusedPress),
+    be = De(SelectFields),
     Mr;
   if (b[0] !== ze || b[1] !== be || b[2] !== ne || b[3] !== G.value)
     ((Mr = be?.pickedOf(ne, ze) ?? G.value),
@@ -283,12 +283,12 @@ function fe(G) {
   const W = z ? L.length : 0;
   let Ur;
   if (b[10] !== P || b[11] !== W)
-    ((Ur = Zit(W, P)), (b[10] = P), (b[11] = W), (b[12] = Ur));
+    ((Ur = listWindow(W, P)), (b[10] = P), (b[11] = W), (b[12] = Ur));
   else Ur = b[12];
   let { first: B, size: er, hidden: Ce } = Ur,
     he;
   if (b[13] !== q || b[14] !== Ze)
-    ((he = e(t, { bold: q, children: Ze })),
+    ((he = e(Text, { bold: q, children: Ze })),
       (b[13] = q),
       (b[14] = Ze),
       (b[15] = he));
@@ -297,8 +297,8 @@ function fe(G) {
   if (b[16] !== pe || b[17] !== q || b[18] !== z)
     ((Ee =
       pe === void 0
-        ? e(t, { dimColor: !0, children: "none" })
-        : e(t, { inverse: q && !z, children: pe.label ?? pe.value })),
+        ? e(Text, { dimColor: !0, children: "none" })
+        : e(Text, { inverse: q && !z, children: pe.label ?? pe.value })),
       (b[16] = pe),
       (b[17] = q),
       (b[18] = z),
@@ -307,11 +307,11 @@ function fe(G) {
   const rr = z ? " \u25B4" : " \u25BE";
   let we;
   if (b[20] !== rr)
-    ((we = e(t, { dimColor: !0, children: rr })), (b[20] = rr), (b[21] = we));
+    ((we = e(Text, { dimColor: !0, children: rr })), (b[20] = rr), (b[21] = we));
   else we = b[21];
   let ke;
   if (b[22] !== he || b[23] !== Ee || b[24] !== we)
-    ((ke = r(t, { wrap: "truncate-end", children: [he, Ee, we] })),
+    ((ke = r(Text, { wrap: "truncate-end", children: [he, Ee, we] })),
       (b[22] = he),
       (b[23] = Ee),
       (b[24] = we),
@@ -323,7 +323,7 @@ function fe(G) {
     if (b[31] !== B || b[32] !== P)
       ((H = (or, Lt) =>
         e(
-          t,
+          Text,
           {
             inverse: B + Lt === P,
             wrap: "truncate-end",
@@ -340,13 +340,13 @@ function fe(G) {
   } else Ie = b[30];
   let H;
   if (b[34] !== Ce)
-    ((H = Ce > 0 && e(t, { dimColor: !0, children: `  \u2026 ${Ce} more` })),
+    ((H = Ce > 0 && e(Text, { dimColor: !0, children: `  \u2026 ${Ce} more` })),
       (b[34] = Ce),
       (b[35] = H));
   else H = b[35];
   let Kr;
   if (b[36] !== H || b[37] !== ke || b[38] !== Ie)
-    ((Kr = r(o, {
+    ((Kr = r(Box, {
       flexDirection: "column",
       flexShrink: 0,
       children: [ke, Ie, H],
@@ -359,7 +359,7 @@ function fe(G) {
   return Kr;
 }
 function Pe(s, p) {
-  if (typeof s === "string") return Ry(t, null, s);
+  if (typeof s === "string") return Ry(Text, null, s);
   if (s.type === "engine") return p(s.ref);
   if (s.type === "Button")
     return Ry(Re, {
@@ -388,7 +388,7 @@ function Pe(s, p) {
       options: s.props.options,
       value: s.props.value,
     });
-  if (s.type === "Svg") return Ry(t, { dimColor: !0 }, s.props.alt);
+  if (s.type === "Svg") return Ry(Text, { dimColor: !0 }, s.props.alt);
   let i =
       s.type === "Text" ||
       s.type === "span" ||
@@ -403,14 +403,14 @@ function Pe(s, p) {
       g =
         f.length === 0 && x === void 0
           ? void 0
-          : Ry(t, null, ...c, " ", Ry(t, { dimColor: !0 }, m));
-    return Ry(ct, { url: m, fallback: g }, ...c);
+          : Ry(Text, null, ...c, " ", Ry(Text, { dimColor: !0 }, m));
+    return Ry(Link, { url: m, fallback: g }, ...c);
   }
   if (s.type === "Box" || s.type === "Text")
-    return Ry(s.type === "Box" ? o : t, Qe(s.props), ...f);
+    return Ry(s.type === "Box" ? Box : Text, Qe(s.props), ...f);
   return s.type === "div"
-    ? Ry(o, { flexDirection: "column" }, ...f)
-    : Ry(t, de(s.props?.style, s.type === "b"), ...f);
+    ? Ry(Box, { flexDirection: "column" }, ...f)
+    : Ry(Text, de(s.props?.style, s.type === "b"), ...f);
 }
 F();
 function ve(s) {
@@ -421,7 +421,7 @@ function ve(s) {
 F();
 var Oe = (s, p) => (s ? `${p.component}\x00${p.requestId}\x00` + buildViewportPropsKey(p) : "");
 var _e = (s, p) =>
-  n(`ui.render (${s.component} ${s.requestId}): site failed: ${l(p)}`, {
+  logForDebugging(`ui.render (${s.component} ${s.requestId}): site failed: ${l(p)}`, {
     level: "error",
   });
 function Ne(s, p, { version: i, staticFrame: f, submittedBy: u }) {
@@ -455,15 +455,15 @@ function Ne(s, p, { version: i, staticFrame: f, submittedBy: u }) {
     m
   );
 }
-var S0e = () => useStoreSelector(getRenderVersions(), (s) => s.get(RENDER_EVENT) ?? 0);
-function ben(s, p, i) {
+var useRenderVersion = () => useStoreSelector(getRenderVersions(), (s) => s.get(RENDER_EVENT) ?? 0);
+function useRenderDrawing(s, p, i) {
   let f = hasRenderHookForComponent(s.component),
     u = De(StaticFrameContext),
-    a = Ne(f, s, { version: S0e(), staticFrame: u, submittedBy: i }),
+    a = Ne(f, s, { version: useRenderVersion(), staticFrame: u, submittedBy: i }),
     m = ve(f) || u;
   return {
     node: Ry(
-      o,
+      Box,
       {
         flexDirection: "column",
         renderEvent: RENDER_EVENT,
@@ -474,10 +474,10 @@ function ben(s, p, i) {
     drawn: a,
   };
 }
-var nF = (s, p, i) => ben(s, p, i).node;
+var useRenderHook = (s, p, i) => useRenderDrawing(s, p, i).node;
 F();
-var QL = (s, p, i) => {
-  let f = S0e(),
+var useRenderInput = (s, p, i) => {
+  let f = useRenderVersion(),
     u = V(p, i);
   return V(() => {
     let a = terminalViewport.get();
@@ -489,43 +489,43 @@ var QL = (s, p, i) => {
     };
   }, [s, u, f]);
 };
-var La = {};
-defineExportGetters(La, {
+var ansiPrimitives = {};
+defineExportGetters(ansiPrimitives, {
   BOLD_WEIGHT: () => le,
   FIELD_MIN_COLUMNS: () => ee,
-  FocusedPress: () => JZ,
+  FocusedPress: () => FocusedPress,
   HEX_COLOR_PROPS: () => ue,
   InputField: () => re,
-  InputFields: () => Jit,
+  InputFields: () => InputFields,
   NAMED_TO_HEX: () => Y,
   PressButton: () => Re,
   SelectField: () => fe,
-  SelectFields: () => eat,
+  SelectFields: () => SelectFields,
   VISIBLE_OPTIONS: () => oe,
-  default: () => La,
-  fieldKey: () => b0e,
+  default: () => ansiPrimitives,
+  fieldKey: () => fieldKey,
   heldFor: () => Ke,
   hexOfNamed: () => Z,
   inkTextPropsOf: () => de,
-  inputFromTerminal: () => wen,
-  listWindow: () => Zit,
-  pressFromTerminal: () => Qit,
+  inputFromTerminal: () => inputFromTerminal,
+  listWindow: () => listWindow,
+  pressFromTerminal: () => pressFromTerminal,
   rebuild: () => Pe,
   renderInputKey: () => Oe,
-  selectFromTerminal: () => OUn,
+  selectFromTerminal: () => selectFromTerminal,
   settleQuietly: () => S,
   siteFailed: () => _e,
   useEngineDrew: () => ve,
   useRenderAnswer: () => Ne,
-  useRenderDrawing: () => ben,
-  useRenderHook: () => nF,
-  useRenderInput: () => QL,
-  useRenderVersion: () => S0e,
+  useRenderDrawing: () => useRenderDrawing,
+  useRenderHook: () => useRenderHook,
+  useRenderInput: () => useRenderInput,
+  useRenderVersion: () => useRenderVersion,
   withHexColors: () => Qe,
 });
-var b0e = (s, p) => `${s}\x00${p}`;
-var wen = (s) => S(`ui.input ${s.plugin}`, handlePluginInputEvent({ ...s, surface: "terminal" }));
-var OUn = (s) => S(`ui.select ${s.plugin}`, handlePluginSelectEvent({ ...s, surface: "terminal" }));
+var fieldKey = (s, p) => `${s}\x00${p}`;
+var inputFromTerminal = (s) => S(`ui.input ${s.plugin}`, handlePluginInputEvent({ ...s, surface: "terminal" }));
+var selectFromTerminal = (s) => S(`ui.select ${s.plugin}`, handlePluginSelectEvent({ ...s, surface: "terminal" }));
 function pr() {
   return !1;
 }
@@ -534,10 +534,10 @@ function jA(s) {
     i = useQueuedMessageContext()?.isQueued === !0;
   return !s && !p && !i && pr();
 }
-function QZ(Fe) {
+function StatusRow(Fe) {
   let M = _(25),
     { tone: me, text: ir, detail: Le, subLines: fr, linkify: Gs } = Fe,
-    w = Gs ? LinkifiedText : t,
+    w = Gs ? LinkifiedText : Text,
     mr =
       Fe.state === "live" && !Fe.reducedMotion
         ? THINKING_SPINNER_FRAMES[Fe.frame % THINKING_SPINNER_FRAMES.length]
@@ -547,7 +547,7 @@ function QZ(Fe) {
   const lr = me === "red" ? "error:" : me === "gold" ? "warning:" : void 0;
   let Be;
   if (M[0] !== J || M[1] !== A || M[2] !== mr || M[3] !== lr)
-    ((Be = r(t, {
+    ((Be = r(Text, {
       "aria-hidden": A,
       "aria-label": lr,
       italic: !0,
@@ -569,14 +569,14 @@ function QZ(Fe) {
   if (M[8] !== w || M[9] !== Le)
     ((Ae =
       Le !== void 0 &&
-      r(t, { dimColor: !0, children: [" \xB7 ", e(w, { children: Le })] })),
+      r(Text, { dimColor: !0, children: [" \xB7 ", e(w, { children: Le })] })),
       (M[8] = w),
       (M[9] = Le),
       (M[10] = Ae));
   else Ae = M[10];
   let Ve;
   if (M[11] !== J || M[12] !== A || M[13] !== He || M[14] !== Ae)
-    ((Ve = r(t, { italic: !0, color: J, dimColor: A, children: [He, Ae] })),
+    ((Ve = r(Text, { italic: !0, color: J, dimColor: A, children: [He, Ae] })),
       (M[11] = J),
       (M[12] = A),
       (M[13] = He),
@@ -586,7 +586,7 @@ function QZ(Fe) {
   let $e;
   if (M[16] !== w || M[17] !== fr)
     (($e = fr?.map((Ws, qs) =>
-      e(t, { dimColor: !0, children: e(w, { children: Ws }) }, qs),
+      e(Text, { dimColor: !0, children: e(w, { children: Ws }) }, qs),
     )),
       (M[16] = w),
       (M[17] = fr),
@@ -594,18 +594,18 @@ function QZ(Fe) {
   else $e = M[18];
   let je;
   if (M[19] !== Ve || M[20] !== $e)
-    ((je = r(o, { flexDirection: "column", flexGrow: 1, children: [Ve, $e] })),
+    ((je = r(Box, { flexDirection: "column", flexGrow: 1, children: [Ve, $e] })),
       (M[19] = Ve),
       (M[20] = $e),
       (M[21] = je));
   else je = M[21];
   let io;
   if (M[22] !== Be || M[23] !== je)
-    ((io = r(o, { flexDirection: "row", children: [Be, je] })),
+    ((io = r(Box, { flexDirection: "row", children: [Be, je] })),
       (M[22] = Be),
       (M[23] = je),
       (M[24] = io));
   else io = M[24];
   return io;
 }
-export { JZ, Jit, Qit, Zit, eat, S0e, ben, b0e, wen, OUn, nF, QL, La, QZ, jA };
+export { FocusedPress, InputFields, pressFromTerminal, listWindow, SelectFields, useRenderVersion, useRenderDrawing, fieldKey, inputFromTerminal, selectFromTerminal, useRenderHook, useRenderInput, ansiPrimitives, StatusRow, jA };

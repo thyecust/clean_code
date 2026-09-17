@@ -24,7 +24,7 @@ import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js"
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isBriefEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
-import { ubt, dbt, pbt, fbt } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { resolveAttachmentUploadLane, shouldRenderAttachmentsLocally, validateAttachments, resolveAttachmentsForUpload } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, O, v, c, Qe, X, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var g = createLazyValue(() =>
     Qe({
@@ -157,10 +157,10 @@ Tell the user the ${pluralize(r.length, "file was", "files were")} not delivered
   create(e) {
     return {
       async validateInput({ files: n }) {
-        return pbt(n, e.permissions());
+        return validateAttachments(n, e.permissions());
       },
       async call({ files: n, caption: r, status: o, display: l }, d) {
-        let t = ubt({ replBridgeEnabled: e.replBridgeEnabled() });
+        let t = resolveAttachmentUploadLane({ replBridgeEnabled: e.replBridgeEnabled() });
         logEvent("tengu_send_user_file", {
           proactive: o === "proactive",
           file_count: n.length,
@@ -168,7 +168,7 @@ Tell the user the ${pluralize(r.length, "file was", "files were")} not delivered
           display_attach: l === "attach",
           upload_lane: fromEnum(t),
         });
-        let f = await fbt(n, {
+        let f = await resolveAttachmentsForUpload(n, {
           lane: t,
           signal: d.signal,
           credentials: e.credentials,
@@ -178,7 +178,7 @@ Tell the user the ${pluralize(r.length, "file was", "files were")} not delivered
             caption: r,
             display: l,
             attachments: f,
-            ...(dbt(t) && { rendered_locally: !0 }),
+            ...(shouldRenderAttachmentsLocally(t) && { rendered_locally: !0 }),
           },
         };
       },

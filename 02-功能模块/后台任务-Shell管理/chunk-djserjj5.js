@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { b, z, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, getFsSurface } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { processIdentity } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { writeFileAtomic, writeFileAtomicSync } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
@@ -103,7 +103,7 @@ async function getCurrentUid() {
   return e;
 }
 function hasUidCollapse() {
-  return ((processIdentity.uidsCollapse ??= L(ae())), processIdentity.uidsCollapse);
+  return ((processIdentity.uidsCollapse ??= L(getFsSurface())), processIdentity.uidsCollapse);
 }
 function L(e) {
   return !1;
@@ -404,7 +404,7 @@ function encodeDataFrame(e) {
   return (n.writeUInt32BE(t.length, 0), n.writeUInt8(FRAME_KIND_DATA, 4), t.copy(n, f), n);
 }
 function encodeControlFrame(e) {
-  let t = Buffer.from(b(e), "utf8"),
+  let t = Buffer.from(jsonStringify(e), "utf8"),
     n = Buffer.allocUnsafe(f + t.length);
   return (n.writeUInt32BE(t.length, 0), n.writeUInt8(FRAME_KIND_CONTROL, 4), t.copy(n, f), n);
 }
@@ -429,7 +429,7 @@ function createFrameDecoder(e, t) {
       else if (p === FRAME_KIND_CONTROL) {
         let w;
         try {
-          w = z(g.toString("utf8"));
+          w = jsonParse(g.toString("utf8"));
         } catch {
           ((r = !0), t("bad ctrl json"));
           return;

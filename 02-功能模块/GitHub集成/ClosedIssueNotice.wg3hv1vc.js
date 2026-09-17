@@ -18,7 +18,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, Kd, Vje } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -78,7 +78,7 @@ async function O(e) {
     g = null;
   if (l === 0)
     try {
-      g = z(u)
+      g = jsonParse(u)
         .filter((p) => p.stateReason === "COMPLETED")
         .map((p) => ({
           number: p.number,
@@ -86,24 +86,24 @@ async function O(e) {
           closedAt: p.closedAt,
         }));
     } catch (r) {
-      n(`Failed to parse gh issue list output: ${r}`, { level: "error" });
+      logForDebugging(`Failed to parse gh issue list output: ${r}`, { level: "error" });
     }
   if (g !== null)
     if (isHoverRestEnabled() && e !== void 0)
       try {
-        let r = await e.write(K(), b(g), { mode: 438 & ~process.umask() });
+        let r = await e.write(K(), jsonStringify(g), { mode: 438 & ~process.umask() });
         if (!r.ok)
-          n(`Failed to write closed-issues cache: ${We(r.error)}`, {
+          logForDebugging(`Failed to write closed-issues cache: ${describeStorageError(r.error)}`, {
             level: "error",
           });
       } catch (r) {
-        n(`Failed to write closed-issues cache: ${r}`, { level: "error" });
+        logForDebugging(`Failed to write closed-issues cache: ${r}`, { level: "error" });
       }
     else
       try {
         await B().write(g);
       } catch (r) {
-        n(`Failed to write closed-issues cache: ${r}`, { level: "error" });
+        logForDebugging(`Failed to write closed-issues cache: ${r}`, { level: "error" });
       }
   let w = t.closedIssuesAcknowledged ?? [],
     d = w;
@@ -130,18 +130,18 @@ async function S(e) {
     try {
       t = await e.read([K()]);
     } catch (l) {
-      if (Kd(l)) n(`closed-issues cache read failed: ${l}`);
+      if (Kd(l)) logForDebugging(`closed-issues cache read failed: ${l}`);
       else logError(l);
       return [];
     }
     if (!t.ok) {
       let l = t.error;
       if ("telemetryCode" in l && Vje(l.telemetryCode))
-        n(`closed-issues cache read failed: ${We(l)}`);
+        logForDebugging(`closed-issues cache read failed: ${describeStorageError(l)}`);
       else
         logError(
           new R(
-            `closed-issues cache read failed: ${We(l)}`,
+            `closed-issues cache read failed: ${describeStorageError(l)}`,
             "closed-issues cache read failed (v5 backend error)",
           ),
         );
@@ -151,17 +151,17 @@ async function S(e) {
     if (!o?.found) return [];
     let a;
     try {
-      a = z(Buffer.from(o.value).toString("utf-8"));
+      a = jsonParse(Buffer.from(o.value).toString("utf-8"));
     } catch (l) {
       return (
-        n(`closed-issues cache is not valid JSON: ${l}`, { level: "warn" }),
+        logForDebugging(`closed-issues cache is not valid JSON: ${l}`, { level: "warn" }),
         []
       );
     }
     let u = L().safeParse(a);
     if (!u.success)
       return (
-        n(`closed-issues cache failed schema validation: ${u.error.message}`, {
+        logForDebugging(`closed-issues cache failed schema validation: ${u.error.message}`, {
           level: "warn",
         }),
         []
@@ -171,7 +171,7 @@ async function S(e) {
   try {
     return await B().read();
   } catch (t) {
-    if (Kd(t)) n(`closed-issues cache read failed: ${t}`);
+    if (Kd(t)) logForDebugging(`closed-issues cache read failed: ${t}`);
     else logError(t);
     return [];
   }

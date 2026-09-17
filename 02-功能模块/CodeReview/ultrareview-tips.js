@@ -13,7 +13,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { Zt, Io, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
@@ -31,10 +31,10 @@ async function v(e) {
   let r = a.CLAUDE_CODE_ULTRAREVIEW_QUOTA_FIXTURE;
   if (r)
     try {
-      let t = f().safeParse(z(r));
+      let t = f().safeParse(jsonParse(r));
       return t.success ? t.data : null;
     } catch (t) {
-      return (n(`fetchUltrareviewQuota fixture parse failed: ${t}`), null);
+      return (logForDebugging(`fetchUltrareviewQuota fixture parse failed: ${t}`), null);
     }
   try {
     let t = await httpClient.get("/v1/ultrareview/quota", {
@@ -46,14 +46,14 @@ async function v(e) {
     let o = f().safeParse(t.data);
     if (!o.success)
       return (
-        n(`fetchUltrareviewQuota schema mismatch: ${o.error.message}`),
+        logForDebugging(`fetchUltrareviewQuota schema mismatch: ${o.error.message}`),
         logFeatureSad("api_ultrareview_quota", "schema_mismatch"),
         null
       );
     return (logFeatureOk("api_ultrareview_quota"), o.data);
   } catch (t) {
     return (
-      n(`fetchUltrareviewQuota failed: ${t}`),
+      logForDebugging(`fetchUltrareviewQuota failed: ${t}`),
       logFeatureSad("api_ultrareview_quota", "request_failed"),
       null
     );

@@ -12,16 +12,16 @@
 import { CHANNEL_TAG, CHANNEL_SOURCE_OPEN_TAG } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { INBOUND_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { M5 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { unescapeHtmlAttribute } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import { EXTERNAL_MESSAGE_PREFIX, getExternalSourceWarning, EXTERNAL_MESSAGE_REPLY_HINT } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
+import "../语法高亮-Markdown渲染/markdown-renderer.js";
 import { TruncatedText } from "../工具UI渲染/chunk-g4k5jjwt.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -88,9 +88,9 @@ function UserChannelMessage(gt) {
       if (!z) {
         I = b
           ? e(TruncatedText, { text: T.trim() })
-          : e(o, {
+          : e(Box, {
               marginTop: W ? 1 : 0,
-              children: e(t, { children: T.trim() }),
+              children: e(Text, { children: T.trim() }),
             });
         break bb0;
       }
@@ -101,7 +101,7 @@ function UserChannelMessage(gt) {
         let xt = P.slice(H);
         if (J.includes(xt)) P = P.slice(0, H);
       }
-      let rt = M5(L);
+      let rt = unescapeHtmlAttribute(L);
       if (g === `${EXTERNAL_MESSAGE_PREFIX}${rt} while you were working:` || g === `${EXTERNAL_MESSAGE_PREFIX}${rt}:`)
         g = "";
       let j = P.slice(dt.length);
@@ -125,11 +125,11 @@ function UserChannelMessage(gt) {
       }
       let Rt = `${g ? `${g} ` : ""}${j}`.trim().replace(/\s+/g, " ");
       K = truncateToWidth(Rt, Y);
-      B = o;
+      B = Box;
       F = W ? 1 : 0;
-      U = t;
+      U = Text;
       if (u[18] === MEMO_CACHE_SENTINEL)
-        ((E = e(t, {
+        ((E = e(Text, {
           "aria-label": "inbound:",
           color: "suggestion",
           children: INBOUND_ARROW_GLYPH,
@@ -137,10 +137,10 @@ function UserChannelMessage(gt) {
           (u[18] = E));
       else E = u[18];
       D = " ";
-      O = t;
+      O = Text;
       G = !0;
-      M = Q(M5(L));
-      A = tt ? ` \xB7 ${M5(tt)}` : "";
+      M = Q(unescapeHtmlAttribute(L));
+      A = tt ? ` \xB7 ${unescapeHtmlAttribute(tt)}` : "";
     }
     ((u[0] = W),
       (u[1] = b),

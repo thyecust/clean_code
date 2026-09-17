@@ -13,7 +13,7 @@ import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js"
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { IMPORT_NO_MANUAL_CONFIG_INSTRUCTION } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { fO, Qw, b3e, Ilt } from "./chunk-ncbnx9cz.js";
+import { sanitizeImportField, sanitizeImportMessage, writeImportFallbackSkill, scanImportSources } from "./agent-import.js";
 import { isAutoImportableItem, classifyImportItem } from "../共享小工具-未细化/import-items.js";
 import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { createHash } from "crypto";
@@ -49,7 +49,7 @@ var _ = async (d, p) => {
     r = u.includes("--dry-run"),
     t = u.find((s) => s === "--yes" || s.startsWith("--yes=")),
     n = u.find((s) => !s.startsWith("-")),
-    { scans: g, error: m, warnings: h } = await Ilt({ from: n });
+    { scans: g, error: m, warnings: h } = await scanImportSources({ from: n });
   if (m) return { type: "text", value: m };
   if (g.length === 0)
     return { type: "text", value: "No importable agent config found." };
@@ -96,8 +96,8 @@ function v(d, p, u, r) {
   if (m.length > 0) {
     o.push(`User-level config (${m.length}):`);
     for (let e of m) {
-      let f = e.warning ? ` \u2014 \u26A0 ${Qw(e.warning)}` : "";
-      o.push(`- [${e.kind}] ${fO(e.label)}${f}`);
+      let f = e.warning ? ` \u2014 \u26A0 ${sanitizeImportMessage(e.warning)}` : "";
+      o.push(`- [${e.kind}] ${sanitizeImportField(e.label)}${f}`);
     }
     o.push("");
   }
@@ -112,7 +112,7 @@ function v(d, p, u, r) {
     o.push(
       `Also ${n.length} ${pluralize(n.length, "item")} with no automatic mapping${e.length > 0 ? ":" : "."}`,
     );
-    for (let w of e) o.push(`- ${fO(w.label)} \u2014 ${w.reason}`);
+    for (let w of e) o.push(`- ${sanitizeImportField(w.label)} \u2014 ${w.reason}`);
     if (f > 0) o.push(`- ${f} from project-level config`);
     o.push("");
   }
@@ -155,15 +155,15 @@ async function S(d, p, u, r) {
   for (let a of g)
     try {
       let y = await a.apply({ dryRun: p, storageV5: r });
-      if (typeof y === "string") (c.push(`  \u2713 ${Qw(y)}`), s++);
-      else c.push(`  - skipped ${Qw(y.skipped)}`);
+      if (typeof y === "string") (c.push(`  \u2713 ${sanitizeImportMessage(y)}`), s++);
+      else c.push(`  - skipped ${sanitizeImportMessage(y.skipped)}`);
     } catch (y) {
-      c.push(`  \u2717 ${fO(a.label)}: ${Qw(l(y))}`);
+      c.push(`  \u2717 ${sanitizeImportField(a.label)}: ${sanitizeImportMessage(l(y))}`);
     }
   let o = !1;
   if (n.length > 0)
     try {
-      let a = await b3e(
+      let a = await writeImportFallbackSkill(
         d.map((y) => ({
           sourceId: y.sourceId,
           displayName: y.displayName,
@@ -171,10 +171,10 @@ async function S(d, p, u, r) {
         })),
         { dryRun: p },
       );
-      if (typeof a === "string") (c.push(`  \u2713 ${Qw(a)}`), (o = !0));
-      else c.push(`  - skipped ${Qw(a.skipped)}`);
+      if (typeof a === "string") (c.push(`  \u2713 ${sanitizeImportMessage(a)}`), (o = !0));
+      else c.push(`  - skipped ${sanitizeImportMessage(a.skipped)}`);
     } catch (a) {
-      c.push(`  \u2717 fallback skill: ${Qw(l(a))}`);
+      c.push(`  \u2717 fallback skill: ${sanitizeImportMessage(l(a))}`);
     }
   logEvent("tengu_import_apply", { imported: s, dry_run: p ? 1 : 0 });
   let e = p

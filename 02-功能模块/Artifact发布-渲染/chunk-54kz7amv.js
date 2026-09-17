@@ -11,8 +11,8 @@ import { ze, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ARTIFACT_WATCH_LIFECYCLE_ORIGIN } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { buildUdsAddress, getCanonicalSocketPath, ARTIFACT_YIELD_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
   enqueuePendingNotification,
   buildTaskNotification,
@@ -34,11 +34,11 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { createMessageEnvelope } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
-import { Nu, qI, mD, sendControlToUdsSocket, sendStampedControlToUdsSocket, listRegisteredSessionRecords, ownMessagingSocket } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { ne } from "./chunk-rr78st95.js";
+import { formatRedactedPreview, formatRedactedErrorDetail, isRetryableSendError, sendControlToUdsSocket, sendStampedControlToUdsSocket, listRegisteredSessionRecords, ownMessagingSocket } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { getArtifactState } from "./chunk-rr78st95.js";
 import { isArtifactReplyYieldEnabled, MAX_YIELD_SLUGS, unrefTimers, waitForYieldAnswer, cancelOutstandingYieldWait, setReplyYieldHolder } from "./artifact-reply-yield.js";
 import { isBackgroundSessionKind, describeHolderSession, scheduleArtifactAutoReactWake } from "./chunk-p1dkvpxj.js";
-import { Ibe } from "./chunk-5gz5xvw9.js";
+import { stopArtifactCommentMonitor } from "./artifact-comment-monitor-intent.js";
 import { getBootingAutoReactArmSlugs } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -111,7 +111,7 @@ async function ee(e) {
     Y = (t) => (getCurrentPlatform() !== "windows" ? { expectPeerPid: t } : {}),
     v = [],
     D = new Set(),
-    { wakes: b, autoReact: X, durable: V } = ne(),
+    { wakes: b, autoReact: X, durable: V } = getArtifactState(),
     W = (t) => {
       for (let d of t.yielded) {
         let i = b.takenFrom.get(d) ?? [];
@@ -148,8 +148,8 @@ async function ee(e) {
       };
       u(t.sock, _, Y(t.pid)).catch((p) => {
         if (
-          (n(`[reply-yield] unyield to ${Nu(t.sock)} failed: ${qI(String(p))}`),
-          mD(p) && !isProcessRunning(t.pid))
+          (logForDebugging(`[reply-yield] unyield to ${formatRedactedPreview(t.sock)} failed: ${formatRedactedErrorDetail(String(p))}`),
+          isRetryableSendError(p) && !isProcessRunning(t.pid))
         ) {
           logFeatureSad("artifact_live_subscribe", "unyield_holder_gone");
           return;
@@ -158,7 +158,7 @@ async function ee(e) {
           void u(t.sock, _, Y(t.pid)).catch(() => {
             logFeatureSad("artifact_live_subscribe", "unyield_send_failed");
           });
-        if (mD(p)) I.setTimeout(k, z);
+        if (isRetryableSendError(p)) I.setTimeout(k, z);
         else k();
       });
     },
@@ -210,7 +210,7 @@ async function ee(e) {
             Y(t.pid),
           );
         } catch (_) {
-          if (mD(_)) {
+          if (isRetryableSendError(_)) {
             let p = cancelOutstandingYieldWait(d.msg_id),
               k = p.map(([J]) => J);
             return isProcessRunning(t.pid)
@@ -298,7 +298,7 @@ function handBackTakenOverSlug(e, o = sendControlToUdsSocket) {
   j(e, !1, o);
 }
 function j(e, o, r) {
-  let { wakes: a } = ne(),
+  let { wakes: a } = getArtifactState(),
     s = a.takenFrom.get(e);
   if (s === void 0 || isSlugYielded(e)) return;
   a.takenFrom.delete(e);
@@ -312,15 +312,15 @@ function j(e, o, r) {
       h = getCurrentPlatform() !== "windows" ? { expectPeerPid: l.pid } : {};
     r(l.sock, f, h).catch((c) => {
       if (
-        (n(`[reply-yield] release to ${Nu(l.sock)} failed: ${qI(String(c))}`),
-        mD(c) && !isProcessRunning(l.pid))
+        (logForDebugging(`[reply-yield] release to ${formatRedactedPreview(l.sock)} failed: ${formatRedactedErrorDetail(String(c))}`),
+        isRetryableSendError(c) && !isProcessRunning(l.pid))
       )
         return;
       let u = () =>
         void r(l.sock, f, h).catch(() => {
           logFeatureSad("artifact_live_subscribe", "takeover_release_failed");
         });
-      if (mD(c)) unrefTimers.setTimeout(u, z);
+      if (isRetryableSendError(c)) unrefTimers.setTimeout(u, z);
       else u();
     });
   }
@@ -371,9 +371,9 @@ function notifyModelOfReplyYield(e, o) {
   enqueuePendingNotification({
     value: buildTaskNotification({
       taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
-      summary: Nt(r),
+      summary: escapeHtmlText(r),
       body: `
-<event>${Nt(a)}</event>`,
+<event>${escapeHtmlText(a)}</event>`,
     }),
     mode: "task-notification",
     passive: !0,
@@ -423,7 +423,7 @@ function registerReplyYieldHolder(e) {
   );
 }
 function se(e, o) {
-  let { live: r, autoReact: a, durable: s } = ne(),
+  let { live: r, autoReact: a, durable: s } = getArtifactState(),
     l = [],
     f = [],
     h = [];
@@ -448,7 +448,7 @@ function se(e, o) {
   return { yielded: l, notHeld: f, newlyYielded: h };
 }
 function E(e) {
-  let { live: o } = ne(),
+  let { live: o } = getArtifactState(),
     r = o.supervisors.get(e);
   return (
     (r !== void 0 && !r.stopped && r.autoReactWiring !== void 0) ||
@@ -457,11 +457,11 @@ function E(e) {
   );
 }
 function re(e, o) {
-  let { live: r } = ne(),
+  let { live: r } = getArtifactState(),
     a = [];
   for (let s of o) {
     if (!releaseYieldedSlugMessage(s, e)) continue;
-    if ((refreshSummonArmForSlug(r, s), isSlugStopped(s) && !isSlugSwept(s))) (Ibe(s), notifyTakenOverSlugStopped(s));
+    if ((refreshSummonArmForSlug(r, s), isSlugStopped(s) && !isSlugSwept(s))) (stopArtifactCommentMonitor(s), notifyTakenOverSlugStopped(s));
     a.push(s);
     let l = r.supervisors.get(s);
     if (!isSlugStopped(s) && !E(s)) handBackTakenOverSlug(s);

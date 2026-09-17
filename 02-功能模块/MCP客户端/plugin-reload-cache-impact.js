@@ -10,10 +10,10 @@
 import { he, jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
-import { $J } from "../插件系统/chunk-7s6mt1vg.js";
+import { $J } from "../插件系统/plugin-system-core.js";
 import {
   discoverPluginMcpServers,
   getAgentDefinitionsWithOverrides,
@@ -44,7 +44,7 @@ async function EDt(r, o) {
 }
 async function refreshActivePlugins(r, o, m, p = {}) {
   let d = p.applyStagedInstalls ?? !0;
-  if ((n("refreshActivePlugins: clearing all plugin caches"), d)) clearInstalledPluginsCache();
+  if ((logForDebugging("refreshActivePlugins: clearing all plugin caches"), d)) clearInstalledPluginsCache();
   if ((refreshPluginState(o, m), d)) clearOrphanedVersionGlobCache();
   let g = await loadAllPlugins(o, m);
   (resetShellProviderCache(), SandboxManager.refreshConfig());
@@ -89,7 +89,7 @@ async function refreshActivePlugins(r, o, m, p = {}) {
   } catch (e) {
     ((A = !0),
       logError(e),
-      n(`refreshActivePlugins: loadPluginHooks failed: ${l(e)}`));
+      logForDebugging(`refreshActivePlugins: loadPluginHooks failed: ${l(e)}`));
   }
   let j = t.reduce((e, a) => {
     if (!a.hooksConfig) return e;
@@ -103,7 +103,7 @@ async function refreshActivePlugins(r, o, m, p = {}) {
   }, 0);
   return (
     skillsChangedEmitter.emit(),
-    n(
+    logForDebugging(
       `refreshActivePlugins: ${t.length} enabled, ${f.length} commands, ${y.length} skills, ${c.allAgents.length} agents, ${j} hooks, ${S} MCP, ${_} LSP`,
     ),
     {

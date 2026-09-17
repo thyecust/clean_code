@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { iK, Nk } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
+import { applyColorSpec, getThemePalette } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 function getThemeColor(e, r, o = "foreground") {
   return (t) => {
     if (!e) return t;
@@ -17,9 +17,9 @@ function getThemeColor(e, r, o = "foreground") {
       e.startsWith("ansi256(") ||
       e.startsWith("ansi:")
     )
-      return iK(t, e, o);
-    let i = typeof r === "string" ? Nk(r) : r;
-    return iK(t, i[e], o);
+      return applyColorSpec(t, e, o);
+    let i = typeof r === "string" ? getThemePalette(r) : r;
+    return applyColorSpec(t, i[e], o);
   };
 }
 export { getThemeColor };

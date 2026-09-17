@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { njn, aNt } from "../../02-功能模块/Bridge-RemoteControl/chunk-hbndb8am.js";
+import { createChromeSocketClient as njn, createClaudeForChromeMcpServer as aNt } from "../../02-功能模块/Bridge-RemoteControl/chrome-bridge-mcp-server.js";
 import "../../02-功能模块/ClaudeinChrome/chrome-tool-error-classifier.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "../../02-功能模块/MCP客户端/mcp-server.js";
-import "../../02-功能模块/MCP客户端/chunk-98spw152.js";
+import "../../02-功能模块/MCP客户端/mcp-protocol.js";
 import "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
 export {
   njn as createChromeSocketClient,

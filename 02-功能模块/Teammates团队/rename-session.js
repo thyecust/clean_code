@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { asSystemPrompt, applySessionNameAndTitle, getLastCacheSafeParams, isMainThreadCacheWarm, runForkedAgent, createUserMessage, joinTextBlocks, wrapSystemReminder, runSmallFastModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createMainAgentContext, sanitizeSessionName, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -57,7 +57,7 @@ async function f(t) {
     return p(r);
   } catch (o) {
     if (!t.aborted)
-      n(`generateSessionName fork failed: ${l(o)}`, { level: "error" });
+      logForDebugging(`generateSessionName fork failed: ${l(o)}`, { level: "error" });
     return null;
   }
 }
@@ -100,7 +100,7 @@ ${o}
       s = joinTextBlocks(r.message.content);
     return p(s);
   } catch (r) {
-    return (n(`generateSessionName failed: ${l(r)}`, { level: "error" }), null);
+    return (logForDebugging(`generateSessionName failed: ${l(r)}`, { level: "error" }), null);
   }
 }
 function buildRenameSystemReminder(t, e = t) {

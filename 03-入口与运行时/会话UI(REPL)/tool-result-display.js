@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { formatOverflowHint } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatOverflowHint } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindingChordText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { VirtualScrollViewportContext } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
@@ -45,7 +45,7 @@ function TranscriptExpandHint() {
   else W = V[0];
   let G;
   if (V[1] !== S)
-    ((G = e(t, {
+    ((G = e(Text, {
       dimColor: !0,
       children: e(KeybindingHint, { chord: S, action: "expand", parens: !0, format: W }),
     })),
@@ -72,7 +72,7 @@ function OverflowHint(Eo) {
   else A = v[4];
   let z;
   if (v[5] !== g || v[6] !== A)
-    ((z = r(t, { dimColor: !0, children: [g, A] })),
+    ((z = r(Text, { dimColor: !0, children: [g, A] })),
       (v[5] = g),
       (v[6] = A),
       (v[7] = z));
@@ -155,9 +155,9 @@ function ToolErrorMessage(Bo) {
       1 -
       MAX_ERROR_MESSAGE_LINES;
     T = ToolResultRow;
-    b = o;
+    b = Box;
     B = "column";
-    y = t;
+    y = Text;
     P = "error";
     k = f
       ? m

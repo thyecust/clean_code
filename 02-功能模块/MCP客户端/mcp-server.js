@@ -25,7 +25,7 @@ import {
   ListRootsResultSchema,
   McpError,
 } from "./chunk-tv3jbp8f.js";
-import { uhe, C1, C2e, Xtt, xkt, Ytt, Hkt, Ikt } from "./chunk-98spw152.js";
+import { isZ4Schema, safeParse, getObjectShape, Protocol, mergeCapabilities, AjvJsonSchemaValidator, assertToolsCallTaskCapability, assertClientRequestTaskCapability } from "./mcp-protocol.js";
 class g {
   constructor(e) {
     this._server = e;
@@ -108,7 +108,7 @@ class g {
     return this._server.cancelTask({ taskId: e }, t);
   }
 }
-class McpServer extends Xtt {
+class McpServer extends Protocol {
   constructor(e, t) {
     super(t);
     if (
@@ -123,7 +123,7 @@ class McpServer extends Xtt {
       }),
       (this._capabilities = t?.capabilities ?? {}),
       (this._instructions = t?.instructions),
-      (this._jsonSchemaValidator = t?.jsonSchemaValidator ?? new Ytt()),
+      (this._jsonSchemaValidator = t?.jsonSchemaValidator ?? new AjvJsonSchemaValidator()),
       this.setRequestHandler(InitializeRequestSchema, (i) => this._oninitialize(i)),
       this.setNotificationHandler(InitializedNotificationSchema, () => this.oninitialized?.()),
       this._capabilities.logging)
@@ -144,13 +144,13 @@ class McpServer extends Xtt {
   registerCapabilities(e) {
     if (this.transport)
       throw Error("Cannot register capabilities after connecting to transport");
-    this._capabilities = xkt(this._capabilities, e);
+    this._capabilities = mergeCapabilities(this._capabilities, e);
   }
   setRequestHandler(e, t) {
-    let s = C2e(e)?.method;
+    let s = getObjectShape(e)?.method;
     if (!s) throw Error("Schema is missing a method literal");
     let o;
-    if (uhe(s)) {
+    if (isZ4Schema(s)) {
       let r = s;
       o = r._zod?.def?.value ?? r.value;
     } else {
@@ -161,7 +161,7 @@ class McpServer extends Xtt {
       throw Error("Schema method literal must be a string");
     if (o === "tools/call") {
       let r = async (h, c) => {
-        let a = C1(CallToolRequestSchema, h);
+        let a = safeParse(CallToolRequestSchema, h);
         if (!a.success) {
           let p = a.error instanceof Error ? a.error.message : String(a.error);
           throw new McpError(ErrorCode.InvalidParams, `Invalid tools/call request: ${p}`);
@@ -169,7 +169,7 @@ class McpServer extends Xtt {
         let { params: l } = a.data,
           u = await Promise.resolve(t(h, c));
         if (l.task) {
-          let p = C1(CreateTaskResultSchema, u);
+          let p = safeParse(CreateTaskResultSchema, u);
           if (!p.success) {
             let d =
               p.error instanceof Error ? p.error.message : String(p.error);
@@ -180,7 +180,7 @@ class McpServer extends Xtt {
           }
           return p.data;
         }
-        let f = C1(CallToolResultSchema, u);
+        let f = safeParse(CallToolResultSchema, u);
         if (!f.success) {
           let p = f.error instanceof Error ? f.error.message : String(f.error);
           throw new McpError(ErrorCode.InvalidParams, `Invalid tools/call result: ${p}`);
@@ -294,11 +294,11 @@ class McpServer extends Xtt {
     }
   }
   assertTaskCapability(e) {
-    Ikt(this._clientCapabilities?.tasks?.requests, e, "Client");
+    assertClientRequestTaskCapability(this._clientCapabilities?.tasks?.requests, e, "Client");
   }
   assertTaskHandlerCapability(e) {
     if (!this._capabilities) return;
-    Hkt(this._capabilities.tasks?.requests, e, "Server");
+    assertToolsCallTaskCapability(this._capabilities.tasks?.requests, e, "Server");
   }
   async _oninitialize(e) {
     let t = e.params.protocolVersion;

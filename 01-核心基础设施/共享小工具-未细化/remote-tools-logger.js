@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 function logRemoteToolsEvent(e, o, g = {}, d = "debug") {
   let t = e === void 0 ? "[remote-tools]" : `[remote-tools call=${e}]`,
     i = Object.entries(g)
       .flatMap(([u, r]) => (r === void 0 ? [] : [`${u}=${r}`]))
       .join(" ");
-  n(i === "" ? `${t} ${o}` : `${t} ${o} ${i}`, { level: d });
+  logForDebugging(i === "" ? `${t} ${o}` : `${t} ${o} ${i}`, { level: d });
 }
 export { logRemoteToolsEvent };

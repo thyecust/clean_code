@@ -15,9 +15,9 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { l, A, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isCustomizationDisabled } from "./chunk-dqyc6kge.js";
-import { qSt, Nk, Tj } from "./chunk-jz6b76hr.js";
+import { isBuiltinThemeName, getThemePalette, isValidThemeColorValue } from "./chunk-jz6b76hr.js";
 import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { serializeAsyncCalls } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
@@ -91,20 +91,20 @@ function parseCustomThemeRef(e) {
 function E(e, t, r) {
   let i;
   try {
-    i = z(t);
+    i = jsonParse(t);
   } catch {
-    n(`[theme] ${e}.json: invalid JSON`, { level: "warn" });
+    logForDebugging(`[theme] ${e}.json: invalid JSON`, { level: "warn" });
     return;
   }
   if (typeof i !== "object" || i === null || Array.isArray(i)) return;
   let a = i,
-    h = qSt(a.base) ? a.base : "dark",
+    h = isBuiltinThemeName(a.base) ? a.base : "dark",
     f = typeof a.name === "string" ? a.name : e,
     o = {};
   if (typeof a.overrides === "object" && a.overrides !== null) {
-    let p = Nk(h);
+    let p = getThemePalette(h);
     for (let [g, y] of Object.entries(a.overrides))
-      if (Object.hasOwn(p, g) && Tj(y)) o[g] = y;
+      if (Object.hasOwn(p, g) && isValidThemeColorValue(y)) o[g] = y;
   }
   return { slug: e, name: f, base: h, overrides: o, source: r };
 }
@@ -115,12 +115,12 @@ async function S(e, t, r, i, a, h) {
       o = await i.read([a]);
     } catch (g) {
       if (h) h.readErrors++;
-      n(`[theme] failed to read ${e}: ${l(g)}`, { level: "warn" });
+      logForDebugging(`[theme] failed to read ${e}: ${l(g)}`, { level: "warn" });
       return;
     }
     if (!o.ok) {
       if (h) h.readErrors++;
-      n(`[theme] failed to read ${e}: ${We(o.error)}`, { level: "warn" });
+      logForDebugging(`[theme] failed to read ${e}: ${describeStorageError(o.error)}`, { level: "warn" });
       return;
     }
     let p = o.value.items[0];
@@ -129,12 +129,12 @@ async function S(e, t, r, i, a, h) {
   let f;
   try {
     if ((await _(e)).size > P) {
-      n(`[theme] ${e} exceeds 256KB; skipping`, { level: "warn" });
+      logForDebugging(`[theme] ${e} exceeds 256KB; skipping`, { level: "warn" });
       return;
     }
     f = await readFile(e, "utf8");
   } catch (o) {
-    if (!W(o)) n(`[theme] failed to read ${e}`, { level: "warn" });
+    if (!W(o)) logForDebugging(`[theme] failed to read ${e}`, { level: "warn" });
     return;
   }
   return E(t, f, r);
@@ -157,7 +157,7 @@ async function R(e, t, r, i) {
                 : "";
             if (extname(T) !== ".json") continue;
             if ((d.size ?? 0) > P) {
-              n(`[theme] ${C(e, T)} exceeds 256KB; skipping`, {
+              logForDebugging(`[theme] ${C(e, T)} exceeds 256KB; skipping`, {
                 level: "warn",
               });
               continue;
@@ -167,7 +167,7 @@ async function R(e, t, r, i) {
         },
       ).catch(
         (u) => (
-          n(
+          logForDebugging(
             `[theme] list themes failed: ${l(u)}; keeping the previously loaded themes (if any)`,
             { level: "warn" },
           ),
@@ -180,15 +180,15 @@ async function R(e, t, r, i) {
         break;
       case "error":
         return (
-          n(
-            `[theme] list themes failed: ${We(p.error)}; keeping the previously loaded themes (if any)`,
+          logForDebugging(
+            `[theme] list themes failed: ${describeStorageError(p.error)}; keeping the previously loaded themes (if any)`,
             { level: "warn" },
           ),
           null
         );
       case "capped":
         return (
-          n(
+          logForDebugging(
             `[theme] list themes exceeded ${DEFAULT_MAX_PAGES} pages; keeping the previously loaded themes (if any)`,
             { level: "warn" },
           ),
@@ -201,7 +201,7 @@ async function R(e, t, r, i) {
     try {
       y = await i.read(g);
     } catch (u) {
-      n(`[theme] batched theme read failed: ${l(u)}`, { level: "warn" });
+      logForDebugging(`[theme] batched theme read failed: ${l(u)}`, { level: "warn" });
     }
     let v = [];
     if (y?.ok) {
@@ -219,7 +219,7 @@ async function R(e, t, r, i) {
     }
     if (v.length === 0 && x.readErrors > 0)
       return (
-        n(
+        logForDebugging(
           `[theme] could not read any of ${o.length} listed theme files; keeping the previously loaded themes (if any)`,
           { level: "warn" },
         ),
@@ -235,7 +235,7 @@ async function R(e, t, r, i) {
       let o = await S(e, r + basename(e, ".json"), t);
       return o ? [o] : [];
     }
-    if (!Rt(f)) n(`[theme] readdir ${e} failed`, { level: "warn" });
+    if (!Rt(f)) logForDebugging(`[theme] readdir ${e} failed`, { level: "warn" });
     return [];
   }
   let h = [];
@@ -262,7 +262,7 @@ async function saveCustomTheme(e, t) {
     i = `${e.slug}.json`;
   if (isHoverRestEnabled() && t !== void 0 && isValidPathSegment(i)) {
     let a =
-        b(r, null, 2) +
+        jsonStringify(r, null, 2) +
         `
 `,
       h = await t.write(STORAGE_KEYS.userConfigDir("themes", [i]), a, {
@@ -271,7 +271,7 @@ async function saveCustomTheme(e, t) {
       });
     if (!h.ok)
       throw (
-        n(`[theme] v5 save ${e.slug} failed: ${We(h.error)}`, {
+        logForDebugging(`[theme] v5 save ${e.slug} failed: ${describeStorageError(h.error)}`, {
           level: "warn",
         }),
         Error("theme save failed")
@@ -307,7 +307,7 @@ function watchCustomThemes(e) {
     t.on("change", e),
     t.on("unlink", e),
     t.on("error", (r) =>
-      n(`[theme] watcher error: ${l(r)}`, { level: "warn" }),
+      logForDebugging(`[theme] watcher error: ${l(r)}`, { level: "warn" }),
     ),
     () => void t.close()
   );

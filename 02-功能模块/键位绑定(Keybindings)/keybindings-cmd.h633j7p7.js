@@ -11,18 +11,18 @@
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { isSafeMode, getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, b, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { K3, X8e, PNe, iN, Y8e, Uyn } from "./键位绑定(Keybindings).sanfja6a.js";
+import { describeStorageError, jsonStringify, getFsSurface } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { DEFAULT_KEYBINDINGS, NON_REBINDABLE_KEYS, normalizeKeybindingChord, isKeybindingCustomizationEnabled, getKeybindingsConfigPath, KEYBINDINGS_STORAGE_KEY } from "./键位绑定(Keybindings).sanfja6a.js";
 import { editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import { writeFile } from "fs/promises";
 import { dirname } from "path";
 function m(s) {
-  let n = new Set(X8e.map((e) => PNe(e.key)));
+  let n = new Set(NON_REBINDABLE_KEYS.map((e) => normalizeKeybindingChord(e.key)));
   return s
     .map((e) => {
       let t = {};
       for (let [r, o] of Object.entries(e.bindings))
-        if (!n.has(PNe(r))) t[r] = o;
+        if (!n.has(normalizeKeybindingChord(r))) t[r] = o;
       return { context: e.context, bindings: t };
     })
     .filter((e) => Object.keys(e.bindings).length > 0);
@@ -31,34 +31,34 @@ function a() {
   let n = {
     $schema: "https://www.schemastore.org/claude-code-keybindings.json",
     $docs: "https://code.claude.com/docs/en/keybindings",
-    bindings: m(K3),
+    bindings: m(DEFAULT_KEYBINDINGS),
   };
   return (
-    b(n, null, 2) +
+    jsonStringify(n, null, 2) +
     `
 `
   );
 }
 async function _(s, n) {
-  if (!iN())
+  if (!isKeybindingCustomizationEnabled())
     return {
       type: "text",
       value: "Keybinding customization is disabled in this environment.",
     };
-  let e = Y8e(),
+  let e = getKeybindingsConfigPath(),
     t = !1,
     r = n.storageV5;
   if (r) {
-    let i = await r.write(Uyn, a(), { precondition: { type: "ifAbsent" } });
+    let i = await r.write(KEYBINDINGS_STORAGE_KEY, a(), { precondition: { type: "ifAbsent" } });
     if (!i.ok)
       if (i.error.code === "AlreadyExists") t = !0;
       else
         throw new R(
-          `keybindings template write failed: ${We(i.error)}`,
+          `keybindings template write failed: ${describeStorageError(i.error)}`,
           "keybindings template write failed",
         );
   } else {
-    await ae().mkdir(dirname(e));
+    await getFsSurface().mkdir(dirname(e));
     try {
       await writeFile(e, a(), { encoding: "utf-8", flag: "wx" });
     } catch (i) {

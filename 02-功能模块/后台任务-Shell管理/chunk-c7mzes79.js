@@ -35,14 +35,14 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { R, A, Jg } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { RENAME_CONTENTION_ERRNOS, renameWithRetry, writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
-import { We, Et, dv, b, z, WP, Wur, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, registerCleanup, registerPreExitFlush, jsonStringify, jsonParse, hasNetworkPathSpelling, hasUnverifiableAncestrySync, resolveSymlinkAncestrySync, fsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { lr, le, Zt, Io, cr, nt, Cu, ru, Rmr } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { yieldToEventLoop, SETTINGS_SOURCE_ORDER, omitObjectKeys, negate, isConnectedMcpServer, shouldRefetchMcpServer, getMcpToolPrefix, hasPolicySettingsNotified } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getJobDir, getOwnJobShortId, listJobs, IDLE_NEEDS, terminalOutcome, isSettled, isSelfDriving } from "./chunk-7wsy8vxb.js";
-import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
   emitTaskNotification,
   isFastModeEnabled,
@@ -57,17 +57,17 @@ import {
   saveCurrentProjectConfigSyncForExit,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import { DEFAULT_OPEN_FILE_MODE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getSettingsForSource, getInitialSettings, getSettings_DEPRECATED, isAdminPolicyUnreadable } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { iA } from "../权限系统/chunk-t3b7pg2x.js";
+import { unpinLaunchEffortLevels } from "../权限系统/chunk-t3b7pg2x.js";
 import { getProjectsDir, getProjectKeyFromDir, getSessionSubagentsDir, getAgentTranscriptPath } from "../Teammates团队/transcript-paths.js";
 import { isManagedPermissionRulesOnlyEnabled, getEffectivePermissionRules, getDeclaredAndRepoOnlyDirectories, getEffectiveAdditionalDirectories, applyPermissionUpdate, getResolvedClaudeTempDir, getCurrentProjectTempDir, getProjectTempDirForPath, realpathIfResolvable } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
 import { userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { cG, $k, evictTaskOutput } from "./chunk-x3txegas.js";
+import { openNoSymlinkTraversal, pinWriteTarget, evictTaskOutput } from "./task-output.js";
 import {
   baseEach,
   createSessionHookRegistry,
@@ -114,10 +114,10 @@ import {
 import { getMcpServerConfigCacheKey } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { ComputerUseMcpStateStore, ComputerUseLockOwnerContext } from "../图片-截图-ComputerUse/computer-use-lock.js";
-import { $h, $fe, ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { DYn, hw, ONe, FYn, $pe, LNe, X3 } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { MAX_ARTIFACT_WATCHES, MAX_WATCH_HANDOFF_ENTRIES, getArtifactState } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { isKeybindingContextName, keybindingStore, loadKeybindingsWithWarnings, startKeybindingsWatcher, resolveKeyEvent, resolveKeyEventByContextPriority, logKeybindingActionFired } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { pauseWorkflowTask } from "../Workflow编排/chunk-va9cgbfs.js";
-import { ize } from "../Artifact发布-渲染/chunk-5gz5xvw9.js";
+import { forgetArtifactCommentMonitors } from "../Artifact发布-渲染/artifact-comment-monitor-intent.js";
 import { getProcessStartTimeTicksAsync, killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import {
   EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
@@ -145,7 +145,7 @@ import { sessionServicesFor } from "../认证-OAuth登录/credentials-store.js";
 import { buildInkKeyEvent, createKeyHandlerRegistry, KeybindingProvider, useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
 import { SessionProvider, useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { CommandQueueProvider } from "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
-import { xh } from "../MCP客户端/chunk-g4gdwpa0.js";
+import { isRemoteTransport } from "../MCP客户端/mcp-discovery-cache.js";
 import { createSpinnerStore, SpinnerStoreContext } from "../Hooks钩子/spinner-store.js";
 import { isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { TasksV2Store, TasksV2StoreContext } from "../工具TodoWrite-Tasks/tasks-v2-store.js";
@@ -339,7 +339,7 @@ function kt(t) {
   return le().transform((o, r) => {
     let s = (w) => (r.addIssue({ code: lr.custom, message: w }), Rmr);
     if (BL(o)) return s(`adopt path is remote UNC: ${o}`);
-    let l = Xg(Sh, o);
+    let l = resolveSymlinkAncestrySync(fsSurface, o);
     if (l !== void 0)
       return s(`adopt path traverses symlink/junction to remote UNC: ${l}`);
     let k = RS(o);
@@ -450,7 +450,7 @@ async function detachAndSerializeShell(t, o) {
     l = o?.rerootOutputsTo;
   if (l !== void 0) {
     let k = async (v) => {
-        n(`[adopt] dropping shell ${t.id} from the handoff (${v})`, {
+        logForDebugging(`[adopt] dropping shell ${t.id} from the handoff (${v})`, {
           level: "error",
         });
         try {
@@ -461,14 +461,14 @@ async function detachAndSerializeShell(t, o) {
       c = !1;
     try {
       if (Xo(s) || li(s)) throw Error("network-spelled output path");
-      if (Xg(Sh, s) !== void 0)
+      if (resolveSymlinkAncestrySync(fsSurface, s) !== void 0)
         throw Error("output path traverses a junction to remote UNC");
       if ((await lstat(s)).isSymbolicLink()) {
         let D = await readlink(s);
         if (Xo(D) || li(D)) throw Error("network-spelled symlink target");
         let O = isAbsolute(D) ? D : Ae(dirname(s), D);
         if (Xo(O) || li(O)) throw Error("network-spelled symlink hop");
-        if (Xg(Sh, O) !== void 0)
+        if (resolveSymlinkAncestrySync(fsSurface, O) !== void 0)
           throw Error("symlink target traverses a junction to remote UNC");
         if ((await lstat(O)).isSymbolicLink())
           throw Error("multi-hop symlink chain");
@@ -489,7 +489,7 @@ async function detachAndSerializeShell(t, o) {
         let U = Ae(l, "rerooted", `${t.id}.output`),
           H;
         try {
-          H = await $k(U, [U], { createParents: !0, leaf: "replace" });
+          H = await pinWriteTarget(U, [U], { createParents: !0, leaf: "replace" });
         } catch {
           return await k("reroot directory not trustworthy");
         }
@@ -523,7 +523,7 @@ async function detachAndSerializeShell(t, o) {
                   (j =
                     getCurrentPlatform() === "windows"
                       ? await dt(W, "wx")
-                      : await cG(
+                      : await openNoSymlinkTraversal(
                           W,
                           constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW,
                           getCurrentPlatform(),
@@ -604,7 +604,7 @@ async function serializeAdoptWorkflow(t, o = {}) {
     scriptSha256: t.script
       ? createHash("sha256").update(t.script).digest("hex")
       : void 0,
-    argsJson: t.args !== void 0 ? b(t.args) : void 0,
+    argsJson: t.args !== void 0 ? jsonStringify(t.args) : void 0,
     description: t.description,
     startTime: t.startTime,
     transcriptDir: await realpath(r).catch(() => r),
@@ -623,7 +623,7 @@ function carriedFrameLiveSlugs(t) {
   return o;
 }
 function collectFrameLiveConsent(t) {
-  let { supervisors: o, bootingWiredArms: r } = ne().live,
+  let { supervisors: o, bootingWiredArms: r } = getArtifactState().live,
     s = getBootingAutoReactArmSlugs(),
     l = [],
     k = Date.now();
@@ -673,7 +673,7 @@ async function serializeAdoptable(t, o) {
     H = !1,
     W = (x) => {
       if (H) return;
-      ((H = !0), ize(D), disposeSupervisors(D));
+      ((H = !0), forgetArtifactCommentMonitors(D), disposeSupervisors(D));
       let I = new Set(O);
       if (D.size > 0) {
         for (let j of Object.values(x.all()))
@@ -717,7 +717,7 @@ async function serializeAdoptable(t, o) {
       (await yieldToEventLoop(),
         await flushSessionStorage().catch((I) => {
           (logFeatureSad("task_local_agent", "adopt_checkpoint_flush_failed"),
-            n(`[adopt] checkpoint flush: ${I}`, { level: "warn" }));
+            logForDebugging(`[adopt] checkpoint flush: ${I}`, { level: "warn" }));
         }));
     },
     stopCarriedWatches: W,
@@ -735,15 +735,15 @@ async function serializeAdoptable(t, o) {
         try {
           x.shellCommand?.kill();
         } catch (I) {
-          n(`[adopt] abandon ${x.id}: ${I}`, { level: "warn" });
+          logForDebugging(`[adopt] abandon ${x.id}: ${I}`, { level: "warn" });
         }
       for (let x of l) {
-        let I = `Background agent "${Nt(x.description)}" was checkpointed for the background fork but the fork failed to spawn; the agent was not resumed.`;
+        let I = `Background agent "${escapeHtmlText(x.description)}" was checkpointed for the background fork but the fork failed to spawn; the agent was not resumed.`;
         lt(x.agentId, I, o);
       }
       if (l.length > 0) logFeatureSad("task_local_agent", "adopt_spawn_failed");
       for (let x of k) {
-        let I = `Background workflow "${Nt(x.description)}" was checkpointed for the background fork but the fork failed to spawn; it was not resumed. To resume manually: Workflow({scriptPath: '${Nt(x.scriptPath ?? "")}', resumeFromRunId: '${Nt(x.workflowRunId ?? "")}'}).`;
+        let I = `Background workflow "${escapeHtmlText(x.description)}" was checkpointed for the background fork but the fork failed to spawn; it was not resumed. To resume manually: Workflow({scriptPath: '${escapeHtmlText(x.scriptPath ?? "")}', resumeFromRunId: '${escapeHtmlText(x.workflowRunId ?? "")}'}).`;
         lt(x.id, I, o);
       }
       if (k.length > 0) logFeatureSad("task_local_workflow", "adopt_spawn_failed");
@@ -772,10 +772,10 @@ function dedupFrameLiveNewest(t) {
         v = k === void 0 || l.writtenAtMs > (k.writtenAtMs ?? 0) ? l : k;
       o.set(s.slug, c > 0 ? { ...v, unattendedReplies: c } : v);
     }
-  if (o.size > $h) logFeatureSad("artifact_live_subscribe", "merged_consent_capped");
+  if (o.size > MAX_ARTIFACT_WATCHES) logFeatureSad("artifact_live_subscribe", "merged_consent_capped");
   return [...o.values()]
     .sort((r, s) => (s.writtenAtMs ?? 0) - (r.writtenAtMs ?? 0))
-    .slice(0, $fe);
+    .slice(0, MAX_WATCH_HANDOFF_ENTRIES);
 }
 function Wr(t, o) {
   let r = (s, l, k) =>
@@ -801,7 +801,7 @@ function Wr(t, o) {
 }
 async function Ur(t, o) {
   let r = await t.read([STORAGE_KEYS.job(o, ["adopt.json"])]);
-  if (!r.ok) return (n(`[adopt] v5 merge read refused: ${We(r.error)}`), null);
+  if (!r.ok) return (logForDebugging(`[adopt] v5 merge read refused: ${describeStorageError(r.error)}`), null);
   let s = r.value.items[0];
   if (!s.found) return null;
   return Buffer.from(s.value).toString("utf8");
@@ -816,7 +816,7 @@ async function writeAdoptJson(t, o, r = {}, s) {
     if (w !== null && w.length <= 1e6) {
       let L = (
         r.mergeShellOutputRoot !== void 0 ? fn(r.mergeShellOutputRoot) : pn()
-      ).safeParse(z(w));
+      ).safeParse(jsonParse(w));
       if (L.success) {
         if (
           L.data.shells.length +
@@ -831,7 +831,7 @@ async function writeAdoptJson(t, o, r = {}, s) {
     }
   } catch {}
   if (c) {
-    let w = await c.write(STORAGE_KEYS.job(k, ["adopt.json"]), b(v), {
+    let w = await c.write(STORAGE_KEYS.job(k, ["adopt.json"]), jsonStringify(v), {
       publishDiscipline: "atomic",
       mode: 438 & ~process.umask(),
       parent: r.parent ?? "mustExist",
@@ -839,7 +839,7 @@ async function writeAdoptJson(t, o, r = {}, s) {
     if (!w.ok)
       throw Object.assign(
         new R(
-          `adopt.json v5 write failed: ${We(w.error)}`,
+          `adopt.json v5 write failed: ${describeStorageError(w.error)}`,
           "adopt.json v5 write failed",
         ),
         "telemetryCode" in w.error && w.error.telemetryCode !== void 0
@@ -848,7 +848,7 @@ async function writeAdoptJson(t, o, r = {}, s) {
       );
     return;
   }
-  await writeFileAtomic(l, b(v));
+  await writeFileAtomic(l, jsonStringify(v));
 }
 async function readAndConsumeAdoptJson(t, o = {}) {
   if (!t) return null;
@@ -870,7 +870,7 @@ async function readAndConsumeAdoptJson(t, o = {}) {
         return (logEvent("tengu_adopt_claim", { result: S("enoent") }), null);
       }
       return (
-        n(`[adopt] rename failed: ${w}`, { level: "warn" }),
+        logForDebugging(`[adopt] rename failed: ${w}`, { level: "warn" }),
         logEvent("tengu_adopt_claim", {
           result: T !== void 0 && RENAME_CONTENTION_ERRNOS.has(T) ? S("ebusy_gave_up") : Jg(w),
         }),
@@ -886,13 +886,13 @@ async function readAndConsumeAdoptJson(t, o = {}) {
       ).safeParse(JSON.parse(w));
     if (!L.success)
       return (
-        n(`[adopt] schema rejected: ${L.error.message}`, { level: "warn" }),
+        logForDebugging(`[adopt] schema rejected: ${L.error.message}`, { level: "warn" }),
         logEvent("tengu_adopt_claim", { result: S("schema_rejected") }),
         null
       );
     let D = c - L.data.writtenAtMs;
     if (L.data.origin !== "exit" && D > STALE_THRESHOLD_MS) {
-      n(`[adopt] stale (age ${D}ms)`, { level: "warn" });
+      logForDebugging(`[adopt] stale (age ${D}ms)`, { level: "warn" });
       let O = L.data.frameLive ?? [];
       if (O.length === 0)
         return (logEvent("tengu_adopt_claim", { result: S("stale") }), null);
@@ -925,7 +925,7 @@ async function readAndConsumeAdoptJson(t, o = {}) {
         }),
         U = countMatching(O, (H) => "stale" in H);
       if (U > 0)
-        n(`[adopt] ${U}/${O.length} frameLive entries marked stale`, {
+        logForDebugging(`[adopt] ${U}/${O.length} frameLive entries marked stale`, {
           level: "warn",
         });
       return (
@@ -939,7 +939,7 @@ async function readAndConsumeAdoptJson(t, o = {}) {
     return (logEvent("tengu_adopt_claim", { result: v }), L.data);
   } catch (w) {
     return (
-      n(`[adopt] read/parse failed: ${w}`, { level: "warn" }),
+      logForDebugging(`[adopt] read/parse failed: ${w}`, { level: "warn" }),
       logEvent("tengu_adopt_claim", { result: S("parse_failed") }),
       null
     );
@@ -1071,7 +1071,7 @@ async function Vr(t, o, r) {
       let { dev: w, ino: T } = await k.stat();
       return (
         await k.utimes(l.atime, l.mtime).catch((L) => {
-          n(`[adopt] copied file keeps fresh timestamps (${A(L) ?? "error"})`, {
+          logForDebugging(`[adopt] copied file keeps fresh timestamps (${A(L) ?? "error"})`, {
             level: "warn",
           });
         }),
@@ -1319,7 +1319,7 @@ async function Yr(t, o) {
       ...(U.method === "copy" ? ["transcript"] : []),
       ...(O.method === "copy" ? ["meta"] : []),
     ].join("+");
-    (n(
+    (logForDebugging(
       `[adopt] agent ${t.agentId}: hard link impossible (${H}) \u2014 materialised a copy of ${W}`,
       { level: "warn" },
     ),
@@ -1348,7 +1348,7 @@ async function relinkAdoptedAgentSymlinks({ storageV5: t, linkFn: o = on } = {})
     await ei(getSessionSubagentsDir(), o);
   } catch (r) {
     if (A(r) !== void 0) {
-      n(`[adopt] relink sweep abandoned: ${r}`, { level: "warn" });
+      logForDebugging(`[adopt] relink sweep abandoned: ${r}`, { level: "warn" });
       return;
     }
     logError(r);
@@ -1391,7 +1391,7 @@ async function ei(t, o) {
   if (L === null || D === null) return;
   let O = gn(L, D);
   if (getProjectKeyFromDir(dirname(dirname(t))) === void 0 || O === null || O.depth !== 3) {
-    n(
+    logForDebugging(
       `[adopt] relink sweep: ${l.length} symlinked name(s) left as is (session dir outside the transcript store)`,
       { level: "warn" },
     );
@@ -1453,7 +1453,7 @@ async function ei(t, o) {
     }
   }
   if (W > 0) logFeatureSad("task_local_agent", "adopt_link_fallback_copy");
-  (n(
+  (logForDebugging(
     `[adopt] relink sweep: ${H} hard-linked, ${W} copied, ${j.length - (x > 0 ? 1 : 0) + x} left as is${j.length > 0 ? ` (${j.slice(0, 5).join(", ")})` : ""}`,
     { level: j.length > 0 || W > 0 ? "warn" : "debug" },
   ),
@@ -1499,7 +1499,7 @@ async function hn(t, o, r) {
 }
 function qo(t) {
   try {
-    return z(t);
+    return jsonParse(t);
   } catch {
     return null;
   }
@@ -1546,7 +1546,7 @@ function ni(t, o) {
 async function Qo(t, o, r, s, { besideDir: l } = {}) {
   let k = Ae(t, o),
     c = await readlink(k);
-  if (!isAbsolute(c) || basename(c) !== o || WP(c)) return "unexpected target spelling";
+  if (!isAbsolute(c) || basename(c) !== o || hasNetworkPathSpelling(c)) return "unexpected target spelling";
   let v;
   try {
     v = await lstat(c);
@@ -1612,14 +1612,14 @@ async function linkAdoptedWorkflowDir(t) {
 function emitAdoptWorkflowFailed(t, o, r) {
   let s =
       t.scriptPath !== void 0
-        ? ` To resume manually: Workflow({scriptPath: '${Nt(t.scriptPath)}', resumeFromRunId: '${Nt(t.workflowRunId)}'}).`
+        ? ` To resume manually: Workflow({scriptPath: '${escapeHtmlText(t.scriptPath)}', resumeFromRunId: '${escapeHtmlText(t.workflowRunId)}'}).`
         : "",
-    l = `Background workflow "${Nt(t.description)}" was checkpointed for the background fork but could not be resumed (${Nt(o)}).${s}`;
+    l = `Background workflow "${escapeHtmlText(t.description)}" was checkpointed for the background fork but could not be resumed (${escapeHtmlText(o)}).${s}`;
   lt(t.taskId, l, r);
 }
 function lt(t, o, r, s = ze()) {
   (r.enqueuePendingNotification({
-    value: buildTaskNotification({ taskId: Nt(t), status: "failed", summary: o }),
+    value: buildTaskNotification({ taskId: escapeHtmlText(t), status: "failed", summary: o }),
     agentId: s,
     mode: "task-notification",
     skipAttachments: !0,
@@ -1653,7 +1653,7 @@ function emitAdoptAgentFailed(t, o, r, s) {
       t.parentAgentId !== void 0 && isLocalAgentTask(r.get(t.parentAgentId))
         ? oo(t.parentAgentId)
         : ze(),
-    k = `Background agent "${Nt(t.description ?? t.agentId)}" was checkpointed for the background fork but could not be resumed (${Nt(o)}).`;
+    k = `Background agent "${escapeHtmlText(t.description ?? t.agentId)}" was checkpointed for the background fork but could not be resumed (${escapeHtmlText(o)}).`;
   lt(t.agentId, k, s, l);
 }
 function adoptCron(t, o) {
@@ -2086,7 +2086,7 @@ function Ct(Nl) {
       let gi = !1;
       let Wl =
         isHoverRestEnabled() && Pt !== void 0
-          ? dv(async () => {
+          ? registerPreExitFlush(async () => {
               let hi = Be.getAll();
               if (Object.keys(hi).length > 0)
                 await saveCurrentProjectConfig((jl) => ({ ...jl, lastSessionMetrics: hi }), Pt);
@@ -2166,9 +2166,9 @@ function KeybindingSetupIfNeeded(pd) {
 }
 function Nn({ children: t }) {
   let [{ bindings: o }, r] = d(() => {
-      let x = ONe(hw);
+      let x = loadKeybindingsWithWarnings(keybindingStore);
       return (
-        n(
+        logForDebugging(
           `[keybindings] KeybindingSetup initialized with ${x.bindings.length} bindings, ${x.warnings.length} warnings`,
         ),
         x
@@ -2195,7 +2195,7 @@ function Nn({ children: t }) {
       (x) => {
         if ((H(), x !== null))
           v.current = s.setTimeout(() => {
-            (n("[keybindings] Chord timeout - cancelling"),
+            (logForDebugging("[keybindings] Chord timeout - cancelling"),
               (l.current = null),
               c(null));
           }, Wi);
@@ -2205,10 +2205,10 @@ function Nn({ children: t }) {
     );
   return (
     E(() => {
-      FYn(hw);
-      let x = hw.changed.subscribe((I) => {
+      startKeybindingsWatcher(keybindingStore);
+      let x = keybindingStore.changed.subscribe((I) => {
         (r(I),
-          n(
+          logForDebugging(
             `[keybindings] Reloaded: ${I.bindings.length} bindings, ${I.warnings.length} warnings`,
           ));
       });
@@ -2297,7 +2297,7 @@ function Wn(fd) {
       }
       let Cd = [...Pi, ...io, "Global"];
       let Ci = Me.current !== null;
-      let co = $pe(Ti, Cd, xe, Me.current);
+      let co = resolveKeyEvent(Ti, Cd, xe, Me.current);
       bb42: switch (co.type) {
         case "chord_started": {
           ((xt.current = "legacy"), ge(co.pending), ft());
@@ -2319,7 +2319,7 @@ function Wn(fd) {
             let _i = It?.get(co.action);
             if (_i) {
               for (const _d of _i) {
-                (_d.handler(), X3(co.action), ft());
+                (_d.handler(), logKeybindingActionFired(co.action), ft());
                 break;
               }
             }
@@ -2343,13 +2343,13 @@ function Wn(fd) {
           }
           let Ft = xi.get(mt.context);
           if (Ft === void 0) {
-            let Mi = $pe(Ti, [...io, mt.context, "Global"], xe, null);
+            let Mi = resolveKeyEvent(Ti, [...io, mt.context, "Global"], xe, null);
             ((Ft = Mi.type === "match" ? Mi.action : null),
               xi.set(mt.context, Ft));
           }
           if (Ft === mt.action) {
             if (mt.handler() !== !1) {
-              (X3(Ft), ft());
+              (logKeybindingActionFired(Ft), ft());
               return;
             }
           }
@@ -2395,18 +2395,18 @@ function Wn(fd) {
       let Ve = St(Ze.target);
       if (uo.preemptiveScopes.size > 0 && !Dn) {
         let Md = [...uo.preemptiveScopes.keys(), "Global"];
-        let po = LNe(Ee, Md, xe, null);
+        let po = resolveKeyEventByContextPriority(Ee, Md, xe, null);
         if (po.type === "match" && Ve) {
           if (
             et(Ve, Ze, po.action, !1, Ze.type === "wheel" ? "wheel" : "single")
           ) {
-            (pe(po.action, !0), X3(po.action));
+            (pe(po.action, !0), logKeybindingActionFired(po.action));
             return;
           }
         }
       }
       if (Dn) {
-        let Ie = LNe(Ee, so.current, xe, Me.current);
+        let Ie = resolveKeyEventByContextPriority(Ee, so.current, xe, Me.current);
         if (Ie.type === "chord_started") {
           ((xt.current = "scopeChain"), ge(Ie.pending), ve(), pe(null, !0));
           return;
@@ -2418,7 +2418,7 @@ function Wn(fd) {
           let Ei = In && Ve && KB(In, U0e(Ve)) ? In : Ve;
           if (Ei) {
             if (et(Ei, Ze, Ie.action, !0, "chord")) {
-              (pe(Ie.action, !0), X3(Ie.action));
+              (pe(Ie.action, !0), logKeybindingActionFired(Ie.action));
               return;
             }
           }
@@ -2426,7 +2426,7 @@ function Wn(fd) {
           let Ii = pt.current?.get(Ie.action);
           if (Ii) {
             for (const Ed of Ii) {
-              (Ed.handler(), X3(Ie.action), ve(), (Di = !0));
+              (Ed.handler(), logKeybindingActionFired(Ie.action), ve(), (Di = !0));
               break;
             }
           }
@@ -2439,7 +2439,7 @@ function Wn(fd) {
           Ue(Ee, He, $e, Ke, ve));
         return;
       }
-      let qe = LNe(Ee, En, xe, null);
+      let qe = resolveKeyEventByContextPriority(Ee, En, xe, null);
       switch (qe.type) {
         case "chord_started": {
           ((so.current = En),
@@ -2462,7 +2462,7 @@ function Wn(fd) {
           if (
             et(Ve, Ze, qe.action, !1, Ze.type === "wheel" ? "wheel" : "single")
           ) {
-            (ge(null), pe(qe.action, !0), X3(qe.action));
+            (ge(null), pe(qe.action, !0), logKeybindingActionFired(qe.action));
             return;
           }
           (pe(qe.action, !1), Ue(Ee, He, $e, Ke, ve, !0));
@@ -2619,7 +2619,7 @@ function jn(t) {
     r = St(t);
   while (r) {
     let s = r.attributes.keybindingScope;
-    if (typeof s === "string" && DYn(s)) o.push(s);
+    if (typeof s === "string" && isKeybindingContextName(s)) o.push(s);
     r = r.parentNode;
   }
   return o;
@@ -2835,7 +2835,7 @@ class McpConnectionsStore {
     this.#e.set((r) => {
       let s = r;
       for (let l of t) {
-        if (l.epoch !== o.currentEpoch && xh(l.config)) {
+        if (l.epoch !== o.currentEpoch && isRemoteTransport(l.config)) {
           if (l.type === "connected") tt().detachAndCloseConnection(l);
           continue;
         }
@@ -3281,7 +3281,7 @@ function Yn(t) {
   let o = isActingAsBgJob() ? getBgJobDir() : void 0;
   if (!o || a.CLAUDE_CODE_DISABLE_BG_EXIT_HANDOFF) {
     if (o) {
-      let O = ne().live;
+      let O = getArtifactState().live;
       if ((drainUnresumedFrameLive(o), O.bootingWiredArms.size > 0))
         logFeatureSad("artifact_live_subscribe", "booting_consent_uncarried");
       disposeSupervisors(O.inFlightSubscribes);
@@ -3306,7 +3306,7 @@ function Yn(t) {
     l = s.filter((O) => isAdoptableWorkflowTask(O, r)),
     k = s.filter((O) => isAdoptableAgentTask(O, r)),
     c = drainUnresumedAdopt(o),
-    v = (O) => !ne().autoReact.userDisarmed && !isSlugStopLatched(O.slug),
+    v = (O) => !getArtifactState().autoReact.userDisarmed && !isSlugStopLatched(O.slug),
     w = drainUnresumedFrameLive(o),
     T = ns(
       dedupFrameLiveNewest([
@@ -3316,7 +3316,7 @@ function Yn(t) {
       ]),
     ),
     L = new Set(T.map((O) => O.slug)),
-    D = ne().live;
+    D = getArtifactState().live;
   if ([...D.bootingWiredArms.keys()].some((O) => !L.has(O)))
     logFeatureSad("artifact_live_subscribe", "booting_consent_uncarried");
   return (
@@ -3380,7 +3380,7 @@ function Qn(
           "task_local_agent_exit_handoff",
           I ? "flush_timeout" : "flush_failed",
         ),
-          n(`exit handoff: agent transcript flush failed: ${x}`, {
+          logForDebugging(`exit handoff: agent transcript flush failed: ${x}`, {
             level: "warn",
           }));
       }
@@ -3430,7 +3430,7 @@ function Qn(
         logFeatureOk("task_local_shell_exit_handoff");
       if (W.length > 0) logFeatureOk("task_local_workflow_exit_handoff");
       if (U.length > 0) logFeatureOk("task_local_agent_exit_handoff");
-      n(
+      logForDebugging(
         `exit handoff: ${H.length} background shell(s), ${W.length} workflow(s), ${U.length} agent(s), and ${k.length} comment-monitoring consent record(s) handed to the next wake of this session`,
       );
     } catch (x) {
@@ -3443,7 +3443,7 @@ function Qn(
       if (U.length > 0) logFeatureBad("task_local_agent_exit_handoff", "write_failed");
       if (k.length > 0 && c !== void 0)
         (recordExitRetryFrameLive(c, k), logFeatureBad("artifact_live_subscribe", "consent_exit_write_failed"));
-      n(`exit handoff: adopt.json write failed: ${x}`, { level: "warn" });
+      logForDebugging(`exit handoff: adopt.json write failed: ${x}`, { level: "warn" });
     }
   })();
   return (trackPendingWrite(O), O);
@@ -3529,7 +3529,7 @@ import { resolve } from "path";
 var autoModeGateChangeNotifier = new Gt(() => Le());
 function applySettingsChange(t, o, r, s, l) {
   let k = getInitialSettings();
-  (n(`Settings changed from ${o}, updating app state`), resetLocalSettingsGitTrackedCache());
+  (logForDebugging(`Settings changed from ${o}, updating app state`), resetLocalSettingsGitTrackedCache());
   let c = getEffectivePermissionRules();
   (updateHooksConfigSnapshot({ userLayer: "retain" }), clearCommandMemoizationCaches());
   let v = !1;
@@ -3555,9 +3555,9 @@ function applySettingsChange(t, o, r, s, l) {
       let D = isAwaySummaryEnabled();
       if (
         w.settings.effortLevel !== k.effortLevel ||
-        b(w.settings.modelSettings) !== b(k.modelSettings)
+        jsonStringify(w.settings.modelSettings) !== jsonStringify(k.modelSettings)
       )
-        iA(s);
+        unpinLaunchEffortLevels(s);
       return {
         ...w,
         settings: k,
@@ -3630,7 +3630,7 @@ function syncAdditionalWorkingDirectories(t, o, r, s, l = !1, k, c) {
     if (addDirsAreLauncherNamed()) {
       for (let J of I)
         if (!j.has(J)) {
-          if (Wur(J)) continue;
+          if (hasUnverifiableAncestrySync(J)) continue;
           let K = getWindowsDrivePathVariants(J);
           if (K.length > 0) {
             j.set(J, K);
@@ -3673,7 +3673,7 @@ function Kt(t) {
   return t === "cliArg" || t === "command" || t === "session";
 }
 function as(t, o) {
-  return resolve(ot(t, o));
+  return resolve(resolvePath(t, o));
 }
 function rt(t, o) {
   try {
@@ -3761,7 +3761,7 @@ function qt(jp) {
       let hs = ko
         ? () => runExitHandoff(oe.getState().tasks, wo)
         : () => $t(oe.getState().tasks);
-      let Up = Et(hs);
+      let Up = registerCleanup(hs);
       return () => {
         (hs(), Up());
       };

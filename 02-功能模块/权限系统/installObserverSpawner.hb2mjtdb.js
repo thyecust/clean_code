@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 202 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { oo, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { clampPermissionMode } from "./chunk-e4pfvp7x.js";
 import { runWithAgentContext, getAgentDepth, getWorkflowRunMetadata } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -35,7 +35,7 @@ import {
   readAgentMetadata,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
-import { gNt, pjn } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
+import { buildObserverAgentTools, resumeAgentInline } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { parsePluginIdIgnoringReservedMarketplace } from "../插件系统/chunk-33bdfgmx.js";
 async function v(e, r, o) {
   if (
@@ -63,7 +63,7 @@ var b = {
       w = t.options.tools.filter(isMcpTool),
       l = `${e.agentType}@${r.observedEnvelopeName}`,
       i = getAgentDepth(t.agentContext) + 1,
-      A = gNt(
+      A = buildObserverAgentTools(
         resolveAgentTools(e, buildSessionTools(c, excludeCoordinatorCommsMcpTools(w), { skipReplFilter: !0 }), !0, !1, !1, i)
           .resolvedTools,
       ),
@@ -149,7 +149,7 @@ var b = {
     canUseTool: a,
     armingPermissionMode: t,
   }) {
-    await pjn({
+    await resumeAgentInline({
       agentId: e,
       prompt: r,
       promptOrigin: { kind: "observer-activity" },
@@ -164,7 +164,7 @@ function installObserverSpawner(e) {
   try {
     setObserverSpawner(e, b);
   } catch (r) {
-    n(`[agentObserver] spawner registration failed: ${r}`);
+    logForDebugging(`[agentObserver] spawner registration failed: ${r}`);
   }
 }
 export { installObserverSpawner };

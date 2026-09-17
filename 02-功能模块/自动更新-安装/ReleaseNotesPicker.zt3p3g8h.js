@@ -12,7 +12,7 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { isSemverGreaterThan } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -114,10 +114,10 @@ function ReleaseNotesPicker(L) {
   let m = v,
     G;
   if (f[11] === MEMO_CACHE_SENTINEL)
-    ((G = e(o, {
+    ((G = e(Box, {
       flexDirection: "column",
       marginBottom: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: "Select a version to view its notes.",
       }),

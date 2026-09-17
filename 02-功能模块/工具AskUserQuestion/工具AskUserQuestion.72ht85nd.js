@@ -12,7 +12,7 @@ import { K, sn, bB, Prt, kg, HL } from "../../00-第三方库/lodash/lodash.2x3q
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { getProcessStartTime, isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -81,7 +81,7 @@ async function ie(r) {
 `);
     await appendFile(S, u + k);
   } catch (t) {
-    n(`ensureClaudeRuntimeFilesExcluded: ${t}`);
+    logForDebugging(`ensureClaudeRuntimeFilesExcluded: ${t}`);
   }
 }
 var Ce = de(".claude", "scheduled_tasks.lock"),
@@ -103,7 +103,7 @@ async function le(r) {
 }
 async function ae(r, t) {
   let a = N(t),
-    S = b(r);
+    S = jsonStringify(r);
   try {
     return (await writeFile(a, S, { flag: "wx" }), !0);
   } catch (l) {
@@ -123,7 +123,7 @@ async function ae(r, t) {
 }
 function X(r, t) {
   (r.unregisterCleanup?.(),
-    (r.unregisterCleanup = Et(async () => {
+    (r.unregisterCleanup = registerCleanup(async () => {
       await j(r, t);
     })));
 }
@@ -141,24 +141,24 @@ async function Y(r, t) {
     return (
       (r.lastBlockedBy = void 0),
       X(r, t),
-      n(`[ScheduledTasks] acquired scheduler lock (PID ${process.pid})`),
+      logForDebugging(`[ScheduledTasks] acquired scheduler lock (PID ${process.pid})`),
       !0
     );
   let u = await le(a);
   if (u?.sessionId === S) {
-    if (u.pid !== process.pid) (await writeFile(N(a), b(l)), X(r, t));
+    if (u.pid !== process.pid) (await writeFile(N(a), jsonStringify(l)), X(r, t));
     return !0;
   }
   if (u && isProcessRunning(u.pid) && (await isSameProcessAsync(u.pid, u.procStart))) {
     if (r.lastBlockedBy !== u.sessionId)
       ((r.lastBlockedBy = u.sessionId),
-        n(
+        logForDebugging(
           `[ScheduledTasks] scheduler lock held by session ${u.sessionId} (PID ${u.pid})`,
         ));
     return !1;
   }
   if (u)
-    n(`[ScheduledTasks] recovering stale scheduler lock from PID ${u.pid}`);
+    logForDebugging(`[ScheduledTasks] recovering stale scheduler lock from PID ${u.pid}`);
   if ((await unlink(N(a)).catch(() => {}), await ae(l, a)))
     return ((r.lastBlockedBy = void 0), X(r, t), !0);
   return !1;
@@ -170,7 +170,7 @@ async function j(r, t) {
     l = await le(a);
   if (!l || l.sessionId !== S) return;
   try {
-    (await unlink(N(a)), n("[ScheduledTasks] released scheduler lock"));
+    (await unlink(N(a)), logForDebugging("[ScheduledTasks] released scheduler lock"));
   } catch {}
 }
 class Z {
@@ -241,7 +241,7 @@ function createCronScheduler(r) {
         ? await z().catch((d) => {
             if (getClaimRegistry().claim("cron_extra_tasks_load_bad"))
               logFeatureBad("routine_register_trigger", "extra_tasks_load_failed");
-            return (n(`[ScheduledTasks] getExtraTasks failed: ${d}`), []);
+            return (logForDebugging(`[ScheduledTasks] getExtraTasks failed: ${d}`), []);
           })
         : [];
     if (L) return;
@@ -258,7 +258,7 @@ function createCronScheduler(r) {
           (_ = !0));
     if (_)
       await writeScheduledTasks(h, k).catch((d) =>
-        n(`[ScheduledTasks] failed to refresh task pids: ${d}`),
+        logForDebugging(`[ScheduledTasks] failed to refresh task pids: ${d}`),
       );
     let M = Date.now(),
       e = filterOverdueTasks(h, M).filter(
@@ -278,8 +278,8 @@ function createCronScheduler(r) {
       (deleteScheduledTasks(
         e.map((d) => d.id),
         k,
-      ).catch((d) => n(`[ScheduledTasks] failed to remove missed tasks: ${d}`)),
-        n(`[ScheduledTasks] surfaced ${e.length} missed one-shot task(s)`));
+      ).catch((d) => logForDebugging(`[ScheduledTasks] failed to remove missed tasks: ${d}`)),
+        logForDebugging(`[ScheduledTasks] surfaced ${e.length} missed one-shot task(s)`));
     }
   }
   function W() {
@@ -303,13 +303,13 @@ function createCronScheduler(r) {
           });
         ((x = C ?? 1 / 0),
           I.set(e.id, x),
-          n(
+          logForDebugging(
             `[ScheduledTasks] scheduled ${e.id} for ${x === 1 / 0 ? "never" : new Date(x).toISOString()}`,
           ));
       }
       if (o < x) return;
       if (
-        (n(
+        (logForDebugging(
           `[ScheduledTasks] firing ${e.id}${e.recurring ? " (recurring)" : ""}`,
         ),
         logEvent("tengu_scheduled_task_fire", {
@@ -328,7 +328,7 @@ function createCronScheduler(r) {
       let ne = Fe(e, o, _.recurringMaxAgeMs);
       if (ne) {
         let C = Math.floor((o - e.createdAt) / 1000 / 60 / 60);
-        (n(
+        (logForDebugging(
           `[ScheduledTasks] recurring task ${e.id} aged out (${C}h since creation), deleting after final fire`,
         ),
           logEvent("tengu_scheduled_task_expired", { taskId: e.id, ageHours: C }));
@@ -344,7 +344,7 @@ function createCronScheduler(r) {
           I.set(e.id, 1 / 0),
           deleteScheduledTasks([e.id], k)
             .catch((C) =>
-              n(`[ScheduledTasks] failed to remove task ${e.id}: ${C}`),
+              logForDebugging(`[ScheduledTasks] failed to remove task ${e.id}: ${C}`),
             )
             .finally(() => D.delete(e.id)));
     }
@@ -352,7 +352,7 @@ function createCronScheduler(r) {
     if (p.length > 0) {
       for (let e of p) D.add(e);
       updateTasksLastFiredAt(p, o, k)
-        .catch((e) => n(`[ScheduledTasks] failed to persist lastFiredAt: ${e}`))
+        .catch((e) => logForDebugging(`[ScheduledTasks] failed to persist lastFiredAt: ${e}`))
         .finally(() => {
           for (let e of p) D.delete(e);
         });
@@ -386,7 +386,7 @@ function createCronScheduler(r) {
               if (((w = !0), E)) (clearInterval(E), (E = null));
             }
           })
-          .catch((p) => n(String(p), { level: "error" }));
+          .catch((p) => logForDebugging(String(p), { level: "error" }));
       }, Oe)),
         E.unref?.());
     V(!0).then(W);
@@ -398,7 +398,7 @@ function createCronScheduler(r) {
       ignorePermissionErrors: !0,
     })),
       O.on("error", (p) =>
-        n(`[ScheduledTasks] watcher error: ${p}`, { level: "warn" }),
+        logForDebugging(`[ScheduledTasks] watcher error: ${p}`, { level: "warn" }),
       ),
       O.on("add", () => void V(!1)),
       O.on("change", () => void V(!1)),
@@ -411,14 +411,14 @@ function createCronScheduler(r) {
   return {
     start() {
       if (((L = !1), k !== void 0)) {
-        (n(
+        (logForDebugging(
           `[ScheduledTasks] scheduler start() \u2014 dir=${k}, hasTasks=${hasScheduledTasks(k)}`,
         ),
           G());
         return;
       }
       if (
-        (n(
+        (logForDebugging(
           `[ScheduledTasks] scheduler start() \u2014 enabled=${Prt()}, hasTasks=${hasScheduledTasks()}`,
         ),
         !Prt() && (S || z !== void 0 || hasScheduledTasks()))

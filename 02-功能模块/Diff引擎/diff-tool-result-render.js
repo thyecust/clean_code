@@ -10,7 +10,7 @@
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { TranscriptExpandHint, OverflowHint } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -35,7 +35,7 @@ function RejectedToolUseDiff(Dt) {
     { columns: lt } = useTerminalSize(),
     F;
   if (i[0] !== z)
-    ((F = r(t, { color: "subtle", children: ["User rejected ", z, " to "] })),
+    ((F = r(Text, { color: "subtle", children: ["User rejected ", z, " to "] })),
       (i[0] = z),
       (i[1] = F));
   else F = i[1];
@@ -45,13 +45,13 @@ function RejectedToolUseDiff(Dt) {
   else J = i[4];
   let K;
   if (i[5] !== J)
-    ((K = e(t, { bold: !0, color: "subtle", children: J })),
+    ((K = e(Text, { bold: !0, color: "subtle", children: J })),
       (i[5] = J),
       (i[6] = K));
   else K = i[6];
   let ft;
   if (i[7] !== F || i[8] !== K)
-    ((ft = r(o, { flexDirection: "row", children: [F, K] })),
+    ((ft = r(Box, { flexDirection: "row", children: [F, K] })),
       (i[7] = F),
       (i[8] = K),
       (i[9] = ft));
@@ -93,7 +93,7 @@ function RejectedToolUseDiff(Dt) {
     let ct;
     if (i[23] !== Y || i[24] !== Z || i[25] !== s)
       ((ct = e(ToolResultRow, {
-        children: r(o, { flexDirection: "column", children: [s, Y, Z] }),
+        children: r(Box, { flexDirection: "column", children: [s, Y, Z] }),
       })),
         (i[23] = Y),
         (i[24] = Z),
@@ -129,7 +129,7 @@ function RejectedToolUseDiff(Dt) {
   let b;
   if (i[35] !== g || i[36] !== s)
     ((b = e(ToolResultRow, {
-      children: r(o, { flexDirection: "column", children: [s, g] }),
+      children: r(Box, { flexDirection: "column", children: [s, g] }),
     })),
       (i[35] = g),
       (i[36] = s),
@@ -171,7 +171,7 @@ function ToolUseDiff(Ft) {
         ? r(N, {
             children: [
               "Added ",
-              e(t, { bold: !0, children: c }),
+              e(Text, { bold: !0, children: c }),
               " ",
               c > 1 ? "lines" : "line",
             ],
@@ -189,7 +189,7 @@ function ToolUseDiff(Ft) {
             children: [
               c === 0 ? "R" : "r",
               "emoved ",
-              e(t, { bold: !0, children: y }),
+              e(Text, { bold: !0, children: y }),
               " ",
               y > 1 ? "lines" : "line",
             ],
@@ -201,7 +201,7 @@ function ToolUseDiff(Ft) {
   else O = a[4];
   let ut;
   if (a[5] !== I || a[6] !== st || a[7] !== O)
-    ((ut = r(t, { children: [I, st, O] })),
+    ((ut = r(Text, { children: [I, st, O] })),
       (a[5] = I),
       (a[6] = st),
       (a[7] = O),
@@ -212,7 +212,7 @@ function ToolUseDiff(Ft) {
     if (dt !== "condensed" && !it) {
       let d;
       if (a[9] !== v)
-        ((d = e(ToolResultRow, { children: e(t, { dimColor: !0, children: v }) })),
+        ((d = e(ToolResultRow, { children: e(Text, { dimColor: !0, children: v }) })),
           (a[9] = v),
           (a[10] = d));
       else d = a[10];
@@ -226,14 +226,14 @@ function ToolUseDiff(Ft) {
     else d = a[11];
     let H;
     if (a[12] !== k)
-      ((H = e(ToolResultRow, { children: r(t, { children: [k, " ", d] }) })),
+      ((H = e(ToolResultRow, { children: r(Text, { children: [k, " ", d] }) })),
         (a[12] = k),
         (a[13] = H));
     else H = a[13];
     return H;
   }
   let d;
-  if (a[14] !== k) ((d = e(t, { children: k })), (a[14] = k), (a[15] = d));
+  if (a[14] !== k) ((d = e(Text, { children: k })), (a[14] = k), (a[15] = d));
   else d = a[15];
   const H = Jt - 12;
   let X;
@@ -262,7 +262,7 @@ function ToolUseDiff(Ft) {
   let pt;
   if (a[22] !== d || a[23] !== X)
     ((pt = e(ToolResultRow, {
-      children: r(o, { flexDirection: "column", children: [d, X] }),
+      children: r(Box, { flexDirection: "column", children: [d, X] }),
     })),
       (a[22] = d),
       (a[23] = X),

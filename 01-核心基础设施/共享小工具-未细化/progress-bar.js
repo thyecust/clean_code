@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { CT } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
+import { terminalCapabilities } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { repeatString } from "../核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { EARLY_RETURN_SENTINEL } from "./chunk-2c9tjhwd.js";
 var p = [
@@ -26,7 +26,7 @@ var p = [
   ],
   x = { fill: "\u25B0", empty: "\u25B1" },
   A = { fill: "\u2588", empty: "\u2591" },
-  S = () => (CT.hasGeometricShapesInkBleedBug() ? A : x),
+  S = () => (terminalCapabilities.hasGeometricShapesInkBleedBug() ? A : x),
   T = (a) => Math.min(1, Math.max(0, a)),
   B = (a, o) => {
     let n = Math.floor(a * o),
@@ -57,15 +57,15 @@ function ProgressBar(q) {
       if (k === "pill") {
         let { fill: v, empty: K } = S();
         let H = Math.round(M * c);
-        C = r(t, {
+        C = r(Text, {
           children: [
-            e(t, { color: L, children: repeatString(v, H) }),
-            e(t, { color: i, dimColor: i === void 0, children: repeatString(K, c - H) }),
+            e(Text, { color: L, children: repeatString(v, H) }),
+            e(Text, { color: i, dimColor: i === void 0, children: repeatString(K, c - H) }),
           ],
         });
         break bb0;
       }
-      u = t;
+      u = Text;
       h = L;
       P = i;
       y = `${Math.round(M * 100)}%`;

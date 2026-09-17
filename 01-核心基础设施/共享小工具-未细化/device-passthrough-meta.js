@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { createLazyValue } from "./lazy-value.js";
-import { fE, Clt } from "../../02-功能模块/远程工具执行/chunk-66axrkvh.js";
+import { sanitizeText, parseMachineDescription } from "../../02-功能模块/远程工具执行/remote-tool-protocol.js";
 import { normalizeMcpName } from "./mcp-name-normalization.js";
 import { s, se, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var DEVICE_PASSTHROUGH_META_KEY = "anthropic/devicePassthrough",
@@ -20,10 +20,10 @@ var DEVICE_PASSTHROUGH_META_KEY = "anthropic/devicePassthrough",
 function parseDevicePassthroughMeta(t) {
   let e = l().safeParse(t);
   if (!e.success) return;
-  let o = Clt(e.data.target);
+  let o = parseMachineDescription(e.data.target);
   return o === void 0
     ? void 0
-    : { v: e.data.v, tool: fE(e.data.tool, n), target: o };
+    : { v: e.data.v, tool: sanitizeText(e.data.tool, n), target: o };
 }
 function r(t) {
   return normalizeMcpName(t).toLowerCase().replace(/[-_]+/g, "_").replace(/^_|_$/g, "");

@@ -15,20 +15,20 @@ import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小�
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dt, ge, l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { escapeInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sanitizeForDisplay, sanitizeMultilineForDisplay, getPluginDisplayName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { formatPathWithTilde } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Ui, mXe } from "./chunk-ajtn749s.js";
 import { areLocalPluginDirsAllowedByPolicy, localPluginDirsBlockedMessage, marketplacesRefusedByPolicyClause } from "./plugin-source-policy.js";
-import { V$, Aa, vm, K$ } from "./chunk-7s6mt1vg.js";
+import { isValidCliNameToken, buildCliCommand, formatPluginError, formatPluginWarning } from "./plugin-system-core.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getGitUserEmail, getGitUserName, getMainLoopModel, hashForTelemetry } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import {
   getPolicyPluginNames,
   gracefulShutdown,
@@ -155,8 +155,8 @@ function Be(a, o, s) {
 }
 function Z(a, o) {
   if (a instanceof Ui)
-    return (n(`${o} refused: ${a.message}`), cliError(sanitizeMultilineForDisplay(a.message)));
-  (n(`Failed to ${o}: ${l(a)}`, { level: "error" }),
+    return (logForDebugging(`${o} refused: ${a.message}`), cliError(sanitizeMultilineForDisplay(a.message)));
+  (logForDebugging(`Failed to ${o}: ${l(a)}`, { level: "error" }),
     cliError(sanitizeMultilineForDisplay(`${figures.cross} Failed to ${o}: ${l(a)}`)));
 }
 function de(a) {
@@ -193,7 +193,7 @@ async function pluginValidateHandler(a, o, s) {
     d = await ZWe(o);
   } catch (C) {
     if (Rt(C))
-      n(`Plugin validation failed for ${o}: ${l(C)}`, { level: "error" });
+      logForDebugging(`Plugin validation failed for ${o}: ${l(C)}`, { level: "error" });
     else logError(C);
     return (
       console.error(
@@ -234,7 +234,7 @@ async function pluginValidateHandler(a, o, s) {
     R.push(`${figures.cross} Validation failed (--strict treats warnings as errors)`);
   else R.push(`${figures.cross} Validation failed`);
   return (
-    await renderAndWaitForExit(await a(), e(t, { children: X(R) })),
+    await renderAndWaitForExit(await a(), e(Text, { children: X(R) })),
     await P(),
     exitAfterAnalyticsFlush(k ? 0 : 1)
   );
@@ -272,7 +272,7 @@ async function pluginTagHandler(a, o, s) {
     (logFeatureOk("cli_plugin_tag"),
       c.push(
         `${figures.tick} Dry run \u2014 would create tag ${p.tag} at HEAD in ${p.gitRoot}`,
-        `  git -C ${p.gitRoot} tag ${w ? "-f " : ""}-a ${p.tag} -m ${b(v)}`,
+        `  git -C ${p.gitRoot} tag ${w ? "-f " : ""}-a ${p.tag} -m ${jsonStringify(v)}`,
         `  ${P}`,
       ),
       z(a, c, 0));
@@ -296,7 +296,7 @@ async function pluginTagHandler(a, o, s) {
   z(a, c, 0);
 }
 function z(a, o, s) {
-  (a.render(e(RenderOnceAndExit, { children: e(t, { children: X(o) }) })),
+  (a.render(e(RenderOnceAndExit, { children: e(Text, { children: X(o) }) })),
     a.waitUntilExit().then(() => process.exit(s)));
 }
 async function pluginInitHandler(a, o, s, d) {
@@ -321,7 +321,7 @@ async function pluginInitHandler(a, o, s, d) {
     }
   if (!areLocalPluginDirsAllowedByPolicy()) {
     (logFeatureBad("cli_plugin_init", "policy_blocked"),
-      c.push(`${figures.cross} ${localPluginDirsBlockedMessage(Gu(ce(getClaudeConfigDir(), "skills")))}`),
+      c.push(`${figures.cross} ${localPluginDirsBlockedMessage(formatPathWithTilde(ce(getClaudeConfigDir(), "skills")))}`),
       z(a, c, 1));
     return;
   }
@@ -329,7 +329,7 @@ async function pluginInitHandler(a, o, s, d) {
     v = ce(w, o);
   if (relative(w, resolve(v)).startsWith("..")) {
     (logFeatureBad("cli_plugin_init", "invalid_name"),
-      c.push(`${figures.cross} Plugin name "${o}" would write outside ${Gu(w)}`),
+      c.push(`${figures.cross} Plugin name "${o}" would write outside ${formatPathWithTilde(w)}`),
       z(a, c, 1));
     return;
   }
@@ -367,7 +367,7 @@ async function pluginInitHandler(a, o, s, d) {
   }
   logFeatureOk("cli_plugin_init");
   let H = `${o}@${SKILLS_DIR_PLUGIN_SOURCE}`;
-  c.push(`${figures.tick} Created plugin "${o}" at ${Gu(v)}`);
+  c.push(`${figures.tick} Created plugin "${o}" at ${formatPathWithTilde(v)}`);
   let E = getSettings_DEPRECATED().enabledPlugins ?? {},
     B = getPolicyPluginNames()?.has(o) ?? !1,
     Y = await getKnownMarketplacesOrEmpty(d),
@@ -391,7 +391,7 @@ async function pluginInitHandler(a, o, s, d) {
       `  ${figures.warning} The name "${o}" is already taken by ${T} \u2014 when that plugin loads, ${H} won't. To load this copy, give it a different "name" in .claude-plugin/plugin.json or uninstall the conflicting plugin.`,
     );
   else if (O) {
-    let D = Aa("plugin enable", H);
+    let D = buildCliCommand("plugin enable", H);
     c.push(
       `  ${figures.warning} A disabled setting for ${H} exists, so it won't load until you re-enable it${D ? `: ${D}` : " in /plugin"}`,
     );
@@ -399,7 +399,7 @@ async function pluginInitHandler(a, o, s, d) {
     c.push(
       `  It will auto-load next session as ${H}. Run /reload-plugins to load it now.`,
     );
-  let U = Aa("plugin disable", H);
+  let U = buildCliCommand("plugin disable", H);
   (c.push(
     `  ${U ? `Disable: ${U}. ` : "Disable: in /plugin. "}Remove: delete the directory.`,
   ),
@@ -454,8 +454,8 @@ async function pluginListHandler(a, o, s, d) {
       if (!D || D.length === 0) continue;
       let J = m.get(U),
         W = J?.name ?? splitPluginId(U).name,
-        G = C.filter((V) => z8(V, U, W)).map(vm),
-        K = N.filter((V) => z8(V, U, W)).map(K$);
+        G = C.filter((V) => z8(V, U, W)).map(formatPluginError),
+        K = N.filter((V) => z8(V, U, W)).map(formatPluginWarning);
       for (let V of D) {
         let q;
         if (J) {
@@ -538,15 +538,15 @@ async function pluginListHandler(a, o, s, d) {
         B.push(`    Version: ${V}`),
         B.push(`    Scope: ${q}`),
         B.push(`    Status: ${K}`));
-      for (let I of D) B.push(`    Error: ${vm(I)}`);
-      for (let I of J) B.push(`    Note: ${K$(I)}`);
+      for (let I of D) B.push(`    Error: ${formatPluginError(I)}`);
+      for (let I of J) B.push(`    Note: ${formatPluginWarning(I)}`);
       B.push("");
     }
   }
   for (let T of E) B.push(...He(T));
   logFeatureOk("cli_plugin_list");
   let Y = await a();
-  await renderAndWaitForExit(Y, e(t, { children: X(B) }));
+  await renderAndWaitForExit(Y, e(Text, { children: X(B) }));
 }
 function pe(_a) {
   let Te = _(4),
@@ -557,7 +557,7 @@ function pe(_a) {
   else te = Te[1];
   let Ce;
   if (Te[2] !== te)
-    ((Ce = e(RenderOnceAndExit, { children: e(t, { children: te }) })),
+    ((Ce = e(RenderOnceAndExit, { children: e(Text, { children: te }) })),
       (Te[2] = te),
       (Te[3] = Ce));
   else Ce = Te[3];
@@ -636,7 +636,7 @@ async function marketplaceAddHandler(a, o, s, d, c) {
       try {
         m = (await resolveMissingDependencies((await loadAllPlugins(d, c)).errors, d)).installed;
       } catch (E) {
-        n(`marketplace add: dep auto-resolve skipped: ${l(E)}`, {
+        logForDebugging(`marketplace add: dep auto-resolve skipped: ${l(E)}`, {
           level: "warn",
         });
       }
@@ -658,7 +658,7 @@ async function marketplaceAddHandler(a, o, s, d, c) {
   })();
   (a.render(
     e(Dn, {
-      fallback: e(t, { children: "Adding marketplace\u2026" }),
+      fallback: e(Text, { children: "Adding marketplace\u2026" }),
       children: e(pe, { promise: v }),
     }),
   ),
@@ -721,7 +721,7 @@ async function Ne(a, o, s, d) {
   (c.catch(() => {}),
     a.render(
       e(Dn, {
-        fallback: e(t, { children: "Adding marketplace\u2026" }),
+        fallback: e(Text, { children: "Adding marketplace\u2026" }),
         children: e(pe, { promise: c }),
       }),
     ),
@@ -788,7 +788,7 @@ async function marketplaceListHandler(a, o, s) {
   }
   let C;
   if (c.length === 0 && k.length === 0 && w.length === 0 && v.length === 0)
-    C = e(t, { children: "No marketplaces configured" });
+    C = e(Text, { children: "No marketplaces configured" });
   else {
     let A =
       c.length > 0
@@ -835,12 +835,12 @@ async function marketplaceListHandler(a, o, s) {
         `  ${figures.pointer} ${formatMarketplaceRowLabel(m)} \u2014 hosted on claude.ai, ${formatMarketplaceScopeLabel(m.scope)} \xB7 not added`,
       ),
         A.push(
-          `    Add: claude plugin marketplace add --claudeai ${V$(m.name) ? m.name : "<name>"}`,
+          `    Add: claude plugin marketplace add --claudeai ${isValidCliNameToken(m.name) ? m.name : "<name>"}`,
         ),
         A.push(""));
     for (let m of v)
       (A.push(`  ${figures.pointer} ${formatBrowseOnlyMarketplace(m)} (browse on claude.ai)`), A.push(""));
-    C = e(t, { children: X(A) });
+    C = e(Text, { children: X(A) });
   }
   logFeatureOk("cli_marketplace_list");
   let N = await a();
@@ -869,7 +869,7 @@ async function marketplaceRemoveHandler(a, o, s, d) {
   (logFeatureOk("cli_marketplace_remove"),
     await renderAndWaitForExit(
       a,
-      r(t, {
+      r(Text, {
         children: [
           figures.tick,
           " Successfully removed marketplace:",
@@ -890,7 +890,7 @@ function Se(ka) {
   if (ke[0] !== he || ke[1] !== _e) {
     let $a = [...he, _e];
     ie = RenderOnceAndExit;
-    re = t;
+    re = Text;
     oe = X($a);
     ((ke[0] = he), (ke[1] = _e), (ke[2] = re), (ke[3] = ie), (ke[4] = oe));
   } else ((re = ke[2]), (ie = ke[3]), (oe = ke[4]));
@@ -952,7 +952,7 @@ async function marketplaceUpdateHandler(a, o, s, d) {
     }
     let v = Object.keys(w);
     if (v.length === 0) {
-      (await renderAndWaitForExit(a, e(t, { children: "No marketplaces configured" })),
+      (await renderAndWaitForExit(a, e(Text, { children: "No marketplaces configured" })),
         process.exit(0));
       return;
     }
@@ -989,7 +989,7 @@ async function marketplaceUpdateHandler(a, o, s, d) {
         )));
   }
   (a.render(
-    e(Dn, { fallback: e(t, { children: c }), children: e(Se, { promise: k }) }),
+    e(Dn, { fallback: e(Text, { children: c }), children: e(Se, { promise: k }) }),
   ),
     await a.waitUntilExit(),
     await exitAfterAnalyticsFlush(p));
@@ -1003,7 +1003,7 @@ function ve(Pa) {
   else le = xe[1];
   let Oe;
   if (xe[2] !== le)
-    ((Oe = e(RenderOnceAndExit, { children: r(t, { children: [figures.tick, " ", le] }) })),
+    ((Oe = e(RenderOnceAndExit, { children: r(Text, { children: [figures.tick, " ", le] }) })),
       (xe[2] = le),
       (xe[3] = Oe));
   else Oe = xe[3];
@@ -1065,7 +1065,7 @@ async function pluginInstallHandler(a, o, s, d) {
   if (v?.kind === "declined") {
     if (p) dle(p.outcome);
     (logFeatureSad("cli_plugin_install", "command_source_declined"),
-      await renderAndWaitForExit(a, e(t, { children: "Aborted." })),
+      await renderAndWaitForExit(a, e(Text, { children: "Aborted." })),
       await gracefulShutdown(1));
     return;
   }
@@ -1082,7 +1082,7 @@ async function pluginInstallHandler(a, o, s, d) {
       p)
     )
       dle(p.outcome);
-    (await renderAndWaitForExit(a, e(t, { children: "Aborted \u2014 the command was not run." })),
+    (await renderAndWaitForExit(a, e(Text, { children: "Aborted \u2014 the command was not run." })),
       await gracefulShutdown(1));
     return;
   }
@@ -1091,7 +1091,7 @@ async function pluginInstallHandler(a, o, s, d) {
   );
   (a.render(
     e(Dn, {
-      fallback: e(t, { children: sanitizeForDisplay(`Installing plugin "${o}"...`) }),
+      fallback: e(Text, { children: sanitizeForDisplay(`Installing plugin "${o}"...`) }),
       children: e(ve, { promise: C }),
     }),
   ),
@@ -1103,7 +1103,7 @@ async function pluginUninstallHandler(a, o, s, d) {
   let c = me(s);
   ae("tengu_plugin_uninstall_command", o, fromEnum(c));
   let p = await runPluginUninstallCommand(o, c, s.keepData, s.prune, s.yes, d);
-  (await renderAndWaitForExit(a, e(t, { children: sanitizeMultilineForDisplay(s.prune ? p : `${figures.tick} ${p}`) })),
+  (await renderAndWaitForExit(a, e(Text, { children: sanitizeMultilineForDisplay(s.prune ? p : `${figures.tick} ${p}`) })),
     await logFeatureOkAsync("cli_plugin_uninstall"),
     await exitAfterAnalyticsFlush(0));
 }
@@ -1112,7 +1112,7 @@ async function pluginPruneHandler(a, o, s) {
   let d = me(o);
   logEvent("tengu_plugin_prune_command", { scope: fromEnum(d), dry_run: o.dryRun ?? !1 });
   let c = await runPluginPruneCommand(d, { dryRun: o.dryRun, yes: o.yes }, s);
-  (await renderAndWaitForExit(a, e(t, { children: sanitizeMultilineForDisplay(c) })),
+  (await renderAndWaitForExit(a, e(Text, { children: sanitizeMultilineForDisplay(c) })),
     await logFeatureOkAsync("cli_plugin_prune"),
     await exitAfterAnalyticsFlush(0));
 }
@@ -1127,7 +1127,7 @@ async function pluginEnableHandler(a, o, s, d) {
   } catch (k) {
     return await handlePluginCommandError(k, "enable", o);
   }
-  (await renderAndWaitForExit(a, r(t, { children: [figures.tick, " ", sanitizeMultilineForDisplay(p.message)] })),
+  (await renderAndWaitForExit(a, r(Text, { children: [figures.tick, " ", sanitizeMultilineForDisplay(p.message)] })),
     await logEventAsync("tengu_plugin_enabled_cli", {
       ...buildPluginTelemetryFieldsFromId(p.pluginId || o, getPolicyPluginNames()),
       scope: fromEnumOpt(p.scope),
@@ -1151,7 +1151,7 @@ async function pluginDisableHandler(a, o, s, d) {
       ensureBuiltinPluginsRegistered(),
       (c = await runPluginDisableCommand(o, p, d)));
   }
-  (await renderAndWaitForExit(a, e(t, { children: sanitizeMultilineForDisplay(c) })),
+  (await renderAndWaitForExit(a, e(Text, { children: sanitizeMultilineForDisplay(c) })),
     await logFeatureOkAsync("cli_plugin_disable"),
     await exitAfterAnalyticsFlush(0));
 }
@@ -1175,7 +1175,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
       computePluginTokenCost: k,
       scaleCharsToTokens: w,
     } = await import("../MCP客户端/chunk-4xr0rjb4.js"),
-    { formatTokenEstimate: v } = await import("../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js");
+    { formatTokenEstimate: v } = await import("../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js");
   await reloadPluginDirsFromDisk();
   let { enabled: P, disabled: R } = await loadAllPlugins(isHoverRestEnabled() ? d : void 0, c),
     C = parsePluginId(o),
@@ -1187,7 +1187,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
     let I = `Plugin "${o}" not found. Run \`claude plugin list\` to see installed plugins, or pass --plugin-dir <path> to load one from disk.`;
     if (s.json) return cliError(sanitizeMultilineForDisplay(I));
     let j = await a();
-    (await renderAndWaitForExit(j, e(t, { children: sanitizeMultilineForDisplay(I) })), process.exit(1));
+    (await renderAndWaitForExit(j, e(Text, { children: sanitizeMultilineForDisplay(I) })), process.exit(1));
   }
   let H = getPluginMarketplace(m.source) ?? INLINE_PLUGIN_SOURCE,
     E = s.models?.length ? s.models : [getMainLoopModel()],
@@ -1201,7 +1201,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
     let j = `${figures.cross} Could not load details for "${m.name}": ${l(I)}`;
     if (s.json) return cliError(sanitizeMultilineForDisplay(j));
     let Q = await a();
-    (await renderAndWaitForExit(Q, e(t, { children: sanitizeMultilineForDisplay(j) })), process.exit(1));
+    (await renderAndWaitForExit(Q, e(Text, { children: sanitizeMultilineForDisplay(j) })), process.exit(1));
   }
   let { tokens: Y, inventory: T } = B;
   if (s.json) {
@@ -1294,14 +1294,14 @@ async function pluginDetailsHandler(a, o, s, d, c) {
   if (K) logFeatureOk("cli_plugin_details");
   else logFeatureSad("cli_plugin_details", "count_tokens_unreachable");
   let q = await a();
-  await renderAndWaitForExit(q, e(t, { children: X(O) }));
+  await renderAndWaitForExit(q, e(Text, { children: X(O) }));
 }
 function X(a) {
   return a.map(sanitizeForDisplay).join(`
 `);
 }
 function ne(a) {
-  return escapeInvisibleChars(b(a, null, 2));
+  return escapeInvisibleChars(jsonStringify(a, null, 2));
 }
 function ue(a, o) {
   let s = (k) => getNonMarketplacePluginSource(k.source) === a,
@@ -1327,7 +1327,7 @@ function He(a) {
   if (!Re(a)) return [];
   let { standaloneErrorRows: o, standaloneWarningRows: s } = a,
     d = [a.header, ""];
-  for (let c of s) d.push(`  ${figures.warning} ${K$(c)}`, "");
+  for (let c of s) d.push(`  ${figures.warning} ${formatPluginWarning(c)}`, "");
   for (let c of a.plugins) {
     let p = a.errors.filter((v) => ZPt(v, c)),
       k = a.warnings.filter((v) => eOt(v, c)),
@@ -1344,12 +1344,12 @@ function He(a) {
     )
       d.push(`    Scope: ${a.scopeOf(c)}`);
     (d.push(`    Path: ${a.pathOf(c)}`), d.push(`    Status: ${w}`));
-    for (let v of p) d.push(`    Error: ${vm(v)}`);
-    for (let v of k) d.push(`    Note: ${K$(v)}`);
+    for (let v of p) d.push(`    Error: ${formatPluginError(v)}`);
+    for (let v of k) d.push(`    Note: ${formatPluginWarning(v)}`);
     d.push("");
   }
   for (let c of o)
-    d.push(`  ${figures.pointer} ${c.source}: ${figures.cross} ${vm(c)}`, "");
+    d.push(`  ${figures.pointer} ${c.source}: ${figures.cross} ${formatPluginError(c)}`, "");
   return d;
 }
 function $e({ path: a, message: o }) {
@@ -1379,8 +1379,8 @@ async function Ue(a, o) {
     let c =
         d.mcpServers ||
         (await discoverPluginMcpServers(d, void 0, o, void 0, { readOnlyListing: !0 })),
-      p = a.errors.filter((w) => ZPt(w, d)).map(vm),
-      k = a.warnings.filter((w) => eOt(w, d)).map(K$);
+      p = a.errors.filter((w) => ZPt(w, d)).map(formatPluginError),
+      k = a.warnings.filter((w) => eOt(w, d)).map(formatPluginWarning);
     s.push({
       id: d.source,
       version: d.manifest.version ?? "unknown",
@@ -1399,7 +1399,7 @@ async function Ue(a, o) {
       scope: a.standaloneErrorScope,
       enabled: !1,
       installPath: "path" in d ? d.path : "",
-      errors: [vm(d)],
+      errors: [formatPluginError(d)],
     });
   for (let d of a.standaloneWarningRows)
     s.push({
@@ -1408,7 +1408,7 @@ async function Ue(a, o) {
       scope: a.standaloneWarningScope,
       enabled: d.type === "synced-plugin-shadowed",
       installPath: "",
-      notes: [K$(d)],
+      notes: [formatPluginWarning(d)],
     });
   return s;
 }

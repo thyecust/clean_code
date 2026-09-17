@@ -18,19 +18,19 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { parsePermissionMode, UNRECOGNIZED_PERMISSION_MODE_ERROR } from "../权限系统/chunk-e4pfvp7x.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { yt, mi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { areBackgroundTasksDisabled, BACKGROUND_TASKS_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
 import { formatDisplayText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var sp = "(no content)",
-  ER = "No response requested.",
-  fc = "<synthetic>",
-  nrr = "Auto Mode Active",
-  mAt =
+var NO_CONTENT_PLACEHOLDER = "(no content)",
+  NO_RESPONSE_REQUESTED_TEXT = "No response requested.",
+  SYNTHETIC_MODEL_NAME = "<synthetic>",
+  AUTO_MODE_ACTIVE_HEADING = "Auto Mode Active",
+  SKIPPED_TRACKED_PATHS_REASON =
     "the tracked path is (or became) a link or other non-regular file, its directory changed since the checkpoint, or its backup could not be safely read";
-var of = {
+var ZERO_USAGE_TOTALS = {
   output_tokens_details: { thinking_tokens: 0 },
   input_tokens: 0,
   cache_creation_input_tokens: 0,
@@ -46,14 +46,14 @@ var of = {
   iterations: [],
   speed: "standard",
 };
-function K4t(e) {
+function parseBackgroundTasksToolUseId(e) {
   if (e == null || e === "") return { valid: !0, toolUseId: void 0 };
   if (typeof e === "string") return { valid: !0, toolUseId: e };
   return { valid: !1 };
 }
-var X4t = "background_tasks: tool_use_id must be a string";
-var uCn = 32;
-function p6(e) {
+var BACKGROUND_TASKS_TOOL_USE_ID_TYPE_ERROR = "background_tasks: tool_use_id must be a string";
+var MAX_DECLARED_DIALOG_KINDS = 32;
+function normalizeDeclaredDialogKinds(e) {
   if (!Array.isArray(e)) return [];
   return e
     .filter((t) => typeof t === "string" && t.length > 0 && t.length <= 64)
@@ -75,13 +75,13 @@ function Qn(e) {
   }
   return "";
 }
-function dCn(e) {
+function replaceInvisibleCharsWithSpace(e) {
   if (typeof e !== "string") return "";
   return (e.length > 4096 ? e.slice(0, 4096) : e)
     .replace(Q, (r) => (r.length === 2 ? r : " "))
     .replace(w, " ");
 }
-function Y4t(e) {
+function sanitizeRelayableText(e) {
   if (e.length > 16384) return null;
   let t = e;
   for (let r = 0; r < 64; r++) {
@@ -91,24 +91,24 @@ function Y4t(e) {
   }
   return null;
 }
-function rrr(e) {
+function formatElicitationUrls(e) {
   let t = e
       .slice(0, 3)
-      .map((s) => Y4t(s) ?? "[elicitation URL too long to relay]"),
+      .map((s) => sanitizeRelayableText(s) ?? "[elicitation URL too long to relay]"),
     r =
       e.length > 3
         ? ` \u2026and ${e.length - 3} more \u2014 re-run in the terminal to see all`
         : "";
   return `${t.join(", ")}${r}`;
 }
-function AR(e) {
+function isHumanOrigin(e) {
   return e?.kind === "human";
 }
-function pCn(e) {
+function isStrictHumanTurn(e) {
   try {
     if (e.type === "user")
       return (
-        AR(e.origin) &&
+        isHumanOrigin(e.origin) &&
         e.toolUseResult === void 0 &&
         e.isCompactSummary !== !0 &&
         e.verifiedSlackHumanTurn !== !0
@@ -116,30 +116,30 @@ function pCn(e) {
     return (
       e.type === "attachment" &&
       e.attachment.type === "queued_command" &&
-      AR(e.attachment.origin) &&
+      isHumanOrigin(e.attachment.origin) &&
       e.attachment.verifiedSlackHumanTurn !== !0
     );
   } catch {
     return !1;
   }
 }
-function gAt(e) {
+function hasStrictHumanDecider(e) {
   return Ee(e) !== void 0;
 }
 function Ee(e) {
-  let t = kme(e).decider;
+  let t = analyzeTurnTail(e).decider;
   if (t == null || !t.strictHuman) return;
   let r = e[t.index];
-  return r !== void 0 && pCn(r) ? r : void 0;
+  return r !== void 0 && isStrictHumanTurn(r) ? r : void 0;
 }
-function J4t(e) {
+function isUserDrivenOrigin(e) {
   return e?.kind === "human" || e?.kind === "auto-continuation";
 }
-function dse(e) {
-  return kme(e).decider?.userDriven === !0;
+function isUserDrivenTurn(e) {
+  return analyzeTurnTail(e).decider?.userDriven === !0;
 }
 var N = { decider: null, referentTail: void 0, scheduledTrigger: !1 };
-function kme(e) {
+function analyzeTurnTail(e) {
   try {
     return De(e);
   } catch {
@@ -191,7 +191,7 @@ function De(e) {
             origin: M,
             text: J(Ae(b.attachment.prompt)),
             userDriven: !0,
-            strictHuman: AR(M),
+            strictHuman: isHumanOrigin(M),
             scheduledTrigger: C(M),
           }),
             (r = a));
@@ -204,13 +204,13 @@ function De(e) {
         continue;
       }
       let k = b.origin,
-        E = b.isMeta === !0 && AR(k);
+        E = b.isMeta === !0 && isHumanOrigin(k);
       ((t = {
         index: a,
         origin: k,
         text: J(Ie(b)),
-        userDriven: E || (b.isMeta !== !0 && J4t(k)),
-        strictHuman: E || (b.isMeta !== !0 && AR(k)),
+        userDriven: E || (b.isMeta !== !0 && isUserDrivenOrigin(k)),
+        strictHuman: E || (b.isMeta !== !0 && isHumanOrigin(k)),
         scheduledTrigger: C(k),
       }),
         (r = a));
@@ -230,7 +230,7 @@ function De(e) {
       if (
         b.isApiErrorMessage === !0 ||
         b.isVirtual === !0 ||
-        b.message?.model === fc
+        b.message?.model === SYNTHETIC_MODEL_NAME
       )
         continue;
       let E = ve(b);
@@ -302,7 +302,7 @@ function Ae(e) {
     : null;
 }
 function ne(e) {
-  return AR(e.origin) || (e.isMeta !== !0 && J4t(e.origin));
+  return isHumanOrigin(e.origin) || (e.isMeta !== !0 && isUserDrivenOrigin(e.origin));
 }
 function re(e) {
   return se(e) || e.isCompactSummary === !0;
@@ -317,7 +317,7 @@ function se(e) {
 }
 function Te(e, t) {
   let r = e[t];
-  if (r?.type !== "user" || !(r.origin === void 0 || AR(r.origin))) return !1;
+  if (r?.type !== "user" || !(r.origin === void 0 || isHumanOrigin(r.origin))) return !1;
   let s = ee(r);
   if (s === null) return !1;
   let d = new Set(s),
@@ -366,33 +366,33 @@ function ee(e) {
   }
   return r;
 }
-function Ew(e) {
+function isHumanOrUnstampedOrigin(e) {
   return e === void 0 || e.kind === "human";
 }
-function orr(e) {
-  return e.verifiedSlackHumanTurn === !0 && e.isMeta !== !0 && Ew(e.origin);
+function isVerifiedRelayHumanTurn(e) {
+  return e.verifiedSlackHumanTurn === !0 && e.isMeta !== !0 && isHumanOrUnstampedOrigin(e.origin);
 }
-function srr(e) {
+function isUnclassifiedOrigin(e) {
   return e === void 0 || e.kind === "unclassified";
 }
-function f6(e) {
+function isProjectsRelayOrigin(e) {
   return e?.kind === "task-notification" && e.subkind === "projects-relay";
 }
-function pse(e) {
+function isPeerOrObserverOrigin(e) {
   return (
     (e?.kind === "peer" && e.senderTaskId !== void 0) || e?.kind === "observer"
   );
 }
-function hAt(e) {
+function getOriginDisplayName(e) {
   return (e.kind === "peer" && e.name) || e.from;
 }
-function _At(e) {
+function isPeerOrSlackPingOrigin(e) {
   return e?.kind === "peer" || e?.kind === "slack-ping";
 }
-function w_(e) {
+function isUserDrivenOrUnstampedOrigin(e) {
   return e === void 0 || e.kind === "human" || e.kind === "auto-continuation";
 }
-function fCn(e, t) {
+function toHumanOrigin(e, t) {
   if (t) return;
   return typeof e === "object" &&
     e !== null &&
@@ -401,15 +401,15 @@ function fCn(e, t) {
     ? { kind: "human" }
     : void 0;
 }
-function iQe(e, t) {
-  return (t === !0 || (e !== void 0 && e !== null)) && fCn(e, t) === void 0;
+function lacksHumanOrigin(e, t) {
+  return (t === !0 || (e !== void 0 && e !== null)) && toHumanOrigin(e, t) === void 0;
 }
-function s5(e) {
+function isPlainUserMessage(e) {
   return e.type === "user" && !e.isMeta && e.toolUseResult === void 0;
 }
-function irr(e, t) {
+function isHumanAuthoredMessage(e, t) {
   return (
-    s5(e) ||
+    isPlainUserMessage(e) ||
     (e.type === "system" &&
       e.subtype === "local_command" &&
       xe(e.content, t)) ||
@@ -418,16 +418,16 @@ function irr(e, t) {
       e.attachment.origin?.kind === "human")
   );
 }
-function F$e(e) {
+function isHumanUserMessage(e) {
   return (
     e.type === "user" &&
     !e.isMeta &&
     e.toolUseResult === void 0 &&
     !e.isCompactSummary &&
-    Ew(e.origin)
+    isHumanOrUnstampedOrigin(e.origin)
   );
 }
-function arr(e, t) {
+function logHumanOriginPresumed(e, t) {
   if (t === 0) return;
   logEvent("tengu_human_origin_presumed", {
     consumer: fromEnum(e),
@@ -441,7 +441,7 @@ function xe(e, t) {
   return r === t.trimStart().split(/\s/, 1)[0];
 }
 import { randomUUID } from "crypto";
-function N$e(e) {
+function normalizeRequestIdFields(e) {
   if (e === null || typeof e !== "object") return e;
   let t = e;
   if ("requestId" in t && !("request_id" in t))
@@ -457,7 +457,7 @@ function N$e(e) {
   }
   return e;
 }
-function mCn(e) {
+function isTypedMessageObject(e) {
   return (
     e !== null &&
     typeof e === "object" &&
@@ -486,10 +486,10 @@ function Ne(e) {
     e.request != null
   );
 }
-function lrr(e) {
+function setBridgeStateFramesGate(e) {
   getSessionRuntimeState().bridgeStateFramesGate = e;
 }
-function xme(e) {
+function shouldRelayMessageToBridge(e) {
   if ((e.type === "user" || e.type === "assistant") && e.isVirtual) return !1;
   if (e.type === "attachment") {
     if (e.attachment.type === "hook_system_message") return !0;
@@ -498,7 +498,7 @@ function xme(e) {
       e.attachment.type === "queued_command" &&
       e.attachment.commandMode === "prompt" &&
       !e.attachment.isMeta &&
-      w_(e.attachment.origin)
+      isUserDrivenOrUnstampedOrigin(e.attachment.origin)
     );
   }
   return (
@@ -520,10 +520,10 @@ function Oe(e) {
         : void 0;
   return typeof r === "string" && qe.some((s) => r.startsWith(s));
 }
-function Q4t(e) {
+function isRelayableUserMessage(e) {
   return e.type === "user" && !e.isCompactSummary && !Oe(e);
 }
-function yAt(e) {
+function isSdkStreamEvent(e) {
   return (
     e.type === "conversation_reset" ||
     e.type === "stream_event" ||
@@ -538,8 +538,8 @@ function yAt(e) {
     e.subtype === "vcs_state_changed"
   );
 }
-function crr(e) {
-  if (!F$e(e)) return;
+function getHumanUserMessageText(e) {
+  if (!isHumanUserMessage(e)) return;
   let t = e.message.content,
     r;
   if (typeof t === "string") r = t;
@@ -552,42 +552,42 @@ function crr(e) {
   if (!r) return;
   return stripXmlTags(r) || void 0;
 }
-function urr(e, t, r, s, d, S) {
+function handleBridgeIngressMessage(e, t, r, s, d, S) {
   try {
-    let p = N$e(z(e));
+    let p = normalizeRequestIdFields(jsonParse(e));
     if (we(p)) {
-      (n("[bridge:repl] Ingress message type=control_response"), d?.(p));
+      (logForDebugging("[bridge:repl] Ingress message type=control_response"), d?.(p));
       return;
     }
     if (Ne(p)) {
-      (n(`[bridge:repl] Inbound control_request subtype=${p.request.subtype}`),
+      (logForDebugging(`[bridge:repl] Inbound control_request subtype=${p.request.subtype}`),
         S?.(p));
       return;
     }
-    if (!mCn(p)) return;
+    if (!isTypedMessageObject(p)) return;
     let a = "uuid" in p && typeof p.uuid === "string" ? p.uuid : void 0;
     if (a && t.has(a)) {
-      n(`[bridge:repl] Ignoring echo: type=${p.type} uuid=${a}`);
+      logForDebugging(`[bridge:repl] Ignoring echo: type=${p.type} uuid=${a}`);
       return;
     }
     if (a && r.has(a)) {
-      n(
+      logForDebugging(
         `[bridge:repl] Ignoring re-delivered inbound: type=${p.type} uuid=${a}`,
       );
       return;
     }
     if (
-      (n(
+      (logForDebugging(
         `[bridge:repl] Ingress message type=${p.type}${a ? ` uuid=${a}` : ""}`,
       ),
       p.type === "user")
     ) {
       if ("isReplay" in p && p.isReplay === !0) {
-        n(`[bridge:repl] Ignoring replay echo: uuid=${a ?? "none"}`);
+        logForDebugging(`[bridge:repl] Ignoring replay echo: uuid=${a ?? "none"}`);
         return;
       }
       if ("parent_tool_use_id" in p && p.parent_tool_use_id != null) {
-        n(
+        logForDebugging(
           `[bridge:repl] Ignoring parented user frame at ingress (echo/replay of a subagent frame): uuid=${a}`,
         );
         return;
@@ -596,9 +596,9 @@ function urr(e, t, r, s, d, S) {
       (logEvent("tengu_bridge_message_received", { is_repl: !0 }),
         logFeatureOk("bridge_message_receive"),
         s?.(p));
-    } else n(`[bridge:repl] Ignoring non-user inbound message: type=${p.type}`);
+    } else logForDebugging(`[bridge:repl] Ignoring non-user inbound message: type=${p.type}`);
   } catch (p) {
-    (n(`[bridge:repl] Failed to parse ingress message: ${l(p)}`),
+    (logForDebugging(`[bridge:repl] Failed to parse ingress message: ${l(p)}`),
       logFeatureBad("bridge_message_receive", "bridge_message_receive_parse_failed"));
   }
 }
@@ -623,12 +623,12 @@ var Pe = new Set(["effortLevel", "ultracode"]),
 function Ge(e, t) {
   if (t instanceof mi) return Qn(l(t));
   if (yt(t)) return Qn(l(t));
-  return (n(`${e} failed: ${l(t)}`, { level: "error" }), `${e} failed`);
+  return (logForDebugging(`${e} failed: ${l(t)}`, { level: "error" }), `${e} failed`);
 }
-function drr(e) {
+function assertMcpReconnectSucceeded(e) {
   if (e.type === "connected") return;
   if (e.type === "failed") {
-    if (e.error) n(`mcp_reconnect failed: ${e.error}`, { level: "error" });
+    if (e.error) logForDebugging(`mcp_reconnect failed: ${e.error}`, { level: "error" });
     throw new mi("Connection failed");
   }
   throw new mi(`Server status: ${e.type}`);
@@ -653,7 +653,7 @@ function A(e, t, r, s) {
     .then((d) => {
       let S = { ...d, session_id: r };
       (t.write(S),
-        n(
+        logForDebugging(
           `[bridge:repl] Sent control_response for ${e.request.subtype} request_id=${e.request_id} result=${d.response.subtype}`,
         ));
     });
@@ -699,7 +699,7 @@ function je(e, t, r, s, d = Ve) {
     })
     .catch(
       (k) => (
-        n(`[bridge:repl] set_model verdict rejected: ${l(k)}`, {
+        logForDebugging(`[bridge:repl] set_model verdict rejected: ${l(k)}`, {
           level: "error",
         }),
         {
@@ -715,7 +715,7 @@ function je(e, t, r, s, d = Ve) {
     .then((k) => {
       let E = { ...k, session_id: r };
       (t.write(E),
-        n(
+        logForDebugging(
           `[bridge:repl] Sent control_response for set_model request_id=${e.request_id} result=${k.response.subtype}`,
         ));
     }),
@@ -730,7 +730,7 @@ function je(e, t, r, s, d = Ve) {
       },
       (k) => {
         if (
-          (n(
+          (logForDebugging(
             `[bridge] set_model verdict rejected after the deadline reply: ${l(k)}`,
             { level: "error" },
           ),
@@ -740,7 +740,7 @@ function je(e, t, r, s, d = Ve) {
       },
     ));
 }
-function prr(e, t) {
+function handleBridgeControlRequest(e, t) {
   let {
     transport: r,
     sessionId: s,
@@ -771,14 +771,14 @@ function prr(e, t) {
     onMcpSetServers: Y,
   } = t;
   if (!r) {
-    n(
+    logForDebugging(
       "[bridge:repl] Cannot respond to control_request: transport not configured",
     );
     return;
   }
   let h;
   if (isExiting() && !Be.has(e.request.subtype)) {
-    (n(`[bridge] refusing ${e.request.subtype}: this process is exiting`),
+    (logForDebugging(`[bridge] refusing ${e.request.subtype}: this process is exiting`),
       (h = {
         type: "control_response",
         response: { subtype: "error", request_id: e.request_id, error: Ke },
@@ -794,7 +794,7 @@ function prr(e, t) {
     };
     let o = { ...h, session_id: s };
     (r.write(o),
-      n(
+      logForDebugging(
         `[bridge:repl] Rejected ${e.request.subtype} (outbound-only) request_id=${e.request_id}`,
       ));
     return;
@@ -802,10 +802,10 @@ function prr(e, t) {
   switch (e.request.subtype) {
     case "initialize": {
       try {
-        let I = p6(e.request.supportedDialogKinds);
+        let I = normalizeDeclaredDialogKinds(e.request.supportedDialogKinds);
         if (I.length > 0) M?.(I);
       } catch (I) {
-        n(
+        logForDebugging(
           `[bridge:repl] dialog-kind capture failed; acking initialize anyway: ${l(I)}`,
         );
       }
@@ -815,7 +815,7 @@ function prr(e, t) {
           o = p?.() ?? [];
         } catch (I) {
           (logFeatureBad("bridge_initialize_commands", "get_commands_threw"),
-            n(
+            logForDebugging(
               `[bridge:repl] getCommands failed; acking initialize with commands: []: ${l(I)}`,
             ));
         }
@@ -844,7 +844,7 @@ function prr(e, t) {
       try {
         _e?.();
       } catch (I) {
-        n(
+        logForDebugging(
           `[bridge:repl] onClientInitialize failed; acking initialize anyway: ${l(I)}`,
         );
       }
@@ -1186,7 +1186,7 @@ function prr(e, t) {
         _ = "hint" in e.request ? e.request.hint : void 0,
         D;
       if (o === void 0 && typeof _ === "string")
-        (n(
+        (logForDebugging(
           "[bridge:repl] mcp_set_servers carried an advisory hint and no servers; acknowledged, nothing to apply",
         ),
           (D = {
@@ -1208,7 +1208,7 @@ function prr(e, t) {
         try {
           D = Y(o);
         } catch (R) {
-          (n(`[bridge:repl] mcp_set_servers handler threw: ${l(R)}`, {
+          (logForDebugging(`[bridge:repl] mcp_set_servers handler threw: ${l(R)}`, {
             level: "error",
           }),
             (D = { ok: !1, error: "mcp_set_servers failed to apply" }));
@@ -1268,7 +1268,7 @@ function prr(e, t) {
       return;
     }
     case "background_tasks": {
-      let o = K4t(e.request.tool_use_id);
+      let o = parseBackgroundTasksToolUseId(e.request.tool_use_id);
       if (!o.valid) {
         (logFeatureBad("task_local_shell_background_all", "invalid_tool_use_id"),
           (h = {
@@ -1276,7 +1276,7 @@ function prr(e, t) {
             response: {
               subtype: "error",
               request_id: e.request_id,
-              error: X4t,
+              error: BACKGROUND_TASKS_TOOL_USE_ID_TYPE_ERROR,
             },
           }));
         break;
@@ -1329,7 +1329,7 @@ function prr(e, t) {
   }
   let Se = { ...h, session_id: s };
   (r.write(Se),
-    n(
+    logForDebugging(
       `[bridge:repl] Sent control_response for ${e.request.subtype} request_id=${e.request_id} result=${h.response.subtype}`,
     ));
 }
@@ -1393,7 +1393,7 @@ function ze(e) {
     );
   return { ok: !0, settings: r };
 }
-function gCn(e, t) {
+function createBridgeResultMessage(e, t) {
   let r = t?.outcome,
     s = r !== void 0 && isAbortTerminalReason(r.terminal_reason),
     d = {
@@ -1402,7 +1402,7 @@ function gCn(e, t) {
       duration_ms: 0,
       duration_api_ms: 0,
       total_cost_usd: 0,
-      usage: { ...of },
+      usage: { ...ZERO_USAGE_TOTALS },
       modelUsage: {},
       permission_denials: [],
       session_id: e,
@@ -1435,7 +1435,7 @@ function gCn(e, t) {
     };
   return { ...d, ...S, subtype: r.subtype, errors: [] };
 }
-function hCn(e, t) {
+function createWorkerShuttingDownMessage(e, t) {
   return {
     type: "system",
     subtype: "worker_shutting_down",
@@ -1445,20 +1445,20 @@ function hCn(e, t) {
   };
 }
 var Ye = "PushNotification";
-function frr(e, t) {
+function createPushNotificationToolUseMessage(e, t) {
   return {
     type: "assistant",
     message: {
       diagnostics: null,
       id: randomUUID(),
       container: null,
-      model: fc,
+      model: SYNTHETIC_MODEL_NAME,
       role: "assistant",
       stop_details: null,
       stop_reason: "tool_use",
       stop_sequence: null,
       type: "message",
-      usage: { ...of },
+      usage: { ...ZERO_USAGE_TOTALS },
       content: [
         {
           type: "tool_use",
@@ -1475,20 +1475,20 @@ function frr(e, t) {
     uuid: randomUUID(),
   };
 }
-function Z4t(e, t) {
+function createSyntheticAssistantTextMessage(e, t) {
   return {
     type: "assistant",
     message: {
       diagnostics: null,
       id: randomUUID(),
       container: null,
-      model: fc,
+      model: SYNTHETIC_MODEL_NAME,
       role: "assistant",
       stop_details: null,
       stop_reason: "stop_sequence",
       stop_sequence: "",
       type: "message",
-      usage: { ...of },
+      usage: { ...ZERO_USAGE_TOTALS },
       content: [{ type: "text", text: e, citations: null }],
       context_management: null,
     },
@@ -1498,7 +1498,7 @@ function Z4t(e, t) {
     timestamp: new Date().toISOString(),
   };
 }
-class Ove {
+class BoundedDedupBuffer {
   capacity;
   ring;
   set = new Set();
@@ -1540,7 +1540,7 @@ var Xe = [
     "INVALID",
     "UNCHECKED",
   ];
-function _Cn(e) {
+function normalizeDeviceAttestationStatus(e) {
   if (e === void 0 || e === null) return "UNSPECIFIED";
   if (typeof e === "number") return Qe[e] ?? "UNSPECIFIED";
   if (typeof e !== "string") return "UNSPECIFIED";
@@ -1548,12 +1548,12 @@ function _Cn(e) {
   return Xe.find((r) => r === t) ?? "UNSPECIFIED";
 }
 var U = ["VERIFIED", "VERIFIED_KEYLESS_DEVICE", "VERIFIED_BY_GATE"];
-function yCn(e, t) {
+function meetsAttestationLevel(e, t) {
   if (e === "SERVICE_VOUCHED") return !0;
   let r = U.findIndex((s) => s === e);
   return r !== -1 && r <= U.indexOf(t);
 }
-var eVt = { enforce: !1, acceptLevel: "VERIFIED", acceptStatuses: new Set() },
+var DEFAULT_ATTESTATION_FILTER_POLICY = { enforce: !1, acceptLevel: "VERIFIED", acceptStatuses: new Set() },
   Ze = ["UNSPECIFIED", "ABSENT", "INVALID", "UNCHECKED"],
   Je = createLazyValue(() =>
     c({
@@ -1561,19 +1561,19 @@ var eVt = { enforce: !1, acceptLevel: "VERIFIED", acceptStatuses: new Set() },
       accept_statuses: v(X(Ze)).default([]),
     }),
   );
-function mrr(e) {
+function parseAttestationFilterPolicy(e) {
   let t = getSessionRuntimeState().attestation,
     r = Je().safeParse(e);
   if (!r.success && !t.malformedConfigReported) {
     t.malformedConfigReported = !0;
     try {
-      (n(
+      (logForDebugging(
         `[bridge:attestation] malformed enforce config \u2014 failing closed to accept_level=VERIFIED with no accept_statuses: ${r.error.message}`,
         { level: "error" },
       ),
         logFeatureSad("bridge_event_attestation", "malformed_config"));
     } catch (s) {
-      n(`[bridge:attestation] malformed-config report threw: ${l(s)}`, {
+      logForDebugging(`[bridge:attestation] malformed-config report threw: ${l(s)}`, {
         level: "error",
       });
     }
@@ -1584,21 +1584,21 @@ function mrr(e) {
     acceptStatuses: new Set(r.success ? r.data.accept_statuses : []),
   };
 }
-function Dve(e) {
+function setAttestationFilterPolicy(e) {
   getSessionRuntimeState().attestation.filterPolicy = e;
 }
-function aQe(e) {
+function setAttestationDropNotifier(e) {
   getSessionRuntimeState().attestation.dropNotifier = e;
 }
-function SAt(e) {
+function setAttestationSenderDropWriter(e) {
   getSessionRuntimeState().attestation.senderDropWriter = e;
 }
-function bAt(e) {
+function clearAttestationSenderDropWriter(e) {
   let t = getSessionRuntimeState().attestation;
   if (t.senderDropWriter === e) t.senderDropWriter = void 0;
 }
-var $$e = "[remote-io] warning: ";
-function tVt({ status: e, payloadType: t, subtype: r }) {
+var REMOTE_IO_WARNING_PREFIX = "[remote-io] warning: ";
+function describeDroppedAttestationPayload({ status: e, payloadType: t, subtype: r }) {
   return {
     what:
       t === "control_response"
@@ -1614,19 +1614,19 @@ function tVt({ status: e, payloadType: t, subtype: r }) {
           : void 0,
   };
 }
-function U$e(e) {
+function formatRemoteActivityDropWarning(e) {
   if (e.windowCapped)
     return "Remote Control is rejecting a burst of unsigned remote activity; further warnings for this burst are suppressed.";
-  let { what: t, hint: r } = tVt(e);
+  let { what: t, hint: r } = describeDroppedAttestationPayload(e);
   return `Remote Control ignored a ${t} that arrived without a valid device signature (attestation: ${e.status}).${r ? ` ${r}` : ""}`;
 }
-function lQe(e) {
-  let { what: t, hint: r } = tVt(e);
+function formatRemoteActivityDropReply(e) {
+  let { what: t, hint: r } = describeDroppedAttestationPayload(e);
   return `This ${t} arrived without a valid device signature (attestation: ${e.status}) and was ignored.${r ? ` ${r}` : ""}`;
 }
 function et(e) {
   if (e.payloadType === "control_request") return;
-  return Z4t(e.windowCapped ? U$e(e) : lQe(e), K());
+  return createSyntheticAssistantTextMessage(e.windowCapped ? formatRemoteActivityDropWarning(e) : formatRemoteActivityDropReply(e), K());
 }
 var tt = new Set([
   "set_model",
@@ -1644,7 +1644,7 @@ var tt = new Set([
   "side_question",
   "reload_plugins",
 ]);
-function B$e(e) {
+function getControlFrameRequestId(e) {
   let t =
     "request_id" in e ? e.request_id : "requestId" in e ? e.requestId : void 0;
   return typeof t === "string" ? t : void 0;
@@ -1656,7 +1656,7 @@ function pe(e) {
         ? t.subtype
         : void 0;
   if (typeof r !== "string" || !tt.has(r)) return;
-  return { subtype: r, requestId: e.payload ? B$e(e.payload) : void 0 };
+  return { subtype: r, requestId: e.payload ? getControlFrameRequestId(e.payload) : void 0 };
 }
 var nt = 2000,
   ue = 200,
@@ -1672,7 +1672,7 @@ function st(e) {
   let t = getSessionRuntimeState().attestation;
   return t.knownInboundRequestIds.has(e) || t.knownOutboundRequestIds.has(e);
 }
-function wAt(e, { automated: t }) {
+function recordOutboundRequestId(e, { automated: t }) {
   let r = getSessionRuntimeState().attestation;
   if ((x(r.knownOutboundRequestIds, ue, e), t))
     x(r.automatedOutboundRequestIds, ue, e);
@@ -1680,17 +1680,17 @@ function wAt(e, { automated: t }) {
 function ot(e) {
   let t = e.payload?.response;
   if (typeof t !== "object" || t === null) return !1;
-  let r = B$e(t);
+  let r = getControlFrameRequestId(t);
   return r !== void 0 && getSessionRuntimeState().attestation.automatedOutboundRequestIds.has(r);
 }
 var it = 200;
-function TAt(e) {
+function markPromptRequestResolved(e) {
   x(getSessionRuntimeState().attestation.resolvedPromptRequestIds, it, e);
 }
 function at(e) {
   let t = e.payload?.response;
   if (typeof t !== "object" || t === null) return !1;
-  let r = B$e(t);
+  let r = getControlFrameRequestId(t);
   return r !== void 0 && getSessionRuntimeState().attestation.resolvedPromptRequestIds.has(r);
 }
 var ut = 60000,
@@ -1721,7 +1721,7 @@ function ce(e) {
     try {
       t.dropNotifier(e);
     } catch (r) {
-      n(`[bridge:attestation] drop notifier threw: ${l(r)}`, {
+      logForDebugging(`[bridge:attestation] drop notifier threw: ${l(r)}`, {
         level: "error",
       });
     }
@@ -1730,14 +1730,14 @@ function ce(e) {
       let r = et(e);
       if (r) t.senderDropWriter(r);
     } catch (r) {
-      n(`[bridge:attestation] drop sender writer threw: ${l(r)}`, {
+      logForDebugging(`[bridge:attestation] drop sender writer threw: ${l(r)}`, {
         level: "error",
       });
     }
 }
 function P(e, t) {
   if (t !== "control_request") return;
-  let r = e.payload ? B$e(e.payload) : void 0;
+  let r = e.payload ? getControlFrameRequestId(e.payload) : void 0;
   if (r !== void 0) x(getSessionRuntimeState().attestation.knownInboundRequestIds, nt, r);
   if (pe(e) !== void 0) logFeatureOk("bridge_control_request_attestation");
 }
@@ -1759,30 +1759,30 @@ function lt(e, t, r) {
       S = `${t.toLowerCase()}_${d}`;
     if (s.has(S)) return;
     (s.add(S),
-      n(
+      logForDebugging(
         `[bridge:attestation] DROPPING unverified ${r} event_id=${e.event_id} status=${t} (stray payload class ${S}; counted once per process)`,
         { level: "warn" },
       ),
       logFeatureBad("bridge_stray_event_attestation", S));
   } catch (s) {
-    n(`[bridge:attestation] stray-drop report threw: ${l(s)}`, {
+    logForDebugging(`[bridge:attestation] stray-drop report threw: ${l(s)}`, {
       level: "error",
     });
   }
 }
-function EAt(e) {
+function isEventRejectedByAttestation(e) {
   let t = typeof e.payload?.type === "string" ? e.payload.type : e.event_type,
     r = t === "user" || t === "control_response",
-    s = _Cn(e.device_attestation_status),
-    d = getSessionRuntimeState().attestation.filterPolicy?.() ?? eVt;
-  if (yCn(s, d.acceptLevel)) {
+    s = normalizeDeviceAttestationStatus(e.device_attestation_status),
+    d = getSessionRuntimeState().attestation.filterPolicy?.() ?? DEFAULT_ATTESTATION_FILTER_POLICY;
+  if (meetsAttestationLevel(s, d.acceptLevel)) {
     if (r) logFeatureOk("bridge_event_attestation");
     return (P(e, t), !1);
   }
   if (!d.enforce) {
     if ((P(e, t), s === "UNSPECIFIED")) return !1;
     if (r)
-      (n(
+      (logForDebugging(
         `[bridge:attestation] accepting unverified ${t} event_id=${e.event_id} status=${s}`,
         { level: "info" },
       ),
@@ -1794,7 +1794,7 @@ function EAt(e) {
   if (r) {
     let a = `${s.toLowerCase()}_${t}`;
     if (
-      (n(
+      (logForDebugging(
         `[bridge:attestation] ${S ? "accepting (config exception)" : "DROPPING"} unverified ${t} event_id=${e.event_id} status=${s}`,
         { level: S ? "info" : "warn" },
       ),
@@ -1803,14 +1803,14 @@ function EAt(e) {
       logFeatureSad("bridge_event_attestation", a);
     else if (t === "control_response" && ot(e))
       ((p = !0),
-        n(
+        logForDebugging(
           `[bridge:attestation] dropped ${t} event_id=${e.event_id} status=${s} answers an automated outbound request; notice suppressed`,
           { level: "info" },
         ),
         logFeatureBad("bridge_event_attestation", `${a}_automated_reply`));
     else if (t === "control_response" && at(e))
       ((p = !0),
-        n(
+        logForDebugging(
           `[bridge:attestation] dropped ${t} event_id=${e.event_id} status=${s} is a duplicate answer to an already-resolved prompt; notice suppressed`,
           { level: "info" },
         ),
@@ -1824,7 +1824,7 @@ function EAt(e) {
     if (a) {
       p = !0;
       let b = a.requestId !== void 0 && st(a.requestId) ? void 0 : a.requestId;
-      (n(
+      (logForDebugging(
         `[bridge:attestation] DROPPING unverified control_request subtype=${a.subtype} event_id=${e.event_id} status=${s}${b === void 0 && a.requestId !== void 0 ? " (forged-id refusal suppressed)" : ""}`,
         { level: "warn" },
       ),
@@ -1843,69 +1843,69 @@ function EAt(e) {
   return !S;
 }
 export {
-  sp,
-  ER,
-  fc,
-  nrr,
-  mAt,
-  of,
-  K4t,
-  X4t,
-  N$e,
-  uCn,
-  p6,
+  NO_CONTENT_PLACEHOLDER,
+  NO_RESPONSE_REQUESTED_TEXT,
+  SYNTHETIC_MODEL_NAME,
+  AUTO_MODE_ACTIVE_HEADING,
+  SKIPPED_TRACKED_PATHS_REASON,
+  ZERO_USAGE_TOTALS,
+  parseBackgroundTasksToolUseId,
+  BACKGROUND_TASKS_TOOL_USE_ID_TYPE_ERROR,
+  normalizeRequestIdFields,
+  MAX_DECLARED_DIALOG_KINDS,
+  normalizeDeclaredDialogKinds,
   Qn,
-  dCn,
-  Y4t,
-  rrr,
-  AR,
-  pCn,
-  gAt,
-  J4t,
-  dse,
-  kme,
-  Ew,
-  orr,
-  srr,
-  f6,
-  pse,
-  hAt,
-  _At,
-  w_,
-  fCn,
-  iQe,
-  s5,
-  irr,
-  F$e,
-  arr,
-  mCn,
-  lrr,
-  xme,
-  Q4t,
-  yAt,
-  crr,
-  urr,
-  drr,
-  prr,
-  gCn,
-  hCn,
-  frr,
-  Z4t,
-  Ove,
-  _Cn,
-  yCn,
-  eVt,
-  mrr,
-  Dve,
-  aQe,
-  SAt,
-  bAt,
-  $$e,
-  tVt,
-  U$e,
-  lQe,
-  B$e,
-  wAt,
-  TAt,
-  EAt,
+  replaceInvisibleCharsWithSpace,
+  sanitizeRelayableText,
+  formatElicitationUrls,
+  isHumanOrigin,
+  isStrictHumanTurn,
+  hasStrictHumanDecider,
+  isUserDrivenOrigin,
+  isUserDrivenTurn,
+  analyzeTurnTail,
+  isHumanOrUnstampedOrigin,
+  isVerifiedRelayHumanTurn,
+  isUnclassifiedOrigin,
+  isProjectsRelayOrigin,
+  isPeerOrObserverOrigin,
+  getOriginDisplayName,
+  isPeerOrSlackPingOrigin,
+  isUserDrivenOrUnstampedOrigin,
+  toHumanOrigin,
+  lacksHumanOrigin,
+  isPlainUserMessage,
+  isHumanAuthoredMessage,
+  isHumanUserMessage,
+  logHumanOriginPresumed,
+  isTypedMessageObject,
+  setBridgeStateFramesGate,
+  shouldRelayMessageToBridge,
+  isRelayableUserMessage,
+  isSdkStreamEvent,
+  getHumanUserMessageText,
+  handleBridgeIngressMessage,
+  assertMcpReconnectSucceeded,
+  handleBridgeControlRequest,
+  createBridgeResultMessage,
+  createWorkerShuttingDownMessage,
+  createPushNotificationToolUseMessage,
+  createSyntheticAssistantTextMessage,
+  BoundedDedupBuffer,
+  normalizeDeviceAttestationStatus,
+  meetsAttestationLevel,
+  DEFAULT_ATTESTATION_FILTER_POLICY,
+  parseAttestationFilterPolicy,
+  setAttestationFilterPolicy,
+  setAttestationDropNotifier,
+  setAttestationSenderDropWriter,
+  clearAttestationSenderDropWriter,
+  REMOTE_IO_WARNING_PREFIX,
+  describeDroppedAttestationPayload,
+  formatRemoteActivityDropWarning,
+  formatRemoteActivityDropReply,
+  getControlFrameRequestId,
+  recordOutboundRequestId,
+  markPromptRequestResolved,
+  isEventRejectedByAttestation,
 };

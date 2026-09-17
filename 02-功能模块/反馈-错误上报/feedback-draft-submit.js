@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { Np, Tc, Is, k_, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { startSlowOperationSpan, Tc, Is, readTailBytes, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
@@ -49,7 +49,7 @@ function L(e) {
 function O(e) {
   let s = measureFeedbackPayloadBytes(e);
   if (s <= MAX_FEEDBACK_PAYLOAD_BYTES) return { payload: e, trim: null };
-  using k = Np`fitFeedbackPayloadToBudget(${s})`;
+  using k = startSlowOperationSpan`fitFeedbackPayloadToBudget(${s})`;
   let c = s - (MAX_FEEDBACK_PAYLOAD_BYTES - J),
     t = e.transcript.map((T) => H(T) + 1),
     b = t.reduce((T, F) => T + F, 0),
@@ -102,7 +102,7 @@ ${_}`,
     },
     o = measureFeedbackPayloadBytes(M);
   if (o > MAX_FEEDBACK_PAYLOAD_BYTES)
-    n(
+    logForDebugging(
       `fitFeedbackPayloadToBudget: still ${o} bytes after trim (budget ${MAX_FEEDBACK_PAYLOAD_BYTES})`,
       { level: "error" },
     );
@@ -167,7 +167,7 @@ function V(e, s = "panel") {
 }
 function Y(e) {
   let s = [];
-  using k = Np`parseDraftTranscriptMessages(${e.length})`;
+  using k = startSlowOperationSpan`parseDraftTranscriptMessages(${e.length})`;
   for (let c of e.split(`
 `)) {
     if (!c) continue;
@@ -230,7 +230,7 @@ async function submitFeedbackDraft({
     if (m) {
       if (((l = prepareApiMessages(k)), _ !== null))
         try {
-          let { content: R, bytesRead: B, bytesTotal: M } = await k_(_, MAX_RAW_TRANSCRIPT_BYTES),
+          let { content: R, bytesRead: B, bytesTotal: M } = await readTailBytes(_, MAX_RAW_TRANSCRIPT_BYTES),
             o = R;
           if (B < M)
             o = o.slice(
@@ -238,14 +238,14 @@ async function submitFeedbackDraft({
 `) + 1,
             );
           if (hasThirdPartyTranscriptMarkers(o))
-            n(
+            logForDebugging(
               "rawTranscriptJsonl withheld from feedback draft submit: contains_3p_transcript_markers",
             );
           else p = o;
         } catch {}
     } else if (_ !== null)
       try {
-        let { content: R, bytesRead: B, bytesTotal: M } = await k_(_, MAX_RAW_TRANSCRIPT_BYTES),
+        let { content: R, bytesRead: B, bytesTotal: M } = await readTailBytes(_, MAX_RAW_TRANSCRIPT_BYTES),
           o = R;
         if (B < M)
           o = o.slice(
@@ -253,17 +253,17 @@ async function submitFeedbackDraft({
 `) + 1,
           );
         if (!transcriptCorroboratesDraftIdentity(o, e))
-          n(
+          logForDebugging(
             "draft transcript withheld from feedback submit: identity_not_corroborated",
           );
         else {
           if (((l = Y(o)), anyTranscriptEntryHasThirdPartyMarkers(l)))
             ((l = []),
-              n(
+              logForDebugging(
                 "draft transcript withheld from feedback submit: contains_3p_transcript_markers",
               ));
           if (hasThirdPartyTranscriptMarkers(o))
-            n(
+            logForDebugging(
               "rawTranscriptJsonl withheld from feedback draft submit: contains_3p_transcript_markers",
             );
           else p = o;
@@ -292,7 +292,7 @@ async function submitFeedbackDraft({
     try {
       await deleteFeedbackDraft(e.draft_id, h);
     } catch (_) {
-      (n(
+      (logForDebugging(
         `feedbackDrafts: post-submit draft delete failed: ${_ instanceof Error ? _.name : "unknown"}`,
         { level: "error" },
       ),

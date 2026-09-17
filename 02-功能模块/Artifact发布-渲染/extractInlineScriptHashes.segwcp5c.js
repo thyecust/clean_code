@@ -13,22 +13,22 @@ import { S4t, rAt } from "../../00-第三方库/parse5/parse5.2zwbfepc.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { MERMAID_RUNTIME_URL_PATH, trimAsciiWhitespace, sanitizeInvisibleCharacters } from "../图表-Mermaid/chunk-743atbtj.js";
 import {
-  Ufe,
-  L$,
-  cg,
-  Hoe,
-  xTn,
+  XHTML_NAMESPACE,
+  asDocument,
+  getAttributeValue,
+  DECISION_ID_PATTERN,
+  ANCHOR_VALUE_PATTERN,
   DTn,
-  yTt,
-  LTn,
-  wFe,
-  MTn,
-  vYe,
+  tallyDeliverableKinds,
+  DECISION_ISLAND_OPEN_TAG_END,
+  findIslandOpenTagSpans,
+  parseDecisionIslandItems,
+  deriveIslandWorkshopState,
 } from "./chunk-rr78st95.js";
 import { TAn } from "../../00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js";
 import { isSafeExternalUrl } from "./chunk-01ymf0ar.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-var S = new RegExp(`^${Hoe}$`),
+var S = new RegExp(`^${DECISION_ID_PATTERN}$`),
   W = "http://www.w3.org/2000/svg",
   _ = "http://www.w3.org/1998/Math/MathML",
   x = 512;
@@ -37,15 +37,15 @@ function extractInlineScriptHashes(e) {
     h = (s) => {
       if ((s.tagName ?? "").toLowerCase() === "script") {
         if (
-          (cg(s, "type") ?? "").trim().toLowerCase() !== "application/json" &&
-          cg(s, "src") === void 0
+          (getAttributeValue(s, "type") ?? "").trim().toLowerCase() !== "application/json" &&
+          getAttributeValue(s, "src") === void 0
         )
           t.add(hashSha256(y(s)));
       }
       for (let i of s.childNodes ?? []) h(i);
       for (let i of s.content?.childNodes ?? []) h(i);
     };
-  return (h(L$(rAt(e))), t);
+  return (h(asDocument(rAt(e))), t);
 }
 function y(e) {
   let t = "";
@@ -154,7 +154,7 @@ function G(e, t, h, s) {
         });
       continue;
     }
-    if (l === "data-anchor" && !xTn.test(n.value)) {
+    if (l === "data-anchor" && !ANCHOR_VALUE_PATTERN.test(n.value)) {
       a.push({
         rule: "bad-anchor-value",
         where: o(e, t.snippets),
@@ -197,17 +197,17 @@ function G(e, t, h, s) {
         hint: "Only http(s), mailto, relative, or fragment URLs are allowed.",
       });
   }
-  let p = cg(e, "data-ws-state");
+  let p = getAttributeValue(e, "data-ws-state");
   if (p !== void 0) t.banners.push({ value: p, node: e });
-  let f = cg(e, DTn);
+  let f = getAttributeValue(e, DTn);
   if (f !== void 0) t.deliverableKinds.push(f);
   let g =
     !r &&
     i === "script" &&
-    (cg(e, "type") ?? "").trim().toLowerCase() === "application/json" &&
-    cg(e, "src") === void 0 &&
-    cg(e, "id") === "ws-decisions";
-  if (cg(e, "id") === "ws-decisions" && !g)
+    (getAttributeValue(e, "type") ?? "").trim().toLowerCase() === "application/json" &&
+    getAttributeValue(e, "src") === void 0 &&
+    getAttributeValue(e, "id") === "ws-decisions";
+  if (getAttributeValue(e, "id") === "ws-decisions" && !g)
     (t.wsIdMisuse.push(e),
       a.push({
         rule: "island-id-misuse",
@@ -215,7 +215,7 @@ function G(e, t, h, s) {
         hint: "Only the ws-decisions JSON script element may carry this id \u2014 the page script locates the island by it.",
       }));
   let d = s,
-    c = cg(e, "data-decision-id");
+    c = getAttributeValue(e, "data-decision-id");
   if (c !== void 0)
     if (((d = c), !S.test(c)))
       a.push({
@@ -228,15 +228,15 @@ function G(e, t, h, s) {
       if (n !== void 0) n.count++;
       else
         t.items.set(c, {
-          state: cg(e, "data-decision-state") ?? "",
-          resolvedChoice: cg(e, "data-resolved-choice"),
-          resolvedCustom: cg(e, "data-resolved-custom"),
-          leanChoice: cg(e, "data-lean-choice"),
+          state: getAttributeValue(e, "data-decision-state") ?? "",
+          resolvedChoice: getAttributeValue(e, "data-resolved-choice"),
+          resolvedCustom: getAttributeValue(e, "data-resolved-custom"),
+          leanChoice: getAttributeValue(e, "data-lean-choice"),
           choices: [],
           count: 1,
         });
     }
-  let u = cg(e, "data-choice");
+  let u = getAttributeValue(e, "data-choice");
   if (u !== void 0)
     if (d === null) t.orphanChoices.push(e);
     else if (!S.test(u))
@@ -256,9 +256,9 @@ function G(e, t, h, s) {
         }),
         d
       );
-    if (cg(e, "src") !== void 0) {
+    if (getAttributeValue(e, "src") !== void 0) {
       if (!(
-        cg(e, "src") === MERMAID_RUNTIME_URL_PATH &&
+        getAttributeValue(e, "src") === MERMAID_RUNTIME_URL_PATH &&
         (e.attrs ?? []).length === 1 &&
         (e.childNodes ?? []).length === 0
       ))
@@ -269,7 +269,7 @@ function G(e, t, h, s) {
         });
       return d;
     }
-    if ((cg(e, "type") ?? "").trim().toLowerCase() === "application/json") {
+    if ((getAttributeValue(e, "type") ?? "").trim().toLowerCase() === "application/json") {
       if (g) t.islands.push({ text: y(e), node: e });
       else
         a.push({
@@ -342,7 +342,7 @@ function G(e, t, h, s) {
       }),
       d
     );
-  if (!r && i === "meta" && cg(e, "http-equiv") !== void 0)
+  if (!r && i === "meta" && getAttributeValue(e, "http-equiv") !== void 0)
     return (
       a.push({
         rule: "meta-http-equiv",
@@ -355,7 +355,7 @@ function G(e, t, h, s) {
     !r &&
     i === "meta" &&
     ["referrer", "origin-trial"].includes(
-      (cg(e, "name") ?? "").trim().toLowerCase(),
+      (getAttributeValue(e, "name") ?? "").trim().toLowerCase(),
     )
   )
     return (
@@ -376,7 +376,7 @@ function G(e, t, h, s) {
       d
     );
   if (r && V.has(i)) {
-    let n = (cg(e, "attributename") ?? "").trim().toLowerCase();
+    let n = (getAttributeValue(e, "attributename") ?? "").trim().toLowerCase();
     if (
       n.startsWith("on") ||
       T.has(n) ||
@@ -416,9 +416,9 @@ function b(e, t, h, s, i = !1, r = 0) {
     if (
       ((a = G(e, t, h, s)),
       i &&
-        (cg(e, "id") === "ws-decisions" ||
-          cg(e, "data-decision-id") !== void 0 ||
-          cg(e, "data-choice") !== void 0))
+        (getAttributeValue(e, "id") === "ws-decisions" ||
+          getAttributeValue(e, "data-decision-id") !== void 0 ||
+          getAttributeValue(e, "data-choice") !== void 0))
     )
       t.violations.push({
         rule: "template-content-surface",
@@ -498,12 +498,12 @@ function z(e, t, h) {
   return s;
 }
 function R(e) {
-  let t = L$(rAt(e));
+  let t = asDocument(rAt(e));
   return (k(t), S4t(t));
 }
 var j = new Set(["pre", "textarea", "listing"]);
 function k(e) {
-  if (j.has((e.tagName ?? "").toLowerCase()) && e.namespaceURI === Ufe) {
+  if (j.has((e.tagName ?? "").toLowerCase()) && e.namespaceURI === XHTML_NAMESPACE) {
     let t = e.childNodes?.[0];
     if (
       t !== void 0 &&
@@ -529,12 +529,12 @@ function C(e, t, h) {
       items: new Map(),
       orphanChoices: [],
     },
-    i = L$(rAt(e, { sourceCodeLocationInfo: !0 }));
+    i = asDocument(rAt(e, { sourceCodeLocationInfo: !0 }));
   b(i, s, t, null);
   let r = s.violations,
     a = 0,
     p = "in-progress",
-    f = wFe(e, "ws-decisions").length,
+    f = findIslandOpenTagSpans(e, "ws-decisions").length,
     g = s.nestingTruncated;
   if (
     h === "probe" &&
@@ -555,12 +555,12 @@ function C(e, t, h) {
       continue;
     }
     let n = e.slice(u.startOffset, u.endOffset),
-      l = wFe(n, "ws-decisions");
+      l = findIslandOpenTagSpans(n, "ws-decisions");
     if (l.length !== 1 || l[0][1] !== n.length)
       r.push({
         rule: "island-noncanonical-spelling",
         where: o(c.node, s.snippets),
-        hint: `The ws-decisions island's open tag must END with the exact bytes ${LTn} (double-quoted id attribute, last in the tag, as the template ships it; a page read back from the server may carry the server's own data-id after the id, nothing else) \u2014 the session's mechanical extraction scans for that sequence.`,
+        hint: `The ws-decisions island's open tag must END with the exact bytes ${DECISION_ISLAND_OPEN_TAG_END} (double-quoted id attribute, last in the tag, as the template ships it; a page read back from the server may carry the server's own data-id after the id, nothing else) \u2014 the session's mechanical extraction scans for that sequence.`,
       });
     let m = c.node.sourceCodeLocation?.endTag;
     if (m === void 0 || m === null) {
@@ -583,7 +583,7 @@ function C(e, t, h) {
     r.push({
       rule: "island-sentinel-ambiguity",
       where: "(document)",
-      hint: `The island open-tag ending ${LTn} (counting the form a server read-back carries, with the server's data-id after the id) appears ${d} time(s) but ${s.islands.length} real island element(s) exist \u2014 the session's mechanical island extraction scans for exactly that sequence. Keep the island's id attribute LAST in its script tag (as the template ships it), and escape or rephrase any other text containing the sequence.`,
+      hint: `The island open-tag ending ${DECISION_ISLAND_OPEN_TAG_END} (counting the form a server read-back carries, with the server's data-id after the id) appears ${d} time(s) but ${s.islands.length} real island element(s) exist \u2014 the session's mechanical island extraction scans for exactly that sequence. Keep the island's id attribute LAST in its script tag (as the template ships it), and escape or rephrase any other text containing the sequence.`,
     });
   for (let c of s.orphanChoices)
     r.push({
@@ -605,7 +605,7 @@ function C(e, t, h) {
         hint: "Decision items exist but there is no ws-decisions island \u2014 the session reads decisions ONLY from the island.",
       });
   } else {
-    let c = MTn(s.islands[0].text);
+    let c = parseDecisionIslandItems(s.islands[0].text);
     if (c === null)
       r.push({
         rule: "island-grammar",
@@ -683,7 +683,7 @@ function C(e, t, h) {
             where: `data-decision-id "${n}"`,
             hint: "Every decision item must have a ws-decisions island entry \u2014 a call-item without one is a forged decision surface.",
           });
-      (L(s, c, r), (a = c.length), (p = vYe(c)));
+      (L(s, c, r), (a = c.length), (p = deriveIslandWorkshopState(c)));
     }
   }
   if (s.islands.length === 0) L(s, [], r);
@@ -699,14 +699,14 @@ function C(e, t, h) {
         workshopSurface: !0,
         decisionCount: a,
         workshopState: p,
-        deliverables: yTt(s.deliverableKinds),
+        deliverables: tallyDeliverableKinds(s.deliverableKinds),
       }
     : { ok: !1, violations: r };
 }
 var U = new Set(["in-progress", "ready", "started"]);
 function L(e, t, h) {
   if (e.banners.length === 0) return;
-  let s = vYe(t);
+  let s = deriveIslandWorkshopState(t);
   for (let i of e.banners)
     if (!U.has(i.value))
       h.push({

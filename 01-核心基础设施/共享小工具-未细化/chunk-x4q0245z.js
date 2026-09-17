@@ -10,7 +10,7 @@
 import { logEvent } from "./analytics-event-queue.js";
 import { fromEnum } from "./analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 var g = 2000,
   c = [
     "session_ingress_token",
@@ -38,7 +38,7 @@ function debugTruncate(e) {
   return o.slice(0, g) + `... (${o.length} chars)`;
 }
 function debugBody(e) {
-  let o = typeof e === "string" ? e : b(e),
+  let o = typeof e === "string" ? e : jsonStringify(e),
     r = d(o);
   if (r.length <= g) return r;
   return r.slice(0, g) + `... (${r.length} chars)`;
@@ -88,7 +88,7 @@ function extractErrorDetail(e) {
   return;
 }
 function logBridgeSkip(e, o, r, t) {
-  if (o) n(o);
+  if (o) logForDebugging(o);
   logEvent("tengu_bridge_repl_skipped", {
     reason: fromEnum(e),
     ...(r !== void 0 && { v2: r }),

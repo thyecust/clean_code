@@ -23,7 +23,7 @@ import {
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { enqueueSdkEvent, getCurrentWorktreeSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   contextBudgetTracker,
@@ -65,12 +65,12 @@ import {
 import { getSessionTranscriptPath, getAgentTranscriptPath } from "../Teammates团队/transcript-paths.js";
 import { logGoalCleared } from "../Skills技能/chunk-sapykxw7.js";
 import { clearAllPlanSlugs } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { evictTaskOutput, initTaskOutputAsSymlink } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { evictTaskOutput, initTaskOutputAsSymlink } from "../后台任务-Shell管理/task-output.js";
 import { retainPathLinks } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { isBridgeStateFramesEnabled } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { cfe } from "../插件系统/chunk-ajtn749s.js";
 import { setMcpClientOnClose } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { vJ, HCe, xoe, ICe, PCe } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { rearmWatchNoticeBudgets, clearRefusedPublishBodies, disposeArtifactRoom, retireLiveDocWatches, resetArtifactConversationState } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { runBundledSkillSessionResets } from "../Skills技能/bundled-skills.js";
 import { syncJobResumeSessionId } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
@@ -99,7 +99,7 @@ async function* clearConversation({
   storageV5: o,
   credentials: I,
 }) {
-  (clearObserverPairings(t), removeCommandsByFilter(isPassiveCommand), ICe(), xoe(), vJ());
+  (clearObserverPairings(t), removeCommandsByFilter(isPassiveCommand), retireLiveDocWatches(), disposeArtifactRoom(), rearmWatchNoticeBudgets());
   let H = getSessionEndHookTimeoutMs();
   (await executeSessionEndHooks(t, "clear", {
     sessionHooks: U,
@@ -136,7 +136,7 @@ async function* clearConversation({
   try {
     setSessionCwd(O);
   } catch {
-    n(`/clear: originalCwd "${O}" no longer exists; falling back`);
+    logForDebugging(`/clear: originalCwd "${O}" no longer exists; falling back`);
     let e = sn();
     if (e !== O)
       try {
@@ -152,7 +152,7 @@ async function* clearConversation({
     x = f && isConversationEgressTainted(pinSessionId(K())),
     p,
     T;
-  if ((HCe(), k)) {
+  if ((clearRefusedPublishBodies(), k)) {
     if (
       (F?.dismissKind(GOAL_PROPOSAL_DIALOG.kind),
       retainPathLinks(new Set()),
@@ -229,7 +229,7 @@ async function* clearConversation({
     J = x || (f && isConversationEgressTainted(P));
   if ((aOn({ setCurrentAsParent: !0 }), f && l !== void 0)) cacheSessionTitle(l);
   let Z = Promise.resolve(!0);
-  if ((runBundledSkillSessionResets(), PCe(), sessionAnnouncementStateStore.of(t).reset(), cfe(t), a.CLAUDE_CODE_SESSION_ID))
+  if ((runBundledSkillSessionResets(), resetArtifactConversationState(), sessionAnnouncementStateStore.of(t).reset(), cfe(t), a.CLAUDE_CODE_SESSION_ID))
     process.env.CLAUDE_CODE_SESSION_ID = K();
   if ((await resetSessionFilePointer(), dropSessionHistorySuppression(), releasePrecautionarySuppressionFor(P), await syncJobResumeSessionId(K(), getSessionTranscriptPath(), o), u))
     await saveCustomTitle(q, u, W, "user", o);

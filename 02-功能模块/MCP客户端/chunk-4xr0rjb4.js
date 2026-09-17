@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { ge, l, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ASt } from "../Hooks钩子/chunk-z3433nr6.js";
+import { getBuiltinPlugin } from "../Hooks钩子/chunk-z3433nr6.js";
 import { estimateTokens, countMessageTokens, resolvePluginRelativePath, extractMarkdownTitle, buildSkillSearchText, loadMarketplace } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { parseFrontmatter, parseOptionalString } from "./chunk-3kmsshb6.js";
 import { isNonMarketplacePluginSource, isProjectSkillsDirPlugin, splitPluginId } from "../插件系统/chunk-33bdfgmx.js";
@@ -19,7 +19,7 @@ import * as p from "fs/promises";
 import * as m from "path";
 async function getPluginInventory(t, e) {
   if (e === "builtin") {
-    let d = ASt(t.name);
+    let d = getBuiltinPlugin(t.name);
     if (!d) throw Error(`Built-in plugin ${t.name} not found`);
     return {
       commands: [],
@@ -148,7 +148,7 @@ async function _(t) {
     let e = await O(t, ".mcp.json");
     if (e === null) return [];
     let s = await p.readFile(e, "utf-8"),
-      o = z(s);
+      o = jsonParse(s);
     if (o == null || typeof o !== "object") return [];
     let r =
       "mcpServers" in o && typeof o.mcpServers === "object" ? o.mcpServers : o;
@@ -162,7 +162,7 @@ async function L(t) {
     let e = await O(t, ".lsp.json");
     if (e === null) return [];
     let s = await p.readFile(e, "utf-8"),
-      o = z(s);
+      o = jsonParse(s);
     if (o == null || typeof o !== "object") return [];
     return Object.keys(o);
   } catch {
@@ -236,7 +236,7 @@ async function T(t) {
 }
 function v(t, e) {
   if (
-    (n(`Failed to read plugin components from ${t}: ${l(e)}`, {
+    (logForDebugging(`Failed to read plugin components from ${t}: ${l(e)}`, {
       level: "error",
     }),
     Po(e))

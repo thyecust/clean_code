@@ -14,7 +14,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { wc, Et, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { pathSpaces, registerCleanup, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { SYNCED_DIR_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -86,12 +86,12 @@ function fe(o) {
     if (k || d !== E) return;
     if (((C = a), C.length === 0)) return;
     if (((I = await D().catch(() => null)), k || d !== E)) return;
-    (n(`Watching for changes in skill/command directories: ${C.join(", ")}...`),
+    (logForDebugging(`Watching for changes in skill/command directories: ${C.join(", ")}...`),
       (u = G(m)));
     let P = u;
     if ((await new Promise((f) => P.once("ready", () => f())), U))
       ((v = setInterval(W, Q)), v.unref?.());
-    F = Et(j);
+    F = registerCleanup(j);
   }
   function G(t) {
     let r = RT.watch(C, {
@@ -117,7 +117,7 @@ function fe(o) {
       r.on("change", z),
       r.on("unlink", z),
       r.on("error", (d) =>
-        n(`[skills] watcher error: ${l(d)}`, { level: "warn" }),
+        logForDebugging(`[skills] watcher error: ${l(d)}`, { level: "warn" }),
       ),
       r
     );
@@ -129,7 +129,7 @@ function fe(o) {
     H = t;
     let r = t ? J : m;
     if (
-      (n(
+      (logForDebugging(
         `[skills] ${t ? "idle" : "active"} \u2014 switching poll interval to ${r}ms`,
       ),
       u.close(),
@@ -147,7 +147,7 @@ function fe(o) {
     let d = ++E;
     if (
       ((C = r),
-      n(
+      logForDebugging(
         `[skills] session moved \u2014 watching skill/command directories: ${C.join(", ")}`,
       ),
       u)
@@ -159,7 +159,7 @@ function fe(o) {
     if ((await Promise.race([P, sleep(ue, void 0, { unref: !0 })]), k || d !== E))
       return;
     if (U && v === null) ((v = setInterval(W, Q)), v.unref?.());
-    F ??= Et(j);
+    F ??= registerCleanup(j);
   }
   function j() {
     if (((k = !0), F)) (F(), (F = null));
@@ -171,7 +171,7 @@ function fe(o) {
     return (R.clear(), w(), e.clear(), t);
   }
   function z(t) {
-    (n(`Detected skill change: ${t}`),
+    (logForDebugging(`Detected skill change: ${t}`),
       logEvent("tengu_skill_file_changed", { source: S("chokidar") }),
       K(t));
   }
@@ -185,7 +185,7 @@ function fe(o) {
       if (!d) {
         let f = r.find((_) => _ !== x) ?? r[0];
         if (await te(f)) {
-          n(`ConfigChange hook blocked skill reload (${r.length} paths)`);
+          logForDebugging(`ConfigChange hook blocked skill reload (${r.length} paths)`);
           return;
         }
       }
@@ -207,14 +207,14 @@ function fe(o) {
         (clearCommandsCache(),
         clearAgentDefinitionsCache(),
         await reloadDynamicSkills().catch((f) =>
-          n(
+          logForDebugging(
             `[skills] re-reading the moved directory's skills failed: ${l(f)}`,
             { level: "warn" },
           ),
         ),
         P)
       )
-        n(
+        logForDebugging(
           `[skills] ${r.length} fs event(s) but skill list unchanged \u2014 skipping re-announce`,
         );
       else {
@@ -259,7 +259,7 @@ function fe(o) {
 }
 var skillChangeDetector = fe();
 async function X(o) {
-  let c = ae(),
+  let c = getFsSurface(),
     s = [],
     p = getSettingsSourcePath("userSettings", "skills");
   if (p)
@@ -317,7 +317,7 @@ async function X(o) {
   return s;
 }
 async function O(o, c) {
-  let s = await o.hostFiles.stat(wc.workspace(c));
+  let s = await o.hostFiles.stat(pathSpaces.workspace(c));
   return s.ok && s.value.kind !== "absent";
 }
 export { skillChangeDetector };

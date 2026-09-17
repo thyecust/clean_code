@@ -14,34 +14,34 @@ import { isInProtectedNamespace } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { generateAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { getSessionRuntimeState, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { buildBearerAuthHeader, setSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
-import { FRe, WT } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { INTERRUPT_MESSAGE_PREFIXES, isInterruptLikeUserMessage } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isProcessProvablyGone, isSameProcessAsync, ownProcStartAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { REMOTE_CONTROL_MALFORMED_RESPONSE_MESSAGE, REMOTE_CONTROL_SIGNED_IN_ACCOUNT_CHANGED_MESSAGE, REMOTE_CONTROL_HOST_SIGNED_OUT_MESSAGE, REMOTE_CONTROL_HOST_ACCOUNT_CHANGED_MESSAGE, REMOTE_CONTROL_PREVIOUS_SESSION_UNAVAILABLE_MESSAGE } from "./remote-control-messages.js";
 import { createGzipRequestBodyFetch, setPullRequestSubscription, recordCreatedPullRequest, getBridgeSessionOrStatus, isSessionTeleported, findResumedThinkingGroupRanges } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import {
-  xme,
-  Q4t,
-  crr,
-  urr,
-  prr,
-  gCn,
-  hCn,
-  Ove,
-  wAt,
-  TAt,
-  EAt,
+  shouldRelayMessageToBridge,
+  isRelayableUserMessage,
+  getHumanUserMessageText,
+  handleBridgeIngressMessage,
+  handleBridgeControlRequest,
+  createBridgeResultMessage,
+  createWorkerShuttingDownMessage,
+  BoundedDedupBuffer,
+  recordOutboundRequestId,
+  markPromptRequestResolved,
+  isEventRejectedByAttestation,
 } from "./chunk-5ne99rq3.js";
 import { isBridgeAuthReviveEnabled, isBridgeNonOrigin403RetryEnabled, isBridgeOwnerPinnedEndEnabled, isBridgeHostDeclinedEndEnabled, isBridgeSignedOutNeutralEnabled, isCcrV2SessionCrudEnabled } from "./chunk-9estzwf5.js";
 import { logBridgeSkip } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
@@ -49,7 +49,7 @@ import { isProactiveEnrollmentDisabled, isTrustedDeviceGateEnabled, getTrustedDe
 import { isNonOriginSource, describeNonOriginSource, isCreateSessionFailure, createCodeSession, isCredentialsFailure, isCredentialsRejection, fetchRemoteCredentials, archiveCodeSession, unarchiveCodeSession } from "./code-session-api.js";
 import { reseedBridgePermissionMode, reseedBridgeCrossSessionInbound, reseedBridgeModel } from "../权限系统/chunk-1y2g140m.js";
 import { getBridgeBaseUrlOverride, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { aSn } from "./chunk-1yq098a7.js";
+import { buildPendingActionsList } from "./chunk-1yq098a7.js";
 import { VGe, KGe, Qjn, pM, rdt } from "./chunk-znhfst8k.js";
 import { isHumanTurnEvent } from "./bridge-inbound-origin.js";
 import { buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
@@ -225,7 +225,7 @@ function oi(t, p) {
       (S.push([t, w]), S.sort((B, F) => F[1].createdAt - B[1].createdAt));
       let L = S.slice(ti);
       if (L.length > 0)
-        n(
+        logForDebugging(
           `[bridge:placeholder] evicting ${L.length} record(s) past cap: ${L.map(([B]) => B).join(", ")}`,
         );
       return {
@@ -295,7 +295,7 @@ async function $o(t, p, v) {
   if (!w) return "keep";
   if (!w.created_at || !w.updated_at)
     return (
-      n(
+      logForDebugging(
         `[bridge:placeholder] session GET carried no timestamps for ${t}; keeping`,
       ),
       "keep"
@@ -310,7 +310,7 @@ async function $o(t, p, v) {
     );
   return (
     logFeatureOk("bridge_placeholder_sweep"),
-    n(`[bridge:placeholder] archived orphaned placeholder ${t} (status=${S})`),
+    logForDebugging(`[bridge:placeholder] archived orphaned placeholder ${t} (status=${S})`),
     "remove"
   );
 }
@@ -342,7 +342,7 @@ function ai(t) {
           return { ...S, replBridgePlaceholders: L };
         }, t.storageV5);
     })().catch((v) => {
-      n(`[bridge:placeholder] sweep failed: ${l(v)}`, { level: "error" });
+      logForDebugging(`[bridge:placeholder] sweep failed: ${l(v)}`, { level: "error" });
     })
   );
 }
@@ -406,7 +406,7 @@ async function xt(t) {
   if (S) L = () => buildBearerAuthHeader(S());
   else setSessionAccessToken(v);
   let B = t.epoch ?? (await registerWorker(p, v));
-  n(
+  logForDebugging(
     `[bridge:repl] CCR v2: worker sessionId=${w} epoch=${B}${t.epoch !== void 0 ? " (from /bridge)" : " (via registerWorker)"}`,
   );
   let F = new URL(p);
@@ -467,7 +467,7 @@ async function xt(t) {
     onEpochMismatch: (M) => {
       let oe = t.causeTypedCloseCodes ? Qjn[M] : 4090;
       throw (
-        n(
+        logForDebugging(
           `[bridge:repl] CCR v2: terminal request-path condition (${M}) \u2014 closing with ${oe} for ${oe === 4094 ? "auth recovery" : "poll-loop recovery"}`,
         ),
         re(oe, M),
@@ -478,7 +478,7 @@ async function xt(t) {
     ...(ke && {
       onHeartbeatLost: () => {
         if (ie) return;
-        (n(
+        (logForDebugging(
           "[bridge:repl] CCR v2: heartbeats failing while SSE healthy \u2014 closing for transport rebuild",
           { level: "warn" },
         ),
@@ -490,7 +490,7 @@ async function xt(t) {
     (W.reportDelivery(M.event_id, "received"),
       W.reportDelivery(M.event_id, "processed"));
   }),
-    Q.setEventFilter(EAt));
+    Q.setEventFilter(isEventRejectedByAttestation));
   let er,
     rr = !1;
   return {
@@ -599,7 +599,7 @@ async function xt(t) {
           if (ie) return;
           if (
             ((rr = !0),
-            n(
+            logForDebugging(
               `[bridge:repl] v2 transport ready for writes (epoch=${B}); opening the read stream`,
             ),
             er?.(),
@@ -608,7 +608,7 @@ async function xt(t) {
             Q.connect();
         },
         (M) => {
-          (n(`[bridge:repl] CCR v2 initialize failed: ${l(M)}`, {
+          (logForDebugging(`[bridge:repl] CCR v2 initialize failed: ${l(M)}`, {
             level: "error",
           }),
             re(4091));
@@ -721,7 +721,7 @@ async function Yjn(t) {
     Nr = ie();
   if (!Nr)
     return (
-      n("[remote-bridge] No OAuth token"),
+      logForDebugging("[remote-bridge] No OAuth token"),
       logFeatureBad("bridge_connect", "bridge_connect_no_token"),
       null
     );
@@ -782,10 +782,10 @@ async function Yjn(t) {
           (Fr = void 0),
           await r(),
           writeDiagnosticsEvent("info", "bridge_repl_v2_grouping_dropped", { status: a.status }),
-          n(
+          logForDebugging(
             "[bridge:core] persisted Project no longer available; recreated session outside it",
           ),
-          n(`[remote-bridge] Created session ${d}`),
+          logForDebugging(`[remote-bridge] Created session ${d}`),
           writeDiagnosticsEvent("info", "bridge_repl_v2_session_created"),
           d
         );
@@ -794,7 +794,7 @@ async function Yjn(t) {
     if (typeof a === "string")
       ((Fr = Hr),
         await r(),
-        n(`[remote-bridge] Created session ${a}`),
+        logForDebugging(`[remote-bridge] Created session ${a}`),
         writeDiagnosticsEvent("info", "bridge_repl_v2_session_created"));
     return a;
   }
@@ -831,7 +831,7 @@ async function Yjn(t) {
   if (je && isSessionTeleported(je)) {
     if (I)
       return (
-        n(
+        logForDebugging(
           `[remote-bridge] Reattach-or-fail: ${je} is teleported; failing terminally instead of minting fresh`,
         ),
         writeDiagnosticsEvent("info", "bridge_repl_v2_revive_reattach_teleported"),
@@ -841,7 +841,7 @@ async function Yjn(t) {
         logFeatureBad("bridge_connect", "bridge_connect_reattach_teleported"),
         null
       );
-    (n(
+    (logForDebugging(
       `[remote-bridge] Reattach suppressed for teleported session ${je} \u2014 minting fresh`,
     ),
       (ut = !0),
@@ -851,7 +851,7 @@ async function Yjn(t) {
   if (Ae) {
     if (!je || ut)
       return (
-        n(
+        logForDebugging(
           "[remote-bridge] Work-secret attach has no session to reattach; failing",
           { level: "error" },
         ),
@@ -865,13 +865,13 @@ async function Yjn(t) {
         null
       );
     ((b = je),
-      n(
+      logForDebugging(
         `[remote-bridge] Attaching to session ${b} with the host's work secret`,
       ),
       writeDiagnosticsEvent("info", "bridge_repl_v2_work_secret_attach"));
   } else if (je && !ut) {
     ((b = je),
-      n(`[remote-bridge] Reattaching to session ${b}`),
+      logForDebugging(`[remote-bridge] Reattaching to session ${b}`),
       writeDiagnosticsEvent("info", "bridge_repl_v2_session_reattached"));
     let e = await Lt(
       (r, o) => Yo(b, p, r, v, D.http_timeout_ms, o, Er),
@@ -880,7 +880,7 @@ async function Yjn(t) {
       { getAccessToken: yr, onAuth401: re, recoveryAttemptedTokens: dt },
     );
     if (e?.outcome === "elevated_auth") {
-      (n(
+      (logForDebugging(
         `[remote-bridge] Reattach ${b}: unarchive elevated-auth (${e.reason}) \u2014 surfacing auth failure, pointer preserved`,
       ),
         writeDiagnosticsEvent("info", "bridge_repl_v2_reattach_elevated_auth"));
@@ -897,7 +897,7 @@ async function Yjn(t) {
     }
     if (e?.outcome === "gone" && I)
       return (
-        n(
+        logForDebugging(
           `[remote-bridge] Reattach-or-fail: ${b} gone (unarchive ${e.status}); failing terminally instead of minting fresh`,
         ),
         writeDiagnosticsEvent("info", "bridge_repl_v2_revive_reattach_gone"),
@@ -912,7 +912,7 @@ async function Yjn(t) {
         null
       );
     if (e?.outcome === "gone") {
-      (n(
+      (logForDebugging(
         `[remote-bridge] Reattach ${b} gone (unarchive ${e.status}); minting fresh session`,
       ),
         (ft = !0),
@@ -936,7 +936,7 @@ async function Yjn(t) {
   } else {
     if (I)
       return (
-        n(
+        logForDebugging(
           "[remote-bridge] Reattach-or-fail: no reattach pointer for this init; failing terminally instead of minting fresh",
         ),
         writeDiagnosticsEvent("info", "bridge_repl_v2_revive_fresh_refused"),
@@ -951,7 +951,7 @@ async function Yjn(t) {
     b = e;
   }
   if (de && Rr !== void 0 && Rr !== Fr)
-    n(
+    logForDebugging(
       "[bridge:core] --project ignored: reattached to existing session (Project is fixed at create)",
     );
   if (Ve && de) Ir(b, Ee);
@@ -981,13 +981,13 @@ async function Yjn(t) {
     let o = r - Be.startedAtMs;
     if (Be.refusals > 1 && o >= Ft)
       return (
-        n(
+        logForDebugging(
           `[remote-bridge] /bridge refused by ${e.source} ${Be.refusals}\xD7 over ${Math.round(o / 1000)}s with nothing reaching Anthropic since \u2014 treating as a verdict`,
         ),
         e
       );
     return (
-      n(
+      logForDebugging(
         `[remote-bridge] /bridge 403 not written by Anthropic's origin (${e.source}) \u2014 treating as unreachable`,
       ),
       writeDiagnosticsEvent("warn", "bridge_repl_v2_bridge_403_nonorigin", { source: e.source }),
@@ -1016,7 +1016,7 @@ async function Yjn(t) {
       { getAccessToken: yr, onAuth401: re, recoveryAttemptedTokens: dt },
     );
   if (de && K === null)
-    (n(
+    (logForDebugging(
       `[remote-bridge] Reattach ${b}: /bridge failed after unarchive; surfacing retry prompt`,
     ),
       writeDiagnosticsEvent("info", "v2_remote_creds_reattach_transient"));
@@ -1041,7 +1041,7 @@ async function Yjn(t) {
               ? `v2_remote_creds_request_rejected_${K.source}`
               : `v2_remote_creds_${K.reason}`;
     if (
-      (n(
+      (logForDebugging(
         `[remote-bridge] Creds failed; onStateChange ${_e ? "set" : "UNSET"}, msg="${e}"`,
       ),
       _e?.("failed", e, r),
@@ -1052,13 +1052,13 @@ async function Yjn(t) {
       Ze(b, p, rn(), v, D.http_timeout_ms, void 0, Ee);
     return null;
   }
-  (n(
+  (logForDebugging(
     `[remote-bridge] Fetched bridge credentials (expires_in=${K.expires_in}s)`,
   ),
     Br(on),
     pi?.(b));
   let sn = buildSessionApiUrl(K.api_base_url, b);
-  n(`[remote-bridge] v2 session URL: ${sn}`);
+  logForDebugging(`[remote-bridge] v2 session URL: ${sn}`);
   function Ji() {
     return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_selfheal_heartbeats", !0);
   }
@@ -1132,7 +1132,7 @@ async function Yjn(t) {
     });
   } catch (e) {
     if (
-      (n(`[remote-bridge] v2 transport setup failed: ${l(e)}`, {
+      (logForDebugging(`[remote-bridge] v2 transport setup failed: ${l(e)}`, {
         level: "error",
       }),
       _e?.("failed", `Transport setup failed: ${l(e)}`),
@@ -1143,7 +1143,7 @@ async function Yjn(t) {
       Ze(b, p, rn(), v, D.http_timeout_ms, void 0, Ee);
     return null;
   }
-  (n(`[remote-bridge] v2 transport created (epoch=${K.worker_epoch})`),
+  (logForDebugging(`[remote-bridge] v2 transport created (epoch=${K.worker_epoch})`),
     _e?.("ready"));
   let { worker_jwt: pt, api_base_url: cn } = K,
     rs = null,
@@ -1192,11 +1192,11 @@ async function Yjn(t) {
   }
   function co(e) {}
   let mt = null,
-    Sr = new Ove(D.uuid_dedup_buffer_size),
+    Sr = new BoundedDedupBuffer(D.uuid_dedup_buffer_size),
     fn = new Set();
   if (me) for (let e of me) (fn.add(e.uuid), Sr.add(e.uuid));
-  let uo = new Ove(D.uuid_dedup_buffer_size),
-    vt = new Ove(D.uuid_dedup_buffer_size),
+  let uo = new BoundedDedupBuffer(D.uuid_dedup_buffer_size),
+    vt = new BoundedDedupBuffer(D.uuid_dedup_buffer_size),
     ve = new ot(),
     he = new ot(),
     bt = 0,
@@ -1318,7 +1318,7 @@ async function Yjn(t) {
   function go(e) {
     if (R || z || X) return;
     if (
-      (n(
+      (logForDebugging(
         `[remote-bridge] SSE stream live again after ${e.attempts} non-origin 403(s) over ${Math.round(e.streakMs / 1000)}s (source=${e.source})`,
       ),
       De(
@@ -1355,7 +1355,7 @@ async function Yjn(t) {
     if (se !== void 0 || Y === void 0 || r === void 0 || (Tr && fi(r))) return;
     if (
       ((se = r),
-      n(
+      logForDebugging(
         `[remote-bridge] ${e} latched a stashed supersession close (${Y.code}/${Y.cause ?? "uncaused"}) \u2014 archive suppressed`,
       ),
       !X)
@@ -1450,7 +1450,7 @@ async function Yjn(t) {
       mt?.stop(),
       isSessionTeleported(b))
     ) {
-      (n(
+      (logForDebugging(
         `[remote-bridge] Signed-in account changed under teleported session ${b} (${e}) \u2014 latched only`,
       ),
         Kr(),
@@ -1461,7 +1461,7 @@ async function Yjn(t) {
     }
     let r = X || se !== void 0;
     if (
-      (n(
+      (logForDebugging(
         `[remote-bridge] Signed-in account changed under ${b} (${e}${r ? ", episode already dead" : ""}) \u2014 stopping`,
       ),
       writeDiagnosticsEvent("info", "bridge_repl_v2_owner_changed"),
@@ -1470,7 +1470,7 @@ async function Yjn(t) {
       (De(e),
         (X = !0),
         J(REMOTE_CONTROL_SIGNED_IN_ACCOUNT_CHANGED_MESSAGE, "terminal"),
-        k.write(hCn(b, "account_changed")),
+        k.write(createWorkerShuttingDownMessage(b, "account_changed")),
         await Cr(ze() > 0 ? D.teardown_archive_timeout_ms : di).catch(() => {
           return;
         }));
@@ -1481,7 +1481,7 @@ async function Yjn(t) {
     let o;
     if (Ve)
       ((o = "skipped_host_owned"),
-        n(
+        logForDebugging(
           `[remote-bridge] Owner-changed settle left host-owned session ${b} unarchived`,
         ));
     else {
@@ -1495,7 +1495,7 @@ async function Yjn(t) {
         Ee,
       );
       ((o = _i(a, se)),
-        n(
+        logForDebugging(
           `[remote-bridge] Owner-changed settle archived ${b} with the owner's credential (archive=${a})`,
         ));
     }
@@ -1520,7 +1520,7 @@ async function Yjn(t) {
     be = new Map(),
     _r = new Set();
   function Ct(e, r) {
-    if ((_r.delete(e), be.delete(e) && r)) TAt(e);
+    if ((_r.delete(e), be.delete(e) && r)) markPromptRequestResolved(e);
   }
   let Oe = (e, r) => {
     if (Gt && !z && (e === "requires_action" || e === "idle")) Gt();
@@ -1531,7 +1531,7 @@ async function Yjn(t) {
         .reverse();
       k.reportMetadata({
         pending_action: r,
-        pending_actions: aSn(
+        pending_actions: buildPendingActionsList(
           r,
           o.filter((a) => a !== r),
         ),
@@ -1645,7 +1645,7 @@ async function Yjn(t) {
                 if (Wn === U) continue;
                 if (
                   ((U = Wn),
-                  n(
+                  logForDebugging(
                     `[remote-bridge] worktree_state \u2192 ${j}: ${JSON.stringify(Ce)}`,
                   ),
                   (ae = Ce !== null),
@@ -1671,7 +1671,7 @@ async function Yjn(t) {
               ((U = ne), k.reportMetadata({ current_branches: { [j]: ne } }));
             } while (Ie);
           } catch (pe) {
-            n(`[remote-bridge] current_branches emit failed: ${l(pe)}`);
+            logForDebugging(`[remote-bridge] current_branches emit failed: ${l(pe)}`);
           } finally {
             Se = !1;
           }
@@ -1686,7 +1686,7 @@ async function Yjn(t) {
       }),
         Or());
     })().catch((e) =>
-      n(`[remote-bridge] current_branches setup failed: ${l(e)}`),
+      logForDebugging(`[remote-bridge] current_branches setup failed: ${l(e)}`),
     );
   let In = hB(() => wr.noteActivity()),
     Pn = onGrowthBookRefresh(() => {
@@ -1718,7 +1718,7 @@ async function Yjn(t) {
     try {
       if (await re(e)) return "recovered";
     } catch (r) {
-      n(`[remote-bridge] Proactive forced OAuth refresh threw: ${l(r)}`, {
+      logForDebugging(`[remote-bridge] Proactive forced OAuth refresh threw: ${l(r)}`, {
         level: "error",
       });
     }
@@ -1740,12 +1740,12 @@ async function Yjn(t) {
       if (!R && !X) wt({ leg: "bad", code: "chain_exhausted_no_oauth" });
       if (ue || R) return;
       if (dr) {
-        n(
+        logForDebugging(
           `[remote-bridge] Token refresh chain exhausted for ${e} \u2014 terminal state already showing, not repainting`,
         );
         return;
       }
-      (n(
+      (logForDebugging(
         `[remote-bridge] Token refresh chain exhausted for ${e} \u2014 surfacing auth failure`,
         { level: "error" },
       ),
@@ -1771,7 +1771,7 @@ async function Yjn(t) {
         if (r) await er?.();
         else await M?.();
       } catch (o) {
-        n(`[remote-bridge] scheduler token refresh failed: ${l(o)}`, {
+        logForDebugging(`[remote-bridge] scheduler token refresh failed: ${l(o)}`, {
           level: "error",
         });
       }
@@ -1780,14 +1780,14 @@ async function Yjn(t) {
     onRefresh: (e, r) => {
       (async () => {
         if (se !== void 0 || z) {
-          n(
+          logForDebugging(
             `[remote-bridge] Proactive refresh skipped: session ${z ? "stopped for an owner change" : "superseded"}`,
           );
           return;
         }
         if (ue || R) {
           if (
-            (n(
+            (logForDebugging(
               "[remote-bridge] Recovery already in flight, skipping proactive refresh",
             ),
             ue && Ke !== 0)
@@ -1796,7 +1796,7 @@ async function Yjn(t) {
           return;
         }
         if (isSessionTeleported(e)) {
-          n(
+          logForDebugging(
             `[remote-bridge] Proactive refresh suppressed for teleported session ${e}`,
           );
           return;
@@ -1846,7 +1846,7 @@ async function Yjn(t) {
           if (R || V !== o) return;
           if (isCredentialsRejection(fe)) {
             if (
-              (n(
+              (logForDebugging(
                 A
                   ? "[remote-bridge] Proactive cycle: bearer already rejected by /bridge \u2014 retrying the forced OAuth refresh without re-registering"
                   : "[remote-bridge] Proactive /bridge re-mint rejected (oauth_rejected) \u2014 attempting forced OAuth refresh",
@@ -1861,7 +1861,7 @@ async function Yjn(t) {
             if (await ge()) return;
             if (Ie === "unreachable") {
               if (
-                (n(
+                (logForDebugging(
                   "[remote-bridge] Proactive forced OAuth refresh got no verdict (token endpoint unreachable); keeping transport, a later cycle retries the refresh",
                 ),
                 !A)
@@ -1895,7 +1895,7 @@ async function Yjn(t) {
             if (R || V !== o) return;
             if (Qe && pe === null) {
               if (
-                (n(
+                (logForDebugging(
                   "[remote-bridge] Proactive post-refresh re-mint failed (transient); fallback refresh will retry",
                 ),
                 se === void 0)
@@ -1933,14 +1933,14 @@ async function Yjn(t) {
             if (Pe === "rebuilt")
               ((d = !0),
                 (C = { leg: "sad", code: "oauth_rejected_recovered" }),
-                n(
+                logForDebugging(
                   "[remote-bridge] Transport rebuilt (proactive refresh after forced OAuth refresh)",
                 ));
             return;
           }
           if (!fe) {
             if (
-              (n(
+              (logForDebugging(
                 "[remote-bridge] Proactive /bridge re-mint failed (transient); fallback refresh will retry",
               ),
               writeDiagnosticsEvent("warn", "bridge_repl_v2_proactive_remint_null"),
@@ -1960,10 +1960,10 @@ async function Yjn(t) {
           if (ye === "rebuilt")
             ((d = !0),
               (C = { leg: "ok" }),
-              n("[remote-bridge] Transport rebuilt (proactive refresh)"));
+              logForDebugging("[remote-bridge] Transport rebuilt (proactive refresh)"));
         } catch (A) {
           if (
-            (n(`[remote-bridge] Proactive refresh rebuild failed: ${l(A)}`, {
+            (logForDebugging(`[remote-bridge] Proactive refresh rebuild failed: ${l(A)}`, {
               level: "error",
             }),
             writeDiagnosticsEvent("error", "bridge_repl_v2_proactive_refresh_failed"),
@@ -2028,7 +2028,7 @@ async function Yjn(t) {
         (Oe("requires_action", o?.details), _r.clear());
       }
       if (
-        (n("[remote-bridge] v2 transport connected"),
+        (logForDebugging("[remote-bridge] v2 transport connected"),
         writeDiagnosticsEvent("info", "bridge_repl_v2_transport_connected"),
         Yt)
       ) {
@@ -2049,7 +2049,7 @@ async function Yjn(t) {
         Rt = !0;
         let o = k;
         To(me)
-          .catch((a) => n(`[remote-bridge] flushHistory failed: ${a}`))
+          .catch((a) => logForDebugging(`[remote-bridge] flushHistory failed: ${a}`))
           .finally(() => {
             if (k !== o || R || z || ue) return;
             (Mr(), zr());
@@ -2096,7 +2096,7 @@ async function Yjn(t) {
       });
     }
     function r(o) {
-      urr(
+      handleBridgeIngressMessage(
         o,
         Sr,
         uo,
@@ -2116,7 +2116,7 @@ async function Yjn(t) {
           : void 0,
         (a) => {
           if (isUserActivityRequest(a)) wr.noteActivity();
-          prr(a, {
+          handleBridgeControlRequest(a, {
             transport: k,
             sessionId: b,
             onInterrupt: mi,
@@ -2154,7 +2154,7 @@ async function Yjn(t) {
     if ((clearTimeout(gr), R || z))
       return (En(0, [], k.discardUndeliveredEvents?.() ?? []), !1);
     if (!a)
-      (n(
+      (logForDebugging(
         `[remote-bridge] v2 transport closed (code=${e}${o ? ` source=${o.rejectSource}` : ""})`,
       ),
         logEvent("tengu_bridge_repl_ws_closed", {
@@ -2167,7 +2167,7 @@ async function Yjn(t) {
     if (ue) {
       let E = ir ? Date.now() - ir : 0;
       if (E <= vn) return ((Y = { code: e ?? 4092, cause: r, detail: o }), !1);
-      (n(
+      (logForDebugging(
         `[remote-bridge] authRecoveryInFlight held ${Math.round(E / 1000)}s (> ceiling ${Math.round(vn / 1000)}s) \u2014 treating as leaked, handling close directly`,
         { level: "error" },
       ),
@@ -2179,7 +2179,7 @@ async function Yjn(t) {
     if (Fn(e)) {
       if (sr >= bn) {
         if (
-          (n(`[remote-bridge] ${e} recovery exhausted after ${sr} attempts`, {
+          (logForDebugging(`[remote-bridge] ${e} recovery exhausted after ${sr} attempts`, {
             level: "error",
           }),
           J(`Transport recovery exhausted (code ${e})`),
@@ -2191,7 +2191,7 @@ async function Yjn(t) {
       if (e === 4094 && !a) {
         if (Gr >= bn) {
           if (
-            (n(
+            (logForDebugging(
               `[remote-bridge] worker-credential recovery exhausted after ${Gr} attempts with no successful heartbeat between them`,
               { level: "error" },
             ),
@@ -2213,7 +2213,7 @@ async function Yjn(t) {
           case "daily_exhausted": {
             let j = E === "hourly_exhausted" ? 1 : 24;
             if (
-              (n(
+              (logForDebugging(
                 `[remote-bridge] heartbeat recovery budget exhausted (${j}h window)`,
                 { level: "error" },
               ),
@@ -2256,7 +2256,7 @@ async function Yjn(t) {
   async function Ot(e, r, o, a, d) {
     if (isSessionTeleported(b))
       return (
-        n(`[remote-bridge] Rebuild suppressed for teleported session ${b}`),
+        logForDebugging(`[remote-bridge] Rebuild suppressed for teleported session ${b}`),
         "suppressed_teleported"
       );
     ((Zr = r),
@@ -2320,7 +2320,7 @@ async function Yjn(t) {
     if (a && (R || V !== r)) return;
     if (d === "signed_out") {
       if (
-        (n(
+        (logForDebugging(
           `[remote-bridge] Signed out on this machine under ${b} (${e}) \u2014 stopping`,
         ),
         writeDiagnosticsEvent("info", "bridge_repl_v2_signed_out"),
@@ -2368,7 +2368,7 @@ async function Yjn(t) {
         if (A === null) {
           if ((O++, a === void 0 || O < a.attempts)) continue;
           if (
-            (n(
+            (logForDebugging(
               `[remote-bridge] Re-mint loop exhausted (code ${e}): ${O} unreachable attempts, ${Math.round((Date.now() - d) / 1000)}s`,
               { level: "error" },
             ),
@@ -2392,14 +2392,14 @@ async function Yjn(t) {
             try {
               U = await re(ge);
             } catch (ae) {
-              n(`[remote-bridge] Re-mint loop OAuth refresh threw: ${l(ae)}`, {
+              logForDebugging(`[remote-bridge] Re-mint loop OAuth refresh threw: ${l(ae)}`, {
                 level: "error",
               });
             }
             if (R) break;
             if (V !== r) return { creds: null, attempts: _ };
             if (U) {
-              n(
+              logForDebugging(
                 "[remote-bridge] Re-mint rejected after outage \u2014 OAuth refresh succeeded; retrying with the refreshed credential",
               );
               continue;
@@ -2419,7 +2419,7 @@ async function Yjn(t) {
           );
         }
         return (
-          n(
+          logForDebugging(
             `[remote-bridge] Re-mint loop succeeded (code ${e}, attempt ${C}, ${Math.round((Date.now() - d) / 1000)}s)`,
           ),
           writeDiagnosticsEvent("info", "bridge_repl_v2_remint_loop_recovered", {
@@ -2486,7 +2486,7 @@ async function Yjn(t) {
     (ve.start(),
       he.start(),
       Vr("presence recovery failed \u2014 retrying"),
-      n(
+      logForDebugging(
         `[remote-bridge] ${e} recovery fetch failed \u2014 retrying in ${$n}ms`,
       ),
       ar());
@@ -2519,7 +2519,7 @@ async function Yjn(t) {
     (ve.start(),
       he.start(),
       Vr(Re[e].reconnectingDetail),
-      n(
+      logForDebugging(
         `[remote-bridge] ${e} on transport \u2014 attempting credential refresh + rebuild`,
       ));
     try {
@@ -2532,7 +2532,7 @@ async function Yjn(t) {
           d = await re(a ?? "");
         } catch (A) {
           ((d = !1),
-            n(`[remote-bridge] ${e} recovery OAuth refresh threw: ${l(A)}`, {
+            logForDebugging(`[remote-bridge] ${e} recovery OAuth refresh threw: ${l(A)}`, {
               level: "error",
             }));
         }
@@ -2540,7 +2540,7 @@ async function Yjn(t) {
         try {
           await M();
         } catch (A) {
-          n(`[remote-bridge] pre-recovery token refresh failed: ${l(A)}`, {
+          logForDebugging(`[remote-bridge] pre-recovery token refresh failed: ${l(A)}`, {
             level: "error",
           });
         }
@@ -2571,7 +2571,7 @@ async function Yjn(t) {
           try {
             ye = er ? await er() : (await re(a ?? "")) ? ie() : void 0;
           } catch (Ie) {
-            n(
+            logForDebugging(
               `[remote-bridge] Adopt-loop token read threw (attempt ${U}): ${l(Ie)}`,
               { level: "error" },
             );
@@ -2627,7 +2627,7 @@ async function Yjn(t) {
         try {
           A = await re(a ?? "");
         } catch (U) {
-          n(`[remote-bridge] ${e} late OAuth refresh threw: ${l(U)}`, {
+          logForDebugging(`[remote-bridge] ${e} late OAuth refresh threw: ${l(U)}`, {
             level: "error",
           });
         }
@@ -2667,13 +2667,13 @@ async function Yjn(t) {
         return;
       }
       if (ge === "suppressed_owner_changed") return;
-      if ((n(`[remote-bridge] Transport rebuilt after ${e}`), !R)) {
+      if ((logForDebugging(`[remote-bridge] Transport rebuilt after ${e}`), !R)) {
         if (!r)
           De(Re[e].recoveredCode, j > 0 ? { remint_attempts: j } : void 0);
       }
     } catch (a) {
       if (
-        (n(`[remote-bridge] ${e} recovery failed: ${l(a)}`, { level: "error" }),
+        (logForDebugging(`[remote-bridge] ${e} recovery failed: ${l(a)}`, { level: "error" }),
         writeDiagnosticsEvent("error", Re[e].failureDiagnostic),
         !R && !z)
       ) {
@@ -2740,7 +2740,7 @@ async function Yjn(t) {
       }
     }
     if ((_(), It(() => o) && be.size === 0)) Oe("running");
-    (n(
+    (logForDebugging(
       `[remote-bridge] Drained ${e.length} queued message(s) and ${r.length} SDK event(s) / control frame(s) after flush`,
     ),
       k.writeBatch(a));
@@ -2748,7 +2748,7 @@ async function Yjn(t) {
   function So(e) {
     let r = e.takeUndeliveredEvents?.() ?? [];
     if (r.length === 0) return;
-    (n(
+    (logForDebugging(
       `[remote-bridge] Carrying ${r.length} undelivered client event(s) over to the rebuilt transport`,
     ),
       writeDiagnosticsEvent("info", "bridge_repl_v2_events_carried_over", { count: r.length }),
@@ -2757,24 +2757,24 @@ async function Yjn(t) {
   }
   function tt(e, r) {
     if (he.enqueue({ seq: bt++, frame: e })) {
-      n(`[remote-bridge] Queued ${r} during flush`);
+      logForDebugging(`[remote-bridge] Queued ${r} during flush`);
       return;
     }
-    (k.write(e), n(`[remote-bridge] Sent ${r}`));
+    (k.write(e), logForDebugging(`[remote-bridge] Sent ${r}`));
   }
   async function To(e) {
-    let r = e.filter(xme),
+    let r = e.filter(shouldRelayMessageToBridge),
       o = Xo(r, He);
     if (o.length < r.length)
-      n(
+      logForDebugging(
         `[remote-bridge] Capped initial flush: ${r.length} -> ${o.length} (cap=${He})`,
       );
     let a = oe(o).map((_) => ({ ..._, session_id: b, historical: !0 }));
     if (a.length === 0) return;
     let d = r.findLast((_) => _.type !== "attachment");
-    if (It(() => d !== void 0 && Q4t(d) && !hi(d)) && be.size === 0)
+    if (It(() => d !== void 0 && isRelayableUserMessage(d) && !hi(d)) && be.size === 0)
       Oe("running");
-    (n(`[remote-bridge] Flushing ${a.length} history events`),
+    (logForDebugging(`[remote-bridge] Flushing ${a.length} history events`),
       await k.writeBatch(a));
   }
   let Pt = Ve === !0,
@@ -2819,8 +2819,8 @@ async function Yjn(t) {
       Oe("idle"),
       mr !== void 0)
     )
-      k.write(hCn(b, mr));
-    if ((k.write(gCn(b)), Pt || (Wr && mr !== "remote_control_disabled"))) {
+      k.write(createWorkerShuttingDownMessage(b, mr));
+    if ((k.write(createBridgeResultMessage(b)), Pt || (Wr && mr !== "remote_control_disabled"))) {
       let j = Ve
         ? "skipped_host_owned"
         : Pt
@@ -2829,7 +2829,7 @@ async function Yjn(t) {
       if (mr !== void 0 || ze() > 0) await Cr();
       (k.close(),
         await k.flushGoodbye(),
-        n(`[remote-bridge] Teardown complete (skipArchive): session=${b}`),
+        logForDebugging(`[remote-bridge] Teardown complete (skipArchive): session=${b}`),
         writeDiagnosticsEvent("info", "bridge_repl_v2_teardown"),
         logEvent("tengu_bridge_repl_teardown", {
           v2: !0,
@@ -2855,14 +2855,14 @@ async function Yjn(t) {
           (P = _.token),
           (O = await Ze(b, p, P, v, Math.max(1, r - (Date.now() - o)), a, Ee)));
       } catch (j) {
-        n(`[remote-bridge] Teardown 401 retry threw: ${l(j)}`, {
+        logForDebugging(`[remote-bridge] Teardown 401 retry threw: ${l(j)}`, {
           level: "error",
         });
       }
     if (mr !== void 0 && d === void 0) await Cr();
     (k.close(), await k.flushGoodbye());
     let E = _i(O, se);
-    (n(`[remote-bridge] Torn down (archive=${O})`),
+    (logForDebugging(`[remote-bridge] Torn down (archive=${O})`),
       writeDiagnosticsEvent("info", "bridge_repl_v2_teardown"),
       logEvent("tengu_bridge_repl_teardown", {
         v2: !0,
@@ -2887,7 +2887,7 @@ async function Yjn(t) {
     logFeatureOk("bridge_connect"));
   function Ne(e) {
     if (!z) return !1;
-    return (n(`[remote-bridge] Dropping ${e} after owner change`), !0);
+    return (logForDebugging(`[remote-bridge] Dropping ${e} after owner change`), !0);
   }
   let jt = {
     bridgeSessionId: b,
@@ -2910,27 +2910,27 @@ async function Yjn(t) {
     flush: () => (Mr(), k.flush()),
     writeMessages(e) {
       if (Ne("writeMessages")) return;
-      let r = e.filter((d) => xme(d) && !fn.has(d.uuid) && !Sr.has(d.uuid));
+      let r = e.filter((d) => shouldRelayMessageToBridge(d) && !fn.has(d.uuid) && !Sr.has(d.uuid));
       if (r.length === 0) return;
       if (!jn)
         for (let d of r) {
-          let _ = crr(d);
+          let _ = getHumanUserMessageText(d);
           if (_ !== void 0 && qt?.(_, b)) {
             jn = !0;
             break;
           }
         }
-      let o = r.some(Fe ? Qo : Q4t);
+      let o = r.some(Fe ? Qo : isRelayableUserMessage);
       if (o) Fe = !1;
       if (ve.enqueue(...r.map((d) => ({ seq: bt++, message: d })))) {
         if (o) tr = !0;
-        n(`[remote-bridge] Queued ${r.length} message(s) during flush`);
+        logForDebugging(`[remote-bridge] Queued ${r.length} message(s) during flush`);
         return;
       }
       for (let d of r) Sr.add(d.uuid);
       let a = Un(r);
       if (It(() => o) && be.size === 0) Oe("running");
-      (n(`[remote-bridge] Sending ${r.length} message(s)`), k.writeBatch(a));
+      (logForDebugging(`[remote-bridge] Sending ${r.length} message(s)`), k.writeBatch(a));
     },
     reportMetadata(e) {
       if (Ne("reportMetadata")) return;
@@ -2947,10 +2947,10 @@ async function Yjn(t) {
         let a = r.filter((_) => _.type !== "stream_event"),
           d = r.length - a.length;
         if (d > 0)
-          n(`[remote-bridge] Dropped ${d} stream_event frame(s) during flush`);
+          logForDebugging(`[remote-bridge] Dropped ${d} stream_event frame(s) during flush`);
         if (a.length > 0)
           (he.enqueue(...a.map((_) => ({ seq: bt++, frame: _ }))),
-            n(`[remote-bridge] Queued ${a.length} SDK event(s) during flush`));
+            logForDebugging(`[remote-bridge] Queued ${a.length} SDK event(s) during flush`));
         return;
       }
       for (let a of r) if (a.uuid) vt.add(a.uuid);
@@ -2958,7 +2958,7 @@ async function Yjn(t) {
       k.writeBatch(o);
     },
     sendControlRequest(e) {
-      wAt(e.request_id, { automated: !isHumanInputRequest(e) });
+      recordOutboundRequestId(e.request_id, { automated: !isHumanInputRequest(e) });
       let r = e.request;
       if (r.subtype === "can_use_tool" || r.subtype === "request_user_dialog")
         (be.delete(e.request_id),
@@ -2967,7 +2967,7 @@ async function Yjn(t) {
       if (r.subtype === "request_user_dialog" && (he.active || ue))
         return (
           _r.add(e.request_id),
-          n(
+          logForDebugging(
             `[remote-bridge] Not forwarding request_user_dialog while writes are gated / transport recovering (local-only): ${e.request_id}`,
           ),
           !1
@@ -2989,7 +2989,7 @@ async function Yjn(t) {
                 ? j + (C.length > 1 ? ` (+${C.length - 1} more)` : "")
                 : "Tap to answer",
             };
-          } else if (r.tool_name === Wh)
+          } else if (r.tool_name === EXIT_PLAN_MODE_TOOL_NAME_ALIAS)
             _ = { label: "Plan", body: "Plan ready for review" };
           if (!_ && r.requires_user_interaction)
             _ = { label: r.display_name ?? r.tool_name, body: "" };
@@ -3034,7 +3034,7 @@ async function Yjn(t) {
     sendControlCancelRequest(e) {
       if (_r.delete(e)) {
         (be.delete(e),
-          n(
+          logForDebugging(
             `[remote-bridge] Local-only retract of a declined dialog forward request_id=${e}`,
           ));
         return;
@@ -3047,7 +3047,7 @@ async function Yjn(t) {
     sendResult(e) {
       if (((tr = !1), (Fe = !0), Ne("result"))) return;
       Oe("idle");
-      let r = gCn(b, e);
+      let r = createBridgeResultMessage(b, e);
       tt(
         r,
         `result ${r.subtype} is_error=${r.is_error} num_turns=${r.num_turns}${r.user_message_uuid ? ` user_message_uuid=${r.user_message_uuid}` : ""}`,
@@ -3129,7 +3129,7 @@ async function Yjn(t) {
     },
   };
   if (Ve && !de) Ir(b, Ee);
-  let Ln = Et(jt);
+  let Ln = registerCleanup(jt);
   return jt;
 }
 async function vr(t, p, v) {
@@ -3141,7 +3141,7 @@ async function vr(t, p, v) {
       let L = v.init_retry_base_delay_ms * 2 ** (I - 1),
         B = L * v.init_retry_jitter_fraction * (2 * Math.random() - 1),
         F = Math.min(L + B, v.init_retry_max_delay_ms);
-      (n(
+      (logForDebugging(
         `[remote-bridge] ${p} failed (attempt ${I}/${w}), retrying in ${Math.round(F)}ms`,
       ),
         await sleep(F));
@@ -3173,13 +3173,13 @@ async function Lt(t, p, v, w) {
           try {
             ke = await w.onAuth401(B);
           } catch (Ge) {
-            n(`[remote-bridge] ${p} 401 \u2014 OAuth refresh threw: ${l(Ge)}`, {
+            logForDebugging(`[remote-bridge] ${p} 401 \u2014 OAuth refresh threw: ${l(Ge)}`, {
               level: "error",
             });
           }
           if (
             ((I = ke),
-            n(
+            logForDebugging(
               `[remote-bridge] ${p} 401 \u2014 OAuth ${ke ? "refreshed; retrying with the fresh token" : "refresh unavailable"}`,
             ),
             writeDiagnosticsEvent("info", "bridge_repl_v2_init_401_refresh", { refreshed: ke }),
@@ -3194,7 +3194,7 @@ async function Lt(t, p, v, w) {
     );
   if (L === null && I && !S)
     return (
-      n(
+      logForDebugging(
         `[remote-bridge] ${p} refreshed on the final attempt; one extra try with the fresh token`,
       ),
       t(w.getAccessToken(), () => {})
@@ -3305,19 +3305,19 @@ function _i(t, p) {
 async function Ze(t, p, v, w, I, S, L) {
   if (isSessionTeleported(t))
     return (
-      n(`[remote-bridge] Archive suppressed for teleported session ${t}`),
+      logForDebugging(`[remote-bridge] Archive suppressed for teleported session ${t}`),
       Ir(t, L),
       200
     );
   if (S === "owner_changed")
     return (
-      n(`[remote-bridge] Archive suppressed for owner-changed session ${t}`),
+      logForDebugging(`[remote-bridge] Archive suppressed for owner-changed session ${t}`),
       writeDiagnosticsEvent("info", "bridge_repl_archive_suppressed_owner_changed"),
       "skipped_owner_changed"
     );
   if (S !== void 0)
     return (
-      n(`[remote-bridge] Archive suppressed for ${S} session ${t}`),
+      logForDebugging(`[remote-bridge] Archive suppressed for ${S} session ${t}`),
       writeDiagnosticsEvent(
         "info",
         S === "superseded"
@@ -3398,15 +3398,15 @@ function Xo(t, p) {
   return t.slice(v);
 }
 function Qo(t) {
-  if (t.type !== "user" || !Q4t(t) || hi(t)) return !1;
+  if (t.type !== "user" || !isRelayableUserMessage(t) || hi(t)) return !1;
   let p = t.message.content;
   return typeof p === "string" || !p.some((v) => v.type === "tool_result");
 }
 function hi(t) {
-  if (t.type !== "user" || !WT(t)) return !1;
+  if (t.type !== "user" || !isInterruptLikeUserMessage(t)) return !1;
   let p = t.message.content;
   return typeof p === "string"
-    ? FRe.includes(p)
-    : p.every((v) => v.type !== "text" || FRe.includes(v.text));
+    ? INTERRUPT_MESSAGE_PREFIXES.includes(p)
+    : p.every((v) => v.type !== "text" || INTERRUPT_MESSAGE_PREFIXES.includes(v.text));
 }
 export { Xjn, ndt, Yjn, A7 };

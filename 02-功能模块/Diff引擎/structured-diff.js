@@ -8,21 +8,21 @@
 
 // Version: 2.1.263
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { gi, ree, o, t, pd, oee } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { isFullscreen, useRenderCaches, Box, Text, NoSelect, RawAnsi } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useTheme, useActiveThemeOverrides } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { iYn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+import { splitAnsiLineAtWidth } from "../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import { diffWordsWithSpace } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Rye, lle, dUn } from "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import { truncateCodeLine, formatTruncationNotice, getDiffHunkRenderer } from "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Yl, V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
 F();
 function ke(He, Ae) {
-  return e(o, { children: He }, Ae);
+  return e(Box, { children: He }, Ae);
 }
 var pe = 0.4;
 function G($e) {
@@ -51,7 +51,7 @@ function G($e) {
   else Y = re[7];
   let ge;
   if (re[8] !== Y)
-    ((ge = e(o, { flexDirection: "column", flexGrow: 1, children: Y })),
+    ((ge = e(Box, { flexDirection: "column", flexGrow: 1, children: Y })),
       (re[8] = Y),
       (re[9] = ge));
   else ge = re[9];
@@ -64,7 +64,7 @@ function xe(i) {
         : c.startsWith("-")
           ? "remove"
           : "nochange",
-      { code: n, truncatedChars: a } = Rye(c, 1);
+      { code: n, truncatedChars: a } = truncateCodeLine(c, 1);
     return { code: n, i: 0, type: d, originalCode: n, truncatedChars: a };
   });
 }
@@ -152,21 +152,21 @@ function Le(i, c, d, n, a) {
         )
         .forEach((N, H) => {
           if (!N) return;
-          if (H > 0 || h + te(N) > R) {
+          if (H > 0 || h + getStringWidth(N) > R) {
             if (b.length > 0)
               (C.push({ content: [...b], contentWidth: h }), (b = []), (h = 0));
           }
-          (b.push(e(t, { backgroundColor: P, children: N }, `part-${A}-${H}`)),
-            (h += te(N)));
+          (b.push(e(Text, { backgroundColor: P, children: N }, `part-${A}-${H}`)),
+            (h += getStringWidth(N)));
         });
     }),
     b.length > 0)
   )
     C.push({ content: b, contentWidth: h });
-  let T = i.truncatedChars > 0 ? lle(i.truncatedChars) : "",
+  let T = i.truncatedChars > 0 ? formatTruncationNotice(i.truncatedChars) : "",
     y = -1;
   if (T && C.length > 0) {
-    if (C.at(-1).contentWidth + te(T) > R)
+    if (C.at(-1).contentWidth + getStringWidth(T) > R)
       C.push({ content: [], contentWidth: 0 });
     y = C.length - 1;
   }
@@ -183,30 +183,30 @@ function Le(i, c, d, n, a) {
       E = v === 0 ? l : void 0,
       N = (E !== void 0 ? E.toString().padStart(d) : " ".repeat(d)) + " ",
       H = v === y ? T : "",
-      B = N.length + x + A + te(H),
+      B = N.length + x + A + getStringWidth(H),
       me = Math.max(0, c - B);
     return r(
-      o,
+      Box,
       {
         flexDirection: "row",
         children: [
-          e(pd, {
+          e(NoSelect, {
             fromLeftEdge: !0,
-            children: r(t, {
+            children: r(Text, {
               color: a ? "text" : void 0,
               backgroundColor: O,
               dimColor: n,
               children: [N, w],
             }),
           }),
-          e(t, {
+          e(Text, {
             color: a ? "text" : void 0,
             backgroundColor: O,
             dimColor: n,
             children: L,
           }),
-          H ? e(t, { dimColor: !0, children: H }) : null,
-          e(t, {
+          H ? e(Text, { dimColor: !0, children: H }) : null,
+          e(Text, {
             color: a ? "text" : void 0,
             backgroundColor: O,
             dimColor: n,
@@ -235,11 +235,11 @@ function ce(i, c, d, n, a) {
       R = Math.max(1, s - m - 1 - x),
       b = Vm(W, R, "wrap").split(`
 `),
-      h = p.truncatedChars > 0 ? lle(p.truncatedChars) : "",
+      h = p.truncatedChars > 0 ? formatTruncationNotice(p.truncatedChars) : "",
       T = -1;
     if (h && b.length > 0) {
       let y = b.at(-1);
-      if (te(y) + te(h) > R) b.push("");
+      if (getStringWidth(y) + getStringWidth(h) > R) b.push("");
       T = b.length - 1;
     }
     return b.map((y, L) => {
@@ -248,7 +248,7 @@ function ce(i, c, d, n, a) {
         P = (v !== void 0 ? v.toString().padStart(m) : " ".repeat(m)) + " ",
         O = f === "add" ? "+" : f === "remove" ? "-" : " ",
         E = L === T ? h : "",
-        N = P.length + 1 + te(y) + te(E),
+        N = P.length + 1 + getStringWidth(y) + getStringWidth(E),
         H = Math.max(0, s - N),
         B =
           f === "add"
@@ -261,27 +261,27 @@ function ce(i, c, d, n, a) {
                 : "diffRemoved"
               : void 0;
       return r(
-        o,
+        Box,
         {
           flexDirection: "row",
           children: [
-            e(pd, {
+            e(NoSelect, {
               fromLeftEdge: !0,
-              children: r(t, {
+              children: r(Text, {
                 color: a ? "text" : void 0,
                 backgroundColor: B,
                 dimColor: n || f === "nochange",
                 children: [P, O],
               }),
             }),
-            e(t, {
+            e(Text, {
               color: a ? "text" : void 0,
               backgroundColor: B,
               dimColor: n,
               children: y,
             }),
-            E ? e(t, { dimColor: !0, children: E }) : null,
-            e(t, {
+            E ? e(Text, { dimColor: !0, children: E }) : null,
+            e(Text, {
               color: a ? "text" : void 0,
               backgroundColor: B,
               dimColor: n,
@@ -383,7 +383,7 @@ function fe(i) {
   return c;
 }
 function le(i, c, d, n, a, s, l, u, g, D) {
-  let m = dUn();
+  let m = getDiffHunkRenderer();
   if (!m) return null;
   let p = D ? we(c) : 0,
     f = p > 0 && p < u ? p : 0,
@@ -399,7 +399,7 @@ function le(i, c, d, n, a, s, l, u, g, D) {
   if (f > 0) {
     ((R = Array(x.length)), (C = Array(x.length)));
     for (let h = 0; h < x.length; h++) {
-      let [T, y] = iYn(x[h] ?? "", f);
+      let [T, y] = splitAnsiLineAtWidth(x[h] ?? "", f);
       ((R[h] = T), (C[h] = y));
     }
   }
@@ -424,13 +424,13 @@ var StructuredDiff = Yl(function (Je) {
     et = fe(useActiveThemeOverrides()),
     tt = useSettings().syntaxHighlightingDisabled ?? !1,
     K = Math.max(1, Math.floor(U)),
-    nt = gi(),
-    { structuredDiff: ot } = ree(),
+    nt = isFullscreen(),
+    { structuredDiff: ot } = useRenderCaches(),
     ye = Ze || tt ? null : le(ot, J, Ue, Qe, Xe ?? null, Ie, et, K, Q, nt);
   if (!ye) {
     let M;
     if (q[0] !== Q || q[1] !== J || q[2] !== U)
-      ((M = e(o, { children: e(G, { patch: J, dim: Q, width: U }) })),
+      ((M = e(Box, { children: e(G, { patch: J, dim: Q, width: U }) })),
         (q[0] = Q),
         (q[1] = J),
         (q[2] = U),
@@ -442,10 +442,10 @@ var StructuredDiff = Yl(function (Je) {
   if (z > 0 && X && Z) {
     let M;
     if (q[4] !== z || q[5] !== X)
-      ((M = e(pd, {
+      ((M = e(NoSelect, {
         fromLeftEdge: !0,
         flexShrink: 0,
-        children: e(oee, { lines: X, width: z }),
+        children: e(RawAnsi, { lines: X, width: z }),
       })),
         (q[4] = z),
         (q[5] = X),
@@ -454,14 +454,14 @@ var StructuredDiff = Yl(function (Je) {
     const ae = K - z;
     let I;
     if (q[7] !== Z || q[8] !== ae)
-      ((I = e(oee, { lines: Z, width: ae })),
+      ((I = e(RawAnsi, { lines: Z, width: ae })),
         (q[7] = Z),
         (q[8] = ae),
         (q[9] = I));
     else I = q[9];
     let ve;
     if (q[10] !== M || q[11] !== I)
-      ((ve = r(o, { flexDirection: "row", children: [M, I] })),
+      ((ve = r(Box, { flexDirection: "row", children: [M, I] })),
         (q[10] = M),
         (q[11] = I),
         (q[12] = ve));
@@ -470,7 +470,7 @@ var StructuredDiff = Yl(function (Je) {
   }
   let M;
   if (q[13] !== se || q[14] !== K)
-    ((M = e(o, { children: e(oee, { lines: se, width: K }) })),
+    ((M = e(Box, { children: e(RawAnsi, { lines: se, width: K }) })),
       (q[13] = se),
       (q[14] = K),
       (q[15] = M));

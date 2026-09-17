@@ -36,7 +36,7 @@ import { le, Zt, Io, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { COMMAND_NAME_TAG, COMMAND_ARGS_TAG, FORK_SOURCE_TAG, TASK_NOTIFICATION_TAG, TASK_ID_TAG, STATUS_TAG, SUMMARY_TAG, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -47,17 +47,17 @@ import { findCanonicalGitRoot } from "../../01-核心基础设施/安全文件�
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { isLocalMarketplaceSource, CLAUDE_AI_MARKETPLACE_NAME_PREFIX } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { pathExists } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isDesktopHostSession, isVsCodeExtensionSession, isClaudecodeEnv } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
-import { Nt, SA } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { RP, um, Xt, er, kP, lie, Qa, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { escapeHtmlText, unescapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { MODEL_ALIASES, isModelAlias, strip1mSuffix, stripLongContextTags, kP, getCatalogIdByProviderId, getCatalogEntryById, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
-import { Vo, ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, parseArtifactUrl, artifactViewerUrlFor } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { getArtifactEnvironment, ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, parseArtifactUrl, artifactViewerUrlFor } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { provenSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { getSessionAnnouncementState } from "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
-import { BG, Sl, xEt, $t } from "../插件系统/chunk-7s6mt1vg.js";
+import { getPluginRegistryFileScope, getPluginsDir, isReservedClaudeAiMarketplaceName, getPluginRegistryState } from "../插件系统/plugin-system-core.js";
 import { stripMemoryTags, getMemoryTagStats, collectMemoryCitationMetrics, stripMemoryTagsFromContentBlocks } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   getCommandName,
@@ -131,17 +131,17 @@ import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { findLivePeerBySessionId } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { derivePublishContextFrom, mainObservedArtifactVersion, isArtifactReadOnlySurface } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { dGt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
-import { fc, uCn, s5 } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { applyHearthRelayFields } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { SYNTHETIC_MODEL_NAME, MAX_DECLARED_DIALOG_KINDS, isPlainUserMessage } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { isBridgeRateLimitEventEnabled } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { LIST_AGENTS_TOOL_NAME } from "../Teammates团队/list-agents-tool-constants.js";
 import { computeOneShotTaskFireTime } from "./scheduled-tasks.js";
 import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
-import { $h, $fe, ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { MAX_ARTIFACT_WATCHES, MAX_WATCH_HANDOFF_ENTRIES, getArtifactState } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { syncLiveInFlightSnapshot } from "./chunk-7wsy8vxb.js";
 import { getCronJitterConfig } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
-import { mpt, sze, gpt, _pt } from "../Artifact发布-渲染/chunk-5gz5xvw9.js";
+import { parseArtifactCommentMonitorIntent, readArtifactCommentMonitorRecords, getTornArtifactCommentMonitorStops, applyArtifactCommentMonitorStops } from "../Artifact发布-渲染/artifact-comment-monitor-intent.js";
 import { isArtifactCommentsAvailable, resolveLiveSessionHolder, buildHolderDescriptor, describeHolderWithOthers, getHolderTelemetryFields, stripGoneJobHolderFields, isArtifactAutoReactEnabled } from "../Artifact发布-渲染/chunk-p1dkvpxj.js";
 import { onArmSettled, slugRepliesWiredHere, maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
 import { relinkAdoptedAgentSymlinks } from "./chunk-c7mzes79.js";
@@ -149,8 +149,8 @@ import { collectMinimalAmbientContext, buildSystemInitMessage } from "../输入�
 import { isVerifiedSlackHumanTurn } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import { r4 } from "../插件系统/chunk-q8w2zntw.js";
 import { summarizeBackgroundTasks } from "./background-task-inventory.js";
-import { P_, Jle, Rl } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
-import { won } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
+import { resolvePreModelSwitchDecision, formatModelSwitchBlockedNotice, toSingleLineDisplayText } from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
+import { isWebFetchAgentToolUse } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
 import { getEffectiveEffortLevel } from "../Bridge-RemoteControl/bridge-effort-sync.js";
 import { isUserPresent, addUnattendedReplies, takeUnattendedReplies, buildUnattendedRepliesNotice } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
@@ -224,11 +224,11 @@ function Gt(e, t, o) {
   for (let r of e) {
     if (t.has(r)) continue;
     if ((t.add(r), !r.events.has("session.start"))) continue;
-    (n(`session.start: raised for ${r.name} (loaded later)`),
+    (logForDebugging(`session.start: raised for ${r.name} (loaded later)`),
       Promise.resolve()
         .then(() => sessionEvents({ only: r.name }).session.start({ cwd: getCwd(), ...o }))
         .catch((s) => {
-          n(`session.start: failed for ${r.name}: ${l(s)}`, { level: "error" });
+          logForDebugging(`session.start: failed for ${r.name}: ${l(s)}`, { level: "error" });
         }));
   }
 }
@@ -236,15 +236,15 @@ async function jt({ loaded: e, surface: t, interactive: o }) {
   (await Promise.resolve(e).catch(() => {
     return;
   }),
-    n(
+    logForDebugging(
       `session.start: raised (surface ${t ?? "none"}, ${o ? "interactive" : "not interactive"})`,
     ));
-  let r = new WeakSet($t().loadedModules);
+  let r = new WeakSet(getPluginRegistryState().loadedModules);
   pluginModuleLoadNotifier.set((s, d) => (d ? Gt(s, r, { surface: t, interactive: o }) : Bt(s, r)));
   try {
     await sessionEvents().session.start({ cwd: getCwd(), surface: t, interactive: o });
   } catch (s) {
-    n(`session.start: failed: ${l(s)}`, { level: "error" });
+    logForDebugging(`session.start: failed: ${l(s)}`, { level: "error" });
   }
 }
 function raiseSessionStartOnce(e) {
@@ -320,7 +320,7 @@ async function Vt(e) {
     }
     if (Qn(o, E)) p = mergeArtifactCommentMonitorEntries(p, E);
   }
-  return mpt(p);
+  return parseArtifactCommentMonitorIntent(p);
 }
 function Qn(e, t) {
   return (
@@ -379,7 +379,7 @@ function lt(
     }
     case "watch_cap":
     case "watch_cap_reconnect":
-      return `Artifact comment monitor for ${e} didn't resume: this session can watch at most ${$h} Artifacts at once. ${o ? "Open this session, ask Claude to stop watching one, then publish the Artifact again" : "Ask Claude to stop watching one, then publish the Artifact again"} to turn automatic replies back on.`;
+      return `Artifact comment monitor for ${e} didn't resume: this session can watch at most ${MAX_ARTIFACT_WATCHES} Artifacts at once. ${o ? "Open this session, ask Claude to stop watching one, then publish the Artifact again" : "Ask Claude to stop watching one, then publish the Artifact again"} to turn automatic replies back on.`;
     default:
       return st(e, "it couldn't restart in this session", o);
   }
@@ -407,7 +407,7 @@ function Qt(e) {
   return {
     countsAsLoss: e.some((t) => t.stale !== !0),
     warnings: e
-      .slice(0, $fe)
+      .slice(0, MAX_WATCH_HANDOFF_ENTRIES)
       .map((t) => ({
         slug: t.slug,
         reason: t.stale === !0 ? "stale_handoff" : "unavailable",
@@ -432,7 +432,7 @@ function Re(e) {
 }
 function dt(e, t = "unprovable") {
   return t === "watch_cap"
-    ? `${Re(e)}: this session can watch at most ${$h} Artifacts at once. Ask Claude to stop watching one, then publish one of these again, to turn its replies back on.`
+    ? `${Re(e)}: this session can watch at most ${MAX_ARTIFACT_WATCHES} Artifacts at once. Ask Claude to stop watching one, then publish one of these again, to turn its replies back on.`
     : `${Re(e)}. Ask Claude to watch one of these, or publish it again, to turn its replies back on.`;
 }
 function formatConversationSwitchNotice(e) {
@@ -546,7 +546,7 @@ function rn(e, t, o) {
       r = [s, d];
   return r === void 0
     ? null
-    : { slug: r[0], url: artifactViewerUrlFor({ slug: r[0], env: Vo() }) };
+    : { slug: r[0], url: artifactViewerUrlFor({ slug: r[0], env: getArtifactEnvironment() }) };
 }
 function Jn(e) {
   let { slug: t, url: o, record: r } = e;
@@ -574,7 +574,7 @@ function Jn(e) {
       else if (
         d.outcome === "already_watching" &&
         d.taskId !== void 0 &&
-        ne().live.supervisors.get(t)?.autoReactWiring !== void 0
+        getArtifactState().live.supervisors.get(t)?.autoReactWiring !== void 0
       );
       else if (d.outcome === "already_watching" && d.taskId === void 0)
         e.onCarriedSkip?.(t, "arm_in_flight");
@@ -603,12 +603,12 @@ function sn(e) {
     T = (q) =>
       e.tornStops?.has(q) === !0 ? "record_incomplete" : "recorded_stop",
     k = new Set(),
-    C = o === void 0 ? $h : $h - 1,
+    C = o === void 0 ? MAX_ARTIFACT_WATCHES : MAX_ARTIFACT_WATCHES - 1,
     L = 0;
   if (e.carried !== void 0 && e.carried.length > 0) {
-    let q = Vo(),
+    let q = getArtifactEnvironment(),
       Y = [];
-    for (let F of e.carried.slice(0, $fe)) {
+    for (let F of e.carried.slice(0, MAX_WATCH_HANDOFF_ENTRIES)) {
       let de = artifactViewerUrlFor({ slug: F.slug, env: q });
       if (parseArtifactUrl(de)?.slug !== F.slug) continue;
       if (F.slug === o) continue;
@@ -689,7 +689,7 @@ function sn(e) {
         );
       if (F !== void 0)
         for (let ie of te)
-          re(F, ie, artifactViewerUrlFor({ slug: ie, env: Vo() }), p.get(ie), r(ie) === void 0);
+          re(F, ie, artifactViewerUrlFor({ slug: ie, env: getArtifactEnvironment() }), p.get(ie), r(ie) === void 0);
     };
   if (I === null || v.has(I.slug)) {
     O(!1);
@@ -747,7 +747,7 @@ function runArtifactLiveRearmPrelude(e, t, o) {
   try {
     Zn(e, t, o);
   } catch (r) {
-    (n(`[frame-live] resume re-arm prelude failed: ${l(r)}`, {
+    (logForDebugging(`[frame-live] resume re-arm prelude failed: ${l(r)}`, {
       level: "error",
     }),
       logError(r));
@@ -841,14 +841,14 @@ function Zn(e, t, o) {
       let D = Qt(V);
       if (D.countsAsLoss)
         logFeatureSad("artifact_live_subscribe", "carried_consent_dropped", { surface: _ });
-      let X = Vo();
+      let X = getArtifactEnvironment();
       for (let U of D.warnings) {
         let se = artifactViewerUrlFor({ slug: U.slug, env: X });
         if (parseArtifactUrl(se)?.slug !== U.slug) continue;
         ie(U.slug, se, U.reason);
       }
     },
-    Ye = (o?.readRecords ?? sze)({
+    Ye = (o?.readRecords ?? readArtifactCommentMonitorRecords)({
       ...(s !== void 0 && { excludeSlug: s }),
       ...(d !== void 0 && { storageV5: d }),
     }),
@@ -862,7 +862,7 @@ function Zn(e, t, o) {
       for (let U of D) {
         if (V === "drop" || slugRepliesWiredHere(U.slug)) continue;
         if (V === "say") c(U.messages.slice(-1));
-        else ie(U.slug, artifactViewerUrlFor({ slug: U.slug, env: Vo() }), V);
+        else ie(U.slug, artifactViewerUrlFor({ slug: U.slug, env: getArtifactEnvironment() }), V);
       }
     },
     Ae = () => $e("say");
@@ -897,7 +897,7 @@ function Zn(e, t, o) {
             }),
           ));
       }
-      let se = Vo(),
+      let se = getArtifactEnvironment(),
         ye =
           ue === void 0
             ? []
@@ -925,7 +925,7 @@ function Zn(e, t, o) {
         ye = U.length > 0 && se !== void 0 ? se.take() : [];
       if (U.length > 0 && se !== void 0 && ye.length === 0) return;
       Se = U;
-      for (let P of U.slice(0, $fe))
+      for (let P of U.slice(0, MAX_WATCH_HANDOFF_ENTRIES))
         if (P.unattendedReplies !== void 0) addUnattendedReplies(P.slug, P.unattendedReplies);
       let fe = U.some((P) => P.stale !== !0);
       if (D && ue !== void 0 && J.size > 0 && t.jobHolderVerdicts !== void 0)
@@ -993,7 +993,7 @@ function Zn(e, t, o) {
                   0,
                   Math.max(
                     0,
-                    $h -
+                    MAX_ARTIFACT_WATCHES -
                       (s !== void 0 ? 1 : 0) -
                       U.length -
                       (Me !== null &&
@@ -1067,7 +1067,7 @@ function Zn(e, t, o) {
             carried: P.carried,
             ...(P.intent !== void 0 && {
               resumedIntent: P.intent,
-              tornStops: gpt(),
+              tornStops: getTornArtifactCommentMonitorStops(),
             }),
             holderProbe: P.holderProbe,
             ...(P.freedSlugs.size > 0 && { freedSlugs: P.freedSlugs }),
@@ -1081,7 +1081,7 @@ function Zn(e, t, o) {
             },
             onRecordedNotResumed: (N, oe) => {
               Le(N);
-              let pe = Vo();
+              let pe = getArtifactEnvironment();
               c([
                 createSystemInfoMessage(
                   dt(
@@ -1093,10 +1093,10 @@ function Zn(e, t, o) {
               ]);
             },
             onCarriedSkip: (N, oe) => {
-              if ((ie(N, artifactViewerUrlFor({ slug: N, env: Vo() }), oe), !ve.has(N))) return;
+              if ((ie(N, artifactViewerUrlFor({ slug: N, env: getArtifactEnvironment() }), oe), !ve.has(N))) return;
               if (
                 oe === "arm_in_flight" &&
-                ne().live.inFlightWiredIntent.has(N)
+                getArtifactState().live.inFlightWiredIntent.has(N)
               ) {
                 onArmSettled(N, () => Le([N]));
                 return;
@@ -1189,7 +1189,7 @@ function Zn(e, t, o) {
               tt.set(it, Ne.writtenAtMs);
             Ot.set(it, Ne);
           }
-          if (tt.size > 0) _pt(tt, { storageV5: d });
+          if (tt.size > 0) applyArtifactCommentMonitorStops(tt, { storageV5: d });
           pe = Ot;
           let ot = await N();
           if (ot !== "none" || K() !== me || P()) {
@@ -1224,7 +1224,7 @@ function Zn(e, t, o) {
         )(() => {
           Un().catch((N) => {
             (Ae(),
-              n(`[frame-live] resume re-probe failed: ${l(N)}`, {
+              logForDebugging(`[frame-live] resume re-probe failed: ${l(N)}`, {
                 level: "error",
               }));
           });
@@ -1233,7 +1233,7 @@ function Zn(e, t, o) {
     })
     .catch((V) => {
       if (
-        (n(`[frame-live] resume re-arm failed: ${l(V)}`, { level: "error" }),
+        (logForDebugging(`[frame-live] resume re-arm failed: ${l(V)}`, { level: "error" }),
         Ae(),
         Qe)
       )
@@ -1247,7 +1247,7 @@ function Zn(e, t, o) {
       p?.adopted?.then((D) => {
         if (D === void 0 || D.entries.length === 0) return;
         if (D.park !== void 0 && D.park.take().length === 0) return;
-        for (let X of D.entries.slice(0, $fe))
+        for (let X of D.entries.slice(0, MAX_WATCH_HANDOFF_ENTRIES))
           if (X.unattendedReplies !== void 0) addUnattendedReplies(X.slug, X.unattendedReplies);
         if (isUserPresent()) p?.discloseUnattended({ willRearm: !1 });
         Oe(D.entries);
@@ -1269,7 +1269,7 @@ function rearmArtifactLiveInHeadlessHost(e) {
       if (!(r?.hostOwned ?? (() => (isDesktopHostSession() && !isClaudecodeEnv() && !isArtifactReadOnlySurface()) || isVsCodeExtensionSession()))())
         return;
     } catch (w) {
-      (n(`[frame-live] headless resume re-arm gate failed: ${l(w)}`, {
+      (logForDebugging(`[frame-live] headless resume re-arm gate failed: ${l(w)}`, {
         level: "error",
       }),
         logError(w));
@@ -1304,7 +1304,7 @@ function rearmArtifactLiveInHeadlessHost(e) {
           let v = await loadTranscriptFromFile(_.path, e.storageV5);
           if (v.artifactCommentMonitor === void 0) return new Map(w);
           let T = !1,
-            k = mpt(v.artifactCommentMonitor, {
+            k = parseArtifactCommentMonitorIntent(v.artifactCommentMonitor, {
               onTornStop: () => {
                 T = !0;
               },
@@ -1358,7 +1358,7 @@ async function ln(e, t, o) {
     let p = FT(c.name || basename(c.cwd)),
       _ = p && p !== "?" ? p : null,
       I = _
-        ? `a session whose self-reported name is '${Nt(_)}'`
+        ? `a session whose self-reported name is '${escapeHtmlText(_)}'`
         : "a session that was untitled when this note was written",
       E = _
         ? `find it in the ${LIST_AGENTS_TOOL_NAME} listing under that name (it may have been renamed since)`
@@ -1459,7 +1459,7 @@ function uo(e) {
         if (L.type !== "tool_use") continue;
         let B = ft(L.input) ? L.input : {};
         if (L.name === AGENT_TOOL_NAME || L.name === TASK_TOOL_NAME) {
-          if ((I.add(L.id), won(L))) E.add(L.id);
+          if ((I.add(L.id), isWebFetchAgentToolUse(L))) E.add(L.id);
         } else if (L.name === SKILL_TOOL_NAME) w.add(L.id);
         else if (L.name === CRON_CREATE_TOOL_NAME)
           t.push({ toolUseId: L.id, input: B, createdAt: C });
@@ -1586,7 +1586,7 @@ function dn(e, t) {
   if (!e.includes(io) || !e.includes(ao)) return o;
   for (let r of e.matchAll(ro)) {
     if (!r[1]) continue;
-    let s = SA(r[1]);
+    let s = unescapeHtmlText(r[1]);
     if (s.startsWith(ct)) {
       o.liveExclusions.add(s.slice(ct.length));
       continue;
@@ -1633,14 +1633,14 @@ async function po({ asyncAgents: e, notifiedTaskIds: t }, o, r, s, d) {
   if (c.length === 0) return;
   if (
     (logFeatureSad("task_local_agent", "orphaned_on_resume"),
-    n(
+    logForDebugging(
       `resume: ${c.length} background agent(s) orphaned by previous process exit`,
     ),
     c.length > Be)
   ) {
     for (let v of c)
       emitTaskNotification(v.agentId, "failed", { summary: gt, outputFile: pt(v) });
-    ht("failed", "agent", "agent", c, (v) => Nt(v.agentId), p);
+    ht("failed", "agent", "agent", c, (v) => escapeHtmlText(v.agentId), p);
     return;
   }
   let _ = await Promise.all(
@@ -1688,13 +1688,13 @@ async function po({ asyncAgents: e, notifiedTaskIds: t }, o, r, s, d) {
     let B = k !== null || L,
       J = T.redispatched || B ? "stopped" : "failed",
       Z = T.redispatched
-        ? `No completion record was found for background agent "${Nt(T.description)}" after it was re-dispatched via SendMessage in the previous session. It may have been stopped (via the UI, an SDK interrupt, or agent teardown \u2014 these leave no transcript marker), or it may have been running when the previous Claude Code process exited. ${T.isWebFetchLaunch ? "Send it another message with SendMessage to resume it and get its report before assuming the fetch landed." : "Check its worktree/output for partial work before assuming the task landed."}`
+        ? `No completion record was found for background agent "${escapeHtmlText(T.description)}" after it was re-dispatched via SendMessage in the previous session. It may have been stopped (via the UI, an SDK interrupt, or agent teardown \u2014 these leave no transcript marker), or it may have been running when the previous Claude Code process exited. ${T.isWebFetchLaunch ? "Send it another message with SendMessage to resume it and get its report before assuming the fetch landed." : "Check its worktree/output for partial work before assuming the task landed."}`
         : B
-          ? `No completion record was found for background agent "${Nt(T.description)}" from the previous session. It may have been stopped, or it may have been running when the previous Claude Code process exited \u2014 either way its transcript is saved, so its progress is not lost. ${T.isWebFetchLaunch ? "Resume it by sending it a message with SendMessage to get its report." : "Resume it by sending it a message with SendMessage, or check its worktree/output for partial work before assuming the task landed."}`
-          : `Background agent "${Nt(T.description)}" was running when the previous Claude Code process exited and did not complete. Its in-process state was lost. ${T.isWebFetchLaunch ? "Launch it again if its report is still needed." : "Check its worktree/output for partial work before assuming the task landed."}`;
+          ? `No completion record was found for background agent "${escapeHtmlText(T.description)}" from the previous session. It may have been stopped, or it may have been running when the previous Claude Code process exited \u2014 either way its transcript is saved, so its progress is not lost. ${T.isWebFetchLaunch ? "Resume it by sending it a message with SendMessage to get its report." : "Resume it by sending it a message with SendMessage, or check its worktree/output for partial work before assuming the task landed."}`
+          : `Background agent "${escapeHtmlText(T.description)}" was running when the previous Claude Code process exited and did not complete. Its in-process state was lost. ${T.isWebFetchLaunch ? "Launch it again if its report is still needed." : "Check its worktree/output for partial work before assuming the task landed."}`;
     if (T.redispatched) xe(T, J, Z);
     else E[J].push({ agent: T, summary: Z });
-    emitTaskNotification(T.agentId, J, { summary: SA(Z), outputFile: pt(T) });
+    emitTaskNotification(T.agentId, J, { summary: unescapeHtmlText(Z), outputFile: pt(T) });
   }
   for (let v of ["stopped", "failed"]) {
     let T = E[v],
@@ -1707,7 +1707,7 @@ async function po({ asyncAgents: e, notifiedTaskIds: t }, o, r, s, d) {
       );
   }
   if (I.length > 0 && r !== void 0)
-    (n(
+    (logForDebugging(
       `resume: handing ${I.length} disk-resumable orphaned agent(s) to the bg auto-resume path`,
     ),
       r(I));
@@ -1716,7 +1716,7 @@ function notifyOrphanedAgentAutoResumed(e) {
   xe(
     e,
     void 0,
-    `Background agent "${Nt(e.description)}" had no completion record after the previous Claude Code process exited, and was automatically restarted from its saved transcript. It is running in the background again; its result will arrive as a separate task notification.`,
+    `Background agent "${escapeHtmlText(e.description)}" had no completion record after the previous Claude Code process exited, and was automatically restarted from its saved transcript. It is running in the background again; its result will arrive as a separate task notification.`,
   );
 }
 function notifyOrphanedAgentAlreadyCompleted(e, t) {
@@ -1727,22 +1727,22 @@ function notifyOrphanedAgentAlreadyCompleted(e, t) {
   xe(
     r ? { ...e, isWebFetchLaunch: !0 } : e,
     "completed",
-    `Background agent "${Nt(e.description)}" had already completed before the previous Claude Code process exited \u2014 only its completion notification was lost, so it was not restarted and no further task notification will arrive. ${r ? "Send it a message with SendMessage to get its report." : "Read its output file (and check its worktree, if any) for the result."}`,
+    `Background agent "${escapeHtmlText(e.description)}" had already completed before the previous Claude Code process exited \u2014 only its completion notification was lost, so it was not restarted and no further task notification will arrive. ${r ? "Send it a message with SendMessage to get its report." : "Read its output file (and check its worktree, if any) for the result."}`,
   );
 }
 function notifyOrphanedAgentResumeFailed(e, t) {
   xe(
     e,
     "stopped",
-    `Background agent "${Nt(e.description)}" from the previous session could not be automatically restarted: ${Nt(t)}. Its transcript may still be resumable by sending it a message with SendMessage${e.isWebFetchLaunch ? ", which is the only way to get its report." : "; check its worktree/output for partial work before assuming the task landed."}`,
+    `Background agent "${escapeHtmlText(e.description)}" from the previous session could not be automatically restarted: ${escapeHtmlText(t)}. Its transcript may still be resumable by sending it a message with SendMessage${e.isWebFetchLaunch ? ", which is the only way to get its report." : "; check its worktree/output for partial work before assuming the task landed."}`,
   );
 }
 function xe(e, t, o) {
   let r = pt(e);
   enqueuePendingNotification({
     value: buildTaskNotification({
-      taskId: Nt(e.agentId),
-      outputFile: r ? Nt(r) : void 0,
+      taskId: escapeHtmlText(e.agentId),
+      outputFile: r ? escapeHtmlText(r) : void 0,
       status: t,
       summary: o,
     }),
@@ -1754,10 +1754,10 @@ function xe(e, t, o) {
   });
 }
 function go(e, t) {
-  let o = t.map((w) => `<${TASK_ID_TAG}>${Nt(w.agentId)}</${TASK_ID_TAG}>`).join(`
+  let o = t.map((w) => `<${TASK_ID_TAG}>${escapeHtmlText(w.agentId)}</${TASK_ID_TAG}>`).join(`
 `),
-    r = t.map((w) => `"${Nt(w.description)}" (${Nt(w.agentId)})`).join(", "),
-    s = t.filter((w) => w.isWebFetchLaunch).map((w) => Nt(w.agentId)),
+    r = t.map((w) => `"${escapeHtmlText(w.description)}" (${escapeHtmlText(w.agentId)})`).join(", "),
+    s = t.filter((w) => w.isWebFetchLaunch).map((w) => escapeHtmlText(w.agentId)),
     d = s.length === t.length,
     c =
       s.length === 1
@@ -1801,21 +1801,21 @@ function ho({ bgShells: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
   if (s.length === 0) return;
   if (
     (logFeatureSad("task_local_shell", "orphaned_on_resume"),
-    n(
+    logForDebugging(
       `resume: ${s.length} background shell command(s) orphaned by previous process exit`,
     ),
     s.length > 1)
   ) {
     for (let c of s)
       emitTaskNotification(c.taskId, "stopped", { toolUseId: c.toolUseId, summary: gt });
-    ht("stopped", "shell", "shell command", s, (c) => Nt(c.taskId), d);
+    ht("stopped", "shell", "shell command", s, (c) => escapeHtmlText(c.taskId), d);
     return;
   }
   for (let c of s)
     (enqueuePendingNotification({
       value: buildTaskNotification({
-        taskId: Nt(c.taskId),
-        toolUseId: Nt(c.toolUseId),
+        taskId: escapeHtmlText(c.taskId),
+        toolUseId: escapeHtmlText(c.toolUseId),
         status: "stopped",
         summary:
           "No completion record was found for this background shell command from the previous session. It may have been stopped (via the UI, Monitor timeout, or agent teardown \u2014 these leave no transcript marker), or it may have been running when the previous Claude Code process exited. Check the output file for partial results before assuming it completed.",
@@ -1846,14 +1846,14 @@ function yo({ workflows: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
   if (s.length === 0) return;
   if (
     (logFeatureSad("task_local_workflow", "orphaned_on_resume"),
-    n(
+    logForDebugging(
       `resume: ${s.length} background workflow(s) orphaned by previous process exit`,
     ),
     s.length > Be)
   ) {
     for (let c of s)
       emitTaskNotification(c.taskId, "stopped", { toolUseId: c.toolUseId, summary: gt });
-    ht("stopped", "workflow", "workflow", s, (c) => Nt(c.taskId), d);
+    ht("stopped", "workflow", "workflow", s, (c) => escapeHtmlText(c.taskId), d);
     return;
   }
   for (let c of s) {
@@ -1865,10 +1865,10 @@ function yo({ workflows: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
       E = `No completion record was found for background workflow${p} from the previous session. It may have been stopped (via the UI or TaskStop \u2014 these leave no transcript marker), or it may have been running when the previous Claude Code process exited.${_}${I}`;
     (enqueuePendingNotification({
       value: buildTaskNotification({
-        taskId: Nt(c.taskId),
-        toolUseId: Nt(c.toolUseId),
+        taskId: escapeHtmlText(c.taskId),
+        toolUseId: escapeHtmlText(c.toolUseId),
         status: "stopped",
-        summary: Nt(E),
+        summary: escapeHtmlText(E),
       }),
       agentId: ze(),
       mode: "task-notification",
@@ -1881,7 +1881,7 @@ function yo({ workflows: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
 }
 function ht(e, t, o, r, s, d) {
   let c = r.slice(0, Be).map(s),
-    p = [...c, `${ut}${t}`, ...d.map((E) => `${ct}${Nt(E)}`)].map(
+    p = [...c, `${ut}${t}`, ...d.map((E) => `${ct}${escapeHtmlText(E)}`)].map(
       (E) => `<${TASK_ID_TAG}>${E}</${TASK_ID_TAG}>`,
     ).join(`
 `),
@@ -1931,7 +1931,7 @@ function bo({ calls: e, results: t, deletedCronIds: o }) {
     (m8({ id: _.id, cron: I, prompt: E, createdAt: p.createdAt, recurring: w }),
       c++);
   }
-  if (c > 0) (bB(!0), n(`resume: resurrected ${c} session cron task(s)`));
+  if (c > 0) (bB(!0), logForDebugging(`resume: resurrected ${c} session cron task(s)`));
 }
 function ft(e) {
   return typeof e === "object" && e !== null;
@@ -1985,7 +1985,7 @@ function collectPendingAgentNotifications(e, t) {
 function isDisplayableAssistantMessage(e) {
   return (
     e.type === "assistant" &&
-    e.message.model !== fc &&
+    e.message.model !== SYNTHETIC_MODEL_NAME &&
     e.isMeta !== !0 &&
     e.isVirtual !== !0
   );
@@ -2009,7 +2009,7 @@ function createTurnEventTail(e) {
         .then(() => {
           if (_ <= s)
             return (
-              n(
+              logForDebugging(
                 `${d}: not dispatched, the tail was severed while it waited behind an event that never settled`,
               ),
               []
@@ -2019,14 +2019,14 @@ function createTurnEventTail(e) {
         .then((I) => {
           if (I.length === 0) return;
           if (p !== o) {
-            n(
+            logForDebugging(
               `${d}: ${I.length} note(s) dropped, the conversation was reset while it ran (${p} to ${o})`,
             );
             return;
           }
           e(I);
         })
-        .catch((I) => n(`${d} failed: ${l(I)}`));
+        .catch((I) => logForDebugging(`${d} failed: ${l(I)}`));
     },
     reset: () => {
       o += 1;
@@ -2177,7 +2177,7 @@ function forwardRateLimitEventToBridge(e, t) {
     e.writeSdkMessages([t]);
   } catch (o) {
     return (
-      n(`[bridge] rate_limit_event forward failed: ${l(o)}`, {
+      logForDebugging(`[bridge] rate_limit_event forward failed: ${l(o)}`, {
         level: "error",
       }),
       !1
@@ -2187,7 +2187,7 @@ function forwardRateLimitEventToBridge(e, t) {
     let o = buildRateLimitMirrorMetadata(e, t);
     if (o) e.reportMetadata(o);
   } catch (o) {
-    n(`[bridge] rate_limit_info metadata mirror failed: ${l(o)}`, {
+    logForDebugging(`[bridge] rate_limit_info metadata mirror failed: ${l(o)}`, {
       level: "error",
     });
   }
@@ -2290,7 +2290,7 @@ function getBridgeInitializeCommands(e) {
 function recordDeclaredDialogKinds(e, t, o, r) {
   let s = e.size;
   for (let d of t) {
-    if (e.size >= uCn) break;
+    if (e.size >= MAX_DECLARED_DIALOG_KINDS) break;
     e.add(d);
   }
   if (o === "restored" || e.size === s) return;
@@ -2305,9 +2305,9 @@ function St(e) {
   if (!t) return { recognized: !1, shape: "empty" };
   if (getAPIProvider() !== "firstParty" || !isFirstPartyAnthropicBaseUrl()) return { recognized: !0 };
   let o = t.toLowerCase(),
-    r = Xt(o).trim();
-  if (um(o) || um(r)) return { recognized: !0 };
-  if (Qa(r) || lie(r)) return { recognized: !0 };
+    r = strip1mSuffix(o).trim();
+  if (isModelAlias(o) || isModelAlias(r)) return { recognized: !0 };
+  if (getCatalogEntryById(r) || getCatalogIdByProviderId(r)) return { recognized: !0 };
   if (isDeploymentVouchedModel(t)) return { recognized: !0 };
   if (buildModelOptions().some((s) => s.value === t)) return { recognized: !0 };
   if (/^claude-\S+$/.test(o)) return { recognized: !0 };
@@ -2325,7 +2325,7 @@ function To(e) {
   return { shape: "other", ...kt(e) };
 }
 function kt(e) {
-  let t = [...RP, ...kP().models.map((r) => r.id)],
+  let t = [...MODEL_ALIASES, ...kP().models.map((r) => r.id)],
     [o] = findNearNameMatches(e.toLowerCase(), t, 1);
   return o ? { suggestion: o } : {};
 }
@@ -2340,7 +2340,7 @@ function parseAllowedUserModel(e) {
   return e !== void 0 && (isExemptDefaultResolvingPick(e) || isModelAllowed(e)) ? parseUserSpecifiedModel(e) : void 0;
 }
 function getConversationModel({ messages: e, queriedInProcess: t, activeModel: o }) {
-  if (t && e.some((r) => s5(r) || pn(r) !== void 0)) return o;
+  if (t && e.some((r) => isPlainUserMessage(r) || pn(r) !== void 0)) return o;
   for (let r = e.length - 1; r >= 0; r--) {
     let s = e[r];
     if (isCompactBoundaryMessage(s)) return;
@@ -2454,11 +2454,11 @@ async function handleSetModelRequest(e, t) {
       };
     },
     I = d.kind === "default" ? null : c,
-    E = await P_(t.session, _, I, "sdk");
+    E = await resolvePreModelSwitchDecision(t.session, _, I, "sdk");
   if (E.decision !== "proceed") {
     if ((logFeatureSad("model_switch", "blocked_by_hook"), typeof r === "string"))
       logFeatureBad("system_prompt_switch", "model_switch_rejected");
-    return { ok: !1, error: Jle(E) };
+    return { ok: !1, error: formatModelSwitchBlockedNotice(E) };
   }
   let w = getMainLoopModel(),
     v = t.getActiveModel(),
@@ -2476,19 +2476,19 @@ async function handleSetModelRequest(e, t) {
   else logFeatureOk("model_switch");
   if (typeof r === "string") (t.setSystemPrompt(r), logFeatureOk("system_prompt_switch"));
   return E.messages.length > 0
-    ? { ok: !0, notices: E.messages.map(Rl) }
+    ? { ok: !0, notices: E.messages.map(toSingleLineDisplayText) }
     : { ok: !0 };
 }
 function pn(e) {
   if (e.type !== "assistant") return;
   let t = e.message?.model;
-  return typeof t === "string" && t !== fc ? t : void 0;
+  return typeof t === "string" && t !== SYNTHETIC_MODEL_NAME ? t : void 0;
 }
 function gn(e) {
   return e.type === "user" ? getMessageContentText(e.message?.content) : null;
 }
 function At(e) {
-  return getCanonicalName(er(e));
+  return getCanonicalName(stripLongContextTags(e));
 }
 function xo(e) {
   let t = hn(e);
@@ -2603,7 +2603,7 @@ async function reconcileDeclaredMarketplaces(e) {
   try {
     r = await getKnownMarketplaces(o);
   } catch (w) {
-    (n(
+    (logForDebugging(
       `reconciler: failed to load known_marketplaces.json, treating as empty: ${l(w)}`,
       { level: "error" },
     ),
@@ -2630,15 +2630,15 @@ async function reconcileDeclaredMarketplaces(e) {
       c.push(w.name);
       continue;
     }
-    if (xEt(w.name)) {
+    if (isReservedClaudeAiMarketplaceName(w.name)) {
       let v = `not materialized: names starting with "${CLAUDE_AI_MARKETPLACE_NAME_PREFIX}" are reserved for marketplaces hosted on claude.ai \u2014 rename the declaration`;
-      (n(`[reconcile] '${w.name}' ${v}`, { level: "warn" }),
+      (logForDebugging(`[reconcile] '${w.name}' ${v}`, { level: "warn" }),
         _.push({ name: w.name, error: v }),
         e?.onProgress?.({ type: "failed", name: w.name, error: v }));
       continue;
     }
-    if (w.action === "update" && isLocalMarketplaceSource(w.source) && !(await El(w.source.path))) {
-      (n(
+    if (w.action === "update" && isLocalMarketplaceSource(w.source) && !(await pathExists(w.source.path))) {
+      (logForDebugging(
         `[reconcile] '${w.name}' declared path does not exist; keeping materialized entry`,
       ),
         c.push(w.name));
@@ -2649,7 +2649,7 @@ async function reconcileDeclaredMarketplaces(e) {
   let I = [],
     E = [];
   if (p.length > 0) {
-    n(
+    logForDebugging(
       `[reconcile] ${p.length} marketplace(s): ${p.map((w) => `${w.name}(${w.action})`).join(", ")}`,
     );
     for (let w = 0; w < p.length; w++) {
@@ -2674,7 +2674,7 @@ async function reconcileDeclaredMarketplaces(e) {
         let L = l(C);
         (_.push({ name: v, error: L }),
           e?.onProgress?.({ type: "failed", name: v, error: L }),
-          n(`[reconcile] failed to ${k} marketplace '${v}': ${L}`, {
+          logForDebugging(`[reconcile] failed to ${k} marketplace '${v}': ${L}`, {
             level: "error",
           }));
       }
@@ -2698,10 +2698,10 @@ import { join as Wo } from "path";
 var Ko = "flagged-plugins.json",
   Yo = 172800000;
 function _n() {
-  return Wo(Sl(), Ko);
+  return Wo(getPluginsDir(), Ko);
 }
 function Sn(e) {
-  let t = z(e);
+  let t = jsonParse(e);
   if (
     typeof t !== "object" ||
     t === null ||
@@ -2728,7 +2728,7 @@ function Sn(e) {
 var wn = new Set(["ENOSPC", "EROFS", "EACCES", "ENOENT", "ENOTDIR"]),
   Xo = new Set([...wn, "EEXIST", "EISDIR", "AbsentParent", "UnexpectedAbsent"]);
 function Cn(e) {
-  return isHoverRestEnabled() && e !== void 0 && BG("flagged", Sl()) !== null ? e : void 0;
+  return isHoverRestEnabled() && e !== void 0 && getPluginRegistryFileScope("flagged", getPluginsDir()) !== null ? e : void 0;
 }
 async function je(e) {
   let t = _n(),
@@ -2759,15 +2759,15 @@ async function Ve(e, t) {
   if (r) {
     let s = await r.write(
       STORAGE_KEYS.pluginRegistry("flagged"),
-      b({ plugins: e }, null, 2),
+      jsonStringify({ plugins: e }, null, 2),
     );
     if (s.ok) {
-      $t().flaggedPlugins = e;
+      getPluginRegistryState().flaggedPlugins = e;
       return;
     }
     let d = "telemetryCode" in s.error ? s.error.telemetryCode : void 0;
     if (d !== void 0 && Xo.has(d))
-      n(`Failed to persist flagged plugins: ${We(s.error)}`, {
+      logForDebugging(`Failed to persist flagged plugins: ${describeStorageError(s.error)}`, {
         level: "error",
       });
     else
@@ -2780,13 +2780,13 @@ async function Ve(e, t) {
     return;
   }
   try {
-    await ae().mkdir(Sl());
-    let s = b({ plugins: e }, null, 2);
-    (await writeFileAtomic(o, s, 384), ($t().flaggedPlugins = e));
+    await getFsSurface().mkdir(getPluginsDir());
+    let s = jsonStringify({ plugins: e }, null, 2);
+    (await writeFileAtomic(o, s, 384), (getPluginRegistryState().flaggedPlugins = e));
   } catch (s) {
     let d = A(s);
     if (d !== void 0 && wn.has(d))
-      n(`Failed to persist flagged plugins: ${s}`, { level: "error" });
+      logForDebugging(`Failed to persist flagged plugins: ${s}`, { level: "error" });
     else logError(s);
   }
 }
@@ -2797,19 +2797,19 @@ async function An(e) {
   for (let [s, d] of Object.entries(t))
     if (d.seenAt && o - new Date(d.seenAt).getTime() >= Yo)
       (delete t[s], (r = !0));
-  if ((($t().flaggedPlugins = t), r)) await Ve(t, e);
+  if (((getPluginRegistryState().flaggedPlugins = t), r)) await Ve(t, e);
 }
 function getFlaggedPlugins() {
-  return $t().flaggedPlugins ?? {};
+  return getPluginRegistryState().flaggedPlugins ?? {};
 }
 async function Mn(e, t) {
-  let o = $t();
+  let o = getPluginRegistryState();
   if (o.flaggedPlugins === null) o.flaggedPlugins = await je(t);
   let r = { ...o.flaggedPlugins, [e]: { flaggedAt: new Date().toISOString() } };
-  (await Ve(r, t), n(`Flagged plugin: ${e}`));
+  (await Ve(r, t), logForDebugging(`Flagged plugin: ${e}`));
 }
 async function markFlaggedPluginsSeen(e, t) {
-  let o = $t();
+  let o = getPluginRegistryState();
   if (o.flaggedPlugins === null) o.flaggedPlugins = await je(t);
   let r = new Date().toISOString(),
     s = !1,
@@ -2821,7 +2821,7 @@ async function markFlaggedPluginsSeen(e, t) {
   if (s) await Ve(d, t);
 }
 async function clearFlaggedPlugin(e, t) {
-  let o = $t();
+  let o = getPluginRegistryState();
   if (o.flaggedPlugins === null) o.flaggedPlugins = await je(t);
   if (!(e in o.flaggedPlugins)) return;
   let { [e]: r, ...s } = o.flaggedPlugins;
@@ -2874,7 +2874,7 @@ async function enforceDelistedPlugins(e) {
               ...buildPluginTelemetryFieldsFromId(_, getPolicyPluginNames()),
             });
           } catch (T) {
-            (n(
+            (logForDebugging(
               `Failed to auto-uninstall delisted plugin ${_} from ${v}: ${l(T)}`,
               { level: "error" },
             ),
@@ -2889,7 +2889,7 @@ async function enforceDelistedPlugins(e) {
         (await Mn(_, e), s.push(_));
       }
     } catch (c) {
-      (n(`Failed to check for delisted plugins in "${d}": ${l(c)}`, {
+      (logForDebugging(`Failed to check for delisted plugins in "${d}": ${l(c)}`, {
         level: "warn",
       }),
         logEvent("tengu_plugin_delisted_enforcement", {
@@ -2952,7 +2952,7 @@ function createDisplayTransformQueue({
           }
         } catch (O) {
           (k.stats.errorCount++,
-            n(
+            logForDebugging(
               `MessageDisplay hook flush ${C} failed; displaying original delta: ${O instanceof Error ? O.message : String(O)}`,
               { level: "error" },
             ));
@@ -3161,7 +3161,7 @@ async function applyMessageDisplayHooks(e, t, o, r, s, d, c) {
       if (v.displayContent !== void 0) E = v.displayContent;
   } catch (v) {
     return (
-      n(
+      logForDebugging(
         `MessageDisplay hook failed for completed message; emitting original text: ${v instanceof Error ? v.message : String(v)}`,
         { level: "error" },
       ),
@@ -3209,7 +3209,7 @@ function isNonBlankTextDelta(e) {
   );
 }
 function xn(e) {
-  return !e.isApiErrorMessage && e.message.model !== fc;
+  return !e.isApiErrorMessage && e.message.model !== SYNTHETIC_MODEL_NAME;
 }
 function hasRenderableAssistantText(e, t) {
   if (!xn(e)) return !1;
@@ -3250,7 +3250,7 @@ function createTurnFirstTextTracker({
     try {
       W();
     } catch (re) {
-      n(`tengu_turn_first_text: ${O} failed: ${l(re)}`, { level: "error" });
+      logForDebugging(`tengu_turn_first_text: ${O} failed: ${l(re)}`, { level: "error" });
     }
   }
   function J(O, W) {
@@ -3303,7 +3303,7 @@ function createTurnFirstTextTracker({
           }),
       });
     } catch (ie) {
-      n(
+      logForDebugging(
         `tengu_turn_first_text: analytics sink threw, event dropped: ${l(ie)}`,
         { level: "error" },
       );
@@ -3401,7 +3401,7 @@ function createTurnFirstTextObserver({ toolUseContext: e, sessionState: t }) {
 }
 import { randomUUID as rr } from "crypto";
 function markVerifiedSlackHumanTurn(e, t) {
-  dGt(e, t, { verifiedSlackHumanTurn: !0 });
+  applyHearthRelayFields(e, t, { verifiedSlackHumanTurn: !0 });
 }
 function resolveMessageUuid(e, t) {
   return e || (t ? rr() : void 0);
@@ -3425,7 +3425,7 @@ function En(e, t) {
       : "";
   } catch (o) {
     return (
-      n("turn.complete: could not read the final message: " + ge(o).message),
+      logForDebugging("turn.complete: could not read the final message: " + ge(o).message),
       ""
     );
   }
@@ -3475,7 +3475,7 @@ function Dn(e, t) {
       })
       .at(-1);
   } catch (o) {
-    n("turn.complete: could not read the refusal: " + ge(o).message);
+    logForDebugging("turn.complete: could not read the refusal: " + ge(o).message);
     return;
   }
 }

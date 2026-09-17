@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 8 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { JSONRPCMessageSchema as GR, ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
-import "../MCP客户端/chunk-98spw152.js";
+import "../MCP客户端/mcp-protocol.js";
 import { McpServer } from "../MCP客户端/mcp-server.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 var g = "claude-code-device",
   u = "get_device_info";
@@ -65,7 +65,7 @@ function createDeviceMcpServer(e) {
           return await d.call(f, { sessionId: a, signal: m.signal });
         } catch (p) {
           return (
-            n(`[deviceBridge] tool ${r} failed: ${ge(p).message}`),
+            logForDebugging(`[deviceBridge] tool ${r} failed: ${ge(p).message}`),
             {
               content: [
                 { type: "text", text: `Tool ${r} failed: internal error` },
@@ -94,8 +94,8 @@ function createDeviceMcpServer(e) {
 function h(e, t, o) {
   let s = e.definition.name;
   return (
-    n(
-      `[deviceBridge] refused ${s}: call asserted for session ${b(t.slice(0, 48))}, this device serves ${o}`,
+    logForDebugging(
+      `[deviceBridge] refused ${s}: call asserted for session ${jsonStringify(t.slice(0, 48))}, this device serves ${o}`,
     ),
     logEvent("tengu_device_tool_refused", {
       tool: e.analyticsName,
@@ -132,7 +132,7 @@ function deviceInfoProbeTool(e) {
         deviceName: e.getDeviceName(),
         timestamp: t().toISOString(),
       };
-      return { content: [{ type: "text", text: b(o, null, 2) }] };
+      return { content: [{ type: "text", text: jsonStringify(o, null, 2) }] };
     },
   };
 }

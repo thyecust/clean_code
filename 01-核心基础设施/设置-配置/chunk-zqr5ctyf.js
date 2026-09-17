@@ -12,7 +12,7 @@ import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../共享小工具-未细�
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, my, _Z, AHt, Tae } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
-import { iae, ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { hasUnverifiableAncestry, getFsSurface } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fileSuffixForOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { hur, I } from "../../00-第三方库/zod/zod.3g334xwq.js";
@@ -229,7 +229,7 @@ function V() {
   return !1;
 }
 function pt() {
-  if (ae().existsSync(S(getClaudeConfigDir(), ".config.json"))) return S(getClaudeConfigDir(), ".config.json");
+  if (getFsSurface().existsSync(S(getClaudeConfigDir(), ".config.json"))) return S(getClaudeConfigDir(), ".config.json");
   return dXt();
 }
 function dXt() {
@@ -324,7 +324,7 @@ async function xt(t) {
 }
 async function IPn(t) {
   if (t === "" || _Z(t) || my(t)) return !1;
-  return !(await iae(resolve(t)));
+  return !(await hasUnverifiableAncestry(resolve(t)));
 }
 async function $nt(t, o) {
   let E = getCurrentPlatform() === "windows",
@@ -365,7 +365,7 @@ async function $nt(t, o) {
           if (L && (await xt(S(e, O.name)))) continue;
         } else {
           let D = S(e, O.name);
-          if ((O.isSymbolicLink() || vxt(O)) && (await iae(resolve(D)))) continue;
+          if ((O.isSymbolicLink() || vxt(O)) && (await hasUnverifiableAncestry(resolve(D)))) continue;
           try {
             await access(D, Ct.X_OK);
           } catch {

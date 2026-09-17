@@ -13,7 +13,7 @@ import { K, he, X1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ge, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getOwnJobShortId, syncJobName } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
@@ -104,7 +104,7 @@ async function createFork(t, u, d, n) {
     r = A,
     o = () =>
       M(
-        b(buildHistorySuppressionEntry(a, "fork_inherit")) +
+        jsonStringify(buildHistorySuppressionEntry(a, "fork_inherit")) +
           `
 `,
       );
@@ -114,7 +114,7 @@ async function createFork(t, u, d, n) {
       if (e.length === 0) continue;
       let f;
       try {
-        f = z(e);
+        f = jsonParse(e);
       } catch {
         continue;
       }
@@ -174,7 +174,7 @@ async function createFork(t, u, d, n) {
         (P.push(_),
         (T = f),
         await M(
-          b(L) +
+          jsonStringify(L) +
             `
 `,
         ),
@@ -202,7 +202,7 @@ async function createFork(t, u, d, n) {
       if (
         (P.push(f),
         await M(
-          b(c) +
+          jsonStringify(c) +
             `
 `,
         ),
@@ -212,19 +212,19 @@ async function createFork(t, u, d, n) {
     }
   if (I.length > 0)
     await M(
-      b({ type: "content-replacement", sessionId: a, replacements: I }) +
+      jsonStringify({ type: "content-replacement", sessionId: a, replacements: I }) +
         `
 `,
     );
   if (k)
     await M(
-      b({ type: "relocated", sessionId: a, relocatedCwd: k }) +
+      jsonStringify({ type: "relocated", sessionId: a, relocatedCwd: k }) +
         `
 `,
     );
   if (s !== void 0)
     await M(
-      b({ type: "atis-latch", sessionId: a, atis: s }) +
+      jsonStringify({ type: "atis-latch", sessionId: a, atis: s }) +
         `
 `,
     );
@@ -241,7 +241,7 @@ async function createFork(t, u, d, n) {
 function B(t) {
   return {
     data:
-      b(t) +
+      jsonStringify(t) +
       `
 `,
   };
@@ -287,7 +287,7 @@ async function Q(t) {
       if (T.length === 0) continue;
       let P;
       try {
-        P = z(T);
+        P = jsonParse(T);
       } catch {
         continue;
       }

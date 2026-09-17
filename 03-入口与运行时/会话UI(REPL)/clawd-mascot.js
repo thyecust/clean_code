@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useIsScreenReaderEnabled } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var x = {
@@ -55,7 +55,7 @@ function ClawdMascot(u) {
   else S = c[1];
   let { pose: D } = S,
     R = D === void 0 ? "default" : D;
-  if (tn()) {
+  if (useIsScreenReaderEnabled()) {
     return null;
   }
   if (a.terminal === "Apple_Terminal") {
@@ -67,13 +67,13 @@ function ClawdMascot(u) {
   let l = x[R],
     d;
   if (c[4] !== l.r1L)
-    ((d = e(t, { color: "clawd_body", children: l.r1L })),
+    ((d = e(Text, { color: "clawd_body", children: l.r1L })),
       (c[4] = l.r1L),
       (c[5] = d));
   else d = c[5];
   let g;
   if (c[6] !== l.r1E)
-    ((g = e(t, {
+    ((g = e(Text, {
       color: "clawd_body",
       backgroundColor: "clawd_background",
       children: l.r1E,
@@ -83,13 +83,13 @@ function ClawdMascot(u) {
   else g = c[7];
   let b;
   if (c[8] !== l.r1R)
-    ((b = e(t, { color: "clawd_body", children: l.r1R })),
+    ((b = e(Text, { color: "clawd_body", children: l.r1R })),
       (c[8] = l.r1R),
       (c[9] = b));
   else b = c[9];
   let w;
   if (c[10] !== d || c[11] !== g || c[12] !== b)
-    ((w = r(t, { children: [d, g, b] })),
+    ((w = r(Text, { children: [d, g, b] })),
       (c[10] = d),
       (c[11] = g),
       (c[12] = b),
@@ -97,13 +97,13 @@ function ClawdMascot(u) {
   else w = c[13];
   let f;
   if (c[14] !== l.r2L)
-    ((f = e(t, { color: "clawd_body", children: l.r2L })),
+    ((f = e(Text, { color: "clawd_body", children: l.r2L })),
       (c[14] = l.r2L),
       (c[15] = f));
   else f = c[15];
   let N;
   if (c[16] === MEMO_CACHE_SENTINEL)
-    ((N = e(t, {
+    ((N = e(Text, {
       color: "clawd_body",
       backgroundColor: "clawd_background",
       children: "\u2588\u2588\u2588\u2588\u2588",
@@ -112,20 +112,20 @@ function ClawdMascot(u) {
   else N = c[16];
   let y;
   if (c[17] !== l.r2R)
-    ((y = e(t, { color: "clawd_body", children: l.r2R })),
+    ((y = e(Text, { color: "clawd_body", children: l.r2R })),
       (c[17] = l.r2R),
       (c[18] = y));
   else y = c[18];
   let k;
   if (c[19] !== f || c[20] !== y)
-    ((k = r(t, { children: [f, N, y] })),
+    ((k = r(Text, { children: [f, N, y] })),
       (c[19] = f),
       (c[20] = y),
       (c[21] = k));
   else k = c[21];
   let B;
   if (c[22] === MEMO_CACHE_SENTINEL)
-    ((B = r(t, {
+    ((B = r(Text, {
       color: "clawd_body",
       children: ["  ", "\u259D\u259D \u259D\u259D", "  "],
     })),
@@ -133,7 +133,7 @@ function ClawdMascot(u) {
   else B = c[22];
   let I;
   if (c[23] !== k || c[24] !== w)
-    ((I = r(o, {
+    ((I = r(Box, {
       flexDirection: "column",
       flexShrink: 0,
       children: [w, k, B],
@@ -149,12 +149,12 @@ function C(J) {
     { pose: K } = J,
     T;
   if (s[0] === MEMO_CACHE_SENTINEL)
-    ((T = e(t, { color: "clawd_body", children: "\u2597" })), (s[0] = T));
+    ((T = e(Text, { color: "clawd_body", children: "\u2597" })), (s[0] = T));
   else T = s[0];
   const P = E[K];
   let m;
   if (s[1] !== P)
-    ((m = e(t, {
+    ((m = e(Text, {
       color: "clawd_background",
       backgroundColor: "clawd_body",
       children: P,
@@ -164,15 +164,15 @@ function C(J) {
   else m = s[2];
   let q;
   if (s[3] === MEMO_CACHE_SENTINEL)
-    ((q = e(t, { color: "clawd_body", children: "\u2596" })), (s[3] = q));
+    ((q = e(Text, { color: "clawd_body", children: "\u2596" })), (s[3] = q));
   else q = s[3];
   let L;
-  if (s[4] !== m) ((L = r(t, { children: [T, m, q] })), (s[4] = m), (s[5] = L));
+  if (s[4] !== m) ((L = r(Text, { children: [T, m, q] })), (s[4] = m), (s[5] = L));
   else L = s[5];
   let v, z;
   if (s[6] === MEMO_CACHE_SENTINEL)
-    ((v = e(t, { backgroundColor: "clawd_body", children: " ".repeat(7) })),
-      (z = e(t, {
+    ((v = e(Text, { backgroundColor: "clawd_body", children: " ".repeat(7) })),
+      (z = e(Text, {
         color: "clawd_body",
         children: "\u2598\u2598 \u259D\u259D",
       })),
@@ -181,7 +181,7 @@ function C(J) {
   else ((v = s[6]), (z = s[7]));
   let A;
   if (s[8] !== L)
-    ((A = r(o, {
+    ((A = r(Box, {
       flexDirection: "column",
       alignItems: "center",
       children: [L, v, z],

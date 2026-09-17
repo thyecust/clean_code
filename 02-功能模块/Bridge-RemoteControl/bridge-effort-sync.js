@@ -8,27 +8,27 @@
 
 // Version: 2.1.263
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
 import {
-  ib,
-  $C,
-  Z$,
-  hve,
-  h$e,
-  Xk,
-  VH,
-  Yk,
-  XK,
-  qG,
-  Ya,
-  iA,
-  MT,
-  XEt,
+  modelSupportsUltracode,
+  isValidEffortLevel,
+  clampEffortToOrgLimit,
+  normalizeUltracodeAlias,
+  resolveUltracodeEffortLevel,
+  coerceEffortLevelValue,
+  getEnvEffortLevelOverride,
+  createEffortLevel,
+  createEffortLevelOrDefault,
+  isSameEffortSelection,
+  getSessionEffortLevel,
+  unpinLaunchEffortLevels,
+  resolveModelEffortLevel,
+  resolveEffortLevelForRemoteSession,
 } from "../权限系统/chunk-t3b7pg2x.js";
 import { isBridgeEffortSyncEnabled } from "./chunk-9estzwf5.js";
 function getEffectiveEffortLevel(e, r) {
-  let o = MT(e, r);
+  let o = resolveModelEffortLevel(e, r);
   return typeof o === "string" ? o : null;
 }
 function applyBridgeFlagSettings(e, { model: r, getAppState: o, setAppState: E, storageV5: v }) {
@@ -45,15 +45,15 @@ function applyBridgeFlagSettings(e, { model: r, getAppState: o, setAppState: E, 
     l = !1;
   if ("effortLevel" in e) {
     if (((l = !0), e.effortLevel != null)) {
-      let t = Xk(e.effortLevel) ?? h$e(e.effortLevel);
-      if (typeof t !== "string" || !$C(t))
+      let t = coerceEffortLevelValue(e.effortLevel) ?? resolveUltracodeEffortLevel(e.effortLevel);
+      if (typeof t !== "string" || !isValidEffortLevel(t))
         return (
           logFeatureBad("bridge_flag_settings", "invalid_effort_level"),
           { ok: !1, error: "apply_flag_settings: unrecognized effortLevel" }
         );
-      s = Z$(t, r);
+      s = clampEffortToOrgLimit(t, r);
     }
-    let a = VH();
+    let a = getEnvEffortLevelOverride();
     if (a !== void 0 && s !== a)
       return (
         logFeatureBad("bridge_flag_settings", "env_override"),
@@ -64,9 +64,9 @@ function applyBridgeFlagSettings(e, { model: r, getAppState: o, setAppState: E, 
         }
       );
   }
-  let d = hve(e.effortLevel) === "ultracode",
+  let d = normalizeUltracodeAlias(e.effortLevel) === "ultracode",
     i = "ultracode" in e ? e.ultracode === !0 : void 0;
-  if ((i === !0 || (i === void 0 && d)) && !ib(r))
+  if ((i === !0 || (i === void 0 && d)) && !modelSupportsUltracode(r))
     return (
       logFeatureBad("bridge_flag_settings", "ultracode_unavailable"),
       {
@@ -75,27 +75,27 @@ function applyBridgeFlagSettings(e, { model: r, getAppState: o, setAppState: E, 
           "apply_flag_settings: ultracode is not available for this session (dynamic workflows are off, or the model / your organization does not allow xhigh effort)",
       }
     );
-  if (l || i === !0) iA(v);
+  if (l || i === !0) unpinLaunchEffortLevels(v);
   E((a) => {
     let t = a;
     if (l) {
-      let g = XK(s);
-      if (!qG(t.sessionEffort, g)) t = { ...t, sessionEffort: g };
+      let g = createEffortLevelOrDefault(s);
+      if (!isSameEffortSelection(t.sessionEffort, g)) t = { ...t, sessionEffort: g };
     }
     if (i === void 0) {
       if (d) {
         if (!t.ultracode) t = { ...t, ultracode: !0 };
       } else if (l && t.ultracode) t = { ...t, ultracode: !1 };
     } else if (i) {
-      if (!t.ultracode || Ya(t) !== "xhigh")
-        t = { ...t, ultracode: !0, sessionEffort: Yk("xhigh") };
+      if (!t.ultracode || getSessionEffortLevel(t) !== "xhigh")
+        t = { ...t, ultracode: !0, sessionEffort: createEffortLevel("xhigh") };
     } else if (t.ultracode) t = { ...t, ultracode: !1 };
     return t;
   });
   let u = o();
   return (
-    n(
-      `[bridge] apply_flag_settings applied effort=${Ya(u) ?? "auto"} ultracode=${u.ultracode === !0}`,
+    logForDebugging(
+      `[bridge] apply_flag_settings applied effort=${getSessionEffortLevel(u) ?? "auto"} ultracode=${u.ultracode === !0}`,
     ),
     { ok: !0 }
   );
@@ -109,7 +109,7 @@ function p(e) {
 }
 function reportSessionEffort(e, r) {
   if (!c()) return;
-  let o = XEt(e, Ya(r, e));
+  let o = resolveEffortLevelForRemoteSession(e, getSessionEffortLevel(r, e));
   p(o === void 0 ? null : getEffectiveEffortLevel(e, o));
 }
 function c() {

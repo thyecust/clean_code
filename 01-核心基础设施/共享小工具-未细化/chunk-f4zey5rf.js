@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProTrialOverride, setProTrialOverride, httpClient, getOauthAccountInfo, getSubscriptionType, saveGlobalConfig, getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -42,7 +42,7 @@ async function startProTrial(e, t) {
           : `Pro trial start unavailable: ${a.reason}`,
       );
     return (
-      n("Pro trial started", { level: "debug" }),
+      logForDebugging("Pro trial started", { level: "debug" }),
       u(a.data.ends_at, e),
       o(!0, a.data.ends_at)
     );

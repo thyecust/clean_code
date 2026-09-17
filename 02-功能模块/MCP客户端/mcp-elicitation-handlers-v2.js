@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Wrn, VIe } from "./chunk-5wa92x7d.js";
+import { RELATED_TASK_META_KEY, RelatedTaskMetadataSchema } from "./mcp-protocol-schemas.js";
 import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { executeElicitationHooks, executeElicitationResultHooks, executeNotificationHooks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getOrCreateElicitationHandler } from "./mcp-elicitation-request-handler.js";
 import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
 function parseRelatedTaskMetadataV2(e) {
-  let t = VIe.safeParse(e?.[Wrn]);
+  let t = RelatedTaskMetadataSchema.safeParse(e?.[RELATED_TASK_META_KEY]);
   return t.success ? { taskId: t.data.taskId } : null;
 }
 function registerElicitationHandlerV2(e, t, r, c) {

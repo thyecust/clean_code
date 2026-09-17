@@ -12,7 +12,7 @@ import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { truncateToCodePoints, truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { estimateTokens, countMessageTokens } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { cJn } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { compressImageBlockToFitBytes } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
 var C = 0.5,
   l = 1600,
   d = 25000;
@@ -92,7 +92,7 @@ async function M(e, n) {
         if (i > 0) {
           let c = Math.floor(i * 0.75);
           try {
-            let m = await cJn(o, c);
+            let m = await compressImageBlockToFitBytes(o, c);
             if ((t.push(m), m.source.type === "base64"))
               r += m.source.data.length;
             else r += s;

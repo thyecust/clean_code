@@ -12,7 +12,7 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { getBgTakeover, isBgSession, isBeingWatched, isBeingWatchedV5, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hasRemoteCapability } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { shouldUseFullscreen } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { getBgJobRuntimeState } from "./bg-job-runtime-state.js";
@@ -68,7 +68,7 @@ function c(e) {
     if (r in i) t.add(r);
     else if (!getBgJobRuntimeState().warnedUnknownDisabledSurface)
       ((getBgJobRuntimeState().warnedUnknownDisabledSurface = !0),
-        n(
+        logForDebugging(
           `[classifier] tengu_classifier_disabled_surfaces: unknown surface '${r}' ignored`,
         ));
   }

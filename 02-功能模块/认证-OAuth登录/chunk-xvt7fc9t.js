@@ -45,25 +45,25 @@ import {
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
-import { Tvt, Yse, c1, Evt } from "./chunk-wk0e3dz4.js";
+import { formatAccountOnHoldSignInMessage, sanitizeAccountOnHoldUrl, OAuthCallbackError, isAccountOnHoldCallbackError } from "./chunk-wk0e3dz4.js";
 import { getSecureStorage } from "./secure-storage.js";
 import { getProactivityBaselineState } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ps } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getMouseMode, isFullscreenActive } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { getNativeCopyModifierKey } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { kG } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import { uIe, UBn, BBn, jBn, ODt, WBn, GBn } from "./chunk-9g86t9bp.js";
+import { CONSOLE_OAUTH_CLIENT_ID, CONSOLE_PROFILE_OAUTH_SCOPES, doesProfileLoginRefusalPermitFallback, getProfileLoginRefusalCauseSummary, resolveConsoleProfileLoginTarget, saveConsoleProfileLogin, isRefreshTokenStoredInProfile } from "./console-profile-auth.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { qA } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { o, t, ct, uE, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link, useApp, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -72,11 +72,11 @@ import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享
 import { AuthenticationStatusBox } from "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { Sv } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { _0e } from "../Bedrock-Vertex/chunk-g6sqdw6w.js";
+import { BedrockSetupWizard } from "../Bedrock-Vertex/bedrock-setup-wizard.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
-import { y0e } from "../Bedrock-Vertex/chunk-yvs1a1sd.js";
+import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
+import { VertexSetupWizard } from "../Bedrock-Vertex/vertex-setup-wizard.js";
 import { finalizeOAuthLogin, applyOAuthLoginIdentity, refreshAuthStateAfterLogin } from "./oauth-login-completion.js";
 import { showNotification } from "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -109,11 +109,11 @@ async function dt(s, c, M = {}) {
 }
 async function Wt(s, c, { loginHint: M, loginMethod: H, orgUUID: D }) {
   try {
-    await ODt();
+    await resolveConsoleProfileLoginTarget();
   } catch (U) {
-    let Q = BBn(U);
+    let Q = doesProfileLoginRefusalPermitFallback(U);
     if (Q === null) throw U;
-    let se = jBn(U);
+    let se = getProfileLoginRefusalCauseSummary(U);
     throw new ye(
       l(U),
       Q && se !== null
@@ -123,7 +123,7 @@ async function Wt(s, c, { loginHint: M, loginMethod: H, orgUUID: D }) {
   }
   let T = await s.startOAuthFlow(c, {
       loginWithClaudeAi: !1,
-      oauthClient: { clientId: uIe, scopes: UBn },
+      oauthClient: { clientId: CONSOLE_OAUTH_CLIENT_ID, scopes: CONSOLE_PROFILE_OAUTH_SCOPES },
       loginHint: M,
       loginMethod: H,
       orgUUID: D,
@@ -135,7 +135,7 @@ async function Wt(s, c, { loginHint: M, loginMethod: H, orgUUID: D }) {
     R;
   try {
     let U = T.tokenAccount;
-    R = await WBn({
+    R = await saveConsoleProfileLogin({
       accessToken: T.accessToken,
       refreshToken: z.refreshToken,
       expiresAtMs: z.expiresAtMs,
@@ -147,11 +147,11 @@ async function Wt(s, c, { loginHint: M, loginMethod: H, orgUUID: D }) {
       workspaceName: U?.workspaceName,
     });
   } catch (U) {
-    if (!(await GBn(z.refreshToken))) await ut(T);
+    if (!(await isRefreshTokenStoredInProfile(z.refreshToken))) await ut(T);
     throw U;
   }
   return (
-    await fetchAndStoreUserRoles(T.accessToken).catch((U) => n(String(U), { level: "error" })),
+    await fetchAndStoreUserRoles(T.accessToken).catch((U) => logForDebugging(String(U), { level: "error" })),
     await refreshAuthStateAfterLogin({ ...ee }),
     R
   );
@@ -171,7 +171,7 @@ async function Xt(s) {
   try {
     await getSecureStorage().mutate((c) => ({ ...c, claudeAiOauth: void 0 }));
   } catch (c) {
-    n(
+    logForDebugging(
       `Console profile login: could not clear the replaced claude.ai login record: ${l(c)}`,
       { level: "error" },
     );
@@ -193,7 +193,7 @@ function jt(s) {
   return { refreshToken: s.refreshToken, expiresAtMs: s.expiresAt };
 }
 async function ut(s) {
-  if (s.refreshToken) await revokeOAuthToken(s.refreshToken, uIe);
+  if (s.refreshToken) await revokeOAuthToken(s.refreshToken, CONSOLE_OAUTH_CLIENT_ID);
 }
 F();
 var uo = "urn:ietf:params:oauth:grant-type:device_code",
@@ -247,7 +247,7 @@ function ht(s, c, M) {
     try {
       if (new URL(c).origin === new URL(s).origin) return c;
     } catch {}
-    n(
+    logForDebugging(
       `[gateway-login] ignoring advertised endpoint ${c} (not same-origin with ${s}); using ${M}`,
     );
   }
@@ -432,7 +432,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
     } catch (w) {
       if (Y !== R.current) return;
       let B = l(w);
-      (n(`[gateway-login] secureStorage write failed: ${B}`, {
+      (logForDebugging(`[gateway-login] secureStorage write failed: ${B}`, {
         level: "error",
       }),
         z({ state: "error", message: B }));
@@ -458,34 +458,34 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
   ) {
     case "url_input":
       if (!ee)
-        return r(o, {
+        return r(Box, {
           flexDirection: "column",
           gap: 1,
           children: [
-            e(t, { bold: !0, children: "Cloud gateway" }),
-            e(t, {
+            e(Text, { bold: !0, children: "Cloud gateway" }),
+            e(Text, {
               color: "warning",
               children:
                 "Gateway login is required by your organization's policy, but no gateway URL is configured. Contact your IT administrator.",
             }),
           ],
         });
-      return r(o, {
+      return r(Box, {
         flexDirection: "column",
         gap: 1,
         children: [
-          e(t, { bold: !0, children: "Cloud gateway" }),
-          e(t, {
+          e(Text, { bold: !0, children: "Cloud gateway" }),
+          e(Text, {
             children:
               "Your organization's gateway URL (set by managed settings):",
           }),
-          e(o, {
+          e(Box, {
             borderDimColor: !0,
             borderStyle: "round",
             paddingLeft: 1,
-            children: e(t, { children: ee }),
+            children: e(Text, { children: ee }),
           }),
-          r(t, {
+          r(Text, {
             dimColor: !0,
             children: [
               "Press Enter to connect",
@@ -503,29 +503,29 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
     case "connecting":
       return e(wt, { label: "Connecting to gateway\u2026", onCancel: Q });
     case "trust_prompt":
-      return r(o, {
+      return r(Box, {
         flexDirection: "column",
         gap: 1,
         children: [
-          r(t, {
+          r(Text, {
             bold: !0,
             children: [
               "Trust gateway ",
-              e(t, { color: "suggestion", children: T.hostname }),
+              e(Text, { color: "suggestion", children: T.hostname }),
               "?",
             ],
           }),
           T.previouslyPinned
-            ? e(t, {
+            ? e(Text, {
                 color: "warning",
                 children:
                   "The TLS certificate for this gateway has changed since you last connected. Only continue if your administrator has confirmed a certificate rotation.",
               })
-            : e(t, {
+            : e(Text, {
                 children:
                   "You haven't connected to this gateway before. Once trusted, it can push settings to this machine that execute commands and change your environment. Only continue if this is your organization's gateway.",
               }),
-          r(t, {
+          r(Text, {
             dimColor: !0,
             children: [
               "Certificate fingerprint (SHA-256): ",
@@ -567,8 +567,8 @@ function yt(or) {
   useKeybinding("confirm:no", rr, Kt);
   let qt, Jt;
   if (we[1] === MEMO_CACHE_SENTINEL)
-    ((qt = e(t, { bold: !0, children: "Cloud gateway \xB7 sign in" })),
-      (Jt = e(t, {
+    ((qt = e(Text, { bold: !0, children: "Cloud gateway \xB7 sign in" })),
+      (Jt = e(Text, {
         children:
           "A browser window should have opened. After signing in with your identity provider, confirm this code on the verification page:",
       })),
@@ -577,48 +577,48 @@ function yt(or) {
   else ((qt = we[1]), (Jt = we[2]));
   let ze;
   if (we[3] !== ft)
-    ((ze = e(o, {
+    ((ze = e(Box, {
       borderDimColor: !0,
       borderStyle: "round",
       paddingX: 2,
-      children: e(t, { bold: !0, color: "suggestion", children: ft }),
+      children: e(Text, { bold: !0, color: "suggestion", children: ft }),
     })),
       (we[3] = ft),
       (we[4] = ze));
   else ze = we[4];
   let Qt;
   if (we[5] === MEMO_CACHE_SENTINEL)
-    ((Qt = e(t, { dimColor: !0, children: "Browser didn't open? Visit:" })),
+    ((Qt = e(Text, { dimColor: !0, children: "Browser didn't open? Visit:" })),
       (we[5] = Qt));
   else Qt = we[5];
   let Be;
   if (we[6] !== gt)
-    ((Be = r(o, {
+    ((Be = r(Box, {
       flexDirection: "column",
-      children: [Qt, e(t, { dimColor: !0, wrap: "wrap", children: gt })],
+      children: [Qt, e(Text, { dimColor: !0, wrap: "wrap", children: gt })],
     })),
       (we[6] = gt),
       (we[7] = Be));
   else Be = we[7];
   let eo, to;
   if (we[8] === MEMO_CACHE_SENTINEL)
-    ((eo = r(o, {
+    ((eo = r(Box, {
       gap: 1,
       children: [
-        e(yo, {}),
-        e(t, {
+        e(SpinnerGlyph, {}),
+        e(Text, {
           dimColor: !0,
           children: "Waiting for sign-in to complete in your browser\u2026",
         }),
       ],
     })),
-      (to = e(t, { dimColor: !0, children: "Press Esc to cancel" })),
+      (to = e(Text, { dimColor: !0, children: "Press Esc to cancel" })),
       (we[8] = eo),
       (we[9] = to));
   else ((eo = we[8]), (to = we[9]));
   let oo;
   if (we[10] !== ze || we[11] !== Be)
-    ((oo = r(o, {
+    ((oo = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [qt, Jt, ze, Be, eo, to],
@@ -637,22 +637,22 @@ function wt(nr) {
   else ro = Ee[0];
   useKeybinding("confirm:no", ir, ro);
   let no;
-  if (Ee[1] === MEMO_CACHE_SENTINEL) ((no = e(yo, {})), (Ee[1] = no));
+  if (Ee[1] === MEMO_CACHE_SENTINEL) ((no = e(SpinnerGlyph, {})), (Ee[1] = no));
   else no = Ee[1];
   let He;
   if (Ee[2] !== mt)
-    ((He = r(o, { gap: 1, children: [no, e(t, { children: mt })] })),
+    ((He = r(Box, { gap: 1, children: [no, e(Text, { children: mt })] })),
       (Ee[2] = mt),
       (Ee[3] = He));
   else He = Ee[3];
   let io;
   if (Ee[4] === MEMO_CACHE_SENTINEL)
-    ((io = e(t, { dimColor: !0, children: "Press Esc to cancel" })),
+    ((io = e(Text, { dimColor: !0, children: "Press Esc to cancel" })),
       (Ee[4] = io));
   else io = Ee[4];
   let ao;
   if (Ee[5] !== He)
-    ((ao = r(o, { flexDirection: "column", gap: 1, children: [He, io] })),
+    ((ao = r(Box, { flexDirection: "column", gap: 1, children: [He, io] })),
       (Ee[5] = He),
       (Ee[6] = ao));
   else ao = Ee[6];
@@ -667,24 +667,24 @@ function Ct(ar) {
   useKeybinding("confirm:no", sr, so);
   let $e;
   if (Oe[1] !== pt)
-    (($e = r(t, { color: "error", children: ["Error: ", pt] })),
+    (($e = r(Text, { color: "error", children: ["Error: ", pt] })),
       (Oe[1] = pt),
       (Oe[2] = $e));
   else $e = Oe[2];
   let We;
   if (Oe[3] !== Ye)
-    ((We = Ye && e(t, { dimColor: !0, children: Ye })),
+    ((We = Ye && e(Text, { dimColor: !0, children: Ye })),
       (Oe[3] = Ye),
       (Oe[4] = We));
   else We = Oe[4];
   let co;
   if (Oe[5] === MEMO_CACHE_SENTINEL)
-    ((co = e(t, { dimColor: !0, children: "Press Esc to go back" })),
+    ((co = e(Text, { dimColor: !0, children: "Press Esc to go back" })),
       (Oe[5] = co));
   else co = Oe[5];
   let lo;
   if (Oe[6] !== $e || Oe[7] !== We)
-    ((lo = r(o, { flexDirection: "column", gap: 1, children: [$e, We, co] })),
+    ((lo = r(Box, { flexDirection: "column", gap: 1, children: [$e, We, co] })),
       (Oe[6] = $e),
       (Oe[7] = We),
       (Oe[8] = lo));
@@ -699,7 +699,7 @@ function To(s) {
   if (c === 365) return "1 year";
   return `${c} ${pluralize(c, "day")}`;
 }
-function V8({
+function OAuthLoginScreen({
   onDone: s,
   onAuthSuccess: c,
   onAccountOnHold: M,
@@ -769,7 +769,7 @@ function V8({
     else if (Y && !0 && D !== "setup-token")
       logEvent("tengu_oauth_gateway_forced", {});
   }, [v, Y, D]),
-    Un(
+    useTimeout(
       () => {
         if (w.state === "about_to_retry") B(w.nextState);
       },
@@ -794,7 +794,7 @@ function V8({
           w.state === "gateway_done",
       },
     ));
-  let Yt = uE(),
+  let Yt = useApp(),
     at = C(!1);
   (useKeybinding(
     "confirm:yes",
@@ -919,7 +919,7 @@ function V8({
               cause: L.causeSummary !== null ? ps(L.causeSummary) : ne,
               message: ne,
             }),
-              n(
+              logForDebugging(
                 `Keyless Console sign-in unavailable here, continuing with the API-key sign-in: ${ne}`,
                 { level: "warn" },
               ));
@@ -933,7 +933,7 @@ function V8({
             orgUUID: Me,
           })
           .catch((L) => {
-            if (L instanceof c1) throw L;
+            if (L instanceof OAuthCallbackError) throw L;
             let ne = L.message.includes("Token exchange failed"),
               lt = kG(L);
             throw (
@@ -979,12 +979,12 @@ function V8({
             ));
         }
       } catch (X) {
-        if (Evt(X)) {
-          (B({ state: "account_on_hold", message: Tvt(Yse(X.errorUri)) }),
+        if (isAccountOnHoldCallbackError(X)) {
+          (B({ state: "account_on_hold", message: formatAccountOnHoldSignInMessage(sanitizeAccountOnHoldUrl(X.errorUri)) }),
             logEvent("tengu_oauth_error", { account_on_hold: !0 }));
           return;
         }
-        let L = X instanceof c1 ? X.displayMessage : l(X),
+        let L = X instanceof OAuthCallbackError ? X.displayMessage : l(X),
           ne = kG(X);
         (B({
           state: "error",
@@ -1009,14 +1009,14 @@ function V8({
             Ge,
           ));
     }, [w.state, st]),
-    Un(
+    useTimeout(
       () => {
         (logEvent("tengu_oauth_success", { loginWithClaudeAi: ge }), s());
       },
       D === "setup-token" && w.state === "success" ? 500 : null,
       [D, w, ge, s],
     ),
-    Un(
+    useTimeout(
       () => M?.(),
       D === "setup-token" && w.state === "account_on_hold" ? 500 : null,
       [D, w, M],
@@ -1027,27 +1027,27 @@ function V8({
       },
       [he],
     ),
-    r(o, {
+    r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
         w.state === "waiting_for_login" &&
           xe &&
           r(
-            o,
+            Box,
             {
               flexDirection: "column",
               gap: 1,
               paddingBottom: 1,
               marginX: de ? -de : void 0,
               children: [
-                r(o, {
+                r(Box, {
                   flexDirection: "column",
                   paddingX: de,
                   children: [
-                    r(o, {
+                    r(Box, {
                       children: [
-                        r(t, {
+                        r(Text, {
                           dimColor: !0,
                           children: [
                             "Browser didn't open? Use the url below to sign in",
@@ -1060,17 +1060,17 @@ function V8({
                     e(CopyFallbackNotice, { via: ot }),
                   ],
                 }),
-                e(o, {
-                  children: e(ct, {
+                e(Box, {
+                  children: e(Link, {
                     url: w.url,
                     assumeSupport: !0,
-                    children: e(t, { dimColor: !0, children: w.url }),
+                    children: e(Text, { dimColor: !0, children: w.url }),
                   }),
                 }),
                 Ht &&
-                  e(o, {
+                  e(Box, {
                     paddingX: de,
-                    children: r(t, {
+                    children: r(Text, {
                       dimColor: !0,
                       children: [
                         "Hold ",
@@ -1087,22 +1087,22 @@ function V8({
           w.state === "success" &&
           w.token &&
           r(
-            o,
+            Box,
             {
               flexDirection: "column",
               gap: 1,
               paddingTop: 1,
               children: [
-                e(t, {
+                e(Text, {
                   color: "success",
                   children:
                     "\u2713 Long-lived authentication token created successfully!",
                 }),
-                r(o, {
+                r(Box, {
                   flexDirection: "column",
                   gap: 1,
                   children: [
-                    r(t, {
+                    r(Text, {
                       children: [
                         "Your OAuth token (valid for",
                         " ",
@@ -1114,13 +1114,13 @@ function V8({
                         "):",
                       ],
                     }),
-                    e(t, { color: "warning", children: w.token }),
-                    e(t, {
+                    e(Text, { color: "warning", children: w.token }),
+                    e(Text, {
                       dimColor: !0,
                       children:
                         "Store this token securely. You won't be able to see it again.",
                     }),
-                    e(t, {
+                    e(Text, {
                       dimColor: !0,
                       children:
                         "Use this token by setting: export CLAUDE_CODE_OAUTH_TOKEN=<token>",
@@ -1131,7 +1131,7 @@ function V8({
             },
             "tokenOutput",
           ),
-        e(o, {
+        e(Box, {
           flexDirection: "column",
           gap: 1,
           children: e(Ut, {
@@ -1197,14 +1197,14 @@ function Je(tn) {
   E(_o, bo);
   let ko;
   if (bt[3] === MEMO_CACHE_SENTINEL)
-    ((ko = r(o, {
+    ((ko = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(o, {
+        r(Box, {
           children: [
-            e(yo, {}),
-            e(t, { children: "Running awsAuthRefresh\u2026" }),
+            e(SpinnerGlyph, {}),
+            e(Text, { children: "Running awsAuthRefresh\u2026" }),
           ],
         }),
         e(AuthenticationStatusBox, {}),
@@ -1245,26 +1245,26 @@ function Ut(on) {
         : "Claude Code can be used with your Claude subscription or billed based on API usage through your Console account.";
       let b;
       if (u[0] !== a)
-        ((b = e(t, { bold: !0, children: a })), (u[0] = a), (u[1] = b));
+        ((b = e(Text, { bold: !0, children: a })), (u[0] = a), (u[1] = b));
       else b = u[1];
       let O;
       if (u[2] !== Ke)
-        ((O = Ke && e(t, { color: "warning", children: Ke })),
+        ((O = Ke && e(Text, { color: "warning", children: Ke })),
           (u[2] = Ke),
           (u[3] = O));
       else O = u[3];
       let J;
       if (u[4] === MEMO_CACHE_SENTINEL)
-        ((J = e(t, { children: "Select login method:" })), (u[4] = J));
+        ((J = e(Text, { children: "Select login method:" })), (u[4] = J));
       else J = u[4];
       let ae;
       if (u[5] === MEMO_CACHE_SENTINEL)
         ((ae = {
-          label: r(t, {
+          label: r(Text, {
             children: [
               "Claude account with subscription \xB7",
               " ",
-              e(t, { dimColor: !0, children: "Pro, Max, Team, or Enterprise" }),
+              e(Text, { dimColor: !0, children: "Pro, Max, Team, or Enterprise" }),
               !1,
             ],
           }),
@@ -1275,11 +1275,11 @@ function Ut(on) {
       let ce;
       if (u[6] === MEMO_CACHE_SENTINEL)
         ((ce = {
-          label: r(t, {
+          label: r(Text, {
             children: [
               "Anthropic Console account \xB7",
               " ",
-              e(t, { dimColor: !0, children: "API usage billing" }),
+              e(Text, { dimColor: !0, children: "API usage billing" }),
             ],
           }),
           value: "console",
@@ -1292,11 +1292,11 @@ function Ut(on) {
           ae,
           ce,
           {
-            label: r(t, {
+            label: r(Text, {
               children: [
                 "3rd-party platform \xB7",
                 " ",
-                e(t, {
+                e(Text, {
                   dimColor: !0,
                   children: "Amazon Bedrock, Microsoft Foundry, or Vertex AI",
                 }),
@@ -1309,7 +1309,7 @@ function Ut(on) {
       else ie = u[7];
       let ue;
       if (u[8] !== Dt || u[9] !== pe || u[10] !== Ce || u[11] !== k)
-        ((ue = e(o, {
+        ((ue = e(Box, {
           children: e(ve, {
             options: ie,
             onChange: (Ao) => {
@@ -1340,7 +1340,7 @@ function Ut(on) {
       else ue = u[12];
       let De;
       if (u[13] !== b || u[14] !== O || u[15] !== ue)
-        ((De = r(o, {
+        ((De = r(Box, {
           flexDirection: "column",
           gap: 1,
           children: [b, O, J, ue],
@@ -1385,7 +1385,7 @@ function Ut(on) {
     case "gateway_done": {
       let a;
       if (u[27] === MEMO_CACHE_SENTINEL)
-        ((a = e(t, {
+        ((a = e(Text, {
           color: "success",
           children: "Connected to Cloud gateway.",
         })),
@@ -1393,17 +1393,17 @@ function Ut(on) {
       else a = u[27];
       let b;
       if (u[28] === MEMO_CACHE_SENTINEL)
-        ((b = r(o, {
+        ((b = r(Box, {
           flexDirection: "column",
           gap: 1,
           marginTop: 1,
           children: [
             a,
-            r(t, {
+            r(Text, {
               dimColor: !0,
               children: [
                 "Press ",
-                e(t, { bold: !0, children: "Enter" }),
+                e(Text, { bold: !0, children: "Enter" }),
                 " to continue.",
               ],
             }),
@@ -1416,19 +1416,19 @@ function Ut(on) {
     case "console_method": {
       let a, b;
       if (u[29] === MEMO_CACHE_SENTINEL)
-        ((a = e(t, { bold: !0, children: "Anthropic Console account" })),
-          (b = e(t, { children: "How do you want to sign in?" })),
+        ((a = e(Text, { bold: !0, children: "Anthropic Console account" })),
+          (b = e(Text, { children: "How do you want to sign in?" })),
           (u[29] = a),
           (u[30] = b));
       else ((a = u[29]), (b = u[30]));
       let O;
       if (u[31] === MEMO_CACHE_SENTINEL)
         ((O = {
-          label: r(t, {
+          label: r(Text, {
             children: [
               "Sign in with your Console account",
               " ",
-              e(t, { dimColor: !0, children: "(recommended)" }),
+              e(Text, { dimColor: !0, children: "(recommended)" }),
             ],
           }),
           value: "wif",
@@ -1437,20 +1437,20 @@ function Ut(on) {
       else O = u[31];
       let J;
       if (u[32] === MEMO_CACHE_SENTINEL)
-        ((J = e(t, { dimColor: !0, children: "(legacy)" })), (u[32] = J));
+        ((J = e(Text, { dimColor: !0, children: "(legacy)" })), (u[32] = J));
       else J = u[32];
       let ae;
       if (u[33] === MEMO_CACHE_SENTINEL)
         ((ae = [
           O,
           {
-            label: r(t, {
+            label: r(Text, {
               children: [
                 "Create an API key ",
                 J,
                 " \xB7",
                 " ",
-                e(t, {
+                e(Text, {
                   dimColor: !0,
                   children: "adds a key to your Console workspace",
                 }),
@@ -1485,13 +1485,13 @@ function Ut(on) {
       else ie = u[39];
       let ue;
       if (u[40] !== ce || u[41] !== ie)
-        ((ue = r(o, {
+        ((ue = r(Box, {
           flexDirection: "column",
           gap: 1,
           children: [
             a,
             b,
-            e(o, {
+            e(Box, {
               children: e(ve, { options: ae, onCancel: ce, onChange: ie }),
             }),
           ],
@@ -1509,16 +1509,16 @@ function Ut(on) {
       let rn = a;
       let b;
       if (u[44] === MEMO_CACHE_SENTINEL)
-        ((b = e(t, { bold: !0, children: "Using 3rd-party platforms" })),
+        ((b = e(Text, { bold: !0, children: "Using 3rd-party platforms" })),
           (u[44] = b));
       else b = u[44];
       let O, J;
       if (u[45] === MEMO_CACHE_SENTINEL)
         ((O = {
-          label: r(t, {
+          label: r(Text, {
             children: [
               "Amazon Bedrock \xB7 ",
-              e(t, { dimColor: !0, children: "interactive setup" }),
+              e(Text, { dimColor: !0, children: "interactive setup" }),
             ],
           }),
           value: "bedrock",
@@ -1526,11 +1526,11 @@ function Ut(on) {
           (J = rn
             ? [
                 {
-                  label: r(t, {
+                  label: r(Text, {
                     children: [
                       "Claude Platform on AWS \xB7",
                       " ",
-                      e(t, { dimColor: !0, children: "refresh credentials" }),
+                      e(Text, { dimColor: !0, children: "refresh credentials" }),
                     ],
                   }),
                   value: "aws_refresh",
@@ -1543,10 +1543,10 @@ function Ut(on) {
       let ae;
       if (u[47] === MEMO_CACHE_SENTINEL)
         ((ae = {
-          label: r(t, {
+          label: r(Text, {
             children: [
               "Microsoft Foundry \xB7 ",
-              e(t, { dimColor: !0, children: "opens docs" }),
+              e(Text, { dimColor: !0, children: "opens docs" }),
             ],
           }),
           value: "foundry",
@@ -1560,10 +1560,10 @@ function Ut(on) {
           ...J,
           ae,
           {
-            label: r(t, {
+            label: r(Text, {
               children: [
                 "Google Vertex AI \xB7 ",
-                e(t, { dimColor: !0, children: "interactive setup" }),
+                e(Text, { dimColor: !0, children: "interactive setup" }),
               ],
             }),
             value: "vertex",
@@ -1613,11 +1613,11 @@ function Ut(on) {
       else ie = u[50];
       let ue;
       if (u[51] === MEMO_CACHE_SENTINEL)
-        ((ue = r(t, {
+        ((ue = r(Text, {
           dimColor: !0,
           children: [
             "Foundry: ",
-            e(ct, {
+            e(Link, {
               url: "https://code.claude.com/docs/en/microsoft-foundry",
               children: "https://code.claude.com/docs/en/microsoft-foundry",
             }),
@@ -1627,7 +1627,7 @@ function Ut(on) {
       else ue = u[51];
       let De;
       if (u[52] !== ie)
-        ((De = r(o, {
+        ((De = r(Box, {
           flexDirection: "column",
           gap: 1,
           children: [b, ie, ue],
@@ -1652,8 +1652,8 @@ function Ut(on) {
       let a;
       if (u[56] !== W.ok)
         ((a = W.ok
-          ? e(t, { color: "success", children: "AWS credentials refreshed." })
-          : e(t, {
+          ? e(Text, { color: "success", children: "AWS credentials refreshed." })
+          : e(Text, {
               color: "error",
               children:
                 "awsAuthRefresh failed. Check the command in your settings and try running it in a separate terminal.",
@@ -1663,11 +1663,11 @@ function Ut(on) {
       else a = u[57];
       let b;
       if (u[58] === MEMO_CACHE_SENTINEL)
-        ((b = r(t, {
+        ((b = r(Text, {
           dimColor: !0,
           children: [
             "Press ",
-            e(t, { bold: !0, children: "Enter" }),
+            e(Text, { bold: !0, children: "Enter" }),
             " to continue.",
           ],
         })),
@@ -1675,7 +1675,7 @@ function Ut(on) {
       else b = u[58];
       let O;
       if (u[59] !== a)
-        ((O = r(o, { flexDirection: "column", gap: 1, children: [a, b] })),
+        ((O = r(Box, { flexDirection: "column", gap: 1, children: [a, b] })),
           (u[59] = a),
           (u[60] = O));
       else O = u[60];
@@ -1684,7 +1684,7 @@ function Ut(on) {
     case "bedrock_wizard": {
       let a;
       if (u[61] !== k)
-        ((a = e(_0e, {
+        ((a = e(BedrockSetupWizard, {
           onComplete: (sn) => k({ state: "bedrock_done", message: sn }),
           onCancel: () => k({ state: "platform_setup" }),
         })),
@@ -1697,17 +1697,17 @@ function Ut(on) {
     case "vertex_done": {
       let a;
       if (u[63] !== W.message)
-        ((a = e(t, { color: "success", children: W.message })),
+        ((a = e(Text, { color: "success", children: W.message })),
           (u[63] = W.message),
           (u[64] = a));
       else a = u[64];
       let b;
       if (u[65] === MEMO_CACHE_SENTINEL)
-        ((b = r(t, {
+        ((b = r(Text, {
           dimColor: !0,
           children: [
             "Press ",
-            e(t, { bold: !0, children: "Enter" }),
+            e(Text, { bold: !0, children: "Enter" }),
             " to restart Claude Code.",
           ],
         })),
@@ -1715,7 +1715,7 @@ function Ut(on) {
       else b = u[65];
       let O;
       if (u[66] !== a)
-        ((O = r(o, { flexDirection: "column", gap: 1, children: [a, b] })),
+        ((O = r(Box, { flexDirection: "column", gap: 1, children: [a, b] })),
           (u[66] = a),
           (u[67] = O));
       else O = u[67];
@@ -1724,7 +1724,7 @@ function Ut(on) {
     case "vertex_wizard": {
       let a;
       if (u[68] !== k)
-        ((a = e(y0e, {
+        ((a = e(VertexSetupWizard, {
           onComplete: (cn) => k({ state: "vertex_done", message: cn }),
           onCancel: () => k({ state: "platform_setup" }),
         })),
@@ -1736,7 +1736,7 @@ function Ut(on) {
     case "waiting_for_login": {
       let a;
       if (u[70] !== je)
-        ((a = je && e(o, { children: e(t, { dimColor: !0, children: je }) })),
+        ((a = je && e(Box, { children: e(Text, { dimColor: !0, children: je }) })),
           (u[70] = je),
           (u[71] = a));
       else a = u[71];
@@ -1744,8 +1744,8 @@ function Ut(on) {
       if (u[72] !== me)
         ((b =
           me &&
-          e(o, {
-            children: e(t, {
+          e(Box, {
+            children: e(Text, {
               dimColor: !0,
               children: `${Le} (${me.cause}), so this sign-in will create an API key.`,
             }),
@@ -1757,10 +1757,10 @@ function Ut(on) {
       if (u[74] !== ke)
         ((O =
           !ke &&
-          r(o, {
+          r(Box, {
             children: [
-              e(yo, {}),
-              e(t, { children: "Opening browser to sign in\u2026" }),
+              e(SpinnerGlyph, {}),
+              e(Text, { children: "Opening browser to sign in\u2026" }),
             ],
           })),
           (u[74] = ke),
@@ -1779,9 +1779,9 @@ function Ut(on) {
       )
         ((J =
           ke &&
-          r(o, {
+          r(Box, {
             children: [
-              e(t, { children: qe }),
+              e(Text, { children: qe }),
               e(hn, {
                 value: Tt,
                 onChange: Et,
@@ -1805,7 +1805,7 @@ function Ut(on) {
       else J = u[84];
       let ae;
       if (u[85] !== a || u[86] !== b || u[87] !== O || u[88] !== J)
-        ((ae = r(o, {
+        ((ae = r(Box, {
           flexDirection: "column",
           gap: 1,
           children: [a, b, O, J],
@@ -1821,13 +1821,13 @@ function Ut(on) {
     case "creating_api_key": {
       let a;
       if (u[90] === MEMO_CACHE_SENTINEL)
-        ((a = e(o, {
+        ((a = e(Box, {
           flexDirection: "column",
           gap: 1,
-          children: r(o, {
+          children: r(Box, {
             children: [
-              e(yo, {}),
-              e(t, { children: "Creating API key for Claude Code\u2026" }),
+              e(SpinnerGlyph, {}),
+              e(Text, { children: "Creating API key for Claude Code\u2026" }),
             ],
           }),
         })),
@@ -1838,10 +1838,10 @@ function Ut(on) {
     case "about_to_retry": {
       let a;
       if (u[91] === MEMO_CACHE_SENTINEL)
-        ((a = e(o, {
+        ((a = e(Box, {
           flexDirection: "column",
           gap: 1,
-          children: e(t, { color: "permission", children: "Retrying\u2026" }),
+          children: e(Text, { color: "permission", children: "Retrying\u2026" }),
         })),
           (u[91] = a));
       else a = u[91];
@@ -1856,20 +1856,20 @@ function Ut(on) {
             : r(N, {
                 children: [
                   getOauthAccountInfo()?.emailAddress
-                    ? r(t, {
+                    ? r(Text, {
                         dimColor: !0,
                         children: [
                           "Logged in as",
                           " ",
-                          e(t, { children: getOauthAccountInfo()?.emailAddress }),
+                          e(Text, { children: getOauthAccountInfo()?.emailAddress }),
                         ],
                       })
                     : null,
-                  r(t, {
+                  r(Text, {
                     color: "success",
                     children: [
                       "Login successful. Press ",
-                      e(t, { bold: !0, children: "Enter" }),
+                      e(Text, { bold: !0, children: "Enter" }),
                       " to continue\u2026",
                     ],
                   }),
@@ -1881,7 +1881,7 @@ function Ut(on) {
       else a = u[94];
       let b;
       if (u[95] !== a)
-        ((b = e(o, { flexDirection: "column", children: a })),
+        ((b = e(Box, { flexDirection: "column", children: a })),
           (u[95] = a),
           (u[96] = b));
       else b = u[96];
@@ -1890,7 +1890,7 @@ function Ut(on) {
     case "account_on_hold": {
       let a;
       if (u[97] !== W.message)
-        ((a = e(t, { color: "warning", children: W.message })),
+        ((a = e(Text, { color: "warning", children: W.message })),
           (u[97] = W.message),
           (u[98] = a));
       else a = u[98];
@@ -1898,11 +1898,11 @@ function Ut(on) {
       if (u[99] !== be)
         ((b =
           be !== "setup-token" &&
-          r(t, {
+          r(Text, {
             dimColor: !0,
             children: [
               "Press ",
-              e(t, { bold: !0, children: "Enter" }),
+              e(Text, { bold: !0, children: "Enter" }),
               " to go back to login options.",
             ],
           })),
@@ -1911,7 +1911,7 @@ function Ut(on) {
       else b = u[100];
       let O;
       if (u[101] !== a || u[102] !== b)
-        ((O = r(o, { flexDirection: "column", gap: 1, children: [a, b] })),
+        ((O = r(Box, { flexDirection: "column", gap: 1, children: [a, b] })),
           (u[101] = a),
           (u[102] = b),
           (u[103] = O));
@@ -1921,13 +1921,13 @@ function Ut(on) {
     case "error": {
       let a;
       if (u[104] !== W.message)
-        ((a = r(t, { color: "error", children: ["OAuth error: ", W.message] })),
+        ((a = r(Text, { color: "error", children: ["OAuth error: ", W.message] })),
           (u[104] = W.message),
           (u[105] = a));
       else a = u[105];
       let b;
       if (u[106] !== me)
-        ((b = me && e(t, { dimColor: !0, children: `${Le}: ${me.message}` })),
+        ((b = me && e(Text, { dimColor: !0, children: `${Le}: ${me.message}` })),
           (u[106] = me),
           (u[107] = b));
       else b = u[107];
@@ -1935,13 +1935,13 @@ function Ut(on) {
       if (u[108] !== W.toRetry)
         ((O =
           W.toRetry &&
-          e(o, {
+          e(Box, {
             marginTop: 1,
-            children: r(t, {
+            children: r(Text, {
               color: "permission",
               children: [
                 "Press ",
-                e(t, { bold: !0, children: "Enter" }),
+                e(Text, { bold: !0, children: "Enter" }),
                 " to retry.",
               ],
             }),
@@ -1951,7 +1951,7 @@ function Ut(on) {
       else O = u[109];
       let J;
       if (u[110] !== a || u[111] !== b || u[112] !== O)
-        ((J = r(o, { flexDirection: "column", gap: 1, children: [a, b, O] })),
+        ((J = r(Box, { flexDirection: "column", gap: 1, children: [a, b, O] })),
           (u[110] = a),
           (u[111] = b),
           (u[112] = O),
@@ -1964,4 +1964,4 @@ function Ut(on) {
     }
   }
 }
-export { V8 };
+export { OAuthLoginScreen };

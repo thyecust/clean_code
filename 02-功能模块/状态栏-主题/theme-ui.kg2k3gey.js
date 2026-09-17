@@ -11,23 +11,23 @@
 // [preload stripped] 原本在此预载 244 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { Nk, Tj } from "./chunk-jz6b76hr.js";
+import { getThemePalette, isValidThemeColorValue } from "./chunk-jz6b76hr.js";
 import { useTheme, useThemeSetting, useCustomThemes } from "./chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { isCustomizationDisabled } from "./chunk-dqyc6kge.js";
 import { getThemesDir, customThemeRef, parseCustomThemeRef, saveCustomTheme, slugify } from "./custom-themes.js";
 import { omitObjectKeys } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { FULL_BLOCK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DimParenthetical, SearchablePickerDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
 import { ThemePicker } from "./theme-picker.js";
 import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
@@ -52,7 +52,7 @@ function U(Mr) {
     { value: Ie } = Mr,
     Ro;
   if (jr[0] !== Ie)
-    ((Ro = e(t, { color: Ie, children: ao })), (jr[0] = Ie), (jr[1] = Ro));
+    ((Ro = e(Text, { color: Ie, children: ao })), (jr[0] = Ie), (jr[1] = Ro));
   else Ro = jr[1];
   return Ro;
 }
@@ -73,7 +73,7 @@ function Ee(Br) {
   else xo = s[2];
   let [h] = d(xo),
     Mo;
-  if (s[3] !== h) ((Mo = Nk(h)), (s[3] = h), (s[4] = Mo));
+  if (s[3] !== h) ((Mo = getThemePalette(h)), (s[3] = h), (s[4] = Mo));
   else Mo = s[4];
   let v = Mo,
     jo;
@@ -138,7 +138,7 @@ function Ee(Br) {
           { slug: Go, name: l.trim(), base: h, overrides: no, source: "user" },
           de,
         ).catch((zr) => {
-          n(`[theme] save ${Go} failed: ${zr}`, { level: "warn" });
+          logForDebugging(`[theme] save ${Go} failed: ${zr}`, { level: "warn" });
         }));
     }),
       (s[24] = h),
@@ -168,7 +168,7 @@ function Ee(Br) {
     s[36] !== f
   )
     ((Zo = function be() {
-      if (a === null || !Tj(O)) {
+      if (a === null || !isValidThemeColorValue(O)) {
         return;
       }
       (S(f, O === v[a] ? omitObjectKeys(m, a) : { ...m, [a]: O }), ro(null));
@@ -209,7 +209,7 @@ function Ee(Br) {
     or;
   if (s[45] !== a || s[46] !== m || s[47] !== u)
     ((or = function De(io) {
-      if ((Ao(io), a && Tj(io))) u({ ...m, [a]: io });
+      if ((Ao(io), a && isValidThemeColorValue(io))) u({ ...m, [a]: io });
     }),
       (s[45] = a),
       (s[46] = m),
@@ -242,12 +242,12 @@ function Ee(Br) {
     const P = eo && k ? `Fork ${k.name} to your themes` : "New custom theme";
     let N;
     if (s[57] !== P)
-      ((N = e(t, { bold: !0, color: "permission", children: P })),
+      ((N = e(Text, { bold: !0, color: "permission", children: P })),
         (s[57] = P),
         (s[58] = N));
     else N = s[58];
     let L;
-    if (s[59] === MEMO_CACHE_SENTINEL) ((L = e(t, { children: "Name: " })), (s[59] = L));
+    if (s[59] === MEMO_CACHE_SENTINEL) ((L = e(Text, { children: "Name: " })), (s[59] = L));
     else L = s[59];
     let w;
     if (
@@ -273,7 +273,7 @@ function Ee(Br) {
               Ze(customThemeRef(z));
             })
             .catch((Kr) => {
-              n(`[theme] save ${z} failed: ${Kr}`, { level: "warn" });
+              logForDebugging(`[theme] save ${z} failed: ${Kr}`, { level: "warn" });
             }));
       }),
         (s[60] = h),
@@ -288,7 +288,7 @@ function Ee(Br) {
     else w = s[68];
     let y;
     if (s[69] !== l || s[70] !== oo || s[71] !== ae || s[72] !== w)
-      ((y = r(o, {
+      ((y = r(Box, {
         children: [
           L,
           e(hn, {
@@ -318,7 +318,7 @@ function Ee(Br) {
     else A = s[74];
     let oe;
     if (s[75] !== h || s[76] !== z)
-      ((oe = r(t, {
+      ((oe = r(Text, {
         dimColor: !0,
         children: ["based on ", h, " \xB7 saved to ", A, lo, z, ".json"],
       })),
@@ -328,7 +328,7 @@ function Ee(Br) {
     else oe = s[77];
     let Y;
     if (s[78] !== y || s[79] !== oe)
-      ((Y = r(o, { flexDirection: "column", children: [y, oe] })),
+      ((Y = r(Box, { flexDirection: "column", children: [y, oe] })),
         (s[78] = y),
         (s[79] = oe),
         (s[80] = Y));
@@ -345,7 +345,7 @@ function Ee(Br) {
     else Pe = s[83];
     let I;
     if (s[84] !== G)
-      ((I = e(t, { dimColor: !0, children: r(DotSeparatedList, { children: [G, Pe] }) })),
+      ((I = e(Text, { dimColor: !0, children: r(DotSeparatedList, { children: [G, Pe] }) })),
         (s[84] = G),
         (s[85] = I));
     else I = s[85];
@@ -353,7 +353,7 @@ function Ee(Br) {
     if (s[86] !== N || s[87] !== Y || s[88] !== I)
       ((ie = e(Qr, {
         color: "permission",
-        children: r(o, {
+        children: r(Box, {
           flexDirection: "column",
           gap: 1,
           children: [N, Y, I],
@@ -368,12 +368,12 @@ function Ee(Br) {
   }
   if (a !== null) {
     let K;
-    if (s[90] !== O) ((K = Tj(O)), (s[90] = O), (s[91] = K));
+    if (s[90] !== O) ((K = isValidThemeColorValue(O)), (s[90] = O), (s[91] = K));
     else K = s[91];
     let Fe = K;
     let P;
     if (s[92] !== l)
-      ((P = e(t, { bold: !0, color: "permission", children: l })),
+      ((P = e(Text, { bold: !0, color: "permission", children: l })),
         (s[92] = l),
         (s[93] = P));
     else P = s[93];
@@ -382,15 +382,15 @@ function Ee(Br) {
     if (s[94] !== N) ((L = e(U, { value: N })), (s[94] = N), (s[95] = L));
     else L = s[95];
     let w;
-    if (s[96] === MEMO_CACHE_SENTINEL) ((w = e(t, { children: " " })), (s[96] = w));
+    if (s[96] === MEMO_CACHE_SENTINEL) ((w = e(Text, { children: " " })), (s[96] = w));
     else w = s[96];
     let y;
     if (s[97] !== a)
-      ((y = e(t, { bold: !0, children: a })), (s[97] = a), (s[98] = y));
+      ((y = e(Text, { bold: !0, children: a })), (s[97] = a), (s[98] = y));
     else y = s[98];
     let A;
     if (s[99] !== L || s[100] !== y)
-      ((A = r(o, { children: [L, w, y] })),
+      ((A = r(Box, { children: [L, w, y] })),
         (s[99] = L),
         (s[100] = y),
         (s[101] = A));
@@ -398,19 +398,19 @@ function Ee(Br) {
     const oe = v[a];
     let Y;
     if (s[102] !== oe)
-      ((Y = r(t, { dimColor: !0, children: ["preset: ", oe] })),
+      ((Y = r(Text, { dimColor: !0, children: ["preset: ", oe] })),
         (s[102] = oe),
         (s[103] = Y));
     else Y = s[103];
     let G;
     if (s[104] !== A || s[105] !== Y)
-      ((G = r(o, { flexDirection: "column", children: [A, Y] })),
+      ((G = r(Box, { flexDirection: "column", children: [A, Y] })),
         (s[104] = A),
         (s[105] = Y),
         (s[106] = G));
     else G = s[106];
     let Pe;
-    if (s[107] === MEMO_CACHE_SENTINEL) ((Pe = e(t, { children: "Value: " })), (s[107] = Pe));
+    if (s[107] === MEMO_CACHE_SENTINEL) ((Pe = e(Text, { children: "Value: " })), (s[107] = Pe));
     else Pe = s[107];
     let I;
     if (
@@ -420,7 +420,7 @@ function Ee(Br) {
       s[111] !== O ||
       s[112] !== De
     )
-      ((I = r(o, {
+      ((I = r(Box, {
         children: [
           Pe,
           e(hn, {
@@ -461,7 +461,7 @@ function Ee(Br) {
     else ie = s[115];
     let Ue;
     if (s[116] !== ie)
-      ((Ue = e(t, { dimColor: !0, children: ie })),
+      ((Ue = e(Text, { dimColor: !0, children: ie })),
         (s[116] = ie),
         (s[117] = Ue));
     else Ue = s[117];
@@ -469,7 +469,7 @@ function Ee(Br) {
     if (s[118] !== P || s[119] !== G || s[120] !== I || s[121] !== Ue)
       ((tr = e(Qr, {
         color: "permission",
-        children: r(o, {
+        children: r(Box, {
           flexDirection: "column",
           gap: 1,
           children: [P, G, I, Ue],
@@ -530,11 +530,11 @@ function Ee(Br) {
   if (s[135] !== m || s[136] !== R)
     ((w = (co, Yr) => {
       let Gr = m[co] !== void 0;
-      return r(o, {
+      return r(Box, {
         children: [
           e(U, { value: R(co) }),
-          e(t, { children: " " }),
-          e(t, { color: Yr ? "suggestion" : void 0, children: co }),
+          e(Text, { children: " " }),
+          e(Text, { color: Yr ? "suggestion" : void 0, children: co }),
           e(DimParenthetical, { when: Gr, children: "custom" }),
         ],
       });
@@ -546,12 +546,12 @@ function Ee(Br) {
   let y;
   if (s[138] !== m || s[139] !== v || s[140] !== R)
     ((y = (Oe) =>
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         children: [
-          r(t, { children: ["current: ", e(U, { value: R(Oe) }), " ", R(Oe)] }),
+          r(Text, { children: ["current: ", e(U, { value: R(Oe) }), " ", R(Oe)] }),
           m[Oe] !== void 0 &&
-            r(t, {
+            r(Text, {
               dimColor: !0,
               children: ["preset: ", e(U, { value: v[Oe] }), " ", v[Oe]],
             }),

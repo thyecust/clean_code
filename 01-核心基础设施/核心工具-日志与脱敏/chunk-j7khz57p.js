@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { b, z, Zhe, B1, n } from "./核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, redactForDisplay, redactDeep, logForDebugging } from "./核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodePoints, toWellFormed } from "../核心工具-字符串与文本/string-utils.js";
 import { QUOTE_HOMOGLYPHS, INVISIBLE_BLANKS, isDecisionSurfaceControl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -91,7 +91,7 @@ var U =
     /[\u2018\u2019\u201A\u201B\u00B4\u02B9\u02BB\u02BC\u02BD\u02BE\u02BF\u02C0\u02C8\u02CA\u02CB\u02F4\u0374\u0384\u055A\u055D\u05F3\u07F4\u07F5\u1FBD\u1FBF\u1FEF\u1FFD\u1FFE\u2032\u2035\u275B\u275C\u275F\uA78B\uA78C\uFF07\uFF40]/g,
   V = /[\u02C2\u02C3\uFE64\uFE65\uFF1C\uFF1E]/g;
 function k(r) {
-  return B(b(r)).replace(/\s/g, " ");
+  return B(jsonStringify(r)).replace(/\s/g, " ");
 }
 function A(r, e, o) {
   let t = r,
@@ -111,7 +111,7 @@ function C(r) {
     let e = Object.create(null),
       o = new Set(),
       t = new Map();
-    for (let [s, i] of Object.entries(r)) e[A(Zhe(s), o, t)] = C(i);
+    for (let [s, i] of Object.entries(r)) e[A(redactForDisplay(s), o, t)] = C(i);
     return e;
   }
   return r;
@@ -163,18 +163,18 @@ function truncateForPreview(r) {
           E = !1;
         try {
           if (((g = r[f]), N(g))) E = !0;
-          else m = b(g);
+          else m = jsonStringify(g);
         } catch {
           E = !0;
         }
         if (m === void 0) {
           if (!E) continue;
-          let _ = A(Zhe(f), l, p);
-          n(
+          let _ = A(redactForDisplay(f), l, p);
+          logForDebugging(
             "truncateForPreview: field serialization threw (depth) \u2014 rendering a loud unserializable marker",
             { level: "error" },
           );
-          let y = d(b(_)).replace(/\s+/g, " "),
+          let y = d(jsonStringify(_)).replace(/\s+/g, " "),
             S = truncateToCodePoints(y, 50),
             O = S.length < y.length ? S + "\u2026" : S;
           if (i >= D) {
@@ -185,9 +185,9 @@ function truncateForPreview(r) {
           ((i += Array.from(R).length), s.push(R));
           continue;
         }
-        let c = A(Zhe(f), l, p);
+        let c = A(redactForDisplay(f), l, p);
         if (i >= D) {
-          let _ = d(b(c)).replace(/\s+/g, " "),
+          let _ = d(jsonStringify(c)).replace(/\s+/g, " "),
             y = truncateToCodePoints(_, 50);
           a.push(y.length < _.length ? y + "\u2026" : y);
           continue;
@@ -195,19 +195,19 @@ function truncateForPreview(r) {
         let u,
           I = !1;
         try {
-          u = b(C(B1({ [f]: z(m) }, Zhe)[f]));
+          u = jsonStringify(C(redactDeep({ [f]: jsonParse(m) }, redactForDisplay)[f]));
         } catch {
           I = !0;
         }
         if (u === void 0)
           if (I)
-            n(
-              `truncateForPreview: redaction round-trip threw for field ${b(c)} \u2014 rendering unredacted`,
+            logForDebugging(
+              `truncateForPreview: redaction round-trip threw for field ${jsonStringify(c)} \u2014 rendering unredacted`,
               { level: "error" },
             );
           else
-            (n(
-              `truncateForPreview: redaction round-trip yielded no text for field ${b(c)} \u2014 rendering unredacted`,
+            (logForDebugging(
+              `truncateForPreview: redaction round-trip yielded no text for field ${jsonStringify(c)} \u2014 rendering unredacted`,
               { level: "error" },
             ),
               logError(
@@ -216,7 +216,7 @@ function truncateForPreview(r) {
                 ),
               ));
         let M = u === void 0 ? m : u,
-          v = `${B(b(c))}: ${B(M)}`;
+          v = `${B(jsonStringify(c))}: ${B(M)}`;
         ((i += Array.from(v).length), s.push(v));
       }
       let P = "";
@@ -242,16 +242,16 @@ function truncateForPreview(r) {
     try {
       if (N(r))
         return (
-          n(
+          logForDebugging(
             "truncateForPreview: non-object input exceeds the serialization depth probe \u2014 rendering a loud unserializable marker",
             { level: "error" },
           ),
           "(value unserializable)"
         );
-      e = b(r);
+      e = jsonStringify(r);
     } catch {
       return (
-        n(
+        logForDebugging(
           "truncateForPreview: non-object input serialization threw \u2014 rendering a loud unserializable marker",
           { level: "error" },
         ),
@@ -262,18 +262,18 @@ function truncateForPreview(r) {
     let o,
       t = !1;
     try {
-      o = b(C(B1(z(e), Zhe)));
+      o = jsonStringify(C(redactDeep(jsonParse(e), redactForDisplay)));
     } catch {
       t = !0;
     }
     if (o === void 0) {
       if (t)
-        n(
+        logForDebugging(
           "truncateForPreview: non-object redaction round-trip threw \u2014 rendering unredacted",
           { level: "error" },
         );
       else
-        (n(
+        (logForDebugging(
           "truncateForPreview: non-object redaction round-trip failed \u2014 rendering unredacted",
           { level: "error" },
         ),

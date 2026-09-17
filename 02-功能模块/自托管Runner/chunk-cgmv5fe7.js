@@ -10,7 +10,7 @@
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -727,7 +727,7 @@ function startMetricsServer(e, n, o) {
         t.on("end", () => {
           if (h) return;
           try {
-            (ze(n, z(Buffer.concat(m).toString("utf8"))),
+            (ze(n, jsonParse(Buffer.concat(m).toString("utf8"))),
               s.writeHead(200).end());
           } catch (_) {
             (o(`[runner:warn] /v1/metrics rejected malformed body: ${l(_)}`),
@@ -753,7 +753,7 @@ function startMetricsServer(e, n, o) {
     }
     let a = Date.now(),
       i = n.lastPollAt > 0 ? a - n.lastPollAt : null,
-      d = b({
+      d = jsonStringify({
         status: "ok",
         runner_id: n.runnerId,
         active_sessions: n.activeSessions,

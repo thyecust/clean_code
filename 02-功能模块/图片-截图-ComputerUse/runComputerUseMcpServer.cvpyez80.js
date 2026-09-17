@@ -10,18 +10,18 @@
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ListToolsRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
-import "../MCP客户端/chunk-98spw152.js";
+import "../MCP客户端/mcp-protocol.js";
 import "../MCP客户端/mcp-server.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { shutdownFirstPartyEventLogging, watchGlobalConfigThroughStorage, seedInstallIDs, shutdownDatadog } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { zR, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { initDefaultDebugLog, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
 import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import { loadFastPathPolicy } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
 import { getComputerUseNativeModule, runComputerUseNativeCall } from "./computer-use-session.js";
 import "./computer-use-cli-executor.js";
 import { X2n, put } from "./chunk-v76f8dbx.js";
-import { WSe } from "./chunk-6842b6x1.js";
+import { buildComputerUseToolDefinitions } from "./computer-use-tool-definitions.js";
 import { getFrozenCoordinateMode } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
 import { StdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
 import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
@@ -124,7 +124,7 @@ async function _() {
     if (!o.includes("Finder")) o.unshift("Finder");
     return o;
   } catch {
-    n(
+    logForDebugging(
       `[Computer Use MCP] app enumeration exceeded ${m}ms or failed; tool description omits list`,
     );
     return;
@@ -135,7 +135,7 @@ async function createComputerUseMcpServerForCli() {
     e = getFrozenCoordinateMode(),
     o = X2n(t, e),
     r = await _(),
-    s = WSe(t.executor.capabilities, e, r);
+    s = buildComputerUseToolDefinitions(t.executor.capabilities, e, r);
   return (
     o.setRequestHandler(ListToolsRequestSchema, async () =>
       t.isDisabled() ? { tools: [] } : { tools: s },
@@ -151,7 +151,7 @@ async function runComputerUseMcpServer(t) {
   initializeAnalyticsSink();
   let o = pinStorageV5(t);
   if (isHoverRestEnabled() && o !== void 0) {
-    (zR({ storageV5: o }), watchGlobalConfigThroughStorage(o));
+    (initDefaultDebugLog({ storageV5: o }), watchGlobalConfigThroughStorage(o));
     let [{ credentialsStoreFor: a }, { primeFastPathCredentials: d }] =
       await Promise.all([
         import("../../01-核心基础设施/共享小工具-未细化/credentialsStoreFor.r7prg4pg.js"),
@@ -168,8 +168,8 @@ async function runComputerUseMcpServer(t) {
     };
   (process.stdin.on("end", () => void i()),
     process.stdin.on("error", () => void i()),
-    n("[Computer Use MCP] Starting MCP server"),
+    logForDebugging("[Computer Use MCP] Starting MCP server"),
     await r.connect(s),
-    n("[Computer Use MCP] MCP server started"));
+    logForDebugging("[Computer Use MCP] MCP server started"));
 }
 export { createComputerUseMcpServerForCli, runComputerUseMcpServer };

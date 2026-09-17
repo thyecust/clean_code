@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { isValidPathSegment, hasValidPathSegments, STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
-import { wc } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { pathSpaces } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getProjectsDir } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { validateStorageKey } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isAbsolute as g, sep as a } from "path";
@@ -19,7 +19,7 @@ function l(e) {
 }
 function createRealPathResolver(e) {
   return (n) =>
-    e.hostFiles.realPath(wc.workspace(n === "" || g(n) ? n : l(n)), {
+    e.hostFiles.realPath(pathSpaces.workspace(n === "" || g(n) ? n : l(n)), {
       native: !0,
     });
 }

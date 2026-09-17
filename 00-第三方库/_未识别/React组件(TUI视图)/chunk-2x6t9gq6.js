@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { _ } from "../../react/react.zhnvc798.js";
-import { te } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { getStringWidth } from "../../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding, useKeybindings } from "../../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "./chunk-tp42fv8j.js";
@@ -22,7 +22,7 @@ import { figures } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye
 import { MEMO_CACHE_SENTINEL } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Be(lo) {
-  return te(lo.label);
+  return getStringWidth(lo.label);
 }
 function Ie(co) {
   return co !== null;
@@ -282,7 +282,7 @@ function XL(Ye) {
     Gt = l === k - 1 ? figures.pointer : " ";
   let xt;
   if (n[72] !== W || n[73] !== Gt)
-    ((xt = r(t, { color: W, children: [Gt, " "] })),
+    ((xt = r(Text, { color: W, children: [Gt, " "] })),
       (n[72] = W),
       (n[73] = Gt),
       (n[74] = xt));
@@ -291,7 +291,7 @@ function XL(Ye) {
     Vt = !!S;
   let vt;
   if (n[75] !== It || n[76] !== Ht || n[77] !== Vt)
-    ((vt = e(t, { bold: Ht, dimColor: Vt, children: It })),
+    ((vt = e(Text, { bold: Ht, dimColor: Vt, children: It })),
       (n[75] = It),
       (n[76] = Ht),
       (n[77] = Vt),
@@ -300,7 +300,7 @@ function XL(Ye) {
   let ft;
   if (n[79] !== S || n[80] !== l || n[81] !== k)
     ((ft =
-      S && l === k - 1 && r(t, { color: "error", children: [" \xB7 ", S] })),
+      S && l === k - 1 && r(Text, { color: "error", children: [" \xB7 ", S] })),
       (n[79] = S),
       (n[80] = l),
       (n[81] = k),
@@ -308,7 +308,7 @@ function XL(Ye) {
   else ft = n[82];
   let Ct;
   if (n[83] !== xt || n[84] !== vt || n[85] !== ft)
-    ((Ct = r(o, { marginTop: 1, children: [xt, vt, ft] })),
+    ((Ct = r(Box, { marginTop: 1, children: [xt, vt, ft] })),
       (n[83] = xt),
       (n[84] = vt),
       (n[85] = ft),
@@ -316,14 +316,14 @@ function XL(Ye) {
   else Ct = n[86];
   let kt;
   if (n[87] !== B || n[88] !== ht)
-    ((kt = e(o, {
+    ((kt = e(Box, {
       marginTop: 1,
       minHeight: 1,
       children: B
         ? e(ErrorMessage, { error: B })
         : ht
-          ? e(t, { dimColor: !0, children: ht })
-          : e(t, { children: " " }),
+          ? e(Text, { dimColor: !0, children: ht })
+          : e(Text, { children: " " }),
     })),
       (n[87] = B),
       (n[88] = ht),
@@ -350,9 +350,9 @@ function XL(Ye) {
   else ((De = n[93]), (Ee = n[94]));
   let Rt;
   if (n[95] !== Ft)
-    ((Rt = e(o, {
+    ((Rt = e(Box, {
       marginTop: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: r(DotSeparatedList, { children: [we, Ft, De, Ee] }),
       }),
@@ -362,7 +362,7 @@ function XL(Ye) {
   else Rt = n[96];
   let Tt;
   if (n[97] !== yt || n[98] !== Ct || n[99] !== kt || n[100] !== Rt)
-    ((Tt = r(o, { flexDirection: "column", children: [yt, Ct, kt, Rt] })),
+    ((Tt = r(Box, { flexDirection: "column", children: [yt, Ct, kt, Rt] })),
       (n[97] = yt),
       (n[98] = Ct),
       (n[99] = kt),
@@ -404,7 +404,7 @@ function Et(ao) {
     } = ao,
     Ae;
   if (w[0] !== i.label || w[1] !== Wt)
-    ((Ae = " ".repeat(Math.max(0, Wt - te(i.label)))),
+    ((Ae = " ".repeat(Math.max(0, Wt - getStringWidth(i.label)))),
       (w[0] = i.label),
       (w[1] = Wt),
       (w[2] = Ae));
@@ -423,7 +423,7 @@ function Et(ao) {
     ee = M ? figures.pointer : " ";
   let qe;
   if (w[7] !== Kt || w[8] !== ee)
-    ((qe = r(t, { color: Kt, children: [ee, " "] })),
+    ((qe = r(Text, { color: Kt, children: [ee, " "] })),
       (w[7] = Kt),
       (w[8] = ee),
       (w[9] = qe));
@@ -432,13 +432,13 @@ function Et(ao) {
   const oe = !M;
   let wt;
   if (w[10] !== jt)
-    ((wt = jt ? e(t, { color: "error", children: "*" }) : " "),
+    ((wt = jt ? e(Text, { color: "error", children: "*" }) : " "),
       (w[10] = jt),
       (w[11] = wt));
   else wt = w[11];
   let Pe;
   if (w[12] !== i.label || w[13] !== _t || w[14] !== oe || w[15] !== wt)
-    ((Pe = r(t, { dimColor: oe, children: [i.label, wt, _t, " "] })),
+    ((Pe = r(Text, { dimColor: oe, children: [i.label, wt, _t, " "] })),
       (w[12] = i.label),
       (w[13] = _t),
       (w[14] = oe),
@@ -458,14 +458,14 @@ function Et(ao) {
     let N;
     if (w[20] !== M || w[21] !== Dt?.label || w[22] !== b)
       ((N = M
-        ? r(t, {
+        ? r(Text, {
             children: [
-              r(t, { dimColor: !0, children: [figures.triangleLeft, " "] }),
+              r(Text, { dimColor: !0, children: [figures.triangleLeft, " "] }),
               Dt?.label ?? b,
-              r(t, { dimColor: !0, children: [" ", figures.triangleRight] }),
+              r(Text, { dimColor: !0, children: [" ", figures.triangleRight] }),
             ],
           })
-        : e(t, { children: Dt?.label ?? b })),
+        : e(Text, { children: Dt?.label ?? b })),
         (w[20] = M),
         (w[21] = Dt?.label),
         (w[22] = b),
@@ -473,7 +473,7 @@ function Et(ao) {
     else N = w[23];
     let Ue;
     if (w[24] !== J || w[25] !== z || w[26] !== N)
-      ((Ue = r(o, { children: [z, J, N] })),
+      ((Ue = r(Box, { children: [z, J, N] })),
         (w[24] = J),
         (w[25] = z),
         (w[26] = N),
@@ -514,8 +514,8 @@ function Et(ao) {
           showCursor: !0,
         })
       : b
-        ? e(t, { children: i.mask ? i.mask.repeat(Math.min(te(b), 60)) : b })
-        : e(t, { dimColor: !0, children: i.placeholder ?? "" })),
+        ? e(Text, { children: i.mask ? i.mask.repeat(Math.min(getStringWidth(b), 60)) : b })
+        : e(Text, { dimColor: !0, children: i.placeholder ?? "" })),
       (w[28] = $t),
       (w[29] = i.mask),
       (w[30] = i.placeholder),
@@ -531,7 +531,7 @@ function Et(ao) {
   else I = w[39];
   let N;
   if (w[40] !== J || w[41] !== z || w[42] !== I)
-    ((N = r(o, { children: [z, J, I] })),
+    ((N = r(Box, { children: [z, J, I] })),
       (w[40] = J),
       (w[41] = z),
       (w[42] = I),

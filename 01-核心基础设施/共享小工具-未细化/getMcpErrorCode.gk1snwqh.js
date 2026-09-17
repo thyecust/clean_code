@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import "../../02-功能模块/MCP客户端/chunk-5wa92x7d.js";
+import "../../02-功能模块/MCP客户端/mcp-protocol-schemas.js";
 import { ErrorCode, ProtocolError } from "../../02-功能模块/MCP客户端/chunk-78r8f7dw.js";
 import "../../02-功能模块/认证-OAuth登录/pkce-challenge.js";
 var n = new Set([-32002, ErrorCode.InvalidParams]);

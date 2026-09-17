@@ -14,7 +14,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
@@ -109,7 +109,7 @@ function ChromeAutoEnableDialog(Co) {
   else M = n[11];
   let S;
   if (n[12] === MEMO_CACHE_SENTINEL)
-    ((S = e(t, {
+    ((S = e(Text, {
       children:
         "Claude will use your Chrome browser by default \u2014 navigating sites, filling forms, and capturing screenshots in your existing session.",
     })),
@@ -122,17 +122,17 @@ function ChromeAutoEnableDialog(Co) {
       : "Browser actions still go through Claude's regular permission prompts before they run.";
   let oo;
   if (n[13] === MEMO_CACHE_SENTINEL)
-    ((oo = e(t, { bold: !0, color: "permission", children: "/chrome" })),
+    ((oo = e(Text, { bold: !0, color: "permission", children: "/chrome" })),
       (n[13] = oo));
   else oo = n[13];
   let c;
   if (n[14] !== N)
-    ((c = r(o, {
+    ((c = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
         S,
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             N,

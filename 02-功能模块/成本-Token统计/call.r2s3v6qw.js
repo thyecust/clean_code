@@ -14,8 +14,8 @@ import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { getOverageBillingOverride, getOauthAccountInfo, getSubscriptionType, getRateLimitTier, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import {
   shouldShowUpgradeCommand,
@@ -32,17 +32,17 @@ import {
   getSessionLimitResetCopy,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { Zle, wee, xIe, orn, R4, Jx } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { canOfferQuotaAutoResume, isAutoResumeWaitingPhase, hasPendingAutoContinuation, armAutoResume, withAutoResumeRecheck, cancelAutoResume } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { fWe, QR, XIt, DB, LB } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
 import { shouldOfferLowPriority, trackLowPriorityOfferShown, enableLowPriorityMode, formatLowPriorityEnabledMessage, formatLowPriorityUnavailableMessage } from "../限流-重试/限流-重试.4mc5yc28.js";
-import { oM, G9e, oIe, sIe, q9e, nnn, z9e } from "../用量额度-限额/chunk-n4zff40p.js";
+import { getSessionLimitResetState, subscribeToSessionLimitResetChanges, isSessionLimitResetAvailable, formatSessionLimitSpentLine, logSessionLimitResetShown, retrySessionLimitResetOnDialog, requestSessionLimitReset } from "../用量额度-限额/session-limit-reset.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
-import "../认证-OAuth登录/chunk-9g86t9bp.js";
+import "../认证-OAuth登录/console-profile-auth.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
+import "../Bedrock-Vertex/bedrock-setup-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -52,14 +52,14 @@ import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
+import "../Bedrock-Vertex/vertex-setup-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import "../../01-核心基础设施/设置-配置/managed-settings-approval-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
-import "../Bridge-RemoteControl/chunk-3b6ct3yp.js";
+import "../Bridge-RemoteControl/login-flow.js";
 import { startExtraUsageFlow } from "../../01-核心基础设施/共享小工具-未细化/extra-usage-flow.js";
 import { callUpgradeFromSurface } from "../../01-核心基础设施/共享小工具-未细化/upgrade-flow.js";
 import "../权限系统/permission-dialog.js";
@@ -407,22 +407,22 @@ function Ge(bn) {
     Xt = !J;
   let _t;
   if (b[46] !== se || b[47] !== be)
-    ((_t = e(o, {
+    ((_t = e(Box, {
       flexDirection: "column",
       children: se.map((gt, Pn) => {
         let Ri = Pn === be;
         return r(
-          o,
+          Box,
           {
             justifyContent: "space-between",
             gap: 2,
             children: [
-              r(t, {
+              r(Text, {
                 color: Ri ? "suggestion" : void 0,
                 children: [Ri ? figures.pointer : " ", " ", gt.label],
               }),
               gt.hint
-                ? e(t, {
+                ? e(Text, {
                     dimColor: !0,
                     wrap: "truncate-end",
                     children: gt.hint,
@@ -443,7 +443,7 @@ function Ge(bn) {
     ((yt = J
       ? e(SpinnerMessageLine, { message: "Updating spend limit\u2026" })
       : lt
-        ? e(o, { children: e(t, { color: "error", children: lt }) })
+        ? e(Box, { children: e(Text, { color: "error", children: lt }) })
         : null),
       (b[49] = lt),
       (b[50] = J),
@@ -519,21 +519,21 @@ function zt(co) {
   let { label: Kt } = Ui,
     Oe = LB().phase,
     Si;
-  if (l[5] !== Oe) ((Si = wee(Oe)), (l[5] = Oe), (l[6] = Si));
+  if (l[5] !== Oe) ((Si = isAutoResumeWaitingPhase(Oe)), (l[5] = Oe), (l[6] = Si));
   else Si = l[6];
   let Ft = Si,
     ji;
   if (l[7] !== n) ((ji = shouldOfferLowPriority(n)), (l[7] = n), (l[8] = ji));
   else ji = l[8];
   let Re = ji,
-    vt = At(G9e, oM, oM).phase,
+    vt = At(subscribeToSessionLimitResetChanges, getSessionLimitResetState, getSessionLimitResetState).phase,
     ki;
-  if (l[9] !== n) ((ki = oIe(n)), (l[9] = n), (l[10] = ki));
+  if (l[9] !== n) ((ki = isSessionLimitResetAvailable(n)), (l[9] = n), (l[10] = ki));
   else ki = l[10];
   let X = ki,
     Ni;
   if (l[11] !== n || l[12] !== X)
-    ((Ni = X ? void 0 : sIe(n)), (l[11] = n), (l[12] = X), (l[13] = Ni));
+    ((Ni = X ? void 0 : formatSessionLimitSpentLine(n)), (l[11] = n), (l[12] = X), (l[13] = Ni));
   else Ni = l[13];
   let xe = Ni,
     [yo, bo] = d(!1),
@@ -642,7 +642,7 @@ function zt(co) {
             label: "Don\u2019t continue automatically",
             value: "cancel-auto-resume",
           }
-        : Zle(n)
+        : canOfferQuotaAutoResume(n)
           ? { label: Kt, value: "auto-resume" }
           : void 0),
         (l[28] = Kt),
@@ -710,7 +710,7 @@ function zt(co) {
   let R, Ei;
   if (l[51] !== n || l[52] !== X)
     ((R = () => {
-      if (X) q9e(n, "dialog");
+      if (X) logSessionLimitResetShown(n, "dialog");
     }),
       (Ei = [X, n]),
       (l[51] = n),
@@ -727,7 +727,7 @@ function zt(co) {
       if (Qi.current || vt !== "failed") {
         return;
       }
-      ((Qi.current = !0), nnn(n, g.credentials));
+      ((Qi.current = !0), retrySessionLimitResetOnDialog(n, g.credentials));
     }),
       (Fi = [vt, n, g.credentials]),
       (l[55] = n),
@@ -748,7 +748,7 @@ function zt(co) {
     De = function De() {
       if (
         (logEvent("tengu_rate_limit_options_menu_select_auto_resume", {}),
-        !orn(n, Date.now(), "dialog", $t))
+        !armAutoResume(n, Date.now(), "dialog", $t))
       ) {
         Ve();
         return;
@@ -781,7 +781,7 @@ function zt(co) {
       ((M = function Se() {
         (logEvent("tengu_rate_limit_options_menu_select_juniper_tide", {}),
           bo(!0),
-          z9e("dialog", g.credentials)
+          requestSessionLimitReset("dialog", g.credentials)
             .then((Oo) => {
               h(Oo.text);
             })
@@ -797,7 +797,7 @@ function zt(co) {
     let ae;
     if (l[76] !== h)
       ((ae = function Ne() {
-        (Jx("dialog"),
+        (cancelAutoResume("dialog"),
           h(
             "Automatic continue cancelled. Your session will wait for you instead; /rate-limit-options can arm it again.",
           ));
@@ -817,7 +817,7 @@ function zt(co) {
     Pe = Yi;
     ke = function ke() {
       if (
-        (logEvent("tengu_rate_limit_options_menu_cancel", {}), xIe() || Oe === "stale")
+        (logEvent("tengu_rate_limit_options_menu_cancel", {}), hasPendingAutoContinuation() || Oe === "stale")
       ) {
         Ne();
         return;
@@ -897,7 +897,7 @@ function zt(co) {
         onCancel: Hi,
         color: "suggestion",
         hideInputGuide: !0,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children:
             "Resetting your session limit\u2026 this usually takes a few seconds",
@@ -909,7 +909,7 @@ function zt(co) {
   }
   if (Lt) {
     let M;
-    if (l[89] !== h) ((M = R4(h)), (l[89] = h), (l[90] = M));
+    if (l[89] !== h) ((M = withAutoResumeRecheck(h)), (l[89] = h), (l[90] = M));
     else M = l[90];
     let ae;
     if (l[91] !== g || l[92] !== Lt || l[93] !== M)

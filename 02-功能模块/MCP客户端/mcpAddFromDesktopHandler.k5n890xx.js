@@ -13,7 +13,7 @@ import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { B1, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { redactDeep, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { shouldSendMcpServerTelemetry, getGlobalConfig, getCurrentProjectConfig, deleteCurrentProjectConfigFields } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -25,7 +25,7 @@ import { McpServerConfigSchema, formatServerDisplayName } from "../../01-核心�
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getLocalSettingsValidationErrors, getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
-import { o, t, J0 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, render } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import {
   mapWithConcurrency,
   gracefulShutdown,
@@ -47,7 +47,7 @@ import {
   doesEnterpriseMcpConfigExist,
   isMcpServerDisabled,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
+import { buildCliCommand } from "../插件系统/plugin-system-core.js";
 import { isRestrictedToPluginOnly } from "../Skills技能/chunk-sapykxw7.js";
 import { listMcpToolsRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -76,7 +76,7 @@ F();
 import { cwd as ct } from "process";
 F();
 function ot(Wt) {
-  n(`Failed to read existing MCP configs for Desktop import: ${l(Wt)}`, {
+  logForDebugging(`Failed to read existing MCP configs for Desktop import: ${l(Wt)}`, {
     level: "error",
   });
 }
@@ -226,7 +226,7 @@ ${getThemeColor("error", re)(`Could not import ${qt}: ${Gt}`)}
   if (T[28] !== q.length)
     ((fe =
       q.length > 0 &&
-      e(t, {
+      e(Text, {
         color: "warning",
         children:
           "Note: Some servers already exist with the same name. If selected, they will be imported with a numbered suffix.",
@@ -236,7 +236,7 @@ ${getThemeColor("error", re)(`Could not import ${qt}: ${Gt}`)}
   else fe = T[29];
   let et;
   if (T[30] === MEMO_CACHE_SENTINEL)
-    ((et = e(t, { children: "Please select the servers you want to import:" })),
+    ((et = e(Text, { children: "Please select the servers you want to import:" })),
       (T[30] = et));
   else et = T[30];
   let me, ge;
@@ -284,9 +284,9 @@ ${getThemeColor("error", re)(`Could not import ${qt}: ${Gt}`)}
   else ve = T[46];
   let tt;
   if (T[47] === MEMO_CACHE_SENTINEL)
-    ((tt = e(o, {
+    ((tt = e(Box, {
       paddingX: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         italic: !0,
         children: r(DotSeparatedList, {
@@ -445,7 +445,7 @@ async function mcpRemoveHandler(h, s, v, a) {
           (await Z().clearServerTokensFromLocalStorage(s, f),
             await Z().clearMcpClientConfig(s, f));
         } catch (M) {
-          n(`mcp remove: secure-storage cleanup for "${s}" failed: ${l(M)}`, {
+          logForDebugging(`mcp remove: secure-storage cleanup for "${s}" failed: ${l(M)}`, {
             level: "warn",
           });
         }
@@ -503,7 +503,7 @@ async function mcpRemoveHandler(h, s, v, a) {
 `);
           }));
         let c = b
-          .map((w) => Aa("mcp remove", s, `-s ${w}`))
+          .map((w) => buildCliCommand("mcp remove", s, `-s ${w}`))
           .filter((w) => w !== null);
         if (c.length > 0)
           (process.stderr.write(`
@@ -530,11 +530,11 @@ Specify a scope with -s to remove from a specific one.
   let k = v.scope ? s : `"${s}"`;
   await renderAndWaitForExit(
     h,
-    r(o, {
+    r(Box, {
       flexDirection: "column",
       children: [
-        r(t, { children: ["Removed MCP server ", k, " from ", i, " config"] }),
-        r(t, { children: ["File modified: ", formatMcpScopeLocation(i)] }),
+        r(Text, { children: ["Removed MCP server ", k, " from ", i, " config"] }),
+        r(Text, { children: ["File modified: ", formatMcpScopeLocation(i)] }),
       ],
     }),
   );
@@ -558,9 +558,9 @@ function Be(h) {
         v[a] = y;
         continue;
       }
-      let i = B1(y);
+      let i = redactDeep(y);
       v[a] = "url" in i ? redactManagedMcpConfig(i, y.scope) : i;
-    } else v[a] = B1(f);
+    } else v[a] = redactDeep(f);
   return v;
 }
 function Ne({ name: h, server: s, status: v, issue: a }) {
@@ -584,7 +584,7 @@ function He(Vr) {
   if (Fe[0] !== Te) {
     let Kr = Te.map(Ne).filter(dt);
     Ce = RenderOnceAndExit;
-    we = t;
+    we = Text;
     be = Kr.join(`
 `);
     ((Fe[0] = Te), (Fe[1] = we), (Fe[2] = Ce), (Fe[3] = be));
@@ -614,10 +614,10 @@ async function mcpListHandler(h, s, v) {
   if (Object.keys(a).length === 0) {
     (await renderAndWaitForExit(
       h,
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         children: [
-          e(t, {
+          e(Text, {
             children:
               "No MCP servers configured. Use `claude mcp add` to add a server.",
           }),
@@ -648,7 +648,7 @@ async function mcpListHandler(h, s, v) {
     );
   (h.render(
     e(Dn, {
-      fallback: r(t, {
+      fallback: r(Text, {
         children: [
           "Checking MCP server health\u2026",
           `
@@ -656,7 +656,7 @@ async function mcpListHandler(h, s, v) {
 `,
         ],
       }),
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         children: [e(He, { promise: i }), m],
       }),
@@ -734,7 +734,7 @@ async function mcpGetHandler(h, s, v, a) {
     );
   let j =
       i.scope === "local" || i.scope === "project" || i.scope === "user"
-        ? Aa("mcp remove", s, `-s ${i.scope}`)
+        ? buildCliCommand("mcp remove", s, `-s ${i.scope}`)
         : null,
     b = null;
   if (j) b = `To remove this server, run: ${j}`;
@@ -752,7 +752,7 @@ async function mcpGetHandler(h, s, v, a) {
   (await logFeatureOkAsync("cli_mcp_get"),
     await renderAndWaitForExit(
       h,
-      e(t, {
+      e(Text, {
         children: C.join(`
 `),
       }),
@@ -765,7 +765,7 @@ async function mcpAddJsonHandler(h, s, v, a, f) {
     m = normalizeMcpScope(a.scope);
     let i = xt(v, !1);
     if (i === null)
-      n("mcp add-json: user-provided JSON was empty, invalid, or null", {
+      logForDebugging("mcp add-json: user-provided JSON was empty, invalid, or null", {
         level: "error",
       });
     let M =
@@ -815,7 +815,7 @@ async function mcpAddJsonHandler(h, s, v, a, f) {
   (await logFeatureOkAsync("cli_mcp_add_json"),
     await renderAndWaitForExit(
       h,
-      r(t, {
+      r(Text, {
         children: ["Added ", y, " MCP server ", s, " to ", m, " config"],
       }),
     ));
@@ -840,7 +840,7 @@ async function mcpAddFromDesktopHandler(h, s) {
         )
       );
     await logFeatureOkAsync("cli_mcp_add_from_desktop");
-    let { unmount: y } = await J0(
+    let { unmount: y } = await render(
       e(AppRoot, {
         session: B(),
         storageV5: s,
@@ -960,7 +960,7 @@ async function mcpResetChoicesHandler(h, s) {
       };
     }
   } catch (y) {
-    (n(
+    (logForDebugging(
       `mcp reset-project-choices: post-reset disclosure scan failed: ${l(y)}`,
       { level: "warn" },
     ),
@@ -968,16 +968,16 @@ async function mcpResetChoicesHandler(h, s) {
   }
   (h.render(
     e(RenderOnceAndExit, {
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         children: [
-          e(t, {
+          e(Text, {
             children:
               "Project-scoped (.mcp.json) server approvals and rejections stored for this project have been reset.",
           }),
           m &&
             m.autoApprovedServers.length > 0 &&
-            e(t, {
+            e(Text, {
               children: Oe(
                 m.autoApprovedServers,
                 "is still approved by other settings and will connect automatically without prompting.",
@@ -986,7 +986,7 @@ async function mcpResetChoicesHandler(h, s) {
             }),
           m &&
             m.stillRejectedServers.length > 0 &&
-            e(t, {
+            e(Text, {
               children: Oe(
                 m.stillRejectedServers,
                 "remains rejected by other settings and will not prompt.",
@@ -996,11 +996,11 @@ async function mcpResetChoicesHandler(h, s) {
           m &&
             m.pendingCount > 0 &&
             (m.gatingErrors > 0
-              ? e(t, {
+              ? e(Text, {
                   children:
                     "Settings errors are currently blocking the approval prompt \u2014 run `claude doctor` to list them, fix them, then restart Claude Code to be prompted.",
                 })
-              : e(t, {
+              : e(Text, {
                   children:
                     "You will be prompted for approval next time you start Claude Code.",
                 })),

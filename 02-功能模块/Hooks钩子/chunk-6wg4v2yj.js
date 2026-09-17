@@ -14,13 +14,13 @@ import { sleep, fullJitterBackoffMs } from "../../01-核心基础设施/共享�
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { j, MA, d8, mp } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { WZ, R$n } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
+import { getCloudPluginsConsentPath, createCloudPluginsConsentPin } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import { runWithCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getGlobalClaudeFile, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { HOOK_EVENT_NAMES, SETTINGS_SOURCE_ORDER, PROJECT_SCOPED_SETTINGS_SOURCE_SET, parseSettingsFileUncached } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   resolveHookCommandScript,
@@ -92,12 +92,12 @@ import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Comma
 import { getSettingsFilePathForSource, getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isProjectScopeTrustAccepted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isViolinWoodEnabledCached, isViolinAmatiEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { getPreferredShellToolName } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { untrustedDeviceHint } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { primeUnattendedServingConsent } from "../AutoMode-自动模式/unattended-serving-consent.js";
-import { p2n, m2n } from "../远程工具执行/chunk-66axrkvh.js";
-import { xC, moe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
+import { parseRemoteToolCallRequest, parsePlumbingCallRequest } from "../远程工具执行/remote-tool-protocol.js";
+import { peekPreSettingsEnvSnapshot, getAppliedGlobalConfigEnv } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 import { kS } from "../Bridge-RemoteControl/chunk-x379yyxb.js";
 import { NOT_HELD_STATE } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
 import { findTemplateByDigest, getHookTemplateById } from "./hook-template-catalog.js";
@@ -123,7 +123,7 @@ function Ke() {
 }
 function Je() {
   return {
-    consentPin: R$n(),
+    consentPin: createCloudPluginsConsentPin(),
     generations: Ke(),
     pointedToCommand: { shown: !1 },
     setAsideSessions: new Set(),
@@ -146,7 +146,7 @@ function re(e) {
     t = d.find((r) => !r.startsWith("/"));
   if (t !== void 0)
     return (
-      n(
+      logForDebugging(
         `[deviceHooks] reach: a root that is not an absolute path (${JSON.stringify(t)}) \u2014 everything on this machine counts as in the cloud session's reach`,
         { level: "warn" },
       ),
@@ -274,7 +274,7 @@ function Re(e) {
     C = async () => {
       let D = o.addedDirectories().flatMap((M) => {
         try {
-          return [ot(M, e.launchDir)];
+          return [resolvePath(M, e.launchDir)];
         } catch {
           return [];
         }
@@ -330,7 +330,7 @@ function Re(e) {
         }),
         D)
       )
-        n(
+        logForDebugging(
           "cloud session reach: a base root did not resolve (or sync state could not be read); every hook is treated as in reach for this answer",
           { level: "warn" },
         );
@@ -358,7 +358,7 @@ function en(e) {
       let r = parseSettingsFileUncached(t, o === "flagSettings" ? (MA() ?? d8()) : void 0);
       if (r.errors.some((k) => (k.severity ?? "fatal") === "fatal"))
         return (
-          n(
+          logForDebugging(
             `cloud session reach: the ${o} settings file could not be read or parsed at attach; its write grants are unknown, so every hook counts as in the session's reach`,
             { level: "warn" },
           ),
@@ -483,7 +483,7 @@ var dn = 4,
   De = 2000,
   Pe = 1048576;
 function ln(e) {
-  if (e.passthrough.length === 0 || b(He(e)).length <= Pe)
+  if (e.passthrough.length === 0 || jsonStringify(He(e)).length <= Pe)
     return { body: e, trimmed: !1 };
   return { body: { ...e, passthrough: [] }, trimmed: !0 };
 }
@@ -529,7 +529,7 @@ function Ie(e) {
       if (x && !M)
         ((M = !0),
           logFeatureSad("remote_tools_client_announce", "passthrough_over_frame"),
-          n(
+          logForDebugging(
             `[remoteToolsAnnounce] the announce with this machine's ${U.passthrough.length} MCP tools is larger than the worker reads (${Pe} chars); announcing without them \u2014 they stay on the device bridge`,
             { level: "warn" },
           ));
@@ -550,7 +550,7 @@ function Ie(e) {
             ? { kind: "retry", reason: Gae }
             : V;
       switch (
-        (n(
+        (logForDebugging(
           `[remoteToolsAnnounce] ${N}: ${ne.kind}${"reason" in ne ? ` (${cn(ne.reason)})` : ""}`,
         ),
         e.onOutcome?.(ne, N),
@@ -681,14 +681,14 @@ function Me({ serving: e, manager: o, observer: d }) {
 }
 async function pn(e, o, d, t) {
   let r = (D) => {
-      (n(
+      (logForDebugging(
         `[servedChannel] ${e.subtype} ${kS(e.requestId)} not answered here: ${D}`,
       ),
         d()?.releaseServedChannelRequest(e.requestId));
     },
     k = o();
   if (k === null) return r("nothing serving");
-  let R = e.subtype === "remote_tool_call" ? p2n(e.request) : void 0,
+  let R = e.subtype === "remote_tool_call" ? parseRemoteToolCallRequest(e.request) : void 0,
     _ =
       t !== void 0 && R !== void 0 && R.instance_id === k.instanceId
         ? { observer: t, leg: R }
@@ -703,7 +703,7 @@ async function pn(e, o, d, t) {
   if (C === void 0) return r("not this client's to answer");
   if (e.signal.aborted) return;
   if (d()?.respondToServedChannelRequest(e.requestId, C) !== !0)
-    n(
+    logForDebugging(
       `[servedChannel] ${e.subtype} ${kS(e.requestId)} answered after it was withdrawn \u2014 result dropped`,
     );
 }
@@ -725,7 +725,7 @@ async function mn(e, o, d) {
     case "remote_tool_call":
       return d === void 0 ? void 0 : o.serveSessionToolCall(d, t);
     case "remote_plumbing_call": {
-      let r = m2n(e.request);
+      let r = parsePlumbingCallRequest(e.request);
       return r === void 0 ? void 0 : o.servePlumbingCall(r, t);
     }
     case "remote_tools_probe":
@@ -856,7 +856,7 @@ function Rst(e) {
         (x === "reconnected" && C !== void 0) ||
         (x === "attached" && (C !== void 0 || H !== void 0))
       ) {
-        n(
+        logForDebugging(
           `[servedChannel] ${x}: nothing to announce \u2014 worker epoch ${C ?? H} already has (or is being told) this machine's tools`,
         );
         return;
@@ -939,7 +939,7 @@ function Rst(e) {
   if (
     ((B =
       e.onRevoked?.((x) => {
-        (n(
+        (logForDebugging(
           `[servedChannel] serving revoked on this machine (${x}) \u2014 closing the channel`,
         ),
           N(),
@@ -1041,7 +1041,7 @@ var ue = 128,
 function me(e, o, d) {
   let t =
     o.type === "command"
-      ? `${o.shell ?? d}\x00${o.command}\x00${b(o.args ?? null)}`
+      ? `${o.shell ?? d}\x00${o.command}\x00${jsonStringify(o.args ?? null)}`
       : o.url;
   return `${e.event}\x00${e.matcher ?? ""}\x00${o.type}\x00${t}\x00${o.if ?? ""}`;
 }
@@ -1780,7 +1780,7 @@ function Ln(e, o = Date.now()) {
 }
 function P6e(e) {
   return (
-    (e.legacyConfigFile ??= jn(getGlobalClaudeFile(), resolveLegacyEnvPin(e, moe()))),
+    (e.legacyConfigFile ??= jn(getGlobalClaudeFile(), resolveLegacyEnvPin(e, getAppliedGlobalConfigEnv()))),
     Ln(e.legacyConfigFile),
     e.legacyConfigFile
   );
@@ -1877,7 +1877,7 @@ function Be({
 }) {
   let C = () => null,
     D = createHookStagingArea(getStagingFileSystemAccess(), () => [...(C()?.cloudWritableRoots ?? [e]), ...getAllWriteRoots(e)]),
-    M = Et(() => D.dispose()),
+    M = registerCleanup(() => D.dispose()),
     H = e;
   te(e).then(
     (p) => {
@@ -1892,7 +1892,7 @@ function Be({
       let p = subprocessEnv();
       return mergeChildProcessEnv({
         attached: O,
-        beforeSettings: xC(),
+        beforeSettings: peekPreSettingsEnvSnapshot(),
         ownEnv: oIt(A, P6e(o)),
         childrenSee: (S) => Object.hasOwn(p, S),
       });
@@ -1939,7 +1939,7 @@ function Be({
           waited_ms: p.waitedMs,
         });
       },
-      debug: (p) => n(p),
+      debug: (p) => logForDebugging(p),
       logError: logError,
       extraWritableRoots: () => getAllWriteRoots(e),
       hostEnv: F,
@@ -1959,7 +1959,7 @@ function Be({
     });
   return (
     (C = E.state),
-    n("[deviceHooks] device hook session created for this attach"),
+    logForDebugging("[deviceHooks] device hook session created for this attach"),
     E
   );
 }
@@ -1992,7 +1992,7 @@ function ze({
     let w = subprocessEnv();
     return mergeChildProcessEnv({
       attached: A,
-      beforeSettings: xC(),
+      beforeSettings: peekPreSettingsEnvSnapshot(),
       ownEnv: oIt(O, P6e(o)),
       childrenSee: (E) => Object.hasOwn(w, E),
     });
@@ -2175,7 +2175,7 @@ function Ast(e) {
   let o = {
       realpath: zn,
       repoRootOf: findGitRootUncached,
-      consentPath: WZ,
+      consentPath: getCloudPluginsConsentPath,
       configHome: getClaudeConfigDir,
       ...e.deps,
     },
@@ -2437,14 +2437,14 @@ function xst({
         () => {
           (D({ kind: "push", postedMode: o, outcome: "taken" }),
             logFeatureOk("remote_create_mode_push"),
-            n(
+            logForDebugging(
               `[remote] The session took its create's ${o} permission mode as a live request`,
             ));
         },
         (F) => {
           let w = classifyRemoteControlError(F);
           if (
-            (n(
+            (logForDebugging(
               `[remote] The create's ${o} permission mode push was not taken (${w}): ${formatSingleLineText(l(F), { maxCodeUnits: 200 })}`,
             ),
             w !== "server_error")
@@ -2462,7 +2462,7 @@ function xst({
           let E = H("default", "converge");
           (E.then(({ response: p }) =>
             p?.catch((S) => {
-              n(
+              logForDebugging(
                 `[remote] The default mode sent after that refusal was not taken either: ${formatSingleLineText(l(S), { maxCodeUnits: 200 })}`,
               );
             }),

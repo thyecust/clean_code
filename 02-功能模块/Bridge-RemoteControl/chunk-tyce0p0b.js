@@ -15,11 +15,11 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { getFeatureValue_CACHED_MAY_BE_STALE, checkGate_CACHED_OR_BLOCKING } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
-import { eVt, mrr } from "./chunk-5ne99rq3.js";
+import { DEFAULT_ATTESTATION_FILTER_POLICY, parseAttestationFilterPolicy } from "./chunk-5ne99rq3.js";
 import { getPlatformDisplayName } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { hostname } from "os";
 var m = "tengu_sessions_elevated_auth_enforcement",
@@ -59,10 +59,10 @@ function formatUnreachableElevatedRefusal(e) {
   return `Nothing was sent: Remote Control session '${e}' is ${CLOUD_CANNOT_REACH_ELEVATED_HINT}.`;
 }
 function getAttestationFilterPolicy() {
-  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_attestation_enforce", !1)) return eVt;
-  if (!p()) return eVt;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_attestation_enforce", !1)) return DEFAULT_ATTESTATION_FILTER_POLICY;
+  if (!p()) return DEFAULT_ATTESTATION_FILTER_POLICY;
   let t = getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_attestation_enforce_config", {});
-  return mrr(t);
+  return parseAttestationFilterPolicy(t);
 }
 function readStoredTrustedDeviceToken() {
   let e = g.of(B().host);
@@ -108,7 +108,7 @@ async function recoverFromUntrustedDevice(e, t) {
   }
   if (!r || r === e) return;
   return (
-    n(
+    logForDebugging(
       "[trusted-device] Token changed after untrusted_device 403 (cache bust or lazy enrollment); caller will retry",
     ),
     r
@@ -127,7 +127,7 @@ async function enrollTrustedDeviceIfNeeded(e) {
   if (!p()) return;
   if ((clearTrustedDeviceTokenCache(), !(await isTrustedDeviceUnenrolled()))) return;
   if (isProactiveEnrollmentDisabled()) return;
-  (n(
+  (logForDebugging(
     "[trusted-device] Not enrolled, attempting lazy enrollment with OAuth token",
   ),
     await enrollTrustedDevice({ credentials: e }));
@@ -137,7 +137,7 @@ async function ensureTrustedDeviceTokenForBind(e) {
   if ((clearTrustedDeviceTokenCache(), await readStoredTrustedDeviceToken())) return !0;
   if (isProactiveEnrollmentDisabled()) return !1;
   return (
-    n("[trusted-device] Not enrolled, enrolling for a device-bound session"),
+    logForDebugging("[trusted-device] Not enrolled, enrolling for a device-bound session"),
     await enrollTrustedDevice({ trigger: "device_bind", credentials: e }),
     Boolean(await getTrustedDeviceToken())
   );
@@ -163,15 +163,15 @@ async function enrollTrustedDevice({ trigger: e = "proactive", credentials: t })
   if (!isFirstPartyProvider() || !r()) return;
   try {
     if (!(await checkGate_CACHED_OR_BLOCKING(m))) {
-      n(`[trusted-device] Gate ${m} is off, skipping enrollment`);
+      logForDebugging(`[trusted-device] Gate ${m} is off, skipping enrollment`);
       return;
     }
     if (isProactiveEnrollmentDisabled()) {
-      n(`[trusted-device] Proactive enrollment disabled via ${h}, skipping`);
+      logForDebugging(`[trusted-device] Proactive enrollment disabled via ${h}, skipping`);
       return;
     }
     if (process.env.CLAUDE_TRUSTED_DEVICE_TOKEN) {
-      n(
+      logForDebugging(
         "[trusted-device] CLAUDE_TRUSTED_DEVICE_TOKEN env var is set, skipping enrollment (env var takes precedence)",
       );
       return;
@@ -181,18 +181,18 @@ async function enrollTrustedDevice({ trigger: e = "proactive", credentials: t })
       E = _.isPolicyEnforced(c),
       w = e === "server_denied" || (e === "device_bind" && o());
     if (!(E || (w && _.isPolicyAllowed(c)))) {
-      n(`[trusted-device] Org has not enabled ${c}, skipping enrollment`);
+      logForDebugging(`[trusted-device] Org has not enabled ${c}, skipping enrollment`);
       return;
     }
     let d = { trigger: fromEnum(e), org_enforced: E };
     if (isEssentialTrafficOnly()) {
-      n("[trusted-device] Essential traffic only, skipping enrollment");
+      logForDebugging("[trusted-device] Essential traffic only, skipping enrollment");
       return;
     }
     await k({ credentials: t });
     let D = A()?.accessToken;
     if (!D) {
-      n("[trusted-device] No OAuth token, skipping enrollment");
+      logForDebugging("[trusted-device] No OAuth token, skipping enrollment");
       return;
     }
     let P = getOauthConfig().BASE_API_URL,
@@ -211,43 +211,43 @@ async function enrollTrustedDevice({ trigger: e = "proactive", credentials: t })
         },
       );
     } catch (i) {
-      (n(`[trusted-device] Enrollment request failed: ${l(i)}`),
+      (logForDebugging(`[trusted-device] Enrollment request failed: ${l(i)}`),
         logFeatureBad("bridge_trusted_device_enroll", "request_failed", d));
       return;
     }
     if (s.status !== 200 && s.status !== 201) {
-      (n(
-        `[trusted-device] Enrollment failed ${s.status}: ${b(s.data).slice(0, 200)}`,
+      (logForDebugging(
+        `[trusted-device] Enrollment failed ${s.status}: ${jsonStringify(s.data).slice(0, 200)}`,
       ),
         logFeatureBad("bridge_trusted_device_enroll", "http_error", d));
       return;
     }
     let v = s.data?.device_token;
     if (!v || typeof v !== "string") {
-      (n("[trusted-device] Enrollment response missing device_token field"),
+      (logForDebugging("[trusted-device] Enrollment response missing device_token field"),
         logFeatureBad("bridge_trusted_device_enroll", "missing_token", d));
       return;
     }
     try {
       let i = await getSecureStorage().mutate((S) => ({ ...S, trustedDeviceToken: v }));
       if (!i.success) {
-        (n(
+        (logForDebugging(
           `[trusted-device] Failed to persist token: ${i.warning ?? "unknown"}`,
         ),
           logFeatureBad("bridge_trusted_device_enroll", "storage_failed", d));
         return;
       }
       (clearTrustedDeviceTokenCache(),
-        n(
+        logForDebugging(
           `[trusted-device] Enrolled device_id=${s.data.device_id ?? "unknown"}`,
         ),
         logFeatureOk("bridge_trusted_device_enroll", d));
     } catch (i) {
-      (n(`[trusted-device] Storage write failed: ${l(i)}`),
+      (logForDebugging(`[trusted-device] Storage write failed: ${l(i)}`),
         logFeatureBad("bridge_trusted_device_enroll", "storage_failed", d));
     }
   } catch (_) {
-    (n(`[trusted-device] Enrollment error: ${l(_)}`),
+    (logForDebugging(`[trusted-device] Enrollment error: ${l(_)}`),
       logFeatureBad("bridge_trusted_device_enroll", "unexpected_error", { trigger: fromEnum(e) }));
   }
 }

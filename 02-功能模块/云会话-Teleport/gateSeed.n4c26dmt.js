@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 203 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
-import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { CCR_SESSION_ID_RE } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -30,8 +30,8 @@ import {
   Mst,
 } from "../Bridge-RemoteControl/chunk-x379yyxb.js";
 import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../远程工具执行/chunk-66axrkvh.js";
-import { w6e, mHe, VJt, kZ, jae } from "../../03-入口与运行时/Headless-SDK模式/chunk-ph7v431y.js";
+import "../远程工具执行/remote-tool-protocol.js";
+import { parseSdkInitFrame, parseActiveGoalState, parseRemoteAutocompactState, adaptSdkMessageFrame, extractRetractionSignal } from "../../03-入口与运行时/Headless-SDK模式/sdk-message-adapter.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
 import { createWriteStream } from "fs";
 import {
@@ -55,7 +55,7 @@ function z() {
   let e = getSessionRuntimeState();
   if (e.historySpoolDir === null)
     ((e.historySpoolDir = b(tmpdir(), `cc-history-prefetch-${process.pid}`)),
-      Et(() =>
+      registerCleanup(() =>
         e.historySpoolDir === null
           ? void 0
           : O(e.historySpoolDir, { recursive: !0, force: !0 }).catch(() => {}),
@@ -65,7 +65,7 @@ function z() {
 function B(e, t, s) {
   if (getAPIProvider() !== "firstParty") return;
   if (!CCR_SESSION_ID_RE.test(e)) {
-    n(`[historyPrefetch] ${e} fails CCR_SESSION_ID_RE \u2014 refusing`, {
+    logForDebugging(`[historyPrefetch] ${e} fails CCR_SESSION_ID_RE \u2014 refusing`, {
       level: "warn",
     });
     return;
@@ -97,7 +97,7 @@ function B(e, t, s) {
           }),
         f = await c(k);
       if (f.ok && f.status === 400)
-        (n(
+        (logForDebugging(
           `[historyPrefetch] ${e} limit=${k} rejected (400) \u2014 retrying at ${L6e}`,
         ),
           f.data.resume(),
@@ -105,21 +105,21 @@ function B(e, t, s) {
           (f = await c(L6e)));
       if (!f.ok)
         return (
-          n(
+          logForDebugging(
             `[historyPrefetch] ${e} gate=${f.reason} ${"detail" in f ? f.detail : ""}`,
           ),
           null
         );
       if (f.status !== 200)
         return (
-          n(`[historyPrefetch] ${e} HTTP ${f.status}`),
+          logForDebugging(`[historyPrefetch] ${e} HTTP ${f.status}`),
           f.data.resume(),
           null
         );
       return (await pipeline(f.data, createWriteStream(i, { mode: 384 })), i);
     })().catch(
       (c) => (
-        n(`[historyPrefetch] ${e} failed: ${l(c)}`),
+        logForDebugging(`[historyPrefetch] ${e} failed: ${l(c)}`),
         unlink(i).catch(() => {}),
         null
       ),
@@ -140,7 +140,7 @@ function B(e, t, s) {
       c === null && a?.settled === !0 && r.get(e) === d)
     )
       r.set(e, { ...a, settledAt: Date.now() });
-    n(
+    logForDebugging(
       `[historyPrefetch] ${e} ${c ? `\u2192 ${c}` : "null"} +${(performance.now() - p).toFixed(0)}ms`,
     );
   });
@@ -150,18 +150,18 @@ async function L(e, t) {
   try {
     s = (await x(t)).size;
   } catch (r) {
-    if (!W(r)) n(`[historyPrefetch] stat ${t} failed: ${l(r)}`);
+    if (!W(r)) logForDebugging(`[historyPrefetch] stat ${t} failed: ${l(r)}`);
     return { skip: "gone" };
   }
   if (s > C)
     return (
-      n(`[historyPrefetch] ${e} spool ${s}B exceeds cap \u2014 skipping`),
+      logForDebugging(`[historyPrefetch] ${e} spool ${s}B exceeds cap \u2014 skipping`),
       { skip: "oversize" }
     );
   try {
     return { body: await readFile(t, "utf8") };
   } catch (r) {
-    if (!W(r)) n(`[historyPrefetch] read ${t} failed: ${l(r)}`);
+    if (!W(r)) logForDebugging(`[historyPrefetch] read ${t} failed: ${l(r)}`);
     return { skip: "gone" };
   }
 }
@@ -176,7 +176,7 @@ async function consumePrefetchedHistory(e, t) {
   if ((await unlink(a).catch(() => {}), "skip" in u)) return null;
   let i = u.body,
     p = Y(i);
-  if (p === null) return (n(`[historyPrefetch] ${e} parse failed`), null);
+  if (p === null) return (logForDebugging(`[historyPrefetch] ${e} parse failed`), null);
   if (!p.hasMore) return v(p);
   let d = await V_e(e, t).catch(() => null);
   if (d === null) return v(p);
@@ -195,7 +195,7 @@ async function consumePrefetchedHistory(e, t) {
   }
   let m = c !== null && M(S);
   return (
-    n(
+    logForDebugging(
       `[historyPrefetch] ${e} walked ${f} pages, ${S.length} events, complete=${c === null || m}`,
     ),
     v({ events: S, firstId: c, hasMore: c !== null && !m })
@@ -241,21 +241,21 @@ function v(e) {
     try {
       if (!xZ(o.payload)) continue;
       if (o.source === "worker") {
-        let h = jae(o.payload);
+        let h = extractRetractionSignal(o.payload);
         if (h) for (let P of h.uuids) a.add(P);
         if (o.payload.type === "active_goal") {
-          d = mHe(o.payload.value);
+          d = parseActiveGoalState(o.payload.value);
           continue;
         }
         if (o.payload.type === "autocompact_state") {
-          S = VJt(o.payload.value);
+          S = parseRemoteAutocompactState(o.payload.value);
           continue;
         }
         if (
           ((c = parsePermissionModeFromSystemMessage(o.payload) ?? c),
           o.payload.type === "system" && o.payload.subtype === "init")
         ) {
-          let { skills: P, plugins: A } = w6e(o.payload);
+          let { skills: P, plugins: A } = parseSdkInitFrame(o.payload);
           if (P !== void 0 || A !== void 0)
             f = { skills: P ?? [], plugins: A ?? [] };
         }
@@ -280,10 +280,10 @@ function v(e) {
         s.push(...m);
         continue;
       }
-      let _ = kZ(o.payload, { convertUserTextMessages: !0 });
+      let _ = adaptSdkMessageFrame(o.payload, { convertUserTextMessages: !0 });
       if (_.type === "message") s.push(_.message);
     } catch (m) {
-      n(
+      logForDebugging(
         `[historyPrefetch] Skipping ${o.payload.type} frame seq=${o.sequenceNum ?? "?"} \u2014 conversion threw: ${l(m)}`,
         { level: "error" },
       );
@@ -361,7 +361,7 @@ function I(e) {
   let t = w;
   if (t === null) return !1;
   if (e.type === "system" && e.subtype === "init") {
-    let s = w6e(e);
+    let s = parseSdkInitFrame(e);
     return t.hasReplyChannelInit({ mcp_servers: s.mcpServers, tools: s.tools });
   }
   return (
@@ -402,7 +402,7 @@ function gateSeed(e) {
 }
 function partialSeedNotice(e) {
   return createSystemInfoMessage(
-    `Showing recent messages \xB7 full history at ${wa(e, void 0, { from: "cli", m: "0" })}`,
+    `Showing recent messages \xB7 full history at ${buildClaudeAiSessionUrl(e, void 0, { from: "cli", m: "0" })}`,
     "notice",
   );
 }

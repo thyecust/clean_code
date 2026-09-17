@@ -12,19 +12,19 @@
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { isSignalAborted, isDirSyncStreamingEnabled, resolveRealPath, getDirectoryDirSyncConsent, createStoppedEngine, createSyncedFileLaneClient, createPathWithholdClassifier, CLAUDE_REF_PREFIX, MAX_LISTED_COMMITS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
+import { openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
 import "../文件同步-Sync/sync-journal.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { Jpt, Zpt, mte, Ybe } from "./chunk-zbxyj64j.js";
-import { I9, Cze, Qan } from "../Git-Worktree/chunk-v967hawf.js";
+import { createDirChangeFeed, createGitSessionRecord, readGitSessionRecord, writeGitSessionRecord } from "./chunk-zbxyj64j.js";
+import { DEFAULT_MAX_BUNDLE_BYTES, formatBundleHeader, validateBundleForRefs } from "../Git-Worktree/dir-sync-git-repository.js";
 import "../文件同步-Sync/chunk-tqwnv5vj.js";
 import { mFt, gFt, hFt, _Ft, yFt } from "../云目录同步-Git/云目录同步-Git.tksek4c2.js";
-import { qbe, Fan, iOe, wze, Tze } from "../文件同步-Sync/chunk-eg4wmaq4.js";
+import { segmentScopeSkip, createNestedRepositoryCheck, platformIgnoresCase, ignoreMatcherFrom, readRootIgnoreLines } from "../文件同步-Sync/sync-folder-scan.js";
 import {
   z4,
   fFt,
@@ -57,11 +57,11 @@ var M = new Set();
 function W({ folder: e }) {
   return {
     async ignoredHere(t) {
-      let s = await Tze(e);
+      let s = await readRootIgnoreLines(e);
       if (s.kind === "unusable")
         return { ignored: M, unjudged: new Set(t), unjudgeable: M };
-      let d = wze(s.lines, { ignoreCase: iOe(e) }),
-        h = Fan(e),
+      let d = ignoreMatcherFrom(s.lines, { ignoreCase: platformIgnoresCase(e) }),
+        h = createNestedRepositoryCheck(e),
         m = new Set(),
         y = new Set();
       for (let g of t)
@@ -106,22 +106,22 @@ function N({
             ? "too_large"
             : null;
       } catch (o) {
-        return (n(`folder sync: listing ${r} failed: ${String(o)}`), null);
+        return (logForDebugging(`folder sync: listing ${r} failed: ${String(o)}`), null);
       }
     },
     R = async (r, o) => {
       try {
         return await o();
       } catch (c) {
-        return (n(`folder sync: store read failed: ${String(c)}`), r);
+        return (logForDebugging(`folder sync: store read failed: ${String(c)}`), r);
       }
     },
     p = async ({ content: r, targets: o, heldBases: c, heldRefs: b }) => {
       let F = m();
       if (isSignalAborted(h)) return { ok: !1, reason: "aborted" };
-      if (r.length > I9)
+      if (r.length > DEFAULT_MAX_BUNDLE_BYTES)
         return { ok: !1, reason: "too_large", sizeBytes: r.length };
-      let E = Qan(r, { refNames: [...o.keys()] });
+      let E = validateBundleForRefs(r, { refNames: [...o.keys()] });
       if (!E.ok) return E;
       let { header: k } = E;
       if (k.refs.length === 0) return { ok: !1, reason: "unexpected_refs" };
@@ -243,7 +243,7 @@ function N({
         return await p(r);
       } catch (o) {
         return (
-          n(`folder sync: receive failed: ${String(o)}`),
+          logForDebugging(`folder sync: receive failed: ${String(o)}`),
           { ok: !1, reason: "git_error", stage: "threw", detail: String(o) }
         );
       }
@@ -408,7 +408,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
       try {
         return await f();
       } catch (r) {
-        return (n(`folder sync: store read failed: ${String(r)}`), p);
+        return (logForDebugging(`folder sync: store read failed: ${String(r)}`), p);
       }
     },
     g = {
@@ -423,7 +423,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
             if (!z4(r, m) || !(await e.store.hasHere(r))) continue;
             let o = await e.commitParents(r);
             if (o === "unknown") {
-              n(
+              logForDebugging(
                 `folder sync: commit ${r} is unreadable in the local store; treated as not held`,
               );
               continue;
@@ -452,7 +452,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
           return await R(p);
         } catch (f) {
           return (
-            n(`folder sync: bundle failed: ${String(f)}`),
+            logForDebugging(`folder sync: bundle failed: ${String(f)}`),
             isSignalAborted(d)
               ? { ok: !1, reason: "aborted" }
               : A("range", `the local store could not be read: ${String(f)}`)
@@ -525,7 +525,7 @@ function G({ repo: e, refs: t, onPass: s, signal: d, now: h = Date.now }) {
       }
       let v = await Upt(_, m),
         T = Buffer.concat([
-          Cze({
+          formatBundleHeader({
             version: m === "sha1" ? 2 : 3,
             capabilities: m === "sha1" ? [] : [`object-format=${m}`],
             prerequisites: [...f],
@@ -587,7 +587,7 @@ var re = "writer.lock",
     "This folder is not syncing: its files could not be recorded in the local sync store as the session opened. Start a new cloud session from this folder to try again.";
 function le(e) {
   let t = e.split("/");
-  return t.every((s, d) => qbe(s, d < t.length - 1) === null);
+  return t.every((s, d) => segmentScopeSkip(s, d < t.length - 1) === null);
 }
 async function openFolderGitSync({
   sessionId: e,
@@ -621,13 +621,13 @@ async function openFolderGitSync({
       ...(d !== void 0 && { seedObjects: d.seedObjects }),
       ...(h !== void 0 && { signal: h }),
       lastSentCommit: async () => {
-        let a = await mte(c.path, o, c.v5);
+        let a = await readGitSessionRecord(c.path, o, c.v5);
         return a.kind === "git"
           ? (a.record.sent[0]?.worktreeCommit ?? null)
           : null;
       },
       ackedOf: async () => {
-        let a = await mte(c.path, o, c.v5);
+        let a = await readGitSessionRecord(c.path, o, c.v5);
         return a.kind === "git" ? a.record.acked : [];
       },
       onPassStats: (a) => {
@@ -635,7 +635,7 @@ async function openFolderGitSync({
       },
     });
   if (_.kind !== "ok") {
-    n(`folder sync: ${_.kind} for session ${o} (${_.detail})`);
+    logForDebugging(`folder sync: ${_.kind} for session ${o} (${_.detail})`);
     let a = _.kind;
     return (
       logEvent("tengu_dir_sync_folder_store_lost", { reason: fromEnum(a), at_create: b }),
@@ -651,9 +651,9 @@ async function openFolderGitSync({
     if (d !== void 0) {
       if (h?.aborted === !0) throw new Ve();
       if (
-        (await Ybe(
+        (await writeGitSessionRecord(
           c.path,
-          Zpt({
+          createGitSessionRecord({
             sessionId: o,
             armedAtMs: d.armedAtMs,
             start: s,
@@ -709,7 +709,7 @@ async function openFolderGitSync({
           mFt({ recordPath: c.path, lockPath: q(E, re), onLost: w }),
         onPeerSilent: () => {},
         ...(isDirSyncStreamingEnabled() && {
-          changeFeed: () => Jpt({ root: t }),
+          changeFeed: () => createDirChangeFeed({ root: t }),
           streamingScope: async (w) => w.some(le),
         }),
         lines: { peerQuiet: ie, peerSilent: ae },
@@ -804,8 +804,8 @@ async function ue({
           maxBytes: r,
           withheldOf: p ?? (() => createPathWithholdClassifier(e, { realRoot: t })),
           anchor: () =>
-            SO(uk(), { gitRoot: e, realRoot: t }).catch(
-              (a) => (n(`folder sync: tree anchor not opened (${l(a)})`), null),
+            openTreeAnchor(createFileSystemHost(), { gitRoot: e, realRoot: t }).catch(
+              (a) => (logForDebugging(`folder sync: tree anchor not opened (${l(a)})`), null),
             ),
           onPass: (a) => f({ kind: "tree", ...a }),
         }),
@@ -867,7 +867,7 @@ async function pe(e, t) {
         return `object ${s.id} refused`;
     return (await e.flush(), null);
   } catch (s) {
-    return (n(`folder sync: seed objects not stored (${l(s)})`), l(s));
+    return (logForDebugging(`folder sync: seed objects not stored (${l(s)})`), l(s));
   }
 }
 var me = {

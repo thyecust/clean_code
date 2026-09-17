@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 246 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useInterval } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -49,7 +49,7 @@ function CloudCreateChecklist(st) {
     M;
   if (n[0] === MEMO_CACHE_SENTINEL) ((M = () => mt(Date.now())), (n[0] = M));
   else M = n[0];
-  ko(M, 1000);
+  useInterval(M, 1000);
   let O;
   if (n[1] !== a) ((O = getChecklistPhase(a)), (n[1] = a), (n[2] = O));
   else O = n[2];
@@ -74,7 +74,7 @@ function CloudCreateChecklist(st) {
   else g = n[9];
   let k;
   if (n[10] !== g)
-    ((k = e(t, { bold: !0, children: g })), (n[10] = g), (n[11] = k));
+    ((k = e(Text, { bold: !0, children: g })), (n[10] = g), (n[11] = k));
   else k = n[11];
   let h;
   if (n[12] !== D || n[13] !== N || n[14] !== a)
@@ -93,13 +93,13 @@ function CloudCreateChecklist(st) {
   if (n[18] !== y || n[19] !== s)
     ((S =
       !s &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children: r(DotSeparatedList, {
             children: [
-              e(t, {
+              e(Text, {
                 children: y
                   ? "Cancelling\u2026"
                   : "Typing is paused until the prompt opens",
@@ -120,7 +120,7 @@ function CloudCreateChecklist(st) {
   else S = n[20];
   let J;
   if (n[21] !== v || n[22] !== S || n[23] !== k || n[24] !== h)
-    ((J = r(o, {
+    ((J = r(Box, {
       flexDirection: "column",
       marginTop: 1,
       children: [k, h, v, S],

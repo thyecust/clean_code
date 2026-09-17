@@ -14,7 +14,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { j, B, K, sc, ke, g8, _8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, Yhe, Xg, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, isCleanupDrainStarted, resolveSymlinkAncestrySync, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
@@ -48,14 +48,14 @@ import {
   resolve,
   sep as U,
 } from "path";
-var Wh = "ExitPlanMode",
-  Jc = "ExitPlanMode";
-function mJe() {
+var EXIT_PLAN_MODE_TOOL_NAME_ALIAS = "ExitPlanMode",
+  EXIT_PLAN_MODE_TOOL_NAME = "ExitPlanMode";
+function getCloudEnvironmentKind() {
   let t = a.CLAUDE_CODE_ENVIRONMENT_KIND;
   if (t === "byoc" || t === "anthropic_cloud") return t;
   return null;
 }
-function AEt(t, e) {
+function isManagedRemoteSession(t, e) {
   return Boolean(t) && (!e || e === "anthropic_cloud");
 }
 var le = 10,
@@ -230,18 +230,18 @@ class X {
         if (i.stopped) o.value.unsubscribe();
         else
           ((i.subscription = o.value),
-            n(
+            logForDebugging(
               `plans: watching ${e} through the storage interface (changes trail by at most ${o.value.observationLagMs} ms)`,
             ));
         return;
       }
-      s = We(o.error);
+      s = describeStorageError(o.error);
     } catch (o) {
       s = String(o);
     }
     if (i.stopped) return;
     if (
-      (n(
+      (logForDebugging(
         `plans: watching ${e} through the storage interface failed (${s}); serving its last read and in-process writes`,
       ),
       this.planFileCache?.has(e) !== !0)
@@ -255,8 +255,8 @@ class X {
         queueMicrotask(() => void this.refreshPlanFile(t, e));
         return;
       }
-      if (((e.subscription = void 0), Yhe())) return;
-      n(`plans: the watch on ${t} ended: ${We(r.error)}`);
+      if (((e.subscription = void 0), isCleanupDrainStarted())) return;
+      logForDebugging(`plans: the watch on ${t} ended: ${describeStorageError(r.error)}`);
       let o = this.planFileBackend;
       if (o !== null && !e.resubscribed)
         ((e.resubscribed = !0), this.subscribePlanFile(o, t, e));
@@ -312,9 +312,9 @@ class X {
         let r = i.value.items[0];
         return r?.found ? Buffer.from(r.value).toString("utf-8") : null;
       }
-      n(`plans: v5 read of ${e} failed: ${i.error.code}`);
+      logForDebugging(`plans: v5 read of ${e} failed: ${i.error.code}`);
     } catch (i) {
-      n(`plans: v5 read of ${e} threw: ${i}`);
+      logForDebugging(`plans: v5 read of ${e} threw: ${i}`);
     }
     return;
   }
@@ -367,7 +367,7 @@ class X {
       }
       if (F(c).some((f) => i.has(f))) {
         if (u.consumed) {
-          (n(
+          (logForDebugging(
             `Plan slug collision for '${c}' in ${t} detected after the plan path was already in use \u2014 keeping the slug (the pre-existing plan file may be overwritten).`,
             { level: "warn" },
           ),
@@ -477,19 +477,19 @@ async function fe(t) {
         return e;
       case "error":
         return (
-          n(`primePlanSlugCollisions: v5 list failed: ${i.error.code}`),
+          logForDebugging(`primePlanSlugCollisions: v5 list failed: ${i.error.code}`),
           null
         );
       case "capped":
         return (
-          n(
+          logForDebugging(
             `primePlanSlugCollisions: v5 list exceeded ${DEFAULT_MAX_PAGES} pages; leaving the listing unprimed`,
           ),
           null
         );
     }
   } catch (i) {
-    return (n(`primePlanSlugCollisions: v5 list threw: ${i}`), null);
+    return (logForDebugging(`primePlanSlugCollisions: v5 list threw: ${i}`), null);
   }
 }
 async function de(t, e) {
@@ -590,7 +590,7 @@ class z {
       let i = getCwd(),
         r = resolve(i, e);
       if (pe(r, i)) return r;
-      n(`plansDirectory must be within project root: ${e}`, { level: "error" });
+      logForDebugging(`plansDirectory must be within project root: ${e}`, { level: "error" });
     }
     return P();
   }
@@ -613,7 +613,7 @@ var G = new j(() => new z()),
   );
 function pe(t, e) {
   if (t !== e && !t.startsWith(e + U)) return !1;
-  if (Xg(ae(), t) !== void 0) return !1;
+  if (resolveSymlinkAncestrySync(getFsSurface(), t) !== void 0) return !1;
   let i = RS(e);
   if (i === null) return !1;
   let r = t;
@@ -630,7 +630,7 @@ async function m(t) {
   try {
     await getFileStorage().mkdir(e);
   } catch (i) {
-    n(`Failed to create plans directory ${e}: ${i}`, { level: "error" });
+    logForDebugging(`Failed to create plans directory ${e}: ${i}`, { level: "error" });
   }
   return e;
 }
@@ -670,7 +670,7 @@ async function persistPlanEdit(t, e, i) {
   }
 }
 function H(t, e) {
-  (notePlanFileForgotten(t), n(`Failed to persist plan to ${t}: ${e}`, { level: "error" }));
+  (notePlanFileForgotten(t), logForDebugging(`Failed to persist plan to ${t}: ${e}`, { level: "error" }));
 }
 function getPlanFilePath(t) {
   let e = K(),
@@ -684,7 +684,7 @@ function getPlanWorkshopDocPath() {
 }
 async function D(t, e, i) {
   let r = await t.read([p(e)]);
-  if (!r.ok) return (n(`${i}: v5 read failed: ${r.error.code}`), null);
+  if (!r.ok) return (logForDebugging(`${i}: v5 read failed: ${r.error.code}`), null);
   let s = r.value.items[0];
   return s.found ? Buffer.from(s.value).toString("utf-8") : null;
 }
@@ -692,11 +692,11 @@ async function getPlanWorkshopDoc(t) {
   if (t && g()) return D(t, `${getPlanSlug(K())}.workshop`, "getPlanWorkshopDoc");
   let e = getPlanWorkshopDocPath();
   try {
-    return await ae().readFile(e, { encoding: "utf-8" });
+    return await getFsSurface().readFile(e, { encoding: "utf-8" });
   } catch (i) {
     if (W(i)) return null;
     if (Rt(i))
-      return (n(`getPlanWorkshopDoc: read failed for ${e}: ${i}`), null);
+      return (logForDebugging(`getPlanWorkshopDoc: read failed for ${e}: ${i}`), null);
     return (logError(i), null);
   }
 }
@@ -707,7 +707,7 @@ function planWorkshopDocExists() {
     if (e !== void 0) return e !== null;
   }
   try {
-    return ae().existsSync(getPlanWorkshopDocPath());
+    return getFsSurface().existsSync(getPlanWorkshopDocPath());
   } catch {
     return !1;
   }
@@ -770,10 +770,10 @@ async function readPlanFileFresh(t) {
 }
 function J(t) {
   try {
-    return ae().readFileSync(t, { encoding: "utf-8" });
+    return getFsSurface().readFileSync(t, { encoding: "utf-8" });
   } catch (e) {
     if (W(e)) return null;
-    if (Rt(e)) return (n(`getPlan: read failed for ${t}: ${e}`), null);
+    if (Rt(e)) return (logForDebugging(`getPlan: read failed for ${t}: ${e}`), null);
     return (logError(e), null);
   }
 }
@@ -782,7 +782,7 @@ function Y(t) {
   let e = t.messages.find((i) => i.slug)?.slug;
   if (e === void 0) return;
   if (!he.test(e)) {
-    n(
+    logForDebugging(
       `getSlugFromLog: rejecting malformed transcript slug (${e.length} chars)`,
     );
     return;
@@ -790,7 +790,7 @@ function Y(t) {
   return e;
 }
 async function V(t, e, i) {
-  if (mJe() === null) return;
+  if (getCloudEnvironmentKind() === null) return;
   if (i && g()) return ge(i, t, e).catch(logError);
   let r = d(getPlansDirectory(), `${e}.workshop.md`);
   try {
@@ -798,7 +798,7 @@ async function V(t, e, i) {
     return;
   } catch (o) {
     if (!W(o)) {
-      if (Rt(o)) n(`recoverWorkshopDocForResume: read failed for ${r}: ${o}`);
+      if (Rt(o)) logForDebugging(`recoverWorkshopDocForResume: read failed for ${r}: ${o}`);
       else logError(o);
       return;
     }
@@ -808,13 +808,13 @@ async function V(t, e, i) {
   try {
     (await m(),
       await getFileStorage().write(r, s.content),
-      n(
+      logForDebugging(
         `Workshop doc recovered from file snapshot, ${s.content.length} chars`,
         { level: "info" },
       ));
   } catch (o) {
     if (Rt(o)) {
-      n(`Workshop doc recovery write failed for ${r}: ${o}`);
+      logForDebugging(`Workshop doc recovery write failed for ${r}: ${o}`);
       return;
     }
     logError(o);
@@ -828,7 +828,7 @@ async function ge(t, e, i) {
     o = planFiles().observePlanFile(r),
     l = await t.read([s]);
   if (!l.ok) {
-    n(`recoverWorkshopDocForResume: v5 read failed for ${i}: ${l.error.code}`);
+    logForDebugging(`recoverWorkshopDocForResume: v5 read failed for ${i}: ${l.error.code}`);
     return;
   }
   let u = l.value.items[0];
@@ -849,11 +849,11 @@ async function ge(t, e, i) {
     await m(t);
     let S = await t.write(s, c.content, w);
     if (!S.ok) {
-      n(`Workshop doc recovery write failed for ${i}: ${S.error.code}`);
+      logForDebugging(`Workshop doc recovery write failed for ${i}: ${S.error.code}`);
       return;
     }
     ((k = !0),
-      n(
+      logForDebugging(
         `Workshop doc recovered from file snapshot, ${c.content.length} chars`,
         { level: "info" },
       ));
@@ -874,33 +874,33 @@ async function copyPlanForResume(t, e, i) {
   } catch (l) {
     if (!W(l)) {
       if (Rt(l))
-        return (n(`copyPlanForResume: read failed for ${o}: ${l}`), !1);
+        return (logForDebugging(`copyPlanForResume: read failed for ${o}: ${l}`), !1);
       return (logError(l), !1);
     }
-    if (mJe() === null) return !1;
-    n(`Plan file missing during resume: ${o}. Attempting recovery.`);
+    if (getCloudEnvironmentKind() === null) return !1;
+    logForDebugging(`Plan file missing during resume: ${o}. Attempting recovery.`);
     let u = E(t.messages, "plan"),
       c = null;
     if (u && b(u.content))
       ((c = u.content),
-        n(`Plan recovered from file snapshot, ${c.length} chars`, {
+        logForDebugging(`Plan recovered from file snapshot, ${c.length} chars`, {
           level: "info",
         }));
     else if (((c = ee(t)), c))
-      n(`Plan recovered from message history, ${c.length} chars`, {
+      logForDebugging(`Plan recovered from message history, ${c.length} chars`, {
         level: "info",
       });
     if (c)
       try {
         return (await m(), await getFileStorage().write(o, c), !0);
       } catch (f) {
-        if (Rt(f)) return (n(`Plan recovery write failed for ${o}: ${f}`), !1);
+        if (Rt(f)) return (logForDebugging(`Plan recovery write failed for ${o}: ${f}`), !1);
         return (logError(f), !1);
       } finally {
         notePlanFileForgotten(o);
       }
     return (
-      n(
+      logForDebugging(
         "Plan file recovery failed: no file snapshot or plan content found in message history",
       ),
       !1
@@ -918,7 +918,7 @@ async function me(t, e) {
   let s = r.observePlanFile(i),
     o = await t.read([p(`${e}.workshop`)]);
   if (!o.ok) {
-    n(`copyPlanForResume: v5 read failed for ${e}.workshop: ${o.error.code}`);
+    logForDebugging(`copyPlanForResume: v5 read failed for ${e}.workshop: ${o.error.code}`);
     return;
   }
   let l = o.value.items[0];
@@ -935,7 +935,7 @@ async function Fe(t, e, i) {
     o = await t.read([p(i)]);
   if (!o.ok)
     return (
-      n(`copyPlanForResume: v5 read failed for ${i}: ${o.error.code}`),
+      logForDebugging(`copyPlanForResume: v5 read failed for ${i}: ${o.error.code}`),
       !1
     );
   let l = o.value.items[0];
@@ -949,17 +949,17 @@ async function Fe(t, e, i) {
     l?.found)
   )
     return !0;
-  if (mJe() === null) return !1;
-  n(`Plan file missing during resume: ${i}. Attempting recovery.`);
+  if (getCloudEnvironmentKind() === null) return !1;
+  logForDebugging(`Plan file missing during resume: ${i}. Attempting recovery.`);
   let u = E(e.messages, "plan"),
     c = null;
   if (u && b(u.content))
     ((c = u.content),
-      n(`Plan recovered from file snapshot, ${c.length} chars`, {
+      logForDebugging(`Plan recovered from file snapshot, ${c.length} chars`, {
         level: "info",
       }));
   else if (((c = ee(e)), c))
-    n(`Plan recovered from message history, ${c.length} chars`, {
+    logForDebugging(`Plan recovered from message history, ${c.length} chars`, {
       level: "info",
     });
   if (c) {
@@ -969,7 +969,7 @@ async function Fe(t, e, i) {
       await m(t);
       let S = await t.write(p(i), c, w);
       if (!S.ok)
-        return (n(`Plan recovery write failed for ${i}: ${S.error.code}`), !1);
+        return (logForDebugging(`Plan recovery write failed for ${i}: ${S.error.code}`), !1);
       return ((k = !0), !0);
     } finally {
       if (k) notePlanFileWritten(f, c);
@@ -977,7 +977,7 @@ async function Fe(t, e, i) {
     }
   }
   return (
-    n(
+    logForDebugging(
       "Plan file recovery failed: no file snapshot or plan content found in message history",
     ),
     !1
@@ -997,7 +997,7 @@ async function copyPlanForFork(t, e, i) {
     await getFileStorage().copy(d(s, `${r}.workshop.md`), d(s, `${l}.workshop.md`));
   } catch (c) {
     if (!W(c))
-      if (Rt(c)) n(`copyPlanForFork: workshop sibling copy failed: ${c}`);
+      if (Rt(c)) logForDebugging(`copyPlanForFork: workshop sibling copy failed: ${c}`);
       else logError(c);
   } finally {
     notePlanFileForgotten(d(s, `${l}.workshop.md`));
@@ -1006,7 +1006,7 @@ async function copyPlanForFork(t, e, i) {
     return (await getFileStorage().copy(o, u), !0);
   } catch (c) {
     if (W(c)) return !1;
-    if (Rt(c)) return (n(`copyPlanForFork: copy failed for ${o}: ${c}`), !1);
+    if (Rt(c)) return (logForDebugging(`copyPlanForFork: copy failed for ${o}: ${c}`), !1);
     return (logError(c), !1);
   } finally {
     notePlanFileForgotten(u);
@@ -1019,12 +1019,12 @@ async function Pe(t, e, i) {
     await m(t);
     let u = await t.read([p(`${e}.workshop`)]);
     if (!u.ok)
-      n(`copyPlanForFork: v5 workshop sibling read failed: ${u.error.code}`);
+      logForDebugging(`copyPlanForFork: v5 workshop sibling read failed: ${u.error.code}`);
     else if (u.value.items[0].found) {
       let c = u.value.items[0].value,
         f = await t.write(p(`${i}.workshop`), c, await N(`${e}.workshop`));
       if (!f.ok)
-        n(`copyPlanForFork: v5 workshop sibling copy failed: ${f.error.code}`);
+        logForDebugging(`copyPlanForFork: v5 workshop sibling copy failed: ${f.error.code}`);
       else s = Buffer.from(c).toString("utf-8");
     }
   } finally {
@@ -1037,7 +1037,7 @@ async function Pe(t, e, i) {
     let u = await t.read([p(e)]);
     if (!u.ok)
       return (
-        n(`copyPlanForFork: v5 read failed for ${e}: ${u.error.code}`),
+        logForDebugging(`copyPlanForFork: v5 read failed for ${e}: ${u.error.code}`),
         !1
       );
     if (!u.value.items[0].found) return !1;
@@ -1045,7 +1045,7 @@ async function Pe(t, e, i) {
       f = await t.write(p(i), c, await N(e));
     if (!f.ok)
       return (
-        n(`copyPlanForFork: v5 write failed for ${i}: ${f.error.code}`),
+        logForDebugging(`copyPlanForFork: v5 write failed for ${i}: ${f.error.code}`),
         !1
       );
     return ((l = Buffer.from(c).toString("utf-8")), !0);
@@ -1066,7 +1066,7 @@ function ee(t) {
             typeof s === "object" &&
             s !== null &&
             s.type === "tool_use" &&
-            s.name === Jc
+            s.name === EXIT_PLAN_MODE_TOOL_NAME
           ) {
             let o = s.input,
               l = typeof o === "object" && o !== null ? o.plan : void 0;
@@ -1118,15 +1118,15 @@ function b(t) {
   return typeof t === "string" && t.length > 0 && t.length <= PLAN_SNAPSHOT_MAX_CHARS;
 }
 export {
-  Wh,
-  Jc,
+  EXIT_PLAN_MODE_TOOL_NAME_ALIAS,
+  EXIT_PLAN_MODE_TOOL_NAME,
   DEFAULT_STAGE_FILE_ROOT,
   DEFAULT_OUTPUTS_ROOT,
   STAGE_TMP_PREFIX,
   getStageFileRoot,
   getOutputsRoot,
-  mJe,
-  AEt,
+  getCloudEnvironmentKind,
+  isManagedRemoteSession,
   planFiles,
   notePlanFileWritten,
   notePlanFileForgotten,

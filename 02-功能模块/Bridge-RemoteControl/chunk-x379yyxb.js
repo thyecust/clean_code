@@ -10,7 +10,7 @@
 import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ve, dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { COMMAND_MESSAGE_TAG, LOCAL_COMMAND_CAVEAT_TAG, TICK_TAG, TASK_NOTIFICATION_TAG, TEAMMATE_MESSAGE_TAG, CHANNEL_SOURCE_OPEN_TAG, FORK_BOILERPLATE_TAG, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
@@ -36,7 +36,7 @@ import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心�
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { getTrustedDeviceToken, recoverFromUntrustedDevice } from "./chunk-tyce0p0b.js";
 import { classifyElevatedAuthError } from "./code-session-api.js";
-import { GDt } from "../远程工具执行/chunk-66axrkvh.js";
+import { MAX_RESULT_BYTES } from "../远程工具执行/remote-tool-protocol.js";
 import { SSEParser } from "../../01-核心基础设施/共享小工具-未细化/sse-parser.js";
 import { drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
 import { s, T, O, se, v, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -157,7 +157,7 @@ function We(e) {
   }
   if (!q(t)) return ((e.content = String(t)), !0);
   try {
-    return ((e.content = b(t)), !0);
+    return ((e.content = jsonStringify(t)), !0);
   } catch {
     return !1;
   }
@@ -174,7 +174,7 @@ function Ge(e) {
   return o.generic.safeParse(e).success;
 }
 function E(e, t, o) {
-  n(
+  logForDebugging(
     `[wireFrameShape] ${e} frame ${typeof t === "string" ? t : "(no uuid)"}: ${o}`,
     { level: "error" },
   );
@@ -398,7 +398,7 @@ function EFn(e) {
       ve(e)
     )
       return (
-        n(
+        logForDebugging(
           "[wireFrameShape] can_use_tool request dropped \u2014 tool_name/tool_use_id not strings, input not an object, or nested too deep",
           { level: "error" },
         ),
@@ -434,14 +434,14 @@ function EFn(e) {
         (delete e.matched_ask_rule, t.push("matched_ask_rule"));
     }
     if (t.length > 0)
-      n(
+      logForDebugging(
         `[wireFrameShape] can_use_tool request ${e.tool_use_id}: removed malformed field(s): ${t.join(", ")}`,
         { level: "error" },
       );
     return !0;
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `[wireFrameShape] can_use_tool request dropped \u2014 conformance threw: ${l(t)}`,
         { level: "error" },
       ),
@@ -707,7 +707,7 @@ class de {
   }
   async connect() {
     if (this.state === "connecting" || this.state === "connected") {
-      n("[SessionsV2Client] Already connecting/connected");
+      logForDebugging("[SessionsV2Client] Already connecting/connected");
       return;
     }
     ((this.state = "connecting"), (this.connectedSince = Date.now()));
@@ -723,7 +723,7 @@ class de {
       o = await this.authHeaders();
     } catch (a) {
       if (this.abortController !== t) return;
-      (n(
+      (logForDebugging(
         `[SessionsV2Client] Could not build the stream's credentials: ${l(a)}`,
         { level: "error" },
       ),
@@ -735,7 +735,7 @@ class de {
     if (t.signal.aborted || this.abortController !== t) return;
     if (this.lastSequenceNum > 0)
       r["Last-Event-ID"] = String(this.lastSequenceNum);
-    (n(
+    (logForDebugging(
       `[SessionsV2Client] Connecting to ${e.href} (from_sequence_num=${this.lastSequenceNum})`,
     ),
       this.readStream(e, r, t));
@@ -753,7 +753,7 @@ class de {
         } catch (r) {
           return (
             t(),
-            n(
+            logForDebugging(
               `[SessionsV2Client] trusted-device token unavailable, sending no td-v1 header: ${l(r)}`,
             ),
             ""
@@ -776,7 +776,7 @@ class de {
           let d = (await isViolinWoodEnabled()) ? await recoverFromUntrustedDevice(a || void 0) : void 0;
           if (d) return d;
         } catch (d) {
-          n(`[SessionsV2Client] trusted-device re-enrollment failed: ${l(d)}`);
+          logForDebugging(`[SessionsV2Client] trusted-device re-enrollment failed: ${l(d)}`);
         }
         let p = await this.loadTrustedDeviceToken();
         if (!p) o();
@@ -784,7 +784,7 @@ class de {
       })().catch(
         (a) => (
           o(),
-          n(`[SessionsV2Client] device proof renewal failed: ${l(a)}`),
+          logForDebugging(`[SessionsV2Client] device proof renewal failed: ${l(a)}`),
           ""
         ),
       );
@@ -798,7 +798,7 @@ class de {
       return ((this.trustedDeviceToken = Promise.resolve(t)), !0);
     } catch (t) {
       return (
-        n(`[SessionsV2Client] trusted-device re-enrollment failed: ${l(t)}`),
+        logForDebugging(`[SessionsV2Client] trusted-device re-enrollment failed: ${l(t)}`),
         !1
       );
     }
@@ -807,7 +807,7 @@ class de {
     let a = await fetch(e, {
       method: "POST",
       headers: o,
-      body: b(t),
+      body: jsonStringify(t),
       signal: AbortSignal.timeout(r),
       ...getProxyFetchOptions({ url: e }),
     });
@@ -844,7 +844,7 @@ class de {
       });
     } catch (_) {
       if ((clearTimeout(p), a)) {
-        (n(`[SessionsV2Client] Connect timed out after ${be}ms, reconnecting`, {
+        (logForDebugging(`[SessionsV2Client] Connect timed out after ${be}ms, reconnecting`, {
           level: "error",
         }),
           logFeatureSad("remote_connect", "remote_connect_timeout"),
@@ -852,14 +852,14 @@ class de {
         return;
       }
       if (o.signal.aborted) return;
-      (n(`[SessionsV2Client] Connect error: ${l(_)}`, { level: "error" }),
+      (logForDebugging(`[SessionsV2Client] Connect error: ${l(_)}`, { level: "error" }),
         logFeatureSad("remote_connect", "remote_connect_request_failed"),
         this.callbacks.onError?.(ge(_)),
         this.handleStreamEnd());
       return;
     }
     if (!r.ok || !r.body) {
-      n(`[SessionsV2Client] HTTP ${r.status} on SSE connect`, {
+      logForDebugging(`[SessionsV2Client] HTTP ${r.status} on SSE connect`, {
         level: "error",
       });
       let _;
@@ -867,7 +867,7 @@ class de {
       else await drainResponseBody(r);
       if ((clearTimeout(p), this.abortController !== o)) return;
       if (r.status === 401 && this.onAuth401) {
-        (n("[SessionsV2Client] 401 on SSE connect \u2014 refreshing"),
+        (logForDebugging("[SessionsV2Client] 401 on SSE connect \u2014 refreshing"),
           logFeatureBad("remote_connect", "remote_connect_auth_401"));
         let M = await this.onAuth401(this.getAccessToken());
         if (this.abortController !== o) return;
@@ -887,7 +887,7 @@ class de {
         );
         if (this.abortController !== o) return;
         if (M) {
-          (n(
+          (logForDebugging(
             "[SessionsV2Client] untrusted_device on SSE connect \u2014 re-enrolled, reconnecting",
           ),
             logFeatureSad("remote_connect", "remote_connect_untrusted_device"),
@@ -909,7 +909,7 @@ class de {
     let d = Date.parse(r.headers.get("date") ?? "");
     if (Number.isNaN(d))
       ((this.serviceClock = void 0),
-        n(
+        logForDebugging(
           "[SessionsV2Client] The stream answered without a Date header: frames on it cannot be dated against the service clock",
           { level: "warn" },
         ));
@@ -925,7 +925,7 @@ class de {
       (this.rediallingPastBudget = !1),
       this.resetLivenessTimer(),
       this.startDriftWatch(),
-      n("[SessionsV2Client] Connected"),
+      logForDebugging("[SessionsV2Client] Connected"),
       logFeatureOk("remote_connect"),
       this.callbacks.onConnected?.());
     let S = r.body.getReader(),
@@ -940,18 +940,18 @@ class de {
       }
     } catch (_) {
       if (o.signal.aborted) return;
-      (n(`[SessionsV2Client] Stream read error: ${l(_)}`, { level: "error" }),
+      (logForDebugging(`[SessionsV2Client] Stream read error: ${l(_)}`, { level: "error" }),
         logFeatureSad("remote_connect", "remote_connect_stream_error"));
     } finally {
       S.releaseLock();
     }
     if (!o.signal.aborted)
-      (n("[SessionsV2Client] Stream ended"), this.handleStreamEnd());
+      (logForDebugging("[SessionsV2Client] Stream ended"), this.handleStreamEnd());
   }
   handleFrame(e, t, o) {
     let r;
     try {
-      r = z(o);
+      r = jsonParse(o);
     } catch (a) {
       (logError(
         dt(
@@ -968,7 +968,7 @@ class de {
           p = parseInt(t ?? String(a.sequence_num), 10);
         if (!isNaN(p) && p > this.lastSequenceNum) this.lastSequenceNum = p;
         if (!ae(a.payload)) {
-          n(
+          logForDebugging(
             `[SessionsV2Client] Dropping client_event with no payload.type (event_type=${a.event_type})`,
           );
           return;
@@ -976,7 +976,7 @@ class de {
         if (a.payload.type === "control_response") {
           let { response: d } = a.payload;
           if (!d || typeof d !== "object" || typeof d.request_id !== "string") {
-            n(
+            logForDebugging(
               `[SessionsV2Client] Dropping malformed control_response from source=${a.source}`,
               { level: "warn" },
             );
@@ -985,14 +985,14 @@ class de {
         }
         if (a.payload.type === "user") {
           if (a.source !== "worker" && qae(a.payload)) {
-            n(
+            logForDebugging(
               `[SessionsV2Client] Dropping worker-output-shaped user frame from source=${a.source} \u2014 only the worker produces tool results and execution output`,
               { level: "warn" },
             );
             return;
           }
           if (wHe(a.payload)) {
-            n(
+            logForDebugging(
               `[SessionsV2Client] Dropping user frame with malformed content from source=${a.source}`,
               { level: "warn" },
             );
@@ -1002,7 +1002,7 @@ class de {
         if (a.source !== "worker") {
           if (a.payload.type === "control_response") {
             if (this.issuedRequestIds.has(a.payload.response.request_id)) {
-              n(
+              logForDebugging(
                 `[SessionsV2Client] Dropping control_response for this client's request_id from source=${a.source} \u2014 only the worker may answer our RPCs`,
                 { level: "warn" },
               );
@@ -1012,7 +1012,7 @@ class de {
               a.payload.response.pending_user_dialog_requests ||
               a.payload.response.pending_permission_requests
             ) {
-              n(
+              logForDebugging(
                 `[SessionsV2Client] Stripping prompt-redelivery fields from control_response with source=${a.source}`,
               );
               let {
@@ -1040,14 +1040,14 @@ class de {
                 typeof d !== "string" ||
                 d !== this.ownRequestUuids.get(a.payload.request_id)
               ) {
-                n(
+                logForDebugging(
                   `[SessionsV2Client] A copy of own request ${N(a.payload.request_id)} from source=${N(a.source)} under another event uuid \u2014 ignored`,
                 );
                 return;
               }
               let S = ct(a.device_attestation_status);
               if (
-                (n(
+                (logForDebugging(
                   `[SessionsV2Client] Own request ${N(a.payload.request_id)} echoed from source=${N(a.source)}: device proof ${N(a.device_attestation_status)} (${S})`,
                 ),
                 S === "unverified")
@@ -1056,7 +1056,7 @@ class de {
               this.callbacks.onOwnRequestEchoed?.(a.payload.request_id, S);
               return;
             }
-            n(
+            logForDebugging(
               `[SessionsV2Client] Dropping ${a.payload.type} from source=${a.source}`,
             );
             return;
@@ -1080,13 +1080,13 @@ class de {
             return;
           }
           if (a.payload.type !== "stream_event") {
-            n(
+            logForDebugging(
               `[SessionsV2Client] Dropping ${a.payload.type} on ephemeral channel`,
             );
             return;
           }
           if (!re(a.payload.event)) {
-            n(
+            logForDebugging(
               "[SessionsV2Client] Dropping malformed stream_event on ephemeral channel",
               { level: "warn" },
             );
@@ -1097,7 +1097,7 @@ class de {
         return;
       }
       case "catch_up_truncated":
-        (n("[SessionsV2Client] catch_up_truncated \u2014 transcript gap"),
+        (logForDebugging("[SessionsV2Client] catch_up_truncated \u2014 transcript gap"),
           logFeatureSad("remote_connect", "remote_catch_up_truncated"),
           this.callbacks.onCatchUpTruncated?.());
         return;
@@ -1107,19 +1107,19 @@ class de {
           try {
             this.callbacks.onWorkerConnectionStatus?.(a);
           } catch (p) {
-            n(
+            logForDebugging(
               `[SessionsV2Client] worker connection status handler threw: ${l(p)}`,
               { level: "error" },
             );
           }
-        else n("[SessionsV2Client] Ignoring session_update frame");
+        else logForDebugging("[SessionsV2Client] Ignoring session_update frame");
         return;
       }
       case "delivery_update":
-        n(`[SessionsV2Client] Ignoring ${e} frame`);
+        logForDebugging(`[SessionsV2Client] Ignoring ${e} frame`);
         return;
       default:
-        n(`[SessionsV2Client] Unknown SSE event type '${e}'`, {
+        logForDebugging(`[SessionsV2Client] Unknown SSE event type '${e}'`, {
           level: "warn",
         });
         return;
@@ -1139,7 +1139,7 @@ class de {
     this.abortController = null;
     let e = this.reconnectAttempts >= K;
     if (e && !this.keepRedialling) {
-      (n(`[SessionsV2Client] Reconnect budget exhausted (${K}), closing`),
+      (logForDebugging(`[SessionsV2Client] Reconnect budget exhausted (${K}), closing`),
         logFeatureBad("remote_connect", "remote_connect_reconnect_exhausted"),
         (this.state = "closed"),
         (this.exhaustedBudget = !0),
@@ -1153,7 +1153,7 @@ class de {
     this.state = "idle";
     let t = e ? we : Math.min(st * 2 ** (this.reconnectAttempts - 1), we);
     if (
-      (n(
+      (logForDebugging(
         `[SessionsV2Client] Reconnecting in ${t}ms (attempt ${this.reconnectAttempts}/${this.keepRedialling ? "\u221E" : K}, from_sequence_num=${this.lastSequenceNum})`,
       ),
       !e)
@@ -1165,7 +1165,7 @@ class de {
   }
   onLivenessTimeout = () => {
     ((this.livenessTimer = null),
-      n("[SessionsV2Client] Liveness timeout, reconnecting", { level: "warn" }),
+      logForDebugging("[SessionsV2Client] Liveness timeout, reconnecting", { level: "warn" }),
       this.abortController?.abort(),
       (this.abortController = null),
       this.handleStreamEnd());
@@ -1187,7 +1187,7 @@ class de {
         if (
           ((this.lastDriftCheck = e), t > ke * 2 && this.state === "connected")
         )
-          (n(
+          (logForDebugging(
             `[SessionsV2Client] Wall-clock drift ${t}ms \u2014 reconnecting after suspend`,
           ),
             this.reconnect());
@@ -1219,7 +1219,7 @@ class de {
   async postEvent(e, t = {}) {
     if (this.state === "closed")
       return (
-        n("[SessionsV2Client] Cannot send: closed", { level: "warn" }),
+        logForDebugging("[SessionsV2Client] Cannot send: closed", { level: "warn" }),
         logFeatureBad("remote_send_event", "remote_send_event_closed"),
         { outcome: "failed", cause: "closed" }
       );
@@ -1231,7 +1231,7 @@ class de {
         d = await this.postEvents(o, a, p, t.timeoutMs);
       if (!d.ok && d.status === 401 && this.onAuth401) {
         if (
-          (n("[SessionsV2Client] 401 on POST \u2014 refreshing + retry"),
+          (logForDebugging("[SessionsV2Client] 401 on POST \u2014 refreshing + retry"),
           await this.onAuth401(this.getAccessToken()))
         )
           d = await this.postEvents(
@@ -1247,7 +1247,7 @@ class de {
         d.refusal === "untrusted_device" &&
         (await this.recoverTrustedDeviceToken(d.sentDeviceToken))
       )
-        (n(
+        (logForDebugging(
           "[SessionsV2Client] untrusted_device on POST \u2014 re-enrolled, retrying",
         ),
           (d = await this.postEvents(
@@ -1259,7 +1259,7 @@ class de {
           (S = !0));
       if (!d.ok) {
         if (
-          (n(
+          (logForDebugging(
             `[SessionsV2Client] POST /events returned ${d.status}${d.inactive ? " (session not active)" : ""}`,
             { level: "warn" },
           ),
@@ -1279,7 +1279,7 @@ class de {
       return { outcome: "accepted", sequence_num: d.sequence_num };
     } catch (r) {
       return (
-        n(`[SessionsV2Client] POST /events failed: ${l(r)}`, { level: "warn" }),
+        logForDebugging(`[SessionsV2Client] POST /events failed: ${l(r)}`, { level: "warn" }),
         logFeatureBad("remote_send_event", "remote_send_event_request_failed"),
         { outcome: "failed", cause: St(r) ? "timeout" : "network" }
       );
@@ -1287,7 +1287,7 @@ class de {
   }
   sendControlResponse(e, t = Y(), o = {}) {
     return (
-      n("[SessionsV2Client] Sending control_response"),
+      logForDebugging("[SessionsV2Client] Sending control_response"),
       this.trackSend(this.postEvent({ ...e, uuid: t }, o))
     );
   }
@@ -1297,14 +1297,14 @@ class de {
   postControlRequest(e, t) {
     if (this.state === "closed")
       return (
-        n("[SessionsV2Client] Cannot send control_request: closed", {
+        logForDebugging("[SessionsV2Client] Cannot send control_request: closed", {
           level: "warn",
         }),
         null
       );
     let o = Y();
     if ((this.issuedRequestIds.add(o), this.issuedRequestIds.size > Re)) {
-      n(
+      logForDebugging(
         "[SessionsV2Client] issuedRequestIds overflow \u2014 evicting oldest unanswered request_id",
         { level: "warn" },
       );
@@ -1314,7 +1314,7 @@ class de {
     }
     let r = { type: "control_request", request_id: o, request: e, uuid: Y() };
     (this.ownRequestUuids.set(o, r.uuid),
-      n(`[SessionsV2Client] Sending control_request: ${e.subtype}`));
+      logForDebugging(`[SessionsV2Client] Sending control_request: ${e.subtype}`));
     let a = this.trackSend(
       this.postEvent(r).then((p) => {
         if (
@@ -1329,7 +1329,7 @@ class de {
   }
   sendControlCancelRequest(e) {
     if (this.state === "closed") return;
-    (n(`[SessionsV2Client] Sending control_cancel_request: ${e}`),
+    (logForDebugging(`[SessionsV2Client] Sending control_cancel_request: ${e}`),
       this.sendEvent({
         type: "control_cancel_request",
         request_id: e,
@@ -1341,7 +1341,7 @@ class de {
   }
   close() {
     if (
-      (n("[SessionsV2Client] Closing"),
+      (logForDebugging("[SessionsV2Client] Closing"),
       (this.state = "closed"),
       (this.exhaustedBudget = !1),
       this.clearLivenessTimer(),
@@ -1353,7 +1353,7 @@ class de {
   }
   reconnect() {
     if (
-      (n("[SessionsV2Client] Force reconnect"),
+      (logForDebugging("[SessionsV2Client] Force reconnect"),
       (this.reconnectAttempts = 0),
       (this.exhaustedBudget = !1),
       this.clearLivenessTimer(),
@@ -1418,7 +1418,7 @@ async function Te(e) {
       let d = Math.min(p.length, ie - r);
       if ((o.set(p.subarray(0, d), r), (r += d), r >= ie)) break;
     }
-    return z(new TextDecoder().decode(o.subarray(0, r)));
+    return jsonParse(new TextDecoder().decode(o.subarray(0, r)));
   } catch {
     return;
   } finally {
@@ -1570,11 +1570,11 @@ class D6e {
       e.dirSync?.sync.messageSent(e.initialPromptUuid);
   }
   connect() {
-    n(`[RemoteSessionManager] Connecting to session ${this.config.sessionId}`);
+    logForDebugging(`[RemoteSessionManager] Connecting to session ${this.config.sessionId}`);
     let e = {
       onMessage: (t, o) => this.handleMessage(t, o),
       onConnected: () => {
-        (n("[RemoteSessionManager] Connected"),
+        (logForDebugging("[RemoteSessionManager] Connected"),
           this.config.dirSync?.sync.afterConnect());
         for (let t of this.undeliveredResponses.values())
           if (((t.failures = 0), t.giveUpOnSettle === "undelivered"))
@@ -1585,7 +1585,7 @@ class D6e {
       },
       onClose: (t) => {
         if (
-          (n("[RemoteSessionManager] Disconnected"), this.client?.isRevivable())
+          (logForDebugging("[RemoteSessionManager] Disconnected"), this.client?.isRevivable())
         )
           this.giveUpUndeliveredResponses();
         else this.dropUndeliveredResponses();
@@ -1593,7 +1593,7 @@ class D6e {
       },
       onReconnecting: () => {
         ((this.workerSeenThisConnection = !1),
-          n("[RemoteSessionManager] Reconnecting"),
+          logForDebugging("[RemoteSessionManager] Reconnecting"),
           this.callbacks.onReconnecting?.());
       },
       onOwnRequestEchoed: (t, o) => {
@@ -1604,7 +1604,7 @@ class D6e {
       },
       onWorkerConnectionStatus: (t) => {
         if (
-          (n(
+          (logForDebugging(
             `[RemoteSessionManager] The service reports the worker ${t === "connected" || t === "disconnected" ? t : "in an unknown state"}`,
           ),
           t === "connected")
@@ -1615,11 +1615,11 @@ class D6e {
             this.callbacks.onWorkerGone?.());
       },
       onCatchUpTruncated: () => {
-        (n("[RemoteSessionManager] Catch-up truncated"),
+        (logForDebugging("[RemoteSessionManager] Catch-up truncated"),
           this.callbacks.onCatchUpTruncated?.());
       },
       onError: (t) => {
-        (n(`[RemoteSessionManager] Stream error: ${t.message}`, {
+        (logForDebugging(`[RemoteSessionManager] Stream error: ${t.message}`, {
           level: "error",
         }),
           this.callbacks.onError?.(t));
@@ -1664,7 +1664,7 @@ class D6e {
           logFeatureBad("remote_control_response", "overtaken"),
           this.callbacks.onResponseUndelivered?.(r, "hook", "overtaken"));
       if (this.pendingForwardedHooks.delete(r)) {
-        (n(
+        (logForDebugging(
           `[RemoteSessionManager] Forwarded hook request cancelled by the worker: ${kS(r)}`,
         ),
           this.callbacks.onForwardedHookCancelled?.(r, "worker"));
@@ -1672,18 +1672,18 @@ class D6e {
       }
       if (this.retireServedRequest(r, "worker")) return;
       if (this.pendingDialogRequests.delete(r)) {
-        (n(`[RemoteSessionManager] User dialog request cancelled: ${r}`),
+        (logForDebugging(`[RemoteSessionManager] User dialog request cancelled: ${r}`),
           this.callbacks.onUserDialogCancelled?.(r));
         return;
       }
       let p = this.pendingPermissionRequests.get(r);
       if (!p) {
-        n(
+        logForDebugging(
           `[RemoteSessionManager] control_cancel_request for unknown request ${r} \u2014 nothing pending, ignoring`,
         );
         return;
       }
-      (n(`[RemoteSessionManager] Permission request cancelled: ${r}`),
+      (logForDebugging(`[RemoteSessionManager] Permission request cancelled: ${r}`),
         this.retirePermissionRequest(r),
         this.callbacks.onPermissionCancelled?.(r, p.tool_use_id));
       return;
@@ -1691,7 +1691,7 @@ class D6e {
     if (e.type === "system" && e.subtype === "control_request_progress") {
       let r = this.pendingControlRequests.get(e.request_id);
       if (!r) {
-        n(
+        logForDebugging(
           `[RemoteSessionManager] control_request_progress for unknown request ${e.request_id} \u2014 ignoring`,
         );
         return;
@@ -1744,34 +1744,34 @@ class D6e {
               ? e.response.response?.toolName
               : void 0;
           if (typeof R === "string" && R !== S.tool_name) {
-            (n(
+            (logForDebugging(
               `[RemoteSessionManager] Permission response ${r} has mismatched toolName \u2014 worker will drop it, keeping prompt`,
             ),
               this.seenControlResponseIds.delete(r));
             return;
           }
           (this.retirePermissionRequest(r),
-            n(
+            logForDebugging(
               `[RemoteSessionManager] Permission request ${r} answered elsewhere \u2014 dismissing`,
             ),
             this.callbacks.onPermissionCancelled?.(r, S.tool_use_id));
         } else if (this.pendingDialogRequests.has(r))
           if (a)
-            n(
+            logForDebugging(
               `[RemoteSessionManager] User dialog request ${r} got an error-shaped reply elsewhere \u2014 worker still waiting, keeping it`,
             );
           else
             (this.pendingDialogRequests.delete(r),
-              n(
+              logForDebugging(
                 `[RemoteSessionManager] User dialog request ${r} answered elsewhere \u2014 dismissing`,
               ),
               this.callbacks.onUserDialogCancelled?.(r));
         else if (this.pendingForwardedHooks.has(r))
-          n(
+          logForDebugging(
             `[RemoteSessionManager] Ignoring a peer control_response (${e.response.subtype}) for forwarded hook request ${kS(r)} \u2014 still answering it here`,
           );
         else
-          n(
+          logForDebugging(
             `[RemoteSessionManager] Unmatched control_response ${r} (${e.response.subtype})${e.response.subtype === "error" ? `: ${e.response.error}` : ""}`,
           );
       }
@@ -1799,7 +1799,7 @@ class D6e {
     ) {
       let [r] = this.pendingModelSwitchIds;
       (this.pendingModelSwitchIds.delete(r),
-        n("[RemoteSessionManager] Dropped own set_model breadcrumb echo"));
+        logForDebugging("[RemoteSessionManager] Dropped own set_model breadcrumb echo"));
       return;
     }
     let o = At(e);
@@ -1814,7 +1814,7 @@ class D6e {
       )
         this.config.homeSeed?.afterFirstReply(this.lifetime.signal);
       for (let [r, a] of this.pendingPermissionRequests)
-        (n(
+        (logForDebugging(
           `[RemoteSessionManager] Turn ended with permission request ${r} unresolved \u2014 dismissing`,
         ),
           this.callbacks.onPermissionCancelled?.(r, a.tool_use_id),
@@ -1822,7 +1822,7 @@ class D6e {
           Pe(this.reinstatablePermissionRequests, r, a));
       this.pendingPermissionRequests.clear();
       for (let r of this.pendingDialogRequests)
-        (n(
+        (logForDebugging(
           `[RemoteSessionManager] Turn ended with user dialog request ${r} unresolved \u2014 dismissing`,
         ),
           this.callbacks.onUserDialogCancelled?.(r),
@@ -1845,7 +1845,7 @@ class D6e {
         (t === "can_use_tool" &&
           this.errorShapedControlResponseIds.has(a.request_id))
       ) {
-        n(
+        logForDebugging(
           `[RemoteSessionManager] Redelivered ${t} ${kS(a.request_id)} already answered \u2014 skipping`,
         );
         return;
@@ -1857,7 +1857,7 @@ class D6e {
       ) {
         let S = this.reinstatablePermissionRequests.get(a.request_id);
         if (S === void 0) {
-          n(
+          logForDebugging(
             `[RemoteSessionManager] Redelivered can_use_tool ${kS(a.request_id)} already retired here \u2014 skipping`,
           );
           return;
@@ -1867,7 +1867,7 @@ class D6e {
           !qe(S, a.request))
         ) {
           (logFeatureBad("remote_permission_request", "redelivered_mismatch"),
-            n(
+            logForDebugging(
               `[RemoteSessionManager] Redelivered can_use_tool ${kS(a.request_id)} differs from the request first shown under that id \u2014 not arming it`,
               { level: "warn" },
             ));
@@ -1898,16 +1898,16 @@ class D6e {
   handleControlRequest(e, t, o) {
     let { request_id: r, request: a } = e;
     if (a.subtype === "can_use_tool") {
-      n(`[RemoteSessionManager] Permission request for tool: ${a.tool_name}`);
+      logForDebugging(`[RemoteSessionManager] Permission request for tool: ${a.tool_name}`);
       let p = this.pendingPermissionRequests.get(r);
       if (p !== void 0) {
         if (qe(p, a))
-          n(
+          logForDebugging(
             `[RemoteSessionManager] Duplicate permission request ${kS(String(r))} \u2014 already pending, skipping`,
           );
         else
           (logFeatureBad("remote_permission_request", "redelivered_mismatch"),
-            n(
+            logForDebugging(
               `[RemoteSessionManager] Permission request ${kS(String(r))} redelivered with a different body (${kS(String(a.tool_name))}) \u2014 keeping the one first shown (${kS(p.tool_name)})`,
               { level: "warn" },
             ));
@@ -1915,7 +1915,7 @@ class D6e {
       }
       if (this.retiredPermissionRequestIds.has(r)) {
         (logFeatureBad("remote_permission_request", "retired_id_rearmed"),
-          n(
+          logForDebugging(
             `[RemoteSessionManager] Permission request ${kS(String(r))} arrived again after it was retired here \u2014 not arming it`,
             { level: "warn" },
           ));
@@ -1933,12 +1933,12 @@ class D6e {
     }
     if (a.subtype === "request_user_dialog") {
       if (this.pendingDialogRequests.has(r)) {
-        n(
+        logForDebugging(
           `[RemoteSessionManager] Duplicate user dialog request ${r} \u2014 already pending, skipping`,
         );
         return;
       }
-      (n(`[RemoteSessionManager] User dialog request: ${a.dialog_kind}`),
+      (logForDebugging(`[RemoteSessionManager] User dialog request: ${a.dialog_kind}`),
         this.pendingDialogRequests.add(r),
         this.callbacks.onUserDialogRequest(a, r, o));
       return;
@@ -1946,13 +1946,13 @@ class D6e {
     if (a.subtype === "hook_callback" && It(a)) {
       let p = this.callbacks.onForwardedHookCallback;
       if (!p) {
-        n(
+        logForDebugging(
           `[RemoteSessionManager] Forwarded hook_callback ${kS(r)} \u2014 not serving device hooks here, leaving it unanswered`,
         );
         return;
       }
       if (r.length > H || a.callback_id.length > H) {
-        n(
+        logForDebugging(
           `[RemoteSessionManager] Forwarded hook_callback ${kS(r)} \u2014 an id longer than ${H} characters, leaving it unanswered`,
         );
         return;
@@ -1978,7 +1978,7 @@ class D6e {
         this.settledForwardedHookIds.has(r) ||
         this.pendingForwardedHooks.has(r)
       ) {
-        n(
+        logForDebugging(
           `[RemoteSessionManager] Forwarded hook_callback ${kS(r)} already answered or in hand \u2014 skipping`,
         );
         return;
@@ -1989,13 +1989,13 @@ class D6e {
     if (Ot(a)) {
       let p = this.callbacks.onServedChannelRequest;
       if (!p) {
-        n(
+        logForDebugging(
           `[RemoteSessionManager] ${a.subtype} ${kS(r)} \u2014 not serving tools here, leaving it unanswered`,
         );
         return;
       }
       if (r.length > H) {
-        n(
+        logForDebugging(
           `[RemoteSessionManager] ${a.subtype} ${kS(r)} \u2014 an id longer than ${H} characters, leaving it unanswered`,
         );
         return;
@@ -2004,7 +2004,7 @@ class D6e {
         this.settledServedRequestIds.has(r) ||
         this.pendingServedRequests.has(r)
       ) {
-        n(
+        logForDebugging(
           `[RemoteSessionManager] ${a.subtype} ${kS(r)} already answered or in hand \u2014 skipping`,
         );
         return;
@@ -2020,7 +2020,7 @@ class D6e {
         }));
       return;
     }
-    (n(
+    (logForDebugging(
       `[RemoteSessionManager] Unsupported control request subtype: ${a.subtype}`,
     ),
       this.sendResponse(
@@ -2053,7 +2053,7 @@ class D6e {
     return this.send(e, t, o, !0);
   }
   async send(e, t, o, r) {
-    (n(
+    (logForDebugging(
       `[RemoteSessionManager] Sending message to session ${this.config.sessionId}`,
     ),
       this.reviveStreamForUserSend(),
@@ -2065,7 +2065,7 @@ class D6e {
       d = await (p ? o(e, t) : this.sendBehindGates(a, e, t, o));
     } catch (S) {
       throw (
-        n(
+        logForDebugging(
           `[RemoteSessionManager] Send to session ${this.config.sessionId} threw: ${l(S)}`,
           { level: "error" },
         ),
@@ -2074,7 +2074,7 @@ class D6e {
       );
     }
     if (!d.ok && d.withheld)
-      (n(`[RemoteSessionManager] Message withheld by a send gate: ${d.reason}`),
+      (logForDebugging(`[RemoteSessionManager] Message withheld by a send gate: ${d.reason}`),
         logFeatureSad(
           "remote_send_message",
           d.reason === Ost
@@ -2084,7 +2084,7 @@ class D6e {
               : "remote_send_message_withheld",
         ));
     else if (!d.ok)
-      (n(
+      (logForDebugging(
         `[RemoteSessionManager] Failed to send message to session ${this.config.sessionId}: ${d.reason}`,
         { level: "error" },
       ),
@@ -2369,13 +2369,13 @@ class D6e {
     );
   }
   async sendBashCommand(e, t) {
-    (n(
+    (logForDebugging(
       `[RemoteSessionManager] Sending bash_command to session ${this.config.sessionId}`,
     ),
       this.reviveStreamForUserSend());
     let o = await sendBashCommandToRemoteSession(this.config.sessionId, e, this.signedOpts(t));
     if (!o.ok)
-      (n(
+      (logForDebugging(
         `[RemoteSessionManager] Failed to send bash_command to session ${this.config.sessionId}: ${o.reason}`,
         { level: "error" },
       ),
@@ -2412,7 +2412,7 @@ class D6e {
       e.sendControlResponse(t.response, t.uuid, Ae(t.kind)).then(
         (o) => this.settleResponsePost(t, o),
         (o) => {
-          (n(`[RemoteSessionManager] Posting an answer threw: ${l(o)}`, {
+          (logForDebugging(`[RemoteSessionManager] Posting an answer threw: ${l(o)}`, {
             level: "warn",
           }),
             this.settleResponsePost(t, {
@@ -2445,7 +2445,7 @@ class D6e {
       (t.outcome === "failed" && t.cause === "http" && t.status === 404)
     ) {
       (this.dropKept(e),
-        n(
+        logForDebugging(
           `[RemoteSessionManager] Answer for ${kS(o)} has no session to go to (${t.outcome === "failed" && t.cause === "http" ? `http ${t.status}` : "session not active"}); dropped`,
         ),
         logFeatureSad("remote_control_response", "session_gone"));
@@ -2462,7 +2462,7 @@ class D6e {
       t.status !== 408 &&
       t.status !== 429
     ) {
-      (n(
+      (logForDebugging(
         `[RemoteSessionManager] Answer for ${kS(o)} was refused by the service (http ${t.status}); not re-sending`,
         { level: "warn" },
       ),
@@ -2470,13 +2470,13 @@ class D6e {
       return;
     }
     if (!this.client?.isConnected()) {
-      n(
+      logForDebugging(
         `[RemoteSessionManager] Answer for ${kS(o)} did not reach the session while the stream is down; it goes again at reconnect`,
       );
       return;
     }
     if (((e.failures += 1), e.failures > De)) {
-      (n(
+      (logForDebugging(
         `[RemoteSessionManager] Answer for ${kS(o)} could not be delivered after ${e.failures} attempts; giving up`,
         { level: "warn" },
       ),
@@ -2565,7 +2565,7 @@ class D6e {
       t,
       this.config.nameToolOnPermissionAllow === !0 ? o.tool_name : void 0,
     );
-    (n(`[RemoteSessionManager] Sending permission response: ${t.behavior}`),
+    (logForDebugging(`[RemoteSessionManager] Sending permission response: ${t.behavior}`),
       P("out", r),
       this.sendResponse(r, "permission", o),
       logFeatureOk("remote_permission_respond"));
@@ -2585,7 +2585,7 @@ class D6e {
       type: "control_response",
       response: { subtype: "success", request_id: e, response: t },
     };
-    (n(`[RemoteSessionManager] Sending user dialog response: ${t.behavior}`),
+    (logForDebugging(`[RemoteSessionManager] Sending user dialog response: ${t.behavior}`),
       P("out", o),
       this.sendResponse(o, "dialog"),
       logFeatureOk("remote_dialog_respond"));
@@ -2600,7 +2600,7 @@ class D6e {
   respondToForwardedHook(e, t) {
     if (!this.pendingForwardedHooks.delete(e))
       return (
-        n(
+        logForDebugging(
           `[RemoteSessionManager] Forwarded hook request ${kS(e)} is no longer pending \u2014 answer not sent`,
         ),
         !1
@@ -2619,7 +2619,7 @@ class D6e {
     let o = this.pendingServedRequests.get(e);
     if (!o)
       return (
-        n(
+        logForDebugging(
           `[RemoteSessionManager] served request ${kS(e)} is no longer pending \u2014 result not sent`,
         ),
         !1
@@ -2646,7 +2646,7 @@ class D6e {
     if (!o) return !1;
     return (
       this.pendingServedRequests.delete(e),
-      n(
+      logForDebugging(
         `[RemoteSessionManager] served request ${kS(e)} ${t === "worker" ? "cancelled by the worker" : "dropped with the stream"}`,
       ),
       o.abort.abort(),
@@ -2671,7 +2671,7 @@ class D6e {
     return this.client?.flushSends(e) ?? Promise.resolve();
   }
   cancelSession() {
-    (n("[RemoteSessionManager] Sending interrupt signal"),
+    (logForDebugging("[RemoteSessionManager] Sending interrupt signal"),
       (this.firstSendReleased = !0),
       this.reviveStreamForUserSend());
     let e = () => {
@@ -2747,7 +2747,7 @@ class D6e {
     (this.pendingControlRequests.delete(e),
       clearTimeout(t.timer),
       t.removeAbortListener?.(),
-      n(
+      logForDebugging(
         `[RemoteSessionManager] control_request ${e} (${t.subtype}) was not delivered \u2014 failing it`,
         { level: "warn" },
       ),
@@ -2768,7 +2768,7 @@ class D6e {
     (this.pendingControlRequests.delete(e),
       this.pendingModelSwitchIds.delete(e),
       clearTimeout(t.timer),
-      n(
+      logForDebugging(
         `[RemoteSessionManager] Cancelling control request ${e} (${t.subtype})`,
       ),
       P("out", { kind: "control_cancel_request", requestId: e }),
@@ -2779,7 +2779,7 @@ class D6e {
     return this.config.sessionId;
   }
   disconnect() {
-    n("[RemoteSessionManager] Disconnecting");
+    logForDebugging("[RemoteSessionManager] Disconnecting");
     let e = this.config.withheldInitialPrompt;
     if (
       e !== void 0 &&
@@ -2813,7 +2813,7 @@ class D6e {
     (this.pendingControlRequests.clear(), this.pendingModelSwitchIds.clear());
   }
   reconnect() {
-    (n("[RemoteSessionManager] Reconnecting SSE stream"),
+    (logForDebugging("[RemoteSessionManager] Reconnecting SSE stream"),
       this.client?.reconnect());
   }
 }
@@ -2845,14 +2845,14 @@ function Ae(e) {
   return e === "tool" ? { timeoutMs: Dt } : {};
 }
 function Ut(e) {
-  let t = Buffer.byteLength(b(e), "utf8");
-  if (t <= GDt) return e;
+  let t = Buffer.byteLength(jsonStringify(e), "utf8");
+  if (t <= MAX_RESULT_BYTES) return e;
   return {
     result: {
       content: [
         {
           type: "text",
-          text: `(the result was too large to return: ${t} bytes, over the ${GDt}-byte limit)`,
+          text: `(the result was too large to return: ${t} bytes, over the ${MAX_RESULT_BYTES}-byte limit)`,
         },
       ],
       isError: !0,
@@ -2861,7 +2861,7 @@ function Ut(e) {
 }
 function $t(e, t) {
   let o = (r) => {
-    n(`[RemoteSessionManager] send gate failed, message goes anyway: ${l(r)}`, {
+    logForDebugging(`[RemoteSessionManager] send gate failed, message goes anyway: ${l(r)}`, {
       level: "warn",
     });
     return;
@@ -2939,9 +2939,9 @@ async function xe(e, t, o, r) {
     })
     .catch(() => null);
   if (!a || a.status !== 200)
-    return (n(`[${o}] HTTP ${a?.status ?? "error"}`), null);
+    return (logForDebugging(`[${o}] HTTP ${a?.status ?? "error"}`), null);
   if (a.data === null || typeof a.data !== "object")
-    return (n(`[${o}] non-object 200 body`), null);
+    return (logForDebugging(`[${o}] non-object 200 body`), null);
   let p = Array.isArray(a.data.data) ? a.data.data : [],
     d = [];
   for (let R = p.length - 1; R >= 0; R--) {

@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 201 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
-import "../MCP客户端/chunk-98spw152.js";
+import "../MCP客户端/mcp-protocol.js";
 import { McpServer } from "../MCP客户端/mcp-server.js";
 import { artifactReadObservationIn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { bh, B, Nb, HW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
@@ -44,7 +44,7 @@ import {
   createAssistantMessage,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { MAIN_AGENT_ID } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { CC } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { AsyncEvalDispatcher } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { kGt } from "../插件系统/chunk-ajtn749s.js";
 import { pruneSyncedSkillsForClosedGate } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { createBaseAppState } from "../后台任务-Shell管理/chunk-c7mzes79.js";
@@ -72,7 +72,7 @@ async function startMCPServer(e, m, d, S, a) {
   setSessionCwd(e);
   let C = q(m, d, B(), "stdio", S, a),
     L = new BufferCoercingStdioServerTransport();
-  (await C.connect(L), Et(() => C.close()));
+  (await C.connect(L), registerCleanup(() => C.close()));
 }
 class D extends PerClassInstanceRegistry {
   #e;
@@ -81,7 +81,7 @@ class D extends PerClassInstanceRegistry {
     this.#e = e;
   }
   get(e) {
-    return e === CC ? super.get(e) : this.#e.get(e);
+    return e === AsyncEvalDispatcher ? super.get(e) : this.#e.get(e);
   }
 }
 function q(e, m, d, S, a, C = "raw") {
@@ -220,7 +220,7 @@ function q(e, m, d, S, a, C = "raw") {
           if (!s.isEnabled()) {
             let t = `Tool ${r} is not enabled`;
             return (
-              n(`MCP server: ${t}`, { level: "error" }),
+              logForDebugging(`MCP server: ${t}`, { level: "error" }),
               { isError: !0, content: [{ type: "text", text: t }] }
             );
           }
@@ -233,7 +233,7 @@ function q(e, m, d, S, a, C = "raw") {
           if (!c.success) {
             let t = `Tool ${r} arguments failed schema validation: ${c.error.message}`;
             return (
-              n(`MCP server: ${t}`, { level: "error" }),
+              logForDebugging(`MCP server: ${t}`, { level: "error" }),
               { isError: !0, content: [{ type: "text", text: t }] }
             );
           }
@@ -241,14 +241,14 @@ function q(e, m, d, S, a, C = "raw") {
           if (u && !u.result) {
             let t = `Tool ${r} input is invalid: ${u.message}`;
             return (
-              n(`MCP server: ${t}`, { level: "error" }),
+              logForDebugging(`MCP server: ${t}`, { level: "error" }),
               { isError: !0, content: [{ type: "text", text: t }] }
             );
           }
           let A = await s.call(c.data, x, hasPermissionsToUseTool, createAssistantMessage({ content: [] })),
             l;
           if (
-            ((l ??= { content: [{ type: "text", text: b(A.data) }] }),
+            ((l ??= { content: [{ type: "text", text: jsonStringify(A.data) }] }),
             O.length > 0)
           ) {
             let t = `[serve-mode] Stripped client-supplied privilege field(s): ${O.join(", ")}`,
@@ -268,11 +268,11 @@ ${t}`;
 `,
               )
               .trim() || "Error";
-          if (isToolCallAbortedError(o)) n(`MCP server tool call '${r}' aborted`);
+          if (isToolCallAbortedError(o)) logForDebugging(`MCP server tool call '${r}' aborted`);
           else {
             let { code: u, isSad: A } = classifyToolCallError(o);
             if (A)
-              (n(`MCP server tool call '${r}' failed: ${c}`, {
+              (logForDebugging(`MCP server tool call '${r}' failed: ${c}`, {
                 level: "error",
               }),
                 logFeatureSad(getToolFeatureName(s.name), u));
@@ -288,7 +288,7 @@ ${t}`;
           }
           return { isError: !0, content: [{ type: "text", text: c }] };
         } finally {
-          F.get(CC).release(MAIN_AGENT_ID);
+          F.get(AsyncEvalDispatcher).release(MAIN_AGENT_ID);
         }
       },
     ),

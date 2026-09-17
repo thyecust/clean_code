@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _je, mae } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "./async-timeout-utils.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { isReviewOriginSession, OAUTH_TOKEN_WELL_KNOWN_PATH, API_KEY_WELL_KNOWN_PATH, SESSION_INGRESS_TOKEN_WELL_KNOWN_PATH, readWellKnownTokenFile } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 import { writeDiagnosticsEvent } from "./diagnostics-log.js";
@@ -45,7 +45,7 @@ async function waitForSessionIngressToken(
     r = 0;
   while (!l && r < e.length) {
     let s = e[r];
-    (n(
+    (logForDebugging(
       `[spare-claim] session ingress token file not readable yet (${_}), re-checking in ${s}ms (${r + 1}/${e.length})`,
       { level: "warn" },
     ),
@@ -84,7 +84,7 @@ function recoverSessionIngressToken() {
     return { recovered: !1, diag: { fd_env_set: o, last_miss: t ?? "other" } };
   return (
     mae(e),
-    n("Session ingress token re-read from well-known file"),
+    logForDebugging("Session ingress token re-read from well-known file"),
     { recovered: !0, diag: { fd_env_set: o } }
   );
 }

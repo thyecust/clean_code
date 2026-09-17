@@ -51,7 +51,7 @@ import { withTimeout } from "../../01-核心基础设施/共享小工具-未细�
 import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Iu, dt, ge, l, A, Gw, EZ, hv, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, b, Yu, zur, fp, zR, rje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringify, changeWorkingDirectory, redactSensitiveKeys, sanitizeUrl, initDefaultDebugLog, setHasFormattedOutput, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { parseConfigInteger, parseNumericValue, getClaudeConfigDir, hasNodeOption, isSimpleMode, isSafeMode, isSupervisedMode, parseEnvAssignments } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { repeatString } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -129,7 +129,7 @@ import "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import { isRemoteActive, getIsGit, getBranch, getWorktreeCount } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isTranscriptFileResumeArg } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
@@ -170,7 +170,7 @@ import { toCompatSessionId, remoteRowId } from "../../02-功能模块/权限系�
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { getDynamicTeamContext } from "../../02-功能模块/Teammates团队/teammate-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
-import { Xt, getAPIProvider, isFirstPartyApiBackend } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { strip1mSuffix, getAPIProvider, isFirstPartyApiBackend } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import "../../00-第三方库/axios/axios.t0fczzmz.js";
 import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
@@ -190,13 +190,13 @@ import "../../02-功能模块/Hooks钩子/session-feature-cache.js";
 import { USER_INTENT_SETTING_KEYS, resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 import { isAgentsFleetEnabled, isPastSessionsExperimentEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { printCliError, cliError, cliOk, cliWarn, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { Aa } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
+import { buildCliCommand } from "../../02-功能模块/插件系统/plugin-system-core.js";
 import "../../02-功能模块/ClaudeinChrome/claude-in-chrome-host.js";
 import { isClaudeMdLoadingDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { goe, dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
+import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
+import { applySafeConfigEnvironmentVariables, applyConfigEnvironmentVariables } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 import {
   addHistoryEntry,
   listGitWorktrees,
@@ -292,16 +292,16 @@ import "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
 import "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import {
-  xJe,
-  qEt,
-  zEt,
-  Snr,
-  bnr,
-  im,
-  KEt,
-  i4t,
-  Ya,
-  S$e,
+  isAutoModeSeedable,
+  isTrustedPlanModeDisplaced,
+  buildPermissionModeSeed,
+  resolveSessionStartPermissionMode,
+  buildSettingsKeptNotice,
+  EFFORT_LEVELS,
+  parseEffortArgValue,
+  isUltracodeRequestedAtStartup,
+  getSessionEffortLevel,
+  buildInitialEffortState,
 } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
@@ -328,7 +328,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js"
 import "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import "../../02-功能模块/后台任务-Shell管理/chunk-x3txegas.js";
+import "../../02-功能模块/后台任务-Shell管理/task-output.js";
 import "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
 import "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
@@ -352,7 +352,7 @@ import "../../01-核心基础设施/共享小工具-未细化/terminal-focus-sta
 import "../../02-功能模块/认证-OAuth登录/wif-credentials.js";
 import "../../02-功能模块/Skills技能/bundled-skills.js";
 import "../../01-核心基础设施/共享小工具-未细化/plugin-eval-quickref-asset.js";
-import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
+import { buildClaudeAiSessionUrl } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import "../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js";
@@ -369,10 +369,10 @@ import { foldRestricted, cliCarriesSessionConfig } from "../../02-功能模块/�
 import "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
 import "../../02-功能模块/语音-音频/loop-wakeup-scheduler.js";
 import "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+import "../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
 import "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
-import { s7e } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
+import { SessionStateStore } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import "../../02-功能模块/Bridge-RemoteControl/remote-control-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js";
@@ -388,7 +388,7 @@ import "../../02-功能模块/Artifact发布-渲染/chunk-qpgskeea.js";
 import "../../02-功能模块/Artifact发布-渲染/artifact-reply-yield.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-5gz5xvw9.js";
+import "../../02-功能模块/Artifact发布-渲染/artifact-comment-monitor-intent.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
 import {
   awaitMcpPolicyColdStart,
@@ -447,11 +447,11 @@ import "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbw
 import { TIER_LABELS, withProbeDeadline, apply3PDefaultFallbacks as Bnn } from "../../02-功能模块/Bedrock-Vertex/apply-3p-default-fallbacks.js";
 import "../../01-核心基础设施/共享小工具-未细化/additional-working-directories.js";
 import { registerToolHosts } from "../../01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js";
-import { qJe, b_, KAn, zJe } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
-import { XBn, fIe, _lt, mIe, YBn, $Dt, UDt } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
+import { shouldAwaitPolicyLimitsOnStartup, waitForPolicyLimitsToLoad, loadPolicyLimits, refreshPolicyLimits } from "../../02-功能模块/策略限制(PolicyLimits)/policy-limits-client.js";
+import { markNoConsentSurface, isRemoteSettingsFetchPending, initializeRemoteManagedSettings, tryRefreshRemoteManagedSettings, awaitRemoteSettingsRefreshAfterLogin, validateRemoteManagedSettingsLoad, stopRemoteSettingsPoller } from "../../01-核心基础设施/设置-配置/remote-managed-settings.js";
 import "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { capturePolicySnapshot, hasPolicyDiverged } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
-import { CHe, $st } from "../../02-功能模块/Git-Worktree/chunk-xercceag.js";
+import { isModelExplicitlyConfigured, restoreSessionFromTranscript } from "../../02-功能模块/Git-Worktree/resume-session-state.js";
 import { stopCapturingEarlyInput, consumeEarlyInput, hasEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
 import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -462,7 +462,7 @@ import "../../01-核心基础设施/共享小工具-未细化/storage-v5-context
 import "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import "../../02-功能模块/状态栏-主题/custom-themes.js";
-import { o, t, uE } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useApp } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { credentialsStoreFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kk7p3hsm.js";
@@ -471,7 +471,7 @@ import "../../01-核心基础设施/共享小工具-未细化/terminal-querier.j
 import "../../02-功能模块/键位绑定(Keybindings)/keybinding-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
-import "../../02-功能模块/MCP客户端/chunk-g4gdwpa0.js";
+import "../../02-功能模块/MCP客户端/mcp-discovery-cache.js";
 import "../../02-功能模块/Hooks钩子/spinner-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import "../../02-功能模块/工具TodoWrite-Tasks/tasks-v2-store.js";
@@ -492,19 +492,19 @@ import "../../01-核心基础设施/共享小工具-未细化/publish-permission
 import "../../02-功能模块/权限系统/inherit-permission-mode-flag.js";
 import "../../02-功能模块/Skills技能/Skills技能.dpy2ket5.js";
 import { registerClientDataGetters } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-y8j05azr.js";
+import "../../02-功能模块/Artifact发布-渲染/artifact-db.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-01jnk0v2.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-pdd7kz7p.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-stvynqrz.js";
+import "../../02-功能模块/Artifact发布-渲染/artifact-asset-store.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-b6k1z7an.js";
 import "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-yrjr7v83.js";
+import "../../02-功能模块/Artifact发布-渲染/artifact-prompt-paragraphs.js";
 import "../../02-功能模块/CodeReview/ultrareview-tips.js";
 import "../../02-功能模块/后台任务-Shell管理/daemon-lock.js";
 import "../../02-功能模块/DesignSync/register-design-skill.js";
 import "../../02-功能模块/CodeReview/pr-review-target.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
-import "../../02-功能模块/自动更新-安装/chunk-548xet6h.js";
+import "../../02-功能模块/自动更新-安装/auto-updater.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hrfnq7gz.js";
 import { shouldShowGroveNotice } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
 import "../../02-功能模块/斜杠命令-框架/chunk-a4vej95c.js";
@@ -2350,13 +2350,13 @@ function wr(v, k) {
       D = 0,
       N = !1;
     for (let I of x) {
-      let L = te(I);
+      let L = getStringWidth(I);
       if (!N) ((U = I), (D = L), (N = !0));
       else if (D + L <= O) ((U += I), (D += L));
       else {
         R.push(U);
         let W = I.replace(/^\s+/, "");
-        ((U = W), (D = te(W)));
+        ((U = W), (D = getStringWidth(W)));
       }
     }
     R.push(U);
@@ -2367,7 +2367,7 @@ function wr(v, k) {
 function Zo(v, k, O, R) {
   let T = " ".repeat(xo);
   if (!k) return T + v;
-  let x = te(v);
+  let x = getStringWidth(v);
   if (
     k.includes(`
 `)
@@ -2592,24 +2592,24 @@ Usage: claude mcp add <name> <command> [args...]`);
             }
             if (
               (process.stdout
-                .write(`Added ${q} MCP server ${T} with URL: ${fp(N)} to ${L} config
+                .write(`Added ${q} MCP server ${T} with URL: ${sanitizeUrl(N)} to ${L} config
 `),
               J)
             )
-              process.stdout.write(`Headers: ${b(zur(J), null, 2)}
+              process.stdout.write(`Headers: ${jsonStringify(redactSensitiveKeys(J), null, 2)}
 `);
           } else {
             if (D.clientId || D.clientSecret || D.callbackPort || D.xaa)
               process.stderr
                 .write(`Warning: --client-id, --client-secret, --callback-port, and --xaa are only supported for HTTP/SSE transports and will be ignored for stdio.
 `);
-            let q = V ? fp(N) : N;
+            let q = V ? sanitizeUrl(N) : N;
             if (!j && V) {
               process.stderr.write(`
 Warning: The command "${q}" looks like a URL, but is being interpreted as a stdio server as --transport was not specified.
 `);
-              let X = Aa("mcp add --transport http", T),
-                ce = Aa("mcp add --transport sse", T);
+              let X = buildCliCommand("mcp add --transport http", T),
+                ce = buildCliCommand("mcp add --transport sse", T);
               if (X && ce)
                 (process.stderr.write(`If this is an HTTP server, use: ${X} ${q}
 `),
@@ -3427,7 +3427,7 @@ function kn(v) {
   if (!O) return;
   if (getGlobalConfig().deepLinkTerminal === O) return;
   (saveGlobalConfig((T) => ({ ...T, deepLinkTerminal: O }), v),
-    n(`Stored deep link terminal preference: ${O}`));
+    logForDebugging(`Stored deep link terminal preference: ${O}`));
 }
 class yr {
   frameDurations = [];
@@ -3576,7 +3576,7 @@ async function Rr(v, k, O) {
   let R = O?.color,
     T = O?.exitCode ?? 1;
   if (
-    (showScreen(v, R ? e(t, { color: R, children: k }) : e(t, { children: k })),
+    (showScreen(v, R ? e(Text, { color: R, children: k }) : e(Text, { children: k })),
     v.unmount(),
     await O?.beforeExit?.(),
     T !== 0)
@@ -3665,7 +3665,7 @@ async function Hn(v, k, O, R, T, x, U, D, N, I) {
       ),
       In(N, W),
       () => (
-        dR(),
+        applyConfigEnvironmentVariables(),
         import("./setup.sbdmcpy2.js").then((j) => j.maybePrewarmRecallIndex(v)),
         primePlanSlugCollisions(N),
         capturePolicySnapshot(),
@@ -3780,7 +3780,7 @@ function ia(
       if (
         (addTrackedRepoPath(D),
         kn(D),
-        dR(),
+        applyConfigEnvironmentVariables(),
         import("./setup.sbdmcpy2.js").then((j) => j.maybePrewarmRecallIndex(v)),
         primePlanSlugCollisions(D),
         capturePolicySnapshot(),
@@ -3846,9 +3846,9 @@ function ia(
       return e(Fn, {
         afterMs: J ? 4000 : 1500,
         onDone: j,
-        children: e(o, {
+        children: e(Box, {
           flexDirection: "column",
-          children: q.map((X) => e(t, { color: "warning", children: X }, X)),
+          children: q.map((X) => e(Text, { color: "warning", children: X }, X)),
         }),
       });
     },
@@ -3903,7 +3903,7 @@ function ia(
         J = Boolean(getGlobalConfig().chromeExtension?.pairedDeviceId);
       if (!q && !J)
         return (
-          n(
+          logForDebugging(
             "[Claude in Chrome] Skipping offer: extension not present locally (stale cache)",
           ),
           null
@@ -3923,14 +3923,14 @@ function ia(
           await import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
       if (Me() || Le(qe, fe()) || !oe())
         return (
-          n(
+          logForDebugging(
             "[Claude in Chrome] Skipping offer: blocked by enterprise MCP config, managed deniedMcpServers policy, or organization policy (allow_claude_browser_extension)",
           ),
           null
         );
       if (ce)
         return (
-          n(
+          logForDebugging(
             "[Claude in Chrome] Skipping offer: decision already recorded (another instance answered)",
           ),
           (I.claudeInChromeAccepted = getGlobalConfig().claudeInChromeDefaultEnabled === !0),
@@ -3938,7 +3938,7 @@ function ia(
         );
       if (!X)
         return (
-          n(
+          logForDebugging(
             "[Claude in Chrome] Skipping offer: tengu_chrome_auto_enable no longer set (stale GB cache)",
           ),
           null
@@ -3958,10 +3958,10 @@ async function sa() {
   let v = Date.now();
   try {
     (await withTimeout(initializeGrowthBook(), na, Mn),
-      n(`[STARTUP] post-onboarding GB await ${Date.now() - v}ms`));
+      logForDebugging(`[STARTUP] post-onboarding GB await ${Date.now() - v}ms`));
   } catch (k) {
     if (
-      (n(`[STARTUP] post-onboarding GB await ${Date.now() - v}ms: ${k}`, {
+      (logForDebugging(`[STARTUP] post-onboarding GB await ${Date.now() - v}ms: ${k}`, {
         level: "warn",
       }),
       !(k instanceof Error && k.message === Mn))
@@ -4093,7 +4093,7 @@ function Un(fc) {
   else Vs = wo[0];
   let [gc, Ws] = d(Vs),
     { at: ro, acceptedAny: hc, phase: Gt } = gc,
-    { exit: Ar } = uE(),
+    { exit: Ar } = useApp(),
     Gs = C(null),
     it = Er[ro],
     Ys;
@@ -4146,7 +4146,7 @@ function Un(fc) {
   if ((E(zs, Ks), Gt === "relaunching" && hc)) {
     let Ut;
     if (wo[10] === MEMO_CACHE_SENTINEL)
-      ((Ut = e(t, {
+      ((Ut = e(Text, {
         dimColor: !0,
         children: "Restarting Claude Code to apply the new model\u2026",
       })),
@@ -4161,7 +4161,7 @@ function Un(fc) {
     const Ut = TIER_LABELS[it.tier];
     let Co;
     if (wo[11] !== Ut)
-      ((Co = r(t, {
+      ((Co = r(Text, {
         color: "error",
         children: ["Failed to save ", Ut, " upgrade to settings."],
       })),
@@ -4495,7 +4495,7 @@ function ti() {
         }),
         a.CLAUDE_DEBUG)
       )
-        n(`${W ? "[Internal Warning]" : "[Warning]"} ${D}: ${x}`, {
+        logForDebugging(`${W ? "[Internal Warning]" : "[Warning]"} ${D}: ${x}`, {
           level: "warn",
         });
     } catch {}
@@ -4583,7 +4583,7 @@ async function ii() {
   if (!O && !R && !T) return;
   try {
     if (getLocalSettingsErrorsBlockingWrite().length > 0) {
-      n(
+      logForDebugging(
         "migrateEnableAllProjectMcpServersToSettings: deferring \u2014 settings.local.json carries validation errors a write could compound; will retry next startup",
         { level: "error" },
       );
@@ -4621,7 +4621,7 @@ async function ii() {
       { legacyRevocation: "skip" },
     );
     if (U) {
-      n(
+      logForDebugging(
         `migrateEnableAllProjectMcpServersToSettings: settings write failed (${U.message}); will retry next startup`,
         { level: "error" },
       );
@@ -4629,7 +4629,7 @@ async function ii() {
     }
     if (x.length > 0) {
       if (!(await deleteCurrentProjectConfigFields(x))) {
-        n(
+        logForDebugging(
           "migrateEnableAllProjectMcpServersToSettings: settings copy landed but legacy projectConfig fields could not be removed (unwritable config?); will retry next startup",
           { level: "error" },
         );
@@ -4654,7 +4654,7 @@ async function si(v = ha, k) {
   if (getAPIProvider() !== "firstParty") return !0;
   let O = getSettingsForSource("userSettings")?.model;
   if (!O) return !0;
-  let R = Xt(O);
+  let R = strip1mSuffix(O);
   if (!Object.hasOwn(v, R)) return !0;
   let T = v[R];
   if (T === void 0) return !0;
@@ -4667,7 +4667,7 @@ async function si(v = ha, k) {
     );
   if (U)
     return (
-      n(`Failed to apply model alias migration: ${U}`, { level: "error" }),
+      logForDebugging(`Failed to apply model alias migration: ${U}`, { level: "error" }),
       !1
     );
   return (
@@ -4706,7 +4706,7 @@ async function ai(v) {
     );
   } catch (O) {
     return (
-      n(`Failed to migrate auto-updates: ${O}`, { level: "error" }),
+      logForDebugging(`Failed to migrate auto-updates: ${O}`, { level: "error" }),
       logEvent("tengu_migrate_autoupdates_error", { has_error: !0 }),
       logFeatureBad(
         "migration_auto_updates_to_settings",
@@ -4740,7 +4740,7 @@ async function li(v) {
     );
   } catch (O) {
     return (
-      n(`Failed to migrate bypass permissions accepted: ${O}`, {
+      logForDebugging(`Failed to migrate bypass permissions accepted: ${O}`, {
         level: "error",
       }),
       logFeatureBad(
@@ -4764,7 +4764,7 @@ async function ci(v) {
     );
   if (R)
     return (
-      n(`Failed to migrate Fable 5 model setting: ${R}`, { level: "error" }),
+      logForDebugging(`Failed to migrate Fable 5 model setting: ${R}`, { level: "error" }),
       logFeatureBad("migration_fable5_to_fable_alias", "migration_fable5_write_failed"),
       !1
     );
@@ -4790,7 +4790,7 @@ async function pi(v) {
   let { error: O } = await updateSettingsForSource("userSettings", { model: "opus" }, void 0, v);
   if (O)
     return (
-      n(`Failed to migrate legacy Opus model setting: ${O}`, {
+      logForDebugging(`Failed to migrate legacy Opus model setting: ${O}`, {
         level: "error",
       }),
       logFeatureBad(
@@ -4829,7 +4829,7 @@ async function mi(v) {
   let { error: O } = await updateSettingsForSource("userSettings", { model: "opus[1m]" }, void 0, v);
   if (O)
     return (
-      n(`Failed to migrate opus model setting: ${O}`, { level: "error" }),
+      logForDebugging(`Failed to migrate opus model setting: ${O}`, { level: "error" }),
       logFeatureBad("migration_opus_to_opus1m", "migration_opus_to_opus1m_write_failed"),
       !1
     );
@@ -4865,7 +4865,7 @@ async function gi(v) {
     );
     if (x)
       return (
-        n(`Failed to migrate sonnet[1m] model setting: ${x}`, {
+        logForDebugging(`Failed to migrate sonnet[1m] model setting: ${x}`, {
           level: "error",
         }),
         logFeatureBad("migration_sonnet1m_to_sonnet45", "migration_sonnet1m_write_failed"),
@@ -4898,7 +4898,7 @@ async function hi(v) {
     );
   if (R)
     return (
-      n(`Failed to migrate Sonnet 4.5 model setting: ${R}`, { level: "error" }),
+      logForDebugging(`Failed to migrate Sonnet 4.5 model setting: ${R}`, { level: "error" }),
       logFeatureBad("migration_sonnet45_to_sonnet46", "migration_sonnet45_write_failed"),
       !1
     );
@@ -5024,7 +5024,7 @@ async function yi(v) {
     k.push(await Si(v)),
     !k.every(Boolean))
   ) {
-    n(
+    logForDebugging(
       "Skipping migrationVersion bump: a settings-writing migration failed to persist; the set re-runs next startup.",
       { level: "error" },
     );
@@ -5133,7 +5133,7 @@ async function bi(v, k) {
       verbose: Ho,
     } = v;
   if ((HDn(Ve ?? "text"), ut)) {
-    if ((rje(!0), dR(), initializeTelemetryAfterTrust(v.storageV5), isViolinWoodEnabledCached() && !isSimpleMode()))
+    if ((setHasFormattedOutput(!0), applyConfigEnvironmentVariables(), initializeTelemetryAfterTrust(v.storageV5), isViolinWoodEnabledCached() && !isSimpleMode()))
       settingsChangeDetector.initialize(createConfigChangeHookGate(yt, v.storageV5, v.credentials), v.storageV5, {
         machineServesSession: !0,
       });
@@ -5144,7 +5144,7 @@ async function bi(v, k) {
   if (X !== null) {
     let Ce = await validateForceLoginOrg(v.credentials);
     if (!Ce.valid) return cliErrorAfterAnalyticsFlush(Ce.message);
-    await b_();
+    await waitForPolicyLimitsToLoad();
     let Ye = getCloudSessionsUnavailableReason();
     if (Ye) return cliErrorAfterAnalyticsFlush(`Error: ${Ye}`);
     if (Ve === "stream-json")
@@ -5190,7 +5190,7 @@ async function bi(v, k) {
         Ve === "json")
       )
         process.stdout.write(
-          b({ ok: !1, session_id: X, error: ft.reason }) +
+          jsonStringify({ ok: !1, session_id: X, error: ft.reason }) +
             `
 `,
         );
@@ -5201,10 +5201,10 @@ async function bi(v, k) {
     await logEventAsync("tengu_remote_send_headless_success", {
       entry_point: fromEnum("cloud_attach_headless"),
     });
-    let gt = wa(X, void 0, { from: "cli", m: "0" });
+    let gt = buildClaudeAiSessionUrl(X, void 0, { from: "cli", m: "0" });
     if (Ve === "json")
       process.stdout.write(
-        b({ ok: !0, session_id: X, url: gt }) +
+        jsonStringify({ ok: !0, session_id: X, url: gt }) +
           `
 `,
       );
@@ -5221,7 +5221,7 @@ async function bi(v, k) {
   if (Bt !== null) {
     let Ce = await validateForceLoginOrg(v.credentials);
     if (!Ce.valid) return cliErrorAfterAnalyticsFlush(Ce.message);
-    await b_();
+    await waitForPolicyLimitsToLoad();
     let Ye = getCloudSessionsUnavailableReason();
     if (Ye) return cliErrorAfterAnalyticsFlush(`Error: ${Ye}`);
     let tt = typeof Ue === "string" && Ue.trim() !== "" ? Ue : null;
@@ -5276,7 +5276,7 @@ async function bi(v, k) {
         Ve === "json")
       )
         process.stdout.write(
-          b({ ok: !1, error: jt ?? "Unable to create cloud session" }) +
+          jsonStringify({ ok: !1, error: jt ?? "Unable to create cloud session" }) +
             `
 `,
         );
@@ -5287,10 +5287,10 @@ async function bi(v, k) {
       entry_point: fromEnum("pool_headless"),
       branch_mode: getBranchMode(Je, De),
     });
-    let Lo = wa(me.id, void 0, { from: "cli", m: "0" });
+    let Lo = buildClaudeAiSessionUrl(me.id, void 0, { from: "cli", m: "0" });
     if (Ve === "json")
       process.stdout.write(
-        b({
+        jsonStringify({
           ok: !0,
           session_id: me.id,
           title: me.title,
@@ -5312,9 +5312,9 @@ async function bi(v, k) {
     await gracefulShutdown(0);
     return;
   }
-  if (Ve === "stream-json" || Ve === "json") rje(!0);
-  (dR(), initializeTelemetryAfterTrust(v.storageV5));
-  let Lt = (k.continue || k.resume || se) && !CHe() ? null : formatModelDeprecationWarning(ao ?? lo);
+  if (Ve === "stream-json" || Ve === "json") setHasFormattedOutput(!0);
+  (applyConfigEnvironmentVariables(), initializeTelemetryAfterTrust(v.storageV5));
+  let Lt = (k.continue || k.resume || se) && !isModelExplicitlyConfigured() ? null : formatModelDeprecationWarning(ao ?? lo);
   if (Lt && Ve !== "json" && Ve !== "stream-json") cliWarn(Lt);
   let ae = performance.now(),
     He =
@@ -5340,8 +5340,8 @@ async function bi(v, k) {
       mcp: { ...Fo.mcp, clients: Yt, commands: zt, tools: Kt },
       toolPermissionContext: Se,
       proactivityLevel: v.proactivityLevel,
-      ...S$e(k.effort),
-      ultracode: i4t(k.effort),
+      ...buildInitialEffortState(k.effort),
+      ultracode: isUltracodeRequestedAtStartup(k.effort),
       autoCompactWindow: R,
       ...(isFastModeEnabled() && { fastMode: shouldStartWithFastMode(je ?? null) }),
       ...(isAdvisorToolEnabled() && j && { advisorModel: j }),
@@ -5353,10 +5353,10 @@ async function bi(v, k) {
         teammateColors: mo.teammateColors,
       }),
     },
-    bo = new s7e(),
+    bo = new SessionStateStore(),
     at = createStore(Xe, (Ce) => handleAppStateChange(Ce, yt, bo, v.storageV5, v.credentials));
   if (
-    (Et(() => runExitHandoff(at.getState().tasks, v.storageV5)),
+    (registerCleanup(() => runExitHandoff(at.getState().tasks, v.storageV5)),
     subscribeToRefusalFallbackRestoreSync(at.setState),
     verifyAutoModeGateAccess(Se, at.getState().fastMode).then(({ updateContext: Ce }) => {
       at.setState((Ye) => {
@@ -5470,7 +5470,7 @@ function ya() {
     k = getBasePolicySettingsOrigin();
   if (k === "remote") return hasRemotePolicyHelperEntry(v);
   return (
-    isAdminPolicyOrigin(k) && (v?.policyHelpers != null || v?.policyHelper != null) && fIe()
+    isAdminPolicyOrigin(k) && (v?.policyHelpers != null || v?.policyHelper != null) && isRemoteSettingsFetchPending()
   );
 }
 var Ca = 120000,
@@ -5487,7 +5487,7 @@ function Ir() {
 }
 var ka = {
     readBase: () => ({ settings: getBasePolicySettings(), origin: getBasePolicySettingsOrigin(), loadErrors: getPolicyHelperSourceLoadErrors() }),
-    baseSettled: () => !fIe(),
+    baseSettled: () => !isRemoteSettingsFetchPending(),
     refuse: (v) => {
       let k = isExiting();
       if ((commitExit(), emitExitMessage(v), k)) {
@@ -5536,7 +5536,7 @@ function ki(v) {
       (T = credentialsStoreFor(R)),
       isHoverRestEnabled() && R !== void 0)
     )
-      zR({ storageV5: R });
+      initDefaultDebugLog({ storageV5: R });
     if ((profileCheckpoint("preAction_after_init"), !a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE))
       process.title = "claude";
     let { initSinks: K } = await import("../../02-功能模块/Bridge-RemoteControl/initSinks.6cfazjmq.js");
@@ -5564,12 +5564,12 @@ function ki(v) {
     (await Ra(R), profileCheckpoint("preAction_after_migrations"));
     let Me = L.parent?.name() === "auth";
     if (isForceRemoteSettingsRefreshConfigured() && !Me) {
-      let oe = await $Dt(async () =>
-        _lt(await v.showSecurityDialog?.(), R, { credentials: T }),
+      let oe = await validateRemoteManagedSettingsLoad(async () =>
+        initializeRemoteManagedSettings(await v.showSecurityDialog?.(), R, { credentials: T }),
       );
       if (!oe.valid) return cliError(oe.message);
     } else if (getAPIProvider() === "gateway" && !Me) {
-      if (!(await _lt(await v.showSecurityDialog?.(), R, { credentials: T }))) {
+      if (!(await initializeRemoteManagedSettings(await v.showSecurityDialog?.(), R, { credentials: T }))) {
         let oe = Fr();
         if (!oe.endedSession || L !== k || ke() || isUnattendedInteractiveSession())
           return cliError(oe.exitMessage);
@@ -5577,21 +5577,21 @@ function ki(v) {
       }
     } else if (ya() && !Me)
       await Promise.resolve(v.showSecurityDialog?.())
-        .then((oe) => _lt(oe, R, { singleAttempt: !0, credentials: T }))
+        .then((oe) => initializeRemoteManagedSettings(oe, R, { singleAttempt: !0, credentials: T }))
         .catch(logError);
     else
       Promise.resolve(v.showSecurityDialog?.())
-        .then((oe) => _lt(oe, R, { credentials: T }))
+        .then((oe) => initializeRemoteManagedSettings(oe, R, { credentials: T }))
         .catch(logError);
-    if (Pa(L, k)) XBn();
-    let Le = L === k && qJe();
-    KAn({ startupAwaited: Le });
+    if (Pa(L, k)) markNoConsentSurface();
+    let Le = L === k && shouldAwaitPolicyLimitsOnStartup();
+    loadPolicyLimits({ startupAwaited: Le });
     {
       let oe = getBasePolicySettingsOrigin();
       retireOsAdminPolicyHelper(oe);
       let je = await runPolicyHelperPass(getBasePolicySettings(), oe, getPolicyHelperSourceLoadErrors());
       if (je) return cliError(je);
-      if ((enableMidSessionPolicyHelperArming(ka), hasActivePolicyHelper())) goe();
+      if ((enableMidSessionPolicyHelperArming(ka), hasActivePolicyHelper())) applySafeConfigEnvironmentVariables();
     }
     let qe = vi(B());
     if ((policyHelperRefreshedEvents.subscribe(qe), areSideloadFlagsDisabledByPolicy())) {
@@ -6063,9 +6063,9 @@ function ki(v) {
       .addOption(
         new z(
           "--effort <level>",
-          `Effort level for the current session (${im.join(", ")})`,
+          `Effort level for the current session (${EFFORT_LEVELS.join(", ")})`,
         ).argParser((I) => {
-          let { level: L, warning: W } = KEt(I);
+          let { level: L, warning: W } = parseEffortArgValue(I);
           if (W !== void 0)
             process.stderr.write(`Warning: ${W}
 `);
@@ -6361,7 +6361,7 @@ function Ai(v) {
 }
 function Ta() {
   (kW(null),
-    UDt(),
+    stopRemoteSettingsPoller(),
     resetRemoteSettingsSyncCache(),
     invalidateAllSettings(),
     process.stderr.write(
@@ -6698,7 +6698,7 @@ async function ja(v) {
     durationMs: Math.round(process.uptime() * 1000),
     resumed: !!(O.resume || O.continue),
   }),
-    n("[STARTUP] Running showSetupScreens()..."));
+    logForDebugging("[STARTUP] Running showSetupScreens()..."));
   let ao = Date.now(),
     et = !1,
     lo = shouldSuppressChromeOffer({
@@ -6728,7 +6728,7 @@ async function ja(v) {
       oe,
     )),
     kLn(Nt),
-    n(`[STARTUP] showSetupScreens() completed in ${Date.now() - ao}ms`),
+    logForDebugging(`[STARTUP] showSetupScreens() completed in ${Date.now() - ao}ms`),
     ((!V && checkHasTrustDialogAccepted()) || (!q && isWorkspacePersistedTrusted())) && !J && !isSimpleMode() && !Nn())
   ) {
     let le = Date.now();
@@ -6737,7 +6737,7 @@ async function ja(v) {
     );
   }
   if (et && !isClaudeInChromeAllowed())
-    n(
+    logForDebugging(
       "[Claude in Chrome] Skipping accepted offer: denied by organization policy (allow_claude_browser_extension)",
     );
   else if (et) {
@@ -6753,12 +6753,12 @@ ${Rt}`
     } catch (le) {
       (logEvent("tengu_claude_in_chrome_setup_failed", { platform: getPlatformForAnalytics(getCurrentPlatform()) }),
         logError(le),
-        n(`[Claude in Chrome] Error (startup offer): ${le}`));
+        logForDebugging(`[Claude in Chrome] Error (startup offer): ${le}`));
     }
     try {
       je = await getCommands(X, fe);
     } catch (le) {
-      n(`[Claude in Chrome] command refresh after accept failed: ${le}`);
+      logForDebugging(`[Claude in Chrome] command refresh after accept failed: ${le}`);
     }
   }
   if (Me !== void 0) {
@@ -6779,10 +6779,10 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
   if (Nt && zt?.trim().toLowerCase() === "/login") zt = "";
   if (Nt) {
     if (isForceRemoteSettingsRefreshConfigured()) {
-      let le = await $Dt(async () => mIe(await tr(), fe, oe));
+      let le = await validateRemoteManagedSettingsLoad(async () => tryRefreshRemoteManagedSettings(await tr(), fe, oe));
       if (!le.valid) return await Ne(De, le.message);
     } else if (getAPIProvider() === "gateway") {
-      if (!(await mIe(await tr(), fe, oe))) {
+      if (!(await tryRefreshRemoteManagedSettings(await tr(), fe, oe))) {
         let le = Fr();
         return await Ne(
           De,
@@ -6792,22 +6792,22 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
         );
       }
     } else
-      switch (await YBn(await tr(), fe, oe)) {
+      switch (await awaitRemoteSettingsRefreshAfterLogin(await tr(), fe, oe)) {
         case "refreshed":
           break;
         case "consent_pending":
-          n(
+          logForDebugging(
             "Remote settings: fetched settings need consent \u2014 dialog opens once the REPL mounts; settings apply after approval",
           );
           break;
         case "timed_out":
-          n(
+          logForDebugging(
             "Remote settings: refresh still in flight at REPL mount \u2014 org settings (company announcements included) may apply later this session",
             { level: "warn" },
           );
           break;
         case "failed":
-          n(
+          logForDebugging(
             "Remote settings: post-onboarding refresh did not complete \u2014 org settings may be stale or absent this session",
             { level: "warn" },
           );
@@ -6840,9 +6840,9 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
           De.unmount(),
           await import("../../02-功能模块/认证-OAuth登录/execRelaunch.ewkdrr0a.js").then((le) => le.execRelaunch())
         );
-      (resetAuthCachesAfterLogin("gateway"), dR());
+      (resetAuthCachesAfterLogin("gateway"), applyConfigEnvironmentVariables());
     }
-    (zJe(),
+    (refreshPolicyLimits(),
       resetUserData(),
       refreshGrowthBookAfterAuthChange(),
       import("../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js").then(
@@ -6875,7 +6875,7 @@ function Nr(v, k) {
         has_prefill: Boolean(k.prefill),
         has_repo: Boolean(k.deepLinkRepo),
       }),
-      n(
+      logForDebugging(
         formatDeepLinkSessionNotice({
           cwd: getCwd(),
           prefillLength: k.prefill?.length,
@@ -7114,8 +7114,8 @@ async function $a(v, k, O, R) {
         : k.replyOnResume
           ? { replay: !0 }
           : null,
-      ...S$e(k.effort),
-      ultracode: i4t(k.effort),
+      ...buildInitialEffortState(k.effort),
+      ultracode: isUltracodeRequestedAtStartup(k.effort),
       cacheMissAckedAtOutputTokens: -1,
       autoCompactWindow: L,
       activeOverlays: new Set(),
@@ -7218,7 +7218,7 @@ async function $a(v, k, O, R) {
             Ct === void 0 ? "No conversation found to continue" : formatContinuedInMessage(Ct),
           )
         );
-      let We = await $st(
+      let We = await restoreSessionFromTranscript(
         Zt,
         {
           forkSession: !!k.forkSession,
@@ -7294,7 +7294,7 @@ async function $a(v, k, O, R) {
       }
     }
     if (x !== null || Xe) {
-      await b_();
+      await waitForPolicyLimitsToLoad();
       let ne = getCloudSessionsUnavailableReason();
       if (ne) return await Ne(se, `Error: ${ne}`, () => gracefulShutdown(1));
     }
@@ -7398,7 +7398,7 @@ Usage: claude --cloud "your task description"`,
           vt = await prepareApiRequest(He);
         } catch (Ze) {
           return (
-            n(`--remote auth setup failed: ${l(Ze)}`, { level: "error" }),
+            logForDebugging(`--remote auth setup failed: ${l(Ze)}`, { level: "error" }),
             await Ne(se, `Error: ${l(Ze) || "Failed to authenticate"}`, () =>
               gracefulShutdown(1),
             )
@@ -7453,13 +7453,13 @@ Usage: claude --cloud "your task description"`,
             launchMayForward: Le,
             hostConsent: qe,
           }),
-          At = zEt({
+          At = buildPermissionModeSeed({
             gateOn: zo,
             permissionModeTyped: Tt !== void 0,
             dangerouslySkipPermissions: q === !0,
             scrubbed: isScrubEnabled(),
             settings: getInitialSettings(),
-            effort: Ya(me),
+            effort: getSessionEffortLevel(me),
           });
         if (nt) {
           ko = getMainLoopModel();
@@ -7472,7 +7472,7 @@ Usage: claude --cloud "your task description"`,
               droppedMode: (ue !== void 0 && !Fe) || Boolean(q),
               settingsMode: At.settingsDefault,
               settingsModeForwardable: zo,
-              autoSeedable: xJe(getInitialSettings()) && !isScrubEnabled(),
+              autoSeedable: isAutoModeSeedable(getInitialSettings()) && !isScrubEnabled(),
               publicModel: getDefaultOpusModel(),
               repositoryModel: Ze
                 ? getRepositoryModelSource({
@@ -7486,20 +7486,20 @@ Usage: claude --cloud "your task description"`,
                     restrictedModel: vo,
                   })
                 : void 0,
-              trustedPlanDisplaced: qEt(getInitialSettings()),
+              trustedPlanDisplaced: isTrustedPlanModeDisplaced(getInitialSettings()),
             })),
             ot.notice)
           )
-            n(`[remote] ${ot.notice.text}`);
+            logForDebugging(`[remote] ${ot.notice.text}`);
         }
         let Mt = ot ? ot.permissionMode : Fe;
         if (nt)
           ((lr = Mt && { mode: Mt }),
-            (qo = Snr({
+            (qo = resolveSessionStartPermissionMode({
               sentMode: Mt,
               repositorySettings: getSettingsForSource("projectSettings"),
             })),
-            (Yo = bnr({
+            (Yo = buildSettingsKeptNotice({
               seed: At,
               settingsMode: getInitialSettings().permissions?.defaultMode,
               sentMode: Mt,
@@ -7538,7 +7538,7 @@ Usage: claude --cloud "your task description"`,
             reuseOutcomeBranch: De ?? void 0,
             explicitRef: De ?? et ?? void 0,
             poolId: Je ?? void 0,
-            effort: oo && k.effort !== void 0 ? Ya(me) : At.effort,
+            effort: oo && k.effort !== void 0 ? getSessionEffortLevel(me) : At.effort,
             correlationId: j ?? void 0,
             deviceBinding: Ni,
             permissionMode: Mt,
@@ -7626,7 +7626,7 @@ Usage: claude --cloud "your task description"`,
 `);
           if (
             (process.stdout
-              .write(`View: ${wa(kt.id, void 0, { from: "cli", m: "0" })}
+              .write(`View: ${buildClaudeAiSessionUrl(kt.id, void 0, { from: "cli", m: "0" })}
 `),
             process.stdout.write(`Resume with: claude --teleport ${kt.id}
 `),
@@ -7695,7 +7695,7 @@ Usage: claude --cloud "your task description"`,
             ),
           }),
         },
-        Gr = wa(xt, void 0, { from: "cli", m: "0" }),
+        Gr = buildClaudeAiSessionUrl(xt, void 0, { from: "cli", m: "0" }),
         qr = buildCloudSessionStatusMessage("create", Gr, isViolinWoodEnabledCached()),
         Yr = Yo ? [createSystemInfoMessage(Yo.text, Yo.level)] : [],
         Kr = ht.map((nt) => createSystemInfoMessage(nt, "warning")),
@@ -7807,7 +7807,7 @@ Usage: claude --cloud "your task description"`,
     } else if (Xe) {
       if (Xe === !0 || Xe === "") {
         (logEvent("tengu_teleport_interactive_mode", {}),
-          n("selectAndResumeTeleportTask: Starting teleport flow..."));
+          logForDebugging("selectAndResumeTeleportTask: Starting teleport flow..."));
         let ne = await jn(se);
         if (!ne) (await gracefulShutdown(0), process.exit(0));
         let { branchError: Z } = await checkOutTeleportedSessionBranch(ne.branch);
@@ -7847,7 +7847,7 @@ Usage: claude --cloud "your task description"`,
                   initialPaths: xt,
                   storageV5: ae,
                 });
-                if (ht) (Yu(ht), setSessionCwd(ht), ES(ht), getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(ae));
+                if (ht) (changeWorkingDirectory(ht), setSessionCwd(ht), ES(ht), getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(ae));
                 else await gracefulShutdown(0);
               } else {
                 let ht = Fe,
@@ -7923,7 +7923,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
             if (ze) {
               if (
                 ((Qe = "processing_error"),
-                (Oe = await $st(
+                (Oe = await restoreSessionFromTranscript(
                   ze,
                   {
                     forkSession: !!k.forkSession,
@@ -7960,7 +7960,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
               }),
               Qe === "load_error" && (Kd(ue) || Bp(ue)))
             )
-              n(`--resume file unreadable (${A(ue)}): ${l(ue)}`, {
+              logForDebugging(`--resume file unreadable (${A(ue)}): ${l(ue)}`, {
                 level: "error",
               });
             else logError(ue);
@@ -7997,12 +7997,12 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
             failure_reason: S("not_found_explicit_id"),
           });
           let Fe = `No conversation found with session ID: ${ne}`;
-          return (n(Fe, { level: "error" }), await Ne(se, Fe, () => gracefulShutdown(1)));
+          return (logForDebugging(Fe, { level: "error" }), await Ne(se, Fe, () => gracefulShutdown(1)));
         }
         Z = "processing_error";
         let ue = We?.fullPath ?? Qe.fullPath;
         if (
-          ((Oe = await $st(
+          ((Oe = await restoreSessionFromTranscript(
             Qe,
             {
               forkSession: !!k.forkSession,
@@ -8033,7 +8033,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
           }),
           Z === "load_error" && (Kd(de) || Bp(de)))
         )
-          n(`--resume session load failed (${A(de)}): ${l(de)}`, {
+          logForDebugging(`--resume session load failed (${A(de)}): ${l(de)}`, {
             level: "error",
           });
         else logError(de);

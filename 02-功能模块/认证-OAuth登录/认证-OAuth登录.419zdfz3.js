@@ -105,18 +105,18 @@ import {
   Ps,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import {
-  rZ,
-  We,
-  CL,
-  Cg,
-  Et,
-  Yhe,
-  b,
-  z,
+  isAbsentParentFailure,
+  describeStorageError,
+  createOkResult,
+  createErrorResult,
+  registerCleanup,
+  isCleanupDrainStarted,
+  jsonStringify,
+  jsonParse,
   Is,
-  ae,
-  n,
-  AW,
+  getFsSurface,
+  logForDebugging,
+  logAntError,
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, truncateToCodeUnits, toWellFormed, sanitizeLoneSurrogates, truncateAtWordBoundary } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { CROSS_SESSION_MESSAGE_TAG, isEssentialTrafficOnly, isNonessentialTrafficRestricted, getNonessentialTrafficDisabledEnvVar, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -144,7 +144,7 @@ import {
   isAdminPolicyOrigin,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
-import { y1, Kxn, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { toForwardSlashPath, writeFileSyncAndFlush, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizePath, getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { Jcr, wS, Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -161,7 +161,7 @@ import {
   readGitConfigValue,
   getRepoRemoteHash,
 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { cs, xt, ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -200,34 +200,34 @@ import {
   getAWSProxyRequestHandler,
 } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
-  R5t,
-  RP,
-  Gvt,
-  hBe,
-  um,
-  Xt,
-  _0,
-  er,
-  _A,
-  k5t,
-  m1,
-  qvt,
+  CANONICAL_MODEL_IDS,
+  MODEL_ALIASES,
+  MODEL_FAMILIES,
+  MYTHOS_PREVIEW_MODEL_ID,
+  isModelAlias,
+  strip1mSuffix,
+  isSameModelName,
+  stripLongContextTags,
+  isModelFamily,
+  BAKED_MODEL_CATALOG,
+  getModelCatalogState,
+  getModelCatalog,
   kP,
-  lie,
-  Qa,
-  Qkn,
-  Yir,
-  dm,
-  Qir,
-  to,
-  _Be,
-  ear,
-  exn,
-  QD,
-  BR,
-  g1,
-  F6,
-  zvt,
+  getCatalogIdByProviderId,
+  getCatalogEntryById,
+  getPricingTierForModel,
+  setServedCapabilityLookup,
+  modelHasCapability,
+  resolveModelAliasForProvider,
+  MODEL_CONFIGS_BY_KEY,
+  FABLE_5_MODEL_CONFIG,
+  MYTHOS_5_MODEL_CONFIG,
+  OPUS_LINEUP_KEYS,
+  MODEL_KEY_BY_FIRST_PARTY_ID,
+  findModelConfigByProviderId,
+  parseModelId,
+  isFullyRecognizedModelId,
+  isSameModelVersion,
   getAPIProvider,
   isFirstPartyProvider,
   getProviderForModel,
@@ -242,21 +242,21 @@ import {
 } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import {
   dir,
-  PRe,
-  sBe,
-  WZe,
-  nS,
-  Tkn,
-  pir,
-  Cvt,
-  GZe,
-  aBe,
-  bQ,
-  jt,
-  rS,
-  VZe,
-  DRe,
-  Akn,
+  ACCOUNT_ON_HOLD_ERROR_CODE,
+  ACCOUNT_ON_HOLD_URL,
+  parseAccountOnHoldError,
+  getAuthPrecedenceSource,
+  clearCachedAccountInfo,
+  isProfileAuthSelected,
+  getProfileAuthType,
+  isClaudeAiLoginShadowingProfile,
+  scanSdkUrlFlag,
+  normalizeUrlSchemeToHttp,
+  getMcpClientState,
+  isCliOwnedMcpConfig,
+  isRemoteDevicesProxyUrl,
+  normalizeMcpServerUrl,
+  getBgDispatcherIdentity,
 } from "./chunk-wk0e3dz4.js";
 import { isTainted, areComplianceTaintsSettled } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
@@ -270,7 +270,7 @@ import { getSecureStorageDir, getKeychainServiceName, getKeychainAccountName, in
 import { getLegacyApiKeyPrefetchResult, clearLegacyApiKeyPrefetch } from "../../01-核心基础设施/共享小工具-未细化/keychain-prefetch.js";
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { jir, ARTIFACT_TOOL_NAME } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { YRe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { neutralizeClosingTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { SEND_USER_FILE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { getParentSessionId, getAgentId, getTeamName, isTeammate, isNestedInteractiveClaudeSession } from "../Teammates团队/teammate-context.js";
@@ -6116,7 +6116,7 @@ async function SH() {
       .filter(Boolean);
   } catch (d) {
     throw (
-      n(
+      logForDebugging(
         `Bedrock ListInferenceProfiles failed: ${d instanceof Error ? d.message : String(d)}`,
         { level: "error" },
       ),
@@ -6238,7 +6238,7 @@ async function countBedrockTokens(e, t, r, o) {
           input: {
             invokeModel: {
               body: Buffer.from(
-                b({ anthropic_version: "bedrock-2023-05-31", ...r }),
+                jsonStringify({ anthropic_version: "bedrock-2023-05-31", ...r }),
               ),
             },
           },
@@ -6249,7 +6249,7 @@ async function countBedrockTokens(e, t, r, o) {
   );
 }
 function getInferenceProfileBackingModel(e) {
-  let t = er(e),
+  let t = stripLongContextTags(e),
     r = getProviderState().providerCache.inferenceProfileBackingModels,
     o = r.get(t);
   if (o === void 0) ((o = TH(t)), r.set(t, o));
@@ -6257,7 +6257,7 @@ function getInferenceProfileBackingModel(e) {
 }
 function isUnresolvedInferenceProfileArn(e) {
   return (
-    e.includes("application-inference-profile") && typeof OW(er(e)) !== "string"
+    e.includes("application-inference-profile") && typeof OW(stripLongContextTags(e)) !== "string"
   );
 }
 async function TH(e) {
@@ -6277,7 +6277,7 @@ async function TH(e) {
       t = _ >= 0 ? p.substring(_ + 1) : p;
     }
   } catch (r) {
-    n(
+    logForDebugging(
       `Failed to resolve Bedrock inference profile backing model for ${e}: ${r instanceof Error ? r.message : String(r)}`,
       { level: "error" },
     );
@@ -6323,13 +6323,13 @@ async function i_() {
 function ub(e) {
   return e;
 }
-var Dc = Object.keys(to);
+var Dc = Object.keys(MODEL_CONFIGS_BY_KEY);
 function bo(e, t) {
-  let r = Dc.find((p) => to[p][e] !== null),
+  let r = Dc.find((p) => MODEL_CONFIGS_BY_KEY[p][e] !== null),
     o = e === "bedrock" ? resolveInferenceProfilePrefix(t ?? getAwsRegion()) : void 0,
     d = {};
   for (let p of Dc) {
-    let _ = to[p][e] ?? (r ? to[r][e] : to[p].firstParty);
+    let _ = MODEL_CONFIGS_BY_KEY[p][e] ?? (r ? MODEL_CONFIGS_BY_KEY[r][e] : MODEL_CONFIGS_BY_KEY[p].firstParty);
     d[p] = ub(o ? applyInferenceProfilePrefix(_, o) : _);
   }
   return d;
@@ -6341,7 +6341,7 @@ async function bH() {
     o = bo("bedrock", e),
     d = () => {
       if (t !== r)
-        n(
+        logForDebugging(
           `ANTHROPIC_BEDROCK_REGION_PREFIX=${t} is being applied without an availability check (inference-profile discovery is unavailable). If requests 400, ensure ${t}.* cross-region inference profiles are enabled in this account, or unset the variable to fall back to ${r}.*.`,
           { level: "warn" },
         );
@@ -6351,7 +6351,7 @@ async function bH() {
     p = await getBedrockInferenceProfiles();
   } catch (C) {
     return (
-      n(
+      logForDebugging(
         `Failed to list Bedrock inference profiles, falling back to hardcoded models: ${C instanceof Error ? C.message : String(C)}`,
         { level: "error" },
       ),
@@ -6363,12 +6363,12 @@ async function bH() {
   let _ = {},
     E = [];
   for (let C of Dc) {
-    let I = to[C].firstParty,
+    let I = MODEL_CONFIGS_BY_KEY[C].firstParty,
       D = findInferenceProfileForModel(p, I, t) || o[C];
     if (((_[C] = ub(D)), t !== r && !D.startsWith(`${t}.`))) E.push(I);
   }
   if (E.length > 0)
-    n(
+    logForDebugging(
       `ANTHROPIC_BEDROCK_REGION_PREFIX=${t}: ${E.length} model(s) resolved to a different prefix (no ${t}.* profile in this account): ${E.join(", ")}. This is a preference, not a residency guarantee.`,
       { level: "warn" },
     );
@@ -6379,7 +6379,7 @@ function s_(e) {
   if (!t) return e;
   let r = { ...e };
   for (let [o, d] of Object.entries(t)) {
-    let p = QD[o];
+    let p = MODEL_KEY_BY_FIRST_PARTY_ID[o];
     if (p && d) r[p] = ub(d);
   }
   return r;
@@ -9483,7 +9483,7 @@ function bh(e) {
 }
 function supportsPerTurnEffort(e, t) {
   if (!canUseExperimentalBetas() || !hasFirstPartyCapabilities(getProviderForModel(e))) return !1;
-  if (dm(t, "per_turn_effort", e) !== !0 && Eh?.(t, e) !== !0) return !1;
+  if (modelHasCapability(t, "per_turn_effort", e) !== !0 && Eh?.(t, e) !== !0) return !1;
   return Th?.() !== !0;
 }
 function Err(e, t) {
@@ -9641,7 +9641,7 @@ class fu {
   }
   setCredentials(e) {
     if (this.credentials !== void 0 && this.credentials !== e) {
-      n(
+      logForDebugging(
         "GrowthBook: a credentials store was already handed in; the later one is ignored",
       );
       return;
@@ -9650,7 +9650,7 @@ class fu {
   }
   setStorageBackend(e) {
     if (this.storageV5 !== void 0 && this.storageV5 !== e) {
-      n(
+      logForDebugging(
         "GrowthBook: a storage backend was already handed in; the later one is ignored",
       );
       return;
@@ -9659,7 +9659,7 @@ class fu {
   }
   refreshOAuthToken() {
     if (isHoverRestEnabled())
-      n(
+      logForDebugging(
         `GrowthBook: token-refresh check (credentials store: ${this.credentials === void 0 ? "none" : "handed"})`,
       );
     return this.deps.refreshOAuthTokenIfNeeded(
@@ -9921,12 +9921,12 @@ class fu {
       } catch (I) {
         let D = ge(I),
           x = D.message === Oh ? "timeout" : D.name;
-        n(`GrowthBook: pre-init OAuth refresh failed (${x})`);
+        logForDebugging(`GrowthBook: pre-init OAuth refresh failed (${x})`);
       }
       try {
         t = await this.deps.getAuthHeaders();
       } catch (I) {
-        (n(
+        (logForDebugging(
           `GrowthBook: auth header resolution failed (${ge(I).name}), continuing without auth`,
         ),
           (t = { headers: {}, error: "auth resolution failed" }),
@@ -10729,14 +10729,14 @@ class TelemetryExportFailureReporter {
   }
   record(e) {
     if ((this.count++, (this.last = e), this.count === 1))
-      n(
+      logForDebugging(
         `${TELEMETRY_LOG_PREFIX} ${this.pipeline} export failed (${e}). This is Anthropic's own telemetry pipeline, not your OTel collector; further failures are counted and summarised at shutdown.`,
       );
   }
   logSummary() {
     if (this.count === this.reportedCount) return;
     ((this.reportedCount = this.count),
-      n(
+      logForDebugging(
         `${TELEMETRY_LOG_PREFIX} ${this.pipeline} export: ${this.count} failure(s) this session (last: ${this.last})`,
       ));
   }
@@ -11556,7 +11556,7 @@ function setRequestBodyGzipPlanner(e) {
 }
 function buildGzippedBodyIfEnabled({ url: e, payload: t, storageV5: r }) {
   if (Ra === null) return null;
-  let o = b(t);
+  let o = jsonStringify(t);
   if (typeof o !== "string") return null;
   let d = Ra(e, o, r);
   if (d === void 0 || !d.gzip) return null;
@@ -11582,8 +11582,8 @@ function C7(e) {
   return ka.test(t) ? t : void 0;
 }
 function O7() {
-  let e = [...RP];
-  for (let t of k5t.models) {
+  let e = [...MODEL_ALIASES];
+  for (let t of BAKED_MODEL_CATALOG.models) {
     e.push(t.id);
     for (let [r, o] of Object.entries(t.provider_ids)) {
       if (typeof o !== "string" || o === "") continue;
@@ -12066,10 +12066,10 @@ function normalizeQuerySource(e) {
 }
 var Ix = "tengu_mossy_lantern";
 function Dx(e) {
-  m1().mainLoopCanonical = e;
+  getModelCatalogState().mainLoopCanonical = e;
 }
 function getMainLoopCanonical() {
-  return m1().mainLoopCanonical?.();
+  return getModelCatalogState().mainLoopCanonical?.();
 }
 var see = /^[A-Za-z0-9._:[\]-]{1,100}$/,
   aee = /^[A-Za-z0-9._:[\]-]{1,91}@\d{8}(\[\d{1,3}[mM]\])?$/;
@@ -12405,7 +12405,7 @@ function getFastModeUnavailableMessage(e) {
   let t = getFastModeUnavailableReason(e);
   if (t === null) return null;
   let r = fee(t);
-  return (n(`Fast mode unavailable: ${r}`), r);
+  return (logForDebugging(`Fast mode unavailable: ${r}`), r);
 }
 function fee(e) {
   switch (e) {
@@ -12454,7 +12454,7 @@ function modelSupportsFastMode(e) {
   if (!isFastModeEnabled()) return !1;
   let t = e ?? getDefaultMainLoopModelSetting(),
     r = parseUserSpecifiedModel(t);
-  if (dm(getCanonicalName(r), "fast_mode", r)) return !0;
+  if (modelHasCapability(getCanonicalName(r), "fast_mode", r)) return !0;
   let o = r.toLowerCase();
   return o.includes("opus-4-8") || o.includes("opus-5");
 }
@@ -12536,7 +12536,7 @@ function getFastModeCooldownState() {
   let e = fastModeStore.runtimeState;
   if (e.status === "cooldown" && Date.now() >= e.resetAt) {
     if (isFastModeEnabled() && !fastModeStore.hasLoggedCooldownExpiry)
-      (n("Fast mode cooldown expired, re-enabling fast mode"),
+      (logForDebugging("Fast mode cooldown expired, re-enabling fast mode"),
         fastModeStore.markCooldownExpiryLogged(),
         fastModeStore.cooldownExpired.emit());
     fastModeStore.clearCooldown();
@@ -12547,7 +12547,7 @@ function enterFastModeCooldown(e, t) {
   if (!isFastModeEnabled()) return;
   fastModeStore.enterCooldown(e, t);
   let r = e - Date.now();
-  (n(`Fast mode cooldown triggered (${t}), duration ${Math.round(r / 1000)}s`),
+  (logForDebugging(`Fast mode cooldown triggered (${t}), duration ${Math.round(r / 1000)}s`),
     logEvent("tengu_fast_mode_fallback_triggered", {
       cooldown_duration_ms: r,
       cooldown_reason: fromEnum(t),
@@ -12618,14 +12618,14 @@ function rearmFastModeCreditsNotice() {
 function handleFastModeOverageRejection(e, t) {
   let r = gee(e);
   if (
-    (n(`Fast mode overage rejection: ${e ?? "unknown"} \u2014 ${r}`),
+    (logForDebugging(`Fast mode overage rejection: ${e ?? "unknown"} \u2014 ${r}`),
     logEvent("tengu_fast_mode_overage_rejected", {
       overage_disabled_reason: Ub(e ?? "unknown"),
     }),
     isCreditsExhaustedReason(e))
   ) {
     if (!fastModeStore.claimCreditsExhaustedNotice()) {
-      n(
+      logForDebugging(
         "Fast mode credits rejection already surfaced this turn, suppressing repeat",
       );
       return;
@@ -12734,7 +12734,7 @@ async function prefetchOrgFastModeStatus(e, t) {
   }
   if (fastModeStore.inflightPrefetch)
     return (
-      n("Fast mode prefetch in progress, returning in-flight promise"),
+      logForDebugging("Fast mode prefetch in progress, returning in-flight promise"),
       fastModeStore.inflightPrefetch
     );
   let r = getAnthropicApiKeySafe();
@@ -12750,7 +12750,7 @@ async function prefetchOrgFastModeStatus(e, t) {
     return;
   }
   if (!fastModeStore.beginPrefetchWindow(Date.now(), Eee)) {
-    n("Skipping fast mode prefetch, fetched recently");
+    logForDebugging("Skipping fast mode prefetch, fetched recently");
     return;
   }
   let d = async () => {
@@ -12802,7 +12802,7 @@ async function prefetchOrgFastModeStatus(e, t) {
           await updateSettingsForSource("userSettings", { fastMode: void 0 }, void 0, e);
         await saveGlobalConfig((I) => ({ ...I, penguinModeOrgEnabled: E.enabled }), e);
       }
-      n(
+      logForDebugging(
         `Org fast mode: ${E.enabled ? "enabled" : `disabled (${E.disabled_reason ?? "preference"})`}`,
       );
     } catch (E) {
@@ -12817,7 +12817,7 @@ async function prefetchOrgFastModeStatus(e, t) {
         fastModeStore.orgStatus.status === "disabled"
           ? `disabled (${fastModeStore.orgStatus.reason})`
           : "enabled (cached)";
-      (n(`Failed to fetch org fast mode status, standing on ${D}: ${E}`, {
+      (logForDebugging(`Failed to fetch org fast mode status, standing on ${D}: ${E}`, {
         level: "error",
       }),
         logEvent("tengu_org_penguin_mode_fetch_failed", {}));
@@ -12872,8 +12872,8 @@ function getFastModeModelCosts(e) {
   return Wx;
 }
 function $x(e) {
-  let t = Qa(e),
-    r = t === void 0 ? void 0 : Qkn(t);
+  let t = getCatalogEntryById(e),
+    r = t === void 0 ? void 0 : getPricingTierForModel(t);
   return r === void 0 ? void 0 : formatCostsPerMtok(Yx(e, r));
 }
 function Yx(e, t) {
@@ -12899,14 +12899,14 @@ function Yx(e, t) {
     webSearchRequests: E,
   };
 }
-var Tee = new Set(R5t);
+var Tee = new Set(CANONICAL_MODEL_IDS);
 function pp(e) {
   return Tee.has(e);
 }
 function bee() {
   let e = {};
   for (let t of kP().models) {
-    let r = Qkn(t);
+    let r = getPricingTierForModel(t);
     if (r === void 0) continue;
     if (!pp(t.id))
       throw new R(
@@ -12918,8 +12918,8 @@ function bee() {
   return e;
 }
 var MODEL_COSTS_BY_CANONICAL_NAME = Object.assign(Object.create(null), {
-  [firstPartyNameToCanonical(_Be.firstParty)]: Ua,
-  [firstPartyNameToCanonical(ear.firstParty)]: Ua,
+  [firstPartyNameToCanonical(FABLE_5_MODEL_CONFIG.firstParty)]: Ua,
+  [firstPartyNameToCanonical(MYTHOS_5_MODEL_CONFIG.firstParty)]: Ua,
   ...bee(),
 });
 function Aee(e, t) {
@@ -12965,7 +12965,7 @@ function resolveModelCosts(e, t) {
     o = getCanonicalName(e, { identity: !0 });
   if (o !== r) {
     let E = getGlobalConfig().additionalModelCostsCache,
-      C = Kx(E, Xt(e)) ?? Kx(E, Xt(o));
+      C = Kx(E, strip1mSuffix(e)) ?? Kx(E, strip1mSuffix(o));
     if (C) return C;
   }
   if (t.speed === "fast") {
@@ -13012,7 +13012,7 @@ function za() {
     return o.orgPricing.value;
   } catch (t) {
     if (
-      (n(
+      (logForDebugging(
         `modelPricing: ${t instanceof Error ? t.message : String(t)}; pricing at list`,
         { level: "error" },
       ),
@@ -13033,9 +13033,9 @@ function kee(e, t) {
         promptCacheWriteTokens: p.cacheWrite,
         webSearchRequests: DEFAULT_MODEL_COSTS.webSearchRequests,
       },
-      E = er(d).toLowerCase();
+      E = stripLongContextTags(d).toLowerCase();
     if (r.has(E)) {
-      n(
+      logForDebugging(
         `modelPricing: override '${d}' repeats an earlier row's key; the earlier row is used`,
         { level: "warn" },
       );
@@ -13045,7 +13045,7 @@ function kee(e, t) {
     let C = wee(E);
     if (C === null) continue;
     if (o.has(C)) {
-      n(
+      logForDebugging(
         `modelPricing: override '${d}' spells the same built-in model as an earlier row; it prices only its exact spelling, other spellings use the earlier row`,
         { level: "warn" },
       );
@@ -13065,13 +13065,13 @@ function wee(e) {
   if (pp(e)) return e;
   let t = TW.find((o) => o !== "us" && e.startsWith(`${o}.anthropic.`)),
     r =
-      lie(t ? `us${e.slice(t.length)}` : e) ??
-      (e.startsWith("anthropic.") ? lie(`us.${e}`) : void 0);
+      getCatalogIdByProviderId(t ? `us${e.slice(t.length)}` : e) ??
+      (e.startsWith("anthropic.") ? getCatalogIdByProviderId(`us.${e}`) : void 0);
   return r !== void 0 && pp(r) ? r : null;
 }
 function fp(e, t) {
   return (
-    e.exact.get(er(t).toLowerCase()) ??
+    e.exact.get(stripLongContextTags(t).toLowerCase()) ??
     (e.builtin.size > 0
       ? e.builtin.get(
           getCanonicalName(t, { overridesMap: e.adminOverrides ?? getPairedPolicyModelOverrides() ?? {}, identity: !0 }),
@@ -13104,7 +13104,7 @@ function hasKnownModelCosts(e) {
 }
 function getCostBasis(e) {
   let t = za(),
-    r = e.includes("application-inference-profile") ? (OW(er(e)) ?? e) : e;
+    r = e.includes("application-inference-profile") ? (OW(stripLongContextTags(e)) ?? e) : e;
   if (t && fp(t, r) !== void 0) return "managed";
   if (!hasKnownModelCosts(r)) return "unknown";
   return t && t.multiplier !== 1 ? "managed" : "list";
@@ -13900,7 +13900,7 @@ async function primeGatewayModelCache(e) {
   if (fi().has(t)) return;
   let r = await e.read([wp()]);
   if (!r.ok) {
-    n(`[gatewayDiscovery] prime read failed: ${r.error.code}`);
+    logForDebugging(`[gatewayDiscovery] prime read failed: ${r.error.code}`);
     return;
   }
   let o = r.value.items[0];
@@ -13932,7 +13932,7 @@ async function fetchAndCacheGatewayModels(e) {
   if (!Pp()) {
     if (a.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY) {
       let t = getAPIProvider();
-      n(
+      logForDebugging(
         `[gatewayDiscovery] skipped: ${t !== "firstParty" ? `provider is ${t}` : a._CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL ? "_CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL is set" : a.ANTHROPIC_BASE_URL ? "ANTHROPIC_BASE_URL is a first-party host" : "ANTHROPIC_BASE_URL is unset"}`,
       );
     }
@@ -13947,7 +13947,7 @@ async function fetchAndCacheGatewayModels(e) {
       p = r || d,
       _ = getAnthropicApiKeySafe()?.trim() || d;
     if (!p && !_) {
-      n(
+      logForDebugging(
         o
           ? "[gatewayDiscovery] skipped: no credential (ANTHROPIC_AUTH_TOKEN, apiKeyHelper, or API key)"
           : "[gatewayDiscovery] skipped: apiKeyHelper requires workspace trust",
@@ -14002,18 +14002,18 @@ async function fetchAndCacheGatewayModels(e) {
         ...getProxyFetchOptions({ url: x }),
       });
     if (!N.ok) {
-      n(`[gatewayDiscovery] non-OK status ${N.status}`);
+      logForDebugging(`[gatewayDiscovery] non-OK status ${N.status}`);
       return;
     }
     let G = await N.json(),
       L = c({ data: v(AN()) }).safeParse(G);
     if (!L.success) {
-      n("[gatewayDiscovery] response body failed validation");
+      logForDebugging("[gatewayDiscovery] response body failed validation");
       return;
     }
     let U = L.data.data.filter((te) => /(claude|anthropic)/i.test(te.id));
     if (U.length === 0) {
-      n("[gatewayDiscovery] 0 usable models after filter");
+      logForDebugging("[gatewayDiscovery] 0 usable models after filter");
       return;
     }
     let F = Mp();
@@ -14023,14 +14023,14 @@ async function fetchAndCacheGatewayModels(e) {
           te.ok && te.value.items[0]?.found
             ? Ka(Buffer.from(te.value.items[0].value).toString("utf-8"))
             : null;
-      if (!te.ok) n(`[gatewayDiscovery] cache read failed: ${te.error.code}`);
+      if (!te.ok) logForDebugging(`[gatewayDiscovery] cache read failed: ${te.error.code}`);
       else fi().set(F, re);
       if (re && re.baseUrl === t && Qs(re.models, U)) return;
-      let ce = b({ baseUrl: t, fetchedAt: Date.now(), models: U });
+      let ce = jsonStringify({ baseUrl: t, fetchedAt: Date.now(), models: U });
       try {
         await SN(Op(), { recursive: !0 });
       } catch (Be) {
-        n(
+        logForDebugging(
           `[gatewayDiscovery] cache folder could not be made: ${Be instanceof Error ? Be.message : "unknown"}`,
         );
         return;
@@ -14040,23 +14040,23 @@ async function fetchAndCacheGatewayModels(e) {
         mode: 384,
       });
       if (!_e.ok) {
-        n(`[gatewayDiscovery] cache write failed: ${_e.error.code}`);
+        logForDebugging(`[gatewayDiscovery] cache write failed: ${_e.error.code}`);
         return;
       }
-      (fi().set(F, Ka(ce)), n(`[gatewayDiscovery] cached ${U.length} models`));
+      (fi().set(F, Ka(ce)), logForDebugging(`[gatewayDiscovery] cached ${U.length} models`));
       return;
     }
     let V = yN(F);
     if (V && V.baseUrl === t && Qs(V.models, U)) return;
     (await SN(Op(), { recursive: !0 }),
-      await Cne(F, b({ baseUrl: t, fetchedAt: Date.now(), models: U }), {
+      await Cne(F, jsonStringify({ baseUrl: t, fetchedAt: Date.now(), models: U }), {
         encoding: "utf-8",
         mode: 384,
       }),
       fi().delete(F),
-      n(`[gatewayDiscovery] cached ${U.length} models`));
+      logForDebugging(`[gatewayDiscovery] cached ${U.length} models`));
   } catch (t) {
-    n(
+    logForDebugging(
       t instanceof InvalidRequestHeaderValueError
         ? `[gatewayDiscovery] skipped: ${t.message}`
         : `[gatewayDiscovery] failed: ${t instanceof Error ? Ap(t.message) : "unknown"}`,
@@ -14146,10 +14146,10 @@ var vN = {
   },
 };
 function gi(e) {
-  let t = getCanonicalName(Xt(e), { identity: !0 }),
+  let t = getCanonicalName(strip1mSuffix(e), { identity: !0 }),
     r = getAPIProvider(),
     o = e.trim().toLowerCase(),
-    d = hasLongContextSuffix(o) ? Xt(o).trim() : o,
+    d = hasLongContextSuffix(o) ? strip1mSuffix(o).trim() : o,
     p = usesFirstPartyModelIds() && isLegacyOpusFirstParty(d) && isLegacyModelRemapEnabled(),
     _ = Object.hasOwn(vN, t) ? vN[t] : void 0;
   if (_) {
@@ -14174,7 +14174,7 @@ function RN(e) {
   return gi(e).isDeprecated;
 }
 function isModelRetiredOrRemapped(e) {
-  if (usesFirstPartyModelIds() && isLegacyOpusFirstParty(getCanonicalName(Xt(e), { identity: !0 })) && isLegacyModelRemapEnabled()) return !0;
+  if (usesFirstPartyModelIds() && isLegacyOpusFirstParty(getCanonicalName(strip1mSuffix(e), { identity: !0 })) && isLegacyModelRemapEnabled()) return !0;
   let t = gi(e);
   if (!t.isDeprecated) return !1;
   switch (t.copy.kind) {
@@ -14232,12 +14232,12 @@ function formatModelDeprecationWarning(e) {
   }
 }
 function classifyModelFamily(e, t) {
-  let r = Xt(e).toLowerCase(),
-    o = Gvt.find((p) => p === r);
+  let r = strip1mSuffix(e).toLowerCase(),
+    o = MODEL_FAMILIES.find((p) => p === r);
   if (o) return o;
   if (r === "best" || r === "opusplan") return "other";
-  let d = Xt(t).toLowerCase();
-  return Gvt.find((p) => d.includes(p)) ?? "other";
+  let d = strip1mSuffix(t).toLowerCase();
+  return MODEL_FAMILIES.find((p) => d.includes(p)) ?? "other";
 }
 function getCatalogModels(e) {
   return e.config.models ?? [];
@@ -14271,7 +14271,7 @@ function CN(e) {
 }
 var Pne = /^[a-z][a-z0-9]{1,23}$/;
 var Mne = new Set([
-  ...RP.map((e) => Xt(e)),
+  ...MODEL_ALIASES.map((e) => strip1mSuffix(e)),
   "default",
   "inherit",
   "latest",
@@ -14349,7 +14349,7 @@ function hasDroppedCatalogRows(e) {
   return (e.config.dropped_model_ids?.length ?? 0) > 0 || hasDroppedUnidentifiedRows(e);
 }
 function normalizeModelId(e) {
-  return er(e).trim().toLowerCase();
+  return stripLongContextTags(e).trim().toLowerCase();
 }
 var CONFIDENTIAL_MODEL_ID = "confidential";
 function setServedCatalog(e, t, r = !1) {
@@ -14413,18 +14413,18 @@ function MN() {
 }
 function ja(e) {
   let t = normalizeModelId(e);
-  return g1(t.includes("claude-") ? t : `claude-${t}`);
+  return parseModelId(t.includes("claude-") ? t : `claude-${t}`);
 }
 function xne(e, t) {
   return e.date === void 0 || t.has(e.date);
 }
 var Nne = createLazyValue(() =>
-  qvt().models.flatMap((e) => {
-    let t = g1(e.id);
-    if (!F6(t)) return [];
+  getModelCatalog().models.flatMap((e) => {
+    let t = parseModelId(e.id);
+    if (!isFullyRecognizedModelId(t)) return [];
     let r = new Set();
     for (let o of [e.id, ...Object.values(e.provider_ids)]) {
-      let d = typeof o === "string" ? g1(o)?.date : void 0;
+      let d = typeof o === "string" ? parseModelId(o)?.date : void 0;
       if (d !== void 0) r.add(d);
     }
     return [{ parsed: t, dates: r }];
@@ -14432,12 +14432,12 @@ var Nne = createLazyValue(() =>
 );
 function Lne(e) {
   let t = normalizeModelId(e);
-  if (um(t) || t === hBe) return !0;
+  if (isModelAlias(t) || t === MYTHOS_PREVIEW_MODEL_ID) return !0;
   if (xN(e)) return !0;
   let r = ja(e);
-  return F6(r) && Nne().some((o) => zvt(o.parsed, r) && xne(r, o.dates));
+  return isFullyRecognizedModelId(r) && Nne().some((o) => isSameModelVersion(o.parsed, r) && xne(r, o.dates));
 }
-var IN = new Set(R5t.flatMap((e) => g1(e)?.family ?? []));
+var IN = new Set(CANONICAL_MODEL_IDS.flatMap((e) => parseModelId(e)?.family ?? []));
 function DN(e) {
   return IN.has(e);
 }
@@ -14446,9 +14446,9 @@ function oo(e) {
 }
 function isCompiledModelId(e) {
   let t = normalizeModelId(e);
-  if (um(t) || t === hBe) return !0;
+  if (isModelAlias(t) || t === MYTHOS_PREVIEW_MODEL_ID) return !0;
   let r = ja(t);
-  return F6(r) && IN.has(r.family);
+  return isFullyRecognizedModelId(r) && IN.has(r.family);
 }
 function Une(e) {
   return NN() && !xN(e) && !isCompiledModelId(e);
@@ -14458,9 +14458,9 @@ function xN(e) {
   if (t.size === 0) return !1;
   if (t.has(normalizeModelId(e))) return !0;
   let r = ja(e);
-  if (!F6(r)) return !1;
+  if (!isFullyRecognizedModelId(r)) return !1;
   for (let o of t.values())
-    if (F6(o) && zvt(o, r) && (r.date === void 0 || r.date === o.date))
+    if (isFullyRecognizedModelId(o) && isSameModelVersion(o, r) && (r.date === void 0 || r.date === o.date))
       return !0;
   return !1;
 }
@@ -14516,7 +14516,7 @@ function maskModelIdsInPayload(e) {
   return r ?? e;
 }
 function Bne(e) {
-  return g1(normalizeModelId(e)) !== null;
+  return parseModelId(normalizeModelId(e)) !== null;
 }
 function Hne(e, t, r) {
   let o = (_) => {
@@ -14596,7 +14596,7 @@ function UN(e, t) {
   return;
 }
 function Gne(e, t) {
-  let r = m1().modelKnowledge?.identitySpelling(t);
+  let r = getModelCatalogState().modelKnowledge?.identitySpelling(t);
   return r === void 0 || normalizeModelId(r) === normalizeModelId(t) ? void 0 : findCatalogModel(e, r);
 }
 function $a(...e) {
@@ -14652,7 +14652,7 @@ function $N(e, t) {
     : void 0;
 }
 function rL(e) {
-  return getCanonicalName(Xt(e.trim().toLowerCase()), { identity: !0 });
+  return getCanonicalName(strip1mSuffix(e.trim().toLowerCase()), { identity: !0 });
 }
 function collectUnentitledModelNames(e) {
   let t = new Set();
@@ -14672,7 +14672,7 @@ function $ne(e, t) {
   for (let r of Wne()) {
     if (r === void 0) continue;
     for (let [o, d] of Object.entries(r)) {
-      if (!_0(d, e)) continue;
+      if (!isSameModelName(d, e)) continue;
       if (t.has(rL(o))) return !0;
     }
   }
@@ -14680,8 +14680,8 @@ function $ne(e, t) {
 }
 function isModelDenied(e, t) {
   if (t.size === 0) return !1;
-  let r = Xt(e.trim().toLowerCase());
-  return (so(r) ? [r, Xt(parseUserSpecifiedModel(r))] : [r]).some(
+  let r = strip1mSuffix(e.trim().toLowerCase());
+  return (so(r) ? [r, strip1mSuffix(parseUserSpecifiedModel(r))] : [r]).some(
     (d) => t.has(getCanonicalName(d, { identity: !0 })) || $ne(d, t),
   );
 }
@@ -14709,9 +14709,9 @@ function getOrgDefaultModelUpdatedAt() {
   return getOrgModelDefaultCache()?.updated_at ?? null;
 }
 function pickNewestPermittedFamilyModel(e) {
-  let t = Object.keys(to);
+  let t = Object.keys(MODEL_CONFIGS_BY_KEY);
   for (let r = t.length - 1; r >= 0; r--) {
-    let o = to[t[r]].firstParty;
+    let o = MODEL_CONFIGS_BY_KEY[t[r]].firstParty;
     if (Dp(getCanonicalName(o), e) && isModelAllowed(o) && !isModelRetiredOrRemapped(o) && !RN(o)) return o;
   }
   return null;
@@ -14726,7 +14726,7 @@ function Dp(e, t) {
   return !1;
 }
 function so(e) {
-  return um(e) || isServedFamilyExpandedSpelling(e);
+  return isModelAlias(e) || isServedFamilyExpandedSpelling(e);
 }
 function oL(e) {
   return resolveModelAliasEnvFree(e) ?? registryTargetServedFree(e);
@@ -14743,14 +14743,14 @@ function eL(e, t) {
   return e.length === t.length || e[t.length] === "-";
 }
 function qne(e, t) {
-  let r = so(e) ? Xt(parseUserSpecifiedModel(e).toLowerCase()) : e;
+  let r = so(e) ? strip1mSuffix(parseUserSpecifiedModel(e).toLowerCase()) : e;
   if (eL(r, t)) return !0;
   if (!t.startsWith("claude-") && eL(r, `claude-${t}`)) return !0;
   return !1;
 }
 function tL(e, t) {
   for (let r of t) {
-    if (_A(r)) continue;
+    if (isModelFamily(r)) continue;
     let o = r.indexOf(e);
     if (o === -1) continue;
     let d = o + e.length;
@@ -14759,14 +14759,14 @@ function tL(e, t) {
   return !1;
 }
 function nL(e, t) {
-  for (let [r, o] of Object.entries(t)) if (_0(o, e)) return r;
+  for (let [r, o] of Object.entries(t)) if (isSameModelName(o, e)) return r;
   return e;
 }
 function qa(e, t) {
-  let r = Xt(parseUserSpecifiedModel(e).trim().toLowerCase()),
+  let r = strip1mSuffix(parseUserSpecifiedModel(e).trim().toLowerCase()),
     o = oL(e);
-  if (o !== null && Xt(o) === r) return !0;
-  if (um(r)) return !1;
+  if (o !== null && strip1mSuffix(o) === r) return !0;
+  if (isModelAlias(r)) return !1;
   return isModelAllowed(r, { ...t, envFreeAliasResolution: !0 });
 }
 function isModelAllowed(e, t) {
@@ -14782,9 +14782,9 @@ function isModelAllowed(e, t) {
     o = t?.allowlist ?? r.availableModels;
   if (!o) return !0;
   if (o.length === 0) return !1;
-  let d = o.map((C) => Xt(C.trim().toLowerCase())),
-    p = Xt(e.trim().toLowerCase());
-  if (d.includes(p) && !_A(p)) {
+  let d = o.map((C) => strip1mSuffix(C.trim().toLowerCase())),
+    p = strip1mSuffix(e.trim().toLowerCase());
+  if (d.includes(p) && !isModelFamily(p)) {
     if (t?.envFreeAliasResolution || !so(p) || qa(p, t)) return !0;
   }
   let _;
@@ -14802,25 +14802,25 @@ function isModelAllowed(e, t) {
         ? nL(e, C.modelOverrides ?? getPairedPolicyModelOverrides() ?? {})
         : getModelOverrideSourceId(e);
   }
-  let E = Xt(_.trim().toLowerCase());
+  let E = strip1mSuffix(_.trim().toLowerCase());
   if (d.includes(E)) {
-    if (!_A(E) || !tL(E, d)) {
+    if (!isModelFamily(E) || !tL(E, d)) {
       if (t?.envFreeAliasResolution || E !== p || !so(E) || qa(E, t)) return !0;
     }
   }
   for (let C of d)
-    if (_A(C) && !tL(C, d) && Yne(E, C, t?.envFreeAliasResolution)) return !0;
+    if (isModelFamily(C) && !tL(C, d) && Yne(E, C, t?.envFreeAliasResolution)) return !0;
   if (so(E)) {
-    let C = Xt(parseUserSpecifiedModel(E).toLowerCase());
+    let C = strip1mSuffix(parseUserSpecifiedModel(E).toLowerCase());
     if (d.includes(C)) return !0;
   }
   for (let C of d)
-    if (!_A(C) && um(C)) {
+    if (!isModelFamily(C) && isModelAlias(C)) {
       let I = resolveModelAliasEnvFree(C);
-      if (I !== null && Xt(I) === E) return !0;
+      if (I !== null && strip1mSuffix(I) === E) return !0;
     }
   for (let C of d)
-    if (!_A(C) && !um(C)) {
+    if (!isModelFamily(C) && !isModelAlias(C)) {
       if (qne(E, C)) return !0;
     }
   return !1;
@@ -14882,7 +14882,7 @@ function formatUnrecognizedModelNotice(e) {
   return `"${e}" isn't described by this version's model catalog; update Claude Code, or map it with behavesAs on a modelPicker row (or modelOverrides, if it is a provider id of a model this version knows).`;
 }
 function dL(e) {
-  m1().modelKnowledge = e;
+  getModelCatalogState().modelKnowledge = e;
 }
 var Qne = 256;
 function pL() {
@@ -14928,7 +14928,7 @@ function Lp(e) {
   );
 }
 function resolveModelBehavesAs(e, t) {
-  let r = m1().modelKnowledge;
+  let r = getModelCatalogState().modelKnowledge;
   if (r === void 0) return uL;
   let o = Np(r),
     d = fL(o, e),
@@ -14987,7 +14987,7 @@ function mL(e) {
   return resolveModelBehavesAs(Wa(), e);
 }
 function _L(e) {
-  let t = m1().modelKnowledge;
+  let t = getModelCatalogState().modelKnowledge;
   if (t === void 0) return e;
   let r = Wa();
   if (r === null && !Lp(Np(t))) return e;
@@ -15001,7 +15001,7 @@ function isOfferedModelRow(e, t) {
   return isCatalogModelSelectable(t) && hL(e, t).status !== "unknown";
 }
 function getOfferedModelRows(e) {
-  let t = m1().modelKnowledge;
+  let t = getModelCatalogState().modelKnowledge;
   if (t === void 0) return getCatalogModels(e).filter((o) => isOfferedModelRow(e, o));
   let r = fL(Np(t), e);
   return ((r.offeredRows ??= getCatalogModels(e).filter((o) => isOfferedModelRow(e, o))), r.offeredRows);
@@ -15034,7 +15034,7 @@ function isTierPinnedByEnv(e) {
     a.ANTHROPIC_DEFAULT_OPUS_MODEL,
     a.ANTHROPIC_DEFAULT_SONNET_MODEL,
     a.ANTHROPIC_DEFAULT_HAIKU_MODEL,
-  ].some((t) => t !== void 0 && _0(t, e));
+  ].some((t) => t !== void 0 && isSameModelName(t, e));
 }
 function Fp() {
   return (
@@ -15078,7 +15078,7 @@ function getSmallFastModel() {
   return getDefaultHaikuModel();
 }
 function nl(e, t) {
-  return Qa(e)?.family === t;
+  return getCatalogEntryById(e)?.family === t;
 }
 function isNonCustomFableModel(e) {
   return nl(e, "fable");
@@ -15133,11 +15133,11 @@ function nre(e) {
   let t = ao(e);
   if (t === "") return !1;
   return (
-    um(t) || isModeDependentModelSetting(t) || Gp(t) || t === "default" || t === "inherit" || rre(t)
+    isModelAlias(t) || isModeDependentModelSetting(t) || Gp(t) || t === "default" || t === "inherit" || rre(t)
   );
 }
 function ao(e) {
-  return Xt(e.trim().toLowerCase()).trim();
+  return strip1mSuffix(e.trim().toLowerCase()).trim();
 }
 function rre(e) {
   let t = a.ANTHROPIC_CUSTOM_MODEL_OPTION;
@@ -15296,7 +15296,7 @@ function yL(e) {
 function isPinnedFableModel(e) {
   let t = a.ANTHROPIC_DEFAULT_FABLE_MODEL;
   if (!t) return !1;
-  return Xt(e) === Xt(t);
+  return strip1mSuffix(e) === strip1mSuffix(t);
 }
 function isFableFamilyOrPinnedModel(e, t) {
   return (
@@ -15309,7 +15309,7 @@ function ire(e) {
   return getCanonicalName(e).startsWith("claude-mythos-");
 }
 function isOpus5FamilyModel(e) {
-  return Xt(getCanonicalName(e)) === "claude-opus-5";
+  return strip1mSuffix(getCanonicalName(e)) === "claude-opus-5";
 }
 function isAntInternalFastModelId(e) {
   return !1;
@@ -15319,7 +15319,7 @@ function sre(e) {
   if (t === void 0) {
     let r = getEffectiveModelStrings();
     if (((t = r.opus5), getAPIProvider() === "firstParty"))
-      t = exn.map((o) => r[o]).find((o) => isModelAllowed(o)) ?? r.opus5;
+      t = OPUS_LINEUP_KEYS.map((o) => r[o]).find((o) => isModelAllowed(o)) ?? r.opus5;
   }
   return IL(ub(t), e);
 }
@@ -15360,12 +15360,12 @@ function getPermissionClassifierFlagshipRerouteTarget(e) {
 }
 function getActiveOpusLineupIds() {
   let e = getEffectiveModelStrings();
-  return exn.map((t) => e[t]);
+  return OPUS_LINEUP_KEYS.map((t) => e[t]);
 }
 function getModelUnavailabilityReason(e, t) {
   if (getAPIProvider() !== "firstParty" || !isFirstPartyAnthropicBaseUrl()) return null;
-  let r = um(e.toLowerCase().trim()) ? parseUserSpecifiedModel(e) : e,
-    o = t?.ignoreModelOverrides ? (I) => firstPartyNameToCanonical(Xt(I.toLowerCase()).trim()) : lre,
+  let r = isModelAlias(e.toLowerCase().trim()) ? parseUserSpecifiedModel(e) : e,
+    o = t?.ignoreModelOverrides ? (I) => firstPartyNameToCanonical(strip1mSuffix(I.toLowerCase()).trim()) : lre,
     d = o(e),
     p = o(r),
     _ =
@@ -15406,7 +15406,7 @@ function getModelUnavailabilityReason(e, t) {
   return null;
 }
 function lre(e) {
-  return getCanonicalName(Xt(e.toLowerCase()).trim());
+  return getCanonicalName(strip1mSuffix(e.toLowerCase()).trim());
 }
 function cre(e) {
   return e.toLowerCase().includes("fable");
@@ -15431,10 +15431,10 @@ var ure = {
   gateway: "gateway",
 };
 function rl(e, t, r = getAPIProvider()) {
-  let o = Qir(e, ure[r]);
+  let o = resolveModelAliasForProvider(e, ure[r]);
   if (o === void 0) return;
-  let d = Qa(o)?.provider_ids.first_party,
-    p = d !== void 0 ? QD[d] : void 0;
+  let d = getCatalogEntryById(o)?.provider_ids.first_party,
+    p = d !== void 0 ? MODEL_KEY_BY_FIRST_PARTY_ID[d] : void 0;
   return p !== void 0 ? t[p] : void 0;
 }
 function dre(e, t, r) {
@@ -15443,7 +15443,7 @@ function dre(e, t, r) {
   let o = SL(e);
   if (o === void 0) return;
   let d = o.toLowerCase(),
-    p = Object.hasOwn(QD, d) ? QD[d] : void 0;
+    p = Object.hasOwn(MODEL_KEY_BY_FIRST_PARTY_ID, d) ? MODEL_KEY_BY_FIRST_PARTY_ID[d] : void 0;
   return p !== void 0 ? t[p] : ub(o);
 }
 function il(e) {
@@ -15505,8 +15505,8 @@ function Gp(e) {
 }
 function stepDownRestrictedFamilyAliasPick(e) {
   let t = e.trim().toLowerCase(),
-    r = Xt(t).trim();
-  if (!_A(r) || !usesFirstPartyModelIds()) return null;
+    r = strip1mSuffix(t).trim();
+  if (!isModelFamily(r) || !usesFirstPartyModelIds()) return null;
   let o = getModelEntitlementDenySet();
   if (!(getSettings_DEPRECATED() || {}).availableModels && o.size === 0) return null;
   let d = pickNewestPermittedFamilyModel(r);
@@ -15540,7 +15540,7 @@ function getRuntimeMainLoopModel(e) {
         _.clamp === "stepDown"
           ? `Plan mode: the ${E} model is not permitted by the org model restrictions (availableModels allowlist or model_access entitlement); planning uses the newest permitted ${p === "opus" ? "Opus" : "Sonnet"} instead`
           : `Plan mode: the ${E} model is not permitted by the org model restrictions (availableModels allowlist or model_access entitlement); planning uses the resting model instead`;
-    if (!st().has(C)) (st().add(C), n(C, { level: "warn" }));
+    if (!st().has(C)) (st().add(C), logForDebugging(C, { level: "warn" }));
   }
   return _.model;
 }
@@ -15552,7 +15552,7 @@ function getResolvedOrgDefaultModel() {
   if (!e) return null;
   if (!isRecognizedOrgDefaultName(e.name)) {
     let t = `Org default model "${e.name}" is not one this build recognizes; using the standard default instead`;
-    if (!st().has(t)) (st().add(t), n(t, { level: "warn" }));
+    if (!st().has(t)) (st().add(t), logForDebugging(t, { level: "warn" }));
     return null;
   }
   return xL(e.name);
@@ -15568,17 +15568,17 @@ function getBootstrapOrgDefaultEffect() {
   return { model: NL(null).setting, kind: "standard" };
 }
 function isRecognizedOrgDefaultName(e) {
-  return um(e.toLowerCase()) || isRecognizedModel(e) || isDeploymentVouchedModel(e);
+  return isModelAlias(e.toLowerCase()) || isRecognizedModel(e) || isDeploymentVouchedModel(e);
 }
 function isDeploymentVouchedModel(e) {
   return (
     (a.ANTHROPIC_CUSTOM_MODEL_OPTION !== void 0 &&
-      _0(a.ANTHROPIC_CUSTOM_MODEL_OPTION, e)) ||
+      isSameModelName(a.ANTHROPIC_CUSTOM_MODEL_OPTION, e)) ||
     isTierPinnedByEnv(e) ||
     getModelOverrideSourceId(e) !== e ||
-    getAdditionalModelOptionsCache().some((t) => typeof t.value === "string" && _0(t.value, e)) ||
-    getGatewayModelOptions().some((t) => typeof t.value === "string" && _0(t.value, e)) ||
-    (getCuratedModelPicker()?.picker.options.some((t) => _0(t.model.trim(), e)) ?? !1)
+    getAdditionalModelOptionsCache().some((t) => typeof t.value === "string" && isSameModelName(t.value, e)) ||
+    getGatewayModelOptions().some((t) => typeof t.value === "string" && isSameModelName(t.value, e)) ||
+    (getCuratedModelPicker()?.picker.options.some((t) => isSameModelName(t.model.trim(), e)) ?? !1)
   );
 }
 function Vp() {
@@ -15638,7 +15638,7 @@ function NL(e) {
 function LL() {
   let e = jN();
   if (e === void 0) return null;
-  if (um(Xt(e.model.trim().toLowerCase()).trim())) return null;
+  if (isModelAlias(strip1mSuffix(e.model.trim().toLowerCase()).trim())) return null;
   let t = new Set([e.model, parseUserSpecifiedModel(e.model)]);
   for (let r of t)
     if (
@@ -15689,7 +15689,7 @@ function getEnvDefaultModel() {
   if (t == null) return null;
   let r = t.trim().toLowerCase();
   if (r === "default" || r === "inherit") return null;
-  if (isModeDependentModelSetting(Xt(r))) return null;
+  if (isModeDependentModelSetting(strip1mSuffix(r))) return null;
   if (Gp(r)) return null;
   if (Vp()) return null;
   if (_i().state !== "inactive" || getSettings_DEPRECATED()?.enforceAvailableModels === !0)
@@ -15735,20 +15735,20 @@ function jp(e, t, r) {
   let I = { overridesMap: _, envFreeAliasResolution: !0, allowlist: d },
     D = { overridesMap: _ },
     x = (He) => {
-      let Me = firstPartyNameToCanonical(Xt(He));
-      for (let [De, ve] of Object.entries(_)) if (firstPartyNameToCanonical(Xt(De)) === Me) return ve;
+      let Me = firstPartyNameToCanonical(strip1mSuffix(He));
+      for (let [De, ve] of Object.entries(_)) if (firstPartyNameToCanonical(strip1mSuffix(De)) === Me) return ve;
       return;
     },
     N = (He, Me) => {
-      let De = Xt(He);
+      let De = strip1mSuffix(He);
       if (Me?.isConcreteEntry) return He;
       let ve = x(De);
       if (!ve?.trim()) return He;
       ve = ve.trim();
       {
-        let Oe = Xt(ve).trim().toLowerCase(),
+        let Oe = strip1mSuffix(ve).trim().toLowerCase(),
           Ke = hasLongContextSuffix(ve),
-          xe = um(Oe) ? Xa(Oe) : null;
+          xe = isModelAlias(Oe) ? Xa(Oe) : null;
         if (xe !== null) ve = Ke ? Je(xe) : xe;
         else {
           let Ze = Oe.startsWith("claude-") ? Oe : `claude-${Oe}`;
@@ -15758,9 +15758,9 @@ function jp(e, t, r) {
           }
         }
       }
-      if (getModelUnavailabilityReason(Xt(ve), { ignoreModelOverrides: !0 }) !== null) {
+      if (getModelUnavailabilityReason(strip1mSuffix(ve), { ignoreModelOverrides: !0 }) !== null) {
         let Oe = `enforceAvailableModels: the managed modelOverrides target "${ve}" is server-unavailable; using the unmapped candidate`;
-        if (!st().has(Oe)) (st().add(Oe), n(Oe, { level: "warn" }));
+        if (!st().has(Oe)) (st().add(Oe), logForDebugging(Oe, { level: "warn" }));
         return He;
       }
       if (De !== He) return eligible1mSuffixTarget(ve, D) ? Je(ve) : strip1mTag(ve);
@@ -15769,16 +15769,16 @@ function jp(e, t, r) {
     },
     G = null,
     L = String(e),
-    U = Xt(L.trim().toLowerCase()),
+    U = strip1mSuffix(L.trim().toLowerCase()),
     F = hasLongContextSuffix(e),
     V = U.startsWith("claude-") ? U : `claude-${U}`,
     te = isLegacyOpusFirstParty(V) ? en(Wt()) : Xa(U);
   if (te !== null) {
-    let Me = U !== L.trim().toLowerCase() && eligible1mSuffixTarget(te, D) ? Je(te) : Xt(te),
+    let Me = U !== L.trim().toLowerCase() && eligible1mSuffixTarget(te, D) ? Je(te) : strip1mSuffix(te),
       De = parseUserSpecifiedModel(L);
-    if (Xt(De) !== Xt(te)) G = Me;
+    if (strip1mSuffix(De) !== strip1mSuffix(te)) G = Me;
     if (isModelAllowed(Me, I))
-      if (Xt(De) !== Xt(te)) {
+      if (strip1mSuffix(De) !== strip1mSuffix(te)) {
         if (getModelUnavailabilityReason(Me, { ignoreModelOverrides: !0 }) === null) return N(Me);
       } else return null;
   } else {
@@ -15791,23 +15791,23 @@ function jp(e, t, r) {
           throw Error(`steeringVarTable has no row for tier family "${t}"`);
         let ve = De[3],
           Oe = ve();
-        if (typeof Oe === "string" && Xt(Oe).toLowerCase() !== U) {
+        if (typeof Oe === "string" && strip1mSuffix(Oe).toLowerCase() !== U) {
           let Ke = ve();
           G = F && eligible1mSuffixTarget(Ke, D) ? Je(Ke) : Ke;
         }
       }
-      if (t === null && r !== void 0 && Xt(r).toLowerCase() !== U) G = r;
+      if (t === null && r !== void 0 && strip1mSuffix(r).toLowerCase() !== U) G = r;
     } else {
       let De = (() => {
           for (let [, , Oe, Ke] of Me) {
             let xe = Ke();
-            if (typeof xe === "string" && Xt(xe).toLowerCase() === U) return Oe;
+            if (typeof xe === "string" && strip1mSuffix(xe).toLowerCase() === U) return Oe;
           }
           return null;
         })(),
         ve = Me;
       for (let [, Oe, Ke, xe] of ve) {
-        if (Oe === void 0 || Xt(Oe.trim().toLowerCase()) !== U) continue;
+        if (Oe === void 0 || strip1mSuffix(Oe.trim().toLowerCase()) !== U) continue;
         if (De !== null && De <= Ke) continue;
         {
           let Ze = xe();
@@ -15823,7 +15823,7 @@ function jp(e, t, r) {
     let Me = He.trim();
     if (!Me) continue;
     let De = Me.toLowerCase(),
-      ve = Xt(De),
+      ve = strip1mSuffix(De),
       Oe = Xa(ve);
     if (Oe !== null) {
       let So = De !== ve && eligible1mSuffixTarget(Oe, D) ? Je(Oe) : Oe;
@@ -15833,7 +15833,7 @@ function jp(e, t, r) {
       }
       continue;
     }
-    let Ke = Xt(De),
+    let Ke = strip1mSuffix(De),
       xe = Ke.startsWith("claude-") ? Ke : `claude-${Ke}`;
     if (isLegacyOpusFirstParty(xe) && usesFirstPartyModelIds()) {
       let jn = en(Wt()),
@@ -15845,7 +15845,7 @@ function jp(e, t, r) {
     let Ze = getAPIProvider() !== "foundry" && !De.startsWith("claude-") && ka.test(De),
       Cr = Ze || (getAPIProvider() !== "foundry" && De.startsWith("claude-")),
       nn = parseUserSpecifiedModel(Ze ? `claude-${De}` : Cr ? De : Me),
-      Yi = Xt(nn).toLowerCase();
+      Yi = strip1mSuffix(nn).toLowerCase();
     if (Cr && !/[-@]\d{8}$/.test(Yi) && firstPartyNameToCanonical(Yi) !== Yi) continue;
     if (!vL(nn)) continue;
     let Jm = !Cr || /[-@]\d{8}$/.test(Yi);
@@ -15861,7 +15861,7 @@ function jp(e, t, r) {
   let ce = G !== null ? x(G) : void 0,
     _e =
       ce !== void 0 &&
-      Xt(ce).trim().toLowerCase() === Xt(e).trim().toLowerCase(),
+      strip1mSuffix(ce).trim().toLowerCase() === strip1mSuffix(e).trim().toLowerCase(),
     Be =
       G !== null
         ? _e
@@ -15872,7 +15872,7 @@ function jp(e, t, r) {
       re.length > 0
         ? `enforceAvailableModels: no availableModels entry survived; ${re.length} entr${re.length === 1 ? "y was" : "ies were"} allowed but skipped as server-unavailable (${re.join(", ")}); ${Be}`
         : `enforceAvailableModels: no availableModels entry expands to an allowed model; ${Be}`;
-  if (!st().has(ut)) (st().add(ut), n(ut, { level: "warn" }));
+  if (!st().has(ut)) (st().add(ut), logForDebugging(ut, { level: "warn" }));
   return G !== null ? N(G) : null;
 }
 function eligible1mSuffixTarget(e, t) {
@@ -15908,7 +15908,7 @@ function _i() {
         let E = _
           ? "enforceAvailableModels: an admin policy source failed to load; enforcing the surviving admin tier (the failed source may carry a different policy \u2014 fix it to restore full coverage)"
           : "enforceAvailableModels: an admin policy source failed to load and the surviving admin tier carries no model policy \u2014 model enforcement is OFF; the failed source may have carried it";
-        if (!st().has(E)) (st().add(E), n(E, { level: "warn" }));
+        if (!st().has(E)) (st().add(E), logForDebugging(E, { level: "warn" }));
       };
     if (isAdminPolicyUnreadable()) {
       if (
@@ -15919,7 +15919,7 @@ function _i() {
         (st().add(
           "enforceAvailableModels: a policy source exists but failed to load; refusing cascade-trust mode (model enforcement from user/project settings is disabled until the policy source is fixed)",
         ),
-          n(
+          logForDebugging(
             "enforceAvailableModels: a policy source exists but failed to load; refusing cascade-trust mode (model enforcement from user/project settings is disabled until the policy source is fixed)",
             { level: "warn" },
           ));
@@ -15948,7 +15948,7 @@ function _i() {
         (st().add(
           "enforceAvailableModels: the policy view sets the enforce flag but not availableModels; enforcement is disabled (the flag requires a policy-owned allowlist)",
         ),
-          n(
+          logForDebugging(
             "enforceAvailableModels: the policy view sets the enforce flag but not availableModels; enforcement is disabled (the flag requires a policy-owned allowlist)",
             { level: "warn" },
           ));
@@ -15962,7 +15962,7 @@ function _i() {
     );
   } catch (e) {
     let t = `enforceAvailableModels: policy-tier settings read failed; refusing cascade-trust mode: ${e instanceof Error ? e.message : String(e)}`;
-    if (!st().has(t)) (st().add(t), n(t, { level: "warn" }));
+    if (!st().has(t)) (st().add(t), logForDebugging(t, { level: "warn" }));
     return { state: "refused" };
   }
 }
@@ -15977,17 +15977,17 @@ function isModelAllowedUnderActiveEnforcement(e) {
   };
   if (!isModelAllowed(e, r)) return !1;
   let o = e.trim().toLowerCase(),
-    d = /\[1m\]/i.test(o) ? Xt(o).trim() : o;
-  return !(um(d) || isServedFamilyExpandedSpelling(d) || (usesFirstPartyModelIds() && isLegacyOpusFirstParty(d))) || qa(d, r);
+    d = /\[1m\]/i.test(o) ? strip1mSuffix(o).trim() : o;
+  return !(isModelAlias(d) || isServedFamilyExpandedSpelling(d) || (usesFirstPartyModelIds() && isLegacyOpusFirstParty(d))) || qa(d, r);
 }
 function isPermittedByOrgModelPolicy(e) {
   return (isModelAllowedUnderActiveEnforcement(e) ?? isModelAllowed(e)) && !isModelDenied(e, getModelEntitlementDenySet());
 }
 function mre(e) {
-  return Xt(parseUserSpecifiedModel(e)).toLowerCase() === Xt(getDefaultMainLoopModel()).toLowerCase();
+  return strip1mSuffix(parseUserSpecifiedModel(e)).toLowerCase() === strip1mSuffix(getDefaultMainLoopModel()).toLowerCase();
 }
 function isExemptDefaultResolvingPick(e) {
-  let t = Xt(e.trim().toLowerCase());
+  let t = strip1mSuffix(e.trim().toLowerCase());
   if (isModeDependentModelSetting(t)) return !1;
   if (t === "best") return !1;
   return mre(e);
@@ -15995,10 +15995,10 @@ function isExemptDefaultResolvingPick(e) {
 function isWindowSilentDefaultPick(e) {
   if (!isExemptDefaultResolvingPick(e)) return !1;
   let t = e.trim().toLowerCase();
-  return parseUserSpecifiedModel(e).toLowerCase() === getDefaultMainLoopModel().toLowerCase() || (um(t) && t === Xt(t));
+  return parseUserSpecifiedModel(e).toLowerCase() === getDefaultMainLoopModel().toLowerCase() || (isModelAlias(t) && t === strip1mSuffix(t));
 }
 function resolveModelAliasEnvFree(e) {
-  let t = Xt(e),
+  let t = strip1mSuffix(e),
     r = Xa(t);
   if (r !== null) return r.toLowerCase();
   let o = t.startsWith("claude-") ? t : `claude-${t}`;
@@ -16068,16 +16068,16 @@ function getFableDeclineFallbackModel() {
 }
 function firstPartyNameToCanonical(e) {
   e = e.toLowerCase();
-  let t = lie(e);
+  let t = getCatalogIdByProviderId(e);
   if (t !== void 0) return t;
   for (let o of TW)
     if (o !== "us" && e.startsWith(`${o}.anthropic.`)) {
-      let d = lie(`us${e.slice(o.length)}`);
+      let d = getCatalogIdByProviderId(`us${e.slice(o.length)}`);
       if (d !== void 0) return d;
       break;
     }
-  let r = g1(e);
-  if (F6(r)) return hre(r) ?? RL(r.base);
+  let r = parseModelId(e);
+  if (isFullyRecognizedModelId(r)) return hre(r) ?? RL(r.base);
   if (e.includes("claude-fable-5-1")) return "claude-fable-5-1";
   if (e.includes("claude-fable-5")) return "claude-fable-5";
   if (e.includes("claude-mythos-5-1")) return "claude-mythos-5-1";
@@ -16106,10 +16106,10 @@ function RL(e) {
   return e.replace(/-\d{8}$/, "");
 }
 function hre(e) {
-  let t = [...qvt().models.map((r) => r.id), ...FL()];
+  let t = [...getModelCatalog().models.map((r) => r.id), ...FL()];
   for (let r of t) {
-    let o = g1(r);
-    if (F6(o) && zvt(o, e)) return r;
+    let o = parseModelId(r);
+    if (isFullyRecognizedModelId(o) && isSameModelVersion(o, e)) return r;
   }
   return;
 }
@@ -16118,8 +16118,8 @@ function FL() {
 }
 var Ere = new Set(FL());
 function isRecognizedCanonical(e) {
-  let t = Xt(e);
-  return Qa(t) !== void 0 || Ere.has(t) || t === hBe;
+  let t = strip1mSuffix(e);
+  return getCatalogEntryById(t) !== void 0 || Ere.has(t) || t === MYTHOS_PREVIEW_MODEL_ID;
 }
 function isRecognizedModel(e, t = getCanonicalName(e)) {
   return isRecognizedCanonical(t);
@@ -16127,7 +16127,7 @@ function isRecognizedModel(e, t = getCanonicalName(e)) {
 function mi(e, t, r) {
   if (e === void 0) return;
   for (let [o, d] of Object.entries(e)) {
-    if (!(r ? _0(d, t) : d === t)) continue;
+    if (!(r ? isSameModelName(d, t) : d === t)) continue;
     let _ = firstPartyNameToCanonical(o);
     if (isRecognizedModel(_, _)) return _;
   }
@@ -16156,21 +16156,21 @@ function OL(e, t) {
   }
   if (r !== void 0) return r;
   if (!t?.deterministic && e.includes("application-inference-profile")) {
-    let o = OW(er(e));
+    let o = OW(stripLongContextTags(e));
     if (o) return firstPartyNameToCanonical(o);
   }
   return firstPartyNameToCanonical(e);
 }
 function mainModelOverrideKeys(e, t) {
   let r = e ?? getMainLoopModel(),
-    o = Xt(getCanonicalName(r, { ...t, identity: !0 }));
+    o = strip1mSuffix(getCanonicalName(r, { ...t, identity: !0 }));
   return Wp(r) ? [`${o}[1m]`, o] : [o];
 }
 function strippedCanonicalName(e) {
-  return Xt(getCanonicalName(e, { identity: !0 }));
+  return strip1mSuffix(getCanonicalName(e, { identity: !0 }));
 }
 function hookModelMatchKey(e) {
-  return Xt(getCanonicalName(e, { overridesMap: getPairedPolicyModelOverrides() ?? {}, identity: !0 }));
+  return strip1mSuffix(getCanonicalName(e, { overridesMap: getPairedPolicyModelOverrides() ?? {}, identity: !0 }));
 }
 function isRecognizedModelKey(e) {
   return isRecognizedCanonical(e);
@@ -16195,13 +16195,13 @@ var Sre = new Set([
 function bytesPerTokenForModel(e) {
   if (!e) return 4;
   let t = parseUserSpecifiedModel(e),
-    r = Xt(getCanonicalName(t)).replace(/[._]/g, "-");
+    r = strip1mSuffix(getCanonicalName(t)).replace(/[._]/g, "-");
   return Sre.has(r) ? 4 : 3;
 }
 function getClaudeAiUserDefaultModelDescription(e = !1) {
   let { setting: t, attribution: r } = resolveDefaultMainLoopModelSetting();
   if (r === "served") {
-    let d = getMarketingNameForModel(er(t)) ?? renderModelName(t),
+    let d = getMarketingNameForModel(stripLongContextTags(t)) ?? renderModelName(t),
       p = HN(t) ?? classifyModelFamily(t, getCanonicalName(parseUserSpecifiedModel(t))),
       _ =
         p === "opus"
@@ -16212,16 +16212,16 @@ function getClaudeAiUserDefaultModelDescription(e = !1) {
       E = e && modelSupportsFastMode(t) ? getModelPricingSuffix(!0, t) : "";
     return `${d}${_}${E}`;
   }
-  if (r !== "tier") return `${getMarketingNameForModel(er(parseUserSpecifiedModel(t))) ?? renderModelName(t)}${defaultModelAttributionSuffix(r)}`;
+  if (r !== "tier") return `${getMarketingNameForModel(stripLongContextTags(parseUserSpecifiedModel(t))) ?? renderModelName(t)}${defaultModelAttributionSuffix(r)}`;
   if (isOpusDefaultSubscriber()) {
     let d = getDefaultOpusModel(),
-      p = getMarketingNameForModel(er(d)) ?? "Opus",
+      p = getMarketingNameForModel(stripLongContextTags(d)) ?? "Opus",
       _ = e && modelSupportsFastMode(d);
     if (isOpus1mMergeEnabled())
       return `${p} with 1M context \xB7 Best for everyday, complex tasks${_ ? getModelPricingSuffix(!0, d) : ""}`;
     return `${p} \xB7 Best for everyday, complex tasks${_ ? getModelPricingSuffix(!0, d) : ""}`;
   }
-  return `${getMarketingNameForModel(er(getDefaultSonnetModel())) ?? "Sonnet"} \xB7 Efficient for routine tasks`;
+  return `${getMarketingNameForModel(stripLongContextTags(getDefaultSonnetModel())) ?? "Sonnet"} \xB7 Efficient for routine tasks`;
 }
 function renderDefaultModelSetting(e) {
   if (e === "opusplan") return "Opus in plan mode, else Sonnet";
@@ -16256,7 +16256,7 @@ function Tre(e) {
 }
 function renderModelSetting(e) {
   if (e === "opusplan") return "Opus Plan";
-  if (um(e)) return renderModelName(parseUserSpecifiedModel(e));
+  if (isModelAlias(e)) return renderModelName(parseUserSpecifiedModel(e));
   return renderModelName(e);
 }
 function getModelSourceAnnotation() {
@@ -16275,7 +16275,7 @@ function getPublicModelDisplayName(e) {
   return BL(getCanonicalName(e, { identity: !0 }), e.endsWith("[1m]"));
 }
 function BL(e, t) {
-  let r = Qa(e);
+  let r = getCatalogEntryById(e);
   if (!r) return null;
   let o = t && r.context?.supports_1m_suffix ? " (1M context)" : "";
   return r.display_name + o;
@@ -16313,7 +16313,7 @@ function yre() {
 }
 dL({
   isKnown: (e) => isRecognizedModel(e, getCanonicalName(e, { identity: !0 })),
-  isModelId: (e) => Qa(e) !== void 0 || lie(e) !== void 0 || !1,
+  isModelId: (e) => getCatalogEntryById(e) !== void 0 || getCatalogIdByProviderId(e) !== void 0 || !1,
   registryNamesFamily: (e) => !1,
   isClientSpelling: nre,
   clientSpellingGeneration: () =>
@@ -16322,28 +16322,28 @@ dL({
       .join(
         ",",
       )}|${a.ANTHROPIC_CUSTOM_MODEL_OPTION ?? ""}|${Object.values(sl() ?? {}).join(",")}`,
-  identitySpelling: (e) => firstPartyNameToCanonical(Xt(e.toLowerCase()).trim()),
+  identitySpelling: (e) => firstPartyNameToCanonical(strip1mSuffix(e.toLowerCase()).trim()),
   settingsBehavesAs: Are,
   hasSettingsBehavesAs: yre,
   settingsGeneration: () => getHostSettingsStore().policy,
   knowledgeGeneration: () => null,
 });
-Yir((e, t) => BN(e, ...t));
+setServedCapabilityLookup((e, t) => BN(e, ...t));
 function renderModelName(e) {
   let t = bre(e);
   if (t !== void 0) return t;
-  let r = er(e);
-  if (BR(r) === null) {
+  let r = stripLongContextTags(e);
+  if (findModelConfigByProviderId(r) === null) {
     let d = findServedCatalogModel(r, getCanonicalName(r, { identity: !0 }));
     if (d !== void 0) {
       let C = formatLabelText(d.name ?? "");
       if (C) return C;
       if (d.confidential === !0) {
-        let I = formatLabelText(maskModelCodename(Xt(d.id)));
+        let I = formatLabelText(maskModelCodename(strip1mSuffix(d.id)));
         if (I) return I;
       }
     }
-    let p = (C) => typeof C.value === "string" && er(C.value) === r,
+    let p = (C) => typeof C.value === "string" && stripLongContextTags(C.value) === r,
       _ = getGatewayModelOptions().find(p),
       E = _ ?? (isActiveCatalogFromServer() ? void 0 : getAdditionalModelOptionsCache().find(p));
     if (E?.label) {
@@ -16371,8 +16371,8 @@ function parseUserSpecifiedModel(e) {
   let t = e.trim(),
     r = t.toLowerCase(),
     o = hasLongContextSuffix(r),
-    d = o ? Xt(r).trim() : r;
-  if (um(d))
+    d = o ? strip1mSuffix(r).trim() : r;
+  if (isModelAlias(d))
     switch (d) {
       case "fable": {
         let p = getDefaultFableModel();
@@ -16403,7 +16403,7 @@ function resolveSkillModelOverride(e, t) {
   let r = parseUserSpecifiedModel(e);
   if (!isExemptDefaultResolvingPick(r) && !isModelAllowed(r))
     return (
-      n(
+      logForDebugging(
         `Skill/command model "${e}" is not in the availableModels allowlist; keeping the session model`,
         { level: "warn" },
       ),
@@ -16456,14 +16456,14 @@ function nameForUnnamedModelId(e) {
   let t = e.trim(),
     r = t.toLowerCase();
   if (/\s/.test(r)) return;
-  let o = Ore(Xt(t));
+  let o = Ore(strip1mSuffix(t));
   if (o !== void 0) return BL(o, hasLongContextSuffix(t)) ?? void 0;
   let d = r,
-    p = g1(d);
+    p = parseModelId(d);
   if (!p) {
     let _ = r.indexOf("claude-");
     if (_ <= 0 || /[a-z0-9]/.test(r[_ - 1] ?? "")) return;
-    ((d = r.slice(_)), (p = g1(d)));
+    ((d = r.slice(_)), (p = parseModelId(d)));
   }
   if (
     !p ||
@@ -16471,7 +16471,7 @@ function nameForUnnamedModelId(e) {
     /-fast(?![a-z0-9])/.test(d.slice(d.lastIndexOf(p.base) + p.base.length))
   )
     return;
-  return getPublicModelDisplayName(hasLongContextSuffix(d) ? d : Xt(d)) ?? void 0;
+  return getPublicModelDisplayName(hasLongContextSuffix(d) ? d : strip1mSuffix(d)) ?? void 0;
 }
 function Ore(e) {
   return mi(sl(), e, !1) ?? mi(getPairedPolicyModelOverrides(), e, !0);
@@ -16481,21 +16481,21 @@ function getMarketingNameForModel(e) {
   let t = getCanonicalName(e, { identity: !0 }),
     r = Cre.get(t);
   if (r !== void 0) return r;
-  let o = Qa(t);
+  let o = getCatalogEntryById(t);
   if (!o) return;
   return e.toLowerCase().includes("[1m]") && Rre.has(t)
     ? `${o.display_name} (1M context)`
     : o.display_name;
 }
 function modelSettingResolvesThroughModelStrings(e) {
-  let t = er(e).trim().toLowerCase();
-  return um(t) || Object.hasOwn(QD, t);
+  let t = stripLongContextTags(e).trim().toLowerCase();
+  return isModelAlias(t) || Object.hasOwn(MODEL_KEY_BY_FIRST_PARTY_ID, t);
 }
 function toProviderWireModelId(e) {
-  let t = er(e),
+  let t = stripLongContextTags(e),
     r = t.toLowerCase();
-  if (!Object.hasOwn(QD, r)) return t;
-  let o = QD[r];
+  if (!Object.hasOwn(MODEL_KEY_BY_FIRST_PARTY_ID, r)) return t;
+  let o = MODEL_KEY_BY_FIRST_PARTY_ID[r];
   if (o === void 0) return t;
   let d = Wt()[o];
   if (_i().state === "refused") return t;
@@ -16517,12 +16517,12 @@ function toProviderWireModelId(e) {
     ((I = N ?? d), (D = N !== void 0));
   }
   let x = getAPIProvider();
-  if (D || (x !== "foundry" && to[o][x] !== null)) return er(I);
+  if (D || (x !== "foundry" && MODEL_CONFIGS_BY_KEY[o][x] !== null)) return stripLongContextTags(I);
   return t;
 }
 function kre(e, t) {
   for (let [r, o] of Object.entries(e))
-    if (Object.hasOwn(QD, r) && QD[r] === t && o) return o;
+    if (Object.hasOwn(MODEL_KEY_BY_FIRST_PARTY_ID, r) && MODEL_KEY_BY_FIRST_PARTY_ID[r] === t && o) return o;
   return;
 }
 function strip1mTag(e) {
@@ -16586,7 +16586,7 @@ async function primeModelCapabilitiesCache(e) {
   if (hi().has(t)) return;
   let r = await e.read([Yp()]);
   if (!r.ok) {
-    n(`[modelCapabilities] prime read failed: ${r.error.code}`);
+    logForDebugging(`[modelCapabilities] prime read failed: ${r.error.code}`);
     return;
   }
   let o = r.value.items[0];
@@ -16616,40 +16616,40 @@ async function writeModelCapabilitiesCache(e, t) {
         d.ok && d.value.items[0]?.found
           ? al(Buffer.from(d.value.items[0].value).toString("utf-8"))
           : null;
-    if (!d.ok) n(`[modelCapabilities] cache read failed: ${d.error.code}`);
+    if (!d.ok) logForDebugging(`[modelCapabilities] cache read failed: ${d.error.code}`);
     else hi().set(r, p);
     if (Qs(p, o)) {
-      n("[modelCapabilities] cache unchanged, skipping write");
+      logForDebugging("[modelCapabilities] cache unchanged, skipping write");
       return;
     }
-    let _ = b({ models: o, timestamp: Date.now() });
+    let _ = jsonStringify({ models: o, timestamp: Date.now() });
     try {
       await HL($p(), { recursive: !0 });
     } catch (C) {
-      n(
+      logForDebugging(
         `[modelCapabilities] cache folder could not be made: ${C instanceof Error ? C.message : "unknown"}`,
       );
       return;
     }
     let E = await t.write(Yp(), _, { publishDiscipline: "inPlace", mode: 384 });
     if (!E.ok) {
-      n(`[modelCapabilities] cache write failed: ${E.error.code}`);
+      logForDebugging(`[modelCapabilities] cache write failed: ${E.error.code}`);
       return;
     }
-    (hi().set(r, al(_)), n(`[modelCapabilities] cached ${o.length} models`));
+    (hi().set(r, al(_)), logForDebugging(`[modelCapabilities] cached ${o.length} models`));
     return;
   }
   if (Qs(KL(r), o)) {
-    n("[modelCapabilities] cache unchanged, skipping write");
+    logForDebugging("[modelCapabilities] cache unchanged, skipping write");
     return;
   }
   (await HL($p(), { recursive: !0 }),
-    await Pre(r, b({ models: o, timestamp: Date.now() }), {
+    await Pre(r, jsonStringify({ models: o, timestamp: Date.now() }), {
       encoding: "utf-8",
       mode: 384,
     }),
     hi().delete(r),
-    n(`[modelCapabilities] cached ${o.length} models`));
+    logForDebugging(`[modelCapabilities] cached ${o.length} models`));
 }
 var DEFAULT_CONTEXT_WINDOW_TOKENS = 200000,
   STANDARD_CONTEXT_WINDOW_TOKENS = 200000,
@@ -16666,7 +16666,7 @@ function Wp(e) {
   return /\[1m\]/i.test(e);
 }
 function YL(e) {
-  let t = Xt(e),
+  let t = strip1mSuffix(e),
     r = getCanonicalName(t);
   if ($L(r)) return r;
   if (t === e) return;
@@ -16675,8 +16675,8 @@ function YL(e) {
   return;
 }
 function $L(e) {
-  let t = Xt(e);
-  return Qa(t)?.context?.native_1m === !0 || t === hBe;
+  let t = strip1mSuffix(e);
+  return getCatalogEntryById(t)?.context?.native_1m === !0 || t === MYTHOS_PREVIEW_MODEL_ID;
 }
 function isNative1mContextModel(e) {
   return YL(e) !== void 0;
@@ -16687,7 +16687,7 @@ function ror(e) {
 }
 function qL(e) {
   let t = parseUserSpecifiedModel(e),
-    r = er(t),
+    r = stripLongContextTags(t),
     o = getCanonicalName(r);
   if (isRecognizedCanonical(o) || (r !== t && isRecognizedCanonical(getCanonicalName(t)))) return !1;
   let d = r.toLowerCase();
@@ -16697,7 +16697,7 @@ function modelHasNative1MContext(e) {
   if (isLongContextDisabled()) return !1;
   let t = YL(e);
   if (t === void 0) return !1;
-  let r = Qa(Xt(t))?.context,
+  let r = getCatalogEntryById(strip1mSuffix(t))?.context,
     o = getProviderForModel(e);
   if ((o === "firstParty" && isFirstPartyAnthropicBaseUrl()) || isClaudePlatformProvider(o) || o === "mantle") return !0;
   return xre(o, r);
@@ -16728,7 +16728,7 @@ function supports1mContextBeta(e) {
   if (isLongContextDisabled()) return !1;
   let t = getCanonicalName(e);
   if (lacks1mContextSupport(t)) return !1;
-  if (Qa(t)?.context?.supports_1m_beta) return !0;
+  if (getCatalogEntryById(t)?.context?.supports_1m_beta) return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
 function getEffectiveContextWindow(e, t) {
@@ -16810,7 +16810,7 @@ function getMaxOutputTokens(e) {
     r,
     o = getCanonicalName(e),
     d = FN(e, o),
-    p = Qa(o)?.max_output_tokens;
+    p = getCatalogEntryById(o)?.max_output_tokens;
   if (d !== void 0) ((r = d), (t = Math.min(p?.default ?? WL, d)));
   else if (p) ((t = p.default), (r = p.upper));
   else if (o === "claude-3-opus" || o === "claude-3-haiku")
@@ -17111,7 +17111,7 @@ function canDisableThinking(e) {
     t === "claude-haiku-4-5"
   )
     return !1;
-  if (dm(t, "rejects_disabled_thinking", e)) return !0;
+  if (modelHasCapability(t, "rejects_disabled_thinking", e)) return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
 function getThinkingBudgetDefaults(e) {
@@ -17142,7 +17142,7 @@ function canUseAdaptiveThinking(e) {
     r === "claude-haiku-4-5"
   )
     return !1;
-  if (dm(r, "adaptive_thinking", e) || r === "claude-mythos-5") return !0;
+  if (modelHasCapability(r, "adaptive_thinking", e) || r === "claude-mythos-5") return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
 function getThinkingDisabledReason() {
@@ -17218,7 +17218,7 @@ function Kre(e) {
     r = getProviderForModel(e);
   if (r === "foundry") return !0;
   if (hasFirstPartyCapabilities(r)) return !t.includes("claude-3-");
-  return dm(t, "context_management", e) || t === "claude-mythos-5";
+  return modelHasCapability(t, "context_management", e) || t === "claude-mythos-5";
 }
 function supportsStructuredOutputs(e) {
   let t = getCanonicalName(e),
@@ -17260,9 +17260,9 @@ function supportsMidConversationToolChange(e) {
   let t = getCanonicalName(e);
   if (EMn(t)) return !1;
   return (
-    dm(t, "mid_conv_tool_change") === !0 ||
+    modelHasCapability(t, "mid_conv_tool_change") === !0 ||
     t === "claude-mythos-5" ||
-    Qa(strip1mTag(t)) === void 0
+    getCatalogEntryById(strip1mTag(t)) === void 0
   );
 }
 function Wre() {
@@ -17287,7 +17287,7 @@ function $re(e) {
     r === "claude-haiku-4-5"
   )
     return !1;
-  if (dm(r, "mid_conv_system", e) || r === "claude-mythos-5") return !0;
+  if (modelHasCapability(r, "mid_conv_system", e) || r === "claude-mythos-5") return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
 function isSonnet5Model(e) {
@@ -17370,7 +17370,7 @@ function isSkillModelSupportedInAutoMode({ skillModel: e, mode: t, fastMode: r }
   });
   if (o) return !0;
   return (
-    n(
+    logForDebugging(
       d
         ? `Skill/command model "${e}" skipped: fast mode is disabled for auto mode by config (disableFastMode); keeping the session model`
         : `Skill/command model "${e}" is not supported in auto mode; keeping the session model`,
@@ -17433,7 +17433,7 @@ function qre(e) {
   let I = a.ANTHROPIC_BETAS;
   if (I)
     if (isHipaaTaintActive())
-      n(
+      logForDebugging(
         "ANTHROPIC_BETAS ignored: experimental betas are disabled by org compliance policy",
         { level: "debug" },
       );
@@ -17476,7 +17476,7 @@ function resolveRequestBetas(e, t) {
   let d = withholdBetasIfHipaaTainted(o);
   if (!d)
     return (
-      n(
+      logForDebugging(
         "SDK betas dropped: experimental betas are disabled by org compliance policy",
         { level: "debug" },
       ),
@@ -17487,7 +17487,7 @@ function resolveRequestBetas(e, t) {
     p = p.filter((_) => {
       if (ZL.has(_)) return !0;
       return (
-        n(`SDK beta '${_.header}' dropped on 3P`, { level: "debug" }),
+        logForDebugging(`SDK beta '${_.header}' dropped on 3P`, { level: "debug" }),
         !1
       );
     });
@@ -17548,7 +17548,7 @@ function ensureServedCatalogMaskHydrated() {
   return (
     (e.servedCatalogMaskHydration ??= toe()
       .catch((t) => {
-        (n(
+        (logForDebugging(
           `[servedCatalog] mask hydration failed: ${t instanceof Error ? t.name : "unknown"}`,
           { level: "error" },
         ),
@@ -17578,13 +17578,13 @@ async function Jp() {
   } catch (d) {
     if (W(d)) return { status: "ok", ids: [] };
     return (
-      n(`[servedCatalog] mask file read failed: ${A(d) ?? "unknown"}`),
+      logForDebugging(`[servedCatalog] mask file read failed: ${A(d) ?? "unknown"}`),
       { status: "unreadable" }
     );
   }
   if (e.length > eU)
     return (
-      n("[servedCatalog] mask file oversized; not in this format"),
+      logForDebugging("[servedCatalog] mask file oversized; not in this format"),
       { status: "foreign", ids: [], bytes: void 0 }
     );
   let t = xt(e.toString("utf8"), !1),
@@ -17598,7 +17598,7 @@ async function Jp() {
       ? tU(t.ids)
       : [];
   return (
-    n(
+    logForDebugging(
       `[servedCatalog] mask file not in this format; keeping ${o.length} ids it names`,
     ),
     { status: "foreign", ids: o, bytes: e }
@@ -17609,7 +17609,7 @@ function tU(e) {
     e.filter((r) => typeof r === "string" && rU.test(r) && !oo(r)),
   ).slice(0, nU);
   if (t.length < e.length)
-    n(
+    logForDebugging(
       `[servedCatalog] mask file: ${e.length - t.length} entries are not ids (or repeat one, or name a family this build ships), dropped`,
     );
   return t;
@@ -17620,7 +17620,7 @@ function persistMaskedModelIds(e) {
   hr(t);
   let r = t.filter((p) => rU.test(p)).slice(0, Xre);
   if (r.length < t.length)
-    n(
+    logForDebugging(
       `[servedCatalog] ${t.length - r.length} confidential ids masked this session but not persisted (outside the id charset or over the per-entry cap)`,
     );
   if (r.length === 0) return Promise.resolve();
@@ -17634,7 +17634,7 @@ async function noe(e) {
     let t = getProviderState(),
       r = t.servedCatalogPersistedMaskedIds;
     if (r === void 0) {
-      n("[servedCatalog] mask file unreadable; not rewriting it this session");
+      logForDebugging("[servedCatalog] mask file unreadable; not rewriting it this session");
       return;
     }
     if (e.every((p) => r.includes(p))) return;
@@ -17643,7 +17643,7 @@ async function noe(e) {
     for (let p = 0; p < Qre; p++) {
       let _ = await Jp();
       if (_.status === "unreadable") {
-        n(
+        logForDebugging(
           "[servedCatalog] mask file unreadable at write time; not rewriting it",
         );
         return;
@@ -17651,7 +17651,7 @@ async function noe(e) {
       if ((hr(_.ids), _.status === "foreign")) await roe(_.bytes);
       let E = dedupe([...e, ..._.ids, ...o]).slice(0, nU);
       (await d.mkdir(getModelCatalogCacheDir()),
-        await d.atomicWrite(sU(), b({ version: oU, ids: E }), 384));
+        await d.atomicWrite(sU(), jsonStringify({ version: oU, ids: E }), 384));
       let C = await Jp();
       if (C.status !== "ok") {
         t.servedCatalogPersistedMaskedIds = E;
@@ -17664,24 +17664,24 @@ async function noe(e) {
       )
         return;
       ((o = C.ids),
-        n("[servedCatalog] mask file changed under the write; merging again"));
+        logForDebugging("[servedCatalog] mask file changed under the write; merging again"));
     }
   } catch (t) {
-    n(`[servedCatalog] mask file write failed: ${A(t) ?? "unknown"}`);
+    logForDebugging(`[servedCatalog] mask file write failed: ${A(t) ?? "unknown"}`);
   }
 }
 async function roe(e) {
   if (e === void 0) {
-    n("[servedCatalog] oversized mask file replaced without a copy");
+    logForDebugging("[servedCatalog] oversized mask file replaced without a copy");
     return;
   }
   try {
     (await getFileStorage().atomicWrite(eoe(), e.toString("utf8"), 384),
-      n(
+      logForDebugging(
         `[servedCatalog] mask file not in this format; copied to ${iU} and replaced`,
       ));
   } catch (t) {
-    n(`[servedCatalog] mask file quarantine failed: ${A(t) ?? "unknown"}`);
+    logForDebugging(`[servedCatalog] mask file quarantine failed: ${A(t) ?? "unknown"}`);
   }
 }
 import { createHash as ooe } from "crypto";
@@ -17814,8 +17814,8 @@ async function signClientEvent(e, t, r) {
   }
 }
 function uoe(e) {
-  let t = b(e),
-    r = z(t);
+  let t = jsonStringify(e),
+    r = jsonParse(t);
   if (doe.test(t)) (sanitizeLoneSurrogates(r), poe(r));
   return r;
 }
@@ -17835,7 +17835,7 @@ function poe(e) {
   }
 }
 function reportEventSignerLoadFailure(e) {
-  (n(`[clientEventSigner] the signer module did not load: ${l(e)}`, {
+  (logForDebugging(`[clientEventSigner] the signer module did not load: ${l(e)}`, {
     level: "warn",
   }),
     logFeatureBad("client_event_signer", "module_load_failed"));
@@ -17850,7 +17850,7 @@ function foe(e, t) {
     !e.noteSignFailure())
   )
     return;
-  (n(`[clientEventSigner] event not signed: ${l(t)}`, { level: "warn" }),
+  (logForDebugging(`[clientEventSigner] event not signed: ${l(t)}`, { level: "warn" }),
     logFeatureBad("client_event_signer", "sign_failed"));
 }
 var Zp = ["signed_out", "identity_changed", "transient", "refresh_failed"];
@@ -23706,7 +23706,7 @@ function tryHandleFrame(e, t, r) {
   } catch (o) {
     let d = typeof t.subtype === "string" ? `${t.type}:${t.subtype}` : t.type;
     return (
-      n(`[${r}] Dropping ${d} frame \u2014 handler threw: ${l(o)}`, {
+      logForDebugging(`[${r}] Dropping ${d} frame \u2014 handler threw: ${l(o)}`, {
         level: "error",
       }),
       !1
@@ -23754,11 +23754,11 @@ async function axiosGetWithRetry(e, t) {
       if (((r = d), !isTransientNetworkError(d))) throw d;
       if (o >= Bg)
         throw (
-          n(`Teleport request failed after ${o + 1} attempts: ${l(d)}`),
+          logForDebugging(`Teleport request failed after ${o + 1} attempts: ${l(d)}`),
           d
         );
       let p = vz[o] ?? 2000;
-      (n(
+      (logForDebugging(
         `Teleport request failed (attempt ${o + 1}/${Bg + 1}), retrying in ${p}ms: ${l(d)}`,
       ),
         await sleep(p));
@@ -23915,7 +23915,7 @@ async function fetchCodeSessionsFromSessionsAPI() {
     } catch (r) {
       let o = ge(r);
       if (cc(r))
-        n(`Failed to fetch code sessions: ${o.message}`, { level: "error" });
+        logForDebugging(`Failed to fetch code sessions: ${o.message}`, { level: "error" });
       else logError(o);
       throw r;
     }
@@ -24006,7 +24006,7 @@ async function yl(e, t, r, o) {
     let { accessToken: d } = await prepareApiRequest(),
       p = `${getOauthConfig().BASE_API_URL}/v1/code/sessions/${e}/events`,
       _ = await getSessionRequestHeaders(d);
-    n(`${r} Sending event to session ${e}`);
+    logForDebugging(`${r} Sending event to session ${e}`);
     let E = await signClientEvent(o, e, t),
       C = (x) =>
         at.post(
@@ -24019,12 +24019,12 @@ async function yl(e, t, r, o) {
       );
     if (I.status === 200 || I.status === 201)
       return (
-        n(`${r} Successfully sent event to session ${e}`),
+        logForDebugging(`${r} Successfully sent event to session ${e}`),
         I.data?.results?.[0]?.duplicate === !0
           ? { ok: !0, duplicate: !0 }
           : { ok: !0 }
       );
-    n(`${r} Failed with status ${I.status}: ${b(I.data)}`);
+    logForDebugging(`${r} Failed with status ${I.status}: ${jsonStringify(I.data)}`);
     let D = I.data?.error?.message;
     return {
       ok: !1,
@@ -24036,7 +24036,7 @@ async function yl(e, t, r, o) {
     };
   } catch (d) {
     return (
-      n(`${r} Error: ${l(d)}`),
+      logForDebugging(`${r} Error: ${l(d)}`),
       {
         ok: !1,
         reason: l(d),
@@ -24100,7 +24100,7 @@ async function updateSessionTitle(e, t) {
   try {
     let { accessToken: r } = await prepareApiRequest(),
       o = `${getOauthConfig().BASE_API_URL}/v1/code/sessions/${e}`;
-    n(`[updateSessionTitle] Updating title for session ${e}: "${t}"`);
+    logForDebugging(`[updateSessionTitle] Updating title for session ${e}: "${t}"`);
     let d = await at.put(
       o,
       { title: t },
@@ -24108,15 +24108,15 @@ async function updateSessionTitle(e, t) {
     );
     if (d.status === 200)
       return (
-        n(`[updateSessionTitle] Successfully updated title for session ${e}`),
+        logForDebugging(`[updateSessionTitle] Successfully updated title for session ${e}`),
         !0
       );
     return (
-      n(`[updateSessionTitle] Failed with status ${d.status}: ${b(d.data)}`),
+      logForDebugging(`[updateSessionTitle] Failed with status ${d.status}: ${jsonStringify(d.data)}`),
       !1
     );
   } catch (r) {
-    return (n(`[updateSessionTitle] Error: ${l(r)}`), !1);
+    return (logForDebugging(`[updateSessionTitle] Error: ${l(r)}`), !1);
   }
 }
 async function markSessionRead(e, t) {
@@ -24129,9 +24129,9 @@ async function markSessionRead(e, t) {
         validateStatus: (p) => p < 500,
       });
     if (d.status !== 200)
-      n(`[markSessionRead] Failed with status ${d.status}: ${b(d.data)}`);
+      logForDebugging(`[markSessionRead] Failed with status ${d.status}: ${jsonStringify(d.data)}`);
   } catch (r) {
-    n(`[markSessionRead] Error: ${l(r)}`);
+    logForDebugging(`[markSessionRead] Error: ${l(r)}`);
   }
 }
 var ble = createLazyValue(() =>
@@ -24208,7 +24208,7 @@ async function pollRemoteSessionEvents(e, t, r) {
     ((D = getBranchFromSession(L)), (x = L.session_status), (N = L.startup_failure));
   } catch (L) {
     ((G = l(L)),
-      n(`teleport: failed to fetch session ${e} metadata: ${L}`, {
+      logForDebugging(`teleport: failed to fetch session ${e} metadata: ${L}`, {
         level: "warn",
       }));
   }
@@ -24225,7 +24225,7 @@ async function pollRemoteSessionEvents(e, t, r) {
 async function archiveRemoteSession(e, t = 1e4) {
   if (!isFirstPartyProvider())
     return (
-      n(`[archiveRemoteSession] ${e} skipped: non-first-party provider`),
+      logForDebugging(`[archiveRemoteSession] ${e} skipped: non-first-party provider`),
       !1
     );
   let r = getAccessTokenWithCcrFallback();
@@ -24238,14 +24238,14 @@ async function archiveRemoteSession(e, t = 1e4) {
       { headers: await getSessionRequestHeaders(r), timeout: t, validateStatus: (p) => p < 500 },
     );
     if (d.status === 200 || d.status === 409)
-      return (n(`[archiveRemoteSession] archived ${e}`), !0);
+      return (logForDebugging(`[archiveRemoteSession] archived ${e}`), !0);
     return (
-      n(`[archiveRemoteSession] ${e} failed ${d.status}: ${b(d.data)}`),
+      logForDebugging(`[archiveRemoteSession] ${e} failed ${d.status}: ${jsonStringify(d.data)}`),
       !1
     );
   } catch (d) {
     return (
-      n(`[archiveRemoteSession] ${e} failed: ${l(d)}`, { level: "error" }),
+      logForDebugging(`[archiveRemoteSession] ${e} failed: ${l(d)}`, { level: "error" }),
       !1
     );
   }
@@ -24352,7 +24352,7 @@ function Mle(e) {
   }
 }
 function Oz(e) {
-  let t = aBe();
+  let t = scanSdkUrlFlag();
   switch (t.status) {
     case "absent":
       throw e === "ccr-session"
@@ -24369,7 +24369,7 @@ function Oz(e) {
             "ccr-gateway --sdk-url rejected by allowlist",
           );
     case "ok":
-      return bQ(new URL(t.url));
+      return normalizeUrlSchemeToHttp(new URL(t.url));
   }
 }
 function hashSha256Hex(e) {
@@ -24550,7 +24550,7 @@ async function kz(e) {
   try {
     await checkAndRefreshOAuthTokenIfNeeded({ credentials: e.credentials, storageV5: e.storageV5 });
   } catch (t) {
-    n(
+    logForDebugging(
       `firstPartyApi: refreshOAuth failed (${t instanceof Error ? t.message : t}); proceeding with cached token`,
     );
   }
@@ -24572,7 +24572,7 @@ function Dle(e) {
   if (Nle(e)) return Buffer.from(e.buffer, e.byteOffset, e.byteLength);
   if (e instanceof ArrayBuffer) return Buffer.from(e);
   if (typeof e === "string") return Buffer.from(e);
-  if (xz(e)) return Buffer.from(b(e));
+  if (xz(e)) return Buffer.from(jsonStringify(e));
   throw TypeError("streamUpload: unsupported request body type");
 }
 function xz(e) {
@@ -24696,7 +24696,7 @@ async function refreshOfficialMcpRegistryUrls() {
     t = S(e ? "bff" : "legacy"),
     r = Lle();
   if (r.length === 0) {
-    ((jt().officialUrls = new Set()),
+    ((getMcpClientState().officialUrls = new Set()),
       logFeatureOk("mcp_registry_fetch"),
       logEvent("tengu_mcp_registry_fetch", {
         source: t,
@@ -24710,8 +24710,8 @@ async function refreshOfficialMcpRegistryUrls() {
   let o = Date.now();
   try {
     let d = e ? await zle(r) : await Ule(r);
-    ((jt().officialUrls = d),
-      n(
+    ((getMcpClientState().officialUrls = d),
+      logForDebugging(
         `[mcp-registry] Loaded ${d.size} official MCP URLs (${e ? "bff" : "legacy"})`,
       ),
       logFeatureOk("mcp_registry_fetch"),
@@ -24722,7 +24722,7 @@ async function refreshOfficialMcpRegistryUrls() {
         duration_ms: Date.now() - o,
       }));
   } catch (d) {
-    (n(`Failed to fetch MCP registry: ${l(d)}`, { level: "error" }),
+    (logForDebugging(`Failed to fetch MCP registry: ${l(d)}`, { level: "error" }),
       logFeatureSad("mcp_registry_fetch", "fetch_failed"),
       logEvent("tengu_mcp_registry_fetch", {
         source: t,
@@ -24733,7 +24733,7 @@ async function refreshOfficialMcpRegistryUrls() {
   }
 }
 function zz(e) {
-  return jt().officialUrls?.has(e) ?? !1;
+  return getMcpClientState().officialUrls?.has(e) ?? !1;
 }
 var REMOTE_DEVICES_MCP_SERVER_NAME = "remote-devices",
   REMOTE_DEVICE_BASH_TOOL_NAME = "mcp__remote-devices__device_bash";
@@ -24918,7 +24918,7 @@ async function Wle(e, t) {
   }
 }
 function getMcpOAuthCredentialKey(e, t) {
-  let r = b({ type: t.type, url: t.url, headers: t.headers || {} }),
+  let r = jsonStringify({ type: t.type, url: t.url, headers: t.headers || {} }),
     o = Gle("sha256").update(r).digest("hex").substring(0, 16);
   return `${e}|${o}`;
 }
@@ -24949,7 +24949,7 @@ function configProvidesOwnAuth(e) {
   return !1;
 }
 function isMcpServerAuthenticated(e, t) {
-  return configHasAuthorizationHeader(e) || rS(e) || (isFirstPartyDesignUrl(e.url) && isFirstPartyProvider() && t);
+  return configHasAuthorizationHeader(e) || isCliOwnedMcpConfig(e) || (isFirstPartyDesignUrl(e.url) && isFirstPartyProvider() && t);
 }
 async function hasStoredRefreshToken(e, t) {
   let r = await readSecureStorageResilient();
@@ -25281,7 +25281,7 @@ function Tce(e, t, r, o, d) {
 function buildCrossSessionEnvelope(e, t, r, o, d, p) {
   let _ = Tce(e, t, o, d, p);
   return `<${CROSS_SESSION_MESSAGE_TAG}${_}>
-${YRe(CROSS_SESSION_MESSAGE_TAG, r)}
+${neutralizeClosingTags(CROSS_SESSION_MESSAGE_TAG, r)}
 </${CROSS_SESSION_MESSAGE_TAG}>`;
 }
 function oF(e) {
@@ -25852,7 +25852,7 @@ async function Il(e, t) {
     case "done":
       return r;
     case "error":
-      t.onIssue?.(`failed: ${We(o.error)}`);
+      t.onIssue?.(`failed: ${describeStorageError(o.error)}`);
       return;
     case "capped":
       return (
@@ -25917,7 +25917,7 @@ async function publishMessagingKey(e, t, r, { sweepPermitted: o }) {
   return (
     await writeFileAtomic(
       p,
-      b({ peerToken: t, ...procIdentityFields(await ownProcStartAsync()), pidDomain: await ownPidDomain() }),
+      jsonStringify({ peerToken: t, ...procIdentityFields(await ownProcStartAsync()), pidDomain: await ownPidDomain() }),
       384,
     ),
     p
@@ -25928,7 +25928,7 @@ async function jce(e, t, r) {
     d = await e.ensureScope({ namespace: "session" });
   if (!d.ok)
     throw (
-      n(`[uds-auth] sessions scope unavailable: ${We(d.error)}`),
+      logForDebugging(`[uds-auth] sessions scope unavailable: ${describeStorageError(d.error)}`),
       Error("messaging key folder could not be made through storage")
     );
   try {
@@ -25936,12 +25936,12 @@ async function jce(e, t, r) {
   } catch {}
   let p = await e.write(
     STORAGE_KEYS.session(o),
-    b({ peerToken: r, ...procIdentityFields(await ownProcStartAsync()), pidDomain: await ownPidDomain() }),
+    jsonStringify({ peerToken: r, ...procIdentityFields(await ownProcStartAsync()), pidDomain: await ownPidDomain() }),
     { publishDiscipline: "atomic", mode: 384, exactMode: 384 },
   );
   if (!p.ok)
     throw (
-      n(`[uds-auth] key publish failed: ${We(p.error)}`),
+      logForDebugging(`[uds-auth] key publish failed: ${describeStorageError(p.error)}`),
       Error("messaging key could not be published through storage")
     );
   return go(getSessionsDir(), o);
@@ -26068,7 +26068,7 @@ async function $ce(e, t) {
 }
 function formatAuthLine(e) {
   return (
-    b({ type: mF, token: e }) +
+    jsonStringify({ type: mF, token: e }) +
     `
 `
   );
@@ -26315,10 +26315,10 @@ async function touchFleetViewHeartbeat(e) {
       let t = await e.write(om(), String(Date.now()), {
         publishDiscipline: "inPlace",
       });
-      if (!t.ok && !rZ(t.error))
-        n(`[concurrentSessions] heartbeat touch failed: ${We(t.error)}`);
+      if (!t.ok && !isAbsentParentFailure(t.error))
+        logForDebugging(`[concurrentSessions] heartbeat touch failed: ${describeStorageError(t.error)}`);
     } catch (t) {
-      n(`[concurrentSessions] heartbeat touch failed: ${l(t)}`);
+      logForDebugging(`[concurrentSessions] heartbeat touch failed: ${l(t)}`);
     }
     return;
   }
@@ -26352,7 +26352,7 @@ function isBeingWatched() {
     let { mtimeMs: d } = statSync(It(getSessionsDir(), Nl));
     o = t - d < OF;
   } catch (d) {
-    if (!W(d)) n(`[concurrentSessions] heartbeat stat failed: ${l(d)}`);
+    if (!W(d)) logForDebugging(`[concurrentSessions] heartbeat stat failed: ${l(d)}`);
   }
   return (e.setWatchedCache({ at: t, value: o }), o);
 }
@@ -26366,9 +26366,9 @@ async function isBeingWatchedV5(e) {
     let C = await e.statMeta(om());
     if (C.ok) d = C.value.mtimeMs;
     else if (C.error.code !== "NotFound")
-      n(`[concurrentSessions] heartbeat stat failed: ${We(C.error)}`);
+      logForDebugging(`[concurrentSessions] heartbeat stat failed: ${describeStorageError(C.error)}`);
   } catch (C) {
-    n(`[concurrentSessions] heartbeat stat failed: ${l(C)}`);
+    logForDebugging(`[concurrentSessions] heartbeat stat failed: ${l(C)}`);
   }
   let p = Date.now(),
     _ = d !== void 0 && p - d < OF,
@@ -26398,7 +26398,7 @@ async function cue(e, t) {
       unlinkSync(E);
     } catch {}
   }),
-    Et(async () => {
+    registerCleanup(async () => {
       if (t) {
         try {
           await t.delete(xl());
@@ -26417,7 +26417,7 @@ async function cue(e, t) {
         : o === "interactive"
           ? { name: pF(he()), source: "derived" }
           : void 0,
-      D = b({
+      D = jsonStringify({
         pid: process.pid,
         sessionId: K(),
         cwd: he(),
@@ -26458,7 +26458,7 @@ async function cue(e, t) {
       let x = await t.write(xl(), D, { publishDiscipline: "inPlace" });
       if (!x.ok)
         throw (
-          n(`[concurrentSessions] v5 pid-file write failed: ${We(x.error)}`),
+          logForDebugging(`[concurrentSessions] v5 pid-file write failed: ${describeStorageError(x.error)}`),
           Error("v5 pid-file write failed")
         );
     } else await rm(E, D);
@@ -26474,7 +26474,7 @@ async function cue(e, t) {
       !0
     );
   } catch (C) {
-    return (n(`[concurrentSessions] register failed: ${l(C)}`), !1);
+    return (logForDebugging(`[concurrentSessions] register failed: ${l(C)}`), !1);
   } finally {
     r.resolve();
   }
@@ -26488,32 +26488,32 @@ async function hn(e, t) {
           let _ = await t.read([xl()]);
           if (!_.ok)
             return (
-              n(`[concurrentSessions] updatePidFile failed: ${We(_.error)}`),
+              logForDebugging(`[concurrentSessions] updatePidFile failed: ${describeStorageError(_.error)}`),
               !1
             );
           let E = _.value.items[0];
           if (!E?.found)
             return (
-              n(
+              logForDebugging(
                 "[concurrentSessions] updatePidFile failed: pid file not found",
               ),
               !1
             );
-          let C = z(Buffer.from(E.value).toString("utf8")),
-            I = await t.write(xl(), b({ ...C, ...e }), {
+          let C = jsonParse(Buffer.from(E.value).toString("utf8")),
+            I = await t.write(xl(), jsonStringify({ ...C, ...e }), {
               publishDiscipline: "inPlace",
             });
           if (!I.ok)
             return (
-              n(`[concurrentSessions] updatePidFile failed: ${We(I.error)}`),
+              logForDebugging(`[concurrentSessions] updatePidFile failed: ${describeStorageError(I.error)}`),
               !1
             );
           return !0;
         }
-        let p = z(await tue(r, "utf8"));
-        return (await rm(r, b({ ...p, ...e })), !0);
+        let p = jsonParse(await tue(r, "utf8"));
+        return (await rm(r, jsonStringify({ ...p, ...e })), !0);
       } catch (p) {
-        return (n(`[concurrentSessions] updatePidFile failed: ${l(p)}`), !1);
+        return (logForDebugging(`[concurrentSessions] updatePidFile failed: ${l(p)}`), !1);
       }
     });
   return (
@@ -26541,7 +26541,7 @@ async function updateSessionName(e, t, r = "user") {
       t,
     )) || !wF();
   if (!p)
-    n(
+    logForDebugging(
       `[session-name] "${e}" applied locally but the session registry record was not updated \u2014 other sessions may keep showing the old name (see "updatePidFile failed" above)`,
       { level: "warn" },
     );
@@ -26630,7 +26630,7 @@ async function AF(e, t) {
     let r = await e.read([{ key: STORAGE_KEYS.session(t), offset: 0, length: MAX_SESSION_RECORD_BYTES + 1 }]),
       o = r.ok ? r.value.items[0] : void 0;
     if (!o?.found || o.value.byteLength > MAX_SESSION_RECORD_BYTES) return null;
-    return tm().safeParse(z(Buffer.from(o.value).toString("utf8")));
+    return tm().safeParse(jsonParse(Buffer.from(o.value).toString("utf8")));
   } catch {
     return null;
   }
@@ -26647,7 +26647,7 @@ async function IF(e) {
   return Il(e, {
     partialOnCap: !0,
     onIssue: (t, r) =>
-      n(
+      logForDebugging(
         `[concurrentSessions] session list ${t}`,
         r === void 0 ? void 0 : { level: r },
       ),
@@ -26721,13 +26721,13 @@ async function countConcurrentSessions(e) {
     try {
       r = await RF(t);
     } catch (D) {
-      if (!Rt(D)) n(`[concurrentSessions] readdir failed: ${l(D)}`);
+      if (!Rt(D)) logForDebugging(`[concurrentSessions] readdir failed: ${l(D)}`);
       return 0;
     }
   let o = yt(),
     d = await o.isRegistrySweepPermitted(),
     p = d ? await ownPidDomain() : "";
-  n(
+  logForDebugging(
     `[sessionRegistry] sweep ${d ? `permitted (domain ${p})` : "declined by isRegistrySweepPermitted() \u2014 dead records are left in place (neither counted nor deleted)"}`,
   );
   let _ = 0,
@@ -26758,7 +26758,7 @@ async function countConcurrentSessions(e) {
       G = e
         ? await AF(e, D)
         : await readBoundedFile(N, MAX_SESSION_RECORD_BYTES)
-            .then((V) => (V === null ? null : tm().safeParse(z(V))))
+            .then((V) => (V === null ? null : tm().safeParse(jsonParse(V))))
             .catch(() => null),
       L = G?.success ? G.data : null;
     if (L === null) {
@@ -26766,7 +26766,7 @@ async function countConcurrentSessions(e) {
       let V = e
         ? await AF(e, D)
         : await readBoundedFile(N, MAX_SESSION_RECORD_BYTES)
-            .then((te) => (te === null ? null : tm().safeParse(z(te))))
+            .then((te) => (te === null ? null : tm().safeParse(jsonParse(te))))
             .catch(() => null);
       L = V?.success ? V.data : null;
     }
@@ -26796,7 +26796,7 @@ async function countConcurrentSessions(e) {
         !isNonTerminalEntrypoint(L.entrypoint) &&
         !o.reportedUncleanExitPaths.has(N))
     )
-      (n(
+      (logForDebugging(
         `Prior session exited uncleanly: ${L.sessionId} (v${L.version ?? "?"})`,
       ),
         logEvent("tengu_unclean_exit", {
@@ -27071,8 +27071,8 @@ function shouldSendMcpServerTelemetry(e, t) {
     return xF(void 0, void 0);
   }
   if (Xz(e, t)) return !0;
-  if ("url" in t && VZe(t.url) && normalizeMcpName(e) === REMOTE_DEVICES_MCP_SERVER_NAME) return !0;
-  return xF(t.type, DRe(t));
+  if ("url" in t && isRemoteDevicesProxyUrl(t.url) && normalizeMcpName(e) === REMOTE_DEVICES_MCP_SERVER_NAME) return !0;
+  return xF(t.type, normalizeMcpServerUrl(t));
 }
 function getMcpToolAnalyticsFields(e, t) {
   if (!t) return {};
@@ -27211,7 +27211,7 @@ function im(e, t = 0) {
 function serializeToolInputForOtel(e) {
   if (!isToolDetailsLoggingEnabled()) return;
   let t = im(e),
-    r = b(t);
+    r = jsonStringify(t);
   if (r.length > NF) r = r.slice(0, NF) + "\u2026[truncated]";
   return r;
 }
@@ -27379,7 +27379,7 @@ function sumAttachmentBytesInMessages(e) {
     let o = r.message.content;
     if (!Array.isArray(o)) continue;
     for (let d of o)
-      if (d.type === "document" || d.type === "image") t += b(d).length;
+      if (d.type === "document" || d.type === "image") t += jsonStringify(d).length;
   }
   return t;
 }
@@ -27719,7 +27719,7 @@ function HF(e, t, r = {}) {
     te = { account_uuid: t.accountUuid, organization_uuid: t.organizationUuid };
   return {
     env: F,
-    ...(d && { process: Buffer.from(b(d)).toString("base64") }),
+    ...(d && { process: Buffer.from(jsonStringify(d)).toString("base64") }),
     ...(te && { auth: te }),
     core: V,
     additional: {
@@ -27859,14 +27859,14 @@ class gm {
       else {
         await GF(br(), { recursive: !0 });
         let r =
-          t.map((o) => b(o)).join(`
+          t.map((o) => jsonStringify(o)).join(`
 `) +
           `
 `;
         await Uue(e, r, "utf8");
       }
     } catch (r) {
-      n(
+      logForDebugging(
         `1P event logging: failed to persist failed-events batch to ${e}: ${l(r)}`,
         { level: "error" },
       );
@@ -27877,13 +27877,13 @@ class gm {
     try {
       await GF(br(), { recursive: !0 });
       let r =
-        t.map((o) => b(o)).join(`
+        t.map((o) => jsonStringify(o)).join(`
 `) +
         `
 `;
       await appendFile(e, r, "utf8");
     } catch (r) {
-      n(
+      logForDebugging(
         `1P event logging: failed to persist failed-event queue to ${e}: ${l(r)}`,
         { level: "error" },
       );
@@ -27911,7 +27911,7 @@ class gm {
             : E;
         if (!C) continue;
         try {
-          r.push(z(C));
+          r.push(jsonParse(C));
         } catch {}
       }
       if (p.value.nextSeq === void 0) return r;
@@ -27927,13 +27927,13 @@ class gm {
       t,
       r.map((d) => ({
         data:
-          b(d) +
+          jsonStringify(d) +
           `
 `,
       })),
     );
     if (!o.ok)
-      n(
+      logForDebugging(
         `1P event logging: failed to persist failed-event queue to v5 stream: ${o.error.code}`,
         { level: "error" },
       );
@@ -28007,7 +28007,7 @@ class gm {
       case "error":
         return;
       case "capped":
-        n(
+        logForDebugging(
           `1P event logging: previous-batch stream listing truncated at ${DEFAULT_MAX_PAGES} pages; retrying the ${o.length} streams seen`,
           { level: "warn" },
         );
@@ -28050,14 +28050,14 @@ class gm {
         C,
         I.map((x, N) => {
           let G =
-            b(x) +
+            jsonStringify(x) +
             `
 `;
           return { data: G, recordId: zue(N, G) };
         }),
       );
       if (!D.ok) {
-        n(
+        logForDebugging(
           `1P event logging: failed to migrate flat failed-event batch to v5 stream: ${D.error.code}`,
           { level: "error" },
         );
@@ -28183,7 +28183,7 @@ class gm {
     let r = this.lastExportErrorContext
       ? ` (${this.lastExportErrorContext})`
       : "";
-    n(`1P event logging: ${e.length} events failed to export${r}`, {
+    logForDebugging(`1P event logging: ${e.length} events failed to export${r}`, {
       level: "error",
     });
   }
@@ -28268,7 +28268,7 @@ class gm {
       .then(
         () => {},
         (r) => {
-          n(
+          logForDebugging(
             `1P event logging: OAuth refresh before send failed: ${ge(r).name}`,
           );
         },
@@ -28428,7 +28428,7 @@ class gm {
           client_timestamp: this.hrTimeToDate(_.hrTime),
           session_id: K(),
           additional_metadata: Buffer.from(
-            b({ transform_error: "core_metadata attribute is missing" }),
+            jsonStringify({ transform_error: "core_metadata attribute is missing" }),
           ).toString("base64"),
         });
         continue;
@@ -28465,7 +28465,7 @@ class gm {
         head_sha: o(re),
         additional_metadata:
           Object.keys(Be).length > 0
-            ? Buffer.from(b(Be)).toString("base64")
+            ? Buffer.from(jsonStringify(Be)).toString("base64")
             : void 0,
       });
     }
@@ -28647,10 +28647,10 @@ function logGrowthBookExposure(e) {
       ...(p && { organization_uuid: p }),
       ...(e.userAttributes && {
         session_id: e.userAttributes.sessionId,
-        user_attributes: b({ appVersion: e.userAttributes.appVersion }),
+        user_attributes: jsonStringify({ appVersion: e.userAttributes.appVersion }),
       }),
       ...(e.experimentMetadata && {
-        experiment_metadata: b(e.experimentMetadata),
+        experiment_metadata: jsonStringify(e.experimentMetadata),
       }),
       environment: que(),
     },
@@ -28806,7 +28806,7 @@ function ft() {
       getAuthHeaders: () => getAuthHeadersAsync(),
       refreshOAuthTokenIfNeeded: (t, r) => checkAndRefreshOAuthTokenIfNeeded({ credentials: t, storageV5: r }),
       getUserAttributes: () => getUserAttributes(),
-      rereadUserAttributes: () => (Tkn(), resetUserData(), initUserData(), getUserAttributes()),
+      rereadUserAttributes: () => (clearCachedAccountInfo(), resetUserData(), initUserData(), getUserAttributes()),
       readGlobalConfig: () => getGlobalConfig(),
       saveGlobalConfig: (t, r) => {
         saveGlobalConfig(t, r);
@@ -29651,7 +29651,7 @@ function buildEmptyInputRepairMessage(e, t) {
     for (let [_, E] of o) d[_] = yde(_, E);
     if (!t.safeParse(d).success) return null;
     let p = o.map(([_]) => `\`${_}\``).join(", ");
-    return `The ${e} tool was called with an empty input object ({}), but it has required parameters: ${p}. Minimal valid call shape: ${b(d)}. Re-issue the call with real values for each required parameter.`;
+    return `The ${e} tool was called with an empty input object ({}), but it has required parameters: ${p}. Minimal valid call shape: ${jsonStringify(d)}. Re-issue the call with real values for each required parameter.`;
   } catch {
     return null;
   }
@@ -29817,21 +29817,21 @@ function getWorkspacePersistedTrustKey(e) {
   return getPersistedTrustKeyForPath(e ?? he());
 }
 function getPersistedTrustKeyForPath(e) {
-  return y1(findCanonicalGitRootUncached(e) ?? zn(lt(e)));
+  return toForwardSlashPath(findCanonicalGitRootUncached(e) ?? zn(lt(e)));
 }
 function isPathPersistedTrustedCwdExact(e) {
   return isTrustKeyPersistedTrusted(getPersistedTrustKeyForExactPath(e));
 }
 function getPersistedTrustKeyForExactPath(e) {
-  return y1(zn(lt(e)));
+  return toForwardSlashPath(zn(lt(e)));
 }
 async function persistedTrustKeyThroughBackend(e, t) {
   if (e.hostFiles.serving("workspace") !== "host") return;
   let r = lt(t),
     o = await findGitRootThroughBackendUncached(e.hostFiles, r);
   if (o === void 0) return;
-  if (o.gitRoot === null) return y1(zn(r));
-  return o.entry === "directory" ? y1(o.gitRoot) : void 0;
+  if (o.gitRoot === null) return toForwardSlashPath(zn(r));
+  return o.entry === "directory" ? toForwardSlashPath(o.gitRoot) : void 0;
 }
 async function workspacePersistedTrustThroughBackend(e) {
   try {
@@ -29871,7 +29871,7 @@ function resetLocalSettingsGitTrackedCache() {
 }
 function Ode() {
   let e = he(),
-    t = ae();
+    t = getFsSurface();
   try {
     if (t.realpathSync(lt(e)) === t.realpathSync(TB())) return !0;
   } catch {}
@@ -29894,7 +29894,7 @@ function kde() {
   return d ? "indeterminate" : "untracked";
 }
 function wde(e) {
-  let t = ae();
+  let t = getFsSurface();
   try {
     if (t.realpathSync(lt(e)) === t.realpathSync(TB())) return "untracked";
   } catch {}
@@ -29967,17 +29967,17 @@ function Pde() {
 function AB(e, t) {
   let r = zn(lt(t)),
     o = findGitRootUncached(r),
-    d = o !== null ? y1(lt(o)) : null;
+    d = o !== null ? toForwardSlashPath(lt(o)) : null;
   return yB(e, r, d);
 }
 function yB(e, t, r) {
-  let o = y1(t);
+  let o = toForwardSlashPath(t);
   while (!0) {
     if (!(r === null || o === r || o.startsWith(r.endsWith("/") ? r : r + "/")))
       return !1;
     if (e.projects?.[o]?.hasTrustDialogAccepted) return !0;
     if (o === r) return !1;
-    let p = y1(lt(o, ".."));
+    let p = toForwardSlashPath(lt(o, ".."));
     if (p === o) return !1;
     o = p;
   }
@@ -30081,7 +30081,7 @@ var Mde = new Set([
 function ym(e, t) {
   let r = new Set([...Object.keys(e), ...Object.keys(t)]),
     o = [];
-  for (let d of r) if (b(e[d]) !== b(t[d])) o.push(d);
+  for (let d of r) if (jsonStringify(e[d]) !== jsonStringify(t[d])) o.push(d);
   return o;
 }
 function vB(e, t) {
@@ -30113,8 +30113,8 @@ async function Nde(e) {
     r = await e.readText([STORAGE_KEYS.globalConfig()]);
   if (!r.ok)
     return (
-      n(
-        `Config read through storage failed; continuing from defaults: ${We(r.error)}`,
+      logForDebugging(
+        `Config read through storage failed; continuing from defaults: ${describeStorageError(r.error)}`,
         { level: "error" },
       ),
       t.setLastGetConfigOutcome("enoent"),
@@ -30123,7 +30123,7 @@ async function Nde(e) {
   let o = r.value.items[0];
   if (!o?.found) return (t.setLastGetConfigOutcome("enoent"), Ye());
   try {
-    let d = z(cs(o.value));
+    let d = jsonParse(cs(o.value));
     return (t.setLastGetConfigOutcome("parsed"), { ...Ye(), ...d });
   } catch {
     return (t.setLastGetConfigOutcome("parse-error"), Ye());
@@ -30188,7 +30188,7 @@ function dc(e, t) {
   if (!(isHoverRestEnabled() && Q().unhandedWritesInMemory) || e !== void 0) return !1;
   return (
     logFeatureSad("storage_v5_backend", "unhanded_config_writer"),
-    n(
+    logForDebugging(
       `config: ${t} ran without the storage backend in a process whose config record has no file behind it; the change is in memory only and is replaced when a backend-handed save or refresh rebuilds the config from the record`,
       { level: "warn" },
     ),
@@ -30240,7 +30240,7 @@ async function Lde(e, t, r, o) {
     if (C && p) Bi(p);
     return (C || _) && !E;
   } catch (C) {
-    n(`Failed to save config with lock: ${C}`, { level: "error" });
+    logForDebugging(`Failed to save config with lock: ${C}`, { level: "error" });
     let I = await zi(t, r);
     if (I.readRejected) return (gc("save_global"), !1);
     let D = I.config,
@@ -30252,12 +30252,12 @@ async function Lde(e, t, r, o) {
     if (Lt(D) && Lt(p)) {
       let G = d.pendingWriteCount(getGlobalClaudeFile());
       if (G > 1 && Gn(C))
-        n(
+        logForDebugging(
           "saveGlobalConfig fallback under contention: proceeding on the base as-is (fresh disk on a clean read; the snapshot copy on a torn read); the write queued behind carries the pending auth. See GH #3117 / gh-73364.",
         );
       else if (G > 1 && t) {
         if (
-          (n(
+          (logForDebugging(
             "saveGlobalConfig fallback: merge base is missing auth the cache has, but an in-process write is queued behind this one; re-basing on the enqueue-time cache snapshot so the pending auth and this write both land. See GH #3117.",
           ),
           (D = { ...t }),
@@ -30268,7 +30268,7 @@ async function Lde(e, t, r, o) {
         p = Nt({ ...x, projects: Li(D.projects, x.projects) });
       } else
         return (
-          n(
+          logForDebugging(
             "saveGlobalConfig fallback: re-read config is missing auth that cache has; refusing to write. See GH #3117.",
             { level: "error" },
           ),
@@ -30289,7 +30289,7 @@ function Ude() {
       hit_rate: e / r,
     });
 }
-Et(async () => {
+registerCleanup(async () => {
   Ude();
 });
 function Ui(e) {
@@ -30393,7 +30393,7 @@ function OB() {
     }
     RB(r);
   }),
-    Et(async () => {
+    registerCleanup(async () => {
       (unwatchFile(t), e.setFreshnessWatcherStarted(!1), e.setFreshnessBackend(void 0));
     }));
 }
@@ -30401,7 +30401,7 @@ function _o() {
   return isHoverRestEnabled() && !Q().fileWatchFallback;
 }
 function zde() {
-  (n(
+  (logForDebugging(
     "Not watching ~/.claude.json for other processes: the fs.watchFile fallback is off for this process",
     { level: "warn" },
   ),
@@ -30412,7 +30412,7 @@ async function Cm(e) {
     r = getGlobalClaudeFile(),
     o;
   try {
-    o = await ae().readFile(r, { encoding: "utf-8" });
+    o = await getFsSurface().readFile(r, { encoding: "utf-8" });
   } catch {
     return;
   }
@@ -30445,7 +30445,7 @@ async function wB() {
   if (_o()) return;
   let r;
   try {
-    let o = await ae().stat(e);
+    let o = await getFsSurface().stat(e);
     r = { mtimeMs: o.mtimeMs, size: o.size };
   } catch {
     return;
@@ -30483,7 +30483,7 @@ function Fde() {
     e.setLoadedVersion(void 0),
     oc(),
     t?.unsubscribe(),
-    n(
+    logForDebugging(
       _o()
         ? "The startup storage backend was withdrawn; ~/.claude.json is now unwatched"
         : "The startup storage backend was withdrawn; watching ~/.claude.json with the fs.watchFile poll again",
@@ -30497,24 +30497,24 @@ async function pc(e) {
     });
     if (o.ok)
       return (
-        n(
+        logForDebugging(
           "Watching ~/.claude.json for other processes through the storage interface",
         ),
         o.value
       );
-    t = We(o.error);
+    t = describeStorageError(o.error);
   } catch (o) {
     t = String(o);
   }
   let r = _o() ? "" : "; using the fs.watchFile poll";
-  n(`Watching ~/.claude.json through the storage interface failed${r}: ${t}`, {
+  logForDebugging(`Watching ~/.claude.json through the storage interface failed${r}: ${t}`, {
     level: "warn",
   });
   return;
 }
 function oc() {
   let e = Q();
-  if (Yhe()) return;
+  if (isCleanupDrainStarted()) return;
   if (_o()) {
     if ((zde(), e.freshnessBackend !== void 0)) rc();
     return;
@@ -30526,10 +30526,10 @@ function PB(e) {
     r = t.freshnessBackend;
   if (!isHoverRestEnabled() || r === void 0) return;
   if (!e.ok) {
-    if (Yhe()) return;
+    if (isCleanupDrainStarted()) return;
     if (
-      (n(
-        `Watching ~/.claude.json through the storage interface ended: ${We(e.error)}`,
+      (logForDebugging(
+        `Watching ~/.claude.json through the storage interface ended: ${describeStorageError(e.error)}`,
         { level: "warn" },
       ),
       t.setFreshnessSubscription(void 0),
@@ -30594,7 +30594,7 @@ async function readFreshOauthAccountFromDisk(e) {
         p = d.ok ? d.value.items[0] : void 0;
       if (!p?.found) return;
       t = p.value;
-    } else t = await ae().readFile(getGlobalClaudeFile(), { encoding: "utf-8" });
+    } else t = await getFsSurface().readFile(getGlobalClaudeFile(), { encoding: "utf-8" });
     let r = xt(cs(t), !1);
     if (r === null || typeof r !== "object" || !("oauthAccount" in r)) return;
     let o = r.oauthAccount;
@@ -30633,7 +30633,7 @@ function resolveExplicitRemoteControlAtStartup() {
           ? { value: d, source: "legacy_global_config" }
           : { value: void 0, source: "none" };
   if (p.value !== !0 && (t === !0 || r === !0))
-    n(
+    logForDebugging(
       `remoteControlAtStartup: true in ${t === !0 && r === !0 ? "project and local" : t === !0 ? "project" : "local"} settings ignored \u2014 repo-scoped settings cannot enable Remote Control; set it at user scope (/config)`,
     );
   return p;
@@ -30690,7 +30690,7 @@ function Gn(e) {
 }
 var _isLockContentionErrorForTesting = Gn;
 function fc(e, t = !1) {
-  (n(
+  (logForDebugging(
     `Config lock still held by a live process after retries; skipping the unlocked fallback write (${e}) to avoid clobbering the lock holder${t ? " and re-enqueueing it through the locked path" : ""}. See gh-73364.`,
     { level: "error" },
   ),
@@ -30700,7 +30700,7 @@ function fc(e, t = !1) {
     }));
 }
 function gc(e) {
-  (n(
+  (logForDebugging(
     `Config re-read was rejected (disk unreadable); suppressing the unlocked fallback write (${e}) \u2014 a memory-derived base may not be written without the lock. See the decision table at GetConfigOutcome.`,
     { level: "error" },
   ),
@@ -30710,22 +30710,22 @@ async function _c(e, t, r) {
   Bi(e);
   let o = !1;
   try {
-    let d = pickBy(e, (p, _) => b(p) !== b(DEFAULT_GLOBAL_CONFIG[_]));
+    let d = pickBy(e, (p, _) => jsonStringify(p) !== jsonStringify(DEFAULT_GLOBAL_CONFIG[_]));
     if (isHoverRestEnabled() && r !== void 0) {
-      await ae().mkdir(Ql(getGlobalClaudeFile()));
-      let p = await r.write(STORAGE_KEYS.globalConfig(), b(d, null, 2), {
+      await getFsSurface().mkdir(Ql(getGlobalClaudeFile()));
+      let p = await r.write(STORAGE_KEYS.globalConfig(), jsonStringify(d, null, 2), {
         publishDiscipline: "followAtomic",
         mode: 384,
         precondition: { type: "none" },
       });
       if (!p.ok)
         throw Error("Config fallback write through storage failed", {
-          cause: We(p.error),
+          cause: describeStorageError(p.error),
         });
     } else {
       let p = getGlobalClaudeFile();
-      (await ae().mkdir(Ql(p)),
-        await wb(p, b(d, null, 2), {
+      (await getFsSurface().mkdir(Ql(p)),
+        await writeFileAndFlush(p, jsonStringify(d, null, 2), {
           encoding: "utf-8",
           mode: 384,
           allowSymlink: !0,
@@ -30733,7 +30733,7 @@ async function _c(e, t, r) {
     }
     o = !0;
   } catch (d) {
-    n(
+    logForDebugging(
       `Config fallback write also failed; continuing without persisting: ${d}`,
       { level: "error" },
     );
@@ -30745,10 +30745,10 @@ var MB = 60000,
 async function Sc(e, t, r) {
   if (isHoverRestEnabled() && r !== void 0) {
     let d = await Vde(r.backend, r.replaced, t).catch((p) => String(p));
-    if (d !== void 0) n(`Failed to backup config: ${d}`, { level: "error" });
+    if (d !== void 0) logForDebugging(`Failed to backup config: ${d}`, { level: "error" });
     return;
   }
-  let o = ae();
+  let o = getFsSurface();
   try {
     let d = lc(e),
       p = Tc();
@@ -30782,7 +30782,7 @@ async function Sc(e, t, r) {
       } catch {}
   } catch (d) {
     if (A(d) !== "ENOENT")
-      n(`Failed to backup config: ${d}`, { level: "error" });
+      logForDebugging(`Failed to backup config: ${d}`, { level: "error" });
   }
 }
 async function DB(e) {
@@ -30801,7 +30801,7 @@ async function Vde(e, t, r) {
       I = await e.write(STORAGE_KEYS.globalConfigCopy("backup", C), t, {
         exactMode: await DB(e),
       });
-    if (!I.ok) return We(I.error);
+    if (!I.ok) return describeStorageError(I.error);
     d.push(C);
   }
   for (let C of d.sort().reverse().slice(IB))
@@ -30829,23 +30829,23 @@ async function xB(e, t, r) {
     );
   switch (d.status) {
     case "done":
-      return CL(o);
+      return createOkResult(o);
     case "error":
-      return Cg(We(d.error));
+      return createErrorResult(describeStorageError(d.error));
     case "capped":
-      return Cg(`more than ${DEFAULT_MAX_PAGES} pages of copies`);
+      return createErrorResult(`more than ${DEFAULT_MAX_PAGES} pages of copies`);
   }
 }
 async function NB(e) {
   let t = await xB(e, "backup", !0);
-  return t.ok ? CL(t.value.map((r) => r.stamp)) : t;
+  return t.ok ? createOkResult(t.value.map((r) => r.stamp)) : t;
 }
 async function Hi(e, t, r, o, d, p) {
   let _ = Q();
   if (isHoverRestEnabled() && p !== void 0 && e === getGlobalClaudeFile()) return $de(p, e, t, r, o);
   let E = t(),
     C = Ql(e),
-    I = ae();
+    I = getFsSurface();
   await I.mkdir(C);
   let D;
   try {
@@ -30857,7 +30857,7 @@ async function Hi(e, t, r, o, d, p) {
           lockfilePath: x,
           onCompromised: (ce) => {
             (d?.onCompromised?.(),
-              n(`Config lock compromised: ${ce}`, { level: "error" }));
+              logForDebugging(`Config lock compromised: ${ce}`, { level: "error" }));
           },
         });
         break;
@@ -30868,7 +30868,7 @@ async function Hi(e, t, r, o, d, p) {
       }
     let G = Date.now() - N;
     if (G > 100)
-      (n(
+      (logForDebugging(
         "Lock acquisition took longer than expected - another Claude instance may be running",
       ),
         logEvent("tengu_config_lock_contention", { lock_time_ms: G }));
@@ -30886,7 +30886,7 @@ async function Hi(e, t, r, o, d, p) {
             write_size: re.size,
           });
       } catch (re) {
-        n(`Config stale-write stat failed: ${re}`);
+        logForDebugging(`Config stale-write stat failed: ${re}`);
       }
     let L = await Om(e, t),
       U = !1,
@@ -30899,7 +30899,7 @@ async function Hi(e, t, r, o, d, p) {
         try {
           _e = (await I.stat(e)).size;
         } catch {}
-        (n(
+        (logForDebugging(
           "saveConfigWithLock: re-read hit a parse error; auto-repairing from cached config under lock. See GH #3117.",
           { level: "error" },
         ),
@@ -30922,28 +30922,28 @@ async function Hi(e, t, r, o, d, p) {
         (_.lastGetConfigOutcome === "parsed" ||
           _.lastGetConfigOutcome === "enoent")
       )
-        n(
+        logForDebugging(
           "saveConfigWithLock: merge base is missing auth the cache has; an in-process write queued behind this one carries it and will land it under its own lock. Proceeding on the under-lock read. See GH #3117 / gh-73364.",
         );
       else if (re > 1) {
         let ce = o ?? _.cache.config;
         if (!ce)
           return (
-            n(
+            logForDebugging(
               "saveConfigWithLock: under-lock re-read was rejected and no re-base exists; refusing to write. See GH #3117.",
               { level: "error" },
             ),
             logEvent("tengu_config_auth_loss_prevented", {}),
             !1
           );
-        (n(
+        (logForDebugging(
           "saveConfigWithLock: under-lock re-read was rejected (read-error) with a write queued behind; re-basing on the enqueue-time cache snapshot instead of the defaults base. See GH #3117 / gh-73364.",
         ),
           (L = { ...ce }),
           (V = r(L)));
       } else
         return (
-          n(
+          logForDebugging(
             "saveConfigWithLock: re-read config is missing auth that cache has; refusing to write to avoid wiping ~/.claude.json. See GH #3117.",
             { level: "error" },
           ),
@@ -30951,10 +30951,10 @@ async function Hi(e, t, r, o, d, p) {
           !1
         );
     }
-    let te = pickBy(V, (re, ce) => b(re) !== b(E[ce]));
+    let te = pickBy(V, (re, ce) => jsonStringify(re) !== jsonStringify(E[ce]));
     return (
       await Sc(e, U),
-      await wb(e, b(te, null, 2), {
+      await writeFileAndFlush(e, jsonStringify(te, null, 2), {
         encoding: "utf-8",
         mode: 384,
         allowSymlink: !0,
@@ -30969,7 +30969,7 @@ async function Hi(e, t, r, o, d, p) {
         let N = A(x);
         if (N === "ERELEASED" || N === "ENOTACQUIRED" || N === "ECOMPROMISED")
           d?.onCompromised?.();
-        n(`Config lock release failed: ${x}`, { level: "error" });
+        logForDebugging(`Config lock release failed: ${x}`, { level: "error" });
       }
   }
 }
@@ -30977,7 +30977,7 @@ async function Kde(e, t, r) {
   let o = `${lc(t)}.corrupted.`,
     d = await xB(e, "corrupted", !1);
   if (!d.ok) {
-    n(`Could not back up corrupted config (${d.error}); continuing.`, {
+    logForDebugging(`Could not back up corrupted config (${d.error}); continuing.`, {
       level: "error",
     });
     return;
@@ -30997,19 +30997,19 @@ async function Kde(e, t, r) {
     });
   if (_.ok) {
     let E = Ve(Tc(), o + p);
-    (n(FB(E), { level: "error" }), process.stderr.write(BB(E)));
+    (logForDebugging(FB(E), { level: "error" }), process.stderr.write(BB(E)));
   } else
-    n(`Could not back up corrupted config (${We(_.error)}); continuing.`, {
+    logForDebugging(`Could not back up corrupted config (${describeStorageError(_.error)}); continuing.`, {
       level: "error",
     });
 }
 async function km(e, t, r, o = !1) {
   let d = Q();
   try {
-    (n(zB(r.message), { level: "error" }),
+    (logForDebugging(zB(r.message), { level: "error" }),
       process.stderr.write(UB(t, r.message)),
       await Kde(e, t, r).catch((_) =>
-        n(`Could not back up corrupted config (${_}); continuing.`, {
+        logForDebugging(`Could not back up corrupted config (${_}); continuing.`, {
           level: "error",
         }),
       ));
@@ -31055,7 +31055,7 @@ async function km(e, t, r, o = !1) {
       }
     }
   } catch (p) {
-    n(`Could not report the corrupt config: ${p}`, { level: "error" });
+    logForDebugging(`Could not report the corrupt config: ${p}`, { level: "error" });
   }
 }
 async function jde(e, t, r, o) {
@@ -31092,7 +31092,7 @@ async function $de(e, t, r, o, d) {
           if (V === void 0) te = r();
           else
             try {
-              te = { ...r(), ...z(cs(V)) };
+              te = { ...r(), ...jsonParse(cs(V)) };
             } catch (xe) {
               ((re = !0),
                 (ce = xe instanceof Error ? xe.message : String(xe)),
@@ -31116,7 +31116,7 @@ async function $de(e, t, r, o, d) {
           if (re && ve) {
             let xe = U === void 0 ? 0 : U.value.byteLength;
             (F.push(() => {
-              (n(
+              (logForDebugging(
                 "saveConfigWithLock: re-read hit a parse error; auto-repairing from cached config under lock. See GH #3117.",
                 { level: "error" },
               ),
@@ -31159,7 +31159,7 @@ async function $de(e, t, r, o, d) {
               Ze = d ?? p.cache.config;
             if (xe > 1 && Ze)
               (F.push(() =>
-                n(
+                logForDebugging(
                   "saveConfigWithLock: merge base is missing auth the cache has, but an in-process write is queued behind this one; re-basing on the enqueue-time cache snapshot so the pending auth and this write both land. See GH #3117.",
                 ),
               ),
@@ -31168,7 +31168,7 @@ async function $de(e, t, r, o, d) {
             else
               return (
                 F.push(() => {
-                  (n(
+                  (logForDebugging(
                     "saveConfigWithLock: re-read config is missing auth that cache has; refusing to write to avoid wiping ~/.claude.json. See GH #3117.",
                     { level: "error" },
                   ),
@@ -31185,9 +31185,9 @@ async function $de(e, t, r, o, d) {
                 }
               );
           }
-          let Ke = pickBy(Oe, (xe, Ze) => b(xe) !== b(_[Ze]));
+          let Ke = pickBy(Oe, (xe, Ze) => jsonStringify(xe) !== jsonStringify(_[Ze]));
           return {
-            write: b(Ke, null, 2),
+            write: jsonStringify(Ke, null, 2),
             result: {
               didWrite: !0,
               after: F,
@@ -31217,7 +31217,7 @@ async function $de(e, t, r, o, d) {
         D.error.telemetryCode === "LockSuspect")
     )
       logEvent("tengu_config_lock_contention", { lock_time_ms: x });
-    throw Error("Config update through storage failed", { cause: We(D.error) });
+    throw Error("Config update through storage failed", { cause: describeStorageError(D.error) });
   }
   let N = D.value.result;
   if (N === void 0) return !1;
@@ -31226,7 +31226,7 @@ async function $de(e, t, r, o, d) {
       let L = await mo(t, e);
       if (L) process.stderr.write(Mm(t, L));
     } catch (L) {
-      n(`Could not report the missing config file: ${L}`, { level: "error" });
+      logForDebugging(`Could not report the missing config file: ${L}`, { level: "error" });
     }
   if (N.corrupt !== void 0) await km(e, t, N.corrupt);
   let G = N.backup !== void 0 && N.backup.replaced === void 0;
@@ -31239,19 +31239,19 @@ async function $de(e, t, r, o, d) {
     try {
       L();
     } catch (U) {
-      n(`Config save after-effect failed: ${U}`, { level: "error" });
+      logForDebugging(`Config save after-effect failed: ${U}`, { level: "error" });
     }
   return N.didWrite;
 }
 async function wm(e, t, r = !1) {
   let o = Q(),
     d = await e.read([STORAGE_KEYS.globalConfig()]).then(
-      (I) => (I.ok ? I : We(I.error)),
+      (I) => (I.ok ? I : describeStorageError(I.error)),
       (I) => String(I),
     );
   if (typeof d === "string")
     return (
-      n(
+      logForDebugging(
         `Startup config read through storage failed; reading the file directly: ${d}`,
         { level: "warn" },
       ),
@@ -31268,7 +31268,7 @@ async function wm(e, t, r = !1) {
     E = { mtimeMs: p.mtimeMs, size: p.totalBytes },
     C;
   try {
-    C = z(cs(_));
+    C = jsonParse(cs(_));
   } catch (I) {
     let D = I instanceof Error ? I.message : String(I);
     if (!r)
@@ -31325,7 +31325,7 @@ function LB(e, t, r, o) {
       d.setLoadedVersion(r.version),
       (p = "its record is now the in-memory config"));
   if (
-    (n(
+    (logForDebugging(
       `Re-read ~/.claude.json through the storage interface after the direct start-up read: ${p}`,
     ),
     d.freshnessBackend === void 0)
@@ -31354,7 +31354,7 @@ async function qde(e, t) {
     } else {
       let _ = null;
       try {
-        _ = await ae().stat(d);
+        _ = await getFsSurface().stat(d);
       } catch {}
       let E = Ui(await Om(d, Ye, !0));
       if ((r.installDiskRead(E, _), e !== void 0 && _o())) ac(e);
@@ -31404,7 +31404,7 @@ Claude configuration file not found at: ${e}
   );
 }
 async function mo(e, t) {
-  let r = ae(),
+  let r = getFsSurface(),
     o = lc(e),
     d = Tc();
   if (isHoverRestEnabled() && t !== void 0) {
@@ -31440,11 +31440,11 @@ async function mo(e, t) {
 async function Tm(e, t, r) {
   let o = Q();
   if (!o.readingAllowed) throw Error("Config accessed before allowed.");
-  let d = ae();
+  let d = getFsSurface();
   try {
     let p = await d.readFile(e, { encoding: "utf-8" });
     try {
-      let _ = z(cs(p));
+      let _ = jsonParse(cs(p));
       return (o.setLastGetConfigOutcome("parsed"), { ...t(), ..._ });
     } catch (_) {
       let E = _ instanceof Error ? _.message : String(_);
@@ -31467,7 +31467,7 @@ async function Tm(e, t, r) {
       return t();
     }
     if (p instanceof YR) {
-      (n(zB(p.message), { level: "error" }),
+      (logForDebugging(zB(p.message), { level: "error" }),
         process.stderr.write(UB(e, p.message)));
       let E = 0;
       try {
@@ -31492,11 +31492,11 @@ async function Tm(e, t, r) {
         if (!G)
           ((N = Ve(D, `${I}.corrupted.${Date.now()}`)),
             await d.copyFile(e, N),
-            n(FB(N), { level: "error" }));
+            logForDebugging(FB(N), { level: "error" }));
         if (N) process.stderr.write(BB(N));
         else if (G) process.stderr.write(HB);
       } catch (I) {
-        n(`Could not back up corrupted config (${A(I) ?? I}); continuing.`, {
+        logForDebugging(`Could not back up corrupted config (${A(I) ?? I}); continuing.`, {
           level: "error",
         });
       }
@@ -31550,7 +31550,7 @@ function getProjectPathForConfig() {
   if (e.projectPathForConfig !== null) return e.projectPathForConfig;
   let t = he(),
     r = findCanonicalGitRoot(t),
-    o = r ? y1(r) : y1(zn(lt(t)));
+    o = r ? toForwardSlashPath(r) : toForwardSlashPath(zn(lt(t)));
   return (e.setProjectPathForConfig(o), o);
 }
 function clearProjectPathForConfigCache() {
@@ -31616,7 +31616,7 @@ async function GB(e, t, r, o, d) {
     )
       Bi(_);
   } catch (E) {
-    n(`Failed to save config with lock: ${E}`, { level: "error" });
+    logForDebugging(`Failed to save config with lock: ${E}`, { level: "error" });
     let C = await zi(r, o);
     if (C.readRejected) {
       gc("save_project");
@@ -31637,7 +31637,7 @@ async function GB(e, t, r, o, d) {
               return Fi(getGlobalClaudeFile(), () => GB(e, t, U, o, d + 1));
             })
             .catch((U) =>
-              n(`Crash-marker config re-enqueue failed: ${U}`, {
+              logForDebugging(`Crash-marker config re-enqueue failed: ${U}`, {
                 level: "error",
               }),
             );
@@ -31647,16 +31647,16 @@ async function GB(e, t, r, o, d) {
     if (Lt(I)) {
       let N = p.pendingWriteCount(getGlobalClaudeFile());
       if (N > 1 && Gn(E))
-        n(
+        logForDebugging(
           "saveCurrentProjectConfig fallback under contention: proceeding on the base as-is (fresh disk on a clean read; the snapshot copy on a torn read); the write queued behind carries the pending auth. See GH #3117 / gh-73364.",
         );
       else if (N > 1 && r)
-        (n(
+        (logForDebugging(
           "saveCurrentProjectConfig fallback: merge base is missing auth the cache has, but an in-process write is queued behind this one; re-basing on the enqueue-time cache snapshot. See GH #3117.",
         ),
           (I = { ...r }));
       else {
-        (n(
+        (logForDebugging(
           "saveCurrentProjectConfig fallback: re-read config is missing auth that cache has; refusing to write. See GH #3117.",
           { level: "error" },
         ),
@@ -31689,14 +31689,14 @@ function saveCurrentProjectConfigSyncForExit(e) {
       if (!W(D)) throw D;
     }
     let p = Ye();
-    if (d !== null) p = { ...p, ...z(cs(d)) };
+    if (d !== null) p = { ...p, ...jsonParse(cs(d)) };
     let _ = p.projects?.[o] ?? DEFAULT_PROJECT_CONFIG,
       E = e(_);
     if (E === _) return;
     let C = Nt({ ...p, projects: { ...p.projects, [o]: E } });
     if (Lt(C)) return;
-    let I = pickBy(C, (D, x) => b(D) !== b(DEFAULT_GLOBAL_CONFIG[x]));
-    Kxn(r, b(I, null, 2), { encoding: "utf-8", mode: 384, allowSymlink: !0 });
+    let I = pickBy(C, (D, x) => jsonStringify(D) !== jsonStringify(DEFAULT_GLOBAL_CONFIG[x]));
+    writeFileSyncAndFlush(r, jsonStringify(I, null, 2), { encoding: "utf-8", mode: 384, allowSymlink: !0 });
   } catch {}
 }
 function saveGlobalConfigSyncForExit(e) {
@@ -31716,13 +31716,13 @@ function saveGlobalConfigSyncForExit(e) {
       if (!W(C)) throw C;
     }
     let d = Ye();
-    if (o !== null) d = { ...d, ...z(cs(o)) };
+    if (o !== null) d = { ...d, ...jsonParse(cs(o)) };
     let p = e(d);
     if (p === d) return;
     let _ = Nt({ ...p, projects: Li(d.projects, p.projects) });
     if (Lt(_)) return;
-    let E = pickBy(_, (C, I) => b(C) !== b(DEFAULT_GLOBAL_CONFIG[I]));
-    Kxn(r, b(E, null, 2), { encoding: "utf-8", mode: 384, allowSymlink: !0 });
+    let E = pickBy(_, (C, I) => jsonStringify(C) !== jsonStringify(DEFAULT_GLOBAL_CONFIG[I]));
+    writeFileSyncAndFlush(r, jsonStringify(E, null, 2), { encoding: "utf-8", mode: 384, allowSymlink: !0 });
   } catch {}
 }
 function deleteProjectConfig(e, t) {
@@ -31761,20 +31761,20 @@ async function Xde(e, t, r) {
     if (_ && d) Bi(d);
     return _ || p === !1;
   } catch (_) {
-    if ((n(`Failed to save config with lock: ${_}`, { level: "error" }), Gn(_)))
+    if ((logForDebugging(`Failed to save config with lock: ${_}`, { level: "error" }), Gn(_)))
       return (fc("delete_project"), !1);
     let E = await zi(t, r);
     if (E.readRejected) return (gc("delete_project"), !1);
     let C = E.config;
     if (Lt(C))
       if (o.pendingWriteCount(getGlobalClaudeFile()) > 1 && t)
-        (n(
+        (logForDebugging(
           "deleteProjectConfig fallback: merge base is missing auth the cache has, but an in-process write is queued behind this one; re-basing on the enqueue-time cache snapshot. See GH #3117.",
         ),
           (C = { ...t }));
       else
         return (
-          n(
+          logForDebugging(
             "deleteProjectConfig fallback: re-read config is missing auth that cache has; refusing to write. See GH #3117.",
             { level: "error" },
           ),
@@ -31839,20 +31839,20 @@ async function KB(e, t) {
     if (C && _) t.writeCache(_);
     return C || E === !1;
   } catch (C) {
-    if ((n(`Failed to save config with lock: ${C}`, { level: "error" }), Gn(C)))
+    if ((logForDebugging(`Failed to save config with lock: ${C}`, { level: "error" }), Gn(C)))
       return (fc("delete_project_fields"), !1);
     let I = await t.readConfigFallback();
     if (I.readRejected) return (gc("delete_project_fields"), !1);
     let D = I.config;
     if (t.wouldLoseAuth(D))
       if (t.pendingWriteCount() > 1 && t.enqueueCacheSnapshot)
-        (n(
+        (logForDebugging(
           "deleteCurrentProjectConfigFields fallback: merge base is missing auth the cache has, but an in-process write is queued behind this one; re-basing on the enqueue-time cache snapshot. See GH #3117.",
         ),
           (D = { ...t.enqueueCacheSnapshot }));
       else
         return (
-          n(
+          logForDebugging(
             "deleteCurrentProjectConfigFields fallback: re-read config is missing auth that cache has; refusing to write. See GH #3117.",
             { level: "error" },
           ),
@@ -32507,7 +32507,7 @@ async function _pe(e) {
       timeout: rpe,
     });
   } catch (t) {
-    n(`Failed to flush logs to Datadog: ${t}`, { level: "error" });
+    logForDebugging(`Failed to flush logs to Datadog: ${t}`, { level: "error" });
   }
 }
 var hpe = 30;
@@ -32556,7 +32556,7 @@ function Spe(e, { isTrustedAnt: t, onAnthropicHost: r }) {
   if (t) return e;
   if (e === CONFIDENTIAL_MODEL_ID && r) return e;
   if (!e.toLowerCase().includes("claude")) return null;
-  let o = getCanonicalName(Xt(e), { identity: !0 });
+  let o = getCanonicalName(strip1mSuffix(e), { identity: !0 });
   return o in MODEL_COSTS_BY_CANONICAL_NAME ? o : "other";
 }
 async function trackDatadogEvent(e, t) {
@@ -32714,7 +32714,7 @@ function getErrorTelemetryFields(e) {
 function reportRenderError(e, t) {
   let r = Gw(e) ?? S("unknown");
   try {
-    n(`[reportRenderError] React boundary caught ${r}: ${l(e)}`, {
+    logForDebugging(`[reportRenderError] React boundary caught ${r}: ${l(e)}`, {
       level: "error",
     });
   } catch {}
@@ -32741,7 +32741,7 @@ function $B(e) {
   let t = ype().safeParse(e);
   if (!t.success) {
     (logFeatureBad("oauth_profile_fetch", "malformed_response_body"),
-      n(
+      logForDebugging(
         `OAuth profile: response body failed shape validation \u2014 ${t.error.message}`,
         { level: "error" },
       ));
@@ -32779,7 +32779,7 @@ async function fetchOAuthProfileWithApiKey() {
   } catch (d) {
     if (cc(d))
       (logFeatureSad("oauth_profile_fetch", `api_key_${YB(d)}`),
-        n(`Failed to fetch oauth profile from API key: ${d}`, {
+        logForDebugging(`Failed to fetch oauth profile from API key: ${d}`, {
           level: "error",
         }));
     else (logFeatureBad("oauth_profile_fetch", `api_key_${qB(d)}`), logError(d));
@@ -32800,7 +32800,7 @@ async function fetchOAuthProfileWithToken(e) {
   } catch (r) {
     if (cc(r))
       (logFeatureSad("oauth_profile_fetch", `token_${YB(r)}`),
-        n(`Failed to fetch oauth profile from OAuth token: ${r}`, {
+        logForDebugging(`Failed to fetch oauth profile from OAuth token: ${r}`, {
           level: "error",
         }));
     else (logFeatureBad("oauth_profile_fetch", `token_${qB(r)}`), logError(r));
@@ -32819,7 +32819,7 @@ async function validateOAuthToken(e) {
     return (logFeatureOk("oauth_token_validate"), r.data);
   } catch (r) {
     if ((logFeatureSad("oauth_token_validate", "oauth_validate_failed"), cc(r)))
-      n(`Failed to validate OAuth token: ${r}`, { level: "error" });
+      logForDebugging(`Failed to validate OAuth token: ${r}`, { level: "error" });
     else logError(r);
   }
 }
@@ -33034,7 +33034,7 @@ async function revokeOAuthToken(e, t) {
       logFeatureOk("oauth_token_revoke"));
   } catch (r) {
     let o = at.isAxiosError(r) ? r.response?.status : void 0;
-    (n(
+    (logForDebugging(
       `OAuth token revoke failed (status=${o ?? "network"}); continuing with local logout.`,
     ),
       logFeatureSad("oauth_token_revoke", `http_${o ?? "network"}`));
@@ -33171,7 +33171,7 @@ async function populateOAuthAccountInfoIfNeeded(e, t) {
   let D = await fetchOAuthProfileWithToken(I.accessToken);
   if (!D?.account || !D.organization) return !1;
   if (p)
-    n("OAuth profile fetch succeeded, overriding env var account info", {
+    logForDebugging("OAuth profile fetch succeeded, overriding env var account info", {
       level: "info",
     });
   return (
@@ -33270,10 +33270,10 @@ function isAccountOnHoldError(e) {
   if (!at.isAxiosError(e) || !e.response) return !1;
   let t = e.response.status;
   if (t !== 400 && t !== 401 && t !== 403) return !1;
-  return WZe(e.response.data) !== null;
+  return parseAccountOnHoldError(e.response.data) !== null;
 }
 function getAccountOnHoldErrorUrl(e) {
-  return (at.isAxiosError(e) ? WZe(e.response?.data) : null)?.url ?? sBe;
+  return (at.isAxiosError(e) ? parseAccountOnHoldError(e.response?.data) : null)?.url ?? ACCOUNT_ON_HOLD_URL;
 }
 function isInvalidGrantError(e) {
   if (!at.isAxiosError(e) || !e.response) return !1;
@@ -33281,7 +33281,7 @@ function isInvalidGrantError(e) {
   if (t !== 400 && t !== 401) return !1;
   return (
     Ac(e.response.data).code === "invalid_grant" &&
-    WZe(e.response.data) === null
+    parseAccountOnHoldError(e.response.data) === null
   );
 }
 function isInvalidScopeError(e) {
@@ -33299,7 +33299,7 @@ var kpe = [
   "Refresh token not found or invalid",
   "No organization associated with this token",
   "No account associated with this token",
-  PRe,
+  ACCOUNT_ON_HOLD_ERROR_CODE,
 ];
 function extractOAuthErrorFields(e) {
   if (!at.isAxiosError(e) || !e.response) return {};
@@ -33430,7 +33430,7 @@ async function h0() {
 }
 async function E0() {
   try {
-    n("Clearing AWS credential provider cache");
+    logForDebugging("Clearing AWS credential provider cache");
     let [{ fromIni: e }, t] = await Promise.all([
         import("../../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js"),
         resolveAwsRegion(),
@@ -33444,9 +33444,9 @@ async function E0() {
         }),
       });
     (await withTimeout(o(), getAwsChainResolveTimeoutMs(), "AWS ini cache refresh"),
-      n("AWS credential provider cache refreshed"));
+      logForDebugging("AWS credential provider cache refreshed"));
   } catch (e) {
-    n(`Failed to refresh AWS credential cache: ${l(e)}`);
+    logForDebugging(`Failed to refresh AWS credential cache: ${l(e)}`);
   }
 }
 var Mpe = 15000;
@@ -33747,7 +33747,7 @@ function Gpe(e) {
 function createPinnedHttpsAgent(e, t) {
   if (!e || new URL(t).protocol !== "https:") return;
   if (getUsableProxyUrl() && !shouldBypassProxy(t)) {
-    n(
+    logForDebugging(
       `[gateway] ${new URL(t).host} is reached through the HTTPS proxy \u2014 per-request cert pin not applied (known gap; list the gateway in NO_PROXY to pin)`,
       { level: "warn" },
     );
@@ -33786,7 +33786,7 @@ function Rc() {
       t = a.ANTHROPIC_AUTH_TOKEN || getGatewayToken();
     if (!e || !t)
       return (
-        n(
+        logForDebugging(
           `CLAUDE_CODE_USE_GATEWAY is set but ${!e ? "ANTHROPIC_BASE_URL is missing" : "no ANTHROPIC_AUTH_TOKEN and no token on a gateway descriptor / snapshot"}; ignoring`,
           { level: "warn" },
         ),
@@ -33841,11 +33841,11 @@ async function Kpe(e, t, r) {
       ),
       _ = getGatewayTokenResponseSchema().safeParse(p);
     if (!_.success) {
-      n("[gateway-refresh] malformed response; will retry later");
+      logForDebugging("[gateway-refresh] malformed response; will retry later");
       return;
     }
     if (ns() !== e) {
-      n("[gateway-refresh] auth changed mid-refresh; discarding");
+      logForDebugging("[gateway-refresh] auth changed mid-refresh; discarding");
       return;
     }
     (await b0(
@@ -33860,29 +33860,29 @@ async function Kpe(e, t, r) {
       }),
       r,
     ),
-      n("[gateway-refresh] refreshed gateway JWT"));
+      logForDebugging("[gateway-refresh] refreshed gateway JWT"));
   } catch (o) {
     if (getOAuthErrorCode(o) === "invalid_grant") {
       if (ns() !== e) {
-        n(
+        logForDebugging(
           "[gateway-refresh] auth changed mid-refresh; discarding invalid_grant",
         );
         return;
       }
-      n("[gateway-refresh] IdP rejected refresh token; clearing it", {
+      logForDebugging("[gateway-refresh] IdP rejected refresh token; clearing it", {
         level: "warn",
       });
       try {
         await b0(e, t, (d) => ({ ...d, idpRefreshToken: void 0 }), r);
       } catch (d) {
-        n(`[gateway-refresh] secureStorage write failed: ${l(d)}`, {
+        logForDebugging(`[gateway-refresh] secureStorage write failed: ${l(d)}`, {
           level: "warn",
         });
       }
     } else {
       let d = jpe(o);
-      if (d) n(`[gateway-refresh] ${d}: ${l(o)}`, { level: "warn" });
-      else n(`[gateway-refresh] transient failure: ${l(o)}`);
+      if (d) logForDebugging(`[gateway-refresh] ${d}: ${l(o)}`, { level: "warn" });
+      else logForDebugging(`[gateway-refresh] transient failure: ${l(o)}`);
     }
   }
 }
@@ -33901,13 +33901,13 @@ async function b0(e, t, r, o) {
       return ((d = r(_ ?? e)), { ...p, enterpriseGateway: d });
     }, o);
   } catch (p) {
-    n(
+    logForDebugging(
       `[gateway-refresh] secureStorage write failed; applying refreshed credential in-memory only: ${l(p)}`,
       { level: "warn" },
     );
   }
   if (ns() !== e) {
-    n("[gateway-refresh] auth changed during persist; discarding outcome");
+    logForDebugging("[gateway-refresh] auth changed during persist; discarding outcome");
     return;
   }
   kW(d);
@@ -33933,12 +33933,12 @@ async function removeDiscardedGatewayCredential(e, t) {
       return (delete p.enterpriseGateway, p);
     }, t);
     if (!o.success)
-      n(
+      logForDebugging(
         `[gateway-login] could not remove the discarded credential from secure storage${o.warning ? `: ${o.warning}` : ""}`,
         { level: "warn" },
       );
   } catch (o) {
-    n(
+    logForDebugging(
       `[gateway-login] could not remove the discarded credential from secure storage: ${l(o)}`,
       { level: "warn" },
     );
@@ -34167,7 +34167,7 @@ class K0 {
     async (e, t, r, o) => {
       let d;
       try {
-        d = z(await nfe(e, "utf-8"));
+        d = jsonParse(await nfe(e, "utf-8"));
       } catch {
         return null;
       }
@@ -34259,7 +34259,7 @@ async function dfe(e, t, r) {
     return await o.ssoRole(p, d.accountId, d.roleName, d.region);
   } catch (d) {
     return (
-      n(
+      logForDebugging(
         `[API:auth] host-pinned SSO leg failed (${d instanceof Error ? d.name : "unknown"}) \u2014 falling back to fromIni`,
       ),
       null
@@ -34285,7 +34285,7 @@ class j0 {
 var wifAuthDebugNotices = new j(() => new j0());
 function pfe(e) {
   if (e.implicitProfileSkippedLogged) return;
-  (n(
+  (logForDebugging(
     `An Anthropic profile (~/.config/anthropic) is configured, but a claude.ai login exists \u2014 using the claude.ai login. Set ANTHROPIC_PROFILE=<name> to use the profile instead.${""}`,
     { level: "warn" },
   ),
@@ -34296,9 +34296,9 @@ function pfe(e) {
 }
 function ffe(e) {
   if (e.profileAuthSelectedLogged) return;
-  let t = nS() ?? "profile";
-  (n(
-    `Using Anthropic profile auth (${t}); ${GZe() ? "a claude.ai login (/login) would take precedence over it" : "this takes precedence over any stored claude.ai login"}`,
+  let t = getAuthPrecedenceSource() ?? "profile";
+  (logForDebugging(
+    `Using Anthropic profile auth (${t}); ${isClaudeAiLoginShadowingProfile() ? "a claude.ai login (/login) would take precedence over it" : "this takes precedence over any stored claude.ai login"}`,
     { level: "info" },
   ),
     (e.profileAuthSelectedLogged = !0));
@@ -34317,12 +34317,12 @@ function isProfileAuthShadowed(e = {}) {
   );
 }
 function shouldUseWIFAuth(e = {}) {
-  if (!pir()) return !1;
+  if (!isProfileAuthSelected()) return !1;
   if (isProfileAuthShadowed(e)) return !1;
   let t = e.skipApiKeyHelper ? void 0 : wifAuthDebugNotices.of(B().host);
-  if (nS() === "profile-implicit") {
+  if (getAuthPrecedenceSource() === "profile-implicit") {
     let r = getClaudeAIOAuthTokens();
-    if (isUsableClaudeAILoginRecord(r) && GZe()) {
+    if (isUsableClaudeAILoginRecord(r) && isClaudeAiLoginShadowingProfile()) {
       if (t) pfe(t);
       return !1;
     }
@@ -34335,8 +34335,8 @@ function isWIFDispatchAuth() {
 }
 function isProfileRemoteSettingsCredential() {
   return (
-    nS() !== "env-quad" &&
-    Cvt() === "user_oauth" &&
+    getAuthPrecedenceSource() !== "env-quad" &&
+    getProfileAuthType() === "user_oauth" &&
     shouldUseWIFAuth({ skipApiKeyHelper: !0 }) &&
     getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }).key === null
   );
@@ -34381,14 +34381,14 @@ async function restoreGatewayAuth(e) {
           process.stderr
             .write(`Cloud gateway ${o} TLS certificate changed since you connected \u2014 run /login to verify and reconnect.
 `);
-        n(
+        logForDebugging(
           `[gateway] TLS fingerprint mismatch on restore for ${o}: pinned ${d}, live ${p.fingerprint}`,
           { level: "warn" },
         );
         return;
       }
     } catch (p) {
-      n(
+      logForDebugging(
         `[gateway] TLS fingerprint probe failed on restore for ${o} (${l(p)}); proceeding without re-verify`,
       );
     }
@@ -34663,7 +34663,7 @@ function calculateApiKeyHelperTTL() {
   let e = a.CLAUDE_CODE_API_KEY_HELPER_TTL_MS;
   if (e !== void 0) {
     if (e >= 0) return e;
-    n(
+    logForDebugging(
       `Found CLAUDE_CODE_API_KEY_HELPER_TTL_MS env var, but it was not a valid number. Got ${e}`,
       { level: "error" },
     );
@@ -34734,7 +34734,7 @@ async function P0(e, t, r, o) {
     let p = d instanceof Error ? d.message : String(d);
     if (
       (console.error(chalk.red(`apiKeyHelper failed: ${p}`)),
-      n(`Error getting API key from apiKeyHelper: ${p}`, { level: "error" }),
+      logForDebugging(`Error getting API key from apiKeyHelper: ${p}`, { level: "error" }),
       !r && e.cache && e.cache.value !== " ")
     )
       return ((e.cache = { ...e.cache, timestamp: Date.now() }), e.cache.value);
@@ -34758,7 +34758,7 @@ async function _fe(e) {
         `Security: apiKeyHelper executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
       );
       return (
-        AW("apiKeyHelper invoked before trust check", _),
+        logAntError("apiKeyHelper invoked before trust check", _),
         logEvent("tengu_apiKeyHelper_missing_trust11", {}),
         null
       );
@@ -34821,7 +34821,7 @@ async function Tfe() {
         `Security: awsAuthRefresh executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
       );
       return (
-        AW("awsAuthRefresh invoked before trust check", d),
+        logAntError("awsAuthRefresh invoked before trust check", d),
         logEvent("tengu_awsAuthRefresh_missing_trust", {}),
         !1
       );
@@ -34830,9 +34830,9 @@ async function Tfe() {
   if (e.inFlight) return e.inFlight;
   try {
     return (
-      n("Fetching AWS caller identity for AWS auth refresh command"),
+      logForDebugging("Fetching AWS caller identity for AWS auth refresh command"),
       await h0(),
-      n("Fetched AWS caller identity, skipping AWS auth refresh command"),
+      logForDebugging("Fetched AWS caller identity, skipping AWS auth refresh command"),
       !1
     );
   } catch {
@@ -34854,7 +34854,7 @@ async function Tfe() {
 }
 var D0 = 180000;
 function refreshAwsAuth(e, t) {
-  n("Running AWS auth refresh command");
+  logForDebugging("Running AWS auth refresh command");
   let r = AuthenticationStatusStore.getInstance();
   return (
     r.startAuthentication(),
@@ -34865,7 +34865,7 @@ function refreshAwsAuth(e, t) {
       else {
         let p = resolveExecutableSafely(e.file, !0);
         if (p === null) {
-          (n("AWS auth refresh: executable not found in a safe directory"),
+          (logForDebugging("AWS auth refresh: executable not found in a safe directory"),
             r.endAuthentication(!1),
             o(!1));
           return;
@@ -34881,15 +34881,15 @@ function refreshAwsAuth(e, t) {
       (wS(d.pid),
         d.stdout.on("data", (p) => {
           let _ = p.toString().trim();
-          if (_) (r.addOutput(_), n(_, { level: "debug" }));
+          if (_) (r.addOutput(_), logForDebugging(_, { level: "debug" }));
         }),
         d.stderr.on("data", (p) => {
           let _ = p.toString().trim();
-          if (_) (r.setError(_), n(_, { level: "error" }));
+          if (_) (r.setError(_), logForDebugging(_, { level: "error" }));
         }),
         d.on("close", (p, _) => {
           if (p === 0)
-            (n("AWS auth refresh completed successfully"),
+            (logForDebugging("AWS auth refresh completed successfully"),
               r.endAuthentication(!0),
               o(!0));
           else {
@@ -34929,24 +34929,24 @@ async function bfe() {
         `Security: awsCredentialExport executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
       );
       return (
-        AW("awsCredentialExport invoked before trust check", r),
+        logAntError("awsCredentialExport invoked before trust check", r),
         logEvent("tengu_awsCredentialExport_missing_trust", {}),
         null
       );
     }
   }
   try {
-    n("Running AWS credential export command");
+    logForDebugging("Running AWS credential export command");
     let t = await a_(e, { reject: !1, useToolMemoryCgroup: !1 });
     if (t.exitCode !== 0 || !t.stdout)
       throw Error("awsCredentialExport did not return a valid value");
-    let r = z(t.stdout.trim()),
+    let r = jsonParse(t.stdout.trim()),
       o = ZB(r);
     if (!o)
       throw Error(
         "awsCredentialExport did not return valid AWS STS output structure",
       );
-    n("AWS credentials retrieved from awsCredentialExport");
+    logForDebugging("AWS credentials retrieved from awsCredentialExport");
     let d = o.Expiration,
       p = typeof d === "string" ? Date.parse(d) : NaN;
     return {
@@ -34966,12 +34966,12 @@ async function bfe() {
 }
 async function Afe(e) {
   let t = performance.now();
-  n("[API:auth] AWS credential resolve start");
+  logForDebugging("[API:auth] AWS credential resolve start");
   let r = await Tfe(),
     o = await bfe();
   if (r) (await E0(), e.defaultChain.cache.clear());
   return (
-    n(
+    logForDebugging(
       `[API:auth] AWS credential resolve done in ${Math.round(performance.now() - t)}ms`,
     ),
     o
@@ -35013,7 +35013,7 @@ async function resolveWithStallGuard(e, t = a.CLAUDE_CODE_AWS_CHAIN_RESOLVE_TIME
 async function yfe(e) {
   let t = cB(
     async () => {
-      n(`[API:auth] resolving default AWS provider chain (region: ${e})`);
+      logForDebugging(`[API:auth] resolving default AWS provider chain (region: ${e})`);
       let [{ fromNodeProviderChain: r }, o] = await Promise.all([
           import("../../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js"),
           getAWSProxyRequestHandler({ url: resolveStsEndpointForProxyUrl(e), requestTimeoutMs: AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS }),
@@ -35120,12 +35120,12 @@ async function checkGcpCredentialsValid() {
     let r = Date.now() - e;
     if (t instanceof Vm)
       return (
-        n(`GCP credentials check did not finish within ${r}ms`, {
+        logForDebugging(`GCP credentials check did not finish within ${r}ms`, {
           level: "warn",
         }),
         "timeout"
       );
-    return (n(`GCP credentials check failed after ${r}ms: ${l(t)}`), "invalid");
+    return (logForDebugging(`GCP credentials check failed after ${r}ms: ${l(t)}`), "invalid");
   }
 }
 var gcpCredentialRejections = new j(() => ({ rejectedByApi: !1 }));
@@ -35142,7 +35142,7 @@ async function Ofe() {
         `Security: gcpAuthRefresh executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
       );
       return (
-        AW("gcpAuthRefresh invoked before trust check", p),
+        logAntError("gcpAuthRefresh invoked before trust check", p),
         logEvent("tengu_gcpAuthRefresh_missing_trust", {}),
         !1
       );
@@ -35152,18 +35152,18 @@ async function Ofe() {
     r = t.rejectedByApi;
   switch (
     ((t.rejectedByApi = !1),
-    n("Checking GCP credentials validity for auth refresh"),
+    logForDebugging("Checking GCP credentials validity for auth refresh"),
     await checkGcpCredentialsValid())
   ) {
     case "valid":
       return (
-        n("GCP credentials are valid, skipping auth refresh command"),
+        logForDebugging("GCP credentials are valid, skipping auth refresh command"),
         !1
       );
     case "timeout":
       if (!r)
         return (
-          n(
+          logForDebugging(
             "GCP credentials check timed out, skipping auth refresh command until the API rejects the credentials",
           ),
           !1
@@ -35176,7 +35176,7 @@ async function Ofe() {
 }
 var kfe = 180000;
 function refreshGcpAuth(e) {
-  n("Running GCP auth refresh command");
+  logForDebugging("Running GCP auth refresh command");
   let t = AuthenticationStatusStore.getInstance();
   return (
     t.startAuthentication(),
@@ -35185,15 +35185,15 @@ function refreshGcpAuth(e) {
       (wS(o.pid),
         o.stdout.on("data", (d) => {
           let p = d.toString().trim();
-          if (p) (t.addOutput(p), n(p, { level: "debug" }));
+          if (p) (t.addOutput(p), logForDebugging(p, { level: "debug" }));
         }),
         o.stderr.on("data", (d) => {
           let p = d.toString().trim();
-          if (p) (t.setError(p), n(p, { level: "error" }));
+          if (p) (t.setError(p), logForDebugging(p, { level: "error" }));
         }),
         o.on("close", (d, p) => {
           if (d === 0)
-            (n("GCP auth refresh completed successfully"),
+            (logForDebugging("GCP auth refresh completed successfully"),
               t.endAuthentication(!0),
               r(!0));
           else {
@@ -35247,7 +35247,7 @@ function wfe() {
         let o = execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING(`security find-generic-password -a "${getKeychainAccountName()}" -w -s "${r}"`);
         if (o) return { key: o, source: "/login managed key" };
       } catch (o) {
-        n(`Failed to read API key from macOS keychain: ${o}`, {
+        logForDebugging(`Failed to read API key from macOS keychain: ${o}`, {
           level: "error",
         });
       }
@@ -35334,7 +35334,7 @@ async function X0() {
   try {
     await XB();
   } catch (e) {
-    n(`Failed to remove API key from macOS keychain: ${l(e)}`, {
+    logForDebugging(`Failed to remove API key from macOS keychain: ${l(e)}`, {
       level: "error",
     });
   }
@@ -35390,7 +35390,7 @@ async function saveRefreshedOAuthTokensRespectingLock({
           return { ...G, claudeAiOauth: J0(G.claudeAiOauth, _) };
         }, o);
       } catch (G) {
-        (n(`OAuth refresh CAS save failed: ${l(G)}`, { level: "error" }),
+        (logForDebugging(`OAuth refresh CAS save failed: ${l(G)}`, { level: "error" }),
           (I = { success: !1 }),
           (D = !0),
           (x = G));
@@ -35470,7 +35470,7 @@ async function saveOAuthTokensIfNeeded(e, t) {
     return D;
   } catch (D) {
     return (
-      n(`Failed to save OAuth tokens: ${l(D)}`, { level: "error" }),
+      logForDebugging(`Failed to save OAuth tokens: ${l(D)}`, { level: "error" }),
       logEvent("tengu_oauth_tokens_save_exception", { storageBackend: I, ...getErrorTelemetryFields(D) }),
       { success: !1, warning: "Failed to save OAuth tokens" }
     );
@@ -35521,11 +35521,11 @@ async function markRefreshTokenDeadAfterInvalidGrant(e, t) {
       }, t);
     if (r && o.success) logEvent("tengu_oauth_refresh_token_cleared_on_disk", {});
     else if (r)
-      n("OAuth dead-token disk clear: backend write failed", {
+      logForDebugging("OAuth dead-token disk clear: backend write failed", {
         level: "error",
       });
   } catch (r) {
-    n(`OAuth dead-token disk clear failed: ${l(r)}`, { level: "error" });
+    logForDebugging(`OAuth dead-token disk clear failed: ${l(r)}`, { level: "error" });
   }
 }
 function isOAuthRefreshKnownDead() {
@@ -35671,7 +35671,7 @@ async function primeStoredLogin(e, t) {
     let _ = await e.probeCredentials();
     o = _.state === "present" ? _.version : void 0;
   } catch (_) {
-    n(`Credentials version prime failed: ${l(_)}`, { level: "error" });
+    logForDebugging(`Credentials version prime failed: ${l(_)}`, { level: "error" });
   }
   if (
     (await t?.catch(() => null),
@@ -35693,7 +35693,7 @@ async function xfe(e) {
     return t?.accessToken ? t : null;
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `Credentials prime through the store failed (${t instanceof Error ? t.name : typeof t})`,
         { level: "error" },
       ),
@@ -35821,7 +35821,7 @@ async function Ufe(e, t, r) {
             noteAuthRecoveryOutcome({ recovered: !0 }),
             !0
           );
-        n(
+        logForDebugging(
           E === null
             ? "SDK getOAuthToken callback returned null (no token available)"
             : "SDK getOAuthToken callback returned the same expired token; treating as no refresh",
@@ -35829,7 +35829,7 @@ async function Ufe(e, t, r) {
         );
       } catch (E) {
         (logFeatureBad("oauth_401_recovery", "oauth_401_sdk_callback_failed"),
-          n(
+          logForDebugging(
             `SDK getOAuthToken callback failed: ${E instanceof Error ? E.message : String(E)}`,
             { level: "error" },
           ));
@@ -35843,7 +35843,7 @@ async function Ufe(e, t, r) {
           !a.ANTHROPIC_UNIX_SOCKET),
         p)
       )
-        n(
+        logForDebugging(
           "OAuth 401: keeping the user-supplied CLAUDE_CODE_OAUTH_TOKEN instead of adopting the stored credential. Mint a fresh token with `claude setup-token` and restart with it, or unset the variable and run /login.",
           { level: "error" },
         );
@@ -35873,7 +35873,7 @@ async function Ufe(e, t, r) {
       let E = Lfe();
       if (E > 0) {
         if (
-          (n(
+          (logForDebugging(
             `OAuth 401 recovery: waiting up to ${E}ms for a rotated env token`,
           ),
           await waitForRotatedEnvToken({ failedAccessToken: e, timeoutMs: E }))
@@ -35905,7 +35905,7 @@ async function Ufe(e, t, r) {
       noteAuthRecoveryOutcome({ recovered: !1 }) === "exit")
     )
       (logEvent("tengu_oauth_401_zombie_exit", {}),
-        n(
+        logForDebugging(
           "OAuth 401 unrecovered past CLAUDE_CODE_AUTH_FAIL_EXIT_MS \u2014 exiting so the runner recycles this session with fresh credentials",
           { level: "error" },
         ),
@@ -36027,7 +36027,7 @@ function oauthRefreshLockOptions(e, t) {
     stale: 60000,
     update: 5000,
     onCompromised: (r) => {
-      (n(`OAuth refresh lock compromised: ${r.message}`, { level: "error" }),
+      (logForDebugging(`OAuth refresh lock compromised: ${r.message}`, { level: "error" }),
         t?.(r));
     },
   };
@@ -36056,11 +36056,11 @@ async function acquireOAuthRefreshLock(e) {
       throw (
         logEvent("tengu_oauth_refresh_legacy_lock_contended", {}),
         await d().catch((I) =>
-          Rt(I) || t ? n(`OAuth refresh new-lock release failed: ${I}`) : logError(I),
+          Rt(I) || t ? logForDebugging(`OAuth refresh new-lock release failed: ${I}`) : logError(I),
         ),
         C
       );
-    if (Rt(C)) n(`OAuth refresh legacy-lock acquire failed: ${C}`);
+    if (Rt(C)) logForDebugging(`OAuth refresh legacy-lock acquire failed: ${C}`);
     else logError(C);
   }
   return {
@@ -36070,7 +36070,7 @@ async function acquireOAuthRefreshLock(e) {
       if (E)
         await E().catch((C) =>
           Rt(C) || t
-            ? n(`OAuth refresh legacy-lock release failed: ${C}`)
+            ? logForDebugging(`OAuth refresh legacy-lock release failed: ${C}`)
             : logError(C),
         );
       await d();
@@ -36080,7 +36080,7 @@ async function acquireOAuthRefreshLock(e) {
 var Ffe = 5;
 async function withOAuthRefreshLock(e, t) {
   let r = getSecureStorageDir();
-  await ae().mkdir(r);
+  await getFsSurface().mkdir(r);
   let o,
     d = 0;
   while (!o) {
@@ -36112,7 +36112,7 @@ async function withOAuthRefreshLock(e, t) {
       await o.release();
     } catch (p) {
       if (Rt(p) || o.isCompromised())
-        n(`OAuth refresh lock release failed: ${p}`);
+        logForDebugging(`OAuth refresh lock release failed: ${p}`);
       else logError(p);
     }
   }
@@ -36177,7 +36177,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
     );
   if (!d && !isOAuthTokenExpired(x.expiresAt)) return "not_needed";
   let N = getSecureStorageDir();
-  await ae().mkdir(N);
+  await getFsSurface().mkdir(N);
   let G;
   try {
     (logEvent("tengu_oauth_token_refresh_lock_acquiring", {}),
@@ -36285,7 +36285,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
     );
   } catch (F) {
     if (G.isCompromised()) {
-      (n(`OAuth refresh failed while lock compromised: ${l(F)}`, {
+      (logForDebugging(`OAuth refresh failed while lock compromised: ${l(F)}`, {
         level: "error",
       }),
         logEvent("tengu_oauth_token_refresh_lock_compromised_in_catch", {}),
@@ -36303,7 +36303,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
       );
     }
     if (isExpectedOAuthRefreshError(F, { isDefaultFirstPartyClient: U }))
-      n(`OAuth refresh failed (expected): ${l(F)}`, { level: "error" });
+      logForDebugging(`OAuth refresh failed (expected): ${l(F)}`, { level: "error" });
     else logError(F);
     clearOAuthTokenCache();
     let V = await getClaudeAIOAuthTokensAsync(_);
@@ -36326,7 +36326,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
     try {
       (await G.release(), logEvent("tengu_oauth_token_refresh_lock_released", {}));
     } catch (F) {
-      (n(`OAuth refresh lock release failed: ${F}`, { level: "error" }),
+      (logForDebugging(`OAuth refresh lock release failed: ${F}`, { level: "error" }),
         logEvent("tengu_oauth_token_refresh_lock_release_error", {}));
     }
   }
@@ -36426,7 +36426,7 @@ function getSubscriptionType() {
 }
 function dH() {
   if (!qm()) return null;
-  switch (Akn().subscriptionType) {
+  switch (getBgDispatcherIdentity().subscriptionType) {
     case "max":
       return "max";
     case "pro":
@@ -36481,7 +36481,7 @@ function getRateLimitTier() {
 var Bfe = /^[a-z][a-z0-9_]{0,63}$/;
 function pH() {
   if (!qm()) return null;
-  let e = Akn().rateLimitTier;
+  let e = getBgDispatcherIdentity().rateLimitTier;
   return e !== void 0 && Bfe.test(e) ? e : null;
 }
 function getSeatTier() {
@@ -36584,7 +36584,7 @@ async function getOtelHeadersFromHelper() {
         }
         let _ = p.stdout?.toString().trim();
         if (!_) throw Error("otelHeadersHelper did not return a valid value");
-        let E = z(_);
+        let E = jsonParse(_);
         if (typeof E !== "object" || E === null || Array.isArray(E))
           throw Error(
             "otelHeadersHelper must return a JSON object with string key-value pairs",
@@ -36612,7 +36612,7 @@ async function getOtelHeadersFromHelper() {
           );
         throw (
           (r.lastFailure = d),
-          n(
+          logForDebugging(
             `Error getting OpenTelemetry headers from otelHeadersHelper (in settings): ${d}`,
             { level: "error" },
           ),
@@ -36697,7 +36697,7 @@ async function Gfe() {
         ).stdout.trim();
         if (d) return { key: d, source: "/login managed key" };
       } catch (o) {
-        n(`Failed to read API key from macOS keychain: ${o}`, {
+        logForDebugging(`Failed to read API key from macOS keychain: ${o}`, {
           level: "error",
         });
       }
@@ -37144,7 +37144,7 @@ async function getAuthHeadersAsync() {
         };
     } catch (e) {
       return (
-        n(
+        logForDebugging(
           `WIF auth header resolution failed: ${e instanceof Error ? e.message : String(e)}`,
           { level: "error" },
         ),

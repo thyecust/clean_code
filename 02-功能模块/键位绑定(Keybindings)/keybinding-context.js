@@ -11,7 +11,7 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, dn, V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { Fpe, $pe } from "./键位绑定(Keybindings).sanfja6a.js";
+import { getKeybindingDisplayText, resolveKeyEvent } from "./键位绑定(Keybindings).sanfja6a.js";
 function buildInkKeyEvent(n) {
   let t = G[n.name],
     o = {
@@ -123,13 +123,13 @@ function KeybindingProvider(de) {
     } = de,
     h;
   if (l[0] !== a || l[1] !== P)
-    ((h = (le, ce, ge) => $pe(w(le, ce), ge, a, P.current)),
+    ((h = (le, ce, ge) => resolveKeyEvent(w(le, ce), ge, a, P.current)),
       (l[0] = a),
       (l[1] = P),
       (l[2] = h));
   else h = l[2];
   let b;
-  if (l[3] !== a) ((b = (ye, ue) => Fpe(ye, ue, a)), (l[3] = a), (l[4] = b));
+  if (l[3] !== a) ((b = (ye, ue) => getKeybindingDisplayText(ye, ue, a)), (l[3] = a), (l[4] = b));
   else b = l[4];
   let f;
   if (l[5] !== T)

@@ -9,18 +9,18 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 263 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { LPt } from "./chunk-kyfaptqk.js";
+import { callLegacyFeedbackDialog } from "./feedback-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
+import "../语法高亮-Markdown渲染/markdown-renderer.js";
 import "../反馈-错误上报/反馈-错误上报.grgh562d.js";
 import "../反馈-错误上报/feedback-draft-submit.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 async function n(o, a, e, m) {
-  return LPt(o, a, e, m === "share" ? "/share" : "/bug");
+  return callLegacyFeedbackDialog(o, a, e, m === "share" ? "/share" : "/bug");
 }
 export { n as call };

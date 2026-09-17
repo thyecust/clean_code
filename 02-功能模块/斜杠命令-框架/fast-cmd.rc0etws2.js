@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 214 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { isFastModeEnabled, getFastModeUnavailableMessage, prefetchOrgFastModeStatus } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { runFastModeToggle } from "../../01-核心基础设施/设置-配置/fast-mode.js";
-import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 async function l(a, e) {
   if (!isFastModeEnabled())
     return { type: "text", value: getFastModeUnavailableMessage() ?? "Fast mode is not available" };

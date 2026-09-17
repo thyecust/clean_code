@@ -14,21 +14,21 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { areTasksEnabled } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { getMainLoopModel, getFeatureValue_CACHED_MAY_BE_STALE, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { te, truncateToWidth, formatDuration, formatDurationCoarse, formatNumber, formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, truncateToWidth, formatDuration, formatDurationCoarse, formatNumber, formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { CLAUDE_ASTERISK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { useTasksV2 } from "../工具TodoWrite-Tasks/tasks-v2-store.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useResolvedTheme } from "./chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, tn, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useIsScreenReaderEnabled, useAnimationFrame } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { AGENT_COLOR_THEME_KEYS } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { isAgentSwarmsEnabled } from "../Teammates团队/agent-swarms-enablement.js";
-import { Ya, IJe } from "../权限系统/chunk-t3b7pg2x.js";
+import { getSessionEffortLevel, formatEffortSuffix } from "../权限系统/chunk-t3b7pg2x.js";
 import { getLowPriorityCopy, getRateLimitTypeLabel, getStatusPageHint, isInProcessTeammateTask, isLiveBackgroundTask, summarizeRecentActivities } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSpinnerFrames, getSpinnerPingPongFrames, quantizeToEighth, getPulseProgress, interpolateColor, formatRgbColor, parseRgbColor } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { nF, QL, La, QZ, jA } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
+import { useRenderHook, useRenderInput, ansiPrimitives, StatusRow, jA } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { shouldExcludeDefaultTips } from "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
 import { activeTimeTracker } from "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -54,7 +54,7 @@ function Sr(Ss, ws) {
 function wr(Rs) {
   return `#${Rs}`;
 }
-function lOt(fs) {
+function ExpandedTasksPanel(fs) {
   let hs = _(2),
     { hidden: ds } = fs,
     ps = useAppStateSelector(xr) === "tasks",
@@ -64,7 +64,7 @@ function lOt(fs) {
   }
   let pr;
   if (hs[0] !== Oe)
-    ((pr = e(o, {
+    ((pr = e(Box, {
       width: "100%",
       flexDirection: "column",
       children: e(We, { tasks: Oe, isStandalone: !0 }),
@@ -187,28 +187,28 @@ function We({ tasks: n, isStandalone: s = !1 }) {
           m.id,
         ),
       ),
-      S > 0 && ct && e(t, { dimColor: !0, children: ct }),
+      S > 0 && ct && e(Text, { dimColor: !0, children: ct }),
     ],
   });
   if (s)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       marginTop: 1,
       marginLeft: 2,
       children: [
-        e(o, {
-          children: r(t, {
+        e(Box, {
+          children: r(Text, {
             dimColor: !0,
             children: [
-              e(t, { bold: !0, children: n.length }),
+              e(Text, { bold: !0, children: n.length }),
               " tasks (",
-              e(t, { bold: !0, children: B }),
+              e(Text, { bold: !0, children: B }),
               " done, ",
               P > 0 &&
                 r(N, {
-                  children: [e(t, { bold: !0, children: P }), " in progress, "],
+                  children: [e(Text, { bold: !0, children: P }), " in progress, "],
                 }),
-              e(t, { bold: !0, children: R }),
+              e(Text, { bold: !0, children: R }),
               " open)",
             ],
           }),
@@ -216,7 +216,7 @@ function We({ tasks: n, isStandalone: s = !1 }) {
         Dt,
       ],
     });
-  return e(o, { flexDirection: "column", children: Dt });
+  return e(Box, { flexDirection: "column", children: Dt });
 }
 function io(n) {
   switch (n) {
@@ -250,7 +250,7 @@ function so(Ts) {
     ge = Yn >= 60 && dt.owner && ks,
     gr;
   if (Et[2] !== ge || Et[3] !== dt.owner)
-    ((gr = ge ? te(` (@${dt.owner})`) : 0),
+    ((gr = ge ? getStringWidth(` (@${dt.owner})`) : 0),
       (Et[2] = ge),
       (Et[3] = dt.owner),
       (Et[4] = gr));
@@ -276,7 +276,7 @@ function so(Ts) {
   let an = kr,
     ln;
   if (Et[11] !== Qn || Et[12] !== Jn)
-    ((ln = r(t, { color: Qn, children: [Jn, " "] })),
+    ((ln = r(Text, { color: Qn, children: [Jn, " "] })),
       (Et[11] = Qn),
       (Et[12] = Jn),
       (Et[13] = ln));
@@ -284,7 +284,7 @@ function so(Ts) {
   const oo = sn || Le;
   let mn;
   if (Et[14] !== eo || Et[15] !== sn || Et[16] !== cn || Et[17] !== oo)
-    ((mn = e(t, { bold: cn, strikethrough: sn, dimColor: oo, children: eo })),
+    ((mn = e(Text, { bold: cn, strikethrough: sn, dimColor: oo, children: eo })),
       (Et[14] = eo),
       (Et[15] = sn),
       (Et[16] = cn),
@@ -295,11 +295,11 @@ function so(Ts) {
   if (Et[19] !== on || Et[20] !== ge || Et[21] !== dt.owner)
     ((un =
       ge &&
-      r(t, {
+      r(Text, {
         dimColor: !0,
         children: [
           " (",
-          on ? r(t, { color: on, children: ["@", dt.owner] }) : `@${dt.owner}`,
+          on ? r(Text, { color: on, children: ["@", dt.owner] }) : `@${dt.owner}`,
           ")",
         ],
       })),
@@ -312,7 +312,7 @@ function so(Ts) {
   if (Et[23] !== Le || Et[24] !== rn)
     ((fn =
       Le &&
-      r(t, {
+      r(Text, {
         dimColor: !0,
         children: [
           " ",
@@ -328,7 +328,7 @@ function so(Ts) {
   else fn = Et[25];
   let dn;
   if (Et[26] !== ln || Et[27] !== mn || Et[28] !== un || Et[29] !== fn)
-    ((dn = r(o, { children: [ln, mn, un, fn] })),
+    ((dn = r(Box, { children: [ln, mn, un, fn] })),
       (Et[26] = ln),
       (Et[27] = mn),
       (Et[28] = un),
@@ -340,8 +340,8 @@ function so(Ts) {
     ((pn =
       Zn &&
       an &&
-      e(o, {
-        children: r(t, { dimColor: !0, children: ["  ", an, figures.ellipsis] }),
+      e(Box, {
+        children: r(Text, { dimColor: !0, children: ["  ", an, figures.ellipsis] }),
       })),
       (Et[31] = an),
       (Et[32] = Zn),
@@ -349,21 +349,21 @@ function so(Ts) {
   else pn = Et[33];
   let br;
   if (Et[34] !== dn || Et[35] !== pn)
-    ((br = r(o, { flexDirection: "column", children: [dn, pn] })),
+    ((br = r(Box, { flexDirection: "column", children: [dn, pn] })),
       (Et[34] = dn),
       (Et[35] = pn),
       (Et[36] = br));
   else br = Et[36];
   return br;
 }
-function qf() {
-  return useAppStateSelector((n) => Ya(n));
+function useSessionEffortLevel() {
+  return useAppStateSelector((n) => getSessionEffortLevel(n));
 }
 var Ge = "\u25CF",
   mo = 2000,
   uo = { r: 171, g: 43, b: 63 },
   fo = { r: 0, g: 0, b: 0 };
-function o4(As) {
+function IntensitySpinnerGlyph(As) {
   let Nt = _(35),
     {
       frame: vs,
@@ -390,10 +390,10 @@ function o4(As) {
         if (co) {
           let Ls = interpolateColor(co, fo, 0.5);
           let Ws = interpolateColor(Ls, co, quantizeToEighth(hn));
-          const mt = e(t, { color: formatRgbColor(Ws), bold: Bt >= 0.5, children: Ge });
+          const mt = e(Text, { color: formatRgbColor(Ws), bold: Bt >= 0.5, children: Ge });
           let st;
           if (Nt[4] !== mt)
-            ((st = e(o, {
+            ((st = e(Box, {
               "aria-hidden": !0,
               flexWrap: "wrap",
               height: 1,
@@ -414,12 +414,12 @@ function o4(As) {
     const st = Bt >= 0.5;
     let Yt;
     if (Nt[6] !== gn || Nt[7] !== mt || Nt[8] !== st)
-      ((Yt = e(o, {
+      ((Yt = e(Box, {
         "aria-hidden": !0,
         flexWrap: "wrap",
         height: 1,
         width: 2,
-        children: e(t, { color: gn, dimColor: mt, bold: st, children: Ge }),
+        children: e(Text, { color: gn, dimColor: mt, bold: st, children: Ge }),
       })),
         (Nt[6] = gn),
         (Nt[7] = mt),
@@ -442,10 +442,10 @@ function o4(As) {
         let Ir = kn ? parseRgbColor(kn) : null;
         if (Ir) {
           let $s = interpolateColor(Ir, uo, quantizeToEighth($e));
-          const st = e(t, { color: formatRgbColor($s), children: ht });
+          const st = e(Text, { color: formatRgbColor($s), children: ht });
           let Yt;
           if (Nt[15] !== st)
-            ((Yt = e(o, {
+            ((Yt = e(Box, {
               "aria-hidden": !0,
               flexWrap: "wrap",
               height: 1,
@@ -465,12 +465,12 @@ function o4(As) {
     let ao = $e > 0.5 ? "error" : Xt;
     let st;
     if (Nt[17] !== ao || Nt[18] !== ht)
-      ((st = e(o, {
+      ((st = e(Box, {
         "aria-hidden": !0,
         flexWrap: "wrap",
         height: 1,
         width: 2,
-        children: e(t, { color: ao, children: ht }),
+        children: e(Text, { color: ao, children: ht }),
       })),
         (Nt[17] = ao),
         (Nt[18] = ht),
@@ -494,10 +494,10 @@ function o4(As) {
         je = Bt >= 0.5;
         if (Er && Br) {
           let js = interpolateColor(Er, Br, quantizeToEighth(Bt));
-          const st = e(t, { bold: je, color: formatRgbColor(js), children: ht });
+          const st = e(Text, { bold: je, color: formatRgbColor(js), children: ht });
           let Yt;
           if (Nt[26] !== st)
-            ((Yt = e(o, {
+            ((Yt = e(Box, {
               "aria-hidden": !0,
               flexWrap: "wrap",
               height: 1,
@@ -522,12 +522,12 @@ function o4(As) {
     let lo = Bt > 0.5 ? "warning" : Xt;
     let st;
     if (Nt[28] !== je || Nt[29] !== lo || Nt[30] !== ht)
-      ((st = e(o, {
+      ((st = e(Box, {
         "aria-hidden": !0,
         flexWrap: "wrap",
         height: 1,
         width: 2,
-        children: e(t, { bold: je, color: lo, children: ht }),
+        children: e(Text, { bold: je, color: lo, children: ht }),
       })),
         (Nt[28] = je),
         (Nt[29] = lo),
@@ -538,12 +538,12 @@ function o4(As) {
   }
   let mt;
   if (Nt[32] !== Xt || Nt[33] !== ht)
-    ((mt = e(o, {
+    ((mt = e(Box, {
       "aria-hidden": !0,
       flexWrap: "wrap",
       height: 1,
       width: 2,
-      children: e(t, { color: Xt, children: ht }),
+      children: e(Text, { color: Xt, children: ht }),
     })),
       (Nt[32] = Xt),
       (Nt[33] = ht),
@@ -558,13 +558,13 @@ function wn(zs) {
   let Nr = _(8),
     { tone: po, text: ho } = zs,
     Ys = useReducedMotion(),
-    Js = tn(),
+    Js = useIsScreenReaderEnabled(),
     xn = Ys || Js,
-    [go, Qs] = bs(xn ? null : He);
+    [go, Qs] = useAnimationFrame(xn ? null : He);
   const To = Math.floor(Qs / He);
   let Sn;
   if (Nr[0] !== xn || Nr[1] !== To || Nr[2] !== ho || Nr[3] !== po)
-    ((Sn = e(QZ, {
+    ((Sn = e(StatusRow, {
       state: "live",
       tone: po,
       text: ho,
@@ -580,7 +580,7 @@ function wn(zs) {
   else Sn = Nr[4];
   let Ar;
   if (Nr[5] !== go || Nr[6] !== Sn)
-    ((Ar = e(o, { ref: go, flexDirection: "column", children: Sn })),
+    ((Ar = e(Box, { ref: go, flexDirection: "column", children: Sn })),
       (Nr[5] = go),
       (Nr[6] = Sn),
       (Nr[7] = Ar));
@@ -589,7 +589,7 @@ function wn(zs) {
 }
 F();
 var wo = { r: 171, g: 43, b: 63 };
-function l9e(cc) {
+function SpinnerMessageText(cc) {
   let D = _(97),
     {
       message: O,
@@ -608,11 +608,11 @@ function l9e(cc) {
   if (D[0] !== O) {
     Ue = [];
     for (const { segment: Dr } of getGraphemeSegmenter().segment(O))
-      Ue.push({ segment: Dr, width: te(Dr) });
+      Ue.push({ segment: Dr, width: getStringWidth(Dr) });
     ((D[0] = O), (D[1] = Ue));
   } else Ue = D[1];
   let Mn;
-  if (D[2] !== O) ((Mn = te(O)), (D[2] = O), (D[3] = Mn));
+  if (D[2] !== O) ((Mn = getStringWidth(O)), (D[2] = O), (D[3] = Mn));
   else Mn = D[3];
   let Lr;
   if (D[4] !== Ue || D[5] !== Mn)
@@ -637,14 +637,14 @@ function l9e(cc) {
           let we = formatRgbColor(mc);
           let M;
           if (D[11] !== we || D[12] !== O)
-            ((M = e(t, { color: we, children: O })),
+            ((M = e(Text, { color: we, children: O })),
               (D[11] = we),
               (D[12] = O),
               (D[13] = M));
           else M = D[13];
           let y;
           if (D[14] !== we)
-            ((y = e(t, { color: we, children: " " })),
+            ((y = e(Text, { color: we, children: " " })),
               (D[14] = we),
               (D[15] = y));
           else y = D[15];
@@ -665,14 +665,14 @@ function l9e(cc) {
     let Re = Ke > 0.5 ? "error" : W;
     let M;
     if (D[19] !== Re || D[20] !== O)
-      ((M = e(t, { color: Re, children: O })),
+      ((M = e(Text, { color: Re, children: O })),
         (D[19] = Re),
         (D[20] = O),
         (D[21] = M));
     else M = D[21];
     let y;
     if (D[22] !== Re)
-      ((y = e(t, { color: Re, children: " " })), (D[22] = Re), (D[23] = y));
+      ((y = e(Text, { color: Re, children: " " })), (D[22] = Re), (D[23] = y));
     else y = D[23];
     let et;
     if (D[24] !== M || D[25] !== y)
@@ -696,14 +696,14 @@ function l9e(cc) {
           let Me = formatRgbColor(uc);
           let M;
           if (D[32] !== Me || D[33] !== O)
-            ((M = e(t, { color: Me, children: O })),
+            ((M = e(Text, { color: Me, children: O })),
               (D[32] = Me),
               (D[33] = O),
               (D[34] = M));
           else M = D[34];
           let y;
           if (D[35] !== Me)
-            ((y = e(t, { color: Me, children: " " })),
+            ((y = e(Text, { color: Me, children: " " })),
               (D[35] = Me),
               (D[36] = y));
           else y = D[36];
@@ -728,14 +728,14 @@ function l9e(cc) {
     let ye = Fe > 0.5 ? "warning" : W;
     let M;
     if (D[40] !== ye || D[41] !== O)
-      ((M = e(t, { color: ye, children: O })),
+      ((M = e(Text, { color: ye, children: O })),
         (D[40] = ye),
         (D[41] = O),
         (D[42] = M));
     else M = D[42];
     let y;
     if (D[43] !== ye)
-      ((y = e(t, { color: ye, children: " " })), (D[43] = ye), (D[44] = y));
+      ((y = e(Text, { color: ye, children: " " })), (D[43] = ye), (D[44] = y));
     else y = D[44];
     let et;
     if (D[45] !== M || D[46] !== y)
@@ -763,10 +763,10 @@ function l9e(cc) {
         let Hr = In ? parseRgbColor(In) : null;
         if (Gr && Hr) {
           let fc = interpolateColor(Gr, Hr, quantizeToEighth(Rn));
-          const M = e(t, { color: formatRgbColor(fc), children: O });
+          const M = e(Text, { color: formatRgbColor(fc), children: O });
           let y;
           if (D[54] !== W)
-            ((y = e(t, { color: W, children: " " })), (D[54] = W), (D[55] = y));
+            ((y = e(Text, { color: W, children: " " })), (D[54] = W), (D[55] = y));
           else y = D[55];
           let et;
           if (D[56] !== M || D[57] !== y)
@@ -790,14 +790,14 @@ function l9e(cc) {
     let bo = Rn > 0.5 ? Ve : W;
     let M;
     if (D[59] !== bo || D[60] !== O)
-      ((M = e(t, { color: bo, children: O })),
+      ((M = e(Text, { color: bo, children: O })),
         (D[59] = bo),
         (D[60] = O),
         (D[61] = M));
     else M = D[61];
     let y;
     if (D[62] !== W)
-      ((y = e(t, { color: W, children: " " })), (D[62] = W), (D[63] = y));
+      ((y = e(Text, { color: W, children: " " })), (D[62] = W), (D[63] = y));
     else y = D[63];
     let et;
     if (D[64] !== M || D[65] !== y)
@@ -813,14 +813,14 @@ function l9e(cc) {
   if (Vr >= lc || En < 0) {
     let it;
     if (D[67] !== O || D[68] !== W)
-      ((it = e(t, { color: W, children: O })),
+      ((it = e(Text, { color: W, children: O })),
         (D[67] = O),
         (D[68] = W),
         (D[69] = it));
     else it = D[69];
     let M;
     if (D[70] !== W)
-      ((M = e(t, { color: W, children: " " })), (D[70] = W), (D[71] = M));
+      ((M = e(Text, { color: W, children: " " })), (D[70] = W), (D[71] = M));
     else M = D[71];
     let y;
     if (D[72] !== it || D[73] !== M)
@@ -855,28 +855,28 @@ function l9e(cc) {
   } else ((se = D[78]), (ce = D[79]), (_e = D[80]));
   let it;
   if (D[81] !== ce || D[82] !== W)
-    ((it = ce && e(t, { color: W, children: ce })),
+    ((it = ce && e(Text, { color: W, children: ce })),
       (D[81] = ce),
       (D[82] = W),
       (D[83] = it));
   else it = D[83];
   let M;
   if (D[84] !== _e || D[85] !== Ve)
-    ((M = e(t, { color: Ve, children: _e })),
+    ((M = e(Text, { color: Ve, children: _e })),
       (D[84] = _e),
       (D[85] = Ve),
       (D[86] = M));
   else M = D[86];
   let y;
   if (D[87] !== se || D[88] !== W)
-    ((y = se && e(t, { color: W, children: se })),
+    ((y = se && e(Text, { color: W, children: se })),
       (D[87] = se),
       (D[88] = W),
       (D[89] = y));
   else y = D[89];
   let et;
   if (D[90] !== W)
-    ((et = e(t, { color: W, children: " " })), (D[90] = W), (D[91] = et));
+    ((et = e(Text, { color: W, children: " " })), (D[90] = W), (D[91] = et));
   else et = D[91];
   let Fr;
   if (D[92] !== it || D[93] !== M || D[94] !== y || D[95] !== et)
@@ -1026,7 +1026,7 @@ function Bo({
   showToolCallTimer: j,
   agentId: I,
 }) {
-  let [K, T] = bs(s ? null : n === "requesting" ? 50 : 100),
+  let [K, T] = useAnimationFrame(s ? null : n === "requesting" ? 50 : 100),
     B = Date.now(),
     P = b !== null ? b - h - k : B - h - k,
     X = C(Mo()),
@@ -1079,7 +1079,7 @@ function Bo({
   }
   let lt = s ? 0 : ti(T),
     Mt = n === "requesting" ? 50 : 200,
-    Lt = V(() => te(f), [f]),
+    Lt = V(() => getStringWidth(f), [f]),
     xt = Lt + 20,
     zt = Math.floor(T / Mt),
     Zt = s
@@ -1138,11 +1138,11 @@ function Bo({
   } else ((gt.current = v), (Wt.current = T));
   let pe = s ? v : gt.current,
     Kt = formatDuration(P),
-    ne = te(Kt),
+    ne = getStringWidth(Kt),
     ut = yt,
     $t = formatNumber(ut),
     _t = `${figures.arrowDown} ${$t} tokens`,
-    St = te(_t),
+    St = getStringWidth(_t),
     J = q.kind === "thinking" ? ei(q.thinkingMs) : "thinking",
     ft;
   switch (q.kind) {
@@ -1162,7 +1162,7 @@ function Bo({
       ft = null;
       break;
   }
-  let Pe = ft ? te(ft) : 0,
+  let Pe = ft ? getStringWidth(ft) : 0,
     oe = C(0),
     Ft = S && w !== null ? Math.max(oe.current, Ro(B - w)) : null;
   oe.current = Ft ?? 0;
@@ -1223,8 +1223,8 @@ function Ao(n) {
     s
   );
 }
-var ui = te(" \xB7 "),
-  Ho = te("thinking"),
+var ui = getStringWidth(" \xB7 "),
+  Ho = getStringWidth("thinking"),
   fi = 16000,
   di = 40,
   pi = 8,
@@ -1280,7 +1280,7 @@ function Fo({
       agentId: X,
     }),
     q = useResolvedTheme(),
-    v = tn(),
+    v = useIsScreenReaderEnabled(),
     ct = jA(w),
     {
       viewportRef: Dt,
@@ -1324,19 +1324,19 @@ function Fo({
     re = !he && lt > 0.5 ? "warning" : void 0,
     wt = lt > 0 ? "warning" : void 0,
     Ct = [
-      ...(S ? [e(t, { dimColor: !0, children: S }, "suffix")] : []),
+      ...(S ? [e(Text, { dimColor: !0, children: S }, "suffix")] : []),
       ...(!v && ft
-        ? [e(t, { dimColor: !0, children: xt }, "elapsedTime")]
+        ? [e(Text, { dimColor: !0, children: xt }, "elapsedTime")]
         : []),
       ...(!v && oe
         ? [
             r(
-              o,
+              Box,
               {
                 flexDirection: "row",
                 children: [
                   e(Uo, { mode: n }),
-                  r(t, { dimColor: !0, children: [fe, " tokens"] }),
+                  r(Text, { dimColor: !0, children: [fe, " tokens"] }),
                 ],
               },
               "tokens",
@@ -1347,11 +1347,11 @@ function Fo({
         ? [
             Mt.kind === "thinking" && !s
               ? e(
-                  t,
+                  Text,
                   { color: re ?? pt, children: Ft ? `(${yt})` : yt },
                   "thinking",
                 )
-              : e(t, { dimColor: !wt, color: wt, children: yt }, "thinking"),
+              : e(Text, { dimColor: !wt, color: wt, children: yt }, "thinking"),
           ]
         : []),
     ],
@@ -1361,48 +1361,48 @@ function Fo({
           ? e(DotSeparatedList, { children: Ct })
           : r(N, {
               children: [
-                e(t, { dimColor: !0, children: "(" }),
+                e(Text, { dimColor: !0, children: "(" }),
                 e(DotSeparatedList, { children: Ct }),
-                e(t, { dimColor: !0, children: ")" }),
+                e(Text, { dimColor: !0, children: ")" }),
               ],
             })
         : null,
     nn =
       pe && Vt !== null
-        ? r(o, {
+        ? r(Box, {
             flexDirection: "row",
             gap: 1,
             marginLeft: Vo,
             width: "100%",
             children: [
               e(ProgressBar, { ratio: Vt / 100, width: Wt, variant: "pill" }),
-              e(t, { dimColor: !0, children: de }),
+              e(Text, { dimColor: !0, children: de }),
             ],
           })
         : null;
   if (nn !== null && P === null && ct)
-    return r(o, {
+    return r(Box, {
       ref: Dt,
       flexDirection: "column",
       marginTop: 1,
       width: "100%",
       children: [e(wn, { tone: "dim", text: f.replace(/\u2026$/, "") }), nn],
     });
-  return r(o, {
+  return r(Box, {
     ref: Dt,
     flexDirection: "column",
     width: "100%",
     children: [
-      e(o, {
+      e(Box, {
         flexDirection: "row",
         flexWrap: "wrap",
         marginTop: 1,
         width: "100%",
         children: P
-          ? e(Xit, { status: P, columns: j })
+          ? e(SpinnerRetryStatusLine, { status: P, columns: j })
           : r(N, {
               children: [
-                e(o4, {
+                e(IntensitySpinnerGlyph, {
                   frame: z,
                   messageColor: g,
                   stalledIntensity: k ? 0 : at,
@@ -1410,7 +1410,7 @@ function Fo({
                   reducedMotion: s,
                   time: m,
                 }),
-                e(l9e, {
+                e(SpinnerMessageText, {
                   message: f,
                   mode: n,
                   messageColor: g,
@@ -1428,7 +1428,7 @@ function Fo({
     ],
   });
 }
-function Xit(Yc) {
+function SpinnerRetryStatusLine(Yc) {
   let Q = _(53),
     { status: nt, columns: vo } = Yc,
     Nn = Math.max(0, Math.ceil((nt.deadline - Date.now()) / 1000)) * 1000,
@@ -1450,12 +1450,12 @@ function Xit(Yc) {
   let qe = ri,
     ii;
   if (Q[5] === MEMO_CACHE_SENTINEL)
-    ((ii = e(o, {
+    ((ii = e(Box, {
       "aria-hidden": !0,
       flexWrap: "wrap",
       height: 1,
       width: 2,
-      children: e(t, { color: "error", children: CLAUDE_ASTERISK_GLYPH }),
+      children: e(Text, { color: "error", children: CLAUDE_ASTERISK_GLYPH }),
     })),
       (Q[5] = ii));
   else ii = Q[5];
@@ -1463,7 +1463,7 @@ function Xit(Yc) {
   if (nt.kind === "stalled") {
     let At;
     if (Q[6] === MEMO_CACHE_SENTINEL)
-      ((At = e(t, { color: "error", children: "Waiting for API response" })),
+      ((At = e(Text, { color: "error", children: "Waiting for API response" })),
         (Q[6] = At));
     else At = Q[6];
     let Rt;
@@ -1471,11 +1471,11 @@ function Xit(Yc) {
       ((Rt = r(N, {
         children: [
           Oo,
-          r(o, {
+          r(Box, {
             flexShrink: 1,
             children: [
               At,
-              r(t, {
+              r(Text, {
                 dimColor: !0,
                 children: [
                   " \xB7 will retry in ",
@@ -1494,15 +1494,15 @@ function Xit(Yc) {
   }
   if (nt.kind === "low_priority_waiting") {
     let An = ` \xB7 next try in ${qe} \xB7 attempt ${nt.attempt} \xB7 esc to interrupt`;
-    let Do = Math.max(10, vo - 2 - te(An) - 2);
+    let Do = Math.max(10, vo - 2 - getStringWidth(An) - 2);
     let At;
     if (Q[9] === MEMO_CACHE_SENTINEL)
-      ((At = e(o, {
+      ((At = e(Box, {
         "aria-hidden": !0,
         flexWrap: "wrap",
         height: 1,
         width: 2,
-        children: e(t, { color: "warning", children: CLAUDE_ASTERISK_GLYPH }),
+        children: e(Text, { color: "warning", children: CLAUDE_ASTERISK_GLYPH }),
       })),
         (Q[9] = At));
     else At = Q[9];
@@ -1513,18 +1513,18 @@ function Xit(Yc) {
     else Pt = Q[12];
     let Tt;
     if (Q[13] !== Pt)
-      ((Tt = e(t, { color: "warning", children: Pt })),
+      ((Tt = e(Text, { color: "warning", children: Pt })),
         (Q[13] = Pt),
         (Q[14] = Tt));
     else Tt = Q[14];
     let kt;
     if (Q[15] !== An)
-      ((kt = e(t, { dimColor: !0, children: An })), (Q[15] = An), (Q[16] = kt));
+      ((kt = e(Text, { dimColor: !0, children: An })), (Q[15] = An), (Q[16] = kt));
     else kt = Q[16];
     let jt;
     if (Q[17] !== Tt || Q[18] !== kt)
       ((jt = r(N, {
-        children: [At, r(o, { flexShrink: 1, children: [Tt, kt] })],
+        children: [At, r(Box, { flexShrink: 1, children: [Tt, kt] })],
       })),
         (Q[17] = Tt),
         (Q[18] = kt),
@@ -1543,7 +1543,7 @@ function Xit(Yc) {
     let vn = Qc
       ? ` \xB7 retrying once, waiting up to ${si}`
       : ` \xB7 retrying, waiting up to ${si} \xB7 attempt ${nt.attempt}/${nt.maxRetries}`;
-    let Lo = Math.max(10, vo - 2 - te(vn) - 2);
+    let Lo = Math.max(10, vo - 2 - getStringWidth(vn) - 2);
     let Rt;
     if (Q[22] !== ae.waitedMs)
       ((Rt = formatDurationCoarse(ae.waitedMs)), (Q[22] = ae.waitedMs), (Q[23] = Rt));
@@ -1555,24 +1555,24 @@ function Xit(Yc) {
     else Tt = Q[26];
     let kt;
     if (Q[27] !== Tt)
-      ((kt = e(t, { color: "error", children: Tt })),
+      ((kt = e(Text, { color: "error", children: Tt })),
         (Q[27] = Tt),
         (Q[28] = kt));
     else kt = Q[28];
     let jt;
     if (Q[29] !== vn)
-      ((jt = e(t, { dimColor: !0, children: vn })), (Q[29] = vn), (Q[30] = jt));
+      ((jt = e(Text, { dimColor: !0, children: vn })), (Q[29] = vn), (Q[30] = jt));
     else jt = Q[30];
     let Pn;
     if (Q[31] !== jt || Q[32] !== kt)
-      ((Pn = r(o, { children: [kt, jt] })),
+      ((Pn = r(Box, { children: [kt, jt] })),
         (Q[31] = jt),
         (Q[32] = kt),
         (Q[33] = Pn));
     else Pn = Q[33];
     let ci;
     if (Q[34] === MEMO_CACHE_SENTINEL)
-      ((ci = e(t, {
+      ((ci = e(Text, {
         dimColor: !0,
         children:
           "A proxy or gateway that buffers streaming responses can cause this \xB7 set CLAUDE_STREAM_FIRST_BYTE_TIMEOUT_MS to change the first wait",
@@ -1584,7 +1584,7 @@ function Xit(Yc) {
       ((ai = r(N, {
         children: [
           Oo,
-          r(o, {
+          r(Box, {
             flexBasis: 0,
             flexDirection: "column",
             flexGrow: 1,
@@ -1622,7 +1622,7 @@ function Xit(Yc) {
     ((Q[39] = Gt), (Q[40] = Wo), (Q[41] = nt.error.formatted), (Q[42] = Rt));
   } else Rt = Q[42];
   let $o = Rt,
-    jo = Math.max(10, vo - 2 - te(On) - 2),
+    jo = Math.max(10, vo - 2 - getStringWidth(On) - 2),
     Pt;
   if (Q[43] !== jo || Q[44] !== $o)
     ((Pt = truncateToWidth($o, jo)), (Q[43] = jo), (Q[44] = $o), (Q[45] = Pt));
@@ -1630,16 +1630,16 @@ function Xit(Yc) {
   let Go = Pt,
     Tt;
   if (Q[46] !== Go)
-    ((Tt = e(t, { color: "error", children: Go })), (Q[46] = Go), (Q[47] = Tt));
+    ((Tt = e(Text, { color: "error", children: Go })), (Q[46] = Go), (Q[47] = Tt));
   else Tt = Q[47];
   let kt;
   if (Q[48] !== On)
-    ((kt = e(t, { dimColor: !0, children: On })), (Q[48] = On), (Q[49] = kt));
+    ((kt = e(Text, { dimColor: !0, children: On })), (Q[48] = On), (Q[49] = kt));
   else kt = Q[49];
   let jt;
   if (Q[50] !== Tt || Q[51] !== kt)
     ((jt = r(N, {
-      children: [Oo, r(o, { flexShrink: 1, children: [Tt, kt] })],
+      children: [Oo, r(Box, { flexShrink: 1, children: [Tt, kt] })],
     })),
       (Q[50] = Tt),
       (Q[51] = kt),
@@ -1657,9 +1657,9 @@ function Uo(Zc) {
     case "thinking": {
       let Ye;
       if (mi[0] === MEMO_CACHE_SENTINEL)
-        ((Ye = e(o, {
+        ((Ye = e(Box, {
           width: 2,
-          children: e(t, {
+          children: e(Text, {
             "aria-hidden": !0,
             dimColor: !0,
             children: figures.arrowDown,
@@ -1672,9 +1672,9 @@ function Uo(Zc) {
     case "requesting": {
       let Ye;
       if (mi[1] === MEMO_CACHE_SENTINEL)
-        ((Ye = e(o, {
+        ((Ye = e(Box, {
           width: 2,
-          children: e(t, {
+          children: e(Text, {
             "aria-hidden": !0,
             dimColor: !0,
             children: figures.arrowUp,
@@ -1710,7 +1710,7 @@ function zi(Li) {
 function Xi(cl) {
   return cl.settings.prefersReducedMotion;
 }
-function cOt(Jt) {
+function useSpinnerRenderInput(Jt) {
   let or = _(21),
     {
       mode: Qt,
@@ -1743,7 +1743,7 @@ function cOt(Jt) {
       (or[4] = bi),
       (or[5] = xi));
   else ((bi = or[4]), (xi = or[5]));
-  let Fa = La.useRenderInput("Spinner", bi, xi),
+  let Fa = ansiPrimitives.useRenderInput("Spinner", bi, xi),
     Si;
   if (or[6] !== er || or[7] !== nr)
     ((Si = Ox() && (Ka || getFeatureValue_CACHED_MAY_BE_STALE("tengu_kairos_brief", !1)) && er && !nr),
@@ -1796,7 +1796,7 @@ function cOt(Jt) {
       (or[19] = Zo),
       (or[20] = wi));
   else wi = or[20];
-  return La.useRenderHook(Fa, wi);
+  return ansiPrimitives.useRenderHook(Fa, wi);
 }
 function dr({
   mode: n,
@@ -1820,7 +1820,7 @@ function dr({
   agentId: R,
 }) {
   let P = useSettings(),
-    X = tn(),
+    X = useIsScreenReaderEnabled(),
     Z = shouldReduceMotion(P.prefersReducedMotion) || X,
     q = useAppStateSelector((J) => J.spinnerTip),
     v = useAppStateSelector((J) => J.spinnerTipLabel),
@@ -1844,8 +1844,8 @@ function dr({
       }
     );
   }, [n]);
-  let Mt = qf(),
-    Lt = IJe(K ?? getMainLoopModel(), I ?? Mt),
+  let Mt = useSessionEffortLevel(),
+    Lt = formatEffortSuffix(K ?? getMainLoopModel(), I ?? Mt),
     xt =
       l.current !== null
         ? l.current - s.current - c.current
@@ -1888,7 +1888,7 @@ function dr({
       ft = T.attempt >= Math.min(3, T.maxRetries);
     if (J && ft) St = getStatusPageHint().trim();
   }
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     width: "100%",
     alignItems: "flex-start",
@@ -1918,13 +1918,13 @@ function dr({
         agentId: R,
       }),
       z && ct && m && m.length > 0
-        ? r(o, {
+        ? r(Box, {
             width: "100%",
             flexDirection: "column",
             children: [
               ut &&
                 e(ToolResultRow, {
-                  children: e(t, {
+                  children: e(Text, {
                     dimColor: !0,
                     italic: !0,
                     wrap: "truncate-end",
@@ -1935,42 +1935,42 @@ function dr({
             ],
           })
         : b && A
-          ? r(o, {
+          ? r(Box, {
               width: "100%",
               flexDirection: "column",
               children: [
                 ut &&
                   e(ToolResultRow, {
-                    children: e(t, {
+                    children: e(Text, {
                       dimColor: !0,
                       italic: !0,
                       wrap: "truncate-end",
                       children: ut,
                     }),
                   }),
-                e(ToolResultRow, { children: e(t, { dimColor: !0, children: A }) }),
+                e(ToolResultRow, { children: e(Text, { dimColor: !0, children: A }) }),
               ],
             })
           : T
             ? St
-              ? e(o, {
+              ? e(Box, {
                   width: "100%",
                   flexDirection: "column",
                   children: e(ToolResultRow, {
-                    children: e(t, { dimColor: !0, children: St }),
+                    children: e(Text, { dimColor: !0, children: St }),
                   }),
                 })
               : null
             : ut || $t || _t
-              ? r(o, {
+              ? r(Box, {
                   width: "100%",
                   flexDirection: "column",
                   children: [
                     _t &&
-                      e(ToolResultRow, { children: e(t, { dimColor: !0, children: _t }) }),
+                      e(ToolResultRow, { children: e(Text, { dimColor: !0, children: _t }) }),
                     ut
                       ? e(ToolResultRow, {
-                          children: e(t, {
+                          children: e(Text, {
                             dimColor: !0,
                             italic: !0,
                             wrap: "truncate-end",
@@ -1979,7 +1979,7 @@ function dr({
                         })
                       : $t &&
                         e(ToolResultRow, {
-                          children: e(t, { dimColor: !0, children: $t }),
+                          children: e(Text, { dimColor: !0, children: $t }),
                         }),
                   ],
                 })
@@ -1991,7 +1991,7 @@ function Xn(za) {
   let Ut = _(34),
     { mode: Wn, overrideMessage: Xa } = za,
     sr = useSettings(),
-    cr = tn(),
+    cr = useIsScreenReaderEnabled(),
     Ri;
   if (Ut[0] !== cr || Ut[1] !== sr.prefersReducedMotion)
     ((Ri = shouldReduceMotion(sr.prefersReducedMotion) || cr),
@@ -2021,7 +2021,7 @@ function Xn(za) {
       (Ut[5] = yi));
   else ((Mi = Ut[4]), (yi = Ut[5]));
   E(Mi, yi);
-  let [, $n] = bs(le ? null : 120),
+  let [, $n] = useAnimationFrame(le ? null : 120),
     Ci = useAppStateSelector(Ui),
     qt = ar === "reconnecting" || ar === "disconnected",
     Ie = ar === "reconnecting" ? "Reconnecting" : "Disconnected",
@@ -2035,7 +2035,7 @@ function Xn(za) {
   else Ii = Ut[8];
   let jn = Ii,
     Ei;
-  if (Ut[9] !== Ce) ((Ei = te(Ce)), (Ut[9] = Ce), (Ut[10] = Ei));
+  if (Ut[9] !== Ce) ((Ei = getStringWidth(Ce)), (Ut[9] = Ce), (Ut[10] = Ei));
   else Ei = Ut[10];
   let Ee = Ei,
     Bi;
@@ -2060,14 +2060,14 @@ function Xn(za) {
     Je = Ci > 0 ? `${Ci} in background` : "",
     Ni;
   if (Ut[17] !== Ie || Ut[18] !== qt || Ut[19] !== Ee)
-    ((Ni = qt ? te(Ie) : Ee),
+    ((Ni = qt ? getStringWidth(Ie) : Ee),
       (Ut[17] = Ie),
       (Ut[18] = qt),
       (Ut[19] = Ee),
       (Ut[20] = Ni));
   else Ni = Ut[20];
   let tl = Ni + 3,
-    mr = Math.max(1, Za - 2 - tl - te(Je)),
+    mr = Math.max(1, Za - 2 - tl - getStringWidth(Je)),
     Kn;
   if (
     Ut[21] !== Vn ||
@@ -2078,13 +2078,13 @@ function Xn(za) {
     Ut[26] !== qt
   )
     ((Kn = qt
-      ? e(t, { color: "error", children: Ie + jn })
+      ? e(Text, { color: "error", children: Ie + jn })
       : r(N, {
           children: [
-            Gn ? e(t, { dimColor: !0, children: Gn }) : null,
-            Hn ? e(t, { children: Hn }) : null,
-            Vn ? e(t, { dimColor: !0, children: Vn }) : null,
-            e(t, { dimColor: !0, children: jn }),
+            Gn ? e(Text, { dimColor: !0, children: Gn }) : null,
+            Hn ? e(Text, { children: Hn }) : null,
+            Vn ? e(Text, { dimColor: !0, children: Vn }) : null,
+            e(Text, { dimColor: !0, children: jn }),
           ],
         })),
       (Ut[21] = Vn),
@@ -2100,8 +2100,8 @@ function Xn(za) {
     ((Fn = Je
       ? r(N, {
           children: [
-            e(t, { children: " ".repeat(mr) }),
-            e(t, { color: "subtle", children: Je }),
+            e(Text, { children: " ".repeat(mr) }),
+            e(Text, { color: "subtle", children: Je }),
           ],
         })
       : null),
@@ -2111,7 +2111,7 @@ function Xn(za) {
   else Fn = Ut[30];
   let vi;
   if (Ut[31] !== Kn || Ut[32] !== Fn)
-    ((vi = r(o, {
+    ((vi = r(Box, {
       flexDirection: "row",
       width: "100%",
       marginTop: 1,
@@ -2124,7 +2124,7 @@ function Xn(za) {
   else vi = Ut[33];
   return vi;
 }
-function uOt() {
+function RemoteConnectionStatusLine() {
   let Un = _(9),
     ur = useAppStateSelector(qi),
     Oi = useAppStateSelector(zi),
@@ -2138,14 +2138,14 @@ function uOt() {
     Ne = Oi > 0 ? `${Oi} in background` : "";
   if (!Be && !Ne) {
     let me;
-    if (Un[0] === MEMO_CACHE_SENTINEL) ((me = e(o, { height: 2 })), (Un[0] = me));
+    if (Un[0] === MEMO_CACHE_SENTINEL) ((me = e(Box, { height: 2 })), (Un[0] = me));
     else me = Un[0];
     return me;
   }
-  let fr = Math.max(1, nl - 2 - te(Be) - te(Ne)),
+  let fr = Math.max(1, nl - 2 - getStringWidth(Be) - getStringWidth(Ne)),
     me;
   if (Un[1] !== Be)
-    ((me = Be ? e(t, { color: "error", children: Be }) : null),
+    ((me = Be ? e(Text, { color: "error", children: Be }) : null),
       (Un[1] = Be),
       (Un[2] = me));
   else me = Un[2];
@@ -2154,8 +2154,8 @@ function uOt() {
     ((qn = Ne
       ? r(N, {
           children: [
-            e(t, { children: " ".repeat(fr) }),
-            e(t, { color: "subtle", children: Ne }),
+            e(Text, { children: " ".repeat(fr) }),
+            e(Text, { color: "subtle", children: Ne }),
           ],
         })
       : null),
@@ -2165,10 +2165,10 @@ function uOt() {
   else qn = Un[5];
   let Di;
   if (Un[6] !== me || Un[7] !== qn)
-    ((Di = e(o, {
+    ((Di = e(Box, {
       marginTop: 1,
       paddingLeft: 2,
-      children: r(t, { children: [me, qn] }),
+      children: r(Text, { children: [me, qn] }),
     })),
       (Un[6] = me),
       (Un[7] = qn),
@@ -2176,19 +2176,19 @@ function uOt() {
   else Di = Un[8];
   return Di;
 }
-function yo() {
+function SpinnerGlyph() {
   let Qe = _(9),
-    rl = tn(),
+    rl = useIsScreenReaderEnabled(),
     Wi = shouldReduceMotion(useAppStateSelectorUnchecked(Xi)) || rl,
-    [Ae, il] = bs(Wi ? null : 120);
+    [Ae, il] = useAnimationFrame(Wi ? null : 120);
   if (Wi) {
     let Ze;
     if (Qe[0] === MEMO_CACHE_SENTINEL)
-      ((Ze = e(t, { color: "text", children: "\u25CF" })), (Qe[0] = Ze));
+      ((Ze = e(Text, { color: "text", children: "\u25CF" })), (Qe[0] = Ze));
     else Ze = Qe[0];
     let ve;
     if (Qe[1] !== Ae)
-      ((ve = e(o, {
+      ((ve = e(Box, {
         ref: Ae,
         "aria-hidden": !0,
         flexWrap: "wrap",
@@ -2209,11 +2209,11 @@ function yo() {
   const ve = $i[sl];
   let zn;
   if (Qe[4] !== ve)
-    ((zn = e(t, { color: "text", children: ve })), (Qe[4] = ve), (Qe[5] = zn));
+    ((zn = e(Text, { color: "text", children: ve })), (Qe[4] = ve), (Qe[5] = zn));
   else zn = Qe[5];
   let ji;
   if (Qe[6] !== Ae || Qe[7] !== zn)
-    ((ji = e(o, {
+    ((ji = e(Box, {
       ref: Ae,
       "aria-hidden": !0,
       flexWrap: "wrap",
@@ -2227,7 +2227,7 @@ function yo() {
   else ji = Qe[8];
   return ji;
 }
-function IUn({ entries: n, responseLength: s, event: c }) {
+function applyApiMetricsEvent({ entries: n, responseLength: s, event: c }) {
   if (c.type === "start")
     return (
       n.push({
@@ -2295,4 +2295,4 @@ function Gi(n) {
   let c = new Set(n.filter((l) => l.status !== "completed").map((l) => l.id));
   return s.find((l) => !l.blockedBy.some((f) => c.has(f))) ?? s[0];
 }
-export { lOt, qf, l9e, o4, Xit, cOt, uOt, yo, IUn };
+export { ExpandedTasksPanel, useSessionEffortLevel, SpinnerMessageText, IntensitySpinnerGlyph, SpinnerRetryStatusLine, useSpinnerRenderInput, RemoteConnectionStatusLine, SpinnerGlyph, applyApiMetricsEvent };

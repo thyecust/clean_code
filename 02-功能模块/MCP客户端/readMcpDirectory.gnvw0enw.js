@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Hee } from "./chunk-5wa92x7d.js";
+import { ListResourcesResultSchema } from "./mcp-protocol-schemas.js";
 import { ErrorCode, ProtocolError } from "./chunk-78r8f7dw.js";
 import "../认证-OAuth登录/pkce-challenge.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -42,7 +42,7 @@ async function readMcpDirectory(r, e) {
           method: "resources/directory/read",
           params: { uri: e, ...(o && { cursor: o }) },
         },
-        Hee,
+        ListResourcesResultSchema,
         { timeout: getMcpTimeoutMs() },
       );
     } catch (n) {

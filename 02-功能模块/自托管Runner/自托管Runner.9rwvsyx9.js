@@ -19,9 +19,9 @@ import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { bc, getGlobalClaudeFile, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_GLOBAL_FILE_SUFFIXES, fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { EDIT_TOOL_NAME, WRITE_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
@@ -31,15 +31,15 @@ import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { GITHUB_HOST, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { MAX_SETTINGS_FILE_BYTES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { ot, rL } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath, rL } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getProxyFetchOptions, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { provenSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { isTempScratchName, stripRecursiveGlobSuffix, parseRuleForSandbox, resolvePathPatternForSandboxAt, resolveSandboxFilesystemPathAt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { normalizePathForCompare, getResolvedClaudeTempDir, getResolvedChildProcessTmpDir, patternWithRootFor } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { fc } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import "../自动更新-安装/chunk-brx72pf1.js";
+import { SYNTHETIC_MODEL_NAME } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import "../自动更新-安装/install-diagnostics.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
 import {
   RUNNER_VERSION,
@@ -75,25 +75,25 @@ import { startGuestVitalsEmitter } from "./guest-vitals-emitter.js";
 import { appendClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
 import { OTEL_DIAG_ERROR_LOG_PREFIX } from "../../01-核心基础设施/共享小工具-未细化/otel-diag-logger.js";
 import {
-  cLt,
-  Vlt,
-  gF,
-  g7,
-  O2n,
-  frn,
-  Klt,
-  mrn,
-  grn,
-  uLt,
-  dLt,
-  $3e,
-  hrn,
-  _rn,
-  D2n,
-  L2n,
-  M2n,
-  Xlt,
-} from "../Git-Worktree/chunk-33y3h2sy.js";
+  GIT_WORKTREE_TIMEOUT_MS,
+  isMissingRemoteRefError,
+  GIT_HARDENING_ARGS,
+  GIT_BASE_ENV_OVERRIDES,
+  prepareGitSources,
+  isSupportedSourceType,
+  GIT_PROXY_TOKEN_ENV_VAR,
+  GIT_LFS_CONFIG_ARGS,
+  buildCredentialHelperScript,
+  buildTokenCredentialArgs,
+  buildGitProxyArgs,
+  isSupportedGitUrl,
+  injectTokenIntoGitUrl,
+  resolveCanonicalRepoPath,
+  repoSlugToDirName,
+  addSessionWorktree,
+  removeSessionWorktrees,
+  redactGitCredentials,
+} from "../Git-Worktree/git-operations.js";
 import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
 import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
 import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
@@ -785,7 +785,7 @@ async function bs(e, t) {
         : isHoverRestEnabled() && t !== void 0
           ? await Ki(t)
           : await Dn(getGlobalClaudeFile(), "utf8"),
-      p = await z(m);
+      p = await jsonParse(m);
     if (p !== null && typeof p === "object") {
       let i = p.mcpServers;
       if (i !== null && typeof i === "object" && Object.keys(i).length > 0)
@@ -1023,7 +1023,7 @@ async function qi(e, t, n, r, s = fileSuffixForOauthConfig()) {
             (await sn(h, m, { mode: p }), d.push(c));
           }
           if (t.mcpServers) {
-            let c = await b({ mcpServers: t.mcpServers });
+            let c = await jsonStringify({ mcpServers: t.mcpServers });
             await sn(X(e, `.claude${s}.json`), c, { mode: 384 });
           }
         })(),
@@ -1059,7 +1059,7 @@ var Zi = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,62}\.(py|sh)$/,
   ]),
   as = 131072;
 function Cn(e) {
-  let t = b(e) ?? String(e),
+  let t = jsonStringify(e) ?? String(e),
     n = Buffer.byteLength(t, "utf8");
   return n <= 200 ? t : `${t.slice(0, 200)}\u2026 (+${n - 200} bytes)`;
 }
@@ -1075,12 +1075,12 @@ function Qi(e) {
       return `launcher_hooks[${n}]: invalid filename ${Cn(r.filename)}`;
     let s = r.filename.toLowerCase();
     if (t.has(s))
-      return `launcher_hooks[${n}]: duplicate filename ${b(r.filename)} (case-insensitive)`;
+      return `launcher_hooks[${n}]: duplicate filename ${jsonStringify(r.filename)} (case-insensitive)`;
     t.add(s);
     let d =
       typeof r.script === "string" ? Buffer.byteLength(r.script, "utf8") : 0;
     if (d === 0 || d > as)
-      return `launcher_hooks[${n}] ${b(r.filename)}: script size ${d} out of range (1..${as})`;
+      return `launcher_hooks[${n}] ${jsonStringify(r.filename)}: script size ${d} out of range (1..${as})`;
   }
   return;
 }
@@ -1122,7 +1122,7 @@ async function eo(e, t, n, r, s) {
     n.push(m),
     await xe(unlink(m), `unlink ${m}`).catch(() => {}),
     await xe(
-      sn(m, b({ hooks: o }, null, 2), { flag: "wx", mode: 384 }),
+      sn(m, jsonStringify({ hooks: o }, null, 2), { flag: "wx", mode: 384 }),
       `writeFile ${m}`,
     ),
     r(`[runner:session] Wrote ${t.length} launcher hook(s) + ${m}`),
@@ -1663,9 +1663,9 @@ async function Os(e, t, n) {
           se,
           ce = [];
         for (let T of Yt) {
-          if (!frn(T.type)) continue;
-          let pe = _rn(d, T),
-            Xe = D2n(T);
+          if (!isSupportedSourceType(T.type)) continue;
+          let pe = resolveCanonicalRepoPath(d, T),
+            Xe = repoSlugToDirName(T);
           if (!pe || !Xe)
             throw new R(
               `Source '${T.url}' resolved to an unsafe repo path (slug='${T.repo}'). Check for path traversal in the URL.`,
@@ -1724,7 +1724,7 @@ async function Os(e, t, n) {
                   "refusing to pass unsafe ref to checkout hook",
                 );
               let Ve = T.governedMount && T.upstreamUrl ? T.upstreamUrl : T.url;
-              if (!Ve || !$3e(Ve))
+              if (!Ve || !isSupportedGitUrl(Ve))
                 throw new R(
                   `[runner:session] refusing to pass unsafe repo URL to checkout hook: ${Ve}`,
                   "refusing to pass unsafe repo URL to checkout hook",
@@ -1774,7 +1774,7 @@ async function Os(e, t, n) {
                     onDebug: i,
                   });
                 if (
-                  (await O2n({
+                  (await prepareGitSources({
                     baseDir: d,
                     sources: [
                       {
@@ -1838,7 +1838,7 @@ async function Os(e, t, n) {
                   }),
                   De)
                 )
-                  await L2n({
+                  await addSessionWorktree({
                     canonicalRepoPath: pe,
                     worktreePath: tt,
                     ref: T.ref,
@@ -1858,7 +1858,7 @@ async function Os(e, t, n) {
               }));
           } catch (tt) {
             let Ve = tt instanceof Error ? tt.message : String(tt);
-            if (Vlt(Ve)) {
+            if (isMissingRemoteRefError(Ve)) {
               if (!Oe) {
                 let dt = T.ref ? `'${T.ref}'` : "the configured ref";
                 i(
@@ -2121,7 +2121,7 @@ async function Os(e, t, n) {
           ])
             N[pe] = { hasTrustDialogAccepted: !0 };
         }
-        let I = await b({
+        let I = await jsonStringify({
             ...(zt?.mcpServers && { mcpServers: zt.mcpServers }),
             projects: N,
           }),
@@ -2171,7 +2171,7 @@ async function Os(e, t, n) {
         an = new Map(),
         k = !1,
         J =
-          b({
+          jsonStringify({
             type: "control_request",
             request_id: `runner-session-gone-${e}`,
             request: { subtype: "end_session", reason: "session_not_found" },
@@ -2469,7 +2469,7 @@ async function Os(e, t, n) {
       }
       let Le = redactSecrets(K instanceof Error ? K.message : String(K));
       Re = `setup threw: ${Le}`;
-      let gt = K instanceof Vn || Vlt(Le);
+      let gt = K instanceof Vn || isMissingRemoteRefError(Le);
       {
         let Qe = getHttpStatusFromError(K);
         if (Qe !== void 0 && Qe >= 500)
@@ -2618,7 +2618,7 @@ async function Os(e, t, n) {
     for (let D of [...(It ? [It] : []), ..._n])
       await xe(unlink(D), `unlink ${D}`).catch(() => {});
     if (ge.length > 0)
-      await M2n({ worktrees: ge, onDebug: i }).catch((D) => {
+      await removeSessionWorktrees({ worktrees: ge, onDebug: i }).catch((D) => {
         i(`[runner:session] worktree cleanup failed: ${D}`);
       });
     for (let D of _)
@@ -2995,7 +2995,7 @@ function ro(e) {
     it = (x) => {
       let ee;
       try {
-        ee = z(x);
+        ee = jsonParse(x);
       } catch {
         return;
       }
@@ -3561,7 +3561,7 @@ function ls(e) {
         sentAtMs: e.nowMs ?? Date.now(),
       }));
   (e.write(
-    b({
+    jsonStringify({
       type: "update_environment_variables",
       variables: { [e.envVar]: e.token },
       ...(n && { request_id: n }),
@@ -4039,7 +4039,7 @@ async function To(e, t, n, r) {
       [["credential.helper", ""], ["--replace-all"]],
       [[`credential.${s}.helper`, ""], ["--replace-all"]],
       [
-        [`credential.${s}.helper`, grn("CLAUDE_CODE_SESSION_ACCESS_TOKEN")],
+        [`credential.${s}.helper`, buildCredentialHelperScript("CLAUDE_CODE_SESSION_ACCESS_TOKEN")],
         ["--add"],
       ],
     ];
@@ -4095,7 +4095,7 @@ async function Ns(e, t, n, r = spawn, s = cn) {
 }
 async function yo(e, t, n, r) {
   (await Ns(
-    ["-C", e, ...gF, "remote", "set-url", "origin", "--", t],
+    ["-C", e, ...GIT_HARDENING_ARGS, "remote", "set-url", "origin", "--", t],
     (s) =>
       new R(
         `governed git: 'git remote set-url origin' in ${e} exited ${s.code}: ${s.stderr}`,
@@ -4234,7 +4234,7 @@ async function No(e, t, n) {
     },
     m = (i) => {
       let h = stripRecursiveGlobSuffix(i) || Ge;
-      return ot(h, e);
+      return resolvePath(h, e);
     },
     p = (i) => stripRecursiveGlobSuffix(i) || Ge;
   for (let i of new Set([e, ...t])) {
@@ -4401,7 +4401,7 @@ async function No(e, t, n) {
           },
           ke;
         try {
-          ke = bn(ot(H, e));
+          ke = bn(resolvePath(H, e));
         } catch (de) {
           throw new _t(
             { ...fe, path: String(H) },
@@ -4470,7 +4470,7 @@ async function Do(e, t, n, r, s, d, o = spawn) {
   if (r?.aborted) return;
   let c = {
       ...process.env,
-      ...g7,
+      ...GIT_BASE_ENV_OVERRIDES,
       ...(s
         ? {
             GIT_CONFIG_GLOBAL: "/dev/null",
@@ -4488,7 +4488,7 @@ async function Do(e, t, n, r, s, d, o = spawn) {
               r?.removeEventListener("abort", te),
               w(we));
           },
-          ne = o("git", [...gF, ...S, "-C", e, ...i], {
+          ne = o("git", [...GIT_HARDENING_ARGS, ...S, "-C", e, ...i], {
             cwd: void 0,
             stdio: ["ignore", "ignore", "pipe"],
             windowsHide: !0,
@@ -4548,7 +4548,7 @@ async function Do(e, t, n, r, s, d, o = spawn) {
     (await m(
       ["checkout", "-B", t, ...(d ? [d] : [])],
       `checkout -B '${t}'`,
-      d ? cLt : cn,
+      d ? GIT_WORKTREE_TIMEOUT_MS : cn,
     )) === "failed"
   )
     n(
@@ -4580,9 +4580,9 @@ async function Po(e, t, n, r, s = spawn, d = !1, o, c) {
             [
               "-C",
               e,
-              ...gF,
-              ...(o ? dLt(o) : []),
-              ...(p ? [...dLt(p), ...uLt(p), ...mrn] : []),
+              ...GIT_HARDENING_ARGS,
+              ...(o ? buildGitProxyArgs(o) : []),
+              ...(p ? [...buildGitProxyArgs(p), ...buildTokenCredentialArgs(p), ...GIT_LFS_CONFIG_ARGS] : []),
               "-c",
               "http.proxyAuthMethod=basic",
               "fetch",
@@ -4598,16 +4598,16 @@ async function Po(e, t, n, r, s = spawn, d = !1, o, c) {
               ...Bs("helper"),
               env: {
                 ...process.env,
-                ...g7,
+                ...GIT_BASE_ENV_OVERRIDES,
                 ...(o || p ? { GIT_CONFIG_GLOBAL: "/dev/null" } : void 0),
                 ...(c
                   ? {
-                      [Klt]: c.getToken(),
+                      [GIT_PROXY_TOKEN_ENV_VAR]: c.getToken(),
                       CLAUDE_CODE_SESSION_ACCESS_TOKEN: void 0,
                     }
                   : void 0),
                 ...(d && {
-                  GIT_ALLOW_PROTOCOL: `file:${g7.GIT_ALLOW_PROTOCOL}`,
+                  GIT_ALLOW_PROTOCOL: `file:${GIT_BASE_ENV_OVERRIDES.GIT_ALLOW_PROTOCOL}`,
                 }),
                 GIT_TERMINAL_PROMPT: "0",
                 GIT_SSH_COMMAND: `${a.GIT_SSH_COMMAND || "ssh"} -o BatchMode=yes -o ConnectTimeout=30`,
@@ -4661,7 +4661,7 @@ async function Po(e, t, n, r, s = spawn, d = !1, o, c) {
 function xs(e) {
   let t = e.url ?? "",
     n = e.getAuthToken ? e.getAuthToken() : e.token,
-    r = e.getAuthToken ? t : hrn(t, e.token),
+    r = e.getAuthToken ? t : injectTokenIntoGitUrl(t, e.token),
     s;
   try {
     let c = new URL(t);
@@ -4673,7 +4673,7 @@ function xs(e) {
       process.env.ALL_PROXY ||
       process.env.all_proxy ||
       "",
-    o = [...gF];
+    o = [...GIT_HARDENING_ARGS];
   if (s) {
     if (
       (o.push("-c", "http.sslVerify=true"),
@@ -4685,7 +4685,7 @@ function xs(e) {
         o.push("-c", `http.${s}.proxy=${d}`),
         o.push("-c", `http.${t}.proxy=${d}`));
     if (n)
-      if (e.getAuthToken) o.push(...uLt(t));
+      if (e.getAuthToken) o.push(...buildTokenCredentialArgs(t));
       else
         (o.push("-c", "credential.helper="),
           o.push("-c", `credential.${s}.helper=`));
@@ -4697,15 +4697,15 @@ function xs(e) {
     env: {
       ...process.env,
       GIT_TERMINAL_PROMPT: "0",
-      ...g7,
+      ...GIT_BASE_ENV_OVERRIDES,
       ...(t.startsWith("file://") && {
-        GIT_ALLOW_PROTOCOL: `file:${g7.GIT_ALLOW_PROTOCOL}`,
+        GIT_ALLOW_PROTOCOL: `file:${GIT_BASE_ENV_OVERRIDES.GIT_ALLOW_PROTOCOL}`,
       }),
       GIT_SSH_COMMAND: `${process.env.GIT_SSH_COMMAND || "ssh"} -o BatchMode=yes -o ConnectTimeout=30`,
       SELF_HOSTED_RUNNER_HOST_CONFIG_DIR: void 0,
       ...(n && {
         GIT_CONFIG_GLOBAL: "/dev/null",
-        [Klt]: e.getAuthToken ? n : void 0,
+        [GIT_PROXY_TOKEN_ENV_VAR]: e.getAuthToken ? n : void 0,
       }),
     },
   };
@@ -4774,7 +4774,7 @@ async function Mo(e, t, n, r, s, d) {
           p(!0));
       else
         (s(
-          `[runner:session] push-on-release resume: no prior '${t}' on source remote (${Xlt(L, o.authURL, o.token).trim() || `exit ${w}`}); starting from source HEAD`,
+          `[runner:session] push-on-release resume: no prior '${t}' on source remote (${redactGitCredentials(L, o.authURL, o.token).trim() || `exit ${w}`}); starting from source HEAD`,
         ),
           p(!1));
     }),
@@ -4788,10 +4788,10 @@ async function ms(e, t, n = cn) {
         if (s) return;
         ((s = !0), clearTimeout(m), r(p));
       },
-      o = spawn("git", [...gF, "-C", e, "rev-parse", "--verify", t], {
+      o = spawn("git", [...GIT_HARDENING_ARGS, "-C", e, "rev-parse", "--verify", t], {
         stdio: ["ignore", "pipe", "ignore"],
         cwd: void 0,
-        env: { ...process.env, ...g7 },
+        env: { ...process.env, ...GIT_BASE_ENV_OVERRIDES },
         windowsHide: !0,
         ...Bs("helper"),
       }),
@@ -4870,7 +4870,7 @@ async function Io(e, t, n, r, s) {
         );
       else
         s(
-          `[runner:session] push-on-release '${t}' from ${e} exited ${w}: ${Xlt(L, c.authURL, c.token).trim()} (best-effort)` +
+          `[runner:session] push-on-release '${t}' from ${e} exited ${w}: ${redactGitCredentials(L, c.authURL, c.token).trim()} (best-effort)` +
             (d
               ? " \u2014 governed git pushes --push-outcome-on-release branches to the plain " +
                 "upstream with customer-managed credentials (the governed mount is read-only); if this failed with an auth error, provide a git credential for the push target on the runner host or use the post-session hook"
@@ -4894,14 +4894,14 @@ async function Uo(e, t, n, r, s, d = spawn, o = cn) {
           if (L) return;
           ((L = !0), clearTimeout(V), h(ne));
         },
-        w = d("git", [...gF, "-C", e, ...p], {
+        w = d("git", [...GIT_HARDENING_ARGS, "-C", e, ...p], {
           stdio: ["ignore", "ignore", "pipe"],
           cwd: void 0,
           windowsHide: !0,
           ...Bs("helper"),
           env: {
             ...process.env,
-            ...g7,
+            ...GIT_BASE_ENV_OVERRIDES,
             ...(s
               ? {
                   GIT_CONFIG_GLOBAL: "/dev/null",
@@ -5171,7 +5171,7 @@ function zo({
   if (m === void 0)
     return {
       eligible: !1,
-      reason: `session named a revision the standby does not prefetch (${truncateToCodeUnits(b(o.ref), 80)})`,
+      reason: `session named a revision the standby does not prefetch (${truncateToCodeUnits(jsonStringify(o.ref), 80)})`,
     };
   if (o.repo.toLowerCase() !== cr || !isSameHost(o.upstreamHost, lr))
     return {
@@ -5327,7 +5327,7 @@ ${m}`;
       uuid: randomUUID(),
       message: {
         role: "assistant",
-        model: fc,
+        model: SYNTHETIC_MODEL_NAME,
         content: [{ type: "text", text: d }],
         stop_reason: "stop_sequence",
         usage: { input_tokens: 0, output_tokens: 0 },
@@ -5533,7 +5533,7 @@ function Aa(e, t) {
   let n = parseConfigInteger(e);
   if (Number.isNaN(n) || n < 0 || n > 65535)
     throw Error(
-      `SELF_HOSTED_RUNNER_HEALTH_PORT must be an integer in [0, 65535] (0 disables), got: ${b(e)}`,
+      `SELF_HOSTED_RUNNER_HEALTH_PORT must be an integer in [0, 65535] (0 disables), got: ${jsonStringify(e)}`,
     );
   return n;
 }
@@ -5542,7 +5542,7 @@ function $a(e) {
   if (Ie(e)) return !0;
   if (e === void 0 || e.trim() === "") return Xs;
   throw Error(
-    `SELF_HOSTED_RUNNER_TRUST_WORKSPACE must be one of 1/true/yes/on or 0/false/no/off (got: ${b(e)})`,
+    `SELF_HOSTED_RUNNER_TRUST_WORKSPACE must be one of 1/true/yes/on or 0/false/no/off (got: ${jsonStringify(e)})`,
   );
 }
 function Ca(e) {
@@ -5550,7 +5550,7 @@ function Ca(e) {
   let t = e.trim().toLowerCase();
   if (t === "enforce" || t === "warn" || t === "off") return t;
   throw Error(
-    `SELF_HOSTED_RUNNER_CONFINE_REPO_SETTINGS must be one of enforce/warn/off (got: ${b(e)})`,
+    `SELF_HOSTED_RUNNER_CONFINE_REPO_SETTINGS must be one of enforce/warn/off (got: ${jsonStringify(e)})`,
   );
 }
 function Na(e) {
@@ -5661,7 +5661,7 @@ function Na(e) {
           ((n.confineRepoSettings = o), s++);
         else
           throw Error(
-            `--confine-repo-settings requires one of enforce/warn/off (got: ${b(o)})`,
+            `--confine-repo-settings requires one of enforce/warn/off (got: ${jsonStringify(o)})`,
           );
         break;
       case "--log-level":

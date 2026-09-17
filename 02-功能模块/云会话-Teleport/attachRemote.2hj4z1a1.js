@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 252 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { identity as _m, K, $p, Bw, s_e, Nn, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { Iu, R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { deviceToolNoticesTo } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { reportEventSignerLoadFailure, SESSION_NOT_FOUND_PREFIX, INVALID_SESSION_ID_PREFIX } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -37,7 +37,7 @@ function de(r) {
 function ce(r) {
   let e = de(r);
   if (e === null) {
-    n(
+    logForDebugging(
       `[attachRemote] preflight fetchSession failed (continuing via WS): ${l(r)}`,
     );
     return;
@@ -138,7 +138,7 @@ async function attachRemote(r, e, c, t) {
               reason: S("archived"),
             }),
             Error(`Cloud session ${e} is archived and cannot accept new messages.
-View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
+View it at ${buildClaudeAiSessionUrl(e, void 0, { from: "cli", m: "0" })}`)
           );
         if (o.session_context.cwd && !p) {
           if ((await isSessionCwdSafeToAdopt(o.session_context.cwd, "attachRemote")) && !p)
@@ -148,7 +148,7 @@ View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
       (o) => ce(o),
     );
     a.catch(() => {});
-    let A = wa(e, void 0, { from: "cli", m: "0" }),
+    let A = buildClaudeAiSessionUrl(e, void 0, { from: "cli", m: "0" }),
       w = isViolinWoodEnabledCached(),
       P = buildCloudSessionStatusMessage("attach", A, w),
       y = {
@@ -192,7 +192,7 @@ View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
               )
               .catch(
                 (o) => (
-                  n(`[attachRemote] directory-sync lookup failed: ${l(o)}`, {
+                  logForDebugging(`[attachRemote] directory-sync lookup failed: ${l(o)}`, {
                     level: "warn",
                   }),
                   { handle: void 0, elsewhere: void 0, maybeElsewhere: !0 }

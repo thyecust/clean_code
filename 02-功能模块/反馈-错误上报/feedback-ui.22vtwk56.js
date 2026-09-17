@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 263 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { jdr, LPt, ggr } from "../斜杠命令-UI组件/chunk-kyfaptqk.js";
+import { renderFeedbackComponent as jdr, callLegacyFeedbackDialog as LPt, call as ggr } from "../斜杠命令-UI组件/feedback-dialog.js";
 import "./反馈-错误上报.grgh562d.js";
-import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import "../语法高亮-Markdown渲染/markdown-renderer.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "./feedback-draft-submit.js";

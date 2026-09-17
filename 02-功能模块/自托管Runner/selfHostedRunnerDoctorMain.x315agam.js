@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 81 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { b, zR } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, initDefaultDebugLog } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { logFeatureOkAsync, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { initializeFirstPartyEventLogging, watchGlobalConfigThroughStorage, seedInstallIDs } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -204,7 +204,7 @@ Any extra args are passed to the underlying Claude Code session.`);
   (await ensureFastPathSettingsLoaded(r), initializeAnalyticsSink());
   let o = pinStorageV5(r);
   if ((initializeFirstPartyEventLogging(o), isHoverRestEnabled() && o !== void 0)) {
-    (zR({ storageV5: o }), watchGlobalConfigThroughStorage(o));
+    (initDefaultDebugLog({ storageV5: o }), watchGlobalConfigThroughStorage(o));
     let [
       { composePolicyLimitsClient: n, primePolicyLimitsCache: d },
       { credentialsStoreFor: u },
@@ -233,7 +233,7 @@ Any extra args are passed to the underlying Claude Code session.`);
   if (a.DEBUG)
     console.error(
       "[self-hosted-runner:doctor] spawning:",
-      b({
+      jsonStringify({
         argv: [
           process.execPath,
           ...i.map((n) => (n === s ? `<${s.length} chars>` : n)),

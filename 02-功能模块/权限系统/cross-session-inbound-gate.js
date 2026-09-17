@@ -11,7 +11,7 @@ import { onGrowthBookRefresh, getFeatureValue_CACHED_MAY_BE_STALE } from "../认
 import { ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isSettingsSourceEnabled, CROSS_SESSION_INBOUND_SETTING_KEY } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, getSettingsWithErrors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -19,7 +19,7 @@ import { PERMISSION_MODES } from "./chunk-e4pfvp7x.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { MCP_SEND_MESSAGE_ORIGIN, SLACK_BOT_ORIGIN, enqueueReportingAdmission } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
-import { Nu } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { formatRedactedPreview } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 function isHarborKiteModeEmitEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_kite_mode_emit", !0);
 }
@@ -87,7 +87,7 @@ function setCorrespondentRecorder(e) {
 var F = 750;
 function x() {
   if (getBridgeHostState().inbound.shutdownSettleHandle === null)
-    getBridgeHostState().inbound.shutdownSettleHandle = Et(settleHeldPeerMessagesOnShutdown);
+    getBridgeHostState().inbound.shutdownSettleHandle = registerCleanup(settleHeldPeerMessagesOnShutdown);
 }
 async function settleHeldPeerMessagesOnShutdown() {
   let e = getBridgeHostState().inbound;
@@ -99,7 +99,7 @@ async function settleHeldPeerMessagesOnShutdown() {
   )
     return;
   let o = e.held.splice(0, e.held.length);
-  n(
+  logForDebugging(
     `[cross-session-inbound] shutdown: settling ${o.length} still-held peer message(s) as expired`,
   );
   let s = [];
@@ -173,7 +173,7 @@ function _() {
   if (s === null) return { policy: "hold", holdCause: "mode-unknown" };
   if (!P.has(s.mode))
     return (
-      n(
+      logForDebugging(
         `[cross-session-inbound] unrecognized permission mode '${s.mode}' (fail-closed \u2192 hold)`,
       ),
       { policy: "hold", holdCause: "mode-unknown" }
@@ -197,7 +197,7 @@ function k(e, o) {
   let t = v();
   if (t === null || !P.has(t.mode)) {
     if (t !== null)
-      n(
+      logForDebugging(
         `[cross-session-inbound] unrecognized permission mode '${t.mode}' (fail-closed \u2192 hold)`,
       );
     return { policy: "hold", holdCause: "mode-unknown" };
@@ -231,7 +231,7 @@ function v() {
   let e = getBridgeHostState().inbound.getCurrentMode;
   if (e === null)
     return (
-      n(
+      logForDebugging(
         "[cross-session-inbound] permission-mode getter not wired (fail-closed \u2192 hold)",
       ),
       null
@@ -240,7 +240,7 @@ function v() {
     return e();
   } catch (o) {
     return (
-      n(
+      logForDebugging(
         `[cross-session-inbound] mode getter threw (${l(o)}; fail-closed \u2192 hold)`,
       ),
       null
@@ -297,7 +297,7 @@ function R(e, o) {
       let { holdCause: t } = o;
       if (s.shuttingDown)
         return (
-          n(
+          logForDebugging(
             `[cross-session-inbound] shutdown: not parking a late peer message \u2014 settled as expired: ${f(e)}`,
           ),
           s.sendPeerReceipt?.(e, "expired"),
@@ -307,7 +307,7 @@ function R(e, o) {
       if (s.held.length >= Q) {
         let i = s.held.shift();
         if (i)
-          (n(
+          (logForDebugging(
             `[cross-session-inbound] hold buffer full \u2014 evicted oldest as expired: ${f(i)}`,
           ),
             s.sendPeerReceipt?.(i, "expired"),
@@ -316,7 +316,7 @@ function R(e, o) {
       if (
         (s.held.push(e),
         x(),
-        n(
+        logForDebugging(
           `[cross-session-inbound] held inbound peer message (${s.held.length} held, cause=${t}): ${f(e)}`,
         ),
         logFeatureSad("peer_inbound_gate", "held"),
@@ -327,7 +327,7 @@ function R(e, o) {
     }
   }
 }
-function uqe(e) {
+function getIngressKind(e) {
   if (!e) return "ungated";
   if (e.kind === "peer")
     return "hostInjected" in e && e.hostInjected === !0
@@ -342,7 +342,7 @@ function uqe(e) {
   return "ungated";
 }
 function isCrossSessionIngress({ ingressOrigin: e, inboundOrigin: o, envelopePeer: s = !1 }) {
-  return s || (uqe(e) !== "ungated" && !j(e)) || o === MCP_SEND_MESSAGE_ORIGIN;
+  return s || (getIngressKind(e) !== "ungated" && !j(e)) || o === MCP_SEND_MESSAGE_ORIGIN;
 }
 function j(e) {
   return (
@@ -354,7 +354,7 @@ function j(e) {
   );
 }
 function gateInboundMessageByOrigin(e, o) {
-  switch (uqe(e)) {
+  switch (getIngressKind(e)) {
     case "peer":
       return gatePeerInboundMessage(o);
     case "host-injected":
@@ -366,7 +366,7 @@ function gateInboundMessageByOrigin(e, o) {
   }
 }
 function getIngressRefuseCause(e) {
-  switch (uqe(e)) {
+  switch (getIngressKind(e)) {
     case "peer":
       return getSessionRefuseCause();
     case "coordinator":
@@ -395,20 +395,20 @@ function gateHostInjectedInboundMessage(e) {
 }
 function logInboundRefused(e, o) {
   if ((publishInboundAvailability(), o === "kill-switch")) {
-    (n(
+    (logForDebugging(
       `[cross-session-inbound] refused inbound peer message \u2014 cross-session messaging disabled (kill switch) (${e})`,
     ),
       logFeatureSad("peer_inbound_gate", "kill_switch"));
     return;
   }
-  (n(`[cross-session-inbound] refused inbound peer message (${e})`),
+  (logForDebugging(`[cross-session-inbound] refused inbound peer message (${e})`),
     logFeatureSad("peer_inbound_gate", "refused"));
 }
 function reapplyInboundPolicy(e) {
   return (publishInboundAvailability(), D(e));
 }
 function M(e) {
-  switch (uqe(e.origin)) {
+  switch (getIngressKind(e.origin)) {
     case "coordinator":
       return B();
     case "host-injected":
@@ -439,7 +439,7 @@ function D(e) {
   ((s.length = 0), s.push(...t));
   for (let [r, u] of a) (o.announced.set(r, u), o.onPeerHeld?.(r, s.length, u));
   if (d > 0)
-    n(
+    logForDebugging(
       h === d
         ? `[cross-session-inbound] gate off \u2014 dropped ${d} parked peer message(s) (cross-session messaging disabled)`
         : `[cross-session-inbound] dropped ${d} held peer message(s) \u2014 policy is now refuse`,
@@ -450,7 +450,7 @@ function D(e) {
     if (A(r)) (c.push(r), logFeatureOk("peer_inbound_gate"));
     else o.onPeerHoldDropped?.(r);
   if (
-    (n(
+    (logForDebugging(
       `[cross-session-inbound] released ${i.length} held peer message(s) (${e}) \u2014 ${c.length} admitted by the ingress guard; ${s.length} still held`,
     ),
     c.length > 0)
@@ -470,7 +470,7 @@ function resolveHeldPeerMessage(e, o) {
     if (d.policy === "refuse") {
       let c = d.refuseCause === "kill-switch";
       return (
-        n(
+        logForDebugging(
           `[cross-session-inbound] held peer message approved but policy is now refuse (${c ? "kill switch" : "opt-out"}) \u2014 dropped`,
         ),
         s.sendPeerReceipt?.(i, "refused"),
@@ -480,14 +480,14 @@ function resolveHeldPeerMessage(e, o) {
     }
     if (!A(i))
       return (
-        n(
+        logForDebugging(
           "[cross-session-inbound] held peer message approved but DROPPED by the ingress guard on release",
         ),
         s.onPeerHoldDropped?.(i),
         "dropped-by-guard"
       );
     return (
-      n(
+      logForDebugging(
         "[cross-session-inbound] held peer message APPROVED \u2014 released to queue",
       ),
       logFeatureOk("peer_inbound_gate"),
@@ -496,7 +496,7 @@ function resolveHeldPeerMessage(e, o) {
       "delivered"
     );
   }
-  n(
+  logForDebugging(
     `[cross-session-inbound] held peer message ${o === "deny" ? "DENIED" : "EXPIRED/CANCELLED"} \u2014 dropped with denial receipt`,
   );
   let a = o === "deny" ? "denied" : "expired";
@@ -514,7 +514,7 @@ function f(e) {
         ? e.origin.from
         : "unknown",
     s = typeof e.value === "string" ? e.value : "[blocks]";
-  return `from=${Nu(o)} "${Nu(s, 60)}"`;
+  return `from=${formatRedactedPreview(o)} "${formatRedactedPreview(s, 60)}"`;
 }
 export {
   isHarborKiteModeEmitEnabled,
@@ -535,7 +535,7 @@ export {
   getPeerInboundPolicy,
   needsPeerModeVerdict,
   gatePeerInboundMessage,
-  uqe,
+  getIngressKind,
   isCrossSessionIngress,
   gateInboundMessageByOrigin,
   getIngressRefuseCause,

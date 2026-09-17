@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 230 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
@@ -22,10 +22,10 @@ import { BASH_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SETTINGS_SOURCE_ORDER, describeSettingsSourceShort, HOOK_SETTINGS_SOURCE_ORDER, getRelativeSettingsFilePathForSource } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { parseSettingsFile, getSettingsFilePathForSource, getSettingsForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema, AUTO_MODE_TRUSTED_SOURCES } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionRule, formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
-import { gi, o, t, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { isFullscreen, Box, Text, Newline } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -55,7 +55,7 @@ import {
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { applyPermissionUpdate, persistPermissionUpdate, getAlwaysAllowRules, getAlwaysDenyRules, getAlwaysAskRules } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { vve, Rm, Us, Qk, Oo, ZJe } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { MAX_DISPLAY_TEXT_UNITS, MAX_DISPLAY_PAYLOAD_UNITS, prepareDisplayText, toUniqueDisplayLabels, replaceLineBreaks, formatValueListForDisplay } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -87,7 +87,7 @@ import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import "../Git-Worktree/chunk-33y3h2sy.js";
+import "../Git-Worktree/git-operations.js";
 import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { s, se, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -204,7 +204,7 @@ function li(eg) {
   else fn = fo[7];
   let td;
   if (fo[8] === MEMO_CACHE_SENTINEL)
-    ((td = e(t, {
+    ((td = e(Text, {
       dimColor: !0,
       wrap: "wrap-trim",
       children:
@@ -218,7 +218,7 @@ function li(eg) {
   else od = fo[9];
   let nd;
   if (fo[10] === MEMO_CACHE_SENTINEL)
-    ((nd = r(o, {
+    ((nd = r(Box, {
       marginTop: 1,
       flexDirection: "column",
       children: [
@@ -251,7 +251,7 @@ function ii(ng) {
   if (At.kind === "unreadable") {
     let Uo;
     if (Zr[0] !== At.reason)
-      ((Uo = r(t, {
+      ((Uo = r(Text, {
         color: "error",
         children: ["Couldn't read the cloud session's rules: ", At.reason],
       })),
@@ -265,7 +265,7 @@ function ii(ng) {
   if (Zr[2] !== At.skippedFiles)
     ((Uo =
       At.skippedFiles > 0 &&
-      r(t, {
+      r(Text, {
         color: "warning",
         wrap: "wrap-trim",
         children: [
@@ -285,7 +285,7 @@ function ii(ng) {
   if (Zr[4] !== Il || Zr[5] !== Ll || Zr[6] !== ei)
     ((ti =
       ei.length === 0
-        ? e(t, { dimColor: !0, children: Il })
+        ? e(Text, { dimColor: !0, children: Il })
         : e(si, { rules: ei, onExit: Ll })),
       (Zr[4] = Il),
       (Zr[5] = Ll),
@@ -294,7 +294,7 @@ function ii(ng) {
   else ti = Zr[7];
   let id;
   if (Zr[8] !== Uo || Zr[9] !== ti)
-    ((id = r(o, { flexDirection: "column", children: [Uo, ti] })),
+    ((id = r(Box, { flexDirection: "column", children: [Uo, ti] })),
       (Zr[8] = Uo),
       (Zr[9] = ti),
       (Zr[10] = id));
@@ -422,12 +422,12 @@ function go(Rg) {
           else We = Io[1];
           let po;
           if (Io[2] !== We)
-            ((po = r(t, {
+            ((po = r(Text, {
               dimColor: !0,
               children: [
                 "Any Bash command starting with",
                 " ",
-                e(t, { bold: !0, children: We }),
+                e(Text, { bold: !0, children: We }),
               ],
             })),
               (Io[2] = We),
@@ -441,12 +441,12 @@ function go(Rg) {
           else We = Io[5];
           let po;
           if (Io[6] !== We)
-            ((po = r(t, {
+            ((po = r(Text, {
               dimColor: !0,
               children: [
                 "The Bash command",
                 " ",
-                e(t, { bold: !0, children: We }),
+                e(Text, { bold: !0, children: We }),
               ],
             })),
               (Io[6] = We),
@@ -457,7 +457,7 @@ function go(Rg) {
       } else {
         let We;
         if (Io[8] === MEMO_CACHE_SENTINEL)
-          ((We = e(t, { dimColor: !0, children: "Any Bash command" })),
+          ((We = e(Text, { dimColor: !0, children: "Any Bash command" })),
             (Io[8] = We));
         else We = Io[8];
         return We;
@@ -471,12 +471,12 @@ function go(Rg) {
         else We = Io[10];
         let po;
         if (Io[11] !== We)
-          ((po = r(t, {
+          ((po = r(Text, {
             dimColor: !0,
             children: [
               "Any use of the",
               " ",
-              e(t, { bold: !0, children: We }),
+              e(Text, { bold: !0, children: We }),
               " tool",
             ],
           })),
@@ -492,11 +492,11 @@ function go(Rg) {
 }
 function Rd(sa) {
   return r(
-    o,
+    Box,
     {
       flexDirection: "column",
       children: [
-        e(t, { bold: !0, children: formatPermissionRule(sa) }),
+        e(Text, { bold: !0, children: formatPermissionRule(sa) }),
         e(go, { ruleValue: sa }),
       ],
     },
@@ -604,7 +604,7 @@ function tr(Ig) {
   else ui = Gt[12];
   let di;
   if (Gt[13] !== ui)
-    ((di = e(o, { flexDirection: "column", paddingX: 2, children: ui })),
+    ((di = e(Box, { flexDirection: "column", paddingX: 2, children: ui })),
       (Gt[13] = ui),
       (Gt[14] = di));
   else di = Gt[14];
@@ -614,7 +614,7 @@ function tr(Ig) {
       : "Where should these rules be saved?";
   let mi;
   if (Gt[15] !== ia)
-    ((mi = e(t, { children: ia })), (Gt[15] = ia), (Gt[16] = mi));
+    ((mi = e(Text, { children: ia })), (Gt[15] = ia), (Gt[16] = mi));
   else mi = Gt[16];
   let fi;
   if (Gt[17] !== na)
@@ -622,7 +622,7 @@ function tr(Ig) {
   else fi = Gt[18];
   let pi;
   if (Gt[19] !== mi || Gt[20] !== fi)
-    ((pi = r(o, { flexDirection: "column", marginY: 1, children: [mi, fi] })),
+    ((pi = r(Box, { flexDirection: "column", marginY: 1, children: [mi, fi] })),
       (Gt[19] = mi),
       (Gt[20] = fi),
       (Gt[21] = pi));
@@ -682,18 +682,18 @@ function or(ly) {
       (yo[4] = Ed));
   else Ed = yo[4];
   let Ad;
-  if (yo[5] === MEMO_CACHE_SENTINEL) ((Ad = e(zb, {})), (yo[5] = Ad));
+  if (yo[5] === MEMO_CACHE_SENTINEL) ((Ad = e(Newline, {})), (yo[5] = Ad));
   else Ad = yo[5];
   let Pd, kd;
   if (yo[6] === MEMO_CACHE_SENTINEL)
-    ((Pd = e(t, { bold: !0, children: formatPermissionRule({ toolName: WebFetchTool.name }) })),
-      (kd = e(t, { bold: !1, children: " or " })),
+    ((Pd = e(Text, { bold: !0, children: formatPermissionRule({ toolName: WebFetchTool.name }) })),
+      (kd = e(Text, { bold: !1, children: " or " })),
       (yo[6] = Pd),
       (yo[7] = kd));
   else ((Pd = yo[6]), (kd = yo[7]));
   let Td;
   if (yo[8] === MEMO_CACHE_SENTINEL)
-    ((Td = r(t, {
+    ((Td = r(Text, {
       children: [
         "Permission rules are a tool name, optionally followed by a specifier in parentheses.",
         Ad,
@@ -701,7 +701,7 @@ function or(ly) {
         " ",
         Pd,
         kd,
-        e(t, {
+        e(Text, {
           bold: !0,
           children: formatPermissionRule({ toolName: BashTool.name, ruleContent: "ls *" }),
         }),
@@ -711,11 +711,11 @@ function or(ly) {
   else Td = yo[8];
   let vi;
   if (yo[9] !== ua || yo[10] !== ma || yo[11] !== ca || yo[12] !== da)
-    ((vi = r(o, {
+    ((vi = r(Box, {
       flexDirection: "column",
       children: [
         Td,
-        e(o, {
+        e(Box, {
           borderDimColor: !0,
           borderStyle: "round",
           marginY: 1,
@@ -777,7 +777,7 @@ function em(Ly) {
 }
 function tm(Hd) {
   return Hd.reason
-    ? Oo(Us(Hd.reason).text).replace(/\s+/g, " ").trim()
+    ? replaceLineBreaks(prepareDisplayText(Hd.reason).text).replace(/\s+/g, " ").trim()
     : void 0;
 }
 function ur(Ey) {
@@ -819,7 +819,7 @@ function ur(Ey) {
   E(Fd, Bd);
   let Od;
   if (Je[10] !== ct)
-    ((Od = ZJe(ct.map(Gd), { maxUnits: Rm })), (Je[10] = ct), (Je[11] = Od));
+    ((Od = formatValueListForDisplay(ct.map(Gd), { maxUnits: MAX_DISPLAY_PAYLOAD_UNITS })), (Je[10] = ct), (Je[11] = Od));
   else Od = Je[11];
   let yn = Od,
     Nd;
@@ -899,7 +899,7 @@ function ur(Ey) {
   if (ct.length === 0) {
     let lr;
     if (Je[25] === MEMO_CACHE_SENTINEL)
-      ((lr = e(t, {
+      ((lr = e(Text, {
         dimColor: !0,
         children:
           "No recent denials. Commands denied by the auto mode classifier will appear here.",
@@ -923,11 +923,11 @@ function ur(Ey) {
         let By = Jt.has(cr) ? " (retry)" : "";
         let Yd = sr[cr];
         return {
-          label: r(t, {
+          label: r(Text, {
             children: [
               e(StatusIndicator, { status: Fy ? "success" : "error", withSpace: !0 }),
               ir[cr],
-              e(t, { dimColor: !0, children: By }),
+              e(Text, { dimColor: !0, children: By }),
             ],
           }),
           value: String(cr),
@@ -951,7 +951,7 @@ function ur(Ey) {
   let Ei = lr,
     ar;
   if (Je[37] === MEMO_CACHE_SENTINEL)
-    ((ar = e(t, {
+    ((ar = e(Text, {
       children: "Commands recently denied by the auto mode classifier.",
     })),
       (Je[37] = ar));
@@ -965,7 +965,7 @@ function ur(Ey) {
     Je[41] !== Ei ||
     Je[42] !== ya
   )
-    ((Ai = e(o, {
+    ((Ai = e(Box, {
       marginTop: 1,
       children: e(ve, {
         options: Ei,
@@ -985,7 +985,7 @@ function ur(Ey) {
   else Ai = Je[43];
   let zd;
   if (Je[44] !== rr || Je[45] !== Ai)
-    ((zd = r(o, {
+    ((zd = r(Box, {
       flexDirection: "column",
       onKeyDown: rr,
       children: [ar, Ai],
@@ -1024,17 +1024,17 @@ function mr(qy) {
   let Ra = om,
     Pi;
   if (dr[5] !== vn)
-    ((Pi = e(o, {
+    ((Pi = e(Box, {
       marginX: 2,
       flexDirection: "column",
-      children: e(t, { bold: !0, children: vn }),
+      children: e(Text, { bold: !0, children: vn }),
     })),
       (dr[5] = vn),
       (dr[6] = Pi));
   else Pi = dr[6];
   let nm;
   if (dr[7] === MEMO_CACHE_SENTINEL)
-    ((nm = e(t, {
+    ((nm = e(Text, {
       children:
         "Claude Code will no longer have access to files in this directory.",
     })),
@@ -1131,7 +1131,7 @@ function fr(cb) {
   let $a = um,
     dm;
   if (kt[12] !== Wo) {
-    let db = Qk(Wo.map(bm), vm);
+    let db = toUniqueDisplayLabels(Wo.map(bm), vm);
     let mm = Wo.map((mb, fb) => ({ label: db[fb], value: mb.path }));
     dm =
       (mm.push({ label: `Add directory${figures.ellipsis}`, value: "add-directory" }),
@@ -1145,16 +1145,16 @@ function fr(cb) {
   const Da = `-  ${fm}`;
   let Di;
   if (kt[16] !== Da)
-    ((Di = e(t, { children: Da })), (kt[16] = Da), (kt[17] = Di));
+    ((Di = e(Text, { children: Da })), (kt[16] = Da), (kt[17] = Di));
   else Di = kt[17];
   let pm;
   if (kt[18] === MEMO_CACHE_SENTINEL)
-    ((pm = e(t, { dimColor: !0, children: "(Original working directory)" })),
+    ((pm = e(Text, { dimColor: !0, children: "(Original working directory)" })),
       (kt[18] = pm));
   else pm = kt[18];
   let _i;
   if (kt[19] !== Di)
-    ((_i = r(o, {
+    ((_i = r(Box, {
       flexDirection: "row",
       marginTop: 1,
       marginLeft: 2,
@@ -1192,7 +1192,7 @@ function fr(cb) {
   else Mi = kt[27];
   let hm;
   if (kt[28] !== _i || kt[29] !== Mi)
-    ((hm = r(o, {
+    ((hm = r(Box, {
       flexDirection: "column",
       marginBottom: 1,
       children: [_i, Mi],
@@ -1556,7 +1556,7 @@ function rf(fv) {
   return fv.text;
 }
 function sf(pv) {
-  return Oo(Us(pv).text);
+  return replaceLineBreaks(prepareDisplayText(pv).text);
 }
 function lf(hv) {
   return hv.section === "environment";
@@ -1564,11 +1564,11 @@ function lf(hv) {
 function af(ec) {
   return {
     tag: ec.legacy ? "legacy" : Rr(ec.source),
-    text: Oo(Us(ec.text).text),
+    text: replaceLineBreaks(prepareDisplayText(ec.text).text),
   };
 }
 function cf(gv) {
-  return { tag: null, text: Oo(Us(gv).text) };
+  return { tag: null, text: replaceLineBreaks(prepareDisplayText(gv).text) };
 }
 function uf(yv) {
   return yv.source;
@@ -1583,12 +1583,12 @@ function ff(wr) {
   let tc = me(wr.section);
   let Zm = wr.legacy ? "legacy" : Rr(wr.source);
   if (!Zm) {
-    return e(t, { color: ze(wr.section), children: tc.padEnd(Pe) });
+    return e(Text, { color: ze(wr.section), children: tc.padEnd(Pe) });
   }
   return r(N, {
     children: [
-      e(t, { color: ze(wr.section), children: tc }),
-      e(t, { dimColor: !0, children: ` \xB7 ${Zm}`.padEnd(Pe - tc.length) }),
+      e(Text, { color: ze(wr.section), children: tc }),
+      e(Text, { dimColor: !0, children: ` \xB7 ${Zm}`.padEnd(Pe - tc.length) }),
     ],
   });
 }
@@ -1668,7 +1668,7 @@ function tf(i, u) {
     a = "",
     g = 0;
   for (let { segment: w } of getGraphemeSegmenter().segment(i)) {
-    let S = te(w);
+    let S = getStringWidth(w);
     if (g + S > u && a.length > 0) (f.push(a), (a = ""), (g = 0));
     ((a += w), (g += S));
   }
@@ -1677,11 +1677,11 @@ function tf(i, u) {
 }
 var oc = 5;
 function Cr(i, u) {
-  if (te(i) <= u) return i;
+  if (getStringWidth(i) <= u) return i;
   let f = "",
     a = 0;
   for (let { segment: g } of getGraphemeSegmenter().segment(i)) {
-    let w = te(g);
+    let w = getStringWidth(g);
     if (a + w > u - 1) break;
     ((f += g), (a += w));
   }
@@ -1695,9 +1695,9 @@ function nc(i, u) {
       if (a.length > 0) (f.push(a), (a = ""), (g = 0));
     };
   for (let S of i.split(" ")) {
-    let P = te(S) > u ? tf(S, u) : [S];
+    let P = getStringWidth(S) > u ? tf(S, u) : [S];
     for (let B of P) {
-      let I = te(B);
+      let I = getStringWidth(B);
       if (g === 0) ((a = B), (g = I));
       else if (g + 1 + I <= u) ((a = `${a} ${B}`), (g += 1 + I));
       else (w(), (a = B), (g = I));
@@ -1786,7 +1786,7 @@ function xr(Vb) {
   ) {
     let Om = Tt.toLowerCase();
     let zi = Nt(An).filter((Hb) => !Tt || Hb.text.toLowerCase().includes(Om));
-    let Nm = Qk(zi.map(rf), sf);
+    let Nm = toUniqueDisplayLabels(zi.map(rf), sf);
     let hr = wo ? Nt(Yo).filter(lf) : [];
     let Um = hr.length > 0;
     let Ka = Um ? hr.map(af) : Yb.map(cf);
@@ -1843,11 +1843,11 @@ ${" ".repeat(Pe)}\u2026 (+${Ga.length - 3} lines)`
     else Pn = dt[27];
     let Vm = Pn;
     let zm = (Qa, Ym) => ({
-      label: r(t, {
+      label: r(Text, {
         children: [
           ov(Qa),
           Qa.structure
-            ? e(t, { dimColor: !0, children: Vm(Nm[Ym] ?? "") })
+            ? e(Text, { dimColor: !0, children: Vm(Nm[Ym] ?? "") })
             : Vm(Nm[Ym] ?? ""),
         ],
       }),
@@ -1858,16 +1858,16 @@ ${" ".repeat(Pe)}\u2026 (+${Ga.length - 3} lines)`
       let Hm = Ka.slice(0, oc);
       let Ja = Ka.length - Hm.length;
       return {
-        label: r(t, {
+        label: r(Text, {
           children: [
-            e(t, {
+            e(Text, {
               color: ze("environment"),
               children: "Environment".padEnd(Pe),
             }),
-            e(t, { dimColor: !0, children: Cr(Qb, yr) }),
+            e(Text, { dimColor: !0, children: Cr(Qb, yr) }),
             Hm.map((Km, iv) =>
               e(
-                t,
+                Text,
                 {
                   dimColor: !0,
                   children: `
@@ -1877,7 +1877,7 @@ ${rv(Km.tag)}${Cr(Km.text, yr)}`,
               ),
             ),
             Ja > 0
-              ? e(t, {
+              ? e(Text, {
                   dimColor: !0,
                   children: `
 ${" ".repeat(Pe)}\u2026 (+${Ja} more ${Ja === 1 ? "line" : "lines"})`,
@@ -1896,24 +1896,24 @@ ${" ".repeat(Pe)}\u2026 (+${Ja} more ${Ja === 1 ? "line" : "lines"})`,
         let lv = pr[Zt] ?? 0;
         if (Tn.control === "internalTemplate") {
           return {
-            label: r(t, {
+            label: r(Text, {
               children: [
-                e(t, { color: ze(Zt), children: me(Zt).padEnd(Pe) }),
+                e(Text, { color: ze(Zt), children: me(Zt).padEnd(Pe) }),
                 Zt === "environment"
                   ? "Built-in environment"
                   : "Built-in rules",
-                e(t, { dimColor: !0, children: "" }),
+                e(Text, { dimColor: !0, children: "" }),
               ],
             }),
             value: `builtins:${Zt}`,
           };
         }
         return {
-          label: r(t, {
+          label: r(Text, {
             children: [
-              e(t, { color: ze(Zt), children: me(Zt).padEnd(Pe) }),
+              e(Text, { color: ze(Zt), children: me(Zt).padEnd(Pe) }),
               `${sv} Built-in rules`,
-              r(t, {
+              r(Text, {
                 dimColor: !0,
                 children: [
                   ` \xB7 ${lv}${Tn.enabled ? "" : " \xB7 off"}`,
@@ -1966,7 +1966,7 @@ ${" ".repeat(Pe)}\u2026 (+${Ja} more ${Ja === 1 ? "line" : "lines"})`,
   let Ki = Bm,
     gr;
   if (dt[31] === MEMO_CACHE_SENTINEL)
-    ((gr = e(t, {
+    ((gr = e(Text, {
       wrap: "wrap-trim",
       children:
         "Extra rules for the auto mode classifier. Rules are plain sentences; new rules are saved to your user settings.",
@@ -1982,7 +1982,7 @@ ${" ".repeat(Pe)}\u2026 (+${Ja} more ${Ja === 1 ? "line" : "lines"})`,
     dt[35] !== Pn ||
     dt[36] !== xn
   )
-    ((zo = e(o, {
+    ((zo = e(Box, {
       marginBottom: 1,
       marginTop: 1,
       flexDirection: "column",
@@ -2064,7 +2064,7 @@ ${" ".repeat(Pe)}\u2026 (+${Ja} more ${Ja === 1 ? "line" : "lines"})`,
   else Xi = dt[51];
   let Qm;
   if (dt[52] !== zo || dt[53] !== Xi)
-    ((Qm = r(o, { flexDirection: "column", children: [gr, zo, Xi] })),
+    ((Qm = r(Box, { flexDirection: "column", children: [gr, zo, Xi] })),
       (dt[52] = zo),
       (dt[53] = Xi),
       (dt[54] = Qm));
@@ -2134,7 +2134,7 @@ function Wt(Zv) {
   let Pr = _(13),
     { entry: Ar, onCancel: Mn } = Zv,
     [Qi, uc] = Un(Ar.section);
-  if (Ar.text.length <= vve) {
+  if (Ar.text.length <= MAX_DISPLAY_TEXT_UNITS) {
     return null;
   }
   let vf;
@@ -2169,7 +2169,7 @@ function Wt(Zv) {
   let es;
   if (Pr[8] !== Qi)
     ((es =
-      Qi !== null && e(t, { dimColor: !0, wrap: "wrap-trim", children: Qi })),
+      Qi !== null && e(Text, { dimColor: !0, wrap: "wrap-trim", children: Qi })),
       (Pr[8] = Qi),
       (Pr[9] = es));
   else es = Pr[9];
@@ -2186,12 +2186,12 @@ function He(tw) {
   let Lt = _(25),
     { entry: ht } = tw,
     Rf;
-  if (Lt[0] !== ht.text) ((Rf = Us(ht.text)), (Lt[0] = ht.text), (Lt[1] = Rf));
+  if (Lt[0] !== ht.text) ((Rf = prepareDisplayText(ht.text)), (Lt[0] = ht.text), (Lt[1] = Rf));
   else Rf = Lt[1];
   let Fn = Rf,
     ts;
   if (Lt[2] !== Fn.text)
-    ((ts = e(t, { bold: !0, wrap: "wrap-trim", children: Fn.text })),
+    ((ts = e(Text, { bold: !0, wrap: "wrap-trim", children: Fn.text })),
       (Lt[2] = Fn.text),
       (Lt[3] = ts));
   else ts = Lt[3];
@@ -2212,7 +2212,7 @@ function He(tw) {
   else rs = Lt[10];
   let is;
   if (Lt[11] !== ns || Lt[12] !== rs)
-    ((is = e(t, { color: ns, children: rs })),
+    ((is = e(Text, { color: ns, children: rs })),
       (Lt[11] = ns),
       (Lt[12] = rs),
       (Lt[13] = is));
@@ -2224,7 +2224,7 @@ function He(tw) {
   else ls = Lt[15];
   let as;
   if (Lt[16] !== dc || Lt[17] !== ls)
-    ((as = r(t, {
+    ((as = r(Text, {
       dimColor: !0,
       children: [" ", dc, " for the auto mode classifier \xB7 From ", ls],
     })),
@@ -2234,14 +2234,14 @@ function He(tw) {
   else as = Lt[18];
   let cs;
   if (Lt[19] !== is || Lt[20] !== as)
-    ((cs = r(t, { children: [is, as] })),
+    ((cs = r(Text, { children: [is, as] })),
       (Lt[19] = is),
       (Lt[20] = as),
       (Lt[21] = cs));
   else cs = Lt[21];
   let Sf;
   if (Lt[22] !== cs || Lt[23] !== os)
-    ((Sf = r(o, { flexDirection: "column", marginX: 2, children: [os, cs] })),
+    ((Sf = r(Box, { flexDirection: "column", marginX: 2, children: [os, cs] })),
       (Lt[22] = cs),
       (Lt[23] = os),
       (Lt[24] = Sf));
@@ -2257,7 +2257,7 @@ function _r(ow) {
   useKeybinding("confirm:no", he, Cf);
   let xf;
   if (Z[1] === MEMO_CACHE_SENTINEL)
-    ((xf = e(o, {
+    ((xf = e(Box, {
       marginLeft: 3,
       children: e(InputGuide, {
         children: e(KeybindingHint, { chord: "escape", action: "cancel" }),
@@ -2278,7 +2278,7 @@ function _r(ow) {
           " and cannot be modified here.";
     let ae;
     if (Z[4] !== xe)
-      ((ae = r(t, {
+      ((ae = r(Text, {
         italic: !0,
         children: [
           "",
@@ -2333,7 +2333,7 @@ function _r(ow) {
     else xe = Z[16];
     let ae;
     if (Z[17] !== xe)
-      ((ae = r(t, {
+      ((ae = r(Text, {
         italic: !0,
         children: [
           "A section header that organizes the environment entries below it; it renders into the classifier prompt as written.",
@@ -2376,7 +2376,7 @@ function _r(ow) {
     else ke = Z[27];
     let xe;
     if (Z[28] === MEMO_CACHE_SENTINEL)
-      ((xe = r(t, {
+      ((xe = r(Text, {
         italic: !0,
         children: [
           "This rule is configured by managed settings and cannot be modified.",
@@ -2418,7 +2418,7 @@ function _r(ow) {
     else ke = Z[36];
     let xe;
     if (Z[37] === MEMO_CACHE_SENTINEL)
-      ((xe = e(t, {
+      ((xe = e(Text, {
         italic: !0,
         children:
           "This rule comes from a read-only source (the --settings flag) and cannot be modified here.",
@@ -2464,7 +2464,7 @@ function _r(ow) {
     else xe = Z[48];
     let ae;
     if (Z[49] !== us)
-      ((ae = r(t, {
+      ((ae = r(Text, {
         italic: !0,
         children: [
           "This rule cannot be edited here: ",
@@ -2528,7 +2528,7 @@ function _r(ow) {
   if (Z[64] !== j.section)
     ((ae =
       j.section === "environment" &&
-      r(t, {
+      r(Text, {
         italic: !0,
         children: [
           "Environment entries describe this machine and project for the classifier.",
@@ -2592,7 +2592,7 @@ function wc(i) {
 function Mr(rw) {
   let Te = _(83),
     { section: jt, state: ge, onToggle: fc, onCancel: Ho } = rw,
-    pc = gi(),
+    pc = isFullscreen(),
     Af;
   if (Te[0] === MEMO_CACHE_SENTINEL) ((Af = { context: "Settings" }), (Te[0] = Af));
   else Af = Te[0];
@@ -2636,7 +2636,7 @@ function Mr(rw) {
     else Xo = Te[22];
     let So;
     if (Te[23] !== to || Te[24] !== Xo)
-      ((So = e(t, { color: to, children: Xo })),
+      ((So = e(Text, { color: to, children: Xo })),
         (Te[23] = to),
         (Te[24] = Xo),
         (Te[25] = So));
@@ -2644,17 +2644,17 @@ function Mr(rw) {
     const Co = `${Ro.length} built-in ${Ro.length === 1 ? "rule" : "rules"} \xB7 ${ge.enabled ? "in effect" : "switched off"}`;
     let oo;
     if (Te[26] !== Co)
-      ((oo = r(t, { dimColor: !0, children: [" ", "\xB7", " ", Co] })),
+      ((oo = r(Text, { dimColor: !0, children: [" ", "\xB7", " ", Co] })),
         (Te[26] = Co),
         (Te[27] = oo));
     else oo = Te[27];
     if (Te[28] !== So || Te[29] !== oo)
-      ((Tr = r(t, { children: [So, oo] })),
+      ((Tr = r(Text, { children: [So, oo] })),
         (Te[28] = So),
         (Te[29] = oo),
         (Te[30] = Tr));
     else Tr = Te[30];
-    ms = o;
+    ms = Box;
     gs = "column";
     ys = 2;
     bs = 1;
@@ -2708,7 +2708,7 @@ function Mr(rw) {
   if (Te[31] !== Rt || Te[32] !== ge.enabled)
     ((Ko = Rt.map((sw, lw) =>
       r(
-        t,
+        Text,
         {
           dimColor: !0,
           strikethrough: !ge.enabled,
@@ -2726,7 +2726,7 @@ function Mr(rw) {
   if (Te[34] !== $r)
     ((to =
       $r > 0 &&
-      r(t, {
+      r(Text, {
         dimColor: !0,
         italic: !0,
         children: [
@@ -2776,7 +2776,7 @@ function Mr(rw) {
   if (Te[46] !== ge.control)
     ((oo =
       ge.control === "empty" &&
-      e(t, {
+      e(Text, {
         italic: !0,
         children:
           "This section has no configured rules, so the built-ins apply. Add a rule to customize it.",
@@ -2788,7 +2788,7 @@ function Mr(rw) {
   if (Te[48] !== ge.control || Te[49] !== ge.enabled || Te[50] !== ge.source)
     ((xs =
       ge.control === "otherSource" &&
-      e(t, {
+      e(Text, {
         italic: !0,
         children: ge.enabled
           ? `Kept on by ${Le(ge.source ?? "policySettings")} \u2014 it cannot be switched off here.`
@@ -2857,7 +2857,7 @@ function Mr(rw) {
   let Ts;
   if (Te[68] !== ds)
     ((Ts =
-      ds !== null && e(t, { dimColor: !0, wrap: "wrap-trim", children: ds })),
+      ds !== null && e(Text, { dimColor: !0, wrap: "wrap-trim", children: ds })),
       (Te[68] = ds),
       (Te[69] = Ts));
   else Ts = Te[69];
@@ -2903,7 +2903,7 @@ function Br(cw) {
   useKeybinding("confirm:no", Ds, _f);
   let Mf;
   if (no[1] === MEMO_CACHE_SENTINEL)
-    ((Mf = e(t, {
+    ((Mf = e(Text, {
       bold: !0,
       color: "error",
       children: "Delete auto mode rule?",
@@ -2924,7 +2924,7 @@ function Br(cw) {
   else Bs = no[6];
   let Os;
   if (no[7] !== Bs)
-    ((Os = r(t, {
+    ((Os = r(Text, {
       children: [
         "Are you sure you want to delete this rule? The classifier stops applying it on your next request.",
         Bs,
@@ -2942,7 +2942,7 @@ function Br(cw) {
   else Ns = no[11];
   let Is;
   if (no[12] !== Ms || no[13] !== Os || no[14] !== Ns)
-    ((Is = r(o, {
+    ((Is = r(Box, {
       flexDirection: "column",
       gap: 1,
       borderStyle: "round",
@@ -2958,7 +2958,7 @@ function Br(cw) {
   else Is = no[15];
   let Ff;
   if (no[16] === MEMO_CACHE_SENTINEL)
-    ((Ff = e(o, {
+    ((Ff = e(Box, {
       marginLeft: 3,
       children: e(InputGuide, {
         children: e(KeybindingHint, { chord: "escape", action: "cancel" }),
@@ -3063,10 +3063,10 @@ function Nr(Mw) {
     { onCancel: In, onPick: Rc } = Mw,
     jf;
   if (Ls[0] === MEMO_CACHE_SENTINEL)
-    ((jf = e(o, {
+    ((jf = e(Box, {
       flexDirection: "column",
       marginBottom: 1,
-      children: e(t, { children: "What kind of rule is this?" }),
+      children: e(Text, { children: "What kind of rule is this?" }),
     })),
       (Ls[0] = jf));
   else jf = Ls[0];
@@ -3150,15 +3150,15 @@ function Ur(Fw) {
       (gt[7] = Gf));
   else Gf = gt[7];
   let Qf;
-  if (gt[8] === MEMO_CACHE_SENTINEL) ((Qf = e(zb, {})), (gt[8] = Qf));
+  if (gt[8] === MEMO_CACHE_SENTINEL) ((Qf = e(Newline, {})), (gt[8] = Qf));
   else Qf = gt[8];
   let zs;
   if (gt[9] !== Tc)
-    ((zs = r(t, {
+    ((zs = r(Text, {
       children: [
         "Write the rule as a plain sentence. A short label up front helps, e.g.,",
         Qf,
-        e(t, { bold: !0, children: Tc }),
+        e(Text, { bold: !0, children: Tc }),
       ],
     })),
       (gt[9] = Tc),
@@ -3173,7 +3173,7 @@ function Ur(Fw) {
   else Jf = gt[11];
   let Hs;
   if (gt[12] !== Ec || gt[13] !== kc || gt[14] !== xc || gt[15] !== Ac)
-    ((Hs = e(o, {
+    ((Hs = e(Box, {
       borderDimColor: !0,
       borderStyle: "round",
       marginY: 1,
@@ -3202,13 +3202,13 @@ function Ur(Fw) {
   let qs;
   if (gt[17] !== Ys)
     ((qs =
-      Ys !== null && e(t, { color: "error", wrap: "wrap-trim", children: Ys })),
+      Ys !== null && e(Text, { color: "error", wrap: "wrap-trim", children: Ys })),
       (gt[17] = Ys),
       (gt[18] = qs));
   else qs = gt[18];
   let Zf;
   if (gt[19] === MEMO_CACHE_SENTINEL)
-    ((Zf = e(t, {
+    ((Zf = e(Text, {
       dimColor: !0,
       children: "Saved to your user settings file",
     })),
@@ -3216,7 +3216,7 @@ function Ur(Fw) {
   else Zf = gt[19];
   let Gs;
   if (gt[20] !== Hs || gt[21] !== qs || gt[22] !== zs)
-    ((Gs = r(o, { flexDirection: "column", children: [zs, Hs, qs, Zf] })),
+    ((Gs = r(Box, { flexDirection: "column", children: [zs, Hs, qs, Zf] })),
       (gt[20] = Hs),
       (gt[21] = qs),
       (gt[22] = zs),
@@ -3249,7 +3249,7 @@ function Rh() {
   return Re();
 }
 function Fh(bh) {
-  return [b(bh), bh];
+  return [jsonStringify(bh), bh];
 }
 function Sh(JS) {
   return new Map(JS.map(Fh));
@@ -3297,7 +3297,7 @@ function Dl(MR) {
   const Mc = `From ${mp}`;
   let fp;
   if (dp[2] !== Mc)
-    ((fp = e(t, { dimColor: !0, children: Mc })), (dp[2] = Mc), (dp[3] = fp));
+    ((fp = e(Text, { dimColor: !0, children: Mc })), (dp[2] = Mc), (dp[3] = fp));
   else fp = dp[3];
   return fp;
 }
@@ -3324,7 +3324,7 @@ function _l(FR) {
   else Zs = Xe[2];
   let el;
   if (Xe[3] !== Zs)
-    ((el = e(t, { bold: !0, children: Zs })), (Xe[3] = Zs), (Xe[4] = el));
+    ((el = e(Text, { bold: !0, children: Zs })), (Xe[3] = Zs), (Xe[4] = el));
   else el = Xe[4];
   let tl;
   if (Xe[5] !== Ke.ruleValue)
@@ -3337,7 +3337,7 @@ function _l(FR) {
   else ol = Xe[8];
   let hp;
   if (Xe[9] !== el || Xe[10] !== tl || Xe[11] !== ol)
-    ((hp = r(o, {
+    ((hp = r(Box, {
       flexDirection: "column",
       marginX: 2,
       children: [el, tl, ol],
@@ -3350,7 +3350,7 @@ function _l(FR) {
   let ro = hp,
     gp;
   if (Xe[13] === MEMO_CACHE_SENTINEL)
-    ((gp = e(o, {
+    ((gp = e(Box, {
       marginLeft: 3,
       children: e(InputGuide, {
         children: e(KeybindingHint, { chord: "escape", action: "cancel" }),
@@ -3362,7 +3362,7 @@ function _l(FR) {
   if (Ke.source === "policySettings") {
     let $t;
     if (Xe[14] === MEMO_CACHE_SENTINEL)
-      (($t = r(t, {
+      (($t = r(Text, {
         italic: !0,
         children: [
           "This rule is configured by managed settings and cannot be modified.",
@@ -3395,7 +3395,7 @@ function _l(FR) {
       Ke.source === "flagSettings" ? "the --settings flag" : "a slash command";
     let St;
     if (Xe[17] !== $t)
-      ((St = r(t, {
+      ((St = r(Text, {
         italic: !0,
         children: [
           "This rule comes from a read-only source (",
@@ -3430,7 +3430,7 @@ function _l(FR) {
   else $t = Xe[23];
   let St;
   if (Xe[24] !== $t)
-    ((St = r(t, {
+    ((St = r(Text, {
       bold: !0,
       color: "error",
       children: ["Delete ", $t, " tool?"],
@@ -3440,7 +3440,7 @@ function _l(FR) {
   else St = Xe[25];
   let Ir;
   if (Xe[26] === MEMO_CACHE_SENTINEL)
-    ((Ir = e(t, {
+    ((Ir = e(Text, {
       children: "Are you sure you want to delete this permission rule?",
     })),
       (Xe[26] = Ir));
@@ -3456,7 +3456,7 @@ function _l(FR) {
   if (Xe[30] !== ro || Xe[31] !== nl || Xe[32] !== St)
     ((yp = r(N, {
       children: [
-        r(o, {
+        r(Box, {
           flexDirection: "column",
           gap: 1,
           borderStyle: "round",
@@ -3525,7 +3525,7 @@ function Ml(BR) {
     Lr[12] !== zc ||
     Lr[13] !== Vc
   )
-    ((ll = e(o, {
+    ((ll = e(Box, {
       marginBottom: 1,
       flexDirection: "column",
       children: e(SearchInput, {
@@ -3575,7 +3575,7 @@ function Ml(BR) {
   else al = Lr[22];
   let Sp;
   if (Lr[23] !== ll || Lr[24] !== al)
-    ((Sp = r(o, { flexDirection: "column", children: [ll, al] })),
+    ((Sp = r(Box, { flexDirection: "column", children: [ll, al] })),
       (Lr[23] = ll),
       (Lr[24] = al),
       (Lr[25] = Sp));
@@ -3608,7 +3608,7 @@ function To(Xc) {
   else Cp = Go[5];
   const Gc = Cp[io];
   let dl;
-  if (Go[6] !== Gc) ((dl = e(t, { children: Gc })), (Go[6] = Gc), (Go[7] = dl));
+  if (Go[6] !== Gc) ((dl = e(Text, { children: Gc })), (Go[6] = Gc), (Go[7] = dl));
   else dl = Go[7];
   let ml;
   if (Go[8] !== cl || Go[9] !== Qo.searchQuery || Go[10] !== io)
@@ -3632,7 +3632,7 @@ function To(Xc) {
   else pl = Go[18];
   let xp;
   if (Go[19] !== qc || Go[20] !== dl || Go[21] !== pl)
-    ((xp = r(o, {
+    ((xp = r(Box, {
       flexDirection: "column",
       flexShrink: qc,
       children: [dl, pl],
@@ -3750,7 +3750,7 @@ function Fl(NR) {
           hu.push({ ruleKey: Op, ruleString: Up });
         }
       }
-      let QR = Qk(hu.map(Ch), xh);
+      let QR = toUniqueDisplayLabels(hu.map(Ch), xh);
       for (const [JR, ZR] of hu.entries())
         pu.push({ label: QR[JR], value: ZR.ruleKey });
       return { options: pu, rulesByKey: Wr };
@@ -3909,7 +3909,7 @@ function Fl(NR) {
       if (Cu.length > 0 || hl.length > 0) {
         for (const gS of Cu) Zc(gS);
         let Vr = Cu.map(Ph);
-        let yS = ZJe(Vr, { maxUnits: Rm });
+        let yS = formatValueListForDisplay(Vr, { maxUnits: MAX_DISPLAY_PAYLOAD_UNITS });
         let bS = Vr.length > 0 ? [`Approved ${yS.map(kh).join(", ")}`] : [];
         xo(
           [...bS, ...hl].join(`
@@ -3950,7 +3950,7 @@ function Fl(NR) {
         return;
       }
       let { options: vS } = so(yt.ruleBehavior);
-      let wS = b(yt);
+      let wS = jsonStringify(yt);
       let El = vS.filter(Th).map($h);
       let Yr = El.indexOf(wS);
       let Eu;
@@ -4072,7 +4072,7 @@ function Fl(NR) {
             ]));
         })
         .catch((Pu) => {
-          (n(`auto mode env save failed: ${String(Pu)}`, { level: "error" }),
+          (logForDebugging(`auto mode env save failed: ${String(Pu)}`, { level: "error" }),
             zt(Re()),
             Yt(Ce()),
             Ge((TS) => [
@@ -4122,8 +4122,8 @@ function Fl(NR) {
   if (bt?.mode === "env-first-confirm") {
     let O, H;
     if (R[56] === MEMO_CACHE_SENTINEL)
-      ((O = e(t, { bold: !0, children: "Replace the built-in environment?" })),
-        (H = e(t, {
+      ((O = e(Text, { bold: !0, children: "Replace the built-in environment?" })),
+        (H = e(Text, {
           wrap: "wrap-trim",
           children:
             "Writing your own environment replaces the built-in default document \u2014 the classifier context that defines trusted hosts, sensitive targets, and repository scope. The editor starts from the full default text so you can edit rather than rewrite; deleting all your environment entries later restores the default.",
@@ -4140,7 +4140,7 @@ function Fl(NR) {
     else pe = R[60];
     let $e;
     if (R[61] !== Q)
-      (($e = r(o, {
+      (($e = r(Box, {
         flexDirection: "column",
         gap: 1,
         borderStyle: "round",
@@ -4158,7 +4158,7 @@ function Fl(NR) {
     else $e = R[62];
     let vt;
     if (R[63] === MEMO_CACHE_SENTINEL)
-      ((vt = e(o, {
+      ((vt = e(Box, {
         marginLeft: 3,
         children: e(InputGuide, {
           children: e(KeybindingHint, { chord: "escape", action: "cancel" }),
@@ -4176,7 +4176,7 @@ function Fl(NR) {
     let { problem: Tu, draftLines: $u, expected: Du, canReopen: _u } = bt;
     let O;
     if (R[66] !== Tu)
-      ((O = e(t, { color: "error", wrap: "wrap-trim", children: Tu })),
+      ((O = e(Text, { color: "error", wrap: "wrap-trim", children: Tu })),
         (R[66] = Tu),
         (R[67] = O));
     else O = R[67];
@@ -4265,18 +4265,18 @@ function Fl(NR) {
                 Yt(Ce()),
                 Ge((_S) => [
                   ..._S,
-                  `Updated auto mode ${Al} rule ${chalk.bold(Oo(Us(qn).text))}`,
+                  `Updated auto mode ${Al} rule ${chalk.bold(replaceLineBreaks(prepareDisplayText(qn).text))}`,
                 ]));
             })
             .catch((Mu) => {
-              (n(`auto mode rule update failed: ${String(Mu)}`, {
+              (logForDebugging(`auto mode rule update failed: ${String(Mu)}`, {
                 level: "error",
               }),
                 zt(Re()),
                 Yt(Ce()),
                 Ge((MS) => [
                   ...MS,
-                  `Could not update ${chalk.bold(Oo(Us(wt.text).text))} \u2014 ${Mu instanceof Error ? Mu.message : "the rule is unchanged"}`,
+                  `Could not update ${chalk.bold(replaceLineBreaks(prepareDisplayText(wt.text).text))} \u2014 ${Mu instanceof Error ? Mu.message : "the rule is unchanged"}`,
                 ]));
             });
         else
@@ -4286,18 +4286,18 @@ function Fl(NR) {
                 Yt(Ce()),
                 Ge((FS) => [
                   ...FS,
-                  `Added auto mode ${Al} rule ${chalk.bold(Oo(Us(qn).text))}`,
+                  `Added auto mode ${Al} rule ${chalk.bold(replaceLineBreaks(prepareDisplayText(qn).text))}`,
                 ]));
             })
             .catch((Fu) => {
-              (n(`auto mode rule add failed: ${String(Fu)}`, {
+              (logForDebugging(`auto mode rule add failed: ${String(Fu)}`, {
                 level: "error",
               }),
                 zt(Re()),
                 Yt(Ce()),
                 Ge((BS) => [
                   ...BS,
-                  `Could not add ${chalk.bold(Oo(Us(qn).text))} \u2014 ${Fu instanceof Error ? Fu.message : "nothing was saved"}`,
+                  `Could not add ${chalk.bold(replaceLineBreaks(prepareDisplayText(qn).text))} \u2014 ${Fu instanceof Error ? Fu.message : "nothing was saved"}`,
                 ]));
             });
         be(null);
@@ -4341,7 +4341,7 @@ function Fl(NR) {
               ]));
           })
           .catch((Ou) => {
-            (n(`auto mode builtins toggle failed: ${String(Ou)}`, {
+            (logForDebugging(`auto mode builtins toggle failed: ${String(Ou)}`, {
               level: "error",
             }),
               zt(Re()),
@@ -4425,18 +4425,18 @@ function Fl(NR) {
             (gl(mh ? Ut(mh) : void 0),
               Ge((jS) => [
                 ...jS,
-                `Deleted auto mode ${me(je.section).toLowerCase()} rule ${chalk.bold(Oo(Us(je.text).text))}`,
+                `Deleted auto mode ${me(je.section).toLowerCase()} rule ${chalk.bold(replaceLineBreaks(prepareDisplayText(je.text).text))}`,
               ]));
           })
           .catch((Iu) => {
-            (n(`auto mode rule delete failed: ${String(Iu)}`, {
+            (logForDebugging(`auto mode rule delete failed: ${String(Iu)}`, {
               level: "error",
             }),
               zt(Re()),
               Yt(Ce()),
               Ge((WS) => [
                 ...WS,
-                `Could not delete ${chalk.bold(Oo(Us(je.text).text))} \u2014 ${Iu instanceof Error ? Iu.message : "the rule is unchanged"}`,
+                `Could not delete ${chalk.bold(replaceLineBreaks(prepareDisplayText(je.text).text))} \u2014 ${Iu instanceof Error ? Iu.message : "the rule is unchanged"}`,
               ]));
           }),
           be(null));
@@ -4742,7 +4742,7 @@ function Fl(NR) {
   else ao = R[194];
   let zr;
   if (R[195] === MEMO_CACHE_SENTINEL)
-    ((zr = e(t, {
+    ((zr = e(Text, {
       wrap: "wrap-trim",
       children:
         "Claude Code can read files in the workspace, and make edits when auto-accept edits is on.",
@@ -4756,7 +4756,7 @@ function Fl(NR) {
       {
         id: "workspace",
         title: "Workspace",
-        children: r(o, {
+        children: r(Box, {
           flexDirection: "column",
           children: [
             zr,
@@ -4822,7 +4822,7 @@ function Fl(NR) {
   else kl = R[211];
   let Tl;
   if (R[212] !== Jo || R[213] !== jr || R[214] !== uu || R[215] !== nt)
-    ((Tl = e(o, {
+    ((Tl = e(Box, {
       marginTop: 1,
       children: e(InputGuide, {
         children: uu
@@ -4861,7 +4861,7 @@ function Fl(NR) {
   else $l = R[219];
   let yh;
   if (R[220] !== bu || R[221] !== yu || R[222] !== $l)
-    ((yh = e(o, {
+    ((yh = e(Box, {
       flexDirection: "column",
       onKeyDown: bu,
       onPaste: yu,

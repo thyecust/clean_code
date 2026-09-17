@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getClipboardCopyStrategy, probeLinuxClipboardTool, setClipboard } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { useClock } from "./use-clock.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
@@ -81,14 +81,14 @@ function CopyFeedbackHint(W) {
   if (k === "native") {
     let u;
     if (L[0] === MEMO_CACHE_SENTINEL)
-      ((u = e(t, { color: "success", children: "(Copied!)" })), (L[0] = u));
+      ((u = e(Text, { color: "success", children: "(Copied!)" })), (L[0] = u));
     else u = L[0];
     return u;
   }
   if (k === null) {
     let u;
     if (L[1] === MEMO_CACHE_SENTINEL)
-      ((u = e(t, {
+      ((u = e(Text, {
         dimColor: !0,
         children: e(KeybindingHint, { chord: "c", action: "copy", parens: !0 }),
       })),
@@ -104,7 +104,7 @@ function CopyFallbackNotice(B) {
   if (U === "tmux-buffer") {
     let c;
     if (O[0] === MEMO_CACHE_SENTINEL)
-      ((c = e(t, {
+      ((c = e(Text, {
         dimColor: !0,
         children:
           "(Copied to tmux buffer \xB7 select the URL manually if paste fails)",
@@ -116,7 +116,7 @@ function CopyFallbackNotice(B) {
   if (U === "osc52") {
     let c;
     if (O[1] === MEMO_CACHE_SENTINEL)
-      ((c = e(t, {
+      ((c = e(Text, {
         dimColor: !0,
         children:
           "(Sent via OSC 52 \xB7 select the URL manually if paste fails)",

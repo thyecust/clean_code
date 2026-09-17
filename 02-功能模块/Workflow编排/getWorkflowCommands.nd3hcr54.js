@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 209 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { areWorkflowsEnabled, shouldSkipWorkflowWarmup } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import "./workflow-script.js";
 import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";
@@ -62,8 +62,8 @@ Phases:
 `)
           : "",
         e = n.trim(),
-        i = b(o.name),
-        a = e ? `{ name: ${i}, args: ${b(e)} }` : `{ name: ${i} }`,
+        i = jsonStringify(o.name),
+        a = e ? `{ name: ${i}, args: ${jsonStringify(e)} }` : `{ name: ${i} }`,
         l = isWorkflowAuthoringSkillAvailable(t?.options?.tools)
           ? `
 

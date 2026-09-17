@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useIsScreenReaderEnabled } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { fromNumber } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -54,7 +54,7 @@ function _t(m) {
   ];
 }
 var We = 500;
-function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
+function FeedbackDraftsPanel({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
   let [g, k] = d(null),
     [T, z] = d(0),
     [h, M] = d("list"),
@@ -411,34 +411,34 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
       children: [
         h === "list" &&
           g === null &&
-          e(t, { dimColor: !0, children: "Loading\u2026" }),
+          e(Text, { dimColor: !0, children: "Loading\u2026" }),
         h === "list" &&
           g !== null &&
           J.length === 0 &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             gap: 1,
             children: [
-              e(t, { children: "No feedback drafts queued." }),
-              e(t, {
+              e(Text, { children: "No feedback drafts queued." }),
+              e(Text, {
                 dimColor: !0,
                 children:
                   "Claude drafts feedback at high-signal moments; drafts appear here for your review.",
               }),
               b
-                ? r(o, {
+                ? r(Box, {
                     flexDirection: "column",
                     gap: 1,
                     children: [
                       e(nt, { isSelected: me }),
-                      e(t, {
+                      e(Text, {
                         dimColor: !0,
                         children:
                           "/bug works anytime. Any other key closes this panel.",
                       }),
                     ],
                   })
-                : e(t, {
+                : e(Text, {
                     dimColor: !0,
                     children: "Any key closes this panel.",
                   }),
@@ -447,7 +447,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
         h === "list" &&
           g !== null &&
           J.length > 0 &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             children: [
               fe.length > 0 &&
@@ -464,10 +464,10 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                   offset: fe.length,
                   cursor: T,
                 }),
-              b && e(o, { marginTop: 1, children: e(nt, { isSelected: me }) }),
-              e(o, {
+              b && e(Box, { marginTop: 1, children: e(nt, { isSelected: me }) }),
+              e(Box, {
                 marginTop: 1,
-                children: e(t, {
+                children: e(Text, {
                   dimColor: !0,
                   wrap: "wrap",
                   children:
@@ -479,13 +479,13 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
         h === "review" &&
           s &&
           u &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             children: [
-              r(o, {
+              r(Box, {
                 children: [
                   e(S, { isFocused: c === "type" }),
-                  e(t, { children: "Type: " }),
+                  e(Text, { children: "Type: " }),
                   e(se, { value: tt[u.type], isFocused: c === "type" }),
                 ],
               }),
@@ -515,20 +515,20 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                 onPrev: () => A(-1),
                 onExit: he,
               }),
-              r(o, {
+              r(Box, {
                 children: [
                   e(S, { isFocused: c === "failure_mode" }),
-                  e(t, { children: "Failure mode: " }),
+                  e(Text, { children: "Failure mode: " }),
                   e(se, {
                     value: Dt(u.failureMode),
                     isFocused: c === "failure_mode",
                   }),
                 ],
               }),
-              r(o, {
+              r(Box, {
                 children: [
                   e(S, { isFocused: c === "task_category" }),
-                  e(t, { children: "Task: " }),
+                  e(Text, { children: "Task: " }),
                   e(se, {
                     value: Dt(u.taskCategory),
                     isFocused: c === "task_category",
@@ -562,18 +562,18 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                 onExit: he,
               }),
               s.transcriptAvailable
-                ? r(o, {
+                ? r(Box, {
                     flexDirection: "column",
                     children: [
-                      r(o, {
+                      r(Box, {
                         children: [
                           e(S, { isFocused: c === "transcript" }),
-                          e(t, { children: "Send transcript: " }),
+                          e(Text, { children: "Send transcript: " }),
                           e(se, {
                             value: j ? "yes" : "no",
                             isFocused: c === "transcript",
                           }),
-                          r(t, {
+                          r(Text, {
                             dimColor: !0,
                             children: [
                               " \xB7 ",
@@ -585,9 +585,9 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                         ],
                       }),
                       s.source_session_id !== U &&
-                        e(o, {
+                        e(Box, {
                           marginLeft: 4,
-                          children: r(t, {
+                          children: r(Text, {
                             dimColor: !0,
                             wrap: "wrap",
                             children: [
@@ -601,13 +601,13 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                         }),
                     ],
                   })
-                : r(o, {
+                : r(Box, {
                     children: [
                       e(S, { isFocused: !1 }),
-                      r(t, {
+                      r(Text, {
                         children: [
                           "Send transcript: ",
-                          e(t, {
+                          e(Text, {
                             dimColor: !0,
                             children: "expired (report only)",
                           }),
@@ -615,11 +615,11 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                       }),
                     ],
                   }),
-              r(o, {
+              r(Box, {
                 marginTop: 1,
                 children: [
                   e(S, { isFocused: !1 }),
-                  r(t, {
+                  r(Text, {
                     dimColor: !0,
                     wrap: "wrap",
                     children: [
@@ -675,17 +675,17 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                   }),
                 ],
               }),
-              st && e(o, { marginTop: 1, children: e(ErrorMessage, { error: st }) }),
-              r(o, {
+              st && e(Box, { marginTop: 1, children: e(ErrorMessage, { error: st }) }),
+              r(Box, {
                 marginTop: 1,
                 children: [
                   e(S, { isFocused: c === "send" }),
-                  e(t, { bold: c === "send", children: "Send feedback" }),
+                  e(Text, { bold: c === "send", children: "Send feedback" }),
                 ],
               }),
-              e(o, {
+              e(Box, {
                 marginTop: 1,
-                children: e(t, {
+                children: e(Text, {
                   dimColor: !0,
                   wrap: "wrap",
                   children:
@@ -694,12 +694,12 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
               }),
             ],
           }),
-        h === "submitting" && e(t, { children: "Sending feedback\u2026" }),
+        h === "submitting" && e(Text, { children: "Sending feedback\u2026" }),
         h === "receipt" &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             children: [
-              r(t, {
+              r(Text, {
                 color: "success",
                 children: [
                   e(StatusIndicator, { status: "success", withSpace: !0 }),
@@ -708,9 +708,9 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                   "). Thanks!",
                 ],
               }),
-              e(o, {
+              e(Box, {
                 marginTop: 1,
-                children: e(t, {
+                children: e(Text, {
                   dimColor: !0,
                   italic: !0,
                   children: "Any key to continue",
@@ -750,7 +750,7 @@ function S(bn) {
     ft = At ? `${figures.pointer} ` : "  ";
   let Lt;
   if (wn[0] !== ut || wn[1] !== ft)
-    ((Lt = e(t, { color: ut, children: ft })),
+    ((Lt = e(Text, { color: ut, children: ft })),
       (wn[0] = ut),
       (wn[1] = ft),
       (wn[2] = Lt));
@@ -763,23 +763,23 @@ function se(kn) {
   if (!xn) {
     let ye;
     if (Pe[0] !== ee)
-      ((ye = e(t, { dimColor: !0, children: ee })), (Pe[0] = ee), (Pe[1] = ye));
+      ((ye = e(Text, { dimColor: !0, children: ee })), (Pe[0] = ee), (Pe[1] = ye));
     else ye = Pe[1];
     return ye;
   }
   let ye;
   if (Pe[2] === MEMO_CACHE_SENTINEL)
-    ((ye = r(t, { dimColor: !0, children: [figures.triangleLeft, " "] })),
+    ((ye = r(Text, { dimColor: !0, children: [figures.triangleLeft, " "] })),
       (Pe[2] = ye));
   else ye = Pe[2];
   let It;
   if (Pe[3] === MEMO_CACHE_SENTINEL)
-    ((It = r(t, { dimColor: !0, children: [" ", figures.triangleRight] })),
+    ((It = r(Text, { dimColor: !0, children: [" ", figures.triangleRight] })),
       (Pe[3] = It));
   else It = Pe[3];
   let Ot;
   if (Pe[4] !== ee)
-    ((Ot = r(t, { children: [ye, ee, It] })), (Pe[4] = ee), (Pe[5] = Ot));
+    ((Ot = r(Text, { children: [ye, ee, It] })), (Pe[4] = ee), (Pe[5] = Ot));
   else Ot = Pe[5];
   return Ot;
 }
@@ -800,17 +800,17 @@ function Fe(Cn) {
       onPrev: yt,
       onExit: bt,
     } = Cn,
-    we = tn(),
+    we = useIsScreenReaderEnabled(),
     Ue;
   if (ke[0] !== ne)
     ((Ue = e(S, { isFocused: ne })), (ke[0] = ne), (ke[1] = Ue));
   else Ue = ke[1];
   let je;
-  if (ke[2] !== mt) ((je = e(t, { children: mt })), (ke[2] = mt), (ke[3] = je));
+  if (ke[2] !== mt) ((je = e(Text, { children: mt })), (ke[2] = mt), (ke[3] = je));
   else je = ke[3];
   let He;
   if (ke[4] !== Ue || ke[5] !== je)
-    ((He = r(o, { children: [Ue, je] })),
+    ((He = r(Box, { children: [Ue, je] })),
       (ke[4] = Ue),
       (ke[5] = je),
       (ke[6] = He));
@@ -831,10 +831,10 @@ function Fe(Cn) {
     ke[18] !== yt ||
     ke[19] !== te
   )
-    ((Ve = e(o, {
+    ((Ve = e(Box, {
       marginLeft: 4,
       children: ne
-        ? e(o, {
+        ? e(Box, {
             borderStyle: I && !we ? "single" : void 0,
             borderLeft: !0,
             borderTop: !1,
@@ -864,7 +864,7 @@ function Fe(Cn) {
           })
         : I
           ? e(BorderedTextPreview, { value: te, bold: $e, dim: qe, columns: be })
-          : e(t, { bold: $e, dimColor: qe, wrap: "wrap", children: sanitizeForDisplay(te) }),
+          : e(Text, { bold: $e, dimColor: qe, wrap: "wrap", children: sanitizeForDisplay(te) }),
     })),
       (ke[7] = $e),
       (ke[8] = be),
@@ -883,7 +883,7 @@ function Fe(Cn) {
   else Ve = ke[20];
   let Kt;
   if (ke[21] !== He || ke[22] !== Ve)
-    ((Kt = r(o, { flexDirection: "column", children: [He, Ve] })),
+    ((Kt = r(Box, { flexDirection: "column", children: [He, Ve] })),
       (ke[21] = He),
       (ke[22] = Ve),
       (ke[23] = Kt));
@@ -897,9 +897,9 @@ function nt(Dn) {
     kt = Nt ? `${figures.pointer} ` : "  ";
   let Pt;
   if (_n[0] !== wt || _n[1] !== kt)
-    ((Pt = e(o, {
+    ((Pt = e(Box, {
       marginLeft: 1,
-      children: r(t, { color: wt, children: [kt, "+ Write new feedback"] }),
+      children: r(Text, { color: wt, children: [kt, "+ Write new feedback"] }),
     })),
       (_n[0] = wt),
       (_n[1] = kt),
@@ -912,7 +912,7 @@ function rt(Tn) {
     { title: xt, drafts: Ct, offset: xe, cursor: Ce } = Tn,
     Je;
   if (Xe[0] !== xt)
-    ((Je = e(t, { bold: !0, children: xt })), (Xe[0] = xt), (Xe[1] = Je));
+    ((Je = e(Text, { bold: !0, children: xt })), (Xe[0] = xt), (Xe[1] = Je));
   else Je = Xe[1];
   let ze;
   if (Xe[2] !== Ce || Xe[3] !== Ct || Xe[4] !== xe) {
@@ -921,10 +921,10 @@ function rt(Tn) {
       ((ve = (ie, Fn) => {
         let $t = xe + Fn === Ce;
         return e(
-          o,
+          Box,
           {
             marginLeft: 1,
-            children: r(t, {
+            children: r(Text, {
               color: $t ? "suggestion" : void 0,
               wrap: "truncate-end",
               children: [
@@ -935,7 +935,7 @@ function rt(Tn) {
                 " ",
                 sanitizeForDisplay(ie.title),
                 " ",
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: [
                     it(ie.created_at),
@@ -964,7 +964,7 @@ function rt(Tn) {
   } else ze = Xe[5];
   let ve;
   if (Xe[9] !== Je || Xe[10] !== ze)
-    ((ve = r(o, { flexDirection: "column", children: [Je, ze] })),
+    ((ve = r(Box, { flexDirection: "column", children: [Je, ze] })),
       (Xe[9] = Je),
       (Xe[10] = ze),
       (Xe[11] = ve));
@@ -980,4 +980,4 @@ function it(m, y = Date.now()) {
   if (g < 24) return `${g}h`;
   return `${Math.floor(g / 24)}d`;
 }
-export { r0e };
+export { FeedbackDraftsPanel };

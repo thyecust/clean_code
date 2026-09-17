@@ -12,7 +12,7 @@ import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly, isNonessentialTrafficRestricted } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getUserAgent, isAnthropicAuthEnabled, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
@@ -84,12 +84,12 @@ async function connectVoiceStream(e, s, d) {
   if (isHoverRestEnabled() && d !== void 0) (await checkAndRefreshOAuthTokenIfNeeded({ credentials: d }), (u = await getClaudeAIOAuthTokensAsync(d)));
   else (await checkAndRefreshOAuthTokenIfNeeded(), (u = getClaudeAIOAuthTokens()));
   if (!u?.accessToken)
-    return (n("[voice_stream] No OAuth token available"), null);
+    return (logForDebugging("[voice_stream] No OAuth token available"), null);
   let C =
     a.VOICE_STREAM_BASE_URL ||
     getOauthConfig().BASE_API_URL.replace("https://", "wss://").replace("http://", "ws://");
   if (a.VOICE_STREAM_BASE_URL)
-    n(
+    logForDebugging(
       `[voice_stream] Using VOICE_STREAM_BASE_URL override: ${a.VOICE_STREAM_BASE_URL}`,
     );
   let p = B(),
@@ -104,7 +104,7 @@ async function connectVoiceStream(e, s, d) {
       ...(p && { forward_interims: "typed" }),
     }),
     T = `${C}${L}?${E.toString()}`;
-  n(`[voice_stream] Connecting to ${T}`);
+  logForDebugging(`[voice_stream] Connecting to ${T}`);
   let O = {
     Authorization: `Bearer ${u.accessToken}`,
     "User-Agent": getUserAgent(),
@@ -131,12 +131,12 @@ async function connectVoiceStream(e, s, d) {
       send(t) {
         if (i.readyState !== m.OPEN) return;
         if (S) {
-          n(
+          logForDebugging(
             `[voice_stream] Dropping audio chunk after CloseStream: ${String(t.length)} bytes`,
           );
           return;
         }
-        (n(`[voice_stream] Sending audio chunk: ${String(t.length)} bytes`),
+        (logForDebugging(`[voice_stream] Sending audio chunk: ${String(t.length)} bytes`),
           i.send(Buffer.from(t)));
       },
       finalize() {
@@ -154,13 +154,13 @@ async function connectVoiceStream(e, s, d) {
                 if (
                   (clearTimeout(c), clearTimeout(r), (_ = null), (v = null), l)
                 ) {
-                  n(
+                  logForDebugging(
                     `[voice_stream] Promoting unreported interim before ${o} resolve`,
                   );
                   let P = l;
                   ((l = ""), e.onTranscript(P, !0));
                 }
-                (n(`[voice_stream] Finalize resolved via ${o}`), t(o));
+                (logForDebugging(`[voice_stream] Finalize resolved via ${o}`), t(o));
               }),
               i.readyState === m.CLOSED || i.readyState === m.CLOSING)
             ) {
@@ -169,7 +169,7 @@ async function connectVoiceStream(e, s, d) {
             }
             setTimeout(() => {
               if (((S = !0), i.readyState === m.OPEN))
-                (n("[voice_stream] Sending CloseStream (finalize)"), i.send(F));
+                (logForDebugging("[voice_stream] Sending CloseStream (finalize)"), i.send(F));
             }, 0);
           })
         );
@@ -183,15 +183,15 @@ async function connectVoiceStream(e, s, d) {
       },
     };
   i.on("open", () => {
-    (n("[voice_stream] WebSocket connected"),
+    (logForDebugging("[voice_stream] WebSocket connected"),
       (y = !0),
       (I = !0),
-      n("[voice_stream] Sending initial KeepAlive"),
+      logForDebugging("[voice_stream] Sending initial KeepAlive"),
       i.send(V),
       (f = setInterval(
         (t) => {
           if (t.readyState === m.OPEN)
-            (n("[voice_stream] Sending periodic KeepAlive"), t.send(V));
+            (logForDebugging("[voice_stream] Sending periodic KeepAlive"), t.send(V));
         },
         U,
         i,
@@ -201,17 +201,17 @@ async function connectVoiceStream(e, s, d) {
   let l = "";
   function h(t) {
     if (!l) return;
-    n(`[voice_stream] Promoting unreported interim to final (${t})`);
+    logForDebugging(`[voice_stream] Promoting unreported interim to final (${t})`);
     let c = l;
     ((l = ""), e.onTranscript(c, !0));
   }
   return (
     i.on("message", (t) => {
       let c = t.toString();
-      n(`[voice_stream] Message received (${String(c.length)} chars)`);
+      logForDebugging(`[voice_stream] Message received (${String(c.length)} chars)`);
       let r;
       try {
-        r = z(c);
+        r = jsonParse(c);
       } catch {
         return;
       }
@@ -220,14 +220,14 @@ async function connectVoiceStream(e, s, d) {
         case "TranscriptText": {
           let o = r.data;
           if (
-            (n(`[voice_stream] ${r.type} (${String(o?.length ?? 0)} chars)`), S)
+            (logForDebugging(`[voice_stream] ${r.type} (${String(o?.length ?? 0)} chars)`), S)
           )
             v?.();
           if (o) ((l = o), e.onTranscript(o, !1));
           break;
         }
         case "TranscriptEndpoint": {
-          n(
+          logForDebugging(
             `[voice_stream] TranscriptEndpoint received (${String(l.length)} chars pending)`,
           );
           let o = l;
@@ -239,7 +239,7 @@ async function connectVoiceStream(e, s, d) {
           let o =
             r.description ?? r.error_code ?? "unknown transcription error";
           if (
-            (n(`[voice_stream] TranscriptError: ${o}`),
+            (logForDebugging(`[voice_stream] TranscriptError: ${o}`),
             h("TranscriptError"),
             !g)
           )
@@ -250,7 +250,7 @@ async function connectVoiceStream(e, s, d) {
           let o =
             r.message ??
             `unstructured error frame (keys: ${Object.keys(r).join(", ")})`;
-          if ((n(`[voice_stream] Server error: ${o}`), h("server error"), !g))
+          if ((logForDebugging(`[voice_stream] Server error: ${o}`), h("server error"), !g))
             e.onError(o);
           break;
         }
@@ -261,7 +261,7 @@ async function connectVoiceStream(e, s, d) {
     i.on("close", (t, c) => {
       let r = c?.toString() ?? "";
       if (
-        (n(`[voice_stream] WebSocket closed: code=${String(t)} reason="${r}"`),
+        (logForDebugging(`[voice_stream] WebSocket closed: code=${String(t)} reason="${r}"`),
         (y = !1),
         f)
       )
@@ -278,11 +278,11 @@ async function connectVoiceStream(e, s, d) {
     i.on("unexpected-response", (t, c) => {
       let r = c.statusCode ?? 0;
       if (r === 101) {
-        n("[voice_stream] unexpected-response fired with 101; ignoring");
+        logForDebugging("[voice_stream] unexpected-response fired with 101; ignoring");
         return;
       }
       if (
-        (n(
+        (logForDebugging(
           `[voice_stream] Upgrade rejected: status=${String(r)} cf-mitigated=${String(c.headers["cf-mitigated"])} cf-ray=${String(c.headers["cf-ray"])}`,
         ),
         (k = !0),
@@ -301,7 +301,7 @@ async function connectVoiceStream(e, s, d) {
     }),
     i.on("error", (t) => {
       if (
-        (n(`[voice_stream] WebSocket error: ${t.message}`, { level: "error" }),
+        (logForDebugging(`[voice_stream] WebSocket error: ${t.message}`, { level: "error" }),
         h("ws error"),
         !g)
       )

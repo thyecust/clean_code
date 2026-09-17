@@ -12,7 +12,7 @@
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   resolveAwsRegion,
   getUserSpecifiedModelSetting,
@@ -30,14 +30,14 @@ import {
   getDefaultAwsProviderChain,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { to, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { MODEL_CONFIGS_BY_KEY, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isProbeWrittenTierDefault } from "./apply-3p-default-fallbacks.js";
-var M = Object.keys(to).filter((e) => to[e].mantle !== null);
+var M = Object.keys(MODEL_CONFIGS_BY_KEY).filter((e) => MODEL_CONFIGS_BY_KEY[e].mantle !== null);
 async function checkMantleDefaultAvailability(e = DEFAULT_MANTLE_OPUS_KEY, s) {
   if (getAPIProvider() !== "mantle") return [];
   if (a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST) return [];
   let r = getInitialSettings().modelOverrides;
-  if (r?.[to[e].firstParty]) return [];
+  if (r?.[MODEL_CONFIGS_BY_KEY[e].firstParty]) return [];
   let c = s?.userPinned ?? getUserSpecifiedModelSetting() != null,
     m = a.ANTHROPIC_DEFAULT_OPUS_MODEL,
     o;
@@ -56,7 +56,7 @@ async function checkMantleDefaultAvailability(e = DEFAULT_MANTLE_OPUS_KEY, s) {
       return [{ kind: "adminPin", tier: "opus", adminMantleId: m }];
     o = m;
   }
-  let d = to[e].mantle;
+  let d = MODEL_CONFIGS_BY_KEY[e].mantle;
   if (!d) return [];
   logEvent("tengu_mantle_default_check", {});
   let l = await h(d);
@@ -74,33 +74,33 @@ async function checkMantleDefaultAvailability(e = DEFAULT_MANTLE_OPUS_KEY, s) {
           tier: "opus",
           refutedValue: o,
           workingKey: e,
-          workingName: getMarketingNameForModel(to[e].firstParty) ?? d,
+          workingName: getMarketingNameForModel(MODEL_CONFIGS_BY_KEY[e].firstParty) ?? d,
           workingMantleId: d,
           defaultKey: e,
         },
       ];
     return [];
   }
-  let f = getMarketingNameForModel(to[e].firstParty) ?? d,
+  let f = getMarketingNameForModel(MODEL_CONFIGS_BY_KEY[e].firstParty) ?? d,
     g = M.indexOf(e),
     p = M.slice(0, g)
       .reverse()
-      .filter((t) => t.startsWith("opus") && !r?.[to[t].firstParty]),
+      .filter((t) => t.startsWith("opus") && !r?.[MODEL_CONFIGS_BY_KEY[t].firstParty]),
     k = await Promise.all(
       p.map(async (t) => {
-        let A = to[t].mantle,
+        let A = MODEL_CONFIGS_BY_KEY[t].mantle,
           _ = await h(A);
         logEvent("tengu_mantle_probe_result", {
           model_key: fromEnum(t),
           accessible: S(_ ? "true" : "false"),
         });
-        let w = getMarketingNameForModel(to[t].firstParty) ?? A;
+        let w = getMarketingNameForModel(MODEL_CONFIGS_BY_KEY[t].firstParty) ?? A;
         return { key: t, mantleId: A, name: w, ok: _ };
       }),
     );
   for (let t of k)
     if (t.ok) {
-      if ((n(`[mantle-fallback] default=${e} fallback=${t.key}`), o !== void 0))
+      if ((logForDebugging(`[mantle-fallback] default=${e} fallback=${t.key}`), o !== void 0))
         return [
           {
             kind: "pinRefuted",
@@ -131,7 +131,7 @@ async function checkMantleDefaultAvailability(e = DEFAULT_MANTLE_OPUS_KEY, s) {
     ...k.map((t) => t.name),
   ];
   return (
-    n(`[mantle-fallback] default=${e} exhausted \u2014 no working Opus`),
+    logForDebugging(`[mantle-fallback] default=${e} exhausted \u2014 no working Opus`),
     [{ kind: "exhausted", tier: "opus", defaultName: f, triedNames: b }]
   );
 }

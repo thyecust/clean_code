@@ -25,8 +25,8 @@ import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { ensurePolicyLimitsLoadedForDiagnostic } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { isPushNotificationsEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 import { isArtifactConfigToggleable } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { sLt, Blt } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { Olt, AIe, w2n, gSe } from "../../01-核心基础设施/设置-配置/chunk-bznmdnc2.js";
+import { getAutoContinueAtUsageLimitSetting, isAutoContinueSettingUserControlled } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { getSecuritySensitiveSettings, getEffectiveConfig, noopConfigSetters, createSettingsViewModel } from "../../01-核心基础设施/设置-配置/settings-config-model.js";
 import { isWorkflowSizeGuidelineConfigured } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function parseConfigShorthand(n) {
@@ -69,14 +69,14 @@ async function applyConfigShorthand(n, o, t) {
   await readUnattendedServingConsent().catch(() => {
     return;
   });
-  let { settings: s } = gSe(e);
+  let { settings: s } = createSettingsViewModel(e);
   if (
     n.some(({ key: l, raw: r }) => {
       let u = p(l, s);
       return u !== void 0 && u.lock?.source !== "managed" && m(u, r);
     })
   )
-    (await ensurePolicyLimitsLoadedForDiagnostic().catch(() => {}), (s = gSe(c(o, t)).settings));
+    (await ensurePolicyLimitsLoadedForDiagnostic().catch(() => {}), (s = createSettingsViewModel(c(o, t)).settings));
   let d = [];
   for (let { key: l, raw: r } of n) d.push(await w(l, r, s));
   return d;
@@ -200,7 +200,7 @@ function collapseShorthandResultOffBox(n, o) {
   }
 }
 function listConfigKeys(n) {
-  let { settings: o } = gSe(c(n));
+  let { settings: o } = createSettingsViewModel(c(n));
   return o
     .flatMap((t) => {
       if (t.consentGated) return [];
@@ -265,7 +265,7 @@ function b() {
       setAppState: () => {},
       options: { mcpClients: [] },
     },
-    { settings: o } = gSe(c(n));
+    { settings: o } = createSettingsViewModel(c(n));
   return o.flatMap((t) => {
     if (t.consentGated) return [];
     let e =
@@ -287,8 +287,8 @@ function b() {
 }
 function c(n, o) {
   let t = n.getAppState(),
-    e = { ...getInitialSettings(), ...Olt(), autoContinueAtUsageLimit: sLt() ?? !0 },
-    s = AIe(),
+    e = { ...getInitialSettings(), ...getSecuritySensitiveSettings(), autoContinueAtUsageLimit: getAutoContinueAtUsageLimitSetting() ?? !0 },
+    s = getEffectiveConfig(),
     f = resolveSetting("disableWorkflows", !1),
     d = resolveSetting("enableWorkflows", !1),
     l =
@@ -296,7 +296,7 @@ function c(n, o) {
       (f.value !== !0 || f.source === "userSettings") &&
       (d.source === "default" || d.source === "userSettings"),
     r = !isWorkflowSizeGuidelineConfigured(),
-    u = Blt(),
+    u = isAutoContinueSettingUserControlled(),
     h = isArtifactConfigToggleable(),
     C = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js").isBriefEntitled();
   return {
@@ -341,7 +341,7 @@ function c(n, o) {
         isHoverRestEnabled() && n.storageV5 !== void 0
           ? saveUserIntentSetting("theme", g, n.storageV5)
           : saveUserIntentSetting("theme", g)),
-    ...w2n,
+    ...noopConfigSetters,
   };
 }
 export { parseConfigShorthand, applyConfigShorthand, collapseShorthandResultOffBox, listConfigKeys, getConfigArgumentCompletions };

@@ -7,16 +7,16 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { _f } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
+import { buildCsiSequence } from "../核心工具-字符串与文本/ansi-text-utils.js";
 import { formatOscSequence } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 function createDecrpmQuery(e) {
   return {
-    request: _f(`?${e}$p`),
+    request: buildCsiSequence(`?${e}$p`),
     match: (s) => s.type === "decrpm" && s.mode === e,
   };
 }
 function createCursorPositionQuery() {
-  return { request: _f("?6n"), match: (e) => e.type === "cursorPosition" };
+  return { request: buildCsiSequence("?6n"), match: (e) => e.type === "cursorPosition" };
 }
 function createOscQuery(e) {
   return {
@@ -25,9 +25,9 @@ function createOscQuery(e) {
   };
 }
 function createXtVersionQuery() {
-  return { request: _f(">0q"), match: (e) => e.type === "xtversion" };
+  return { request: buildCsiSequence(">0q"), match: (e) => e.type === "xtversion" };
 }
-var n = _f("c");
+var n = buildCsiSequence("c");
 class TerminalQuerier {
   stdout;
   queue = [];

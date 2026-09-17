@@ -16,7 +16,7 @@ import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getRemoteTransport, isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getSettingsFilePathForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import {
   checkWindowsSandboxStatusAsync,
@@ -47,7 +47,7 @@ import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { relative } from "path";
 function ce(Un, Fn) {
-  return e(t, { dimColor: !0, children: Un }, Fn);
+  return e(Text, { dimColor: !0, children: Un }, Fn);
 }
 function G() {
   let Ao = _(3),
@@ -57,7 +57,7 @@ function G() {
     let le = SandboxManager.checkDependencies();
     ie =
       le.warnings.length > 0
-        ? e(o, {
+        ? e(Box, {
             marginTop: 1,
             flexDirection: "column",
             children: le.warnings.map(ce),
@@ -69,10 +69,10 @@ function G() {
   if (!Bn) {
     let j;
     if (Ao[1] === MEMO_CACHE_SENTINEL)
-      ((j = r(o, {
+      ((j = r(Box, {
         flexDirection: "column",
         children: [
-          e(t, { color: "subtle", children: "Sandbox is not enabled" }),
+          e(Text, { color: "subtle", children: "Sandbox is not enabled" }),
           ae,
         ],
       })),
@@ -88,40 +88,40 @@ function G() {
     let Eo = SandboxManager.getAllowUnixSockets();
     let de = SandboxManager.getExcludedCommands();
     let oo = SandboxManager.getLinuxGlobPatternWarnings();
-    j = r(o, {
+    j = r(Box, {
       flexDirection: "column",
       children: [
-        r(o, {
+        r(Box, {
           flexDirection: "column",
           children: [
-            e(t, {
+            e(Text, {
               bold: !0,
               color: "permission",
               children: "Excluded Commands:",
             }),
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children: de.length > 0 ? de.join(", ") : "None",
             }),
           ],
         }),
         M.denyOnly.length > 0 &&
-          r(o, {
+          r(Box, {
             marginTop: 1,
             flexDirection: "column",
             children: [
-              e(t, {
+              e(Text, {
                 bold: !0,
                 color: "permission",
                 children: "Filesystem Read Restrictions:",
               }),
-              r(t, {
+              r(Text, {
                 dimColor: !0,
                 children: ["Denied: ", M.denyOnly.join(", ")],
               }),
               M.allowWithinDeny &&
                 M.allowWithinDeny.length > 0 &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: [
                     "Allowed within denied: ",
@@ -131,21 +131,21 @@ function G() {
             ],
           }),
         Z.allowOnly.length > 0 &&
-          r(o, {
+          r(Box, {
             marginTop: 1,
             flexDirection: "column",
             children: [
-              e(t, {
+              e(Text, {
                 bold: !0,
                 color: "permission",
                 children: "Filesystem Write Restrictions:",
               }),
-              r(t, {
+              r(Text, {
                 dimColor: !0,
                 children: ["Allowed: ", Z.allowOnly.join(", ")],
               }),
               Z.denyWithinAllow.length > 0 &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: [
                     "Denied within allowed: ",
@@ -156,11 +156,11 @@ function G() {
           }),
         ((S.allowedHosts && S.allowedHosts.length > 0) ||
           (S.deniedHosts && S.deniedHosts.length > 0)) &&
-          r(o, {
+          r(Box, {
             marginTop: 1,
             flexDirection: "column",
             children: [
-              r(t, {
+              r(Text, {
                 bold: !0,
                 color: "permission",
                 children: [
@@ -171,13 +171,13 @@ function G() {
               }),
               S.allowedHosts &&
                 S.allowedHosts.length > 0 &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: ["Allowed: ", S.allowedHosts.join(", ")],
                 }),
               S.deniedHosts &&
                 S.deniedHosts.length > 0 &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: ["Denied: ", S.deniedHosts.join(", ")],
                 }),
@@ -185,30 +185,30 @@ function G() {
           }),
         Eo &&
           Eo.length > 0 &&
-          r(o, {
+          r(Box, {
             marginTop: 1,
             flexDirection: "column",
             children: [
-              e(t, {
+              e(Text, {
                 bold: !0,
                 color: "permission",
                 children: "Allowed Unix Sockets:",
               }),
-              e(t, { dimColor: !0, children: Eo.join(", ") }),
+              e(Text, { dimColor: !0, children: Eo.join(", ") }),
             ],
           }),
         oo.length > 0 &&
-          r(o, {
+          r(Box, {
             marginTop: 1,
             flexDirection: "column",
             children: [
-              e(t, {
+              e(Text, {
                 bold: !0,
                 color: "warning",
                 children:
                   "\u26A0 Warning: Glob patterns not fully supported on Linux",
               }),
-              r(t, {
+              r(Text, {
                 dimColor: !0,
                 children: [
                   "The following patterns will be ignored:",
@@ -242,7 +242,7 @@ function Ne(Bo) {
   );
 }
 function Be(we) {
-  return e(t, { color: "error", children: we }, we);
+  return e(Text, { color: "error", children: we }, we);
 }
 function Fe(Ho) {
   let ke = null;
@@ -268,7 +268,7 @@ function Oe(tt) {
   return formatWindowsSandboxErrorMessage(tt);
 }
 function Le(Pe) {
-  return e(t, { color: "error", children: Pe }, Pe);
+  return e(Text, { color: "error", children: Pe }, Pe);
 }
 function E(_n) {
   let k = _(26),
@@ -314,12 +314,12 @@ function E(_n) {
     if (k[15] === MEMO_CACHE_SENTINEL)
       ((ge =
         No &&
-        e(o, {
+        e(Box, {
           flexDirection: "column",
-          children: r(t, {
+          children: r(Text, {
             children: [
               "seatbelt: ",
-              e(t, { color: "success", children: "built-in (macOS)" }),
+              e(Text, { color: "success", children: "built-in (macOS)" }),
             ],
           }),
         })),
@@ -327,23 +327,23 @@ function E(_n) {
     else ge = k[15];
     let eo, no;
     if (k[16] !== B)
-      ((eo = r(t, {
+      ((eo = r(Text, {
         children: [
           "ripgrep (rg):",
           " ",
           B
-            ? e(t, { color: "error", children: "not found" })
-            : e(t, { color: "success", children: "found" }),
+            ? e(Text, { color: "error", children: "not found" })
+            : e(Text, { color: "success", children: "found" }),
         ],
       })),
-        (no = B && r(t, { dimColor: !0, children: ["  ", "\xB7 ", Jn] })),
+        (no = B && r(Text, { dimColor: !0, children: ["  ", "\xB7 ", Jn] })),
         (k[16] = B),
         (k[17] = eo),
         (k[18] = no));
     else ((eo = k[17]), (no = k[18]));
     let xe;
     if (k[19] !== eo || k[20] !== no)
-      ((xe = r(o, { flexDirection: "column", children: [eo, no] })),
+      ((xe = r(Box, { flexDirection: "column", children: [eo, no] })),
         (k[19] = eo),
         (k[20] = no),
         (k[21] = xe));
@@ -354,80 +354,80 @@ function E(_n) {
         !No &&
         r(N, {
           children: [
-            r(o, {
+            r(Box, {
               flexDirection: "column",
               children: [
-                r(t, {
+                r(Text, {
                   children: [
                     "bubblewrap (bwrap):",
                     " ",
                     U
-                      ? e(t, { color: "error", children: "not installed" })
-                      : e(t, { color: "success", children: "installed" }),
+                      ? e(Text, { color: "error", children: "not installed" })
+                      : e(Text, { color: "success", children: "installed" }),
                   ],
                 }),
                 U &&
-                  r(t, {
+                  r(Text, {
                     dimColor: !0,
                     children: ["  ", "\xB7 apt install bubblewrap"],
                   }),
               ],
             }),
-            r(o, {
+            r(Box, {
               flexDirection: "column",
               children: [
-                r(t, {
+                r(Text, {
                   children: [
                     "socat:",
                     " ",
                     H
-                      ? e(t, { color: "error", children: "not installed" })
-                      : e(t, { color: "success", children: "installed" }),
+                      ? e(Text, { color: "error", children: "not installed" })
+                      : e(Text, { color: "success", children: "installed" }),
                   ],
                 }),
                 H &&
-                  r(t, {
+                  r(Text, {
                     dimColor: !0,
                     children: ["  ", "\xB7 apt install socat"],
                   }),
               ],
             }),
-            r(o, {
+            r(Box, {
               flexDirection: "column",
               children: [
-                r(t, {
+                r(Text, {
                   children: [
                     "seccomp filter:",
                     " ",
                     A
-                      ? e(t, { color: "warning", children: "not installed" })
-                      : e(t, { color: "success", children: "installed" }),
+                      ? e(Text, { color: "warning", children: "not installed" })
+                      : e(Text, { color: "success", children: "installed" }),
                     A &&
-                      e(t, {
+                      e(Text, {
                         dimColor: !0,
                         children: " (required to block unix domain sockets)",
                       }),
                   ],
                 }),
                 A &&
-                  r(o, {
+                  r(Box, {
                     flexDirection: "column",
                     children: [
-                      r(t, {
+                      r(Text, {
                         dimColor: !0,
                         children: [
                           "  ",
                           "\xB7 npm install -g @anthropic-ai/sandbox-runtime",
                         ],
                       }),
-                      r(t, {
+                      r(Text, {
                         dimColor: !0,
                         children: [
                           "  ",
                           "\xB7 or copy vendor/seccomp/* from sandbox-runtime and set",
                         ],
                       }),
-                      r(t, {
+                      r(Text, {
                         dimColor: !0,
                         children: [
                           "    ",
@@ -445,7 +445,7 @@ function E(_n) {
         (k[24] = H),
         (k[25] = he));
     else he = k[25];
-    fe = r(o, {
+    fe = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [ge, xe, he, zn.map(Be)],
@@ -465,7 +465,7 @@ function ao(Zn) {
     [Fo] = d(Ue),
     Ce;
   if (ye[0] === MEMO_CACHE_SENTINEL)
-    ((Ce = e(t, {
+    ((Ce = e(Text, {
       dimColor: !0,
       children: "Checking Windows sandbox status\u2026",
     })),
@@ -491,14 +491,14 @@ function co(et) {
   if (so[0] !== f)
     ((ro =
       "probeError" in f
-        ? r(o, {
+        ? r(Box, {
             flexDirection: "column",
             children: [
-              r(t, {
+              r(Text, {
                 color: "error",
                 children: ["could not check sandbox status: ", f.probeError],
               }),
-              r(t, {
+              r(Text, {
                 dimColor: !0,
                 children: [
                   "  ",
@@ -507,59 +507,59 @@ function co(et) {
               }),
             ],
           })
-        : r(o, {
+        : r(Box, {
             flexDirection: "column",
             children: [
-              r(t, {
+              r(Text, {
                 children: [
                   "sandbox user:",
                   " ",
                   f.user.provisioned && f.user.credPresent
-                    ? e(t, { color: "success", children: "provisioned" })
+                    ? e(Text, { color: "success", children: "provisioned" })
                     : f.user.provisioned
-                      ? e(t, {
+                      ? e(Text, {
                           color: "warning",
                           children:
                             "provisioned \u2014 credential not readable",
                         })
-                      : e(t, { color: "error", children: "not installed" }),
+                      : e(Text, { color: "error", children: "not installed" }),
                 ],
               }),
-              r(t, {
+              r(Text, {
                 children: [
                   "network filters (WFP):",
                   " ",
                   f.wfp.state === "installed"
-                    ? e(t, { color: "success", children: "installed" })
+                    ? e(Text, { color: "success", children: "installed" })
                     : f.wfp.state === "cannot-read"
-                      ? e(t, {
+                      ? e(Text, {
                           color: "warning",
                           children: "cannot read (run elevated to check)",
                         })
-                      : e(t, { color: "error", children: "not installed" }),
+                      : e(Text, { color: "error", children: "not installed" }),
                 ],
               }),
               f.caTrusted !== null &&
-                r(t, {
+                r(Text, {
                   children: [
                     "TLS inspection CA:",
                     " ",
                     f.caTrusted
-                      ? e(t, { color: "success", children: "trusted" })
-                      : e(t, { color: "error", children: "not trusted" }),
+                      ? e(Text, { color: "success", children: "trusted" })
+                      : e(Text, { color: "error", children: "not trusted" }),
                   ],
                 }),
               (!f.user.provisioned ||
                 !f.user.credPresent ||
                 f.wfp.state === "absent" ||
                 (f.caTrusted === !1 && f.caManaged)) &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: ["  ", "\xB7 run /sandbox install"],
                 }),
               f.caTrusted === !1 &&
                 !f.caManaged &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: [
                     "  ",
@@ -583,7 +583,7 @@ function co(et) {
   else lo = so[6];
   let De;
   if (so[7] !== ro || so[8] !== lo)
-    ((De = r(o, { flexDirection: "column", gap: 1, children: [ro, lo] })),
+    ((De = r(Box, { flexDirection: "column", gap: 1, children: [ro, lo] })),
       (so[7] = ro),
       (so[8] = lo),
       (so[9] = De));
@@ -601,9 +601,9 @@ function K(gt) {
   if (!xt) {
     let W;
     if (mo[0] === MEMO_CACHE_SENTINEL)
-      ((W = e(o, {
+      ((W = e(Box, {
         flexDirection: "column",
-        children: e(t, {
+        children: e(Text, {
           color: "subtle",
           children:
             "Sandbox is not enabled. Enable sandbox to configure override settings.",
@@ -616,7 +616,7 @@ function K(gt) {
   if (ht) {
     let W;
     if (mo[1] === MEMO_CACHE_SENTINEL)
-      ((W = e(t, {
+      ((W = e(Text, {
         color: "subtle",
         children:
           "Override settings are managed by a higher-priority configuration and cannot be changed locally.",
@@ -625,13 +625,13 @@ function K(gt) {
     else W = mo[1];
     let Me;
     if (mo[2] === MEMO_CACHE_SENTINEL)
-      ((Me = r(o, {
+      ((Me = r(Box, {
         flexDirection: "column",
         children: [
           W,
-          e(o, {
+          e(Box, {
             marginTop: 1,
-            children: r(t, {
+            children: r(Text, {
               dimColor: !0,
               children: [
                 "Current setting:",
@@ -700,9 +700,9 @@ function go(wt) {
   let V = Ke,
     ze;
   if (C[11] === MEMO_CACHE_SENTINEL)
-    ((ze = e(o, {
+    ((ze = e(Box, {
       marginBottom: 1,
-      children: e(t, { bold: !0, children: "Configure overrides" }),
+      children: e(Text, { bold: !0, children: "Configure overrides" }),
     })),
       (C[11] = ze));
   else ze = C[11];
@@ -734,11 +734,11 @@ function go(wt) {
   else fo = C[19];
   let Je;
   if (C[20] === MEMO_CACHE_SENTINEL)
-    ((Je = r(t, {
+    ((Je = r(Text, {
       dimColor: !0,
       wrap: "wrap-trim",
       children: [
-        e(t, {
+        e(Text, {
           bold: !0,
           dimColor: !0,
           children: "Allow unsandboxed fallback:",
@@ -751,17 +751,17 @@ function go(wt) {
   else Je = C[20];
   let Qe;
   if (C[21] === MEMO_CACHE_SENTINEL)
-    ((Qe = r(o, {
+    ((Qe = r(Box, {
       flexDirection: "column",
       marginTop: 1,
       gap: 1,
       children: [
         Je,
-        r(t, {
+        r(Text, {
           dimColor: !0,
           wrap: "wrap-trim",
           children: [
-            e(t, { bold: !0, dimColor: !0, children: "Strict sandbox mode:" }),
+            e(Text, { bold: !0, dimColor: !0, children: "Strict sandbox mode:" }),
             " ",
             "All bash commands invoked by the model must run in the sandbox unless they are explicitly listed in excludedCommands.",
           ],
@@ -775,7 +775,7 @@ function go(wt) {
   else Qe = C[21];
   let Xe;
   if (C[22] !== fo)
-    ((Xe = r(o, { flexDirection: "column", children: [ze, fo, Qe] })),
+    ((Xe = r(Box, { flexDirection: "column", children: [ze, fo, Qe] })),
       (C[22] = fo),
       (C[23] = Xe));
   else Xe = C[23];
@@ -977,9 +977,9 @@ function vo(Mt) {
     wn;
   if (x[26] === MEMO_CACHE_SENTINEL)
     ((wn = isRemoteActive()
-      ? e(o, {
+      ? e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             wrap: "wrap-trim",
             children:
@@ -1005,7 +1005,7 @@ function vo(Mt) {
   else wo = x[28];
   let yn;
   if (x[29] === MEMO_CACHE_SENTINEL)
-    ((yn = e(o, {
+    ((yn = e(Box, {
       marginTop: 1,
       children: e(InputGuide, {
         children:
@@ -1037,7 +1037,7 @@ function Wo(Xt) {
   if (D[0] !== Jo)
     ((So =
       Jo &&
-      e(o, {
+      e(Box, {
         marginBottom: 1,
         children: e(StatusLine, {
           status: "warning",
@@ -1049,9 +1049,9 @@ function Wo(Xt) {
   else So = D[1];
   let Sn;
   if (D[2] === MEMO_CACHE_SENTINEL)
-    ((Sn = e(o, {
+    ((Sn = e(Box, {
       marginBottom: 1,
-      children: e(t, { bold: !0, children: "Configure mode" }),
+      children: e(Text, { bold: !0, children: "Configure mode" }),
     })),
       (D[2] = Sn));
   else Sn = D[2];
@@ -1089,7 +1089,7 @@ function Wo(Xt) {
   if (D[12] !== Co)
     ((Do =
       Co &&
-      e(o, { marginTop: 1, children: e(t, { dimColor: !0, children: Co }) })),
+      e(Box, { marginTop: 1, children: e(Text, { dimColor: !0, children: Co }) })),
       (D[12] = Co),
       (D[13] = Do));
   else Do = D[13];
@@ -1097,10 +1097,10 @@ function Wo(Xt) {
   if (D[14] !== L)
     ((To =
       L.some(Pn) &&
-      r(t, {
+      r(Text, {
         dimColor: !0,
         children: [
-          e(t, { bold: !0, dimColor: !0, children: "Auto-allow mode:" }),
+          e(Text, { bold: !0, dimColor: !0, children: "Auto-allow mode:" }),
           " ",
           "Commands will try to run in the sandbox automatically, and attempts to run outside of the sandbox fallback to regular permissions. Explicit ask/deny rules are always respected.",
         ],
@@ -1115,7 +1115,7 @@ function Wo(Xt) {
   else Rn = D[16];
   let Po;
   if (D[17] !== To)
-    ((Po = r(o, {
+    ((Po = r(Box, {
       flexDirection: "column",
       marginTop: 1,
       gap: 1,
@@ -1126,7 +1126,7 @@ function Wo(Xt) {
   else Po = D[18];
   let Tn;
   if (D[19] !== So || D[20] !== Ro || D[21] !== Do || D[22] !== Po)
-    ((Tn = r(o, { flexDirection: "column", children: [So, Sn, Ro, Do, Po] })),
+    ((Tn = r(Box, { flexDirection: "column", children: [So, Sn, Ro, Do, Po] })),
       (D[19] = So),
       (D[20] = Ro),
       (D[21] = Do),

@@ -24,12 +24,12 @@ import {
   Rt,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { gge, iBe, nS, Avt } from "./chunk-wk0e3dz4.js";
+import { parseAccountOnHoldApiError, isNoRefreshAvailableError, getAuthPrecedenceSource, resetProfileAuthCache } from "./chunk-wk0e3dz4.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { getFederationCacheDir } from "../../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
@@ -49,7 +49,7 @@ async function withCredentialsLock(e, t, r = "fail-closed") {
   } catch (d) {
     if (r === "fail-closed" || d instanceof Ra) throw d;
     return (
-      n(
+      logForDebugging(
         `wif: credentials lock unavailable at ${s} (${l(d)}); refreshing without cross-process serialization`,
       ),
       t()
@@ -62,7 +62,7 @@ async function withCredentialsLock(e, t, r = "fail-closed") {
     try {
       await c();
     } catch (d) {
-      if (Po(d)) n(`wif: lock release failed: ${d}`);
+      if (Po(d)) logForDebugging(`wif: lock release failed: ${d}`);
       else logError(d);
     }
   }
@@ -74,7 +74,7 @@ async function O(e, t, r) {
         stale: 60000,
         update: 5000,
         onCompromised: (o) =>
-          n(`WIF credentials lock compromised: ${o}`, { level: "error" }),
+          logForDebugging(`WIF credentials lock compromised: ${o}`, { level: "error" }),
       });
     } catch (o) {
       if (o.code !== "ELOCKED") throw o;
@@ -124,7 +124,7 @@ function A(e) {
       if (t === null) return ((e.resolvedBaseUrlSnapshot = null), null);
       let r = a.ANTHROPIC_BASE_URL || t.base_url,
         s = r || "https://api.anthropic.com",
-        o = nS() === "env-quad",
+        o = getAuthPrecedenceSource() === "env-quad",
         c = o ? await K(t, s) : await GYt(t),
         d = {
           ...t,
@@ -146,8 +146,8 @@ function A(e) {
               signal: AbortSignal.timeout(1e4),
             }),
           userAgent: m(),
-          onSafetyWarning: (g) => n(g, { level: "warn" }),
-          onCacheWriteError: (g) => n(String(g), { level: "warn" }),
+          onSafetyWarning: (g) => logForDebugging(g, { level: "warn" }),
+          onCacheWriteError: (g) => logForDebugging(String(g), { level: "warn" }),
         });
       if (c && t.authentication.type === "user_oauth")
         _.provider = E(
@@ -164,7 +164,7 @@ function A(e) {
       return ((e.resolvedBaseUrlSnapshot = _.baseURL ?? null), _);
     }).catch((t) => {
       throw (
-        n(`WIF credential resolution failed: ${l(t)}`, { level: "error" }),
+        logForDebugging(`WIF credential resolution failed: ${l(t)}`, { level: "error" }),
         t instanceof Ra ? t : new Ra(l(t))
       );
     });
@@ -204,7 +204,7 @@ function R(e) {
             throw (logFeatureBad("wif_token_exchange", H(c)), c);
           }
         },
-        (s) => n(String(s), { level: "warn" }),
+        (s) => logForDebugging(String(s), { level: "warn" }),
       );
     })),
     e.tokenCachePromise
@@ -228,14 +228,14 @@ function C(e, t, r, s) {
             { fromEnum: g } = await import("../../01-核心基础设施/共享小工具-未细化/analytics-fields.js");
           return (
             _("tengu_wif_user_oauth_refresh_race_resolved", { mode: g(r) }),
-            n(
+            logForDebugging(
               "wif: adopting sibling-rotated access token from credentials file; skipping refresh grant",
             ),
             { token: m, expiresAt: typeof p === "number" ? p : null }
           );
         }
       } catch (c) {
-        n(`wif: rotated-token adoption check failed: ${l(c)}`);
+        logForDebugging(`wif: rotated-token adoption check failed: ${l(c)}`);
       }
     return e(o);
   };
@@ -259,7 +259,7 @@ function W(e, t) {
         (d.statusCode === 400 || d.statusCode === 401) &&
         typeof d.body === "string" &&
         d.body.includes('"invalid_grant"') &&
-        gge(d) === null &&
+        parseAccountOnHoldApiError(d) === null &&
         typeof c === "string" &&
         c
       )
@@ -271,7 +271,7 @@ function W(e, t) {
               p("tengu_wif_user_oauth_refresh_token_cleared", {}));
           }
         } catch (m) {
-          if (Rt(m)) n(`wif: refresh-token cleanup write failed: ${m}`);
+          if (Rt(m)) logForDebugging(`wif: refresh-token cleanup write failed: ${m}`);
           else
             logError(dt(ge(m), "WIF: failed to clear stale user_oauth refresh_token"));
         }
@@ -314,8 +314,8 @@ function U(e) {
   }
 }
 function H(e) {
-  if (iBe(e)) return "no_refresh_available";
-  if (gge(e)) return "account_on_hold";
+  if (isNoRefreshAvailableError(e)) return "no_refresh_available";
+  if (parseAccountOnHoldApiError(e)) return "account_on_hold";
   if (typeof e.body === "string" && e.body.includes('"invalid_grant"'))
     return "invalid_grant";
   if (typeof e.statusCode === "number") {
@@ -327,11 +327,11 @@ function H(e) {
   return "network_error";
 }
 function resetWIFCredentialState() {
-  (w().reset(), Avt());
+  (w().reset(), resetProfileAuthCache());
 }
 var k = (e) => process.env[e]?.trim() || void 0;
 async function L() {
-  if (nS() === "env-quad") {
+  if (getAuthPrecedenceSource() === "env-quad") {
     let e = k("ANTHROPIC_FEDERATION_RULE_ID"),
       t = k("ANTHROPIC_ORGANIZATION_ID");
     if (e && t) {
@@ -361,7 +361,7 @@ async function K(e, t) {
       s = (await readFile(r, "utf-8")).trim();
     } catch (d) {
       return (
-        n(
+        logForDebugging(
           `wif: cannot read identity token at ${r} (${l(d)}); federation token cache disabled`,
         ),
         null
@@ -369,11 +369,11 @@ async function K(e, t) {
     }
   else s = k("ANTHROPIC_IDENTITY_TOKEN");
   if (!s)
-    return (n("wif: no identity token; federation token cache disabled"), null);
+    return (logForDebugging("wif: no identity token; federation token cache disabled"), null);
   let o = getFederationCacheDir();
   if (o === null)
     return (
-      n("wif: no config directory; federation token cache disabled"),
+      logForDebugging("wif: no config directory; federation token cache disabled"),
       null
     );
   try {
@@ -383,7 +383,7 @@ async function K(e, t) {
         m = d.mode & 511;
       if (m & 63)
         return (
-          n(
+          logForDebugging(
             `wif: ${o} is mode 0o${m.toString(8)} (filesystem ignores modes, or directory pre-existed shared); federation token cache disabled`,
           ),
           null
@@ -391,7 +391,7 @@ async function K(e, t) {
       let p = process.getuid?.();
       if (p !== void 0 && d.uid !== p)
         return (
-          n(
+          logForDebugging(
             `wif: ${o} is owned by uid ${d.uid}, not ${p}; federation token cache disabled`,
           ),
           null
@@ -399,7 +399,7 @@ async function K(e, t) {
     }
   } catch (d) {
     return (
-      n(`wif: cannot prepare ${o} (${l(d)}); federation token cache disabled`),
+      logForDebugging(`wif: cannot prepare ${o} (${l(d)}); federation token cache disabled`),
       null
     );
   }

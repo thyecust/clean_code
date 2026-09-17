@@ -13,7 +13,7 @@ import { shouldForceGatewayLogin, getGlobalConfig, enableConfigs } from "../../0
 import { getHostSettingsStore } from "./设置-配置.aqbb35ee.js";
 import { awaitMdmSettingsLoaded, runPolicyHelperPass, hasActivePolicyHelper, getBasePolicySettings, getBasePolicySettingsOrigin, getPolicyHelperSourceLoadErrors } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS, ensureKeychainPrefetchCompleted } from "../共享小工具-未细化/keychain-prefetch.js";
-import { goe } from "../遥测-OpenTelemetry/chunk-x7kby92q.js";
+import { applySafeConfigEnvironmentVariables } from "../遥测-OpenTelemetry/settings-env-application.js";
 import { checkVersionPolicy } from "../共享小工具-未细化/version-policy.js";
 class s {
   settingsLoaded = !1;
@@ -63,7 +63,7 @@ async function ensureFastPathSettingsLoaded(t) {
       r = o(e);
     if (r !== void 0) (await i(r, { bgAuthSnapshot: "leave" }), await a(r));
   }
-  (g_e(shouldForceGatewayLogin), goe());
+  (g_e(shouldForceGatewayLogin), applySafeConfigEnvironmentVariables());
   let n = checkVersionPolicy();
   if (n)
     (process.stderr.write(`${n}
@@ -74,7 +74,7 @@ async function runFastPathPolicyHelper() {
   let t = l();
   if (t.helperResult) return t.helperResult.error;
   let e = t.beginHelperRun();
-  if (((e.error = await runPolicyHelperPass(getBasePolicySettings(), getBasePolicySettingsOrigin(), getPolicyHelperSourceLoadErrors())), hasActivePolicyHelper())) goe();
+  if (((e.error = await runPolicyHelperPass(getBasePolicySettings(), getBasePolicySettingsOrigin(), getPolicyHelperSourceLoadErrors())), hasActivePolicyHelper())) applySafeConfigEnvironmentVariables();
   return e.error;
 }
 async function loadFastPathPolicy(t) {

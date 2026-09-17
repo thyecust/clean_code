@@ -10,7 +10,7 @@
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { validateOAuthToken, getClaudeAIOAuthTokenOriginAsync, getClaudeAIOAuthTokensAsync, readFreshOAuthCredentialSnapshot, getOauthAccountInfo, getAuthenticatedAccountInfo, subscribeGlobalConfigInstalled, readFreshOauthAccountFromDisk } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getBridgeTokenOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
@@ -27,7 +27,7 @@ async function resolveBridgeDaemonOwner(t) {
   let e = t(),
     r = e === void 0 ? void 0 : await A(e);
   if (r === void 0)
-    n(
+    logForDebugging(
       "[bridge:owner-pin] daemon owner not declared: no bootstrap stamp, and the daemon credential is absent or was not attributed by the server in time \u2014 spawned sessions run the unverified inbox path",
       { level: "warn" },
     );
@@ -78,7 +78,7 @@ async function Z({
   let I = r === void 0 ? getAuthenticatedAccountInfo() : void 0;
   if (I !== void 0 && !x(I) && !(await z()))
     return (
-      n(
+      logForDebugging(
         "[bridge:owner-pin] identity sources disagree and the credential could not be validated \u2014 session runs unpinned",
       ),
       { pin: void 0, reason: "unresolved" }
@@ -197,7 +197,7 @@ async function Z({
     if (O === void 0) return k("inconclusive");
     if (p(O))
       return (
-        n(
+        logForDebugging(
           "[bridge:owner-pin] the server attributes the rotated credential to the owner \u2014 re-baselining",
         ),
         (a = {
@@ -232,7 +232,7 @@ async function Z({
         .then(async (S) => {
           if (!S?.accountUuid || p(S)) return;
           let O = await z();
-          n(
+          logForDebugging(
             O
               ? "[bridge:owner-pin] request accepted while the identity file names another account \u2014 re-pinned to the tenant the server attributes the credential to"
               : "[bridge:owner-pin] request accepted while the identity file names another account, but the credential could not be attributed \u2014 keeping the pinned owner",
@@ -371,7 +371,7 @@ function W(t, i) {
     v(e));
   let c = e.sendingRetry;
   if (((e.sendingRetry = !1), e.suppressed > 0))
-    (n(
+    (logForDebugging(
       `[bridge] title write: sending latest after coalescing ${e.suppressed} update(s)`,
     ),
       (e.suppressed = 0));
@@ -386,7 +386,7 @@ function W(t, i) {
             e.retryTimer.unref?.());
       },
       (f) => {
-        n(`[bridge] title write failed: ${l(f)}`);
+        logForDebugging(`[bridge] title write failed: ${l(f)}`);
       },
     )
     .finally(() => {
@@ -402,7 +402,7 @@ function ie(t, i, e, r) {
   if (!d) return;
   if (((d.retryTimer = void 0), !q(t, d, i, e))) return;
   if (r?.shouldSend !== void 0 && !r.shouldSend()) {
-    n("[bridge] title write retry dropped: sending is now barred");
+    logForDebugging("[bridge] title write retry dropped: sending is now barred");
     return;
   }
   getBridgeSession(i, {
@@ -413,11 +413,11 @@ function ie(t, i, e, r) {
     (u) => {
       if (!q(t, d, i, e)) return;
       if (u === null) {
-        n("[bridge] title write retry skipped: server state unreadable");
+        logForDebugging("[bridge] title write retry skipped: server state unreadable");
         return;
       }
       if (u.title && !d.knownTitles.has(u.title) && !t.isOwnTitle(i, u.title)) {
-        (n(
+        (logForDebugging(
           "[bridge] title write retry dropped: the session was renamed elsewhere",
         ),
           j(t, i, u.title),
@@ -429,7 +429,7 @@ function ie(t, i, e, r) {
         W(t, i));
     },
     (u) => {
-      n(`[bridge] title write retry skipped: ${l(u)}`);
+      logForDebugging(`[bridge] title write retry skipped: ${l(u)}`);
     },
   );
 }

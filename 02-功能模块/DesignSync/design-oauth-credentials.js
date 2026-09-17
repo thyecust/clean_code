@@ -13,7 +13,7 @@ import { DESIGN_OAUTH_SCOPES, getOauthConfig } from "../认证-OAuth登录/chunk
 import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { refreshOAuthToken, revokeOAuthToken, isOAuthTokenExpired, isInvalidGrantError } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
@@ -26,7 +26,7 @@ async function readDesignOauthTokens(r) {
     return (await getSecureStorage().readAsync(r))?.designOauth ?? null;
   } catch (t) {
     return (
-      n(`Failed to read design OAuth tokens: ${l(t)}`, { level: "error" }),
+      logForDebugging(`Failed to read design OAuth tokens: ${l(t)}`, { level: "error" }),
       null
     );
   }
@@ -41,7 +41,7 @@ async function saveDesignOauthTokens(r, t) {
     return o ? { ...s, raced: !0 } : s;
   } catch (o) {
     return (
-      n(`Failed to save design OAuth tokens: ${l(o)}`, { level: "error" }),
+      logForDebugging(`Failed to save design OAuth tokens: ${l(o)}`, { level: "error" }),
       { success: !1, warning: "Failed to save design OAuth tokens" }
     );
   }
@@ -55,7 +55,7 @@ async function k(r) {
       return (delete o.designOauth, o);
     });
   } catch (t) {
-    n(`Failed to clear design OAuth tokens: ${l(t)}`, { level: "error" });
+    logForDebugging(`Failed to clear design OAuth tokens: ${l(t)}`, { level: "error" });
   }
 }
 var D = ".design_oauth_refresh.lock",
@@ -70,7 +70,7 @@ class T extends Error {
 }
 async function y(r) {
   let t = getSecureStorageDir();
-  await ae().mkdir(t);
+  await getFsSurface().mkdir(t);
   let o = O(t, D),
     s = !1,
     e,
@@ -85,7 +85,7 @@ async function y(r) {
         update: 5000,
         onCompromised: (i) => {
           ((s = !0),
-            n(`Design OAuth refresh lock compromised: ${i.message}`, {
+            logForDebugging(`Design OAuth refresh lock compromised: ${i.message}`, {
               level: "error",
             }));
         },
@@ -108,7 +108,7 @@ async function y(r) {
     try {
       await e();
     } catch (i) {
-      n(`Design OAuth refresh lock release failed: ${l(i)}`, {
+      logForDebugging(`Design OAuth refresh lock release failed: ${l(i)}`, {
         level: "error",
       });
     }
@@ -196,7 +196,7 @@ async function ensureDesignAccessToken(r) {
             : { ok: !1, reason: "needs_design_login" };
         }
         if (!u.success)
-          n(
+          logForDebugging(
             "Design OAuth refresh succeeded but persist failed; continuing with in-memory token.",
             { level: "error" },
           );

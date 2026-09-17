@@ -13,7 +13,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { fromEnum, fromNumber } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { parseRegionName } from "./chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   resolveAwsRegion,
   getBedrockInferenceProfiles,
@@ -35,7 +35,7 @@ import {
   getDefaultAwsProviderChain,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { to, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { MODEL_CONFIGS_BY_KEY, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { tierConfig, collectStalePins, seedEnvDefaultForUserPin, collectUnpinnedTiers, predecessorsInTier } from "../../01-核心基础设施/共享小工具-未细化/chunk-nzt97y14.js";
 var y = tierConfig(DEFAULT_BEDROCK_OPUS_KEY);
 async function findBedrockUpgradeCandidates() {
@@ -53,11 +53,11 @@ async function findBedrockUpgradeCandidates() {
   let t = resolveInferenceProfilePrefix(await resolveAwsRegion()),
     c = [];
   for (let e of o) {
-    let p = to[e.defaultKey].firstParty,
+    let p = MODEL_CONFIGS_BY_KEY[e.defaultKey].firstParty,
       r = findInferenceProfileForModel(s, p, t);
     if (!r) continue;
-    let d = getMarketingNameForModel(to[e.pinnedKey].firstParty),
-      l = getMarketingNameForModel(to[e.defaultKey].firstParty);
+    let d = getMarketingNameForModel(MODEL_CONFIGS_BY_KEY[e.pinnedKey].firstParty),
+      l = getMarketingNameForModel(MODEL_CONFIGS_BY_KEY[e.defaultKey].firstParty);
     if (!d || !l) continue;
     c.push({
       tier: e.tier,
@@ -85,7 +85,7 @@ async function findBedrockUpgradeCandidates() {
     )
   ).filter((e) => e !== null);
   return (
-    n(`[bedrock-upgrade] tiersWithPin=${o.length} candidates=${f.length}`),
+    logForDebugging(`[bedrock-upgrade] tiersWithPin=${o.length} candidates=${f.length}`),
     f
   );
 }
@@ -108,7 +108,7 @@ async function checkBedrockDefaultAvailability() {
   let c = resolveInferenceProfilePrefix(await resolveAwsRegion()),
     g = await Promise.all(
       s.map(async (e) => {
-        let p = to[e.defaultKey],
+        let p = MODEL_CONFIGS_BY_KEY[e.defaultKey],
           r = h(e.defaultKey, t, c);
         if (!r) return null;
         let d = await _(r, e.tier);
@@ -124,7 +124,7 @@ async function checkBedrockDefaultAvailability() {
         let l = await A(e.defaultKey, e.tier, t, c, o);
         if (!l) return null;
         let m = getMarketingNameForModel(p.firstParty),
-          k = getMarketingNameForModel(to[l.key].firstParty);
+          k = getMarketingNameForModel(MODEL_CONFIGS_BY_KEY[l.key].firstParty);
         if (!m || !k) return null;
         return {
           tier: e.tier,
@@ -141,12 +141,12 @@ async function checkBedrockDefaultAvailability() {
     f = [];
   for (let e of g) if (e !== null) f.push(e);
   return (
-    n(`[bedrock-fallback] unpinnedTiers=${s.length} fallbacks=${f.length}`),
+    logForDebugging(`[bedrock-fallback] unpinnedTiers=${s.length} fallbacks=${f.length}`),
     f
   );
 }
 function h(o, s, t) {
-  let c = to[o],
+  let c = MODEL_CONFIGS_BY_KEY[o],
     g = findInferenceProfileForModel(s, c.firstParty, t);
   if (g) return g;
   if (!c.bedrock) return null;
@@ -158,7 +158,7 @@ async function A(o, s, t, c, g) {
     if (!l) return null;
     return (await _(l, d)) ? l : null;
   }
-  let e = predecessorsInTier(o, s).filter((r) => !g?.[to[r].firstParty]),
+  let e = predecessorsInTier(o, s).filter((r) => !g?.[MODEL_CONFIGS_BY_KEY[r].firstParty]),
     p = await Promise.all(e.map((r) => f(r, s)));
   for (let [r, d] of p.entries()) if (d) return { key: e[r], regionalId: d };
   if (s === "opus") {

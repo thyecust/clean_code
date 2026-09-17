@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { to } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { MODEL_CONFIGS_BY_KEY } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { DEFAULT_3P_SONNET_KEY, DEFAULT_3P_HAIKU_KEY, firstPartyNameToCanonical } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isProbeWrittenTierDefault } from "../../02-功能模块/Bedrock-Vertex/apply-3p-default-fallbacks.js";
-var u = Object.keys(to);
+var u = Object.keys(MODEL_CONFIGS_BY_KEY);
 function tierConfig(e) {
   return {
     sonnet: {
@@ -37,7 +37,7 @@ function l(e) {
 }
 function T(e) {
   let o = firstPartyNameToCanonical(e);
-  for (let r of u) if (firstPartyNameToCanonical(to[r].firstParty) === o) return r;
+  for (let r of u) if (firstPartyNameToCanonical(MODEL_CONFIGS_BY_KEY[r].firstParty) === o) return r;
   return;
 }
 function upgradeKey(e) {
@@ -82,14 +82,14 @@ function seedEnvDefaultForUserPin(e, o) {
   if (!n) return;
   if (n === "haiku") return;
   let i = o[n];
-  if (getInitialSettings().modelOverrides?.[to[i.defaultKey].firstParty]) return;
+  if (getInitialSettings().modelOverrides?.[MODEL_CONFIGS_BY_KEY[i.defaultKey].firstParty]) return;
   return { tier: n, envVar: i.envVarPriority.at(-1), value: r };
 }
 function collectUnpinnedTiers(e, o) {
   let r = [];
   for (let t of Object.keys(e)) {
     let n = e[t];
-    if (o?.[to[n.defaultKey].firstParty]) continue;
+    if (o?.[MODEL_CONFIGS_BY_KEY[n.defaultKey].firstParty]) continue;
     if (
       n.envVarPriority.some((f) => {
         let s = process.env[f]?.trim();

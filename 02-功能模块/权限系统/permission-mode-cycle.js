@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { transitionPermissionMode, isAutoModeGateEnabled, getAutoModeUnavailableReason } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isBypassPermissionsModeDisabled } from "./bypass-permissions-mode-policy.js";
 function canCycleToAuto(e) {
   let o = isAutoModeGateEnabled(),
     t = !!e.isAutoModeAvailable && o;
   if (!t)
-    n(
+    logForDebugging(
       `[auto-mode] canCycleToAuto=false: ctx.isAutoModeAvailable=${e.isAutoModeAvailable} isAutoModeGateEnabled=${o} reason=${getAutoModeUnavailableReason()}`,
     );
   return t;

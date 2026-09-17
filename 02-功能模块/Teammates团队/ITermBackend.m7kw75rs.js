@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 20 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { isInITerm2, getIt2Command, isIt2CliAvailable } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
@@ -39,11 +39,11 @@ class g {
   paneCreationLock = createMutex();
   async isAvailable() {
     let e = isInITerm2();
-    if ((n(`[ITermBackend] isAvailable check: inITerm2=${e}`), !e))
-      return (n("[ITermBackend] isAvailable: false (not in iTerm2)"), !1);
+    if ((logForDebugging(`[ITermBackend] isAvailable check: inITerm2=${e}`), !e))
+      return (logForDebugging("[ITermBackend] isAvailable: false (not in iTerm2)"), !1);
     let s = await isIt2CliAvailable();
     return (
-      n(
+      logForDebugging(
         `[ITermBackend] isAvailable: ${s} (it2 CLI ${s ? "found" : "not found"})`,
       ),
       s
@@ -51,17 +51,17 @@ class g {
   }
   async isRunningInside() {
     let e = isInITerm2();
-    return (n(`[ITermBackend] isRunningInside: ${e}`), e);
+    return (logForDebugging(`[ITermBackend] isRunningInside: ${e}`), e);
   }
   async createTeammatePaneInSwarmView(e, s) {
-    n(
+    logForDebugging(
       `[ITermBackend] createTeammatePaneInSwarmView called for ${e} with color ${s}`,
     );
     let o = await this.paneCreationLock.acquire();
     try {
       while (!0) {
         let t = !this.firstPaneUsed;
-        n(
+        logForDebugging(
           `[ITermBackend] Creating pane: isFirstTeammate=${t}, existingPanes=${this.teammateSessionIds.length}`,
         );
         let r, i;
@@ -69,18 +69,18 @@ class g {
           let l = I();
           if (l)
             ((r = ["session", "split", "-v", "-s", l]),
-              n(`[ITermBackend] First split from leader session: ${l}`));
+              logForDebugging(`[ITermBackend] First split from leader session: ${l}`));
           else
             ((r = ["session", "split", "-v"]),
-              n(
+              logForDebugging(
                 "[ITermBackend] First split from active session (no leader ID)",
               ));
         } else if (((i = this.teammateSessionIds.at(-1)), i))
           ((r = ["session", "split", "-s", i]),
-            n(`[ITermBackend] Subsequent split from teammate session: ${i}`));
+            logForDebugging(`[ITermBackend] Subsequent split from teammate session: ${i}`));
         else
           ((r = ["session", "split"]),
-            n(
+            logForDebugging(
               "[ITermBackend] Subsequent split from active session (no teammate ID)",
             ));
         let m = await d(r);
@@ -88,7 +88,7 @@ class g {
           if (i) {
             let l = await d(["session", "list"]);
             if (l.code === 0 && !l.stdout.includes(i)) {
-              n(
+              logForDebugging(
                 `[ITermBackend] Split failed targeting dead session ${i}, pruning and retrying: ${m.stderr}`,
               );
               let u = this.teammateSessionIds.indexOf(i);
@@ -104,7 +104,7 @@ class g {
           throw Error(
             `Failed to parse session ID from split output: ${m.stdout}`,
           );
-        if ((n(`[ITermBackend] Created teammate pane for ${e}: ${c}`), t))
+        if ((logForDebugging(`[ITermBackend] Created teammate pane for ${e}: ${c}`), t))
           this.firstPaneUsed = !0;
         return (
           this.teammateSessionIds.push(c),

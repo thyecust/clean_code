@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
-import { Jhe, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { Jhe, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { qR, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { wS, tXt } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { countLineBreaks, formatPastedTextPlaceholder, expandPastedContents, getIdeDisplayName } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -68,7 +68,7 @@ function openFileInEditor(t, e) {
       c;
     return (
       (c = spawn(l, [...u, ...i], f)),
-      c.on("error", (m) => n(`editor spawn failed: ${m}`, { level: "error" })),
+      c.on("error", (m) => logForDebugging(`editor spawn failed: ${m}`, { level: "error" })),
       wS(c.pid),
       c.unref(),
       !0
@@ -88,7 +88,7 @@ function openFileInEditor(t, e) {
         f = S(l, c, i);
     }
     if (f.error)
-      return (n(`editor spawn failed: ${f.error}`, { level: "error" }), !1);
+      return (logForDebugging(`editor spawn failed: ${f.error}`, { level: "error" }), !1);
     return !0;
   } finally {
     d.exitAlternateScreen();
@@ -127,7 +127,7 @@ function getEditorDisplayName() {
 import { spawnSync as x } from "child_process";
 var D = { code: "code -w", subl: "subl --wait" };
 function editFileInExternalEditor(t) {
-  let e = ae(),
+  let e = getFsSurface(),
     r = getInkInstanceRegistry().get(process.stdout);
   if (!r) throw Error("Ink instance not found - cannot pause rendering");
   let o = resolveEditorCommand();
@@ -213,7 +213,7 @@ function U(t) {
   return t.slice(e + E.length).replace(/^\r?\n\r?\n?/, "");
 }
 function editTextInExternalEditor(t, e, r) {
-  let o = ae(),
+  let o = getFsSurface(),
     l = createTempFilePath();
   try {
     let u = e ? expandPastedContents(t, e) : t,

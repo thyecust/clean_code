@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { updateSettingsForSource, hasSkipWorkflowUsageWarning } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { sA } from "../权限系统/chunk-t3b7pg2x.js";
+import { isUltracodeActive } from "../权限系统/chunk-t3b7pg2x.js";
 import { getToolPermissionContext, getEffortValue, getUltracodeRequested } from "../权限系统/chunk-fjrcf22x.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { isTeammateWorker } from "../Teammates团队/permission-sync-mailbox.js";
@@ -23,7 +23,7 @@ function workflowNeedsUsageConsentPrompt(e, o) {
   if (getToolPermissionContext(o).shouldAvoidPermissionPrompts) return !1;
   if (isBgSession()) return !1;
   if (isTeammateWorker()) return !1;
-  if (sA(o.options.mainLoopModel, getEffortValue(o), getUltracodeRequested(o))) return !1;
+  if (isUltracodeActive(o.options.mainLoopModel, getEffortValue(o), getUltracodeRequested(o))) return !1;
   return !o.session.workflowUsageConsent.isGranted() && !hasSkipWorkflowUsageWarning();
 }
 async function recordWorkflowUsageConsent(e, o) {
@@ -35,7 +35,7 @@ async function recordWorkflowUsageConsent(e, o) {
     o,
   );
   if (r) {
-    n(`Failed to persist skipWorkflowUsageWarning: ${r.message}`, {
+    logForDebugging(`Failed to persist skipWorkflowUsageWarning: ${r.message}`, {
       level: "error",
     });
     return;

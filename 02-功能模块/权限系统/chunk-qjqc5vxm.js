@@ -10,7 +10,7 @@
 import { Xl } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { createAbortController, createChildAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { runForkedAgent, resolveRetractedMessages, createAssistantMessage, createUserMessage, joinTextBlocks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { of } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { ZERO_USAGE_TOTALS } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 var b = /^\/btw\b/gi;
 function findBtwTriggerPositions(t) {
   let r = [],
@@ -101,7 +101,7 @@ ${o.response}`
     };
   } catch (o) {
     if (o instanceof Xl || y.signal.aborted)
-      return { response: null, synthetic: !1, usage: of, aborted: !0 };
+      return { response: null, synthetic: !1, usage: ZERO_USAGE_TOTALS, aborted: !0 };
     throw o;
   }
 }

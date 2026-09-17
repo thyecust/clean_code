@@ -13,7 +13,7 @@ import { BASH_STDOUT_TAG, BASH_STDERR_TAG, BASH_EXIT_CODE_TAG } from "../../02-�
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
-import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { getDefaultShell } from "../../01-核心基础设施/共享小工具-未细化/get-default-shell.js";
 import { getBashSpawnFailureDetail } from "../../01-核心基础设施/共享小工具-未细化/bash-spawn-failure-detail.js";
 import { randomUUID } from "crypto";
@@ -40,7 +40,7 @@ async function runHeadlessBashCommand(e) {
   let l = t ? getBashSpawnFailureDetail(t, e.session) : "";
   return {
     outputUuid: randomUUID(),
-    outputText: `<${BASH_STDOUT_TAG}>${Nt(m)}</${BASH_STDOUT_TAG}><${BASH_STDERR_TAG}>${Nt(d || l)}</${BASH_STDERR_TAG}><${BASH_EXIT_CODE_TAG}>${o}</${BASH_EXIT_CODE_TAG}>`,
+    outputText: `<${BASH_STDOUT_TAG}>${escapeHtmlText(m)}</${BASH_STDOUT_TAG}><${BASH_STDERR_TAG}>${escapeHtmlText(d || l)}</${BASH_STDERR_TAG}><${BASH_EXIT_CODE_TAG}>${o}</${BASH_EXIT_CODE_TAG}>`,
     exitCode: o,
   };
 }

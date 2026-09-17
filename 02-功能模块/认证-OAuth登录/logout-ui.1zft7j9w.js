@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { isBgSession } from "./认证-OAuth登录.419zdfz3.js";
-import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { gracefulShutdownSync } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { emitAuthEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
-import { performLogout } from "./chunk-9g86t9bp.js";
+import { performLogout } from "./console-profile-auth.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 async function l(n, o) {
   let r = isBgSession();
@@ -33,7 +33,7 @@ async function l(n, o) {
       ),
       null
     );
-  let s = e(t, {
+  let s = e(Text, {
     children: "Successfully logged out from your Anthropic account.",
   });
   return (

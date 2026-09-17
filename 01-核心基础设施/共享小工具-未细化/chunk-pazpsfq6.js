@@ -10,7 +10,7 @@
 import { AGENT_COLOR_THEME_KEYS, isAgentColorName } from "./agent-color-palette.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { buildMessagePreview, slugifyDisplayName } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindingChordText } from "./use-keybinding-chord-text.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -43,13 +43,13 @@ function CollapsedMessagesHint(K) {
   const u = Q ? 1 : 0;
   let H;
   if (i[5] === MEMO_CACHE_SENTINEL)
-    ((H = r(t, { "aria-hidden": !0, children: [figures.pointerSmall, " "] })),
+    ((H = r(Text, { "aria-hidden": !0, children: [figures.pointerSmall, " "] })),
       (i[5] = H));
   else H = i[5];
   const R = k === 1 ? "Message" : `${k} messages`;
   let f;
   if (i[6] !== m)
-    ((f = m ? r(t, { italic: !0, children: [": ", m] }) : ""),
+    ((f = m ? r(Text, { italic: !0, children: [": ", m] }) : ""),
       (i[6] = m),
       (i[7] = f));
   else f = i[7];
@@ -61,7 +61,7 @@ function CollapsedMessagesHint(K) {
   else c = i[9];
   let T;
   if (i[10] !== E || i[11] !== R || i[12] !== f || i[13] !== c)
-    ((T = r(t, { dimColor: !0, children: [H, R, " from @", E, f, " ", c] })),
+    ((T = r(Text, { dimColor: !0, children: [H, R, " from @", E, f, " ", c] })),
       (i[10] = E),
       (i[11] = R),
       (i[12] = f),
@@ -70,7 +70,7 @@ function CollapsedMessagesHint(K) {
   else T = i[14];
   let U;
   if (i[15] !== T || i[16] !== u)
-    ((U = e(o, { marginTop: u, children: T })),
+    ((U = e(Box, { marginTop: u, children: T })),
       (i[15] = T),
       (i[16] = u),
       (i[17] = U));

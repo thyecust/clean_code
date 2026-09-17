@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { parsePluginScopedServerName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -32,7 +32,7 @@ function getOfficialPluginPromptOverrides(e) {
   let u = getFeatureValue_CACHED_MAY_BE_STALE("tengu_official_plugin_prompt_overrides", {}),
     t = l().safeParse(u);
   if (!t.success) {
-    n(
+    logForDebugging(
       "tengu_official_plugin_prompt_overrides: GB payload is not an object; ignoring",
       { level: "error" },
     );
@@ -42,7 +42,7 @@ function getOfficialPluginPromptOverrides(e) {
   if (a === void 0) return;
   let p = f().safeParse(a);
   if (!p.success) {
-    n(
+    logForDebugging(
       `tengu_official_plugin_prompt_overrides: entry for '${r}' failed schema (${p.error.issues[0]?.message}); using baked-in text`,
       { level: "error" },
     );

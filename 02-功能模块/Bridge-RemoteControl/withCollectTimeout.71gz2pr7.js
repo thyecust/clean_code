@@ -12,7 +12,7 @@
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { getGitRepoCache, findGitRootRecheckingNegative, gitExe, getGitDir } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { lstat, open as w } from "fs/promises";
@@ -40,7 +40,7 @@ async function collectWorktreeState(e, t, r = d) {
   } catch (o) {
     return (
       logFeatureBad("bridge_worktree_state", "collect_failed"),
-      n(`[bridge:worktree] collectWorktreeState failed: ${l(o)}`),
+      logForDebugging(`[bridge:worktree] collectWorktreeState failed: ${l(o)}`),
       null
     );
   }

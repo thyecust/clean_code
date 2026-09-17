@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { ARTIFACT_MARKER_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import {
   ASSET_ID_RE,
   STALE_GUARD_REJECTION_PREFIX,
@@ -32,12 +32,12 @@ import {
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { formatArtifactTitle, sanitizeDisplayText, getShareEntry, ownershipTag, shareAudienceParenthetical } from "./chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { stripRejectNotice } from "./chunk-fx5ekm7e.js";
-import { wte, lwe, FS } from "./chunk-qpgskeea.js";
+import { toLegacyVerbInput, toFamilyParentInput, isArtifactToolsetEnabled } from "./chunk-qpgskeea.js";
 import { ROOM_CONSENT_CLAUSE, DB_BATCH_OP, replayedPublishesRemaining, replayedPublishesResetAt, publishesRemainingLine } from "./chunk-pdd7kz7p.js";
 import { MAX_PREVIEW_WIDTHS, MAX_REPORTED_DROPPED_ISSUES, MAX_PREVIEW_SHOTS, MAX_PREVIEW_ISSUES, normalizePreviewWidths, normalizePreviewThemes, isArtifactRoomFeatureEnabled, artifactLivePathsSchemaOpen } from "./chunk-b6k1z7an.js";
 import "./chunk-x29r16ke.js";
@@ -75,7 +75,7 @@ import "../Teammates团队/chunk-weg7y2ya.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
 import "../Bridge-RemoteControl/bridge-inbound-origin.js";
-import "./chunk-5gvg7p5p.js";
+import "./artifact-read-for-model.js";
 import "../Teammates团队/chunk-y89mhs4a.js";
 import { ReceivedBytesStatus } from "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -88,12 +88,12 @@ function R(ee) {
     L = q === void 0 ? "claude" : q,
     M;
   if (D[0] !== L)
-    ((M = e(t, { color: L, children: ARTIFACT_MARKER_GLYPH })), (D[0] = L), (D[1] = M));
+    ((M = e(Text, { color: L, children: ARTIFACT_MARKER_GLYPH })), (D[0] = L), (D[1] = M));
   else M = D[1];
   let k;
   if (D[2] !== A || D[3] !== E)
     ((k = E
-      ? e(ct, {
+      ? e(Link, {
           url: E,
           fallback: A === E ? void 0 : `${A} (${E})`,
           children: A,
@@ -105,7 +105,7 @@ function R(ee) {
   else k = D[4];
   let V;
   if (D[5] !== M || D[6] !== k)
-    ((V = r(t, { children: [M, " ", k] })), (D[5] = M), (D[6] = k), (D[7] = V));
+    ((V = r(Text, { children: [M, " ", k] })), (D[5] = M), (D[6] = k), (D[7] = V));
   else V = D[7];
   return V;
 }
@@ -116,24 +116,24 @@ var P = null,
   j = null,
   Y = 8;
 function renderToolUseMessage(s, m) {
-  let n = FS() ? wte(s) : s;
+  let n = isArtifactToolsetEnabled() ? toLegacyVerbInput(s) : s;
   if (n.action === "live-edit")
     return U
       ? U.renderLiveEditToolUse(n, m?.verbose === !0, artifactLivePathsSchemaOpen())
-      : e(t, { children: "live-edit" });
+      : e(Text, { children: "live-edit" });
   if (n.action === "preview") {
     let d = n,
       a = typeof d.file_path === "string" ? d.file_path : "",
       c = sweepProvenanceMarker(sweepAskCopy(a) ?? "(no file)");
     if (m?.verbose !== !0)
-      return r(t, { children: ["preview ", truncatePathMiddle(basename(c), 60)] });
+      return r(Text, { children: ["preview ", truncatePathMiddle(basename(c), 60)] });
     let f = normalizePreviewWidths(d),
       g = normalizePreviewThemes(d);
-    return r(t, {
+    return r(Text, {
       children: [
         "preview ",
         truncatePathMiddle(c, 1024),
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children: ` \xB7 ${f.join("/")} \xB7 ${g.join("+")}`,
         }),
@@ -141,7 +141,7 @@ function renderToolUseMessage(s, m) {
     });
   }
   if (n.action === "sync")
-    return r(t, {
+    return r(Text, {
       children: [
         "sync working copy",
         typeof n.file_path === "string"
@@ -153,14 +153,14 @@ function renderToolUseMessage(s, m) {
       ],
     });
   if (n.action === "version")
-    return r(t, {
+    return r(Text, {
       children: [
         "version",
         typeof n.url === "string"
           ? ` ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}`
           : "",
         typeof n.label === "string" && n.label !== ""
-          ? e(t, { dimColor: !0, children: ` \xB7 ${sweepAskCopy(n.label) ?? ""}` })
+          ? e(Text, { dimColor: !0, children: ` \xB7 ${sweepAskCopy(n.label) ?? ""}` })
           : null,
       ],
     });
@@ -172,18 +172,18 @@ function renderToolUseMessage(s, m) {
           c !== void 0
             ? `"${sweepAskCopy(truncateToCodeUnits(c, 200)) ?? ""}"`
             : canonicalArtifactTargetFor(getArtifactTypeUrl(n), "(unrecognized address)");
-      return r(t, {
+      return r(Text, {
         children: [
           "list",
           a === "shared" ? " (shared)" : a === "all" ? " (mine + shared)" : "",
           " ",
           "of type ",
-          e(t, { dimColor: !0, children: f }),
+          e(Text, { dimColor: !0, children: f }),
         ],
       });
     }
     let d = listScopeFrom(n);
-    return r(t, {
+    return r(Text, {
       children: [
         "list",
         d === "shared" ? " (shared)" : d === "all" ? " (mine + shared)" : "",
@@ -195,19 +195,19 @@ function renderToolUseMessage(s, m) {
       typeof n.type_query === "string" && n.type_query !== ""
         ? sweepAskCopy(truncateToCodeUnits(n.type_query, 200))
         : null;
-    return r(t, {
+    return r(Text, {
       children: [
         "list types",
-        d ? e(t, { dimColor: !0, children: ` "${d}"` }) : "",
+        d ? e(Text, { dimColor: !0, children: ` "${d}"` }) : "",
       ],
     });
   }
   if (n.action === "describe_type")
-    return r(t, {
+    return r(Text, {
       children: [
         "describe type",
         " ",
-        e(t, { dimColor: !0, children: canonicalArtifactTargetFor(getArtifactTypeUrl(n), "(unrecognized address)") }),
+        e(Text, { dimColor: !0, children: canonicalArtifactTargetFor(getArtifactTypeUrl(n), "(unrecognized address)") }),
       ],
     });
   if (
@@ -227,17 +227,17 @@ function renderToolUseMessage(s, m) {
           ? getShareEntry(d.slug)
           : void 0,
       f = shareAudienceParenthetical(c);
-    return r(t, {
+    return r(Text, {
       children: [
         n.action,
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [" ", d !== null ? artifactViewerUrlFor(d) : "(unrecognized address)"],
         }),
-        f !== "" && e(t, { dimColor: !0, children: f }),
+        f !== "" && e(Text, { dimColor: !0, children: f }),
         a !== void 0 &&
           a !== "" &&
-          e(t, { dimColor: !0, children: ` \u2014 "${a}"` }),
+          e(Text, { dimColor: !0, children: ` \u2014 "${a}"` }),
       ],
     });
   }
@@ -266,7 +266,7 @@ function renderToolUseMessage(s, m) {
                 ? "resume auto-replies"
                 : n.action;
     if ((n.action === "status" || n.action === "verify") && n.url === void 0)
-      return e(t, { children: d });
+      return e(Text, { children: d });
     let a = n.action === "read_db" ? resolveArtifactDbReadDir(n) : void 0,
       c =
         a?.kind === "dir"
@@ -289,17 +289,17 @@ function renderToolUseMessage(s, m) {
               ? `from ${truncatePathMiddle(sweepAskCopy(F) ?? "(unprintable path)", 1024)}`
               : formatArtifactPayloadPreview(C),
         N = ownershipTag(g);
-      return r(t, {
+      return r(Text, {
         children: [
           d,
           " (",
           T,
           ")",
           " ",
-          e(t, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
-          e(t, { dimColor: !0, children: ` \u2014 ${y}${p}` }),
-          N !== "" && e(t, { color: "warning", children: N }),
-          z !== "" && e(t, { dimColor: !0, children: ` \u2014 ${z}` }),
+          e(Text, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
+          e(Text, { dimColor: !0, children: ` \u2014 ${y}${p}` }),
+          N !== "" && e(Text, { color: "warning", children: N }),
+          z !== "" && e(Text, { dimColor: !0, children: ` \u2014 ${z}` }),
         ],
       });
     }
@@ -309,34 +309,34 @@ function renderToolUseMessage(s, m) {
         p = shareAudienceParenthetical(g),
         T = formatArtifactPayloadPreview(parseArtifactRoomSendInput(n).data),
         y = ownershipTag(g);
-      return r(t, {
+      return r(Text, {
         children: [
           d,
           " ",
-          e(t, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
-          p !== "" && e(t, { dimColor: !0, children: p }),
-          y !== "" && e(t, { color: "warning", children: y }),
-          T !== "" && e(t, { dimColor: !0, children: ` \u2014 ${T}` }),
+          e(Text, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
+          p !== "" && e(Text, { dimColor: !0, children: p }),
+          y !== "" && e(Text, { color: "warning", children: y }),
+          T !== "" && e(Text, { dimColor: !0, children: ` \u2014 ${T}` }),
         ],
       });
     }
     if (n.action === "resume_replies" && m?.verbose === !0) {
       let f = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
         g = f !== null ? getShareEntry(f.slug) : void 0;
-      return r(t, {
+      return r(Text, {
         children: [
           d,
           " ",
-          e(t, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
-          e(t, { dimColor: !0, children: shareAudienceParenthetical(g) }),
+          e(Text, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
+          e(Text, { dimColor: !0, children: shareAudienceParenthetical(g) }),
         ],
       });
     }
-    return r(t, {
+    return r(Text, {
       children: [
         d,
         " ",
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [canonicalArtifactTargetFor(n.url, "(unrecognized address)"), c],
         }),
@@ -351,12 +351,12 @@ function renderToolUseMessage(s, m) {
     let { verb: d, body: a } = O
       ? O.handlersToolUseLine(n, m?.verbose === !0)
       : { verb: String(n.action), body: "" };
-    return r(t, {
+    return r(Text, {
       children: [
         d,
         " ",
-        e(t, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
-        a !== "" && e(t, { dimColor: !0, children: a }),
+        e(Text, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
+        a !== "" && e(Text, { dimColor: !0, children: a }),
       ],
     });
   }
@@ -364,15 +364,15 @@ function renderToolUseMessage(s, m) {
     let d = parseArtifactUrlInput(n.url),
       a = d !== null ? getShareEntry(d.slug) : void 0,
       c = m?.verbose === !0 ? ownershipTag(a) : "";
-    return r(t, {
+    return r(Text, {
       children: [
         "read",
         " ",
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children: d !== null ? artifactViewerUrlFor(d) : "(unrecognized address)",
         }),
-        c !== "" && e(t, { color: "warning", children: c }),
+        c !== "" && e(Text, { color: "warning", children: c }),
       ],
     });
   }
@@ -382,15 +382,15 @@ function renderToolUseMessage(s, m) {
       c = m?.verbose === !0,
       f = c ? ownershipTag(a) : "",
       g = truncatePathMiddle(sweepAskCopy(n.file_path ?? "") ?? "(unprintable path)", 1024);
-    return r(t, {
+    return r(Text, {
       children: [
         "upload ",
         g,
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children: ` \u2192 ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}${c ? shareAudienceParenthetical(a) : ""}`,
         }),
-        f !== "" && e(t, { color: "warning", children: f }),
+        f !== "" && e(Text, { color: "warning", children: f }),
       ],
     });
   }
@@ -404,7 +404,7 @@ function renderToolUseMessage(s, m) {
       T = n.from_url,
       y = typeof T === "string" ? parseArtifactUrl(T) : null,
       C = c ? formatOwnershipParenthetical(y !== null ? getShareEntry(y.slug) : void 0, "assets") : "";
-    return r(t, {
+    return r(Text, {
       children: [
         "copy ",
         p,
@@ -413,12 +413,12 @@ function renderToolUseMessage(s, m) {
         " from",
         " ",
         canonicalArtifactTargetFor(T, "(unrecognized address)"),
-        C !== "" && e(t, { color: "warning", children: C }),
-        e(t, {
+        C !== "" && e(Text, { color: "warning", children: C }),
+        e(Text, {
           dimColor: !0,
           children: ` \u2192 ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}${c ? shareAudienceParenthetical(a) : ""}`,
         }),
-        f !== "" && e(t, { color: "warning", children: f }),
+        f !== "" && e(Text, { color: "warning", children: f }),
       ],
     });
   }
@@ -436,14 +436,14 @@ function renderToolUseMessage(s, m) {
         C = resolveArtifactReadDestination(n, { outDirJudged: y });
       p = ` \u2192 ${"dest" in C ? truncatePathMiddle(sweepAskCopy(C.dest) ?? "(unprintable path)", 1024) : "(no destination)"}`;
     }
-    return r(t, {
+    return r(Text, {
       children: [
         g,
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children: ` of ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}${c ? shareAudienceParenthetical(a) : ""}${p}`,
         }),
-        f !== "" && e(t, { color: "warning", children: f }),
+        f !== "" && e(Text, { color: "warning", children: f }),
       ],
     });
   }
@@ -455,11 +455,11 @@ function renderToolUseMessage(s, m) {
         (d !== null ? getShareEntry(d.slug)?.title : void 0) ||
           (typeof c === "string" ? c : ""),
       );
-    return r(t, {
+    return r(Text, {
       children: [
         n.action,
         f ? ` "${f}"` : "",
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children: ` \xB7 ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}`,
         }),
@@ -474,15 +474,15 @@ function renderToolUseMessage(s, m) {
       g = n[ARTIFACT_DELETE_TARGET],
       p = isRecord(g) ? g.title : void 0,
       T = truncateArtifactTitle(a?.title || (typeof p === "string" ? p : ""));
-    return r(t, {
+    return r(Text, {
       children: [
         "delete",
         T ? ` "${T}"` : "",
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children: ` \xB7 ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}${c ? shareAudienceParenthetical(a) : ""}`,
         }),
-        f !== "" && e(t, { color: "warning", children: f }),
+        f !== "" && e(Text, { color: "warning", children: f }),
       ],
     });
   }
@@ -504,14 +504,14 @@ function renderToolUseMessage(s, m) {
           : n.action === "read_asset"
             ? `save asset ${p}`
             : "list assets";
-    return r(t, {
+    return r(Text, {
       children: [
         y,
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children: ` ${n.action === "delete_asset" ? "from" : "of"} ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}${c ? shareAudienceParenthetical(a) : ""}${T !== void 0 ? ` \u2192 ${truncatePathMiddle(sweepAskCopy(`${T}.*`) ?? "(unprintable path)", 1024)}` : ""}`,
         }),
-        f !== "" && e(t, { color: "warning", children: f }),
+        f !== "" && e(Text, { color: "warning", children: f }),
       ],
     });
   }
@@ -522,12 +522,12 @@ function renderToolUseMessage(s, m) {
   if (u !== void 0) {
     let d = canonicalArtifactTargetFor(u, "(unrecognized address)"),
       a = b !== void 0 ? sweepProvenanceMarker(sweepAskCopy(b) ?? "(unprintable path)") : void 0;
-    return r(t, {
+    return r(Text, {
       children: [
         a !== void 0 ? `${a} ` : "",
-        r(t, { dimColor: !0, children: ["\u2192 new Artifact from type ", d] }),
+        r(Text, { dimColor: !0, children: ["\u2192 new Artifact from type ", d] }),
         l !== void 0 &&
-          e(t, {
+          e(Text, {
             dimColor: !0,
             children: `
 ${l}`,
@@ -537,12 +537,12 @@ ${l}`,
   }
   let h = i && w !== void 0 ? canonicalArtifactTargetFor(w, "(unrecognized address)") : void 0,
     v = sweepProvenanceMarker(sweepAskCopy(b ?? "") ?? "(unprintable path)");
-  return r(t, {
+  return r(Text, {
     children: [
       v,
-      h !== void 0 && r(t, { dimColor: !0, children: [" \u2192 ", h] }),
+      h !== void 0 && r(Text, { dimColor: !0, children: [" \u2192 ", h] }),
       l !== void 0 &&
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children: `
 ${l}`,
@@ -551,7 +551,7 @@ ${l}`,
   });
 }
 function S(s) {
-  return (m, n) => renderToolUseMessage(lwe(s, m), n);
+  return (m, n) => renderToolUseMessage(toFamilyParentInput(s, m), n);
 }
 var renderCommentsToolUseMessage = S("comments"),
   renderDataToolUseMessage = S("data"),
@@ -564,7 +564,7 @@ function renderToolUseProgressMessage(s) {
       ? "Publish service temporarily unavailable"
       : "Publish service busy";
   return e(ToolResultRow, {
-    children: r(t, {
+    children: r(Text, {
       dimColor: !0,
       children: [
         n,
@@ -608,10 +608,10 @@ function renderToolResultMessage(s, m, n) {
       v = n?.verbose === !0 ? i.issues : i.issues.slice(0, Y),
       d = i.issues.length - v.length + (i.issuesDropped ?? 0);
     return e(ToolResultRow, {
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         children: [
-          r(t, {
+          r(Text, {
             dimColor: !0,
             children: [
               l === 0 ? "Could not preview " : "Previewed ",
@@ -633,31 +633,31 @@ function renderToolResultMessage(s, m, n) {
             ],
           }),
           i.renderError !== void 0 &&
-            e(o, {
+            e(Box, {
               paddingLeft: 2,
-              children: e(t, {
+              children: e(Text, {
                 color: "warning",
                 children: h(i.renderError, 200),
               }),
             }),
           v.map((a, c) =>
             r(
-              o,
+              Box,
               {
                 paddingLeft: 2,
                 flexDirection: "row",
                 children: [
-                  e(t, { dimColor: !0, children: "\xB7 " }),
-                  e(t, { dimColor: !0, children: h(a.text, 200) }),
+                  e(Text, { dimColor: !0, children: "\xB7 " }),
+                  e(Text, { dimColor: !0, children: h(a.text, 200) }),
                 ],
               },
               c,
             ),
           ),
           d > 0 &&
-            e(o, {
+            e(Box, {
               paddingLeft: 2,
-              children: r(t, {
+              children: r(Text, {
                 dimColor: !0,
                 children: [
                   "\xB7 \u2026 ",
@@ -670,10 +670,10 @@ function renderToolResultMessage(s, m, n) {
           n?.verbose === !0 &&
             i.shots.map((a, c) =>
               e(
-                o,
+                Box,
                 {
                   paddingLeft: 2,
-                  children: r(t, {
+                  children: r(Text, {
                     dimColor: !0,
                     children: [
                       h(`${a.width} ${a.theme}`, 20),
@@ -701,7 +701,7 @@ function renderToolResultMessage(s, m, n) {
     let i = s.threads_dropped === !0,
       l = s.thread_filter !== void 0;
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: l
           ? s.threads.some((u) => u.id === s.thread_filter)
@@ -719,7 +719,7 @@ function renderToolResultMessage(s, m, n) {
   }
   if ("replied" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: s.replied
           ? "replied to comment thread"
@@ -734,7 +734,7 @@ function renderToolResultMessage(s, m, n) {
     });
   if ("thread_resolved" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: s.thread_resolved
           ? "resolved comment thread"
@@ -749,7 +749,7 @@ function renderToolResultMessage(s, m, n) {
     });
   if ("liveEdit" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: P
           ? P.renderLiveEditResultText(s.liveEdit)
@@ -758,7 +758,7 @@ function renderToolResultMessage(s, m, n) {
     });
   if ("sync" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: P ? P.renderSyncResultText(s.sync) : "synced",
       }),
@@ -767,7 +767,7 @@ function renderToolResultMessage(s, m, n) {
     let i = typeof s.versioned.url === "string" ? parseArtifactUrl(s.versioned.url) : null,
       l = i ? artifactViewerUrlFor(i) : void 0;
     return e(ToolResultRow, {
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "Versioned",
@@ -797,7 +797,7 @@ function renderToolResultMessage(s, m, n) {
           ? `saved ${h.fileCount} ${pluralize(h.fileCount, "document")} under ${truncatePathMiddle(sweepAskCopy(h.dir) ?? "(unprintable path)", 1024)}${h.skippedCount > 0 ? ` (${h.skippedCount} skipped)` : ""}`
           : void 0;
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children:
           i.found === !1
@@ -812,7 +812,7 @@ function renderToolResultMessage(s, m, n) {
         ? s.db_write.results.length
         : void 0;
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: !s.db_write.committed
           ? "database write not committed"
@@ -826,7 +826,7 @@ function renderToolResultMessage(s, m, n) {
     return j
       ? j.renderHandlersResult(s)
       : e(ToolResultRow, {
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             children: "This record is unreadable in this build.",
           }),
@@ -841,7 +841,7 @@ function renderToolResultMessage(s, m, n) {
           : "? peers",
       u = typeof i.reason === "string" ? sanitizeDisplayText(i.reason, { max: 32 }) : void 0;
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children:
           i.delivered === !0
@@ -855,7 +855,7 @@ function renderToolResultMessage(s, m, n) {
   if ("asset_upload" in s) {
     let i = s.asset_upload;
     return e(ToolResultRow, {
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "uploaded ",
@@ -872,7 +872,7 @@ function renderToolResultMessage(s, m, n) {
     let i = isRecord(s.asset_list) ? s.asset_list : {},
       l = Array.isArray(i.assets) ? i.assets.length : void 0;
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children:
           l === void 0
@@ -887,7 +887,7 @@ function renderToolResultMessage(s, m, n) {
     let i = isRecord(s.file_list) ? s.file_list : {},
       l = Array.isArray(i.files) ? i.files.length : void 0;
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children:
           l === void 0
@@ -901,7 +901,7 @@ function renderToolResultMessage(s, m, n) {
   if ("file_read" in s) {
     let i = isRecord(s.file_read) ? s.file_read : {};
     return e(ToolResultRow, {
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "saved",
@@ -919,7 +919,7 @@ function renderToolResultMessage(s, m, n) {
   if ("asset_read" in s) {
     let i = s.asset_read;
     return e(ToolResultRow, {
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "saved ",
@@ -933,7 +933,7 @@ function renderToolResultMessage(s, m, n) {
   }
   if ("asset_delete" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: s.asset_delete.deleted ? "asset deleted" : "no such asset",
       }),
@@ -941,7 +941,7 @@ function renderToolResultMessage(s, m, n) {
   if ("asset_copy" in s) {
     let i = Array.isArray(s.asset_copy.assets) ? s.asset_copy.assets.length : 0;
     return e(ToolResultRow, {
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: ["copied ", i, " ", pluralize(i, "asset"), " into the artifact"],
       }),
@@ -949,7 +949,7 @@ function renderToolResultMessage(s, m, n) {
   }
   if ("artifact_delete" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children:
           s.artifact_delete.already_gone === !0
@@ -959,14 +959,14 @@ function renderToolResultMessage(s, m, n) {
     });
   if ("pin" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: s.pin.pinned ? "pinned to the sidebar" : "unpinned",
       }),
     });
   if ("watch" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: s.watch.watching
           ? s.watch.events?.includes("comment")
@@ -979,7 +979,7 @@ function renderToolResultMessage(s, m, n) {
     });
   if ("unwatch" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: s.unwatch.was_watching
           ? "stopped watching"
@@ -1011,7 +1011,7 @@ function renderToolResultMessage(s, m, n) {
           ? ` \xB7 ${c.length} artifact ${pluralize(c.length, "room")} joined${f > 0 ? ` (${f} reconnecting)` : ""}`
           : "";
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: `${i} artifact ${pluralize(i, "watch", "watches")}${l > 0 ? ` \xB7 ${l} with auto-replies paused or stopped` : ""}${a !== "" ? `, ${a}` : ""}${g}`,
       }),
@@ -1019,7 +1019,7 @@ function renderToolResultMessage(s, m, n) {
   }
   if ("resume_replies" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: s.resume_replies.resumed
           ? "auto-replies resumed"
@@ -1032,7 +1032,7 @@ function renderToolResultMessage(s, m, n) {
     });
   if ("verify" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children:
           s.verify.state === "no_row"
@@ -1055,7 +1055,7 @@ function renderToolResultMessage(s, m, n) {
               .join(", ")})`,
       l = ` \xB7 ${s.page_data.provenance.authorship}`;
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: s.page_data.islandPresent
           ? `read ${s.page_data.entries.length} ${pluralize(s.page_data.entries.length, "entry", "entries")} [${s.page_data.schema}]${i}${l}`
@@ -1065,7 +1065,7 @@ function renderToolResultMessage(s, m, n) {
   }
   if ("artifact_types" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children:
           s.artifact_types.length === 0
@@ -1079,7 +1079,7 @@ function renderToolResultMessage(s, m, n) {
     let i = parseArtifactUrl(s.artifact_type.type_url),
       l = i ? artifactViewerUrlFor(i) : void 0;
     return e(ToolResultRow, {
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "described artifact type",
@@ -1095,7 +1095,7 @@ function renderToolResultMessage(s, m, n) {
       ? s.type_instances.instances.length
       : 0;
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children:
           i === 0
@@ -1108,7 +1108,7 @@ function renderToolResultMessage(s, m, n) {
   }
   if ("artifacts" in s)
     return e(ToolResultRow, {
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children:
           s.artifacts.length === 0
@@ -1124,7 +1124,7 @@ function renderToolResultMessage(s, m, n) {
     let i = typeof s.url === "string" ? parseArtifactUrl(s.url) : null,
       l = i ? artifactViewerUrlFor(i) : void 0;
     return e(ToolResultRow, {
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "Opened",
@@ -1148,7 +1148,7 @@ function renderToolResultMessage(s, m, n) {
         : "(unrecognized address)";
     };
     return e(ToolResultRow, {
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "Created ",
@@ -1166,10 +1166,10 @@ function renderToolResultMessage(s, m, n) {
   let b = replayedPublishesRemaining(s.publishesRemaining),
     w = replayedPublishesResetAt(s.publishesResetAt);
   return e(ToolResultRow, {
-    children: r(o, {
+    children: r(Box, {
       flexDirection: "column",
       children: [
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             s.updated ? "Updated" : "Published",
@@ -1179,7 +1179,7 @@ function renderToolResultMessage(s, m, n) {
         }),
         b !== void 0 &&
           w !== void 0 &&
-          e(t, { dimColor: !0, children: publishesRemainingLine(b, w) }),
+          e(Text, { dimColor: !0, children: publishesRemainingLine(b, w) }),
       ],
     }),
   });

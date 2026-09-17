@@ -21,7 +21,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { validateUuid, writeEntriesToJsonlFile, sanitizePath, getProjectKey } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
@@ -29,7 +29,7 @@ import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys
 import { AsyncQueue } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { CREDENTIALS_SUFFIX, getKeychainServiceName, getKeychainAccountName } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
-import "../../02-功能模块/MCP客户端/chunk-98spw152.js";
+import "../../02-功能模块/MCP客户端/mcp-protocol.js";
 import "../../02-功能模块/MCP客户端/mcp-server.js";
 import { AbortError } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -139,9 +139,9 @@ function wt(e, t) {
   let p = { sandbox: o };
   if (d)
     try {
-      p = { ...z(d), sandbox: o };
+      p = { ...jsonParse(d), sandbox: o };
     } catch {}
-  return ((r.settings = b(p)), r);
+  return ((r.settings = jsonStringify(p)), r);
 }
 var ys = 2000,
   He = 2048,
@@ -181,17 +181,17 @@ function ks(e) {
     throw Error("Skill names must be non-empty strings.");
   if (!isWellFormed(e))
     throw new R(
-      `Invalid skill name ${b(e)}: the name contains an unpaired surrogate, which cannot survive the UTF-8 encoding of the CLI invocation; no skill discovered from the filesystem can have such a name.`,
+      `Invalid skill name ${jsonStringify(e)}: the name contains an unpaired surrogate, which cannot survive the UTF-8 encoding of the CLI invocation; no skill discovered from the filesystem can have such a name.`,
       "skill name with unpaired surrogate rejected",
     );
   if (e !== e.trim())
     throw new R(
-      `Invalid skill name ${b(e)}: leading or trailing whitespace is not allowed \u2014 the Skill tool trims the invoked name, so a padded rule can never match. Remove the padding.`,
+      `Invalid skill name ${jsonStringify(e)}: leading or trailing whitespace is not allowed \u2014 the Skill tool trims the invoked name, so a padded rule can never match. Remove the padding.`,
       "skill name with surrounding whitespace rejected",
     );
   if (bs.test(e))
     throw new R(
-      `Invalid skill name ${b(e)}: parentheses, commas, and control characters are not allowed in skill names. Skill names match the skill's directory name (or 'plugin:skill' for plugin-qualified skills); rename the skill if its directory name contains these characters.`,
+      `Invalid skill name ${jsonStringify(e)}: parentheses, commas, and control characters are not allowed in skill names. Skill names match the skill's directory name (or 'plugin:skill' for plugin-qualified skills); rename the skill if its directory name contains these characters.`,
       "invalid skill name rejected",
     );
   if (e === "*")
@@ -200,22 +200,22 @@ function ks(e) {
     );
   if (e.endsWith(":*") || e.endsWith(" *"))
     throw new R(
-      `Invalid skill name ${b(e)}: wildcard-suffix names are not allowed; list each skill by its exact name.`,
+      `Invalid skill name ${jsonStringify(e)}: wildcard-suffix names are not allowed; list each skill by its exact name.`,
       "wildcard-suffix skill name rejected",
     );
   if (e.startsWith("/"))
     throw new R(
-      `Invalid skill name ${b(e)}: skill names may not start with '/'. Skills are invoked as slash commands, but the skills option takes the skill's canonical name \u2014 the directory name, or 'plugin:skill'.`,
+      `Invalid skill name ${jsonStringify(e)}: skill names may not start with '/'. Skills are invoked as slash commands, but the skills option takes the skill's canonical name \u2014 the directory name, or 'plugin:skill'.`,
       "skill name with leading slash rejected",
     );
   if (e.includes("\\\\"))
     throw new R(
-      `Invalid skill name ${b(e)}: consecutive backslashes are not allowed \u2014 the permission-rule parser collapses escaped backslashes, so the rule would name a different skill. Rename the skill.`,
+      `Invalid skill name ${jsonStringify(e)}: consecutive backslashes are not allowed \u2014 the permission-rule parser collapses escaped backslashes, so the rule would name a different skill. Rename the skill.`,
       "skill name with consecutive backslashes rejected",
     );
   if (e.endsWith("\\"))
     throw new R(
-      `Invalid skill name ${b(e)}: names may not end with an unpaired backslash.`,
+      `Invalid skill name ${jsonStringify(e)}: names may not end with an unpaired backslash.`,
       "skill name with unpaired trailing backslash rejected",
     );
   return e;
@@ -412,7 +412,7 @@ class We {
       if (_) y.push("--model", _);
       if (t) y.push("--agent", t);
       if (r && r.length > 0) y.push("--betas", r.join(","));
-      if (E) y.push("--json-schema", b(E));
+      if (E) y.push("--json-schema", jsonStringify(E));
       if (this.options.debugFile)
         y.push("--debug-file", this.options.debugFile);
       else if (this.options.debug) y.push("--debug");
@@ -438,7 +438,7 @@ class We {
           else y.push("--tools", J.join(","));
         else y.push("--tools", "default");
       if (ne && Object.keys(ne).length > 0)
-        y.push("--mcp-config", b({ mcpServers: ne }));
+        y.push("--mcp-config", jsonStringify({ mcpServers: ne }));
       if (se !== void 0) y.push(`--setting-sources=${se.join(",")}`);
       if (Oe) y.push("--strict-mcp-config");
       if (T) y.push("--permission-mode", T);
@@ -737,7 +737,7 @@ class We {
         if (r.trim()) {
           let o;
           try {
-            o = z(r);
+            o = jsonParse(r);
           } catch (d) {
             x(`Non-JSON stdout: ${r}`);
             continue;
@@ -1109,7 +1109,7 @@ class _e {
           )
             this.firstResultReceivedResolve();
           if (this.isSingleUserTurn)
-            (n(
+            (logForDebugging(
               "[Query.readMessages] First result received for single-turn query, closing stdin",
             ),
               this.transport.endInput());
@@ -1141,7 +1141,7 @@ class _e {
             errorClass: "error_result",
           },
         );
-        (n(
+        (logForDebugging(
           `[Query.readMessages] Replacing exit error with result text. Original: ${l(e)}`,
         ),
           this.inputStream.error(t),
@@ -1153,7 +1153,7 @@ class _e {
   }
   async handleControlRequest(e) {
     if (this.cancelControllers.has(e.request_id)) {
-      n(
+      logForDebugging(
         `[Query.handleControlRequest] Duplicate delivery of in-flight request ${e.request_id} (${e.request.subtype}) \u2014 skipping`,
       );
       return;
@@ -1170,7 +1170,7 @@ class _e {
       };
       await Promise.resolve(
         this.transport.write(
-          b(o) +
+          jsonStringify(o) +
             `
 `,
         ),
@@ -1184,13 +1184,13 @@ class _e {
       try {
         await Promise.resolve(
           this.transport.write(
-            b(o) +
+            jsonStringify(o) +
               `
 `,
           ),
         );
       } catch (d) {
-        n(`[Query.handleControlRequest] Error-response write failed: ${l(d)}`, {
+        logForDebugging(`[Query.handleControlRequest] Error-response write failed: ${l(d)}`, {
           level: "error",
         });
       }
@@ -1282,7 +1282,7 @@ class _e {
         return r;
       }
       return (
-        n(
+        logForDebugging(
           `[Query] No onUserDialog handler for request_user_dialog (kind=${e.request.dialog_kind}) \u2014 staying silent so a capable client (or the worker's park deadline) settles it`,
         ),
         logEvent("tengu_request_user_dialog_response_ignored", {
@@ -1391,7 +1391,7 @@ class _e {
       this.initConfig.plugins.length > 0 &&
       p.plugins_applied !== !0
     )
-      n(
+      logForDebugging(
         `[Query.initialize] Claude Code reported plugins_applied=${String(p.plugins_applied)} for ${this.initConfig.plugins.length} plugins sent with pluginDelivery 'initialize'; the process is running with the plugins it was launched with.`,
         { level: "warn" },
       );
@@ -1442,7 +1442,7 @@ class _e {
             t(h);
           } else r(new R(p.error, "awaitControlResponse: CLI error verdict"));
           if (p.pending_permission_requests || p.pending_user_dialog_requests)
-            n(
+            logForDebugging(
               "[Query] Ignoring prompt-redelivery fields on awaitControlResponse response",
             );
         };
@@ -1675,7 +1675,7 @@ class _e {
           try {
             Promise.resolve(
               this.transport.write(
-                b({ type: "control_cancel_request", request_id: r }) +
+                jsonStringify({ type: "control_cancel_request", request_id: r }) +
                   `
 `,
               ),
@@ -1706,7 +1706,7 @@ class _e {
             !d &&
             (S.pending_permission_requests || S.pending_user_dialog_requests)
           )
-            n(
+            logForDebugging(
               `[Query] Ignoring prompt-redelivery fields on non-initialize response (subtype=${e.subtype})`,
             );
           else {
@@ -1724,7 +1724,7 @@ class _e {
       }),
         Promise.resolve(
           this.transport.write(
-            b(o) +
+            jsonStringify(o) +
               `
 `,
           ),
@@ -1867,7 +1867,7 @@ class _e {
         let w = this.sdkMcpServers.get(g);
         if (!w) this.connectSdkMcpServer(g, h);
         else if (parsePositiveInteger(h.timeout) !== w.timeout)
-          n(
+          logForDebugging(
             `[Query.setMcpServers] MCP server '${g}' is already registered; its timeout change is ignored until the server is removed and re-added`,
           );
       }
@@ -1888,35 +1888,35 @@ class _e {
     return (await this.initialization).account;
   }
   async streamInput(e) {
-    n("[Query.streamInput] Starting to process input stream");
+    logForDebugging("[Query.streamInput] Starting to process input stream");
     try {
       let t = 0;
       for await (let r of e) {
         if (
           (t++,
-          n(`[Query.streamInput] Processing message ${t}: ${r.type}`),
+          logForDebugging(`[Query.streamInput] Processing message ${t}: ${r.type}`),
           this.abortController?.signal.aborted)
         )
           break;
         await Promise.resolve(
           this.transport.write(
-            b(r) +
+            jsonStringify(r) +
               `
 `,
           ),
         );
       }
       if (
-        (n(
+        (logForDebugging(
           `[Query.streamInput] Finished processing ${t} messages from input stream`,
         ),
         t > 0 && this.hasBidirectionalNeeds())
       )
-        (n(
+        (logForDebugging(
           "[Query.streamInput] Has bidirectional needs, waiting for first result",
         ),
           await this.waitForFirstResult());
-      (n("[Query] Calling transport.endInput() to close stdin to CLI process"),
+      (logForDebugging("[Query] Calling transport.endInput() to close stdin to CLI process"),
         this.transport.endInput());
     } catch (t) {
       if (!(t instanceof AbortError)) throw t;
@@ -1925,7 +1925,7 @@ class _e {
   waitForFirstResult() {
     if (this.firstResultReceived)
       return (
-        n(
+        logForDebugging(
           "[Query.waitForFirstResult] Result already received, returning immediately",
         ),
         Promise.resolve()
@@ -1957,7 +1957,7 @@ class _e {
       t.instance.connect(r).catch((o) => {
         if (this.sdkMcpServers.get(e)?.transport === r)
           this.sdkMcpServers.delete(e);
-        n(
+        logForDebugging(
           `[Query.connectSdkMcpServer] Failed to connect MCP server '${e}': ${o}`,
           { level: "error" },
         );
@@ -1986,12 +1986,12 @@ class _e {
     };
     Promise.resolve(
       this.transport.write(
-        b(r) +
+        jsonStringify(r) +
           `
 `,
       ),
     ).catch((o) => {
-      n(`[Query.sendMcpServerMessageToCli] Transport write failed: ${o}`, {
+      logForDebugging(`[Query.sendMcpServerMessageToCli] Transport write failed: ${o}`, {
         level: "error",
       });
     });
@@ -2029,7 +2029,7 @@ function Ct(e, t) {
 }
 function Ps(e) {
   try {
-    let t = z(Buffer.from(e, "base64url").toString("utf8"));
+    let t = jsonParse(Buffer.from(e, "base64url").toString("utf8"));
     if (
       typeof t !== "object" ||
       t === null ||
@@ -2040,7 +2040,7 @@ function Ps(e) {
     let r = t.session_ingress_token,
       d = (r.startsWith("sk-ant-si-") ? r.slice(10) : r).split(".");
     if (d.length !== 3 || !d[1]) return;
-    let p = z(Buffer.from(d[1], "base64url").toString("utf8"));
+    let p = jsonParse(Buffer.from(d[1], "base64url").toString("utf8"));
     return typeof p === "object" &&
       p !== null &&
       "session_id" in p &&
@@ -2082,7 +2082,7 @@ class Qe {
       (this.backoffMs = f));
   }
   enqueue(e, t) {
-    let r = b(t).length;
+    let r = jsonStringify(t).length;
     if (
       (this.pending.push({ filePath: e, entries: t, bytes: r }),
       (this.pendingEntries += t.length),
@@ -2129,14 +2129,14 @@ class Qe {
         await sleep(g);
       }
     if (d) {
-      n(
+      logForDebugging(
         `[TranscriptMirrorBatcher] flush failed for ${e} after ${p} attempt(s): ${d}`,
         { level: "error" },
       );
       try {
         this.onError?.(e, d);
       } catch (f) {
-        n(`[TranscriptMirrorBatcher] onError callback threw: ${f}`, {
+        logForDebugging(`[TranscriptMirrorBatcher] onError callback threw: ${f}`, {
           level: "error",
         });
       }
@@ -2170,7 +2170,7 @@ async function Me(e, t, r, o) {
     if (A(d) === void 0) throw d;
     if (!W(d))
       (await xt(t, { force: !0 }).catch(() => {}),
-        n(`sessionStore resume: skipping ${e} (${A(d)})`));
+        logForDebugging(`sessionStore resume: skipping ${e} (${A(d)})`));
   }
 }
 async function Ks({ backend: e, key: t }, r, o, d) {
@@ -2181,7 +2181,7 @@ async function Ks({ backend: e, key: t }, r, o, d) {
         `sessionStore resume: invalid v5 key for ${r}: ${p.error.argument}${p.error.reason ? ` (${p.error.reason})` : ""}`,
         "sessionStore resume: invalid v5 key (InvalidArgument from backend read)",
       );
-    n(`sessionStore resume: skipping ${r} (${p.error.code})`);
+    logForDebugging(`sessionStore resume: skipping ${r} (${p.error.code})`);
     return;
   }
   let f = p.value.items[0];
@@ -2193,7 +2193,7 @@ async function Ks({ backend: e, key: t }, r, o, d) {
     if (A(h) === void 0) throw h;
     if (!W(h))
       (await xt(o, { force: !0 }).catch(() => {}),
-        n(`sessionStore resume: skipping ${r} (${A(h)})`));
+        logForDebugging(`sessionStore resume: skipping ${r} (${A(h)})`));
   }
 }
 function Bs(e, t) {
@@ -2226,7 +2226,7 @@ var Ys = ["enabledPlugins", "extraKnownMarketplaces", "additionalMarketplaces"];
 function Lt(e) {
   let t;
   try {
-    t = z(cs(e.toString("utf8")));
+    t = jsonParse(cs(e.toString("utf8")));
   } catch {
     return e;
   }
@@ -2236,7 +2236,7 @@ function Lt(e) {
   let o = t.env;
   if ($t(o) && Object.hasOwn(o, "CLAUDE_CONFIG_DIR"))
     (delete o.CLAUDE_CONFIG_DIR, (r = !0));
-  return r ? b(t) : e;
+  return r ? jsonStringify(t) : e;
 }
 function $t(e) {
   return e !== null && typeof e === "object" && !Array.isArray(e);
@@ -2245,9 +2245,9 @@ async function Zs(e, t) {
   if (!e) return;
   let r = e;
   try {
-    let o = z(e);
+    let o = jsonParse(e);
     if (o?.claudeAiOauth?.refreshToken)
-      (delete o.claudeAiOauth.refreshToken, (r = b(o)));
+      (delete o.claudeAiOauth.refreshToken, (r = jsonStringify(o)));
   } catch {}
   await Kt(t, r, { mode: 384 });
 }
@@ -2331,7 +2331,7 @@ async function sr(e, t, r, o) {
       p.split(/[\\/]/).includes("..") ||
       !f.startsWith(r + Ht)
     ) {
-      n(`[SessionStore] skipping unsafe subpath from listSubkeys: ${p}`, {
+      logForDebugging(`[SessionStore] skipping unsafe subpath from listSubkeys: ${p}`, {
         level: "warn",
       });
       continue;
@@ -2353,7 +2353,7 @@ async function sr(e, t, r, o) {
         S = resolve(r, p + ".meta.json");
       await mkdir(dirname(S), { recursive: !0 });
       let { type: C, ..._ } = k;
-      await Kt(S, b(_), { mode: 384 });
+      await Kt(S, jsonStringify(_), { mode: 384 });
     }
   }
 }
@@ -2456,7 +2456,7 @@ function Gt(e, t) {
       "enableFileCheckpointing is not yet supported with sessionStore (backup blobs are not mirrored, so rewindFiles() fails after a store-backed resume).",
     );
   if (O && k.spawnClaudeCodeProcess)
-    n(
+    logForDebugging(
       "sessionStore with custom spawnClaudeCodeProcess: ensure the subprocess CLAUDE_CONFIG_DIR matches the parent (same path, same separators) or transcript_mirror frames will be dropped.",
       { level: "warn" },
     );
@@ -2558,8 +2558,8 @@ function Gt(e, t) {
       resumeSessionAt: rs,
       resumeDropsTurn: ns,
       sessionId: is,
-      settings: typeof f === "object" ? b(f) : f,
-      managedSettings: g ? b(g) : void 0,
+      settings: typeof f === "object" ? jsonStringify(f) : f,
+      managedSettings: g ? jsonStringify(g) : void 0,
       settingSources: h,
       skills: at,
       allowedTools: te,
@@ -2607,7 +2607,7 @@ function Gt(e, t) {
           let de = Nt(X, I());
           if (de) await O.append(de, qe);
           else
-            n(
+            logForDebugging(
               `[SessionStore] dropping mirror frame: filePath ${X} is not under ${I()} -- subprocess CLAUDE_CONFIG_DIR likely differs from parent (custom spawnClaudeCodeProcess / container?)`,
               { level: "warn" },
             );
@@ -2633,7 +2633,7 @@ function Gt(e, t) {
 function zt(e, t, r, o) {
   if (typeof r === "string")
     t.write(
-      b({
+      jsonStringify({
         type: "user",
         session_id: "",
         message: { role: "user", content: [{ type: "text", text: r }] },

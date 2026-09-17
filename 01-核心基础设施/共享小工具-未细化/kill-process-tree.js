@@ -10,7 +10,7 @@
 import { logEvent } from "./analytics-event-queue.js";
 import { fromEnum } from "./analytics-fields.js";
 import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { spawn } from "child_process";
 var f = 500;
@@ -136,7 +136,7 @@ function k(r, t) {
   try {
     let o = A(t),
       e = Jr(t);
-    (n(`killProcessTree ${r} failed: ${o ?? t}`),
+    (logForDebugging(`killProcessTree ${r} failed: ${o ?? t}`),
       logEvent("tengu_bash_tool_kill_error", {
         stage: fromEnum(r),
         ...(e && { error_code: e }),

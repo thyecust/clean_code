@@ -19,16 +19,16 @@ import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, Et, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, registerCleanup, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, beforeFirst, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { s, Uf, v, c, $e, fe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-function INe(e) {
+function parseKeybindingKey(e) {
   let r = e.split("+"),
     t = { key: "", ctrl: !1, alt: !1, shift: !1, meta: !1, super: !1 };
   for (let o of r) {
@@ -86,9 +86,9 @@ function INe(e) {
   }
   return t;
 }
-function gw(e) {
-  if (e === " ") return [INe("space")];
-  return e.trim().split(/\s+/).map(INe);
+function parseKeybindingChord(e) {
+  if (e === " ") return [parseKeybindingKey("space")];
+  return e.trim().split(/\s+/).map(parseKeybindingKey);
 }
 function ce(e) {
   let r = [];
@@ -134,10 +134,10 @@ function V(e) {
       return e;
   }
 }
-function Ej(e) {
+function formatKeybindingChordText(e) {
   return e.map(ce).join(" ");
 }
-function A3t(e, r = "linux") {
+function formatKeybindingKeyForPlatform(e, r = "linux") {
   let t = [];
   if (e.ctrl) t.push("ctrl");
   if (e.alt || e.meta) t.push(r === "macos" ? "opt" : "alt");
@@ -146,14 +146,14 @@ function A3t(e, r = "linux") {
   let o = V(e.key);
   return (t.push(o), t.join("+"));
 }
-function Dre(e, r = "linux") {
-  return e.map((t) => A3t(t, r)).join(" ");
+function formatKeybindingChordForPlatform(e, r = "linux") {
+  return e.map((t) => formatKeybindingKeyForPlatform(t, r)).join(" ");
 }
-function HAe(e) {
+function expandKeybindingBlocks(e) {
   let r = [];
   for (let t of e)
     for (let [o, p] of Object.entries(t.bindings))
-      r.push({ chord: gw(o), action: p, context: t.context });
+      r.push({ chord: parseKeybindingChord(o), action: p, context: t.context });
   return r;
 }
 import { readFileSync } from "fs";
@@ -168,7 +168,7 @@ var B = getCurrentPlatform(),
       ? satisfiesSemverRange("1.4.1", ">=1.2.23")
       : satisfiesSemverRange(process.versions.node, ">=22.17.0 <23.0.0 || >=24.2.0")),
   q = ge ? "shift+tab" : "meta+m",
-  K3 = [
+  DEFAULT_KEYBINDINGS = [
     {
       context: "Global",
       bindings: {
@@ -490,7 +490,7 @@ var B = getCurrentPlatform(),
       bindings: { "ctrl+s": "agents:switchView", "ctrl+t": "agents:togglePin" },
     },
   ];
-var K8e = [
+var KEYBINDING_CONTEXT_NAMES = [
     "Global",
     "Chat",
     "Autocomplete",
@@ -518,11 +518,11 @@ var K8e = [
     "Scroll",
     "Agents",
   ],
-  ue = new Set(K8e);
-function DYn(e) {
+  ue = new Set(KEYBINDING_CONTEXT_NAMES);
+function isKeybindingContextName(e) {
   return ue.has(e);
 }
-var LYn = {
+var KEYBINDING_CONTEXT_DESCRIPTIONS = {
     Global: "Active everywhere, regardless of focus",
     Chat: "When the chat input is focused",
     Autocomplete: "When autocomplete menu is visible",
@@ -552,7 +552,7 @@ var LYn = {
     Scroll: "When a scrollable view is focused (fullscreen layout)",
     Agents: "When the agents view (`claude agents`) is open",
   },
-  Lre = [
+  KEYBINDING_ACTION_IDS = [
     "app:interrupt",
     "app:exit",
     "app:toggleTodos",
@@ -704,19 +704,19 @@ var LYn = {
     "agents:switchView",
     "agents:togglePin",
   ],
-  me = new Set(Lre);
+  me = new Set(KEYBINDING_ACTION_IDS);
 function D(e) {
   return me.has(e) || e.startsWith("command:");
 }
 var ye = createLazyValue(() =>
     c({
-      context: X(K8e).describe(
+      context: X(KEYBINDING_CONTEXT_NAMES).describe(
         "UI context where these bindings apply. Global bindings work everywhere.",
       ),
       bindings: fe(
         s().describe('Keystroke pattern (e.g., "ctrl+k", "shift+tab")'),
         $e([
-          X(Lre),
+          X(KEYBINDING_ACTION_IDS),
           s()
             .regex(/^command:[a-zA-Z0-9:\-_]+$/)
             .describe(
@@ -736,7 +736,7 @@ var ye = createLazyValue(() =>
       "Claude Code keybindings configuration. Customize keyboard shortcuts by context.",
     ),
   );
-var X8e = [
+var NON_REBINDABLE_KEYS = [
     {
       key: "ctrl+c",
       reason: "Cannot be rebound - used for interrupt/exit (hardcoded)",
@@ -774,7 +774,7 @@ var X8e = [
       severity: "error",
     },
   ],
-  Fyn = [
+  TERMINAL_RESERVED_KEYS = [
     {
       key: "ctrl+z",
       reason: "Unix process suspend (SIGTSTP)",
@@ -786,7 +786,7 @@ var X8e = [
       severity: "error",
     },
   ],
-  $yn = [
+  MACOS_RESERVED_KEYS = [
     { key: "cmd+c", reason: "macOS system copy", severity: "error" },
     { key: "cmd+v", reason: "macOS system paste", severity: "error" },
     { key: "cmd+x", reason: "macOS system cut", severity: "error" },
@@ -797,11 +797,11 @@ var X8e = [
   ];
 function Z() {
   let e = getCurrentPlatform(),
-    r = [...X8e, ...Fyn];
-  if (e === "macos") r.push(...$yn);
+    r = [...NON_REBINDABLE_KEYS, ...TERMINAL_RESERVED_KEYS];
+  if (e === "macos") r.push(...MACOS_RESERVED_KEYS);
   return r;
 }
-function PNe(e) {
+function normalizeKeybindingChord(e) {
   if (e === " ") return "space";
   return e.trim().split(/\s+/).map(we).join(" ");
 }
@@ -854,7 +854,7 @@ function xe(e) {
 function T(e) {
   return Array.isArray(e) && e.every(xe);
 }
-var J = K8e;
+var J = KEYBINDING_CONTEXT_NAMES;
 function Se(e) {
   return J.includes(e);
 }
@@ -952,7 +952,7 @@ function Pe(e, r) {
         suggestion: Ke(h),
       });
     else if (h === "voice:pushToTalk") {
-      let x = gw(k)[0];
+      let x = parseKeybindingChord(k)[0];
       if (
         x &&
         !x.ctrl &&
@@ -977,15 +977,15 @@ function Pe(e, r) {
 function Ke(e) {
   let r,
     t = 1 / 0;
-  for (let b of Lre) {
+  for (let b of KEYBINDING_ACTION_IDS) {
     let k = Ee(e.toLowerCase(), b.toLowerCase());
     if (k < t) ((t = k), (r = b));
   }
   if (r && t <= 2) return `Did you mean "${r}"?`;
   let o = beforeFirst(e, ":"),
-    p = Lre.filter((b) => b.startsWith(`${o}:`));
+    p = KEYBINDING_ACTION_IDS.filter((b) => b.startsWith(`${o}:`));
   if (p.length > 0) return `Valid "${o}:" actions: ${p.join(", ")}`;
-  return `Valid action namespaces: ${dedupe(Lre.map((b) => beforeFirst(b, ":")))
+  return `Valid action namespaces: ${dedupe(KEYBINDING_ACTION_IDS.map((b) => beforeFirst(b, ":")))
     .map((b) => `${b}:`)
     .join(", ")}`;
 }
@@ -1058,7 +1058,7 @@ function Ae(e) {
     let p = t.get(o.context) ?? new Map();
     t.set(o.context, p);
     for (let [d, b] of Object.entries(o.bindings)) {
-      let k = PNe(d),
+      let k = normalizeKeybindingChord(d),
         h = p.get(k);
       if (h && h !== b)
         r.push({
@@ -1079,10 +1079,10 @@ function Be(e) {
   let r = [],
     t = Z();
   for (let o of e) {
-    let p = Ej(o.chord),
-      d = PNe(p);
+    let p = formatKeybindingChordText(o.chord),
+      d = normalizeKeybindingChord(p);
     for (let b of t)
-      if (PNe(b.key) === d)
+      if (normalizeKeybindingChord(b.key) === d)
         r.push({
           type: "reserved",
           severity: b.severity,
@@ -1098,7 +1098,7 @@ function De(e) {
   let r = [];
   for (let t of e)
     for (let [o, p] of Object.entries(t.bindings)) {
-      let d = o.split(" ").map((b) => INe(b));
+      let d = o.split(" ").map((b) => parseKeybindingKey(b));
       r.push({ chord: d, action: p, context: t.context });
     }
   return r;
@@ -1117,7 +1117,7 @@ function I(e, r) {
     return (o.add(d), !0);
   });
 }
-function iN() {
+function isKeybindingCustomizationEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_keybinding_customization_release", !0);
 }
 var je = 500,
@@ -1143,26 +1143,26 @@ function Fe() {
   };
   return e;
 }
-var hw = Fe();
+var keybindingStore = Fe();
 function R(e, r) {
   let t = new Date().toISOString().slice(0, 10);
   if (e.lastCustomBindingsLogDate === t) return;
   ((e.lastCustomBindingsLogDate = t),
     logEvent("tengu_custom_keybindings_loaded", { user_binding_count: r }));
 }
-function Y8e() {
+function getKeybindingsConfigPath() {
   return Oe(getClaudeConfigDir(), "keybindings.json");
 }
-var Uyn = STORAGE_KEYS.state("keybindings");
+var KEYBINDINGS_STORAGE_KEY = STORAGE_KEYS.state("keybindings");
 function L() {
-  return HAe(K3);
+  return expandKeybindingBlocks(DEFAULT_KEYBINDINGS);
 }
 function O(e) {
-  return HAe(e).filter((r) => r.action === null || D(r.action));
+  return expandKeybindingBlocks(e).filter((r) => r.action === null || D(r.action));
 }
 function F(e) {
   for (let r of e)
-    n(
+    logForDebugging(
       `[keybindings] [${r.severity}] ${r.message}${r.suggestion ? ` \u2014 ${r.suggestion}` : ""}`,
       { level: "warn" },
     );
@@ -1173,15 +1173,15 @@ function C(e, r) {
   else logFeatureBad("keybinding_load_user_config", r);
 }
 function U() {
-  return !iN() || isCustomizationDisabled("keybindings");
+  return !isKeybindingCustomizationEnabled() || isCustomizationDisabled("keybindings");
 }
-function MYn(e) {
+function loadKeybindingsFromConfigFile(e) {
   let r = L();
   if (U()) return r;
   if (isHoverRestEnabled() && e !== void 0) return r;
   try {
-    let t = readFileSync(Y8e(), "utf-8"),
-      o = z(t),
+    let t = readFileSync(getKeybindingsConfigPath(), "utf-8"),
+      o = jsonParse(t),
       p =
         typeof o === "object" && o !== null && "bindings" in o
           ? o.bindings
@@ -1193,15 +1193,15 @@ function MYn(e) {
 }
 async function ne(e, r, t) {
   let o = L();
-  if (!iN() || isCustomizationDisabled("keybindings")) return { bindings: o, warnings: [] };
-  let p = Y8e();
+  if (!isKeybindingCustomizationEnabled() || isCustomizationDisabled("keybindings")) return { bindings: o, warnings: [] };
+  let p = getKeybindingsConfigPath();
   if (r) {
-    let d = await r.read([Uyn]);
+    let d = await r.read([KEYBINDINGS_STORAGE_KEY]);
     if (!d.ok) {
       let k = d.error,
-        h = We(k);
+        h = describeStorageError(k);
       if (
-        (n(`[keybindings] Error loading ${p}: ${h}`), t?.suppressFeatureEvents)
+        (logForDebugging(`[keybindings] Error loading ${p}: ${h}`), t?.suppressFeatureEvents)
       )
         logFeatureSad("keybinding_load_user_config", "warm_backend_read_failed_fell_back");
       return (
@@ -1224,12 +1224,12 @@ async function ne(e, r, t) {
   }
   try {
     let d = await readFile(p, "utf-8"),
-      b = z(d),
+      b = jsonParse(d),
       k;
     if (typeof b === "object" && b !== null && "bindings" in b) k = b.bindings;
     else
       return (
-        n(
+        logForDebugging(
           '[keybindings] Invalid keybindings.json: keybindings.json must have a "bindings" array',
         ),
         C(t, "keybinding_config_invalid_format"),
@@ -1253,7 +1253,7 @@ async function ne(e, r, t) {
           ? 'Set "bindings" to an array of keybinding blocks'
           : 'Each block must have "context" (string) and "bindings" (object mapping keys to a string action or null)';
       return (
-        n(`[keybindings] Invalid keybindings.json: ${K}`),
+        logForDebugging(`[keybindings] Invalid keybindings.json: ${K}`),
         C(t, "keybinding_config_invalid_structure"),
         {
           bindings: o,
@@ -1269,17 +1269,17 @@ async function ne(e, r, t) {
       );
     }
     let h = O(k);
-    n(`[keybindings] Loaded ${h.length} user bindings from ${p}`);
+    logForDebugging(`[keybindings] Loaded ${h.length} user bindings from ${p}`);
     let w = [...o, ...h];
     R(e, h.length);
     let _ = [...N(d), ...I(k, w)];
     if (_.length > 0)
-      (n(`[keybindings] Found ${_.length} validation issue(s)`), F(_));
+      (logForDebugging(`[keybindings] Found ${_.length} validation issue(s)`), F(_));
     return (C(t, "ok"), { bindings: w, warnings: _ });
   } catch (d) {
     if (W(d)) return (C(t, "ok"), { bindings: o, warnings: [] });
     return (
-      n(`[keybindings] Error loading ${p}: ${l(d)}`),
+      logForDebugging(`[keybindings] Error loading ${p}: ${l(d)}`),
       C(t, "keybinding_config_parse_error"),
       {
         bindings: o,
@@ -1296,12 +1296,12 @@ async function ne(e, r, t) {
 }
 function Ue(e, r, t, o, p) {
   try {
-    let d = z(e),
+    let d = jsonParse(e),
       b;
     if (typeof d === "object" && d !== null && "bindings" in d) b = d.bindings;
     else
       return (
-        n(
+        logForDebugging(
           '[keybindings] Invalid keybindings.json: keybindings.json must have a "bindings" array',
         ),
         C(p, "keybinding_config_invalid_format"),
@@ -1325,7 +1325,7 @@ function Ue(e, r, t, o, p) {
           ? 'Set "bindings" to an array of keybinding blocks'
           : 'Each block must have "context" (string) and "bindings" (object mapping keys to a string action or null)';
       return (
-        n(`[keybindings] Invalid keybindings.json: ${_}`),
+        logForDebugging(`[keybindings] Invalid keybindings.json: ${_}`),
         C(p, "keybinding_config_invalid_structure"),
         {
           bindings: t,
@@ -1341,16 +1341,16 @@ function Ue(e, r, t, o, p) {
       );
     }
     let k = O(b);
-    n(`[keybindings] Loaded ${k.length} user bindings from ${o}`);
+    logForDebugging(`[keybindings] Loaded ${k.length} user bindings from ${o}`);
     let h = [...t, ...k];
     R(r, k.length);
     let x = [...N(e), ...I(b, h)];
     if (x.length > 0)
-      (n(`[keybindings] Found ${x.length} validation issue(s)`), F(x));
+      (logForDebugging(`[keybindings] Found ${x.length} validation issue(s)`), F(x));
     return (C(p, "ok"), { bindings: h, warnings: x });
   } catch (d) {
     return (
-      n(`[keybindings] Error loading ${o}: ${l(d)}`),
+      logForDebugging(`[keybindings] Error loading ${o}: ${l(d)}`),
       C(p, "keybinding_config_parse_error"),
       {
         bindings: t,
@@ -1365,7 +1365,7 @@ function Ue(e, r, t, o, p) {
     );
   }
 }
-async function NYn(e, r) {
+async function warmKeybindingsFromBackend(e, r) {
   if (e.bindings) return e.bindings;
   if (e.warmAttempted) return;
   if (ke()) return;
@@ -1390,25 +1390,25 @@ function te(e) {
     );
   return ((e.warmedFromBackend = !1), !1);
 }
-function zSt(e) {
+function getActiveKeybindings(e) {
   if (e.bindings && !te(e)) return e.bindings;
-  return ONe(e).bindings;
+  return loadKeybindingsWithWarnings(e).bindings;
 }
-function ONe(e) {
+function loadKeybindingsWithWarnings(e) {
   if (e.bindings && !te(e))
     return { bindings: e.bindings, warnings: e.warnings };
   e.warmedFromBackend = !1;
   let r = L();
-  if (!iN() || isCustomizationDisabled("keybindings"))
+  if (!isKeybindingCustomizationEnabled() || isCustomizationDisabled("keybindings"))
     return (
       (e.bindings = r),
       (e.warnings = []),
       { bindings: e.bindings, warnings: e.warnings }
     );
-  let t = Y8e();
+  let t = getKeybindingsConfigPath();
   try {
     let o = readFileSync(t, "utf-8"),
-      p = z(o),
+      p = jsonParse(o),
       d;
     if (typeof p === "object" && p !== null && "bindings" in p) d = p.bindings;
     else
@@ -1442,12 +1442,12 @@ function ONe(e) {
       );
     }
     let b = O(d);
-    (n(`[keybindings] Loaded ${b.length} user bindings from ${t}`),
+    (logForDebugging(`[keybindings] Loaded ${b.length} user bindings from ${t}`),
       (e.bindings = [...r, ...b]),
       R(e, b.length));
     let k = N(o);
     if (((e.warnings = [...k, ...I(d, e.bindings)]), e.warnings.length > 0))
-      (n(`[keybindings] Found ${e.warnings.length} validation issue(s)`),
+      (logForDebugging(`[keybindings] Found ${e.warnings.length} validation issue(s)`),
         F(e.warnings));
     return (
       logFeatureOk("keybinding_load_user_config"),
@@ -1462,7 +1462,7 @@ function ONe(e) {
         { bindings: e.bindings, warnings: e.warnings }
       );
     return (
-      n(`[keybindings] Error loading ${t}: ${l(o)}`),
+      logForDebugging(`[keybindings] Error loading ${t}: ${l(o)}`),
       logFeatureBad("keybinding_load_user_config", "keybinding_config_parse_error"),
       (e.bindings = r),
       (e.warnings = [
@@ -1476,27 +1476,27 @@ function ONe(e) {
     );
   }
 }
-async function FYn(e) {
+async function startKeybindingsWatcher(e) {
   if (e.initialized || e.disposed) return;
-  if (!iN() || isCustomizationDisabled("keybindings")) {
-    n("[keybindings] Skipping file watcher - user customization disabled");
+  if (!isKeybindingCustomizationEnabled() || isCustomizationDisabled("keybindings")) {
+    logForDebugging("[keybindings] Skipping file watcher - user customization disabled");
     return;
   }
-  let r = Y8e(),
+  let r = getKeybindingsConfigPath(),
     t = dirname(r);
   try {
     if (!(await Ie(t)).isDirectory()) {
-      (n(`[keybindings] Not watching: ${t} is not a directory`),
+      (logForDebugging(`[keybindings] Not watching: ${t} is not a directory`),
         logFeatureSad("keybinding_watcher_init", "watch_dir_inaccessible"));
       return;
     }
   } catch {
-    (n(`[keybindings] Not watching: ${t} does not exist`),
+    (logForDebugging(`[keybindings] Not watching: ${t} does not exist`),
       logFeatureSad("keybinding_watcher_init", "watch_dir_inaccessible"));
     return;
   }
   ((e.initialized = !0),
-    n(`[keybindings] Watching for changes to ${r}`),
+    logForDebugging(`[keybindings] Watching for changes to ${r}`),
     (e.watcher = RT.watch(r, {
       persistent: !0,
       ignoreInitial: !0,
@@ -1510,13 +1510,13 @@ async function FYn(e) {
     e.watcher.on("change", (o) => Q(e, o)),
     e.watcher.on("unlink", (o) => ze(e, o)),
     e.watcher.on("error", (o) =>
-      n(`[keybindings] watcher error: ${l(o)}`, { level: "warn" }),
+      logForDebugging(`[keybindings] watcher error: ${l(o)}`, { level: "warn" }),
     ),
-    Et(e),
+    registerCleanup(e),
     logFeatureOk("keybinding_watcher_init"));
 }
 async function Q(e, r) {
-  n(`[keybindings] Detected change to ${r}`);
+  logForDebugging(`[keybindings] Detected change to ${r}`);
   try {
     let t = await ne(e);
     ((e.bindings = t.bindings),
@@ -1525,12 +1525,12 @@ async function Q(e, r) {
       e.changed.emit(t),
       logFeatureOk("keybinding_hot_reload"));
   } catch (t) {
-    (n(`[keybindings] Error reloading: ${l(t)}`),
+    (logForDebugging(`[keybindings] Error reloading: ${l(t)}`),
       logFeatureSad("keybinding_hot_reload", "keybinding_reload_failed"));
   }
 }
 function ze(e, r) {
-  n(`[keybindings] Detected deletion of ${r}`);
+  logForDebugging(`[keybindings] Detected deletion of ${r}`);
   let t = L();
   ((e.bindings = t),
     (e.warnings = []),
@@ -1544,7 +1544,7 @@ function rg(e) {
   let r = e === void 0 ? "" : normalizeWhitespace(stripAnsi(e).replace(Ge, " "));
   return r === "" ? void 0 : truncateToWidth(truncateToCodeUnits(r, Ye), ie);
 }
-function w$() {
+function getKeybindingPlatform() {
   let e = getCurrentPlatform();
   if (e === "macos") return e;
   if (
@@ -1559,9 +1559,9 @@ var G = { "\u2020": "t" };
 function re(e) {
   return Object.hasOwn(G, e);
 }
-var C3t = { π: "alt+p", ø: "alt+o" };
-function Byn(e) {
-  return Object.hasOwn(C3t, e);
+var OPTION_GLYPH_KEYBINDINGS = { π: "alt+p", ø: "alt+o" };
+function isOptionGlyphKey(e) {
+  return Object.hasOwn(OPTION_GLYPH_KEYBINDINGS, e);
 }
 var He = {
   escape: "escape",
@@ -1580,7 +1580,7 @@ var He = {
   home: "home",
   end: "end",
 };
-function v3t(e, r, t) {
+function resolveKeybindingChord(e, r, t) {
   let o = !1,
     p;
   for (let d = 0; d < t.length; d++) {
@@ -1600,7 +1600,7 @@ function v3t(e, r, t) {
   if (p) return p;
   return o ? null : void 0;
 }
-function $Yn(e, r, t) {
+function resolveKeybindingChordInContexts(e, r, t) {
   let o = new Set(r),
     p = new Map();
   for (let b of t) {
@@ -1615,7 +1615,7 @@ function $Yn(e, r, t) {
     if (k === void 0) continue;
     let h = p.get(k);
     if (!h) continue;
-    let w = v3t(e, k, h);
+    let w = resolveKeybindingChord(e, k, h);
     if (w === null) {
       d = !0;
       continue;
@@ -1633,21 +1633,21 @@ function $Yn(e, r, t) {
   }
   return d ? null : void 0;
 }
-function jyn(e, r, t) {
+function findActionForKeyInContext(e, r, t) {
   let o = null;
   for (let p of t) {
     if (p.context !== r || p.chord.length !== 1) continue;
     let d = p.chord[0];
-    if (d && DNe(d, e)) o = p.action;
+    if (d && isSameKeySpec(d, e)) o = p.action;
   }
   return o;
 }
-function Wyn(e, r, t) {
+function findActionForKeyAcrossContexts(e, r, t) {
   let o;
   for (let p of t) {
     if (p.chord.length !== 1 || !r.includes(p.context)) continue;
     let d = p.chord[0];
-    if (d && DNe(d, e)) o = p.action;
+    if (d && isSameKeySpec(d, e)) o = p.action;
   }
   return o;
 }
@@ -1656,15 +1656,15 @@ function j(e, r) {
   for (let t = 0; t < e.length; t++) {
     let o = e[t],
       p = r[t];
-    if (!o || !p || !DNe(o, p)) return !1;
+    if (!o || !p || !isSameKeySpec(o, p)) return !1;
   }
   return !0;
 }
-function Fpe(e, r, t) {
-  let o = v3t(e, r, t);
-  return o ? Dre(o, w$()) : o;
+function getKeybindingDisplayText(e, r, t) {
+  let o = resolveKeybindingChord(e, r, t);
+  return o ? formatKeybindingChordForPlatform(o, getKeybindingPlatform()) : o;
 }
-function R3t(e) {
+function normalizeKeyEvent(e) {
   let r =
       e.name === "enter"
         ? `
@@ -1679,7 +1679,7 @@ function R3t(e) {
     (r.length === 1 && r !== r.toLowerCase() && r === r.toUpperCase());
   return { key: o, ctrl: e.ctrl, alt: t, shift: p, meta: t, super: e.superKey };
 }
-function DNe(e, r) {
+function isSameKeySpec(e, r) {
   return (
     e.key === r.key &&
     e.ctrl === r.ctrl &&
@@ -1694,13 +1694,13 @@ function se(e, r) {
     let o = e[t],
       p = r.chord[t];
     if (!o || !p) return !1;
-    if (!DNe(o, p)) return !1;
+    if (!isSameKeySpec(o, p)) return !1;
   }
   return !0;
 }
-function $pe(e, r, t, o) {
+function resolveKeyEvent(e, r, t, o) {
   if (e.name === "escape" && o !== null) return { type: "chord_cancelled" };
-  let p = R3t(e);
+  let p = normalizeKeyEvent(e);
   if (!p) {
     if (o !== null) return { type: "chord_cancelled" };
     return { type: "none" };
@@ -1711,7 +1711,7 @@ function $pe(e, r, t, o) {
   for (let h of t) {
     if (!r.includes(h.context)) continue;
     if (h.chord.length > d.length) {
-      if (se(d, h)) ((b ??= new Map()), b.set(Ej(h.chord), h.action));
+      if (se(d, h)) ((b ??= new Map()), b.set(formatKeybindingChordText(h.chord), h.action));
     } else if (j(d, h.chord)) k = h;
   }
   if (b !== null) {
@@ -1725,9 +1725,9 @@ function $pe(e, r, t, o) {
   if (o !== null) return { type: "chord_cancelled" };
   return { type: "none" };
 }
-function LNe(e, r, t, o) {
+function resolveKeyEventByContextPriority(e, r, t, o) {
   if (e.name === "escape" && o !== null) return { type: "chord_cancelled" };
-  let p = R3t(e);
+  let p = normalizeKeyEvent(e);
   if (!p) {
     if (o !== null) return { type: "chord_cancelled" };
     return { type: "none" };
@@ -1739,7 +1739,7 @@ function LNe(e, r, t, o) {
   for (let w of t) {
     if (!b.has(w.context)) continue;
     if (w.chord.length > d.length) {
-      if (se(d, w)) k.set(Ej(w.chord), w.action);
+      if (se(d, w)) k.set(formatKeybindingChordText(w.chord), w.action);
     } else if (j(d, w.chord)) h.set(w.context, w);
   }
   for (let w of k.values())
@@ -1754,7 +1754,7 @@ function LNe(e, r, t, o) {
   if (o !== null) return { type: "chord_cancelled" };
   return { type: "none" };
 }
-var Ve = new Set(Lre);
+var Ve = new Set(KEYBINDING_ACTION_IDS);
 function ae(e) {
   if (e.startsWith("command:")) return S("command:custom");
   if (Ve.has(e)) return fromSanitizer_SANITIZER_OUTPUT_ONLY(e);
@@ -1765,14 +1765,14 @@ function Ze(e) {
   return qe.test(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : S("invalid");
 }
 var Je = 1000;
-function X3(e) {
+function logKeybindingActionFired(e) {
   let r = Date.now(),
-    t = hw.actionFiredLoggedAt,
+    t = keybindingStore.actionFiredLoggedAt,
     o = t.get(e);
   if (o !== void 0 && r - o < Je) return;
   (t.set(e, r), logEvent("tengu_keybinding_fired", { action_id: ae(e) }));
 }
-function IAe(e, r, t, o) {
+function logKeybindingFallbackUsed(e, r, t, o) {
   logEvent("tengu_keybinding_fallback_used", {
     action: ae(e),
     context: fromEnum(r),
@@ -1781,43 +1781,43 @@ function IAe(e, r, t, o) {
   });
 }
 export {
-  K3,
-  INe,
-  gw,
-  Ej,
-  A3t,
-  Dre,
-  HAe,
-  K8e,
-  DYn,
-  LYn,
-  Lre,
-  X8e,
-  Fyn,
-  $yn,
-  PNe,
-  iN,
-  hw,
-  Y8e,
-  Uyn,
-  MYn,
-  NYn,
-  zSt,
-  ONe,
-  FYn,
-  C3t,
-  Byn,
-  w$,
-  v3t,
-  $Yn,
-  jyn,
-  Wyn,
-  Fpe,
-  R3t,
-  DNe,
-  $pe,
-  LNe,
-  X3,
-  IAe,
+  DEFAULT_KEYBINDINGS,
+  parseKeybindingKey,
+  parseKeybindingChord,
+  formatKeybindingChordText,
+  formatKeybindingKeyForPlatform,
+  formatKeybindingChordForPlatform,
+  expandKeybindingBlocks,
+  KEYBINDING_CONTEXT_NAMES,
+  isKeybindingContextName,
+  KEYBINDING_CONTEXT_DESCRIPTIONS,
+  KEYBINDING_ACTION_IDS,
+  NON_REBINDABLE_KEYS,
+  TERMINAL_RESERVED_KEYS,
+  MACOS_RESERVED_KEYS,
+  normalizeKeybindingChord,
+  isKeybindingCustomizationEnabled,
+  keybindingStore,
+  getKeybindingsConfigPath,
+  KEYBINDINGS_STORAGE_KEY,
+  loadKeybindingsFromConfigFile,
+  warmKeybindingsFromBackend,
+  getActiveKeybindings,
+  loadKeybindingsWithWarnings,
+  startKeybindingsWatcher,
+  OPTION_GLYPH_KEYBINDINGS,
+  isOptionGlyphKey,
+  getKeybindingPlatform,
+  resolveKeybindingChord,
+  resolveKeybindingChordInContexts,
+  findActionForKeyInContext,
+  findActionForKeyAcrossContexts,
+  getKeybindingDisplayText,
+  normalizeKeyEvent,
+  isSameKeySpec,
+  resolveKeyEvent,
+  resolveKeyEventByContextPriority,
+  logKeybindingActionFired,
+  logKeybindingFallbackUsed,
   rg,
 };

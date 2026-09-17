@@ -21,7 +21,7 @@ import { useTerminalFocus, setTimeoutWithCancel } from "../../01-核心基础设
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Et, dv, z, hxe, Sh, k_, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, registerPreExitFlush, jsonParse, resolveSymlinkAncestry, fsSurface, readTailBytes, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   getMainLoopModel,
   renderModelSetting,
@@ -46,27 +46,27 @@ import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chal
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { formatPathWithTilde } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isRemoteActive, findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, truncateToWidth, truncateStartToWidth, truncate, formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, truncateToWidth, truncateStartToWidth, truncate, formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { getInitialSettings, hasSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { BULLET_OPERATOR_GLYPH, ARTIFACT_MARKER_GLYPH, parsePermissionModeOrDefault, getPermissionModeIndicator, getPermissionModeSymbol, getPermissionModeColor } from "../权限系统/chunk-e4pfvp7x.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { SQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { stripTrailingPunctuation } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { isGitLabMergeRequestUrl } from "../Git-Worktree/git-repository-detection.js";
 import { remoteRowId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { oa, iee, oDt } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { getEraseScreenSequence, eraseViewportInPlace, cDt, Nat, uF, qA } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { useStdin } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { isFullscreenEnabled } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { o, t, ct, bs, ko, e7, aO, n7, Un, w9e } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link, useAnimationFrame, useInterval, startClockInterval, useSelection, useTerminalTitle, useTimeout, createRoot } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { formatOscSequence, OSC_CODES } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
-import { K3, Dre, HAe, w$, Wyn, R3t } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { DEFAULT_KEYBINDINGS, formatKeybindingChordForPlatform, expandKeybindingBlocks, getKeybindingPlatform, findActionForKeyAcrossContexts, normalizeKeyEvent } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
   isCommandEnabled,
@@ -106,8 +106,8 @@ import {
   meetsAvailabilityRequirement,
   getCommands,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { KEt } from "../权限系统/chunk-t3b7pg2x.js";
-import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { parseEffortArgValue } from "../权限系统/chunk-t3b7pg2x.js";
+import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { sendControlToUdsSocket, listAllLiveSessions } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { AGENT_COLOR_THEME_KEYS, isAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
@@ -236,7 +236,7 @@ import { buildDraftText, getDraftMode, getDraftValue, isBashModeShortcut } from 
 import { Nl, re, E, dn, V, pk, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { createHoverRestOptions, resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
-import { lK, Z3 } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { LARGE_PASTE_CHAR_THRESHOLD, readClipboardImage } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/bypass-permissions-mode-policy.js";
 import { getGraphemeSegmenter, countGraphemes, splitGraphemes } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -262,7 +262,7 @@ function Yu(s) {
       s.worker_status === "requires_action"
         ? w?.tool_name === ASK_USER_QUESTION_TOOL_NAME
           ? formatAskUserQuestionNeeds(w.input).text
-          : w?.tool_name === Wh
+          : w?.tool_name === EXIT_PLAN_MODE_TOOL_NAME_ALIAS
             ? "approve plan"
             : typeof w?.tool_name === "string" &&
                 typeof w.action_description === "string" &&
@@ -374,7 +374,7 @@ function ec(s) {
     b = !isBypassPermissionsModeDisabled() && (hasSkipDangerousModePermissionPrompt() || Boolean(getGlobalConfig().bypassPermissionsModeAccepted)),
     k = m === "bypassPermissions" && !b ? void 0 : m,
     w = s?.allowBypass && b ? !0 : void 0,
-    v = s?.effort ? KEt(s.effort).level : void 0;
+    v = s?.effort ? parseEffortArgValue(s.effort).level : void 0;
   if (!k && !s?.model && !v && !c && !w) return;
   return {
     permissionMode: k,
@@ -411,7 +411,7 @@ function Fi(vS) {
   }
   let fa;
   if (Sr[0] !== Mn || Sr[1] !== Oi)
-    ((fa = Oi && r(t, { color: getPermissionModeColor(Mn), children: [getPermissionModeSymbol(Mn), " ", getPermissionModeIndicator(Mn)] })),
+    ((fa = Oi && r(Text, { color: getPermissionModeColor(Mn), children: [getPermissionModeSymbol(Mn), " ", getPermissionModeIndicator(Mn)] })),
       (Sr[0] = Mn),
       (Sr[1] = Oi),
       (Sr[2] = fa));
@@ -420,7 +420,7 @@ function Fi(vS) {
   if (Sr[3] !== pa)
     ((ma =
       pa &&
-      r(t, {
+      r(Text, {
         color: getPermissionModeColor("bypassPermissions"),
         children: [getPermissionModeSymbol("bypassPermissions"), " bypass available"],
       })),
@@ -429,19 +429,19 @@ function Fi(vS) {
   else ma = Sr[4];
   let ga;
   if (Sr[5] !== Ai)
-    ((ga = Ai && r(t, { dimColor: !0, children: ["@", Ai] })),
+    ((ga = Ai && r(Text, { dimColor: !0, children: ["@", Ai] })),
       (Sr[5] = Ai),
       (Sr[6] = ga));
   else ga = Sr[6];
   let ha;
   if (Sr[7] !== Ii)
-    ((ha = Ii && e(t, { dimColor: !0, children: Ii })),
+    ((ha = Ii && e(Text, { dimColor: !0, children: Ii })),
       (Sr[7] = Ii),
       (Sr[8] = ha));
   else ha = Sr[8];
   let ba;
   if (Sr[9] !== Pi)
-    ((ba = Pi && e(t, { dimColor: !0, children: Pi })),
+    ((ba = Pi && e(Text, { dimColor: !0, children: Pi })),
       (Sr[9] = Pi),
       (Sr[10] = ba));
   else ba = Sr[10];
@@ -580,7 +580,7 @@ async function sc(s, c, m) {
       bytesTotal: w.totalBytes,
     };
   }
-  return k_(s, c);
+  return readTailBytes(s, c);
 }
 import { open as Th } from "fs/promises";
 var Dh = 7,
@@ -679,7 +679,7 @@ function dc(s, c) {
 import { join as Jh } from "path";
 function Bh(s) {
   try {
-    let c = z(s);
+    let c = jsonParse(s);
     if (c.type === "assistant") {
       let b = (c.message?.content ?? []).find((k) => k.type === "text")?.text;
       if (b) return b;
@@ -946,7 +946,7 @@ function Ui(s) {
   return findCanonicalGitRoot(c) ?? c;
 }
 function _a(s) {
-  return Gu(s);
+  return formatPathWithTilde(s);
 }
 function Gi(s) {
   return s.sortOrder ?? Date.parse(s.createdAt);
@@ -1110,9 +1110,9 @@ class kc {
     if (
       (this.load(),
       this.#s.push(
-        e7(s, () => void this.load(), yc),
-        e7(s, this.#A, Vh),
-        e7(
+        startClockInterval(s, () => void this.load(), yc),
+        startClockInterval(s, this.#A, Vh),
+        startClockInterval(
           s,
           () => {
             this.#d;
@@ -1135,7 +1135,7 @@ class kc {
     }),
       this.loadRemote(),
       this.#o?.(),
-      (this.#o = e7(this.#i, this.loadRemote, Uh)));
+      (this.#o = startClockInterval(this.#i, this.loadRemote, Uh)));
   }
   #P() {
     for (let m of this.#s) m();
@@ -1598,7 +1598,7 @@ class kc {
       })
       .catch((c) => {
         if (
-          (n(`[fleet:remote] poll mapper threw: ${l(c)}`),
+          (logForDebugging(`[fleet:remote] poll mapper threw: ${l(c)}`),
           s === this.#v && this.#r > 0)
         )
           this.#p("remoteListLoaded", () => !0);
@@ -1635,7 +1635,7 @@ class kc {
     } catch (m) {
       throw (
         logFeatureBad("fleet_view_stop_session", "interrupt_failed"),
-        n(`[fleet:remote] interrupt ${c} failed: ${l(m)}`),
+        logForDebugging(`[fleet:remote] interrupt ${c} failed: ${l(m)}`),
         this.#S.delete(s.id),
         this.loadRemote(),
         m
@@ -1658,7 +1658,7 @@ class kc {
     } catch (m) {
       throw (
         logFeatureBad("fleet_view_archive_session", "archive_failed"),
-        n(`[fleet:remote] archive ${c} failed: ${l(m)}`),
+        logForDebugging(`[fleet:remote] archive ${c} failed: ${l(m)}`),
         this.#w.delete(s.id),
         this.loadRemote(),
         m
@@ -1812,7 +1812,7 @@ class _c {
       return;
     }
     if (b !== c)
-      (n(
+      (logForDebugging(
         `[FV-poll] follow re-pin moved focus: was=${c} now=${b} followId=${m}`,
       ),
         this.#k(b));
@@ -2384,7 +2384,7 @@ async function zi(s, c, m) {
     });
   } catch (b) {
     if (Rt(b))
-      n(`[fleetview] past-session enumeration failed: ${l(b)}`, {
+      logForDebugging(`[fleetview] past-session enumeration failed: ${l(b)}`, {
         level: "error",
       });
     else logError(b);
@@ -2644,7 +2644,7 @@ function Xi(s) {
   return !1;
 }
 function Zi(s, c) {
-  Z3(getImageLimitsForModel(getMainLoopModel()))
+  readClipboardImage(getImageLimitsForModel(getMainLoopModel()))
     .then((m) => {
       if (m) s(m);
       else
@@ -2914,7 +2914,7 @@ function Uc(s, c) {
       Dt = getSpareJob(),
       Lt =
         !parsePastedPlaceholders(Ve).some((fe) => m.pastes[fe.id]?.type === "image") &&
-        Ve.length <= lK &&
+        Ve.length <= LARGE_PASTE_CHAR_THRESHOLD &&
         !Ve.includes(`
 `),
       mt =
@@ -3071,7 +3071,7 @@ function Wc(s, c) {
     }
   }
   let O = countLineBreaks(w);
-  if (b && (w.length > lK || O > 2)) {
+  if (b && (w.length > LARGE_PASTE_CHAR_THRESHOLD || O > 2)) {
     let W = m.mintTextPaste(w);
     if ((k(formatPastedTextPlaceholder(W, O)), w.length <= MAX_PASTED_TEXT_CHARS)) m.setExpandHintPasteId(W);
     return;
@@ -3134,7 +3134,7 @@ async function Oa(s, c, m) {
   if (I === null) (logFeatureOk("fleet_view_reply"), b.clearReplyFailure(W));
   else if (I === REPLY_PEER_NO_SOCK_MSG) (logFeatureOk("fleet_view_reply"), b.clearReplyFailure(W));
   else {
-    if (K) n(`[fleetview] peek-reply respawn failed: ${I}`);
+    if (K) logForDebugging(`[fleetview] peek-reply respawn failed: ${I}`);
     let ne = Date.now();
     if (b.isRetryOfRecentReplyFailure(W, ne))
       logFeatureSad("fleet_view_reply", "retry_of_recent_failure");
@@ -3148,7 +3148,7 @@ async function Oa(s, c, m) {
         oe = [...se.matchAll(/\bE[A-Z]{2,14}\b/g)].find(
           (ce) => !"/\\".includes(se[ce.index - 1] ?? "."),
         )?.[0];
-      n(`[fleetview] peek-reply send failed: ${se}`);
+      logForDebugging(`[fleetview] peek-reply send failed: ${se}`);
       let X = !1;
       if (!q && oe !== void 0 && sb.has(oe) && getDraftMode(m) === "prompt")
         X = await writeStateAtomic(
@@ -3158,7 +3158,7 @@ async function Oa(s, c, m) {
         ).then(
           () => !0,
           (ce) => (
-            n(`[fleetview] queue-to-disk write failed: ${l(ce)}`, {
+            logForDebugging(`[fleetview] queue-to-disk write failed: ${l(ce)}`, {
               level: "error",
             }),
             !1
@@ -3229,12 +3229,12 @@ F();
 function xb(is, WR) {
   let gb = is.match(/^(?:\*\*|\+\+|`)(.+?)(?:\*\*|\+\+|`)$/);
   if (gb) {
-    return e(t, { bold: !0, children: gb[1] }, WR);
+    return e(Text, { bold: !0, children: gb[1] }, WR);
   }
   if (ep.test(is)) {
-    let Yc = SQ(is);
+    let Yc = stripTrailingPunctuation(is);
     return r(N, {
-      children: [e(ct, { url: Yc, children: Yc }), is.slice(Yc.length)],
+      children: [e(Link, { url: Yc, children: Yc }), is.slice(Yc.length)],
     });
   }
   return is;
@@ -3273,11 +3273,11 @@ function So(s, c = !1, m = !1) {
     return normalizeWhitespace(s.template);
   }
   let w = k.length > 3 ? `${k.slice(0, 3).join(" ")}\u2026` : k.join(" ");
-  if (te(w) <= b) return w;
+  if (getStringWidth(w) <= b) return w;
   let v = "",
     R = 0;
   for (let O of splitGraphemes(w)) {
-    let W = te(O);
+    let W = getStringWidth(O);
     if (R + W > b - 1) break;
     ((v += O), (R += W));
   }
@@ -3348,11 +3348,11 @@ function Qc(s, c, m) {
   let b = splitGraphemes(s),
     k = splitGraphemes(c),
     w = k.slice(0, Math.min(m, k.length)).join(""),
-    v = Math.max(te(s), te(c)),
-    R = te(w),
+    v = Math.max(getStringWidth(s), getStringWidth(c)),
+    R = getStringWidth(w),
     O = "";
   for (let W of b.slice(m)) {
-    let A = te(W);
+    let A = getStringWidth(W);
     if (R + A > v) break;
     ((O += W), (R += A));
   }
@@ -3362,18 +3362,18 @@ function Sb(s) {
   let c = Uo(s.children);
   if (!c.length) return 0;
   let m = c.filter((b) => b.kind !== "frame");
-  if (m.length > 1) return te(`${m.length} PRs`);
+  if (m.length > 1) return getStringWidth(`${m.length} PRs`);
   if (m.length === 1) {
     let b = ip(m[0]);
-    return te(b !== void 0 ? `#${b}` : "PR");
+    return getStringWidth(b !== void 0 ? `#${b}` : "PR");
   }
-  return te(c.length > 1 ? `${c.length} ${ARTIFACT_MARKER_GLYPH}` : ARTIFACT_MARKER_GLYPH);
+  return getStringWidth(c.length > 1 ? `${c.length} ${ARTIFACT_MARKER_GLYPH}` : ARTIFACT_MARKER_GLYPH);
 }
 function op(s, c, m, b) {
-  let k = Math.max(wb, ...s.map((O) => te(Hn(O, c(O))))),
+  let k = Math.max(wb, ...s.map((O) => getStringWidth(Hn(O, c(O))))),
     w = Math.min(
       Math.max(40, Math.floor(b / 3)),
-      Math.max(12, ...s.map((O) => te(So(O.state, O.id === m)))),
+      Math.max(12, ...s.map((O) => getStringWidth(So(O.state, O.id === m)))),
     ),
     v = Math.max(0, ...s.map((O) => Sb(O.state))),
     R = Math.max(8, b - (w + 2) - 2 - (v + 2) - (k + 2) - 2);
@@ -3505,7 +3505,7 @@ function as(VR) {
     let UR = zc.split(
       /(\*\*.+?\*\*|\+\+.+?\+\+|`[^`]+`|https?:\/\/[^\s"'<>\\\u2026\x00-\x1f]+)/g,
     );
-    La = t;
+    La = Text;
     Ja = !0;
     Ba = UR.map(xb);
     ((fb[0] = zc), (fb[1] = La), (fb[2] = Ja), (fb[3] = Ba));
@@ -3534,7 +3534,7 @@ function Wn(s, c, m) {
 }
 function kn() {
   let $R = _(1),
-    [, KR] = bs(120),
+    [, KR] = useAnimationFrame(120),
     hb;
   if ($R[0] === MEMO_CACHE_SENTINEL) ((hb = Xc()), ($R[0] = hb));
   else hb = $R[0];
@@ -4191,7 +4191,7 @@ async function mp(s, c, m) {
     let de = c.cwd;
     if (
       !Kb(c.cwd) ||
-      (await hxe(Sh, c.cwd, {
+      (await resolveSymlinkAncestry(fsSurface, c.cwd, {
         surfaceNetworkRaw: !0,
         unreadableAncestry: "unverified",
       })) !== void 0
@@ -4218,7 +4218,7 @@ async function mp(s, c, m) {
     ));
   } catch (se) {
     if (Rt(se))
-      n(`[fleetview] past-session seed write failed: ${l(se)}`, {
+      logForDebugging(`[fleetview] past-session seed write failed: ${l(se)}`, {
         level: "error",
       });
     else logError(se);
@@ -4326,7 +4326,7 @@ function cs(s, c) {
     }
     if ((w.disarm(), !oe.ok && oe.errorCode === "kill_unconfirmed")) {
       (logFeatureSad("fleet_view_open", "restart_stop_unconfirmed"),
-        n(
+        logForDebugging(
           `[FV-attach] confirmed restart of ${c.id} could not stop the worker: ${oe.error}`,
           { level: "warn" },
         ),
@@ -4660,7 +4660,7 @@ function rl(yC) {
     ms = Lr;
     Rn = Xa ? `${renderModelSetting(Xa)} (session)` : renderModelSetting(wp?.model ?? getMainLoopModel());
     Mr = !!Yb && ps !== yp && ps !== Sp;
-    zb = truncatePathSegments(Mr ? Gu(ps) : Yb, Math.max(Dr - 11 - (Rn ? te(Rn) + 3 : 0), 10));
+    zb = truncatePathSegments(Mr ? formatPathWithTilde(ps) : Yb, Math.max(Dr - 11 - (Rn ? getStringWidth(Rn) + 3 : 0), 10));
     ((vn[0] = Sp),
       (vn[1] = Dr),
       (vn[2] = wp?.model),
@@ -4694,37 +4694,37 @@ function rl(yC) {
       r(N, {
         children: [
           Qa
-            ? r(t, {
+            ? r(Text, {
                 wrap: "truncate",
                 children: [
-                  e(t, { bold: !0, children: "Claude Code" }),
+                  e(Text, { bold: !0, children: "Claude Code" }),
                   " ",
-                  r(t, { dimColor: !0, children: ["v", ms] }),
+                  r(Text, { dimColor: !0, children: ["v", ms] }),
                 ],
               })
-            : r(t, {
+            : r(Text, {
                 children: [
-                  e(t, { bold: !0, children: "Claude Code" }),
+                  e(Text, { bold: !0, children: "Claude Code" }),
                   " ",
-                  r(t, { dimColor: !0, children: ["v", ms] }),
+                  r(Text, { dimColor: !0, children: ["v", ms] }),
                 ],
               }),
           Qa
-            ? r(t, {
+            ? r(Text, {
                 dimColor: !0,
                 wrap: "truncate",
                 children: [
                   Rn,
                   Rn && Jr ? " \xB7 " : "",
                   Jr &&
-                    e(t, {
+                    e(Text, {
                       color: Mr ? "suggestion" : void 0,
                       dimColor: !Mr,
                       children: Jr,
                     }),
                 ],
               })
-            : e(t, {
+            : e(Text, {
                 dimColor: !0,
                 children: [Rn, Jr].filter(Boolean).join(" \xB7 "),
               }),
@@ -4741,7 +4741,7 @@ function rl(yC) {
   let el;
   if (vn[20] !== fs || vn[21] !== vp || vn[22] !== vo)
     ((el = vo
-      ? e(t, {
+      ? e(Text, {
           dimColor: !0,
           wrap: "truncate",
           children: r(DotSeparatedList, {
@@ -4754,7 +4754,7 @@ function rl(yC) {
             ],
           }),
         })
-      : e(t, {
+      : e(Text, {
           dimColor: !0,
           children: r(DotSeparatedList, {
             children: [
@@ -4771,14 +4771,14 @@ function rl(yC) {
   else el = vn[23];
   let tl;
   if (vn[24] !== Za || vn[25] !== el)
-    ((tl = r(o, { flexDirection: "column", children: [Za, el] })),
+    ((tl = r(Box, { flexDirection: "column", children: [Za, el] })),
       (vn[24] = Za),
       (vn[25] = el),
       (vn[26] = tl));
   else tl = vn[26];
   let ol;
   if (vn[27] !== Lr || vn[28] !== tl)
-    ((ol = r(o, { gap: 2, marginBottom: 1, children: [Lr, tl] })),
+    ((ol = r(Box, { gap: 2, marginBottom: 1, children: [Lr, tl] })),
       (vn[27] = Lr),
       (vn[28] = tl),
       (vn[29] = ol));
@@ -4787,9 +4787,9 @@ function rl(yC) {
   if (vn[30] !== kp)
     ((nl =
       kp !== void 0 &&
-      e(o, {
+      e(Box, {
         marginBottom: 1,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children:
             "Your conversation moved to the background \u2014 enter opens it \xB7 esc returns to it \xB7 ctrl+c twice quits",
@@ -4816,14 +4816,14 @@ function iw(jC) {
 function sw(qC) {
   return qC.color !== void 0;
 }
-var Ss = te(" (reserved name)");
+var Ss = getStringWidth(" (reserved name)");
 function Io(s, c, m, b = !1) {
   if (b && s) {
     let W = truncateStartToWidth(s, Math.max(m - 1, 1));
     return r(N, {
       children: [
-        e(t, { inverse: !0, children: W }),
-        e(t, { inverse: !0, children: " " }),
+        e(Text, { inverse: !0, children: W }),
+        e(Text, { inverse: !0, children: " " }),
       ],
     });
   }
@@ -4835,12 +4835,12 @@ function Io(s, c, m, b = !1) {
     }
   let v = s.slice(k, w) || " ",
     R = s.slice(w),
-    O = truncateStartToWidth(s.slice(0, k), m - te(v) - (R ? 1 : 0));
+    O = truncateStartToWidth(s.slice(0, k), m - getStringWidth(v) - (R ? 1 : 0));
   return r(N, {
     children: [
-      e(t, { children: O }),
-      e(t, { inverse: !0, children: v }),
-      e(t, { children: R }),
+      e(Text, { children: O }),
+      e(Text, { inverse: !0, children: v }),
+      e(Text, { children: R }),
     ],
   });
 }
@@ -4867,7 +4867,7 @@ function ks(HC) {
     } = HC,
     qn = terminalOutcome(wt.state.state),
     zn = qn && wt.state.tempo !== "active" ? VC : void 0,
-    ul = Eo.detail - te("group: ") - Ss >= 24,
+    ul = Eo.detail - getStringWidth("group: ") - Ss >= 24,
     Gr = Sn(wt.activity, wt.state.tempo, ll, qn),
     { color: cl, dim: UC } = Gr,
     Vr = ll === "busy" ? cl : Na(cl, Cp),
@@ -4950,7 +4950,7 @@ function ks(HC) {
         : Vr !== cl
           ? `${Ap}needs attention:`
           : Vn(wt.activity, wt.state.tempo, ll, qn, co);
-  const Tp = o,
+  const Tp = Box,
     Dp = Eo.label + 2,
     Fp = !co && !po,
     Lp = WC || (Vr === void 0 && !co);
@@ -4959,7 +4959,7 @@ function ks(HC) {
   else fl = ro[8];
   let ml;
   if (ro[9] !== Vr || ro[10] !== Op || ro[11] !== Lp || ro[12] !== fl)
-    ((ml = e(t, { "aria-label": Op, color: Vr, dimColor: Lp, children: fl })),
+    ((ml = e(Text, { "aria-label": Op, color: Vr, dimColor: Lp, children: fl })),
       (ro[9] = Vr),
       (ro[10] = Op),
       (ro[11] = Lp),
@@ -4982,22 +4982,22 @@ function ks(HC) {
         ? e(BackgroundText, {
             color: pl,
             bold: co,
-            children: Yn ? e(ct, { url: Yn, children: Qn }) : Qn,
+            children: Yn ? e(Link, { url: Yn, children: Qn }) : Qn,
           })
         : Br
           ? Io(Br.draft, Br.cursor, Eo.label)
           : Xn
             ? r(N, {
                 children: [
-                  e(t, {
+                  e(Text, {
                     dimColor: !co && !po,
                     children: Xn.display.slice(0, Xn.newLen),
                   }),
-                  e(t, { dimColor: !0, children: Xn.display.slice(Xn.newLen) }),
+                  e(Text, { dimColor: !0, children: Xn.display.slice(Xn.newLen) }),
                 ],
               })
             : Yn
-              ? e(ct, { url: Yn, children: Qn })
+              ? e(Link, { url: Yn, children: Qn })
               : Qn),
       (ro[14] = Eo.label),
       (ro[15] = Yn),
@@ -5011,14 +5011,14 @@ function ks(HC) {
   else gl = ro[22];
   let hl;
   if (ro[23] !== po || ro[24] !== gl)
-    ((hl = e(t, { bold: po, children: gl })),
+    ((hl = e(Text, { bold: po, children: gl })),
       (ro[23] = po),
       (ro[24] = gl),
       (ro[25] = hl));
   else hl = ro[25];
   let bl;
   if (ro[26] !== il || ro[27] !== hl || ro[28] !== Fp || ro[29] !== ml)
-    ((bl = r(t, {
+    ((bl = r(Text, {
       color: il,
       dimColor: Fp,
       wrap: "truncate",
@@ -5032,7 +5032,7 @@ function ks(HC) {
   else bl = ro[30];
   let wl;
   if (ro[31] !== bl || ro[32] !== Dp)
-    ((wl = e(o, { width: Dp, flexShrink: 0, children: bl })),
+    ((wl = e(Box, { width: Dp, flexShrink: 0, children: bl })),
       (ro[31] = bl),
       (ro[32] = Dp),
       (ro[33] = wl));
@@ -5051,26 +5051,26 @@ function ks(HC) {
     ro[43] !== Gr
   )
     ((yl = fo
-      ? r(t, {
+      ? r(Text, {
           wrap: "truncate",
           children: [
-            e(t, { dimColor: !0, children: "group: " }),
+            e(Text, { dimColor: !0, children: "group: " }),
             Io(
               fo.draft,
               fo.cursor,
-              Math.max(Eo.detail - te("group: ") - (ul ? Ss : 0), 8),
+              Math.max(Eo.detail - getStringWidth("group: ") - (ul ? Ss : 0), 8),
               fo.selected,
             ),
             fo.reserved
-              ? e(t, { color: "error", children: " (reserved name)" })
+              ? e(Text, { color: "error", children: " (reserved name)" })
               : !ul
                 ? null
                 : fo.isNew
-                  ? e(t, { dimColor: !0, children: " (new group)" })
+                  ? e(Text, { dimColor: !0, children: " (new group)" })
                   : fo.ungroup
-                    ? e(t, { dimColor: !0, children: " (ungroup)" })
+                    ? e(Text, { dimColor: !0, children: " (ungroup)" })
                     : fo.addTo
-                      ? r(t, {
+                      ? r(Text, {
                           dimColor: !0,
                           children: [" (add to ", fo.addTo, ")"],
                         })
@@ -5078,13 +5078,13 @@ function ks(HC) {
           ],
         })
       : $o === "armed"
-        ? e(t, {
+        ? e(Text, {
             dimColor: !0,
             wrap: "truncate",
             children: "opening\u2026 \xB7 esc to cancel",
           })
         : xo
-          ? e(t, {
+          ? e(Text, {
               color: xo.ungroup ? "warning" : "error",
               wrap: "truncate",
               children: xo.ungroup
@@ -5094,47 +5094,47 @@ function ks(HC) {
                   : "ctrl+x again to delete",
             })
           : zn
-            ? r(t, {
+            ? r(Text, {
                 wrap: "truncate",
                 children: [
-                  e(t, { color: "error", children: "not deleted" }),
-                  r(t, { dimColor: !0, children: [" \xB7 ", zn] }),
+                  e(Text, { color: "error", children: "not deleted" }),
+                  r(Text, { dimColor: !0, children: [" \xB7 ", zn] }),
                 ],
               })
             : $o
-              ? e(t, {
+              ? e(Text, {
                   dimColor: !0,
                   wrap: "truncate",
                   children: "opening\u2026",
                 })
               : Nr
-                ? e(t, {
+                ? e(Text, {
                     wrap: "truncate",
                     children: r(DotSeparatedList, {
                       children: [
-                        e(t, {
+                        e(Text, {
                           color: "suggestion",
                           children: "Open in a terminal",
                         }),
-                        e(t, { dimColor: !0, children: "continue it there" }),
+                        e(Text, { dimColor: !0, children: "continue it there" }),
                       ],
                     }),
                   })
                 : Rp
-                  ? e(t, {
+                  ? e(Text, {
                       wrap: "truncate",
                       children: r(DotSeparatedList, {
                         children: [
-                          e(t, {
+                          e(Text, {
                             color: Gr.color,
                             dimColor: Gr.dim,
                             children: Gr.word,
                           }),
-                          hs && e(t, { dimColor: !0, children: hs }),
+                          hs && e(Text, { dimColor: !0, children: hs }),
                         ],
                       }),
                     })
-                  : e(t, { dimColor: !0, wrap: "truncate", children: hs })),
+                  : e(Text, { dimColor: !0, wrap: "truncate", children: hs })),
       (ro[34] = $o),
       (ro[35] = Eo.detail),
       (ro[36] = xo),
@@ -5158,10 +5158,10 @@ function ks(HC) {
   )
     ((Sl =
       dl && !fo && !xo && !zn && !$o && !Nr
-        ? e(o, {
+        ? e(Box, {
             flexShrink: 0,
             paddingLeft: 1,
-            children: r(t, { dimColor: !0, children: ["\xD7", dl] }),
+            children: r(Text, { dimColor: !0, children: ["\xD7", dl] }),
           })
         : null),
       (ro[45] = $o),
@@ -5174,21 +5174,21 @@ function ks(HC) {
   else Sl = ro[51];
   let kl;
   if (ro[52] !== yl || ro[53] !== Sl)
-    ((kl = r(o, { flexGrow: 1, width: 0, paddingLeft: 2, children: [yl, Sl] })),
+    ((kl = r(Box, { flexGrow: 1, width: 0, paddingLeft: 2, children: [yl, Sl] })),
       (ro[52] = yl),
       (ro[53] = Sl),
       (ro[54] = kl));
   else kl = ro[54];
   const Bp =
       Eo.artifact > 0
-        ? e(o, {
+        ? e(Box, {
             width: Eo.artifact + 2,
             flexShrink: 0,
             paddingLeft: 2,
             justifyContent: "flex-end",
             children:
               ys.length > 1
-                ? r(t, {
+                ? r(Text, {
                     color: en?.color,
                     dimColor: !co || !en?.color,
                     children: [ys.length, " PRs"],
@@ -5204,11 +5204,11 @@ function ks(HC) {
                         underline: !1,
                         hidePrefix: !0,
                       })
-                    : e(t, { color: il, dimColor: !co, children: "PR" })
+                    : e(Text, { color: il, dimColor: !co, children: "PR" })
                   : en
-                    ? e(ct, {
+                    ? e(Link, {
                         url: en.row.href,
-                        children: r(t, {
+                        children: r(Text, {
                           color: "claude",
                           children: [Pp.length > 1 && `${Pp.length} `, ARTIFACT_MARKER_GLYPH],
                         }),
@@ -5219,11 +5219,11 @@ function ks(HC) {
     Np = Eo.age + 2;
   let vl;
   if (ro[55] !== _p)
-    ((vl = e(t, { dimColor: !0, children: _p })), (ro[55] = _p), (ro[56] = vl));
+    ((vl = e(Text, { dimColor: !0, children: _p })), (ro[55] = _p), (ro[56] = vl));
   else vl = ro[56];
   let Rl;
   if (ro[57] !== Np || ro[58] !== vl)
-    ((Rl = e(o, {
+    ((Rl = e(Box, {
       width: Np,
       flexShrink: 0,
       paddingLeft: 2,
@@ -5285,7 +5285,7 @@ function xs(tE) {
     Cs[4] !== Xp ||
     Cs[5] !== Zp
   )
-    ((Il = r(t, {
+    ((Il = r(Text, {
       "aria-label": Qp,
       color: _l,
       dimColor: Xp,
@@ -5310,8 +5310,8 @@ function xs(tE) {
     Cs[12] !== _s
   )
     ((Pl = _s
-      ? e(t, { children: Io(_s.draft, _s.cursor, Yp) })
-      : e(t, {
+      ? e(Text, { children: Io(_s.draft, _s.cursor, Yp) })
+      : e(Text, {
           color: Up,
           dimColor: !vs && !Cl,
           bold: Cl,
@@ -5328,7 +5328,7 @@ function xs(tE) {
   else Pl = Cs[13];
   let Al;
   if (Cs[14] !== Il || Cs[15] !== Pl)
-    ((Al = r(o, { children: [Il, Pl] })),
+    ((Al = r(Box, { children: [Il, Pl] })),
       (Cs[14] = Il),
       (Cs[15] = Pl),
       (Cs[16] = Al));
@@ -5344,9 +5344,9 @@ function xs(tE) {
   )
     ((Ol =
       (qp || Rs) &&
-      e(o, {
+      e(Box, {
         paddingLeft: jo,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           wrap: "truncate",
           children: r(DotSeparatedList, {
@@ -5354,9 +5354,9 @@ function xs(tE) {
               Kp,
               $p,
               Rs
-                ? e(t, { color: "error", wrap: "truncate", children: Rs })
+                ? e(Text, { color: "error", wrap: "truncate", children: Rs })
                 : xl &&
-                  e(t, {
+                  e(Text, {
                     color: El.color,
                     dimColor: El.dim,
                     wrap: "truncate",
@@ -5376,7 +5376,7 @@ function xs(tE) {
   else Ol = Cs[23];
   let aw;
   if (Cs[24] !== Al || Cs[25] !== Ol)
-    ((aw = r(o, { flexDirection: "column", children: [Al, Ol] })),
+    ((aw = r(Box, { flexDirection: "column", children: [Al, Ol] })),
       (Cs[24] = Al),
       (Cs[25] = Ol),
       (Cs[26] = aw));
@@ -5560,20 +5560,20 @@ function od(CE) {
           let ww = Do.slice(ti, ti + 4);
           let yw = Do.length - ti - ww.length;
           let GE = Ro + Xr.label + 4 + 7 - 2;
-          return r(o, {
+          return r(Box, {
             ref: Cf,
             flexDirection: "column",
             paddingLeft: GE,
             children: [
               ti > 0 &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: ["  ", "\u2026 ", ti, " above"],
                 }),
               ww.map((Sw, VE) => {
                 let Pf = ti + VE === go;
                 return r(
-                  t,
+                  Text,
                   {
                     color: Pf ? "suggestion" : void 0,
                     dimColor: !Pf,
@@ -5584,7 +5584,7 @@ function od(CE) {
                 );
               }),
               yw > 0 &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: ["  ", "\u2026 ", yw, " more"],
                 }),
@@ -5686,7 +5686,7 @@ function od(CE) {
         let WE = hf.get(Ze.group) ?? 0;
         let $E = sf.has(_f(Ze.group));
         return r(
-          o,
+          Box,
           {
             ref: eo ? In : void 0,
             marginTop: An > 0 ? 1 : 0,
@@ -5703,31 +5703,31 @@ function od(CE) {
                 },
             children: [
               En?.kind === "rename" && En.from === Ze.group
-                ? r(t, {
+                ? r(Text, {
                     wrap: "truncate",
                     children: [
                       Io(ei, Jl, Math.max(Cn - 4, 10), on),
                       on
                         ? null
                         : Bl
-                          ? e(t, {
+                          ? e(Text, {
                               color: "error",
                               children: " (reserved name)",
                             })
                           : Ul
-                            ? e(t, {
+                            ? e(Text, {
                                 color: "error",
                                 children: " (name taken)",
                               })
                             : Hl
-                              ? e(t, {
+                              ? e(Text, {
                                   dimColor: !0,
                                   children: " (rename group)",
                                 })
                               : null,
                     ],
                   })
-                : r(t, {
+                : r(Text, {
                     bold: UE || ql,
                     color: oi,
                     dimColor: !ql,
@@ -5745,7 +5745,7 @@ function od(CE) {
                               : truncatePathSegments(_a(Ze.group), Math.max(Cn - 10, 10)),
                       $E &&
                         r(N, {
-                          children: [" ", e(t, { dimColor: !0, children: WE })],
+                          children: [" ", e(Text, { dimColor: !0, children: WE })],
                         }),
                       (xn ? Ze.group === "done" : Ze.group === EARLIER) &&
                         jr &&
@@ -5754,7 +5754,7 @@ function od(CE) {
                         r(N, {
                           children: [
                             " ",
-                            e(t, {
+                            e(Text, {
                               dimColor: !0,
                               children: "\xB7 looking for past sessions\u2026",
                             }),
@@ -5764,9 +5764,9 @@ function od(CE) {
                   }),
               Yr &&
                 !(Ze.group === "done" && bf.length > 0) &&
-                e(o, {
+                e(Box, {
                   paddingLeft: 1,
-                  children: e(t, { dimColor: !0, children: Sa[Ze.group] }),
+                  children: e(Text, { dimColor: !0, children: Sa[Ze.group] }),
                 }),
             ],
           },
@@ -5775,7 +5775,7 @@ function od(CE) {
       }
       if (Ze.kind === "fold") {
         return e(
-          o,
+          Box,
           {
             ref: eo ? In : void 0,
             marginTop: _n && Pr(Oo[An - 1], Ze) ? 1 : 0,
@@ -5791,7 +5791,7 @@ function od(CE) {
                   via_click: !0,
                 }));
             },
-            children: r(t, {
+            children: r(Text, {
               color: oi,
               dimColor: !ql,
               "aria-label": `${eo ? "selected, " : ""}${Ze.hidden} more finished sessions folded:`,
@@ -5808,11 +5808,11 @@ function od(CE) {
       }
       if (Ze.kind === "newsession") {
         return r(
-          o,
+          Box,
           {
             flexDirection: "column",
             children: [
-              r(o, {
+              r(Box, {
                 ref: eo ? In : void 0,
                 paddingLeft: Ro,
                 backgroundColor: On,
@@ -5821,17 +5821,17 @@ function od(CE) {
                   (ri(), vf(Ze.origin));
                 },
                 children: [
-                  r(t, {
+                  r(Text, {
                     color: oi ?? "suggestion",
                     "aria-label": eo ? "selected, new session:" : void 0,
                     children: [
                       eo ? "\u276F" : " ",
                       "+  ",
-                      e(t, { underline: eo, children: "new session" }),
+                      e(Text, { underline: eo, children: "new session" }),
                     ],
                   }),
                   df &&
-                    r(t, {
+                    r(Text, {
                       dimColor: !0,
                       wrap: "truncate",
                       children: ["  ", "opening\u2026 \xB7 esc to cancel"],
@@ -5840,67 +5840,67 @@ function od(CE) {
               }),
               nr !== null &&
                 !nr.rows.some(Pw) &&
-                r(o, {
+                r(Box, {
                   paddingLeft: Ro + jo,
                   marginTop: 1,
                   flexDirection: "column",
                   children: [
-                    e(t, {
+                    e(Text, {
                       bold: !0,
                       children: "Nothing running in the background.",
                     }),
-                    e(t, {
+                    e(Text, {
                       dimColor: !0,
                       children:
                         "Hand off a task and it keeps working while you do something else \u2014 even if you close this terminal.",
                     }),
                     !tf &&
-                      r(t, {
+                      r(Text, {
                         color: "warning",
                         wrap: "truncate",
                         children: [
                           "You are not logged in. Run",
                           " ",
-                          e(t, { bold: !0, children: "claude /login" }),
+                          e(Text, { bold: !0, children: "claude /login" }),
                           " first, or press",
                           " ",
-                          e(t, { bold: !0, children: "l" }),
+                          e(Text, { bold: !0, children: "l" }),
                           " to log in.",
                         ],
                       }),
-                    r(o, {
+                    r(Box, {
                       marginTop: 1,
                       flexDirection: "column",
                       children: [
-                        r(t, {
+                        r(Text, {
                           dimColor: !0,
                           children: [
                             "Start one with",
                             " ",
-                            e(t, {
+                            e(Text, {
                               color: "suggestion",
                               children: "+ new session",
                             }),
                             " above,",
                           ],
                         }),
-                        r(t, {
+                        r(Text, {
                           dimColor: !0,
                           children: [
                             "or run",
                             " ",
-                            e(t, {
+                            e(Text, {
                               color: "suggestion",
                               children: 'claude --bg "task"',
                             }),
                             " from any terminal,",
                           ],
                         }),
-                        r(t, {
+                        r(Text, {
                           dimColor: !0,
                           children: [
                             "or ",
-                            e(t, { color: "suggestion", children: "/fork" }),
+                            e(Text, { color: "suggestion", children: "/fork" }),
                             " a session you're already in.",
                           ],
                         }),
@@ -5916,7 +5916,7 @@ function od(CE) {
       if (Ze.kind === "earlier") {
         let zl = Ze.entry;
         return r(
-          o,
+          Box,
           {
             ref: eo ? In : void 0,
             width: "100%",
@@ -5927,21 +5927,21 @@ function od(CE) {
               (ri(), Sf(zl, "section"));
             },
             children: [
-              e(o, {
+              e(Box, {
                 flexGrow: 1,
                 flexShrink: 1,
                 overflow: "hidden",
-                children: r(t, {
+                children: r(Text, {
                   color: oi,
                   dimColor: !ql,
                   wrap: "truncate",
                   children: ["\xB7 ", zl.title],
                 }),
               }),
-              e(o, {
+              e(Box, {
                 flexShrink: 0,
                 marginLeft: 1,
-                children: e(t, {
+                children: e(Text, {
                   dimColor: !0,
                   children: formatDuration(
                     Math.max(0, Date.now() - zl.modified.getTime()),
@@ -5964,7 +5964,7 @@ function od(CE) {
           Wn(it.state, Yl, Ql);
         let _w = it.id === Tl;
         return e(
-          o,
+          Box,
           {
             ref: eo ? In : void 0,
             flexDirection: "column",
@@ -6015,7 +6015,7 @@ function od(CE) {
       }
       let qE = En?.kind === "assign" && En.jobId === it.id;
       let zE = e(
-        o,
+        Box,
         {
           ref: eo ? In : void 0,
           width: "100%",
@@ -6155,9 +6155,9 @@ function od(CE) {
       pf.length === 0 &&
       !!Ao &&
       wf &&
-      e(o, {
+      e(Box, {
         paddingLeft: 2,
-        children: e(t, { dimColor: !0, children: "no sessions match" }),
+        children: e(Text, { dimColor: !0, children: "no sessions match" }),
       })),
       (ho[89] = pf.length),
       (ho[90] = Ao),
@@ -6181,9 +6181,9 @@ function od(CE) {
       !Oo.some(
         (Cw) => Cw.kind === "header" && Cw.group === (xn ? "done" : EARLIER),
       ) &&
-      e(o, {
+      e(Box, {
         paddingLeft: 2,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children: "\xB7 looking for past sessions\u2026",
         }),
@@ -6319,7 +6319,7 @@ function fd(hx) {
     qf[35] !== Bf
   )
     ((pd = Mf
-      ? r(t, {
+      ? r(Text, {
           dimColor: !0,
           children: [
             ii
@@ -6329,7 +6329,7 @@ function fd(hx) {
           ],
         })
       : $f !== null || si !== null
-        ? e(t, {
+        ? e(Text, {
             dimColor: !0,
             children: r(DotSeparatedList, {
               children: [
@@ -6363,10 +6363,10 @@ function fd(hx) {
             }),
           })
         : sd
-          ? e(t, {
+          ? e(Text, {
               dimColor: !0,
               children: ii
-                ? e(t, {
+                ? e(Text, {
                     children: sd.justKilled
                       ? "stopped \xB7 ctrl+x again to delete \xB7 esc to keep"
                       : "ctrl+x again to delete \xB7 esc to keep",
@@ -6374,20 +6374,20 @@ function fd(hx) {
                 : e(KeybindingHint, { chord: "ctrl+x", action: "confirm" }),
             })
           : rd
-            ? e(t, { color: "error", wrap: "truncate-end", children: rd })
+            ? e(Text, { color: "error", wrap: "truncate-end", children: rd })
             : Ds && Bf
               ? e(VoiceWarmupHint, {})
               : Ds && ad !== "idle"
                 ? e(VoiceStatusIndicator, { voiceState: ad })
                 : id
-                  ? e(t, { dimColor: !0, wrap: "truncate-end", children: id })
+                  ? e(Text, { dimColor: !0, wrap: "truncate-end", children: id })
                   : ii && !nd && Fo === ""
-                    ? e(t, {
+                    ? e(Text, {
                         dimColor: !0,
                         wrap: "truncate-end",
                         children: r(DotSeparatedList, {
                           children: [
-                            e(t, {
+                            e(Text, {
                               children:
                                 zo?.kind === "newsession"
                                   ? `${figures.arrowRight} or enter to start`
@@ -6395,18 +6395,18 @@ function fd(hx) {
                             }),
                             sn &&
                               !ai &&
-                              e(t, {
+                              e(Text, {
                                 children: isSettled(sn.state)
                                   ? "ctrl+x to delete"
                                   : "ctrl+x to stop",
                               }),
-                            e(t, { children: "? for shortcuts" }),
+                            e(Text, { children: "? for shortcuts" }),
                             null,
                           ],
                         }),
                       })
                     : !Ff && !nd
-                      ? e(t, {
+                      ? e(Text, {
                           dimColor: !0,
                           wrap: "truncate-end",
                           children: r(DotSeparatedList, {
@@ -6423,7 +6423,7 @@ function fd(hx) {
                               Lf !== null &&
                                 Fo !== "" &&
                                 ir >= 90 &&
-                                e(t, {
+                                e(Text, {
                                   dimColor: !0,
                                   children: "paste again to expand",
                                 }),
@@ -6454,7 +6454,7 @@ function fd(hx) {
                                   format: { keyCase: "lower" },
                                 }),
                               Ds && Jf !== "tap" && Fo === "" && !li && ir >= 55
-                                ? e(t, { children: "hold space to speak" })
+                                ? e(Text, { children: "hold space to speak" })
                                 : null,
                               ir >= 80 &&
                                 (sn && !ai && Fo === ""
@@ -6475,7 +6475,7 @@ function fd(hx) {
                                         })
                                       : null),
                               li
-                                ? e(t, {
+                                ? e(Text, {
                                     color: "bashBorder",
                                     children: "! for shell mode",
                                   })
@@ -6485,7 +6485,7 @@ function fd(hx) {
                                       action: "clear",
                                       format: { keyCase: "lower" },
                                     })
-                                  : e(t, { children: "? for shortcuts" }),
+                                  : e(Text, { children: "? for shortcuts" }),
                               null,
                               ud &&
                                 Fo === "" &&
@@ -6540,7 +6540,7 @@ function fd(hx) {
   else pd = qf[36];
   let Tw;
   if (qf[37] !== Yf || qf[38] !== pd)
-    ((Tw = e(o, { flexShrink: 0, paddingLeft: Yf, height: 1, children: pd })),
+    ((Tw = e(Box, { flexShrink: 0, paddingLeft: Yf, height: 1, children: pd })),
       (qf[37] = Yf),
       (qf[38] = pd),
       (qf[39] = Tw));
@@ -6563,24 +6563,24 @@ function Qf(s) {
 }
 function md(s, c) {
   if (!s) return null;
-  let m = Wyn(s, Bw, c);
+  let m = findActionForKeyAcrossContexts(s, Bw, c);
   if (m !== void 0) return Qf(m);
-  return Qf(Wyn(s, Nw, c));
+  return Qf(findActionForKeyAcrossContexts(s, Nw, c));
 }
 function di(s, c) {
   for (let m = c.length - 1; m >= 0; m--) {
     let b = c[m];
     if (!b || b.action !== s || b.chord.length !== 1) continue;
     let k = b.chord[0];
-    if (k && md(k, c) === s) return Dre(b.chord, w$());
+    if (k && md(k, c) === s) return formatKeybindingChordForPlatform(b.chord, getKeybindingPlatform());
   }
   return "";
 }
 function iy(Ww) {
-  return e(t, { dimColor: !0, children: Ww }, Ww);
+  return e(Text, { dimColor: !0, children: Ww }, Ww);
 }
 function ry(Qx, Xx) {
-  return e(o, { flexDirection: "column", children: Qx.map(iy) }, Xx);
+  return e(Box, { flexDirection: "column", children: Qx.map(iy) }, Xx);
 }
 function sy() {
   return Date.now();
@@ -6600,7 +6600,7 @@ function Ls(qx) {
       canDelete: hd,
       canGoBack: im,
     } = qx,
-    ui = useKeybindingContext()?.bindings ?? HAe(K3),
+    ui = useKeybindingContext()?.bindings ?? expandKeybindingBlocks(DEFAULT_KEYBINDINGS),
     Hw;
   if (sm[0] !== ui)
     ((Hw = di("agents:switchView", ui)), (sm[0] = ui), (sm[1] = Hw));
@@ -6646,7 +6646,7 @@ function Ls(qx) {
     let Uw = [];
     for (let ci = 0; ci < io.length; ci = ci + 2, ci)
       Uw.push(io.slice(ci, ci + 2));
-    Vw = e(o, {
+    Vw = e(Box, {
       flexShrink: 0,
       paddingX: 2,
       flexDirection: "row",
@@ -6684,13 +6684,13 @@ function Js(Zx) {
     qw;
   if (qt[2] === MEMO_CACHE_SENTINEL) ((qw = () => eI(Date.now())), (qt[2] = qw));
   else qw = qt[2];
-  if ((ko(qw, !bo ? null : jw - $w < 60000 ? 1000 : 30000), !bo)) {
+  if ((useInterval(qw, !bo ? null : jw - $w < 60000 ? 1000 : 30000), !bo)) {
     let pi;
     if (qt[3] === MEMO_CACHE_SENTINEL)
-      ((pi = e(o, {
+      ((pi = e(Box, {
         flexShrink: 0,
         paddingX: 2,
-        children: e(t, { dimColor: !0, children: "no job focused" }),
+        children: e(Text, { dimColor: !0, children: "no job focused" }),
       })),
         (qt[3] = pi));
     else pi = qt[3];
@@ -6705,37 +6705,37 @@ function Js(Zx) {
   let am = zw,
     Yw;
   if (qt[6] === MEMO_CACHE_SENTINEL)
-    ((Yw = e(t, { dimColor: !0, children: "backend " })), (qt[6] = Yw));
+    ((Yw = e(Text, { dimColor: !0, children: "backend " })), (qt[6] = Yw));
   else Yw = qt[6];
   let yd;
   if (qt[7] !== to.backend)
-    ((yd = r(t, { children: [Yw, to.backend] })),
+    ((yd = r(Text, { children: [Yw, to.backend] })),
       (qt[7] = to.backend),
       (qt[8] = yd));
   else yd = qt[8];
   let Qw;
   if (qt[9] === MEMO_CACHE_SENTINEL)
-    ((Qw = e(t, { dimColor: !0, children: "dir " })), (qt[9] = Qw));
+    ((Qw = e(Text, { dimColor: !0, children: "dir " })), (qt[9] = Qw));
   else Qw = qt[9];
   let Sd;
   if (qt[10] !== bo.id) ((Sd = getJobDir(bo.id)), (qt[10] = bo.id), (qt[11] = Sd));
   else Sd = qt[11];
   let kd;
   if (qt[12] !== Sd)
-    ((kd = r(t, { children: [Qw, Sd] })), (qt[12] = Sd), (qt[13] = kd));
+    ((kd = r(Text, { children: [Qw, Sd] })), (qt[12] = Sd), (qt[13] = kd));
   else kd = qt[13];
   let Xw;
   if (qt[14] === MEMO_CACHE_SENTINEL)
-    ((Xw = e(t, { dimColor: !0, children: "cwd " })), (qt[14] = Xw));
+    ((Xw = e(Text, { dimColor: !0, children: "cwd " })), (qt[14] = Xw));
   else Xw = qt[14];
   const lm = to.worktreePath ?? to.cwd;
   let vd;
   if (qt[15] !== lm)
-    ((vd = r(t, { children: [Xw, lm] })), (qt[15] = lm), (qt[16] = vd));
+    ((vd = r(Text, { children: [Xw, lm] })), (qt[15] = lm), (qt[16] = vd));
   else vd = qt[16];
   let Rd;
   if (qt[17] !== vd || qt[18] !== yd || qt[19] !== kd)
-    ((Rd = r(o, { flexDirection: "column", children: [yd, kd, vd] })),
+    ((Rd = r(Box, { flexDirection: "column", children: [yd, kd, vd] })),
       (qt[17] = vd),
       (qt[18] = yd),
       (qt[19] = kd),
@@ -6745,9 +6745,9 @@ function Js(Zx) {
   if (qt[21] !== bo.id || qt[22] !== to.backend)
     ((Cd =
       to.backend === "daemon"
-        ? r(t, {
+        ? r(Text, {
             children: [
-              e(t, { dimColor: !0, children: "shell " }),
+              e(Text, { dimColor: !0, children: "shell " }),
               "claude attach ",
               bo.id,
             ],
@@ -6759,23 +6759,23 @@ function Js(Zx) {
   else Cd = qt[23];
   let Zw;
   if (qt[24] === MEMO_CACHE_SENTINEL)
-    ((Zw = e(t, { dimColor: !0, children: "session " })), (qt[24] = Zw));
+    ((Zw = e(Text, { dimColor: !0, children: "session " })), (qt[24] = Zw));
   else Zw = qt[24];
   let Ed;
   if (qt[25] !== to.sessionId)
-    ((Ed = r(t, { children: [Zw, to.sessionId] })),
+    ((Ed = r(Text, { children: [Zw, to.sessionId] })),
       (qt[25] = to.sessionId),
       (qt[26] = Ed));
   else Ed = qt[26];
   let ty;
   if (qt[27] === MEMO_CACHE_SENTINEL)
-    ((ty = e(t, { dimColor: !0, children: "version " })), (qt[27] = ty));
+    ((ty = e(Text, { dimColor: !0, children: "version " })), (qt[27] = ty));
   else ty = qt[27];
   let xd;
   if (qt[28] !== to.cliVersion)
     ((xd =
       to.cliVersion === void 0
-        ? e(t, { dimColor: !0, children: "\u2014" })
+        ? e(Text, { dimColor: !0, children: "\u2014" })
         : to.cliVersion ===
             {
               ISSUES_EXPLAINER:
@@ -6794,8 +6794,8 @@ function Js(Zx) {
           ? to.cliVersion
           : r(N, {
               children: [
-                e(t, { color: "warning", children: to.cliVersion }),
-                r(t, {
+                e(Text, { color: "warning", children: to.cliVersion }),
+                r(Text, {
                   dimColor: !0,
                   children: [
                     " \xB7 current ",
@@ -6822,19 +6822,19 @@ function Js(Zx) {
   else xd = qt[29];
   let Id;
   if (qt[30] !== xd)
-    ((Id = r(t, { children: [ty, xd] })), (qt[30] = xd), (qt[31] = Id));
+    ((Id = r(Text, { children: [ty, xd] })), (qt[30] = xd), (qt[31] = Id));
   else Id = qt[31];
   let oy;
   if (qt[32] === MEMO_CACHE_SENTINEL)
-    ((oy = e(t, { dimColor: !0, children: "updated " })), (qt[32] = oy));
+    ((oy = e(Text, { dimColor: !0, children: "updated " })), (qt[32] = oy));
   else oy = qt[32];
   let Pd;
   if (qt[33] !== am)
-    ((Pd = r(t, { children: [oy, am, " ago"] })), (qt[33] = am), (qt[34] = Pd));
+    ((Pd = r(Text, { children: [oy, am, " ago"] })), (qt[33] = am), (qt[34] = Pd));
   else Pd = qt[34];
   let Ad;
   if (qt[35] !== Cd || qt[36] !== Ed || qt[37] !== Id || qt[38] !== Pd)
-    ((Ad = r(o, { flexDirection: "column", children: [Cd, Ed, Id, Pd] })),
+    ((Ad = r(Box, { flexDirection: "column", children: [Cd, Ed, Id, Pd] })),
       (qt[35] = Cd),
       (qt[36] = Ed),
       (qt[37] = Id),
@@ -6843,7 +6843,7 @@ function Js(Zx) {
   else Ad = qt[39];
   let ny;
   if (qt[40] !== Rd || qt[41] !== Ad)
-    ((ny = r(o, {
+    ((ny = r(Box, {
       flexShrink: 0,
       paddingX: 2,
       flexDirection: "row",
@@ -6860,24 +6860,24 @@ F();
 F();
 function ly(Ld, lI) {
   return r(
-    o,
+    Box,
     {
       paddingLeft: 2,
       children: [
-        e(o, {
+        e(Box, {
           width: 3,
           flexShrink: 0,
-          children: r(t, { dimColor: !0, children: [lI + 1, "."] }),
+          children: r(Text, { dimColor: !0, children: [lI + 1, "."] }),
         }),
-        e(o, {
+        e(Box, {
           flexGrow: 1,
           width: 0,
-          children: r(t, {
+          children: r(Text, {
             wrap: "truncate",
             children: [
               normalizeWhitespace(Ld.label),
               Ld.description &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: [" \xB7 ", normalizeWhitespace(Ld.description)],
                 }),
@@ -6902,10 +6902,10 @@ function Jd(aI) {
   else Od = fi[1];
   let Td;
   if (fi[2] !== Od)
-    ((Td = e(o, {
+    ((Td = e(Box, {
       flexGrow: 1,
       width: 0,
-      children: e(t, { bold: !0, wrap: "truncate", children: Od }),
+      children: e(Text, { bold: !0, wrap: "truncate", children: Od }),
     })),
       (fi[2] = Od),
       (fi[3] = Td));
@@ -6914,10 +6914,10 @@ function Jd(aI) {
   if (fi[4] !== Bs.length)
     ((Dd =
       Bs.length > 1 &&
-      e(o, {
+      e(Box, {
         flexShrink: 0,
         paddingLeft: 1,
-        children: r(t, {
+        children: r(Text, {
           dimColor: !0,
           children: ["+", Bs.length - 1, " more \xB7 enter to open"],
         }),
@@ -6927,7 +6927,7 @@ function Jd(aI) {
   else Dd = fi[5];
   let Fd;
   if (fi[6] !== Td || fi[7] !== Dd)
-    ((Fd = r(o, { children: [Td, Dd] })),
+    ((Fd = r(Box, { children: [Td, Dd] })),
       (fi[6] = Td),
       (fi[7] = Dd),
       (fi[8] = Fd));
@@ -6938,7 +6938,7 @@ function Jd(aI) {
   else Md = fi[10];
   let ay;
   if (fi[11] !== Fd || fi[12] !== Md)
-    ((ay = r(o, { flexDirection: "column", children: [Fd, Md] })),
+    ((ay = r(Box, { flexDirection: "column", children: [Fd, Md] })),
       (fi[11] = Fd),
       (fi[12] = Md),
       (fi[13] = ay));
@@ -6992,7 +6992,7 @@ function Nd({
       : Object.entries(s.state.output ?? {}).filter(([, ae]) => !ce(ae)),
     ge = X ? "questions" : se ? "needs" : Ie.length > 0 ? "output" : "detail",
     ke = ge === "questions" || ge === "needs";
-  ko(() => ne(Date.now()), ke ? (j - K < 60000 ? 1000 : 30000) : null);
+  useInterval(() => ne(Date.now()), ke ? (j - K < 60000 ? 1000 : 30000) : null);
   let Ce = ke ? formatDuration(Math.max(0, j - K), { mostSignificantOnly: !0 }) : "",
     be = C(!1),
     le = C(null);
@@ -7190,11 +7190,11 @@ function Nd({
       Math.max(
         1,
         ...(ge === "needs"
-          ? [te(Nt(se ?? ""))]
+          ? [getStringWidth(Nt(se ?? ""))]
           : ge === "output"
-            ? Ie.map(([, ae]) => te(Nt(ae)))
+            ? Ie.map(([, ae]) => getStringWidth(Nt(ae)))
             : ge === "detail"
-              ? [te(Nt(s.state.detail))]
+              ? [getStringWidth(Nt(s.state.detail))]
               : []),
       ) / Math.max(40, jt - 6),
     ),
@@ -7216,12 +7216,12 @@ function Nd({
     no = Math.max(um, Xt - Jt - mo),
     Ft = O.slice(0, no),
     fe = O.length - Ft.length,
-    Ae = Math.max(0, ...Ie.map(([ae]) => te(ae))),
+    Ae = Math.max(0, ...Ie.map(([ae]) => getStringWidth(ae))),
     Be = 5,
     { color: et } = rp(s.state, s.activity, c);
   return r(N, {
     children: [
-      r(o, {
+      r(Box, {
         ref: le,
         flexDirection: "column",
         borderStyle: "round",
@@ -7277,34 +7277,34 @@ function Nd({
           ge === "questions" && X
             ? e(Jd, { questions: X })
             : ge === "needs"
-              ? e(o, {
+              ? e(Box, {
                   maxHeight: St,
                   overflowY: "hidden",
-                  children: e(t, {
+                  children: e(Text, {
                     wrap: "wrap",
                     children: e(as, { value: Nt(se ?? "") }),
                   }),
                 })
               : ge === "output"
-                ? e(o, {
+                ? e(Box, {
                     flexDirection: "column",
                     children: Ie.map(([ae, gt]) =>
                       r(
-                        o,
+                        Box,
                         {
                           children: [
                             Ie.length > 1 &&
-                              e(o, {
+                              e(Box, {
                                 width: Ae + 2,
                                 flexShrink: 0,
-                                children: e(t, { dimColor: !0, children: ae }),
+                                children: e(Text, { dimColor: !0, children: ae }),
                               }),
-                            e(o, {
+                            e(Box, {
                               flexGrow: 1,
                               width: 0,
                               maxHeight: St,
                               overflowY: "hidden",
-                              children: e(t, {
+                              children: e(Text, {
                                 wrap: "wrap",
                                 children: e(as, { value: Nt(gt) }),
                               }),
@@ -7315,27 +7315,27 @@ function Nd({
                       ),
                     ),
                   })
-                : e(o, {
+                : e(Box, {
                     maxHeight: St,
                     overflowY: "hidden",
-                    children: e(t, {
+                    children: e(Text, {
                       wrap: "wrap",
                       children: e(LinkifiedText, { children: Nt(s.state.detail) }),
                     }),
                   }),
           Ft.length > 0 &&
-            r(o, {
+            r(Box, {
               flexDirection: "column",
               children: [
                 Ft.map((ae) =>
                   r(
-                    o,
+                    Box,
                     {
                       children: [
-                        e(o, {
+                        e(Box, {
                           flexGrow: 1,
                           width: 0,
-                          children: r(t, {
+                          children: r(Text, {
                             wrap: "truncate",
                             children: [
                               ae.prNumber !== void 0
@@ -7347,7 +7347,7 @@ function Nd({
                                     underline: !1,
                                     hidePrefix: !0,
                                   })
-                                : e(t, {
+                                : e(Text, {
                                     color: ae.color,
                                     dimColor: !Wo(ae),
                                     children: Wo(ae) ? ARTIFACT_MARKER_GLYPH : "PR",
@@ -7356,9 +7356,9 @@ function Nd({
                                 ? r(N, {
                                     children: [
                                       " ",
-                                      e(ct, {
+                                      e(Link, {
                                         url: formatPrUrlWithTemplate(ae.row.href, Dt),
-                                        children: r(t, {
+                                        children: r(Text, {
                                           color: ae.isDraft
                                             ? "inactive"
                                             : void 0,
@@ -7376,10 +7376,10 @@ function Nd({
                         }),
                         ae.diffStat &&
                           ae.diffStat.additions + ae.diffStat.deletions > 0 &&
-                          e(o, {
+                          e(Box, {
                             flexShrink: 0,
                             paddingLeft: 1,
-                            children: e(ct, {
+                            children: e(Link, {
                               url: `${ae.row.href}/files`,
                               children: e(DiffStatLabel, {
                                 added: ae.diffStat.additions,
@@ -7387,7 +7387,7 @@ function Nd({
                               }),
                             }),
                           }),
-                        e(o, {
+                        e(Box, {
                           flexShrink: 0,
                           paddingLeft: 1,
                           children: ae.status.map((gt, It) =>
@@ -7395,8 +7395,8 @@ function Nd({
                               Nl,
                               {
                                 children: [
-                                  It > 0 && e(t, { children: " " }),
-                                  e(t, {
+                                  It > 0 && e(Text, { children: " " }),
+                                  e(Text, {
                                     color: gt.color,
                                     dimColor: !gt.color,
                                     children: gt.text,
@@ -7413,9 +7413,9 @@ function Nd({
                   ),
                 ),
                 fe > 0 &&
-                  e(o, {
+                  e(Box, {
                     paddingLeft: 2,
-                    children: r(t, {
+                    children: r(Text, {
                       dimColor: !0,
                       children: ["\u2026 ", fe, " more"],
                     }),
@@ -7423,20 +7423,20 @@ function Nd({
               ],
             }),
           at > 0 &&
-            e(o, {
+            e(Box, {
               paddingLeft: 2,
-              children: e(t, {
+              children: e(Text, {
                 wrap: "truncate",
                 children: r(DotSeparatedList, {
                   children: [
-                    ke && r(t, { color: et, children: ["waiting ", Ce] }),
-                    Gt !== "" && e(t, { dimColor: !0, children: Gt }),
+                    ke && r(Text, { color: et, children: ["waiting ", Ce] }),
+                    Gt !== "" && e(Text, { dimColor: !0, children: Gt }),
                   ],
                 }),
               }),
             }),
-          e(o, { flexGrow: 1 }),
-          e(o, {
+          e(Box, { flexGrow: 1 }),
+          e(Box, {
             marginTop: 1,
             children: e(SearchInput, {
               query: ot,
@@ -7465,7 +7465,7 @@ function Nd({
             }),
           }),
           A &&
-            e(t, {
+            e(Text, {
               color: "error",
               dimColor: !0,
               wrap: "truncate",
@@ -7473,14 +7473,14 @@ function Nd({
             }),
         ],
       }),
-      e(o, {
+      e(Box, {
         paddingLeft: 2,
         children:
           xe && lt && !I
             ? e(VoiceWarmupHint, {})
             : xe && Ye !== "idle" && !I
               ? e(VoiceStatusIndicator, { voiceState: Ye })
-              : e(t, {
+              : e(Text, {
                   dimColor: !0,
                   children: I
                     ? r(DotSeparatedList, {
@@ -7500,7 +7500,7 @@ function Nd({
                     : r(DotSeparatedList, {
                         children: [
                           qe &&
-                            e(t, {
+                            e(Text, {
                               color: "bashBorder",
                               children: "! for shell mode",
                             }),
@@ -7520,7 +7520,7 @@ function Nd({
                             format: { keyCase: "lower" },
                           }),
                           xe && nt !== "tap" && !qe && !ot.trim()
-                            ? e(t, { children: "hold space to speak" })
+                            ? e(Text, { children: "hold space to speak" })
                             : null,
                           e(KeybindingHint, {
                             chord: "ctrl+x",
@@ -7603,18 +7603,18 @@ function qd(SP) {
         ? (() => {
             let Vs;
             if (dr.entries === null)
-              Vs = e(t, {
+              Vs = e(Text, {
                 dimColor: !0,
                 children: "Looking for past sessions\u2026",
               });
             else if (dr.failed)
-              Vs = e(t, {
+              Vs = e(Text, {
                 dimColor: !0,
                 children:
                   "Couldn't load past sessions \u2014 press esc, then try /resume again",
               });
             else if (dr.entries.length === 0)
-              Vs = e(t, {
+              Vs = e(Text, {
                 dimColor: !0,
                 children: "No past sessions to resume",
               });
@@ -7626,31 +7626,31 @@ function qd(SP) {
               Vs = r(N, {
                 children: [
                   hi > 0 &&
-                    r(t, {
+                    r(Text, {
                       dimColor: !0,
                       children: ["  ", "\u2026 ", hi, " above"],
                     }),
                   py.map((Dm, IP) => {
                     let Fm = hi + IP === Hd;
                     return r(
-                      o,
+                      Box,
                       {
                         children: [
-                          e(o, {
+                          e(Box, {
                             flexGrow: 1,
                             flexShrink: 1,
                             overflow: "hidden",
-                            children: r(t, {
+                            children: r(Text, {
                               color: Fm ? "suggestion" : void 0,
                               dimColor: !Fm,
                               wrap: "truncate",
                               children: [Fm ? figures.pointer : " ", " ", Dm.title],
                             }),
                           }),
-                          e(o, {
+                          e(Box, {
                             flexShrink: 0,
                             marginLeft: 1,
-                            children: e(t, {
+                            children: e(Text, {
                               dimColor: !0,
                               children: formatDuration(
                                 Math.max(0, Date.now() - Dm.modified.getTime()),
@@ -7664,28 +7664,28 @@ function qd(SP) {
                     );
                   }),
                   fy > 0 &&
-                    r(t, {
+                    r(Text, {
                       dimColor: !0,
                       children: ["  ", "\u2026 ", fy, " more"],
                     }),
                 ],
               });
             }
-            return e(o, {
+            return e(Box, {
               position: "absolute",
               bottom: 0,
               left: 0,
               right: 0,
               flexDirection: "column",
               opaque: !0,
-              children: r(o, {
+              children: r(Box, {
                 flexDirection: "column",
                 borderStyle: "round",
                 paddingX: 1,
                 children: [
-                  e(t, { bold: !0, children: "Resume a past session" }),
+                  e(Text, { bold: !0, children: "Resume a past session" }),
                   Vs,
-                  e(t, {
+                  e(Text, {
                     dimColor: !0,
                     children:
                       "\u2191/\u2193 to navigate \xB7 enter to resume as a background session \xB7 esc to close",
@@ -7805,7 +7805,7 @@ function qd(SP) {
     ((jd =
       lr &&
       At &&
-      e(o, {
+      e(Box, {
         position: "absolute",
         bottom: 0,
         left: 0,
@@ -7919,7 +7919,7 @@ function ou(oA) {
     ig = aA?.jobId ?? null,
     ky;
   if (fr[0] === MEMO_CACHE_SENTINEL)
-    ((ky = e(t, {
+    ((ky = e(Text, {
       dimColor: !0,
       children:
         "A different way to work with Claude: hand off a bigger task than you would chat through, and Claude organizes it in the sections above so you know when it needs you.",
@@ -7938,7 +7938,7 @@ function ou(oA) {
   )
     ((vy =
       !un && tg && $m !== "remote" && !Hm && og.length > 0 && !cn
-        ? e(t, {
+        ? e(Text, {
             dimColor: !0,
             children:
               "No groups yet \u2014 press ctrl+e on a session to tag it.",
@@ -7955,7 +7955,7 @@ function ou(oA) {
   let zd = vy,
     Ry;
   if (fr[8] === MEMO_CACHE_SENTINEL)
-    ((Ry = e(o, {
+    ((Ry = e(Box, {
       position: "absolute",
       marginTop: -1,
       height: 1,
@@ -7976,7 +7976,7 @@ function ou(oA) {
       eg &&
       !cn &&
       !un &&
-      e(o, { paddingLeft: 1, marginBottom: 1, children: lA })),
+      e(Box, { paddingLeft: 1, marginBottom: 1, children: lA })),
       (fr[9] = eg),
       (fr[10] = cn),
       (fr[11] = un),
@@ -7984,7 +7984,7 @@ function ou(oA) {
   else Yd = fr[12];
   let Zd;
   if (fr[13] !== zd)
-    ((Zd = zd && e(o, { paddingLeft: 1, marginBottom: 1, children: zd })),
+    ((Zd = zd && e(Box, { paddingLeft: 1, marginBottom: 1, children: zd })),
       (fr[13] = zd),
       (fr[14] = Zd));
   else Zd = fr[14];
@@ -8012,7 +8012,7 @@ function ou(oA) {
   )
     ((eu = un
       ? null
-      : e(o, {
+      : e(Box, {
           flexDirection: "column",
           borderStyle: "round",
           borderLeft: !1,
@@ -8065,7 +8065,7 @@ function ou(oA) {
   else eu = fr[34];
   let _y;
   if (fr[35] !== Gm || fr[36] !== Yd || fr[37] !== Zd || fr[38] !== eu)
-    ((_y = r(o, {
+    ((_y = r(Box, {
       flexShrink: 0,
       flexDirection: "column",
       marginTop: 1,
@@ -8119,14 +8119,14 @@ function nu(cA) {
       (tu[9] = _o),
       (tu[10] = Iy));
   else Iy = tu[10];
-  Un(Cy, 300, Iy);
+  useTimeout(Cy, 300, Iy);
   let Py = C(!1),
     Ay,
     Oy;
   if (tu[11] !== so || tu[12] !== Lo || tu[13] !== Jo || tu[14] !== _o)
     ((Ay = () =>
       isHoverRestEnabled() && _o !== void 0
-        ? dv(async () => {
+        ? registerPreExitFlush(async () => {
             let Ty = Lo.draftForDisk();
             let Dy = [...Jo.getSnapshot().collapsed];
             Py.current =
@@ -8414,7 +8414,7 @@ function hg(s) {
           logFeatureOk("fleet_view_rename_job");
         })
         .catch((J) => {
-          (n(`[fleetview] peer rename failed: ${J}`),
+          (logForDebugging(`[fleetview] peer rename failed: ${J}`),
             logFeatureBad("fleet_view_rename_job", "peer_uds_failed"),
             O("Couldn't rename \u2014 that session isn't responding"),
             c.updateAdoptedPeers((j) =>
@@ -8537,9 +8537,9 @@ function iu(s, c, m, b = !1) {
   if (!q) return;
   let K = (j, ne) => {
     if (ne instanceof Or)
-      n(`[FleetView] action '${j}' unconfirmed: ${l(ne)}`, { level: "warn" });
+      logForDebugging(`[FleetView] action '${j}' unconfirmed: ${l(ne)}`, { level: "warn" });
     else if (Rt(ne))
-      n(`[FleetView] action '${j}' fs failure (${ne.code}): ${l(ne)}`, {
+      logForDebugging(`[FleetView] action '${j}' fs failure (${ne.code}): ${l(ne)}`, {
         level: "error",
       });
     else logError(ne);
@@ -9036,7 +9036,7 @@ function wg(s, c) {
     (Qe(), Wy(s, c.key === "up" ? -1 : 1));
     return;
   }
-  let Ft = md(R3t(c), ot);
+  let Ft = md(normalizeKeyEvent(c), ot);
   if (Ft === "agents:switchView") {
     if ((Qe(), Ue)) return;
     ((k.followId = X?.id ?? null), (k.followOrigin = null), ge.disarm());
@@ -9535,7 +9535,7 @@ function Cg({
     j = useKeybindingContext()?.bindings,
     ne = a.CLAUDE_CODE_FLEETVIEW_SIMPLE || getFeatureValue_CACHED_MAY_BE_STALE("tengu_fleetview_simple", !1),
     se = !ne || !!c?.startsWith("remote-");
-  Un(
+  useTimeout(
     () => {
       if (!K) return;
       let T = q.listenerCount("readable");
@@ -9582,7 +9582,7 @@ function Cg({
     { mode: Tt, expandHintPasteId: zt } = useStoreSelector(He),
     [Wt] = d(() => ug(X, { onArm: () => Ar(bt, He) })),
     { pending: Je } = useStoreSelector(Wt);
-  Un(() => Wt.disarm(), Je ? 2000 : null, [Je]);
+  useTimeout(() => Wt.disarm(), Je ? 2000 : null, [Je]);
   let [Ve] = d(() => ({
       roster: de,
       selection: pe,
@@ -9753,7 +9753,7 @@ function Cg({
   (E(() => {
     He.pruneOrphanedPastes();
   }, [He, Bt]),
-    Un(() => He.setExpandHintPasteId(null), zt === null ? null : 8000, [zt]));
+    useTimeout(() => He.setExpandHintPasteId(null), zt === null ? null : 8000, [zt]));
   let [gu] = d(() => ({
       get value() {
         return He.getSnapshot().query;
@@ -9870,7 +9870,7 @@ function Cg({
       [Tt, Qo, Bt, gn, Ae, Yo],
     ),
     vu = re((T) => Sg(T, { cwdFilter: k, onError: Ye }), [k]);
-  ko(
+  useInterval(
     () => {
       let T = Number(process.env[au]) || 0;
       if (Date.now() - T < yg) return;
@@ -9939,7 +9939,7 @@ function Cg({
       [de, pe, A],
     );
   E(() => {
-    (n("[PERF:bg-remount-end]"), logFeatureOk("screen_fleet_view"));
+    (logForDebugging("[PERF:bg-remount-end]"), logFeatureOk("screen_fleet_view"));
   }, []);
   let ta = re(
     () =>
@@ -9955,7 +9955,7 @@ function Cg({
   (E(() => {
     ta();
   }, [ta]),
-    ko(() => {
+    useInterval(() => {
       if (He.hasReplyDrafts()) ta();
     }, 15000));
   let xu = (T) => {
@@ -9976,7 +9976,7 @@ function Cg({
       let Oe = le.get(T.state.sessionId)?.nextAt;
       return Oe != null && Oe > na && Oe - na < 60000;
     });
-  (ko(() => oh((T) => T + 1), nh ? 1000 : ce?.length ? 30000 : null),
+  (useInterval(() => oh((T) => T + 1), nh ? 1000 : ce?.length ? 30000 : null),
     E(() => {
       ensureSpareJob(at, !0, w, st.get(at), A);
     }, [at, w, st, A]),
@@ -9989,7 +9989,7 @@ function Cg({
     }, [X, A]),
     E(() => Jt.loadTarget(mn, A), [Jt, mn, A]));
   let { addNotification: rh } = useNotificationQueue(),
-    Ri = aO();
+    Ri = useSelection();
   (useCopyOnSelect(Ri, !0, (T) => rh(buildSelectionCopiedNotification(T))), useSelectionBackgroundColor(Ri));
   let Au = createSelectionKeyDownHandler(Ri, getGlobalConfig().copyOnSelect ?? !0);
   (useSelectionClearKeybinding(Ri),
@@ -10092,7 +10092,7 @@ function Cg({
     });
   }, [X, de, ao, ce, m, Fe]);
   let gh = V(() => a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE, []);
-  (n7(gh ? null : pc(countMatching(ah, (T) => lo(T.state, Iu(T)) === "blocked"))),
+  (useTerminalTitle(gh ? null : pc(countMatching(ah, (T) => lo(T.state, Iu(T)) === "blocked"))),
     _g(
       sh
         .filter((T) => isLocalDaemonAgent(T.state))
@@ -10335,7 +10335,7 @@ function Cg({
       showAllAgents: vi,
       jobs: ce,
       pendings: Ce,
-      keybindings: j ?? HAe(K3),
+      keybindings: j ?? expandKeybindingBlocks(DEFAULT_KEYBINDINGS),
       simpleView: ne,
       groupsEnabled: ve,
       hasCredentials: Ou,
@@ -10392,7 +10392,7 @@ function Cg({
       yh(T);
     };
   if (ce === null || Wu)
-    return e(o, {
+    return e(Box, {
       tabIndex: 0,
       autoFocus: !0,
       onKeyDownCapture: Au,
@@ -10407,7 +10407,7 @@ function Cg({
     });
   let kh =
       Go.length > 0
-        ? e(o, {
+        ? e(Box, {
             paddingLeft: 2,
             marginBottom: 1,
             children: e(SuggestionList, {
@@ -10441,7 +10441,7 @@ function Cg({
         : jg
           ? [[0, Zs.length], ...ca]
           : [...Fc(Bt), ...ca];
-  return r(o, {
+  return r(Box, {
     ref: $t,
     flexDirection: "column",
     flexGrow: 1,
@@ -10582,7 +10582,7 @@ async function BQt(s, c) {
   let O = c?.cwdFilter ? await canonicalizePath(resolve(c.cwdFilter), createHoverRestOptions(c?.storageV5)) : void 0,
     W = ec(c?.dispatchDefaults),
     A = isHoverRestEnabled() ? c?.storageV5 : void 0;
-  (Et(A ? () => discardSpareJob(A) : discardSpareJob), Et(openDaemonLease("claude agents")));
+  (registerCleanup(A ? () => discardSpareJob(A) : discardSpareJob), registerCleanup(openDaemonLease("claude agents")));
   let I = s,
     q = a.CLAUDE_AGENTS_SELECT,
     K = c?.autoOpenJobId,
@@ -10734,7 +10734,7 @@ async function BQt(s, c) {
         c?.storageV5,
       ));
     if (
-      (n(
+      (logForDebugging(
         `[FV-attach] respawnJob ${le.job.id}: ok=${ve.ok} alive=${!ve.ok && ve.alive} err=${ve.ok ? "" : ve.error}`,
       ),
       ve.ok || ve.alive)
@@ -10796,7 +10796,7 @@ async function BQt(s, c) {
         logFeatureOk("fleet_view_open");
       }
       (Tr("detach", le.job.state, { attachDurationMs: Date.now() - xe }),
-        n(
+        logForDebugging(
           `[FV-attach] attachJob returned after ${Date.now() - yt}ms \u2014 remounting list`,
         ));
     } else {
@@ -10807,11 +10807,11 @@ async function BQt(s, c) {
         logFeatureSad("fleet_view_open", "fork_transcript_never_materialized");
       else logFeatureBad("fleet_view_open", "respawn_failed");
     }
-    if ((HOn(), (I = await w9e(getBaseRenderOptions(!1))), J)) {
+    if ((HOn(), (I = await createRoot(getBaseRenderOptions(!1))), J)) {
       if (!Fe) process.stdout.write(YFn(Fe, je, m));
       return ((J = !1), We(), { back: !0, root: I });
     }
-    (process.stdout.write(YFn(Fe, je, m)), n("[PERF:bg-remount-start]"), We());
+    (process.stdout.write(YFn(Fe, je, m)), logForDebugging("[PERF:bg-remount-start]"), We());
   }
 }
 export { Qmr, YFn, BQt };

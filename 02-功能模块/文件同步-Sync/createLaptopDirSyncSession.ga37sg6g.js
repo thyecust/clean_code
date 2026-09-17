@@ -15,7 +15,7 @@ import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -45,7 +45,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "./sync-journal.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { p3n, mte } from "../目录同步(dir-sync)/chunk-zbxyj64j.js";
+import { createLazyDirSyncStreamer, readGitSessionRecord } from "../目录同步(dir-sync)/chunk-zbxyj64j.js";
 import { createStatusFeed } from "../../01-核心基础设施/共享小工具-未细化/status-feed.js";
 import { getFileEntryKind } from "../../01-核心基础设施/共享小工具-未细化/file-entry-kind.js";
 import { getDirSyncRecordPath, resolveDirSyncRecordLocation, getDirSyncRecordKey, getDirSyncRecordFileName } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
@@ -181,7 +181,7 @@ function N(a, w, d, p) {
       });
     },
     m = (e) => withDeadline(i, e).then((t) => t ?? null),
-    _ = p3n(
+    _ = createLazyDirSyncStreamer(
       i.then((e) => (k ? null : (e?.streaming ?? null))),
       ENGINE_OPEN_TIMEOUT_MS,
     );
@@ -279,9 +279,9 @@ async function attachLaptopDirSyncSession(
     D = findGitRoot(he()),
     r = async (E) => {
       let b = await resolveDirSyncRecordLocation(E, S, s),
-        P = await mte(b.path, S, b.v5);
+        P = await readGitSessionRecord(b.path, S, b.v5);
       return P.kind === "unreadable"
-        ? await sleep(G).then(() => mte(b.path, S, b.v5))
+        ? await sleep(G).then(() => readGitSessionRecord(b.path, S, b.v5))
         : P;
     },
     i = async (E) => isFolderEligibleForDirSync(E) && !(await isInsideBareGitRepository(E)),
@@ -456,7 +456,7 @@ async function dirSyncElsewhereLookup(a, w, d = q) {
   } catch (i) {
     if (W(i)) return F;
     return (
-      n(`[dirSync] looking for this session's base elsewhere failed: ${l(i)}`, {
+      logForDebugging(`[dirSync] looking for this session's base elsewhere failed: ${l(i)}`, {
         level: "warn",
       }),
       { kind: "unknown", why: "listing_failed" }
@@ -471,7 +471,7 @@ async function X(a, w, d, p) {
     return await z(a, w, d, p);
   } catch (s) {
     return (
-      n(`[dirSync] looking for this session's base elsewhere failed: ${l(s)}`, {
+      logForDebugging(`[dirSync] looking for this session's base elsewhere failed: ${l(s)}`, {
         level: "warn",
       }),
       { kind: "unknown", why: "listing_failed" }
@@ -506,8 +506,8 @@ async function z(a, w, d, p) {
     );
     if (!i.ok)
       return (
-        n(
-          `[dirSync] looking for this session's base elsewhere failed: ${We(i.error)}`,
+        logForDebugging(
+          `[dirSync] looking for this session's base elsewhere failed: ${describeStorageError(i.error)}`,
           { level: "warn" },
         ),
         { kind: "unknown", why: "listing_failed" }

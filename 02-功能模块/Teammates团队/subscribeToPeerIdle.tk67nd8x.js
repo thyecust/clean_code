@@ -14,10 +14,10 @@ import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodas
 import { buildUdsAddress, isSchemeQualifiedAddress, isPeerReplyAllowed, getCanonicalSocketPath, NOTIFY_IDLE_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createMessageEnvelope } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
-import { dK, BAe, bbt, mD, sendStampedControlToUdsSocket, registeredLivePeerForSocket, ownMessagingSocket } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { classifySendFailure, formatStaleSocketHint, formatBusySocketHint, isRetryableSendError, sendStampedControlToUdsSocket, registeredLivePeerForSocket, ownMessagingSocket } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { getCurrentUid } from "../后台任务-Shell管理/chunk-djserjj5.js";
 import { getConfiguredInboundPolicy, getInboundPolicy } from "../权限系统/cross-session-inbound-gate.js";
-import { RPe, pdt, Ssn, nqe, fdt } from "./chunk-nhk351pe.js";
+import { MAX_IDLE_SUBSCRIPTIONS, safeIdleLabel, registerIdleSubscription, hasOutstandingIdleSubscription, forgetIdleSubscription } from "./peer-idle-notices.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 async function subscribeToPeerIdle(e, r, s, i) {
   try {
@@ -49,7 +49,7 @@ async function y(e, r, s, i) {
     return t("unreachable-namespace");
   let p = getCurrentPlatform() !== "windows" ? o?.pid : void 0,
     u = createMessageEnvelope(),
-    l = Ssn(u.msg_id, r, e);
+    l = registerIdleSubscription(u.msg_id, r, e);
   if (!l.ok) return t(l.reason === "cap" ? "cap" : "unreachable-namespace");
   let b = l.priors;
   try {
@@ -67,17 +67,17 @@ async function y(e, r, s, i) {
       { ok: !0, peerKnownCapable: o !== void 0 }
     );
   } catch (d) {
-    if (dK(d) === "gone") {
-      fdt(u.msg_id);
-      for (let c of b) fdt(c);
+    if (classifySendFailure(d) === "gone") {
+      forgetIdleSubscription(u.msg_id);
+      for (let c of b) forgetIdleSubscription(c);
       return (
         logFeatureBad("cross_session_notify_idle", "subscribe_peer_gone"),
         { ok: !1, reason: "peer-gone", error: d }
       );
     }
-    if (mD(d)) {
-      fdt(u.msg_id);
-      let c = b.some(nqe);
+    if (isRetryableSendError(d)) {
+      forgetIdleSubscription(u.msg_id);
+      let c = b.some(hasOutstandingIdleSubscription);
       return (
         logFeatureBad("cross_session_notify_idle", "subscribe_send_failed"),
         {
@@ -109,7 +109,7 @@ var m = {
   cap: "subscribe_cap",
 };
 function _(e, r = !0) {
-  let s = pdt(e);
+  let s = safeIdleLabel(e);
   if (!r)
     return `Subscription sent to "${s}" \u2014 but whether it supports idle notices is unknown (no readable session-registry record vouches for it), so a notice may never come; you will be told if it lapses unheard. Do not rely on it.`;
   let i = getConfiguredInboundPolicy();
@@ -140,11 +140,11 @@ function S(e, r) {
     case "peer-unsupported":
       return "notify_when_idle: that session runs a version without idle notices \u2014 nothing was subscribed. Ask your user, or message it and wait for its reply instead.";
     case "cap":
-      return `notify_when_idle: this session already holds ${RPe} pending idle subscriptions \u2014 wait for some to fire or expire.`;
+      return `notify_when_idle: this session already holds ${MAX_IDLE_SUBSCRIPTIONS} pending idle subscriptions \u2014 wait for some to fire or expire.`;
     case "peer-gone":
-      return `notify_when_idle: no session is listening at that address any more; nothing was subscribed, and any earlier idle subscription to it is void${BAe(r)}`;
+      return `notify_when_idle: no session is listening at that address any more; nothing was subscribed, and any earlier idle subscription to it is void${formatStaleSocketHint(r)}`;
     case "send-failed": {
-      let s = dK(e.error) === "busy" ? bbt(e.error) : ".";
+      let s = classifySendFailure(e.error) === "busy" ? formatBusySocketHint(e.error) : ".";
       return e.restoredEarlier
         ? `notify_when_idle: the re-subscribe could not be sent; your earlier idle subscription to that session still stands${s}`
         : `notify_when_idle: the subscription could not be sent \u2014 no notice will arrive${s}`;
@@ -154,7 +154,7 @@ function S(e, r) {
   }
 }
 function I(e, r) {
-  let s = pdt(e);
+  let s = safeIdleLabel(e);
   if (r.ok)
     return r.peerKnownCapable
       ? `You will be told here when ${s} is next idle.`

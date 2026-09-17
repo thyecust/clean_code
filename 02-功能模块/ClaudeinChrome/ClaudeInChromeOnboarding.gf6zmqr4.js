@@ -14,7 +14,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { o, t, ct, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link, Newline } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { CLAUDE_IN_CHROME_URL, isChromeExtensionInstalled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -58,11 +58,11 @@ function ClaudeInChromeOnboarding(J) {
       !l &&
       r(N, {
         children: [
-          e(zb, {}),
-          e(zb, {}),
+          e(Newline, {}),
+          e(Newline, {}),
           "Requires the Chrome extension. Get started at",
           " ",
-          e(ct, { url: CLAUDE_IN_CHROME_URL }),
+          e(Link, { url: CLAUDE_IN_CHROME_URL }),
         ],
       })),
       (n[5] = l),
@@ -70,7 +70,7 @@ function ClaudeInChromeOnboarding(J) {
   else f = n[6];
   let C;
   if (n[7] !== f)
-    ((C = r(t, {
+    ((C = r(Text, {
       children: [
         "Claude in Chrome works with the Chrome extension to let you control your browser directly from Claude Code. You can navigate websites, fill forms, capture screenshots, record GIFs, and debug with console logs and network requests.",
         f,
@@ -81,13 +81,13 @@ function ClaudeInChromeOnboarding(J) {
   else C = n[8];
   let y;
   if (n[9] !== l)
-    ((y = l && r(N, { children: [" ", "(", e(ct, { url: I }), ")"] })),
+    ((y = l && r(N, { children: [" ", "(", e(Link, { url: I }), ")"] })),
       (n[9] = l),
       (n[10] = y));
   else y = n[10];
   let g;
   if (n[11] !== y)
-    ((g = r(t, {
+    ((g = r(Text, {
       dimColor: !0,
       children: [
         "Site-level permissions are inherited from the Chrome extension. Manage permissions in the Chrome extension settings to control which sites Claude can browse, click, and type on",
@@ -100,12 +100,12 @@ function ClaudeInChromeOnboarding(J) {
   else g = n[12];
   let K;
   if (n[13] === MEMO_CACHE_SENTINEL)
-    ((K = e(t, { bold: !0, color: "chromeYellow", children: "/chrome" })),
+    ((K = e(Text, { bold: !0, color: "chromeYellow", children: "/chrome" })),
       (n[13] = K));
   else K = n[13];
   let Y;
   if (n[14] === MEMO_CACHE_SENTINEL)
-    ((Y = r(t, {
+    ((Y = r(Text, {
       dimColor: !0,
       children: [
         "For more info, use",
@@ -113,14 +113,14 @@ function ClaudeInChromeOnboarding(J) {
         K,
         " ",
         "or visit ",
-        e(ct, { url: "https://code.claude.com/docs/en/chrome" }),
+        e(Link, { url: "https://code.claude.com/docs/en/chrome" }),
       ],
     })),
       (n[14] = Y));
   else Y = n[14];
   let v;
   if (n[15] !== c || n[16] !== C || n[17] !== g)
-    ((v = r(o, {
+    ((v = r(Box, {
       flexDirection: "column",
       gap: 1,
       tabIndex: 0,

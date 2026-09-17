@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
-import { wc, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { pathSpaces, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getHostSettingsStore, invalidateAllSettings, getSystemManagedSettingsPathOverride, primeRemoteManagedSettingsCache, getManagedSettingsDirs, logBrokenSettingsSymlink, emptySettingsResult, SETTINGS_FILENAMES } from "./设置-配置.aqbb35ee.js";
 import {
@@ -48,7 +48,7 @@ async function F(t, e) {
   try {
     await e();
   } catch (s) {
-    n(
+    logForDebugging(
       `settingsPrime: start-up seed of the ${t} failed: ${l(s)}; the file reads serve`,
       { level: "warn" },
     );
@@ -58,7 +58,7 @@ async function R(t, e) {
   try {
     await q(t, e);
   } catch (s) {
-    n(
+    logForDebugging(
       `settingsPrime: ownership read-ahead for the local settings root failed: ${l(s)}; the probe runs as today`,
       { level: "warn" },
     );
@@ -69,7 +69,7 @@ async function N(t, e) {
     let s = v();
     if (s === void 0) return;
     if (e.parsedFiles.has(s)) {
-      n(
+      logForDebugging(
         "settingsPrime: user settings already read before start-up; seed skipped",
       );
       return;
@@ -78,19 +78,19 @@ async function N(t, e) {
       r = await readUserSettingsSeed(t, s);
     if (r.kind === "absent") {
       if ((logBrokenSettingsSymlink(s), e.seedParsedFile(s, "userSettings", emptySettingsResult(), i)))
-        n("settingsPrime: user settings absent; seeded as none");
+        logForDebugging("settingsPrime: user settings absent; seeded as none");
       return;
     }
     if (r.kind !== "seeded") {
-      n(
+      logForDebugging(
         `settingsPrime: start-up seed skipped (${describeSettingsReadResult(r)}); the file read serves`,
       );
       return;
     }
     if (e.seedParsedFile(s, "userSettings", r.parsed, i))
-      n(`settingsPrime: user settings seeded at start-up (${r.size} bytes)`);
+      logForDebugging(`settingsPrime: user settings seeded at start-up (${r.size} bytes)`);
   } catch (s) {
-    n(`settingsPrime: start-up seed failed: ${l(s)}; the file read serves`, {
+    logForDebugging(`settingsPrime: start-up seed failed: ${l(s)}; the file read serves`, {
       level: "warn",
     });
   }
@@ -208,23 +208,23 @@ class T {
       return;
     }
     if (e.kind === "failing" && t.kind === "seeded")
-      n(
+      logForDebugging(
         `settingsPrime: backend read recovered after ${this.runsInState} failing run(s)`,
       );
     switch (((this.runsInState = 1), t.kind)) {
       case "seeded":
-        n(`settingsPrime: user settings seeded (${t.size} bytes)`);
+        logForDebugging(`settingsPrime: user settings seeded (${t.size} bytes)`);
         return;
       case "absent":
-        n("settingsPrime: user settings absent; served as none");
+        logForDebugging("settingsPrime: user settings absent; served as none");
         return;
       case "oversize":
-        n(
+        logForDebugging(
           "settingsPrime: user settings not seeded (oversize); raw path serves",
         );
         return;
       case "failing":
-        n(
+        logForDebugging(
           `settingsPrime: backend read failed: ${t.code}${t.failureClass ? ` (${t.failureClass})` : ""}; raw path serves`,
           { level: "warn" },
         );
@@ -241,7 +241,7 @@ class T {
       this.logThrowOnce(t),
       this.consecutiveThrows >= b)
     )
-      (n(
+      (logForDebugging(
         `settingsPrime: disabled after ${b} consecutive failures; raw path serves`,
         { level: "warn" },
       ),
@@ -274,7 +274,7 @@ async function primeSettings(t, e) {
   if (!isHoverRestEnabled() || t === void 0) return;
   if (e.primer !== void 0) {
     if (!e.primer.primes(t))
-      n(
+      logForDebugging(
         "settingsPrime: store already primed through another backend; second prime ignored",
       );
     return;
@@ -337,7 +337,7 @@ async function B(t, e) {
   if (!s.serves("system")) {
     if (!e.systemSpaceServingLogged)
       ((e.systemSpaceServingLogged = !0),
-        n(
+        logForDebugging(
           "settingsPrime: the managed-settings file tier is not read ahead (the backend does not serve 'system'); the policy walk reads the host's files itself",
         ));
     return;
@@ -357,14 +357,14 @@ async function B(t, e) {
     let p = o[c],
       m = f(S, "managed-settings.d");
     if (p.kind === "failing") {
-      (n(
+      (logForDebugging(
         `settingsPrime: ${m} not listed through the backend (backend listing failed: ${p.code}${p.failureClass ? ` (${p.failureClass})` : ""}); the folder read serves`,
       ),
         d.unlisted.push(m));
       continue;
     }
     if (p.names.length === 0) {
-      (n(
+      (logForDebugging(
         `settingsPrime: ${m} has no drop-ins to read ahead; the folder read confirms`,
       ),
         d.unlisted.push(m));
@@ -399,7 +399,7 @@ function P(t, e, s) {
   if (getSystemManagedSettingsPathOverride() !== void 0) {
     if (!e.systemSpaceServingLogged)
       ((e.systemSpaceServingLogged = !0),
-        n(
+        logForDebugging(
           "settingsPrime: the host attests no OS policy folder ('system' absent) but this process was handed a managed-settings directory explicitly (CLAUDE_CODE_MANAGED_SETTINGS_PATH); its files are read by the policy walk itself",
         ));
     return;
@@ -423,7 +423,7 @@ function P(t, e, s) {
   }
   if (!e.systemSpaceServingLogged)
     ((e.systemSpaceServingLogged = !0),
-      n(
+      logForDebugging(
         "settingsPrime: the host attests this machine has no OS policy folder ('system' absent); the policy walk is served an empty managed-settings file tier without reading the host",
       ));
   for (let { basePath: r, dropInDir: a } of i)
@@ -449,7 +449,7 @@ function C(t, e, s, i, r) {
   for (let [g, d] of e.layers.entries()) {
     let u = s[g];
     if (u.kind !== "seeded") {
-      (n(
+      (logForDebugging(
         `settingsPrime: ${d.label} not seeded (${describeSettingsReadResult(u)}); the file read serves`,
       ),
         t.managedFileReads.delete(d.path),
@@ -468,13 +468,13 @@ function C(t, e, s, i, r) {
           : t.policyInstallVerdict(d.path, u.parsed, e.walksAtReadStart);
     if (S === "raced") {
       (t.dropRetainedLayer(d.path),
-        n(
+        logForDebugging(
           `settingsPrime: ${d.label} not installed (the walk read different content while this read was in flight); re-verified next generation`,
         ));
       continue;
     }
     if (S === "deferred") {
-      (n(
+      (logForDebugging(
         `settingsPrime: ${d.label} changed after this generation's policy walk; it applies from the next reset, as today`,
       ),
         a.push({ layer: d, parsed: u.parsed }));
@@ -502,11 +502,11 @@ function I(t, e, s) {
     let o = t.folderInstallVerdict(a.dir, a.names, e.walksAtReadStart);
     if ((r.set(a.dir, o), o === "raced"))
       (t.clearFolderListing(a.dir, s),
-        n(
+        logForDebugging(
           `settingsPrime: ${a.dir} listing not installed (a read this generation went by another membership while it was in flight); the walk's membership or its own folder read serves until the next reset`,
         ));
     else if (o === "deferred")
-      (n(
+      (logForDebugging(
         `settingsPrime: ${a.dir} membership changed after this generation's policy walk; it applies from the next reset, as today`,
       ),
         i.push(a));
@@ -524,7 +524,7 @@ function Q(t, e, s, i) {
             ? emptySettingsResult()
             : void 0;
     if (g !== void 0 && t.walkReadDiffers(a.path, g))
-      n(
+      logForDebugging(
         `settingsPrime: ${a.label} not installed (the file read already saw different content this generation)`,
       );
     else if (o.kind === "seeded")
@@ -532,7 +532,7 @@ function Q(t, e, s, i) {
     else if (g !== void 0)
       (logBrokenSettingsSymlink(a.path), t.seedParsedFile(a.path, a.source, g, i));
     else
-      n(
+      logForDebugging(
         `settingsPrime: ${a.label} not seeded (${describeSettingsReadResult(o)}); the file read serves`,
       );
   }
@@ -562,7 +562,7 @@ async function X(t, e) {
     ];
   } catch (i) {
     return (
-      n(
+      logForDebugging(
         `settings: managed settings not re-seeded: ${l(i)}; the file reads serve`,
         { level: "warn" },
       ),
@@ -584,22 +584,22 @@ async function E(t, e) {
   if (s === void 0 || e.localStoreProbes.hasCanonicalRootOwnerUids(s)) return;
   let i = t.hostFiles;
   if (!i.serves("workspace")) {
-    n(
+    logForDebugging(
       "settingsPrime: ownership of the local settings root not read ahead (the backend does not serve the workspace); the probe runs as today",
     );
     return;
   }
   let [r, a, o] = await Promise.allSettled([
-      i.stat(wc.workspace(s)),
-      i.stat(wc.workspace(f(s, ".git")), { follow: !1 }),
-      i.stat(wc.workspace(f(s, ".claude")), { follow: !1 }),
+      i.stat(pathSpaces.workspace(s)),
+      i.stat(pathSpaces.workspace(f(s, ".git")), { follow: !1 }),
+      i.stat(pathSpaces.workspace(f(s, ".claude")), { follow: !1 }),
     ]),
     g = y(r),
     d = y(a),
     u = y(o),
     c = J(g, d, u);
   if ("skipped" in c) {
-    n(
+    logForDebugging(
       `settingsPrime: ownership of the local settings root not read ahead (${c.skipped}); the probe runs as today`,
     );
     return;
@@ -611,7 +611,7 @@ function j(t, e) {
     e !== void 0 &&
     t.localStoreProbes.primeCanonicalRootOwnerUids(e.root, e.uids)
   )
-    n(
+    logForDebugging(
       "settingsPrime: ownership of the local settings root read ahead through the backend",
     );
 }

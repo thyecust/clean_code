@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { extractTagContent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { _i, jd, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { sanitizeUntrustedText, collapseInvisibleCharacterRuns, replaceLineBreaks } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -22,7 +22,7 @@ import { TruncatedFilePath } from "../../03-入口与运行时/会话UI(REPL)/ch
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function M(q) {
@@ -39,18 +39,18 @@ function M(q) {
     U = u === "delete" ? "delete" : `${u} cell in`,
     F;
   if (a[0] !== n || a[1] !== B)
-    ((F = B ? n : Ao(n)), (a[0] = n), (a[1] = B), (a[2] = F));
+    ((F = B ? n : formatPathForDisplay(n)), (a[0] = n), (a[1] = B), (a[2] = F));
   else F = a[2];
   let j = F,
     R;
   if (a[3] !== U)
-    ((R = r(t, { color: "subtle", children: ["User rejected ", U, " "] })),
+    ((R = r(Text, { color: "subtle", children: ["User rejected ", U, " "] })),
       (a[3] = U),
       (a[4] = R));
   else R = a[4];
   let T;
   if (a[5] !== j || a[6] !== n)
-    ((T = e(t, {
+    ((T = e(Text, {
       bold: !0,
       color: "subtle",
       children: e(TruncatedFilePath, { filePath: n, children: j }),
@@ -60,17 +60,17 @@ function M(q) {
       (a[7] = T));
   else T = a[7];
   let y;
-  if (a[8] !== g) ((y = g ? jd(Oo(_i(g))) : ""), (a[8] = g), (a[9] = y));
+  if (a[8] !== g) ((y = g ? collapseInvisibleCharacterRuns(replaceLineBreaks(sanitizeUntrustedText(g))) : ""), (a[8] = g), (a[9] = y));
   else y = a[9];
   let P;
   if (a[10] !== y)
-    ((P = r(t, { color: "subtle", children: [" at cell ", y] })),
+    ((P = r(Text, { color: "subtle", children: [" at cell ", y] })),
       (a[10] = y),
       (a[11] = P));
   else P = a[11];
   let h;
   if (a[12] !== R || a[13] !== T || a[14] !== P)
-    ((h = r(o, { flexDirection: "row", children: [R, T, P] })),
+    ((h = r(Box, { flexDirection: "row", children: [R, T, P] })),
       (a[12] = R),
       (a[13] = T),
       (a[14] = P),
@@ -80,11 +80,11 @@ function M(q) {
   if (a[16] !== k || a[17] !== u || a[18] !== b)
     ((x =
       u !== "delete" &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
         flexDirection: "column",
         children: e(CodeBlock, {
-          code: _i(b),
+          code: sanitizeUntrustedText(b),
           filePath: k === "markdown" ? "file.md" : "file.py",
           dim: !0,
         }),
@@ -97,7 +97,7 @@ function M(q) {
   let L;
   if (a[20] !== h || a[21] !== x)
     ((L = e(ToolResultRow, {
-      children: r(o, { flexDirection: "column", children: [h, x] }),
+      children: r(Box, { flexDirection: "column", children: [h, x] }),
     })),
       (a[20] = h),
       (a[21] = x),
@@ -110,10 +110,10 @@ function renderToolUseMessage(
   { verbose: p },
 ) {
   if (!s || !l || !c) return null;
-  let f = p ? s : Ao(s),
-    d = jd(Oo(_i(`${i}`)));
+  let f = p ? s : formatPathForDisplay(s),
+    d = collapseInvisibleCharacterRuns(replaceLineBreaks(sanitizeUntrustedText(`${i}`)));
   if (p) {
-    let v = Oo(_i(truncateToCodeUnits(l, 30)));
+    let v = replaceLineBreaks(sanitizeUntrustedText(truncateToCodeUnits(l, 30)));
     return r(N, {
       children: [
         e(TruncatedFilePath, { filePath: s, children: f }),
@@ -136,27 +136,27 @@ function renderToolUseRejectedMessage(s, { verbose: i }) {
 function renderToolUseErrorMessage(s, { verbose: i }) {
   if (!i && typeof s === "string" && extractTagContent(s, "tool_use_error"))
     return e(ToolResultRow, {
-      children: e(t, { color: "error", children: "Error editing notebook" }),
+      children: e(Text, { color: "error", children: "Error editing notebook" }),
     });
   return e(ToolErrorMessage, { result: s, verbose: i });
 }
 function renderToolResultMessage({ cell_id: s, new_source: i, error: l }) {
-  if (l) return e(ToolResultRow, { children: e(t, { color: "error", children: _i(l) }) });
+  if (l) return e(ToolResultRow, { children: e(Text, { color: "error", children: sanitizeUntrustedText(l) }) });
   return e(ToolResultRow, {
-    children: r(o, {
+    children: r(Box, {
       flexDirection: "column",
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "Updated cell",
             " ",
-            e(t, { bold: !0, children: s ? jd(Oo(_i(s))) : "" }),
+            e(Text, { bold: !0, children: s ? collapseInvisibleCharacterRuns(replaceLineBreaks(sanitizeUntrustedText(s))) : "" }),
             ":",
           ],
         }),
-        e(o, {
+        e(Box, {
           marginLeft: 2,
-          children: e(CodeBlock, { code: _i(i), filePath: "notebook.py" }),
+          children: e(CodeBlock, { code: sanitizeUntrustedText(i), filePath: "notebook.py" }),
         }),
       ],
     }),

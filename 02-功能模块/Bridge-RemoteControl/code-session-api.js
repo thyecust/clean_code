@@ -10,7 +10,7 @@
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { validateBridgeId, toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { isValidRequestId } from "../../01-核心基础设施/共享小工具-未细化/request-id.js";
@@ -92,7 +92,7 @@ async function createCodeSession(e, r, i, c, a, f, m, p, o, t, g) {
       let j = `${y.branchDropped}:${f.gitRepoUrl}:${f.branch}`;
       if (!t || t.lastKey !== j) {
         if (t) t.lastKey = j;
-        n(`[code-session] ${y.warnMessage}`);
+        logForDebugging(`[code-session] ${y.warnMessage}`);
       }
     } else if (t) t.lastKey = null;
     if (S.length > 0 || C.length > 0)
@@ -112,12 +112,12 @@ async function createCodeSession(e, r, i, c, a, f, m, p, o, t, g) {
       { headers: oauthHeaders(r), timeout: c, validateStatus: (_) => _ < 500 },
     );
   } catch (_) {
-    return (n(`[code-session] Session create request failed: ${l(_)}`), null);
+    return (logForDebugging(`[code-session] Session create request failed: ${l(_)}`), null);
   }
   if (u.status !== 200 && u.status !== 201) {
     let _ = extractErrorDetail(u.data);
     if (
-      (n(
+      (logForDebugging(
         `[code-session] Session create failed ${u.status}${_ ? `: ${_}` : ""}`,
       ),
       u.status === 401)
@@ -156,8 +156,8 @@ async function createCodeSession(e, r, i, c, a, f, m, p, o, t, g) {
     !h.session.id.startsWith("cse_")
   )
     return (
-      n(
-        `[code-session] No session.id (cse_*) in response: ${b(h).slice(0, 200)}`,
+      logForDebugging(
+        `[code-session] No session.id (cse_*) in response: ${jsonStringify(h).slice(0, 200)}`,
       ),
       {
         terminal: !0,
@@ -205,12 +205,12 @@ async function fetchRemoteCredentials(e, r, i, c, a, f) {
       { headers: p, timeout: c, validateStatus: (s) => s < 500 },
     );
   } catch (s) {
-    return (n(`[code-session] /bridge request failed: ${l(s)}`), null);
+    return (logForDebugging(`[code-session] /bridge request failed: ${l(s)}`), null);
   }
   if (o.status !== 200) {
     let s = extractErrorDetail(o.data);
     if (
-      (n(`[code-session] /bridge failed ${o.status}${s ? `: ${s}` : ""}`),
+      (logForDebugging(`[code-session] /bridge failed ${o.status}${s ? `: ${s}` : ""}`),
       o.status === 401)
     )
       f?.();
@@ -219,7 +219,7 @@ async function fetchRemoteCredentials(e, r, i, c, a, f) {
       let h = classifyElevatedAuthError(o.data, s);
       if (h) return { terminal: !0, reason: h };
       ((u = classifyResponseSource((_) => o.headers?.[_])),
-        n(`[code-session] /bridge 403 source=${u}`));
+        logForDebugging(`[code-session] /bridge 403 source=${u}`));
     }
     switch (w(o.status)) {
       case "oauth_rejected":
@@ -248,8 +248,8 @@ async function fetchRemoteCredentials(e, r, i, c, a, f) {
     !("worker_epoch" in t)
   )
     return (
-      n(
-        `[code-session] /bridge response malformed (need worker_jwt, expires_in, api_base_url, worker_epoch): ${b(t).slice(0, 200)}`,
+      logForDebugging(
+        `[code-session] /bridge response malformed (need worker_jwt, expires_in, api_base_url, worker_epoch): ${jsonStringify(t).slice(0, 200)}`,
       ),
       { terminal: !0, reason: "malformed_response", status: 200 }
     );
@@ -257,7 +257,7 @@ async function fetchRemoteCredentials(e, r, i, c, a, f) {
     d = typeof g === "string" ? Number(g) : g;
   if (typeof d !== "number" || !Number.isFinite(d) || !Number.isSafeInteger(d))
     return (
-      n(`[code-session] /bridge worker_epoch invalid: ${b(g)}`),
+      logForDebugging(`[code-session] /bridge worker_epoch invalid: ${jsonStringify(g)}`),
       { terminal: !0, reason: "malformed_response", status: 200 }
     );
   return {
@@ -273,7 +273,7 @@ function v(e, r) {
   try {
     return (validateBridgeId(e, "sessionId"), !0);
   } catch (i) {
-    return (n(`[code-session] ${r}: ${l(i)}`), !1);
+    return (logForDebugging(`[code-session] ${r}: ${l(i)}`), !1);
   }
 }
 function R(e, r, i, c, a, f = "") {
@@ -290,7 +290,7 @@ function R(e, r, i, c, a, f = "") {
   }
   if (!a.orgUUID)
     return (
-      n(`[code-session] ${e} ${c}: v1 compat path needs an org UUID`),
+      logForDebugging(`[code-session] ${e} ${c}: v1 compat path needs an org UUID`),
       null
     );
   let p = toCompatSessionId(c);
@@ -319,7 +319,7 @@ async function getCodeSession(e, r, i, c, a) {
     if (t.status !== 200) {
       let s = extractErrorDetail(t.data);
       return (
-        n(`[code-session] Get ${o} failed ${t.status}${s ? `: ${s}` : ""}`),
+        logForDebugging(`[code-session] Get ${o} failed ${t.status}${s ? `: ${s}` : ""}`),
         t.status
       );
     }
@@ -335,12 +335,12 @@ async function getCodeSession(e, r, i, c, a) {
       d = g?.response_shape ?? g?.session;
     if (d && typeof d.id === "string") return d;
     return (
-      n(`[code-session] Get ${o}: no session.id in 200 response`),
+      logForDebugging(`[code-session] Get ${o}: no session.id in 200 response`),
       t.status
     );
   } catch (t) {
     return (
-      n(`[code-session] Get ${o} failed: ${l(t)}`),
+      logForDebugging(`[code-session] Get ${o} failed: ${l(t)}`),
       at.isAxiosError(t) && t.code === "ECONNABORTED" ? "timeout" : "error"
     );
   }
@@ -355,12 +355,12 @@ async function updateCodeSession(e, r, i, c, a, f) {
     let d = f.useV2 ? await at.put(p, c, g) : await at.patch(p, c, g);
     if (d.status !== 200) {
       let s = extractErrorDetail(d.data);
-      n(`[code-session] Update ${t} failed ${d.status}${s ? `: ${s}` : ""}`);
+      logForDebugging(`[code-session] Update ${t} failed ${d.status}${s ? `: ${s}` : ""}`);
     }
     return d.status;
   } catch (d) {
     return (
-      n(`[code-session] Update ${t} failed: ${l(d)}`),
+      logForDebugging(`[code-session] Update ${t} failed: ${l(d)}`),
       at.isAxiosError(d) && d.code === "ECONNABORTED" ? "timeout" : "error"
     );
   }
@@ -382,7 +382,7 @@ async function x(e, r, i, c, a, f, m, p) {
       {},
       { headers: g, timeout: f, validateStatus: () => !0 },
     );
-    if ((n(`[code-session] ${e} ${d} status=${s.status}`), s.status === 403)) {
+    if ((logForDebugging(`[code-session] ${e} ${d} status=${s.status}`), s.status === 403)) {
       let u = classifyElevatedAuthError(s.data, extractErrorDetail(s.data));
       if (u === "untrusted_device") return u;
       if (p === "elevated_auth" && u === "session_stale_relogin") return u;
@@ -390,7 +390,7 @@ async function x(e, r, i, c, a, f, m, p) {
     return s.status;
   } catch (s) {
     return (
-      n(`[code-session] ${e} ${d} failed: ${l(s)}`),
+      logForDebugging(`[code-session] ${e} ${d} failed: ${l(s)}`),
       at.isAxiosError(s) && s.code === "ECONNABORTED" ? "timeout" : "error"
     );
   }

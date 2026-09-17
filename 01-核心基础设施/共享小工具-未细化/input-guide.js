@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useGlobalExitKeybinding } from "./exit-keybinding-hooks.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -19,7 +19,7 @@ function InputGuide(R) {
   const o = y ? `Press ${N} again to exit` : l;
   let d;
   if (P[0] !== o)
-    ((d = e(t, { dimColor: !0, children: o })), (P[0] = o), (P[1] = d));
+    ((d = e(Text, { dimColor: !0, children: o })), (P[0] = o), (P[1] = d));
   else d = P[1];
   return d;
 }

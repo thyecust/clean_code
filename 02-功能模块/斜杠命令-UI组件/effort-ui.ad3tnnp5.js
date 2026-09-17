@@ -13,27 +13,27 @@ import { repeatString } from "../../01-核心基础设施/核心工具-字符串
 import { HELP_FLAGS } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { pickRainbowColor } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getRemoteTransport } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import {
-  im,
-  GG,
-  FN,
-  ib,
-  sA,
-  HJe,
-  gve,
-  Anr,
-  $N,
-  VH,
-  UN,
-  KH,
-  tse,
-  NT,
+  EFFORT_LEVELS,
+  MAX_EFFORT_WARNING,
+  modelSupportsMaxEffort,
+  modelSupportsUltracode,
+  isUltracodeActive,
+  getOrgMaxEffortLevelForModel,
+  getOrgDefaultEffortLevelForModel,
+  isEffortCappedByOrg,
+  formatEffortLevel,
+  getEnvEffortLevelOverride,
+  isLaunchEffortPinned,
+  getDefaultEffortLevelForModel,
+  shouldConfirmEffortChangeOnWarmCache,
+  getModelEffortLevelOrDefault,
 } from "../权限系统/chunk-t3b7pg2x.js";
 import { isPromptCacheWarm } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { gw } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { parseKeybindingChord } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, tn, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useIsScreenReaderEnabled, useAnimationFrame } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -50,11 +50,11 @@ import { formatEffortUsageText, parseEffortArgument, formatEffortStatus, runEffo
 import { ModelOrEffortSwitchDialog } from "../../01-核心基础设施/共享小工具-未细化/switch-confirm-dialog.js";
 import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
 import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
-import { qf } from "../状态栏-主题/chunk-jrr487ty.js";
+import { useSessionEffortLevel } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { NO_ANIMATION_INDEX, useReducedMotion } from "../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import { Nl, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -82,7 +82,7 @@ function Ir(Kl) {
 }
 function fn(ul) {
   let { onDone: dl } = ul,
-    fl = qf(),
+    fl = useSessionEffortLevel(),
     ml = useAppStateSelector(Cr),
     gl = useMainLoopModel(),
     { message: pl } = formatEffortStatus(fl, gl, ml);
@@ -95,7 +95,7 @@ async function Q(n, c, l, u, f = !0) {
 function mn(bl) {
   let Ee = _(24),
     { args: be, getMessages: Eo, onDone: ve, storageV5: vt } = bl,
-    xe = qf(),
+    xe = useSessionEffortLevel(),
     Po = useAppStateSelector(Nr),
     $e = useMainLoopModel(),
     xt = useSetAppState(),
@@ -112,7 +112,7 @@ function mn(bl) {
     Ee[6] !== $e ||
     Ee[7] !== B
   )
-    ((wn = () => B !== null && tse(B.value, xe, $e, Po, isPromptCacheWarm(Eo()))),
+    ((wn = () => B !== null && shouldConfirmEffortChangeOnWarmCache(B.value, xe, $e, Po, isPromptCacheWarm(Eo()))),
       (Ee[3] = Po),
       (Ee[4] = xe),
       (Ee[5] = Eo),
@@ -154,7 +154,7 @@ function mn(bl) {
     let yt;
     if (Ee[18] !== xe || Ee[19] !== ve)
       ((yt = () =>
-        ve(`Kept effort level as ${xe !== void 0 ? $N(xe) : "auto"}`)),
+        ve(`Kept effort level as ${xe !== void 0 ? formatEffortLevel(xe) : "auto"}`)),
         (Ee[18] = xe),
         (Ee[19] = ve),
         (Ee[20] = yt));
@@ -206,32 +206,32 @@ function so(n, c) {
   );
 }
 function co(n) {
-  return n !== void 0 && isEffortCostMultiplierEnabled() && getEffortCostMultiplier(n, KH(n)) !== null;
+  return n !== void 0 && isEffortCostMultiplierEnabled() && getEffortCostMultiplier(n, getDefaultEffortLevelForModel(n)) !== null;
 }
 function io(n, c) {
-  let l = KH(n);
-  if (c === "max" && FN(n)) {
+  let l = getDefaultEffortLevelForModel(n);
+  if (c === "max" && modelSupportsMaxEffort(n)) {
     let f = getEffortCostMultiplier(n, "max");
-    return f === null ? GG : `${GG} (${formatCostMultiplier(f)})`;
+    return f === null ? MAX_EFFORT_WARNING : `${MAX_EFFORT_WARNING} (${formatCostMultiplier(f)})`;
   }
   if (c === l)
-    return gve(n) === null
+    return getOrgDefaultEffortLevelForModel(n) === null
       ? "The default effort for this model"
       : "The default effort for this model, set by your organization";
   let u = getEffortCostMultiplier(n, c);
   return u === null ? "" : `${formatCostMultiplier(u)} the estimated cost of ${l} (the default)`;
 }
 function getSliderGeometry(n) {
-  let c = n ? HJe(n) : null,
-    l = Sr(c ? im.indexOf(c) + 1 : im.length),
-    u = n && Anr(n) ? wr : void 0,
+  let c = n ? getOrgMaxEffortLevelForModel(n) : null,
+    l = Sr(c ? EFFORT_LEVELS.indexOf(c) + 1 : EFFORT_LEVELS.length),
+    u = n && isEffortCappedByOrg(n) ? wr : void 0,
     f =
-      n && gve(n) !== null
-        ? `Your organization's default effort for this model is ${KH(n)}.`
+      n && getOrgDefaultEffortLevelForModel(n) !== null
+        ? `Your organization's default effort for this model is ${getDefaultEffortLevelForModel(n)}.`
         : void 0,
     b = [u, f].filter((i) => i !== void 0),
     m = b.length > 0 ? b.join(" ") : void 0;
-  if (ib(n)) {
+  if (modelSupportsUltracode(n)) {
     let O = l.width + 3,
       L = 17,
       X = [
@@ -273,20 +273,20 @@ function uo(yl) {
     if (ie.color === "violet-ripple") {
       let R;
       if (Pe[0] !== A)
-        ((R = e(t, { color: le, children: A })), (Pe[0] = A), (Pe[1] = R));
+        ((R = e(Text, { color: le, children: A })), (Pe[0] = A), (Pe[1] = R));
       else R = Pe[1];
       return R;
     }
     let R;
     if (Pe[2] !== A)
-      ((R = e(t, { dimColor: !0, children: A })), (Pe[2] = A), (Pe[3] = R));
+      ((R = e(Text, { dimColor: !0, children: A })), (Pe[2] = A), (Pe[3] = R));
     else R = Pe[3];
     return R;
   }
   if (ie.color === "violet-ripple") {
     let R;
     if (Pe[4] !== A)
-      ((R = e(t, { bold: !0, backgroundColor: qe, color: ke, children: A })),
+      ((R = e(Text, { bold: !0, backgroundColor: qe, color: ke, children: A })),
         (Pe[4] = A),
         (Pe[5] = R));
     else R = Pe[5];
@@ -306,7 +306,7 @@ function uo(yl) {
   }
   let R;
   if (Pe[10] !== ie.color || Pe[11] !== A)
-    ((R = e(t, { bold: !0, color: ie.color, children: A })),
+    ((R = e(Text, { bold: !0, color: ie.color, children: A })),
       (Pe[10] = ie.color),
       (Pe[11] = A),
       (Pe[12] = R));
@@ -317,17 +317,17 @@ function fo(wl) {
   let $n = _(5),
     { text: Ao } = wl,
     Sl = useReducedMotion(),
-    [, kl] = bs(Sl ? null : 100),
+    [, kl] = useAnimationFrame(Sl ? null : 100),
     Io = Math.floor(kl / 100),
     Mt;
   if ($n[0] !== Ao) ((Mt = [...Ao]), ($n[0] = Ao), ($n[1] = Mt));
   else Mt = $n[1];
   let En;
   if ($n[2] !== Io || $n[3] !== Mt)
-    ((En = e(t, {
+    ((En = e(Text, {
       bold: !0,
       children: Mt.map((Cl, Pn) =>
-        e(t, { color: pickRainbowColor(Pn + Io), children: Cl }, Pn),
+        e(Text, { color: pickRainbowColor(Pn + Io), children: Cl }, Pn),
       ),
     })),
       ($n[2] = Io),
@@ -395,13 +395,13 @@ function UltraRippleText($l) {
   } else Ae = An[4];
   let Rn;
   if (An[5] !== St || An[6] !== Go || An[7] !== Do || An[8] !== Ae)
-    ((Rn = e(t, {
+    ((Rn = e(Text, {
       children: Ae.map((kt, Dn) => {
         if (kt.level === null) {
-          return e(t, { dimColor: Do, bold: St, children: kt.text }, Dn);
+          return e(Text, { dimColor: Do, bold: St, children: kt.text }, Dn);
         }
         return e(
-          t,
+          Text,
           {
             backgroundColor: RIPPLE_RAMP[kt.level],
             color: Go ?? ke,
@@ -424,7 +424,7 @@ function mo(El) {
   let Vn = _(5),
     { text: Ct } = El,
     Gn = useReducedMotion(),
-    [, Pl] = bs(Gn ? null : 100),
+    [, Pl] = useAnimationFrame(Gn ? null : 100),
     Al = Ct.length + 4,
     tt = Gn ? NO_ANIMATION_INDEX : Math.floor(Pl / 100) % Al,
     Nt;
@@ -432,13 +432,13 @@ function mo(El) {
   else Nt = Vn[1];
   let Fn;
   if (Vn[2] !== tt || Vn[3] !== Nt)
-    ((Fn = e(t, {
+    ((Fn = e(Text, {
       bold: !0,
       children: Nt.map((Il, $t) => {
         let Tn = $t === tt;
         let Ol = $t === tt - 1 || $t === tt + 1;
         return e(
-          t,
+          Text,
           { color: Tn ? ao : "autoAccept", bold: Tn || Ol, children: Il },
           $t,
         );
@@ -451,24 +451,24 @@ function mo(El) {
   return Fn;
 }
 function ft(n, c, l, u) {
-  if (sA(n, c, l)) {
+  if (isUltracodeActive(n, c, l)) {
     let y = u.levels.findIndex((S) => S.value === "ultracode");
     if (y !== -1) return y;
   }
-  let f = getRemoteTransport() ? void 0 : VH(),
-    b = UN(n) ? void 0 : c,
+  let f = getRemoteTransport() ? void 0 : getEnvEffortLevelOverride(),
+    b = isLaunchEffortPinned(n) ? void 0 : c,
     m = f === null ? void 0 : (f ?? b);
   if (m !== void 0) {
     let y = u.levels.findIndex((S) => S.value === m);
     if (y !== -1) return y;
   }
-  let w = NT(n, m),
+  let w = getModelEffortLevelOrDefault(n, m),
     i = u.levels.findIndex((y) => y.value === w);
   return i === -1 ? Mr : i;
 }
 function gn(Ie) {
   let Xn = _(4);
-  if (tn()) {
+  if (useIsScreenReaderEnabled()) {
     let ot;
     if (Xn[0] !== Ie) ((ot = e(po, { ...Ie })), (Xn[0] = Ie), (Xn[1] = ot));
     else ot = Xn[1];
@@ -482,7 +482,7 @@ function gn(Ie) {
 function go(Ll) {
   let g = _(170),
     { getMessages: Fo, onDone: oe, storageV5: Oe } = Ll,
-    Le = qf(),
+    Le = useSessionEffortLevel(),
     To = useAppStateSelector($r),
     Xo = useAppStateSelector(Er),
     H = useMainLoopModel(),
@@ -508,7 +508,7 @@ function go(Ll) {
     Vl = useHasVirtualScrollViewport(),
     De = s.levels[I].value === "ultracode",
     nt = useReducedMotion(),
-    [, _o] = bs(De && !nt && Y === null ? Zo : null),
+    [, _o] = useAnimationFrame(De && !nt && Y === null ? Zo : null),
     [Ho, zn] = d(null);
   if (!De || nt) {
     if (Ho !== null) zn(null);
@@ -538,9 +538,9 @@ function go(Ll) {
     Yn,
     Qn;
   if (g[13] === MEMO_CACHE_SENTINEL)
-    ((Kn = formatKeybindingChord([gw("left"), gw("right")])),
-      (Yn = formatKeybindingChord([gw("enter")])),
-      (Qn = formatKeybindingChord([gw("escape")])),
+    ((Kn = formatKeybindingChord([parseKeybindingChord("left"), parseKeybindingChord("right")])),
+      (Yn = formatKeybindingChord([parseKeybindingChord("enter")])),
+      (Qn = formatKeybindingChord([parseKeybindingChord("escape")])),
       (g[13] = Kn),
       (g[14] = Yn),
       (g[15] = Qn));
@@ -565,7 +565,7 @@ function go(Ll) {
       }
       let Et = s.levels[I];
       let Fl = Et.value === "ultracode" ? "xhigh" : Et.value;
-      if (tse(Fl, Le, H, To, isPromptCacheWarm(Fo()))) {
+      if (shouldConfirmEffortChangeOnWarmCache(Fl, Le, H, To, isPromptCacheWarm(Fo()))) {
         Jn({ level: Et.value, persistAsDefault: Un });
         return;
       }
@@ -775,7 +775,7 @@ function go(Ll) {
   if (g[82] !== G || g[83] !== a || g[84] !== h)
     ((Ht = a
       ? e(UltraRippleText, { text: " ".repeat(G), col: -h, row: on, ripple: a })
-      : e(o, { height: 1 })),
+      : e(Box, { height: 1 })),
       (g[82] = G),
       (g[83] = a),
       (g[84] = h),
@@ -783,7 +783,7 @@ function go(Ll) {
   else Ht = g[85];
   let Bt;
   if (g[86] !== J || g[87] !== z || g[88] !== a || g[89] !== h || g[90] !== Gt)
-    ((Bt = e(o, {
+    ((Bt = e(Box, {
       children: a
         ? e(UltraRippleText, {
             text: `${J}Faster${Gt}Smarter${z}`,
@@ -793,9 +793,9 @@ function go(Ll) {
           })
         : r(N, {
             children: [
-              e(t, { children: "Faster" }),
-              e(t, { children: Gt }),
-              e(t, { children: "Smarter" }),
+              e(Text, { children: "Faster" }),
+              e(Text, { children: Gt }),
+              e(Text, { children: "Smarter" }),
             ],
           }),
     })),
@@ -821,7 +821,7 @@ function go(Ll) {
     g[102] !== h ||
     g[103] !== ne
   )
-    ((Jt = e(o, {
+    ((Jt = e(Box, {
       children: a
         ? r(N, {
             children: [
@@ -833,7 +833,7 @@ function go(Ll) {
                 dimColor: !0,
                 coveredColor: ut,
               }),
-              e(t, {
+              e(Text, {
                 bold: !0,
                 backgroundColor: qe,
                 color: ke,
@@ -851,11 +851,11 @@ function go(Ll) {
           })
         : r(N, {
             children: [
-              e(t, { dimColor: !0, children: Ot }),
-              st ? e(t, { color: le, children: st }) : null,
-              e(t, { bold: !0, color: Lt ? le : void 0, children: "\u25B2" }),
-              e(t, { dimColor: !0, children: At }),
-              Dt ? e(t, { color: le, children: Dt }) : null,
+              e(Text, { dimColor: !0, children: Ot }),
+              st ? e(Text, { color: le, children: st }) : null,
+              e(Text, { bold: !0, color: Lt ? le : void 0, children: "\u25B2" }),
+              e(Text, { dimColor: !0, children: At }),
+              Dt ? e(Text, { color: le, children: Dt }) : null,
             ],
           }),
     })),
@@ -909,7 +909,7 @@ function go(Ll) {
                     row: ee,
                     ripple: a,
                   })
-                : e(t, { children: Te(ge - 1) })),
+                : e(Text, { children: Te(ge - 1) })),
             a && I !== ge
               ? e(UltraRippleText, {
                   text: dr.label,
@@ -942,7 +942,7 @@ function go(Ll) {
     ((ye = a
       ? e(UltraRippleText, { text: `${ct}${z}`, col: Vt, row: ee, ripple: a })
       : ct
-        ? e(t, { children: ct })
+        ? e(Text, { children: ct })
         : null),
       (g[122] = Vt),
       (g[123] = ct),
@@ -952,7 +952,7 @@ function go(Ll) {
   else ye = g[126];
   let qt;
   if (g[127] !== zt || g[128] !== jt || g[129] !== ye)
-    ((qt = r(o, { children: [zt, jt, ye] })),
+    ((qt = r(Box, { children: [zt, jt, ye] })),
       (g[127] = zt),
       (g[128] = jt),
       (g[129] = ye),
@@ -967,7 +967,7 @@ function go(Ll) {
     g[135] !== h
   )
     ((Kt = s.sublabel
-      ? e(o, {
+      ? e(Box, {
           children: a
             ? e(UltraRippleText, {
                 text: `${J}${" ".repeat(s.sublabel.start)}${s.sublabel.text}${z}`,
@@ -978,8 +978,8 @@ function go(Ll) {
               })
             : r(N, {
                 children: [
-                  e(t, { children: " ".repeat(s.sublabel.start) }),
-                  e(t, { dimColor: !0, children: s.sublabel.text }),
+                  e(Text, { children: " ".repeat(s.sublabel.start) }),
+                  e(Text, { dimColor: !0, children: s.sublabel.text }),
                 ],
               }),
         })
@@ -995,9 +995,9 @@ function go(Ll) {
   if (g[137] !== Tt || g[138] !== s.levels || g[139] !== I)
     ((Yt =
       Tt !== null
-        ? e(o, { minHeight: 2, children: e(t, { dimColor: !0, children: Tt }) })
+        ? e(Box, { minHeight: 2, children: e(Text, { dimColor: !0, children: Tt }) })
         : s.levels[I]?.value === "max"
-          ? e(o, { children: e(t, { dimColor: !0, children: GG }) })
+          ? e(Box, { children: e(Text, { dimColor: !0, children: MAX_EFFORT_WARNING }) })
           : null),
       (g[137] = Tt),
       (g[138] = s.levels),
@@ -1008,7 +1008,7 @@ function go(Ll) {
   if (g[141] !== s.orgNote || g[142] !== a)
     ((Qt =
       s.orgNote && !a
-        ? e(o, { children: e(t, { dimColor: !0, children: s.orgNote }) })
+        ? e(Box, { children: e(Text, { dimColor: !0, children: s.orgNote }) })
         : null),
       (g[141] = s.orgNote),
       (g[142] = a),
@@ -1023,7 +1023,7 @@ function go(Ll) {
     g[148] !== Yt ||
     g[149] !== Qt
   )
-    ((Wt = r(o, {
+    ((Wt = r(Box, {
       flexDirection: "column",
       alignItems: "center",
       width: "100%",
@@ -1041,7 +1041,7 @@ function go(Ll) {
   if (g[151] !== G || g[152] !== a || g[153] !== h)
     ((Zt = a
       ? e(UltraRippleText, { text: " ".repeat(G), col: -h, row: ln, ripple: a })
-      : e(o, { height: 1 })),
+      : e(Box, { height: 1 })),
       (g[151] = G),
       (g[152] = a),
       (g[153] = h),
@@ -1058,7 +1058,7 @@ function go(Ll) {
     ((Ut = e(InputGuide, {
       children: a
         ? e(UltraRippleText, {
-            text: `${Xe}${Wn}${" ".repeat(Math.max(0, G - W - te(Wn)))}`,
+            text: `${Xe}${Wn}${" ".repeat(Math.max(0, G - W - getStringWidth(Wn)))}`,
             col: -h,
             row: sn,
             ripple: a,
@@ -1068,7 +1068,7 @@ function go(Ll) {
             children: [
               e(KeybindingHint, { chord: ["left", "right"], action: "adjust" }),
               e(KeybindingHint, { chord: "enter", action: "confirm" }),
-              e(t, { children: "s for this session only" }),
+              e(Text, { children: "s for this session only" }),
               e(KeybindingHint, { chord: "escape", action: "cancel" }),
             ],
           }),
@@ -1092,7 +1092,7 @@ function go(Ll) {
     g[168] !== Ut
   )
     ((fr = e(Qr, {
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         tabIndex: 0,
         autoFocus: !0,
@@ -1117,12 +1117,12 @@ function go(Ll) {
 function dn(n, c, l) {
   if (c.value === "ultracode") return l ?? "";
   if (co(n)) return io(n, c.value);
-  return c.value === "max" ? GG : "";
+  return c.value === "max" ? MAX_EFFORT_WARNING : "";
 }
 function po(Jl) {
   let q = _(39),
     { getMessages: Ko, onDone: re, storageV5: _e } = Jl,
-    eo = qf(),
+    eo = useSessionEffortLevel(),
     Yo = useAppStateSelector(Ar),
     zl = useAppStateSelector(Ir),
     j = useMainLoopModel(),
@@ -1193,7 +1193,7 @@ function po(Jl) {
   else Z = q[18];
   let Me;
   if (q[19] !== T.orgNote)
-    ((Me = T.orgNote ? e(t, { children: T.orgNote }) : null),
+    ((Me = T.orgNote ? e(Text, { children: T.orgNote }) : null),
       (q[19] = T.orgNote),
       (q[20] = Me));
   else Me = q[20];
@@ -1211,7 +1211,7 @@ function po(Jl) {
       if (Je.current) {
         return;
       }
-      if (tse(oo === "ultracode" ? "xhigh" : oo, eo, j, Yo, isPromptCacheWarm(Ko()))) {
+      if (shouldConfirmEffortChangeOnWarmCache(oo === "ultracode" ? "xhigh" : oo, eo, j, Yo, isPromptCacheWarm(Ko()))) {
         gr(oo);
         return;
       }
@@ -1254,7 +1254,7 @@ function po(Jl) {
   let hr;
   if (q[36] !== Me || q[37] !== ro)
     ((hr = e(Qr, {
-      children: r(o, { flexDirection: "column", children: [Z, Me, ro] }),
+      children: r(Box, { flexDirection: "column", children: [Z, Me, ro] }),
     })),
       (q[36] = Me),
       (q[37] = ro),

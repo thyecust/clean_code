@@ -11,7 +11,7 @@ import { AS, ML, mv, ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js"
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, getSafeModeExitHint, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize, countOccurrences, normalizeFullWidthDigits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -19,7 +19,7 @@ import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chun
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { gi, o, t, ct, jr, tn, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { isFullscreen, Box, Text, Link, Ansi, useIsScreenReaderEnabled, measureElement } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
@@ -46,7 +46,7 @@ import {
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { getRemoteTransport, isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, formatDuration, formatNumber, formatTokens, formatRelativeTimeAgo, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, formatDuration, formatNumber, formatTokens, formatRelativeTimeAgo, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { listedProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
@@ -58,9 +58,9 @@ import { NOTIFICATION_CHANNELS } from "../图片-截图-ComputerUse/settings-opt
 import { getComplianceTaints } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { D6, Lvt, KZe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { formatComplianceTaintLabel, isKnownComplianceTaint, normalizeComplianceTaints } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
-import { jY, T3t } from "../状态栏-主题/chunk-jz6b76hr.js";
+import { applyForegroundColor, getColorEscapePrefix } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { useTheme, useThemeSetting } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { parseCustomThemeRef } from "../状态栏-主题/custom-themes.js";
@@ -79,7 +79,7 @@ import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共�
 import { isChannelsPolicyBlocked } from "../插件系统/channel-gate.js";
 import { useAppStateSession, useAppStateSelector, useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useMainLoopModelOverride } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
-import { fc } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { SYNTHETIC_MODEL_NAME } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
   formatCostSummary,
   DEFAULT_OUTPUT_STYLE_NAME,
@@ -111,7 +111,7 @@ import { ensurePolicyLimitsLoadedForDiagnostic } from "../Bridge-RemoteControl/c
 import { isPushNotificationsEnabled, isInputNeededPushEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 import { formatCronSchedule } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { isAgentsFleetEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
-import { fDt } from "../跨会话消息(UDS)/chunk-t2esphmv.js";
+import { getUdsInboxUnavailableReason } from "../跨会话消息(UDS)/uds-messaging.js";
 import { githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -125,35 +125,35 @@ import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js
 import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { RemoteHomeSettingsDialog } from "../Memory-CLAUDE.md/chunk-54xx04er.js";
 import { recordExternalIncludesDecision, ClaudeMdExternalIncludesDialog } from "../Memory-CLAUDE.md/claude-md-external-includes-dialog.js";
-import { Ult, Blt } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { getEffectiveAutoContinueAtUsageLimit, isAutoContinueSettingUserControlled } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { getPushReachability, subscribePushReachability, subscribePushPreferencesHydrated } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
-import { YDt, Olt, AIe, gSe } from "../../01-核心基础设施/设置-配置/chunk-bznmdnc2.js";
-import { Ble, a3e } from "../成本-Token统计/chunk-3nwwgatc.js";
+import { formatNotificationChannelLabel, getSecuritySensitiveSettings, getEffectiveConfig, createSettingsViewModel } from "../../01-核心基础设施/设置-配置/settings-config-model.js";
+import { getUsagePatternsAccess, collectRecentUsageSummary } from "../成本-Token统计/usage-transcript-scan.js";
 import { seedUtilization, loadPlanRateLimits } from "../MCP客户端/usage-rate-limits.js";
-import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
+import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import {
-  BWe,
+  splitAnthropicOnlyStatusSections,
   tUn,
   nUn,
-  rUn,
-  oUn,
-  sUn,
-  iUn,
-  aUn,
-  lUn,
-  cUn,
-  jWe,
-  Oit,
-  Dit,
-  uUn,
-} from "../斜杠命令-UI组件/chunk-y5mtnxtg.js";
+  buildIdeStatusRows,
+  buildMcpServersStatusRow,
+  getLargeMemoryFileWarnings,
+  buildSettingsSourcesStatusRows,
+  getAutoUpdateWarningMessages,
+  getLauncherDiagnostics,
+  getSettingsAndUpdateWarnings,
+  fetchOAuthRefreshKnownDeadStatus,
+  buildAccountStatusRows,
+  buildProviderStatusRows,
+  formatModelRowValue,
+} from "../斜杠命令-UI组件/status-info-rows.js";
 import { computeSkillUsageByPlugin } from "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
 import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
 import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Rl } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+import { toSingleLineDisplayText } from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import { isAgentsViewAvailable } from "../后台任务-Shell管理/chunk-531ast3t.js";
 import { resolveThemePalette } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
 import {
@@ -172,7 +172,7 @@ import {
 } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { isSkillDoctorEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import { figures, formatWorkflowSizeGuidelineLabel, isWorkflowSizeGuidelineConfigured } from "../Teammates团队/chunk-mrfx53ye.js";
-import { zNe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { quotePowerShellLiteral } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
@@ -338,14 +338,14 @@ function Vf(Nb, Zu) {
 }
 function Gf(td, Wb) {
   return r(
-    o,
+    Box,
     {
       flexDirection: "row",
       gap: 1,
       paddingX: 1,
       children: [
         e(StatusIndicator, { status: "warning" }),
-        typeof td === "string" ? e(t, { wrap: "wrap", children: td }) : td,
+        typeof td === "string" ? e(Text, { wrap: "wrap", children: td }) : td,
       ],
     },
     Wb,
@@ -354,7 +354,7 @@ function Gf(td, Wb) {
 function od({ sessionId: s, cwd: c, accountStatus: m, webSetupStatus: T }) {
   let R = a.CLAUDE_CODE_TMUX_SESSION,
     v = getRemoteTransport()?.sessionId,
-    H = getCurrentSessionDisplayTitle(s) ?? e(t, { dimColor: !0, children: "/rename to add a name" }),
+    H = getCurrentSessionDisplayTitle(s) ?? e(Text, { dimColor: !0, children: "/rename to add a name" }),
     B = ym(),
     Y = "";
   if (B.length > 0) {
@@ -404,11 +404,11 @@ function od({ sessionId: s, cwd: c, accountStatus: m, webSetupStatus: T }) {
           },
         ]
       : []),
-    ...(isCrossSessionMessagingEnabled() && !udsEnv.CLAUDE_CODE_MESSAGING_SOCKET && fDt() !== void 0
+    ...(isCrossSessionMessagingEnabled() && !udsEnv.CLAUDE_CODE_MESSAGING_SOCKET && getUdsInboxUnavailableReason() !== void 0
       ? [
           {
             label: "Peer address",
-            value: `unavailable \u2014 ${fDt()} (details in the --debug log)`,
+            value: `unavailable \u2014 ${getUdsInboxUnavailableReason()} (details in the --debug log)`,
           },
         ]
       : []),
@@ -421,35 +421,35 @@ function od({ sessionId: s, cwd: c, accountStatus: m, webSetupStatus: T }) {
         ]
       : []),
     { label: "cwd", value: c },
-    ...Oit(m),
+    ...buildAccountStatusRows(m),
     ...$u(T),
     ...$f(),
-    ...Dit(),
+    ...buildProviderStatusRows(),
   ];
 }
 function $f() {
   let s = getComplianceTaints();
   return s.length > 0
-    ? [{ label: "Compliance", value: KZe(s).map((c) => (Lvt(c) ? D6(c) : c)) }]
+    ? [{ label: "Compliance", value: normalizeComplianceTaints(s).map((c) => (isKnownComplianceTaint(c) ? formatComplianceTaintLabel(c) : c)) }]
     : [];
 }
 function nd({ mainLoopModel: s, mcp: c, theme: m, context: T }) {
   return [
-    { label: "Model", value: uUn(s) },
+    { label: "Model", value: formatModelRowValue(s) },
     ...nUn(),
     ...(isRemoteActive()
       ? []
       : [
-          ...rUn(c.clients, T.options.ideInstallationStatus, m),
-          ...oUn(c.clients, m),
+          ...buildIdeStatusRows(c.clients, T.options.ideInstallationStatus, m),
+          ...buildMcpServersStatusRow(c.clients, m),
           ...tUn(),
         ]),
-    ...iUn(),
+    ...buildSettingsSourcesStatusRows(),
   ];
 }
 async function xr(s, c, m) {
   return (
-    await Promise.all([aUn(), cUn(c), lUn(c), isRemoteActive() ? [] : sUn(s, c, m)])
+    await Promise.all([getAutoUpdateWarningMessages(), getSettingsAndUpdateWarnings(c), getLauncherDiagnostics(c), isRemoteActive() ? [] : getLargeMemoryFileWarnings(s, c, m)])
   ).flat();
 }
 function Dr(vb) {
@@ -461,7 +461,7 @@ function Dr(vb) {
       let Js;
       if (hr[2] !== Ct.length)
         ((Js = (xb, wf) =>
-          r(t, { children: [xb, wf < Ct.length - 1 ? "," : ""] }, wf)),
+          r(Text, { children: [xb, wf < Ct.length - 1 ? "," : ""] }, wf)),
           (hr[2] = Ct.length),
           (hr[3] = Js));
       else Js = hr[3];
@@ -470,7 +470,7 @@ function Dr(vb) {
     } else nn = hr[1];
     let Js;
     if (hr[4] !== nn)
-      ((Js = e(o, {
+      ((Js = e(Box, {
         flexWrap: "wrap",
         columnGap: 1,
         flexShrink: 99,
@@ -484,7 +484,7 @@ function Dr(vb) {
   if (typeof Ct === "string") {
     let nn;
     if (hr[6] !== Ct)
-      ((nn = e(t, { children: Ct })), (hr[6] = Ct), (hr[7] = nn));
+      ((nn = e(Text, { children: Ct })), (hr[6] = Ct), (hr[7] = nn));
     else nn = hr[7];
     return nn;
   }
@@ -495,7 +495,7 @@ function Zs(Mb) {
     { context: Gn, diagnosticsPromise: Fu, getWebSetupRead: Uu } = Mb,
     kf;
   if (ao[0] !== Gn.credentials)
-    ((kf = () => jWe(Gn.credentials)), (ao[0] = Gn.credentials), (ao[1] = kf));
+    ((kf = () => fetchOAuthRefreshKnownDeadStatus(Gn.credentials)), (ao[0] = Gn.credentials), (ao[1] = kf));
   else kf = ao[1];
   let [Wu] = d(kf),
     Df;
@@ -550,7 +550,7 @@ function Zs(Mb) {
   else Sr = ao[14];
   let br;
   if (ao[15] !== Kn || ao[16] !== yr || ao[17] !== Sr)
-    ((br = r(o, {
+    ((br = r(Box, {
       flexDirection: "column",
       gap: 1,
       flexGrow: Kn,
@@ -563,7 +563,7 @@ function Zs(Mb) {
   else br = ao[18];
   let Ef;
   if (ao[19] === MEMO_CACHE_SENTINEL)
-    ((Ef = e(t, {
+    ((Ef = e(Text, {
       dimColor: !0,
       children: e(ActionKeybindingHint, {
         action: "confirm:no",
@@ -576,7 +576,7 @@ function Zs(Mb) {
   else Ef = ao[19];
   let Af;
   if (ao[20] !== Kn || ao[21] !== br)
-    ((Af = r(o, {
+    ((Af = r(Box, {
       flexDirection: "column",
       gap: 1,
       flexGrow: Kn,
@@ -609,7 +609,7 @@ function Tr(Hu) {
     Qs[6] !== qu ||
     Qs[7] !== Gu
   )
-    ((If = BWe([
+    ((If = splitAnthropicOnlyStatusSections([
       od({ sessionId: Xu, cwd: Ju, accountStatus: Ku, webSetupStatus: Gu }),
       nd({ mainLoopModel: zu, mcp: Yu, theme: qu, context: Vu }),
     ])),
@@ -628,7 +628,7 @@ function Tr(Hu) {
   if (Qs[9] === MEMO_CACHE_SENTINEL)
     ((_f =
       isRemoteActive() &&
-      r(t, {
+      r(Text, {
         dimColor: !0,
         children: [
           "Model and cwd are the",
@@ -648,7 +648,7 @@ function Tr(Hu) {
   else Cr = Qs[12];
   let Of;
   if (Qs[13] !== Cr)
-    ((Of = r(o, {
+    ((Of = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [_f, e(Table, { columns: Pf, children: Cr })],
@@ -667,14 +667,14 @@ function vr(Fb) {
   }
   let Nf;
   if (ed[0] === MEMO_CACHE_SENTINEL)
-    ((Nf = e(t, { bold: !0, children: "System diagnostics" })), (ed[0] = Nf));
+    ((Nf = e(Text, { bold: !0, children: "System diagnostics" })), (ed[0] = Nf));
   else Nf = ed[0];
   let kr;
   if (ed[1] !== wr) ((kr = wr.map(Gf)), (ed[1] = wr), (ed[2] = kr));
   else kr = ed[2];
   let Bf;
   if (ed[3] !== kr)
-    ((Bf = r(o, {
+    ((Bf = r(Box, {
       flexDirection: "column",
       paddingBottom: 1,
       children: [Nf, kr],
@@ -709,7 +709,7 @@ function Pr(qb) {
   let ti = zf,
     Ar;
   if (Lo[4] !== Er)
-    ((Ar = r(t, {
+    ((Ar = r(Text, {
       children: [
         "The stable channel may have an older version than what you're currently running (",
         Er,
@@ -721,7 +721,7 @@ function Pr(qb) {
   else Ar = Lo[5];
   let Yf;
   if (Lo[6] === MEMO_CACHE_SENTINEL)
-    ((Yf = e(t, {
+    ((Yf = e(Text, {
       dimColor: !0,
       children: "How would you like to handle this?",
     })),
@@ -800,9 +800,9 @@ function Fr(dC) {
     pd = !Jf;
   let Zf;
   if (ni[3] === MEMO_CACHE_SENTINEL)
-    ((Zf = e(o, {
+    ((Zf = e(Box, {
       marginTop: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: "This changes how Claude Code communicates with you",
       }),
@@ -811,12 +811,12 @@ function Fr(dC) {
   else Zf = ni[3];
   let eg;
   if (ni[4] === MEMO_CACHE_SENTINEL)
-    ((eg = e(t, { dimColor: !0, children: "Loading output styles\u2026" })),
+    ((eg = e(Text, { dimColor: !0, children: "Loading output styles\u2026" })),
       (ni[4] = eg));
   else eg = ni[4];
   let Or;
   if (ni[5] !== id || ni[6] !== rd || ni[7] !== ud)
-    ((Or = r(o, {
+    ((Or = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
@@ -869,7 +869,7 @@ function $r(mC) {
   if (si[3] !== lo || si[4] !== gd)
     ((Lr =
       gd &&
-      e(t, {
+      e(Text, {
         dimColor: !0,
         children: `Your saved output style "${lo}" is a custom style disabled in safe mode \u2014 ${getSafeModeExitHint()} to use it; selecting a style here replaces it`,
       })),
@@ -925,18 +925,18 @@ function Hr(xC) {
   let ri = cg,
     ug;
   if (sn[4] === MEMO_CACHE_SENTINEL)
-    ((ug = e(t, {
+    ((ug = e(Text, {
       children: "Enter your preferred response and voice language:",
     })),
       (sn[4] = ug));
   else ug = sn[4];
   let dg;
-  if (sn[5] === MEMO_CACHE_SENTINEL) ((dg = e(t, { children: figures.pointer })), (sn[5] = dg));
+  if (sn[5] === MEMO_CACHE_SENTINEL) ((dg = e(Text, { children: figures.pointer })), (sn[5] = dg));
   else dg = sn[5];
   const Sd = Ur ?? "";
   let Wr;
   if (sn[6] !== yd || sn[7] !== ri || sn[8] !== Sd)
-    ((Wr = r(o, {
+    ((Wr = r(Box, {
       flexDirection: "row",
       gap: 1,
       children: [
@@ -961,7 +961,7 @@ function Hr(xC) {
   else Wr = sn[9];
   let mg;
   if (sn[10] === MEMO_CACHE_SENTINEL)
-    ((mg = e(t, {
+    ((mg = e(Text, {
       dimColor: !0,
       children: "Leave empty for default (English)",
     })),
@@ -969,7 +969,7 @@ function Hr(xC) {
   else mg = sn[10];
   let pg;
   if (sn[11] !== Wr)
-    ((pg = r(o, { flexDirection: "column", gap: 1, children: [ug, Wr, mg] })),
+    ((pg = r(Box, { flexDirection: "column", gap: 1, children: [ug, Wr, mg] })),
       (sn[11] = Wr),
       (sn[12] = pg));
   else pg = sn[12];
@@ -997,7 +997,7 @@ function ea(qC) {
     gg = C(null);
   useFocusTrap(gg, !0);
   let hg;
-  if (Qe[0] !== bd) ((hg = YDt(bd)), (Qe[0] = bd), (Qe[1] = hg));
+  if (Qe[0] !== bd) ((hg = formatNotificationChannelLabel(bd)), (Qe[0] = bd), (Qe[1] = hg));
   else hg = Qe[1];
   const xd = `\u2039 ${hg} \u203A`;
   let Vr;
@@ -1114,15 +1114,15 @@ function ea(qC) {
         {
           active: qr,
           children: [
-            e(o, {
+            e(Box, {
               width: 34,
               flexShrink: 0,
               marginRight: 1,
-              children: r(t, {
+              children: r(Text, {
                 color: qr ? "suggestion" : void 0,
                 wrap: "truncate-end",
                 children: [
-                  r(t, {
+                  r(Text, {
                     "aria-hidden": !0,
                     children: [qr ? figures.pointer : " ", " "],
                   }),
@@ -1130,7 +1130,7 @@ function ea(qC) {
                 ],
               }),
             }),
-            e(t, {
+            e(Text, {
               color: qr ? "suggestion" : void 0,
               wrap: "truncate-end",
               children: Md.value,
@@ -1153,7 +1153,7 @@ function ea(qC) {
   else Jr = Qe[35];
   let Zr;
   if (Qe[36] !== ai || Qe[37] !== Yr || Qe[38] !== Jr)
-    ((Zr = r(o, {
+    ((Zr = r(Box, {
       flexDirection: "column",
       ref: gg,
       tabIndex: 0,
@@ -1188,7 +1188,7 @@ function rn() {
   }
   let Mg;
   if (ZC[0] === MEMO_CACHE_SENTINEL)
-    ((Mg = r(t, {
+    ((Mg = r(Text, {
       color: "warning",
       wrap: "truncate-end",
       children: [
@@ -1196,7 +1196,7 @@ function rn() {
         WARNING_GLYPH,
         " No mobile registered \xB7",
         " ",
-        e(ct, {
+        e(Link, {
           url: "https://claude.com/download#mobile",
           children: "get the app",
         }),
@@ -1355,17 +1355,17 @@ function zg(Uk) {
   return Uk.slice(0, -1);
 }
 function Yg(Hd, Wk) {
-  return r(t, { children: [Wk + 1, ". ", Hd.label, ": ", Hd.value] }, Hd.id);
+  return r(Text, { children: [Wk + 1, ". ", Hd.label, ": ", Hd.value] }, Hd.id);
 }
 function Hg(s, c) {
-  if (te(s) <= c) return s;
+  if (getStringWidth(s) <= c) return s;
   let m = Math.max(1, c - 1),
     T = 0,
     R = 0;
   while (R < s.length) {
     let v = s.charCodeAt(R),
       A = v >= 55296 && v <= 56319 ? 2 : 1,
-      H = te(s.slice(R, R + A));
+      H = getStringWidth(s.slice(R, R + A));
     if (T + H > m) break;
     ((T += H), (R += A));
   }
@@ -1381,7 +1381,7 @@ function ga({
   onIsSearchModeChange: T,
   contentHeight: R,
 }) {
-  let v = gi(),
+  let v = isFullscreen(),
     { storageV5: A, credentials: H } = useStorageV5Context(),
     B = useSession(),
     Y = useAppState(),
@@ -1393,13 +1393,13 @@ function ga({
     se = useHasVirtualScrollViewport(),
     [, ce] = useTheme(),
     K = useThemeSetting(),
-    [I, X] = d(AIe),
+    [I, X] = d(getEffectiveConfig),
     J = C(I),
     [me, he] = d(() => ({
       ...getInitialSettings(),
-      ...Olt(),
+      ...getSecuritySensitiveSettings(),
       feedbackDrafts: getFeedbackDraftsSetting(),
-      autoContinueAtUsageLimit: Ult(),
+      autoContinueAtUsageLimit: getEffectiveAutoContinueAtUsageLimit(),
     })),
     Re = C(getInitialSettings()),
     [Ie, qe] = d(me?.outputStyle || DEFAULT_OUTPUT_STYLE_NAME),
@@ -1412,7 +1412,7 @@ function ga({
     rt = C(null),
     ft = C(""),
     [Ue, Lt] = d(0),
-    at = tn(),
+    at = useIsScreenReaderEnabled(),
     [tt, zt] = d(!at),
     qo = useTerminalFocus(),
     { rows: Fn, columns: ro } = useTerminalSize(),
@@ -1439,14 +1439,14 @@ function ga({
     Vp = useSetAppState(),
     [Eu, Gp] = d({}),
     Kp = C(xu);
-  E(() => subscribePushPreferencesHydrated(() => X(AIe())), []);
+  E(() => subscribePushPreferencesHydrated(() => X(getEffectiveConfig())), []);
   let [Un, js] = d(!1),
     [Jo, Hs] = d(null),
     [Fe, De] = d(null),
     [Au, Ru] = d(null);
   dn(() => {
     if (!or.current) return;
-    let k = Od(or.current).height;
+    let k = measureElement(or.current).height;
     if (k !== nr) Lp(k);
   }, [Z, tt, ro, Fn, nr, Fe]);
   let [sr, ir] = d(0),
@@ -1475,7 +1475,7 @@ function ga({
       (Pu.value !== !0 || Pu.source === "userSettings") &&
       (Ou.source === "default" || Ou.source === "userSettings"),
     Zp = !isWorkflowSizeGuidelineConfigured(),
-    ef = Blt(),
+    ef = isAutoContinueSettingUserControlled(),
     tf = isArtifactConfigToggleable(),
     Lu = kn(getSessionMemoryFiles(B, !0, A, H)),
     of = hasExternalInstructionIncludes(Lu),
@@ -1489,7 +1489,7 @@ function ga({
         changeInputNeededNotif: rf,
         changeAgentPushNotif: cf,
       },
-    } = gSe({
+    } = createSettingsViewModel({
       globalConfig: I,
       settingsData: me,
       themeSetting: K,
@@ -1858,7 +1858,7 @@ function ga({
                 j({
                   key: "config-change-refused",
                   kind: "warning",
-                  text: `Setting change failed: ${Rl(l(le))}`,
+                  text: `Setting change failed: ${toSingleLineDisplayText(l(le))}`,
                   color: "warning",
                   priority: "immediate",
                 }));
@@ -2037,7 +2037,7 @@ function ga({
     },
     [Fe, Z, tt, Yt, Vs, Iu, He, Ys],
   );
-  return e(o, {
+  return e(Box, {
     flexDirection: "column",
     width: "100%",
     ...(at ? {} : { tabIndex: 0, autoFocus: !Z, onKeyDown: bf, onPaste: Yp }),
@@ -2058,8 +2058,8 @@ function ga({
                 hideEscToCancel: !0,
                 skipExitHandling: !0,
               }),
-              e(o, {
-                children: e(t, {
+              e(Box, {
+                children: e(Text, {
                   dimColor: !0,
                   italic: !0,
                   children: r(DotSeparatedList, {
@@ -2101,7 +2101,7 @@ function ga({
                           j({
                             key: "model-switch-blocked",
                             kind: "warning",
-                            text: `Model switch failed: ${Rl(l(ne))}`,
+                            text: `Model switch failed: ${toSingleLineDisplayText(l(ne))}`,
                             color: "warning",
                             priority: "immediate",
                           }));
@@ -2114,7 +2114,7 @@ function ga({
                   },
                   showFastModeNotice: isFastModeEnabled() ? Mu && modelSupportsFastMode(vu) && isFastModeAvailable() : !1,
                 }),
-                e(t, {
+                e(Text, {
                   dimColor: !0,
                   children: r(DotSeparatedList, {
                     children: [
@@ -2167,7 +2167,7 @@ function ga({
                       },
                       externalIncludes: getExternalInstructionIncludes(Lu),
                     }),
-                    e(t, {
+                    e(Text, {
                       dimColor: !0,
                       children: r(DotSeparatedList, {
                         children: [
@@ -2205,7 +2205,7 @@ function ga({
                           (De(null), m(!1));
                         },
                       }),
-                      e(t, {
+                      e(Text, {
                         dimColor: !0,
                         children: r(DotSeparatedList, {
                           children: [
@@ -2240,7 +2240,7 @@ function ga({
                             (De(null), m(!1));
                           },
                         }),
-                        e(t, {
+                        e(Text, {
                           dimColor: !0,
                           children: r(DotSeparatedList, {
                             children: [
@@ -2278,7 +2278,7 @@ function ga({
                                 },
                                 cancelHint: "Escape to close",
                               })
-                            : e(o, {
+                            : e(Box, {
                                 flexDirection: "column",
                                 children: Vn.map((k, oe) => {
                                   let ne = oe === sr;
@@ -2287,15 +2287,15 @@ function ga({
                                     {
                                       active: ne,
                                       children: [
-                                        e(o, {
+                                        e(Box, {
                                           width: Tu,
                                           flexShrink: 0,
                                           marginRight: 1,
-                                          children: r(t, {
+                                          children: r(Text, {
                                             color: ne ? "suggestion" : void 0,
                                             wrap: "truncate-end",
                                             children: [
-                                              r(t, {
+                                              r(Text, {
                                                 "aria-hidden": !0,
                                                 children: [
                                                   ne ? figures.pointer : " ",
@@ -2306,7 +2306,7 @@ function ga({
                                             ],
                                           }),
                                         }),
-                                        e(t, {
+                                        e(Text, {
                                           color: ne ? "suggestion" : void 0,
                                           children: String(k.value),
                                         }),
@@ -2317,7 +2317,7 @@ function ga({
                                 }),
                               }),
                           !at &&
-                            e(t, {
+                            e(Text, {
                               dimColor: !0,
                               children: r(DotSeparatedList, {
                                 children: [
@@ -2357,7 +2357,7 @@ function ga({
                                 onCancel: fr,
                               }),
                             }),
-                            e(t, {
+                            e(Text, {
                               dimColor: !0,
                               children: r(DotSeparatedList, {
                                 children: [
@@ -2385,14 +2385,14 @@ function ga({
                               bt?.type !== "config"
                                 ? r(N, {
                                     children: [
-                                      e(t, {
+                                      e(Text, {
                                         children:
                                           bt?.type === "env"
                                             ? "Auto-updates are controlled by an environment variable and cannot be changed here."
                                             : "Auto-updates are disabled in development builds.",
                                       }),
                                       bt?.type === "env" &&
-                                        r(t, {
+                                        r(Text, {
                                           dimColor: !0,
                                           children: [
                                             "Unset ",
@@ -2526,7 +2526,7 @@ function ga({
                                 },
                               })
                             : at
-                              ? r(o, {
+                              ? r(Box, {
                                   flexDirection: "column",
                                   children: [
                                     e(fa, {
@@ -2547,7 +2547,7 @@ function ga({
                                       onCancel: Nu,
                                       cancelHint: "Escape to save and close",
                                     }),
-                                    Un && e(t, { children: ma }),
+                                    Un && e(Text, { children: ma }),
                                     we.some(
                                       (k) =>
                                         k.id === "inputNeededNotifEnabled" ||
@@ -2557,15 +2557,15 @@ function ga({
                                       we.some(
                                         (k) => k.id === "remoteHomeSettings",
                                       ) &&
-                                      e(t, { children: Jo }),
+                                      e(Text, { children: Jo }),
                                   ],
                                 })
-                              : r(o, {
+                              : r(Box, {
                                   flexDirection: "column",
                                   gap: 1,
                                   marginY: se ? void 0 : 1,
                                   children: [
-                                    r(o, {
+                                    r(Box, {
                                       flexDirection: "column",
                                       children: [
                                         e(SearchInput, {
@@ -2576,18 +2576,18 @@ function ga({
                                           placeholder: "Search settings\u2026",
                                         }),
                                         Us !== null &&
-                                          e(t, {
+                                          e(Text, {
                                             dimColor: !0,
                                             wrap: "wrap-trim",
                                             children: Us,
                                           }),
                                       ],
                                     }),
-                                    e(o, {
+                                    e(Box, {
                                       flexDirection: "column",
                                       children:
                                         we.length === 0
-                                          ? r(t, {
+                                          ? r(Text, {
                                               dimColor: !0,
                                               italic: !0,
                                               wrap: "truncate-end",
@@ -2600,7 +2600,7 @@ function ga({
                                           : r(N, {
                                               children: [
                                                 Ue > 0 &&
-                                                  r(t, {
+                                                  r(Text, {
                                                     dimColor: !0,
                                                     children: [
                                                       figures.arrowUp,
@@ -2636,12 +2636,12 @@ function ga({
                                                       {
                                                         children: [
                                                           Xs &&
-                                                            e(o, {
+                                                            e(Box, {
                                                               marginTop:
                                                                 ne === Ue
                                                                   ? 0
                                                                   : 1,
-                                                              children: e(t, {
+                                                              children: e(Text, {
                                                                 dimColor: !0,
                                                                 wrap: "truncate-end",
                                                                 children: Id(
@@ -2653,18 +2653,18 @@ function ga({
                                                           r(SelectableRow, {
                                                             active: le,
                                                             children: [
-                                                              e(o, {
+                                                              e(Box, {
                                                                 width: Tu,
                                                                 flexShrink: 0,
                                                                 marginRight: 1,
-                                                                children: r(t, {
+                                                                children: r(Text, {
                                                                   color: le
                                                                     ? "suggestion"
                                                                     : void 0,
                                                                   dimColor: Nt,
                                                                   wrap: "truncate-end",
                                                                   children: [
-                                                                    r(t, {
+                                                                    r(Text, {
                                                                       "aria-hidden":
                                                                         !0,
                                                                       children:
@@ -2678,7 +2678,7 @@ function ga({
                                                                     k.label,
                                                                     "labelBoldSuffix" in
                                                                       k &&
-                                                                      e(t, {
+                                                                      e(Text, {
                                                                         bold: !0,
                                                                         children:
                                                                           k.labelBoldSuffix,
@@ -2687,7 +2687,7 @@ function ga({
                                                                 }),
                                                               }),
                                                               r(
-                                                                o,
+                                                                Box,
                                                                 {
                                                                   flexGrow: 1,
                                                                   minWidth: 0,
@@ -2697,7 +2697,7 @@ function ga({
                                                                       Sf(
                                                                         k.id,
                                                                       ) &&
-                                                                      e(t, {
+                                                                      e(Text, {
                                                                         color:
                                                                           "warning",
                                                                         dimColor:
@@ -2708,7 +2708,7 @@ function ga({
                                                                       }),
                                                                     k.type ===
                                                                     "boolean"
-                                                                      ? e(t, {
+                                                                      ? e(Text, {
                                                                           color:
                                                                             le
                                                                               ? "suggestion"
@@ -2721,7 +2721,7 @@ function ga({
                                                                         })
                                                                       : k.id ===
                                                                           "theme"
-                                                                        ? e(t, {
+                                                                        ? e(Text, {
                                                                             color:
                                                                               le
                                                                                 ? "suggestion"
@@ -2739,7 +2739,7 @@ function ga({
                                                                             k.id ===
                                                                               "notifChannel"
                                                                           ? e(
-                                                                              t,
+                                                                              Text,
                                                                               {
                                                                                 color:
                                                                                   le
@@ -2761,7 +2761,7 @@ function ga({
                                                                           : k.id ===
                                                                               "permissionMode"
                                                                             ? e(
-                                                                                t,
+                                                                                Text,
                                                                                 {
                                                                                   color:
                                                                                     le
@@ -2779,7 +2779,7 @@ function ga({
                                                                             : k.id ===
                                                                                 "workflowSizeGuideline"
                                                                               ? e(
-                                                                                  t,
+                                                                                  Text,
                                                                                   {
                                                                                     color:
                                                                                       le
@@ -2800,7 +2800,7 @@ function ga({
                                                                                     "autoUpdatesChannel" &&
                                                                                   bt
                                                                                 ? r(
-                                                                                    t,
+                                                                                    Text,
                                                                                     {
                                                                                       color:
                                                                                         le
@@ -2814,7 +2814,7 @@ function ga({
                                                                                           "disabled",
                                                                                           " ",
                                                                                           r(
-                                                                                            t,
+                                                                                            Text,
                                                                                             {
                                                                                               dimColor:
                                                                                                 !0,
@@ -2832,7 +2832,7 @@ function ga({
                                                                                     },
                                                                                   )
                                                                                 : e(
-                                                                                    t,
+                                                                                    Text,
                                                                                     {
                                                                                       color:
                                                                                         le
@@ -2864,7 +2864,7 @@ function ga({
                                                                             (me?.autoUpdatesChannel ??
                                                                               "latest") ===
                                                                               "latest"))) &&
-                                                                      e(t, {
+                                                                      e(Text, {
                                                                         color:
                                                                           le
                                                                             ? "suggestion"
@@ -2889,9 +2889,9 @@ function ga({
                                                           Un &&
                                                             k.id ===
                                                               "thinking" &&
-                                                            e(o, {
+                                                            e(Box, {
                                                               paddingLeft: 2,
-                                                              children: e(t, {
+                                                              children: e(Text, {
                                                                 color:
                                                                   "warning",
                                                                 children: ma,
@@ -2900,18 +2900,18 @@ function ga({
                                                           Jo !== null &&
                                                             k.id ===
                                                               "remoteHomeSettings" &&
-                                                            e(o, {
+                                                            e(Box, {
                                                               paddingLeft: 2,
-                                                              children: e(t, {
+                                                              children: e(Text, {
                                                                 color:
                                                                   "warning",
                                                                 children: Jo,
                                                               }),
                                                             }),
                                                           k.lock !== void 0 &&
-                                                            e(o, {
+                                                            e(Box, {
                                                               paddingLeft: 4,
-                                                              children: e(t, {
+                                                              children: e(Text, {
                                                                 dimColor: !0,
                                                                 children:
                                                                   k.lock.reason,
@@ -2923,7 +2923,7 @@ function ga({
                                                     );
                                                   }),
                                                 Ue + Zo < we.length &&
-                                                  r(t, {
+                                                  r(Text, {
                                                     dimColor: !0,
                                                     children: [
                                                       figures.arrowDown,
@@ -2936,12 +2936,12 @@ function ga({
                                               ],
                                             }),
                                     }),
-                                    e(o, {
+                                    e(Box, {
                                       ref: or,
                                       flexDirection: "column",
                                       flexShrink: 0,
                                       children: Z
-                                        ? e(t, {
+                                        ? e(Text, {
                                             dimColor: !0,
                                             children: r(DotSeparatedList, {
                                               children: [
@@ -2968,11 +2968,11 @@ function ga({
                                             }),
                                           })
                                         : tt
-                                          ? e(t, {
+                                          ? e(Text, {
                                               dimColor: !0,
                                               children: r(DotSeparatedList, {
                                                 children: [
-                                                  e(t, {
+                                                  e(Text, {
                                                     children: "Type to filter",
                                                   }),
                                                   e(KeybindingHint, {
@@ -2992,7 +2992,7 @@ function ga({
                                                 ],
                                               }),
                                             })
-                                          : e(t, {
+                                          : e(Text, {
                                               dimColor: !0,
                                               children: r(DotSeparatedList, {
                                                 children: [
@@ -3082,8 +3082,8 @@ function ha(Lk) {
     case "iterm2": {
       let Bt;
       if (sa[0] === MEMO_CACHE_SENTINEL)
-        ((Bt = r(t, {
-          children: ["iTerm2 ", e(t, { dimColor: !0, children: "(OSC 9)" })],
+        ((Bt = r(Text, {
+          children: ["iTerm2 ", e(Text, { dimColor: !0, children: "(OSC 9)" })],
         })),
           (sa[0] = Bt));
       else Bt = sa[0];
@@ -3092,10 +3092,10 @@ function ha(Lk) {
     case "terminal_bell": {
       let Bt;
       if (sa[1] === MEMO_CACHE_SENTINEL)
-        ((Bt = r(t, {
+        ((Bt = r(Text, {
           children: [
             "Terminal Bell ",
-            e(t, { dimColor: !0, children: "(\\a)" }),
+            e(Text, { dimColor: !0, children: "(\\a)" }),
           ],
         })),
           (sa[1] = Bt));
@@ -3105,8 +3105,8 @@ function ha(Lk) {
     case "kitty": {
       let Bt;
       if (sa[2] === MEMO_CACHE_SENTINEL)
-        ((Bt = r(t, {
-          children: ["Kitty ", e(t, { dimColor: !0, children: "(OSC 99)" })],
+        ((Bt = r(Text, {
+          children: ["Kitty ", e(Text, { dimColor: !0, children: "(OSC 99)" })],
         })),
           (sa[2] = Bt));
       else Bt = sa[2];
@@ -3115,8 +3115,8 @@ function ha(Lk) {
     case "ghostty": {
       let Bt;
       if (sa[3] === MEMO_CACHE_SENTINEL)
-        ((Bt = r(t, {
-          children: ["Ghostty ", e(t, { dimColor: !0, children: "(OSC 777)" })],
+        ((Bt = r(Text, {
+          children: ["Ghostty ", e(Text, { dimColor: !0, children: "(OSC 777)" })],
         })),
           (sa[3] = Bt));
       else Bt = sa[3];
@@ -3207,11 +3207,11 @@ function fa(Nk) {
   else la = an[8];
   let ca;
   if (an[9] !== ia)
-    ((ca = ia && e(t, { children: ia })), (an[9] = ia), (an[10] = ca));
+    ((ca = ia && e(Text, { children: ia })), (an[9] = ia), (an[10] = ca));
   else ca = an[10];
   let ua;
   if (an[11] !== Fd || an[12] !== $d || an[13] !== Xt.length)
-    ((ua = r(t, {
+    ((ua = r(Text, {
       children: [
         "Enter a number to change [1-",
         Xt.length,
@@ -3228,7 +3228,7 @@ function fa(Nk) {
   else ua = an[14];
   let jg;
   if (an[15] !== jd || an[16] !== la || an[17] !== ca || an[18] !== ua)
-    ((jg = r(o, {
+    ((jg = r(Box, {
       ref: Ng,
       flexDirection: "column",
       tabIndex: 0,
@@ -3257,15 +3257,15 @@ function oh(oD) {
 }
 function nh(di) {
   return r(
-    o,
+    Box,
     {
       flexDirection: "row",
       children: [
-        e(o, {
+        e(Box, {
           width: 28,
-          children: e(t, { dimColor: !0, children: di.pluginName }),
+          children: e(Text, { dimColor: !0, children: di.pluginName }),
         }),
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             di.skillCount,
@@ -3302,8 +3302,8 @@ function mi() {
   }
   let Xg, Jg;
   if (os[4] === MEMO_CACHE_SENTINEL)
-    ((Xg = e(t, { bold: !0, children: "Plugin skill-listing footprint" })),
-      (Jg = e(t, {
+    ((Xg = e(Text, { bold: !0, children: "Plugin skill-listing footprint" })),
+      (Jg = e(Text, {
         dimColor: !0,
         wrap: "wrap",
         children:
@@ -3318,7 +3318,7 @@ function mi() {
   else ya = os[7];
   let Qg;
   if (os[8] === MEMO_CACHE_SENTINEL)
-    ((Qg = e(o, { width: 28, children: e(t, { children: "Total" }) })),
+    ((Qg = e(Box, { width: 28, children: e(Text, { children: "Total" }) })),
       (os[8] = Qg));
   else Qg = os[8];
   const qd = $o.overBudget
@@ -3326,12 +3326,12 @@ function mi() {
     : "";
   let Sa;
   if (os[9] !== $o.totalTokens || os[10] !== qd)
-    ((Sa = r(o, {
+    ((Sa = r(Box, {
       flexDirection: "row",
       marginTop: 1,
       children: [
         Qg,
-        r(t, { children: ["~", $o.totalTokens, " tok/turn", qd] }),
+        r(Text, { children: ["~", $o.totalTokens, " tok/turn", qd] }),
       ],
     })),
       (os[9] = $o.totalTokens),
@@ -3340,13 +3340,13 @@ function mi() {
   else Sa = os[11];
   let Zg;
   if (os[12] !== ya || os[13] !== Sa)
-    ((Zg = r(o, {
+    ((Zg = r(Box, {
       flexDirection: "column",
       marginTop: 1,
       children: [
         Xg,
         Jg,
-        r(o, { flexDirection: "column", marginTop: 1, children: [ya, Sa] }),
+        r(Box, { flexDirection: "column", marginTop: 1, children: [ya, Sa] }),
       ],
     })),
       (os[12] = ya),
@@ -3426,10 +3426,10 @@ function el(CD) {
   let un = _(14),
     { maxWidth: ns } = CD,
     { storageV5: Zd } = useStorageV5Context(),
-    [rs] = d(Ble),
+    [rs] = d(getUsagePatternsAccess),
     ih;
   if (un[0] !== Zd || un[1] !== rs.allowed)
-    ((ih = () => (rs.allowed ? a3e(Zd).catch(Ih) : null)),
+    ((ih = () => (rs.allowed ? collectRecentUsageSummary(Zd).catch(Ih) : null)),
       (un[0] = Zd),
       (un[1] = rs.allowed),
       (un[2] = ih));
@@ -3442,15 +3442,15 @@ function el(CD) {
     const as = rs.allowed ? null : rs.reason;
     let mn;
     if (un[4] !== as)
-      ((mn = e(t, { dimColor: !0, wrap: "wrap", children: as })),
+      ((mn = e(Text, { dimColor: !0, wrap: "wrap", children: as })),
         (un[4] = as),
         (un[5] = mn));
     else mn = un[5];
     let rh;
     if (un[6] !== ns || un[7] !== mn)
-      ((rh = r(o, {
+      ((rh = r(Box, {
         flexDirection: "column",
-        children: [pi, e(o, { marginTop: 1, width: ns, children: mn })],
+        children: [pi, e(Box, { marginTop: 1, width: ns, children: mn })],
       })),
         (un[6] = ns),
         (un[7] = mn),
@@ -3463,13 +3463,13 @@ function el(CD) {
   else pi = un[9];
   let as;
   if (un[10] === MEMO_CACHE_SENTINEL)
-    ((as = r(o, {
+    ((as = r(Box, {
       flexDirection: "column",
       children: [
         pi,
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             children: "Scanning local sessions\u2026",
           }),
@@ -3551,15 +3551,15 @@ function tl(DD) {
     Ea;
   if (Zt[7] !== Fo || Zt[8] !== Ca || Zt[9] !== nt) {
     let fh = Sn(nt);
-    ka = o;
+    ka = Box;
     Ea = "column";
     if (Zt[19] === MEMO_CACHE_SENTINEL) ((fi = e(Ho, {})), (Zt[19] = fi));
     else fi = Zt[19];
     const Uo = Ca === "day" ? "24h" : "7d";
     if (Zt[20] !== Uo)
-      ((hi = e(o, {
+      ((hi = e(Box, {
         marginTop: 1,
-        children: r(t, {
+        children: r(Text, {
           dimColor: !0,
           wrap: "wrap",
           children: [
@@ -3572,13 +3572,13 @@ function tl(DD) {
         (Zt[20] = Uo),
         (Zt[21] = hi));
     else hi = Zt[21];
-    wa = o;
+    wa = Box;
     Da = 1;
     Ta = "column";
     va = 1;
     xa =
       fh.length === 0 && !po(nt)
-        ? r(t, {
+        ? r(Text, {
             dimColor: !0,
             children: [
               "Nothing over ",
@@ -3620,14 +3620,14 @@ function tl(DD) {
                 body: "MCP tool results stay in context for the rest of the session. /compact to flush them, or disable servers you don't need.",
               }),
               !po(nt)
-                ? r(o, {
+                ? r(Box, {
                     flexDirection: "column",
                     children: [
-                      e(t, {
+                      e(Text, {
                         bold: !0,
                         children: "Skills, subagents, plugins, and MCP servers",
                       }),
-                      e(t, {
+                      e(Text, {
                         dimColor: !0,
                         wrap: "wrap",
                         children:
@@ -3686,9 +3686,9 @@ function tl(DD) {
   else Uo = Zt[27];
   let hh;
   if (Zt[28] === MEMO_CACHE_SENTINEL)
-    ((hh = e(o, {
+    ((hh = e(Box, {
       marginTop: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: r(DotSeparatedList, {
           children: [
@@ -3734,7 +3734,7 @@ function Ho(OD) {
     tm = Sh === void 0 ? !0 : Sh,
     bh;
   if (om[0] === MEMO_CACHE_SENTINEL)
-    ((bh = e(t, {
+    ((bh = e(Text, {
       bold: !0,
       wrap: "wrap",
       children: "What's contributing to your limits usage?",
@@ -3745,7 +3745,7 @@ function Ho(OD) {
   if (om[1] !== tm)
     ((Aa =
       tm &&
-      e(t, {
+      e(Text, {
         dimColor: !0,
         wrap: "wrap",
         children:
@@ -3756,7 +3756,7 @@ function Ho(OD) {
   else Aa = om[2];
   let Ch;
   if (om[3] !== Aa)
-    ((Ch = r(o, { flexDirection: "column", children: [bh, Aa] })),
+    ((Ch = r(Box, { flexDirection: "column", children: [bh, Aa] })),
       (om[3] = Aa),
       (om[4] = Ch));
   else Ch = om[4];
@@ -3772,18 +3772,18 @@ function eo(LD) {
   if (pn[0] !== ls || pn[1] !== Si || pn[2] !== yi) {
     let ND = Si.slice(0, fo);
     Ci = Si.length - fo;
-    Ra = o;
+    Ra = Box;
     Ia = "column";
     let uo;
     if (pn[8] !== yi)
-      ((uo = e(t, { children: yi })), (pn[8] = yi), (pn[9] = uo));
+      ((uo = e(Text, { children: yi })), (pn[8] = yi), (pn[9] = uo));
     else uo = pn[9];
     let wi;
     if (pn[10] === MEMO_CACHE_SENTINEL)
-      ((wi = e(t, { dimColor: !0, children: "% of usage" })), (pn[10] = wi));
+      ((wi = e(Text, { dimColor: !0, children: "% of usage" })), (pn[10] = wi));
     else wi = pn[10];
     if (pn[11] !== uo)
-      ((bi = r(o, {
+      ((bi = r(Box, {
         width: xi + Mi,
         justifyContent: "space-between",
         children: [uo, wi],
@@ -3795,21 +3795,21 @@ function eo(LD) {
     if (pn[13] !== ls)
       ((wh = (Pa) =>
         r(
-          o,
+          Box,
           {
             children: [
-              e(o, {
+              e(Box, {
                 width: xi,
-                children: e(t, {
+                children: e(Text, {
                   dimColor: !0,
                   wrap: "truncate-end",
                   children: ls ? ls(Pa.name) : Pa.name,
                 }),
               }),
-              e(o, {
+              e(Box, {
                 width: Mi,
                 justifyContent: "flex-end",
-                children: r(t, { dimColor: !0, children: [Pa.pct, "%"] }),
+                children: r(Text, { dimColor: !0, children: [Pa.pct, "%"] }),
               }),
             ],
           },
@@ -3831,7 +3831,7 @@ function eo(LD) {
   let uo;
   if (pn[15] !== Ci)
     ((uo =
-      Ci > 0 && r(t, { dimColor: !0, children: ["\u2026 ", Ci, " more"] })),
+      Ci > 0 && r(Text, { dimColor: !0, children: ["\u2026 ", Ci, " more"] })),
       (pn[15] = Ci),
       (pn[16] = uo));
   else uo = pn[16];
@@ -3892,14 +3892,14 @@ function ol(BD) {
     let FD = ki.slice(0, fo);
     Ti = ki.length - fo;
     let UD = new Date();
-    Oa = o;
+    Oa = Box;
     La = "column";
     let gn;
-    if (mo[8] === MEMO_CACHE_SENTINEL) ((gn = e(t, { children: "Loops" })), (mo[8] = gn));
+    if (mo[8] === MEMO_CACHE_SENTINEL) ((gn = e(Text, { children: "Loops" })), (mo[8] = gn));
     else gn = mo[8];
     let yn;
     if (mo[9] !== cs)
-      ((yn = e(o, { width: cs, children: gn })), (mo[9] = cs), (mo[10] = yn));
+      ((yn = e(Box, { width: cs, children: gn })), (mo[9] = cs), (mo[10] = yn));
     else yn = mo[10];
     let Dh, Th, vh;
     if (mo[11] === MEMO_CACHE_SENTINEL)
@@ -3921,19 +3921,19 @@ function ol(BD) {
       ((xh = e(Le, { width: fs, text: "last run" })), (mo[16] = xh));
     else xh = mo[16];
     if (mo[17] !== yn || mo[18] !== Ba)
-      ((Di = r(o, { children: [yn, Dh, Th, vh, Ba, xh] })),
+      ((Di = r(Box, { children: [yn, Dh, Th, vh, Ba, xh] })),
         (mo[17] = yn),
         (mo[18] = Ba),
         (mo[19] = Di));
     else Di = mo[19];
     Na = FD.map((Ft) =>
       r(
-        o,
+        Box,
         {
           children: [
-            e(o, {
+            e(Box, {
               width: cs,
-              children: e(t, {
+              children: e(Text, {
                 dimColor: !0,
                 wrap: "truncate-end",
                 children: Ft.prompt,
@@ -3974,7 +3974,7 @@ function ol(BD) {
   let gn;
   if (mo[20] !== Ti)
     ((gn =
-      Ti > 0 && r(t, { dimColor: !0, children: ["\u2026 ", Ti, " more"] })),
+      Ti > 0 && r(Text, { dimColor: !0, children: ["\u2026 ", Ti, " more"] })),
       (mo[20] = Ti),
       (mo[21] = gn));
   else gn = mo[21];
@@ -4001,13 +4001,13 @@ function Le(WD) {
     { width: nm, text: sm } = WD,
     $a;
   if (Mh[0] !== sm)
-    (($a = e(t, { dimColor: !0, wrap: "truncate-end", children: sm })),
+    (($a = e(Text, { dimColor: !0, wrap: "truncate-end", children: sm })),
       (Mh[0] = sm),
       (Mh[1] = $a));
   else $a = Mh[1];
   let Eh;
   if (Mh[2] !== $a || Mh[3] !== nm)
-    ((Eh = e(o, { width: nm, justifyContent: "flex-end", children: $a })),
+    ((Eh = e(Box, { width: nm, justifyContent: "flex-end", children: $a })),
       (Mh[2] = $a),
       (Mh[3] = nm),
       (Mh[4] = Eh));
@@ -4030,20 +4030,20 @@ function to(jD) {
   else Ua = Fa[3];
   let Wa;
   if (Fa[4] !== Ua)
-    ((Wa = e(t, { wrap: "wrap", children: Ua })), (Fa[4] = Ua), (Fa[5] = Wa));
+    ((Wa = e(Text, { wrap: "wrap", children: Ua })), (Fa[4] = Ua), (Fa[5] = Wa));
   else Wa = Fa[5];
   let ja;
   if (Fa[6] !== am)
-    ((ja = e(o, {
+    ((ja = e(Box, {
       paddingLeft: 1,
-      children: e(t, { dimColor: !0, wrap: "wrap", children: am }),
+      children: e(Text, { dimColor: !0, wrap: "wrap", children: am }),
     })),
       (Fa[6] = am),
       (Fa[7] = ja));
   else ja = Fa[7];
   let Ah;
   if (Fa[8] !== im || Fa[9] !== Wa || Fa[10] !== ja)
-    ((Ah = r(o, { flexDirection: "column", width: im, children: [Wa, ja] })),
+    ((Ah = r(Box, { flexDirection: "column", width: im, children: [Wa, ja] })),
       (Fa[8] = im),
       (Fa[9] = Wa),
       (Fa[10] = ja),
@@ -4063,10 +4063,10 @@ function nl(HD) {
     Ja;
   if (Ga[0] !== cm || Ga[1] !== us || Ga[2] !== Ha.cost || Ga[3] !== lm) {
     let GD = Math.round((Ha.cost / lm) * 100);
-    za = o;
+    za = Box;
     Xa = "column";
     Ja = cm;
-    Ka = t;
+    Ka = Text;
     Ya = "wrap";
     qa = us.headline(GD);
     ((Ga[0] = cm),
@@ -4096,9 +4096,9 @@ function nl(HD) {
   else Qa = Ga[13];
   let Za;
   if (Ga[14] !== us.body)
-    ((Za = e(o, {
+    ((Za = e(Box, {
       paddingLeft: 1,
-      children: e(t, { dimColor: !0, wrap: "wrap", children: us.body }),
+      children: e(Text, { dimColor: !0, wrap: "wrap", children: us.body }),
     })),
       (Ga[14] = us.body),
       (Ga[15] = Za));
@@ -4170,7 +4170,7 @@ function so(w0) {
   if (sl >= 62) {
     let wt;
     if (st[4] !== ys)
-      ((wt = e(t, { bold: !0, children: ys })), (st[4] = ys), (st[5] = wt));
+      ((wt = e(Text, { bold: !0, children: ys })), (st[4] = ys), (st[5] = wt));
     else wt = st[5];
     const Vo = il / 100;
     let go;
@@ -4186,18 +4186,18 @@ function so(w0) {
     else go = st[7];
     let ho;
     if (st[8] !== bs)
-      ((ho = e(t, { children: bs })), (st[8] = bs), (st[9] = ho));
+      ((ho = e(Text, { children: bs })), (st[8] = bs), (st[9] = ho));
     else ho = st[9];
     let Go;
     if (st[10] !== go || st[11] !== ho)
-      ((Go = r(o, { flexDirection: "row", gap: 1, children: [go, ho] })),
+      ((Go = r(Box, { flexDirection: "row", gap: 1, children: [go, ho] })),
         (st[10] = go),
         (st[11] = ho),
         (st[12] = Go));
     else Go = st[12];
     let So;
     if (st[13] !== lt)
-      ((So = lt && e(t, { dimColor: !0, children: lt })),
+      ((So = lt && e(Text, { dimColor: !0, children: lt })),
         (st[13] = lt),
         (st[14] = So));
     else So = st[14];
@@ -4207,7 +4207,7 @@ function so(w0) {
     else bo = st[16];
     let Ai;
     if (st[17] !== wt || st[18] !== Go || st[19] !== So || st[20] !== bo)
-      ((Ai = r(o, {
+      ((Ai = r(Box, {
         flexDirection: "column",
         flexShrink: 0,
         children: [wt, Go, So, bo],
@@ -4222,7 +4222,7 @@ function so(w0) {
   } else {
     let wt;
     if (st[22] !== ys)
-      ((wt = e(t, { bold: !0, children: ys })), (st[22] = ys), (st[23] = wt));
+      ((wt = e(Text, { bold: !0, children: ys })), (st[22] = ys), (st[23] = wt));
     else wt = st[23];
     let Vo;
     if (st[24] !== lt)
@@ -4230,8 +4230,8 @@ function so(w0) {
         lt &&
         r(N, {
           children: [
-            e(t, { children: " " }),
-            r(t, { dimColor: !0, children: ["\xB7 ", lt] }),
+            e(Text, { children: " " }),
+            r(Text, { dimColor: !0, children: ["\xB7 ", lt] }),
           ],
         })),
         (st[24] = lt),
@@ -4239,7 +4239,7 @@ function so(w0) {
     else Vo = st[25];
     let go;
     if (st[26] !== wt || st[27] !== Vo)
-      ((go = r(t, { children: [wt, Vo] })),
+      ((go = r(Text, { children: [wt, Vo] })),
         (st[26] = wt),
         (st[27] = Vo),
         (st[28] = go));
@@ -4263,11 +4263,11 @@ function so(w0) {
     else So = st[33];
     let bo;
     if (st[34] !== bs)
-      ((bo = e(t, { children: bs })), (st[34] = bs), (st[35] = bo));
+      ((bo = e(Text, { children: bs })), (st[34] = bs), (st[35] = bo));
     else bo = st[35];
     let Ai;
     if (st[36] !== go || st[37] !== ho || st[38] !== So || st[39] !== bo)
-      ((Ai = r(o, {
+      ((Ai = r(Box, {
         flexDirection: "column",
         flexShrink: 0,
         children: [go, ho, So, bo],
@@ -4283,7 +4283,7 @@ function so(w0) {
 }
 function _i({ lines: s }) {
   return (s ?? []).map((c, m) =>
-    e(t, { dimColor: !c.color, color: c.color, children: c.text }, m),
+    e(Text, { dimColor: !c.color, color: c.color, children: c.text }, m),
   );
 }
 function Pi() {
@@ -4309,10 +4309,10 @@ function Pi() {
   else ((jh = ll[2]), (Hh = ll[3]));
   let Vh;
   if (ll[4] !== al)
-    ((Vh = e(o, {
+    ((Vh = e(Box, {
       flexDirection: "column",
       width: "100%",
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         gap: 1,
         flexShrink: 0,
@@ -4323,7 +4323,7 @@ function Pi() {
             ? e(Ol, { maxWidth: al })
             : v0
               ? e($l, { maxWidth: al })
-              : e(t, {
+              : e(Text, {
                   dimColor: !0,
                   children: e(ActionKeybindingHint, {
                     action: "confirm:no",
@@ -4361,7 +4361,7 @@ function Ol(M0) {
         })
       : haveLimitsBeenObserved()
         ? null
-        : e(t, {
+        : e(Text, {
             dimColor: !0,
             children: "Spend limit \xB7 shown once your gateway reports one",
           })),
@@ -4370,7 +4370,7 @@ function Ol(M0) {
   else ul = cl[2];
   let Kh;
   if (cl[3] === MEMO_CACHE_SENTINEL)
-    ((Kh = e(t, {
+    ((Kh = e(Text, {
       dimColor: !0,
       children: e(ActionKeybindingHint, {
         action: "confirm:no",
@@ -4383,7 +4383,7 @@ function Ol(M0) {
   else Kh = cl[3];
   let zh;
   if (cl[4] !== ul)
-    ((zh = r(o, { flexDirection: "column", gap: 1, children: [ul, Kh] })),
+    ((zh = r(Box, { flexDirection: "column", gap: 1, children: [ul, Kh] })),
       (cl[4] = ul),
       (cl[5] = zh));
   else zh = cl[5];
@@ -4410,19 +4410,19 @@ function Ll(E0) {
   if (Ri[5] !== ml)
     ((fl = ml
       ? e(Dn, {
-          fallback: e(t, {
+          fallback: e(Text, {
             dimColor: !0,
             children: "Loading remote cost\u2026",
           }),
           children: e(Bl, { costPromise: ml }),
         })
-      : e(t, { dimColor: !0, children: A0 })),
+      : e(Text, { dimColor: !0, children: A0 })),
       (Ri[5] = ml),
       (Ri[6] = fl));
   else fl = Ri[6];
   let Xh;
   if (Ri[7] !== pl || Ri[8] !== fl)
-    ((Xh = r(o, { flexDirection: "column", gap: 1, children: [pl, fl] })),
+    ((Xh = r(Box, { flexDirection: "column", gap: 1, children: [pl, fl] })),
       (Ri[7] = pl),
       (Ri[8] = fl),
       (Ri[9] = Xh));
@@ -4435,7 +4435,7 @@ function Bl(R0) {
   const Cm = kn(I0);
   let Jh;
   if (_0[0] !== Cm)
-    ((Jh = e(t, { dimColor: !0, children: Cm })), (_0[0] = Cm), (_0[1] = Jh));
+    ((Jh = e(Text, { dimColor: !0, children: Cm })), (_0[0] = Cm), (_0[1] = Jh));
   else Jh = _0[1];
   return Jh;
 }
@@ -4598,13 +4598,13 @@ function $l(wm) {
   if ((useKeybinding("settings:retry", ly, cy), Ii)) {
     let oo;
     if ($e[16] !== Ii)
-      ((oo = r(t, { color: "error", children: ["Error: ", Ii] })),
+      ((oo = r(Text, { color: "error", children: ["Error: ", Ii] })),
         ($e[16] = Ii),
         ($e[17] = oo));
     else oo = $e[17];
     let no;
     if ($e[18] === MEMO_CACHE_SENTINEL)
-      ((no = e(t, {
+      ((no = e(Text, {
         dimColor: !0,
         children: r(DotSeparatedList, {
           children: [
@@ -4627,7 +4627,7 @@ function $l(wm) {
     else no = $e[18];
     let Cn;
     if ($e[19] !== oo)
-      ((Cn = r(o, { flexDirection: "column", gap: 1, children: [oo, no] })),
+      ((Cn = r(Box, { flexDirection: "column", gap: 1, children: [oo, no] })),
         ($e[19] = oo),
         ($e[20] = Cn));
     else Cn = $e[20];
@@ -4636,17 +4636,17 @@ function $l(wm) {
   if (!Oe) {
     let oo;
     if ($e[21] === MEMO_CACHE_SENTINEL)
-      ((oo = e(t, { dimColor: !0, children: "Loading usage data\u2026" })),
+      ((oo = e(Text, { dimColor: !0, children: "Loading usage data\u2026" })),
         ($e[21] = oo));
     else oo = $e[21];
     let no;
     if ($e[22] === MEMO_CACHE_SENTINEL)
-      ((no = r(o, {
+      ((no = r(Box, {
         flexDirection: "column",
         gap: 1,
         children: [
           oo,
-          e(t, {
+          e(Text, {
             dimColor: !0,
             children: e(ActionKeybindingHint, {
               action: "confirm:no",
@@ -4705,7 +4705,7 @@ function $l(wm) {
         : []),
       ...getModelWeeklyLimitRows(Oe.limits, getOverageIncludedModels()).map(Cy),
     ];
-    Sl = o;
+    Sl = Box;
     no = "column";
     Cn = 1;
     Cl = U0.map((ws) => {
@@ -4765,13 +4765,13 @@ function $l(wm) {
   else kl = $e[40];
   let Dl;
   if ($e[41] !== Ut)
-    ((Dl = Ut && e(t, { dimColor: !0, children: Ut })),
+    ((Dl = Ut && e(Text, { dimColor: !0, children: Ut })),
       ($e[41] = Ut),
       ($e[42] = Dl));
   else Dl = $e[42];
   let Tl;
   if ($e[43] !== Ut || $e[44] !== hl)
-    ((Tl = hl && !Ut && e(t, { dimColor: !0, children: "Refreshing\u2026" })),
+    ((Tl = hl && !Ut && e(Text, { dimColor: !0, children: "Refreshing\u2026" })),
       ($e[43] = Ut),
       ($e[44] = hl),
       ($e[45] = Tl));
@@ -4801,7 +4801,7 @@ function $l(wm) {
   else py = $e[48];
   let xl;
   if ($e[49] !== vl)
-    ((xl = e(t, { dimColor: !0, children: r(DotSeparatedList, { children: [vl, py] }) })),
+    ((xl = e(Text, { dimColor: !0, children: r(DotSeparatedList, { children: [vl, py] }) })),
       ($e[49] = vl),
       ($e[50] = xl));
   else xl = $e[50];
@@ -5141,7 +5141,7 @@ async function Ay(s) {
     };
   }
   if (c === "windows") {
-    let m = `Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::SetImage([System.Drawing.Image]::FromFile(${zNe(s, "the screenshot temp path (override with CLAUDE_CODE_TMPDIR)")}))`,
+    let m = `Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::SetImage([System.Drawing.Image]::FromFile(${quotePowerShellLiteral(s, "the screenshot temp path (override with CLAUDE_CODE_TMPDIR)")}))`,
       T = await execFileNoThrowWithCwd("powershell", ["-NoProfile", "-Command", m], {
         timeout: 5000,
       });
@@ -5249,22 +5249,22 @@ async function Wm(s) {
     let m;
     if (s !== void 0) {
       let v = await s.read([STORAGE_KEYS.state("stats-cache")]);
-      if (!v.ok) return (n(`Failed to load stats cache: ${We(v.error)}`), Mn());
+      if (!v.ok) return (logForDebugging(`Failed to load stats cache: ${describeStorageError(v.error)}`), Mn());
       if (!v.value.items[0].found)
-        return (n("Failed to load stats cache: not found"), Mn());
+        return (logForDebugging("Failed to load stats cache: not found"), Mn());
       m = Buffer.from(v.value.items[0].value).toString("utf8");
     } else m = await getFileStorage().read(c);
-    let T = z(m);
+    let T = jsonParse(m);
     if (T.version !== Ko) {
       let v = Oy(T);
       if (!v)
         return (
-          n(
+          logForDebugging(
             `Stats cache version ${T.version} not migratable (expected ${Ko}), returning empty cache`,
           ),
           Mn()
         );
-      n(`Migrated stats cache from v${T.version} to v${Ko}`);
+      logForDebugging(`Migrated stats cache from v${T.version} to v${Ko}`);
       let A = $m(v);
       return (await En(A, s), A);
     }
@@ -5275,28 +5275,28 @@ async function Wm(s) {
       typeof T.totalMessages !== "number"
     )
       return (
-        n("Stats cache has invalid structure, returning empty cache"),
+        logForDebugging("Stats cache has invalid structure, returning empty cache"),
         Mn()
       );
     return $m(T);
   } catch (m) {
-    return (n(`Failed to load stats cache: ${l(m)}`), Mn());
+    return (logForDebugging(`Failed to load stats cache: ${l(m)}`), Mn());
   }
 }
 async function En(s, c) {
   let m = Um();
   try {
-    let T = b(s, null, 2);
+    let T = jsonStringify(s, null, 2);
     if (c !== void 0) {
       let v = await c.write(STORAGE_KEYS.state("stats-cache"), T, {
         mode: 384,
         publishDiscipline: "atomic",
       });
       if (!v.ok) {
-        n(`Failed to save stats cache: ${We(v.error)}`, { level: "error" });
+        logForDebugging(`Failed to save stats cache: ${describeStorageError(v.error)}`, { level: "error" });
         return;
       }
-      n(
+      logForDebugging(
         `Stats cache saved successfully (lastComputedDate: ${s.lastComputedDate})`,
       );
       return;
@@ -5304,11 +5304,11 @@ async function En(s, c) {
     let R = getClaudeConfigDir();
     (await getFileStorage().mkdir(R),
       await getFileStorage().atomicWrite(m, T, 384),
-      n(
+      logForDebugging(
         `Stats cache saved successfully (lastComputedDate: ${s.lastComputedDate})`,
       ));
   } catch (T) {
-    n(`Failed to save stats cache: ${l(T)}`, { level: "error" });
+    logForDebugging(`Failed to save stats cache: ${l(T)}`, { level: "error" });
   }
 }
 function Wl(s, c, m) {
@@ -5488,7 +5488,7 @@ function $m(s) {
   }
   if (H === null)
     return (
-      n(
+      logForDebugging(
         `Stats cache has no usable date (lastComputedDate: ${String(s.lastComputedDate)}); resetting aggregates for a full rescan`,
       ),
       {
@@ -5523,7 +5523,7 @@ function vs(s) {
 }
 async function Ts(s, c = {}, m, T) {
   let { fromDate: R, toDate: v } = c,
-    A = ae(),
+    A = getFsSurface(),
     H = new Map(),
     B = new Map(),
     Y = [],
@@ -5560,7 +5560,7 @@ async function Ts(s, c = {}, m, T) {
     for (let { sessionFile: I, entries: X, error: J, skipped: me } of K) {
       if (me) continue;
       if (J || !X) {
-        n(`Failed to read session file ${I}: ${l(J)}`);
+        logForDebugging(`Failed to read session file ${I}: ${l(J)}`);
         continue;
       }
       let he = basename(I, ".jsonl"),
@@ -5575,7 +5575,7 @@ async function Ts(s, c = {}, m, T) {
         Et = new Date(ke.timestamp),
         mt = new Date(Xe.timestamp);
       if (isNaN(Et.getTime()) || isNaN(mt.getTime())) {
-        n(`Skipping session with invalid timestamp: ${I}`);
+        logForDebugging(`Skipping session with invalid timestamp: ${I}`);
         continue;
       }
       let Kt = vo(Et);
@@ -5629,7 +5629,7 @@ async function Ts(s, c = {}, m, T) {
           if (fe.message?.usage) {
             let ft = fe.message.usage,
               Ue = fe.message.model || "unknown";
-            if (Ue === fc || Bi(Ue)) continue;
+            if (Ue === SYNTHETIC_MODEL_NAME || Bi(Ue)) continue;
             if (!O[Ue])
               O[Ue] = {
                 inputTokens: 0,
@@ -5677,7 +5677,7 @@ async function Ts(s, c = {}, m, T) {
 async function zm(s) {
   let c = getProjectsDir();
   if (isHoverRestEnabled() && s !== void 0) return Fy(s, c);
-  let m = ae(),
+  let m = getFsSurface(),
     T;
   try {
     T = await m.readdir(c);
@@ -5715,7 +5715,7 @@ async function zm(s) {
               );
             return [...B, ...G.flat()];
           } catch (H) {
-            return (n(`Failed to read project directory ${A}: ${l(H)}`), []);
+            return (logForDebugging(`Failed to read project directory ${A}: ${l(H)}`), []);
           }
         }),
       )
@@ -5729,8 +5729,8 @@ async function Fy(s, c) {
       if (isValidPathSegment(G)) return !0;
       if (!T.has(G))
         (T.add(G),
-          n(
-            `stats: skipped listed transcript name ${b(G)}: not a single path segment`,
+          logForDebugging(
+            `stats: skipped listed transcript name ${jsonStringify(G)}: not a single path segment`,
           ));
       return !1;
     },
@@ -5791,16 +5791,16 @@ async function Fy(s, c) {
             );
           if (Q.status === "error")
             return (
-              n(
+              logForDebugging(
                 `Failed to read project directory ${j}: storage listing failed`,
               ),
               []
             );
           if (Q.status === "capped")
-            n(
+            logForDebugging(
               `stats: transcript listing of ${j} cut short at the page cap or budget; keeping what was listed`,
             );
-          let se = ae(),
+          let se = getFsSurface(),
             ce = await Promise.all(
               [...Z].map(async (K) => {
                 let I = Ao(j, K, "subagents");
@@ -5935,7 +5935,7 @@ async function jy(s) {
           A.lastComputedDate >= H &&
           A.lastComputedDate <= jl(H, Wy);
       if (Y)
-        n(
+        logForDebugging(
           `Stats watermark ${A.lastComputedDate} is ahead of ${H}; skipping the dailyModelTokens rebuild until the clock catches up`,
         );
       if ((A.dailyModelTokensVersion ?? 0) < $i && !Y) {
@@ -5945,7 +5945,7 @@ async function jy(s) {
               : A.lastComputedDate,
           O = [];
         if (j)
-          (n(`Rebuilding stats dailyModelTokens through ${j}`),
+          (logForDebugging(`Rebuilding stats dailyModelTokens through ${j}`),
             (O = (await Ts(c, { toDate: j }, s, m)).dailyModelTokens));
         ((A = {
           ...A,
@@ -5957,12 +5957,12 @@ async function jy(s) {
       }
       let G = A;
       if (!A.lastComputedDate) {
-        n("Stats cache empty, processing all historical data");
+        logForDebugging("Stats cache empty, processing all historical data");
         let j = await Ts(c, { toDate: B }, s, m);
         if (Km(j)) ((G = Wl(A, j, B)), await En(G, s));
       } else if (xo(A.lastComputedDate, B)) {
         let j = Vy(A.lastComputedDate);
-        n(`Stats cache stale (${A.lastComputedDate}), processing ${j} to ${B}`);
+        logForDebugging(`Stats cache stale (${A.lastComputedDate}), processing ${j} to ${B}`);
         let O = await Ts(c, { fromDate: j, toDate: B }, s, m);
         if (Km(O)) ((G = Wl(A, O, B)), await En(G, s));
         else ((G = { ...A, lastComputedDate: B }), await En(G, s));
@@ -6122,11 +6122,11 @@ function ES(dp) {
 }
 function RS(Sp, Vv) {
   return r(
-    t,
+    Text,
     {
       children: [
         Vv > 0 ? " \xB7 " : "",
-        e(jr, { children: Sp.coloredBullet }),
+        e(Ansi, { children: Sp.coloredBullet }),
         " ",
         Sp.model,
       ],
@@ -6192,11 +6192,11 @@ function er(Cv) {
   useKeybinding("confirm:no", zy, Yy);
   let qy;
   if (An[7] === MEMO_CACHE_SENTINEL)
-    ((qy = r(o, {
+    ((qy = r(Box, {
       marginTop: 1,
       children: [
-        e(yo, {}),
-        e(t, { children: " Loading your Claude Code stats\u2026" }),
+        e(SpinnerGlyph, {}),
+        e(Text, { children: " Loading your Claude Code stats\u2026" }),
       ],
     })),
       (An[7] = qy));
@@ -6213,7 +6213,7 @@ function er(Cv) {
   else Hl = An[10];
   let Xy;
   if (An[11] !== ep || An[12] !== Hl)
-    ((Xy = e(o, { flexDirection: "column", minHeight: ep, children: Hl })),
+    ((Xy = e(Box, { flexDirection: "column", minHeight: ep, children: Hl })),
       (An[11] = ep),
       (An[12] = Hl),
       (An[13] = Xy));
@@ -6304,7 +6304,7 @@ function mu(kv) {
   if (jt.type === "error") {
     let ht;
     if (it[14] !== jt.message)
-      ((ht = r(t, {
+      ((ht = r(Text, {
         color: "error",
         children: ["Failed to load stats: ", jt.message],
       })),
@@ -6313,7 +6313,7 @@ function mu(kv) {
     else ht = it[15];
     let yt;
     if (it[16] !== ut || it[17] !== ht)
-      ((yt = e(o, {
+      ((yt = e(Box, {
         marginTop: 1,
         tabIndex: 0,
         autoFocus: !0,
@@ -6329,7 +6329,7 @@ function mu(kv) {
   if (jt.type === "empty") {
     let ht;
     if (it[19] === MEMO_CACHE_SENTINEL)
-      ((ht = e(t, {
+      ((ht = e(Text, {
         color: "warning",
         children: "No stats available yet. Start using Claude Code!",
       })),
@@ -6337,7 +6337,7 @@ function mu(kv) {
     else ht = it[19];
     let yt;
     if (it[20] !== ut)
-      ((yt = e(o, {
+      ((yt = e(Box, {
         marginTop: 1,
         tabIndex: 0,
         autoFocus: !0,
@@ -6352,14 +6352,14 @@ function mu(kv) {
   if (!Ht || !Vl) {
     let ht, yt;
     if (it[22] === MEMO_CACHE_SENTINEL)
-      ((ht = e(yo, {})),
-        (yt = e(t, { children: " Loading stats\u2026" })),
+      ((ht = e(SpinnerGlyph, {})),
+        (yt = e(Text, { children: " Loading stats\u2026" })),
         (it[22] = ht),
         (it[23] = yt));
     else ((ht = it[22]), (yt = it[23]));
     let Rn;
     if (it[24] !== ut)
-      ((Rn = r(o, {
+      ((Rn = r(Box, {
         marginTop: 1,
         tabIndex: 0,
         autoFocus: !0,
@@ -6415,7 +6415,7 @@ function mu(kv) {
   else Rn = it[37];
   let Kl;
   if (it[38] !== Rs || it[39] !== Gl || it[40] !== yt || it[41] !== Rn)
-    ((Kl = e(o, {
+    ((Kl = e(Box, {
       flexDirection: "row",
       gap: 1,
       marginBottom: 1,
@@ -6439,9 +6439,9 @@ function mu(kv) {
     ip = tS ? ` \xB7 ${tS}` : "";
   let zl;
   if (it[43] !== sp || it[44] !== ip)
-    ((zl = e(o, {
+    ((zl = e(Box, {
       paddingLeft: 2,
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [sp, " \xB7 r to cycle dates \xB7 ctrl+s to copy", ip],
       }),
@@ -6452,7 +6452,7 @@ function mu(kv) {
   else zl = it[45];
   let iS;
   if (it[46] !== ut || it[47] !== zl || it[48] !== Kl)
-    ((iS = r(o, {
+    ((iS = r(Box, {
       flexDirection: "column",
       tabIndex: 0,
       autoFocus: !0,
@@ -6473,13 +6473,13 @@ function Bs(Pv) {
   if (Yl[0] !== rp)
     ((ql = Ns.map((Xl, Ov) =>
       r(
-        t,
+        Text,
         {
           children: [
-            Ov > 0 && e(t, { dimColor: !0, children: " \xB7 " }),
+            Ov > 0 && e(Text, { dimColor: !0, children: " \xB7 " }),
             Xl === rp
-              ? e(t, { bold: !0, color: "claude", children: Zi[Xl] })
-              : e(t, { dimColor: !0, children: Zi[Xl] }),
+              ? e(Text, { bold: !0, color: "claude", children: Zi[Xl] })
+              : e(Text, { dimColor: !0, children: Zi[Xl] }),
           ],
         },
         Xl,
@@ -6489,14 +6489,14 @@ function Bs(Pv) {
       (Yl[1] = ql));
   else ql = Yl[1];
   let Jl;
-  if (Yl[2] !== ql) ((Jl = e(o, { children: ql })), (Yl[2] = ql), (Yl[3] = Jl));
+  if (Yl[2] !== ql) ((Jl = e(Box, { children: ql })), (Yl[2] = ql), (Yl[3] = Jl));
   else Jl = Yl[3];
   let Ql;
-  if (Yl[4] !== lp) ((Ql = lp && e(yo, {})), (Yl[4] = lp), (Yl[5] = Ql));
+  if (Yl[4] !== lp) ((Ql = lp && e(SpinnerGlyph, {})), (Yl[4] = lp), (Yl[5] = Ql));
   else Ql = Yl[5];
   let rS;
   if (Yl[6] !== Jl || Yl[7] !== Ql)
-    ((rS = r(o, { marginBottom: 1, gap: 1, children: [Jl, Ql] })),
+    ((rS = r(Box, { marginBottom: 1, gap: 1, children: [Jl, Ql] })),
       (Yl[6] = Jl),
       (Yl[7] = Ql),
       (Yl[8] = rS));
@@ -6574,16 +6574,16 @@ function hu(Lv) {
     else On = Me[23];
     zi = On;
     nc = Zl === "7d" ? 7 : Zl === "30d" ? 30 : xe.totalDays;
-    oc = o;
+    oc = Box;
     dc = "column";
     mc = 1;
     if (Me[24] !== io.dailyActivity || Me[25] !== Ki)
       ((qi =
         io.dailyActivity.length > 0 &&
-        e(o, {
+        e(Box, {
           flexDirection: "column",
           marginBottom: 1,
-          children: e(jr, {
+          children: e(Ansi, {
             children: Li(io.dailyActivity, { terminalWidth: Ki }),
           }),
         })),
@@ -6597,21 +6597,21 @@ function hu(Lv) {
         (Me[28] = Hi),
         (Me[29] = Yi));
     else Yi = Me[29];
-    tc = o;
+    tc = Box;
     ac = "row";
     lc = 4;
     cc = 1;
-    ec = o;
+    ec = Box;
     sc = "column";
     ic = 28;
     rc =
       aS &&
-      r(t, {
+      r(Text, {
         wrap: "truncate",
         children: [
           "Favorite model:",
           " ",
-          e(t, { color: "claude", bold: !0, children: renderModelName(aS[0]) }),
+          e(Text, { color: "claude", bold: !0, children: renderModelName(aS[0]) }),
         ],
       });
     ((Me[0] = io.dailyActivity),
@@ -6667,15 +6667,15 @@ function hu(Lv) {
   else On = Me[36];
   let pc;
   if (Me[37] !== On)
-    ((pc = e(o, {
+    ((pc = e(Box, {
       flexDirection: "column",
       width: 28,
-      children: r(t, {
+      children: r(Text, {
         wrap: "truncate",
         children: [
           "Total tokens:",
           " ",
-          e(t, { color: "claude", children: On }),
+          e(Text, { color: "claude", children: On }),
         ],
       }),
     })),
@@ -6711,12 +6711,12 @@ function hu(Lv) {
   else hc = Me[47];
   let yc;
   if (Me[48] !== hc)
-    ((yc = e(o, {
+    ((yc = e(Box, {
       flexDirection: "column",
       width: 28,
-      children: r(t, {
+      children: r(Text, {
         wrap: "truncate",
-        children: ["Sessions:", " ", e(t, { color: "claude", children: hc })],
+        children: ["Sessions:", " ", e(Text, { color: "claude", children: hc })],
       }),
     })),
       (Me[48] = hc),
@@ -6726,12 +6726,12 @@ function hu(Lv) {
   if (Me[50] !== xe.longestSession)
     ((Sc =
       xe.longestSession &&
-      r(t, {
+      r(Text, {
         wrap: "truncate",
         children: [
           "Longest session:",
           " ",
-          e(t, { color: "claude", children: formatDuration(xe.longestSession.duration) }),
+          e(Text, { color: "claude", children: formatDuration(xe.longestSession.duration) }),
         ],
       })),
       (Me[50] = xe.longestSession),
@@ -6739,35 +6739,35 @@ function hu(Lv) {
   else Sc = Me[51];
   let bc;
   if (Me[52] !== Sc)
-    ((bc = e(o, { flexDirection: "column", width: 28, children: Sc })),
+    ((bc = e(Box, { flexDirection: "column", width: 28, children: Sc })),
       (Me[52] = Sc),
       (Me[53] = bc));
   else bc = Me[53];
   let Cc;
   if (Me[54] !== yc || Me[55] !== bc)
-    ((Cc = r(o, { flexDirection: "row", gap: 4, children: [yc, bc] })),
+    ((Cc = r(Box, { flexDirection: "row", gap: 4, children: [yc, bc] })),
       (Me[54] = yc),
       (Me[55] = bc),
       (Me[56] = Cc));
   else Cc = Me[56];
   let wc;
   if (Me[57] !== xe.activeDays)
-    ((wc = e(t, { color: "claude", children: xe.activeDays })),
+    ((wc = e(Text, { color: "claude", children: xe.activeDays })),
       (Me[57] = xe.activeDays),
       (Me[58] = wc));
   else wc = Me[58];
   let kc;
   if (Me[59] !== nc)
-    ((kc = r(t, { color: "subtle", children: ["/", nc] })),
+    ((kc = r(Text, { color: "subtle", children: ["/", nc] })),
       (Me[59] = nc),
       (Me[60] = kc));
   else kc = Me[60];
   let Dc;
   if (Me[61] !== wc || Me[62] !== kc)
-    ((Dc = e(o, {
+    ((Dc = e(Box, {
       flexDirection: "column",
       width: 28,
-      children: r(t, { wrap: "truncate", children: ["Active days: ", wc, kc] }),
+      children: r(Text, { wrap: "truncate", children: ["Active days: ", wc, kc] }),
     })),
       (Me[61] = wc),
       (Me[62] = kc),
@@ -6775,7 +6775,7 @@ function hu(Lv) {
   else Dc = Me[63];
   let Tc;
   if (Me[64] !== xe.streaks.longestStreak)
-    ((Tc = e(t, {
+    ((Tc = e(Text, {
       color: "claude",
       bold: !0,
       children: xe.streaks.longestStreak,
@@ -6786,10 +6786,10 @@ function hu(Lv) {
   const cp = xe.streaks.longestStreak === 1 ? "day" : "days";
   let vc;
   if (Me[66] !== Tc || Me[67] !== cp)
-    ((vc = e(o, {
+    ((vc = e(Box, {
       flexDirection: "column",
       width: 28,
-      children: r(t, {
+      children: r(Text, {
         wrap: "truncate",
         children: ["Longest streak:", " ", Tc, " ", cp],
       }),
@@ -6800,7 +6800,7 @@ function hu(Lv) {
   else vc = Me[68];
   let xc;
   if (Me[69] !== Dc || Me[70] !== vc)
-    ((xc = r(o, { flexDirection: "row", gap: 4, children: [Dc, vc] })),
+    ((xc = r(Box, { flexDirection: "row", gap: 4, children: [Dc, vc] })),
       (Me[69] = Dc),
       (Me[70] = vc),
       (Me[71] = xc));
@@ -6809,12 +6809,12 @@ function hu(Lv) {
   if (Me[72] !== xe.peakActivityDay)
     ((Mc =
       xe.peakActivityDay &&
-      r(t, {
+      r(Text, {
         wrap: "truncate",
         children: [
           "Most active day:",
           " ",
-          e(t, { color: "claude", children: du(xe.peakActivityDay) }),
+          e(Text, { color: "claude", children: du(xe.peakActivityDay) }),
         ],
       })),
       (Me[72] = xe.peakActivityDay),
@@ -6822,13 +6822,13 @@ function hu(Lv) {
   else Mc = Me[73];
   let Ec;
   if (Me[74] !== Mc)
-    ((Ec = e(o, { flexDirection: "column", width: 28, children: Mc })),
+    ((Ec = e(Box, { flexDirection: "column", width: 28, children: Mc })),
       (Me[74] = Mc),
       (Me[75] = Ec));
   else Ec = Me[75];
   let Ac;
   if (Me[76] !== io.streaks.currentStreak)
-    ((Ac = e(t, {
+    ((Ac = e(Text, {
       color: "claude",
       bold: !0,
       children: io.streaks.currentStreak,
@@ -6839,10 +6839,10 @@ function hu(Lv) {
   const up = io.streaks.currentStreak === 1 ? "day" : "days";
   let Rc;
   if (Me[78] !== Ac || Me[79] !== up)
-    ((Rc = e(o, {
+    ((Rc = e(Box, {
       flexDirection: "column",
       width: 28,
-      children: r(t, {
+      children: r(Text, {
         wrap: "truncate",
         children: ["Current streak:", " ", Ac, " ", up],
       }),
@@ -6853,7 +6853,7 @@ function hu(Lv) {
   else Rc = Me[80];
   let Ic;
   if (Me[81] !== Ec || Me[82] !== Rc)
-    ((Ic = r(o, { flexDirection: "row", gap: 4, children: [Ec, Rc] })),
+    ((Ic = r(Box, { flexDirection: "row", gap: 4, children: [Ec, Rc] })),
       (Me[81] = Ec),
       (Me[82] = Rc),
       (Me[83] = Ic));
@@ -6862,7 +6862,7 @@ function hu(Lv) {
   if (Me[84] !== xe.modelUsage || Me[85] !== In)
     ((_c =
       In > 0 &&
-      e(t, { color: "subtle", wrap: "truncate", children: pu(xe.modelUsage) })),
+      e(Text, { color: "subtle", wrap: "truncate", children: pu(xe.modelUsage) })),
       (Me[84] = xe.modelUsage),
       (Me[85] = In),
       (Me[86] = _c));
@@ -6873,42 +6873,42 @@ function hu(Lv) {
       null &&
       r(N, {
         children: [
-          e(o, {
+          e(Box, {
             marginTop: 1,
-            children: e(t, { children: "Shot distribution" }),
+            children: e(Text, { children: "Shot distribution" }),
           }),
-          r(o, {
+          r(Box, {
             flexDirection: "row",
             gap: 4,
             children: [
-              e(o, {
+              e(Box, {
                 flexDirection: "column",
                 width: 28,
-                children: r(t, {
+                children: r(Text, {
                   wrap: "truncate",
                   children: [
                     null.buckets[0].label,
                     ":",
                     " ",
-                    e(t, { color: "claude", children: null.buckets[0].count }),
-                    r(t, {
+                    e(Text, { color: "claude", children: null.buckets[0].count }),
+                    r(Text, {
                       color: "subtle",
                       children: [" (", null.buckets[0].pct, "%)"],
                     }),
                   ],
                 }),
               }),
-              e(o, {
+              e(Box, {
                 flexDirection: "column",
                 width: 28,
-                children: r(t, {
+                children: r(Text, {
                   wrap: "truncate",
                   children: [
                     null.buckets[1].label,
                     ":",
                     " ",
-                    e(t, { color: "claude", children: null.buckets[1].count }),
-                    r(t, {
+                    e(Text, { color: "claude", children: null.buckets[1].count }),
+                    r(Text, {
                       color: "subtle",
                       children: [" (", null.buckets[1].pct, "%)"],
                     }),
@@ -6917,38 +6917,38 @@ function hu(Lv) {
               }),
             ],
           }),
-          r(o, {
+          r(Box, {
             flexDirection: "row",
             gap: 4,
             children: [
-              e(o, {
+              e(Box, {
                 flexDirection: "column",
                 width: 28,
-                children: r(t, {
+                children: r(Text, {
                   wrap: "truncate",
                   children: [
                     null.buckets[2].label,
                     ":",
                     " ",
-                    e(t, { color: "claude", children: null.buckets[2].count }),
-                    r(t, {
+                    e(Text, { color: "claude", children: null.buckets[2].count }),
+                    r(Text, {
                       color: "subtle",
                       children: [" (", null.buckets[2].pct, "%)"],
                     }),
                   ],
                 }),
               }),
-              e(o, {
+              e(Box, {
                 flexDirection: "column",
                 width: 28,
-                children: r(t, {
+                children: r(Text, {
                   wrap: "truncate",
                   children: [
                     null.buckets[3].label,
                     ":",
                     " ",
-                    e(t, { color: "claude", children: null.buckets[3].count }),
-                    r(t, {
+                    e(Text, { color: "claude", children: null.buckets[3].count }),
+                    r(Text, {
                       color: "subtle",
                       children: [" (", null.buckets[3].pct, "%)"],
                     }),
@@ -6957,18 +6957,18 @@ function hu(Lv) {
               }),
             ],
           }),
-          e(o, {
+          e(Box, {
             flexDirection: "row",
             gap: 4,
-            children: e(o, {
+            children: e(Box, {
               flexDirection: "column",
               width: 28,
-              children: r(t, {
+              children: r(Text, {
                 wrap: "truncate",
                 children: [
                   "Avg/session:",
                   " ",
-                  e(t, { color: "claude", children: null.avgShots }),
+                  e(Text, { color: "claude", children: null.avgShots }),
                 ],
               }),
             }),
@@ -6981,9 +6981,9 @@ function hu(Lv) {
   if (Me[88] !== zi)
     ((Pc =
       zi &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: e(t, { color: "suggestion", children: zi }),
+        children: e(Text, { color: "suggestion", children: zi }),
       })),
       (Me[88] = zi),
       (Me[89] = Pc));
@@ -7148,8 +7148,8 @@ function Su(dp) {
       if (xt.length === 0) {
         let Io;
         if (Nn[29] === MEMO_CACHE_SENTINEL)
-          ((Io = e(o, {
-            children: e(t, {
+          ((Io = e(Box, {
+            children: e(Text, {
               color: "subtle",
               children: "No model usage data available",
             }),
@@ -7167,7 +7167,7 @@ function Su(dp) {
       $c = Tt > 0;
       Bc = Tt < xt.length - 4;
       Fc = xt.length > 4;
-      Nc = o;
+      Nc = Box;
       Xc = "column";
       Jc = 1;
       Qc = 0;
@@ -7175,14 +7175,14 @@ function Su(dp) {
       Hc = hp;
       Vc =
         eu &&
-        r(o, {
+        r(Box, {
           flexDirection: "column",
           marginBottom: 1,
           children: [
-            e(t, { bold: !0, children: "Tokens per Day" }),
-            e(jr, { children: eu.chart }),
-            e(t, { color: "subtle", children: eu.xAxisLabels }),
-            e(o, { children: eu.legend.map(RS) }),
+            e(Text, { bold: !0, children: "Tokens per Day" }),
+            e(Ansi, { children: eu.chart }),
+            e(Text, { color: "subtle", children: eu.xAxisLabels }),
+            e(Box, { children: eu.legend.map(RS) }),
           ],
         });
       if (Nn[30] !== Ji || Nn[31] !== Xi)
@@ -7191,10 +7191,10 @@ function Su(dp) {
           (Nn[31] = Xi),
           (Nn[32] = Qi));
       else Qi = Nn[32];
-      Lc = o;
+      Lc = Box;
       zc = "row";
       Yc = 4;
-      qc = e(o, {
+      qc = e(Box, {
         flexDirection: "column",
         width: 36,
         children: $v.map((Io) => {
@@ -7202,7 +7202,7 @@ function Su(dp) {
           return e(Ls, { model: pS, usage: Uv, totalTokens: dS }, pS);
         }),
       });
-      Oc = o;
+      Oc = Box;
       Wc = "column";
       Gc = 36;
       Kc = Fv.map((Os) => {
@@ -7297,9 +7297,9 @@ function Su(dp) {
   )
     ((Os =
       Fc &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: r(t, {
+        children: r(Text, {
           color: "subtle",
           children: [
             $c ? figures.arrowUp : " ",
@@ -7373,11 +7373,11 @@ function Ls(Gv) {
   else tu = Vt[4];
   let ou;
   if (Vt[5] !== tu)
-    ((ou = e(t, { bold: !0, children: tu })), (Vt[5] = tu), (Vt[6] = ou));
+    ((ou = e(Text, { bold: !0, children: tu })), (Vt[5] = tu), (Vt[6] = ou));
   else ou = Vt[6];
   let nu;
   if (Vt[7] !== wp)
-    ((nu = r(t, { color: "subtle", children: ["(", wp, "%)"] })),
+    ((nu = r(Text, { color: "subtle", children: ["(", wp, "%)"] })),
       (Vt[7] = wp),
       (Vt[8] = nu));
   else nu = Vt[8];
@@ -7398,7 +7398,7 @@ function Ls(Gv) {
   else ru = Vt[15];
   let au;
   if (Vt[16] !== iu || Vt[17] !== ru)
-    ((au = r(t, {
+    ((au = r(Text, {
       color: "subtle",
       wrap: "truncate",
       children: ["  ", "In: ", iu, " \xB7 Out:", " ", ru],
@@ -7412,13 +7412,13 @@ function Ls(Gv) {
   else cu = Vt[20];
   let uu;
   if (Vt[21] !== cu)
-    ((uu = r(t, { color: "subtle", wrap: "truncate", children: ["  ", cu] })),
+    ((uu = r(Text, { color: "subtle", wrap: "truncate", children: ["  ", cu] })),
       (Vt[21] = cu),
       (Vt[22] = uu));
   else uu = Vt[22];
   let yS;
   if (Vt[23] !== uu || Vt[24] !== su || Vt[25] !== au)
-    ((yS = r(o, { flexDirection: "column", children: [su, au, uu] })),
+    ((yS = r(Box, { flexDirection: "column", children: [su, au, uu] })),
       (Vt[23] = uu),
       (Vt[24] = su),
       (Vt[25] = au),
@@ -7439,7 +7439,7 @@ function bu(s, c, m) {
     for (let se of s) for (let ce = 0; ce < Q; ce++) A.push(se);
   }
   let H = resolveThemePalette(resolveSetting("theme", "dark").value),
-    B = [T3t(H.suggestion), T3t(H.success), T3t(H.warning)],
+    B = [getColorEscapePrefix(H.suggestion), getColorEscapePrefix(H.success), getColorEscapePrefix(H.warning)],
     Y = [],
     G = [],
     j = c.slice(0, 3),
@@ -7450,7 +7450,7 @@ function bu(s, c, m) {
       (Y.push(se),
         G.push({
           model: renderModelName(Q),
-          coloredBullet: jY(figures.bullet, O[(Y.length - 1) % O.length]),
+          coloredBullet: applyForegroundColor(figures.bullet, O[(Y.length - 1) % O.length]),
         }));
   }
   if (Y.length === 0) return null;
@@ -7501,7 +7501,7 @@ function DS(s, c, m) {
   while (T.length > 0 && stripAnsi(T.at(-1)).trim() === "") T.pop();
   if (T.length > 0) {
     let R = T.at(-1),
-      v = te(R),
+      v = getStringWidth(R),
       A = m === "Overview" ? 70 : 80,
       H = "/stats",
       B = Math.max(2, A - v - 6);
@@ -7513,7 +7513,7 @@ function DS(s, c, m) {
 function TS(s, c) {
   let m = [],
     T = resolveThemePalette(resolveSetting("theme", "dark").value),
-    R = (ce) => jY(ce, T.claude),
+    R = (ce) => applyForegroundColor(ce, T.claude),
     v = 18,
     A = 40,
     H = 18,

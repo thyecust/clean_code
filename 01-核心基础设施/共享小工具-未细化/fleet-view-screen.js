@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { isLaunchComposerEnabled } from "./agent-view-feature-gates.js";
-import { GSt } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
+import { isLightThemeName } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { getStoredThemeSetting, KillRingProvider } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AltScreenContainer } from "./alt-screen-container.js";
@@ -28,7 +28,7 @@ function resolveSurfaceBackground(t, o, n) {
     if (o === void 0) return;
     i = o;
   } else i = resolveThemeName(t);
-  return GSt(i) ? T.light : T.dark;
+  return isLightThemeName(i) ? T.light : T.dark;
 }
 function f() {
   let y = _(4),

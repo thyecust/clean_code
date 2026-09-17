@@ -12,11 +12,11 @@ import { CROSS_SESSION_MESSAGE_TAG } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSlackEntrypoint, isTeamsEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { extractMessageOrigin } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { MCP_SEND_MESSAGE_ORIGIN, SLACK_BOT_ORIGIN, HEARTH_AGENT_ORIGIN } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { N3t } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { detectImageMediaTypeFromBase64 } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, O, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var M = createLazyValue(() =>
   c({
@@ -158,7 +158,7 @@ function classifyInboundOrigin(e, r, t, a, d, o) {
   if (!l && r && N.has(r)) return p(t);
   if (t === MCP_SEND_MESSAGE_ORIGIN && a)
     return { kind: "task-notification", subkind: "peer-send-message" };
-  n(
+  logForDebugging(
     `[bridge] demoting unwrapped inbound message to peer origin: client_platform=${r || "(absent)"}`,
     { level: "warn" },
   );
@@ -303,7 +303,7 @@ function q(e) {
       a =
         typeof t.mediaType === "string" && t.mediaType
           ? t.mediaType
-          : N3t(r.source.data);
+          : detectImageMediaTypeFromBase64(r.source.data);
     return {
       ...r,
       source: { type: "base64", media_type: a, data: r.source.data },

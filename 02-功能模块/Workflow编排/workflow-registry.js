@@ -10,13 +10,13 @@
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { r8, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { testAndSetResolvedPath, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getOrCompute, getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { isSettingsSourceEnabled } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { parseWorkflowScript, isValidWorkflowScript } from "./workflow-script.js";
-import { vm, $t, MEt } from "../插件系统/chunk-7s6mt1vg.js";
+import { formatPluginError, getPluginRegistryState, clearPluginWorkflowsCache } from "../插件系统/plugin-system-core.js";
 import { readBoundedFileWithFs } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectDirsUpToHome, loadAllPluginsCacheOnly } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { MAX_WORKFLOW_SCRIPT_BYTES } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -31,7 +31,7 @@ function isWorkflowNameOnlyEnabled() {
 }
 import { join as F } from "path";
 async function _(o, s, t, i, d) {
-  let c = ae(),
+  let c = getFsSurface(),
     e;
   try {
     e = await c.readdir(o);
@@ -49,13 +49,13 @@ async function _(o, s, t, i, d) {
   ).filter((l) => l !== null);
 }
 async function v(o, s, t, i, d) {
-  let c = ae();
-  if (r8(c, o, d)) return null;
+  let c = getFsSurface();
+  if (testAndSetResolvedPath(c, o, d)) return null;
   try {
     let e = await readBoundedFileWithFs(c, o, MAX_WORKFLOW_SCRIPT_BYTES);
     if (e === null)
       return (
-        n(
+        logForDebugging(
           `Plugin workflow ${o}: not a regular file or exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes \u2014 skipping`,
           { level: "warn" },
         ),
@@ -64,7 +64,7 @@ async function v(o, s, t, i, d) {
     let r = parseWorkflowScript(e, { validateBody: !1 });
     if ("error" in r)
       return (
-        n(`Plugin workflow ${o} has invalid meta: ${r.error} \u2014 skipping`, {
+        logForDebugging(`Plugin workflow ${o} has invalid meta: ${r.error} \u2014 skipping`, {
           level: "warn",
         }),
         null
@@ -83,19 +83,19 @@ async function v(o, s, t, i, d) {
     };
   } catch (e) {
     return (
-      n(`Failed to load workflow from ${o}: ${e}`, { level: "error" }),
+      logForDebugging(`Failed to load workflow from ${o}: ${e}`, { level: "error" }),
       null
     );
   }
 }
 function P(o) {
-  let s = $t();
+  let s = getPluginRegistryState();
   return (
     (s.workflows ??= (async () => {
       let { enabled: t, errors: i } = await loadAllPluginsCacheOnly(o),
         d = [];
       if (i.length > 0)
-        n(`Plugin loading errors: ${i.map((e) => vm(e)).join(", ")}`);
+        logForDebugging(`Plugin loading errors: ${i.map((e) => formatPluginError(e)).join(", ")}`);
       let c = null;
       for (let e of t) {
         let r = new Set(),
@@ -104,12 +104,12 @@ function P(o) {
           try {
             let u = await _(e.workflowsPath, e.name, e.source, e.manifest, r);
             if ((d.push(...u), u.length > 0))
-              n(
+              logForDebugging(
                 `Loaded ${u.length} workflows from plugin ${e.name} default directory`,
               );
           } catch (u) {
             ((c = "plugin_load_workflows_dir_failed"),
-              n(
+              logForDebugging(
                 `Failed to load workflows from plugin ${e.name} default directory: ${u}`,
                 { level: "error" },
               ));
@@ -117,24 +117,24 @@ function P(o) {
         if (e.workflowsPaths)
           for (let u of e.workflowsPaths)
             try {
-              let p = await ae().stat(u);
+              let p = await getFsSurface().stat(u);
               if (p.isDirectory()) {
                 let w = await _(u, e.name, e.source, e.manifest, r);
                 if ((d.push(...w), w.length > 0))
-                  n(
+                  logForDebugging(
                     `Loaded ${w.length} workflows from plugin ${e.name} custom path: ${u}`,
                   );
               } else if (p.isFile() && u.endsWith(".js")) {
                 let w = await v(u, e.name, e.source, e.manifest, r);
                 if (w)
                   (d.push(w),
-                    n(
+                    logForDebugging(
                       `Loaded workflow from plugin ${e.name} custom file: ${u}`,
                     ));
               }
             } catch (m) {
               ((c = "plugin_load_workflows_path_failed"),
-                n(
+                logForDebugging(
                   `Failed to load workflows from plugin ${e.name} custom path ${u}: ${m}`,
                   { level: "error" },
                 ));
@@ -142,7 +142,7 @@ function P(o) {
         if (e.serverPluginId !== void 0)
           for (let u of d.slice(l)) u.serverPluginId = e.serverPluginId;
       }
-      if ((n(`Total plugin workflows loaded: ${d.length}`), c))
+      if ((logForDebugging(`Total plugin workflows loaded: ${d.length}`), c))
         logFeatureBad("plugin_load_workflows", c);
       else logFeatureOk("plugin_load_workflows");
       return d;
@@ -154,7 +154,7 @@ import { join as h } from "path";
 function W(o, s) {
   if (!s || isValidWorkflowScript(o.script)) return !0;
   return (
-    n(
+    logForDebugging(
       `Workflow ${o.filePath ?? o.name} (${o.source}) would override ${o.name} but does not parse \u2014 keeping the ${s.source} copy`,
       { level: "warn" },
     ),
@@ -179,7 +179,7 @@ async function T(o, s) {
   } catch (t) {
     if (Po(t))
       return (
-        n(`loadWorkflowsDir: project-dir walk failed: ${t.code}`, {
+        logForDebugging(`loadWorkflowsDir: project-dir walk failed: ${t.code}`, {
           level: "error",
         }),
         (s.walkFailed = !0),
@@ -190,7 +190,7 @@ async function T(o, s) {
 }
 async function D(o, s, t, i) {
   if (i !== void 0 && s === "userSettings") return M(i, o, t);
-  let d = ae(),
+  let d = getFsSurface(),
     c;
   try {
     c = await d.readdir(o);
@@ -214,7 +214,7 @@ async function D(o, s, t, i) {
         }
         if (u.byteLength > MAX_WORKFLOW_SCRIPT_BYTES)
           return (
-            n(`Workflow ${l} exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes \u2014 skipping`, {
+            logForDebugging(`Workflow ${l} exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes \u2014 skipping`, {
               level: "warn",
             }),
             t.skippedOversize++,
@@ -224,7 +224,7 @@ async function D(o, s, t, i) {
           p = parseWorkflowScript(m, { validateBody: !1 });
         if ("error" in p)
           return (
-            n(`Workflow ${l} has invalid meta: ${p.error} \u2014 skipping`, {
+            logForDebugging(`Workflow ${l} has invalid meta: ${p.error} \u2014 skipping`, {
               level: "warn",
             }),
             t.skippedInvalidMeta++,
@@ -274,7 +274,7 @@ async function M(o, s, t) {
     case "error":
       return [];
     case "capped":
-      (n(
+      (logForDebugging(
         `User workflows listing of ${s} truncated at ${DEFAULT_MAX_PAGES} pages \u2014 loading the ${i.length} workflow files seen`,
         { level: "warn" },
       ),
@@ -287,7 +287,7 @@ async function M(o, s, t) {
         let l = await o.read([{ key: e, offset: 0, length: MAX_WORKFLOW_SCRIPT_BYTES + 1 }]);
         if (!l.ok)
           return (
-            n(
+            logForDebugging(
               `Workflow ${h(s, r)} could not be read through the storage backend (${l.error.code}) \u2014 skipping`,
               { level: "warn" },
             ),
@@ -299,7 +299,7 @@ async function M(o, s, t) {
         let m = h(s, r);
         if (u.value.byteLength > MAX_WORKFLOW_SCRIPT_BYTES)
           return (
-            n(`Workflow ${m} exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes \u2014 skipping`, {
+            logForDebugging(`Workflow ${m} exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes \u2014 skipping`, {
               level: "warn",
             }),
             t.skippedOversize++,
@@ -309,7 +309,7 @@ async function M(o, s, t) {
           w = parseWorkflowScript(p, { validateBody: !1 });
         if ("error" in w)
           return (
-            n(`Workflow ${m} has invalid meta: ${w.error} \u2014 skipping`, {
+            logForDebugging(`Workflow ${m} has invalid meta: ${w.error} \u2014 skipping`, {
               level: "warn",
             }),
             t.skippedInvalidMeta++,
@@ -407,6 +407,6 @@ async function getWorkflowByName(o, s, t) {
   return (await getAllWorkflows(s, t)).find((d) => d.name === o);
 }
 function clearWorkflowCaches() {
-  (getHostStateStore().allWorkflows.clear(), MEt());
+  (getHostStateStore().allWorkflows.clear(), clearPluginWorkflowsCache());
 }
 export { REMOTE_WORKFLOW_SCRIPT_ENV, REMOTE_WORKFLOW_ARGS_ENV, WORKFLOW_NAME_ONLY_ENV, isWorkflowNameOnlyEnabled, getUserWorkflowsDir, getAllWorkflows, getWorkflowByName, clearWorkflowCaches };

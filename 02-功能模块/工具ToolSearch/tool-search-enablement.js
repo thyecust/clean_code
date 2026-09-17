@@ -12,9 +12,9 @@ import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isExperimentalBetasDisabled, isHipaaTaintActive, getFeatureValue_CACHED_MAY_BE_STALE, getCachedClientData } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getHostManagedToolSearchEnv, getAdminTierEnvValue } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { er, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { stripLongContextTags, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 function isModelVersionAtLeast(e, r) {
   let t = /^claude-([a-z]+)-(\d+(?:-\d+)*)$/.exec(e),
@@ -42,7 +42,7 @@ function u() {
     return e === void 0 || !p(e);
   } catch (e) {
     return (
-      n(`isToolSearchForceOverride: settings read failed: ${e}`, {
+      logForDebugging(`isToolSearchForceOverride: settings read failed: ${e}`, {
         level: "error",
       }),
       !1
@@ -65,7 +65,7 @@ function parseToolSearchAutoPercent(e) {
     t = parseConfigInteger(r);
   if (isNaN(t))
     return (
-      n(
+      logForDebugging(
         `Invalid ENABLE_TOOL_SEARCH value "${e}": expected auto:N where N is a number.`,
       ),
       null
@@ -96,7 +96,7 @@ var E = ["claude-3-5-haiku", "claude-3-haiku"],
   ];
 function isVertexModelUnsupportedForToolSearch(e) {
   if (getAPIProvider() !== "vertex") return !1;
-  let r = er(e).replace(/[@-]\d{8}$/, "");
+  let r = stripLongContextTags(e).replace(/[@-]\d{8}$/, "");
   if (/^claude-3(-|$)/.test(r)) return !0;
   return /^claude-(opus|sonnet|haiku)-\d/.test(r) && !isModelVersionAtLeast(r, _);
 }
@@ -147,20 +147,20 @@ function isToolSearchEnabled() {
   let e = getToolSearchMode();
   if (e === "standard") {
     if (getClaimRegistry().claim("tool_search_optimistic_decision"))
-      n(
+      logForDebugging(
         `[ToolSearch:optimistic] mode=${e}, ENABLE_TOOL_SEARCH=${a.ENABLE_TOOL_SEARCH}, result=false`,
       );
     return !1;
   }
   if (!a.ENABLE_TOOL_SEARCH && !u() && getAPIProvider() === "firstParty" && !isFirstPartyAnthropicBaseUrl()) {
     if (getClaimRegistry().claim("tool_search_optimistic_decision"))
-      n(
+      logForDebugging(
         `[ToolSearch:optimistic] disabled: ANTHROPIC_BASE_URL=${a.ANTHROPIC_BASE_URL} is not a first-party Anthropic host. Set ENABLE_TOOL_SEARCH=true (or auto / auto:N) if your proxy forwards tool_reference blocks.`,
       );
     return !1;
   }
   if (getClaimRegistry().claim("tool_search_optimistic_decision"))
-    n(
+    logForDebugging(
       `[ToolSearch:optimistic] mode=${e}, ENABLE_TOOL_SEARCH=${a.ENABLE_TOOL_SEARCH}, result=true`,
     );
   return !0;

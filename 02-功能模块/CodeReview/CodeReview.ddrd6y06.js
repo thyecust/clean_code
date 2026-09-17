@@ -16,7 +16,7 @@ import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l, Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -24,14 +24,14 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { GIT_HARDENED_ARGS, buildNonInteractiveGitEnv, GIT_SSH_HARDENING_ARGS, execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { gitExe, getBranch, getDefaultBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isGitHubHost, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { ERt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { isSamePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isDesktopHostEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { isNestedGitLabProject, detectCurrentRepositoryWithHost } from "../Git-Worktree/git-repository-detection.js";
 import { isPolicyAllowed, policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getBridgeEntitlementBlocker } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
-import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
+import { waitForPolicyLimitsToLoad } from "../策略限制(PolicyLimits)/policy-limits-client.js";
 import {
   getReviewBughunterConfig,
   getReviewCostNote,
@@ -87,7 +87,7 @@ function ce(r, t) {
 async function fe(r) {
   let t = a.CLAUDE_CODE_ULTRAREVIEW_PREFLIGHT_FIXTURE;
   if (t) {
-    let d = de().safeParse(z(t));
+    let d = de().safeParse(jsonParse(t));
     return d.success ? d.data : null;
   }
   try {
@@ -118,14 +118,14 @@ async function fe(r) {
     let e = de().safeParse(d.data);
     if (!e.success)
       return (
-        n(`fetchUltrareviewPreflight schema mismatch: ${e.error.message}`),
+        logForDebugging(`fetchUltrareviewPreflight schema mismatch: ${e.error.message}`),
         logFeatureSad("api_ultrareview_preflight", "schema_mismatch"),
         null
       );
     return (logFeatureOk("api_ultrareview_preflight"), e.data);
   } catch (d) {
     return (
-      n(`fetchUltrareviewPreflight failed: ${d}`),
+      logForDebugging(`fetchUltrareviewPreflight failed: ${d}`),
       logFeatureSad("api_ultrareview_preflight", "request_failed"),
       null
     );
@@ -256,7 +256,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       ]);
     if (I) {
       if (
-        (n(
+        (logForDebugging(
           `ultrareview: linked GitHub account access to ${c.owner}/${c.name}: ${I.verdict} (HTTP ${I.httpStatus ?? "none"})`,
         ),
         !d?.suppressOfferedRecoveryEvent)
@@ -295,7 +295,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     }
     if (V === 0 && j.trim())
       try {
-        let C = z(j),
+        let C = jsonParse(j),
           { maxFiles: F, maxLines: G } = getReviewDiffLimits(),
           U = C.additions + C.deletions;
         if (Number.isFinite(C.changedFiles) && Number.isFinite(U))
@@ -1125,7 +1125,7 @@ async function runUltrareviewHeadless(r, t) {
       { status: "error", message: "Ultrareview is currently unavailable." }
     );
   }
-  await b_();
+  await waitForPolicyLimitsToLoad();
   let d = policyDeniedReason("allow_remote_sessions", "Cloud sessions", "are");
   if (d) return { status: "error", message: d };
   let e = await precheckLaunchScope(r, t.invocation, {
@@ -1262,7 +1262,7 @@ function L() {
   try {
     let r = homedir();
     if (!r) return !1;
-    return ERt(zn(resolve(getCwd())), zn(resolve(r)));
+    return isSamePath(zn(resolve(getCwd())), zn(resolve(r)));
   } catch {
     return !1;
   }
@@ -1279,7 +1279,7 @@ async function $e(r, t, d) {
       return { verdict: w, httpStatus: p };
     })().catch(
       (w) => (
-        n(
+        logForDebugging(
           `ultrareview: linked-account access probe failed, treating as inconclusive: ${l(w)}`,
         ),
         e

@@ -10,7 +10,7 @@
 import { useFocusTrap } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { normalizeFullWidthDigits, normalizeIdeographicSpaces } from "../../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../react/react.zhnvc798.js";
-import { o, t, tn } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useIsScreenReaderEnabled } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useActiveOverlay } from "../../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { fOt, qB, Y8, qm, gOt, u9e, d9e } from "../../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { e, r } from "../../react/react.kwtapczy.js";
@@ -185,7 +185,7 @@ function Je(Vt) {
 function Qe() {}
 function lE(i) {
   let Re = _(12);
-  if (tn()) {
+  if (useIsScreenReaderEnabled()) {
     let J;
     if (
       Re[0] !== i.defaultValue ||
@@ -344,7 +344,7 @@ function he(gt) {
     w[29] !== a
   ) {
     let Ue = D.length.toString().length;
-    de = o;
+    de = Box;
     fe = "column";
     pe = He;
     if (w[37] !== p || w[38] !== a.handleKeyDown)
@@ -353,7 +353,7 @@ function he(gt) {
         (w[38] = a.handleKeyDown),
         (w[39] = Q));
     else Q = w[39];
-    ue = o;
+    ue = Box;
     me = "column";
     ce = a.visibleOptions.map((g, kt) => {
       let Ee = !p && a.focusedValue === g.value && !a.isSubmitFocused;
@@ -366,7 +366,7 @@ function he(gt) {
       if (g.type === "input") {
         let Ot = a.inputValues.get(g.value) || "";
         return e(
-          o,
+          Box,
           {
             gap: 1,
             children: e(Y8, {
@@ -393,7 +393,7 @@ function he(gt) {
               pastedContents: Ve,
               onRemoveImage: xe,
               extraChromeWidth: 4,
-              children: r(t, {
+              children: r(Text, {
                 color: ye ? "success" : void 0,
                 children: ["[", ye ? figures.tick : " ", "]", " "],
               }),
@@ -403,7 +403,7 @@ function he(gt) {
         );
       }
       return e(
-        o,
+        Box,
         {
           gap: 1,
           children: r(qB, {
@@ -414,12 +414,12 @@ function he(gt) {
             description: g.description,
             onClick: ae(g),
             children: [
-              !H && e(t, { dimColor: !0, children: `${Xe}.`.padEnd(Ue) }),
-              r(t, {
+              !H && e(Text, { dimColor: !0, children: `${Xe}.`.padEnd(Ue) }),
+              r(Text, {
                 color: ye ? "success" : void 0,
                 children: ["[", ye ? figures.tick : " ", "]"],
               }),
-              e(t, { color: Ee ? "suggestion" : void 0, children: g.label }),
+              e(Text, { color: Ee ? "suggestion" : void 0, children: g.label }),
             ],
           }),
         },
@@ -472,7 +472,7 @@ function he(gt) {
     ((ge =
       P &&
       R &&
-      r(o, {
+      r(Box, {
         marginTop: 0,
         gap: 1,
         onClick: p
@@ -487,13 +487,13 @@ function he(gt) {
         onMouseLeave: () => ze(!1),
         children: [
           !p && a.isSubmitFocused
-            ? e(t, { color: "suggestion", children: figures.pointer })
+            ? e(Text, { color: "suggestion", children: figures.pointer })
             : !p && Fe
-              ? e(t, { dimColor: !0, children: figures.pointer })
-              : e(t, { children: " " }),
-          e(o, {
+              ? e(Text, { dimColor: !0, children: figures.pointer })
+              : e(Text, { children: " " }),
+          e(Box, {
             marginLeft: 3,
-            children: e(t, {
+            children: e(Text, {
               color: !p && a.isSubmitFocused ? "suggestion" : void 0,
               bold: !0,
               children: P,

@@ -11,7 +11,7 @@ import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "./analytics-fields.js";
 import { isValidPathSegment } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
-import { ou, We } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getTelemetryCode, describeStorageError } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getJobDir } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 var a = new Set([
   "starting",
@@ -59,9 +59,9 @@ function s(e) {
 async function i(e, r) {
   let t = await e.ensureScope(r);
   if (!t.ok) {
-    let n = ou(t.error);
+    let n = getTelemetryCode(t.error);
     throw Object.assign(
-      new R(`job folder not made (${We(t.error)})`, "job folder not made"),
+      new R(`job folder not made (${describeStorageError(t.error)})`, "job folder not made"),
       n !== void 0 ? { code: n } : {},
     );
   }

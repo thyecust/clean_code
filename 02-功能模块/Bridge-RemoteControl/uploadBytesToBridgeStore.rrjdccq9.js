@@ -15,7 +15,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -50,7 +50,7 @@ function P(e) {
     .replaceAll('"', '\\"');
 }
 function o(e) {
-  n(`[brief:upload] ${e}`);
+  logForDebugging(`[brief:upload] ${e}`);
 }
 function E(e) {
   if (getAPIProvider() !== "firstParty")
@@ -136,7 +136,7 @@ Content-Type: ${d}\r
     if (t.status !== 201)
       return (
         o(
-          `upload failed for ${r}: status=${t.status} body=${b(t.data).slice(0, 200)}`,
+          `upload failed for ${r}: status=${t.status} body=${jsonStringify(t.data).slice(0, 200)}`,
         ),
         logFeatureSad("bridge_attachment_upload", j(t.status), i),
         { error: `upload failed: server returned ${t.status}` }

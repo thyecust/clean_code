@@ -12,7 +12,7 @@
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { o, t, ct, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link, Newline } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { gracefulShutdownSync, isShuttingDown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -69,22 +69,22 @@ function BypassPermissionsModeDialog(T) {
   let G = k,
     B;
   if (s[5] === MEMO_CACHE_SENTINEL)
-    ((B = r(o, {
+    ((B = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "In Bypass Permissions mode, Claude Code will not ask for your approval before running potentially dangerous commands.",
-            e(zb, {}),
+            e(Newline, {}),
             "This mode should only be used in a sandboxed container/VM that has restricted internet access and can easily be restored if damaged.",
           ],
         }),
-        e(t, {
+        e(Text, {
           children:
             "By proceeding, you accept all responsibility for actions taken while running in Bypass Permissions mode.",
         }),
-        e(ct, { url: "https://code.claude.com/docs/en/security" }),
+        e(Link, { url: "https://code.claude.com/docs/en/security" }),
       ],
     })),
       (s[5] = B));

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeFileAtomic } from "../安全文件系统(FS加固)/atomic-file-write.js";
-import { b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { mkdir, readFile } from "fs/promises";
 import { dirname } from "path";
 function createJsonFileStore(e, f, c) {
@@ -33,17 +33,17 @@ function createJsonFileStore(e, f, c) {
     }
     let r;
     try {
-      r = z(t);
+      r = jsonParse(t);
     } catch (i) {
       return (
-        n(`jsonStore: ${e} is not valid JSON: ${i}`, { level: "warn" }),
+        logForDebugging(`jsonStore: ${e} is not valid JSON: ${i}`, { level: "warn" }),
         u()
       );
     }
     let o = f().safeParse(r);
     if (!o.success)
       return (
-        n(`jsonStore: ${e} failed schema validation: ${o.error.message}`, {
+        logForDebugging(`jsonStore: ${e} failed schema validation: ${o.error.message}`, {
           level: "warn",
         }),
         u()
@@ -54,7 +54,7 @@ function createJsonFileStore(e, f, c) {
     if (s !== !1)
       await mkdir(dirname(e), { recursive: !0, mode: s === !0 ? void 0 : s.mode });
     let r =
-      b(t, null, p) +
+      jsonStringify(t, null, p) +
       (w
         ? `
 `

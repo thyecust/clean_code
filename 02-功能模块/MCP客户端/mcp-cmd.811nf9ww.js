@@ -13,7 +13,7 @@ import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { mi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -21,13 +21,13 @@ import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { isConnectedMcpServer, parseMcpToolName, getMcpToolPrefix } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { REMOTE_DEVICES_MCP_SERVER_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { V$ } from "../插件系统/chunk-7s6mt1vg.js";
+import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { isValidCliNameToken } from "../插件系统/plugin-system-core.js";
 import { sanitizeDisplayTextWithoutRedaction, sanitizeDisplayText, isUnconfiguredMcpServer, ToolHostRegistry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../远程工具执行/chunk-66axrkvh.js";
+import "../远程工具执行/remote-tool-protocol.js";
 import "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
-import { gIe } from "../Bridge-RemoteControl/chunk-qp3gv3vk.js";
-import "../Bridge-RemoteControl/chunk-bm9p9vh6.js";
+import { refreshRemoteToolHosts } from "../Bridge-RemoteControl/device-bridge-remote-tools.js";
+import "../Bridge-RemoteControl/session-event-transport.js";
 import "../Bridge-RemoteControl/remote-session-host-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
@@ -95,7 +95,7 @@ async function Oe(t, c) {
       let v = c.toolState.get(ToolHostRegistry);
       if (
         (await Promise.race([
-          gIe(c, v, "resolve"),
+          refreshRemoteToolHosts(c, v, "resolve"),
           sleep(ee, c.abortController.signal),
         ]),
         !mayHaveRemoteClient(c.session))
@@ -309,7 +309,7 @@ function m(t) {
 }
 function W(t, c, g) {
   let r = `${t}${c}`;
-  return V$(g) && [...r].length <= 1024 ? r : t;
+  return isValidCliNameToken(g) && [...r].length <= 1024 ? r : t;
 }
 function s(t) {
   return { type: "text", value: t };
@@ -363,7 +363,7 @@ function re(t) {
   return `  ${_(m(t.serverName))}  ${_(oe[t.hostStatus])}  via ${REMOTE_DEVICES_MCP_SERVER_NAME}${X(t.toolCount)}`;
 }
 function _(t) {
-  return t + " ".repeat(Math.max(0, 28 - te(t)));
+  return t + " ".repeat(Math.max(0, 28 - getStringWidth(t)));
 }
 function X(t) {
   return t > 0 ? ` \xB7 ${t} ${pluralize(t, "tool")}` : "";
@@ -372,7 +372,7 @@ function z(t, c, g, r) {
   if (g instanceof mi) return s(sanitizeDisplayText(l(g), void 0, "none"));
   if (r.persistsOffBox)
     return (
-      n(`mcp ${t} refused for ${Qn(c)}: ${l(g)}`, { level: "error" }),
+      logForDebugging(`mcp ${t} refused for ${Qn(c)}: ${l(g)}`, { level: "error" }),
       s(
         `Couldn't ${t} "${m(c)}" (detail withheld on this connection). Run \`/mcp\` in the terminal to check.`,
       )

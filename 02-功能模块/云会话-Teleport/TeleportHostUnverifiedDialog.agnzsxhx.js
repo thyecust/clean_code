@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 142 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -83,11 +83,11 @@ function TeleportHostUnverifiedDialog(ie) {
     R = "background";
     let n;
     if (i[28] !== u)
-      ((n = r(t, {
+      ((n = r(Text, {
         children: [
           "Couldn't verify your git remote host (remote is",
           " ",
-          e(t, { bold: !0, children: u }),
+          e(Text, { bold: !0, children: u }),
           ").",
         ],
       })),
@@ -96,14 +96,14 @@ function TeleportHostUnverifiedDialog(ie) {
     else n = i[29];
     let s;
     if (i[30] !== f)
-      ((s = r(t, {
-        children: ["Proceed against ", e(t, { bold: !0, children: f }), "?"],
+      ((s = r(Text, {
+        children: ["Proceed against ", e(Text, { bold: !0, children: f }), "?"],
       })),
         (i[30] = f),
         (i[31] = s));
     else s = i[31];
     if (i[32] !== n || i[33] !== s)
-      ((h = r(o, { flexDirection: "column", gap: 1, children: [n, s] })),
+      ((h = r(Box, { flexDirection: "column", gap: 1, children: [n, s] })),
         (i[32] = n),
         (i[33] = s),
         (i[34] = h));

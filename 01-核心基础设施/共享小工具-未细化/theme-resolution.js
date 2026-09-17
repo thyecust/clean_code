@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { qSt, Nk, V8e } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
+import { isBuiltinThemeName, getThemePalette, mergeThemeOverrides } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { getThemeStore, getCustomThemeBase, getCachedCustomTheme, parseCustomThemeRef } from "../../02-功能模块/状态栏-主题/custom-themes.js";
 function resolveSystemTheme() {
   return getThemeStore().cachedSystemTheme() ?? s() ?? "dark";
@@ -27,15 +27,15 @@ function subscribeSystemThemeChange(e) {
 }
 function resolveThemeName(e) {
   if (e === "auto") return resolveSystemTheme();
-  if (qSt(e)) return e;
+  if (isBuiltinThemeName(e)) return e;
   let t = parseCustomThemeRef(e);
   return (t && getCustomThemeBase(t)) || "dark";
 }
 function resolveThemePalette(e) {
-  let t = Nk(resolveThemeName(e)),
+  let t = getThemePalette(resolveThemeName(e)),
     n = parseCustomThemeRef(e);
   if (!n) return t;
-  return V8e(t, getCachedCustomTheme(n)?.overrides);
+  return mergeThemeOverrides(t, getCachedCustomTheme(n)?.overrides);
 }
 function detectThemeFromColor(e) {
   let t = i(e);

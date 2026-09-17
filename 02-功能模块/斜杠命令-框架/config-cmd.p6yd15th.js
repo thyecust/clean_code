@@ -16,11 +16,11 @@ import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import "../Teammates团队/chunk-88ybhavr.js";
 import "../Teammates团队/backend-registry.js";
-import "../../01-核心基础设施/设置-配置/chunk-bznmdnc2.js";
+import "../../01-核心基础设施/设置-配置/settings-config-model.js";
 import { parseConfigShorthand, applyConfigShorthand, collapseShorthandResultOffBox, listConfigKeys } from "../Memory-CLAUDE.md/config-shorthand.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/设置-配置/fast-mode.js";
-import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import "../../01-核心基础设施/共享小工具-未细化/propose-goal-feature-gate.js";
 async function p(n, o) {
   let t = n.trim(),

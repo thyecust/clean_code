@@ -13,7 +13,7 @@ import { TB, EB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import "./chunk-w0pgmfvw.js";
+import "./workflow-tool-prompt.js";
 import { renderWorkflowAuthoringSkillBody } from "../../01-核心基础设施/共享小工具-未细化/workflow-authoring-skill.js";
 import { findSkillContentSource, createUserMessage, sliceFromLastCompactBoundary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";

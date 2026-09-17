@@ -40,16 +40,16 @@ import {
 import { MXt, Xxt, jc, drt, ke, gae, bHt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getEnabledSettingsSources, isSettingsSourceEnabled } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { isTopLevelCoworkSession, isVsCodeExtensionSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getPolicyHelperAppendSystemPrompt, getSettingsForSource, getInitialSettings, getEffectiveSettingSource, updateSettingsForSource, hasVouchedSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { normalizePermissionModeAlias, parsePermissionMode, clampPermissionMode, parsePermissionModeOrDefault } from "./chunk-e4pfvp7x.js";
-import { Xt, Qa, dm, getAPIProvider, getProviderForModel, hasFirstPartyCapabilities } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { strip1mSuffix, getCatalogEntryById, modelHasCapability, getAPIProvider, getProviderForModel, hasFirstPartyCapabilities } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { areWorkflowsEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
-function gnr(e, t, o) {
+function resolvePermissionModeForProactivityLevel(e, t, o) {
   switch (e) {
     case "ask":
       return t.isAutoModeAvailable ? "auto" : "default";
@@ -68,28 +68,28 @@ function gnr(e, t, o) {
       return t.isAutoModeAvailable ? "auto" : "acceptEdits";
   }
 }
-function Zoe(e, t) {
-  if (dm(e, "fable_5_mitigations", t) || e === "claude-mythos-5") return !0;
+function hasFable5Mitigations(e, t) {
+  if (modelHasCapability(e, "fable_5_mitigations", t) || e === "claude-mythos-5") return !0;
   return !1;
 }
-function WG(e) {
-  return !isTopLevelCoworkSession() && dm(e, "fable_5_1_prompt_bundle") === !0;
+function hasFable51PromptBundle(e) {
+  return !isTopLevelCoworkSession() && modelHasCapability(e, "fable_5_1_prompt_bundle") === !0;
 }
-function fve(e) {
+function isFableFamilyModel(e) {
   return e.startsWith("claude-fable-");
 }
-function mnr(e) {
+function isMythosFamilyModel(e) {
   return e.startsWith("claude-mythos-");
 }
 function o4t(e) {
   return !1;
 }
-var im = ["low", "medium", "high", "xhigh", "max"],
-  s4t = "Fable 5, Opus 4.7+, Sonnet 5",
-  wnr = "Fable 5, Opus 4.6+, Sonnet 4.6+",
-  GG =
+var EFFORT_LEVELS = ["low", "medium", "high", "xhigh", "max"],
+  XHIGH_CAPABLE_MODELS_LABEL = "Fable 5, Opus 4.7+, Sonnet 5",
+  MAX_CAPABLE_MODELS_LABEL = "Fable 5, Opus 4.6+, Sonnet 4.6+",
+  MAX_EFFORT_WARNING =
     "May use excessive tokens resulting in long response times or overthinking. Use sparingly for the hardest tasks.";
-function zh(e) {
+function modelSupportsEffort(e) {
   if (bHt(e)) return !1;
   let t = getModelCapabilityOverride(e, "effort");
   if (t !== void 0) return t;
@@ -106,10 +106,10 @@ function zh(e) {
   )
     return !1;
   if (a.CLAUDE_CODE_ALWAYS_ENABLE_EFFORT) return !0;
-  if (dm(o, "effort", e) || o === "claude-mythos-5") return !0;
+  if (modelHasCapability(o, "effort", e) || o === "claude-mythos-5") return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
-function FN(e) {
+function modelSupportsMaxEffort(e) {
   if (bHt(e)) return !1;
   let t = getModelCapabilityOverride(e, "max_effort");
   if (t !== void 0) return t;
@@ -126,10 +126,10 @@ function FN(e) {
     o === "claude-haiku-4-5"
   )
     return !1;
-  if (dm(o, "max_effort", e) || o === "claude-mythos-5") return !0;
+  if (modelHasCapability(o, "max_effort", e) || o === "claude-mythos-5") return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
-function i6(e) {
+function modelSupportsXHighEffort(e) {
   if (bHt(e)) return !1;
   let t = getModelCapabilityOverride(e, "xhigh_effort");
   if (t !== void 0) return t;
@@ -148,137 +148,137 @@ function i6(e) {
     o === "claude-haiku-4-5"
   )
     return !1;
-  if (dm(o, "xhigh_effort", e) || o === "claude-mythos-5") return !0;
+  if (modelHasCapability(o, "xhigh_effort", e) || o === "claude-mythos-5") return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
-function ib(e) {
-  return areWorkflowsEnabled() && (e === void 0 || (i6(e) && _me("xhigh", e)));
+function modelSupportsUltracode(e) {
+  return areWorkflowsEnabled() && (e === void 0 || (modelSupportsXHighEffort(e) && isEffortAllowedByOrg("xhigh", e)));
 }
-function mve(e) {
-  return Z$(FN(e) && _me("max", e) ? "max" : "high", e);
+function getUltracodeFallbackEffort(e) {
+  return clampEffortToOrgLimit(modelSupportsMaxEffort(e) && isEffortAllowedByOrg("max", e) ? "max" : "high", e);
 }
-function sA(e, t, o) {
-  return o === !0 && areWorkflowsEnabled() && MT(e, t) === "xhigh";
+function isUltracodeActive(e, t, o) {
+  return o === !0 && areWorkflowsEnabled() && resolveModelEffortLevel(e, t) === "xhigh";
 }
-function $C(e) {
-  return im.includes(e);
+function isValidEffortLevel(e) {
+  return EFFORT_LEVELS.includes(e);
 }
 function M(e) {
-  return im.indexOf(e);
+  return EFFORT_LEVELS.indexOf(e);
 }
-var VEt = "high";
-function Tnr(e) {
-  return $C(e) && M(e) > M(VEt);
+var HIGH_EFFORT_LEVEL = "high";
+function isAboveHighEffort(e) {
+  return isValidEffortLevel(e) && M(e) > M(HIGH_EFFORT_LEVEL);
 }
-function Enr(e) {
+function modelCapsEffortWhenThinkingDisabled(e) {
   let t = getCanonicalName(e);
-  return t === "claude-opus-5" || dm(t, "thinking_disabled_effort_cap") === !0;
+  return t === "claude-opus-5" || modelHasCapability(t, "thinking_disabled_effort_cap") === !0;
 }
-function HJe(e) {
+function getOrgMaxEffortLevelForModel(e) {
   let t = getAPIProvider();
   if (t !== "firstParty" && t !== "gateway") return null;
   let o = getCanonicalName(n0(e.trim().toLowerCase()), { identity: !0 }),
     r = getModelAccessCache().find(
       (u) => getCanonicalName(n0(u.apiName.trim().toLowerCase()), { identity: !0 }) === o,
     )?.maxEffortLevel;
-  return r != null && $C(r) ? r : null;
+  return r != null && isValidEffortLevel(r) ? r : null;
 }
-function gve(e) {
+function getOrgDefaultEffortLevelForModel(e) {
   if (getAPIProvider() !== "firstParty") return null;
   let t = getOrgModelDefaultCache();
   if (t === null) return null;
   let o = t.default_effort_level;
-  if (o == null || !$C(o)) return null;
+  if (o == null || !isValidEffortLevel(o)) return null;
   let r = getCanonicalName(n0(e.trim().toLowerCase()), { identity: !0 });
   return getCanonicalName(n0(t.name.trim().toLowerCase()), { identity: !0 }) === r ? o : null;
 }
-function _me(e, t) {
-  let o = HJe(t);
+function isEffortAllowedByOrg(e, t) {
+  let o = getOrgMaxEffortLevelForModel(t);
   return o === null || M(e) <= M(o);
 }
-function VK(e) {
-  return im.filter((t) => _me(t, e));
+function getAllowedEffortLevels(e) {
+  return EFFORT_LEVELS.filter((t) => isEffortAllowedByOrg(t, e));
 }
-function Z$(e, t) {
-  let o = HJe(t);
+function clampEffortToOrgLimit(e, t) {
+  let o = getOrgMaxEffortLevelForModel(t);
   return o !== null && M(e) > M(o) ? o : e;
 }
 function G(e, t) {
-  if (t === "xhigh") return i6(e);
-  if (t === "max") return FN(e);
+  if (t === "xhigh") return modelSupportsXHighEffort(e);
+  if (t === "max") return modelSupportsMaxEffort(e);
   return !0;
 }
-function Anr(e) {
-  let t = HJe(e);
-  return t !== null && im.some((o) => M(o) > M(t) && G(e, o));
+function isEffortCappedByOrg(e) {
+  let t = getOrgMaxEffortLevelForModel(e);
+  return t !== null && EFFORT_LEVELS.some((o) => M(o) > M(t) && G(e, o));
 }
-function Cnr(e, t) {
-  if (typeof e !== "string" || !$C(e)) return null;
-  let o = HJe(t);
+function getOrgEffortCapWarning(e, t) {
+  if (typeof e !== "string" || !isValidEffortLevel(e)) return null;
+  let o = getOrgMaxEffortLevelForModel(t);
   if (o === null || M(e) <= M(o)) return null;
-  let r = MT(t, e) ?? o;
+  let r = resolveModelEffortLevel(t, e) ?? o;
   return `Effort '${e}' exceeds your organization's limit for ${t}; using '${r}'.`;
 }
 var B = { med: "medium" },
   U = { ultracode: "xhigh" };
-function hve(e) {
+function normalizeUltracodeAlias(e) {
   if (typeof e !== "string") return;
   let t = e.trim().toLowerCase();
   return Object.hasOwn(U, t) ? t : void 0;
 }
-function h$e(e) {
-  let t = hve(e);
+function resolveUltracodeEffortLevel(e) {
+  let t = normalizeUltracodeAlias(e);
   return t === void 0 ? void 0 : U[t];
 }
-function $N(e) {
+function formatEffortLevel(e) {
   return String(e);
 }
-function _$e(e) {
+function parseEffortLevelAlias(e) {
   let t = e.trim().toLowerCase(),
     o = B[t] ?? t;
-  return $C(o) ? o : void 0;
+  return isValidEffortLevel(o) ? o : void 0;
 }
-function KEt(e) {
-  let t = _$e(e);
+function parseEffortArgValue(e) {
+  let t = parseEffortLevelAlias(e);
   if (t !== void 0) return { level: t, warning: void 0 };
-  let o = hve(e);
+  let o = normalizeUltracodeAlias(e);
   if (o !== void 0) return { level: o, warning: void 0 };
   return {
     level: void 0,
-    warning: `Unknown --effort value '${e}' \u2014 ignoring it and using the default effort. Valid values: ${im.join(", ")}.`,
+    warning: `Unknown --effort value '${e}' \u2014 ignoring it and using the default effort. Valid values: ${EFFORT_LEVELS.join(", ")}.`,
   };
 }
-function Xk(e) {
+function coerceEffortLevelValue(e) {
   if (e === void 0 || e === null || e === "") return;
   if (typeof e === "number" && V(e)) return e;
   let t = String(e).toLowerCase(),
     o = B[t] ?? t;
-  if ($C(o)) return o;
+  if (isValidEffortLevel(o)) return o;
   let r = parseInt(t, 10);
   if (!isNaN(r) && V(r)) return r;
   return;
 }
-function KK(e) {
+function toPersistableEffortLevel(e) {
   if (e === "low" || e === "medium" || e === "high" || e === "xhigh") return e;
   return;
 }
-function i4t(e) {
-  let t = getInitialSettings().ultracode === !0 || hve(e) === "ultracode";
+function isUltracodeRequestedAtStartup(e) {
+  let t = getInitialSettings().ultracode === !0 || normalizeUltracodeAlias(e) === "ultracode";
   if (t) Xxt();
   return t;
 }
-function VH() {
+function getEnvEffortLevelOverride() {
   let e = a.CLAUDE_CODE_EFFORT_LEVEL;
   return e?.toLowerCase() === "unset" || e?.toLowerCase() === "auto"
     ? null
-    : Xk(e);
+    : coerceEffortLevelValue(e);
 }
-function UN(e) {
+function isLaunchEffortPinned(e) {
   if (MXt()) return !1;
   let t = getCanonicalName(e);
   if (t.includes("opus-4-7")) return !getGlobalConfig().unpinOpus47LaunchEffort;
   if (t.includes("opus-4-8")) return !getGlobalConfig().unpinOpus48LaunchEffort;
-  if (Xt(t) === "claude-fable-5" || (isPinnedFableModel(e) && !fve(t)))
+  if (strip1mSuffix(t) === "claude-fable-5" || (isPinnedFableModel(e) && !isFableFamilyModel(t)))
     return !getGlobalConfig().unpinFable5LaunchEffort;
   return !1;
 }
@@ -292,16 +292,16 @@ function W() {
 }
 var N = Object.freeze({ kind: "inherit" }),
   K = Object.freeze({ kind: "default" });
-function Yk(e) {
+function createEffortLevel(e) {
   return { kind: "level", value: e };
 }
-function XK(e) {
-  return e === void 0 ? K : Yk(e);
+function createEffortLevelOrDefault(e) {
+  return e === void 0 ? K : createEffortLevel(e);
 }
 function z(e) {
-  return e === void 0 ? N : Yk(e);
+  return e === void 0 ? N : createEffortLevel(e);
 }
-function qG(e, t) {
+function isSameEffortSelection(e, t) {
   return (
     e === t ||
     (e.kind === t.kind &&
@@ -321,7 +321,7 @@ function X() {
       for (let [p, E] of Object.entries(s.modelSettings ?? {})) {
         let v = E?.effortLevel;
         if (v === void 0) continue;
-        let g = y$e(p);
+        let g = getModelSettingsKey(p);
         if (p === g || !l.has(g)) l.set(g, v);
       }
       return l;
@@ -333,11 +333,11 @@ function X() {
     for (let l = 0; l < o.length; l++) {
       let p = r[l].get(s);
       if (p !== void 0) {
-        d[s] = KK(p);
+        d[s] = toPersistableEffortLevel(p);
         break;
       }
       if (o[l].effortLevel !== void 0) {
-        d[s] = KK(o[l].effortLevel);
+        d[s] = toPersistableEffortLevel(o[l].effortLevel);
         break;
       }
     }
@@ -345,23 +345,23 @@ function X() {
 }
 function q(e, t) {
   if (t === void 0 || t === null) return e.default;
-  let o = y$e(t);
+  let o = getModelSettingsKey(t);
   return Object.hasOwn(e.byModel, o) ? e.byModel[o] : e.default;
 }
 function Q(e) {
   for (let t in e.byModel) return !0;
   return !1;
 }
-function y$e(e) {
-  return Xt(getCanonicalName(parseUserSpecifiedModel(e), { deterministic: !0, identity: !0 }));
+function getModelSettingsKey(e) {
+  return strip1mSuffix(getCanonicalName(parseUserSpecifiedModel(e), { deterministic: !0, identity: !0 }));
 }
 function Z(e, t) {
-  let o = y$e(e);
+  let o = getModelSettingsKey(e);
   return Object.hasOwn(Object.prototype, o)
     ? { effortLevel: t }
     : { modelSettings: { [o]: { effortLevel: t } } };
 }
-function Ya(e, t) {
+function getSessionEffortLevel(e, t) {
   let o = e.sessionEffort ?? N;
   switch (o.kind) {
     case "level":
@@ -377,12 +377,12 @@ function Ya(e, t) {
       );
   }
 }
-function _ve(e) {
+function getCarriableEffortLevel(e) {
   return e.kind === "level" && typeof e.value === "string" && (W() || MXt())
     ? e.value
     : void 0;
 }
-function iA(e) {
+function unpinLaunchEffortLevels(e) {
   saveGlobalConfig(
     (t) =>
       t.unpinOpus47LaunchEffort &&
@@ -399,92 +399,92 @@ function iA(e) {
   );
 }
 function ese(e, t) {
-  if (e) iA(t);
+  if (e) unpinLaunchEffortLevels(t);
   else if (!ke()) Xxt();
 }
-function MT(e, t, { honorLaunchPin: o = !0 } = {}) {
-  if (!zh(e)) return;
-  let r = o && UN(e),
+function resolveModelEffortLevel(e, t, { honorLaunchPin: o = !0 } = {}) {
+  if (!modelSupportsEffort(e)) return;
+  let r = o && isLaunchEffortPinned(e),
     u = D(e),
-    d = VH();
+    d = getEnvEffortLevelOverride();
   if (d === null && !r) return;
   return P(d ?? (r ? u : void 0) ?? t ?? u, e);
 }
-function XEt(e, t) {
-  if (!zh(e) || VH() !== void 0) return;
-  let o = UN(e);
+function resolveEffortLevelForRemoteSession(e, t) {
+  if (!modelSupportsEffort(e) || getEnvEffortLevelOverride() !== void 0) return;
+  let o = isLaunchEffortPinned(e);
   if (typeof t === "string" && !o) return t;
-  if ((t === void 0 || o) && gve(e)) return KH(e);
+  if ((t === void 0 || o) && getOrgDefaultEffortLevelForModel(e)) return getDefaultEffortLevelForModel(e);
   return;
 }
 function P(e, t) {
   let o = e;
-  if (typeof o === "string" && $C(o)) o = Z$(o, t);
-  if (o === "max" && !FN(t)) o = "high";
-  if (o === "xhigh" && !i6(t)) o = "high";
+  if (typeof o === "string" && isValidEffortLevel(o)) o = clampEffortToOrgLimit(o, t);
+  if (o === "max" && !modelSupportsMaxEffort(t)) o = "high";
+  if (o === "xhigh" && !modelSupportsXHighEffort(t)) o = "high";
   return o;
 }
-function KH(e) {
-  return eU(P(D(e), e));
+function getDefaultEffortLevelForModel(e) {
+  return sanitizeEffortLevel(P(D(e), e));
 }
-function tse(e, t, o, r, u) {
+function shouldConfirmEffortChangeOnWarmCache(e, t, o, r, u) {
   if (!u) return !1;
   let d = jc();
   if (d === 0 || d === r) return !1;
-  if (!zh(o)) return !1;
+  if (!modelSupportsEffort(o)) return !1;
   if (
-    typeof MT(o, e) !== "number" &&
-    typeof MT(o, t) !== "number" &&
+    typeof resolveModelEffortLevel(o, e) !== "number" &&
+    typeof resolveModelEffortLevel(o, t) !== "number" &&
     Err(o, getCanonicalName(o))
   )
     return !1;
-  if (UN(o)) {
+  if (isLaunchEffortPinned(o)) {
     if (e === void 0 || P(e, o) === P(D(o), o)) return !1;
-  } else if (MT(o, e) === MT(o, t)) return !1;
+  } else if (resolveModelEffortLevel(o, e) === resolveModelEffortLevel(o, t)) return !1;
   if (
     hasRemoteControlChannel() &&
     e !== void 0 &&
-    KK(typeof e === "string" ? Z$(e, o) : e) === void 0
+    toPersistableEffortLevel(typeof e === "string" ? clampEffortToOrgLimit(e, o) : e) === void 0
   )
     return !1;
   return !0;
 }
-async function a4t(e, t, o) {
+async function saveEffortLevelForModel(e, t, o) {
   return updateSettingsForSource("userSettings", Z(t, e), void 0, o);
 }
-async function zG(e, t, o = !0, r) {
-  let u = e !== void 0 ? KK(e) : void 0;
+async function applyEffortLevelChange(e, t, o = !0, r) {
+  let u = e !== void 0 ? toPersistableEffortLevel(e) : void 0;
   if (o && (e === void 0 || u !== void 0) && !getRemoteTransport()) {
-    let d = await a4t(u, t, r);
+    let d = await saveEffortLevelForModel(u, t, r);
     if (d.error) return d.error;
   }
   ese(o, r);
   return;
 }
-function S$e(e) {
+function buildInitialEffortState(e) {
   let t = A(e);
   if (t !== void 0) Xxt();
   let o = { sessionEffort: z(t), settingsEffortTable: X() };
   return (drt(o), o);
 }
-function NT(e, t) {
-  let o = MT(e, t) ?? "high";
-  return eU(o);
+function getModelEffortLevelOrDefault(e, t) {
+  let o = resolveModelEffortLevel(e, t) ?? "high";
+  return sanitizeEffortLevel(o);
 }
-function Xy(e, t) {
-  return zh(e) ? NT(e, t) : void 0;
+function getModelEffortLevelIfSupported(e, t) {
+  return modelSupportsEffort(e) ? getModelEffortLevelOrDefault(e, t) : void 0;
 }
-function IJe(e, t) {
+function formatEffortSuffix(e, t) {
   if (t === void 0) return "";
-  let o = MT(e, t);
+  let o = resolveModelEffortLevel(e, t);
   if (o === void 0) return "";
-  return ` with ${$N(eU(o))} effort`;
+  return ` with ${formatEffortLevel(sanitizeEffortLevel(o))} effort`;
 }
 function V(e) {
   return Number.isInteger(e);
 }
-function eU(e) {
-  if (typeof e === "string") return $C(e) ? e : "high";
+function sanitizeEffortLevel(e) {
+  if (typeof e === "string") return isValidEffortLevel(e) ? e : "high";
   return "high";
 }
 function te(e) {
@@ -496,12 +496,12 @@ function te(e) {
     case "high":
       return "Comprehensive implementation with extensive testing and documentation";
     case "xhigh":
-      return `Deeper reasoning than high, just below maximum (${s4t})`;
+      return `Deeper reasoning than high, just below maximum (${XHIGH_CAPABLE_MODELS_LABEL})`;
     case "max":
-      return `Maximum capability with deepest reasoning. ${GG}`;
+      return `Maximum capability with deepest reasoning. ${MAX_EFFORT_WARNING}`;
   }
 }
-function mAn(e) {
+function getEffortLevelDescription(e) {
   if (typeof e === "string") {
     let t = te(e);
     if (e === "high" && isProSubscriber() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_slate_finch", !1))
@@ -511,30 +511,30 @@ function mAn(e) {
   return "Balanced approach with standard implementation and testing";
 }
 function D(e) {
-  return gve(e) ?? ne(e) ?? oe(e);
+  return getOrgDefaultEffortLevelForModel(e) ?? ne(e) ?? oe(e);
 }
 function ne(e) {
   let t = getModelDefaultEffort(e, getCanonicalName(e));
-  return t !== void 0 && $C(t) ? t : void 0;
+  return t !== void 0 && isValidEffortLevel(t) ? t : void 0;
 }
 function oe(e) {
-  return Qa(getCanonicalName(e))?.default_effort ?? "high";
+  return getCatalogEntryById(getCanonicalName(e))?.default_effort ?? "high";
 }
 function A(e) {
-  return Xk(e) ?? h$e(e);
+  return coerceEffortLevelValue(e) ?? resolveUltracodeEffortLevel(e);
 }
 function I(e) {
   let t = A(e.cli.effort);
   if (t !== void 0) return t;
   if (e.settings.ultracode === !0) return "xhigh";
-  return KK(e.settings.effortLevel);
+  return toPersistableEffortLevel(e.settings.effortLevel);
 }
 function Y() {
   let { value: e, source: t } = getFeatureValueWithSource_CACHED_MAY_BE_STALE("tengu_auto_mode_config", {});
   if (e?.enabled !== "disabled") return !1;
   return t === "override" || t === "payload";
 }
-function fAn(e) {
+function resolvePermissionModeFromInputs(e) {
   let { cli: t, env: o, settings: r, agentFrontmatter: u } = e,
     d = normalizePermissionModeAlias(t.permissionMode),
     s = normalizePermissionModeAlias(t.inheritPermissionMode),
@@ -588,26 +588,26 @@ function fAn(e) {
   }
   if (p)
     if (p === "auto" && g)
-      n(
+      logForDebugging(
         "agent frontmatter requested auto mode but circuit breaker active \u2014 falling through",
         { level: "warn" },
       );
     else if (b && clampPermissionMode(p, b) === void 0)
-      (n(
+      (logForDebugging(
         `agent frontmatter permissionMode "${p}" ignored \u2014 it would widen the agent view's inherited mode (effective "${b}"), and the dispatched agent name is repo-controllable (settings \`agent\`)`,
         { level: "warn" },
       ),
         logEvent("tengu_agent_frontmatter_mode_widening_carry_ignored", {}));
     else c.push(p);
   if (isVsCodeExtensionSession()) {
-    let f = !GEt()
+    let f = !isAutoDefaultLaunchEnabled()
       ? void 0
       : T()
           .map((L) => normalizePermissionModeAlias(getSettingsForSource(L)?.permissions?.defaultMode))
           .find((L) => L != null);
     if (f != null && Ie(o.CLAUDE_CODE_REMOTE) && !w(f)) {
       if (
-        (n(
+        (logForDebugging(
           `settings defaultMode "${f}" is not supported in CLAUDE_CODE_REMOTE \u2014 only acceptEdits, plan, default, and auto are allowed`,
           { level: "warn" },
         ),
@@ -620,7 +620,7 @@ function fAn(e) {
       else if (c.length === 0)
         ((y =
           'Permission mode bypassPermissions from settings was ignored \u2014 enable the "Claude Code: Allow Dangerously Skip Permissions" setting in VS Code to consent to it'),
-          n(
+          logForDebugging(
             'settings defaultMode "bypassPermissions" ignored for a VS Code-owned session without the allow-bypass setting',
             { level: "warn" },
           ),
@@ -631,7 +631,7 @@ function fAn(e) {
     } else if (f === "auto")
       if (!g) c.push(f);
       else
-        n(
+        logForDebugging(
           'settings defaultMode "auto" ignored for the IDE session \u2014 auto-mode circuit breaker is active',
           { level: "warn" },
         );
@@ -639,7 +639,7 @@ function fAn(e) {
   } else if (r.permissions?.defaultMode) {
     let f = normalizePermissionModeAlias(r.permissions.defaultMode);
     if (Ie(o.CLAUDE_CODE_REMOTE) && !w(f))
-      (n(
+      (logForDebugging(
         `settings defaultMode "${f}" is not supported in CLAUDE_CODE_REMOTE \u2014 only acceptEdits, plan, default, and auto are allowed`,
         { level: "warn" },
       ),
@@ -647,7 +647,7 @@ function fAn(e) {
     else if (f === "bypassPermissions")
       if (!C("bypassPermissions")) {
         if (
-          (n(
+          (logForDebugging(
             'settings defaultMode "bypassPermissions" ignored \u2014 only policy/user/flag settings may grant bypass mode (projectSettings and localSettings are repo-controllable)',
             { level: "warn" },
           ),
@@ -661,20 +661,20 @@ function fAn(e) {
       } else c.push(f);
     else if (f !== "auto")
       if (b && !C(f) && clampPermissionMode(f, b) === void 0)
-        (n(
+        (logForDebugging(
           `settings defaultMode "${f}" ignored \u2014 it would widen the agent view's inherited mode (effective "${b}"), and only policy/user/flag settings may do that (projectSettings and localSettings are repo-controllable)`,
           { level: "warn" },
         ),
           logEvent("tengu_settings_mode_widening_carry_ignored", {}));
       else c.push(f);
     else if (!C("auto"))
-      (n(
+      (logForDebugging(
         'settings defaultMode "auto" ignored \u2014 only policy/user/flag settings may grant auto mode (projectSettings and localSettings are repo-controllable)',
         { level: "warn" },
       ),
         logEvent("tengu_settings_auto_mode_untrusted_source_ignored", {}));
     else if (g)
-      n(
+      logForDebugging(
         "auto mode killswitch active (override- or payload-served) \u2014 falling back to default",
         { level: "warn" },
       );
@@ -690,7 +690,7 @@ function fAn(e) {
   let S;
   for (let f of c) {
     if (f === "bypassPermissions" && v) {
-      (n("bypassPermissions mode is disabled by settings", { level: "warn" }),
+      (logForDebugging("bypassPermissions mode is disabled by settings", { level: "warn" }),
         (y = "Bypass permissions mode was disabled by settings"));
       continue;
     }
@@ -702,7 +702,7 @@ function fAn(e) {
     let f = "default";
     if (
       m &&
-      GEt() &&
+      isAutoDefaultLaunchEnabled() &&
       (!t.isNonInteractiveSession || isVsCodeExtensionSession() || getFeatureValue_CACHED_MAY_BE_STALE("tengu_moss_anchor", !1))
     )
       ((f = "auto"), (h = !0));
@@ -719,7 +719,7 @@ function fAn(e) {
     modeSuppliedOnInvocation: E,
   };
 }
-function hnr(e) {
+function resolveFallbackModels(e) {
   let t =
     e.cli.fallbackModel?.split(",") ??
     (Array.isArray(e.settings.fallbackModel)
@@ -810,7 +810,7 @@ function fe(e, t, o) {
   } else if (p) E();
   return e;
 }
-function _nr(e, t) {
+function resolveInitialModelSelection(e, t) {
   let { cli: o, env: r, settings: u, agentFrontmatter: d } = e,
     s = o.model === "default" ? getDefaultMainLoopModel() : o.model,
     l = s,
@@ -864,7 +864,7 @@ function _nr(e, t) {
     settingLayer: p,
   };
 }
-function ynr(e) {
+function resolveEffectiveSystemPrompts(e) {
   let t = e.cli.systemPrompt,
     o = e.cli.appendSystemPrompt,
     r = getPolicyHelperAppendSystemPrompt();
@@ -876,7 +876,7 @@ ${r}`
       : r;
   return { systemPrompt: t, appendSystemPrompt: o };
 }
-function GEt() {
+function isAutoDefaultLaunchEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_willow", !1) || getCachedClientDataStrict()?.meadow_lantern === !0;
 }
 var de = ["policySettings", "flagSettings", "userSettings"],
@@ -896,10 +896,10 @@ function J(e) {
     e.disableAutoMode === "disable"
   );
 }
-function xJe(e) {
+function isAutoModeSeedable(e) {
   return !J(e) && !Y();
 }
-function qEt(e) {
+function isTrustedPlanModeDisplaced(e) {
   return (
     T()
       .map((o) => normalizePermissionModeAlias(getSettingsForSource(o)?.permissions?.defaultMode))
@@ -911,9 +911,9 @@ function ue(e) {
   let t = normalizePermissionModeAlias(e.permissions?.defaultMode);
   if (t == null || !w(t)) return;
   if (t !== "auto") return t;
-  return C("auto") && xJe(e) ? "auto" : void 0;
+  return C("auto") && isAutoModeSeedable(e) ? "auto" : void 0;
 }
-function zEt({
+function buildPermissionModeSeed({
   gateOn: e,
   permissionModeTyped: t,
   dangerouslySkipPermissions: o,
@@ -931,13 +931,13 @@ function zEt({
     effort: e ? d : void 0,
   };
 }
-function Snr({ sentMode: e, repositorySettings: t }) {
+function resolveSessionStartPermissionMode({ sentMode: e, repositorySettings: t }) {
   if (e === "auto") return;
   if (e !== void 0) return e;
   let o = k(t?.permissions?.defaultMode);
   return o !== void 0 && o !== "auto" && w(o) ? o : "default";
 }
-function bnr({ seed: e, settingsMode: t, sentMode: o, startsIn: r }) {
+function buildSettingsKeptNotice({ seed: e, settingsMode: t, sentMode: o, startsIn: r }) {
   if (
     !e.considered ||
     !e.settingsDefaultModePresent ||
@@ -970,77 +970,77 @@ function j(e, t, o) {
   let r = parsePermissionModeOrDefault(e);
   if (O(r)) return { mode: "default", unconsented: !0 };
   if (r === "auto" && t) {
-    n(o, { level: "warn" });
+    logForDebugging(o, { level: "warn" });
     return;
   }
   return { mode: r };
 }
 export {
-  Zoe,
-  WG,
-  fve,
-  mnr,
+  hasFable5Mitigations,
+  hasFable51PromptBundle,
+  isFableFamilyModel,
+  isMythosFamilyModel,
   o4t,
-  gnr,
-  fAn,
-  hnr,
-  _nr,
-  ynr,
-  GEt,
-  xJe,
-  qEt,
-  zEt,
-  Snr,
-  bnr,
-  im,
-  s4t,
-  wnr,
-  GG,
-  zh,
-  FN,
-  i6,
-  ib,
-  mve,
-  sA,
-  $C,
-  VEt,
-  Tnr,
-  Enr,
-  HJe,
-  gve,
-  _me,
-  VK,
-  Z$,
-  Anr,
-  Cnr,
-  hve,
-  h$e,
-  $N,
-  _$e,
-  KEt,
-  Xk,
-  KK,
-  i4t,
-  VH,
-  UN,
-  Yk,
-  XK,
-  qG,
-  y$e,
-  Ya,
-  _ve,
-  iA,
+  resolvePermissionModeForProactivityLevel,
+  resolvePermissionModeFromInputs,
+  resolveFallbackModels,
+  resolveInitialModelSelection,
+  resolveEffectiveSystemPrompts,
+  isAutoDefaultLaunchEnabled,
+  isAutoModeSeedable,
+  isTrustedPlanModeDisplaced,
+  buildPermissionModeSeed,
+  resolveSessionStartPermissionMode,
+  buildSettingsKeptNotice,
+  EFFORT_LEVELS,
+  XHIGH_CAPABLE_MODELS_LABEL,
+  MAX_CAPABLE_MODELS_LABEL,
+  MAX_EFFORT_WARNING,
+  modelSupportsEffort,
+  modelSupportsMaxEffort,
+  modelSupportsXHighEffort,
+  modelSupportsUltracode,
+  getUltracodeFallbackEffort,
+  isUltracodeActive,
+  isValidEffortLevel,
+  HIGH_EFFORT_LEVEL,
+  isAboveHighEffort,
+  modelCapsEffortWhenThinkingDisabled,
+  getOrgMaxEffortLevelForModel,
+  getOrgDefaultEffortLevelForModel,
+  isEffortAllowedByOrg,
+  getAllowedEffortLevels,
+  clampEffortToOrgLimit,
+  isEffortCappedByOrg,
+  getOrgEffortCapWarning,
+  normalizeUltracodeAlias,
+  resolveUltracodeEffortLevel,
+  formatEffortLevel,
+  parseEffortLevelAlias,
+  parseEffortArgValue,
+  coerceEffortLevelValue,
+  toPersistableEffortLevel,
+  isUltracodeRequestedAtStartup,
+  getEnvEffortLevelOverride,
+  isLaunchEffortPinned,
+  createEffortLevel,
+  createEffortLevelOrDefault,
+  isSameEffortSelection,
+  getModelSettingsKey,
+  getSessionEffortLevel,
+  getCarriableEffortLevel,
+  unpinLaunchEffortLevels,
   ese,
-  MT,
-  XEt,
-  KH,
-  tse,
-  a4t,
-  zG,
-  S$e,
-  NT,
-  Xy,
-  IJe,
-  eU,
-  mAn,
+  resolveModelEffortLevel,
+  resolveEffortLevelForRemoteSession,
+  getDefaultEffortLevelForModel,
+  shouldConfirmEffortChangeOnWarmCache,
+  saveEffortLevelForModel,
+  applyEffortLevelChange,
+  buildInitialEffortState,
+  getModelEffortLevelOrDefault,
+  getModelEffortLevelIfSupported,
+  formatEffortSuffix,
+  sanitizeEffortLevel,
+  getEffortLevelDescription,
 };

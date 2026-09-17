@@ -13,7 +13,7 @@ import { hasPluginSource, isConnectedMcpServer } from "../../01-核心基础设�
 import { isSimpleMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { M0 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isClaudeAISubscriber, hasStoredOAuthToken, hasOAuthScope } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -28,7 +28,7 @@ import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js
 import { getSuppressedClaudeAiConnectors } from "../权限系统/chunk-fjrcf22x.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { registerBundledSkill } from "../Skills技能/bundled-skills.js";
-import { E$ } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { REMOTE_TRIGGER_TOOL_NAME } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
 import { SCHEDULE_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -210,7 +210,7 @@ ${
     ? "The user has already told you what they want (see User Request at the bottom). Skip the initial question and go directly to the matching workflow."
     : `Your FIRST action must be a single ${ASK_USER_QUESTION_TOOL_NAME} tool call (no preamble). Use this EXACT string for the \`question\` field \u2014 do not paraphrase or shorten it:
 
-${b(o)}
+${jsonStringify(o)}
 
 Set \`header: "Action"\` and offer the four actions (create/list/update/run) as options. After the user picks, follow the matching workflow below.`
 }
@@ -218,7 +218,7 @@ ${g}
 
 ## What You Can Do
 
-Use the \`${E$}\` tool (load it first with \`ToolSearch select:${E$}\`; auth is handled in-process \u2014 do not use curl):
+Use the \`${REMOTE_TRIGGER_TOOL_NAME}\` tool (load it first with \`ToolSearch select:${REMOTE_TRIGGER_TOOL_NAME}\`; auth is handled in-process \u2014 do not use curl):
 
 - \`{action: "list"}\` \u2014 list all routines
 - \`{action: "get", trigger_id: "..."}\` \u2014 fetch one routine
@@ -351,7 +351,7 @@ When /schedule was invoked it was **${p}** (${t}) / **${i}** UTC. Treat this as 
 4. **Choose the model** \u2014 Default to \`claude-sonnet-5\`. Tell the user which model you're defaulting to and ask if they want a different one.
 5. **Validate connections** \u2014 Infer what services the agent will need from the user's description. For example, if they say "check Datadog and Slack me errors," the agent needs both Datadog and Slack MCP connectors. Cross-reference with the connectors list above. If any are missing, warn the user and link them to https://claude.ai/customize/connectors to connect first.${h ? ` The default git repo is already set to \`${h}\`. Ask the user if this is the right repo or if they need a different one.` : " Ask which git repos the cloud agent needs cloned into its environment."}
 6. **Review and confirm** \u2014 Show the full configuration before creating. Let them adjust.
-7. **Create it** \u2014 Call \`${E$}\` with \`action: "create"\` and show the result. The response includes the routine ID. Always output a link at the end: \`https://claude.ai/code/routines/{ROUTINE_ID}\`
+7. **Create it** \u2014 Call \`${REMOTE_TRIGGER_TOOL_NAME}\` with \`action: "create"\` and show the result. The response includes the routine ID. Always output a link at the end: \`https://claude.ai/code/routines/{ROUTINE_ID}\`
 
 ### UPDATE a routine:
 
@@ -408,7 +408,7 @@ function registerScheduleRemoteAgentsSkill() {
       !a.CLAUDE_CODE_REMOTE &&
       isPolicyAllowed("allow_remote_sessions") &&
       isPolicyAllowed(ALLOW_ROUTINES_POLICY),
-    allowedTools: [E$, ASK_USER_QUESTION_TOOL_NAME, "Bash(date *)"],
+    allowedTools: [REMOTE_TRIGGER_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME, "Bash(date *)"],
     async getPromptForCommand(s, t) {
       if (!hasStoredOAuthToken())
         return [
@@ -431,7 +431,7 @@ function registerScheduleRemoteAgentsSkill() {
           i = await fetchRemoteEnvironments(void 0, t.storageV5, t.credentials);
         } catch (l) {
           return (
-            n(`[schedule] Failed to fetch environments: ${l}`, {
+            logForDebugging(`[schedule] Failed to fetch environments: ${l}`, {
               level: "warn",
             }),
             [
@@ -447,7 +447,7 @@ function registerScheduleRemoteAgentsSkill() {
             ((p = await createDefaultRemoteEnvironment()), (i = [p]));
           } catch (l) {
             return (
-              n(`[schedule] Failed to create environment: ${l}`, {
+              logForDebugging(`[schedule] Failed to create environment: ${l}`, {
                 level: "warn",
               }),
               [

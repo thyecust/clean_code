@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { isHoverRestEnabled, pinHoverRestFlag } from "./chunk-h62vxw7j.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, isSameAsConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 function pinStorageV5FromEnv(e = tryCreateV5Backend) {
@@ -21,7 +21,7 @@ function adoptStorageV5EnvPin(e) {
   let o = isHoverRestEnabled() ? e.backend : void 0;
   if (o === void 0) return;
   if (!isSameAsConfigDir(e.configHome)) {
-    n(
+    logForDebugging(
       `CLAUDE_CONFIG_DIR now names ${getClaudeConfigDir()}, not ${e.configHome} where the v5 storage backend was built at start-up; not handing it on, so this process keeps today's direct file access`,
       { level: "warn" },
     );
@@ -31,13 +31,13 @@ function adoptStorageV5EnvPin(e) {
 }
 function recordHoverRestDecision(e) {
   if (typeof e !== "boolean")
-    n(
+    logForDebugging(
       `tengu_hover_rest served a ${typeof e}, not a boolean; treating it as off`,
       { level: "warn" },
     );
   let o = pinHoverRestFlag(e);
   if (o === "conflict")
-    n(
+    logForDebugging(
       `tengu_hover_rest read ${String(e)} at a second pin in this process; keeping the first decision`,
       { level: "warn" },
     );

@@ -24,15 +24,15 @@ import "../../01-核心基础设施/共享小工具-未细化/expanded-content-c
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { useDialogStore } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import "../认证-OAuth登录/chunk-9g86t9bp.js";
+import "../认证-OAuth登录/console-profile-auth.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
+import "../Bedrock-Vertex/bedrock-setup-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
+import "../Bedrock-Vertex/vertex-setup-wizard.js";
 import "./teleport-errors.js";
 import { rehydrateArtifactFrameState } from "../Artifact发布-渲染/chunk-fx5ekm7e.js";
 import "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";

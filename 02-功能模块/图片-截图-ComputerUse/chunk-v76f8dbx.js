@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import { McpServer } from "../MCP客户端/mcp-server.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getComputerUseSession, getComputerUseNativeModule } from "./computer-use-session.js";
 import { createCliExecutor } from "./computer-use-cli-executor.js";
 import { COMPUTER_USE_MCP_SERVER_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { WSe } from "./chunk-6842b6x1.js";
+import { buildComputerUseToolDefinitions } from "./computer-use-tool-definitions.js";
 import { isComputerUseEnabled, getComputerUseSubGates } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
 import { DEFAULT_GRANT_FLAGS, isKnownAppBundleId } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
 import { IMAGE_TOKEN_BUDGET, fitSizeToTokenBudget, DEFAULT_IMAGE_SCALE, validateImageScale, formatScaleCoordinateFrameNote, scaleImageDimensions } from "../../01-核心基础设施/共享小工具-未细化/image-scaling.js";
@@ -5414,7 +5414,7 @@ function X2n(e, o, t) {
       { name: r, version: "0.2.0" },
       { capabilities: { tools: {}, logging: {} } },
     ),
-    a = WSe(e.executor.capabilities, o);
+    a = buildComputerUseToolDefinitions(e.executor.capabilities, o);
   if (
     (s.setRequestHandler(ListToolsRequestSchema, () =>
       e.isDisabled() ? { tools: [] } : { tools: a },
@@ -5458,19 +5458,19 @@ function X2n(e, o, t) {
 import { format } from "util";
 class An {
   silly(e, ...o) {
-    n(format(e, ...o), { level: "debug" });
+    logForDebugging(format(e, ...o), { level: "debug" });
   }
   debug(e, ...o) {
-    n(format(e, ...o), { level: "debug" });
+    logForDebugging(format(e, ...o), { level: "debug" });
   }
   info(e, ...o) {
-    n(format(e, ...o), { level: "info" });
+    logForDebugging(format(e, ...o), { level: "info" });
   }
   warn(e, ...o) {
-    n(format(e, ...o), { level: "warn" });
+    logForDebugging(format(e, ...o), { level: "warn" });
   }
   error(e, ...o) {
-    n(format(e, ...o), { level: "error" });
+    logForDebugging(format(e, ...o), { level: "error" });
   }
 }
 function put() {

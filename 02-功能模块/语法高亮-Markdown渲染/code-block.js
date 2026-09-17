@@ -7,19 +7,19 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { hashPairWithBun } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { LU } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { expandLeadingTabs } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { gi, ree, o, t, jr, pd, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { _$ } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+import { isFullscreen, useRenderCaches, Box, Text, Ansi, NoSelect, measureElement } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { sliceAnsi } from "../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import { highlightLanguageRegistry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import { Mit, Rye, lle, VZt } from "./chunk-hqp2e8nr.js";
+import { MAX_CODE_LINE_CHARS, truncateCodeLine, formatTruncationNotice, getCodeBlockRenderer } from "./syntax-highlight-renderer.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Yl, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -41,7 +41,7 @@ function K(s, i, m, f) {
 }
 function Q(s) {
   let i = new Map();
-  if (s.length <= Mit) return { text: s, markers: i };
+  if (s.length <= MAX_CODE_LINE_CHARS) return { text: s, markers: i };
   return {
     text: s
       .split(
@@ -49,8 +49,8 @@ function Q(s) {
 `,
       )
       .map((u, l) => {
-        let { code: c, truncatedChars: g } = Rye(u);
-        if (g > 0) return (i.set(l, lle(g)), c);
+        let { code: c, truncatedChars: g } = truncateCodeLine(u);
+        if (g > 0) return (i.set(l, formatTruncationNotice(g)), c);
         return u;
       }).join(`
 `),
@@ -80,13 +80,13 @@ function Y(xr) {
   if (j[0] !== xt || j[1] !== R || j[2] !== Rt) {
     Et = EARLY_RETURN_SENTINEL;
     bb0: {
-      q = LU(xt);
+      q = expandLeadingTabs(xt);
       if (Rt) {
         let { text: yr, markers: Rr } = Q(q);
-        const A = e(jr, { children: x(yr, Rr) });
+        const A = e(Ansi, { children: x(yr, Rr) });
         let D;
         if (j[5] !== R || j[6] !== A)
-          ((D = e(t, { dimColor: R, children: A })),
+          ((D = e(Text, { dimColor: R, children: A })),
             (j[5] = R),
             (j[6] = A),
             (j[7] = D));
@@ -111,7 +111,7 @@ function Y(xr) {
   else D = j[12];
   let qt;
   if (j[13] !== R || j[14] !== D)
-    ((qt = e(t, { dimColor: R, children: D })),
+    ((qt = e(Text, { dimColor: R, children: D })),
       (j[13] = R),
       (j[14] = D),
       (j[15] = qt));
@@ -125,7 +125,7 @@ function mt(Er) {
   if (Mt[0] === MEMO_CACHE_SENTINEL) ((Jt = getSyntaxHighlightAdapter()), (Mt[0] = Jt));
   else Jt = Mt[0];
   let St = Jt,
-    { highlightedCode: it } = ree(),
+    { highlightedCode: it } = useRenderCaches(),
     grammarGeneration = highlightLanguageRegistry.pluginGrammarGeneration,
     J;
   if (Mt[1] !== Ct || Mt[2] !== it || Mt[3] !== I) {
@@ -135,7 +135,7 @@ function mt(Er) {
       if (I) {
         if (St.supportsLanguage(I)) Kt = I;
         else
-          n(
+          logForDebugging(
             `Language not supported while highlighting code, falling back to markdown: ${I}`,
           );
       }
@@ -145,7 +145,7 @@ function mt(Er) {
         let Gt = st;
         if (Gt instanceof Error && Gt.message.includes("Unknown language")) {
           J =
-            (n(
+            (logForDebugging(
               `Language not supported while highlighting code, falling back to markdown: ${Gt}`,
             ),
             x(K(it, St, Dt, "markdown"), Wt));
@@ -159,7 +159,7 @@ function mt(Er) {
   let Ht = J,
     st;
   if (Mt[5] !== Ht)
-    ((st = e(jr, { children: Ht })), (Mt[5] = Ht), (Mt[6] = st));
+    ((st = e(Ansi, { children: Ht })), (Mt[5] = Ht), (Mt[6] = st));
   else st = Mt[6];
   return st;
 }
@@ -180,12 +180,12 @@ var Ft = 80,
           L = null;
           break bb0;
         }
-        let Zt = VZt();
+        let Zt = getCodeBlockRenderer();
         if (!Zt) {
           L = null;
           break bb0;
         }
-        L = new Zt(LU(b), T);
+        L = new Zt(expandLeadingTabs(b), T);
       }
       ((W[0] = b), (W[1] = T), (W[2] = O), (W[3] = L));
     } else L = W[3];
@@ -195,7 +195,7 @@ var Ft = 80,
     if (W[4] !== Z)
       ((Lt = () => {
         if (!Z && Pt.current) {
-          let { width: rr } = Od(Pt.current);
+          let { width: rr } = measureElement(Pt.current);
           if (rr > 0) zr(rr - 2);
         }
       }),
@@ -249,7 +249,7 @@ var Ft = 80,
       G = y;
     }
     let w = G,
-      Fr = gi(),
+      Fr = isFullscreen(),
       y;
     bb3: {
       if (!Fr && k === 1) {
@@ -273,7 +273,7 @@ var Ft = 80,
       if (W[18] !== ft || W[19] !== M || W[20] !== w || W[21] !== k) {
         let ct = k;
         rt = w.map((Or) => {
-          if (stripAnsi(_$(Or, 0, M)).trim() === "") {
+          if (stripAnsi(sliceAnsi(Or, 0, M)).trim() === "") {
             return " ".repeat(ft + 2);
           }
           let Xr = ct;
@@ -295,10 +295,10 @@ var Ft = 80,
       W[29] !== k ||
       W[30] !== O
     )
-      ((rt = e(o, {
+      ((rt = e(Box, {
         ref: Pt,
         children: w
-          ? e(o, {
+          ? e(Box, {
               flexDirection: "column",
               children: w.map((er, Tt) =>
                 M > 0
@@ -307,14 +307,14 @@ var Ft = 80,
                       { line: er, gutterWidth: M, displayGutter: It?.[Tt] },
                       Tt,
                     )
-                  : e(t, { children: e(jr, { children: er }) }, Tt),
+                  : e(Text, { children: e(Ansi, { children: er }) }, Tt),
               ),
             })
-          : r(o, {
+          : r(Box, {
               flexDirection: "column",
               children: [
                 k !== 1 &&
-                  r(t, { dimColor: !0, children: ["\u2026 from line ", k] }),
+                  r(Text, { dimColor: !0, children: ["\u2026 from line ", k] }),
                 e(Y, { code: b, filePath: T, dim: z, skipColoring: O }),
               ],
             }),
@@ -348,17 +348,17 @@ function bt(vr) {
     { line: v, gutterWidth: B, displayGutter: gt } = vr,
     or;
   if (at[0] !== B || at[1] !== v)
-    ((or = _$(v, B)), (at[0] = B), (at[1] = v), (at[2] = or));
+    ((or = sliceAnsi(v, B)), (at[0] = B), (at[1] = v), (at[2] = or));
   else or = at[2];
   let zt = or,
     dt;
   if (at[3] !== gt || at[4] !== B || at[5] !== v)
-    ((dt = e(pd, {
+    ((dt = e(NoSelect, {
       fromLeftEdge: !0,
       children:
         gt === void 0
-          ? e(t, { children: e(jr, { children: _$(v, 0, B) }) })
-          : e(t, { dimColor: !0, children: gt }),
+          ? e(Text, { children: e(Ansi, { children: sliceAnsi(v, 0, B) }) })
+          : e(Text, { dimColor: !0, children: gt }),
     })),
       (at[3] = gt),
       (at[4] = B),
@@ -367,13 +367,13 @@ function bt(vr) {
   else dt = at[6];
   let ht;
   if (at[7] !== zt)
-    ((ht = e(t, { children: e(jr, { children: zt }) })),
+    ((ht = e(Text, { children: e(Ansi, { children: zt }) })),
       (at[7] = zt),
       (at[8] = ht));
   else ht = at[8];
   let ir;
   if (at[9] !== dt || at[10] !== ht)
-    ((ir = r(o, { flexDirection: "row", children: [dt, ht] })),
+    ((ir = r(Box, { flexDirection: "row", children: [dt, ht] })),
       (at[9] = dt),
       (at[10] = ht),
       (at[11] = ir));

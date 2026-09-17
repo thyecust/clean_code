@@ -14,7 +14,7 @@ import { countOccurrences } from "../../01-核心基础设施/核心工具-字�
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
@@ -25,8 +25,8 @@ import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.j
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
+import "../语法高亮-Markdown渲染/markdown-renderer.js";
 import { hye, _We } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
@@ -38,7 +38,7 @@ import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js
 import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
@@ -69,19 +69,19 @@ import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function renderToolUseTag(l) {
   if (!l.task_id) return null;
-  return r(t, { dimColor: !0, children: [" ", l.task_id] });
+  return r(Text, { dimColor: !0, children: [" ", l.task_id] });
 }
 function renderToolUseProgressMessage(l) {
   let T = l.at(-1)?.data;
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     children: [
-      T?.taskDescription && r(t, { children: ["\xA0\xA0", T.taskDescription] }),
-      r(t, {
+      T?.taskDescription && r(Text, { children: ["\xA0\xA0", T.taskDescription] }),
+      r(Text, {
         children: [
           "\xA0\xA0\xA0\xA0\xA0Waiting for task",
           " ",
-          e(t, {
+          e(Text, {
             dimColor: !0,
             children: e(KeybindingHint, {
               chord: "escape",
@@ -176,26 +176,26 @@ function O(V) {
           : 0;
         if (h.retrieval_status === "success") {
           if (f) {
-            u = r(o, {
+            u = r(Box, {
               flexDirection: "column",
               children: [
-                r(t, { children: [a.description, " (", Y, " lines)"] }),
-                r(o, {
+                r(Text, { children: [a.description, " (", Y, " lines)"] }),
+                r(Box, {
                   flexDirection: "column",
                   paddingLeft: 2,
                   marginTop: 1,
                   children: [
                     a.prompt && e(hye, { prompt: a.prompt, theme: C, dim: !0 }),
                     a.harnessHead &&
-                      e(o, {
+                      e(Box, {
                         marginTop: 1,
-                        children: e(t, {
+                        children: e(Text, {
                           dimColor: !0,
                           children: a.harnessHead,
                         }),
                       }),
                     a.result &&
-                      e(o, {
+                      e(Box, {
                         marginTop: 1,
                         children: e(_We, {
                           content: [{ type: "text", text: a.result }],
@@ -203,18 +203,18 @@ function O(V) {
                         }),
                       }),
                     a.error &&
-                      r(o, {
+                      r(Box, {
                         flexDirection: "column",
                         marginTop: 1,
                         children: [
-                          e(t, {
+                          e(Text, {
                             color: "error",
                             bold: !0,
                             children: "Error:",
                           }),
-                          e(o, {
+                          e(Box, {
                             paddingLeft: 2,
-                            children: e(t, {
+                            children: e(Text, {
                               color: "error",
                               children: a.error,
                             }),
@@ -230,7 +230,7 @@ function O(V) {
           let i;
           if (b[10] !== x)
             ((i = e(ToolResultRow, {
-              children: r(t, {
+              children: r(Text, {
                 dimColor: !0,
                 children: ["Read output (", x, " to expand)"],
               }),
@@ -245,7 +245,7 @@ function O(V) {
           let i;
           if (b[12] === MEMO_CACHE_SENTINEL)
             ((i = e(ToolResultRow, {
-              children: e(t, {
+              children: e(Text, {
                 dimColor: !0,
                 children: "Task is still running\u2026",
               }),
@@ -259,7 +259,7 @@ function O(V) {
           let i;
           if (b[13] === MEMO_CACHE_SENTINEL)
             ((i = e(ToolResultRow, {
-              children: e(t, {
+              children: e(Text, {
                 dimColor: !0,
                 children: "Task is still running\u2026",
               }),
@@ -272,7 +272,7 @@ function O(V) {
         let i;
         if (b[14] === MEMO_CACHE_SENTINEL)
           ((i = e(ToolResultRow, {
-            children: e(t, { dimColor: !0, children: "Task not ready" }),
+            children: e(Text, { dimColor: !0, children: "Task not ready" }),
           })),
             (b[14] = i));
         else i = b[14];
@@ -280,22 +280,22 @@ function O(V) {
         break bb0;
       }
       if (a.task_type === "remote_agent") {
-        u = r(o, {
+        u = r(Box, {
           flexDirection: "column",
           children: [
-            r(t, {
+            r(Text, {
               children: ["\xA0\xA0", a.description, " [", a.status, "]"],
             }),
             a.output &&
               f &&
-              e(o, {
+              e(Box, {
                 paddingLeft: 4,
                 marginTop: 1,
-                children: e(t, { children: a.output }),
+                children: e(Text, { children: a.output }),
               }),
             !f &&
               a.output &&
-              r(t, {
+              r(Text, {
                 dimColor: !0,
                 children: ["     ", "(", x, " to expand)"],
               }),
@@ -303,14 +303,14 @@ function O(V) {
         });
         break bb0;
       }
-      R = r(o, {
+      R = r(Box, {
         flexDirection: "column",
         children: [
-          r(t, { children: ["\xA0\xA0", a.description, " [", a.status, "]"] }),
+          r(Text, { children: ["\xA0\xA0", a.description, " [", a.status, "]"] }),
           a.output &&
-            e(o, {
+            e(Box, {
               paddingLeft: 4,
-              children: e(t, { children: a.output.slice(0, 500) }),
+              children: e(Text, { children: a.output.slice(0, 500) }),
             }),
         ],
       });

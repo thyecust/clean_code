@@ -10,7 +10,7 @@
 import { j, iOn, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, zn, ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { R, l, A, W, Nz, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Np, Ro, Tr, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { startSlowOperationSpan, resolvePathInfo, expandPathAliases, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { findExecutableWindows } from "../共享小工具-未细化/chunk-twnwwsbr.js";
@@ -31,28 +31,28 @@ class K {
   warnedShortTmpDir = !1;
 }
 var fe = new j(() => new K());
-function Pge() {
+function getShellConfig() {
   return fe.of(B().host);
 }
-function SRt() {
+function setupGitBashShellEnv() {
   if (getCurrentPlatform() === "windows") {
-    let e = _1();
-    if (e) ((process.env.SHELL = e), n(`Using bash path: "${e}"`));
-    else n("Git Bash not found; BashTool will be unavailable");
+    let e = getGitBashPath();
+    if (e) ((process.env.SHELL = e), logForDebugging(`Using bash path: "${e}"`));
+    else logForDebugging("Git Bash not found; BashTool will be unavailable");
   }
 }
-function _1() {
-  let e = Pge();
+function getGitBashPath() {
+  let e = getShellConfig();
   if (e.gitBashPath === void 0) e.gitBashPath = de();
   return e.gitBashPath;
 }
 function de() {
-  let { existsSync: e } = ae();
+  let { existsSync: e } = getFsSurface();
   if (a.CLAUDE_CODE_GIT_BASH_PATH) {
     let i = x.basename(a.CLAUDE_CODE_GIT_BASH_PATH).toLowerCase(),
       s = ["bash.exe", "sh.exe", "bash", "sh"].includes(i);
     if (s && e(a.CLAUDE_CODE_GIT_BASH_PATH)) return a.CLAUDE_CODE_GIT_BASH_PATH;
-    n(
+    logForDebugging(
       `CLAUDE_CODE_GIT_BASH_PATH "${a.CLAUDE_CODE_GIT_BASH_PATH}" ${s ? "not found" : "is not a bash/sh binary"}; falling back to auto-detection`,
       { level: "warn" },
     );
@@ -69,14 +69,14 @@ function de() {
   }
   return null;
 }
-function bRt(e, t) {
+function prependDirectoryToPathEnv(e, t) {
   if (!x.isAbsolute(t)) return;
   let r = x.dirname(t),
     i = Object.keys(e).find((o) => o.toUpperCase() === "PATH") ?? "PATH",
     s = e[i];
   e[i] = s ? r + x.delimiter + s : r;
 }
-function wRt(e) {
+function wrapShellScriptWithBash(e) {
   let t = e.trim(),
     r = "",
     i = 0;
@@ -95,7 +95,7 @@ function wRt(e) {
   }
   return r.endsWith(".sh") ? `bash ${e}` : e;
 }
-var KT = xA(
+var convertWindowsPathToUnix = xA(
     (e) => {
       if (e.startsWith("\\\\")) return e.replaceAll("\\", "/");
       let t = e.match(/^([A-Za-z]):[/\\]/);
@@ -105,7 +105,7 @@ var KT = xA(
     (e) => e,
     500,
   ),
-  Oge = xA(
+  convertUnixPathToWindows = xA(
     (e) => {
       if (e.startsWith("//")) return e.replaceAll("/", "\\");
       let t = e.match(/^\/cygdrive\/([A-Za-z])(\/|$)/);
@@ -136,8 +136,8 @@ import {
   resolve as ge,
   sep as we,
 } from "path";
-function ot(e, t) {
-  let r = t ?? getCwd() ?? ae().cwd();
+function resolvePath(e, t) {
+  let r = t ?? getCwd() ?? getFsSurface().cwd();
   if (typeof e !== "string")
     throw TypeError(`Path must be a string, received ${typeof e}`);
   if (typeof r !== "string")
@@ -151,40 +151,40 @@ function ot(e, t) {
   let s = i;
   if (getCurrentPlatform() === "windows" && i.match(/^\/[a-z]\//i))
     try {
-      s = Oge(i);
+      s = convertUnixPathToWindows(i);
     } catch {
       s = i;
     }
   if (me(s)) return zn(H(s));
   return zn(ge(r, s));
 }
-function Net(e) {
+function toCwdRelativePath(e) {
   let t = pe(getCwd(), e);
   return t.startsWith("..") ? e : t;
 }
-function nL(e) {
-  let t = ot(e);
+function getContainingDirectory(e) {
+  let t = resolvePath(e);
   if (ku(t)) return Z(t);
   try {
-    if (ae().statSync(t).isDirectory()) return t;
+    if (getFsSurface().statSync(t).isDirectory()) return t;
   } catch {}
   return Z(t);
 }
-function Iq(e) {
+function containsPathTraversal(e) {
   return /(?:^|[\\/])\.\.(?:[\\/]|$)/.test(e);
 }
-function Gu(e) {
+function formatPathWithTilde(e) {
   let t = U();
   if (e === t) return "~";
   if (e.startsWith(t + we)) return "~" + e.slice(t.length);
   return e;
 }
-function y1(e) {
+function toForwardSlashPath(e) {
   let t = H(e);
   if (getCurrentPlatform() === "windows") return t.replaceAll("\\", "/");
   return t;
 }
-function kQ(e) {
+function isJupyterNotebookPath(e) {
   return ue(e).toLowerCase() === ".ipynb";
 }
 import { randomBytes } from "crypto";
@@ -248,7 +248,7 @@ function G() {
 function q(e) {
   return Y(e);
 }
-function Mar(e, t, r, i) {
+function recordFileIdentity(e, t, r, i) {
   G().record(e, t, r, i);
 }
 function k(e) {
@@ -261,7 +261,7 @@ function k(e) {
   } catch (i) {
     let s = A(i);
     if (s === "ENOENT" || s === "ENOTDIR" || s === "ELOOP" || s === "EACCES")
-      rke(
+      throwStagingDirTamperedError(
         `Staging dir ${e} was established for a sandboxed command but is now unopenable (${s}) \u2014 refusing atomic write`,
       );
     throw i;
@@ -269,7 +269,7 @@ function k(e) {
   try {
     let i = fstatSync(r);
     if (i.dev !== t.dev || i.ino !== t.ino)
-      rke(
+      throwStagingDirTamperedError(
         `Staging dir ${e} identity changed (expected ${t.dev}/${t.ino}, found ${i.dev}/${i.ino}) \u2014 refusing atomic write`,
       );
   } finally {
@@ -288,17 +288,17 @@ function oe(e, t, r, i) {
     let p = A(w);
     if (p === "ELOOP" || p === "ENOTDIR") {
       if (o)
-        rke(
+        throwStagingDirTamperedError(
           `Staging dir parent ${O(e)} is ${p} but a sandboxed command established ${e} \u2014 refusing sibling fallback`,
         );
       if (i) return s;
-      throw new gh(
+      throw new SymlinkWriteRefusedError(
         `Refusing to stage atomic write under non-directory parent: ${O(e)}`,
       );
     }
     if (!W(w)) throw w;
     if (o)
-      rke(
+      throwStagingDirTamperedError(
         `Staging dir parent ${O(e)} is absent but a sandboxed command established ${e} \u2014 refusing sibling fallback`,
       );
     return s;
@@ -310,7 +310,7 @@ function oe(e, t, r, i) {
     let p = A(w);
     if (p === "ENOENT" || p === "ENOTDIR" || p === "ELOOP") {
       if (o)
-        rke(
+        throwStagingDirTamperedError(
           `Staging dir ${e} is ${p} but a sandboxed command established it \u2014 refusing sibling fallback`,
         );
       return s;
@@ -321,7 +321,7 @@ function oe(e, t, r, i) {
     if (o) {
       let w = fstatSync(u);
       if (w.dev !== o.dev || w.ino !== o.ino)
-        rke(
+        throwStagingDirTamperedError(
           `Staging dir ${e} identity changed (expected ${o.dev}/${o.ino}, found ${w.dev}/${w.ino}) \u2014 refusing atomic write`,
         );
     }
@@ -330,19 +330,19 @@ function oe(e, t, r, i) {
   }
   return L(e, `${basename(t)}${r}`);
 }
-class gh extends Error {
+class SymlinkWriteRefusedError extends Error {
   constructor(e) {
     super(e);
     this.name = "SymlinkWriteRefusedError";
   }
 }
-class xQ extends Error {
+class SymlinkReadRefusedError extends Error {
   constructor(e) {
     super(e);
     this.name = "SymlinkReadRefusedError";
   }
 }
-async function nke(e, t) {
+async function assertDirChainReal(e, t) {
   let r = z(e, t);
   if (r === "" || r.startsWith("..") || M(r))
     throw new R(
@@ -357,7 +357,7 @@ async function nke(e, t) {
     } catch (o) {
       let c = A(o);
       if (c === "ELOOP" || c === "ENOTDIR")
-        throw new gh(
+        throw new SymlinkWriteRefusedError(
           `Refusing to write under symlinked or non-directory path: ${i}`,
         );
       if (c === "ENOENT") return;
@@ -371,34 +371,34 @@ class se extends Error {
     this.name = "StagingDirTamperedError";
   }
 }
-function rke(e) {
+function throwStagingDirTamperedError(e) {
   throw (logFeatureBad("sandbox_exec", "atomic_write_staging_dir_tampered"), new se(e));
 }
-function DU(e, t, r = "write") {
+function takeApprovedPathForWrite(e, t, r = "write") {
   let i = e.session.writePermissionStash.consume(e.toolUseId, t, r);
   if (i === iOn)
-    throw new (r === "read" ? xQ : gh)(
+    throw new (r === "read" ? SymlinkReadRefusedError : SymlinkWriteRefusedError)(
       `Refusing to ${r === "read" ? "read" : "write"} ${t}: its permission check expired before it ran (too many concurrent file operations). Retry.`,
     );
   if (i !== void 0) return i;
   if (e.toolUseId)
-    n(
+    logForDebugging(
       `takeApprovedPathsForWrite: no check-time stash for toolUseId=${e.toolUseId}; using fresh resolution`,
     );
-  return Tr(t);
+  return expandPathAliases(t);
 }
-function oke(e, t) {
-  return DU(e, t, "read");
+function takeApprovedPathForRead(e, t) {
+  return takeApprovedPathForWrite(e, t, "read");
 }
-async function El(e) {
+async function pathExists(e) {
   try {
     return (await re(e), !0);
   } catch {
     return !1;
   }
 }
-var Dge = 262144;
-function Lge(
+var DEFAULT_MAX_FILE_READ_BYTES = 262144;
+function readBoundedSync(
   e,
   {
     maxBytes: t,
@@ -406,7 +406,7 @@ function Lge(
     regularFileOnly: i = r === "refuse",
   },
 ) {
-  using s = Np`fs.readBoundedSync(${e}, max ${t} bytes)`;
+  using s = startSlowOperationSpan`fs.readBoundedSync(${e}, max ${t} bytes)`;
   let o = "r";
   if (r === "refuse") o = constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK;
   else if (i) o = constants.O_RDONLY | constants.O_NONBLOCK;
@@ -423,8 +423,8 @@ function Lge(
     closeSync(c);
   }
 }
-function Nar(e, { maxBytes: t }) {
-  using r = Np`fs.readInheritedFdSync(fd ${e}, max ${t} bytes)`;
+function readInheritedFdSync(e, { maxBytes: t }) {
+  using r = startSlowOperationSpan`fs.readInheritedFdSync(fd ${e}, max ${t} bytes)`;
   let i = fstatSync(e);
   if (!i.isSocket() && !i.isFIFO())
     throw new R(
@@ -433,7 +433,7 @@ function Nar(e, { maxBytes: t }) {
     );
   return xe(e, t);
 }
-function z5t(e) {
+function isSocketFd(e) {
   try {
     return fstatSync(e).isSocket();
   } catch {
@@ -464,27 +464,27 @@ function ce(e, t, r, { untilNewline: i = !1 } = {}) {
       return Buffer.concat(s).toString("utf8");
   }
 }
-function Pq(e) {
-  let t = ae();
+function getFileMtimeMsSync(e) {
+  let t = getFsSurface();
   return Math.floor(t.statSync(e).mtimeMs);
 }
-async function bA(e) {
-  let t = await ae().stat(e);
+async function getFileMtimeMs(e) {
+  let t = await getFsSurface().stat(e);
   return Math.floor(t.mtimeMs);
 }
-function Vxn() {
+function isPerforceModeEnabled() {
   return Ie(a.CLAUDE_CODE_PERFORCE_MODE);
 }
-var Fet =
+var PERFORCE_READ_ONLY_MESSAGE =
   "File is read-only \u2014 it has not been opened for edit in Perforce. Run `p4 edit <file>` to check it out, then retry. Do not chmod the file writable; that bypasses Perforce tracking.";
-function $et(e) {
-  return Vxn() && (e & 128) === 0;
+function isReadOnlyFileMode(e) {
+  return isPerforceModeEnabled() && (e & 128) === 0;
 }
 var Le = createKeyedSerialQueue();
-function j6(e, t) {
+function withPathLock(e, t) {
   return Le.run(e, t);
 }
-function Uet(e, t) {
+function applyLineEndings(e, t) {
   if (t !== "CRLF") return e;
   return e.replaceAll(
     `\r
@@ -495,11 +495,11 @@ function Uet(e, t) {
 `).join(`\r
 `);
 }
-async function HQ(e, t, r, i) {
-  let s = Uet(t, i);
-  await wb(e, s, { encoding: r });
+async function writeTextContent(e, t, r, i) {
+  let s = applyLineEndings(t, i);
+  await writeFileAndFlush(e, s, { encoding: r });
   let o = Buffer.byteLength(s, r),
-    c = await ae().stat(e);
+    c = await getFsSurface().stat(e);
   if (c.size !== o)
     throw new R(
       `Write verification failed: ${e} is ${c.size} bytes on disk, expected ${o}. The filesystem may have silently truncated the write (network drive / cloud sync).`,
@@ -507,38 +507,38 @@ async function HQ(e, t, r, i) {
     );
   return Math.floor(c.mtimeMs);
 }
-function Far(e) {
+function detectFileEncodingSafe(e) {
   try {
-    let t = ae(),
-      { resolvedPath: r } = Ro(t, e);
+    let t = getFsSurface(),
+      { resolvedPath: r } = resolvePathInfo(t, e);
     return detectFileEncoding(r);
   } catch (t) {
     if (Rt(t) || Nz(t) || Bp(t))
-      n(`detectFileEncoding failed for expected reason: ${A(t)}`, {
+      logForDebugging(`detectFileEncoding failed for expected reason: ${A(t)}`, {
         level: "debug",
       });
     else logError(t);
     return "utf8";
   }
 }
-function LU(e) {
+function expandLeadingTabs(e) {
   if (!e.includes("\t")) return e;
   return e.replace(/^\t+/gm, (t) => "  ".repeat(t.length));
 }
 function ve(e) {
-  let t = e ? ot(e) : void 0,
+  let t = e ? resolvePath(e) : void 0,
     r = t ? z(getCwd(), t) : void 0;
   return { absolutePath: t, relativePath: r };
 }
-function Ao(e) {
+function formatPathForDisplay(e) {
   let { relativePath: t } = ve(e);
   if (t && !t.startsWith("..")) return t;
   let r = ne();
   if (e.startsWith(r + T)) return "~" + e.slice(r.length);
   return e;
 }
-async function _ie(e) {
-  let t = ae();
+async function findSimilarFile(e) {
+  let t = getFsSurface();
   try {
     let r = O(e),
       i = basename(e, J(e)),
@@ -548,12 +548,12 @@ async function _ie(e) {
     if (c) return c.name;
     return;
   } catch (r) {
-    if (!W(r)) n(`findSimilarFile failed for ${e}: ${r}`, { level: "error" });
+    if (!W(r)) logForDebugging(`findSimilarFile failed for ${e}: ${r}`, { level: "error" });
     return;
   }
 }
-var yx = "Note: your current working directory is";
-async function W6(e) {
+var CWD_NOTE_PREFIX = "Note: your current working directory is";
+async function getSuggestedPathOutsideCwd(e) {
   let t = getCwd(),
     r = O(t),
     i = e;
@@ -573,7 +573,7 @@ async function W6(e) {
     return;
   }
 }
-function V5t({ content: e, startLine: t, tabAwareSeparator: r = !1 }) {
+function addLineNumbers({ content: e, startLine: t, tabAwareSeparator: r = !1 }) {
   if (!e) return "";
   let i =
       r &&
@@ -588,7 +588,7 @@ function V5t({ content: e, startLine: t, tabAwareSeparator: r = !1 }) {
     u = e.indexOf(`
 `);
   while (u !== -1)
-    (s.push(K5t(e.slice(c, u), o++, i)),
+    (s.push(formatNumberedLine(e.slice(c, u), o++, i)),
       (c = u + 1),
       (u = e.indexOf(
         `
@@ -596,20 +596,20 @@ function V5t({ content: e, startLine: t, tabAwareSeparator: r = !1 }) {
         c,
       )));
   return (
-    s.push(K5t(e.slice(c), o, i)),
+    s.push(formatNumberedLine(e.slice(c), o, i)),
     s.join(`
 `)
   );
 }
-function K5t(e, t, r) {
+function formatNumberedLine(e, t, r) {
   let i = e.endsWith("\r") ? e.slice(0, -1) : e;
   return `${t}${r}${i}`;
 }
-function TRt(e) {
+function stripLineNumberPrefix(e) {
   return e.match(/^\s*\d+[\u2192\t:](.*)$/)?.[1] ?? e;
 }
 function le(e, t) {
-  if (e instanceof Error && !(e instanceof gh) && e !== t)
+  if (e instanceof Error && !(e instanceof SymlinkWriteRefusedError) && e !== t)
     try {
       if (e.cause === void 0)
         ((e.message += ` (atomic write failed first: ${l(t)})`),
@@ -622,8 +622,8 @@ function le(e, t) {
     } catch {}
   throw e;
 }
-function Kxn(e, t, r = { encoding: "utf-8" }) {
-  let i = ae(),
+function writeFileSyncAndFlush(e, t, r = { encoding: "utf-8" }) {
+  let i = getFsSurface(),
     s = r.allowSymlink ? 0 : constants.O_NOFOLLOW,
     o = e,
     c,
@@ -631,8 +631,8 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
   if (r.allowSymlink)
     try {
       let d = i.readlinkSync(e);
-      ((o = M(d) ? d : Y(Ro(i, O(e)).resolvedPath, d)),
-        n(`Writing through symlink: ${e} -> ${o}`));
+      ((o = M(d) ? d : Y(resolvePathInfo(i, O(e)).resolvedPath, d)),
+        logForDebugging(`Writing through symlink: ${e} -> ${o}`));
     } catch {}
   else {
     if (r.checkParentDir)
@@ -641,12 +641,12 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
       } catch (d) {
         let b = A(d);
         if (b === "ELOOP" || b === "ENOTDIR")
-          throw new gh(`Refusing to write into symlinked directory: ${O(e)}`);
+          throw new SymlinkWriteRefusedError(`Refusing to write into symlinked directory: ${O(e)}`);
       }
     try {
       let d = i.lstatSync(e);
       if (d.isSymbolicLink())
-        throw new gh(
+        throw new SymlinkWriteRefusedError(
           `Refusing to write through symlink: ${e}. Resolve the symlink and pass the real target path explicitly.`,
         );
       ((c = d.mode), (u = !0));
@@ -663,11 +663,11 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
     } catch (d) {
       if (!W(d)) throw d;
     }
-  if (u && c !== void 0) n(`Preserving file permissions: ${c.toString(8)}`);
+  if (u && c !== void 0) logForDebugging(`Preserving file permissions: ${c.toString(8)}`);
   else if (r.mode !== void 0)
-    ((c = r.mode), n(`Setting permissions for new file: ${c.toString(8)}`));
+    ((c = r.mode), logForDebugging(`Setting permissions for new file: ${c.toString(8)}`));
   try {
-    n(`Writing to temp file: ${p}`);
+    logForDebugging(`Writing to temp file: ${p}`);
     let d = openSync(
         p,
         constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | s,
@@ -679,16 +679,16 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
       if (O(p) !== O(o)) k(r.stagingDir);
       if ((writeFileSync(d, t, { encoding: r.encoding }), u && c !== void 0))
         try {
-          (fchmodSync(d, c), n("Applied original permissions to temp file"));
+          (fchmodSync(d, c), logForDebugging("Applied original permissions to temp file"));
         } catch (g) {
           if (!isUnsupportedFsOperationError(g)) throw g;
-          n(`fchmod unsupported on this filesystem: ${g}`);
+          logForDebugging(`fchmod unsupported on this filesystem: ${g}`);
         }
       try {
         fsyncSync(d);
       } catch (g) {
         if (!isUnsupportedFsOperationError(g)) throw g;
-        n(`fsync unsupported on this filesystem: ${g}`);
+        logForDebugging(`fsync unsupported on this filesystem: ${g}`);
       }
       S = !0;
     } catch (g) {
@@ -698,21 +698,21 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
       closeSync(d);
     } catch (g) {
       if (!b) throw g;
-      n(`closeSync also failed after temp write error: ${g}`, {
+      logForDebugging(`closeSync also failed after temp write error: ${g}`, {
         level: "error",
       });
     }
     if (b) throw v;
     if (
-      (n(`Temp file written successfully, size: ${t.length} bytes`),
+      (logForDebugging(`Temp file written successfully, size: ${t.length} bytes`),
       O(p) !== O(o))
     )
       k(r.stagingDir);
-    (n(`Renaming ${p} to ${o}`),
+    (logForDebugging(`Renaming ${p} to ${o}`),
       renameWithRetrySync(p, o, (g, E) => i.renameSync(g, E)),
-      n(`File ${o} written atomically`));
+      logForDebugging(`File ${o} written atomically`));
   } catch (d) {
-    n(`Failed to write file atomically: ${d}`, { level: "error" });
+    logForDebugging(`Failed to write file atomically: ${d}`, { level: "error" });
     let b = A(d);
     if ((S && b !== void 0 && RENAME_FALLBACK_ERRNOS.has(b)) || (!S && u && b === "EACCES")) {
       let E;
@@ -726,10 +726,10 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
         try {
           i.unlinkSync(p);
         } catch (I) {
-          n(`Failed to clean up temp file: ${I}`);
+          logForDebugging(`Failed to clean up temp file: ${I}`);
         }
         if (A(y) === "ELOOP")
-          throw new gh(`Refusing to write through symlink: ${o} (O_NOFOLLOW)`);
+          throw new SymlinkWriteRefusedError(`Refusing to write through symlink: ${o} (O_NOFOLLOW)`);
         throw d;
       }
       try {
@@ -738,15 +738,15 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
           fsyncSync(E);
         } catch (y) {
           if (!isUnsupportedFsOperationError(y)) throw y;
-          n(`fsync unsupported on this filesystem: ${y}`);
+          logForDebugging(`fsync unsupported on this filesystem: ${y}`);
         }
         closeSync(E);
         try {
           i.unlinkSync(p);
         } catch (y) {
-          n(`Failed to clean up temp file: ${y}`);
+          logForDebugging(`Failed to clean up temp file: ${y}`);
         }
-        n(`File ${o} written via in-place fallback`);
+        logForDebugging(`File ${o} written via in-place fallback`);
         return;
       } catch (y) {
         try {
@@ -766,13 +766,13 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
     try {
       i.unlinkSync(p);
     } catch (E) {
-      n(`Failed to clean up temp file: ${E}`);
+      logForDebugging(`Failed to clean up temp file: ${E}`);
     }
     throw d;
   }
 }
-async function wb(e, t, r = { encoding: "utf-8" }) {
-  let i = ae(),
+async function writeFileAndFlush(e, t, r = { encoding: "utf-8" }) {
+  let i = getFsSurface(),
     s = r.allowSymlink ? 0 : constants.O_NOFOLLOW,
     o = e,
     c,
@@ -781,7 +781,7 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
     try {
       let d = await readlink(e);
       ((o = M(d) ? d : Y(await realpath(O(e)), d)),
-        n(`Writing through symlink: ${e} -> ${o}`));
+        logForDebugging(`Writing through symlink: ${e} -> ${o}`));
     } catch {}
   else {
     if (r.checkParentDir)
@@ -792,12 +792,12 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
       } catch (d) {
         let b = A(d);
         if (b === "ELOOP" || b === "ENOTDIR")
-          throw new gh(`Refusing to write into symlinked directory: ${O(e)}`);
+          throw new SymlinkWriteRefusedError(`Refusing to write into symlinked directory: ${O(e)}`);
       }
     try {
       let d = await lstat(e);
       if (d.isSymbolicLink())
-        throw new gh(
+        throw new SymlinkWriteRefusedError(
           `Refusing to write through symlink: ${e}. Resolve the symlink and pass the real target path explicitly.`,
         );
       ((c = d.mode), (u = !0));
@@ -814,11 +814,11 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
     } catch (d) {
       if (!W(d)) throw d;
     }
-  if (u && c !== void 0) n(`Preserving file permissions: ${c.toString(8)}`);
+  if (u && c !== void 0) logForDebugging(`Preserving file permissions: ${c.toString(8)}`);
   else if (r.mode !== void 0)
-    ((c = r.mode), n(`Setting permissions for new file: ${c.toString(8)}`));
+    ((c = r.mode), logForDebugging(`Setting permissions for new file: ${c.toString(8)}`));
   try {
-    n(`Writing to temp file: ${p}`);
+    logForDebugging(`Writing to temp file: ${p}`);
     let d = await D(
         p,
         constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | s,
@@ -830,16 +830,16 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
       if (O(p) !== O(o)) k(r.stagingDir);
       if ((await d.writeFile(t, { encoding: r.encoding }), u && c !== void 0))
         try {
-          (await d.chmod(c), n("Applied original permissions to temp file"));
+          (await d.chmod(c), logForDebugging("Applied original permissions to temp file"));
         } catch (g) {
           if (!isUnsupportedFsOperationError(g)) throw g;
-          n(`fchmod unsupported on this filesystem: ${g}`);
+          logForDebugging(`fchmod unsupported on this filesystem: ${g}`);
         }
       try {
         await d.sync();
       } catch (g) {
         if (!isUnsupportedFsOperationError(g)) throw g;
-        n(`fsync unsupported on this filesystem: ${g}`);
+        logForDebugging(`fsync unsupported on this filesystem: ${g}`);
       }
       S = !0;
     } catch (g) {
@@ -849,19 +849,19 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
       await d.close();
     } catch (g) {
       if (!b) throw g;
-      n(`close also failed after temp write error: ${g}`, { level: "error" });
+      logForDebugging(`close also failed after temp write error: ${g}`, { level: "error" });
     }
     if (b) throw v;
     if (
-      (n(`Temp file written successfully, size: ${t.length} bytes`),
+      (logForDebugging(`Temp file written successfully, size: ${t.length} bytes`),
       O(p) !== O(o))
     )
       k(r.stagingDir);
-    (n(`Renaming ${p} to ${o}`),
+    (logForDebugging(`Renaming ${p} to ${o}`),
       await renameWithRetry(p, o, (g, E) => i.rename(g, E)),
-      n(`File ${o} written atomically`));
+      logForDebugging(`File ${o} written atomically`));
   } catch (d) {
-    n(`Failed to write file atomically: ${d}`, { level: "error" });
+    logForDebugging(`Failed to write file atomically: ${d}`, { level: "error" });
     let b = A(d);
     if ((S && b !== void 0 && RENAME_FALLBACK_ERRNOS.has(b)) || (!S && u && b === "EACCES")) {
       let E;
@@ -875,10 +875,10 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
         try {
           await i.unlink(p);
         } catch (I) {
-          n(`Failed to clean up temp file: ${I}`);
+          logForDebugging(`Failed to clean up temp file: ${I}`);
         }
         if (A(y) === "ELOOP")
-          throw new gh(`Refusing to write through symlink: ${o} (O_NOFOLLOW)`);
+          throw new SymlinkWriteRefusedError(`Refusing to write through symlink: ${o} (O_NOFOLLOW)`);
         throw d;
       }
       try {
@@ -887,15 +887,15 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
           await E.sync();
         } catch (y) {
           if (!isUnsupportedFsOperationError(y)) throw y;
-          n(`fsync unsupported on this filesystem: ${y}`);
+          logForDebugging(`fsync unsupported on this filesystem: ${y}`);
         }
         await E.close();
         try {
           await i.unlink(p);
         } catch (y) {
-          n(`Failed to clean up temp file: ${y}`);
+          logForDebugging(`Failed to clean up temp file: ${y}`);
         }
-        n(`File ${o} written via in-place fallback`);
+        logForDebugging(`File ${o} written via in-place fallback`);
         return;
       } catch (y) {
         try {
@@ -915,43 +915,43 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
     try {
       await i.unlink(p);
     } catch (E) {
-      n(`Failed to clean up temp file: ${E}`);
+      logForDebugging(`Failed to clean up temp file: ${E}`);
     }
     throw d;
   }
 }
 var Pe = new Set(["Public", "Default", "Default User", "All Users"]);
-async function $ar() {
+async function getDesktopPath() {
   let e = getCurrentPlatform(),
     t = ne(),
-    r = ae();
+    r = getFsSurface();
   if (e === "macos") return L(t, "Desktop");
   if (e === "windows") {
     let s = a.USERPROFILE ? a.USERPROFILE.replaceAll("\\", "/") : null;
     if (s) {
       let c = `/mnt/c${s.replace(/^[A-Z]:/, "")}/Desktop`;
-      if (await El(c)) return c;
+      if (await pathExists(c)) return c;
     }
     try {
       let c = await r.readdir("/mnt/c/Users");
       for (let u of c) {
         if (Pe.has(u.name)) continue;
         let w = L("/mnt/c/Users", u.name, "Desktop");
-        if (await El(w)) return w;
+        if (await pathExists(w)) return w;
       }
     } catch (o) {
-      n(`Failed to enumerate /mnt/c/Users for Windows desktop path: ${o}`, {
+      logForDebugging(`Failed to enumerate /mnt/c/Users for Windows desktop path: ${o}`, {
         level: "error",
       });
     }
   }
   let i = L(t, "Desktop");
-  if (await El(i)) return i;
+  if (await pathExists(i)) return i;
   return t;
 }
-async function X5t(e, t = Dge) {
+async function isFileSizeWithinLimit(e, t = DEFAULT_MAX_FILE_READ_BYTES) {
   try {
-    return (await ae().stat(e)).size <= t;
+    return (await getFsSurface().stat(e)).size <= t;
   } catch {
     return !1;
   }
@@ -963,58 +963,58 @@ function pf(e) {
     s = r.length > parse(r).root.length ? r.replace(i, "") : r;
   return t ? s.replaceAll("/", "\\").toLowerCase() : s;
 }
-function ERt(e, t) {
+function isSamePath(e, t) {
   return pf(e) === pf(t);
 }
 export {
-  Pge,
-  SRt,
-  _1,
-  bRt,
-  wRt,
-  KT,
-  Oge,
-  ot,
-  Net,
-  nL,
-  Iq,
-  Gu,
-  y1,
-  kQ,
+  getShellConfig,
+  setupGitBashShellEnv,
+  getGitBashPath,
+  prependDirectoryToPathEnv,
+  wrapShellScriptWithBash,
+  convertWindowsPathToUnix,
+  convertUnixPathToWindows,
+  resolvePath,
+  toCwdRelativePath,
+  getContainingDirectory,
+  containsPathTraversal,
+  formatPathWithTilde,
+  toForwardSlashPath,
+  isJupyterNotebookPath,
   rL,
-  Mar,
-  gh,
-  xQ,
-  nke,
-  rke,
-  DU,
-  oke,
-  El,
-  Dge,
-  Lge,
-  Nar,
-  z5t,
-  Pq,
-  bA,
-  Vxn,
-  Fet,
-  $et,
-  j6,
-  Uet,
-  HQ,
-  Far,
-  LU,
-  Ao,
-  _ie,
-  yx,
-  W6,
-  V5t,
-  K5t,
-  TRt,
-  Kxn,
-  wb,
-  $ar,
-  X5t,
+  recordFileIdentity,
+  SymlinkWriteRefusedError,
+  SymlinkReadRefusedError,
+  assertDirChainReal,
+  throwStagingDirTamperedError,
+  takeApprovedPathForWrite,
+  takeApprovedPathForRead,
+  pathExists,
+  DEFAULT_MAX_FILE_READ_BYTES,
+  readBoundedSync,
+  readInheritedFdSync,
+  isSocketFd,
+  getFileMtimeMsSync,
+  getFileMtimeMs,
+  isPerforceModeEnabled,
+  PERFORCE_READ_ONLY_MESSAGE,
+  isReadOnlyFileMode,
+  withPathLock,
+  applyLineEndings,
+  writeTextContent,
+  detectFileEncodingSafe,
+  expandLeadingTabs,
+  formatPathForDisplay,
+  findSimilarFile,
+  CWD_NOTE_PREFIX,
+  getSuggestedPathOutsideCwd,
+  addLineNumbers,
+  formatNumberedLine,
+  stripLineNumberPrefix,
+  writeFileSyncAndFlush,
+  writeFileAndFlush,
+  getDesktopPath,
+  isFileSizeWithinLimit,
   pf,
-  ERt,
+  isSamePath,
 };

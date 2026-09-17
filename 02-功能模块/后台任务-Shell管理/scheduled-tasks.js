@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { K, sn, G1, GDn, kg, m8, HL } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isConfigDirPath } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { rL, nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { rL, assertDirChainReal, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 var x = [
@@ -237,7 +237,7 @@ function getScheduledTasksPath(e) {
   return S(e ?? sn(), v);
 }
 async function readScheduledTasks(e) {
-  let s = ae(),
+  let s = getFsSurface(),
     r;
   try {
     r = await s.readFile(getScheduledTasksPath(e), { encoding: "utf-8" });
@@ -258,11 +258,11 @@ async function readScheduledTasks(e) {
       typeof o.prompt !== "string" ||
       typeof o.createdAt !== "number"
     ) {
-      n(`[ScheduledTasks] skipping malformed task: ${b(o)}`);
+      logForDebugging(`[ScheduledTasks] skipping malformed task: ${jsonStringify(o)}`);
       continue;
     }
     if (!parseCronExpression(o.cron)) {
-      n(`[ScheduledTasks] skipping task ${o.id} with invalid cron '${o.cron}'`);
+      logForDebugging(`[ScheduledTasks] skipping task ${o.id} with invalid cron '${o.cron}'`);
       continue;
     }
     a.push({
@@ -305,12 +305,12 @@ function hasScheduledTasks(e) {
 async function writeScheduledTasks(e, s) {
   let r = s ?? sn(),
     t = !isConfigDirPath(S(r, ".claude"));
-  if (t) await nke(r, S(r, ".claude"));
+  if (t) await assertDirChainReal(r, S(r, ".claude"));
   await mkdir(S(r, ".claude"), { recursive: !0 });
   let i = { tasks: e.map(({ durable: a, ...o }) => o) };
-  await wb(
+  await writeFileAndFlush(
     getScheduledTasksPath(r),
-    b(i, null, 2) +
+    jsonStringify(i, null, 2) +
       `
 `,
     {

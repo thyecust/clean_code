@@ -10,8 +10,8 @@
 import { vW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { w3t } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { isThemeColorKey } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { Zd, m4, uF, ga, Kx, Z0 } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { ThemeProvider, useResolvedTheme, KillRingProvider } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -19,7 +19,7 @@ import { StorageV5ContextProvider } from "../共享小工具-未细化/storage-v
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { te, X5, _h, Ccr, vcr, ePn, sB } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, CONTROL_CHAR_CODES, CSI_COMMAND_CODES, ERASE_DISPLAY_REGIONS, ERASE_LINE_REGIONS, CURSOR_STYLE_PRESETS, createAnsiTokenizer } from "../核心工具-字符串与文本/ansi-text-utils.js";
 import { stripAnsi } from "../共享小工具-未细化/text-sanitization.js";
 import { shouldUseFullscreen } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { sessionServicesFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
@@ -68,15 +68,15 @@ function fe(Rr) {
   else uo = Er[2];
   return uo;
 }
-function sO() {
+function useRenderMode() {
   let r = De(de);
   if (r === null) return Ke();
   if (typeof r === "string") return r;
   if (r.latched === null) r.latched = Ke();
   return r.latched;
 }
-function gi() {
-  return sO() === "fullscreen";
+function isFullscreen() {
+  return useRenderMode() === "fullscreen";
 }
 F();
 function ze() {
@@ -94,7 +94,7 @@ function Je({ children: r }) {
     e(Ye.Provider, { value: s.current, children: r })
   );
 }
-function ree() {
+function useRenderCaches() {
   let r = De(Ye),
     s = C(null);
   if (r) return r;
@@ -155,7 +155,7 @@ var mo = (r, s) => {
     await Promise.resolve();
     let c = mo(r, s);
     return (
-      n(
+      logForDebugging(
         `[render] first ink render: ${Math.round(process.uptime() * 1000)}ms since process start`,
       ),
       c
@@ -207,7 +207,7 @@ var ho = (r = {}) => {
     if (!c) (setTerminalHooks(ye), (c = s()), l.set(r, c));
     return c;
   };
-function zUn() {
+function reportStylePoolHealth() {
   let r = getInkInstanceRegistry().get(process.stdout);
   if (!r) return;
   go(r.getStylePool());
@@ -280,7 +280,7 @@ function w(r, s) {
     r.startsWith("ansi:")
   )
     return r;
-  return w3t(r) ? s[r] : void 0;
+  return isThemeColorKey(r) ? s[r] : void 0;
 }
 function Xe(k) {
   let Y = _(26),
@@ -357,7 +357,7 @@ function Xe(k) {
   else So = Y[25];
   return So;
 }
-var o = Xe;
+var Box = Xe;
 F();
 F();
 var F0e = Qt(!1);
@@ -370,9 +370,9 @@ function ue(r, s) {
     r.startsWith("ansi:")
   )
     return r;
-  return w3t(r) ? s[r] : void 0;
+  return isThemeColorKey(r) ? s[r] : void 0;
 }
-function t(Qe) {
+function Text(Qe) {
   let Re = _(31),
     ke,
     Te,
@@ -487,7 +487,7 @@ function t(Qe) {
   return To;
 }
 F();
-function ct(An) {
+function Link(An) {
   let Ao = _(5),
     { children: wn, url: we, fallback: Pn, assumeSupport: _n } = An,
     Pe = wn ?? we;
@@ -768,7 +768,7 @@ function* Ct(r) {
         continue;
       }
     }
-    yield { value: l, width: Math.max(1, te(l)) };
+    yield { value: l, width: Math.max(1, getStringWidth(l)) };
   }
 }
 function Oo(r, s) {
@@ -818,76 +818,76 @@ function Mo(r) {
     let v = h.match(/([^0-9;:]+)$/);
     if (v) ((m = v[1]), (h = h.slice(0, -m.length)));
   }
-  if (l === _h.SGR && f === "") return { type: "sgr", params: h };
+  if (l === CSI_COMMAND_CODES.SGR && f === "") return { type: "sgr", params: h };
   let S =
       h === ""
         ? []
         : h.split(/[;:]/).map((v) => (v === "" ? 0 : parseInt(v, 10))),
     x = S[0] ?? 1,
     R = S[1] ?? 1;
-  if (l === _h.CUU)
+  if (l === CSI_COMMAND_CODES.CUU)
     return {
       type: "cursor",
       action: { type: "move", direction: "up", count: x },
     };
-  if (l === _h.CUD || l === _h.VPR)
+  if (l === CSI_COMMAND_CODES.CUD || l === CSI_COMMAND_CODES.VPR)
     return {
       type: "cursor",
       action: { type: "move", direction: "down", count: x },
     };
-  if (l === _h.CUF || l === _h.HPR)
+  if (l === CSI_COMMAND_CODES.CUF || l === CSI_COMMAND_CODES.HPR)
     return {
       type: "cursor",
       action: { type: "move", direction: "forward", count: x },
     };
-  if (l === _h.CUB)
+  if (l === CSI_COMMAND_CODES.CUB)
     return {
       type: "cursor",
       action: { type: "move", direction: "back", count: x },
     };
-  if (l === _h.CNL)
+  if (l === CSI_COMMAND_CODES.CNL)
     return { type: "cursor", action: { type: "nextLine", count: x } };
-  if (l === _h.CPL)
+  if (l === CSI_COMMAND_CODES.CPL)
     return { type: "cursor", action: { type: "prevLine", count: x } };
-  if (l === _h.CHA || l === _h.HPA)
+  if (l === CSI_COMMAND_CODES.CHA || l === CSI_COMMAND_CODES.HPA)
     return { type: "cursor", action: { type: "column", col: x } };
-  if (l === _h.CUP || l === _h.HVP)
+  if (l === CSI_COMMAND_CODES.CUP || l === CSI_COMMAND_CODES.HVP)
     return { type: "cursor", action: { type: "position", row: x, col: R } };
-  if (l === _h.VPA) return { type: "cursor", action: { type: "row", row: x } };
-  if (l === _h.ED)
+  if (l === CSI_COMMAND_CODES.VPA) return { type: "cursor", action: { type: "row", row: x } };
+  if (l === CSI_COMMAND_CODES.ED)
     return {
       type: "erase",
-      action: { type: "display", region: Ccr[S[0] ?? 0] ?? "toEnd" },
+      action: { type: "display", region: ERASE_DISPLAY_REGIONS[S[0] ?? 0] ?? "toEnd" },
     };
-  if (l === _h.EL)
+  if (l === CSI_COMMAND_CODES.EL)
     return {
       type: "erase",
-      action: { type: "line", region: vcr[S[0] ?? 0] ?? "toEnd" },
+      action: { type: "line", region: ERASE_LINE_REGIONS[S[0] ?? 0] ?? "toEnd" },
     };
-  if (l === _h.ECH)
+  if (l === CSI_COMMAND_CODES.ECH)
     return { type: "erase", action: { type: "chars", count: x } };
-  if (l === _h.IL)
+  if (l === CSI_COMMAND_CODES.IL)
     return { type: "edit", action: { type: "insertLines", count: x } };
-  if (l === _h.DL)
+  if (l === CSI_COMMAND_CODES.DL)
     return { type: "edit", action: { type: "deleteLines", count: x } };
-  if (l === _h.ICH)
+  if (l === CSI_COMMAND_CODES.ICH)
     return { type: "edit", action: { type: "insertChars", count: x } };
-  if (l === _h.DCH)
+  if (l === CSI_COMMAND_CODES.DCH)
     return { type: "edit", action: { type: "deleteChars", count: x } };
-  if (l === _h.SU) return { type: "scroll", action: { type: "up", count: x } };
-  if (l === _h.SD)
+  if (l === CSI_COMMAND_CODES.SU) return { type: "scroll", action: { type: "up", count: x } };
+  if (l === CSI_COMMAND_CODES.SD)
     return { type: "scroll", action: { type: "down", count: x } };
-  if (l === _h.DECSTBM)
+  if (l === CSI_COMMAND_CODES.DECSTBM)
     return {
       type: "scroll",
       action: { type: "setRegion", top: x, bottom: S[1] ?? 0 },
     };
-  if (l === _h.SCOSC) return { type: "cursor", action: { type: "save" } };
-  if (l === _h.SCORC) return { type: "cursor", action: { type: "restore" } };
-  if (l === _h.DECSCUSR && m === " ")
-    return { type: "cursor", action: { type: "style", ...(ePn[x] ?? ePn[0]) } };
-  if (f === "?" && (l === _h.SM || l === _h.RM)) {
-    let v = l === _h.SM,
+  if (l === CSI_COMMAND_CODES.SCOSC) return { type: "cursor", action: { type: "save" } };
+  if (l === CSI_COMMAND_CODES.SCORC) return { type: "cursor", action: { type: "restore" } };
+  if (l === CSI_COMMAND_CODES.DECSCUSR && m === " ")
+    return { type: "cursor", action: { type: "style", ...(CURSOR_STYLE_PRESETS[x] ?? CURSOR_STYLE_PRESETS[0]) } };
+  if (f === "?" && (l === CSI_COMMAND_CODES.SM || l === CSI_COMMAND_CODES.RM)) {
+    let v = l === CSI_COMMAND_CODES.SM,
       N = [];
     for (let O of S) {
       let P = Oo(O, v);
@@ -899,7 +899,7 @@ function Mo(r) {
 }
 function Io(r) {
   if (r.length < 2) return "unknown";
-  if (r.charCodeAt(0) !== X5.ESC) return "unknown";
+  if (r.charCodeAt(0) !== CONTROL_CHAR_CODES.ESC) return "unknown";
   let s = r.charCodeAt(1);
   if (s === 91) return "csi";
   if (s === 93) return "osc";
@@ -912,7 +912,7 @@ class ce {
   tail = "";
   constructor(r) {
     ((this.forOutput = r?.forOutput ?? !1),
-      (this.tokenizer = sB({ forOutput: this.forOutput })));
+      (this.tokenizer = createAnsiTokenizer({ forOutput: this.forOutput })));
   }
   style = q();
   inLink = !1;
@@ -1027,7 +1027,7 @@ class ce {
     }
   }
 }
-var jr = Yl(function (ti) {
+var Ansi = Yl(function (ti) {
   let _e = _(19),
     { children: oe, dimColor: j, italic: G, wrap: U } = ti;
   if (typeof oe !== "string") {
@@ -1088,7 +1088,7 @@ var jr = Yl(function (ti) {
                 Lo,
               )
             : A.text;
-          return Bo ? e(ct, { url: Bo, children: Do }, Lo) : Do;
+          return Bo ? e(Link, { url: Bo, children: Do }, Lo) : Do;
         }),
           (_e[11] = j),
           (_e[12] = G),
@@ -1397,16 +1397,16 @@ function Ht(Et) {
   else nr = M[36];
   return nr;
 }
-var iO = Ht;
+var Button = Ht;
 F();
-function tn() {
+function useIsScreenReaderEnabled() {
   return De(JOt);
 }
-function n9(ki) {
+function Decorative(ki) {
   let { children: Ti, fallback: Ei } = ki;
-  return tn() ? (Ei ?? null) : Ti;
+  return useIsScreenReaderEnabled() ? (Ei ?? null) : Ti;
 }
-function zb(wi) {
+function Newline(wi) {
   let sr = _(4),
     { count: ir } = wi,
     jt = ir === void 0 ? 1 : ir,
@@ -1423,7 +1423,7 @@ function zb(wi) {
   else lr = sr[3];
   return lr;
 }
-function pd(Vt) {
+function NoSelect(Vt) {
   let ur = _(9),
     Fe,
     Ue,
@@ -1448,7 +1448,7 @@ function pd(Vt) {
   else ar = ur[8];
   return ar;
 }
-function oee(Bi) {
+function RawAnsi(Bi) {
   let cr = _(6),
     { lines: Q, width: Yt } = Bi;
   if (Q.length === 0) {
@@ -1496,7 +1496,7 @@ function Jt(r, s) {
   if (l === 0) return f >= R && f < v;
   return S > R && f < v;
 }
-function see() {
+function useTerminalViewport() {
   let r = De(Kx),
     s = C(null),
     l = C({ isVisible: !0 }),
@@ -1526,9 +1526,9 @@ var dr = 480;
 function He(r) {
   return a.CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT ? Math.max(r, dr) : r;
 }
-function bs(r = 16) {
+function useAnimationFrame(r = 16) {
   let s = De(ClockContext),
-    [l, { isVisible: c }, f] = see(),
+    [l, { isVisible: c }, f] = useTerminalViewport(),
     h = useTerminalFocusState(),
     m = C(h),
     b = c;
@@ -1545,9 +1545,9 @@ function bs(r = 16) {
 }
 F();
 var fr = () => De(Q0),
-  uE = fr;
+  useApp = fr;
 F();
-function nk(r, s) {
+function useDebouncedCallback(r, s) {
   let l = De(ClockContext),
     c = C(r);
   c.current = r;
@@ -1572,7 +1572,7 @@ function nk(r, s) {
 }
 F();
 var $t = () => () => {};
-function zye() {
+function useFocus() {
   let { focusManager: r, rootNode: s } = De(Q0),
     l = At(r?.subscribe ?? $t, () => r?.activeElement ?? null);
   return V(
@@ -1597,7 +1597,7 @@ function zye() {
 }
 F();
 var mr = () => () => {};
-function KOt(r) {
+function useHasFocus(r) {
   let { focusManager: s } = De(Q0);
   return At(
     s?.subscribe ?? mr,
@@ -1611,7 +1611,7 @@ function KOt(r) {
   );
 }
 F();
-function XOt(r) {
+function useAnimationTimer(r) {
   let s = De(ClockContext),
     l = r === null ? null : Math.ceil(He(r) / CLOCK_TICK_INTERVAL_MS) * CLOCK_TICK_INTERVAL_MS,
     c = C(null),
@@ -1628,7 +1628,7 @@ function XOt(r) {
     return Math.floor(c.current / l) * l;
   });
 }
-function ko(r, s, l) {
+function useInterval(r, s, l) {
   let c = C(r);
   c.current = r;
   let f = De(ClockContext),
@@ -1640,13 +1640,13 @@ function ko(r, s, l) {
           ? (S) => ((m.current = null), () => {})
           : (S) => {
               if (h && m.current === null) c.current();
-              return ((m.current = s), e7(f, () => c.current(), s));
+              return ((m.current = s), startClockInterval(f, () => c.current(), s));
             },
       [f, s, h],
     );
   At(b, getNullSnapshot);
 }
-function e7(r, s, l) {
+function startClockInterval(r, s, l) {
   let c = !1,
     f,
     h = () => {
@@ -1665,12 +1665,12 @@ function e7(r, s, l) {
   );
 }
 F();
-function t7(r) {
+function useMeasured(r) {
   let { subscribeLayout: s } = De(Q0);
   return At(s, r);
 }
 F();
-function aO() {
+function useSelection() {
   De(m4);
   let r = getInkInstanceRegistry().get(process.stdout);
   return V(() => {
@@ -1701,7 +1701,7 @@ function aO() {
 }
 var yr = () => () => {},
   hr = () => !1;
-function VUn() {
+function useHasTextSelection() {
   De(m4);
   let r = getInkInstanceRegistry().get(process.stdout);
   return At(r ? r.subscribeToSelectionChange : yr, r ? r.hasTextSelection : hr);
@@ -1725,7 +1725,7 @@ var Z = (r, s, l) => ({ type: "rgb", r, g: s, b: l }),
       statusColor: Z(95, 135, 255),
     },
   };
-function Rat(r, s) {
+function useTabStatus(r, s) {
   let l = De(Z0),
     c = C(null);
   E(() => {
@@ -1741,7 +1741,7 @@ function Rat(r, s) {
   }, [r, s, l]);
 }
 F();
-function n7(r) {
+function useTerminalTitle(r) {
   let s = De(Z0);
   E(() => {
     if (r === null || !s) return;
@@ -1751,7 +1751,7 @@ function n7(r) {
 }
 F();
 var gr = () => !1;
-function Un(r, s, l) {
+function useTimeout(r, s, l) {
   let c = De(ClockContext),
     f = typeof r === "function",
     h = f ? r : null,
@@ -1780,7 +1780,7 @@ var xr = (r) => ({
     width: r.yogaNode?.getComputedWidth() ?? 0,
     height: r.yogaNode?.getComputedHeight() ?? 0,
   }),
-  Od = xr;
+  measureElement = xr;
 function je(r, s) {
   let l = Ry(fe, null, Ry(ThemeProvider, null, Ry(KillRingProvider, null, Ry(Je, null, r))));
   return s !== void 0 ? Ry(StorageV5ContextProvider, { ...s, children: l }) : l;
@@ -1788,13 +1788,13 @@ function je(r, s) {
 function qt() {
   return { nativeCursor: lF(), atlasRecorder: qe() };
 }
-async function J0(r, s, l) {
+async function render(r, s, l) {
   let c = l?.storageV5 !== void 0 ? sessionServicesFor(l.storageV5) : void 0;
   if (s !== void 0 && "write" in s) return he(je(r, c), s);
   return he(je(r, c), { ...qt(), ...s });
 }
 var Xt = new WeakMap();
-async function w9e(r, s) {
+async function createRoot(r, s) {
   let l = await $e({ ...qt(), ...r }),
     c = s?.storageV5 !== void 0 ? sessionServicesFor(s.storageV5) : void 0,
     f = { ...l, render: (m) => l.render(je(m, c)) },
@@ -1802,43 +1802,43 @@ async function w9e(r, s) {
   if (h) Xt.set(h, f);
   return f;
 }
-function _tn(r = process.stdout) {
+function rootOf(r = process.stdout) {
   let s = getInkInstanceRegistry().get(r);
   return s && Xt.get(s);
 }
 export {
-  sO,
-  gi,
-  ree,
-  zUn,
-  o,
+  useRenderMode,
+  isFullscreen,
+  useRenderCaches,
+  reportStylePoolHealth,
+  Box,
   F0e,
-  t,
-  ct,
-  jr,
-  iO,
-  tn,
-  n9,
-  zb,
-  pd,
-  oee,
-  see,
-  bs,
-  uE,
-  nk,
-  zye,
-  KOt,
-  XOt,
-  ko,
-  e7,
-  t7,
-  aO,
-  VUn,
-  Rat,
-  n7,
-  Un,
-  Od,
-  J0,
-  w9e,
-  _tn,
+  Text,
+  Link,
+  Ansi,
+  Button,
+  useIsScreenReaderEnabled,
+  Decorative,
+  Newline,
+  NoSelect,
+  RawAnsi,
+  useTerminalViewport,
+  useAnimationFrame,
+  useApp,
+  useDebouncedCallback,
+  useFocus,
+  useHasFocus,
+  useAnimationTimer,
+  useInterval,
+  startClockInterval,
+  useMeasured,
+  useSelection,
+  useHasTextSelection,
+  useTabStatus,
+  useTerminalTitle,
+  useTimeout,
+  measureElement,
+  render,
+  createRoot,
+  rootOf,
 };

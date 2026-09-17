@@ -24,8 +24,8 @@ import {
   lHt,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Lge, Nar, z5t } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { readBoundedSync, readInheritedFdSync, isSocketFd } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { MAX_CREDENTIAL_FILE_BYTES } from "../../01-核心基础设施/共享小工具-未细化/max-credential-file-bytes.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 function isReviewOriginSession() {
@@ -41,15 +41,15 @@ var y = "/home/claude/.claude/remote",
 function F(e, t, r, { skipInReviewOrigin: o = !1 } = {}) {
   if (!a.CLAUDE_CODE_REMOTE) return;
   if (o && isReviewOriginSession()) {
-    n(`Skipping ${r} disk persistence in review-origin session`);
+    logForDebugging(`Skipping ${r} disk persistence in review-origin session`);
     return;
   }
   try {
     (mkdirSync(y, { recursive: !0, mode: 448 }),
       writeFileSync(e, t, { encoding: "utf8", mode: 384 }),
-      n(`Persisted ${r} to ${e} for subprocess access`));
+      logForDebugging(`Persisted ${r} to ${e} for subprocess access`));
   } catch (s) {
-    n(`Failed to persist ${r} to disk (non-fatal): ${l(s)}`, {
+    logForDebugging(`Failed to persist ${r} to disk (non-fatal): ${l(s)}`, {
       level: "error",
     });
   }
@@ -59,13 +59,13 @@ function h(e, t) {
 }
 function readWellKnownTokenFile(e, t) {
   try {
-    let r = Lge(e, { maxBytes: MAX_CREDENTIAL_BYTES, regularFileOnly: !0 }).trim();
+    let r = readBoundedSync(e, { maxBytes: MAX_CREDENTIAL_BYTES, regularFileOnly: !0 }).trim();
     if (!r) return { token: null, miss: "empty" };
-    return (n(`Read ${t} from well-known file ${e}`), { token: r });
+    return (logForDebugging(`Read ${t} from well-known file ${e}`), { token: r });
   } catch (r) {
     if (W(r)) return { token: null, miss: "enoent" };
     return (
-      n(`Failed to read ${t} from ${e}: ${l(r)}`, { level: "debug" }),
+      logForDebugging(`Failed to read ${t} from ${e}: ${l(r)}`, { level: "debug" }),
       { token: null, miss: A(r) === "EACCES" ? "eacces" : "other" }
     );
   }
@@ -73,15 +73,15 @@ function readWellKnownTokenFile(e, t) {
 async function w(e, t, r, o, { skipInReviewOrigin: s = !1 } = {}) {
   if (!a.CLAUDE_CODE_REMOTE) return;
   if (s && isReviewOriginSession()) {
-    n(`Skipping ${r} disk persistence in review-origin session`);
+    logForDebugging(`Skipping ${r} disk persistence in review-origin session`);
     return;
   }
   let p = await o.writeHandoffCredential(e, t);
   if (p.state === "written") {
-    n(`Persisted ${r} to ${e} for subprocess access`);
+    logForDebugging(`Persisted ${r} to ${e} for subprocess access`);
     return;
   }
-  n(
+  logForDebugging(
     `Failed to persist ${r} to disk (non-fatal): ${p.code ?? "unknown error"}`,
     { level: "error" },
   );
@@ -92,13 +92,13 @@ async function v(e, t, r) {
     case "present": {
       let s = o.contents.trim();
       if (!s) return null;
-      return (n(`Read ${t} from well-known file ${e}`), s);
+      return (logForDebugging(`Read ${t} from well-known file ${e}`), s);
     }
     case "absent":
       return null;
     case "read-failed":
       return (
-        n(`Failed to read ${t} from ${e}: ${o.code ?? "unknown error"}`, {
+        logForDebugging(`Failed to read ${t} from ${e}: ${o.code ?? "unknown error"}`, {
           level: "debug",
         }),
         null
@@ -125,13 +125,13 @@ function D({
   let f = parseInt(g, 10);
   if (Number.isNaN(f))
     return (
-      n(`${e} must be a valid file descriptor number, got: ${g}`, {
+      logForDebugging(`${e} must be a valid file descriptor number, got: ${g}`, {
         level: "error",
       }),
       c(null),
       null
     );
-  if (z5t(f)) {
+  if (isSocketFd(f)) {
     let i = !a.CLAUDE_CODE_REMOTE && typeof process.send !== "function",
       u = i ? T(f, o) : h(r, s);
     if (i) (delete process.env[e], aHt(e));
@@ -140,21 +140,21 @@ function D({
   }
   try {
     let i = `/dev/fd/${f}`,
-      u = Lge(i, { maxBytes: MAX_CREDENTIAL_BYTES }).trim();
+      u = readBoundedSync(i, { maxBytes: MAX_CREDENTIAL_BYTES }).trim();
     if (!u)
       return (
-        n(`File descriptor contained empty ${o}`, { level: "error" }),
+        logForDebugging(`File descriptor contained empty ${o}`, { level: "error" }),
         c(null),
         null
       );
     return (
-      n(`Successfully read ${o} from file descriptor ${f}`),
+      logForDebugging(`Successfully read ${o} from file descriptor ${f}`),
       c(u),
       F(t, u, s, { skipInReviewOrigin: E }),
       u
     );
   } catch (i) {
-    n(`Failed to read ${o} from file descriptor ${f}: ${l(i)}`, {
+    logForDebugging(`Failed to read ${o} from file descriptor ${f}: ${l(i)}`, {
       level: "error",
     });
     let u = h(r, s);
@@ -174,22 +174,22 @@ function D({
 }
 function T(e, t) {
   try {
-    n(
+    logForDebugging(
       `Reading ${t} from inherited descriptor ${e} (until newline or end-of-stream)`,
     );
-    let r = Nar(e, { maxBytes: MAX_CREDENTIAL_BYTES }).trim();
+    let r = readInheritedFdSync(e, { maxBytes: MAX_CREDENTIAL_BYTES }).trim();
     if (!r)
       return (
-        n(`File descriptor ${e} contained empty ${t}`, { level: "error" }),
+        logForDebugging(`File descriptor ${e} contained empty ${t}`, { level: "error" }),
         null
       );
     return (
-      n(`Successfully read ${t} directly from inherited descriptor ${e}`),
+      logForDebugging(`Successfully read ${t} directly from inherited descriptor ${e}`),
       r
     );
   } catch (r) {
     return (
-      n(`Failed to read ${t} directly from descriptor ${e}: ${l(r)}`, {
+      logForDebugging(`Failed to read ${t} directly from descriptor ${e}: ${l(r)}`, {
         level: "error",
       }),
       null
@@ -217,7 +217,7 @@ async function k({
   let i = parseInt(f, 10);
   if (Number.isNaN(i))
     return (
-      n(`${e} must be a valid file descriptor number, got: ${f}`, {
+      logForDebugging(`${e} must be a valid file descriptor number, got: ${f}`, {
         level: "error",
       }),
       c(null),
@@ -227,7 +227,7 @@ async function k({
     S = () => {
       (delete process.env[e], aHt(e));
     };
-  if (z5t(i)) {
+  if (isSocketFd(i)) {
     if (!u) {
       let _ = await v(r, s, E);
       return O(p, c, _);
@@ -238,21 +238,21 @@ async function k({
   }
   try {
     let d = `/dev/fd/${i}`,
-      _ = Lge(d, { maxBytes: MAX_CREDENTIAL_BYTES }).trim();
+      _ = readBoundedSync(d, { maxBytes: MAX_CREDENTIAL_BYTES }).trim();
     if (!_)
       return (
-        n(`File descriptor contained empty ${o}`, { level: "error" }),
+        logForDebugging(`File descriptor contained empty ${o}`, { level: "error" }),
         c(null),
         null
       );
     return (
-      n(`Successfully read ${o} from file descriptor ${i}`),
+      logForDebugging(`Successfully read ${o} from file descriptor ${i}`),
       c(_),
       await w(t, _, s, E, { skipInReviewOrigin: m }),
       _
     );
   } catch (d) {
-    n(`Failed to read ${o} from file descriptor ${i}: ${l(d)}`, {
+    logForDebugging(`Failed to read ${o} from file descriptor ${i}: ${l(d)}`, {
       level: "error",
     });
     let _ = await v(r, s, E);
@@ -286,24 +286,24 @@ function I() {
     t = b(e);
   } catch (r) {
     if (U(r)) {
-      n(`bg auth snapshot busy, will retry on the next read: ${l(r)}`, {
+      logForDebugging(`bg auth snapshot busy, will retry on the next read: ${l(r)}`, {
         level: "warn",
       });
       return;
     }
     if (!W(r))
-      n(`Failed to consume bg auth snapshot: ${l(r)}`, { level: "warn" });
+      logForDebugging(`Failed to consume bg auth snapshot: ${l(r)}`, { level: "warn" });
   }
   if ((delete process.env.CLAUDE_BG_AUTH_SNAPSHOT_PATH, t === void 0)) return;
   try {
     unlink(e).catch(() => {});
     let r = JSON.parse(t);
     if (typeof r?.gatewayToken === "string" && r.gatewayToken) {
-      (lHt(r.gatewayToken), n("Consumed gateway token from bg auth snapshot"));
+      (lHt(r.gatewayToken), logForDebugging("Consumed gateway token from bg auth snapshot"));
       return;
     }
     if (typeof r?.accessToken !== "string" || !r.accessToken) {
-      n("bg auth snapshot missing accessToken", { level: "warn" });
+      logForDebugging("bg auth snapshot missing accessToken", { level: "warn" });
       return;
     }
     if (
@@ -316,10 +316,10 @@ function I() {
       process.env.CLAUDE_CODE_SUBSCRIPTION_TYPE = r.subscriptionType;
     if (r.rateLimitTier)
       process.env.CLAUDE_CODE_RATE_LIMIT_TIER = r.rateLimitTier;
-    n("Consumed bg auth snapshot from sockDir");
+    logForDebugging("Consumed bg auth snapshot from sockDir");
   } catch (r) {
     if (!W(r))
-      n(`Failed to consume bg auth snapshot: ${l(r)}`, { level: "warn" });
+      logForDebugging(`Failed to consume bg auth snapshot: ${l(r)}`, { level: "warn" });
   }
 }
 async function consumeBgAuthSnapshotAsync(e) {
@@ -340,7 +340,7 @@ async function consumeBgAuthSnapshotAsync(e) {
         !(r.code === "EACCES" && getCurrentPlatform() === "windows")
       )
         a.unset("CLAUDE_BG_AUTH_SNAPSHOT_PATH");
-      n(`Failed to consume bg auth snapshot: ${r.code ?? "unknown error"}`, {
+      logForDebugging(`Failed to consume bg auth snapshot: ${r.code ?? "unknown error"}`, {
         level: "warn",
       });
       return;
@@ -352,11 +352,11 @@ async function consumeBgAuthSnapshotAsync(e) {
   try {
     let o = JSON.parse(r.contents);
     if (typeof o?.gatewayToken === "string" && o.gatewayToken) {
-      (lHt(o.gatewayToken), n("Consumed gateway token from bg auth snapshot"));
+      (lHt(o.gatewayToken), logForDebugging("Consumed gateway token from bg auth snapshot"));
       return;
     }
     if (typeof o?.accessToken !== "string" || !o.accessToken) {
-      n("bg auth snapshot missing accessToken", { level: "warn" });
+      logForDebugging("bg auth snapshot missing accessToken", { level: "warn" });
       return;
     }
     if (
@@ -369,9 +369,9 @@ async function consumeBgAuthSnapshotAsync(e) {
       a.set("CLAUDE_CODE_SUBSCRIPTION_TYPE", String(o.subscriptionType));
     if (o.rateLimitTier)
       a.set("CLAUDE_CODE_RATE_LIMIT_TIER", String(o.rateLimitTier));
-    n("Consumed bg auth snapshot from sockDir");
+    logForDebugging("Consumed bg auth snapshot from sockDir");
   } catch (o) {
-    n(`Failed to consume bg auth snapshot: ${l(o)}`, { level: "warn" });
+    logForDebugging(`Failed to consume bg auth snapshot: ${l(o)}`, { level: "warn" });
   }
 }
 function hasCredentialDescriptor(e) {
@@ -417,7 +417,7 @@ function getGatewayToken() {
       Number.isNaN(o) ||
       a.CLAUDE_CODE_REMOTE ||
       typeof process.send === "function" ||
-      !z5t(o)
+      !isSocketFd(o)
         ? null
         : T(o, "gateway token");
   return (
@@ -453,7 +453,7 @@ function U(e) {
 }
 function b(e) {
   let t = () =>
-    Lge(e, {
+    readBoundedSync(e, {
       maxBytes: MAX_CREDENTIAL_BYTES,
       symlinkAtPath: a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST
         ? "follow"

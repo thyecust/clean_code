@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 119 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { ccn, i_r, ucn } from "../Artifact发布-渲染/chunk-5gvg7p5p.js";
+import { DEFAULT_ARTIFACT_READ_PROMPT as ccn, webFetchFileLane as i_r, readArtifactForModel as ucn } from "../Artifact发布-渲染/artifact-read-for-model.js";
 import "../Artifact发布-渲染/chunk-x29r16ke.js";
 export {
   ccn as DEFAULT_ARTIFACT_READ_PROMPT,

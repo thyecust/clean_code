@@ -10,9 +10,9 @@
 import { truncateToCodeUnits, takeLastCodeUnits, removeLoneSurrogates, countOccurrences, CONTROL_CHARS_REGEX } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { isUltrathinkEnabled, hasUltrathinkTrigger, findUltrathinkMatches, pickRainbowColor } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useQueuedMessageContext } from "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import { Markdown } from "../语法高亮-Markdown渲染/markdown-renderer.js";
 import { Divider } from "../../01-核心基础设施/共享小工具-未细化/divider.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getSystemLocale, getTimeFormatConfig, formatDateWithPreset, formatDateWithPattern } from "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
@@ -125,21 +125,21 @@ function UserPromptText(Je) {
     if (T[6] !== R || T[7] !== C || T[8] !== p || T[9] !== Z)
       ((S = R
         ? null
-        : r(o, {
+        : r(Box, {
             flexDirection: "row",
             children: [
               p
-                ? r(t, {
+                ? r(Text, {
                     "aria-label": "selected:",
                     color: "suggestion",
                     children: [figures.pointer, " "],
                   })
                 : null,
-              e(t, {
+              e(Text, {
                 color: p ? "suggestion" : C ? "subtle" : "briefLabelYou",
                 children: "You",
               }),
-              Z ? r(t, { dimColor: !0, children: [" ", Z] }) : null,
+              Z ? r(Text, { dimColor: !0, children: [" ", Z] }) : null,
             ],
           })),
         (T[6] = R),
@@ -153,14 +153,14 @@ function UserPromptText(Je) {
       ((G = f
         ? r(N, {
             children: [
-              e(t, { color: O, children: l.head }),
+              e(Text, { color: O, children: l.head }),
               e(g, { hiddenLines: l.hiddenLines, indent: R ? 0 : 2 }),
-              e(t, { color: O, children: l.tail }),
+              e(Text, { color: O, children: l.tail }),
             ],
           })
         : I
-          ? e(js, { promptMode: !0, color: O, children: l })
-          : e(t, { color: O, children: l })),
+          ? e(Markdown, { promptMode: !0, color: O, children: l })
+          : e(Text, { color: O, children: l })),
         (T[11] = R),
         (T[12] = I),
         (T[13] = l),
@@ -170,7 +170,7 @@ function UserPromptText(Je) {
     else G = T[16];
     let we;
     if (T[17] !== A || T[18] !== S || T[19] !== G)
-      ((we = r(o, {
+      ((we = r(Box, {
         flexDirection: "column",
         paddingLeft: A,
         children: [S, G],
@@ -186,12 +186,12 @@ function UserPromptText(Je) {
     x = p ? "suggestion" : "text",
     b;
   if (T[21] !== F?.selectionHighlight || T[22] !== p)
-    ((b = e(o, {
+    ((b = e(Box, {
       flexShrink: 0,
       children:
         F?.selectionHighlight === "off"
-          ? e(t, { children: "  " })
-          : r(t, {
+          ? e(Text, { children: "  " })
+          : r(Text, {
               "aria-label": p ? "selected:" : "you:",
               color: p ? "suggestion" : "subtle",
               children: [figures.pointer, " "],
@@ -204,7 +204,7 @@ function UserPromptText(Je) {
   let A;
   if (T[24] !== ce || T[25] !== I || T[26] !== l || T[27] !== x || T[28] !== f)
     ((A = f
-      ? r(o, {
+      ? r(Box, {
           flexDirection: "column",
           children: [
             e(P, { text: l.head, color: x }),
@@ -213,7 +213,7 @@ function UserPromptText(Je) {
           ],
         })
       : I
-        ? e(js, { promptMode: !0, color: x, children: l })
+        ? e(Markdown, { promptMode: !0, color: x, children: l })
         : e(P, { text: l, color: x })),
       (T[24] = ce),
       (T[25] = I),
@@ -224,7 +224,7 @@ function UserPromptText(Je) {
   else A = T[29];
   let S;
   if (T[30] !== b || T[31] !== A)
-    ((S = r(o, { flexDirection: "row", children: [b, A] })),
+    ((S = r(Box, { flexDirection: "row", children: [b, A] })),
       (T[30] = b),
       (T[31] = A),
       (T[32] = S));
@@ -276,7 +276,7 @@ function P(ve) {
     bb0: {
       let Le = isUltrathinkEnabled() ? findUltrathinkMatches(D) : [];
       if (Le.length === 0) {
-        ue = e(t, { color: X, children: D });
+        ue = e(Text, { color: X, children: D });
         break bb0;
       }
       let V = [];
@@ -284,15 +284,15 @@ function P(ve) {
       for (const E of Le) {
         if (E.start > k)
           V.push(
-            e(t, { color: X, children: D.slice(k, E.start) }, `plain-${k}`),
+            e(Text, { color: X, children: D.slice(k, E.start) }, `plain-${k}`),
           );
         for (let Q = E.start; Q < E.end; Q++)
-          V.push(e(t, { color: pickRainbowColor(Q - E.start), children: D[Q] }, `rb-${Q}`));
+          V.push(e(Text, { color: pickRainbowColor(Q - E.start), children: D[Q] }, `rb-${Q}`));
         k = E.end;
       }
       if (k < D.length)
-        V.push(e(t, { color: X, children: D.slice(k) }, `plain-${k}`));
-      Ne = e(t, { children: V });
+        V.push(e(Text, { color: X, children: D.slice(k) }, `plain-${k}`));
+      Ne = e(Text, { children: V });
     }
     ((ze[0] = X), (ze[1] = D), (ze[2] = Ne), (ze[3] = ue));
   } else ((Ne = ze[2]), (ue = ze[3]));
@@ -315,18 +315,18 @@ function TruncatedText(st) {
     bb0: {
       let H = truncateMiddleText(pe);
       if (typeof H === "string") {
-        ge = e(t, { wrap: "wrap", children: y(H) });
+        ge = e(Text, { wrap: "wrap", children: y(H) });
         break bb0;
       }
-      v = o;
+      v = Box;
       ee = "column";
-      te = e(t, { wrap: "wrap", children: y(H.head) });
+      te = e(Text, { wrap: "wrap", children: y(H.head) });
       ne = e(g, {
         hiddenLines: H.hiddenLines,
         hiddenChars: H.hiddenChars,
         indent: 0,
       });
-      j = t;
+      j = Text;
       z = "wrap";
       W = y(H.tail);
     }

@@ -10,7 +10,7 @@
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { K, kg } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { truncate, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getSessionProjectDir } from "../MCP客户端/mcp-task-metadata.js";
 import { isLocalBashTask, TASK_TYPE_LABELS, isLiveBackgroundTask, isIdleTeammateTask, isTaskAutoReactArmed, isMonitorTaskLeaseLive } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { parseCronExpression, getNextCronFireDate, formatCronSchedule } from "./scheduled-tasks.js";

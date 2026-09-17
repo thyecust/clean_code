@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ne, HCe, vTn, ker, PCe } from "./chunk-rr78st95.js";
+import { getArtifactState, clearRefusedPublishBodies, clearReadDeliveries, pruneRefusedPublishBodies, resetArtifactConversationState } from "./chunk-rr78st95.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ARTIFACT_TOOL_NAME, PR_REVIEW_SECURITY_WALL, ArtifactInputError, ARTIFACT_VERSION_SAFE_RE, ARTIFACT_DELETED_NOTE_TAG, ARTIFACT_DELETED_NOTE_RE, uuidSlugFromUrl, canonicalArtifactTargetFor, sanitizeArtifactTitle } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { runBundledSkillSessionResets } from "../Skills技能/bundled-skills.js";
 import { hashForTelemetry, READ_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { WEB_FETCH_TOOL_NAME, formatArtifactTitle, linkPathToSlug, unlinkPath, retainPathLinks } from "./chunk-01ymf0ar.js";
 import { CREATED_FRAME_URL_PREFIX, OPENED_FRAME_URL_PREFIX, getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
 import { hasAutoEditChainPublishId, isPipelineReplyOriginToolUseId } from "./chunk-p1dkvpxj.js";
@@ -33,7 +33,7 @@ function L(e) {
   return `${r || "publish"}\x00${t}\x00${n}\x00${a}`;
 }
 function S(e, r, t) {
-  let n = ne().rejectBreaker,
+  let n = getArtifactState().rejectBreaker,
     a = L(e),
     s = n.get(a),
     l = s !== void 0 && s.reason === r && s.fingerprint === t ? s.count + 1 : 1;
@@ -146,7 +146,7 @@ function V(e) {
   };
 }
 function z() {
-  ne().rejectBreaker.clear();
+  getArtifactState().rejectBreaker.clear();
 }
 class C {
   order = [];
@@ -268,7 +268,7 @@ function v(e, r) {
   for (let [t, n] of Object.entries(r.frameUrls))
     if (uuidSlugFromUrl(n.url) === e) {
       if ((delete r.frameUrls[t], r.applyLinks && !t.includes("\x00")))
-        unlinkPath(ot(t));
+        unlinkPath(resolvePath(t));
     }
   for (let [t, n] of Object.entries(r.createdFromType))
     if (n.slug === e) delete r.createdFromType[t];
@@ -342,9 +342,9 @@ function H(e, r, t, n, a, s, l) {
     return;
   for (let [f, d] of Object.entries(t))
     if (f !== o.path && uuidSlugFromUrl(d.url) === u) {
-      if ((delete t[f], l)) unlinkPath(ot(f));
+      if ((delete t[f], l)) unlinkPath(resolvePath(f));
     }
-  if (l) linkPathToSlug(ot(o.path), u);
+  if (l) linkPathToSlug(resolvePath(o.path), u);
   delete t[o.path];
   let c = typeof o.title === "string" ? sanitizeArtifactTitle(o.title) : null;
   if (
@@ -364,7 +364,7 @@ function buildArtifactReadSeed(e, r, t) {
   let n = new Set();
   for (let s of e)
     if (s.type === "assistant" && s.message.id) n.add(s.message.id);
-  if ((ker(n), vTn(), !t))
+  if ((pruneRefusedPublishBodies(n), clearReadDeliveries(), !t))
     return { artifactReadVersions: {}, artifactReadObservers: {} };
   let a = collectArtifactStateFromMessages(e, { applyLinks: !1 }).artifactReadVersions;
   return { artifactReadVersions: a, artifactReadObservers: F(a, r) };
@@ -417,11 +417,11 @@ function Z(e, r) {
 function rehydrateArtifactFrameState(e, r, t) {
   let { legacyConflict: n, continuesConversation: a = !1 } = t,
     { frameUrls: s, artifactReadVersions: l, artifactRefs: o } = r;
-  (runBundledSkillSessionResets(), PCe({ continuesConversation: a }));
-  let p = ne().createdFromType;
+  (runBundledSkillSessionResets(), resetArtifactConversationState({ continuesConversation: a }));
+  let p = getArtifactState().createdFromType;
   for (let [c, f] of Object.entries(r.createdFromType)) p.set(c, f);
-  if (!a) HCe();
-  retainPathLinks(new Set(Object.keys(s).map((c) => ot(c))));
+  if (!a) clearRefusedPublishBodies();
+  retainPathLinks(new Set(Object.keys(s).map((c) => resolvePath(c))));
   let u = F(l, n);
   e((c) => {
     let f = Object.keys(c.frameUrls),

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 113 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { RENAME_NOTICE } from "../../01-核心基础设施/共享小工具-未细化/chunk-57d41trc.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 var s = async (l, m) => {
@@ -27,9 +27,9 @@ ${a}`
       m,
     );
   if (n == null) return n;
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
-    children: [e(t, { dimColor: !0, children: RENAME_NOTICE }), n],
+    children: [e(Text, { dimColor: !0, children: RENAME_NOTICE }), n],
   });
 };
 export { s as call };

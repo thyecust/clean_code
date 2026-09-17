@@ -12,7 +12,7 @@
 import { ze, wje, Ixe, Lrt, Eje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { CRON_WORKLOAD_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getRemoteTransport } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -209,7 +209,7 @@ function useScheduledTasks({ isLoading: o, assistantMode: r, transcript: s, stor
                 ),
               );
             } catch (f) {
-              n(
+              logForDebugging(
                 `[ScheduledTasks] fire enqueue (v5 arm) failed; fire skipped: ${f}`,
               );
             }
@@ -240,7 +240,7 @@ function useScheduledTasks({ isLoading: o, assistantMode: r, transcript: s, stor
               queueTeammateUserMessage(u.id, t.prompt, _, { kind: "task-notification" });
               return;
             }
-            (n(
+            (logForDebugging(
               `[ScheduledTasks] teammate ${t.agentId} gone, removing orphaned cron ${t.id}`,
             ),
               deleteScheduledTasks([t.id]));

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 172 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep, withDeadline, raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -18,7 +18,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, withFea
 import { parseConfigInteger, isInProtectedNamespace } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { normalizePermissionModeAlias, ASCII_SPINNER_FRAMES, CHECK_MARK_GLYPH, CROSS_MARK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { Ve, R, dt, l, A, dot, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, changeWorkingDirectory, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, getNonessentialTrafficDisabledEnvVar, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -26,7 +26,7 @@ import { pXt, IPn, $nt, env as a } from "../../01-核心基础设施/设置-配�
 import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { te, truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { ENVIRONMENTS_BETA, readBoundedFile, sanitizeSessionName, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -49,7 +49,7 @@ import { generateAdjectiveNounName } from "../../01-核心基础设施/核心工
 import { validateBridgeId, toCompatSessionId, toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { Eq, Hvt, Pvt, Ovt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { CLAUDE_CODE_REMOTE_SERVER_NAME, buildCcrMetaServerConfig, buildCcrSessionMetaUrl, getTrustedIngressOrigin } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import {
   ensureBridgeSpawnRootDir,
   REMOTE_CONTROL_CLI_TAG,
@@ -63,13 +63,13 @@ import {
   getMcpConfigsByScope,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { Dve, $$e } from "./chunk-5ne99rq3.js";
+import { setAttestationFilterPolicy, REMOTE_IO_WARNING_PREFIX } from "./chunk-5ne99rq3.js";
 import { isBridgeEnvReregisterEnabled, isCcrV2SendEventsEnabled, isCcrV2SessionCrudEnabled, isBridgeServerSessionConfigEnabled } from "./chunk-9estzwf5.js";
 import { debugTruncate, debugBody, describeAxiosError, parseRetryAfterHeader, extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { getAttestationFilterPolicy, getTrustedDeviceToken, withUntrustedDeviceRecovery } from "./chunk-tyce0p0b.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE, REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE, BRIDGE_WORK_STATE_QUEUED } from "./remote-control-messages.js";
-import "../自动更新-安装/chunk-brx72pf1.js";
+import "../自动更新-安装/install-diagnostics.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
 import { removeGuiHostEntrypoint, g4 } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import { NESTED_SESSION_MARKER_ENV_VARS, NON_INHERITED_SESSION_ENV_VARS } from "../Workflow编排/session-env-vars.js";
@@ -432,11 +432,11 @@ import {
 } from "fs/promises";
 import { join as Qt } from "path";
 var Fr = /^[a-zA-Z0-9_-]{1,64}$/;
-function dr(e, t = Eq) {
+function dr(e, t = CLAUDE_CODE_REMOTE_SERVER_NAME) {
   if (!("tools" in e) || e.tools === void 0) return [];
   if (!Array.isArray(e.tools))
     return (
-      n("[bridge:meta-mcp] meta tools[] is not an array", { level: "warn" }),
+      logForDebugging("[bridge:meta-mcp] meta tools[] is not an array", { level: "warn" }),
       null
     );
   let o = [];
@@ -449,7 +449,7 @@ function dr(e, t = Eq) {
       !Fr.test(r.name)
     )
       return (
-        n("[bridge:meta-mcp] injected tools[] entry is malformed", {
+        logForDebugging("[bridge:meta-mcp] injected tools[] entry is malformed", {
           level: "warn",
         }),
         null
@@ -512,7 +512,7 @@ function Xr(e, t) {
 function Kr(e, t, o) {
   let d;
   try {
-    d = z(e);
+    d = jsonParse(e);
   } catch {
     return [];
   }
@@ -706,12 +706,12 @@ function Jt(e) {
         We = !1;
       if (I.stderr)
         createInterface({ input: I.stderr }).on("line", (Se) => {
-          if (Se.startsWith($$e)) {
-            let $e = normalizeWhitespace(Se.slice($$e.length));
+          if (Se.startsWith(REMOTE_IO_WARNING_PREFIX)) {
+            let $e = normalizeWhitespace(Se.slice(REMOTE_IO_WARNING_PREFIX.length));
             if (e.onChildWarning) e.onChildWarning(t.sessionId, $e);
             else
               process.stderr.write(
-                $$e +
+                REMOTE_IO_WARNING_PREFIX +
                   $e +
                   `
 `,
@@ -755,7 +755,7 @@ function Jt(e) {
           {
             let fe;
             try {
-              fe = z(Se);
+              fe = jsonParse(Se);
             } catch {}
             if (fe && typeof fe === "object") {
               let Ae = fe;
@@ -833,7 +833,7 @@ function Jt(e) {
           updateAccessToken(j) {
             ((et.accessToken = j),
               et.writeStdin(
-                b({
+                jsonStringify({
                   type: "update_environment_variables",
                   variables: { CLAUDE_CODE_SESSION_ACCESS_TOKEN: j },
                 }) +
@@ -884,7 +884,7 @@ function ln(e, t) {
     };
   let _ =
     r.autoAllowTools.length > 0
-      ? [`--allowedTools=${r.autoAllowTools.map((T) => buildMcpToolName(Eq, T)).join(",")}`]
+      ? [`--allowedTools=${r.autoAllowTools.map((T) => buildMcpToolName(CLAUDE_CODE_REMOTE_SERVER_NAME, T)).join(",")}`]
       : [];
   return {
     extraArgs: [...o, ..._],
@@ -911,10 +911,10 @@ function wr(e) {
     else p++;
   let r = [],
     C = appendClaudeCodeArgs(r, t, on, (w) =>
-      n(`[bridge:server-config] skipped ${w} claude_code_arg`),
+      logForDebugging(`[bridge:server-config] skipped ${w} claude_code_arg`),
     );
   return (
-    n(
+    logForDebugging(
       `[bridge:server-config] claude_code_args applied=${C} append_prompt=${o ? "present" : "unset"} disallowed_tools=${d.length} not_allowlisted=${p}`,
     ),
     { extraArgs: r, appendSystemPrompt: o, disallowedTools: d }
@@ -929,15 +929,15 @@ function cn(e, t) {
   if (!e) return { meta: null, ignored: 0, dropped: null };
   let o = un(e.content);
   if (!o) return { meta: null, ignored: 0, dropped: "undecodable" };
-  let d = countMatching(Object.keys(o), (T) => T !== Eq);
+  let d = countMatching(Object.keys(o), (T) => T !== CLAUDE_CODE_REMOTE_SERVER_NAME);
   if (d > 0)
-    n(
-      `[bridge:server-config] ignoring ${d} other server(s) in mcp_config (only ${Eq} is honored)`,
+    logForDebugging(
+      `[bridge:server-config] ignoring ${d} other server(s) in mcp_config (only ${CLAUDE_CODE_REMOTE_SERVER_NAME} is honored)`,
     );
-  let p = o[Eq];
+  let p = o[CLAUDE_CODE_REMOTE_SERVER_NAME];
   if (p === void 0)
     return (
-      n("[bridge:server-config] mcp_config carries no meta entry"),
+      logForDebugging("[bridge:server-config] mcp_config carries no meta entry"),
       { meta: null, ignored: d, dropped: "no_meta_entry" }
     );
   if (
@@ -949,22 +949,22 @@ function cn(e, t) {
     typeof p.url !== "string"
   )
     return (
-      n("[bridge:server-config] meta entry is not http", { level: "warn" }),
+      logForDebugging("[bridge:server-config] meta entry is not http", { level: "warn" }),
       { meta: null, ignored: d, dropped: "not_http" }
     );
-  let r = Ovt(t.apiBaseUrl);
+  let r = getTrustedIngressOrigin(t.apiBaseUrl);
   if (!r)
     return (
-      n(
+      logForDebugging(
         "[bridge:server-config] apiBaseUrl is not a trusted ingress origin; dropping meta entry",
         { level: "warn" },
       ),
       { meta: null, ignored: d, dropped: "untrusted_origin" }
     );
-  let C = Pvt(p.url, r, t.sessionId);
+  let C = buildCcrSessionMetaUrl(p.url, r, t.sessionId);
   if (!C)
     return (
-      n(
+      logForDebugging(
         "[bridge:server-config] meta url is not this session's meta proxy route on the bridge origin",
         { level: "warn" },
       ),
@@ -974,7 +974,7 @@ function cn(e, t) {
   if (!w) return { meta: null, ignored: d, dropped: "bad_tools" };
   return {
     meta: {
-      json: b({ mcpServers: { [Eq]: Hvt(C, t.sessionId) } }),
+      json: jsonStringify({ mcpServers: { [CLAUDE_CODE_REMOTE_SERVER_NAME]: buildCcrMetaServerConfig(C, t.sessionId) } }),
       url: C,
       autoAllowTools: w,
     },
@@ -985,10 +985,10 @@ function cn(e, t) {
 function un(e) {
   let t;
   try {
-    t = z(Buffer.from(e, "base64").toString("utf8"));
+    t = jsonParse(Buffer.from(e, "base64").toString("utf8"));
   } catch {
     return (
-      n("[bridge:server-config] mcp_config did not decode", { level: "warn" }),
+      logForDebugging("[bridge:server-config] mcp_config did not decode", { level: "warn" }),
       null
     );
   }
@@ -1001,7 +1001,7 @@ function un(e) {
     Array.isArray(t.mcpServers)
   )
     return (
-      n("[bridge:server-config] mcp_config has no mcpServers", {
+      logForDebugging("[bridge:server-config] mcp_config has no mcpServers", {
         level: "warn",
       }),
       null
@@ -1069,7 +1069,7 @@ async function hr(e) {
   if (e?.dir) await Zt(e.dir);
 }
 function fn(e, t) {
-  (n(
+  (logForDebugging(
     `[bridge:server-config] not applied sessionId=${e}: gate_off (tengu_bridge_apply_server_session_config=false)`,
     { level: "warn" },
   ),
@@ -1103,7 +1103,7 @@ async function br(e, t) {
     ...(d.metaDropReason !== null && { meta_drop: fromEnum(d.metaDropReason) }),
   };
   if (r !== void 0) {
-    (n(`[bridge:server-config] not applied sessionId=${t.sessionId}: ${r}`, {
+    (logForDebugging(`[bridge:server-config] not applied sessionId=${t.sessionId}: ${r}`, {
       level: "warn",
     }),
       logEvent("tengu_bridge_server_config_rejected", {
@@ -1114,7 +1114,7 @@ async function br(e, t) {
     return;
   }
   if (!p) {
-    (n(
+    (logForDebugging(
       `[bridge:server-config] nothing applied sessionId=${t.sessionId}: every carried value was rejected`,
       { level: "warn" },
     ),
@@ -1131,7 +1131,7 @@ async function br(e, t) {
       ? `dropped:${d.metaDropReason}`
       : "unset";
   if (
-    (n(
+    (logForDebugging(
       `[bridge:server-config] applied sessionId=${t.sessionId} args=${d.extraArgs.length} appendPrompt=${d.appendSystemPrompt ? "present" : "unset"} metaMcp=${w} autoAllow=${d.autoAllowTools.length}`,
       { level: d.metaDropReason ? "warn" : "debug" },
     ),
@@ -1177,7 +1177,7 @@ function vr(e) {
         de++;
         continue;
       }
-      let Te = te(be);
+      let Te = getStringWidth(be);
       de += Math.max(1, Math.ceil(Te / J));
     }
     if (
@@ -1210,7 +1210,7 @@ function vr(e) {
             De());
         })
         .catch((J) => {
-          n(`QR code generation failed: ${J}`, { level: "error" });
+          logForDebugging(`QR code generation failed: ${J}`, { level: "error" });
         }));
   }
   function Ae() {
@@ -1436,7 +1436,7 @@ function vr(e) {
         (ce = 0),
         X <= 1)
       )
-        ((N = wa(k, W)), fe(N));
+        ((N = buildClaudeAiSessionUrl(k, W)), fe(N));
       De();
     },
     updateReconnectingStatus(k, J) {
@@ -1826,7 +1826,7 @@ async function Hn(e) {
     try {
       d = Object.keys(getMcpConfigsByScope(o, { expandVars: !1 }).servers);
     } catch (r) {
-      n(`[bridge:host-profile] could not read ${o} MCP config: ${l(r)}`, {
+      logForDebugging(`[bridge:host-profile] could not read ${o} MCP config: ${l(r)}`, {
         level: "warn",
       });
       continue;
@@ -1861,7 +1861,7 @@ async function Cr({
   attempt: p,
   signal: r,
 }) {
-  n(
+  logForDebugging(
     `[bridge:poll] Poll returned 404; re-registering environment ${o} (attempt ${p}/${Ht})`,
     { level: "warn" },
   );
@@ -1877,7 +1877,7 @@ async function Cr({
   } catch (T) {
     let E = Ir(T);
     if (
-      (n(
+      (logForDebugging(
         `[bridge:poll] Re-registration of ${o} ${E ? "rejected" : "failed transiently"}: ${l(T)}`,
         { level: E ? "error" : "warn" },
       ),
@@ -1899,7 +1899,7 @@ async function Cr({
   }
   if (C.environment_id !== o)
     return (
-      n(
+      logForDebugging(
         `[bridge:poll] Re-registration returned ${C.environment_id}, not ${o}; sessions attached to ${o} cannot be reconnected`,
         { level: "warn" },
       ),
@@ -1908,7 +1908,7 @@ async function Cr({
       await e
         .deregisterEnvironment(C.environment_id)
         .catch((T) =>
-          n(
+          logForDebugging(
             `[bridge:poll] Failed to delete replacement environment ${C.environment_id}: ${l(T)}`,
             { level: "warn" },
           ),
@@ -1925,7 +1925,7 @@ async function Cr({
       attempt: p,
       active_sessions: w.length,
     }),
-    n(
+    logForDebugging(
       `[bridge:poll] Environment ${o} re-registered in place; re-queuing ${w.length} session(s)`,
       { level: "info" },
     ));
@@ -1947,7 +1947,7 @@ async function Nt(e, t, o, d) {
   } catch (p) {
     let r = Ir(p);
     if (
-      (n(
+      (logForDebugging(
         `[bridge:poll] reconnectSession(${o}) after re-registration ${r ? "rejected" : "failed transiently"}: ${l(p)}`,
         { level: "warn" },
       ),
@@ -2072,7 +2072,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
         (await d.heartbeatWork(t, re, ee), (v = !0));
       } catch (me) {
         if (
-          (n(
+          (logForDebugging(
             `[bridge:heartbeat] Failed for sessionId=${O} workId=${re}: ${l(me)}`,
           ),
           me instanceof Le)
@@ -2098,18 +2098,18 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       );
       try {
         (await d.reconnectSession(t, O),
-          n(
+          logForDebugging(
             `[bridge:heartbeat] Re-queued sessionId=${O} via bridge/reconnect`,
           ));
       } catch (F) {
         if (qt(F)) {
-          n(
+          logForDebugging(
             `[bridge:heartbeat] reconnectSession(${O}) skipped \u2014 resource gone: ${l(F)}`,
           );
           continue;
         }
         (r.logError(`Failed to refresh session ${O} token: ${l(F)}`),
-          n(`[bridge:heartbeat] reconnectSession(${O}) failed: ${l(F)}`, {
+          logForDebugging(`[bridge:heartbeat] reconnectSession(${O}) failed: ${l(F)}`, {
             level: "error",
           }));
       }
@@ -2129,7 +2129,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       if (L === "aborted") return;
       if (L === "done") X(v, !1);
       else if (V + 1 >= Ut)
-        (n(
+        (logForDebugging(
           `[bridge:poll] Giving up startup re-queue of sessionId=${v} after ${Ut} attempts`,
           { level: "warn" },
         ),
@@ -2147,7 +2147,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       if (L === "done") ae.delete(v);
       else if (V + 1 >= Ut)
         (ae.delete(v),
-          n(
+          logForDebugging(
             `[bridge:poll] Giving up re-queuing sessionId=${v} after ${Ut} attempts; left to token refresh`,
             { level: "warn" },
           ),
@@ -2167,7 +2167,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             (r.logVerbose(`Refreshing session ${v} token via bridge/reconnect`),
               d.reconnectSession(t, v).catch((O) => {
                 (r.logError(`Failed to refresh session ${v} token: ${l(O)}`),
-                  n(`[bridge:token] reconnectSession(${v}) failed: ${l(O)}`, {
+                  logForDebugging(`[bridge:token] reconnectSession(${v}) failed: ${l(O)}`, {
                     level: "error",
                   }));
               }));
@@ -2190,7 +2190,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
     ut = !1,
     ft = !1;
   if (
-    (n(
+    (logForDebugging(
       `[bridge:work] Starting poll loop spawnMode=${e.spawnMode} maxSessions=${e.maxSessions} environmentId=${t}`,
     ),
     writeDiagnosticsEvent("info", "bridge_loop_started", {
@@ -2255,7 +2255,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       else De.delete(re);
       (be.delete(v), ze?.cancel(v), Te.wake());
       let ee = Date.now() - V;
-      (n(
+      (logForDebugging(
         `[bridge:session] sessionId=${v} workId=${F ?? "unknown"} exited status=${O} duration=${formatDuration(ee)}`,
       ),
         logEvent("tengu_bridge_session_done", { status: fromEnum(O), duration_ms: ee }),
@@ -2279,7 +2279,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               r.logSessionFailed(v, Ze),
               !me || Ze.includes("transport closed"))
             )
-              n(`Bridge session failed: ${Ze}`, { level: "error" });
+              logForDebugging(`Bridge session failed: ${Ze}`, { level: "error" });
             else
               logError(
                 dt(
@@ -2317,11 +2317,11 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                   r.logVerbose(`Failed to archive session ${v}: ${l(he)}`),
                 ),
             );
-          n(
+          logForDebugging(
             `[bridge:session] Session ${O}, returning to idle (multi-session mode)`,
           );
         } else {
-          (n(
+          (logForDebugging(
             `[bridge:session] Session ${O}, aborting poll loop to tear down environment`,
           ),
             W.abort());
@@ -2359,7 +2359,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       if (Ee !== null || Be !== null) {
         let U = Date.now() - (Ee ?? Be ?? Date.now());
         (r.logReconnected(U),
-          n(`[bridge:poll] Reconnected after ${formatDuration(U)}`),
+          logForDebugging(`[bridge:poll] Reconnected after ${formatDuration(U)}`),
           logEvent("tengu_bridge_reconnected", { disconnected_ms: U }),
           (ut = !1));
       }
@@ -2424,7 +2424,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               }),
               lt === "poll_due")
             )
-              n(
+              logForDebugging(
                 `[bridge:poll] Heartbeat poll_due after ${st} cycles \u2014 falling through to pollForWork`,
               );
             if (Ue === "auth_failed" || Ue === "fatal") {
@@ -2456,12 +2456,12 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       let F = D.size >= e.maxSessions;
       if (fe.has(L.id) && L.state === BRIDGE_WORK_STATE_QUEUED)
         (fe.delete(L.id),
-          n(
+          logForDebugging(
             `[bridge:work] Previously completed workId=${L.id} was re-queued by the server, handling as new work`,
           ));
       if (fe.has(L.id)) {
         if (
-          (n(
+          (logForDebugging(
             `[bridge:work] Skipping already-completed workId=${L.id} state=${L.state}`,
           ),
           F)
@@ -2499,11 +2499,11 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
         continue;
       }
       let ee = async () => {
-          n(`[bridge:work] Acknowledging workId=${L.id}`);
+          logForDebugging(`[bridge:work] Acknowledging workId=${L.id}`);
           try {
             await d.acknowledgeWork(t, L.id, re.session_ingress_token);
           } catch (U) {
-            n(`[bridge:work] Acknowledge failed workId=${L.id}: ${l(U)}`);
+            logForDebugging(`[bridge:work] Acknowledge failed workId=${L.id}: ${l(U)}`);
           }
         },
         me = () => {
@@ -2515,7 +2515,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                 .then(() => logFeatureOk("bridge_work_heartbeat"))
                 .catch((U) => {
                   (logFeatureSad("bridge_work_heartbeat", "initial_failed"),
-                    n(
+                    logForDebugging(
                       `[bridge:work] Initial heartbeat failed workId=${L.id}: ${l(U)}`,
                     ));
                 }),
@@ -2525,7 +2525,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       switch (L.data.type) {
         case "healthcheck":
           (await ee(),
-            n("[bridge:work] Healthcheck received"),
+            logForDebugging("[bridge:work] Healthcheck received"),
             r.logVerbose("Healthcheck received"));
           break;
         case "session": {
@@ -2544,7 +2544,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               $e.get(U)?.updateAccessToken(re.session_ingress_token),
               j.set(U, L.id),
               ze?.schedule(U, re.session_ingress_token),
-              n(
+              logForDebugging(
                 `[bridge:work] Updated access token for existing sessionId=${U} workId=${L.id}`,
               ),
               await ee(),
@@ -2552,7 +2552,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             break;
           }
           if (D.size >= e.maxSessions) {
-            n(
+            logForDebugging(
               `[bridge:work] At capacity (${D.size}/${e.maxSessions}), cannot spawn new session for workId=${L.id}`,
             );
             break;
@@ -2564,7 +2564,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           for (let ve = 1; ve <= 2; ve++)
             try {
               ((st = await registerWorker(Ue, re.session_ingress_token)),
-                n(
+                logForDebugging(
                   `[bridge:session] CCR v2: registered worker sessionId=${U} epoch=${st} attempt=${ve}`,
                 ),
                 logFeatureOk("bridge_register_worker"));
@@ -2573,7 +2573,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               let Ge = l(Ne);
               if (ve < 2) {
                 if (
-                  (n(
+                  (logForDebugging(
                     `[bridge:session] CCR v2: registerWorker attempt ${ve} failed, retrying: ${Ge}`,
                   ),
                   await sleep(2000, N),
@@ -2588,7 +2588,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                 logFeatureBad("bridge_register_worker", "request_failed"));
               let { kind: ct, status: B } = Ps(Ne);
               if (ct !== "other" && ((B ?? 0) < 500 || B === 503))
-                n(`registerWorker failed: ${Ge}`, { level: "error" });
+                logForDebugging(`registerWorker failed: ${Ge}`, { level: "error" });
               else
                 logError(
                   dt(
@@ -2614,13 +2614,13 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                   headCommit: Ne.headCommit,
                 }),
                 (qe = Ne.worktreePath),
-                n(
+                logForDebugging(
                   `[bridge:session] Created worktree for sessionId=${U} at ${Ne.worktreePath}`,
                 ));
             } catch (Ne) {
               let Ge = l(Ne);
               (r.logError(`Failed to create worktree for session ${U}: ${Ge}`),
-                n(`Worktree creation failed for session ${U}: ${Ge}`, {
+                logForDebugging(`Worktree creation failed for session ${U}: ${Ge}`, {
                   level: "error",
                 }),
                 fe.add(L.id),
@@ -2628,7 +2628,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               break;
             }
           }
-          n(`[bridge:session] Spawning sessionId=${U} sdkUrl=${Ue}`);
+          logForDebugging(`[bridge:session] Spawning sessionId=${U} sdkUrl=${Ue}`);
           let ke = toCompatSessionId(U),
             Pt = ++de;
           be.set(U, Pt);
@@ -2667,7 +2667,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                   He.add(ke);
                   let Ne = truncateToWidth(ve.replace(/\s+/g, " ").trim(), os);
                   (r.setSessionTitle(ke, Ne),
-                    n(`[bridge:title] derived title for ${ke}: ${Ne}`),
+                    logForDebugging(`[bridge:title] derived title for ${ke}: ${Ne}`),
                     import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js")
                       .then(async ({ getBridgeSession: Ge }) => {
                         k ??= createBridgeTitleWriter({
@@ -2685,7 +2685,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                         ) {
                           (r.setSessionTitle(ke, ct.title),
                             k.noteRemoteTitle(ke, ct.title),
-                            n(
+                            logForDebugging(
                               `[bridge:title] remote rename for ${ke}: ${ct.title}`,
                             ));
                           return;
@@ -2694,7 +2694,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                           await k.update(ke, Ne, { baseUrl: e.apiBaseUrl }));
                       })
                       .catch((Ge) =>
-                        n(
+                        logForDebugging(
                           `[bridge:title] failed to update title for ${ke}: ${Ge}`,
                           { level: "error" },
                         ),
@@ -2747,7 +2747,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             else bt = `${e.debugFile}-${mt}`;
           } else if (e.verbose) bt = zn(getClaudeTempDir(), `bridge-session-${mt}.log`);
           if (bt) r.logVerbose(`Debug log: ${bt}`);
-          (r.addSession(ke, wa(ke, e.sessionIngressUrl, { from: "cli" })),
+          (r.addSession(ke, buildClaudeAiSessionUrl(ke, e.sessionIngressUrl, { from: "cli" })),
             nt(),
             r.setAttached(ke),
             ls(ke, e.apiBaseUrl)
@@ -2755,14 +2755,14 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                 if (ve && be.get(U) === Pt && !He.has(ke)) {
                   if (
                     (r.setSessionTitle(ke, ve),
-                    n(`[bridge:title] server title for ${ke}: ${ve}`),
+                    logForDebugging(`[bridge:title] server title for ${ke}: ${ve}`),
                     !De.get(ke)?.has(ve))
                   )
                     He.add(ke);
                 }
               })
               .catch((ve) =>
-                n(`[bridge:title] failed to fetch title for ${ke}: ${ve}`, {
+                logForDebugging(`[bridge:title] failed to fetch title for ${ke}: ${ve}`, {
                   level: "error",
                 }),
               ),
@@ -2771,7 +2771,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           break;
         }
         default:
-          (await ee(), n(`[bridge:work] Unknown work type: ${Ze}, skipping`));
+          (await ee(), logForDebugging(`[bridge:work] Unknown work type: ${Ze}, skipping`));
           break;
       }
       if (F) {
@@ -2839,11 +2839,11 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               logFeatureBad("bridge_env_reregister", "gave_up"));
         if (((ft = !0), V.status !== 401 && yt(V.errorType)))
           r.logStatus(ir(V.message));
-        else if (Kt(V)) n(`[bridge:work] Suppressed 403 error: ${V.message}`);
+        else if (Kt(V)) logForDebugging(`[bridge:work] Suppressed 403 error: ${V.message}`);
         else if (qt(V) && Oe.size > 0) Et();
         else
           (r.logError(V.message),
-            n(`[bridge:work] Fatal bridge error: ${V.message}`, {
+            logForDebugging(`[bridge:work] Fatal bridge error: ${V.message}`, {
               level: "error",
             }));
         (logEvent("tengu_bridge_fatal_error", {
@@ -2860,7 +2860,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       if (Qn(V) || Zn(V)) {
         let O = Date.now();
         if (le !== null && O - le > Mr(w))
-          (n(
+          (logForDebugging(
             `[bridge:work] Detected system sleep (${Math.round((O - le) / 1000)}s gap), resetting error budget`,
           ),
             writeDiagnosticsEvent("info", "bridge_poll_sleep_detected", { gapMs: O - le }),
@@ -2901,7 +2901,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       } else {
         let O = Date.now();
         if (le !== null && O - le > Mr(w))
-          (n(
+          (logForDebugging(
             `[bridge:work] Detected system sleep (${Math.round((O - le) / 1000)}s gap), resetting error budget`,
           ),
             writeDiagnosticsEvent("info", "bridge_poll_sleep_detected", { gapMs: O - le }),
@@ -3002,11 +3002,11 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
     })(),
     D.size > 0)
   ) {
-    (n(`[bridge:shutdown] Shutting down ${D.size} active session(s)`),
+    (logForDebugging(`[bridge:shutdown] Shutting down ${D.size} active session(s)`),
       r.logStatus(`Shutting down ${D.size} active session(s)\u2026`));
     let v = new Map(j);
     for (let [O, F] of D.entries())
-      (n(`[bridge:shutdown] Sending SIGTERM to sessionId=${O}`), F.kill());
+      (logForDebugging(`[bridge:shutdown] Sending SIGTERM to sessionId=${O}`), F.kill());
     let V = Promise.allSettled(
         [...v.entries()].map(([O, F]) =>
           d
@@ -3034,12 +3034,12 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
     ]),
       L.abort());
     for (let [O, F] of D.entries())
-      (n(`[bridge:shutdown] Force-killing stuck sessionId=${O}`),
+      (logForDebugging(`[bridge:shutdown] Force-killing stuck sessionId=${O}`),
         F.forceKill());
     if ((ze?.cancelAll(), Ae.size > 0)) {
       let O = [...Ae.values()];
       (Ae.clear(),
-        n(`[bridge:shutdown] Cleaning up ${O.length} worktree(s)`),
+        logForDebugging(`[bridge:shutdown] Cleaning up ${O.length} worktree(s)`),
         await Promise.allSettled(
           O.map((F) => nr(F, r, { storageV5: e.storageV5 })),
         ));
@@ -3053,13 +3053,13 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
         ? `Resume this session by running \`claude remote-control ${e.ownsPointer ? "--continue" : `--session-id ${_}`}\``
         : "Environment preserved. Restart `claude remote-control` to reconnect existing sessions.",
     ),
-      n(
+      logForDebugging(
         `[bridge:shutdown] Skipping archive+deregister to allow resume (env ${t}, spawnMode ${e.spawnMode})`,
       ));
     return;
   }
   if ($t.size > 0)
-    (n(`[bridge:shutdown] Archiving ${$t.size} session(s)`),
+    (logForDebugging(`[bridge:shutdown] Archiving ${$t.size} session(s)`),
       await Promise.allSettled(
         [...$t].map((v) =>
           d
@@ -3071,7 +3071,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       ));
   try {
     (await d.deregisterEnvironment(t),
-      n("[bridge:shutdown] Environment deregistered, bridge offline"),
+      logForDebugging("[bridge:shutdown] Environment deregistered, bridge offline"),
       r.logVerbose("Environment deregistered."));
   } catch (v) {
     r.logVerbose(`Failed to deregister environment: ${l(v)}`);
@@ -3124,16 +3124,16 @@ async function Lt(e, t, o, d, p, r = 1000) {
   for (let w = 1; w <= 3; w++)
     try {
       (await e.stopWork(t, o, d, !1),
-        n(`[bridge:work] stopWork succeeded for workId=${o} on attempt ${w}/3`),
+        logForDebugging(`[bridge:work] stopWork succeeded for workId=${o} on attempt ${w}/3`),
         logFeatureOk("bridge_work_stop"));
       return;
     } catch (_) {
       if (_ instanceof Le) {
         if (Kt(_))
-          (n(`[bridge:work] Suppressed stopWork 403 for ${o}: ${_.message}`),
+          (logForDebugging(`[bridge:work] Suppressed stopWork 403 for ${o}: ${_.message}`),
             logFeatureSad("bridge_work_stop", "fatal_403"));
         else if (qt(_))
-          (n(
+          (logForDebugging(
             `[bridge:work] stopWork skipped for ${o} \u2014 environment gone: ${_.message}`,
           ),
             logFeatureSad("bridge_work_stop", "env_gone"));
@@ -3183,7 +3183,7 @@ async function nr(e, t, o) {
             : _;
     if (e.gitRoot) await unlockAgentWorktree(e.worktreePath, e.gitRoot);
     (t.logStatus(`kept worktree ${e.worktreePath} \xB7 ${T}`),
-      n(
+      logForDebugging(
         `[bridge:worktree] kept ${e.worktreePath} dirty=${p} commitsAhead=${r} gitError=${!!C}`,
       ));
     return;
@@ -3454,21 +3454,21 @@ async function ds(e, t, o) {
     if (typeof E === "number" && E < 300)
       return (
         logFeatureOk("bridge_session_unarchive"),
-        n(
+        logForDebugging(
           `[bridge:init] Unarchived reaped session ${e} before reattach (status=${String(E)})`,
         ),
         !0
       );
     if (E === 409)
       return (
-        n(
+        logForDebugging(
           `[bridge:init] Session ${e} already active (unarchived by another client) \u2014 resuming without a mutation to compensate`,
         ),
         !1
       );
     return (
       logFeatureBad("bridge_session_unarchive", typeof E === "number" ? `http_${E}` : E),
-      n(
+      logForDebugging(
         `[bridge:init] Unarchive of reaped session ${e} failed (status=${String(E)}) \u2014 keeping prior reattach behavior`,
         { level: "warn" },
       ),
@@ -3476,7 +3476,7 @@ async function ds(e, t, o) {
     );
   } catch (d) {
     return (
-      n(`[bridge:init] unarchiveBridgeSessionIfNeeded(${e}) failed: ${l(d)}`, {
+      logForDebugging(`[bridge:init] unarchiveBridgeSessionIfNeeded(${e}) failed: ${l(d)}`, {
         level: "warn",
       }),
       !1
@@ -3532,7 +3532,7 @@ async function bridgeMain(e, t, o) {
     let { exitAfterAnalyticsFlush: B } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js");
     return B(1);
   }
-  (q4(), Dve(getAttestationFilterPolicy));
+  (q4(), setAttestationFilterPolicy(getAttestationFilterPolicy));
   let {
     verbose: r,
     sandbox: C,
@@ -3727,7 +3727,7 @@ Spawn mode for this project:
         (await Me(K.pid, K.procStart))
       )
         ((_t = !0),
-          n(
+          logForDebugging(
             `[bridge:init] Pointer writer pid ${K.pid} still running; registering a fresh env and deferring pointer write`,
           ));
       else if (K.source === "standalone") {
@@ -3738,7 +3738,7 @@ Spawn mode for this project:
             _e(K.activeSessionIdsPersistedAt, Date.now(), oe))
         )
           ((je = K.activeSessionIds), (ut = K.activeSessionIdsPersistedAt));
-        n(
+        logForDebugging(
           `[bridge:init] Found prior environment ${le} in pointer (ageMs=${K.ageMs}); requesting reuse on registration`,
         );
       }
@@ -3773,7 +3773,7 @@ Spawn mode for this project:
           "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
         DD_SOURCEMAP_GROUP: "darwin",
       }.VERSION,
-      onDebug: n,
+      onDebug: logForDebugging,
       onAuth401: (B) => L(B, o, t),
       getTrustedDeviceToken: getTrustedDeviceToken,
       useCcrV2Routing: isCcrV2SendEventsEnabled,
@@ -3858,7 +3858,7 @@ Spawn mode for this project:
       ),
         process.exit(1));
     ((ft = tt.status === "archived"),
-      n(`[bridge:init] Resuming session ${X} on environment ${F}`));
+      logForDebugging(`[bridge:init] Resuming session ${X} on environment ${F}`));
   }
   let ee = {
     dir: D,
@@ -3881,11 +3881,11 @@ Spawn mode for this project:
     livePreviewPorts: ce ? new Set(I) : void 0,
     storageV5: t,
   };
-  (n(
+  (logForDebugging(
     `[bridge:init] bridgeId=${V}${F ? ` reuseEnvironmentId=${F}` : ""} dir=${D} branch=${Et} gitRepoUrl=${ze(ht)} machine=${Ft}`,
   ),
-    n(`[bridge:init] apiBaseUrl=${be} sessionIngressUrl=${Te}`),
-    n(`[bridge:init] sandbox=${C}${w ? ` debugFile=${w}` : ""}`));
+    logForDebugging(`[bridge:init] apiBaseUrl=${be} sessionIngressUrl=${Te}`),
+    logForDebugging(`[bridge:init] sandbox=${C}${w ? ` debugFile=${w}` : ""}`));
   let me, Ze;
   try {
     let B = await O.registerBridgeEnvironment(ee);
@@ -3905,7 +3905,7 @@ Spawn mode for this project:
   }
   if (le && !X)
     if (me !== le) {
-      (n(
+      (logForDebugging(
         `Bridge env reuse mismatch: requested ${le}, backend returned ${me}.`,
         { level: "warn" },
       ),
@@ -3939,7 +3939,7 @@ Spawn mode for this project:
       ) {
         let K = await oe(D, { noClear: !0 }, t);
         if (K && K.pid !== void 0 && K.pid !== process.pid)
-          (n(
+          (logForDebugging(
             `[bridge:init] Lost pointer write race to pid ${K.pid}; backing off`,
             { level: "error" },
           ),
@@ -3956,19 +3956,19 @@ Spawn mode for this project:
         for (let tt of se)
           try {
             (await O.reconnectSession(me, tt),
-              n(
+              logForDebugging(
                 `[bridge:init] Adopted session ${tt} re-queued via bridge/reconnect`,
               ),
               (Me = !0));
             break;
           } catch (Dt) {
             (it.push(Dt),
-              n(`[bridge:init] reconnectSession(${tt}) failed: ${l(Dt)}`));
+              logForDebugging(`[bridge:init] reconnectSession(${tt}) failed: ${l(Dt)}`));
           }
         if (!Me)
           if (it.length > 0 && it.every((tt) => tt instanceof Le)) nt = void 0;
           else
-            n(
+            logForDebugging(
               "[bridge:init] reconnectSession transient failure; session will be picked up passively once its lease expires",
               { level: "warn" },
             );
@@ -3977,7 +3977,7 @@ Spawn mode for this project:
   let U;
   if (X)
     if (F && me !== F)
-      (n(
+      (logForDebugging(
         `Bridge resume env mismatch: requested ${F}, backend returned ${me}. Falling back to fresh session.`,
         { level: "error" },
       ),
@@ -3993,7 +3993,7 @@ Spawn mode for this project:
       for (let se of oe)
         try {
           (await O.reconnectSession(me, se),
-            n(`[bridge:init] Session ${se} re-queued via bridge/reconnect`),
+            logForDebugging(`[bridge:init] Session ${se} re-queued via bridge/reconnect`),
             (U = X),
             (_e = !0),
             (ee.preserveOnShutdown = !0),
@@ -4001,7 +4001,7 @@ Spawn mode for this project:
           break;
         } catch (Me) {
           ((K = Me),
-            n(`[bridge:init] reconnectSession(${se}) failed: ${l(Me)}`));
+            logForDebugging(`[bridge:init] reconnectSession(${se}) failed: ${l(Me)}`));
         }
       if (!_e) {
         let se = K,
@@ -4028,7 +4028,7 @@ The session may still be resumable \u2014 try running the same command again.`,
         await it(1);
       }
     }
-  n(`[bridge:init] Registered, server environmentId=${me}`);
+  logForDebugging(`[bridge:init] Registered, server environmentId=${me}`);
   let Re = getBridgePollIntervalConfig();
   (logEvent("tengu_bridge_started", {
     max_sessions: ee.maxSessions,
@@ -4057,12 +4057,12 @@ The session may still be resumable \u2014 try running the same command again.`,
       sandbox: C,
       debugFile: w,
       permissionMode: _,
-      onDebug: n,
+      onDebug: logForDebugging,
       onActivity: (B, oe) => {
-        n(`[bridge:activity] sessionId=${B} ${oe.type} ${oe.summary}`);
+        logForDebugging(`[bridge:activity] sessionId=${B} ${oe.type} ${oe.summary}`);
       },
       onPermissionRequest: (B, oe, _e) => {
-        n(
+        logForDebugging(
           `[bridge:perm] sessionId=${B} tool=${oe.request.tool_name} request_id=${oe.request_id} (not auto-approving)`,
         );
       },
@@ -4111,13 +4111,13 @@ The session may still be resumable \u2014 try running the same command again.`,
       process.stdin.on("data", vt));
   let gt = new AbortController(),
     At = () => {
-      (n("[bridge:shutdown] SIGINT received, shutting down"), gt.abort());
+      (logForDebugging("[bridge:shutdown] SIGINT received, shutting down"), gt.abort());
     },
     It = () => {
-      (n("[bridge:shutdown] SIGTERM received, shutting down"), gt.abort());
+      (logForDebugging("[bridge:shutdown] SIGTERM received, shutting down"), gt.abort());
     },
     Mt = () => {
-      (n("[bridge:shutdown] SIGHUP received, shutting down"),
+      (logForDebugging("[bridge:shutdown] SIGHUP received, shutting down"),
         he.detachTerminal(),
         process.stdin.off("data", vt),
         process.stdin.pause(),
@@ -4152,10 +4152,10 @@ The session may still be resumable \u2014 try running the same command again.`,
         mt)
       ) {
         if (!T) bt = B;
-        n(`[bridge:init] Created initial session ${mt}`);
+        logForDebugging(`[bridge:init] Created initial session ${mt}`);
       }
     } catch (_e) {
-      n(`[bridge:init] Session creation failed (non-fatal): ${l(_e)}`);
+      logForDebugging(`[bridge:init] Session creation failed (non-fatal): ${l(_e)}`);
     }
   }
   let ve = null,
@@ -4279,7 +4279,7 @@ async function runBridgeHeadless(e, t) {
       `${p} \u2014 Remote Control sessions are not started unwrapped; the worker retries once the launcher is fixed`,
       "Remote Control worker refused: corporate launcher unresolvable (transient)",
     );
-  Yu(o);
+  changeWorkingDirectory(o);
   let { setOriginalCwd: r, setCwdState: C } =
     await import("../AppState-状态管理/getOriginalCwd.mg2gq0d6.js");
   (r(o), C(o));

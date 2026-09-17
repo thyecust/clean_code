@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { HELP_FLAGS } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getDefaultMainLoopModelSetting, parseUserSpecifiedModel } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { ib, VK } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
+import { modelSupportsUltracode, getAllowedEffortLevels } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { getEffortValue } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { formatEffortUsageText, formatEffortStatus, runEffortCommand } from "../../02-功能模块/斜杠命令-UI组件/effort-level.js";
 async function f(s, t) {
@@ -26,7 +26,7 @@ async function f(s, t) {
   if (!e)
     return {
       type: "text",
-      value: `Usage: /effort <${VK(r).join("|")}${ib(r) ? "|ultracode" : ""}|auto>`,
+      value: `Usage: /effort <${getAllowedEffortLevels(r).join("|")}${modelSupportsUltracode(r) ? "|ultracode" : ""}|auto>`,
     };
   return {
     type: "text",

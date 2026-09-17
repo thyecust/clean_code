@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { jt } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { getMcpClientState } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 var s = null;
 function registerDesignAuthResolver(e) {
   let n = s;
@@ -41,12 +41,12 @@ function getDesignConsentProvider() {
   return t;
 }
 function setPendingScopeExpansionNotice(e) {
-  let n = jt();
+  let n = getMcpClientState();
   if (n.scopeExpansionDisclosed) return;
   ((n.scopeExpansionDisclosed = !0), (n.pendingScopeExpansionNotice = e));
 }
 function takePendingScopeExpansionNotice() {
-  let e = jt(),
+  let e = getMcpClientState(),
     n = e.pendingScopeExpansionNotice;
   return ((e.pendingScopeExpansionNotice = void 0), n);
 }

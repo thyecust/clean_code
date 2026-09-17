@@ -13,7 +13,7 @@ import { Ie, Xo, Fb } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, dt, ge, l, A, Jr, Jg, WW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { ou, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { PROVIDER_CONFIG_ENV_VARS, MODEL_ENV_VARS, CUSTOM_MODEL_OPTION_ENV_VARS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -33,7 +33,7 @@ import { FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION } from "../权限系统/fork-r
 import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { _ve } from "../权限系统/chunk-t3b7pg2x.js";
+import { getCarriableEffortLevel } from "../权限系统/chunk-t3b7pg2x.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { s, T, O, se, v, c, it, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -152,7 +152,7 @@ function Le(e) {
     else r.push(o);
   if (r.length === 0) return e;
   return (
-    n(
+    logForDebugging(
       `[jobs] stripped disallowed providerEnv key(s) from persisted job state: ${r.join(", ")}`,
       { level: "warn" },
     ),
@@ -182,7 +182,7 @@ function sanitizeRespawnFlags(e) {
       while (e[o + 1] !== void 0 && !e[o + 1].startsWith("-")) f.push(e[++o]);
   }
   if (r.length > 0)
-    n(
+    logForDebugging(
       `[jobs] stripped non-allowlisted respawnFlags token(s) from persisted job state: ${r.join(" ")}`,
       { level: "warn" },
     );
@@ -286,7 +286,7 @@ function wrapDaemonHint(e) {
 var pe = "\x1B_cc-d-imark;",
   kt = Buffer.from(pe, "latin1");
 function interactiveMarkApc(e) {
-  return pe + b(e) + ie;
+  return pe + jsonStringify(e) + ie;
 }
 function extractInteractiveMarks(e, t, r) {
   let o = r?.maxPayload ?? 512,
@@ -333,7 +333,7 @@ function extractInteractiveMarks(e, t, r) {
     let L = !1;
     if (x - D <= o)
       try {
-        let U = z(d.subarray(D, x).toString("utf8"));
+        let U = jsonParse(d.subarray(D, x).toString("utf8"));
         if (
           U !== null &&
           typeof U === "object" &&
@@ -744,7 +744,7 @@ async function readRoster(e, t) {
         else await He(getRosterFilePath(), { recursive: !0, force: !0 }).catch((d) => logError(d));
       return { ...Y(), parseFailed: !0 };
     }
-    r = z(await _t(getRosterFilePath(), "utf8"));
+    r = jsonParse(await _t(getRosterFilePath(), "utf8"));
   } catch (o) {
     if (W(o)) return Y();
     if (!e?.silent)
@@ -779,7 +779,7 @@ async function qe(e, t, r) {
     let d = e,
       g = ["supervisorPid", "updatedAt"].filter((p) => !Number.isFinite(d[p]));
     if (g.length > 0 && !t?.silent)
-      (n(
+      (logForDebugging(
         `[daemon] roster.json stamp field(s) healed on read: ${g.join(", ")}`,
         { level: "warn" },
       ),
@@ -822,7 +822,7 @@ async function me(e) {
   if (t === void 0 || !t.ok)
     logError(
       new R(
-        `roster quarantine v5 move failed: ${t === void 0 ? "threw" : We(t.error)}`,
+        `roster quarantine v5 move failed: ${t === void 0 ? "threw" : describeStorageError(t.error)}`,
         "roster quarantine v5 move failed",
       ),
     );
@@ -918,7 +918,7 @@ async function Pt(e, t) {
     };
   let d;
   try {
-    d = z(Buffer.from(o.value).toString("utf8"));
+    d = jsonParse(Buffer.from(o.value).toString("utf8"));
   } catch (g) {
     if (!t?.silent)
       (logError(dt(ge(g), "bg roster.json read/parse failed")),
@@ -963,12 +963,12 @@ function Je(e) {
 async function Tt(e, t) {
   let { parseFailed: r, inspectFailed: o, ...d } = e;
   if (t) {
-    let p = await t.write(rosterKey(), b(d, null, 2), { mode: 384 });
+    let p = await t.write(rosterKey(), jsonStringify(d, null, 2), { mode: 384 });
     if (!p.ok) {
       let y = p.error,
         w = "telemetryCode" in y ? y.telemetryCode : void 0;
       if (w !== void 0 && WW.has(w)) {
-        n(`[daemon] roster write failed: ${w}`, { level: "error" });
+        logForDebugging(`[daemon] roster write failed: ${w}`, { level: "error" });
         return;
       }
       throw new R(
@@ -980,10 +980,10 @@ async function Tt(e, t) {
   }
   let g = getRosterFilePath();
   (await At(xt(g), { recursive: !0, mode: 448 }).catch(() => {}),
-    await writeFileAtomic(g, b(d, null, 2), 384).catch((p) => {
+    await writeFileAtomic(g, jsonStringify(d, null, 2), 384).catch((p) => {
       let y = A(p);
       if (y && WW.has(y)) {
-        n(`[daemon] roster write failed: ${y}`, { level: "error" });
+        logForDebugging(`[daemon] roster write failed: ${y}`, { level: "error" });
         return;
       }
       throw p;
@@ -1102,7 +1102,7 @@ function buildCarriableSessionFlags(e, t) {
     if (d) d = !1;
     else if (w === "--add-dir") d = !0;
     else o.push(w);
-  let g = _ve(t),
+  let g = getCarriableEffortLevel(t),
     p = getCarriableModelArg(),
     y =
       e.isBypassPermissionsModeAvailable &&
@@ -1260,7 +1260,7 @@ var he = () => s().transform(Fb),
 function de(e, t) {
   return (r) => {
     if (t(r)) return r;
-    n(`[jobs] dropped malformed ${e} from persisted job state`, {
+    logForDebugging(`[jobs] dropped malformed ${e} from persisted job state`, {
       level: "warn",
     });
     return;
@@ -1409,7 +1409,7 @@ var Ae = createLazyValue(() =>
         .transform((e) => {
           if (e === "daemon") return e;
           return (
-            n(
+            logForDebugging(
               `[jobs] coerced persisted backend '${e}' to 'daemon' \u2014 peer/remote rows are never written to disk`,
               { level: "warn" },
             ),
@@ -1526,21 +1526,21 @@ async function writeStateAtomic(e, t, r) {
   E.ownStateWriteDepth++;
   try {
     if (r && F) {
-      let I = await r.write(F, b(C, null, 2), {
+      let I = await r.write(F, jsonStringify(C, null, 2), {
         mode: 384,
         parent: "mustExist",
       });
       if (!I.ok) {
-        let P = ou(I.error);
+        let P = getTelemetryCode(I.error);
         throw Object.assign(
           new R(
-            `[jobs] v5 state write failed: ${We(I.error)}`,
+            `[jobs] v5 state write failed: ${describeStorageError(I.error)}`,
             "[jobs] v5 state write failed",
           ),
           P !== void 0 ? { code: P } : {},
         );
       }
-    } else await writeFileAtomic(J(e, ee), b(C, null, 2), 384);
+    } else await writeFileAtomic(J(e, ee), jsonStringify(C, null, 2), 384);
   } finally {
     (E.ownStateWriteDepth--, invalidateJobStateCache(e));
   }
@@ -1548,7 +1548,7 @@ async function writeStateAtomic(e, t, r) {
 function logJobWriteError(e) {
   let t = A(e);
   if (t && (WW.has(t) || t === "ENOENT")) {
-    n(`[jobs] state write failed (${t}): ${l(e)}`, { level: "error" });
+    logForDebugging(`[jobs] state write failed (${t}): ${l(e)}`, { level: "error" });
     return;
   }
   logError(e);
@@ -1620,7 +1620,7 @@ async function Wt(e, t) {
 function tt(e, t, r) {
   let o = N().peek(e);
   if (!(o?.mtimeKey.startsWith("rejected:") && o.state === null))
-    n(`[jobs] skipping ${basename(e)}: state.json is ${r}`, { level: "warn" });
+    logForDebugging(`[jobs] skipping ${basename(e)}: state.json is ${r}`, { level: "warn" });
   return (N().noteRejected(e, `rejected:${t}`), null);
 }
 function invalidateJobStateCache(e) {
@@ -1639,7 +1639,7 @@ async function qt(e, t, r) {
     } else if (x.value.size > V) {
       let L = `rejected:${x.value.mtimeMs}:${x.value.size}`;
       if (N().peek(t)?.mtimeKey !== L)
-        (n(
+        (logForDebugging(
           `[jobs] skipping ${basename(t)}: state.json is too large (${x.value.size} bytes)`,
           { level: "warn" },
         ),
@@ -1658,7 +1658,7 @@ async function qt(e, t, r) {
     );
   if (!y.ok && at(y.error)) {
     if (N().shouldLogSidecarFallback(t))
-      n(
+      logForDebugging(
         `[jobs] ${basename(t)}: a sidecar could not be read as a regular file; using state.json alone`,
       );
     let x = await e.read([g]);
@@ -1682,7 +1682,7 @@ async function qt(e, t, r) {
     if (x !== void 0)
       return tt(t, x, x === "oversize" ? "too large" : "not a regular file");
     if (
-      (n(`[jobs] ${basename(t)}: v5 state read failed \u2014 ${y.error.code}`, {
+      (logForDebugging(`[jobs] ${basename(t)}: v5 state read failed \u2014 ${y.error.code}`, {
         level: "warn",
       }),
       N().shouldReportTransient(t))
@@ -1699,7 +1699,7 @@ async function qt(e, t, r) {
     let x = `rejected:${f.mtimeMs}:${f.totalBytes}`;
     if (w?.mtimeKey === x) return null;
     return (
-      n(
+      logForDebugging(
         `[jobs] skipping ${basename(t)}: state.json is too large (${f.totalBytes} bytes)`,
         { level: "warn" },
       ),
@@ -1721,11 +1721,11 @@ async function qt(e, t, r) {
 }
 function Kt(e, t, r, o, d, g, p, y) {
   try {
-    let w = z(r),
+    let w = jsonParse(r),
       f = Ae().safeParse(w);
     if (!f.success)
       return (
-        n(
+        logForDebugging(
           `[jobs] skipping ${basename(e)}: state.json schema validation failed \u2014 ${f.error.message}`,
           { level: "warn" },
         ),
@@ -1747,7 +1747,7 @@ function Kt(e, t, r, o, d, g, p, y) {
     return (N().noteParsed(e, t, I), I);
   } catch (w) {
     if (
-      (n(
+      (logForDebugging(
         `[jobs] ${basename(e)}: state.json read/parse failed \u2014 ${w instanceof Error ? w.message : String(w)}`,
         { level: "warn" },
       ),
@@ -1785,7 +1785,7 @@ async function lt(e, t, r) {
       let P = `rejected:${_.mtimeMs}:${_.size}`;
       if (N().peek(e)?.mtimeKey === P) return null;
       return (
-        n(
+        logForDebugging(
           `[jobs] skipping ${basename(e)}: state.json is ${_.isFile() ? `too large (${_.size} bytes)` : "not a regular file"}`,
           { level: "warn" },
         ),
@@ -1798,7 +1798,7 @@ async function lt(e, t, r) {
       (y = `${_.mtimeMs}:${w.order ? C.mtimeMs : 0}:${w.stateOrder ? F.mtimeMs : 0}:${w.group ? E.mtimeMs : 0}`));
   } catch (_) {
     if (W(_)) return (N().noteAbsent(e), null);
-    n(
+    logForDebugging(
       `[jobs] ${basename(e)}: state.json stat failed \u2014 ${_ instanceof Error ? _.message : String(_)}`,
       { level: "warn" },
     );
@@ -1819,11 +1819,11 @@ async function lt(e, t, r) {
         w.stateOrder ? be(g, "utf-8").catch(() => null) : Promise.resolve(null),
         w.group ? be(p, "utf-8").catch(() => null) : Promise.resolve(null),
       ]),
-      I = z(_),
+      I = jsonParse(_),
       P = Ae().safeParse(I);
     if (!P.success)
       return (
-        n(
+        logForDebugging(
           `[jobs] skipping ${basename(e)}: state.json schema validation failed \u2014 ${P.error.message}`,
           { level: "warn" },
         ),
@@ -1846,7 +1846,7 @@ async function lt(e, t, r) {
   } catch (_) {
     if (W(_)) return (N().noteAbsent(e), null);
     if (
-      (n(
+      (logForDebugging(
         `[jobs] ${basename(e)}: state.json read/parse failed \u2014 ${_ instanceof Error ? _.message : String(_)}`,
         { level: "warn" },
       ),
@@ -1888,7 +1888,7 @@ async function readPinnedJobIds(e) {
   } catch (t) {
     if (W(t))
       return (
-        await writeFileAtomic(Q(), b([])).catch((r) => {
+        await writeFileAtomic(Q(), jsonStringify([])).catch((r) => {
           if (!W(r)) logJobWriteError(r);
         }),
         new Set()
@@ -1912,7 +1912,7 @@ function Be(e) {
   if (e === void 0 || e.length > V) return new Set();
   let t;
   try {
-    t = z(e);
+    t = jsonParse(e);
   } catch {
     return new Set();
   }
@@ -2140,10 +2140,10 @@ async function De(e, t, r) {
     mode: 438 & ~process.umask(),
   });
   if (!o.ok) {
-    let d = ou(o.error);
+    let d = getTelemetryCode(o.error);
     throw Object.assign(
       new R(
-        `[jobs] v5 sidecar write failed: ${We(o.error)}`,
+        `[jobs] v5 sidecar write failed: ${describeStorageError(o.error)}`,
         "[jobs] v5 sidecar write failed",
       ),
       d !== void 0 ? { code: d } : {},
@@ -2188,7 +2188,7 @@ async function withSortOrderLock(e) {
     stale: 5000,
     retries: { retries: 5, minTimeout: 20 },
     onCompromised: (o) =>
-      n(
+      logForDebugging(
         `jobs/.order lock compromised (likely process suspend or slow fs): ${o}`,
         { level: "error" },
       ),
@@ -2209,7 +2209,7 @@ function writeJobPinned(e, t, r) {
       stale: Vt,
       retries: { retries: 5, minTimeout: 20 },
       onCompromised: (p) =>
-        n(
+        logForDebugging(
           `pins.json lock compromised (likely process suspend or slow fs): ${p}`,
           { level: "error" },
         ),
@@ -2223,7 +2223,7 @@ function writeJobPinned(e, t, r) {
           if (!W(p)) throw p;
         }),
         invalidateJobStateCache(getJobDir(e)));
-    await writeFileAtomic(o, b([...g], null, 2));
+    await writeFileAtomic(o, jsonStringify([...g], null, 2));
   });
 }
 async function Yt(e, t, r) {
@@ -2232,7 +2232,7 @@ async function Yt(e, t, r) {
       if (t ? f.has(e) : !f.has(e)) return { skip: !0, result: !1 };
       if (t) f.add(e);
       else f.delete(e);
-      return { write: b([...f], null, 2), result: !0 };
+      return { write: jsonStringify([...f], null, 2), result: !0 };
     },
     d = ut(),
     g = await r.statMeta(STORAGE_KEYS.jobPins());
@@ -2251,14 +2251,14 @@ async function Yt(e, t, r) {
     if (w) {
       let f = await r.delete(w);
       if (!f.ok)
-        n(
+        logForDebugging(
           `[jobs] v5 order sidecar release failed after unpin: ${f.error.code}`,
           { level: "warn" },
         );
     } else
       await ue(J(getJobDir(e), "order")).catch((f) => {
         if (!W(f))
-          n(`[jobs] order sidecar release failed after unpin: ${l(f)}`, {
+          logForDebugging(`[jobs] order sidecar release failed after unpin: ${l(f)}`, {
             level: "warn",
           });
       });
@@ -2429,7 +2429,7 @@ async function adoptRosterOrphans(e, t, r) {
   for (let [f, _] of d.entries())
     if (p[f] !== "live") {
       if (
-        (n(`[adoptRosterOrphans] pruned dead record ${_.short} (${p[f]})`),
+        (logForDebugging(`[adoptRosterOrphans] pruned dead record ${_.short} (${p[f]})`),
         N().shouldReportPruned(_.short))
       )
         logEvent("tengu_bg_roster_orphan_pruned", { reason: fromEnum(p[f] ?? "dead_pid") });
@@ -2462,7 +2462,7 @@ async function adoptRosterOrphans(e, t, r) {
       C = getJobDir(f.short),
       F = r ? st(f.short, [ee]) : void 0;
     if (r && F)
-      r.write(F, b(_), { precondition: { type: "ifAbsent" }, mode: 384 }).then(
+      r.write(F, jsonStringify(_), { precondition: { type: "ifAbsent" }, mode: 384 }).then(
         (E) => {
           if (E.ok) logEvent("tengu_bg_roster_orphan_adopted", {});
           else if (E.error.code !== "AlreadyExists")
@@ -2476,7 +2476,7 @@ async function adoptRosterOrphans(e, t, r) {
       );
     else
       Fe(C, { recursive: !0 })
-        .then(() => writeNewFileAfterAbsenceCheck(J(C, "state.json"), b(_), 384))
+        .then(() => writeNewFileAfterAbsenceCheck(J(C, "state.json"), jsonStringify(_), 384))
         .then(() => logEvent("tengu_bg_roster_orphan_adopted", {}))
         .catch((E) => {
           if (A(E) !== "EEXIST") logJobWriteError(E);
@@ -3196,7 +3196,7 @@ function parseStatusClassifierResponse(e) {
   if (r < 0 || o < 0) return null;
   let d;
   try {
-    d = z(t.slice(r, o + 1));
+    d = jsonParse(t.slice(r, o + 1));
   } catch {
     return null;
   }

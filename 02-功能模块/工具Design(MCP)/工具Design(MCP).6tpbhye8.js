@@ -14,7 +14,7 @@ import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Ve, R, l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { j, B, dZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -459,7 +459,7 @@ async function Te(e, t, n, r) {
     if (o.isError === !0) return null;
     for (let p of o.content)
       if (p?.type === "text" && typeof p.text === "string") {
-        let _ = z(p.text),
+        let _ = jsonParse(p.text),
           { name: y, url: i } = _,
           u = _.sharing?.scope;
         if (typeof y !== "string") return null;
@@ -1124,7 +1124,7 @@ var DesignTool = buildTool({
         !Object.hasOwn(V, e.operation ?? "") &&
         !Object.hasOwn(J, e.operation ?? "")
       ) {
-        let f = b(d) ?? "";
+        let f = jsonStringify(d) ?? "";
         return `${r(e.operation ?? "")} (${P(U(f))} of arguments not shown \u2014 operation unknown to this client version)`;
       }
       let o = (f, S) => {
@@ -1132,7 +1132,7 @@ var DesignTool = buildTool({
             return f.length > 80 ? `${r(f)} (${P(U(f))})` : r(f);
           if (typeof f === "object" && f !== null) {
             let A = f,
-              x = U(b(f) ?? "");
+              x = U(jsonStringify(f) ?? "");
             if (typeof A.path === "string") {
               let E = typeof A.data === "string" ? A.data : "",
                 H = ["encoding", "local_path", "if_match"].filter(
@@ -1149,7 +1149,7 @@ var DesignTool = buildTool({
             if (typeof A.src === "string" || typeof A.dest === "string")
               return `${r(String(A.src ?? "?"), 40)} \u2192 ${r(String(A.dest ?? "?"), 40)}${A.src_project_id ? ` [from ${r(String(A.src_project_id), 24)}]` : ""}${typeof A.if_match === "string" && A.if_match ? " [+if_match]" : ""}${x > 256 ? ` (${P(x)})` : ""}`;
           }
-          let D = b(f) ?? String(f);
+          let D = jsonStringify(f) ?? String(f);
           return `${r(D)} (${P(U(D))})`;
         },
         p = (f) =>
@@ -1188,7 +1188,7 @@ var DesignTool = buildTool({
               (x ? " (content previews omitted)" : "")
             );
           }
-          let S = b(f) ?? String(f);
+          let S = jsonStringify(f) ?? String(f);
           return S.length > 80 ? `${r(S)} (${P(U(S))})` : r(S);
         },
         y = Object.entries(d).sort(
@@ -1200,7 +1200,7 @@ var DesignTool = buildTool({
             ? ` (${i.map(([f, S]) => `${r(f)}: ${S.length}`).join(", ")})`
             : "",
         g = y.map(([f, S]) => `${r(f)}: ${_(S)}`).join(", "),
-        w = b(d) ?? "",
+        w = jsonStringify(d) ?? "",
         C = U(w),
         h = `${C > 256 ? ` (${P(C)} total)` : ""}${u} ${g}`.trimStart(),
         k = t ? 2000 : 1500;
@@ -1233,7 +1233,7 @@ function Pe(e) {
       },
     ];
   }
-  return [{ type: "text", text: b(e) ?? "" }];
+  return [{ type: "text", text: jsonStringify(e) ?? "" }];
 }
 function He(e) {
   return e.type === "image" && e.source.type === "base64"
@@ -1332,7 +1332,7 @@ async function Se(e, t, n, r, d, o, p) {
           description: f.description,
           inputSchema: f.inputSchema,
         })),
-        C = b({ tools: w }) ?? "",
+        C = jsonStringify({ tools: w }) ?? "",
         I = hashForTelemetry(C),
         h = n?.full;
       if (
@@ -1352,7 +1352,7 @@ async function Se(e, t, n, r, d, o, p) {
             summary: Be(S.description),
           })),
         };
-        return { operation: t, content: [{ type: "text", text: b(f) }] };
+        return { operation: t, content: [{ type: "text", text: jsonStringify(f) }] };
       }
       if (o !== null) ve(e, o, I);
       return { operation: t, content: [{ type: "text", text: C }] };
@@ -1392,7 +1392,7 @@ async function Se(e, t, n, r, d, o, p) {
     }
     if (u.status < 200 || u.status >= 300)
       throw new R(
-        `Claude Design ${t} failed: HTTP ${u.status} ${q(b(u.data) ?? "", r)}`,
+        `Claude Design ${t} failed: HTTP ${u.status} ${q(jsonStringify(u.data) ?? "", r)}`,
         "design_tool_http_error",
       );
     let g = u.data;
@@ -1403,7 +1403,7 @@ async function Se(e, t, n, r, d, o, p) {
           {
             type: "text",
             text: q(
-              `${g.error.message}${g.error.data ? ` \u2014 ${b(g.error.data)}` : ""}`,
+              `${g.error.message}${g.error.data ? ` \u2014 ${jsonStringify(g.error.data)}` : ""}`,
               r,
             ),
           },
@@ -1603,8 +1603,8 @@ async function te(e, t, n, r, d, o, p = !1) {
           if (typeof u.data === "string") {
             if (u.data.includes(i)) u.data = q(u.data, i);
           } else if (u.data !== null && u.data !== void 0) {
-            let g = b(u.data);
-            if (g !== void 0 && g.includes(i)) u.data = z(q(g, i));
+            let g = jsonStringify(u.data);
+            if (g !== void 0 && g.includes(i)) u.data = jsonParse(q(g, i));
           }
           return u;
         } catch (u) {
@@ -1622,7 +1622,7 @@ async function te(e, t, n, r, d, o, p = !1) {
     let i = _.data;
     if (typeof i === "string")
       try {
-        i = z(i);
+        i = jsonParse(i);
       } catch {
         i = null;
       }

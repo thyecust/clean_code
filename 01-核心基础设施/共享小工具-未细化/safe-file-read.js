@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ro, ae, KPn, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { resolvePathInfo, getFsSurface, readBytesFromFileHandle, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 function a(e, t, r) {
   E(e.statSync(t), t, r);
 }
@@ -77,7 +77,7 @@ function decodeBufferText(e) {
     );
 }
 function detectFileEncoding(e) {
-  let { buffer: t, bytesRead: r } = ae().readSync(e, { length: 4096 });
+  let { buffer: t, bytesRead: r } = getFsSurface().readSync(e, { length: 4096 });
   return l(t.subarray(0, r));
 }
 function detectLineEndings(e) {
@@ -94,9 +94,9 @@ function detectLineEndings(e) {
   return t > r ? "CRLF" : "LF";
 }
 function readFileSyncWithMetadata(e, t) {
-  let r = ae(),
-    { resolvedPath: i, isSymlink: d } = Ro(r, e);
-  if (d) n(`Reading through symlink: ${e} -> ${i}`);
+  let r = getFsSurface(),
+    { resolvedPath: i, isSymlink: d } = resolvePathInfo(r, e);
+  if (d) logForDebugging(`Reading through symlink: ${e} -> ${i}`);
   a(r, e, t);
   let c = detectFileEncoding(e),
     o;
@@ -121,9 +121,9 @@ function readFileSyncText(e, t) {
   return readFileSyncWithMetadata(e, t).content;
 }
 async function readFileWithMetadata(e, t) {
-  let r = ae(),
-    { resolvedPath: i, isSymlink: d } = Ro(r, e);
-  if (d) n(`Reading through symlink: ${e} -> ${i}`);
+  let r = getFsSurface(),
+    { resolvedPath: i, isSymlink: d } = resolvePathInfo(r, e);
+  if (d) logForDebugging(`Reading through symlink: ${e} -> ${i}`);
   a(r, e, t);
   let c = detectFileEncoding(e),
     o = await r.readFileBytes(e, t === void 0 ? void 0 : t + 1);
@@ -146,7 +146,7 @@ async function readFileHandleWithMetadata(e, t, r) {
   let i = Buffer.alloc(4096),
     { bytesRead: d } = await e.read(i, 0, i.length, 0),
     c = l(i.subarray(0, d)),
-    o = r === void 0 ? await e.readFile() : await KPn(e, r + 1, "file");
+    o = r === void 0 ? await e.readFile() : await readBytesFromFileHandle(e, r + 1, "file");
   g(o.length, t, r);
   let s = o.toString(c),
     u = detectLineEndings(s.slice(0, 4096));

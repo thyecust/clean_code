@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 function B(r) {
   if (r < 60000) return `${Math.round(r / 1000)}s`;
@@ -21,7 +21,7 @@ function decodeTokenClaims(r) {
   let s = (r.startsWith("sk-ant-si-") ? r.slice(10) : r).split(".");
   if (s.length !== 3 || !s[1]) return null;
   try {
-    return z(Buffer.from(s[1], "base64url").toString("utf8"));
+    return jsonParse(Buffer.from(s[1], "base64url").toString("utf8"));
   } catch {
     return null;
   }
@@ -72,7 +72,7 @@ function createTokenRefreshScheduler({
   function A(e, o) {
     let f = v(o);
     if (!f) {
-      n(
+      logForDebugging(
         `[${u}:token] Could not decode JWT expiry for sessionId=${e}, token prefix=${o.slice(0, 15)}\u2026, keeping existing timer`,
       );
       return;
@@ -85,12 +85,12 @@ function createTokenRefreshScheduler({
       N = R ? Math.min(c, Math.max(1000, Math.floor(y * 0.2))) : c,
       S = y - N;
     if (S <= 0)
-      n(
+      logForDebugging(
         `[${u}:token] Token for sessionId=${e} expires=${_} (past or within buffer), refreshing immediately`,
       );
     else {
       let O = R ? Math.round(N / 1000) : c / 1000;
-      n(
+      logForDebugging(
         `[${u}:token] Scheduled token refresh for sessionId=${e} in ${k(S)} (expires=${_}, buffer=${O}s)`,
       );
     }
@@ -116,7 +116,7 @@ function createTokenRefreshScheduler({
     if (f) clearTimeout(f);
     let a = E(e),
       g = Math.max(o * 1000 - c, 30000);
-    (n(
+    (logForDebugging(
       `[${u}:token] Scheduled token refresh for sessionId=${e} in ${k(g)} (expires_in=${o}s, buffer=${c / 1000}s)`,
     ),
       w(e, Date.now() + g, a));
@@ -125,7 +125,7 @@ function createTokenRefreshScheduler({
     let o = d.get(e);
     if (o) clearTimeout(o);
     let f = E(e);
-    (n(`[${u}:token] Immediate token refresh requested for sessionId=${e}`),
+    (logForDebugging(`[${u}:token] Immediate token refresh requested for sessionId=${e}`),
       x(e, f));
   }
   async function x(e, o) {
@@ -133,12 +133,12 @@ function createTokenRefreshScheduler({
     try {
       f = await r();
     } catch (g) {
-      n(`[${u}:token] getAccessToken threw for sessionId=${e}: ${l(g)}`, {
+      logForDebugging(`[${u}:token] getAccessToken threw for sessionId=${e}: ${l(g)}`, {
         level: "error",
       });
     }
     if (m.get(e) !== o) {
-      n(
+      logForDebugging(
         `[${u}:token] doRefresh for sessionId=${e} stale (gen ${o} vs ${m.get(e)}), skipping`,
       );
       return;
@@ -147,7 +147,7 @@ function createTokenRefreshScheduler({
       let g = (h.get(e) ?? 0) + 1;
       if (
         (h.set(e, g),
-        n(
+        logForDebugging(
           `[${u}:token] No OAuth token available for refresh, sessionId=${e} (failure ${g}${Number.isFinite(p) ? `/${p}` : ""})`,
           { level: "error" },
         ),
@@ -158,7 +158,7 @@ function createTokenRefreshScheduler({
         d.set(e, _);
         return;
       }
-      (n(
+      (logForDebugging(
         `[${u}:token] Refresh chain exhausted for sessionId=${e} after ${g} consecutive failures`,
         { level: "error" },
       ),
@@ -168,7 +168,7 @@ function createTokenRefreshScheduler({
     }
     if (
       (h.delete(e),
-      n(
+      logForDebugging(
         `[${u}:token] Refreshing token for sessionId=${e}: new token prefix=${f.slice(0, 15)}\u2026`,
       ),
       logEvent("tengu_bridge_token_refreshed", {}),
@@ -180,7 +180,7 @@ function createTokenRefreshScheduler({
     }
     let a = setTimeout(x, b, e, o);
     (d.set(e, a),
-      n(
+      logForDebugging(
         T
           ? `[${u}:token] Non-JWT token \u2014 scheduled fallback refresh for sessionId=${e} in ${k(b)}`
           : `[${u}:token] Scheduled follow-up refresh for sessionId=${e} in ${k(b)}`,

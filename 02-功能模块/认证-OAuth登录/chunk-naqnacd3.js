@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { gce, BSe, jSe } from "../MCP客户端/chunk-5wa92x7d.js";
+import { OAuthMetadataSchema, OAuthTokensSchema, OAuthErrorResponseSchema } from "../MCP客户端/mcp-protocol-schemas.js";
 import { OAuthErrorCode, OAuthError, IssuerMismatchError, RegistrationRejectedError, auth, discoverOAuthProtectedResourceMetadata, discoverAuthorizationServerMetadata, discoverOAuthServerInfo, refreshAuthorization } from "../MCP客户端/chunk-78r8f7dw.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { MCP_CLIENT_METADATA_URL } from "./chunk-9g2q4bjq.js";
 import { yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt, fromNumberOpt, fromEnumArr, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { b, z, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, getFsSurface } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -26,10 +26,10 @@ import { SECURE_STORAGE_READ_FAILED_SENTINEL, getSecureStorage } from "./secure-
 import { getSecureStorageDir, invalidateKeychainCache } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { hashForTelemetry, isXaaEnabled, getXaaIdpConfig, readSecureStorageResilient, getMcpOAuthCredentialKey, shouldSendMcpServerTelemetry, getFeatureValue_CACHED_MAY_BE_STALE } from "./认证-OAuth登录.419zdfz3.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { jt } from "./chunk-wk0e3dz4.js";
+import { getMcpClientState } from "./chunk-wk0e3dz4.js";
 import { SR, UH, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import { authLostEmitter } from "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
-import { Pu, FIe, gE } from "../MCP客户端/chunk-g4gdwpa0.js";
+import { getPresentedCredentialLog, encodeBasicAuth, evictMemoizedDiscoveryCachePaths } from "../MCP客户端/mcp-discovery-cache.js";
 import { McpCredentialStoreUnavailableError, MCP_DOWNSTREAM_UNREACHABLE_CODES, getMcpServerBaseUrl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { renderOAuthCallbackPage, getFirstParamValue, buildOAuthCallbackUrl, pickOAuthCallbackPort } from "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
 import { redactHeaders, redactSearchParams, redactParamValue, redactUrl, formatMcpSdkError, rethrowFetchError } from "./url-and-error-redaction.js";
@@ -74,7 +74,7 @@ class q extends Error {
 var Be =
   /"(access_token|refresh_token|id_token|assertion|subject_token|client_secret)"\s*:\s*"[^"]*"/g;
 function se(e) {
-  return (typeof e === "string" ? e : b(e)).replace(
+  return (typeof e === "string" ? e : jsonStringify(e)).replace(
     Be,
     (n, r) => `"${r}":"[REDACTED]"`,
   );
@@ -220,10 +220,10 @@ async function Je(e) {
     let h = Buffer.from(
       `${encodeURIComponent(e.clientId)}:${encodeURIComponent(e.clientSecret)}`,
     ).toString("base64");
-    ((d.Authorization = `Basic ${h}`), Pu().record(h));
+    ((d.Authorization = `Basic ${h}`), getPresentedCredentialLog().record(h));
   } else
     (r.set("client_id", e.clientId), r.set("client_secret", e.clientSecret));
-  (Pu().record(e.clientSecret), Pu().record(e.assertion));
+  (getPresentedCredentialLog().record(e.clientSecret), getPresentedCredentialLog().record(e.assertion));
   let p = await t(e.tokenEndpoint, { method: "POST", headers: d, body: r });
   if (!p.ok) {
     let h = se(await p.text()).slice(0, 200);
@@ -382,12 +382,12 @@ async function $2n(e) {
   let t = await e.text(),
     n;
   try {
-    n = z(t);
+    n = jsonParse(t);
   } catch {
     return new Response(t, e);
   }
-  if (BSe.safeParse(n).success) return new Response(t, e);
-  let r = jSe.safeParse(n);
+  if (OAuthTokensSchema.safeParse(n).success) return new Response(t, e);
+  let r = OAuthErrorResponseSchema.safeParse(n);
   if (!r.success) return new Response(t, e);
   let d = ut.has(r.data.error)
     ? {
@@ -397,7 +397,7 @@ async function $2n(e) {
           `Server returned non-standard error code: ${r.data.error}`,
       }
     : r.data;
-  return new Response(b(d), {
+  return new Response(jsonStringify(d), {
     status: 400,
     statusText: "Bad Request",
     headers: e.headers,
@@ -462,7 +462,7 @@ async function he(e, t, n) {
           `Configured auth server metadata at ${redactUrl(r)} is not valid JSON`,
         );
       }
-      return gce.parse(k);
+      return OAuthMetadataSchema.parse(k);
     }
     throw Error(
       `HTTP ${v.status} fetching configured auth server metadata from ${redactUrl(r)}`,
@@ -514,7 +514,7 @@ class iI extends R {
   received;
   constructor(e, t) {
     super(
-      `Issuer echo cross-origin mismatch (RFC 8414 \xA73.3): expected ${b(e)}, received ${b(t)}`,
+      `Issuer echo cross-origin mismatch (RFC 8414 \xA73.3): expected ${jsonStringify(e)}, received ${jsonStringify(t)}`,
       "issuer echo cross-origin mismatch (RFC 8414 \xA73.3)",
       "issuer_echo_denied",
     );
@@ -642,10 +642,10 @@ function pt(e) {
   return e !== void 0 && (e === MCP_CLIENT_METADATA_URL || e === xe());
 }
 function nhr(e) {
-  return jt().oauthCallbackSubmitters.get(e);
+  return getMcpClientState().oauthCallbackSubmitters.get(e);
 }
 function rhr(e, t) {
-  let n = jt().activeOAuthFlows;
+  let n = getMcpClientState().activeOAuthFlows;
   (n.set(e, t),
     t
       .finally(() => {
@@ -654,7 +654,7 @@ function rhr(e, t) {
       .catch(() => {}));
 }
 function ohr(e) {
-  return jt().activeOAuthFlows.get(e);
+  return getMcpClientState().activeOAuthFlows.get(e);
 }
 async function wLt(e, t) {
   let n = getMcpOAuthCredentialKey(e, t),
@@ -691,7 +691,7 @@ async function Ie({
       let k = Buffer.from(
         `${encodeURIComponent(d)}:${encodeURIComponent(p)}`,
       ).toString("base64");
-      ((v.Authorization = `Basic ${k}`), Pu().record(k));
+      ((v.Authorization = `Basic ${k}`), getPresentedCredentialLog().record(k));
     }
   else if (d) h.set("client_id", d);
   else logMCPDebug(e, `No client_id available for ${r} revocation - server may reject`);
@@ -725,7 +725,7 @@ async function shr(e, t) {
   };
 }
 async function $e(e, t, n) {
-  let r = Pu();
+  let r = getPresentedCredentialLog();
   (r.record(n.accessToken), r.record(n.refreshToken), r.record(n.clientSecret));
   let d;
   try {
@@ -886,7 +886,7 @@ async function ahr(e, t, { preserveStepUpState: n = !1 } = {}) {
   } catch (h) {
     (logMCPDebug(e, `clear local tokens failed: ${l(h)}`), (_ ??= "local_clear_failed"));
   }
-  if ((gE(e), _)) logFeatureSad("mcp_oauth_revoke", _);
+  if ((evictMemoizedDiscoveryCachePaths(e), _)) logFeatureSad("mcp_oauth_revoke", _);
   else logFeatureOk("mcp_oauth_revoke");
 }
 async function U2n(e, t, n) {
@@ -951,7 +951,7 @@ async function _t(e, t, n, r, d) {
     throw (
       logMCPDebug(
         e,
-        `XAA: secret lookup miss. wanted=${E} have=[${M.join(", ")}] configHeaders=${b(D)}`,
+        `XAA: secret lookup miss. wanted=${E} have=[${M.join(", ")}] configHeaders=${jsonStringify(D)}`,
       ),
       Error(
         `XAA: AS client secret not found for '${e}'. Re-add with --client-secret.`,
@@ -980,7 +980,7 @@ async function _t(e, t, n, r, d) {
     }
     w = "discovery";
     let M = await discoverOidc(p.issuer);
-    ((w = "token_exchange"), Pu().record(h));
+    ((w = "token_exchange"), getPresentedCredentialLog().record(h));
     let D;
     try {
       D = await me(
@@ -1013,7 +1013,7 @@ async function _t(e, t, n, r, d) {
       throw U;
     }
     let C = getMcpOAuthCredentialKey(e, t),
-      T = Pu();
+      T = getPresentedCredentialLog();
     (T.record(D.access_token), T.record(D.refresh_token));
     let I, K;
     try {
@@ -1123,7 +1123,7 @@ async function lhr(e, t, n, r, d) {
     } catch (L) {
       logMCPDebug(e, `clear stored credentials failed: ${l(L)}`);
     }
-    let O = jt(),
+    let O = getMcpClientState(),
       G = new AbortController();
     if (!T)
       (O.oauthCallbackListeners.get(I)?.abort(),
@@ -1344,7 +1344,7 @@ async function lhr(e, t, n, r, d) {
       });
     ((D = !0),
       logMCPDebug(e, "Completing auth flow with authorization code"),
-      Pu().record(Ae));
+      getPresentedCredentialLog().record(Ae));
     let fe = await auth(W, {
       serverUrl: t.url,
       authorizationCode: Ae,
@@ -1504,7 +1504,7 @@ class z3e {
       (this.handleRedirection = r),
       (this.onAuthorizationUrlCallback = d),
       (this.skipBrowserOpen = p ?? !1),
-      (this._presented = Pu()));
+      (this._presented = getPresentedCredentialLog()));
   }
   get redirectUrl() {
     return this.redirectUri;
@@ -1582,7 +1582,7 @@ class z3e {
     let e = await this.resolveClientInformation();
     return (
       this._presented.record(e?.client_secret),
-      this._presented.record(FIe(e?.client_id, e?.client_secret)),
+      this._presented.record(encodeBasicAuth(e?.client_id, e?.client_secret)),
       e
     );
   }
@@ -1688,7 +1688,7 @@ class z3e {
   }
   async saveClientInformation(e) {
     (this._presented.record(e.client_secret),
-      this._presented.record(FIe(e.client_id, e.client_secret)));
+      this._presented.record(encodeBasicAuth(e.client_id, e.client_secret)));
     let t = getMcpOAuthCredentialKey(this.serverName, this.serverConfig);
     try {
       if (
@@ -2318,7 +2318,7 @@ class z3e {
   async refreshAuthorization(e) {
     let t = getMcpOAuthCredentialKey(this.serverName, this.serverConfig),
       n = getSecureStorageDir();
-    await ae().mkdir(n);
+    await getFsSurface().mkdir(n);
     let r = t.replace(/[^a-zA-Z0-9]/g, "_"),
       d = et(n, `mcp-refresh-${r}.lock`),
       p;

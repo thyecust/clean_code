@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { sanitizeDisplayTextWithoutRedaction } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Aa } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
+import { buildCliCommand } from "../../02-功能模块/插件系统/plugin-system-core.js";
 var p = [
   "microsoft365.mcp.claude.com",
   "gmail.mcp.claude.com",
@@ -48,7 +48,7 @@ function a(e, t = {}) {
       "`claude login`), then it'll be available here automatically.",
     r =
       t.scope === "local" || t.scope === "project" || t.scope === "user"
-        ? Aa("mcp remove", e)
+        ? buildCliCommand("mcp remove", e)
         : null,
     s = r ? `${o} Remove the stale entry with: \`${r}\`` : o;
   return r && [...s].length <= 1024 ? s : o;

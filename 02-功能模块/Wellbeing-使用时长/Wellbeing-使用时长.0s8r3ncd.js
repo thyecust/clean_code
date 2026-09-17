@@ -12,7 +12,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { join as S } from "path";
@@ -34,7 +34,7 @@ async function w(t) {
     let i = await t.readText([f()]);
     if (!i.ok)
       throw (
-        n(`Failed to read active-time ledger: ${We(i.error)}`),
+        logForDebugging(`Failed to read active-time ledger: ${describeStorageError(i.error)}`),
         Error("active-time ledger read failed")
       );
     let r = i.value.items[0];
@@ -45,10 +45,10 @@ async function w(t) {
       e = await getFileStorage().read(v());
     } catch (i) {
       if (W(i)) return d();
-      throw (n(`Failed to read active-time ledger: ${l(i)}`), i);
+      throw (logForDebugging(`Failed to read active-time ledger: ${l(i)}`), i);
     }
   try {
-    let i = z(e);
+    let i = jsonParse(e);
     if (i.version !== 1 || !Array.isArray(i.windows)) return d();
     return {
       version: 1,
@@ -142,18 +142,18 @@ class g {
       if (
         ((s.windows = s.windows.filter((a) => a.end >= T)), isHoverRestEnabled() && e !== void 0)
       ) {
-        let a = await e.write(f(), b(s), { mode: 384 });
+        let a = await e.write(f(), jsonStringify(s), { mode: 384 });
         if (!a.ok) {
-          n(`Failed to flush active-time ledger: ${We(a.error)}`);
+          logForDebugging(`Failed to flush active-time ledger: ${describeStorageError(a.error)}`);
           return;
         }
       } else {
         let a = getClaudeConfigDir();
-        (await getFileStorage().mkdir(a), await getFileStorage().atomicWrite(v(), b(s), 384));
+        (await getFileStorage().mkdir(a), await getFileStorage().atomicWrite(v(), jsonStringify(s), 384));
       }
       this.pendingSeconds -= r;
     } catch (s) {
-      n(`Failed to flush active-time ledger: ${l(s)}`);
+      logForDebugging(`Failed to flush active-time ledger: ${l(s)}`);
     }
   }
   ensureFlushTimer() {

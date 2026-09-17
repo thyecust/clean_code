@@ -18,7 +18,7 @@ import { le, Zt, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, A, Jr, H_e, I_e, WHt, Gw, Jg, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, b, z, n8, D0, ae, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, UNVERIFIED_ANCESTRY_SENTINEL, resolveSymlinkTargetSync, getFsSurface, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isStdinUnusableError, peekForStdinData } from "./chunk-z5vtnzjg.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, beforeFirst, normalizeWhitespace, stripAnsiAndControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -27,18 +27,18 @@ import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatu
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { validateStorageKey, isValidGitSha, findGitRoot, findGitRootVerifyingPositive, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { $P, gm, mW, i_, oB, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { cursorToPosition, CURSOR_HOME_SEQUENCE, ERASE_ENTIRE_LINE, ERASE_SCREEN_SEQUENCE, RESET_SCROLL_REGION, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscript, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { RENAME_CONTENTION_ERRNOS, renameWithRetry, writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { PROVIDER_CONFIG_ENV_VARS, BASE_URL_ENV_GROUPS, hasHostManagedAuth } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { SRt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { setupGitBashShellEnv } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { hasSkipDangerousModePermissionPrompt, hasAutoModeOptIn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { Eir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { buildBgDispatcherEnvVars } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { provenSameProcessAsync, ownProcStartAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { bgSupervisorNoun, bgSupervisorNounCap, daemonHint } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
@@ -144,7 +144,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { sendToUdsSocket, listAllLiveSessions } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { wtn, B0e, ktn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
+import { waitForPolicyLimitsToLoad } from "../策略限制(PolicyLimits)/policy-limits-client.js";
 import { relaunchClaudeCode } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import { writeStdoutAndDrain, exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { CLAUDE_AGENT } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
@@ -204,19 +204,19 @@ async function Fn(e, t = {}) {
       break;
     } catch (c) {
       if (Date.now() >= s) {
-        if (!W(c)) n(`[adopt] reap claim failed: ${c}`, { level: "warn" });
+        if (!W(c)) logForDebugging(`[adopt] reap claim failed: ${c}`, { level: "warn" });
         return { found: !1, reaped: 0 };
       }
       await sleep(so);
     }
   try {
-    let c = lo().safeParse(z(await readFile(r, "utf-8")));
+    let c = lo().safeParse(jsonParse(await readFile(r, "utf-8")));
     if (!c.success) return { found: !0, reaped: 0 };
     let { writtenAtMs: d, shells: _ } = c.data,
       p = d !== void 0 ? Date.now() - d : void 0;
     if ((p !== void 0 && p > ao) || _.length > co)
       return (
-        n(
+        logForDebugging(
           `[adopt] reap skipped: implausible payload (age ${p ?? "?"}ms, ${_.length} entries)`,
           { level: "warn" },
         ),
@@ -232,7 +232,7 @@ async function Fn(e, t = {}) {
     return { found: !0, reaped: _.length };
   } catch (c) {
     return (
-      n(`[adopt] reap read/parse failed: ${c}`, { level: "warn" }),
+      logForDebugging(`[adopt] reap read/parse failed: ${c}`, { level: "warn" }),
       { found: !0, reaped: 0 }
     );
   } finally {
@@ -288,13 +288,13 @@ async function claimAttachBeacon(e, t, o) {
         return;
       }
       if (_v().ownedBeacons.get(e) !== r) return;
-      await writeFileAtomic(Gt(e), b(r), 384);
+      await writeFileAtomic(Gt(e), jsonStringify(r), 384);
     }),
     await ho(o));
 }
 async function an(e, t, o, r = !1) {
   if (!(await tt(r))) return !1;
-  if (_v().ownedBeacons.get(t) === o) await e.write(on(t), b(o));
+  if (_v().ownedBeacons.get(t) === o) await e.write(on(t), jsonStringify(o));
   return !0;
 }
 function Gn(e, t, o) {
@@ -308,7 +308,7 @@ function Gn(e, t, o) {
       }
       if (!(await tt())) return;
       if (_v().ownedBeacons.get(e) !== r) return;
-      await writeFileAtomic(Gt(e), b(r), 384);
+      await writeFileAtomic(Gt(e), jsonStringify(r), 384);
     }));
 }
 function ut(e, t, o) {
@@ -334,7 +334,7 @@ function ut(e, t, o) {
     }
     if (!(await tt())) return;
     if (_v().ownedBeacons.get(e) !== r) return;
-    await writeFileAtomic(Gt(e), b(r), 384);
+    await writeFileAtomic(Gt(e), jsonStringify(r), 384);
   });
 }
 async function releaseAttachBeacon(e, t) {
@@ -412,7 +412,7 @@ async function po(e, t) {
 }
 function Jn(e) {
   try {
-    let t = z(e);
+    let t = jsonParse(e);
     return !!t &&
       typeof t === "object" &&
       typeof t.gestureId === "string" &&
@@ -1008,7 +1008,7 @@ async function rt(e, t = {}) {
           SHOW_CURSOR +
           (getCurrentPlatform() === "windows" ? DISABLE_WIN32_INPUT_MODE : "") +
           "\x1B[0m\x1B7" +
-          oB +
+          RESET_SCROLL_REGION +
           "\x1B8" +
           (Jye() ? CLEAR_ITERM2_PROGRESS_SEQUENCE : "") +
           (no ? "" : uF()),
@@ -1034,7 +1034,7 @@ async function rt(e, t = {}) {
       clearTimeout(Ye),
       (Ye = setTimeout(() => {
         if (((Ye = void 0), Ne)) return;
-        if (d < Ve || _ < me) r.write(i_ + gm);
+        if (d < Ve || _ < me) r.write(ERASE_SCREEN_SEQUENCE + CURSOR_HOME_SEQUENCE);
         controlRequest({
           proto: BG_PROTO,
           op: "resize",
@@ -1184,7 +1184,7 @@ async function rt(e, t = {}) {
       r.write(L);
       return;
     }
-    if ($n) (($n = !1), r.write(i_ + gm));
+    if ($n) (($n = !1), r.write(ERASE_SCREEN_SEQUENCE + CURSOR_HOME_SEQUENCE));
     (r.write(L),
       re.feed(L.toString("latin1"), (I) => {
         if (I === 1004) {
@@ -1337,7 +1337,7 @@ async function rt(e, t = {}) {
         H = Rt.subarray(L + 1),
         I;
       try {
-        I = z(F);
+        I = jsonParse(F);
       } catch (se) {
         return fe("error", `bad ack: ${l(se)}`, { failureClass: "bad_ack" });
       }
@@ -1450,7 +1450,7 @@ async function rt(e, t = {}) {
     }),
     ue.once("connect", () => {
       ue.write(
-        b({
+        jsonStringify({
           proto: BG_PROTO,
           op: "attach",
           short: e,
@@ -1814,19 +1814,19 @@ async function pn(e, t = !1, o = Date.now(), r) {
           return _r(T.error, e.source, o, w);
         if ("code" in T && T.code === "ESTALE") {
           if (((E = "stale-short"), (k = T.error), O < 2)) {
-            n(
+            logForDebugging(
               `bg: stale handle for ${e.short}, retrying dispatch (${O + 1}/2)`,
             );
             continue;
           }
           break;
         }
-        n(
+        logForDebugging(
           `bg: socket dispatch fell through (${"code" in T ? T.code : "?"}), using file path`,
         );
       }
       try {
-        let T = b({ ...e, nonce: w });
+        let T = jsonStringify({ ...e, nonce: w });
         if (isHoverRestEnabled() && r !== void 0) {
           let D = await r.write(v, T, { mode: 384 });
           if (!D.ok) {
@@ -1884,13 +1884,13 @@ async function pn(e, t = !1, o = Date.now(), r) {
         O === 2 || (E !== "stale-short" && E !== "ack-timeout"))
       )
         break;
-      n(`bg: ${E} for ${e.short}, retrying dispatch (${O + 1}/2)`);
+      logForDebugging(`bg: ${E} for ${e.short}, retrying dispatch (${O + 1}/2)`);
     }
     if (!t && (E === "enoconn" || E === "estarting"))
       return ((s.daemonConfirmedUp = !1), await pn(e, !0, o, r));
     return (
       Yt(E, k, e.source, o),
-      n(`bg: daemon dispatch fallback (${E}): ${k}`, { level: "warn" }),
+      logForDebugging(`bg: daemon dispatch fallback (${E}): ${k}`, { level: "warn" }),
       { ok: !1, reason: E, detail: k, nonce: w }
     );
   } finally {
@@ -1918,7 +1918,7 @@ function hr(e, t, o, r, s) {
 function _r(e, t, o, r) {
   return (
     Yt("cwd-gone", "ECWDGONE", t, o),
-    n(`bg: daemon refused dispatch (cwd-gone): ${e}`, { level: "warn" }),
+    logForDebugging(`bg: daemon refused dispatch (cwd-gone): ${e}`, { level: "warn" }),
     { ok: !1, reason: "cwd-gone", detail: e, nonce: r }
   );
 }
@@ -1996,7 +1996,7 @@ function wr(e) {
 var ai = ["--bg", "--background"];
 function ci(e) {
   return (
-    SRt(),
+    setupGitBashShellEnv(),
     a.SHELL
       ? { cmd: a.SHELL, args: ["-c", e] }
       : getCurrentPlatform() === "windows"
@@ -2197,11 +2197,11 @@ async function di(e, t, o, r, s, c, d) {
           Ne = !0;
         })
         .catch((re) =>
-          n(`bg seed state write failed: ${l(re)}`, { level: "warn" }),
+          logForDebugging(`bg seed state write failed: ${l(re)}`, { level: "warn" }),
         );
     else if (Ue.length > 0 && me.respawnFlags.length === 0)
       Le = writeStateAtomic(v, { ...me, respawnFlags: Ue }, d).catch((re) =>
-        n(`bg respawnFlags patch failed: ${l(re)}`, { level: "warn" }),
+        logForDebugging(`bg respawnFlags patch failed: ${l(re)}`, { level: "warn" }),
       );
   }
   let qe = {
@@ -2252,7 +2252,7 @@ async function di(e, t, o, r, s, c, d) {
             : De || "1",
         }),
       },
-      reattachEnv: { ...s, ...(!r?.exec && Eir(ownStoredLoginPlanAttributes())) },
+      reattachEnv: { ...s, ...(!r?.exec && buildBgDispatcherEnvVars(ownStoredLoginPlanAttributes())) },
       worktree: r?.worktree
         ? { path: r.worktree.path, ownershipToken: _ }
         : void 0,
@@ -2286,7 +2286,7 @@ async function di(e, t, o, r, s, c, d) {
       )
     )
       return (
-        n(`bg: daemon dispatch ${ne.reason} but worker is live`, {
+        logForDebugging(`bg: daemon dispatch ${ne.reason} but worker is live`, {
           level: "warn",
         }),
         await logEventAsync("tengu_bg_dispatch_rescued", {
@@ -2314,7 +2314,7 @@ async function di(e, t, o, r, s, c, d) {
       );
       if (re.ok && re.op === "dispatch")
         return (
-          n(`bg: ack-timeout recovered via redispatch (${p})`, {
+          logForDebugging(`bg: ack-timeout recovered via redispatch (${p})`, {
             level: "warn",
           }),
           await logEventAsync("tengu_bg_dispatch_rescued", {
@@ -2650,7 +2650,7 @@ async function gi(e = process.stdin) {
   } catch (c) {
     if ((e.off("data", r), !isStdinUnusableError(c))) throw c;
     return (
-      n(`readBgStdin: stdin unreadable: ${l(c)}`, { level: "error" }),
+      logForDebugging(`readBgStdin: stdin unreadable: ${l(c)}`, { level: "error" }),
       await logEventAsync("tengu_bg_stdin_unreadable", { error_code: Jg(c) ?? S("none") }),
       process.stderr
         .write(`warning: stdin is unreadable (${A(c)}), proceeding without piped input
@@ -2800,7 +2800,7 @@ async function kn(e) {
         return;
       });
     if (s === void 0 || !s.ok) {
-      n(
+      logForDebugging(
         `[bg] v5 jobs listing failed: ${s === void 0 ? "rejected" : s.error.code}`,
       );
       return;
@@ -2813,13 +2813,13 @@ async function kn(e) {
       )
         t.add(c.scope.jobId);
     if (s.value.cursor && s.value.cursor === o) {
-      n("[bg] v5 jobs listing failed: cursor did not advance");
+      logForDebugging("[bg] v5 jobs listing failed: cursor did not advance");
       return;
     }
     o = s.value.cursor;
   } while (o && ++r < yr);
   if (o) {
-    n(`[bg] v5 jobs listing failed: more than ${yr} pages`);
+    logForDebugging(`[bg] v5 jobs listing failed: more than ${yr} pages`);
     return;
   }
   return [...t];
@@ -2895,7 +2895,7 @@ async function logsHandler(e, t) {
     _ = process.stdout.isTTY
       ? "\x1B[0m" +
         (c
-          ? $P(d, 1) +
+          ? cursorToPosition(d, 1) +
             `
 `
           : "")
@@ -2940,14 +2940,14 @@ async function hn(e, t = {}, o) {
     _ = (k, w) => {
       let O = Math.round(w / 1000),
         C = O >= 5 ? `${k} (${O}s)` : k;
-      if (s) (process.stderr.write(`\r${mW}${C}`), (c = !0));
+      if (s) (process.stderr.write(`\r${ERASE_ENTIRE_LINE}${C}`), (c = !0));
       else if (k !== d)
         process.stderr.write(`${C}
 `);
       d = k;
     },
     p = () => {
-      if (c) (process.stderr.write(`\r${mW}`), (c = !1));
+      if (c) (process.stderr.write(`\r${ERASE_ENTIRE_LINE}`), (c = !1));
     },
     v = await r(),
     E = 0;
@@ -3389,7 +3389,7 @@ async function stopHandler(e, t) {
       },
       t,
     ).catch((v) =>
-      n(`bg stop terminal write failed: ${l(v)}`, { level: "warn" }),
+      logForDebugging(`bg stop terminal write failed: ${l(v)}`, { level: "warn" }),
     );
   }
   if (
@@ -3996,9 +3996,9 @@ async function materializePastedImages(e, t, o, r) {
         publishDiscipline: "inPlace",
       });
       if (!C.ok) {
-        let N = We(C.error);
+        let N = describeStorageError(C.error);
         throw (
-          n(`pasted-image write failed: ${N}`, { level: "error" }),
+          logForDebugging(`pasted-image write failed: ${N}`, { level: "error" }),
           Object.assign(
             new R(
               `pasted-image write failed: ${N}`,
@@ -4050,11 +4050,11 @@ async function Li(e, t, o, r) {
     displayIntent: p,
   } = o;
   if (d) {
-    await b_();
+    await waitForPolicyLimitsToLoad();
     let J = policyDeniedReason(ALLOW_ROUTINES_POLICY, "Routines", "are", ROUTINES_POLICY_DENIED_MESSAGE);
     if (J) return { ok: !1, error: J };
   }
-  n("[PERF:bg-dispatch-start]");
+  logForDebugging("[PERF:bg-dispatch-start]");
   let v = s.slice(0, 8),
     E = c ?? getCwd(),
     k = d ? buildCarriableFlagPair("--routine", d) : buildCarriableFlagPair("--agent", e.name),
@@ -4097,7 +4097,7 @@ async function Li(e, t, o, r) {
     T = await spawnBgSession(C, s, "fleet", E, void 0, void 0, void 0, r),
     D = !T.ok && (T.reason === "gate_blocked" || T.reason === "cwd_gone");
   if (!T.ok && !T.alive && T.reason === "ack_timeout" && Date.now() - N < 2000)
-    (n(`bg: dispatch fast-failed (${Date.now() - N}ms) \u2014 retrying once`, {
+    (logForDebugging(`bg: dispatch fast-failed (${Date.now() - N}ms) \u2014 retrying once`, {
       level: "warn",
     }),
       await sleep(500),
@@ -4116,7 +4116,7 @@ async function Li(e, t, o, r) {
       { ok: !1, error: T.error, reason: T.reason }
     );
   }
-  if ((n("[PERF:bg-dispatch-end]"), T.rescued))
+  if ((logForDebugging("[PERF:bg-dispatch-end]"), T.rescued))
     logFeatureSad("fleet_view_dispatch", "rescued");
   else logFeatureOk("fleet_view_dispatch");
   return { ok: !0, jobId: T.short, sessionId: s };
@@ -4238,7 +4238,7 @@ class xr {
     }
     let c = Bt(),
       d = c.slice(0, 8);
-    (n(`[PERF:bg-spare-start] ${d}`),
+    (logForDebugging(`[PERF:bg-spare-start] ${d}`),
       (this.ensuring = (async () => {
         try {
           let _ = await canonicalizePath(e, createHoverRestOptions(s)),
@@ -4276,7 +4276,7 @@ class xr {
             ready: !1,
             defaults: o,
           }),
-            n(`[PERF:bg-spare-spawned] ${d}`),
+            logForDebugging(`[PERF:bg-spare-spawned] ${d}`),
             logFeatureOk("job_spare_ensure"));
         } catch {
           (await deleteJob(d, { internal: !0 }, s).catch(() => {}),
@@ -4310,12 +4310,12 @@ function ensureSpareJob(e, t = !1, o, r, s) {
   return Qe().ensure(e, t, o, r, s);
 }
 async function claimSpareJob(e, t, o) {
-  n("[PERF:bg-claim-start]");
+  logForDebugging("[PERF:bg-claim-start]");
   let r = Qe().take(),
     s = t ?? resolveAgentTemplate(r?.defaults),
     c = async (_, p) => {
       if (
-        (n(`[bg-spare] claim miss (${_})${p ? `: ${p}` : ""}`),
+        (logForDebugging(`[bg-spare] claim miss (${_})${p ? `: ${p}` : ""}`),
         logEvent("tengu_bg_spare_claim_fail", { reason: fromEnum(_) }),
         r)
       ) {
@@ -4326,7 +4326,7 @@ async function claimSpareJob(e, t, o) {
         );
         if (!v.removed)
           (logFeatureBad("job_claim_spare", "job_claim_spare_delete_failed"),
-            n(
+            logForDebugging(
               `[bg-spare] deleteJob unconfirmed (${v.error ?? "unknown"}) \u2014 cold-dispatching with fresh sessionId; spare ${r.jobId} dir preserved`,
               { level: "warn" },
             ));
@@ -4359,7 +4359,7 @@ async function claimSpareJob(e, t, o) {
   }
   return (
     await writeStateAtomic(getJobDir(r.jobId), d, o).catch(logJobWriteError),
-    n("[PERF:bg-claim-end]"),
+    logForDebugging("[PERF:bg-claim-end]"),
     logFeatureOk("job_claim_spare"),
     logFeatureOk("fleet_view_dispatch"),
     { ok: !0, jobId: r.jobId, sessionId: r.sessionId }
@@ -4401,7 +4401,7 @@ async function respawnJob(e, t, o) {
     s = t?.knownState,
     c = pr(e);
   if (c) {
-    n(`bg: respawn of ${e} waiting on its in-flight spawn`);
+    logForDebugging(`bg: respawn of ${e} waiting on its in-flight spawn`);
     let X = await c;
     if ((invalidateJobStateCache(r), (s = void 0), !X.ok && !X.alive)) {
       logFeatureSad("job_respawn", "in_flight_spawn_failed");
@@ -4472,7 +4472,7 @@ async function respawnJob(e, t, o) {
       ? Bt()
       : (w.resumeSessionId ?? (Xn(w.sessionId) !== null ? w.sessionId : Bt()));
   if (T)
-    n(
+    logForDebugging(
       `bg: respawn of ${e} \u2014 session id was taken by another conversation; starting under a fresh id`,
       { level: "warn" },
     );
@@ -4528,7 +4528,7 @@ async function respawnJob(e, t, o) {
       !t?.force &&
       !t?.forceRefusalRetry
     ) {
-      (n(
+      (logForDebugging(
         `bg: respawn of ${e} refused \u2014 fork handoff whose own transcript never materialized`,
         { level: "warn" },
       ),
@@ -4553,7 +4553,7 @@ async function respawnJob(e, t, o) {
     }
     if (w.deadEpochReapedAt !== void 0 && !t?.force && !C)
       return (
-        n(
+        logForDebugging(
           `bg: respawn of ${e} refused \u2014 dead-epoch row whose transcript is gone`,
           { level: "warn" },
         ),
@@ -4679,7 +4679,7 @@ ${t.initialPrompt}`
     let X = await readJobState(r, o);
     if (X?.state === "stopped")
       return (
-        n(
+        logForDebugging(
           `bg: respawn of ${e} bailed \u2014 job was stopped while the respawn was in flight`,
           { level: "warn" },
         ),
@@ -4735,7 +4735,7 @@ ${t.initialPrompt}`
     _e.reason === "ack_timeout" &&
     Date.now() - qe < 2000
   )
-    (n(
+    (logForDebugging(
       `bg: respawn dispatch fast-failed (${Date.now() - qe}ms) \u2014 retrying once`,
       { level: "warn" },
     ),
@@ -4744,7 +4744,7 @@ ${t.initialPrompt}`
   let wt = Date.now() - qe,
     bt = Date.now() - p;
   if (
-    (n(
+    (logForDebugging(
       `[PERF:respawn] ${e}: total=${bt}ms probe=${E}ms kill=${te}ms${ve ? " (ceremony skipped)" : ""} wait=${K}ms transcript=${Re}ms dispatch=${wt}ms ok=${_e.ok}`,
     ),
     logEvent("tengu_bg_respawn", {
@@ -5181,7 +5181,7 @@ async function Lr(e, t, o) {
   return;
 }
 async function attachJob(e, t = {}) {
-  (Xi(e, t.storageV5), n("[PERF:bg-attach-start]"), B0e());
+  (Xi(e, t.storageV5), logForDebugging("[PERF:bg-attach-start]"), B0e());
   let o = RACED_SOCKET_GAP,
     r = TRANSIENT_ATTACH_CODE,
     s = {
@@ -5250,7 +5250,7 @@ async function attachJob(e, t = {}) {
   while (p.outcome === "disconnected") {
     let w = Math.max(1, (process.stdout.columns ?? 80) - 15);
     process.stdout.write(
-      `\x1B7${$P(1, w)}\x1B[2;7m${" Reconnecting\u2026 "}\x1B[0m\x1B8`,
+      `\x1B7${cursorToPosition(1, w)}\x1B[2;7m${" Reconnecting\u2026 "}\x1B[0m\x1B8`,
     );
     let O;
     if (process.stdin.isTTY) {
@@ -5269,7 +5269,7 @@ async function attachJob(e, t = {}) {
     if (O === "detach") {
       if (_) process.stdout.write(uF());
       return (
-        n("[PERF:bg-attach-end]"),
+        logForDebugging("[PERF:bg-attach-end]"),
         logFeatureOk("job_attach"),
         xe(d, "detached"),
         { kind: "detached" }
@@ -5291,7 +5291,7 @@ async function attachJob(e, t = {}) {
     if (N && $t(N)) {
       if (_) process.stdout.write(uF());
       return (
-        n("[PERF:bg-attach-end]"),
+        logForDebugging("[PERF:bg-attach-end]"),
         logFeatureOk("job_attach"),
         xe(d, "detached"),
         { kind: "detached" }
@@ -5299,7 +5299,7 @@ async function attachJob(e, t = {}) {
     }
     if (await Ot(e))
       return (
-        n(
+        logForDebugging(
           `[bg-attach] worker gone on reconnect probe short=${e} \u2014 settled while attached`,
         ),
         E()
@@ -5332,7 +5332,7 @@ async function attachJob(e, t = {}) {
         })));
     if (p.msg?.includes("ENOJOB"))
       return (
-        n(
+        logForDebugging(
           `[bg-attach] ENOJOB on reconnect short=${e} \u2014 daemon has no handle (or it's killing/settled)`,
         ),
         E()
@@ -5374,7 +5374,7 @@ async function attachJob(e, t = {}) {
       };
     }
     if (p.msg?.includes("ENOJOB")) {
-      n(
+      logForDebugging(
         `[bg-attach] ENOJOB on first attach short=${e} \u2014 daemon has no handle (or it's killing/settled)`,
       );
       let w = await Lr(e, void 0, t.storageV5);
@@ -5404,7 +5404,7 @@ async function attachJob(e, t = {}) {
             : "Couldn't attach to that session";
     return (logFeatureBad("job_attach", "job_attach_failed"), { kind: "error", msg: k });
   }
-  if ((n("[PERF:bg-attach-end]"), logFeatureOk("job_attach"), p.msg && KICKED_ATTACH_CODE.test(p.msg)))
+  if ((logForDebugging("[PERF:bg-attach-end]"), logFeatureOk("job_attach"), p.msg && KICKED_ATTACH_CODE.test(p.msg)))
     return { kind: "detached", msg: p.msg.replace(KICKED_ATTACH_CODE, "") };
   return { kind: "detached" };
 }
@@ -5453,7 +5453,7 @@ async function deleteJob(e, t = {}, o) {
   ).catch((E) => ({ confirmed: !1, error: l(E) }));
   if (!d.confirmed) {
     if (
-      (n(
+      (logForDebugging(
         `deleteJob: kill unconfirmed for ${e} \u2014 skipping jobdir/worktree removal to avoid stranding a live worker`,
         { level: "warn" },
       ),
@@ -5497,7 +5497,7 @@ async function deleteJob(e, t = {}, o) {
     let de = claudeWorktreeLockPid(je?.lockReason);
     if (await Vi(e, ce, E, o))
       ((k = "in_use"),
-        n(
+        logForDebugging(
           `deleteJob: ${E} is claimed by another running job's state.json \u2014 not ours to remove`,
           { level: "warn" },
         ));
@@ -5515,7 +5515,7 @@ async function deleteJob(e, t = {}, o) {
             return;
           })));
       else k = w === "claimed" ? "shared_record" : "records_unreadable";
-      n(
+      logForDebugging(
         w === "claimed"
           ? `deleteJob: ${E} is also recorded by another settled job's state.json \u2014 not removing another session's output`
           : `deleteJob: could not verify ${E} against sibling records \u2014 refusing until records are readable`,
@@ -5523,7 +5523,7 @@ async function deleteJob(e, t = {}, o) {
       );
     } else if (!(await mayReleaseWorktreeLock(je?.lockReason)) && !(de !== null && c.has(de)))
       ((k = "live_lock"),
-        n(
+        logForDebugging(
           `deleteJob: ${E} is locked by a live Claude Code process, or with a reason we did not write (${je?.lockReason}) \u2014 not ours to remove`,
           { level: "warn" },
         ));
@@ -5538,13 +5538,13 @@ async function deleteJob(e, t = {}, o) {
             : D.kind === "bg" && typeof D.jobId === "string" && SHORT_RE.test(D.jobId)
               ? `background session ${D.jobId}, pid ${D.pid}`
               : `pid ${D.pid}, ${D.kind}`),
-        n(
+        logForDebugging(
           `deleteJob: ${E} is the working directory of a live session (pid ${D.pid}, ${D.kind}) \u2014 not ours to remove`,
           { level: "warn" },
         ));
     else if (J && !te && !be)
       ((k = "dirty"),
-        n(`deleteJob: worktree has uncommitted changes, kept ${E}`, {
+        logForDebugging(`deleteJob: worktree has uncommitted changes, kept ${E}`, {
           level: "warn",
         }));
     else if (
@@ -5555,13 +5555,13 @@ async function deleteJob(e, t = {}, o) {
     ) {
       if ((await Hr(e, ce, E, { includeUnsettled: !1 }, o)) === "claimed")
         ((k = "unpushed_shared"),
-          n(
+          logForDebugging(
             `deleteJob: ${E} has unpushed commits and is also recorded by another settled job's state.json \u2014 not offering a discard`,
             { level: "warn" },
           ));
       else
         ((k = "unpushed"),
-          n(`deleteJob: ${E} has commits that are on no remote, kept`, {
+          logForDebugging(`deleteJob: ${E} has commits that are on no remote, kept`, {
             level: "warn",
           }));
       T = await qt(E).catch(() => {
@@ -5573,7 +5573,7 @@ async function deleteJob(e, t = {}, o) {
       !(await un(ce, t.discardUnpushed.headSha))
     )
       ((k = "unpushed"),
-        n(`deleteJob: ${E} HEAD moved past the confirmed discard pin, kept`, {
+        logForDebugging(`deleteJob: ${E} HEAD moved past the confirmed discard pin, kept`, {
           level: "warn",
         }),
         (T = await qt(E).catch(() => {
@@ -5593,7 +5593,7 @@ async function deleteJob(e, t = {}, o) {
           { storageV5: o },
         ).catch(
           (He) => (
-            n(`deleteJob: removeAgentWorktree threw for ${E}: ${l(He)}`, {
+            logForDebugging(`deleteJob: removeAgentWorktree threw for ${E}: ${l(He)}`, {
               level: "error",
             }),
             { outcome: "failed", errorSummary: l(He) }
@@ -5631,7 +5631,7 @@ async function deleteJob(e, t = {}, o) {
   } catch (E) {
     if (
       (invalidateJobStateCache(getJobDir(e)),
-      n(`deleteJob: failed to remove job dir for ${e}: ${l(E)}`, {
+      logForDebugging(`deleteJob: failed to remove job dir for ${e}: ${l(E)}`, {
         level: "warn",
       }),
       !t.internal)
@@ -5712,8 +5712,8 @@ async function es(e, t, o, r, s) {
 function zr(e, t) {
   let o = getCwd();
   if (!isAbsolute(e) || pl(e) || (ac(e, o) && ac(e, t))) return e;
-  let r = D0(ae(), e, { surfaceNetworkRaw: !0, anchors: [o, t] });
-  if (r === n8) return e;
+  let r = resolveSymlinkTargetSync(getFsSurface(), e, { surfaceNetworkRaw: !0, anchors: [o, t] });
+  if (r === UNVERIFIED_ANCESTRY_SENTINEL) return e;
   if (r !== void 0 && (pl(r) || (ac(r, o) && ac(r, t)))) return e;
   return realpath(e).catch(() => e);
 }

@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { remoteToolsAnnounceRequestSchema } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { Tc, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { _Ie, Alt, Clt, d2n } from "../远程工具执行/chunk-66axrkvh.js";
+import { normalizeWithdrawalReason, isWithinDepth, parseMachineDescription, parseToolAnnouncement } from "../远程工具执行/remote-tool-protocol.js";
 import { ForwardedToolCallRegistry } from "./forwarded-tool-call-registry.js";
 import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
 import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
@@ -32,7 +32,7 @@ function createRemoteToolsAnnounceWorker(e) {
         t = 0;
       for (let c of d) {
         if (!c.askOutstanding) continue;
-        (c.endAsk(_Ie(o)), (t += 1));
+        (c.endAsk(normalizeWithdrawalReason(o)), (t += 1));
       }
       logRemoteToolsEvent(void 0, "serving instance gone", {
         host_inst: i,
@@ -44,7 +44,7 @@ function createRemoteToolsAnnounceWorker(e) {
     };
   return {
     async handle(i) {
-      if (!Alt(i, w))
+      if (!isWithinDepth(i, w))
         return a("invalid", "invalid_announce: request nested too deep");
       if (Tc(i).length > _)
         return a("invalid", "invalid_announce: request larger than 1 MiB");
@@ -56,11 +56,11 @@ function createRemoteToolsAnnounceWorker(e) {
           `invalid_announce: ${formatSingleLineText(`${h?.path.join(".") ?? ""} ${h?.message ?? "malformed"}`, { maxCodeUnits: k })}`,
         );
       }
-      let s = d2n(o.data);
+      let s = parseToolAnnouncement(o.data);
       if (s === void 0)
         return a(
           "invalid",
-          typeof o.data.host.epoch !== "string" && Clt(o.data.host) !== void 0
+          typeof o.data.host.epoch !== "string" && parseMachineDescription(o.data.host) !== void 0
             ? "invalid_announce: host.epoch is required on this channel"
             : "invalid_announce: host is not a readable machine description (name a lowercase slug other than container/this-machine, an epoch, kind, platform, working_dir and limits)",
         );
@@ -126,7 +126,7 @@ function createRemoteToolsAnnounceWorker(e) {
       switch (t.status) {
         case "withdrawn":
           if (t.heldByAnother)
-            n(
+            logForDebugging(
               `[remote-tools] ${s.host.name}: a withdrawal from client instance ${o.data.instance_id} names a machine another instance announced since; kept`,
             );
           if (t.removed.length > 0) m(o.data.instance_id, "withdrawn");
@@ -149,12 +149,12 @@ function createRemoteToolsAnnounceWorker(e) {
           );
         case "announced":
           if (t.displaced !== void 0)
-            (n(
+            (logForDebugging(
               `[remote-tools] ${s.host.name}: client instance ${o.data.instance_id} now announces this machine (was ${t.displaced}); calls go to the newcomer`,
             ),
               m(t.displaced, "displaced"));
           if (c.passthrough > 0)
-            n(
+            logForDebugging(
               `[remote-tools] ${s.host.name} announced ${c.passthrough} MCP tool(s) this worker does not take over the session channel yet`,
             );
           return (

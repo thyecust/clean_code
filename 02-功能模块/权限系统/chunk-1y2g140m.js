@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getSessionRuntimeState, toCompatSessionId, sessionIdBody, isSelfAddressableSessionId } from "./chunk-ynkf3yy4.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { sanitizeDisplayName, buildBridgeAddress, updateSessionBridgeId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getExternalPermissionMode } from "./chunk-e4pfvp7x.js";
-import { SAt, bAt } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { setAttestationSenderDropWriter, clearAttestationSenderDropWriter } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 function l(e, o) {
   let t = getSessionRuntimeState().dropSenderWriterByHandle;
   if (e !== null && e !== o) {
     let i = t.get(e);
-    if (i) bAt(i);
+    if (i) clearAttestationSenderDropWriter(i);
   }
   if (o !== null && o !== e && !o.outboundOnly) {
     let i = t.get(o);
@@ -26,7 +26,7 @@ function l(e, o) {
         o.writeSdkMessages([r]);
       }),
         t.set(o, i));
-    SAt(i);
+    setAttestationSenderDropWriter(i);
   }
 }
 function setSdkHostedBridgeHandle(e, o) {
@@ -99,7 +99,7 @@ function reseedBridgePermissionMode() {
 function setSupervisedBridgeSession(e, o, t) {
   let i = isSelfAddressableSessionId(e);
   if (!i)
-    n(
+    logForDebugging(
       "[bridge] supervised session id refused (not a safe bridge id) \u2014 this child has no Remote Control identity for the peer surface",
       { level: "warn" },
     );

@@ -20,7 +20,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getModelProposedGoalsSettingParsed, getModelProposedGoalsSetting } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isGoalClearKeyword, getGoalGateError } from "../Skills技能/chunk-sapykxw7.js";
 import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
-import { t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { sanitizePlainText } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isProposeGoalEnabled } from "../../01-核心基础设施/共享小工具-未细化/propose-goal-feature-gate.js";
 import { GoalProposalState } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-state.js";
@@ -108,7 +108,7 @@ var ProposeGoalTool = buildTool({
               "Goal proposals are only available in interactive local sessions.",
             )
           );
-        let o = t5(collapseNewlines(r)).trim();
+        let o = sanitizePlainText(collapseNewlines(r)).trim();
         if (o === "")
           throw Error(
             "The goal condition is empty once whitespace and invisible characters are removed. Provide a visible condition.",

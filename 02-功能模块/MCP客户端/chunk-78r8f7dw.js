@@ -8,193 +8,193 @@
 
 // Version: 2.1.263
 import {
-  rGe,
-  qIe,
-  cce,
-  oGe,
-  uce,
-  zIe,
-  Fct,
-  sGe,
-  kSe,
-  VA,
-  Grn,
-  $ct,
-  Uct,
-  DLt,
-  VIe,
-  Bct,
-  lI,
-  KIe,
-  KA,
-  lM,
-  cM,
-  jct,
-  DS,
-  xSe,
-  Wct,
-  Gct,
-  iGe,
-  aGe,
-  c2,
-  qrn,
-  qct,
-  LLt,
-  zct,
-  MLt,
-  HSe,
-  dce,
-  pce,
-  NLt,
-  FLt,
-  $Lt,
-  ULt,
-  Vct,
-  ISe,
-  XIe,
-  Kct,
-  BLt,
-  xee,
-  Xct,
-  jLt,
-  WLt,
-  Yct,
-  GLt,
-  PSe,
-  OSe,
-  Jct,
-  Qct,
-  Zct,
-  DSe,
-  fce,
-  LSe,
-  YIe,
-  qLt,
-  Hee,
-  zLt,
-  JIe,
-  lGe,
-  VLt,
-  KLt,
-  XLt,
-  YLt,
-  JLt,
-  QLt,
-  ZLt,
-  eMt,
-  eut,
-  tMt,
-  nMt,
-  rMt,
-  oMt,
-  sMt,
-  iMt,
-  aMt,
-  lMt,
-  cMt,
-  QIe,
-  uMt,
-  ZIe,
-  dMt,
-  pMt,
-  cGe,
-  uGe,
-  dGe,
-  fMt,
-  mMt,
-  gMt,
-  pGe,
-  hMt,
-  _Mt,
-  yMt,
-  SMt,
-  bMt,
-  MSe,
-  wMt,
-  NSe,
-  mce,
-  fGe,
-  TMt,
-  EMt,
-  AMt,
-  tut,
-  nut,
-  CMt,
-  vMt,
-  RMt,
-  kMt,
-  xMt,
-  HMt,
-  IMt,
-  PMt,
-  OMt,
-  ePe,
-  DMt,
-  LMt,
-  MMt,
-  NMt,
-  FMt,
-  rut,
-  mGe,
-  gGe,
-  out,
-  sut,
-  iut,
-  $Mt,
-  aut,
-  lut,
-  UMt,
-  BMt,
-  cut,
-  hGe,
-  tPe,
-  nPe,
-  jMt,
-  WMt,
-  GMt,
-  qMt,
-  zMt,
-  VMt,
-  KMt,
-  XMt,
-  YMt,
-  JMt,
-  QMt,
-  ZMt,
-  eNt,
-  zrn,
-  tNt,
-  FSe,
-  Vrn,
-  rPe,
-  Krn,
-  Xrn,
-  _Ge,
-  Yrn,
-  Jrn,
-  Qrn,
-  Zrn,
-  eon,
-  $Se,
-  ton,
-  non,
-  ron,
-  oon,
-  son,
-  ion,
-  uut,
-  gce,
-  nNt,
-  USe,
-  BSe,
-  rNt,
-  jSe,
-  oNt,
-  sNt,
-  dut,
-  aon,
-  lon,
-} from "./chunk-5wa92x7d.js";
+  LATEST_PROTOCOL_VERSION,
+  SUPPORTED_PROTOCOL_VERSIONS,
+  PROTOCOL_VERSION_META_KEY,
+  CLIENT_INFO_META_KEY,
+  SERVER_INFO_META_KEY,
+  CLIENT_CAPABILITIES_META_KEY,
+  SUBSCRIPTION_ID_META_KEY,
+  LOG_LEVEL_META_KEY,
+  JSONValueSchema,
+  JSONObjectSchema,
+  JSONArraySchema,
+  ProgressTokenSchema,
+  CursorSchema,
+  TaskMetadataSchema,
+  RelatedTaskMetadataSchema,
+  RequestMetaSchema,
+  BaseRequestParamsSchema,
+  TaskAugmentedRequestParamsSchema,
+  RequestSchema,
+  NotificationsParamsSchema,
+  NotificationSchema,
+  ResultMetaObjectSchema,
+  ResultSchema,
+  RequestIdSchema,
+  JSONRPCRequestSchema,
+  JSONRPCNotificationSchema,
+  JSONRPCResultResponseSchema,
+  JSONRPCErrorResponseSchema,
+  JSONRPCMessageSchema,
+  JSONRPCResponseSchema,
+  EmptyResultSchema,
+  CancelledNotificationParamsSchema,
+  CancelledNotificationSchema,
+  IconSchema,
+  IconsSchema,
+  BaseMetadataSchema,
+  ImplementationSchema,
+  ClientTasksCapabilitySchema,
+  ServerTasksCapabilitySchema,
+  ClientCapabilitiesSchema,
+  InitializeRequestParamsSchema,
+  InitializeRequestSchema,
+  ServerCapabilitiesSchema,
+  InitializeResultSchema,
+  InitializedNotificationSchema,
+  DiscoverRequestSchema,
+  DiscoverResultSchema,
+  PingRequestSchema,
+  ProgressSchema,
+  ProgressNotificationParamsSchema,
+  ProgressNotificationSchema,
+  PaginatedRequestParamsSchema,
+  PaginatedRequestSchema,
+  PaginatedResultSchema,
+  ResourceContentsSchema,
+  TextResourceContentsSchema,
+  BlobResourceContentsSchema,
+  RoleSchema,
+  AnnotationsSchema,
+  ResourceSchema,
+  ResourceTemplateSchema,
+  ListResourcesRequestSchema,
+  ListResourcesResultSchema,
+  ListResourceTemplatesRequestSchema,
+  ListResourceTemplatesResultSchema,
+  ResourceRequestParamsSchema,
+  ReadResourceRequestParamsSchema,
+  ReadResourceRequestSchema,
+  ReadResourceResultSchema,
+  ResourceListChangedNotificationSchema,
+  SubscribeRequestParamsSchema,
+  SubscribeRequestSchema,
+  UnsubscribeRequestParamsSchema,
+  UnsubscribeRequestSchema,
+  SubscriptionFilterSchema,
+  SubscriptionsListenRequestParamsSchema,
+  SubscriptionsListenRequestSchema,
+  SubscriptionsAcknowledgedNotificationParamsSchema,
+  SubscriptionsAcknowledgedNotificationSchema,
+  SubscriptionsListenResultMetaSchema,
+  SubscriptionsListenResultSchema,
+  ResourceUpdatedNotificationParamsSchema,
+  ResourceUpdatedNotificationSchema,
+  PromptArgumentSchema,
+  PromptSchema,
+  ListPromptsRequestSchema,
+  ListPromptsResultSchema,
+  GetPromptRequestParamsSchema,
+  GetPromptRequestSchema,
+  TextContentSchema,
+  ImageContentSchema,
+  AudioContentSchema,
+  ToolUseContentSchema,
+  EmbeddedResourceSchema,
+  ResourceLinkSchema,
+  ContentBlockSchema,
+  PromptMessageSchema,
+  GetPromptResultSchema,
+  PromptListChangedNotificationSchema,
+  ToolAnnotationsSchema,
+  ToolExecutionSchema,
+  ToolSchema,
+  ListToolsRequestSchema,
+  ListToolsResultSchema,
+  CallToolResultSchema,
+  CompatibilityCallToolResultSchema,
+  CallToolRequestParamsSchema,
+  CallToolRequestSchema,
+  ToolListChangedNotificationSchema,
+  ListChangedOptionsBaseSchema,
+  LoggingLevelSchema,
+  SetLevelRequestParamsSchema,
+  SetLevelRequestSchema,
+  LoggingMessageNotificationParamsSchema,
+  LoggingMessageNotificationSchema,
+  ModelHintSchema,
+  ModelPreferencesSchema,
+  ToolChoiceSchema,
+  ToolResultContentSchema,
+  SamplingContentSchema,
+  SamplingMessageContentBlockSchema,
+  SamplingMessageSchema,
+  CreateMessageRequestParamsSchema,
+  CreateMessageRequestSchema,
+  CreateMessageResultSchema,
+  CreateMessageResultWithToolsSchema,
+  BooleanSchemaSchema,
+  StringSchemaSchema,
+  NumberSchemaSchema,
+  UntitledSingleSelectEnumSchemaSchema,
+  TitledSingleSelectEnumSchemaSchema,
+  LegacyTitledEnumSchemaSchema,
+  SingleSelectEnumSchemaSchema,
+  UntitledMultiSelectEnumSchemaSchema,
+  TitledMultiSelectEnumSchemaSchema,
+  MultiSelectEnumSchemaSchema,
+  EnumSchemaSchema,
+  PrimitiveSchemaDefinitionSchema,
+  ElicitRequestFormParamsSchema,
+  ElicitRequestURLParamsSchema,
+  ElicitRequestParamsSchema,
+  ElicitRequestSchema,
+  ElicitationCompleteNotificationParamsSchema,
+  ElicitationCompleteNotificationSchema,
+  ElicitResultSchema,
+  ResourceTemplateReferenceSchema,
+  PromptReferenceSchema,
+  CompleteRequestParamsSchema,
+  CompleteRequestSchema,
+  CompleteResultSchema,
+  RootSchema,
+  ListRootsRequestSchema,
+  ListRootsResultSchema,
+  RootsListChangedNotificationSchema,
+  TaskCreationParamsSchema,
+  TaskStatusSchema,
+  TaskSchema,
+  CreateTaskResultSchema,
+  TaskStatusNotificationParamsSchema,
+  TaskStatusNotificationSchema,
+  GetTaskRequestSchema,
+  GetTaskResultSchema,
+  GetTaskPayloadRequestSchema,
+  GetTaskPayloadResultSchema,
+  ListTasksRequestSchema,
+  ListTasksResultSchema,
+  CancelTaskRequestSchema,
+  CancelTaskResultSchema,
+  ClientRequestSchema,
+  ClientNotificationSchema,
+  ClientResultSchema,
+  ServerRequestSchema,
+  ServerNotificationSchema,
+  ServerResultSchema,
+  OAuthProtectedResourceMetadataSchema,
+  OAuthMetadataSchema,
+  OpenIdProviderMetadataSchema,
+  OpenIdProviderDiscoveryMetadataSchema,
+  OAuthTokensSchema,
+  IdJagTokenExchangeResponseSchema,
+  OAuthErrorResponseSchema,
+  OAuthClientMetadataSchema,
+  OAuthClientInformationSchema,
+  OAuthClientInformationFullSchema,
+  OAuthClientRegistrationErrorSchema,
+  OAuthTokenRevocationRequestSchema,
+} from "./mcp-protocol-schemas.js";
 import { generatePkceChallenge } from "../认证-OAuth登录/pkce-challenge.js";
 import { hce } from "../../00-第三方库/_未识别/第三方库-Nodepolyfill/chunk-5y6047zm.js";
 import { RGe } from "../../00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js";
@@ -1680,10 +1680,10 @@ function Mo() {
     }),
     st = it({
       progressToken: r.optional(),
-      [cce]: s(),
-      [oGe]: g.optional(),
-      [zIe]: St,
-      [sGe]: i.optional(),
+      [PROTOCOL_VERSION_META_KEY]: s(),
+      [CLIENT_INFO_META_KEY]: g.optional(),
+      [CLIENT_CAPABILITIES_META_KEY]: St,
+      [LOG_LEVEL_META_KEY]: i.optional(),
     }),
     Ge = c({
       ...h.shape,
@@ -1709,7 +1709,7 @@ function Mo() {
       _meta: fe(s(), se()).optional(),
     }),
     ot = s(),
-    nt = it({ [uce]: g.optional().catch(void 0) }),
+    nt = it({ [SERVER_INFO_META_KEY]: g.optional().catch(void 0) }),
     ct = nt.optional();
   function ve(he) {
     return it({ _meta: ct, resultType: ot.default("complete"), ...he });
@@ -2243,10 +2243,10 @@ function Bo(e) {
 function Wo(e, t) {
   if (t === void 0) return e;
   let r = e._meta;
-  if (r === void 0) return { ...e, _meta: { [uce]: t } };
+  if (r === void 0) return { ...e, _meta: { [SERVER_INFO_META_KEY]: t } };
   if (!Bo(r)) return e;
-  if (r[uce] !== void 0) return e;
-  return { ...e, _meta: { ...r, [uce]: t } };
+  if (r[SERVER_INFO_META_KEY] !== void 0) return e;
+  return { ...e, _meta: { ...r, [SERVER_INFO_META_KEY]: t } };
 }
 function Yo(e) {
   return e !== void 0 && Zs(e.ttlMs) ? e.ttlMs : Do;
@@ -2347,7 +2347,7 @@ function Ft(e, t) {
     : { ok: !1, reason: "invalid", message: String(r.error) };
 }
 var on = { ok: !1, reason: "not-in-era" },
-  nn = [cce, zIe];
+  nn = [PROTOCOL_VERSION_META_KEY, CLIENT_CAPABILITIES_META_KEY];
 function cn(e, t) {
   let r = t,
     a = !1,
@@ -2406,10 +2406,10 @@ var ts = {
     samplingResultVariant: () => on,
     outboundEnvelope(e) {
       return {
-        [cce]: e.protocolVersion,
-        [oGe]: e.clientInfo,
-        [zIe]: e.clientCapabilities,
-        ...(e.logLevel !== void 0 && { [sGe]: e.logLevel }),
+        [PROTOCOL_VERSION_META_KEY]: e.protocolVersion,
+        [CLIENT_INFO_META_KEY]: e.clientInfo,
+        [CLIENT_CAPABILITIES_META_KEY]: e.clientCapabilities,
+        ...(e.logLevel !== void 0 && { [LOG_LEVEL_META_KEY]: e.logLevel }),
       };
     },
     validateEnvelopeMeta(e) {
@@ -2553,184 +2553,184 @@ function Fr(e) {
 }
 var ca = [Zr, ts],
   mn = vs({
-    AnnotationsSchema: () => fce,
-    AudioContentSchema: () => dGe,
-    BaseMetadataSchema: () => dce,
-    BaseRequestParamsSchema: () => lI,
-    BlobResourceContentsSchema: () => Zct,
-    BooleanSchemaSchema: () => rut,
-    CallToolRequestParamsSchema: () => TMt,
-    CallToolRequestSchema: () => EMt,
-    CallToolResultSchema: () => mce,
-    CancelTaskRequestSchema: () => eon,
-    CancelTaskResultSchema: () => $Se,
-    CancelledNotificationParamsSchema: () => LLt,
-    CancelledNotificationSchema: () => zct,
-    ClientCapabilitiesSchema: () => $Lt,
-    ClientNotificationSchema: () => non,
-    ClientRequestSchema: () => ton,
-    ClientResultSchema: () => ron,
-    ClientTasksCapabilitySchema: () => NLt,
-    CompatibilityCallToolResultSchema: () => fGe,
-    CompleteRequestParamsSchema: () => KMt,
-    CompleteRequestSchema: () => XMt,
-    CompleteResultSchema: () => YMt,
-    ContentBlockSchema: () => pGe,
-    CreateMessageRequestParamsSchema: () => LMt,
-    CreateMessageRequestSchema: () => MMt,
-    CreateMessageResultSchema: () => NMt,
-    CreateMessageResultWithToolsSchema: () => FMt,
-    CreateTaskResultSchema: () => Vrn,
-    CursorSchema: () => Uct,
-    DiscoverRequestSchema: () => BLt,
-    DiscoverResultSchema: () => xee,
-    ElicitRequestFormParamsSchema: () => hGe,
-    ElicitRequestParamsSchema: () => nPe,
-    ElicitRequestSchema: () => jMt,
-    ElicitRequestURLParamsSchema: () => tPe,
-    ElicitResultSchema: () => qMt,
-    ElicitationCompleteNotificationParamsSchema: () => WMt,
-    ElicitationCompleteNotificationSchema: () => GMt,
-    EmbeddedResourceSchema: () => mMt,
-    EmptyResultSchema: () => qct,
-    EnumSchemaSchema: () => BMt,
-    GetPromptRequestParamsSchema: () => dMt,
-    GetPromptRequestSchema: () => pMt,
-    GetPromptResultSchema: () => _Mt,
-    GetTaskPayloadRequestSchema: () => Yrn,
-    GetTaskPayloadResultSchema: () => Jrn,
-    GetTaskRequestSchema: () => Xrn,
-    GetTaskResultSchema: () => _Ge,
-    IconSchema: () => MLt,
-    IconsSchema: () => HSe,
-    ImageContentSchema: () => uGe,
-    ImplementationSchema: () => pce,
-    InitializeRequestParamsSchema: () => ULt,
-    InitializeRequestSchema: () => Vct,
-    InitializeResultSchema: () => XIe,
-    InitializedNotificationSchema: () => Kct,
-    JSONArraySchema: () => Grn,
-    JSONObjectSchema: () => VA,
-    JSONRPCErrorResponseSchema: () => aGe,
-    JSONRPCMessageSchema: () => c2,
-    JSONRPCNotificationSchema: () => Gct,
-    JSONRPCRequestSchema: () => Wct,
-    JSONRPCResponseSchema: () => qrn,
-    JSONRPCResultResponseSchema: () => iGe,
-    JSONValueSchema: () => kSe,
-    LegacyTitledEnumSchemaSchema: () => iut,
-    ListChangedOptionsBaseSchema: () => tut,
-    ListPromptsRequestSchema: () => uMt,
-    ListPromptsResultSchema: () => ZIe,
-    ListResourceTemplatesRequestSchema: () => zLt,
-    ListResourceTemplatesResultSchema: () => JIe,
-    ListResourcesRequestSchema: () => qLt,
-    ListResourcesResultSchema: () => Hee,
-    ListRootsRequestSchema: () => QMt,
-    ListRootsResultSchema: () => ZMt,
-    ListTasksRequestSchema: () => Qrn,
-    ListTasksResultSchema: () => Zrn,
-    ListToolsRequestSchema: () => wMt,
-    ListToolsResultSchema: () => NSe,
-    LoggingLevelSchema: () => nut,
-    LoggingMessageNotificationParamsSchema: () => RMt,
-    LoggingMessageNotificationSchema: () => kMt,
-    ModelHintSchema: () => xMt,
-    ModelPreferencesSchema: () => HMt,
-    MultiSelectEnumSchemaSchema: () => UMt,
-    NotificationSchema: () => cM,
-    NotificationsParamsSchema: () => lM,
-    NumberSchemaSchema: () => gGe,
-    PaginatedRequestParamsSchema: () => GLt,
-    PaginatedRequestSchema: () => PSe,
-    PaginatedResultSchema: () => OSe,
-    PingRequestSchema: () => Xct,
-    PrimitiveSchemaDefinitionSchema: () => cut,
-    ProgressNotificationParamsSchema: () => WLt,
-    ProgressNotificationSchema: () => Yct,
-    ProgressSchema: () => jLt,
-    ProgressTokenSchema: () => $ct,
-    PromptArgumentSchema: () => cMt,
-    PromptListChangedNotificationSchema: () => yMt,
-    PromptMessageSchema: () => hMt,
-    PromptReferenceSchema: () => VMt,
-    PromptSchema: () => QIe,
-    ReadResourceRequestParamsSchema: () => VLt,
-    ReadResourceRequestSchema: () => KLt,
-    ReadResourceResultSchema: () => XLt,
-    RelatedTaskMetadataSchema: () => VIe,
-    RequestIdSchema: () => xSe,
-    RequestMetaSchema: () => Bct,
-    RequestSchema: () => KA,
-    ResourceContentsSchema: () => Jct,
-    ResourceLinkSchema: () => gMt,
-    ResourceListChangedNotificationSchema: () => YLt,
-    ResourceRequestParamsSchema: () => lGe,
-    ResourceSchema: () => LSe,
-    ResourceTemplateReferenceSchema: () => zMt,
-    ResourceTemplateSchema: () => YIe,
-    ResourceUpdatedNotificationParamsSchema: () => aMt,
-    ResourceUpdatedNotificationSchema: () => lMt,
-    ResultMetaObjectSchema: () => jct,
-    ResultSchema: () => DS,
-    RoleSchema: () => DSe,
-    RootSchema: () => JMt,
-    RootsListChangedNotificationSchema: () => eNt,
-    SamplingContentSchema: () => OMt,
-    SamplingMessageContentBlockSchema: () => ePe,
-    SamplingMessageSchema: () => DMt,
-    ServerCapabilitiesSchema: () => ISe,
-    ServerNotificationSchema: () => son,
-    ServerRequestSchema: () => oon,
-    ServerResultSchema: () => ion,
-    ServerTasksCapabilitySchema: () => FLt,
-    SetLevelRequestParamsSchema: () => CMt,
-    SetLevelRequestSchema: () => vMt,
-    SingleSelectEnumSchemaSchema: () => $Mt,
-    StringSchemaSchema: () => mGe,
-    SubscribeRequestParamsSchema: () => JLt,
-    SubscribeRequestSchema: () => QLt,
-    SubscriptionFilterSchema: () => eut,
-    SubscriptionsAcknowledgedNotificationParamsSchema: () => rMt,
-    SubscriptionsAcknowledgedNotificationSchema: () => oMt,
-    SubscriptionsListenRequestParamsSchema: () => tMt,
-    SubscriptionsListenRequestSchema: () => nMt,
-    SubscriptionsListenResultMetaSchema: () => sMt,
-    SubscriptionsListenResultSchema: () => iMt,
-    TaskAugmentedRequestParamsSchema: () => KIe,
-    TaskCreationParamsSchema: () => zrn,
-    TaskMetadataSchema: () => DLt,
-    TaskSchema: () => FSe,
-    TaskStatusNotificationParamsSchema: () => rPe,
-    TaskStatusNotificationSchema: () => Krn,
-    TaskStatusSchema: () => tNt,
-    TextContentSchema: () => cGe,
-    TextResourceContentsSchema: () => Qct,
-    TitledMultiSelectEnumSchemaSchema: () => lut,
-    TitledSingleSelectEnumSchemaSchema: () => sut,
-    ToolAnnotationsSchema: () => SMt,
-    ToolChoiceSchema: () => IMt,
-    ToolExecutionSchema: () => bMt,
-    ToolListChangedNotificationSchema: () => AMt,
-    ToolResultContentSchema: () => PMt,
-    ToolSchema: () => MSe,
-    ToolUseContentSchema: () => fMt,
-    UnsubscribeRequestParamsSchema: () => ZLt,
-    UnsubscribeRequestSchema: () => eMt,
-    UntitledMultiSelectEnumSchemaSchema: () => aut,
-    UntitledSingleSelectEnumSchemaSchema: () => out,
+    AnnotationsSchema: () => AnnotationsSchema,
+    AudioContentSchema: () => AudioContentSchema,
+    BaseMetadataSchema: () => BaseMetadataSchema,
+    BaseRequestParamsSchema: () => BaseRequestParamsSchema,
+    BlobResourceContentsSchema: () => BlobResourceContentsSchema,
+    BooleanSchemaSchema: () => BooleanSchemaSchema,
+    CallToolRequestParamsSchema: () => CallToolRequestParamsSchema,
+    CallToolRequestSchema: () => CallToolRequestSchema,
+    CallToolResultSchema: () => CallToolResultSchema,
+    CancelTaskRequestSchema: () => CancelTaskRequestSchema,
+    CancelTaskResultSchema: () => CancelTaskResultSchema,
+    CancelledNotificationParamsSchema: () => CancelledNotificationParamsSchema,
+    CancelledNotificationSchema: () => CancelledNotificationSchema,
+    ClientCapabilitiesSchema: () => ClientCapabilitiesSchema,
+    ClientNotificationSchema: () => ClientNotificationSchema,
+    ClientRequestSchema: () => ClientRequestSchema,
+    ClientResultSchema: () => ClientResultSchema,
+    ClientTasksCapabilitySchema: () => ClientTasksCapabilitySchema,
+    CompatibilityCallToolResultSchema: () => CompatibilityCallToolResultSchema,
+    CompleteRequestParamsSchema: () => CompleteRequestParamsSchema,
+    CompleteRequestSchema: () => CompleteRequestSchema,
+    CompleteResultSchema: () => CompleteResultSchema,
+    ContentBlockSchema: () => ContentBlockSchema,
+    CreateMessageRequestParamsSchema: () => CreateMessageRequestParamsSchema,
+    CreateMessageRequestSchema: () => CreateMessageRequestSchema,
+    CreateMessageResultSchema: () => CreateMessageResultSchema,
+    CreateMessageResultWithToolsSchema: () => CreateMessageResultWithToolsSchema,
+    CreateTaskResultSchema: () => CreateTaskResultSchema,
+    CursorSchema: () => CursorSchema,
+    DiscoverRequestSchema: () => DiscoverRequestSchema,
+    DiscoverResultSchema: () => DiscoverResultSchema,
+    ElicitRequestFormParamsSchema: () => ElicitRequestFormParamsSchema,
+    ElicitRequestParamsSchema: () => ElicitRequestParamsSchema,
+    ElicitRequestSchema: () => ElicitRequestSchema,
+    ElicitRequestURLParamsSchema: () => ElicitRequestURLParamsSchema,
+    ElicitResultSchema: () => ElicitResultSchema,
+    ElicitationCompleteNotificationParamsSchema: () => ElicitationCompleteNotificationParamsSchema,
+    ElicitationCompleteNotificationSchema: () => ElicitationCompleteNotificationSchema,
+    EmbeddedResourceSchema: () => EmbeddedResourceSchema,
+    EmptyResultSchema: () => EmptyResultSchema,
+    EnumSchemaSchema: () => EnumSchemaSchema,
+    GetPromptRequestParamsSchema: () => GetPromptRequestParamsSchema,
+    GetPromptRequestSchema: () => GetPromptRequestSchema,
+    GetPromptResultSchema: () => GetPromptResultSchema,
+    GetTaskPayloadRequestSchema: () => GetTaskPayloadRequestSchema,
+    GetTaskPayloadResultSchema: () => GetTaskPayloadResultSchema,
+    GetTaskRequestSchema: () => GetTaskRequestSchema,
+    GetTaskResultSchema: () => GetTaskResultSchema,
+    IconSchema: () => IconSchema,
+    IconsSchema: () => IconsSchema,
+    ImageContentSchema: () => ImageContentSchema,
+    ImplementationSchema: () => ImplementationSchema,
+    InitializeRequestParamsSchema: () => InitializeRequestParamsSchema,
+    InitializeRequestSchema: () => InitializeRequestSchema,
+    InitializeResultSchema: () => InitializeResultSchema,
+    InitializedNotificationSchema: () => InitializedNotificationSchema,
+    JSONArraySchema: () => JSONArraySchema,
+    JSONObjectSchema: () => JSONObjectSchema,
+    JSONRPCErrorResponseSchema: () => JSONRPCErrorResponseSchema,
+    JSONRPCMessageSchema: () => JSONRPCMessageSchema,
+    JSONRPCNotificationSchema: () => JSONRPCNotificationSchema,
+    JSONRPCRequestSchema: () => JSONRPCRequestSchema,
+    JSONRPCResponseSchema: () => JSONRPCResponseSchema,
+    JSONRPCResultResponseSchema: () => JSONRPCResultResponseSchema,
+    JSONValueSchema: () => JSONValueSchema,
+    LegacyTitledEnumSchemaSchema: () => LegacyTitledEnumSchemaSchema,
+    ListChangedOptionsBaseSchema: () => ListChangedOptionsBaseSchema,
+    ListPromptsRequestSchema: () => ListPromptsRequestSchema,
+    ListPromptsResultSchema: () => ListPromptsResultSchema,
+    ListResourceTemplatesRequestSchema: () => ListResourceTemplatesRequestSchema,
+    ListResourceTemplatesResultSchema: () => ListResourceTemplatesResultSchema,
+    ListResourcesRequestSchema: () => ListResourcesRequestSchema,
+    ListResourcesResultSchema: () => ListResourcesResultSchema,
+    ListRootsRequestSchema: () => ListRootsRequestSchema,
+    ListRootsResultSchema: () => ListRootsResultSchema,
+    ListTasksRequestSchema: () => ListTasksRequestSchema,
+    ListTasksResultSchema: () => ListTasksResultSchema,
+    ListToolsRequestSchema: () => ListToolsRequestSchema,
+    ListToolsResultSchema: () => ListToolsResultSchema,
+    LoggingLevelSchema: () => LoggingLevelSchema,
+    LoggingMessageNotificationParamsSchema: () => LoggingMessageNotificationParamsSchema,
+    LoggingMessageNotificationSchema: () => LoggingMessageNotificationSchema,
+    ModelHintSchema: () => ModelHintSchema,
+    ModelPreferencesSchema: () => ModelPreferencesSchema,
+    MultiSelectEnumSchemaSchema: () => MultiSelectEnumSchemaSchema,
+    NotificationSchema: () => NotificationSchema,
+    NotificationsParamsSchema: () => NotificationsParamsSchema,
+    NumberSchemaSchema: () => NumberSchemaSchema,
+    PaginatedRequestParamsSchema: () => PaginatedRequestParamsSchema,
+    PaginatedRequestSchema: () => PaginatedRequestSchema,
+    PaginatedResultSchema: () => PaginatedResultSchema,
+    PingRequestSchema: () => PingRequestSchema,
+    PrimitiveSchemaDefinitionSchema: () => PrimitiveSchemaDefinitionSchema,
+    ProgressNotificationParamsSchema: () => ProgressNotificationParamsSchema,
+    ProgressNotificationSchema: () => ProgressNotificationSchema,
+    ProgressSchema: () => ProgressSchema,
+    ProgressTokenSchema: () => ProgressTokenSchema,
+    PromptArgumentSchema: () => PromptArgumentSchema,
+    PromptListChangedNotificationSchema: () => PromptListChangedNotificationSchema,
+    PromptMessageSchema: () => PromptMessageSchema,
+    PromptReferenceSchema: () => PromptReferenceSchema,
+    PromptSchema: () => PromptSchema,
+    ReadResourceRequestParamsSchema: () => ReadResourceRequestParamsSchema,
+    ReadResourceRequestSchema: () => ReadResourceRequestSchema,
+    ReadResourceResultSchema: () => ReadResourceResultSchema,
+    RelatedTaskMetadataSchema: () => RelatedTaskMetadataSchema,
+    RequestIdSchema: () => RequestIdSchema,
+    RequestMetaSchema: () => RequestMetaSchema,
+    RequestSchema: () => RequestSchema,
+    ResourceContentsSchema: () => ResourceContentsSchema,
+    ResourceLinkSchema: () => ResourceLinkSchema,
+    ResourceListChangedNotificationSchema: () => ResourceListChangedNotificationSchema,
+    ResourceRequestParamsSchema: () => ResourceRequestParamsSchema,
+    ResourceSchema: () => ResourceSchema,
+    ResourceTemplateReferenceSchema: () => ResourceTemplateReferenceSchema,
+    ResourceTemplateSchema: () => ResourceTemplateSchema,
+    ResourceUpdatedNotificationParamsSchema: () => ResourceUpdatedNotificationParamsSchema,
+    ResourceUpdatedNotificationSchema: () => ResourceUpdatedNotificationSchema,
+    ResultMetaObjectSchema: () => ResultMetaObjectSchema,
+    ResultSchema: () => ResultSchema,
+    RoleSchema: () => RoleSchema,
+    RootSchema: () => RootSchema,
+    RootsListChangedNotificationSchema: () => RootsListChangedNotificationSchema,
+    SamplingContentSchema: () => SamplingContentSchema,
+    SamplingMessageContentBlockSchema: () => SamplingMessageContentBlockSchema,
+    SamplingMessageSchema: () => SamplingMessageSchema,
+    ServerCapabilitiesSchema: () => ServerCapabilitiesSchema,
+    ServerNotificationSchema: () => ServerNotificationSchema,
+    ServerRequestSchema: () => ServerRequestSchema,
+    ServerResultSchema: () => ServerResultSchema,
+    ServerTasksCapabilitySchema: () => ServerTasksCapabilitySchema,
+    SetLevelRequestParamsSchema: () => SetLevelRequestParamsSchema,
+    SetLevelRequestSchema: () => SetLevelRequestSchema,
+    SingleSelectEnumSchemaSchema: () => SingleSelectEnumSchemaSchema,
+    StringSchemaSchema: () => StringSchemaSchema,
+    SubscribeRequestParamsSchema: () => SubscribeRequestParamsSchema,
+    SubscribeRequestSchema: () => SubscribeRequestSchema,
+    SubscriptionFilterSchema: () => SubscriptionFilterSchema,
+    SubscriptionsAcknowledgedNotificationParamsSchema: () => SubscriptionsAcknowledgedNotificationParamsSchema,
+    SubscriptionsAcknowledgedNotificationSchema: () => SubscriptionsAcknowledgedNotificationSchema,
+    SubscriptionsListenRequestParamsSchema: () => SubscriptionsListenRequestParamsSchema,
+    SubscriptionsListenRequestSchema: () => SubscriptionsListenRequestSchema,
+    SubscriptionsListenResultMetaSchema: () => SubscriptionsListenResultMetaSchema,
+    SubscriptionsListenResultSchema: () => SubscriptionsListenResultSchema,
+    TaskAugmentedRequestParamsSchema: () => TaskAugmentedRequestParamsSchema,
+    TaskCreationParamsSchema: () => TaskCreationParamsSchema,
+    TaskMetadataSchema: () => TaskMetadataSchema,
+    TaskSchema: () => TaskSchema,
+    TaskStatusNotificationParamsSchema: () => TaskStatusNotificationParamsSchema,
+    TaskStatusNotificationSchema: () => TaskStatusNotificationSchema,
+    TaskStatusSchema: () => TaskStatusSchema,
+    TextContentSchema: () => TextContentSchema,
+    TextResourceContentsSchema: () => TextResourceContentsSchema,
+    TitledMultiSelectEnumSchemaSchema: () => TitledMultiSelectEnumSchemaSchema,
+    TitledSingleSelectEnumSchemaSchema: () => TitledSingleSelectEnumSchemaSchema,
+    ToolAnnotationsSchema: () => ToolAnnotationsSchema,
+    ToolChoiceSchema: () => ToolChoiceSchema,
+    ToolExecutionSchema: () => ToolExecutionSchema,
+    ToolListChangedNotificationSchema: () => ToolListChangedNotificationSchema,
+    ToolResultContentSchema: () => ToolResultContentSchema,
+    ToolSchema: () => ToolSchema,
+    ToolUseContentSchema: () => ToolUseContentSchema,
+    UnsubscribeRequestParamsSchema: () => UnsubscribeRequestParamsSchema,
+    UnsubscribeRequestSchema: () => UnsubscribeRequestSchema,
+    UntitledMultiSelectEnumSchemaSchema: () => UntitledMultiSelectEnumSchemaSchema,
+    UntitledSingleSelectEnumSchemaSchema: () => UntitledSingleSelectEnumSchemaSchema,
   });
-var isJSONRPCRequest = (e) => Wct.safeParse(e).success,
-  isJSONRPCNotification = (e) => Gct.safeParse(e).success,
-  isJSONRPCResultResponse = (e) => iGe.safeParse(e).success,
-  isJSONRPCErrorResponse = (e) => aGe.safeParse(e).success;
+var isJSONRPCRequest = (e) => JSONRPCRequestSchema.safeParse(e).success,
+  isJSONRPCNotification = (e) => JSONRPCNotificationSchema.safeParse(e).success,
+  isJSONRPCResultResponse = (e) => JSONRPCResultResponseSchema.safeParse(e).success,
+  isJSONRPCErrorResponse = (e) => JSONRPCErrorResponseSchema.safeParse(e).success;
 var la = (e) =>
   typeof e === "object" &&
   e !== null &&
   !Array.isArray(e) &&
   e.resultType === "input_required";
-var rs = (e) => Vct.safeParse(e).success,
-  ua = (e) => Kct.safeParse(e).success;
+var rs = (e) => InitializeRequestSchema.safeParse(e).success,
+  ua = (e) => InitializedNotificationSchema.safeParse(e).success;
 var fn = "Mcp-Param-",
   Ms = "x-mcp-header",
   pn = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/,
@@ -3093,15 +3093,15 @@ var qn = new Set([
 function as(e) {
   return qn.has(e) || e.startsWith("x-");
 }
-var In = new Set(["$schema", ...Object.keys(hGe.shape.requestedSchema.shape)]),
+var In = new Set(["$schema", ...Object.keys(ElicitRequestFormParamsSchema.shape.requestedSchema.shape)]),
   As = {
-    string: Ht([mGe, out, sut, iut]),
-    number: Ht([gGe]),
-    integer: Ht([gGe]),
-    boolean: Ht([rut]),
-    array: Ht([aut, lut]),
+    string: Ht([StringSchemaSchema, UntitledSingleSelectEnumSchemaSchema, TitledSingleSelectEnumSchemaSchema, LegacyTitledEnumSchemaSchema]),
+    number: Ht([NumberSchemaSchema]),
+    integer: Ht([NumberSchemaSchema]),
+    boolean: Ht([BooleanSchemaSchema]),
+    array: Ht([UntitledMultiSelectEnumSchemaSchema, TitledMultiSelectEnumSchemaSchema]),
   },
-  On = new Set(mGe.shape.format.unwrap().options);
+  On = new Set(StringSchemaSchema.shape.format.unwrap().options);
 function Nn(e, t, r, a) {
   if (!Jt(e)) return e;
   let o =
@@ -3143,7 +3143,7 @@ function Mn(e, t) {
 function jn(e, t) {
   if (!Jt(e.properties)) return t;
   let r = Object.entries(e.properties)
-    .filter(([, a]) => !Pr(cut, a).success)
+    .filter(([, a]) => !Pr(PrimitiveSchemaDefinitionSchema, a).success)
     .map(([a]) => `properties.${a}`);
   return r.length > 0 ? r.join(", ") : t;
 }
@@ -3162,7 +3162,7 @@ function An(e) {
     return { ...e, mode: "form", requestedSchema: e.requestedSchema };
   let t = e.requestedSchema["~standard"].vendor,
     r = Mn(kn(e.requestedSchema), t),
-    a = Pr(hGe.shape.requestedSchema, r);
+    a = Pr(ElicitRequestFormParamsSchema.shape.requestedSchema, r);
   if (!a.success)
     throw new ProtocolError(
       ErrorCode.InvalidParams,
@@ -3498,18 +3498,18 @@ var Gn = [
     "UntitledSingleSelectEnumSchemaSchema",
   ],
   Bn = {
-    IdJagTokenExchangeResponseSchema: rNt,
-    OAuthClientInformationFullSchema: dut,
-    OAuthClientInformationSchema: sNt,
-    OAuthClientMetadataSchema: oNt,
-    OAuthClientRegistrationErrorSchema: aon,
-    OAuthErrorResponseSchema: jSe,
-    OAuthMetadataSchema: gce,
-    OAuthProtectedResourceMetadataSchema: uut,
-    OAuthTokenRevocationRequestSchema: lon,
-    OAuthTokensSchema: BSe,
-    OpenIdProviderDiscoveryMetadataSchema: USe,
-    OpenIdProviderMetadataSchema: nNt,
+    IdJagTokenExchangeResponseSchema: IdJagTokenExchangeResponseSchema,
+    OAuthClientInformationFullSchema: OAuthClientInformationFullSchema,
+    OAuthClientInformationSchema: OAuthClientInformationSchema,
+    OAuthClientMetadataSchema: OAuthClientMetadataSchema,
+    OAuthClientRegistrationErrorSchema: OAuthClientRegistrationErrorSchema,
+    OAuthErrorResponseSchema: OAuthErrorResponseSchema,
+    OAuthMetadataSchema: OAuthMetadataSchema,
+    OAuthProtectedResourceMetadataSchema: OAuthProtectedResourceMetadataSchema,
+    OAuthTokenRevocationRequestSchema: OAuthTokenRevocationRequestSchema,
+    OAuthTokensSchema: OAuthTokensSchema,
+    OpenIdProviderDiscoveryMetadataSchema: OpenIdProviderDiscoveryMetadataSchema,
+    OpenIdProviderMetadataSchema: OpenIdProviderMetadataSchema,
   },
   Sa = {},
   ga = {};
@@ -3533,7 +3533,7 @@ function Yn(e) {
   }
 }
 var Tr = 60000,
-  Xn = [cce, oGe, zIe, sGe],
+  Xn = [PROTOCOL_VERSION_META_KEY, CLIENT_INFO_META_KEY, CLIENT_CAPABILITIES_META_KEY, LOG_LEVEL_META_KEY],
   Zn = ["inputResponses", "requestState"];
 function Ls(e, t) {
   let r = e.params;
@@ -3607,7 +3607,7 @@ var Qn = os(void 0),
     fallbackNotificationHandler;
     constructor(e) {
       ((this._options = e),
-        (this._supportedProtocolVersions = e?.supportedProtocolVersions ?? qIe),
+        (this._supportedProtocolVersions = e?.supportedProtocolVersions ?? SUPPORTED_PROTOCOL_VERSIONS),
         this.setNotificationHandler("notifications/cancelled", (t) => {
           this._oncancel(t);
         }),
@@ -4477,7 +4477,7 @@ var $a = 10485760,
     }
   };
 function deserializeMessage(e) {
-  return c2.parse(JSON.parse(e));
+  return JSONRPCMessageSchema.parse(JSON.parse(e));
 }
 function serializeMessage(e) {
   return (
@@ -11926,7 +11926,7 @@ async function Ja(e) {
   let t = e instanceof Response ? e.status : void 0,
     r = e instanceof Response ? await e.text() : e;
   try {
-    let a = jSe.parse(JSON.parse(r));
+    let a = OAuthErrorResponseSchema.parse(JSON.parse(r));
     return OAuthError.fromResponse(a);
   } catch (a) {
     let o = `${t ? `HTTP ${t}: ` : ""}Invalid OAuth error response: ${a}. Raw body: ${r}`;
@@ -12200,7 +12200,7 @@ async function discoverOAuthProtectedResourceMetadata(e, t, r = fetch) {
         `HTTP ${a.status} trying to load well-known OAuth protected resource metadata.`,
       )
     );
-  return uut.parse(await a.json());
+  return OAuthProtectedResourceMetadataSchema.parse(await a.json());
 }
 async function ho(e, t, r = fetch) {
   try {
@@ -12231,7 +12231,7 @@ function Lc(e, t) {
 }
 async function Uc(e, t, r, a) {
   let o = new URL(e),
-    n = a?.protocolVersion ?? rGe,
+    n = a?.protocolVersion ?? LATEST_PROTOCOL_VERSION,
     i;
   if (a?.metadataUrl) i = new URL(a.metadataUrl);
   else {
@@ -12285,7 +12285,7 @@ async function discoverAuthorizationServerMetadata(
   e,
   {
     fetchFn: t = fetch,
-    protocolVersion: r = rGe,
+    protocolVersion: r = LATEST_PROTOCOL_VERSION,
     skipIssuerValidation: a = !1,
   } = {},
 ) {
@@ -12305,7 +12305,7 @@ async function discoverAuthorizationServerMetadata(
       );
     }
     let d =
-      u === "oauth" ? gce.parse(await l.json()) : USe.parse(await l.json());
+      u === "oauth" ? OAuthMetadataSchema.parse(await l.json()) : OpenIdProviderDiscoveryMetadataSchema.parse(await l.json());
     if (!a) {
       let m = typeof e === "string" ? e : e.href;
       if (!(d.issuer === m || (m.endsWith("/") && d.issuer === m.slice(0, -1))))
@@ -12417,7 +12417,7 @@ async function gs(
   if (!d.ok) throw await Ja(d);
   let m = await d.json();
   try {
-    return BSe.parse(m);
+    return OAuthTokensSchema.parse(m);
   } catch (_) {
     if (typeof m === "object" && m !== null && "error" in m)
       throw await Ja(JSON.stringify(m));
@@ -12533,7 +12533,7 @@ async function Fc(e, { metadata: t, clientMetadata: r, scope: a, fetchFn: o }) {
       body: await u.text(),
       submittedMetadata: i,
     });
-  return dut.parse(await u.json());
+  return OAuthClientInformationFullSchema.parse(await u.json());
 }
 var Mr = new Set([
     "tools/list",
@@ -13263,7 +13263,7 @@ async function ul(e) {
   } catch {}
 }
 function to(e) {
-  let t = e._meta?.[uce];
+  let t = e._meta?.[SERVER_INFO_META_KEY];
   return va.Implementation(t) ? t : void 0;
 }
 function jr(e, t) {
@@ -13299,7 +13299,7 @@ function hl(e) {
       !("discover" in e)
     )
       return e;
-    if (e.kind === "modern" && xee.safeParse(e.discover).success) return e;
+    if (e.kind === "modern" && DiscoverResultSchema.safeParse(e.discover).success) return e;
   }
   throw new SdkError(
     ProtocolErrorCode.EraNegotiationFailed,
@@ -13866,7 +13866,7 @@ var ro = {
     async discover(e) {
       let t = await this._requestWithSchema(
         { method: "server/discover" },
-        xee,
+        DiscoverResultSchema,
         e,
       );
       return ((this._discoverResult = t), t);
@@ -14154,7 +14154,7 @@ var ro = {
         if (typeof a === "string") this._cache.evictKey("resources/read", a);
       } else if (r !== void 0) for (let a of r) this._cache.evict(a);
       if (e.method === "notifications/subscriptions/acknowledged") {
-        let a = e.params?._meta?.[Fct],
+        let a = e.params?._meta?.[SUBSCRIPTION_ID_META_KEY],
           o = typeof a === "string" ? this._listenState.get(a) : void 0;
         if (o !== void 0) {
           let n = this._wireCodec().validateNotification(
@@ -14335,7 +14335,7 @@ var ro = {
       if (t.length !== e.tools.length) e.tools = t;
     }
     _setupListChangedHandler(e, t, r, a) {
-      let o = Pr(tut, r);
+      let o = Pr(ListChangedOptionsBaseSchema, r);
       if (!o.success)
         throw Error(`Invalid ${e} listChanged options: ${o.error.message}`);
       if (typeof r.onChanged !== "function")
@@ -14503,7 +14503,7 @@ var fl = class extends Error {
             let o = a,
               n;
             try {
-              n = c2.parse(JSON.parse(o.data));
+              n = JSONRPCMessageSchema.parse(JSON.parse(o.data));
             } catch (i) {
               this.onerror?.(i);
               return;
@@ -14729,7 +14729,7 @@ var StreamableHTTPClientTransport = class {
   }
   _applyBodyDerivedHeaders(e, t) {
     if (Array.isArray(t) || !isJSONRPCRequest(t)) return;
-    let r = t.params?._meta?.[cce];
+    let r = t.params?._meta?.[PROTOCOL_VERSION_META_KEY];
     if (typeof r !== "string") return;
     (e.set("mcp-protocol-version", r), e.set("mcp-method", t.method));
     let a = t.params,
@@ -14750,7 +14750,7 @@ var StreamableHTTPClientTransport = class {
   }
   _isModernEnvelopedRequest(e) {
     if (Array.isArray(e) || !isJSONRPCRequest(e)) return !1;
-    let t = e.params?._meta?.[cce];
+    let t = e.params?._meta?.[PROTOCOL_VERSION_META_KEY];
     return typeof t === "string" && Ae(t);
   }
   async _startOrAuthSse(e, t = !1, r = 0) {
@@ -14921,7 +14921,7 @@ var StreamableHTTPClientTransport = class {
           if (!z.data) continue;
           if (!z.event || z.event === "message")
             try {
-              let b = c2.parse(JSON.parse(z.data));
+              let b = JSONRPCMessageSchema.parse(JSON.parse(z.data));
               if (isJSONRPCResultResponse(b) || isJSONRPCErrorResponse(b)) {
                 if (((m = !0), o !== void 0)) b.id = o;
               }
@@ -15117,7 +15117,7 @@ var StreamableHTTPClientTransport = class {
           this._isModernEnvelopedRequest(e)
         )
           try {
-            let h = c2.parse(JSON.parse(f)),
+            let h = JSONRPCMessageSchema.parse(JSON.parse(f)),
               g = (Array.isArray(e) ? e : [e]).filter((p) => isJSONRPCRequest(p));
             if (isJSONRPCErrorResponse(h) && g.some((p) => p.id === h.id)) {
               this.onmessage?.(h);
@@ -15155,7 +15155,7 @@ var StreamableHTTPClientTransport = class {
           );
         else if (b === "application/json") {
           let f = await P.json(),
-            h = Array.isArray(f) ? f.map((g) => c2.parse(g)) : [c2.parse(f)];
+            h = Array.isArray(f) ? f.map((g) => JSONRPCMessageSchema.parse(g)) : [JSONRPCMessageSchema.parse(f)];
           for (let g of h) this.onmessage?.(g);
         } else
           throw (

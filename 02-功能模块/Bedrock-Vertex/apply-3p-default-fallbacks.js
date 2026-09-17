@@ -10,9 +10,9 @@
 import { ad, gDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Xt, to, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { strip1mSuffix, MODEL_CONFIGS_BY_KEY, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getUserSpecifiedModelSetting, vetUserSpecifiedModel, DEFAULT_MANTLE_OPUS_KEY, getEnvDefaultModel, isEnvDefaultModelGoverning, getCanonicalName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 function _(t, r) {
   if (t === "ANTHROPIC_DEFAULT_SONNET_MODEL")
@@ -41,7 +41,7 @@ async function withProbeDeadline(t, r) {
       new Promise((l) => {
         f = setTimeout(
           (o, s) => {
-            (n(`[3p-probe] ${s} hit ${O}ms deadline; proceeding without it`),
+            (logForDebugging(`[3p-probe] ${s} hit ${O}ms deadline; proceeding without it`),
               o([]));
           },
           O,
@@ -108,9 +108,9 @@ async function apply3PDefaultFallbacks(t) {
     case "mantle": {
       let e = !1;
       if (o !== null) {
-        let E = Xt(o.trim().toLowerCase());
+        let E = strip1mSuffix(o.trim().toLowerCase());
         e =
-          !(E === "opus" || E === "best" || getCanonicalName(E) === getCanonicalName(to[DEFAULT_MANTLE_OPUS_KEY].firstParty)) &&
+          !(E === "opus" || E === "best" || getCanonicalName(E) === getCanonicalName(MODEL_CONFIGS_BY_KEY[DEFAULT_MANTLE_OPUS_KEY].firstParty)) &&
           isEnvDefaultModelGoverning();
       }
       let c = (l != null && l !== "") || getUserSpecifiedModelSetting() != null || e;

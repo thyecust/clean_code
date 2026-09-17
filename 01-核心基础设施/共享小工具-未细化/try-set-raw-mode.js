@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 var s = new Set(["EIO", "ENOTTY", "EBADF"]);
 function trySetRawMode(e, t) {
   if (!("setRawMode" in e) || typeof e.setRawMode !== "function") return;
@@ -18,7 +18,7 @@ function trySetRawMode(e, t) {
     let r = l(o),
       a = A(o);
     if (r.includes("setRawMode failed") || s.has(a ?? "")) {
-      n(`setRawMode(${t}) failed on revoked tty: ${r}`);
+      logForDebugging(`setRawMode(${t}) failed on revoked tty: ${r}`);
       return;
     }
     throw o;

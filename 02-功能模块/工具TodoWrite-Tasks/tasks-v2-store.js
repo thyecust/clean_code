@@ -13,7 +13,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { l, A, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isTeamLead } from "../Teammates团队/teammate-context.js";
 import { subscribeToTaskListUpdates, resetTaskList, getTaskListId, sanitizeStorageId, getTaskListDir, readTaskList, readAllTasks } from "../Teammates团队/chunk-g6nvp9mm.js";
@@ -80,7 +80,7 @@ class TasksV2Store {
       let t = watch(s, this.#h);
       (t.on("error", (i) => {
         if (
-          (n(`Task list watcher error: ${l(i)}`, { level: "warn" }),
+          (logForDebugging(`Task list watcher error: ${l(i)}`, { level: "warn" }),
           this.#n === t)
         ) {
           if (((this.#f = null), (this.#i = !0), this.#t === null))
@@ -129,7 +129,7 @@ class TasksV2Store {
           return;
         }
         if (
-          (n(`Task list subscription unavailable: ${p}`, { level: "warn" }), t)
+          (logForDebugging(`Task list subscription unavailable: ${p}`, { level: "warn" }), t)
         ) {
           this.#k(s);
           return;
@@ -147,7 +147,7 @@ class TasksV2Store {
       return;
     }
     a.then(
-      (o) => (o.ok ? u(o.value) : u(null, We(o.error))),
+      (o) => (o.ok ? u(o.value) : u(null, describeStorageError(o.error))),
       (o) => u(null, l(o)),
     );
   }
@@ -163,7 +163,7 @@ class TasksV2Store {
       return;
     }
     if (
-      (n(`Task list subscription ended: ${We(e.error)}`, { level: "warn" }),
+      (logForDebugging(`Task list subscription ended: ${describeStorageError(e.error)}`, { level: "warn" }),
       t.onRetry || !this.#r)
     ) {
       (t.subscription.unsubscribe(), this.#k(t.listId));
@@ -195,7 +195,7 @@ class TasksV2Store {
     try {
       t = await readTaskList(s, this.#r);
     } catch (a) {
-      (n(`Task list read failed: ${l(a)}`, { level: "warn" }), (t = null));
+      (logForDebugging(`Task list read failed: ${l(a)}`, { level: "warn" }), (t = null));
     }
     if (this.#r && e < this.#S) return;
     if (((this.#S = e), t === null)) {
@@ -211,7 +211,7 @@ class TasksV2Store {
     if (r || i.length === 0) (this.#w(i.length === 0), this.#C());
     else if (this.#o === null && !this.#d)
       if (this.#p)
-        n(
+        logForDebugging(
           "Task list reset still in flight; not arming another hide until it settles",
           { level: "verbose" },
         );
@@ -243,13 +243,13 @@ class TasksV2Store {
         .catch((t) => {
           if (this.#r) this.#u();
           if (A(t) === "ELOCKED") {
-            n(
+            logForDebugging(
               "Task list lock is busy (another session or process sharing this task list, or an in-flight task write, holds it); completed tasks stay visible and the reset is retried on the next refresh",
             );
             return;
           }
           if (Kd(t) || Bp(t)) {
-            n(
+            logForDebugging(
               `Task list reset failed on the tasks directory and will be retried on the next refresh: ${l(t)}`,
               { level: "warn" },
             );

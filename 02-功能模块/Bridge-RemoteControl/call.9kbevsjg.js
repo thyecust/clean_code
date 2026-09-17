@@ -13,7 +13,7 @@ import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getOauthAccountInfo, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -23,7 +23,7 @@ import { ndt } from "./chunk-ga43tr2w.js";
 import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE, isProactiveEnrollmentDisabled, isTrustedDeviceUnenrolled, enrollTrustedDeviceIfNeeded } from "./chunk-tyce0p0b.js";
 import { REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE, REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "./remote-control-messages.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -34,12 +34,12 @@ import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-�
 import { removeNotificationFromState } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { isDialogKindOpen } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { REMOTE_CALLOUT_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
-import "../认证-OAuth登录/chunk-9g86t9bp.js";
+import "../认证-OAuth登录/console-profile-auth.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
+import "../Bedrock-Vertex/bedrock-setup-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -49,14 +49,14 @@ import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
+import "../Bedrock-Vertex/vertex-setup-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import "../../01-核心基础设施/设置-配置/managed-settings-approval-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
-import { N8, Kz } from "./chunk-3b6ct3yp.js";
+import { runPostLoginHooks, Login } from "./login-flow.js";
 import { markRemoteControlUsed } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { shouldShowRemoteControlDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../权限系统/permission-dialog.js";
@@ -133,7 +133,7 @@ function Pr(No) {
   return No.length > 0;
 }
 function Lr(Go, vo) {
-  return e(t, { children: Go }, vo);
+  return e(Text, { children: Go }, vo);
 }
 var He =
   "Remote Control is already connected \u2014 a session's Project is fixed when it's created. Disconnect first, then re-run /remote-control --project to start a new session in the Project.";
@@ -188,7 +188,7 @@ function ze(_o) {
           .then((Ke) => {
             let Ae = Ke === "enable" && se(getOauthAccountInfo()) === Co;
             if (Ke === "enable" && !Ae)
-              n(
+              logForDebugging(
                 "[bridge:repl] Remote Control callout answered under a different account than it was asked for \u2014 not enabling",
               );
             if (Ae)
@@ -333,10 +333,10 @@ function ze(_o) {
       K[22] !== Le ||
       K[23] !== De
     )
-      ((Z = e(Kz, {
+      ((Z = e(Login, {
         startingMessage: "Sign in to enroll this device for Remote Control.",
         onDone: async (tr, _mainLoopModel, Ro) => {
-          let me = await N8(g, tr, {
+          let me = await runPostLoginHooks(g, tr, {
             setAppState: Ro,
             awaitEnrollment: !0,
             previousAccount: Le,
@@ -493,13 +493,13 @@ function Oe(wo) {
     Be = "Remote Control";
     be = L;
     Ce = !0;
-    ge = o;
+    ge = Box;
     _e = "column";
     ye = 1;
     if (c[32] !== ee)
       ((oe =
         ee !== void 0 &&
-        e(t, {
+        e(Text, {
           children:
             "A session's Project is fixed when it's created \u2014 disconnect first, then re-run /remote-control --project to start a new one.",
         })),
@@ -508,7 +508,7 @@ function Oe(wo) {
     else oe = c[33];
     const v = T ? ` and at ${T}` : " and claude.ai/code";
     if (c[34] !== v)
-      ((ne = r(t, {
+      ((ne = r(Text, {
         children: [
           "This session is available in the Claude mobile app",
           v,
@@ -521,7 +521,7 @@ function Oe(wo) {
     he =
       j &&
       fr.length > 0 &&
-      e(o, { flexDirection: "column", children: fr.map(Lr) });
+      e(Box, { flexDirection: "column", children: fr.map(Lr) });
     ((c[17] = T),
       (c[18] = L),
       (c[19] = pe),
@@ -551,7 +551,7 @@ function Oe(wo) {
   const v = G === 0;
   let _r;
   if (c[36] === MEMO_CACHE_SENTINEL)
-    ((_r = e(t, { children: "Disconnect this session" })), (c[36] = _r));
+    ((_r = e(Text, { children: "Disconnect this session" })), (c[36] = _r));
   else _r = c[36];
   let Re;
   if (c[37] !== v)
@@ -563,7 +563,7 @@ function Oe(wo) {
   if (c[39] !== j)
     ((Ee =
       !j &&
-      e(t, {
+      e(Text, {
         dimColor: !0,
         children: "  Scan with your phone to open this session",
       })),
@@ -572,7 +572,7 @@ function Oe(wo) {
   else Ee = c[40];
   let je;
   if (c[41] !== Xe || c[42] !== Ee)
-    ((je = r(t, { children: [Xe, Ee] })),
+    ((je = r(Text, { children: [Xe, Ee] })),
       (c[41] = Xe),
       (c[42] = Ee),
       (c[43] = je));
@@ -586,7 +586,7 @@ function Oe(wo) {
   else ke = c[46];
   const Qe = G === 2;
   let yr;
-  if (c[47] === MEMO_CACHE_SENTINEL) ((yr = e(t, { children: "Continue" })), (c[47] = yr));
+  if (c[47] === MEMO_CACHE_SENTINEL) ((yr = e(Text, { children: "Continue" })), (c[47] = yr));
   else yr = c[47];
   let we;
   if (c[48] !== Qe)
@@ -594,7 +594,7 @@ function Oe(wo) {
   else we = c[49];
   let Ie;
   if (c[50] !== Re || c[51] !== ke || c[52] !== we)
-    ((Ie = r(o, { flexDirection: "column", children: [Re, ke, we] })),
+    ((Ie = r(Box, { flexDirection: "column", children: [Re, ke, we] })),
       (c[50] = Re),
       (c[51] = ke),
       (c[52] = we),
@@ -602,7 +602,7 @@ function Oe(wo) {
   else Ie = c[53];
   let hr;
   if (c[54] === MEMO_CACHE_SENTINEL)
-    ((hr = e(t, {
+    ((hr = e(Text, {
       dimColor: !0,
       children: r(DotSeparatedList, {
         children: [
@@ -671,7 +671,7 @@ async function ie(l) {
     if (isProactiveEnrollmentDisabled()) return { kind: "error", message: PROACTIVE_ENROLLMENT_DISABLED_MESSAGE };
     return { kind: "unenrolled-trusted-device" };
   }
-  return (n("[bridge] Prerequisites passed, enabling bridge"), null);
+  return (logForDebugging("[bridge] Prerequisites passed, enabling bridge"), null);
 }
 async function go(l, C, b) {
   let f,

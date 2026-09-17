@@ -32,7 +32,7 @@ import {
   executePreCompactHooks,
   invalidateUserContext,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { API_REQUEST_ABORTED_MESSAGE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { emitCompactionEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { buildCacheSafeParams } from "../权限系统/cache-safe-params.js";
 import { get1MContextSuggestion } from "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
@@ -131,7 +131,7 @@ async function E(s, e, n) {
         case "too_few_groups":
           throw Error(NOT_ENOUGH_MESSAGES_TO_COMPACT);
         case "aborted":
-          throw Error(hA);
+          throw Error(API_REQUEST_ABORTED_MESSAGE);
         case "exhausted":
           throw new CompactionError(
             "Compaction failed \xB7 conversation could not be reduced below the context limit",
@@ -201,7 +201,7 @@ async function _(s, e, n, o, m, r) {
       logManualPrecomputedCompactConsumed("none", t, i),
       { hit: !1, reuse: "miss_not_ready", precomputedKind: "none" }
     );
-  if (t.kind === "turn_aborted") throw (logManualPrecomputedCompactConsumed("aborted", t, i), Error(hA));
+  if (t.kind === "turn_aborted") throw (logManualPrecomputedCompactConsumed("aborted", t, i), Error(API_REQUEST_ABORTED_MESSAGE));
   if (t.kind === "failed")
     return (
       logManualPrecomputedCompactConsumed("failed", t, i),

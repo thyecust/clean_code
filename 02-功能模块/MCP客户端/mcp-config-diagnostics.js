@@ -11,7 +11,7 @@ import { replaceControlChars } from "../../01-核心基础设施/共享小工具
 import { formatMcpScopeLocation, formatMcpScopeDescription, getMcpServerApprovalStatus, getMcpScopeConflicts, isOrganizationProvidedMcpScope, getMcpConfigsByScope, doesEnterpriseMcpConfigExist } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isRestrictedToPluginOnly } from "../Skills技能/chunk-sapykxw7.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { fl } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -23,20 +23,20 @@ function A(Te) {
     { title: Q, status: U, detail: j } = Te,
     b;
   if (L[0] !== Q)
-    ((b = e(t, { bold: !0, children: Q })), (L[0] = Q), (L[1] = b));
+    ((b = e(Text, { bold: !0, children: Q })), (L[0] = Q), (L[1] = b));
   else b = L[1];
   let D;
   if (L[2] !== U) ((D = e(StatusIndicator, { status: U })), (L[2] = U), (L[3] = D));
   else D = L[3];
   let M;
   if (L[4] !== j)
-    ((M = j ? r(t, { dimColor: !0, children: [" \xB7 ", j] }) : null),
+    ((M = j ? r(Text, { dimColor: !0, children: [" \xB7 ", j] }) : null),
       (L[4] = j),
       (L[5] = M));
   else M = L[5];
   let te;
   if (L[6] !== b || L[7] !== D || L[8] !== M)
-    ((te = r(t, { children: [b, " ", D, M] })),
+    ((te = r(Text, { children: [b, " ", D, M] })),
       (L[6] = b),
       (L[7] = D),
       (L[8] = M),
@@ -122,7 +122,7 @@ function O(ze) {
   if (c[8] !== T || c[9] !== G)
     ((z =
       (T || G) &&
-      r(t, {
+      r(Text, {
         color: T ? "error" : "warning",
         children: ["[", T ? "Failed to parse" : "Contains warnings", "]", " "],
       })),
@@ -134,19 +134,19 @@ function O(ze) {
   if (c[11] !== w) ((q = formatMcpScopeDescription(w)), (c[11] = w), (c[12] = q));
   else q = c[12];
   let C;
-  if (c[13] !== q) ((C = e(t, { children: q })), (c[13] = q), (c[14] = C));
+  if (c[13] !== q) ((C = e(Text, { children: q })), (c[13] = q), (c[14] = C));
   else C = c[14];
   let H;
   if (c[15] !== z || c[16] !== C)
-    ((H = r(o, { children: [z, C] })), (c[15] = z), (c[16] = C), (c[17] = H));
+    ((H = r(Box, { children: [z, C] })), (c[15] = z), (c[16] = C), (c[17] = H));
   else H = c[17];
   let ae;
   if (c[18] === MEMO_CACHE_SENTINEL)
-    ((ae = e(t, { dimColor: !0, children: "Location: " })), (c[18] = ae));
+    ((ae = e(Text, { dimColor: !0, children: "Location: " })), (c[18] = ae));
   else ae = c[18];
   let J;
   if (c[19] !== d)
-    ((J = r(o, { children: [ae, e(t, { dimColor: !0, children: d })] })),
+    ((J = r(Box, { children: [ae, e(Text, { dimColor: !0, children: d })] })),
       (c[19] = d),
       (c[20] = J));
   else J = c[20];
@@ -160,10 +160,10 @@ function O(ze) {
         return e(
           fl.Node,
           {
-            children: r(t, {
+            children: r(Text, {
               children: [
-                e(t, { color: "error", children: "[Error]" }),
-                r(t, {
+                e(Text, { color: "error", children: "[Error]" }),
+                r(Text, {
                   dimColor: !0,
                   children: [
                     " ",
@@ -195,10 +195,10 @@ function O(ze) {
         return e(
           fl.Node,
           {
-            children: r(t, {
+            children: r(Text, {
               children: [
-                e(t, { color: "warning", children: "[Warning]" }),
-                r(t, {
+                e(Text, { color: "warning", children: "[Warning]" }),
+                r(Text, {
                   dimColor: !0,
                   children: [
                     " ",
@@ -222,7 +222,7 @@ function O(ze) {
   } else P = c[28];
   let R;
   if (c[31] !== K || c[32] !== P)
-    ((R = e(o, {
+    ((R = e(Box, {
       marginLeft: 1,
       children: r(fl, { variant: "tree", children: [K, P] }),
     })),
@@ -232,7 +232,7 @@ function O(ze) {
   else R = c[33];
   let me;
   if (c[34] !== R || c[35] !== H || c[36] !== J)
-    ((me = r(o, {
+    ((me = r(Box, {
       flexDirection: "column",
       marginTop: 1,
       children: [H, J, R],
@@ -282,20 +282,20 @@ function McpConfigDiagnostics() {
   else de = Y[1];
   let ge;
   if (Y[2] === MEMO_CACHE_SENTINEL)
-    ((ge = r(o, {
+    ((ge = r(Box, {
       flexDirection: "column",
       marginTop: 1,
       marginBottom: 1,
       children: [
         de,
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: r(t, {
+          children: r(Text, {
             dimColor: !0,
             children: [
               "For help configuring MCP servers, see:",
               " ",
-              e(ct, {
+              e(Link, {
                 url: "https://code.claude.com/docs/en/mcp",
                 children: "https://code.claude.com/docs/en/mcp",
               }),
@@ -304,11 +304,11 @@ function McpConfigDiagnostics() {
         }),
         Z.map(Re),
         B.length > 0 &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             marginTop: 1,
             children: [
-              e(t, { color: "warning", children: "[Conflicting scopes]" }),
+              e(Text, { color: "warning", children: "[Conflicting scopes]" }),
               e(fl, { variant: "tree", children: B.map(xe) }),
             ],
           }),

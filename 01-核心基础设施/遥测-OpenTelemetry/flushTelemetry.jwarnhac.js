@@ -63,7 +63,7 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Xhe, Et, b, QPn, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { CLEANUP_DRAIN_TIMEOUT_MS, registerCleanup, jsonStringify, getHasFormattedOutput, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isNonessentialTrafficRestricted, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { omitBy } from "../设置-配置/设置-配置.aqbb35ee.js";
@@ -974,7 +974,7 @@ async function dt(e) {
       oauthRefreshLatch: e,
     });
     return (
-      n(
+      logForDebugging(
         `${TELEMETRY_LOG_PREFIX} Metrics opt-out API response: enabled=${t.metrics_logging_enabled}`,
       ),
       logFeatureOk("api_metrics_opt_out_check"),
@@ -982,7 +982,7 @@ async function dt(e) {
     );
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `${TELEMETRY_LOG_PREFIX} Failed to check metrics opt-out status: ${l(t)}`,
         t instanceof ue ? { level: "error" } : void 0,
       ),
@@ -1047,7 +1047,7 @@ var Tt = 250;
 function Ot() {
   return Math.max(
     0,
-    Math.min(a.CLAUDE_CODE_OTEL_SHUTDOWN_TIMEOUT_MS ?? Xhe, Xhe) - Tt,
+    Math.min(a.CLAUDE_CODE_OTEL_SHUTDOWN_TIMEOUT_MS ?? CLEANUP_DRAIN_TIMEOUT_MS, CLEANUP_DRAIN_TIMEOUT_MS) - Tt,
   );
 }
 function Rt(e) {
@@ -1085,7 +1085,7 @@ class Oe {
   }
   async export(e, t) {
     if (this.isShutdown) {
-      (n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics export arrived after shutdown, skipping`),
+      (logForDebugging(`${TELEMETRY_LOG_PREFIX} BigQuery metrics export arrived after shutdown, skipping`),
         t({ code: I.ExportResultCode.SUCCESS }));
       return;
     }
@@ -1099,12 +1099,12 @@ class Oe {
   async doExport(e, t) {
     try {
       if (!(checkHasTrustDialogAccepted() || ke())) {
-        (n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics export: trust not established, skipping`),
+        (logForDebugging(`${TELEMETRY_LOG_PREFIX} BigQuery metrics export: trust not established, skipping`),
           t({ code: I.ExportResultCode.SUCCESS }));
         return;
       }
       if (!this.dispatchHostMatchesEndpoint()) {
-        (n(
+        (logForDebugging(
           `${TELEMETRY_LOG_PREFIX} BigQuery metrics export: WIF dispatch host differs from the metrics endpoint host, skipping`,
         ),
           t({ code: I.ExportResultCode.SUCCESS }));
@@ -1113,7 +1113,7 @@ class Oe {
       let s = await getAuthHeadersAsync(),
         o = withholdCredentialsForMisroutedHost(s, this.endpoint).reasonCode === "misrouted_credential";
       if (o && !this.isAntEndpointOverride) {
-        (n(
+        (logForDebugging(
           `${TELEMETRY_LOG_PREFIX} BigQuery metrics export: credential does not belong to the metrics endpoint host, skipping`,
         ),
           t({ code: I.ExportResultCode.SUCCESS }));
@@ -1140,7 +1140,7 @@ class Oe {
           return;
         }
         if (!m.enabled) {
-          (n(
+          (logForDebugging(
             `${TELEMETRY_LOG_PREFIX} BigQuery metrics export disabled by organization setting, skipping`,
           ),
             t({ code: I.ExportResultCode.SUCCESS }));
@@ -1163,16 +1163,16 @@ class Oe {
         throw (this.reportFailure(..._t(m)), m);
       }
       if (
-        (n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics exported successfully`),
+        (logForDebugging(`${TELEMETRY_LOG_PREFIX} BigQuery metrics exported successfully`),
         !this.successReported)
       )
         ((this.successReported = !0), logFeatureOk("internal_metrics_export"));
-      (n(`${TELEMETRY_LOG_PREFIX} BigQuery API Response: ${b(d.data, null, 2)}`),
+      (logForDebugging(`${TELEMETRY_LOG_PREFIX} BigQuery API Response: ${jsonStringify(d.data, null, 2)}`),
         t({ code: I.ExportResultCode.SUCCESS }));
     } catch (r) {
       let { kind: s, status: o } = Ps(r);
       if (s === "other" && o === void 0)
-        n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics export threw before the request: ${Ye(r)}`, {
+        logForDebugging(`${TELEMETRY_LOG_PREFIX} BigQuery metrics export threw before the request: ${Ye(r)}`, {
           level: "error",
         });
       (this.failures.record(Ye(r)), t({ code: I.ExportResultCode.SUCCESS }));
@@ -1279,7 +1279,7 @@ class Oe {
   async shutdown() {
     ((this.isShutdown = !0),
       await this.forceFlush(),
-      n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics exporter shutdown complete`));
+      logForDebugging(`${TELEMETRY_LOG_PREFIX} BigQuery metrics exporter shutdown complete`));
   }
   armShutdownReport() {
     let e = Ot();
@@ -1288,7 +1288,7 @@ class Oe {
   }
   reportInFlightAtShutdown() {
     if (this.inFlight === 0) return;
-    (n(
+    (logForDebugging(
       `${TELEMETRY_LOG_PREFIX} BigQuery metrics export still in flight at the shutdown budget (${this.inFlight})`,
     ),
       this.reportFailure("pending_at_shutdown"));
@@ -1296,7 +1296,7 @@ class Oe {
   async forceFlush() {
     (await Promise.all(this.pendingExports),
       this.failures.logSummary(),
-      n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics exporter flush complete`));
+      logForDebugging(`${TELEMETRY_LOG_PREFIX} BigQuery metrics exporter flush complete`));
   }
   convertAttributes(e) {
     let t = {};
@@ -1484,7 +1484,7 @@ function nt() {
       (i.forceFlush().catch(() => {}), s.forceFlush().catch(() => {}));
     }),
     Ct(t, o).catch((p) =>
-      n(`Beta tracing exporter wiring failed: ${p}`, { level: "error" }),
+      logForDebugging(`Beta tracing exporter wiring failed: ${p}`, { level: "error" }),
     ));
 }
 async function Ct(e, t) {
@@ -1515,7 +1515,7 @@ function be(e) {
         s(o, (c) => {
           if (!t)
             ((t = !0),
-              n(
+              logForDebugging(
                 `[3P telemetry] First ${e} export: ${c.code === le.ExportResultCode.SUCCESS ? "SUCCESS" : `FAILED (${c.error?.message ?? "unknown"})`}`,
               ));
           i(c);
@@ -1526,8 +1526,8 @@ function be(e) {
 }
 async function vt(e) {
   let t = a.OTEL_METRIC_EXPORT_INTERVAL ?? At;
-  n(
-    `[3P telemetry] getOtlpReaders: types=${b(e)}, interval=${t}, protocol=${a.OTEL_EXPORTER_OTLP_PROTOCOL}, endpoint=${a.OTEL_EXPORTER_OTLP_ENDPOINT}`,
+  logForDebugging(
+    `[3P telemetry] getOtlpReaders: types=${jsonStringify(e)}, interval=${t}, protocol=${a.OTEL_EXPORTER_OTLP_PROTOCOL}, endpoint=${a.OTEL_EXPORTER_OTLP_ENDPOINT}`,
   );
   let r = [];
   for (let o of e)
@@ -1536,10 +1536,10 @@ async function vt(e) {
         c = i.export.bind(i);
       ((i.export = (p, u) => {
         if (p.resource && p.resource.attributes)
-          (n(`
+          (logForDebugging(`
 === Resource Attributes ===`),
-            n(b(p.resource.attributes)),
-            n(`===========================
+            logForDebugging(jsonStringify(p.resource.attributes)),
+            logForDebugging(`===========================
 `));
         return c(p, u);
       }),
@@ -1595,8 +1595,8 @@ async function bt() {
   let e = ve(a.OTEL_LOGS_EXPORTER),
     t = a.OTEL_EXPORTER_OTLP_LOGS_PROTOCOL || a.OTEL_EXPORTER_OTLP_PROTOCOL,
     r = a.OTEL_EXPORTER_OTLP_ENDPOINT;
-  n(
-    `[3P telemetry] getOtlpLogExporters: types=${b(e)}, protocol=${t}, endpoint=${r}`,
+  logForDebugging(
+    `[3P telemetry] getOtlpLogExporters: types=${jsonStringify(e)}, protocol=${t}, endpoint=${r}`,
   );
   let s = [];
   for (let o of e)
@@ -1681,7 +1681,7 @@ function Nt() {
 function Dt(e) {
   let t = new Oe({ storageV5: e });
   return (
-    Et(() => t.armShutdownReport()),
+    registerCleanup(() => t.armShutdownReport()),
     new k.PeriodicExportingMetricReader({
       exporter: t,
       exportIntervalMillis: Nt(),
@@ -1700,7 +1700,7 @@ async function initializeTelemetry(e) {
     yt(),
     await xt(),
     C.propagation.setGlobalPropagator(new le.W3CTraceContextPropagator()),
-    QPn())
+    getHasFormattedOutput())
   )
     for (let p of [
       "OTEL_METRICS_EXPORTER",
@@ -1724,7 +1724,7 @@ async function initializeTelemetry(e) {
     r = Mt(),
     s = r ? ve(a.OTEL_METRICS_EXPORTER) : [];
   if (
-    (n(
+    (logForDebugging(
       `[3P telemetry] isTelemetryEnabled=${r} (CLAUDE_CODE_ENABLE_TELEMETRY=${process.env.CLAUDE_CODE_ENABLE_TELEMETRY})`,
     ),
     r)
@@ -1737,7 +1737,7 @@ async function initializeTelemetry(e) {
     let p = new k.MeterProvider({ resource: o, views: [], readers: t });
     return (
       ZXt(p),
-      Et(async () => {
+      registerCleanup(async () => {
         let d = a.CLAUDE_CODE_OTEL_SHUTDOWN_TIMEOUT_MS ?? 2000;
         try {
           endInteractionSpan();
@@ -1778,7 +1778,7 @@ async function initializeTelemetry(e) {
   if ((ZXt(i), r)) {
     let p = await bt();
     if (
-      (n(`[3P telemetry] Created ${p.length} log exporter(s)`), p.length > 0)
+      (logForDebugging(`[3P telemetry] Created ${p.length} log exporter(s)`), p.length > 0)
     ) {
       let u = new OtelLoggerProvider({
         resource: o,
@@ -1807,7 +1807,7 @@ async function initializeTelemetry(e) {
         }.VERSION,
       );
       (JXt(d, "org"),
-        n("[3P telemetry] Event logger set successfully"),
+        logForDebugging("[3P telemetry] Event logger set successfully"),
         process.on("beforeExit", async () => {
           (await u?.forceFlush(), await d_e()?.forceFlush());
         }),
@@ -1834,7 +1834,7 @@ async function initializeTelemetry(e) {
     }
   }
   return (
-    Et(async () => {
+    registerCleanup(async () => {
       let p = a.CLAUDE_CODE_OTEL_SHUTDOWN_TIMEOUT_MS ?? 2000;
       try {
         endInteractionSpan();
@@ -1849,7 +1849,7 @@ async function initializeTelemetry(e) {
         ]);
       } catch (u) {
         if (u instanceof Error && u.message.includes("timeout"))
-          n(
+          logForDebugging(
             `
 OpenTelemetry telemetry flush timed out after ${p}ms
 
@@ -1897,14 +1897,14 @@ async function flushTelemetry() {
     let o = d_e();
     if (o) r.push(o.forceFlush());
     (await Promise.race([Promise.all(r), Ce(t, "OpenTelemetry flush timeout")]),
-      n("Telemetry flushed successfully"));
+      logForDebugging("Telemetry flushed successfully"));
   } catch (r) {
     if (r instanceof xe)
-      n(
+      logForDebugging(
         `Telemetry flush timed out after ${t}ms. Some metrics may not be exported.`,
         { level: "warn" },
       );
-    else n(`Telemetry flush failed: ${l(r)}`, { level: "error" });
+    else logForDebugging(`Telemetry flush failed: ${l(r)}`, { level: "error" });
   }
 }
 function Ut() {

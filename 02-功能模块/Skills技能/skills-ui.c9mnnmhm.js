@@ -16,9 +16,9 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { bytesPerTokenForModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { CLAUDE_AI_SYNC_LABEL, describeSettingsSourceShort } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getRemoteTransport } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
@@ -51,7 +51,7 @@ import "../认证-OAuth登录/url-and-error-redaction.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
 import "../MCP客户端/chunk-4xr0rjb4.js";
-import "../成本-Token统计/chunk-3nwwgatc.js";
+import "../成本-Token统计/usage-transcript-scan.js";
 import "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -143,8 +143,8 @@ function Oe(ts) {
   else xe = K[11];
   let Ho;
   if (K[12] === MEMO_CACHE_SENTINEL)
-    ((Ho = e(o, {
-      children: e(t, {
+    ((Ho = e(Box, {
+      children: e(Text, {
         dimColor: !0,
         wrap: "wrap-trim",
         children:
@@ -617,7 +617,7 @@ function Ae(Es) {
   )
     (($e =
       g.length === 0
-        ? e(o, {
+        ? e(Box, {
             marginTop: 1,
             children: e(EmptyStateMessage, { children: `No skills match "${u}"` }),
           })
@@ -660,9 +660,9 @@ function Ae(Es) {
   if (i[76] !== l)
     ((Te =
       l.some(qt) &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children: "Plugin skills are managed via /plugin",
         }),
@@ -674,9 +674,9 @@ function Ae(Es) {
   if (i[78] === MEMO_CACHE_SENTINEL)
     ((It =
       isSafeMode() &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: r(t, {
+        children: r(Text, {
           dimColor: !0,
           children: [
             "Custom skills are disabled in safe mode \u2014",
@@ -695,7 +695,7 @@ function Ae(Es) {
     i[82] !== $e ||
     i[83] !== Te
   )
-    ((Ie = r(o, {
+    ((Ie = r(Box, {
       flexDirection: "column",
       tabIndex: 0,
       autoFocus: !0,
@@ -740,8 +740,8 @@ function Ne(Zs) {
     Ee;
   if (z[3] !== T.color || z[4] !== T.glyph || z[5] !== T.label || z[6] !== ge)
     ((Ee = ge
-      ? e(t, { dimColor: !0, children: "\uD83D\uDD12 " + T.label.padEnd(9) })
-      : r(t, { color: T.color, children: [T.glyph, " ", T.label.padEnd(9)] })),
+      ? e(Text, { dimColor: !0, children: "\uD83D\uDD12 " + T.label.padEnd(9) })
+      : r(Text, { color: T.color, children: [T.glyph, " ", T.label.padEnd(9)] })),
       (z[3] = T.color),
       (z[4] = T.glyph),
       (z[5] = T.label),
@@ -749,12 +749,12 @@ function Ne(Zs) {
       (z[7] = Ee));
   else Ee = z[7];
   let Kt;
-  if (z[8] === MEMO_CACHE_SENTINEL) ((Kt = e(t, { children: "  " })), (z[8] = Kt));
+  if (z[8] === MEMO_CACHE_SENTINEL) ((Kt = e(Text, { children: "  " })), (z[8] = Kt));
   else Kt = z[8];
   const Do = en ? "suggestion" : void 0;
   let Me;
   if (z[9] !== O.name || z[10] !== Do)
-    ((Me = e(t, { color: Do, children: O.name })),
+    ((Me = e(Text, { color: Do, children: O.name })),
       (z[9] = O.name),
       (z[10] = Do),
       (z[11] = Me));
@@ -769,7 +769,7 @@ function Ne(Zs) {
   const Fo = ge ? ` \xB7 locked by ${ge.source}` : "";
   let Ke;
   if (z[15] !== Be || z[16] !== Fo || z[17] !== Ro)
-    ((Ke = r(t, {
+    ((Ke = r(Text, {
       dimColor: !0,
       children: [" ", "\xB7 ", Be, " \xB7 ", Ro, Fo],
     })),
@@ -780,7 +780,7 @@ function Ne(Zs) {
   else Ke = z[18];
   let Nt;
   if (z[19] !== Ee || z[20] !== Me || z[21] !== Ke)
-    ((Nt = r(o, { children: [Ee, Kt, Me, Ke] })),
+    ((Nt = r(Box, { children: [Ee, Kt, Me, Ke] })),
       (z[19] = Ee),
       (z[20] = Me),
       (z[21] = Ke),

@@ -12,7 +12,7 @@ import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { Hx, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, stripInvisibleCharacters } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getMaxSubagentSpawnDepth } from "../共享小工具-未细化/max-subagent-spawn-depth.js";
@@ -33,7 +33,7 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { _1 } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
+import { getGitBashPath } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isRemoteTriggerEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ARTIFACT_TOOL_NAME } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
@@ -42,13 +42,13 @@ import { MEMORY_TOOL_NAMES, TOOL_SEARCH_TOOL_NAME, isSimpleModeEnabled, resolveP
 import { areWorkflowsEnabled } from "../共享小工具-未细化/workflow-feature-gates.js";
 import { SKILL_TOOL_NAME } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, getRegisteredTools, buildTool, matchesAnyToolName } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
-import { _G, CC } from "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { POLL_TOOL_NAME, AsyncEvalDispatcher } from "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { WORKFLOW_TOOL_NAME } from "../共享小工具-未细化/chunk-7fcxwgtq.js";
 import { LIST_AGENTS_TOOL_NAME } from "../../02-功能模块/Teammates团队/list-agents-tool-constants.js";
 import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, CRON_LIST_TOOL_NAME } from "../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
 import { END_CONVERSATION_TOOL_NAME } from "../共享小工具-未细化/chunk-vtgvbed1.js";
 import { WEB_FETCH_TOOL_NAME, isArtifactToolRegistered } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { Jc } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { EXIT_PLAN_MODE_TOOL_NAME } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { isCrossSessionMessagingEnabled } from "../共享小工具-未细化/chunk-rfb3s38d.js";
 import { PROPOSE_GOAL_TOOL_NAME } from "../共享小工具-未细化/propose-goal-tool.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
@@ -371,12 +371,12 @@ function isPowerShellToolEnabled() {
   let e = a.CLAUDE_CODE_USE_POWERSHELL_TOOL;
   if (getCurrentPlatform() !== "windows") return e === !0;
   if (e !== void 0) return e;
-  if (_1() === null) return !0;
+  if (getGitBashPath() === null) return !0;
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_ridge", !1);
 }
 function isBashToolAvailable() {
   if (getCurrentPlatform() !== "windows") return !0;
-  return _1() !== null;
+  return getGitBashPath() !== null;
 }
 function getPreferredShellToolName() {
   return isBashToolAvailable() ? "bash" : "powershell";
@@ -416,7 +416,7 @@ function getReplVariant() {
 }
 var MAIN_AGENT_ID = "main";
 function hasReplContextForAgent(e, t) {
-  return e.get(CC).has(t ?? MAIN_AGENT_ID);
+  return e.get(AsyncEvalDispatcher).has(t ?? MAIN_AGENT_ID);
 }
 function isReplModeEnabled() {
   if (!Hx()) return !1;
@@ -887,7 +887,7 @@ var StructuredOutputTool = buildTool({
     renderToolUseMessage(e) {
       let t = Object.keys(e);
       if (t.length === 0) return null;
-      if (t.length <= 3) return t.map((r) => `${r}: ${b(e[r])}`).join(", ");
+      if (t.length <= 3) return t.map((r) => `${r}: ${jsonStringify(e[r])}`).join(", ");
       return `${t.length} fields: ${t.slice(0, 3).join(", ")}\u2026`;
     },
     mapToolResultToToolResultBlockParam(e, t) {
@@ -926,7 +926,7 @@ function Qe(e) {
         reason: l.ok ? void 0 : fromEnum(l.reason),
       });
     } catch (l) {
-      n(
+      logForDebugging(
         `Strict structured-output schema derivation failed, falling back to non-strict: ${l instanceof Error ? l.message : String(l)}`,
         { level: "error" },
       );
@@ -1022,7 +1022,7 @@ function I(e, t) {
 function fe(e) {
   let t;
   try {
-    t = b(e);
+    t = jsonStringify(e);
   } catch {
     return;
   }
@@ -1149,11 +1149,11 @@ var READ_NOTIFICATIONS_TOOL_NAME = "ReadNotifications",
 function ct(e) {
   return new Set([
     TASK_OUTPUT_TOOL_NAME,
-    Jc,
+    EXIT_PLAN_MODE_TOOL_NAME,
     ENTER_PLAN_MODE_TOOL_NAME,
     ...MEMORY_TOOL_NAMES,
     ASK_USER_QUESTION_TOOL_NAME,
-    _G,
+    POLL_TOOL_NAME,
     CONNECT_GITHUB_TOOL_NAME,
     PROPOSE_SKILLS_TOOL_NAME,
     WAIT_FOR_MCP_SERVERS_TOOL_NAME,
@@ -1233,7 +1233,7 @@ function isPreambleSystemBlock(e) {
   return typeof t === "string" && (t.startsWith(ANTHROPIC_BILLING_HEADER_PREFIX) || t === REPORTING_OUTCOMES_PROMPT);
 }
 function hashStringToUint32(e) {
-  let t = Bun.hash(b(e));
+  let t = Bun.hash(jsonStringify(e));
   return typeof t === "bigint" ? Number(t & 0xffffffffn) : t;
 }
 var gt = new Set([
@@ -1291,7 +1291,7 @@ function U(e, t) {
   if ("tool_use_id" in e && typeof e.tool_use_id === "string")
     t.push("u", e.tool_use_id);
   if ("name" in e && typeof e.name === "string") t.push("n", e.name);
-  if ("input" in e && e.input !== void 0) t.push("p", b(e.input));
+  if ("input" in e && e.input !== void 0) t.push("p", jsonStringify(e.input));
   if ("source" in e && e.source && typeof e.source === "object") {
     let o = e.source;
     if (
@@ -1309,7 +1309,7 @@ function U(e, t) {
     t.push("c", String(r.length), r.slice(0, 32), r.slice(-32));
   for (let [o, d] of Object.entries(e)) {
     if (gt.has(o) || d === void 0) continue;
-    let p = typeof d === "string" ? d : b(d);
+    let p = typeof d === "string" ? d : jsonStringify(d);
     t.push(o, p.length > 256 ? `len:${p.length}` : p);
   }
 }

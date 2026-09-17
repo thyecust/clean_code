@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { createLazyValue } from "./lazy-value.js";
-import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { validateBridgeId } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { s, T, v, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var i = createLazyValue(() =>
@@ -61,7 +61,7 @@ class WorkSecretShapeError extends Error {
 function parseWorkSecret(e) {
   let r;
   try {
-    r = z(Buffer.from(e, "base64url").toString("utf-8"));
+    r = jsonParse(Buffer.from(e, "base64url").toString("utf-8"));
   } catch {
     throw new WorkSecretShapeError("secret_did_not_decode");
   }
@@ -99,7 +99,7 @@ async function registerWorker(e, r) {
     o = typeof n === "string" ? Number(n) : n;
   if (typeof o !== "number" || !Number.isFinite(o) || !Number.isSafeInteger(o))
     throw Error(
-      `registerWorker: invalid worker_epoch in response: ${b(t.data)}`,
+      `registerWorker: invalid worker_epoch in response: ${jsonStringify(t.data)}`,
     );
   return o;
 }

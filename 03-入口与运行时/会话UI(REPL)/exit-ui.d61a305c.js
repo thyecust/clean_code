@@ -20,15 +20,15 @@ import "../../02-功能模块/后台任务-Shell管理/chunk-gnmy62vg.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { handlePromptInputExit } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
+import "../../02-功能模块/后台任务-Shell管理/bg-rendezvous-server.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { detachToBackgroundDaemon, ExitSessionDialog } from "./会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
@@ -41,8 +41,8 @@ import { pickRandom } from "../../02-功能模块/Hooks钩子/spinner-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
-import "../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import { r0e } from "../../02-功能模块/反馈-错误上报/反馈-错误上报.grgh562d.js";
+import "../../02-功能模块/语法高亮-Markdown渲染/markdown-renderer.js";
+import { FeedbackDraftsPanel } from "../../02-功能模块/反馈-错误上报/反馈-错误上报.grgh562d.js";
 import { discardFeedbackDraft } from "../../02-功能模块/反馈-错误上报/feedback-draft-submit.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
@@ -121,7 +121,7 @@ function N(me) {
     else R = n[13];
     let l;
     if (n[14] !== T || n[15] !== R)
-      ((l = e(r0e, { messages: T, onDone: R })),
+      ((l = e(FeedbackDraftsPanel, { messages: T, onDone: R })),
         (n[14] = T),
         (n[15] = R),
         (n[16] = l));
@@ -135,14 +135,14 @@ function N(me) {
   else l = n[18];
   let B;
   if (n[19] !== i.length || n[20] !== l)
-    ((B = r(t, { children: ["You have ", R, " unsent", " ", l] })),
+    ((B = r(Text, { children: ["You have ", R, " unsent", " ", l] })),
       (n[19] = i.length),
       (n[20] = l),
       (n[21] = B));
   else B = n[21];
   let Y;
   if (n[22] === MEMO_CACHE_SENTINEL)
-    ((Y = e(t, {
+    ((Y = e(Text, {
       dimColor: !0,
       children: r(DotSeparatedList, {
         children: [

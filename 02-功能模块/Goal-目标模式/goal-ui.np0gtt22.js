@@ -13,9 +13,9 @@ import { jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { pluralize, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { GOAL_MODE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useInterval } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -41,7 +41,7 @@ function L(ut) {
     Q;
   if (s[0] === MEMO_CACHE_SENTINEL) ((Q = () => ft(Y)), (s[0] = Q));
   else Q = s[0];
-  if ((ko(Q, i ? 1000 : null), i)) {
+  if ((useInterval(Q, i ? 1000 : null), i)) {
     const N = Date.now() - i.setAt;
     let h;
     if (s[1] !== N)
@@ -75,7 +75,7 @@ function L(ut) {
     if (s[11] === MEMO_CACHE_SENTINEL)
       ((z = r(DotSeparatedList, {
         children: [
-          e(t, { children: "/goal clear to stop early" }),
+          e(Text, { children: "/goal clear to stop early" }),
           e(KeybindingHint, { chord: "escape", action: "dismiss" }),
         ],
       })),
@@ -97,7 +97,7 @@ function L(ut) {
     else O = s[15];
     let R;
     if (s[16] !== M || s[17] !== O)
-      ((R = r(o, { flexDirection: "column", children: [M, O] })),
+      ((R = r(Box, { flexDirection: "column", children: [M, O] })),
         (s[16] = M),
         (s[17] = O),
         (s[18] = R));
@@ -132,7 +132,7 @@ function L(ut) {
         if (c.tokens !== void 0) b.push(`${formatTokens(c.tokens)} tokens`);
         let h;
         if (s[26] === MEMO_CACHE_SENTINEL)
-          ((h = r(t, {
+          ((h = r(Text, {
             children: [
               e(StatusIndicator, { status: "success", withSpace: !0 }),
               "Goal achieved",
@@ -145,7 +145,7 @@ function L(ut) {
         if (s[27] === MEMO_CACHE_SENTINEL)
           ((C = r(DotSeparatedList, {
             children: [
-              e(t, { children: "/goal <condition> to set another" }),
+              e(Text, { children: "/goal <condition> to set another" }),
               e(KeybindingHint, { chord: "escape", action: "dismiss" }),
             ],
           })),
@@ -202,22 +202,22 @@ function S($t) {
     { label: I, children: P } = $t,
     w;
   if (j[0] !== I)
-    ((w = e(o, {
+    ((w = e(Box, {
       flexShrink: 0,
-      children: r(t, { dimColor: !0, children: [I, ": "] }),
+      children: r(Text, { dimColor: !0, children: [I, ": "] }),
     })),
       (j[0] = I),
       (j[1] = w));
   else w = j[1];
   let v;
   if (j[2] !== P)
-    ((v = e(o, { flexGrow: 1, children: e(t, { wrap: "wrap", children: P }) })),
+    ((v = e(Box, { flexGrow: 1, children: e(Text, { wrap: "wrap", children: P }) })),
       (j[2] = P),
       (j[3] = v));
   else v = j[3];
   let V;
   if (j[4] !== w || j[5] !== v)
-    ((V = r(o, { flexDirection: "row", children: [w, v] })),
+    ((V = r(Box, { flexDirection: "row", children: [w, v] })),
       (j[4] = w),
       (j[5] = v),
       (j[6] = V));

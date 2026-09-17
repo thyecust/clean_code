@@ -10,10 +10,10 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ju } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getPermissionModeTitle } from "./chunk-e4pfvp7x.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -96,7 +96,7 @@ function ScheduledTaskDetail(st) {
           B(`Removed scheduled task '${i.id}'.`, { display: "system" }));
       } catch (R) {
         let yo = R;
-        (n(
+        (logForDebugging(
           `Failed to remove scheduled task '${i.id}' from daemon.json: ${l(yo)}`,
           { level: "error" },
         ),
@@ -174,20 +174,20 @@ function ScheduledTaskDetail(st) {
   else se = m[29];
   let ae;
   if (m[30] !== se || m[31] !== i.cron)
-    ((ae = r(t, { dimColor: !0, children: ["Cron ", lt, " (", se, ")"] })),
+    ((ae = r(Text, { dimColor: !0, children: ["Cron ", lt, " (", se, ")"] })),
       (m[30] = se),
       (m[31] = i.cron),
       (m[32] = ae));
   else ae = m[32];
   let me;
   if (m[33] !== i.directory)
-    ((me = r(t, { dimColor: !0, children: ["Directory ", i.directory] })),
+    ((me = r(Text, { dimColor: !0, children: ["Directory ", i.directory] })),
       (m[33] = i.directory),
       (m[34] = me));
   else me = m[34];
   let le;
   if (m[35] !== i.prompt)
-    ((le = r(t, { dimColor: !0, children: ["Prompt ", i.prompt] })),
+    ((le = r(Text, { dimColor: !0, children: ["Prompt ", i.prompt] })),
       (m[35] = i.prompt),
       (m[36] = le));
   else le = m[36];
@@ -199,7 +199,7 @@ function ScheduledTaskDetail(st) {
   const Oe = i.enabled ? "enabled" : "disabled";
   let ue;
   if (m[39] !== ce || m[40] !== Oe)
-    ((ue = r(t, { dimColor: !0, children: ["Status", " ", ce, Oe] })),
+    ((ue = r(Text, { dimColor: !0, children: ["Status", " ", ce, Oe] })),
       (m[39] = ce),
       (m[40] = Oe),
       (m[41] = ue));
@@ -210,19 +210,19 @@ function ScheduledTaskDetail(st) {
   else pe = m[43];
   let fe;
   if (m[44] !== pe)
-    ((fe = r(t, { dimColor: !0, children: ["Mode ", pe] })),
+    ((fe = r(Text, { dimColor: !0, children: ["Mode ", pe] })),
       (m[44] = pe),
       (m[45] = fe));
   else fe = m[45];
   let be;
   if (m[46] !== i.model)
-    ((be = i.model && r(t, { dimColor: !0, children: ["Model ", i.model] })),
+    ((be = i.model && r(Text, { dimColor: !0, children: ["Model ", i.model] })),
       (m[46] = i.model),
       (m[47] = be));
   else be = m[47];
   let ye;
   if (m[48] !== i.runTimeoutMinutes)
-    ((ye = r(t, {
+    ((ye = r(Text, {
       dimColor: !0,
       children: ["Timeout ", i.runTimeoutMinutes, "m"],
     })),
@@ -231,7 +231,7 @@ function ScheduledTaskDetail(st) {
   else ye = m[49];
   let ge;
   if (m[50] !== i.maxQueued)
-    ((ge = r(t, { dimColor: !0, children: ["Max queue ", i.maxQueued] })),
+    ((ge = r(Text, { dimColor: !0, children: ["Max queue ", i.maxQueued] })),
       (m[50] = i.maxQueued),
       (m[51] = ge));
   else ge = m[51];
@@ -246,7 +246,7 @@ function ScheduledTaskDetail(st) {
     m[58] !== ye ||
     m[59] !== ge
   )
-    ((he = r(o, {
+    ((he = r(Box, {
       flexDirection: "column",
       marginBottom: 1,
       children: [ae, me, le, ue, fe, be, ye, ge],

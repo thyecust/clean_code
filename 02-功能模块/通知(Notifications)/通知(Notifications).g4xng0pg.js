@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { K, he, sn, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -122,7 +122,7 @@ async function h() {
     let r = parsePlist(o.stdout);
     if (!isPlainObject(r))
       return (
-        n(
+        logForDebugging(
           "Failed to read Apple Terminal bell setting: defaults export is not a plist dict",
         ),
         !1
@@ -131,7 +131,7 @@ async function h() {
       s = isPlainObject(l) ? l[t] : void 0;
     if (!isPlainObject(s))
       return (
-        n(
+        logForDebugging(
           "Failed to read Apple Terminal bell setting: no settings dict for the current profile",
         ),
         !1
@@ -139,7 +139,7 @@ async function h() {
     return s.Bell === !1;
   } catch (e) {
     return (
-      n(
+      logForDebugging(
         `Failed to read Apple Terminal bell setting: ${e instanceof Error ? e.message : String(e)}`,
         { level: "error" },
       ),

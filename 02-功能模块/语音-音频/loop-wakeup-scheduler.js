@@ -29,7 +29,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { FIVE_MINUTES_MS } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { getCronJitterConfig } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
 var w = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
@@ -61,7 +61,7 @@ function scheduleDynamicWakeup(e, o, t) {
 function armLoopKeepalive(e) {
   if (pYt() >= D)
     return (
-      n(
+      logForDebugging(
         "[loop] keepalive budget exhausted (model declined to reschedule twice) \u2014 ending loop",
       ),
       L("model_stopped", { via_keepalive: !0 }),
@@ -81,13 +81,13 @@ function stopLoopWakeups() {
   if (t !== null) Ort(t);
   if (e)
     return (
-      n(
+      logForDebugging(
         "[loop] ScheduleWakeup({stop:true}) after loop already ended \u2014 cleanup only, terminal event suppressed",
       ),
       o.length
     );
   return (
-    n(
+    logForDebugging(
       `[loop] model called ScheduleWakeup({stop:true}) \u2014 ending loop (${o.length} pending wakeup(s) cancelled${t !== null ? ", tick in flight" : ""})`,
     ),
     L("model_stopped", { via_keepalive: !1 }),
@@ -145,7 +145,7 @@ function E(e, o, t) {
   )
     return (
       Drt(pYt() + 1),
-      n(`[loop] keepalive armed (model did not reschedule): ${c}s fallback`),
+      logForDebugging(`[loop] keepalive armed (model did not reschedule): ${c}s fallback`),
       logEvent("tengu_loop_keepalive_fired", {
         clamped_delay_seconds: c,
         prompt_is_sentinel: w.isLoopDefaultSentinel(o),
@@ -154,7 +154,7 @@ function E(e, o, t) {
       { scheduledFor: k, clampedDelaySeconds: c, wasClamped: h }
     );
   return (
-    n(
+    logForDebugging(
       `[loop] dynamic wakeup scheduled: ${c}s${h ? ` (clamped from ${e}s)` : ""}${s !== void 0 ? ` \u2014 ${s}` : ""}`,
     ),
     logEvent("tengu_loop_dynamic_wakeup_scheduled", {
@@ -217,7 +217,7 @@ function cancelAllLoopWakeups() {
   for (let t of e) Ort(t.prompt);
   if (o !== null) Ort(o);
   return (
-    n(
+    logForDebugging(
       `[loop/dynamic] cancelled ${e.length} pending loop wakeup(s) on user abort${o !== null ? " (tick in flight)" : ""}`,
     ),
     L("user_abort", { loops_cancelled: e.length }),

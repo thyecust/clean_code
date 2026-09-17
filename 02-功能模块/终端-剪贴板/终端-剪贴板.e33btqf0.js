@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { j, B, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ja, JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
-import { FP, $w, khe, rB } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { ESCAPE_CHARACTER, BELL_CHARACTER, PARAM_SEPARATOR, CONTROL_INTRODUCER_CODES } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isLocalAddress } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { CT } from "../状态栏-主题/chunk-jz6b76hr.js";
+import { terminalCapabilities } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class C {
@@ -61,8 +61,8 @@ function m() {
 }
 import { Buffer as _ } from "buffer";
 import { isAbsolute } from "path";
-var g = FP + String.fromCharCode(rB.OSC),
-  S = FP + "\\";
+var g = ESCAPE_CHARACTER + String.fromCharCode(CONTROL_INTRODUCER_CODES.OSC),
+  S = ESCAPE_CHARACTER + "\\";
 function I() {
   return dl()?.terminal ?? a.terminal;
 }
@@ -112,8 +112,8 @@ var k = new Set([
   ]),
   D = new Set(["vscode", "cursor", "windsurf", "antigravity", "codium"]);
 function formatOscSequence(...t) {
-  let e = I() === "kitty" ? S : $w;
-  return `${g}${t.join(khe)}${e}`;
+  let e = I() === "kitty" ? S : BELL_CHARACTER;
+  return `${g}${t.join(PARAM_SEPARATOR)}${e}`;
 }
 function wrapOscForMultiplexer(t) {
   let e = getTerminalMultiplexer();
@@ -215,7 +215,7 @@ function U(t) {
   return /[^\x00-\x7f]/.test(t);
 }
 function getOsc52Utf8PasteWarning(t) {
-  if (!CT.hasOsc52ClipboardUtf8Bug() || !U(t)) return null;
+  if (!terminalCapabilities.hasOsc52ClipboardUtf8Bug() || !U(t)) return null;
   return "VS Code 1.123/1.124 will mojibake this paste \u2014 update to \u22651.125";
 }
 async function W(t) {
@@ -226,7 +226,7 @@ async function W(t) {
     i = e.length > 0 ? "attacher socket" : "$TMUX",
     { code: s } = await execFileNoThrow("tmux", [...e, "load-buffer", "-w", "-"], o);
   if (
-    (n(
+    (logForDebugging(
       `clipboard: tmux load-buffer -w - \u2192 exit ${s} (server=${i} LC_TERMINAL=${r})`,
     ),
     s === 0)
@@ -234,7 +234,7 @@ async function W(t) {
     return !0;
   let u = await execFileNoThrow("tmux", [...e, "load-buffer", "-"], o);
   return (
-    n(
+    logForDebugging(
       `clipboard: retry tmux load-buffer - \u2192 exit ${u.code} (server=${i} LC_TERMINAL=${r})`,
     ),
     u.code === 0
@@ -249,18 +249,18 @@ async function setClipboard(t) {
     r = p(),
     i = o === "tmux" ? "raw+dcs" : o === "screen" ? "dcs" : "raw";
   if (
-    (n(
+    (logForDebugging(
       `clipboard: setClipboard mux=${o ?? "none"} ssh=${r} native=${!r} predicted=${getClipboardCopyStrategy()} emit=${i} bytes=${t.length}`,
     ),
     o === "tmux")
   ) {
-    let s = `${FP}]52;c;${e}${$w}`;
+    let s = `${ESCAPE_CHARACTER}]52;c;${e}${BELL_CHARACTER}`;
     return s + wrapOscForMultiplexer(s);
   }
   if (o === "screen") {
     let s = [];
     for (let u = 0; u < e.length; u += h) s.push(e.slice(u, u + h));
-    return `${FP}P${FP}]52;c;${s.join(`${S}${FP}P`)}${$w}${S}`;
+    return `${ESCAPE_CHARACTER}P${ESCAPE_CHARACTER}]52;c;${s.join(`${S}${ESCAPE_CHARACTER}P`)}${BELL_CHARACTER}${S}`;
   }
   return formatOscSequence(OSC_CODES.CLIPBOARD, "c", e);
 }
@@ -372,7 +372,7 @@ async function Y(t, e) {
       null
     );
   } catch (o) {
-    return (n(`clipboard: addon read: ${l(o)}`), null);
+    return (logForDebugging(`clipboard: addon read: ${l(o)}`), null);
   }
 }
 var OSC_CODES = {
@@ -496,8 +496,8 @@ function X(t) {
 var HYPERLINK_END = formatOscSequence(OSC_CODES.HYPERLINK, "", ""),
   ITERM2_OSC_COMMANDS = { NOTIFY: 0, BADGE: 2, PROGRESS: 4 },
   ITERM2_PROGRESS_STATES = { CLEAR: 0, SET: 1, ERROR: 2, INDETERMINATE: 3 },
-  CLEAR_ITERM2_PROGRESS_SEQUENCE = `${g}${OSC_CODES.ITERM2};${ITERM2_OSC_COMMANDS.PROGRESS};${ITERM2_PROGRESS_STATES.CLEAR};${$w}`,
-  RESET_TITLE_AND_ICON_SEQUENCE = `${g}${OSC_CODES.SET_TITLE_AND_ICON};${$w}`,
+  CLEAR_ITERM2_PROGRESS_SEQUENCE = `${g}${OSC_CODES.ITERM2};${ITERM2_OSC_COMMANDS.PROGRESS};${ITERM2_PROGRESS_STATES.CLEAR};${BELL_CHARACTER}`,
+  RESET_TITLE_AND_ICON_SEQUENCE = `${g}${OSC_CODES.SET_TITLE_AND_ICON};${BELL_CHARACTER}`,
   RESET_TAB_STATUS_SEQUENCE = formatOscSequence(OSC_CODES.TAB_STATUS, "indicator=;status=;status-color=");
 function isTabStatusEnabled() {
   return !1;

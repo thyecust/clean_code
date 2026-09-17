@@ -12,7 +12,7 @@
 import { mcpCallRequestSchema } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createAbortController } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { getPluginToolStagingDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
@@ -133,7 +133,7 @@ async function ft(e, t) {
     } catch (s) {
       return r(
         "tool_error",
-        `invalid input lane_path ${b(n.lane_path)}: ${l(s)}`,
+        `invalid input lane_path ${jsonStringify(n.lane_path)}: ${l(s)}`,
       );
     }
   let d = [],
@@ -145,7 +145,7 @@ async function ft(e, t) {
     } catch (g) {
       return r(
         "tool_error",
-        `invalid output lane_path ${b(n.lane_path)}: ${l(g)}`,
+        `invalid output lane_path ${jsonStringify(n.lane_path)}: ${l(g)}`,
       );
     }
     let p = N.get(s);

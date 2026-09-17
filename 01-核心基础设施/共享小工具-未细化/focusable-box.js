@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 function FocusableBox(D) {
   let K = _(7),
@@ -32,7 +32,7 @@ function FocusableBox(D) {
     K[4] !== t ||
     K[5] !== c
   )
-    ((l = e(o, {
+    ((l = e(Box, {
       flexDirection: a,
       gap: n,
       tabIndex: c,

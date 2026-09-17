@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { j, bi } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M4t } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { formatSingleLineLabel } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { getSettingsForSource, getAllPolicyTierSettings, getDurablePolicyTierSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -62,7 +62,7 @@ function g() {
   return y(homedir(), ".claude", "state", E);
 }
 function unattendedServingMachineName(e = hostname()) {
-  return M4t(a(e));
+  return formatSingleLineLabel(a(e));
 }
 function p() {
   return {
@@ -106,7 +106,7 @@ async function A(e) {
     t = await e.readText();
   } catch (r) {
     return (
-      n(`unattended-serving consent: store unreadable (${l(r)})`, {
+      logForDebugging(`unattended-serving consent: store unreadable (${l(r)})`, {
         level: "warn",
       }),
       { choice: "unset", unreadable: !0 }
@@ -114,7 +114,7 @@ async function A(e) {
   }
   if (t === void 0) return { choice: "unset", unreadable: !1 };
   try {
-    let r = _().safeParse(z(t));
+    let r = _().safeParse(jsonParse(t));
     if (!r.success) return { choice: "unset", unreadable: !0 };
     let o =
       r.data.choice === "declined" ||
@@ -134,7 +134,7 @@ async function writeUnattendedServingConsent(e, t) {
   try {
     if (
       (await o.writeText(
-        b(
+        jsonStringify(
           {
             version: UNATTENDED_SERVING_CONSENT_VERSION,
             choice: e,
@@ -161,7 +161,7 @@ async function writeUnattendedServingConsent(e, t) {
     return !0;
   } catch (d) {
     return (
-      n(`unattended-serving consent: answer not saved (${l(d)})`, {
+      logForDebugging(`unattended-serving consent: answer not saved (${l(d)})`, {
         level: "warn",
       }),
       !1
@@ -260,7 +260,7 @@ function unattendedServingConsentPending() {
     );
   } catch (e) {
     return (
-      n(
+      logForDebugging(
         `unattended-serving consent: read failed, call treated as unconsented (${l(e)})`,
         { level: "warn" },
       ),

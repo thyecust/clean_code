@@ -30,10 +30,10 @@ import {
   getGlobalConfig,
 } from "./认证-OAuth登录.419zdfz3.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { emitAuthEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
-import { performLogout, clearAuthRelatedCaches } from "./chunk-9g86t9bp.js";
+import { performLogout, clearAuthRelatedCaches } from "./console-profile-auth.js";
 import { fetchBootstrapData } from "../上下文压缩-Compact/chunk-npckj9cm.js";
 async function m(e, o) {
   try {
@@ -48,7 +48,7 @@ async function m(e, o) {
     });
     if (!s.ok) {
       if (s.reason === "no-auth")
-        (n(
+        (logForDebugging(
           `Failed to get auth headers for first-token-date fetch: ${s.detail}`,
           { level: "error" },
         ),
@@ -68,7 +68,7 @@ async function m(e, o) {
       logFeatureOk("api_first_token_date_fetch"));
   } catch (t) {
     if (cc(t))
-      n(`Failed to fetch first token date: ${l(t)}`, { level: "error" });
+      logForDebugging(`Failed to fetch first token date: ${l(t)}`, { level: "error" });
     else logError(t);
     logFeatureBad("api_first_token_date_fetch", "request_failed");
   }
@@ -83,10 +83,10 @@ async function finalizeOAuthLogin(e, { storageV5: o, credentials: t } = {}) {
   if (isHoverRestEnabled() && t !== void 0) await _(t);
   if (r.warning) logEvent("tengu_oauth_storage_warning", { warning: r.warning });
   if (
-    (await fetchAndStoreUserRoles(e.accessToken, o).catch((c) => n(String(c), { level: "error" })),
+    (await fetchAndStoreUserRoles(e.accessToken, o).catch((c) => logForDebugging(String(c), { level: "error" })),
     shouldUseClaudeAIAuth(e.scopes))
   )
-    await m(o, t).catch((c) => n(String(c), { level: "error" }));
+    await m(o, t).catch((c) => logForDebugging(String(c), { level: "error" }));
   else if (!(await createAndStoreApiKey(e.accessToken, o)))
     throw Error(
       "Unable to create API key. The server accepted the request but did not return a key.",

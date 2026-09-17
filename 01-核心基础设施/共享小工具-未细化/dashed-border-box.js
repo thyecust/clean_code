@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, tn } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, useIsScreenReaderEnabled } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 function DashedBorderBox(R) {
   let u = _(6),
     { children: r, paddingX: b, marginTop: t, marginBottom: d } = R,
     n = b === void 0 ? 1 : b;
-  const a = tn() ? void 0 : "dashed";
+  const a = useIsScreenReaderEnabled() ? void 0 : "dashed";
   let l;
   if (u[0] !== r || u[1] !== d || u[2] !== t || u[3] !== n || u[4] !== a)
-    ((l = e(o, {
+    ((l = e(Box, {
       borderStyle: a,
       borderColor: "subtle",
       borderLeft: !1,

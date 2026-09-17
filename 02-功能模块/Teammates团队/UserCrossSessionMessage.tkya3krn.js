@@ -13,12 +13,12 @@ import { PEER_LANE_SUFFIX_VARIANTS, HOST_INJECTED_LANE_SUFFIX_VARIANTS, CROSS_SE
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { shouldExpandContent } from "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import { sanitizeDisplayName, parsePeerAddress } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
+import { Markdown } from "../语法高亮-Markdown渲染/markdown-renderer.js";
 import { resolveAgentColor, CollapsedMessagesHint } from "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { TruncatedText } from "../工具UI渲染/chunk-g4k5jjwt.js";
@@ -100,26 +100,26 @@ function UserCrossSessionMessage(se) {
   else x = i[13];
   let H;
   if (i[14] === MEMO_CACHE_SENTINEL)
-    ((H = e(t, { "aria-hidden": !0, children: figures.pointer })), (i[14] = H));
+    ((H = e(Text, { "aria-hidden": !0, children: figures.pointer })), (i[14] = H));
   else H = i[14];
   let T;
   if (i[15] !== f)
-    ((T = r(t, { color: x, children: ["@ ", f, H] })),
+    ((T = r(Text, { color: x, children: ["@ ", f, H] })),
       (i[15] = f),
       (i[16] = T));
   else T = i[16];
   let w;
   if (i[17] !== m)
-    ((w = e(o, {
+    ((w = e(Box, {
       paddingLeft: 2,
-      children: e(js, { stripPromptTags: !1, children: m }),
+      children: e(Markdown, { stripPromptTags: !1, children: m }),
     })),
       (i[17] = m),
       (i[18] = w));
   else w = i[18];
   let J;
   if (i[19] !== n || i[20] !== T || i[21] !== w)
-    ((J = r(o, {
+    ((J = r(Box, {
       flexDirection: "column",
       marginTop: n,
       width: "100%",

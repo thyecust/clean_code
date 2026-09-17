@@ -15,10 +15,10 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { R, l, A, Po, Bp, vB, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { isValidPathSegment, STORAGE_KEYS } from "./storage-keys.js";
-import { ou, We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, getTeamsDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { go, HU } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { escapeHtmlAttribute, neutralizeOpeningTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { isAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
@@ -259,7 +259,7 @@ function xt(e) {
   let t = e.trim();
   if (!t.startsWith("{") && !t.startsWith("[")) return !1;
   try {
-    let r = z(t);
+    let r = jsonParse(t);
     return typeof r === "object" && r !== null;
   } catch {
     return !1;
@@ -339,7 +339,7 @@ async function _e(e, t, r) {
       publishDiscipline: "inPlace",
     });
     if (!i.ok) {
-      let d = vB(ou(i.error));
+      let d = vB(getTelemetryCode(i.error));
       throw Object.assign(
         new R(
           `[Tasks] high-water mark write failed: ${i.error.code}`,
@@ -357,7 +357,7 @@ async function At(e, t, r) {
   try {
     if (t > (await ue(e, r))) await _e(e, t, r);
   } catch (o) {
-    n(`[Tasks] could not record skipped task id ${t}: ${l(o)}`);
+    logForDebugging(`[Tasks] could not record skipped task id ${t}: ${l(o)}`);
   }
 }
 function areTasksEnabled() {
@@ -378,7 +378,7 @@ async function resetTaskList(e, t) {
         let p = await t.read(d.map((T) => J(e, T)));
         if (!p.ok)
           return (
-            n(
+            logForDebugging(
               `[Tasks] Failed to read task list ${e} before a reset: ${p.error.code}`,
             ),
             !1
@@ -456,12 +456,12 @@ async function Qe(e, t) {
       return o;
     case "error":
       return (
-        n(`[Tasks] Failed to list task list ${t}: ${i.error.code}`),
+        logForDebugging(`[Tasks] Failed to list task list ${t}: ${i.error.code}`),
         null
       );
     case "capped":
       return (
-        n(
+        logForDebugging(
           `[Tasks] Listing task list ${t} exceeded ${DEFAULT_MAX_PAGES} pages; treating the listing as failed`,
         ),
         null
@@ -498,12 +498,12 @@ async function Ze(e, t) {
       break;
     case "error":
       return (
-        n(`[Tasks] Failed to list task list ${t}: ${i.error.code}`),
+        logForDebugging(`[Tasks] Failed to list task list ${t}: ${i.error.code}`),
         null
       );
     case "capped":
       return (
-        n(
+        logForDebugging(
           `[Tasks] Listing task list ${t} exceeded ${DEFAULT_MAX_PAGES} pages; treating the listing as failed`,
         ),
         null
@@ -524,7 +524,7 @@ async function ensureTaskListStorage(e, t) {
       await t.ensureScope({ namespace: "task", listId: sanitizeStorageId(e) });
       return;
     }
-    await ae().mkdir(r);
+    await getFsSurface().mkdir(r);
   } catch {}
 }
 function Je(e) {
@@ -573,7 +573,7 @@ async function createTask(e, t, r) {
     if (r)
       for (let _ = 1; ; _++) {
         let p = { id: u, ...t },
-          T = await r.write(J(e, u), b(p, null, 2), {
+          T = await r.write(J(e, u), jsonStringify(p, null, 2), {
             precondition: { type: "ifAbsent" },
           });
         if (T.ok) break;
@@ -584,7 +584,7 @@ async function createTask(e, t, r) {
           );
         let w = T.error.code === "Failed" ? T.error.telemetryCode : void 0;
         if (
-          (n(
+          (logForDebugging(
             `[Tasks] createTask: task id ${u} is held by an entry the listing did not report (${w ?? T.error.code}); taking the next id`,
           ),
           await At(e, Number(u), r),
@@ -599,7 +599,7 @@ async function createTask(e, t, r) {
     else {
       let _ = { id: u, ...t },
         p = B(e, u);
-      await writeFile(p, b(_, null, 2), { encoding: "utf8" });
+      await writeFile(p, jsonStringify(_, null, 2), { encoding: "utf8" });
     }
     return (L(), u);
   } finally {
@@ -608,17 +608,17 @@ async function createTask(e, t, r) {
 }
 function le(e, t) {
   try {
-    let r = z(t),
+    let r = jsonParse(t),
       o = Ye().safeParse(r);
     if (!o.success)
       return (
-        n(`[Tasks] Task ${e} failed schema validation: ${o.error.message}`),
+        logForDebugging(`[Tasks] Task ${e} failed schema validation: ${o.error.message}`),
         null
       );
     return o.data;
   } catch (r) {
     if (
-      (n(`[Tasks] Failed to read task ${e}: ${l(r)}`),
+      (logForDebugging(`[Tasks] Failed to read task ${e}: ${l(r)}`),
       !(r instanceof SyntaxError))
     )
       logError(r);
@@ -628,7 +628,7 @@ function le(e, t) {
 async function et(e, t, r) {
   let o = await e.read([J(t, r)]);
   if (!o.ok)
-    return (n(`[Tasks] Failed to read task ${r}: ${o.error.code}`), null);
+    return (logForDebugging(`[Tasks] Failed to read task ${r}: ${o.error.code}`), null);
   let i = o.value.items[0];
   if (!i.found) return null;
   return le(r, Buffer.from(i.value).toString("utf8"));
@@ -638,18 +638,18 @@ async function readTask(e, t, r) {
   let o = B(e, t);
   try {
     let i = await readFile(o, "utf8"),
-      d = z(i),
+      d = jsonParse(i),
       u = Ye().safeParse(d);
     if (!u.success)
       return (
-        n(`[Tasks] Task ${t} failed schema validation: ${u.error.message}`),
+        logForDebugging(`[Tasks] Task ${t} failed schema validation: ${u.error.message}`),
         null
       );
     return u.data;
   } catch (i) {
     if (A(i) === "ENOENT") return null;
     if (
-      (n(`[Tasks] Failed to read task ${t}: ${l(i)}`, { level: "error" }),
+      (logForDebugging(`[Tasks] Failed to read task ${t}: ${l(i)}`, { level: "error" }),
       !(i instanceof SyntaxError) && !Kd(i) && !Bp(i))
     )
       logError(i);
@@ -662,7 +662,7 @@ async function tt(e, t, r, o) {
   if (!i) return null;
   let d = { ...i, ...r, id: t },
     u = B(e, t);
-  return (await writeFile(u, b(d, null, 2), { encoding: "utf8" }), L(), d);
+  return (await writeFile(u, jsonStringify(d, null, 2), { encoding: "utf8" }), L(), d);
 }
 var It = 5,
   vt = createJitteredBackoffDelay(50);
@@ -674,7 +674,7 @@ async function ke(e, t, r, o) {
           p === void 0 ? null : le(r, Buffer.from(p.value).toString("utf8")),
         w = o(T);
       return "write" in w
-        ? { write: b(w.write, null, 2), result: w.result }
+        ? { write: jsonStringify(w.write, null, 2), result: w.result }
         : { skip: !0, result: w.result };
     });
     if (u.ok) {
@@ -689,7 +689,7 @@ async function ke(e, t, r, o) {
       d >= It
     )
       throw (
-        n(
+        logForDebugging(
           `[Tasks] update of task ${r} failed after ${d} attempt(s): ${u.error.code}${"telemetryCode" in u.error && u.error.telemetryCode ? ` (${u.error.telemetryCode})` : ""}`,
         ),
         new R(
@@ -749,7 +749,7 @@ async function deleteTask(e, t, r) {
     if (r) {
       let u = await r.delete(J(e, t));
       if (!u.ok)
-        return (n(`[Tasks] Failed to delete task ${t}: ${u.error.code}`), !1);
+        return (logForDebugging(`[Tasks] Failed to delete task ${t}: ${u.error.code}`), !1);
       if (!u.value.existed) return !1;
     } else
       try {
@@ -844,7 +844,7 @@ async function claimTask(e, t, r, o = {}, i) {
     return { success: !0, task: await tt(e, t, { owner: r }, i) };
   } catch (p) {
     return (
-      n(`[Tasks] Failed to claim task ${t}: ${l(p)}`),
+      logForDebugging(`[Tasks] Failed to claim task ${t}: ${l(p)}`),
       logError(p),
       { success: !1, reason: "task_not_found" }
     );
@@ -898,7 +898,7 @@ async function $t(e, t, r, o) {
     return { success: !0, task: await updateTask(e, t, { owner: r }, o) };
   } catch (u) {
     return (
-      n(`[Tasks] Failed to claim task ${t} with busy check: ${l(u)}`),
+      logForDebugging(`[Tasks] Failed to claim task ${t} with busy check: ${l(u)}`),
       logError(u),
       { success: !1, reason: "task_not_found" }
     );
@@ -911,7 +911,7 @@ async function unassignAgentTasks(e, t, r, o, i) {
     (T) => T.status !== "completed" && (T.owner === t || T.owner === r),
   );
   for (let T of u) await updateTask(e, T.id, { owner: void 0, status: "pending" }, i);
-  if (u.length > 0) n(`[Tasks] Unassigned ${u.length} task(s) from ${r}`);
+  if (u.length > 0) logForDebugging(`[Tasks] Unassigned ${u.length} task(s) from ${r}`);
   let p = `${r} ${o === "terminated" ? "was terminated" : "has shut down"}.`;
   if (u.length > 0) {
     let T = u.map((w) => `#${w.id} "${w.subject}"`).join(", ");
@@ -961,7 +961,7 @@ var ut = 100,
   Ot = 2048;
 function Ct(e, t) {
   try {
-    let r = b(t);
+    let r = jsonStringify(t);
     return `${e}\x00${r.length}:${r.slice(0, Ot)}`;
   } catch {
     return `${e}\x00(unserializable)`;
@@ -1019,7 +1019,7 @@ function Ee(e, t) {
       o++;
       let u = at(i, d.error.issues);
       if (zt(t, i, u))
-        n(`[TeammateMailbox] dropping schema-invalid inbox entry (${u})`, {
+        logForDebugging(`[TeammateMailbox] dropping schema-invalid inbox entry (${u})`, {
           level: "warn",
         });
     }
@@ -1051,11 +1051,11 @@ async function pruneInvalidMailboxEntries(e, t, r) {
         !1,
       );
       if (d)
-        n(
+        logForDebugging(
           `[TeammateMailbox] pruned ${d} schema-invalid entr${d === 1 ? "y" : "ies"} at ${e}`,
         );
     } catch (d) {
-      n(`[TeammateMailbox] invalid-entry prune skipped: ${d}`);
+      logForDebugging(`[TeammateMailbox] invalid-entry prune skipped: ${d}`);
     }
     return;
   }
@@ -1064,14 +1064,14 @@ async function pruneInvalidMailboxEntries(e, t, r) {
   try {
     i = await Cs(e, { lockfilePath: o, ...U });
     let d = await getFileStorage().read(e),
-      { valid: u, droppedCount: _ } = Ee(z(d), e);
+      { valid: u, droppedCount: _ } = Ee(jsonParse(d), e);
     if (_ === 0) return;
-    (await getFileStorage().atomicWrite(e, b(u, null, 2)),
-      n(
+    (await getFileStorage().atomicWrite(e, jsonStringify(u, null, 2)),
+      logForDebugging(
         `[TeammateMailbox] pruned ${_} schema-invalid entr${_ === 1 ? "y" : "ies"} at ${e}`,
       ));
   } catch (d) {
-    n(`[TeammateMailbox] invalid-entry prune skipped: ${d}`);
+    logForDebugging(`[TeammateMailbox] invalid-entry prune skipped: ${d}`);
   } finally {
     await hf(i, "[TeammateMailbox] pruneInvalidMailboxEntries");
   }
@@ -1083,7 +1083,7 @@ function getInboxPath(e, t) {
     d = Re(getTeamsDir(), o, "inboxes"),
     u = Re(d, `${i}.json`);
   return (
-    n(`[TeammateMailbox] getInboxPath: agent=${e}, team=${r}, fullPath=${u}`),
+    logForDebugging(`[TeammateMailbox] getInboxPath: agent=${e}, team=${r}, fullPath=${u}`),
     u
   );
 }
@@ -1091,7 +1091,7 @@ async function Ft(e) {
   let t = e || getTeamName() || "default",
     r = sanitizeStorageId(t),
     o = Re(getTeamsDir(), r, "inboxes");
-  (await getFileStorage().mkdir(o), n(`[TeammateMailbox] Ensured inbox directory: ${o}`));
+  (await getFileStorage().mkdir(o), logForDebugging(`[TeammateMailbox] Ensured inbox directory: ${o}`));
 }
 function W(e, t) {
   let r = sanitizeStorageId(t || getTeamName() || "default"),
@@ -1101,7 +1101,7 @@ function W(e, t) {
 function Bt(e, t, r) {
   let o;
   try {
-    o = z(e);
+    o = jsonParse(e);
   } catch {
     return { messages: [], droppedCount: 0, corrupt: !0 };
   }
@@ -1124,13 +1124,13 @@ async function H(e, t, r, o, i = !0) {
         });
       return "skip" in p
         ? { skip: !0, result: p.result }
-        : { write: b(p.messages, null, 2), result: p.result };
+        : { write: jsonStringify(p.messages, null, 2), result: p.result };
     },
     { mode: 438 & ~process.umask() },
   );
   if (!d.ok)
     throw (
-      n(`[TeammateMailbox] inbox update failed: ${We(d.error)}`, {
+      logForDebugging(`[TeammateMailbox] inbox update failed: ${describeStorageError(d.error)}`, {
         level: "error",
       }),
       Error("teammate inbox storage update failed")
@@ -1139,7 +1139,7 @@ async function H(e, t, r, o, i = !0) {
 }
 async function readMailbox(e, t, r, o) {
   let i = getInboxPath(e, t);
-  n(`[TeammateMailbox] readMailbox: path=${i}`);
+  logForDebugging(`[TeammateMailbox] readMailbox: path=${i}`);
   let d = isHoverRestEnabled() && r !== void 0 ? W(e, t) : void 0;
   try {
     let u;
@@ -1147,18 +1147,18 @@ async function readMailbox(e, t, r, o) {
       let T = await r.readText([d]);
       if (!T.ok)
         throw (
-          n(`[TeammateMailbox] readMailbox: inbox read failed: ${We(T.error)}`),
+          logForDebugging(`[TeammateMailbox] readMailbox: inbox read failed: ${describeStorageError(T.error)}`),
           Error("teammate inbox storage read failed")
         );
       if (!T.value.items[0].found)
-        return (n("[TeammateMailbox] readMailbox: file does not exist"), []);
+        return (logForDebugging("[TeammateMailbox] readMailbox: file does not exist"), []);
       u = T.value.items[0].value;
     } else u = await getFileStorage().read(i);
-    let { valid: _, droppedCount: p } = Ee(z(u), i);
+    let { valid: _, droppedCount: p } = Ee(jsonParse(u), i);
     if (p > 0) Nt(i, r, d);
     for (let T of _) if (T.type === void 0) T.type = "message";
     return (
-      n(
+      logForDebugging(
         `[TeammateMailbox] readMailbox: read ${_.length} message(s)` +
           (p > 0 ? `, dropped ${p} invalid` : ""),
       ),
@@ -1166,23 +1166,23 @@ async function readMailbox(e, t, r, o) {
     );
   } catch (u) {
     if (A(u) === "ENOENT")
-      return (n("[TeammateMailbox] readMailbox: file does not exist"), []);
+      return (logForDebugging("[TeammateMailbox] readMailbox: file does not exist"), []);
     if (u instanceof SyntaxError)
       return (
-        n(
+        logForDebugging(
           `[TeammateMailbox] readMailbox: unparseable inbox, treating as empty: ${u}`,
         ),
         []
       );
     if (o?.throwOnUnknownReadError) throw u;
-    return (n(`Failed to read inbox for ${e}: ${u}`), logError(u), []);
+    return (logForDebugging(`Failed to read inbox for ${e}: ${u}`), logError(u), []);
   }
 }
 async function readUnreadMessages(e, t, r) {
   let o = await readMailbox(e, t, r),
     i = o.filter((d) => !d.read);
   return (
-    n(
+    logForDebugging(
       `[TeammateMailbox] readUnreadMessages: ${i.length} unread of ${o.length} total`,
     ),
     i
@@ -1192,7 +1192,7 @@ async function writeToMailbox(e, t, r, o) {
   let i = ot().safeParse(t);
   if (!i.success) {
     let T = at(t, i.error.issues);
-    (n(
+    (logForDebugging(
       `[TeammateMailbox] writeToMailbox: refusing schema-invalid message for ${e} (${T})`,
       { level: "warn" },
     ),
@@ -1218,34 +1218,34 @@ async function writeToMailbox(e, t, r, o) {
           messages: [...w.messages, T],
           result: !0,
         })),
-        n(`[TeammateMailbox] Wrote message to ${e}'s inbox from ${t.from}`),
+        logForDebugging(`[TeammateMailbox] Wrote message to ${e}'s inbox from ${t.from}`),
         T.msg_id
       );
     } catch (w) {
-      (n(`Failed to write to inbox for ${e}: ${w}`, { level: "error" }), logError(w));
+      (logForDebugging(`Failed to write to inbox for ${e}: ${w}`, { level: "error" }), logError(w));
       return;
     }
   }
   try {
     await Ft(r);
   } catch (T) {
-    n(`[TeammateMailbox] writeToMailbox: failed to ensure inbox dir: ${T}`, {
+    logForDebugging(`[TeammateMailbox] writeToMailbox: failed to ensure inbox dir: ${T}`, {
       level: "error",
     });
     return;
   }
   let u = getInboxPath(e, r),
     _ = `${u}.lock`;
-  n(
+  logForDebugging(
     `[TeammateMailbox] writeToMailbox: recipient=${e}, from=${t.from}, path=${u}`,
   );
   try {
     (await getFileStorage().writeExclusive(u, "[]"),
-      n("[TeammateMailbox] writeToMailbox: created new inbox file"));
+      logForDebugging("[TeammateMailbox] writeToMailbox: created new inbox file"));
   } catch (T) {
     if (A(T) !== "EEXIST") {
       if (
-        (n(
+        (logForDebugging(
           `[TeammateMailbox] writeToMailbox: failed to create inbox file: ${T}`,
           { level: "error" },
         ),
@@ -1262,13 +1262,13 @@ async function writeToMailbox(e, t, r, o) {
       w = { ...t, ...createMessageEnvelope(), type: "message", read: !1 };
     return (
       T.push(w),
-      await getFileStorage().atomicWrite(u, b(T, null, 2)),
-      n(`[TeammateMailbox] Wrote message to ${e}'s inbox from ${t.from}`),
+      await getFileStorage().atomicWrite(u, jsonStringify(T, null, 2)),
+      logForDebugging(`[TeammateMailbox] Wrote message to ${e}'s inbox from ${t.from}`),
       w.msg_id
     );
   } catch (T) {
     if (
-      (n(`Failed to write to inbox for ${e}: ${T}`, { level: "error" }), !Po(T))
+      (logForDebugging(`Failed to write to inbox for ${e}: ${T}`, { level: "error" }), !Po(T))
     )
       logError(T);
     return;
@@ -1291,7 +1291,7 @@ function jt(e, t) {
 }
 async function markSingleMessageAsRead(e, t, r, o) {
   let i = getInboxPath(e, t);
-  n(
+  logForDebugging(
     `[TeammateMailbox] markSingleMessageAsRead called: agentName=${e}, teamName=${t}, target=${r.from}@${r.timestamp}, path=${i}`,
   );
   let d = isHoverRestEnabled() && o !== void 0 ? W(e, t) : void 0;
@@ -1302,13 +1302,13 @@ async function markSingleMessageAsRead(e, t, r, o) {
         let w = jt(T.messages, r);
         return { messages: w.messages, result: w.found };
       });
-      n(
+      logForDebugging(
         p === "absent"
           ? `[TeammateMailbox] markSingleMessageAsRead: file does not exist at ${i}`
           : `[TeammateMailbox] markSingleMessageAsRead: dropped target (${p ? "found" : "not found"}) at ${i}`,
       );
     } catch (p) {
-      (n(`[TeammateMailbox] markSingleMessageAsRead FAILED for ${e}: ${p}`),
+      (logForDebugging(`[TeammateMailbox] markSingleMessageAsRead FAILED for ${e}: ${p}`),
         logError(p));
     }
     return;
@@ -1327,18 +1327,18 @@ async function markSingleMessageAsRead(e, t, r, o) {
       );
     if (T !== -1) p.splice(T, 1);
     let w = p.filter((x) => !x.read);
-    (await getFileStorage().atomicWrite(i, b(w, null, 2)),
-      n(
+    (await getFileStorage().atomicWrite(i, jsonStringify(w, null, 2)),
+      logForDebugging(
         `[TeammateMailbox] markSingleMessageAsRead: dropped target (${T === -1 ? "not found" : "found"}); ${w.length} remain at ${i}`,
       ));
   } catch (p) {
     if (A(p) === "ENOENT") {
-      n(
+      logForDebugging(
         `[TeammateMailbox] markSingleMessageAsRead: file does not exist at ${i}`,
       );
       return;
     }
-    (n(`[TeammateMailbox] markSingleMessageAsRead FAILED for ${e}: ${p}`),
+    (logForDebugging(`[TeammateMailbox] markSingleMessageAsRead FAILED for ${e}: ${p}`),
       logError(p));
   } finally {
     await hf(_, "[TeammateMailbox] markSingleMessageAsRead");
@@ -1350,7 +1350,7 @@ function messageIdentityKey(e) {
 }
 async function markMessagesAsRead(e, t, r, o) {
   let i = getInboxPath(e, t);
-  n(
+  logForDebugging(
     `[TeammateMailbox] markMessagesAsRead called: agentName=${e}, teamName=${t}, path=${i}`,
   );
   let d = isHoverRestEnabled() && o !== void 0 ? W(e, t) : void 0;
@@ -1369,7 +1369,7 @@ async function markMessagesAsRead(e, t, r, o) {
         };
       });
       return (
-        n(
+        logForDebugging(
           T
             ? `[TeammateMailbox] markMessagesAsRead: pruned ${T.pruned} delivered message(s), ${T.remain} remain at ${i}`
             : "[TeammateMailbox] markMessagesAsRead: no messages to mark",
@@ -1378,7 +1378,7 @@ async function markMessagesAsRead(e, t, r, o) {
       );
     } catch (T) {
       return (
-        n(`[TeammateMailbox] markMessagesAsRead FAILED for ${e}: ${T}`),
+        logForDebugging(`[TeammateMailbox] markMessagesAsRead FAILED for ${e}: ${T}`),
         logError(T),
         !1
       );
@@ -1387,27 +1387,27 @@ async function markMessagesAsRead(e, t, r, o) {
   let u = `${i}.lock`,
     _;
   try {
-    (n("[TeammateMailbox] markMessagesAsRead: acquiring lock..."),
+    (logForDebugging("[TeammateMailbox] markMessagesAsRead: acquiring lock..."),
       (_ = await Cs(i, { lockfilePath: u, ...U })),
-      n("[TeammateMailbox] markMessagesAsRead: lock acquired"));
+      logForDebugging("[TeammateMailbox] markMessagesAsRead: lock acquired"));
     let p = await readMailbox(e, t, void 0, { throwOnUnknownReadError: !0 });
     if (
-      (n(
+      (logForDebugging(
         `[TeammateMailbox] markMessagesAsRead: read ${p.length} messages after lock`,
       ),
       p.length === 0)
     )
       return (
-        n("[TeammateMailbox] markMessagesAsRead: no messages to mark"),
+        logForDebugging("[TeammateMailbox] markMessagesAsRead: no messages to mark"),
         !0
       );
     let T = countMatching(p, (E) => !E.read);
-    n(`[TeammateMailbox] markMessagesAsRead: ${T} unread of ${p.length} total`);
+    logForDebugging(`[TeammateMailbox] markMessagesAsRead: ${T} unread of ${p.length} total`);
     let w = r === void 0 ? null : new Set(r.map(messageIdentityKey)),
       x = p.filter((E) => !E.read && w !== null && !w.has(messageIdentityKey(E)));
     return (
-      await getFileStorage().atomicWrite(i, b(x, null, 2)),
-      n(
+      await getFileStorage().atomicWrite(i, jsonStringify(x, null, 2)),
+      logForDebugging(
         `[TeammateMailbox] markMessagesAsRead: pruned ${p.length - x.length} delivered message(s), ${x.length} remain at ${i}`,
       ),
       !0
@@ -1415,11 +1415,11 @@ async function markMessagesAsRead(e, t, r, o) {
   } catch (p) {
     if (A(p) === "ENOENT")
       return (
-        n(`[TeammateMailbox] markMessagesAsRead: file does not exist at ${i}`),
+        logForDebugging(`[TeammateMailbox] markMessagesAsRead: file does not exist at ${i}`),
         !0
       );
     return (
-      n(`[TeammateMailbox] markMessagesAsRead FAILED for ${e}: ${p}`),
+      logForDebugging(`[TeammateMailbox] markMessagesAsRead FAILED for ${e}: ${p}`),
       logError(p),
       !1
     );
@@ -1437,9 +1437,9 @@ async function clearMailbox(e, t, r) {
           p.found ? { messages: [], result: !0 } : { skip: !0, result: !1 },
         )
       )
-        n(`[TeammateMailbox] Cleared inbox for ${e}`);
+        logForDebugging(`[TeammateMailbox] Cleared inbox for ${e}`);
     } catch (_) {
-      (n(`Failed to clear inbox for ${e}: ${_}`), logError(_));
+      (logForDebugging(`Failed to clear inbox for ${e}: ${_}`), logError(_));
     }
     return;
   }
@@ -1448,10 +1448,10 @@ async function clearMailbox(e, t, r) {
   try {
     ((u = await Cs(o, { lockfilePath: d, ...U })),
       await getFileStorage().atomicWrite(o, "[]"),
-      n(`[TeammateMailbox] Cleared inbox for ${e}`));
+      logForDebugging(`[TeammateMailbox] Cleared inbox for ${e}`));
   } catch (_) {
     if (A(_) === "ENOENT") return;
-    (n(`Failed to clear inbox for ${e}: ${_}`), logError(_));
+    (logForDebugging(`Failed to clear inbox for ${e}: ${_}`), logError(_));
   } finally {
     await hf(u, "[TeammateMailbox] clearMailbox");
   }
@@ -1459,10 +1459,10 @@ async function clearMailbox(e, t, r) {
 function formatTeammateMessage(e) {
   let t = isAgentColorName(e.color) ? ` color="${e.color}"` : "",
     r = capFrameFieldForDisplay(e.summary),
-    o = r ? ` summary="${go(r)}"` : "",
+    o = r ? ` summary="${escapeHtmlAttribute(r)}"` : "",
     i = capIdFrameField(e.from, IDLE_ID_FIELD_RECEIVE_BOUND) || UNKNOWN_SENDER,
-    d = HU(TEAMMATE_MESSAGE_TAG, e.text);
-  return `<${TEAMMATE_MESSAGE_TAG} teammate_id="${go(i)}"${t}${o}>
+    d = neutralizeOpeningTags(TEAMMATE_MESSAGE_TAG, e.text);
+  return `<${TEAMMATE_MESSAGE_TAG} teammate_id="${escapeHtmlAttribute(i)}"${t}${o}>
 ${d}
 </${TEAMMATE_MESSAGE_TAG}>`;
 }
@@ -1598,7 +1598,7 @@ function ct(e, t, r) {
       typeof t.completedTaskId === "string" && t.completedTaskId
         ? capIdFrameField(t.completedTaskId, IDLE_ID_FIELD_RECEIVE_BOUND)
         : t.completedTaskId,
-    x = z(e),
+    x = jsonParse(e),
     E = x !== null && typeof x === "object" && !Array.isArray(x) ? x : { ...t },
     P = new Set(Object.keys(IdleNotificationMessageSchema().shape)),
     C = [];
@@ -1621,8 +1621,8 @@ function ct(e, t, r) {
       completedTaskId: w,
     },
     S = { ...t, ...j },
-    N = b({ ...de, ...j });
-  if (N.length > IDLE_FRAME_TOTAL_RECEIVE_BOUND) N = b(S);
+    N = jsonStringify({ ...de, ...j });
+  if (N.length > IDLE_FRAME_TOTAL_RECEIVE_BOUND) N = jsonStringify(S);
   let Me = !1;
   while (N.length > IDLE_FRAME_TOTAL_RECEIVE_BOUND) {
     let I,
@@ -1630,7 +1630,7 @@ function ct(e, t, r) {
     for (let Ae of ["result", "summary", "failureReason"]) {
       let ne = S[Ae];
       if (typeof ne === "string" && ne) {
-        let Pe = b(ne).length;
+        let Pe = jsonStringify(ne).length;
         if (Pe > D) ((I = { key: Ae, value: ne }), (D = Pe));
       }
     }
@@ -1638,7 +1638,7 @@ function ct(e, t, r) {
     let te = [...I.value].length;
     ((Me ||= I.key === "result"),
       (S = { ...S, [I.key]: stripFrameControlChars(truncateToCodeUnits(I.value, Math.floor(te / 2))) }),
-      (N = b(S)));
+      (N = jsonStringify(S)));
   }
   if (Me && S.result) {
     let I = {
@@ -1646,7 +1646,7 @@ function ct(e, t, r) {
         result: `${S.result}
 [result truncated]`,
       },
-      D = b(I);
+      D = jsonStringify(I);
     if (D.length <= IDLE_FRAME_TOTAL_RECEIVE_BOUND) ((S = I), (N = D));
   }
   return N === e ? { text: e, idle: t } : { text: N, idle: S };
@@ -1747,7 +1747,7 @@ function sanitizeReceivedStructuredFrame(e, t) {
   if (!mt.test(e)) return null;
   let r;
   try {
-    r = z(e);
+    r = jsonParse(e);
   } catch {
     return null;
   }
@@ -1771,17 +1771,17 @@ function sanitizeReceivedStructuredFrame(e, t) {
     let E = capStrippedFrameField(w, V);
     if (E === "type" || u.has(E)) continue;
     let P = ee(x, Se),
-      C = b(P).length + E.length;
+      C = jsonStringify(P).length + E.length;
     if (p + C > Zt) continue;
     ((p += C), _.push([E, P]));
   }
-  let T = b(Object.fromEntries(_));
+  let T = jsonStringify(Object.fromEntries(_));
   return T === e ? null : T;
 }
 function Jt(e, t, r) {
   if (e.kind === "generic") {
     let o = typeof t === "string" ? capStrippedFrameField(t, V) : ee(t, Se);
-    if (o !== null && typeof o === "object" && b(o).length > Qt) return null;
+    if (o !== null && typeof o === "object" && jsonStringify(o).length > Qt) return null;
     return o;
   }
   if (typeof t !== "string")
@@ -1863,11 +1863,11 @@ function applyAggregateIdleResultBudget(e) {
         completedStatus: _.completedStatus,
         failureReason: _.failureReason,
       },
-      x = b({
+      x = jsonStringify({
         ...w,
         result: `[result truncated \u2014 this drain's results exceeded ${IDLE_RESULT_TOTAL_BUDGET} characters${T}]`,
       });
-    if (x.length > i) x = b({ ...w, result: "[result truncated]" });
+    if (x.length > i) x = jsonStringify({ ...w, result: "[result truncated]" });
     if (x.length >= p.text.length) {
       i = Math.max(0, i - p.text.length);
       continue;
@@ -1951,7 +1951,7 @@ function ft(e) {
 }
 function isIdleNotification(e) {
   try {
-    let t = IdleNotificationMessageSchema().safeParse(z(e));
+    let t = IdleNotificationMessageSchema().safeParse(jsonParse(e));
     return t.success ? t.data : null;
   } catch {}
   return null;
@@ -2016,7 +2016,7 @@ function createPermissionResponseMessage(e) {
 }
 function isPermissionRequest(e) {
   try {
-    let t = z(e);
+    let t = jsonParse(e);
     if (t && t.type === "permission_request") return t;
   } catch {}
   return null;
@@ -2024,7 +2024,7 @@ function isPermissionRequest(e) {
 function isPermissionResponse(e) {
   let t;
   try {
-    t = z(e);
+    t = jsonParse(e);
   } catch {
     return null;
   }
@@ -2038,7 +2038,7 @@ function isPermissionResponse(e) {
   let r = PermissionResponseMessageSchema().safeParse(t);
   if (r.success) return r.data;
   return (
-    n(
+    logForDebugging(
       `[TeammateMailbox] Dropping malformed permission_response frame: ${r.error.issues.map((o) => `${o.path.join(".")}: ${o.message}`).join("; ")}`,
       { level: "warn" },
     ),
@@ -2067,14 +2067,14 @@ function createSandboxPermissionResponseMessage(e) {
 }
 function isSandboxPermissionRequest(e) {
   try {
-    let t = z(e);
+    let t = jsonParse(e);
     if (t && t.type === "sandbox_permission_request") return t;
   } catch {}
   return null;
 }
 function isSandboxPermissionResponse(e) {
   try {
-    let t = z(e);
+    let t = jsonParse(e);
     if (t && t.type === "sandbox_permission_response") return t;
   } catch {}
   return null;
@@ -2157,21 +2157,21 @@ function createShutdownRejectedMessage(e) {
 }
 function isShutdownRequest(e) {
   try {
-    let t = ShutdownRequestMessageSchema().safeParse(z(e));
+    let t = ShutdownRequestMessageSchema().safeParse(jsonParse(e));
     if (t.success) return t.data;
   } catch {}
   return null;
 }
 function isPlanApprovalRequest(e) {
   try {
-    let t = PlanApprovalRequestMessageSchema().safeParse(z(e));
+    let t = PlanApprovalRequestMessageSchema().safeParse(jsonParse(e));
     if (t.success) return t.data;
   } catch {}
   return null;
 }
 function isShutdownApproved(e) {
   try {
-    let t = ShutdownApprovedMessageSchema().safeParse(z(e));
+    let t = ShutdownApprovedMessageSchema().safeParse(jsonParse(e));
     if (t.success) return t.data;
   } catch {}
   return null;
@@ -2194,7 +2194,7 @@ function planVerdictMismatchRejection(e) {
 }
 function isPlanApprovalResponse(e) {
   try {
-    let t = PlanApprovalResponseMessageSchema().safeParse(z(e));
+    let t = PlanApprovalResponseMessageSchema().safeParse(jsonParse(e));
     if (t.success) return t.data;
   } catch {}
   return null;
@@ -2224,14 +2224,14 @@ var TaskCompletedMessageSchema = createLazyValue(() =>
   TeammateTerminatedMessageSchema = createLazyValue(() => c({ type: k("teammate_terminated"), message: s() }));
 function parseFrameForDisplay(e, t) {
   try {
-    let r = e.strict().safeParse(z(t));
+    let r = e.strict().safeParse(jsonParse(t));
     if (r.success) return r.data;
   } catch {}
   return null;
 }
 function isTeamPermissionUpdate(e) {
   try {
-    let t = z(e);
+    let t = jsonParse(e);
     return !!t && t.type === "team_permission_update";
   } catch {
     return !1;
@@ -2239,7 +2239,7 @@ function isTeamPermissionUpdate(e) {
 }
 function isModeSetRequest(e) {
   try {
-    let t = z(e);
+    let t = jsonParse(e);
     return !!t && t.type === "mode_set_request";
   } catch {
     return !1;
@@ -2249,7 +2249,7 @@ var PROTOCOL_FRAME_PROMPT_ERROR =
   "Teammate prompt must not be a mailbox protocol frame (permission/mode/plan/shutdown JSON) \u2014 pass plain-text instructions";
 function isStructuredProtocolMessage(e) {
   try {
-    let t = z(e);
+    let t = jsonParse(e);
     if (!t || typeof t !== "object" || !("type" in t)) return !1;
     let r = t.type;
     return (
@@ -2281,7 +2281,7 @@ var un = /^shutdown-[0-9]{1,20}@[\w.-]{1,64}$/,
   ln = "<requestId of the shutdown request>";
 function shutdownRequestReplyInstructions(e) {
   let t = un.test(e),
-    r = b({
+    r = jsonStringify({
       to: TEAM_LEAD_AGENT_NAME,
       message: {
         type: "shutdown_response",
@@ -2329,7 +2329,7 @@ async function markMessagesAsReadByPredicate(e, t, r, o) {
     let p = await readMailbox(e, r, void 0, { throwOnUnknownReadError: !0 });
     if (p.length === 0) return !0;
     let T = p.filter((w) => !w.read && !t(w));
-    return (await getFileStorage().atomicWrite(i, b(T, null, 2)), !0);
+    return (await getFileStorage().atomicWrite(i, jsonStringify(T, null, 2)), !0);
   } catch (p) {
     if (A(p) === "ENOENT") return !0;
     return (logError(p), !1);

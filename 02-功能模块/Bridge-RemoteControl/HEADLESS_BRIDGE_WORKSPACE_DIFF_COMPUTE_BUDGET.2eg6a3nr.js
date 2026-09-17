@@ -15,7 +15,7 @@ import { withDeadline } from "../../01-核心基础设施/共享小工具-未细
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, z, nje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonParse, streamFileLinesBackward, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { stripXmlTags, isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -46,7 +46,7 @@ import { isTeammate } from "../Teammates团队/teammate-context.js";
 import { generateAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { getBridgeTokenOverride, getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { p6, F$e, lrr, Dve } from "./chunk-5ne99rq3.js";
+import { normalizeDeclaredDialogKinds, isHumanUserMessage, setBridgeStateFramesGate, setAttestationFilterPolicy } from "./chunk-5ne99rq3.js";
 import { retireBridgeHandle, setSelfBridgeTitle } from "../权限系统/chunk-1y2g140m.js";
 import {
   getBridgeSession,
@@ -105,7 +105,7 @@ import { LOGIN_SLASH_COMMAND, REMOTE_CONTROL_ACCOUNT_UNVERIFIED_MESSAGE } from "
 import { globalFileIndexCache, generateFileSuggestions } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { createClientPresenceReporter } from "./client-presence.js";
 import { hydratePushNotificationPreferences } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
-import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
+import { waitForPolicyLimitsToLoad } from "../策略限制(PolicyLimits)/policy-limits-client.js";
 import { readFileForRemote } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { buildWorkspaceDiffResponse } from "../Git-Worktree/chunk-qdn32vbw.js";
 import { collectConversationText, generateSessionTitle } from "../会话-历史-恢复/session-title.js";
@@ -130,7 +130,7 @@ async function mn(d, c, s) {
     () => "unknown_error",
   );
   return (
-    n(`[bridge:signed-out] site=${d} verdict=${r}`),
+    logForDebugging(`[bridge:signed-out] site=${d} verdict=${r}`),
     logEvent("tengu_bridge_token_absence_classified", { site: fromEnum(d), verdict: fromEnum(r) }),
     r
   );
@@ -171,7 +171,7 @@ async function mt(d) {
     if (h === void 0 || !isProcessRunning(r.pid)) continue;
     let p = await getProcessStartTimeAsync(r.pid, { skipCache: !0 });
     if (p === void 0) {
-      n(
+      logForDebugging(
         `[bridge:repl] pid ${r.pid} advertises bridge session ${d} but its start token is unreadable \u2014 not treated as a holder`,
       );
       continue;
@@ -199,7 +199,7 @@ var _t = 20;
 async function Tt(d, c, s, r, h) {
   if (isSessionHistorySuppressed())
     return (
-      n(
+      logForDebugging(
         "[persistence-sync] Refusing backfill: conversation carries a history-suppression taint",
       ),
       { uploadedMain: 0, uploadedSubagents: 0 }
@@ -217,20 +217,20 @@ async function Tt(d, c, s, r, h) {
     let P = E.payload.uuid;
     if (typeof P === "string") w.add(P);
   }
-  n(`[persistence-sync] Server has ${w.size} events since compaction`);
+  logForDebugging(`[persistence-sync] Server has ${w.size} events since compaction`);
   let S = (E) => {
-    n(`[persistence-sync] Write failed: ${E}`);
+    logForDebugging(`[persistence-sync] Write failed: ${E}`);
   };
   if (p !== K())
     return (
-      n(
+      logForDebugging(
         "[persistence-sync] Refusing backfill: session id changed since the scan anchor was pinned (mid-scan /resume) \u2014 pinned content is not the current conversation",
       ),
       { uploadedMain: 0, uploadedSubagents: 0 }
     );
   if (isRemoteEgressSuppressedFor(pinSessionId(p)))
     return (
-      n(
+      logForDebugging(
         "[persistence-sync] Refusing backfill: foreign binding or suppression carrier present at the post-await re-consult",
       ),
       { uploadedMain: 0, uploadedSubagents: 0 }
@@ -240,7 +240,7 @@ async function Tt(d, c, s, r, h) {
     let E = isPrecautionarySuppressionHeldFor(pinSessionId(p));
     if ((holdPrecautionarySuppressionFor(pinSessionId(p)), markPrecautionClearResilientFor(pinSessionId(p)), !E)) markScanUncertaintyHoldFor(pinSessionId(p));
     return (
-      n(
+      logForDebugging(
         "[persistence-sync] Taint sweep budget exhausted: refusing this backfill (precautionary hold, no durable stamp)",
       ),
       { uploadedMain: 0, uploadedSubagents: 0 }
@@ -249,7 +249,7 @@ async function Tt(d, c, s, r, h) {
   if (T === "tainted")
     return (
       holdSessionHistorySuppressionFor(pinSessionId(p)),
-      n(
+      logForDebugging(
         "[persistence-sync] Main transcript tainted: aborting sync (subagents included), healing the in-memory flag",
       ),
       { uploadedMain: 0, uploadedSubagents: 0 }
@@ -263,7 +263,7 @@ async function Tt(d, c, s, r, h) {
     }).catch(S);
   if (p !== K())
     return (
-      n(
+      logForDebugging(
         "[persistence-sync] Skipping subagent backfill: session id changed during the main read (mid-sync /resume)",
       ),
       { uploadedMain: T.length, uploadedSubagents: 0 }
@@ -291,7 +291,7 @@ async function Tt(d, c, s, r, h) {
     C += x.length;
   }
   return (
-    n(`[persistence-sync] Uploaded ${T.length} main + ${C} subagent entries`),
+    logForDebugging(`[persistence-sync] Uploaded ${T.length} main + ${C} subagent entries`),
     { uploadedMain: T.length, uploadedSubagents: C }
   );
 }
@@ -304,7 +304,7 @@ async function kn(d, c) {
     k = r.length - h.length,
     F = h.length - p.length;
   if (k > 0 || F > 0)
-    n(
+    logForDebugging(
       `[persistence-sync] Subagent backfill capped: ${k} over ${SKIP_PRECOMPACT_THRESHOLD}B, ${F} beyond ${_t}-agent limit (live stream unaffected)`,
     );
   return p;
@@ -315,11 +315,11 @@ async function bt(d, c, s = !0, r, h) {
     F = !1;
   try {
     let f = 0,
-      b = r && p ? streamTranscriptLinesBackward(r, p) : nje(d);
+      b = r && p ? streamTranscriptLinesBackward(r, p) : streamFileLinesBackward(d);
     for await (let w of b) {
       if (matchesHistorySuppressionLine(w))
         return (
-          n(
+          logForDebugging(
             "[persistence-sync] Refusing backfill: history-suppression entry in transcript",
           ),
           "tainted"
@@ -327,7 +327,7 @@ async function bt(d, c, s = !0, r, h) {
       if (F) {
         if (++f >= SUPPRESSION_SCAN_MAX_LINES)
           return (
-            n(
+            logForDebugging(
               "[persistence-sync] Refusing backfill: pre-boundary taint sweep exhausted its line budget without a verdict",
             ),
             "budget-exhausted"
@@ -336,7 +336,7 @@ async function bt(d, c, s = !0, r, h) {
       }
       let S;
       try {
-        S = z(w);
+        S = jsonParse(w);
       } catch {
         continue;
       }
@@ -422,12 +422,12 @@ async function bn(d, c) {
               { budget: F },
             );
             if (P.status !== "done")
-              (n(
-                `[persistence-sync] subagent listing for ${E} ${P.status === "error" ? `failed: ${We(P.error)}` : "was capped"} \u2014 its subagents are skipped`,
+              (logForDebugging(
+                `[persistence-sync] subagent listing for ${E} ${P.status === "error" ? `failed: ${describeStorageError(P.error)}` : "was capped"} \u2014 its subagents are skipped`,
               ),
                 C());
           } catch (P) {
-            (n(
+            (logForDebugging(
               `[persistence-sync] subagent listing for ${E} threw: ${l(P)} \u2014 its subagents are skipped`,
             ),
               C());
@@ -442,7 +442,7 @@ async function bn(d, c) {
         let T = k.get(h(S)),
           C = T?.get(S.agentId);
         if (C === void 0 && T !== void 0)
-          n(
+          logForDebugging(
             `[persistence-sync] subagent ${f} not in its folder's listing \u2014 skipped`,
           );
         return C === void 0 ? null : { agentId: f, path: b, ...C };
@@ -489,24 +489,24 @@ function Rt(d) {
     F = !1;
   async function f() {
     if (!r)
-      return (n("[bridge:work-secret] the host offers no refresh path"), null);
+      return (logForDebugging("[bridge:work-secret] the host offers no refresh path"), null);
     let w;
     try {
       w = await r(c);
     } catch (C) {
       return (
-        n(`[bridge:work-secret] host refresh request failed: ${l(C)}`, {
+        logForDebugging(`[bridge:work-secret] host refresh request failed: ${l(C)}`, {
           level: "warn",
         }),
         null
       );
     }
     if (!w)
-      return (n("[bridge:work-secret] host has no fresh secret yet"), null);
+      return (logForDebugging("[bridge:work-secret] host has no fresh secret yet"), null);
     let S = Ct(w, c);
     if (typeof S === "string")
       return (
-        n(`[bridge:work-secret] fresh secret rejected: ${S}`, {
+        logForDebugging(`[bridge:work-secret] fresh secret rejected: ${S}`, {
           level: "warn",
         }),
         null
@@ -518,7 +518,7 @@ function Rt(d) {
         (k.exp !== null && T !== null && T <= k.exp))
     )
       return (
-        n(
+        logForDebugging(
           "[bridge:work-secret] host returned a secret no fresher than the registered one",
         ),
         null
@@ -533,7 +533,7 @@ function Rt(d) {
     } catch (x) {
       let { kind: D, status: j } = Ps(x);
       if (
-        (n(
+        (logForDebugging(
           `[bridge:work-secret] /worker/register failed kind=${D} status=${j ?? "none"}: ${l(x)}`,
           { level: "warn" },
         ),
@@ -548,7 +548,7 @@ function Rt(d) {
     ((k = { secret: w, exp: E }), (F = !1));
     let P = E === null ? wn : Math.max(0, E - Math.floor(Date.now() / 1000));
     return (
-      n(`[bridge:work-secret] registered worker epoch=${C} expires_in=${P}s`),
+      logForDebugging(`[bridge:work-secret] registered worker epoch=${C} expires_in=${P}s`),
       { worker_jwt: T, api_base_url: s, expires_in: P, worker_epoch: C }
     );
   }
@@ -558,7 +558,7 @@ function Rt(d) {
       let T = await f();
       if (S?.stillWanted && !S.stillWanted())
         return (
-          n(
+          logForDebugging(
             "[bridge:work-secret] bridge torn down or superseded while the host was asked; not registering",
           ),
           null
@@ -575,7 +575,7 @@ function Rt(d) {
         C > S.reuseHeldAboveS
       )
         return (
-          n(
+          logForDebugging(
             `[bridge:work-secret] nothing fresher from the host; re-registering the held secret (${C}s left)`,
           ),
           b(k.secret, !0)
@@ -653,7 +653,7 @@ async function initReplBridge(d) {
     workSecret: Ve,
     onWorkSecretRefresh: Vt,
   } = d ?? {};
-  (setCseShimGate(isCseShimEnabled), lrr(isBridgeStateFramesEnabled), Dve(getAttestationFilterPolicy));
+  (setCseShimGate(isCseShimEnabled), setBridgeStateFramesGate(isBridgeStateFramesEnabled), setAttestationFilterPolicy(getAttestationFilterPolicy));
   let v = pinSessionId(K()),
     Oe = getMaterializedSessionFile() ?? void 0,
     ke = Oe !== void 0 && v !== void 0 && !isOwnTranscriptFile(v, Oe),
@@ -673,7 +673,7 @@ async function initReplBridge(d) {
     if (ke)
       (holdPrecautionarySuppressionFor(v),
         claimPrecautionHoldForObservedCause(v),
-        n(
+        logForDebugging(
           `[bridge:repl] ${t} veto under a TORN entry pair (mid-/resume window): precautionary suppression only, no permanent taint write`,
           { level: "warn" },
         ));
@@ -686,7 +686,7 @@ async function initReplBridge(d) {
         (async () => {
           try {
             if (I || be())
-              n(
+              logForDebugging(
                 "[bridge:repl] Persistence backfill suppressed (cross-account veto or foreign binding) \u2014 installing live writer only",
               );
             else {
@@ -694,12 +694,12 @@ async function initReplBridge(d) {
               await Tt(e, t, _, O, o);
             }
           } catch (_) {
-            n(`[bridge:repl] Persistence sync failed: ${l(_)}`, {
+            logForDebugging(`[bridge:repl] Persistence sync failed: ${l(_)}`, {
               level: "error",
             });
           }
           if (m !== Pe) {
-            n(
+            logForDebugging(
               "[bridge:repl] Transport torn down during sync \u2014 skipping writer install",
             );
             return;
@@ -708,7 +708,7 @@ async function initReplBridge(d) {
             (_, H, ie) => (
               e(_, H, ie).catch((Le) => {
                 (logEvent("tengu_session_persistence_failed", {}),
-                  n(`[bridge:repl] Internal event write failed: ${l(Le)}`, {
+                  logForDebugging(`[bridge:repl] Internal event write failed: ${l(Le)}`, {
                     level: "error",
                   }));
               }),
@@ -717,7 +717,7 @@ async function initReplBridge(d) {
             o,
           ),
             setInternalEventReader(t.readMain, t.readSubagents),
-            n(
+            logForDebugging(
               "[bridge:repl] Session persistence enabled \u2014 transcript writer + hydrate readers registered",
             ));
         })();
@@ -768,7 +768,7 @@ async function initReplBridge(d) {
           B ? "Host-directed" : "Restored-pointer",
           t.accountUuid,
         ),
-          n(
+          logForDebugging(
             `[bridge:repl] ${B ? "Host-directed" : "Restored-pointer"} reattach vetoed: the credential store account changed since this conversation's pointer was persisted \u2014 minting fresh, history channels suppressed`,
             { level: "warn" },
           ),
@@ -794,7 +794,7 @@ async function initReplBridge(d) {
               ? "restored_identity_unreadable"
               : "restored_owner_unknown"),
             (Qe = !0),
-            n(
+            logForDebugging(
               `[bridge:repl] Reattaching to persisted bridge session ${A.id} at seq ${A.seq} (${oe ? "reattach-or-fail" : "fresh-mint fallback"}, ${se})`,
             ));
         } else if (m) {
@@ -805,14 +805,14 @@ async function initReplBridge(d) {
             };
         } else if (we(B, A.id))
           ((oe = !0),
-            n(
+            logForDebugging(
               `[bridge:repl] Reattaching to the recorded bridge session ${A.id} as named by the carrier; owner unconfirmed \u2014 reattach-or-fail`,
             ));
         else
           ((I = !0),
             holdPrecautionarySuppressionFor(v),
             claimPrecautionHoldForObservedCause(v),
-            n(
+            logForDebugging(
               "[bridge:repl] Host-directed reattach: this conversation\u2019s recorded owner could not be confirmed as the current login \u2014 attaching with history channels suppressed",
               { level: "warn" },
             ));
@@ -830,14 +830,14 @@ async function initReplBridge(d) {
           (ce = void 0),
           (se = void 0),
           await Xe("env_owner_mismatch", "Env-handoff", e.accountUuid),
-          n(
+          logForDebugging(
             "[bridge:repl] Env-handoff reattach vetoed: the credential store account changed since the handoff was recorded \u2014 minting fresh, history channels suppressed",
             { level: "warn" },
           ));
     } else
       ((oe = !0),
         (se = "env_or_fail"),
-        n(
+        logForDebugging(
           "[bridge:repl] Env-handoff reattach: owner identity unavailable \u2014 reattach-or-fail",
         ));
   }
@@ -858,7 +858,7 @@ async function initReplBridge(d) {
         ? { uncertaintyOnly: !0 }
         : void 0;
   if (I) ((ue = et()), Be?.(ue));
-  let tt = _e ? [] : p6(A?.declaredDialogKinds);
+  let tt = _e ? [] : normalizeDeclaredDialogKinds(A?.declaredDialogKinds);
   if (tt.length > 0) C?.(tt, "restored");
   let Ie;
   if (B) Ie = ne ? Yt : Ze ? A?.groupingId : void 0;
@@ -891,7 +891,7 @@ async function initReplBridge(d) {
     ))
   )
     return null;
-  await b_();
+  await waitForPolicyLimitsToLoad();
   let fe = policyDenyKind("allow_remote_control");
   if (fe === "cache_miss" || fe === "route_missing")
     return (
@@ -941,7 +941,7 @@ async function initReplBridge(d) {
           Ee.onDeclined(e),
           null
         );
-      (n(
+      (logForDebugging(
         `[bridge:repl] Explicit enable is taking over bridge session ${B} from local pid ${e.pid}`,
       ),
         (rt = !0));
@@ -972,7 +972,7 @@ async function initReplBridge(d) {
       getStoredOAuthTokenExpiresAt() === e.bridgeOauthDeadExpiresAt
     )
       return (
-        n(
+        logForDebugging(
           `[bridge:repl] Skipping: cross-process backoff (dead token seen ${e.bridgeOauthDeadFailCount} times)`,
         ),
         null
@@ -1022,7 +1022,7 @@ async function initReplBridge(d) {
     else if (de && de.length > 0)
       for (let o = de.length - 1; o >= 0; o--) {
         let m = de[o];
-        if (!F$e(m) || isNoContentMessage(m)) continue;
+        if (!isHumanUserMessage(m) || isNoContentMessage(m)) continue;
         let _ = getMessageContentText(m.message.content);
         if (!_) continue;
         let H = Cn(_);
@@ -1066,7 +1066,7 @@ async function initReplBridge(d) {
         (V = e),
         te.add(e),
         setSelfBridgeTitle(t, e),
-        n(`[bridge:repl] derived title from message ${o}: ${e}`),
+        logForDebugging(`[bridge:repl] derived title from message ${o}: ${e}`),
         q
           .update(t, e, {
             baseUrl: Q,
@@ -1125,10 +1125,10 @@ async function initReplBridge(d) {
         m = o ? getBridgeBoundConversationSid() : K();
       if (m)
         saveCustomTitle(m, t, o ? getDerivedTranscriptPathForSession(m) : void 0, "remote", O).catch((_) => {
-          n(`saveCustomTitle: transcript append failed: ${l(_)}`);
+          logForDebugging(`saveCustomTitle: transcript append failed: ${l(_)}`);
         });
       else
-        n(
+        logForDebugging(
           "[bridge:repl] Dropping inbound rename mirror: foreign binding with no bound-sid exposure \u2014 the live conversation is not the one the phone renamed",
         );
       if (!isTeammate() && !o)
@@ -1136,7 +1136,7 @@ async function initReplBridge(d) {
           try {
             await applyResolvedSessionName(t, "user", O);
           } catch (_) {
-            n(`onRenameSession: name propagation failed: ${l(_)}`);
+            logForDebugging(`onRenameSession: name propagation failed: ${l(_)}`);
           }
         });
       return { ok: !0 };
@@ -1233,7 +1233,7 @@ async function initReplBridge(d) {
       ))
     )
       return null;
-    n(
+    logForDebugging(
       "[bridge:repl] Host-directed target on a recorded conversation: owner re-verified immediately before connecting",
     );
   }
@@ -1241,7 +1241,7 @@ async function initReplBridge(d) {
   if (Ve !== void 0) {
     if (!B)
       return (
-        n(
+        logForDebugging(
           "[bridge:repl] Skipping: work secret supplied but this init has no session to reattach (no target, or the target was vetoed)",
           { level: "error" },
         ),
@@ -1262,13 +1262,13 @@ async function initReplBridge(d) {
       });
     } catch (e) {
       return (
-        n(`[bridge:repl] Skipping: ${l(e)}`, { level: "error" }),
+        logForDebugging(`[bridge:repl] Skipping: ${l(e)}`, { level: "error" }),
         logBridgeSkip("work_secret_rejected", void 0, !0),
         G?.("failed", `Remote Control could not attach: ${l(e)}`, "terminal"),
         null
       );
     }
-    n(
+    logForDebugging(
       `[bridge:repl] Attaching ${B} with the host's work secret (worker-credential path)`,
     );
   }

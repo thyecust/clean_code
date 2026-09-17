@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "./analytics-event-queue.js";
-import { o, t, uE } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useApp } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "./keybinding-hooks.js";
 import { useAppState } from "./app-state-context.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -19,7 +19,7 @@ F();
 function RelaunchConfirmationWizard(k) {
   let n = _(17),
     { Wizard: u, cancelledEvent: v, onDone: C } = k,
-    g = uE(),
+    g = useApp(),
     x = useAppState(),
     [a, A] = d(null),
     E;
@@ -45,15 +45,15 @@ function RelaunchConfirmationWizard(k) {
   if ((useKeybinding("confirm:yes", E, J), a !== null)) {
     let s;
     if (n[5] !== a)
-      ((s = e(t, { color: "success", children: a })), (n[5] = a), (n[6] = s));
+      ((s = e(Text, { color: "success", children: a })), (n[5] = a), (n[6] = s));
     else s = n[6];
     let c;
     if (n[7] === MEMO_CACHE_SENTINEL)
-      ((c = r(t, {
+      ((c = r(Text, {
         dimColor: !0,
         children: [
           "Press ",
-          e(t, { bold: !0, children: "Enter" }),
+          e(Text, { bold: !0, children: "Enter" }),
           " to restart Claude Code.",
         ],
       })),
@@ -61,7 +61,7 @@ function RelaunchConfirmationWizard(k) {
     else c = n[7];
     let l;
     if (n[8] !== s)
-      ((l = r(o, {
+      ((l = r(Box, {
         flexDirection: "column",
         gap: 1,
         marginTop: 1,

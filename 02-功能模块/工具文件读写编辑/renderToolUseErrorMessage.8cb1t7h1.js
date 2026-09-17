@@ -10,19 +10,19 @@
 
 // [preload stripped] 原本在此预载 232 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ao, yx } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { formatPathForDisplay, CWD_NOTE_PREFIX } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import { DIFF_CONTEXT_LINES, offsetHunkLineNumbers, findActualOldString, matchOldStringQuoteStyle, applyEditToFileContents, readFileContextAroundString, extractTagContent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../语法高亮-Markdown渲染/code-block.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../Diff引擎/structured-diff.js";
 import { isScratchpadDisplayPath, isWorkshopDisplayPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -37,7 +37,7 @@ F();
 function renderToolUseMessage({ file_path: r }, { verbose: s }) {
   if (!r) return null;
   if (r.startsWith(getPlansDirectory())) return "";
-  return e(TruncatedFilePath, { filePath: r, children: s ? r : Ao(r) });
+  return e(TruncatedFilePath, { filePath: r, children: s ? r : formatPathForDisplay(r) });
 }
 function renderToolResultMessage(
   { filePath: r = "", structuredPatch: s, originalFile: i },
@@ -93,14 +93,14 @@ function renderToolUseErrorMessage(r, s) {
     let a = extractTagContent(r, "tool_use_error");
     if (a?.includes("File has not been read yet"))
       return e(ToolResultRow, {
-        children: e(t, { dimColor: !0, children: "File must be read first" }),
+        children: e(Text, { dimColor: !0, children: "File must be read first" }),
       });
-    if (a?.includes(yx))
+    if (a?.includes(CWD_NOTE_PREFIX))
       return e(ToolResultRow, {
-        children: e(t, { color: "error", children: "File not found" }),
+        children: e(Text, { color: "error", children: "File not found" }),
       });
     return e(ToolResultRow, {
-      children: e(t, { color: "error", children: "Error editing file" }),
+      children: e(Text, { color: "error", children: "Error editing file" }),
     });
   }
   return e(ToolErrorMessage, { result: r, verbose: i });
@@ -215,7 +215,7 @@ async function x(r, s, i, a) {
     };
   } catch (o) {
     if (Rt(o))
-      n(`Failed to load rejection diff for ${r}: ${o.message}`, {
+      logForDebugging(`Failed to load rejection diff for ${r}: ${o.message}`, {
         level: "error",
       });
     else logError(o);

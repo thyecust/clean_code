@@ -8,47 +8,47 @@
 
 // Version: 2.1.263
 import {
-  NI,
-  pNe,
-  rYn,
-  fNe,
-  sYn,
-  TSt,
-  Cpe,
-  Ere,
-  o3t,
-} from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+  ansiCodesToString,
+  diffAnsiCodes,
+  styledCharsFromTokens,
+  tokenizeAnsiString,
+  sanitizeAnsiEscapes,
+  getDisplayWidth,
+  sliceAnsiClipped,
+  noopFunction,
+  cliBoxesModule,
+} from "../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import {
-  te,
-  FP,
-  $w,
-  khe,
-  G7t,
-  Bie,
-  nPn,
-  $P,
-  gm,
-  fW,
-  q7t,
-  i_,
-  lxt,
-  Rcr,
-  kcr,
-  nz,
-  oB,
-  xcr,
-  Hcr,
-  jke,
-  xhe,
-  rz,
-  Hhe,
-  sB,
-  dp,
-} from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+  getStringWidth,
+  ESCAPE_CHARACTER,
+  BELL_CHARACTER,
+  PARAM_SEPARATOR,
+  RESET_CHARSET_SEQUENCE,
+  cursorToColumn,
+  cursorToFirstColumn,
+  cursorToPosition,
+  CURSOR_HOME_SEQUENCE,
+  moveCursorBy,
+  eraseToLineEnd,
+  ERASE_SCREEN_SEQUENCE,
+  clearLines,
+  scrollUp,
+  scrollDown,
+  setScrollRegion,
+  RESET_SCROLL_REGION,
+  BRACKETED_PASTE_START,
+  BRACKETED_PASTE_END,
+  FOCUS_IN_SEQUENCE,
+  FOCUS_OUT_SEQUENCE,
+  KITTY_KEYBOARD_POP,
+  DISABLE_MODIFY_OTHER_KEYS,
+  createAnsiTokenizer,
+  wrapAnsi,
+} from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { j, B, Ez, Az, dl } from "../lodash/lodash.2x3q7cfh.js";
 import { root as globalObject, isObject as Fm, Ie, po } from "../lodash/lodash.207999qb.js";
 import { R, dt, ge, A, Po } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { repeatString, toWellFormed, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../react/react.zhnvc798.js";
@@ -59,7 +59,7 @@ import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-har
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { reportRenderError, isScreenReaderModeEnabled, endScreenReaderStartupQuiet, getScreenReaderStartupQuietRemainingMs, getScreenReaderPreParkDelayMs, drainScreenReaderAnnouncements, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { chalk, getColorLevelGeneration } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { CT, xYn, HYn, iK, HNe, jY, IYn } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
+import { terminalCapabilities, convertTruecolorToAnsi256, stripItalicIfRendersAsStandout, applyColorSpec, applyTextStyles, applyForegroundColor, applyPersistentBackground } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { getAttachStampMs, isAttachQuietDrainActive, waitForAttachQuietDrainEnd } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { getSessionFeatureCache } from "../../02-功能模块/Hooks钩子/session-feature-cache.js";
 import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
@@ -8803,7 +8803,7 @@ class ap {
   measure(t) {
     let s = this.#e.get(t);
     if (s !== void 0) return s;
-    let c = te(t);
+    let c = getStringWidth(t);
     if (this.#e.size >= X0) this.#e.clear();
     return (this.#e.set(t, c), c);
   }
@@ -8842,15 +8842,15 @@ function I0(t, s) {
 var A9e = I0;
 var Na = "\u2026";
 function Wc(t, s, c) {
-  let f = TSt(t);
+  let f = getDisplayWidth(t);
   if (f <= s) return null;
   if (s === 1) return { head: "", tail: "" };
-  if (c === "start") return { head: "", tail: Cpe(t, f - s + 1, f) };
+  if (c === "start") return { head: "", tail: sliceAnsiClipped(t, f - s + 1, f) };
   if (c === "middle") {
     let m = Math.floor(s / 2);
-    return { head: Cpe(t, 0, m), tail: Cpe(t, f - (s - m) + 1, f) };
+    return { head: sliceAnsiClipped(t, 0, m), tail: sliceAnsiClipped(t, f - (s - m) + 1, f) };
   }
-  return { head: Cpe(t, 0, s - 1), tail: "" };
+  return { head: sliceAnsiClipped(t, 0, s - 1), tail: "" };
 }
 function J0(t, s, c) {
   if (s < 1) return "";
@@ -8859,8 +8859,8 @@ function J0(t, s, c) {
 }
 function Vm(t, s, c = "wrap") {
   if (c === "wrap" || c === "wrap-stream")
-    return dp(t, s, { trim: !1, hard: !0 });
-  if (c === "wrap-trim") return dp(t, s, { trim: !0, hard: !0 });
+    return wrapAnsi(t, s, { trim: !1, hard: !0 });
+  if (c === "wrap-trim") return wrapAnsi(t, s, { trim: !0, hard: !0 });
   if (c === "end" || c === "middle" || c.startsWith("truncate")) {
     let f = "end";
     if (c === "truncate-middle" || c === "middle") f = "middle";
@@ -8937,7 +8937,7 @@ function fp(t, s = lS) {
   if (c?.installedWrite !== void 0) return ((c.onEpisodeEnd = t), up(c));
   let f = s();
   if (f.fd === void 0)
-    return (n(`nonBlockingStdout: inactive (${f.reason})`), null);
+    return (logForDebugging(`nonBlockingStdout: inactive (${f.reason})`), null);
   let m = {
       fd: f.fd,
       originalWrite: process.stdout.write,
@@ -8967,7 +8967,7 @@ function fp(t, s = lS) {
     (process.stdout.write = y),
     Aa.set(process.stdout, m),
     process.on("exit", m.onExit),
-    n("nonBlockingStdout: active"),
+    logForDebugging("nonBlockingStdout: active"),
     up(m)
   );
 }
@@ -9022,7 +9022,7 @@ function oS(t, s) {
       (t.queue = []),
       (t.queuedBytes = 0),
       (t.dropping = !0),
-      n(
+      logForDebugging(
         `nonBlockingStdout: terminal stopped reading; dropped ${t.episode.droppedBytes} queued bytes, will repaint when it resumes`,
         { level: "warn" },
       ),
@@ -9094,7 +9094,7 @@ function ks(t) {
   pp(t, "flush");
 }
 function Xc(t, s) {
-  (n(`nonBlockingStdout: uninstalling (${s})`),
+  (logForDebugging(`nonBlockingStdout: uninstalling (${s})`),
     (t.queue = []),
     (t.queuedBytes = 0),
     yp(t));
@@ -11293,7 +11293,7 @@ function p1(t) {
 function Ey(t, s = "") {
   let c = s === null,
     f = c ? "" : p1(s),
-    m = t._tokenizer ?? sB({ x10Mouse: !0 }),
+    m = t._tokenizer ?? createAnsiTokenizer({ x10Mouse: !0 }),
     y = t.droppedMousePrefix,
     b = c ? t.flushedEscapePrefix : "",
     S = t.flushedEscapePrefix,
@@ -11345,8 +11345,8 @@ function Ey(t, s = "") {
   }
   for (let Y of E)
     if (Y.type === "sequence")
-      if (((y = ""), (S = ""), Y.value === xcr)) (O(), (C = !0), (D = ""));
-      else if (Y.value === Hcr) (O(), x.push(ay(D)), (C = !1), (D = ""));
+      if (((y = ""), (S = ""), Y.value === BRACKETED_PASTE_START)) (O(), (C = !0), (D = ""));
+      else if (Y.value === BRACKETED_PASTE_END) (O(), x.push(ay(D)), (C = !1), (D = ""));
       else if (C) {
         if (yy(Y.value)) continue;
         let X = my(Y.value);
@@ -11378,7 +11378,7 @@ function Ey(t, s = "") {
           x.push(Z);
           continue;
         }
-        if (Y.value === xhe || (!yy(Y.value) && !py.test(Y.value))) O();
+        if (Y.value === FOCUS_OUT_SEQUENCE || (!yy(Y.value) && !py.test(Y.value))) O();
         x.push(Cr(Y.value));
       }
     else if (Y.type === "text") {
@@ -11692,7 +11692,7 @@ function b1(t) {
 var S1 = /^\x1b\[M[\x60-\x7f][\x20-\uffff]{2}$/,
   py = /^\x1b\[M[\x20-\x7f][\x20-\uffff]{2}$/;
 function yy(t) {
-  return t === jke || t === xhe || Df.test(t) || S1.test(t);
+  return t === FOCUS_IN_SEQUENCE || t === FOCUS_OUT_SEQUENCE || Df.test(t) || S1.test(t);
 }
 function Rf(t) {
   let s = Df.exec(t);
@@ -12986,7 +12986,7 @@ class hd {
       if (f > tv) {
         if (!this.overflowWarned)
           ((this.overflowWarned = !0),
-            n(
+            logForDebugging(
               `StylePool exhausted ${tv} unique styles \u2014 further ` +
                 "style combinations render unstyled to avoid packed-cell aliasing",
               { level: "warn" },
@@ -13010,7 +13010,7 @@ class hd {
       if (this.transitionCache.size >= $1) this.transitionCache.clear();
       let m = this.get(t),
         y = this.get(s);
-      ((f = I1(m, y) + NI(pNe(m, y))), this.transitionCache.set(c, f));
+      ((f = I1(m, y) + ansiCodesToString(diffAnsiCodes(m, y))), this.transitionCache.set(c, f));
     }
     return f;
   }
@@ -13116,7 +13116,7 @@ function lv(t, s) {
 }
 function pd(t, s) {
   if (s > 32767)
-    n(
+    logForDebugging(
       `packSoftWrap: start column ${s} exceeds the 15-bit field; bit 15 is reserved for SW_ELIDED_SEP and will be corrupted`,
       { level: "error" },
     );
@@ -13319,7 +13319,7 @@ function sv(t) {
       if ((t.cells[((m * t.width + y) << 1) + 1] & tn) !== 1) continue;
       let S = dn(t, y, m);
       if (!S || !vd(S.char)) continue;
-      let E = Math.max(2, te(S.char));
+      let E = Math.max(2, getStringWidth(S.char));
       if (y + E < t.width) continue;
       for (let x = y; x < t.width; x++)
         Ar(t, x, m, {
@@ -13445,8 +13445,8 @@ function yu(t, s, c, f) {
       b.fill(0, s * m, (s - f) * m),
       S.fill(0, s, s - f));
 }
-var uv = new RegExp(`^${FP}\\]8${khe}${khe}([^${$w}]*)${$w}$`),
-  Vye = `${FP}]8${khe}`;
+var uv = new RegExp(`^${ESCAPE_CHARACTER}\\]8${PARAM_SEPARATOR}${PARAM_SEPARATOR}([^${BELL_CHARACTER}]*)${BELL_CHARACTER}$`),
+  Vye = `${ESCAPE_CHARACTER}]8${PARAM_SEPARATOR}`;
 function cv(t) {
   for (let s of t) {
     let c = s.code;
@@ -14394,8 +14394,8 @@ async function qv(t) {
         S = b.trim();
       if (S) y = S;
     }
-    (YUn(y), n(`XTVERSION: terminal identified as "${y}"`));
-  } else n("XTVERSION: no reply (terminal ignored query)");
+    (YUn(y), logForDebugging(`XTVERSION: terminal identified as "${y}"`));
+  } else logForDebugging("XTVERSION: no reply (terminal ignored query)");
   let c = !s || a.TERM_PROGRAM === "Apple_Terminal",
     [f] = await Promise.all([
       c ? Promise.resolve(void 0) : t.send(createDecrpmQuery(TERMINAL_MODE_CODES.SYNCHRONIZED_UPDATE)),
@@ -14403,10 +14403,10 @@ async function qv(t) {
     ]),
     m = f?.status === 1 || f?.status === 2;
   (tBn(m),
-    n(
+    logForDebugging(
       `DECRQM(2026): ${c ? `skipped (${s ? "Apple_Terminal" : "no XTVERSION reply"})` : f ? `status=${f.status}` : "no reply"} \u2192 sync ${m ? "supported" : "unsupported"}`,
     ),
-    n(
+    logForDebugging(
       `DECSTBM: ${uDt ? "enabled" : "gated"} (TMUX=${a.TMUX ? "set" : "unset"} ZELLIJ=${process.env.ZELLIJ != null ? "set" : "unset"} TERM_PROGRAM=${a.TERM_PROGRAM ?? "unset"} TERM=${a.TERM ?? "unset"})`,
     ));
 }
@@ -14607,7 +14607,7 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
         this.rawModeEnabledCount > 0 &&
         !c.listeners("readable").includes(this.handleReadable)
       )
-        (n(
+        (logForDebugging(
           "handleReadable: re-attaching stdin readable listener after error recovery",
           { level: "warn" },
         ),
@@ -14685,7 +14685,7 @@ function zd(t) {
   if (t.kind === "response") return !1;
   if (t.kind === "mouse") return !Ud(t.button);
   if (t.name === "mouse") return !1;
-  return t.sequence !== jke && t.sequence !== xhe;
+  return t.sequence !== FOCUS_IN_SEQUENCE && t.sequence !== FOCUS_OUT_SEQUENCE;
 }
 function UE(t, s, c, f) {
   let m = isAttachQuietDrainActive(Date.now());
@@ -14695,7 +14695,7 @@ function UE(t, s, c, f) {
   let b = countMatching(y, zd) === 1;
   for (let S of y) {
     if (m && zd(S) && !(S.kind === "key" && S.name === "left")) {
-      n(
+      logForDebugging(
         `attachQuietDrain: dropped ${S.kind} (ms_since_stamp=${Date.now() - getAttachStampMs()})`,
         { level: "debug" },
       );
@@ -14714,13 +14714,13 @@ function UE(t, s, c, f) {
       continue;
     }
     let E = S.sequence;
-    if (E === jke) {
+    if (E === FOCUS_IN_SEQUENCE) {
       t.handleTerminalFocus(!0);
       let x = new nu("terminalfocus");
       t.internal_eventEmitter.emit("terminalfocus", x);
       continue;
     }
-    if (E === xhe) {
+    if (E === FOCUS_OUT_SEQUENCE) {
       if ((t.handleTerminalFocus(!1), t.props.selection.isDragging))
         (wo(t.props.selection), t.props.onSelectionChange());
       let x = new nu("terminalblur");
@@ -14829,7 +14829,7 @@ function FE(t, s) {
         a.TERM_PROGRAM !== "vscode" &&
         !Zd() &&
         ((s.button & 24) !== 0 ||
-          CT.macCmdClickArrivesWithoutSgrModifierBit() ||
+          terminalCapabilities.macCmdClickArrivesWithoutSgrModifierBit() ||
           JUn())
       ) {
         if (t.pendingHyperlinkTimer) clearTimeout(t.pendingHyperlinkTimer);
@@ -15128,7 +15128,7 @@ var Uo = { type: "carriageReturn" },
     content: `
 `,
   },
-  IE = { type: "stdout", content: q7t() };
+  IE = { type: "stdout", content: eraseToLineEnd() };
 class Yd {
   options;
   state;
@@ -15163,14 +15163,14 @@ class Yd {
             m = x.hyperlink;
           }
           let C = this.options.stylePool.get(x.styleId),
-            D = pNe(f, C);
-          if (D.length > 0) ((b += NI(D)), (f = C));
+            D = diffAnsiCodes(f, C);
+          if (D.length > 0) ((b += ansiCodesToString(D)), (f = C));
           b += x.char;
         }
       }
       if (m !== void 0) ((b += HYPERLINK_END), (m = void 0));
-      let S = pNe(f, []);
-      if (S.length > 0) ((b += NI(S)), (f = []));
+      let S = diffAnsiCodes(f, []);
+      if (S.length > 0) ((b += ansiCodesToString(S)), (f = []));
       c.push(b.trimEnd());
     }
     if (c.length === 0) return [];
@@ -15218,7 +15218,7 @@ class Yd {
             {
               type: "stdout",
               content:
-                nz(fe + 1, ue + 1) + (se > 0 ? Rcr(se) : kcr(-se)) + oB + gm,
+                setScrollRegion(fe + 1, ue + 1) + (se > 0 ? scrollUp(se) : scrollDown(-se)) + RESET_SCROLL_REGION + CURSOR_HOME_SEQUENCE,
             },
           ]));
     }
@@ -15226,7 +15226,7 @@ class Yd {
       T = s.screen.height <= t.viewport.height;
     if (S && T && N)
       return (
-        n(
+        logForDebugging(
           `Full reset (shrink->below): prevHeight=${t.screen.height}, nextHeight=${s.screen.height}, viewport=${t.viewport.height}`,
         ),
         Za(s, "offscreen", y, c, C)
@@ -15359,7 +15359,7 @@ class Yd {
     if (oe > 50) {
       let fe = s.screen.damage,
         ue = fe ? `${fe.width}x${fe.height} at (${fe.x},${fe.y})` : "none";
-      n(
+      logForDebugging(
         `Slow render: ${oe.toFixed(1)}ms, screen: ${s.screen.height}x${s.screen.width}, damage: ${ue}, changes: ${L.diff.length}`,
       );
     }
@@ -15432,7 +15432,7 @@ function ng(t, s, c, f, m) {
   return (Ia(t.diff, m, y, m.none), Gl(t.diff, b, void 0), t);
 }
 function ig(t, s, c) {
-  let f = s.width === 1 ? Math.max(2, te(s.char)) : 1,
+  let f = s.width === 1 ? Math.max(2, getStringWidth(s.char)) : 1,
     m = t.cursor.x,
     y = t.viewportWidth;
   if (f >= 2 && m < y) {
@@ -16413,7 +16413,7 @@ class Xye {
                     ve = dg(Gd(fe, this.stylePool, this.charCache));
                   if (O + ve >= U.x1) oe = !0;
                   if (se === 0 && O + ve <= U.x2) return fe;
-                  return Cpe(fe, se, U.x2 - O);
+                  return sliceAnsiClipped(fe, se, U.x2 - O);
                 })),
                 !oe)
               )
@@ -16476,7 +16476,7 @@ class Xye {
     }
     let C = f + m;
     if (C > 1000 && m > f)
-      n(
+      logForDebugging(
         `High write ratio: blit=${f}, write=${m} (${((m / C) * 100).toFixed(1)}% writes), screen=${c}x${s}`,
       );
     return t;
@@ -16517,14 +16517,14 @@ function fg(t, s, c, f) {
       s.some((E) => E.code.length >= Vye.length && E.code.startsWith(Vye))
         ? fv(s)
         : s,
-    S = c.intern(HYn(xYn(b)));
+    S = c.intern(stripItalicIfRendersAsStandout(convertTruecolorToAnsi256(b)));
   for (let { segment: E } of getGraphemeSegmenter().segment(t))
-    f.push({ value: E, width: te(E), styleId: S, hyperlink: m });
+    f.push({ value: E, width: getStringWidth(E), styleId: S, hyperlink: m });
 }
 function Gd(t, s, c) {
   let f = c.get(t);
   if (f) (c.delete(t), c.set(t, f));
-  else ((f = og(sx(rYn(fNe(sYn(t))), s))), c.set(t, f));
+  else ((f = og(sx(styledCharsFromTokens(tokenizeAnsiString(sanitizeAnsiEscapes(t))), s))), c.set(t, f));
   return f;
 }
 function dg(t) {
@@ -16710,7 +16710,7 @@ var cx = (t) =>
     t.getComputedBorder(0) -
     t.getComputedBorder(2),
   hg = cx;
-var pg = toESM(o3t(), 1);
+var pg = toESM(cliBoxesModule(), 1);
 var fx = {
   dashed: {
     top: "\u254C",
@@ -16734,11 +16734,11 @@ var fx = {
   },
 };
 function mg(t, s, c, f = 0, m) {
-  let y = TSt(s),
+  let y = getDisplayWidth(s),
     b = t.length;
   if (y >= b - 2) {
-    let C = Cpe(s, 0, b),
-      D = m.repeat(Math.max(0, b - TSt(C)));
+    let C = sliceAnsiClipped(s, 0, b),
+      D = m.repeat(Math.max(0, b - getDisplayWidth(C)));
     return ["", C, D];
   }
   let S;
@@ -16751,7 +16751,7 @@ function mg(t, s, c, f = 0, m) {
   return [E, s, x];
 }
 function Fo(t, s, c) {
-  let f = jY(t, s);
+  let f = applyForegroundColor(t, s);
   if (c) f = chalk.dim(f);
   return f;
 }
@@ -16796,13 +16796,13 @@ var dx = (t, s, c, f) => {
       if (z) Q -= 1;
       Q = Math.max(0, Q);
       let ce = (
-        jY(b.left, x) +
+        applyForegroundColor(b.left, x) +
         `
 `
       ).repeat(Q);
       if (T) ce = chalk.dim(ce);
       let le = (
-        jY(b.right, C) +
+        applyForegroundColor(b.right, C) +
         `
 `
       ).repeat(Q);
@@ -17062,7 +17062,7 @@ function Qd(t, s, c, f, m = !1, y) {
         let Y = C.slice(N, z),
           X = s[T];
         if (X) {
-          let U = HNe(Y, X.styles);
+          let U = applyTextStyles(Y, X.styles);
           if (X.hyperlink) U = Ja(U, X.hyperlink);
           D += U;
         } else D += Y;
@@ -17073,7 +17073,7 @@ function Qd(t, s, c, f, m = !1, y) {
     let L = C.slice(N),
       O = s[T];
     if (O) {
-      let z = HNe(L, O.styles);
+      let z = applyTextStyles(L, O.styles);
       if (O.hyperlink) z = Ja(z, O.hyperlink);
       D += z;
     } else D += L;
@@ -17271,7 +17271,7 @@ function Au(
 `,
               )
               .map((fe) => {
-                let ue = HNe(fe, le.styles);
+                let ue = applyTextStyles(fe, le.styles);
                 if (le.hyperlink) ue = Ja(ue, le.hyperlink);
                 return ue;
               }).join(`
@@ -17294,7 +17294,7 @@ function Au(
           Q = Qd(le.wrapped, U, oe, k, J === "wrap-trim", le.softWrap);
         } else
           Q = U.map((le) => {
-            let oe = HNe(le.text, le.styles);
+            let oe = applyTextStyles(le.text, le.styles);
             if (le.hyperlink) oe = Ja(oe, le.hyperlink);
             return oe;
           }).join("");
@@ -17376,7 +17376,7 @@ function Au(
             t.stickyScroll === !1 && et >= nn)
           ) {
             if (ke - et > 3)
-              n(
+              logForDebugging(
                 `render-node-to-output: positional follow re-enabled sticky (scrollTop=${et} prevMax=${nn} \u2192 newMax=${ke}, prevH=${Ee} \u2192 ${Se})`,
               );
             t.stickyScroll = !0;
@@ -17604,7 +17604,7 @@ function Au(
             Ue = Math.floor(L) - he - Se;
           if (Ee > 0 && Ue > 0) {
             let ke = " ".repeat(Ee),
-              et = ue ? HNe(ke, { backgroundColor: ue }) : ke,
+              et = ue ? applyTextStyles(ke, { backgroundColor: ue }) : ke,
               wt = Array(Ue).fill(et).join(`
 `);
             s.write(C + se, N + he, wt);
@@ -17828,7 +17828,7 @@ function Nx(t, s, c, f) {
     y = t.rawBgRewriteCache.get(s);
   if (y && y.text === c && y.color === f && y.levelGeneration === m)
     return y.out;
-  let b = IYn(c, f);
+  let b = applyPersistentBackground(c, f);
   return (
     t.rawBgRewriteCache.set(s, {
       text: c,
@@ -17868,7 +17868,7 @@ function Ax(t, s, c, f, m) {
         let k = c[Y],
           Z = O.slice(W, X);
         if (k) {
-          let J = HNe(Z, k.styles);
+          let J = applyTextStyles(Z, k.styles);
           if (k.hyperlink) J = Ja(J, k.hyperlink);
           z += J;
         } else z += Z;
@@ -18084,7 +18084,7 @@ function Jd(t, s) {
       W = O === void 0 || !Number.isFinite(O) || O < 0;
     if (!t.yogaNode || z || W) {
       if (t.yogaNode && (z || W))
-        n(
+        logForDebugging(
           `Invalid yoga dimensions: width=${O}, height=${L}, childNodes=${t.childNodes.length}, terminalWidth=${E}, terminalRows=${x}`,
         );
       return {
@@ -18097,7 +18097,7 @@ function Jd(t, s) {
       X = Math.floor(t.yogaNode.getComputedHeight()),
       U = m.altScreen ? x : X;
     if (m.altScreen && X > x)
-      n(
+      logForDebugging(
         `alt-screen: yoga height ${X} > terminalRows ${x} \u2014 ` +
           "something is rendering outside <AlternateScreen>. Overflow clipped.",
         { level: "warn" },
@@ -18131,21 +18131,21 @@ import { writeSync as Ui } from "fs";
 function rDt() {
   try {
     if (
-      (Ui(1, G7t),
-      Ui(1, Hhe),
-      Ui(1, rz),
+      (Ui(1, RESET_CHARSET_SEQUENCE),
+      Ui(1, DISABLE_MODIFY_OTHER_KEYS),
+      Ui(1, KITTY_KEYBOARD_POP),
       Ui(1, DISABLE_FOCUS_EVENTS),
       Ui(1, DISABLE_THEME_REPORTS),
       Ui(1, DISABLE_BRACKETED_PASTE),
       Ui(1, SHOW_CURSOR),
-      Ui(1, "\x1B7" + oB + "\x1B8"),
+      Ui(1, "\x1B7" + RESET_SCROLL_REGION + "\x1B8"),
       Jye())
     )
       Ui(1, CLEAR_ITERM2_PROGRESS_SEQUENCE);
     if (isTabStatusEnabled()) Ui(1, wrapOscForMultiplexer(RESET_TAB_STATUS_SEQUENCE));
   } catch (t) {
     if (Po(t))
-      n(`restoreTerminalModes writeSync failed: ${t}`, { level: "error" });
+      logForDebugging(`restoreTerminalModes writeSync failed: ${t}`, { level: "error" });
     else throw t;
   }
 }
@@ -18190,8 +18190,8 @@ var wu = 8192,
   Lx = 50,
   zx = createCursorPositionQuery(),
   Ux = Object.freeze({ x: 0, y: 0, visible: !1 }),
-  Fx = Object.freeze({ type: "stdout", content: gm }),
-  Px = Object.freeze({ type: "stdout", content: i_ + gm }),
+  Fx = Object.freeze({ type: "stdout", content: CURSOR_HOME_SEQUENCE }),
+  Px = Object.freeze({ type: "stdout", content: ERASE_SCREEN_SEQUENCE + CURSOR_HOME_SEQUENCE }),
   Og = "\x1B]104;255\x07",
   Yx = 2000,
   kx = 2000;
@@ -18204,7 +18204,7 @@ function wg(t, s) {
   return s >= t.length;
 }
 function Hg(t) {
-  return Object.freeze({ type: "stdout", content: $P(t, 1) });
+  return Object.freeze({ type: "stdout", content: cursorToPosition(t, 1) });
 }
 var Bg = wu,
   Lg = 2048;
@@ -18354,7 +18354,7 @@ class Yye {
     )
       this.nonBlockingStdout = fp(this.handleStdoutBackpressure);
     if (t.stdout === process.stdout) {
-      if (t.stdout.isTTY) t.stdout.write("\x1B7" + oB + "\x1B8" + SHOW_CURSOR);
+      if (t.stdout.isTTY) t.stdout.write("\x1B7" + RESET_SCROLL_REGION + "\x1B8" + SHOW_CURSOR);
     }
     let { cols: s, rows: c } = oDt(t.stdout, this.warnGarbageWinsizeOnce);
     if (
@@ -18419,10 +18419,10 @@ class Yye {
         !1,
         null,
         "id",
-        Ere,
-        Ere,
-        Ere,
-        Ere,
+        noopFunction,
+        noopFunction,
+        noopFunction,
+        noopFunction,
       )));
   }
   handleResume = () => {
@@ -18475,7 +18475,7 @@ class Yye {
   }
   warnGarbageWinsizeOnce(t) {
     if (this.loggedGarbageWinsize) return;
-    ((this.loggedGarbageWinsize = !0), n(t, { level: "warn" }));
+    ((this.loggedGarbageWinsize = !0), logForDebugging(t, { level: "warn" }));
   }
   hasStaleTerminalSize() {
     let { columns: t, rows: s } = this.stdoutSize();
@@ -18514,7 +18514,7 @@ class Yye {
     (this.pause(),
       this.options.stdout.write(
         this.modes.suspend("altScreen") +
-          (this.altScreenActive ? "" : ENTER_ALT_SCREEN + rz) +
+          (this.altScreenActive ? "" : ENTER_ALT_SCREEN + KITTY_KEYBOARD_POP) +
           "\x1B[0m\x1B[?25h\x1B[2J\x1B[H",
       ),
       this.nonBlockingStdout?.flush(),
@@ -18676,7 +18676,7 @@ class Yye {
           this.layoutFaultDebugLines >= Dg
             ? " \u2014 further layout faults in this session are not logged"
             : "";
-      n(`ink layout pass threw (${c}): ${t.name}: ${t.message}${f}`, {
+      logForDebugging(`ink layout pass threw (${c}): ${t.name}: ${t.message}${f}`, {
         level: "warn",
       });
     } catch {}
@@ -18839,7 +18839,7 @@ class Yye {
           this.rootNode.debugRepaints && he.debug)
         ) {
           let Se = Ky(this.rootNode, he.debug.triggerY);
-          n(
+          logForDebugging(
             `[REPAINT] full reset \xB7 ${he.reason} \xB7 row ${he.debug.triggerY}
   prev: "${he.debug.prevLine}"
   next: "${he.debug.nextLine}"
@@ -18878,19 +18878,19 @@ class Yye {
         let Ee = L.cursor.x - ce.x,
           Ue = Se(L.cursor.y - ce.y);
         if (Ee !== 0 || Ue !== 0)
-          U.unshift({ type: "stdout", content: fW(Ee, Ue) });
+          U.unshift({ type: "stdout", content: moveCursorBy(Ee, Ue) });
       }
       if (Q !== null) {
         if (this.altScreenActive) {
           let Ee = Math.min(Math.max(Q.y + 1, 1), c),
             Ue = Math.min(Math.max(Q.x + 1, 1), s);
-          U.push({ type: "stdout", content: $P(Ee, Ue) });
+          U.push({ type: "stdout", content: cursorToPosition(Ee, Ue) });
         } else {
           let Ee = !Z && ce !== null ? ce : { x: x.cursor.x, y: x.cursor.y },
             Ue = Q.x - Ee.x,
             ke = Se(Q.y - Ee.y);
           if (Ue !== 0 || ke !== 0)
-            U.push({ type: "stdout", content: fW(Ue, ke) });
+            U.push({ type: "stdout", content: moveCursorBy(Ue, ke) });
         }
         if (
           ((this.displayCursor = { ...Q, emittedRows: c }),
@@ -18909,7 +18909,7 @@ class Yye {
           let Ee = x.cursor.x - ce.x,
             Ue = Se(x.cursor.y - ce.y);
           if (Ee !== 0 || Ue !== 0)
-            U.push({ type: "stdout", content: fW(Ee, Ue) });
+            U.push({ type: "stdout", content: moveCursorBy(Ee, Ue) });
         }
         if (
           ((this.displayCursor = null),
@@ -19017,7 +19017,7 @@ class Yye {
           f.some(([se, ve]) => se < oe && oe <= ve);
       if ((b.push(y.length), le === "")) y.push("");
       else {
-        let se = dp(le, c, { trim: !1, hard: !0 }).split(`
+        let se = wrapAnsi(le, c, { trim: !1, hard: !0 }).split(`
 `);
         for (let ve = 0; ve < se.length; ve++) {
           let he = se[ve];
@@ -19036,7 +19036,7 @@ class Yye {
         if (x === -1) x = y.length;
         if (fe === "") y.push("");
         else {
-          let ue = dp(fe, c, { trim: !1, hard: !0 });
+          let ue = wrapAnsi(fe, c, { trim: !1, hard: !0 });
           for (let se of ue.split(`
 `))
             y.push(se.trimEnd());
@@ -19045,7 +19045,7 @@ class Yye {
     }
     let C = this.prevScreenReaderLines,
       D = Math.max(0, y.length - 1),
-      N = E ?? { row: D, col: te(y[D] ?? "") },
+      N = E ?? { row: D, col: getStringWidth(y[D] ?? "") },
       T = 0,
       L = Math.min(C.length, y.length);
     while (T < L && C[T] === y[T]) T++;
@@ -19055,7 +19055,7 @@ class Yye {
       W = N.row === z.row && N.col === z.col;
     if (O && W) {
       if (this.srPreParked)
-        ((this.srPreParked = !1), this.options.stdout.write(Bie(N.col + 1)));
+        ((this.srPreParked = !1), this.options.stdout.write(cursorToColumn(N.col + 1)));
       this.prevScreenReaderParkDeclared = E !== null;
       return;
     }
@@ -19081,15 +19081,15 @@ class Yye {
           break;
         }
       let oe = le ? y[T].slice(C[T].length) : "",
-        fe = oe === "" ? 0 : te(C[T]);
+        fe = oe === "" ? 0 : getStringWidth(C[T]);
       if (
         oe !== "" &&
-        te(String.fromCodePoint(oe.codePointAt(0))) > 0 &&
-        fe + te(oe) === te(y[T]) &&
+        getStringWidth(String.fromCodePoint(oe.codePointAt(0))) > 0 &&
+        fe + getStringWidth(oe) === getStringWidth(y[T]) &&
         wg(y[T], C[T].length)
       ) {
-        let se = (T !== z.row ? fW(0, T - z.row) : "") + Bie(fe + 1),
-          ve = Bie(N.col + 1) + (N.row !== T ? fW(0, N.row - T) : "");
+        let se = (T !== z.row ? moveCursorBy(0, T - z.row) : "") + cursorToColumn(fe + 1),
+          ve = cursorToColumn(N.col + 1) + (N.row !== T ? moveCursorBy(0, N.row - T) : "");
         (this.writeContent(se + oe + ve),
           (this.prevScreenReaderLines = y),
           (this.prevScreenReaderPark = N),
@@ -19118,21 +19118,21 @@ class Yye {
           break;
         }
       let oe = le ? C[T].slice(y[T].length) : "",
-        fe = oe === "" ? 0 : te(y[T]);
+        fe = oe === "" ? 0 : getStringWidth(y[T]);
       if (
         oe !== "" &&
-        te(String.fromCodePoint(oe.codePointAt(0))) > 0 &&
-        fe + te(oe) === te(C[T]) &&
+        getStringWidth(String.fromCodePoint(oe.codePointAt(0))) > 0 &&
+        fe + getStringWidth(oe) === getStringWidth(C[T]) &&
         wg(C[T], y[T].length) &&
         (!/\s/.test(oe) || /^\s+$/.test(oe)) &&
         E !== null &&
         this.prevScreenReaderParkDeclared &&
         z.row === T &&
-        z.col === te(C[T])
+        z.col === getStringWidth(C[T])
       ) {
-        let se = Bie(fe + 1),
-          ve = Bie(N.col + 1) + (N.row !== T ? fW(0, N.row - T) : "");
-        (this.writeContent(se + q7t() + ve),
+        let se = cursorToColumn(fe + 1),
+          ve = cursorToColumn(N.col + 1) + (N.row !== T ? moveCursorBy(0, N.row - T) : "");
+        (this.writeContent(se + eraseToLineEnd() + ve),
           (this.prevScreenReaderLines = y),
           (this.prevScreenReaderPark = N),
           (this.prevScreenReaderParkDeclared = E !== null));
@@ -19142,7 +19142,7 @@ class Yye {
     if (!this.isExiting && !O && x === -1 && !this.srPreParked) {
       let le = getScreenReaderPreParkDelayMs();
       if (le > 0) {
-        (this.options.stdout.write(nPn),
+        (this.options.stdout.write(cursorToFirstColumn),
           (this.srPreParked = !0),
           (this.srPreParkTimer = setTimeout(() => {
             ((this.srPreParkTimer = null), this.onRender());
@@ -19151,12 +19151,12 @@ class Yye {
       }
     }
     let Y = Math.max(0, C.length - 1),
-      X = z.row !== Y ? fW(0, Y - z.row) : "",
+      X = z.row !== Y ? moveCursorBy(0, Y - z.row) : "",
       U = C.length - this.terminalRows,
       k = T === y.length && T > 0,
       Z = (U > T && U >= y.length) || (k && U === T);
     if (U > T && U < y.length) T = U;
-    let J = lxt(C.length - T),
+    let J = clearLines(C.length - T),
       re = y.slice(T).join(`
 `),
       Q;
@@ -19167,9 +19167,9 @@ class Yye {
           ? `
 ${re}`
           : re;
-    else if (T === y.length) Q = T > 0 ? J + fW(0, -1) : J;
+    else if (T === y.length) Q = T > 0 ? J + moveCursorBy(0, -1) : J;
     else Q = J + re;
-    let ce = Bie(N.col + 1) + (N.row !== D ? fW(0, N.row - D) : "");
+    let ce = cursorToColumn(N.col + 1) + (N.row !== D ? moveCursorBy(0, N.row - D) : "");
     if (
       (this.writeContent(X + Q + ce),
       (this.prevScreenReaderLines = y),
@@ -19218,7 +19218,7 @@ ${re}`
     let x =
         b.lastIndexOf(`
 `) + 1,
-      D = (m.relativeY === 0 ? te(t.slice(x, y)) : 0) + m.relativeX,
+      D = (m.relativeY === 0 ? getStringWidth(t.slice(x, y)) : 0) + m.relativeX,
       N = f > 0 ? Math.floor(D / f) : 0,
       T = Math.min(s[E] + N, c.length - 1),
       L = f > 0 ? D % f : D;
@@ -19307,7 +19307,7 @@ ${re}`
     let m = this.displayCursor;
     if (m === null || c(m) <= 1) return !1;
     return (
-      n(
+      logForDebugging(
         `probeExternalClear: detected wipe (parked at y=${m.y}, sent at y=${s.y}, terminal reports row=1 col=${f.col})`,
       ),
       this.forceRedraw(),
@@ -19399,7 +19399,7 @@ ${re}`
     if (this.isHandedOff || this.isUnmounted) return;
     if (
       (this.options.stdout.write(
-        G7t +
+        RESET_CHARSET_SEQUENCE +
           this.modes.reassert("extendedKeys") +
           this.modes.reassert("mouse"),
       ),
@@ -19417,7 +19417,7 @@ ${re}`
     ) {
       let s = this.frontFrame.cursor.x - this.displayCursor.x,
         c = this.frontFrame.cursor.y - this.displayCursor.y;
-      if (s !== 0 || c !== 0) $d(1, fW(s, c));
+      if (s !== 0 || c !== 0) $d(1, moveCursorBy(s, c));
       this.displayCursor = null;
     }
     ((this.isUnmounted = !0),
@@ -19498,7 +19498,7 @@ ${re}`
     GA(t);
     let E = Tg(S, this.searchHighlightQuery);
     return (
-      n(
+      logForDebugging(
         `scanElementSubtree: q='${this.searchHighlightQuery}' el=${s}x${c}@(${f},${m}) n=${E.length} [${E.slice(
           0,
           10,
@@ -19513,7 +19513,7 @@ ${re}`
     ((this.searchPositions = t), this.scheduleRender());
   }
   setSelectionBgColor(t) {
-    let s = iK("\x00", t, "background"),
+    let s = applyColorSpec("\x00", t, "background"),
       c = s.indexOf("\x00");
     if (c <= 0 || c === s.length - 1) {
       this.stylePool.setSelectionBg(null);
@@ -19659,7 +19659,7 @@ ${re}`
     let t = this.options.stdin;
     if (!t.isTTY) return;
     let s = t.listeners("readable");
-    (n(
+    (logForDebugging(
       `[stdin] suspendStdin: removing ${s.length} readable listener(s), wasRawMode=${t.isRaw ?? !1}`,
     ),
       s.forEach((f) => {
@@ -19673,12 +19673,12 @@ ${re}`
     let t = this.options.stdin;
     if (!t.isTTY) return;
     if (this.stdinListeners.length === 0 && !this.wasRawMode)
-      n(
+      logForDebugging(
         "[stdin] resumeStdin: called with no stored listeners and wasRawMode=false (possible desync)",
         { level: "warn" },
       );
     if (
-      (n(
+      (logForDebugging(
         `[stdin] resumeStdin: re-attaching ${this.stdinListeners.length} listener(s), wasRawMode=${this.wasRawMode}`,
       ),
       this.stdinListeners.forEach(({ event: s, listener: c }) => {
@@ -19738,7 +19738,7 @@ ${re}`
         }),
       }),
     });
-    (zi.updateContainerSync(s, this.container, null, Ere), zi.flushSyncWork());
+    (zi.updateContainerSync(s, this.container, null, noopFunction), zi.flushSyncWork());
   }
   restoreConsolePatches() {
     (this.restoreConsole?.(),
@@ -19777,7 +19777,7 @@ ${re}`
         ($d(1, DISABLE_MOUSE_TRACKING), this.drainStdin(), rDt());
       } catch (s) {
         if (Po(s))
-          n(`unmount terminal cleanup writeSync failed: ${s}`, {
+          logForDebugging(`unmount terminal cleanup writeSync failed: ${s}`, {
             level: "error",
           });
         else throw s;
@@ -19788,7 +19788,7 @@ ${re}`
       this.drainTimer !== null)
     )
       (clearTimeout(this.drainTimer), (this.drainTimer = null));
-    (zi.updateContainerSync(null, this.container, null, Ere),
+    (zi.updateContainerSync(null, this.container, null, noopFunction),
       zi.flushSyncWork(),
       getInkInstanceRegistry().delete(this.options.stdout),
       this.rootNode.yogaNode?.free(),
@@ -19834,7 +19834,7 @@ ${re}`
   patchConsole() {
     let t = console,
       s = {},
-      c = (...y) => n(`console.log: ${format(...y)}`),
+      c = (...y) => logForDebugging(`console.log: ${format(...y)}`),
       f =
         (y) =>
         (...b) =>
@@ -19842,13 +19842,13 @@ ${re}`
       m =
         (y) =>
         (...b) =>
-          n(`console.${y}: ${format(...b)}`, { level: "warn" });
+          logForDebugging(`console.${y}: ${format(...b)}`, { level: "warn" });
     for (let y of Gx) ((s[y] = t[y]), (t[y] = c));
     for (let y of jx)
       ((s[y] = t[y]),
         (t[y] =
           y === "error"
-            ? (...b) => n(`console.error: ${format(...b)}`, { level: "error" })
+            ? (...b) => logForDebugging(`console.error: ${format(...b)}`, { level: "error" })
             : m(y)));
     return (
       (s.assert = t.assert),
@@ -19872,7 +19872,7 @@ ${re}`
         try {
           let E = typeof m === "string" ? m : Buffer.from(m).toString("utf8");
           if (
-            (n(`[stderr] ${E}`, { level: "warn" }),
+            (logForDebugging(`[stderr] ${E}`, { level: "warn" }),
             this.altScreenActive && !this.isUnmounted && !this.isHandedOff)
           )
             ((this.prevFrameContaminated = !0), this.scheduleRender());

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 275 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import "../插件系统/chunk-rbjz1q03.js";
@@ -17,18 +17,18 @@ import "../插件系统/channel-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../权限系统/cross-session-inbound-gate.js";
-import "../Teammates团队/chunk-nhk351pe.js";
+import "../Teammates团队/peer-idle-notices.js";
 import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
-import "../跨会话消息(UDS)/chunk-t2esphmv.js";
+import "../跨会话消息(UDS)/uds-messaging.js";
 import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import "../Skills技能/mcp-skill-cache.js";
-import "../自动更新-安装/chunk-brx72pf1.js";
+import "../自动更新-安装/install-diagnostics.js";
 import "../自动更新-安装/chunk-2g5h49pk.js";
-import "../会话-历史-恢复/chunk-szqky9sa.js";
+import "../会话-历史-恢复/retention-cleanup.js";
 import "../跨会话消息(UDS)/peer-file-transfer.js";
 import { n4 } from "../设置-配置-UI/设置-配置-UI.kezhax6q.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
 import "../状态栏-主题/theme-picker.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
@@ -39,8 +39,8 @@ import "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import "../AutoMode-自动模式/unattended-serving-consent.js";
 import "../Teammates团队/chunk-88ybhavr.js";
 import "../Teammates团队/backend-registry.js";
-import "../../01-核心基础设施/设置-配置/chunk-bznmdnc2.js";
-import "../成本-Token统计/chunk-3nwwgatc.js";
+import "../../01-核心基础设施/设置-配置/settings-config-model.js";
+import "../成本-Token统计/usage-transcript-scan.js";
 import "../MCP客户端/usage-rate-limits.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -49,7 +49,7 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import "./chunk-y5mtnxtg.js";
+import "./status-info-rows.js";
 import "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
 import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
@@ -67,7 +67,7 @@ import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/设置-配置/fast-mode.js";
-import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import "../../01-核心基础设施/共享小工具-未细化/propose-goal-feature-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 var i = { vim: "Editor mode", "output-style": "Output style" };
@@ -77,10 +77,10 @@ function redirectMessageFor(n) {
 }
 var d = async (n, s, a, c) => {
   let m = redirectMessageFor(c);
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     children: [
-      e(t, { color: "suggestion", children: m }),
+      e(Text, { color: "suggestion", children: m }),
       e(n4, { onClose: () => n(m), context: s, defaultTab: "Config" }),
     ],
   });

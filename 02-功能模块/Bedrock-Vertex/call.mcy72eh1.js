@@ -13,7 +13,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { RelaunchConfirmationWizard } from "../../01-核心基础设施/共享小工具-未细化/relaunch-confirmation-wizard.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import { y0e } from "./chunk-yvs1a1sd.js";
+import { VertexSetupWizard } from "./vertex-setup-wizard.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
@@ -33,7 +33,7 @@ async function m(o) {
   return (
     logEvent("tengu_vertex_setup_started", {}),
     e(RelaunchConfirmationWizard, {
-      Wizard: y0e,
+      Wizard: VertexSetupWizard,
       cancelledEvent: "tengu_vertex_setup_cancelled",
       onDone: o,
     })

@@ -13,7 +13,7 @@ import { parseRelatedTaskMetadataV2 as khr, registerElicitationHandlerV2 as xhr,
 import "./mcp-elicitation-request-handler.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
 import "./chunk-78r8f7dw.js";
-import "./chunk-5wa92x7d.js";
+import "./mcp-protocol-schemas.js";
 import "../认证-OAuth登录/pkce-challenge.js";
 export {
   Drn as handleElicitationRequest,

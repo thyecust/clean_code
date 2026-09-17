@@ -14,7 +14,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { lit as S, fromEnum, fromNumber, concatSafe } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, ge, l, A, Jr, Po, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, b, z, Yu, qr, zR, XPn, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, changeWorkingDirectory, qr, initDefaultDebugLog, getDebugFilePath, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -70,7 +70,7 @@ import {
   isSettled,
   writeReapedTerminalState,
 } from "./chunk-7wsy8vxb.js";
-import "../自动更新-安装/chunk-brx72pf1.js";
+import "../自动更新-安装/install-diagnostics.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
 import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
 import { runFastPathPolicyHelper } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
@@ -132,9 +132,9 @@ import {
 import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import { YYt, JYt, E8, qW, QYt, ZYt, eJt } from "./chunk-9mmyv6hf.js";
-import { uBn, o9 } from "../认证-OAuth登录/chunk-n76cf9e6.js";
+import { createDaemonAuth, WORKER_KINDS } from "../认证-OAuth登录/daemon-worker-runtime.js";
 import "../权限系统/chunk-3kjwvb3e.js";
 import { getDefaultDaemonConfig, loadDaemonConfig, watchDaemonConfigFile, diffDaemonConfigs } from "../../01-核心基础设施/设置-配置/daemon-config.js";
 import "../../01-核心基础设施/共享小工具-未细化/spare-session-claim.js";
@@ -246,7 +246,7 @@ async function xe(t, e) {
     Te(Ie(t), e));
 }
 function Te(t, e) {
-  (n(`[bg-dispatch] rejected ${t}: ${e}`, { level: "warn" }),
+  (logForDebugging(`[bg-dispatch] rejected ${t}: ${e}`, { level: "warn" }),
     logEvent("tengu_bg_dispatch_rejected", { reason: e }));
 }
 function ut(t) {
@@ -267,7 +267,7 @@ async function ft(t, e) {
     return (logFeatureBad("daemon_bg_dispatch_ingest", "symlink"), xe(t, S("symlink")));
   if (!o.isFile()) {
     (logFeatureBad("daemon_bg_dispatch_ingest", "not_a_file"),
-      n(`[bg-dispatch] removed non-regular ${Ie(t)}`, { level: "warn" }),
+      logForDebugging(`[bg-dispatch] removed non-regular ${Ie(t)}`, { level: "warn" }),
       await lt(t, { recursive: !0, force: !0 }).catch(() => {}));
     return;
   }
@@ -301,7 +301,7 @@ function mt(t) {
   let e,
     o = !0;
   try {
-    e = z(t);
+    e = jsonParse(t);
   } catch {
     ((e = void 0), (o = !1));
   }
@@ -331,7 +331,7 @@ async function Ye(t) {
 }
 async function ht(t) {
   (logFeatureBad("daemon_bg_dispatch_ingest", "not_a_file"),
-    n(`[bg-dispatch] removed non-regular ${t}`, { level: "warn" }),
+    logForDebugging(`[bg-dispatch] removed non-regular ${t}`, { level: "warn" }),
     await Ye(t));
 }
 async function Ke(t, e, o, r) {
@@ -472,20 +472,20 @@ async function Zt(t, e) {
   return (
     a.on("add", (p) => {
       (isHoverRestEnabled() && e !== void 0 ? Xt(e, Ie(p), t) : ft(p, t)).catch((w) =>
-        n(`[bg-dispatch] ${w}`, { level: "error" }),
+        logForDebugging(`[bg-dispatch] ${w}`, { level: "error" }),
       );
     }),
     a.on("error", (p) => {
-      (n(`[bg-dispatch] watcher error: ${p}`, { level: "error" }),
+      (logForDebugging(`[bg-dispatch] watcher error: ${p}`, { level: "error" }),
         logEvent("tengu_bg_dispatch_watcher_failed", {
           errno: Jr(p) ?? S("unknown"),
         }));
     }),
     await withTimeout(Ht(a, "ready"), 5000, "chokidar ready").catch((p) =>
-      n(`[bg-dispatch] watcher ready wait: ${p}`),
+      logForDebugging(`[bg-dispatch] watcher ready wait: ${p}`),
     ),
     await qt(t, e).catch((p) => {
-      (n(`[bg-dispatch] cold-start drain: ${p}`, { level: "error" }),
+      (logForDebugging(`[bg-dispatch] cold-start drain: ${p}`, { level: "error" }),
         logEvent("tengu_bg_dispatch_watcher_failed", {
           errno: Jr(p) ?? S("unknown"),
         }));
@@ -563,7 +563,7 @@ async function St(t, e = {}) {
             })
             .catch((K) => {
               if (Po(K)) {
-                n(`bg-spare spawn failed: ${A(K)} ${K.message}`, {
+                logForDebugging(`bg-spare spawn failed: ${A(K)} ${K.message}`, {
                   level: "warn",
                 });
                 return;
@@ -1732,7 +1732,7 @@ class Ge {
         this.logger.write(this.id, `stdin write error: ${d.message}`);
       }),
       r.stdin.write(
-        b({
+        jsonStringify({
           config: this.config,
           initialAccessToken: this.authManager?.getAccessToken(),
         }) +
@@ -1907,7 +1907,7 @@ function Pt(t) {
 }
 function Pr(t) {
   let e = 0;
-  for (let o of Object.keys(o9)) e += (t[o] ?? []).length;
+  for (let o of Object.keys(WORKER_KINDS)) e += (t[o] ?? []).length;
   return e;
 }
 async function Rt(t) {
@@ -1937,7 +1937,7 @@ async function Rt(t) {
   } else r.write("supervisor", `config load failed: ${_.error} \u2014 idling`);
   await a.ready;
   let B = 0;
-  for (let O of Object.keys(o9)) {
+  for (let O of Object.keys(WORKER_KINDS)) {
     if (!Pt(O)) continue;
     let V = k[O] ?? [];
     for (let q = 0; q < V.length; q++) {
@@ -2021,7 +2021,7 @@ async function Rt(t) {
   return {
     workerCount: () => Pr(k),
     hasOAuthConsumer: () => {
-      for (let O of d.values()) if (o9[O.kind].needsOAuth) return !0;
+      for (let O of d.values()) if (WORKER_KINDS[O.kind].needsOAuth) return !0;
       return !1;
     },
     busyWorkerCount: () => {
@@ -2069,7 +2069,7 @@ function Mr(t) {
     t.syscall === "listen" &&
     (t.code === "EADDRINUSE" || t.code === "EACCES")
   ) {
-    n(`bg manager start failed (listen): ${t.code} ${t.message}`, {
+    logForDebugging(`bg manager start failed (listen): ${t.code} ${t.message}`, {
       level: "warn",
     });
     return;
@@ -2084,7 +2084,7 @@ async function It(t) {
       spawnedBy: a,
       signal: p,
       watch: w = watchDaemonConfigFile,
-      createAuth: d = uBn,
+      createAuth: d = createDaemonAuth,
       staleCheckIntervalMs: k = Ar,
       idleGraceMs: D = Ct,
       startupIdleGraceMs: _ = Tr,
@@ -2148,7 +2148,7 @@ async function It(t) {
     V = isRunningInstalledBinary() ? OZt() : O.target,
     q = await At(V).catch((c) => {
       if (Po(c))
-        n(`binaryIdentity(${V}) failed at startup: ${c.code}`, {
+        logForDebugging(`binaryIdentity(${V}) failed at startup: ${c.code}`, {
           level: "error",
         });
       else logError(c);
@@ -2278,7 +2278,7 @@ async function It(t) {
             continue;
           }
           return (
-            n(
+            logForDebugging(
               `daemon displacement probe: daemon.lock read failed twice (${I instanceof Error ? I.message : String(I)}) \u2014 treating as non-displaced`,
               { level: "warn" },
             ),
@@ -2326,7 +2326,7 @@ async function It(t) {
         c = await At(V);
       } catch (we) {
         if (Po(we))
-          n(`binaryIdentity(${V}) poll failed: ${we.code}`, { level: "error" });
+          logForDebugging(`binaryIdentity(${V}) poll failed: ${we.code}`, { level: "error" });
         else logError(we);
         if (Q !== null) {
           if ((X?.busyWorkerCount() ?? 0) === 0) {
@@ -2546,7 +2546,7 @@ async function It(t) {
       "daemon.json has configured workers but they do not pin the supervisor \u2014 they stop when the last client lease and bg job are gone",
     );
   (logEvent("tengu_daemon_start", {
-    worker_kinds: Object.keys(o9).length,
+    worker_kinds: Object.keys(WORKER_KINDS).length,
     worker_count: le,
     origin: fromEnum(r),
   }),
@@ -2896,7 +2896,7 @@ async function daemonMain(t, e) {
   } else if (k === "run" || k === "status") {
     let _ = await runFastPathPolicyHelper();
     if (_)
-      n(
+      logForDebugging(
         `daemon ${k}: policy helper failed (continuing on static managed settings): ${_}`,
         { level: "warn" },
       );
@@ -2904,7 +2904,7 @@ async function daemonMain(t, e) {
   if (Ur.has(k) && !isDaemonWorkerRegistryEnabled()) return fleetGateRejected(`daemon ${k}`);
   let D = pinStorageV5(e);
   if (isHoverRestEnabled() && D !== void 0) {
-    (zR({ storageV5: D }), watchGlobalConfigThroughStorage(D));
+    (initDefaultDebugLog({ storageV5: D }), watchGlobalConfigThroughStorage(D));
     let [
         { composePolicyLimitsClient: _, primePolicyLimitsCache: B },
         { primeFastPathCredentials: E },
@@ -2953,9 +2953,9 @@ async function daemonMain(t, e) {
       process.title = "claude daemon";
       let _ = resolve(r),
         B = resolve(a);
-      XPn();
+      getDebugFilePath();
       try {
-        Yu(homedir());
+        changeWorkingDirectory(homedir());
       } catch {}
       q4();
       let E = new AbortController(),
@@ -3485,7 +3485,7 @@ async function en(t, e, o, r) {
       e,
       "--origin",
       o,
-      ...(r ? ["--spawned-by", b(r)] : []),
+      ...(r ? ["--spawned-by", jsonStringify(r)] : []),
     ]),
     w = a
       ? `failed to spawn: ${l(a)}`
@@ -3560,7 +3560,7 @@ async function rn(t, e) {
   let o = STORAGE_KEYS.state("daemon-log"),
     r = await e.read([{ key: o, offset: 0, length: 0 }]);
   if (!r.ok || !r.value.items[0].found)
-    (U(`cannot open ${t}: ${r.ok ? "no such file or directory" : We(r.error)}`),
+    (U(`cannot open ${t}: ${r.ok ? "no such file or directory" : describeStorageError(r.error)}`),
       process.exit(1));
   let a = r.value.items[0].totalBytes,
     p = !1;
@@ -3575,11 +3575,11 @@ async function rn(t, e) {
         d.error.code === "Unavailable" ||
         (d.error.code === "Failed" && d.error.failureClass === "permission")
       ) {
-        if (!w) (U(`cannot read ${t}: ${We(d.error)}; retrying`), (w = !0));
+        if (!w) (U(`cannot read ${t}: ${describeStorageError(d.error)}; retrying`), (w = !0));
         await sleep(500);
         continue;
       }
-      (U(`cannot read ${t}: ${We(d.error)}`), process.exit(1));
+      (U(`cannot read ${t}: ${describeStorageError(d.error)}`), process.exit(1));
     }
     let k = d.value.items[0];
     if (!k.found) {

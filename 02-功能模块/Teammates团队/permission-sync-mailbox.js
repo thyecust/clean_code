@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getAgentId, getAgentName, getTeamName, getTeammateColor } from "./teammate-context.js";
 import { writeToMailbox, createPermissionRequestMessage, createPermissionResponseMessage, createSandboxPermissionRequestMessage, createSandboxPermissionResponseMessage } from "./chunk-g6nvp9mm.js";
@@ -20,7 +20,7 @@ function createToolCallFingerprint(e, r) {
   return createHash("sha256")
     .update(e)
     .update("\x00")
-    .update(b(u(r)))
+    .update(jsonStringify(u(r)))
     .digest("hex");
 }
 function u(e, r = 0) {
@@ -35,7 +35,7 @@ function u(e, r = 0) {
   return e;
 }
 function createToolCallInputFingerprint(e, r) {
-  let o = z(b(r));
+  let o = jsonParse(jsonStringify(r));
   return createToolCallFingerprint(e, o);
 }
 function S() {
@@ -77,22 +77,22 @@ async function l(e, r) {
   let o = e || getTeamName();
   if (!o) return null;
   if (!(await readTeamFileAsync(o, r)))
-    return (n(`[PermissionSync] Team file not found for team: ${o}`), null);
+    return (logForDebugging(`[PermissionSync] Team file not found for team: ${o}`), null);
   return TEAM_LEAD_AGENT_NAME;
 }
 async function p(e, r, o, s, i) {
   if ((await writeToMailbox(e, r, o, i)) === void 0)
     return (
-      n(`[PermissionSync] FAILED to deliver ${s}`, { level: "error" }),
+      logForDebugging(`[PermissionSync] FAILED to deliver ${s}`, { level: "error" }),
       !1
     );
-  return (n(`[PermissionSync] Sent ${s}`), !0);
+  return (logForDebugging(`[PermissionSync] Sent ${s}`), !0);
 }
 async function sendPermissionRequestToLeader(e, r) {
   let o = await l(e.teamName, r);
   if (!o)
     return (
-      n(
+      logForDebugging(
         "[PermissionSync] Cannot send permission request: leader name not found",
       ),
       !1
@@ -111,17 +111,17 @@ async function sendPermissionRequestToLeader(e, r) {
       o,
       {
         from: e.workerName,
-        text: b(s),
+        text: jsonStringify(s),
         timestamp: new Date().toISOString(),
         color: e.workerColor,
       },
       e.teamName,
-      `permission request ${b(e.id)} to leader ${b(o)} via mailbox`,
+      `permission request ${jsonStringify(e.id)} to leader ${jsonStringify(o)} via mailbox`,
       r,
     );
   } catch (s) {
     return (
-      n(`[PermissionSync] Failed to send permission request via mailbox: ${s}`),
+      logForDebugging(`[PermissionSync] Failed to send permission request via mailbox: ${s}`),
       logError(s),
       !1
     );
@@ -131,7 +131,7 @@ async function sendPermissionResponseToWorker(e, r, o, s, i, a) {
   let m = s || getTeamName();
   if (!m)
     return (
-      n(
+      logForDebugging(
         "[PermissionSync] Cannot send permission response: team name not found",
       ),
       !1
@@ -148,14 +148,14 @@ async function sendPermissionResponseToWorker(e, r, o, s, i, a) {
     });
     return await p(
       e,
-      { from: TEAM_LEAD_AGENT_NAME, text: b(t), timestamp: new Date().toISOString() },
+      { from: TEAM_LEAD_AGENT_NAME, text: jsonStringify(t), timestamp: new Date().toISOString() },
       m,
-      `permission response for ${b(o)} to worker ${b(e)} via mailbox`,
+      `permission response for ${jsonStringify(o)} to worker ${jsonStringify(e)} via mailbox`,
       i,
     );
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `[PermissionSync] Failed to send permission response via mailbox: ${t}`,
       ),
       logError(t),
@@ -170,7 +170,7 @@ async function sendSandboxPermissionRequestToLeader(e, r, o, s) {
   let i = o || getTeamName();
   if (!i)
     return (
-      n(
+      logForDebugging(
         "[PermissionSync] Cannot send sandbox permission request: team name not found",
       ),
       logFeatureBad("swarm_sandbox_permission_request", "no_team_name"),
@@ -179,7 +179,7 @@ async function sendSandboxPermissionRequestToLeader(e, r, o, s) {
   let a = await l(i, s);
   if (!a)
     return (
-      n(
+      logForDebugging(
         "[PermissionSync] Cannot send sandbox permission request: leader name not found",
       ),
       logFeatureBad("swarm_sandbox_permission_request", "no_leader"),
@@ -190,7 +190,7 @@ async function sendSandboxPermissionRequestToLeader(e, r, o, s) {
     g = getTeammateColor();
   if (!m || !t)
     return (
-      n(
+      logForDebugging(
         "[PermissionSync] Cannot send sandbox permission request: worker ID or name not found",
       ),
       logFeatureBad("swarm_sandbox_permission_request", "no_worker_identity"),
@@ -206,9 +206,9 @@ async function sendSandboxPermissionRequestToLeader(e, r, o, s) {
       }),
       c = await p(
         a,
-        { from: t, text: b(d), timestamp: new Date().toISOString(), color: g },
+        { from: t, text: jsonStringify(d), timestamp: new Date().toISOString(), color: g },
         i,
-        `sandbox permission request ${b(r)} for host ${b(e)} to leader ${b(a)} via mailbox`,
+        `sandbox permission request ${jsonStringify(r)} for host ${jsonStringify(e)} to leader ${jsonStringify(a)} via mailbox`,
         s,
       );
     if (c) logFeatureOk("swarm_sandbox_permission_request");
@@ -216,7 +216,7 @@ async function sendSandboxPermissionRequestToLeader(e, r, o, s) {
     return c;
   } catch (d) {
     return (
-      n(
+      logForDebugging(
         `[PermissionSync] Failed to send sandbox permission request via mailbox: ${d}`,
       ),
       logError(d),
@@ -229,7 +229,7 @@ async function sendSandboxPermissionResponseToWorker(e, r, o, s, i, a) {
   let m = i || getTeamName();
   if (!m)
     return (
-      n(
+      logForDebugging(
         "[PermissionSync] Cannot send sandbox permission response: team name not found",
       ),
       !1
@@ -238,14 +238,14 @@ async function sendSandboxPermissionResponseToWorker(e, r, o, s, i, a) {
     let t = createSandboxPermissionResponseMessage({ requestId: r, host: o, allow: s });
     return await p(
       e,
-      { from: TEAM_LEAD_AGENT_NAME, text: b(t), timestamp: new Date().toISOString() },
+      { from: TEAM_LEAD_AGENT_NAME, text: jsonStringify(t), timestamp: new Date().toISOString() },
       m,
-      `sandbox permission response for ${b(r)} (host: ${b(o)}, allow: ${b(s)}) to worker ${b(e)} via mailbox`,
+      `sandbox permission response for ${jsonStringify(r)} (host: ${jsonStringify(o)}, allow: ${jsonStringify(s)}) to worker ${jsonStringify(e)} via mailbox`,
       a,
     );
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `[PermissionSync] Failed to send sandbox permission response via mailbox: ${t}`,
       ),
       logError(t),

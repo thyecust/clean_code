@@ -12,7 +12,7 @@
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import { _0e } from "./chunk-g6sqdw6w.js";
+import { BedrockSetupWizard } from "./bedrock-setup-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -34,7 +34,7 @@ async function m(o) {
   return (
     logEvent("tengu_bedrock_setup_started", {}),
     e(RelaunchConfirmationWizard, {
-      Wizard: _0e,
+      Wizard: BedrockSetupWizard,
       cancelledEvent: "tengu_bedrock_setup_cancelled",
       onDone: o,
     })

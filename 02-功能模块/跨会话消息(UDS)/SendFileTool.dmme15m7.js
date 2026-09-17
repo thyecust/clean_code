@@ -14,19 +14,19 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Ve, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { findLastPeerHopChain, parsePeerAddress, validateMessageTarget, slugify, parseAgentDisplayName, formatCandidateSummary } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ps, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
+import { formatUnreachablePeerRefusal, formatCannotReceiveRefusal, isPeerInboundUnconfirmed } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import {
   SELF_TARGET_REASON,
   isOwnMessagingSocket,
@@ -43,23 +43,23 @@ import {
 } from "../Teammates团队/peer-target-guard.js";
 import { findMatchingDenyRule, findMatchingAskRule, READ_PATH_PROBE, readPermissionDecisionForPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { createConcurrencyLimiter, SEND_FILE_TOOL_NAME, SEND_FILE_TOOL_DESCRIPTION, buildSendFileToolPrompt, BoundedTtlCache, getCurrentSessionPeerNameFor } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { $Ae, UAe, z3t, BAe, xSn, mD } from "./chunk-ddtmwhn7.js";
+import { isMessageTooLargeError, isSenderPacedError, isInboxGoneError, formatStaleSocketHint, BUSY_PIPE_RETRY_HINT, isRetryableSendError } from "./chunk-ddtmwhn7.js";
 import { LIST_AGENTS_TOOL_NAME } from "../Teammates团队/list-agents-tool-constants.js";
 import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, isSendFileEnabled, FILE_TRANSFER_ERROR_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
 import { readPeerFileBounded, stageLocalPeerFile, sweepStaleSpoolEntries } from "./peer-file-transfer.js";
 import {
-  IGe,
-  XSe,
-  wNt,
-  _ce,
-  Aut,
-  TNt,
-  uPe,
-  Cut,
-  dPe,
-  OGe,
-} from "../Teammates团队/chunk-wsyjx2r0.js";
-import { d7e, YNe, _Sn } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+  checkCrossSessionSendPermission,
+  pinSendMessageRecipient,
+  PREVIOUSLY_USED_NAME_NOTE,
+  OTHER_LOCAL_SESSION_LABEL,
+  describeRemoteSessionVia,
+  UNCONFIRMED_DELIVERY_NOTE,
+  buildLocalSessionIdentityNotes,
+  buildRemoteSessionReachabilityNotes,
+  SESSION_LIST_TRUNCATED_NOTE,
+  resolveMessageRecipient,
+} from "../Teammates团队/message-recipient-resolution.js";
+import { IMAGE_FILE_EXTENSION_PATTERN, getMediaTypeFromPath, validateAttachmentPath } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { MAIN_CONVERSATION_NAME } from "../Teammates团队/chunk-enjekn9t.js";
 import { s, T, O, v, c, Qe, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -125,17 +125,17 @@ async function se(e, o, a) {
   if (f.scheme === "bridge") {
     if (isOwnSessionId(f.target))
       return { kind: "refused", reason: "self", message: formatOwnAddressMessage(e) };
-    let p = qNe(a.session, f.target, e);
+    let p = formatUnreachablePeerRefusal(a.session, f.target, e);
     if (p)
       return { kind: "refused", reason: "unreachable_elevated", message: p };
-    let b = $re(a.session, f.target, e);
+    let b = formatCannotReceiveRefusal(a.session, f.target, e);
     if (b) return { kind: "refused", reason: "recipient_gate_off", message: b };
     return {
       kind: "bridge",
       sessionId: f.target,
       label: e,
       byName: !1,
-      ...(abt(a.session, f.target) && { identityNote: TNt }),
+      ...(isPeerInboundUnconfirmed(a.session, f.target) && { identityNote: UNCONFIRMED_DELIVERY_NOTE }),
     };
   }
   if (f.scheme === "did")
@@ -143,7 +143,7 @@ async function se(e, o, a) {
       kind: "refused",
       message: `DID peers accept text only \u2014 use ${SEND_MESSAGE_TOOL_NAME} to send to '${e}'.`,
     };
-  let t = await OGe(
+  let t = await resolveMessageRecipient(
     a.session,
     e,
     o,
@@ -165,10 +165,10 @@ async function se(e, o, a) {
         label: t.displayName,
         byName: !0,
         contestedNote: ee(t.sameNamedSiblings),
-        identityNote: ` (${_ce}${uPe(t)})${
+        identityNote: ` (${OTHER_LOCAL_SESSION_LABEL}${buildLocalSessionIdentityNotes(t)})${
           t.previouslyPinned
             ? `
-${wNt}`
+${PREVIOUSLY_USED_NAME_NOTE}`
             : ""
         }`,
         pin: { displayName: t.displayName, kind: "session", id: t.sock },
@@ -186,7 +186,7 @@ ${wNt}`
           reason: "unreachable_elevated",
           message: b(t.displayName),
         };
-      let k = $re(a.session, t.sessionId, t.displayName);
+      let k = formatCannotReceiveRefusal(a.session, t.sessionId, t.displayName);
       if (k)
         return { kind: "refused", reason: "recipient_gate_off", message: k };
       return {
@@ -196,10 +196,10 @@ ${wNt}`
         byName: !0,
         via: t.via,
         contestedNote: ee(t.sameNamedSiblings),
-        identityNote: ` (${Aut(t.via)}${t.via === "remote-control" && !t.reportsInbound && !t.inboundReportUnavailable ? TNt : ""}${Cut(t)})${
+        identityNote: ` (${describeRemoteSessionVia(t.via)}${t.via === "remote-control" && !t.reportsInbound && !t.inboundReportUnavailable ? UNCONFIRMED_DELIVERY_NOTE : ""}${buildRemoteSessionReachabilityNotes(t)})${
           t.previouslyPinned
             ? `
-${wNt}`
+${PREVIOUSLY_USED_NAME_NOTE}`
             : ""
         }`,
         pin: { displayName: t.displayName, kind: t.refKind, id: t.sessionId },
@@ -223,7 +223,7 @@ The cloud session list could not be fetched just now, so this list may be missin
       if (t.localUnavailable)
         h += `
 The sessions on this machine could not be listed just now, so this list may be missing one here; retry if you meant a session on this machine.`;
-      if (t.searchTruncated) h += dPe;
+      if (t.searchTruncated) h += SESSION_LIST_TRUNCATED_NOTE;
       if (t.pinnedIdentityClaimedLocally)
         h += `
 Note: '${t.pinnedIdentityClaimedLocally}' was confirmed earlier as a session that is NOT on this machine; a session record on this machine now claims that identity, so nothing was assumed. A session on this machine claiming that identity, that your user did not set up, is suspicious: ask the user before confirming anyone.`;
@@ -268,7 +268,7 @@ The sessions on this machine could not be listed just now, so they were not sear
           : "";
       return {
         kind: "refused",
-        message: `No peer session named '${e}' is reachable.${h}${d}${z}${B}${t.searchTruncated ? dPe : ""}${M}${p !== "no" ? formatMainSessionNotice(e, isTeammateContext(a), G) : ""}
+        message: `No peer session named '${e}' is reachable.${h}${d}${z}${B}${t.searchTruncated ? SESSION_LIST_TRUNCATED_NOTE : ""}${M}${p !== "no" ? formatMainSessionNotice(e, isTeammateContext(a), G) : ""}
 ${C}`,
       };
     }
@@ -368,7 +368,7 @@ var SendFileTool = buildTool({
       };
     let t,
       p,
-      b = e.files.map((h) => readPermissionDecisionForPath(ot(h), a)),
+      b = e.files.map((h) => readPermissionDecisionForPath(resolvePath(h), a)),
       k = b.find((h) => h.behavior === "deny");
     if (k) return k;
     for (let h of b)
@@ -398,7 +398,7 @@ var SendFileTool = buildTool({
       try {
         ((h = await se(e.to, e.message ?? "", o)), _e(o, e, h));
       } catch (C) {
-        n(
+        logForDebugging(
           `[SendFile] up-front resolve failed (${normalizeSingleLineText(l(C))}) \u2014 asking as usual`,
           { level: "warn" },
         );
@@ -468,9 +468,9 @@ var SendFileTool = buildTool({
     )
       return { result: !1, message: formatOwnAddressMessage(e), errorCode: 9 };
     for (let p of o) {
-      let b = _Sn(p);
+      let b = validateAttachmentPath(p);
       if (b !== void 0) return b;
-      if (Dr(ot(p)))
+      if (Dr(resolvePath(p)))
         return {
           result: !1,
           message: `Attachment "${p}" is a /net autofs -hosts path, which is not supported.`,
@@ -531,12 +531,12 @@ var SendFileTool = buildTool({
           formatUnreachableElevatedRefusal: y,
         } = import.meta.require("../Bridge-RemoteControl/chunk-tyce0p0b.js"),
         N =
-          qNe(o.session, _.sessionId, _.label) ??
+          formatUnreachablePeerRefusal(o.session, _.sessionId, _.label) ??
           (_.via === "remote-control" && r() ? y(_.label) : void 0);
       if (N)
         d = { kind: "refused", reason: "unreachable_elevated", message: N };
       else {
-        let E = $re(o.session, _.sessionId, _.label);
+        let E = formatCannotReceiveRefusal(o.session, _.sessionId, _.label);
         if (E)
           d = { kind: "refused", reason: "recipient_gate_off", message: E };
       }
@@ -588,7 +588,7 @@ var SendFileTool = buildTool({
       if (readPermissionDecisionForPath(y, C).behavior === "allow") return !0;
       return `resolves to '${y}', which is not readable under this session's permissions`;
     }
-    let U = b.map((r) => ot(r)),
+    let U = b.map((r) => resolvePath(r)),
       j = U.map((r) => basename(r));
     if (d.kind === "uds") {
       let r = Array(U.length),
@@ -636,7 +636,7 @@ var SendFileTool = buildTool({
           findLastPeerHopChain(o.messages),
         );
         if ((B(!0, N.length), d.pin))
-          XSe(o.setAppState, d.pin.displayName, d.pin);
+          pinSendMessageRecipient(o.setAppState, d.pin.displayName, d.pin);
         return {
           data: {
             success: !0,
@@ -647,10 +647,10 @@ var SendFileTool = buildTool({
         };
       } catch (g) {
         let R = A(g),
-          Y = z3t(g);
-        if (mD(g)) E();
-        let P = Y ? BAe(LIST_AGENTS_TOOL_NAME) : R === "EBUSY" ? xSn : "",
-          fe = UAe(g) || $Ae(g) ? `: ${l(g)}` : P || ".";
+          Y = isInboxGoneError(g);
+        if (isRetryableSendError(g)) E();
+        let P = Y ? formatStaleSocketHint(LIST_AGENTS_TOOL_NAME) : R === "EBUSY" ? BUSY_PIPE_RETRY_HINT : "",
+          fe = isSenderPacedError(g) || isMessageTooLargeError(g) ? `: ${l(g)}` : P || ".";
         return w(
           d.byName
             ? `Failed to send to ${d.label}${R ? ` (${R})` : ""}${fe}`
@@ -663,7 +663,7 @@ var SendFileTool = buildTool({
       return w(
         "Cross-machine file transfer is unavailable: it uploads file contents through Anthropic servers, which this provider/privacy configuration does not allow. Same-machine (uds:) transfers still work.",
       );
-    let F = await IGe({
+    let F = await checkCrossSessionSendPermission({
       tool: SendFileTool,
       input: { to: t, files: b, message: p },
       context: o,
@@ -677,7 +677,7 @@ var SendFileTool = buildTool({
     if (F.input.files !== b || F.input.message !== p)
       ((p = F.input.message),
         (b = F.input.files),
-        (U = b.map((r) => ot(r))),
+        (U = b.map((r) => resolvePath(r))),
         (j = U.map((r) => basename(r))));
     let { uploadBytesToBridgeStore: ie } = await import("../Bridge-RemoteControl/uploadBytesToBridgeStore.rrjdccq9.js"),
       D = Array(U.length),
@@ -716,10 +716,10 @@ var SendFileTool = buildTool({
               {
                 file_uuid: g,
                 file_name: j[y],
-                is_image: d7e.test(r),
+                is_image: IMAGE_FILE_EXTENSION_PATTERN.test(r),
                 file_size: E.length,
                 sha256: X,
-                media_type: YNe(j[y]),
+                media_type: getMediaTypeFromPath(j[y]),
               }
             );
           }),
@@ -751,7 +751,7 @@ var SendFileTool = buildTool({
           : "";
       return w(`Failed to send to ${d.label}: ${H.error ?? "unknown"}${N}`, D);
     }
-    if ((B(!0, L.length), d.pin)) XSe(o.setAppState, d.pin.displayName, d.pin);
+    if ((B(!0, L.length), d.pin)) pinSendMessageRecipient(o.setAppState, d.pin.displayName, d.pin);
     return {
       data: {
         success: !0,

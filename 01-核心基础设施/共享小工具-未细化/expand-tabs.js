@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { te, sB } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, createAnsiTokenizer } from "../核心工具-字符串与文本/ansi-text-utils.js";
 var p = 8;
 function expandTabs(n, r = p) {
   if (!n.includes("\t")) return n;
-  let i = sB(),
+  let i = createAnsiTokenizer(),
     c = i.feed(n);
   c.push(...i.flush());
   let e = "",
@@ -30,7 +30,7 @@ function expandTabs(n, r = p) {
 `
         )
           ((e += t), (s = 0));
-        else ((e += t), (s += te(t)));
+        else ((e += t), (s += getStringWidth(t)));
     }
   return e;
 }

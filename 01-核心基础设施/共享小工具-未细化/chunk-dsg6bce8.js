@@ -10,7 +10,7 @@
 import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { figures } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 var STATUS_PRESENTATION = {
@@ -29,7 +29,7 @@ function StatusIndicator(m) {
   const c = !o.color;
   let i;
   if (d[0] !== o.ariaLabel || d[1] !== o.icon)
-    ((i = e(t, { "aria-label": o.ariaLabel, children: o.icon })),
+    ((i = e(Text, { "aria-label": o.ariaLabel, children: o.icon })),
       (d[0] = o.ariaLabel),
       (d[1] = o.icon),
       (d[2] = i));
@@ -37,7 +37,7 @@ function StatusIndicator(m) {
   const s = w && " ";
   let f;
   if (d[3] !== o.color || d[4] !== c || d[5] !== i || d[6] !== s)
-    ((f = r(t, { color: o.color, dimColor: c, children: [i, s] })),
+    ((f = r(Text, { color: o.color, dimColor: c, children: [i, s] })),
       (d[3] = o.color),
       (d[4] = c),
       (d[5] = i),

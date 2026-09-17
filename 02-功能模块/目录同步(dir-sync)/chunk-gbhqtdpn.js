@@ -10,7 +10,7 @@
 import { isWellFormed, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -20,7 +20,7 @@ import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { createConcurrencyLimiter, isSignalAborted, readExactBytes, readSeedFile, GIT_OBJECT_ID_REGEX, isNonZeroObjectId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { compareByPath } from "../文件同步-Sync/sync-journal.js";
 import { computeGitBlobId, isMtimeSettled } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { iOe, wze, $an, Tze, Uan } from "../文件同步-Sync/chunk-eg4wmaq4.js";
+import { platformIgnoresCase, ignoreMatcherFrom, rootIgnoreRefusalClause, readRootIgnoreLines, listFolderCandidates } from "../文件同步-Sync/sync-folder-scan.js";
 import { sanitizePathSegment } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
 import { createHoverRestOptions } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
@@ -835,7 +835,7 @@ async function j9n({
     if (o?.aborted) return { kind: "unreadable", detail: "aborted" };
     await Bn(f, a, h, y);
   }
-  n(
+  logForDebugging(
     "dir-sync object store: opened with " +
       String(h.size) +
       " objects in " +
@@ -1102,7 +1102,7 @@ function Rn({
           try {
             await z(I, H.entry.type, H.entry.size, H.deflated, !0);
           } catch (q) {
-            (n("dir-sync object store: cannot carry a copy over: " + String(q)),
+            (logForDebugging("dir-sync object store: cannot carry a copy over: " + String(q)),
               w.push(I));
           }
       }
@@ -1157,7 +1157,7 @@ function Rn({
         await z(_, S, w.length, await ut(w));
       else if (!j(_))
         await D(_).catch((F) => {
-          n("dir-sync object store: adoption not recorded: " + String(F));
+          logForDebugging("dir-sync object store: adoption not recorded: " + String(F));
         });
       return _;
     },
@@ -1183,7 +1183,7 @@ function Rn({
       ) {
         if (!j(S))
           await D(S).catch((H) => {
-            n("dir-sync object store: adoption not recorded: " + String(H));
+            logForDebugging("dir-sync object store: adoption not recorded: " + String(H));
           });
         return !0;
       }
@@ -1259,7 +1259,7 @@ async function xn(e, t) {
           : p;
     } catch (p) {
       if (!W(p))
-        n(
+        logForDebugging(
           "dir-sync object store: cannot list a session directory: " +
             String(p),
         );
@@ -1331,7 +1331,7 @@ async function Pn(e, t, r, a) {
     i = await ie(d, "wx", kn);
   } catch (l) {
     return (
-      n("dir-sync object store: cannot create a segment: " + String(l)),
+      logForDebugging("dir-sync object store: cannot create a segment: " + String(l)),
       null
     );
   }
@@ -1356,7 +1356,7 @@ async function Pn(e, t, r, a) {
     };
   } catch (l) {
     return (
-      n("dir-sync object store: cannot write a new segment: " + String(l)),
+      logForDebugging("dir-sync object store: cannot write a new segment: " + String(l)),
       await i.close().catch(() => {
         return;
       }),
@@ -1426,7 +1426,7 @@ async function Bn(e, t, r, a) {
       h = E + u.deflatedSize;
     }
   } catch (g) {
-    n(
+    logForDebugging(
       "dir-sync object store: a segment could not be scanned whole: " +
         String(g),
     );
@@ -1576,7 +1576,7 @@ async function An(e, t) {
     }
   } catch (o) {
     return (
-      n(
+      logForDebugging(
         "dir-sync object store: cannot link a segment, copying its records instead: " +
           String(o),
       ),
@@ -1704,10 +1704,10 @@ async function Bpt(e, { maxEntries: t = mt } = {}) {
             i.observedAtMs,
             y,
           ]),
-        o = b({ version: xe, entries: a });
+        o = jsonStringify({ version: xe, entries: a });
       while (Buffer.byteLength(o) > pt && a.length > 0)
         ((a.length = Math.floor(a.length / 2)),
-          (o = b({ version: xe, entries: a })));
+          (o = jsonStringify({ version: xe, entries: a })));
       try {
         return (
           await vn(dirname(e), { recursive: !0, mode: Hn }),
@@ -1715,7 +1715,7 @@ async function Bpt(e, { maxEntries: t = mt } = {}) {
           !0
         );
       } catch (d) {
-        return (n("dir-sync stat cache: not saved: " + String(d)), !1);
+        return (logForDebugging("dir-sync stat cache: not saved: " + String(d)), !1);
       }
     },
   };
@@ -1825,12 +1825,12 @@ async function Man({
   now: p = Date.now,
 }) {
   let f = p(),
-    u = await Tze(e);
+    u = await readRootIgnoreLines(e);
   if (u.kind === "unusable")
-    return K("unreadable", `the .gitignore in this folder ${$an(u)}`);
-  let E = await Uan({
+    return K("unreadable", `the .gitignore in this folder ${rootIgnoreRefusalClause(u)}`);
+  let E = await listFolderCandidates({
     root: e,
-    ignores: wze(u.lines, { ignoreCase: iOe(e) }),
+    ignores: ignoreMatcherFrom(u.lines, { ignoreCase: platformIgnoresCase(e) }),
     withheldOf: h,
     signal: g,
   });
@@ -1900,12 +1900,12 @@ async function Man({
     };
   }
   for (let { path: U, kept: Z } of S.demoted)
-    n(
+    logForDebugging(
       `folder sync: ${U} cannot keep what was last sent this pass; the tree carries ${Z === "held" ? "the cloud session's copy" : "no entry"} for it`,
     );
   let O = lr(S.commitFiles, X);
   for (let U of O.dropped)
-    n(
+    logForDebugging(
       `folder sync: ${U} kept from an earlier state collides with a directory or file of the same name now; left out of the tree`,
     );
   let F = await fr({
@@ -2077,7 +2077,7 @@ function q9n({
     } catch (C) {
       if (isSignalAborted(B)) return K("aborted", "the sync point was abandoned");
       return (
-        n(`folder sync: snapshot failed: ${String(C)}`),
+        logForDebugging(`folder sync: snapshot failed: ${String(C)}`),
         K("git_error", "this folder could not be written into its local store")
       );
     }
@@ -2291,7 +2291,7 @@ async function fr({
   }
   let x = await l.store.hold([...f.values()].map((B) => B.blobId));
   if (x.length > 0)
-    n(
+    logForDebugging(
       `folder sync: ${String(x.length)} object(s) the tree names could not be secured in this session's store`,
     );
   return { commitFiles: f, slipped: u, blobsStored: E };

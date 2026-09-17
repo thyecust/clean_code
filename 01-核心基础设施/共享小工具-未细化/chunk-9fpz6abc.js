@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getCwd } from "./cwd-context.js";
 import { bgSupervisorNoun, daemonHint } from "./agent-view-feature-gates.js";
 import { redactDaemonNonce, getControlSocketPath } from "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
@@ -54,7 +54,7 @@ async function controlRequest(f, a) {
     r.once("connect", () => {
       ((n = !0),
         r.write(
-          b(f) +
+          jsonStringify(f) +
             `
 `,
         ));
@@ -69,7 +69,7 @@ async function controlRequest(f, a) {
       if (p < 0) return;
       let C = i.slice(0, p);
       try {
-        d(z(C));
+        d(jsonParse(C));
       } catch (y) {
         d({ ok: !1, code: "ENOCONN", error: redactDaemonNonce(l(y)), connected: n });
       }
@@ -103,7 +103,7 @@ function openDaemonLease(f) {
       (o.on("error", () => o?.destroy()),
         o.once("connect", () =>
           o?.write(
-            b({ proto: BG_PROTO, op: "lease", client: a }) +
+            jsonStringify({ proto: BG_PROTO, op: "lease", client: a }) +
               `
 `,
           ),
@@ -145,7 +145,7 @@ function subscribeControl(f, a, r, o) {
     e.on("close", () => n("control socket closed")),
     e.on("connect", () =>
       e.write(
-        b({ proto: BG_PROTO, op: "subscribe", short: f, tail: a }) +
+        jsonStringify({ proto: BG_PROTO, op: "subscribe", short: f, tail: a }) +
           `
 `,
       ),
@@ -153,7 +153,7 @@ function subscribeControl(f, a, r, o) {
   let d = readStreamLines(e, (c) => {
     if (!u) ((u = !0), e.setTimeout(0));
     try {
-      let i = z(c);
+      let i = jsonParse(c);
       if ("ok" in i && i.ok === !1) n(i.error);
       else r(i);
     } catch {}

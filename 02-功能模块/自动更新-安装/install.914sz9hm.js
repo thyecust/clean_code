@@ -12,14 +12,14 @@
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { o, t, Un, J0 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useTimeout, render } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { rT, Bce, jce, Can, van } from "./chunk-2g5h49pk.js";
-import "./chunk-brx72pf1.js";
+import "./install-diagnostics.js";
 import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { getAutoUpdatesChannel } from "./auto-updates-channel.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -30,7 +30,7 @@ F();
 import { homedir } from "os";
 import { join as L } from "path";
 function H(ce, pe) {
-  return e(BulletItem, { children: e(t, { dimColor: !0, children: ce }) }, pe);
+  return e(BulletItem, { children: e(Text, { dimColor: !0, children: ce }) }, pe);
 }
 function N() {
   let y = a.platform === "win32",
@@ -46,8 +46,8 @@ function k(ie) {
   }
   let P;
   if (b[0] === MEMO_CACHE_SENTINEL)
-    ((P = e(o, {
-      children: r(t, {
+    ((P = e(Box, {
+      children: r(Text, {
         color: "warning",
         children: [e(StatusIndicator, { status: "warning", withSpace: !0 }), "Setup notes:"],
       }),
@@ -59,13 +59,13 @@ function k(ie) {
   else V = b[2];
   let A;
   if (b[3] !== V)
-    ((A = r(o, {
+    ((A = r(Box, {
       flexDirection: "column",
       gap: 0,
       marginBottom: 1,
       children: [
         P,
-        e(o, { flexDirection: "column", marginLeft: 2, children: V }),
+        e(Box, { flexDirection: "column", marginLeft: 2, children: V }),
       ],
     })),
       (b[3] = V),
@@ -80,15 +80,15 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
     E(() => {
       async function C() {
         try {
-          n(`Install: Starting installation process (force=${m}, target=${c})`);
+          logForDebugging(`Install: Starting installation process (force=${m}, target=${c})`);
           let f = c || getAutoUpdatesChannel();
           (h({ type: "installing", version: f }),
-            n(
+            logForDebugging(
               `Install: Calling installLatest(channelOrVersion=${f}, forceReinstall=${m})`,
             ));
           let u = await jce(f, m, v);
           if (
-            (n(
+            (logForDebugging(
               `Install: installLatest returned version=${u.latestVersion}, wasUpdated=${u.wasUpdated}, lockFailed=${u.lockFailed}`,
             ),
             u.lockFailed)
@@ -97,7 +97,7 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
               "Could not install - another process is currently installing Claude. Please try again in a moment.",
             );
           if (!u.latestVersion)
-            n(
+            logForDebugging(
               "Install: Failed to retrieve version information during install",
               { level: "error" },
             );
@@ -111,7 +111,7 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
                 v,
               );
             ((S = D === null),
-              n(
+              logForDebugging(
                 S
                   ? `Install: Saved autoUpdatesChannel=${g} to user settings`
                   : `Install: Could not save autoUpdatesChannel=${g}: ${l(D)}`,
@@ -125,21 +125,21 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
             });
             return;
           }
-          if (!u.wasUpdated) n("Install: Already up to date");
+          if (!u.wasUpdated) logForDebugging("Install: Already up to date");
           h({ type: "setting-up" });
           let x = await Bce(!0);
           if (
-            (n(`Install: Setup launcher completed with ${x.length} messages`),
+            (logForDebugging(`Install: Setup launcher completed with ${x.length} messages`),
             x.length > 0)
           )
-            x.forEach((g) => n(`Install: Setup message: ${g.message}`));
-          n("Install: Cleaning up npm installations after successful install");
+            x.forEach((g) => logForDebugging(`Install: Setup message: ${g.message}`));
+          logForDebugging("Install: Cleaning up npm installations after successful install");
           let { removed: R, errors: B, warnings: O } = await van();
-          if (R > 0) n(`Cleaned up ${R} npm installation(s)`);
-          if (B.length > 0) n(`Cleanup errors: ${B.join(", ")}`);
+          if (R > 0) logForDebugging(`Cleaned up ${R} npm installation(s)`);
+          if (B.length > 0) logForDebugging(`Cleanup errors: ${B.join(", ")}`);
           let I = await Can();
           if (I.length > 0)
-            n(`Shell alias cleanup: ${I.map((g) => g.message).join("; ")}`);
+            logForDebugging(`Shell alias cleanup: ${I.map((g) => g.message).join("; ")}`);
           logEvent("tengu_claude_install_command", {
             has_version: u.latestVersion ? 1 : 0,
             forced: m ? 1 : 0,
@@ -157,14 +157,14 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
                 2000,
               ));
           else
-            (n("Install: Shell PATH already configured"),
+            (logForDebugging("Install: Shell PATH already configured"),
               h({
                 type: "success",
                 version: u.latestVersion || "current",
                 setupMessages: M,
               }));
         } catch (f) {
-          (n(`Install command failed: ${f}`, { level: "error" }),
+          (logForDebugging(`Install command failed: ${f}`, { level: "error" }),
             h({
               type: "error",
               message: l(f),
@@ -174,7 +174,7 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
       }
       C();
     }, [w, m, c, v]),
-    Un(
+    useTimeout(
       () => {
         if (s.type === "success")
           y("Claude Code installation completed successfully", {
@@ -185,22 +185,22 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
       },
       s.type === "success" ? 2000 : s.type === "error" ? 3000 : null,
     ),
-    r(o, {
+    r(Box, {
       flexDirection: "column",
       marginTop: 1,
       children: [
         s.type === "checking" &&
-          e(t, {
+          e(Text, {
             color: "claude",
             children: "Checking installation status...",
           }),
         s.type === "cleaning-npm" &&
-          e(t, {
+          e(Text, {
             color: "warning",
             children: "Cleaning up old npm installations...",
           }),
         s.type === "installing" &&
-          r(t, {
+          r(Text, {
             color: "claude",
             children: [
               "Installing Claude Code native build ",
@@ -209,60 +209,60 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
             ],
           }),
         s.type === "setting-up" &&
-          e(t, {
+          e(Text, {
             color: "claude",
             children: "Setting up launcher and shell integration...",
           }),
         s.type === "set-up" && e(k, { messages: s.messages }),
         s.type === "success" &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             gap: 1,
             children: [
-              r(o, {
+              r(Box, {
                 children: [
                   e(StatusIndicator, { status: "success", withSpace: !0 }),
-                  e(t, {
+                  e(Text, {
                     color: "success",
                     bold: !0,
                     children: "Claude Code successfully installed!",
                   }),
                 ],
               }),
-              r(o, {
+              r(Box, {
                 marginLeft: 2,
                 flexDirection: "column",
                 gap: 1,
                 children: [
                   s.version !== "current" &&
-                    r(o, {
+                    r(Box, {
                       children: [
-                        e(t, { dimColor: !0, children: "Version: " }),
-                        e(t, { color: "claude", children: s.version }),
+                        e(Text, { dimColor: !0, children: "Version: " }),
+                        e(Text, { color: "claude", children: s.version }),
                       ],
                     }),
-                  r(o, {
+                  r(Box, {
                     children: [
-                      e(t, { dimColor: !0, children: "Location: " }),
-                      e(t, { color: "text", children: N() }),
+                      e(Text, { dimColor: !0, children: "Location: " }),
+                      e(Text, { color: "text", children: N() }),
                     ],
                   }),
                 ],
               }),
-              e(o, {
+              e(Box, {
                 marginLeft: 2,
                 flexDirection: "column",
                 gap: 1,
-                children: r(o, {
+                children: r(Box, {
                   marginTop: 1,
                   children: [
-                    e(t, { dimColor: !0, children: "Next: Run " }),
-                    e(t, {
+                    e(Text, { dimColor: !0, children: "Next: Run " }),
+                    e(Text, {
                       color: "claude",
                       bold: !0,
                       children: "claude --help",
                     }),
-                    e(t, { dimColor: !0, children: " to get started" }),
+                    e(Text, { dimColor: !0, children: " to get started" }),
                   ],
                 }),
               }),
@@ -270,21 +270,21 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
             ],
           }),
         s.type === "error" &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             gap: 1,
             children: [
-              r(o, {
+              r(Box, {
                 children: [
                   e(StatusIndicator, { status: "error", withSpace: !0 }),
-                  e(t, { color: "error", children: "Installation failed" }),
+                  e(Text, { color: "error", children: "Installation failed" }),
                 ],
               }),
-              e(t, { color: "error", children: s.message }),
+              e(Text, { color: "error", children: s.message }),
               s.forceMayHelp &&
-                e(o, {
+                e(Box, {
                   marginTop: 1,
-                  children: e(t, {
+                  children: e(Text, {
                     dimColor: !0,
                     children: "Try running with --force to override checks",
                   }),
@@ -303,7 +303,7 @@ var install = {
   async call(y, m, c) {
     let v = c.includes("--force"),
       h = c.filter((C) => !C.startsWith("--"))[0],
-      { unmount: w } = await J0(
+      { unmount: w } = await render(
         e(j, {
           onDone: (C, f) => {
             (w(), y(C, f));

@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { uee, Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
@@ -27,7 +27,7 @@ function DiffStatLabel(Te) {
   let H;
   if (j[0] !== T || j[1] !== S)
     ((H =
-      T > 0 && r(t, { color: "diffAddedWord", bold: S, children: ["+", T] })),
+      T > 0 && r(Text, { color: "diffAddedWord", bold: S, children: ["+", T] })),
       (j[0] = T),
       (j[1] = S),
       (j[2] = H));
@@ -36,14 +36,14 @@ function DiffStatLabel(Te) {
   let Y;
   if (j[3] !== S || j[4] !== k)
     ((Y =
-      k > 0 && r(t, { color: "diffRemovedWord", bold: S, children: ["-", k] })),
+      k > 0 && r(Text, { color: "diffRemovedWord", bold: S, children: ["-", k] })),
       (j[3] = S),
       (j[4] = k),
       (j[5] = Y));
   else Y = j[5];
   let le;
   if (j[6] !== H || j[7] !== z || j[8] !== Y)
-    ((le = r(t, { children: [H, z, Y] })),
+    ((le = r(Text, { children: [H, z, Y] })),
       (j[6] = H),
       (j[7] = z),
       (j[8] = Y),
@@ -151,7 +151,7 @@ function PullRequestBadge(Ie) {
     m[18] !== C ||
     m[19] !== b
   )
-    ((Re = r(t, {
+    ((Re = r(Text, {
       color: b,
       dimColor: h,
       bold: l,
@@ -172,7 +172,7 @@ function PullRequestBadge(Ie) {
     ((I =
       !V &&
       r(N, {
-        children: [e(t, { dimColor: A || !l, children: u ? "MR" : "PR" }), " "],
+        children: [e(Text, { dimColor: A || !l, children: u ? "MR" : "PR" }), " "],
       })),
       (m[21] = l),
       (m[22] = A),
@@ -191,7 +191,7 @@ function PullRequestBadge(Ie) {
     m[31] !== b ||
     m[32] !== ee
   )
-    ((B = r(t, {
+    ((B = r(Text, {
       color: b,
       dimColor: h,
       underline: ee,
@@ -210,7 +210,7 @@ function PullRequestBadge(Ie) {
   else B = m[33];
   let G;
   if (m[34] !== Z || m[35] !== B || m[36] !== R)
-    ((G = e(ct, { url: R, fallback: Z, assumeSupport: !0, children: B })),
+    ((G = e(Link, { url: R, fallback: Z, assumeSupport: !0, children: B })),
       (m[34] = Z),
       (m[35] = B),
       (m[36] = R),
@@ -218,7 +218,7 @@ function PullRequestBadge(Ie) {
   else G = m[37];
   let be;
   if (m[38] !== G || m[39] !== I)
-    ((be = r(t, { children: [I, G] })), (m[38] = G), (m[39] = I), (m[40] = be));
+    ((be = r(Text, { children: [I, G] })), (m[38] = G), (m[39] = I), (m[40] = be));
   else be = m[40];
   return be;
 }

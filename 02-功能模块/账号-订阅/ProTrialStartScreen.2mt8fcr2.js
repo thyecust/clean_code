@@ -10,24 +10,24 @@
 
 // [preload stripped] 原本在此预载 242 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { getProTrialDurationDays, startProTrial } from "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
+import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
-import { zB } from "../../03-入口与运行时/CLI入口-Commander/chunk-nhpr06js.js";
+import { WelcomeBanner } from "../../03-入口与运行时/CLI入口-Commander/welcome-banner.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -56,7 +56,7 @@ function ProTrialStartScreen(L) {
             })
             .catch((S) => {
               if (cc(S))
-                n(`Failed to start pro trial: ${l(S)}`, { level: "error" });
+                logForDebugging(`Failed to start pro trial: ${l(S)}`, { level: "error" });
               else logError(S);
               (logEvent("tengu_pro_trial_start_error", {}), B("error"));
             }));
@@ -77,11 +77,11 @@ function ProTrialStartScreen(L) {
   else D = s[6];
   let Y = D,
     b;
-  if (s[7] === MEMO_CACHE_SENTINEL) ((b = e(zB, {})), (s[7] = b));
+  if (s[7] === MEMO_CACHE_SENTINEL) ((b = e(WelcomeBanner, {})), (s[7] = b));
   else b = s[7];
   let j;
   if (s[8] === MEMO_CACHE_SENTINEL)
-    ((j = e(t, {
+    ((j = e(Text, {
       children:
         Y !== null
           ? `Your Pro plan includes ${Y} days of Claude Code.`
@@ -91,7 +91,7 @@ function ProTrialStartScreen(L) {
   else j = s[8];
   let v;
   if (s[9] !== a)
-    ((v = r(o, {
+    ((v = r(Box, {
       flexDirection: "column",
       paddingX: 1,
       gap: 1,
@@ -99,26 +99,26 @@ function ProTrialStartScreen(L) {
         b,
         j,
         a === "starting"
-          ? r(o, {
+          ? r(Box, {
               children: [
-                e(yo, {}),
-                e(t, { children: " Starting your trial\u2026" }),
+                e(SpinnerGlyph, {}),
+                e(Text, { children: " Starting your trial\u2026" }),
               ],
             })
           : a === "error"
-            ? r(t, {
+            ? r(Text, {
                 color: "error",
                 children: [
                   "Couldn't start your trial. Press ",
-                  e(t, { bold: !0, children: "Enter" }),
+                  e(Text, { bold: !0, children: "Enter" }),
                   " to continue.",
                 ],
               })
-            : r(t, {
+            : r(Text, {
                 color: "permission",
                 children: [
                   "Press ",
-                  e(t, { bold: !0, children: "Enter" }),
+                  e(Text, { bold: !0, children: "Enter" }),
                   " to start your trial",
                 ],
               }),

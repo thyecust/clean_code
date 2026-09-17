@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 206 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isPluginBlockedByPolicy } from "./plugin-source-policy.js";
 import { getMarketplaceSourceLabel, formatPluginId, getKnownMarketplacesOrEmpty, loadCachedMarketplaceCatalog, getInstalledPlugins, isInstallationInCurrentScope, formatVersionLabel, isPluginInstalledInCurrentScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getPluginEditableScopes } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
@@ -119,7 +119,7 @@ var g = new j(() => new d());
 async function f(a, n) {
   let r = await getKnownMarketplacesOrEmpty(n),
     l = Object.keys(r).sort(),
-    s = b(l.map((e) => [e, r[e]?.installLocation, r[e]?.lastUpdated])),
+    s = jsonStringify(l.map((e) => [e, r[e]?.installLocation, r[e]?.lastUpdated])),
     i = a.get(s);
   if (i === void 0) {
     let e = await Promise.all(

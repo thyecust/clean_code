@@ -15,12 +15,12 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R, dt, ge, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { LOCAL_COMMAND_TAGS, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getDefaultOpusModel, createMainAgentContext } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { go } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { escapeHtmlAttribute } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
 import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
 import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
@@ -240,7 +240,7 @@ async function Je(e, t, o) {
       let l = await o.write(Ve(a), e, { mode: 384, keepExistingMode: !0 });
       if (!l.ok)
         throw (
-          n(`insights: report write failed: ${We(l.error)}`),
+          logForDebugging(`insights: report write failed: ${describeStorageError(l.error)}`),
           Error("insights: report write through the storage backend failed")
         );
     }
@@ -601,7 +601,7 @@ async function ot(e, t) {
   let o = q(ae(), `${e}.json`);
   try {
     let i = await readFile(o, { encoding: "utf-8" }),
-      a = z(i);
+      a = jsonParse(i);
     if (!he(a)) {
       try {
         await unlink(o);
@@ -617,7 +617,7 @@ function Re(e, t) {
   return me(e, ue, t, async (o, i) => {
     let a;
     try {
-      a = z(Buffer.from(o).toString("utf-8"));
+      a = jsonParse(Buffer.from(o).toString("utf-8"));
     } catch {
       return null;
     }
@@ -630,19 +630,19 @@ async function nt(e, t) {
     await mkdir(ae(), { recursive: !0 });
   } catch {}
   if (isHoverRestEnabled() && t) {
-    let i = await t.write(ue(e.session_id), b(e, null, 2), {
+    let i = await t.write(ue(e.session_id), jsonStringify(e, null, 2), {
       publishDiscipline: "inPlace",
       mode: 384,
     });
     if (!i.ok)
       throw (
-        n(`saveFacets: cache write failed: ${We(i.error)}`),
+        logForDebugging(`saveFacets: cache write failed: ${describeStorageError(i.error)}`),
         Error("saveFacets: cache write through the storage backend failed")
       );
     return;
   }
   let o = q(ae(), `${e.session_id}.json`);
-  await writeFile(o, b(e, null, 2), { encoding: "utf-8", mode: 384 });
+  await writeFile(o, jsonStringify(e, null, 2), { encoding: "utf-8", mode: 384 });
 }
 async function it(e, t) {
   if (t) {
@@ -661,7 +661,7 @@ function ze(e, t) {
     try {
       let i = Ae()
         .nullable()
-        .safeParse(z(Buffer.from(o).toString("utf-8")));
+        .safeParse(jsonParse(Buffer.from(o).toString("utf-8")));
       return i.success && i.data !== null ? je(i.data) : null;
     } catch {
       return null;
@@ -705,14 +705,14 @@ function je(e) {
 async function rt(e, t) {
   try {
     if (t) {
-      let o = await t.write(Ie(e.session_id), b(e, null, 2), { mode: 384 });
+      let o = await t.write(Ie(e.session_id), jsonStringify(e, null, 2), { mode: 384 });
       if (!o.ok) {
         let i = o.error;
-        if (Ge(i)) n(`saveSessionMeta: cache write failed: ${We(i)}`);
+        if (Ge(i)) logForDebugging(`saveSessionMeta: cache write failed: ${describeStorageError(i)}`);
         else
           logError(
             new R(
-              `saveSessionMeta: cache write failed: ${We(i)}`,
+              `saveSessionMeta: cache write failed: ${describeStorageError(i)}`,
               "insights session-meta cache write failed",
             ),
           );
@@ -722,7 +722,7 @@ async function rt(e, t) {
     await Ee(e.session_id).write(e);
   } catch (o) {
     if (Rt(o)) {
-      n(`saveSessionMeta: cache write failed: ${o}`);
+      logForDebugging(`saveSessionMeta: cache write failed: ${o}`);
       return;
     }
     logError(o);
@@ -764,12 +764,12 @@ RESPOND WITH ONLY A VALID JSON OBJECT matching this schema:
       }),
       r = joinTextBlocks(l.message.content).match(/\{[\s\S]*\}/);
     if (!r) return null;
-    let g = z(r[0]);
+    let g = jsonParse(r[0]);
     if (!he(g)) return null;
     return { ...g, session_id: t };
   } catch (i) {
     return (
-      n(`Facet extraction failed: ${ge(i).message}`, { level: "error" }),
+      logForDebugging(`Facet extraction failed: ${ge(i).message}`, { level: "error" }),
       null
     );
   }
@@ -1100,7 +1100,7 @@ DATA:
       let l = a.match(/\{[\s\S]*\}/);
       if (l)
         try {
-          return { name: e.name, result: z(l[0]) };
+          return { name: e.name, result: jsonParse(l[0]) };
         } catch {
           return { name: e.name, result: null };
         }
@@ -1136,7 +1136,7 @@ async function pt(e, t, o) {
       .map((y) => `- ${y}`).join(`
 `),
     r =
-      b(
+      jsonStringify(
         {
           sessions: e.total_sessions,
           analyzed: e.sessions_with_facets,
@@ -1255,7 +1255,7 @@ ${j}`,
   return d;
 }
 function re(e) {
-  return go(e).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  return escapeHtmlAttribute(e).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 }
 var gt = [
     "frustrated",
@@ -1288,7 +1288,7 @@ function G(e, t, o = 6, i) {
         Be[p] ||
         p.replaceAll("_", " ").replace(/\b\w/g, (f) => f.toUpperCase());
     return `<div class="bar-row">
-        <div class="bar-label">${go(d)}</div>
+        <div class="bar-label">${escapeHtmlAttribute(d)}</div>
         <div class="bar-track"><div class="bar-fill" style="width:${g}%;background:${t}"></div></div>
         <div class="bar-value">${r}</div>
       </div>`;
@@ -1354,7 +1354,7 @@ function bt(e) {
 function yt(e) {
   let t = {};
   for (let o of e) t[o] = (t[o] || 0) + 1;
-  return b(t);
+  return jsonStringify(t);
 }
 function vt(e, t) {
   let o = (u) => {
@@ -1366,7 +1366,7 @@ function vt(e, t) {
 `,
         )
         .map((C) => {
-          let S = go(C);
+          let S = escapeHtmlAttribute(C);
           return (
             (S = S.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")),
             (S = S.replace(/^- /gm, "\u2022 ")),
@@ -1405,10 +1405,10 @@ function vt(e, t) {
           (u) => `
         <div class="project-area">
           <div class="area-header">
-            <span class="area-name">${go(u.name)}</span>
+            <span class="area-name">${escapeHtmlAttribute(u.name)}</span>
             <span class="area-count">~${u.session_count} sessions</span>
           </div>
-          <div class="area-desc">${go(u.description)}</div>
+          <div class="area-desc">${escapeHtmlAttribute(u.description)}</div>
         </div>
       `,
         )
@@ -1422,7 +1422,7 @@ function vt(e, t) {
     <h2 id="section-usage">How You Use Claude Code</h2>
     <div class="narrative">
       ${o(r.narrative)}
-      ${r.key_pattern ? `<div class="key-insight"><strong>Key pattern:</strong> ${go(r.key_pattern)}</div>` : ""}
+      ${r.key_pattern ? `<div class="key-insight"><strong>Key pattern:</strong> ${escapeHtmlAttribute(r.key_pattern)}</div>` : ""}
     </div>
     `
       : "",
@@ -1431,14 +1431,14 @@ function vt(e, t) {
       d?.impressive_workflows && d.impressive_workflows.length > 0
         ? `
     <h2 id="section-wins">Impressive Things You Did</h2>
-    ${d.intro ? `<p class="section-intro">${go(d.intro)}</p>` : ""}
+    ${d.intro ? `<p class="section-intro">${escapeHtmlAttribute(d.intro)}</p>` : ""}
     <div class="big-wins">
       ${d.impressive_workflows
         .map(
           (u) => `
         <div class="big-win">
-          <div class="big-win-title">${go(u.title || "")}</div>
-          <div class="big-win-desc">${go(u.description || "")}</div>
+          <div class="big-win-title">${escapeHtmlAttribute(u.title || "")}</div>
+          <div class="big-win-desc">${escapeHtmlAttribute(u.description || "")}</div>
         </div>
       `,
         )
@@ -1451,15 +1451,15 @@ function vt(e, t) {
       w?.categories && w.categories.length > 0
         ? `
     <h2 id="section-friction">Where Things Go Wrong</h2>
-    ${w.intro ? `<p class="section-intro">${go(w.intro)}</p>` : ""}
+    ${w.intro ? `<p class="section-intro">${escapeHtmlAttribute(w.intro)}</p>` : ""}
     <div class="friction-categories">
       ${w.categories
         .map(
           (u) => `
         <div class="friction-category">
-          <div class="friction-title">${go(u.category || "")}</div>
-          <div class="friction-desc">${go(u.description || "")}</div>
-          ${u.examples ? `<ul class="friction-examples">${u.examples.map((C) => `<li>${go(C)}</li>`).join("")}</ul>` : ""}
+          <div class="friction-title">${escapeHtmlAttribute(u.category || "")}</div>
+          <div class="friction-desc">${escapeHtmlAttribute(u.description || "")}</div>
+          ${u.examples ? `<ul class="friction-examples">${u.examples.map((C) => `<li>${escapeHtmlAttribute(C)}</li>`).join("")}</ul>` : ""}
         </div>
       `,
         )
@@ -1484,12 +1484,12 @@ function vt(e, t) {
         .map(
           (u, C) => `
         <div class="claude-md-item">
-          <input type="checkbox" id="cmd-${C}" class="cmd-checkbox" checked data-text="${go(u.prompt_scaffold || u.where || "Add to CLAUDE.md")}\\n\\n${go(u.addition)}">
+          <input type="checkbox" id="cmd-${C}" class="cmd-checkbox" checked data-text="${escapeHtmlAttribute(u.prompt_scaffold || u.where || "Add to CLAUDE.md")}\\n\\n${escapeHtmlAttribute(u.addition)}">
           <label for="cmd-${C}">
-            <code class="cmd-code">${go(u.addition)}</code>
+            <code class="cmd-code">${escapeHtmlAttribute(u.addition)}</code>
             <button class="copy-btn" onclick="copyCmdItem(${C})">Copy</button>
           </label>
-          <div class="cmd-why">${go(u.why)}</div>
+          <div class="cmd-why">${escapeHtmlAttribute(u.why)}</div>
         </div>
       `,
         )
@@ -1507,16 +1507,16 @@ function vt(e, t) {
         .map(
           (u) => `
         <div class="feature-card">
-          <div class="feature-title">${go(u.feature || "")}</div>
-          <div class="feature-oneliner">${go(u.one_liner || "")}</div>
-          <div class="feature-why"><strong>Why for you:</strong> ${go(u.why_for_you || "")}</div>
+          <div class="feature-title">${escapeHtmlAttribute(u.feature || "")}</div>
+          <div class="feature-oneliner">${escapeHtmlAttribute(u.one_liner || "")}</div>
+          <div class="feature-why"><strong>Why for you:</strong> ${escapeHtmlAttribute(u.why_for_you || "")}</div>
           ${
             u.example_code
               ? `
           <div class="feature-examples">
             <div class="feature-example">
               <div class="example-code-row">
-                <code class="example-code">${go(u.example_code)}</code>
+                <code class="example-code">${escapeHtmlAttribute(u.example_code)}</code>
                 <button class="copy-btn" onclick="copyText(this)">Copy</button>
               </div>
             </div>
@@ -1542,16 +1542,16 @@ function vt(e, t) {
         .map(
           (u) => `
         <div class="pattern-card">
-          <div class="pattern-title">${go(u.title || "")}</div>
-          <div class="pattern-summary">${go(u.suggestion || "")}</div>
-          ${u.detail ? `<div class="pattern-detail">${go(u.detail)}</div>` : ""}
+          <div class="pattern-title">${escapeHtmlAttribute(u.title || "")}</div>
+          <div class="pattern-summary">${escapeHtmlAttribute(u.suggestion || "")}</div>
+          ${u.detail ? `<div class="pattern-detail">${escapeHtmlAttribute(u.detail)}</div>` : ""}
           ${
             u.copyable_prompt
               ? `
           <div class="copyable-prompt-section">
             <div class="prompt-label">Paste into Claude Code:</div>
             <div class="copyable-prompt-row">
-              <code class="copyable-prompt">${go(u.copyable_prompt)}</code>
+              <code class="copyable-prompt">${escapeHtmlAttribute(u.copyable_prompt)}</code>
               <button class="copy-btn" onclick="copyText(this)">Copy</button>
             </div>
           </div>
@@ -1573,16 +1573,16 @@ function vt(e, t) {
       j?.opportunities && j.opportunities.length > 0
         ? `
     <h2 id="section-horizon">On the Horizon</h2>
-    ${j.intro ? `<p class="section-intro">${go(j.intro)}</p>` : ""}
+    ${j.intro ? `<p class="section-intro">${escapeHtmlAttribute(j.intro)}</p>` : ""}
     <div class="horizon-section">
       ${j.opportunities
         .map(
           (u) => `
         <div class="horizon-card">
-          <div class="horizon-title">${go(u.title || "")}</div>
-          <div class="horizon-possible">${go(u.whats_possible || "")}</div>
-          ${u.how_to_try ? `<div class="horizon-tip"><strong>Getting started:</strong> ${go(u.how_to_try)}</div>` : ""}
-          ${u.copyable_prompt ? `<div class="pattern-prompt"><div class="prompt-label">Paste into Claude Code:</div><code>${go(u.copyable_prompt)}</code><button class="copy-btn" onclick="copyText(this)">Copy</button></div>` : ""}
+          <div class="horizon-title">${escapeHtmlAttribute(u.title || "")}</div>
+          <div class="horizon-possible">${escapeHtmlAttribute(u.whats_possible || "")}</div>
+          ${u.how_to_try ? `<div class="horizon-tip"><strong>Getting started:</strong> ${escapeHtmlAttribute(u.how_to_try)}</div>` : ""}
+          ${u.copyable_prompt ? `<div class="pattern-prompt"><div class="prompt-label">Paste into Claude Code:</div><code>${escapeHtmlAttribute(u.copyable_prompt)}</code><button class="copy-btn" onclick="copyText(this)">Copy</button></div>` : ""}
         </div>
       `,
         )
@@ -1610,9 +1610,9 @@ function vt(e, t) {
           ${H.map(
             (u) => `
             <div class="feedback-card team-card">
-              <div class="feedback-title">${go(u.title || "")}</div>
-              <div class="feedback-detail">${go(u.detail || "")}</div>
-              ${u.evidence ? `<div class="feedback-evidence"><em>Evidence:</em> ${go(u.evidence)}</div>` : ""}
+              <div class="feedback-title">${escapeHtmlAttribute(u.title || "")}</div>
+              <div class="feedback-detail">${escapeHtmlAttribute(u.detail || "")}</div>
+              ${u.evidence ? `<div class="feedback-evidence"><em>Evidence:</em> ${escapeHtmlAttribute(u.evidence)}</div>` : ""}
             </div>
           `,
           ).join("")}
@@ -1635,9 +1635,9 @@ function vt(e, t) {
           ${B.map(
             (u) => `
             <div class="feedback-card model-card">
-              <div class="feedback-title">${go(u.title || "")}</div>
-              <div class="feedback-detail">${go(u.detail || "")}</div>
-              ${u.evidence ? `<div class="feedback-evidence"><em>Evidence:</em> ${go(u.evidence)}</div>` : ""}
+              <div class="feedback-title">${escapeHtmlAttribute(u.title || "")}</div>
+              <div class="feedback-detail">${escapeHtmlAttribute(u.detail || "")}</div>
+              ${u.evidence ? `<div class="feedback-evidence"><em>Evidence:</em> ${escapeHtmlAttribute(u.evidence)}</div>` : ""}
             </div>
           `,
           ).join("")}
@@ -1653,8 +1653,8 @@ function vt(e, t) {
     W = D?.headline
       ? `
     <div class="fun-ending">
-      <div class="fun-headline">"${go(D.headline)}"</div>
-      ${D.detail ? `<div class="fun-detail">${go(D.detail)}</div>` : ""}
+      <div class="fun-headline">"${escapeHtmlAttribute(D.headline)}"</div>
+      ${D.detail ? `<div class="fun-detail">${escapeHtmlAttribute(D.detail)}</div>` : ""}
     </div>
     `
       : "",
@@ -2168,7 +2168,7 @@ async function xt(e) {
       case "error":
         return [];
       case "capped":
-        n(
+        logForDebugging(
           `insights: project listing truncated at ${DEFAULT_MAX_PAGES} pages; scanning the ${l.length} projects seen`,
           { level: "warn" },
         );
@@ -2217,7 +2217,7 @@ async function xt(e) {
           break;
         case "capped":
           if (d === 0)
-            n(
+            logForDebugging(
               `insights: session listing for project ${w} truncated (the scan's ${DEFAULT_MAX_PAGES}-page session-listing budget is spent); keeping the sessions seen`,
               { level: "warn" },
             );
@@ -2227,7 +2227,7 @@ async function xt(e) {
       if (f % 10 === 9) await new Promise((x) => setImmediate(x));
     }
     if (d > 1)
-      n(
+      logForDebugging(
         `insights: ${d - 1} more ${d === 2 ? "project was" : "projects were"} left without a session listing after the scan's budget ran out`,
         { level: "warn" },
       );
@@ -2464,7 +2464,7 @@ ${E}
       {
         type: "text",
         text: St({
-          insightsJson: b(l, null, 2),
+          insightsJson: jsonStringify(l, null, 2),
           reportUrl: d,
           htmlPath: p,
           facetsDir: ae(),

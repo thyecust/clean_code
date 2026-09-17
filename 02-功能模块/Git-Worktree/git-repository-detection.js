@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { GIT_HARDENED_ARGS, execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import { getGitRepoCache, gitExe, redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -119,9 +119,9 @@ async function detectCurrentRepositoryWithHost(t, r) {
   };
   try {
     let s = await resolveRemoteUrl(e);
-    if ((n(`Git remote URL: ${redactGitRemoteCredentials(s)}`), !s))
+    if ((logForDebugging(`Git remote URL: ${redactGitRemoteCredentials(s)}`), !s))
       return (
-        n("No git remote URL found"),
+        logForDebugging("No git remote URL found"),
         getGitRepoCache().remoteHostByCwd.delete(e),
         l(),
         null
@@ -157,7 +157,7 @@ async function detectCurrentRepositoryWithHost(t, r) {
       }
     }
     ((i ??= u),
-      n(
+      logForDebugging(
         `Parsed repository: ${i ? `${i.host}/${i.owner}/${i.name}` : null} from URL: ${redactGitRemoteCredentials(s)}`,
       ));
     let R = i?.host ?? parseRemoteHostname(s);
@@ -167,7 +167,7 @@ async function detectCurrentRepositoryWithHost(t, r) {
     else if (h) o.delete(e);
     return i;
   } catch (s) {
-    return (n(`Error detecting repository: ${s}`), l(), null);
+    return (logForDebugging(`Error detecting repository: ${s}`), l(), null);
   }
 }
 function getCachedRepository() {
@@ -275,7 +275,7 @@ function parseGitHubRepository(t) {
       return `${o[0]}/${l}`;
     }
   }
-  return (n(`Could not parse repository from: ${r}`), null);
+  return (logForDebugging(`Could not parse repository from: ${r}`), null);
 }
 var A = /^[A-Za-z0-9._-]+$/;
 function c(t) {

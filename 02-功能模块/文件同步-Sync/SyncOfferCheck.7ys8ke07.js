@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 240 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { gracefulShutdownSync } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -110,7 +110,7 @@ function SyncOfferCheck(ge) {
       (i[12] = V));
   else V = i[12];
   let R;
-  if (i[13] !== T) ((R = e(t, { children: T })), (i[13] = T), (i[14] = R));
+  if (i[13] !== T) ((R = e(Text, { children: T })), (i[13] = T), (i[14] = R));
   else R = i[14];
   let S;
   if (i[15] !== n || i[16] !== s)
@@ -141,7 +141,7 @@ function O() {
     X;
   if (Re[0] !== a.keyName || Re[1] !== a.pending)
     ((X = a.pending
-      ? r(t, {
+      ? r(Text, {
           dimColor: !0,
           children: ["Press ", a.keyName, " again to exit"],
         })
@@ -167,7 +167,7 @@ function P(Se) {
     ee;
   if (j[3] !== m.keyName || j[4] !== m.pending)
     ((ee = m.pending
-      ? r(t, {
+      ? r(Text, {
           dimColor: !0,
           children: ["Press ", m.keyName, " again to exit"],
         })

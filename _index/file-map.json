@@ -1,6 +1,6 @@
 {
- "chunk-01cse5zg.js": {
-  "path": "01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js",
+ "ansi-text-utils.js": {
+  "path": "01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js",
   "module": "核心工具 · 字符串与文本",
   "tier": 1,
   "kb": 17.2,
@@ -580,8 +580,8 @@
   "kb": 1.6,
   "confidence": "low"
  },
- "chunk-1pbaa558.js": {
-  "path": "01-核心基础设施/设置-配置/chunk-1pbaa558.js",
+ "remote-managed-settings.js": {
+  "path": "01-核心基础设施/设置-配置/remote-managed-settings.js",
   "module": "设置 / 配置",
   "tier": 1,
   "kb": 39.5,
@@ -860,8 +860,8 @@
   "kb": 3.0,
   "confidence": "low"
  },
- "chunk-2m80582f.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-2m80582f.js",
+ "device-bridge-registration.js": {
+  "path": "02-功能模块/Bridge-RemoteControl/device-bridge-registration.js",
   "module": "Bridge / Remote Control",
   "tier": 2,
   "kb": 40.9,
@@ -1007,8 +1007,8 @@
   "kb": 1.8,
   "confidence": "low"
  },
- "chunk-33y3h2sy.js": {
-  "path": "02-功能模块/Git-Worktree/chunk-33y3h2sy.js",
+ "git-operations.js": {
+  "path": "02-功能模块/Git-Worktree/git-operations.js",
   "module": "Git / Worktree",
   "tier": 2,
   "kb": 36.8,
@@ -1063,8 +1063,8 @@
   "kb": 1.6,
   "confidence": "low"
  },
- "chunk-3b6ct3yp.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-3b6ct3yp.js",
+ "login-flow.js": {
+  "path": "02-功能模块/Bridge-RemoteControl/login-flow.js",
   "module": "Bridge / Remote Control",
   "tier": 2,
   "kb": 14.8,
@@ -1217,8 +1217,8 @@
   "kb": 15.1,
   "confidence": "high"
  },
- "chunk-3nwwgatc.js": {
-  "path": "02-功能模块/成本-Token统计/chunk-3nwwgatc.js",
+ "usage-transcript-scan.js": {
+  "path": "02-功能模块/成本-Token统计/usage-transcript-scan.js",
   "module": "成本 / Token 统计",
   "tier": 2,
   "kb": 21.8,
@@ -1532,15 +1532,15 @@
   "kb": 5.4,
   "confidence": "medium"
  },
- "chunk-548xet6h.js": {
-  "path": "02-功能模块/自动更新-安装/chunk-548xet6h.js",
+ "auto-updater.js": {
+  "path": "02-功能模块/自动更新-安装/auto-updater.js",
   "module": "自动更新 / 安装",
   "tier": 2,
   "kb": 35.7,
   "confidence": "high"
  },
- "chunk-54bf3exn.js": {
-  "path": "02-功能模块/文件同步-Sync/chunk-54bf3exn.js",
+ "sync-offer-probe.js": {
+  "path": "02-功能模块/文件同步-Sync/sync-offer-probe.js",
   "module": "文件同步 / Sync",
   "tier": 2,
   "kb": 18.8,
@@ -1672,15 +1672,15 @@
   "kb": 11.7,
   "confidence": "high"
  },
- "chunk-5gvg7p5p.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-5gvg7p5p.js",
+ "artifact-read-for-model.js": {
+  "path": "02-功能模块/Artifact发布-渲染/artifact-read-for-model.js",
   "module": "Artifact 发布 / 渲染",
   "tier": 2,
   "kb": 20.5,
   "confidence": "high"
  },
- "chunk-5gz5xvw9.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-5gz5xvw9.js",
+ "artifact-comment-monitor-intent.js": {
+  "path": "02-功能模块/Artifact发布-渲染/artifact-comment-monitor-intent.js",
   "module": "Artifact 发布 / 渲染",
   "tier": 2,
   "kb": 26.2,
@@ -1742,8 +1742,8 @@
   "kb": 5.4,
   "confidence": "medium"
  },
- "chunk-5mzs51m4.js": {
-  "path": "01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js",
+ "markdown-ansi-renderer.js": {
+  "path": "01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js",
   "module": "核心工具 · 字符串与文本",
   "tier": 1,
   "kb": 21.0,
@@ -1847,8 +1847,8 @@
   "kb": 0.6,
   "confidence": "low"
  },
- "chunk-5wa92x7d.js": {
-  "path": "02-功能模块/MCP客户端/chunk-5wa92x7d.js",
+ "mcp-protocol-schemas.js": {
+  "path": "02-功能模块/MCP客户端/mcp-protocol-schemas.js",
   "module": "MCP 客户端",
   "tier": 2,
   "kb": 23.1,
@@ -1945,8 +1945,8 @@
   "kb": 3.1,
   "confidence": "low"
  },
- "chunk-66axrkvh.js": {
-  "path": "02-功能模块/远程工具执行/chunk-66axrkvh.js",
+ "remote-tool-protocol.js": {
+  "path": "02-功能模块/远程工具执行/remote-tool-protocol.js",
   "module": "远程工具执行",
   "tier": 2,
   "kb": 30.8,
@@ -1966,8 +1966,8 @@
   "kb": 6.0,
   "confidence": "medium"
  },
- "chunk-6842b6x1.js": {
-  "path": "02-功能模块/图片-截图-ComputerUse/chunk-6842b6x1.js",
+ "computer-use-tool-definitions.js": {
+  "path": "02-功能模块/图片-截图-ComputerUse/computer-use-tool-definitions.js",
   "module": "图片 / 截图 / Computer Use",
   "tier": 2,
   "kb": 45.0,
@@ -2036,8 +2036,8 @@
   "kb": 0.8,
   "confidence": "low"
  },
- "chunk-6gjsfh7a.js": {
-  "path": "02-功能模块/Workflow编排/chunk-6gjsfh7a.js",
+ "workflow-dialogs.js": {
+  "path": "02-功能模块/Workflow编排/workflow-dialogs.js",
   "module": "Workflow 编排",
   "tier": 2,
   "kb": 58.8,
@@ -2253,8 +2253,8 @@
   "kb": 10.2,
   "confidence": "high"
  },
- "chunk-780k92tm.js": {
-  "path": "02-功能模块/Teammates团队/chunk-780k92tm.js",
+ "agent-listing.js": {
+  "path": "02-功能模块/Teammates团队/agent-listing.js",
   "module": "Teammates 团队",
   "tier": 2,
   "kb": 16.0,
@@ -2435,8 +2435,8 @@
   "kb": 13.3,
   "confidence": "high"
  },
- "chunk-7s6mt1vg.js": {
-  "path": "02-功能模块/插件系统/chunk-7s6mt1vg.js",
+ "plugin-system-core.js": {
+  "path": "02-功能模块/插件系统/plugin-system-core.js",
   "module": "插件系统",
   "tier": 2,
   "kb": 31.1,
@@ -2694,8 +2694,8 @@
   "kb": 0.8,
   "confidence": "low"
  },
- "chunk-8jtd54px.js": {
-  "path": "02-功能模块/Teammates团队/chunk-8jtd54px.js",
+ "in-process-teammate-runner.js": {
+  "path": "02-功能模块/Teammates团队/in-process-teammate-runner.js",
   "module": "Teammates 团队",
   "tier": 2,
   "kb": 34.5,
@@ -2750,8 +2750,8 @@
   "kb": 5.0,
   "confidence": "medium"
  },
- "chunk-8sjdj5bm.js": {
-  "path": "02-功能模块/工具Bash-Shell/chunk-8sjdj5bm.js",
+ "powershell-command-safety.js": {
+  "path": "02-功能模块/工具Bash-Shell/powershell-command-safety.js",
   "module": "工具: Bash/Shell",
   "tier": 2,
   "kb": 33.9,
@@ -2876,8 +2876,8 @@
   "kb": 17.9,
   "confidence": "high"
  },
- "chunk-98spw152.js": {
-  "path": "02-功能模块/MCP客户端/chunk-98spw152.js",
+ "mcp-protocol.js": {
+  "path": "02-功能模块/MCP客户端/mcp-protocol.js",
   "module": "MCP 客户端",
   "tier": 2,
   "kb": 40.1,
@@ -2967,8 +2967,8 @@
   "kb": 1.5,
   "confidence": "low"
  },
- "chunk-9g86t9bp.js": {
-  "path": "02-功能模块/认证-OAuth登录/chunk-9g86t9bp.js",
+ "console-profile-auth.js": {
+  "path": "02-功能模块/认证-OAuth登录/console-profile-auth.js",
   "module": "认证 / OAuth 登录",
   "tier": 2,
   "kb": 17.0,
@@ -3555,8 +3555,8 @@
   "kb": 116.8,
   "confidence": "high"
  },
- "chunk-bm9p9vh6.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-bm9p9vh6.js",
+ "session-event-transport.js": {
+  "path": "02-功能模块/Bridge-RemoteControl/session-event-transport.js",
   "module": "Bridge / Remote Control",
   "tier": 2,
   "kb": 16.0,
@@ -3590,8 +3590,8 @@
   "kb": 14.9,
   "confidence": "low"
  },
- "chunk-brx72pf1.js": {
-  "path": "02-功能模块/自动更新-安装/chunk-brx72pf1.js",
+ "install-diagnostics.js": {
+  "path": "02-功能模块/自动更新-安装/install-diagnostics.js",
   "module": "自动更新 / 安装",
   "tier": 2,
   "kb": 28.3,
@@ -3646,8 +3646,8 @@
   "kb": 32.2,
   "confidence": "high"
  },
- "chunk-bznmdnc2.js": {
-  "path": "01-核心基础设施/设置-配置/chunk-bznmdnc2.js",
+ "settings-config-model.js": {
+  "path": "01-核心基础设施/设置-配置/settings-config-model.js",
   "module": "设置 / 配置",
   "tier": 1,
   "kb": 49.9,
@@ -3856,8 +3856,8 @@
   "kb": 24.7,
   "confidence": "high"
  },
- "chunk-ckrdhhqd.js": {
-  "path": "01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js",
+ "subprocess-env-scrub.js": {
+  "path": "01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js",
   "module": "核心工具 · 进程与信号",
   "tier": 1,
   "kb": 16.6,
@@ -4010,8 +4010,8 @@
   "kb": 17.6,
   "confidence": "high"
  },
- "chunk-d0tph3ay.js": {
-  "path": "02-功能模块/插件系统/chunk-d0tph3ay.js",
+ "plugin-autoupdate.js": {
+  "path": "02-功能模块/插件系统/plugin-autoupdate.js",
   "module": "插件系统",
   "tier": 2,
   "kb": 16.7,
@@ -4318,8 +4318,8 @@
   "kb": 1.2,
   "confidence": "low"
  },
- "chunk-dyq13fbm.js": {
-  "path": "02-功能模块/Workflow编排/chunk-dyq13fbm.js",
+ "workflow-progress-ui.js": {
+  "path": "02-功能模块/Workflow编排/workflow-progress-ui.js",
   "module": "Workflow 编排",
   "tier": 2,
   "kb": 25.6,
@@ -4367,8 +4367,8 @@
   "kb": 9.9,
   "confidence": "medium"
  },
- "chunk-e4xwwtsb.js": {
-  "path": "03-入口与运行时/Headless-SDK模式/chunk-e4xwwtsb.js",
+ "structured-io.js": {
+  "path": "03-入口与运行时/Headless-SDK模式/structured-io.js",
   "module": "Headless / SDK 模式",
   "tier": 3,
   "kb": 54.4,
@@ -4437,8 +4437,8 @@
   "kb": 6.7,
   "confidence": "low"
  },
- "chunk-eg4wmaq4.js": {
-  "path": "02-功能模块/文件同步-Sync/chunk-eg4wmaq4.js",
+ "sync-folder-scan.js": {
+  "path": "02-功能模块/文件同步-Sync/sync-folder-scan.js",
   "module": "文件同步 / Sync",
   "tier": 2,
   "kb": 17.0,
@@ -4871,8 +4871,8 @@
   "kb": 2.8,
   "confidence": "low"
  },
- "chunk-g4gdwpa0.js": {
-  "path": "02-功能模块/MCP客户端/chunk-g4gdwpa0.js",
+ "mcp-discovery-cache.js": {
+  "path": "02-功能模块/MCP客户端/mcp-discovery-cache.js",
   "module": "MCP 客户端",
   "tier": 2,
   "kb": 34.8,
@@ -4906,8 +4906,8 @@
   "kb": 65.5,
   "confidence": "high"
  },
- "chunk-g6sqdw6w.js": {
-  "path": "02-功能模块/Bedrock-Vertex/chunk-g6sqdw6w.js",
+ "bedrock-setup-wizard.js": {
+  "path": "02-功能模块/Bedrock-Vertex/bedrock-setup-wizard.js",
   "module": "Bedrock / Vertex",
   "tier": 2,
   "kb": 50.2,
@@ -5242,8 +5242,8 @@
   "kb": 10.5,
   "confidence": "medium"
  },
- "chunk-hbndb8am.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-hbndb8am.js",
+ "chrome-bridge-mcp-server.js": {
+  "path": "02-功能模块/Bridge-RemoteControl/chrome-bridge-mcp-server.js",
   "module": "Bridge / Remote Control",
   "tier": 2,
   "kb": 46.4,
@@ -5340,15 +5340,15 @@
   "kb": 4.5,
   "confidence": "high"
  },
- "chunk-hpw6352m.js": {
-  "path": "02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js",
+ "policy-limits-client.js": {
+  "path": "02-功能模块/策略限制(PolicyLimits)/policy-limits-client.js",
   "module": "策略限制 (Policy Limits)",
   "tier": 2,
   "kb": 27.3,
   "confidence": "high"
  },
- "chunk-hqp2e8nr.js": {
-  "path": "02-功能模块/语法高亮-Markdown渲染/chunk-hqp2e8nr.js",
+ "syntax-highlight-renderer.js": {
+  "path": "02-功能模块/语法高亮-Markdown渲染/syntax-highlight-renderer.js",
   "module": "语法高亮 / Markdown 渲染",
   "tier": 2,
   "kb": 20.7,
@@ -5522,8 +5522,8 @@
   "kb": 0.6,
   "confidence": "low"
  },
- "chunk-j990pwax.js": {
-  "path": "02-功能模块/认证-OAuth登录/chunk-j990pwax.js",
+ "oauth-client.js": {
+  "path": "02-功能模块/认证-OAuth登录/oauth-client.js",
   "module": "认证 / OAuth 登录",
   "tier": 2,
   "kb": 22.3,
@@ -5858,8 +5858,8 @@
   "kb": 0.7,
   "confidence": "low"
  },
- "chunk-ka6sg2f0.js": {
-  "path": "02-功能模块/插件系统/chunk-ka6sg2f0.js",
+ "eval-mock-stand-in.js": {
+  "path": "02-功能模块/插件系统/eval-mock-stand-in.js",
   "module": "插件系统",
   "tier": 2,
   "kb": 20.0,
@@ -6075,8 +6075,8 @@
   "kb": 7.3,
   "confidence": "high"
  },
- "chunk-kyfaptqk.js": {
-  "path": "02-功能模块/斜杠命令-UI组件/chunk-kyfaptqk.js",
+ "feedback-dialog.js": {
+  "path": "02-功能模块/斜杠命令-UI组件/feedback-dialog.js",
   "module": "斜杠命令 · UI 组件",
   "tier": 2,
   "kb": 24.5,
@@ -6439,8 +6439,8 @@
   "kb": 4.2,
   "confidence": "high"
  },
- "chunk-n4zff40p.js": {
-  "path": "02-功能模块/用量额度-限额/chunk-n4zff40p.js",
+ "session-limit-reset.js": {
+  "path": "02-功能模块/用量额度-限额/session-limit-reset.js",
   "module": "用量额度 / 限额",
   "tier": 2,
   "kb": 15.2,
@@ -6474,8 +6474,8 @@
   "kb": 7.1,
   "confidence": "high"
  },
- "chunk-n76cf9e6.js": {
-  "path": "02-功能模块/认证-OAuth登录/chunk-n76cf9e6.js",
+ "daemon-worker-runtime.js": {
+  "path": "02-功能模块/认证-OAuth登录/daemon-worker-runtime.js",
   "module": "认证 / OAuth 登录",
   "tier": 2,
   "kb": 20.3,
@@ -6516,8 +6516,8 @@
   "kb": 0.8,
   "confidence": "low"
  },
- "chunk-ncbnx9cz.js": {
-  "path": "01-核心基础设施/设置-配置/chunk-ncbnx9cz.js",
+ "agent-import.js": {
+  "path": "01-核心基础设施/设置-配置/agent-import.js",
   "module": "设置 / 配置",
   "tier": 1,
   "kb": 44.1,
@@ -6565,8 +6565,8 @@
   "kb": 0.8,
   "confidence": "low"
  },
- "chunk-nhk351pe.js": {
-  "path": "02-功能模块/Teammates团队/chunk-nhk351pe.js",
+ "peer-idle-notices.js": {
+  "path": "02-功能模块/Teammates团队/peer-idle-notices.js",
   "module": "Teammates 团队",
   "tier": 2,
   "kb": 20.9,
@@ -6579,8 +6579,8 @@
   "kb": 5.0,
   "confidence": "high"
  },
- "chunk-nhpr06js.js": {
-  "path": "03-入口与运行时/CLI入口-Commander/chunk-nhpr06js.js",
+ "welcome-banner.js": {
+  "path": "03-入口与运行时/CLI入口-Commander/welcome-banner.js",
   "module": "CLI 入口 / Commander",
   "tier": 3,
   "kb": 24.4,
@@ -6936,8 +6936,8 @@
   "kb": 80.8,
   "confidence": "high"
  },
- "chunk-ph7v431y.js": {
-  "path": "03-入口与运行时/Headless-SDK模式/chunk-ph7v431y.js",
+ "sdk-message-adapter.js": {
+  "path": "03-入口与运行时/Headless-SDK模式/sdk-message-adapter.js",
   "module": "Headless / SDK 模式",
   "tier": 3,
   "kb": 21.4,
@@ -7265,8 +7265,8 @@
   "kb": 8.9,
   "confidence": "medium"
  },
- "chunk-qgx6a5a0.js": {
-  "path": "01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js",
+ "model-switch.js": {
+  "path": "01-核心基础设施/模型目录-ModelCatalog/model-switch.js",
   "module": "模型目录 / Model Catalog",
   "tier": 1,
   "kb": 16.2,
@@ -7328,8 +7328,8 @@
   "kb": 1.7,
   "confidence": "low"
  },
- "chunk-qp3gv3vk.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-qp3gv3vk.js",
+ "device-bridge-remote-tools.js": {
+  "path": "02-功能模块/Bridge-RemoteControl/device-bridge-remote-tools.js",
   "module": "Bridge / Remote Control",
   "tier": 2,
   "kb": 24.5,
@@ -7510,8 +7510,8 @@
   "kb": 1.1,
   "confidence": "low"
  },
- "chunk-rh0xpf1w.js": {
-  "path": "02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js",
+ "bg-rendezvous-server.js": {
+  "path": "02-功能模块/后台任务-Shell管理/bg-rendezvous-server.js",
   "module": "后台任务 / Shell 管理",
   "tier": 2,
   "kb": 17.4,
@@ -7958,8 +7958,8 @@
   "kb": 8.3,
   "confidence": "high"
  },
- "chunk-stvynqrz.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-stvynqrz.js",
+ "artifact-asset-store.js": {
+  "path": "02-功能模块/Artifact发布-渲染/artifact-asset-store.js",
   "module": "Artifact 发布 / 渲染",
   "tier": 2,
   "kb": 33.6,
@@ -8007,8 +8007,8 @@
   "kb": 20.0,
   "confidence": "high"
  },
- "chunk-szqky9sa.js": {
-  "path": "02-功能模块/会话-历史-恢复/chunk-szqky9sa.js",
+ "retention-cleanup.js": {
+  "path": "02-功能模块/会话-历史-恢复/retention-cleanup.js",
   "module": "会话 / 历史 / 恢复",
   "tier": 2,
   "kb": 45.6,
@@ -8056,8 +8056,8 @@
   "kb": 3.7,
   "confidence": "low"
  },
- "chunk-t2esphmv.js": {
-  "path": "02-功能模块/跨会话消息(UDS)/chunk-t2esphmv.js",
+ "uds-messaging.js": {
+  "path": "02-功能模块/跨会话消息(UDS)/uds-messaging.js",
   "module": "跨会话消息 (UDS)",
   "tier": 2,
   "kb": 49.9,
@@ -8084,8 +8084,8 @@
   "kb": 29.1,
   "confidence": "high"
  },
- "chunk-t3q91yqm.js": {
-  "path": "02-功能模块/会话-历史-恢复/chunk-t3q91yqm.js",
+ "resume-session-picker.js": {
+  "path": "02-功能模块/会话-历史-恢复/resume-session-picker.js",
   "module": "会话 / 历史 / 恢复",
   "tier": 2,
   "kb": 33.5,
@@ -8119,8 +8119,8 @@
   "kb": 11.8,
   "confidence": "medium"
  },
- "chunk-t76ttx77.js": {
-  "path": "01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js",
+ "ansi-text-primitives.js": {
+  "path": "01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js",
   "module": "ANSI / 样式 / 布局原语",
   "tier": 1,
   "kb": 22.5,
@@ -8462,8 +8462,8 @@
   "kb": 1.4,
   "confidence": "low"
  },
- "chunk-v8138qz5.js": {
-  "path": "02-功能模块/ClaudeinChrome/chunk-v8138qz5.js",
+ "claude-in-chrome-tool-permissions.js": {
+  "path": "02-功能模块/ClaudeinChrome/claude-in-chrome-tool-permissions.js",
   "module": "Claude in Chrome",
   "tier": 2,
   "kb": 18.2,
@@ -8483,8 +8483,8 @@
   "kb": 13.8,
   "confidence": "medium"
  },
- "chunk-v967hawf.js": {
-  "path": "02-功能模块/Git-Worktree/chunk-v967hawf.js",
+ "dir-sync-git-repository.js": {
+  "path": "02-功能模块/Git-Worktree/dir-sync-git-repository.js",
   "module": "Git / Worktree",
   "tier": 2,
   "kb": 48.8,
@@ -8721,8 +8721,8 @@
   "kb": 0.9,
   "confidence": "low"
  },
- "chunk-w0pgmfvw.js": {
-  "path": "02-功能模块/Workflow编排/chunk-w0pgmfvw.js",
+ "workflow-tool-prompt.js": {
+  "path": "02-功能模块/Workflow编排/workflow-tool-prompt.js",
   "module": "Workflow 编排",
   "tier": 2,
   "kb": 21.1,
@@ -8875,8 +8875,8 @@
   "kb": 2.1,
   "confidence": "low"
  },
- "chunk-wj93jy9j.js": {
-  "path": "02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js",
+ "markdown-renderer.js": {
+  "path": "02-功能模块/语法高亮-Markdown渲染/markdown-renderer.js",
   "module": "语法高亮 / Markdown 渲染",
   "tier": 2,
   "kb": 22.7,
@@ -8973,8 +8973,8 @@
   "kb": 1.5,
   "confidence": "low"
  },
- "chunk-wsyjx2r0.js": {
-  "path": "02-功能模块/Teammates团队/chunk-wsyjx2r0.js",
+ "message-recipient-resolution.js": {
+  "path": "02-功能模块/Teammates团队/message-recipient-resolution.js",
   "module": "Teammates 团队",
   "tier": 2,
   "kb": 23.7,
@@ -9057,8 +9057,8 @@
   "kb": 11.9,
   "confidence": "low"
  },
- "chunk-x3txegas.js": {
-  "path": "02-功能模块/后台任务-Shell管理/chunk-x3txegas.js",
+ "task-output.js": {
+  "path": "02-功能模块/后台任务-Shell管理/task-output.js",
   "module": "后台任务 / Shell 管理",
   "tier": 2,
   "kb": 39.3,
@@ -9092,15 +9092,15 @@
   "kb": 2.7,
   "confidence": "low"
  },
- "chunk-x4qgycdj.js": {
-  "path": "01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js",
+ "hardened-fs-primitives.js": {
+  "path": "01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js",
   "module": "安全文件系统 (FS 加固)",
   "tier": 1,
   "kb": 21.5,
   "confidence": "high"
  },
- "chunk-x7kby92q.js": {
-  "path": "01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js",
+ "settings-env-application.js": {
+  "path": "01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js",
   "module": "遥测 / OpenTelemetry",
   "tier": 1,
   "kb": 18.8,
@@ -9183,8 +9183,8 @@
   "kb": 5.0,
   "confidence": "medium"
  },
- "chunk-xercceag.js": {
-  "path": "02-功能模块/Git-Worktree/chunk-xercceag.js",
+ "resume-session-state.js": {
+  "path": "02-功能模块/Git-Worktree/resume-session-state.js",
   "module": "Git / Worktree",
   "tier": 2,
   "kb": 26.8,
@@ -9337,8 +9337,8 @@
   "kb": 1.5,
   "confidence": "low"
  },
- "chunk-y5mtnxtg.js": {
-  "path": "02-功能模块/斜杠命令-UI组件/chunk-y5mtnxtg.js",
+ "status-info-rows.js": {
+  "path": "02-功能模块/斜杠命令-UI组件/status-info-rows.js",
   "module": "斜杠命令 · UI 组件",
   "tier": 2,
   "kb": 15.8,
@@ -9372,8 +9372,8 @@
   "kb": 12.6,
   "confidence": "low"
  },
- "chunk-y8j05azr.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-y8j05azr.js",
+ "artifact-db.js": {
+  "path": "02-功能模块/Artifact发布-渲染/artifact-db.js",
   "module": "Artifact 发布 / 渲染",
   "tier": 2,
   "kb": 28.8,
@@ -9505,8 +9505,8 @@
   "kb": 4.1,
   "confidence": "low"
  },
- "chunk-yrjr7v83.js": {
-  "path": "02-功能模块/Artifact发布-渲染/chunk-yrjr7v83.js",
+ "artifact-prompt-paragraphs.js": {
+  "path": "02-功能模块/Artifact发布-渲染/artifact-prompt-paragraphs.js",
   "module": "Artifact 发布 / 渲染",
   "tier": 2,
   "kb": 23.5,
@@ -9526,8 +9526,8 @@
   "kb": 6.5,
   "confidence": "high"
  },
- "chunk-yvs1a1sd.js": {
-  "path": "02-功能模块/Bedrock-Vertex/chunk-yvs1a1sd.js",
+ "vertex-setup-wizard.js": {
+  "path": "02-功能模块/Bedrock-Vertex/vertex-setup-wizard.js",
   "module": "Bedrock / Vertex",
   "tier": 2,
   "kb": 42.7,
@@ -9561,8 +9561,8 @@
   "kb": 10.8,
   "confidence": "medium"
  },
- "chunk-z0qj8awf.js": {
-  "path": "02-功能模块/AutoMode-自动模式/chunk-z0qj8awf.js",
+ "auto-mode-setup-proposal.js": {
+  "path": "02-功能模块/AutoMode-自动模式/auto-mode-setup-proposal.js",
   "module": "AutoMode / 自动模式",
   "tier": 2,
   "kb": 17.6,

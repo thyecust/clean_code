@@ -12,7 +12,7 @@ import { useAnswerRefusalState } from "../共享小工具-未细化/use-answer-r
 import { pluralize, countOccurrences } from "../核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { buildSettingsSummary, hasSettingsSummaryEntries, diffSettingsSummaries, isTelemetryOnlyEnvChange, getManagedSettingsApprovalRows } from "./设置-配置.aqbb35ee.js";
-import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useKeybinding } from "../共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -32,13 +32,13 @@ function Qt(An) {
 }
 function Ut(On, jn) {
   return r(
-    o,
+    Box,
     {
       paddingLeft: 2,
       flexDirection: "row",
       children: [
-        e(t, { dimColor: !0, children: "\xB7 " }),
-        e(t, { children: On }),
+        e(Text, { dimColor: !0, children: "\xB7 " }),
+        e(Text, { children: On }),
       ],
     },
     jn,
@@ -46,13 +46,13 @@ function Ut(On, jn) {
 }
 function Zt(zn, Dn) {
   return r(
-    o,
+    Box,
     {
       paddingLeft: 2,
       flexDirection: "row",
       children: [
-        e(t, { dimColor: !0, children: "\xB7 " }),
-        e(t, { children: zn }),
+        e(Text, { dimColor: !0, children: "\xB7 " }),
+        e(Text, { children: zn }),
       ],
     },
     `tail-${Dn}`,
@@ -344,11 +344,11 @@ function Oe(wn) {
   useKeybinding("confirm:no", Gt, Jt);
   let ye;
   if (i[42] !== v.intro)
-    ((ye = e(t, { children: v.intro })), (i[42] = v.intro), (i[43] = ye));
+    ((ye = e(Text, { children: v.intro })), (i[42] = v.intro), (i[43] = ye));
   else ye = i[43];
   let be;
   if (i[44] !== v.listLabel)
-    ((be = e(t, { dimColor: !0, children: v.listLabel })),
+    ((be = e(Text, { dimColor: !0, children: v.listLabel })),
       (i[44] = v.listLabel),
       (i[45] = be));
   else be = i[45];
@@ -365,9 +365,9 @@ function Oe(wn) {
   )
     ((ve =
       fe > 0 &&
-      e(o, {
+      e(Box, {
         paddingLeft: 2,
-        children: e(t, {
+        children: e(Text, {
           color: "warning",
           children: te(
             fe,
@@ -392,7 +392,7 @@ function Oe(wn) {
   if (i[56] !== ge)
     (($e =
       ge &&
-      e(o, { paddingLeft: 2, children: e(t, { dimColor: !0, children: ge }) })),
+      e(Box, { paddingLeft: 2, children: e(Text, { dimColor: !0, children: ge }) })),
       (i[56] = ge),
       (i[57] = $e));
   else $e = i[57];
@@ -400,7 +400,7 @@ function Oe(wn) {
   if (i[58] !== pe)
     ((Ce =
       pe &&
-      e(o, { paddingLeft: 2, children: e(t, { dimColor: !0, children: pe }) })),
+      e(Box, { paddingLeft: 2, children: e(Text, { dimColor: !0, children: pe }) })),
       (i[58] = pe),
       (i[59] = Ce));
   else Ce = i[59];
@@ -413,7 +413,7 @@ function Oe(wn) {
     i[64] !== $e ||
     i[65] !== Ce
   )
-    ((Le = r(o, {
+    ((Le = r(Box, {
       flexDirection: "column",
       children: [be, we, ve, xe, $e, Ce],
     })),
@@ -427,11 +427,11 @@ function Oe(wn) {
   else Le = i[66];
   let ke;
   if (i[67] !== v.advice)
-    ((ke = e(t, { children: v.advice })), (i[67] = v.advice), (i[68] = ke));
+    ((ke = e(Text, { children: v.advice })), (i[67] = v.advice), (i[68] = ke));
   else ke = i[68];
   let Re;
   if (i[69] !== tt)
-    ((Re = e(t, { color: "warning", children: tt })),
+    ((Re = e(Text, { color: "warning", children: tt })),
       (i[69] = tt),
       (i[70] = Re));
   else Re = i[70];
@@ -511,7 +511,7 @@ function Oe(wn) {
       color: "warning",
       titleColor: "warning",
       title: "Managed settings require approval",
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         gap: 1,
         paddingTop: 1,

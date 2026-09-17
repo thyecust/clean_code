@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getFileStorage } from "../共享小工具-未细化/file-storage.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -70,9 +70,9 @@ async function h(e) {
     } finally {
       await r.close();
     }
-    return (n(`Stored image ${e.id} to ${t}`), t);
+    return (logForDebugging(`Stored image ${e.id} to ${t}`), t);
   } catch (t) {
-    return (n(`Failed to store image: ${t}`), null);
+    return (logForDebugging(`Failed to store image: ${t}`), null);
   }
 }
 function u(e, t, r) {
@@ -87,7 +87,7 @@ function u(e, t, r) {
   return (o.set(t, r), o);
 }
 async function cleanupStaleImageCacheDirs() {
-  let e = ae(),
+  let e = getFsSurface(),
     t = d(getClaudeConfigDir(), g),
     r = K();
   try {
@@ -102,7 +102,7 @@ async function cleanupStaleImageCacheDirs() {
       let a = d(t, i.name);
       try {
         (await e.rm(a, { recursive: !0, force: !0 }),
-          n(`Cleaned up old image cache: ${a}`));
+          logForDebugging(`Cleaned up old image cache: ${a}`));
       } catch {}
     }
     try {
@@ -168,14 +168,14 @@ async function C() {
     e = await getFileStorage().readRange(F(), 0, S + 1);
   } catch (r) {
     if (!W(r))
-      n(
+      logForDebugging(
         `[publishedCatalog] floor file read failed: ${A(r) ?? "unknown"}; no persisted version marks this session`,
       );
     return;
   }
   let t = e.length > S ? void 0 : D().safeParse(xt(e.toString("utf8"), !1));
   if (!t?.success) {
-    n(
+    logForDebugging(
       `[publishedCatalog] floor file ${t === void 0 ? "oversized" : "invalid"}; no persisted version marks this session`,
     );
     return;
@@ -197,11 +197,11 @@ async function P() {
     (await t.mkdir(getModelCatalogCacheDir()),
       await t.atomicWrite(
         F(),
-        b({ version: y, sources: Object.fromEntries(e) }),
+        jsonStringify({ version: y, sources: Object.fromEntries(e) }),
         384,
       ));
   } catch (e) {
-    n(`[publishedCatalog] floor file write failed: ${A(e) ?? "unknown"}`);
+    logForDebugging(`[publishedCatalog] floor file write failed: ${A(e) ?? "unknown"}`);
   }
 }
 function getSettingsWithMcpErrors() {

@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { We, b, t8, z, Is, Ru, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonStringifyLine, jsonParse, Is, deepClone, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { parseMcpToolName, getFullToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -25,10 +25,10 @@ import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { runWithAgentContext, isMainAgentContext, getAgentDepth, archiveRemoteSession, BASH_TOOL_NAME, READ_TOOL_NAME, POWERSHELL_TOOL_NAME, isToolDetailsLoggingEnabled, getFeatureValue_CACHED_MAY_BE_STALE, checkGate_CACHED_OR_BLOCKING } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { er } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { stripLongContextTags } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { getParentSessionId, isModelDrivenSession } from "../Teammates团队/teammate-context.js";
-import { Xk } from "../权限系统/chunk-t3b7pg2x.js";
+import { coerceEffortLevelValue } from "../权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
 import { MAX_WORKFLOW_SCRIPT_BYTES, readWorkflowScriptFile, getWorkflowScriptPathError, REPL_TOOL_NAME, findExactDenyRule, readAutoAllowedForMutation } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
@@ -98,7 +98,7 @@ import {
   isMessageFromDifferentModel,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { formatUnsatisfiableSchemaReason, STRUCTURED_OUTPUT_TOOL_NAME, buildStructuredOutputToolFromSchema } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { of, kme } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { ZERO_USAGE_TOTALS, analyzeTurnTail } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { WEB_FETCH_TOOL_NAME } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import {
   withVmTimeout,
@@ -645,8 +645,8 @@ var To =
   vo =
     "Math.random() is unavailable in workflow scripts (breaks resume). For N independent samples, include the index in the agent label or prompt.",
   So = `(() => {
-      const NOW_ERR = ${b(To)};
-      const RANDOM_ERR = ${b(vo)};
+      const NOW_ERR = ${jsonStringify(To)};
+      const RANDOM_ERR = ${jsonStringify(vo)};
       Math.random = function random() { throw new Error(RANDOM_ERR) };
       const RealDate = Date;
       RealDate.now = function now() { throw new Error(NOW_ERR) };
@@ -710,7 +710,7 @@ var X = "__wRg$",
   jn = `${X}resolve`;
 function Xt(t) {
   Lt.runInContext(
-    `Object.defineProperty(globalThis, ${b(jn)}, {
+    `Object.defineProperty(globalThis, ${jsonStringify(jn)}, {
       value: Promise.resolve.bind(Promise),
       writable: false, enumerable: false, configurable: false,
     })`,
@@ -845,13 +845,13 @@ function pn(
         if (typeof k === "string") return k;
         if (k === null || (typeof k !== "object" && typeof k !== "function"))
           try {
-            return b(k);
+            return jsonStringify(k);
           } catch {
             return `[${typeof k}]`;
           }
         let C;
         try {
-          let E = b(l.sanitize(k));
+          let E = jsonStringify(l.sanitize(k));
           if (E !== void 0 && E !== "{}") return E;
           C = E ?? `[${typeof k}]`;
         } catch (E) {
@@ -1080,7 +1080,7 @@ var Vn = 2000,
   mn = 2 * Vn;
 function gn(t, l) {
   if (isModelDrivenSession(l)) return { kind: "none" };
-  let s = kme(t);
+  let s = analyzeTurnTail(t);
   if (s.scheduledTrigger) return { kind: "automated" };
   let m = s.decider;
   if (m === null || !m.strictHuman || m.text === null) return { kind: "none" };
@@ -1184,7 +1184,7 @@ function Fo(t) {
     }
     return p;
   };
-  return b(m(l));
+  return jsonStringify(m(l));
 }
 function Jn(t, l, s) {
   let m = Ro("sha256")
@@ -1230,7 +1230,7 @@ class en {
       try {
         l.push(Is(s));
       } catch (m) {
-        n(`LocalFileJournal: skipping unparseable line in ${this.path}: ${m}`);
+        logForDebugging(`LocalFileJournal: skipping unparseable line in ${this.path}: ${m}`);
       }
     }
     return zn(l);
@@ -1244,7 +1244,7 @@ class en {
       if (!k.ok) {
         if (k.error.code === "NotFound") return;
         throw (
-          n(`LocalFileJournal: read of ${this.path} failed: ${We(k.error)}`),
+          logForDebugging(`LocalFileJournal: read of ${this.path} failed: ${describeStorageError(k.error)}`),
           Error("LocalFileJournal: journal read failed", { cause: k.error })
         );
       }
@@ -1267,17 +1267,17 @@ class en {
   async append(t) {
     let l = this.storageV5;
     if (l !== void 0) {
-      let s = await l.backend.append(l.key, [{ data: t8(t) }]);
+      let s = await l.backend.append(l.key, [{ data: jsonStringifyLine(t) }]);
       if (!s.ok)
         throw (
-          n(`LocalFileJournal: append to ${this.path} failed: ${We(s.error)}`),
+          logForDebugging(`LocalFileJournal: append to ${this.path} failed: ${describeStorageError(s.error)}`),
           Error("LocalFileJournal: journal append failed", { cause: s.error })
         );
       return;
     }
     if (!this.dirReady)
       (await mkdir(dirname(this.path), { recursive: !0 }), (this.dirReady = !0));
-    await appendFile(this.path, t8(t), "utf8");
+    await appendFile(this.path, jsonStringifyLine(t), "utf8");
   }
 }
 var Lo = 5000,
@@ -1388,7 +1388,7 @@ class Zn extends Error {
 var qn = 400;
 function Et(t) {
   if (t == null) return;
-  let l = (typeof t === "string" ? t : b(t)).trim();
+  let l = (typeof t === "string" ? t : jsonStringify(t)).trim();
   if (!l) return;
   return l.length > qn ? truncateToCodeUnits(l, qn) + "\u2026" : l;
 }
@@ -1432,7 +1432,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
   let N = 0,
     ue = async (A) => ({ v: await A }),
     pe = (A, ...F) => A(...F),
-    ee = (A) => Ru(A),
+    ee = (A) => deepClone(A),
     d = (A) => A,
     o = (A) => A,
     r = (A, F) => {
@@ -1658,7 +1658,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         L.schema = q;
       }
       if (L?.model !== void 0 && a.CLAUDE_CODE_SUBAGENT_MODEL_FORCE)
-        (n(
+        (logForDebugging(
           `Workflow agent model "${L.model}" ignored: CLAUDE_CODE_SUBAGENT_MODEL_FORCE is set`,
         ),
           (L.model = void 0));
@@ -1770,7 +1770,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         yt = (q) => {
           if (((Ue = !0), (Mt = q), !I || ye === void 0)) return;
           I.append({ type: "started", key: ye, agentId: q }).catch((_e) =>
-            n(`workflow journal started-append failed: ${_e}`, {
+            logForDebugging(`workflow journal started-append failed: ${_e}`, {
               level: "warn",
             }),
           );
@@ -1780,7 +1780,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
             return;
           await I.append({ type: "failed", key: ye, agentId: Mt ?? "" }).catch(
             (q) =>
-              n(`workflow journal failed-append failed: ${q}`, {
+              logForDebugging(`workflow journal failed-append failed: ${q}`, {
                 level: "warn",
               }),
           );
@@ -1794,7 +1794,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
               agentId: Mt ?? "",
               result: q,
             }).catch((_e) =>
-              n(`workflow journal result-append failed: ${_e}`, {
+              logForDebugging(`workflow journal result-append failed: ${_e}`, {
                 level: "warn",
               }),
             );
@@ -1943,7 +1943,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       he = v.tool;
     }
     let Me = ze ?? (he ? tr : bn),
-      st = Xk(be?.effort),
+      st = coerceEffortLevelValue(be?.effort),
       Ke = st !== void 0 ? { ...Me, effort: st } : Me,
       Le = be?.disallowedTools,
       ye = be?.bashCommandClamp,
@@ -2089,7 +2089,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
             ae !== void 0 &&
             parseMcpToolName(ae)?.serverName === le?.serverName
           )) {
-            n(
+            logForDebugging(
               `workflow agent(): disallowedTools mcp entry '${U}' covers this agent's declared frontmatter MCP server '${Te.declaredSpelling}' \u2014 those tools connect at ` +
                 "spawn, after this check, and the deny is applied to them then" +
                 (Te.verifiable
@@ -2123,14 +2123,14 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
                 "agent() opts.disallowedTools mismatched mcp entry \u2014 spawn refused",
               )
             );
-          n(
+          logForDebugging(
             `workflow agent(): disallowedTools mcp entry '${U}' ` +
               "matches no tool in this session's pool \u2014 the deny is a " +
               "no-op here",
           );
           continue;
         }
-        n(
+        logForDebugging(
           `workflow agent(): disallowedTools entry '${U}' matches no ` +
             "tool in this session's pool \u2014 the deny is a no-op here",
         );
@@ -2189,7 +2189,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       et = gt.mode === "auto",
       Be = null;
     if (be?.isolation === "worktree" && isBuiltInWebFetchAgent(Ue))
-      n(
+      logForDebugging(
         "[web-fetch agent] isolation:'worktree' ignored; the built-in web-fetch agent always runs as a local agent",
       );
     else if (be?.isolation === "worktree") {
@@ -2216,7 +2216,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
         String(Ue.effort ?? getEffortValue(D) ?? ""),
         Ue.agentType,
         at.map((v) => v.name).join(","),
-        be?.schema ? b(be.schema) : "",
+        be?.schema ? jsonStringify(be.schema) : "",
         nn ?? getCwd(),
       ].join(`
 `),
@@ -2245,7 +2245,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
         le,
         Je,
         nt,
-        zt = Ze ? er(Ze) : void 0,
+        zt = Ze ? stripLongContextTags(Ze) : void 0,
         vt = (we, Ge) =>
           s({
             type: "progress",
@@ -2613,7 +2613,7 @@ ${formatSavedFilesHarnessNote(Ht)}`;
         })),
         It.waitedMs > 0)
       )
-        n(
+        logForDebugging(
           `workflow agent [${re}] held ${It.waitedMs}ms for a same-prefix sibling's first response (prompt-cache warm-up)`,
         );
       let v;
@@ -2675,7 +2675,7 @@ ${formatSavedFilesHarnessNote(Ht)}`;
           v.structuredOutputAttempts > 0 &&
           v.structured === void 0
         ) {
-          let nt = b(v.lastStructuredOutputInput),
+          let nt = jsonStringify(v.lastStructuredOutputInput),
             zt = nt.length > 300 ? truncateToCodeUnits(nt, 300) + "\u2026" : nt;
           Je = ` \u2014 ${v.structuredOutputAttempts} StructuredOutput validation ${pluralize(v.structuredOutputAttempts, "failure")} (last input: ${zt})`;
         }
@@ -2729,7 +2729,7 @@ ${formatSavedFilesHarnessNote(Ht)}`;
           abortSignal: D.abortController.signal,
           subagentType: Ue.agentType,
           totalToolUseCount: it + v.toolCalls,
-          finalResultText: he ? (U !== void 0 ? b(U.value) : void 0) : v.text,
+          finalResultText: he ? (U !== void 0 ? jsonStringify(U.value) : void 0) : v.text,
           agentId: D.agentId,
           storageV5: D.storageV5,
           credentials: D.credentials,
@@ -2924,7 +2924,7 @@ ${v.text}`),
         recordRequestUsageAndCost(
           Be.costUSD,
           {
-            ...of,
+            ...ZERO_USAGE_TOTALS,
             input_tokens: Be.inputTokens,
             output_tokens: Be.outputTokens,
             output_tokens_details: { thinking_tokens: Be.thinkingTokens ?? 0 },
@@ -3299,15 +3299,15 @@ async function no(t, l, s, m = {}) {
           : ee,
       o;
     try {
-      o = Ru(d);
+      o = deepClone(d);
     } catch (r) {
       if (d === null || typeof d !== "object") throw r;
       o = JSON.parse(
-        b(d, (e, c) => (typeof c === "function" ? void 0 : c)) ?? "null",
+        jsonStringify(d, (e, c) => (typeof c === "function" ? void 0 : c)) ?? "null",
       );
     }
     return (
-      b(o),
+      jsonStringify(o),
       {
         result: o,
         agentCount: E.hooks.getAgentCount(),
@@ -3319,7 +3319,7 @@ async function no(t, l, s, m = {}) {
   } catch (N) {
     let { name: ue, message: pe, stack: ee } = fe(N);
     if (ee)
-      n(
+      logForDebugging(
         `Workflow script error stack trace:
 ${ee}`,
         { level: "error" },
@@ -3778,7 +3778,7 @@ async function G6n(t) {
       `Workflow script compile failed: ${fe.error}`,
       "adopted workflow script compile failed",
     );
-  let O = p !== void 0 ? z(p) : void 0;
+  let O = p !== void 0 ? jsonParse(p) : void 0;
   for (let J of Object.values(t.toolUseContext.taskRegistry.all()))
     if (
       J.type === "local_workflow" &&

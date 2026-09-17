@@ -113,12 +113,12 @@ import {
 } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { SXt, fxe, wc, b, Ru, Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { UNSUPPORTED_TELEMETRY_CODE, isUnsupportedFailure, pathSpaces, jsonStringify, deepClone, resolvePathInfo, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isConfigDirPath } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getCwd } from "../共享小工具-未细化/cwd-context.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { rL, wb } from "./chunk-fx8qr1md.js";
+import { rL, writeFileAndFlush } from "./chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { findCanonicalGitRoot, dirIsInGitRepo } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -196,7 +196,7 @@ async function addGlobalGitignoreEntry(e, t = getCwd()) {
       if ((await readFile(_, { encoding: "utf-8" })).includes(o)) {
         let I = (await dt(d, t)) ? "already_tracked" : "excludesfile_not_read";
         return (
-          n(
+          logForDebugging(
             `[gitignore] '${o}' already present in ${_} but git check-ignore reports not-ignored \u2014 ${gt(I, d)}`,
             { level: "warn" },
           ),
@@ -222,7 +222,7 @@ ${o}
     if (!(await isPathGitIgnored(d, t))) {
       let O = (await dt(d, t)) ? "already_tracked" : "excludesfile_not_read";
       return (
-        n(
+        logForDebugging(
           `[gitignore] wrote '${o}' to ${_} but git check-ignore still reports not-ignored \u2014 ${gt(O, d)}`,
           { level: "warn" },
         ),
@@ -232,7 +232,7 @@ ${o}
     return { written: !0, effective: !0 };
   } catch (r) {
     return (
-      n(
+      logForDebugging(
         `Failed to add gitignore entry to global gitignore: ${r instanceof Error ? r.message : String(r)}`,
         { level: "error" },
       ),
@@ -280,12 +280,12 @@ class mt {
         { mdm: d, hkcu: _, wslInherits: p } = await ht(o, e);
       this.replace(d, _, p);
       let E = Date.now() - t;
-      n(`MDM settings load completed in ${E}ms`);
+      logForDebugging(`MDM settings load completed in ${E}ms`);
       try {
         logEvent("tengu_managed_settings_os_read", ir(o, E));
       } catch {}
       if (Object.keys(d.settings).length > 0) {
-        n(`MDM settings found: ${Object.keys(d.settings).join(", ")}`);
+        logForDebugging(`MDM settings found: ${Object.keys(d.settings).join(", ")}`);
         try {
           writeDiagnosticsEvent("info", "mdm_settings_loaded", {
             duration_ms: E,
@@ -498,15 +498,15 @@ async function Se(e, t) {
   return readFileSyncText(e, MAX_SETTINGS_FILE_BYTES);
 }
 async function ke(e, t) {
-  if (isHoverRestEnabled() && t !== void 0) return await ae().readdir(e);
-  return ae().readdirSync(e);
+  if (isHoverRestEnabled() && t !== void 0) return await getFsSurface().readdir(e);
+  return getFsSurface().readdirSync(e);
 }
 async function or(e, t) {
   if (e && (await Et(WSL_MANAGED_SETTINGS_DIR, t))) return !0;
   return Et(getManagedSettingsDirPath(), t);
 }
 async function St(e, t) {
-  let r = Ru(xt(await Se(e, t), !1));
+  let r = deepClone(xt(await Se(e, t), !1));
   if (!r || typeof r !== "object") return !1;
   return (collectSettingsWarnings(r, e, { skipMcpServerEntryFilter: !0, policySource: !0 }), hasSettingsContent(r));
 }
@@ -621,7 +621,7 @@ function cr() {
   for (let e of lr) {
     let t = yZ(e);
     if (t === null) {
-      if (ae().existsSync(e)) return null;
+      if (getFsSurface().existsSync(e)) return null;
       continue;
     }
     if (t.toLowerCase() === e.toLowerCase()) return e;
@@ -764,7 +764,7 @@ async function bt(e, t, r) {
 function yr(e, t) {
   let r = t.get(e);
   if (r === void 0) {
-    ((r = ae().stat(e)), t.set(e, r));
+    ((r = getFsSurface().stat(e)), t.set(e, r));
     let o = () => t.delete(e);
     r.then(o, o);
   }
@@ -2106,14 +2106,14 @@ class _n {
               if (this.defaultFallback) {
                 let I = `the static ${this.defaultFallback.sourceField} settings payload governs`;
                 if (this.state.serving === "default") {
-                  (n(
+                  (logForDebugging(
                     `policyHelper refresh: helper still failing (${O.error}); the static default settings payload continues to govern`,
                     { level: "debug" },
                   ),
                     Qe(O.error, I, _));
                   return;
                 }
-                (n(
+                (logForDebugging(
                   `policyHelper refresh failed (${O.error}); applying the static ${this.defaultFallback.sourceField} settings payload`,
                   { level: "warn" },
                 ),
@@ -2131,7 +2131,7 @@ class _n {
                   this.announceTierChange());
                 return;
               }
-              (n(
+              (logForDebugging(
                 `policyHelper refresh failed (retaining current policy): ${O.error}`,
                 { level: "warn" },
               ),
@@ -2144,7 +2144,7 @@ class _n {
               return;
             }
             if ((et(), this.state.serving === "default"))
-              (n(
+              (logForDebugging(
                 "policyHelper refresh: helper recovered; its output replaces the static default settings payload",
                 { level: "info" },
               ),
@@ -2202,7 +2202,7 @@ async function runPolicyHelperPass(e, t, r) {
     E = p ? void 0 : e?.policyHelper;
   if (!d && !E) {
     if (getEligibilityMemo() === !0 && !getRemoteManagedSettingsSyncFromCache())
-      n(
+      logForDebugging(
         "policyHelper: no helper configuration present at helper-pass time (remote managed settings eligible, no payload in cache); a payload landing later arms one only through a fetch cycle after preAction",
         { level: "debug" },
       );
@@ -2219,7 +2219,7 @@ async function runPolicyHelperPass(e, t, r) {
     T.defaultFallback = null;
   } else if (t === "remote" && d)
     return (
-      n("remote policyHelpers names no binary this platform can arm", {
+      logForDebugging("remote policyHelpers names no binary this platform can arm", {
         level: "debug",
       }),
       (T.initializeAttempted = !1),
@@ -2227,7 +2227,7 @@ async function runPolicyHelperPass(e, t, r) {
     );
   else if (t === null || !pn.has(t)) {
     if (
-      (n(
+      (logForDebugging(
         `policyHelper ignored: delivered via non-admin source '${t ?? "unknown"}'`,
         { level: "warn" },
       ),
@@ -2267,7 +2267,7 @@ async function runPolicyHelperPass(e, t, r) {
     if (L instanceof Ne) {
       if (T.defaultFallback)
         return (
-          n(
+          logForDebugging(
             `${L.message}; applying the static ${T.defaultFallback.sourceField} settings payload instead`,
             { level: "warn" },
           ),
@@ -2308,7 +2308,7 @@ function Ze(e, t) {
       statusOnly: !0,
     }),
     ne(),
-    n(d, { level: "warn" }));
+    logForDebugging(d, { level: "warn" }));
 }
 function De() {
   ((T.remoteNoticeSubject = null), tt(fn), T.retireRemoteFailure());
@@ -2348,10 +2348,10 @@ function tt(e) {
 function Pn(e, t) {
   let r = parseManagedSettingsPayload(e, t);
   for (let o of r.strippedKeys)
-    n(`${t}: stripped ${o} from the settings payload (no recursion)`, {
+    logForDebugging(`${t}: stripped ${o} from the settings payload (no recursion)`, {
       level: "warn",
     });
-  for (let o of r.warnings) n(`${t}: ${o.message}`, { level: "warn" });
+  for (let o of r.warnings) logForDebugging(`${t}: ${o.message}`, { level: "warn" });
   return r;
 }
 function Hi(e, t) {
@@ -2427,7 +2427,7 @@ function ln(e, t) {
     output: { managedSettings: r.settings },
     warnings: r.warnings,
   }),
-    n(
+    logForDebugging(
       `${r.sourceField} static settings payload applied (keys: ${Object.keys(r.settings).join(",")})`,
       { level: "debug" },
     ));
@@ -2474,7 +2474,7 @@ function vi(e, t, r, o) {
   if (T.defaultFallback)
     return (
       logFeatureSad("settings_policy_helpers_per_os", "fell_back_to_default"),
-      n(
+      logForDebugging(
         `policyHelper: no policyHelpers helper entry for platform "${d}"; applying the static ${T.defaultFallback.sourceField} settings payload`,
         { level: "info" },
       ),
@@ -2495,7 +2495,7 @@ function vi(e, t, r, o) {
       statusOnly: !0,
     }),
     ne(),
-    n(E, { level: "warn" }),
+    logForDebugging(E, { level: "warn" }),
     !T.noEntrySadLogged)
   )
     ((T.noEntrySadLogged = !0),
@@ -2523,7 +2523,7 @@ async function qe({ config: e, fromPerOs: t }, r) {
     if (e.path !== void 0 && !("error" in _ && _.code === "bad_path"))
       T.retiredHelperPaths.add(e.path);
     return (
-      n("policyHelper: remote arming revoked during exec; discarding output", {
+      logForDebugging("policyHelper: remote arming revoked during exec; discarding output", {
         level: "warn",
       }),
       logFeatureSad("settings_policy_helpers_per_os", "deactivated_during_exec"),
@@ -2545,7 +2545,7 @@ async function qe({ config: e, fromPerOs: t }, r) {
       output: _.output,
       warnings: _.warnings,
     }),
-    n(`policyHelper applied (keys: ${Object.keys(_.output).join(",")})`, {
+    logForDebugging(`policyHelper applied (keys: ${Object.keys(_.output).join(",")})`, {
       level: "debug",
     }),
     !r?.suppressExecEvents)
@@ -2599,7 +2599,7 @@ function retireOsAdminPolicyHelper(e) {
     !t)
   )
     return;
-  (n(
+  (logForDebugging(
     "policyHelper: OS-admin helper pass retired; the remote payload that landed shadows the MDM/file policy it was read from",
     { level: "info" },
   ),
@@ -2612,7 +2612,7 @@ function be() {
     T.stopRefreshTimer(),
     T.retireState(),
     T.releaseLatch(),
-    n("policyHelper: remote-armed helper deactivated", { level: "info" }),
+    logForDebugging("policyHelper: remote-armed helper deactivated", { level: "info" }),
     T.announceTierChange());
 }
 registerSyncCacheResetListener(be);
@@ -2623,7 +2623,7 @@ function cn(e) {
 async function Fi(e, t) {
   try {
     if (!cn(e)) {
-      (n(
+      (logForDebugging(
         "policyHelper: remote retry stopped; the payload in force no longer authorizes the entry",
         { level: "info" },
       ),
@@ -2641,14 +2641,14 @@ async function Fi(e, t) {
     let d = T.remoteArmGeneration !== r;
     if (d || !cn(e)) {
       if (!d) be();
-      (n("policyHelper: remote retry revoked during exec; discarding output", {
+      (logForDebugging("policyHelper: remote retry revoked during exec; discarding output", {
         level: "warn",
       }),
         logFeatureSad("settings_policy_helpers_per_os", "deactivated_during_exec"));
       return;
     }
     if ("error" in o) {
-      (n(
+      (logForDebugging(
         `policyHelper retry failed (remote entry still not armed): ${o.error}`,
         { level: "warn" },
       ),
@@ -2665,7 +2665,7 @@ async function Fi(e, t) {
       warnings: o.warnings,
     }),
       De(),
-      n("policyHelper: remote entry armed by a retry tick", { level: "info" }),
+      logForDebugging("policyHelper: remote entry armed by a retry tick", { level: "info" }),
       logFeatureOk("settings_policy_helpers_per_os"),
       T.announceTierChange());
   } catch (r) {
@@ -2692,7 +2692,7 @@ function Mi() {
   runPolicyHelperPass(t, r, o)
     .then((d) => {
       if (d !== null) {
-        (n(
+        (logForDebugging(
           `policyHelper: the ${r} source became the base mid-session and its pass refused; exiting as the launch would have: ${d}`,
           { level: "error" },
         ),
@@ -2701,7 +2701,7 @@ function Mi() {
         return;
       }
       if (T.state === null) return;
-      (n(
+      (logForDebugging(
         `policyHelper: armed from the ${r} source, which became the base mid-session`,
         { level: "info" },
       ),
@@ -2727,7 +2727,7 @@ function $i(e) {
     .finally(() => {
       let o = T.state?.armedFromRemote === !0;
       if (o)
-        n("policyHelper: remote entry armed mid-session", { level: "info" });
+        logForDebugging("policyHelper: remote entry armed mid-session", { level: "info" });
       if (o || T.retiredHelperPaths.size > r) T.announceTierChange();
     });
 }
@@ -2841,7 +2841,7 @@ async function ki(e, t, r) {
       stdin: p.input === void 0 ? "ignore" : "pipe",
       input: p.input,
     });
-  if (C) n(`policyHelper stderr: ${C}`, { level: "debug" });
+  if (C) logForDebugging(`policyHelper stderr: ${C}`, { level: "debug" });
   if (ce)
     return {
       error: `${C.length > w.length ? "stderr" : "stdout"} exceeded ${Te} bytes`,
@@ -2849,7 +2849,7 @@ async function ki(e, t, r) {
     };
   if (st) return { error: `timed out after ${E}ms`, code: "timed_out" };
   let re = (V) => {
-    if (w) n(`policyHelper stdout: ${w}`, { level: "debug" });
+    if (w) logForDebugging(`policyHelper stdout: ${w}`, { level: "debug" });
     return V;
   };
   if (F !== 0)
@@ -2928,7 +2928,7 @@ async function readUserSettingsSeed(e, t, r) {
 async function Wi(e, t) {
   let r;
   try {
-    r = await e.stat(wc.home(t));
+    r = await e.stat(pathSpaces.home(t));
   } catch (o) {
     return { kind: "failing", code: l(o) };
   }
@@ -2936,7 +2936,7 @@ async function Wi(e, t) {
     return r.value.kind === "absent"
       ? { kind: "absent" }
       : { kind: "failing", code: r.value.kind };
-  return fxe(r.error) ? { kind: "absent" } : He(r.error);
+  return isUnsupportedFailure(r.error) ? { kind: "absent" } : He(r.error);
 }
 async function reseedSettingsFileLayer(e, t) {
   if (!isHoverRestEnabled()) return;
@@ -2950,11 +2950,11 @@ async function reseedSettingsFileLayer(e, t) {
             ? emptySettingsResult()
             : void 0;
     if (d === void 0) {
-      n(`settings: ${t.label} not re-seeded (${describeSettingsReadResult(o)}); the file read serves`);
+      logForDebugging(`settings: ${t.label} not re-seeded (${describeSettingsReadResult(o)}); the file read serves`);
       return;
     }
     if (t.source !== "userSettings" && e.walkReadDiffers(t.path, d)) {
-      n(
+      logForDebugging(
         `settings: ${t.label} not re-seeded (the file read already saw different content this generation); the file read serves`,
       );
       return;
@@ -2964,7 +2964,7 @@ async function reseedSettingsFileLayer(e, t) {
       ? e.retainLayer(t.path, d)
       : void 0;
   } catch (o) {
-    n(`settings: ${t.label} not re-seeded: ${l(o)}; the file read serves`, {
+    logForDebugging(`settings: ${t.label} not re-seeded: ${l(o)}; the file read serves`, {
       level: "warn",
     });
     return;
@@ -2980,11 +2980,11 @@ function createUserSettingsSeedSource(e, t) {
   };
 }
 async function Bi(e, t) {
-  if (!e.serves("userNamed")) return { kind: "failing", code: SXt };
-  return ji(e, wc.userNamed(t), t, !1);
+  if (!e.serves("userNamed")) return { kind: "failing", code: UNSUPPORTED_TELEMETRY_CODE };
+  return ji(e, pathSpaces.userNamed(t), t, !1);
 }
 async function Ki(e, t, r) {
-  let o = await Hn(e, wc.system(t));
+  let o = await Hn(e, pathSpaces.system(t));
   if (o.kind !== "bytes") return o;
   return {
     kind: "seeded",
@@ -3024,7 +3024,7 @@ async function Hn(e, t) {
   };
 }
 async function listSettingsDropInFileNames(e, t) {
-  let r = await e.listFolder(wc.system(t));
+  let r = await e.listFolder(pathSpaces.system(t));
   if (!r.ok) {
     if (r.error.code === "Failed" && r.error.telemetryCode === "ENOTDIR")
       return { kind: "listed", names: [] };
@@ -3041,7 +3041,7 @@ async function listSettingsDropInFileNames(e, t) {
 }
 function describeSettingsReadResult(e) {
   if (e.kind !== "failing") return e.kind;
-  return e.code === SXt
+  return e.code === UNSUPPORTED_TELEMETRY_CODE
     ? "the backend does not serve this space"
     : `backend read failed: ${e.code}`;
 }
@@ -3226,7 +3226,7 @@ function flagFileConsentDropped() {
 function ot(e) {
   let t;
   try {
-    let { resolvedPath: r } = Ro(ae(), e);
+    let { resolvedPath: r } = resolvePathInfo(getFsSurface(), e);
     t = xt(readFileSyncText(r, MAX_SETTINGS_FILE_BYTES), !1);
   } catch (r) {
     if (W(r)) return !1;
@@ -3348,7 +3348,7 @@ function getManagedFileSettingsPresence() {
         p = getHostSettingsStore().primedFolderListing(d);
       if (p !== void 0) o = p.some(_);
       else
-        o = ae()
+        o = getFsSurface()
           .readdirSync(d)
           .some((E) => {
             if (!(E.isFile() || E.isSymbolicLink()) || !isManagedDropInSettingsFile(E.name)) return !1;
@@ -3524,17 +3524,17 @@ async function Xi(e, t, r, o, d) {
         let F = xt(C, !1);
         if (F === null)
           return (
-            n(
+            logForDebugging(
               `updateSettingsForSource: invalid JSON in settings file at ${r}`,
               { level: "error" },
             ),
             { error: Error(`Invalid JSON syntax in settings file at ${r}`) }
           );
         if (F && typeof F === "object") {
-          let K = Ru(F);
+          let K = deepClone(F);
           (normalizeSettingsAliases(K, r),
             (N = K),
-            n(
+            logForDebugging(
               L
                 ? `Using raw settings from ${r} so entries this build does not recognize survive the write`
                 : `Using raw settings from ${r} due to validation failure`,
@@ -3559,7 +3559,7 @@ async function Xi(e, t, r, o, d) {
       }
       return { error: null };
     }
-    await ae().mkdir(pe(r));
+    await getFsSurface().mkdir(pe(r));
     let x = mergeWith(N || {}, U, (C, F, K, ce) => {
       if (F === void 0 && ce && typeof K === "string") {
         delete ce[K];
@@ -3571,7 +3571,7 @@ async function Xi(e, t, r, o, d) {
     });
     markInternalWrite(r);
     let w =
-      b(x, null, 2) +
+      jsonStringify(x, null, 2) +
       `
 `;
     if (_) {
@@ -3585,7 +3585,7 @@ async function Xi(e, t, r, o, d) {
         );
     } else {
       let C = isConfigDirPath(pe(r));
-      await wb(r, w, {
+      await writeFileAndFlush(r, w, {
         encoding: "utf-8",
         allowSymlink: e === "userSettings" || C,
         checkParentDir:
@@ -3597,7 +3597,7 @@ async function Xi(e, t, r, o, d) {
     if (e === "localSettings" && !p) {
       let C = await Mn(t);
       if (C.error && C.phase !== void 0 && !kn(U))
-        n(
+        logForDebugging(
           `localSettings: legacy settings.local.json could not be evaluated (${C.phase} failure) but this write contains no removals \u2014 canonical write succeeded, ignoring: ${C.error.message}`,
           { level: "warn" },
         );
@@ -3613,7 +3613,7 @@ async function Xi(e, t, r, o, d) {
       });
   } catch (N) {
     let L = Error(`Failed to read raw settings from ${r}: ${N}`);
-    return (n(L.message, { level: "error" }), { error: L });
+    return (logForDebugging(L.message, { level: "error" }), { error: L });
   }
   if (isHoverRestEnabled() && d !== void 0 && !_) O = await vn(d, r);
   try {
@@ -3634,7 +3634,7 @@ function Zi(e, t) {
   try {
     r = parseSettingsContent(t, e);
   } catch (d) {
-    n(`updateSettingsForSource: written settings not seeded: ${l(d)}`);
+    logForDebugging(`updateSettingsForSource: written settings not seeded: ${l(d)}`);
     return;
   }
   let o = getHostSettingsStore();
@@ -3665,31 +3665,31 @@ async function Mn(e) {
       "Failed to read legacy settings.local.json",
     );
     return (
-      n(N.message, { level: "error" }),
+      logForDebugging(N.message, { level: "error" }),
       { changed: !1, error: N, phase: "read" }
     );
   }
   let o = xt(r, !1);
   if (!o || typeof o !== "object" || Array.isArray(o))
     return { changed: !1, error: null };
-  let d = Ru(o);
+  let d = deepClone(o);
   normalizeSettingsAliases(d, t);
   let _ = d,
     p;
   try {
-    p = e(Ru(_));
+    p = e(deepClone(_));
   } catch (I) {
     let N = new R(
       `Transform failed against legacy settings.local.json at ${t} (malformed legacy content?): ${I}`,
       "Transform failed against legacy settings.local.json",
     );
     return (
-      n(N.message, { level: "error" }),
+      logForDebugging(N.message, { level: "error" }),
       { changed: !1, error: N, phase: "transform" }
     );
   }
   if (p === null) return { changed: !1, error: null };
-  let E = mergeWith(Ru(_), p, (I, N, L, U) => {
+  let E = mergeWith(deepClone(_), p, (I, N, L, U) => {
       if (N === void 0 && U && typeof L === "string") {
         delete U[L];
         return;
@@ -3698,14 +3698,14 @@ async function Mn(e) {
       return;
     }),
     O = projectRemovalsOnly(_, E);
-  if (b(O) === b(_)) return { changed: !1, error: null };
+  if (jsonStringify(O) === jsonStringify(_)) return { changed: !1, error: null };
   try {
     markInternalWrite(t);
     let I = isConfigDirPath(pe(t));
     return (
-      await wb(
+      await writeFileAndFlush(
         t,
-        b(O, null, 2) +
+        jsonStringify(O, null, 2) +
           `
 `,
         {
@@ -3723,13 +3723,13 @@ async function Mn(e) {
       `Failed to revoke from legacy settings.local.json at ${t}: ${I}`,
       "Failed to revoke from legacy settings.local.json",
     );
-    return (n(N.message, { level: "error" }), { changed: !1, error: N });
+    return (logForDebugging(N.message, { level: "error" }), { changed: !1, error: N });
   }
 }
 function projectRemovalsOnly(e, t) {
   if (Array.isArray(e) && Array.isArray(t)) {
-    let r = new Set(t.map((o) => b(o)));
-    return e.filter((o) => r.has(b(o)));
+    let r = new Set(t.map((o) => jsonStringify(o)));
+    return e.filter((o) => r.has(jsonStringify(o)));
   }
   if (isRecord(e) && isRecord(t)) {
     let r = {};
@@ -3857,7 +3857,7 @@ function getAutoModeConfig() {
       let O = getSettingsForSource(E)?.autoMode;
       if (O && e.safeParse(O).success)
         ((t.autoModeUntrustedSourceWarned = !0),
-          n(
+          logForDebugging(
             `settings autoMode in ${E} ignored \u2014 only user/flag/managed settings may set classifier rules (projectSettings and localSettings are repo-controllable)`,
             { level: "warn" },
           ),
@@ -3944,7 +3944,7 @@ async function rawSettingsKeyPresence(e, t, r) {
         let w = await Un(t);
         switch (w.kind) {
           case "unreadable":
-            (n(
+            (logForDebugging(
               `rawSettingsKeyPresence: v5 user-settings read failed: ${w.code}`,
             ),
               (p = !0));
@@ -3968,7 +3968,7 @@ async function rawSettingsKeyPresence(e, t, r) {
         continue;
       }
       try {
-        let { resolvedPath: w } = Ro(ae(), x),
+        let { resolvedPath: w } = resolvePathInfo(getFsSurface(), x),
           C = readFileSyncText(w, MAX_SETTINGS_FILE_BYTES);
         if (!C.trim()) continue;
         let F = xt(C, !1);

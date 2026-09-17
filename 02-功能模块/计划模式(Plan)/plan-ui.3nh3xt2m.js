@@ -11,13 +11,13 @@
 // [preload stripped] 原本在此预载 223 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { h8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { planArtifactSlot, ModePushTimeoutError, registerModePushWaiter } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { resolveEditorCommand, editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import { getIdeDisplayName, prepareContextForPlanMode, createUserMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -40,7 +40,7 @@ function A(fe) {
   else E = w[1];
   let S;
   if (w[2] !== F)
-    ((S = e(o, { marginTop: 1, children: e(t, { children: F }) })),
+    ((S = e(Box, { marginTop: 1, children: e(Text, { children: F }) })),
       (w[2] = F),
       (w[3] = S));
   else S = w[3];
@@ -48,12 +48,12 @@ function A(fe) {
   if (w[4] !== h)
     ((R =
       h &&
-      r(o, {
+      r(Box, {
         marginTop: 1,
         children: [
-          e(t, { dimColor: !0, children: '"/plan open"' }),
-          e(t, { dimColor: !0, children: " to edit this plan in " }),
-          e(t, { bold: !0, dimColor: !0, children: h }),
+          e(Text, { dimColor: !0, children: '"/plan open"' }),
+          e(Text, { dimColor: !0, children: " to edit this plan in " }),
+          e(Text, { bold: !0, dimColor: !0, children: h }),
         ],
       })),
       (w[4] = h),
@@ -63,11 +63,11 @@ function A(fe) {
   if (w[6] !== U || w[7] !== h)
     ((T =
       U &&
-      r(o, {
+      r(Box, {
         marginTop: h ? 0 : 1,
         children: [
-          e(t, { dimColor: !0, children: '"/plan share"' }),
-          e(t, {
+          e(Text, { dimColor: !0, children: '"/plan share"' }),
+          e(Text, {
             dimColor: !0,
             children: " to publish this plan as an artifact",
           }),
@@ -79,7 +79,7 @@ function A(fe) {
   else T = w[8];
   let X;
   if (w[9] !== E || w[10] !== S || w[11] !== R || w[12] !== T)
-    ((X = r(o, { flexDirection: "column", children: [E, S, R, T] })),
+    ((X = r(Box, { flexDirection: "column", children: [E, S, R, T] })),
       (w[9] = E),
       (w[10] = S),
       (w[11] = R),
@@ -228,7 +228,7 @@ async function me(a, l, m) {
     notePlanFileForgotten(g);
     let i = mayHaveRemoteClient(l.session);
     if (s.error) {
-      if (i) n(`/plan open failed: ${s.error}`, { level: "error" });
+      if (i) logForDebugging(`/plan open failed: ${s.error}`, { level: "error" });
       a(i ? "Couldn't open the plan in the editor" : s.error);
     } else a(i ? "Opened plan in editor" : `Opened plan in editor: ${g}`);
     return null;
@@ -250,9 +250,9 @@ async function me(a, l, m) {
           return d === null ? p : { ...p, workshopVerifiedSlugs: d };
         }),
           a(`Published plan: ${i.url}`));
-      else (n(`plan share: publish returned ${i.err}`), a(s));
+      else (logForDebugging(`plan share: publish returned ${i.err}`), a(s));
     } catch (i) {
-      (n(
+      (logForDebugging(
         `plan share: publish threw ${i instanceof Error ? i.message : String(i)}`,
       ),
         a(s));

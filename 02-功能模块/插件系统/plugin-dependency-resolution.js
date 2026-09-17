@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ive } from "./chunk-7s6mt1vg.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { isDependencyError } from "./plugin-system-core.js";
 import { aJ, noe, lJ, yD } from "./chunk-ajtn749s.js";
 import { isSourceAllowedByPolicy } from "./plugin-source-policy.js";
 import { getEnabledPluginIdsForSource, formatDependencyCountSuffix, formatUnresolvedDependenciesNotice, findSettingsDeclaredEntryAuth, getKnownMarketplacesOrEmpty, loadCachedMarketplaceCatalog, findPluginEntry, installPluginWithDependencies, loadAllPluginsCacheOnly } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -39,7 +39,7 @@ async function resolveMissingDependencies(a, r) {
       continue;
     }
     if (!isSourceAllowedByPolicy(s[u].source)) {
-      (n(
+      (logForDebugging(
         `resolveMissingDependencies: skipping "${e}" \u2014 marketplace "${u}" is blocked by enterprise policy`,
       ),
         i.push(e));
@@ -59,7 +59,7 @@ async function resolveMissingDependencies(a, r) {
       }
     }
     if (!y) {
-      (n(
+      (logForDebugging(
         `resolveMissingDependencies: skipping "${e}" \u2014 cross-marketplace dependency not in any declaring marketplace's allowlist`,
       ),
         i.push(e));
@@ -84,7 +84,7 @@ async function resolveMissingDependencies(a, r) {
           }).entry,
         )
       ) {
-        (n(
+        (logForDebugging(
           `resolveMissingDependencies: skipping "${e}" \u2014 it fetches its archive through an entry headersHelper, which only an explicit install from /plugin may run`,
         ),
           i.push(e));
@@ -105,13 +105,13 @@ async function resolveMissingDependencies(a, r) {
       if (S.ok) {
         for (let h of S.closure) if (!g.includes(h)) g.push(h);
       } else
-        (n(
+        (logForDebugging(
           `resolveMissingDependencies: install of "${e}" did not complete (${S.reason})`,
           { level: "warn" },
         ),
           i.push(e));
     } catch (o) {
-      (n(`resolveMissingDependencies: install of "${e}" threw: ${l(o)}`, {
+      (logForDebugging(`resolveMissingDependencies: install of "${e}" threw: ${l(o)}`, {
         level: "warn",
       }),
         i.push(e));
@@ -121,7 +121,7 @@ async function resolveMissingDependencies(a, r) {
 }
 async function getDependencyErrorsForPlugin(a, r) {
   let { errors: t } = await loadAllPluginsCacheOnly(r);
-  return t.filter(ive).filter((s) => s.source === a);
+  return t.filter(isDependencyError).filter((s) => s.source === a);
 }
 async function buildMissingDependencyNotice(a, r) {
   let t = await getDependencyErrorsForPlugin(a, r);

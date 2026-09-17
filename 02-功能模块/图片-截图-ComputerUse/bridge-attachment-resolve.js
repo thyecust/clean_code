@@ -14,20 +14,20 @@ import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
 import { sanitizePeerFileName, peerFileFailureNote, peerFileCountCapNote, verifyPeerFileIntegrity, emitPeerFileReceiveTelemetry, injectPeerFilePrefix } from "../跨会话消息(UDS)/peer-file-transfer.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { parseFileAttachments, dropEmptyTextBlocks } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import { createConcurrencyLimiter, getUploadsDirectory, buildUploadFileName, cacheFileHash } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { KNe, iJn } from "./chunk-0dcnsftb.js";
+import { getImageMediaTypeOrDefault, buildImageBlockFromBytes } from "./chunk-0dcnsftb.js";
 import { randomUUID } from "crypto";
 import { mkdir, realpath, writeFile } from "fs/promises";
 import { join as L } from "path";
 var j = 30000;
 function a(e) {
-  n(`[bridge:inbound-attach] ${e}`);
+  logForDebugging(`[bridge:inbound-attach] ${e}`);
 }
 var z = {
   "image/png": "png",
@@ -74,11 +74,11 @@ async function D(e, s, l, m, p) {
     );
   let u =
       l && e.is_image === !0 && e.sha256 === void 0
-        ? await iJn(r, DEFAULT_IMAGE_LIMITS).catch(
+        ? await buildImageBlockFromBytes(r, DEFAULT_IMAGE_LIMITS).catch(
             (o) => (a(`inline ${e.file_uuid} threw: ${o}`), null),
           )
         : null,
-    d = u ? `image.${z[KNe(r)]}` : sanitizePeerFileName(e.file_name),
+    d = u ? `image.${z[getImageMediaTypeOrDefault(r)]}` : sanitizePeerFileName(e.file_name),
     h = (
       u ? randomUUID().slice(0, 8) : e.file_uuid.slice(0, 8) || randomUUID().slice(0, 8)
     ).replace(/[^a-zA-Z0-9_-]/g, "_"),
@@ -91,7 +91,7 @@ async function D(e, s, l, m, p) {
       mode: 384,
     });
     if (!o.ok)
-      return (a(`write ${c} failed: ${We(o.error)}`), { failure: "write" });
+      return (a(`write ${c} failed: ${describeStorageError(o.error)}`), { failure: "write" });
   } else
     try {
       (await mkdir(k, { recursive: !0, mode: 448 }), await writeFile(c, r, { mode: 384 }));

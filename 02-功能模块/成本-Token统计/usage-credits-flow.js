@@ -10,7 +10,7 @@
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getOverageBillingOverride, httpClient, isBgSession, isExtraUsageAllowed, getSubscriptionType, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { canSelfManageUsageCredits, USAGE_SETTINGS_URL, fetchUsageUtilization } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -97,7 +97,7 @@ async function submitUsageCreditsRequest(t, r) {
   } catch (e) {
     let i = c(e);
     if (cc(e, (o) => c(o) !== null))
-      n(`Admin request rejected: ${i ?? l(e)}`, { level: "error" });
+      logForDebugging(`Admin request rejected: ${i ?? l(e)}`, { level: "error" });
     else logError(e);
     if (i) return { type: "message", value: i, filed: !1 };
   }
@@ -126,7 +126,7 @@ async function resolveExtraUsageOutcome(t, r) {
     try {
       s = (await fetchUsageUtilization(r))?.extra_usage;
     } catch (u) {
-      n(
+      logForDebugging(
         `extra-usage: fetchUtilization failed, falling through to ask user: ${u}`,
         { level: "error" },
       );
@@ -165,7 +165,7 @@ async function resolveExtraUsageOutcome(t, r) {
           value: "Contact your admin to manage usage credit settings.",
         };
     } catch (u) {
-      n(`Extra usage eligibility check failed: ${u}`, { level: "error" });
+      logForDebugging(`Extra usage eligibility check failed: ${u}`, { level: "error" });
     }
     try {
       let u = await m("limit_increase", ["pending"], r);
@@ -175,7 +175,7 @@ async function resolveExtraUsageOutcome(t, r) {
           value: "You've already sent a usage credit request to your admin.",
         };
     } catch (u) {
-      n(`Failed to fetch pending admin requests: ${u}`, { level: "error" });
+      logForDebugging(`Failed to fetch pending admin requests: ${u}`, { level: "error" });
     }
     return { type: "confirm-admin-request", extraUsage: s };
   }
@@ -187,7 +187,7 @@ async function resolveExtraUsageOutcome(t, r) {
     return { type: "browser-opened", url: a, opened: s };
   } catch (s) {
     return (
-      n(`Failed to open browser for ${a}: ${s}`, { level: "error" }),
+      logForDebugging(`Failed to open browser for ${a}: ${s}`, { level: "error" }),
       {
         type: "message",
         value: `Couldn't open your browser. Visit ${a} to manage usage credits.`,

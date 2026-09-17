@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logEvent } from "./analytics-event-queue.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { handleStreamGoneErrors } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { getErrorTelemetryFields, isScreenReaderModeEnabled } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { applyRelaunchTerminalSizeEnv } from "./relaunch-terminal-size.js";
@@ -39,14 +39,14 @@ class o {
         handleStreamGoneErrors(e),
         e.on("error", (r) => {
           (logEvent("tengu_tty_stream_error", getErrorTelemetryFields(r)),
-            n(`/dev/tty stream error: ${r}`, { level: "debug" }));
+            logForDebugging(`/dev/tty stream error: ${r}`, { level: "debug" }));
         }),
         (e.isTTY = !0),
         (this.override = e),
         this.override
       );
     } catch (t) {
-      (n(`Could not open /dev/tty for stdin override: ${t}`, {
+      (logForDebugging(`Could not open /dev/tty for stdin override: ${t}`, {
         level: "error",
       }),
         (this.override = void 0));

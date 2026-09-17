@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { permissionUpdateSchema } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function u(e) {
@@ -18,7 +18,7 @@ function u(e) {
     let t = i.safeParse(o);
     if (t.success) s.push(t.data);
     else
-      n(
+      logForDebugging(
         `[SwarmPermissionPoller] Dropping malformed permissionUpdate entry: ${t.error.message}`,
         { level: "warn" },
       );
@@ -27,13 +27,13 @@ function u(e) {
 }
 function registerSwarmPermissionCallback(e) {
   (getBridgeHostState().swarmPermissions.pending.set(e.requestId, e),
-    n(
+    logForDebugging(
       `[SwarmPermissionPoller] Registered callback for request ${e.requestId}`,
     ));
 }
 function unregisterSwarmPermissionCallback(e) {
   (getBridgeHostState().swarmPermissions.pending.delete(e),
-    n(`[SwarmPermissionPoller] Unregistered callback for request ${e}`));
+    logForDebugging(`[SwarmPermissionPoller] Unregistered callback for request ${e}`));
 }
 function hasPermissionCallback(e) {
   return getBridgeHostState().swarmPermissions.pending.has(e);
@@ -59,8 +59,8 @@ function processMailboxPermissionResponse(e) {
     s = i.get(e.requestId);
   if (!s)
     return (
-      n(
-        `[SwarmPermissionPoller] No callback registered for mailbox response ${b(e.requestId)}`,
+      logForDebugging(
+        `[SwarmPermissionPoller] No callback registered for mailbox response ${jsonStringify(e.requestId)}`,
       ),
       !1
     );
@@ -71,11 +71,11 @@ function processMailboxPermissionResponse(e) {
       r = e.decision === "approved" ? "approval" : "denial",
       l =
         o === "input_digest_mismatch"
-          ? `this ${b(s.toolName)} call (${b(s.toolUseId)}), but its input digest differs`
-          : `${t ? `${b(t.tool_name)} (${b(t.tool_use_id)})` : b(e.toolUseId)}, not this ${b(s.toolName)} call (${b(s.toolUseId)})`;
+          ? `this ${jsonStringify(s.toolName)} call (${jsonStringify(s.toolUseId)}), but its input digest differs`
+          : `${t ? `${jsonStringify(t.tool_name)} (${jsonStringify(t.tool_use_id)})` : jsonStringify(e.toolUseId)}, not this ${jsonStringify(s.toolName)} call (${jsonStringify(s.toolUseId)})`;
     return (
-      n(
-        `[SwarmPermissionPoller] Refusing ${r} for request ${b(e.requestId)}: the leader answered ${l}`,
+      logForDebugging(
+        `[SwarmPermissionPoller] Refusing ${r} for request ${jsonStringify(e.requestId)}: the leader answered ${l}`,
         { level: "warn" },
       ),
       s.onRefuse(
@@ -86,8 +86,8 @@ function processMailboxPermissionResponse(e) {
     );
   }
   if (
-    (n(
-      `[SwarmPermissionPoller] Processing mailbox response for request ${b(e.requestId)}: ${e.decision} (${o})`,
+    (logForDebugging(
+      `[SwarmPermissionPoller] Processing mailbox response for request ${jsonStringify(e.requestId)}: ${e.decision} (${o})`,
     ),
     o === "unbound")
   )
@@ -101,7 +101,7 @@ function processMailboxPermissionResponse(e) {
 }
 function registerSandboxPermissionCallback(e) {
   (getBridgeHostState().swarmPermissions.pendingSandbox.set(e.requestId, e),
-    n(
+    logForDebugging(
       `[SwarmPermissionPoller] Registered sandbox callback for request ${e.requestId}`,
     ));
 }
@@ -113,23 +113,23 @@ function processSandboxPermissionResponse(e) {
     s = i.get(e.requestId);
   if (!s)
     return (
-      n(
-        `[SwarmPermissionPoller] No sandbox callback registered for request ${b(e.requestId)}`,
+      logForDebugging(
+        `[SwarmPermissionPoller] No sandbox callback registered for request ${jsonStringify(e.requestId)}`,
       ),
       !1
     );
   if ((i.delete(e.requestId), s.host !== e.host))
     return (
-      n(
-        `[SwarmPermissionPoller] Refusing sandbox ${e.allow === !0 ? "allow" : "deny"} for request ${b(e.requestId)}: the leader answered for ${b(e.host)}, not ${b(s.host)}`,
+      logForDebugging(
+        `[SwarmPermissionPoller] Refusing sandbox ${e.allow === !0 ? "allow" : "deny"} for request ${jsonStringify(e.requestId)}: the leader answered for ${jsonStringify(e.host)}, not ${jsonStringify(s.host)}`,
         { level: "warn" },
       ),
       s.resolve(!1),
       !0
     );
   return (
-    n(
-      `[SwarmPermissionPoller] Processing sandbox response for request ${b(e.requestId)}: allow=${b(e.allow)}`,
+    logForDebugging(
+      `[SwarmPermissionPoller] Processing sandbox response for request ${jsonStringify(e.requestId)}: allow=${jsonStringify(e.allow)}`,
     ),
     s.resolve(e.allow),
     !0

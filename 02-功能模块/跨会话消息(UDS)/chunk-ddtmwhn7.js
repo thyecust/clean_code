@@ -10,7 +10,7 @@
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { R, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodePoints, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -62,7 +62,7 @@ function B(e) {
     return Bun.ant.getPeerUid(t);
   } catch (r) {
     return (
-      n(
+      logForDebugging(
         `[daemon] peer uid lookup failed: ${r instanceof Error ? r.message : String(r)}`,
         { level: "warn" },
       ),
@@ -70,7 +70,7 @@ function B(e) {
     );
   }
 }
-function HJn(e, t = B) {
+function getPeerUidRefusalReason(e, t = B) {
   let r = process.getuid?.();
   if (r == null) return null;
   let d = t(e);
@@ -78,22 +78,22 @@ function HJn(e, t = B) {
   if (d === r) return null;
   let s = `permission denied: connecting uid ${d} != daemon uid ${r} (retry without sudo, or as the daemon owner)`;
   return (
-    n(`[daemon] rejecting control connection: ${s}`, { level: "error" }),
+    logForDebugging(`[daemon] rejecting control connection: ${s}`, { level: "error" }),
     s
   );
 }
-function ybt(e) {
+function getSocketPeerPid(e) {
   if (getCurrentPlatform() === "windows") return;
   let t = q(e);
   try {
     let r = t < 0 ? null : Bun.ant.getPeerPid(t);
     if (r !== null && r > 0) return r;
-    n(`[peer-cred] peer pid unavailable (fd=${t}, got=${r})`, {
+    logForDebugging(`[peer-cred] peer pid unavailable (fd=${t}, got=${r})`, {
       level: "warn",
     });
     return;
   } catch (r) {
-    n(
+    logForDebugging(
       `[peer-cred] peer pid lookup failed: ${r instanceof Error ? r.message : String(r)}`,
       { level: "warn" },
     );
@@ -112,10 +112,10 @@ import {
 } from "fs/promises";
 import { connect } from "net";
 import { basename, dirname, join as He } from "path";
-var S7e = 1048576;
+var MAX_MESSAGE_CHARS = 1048576;
 import { randomBytes } from "crypto";
 var _e = randomBytes(32);
-function FAe(e) {
+function computeHopToken(e) {
   return computeHopHash(e, _e);
 }
 function O(e, t, r, d, s) {
@@ -141,7 +141,7 @@ function F(e, t, r, d, s = () => !0) {
   let f = d();
   return (e.set(t, f), f);
 }
-var Sbt = {
+var DEFAULT_PEER_GUARD_LIMITS = {
   bucketCapacity: 30,
   refillPerSecond: 0.5,
   dedupWindowMs: 30000,
@@ -155,8 +155,8 @@ function we(e, t) {
   for (let d of e) if (t.has(d)) r++;
   return r;
 }
-function ASn(e = {}, t) {
-  let r = { ...Sbt, now: () => Date.now(), ...e },
+function createPeerAdmissionController(e = {}, t) {
+  let r = { ...DEFAULT_PEER_GUARD_LIMITS, now: () => Date.now(), ...e },
     d = () => (t ? { ...r, ...t() } : r),
     s = new Map();
   function l(i, o) {
@@ -217,27 +217,27 @@ var he = {
 function Re(e) {
   return typeof e === "string" && Object.hasOwn(he, e);
 }
-function IJn(e) {
+function parseDropReason(e) {
   return Re(e) ? e : void 0;
 }
-var CSn = 256,
+var MAX_TRACKED_MESSAGE_IDS = 256,
   N = 60000,
   Q = 256,
   ke = 20;
-function vSn(e) {
-  getBridgeHostState().ingress.ownUdsHopToken = e === void 0 ? void 0 : FAe(e);
+function setOwnUdsHopToken(e) {
+  getBridgeHostState().ingress.ownUdsHopToken = e === void 0 ? void 0 : computeHopToken(e);
 }
-function b7e(e) {
+function setOwnBridgePeerAddressResolver(e) {
   getBridgeHostState().ingress.ownBridgePeerAddressResolver = e;
 }
-function RSn() {
+function getOwnHopTokens() {
   let { ownUdsHopToken: e, ownBridgePeerAddressResolver: t } = getBridgeHostState().ingress,
     r = new Set();
   if (e) r.add(e);
   let d = t?.();
-  if (d) r.add(FAe(d));
+  if (d) r.add(computeHopToken(d));
   let s = getRemoteSessionCompatId();
-  if (s) r.add(FAe(buildBridgeAddress(s)));
+  if (s) r.add(computeHopToken(buildBridgeAddress(s)));
   return r;
 }
 var Ee = {
@@ -254,7 +254,7 @@ function j(e) {
     name: e.name ? slugifyDisplayName(e.name) : "",
   };
 }
-function PJn(e) {
+function formatDroppedPeerMessageNotice(e) {
   let { from: t } = j(e),
     { name: r } = j(e),
     d = r ? `@${r} (${t})` : t,
@@ -278,7 +278,7 @@ function G(e, t) {
   )
     return s(d);
 }
-function kSn({ trailMs: e = Ie } = {}) {
+function createPeerDropReporter({ trailMs: e = Ie } = {}) {
   let t = new Map(),
     r = 0,
     d = 0;
@@ -308,7 +308,7 @@ function kSn({ trailMs: e = Ie } = {}) {
       if (((y.lastImmediateAt = E), s(E))) _([]);
       return;
     }
-    if ((y.pending++, w !== void 0 && y.pendingIds.length < CSn))
+    if ((y.pending++, w !== void 0 && y.pendingIds.length < MAX_TRACKED_MESSAGE_IDS))
       y.pendingIds.push(w);
     if (((y.pendingSend = _), y.timer === void 0))
       ((y.timer = setTimeout(G, e, y, s)), y.timer.unref?.());
@@ -319,7 +319,7 @@ function kSn({ trailMs: e = Ie } = {}) {
     o = 0;
   function p(S, w = Date.now()) {
     let _ = j(S);
-    n(
+    logForDebugging(
       `[peer-guard] drop ${S.reason} from ${_.from}${_.name ? ` (@${_.name})` : ""}`,
     );
     let E = `${S.from}\x00${S.reason}`,
@@ -345,7 +345,7 @@ function kSn({ trailMs: e = Ie } = {}) {
       if (J !== void 0) f.delete(J);
     }
     let v = { ...S, suppressed: I };
-    (n(
+    (logForDebugging(
       `[peer-guard] Dropped peer message from ${_.from}${_.name ? ` (@${_.name})` : ""}: ${S.reason}${I > 0 ? ` (+${I} suppressed)` : ""}`,
       { level: "warn" },
     ),
@@ -372,7 +372,7 @@ function kSn({ trailMs: e = Ie } = {}) {
   };
 }
 var ve = 50,
-  K = { ...Sbt, maxQueuedPeerMessages: ve },
+  K = { ...DEFAULT_PEER_GUARD_LIMITS, maxQueuedPeerMessages: ve },
   D = K,
   De = createLazyValue(() =>
     c({
@@ -394,12 +394,12 @@ var ve = 50,
     }),
   ),
   Te = 300000;
-function w7e() {
+function getPeerGuardLimits() {
   let e = getFeatureValue_CACHED_WITH_REFRESH("tengu_harbor_kite_limits", K, Te),
     t = De().safeParse(e);
   if (!t.success)
     return (
-      n(
+      logForDebugging(
         "[peer-guard] tengu_harbor_kite_limits is not an object; using defaults",
         { level: "warn" },
       ),
@@ -461,11 +461,11 @@ var Le = /[0-9a-f]{32,}/gi;
 function ne(e) {
   return e.replace(Le, (t) => `<hex:${hashForTelemetry(t)}>`);
 }
-function Nu(e, t = 120) {
+function formatRedactedPreview(e, t = 120) {
   if (/token/i.test(e)) return "(withheld)";
   return truncateToCodePoints(ne(e), t);
 }
-function qI(e) {
+function formatRedactedErrorDetail(e) {
   if (/token/i.test(e)) return "(redacted: fragment may carry an auth token)";
   return truncateToCodePoints(ne(e), 200);
 }
@@ -479,7 +479,7 @@ function se(e, t) {
     ie,
   );
 }
-function $Ae(e) {
+function isMessageTooLargeError(e) {
   return e instanceof R && e.errorClass === ie;
 }
 var de = "sender_paced";
@@ -490,10 +490,10 @@ function ae(e) {
     de,
   );
 }
-function UAe(e) {
+function isSenderPacedError(e) {
   return e instanceof R && e.errorClass === de;
 }
-function z3t(e) {
+function isInboxGoneError(e) {
   let t = A(e);
   return (
     t === "ENOENT" ||
@@ -508,34 +508,34 @@ class U extends R {
     ((this.name = "NoLiveInboxError"), (this.kind = e));
   }
 }
-function V3t(e) {
+function isRegistryUnreadableRefusal(e) {
   return e instanceof U && e.kind === "unusable";
 }
-function dK(e) {
-  if (V3t(e)) return "busy";
-  if (z3t(e)) return "gone";
+function classifySendFailure(e) {
+  if (isRegistryUnreadableRefusal(e)) return "busy";
+  if (isInboxGoneError(e)) return "gone";
   let t = A(e);
   return t === "EBUSY" || t === "EAGAIN" ? "busy" : "other";
 }
-function BAe(e) {
+function formatStaleSocketHint(e) {
   return ` \u2014 the peer process may have restarted, so this socket path is stale. Call ${e} to get the current address.`;
 }
-var xSn =
+var BUSY_PIPE_RETRY_HINT =
     " \u2014 the peer is alive but its pipe is momentarily busy. Retry the same address shortly.",
   Oe =
     " \u2014 this machine's session registry could not be read just now (a transient local condition). Retry the same address shortly.";
-function bbt(e) {
-  return V3t(e) ? Oe : xSn;
+function formatBusySocketHint(e) {
+  return isRegistryUnreadableRefusal(e) ? Oe : BUSY_PIPE_RETRY_HINT;
 }
-class uN extends Error {
+class UdsSendRefusedError extends Error {
   refusal;
   constructor(e, t) {
     super(t);
     ((this.name = "UdsSendRefusedError"), (this.refusal = e));
   }
 }
-function mD(e) {
-  if (e instanceof uN || z3t(e) || UAe(e) || $Ae(e)) return !0;
+function isRetryableSendError(e) {
+  if (e instanceof UdsSendRefusedError || isInboxGoneError(e) || isSenderPacedError(e) || isMessageTooLargeError(e)) return !0;
   let t = A(e);
   return t === "EBUSY" || t === "EAGAIN" || t === "EACCES";
 }
@@ -552,7 +552,7 @@ function Ge(e) {
     .map(({ name: t, until: r }) => ({ name: truncateToCodeUnits(t, maxSlugLength), until: r }));
 }
 function je() {
-  return (getBridgeHostState().outbound.pacer ??= ee(w7e));
+  return (getBridgeHostState().outbound.pacer ??= ee(getPeerGuardLimits));
 }
 var Ke = { ok: !0, refund: () => {} };
 function We() {
@@ -584,7 +584,7 @@ async function sendToUdsSocket(
 ) {
   let p = ownMessagingSocket(),
     k = p ? buildUdsAddress(p) : void 0,
-    h = buildCrossSessionEnvelope(k, d, t, void 0, appendHopToChain(l, k ? FAe(k) : void 0), f),
+    h = buildCrossSessionEnvelope(k, d, t, void 0, appendHopToChain(l, k ? computeHopToken(k) : void 0), f),
     S = createMessageEnvelope(),
     w = {
       ...S,
@@ -601,12 +601,12 @@ async function sendToUdsSocket(
         : Ke;
   if (!y.ok)
     throw (
-      n(
-        `[uds-client] paced: not sending to ${Nu(e)} \u2014 ${y.sentInBurst} sent this burst; its inbox rate limit would drop more`,
+      logForDebugging(
+        `[uds-client] paced: not sending to ${formatRedactedPreview(e)} \u2014 ${y.sentInBurst} sent this burst; its inbox rate limit would drop more`,
       ),
       ae(y.sentInBurst)
     );
-  if ((n(`[uds-client] Sending ${t.length} chars to ${Nu(e)}`), u))
+  if ((logForDebugging(`[uds-client] Sending ${t.length} chars to ${formatRedactedPreview(e)}`), u))
     Xe(S.msg_id, buildUdsAddress(e));
   try {
     await ge(e, w, r, {
@@ -616,7 +616,7 @@ async function sendToUdsSocket(
       ...(o !== void 0 && { expectPeerProcStart: o }),
     });
   } catch (I) {
-    if (mD(I)) {
+    if (isRetryableSendError(I)) {
       if ((y.refund(), u)) ze(S.msg_id);
     }
     throw I;
@@ -683,7 +683,7 @@ async function sendStampedControlToUdsSocket(
   { expectPeerPid: d, expectPeerProcStart: s, storageV5: l } = {},
 ) {
   return (
-    n(`[uds-client] Sending control:${t.action} to ${Nu(e)}`),
+    logForDebugging(`[uds-client] Sending control:${t.action} to ${formatRedactedPreview(e)}`),
     await ge(e, { type: "control", ...t, ...r }, l, {
       noFollowSymlink: !0,
       ...(d !== void 0 && { expectPeerPid: d }),
@@ -730,9 +730,9 @@ async function X(e) {
   return (await provenSameProcessAsync(e.pid, t)) === !0;
 }
 function me(e) {
-  let t = b(e),
+  let t = jsonStringify(e),
     r = AUTH_LINE_BASE_LENGTH + t.length + 1;
-  if (r > S7e) throw se(r, S7e);
+  if (r > MAX_MESSAGE_CHARS) throw se(r, MAX_MESSAGE_CHARS);
   return t;
 }
 async function Je(e) {
@@ -762,7 +762,7 @@ async function ge(
 ) {
   let u = f ?? me(t);
   if (!isLocalAddress(e))
-    throw new uN(
+    throw new UdsSendRefusedError(
       "non-local",
       `Refusing to connect: not a usable local IPC path (remote/UNC host, or a pipe name with extra segments or a trailing dot/space): ${e}`,
     );
@@ -785,12 +785,12 @@ async function ge(
     } catch (w) {
       if (W(w)) throw w;
       throw (
-        n(`[uds-client] reply target unvettable: ${A(w) ?? "lstat failed"}`),
-        new uN("unvettable", "Refusing to send: cannot vet reply target")
+        logForDebugging(`[uds-client] reply target unvettable: ${A(w) ?? "lstat failed"}`),
+        new UdsSendRefusedError("unvettable", "Refusing to send: cannot vet reply target")
       );
     }
     if (S)
-      throw new uN("symlink", "Refusing to send: reply target is a symlink");
+      throw new UdsSendRefusedError("symlink", "Refusing to send: reply target is a symlink");
   }
   let h =
     k +
@@ -808,12 +808,12 @@ async function ge(
       }),
       _.on("connect", () => {
         if (s !== void 0 && getCurrentPlatform() !== "windows") {
-          let y = ybt(_);
+          let y = getSocketPeerPid(_);
           if (y === void 0) {
             ((E = !0),
               _.destroy(),
               w(
-                new uN(
+                new UdsSendRefusedError(
                   "endpoint-unverifiable",
                   "Refusing to send: connected endpoint identity could not be read",
                 ),
@@ -823,11 +823,11 @@ async function ge(
           if (y !== s) {
             ((E = !0),
               _.destroy(),
-              n(
+              logForDebugging(
                 `[uds-client] connected endpoint is pid ${y}, expected ${s} \u2014 refusing to write`,
               ),
               w(
-                new uN(
+                new UdsSendRefusedError(
                   "wrong-endpoint",
                   "Refusing to send: connected endpoint is not the expected process",
                 ),
@@ -840,7 +840,7 @@ async function ge(
             ((E = !0),
               _.destroy(),
               w(
-                new uN(
+                new UdsSendRefusedError(
                   "endpoint-unverifiable",
                   "Refusing to send: connected endpoint owner could not be read",
                 ),
@@ -850,11 +850,11 @@ async function ge(
           if (I !== void 0 && v !== I) {
             ((E = !0),
               _.destroy(),
-              n(
+              logForDebugging(
                 `[uds-client] connected endpoint is owned by uid ${v}, not ours \u2014 refusing to write`,
               ),
               w(
-                new uN(
+                new UdsSendRefusedError(
                   "wrong-endpoint",
                   "Refusing to send: connected endpoint is not owned by this user",
                 ),
@@ -864,11 +864,11 @@ async function ge(
           if (l !== void 0 && getProcessStartTokenLinuxSync(y) !== l) {
             ((E = !0),
               _.destroy(),
-              n(
+              logForDebugging(
                 `[uds-client] connected endpoint pid ${y} is not the process that wrote to us (start token differs \u2014 recycled pid) \u2014 refusing to write`,
               ),
               w(
-                new uN(
+                new UdsSendRefusedError(
                   "wrong-endpoint",
                   "Refusing to send: connected endpoint is a different process with the expected pid",
                 ),
@@ -887,7 +887,7 @@ async function ge(
         else _.end();
       }),
       _.on("close", () => {
-        if (!E) n(`[uds-client] Sent to ${Nu(e)}`);
+        if (!E) logForDebugging(`[uds-client] Sent to ${formatRedactedPreview(e)}`);
         S();
       }));
   });
@@ -945,7 +945,7 @@ async function V(e, t, r) {
     let i = await readBoundedFile(l, MAX_SESSION_RECORD_BYTES);
     if (i === null) return null;
     d = !0;
-    let o = z(i),
+    let o = jsonParse(i),
       p = normalizeSessionRecord(o);
     return {
       sock:
@@ -1102,32 +1102,32 @@ function qe(e) {
     .slice(0, 16);
 }
 export {
-  Nu,
-  qI,
-  HJn,
-  ybt,
-  S7e,
-  FAe,
-  Sbt,
-  ASn,
-  IJn,
-  CSn,
-  vSn,
-  b7e,
-  RSn,
-  PJn,
-  kSn,
-  w7e,
-  $Ae,
-  UAe,
-  z3t,
-  V3t,
-  dK,
-  BAe,
-  xSn,
-  bbt,
-  uN,
-  mD,
+  formatRedactedPreview,
+  formatRedactedErrorDetail,
+  getPeerUidRefusalReason,
+  getSocketPeerPid,
+  MAX_MESSAGE_CHARS,
+  computeHopToken,
+  DEFAULT_PEER_GUARD_LIMITS,
+  createPeerAdmissionController,
+  parseDropReason,
+  MAX_TRACKED_MESSAGE_IDS,
+  setOwnUdsHopToken,
+  setOwnBridgePeerAddressResolver,
+  getOwnHopTokens,
+  formatDroppedPeerMessageNotice,
+  createPeerDropReporter,
+  getPeerGuardLimits,
+  isMessageTooLargeError,
+  isSenderPacedError,
+  isInboxGoneError,
+  isRegistryUnreadableRefusal,
+  classifySendFailure,
+  formatStaleSocketHint,
+  BUSY_PIPE_RETRY_HINT,
+  formatBusySocketHint,
+  UdsSendRefusedError,
+  isRetryableSendError,
   creditPacerForHeldSend,
   debitPacerForReleasedSend,
   sendToUdsSocket,

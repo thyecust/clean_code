@@ -14,11 +14,11 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, FILE_TRANSFER_ERROR_MESSAGE, RECEIVED_FILES_MAX_AGE_DAYS } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
 import { getUploadsDirectory } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { YNe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { getMediaTypeFromPath } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { randomUUID } from "crypto";
 import {
@@ -40,7 +40,7 @@ import {
 var Y = RECEIVED_FILES_MAX_AGE_DAYS * 24 * 60 * 60 * 1000,
   k = "file-transfers";
 function S(t) {
-  n(`[peer-file-transfer] ${t}`);
+  logForDebugging(`[peer-file-transfer] ${t}`);
 }
 function sanitizePeerFileName(t) {
   let e = basename(t).replace(/[^a-zA-Z0-9._-]/g, "_") || "attachment",
@@ -137,7 +137,7 @@ async function stageLocalPeerFile(t) {
       file_name: a,
       file_size: e.length,
       sha256: r,
-      media_type: YNe(a),
+      media_type: getMediaTypeFromPath(a),
     }
   );
 }

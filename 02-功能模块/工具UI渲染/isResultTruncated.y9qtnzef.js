@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 229 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { E9e, A9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -26,7 +26,7 @@ import { getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { TranscriptExpandHint, OverflowHint, ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
@@ -79,7 +79,7 @@ function N() {
   let mt = _(1),
     Te;
   if (mt[0] === MEMO_CACHE_SENTINEL)
-    ((Te = e(t, {
+    ((Te = e(Text, {
       dimColor: !0,
       children: " \u2014 previous content replaced (no diff shown)",
     })),
@@ -115,7 +115,7 @@ function he(gt) {
     ie = m ? 0 : me(U, v) - b,
     q;
   if (g[6] !== M)
-    ((q = e(t, { bold: !0, children: M })), (g[6] = M), (g[7] = q));
+    ((q = e(Text, { bold: !0, children: M })), (g[6] = M), (g[7] = q));
   else q = g[7];
   let z;
   if (g[8] !== M) ((z = pluralize(M, "line")), (g[8] = M), (g[9] = z));
@@ -126,14 +126,14 @@ function he(gt) {
   else A = g[12];
   let G;
   if (g[13] !== A)
-    ((G = e(t, { bold: !0, children: A })), (g[13] = A), (g[14] = G));
+    ((G = e(Text, { bold: !0, children: A })), (g[13] = A), (g[14] = G));
   else G = g[14];
   let J;
   if (g[15] !== oe) ((J = oe && e(N, {})), (g[15] = oe), (g[16] = J));
   else J = g[16];
   let K;
   if (g[17] !== q || g[18] !== z || g[19] !== G || g[20] !== J)
-    ((K = r(t, { children: ["Wrote ", q, " ", z, " to", " ", G, J] })),
+    ((K = r(Text, { children: ["Wrote ", q, " ", z, " to", " ", G, J] })),
       (g[17] = q),
       (g[18] = z),
       (g[19] = G),
@@ -152,7 +152,7 @@ function he(gt) {
   else Z = g[25];
   let E;
   if (g[26] !== se || g[27] !== ae || g[28] !== Z)
-    ((E = e(o, {
+    ((E = e(Box, {
       flexDirection: "column",
       overflowY: se,
       maxHeight: ae,
@@ -173,7 +173,7 @@ function he(gt) {
   let De;
   if (g[33] !== E || g[34] !== I || g[35] !== K)
     ((De = e(ToolResultRow, {
-      children: r(o, { flexDirection: "column", children: [K, E, I] }),
+      children: r(Box, { flexDirection: "column", children: [K, E, I] }),
     })),
       (g[33] = E),
       (g[34] = I),
@@ -204,7 +204,7 @@ function renderToolUseMessage(i, { verbose: a }) {
   if (i.file_path.startsWith(getPlansDirectory())) return "";
   return e(TruncatedFilePath, {
     filePath: i.file_path,
-    children: a ? i.file_path : Ao(i.file_path),
+    children: a ? i.file_path : formatPathForDisplay(i.file_path),
   });
 }
 function renderToolUseRejectedMessage({ file_path: i, content: a }, { style: s, verbose: l }) {
@@ -289,7 +289,7 @@ function te(yt) {
   if (T.type === "error") {
     let S;
     if (Le[0] === MEMO_CACHE_SENTINEL)
-      ((S = e(ToolResultRow, { children: e(t, { children: "(No changes)" }) })),
+      ((S = e(ToolResultRow, { children: e(Text, { children: "(No changes)" }) })),
         (Le[0] = S));
     else S = Le[0];
     return S;
@@ -345,7 +345,7 @@ async function ge(i, a) {
     };
   } catch (s) {
     if (Po(s))
-      n(`Failed to load rejection diff for ${i}: ${s.message}`, {
+      logForDebugging(`Failed to load rejection diff for ${i}: ${s.message}`, {
         level: "error",
       });
     else logError(s);
@@ -355,7 +355,7 @@ async function ge(i, a) {
 function renderToolUseErrorMessage(i, { verbose: a }) {
   if (!a && typeof i === "string" && extractTagContent(i, "tool_use_error"))
     return e(ToolResultRow, {
-      children: e(t, { color: "error", children: "Error writing file" }),
+      children: e(Text, { color: "error", children: "Error writing file" }),
     });
   return e(ToolErrorMessage, { result: i, verbose: a });
 }
@@ -376,29 +376,29 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
       if (c.startsWith(getPlansDirectory()) && !l) {
         if (s !== "condensed")
           return e(ToolResultRow, {
-            children: e(t, { dimColor: !0, children: "/plan to preview" }),
+            children: e(Text, { dimColor: !0, children: "/plan to preview" }),
           });
       } else if (s === "condensed" && !l) {
         let C = O(u);
-        return r(t, {
+        return r(Text, {
           children: [
             "Wrote ",
-            e(t, { bold: !0, children: C }),
+            e(Text, { bold: !0, children: C }),
             " ",
             pluralize(C, "line"),
             " to",
             " ",
-            e(t, { bold: !0, children: relative(getCwd(), c) }),
+            e(Text, { bold: !0, children: relative(getCwd(), c) }),
             f && e(N, {}),
           ],
         });
       } else if (!l && (isScratchpadDisplayPath(c) || isWorkshopDisplayPath(c))) {
         let C = O(u);
         return e(ToolResultRow, {
-          children: r(t, {
+          children: r(Text, {
             children: [
               "Wrote ",
-              e(t, { bold: !0, children: C }),
+              e(Text, { bold: !0, children: C }),
               " ",
               pluralize(C, "line"),
               f && e(N, {}),

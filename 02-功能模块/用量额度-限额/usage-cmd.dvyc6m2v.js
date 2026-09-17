@@ -14,11 +14,11 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { isClaudeAISubscriber, hasProfileScope, getSubscriptionType, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { formatResetTime, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatResetTime, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isUsageBasedBilling, formatCostBreakdown, formatCostSummary, getOverageIncludedModels, getModelWeeklyLimitRows, getCurrentLimits, getUnifiedRateLimitWindows } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ble } from "../成本-Token统计/chunk-3nwwgatc.js";
+import { getUsagePatternsAccess } from "../成本-Token统计/usage-transcript-scan.js";
 import { MIN_BEHAVIOR_PCT, collectUsageData } from "../MCP客户端/usage-rate-limits.js";
 function formatRateLimits(t) {
   let { rate_limits: e, subscription_type: n } = t;
@@ -72,7 +72,7 @@ var g = "What's contributing to your limits usage?",
         s =
           "You are currently using your subscription to power your Claude Code usage";
       let r = ke(),
-        o = Ble(),
+        o = getUsagePatternsAccess(),
         a = await collectUsageData({
           includeBehaviors: r && !mayHaveRemoteClient(e.session) && o.allowed,
           storageV5: e.storageV5,
