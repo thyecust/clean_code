@@ -13,7 +13,7 @@ function h(s) {
     a = Math.min(o.length, TDe());
   return 2 + s.name.length + 2 + a + 1;
 }
-function t0e(s, o, a) {
+function computeSkillUsageByPlugin(s, o, a) {
   let p = new Map();
   for (let n of s) {
     if (n.type !== "prompt" || n.disableModelInvocation) continue;
@@ -49,4 +49,4 @@ function t0e(s, o, a) {
     budgetTokens: Math.round(i / o),
   };
 }
-export { t0e };
+export { computeSkillUsageByPlugin };

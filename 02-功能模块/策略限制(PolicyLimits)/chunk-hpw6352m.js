@@ -42,7 +42,7 @@ import {
   extractSignatureHeader,
   writeSignatureSidecar,
   deleteSignatureSidecars,
-  XJe,
+  pruneStaleSignatureSidecars,
   readStoredSignature,
   readAcceptedSignatureIat,
   recordAcceptedSignatureIat,
@@ -758,12 +758,12 @@ class GAn {
           if (isHoverRestEnabled() && this.storageV5 !== void 0) {
             if ((await this.storageV5.touch(D())).ok)
               (await writeSignatureSidecar(getCachePath(), c.signature),
-                await XJe(getCachePath(), this.cacheClearEpoch !== m));
+                await pruneStaleSignatureSidecars(getCachePath(), this.cacheClearEpoch !== m));
           } else {
             let w = new Date();
             (await utimes(getCachePath(), w, w),
               await writeSignatureSidecar(getCachePath(), c.signature),
-              await XJe(getCachePath(), this.cacheClearEpoch !== m));
+              await pruneStaleSignatureSidecars(getCachePath(), this.cacheClearEpoch !== m));
           }
         } catch {}
         return (logFeatureOk(e), S);

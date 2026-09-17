@@ -28,7 +28,7 @@ import "../../02-功能模块/Workflow编排/chunk-6gjsfh7a.js";
 import "../../01-核心基础设施/共享小工具-未细化/detail-dialog-keys.js";
 import "../../01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
-import "../../01-核心基础设施/设置-配置/chunk-tswdb9jt.js";
+import "../../01-核心基础设施/设置-配置/managed-settings-approval-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tfspgges.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
@@ -91,7 +91,7 @@ import "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
@@ -123,7 +123,7 @@ import "../../02-功能模块/AutoMode-自动模式/unattended-serving-consent.j
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/设置-配置/fast-mode.js";
 import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
-import "../../02-功能模块/工具WebFetch-WebSearch/chunk-1mxgbqzj.js";
+import "../../02-功能模块/工具WebFetch-WebSearch/clear-session-caches.js";
 import "../../02-功能模块/工具Glob-Grep-搜索/chunk-57axeagj.js";
 import "../../02-功能模块/上下文压缩-Compact/chunk-1ntrf0ja.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
@@ -137,7 +137,7 @@ import "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncat
 import "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
 import "../../02-功能模块/认证-OAuth登录/url-and-error-redaction.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
-import "../../02-功能模块/图片-截图-ComputerUse/chunk-1c6fx285.js";
+import "../../02-功能模块/图片-截图-ComputerUse/computer-use-approval-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/plan-approval-permission-mode.js";
 import "../../01-核心基础设施/共享小工具-未细化/send-message-pins.js";
 import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";

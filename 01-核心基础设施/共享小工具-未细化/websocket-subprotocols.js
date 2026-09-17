@@ -15,7 +15,7 @@ function getWsSubprotocols(n) {
   let t = o.filter((r) => typeof r === "string");
   return t.length > 0 ? t : void 0;
 }
-function hWn(n) {
+function formatSubprotocolSuffix(n) {
   let o = getWsSubprotocols(n);
   if (o === void 0) return "";
   return ` (subprotocols: ${o.map((t) => `"${t}"`).join(", ")})`;
@@ -27,4 +27,4 @@ function formatSubprotocolList(n) {
     t = n.length - o.length;
   return `${o.map((r) => `"${r}"`).join(", ")}${t > 0 ? ` (+${t} more)` : ""}`;
 }
-export { getWsSubprotocols, hWn, MAX_SUBPROTOCOLS, formatSubprotocolList };
+export { getWsSubprotocols, formatSubprotocolSuffix, MAX_SUBPROTOCOLS, formatSubprotocolList };

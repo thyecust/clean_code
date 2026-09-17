@@ -307,7 +307,7 @@ function useTasksV2Subscription() {
     return e.subscribe(k);
   }, [e]);
 }
-function qUn() {
+function useTasksV2HasTasks() {
   return useStoreSelector(c(), y) ?? !1;
 }
 function v(e, s) {
@@ -337,4 +337,4 @@ function m(e, s) {
 function y(e) {
   return e !== void 0 && e.length > 0;
 }
-export { TasksV2Store, TasksV2StoreContext, useTasksV2, useTasksV2Snapshot, useTasksV2Subscription, qUn };
+export { TasksV2Store, TasksV2StoreContext, useTasksV2, useTasksV2Snapshot, useTasksV2Subscription, useTasksV2HasTasks };

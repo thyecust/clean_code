@@ -56,11 +56,11 @@ function peerFileFailureNote(t, e) {
 function peerFileCountCapNote(t) {
   return `[SendFile: ${t} additional attachment(s) were dropped \u2014 max ${MAX_TRANSFER_FILE_COUNT} per message]`;
 }
-function tFt(t, e) {
+function verifyPeerFileIntegrity(t, e) {
   if (typeof e.file_size === "number" && t.length !== e.file_size) return !1;
   return hashSha256(t) === e.sha256;
 }
-function nFt(t, e, r) {
+function emitPeerFileReceiveTelemetry(t, e, r) {
   if (
     (logEvent("tengu_send_file_received", {
       transport: fromEnum(t),
@@ -96,7 +96,7 @@ async function readPeerFileBounded(t, e) {
     await r.close().catch(() => {});
   }
 }
-function rFt(t, e) {
+function injectPeerFilePrefix(t, e) {
   if (!e) return t;
   let r = /^<cross-session-message\b[^>]*>\n?/.exec(t);
   return r ? r[0] + e + t.slice(r[0].length) : e + t;
@@ -199,7 +199,7 @@ async function materializeLocalPeerFiles(t) {
       d("the transfer copy could not be read (it may have expired)");
       continue;
     }
-    if (!tFt(w, p)) {
+    if (!verifyPeerFileIntegrity(w, p)) {
       d("it failed integrity verification");
       continue;
     }
@@ -224,4 +224,4 @@ async function materializeLocalPeerFiles(t) {
     verified: D,
   };
 }
-export { sanitizePeerFileName, peerFileFailureNote, peerFileCountCapNote, tFt, nFt, readPeerFileBounded, rFt, peerTransferSpoolDir, stageLocalPeerFile, sweepStaleSpoolEntries, materializeLocalPeerFiles };
+export { sanitizePeerFileName, peerFileFailureNote, peerFileCountCapNote, verifyPeerFileIntegrity, emitPeerFileReceiveTelemetry, readPeerFileBounded, injectPeerFilePrefix, peerTransferSpoolDir, stageLocalPeerFile, sweepStaleSpoolEntries, materializeLocalPeerFiles };

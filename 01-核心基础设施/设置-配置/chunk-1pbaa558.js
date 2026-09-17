@@ -83,7 +83,7 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { vvt, mir, gir } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { commitExit } from "../共享小工具-未细化/exit-commit-state.js";
 import { getJwtSubject } from "../遥测-OpenTelemetry/otel-events.js";
-import { computeRetryDelayMs, extractSignatureHeader, writeSignatureSidecar, deleteSignatureSidecars, XJe } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import { computeRetryDelayMs, extractSignatureHeader, writeSignatureSidecar, deleteSignatureSidecars, pruneStaleSignatureSidecars } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { AsyncQueue } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { I4t, P4t } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { matchesOAuthBaseUrlHost, resetRemoteSettingsSyncCache, isRemoteSettingsEligible, hasTeamOrEnterpriseSubscription } from "../共享小工具-未细化/remote-settings-eligibility.js";
@@ -670,7 +670,7 @@ async function ot(e) {
       );
     try {
       let { getWIFCredentials: r, getWIFTokenCache: a } =
-          await import("../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js"),
+          await import("../../02-功能模块/认证-OAuth登录/wif-credentials.js"),
         [u, p] = await Promise.all([a(), r()]);
       if (u !== null) {
         if (!matchesOAuthBaseUrlHost(p?.baseURL)) {
@@ -689,7 +689,7 @@ async function ot(e) {
       let a = `Remote settings: profile credential unavailable: ${l(r)}`;
       n(a, { level: "error" });
       let { isWIFTransientExchangeError: u } =
-        await import("../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js");
+        await import("../../02-功能模块/认证-OAuth登录/wif-credentials.js");
       return { headers: {}, error: a, profileError: !0, retryable: u(r) };
     }
   }
@@ -944,7 +944,7 @@ async function Pe(e, t = !1, o) {
           let E;
           if (a) {
             let { getWIFTokenCache: C, invalidateWIFToken: U } =
-              await import("../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js");
+              await import("../../02-功能模块/认证-OAuth登录/wif-credentials.js");
             (await U(r),
               (E = await C()
                 .then((Me) => Me?.getToken())
@@ -1135,7 +1135,7 @@ async function ct(e) {
         setSessionCache(o, { verified: !0 }),
         await writeSignatureSidecar(getSettingsPath(), d.signature));
       let _ = A(u);
-      if ((await XJe(getSettingsPath(), _), _))
+      if ((await pruneStaleSignatureSidecars(getSettingsPath(), _), _))
         return { settings: null, fetchSucceeded: !1 };
       if (!r) {
         if ((await q(), A(u))) return { settings: null, fetchSucceeded: !1 };

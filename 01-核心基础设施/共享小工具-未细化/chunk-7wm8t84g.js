@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { b } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { asMcpSdkClient } from "./chunk-1ftn6vfs.js";
+import { asMcpSdkClient } from "./mcp-client-type-casts.js";
 var MAX_SKILL_FILE_BYTES = 1e6;
 class p {
   loaderSide = null;

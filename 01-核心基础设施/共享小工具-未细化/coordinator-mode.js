@@ -15,7 +15,7 @@ function isCoordinatorModeEnabled() {
   if (ld() && !Nn() && !a.CLAUDE_CODE_REMOTE) return !1;
   return !0;
 }
-function iCe(e) {
+function isCoordinatorMainSession(e) {
   return isCoordinatorModeEnabled() && e.agentId === void 0;
 }
-export { isCoordinatorModeEnabled, iCe };
+export { isCoordinatorModeEnabled, isCoordinatorMainSession };

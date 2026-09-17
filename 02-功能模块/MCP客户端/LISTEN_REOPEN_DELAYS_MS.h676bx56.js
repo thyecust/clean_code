@@ -51,7 +51,7 @@ import {
   Brn,
   jrn,
 } from "./chunk-78r8f7dw.js";
-import "../认证-OAuth登录/chunk-3wfaaze4.js";
+import "../认证-OAuth登录/pkce-challenge.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
   Qs,
@@ -245,7 +245,7 @@ import "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-g
 import { noopTaskRegistry } from "../工具WebFetch-WebSearch/noop-task-registry.js";
 import { SdkMcpClientTransport } from "../../01-核心基础设施/共享小工具-未细化/sdk-mcp-transports.js";
 import { stripTextBlockMeta, estimateContentTokens, shouldTruncateOutput, maybeTruncateOutput } from "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
-import "./chunk-7gw5rbph.js";
+import "./mcp-elicitation-request-handler.js";
 import { logChromeToolsAdded } from "../Hooks钩子/chrome-telemetry-events.js";
 import { collectResourceLinks, stripReservedMetaKeys } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
 import { getDesignAuthResolver, hasFirstPartyDesignAuth, FirstPartyDesignNeedsConsentError, getDesignConsentProvider, setPendingScopeExpansionNotice } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
@@ -253,9 +253,9 @@ import { hasChannelCapability } from "../../01-核心基础设施/共享小工�
 import { resolveProxyFetchOptions } from "../../01-核心基础设施/共享小工具-未细化/proxy-fetch-options.js";
 import { splitPluginId } from "../插件系统/chunk-33bdfgmx.js";
 import { isMcpSkillsEnabled, isMcpSkillsCapable } from "./mcp-skills-extension.js";
-import { n7e, asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { asMcpClient, asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
 import { Bg } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { shortenMcpTaskId } from "./chunk-tznd4407.js";
+import { shortenMcpTaskId } from "./mcp-task-id.js";
 import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
 import { isClaudeInChromeMCPServer } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
 import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
@@ -730,7 +730,7 @@ function so(e, t) {
 }
 import { dirname } from "path";
 function Eo(e) {
-  return n7e(e);
+  return asMcpClient(e);
 }
 function Xe(e) {
   return asMcpSdkClient(e);

@@ -13,7 +13,7 @@ import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ry, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { hasSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { pAn, isBypassPermissionsModeDisabled } from "./chunk-pcxn6gwz.js";
+import { getBypassPermissionsModeDisabledMessage, isBypassPermissionsModeDisabled } from "./bypass-permissions-mode-policy.js";
 function i(s) {
   return s?.permissionMode === "bypassPermissions" || s?.allowBypass === !0;
 }
@@ -27,7 +27,7 @@ function refuseBypassUnderRoot(s) {
 }
 function applyBypassPolicyGate(s) {
   if (!s || !i(s)) return s;
-  let o = pAn();
+  let o = getBypassPermissionsModeDisabledMessage();
   if (!o) return s;
   return (
     console.error(o),

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 var LIST_AGENTS_TOOL_NAME = "ListAgents",
-  jQn = "ListPeers";
+  LIST_AGENTS_TOOL_ALIAS = "ListPeers";
 function e() {
   return "";
 }
@@ -17,4 +17,4 @@ var s = `Lists agents you can ${SEND_MESSAGE_TOOL_NAME} to \u2014 in-process sub
 function getListAgentsToolDescription() {
   return s + e();
 }
-export { LIST_AGENTS_TOOL_NAME, jQn, getListAgentsToolDescription };
+export { LIST_AGENTS_TOOL_NAME, LIST_AGENTS_TOOL_ALIAS, getListAgentsToolDescription };

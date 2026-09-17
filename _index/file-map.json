@@ -125,15 +125,15 @@
   "kb": 1.4,
   "confidence": "low"
  },
- "chunk-0dk7tzf3.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-0dk7tzf3.js",
+ "remote-environments.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/remote-environments.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 1.8,
   "confidence": "low"
  },
- "chunk-0en55mb4.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-0en55mb4.js",
+ "git-commit-detection.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/git-commit-detection.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 1.0,
@@ -454,8 +454,8 @@
   "kb": 2.0,
   "confidence": "low"
  },
- "chunk-1c6fx285.js": {
-  "path": "02-功能模块/图片-截图-ComputerUse/chunk-1c6fx285.js",
+ "computer-use-approval-dialog.js": {
+  "path": "02-功能模块/图片-截图-ComputerUse/computer-use-approval-dialog.js",
   "module": "图片 / 截图 / Computer Use",
   "tier": 2,
   "kb": 1.0,
@@ -482,8 +482,8 @@
   "kb": 0.7,
   "confidence": "low"
  },
- "chunk-1ftn6vfs.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js",
+ "mcp-client-type-casts.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 0.7,
@@ -545,8 +545,8 @@
   "kb": 0.8,
   "confidence": "low"
  },
- "chunk-1mxgbqzj.js": {
-  "path": "02-功能模块/工具WebFetch-WebSearch/chunk-1mxgbqzj.js",
+ "clear-session-caches.js": {
+  "path": "02-功能模块/工具WebFetch-WebSearch/clear-session-caches.js",
   "module": "工具: WebFetch/WebSearch",
   "tier": 2,
   "kb": 2.6,
@@ -944,8 +944,8 @@
   "kb": 13.3,
   "confidence": "medium"
  },
- "chunk-2xnaevpn.js": {
-  "path": "02-功能模块/图片-截图-ComputerUse/chunk-2xnaevpn.js",
+ "bridge-attachment-resolve.js": {
+  "path": "02-功能模块/图片-截图-ComputerUse/bridge-attachment-resolve.js",
   "module": "图片 / 截图 / Computer Use",
   "tier": 2,
   "kb": 7.8,
@@ -1224,8 +1224,8 @@
   "kb": 21.8,
   "confidence": "high"
  },
- "chunk-3wfaaze4.js": {
-  "path": "02-功能模块/认证-OAuth登录/chunk-3wfaaze4.js",
+ "pkce-challenge.js": {
+  "path": "02-功能模块/认证-OAuth登录/pkce-challenge.js",
   "module": "认证 / OAuth 登录",
   "tier": 2,
   "kb": 1.5,
@@ -1336,8 +1336,8 @@
   "kb": 5.6,
   "confidence": "medium"
  },
- "chunk-4bdjksjf.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js",
+ "skill-usage-by-plugin.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 1.7,
@@ -1448,8 +1448,8 @@
   "kb": 0.7,
   "confidence": "low"
  },
- "chunk-4q59mpqf.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-4q59mpqf.js",
+ "approve-api-key.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/approve-api-key.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 3.1,
@@ -1707,8 +1707,8 @@
   "kb": 2.2,
   "confidence": "low"
  },
- "chunk-5jqttbex.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-5jqttbex.js",
+ "plugin-eval-quickref-asset.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/plugin-eval-quickref-asset.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 0.7,
@@ -2351,8 +2351,8 @@
   "kb": 0.8,
   "confidence": "low"
  },
- "chunk-7gw5rbph.js": {
-  "path": "02-功能模块/MCP客户端/chunk-7gw5rbph.js",
+ "mcp-elicitation-request-handler.js": {
+  "path": "02-功能模块/MCP客户端/mcp-elicitation-request-handler.js",
   "module": "MCP 客户端",
   "tier": 2,
   "kb": 4.3,
@@ -3471,8 +3471,8 @@
   "kb": 4.1,
   "confidence": "medium"
  },
- "chunk-bacs4ztm.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js",
+ "jittered-backoff-delay.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/jittered-backoff-delay.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 0.8,
@@ -3807,8 +3807,8 @@
   "kb": 65.6,
   "confidence": "high"
  },
- "chunk-ch1x7wx1.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-ch1x7wx1.js",
+ "propose-goal-feature-gate.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/propose-goal-feature-gate.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 0.7,
@@ -3842,8 +3842,8 @@
   "kb": 1.3,
   "confidence": "low"
  },
- "chunk-ck2sjz96.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js",
+ "org-skills-sync.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/org-skills-sync.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 3.0,
@@ -4542,15 +4542,15 @@
   "kb": 12.9,
   "confidence": "medium"
  },
- "chunk-er6a87rc.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js",
+ "server-approval-watch-provider.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/server-approval-watch-provider.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 0.7,
   "confidence": "low"
  },
- "chunk-etbwf1s8.js": {
-  "path": "02-功能模块/Bridge-RemoteControl/chunk-etbwf1s8.js",
+ "forwarded-tool-call-registry.js": {
+  "path": "02-功能模块/Bridge-RemoteControl/forwarded-tool-call-registry.js",
   "module": "Bridge / Remote Control",
   "tier": 2,
   "kb": 5.2,
@@ -6208,8 +6208,8 @@
   "kb": 9.1,
   "confidence": "low"
  },
- "chunk-md00q5qh.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-md00q5qh.js",
+ "design-command-handler.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/design-command-handler.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 2.1,
@@ -6789,8 +6789,8 @@
   "kb": 0.7,
   "confidence": "low"
  },
- "chunk-p3e024j6.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js",
+ "zod-helpers.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/zod-helpers.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 1.2,
@@ -6901,8 +6901,8 @@
   "kb": 10.5,
   "confidence": "medium"
  },
- "chunk-pcxn6gwz.js": {
-  "path": "02-功能模块/权限系统/chunk-pcxn6gwz.js",
+ "bypass-permissions-mode-policy.js": {
+  "path": "02-功能模块/权限系统/bypass-permissions-mode-policy.js",
   "module": "权限系统",
   "tier": 2,
   "kb": 0.9,
@@ -7440,8 +7440,8 @@
   "kb": 10.5,
   "confidence": "medium"
  },
- "chunk-r730456t.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-r730456t.js",
+ "relaunch-confirmation-wizard.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/relaunch-confirmation-wizard.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 2.7,
@@ -7650,8 +7650,8 @@
   "kb": 11.8,
   "confidence": "medium"
  },
- "chunk-rxp6fm7a.js": {
-  "path": "02-功能模块/MCP客户端/chunk-rxp6fm7a.js",
+ "mcp-config-diagnostics.js": {
+  "path": "02-功能模块/MCP客户端/mcp-config-diagnostics.js",
   "module": "MCP 客户端",
   "tier": 2,
   "kb": 8.9,
@@ -8308,8 +8308,8 @@
   "kb": 0.7,
   "confidence": "low"
  },
- "chunk-tswdb9jt.js": {
-  "path": "01-核心基础设施/设置-配置/chunk-tswdb9jt.js",
+ "managed-settings-approval-dialog.js": {
+  "path": "01-核心基础设施/设置-配置/managed-settings-approval-dialog.js",
   "module": "设置 / 配置",
   "tier": 1,
   "kb": 13.1,
@@ -8378,8 +8378,8 @@
   "kb": 8.1,
   "confidence": "low"
  },
- "chunk-tznd4407.js": {
-  "path": "02-功能模块/MCP客户端/chunk-tznd4407.js",
+ "mcp-task-id.js": {
+  "path": "02-功能模块/MCP客户端/mcp-task-id.js",
   "module": "MCP 客户端",
   "tier": 2,
   "kb": 1.1,
@@ -8623,8 +8623,8 @@
   "kb": 0.7,
   "confidence": "low"
  },
- "chunk-vm6pzj28.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-vm6pzj28.js",
+ "conversation-reset.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/conversation-reset.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 1.3,
@@ -9050,8 +9050,8 @@
   "kb": 89.1,
   "confidence": "medium"
  },
- "chunk-x3rm9w4b.js": {
-  "path": "02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js",
+ "wif-credentials.js": {
+  "path": "02-功能模块/认证-OAuth登录/wif-credentials.js",
   "module": "认证 / OAuth 登录",
   "tier": 2,
   "kb": 11.9,
@@ -9218,8 +9218,8 @@
   "kb": 3.2,
   "confidence": "low"
  },
- "chunk-xm1bhjkr.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-xm1bhjkr.js",
+ "worker-agent-type.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/worker-agent-type.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 0.6,
@@ -9386,8 +9386,8 @@
   "kb": 17.6,
   "confidence": "high"
  },
- "chunk-y9z0dpn0.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js",
+ "queued-message-context.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/queued-message-context.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 1.6,

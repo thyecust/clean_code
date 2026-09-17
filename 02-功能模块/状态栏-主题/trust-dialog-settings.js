@@ -26,7 +26,7 @@ var m = () => {
     ...(e ? [["localSettings", ".claude/settings.local.json"]] : []),
   ];
 };
-function jPt(t) {
+function hasHookSettings(t) {
   if (t === null) return !1;
   if (t.statusLine) return !0;
   if (t.fileSuggestion) return !0;
@@ -46,7 +46,7 @@ function getHookSettingsSourceFiles(
   },
 ) {
   let e = [];
-  for (let [s, r] of t.sources) if (jPt(t.read(s))) e.push(r);
+  for (let [s, r] of t.sources) if (hasHookSettings(t.read(s))) e.push(r);
   return e;
 }
 function l(t) {
@@ -80,7 +80,7 @@ function g(t) {
   if (r) return i ? 0 : 1;
   return i ? 2 : 3;
 }
-function s0e(t = S()) {
+function collectAllowRules(t = S()) {
   let e = [],
     s = [];
   for (let [o, n] of t.sources) {
@@ -102,7 +102,7 @@ function p(t) {
   if (t.includes("..")) return 1;
   return 2;
 }
-function i0e(t = S()) {
+function collectAdditionalDirectories(t = S()) {
   let e = [],
     s = [];
   for (let [o, n] of t.sources) {
@@ -170,26 +170,26 @@ function getApiKeyHelperSourceFiles() {
   if (hasApiKeyHelper(s)) t.push(".claude/settings.local.json");
   return t;
 }
-function qPt(t) {
+function hasAwsAuthCommands(t) {
   return !!(t?.awsAuthRefresh || t?.awsCredentialExport);
 }
 function getAwsCommandSourceFiles() {
   let t = [],
     e = getSettingsForSource("projectSettings");
-  if (qPt(e)) t.push(".claude/settings.json");
+  if (hasAwsAuthCommands(e)) t.push(".claude/settings.json");
   let s = getSettingsForSource("localSettings");
-  if (qPt(s)) t.push(".claude/settings.local.json");
+  if (hasAwsAuthCommands(s)) t.push(".claude/settings.local.json");
   return t;
 }
-function zPt(t) {
+function hasGcpAuthCommand(t) {
   return !!t?.gcpAuthRefresh;
 }
 function getGcpCommandSourceFiles() {
   let t = [],
     e = getSettingsForSource("projectSettings");
-  if (zPt(e)) t.push(".claude/settings.json");
+  if (hasGcpAuthCommand(e)) t.push(".claude/settings.json");
   let s = getSettingsForSource("localSettings");
-  if (zPt(s)) t.push(".claude/settings.local.json");
+  if (hasGcpAuthCommand(s)) t.push(".claude/settings.local.json");
   return t;
 }
 function hasProxyAuthHelper(t) {
@@ -216,10 +216,10 @@ function getDangerousEnvVarSourceFiles() {
   return t;
 }
 export {
-  jPt,
+  hasHookSettings,
   getHookSettingsSourceFiles,
-  s0e,
-  i0e,
+  collectAllowRules,
+  collectAdditionalDirectories,
   getBashExecutionSourceFiles,
   formatListWithAnd,
   hasOtelHeadersHelper,
@@ -227,9 +227,9 @@ export {
   getAutoMemoryDirectorySourceFiles,
   hasApiKeyHelper,
   getApiKeyHelperSourceFiles,
-  qPt,
+  hasAwsAuthCommands,
   getAwsCommandSourceFiles,
-  zPt,
+  hasGcpAuthCommand,
   getGcpCommandSourceFiles,
   hasProxyAuthHelper,
   getProxyAuthHelperSourceFiles,

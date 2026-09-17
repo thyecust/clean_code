@@ -14,7 +14,7 @@ import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小�
 import { logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PROCESS_WRAPPER_ENV_VAR, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
-import { aIe, getRelaunchTerminalSizeEnv } from "../../01-核心基础设施/共享小工具-未细化/relaunch-terminal-size.js";
+import { RELAUNCH_TERMINAL_SIZE_ENV_VAR, getRelaunchTerminalSizeEnv } from "../../01-核心基础设施/共享小工具-未细化/relaunch-terminal-size.js";
 import { spawn } from "child_process";
 import { closeSync } from "fs";
 import { constants } from "os";
@@ -39,7 +39,7 @@ ${getLauncherConfigError() ?? `${PROCESS_WRAPPER_ENV_VAR}: launcher \`${getLaunc
   let { cmd: n, prefixArgs: a } = resolveWrappedClaudeInvocation(),
     c = process.argv.slice(2),
     t = { ...process.env };
-  (delete t[aIe], Object.assign(t, getRelaunchTerminalSizeEnv()));
+  (delete t[RELAUNCH_TERMINAL_SIZE_ENV_VAR], Object.assign(t, getRelaunchTerminalSizeEnv()));
   let i = spawn(n, [...a, ...c], { stdio: "inherit", env: t });
   d();
   let s = ["SIGINT", "SIGTERM", "SIGHUP"];

@@ -19,7 +19,7 @@ import { normalizeGitRemoteUrl } from "../../01-核心基础设施/安全文件�
 import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { SHARE_ONBOARDING_GUIDE_TOOL_NAME } from "../Teammates团队/share-onboarding-guide-tool.js";
-import { zSe } from "../Teammates团队/onboarding-guide-api.js";
+import { isOnboardingGuideSharingEnabled } from "../Teammates团队/onboarding-guide-api.js";
 import { readFile as L } from "fs/promises";
 import { basename, join as x } from "path";
 import { readdir, readFile as C, stat as _ } from "fs/promises";
@@ -386,7 +386,7 @@ If the tool returns 'unavailable' at any point, skip that call and use the manua
           m
             .replaceAll("{{WINDOW_DAYS}}", String(d))
             .replaceAll("{{GUIDE_TEMPLATE}}", h)
-            .replaceAll("{{USAGE_DATA}}", p) + (zSe() ? X : "");
+            .replaceAll("{{USAGE_DATA}}", p) + (isOnboardingGuideSharingEnabled() ? X : "");
       return (
         logEvent("tengu_team_onboarding_generated", {
           session_count: r,

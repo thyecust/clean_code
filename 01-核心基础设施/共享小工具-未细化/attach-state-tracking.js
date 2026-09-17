@@ -21,7 +21,7 @@ var s = new j(() => new r());
 function a() {
   return s.of(B().host);
 }
-function _ln(e) {
+function markAttached(e) {
   let t = a();
   if (e === 0) {
     t.reset();
@@ -39,16 +39,16 @@ function isDetachedSinceLastAttach() {
 function getAttachStampMs() {
   return a().stampMs;
 }
-function Nze(e) {
+function isAttachQuietDrainActive(e) {
   return !1;
 }
-async function aft() {
+async function waitForAttachQuietDrainEnd() {
   for (;;) {
     let e = Date.now();
-    if (!Nze(e)) return;
+    if (!isAttachQuietDrainActive(e)) return;
     let { detachedSinceLastAttach: t, stampMs: o } = a(),
       c = t || o === 0 ? 500 : o + 500 - e;
     await sleep(Math.max(25, c) + 25);
   }
 }
-export { _ln, markDetached, isDetachedSinceLastAttach, getAttachStampMs, Nze, aft };
+export { markAttached, markDetached, isDetachedSinceLastAttach, getAttachStampMs, isAttachQuietDrainActive, waitForAttachQuietDrainEnd };

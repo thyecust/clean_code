@@ -46,9 +46,9 @@ import { Pu, FIe, gE } from "../MCP客户端/chunk-g4gdwpa0.js";
 import { Rde, QTe, Fg } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { renderOAuthCallbackPage, buildOAuthCallbackUrl, pickOAuthCallbackPort } from "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
 import { redactHeaders, redactSearchParams, redactParamValue, redactUrl, formatMcpSdkError, rethrowFetchError } from "./url-and-error-redaction.js";
-import { getCachedIdpIdToken, vLt, getIdpClientSecret, discoverOidc, acquireIdpIdToken } from "./xaa-idp-auth.js";
+import { getCachedIdpIdToken, clearIdpIdToken, getIdpClientSecret, discoverOidc, acquireIdpIdToken } from "./xaa-idp-auth.js";
 import { isHeadlessEnvironment, tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
-import { createCoercedZodNumber } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
+import { createCoercedZodNumber } from "../../01-核心基础设施/共享小工具-未细化/zod-helpers.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { randomBytes, randomUUID } from "crypto";
@@ -870,7 +870,7 @@ async function tt(e, t, r, n, d) {
       let x = l(U);
       if (U instanceof W) {
         if (U.shouldClearIdToken)
-          (await vLt(p.issuer),
+          (await clearIdpIdToken(p.issuer),
             logMCPDebug(e, "XAA: cleared cached id_token after token-exchange failure"));
       } else if (
         x.includes("PRM discovery failed") ||
@@ -1809,7 +1809,7 @@ class X3e {
       );
     } catch (o) {
       if (o instanceof W && o.shouldClearIdToken)
-        (await vLt(e.issuer),
+        (await clearIdpIdToken(e.issuer),
           logMCPDebug(this.serverName, "XAA: cleared id_token after exchange failure"));
       throw o;
     }

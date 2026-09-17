@@ -30,8 +30,8 @@ var _ = toESM(Mie(), 1),
     __spread: u,
     __spreadArrays: y,
     __spreadArray: v,
-    __await: b2e,
-    __asyncGenerator: $0n,
+    __await: tslibAwait,
+    __asyncGenerator: tslibAsyncGenerator,
     __asyncDelegator: x,
     __asyncValues: tslibAsyncValues,
     __makeTemplateObject: g,
@@ -44,4 +44,4 @@ var _ = toESM(Mie(), 1),
     __disposeResources: P,
     __rewriteRelativeImportExtension: R,
   } = _.default;
-export { tslibAwaiter, tslibGenerator, tslibValues, b2e, $0n, tslibAsyncValues };
+export { tslibAwaiter, tslibGenerator, tslibValues, tslibAwait, tslibAsyncGenerator, tslibAsyncValues };

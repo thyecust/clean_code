@@ -102,10 +102,10 @@ import {
   isNotDisabledInTrustedSources,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { isPolicyAllowed, zRe } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { isPolicyAllowed, getPolicyDenyKind } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { getAPIProvider, isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { default as at, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { dz } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
+import { ensureAxiosEgressGuardInstalled } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
 import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
@@ -857,7 +857,7 @@ function Lt(e, t) {
 }
 var hN = {
   get(e, t) {
-    return (Lt(e, t), dz(), at.get(e, t));
+    return (Lt(e, t), ensureAxiosEgressGuardInstalled(), at.get(e, t));
   },
 };
 import { homedir as It } from "os";
@@ -1444,8 +1444,8 @@ function AGt(e) {
     r ||
     flagInlineSettingDropped(e.settingKey) ||
     (m_e() && parentManagedTierParticipates()) ||
-    zRe(e.policyKey) === "org_denied" ||
-    zRe(e.policyKey) === "unregistered"
+    getPolicyDenyKind(e.policyKey) === "org_denied" ||
+    getPolicyDenyKind(e.policyKey) === "unregistered"
   );
 }
 function CGt(e) {
@@ -1467,13 +1467,13 @@ function O(e) {
 }
 function vGt(e) {
   if (isRemoteOrCoworkSession()) return !1;
-  let t = zRe(e.policyKey);
+  let t = getPolicyDenyKind(e.policyKey);
   return t === "cache_miss" || t === "route_missing";
 }
 function RGt(e) {
   return (
     [...getDurablePolicyTierSettings(), getSettingsForSource("userSettings")].some((r) => r?.[e.settingKey] === !1) ||
-    zRe(e.policyKey) === "org_denied"
+    getPolicyDenyKind(e.policyKey) === "org_denied"
   );
 }
 var I = {

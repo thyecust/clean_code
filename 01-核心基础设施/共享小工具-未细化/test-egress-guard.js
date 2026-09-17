@@ -91,7 +91,7 @@ function l() {
 function d() {
   return !1;
 }
-function dz() {
+function ensureAxiosEgressGuardInstalled() {
   return;
 }
 function checkFetchEgress(e, t, r) {
@@ -132,4 +132,4 @@ async function runGuardedFetch(e, t) {
   let s = await r(e, t);
   return (checkRedirectEgress(r, n, s), s);
 }
-export { getRequestMethodAndUrl, dz, checkFetchEgress, checkRedirectEgress, checkWebSocketEgress, runGuardedFetch };
+export { getRequestMethodAndUrl, ensureAxiosEgressGuardInstalled, checkFetchEgress, checkRedirectEgress, checkWebSocketEgress, runGuardedFetch };

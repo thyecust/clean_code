@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import {
   HKLM_POLICY_REGISTRY_PATH,
-  yRt,
+  HKCU_POLICY_REGISTRY_PATH,
   SETTINGS_REGISTRY_VALUE_NAME,
   PLUTIL_BINARY_PATH,
   PLUTIL_TO_JSON_ARGS,
   PLUTIL_LINT_ARGS,
   MDM_COMMAND_TIMEOUT_MS,
-  q5t,
+  MDM_COMMAND_MAX_BUFFER_BYTES,
   WSL_REG_EXE_PATH,
-  xBe,
+  isRunningOnWsl,
   getManagedPreferencesPaths,
 } from "../共享小工具-未细化/mdm-policy-paths.js";
 import { execFile } from "child_process";
@@ -143,7 +143,7 @@ function fireRawRead() {
                   ...s,
                 };
               }
-              let r = await a(PLUTIL_BINARY_PATH, [...PLUTIL_TO_JSON_ARGS, o], q5t);
+              let r = await a(PLUTIL_BINARY_PATH, [...PLUTIL_TO_JSON_ARGS, o], MDM_COMMAND_MAX_BUFFER_BYTES);
               if (!R(r))
                 return {
                   stdout: null,
@@ -182,7 +182,7 @@ function fireRawRead() {
         outcomes: { hklm: null, hkcu: null },
       };
     }
-    if (xBe()) return h(WSL_REG_EXE_PATH);
+    if (isRunningOnWsl()) return h(WSL_REG_EXE_PATH);
     return {
       plistStdouts: null,
       hklmStdout: null,
@@ -192,12 +192,12 @@ function fireRawRead() {
   })();
 }
 async function h(t) {
-  let n = (o) => a(t, ["query", o, "/v", SETTINGS_REGISTRY_VALUE_NAME], q5t),
-    [e, u] = await Promise.all([n(HKLM_POLICY_REGISTRY_PATH), n(yRt)]);
+  let n = (o) => a(t, ["query", o, "/v", SETTINGS_REGISTRY_VALUE_NAME], MDM_COMMAND_MAX_BUFFER_BYTES),
+    [e, u] = await Promise.all([n(HKLM_POLICY_REGISTRY_PATH), n(HKCU_POLICY_REGISTRY_PATH)]);
   return {
     plistStdouts: null,
     hklmStdout: e.status === "ok" ? e.stdout : null,
-    ...(x(e) && { hklmUnreadReason: `the value exceeds ${q5t / 1048576} MiB` }),
+    ...(x(e) && { hklmUnreadReason: `the value exceeds ${MDM_COMMAND_MAX_BUFFER_BYTES / 1048576} MiB` }),
     hkcuStdout: u.status === "ok" ? u.stdout : null,
     outcomes: { hklm: m(e), hkcu: m(u) },
   };

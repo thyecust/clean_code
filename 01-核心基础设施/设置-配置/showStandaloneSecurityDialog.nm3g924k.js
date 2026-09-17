@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 280 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { showStandaloneSecurityDialog as FIt } from "../共享小工具-未细化/standalone-security-dialog.js";
-import "./chunk-tswdb9jt.js";
+import "./managed-settings-approval-dialog.js";
 import "../共享小工具-未细化/use-answer-refusal-state.js";
 import "../../02-功能模块/权限系统/permission-dialog.js";
 import "../共享小工具-未细化/confirm-prompt.js";

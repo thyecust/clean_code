@@ -257,7 +257,7 @@ var loadCustomThemes = serializeAsyncCalls(async (e) => {
     );
   }),
   H = createLazyValue(() => c({ name: s(), base: s(), overrides: fe(s(), s()) }));
-async function $ze(e, t) {
+async function saveCustomTheme(e, t) {
   let r = { name: e.name, base: e.base, overrides: e.overrides },
     i = `${e.slug}.json`;
   if (isHoverRestEnabled() && t !== void 0 && isValidPathSegment(i)) {
@@ -312,4 +312,4 @@ function watchCustomThemes(e) {
     () => void t.close()
   );
 }
-export { getThemeStore, getCustomThemeBase, getCachedCustomThemes, getCachedCustomTheme, getThemesDir, customThemeRef, parseCustomThemeRef, readThemesFromPathAsync, loadCustomThemes, $ze, slugify, watchCustomThemes };
+export { getThemeStore, getCustomThemeBase, getCachedCustomThemes, getCachedCustomTheme, getThemesDir, customThemeRef, parseCustomThemeRef, readThemesFromPathAsync, loadCustomThemes, saveCustomTheme, slugify, watchCustomThemes };

@@ -298,7 +298,7 @@ import { OffscreenFrozenContent, useOffscreenFrozenValue } from "../../../01-核
 import { useCommandQueue } from "../../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import { CLOUD_SESSION_ENTRY_LABELS, CLOUD_SESSION_URL_SEPARATOR } from "../../../01-核心基础设施/共享小工具-未细化/cloud-session-status-message.js";
 import { BashToolOutputView } from "../../../02-功能模块/工具Bash-Shell/bash-output-view.js";
-import { formatTimestamp, AWe, UserPromptText, TruncatedText } from "../../../02-功能模块/工具UI渲染/chunk-g4k5jjwt.js";
+import { formatTimestamp, truncateMiddleText, UserPromptText, TruncatedText } from "../../../02-功能模块/工具UI渲染/chunk-g4k5jjwt.js";
 import { renderWebFetchProgressMessage, ReceivedBytesStatus, renderWebFetchResultMessage } from "../../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
 import { DashedBorderBox } from "../../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import { BackgroundText } from "../../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -337,7 +337,7 @@ import {
 import { isTerminalTaskStatus, figures, sanitizeDisplayName } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import { TASK_STOP_TOOL_NAME } from "../../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
-import { yCe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-xm1bhjkr.js";
+import { WORKER_AGENT_TYPE } from "../../../01-核心基础设施/共享小工具-未细化/worker-agent-type.js";
 import { MONITOR_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
 import { detectLineEndings } from "../../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
@@ -8529,7 +8529,7 @@ function ck(KJ) {
   else j1 = qm[3];
   let Gm = j1,
     F1;
-  if (qm[4] !== pl) ((F1 = AWe(pl)), (qm[4] = pl), (qm[5] = F1));
+  if (qm[4] !== pl) ((F1 = truncateMiddleText(pl)), (qm[4] = pl), (qm[5] = F1));
   else F1 = qm[5];
   let zm = F1;
   if (!pl) {
@@ -16392,7 +16392,7 @@ function Bdr(l, f) {
   return null;
 }
 function KE(l) {
-  return !!l && l !== O2.agentType && l !== yCe;
+  return !!l && l !== O2.agentType && l !== WORKER_AGENT_TYPE;
 }
 export {
   $8,

@@ -30,7 +30,7 @@ import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { te, dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { gi, bs, nk } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { XB, ZOt, R9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { getAttachStampMs, Nze } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
+import { getAttachStampMs, isAttachQuietDrainActive } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
@@ -899,7 +899,7 @@ function COt(
   t,
   r,
   s = H("tengu_left_arrow_editing_guard", !0),
-  o = Nze(t),
+  o = isAttachQuietDrainActive(t),
   l = getAttachStampMs(),
 ) {
   if (r !== !0) return "reject";

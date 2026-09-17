@@ -13,7 +13,7 @@ import { createAbortController } from "../../03-入口与运行时/核心应用-
 import { artifactReadObservationIn, makeSetArtifactReadVersion, makeSetArtifactContractTarget, makeGetArtifactContractTarget } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import { createArtifactRegistries, createTeammateColorAssigner, EMPTY_PERMISSION_RELAYS } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
-import { sSe, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
+import { markPrResolvedThisSession, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
 import { createAgentLifecycle } from "../Teammates团队/agent-lifecycle.js";
 import { createFieldAccessor } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 async function fetchSystemPromptParts({
@@ -126,7 +126,7 @@ async function buildSideQuestionFallbackParams({
       permissionRelays: EMPTY_PERMISSION_RELAYS,
       getAppState: e,
       setAppState: o,
-      markPrResolvedThisSession: () => sSe(o),
+      markPrResolvedThisSession: () => markPrResolvedThisSession(o),
       isUltrareviewOverageConfirmed: () => e().ultrareviewOverageConfirmed,
       markUltrareviewOverageConfirmed: () => markUltrareviewOverageConfirmed(o),
       getAdvisorSetting: () => e().advisorModel,

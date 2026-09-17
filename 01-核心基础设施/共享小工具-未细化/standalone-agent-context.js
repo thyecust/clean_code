@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { getTeamName } from "../../02-功能模块/Teammates团队/teammate-context.js";
-function b2n(t) {
+function getStandaloneAgentName(t) {
   if (getTeamName()) return;
   return t.standaloneAgentContext?.name;
 }
@@ -17,4 +17,4 @@ function updateStandaloneAgentContext(t, n) {
   if (!Object.keys(n).some((o) => e?.[o] !== n[o])) return t;
   return { ...t, standaloneAgentContext: { ...e, name: e?.name ?? "", ...n } };
 }
-export { b2n, updateStandaloneAgentContext };
+export { getStandaloneAgentName, updateStandaloneAgentContext };

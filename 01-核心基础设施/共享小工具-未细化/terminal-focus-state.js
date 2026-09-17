@@ -37,23 +37,23 @@ class n {
   orgMemoryReadRowSeen = !1;
   remoteHomeSettingsRowSeen = !1;
 }
-var zs = new n();
+var appStateStore = new n();
 function setTerminalFocus(e) {
-  if (e) zs.terminalFocusGainedAt = Date.now();
-  ((zs.terminalFocus = e ? "focused" : "blurred"),
+  if (e) appStateStore.terminalFocusGainedAt = Date.now();
+  ((appStateStore.terminalFocus = e ? "focused" : "blurred"),
     $On(e),
-    zs.terminalFocusChanged.emit());
+    appStateStore.terminalFocusChanged.emit());
 }
 function isTerminalFocused() {
-  return zs.terminalFocus !== "blurred";
+  return appStateStore.terminalFocus !== "blurred";
 }
 function getTerminalFocus() {
-  return zs.terminalFocus;
+  return appStateStore.terminalFocus;
 }
 function getTerminalFocusGainedAt() {
-  return zs.terminalFocusGainedAt;
+  return appStateStore.terminalFocusGainedAt;
 }
 function subscribeTerminalFocus(e) {
-  return zs.terminalFocusChanged.subscribe(e);
+  return appStateStore.terminalFocusChanged.subscribe(e);
 }
-export { zs, setTerminalFocus, isTerminalFocused, getTerminalFocus, getTerminalFocusGainedAt, subscribeTerminalFocus };
+export { appStateStore, setTerminalFocus, isTerminalFocused, getTerminalFocus, getTerminalFocusGainedAt, subscribeTerminalFocus };

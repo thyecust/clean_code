@@ -33,7 +33,7 @@ import { useStoreSelector } from "../共享小工具-未细化/use-store-selecto
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { StaticFrameContext } from "../共享小工具-未细化/one-shot-render.js";
 import { useForcedExpandedContent } from "../共享小工具-未细化/expanded-content-context.js";
-import { w0e } from "../共享小工具-未细化/chunk-y9z0dpn0.js";
+import { useQueuedMessageContext } from "../共享小工具-未细化/queued-message-context.js";
 import { LinkifiedText } from "../共享小工具-未细化/linkified-text.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, Ry, De, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -531,7 +531,7 @@ function pr() {
 }
 function jA(s) {
   let p = useForcedExpandedContent(),
-    i = w0e()?.isQueued === !0;
+    i = useQueuedMessageContext()?.isQueued === !0;
   return !s && !p && !i && pr();
 }
 function QZ(Fe) {

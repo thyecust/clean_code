@@ -25,7 +25,7 @@ import { constants } from "fs";
 import { open as G, realpath } from "fs/promises";
 import { isAbsolute } from "path";
 var ORG_TIP_ID_PREFIX = "org-tip:",
-  dOt = "custom-tip-",
+  CUSTOM_TIP_ID_PREFIX = "custom-tip-",
   I = 500,
   B = 200,
   O = 262144,
@@ -246,13 +246,13 @@ async function getOverrideSpinnerTips(e) {
     },
     b = 0;
   for (let { source: s, override: o } of t) {
-    for (let p of o.tips ?? []) F(p, `${dOt}${b++}`, r, S);
+    for (let p of o.tips ?? []) F(p, `${CUSTOM_TIP_ID_PREFIX}${b++}`, r, S);
     if (s === l) u.forEach((p, _) => F(p, `${Y}${_}`, r, S));
   }
   let D = T.length;
   for (let { source: s, override: o } of i)
     for (let p of o.tips ?? []) {
-      let _ = `${dOt}${b++}`;
+      let _ = `${CUSTOM_TIP_ID_PREFIX}${b++}`;
       if (typeof p === "string") F(p, _, w, S);
       else
         n(
@@ -292,4 +292,4 @@ function F(e, t, i, r) {
         : 0;
   r(`${ORG_TIP_ID_PREFIX}${e.id}`, e.text, a, l, i);
 }
-export { ORG_TIP_ID_PREFIX, dOt, shouldExcludeDefaultTips, getOverrideSpinnerTips };
+export { ORG_TIP_ID_PREFIX, CUSTOM_TIP_ID_PREFIX, shouldExcludeDefaultTips, getOverrideSpinnerTips };

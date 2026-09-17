@@ -12,7 +12,7 @@ import { withDeadline } from "../../01-核心基础设施/共享小工具-未细
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { sM, fSe, Tlt, Lnn, f2n, g2n, d9, u7, e2 } from "../远程工具执行/chunk-66axrkvh.js";
 import { MV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { d3e, p3e, f3e } from "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
+import { ServingInstanceGoneError, RequestDeliveryUnknownError, RequestNotDeliveredError } from "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 function R(e) {
   return typeof e === "object" && e !== null && !Array.isArray(e);
@@ -389,11 +389,11 @@ async function I(e, t, d, { holdAtDeadline: a, withdrawable: u }) {
       (s) => ({ kind: "answered", payload: s }),
       (s) => {
         if (d.aborted) return { kind: "cancelled" };
-        if (s instanceof f3e) return { kind: "undelivered", status: s.status };
-        if (s instanceof p3e)
+        if (s instanceof RequestNotDeliveredError) return { kind: "undelivered", status: s.status };
+        if (s instanceof RequestDeliveryUnknownError)
           return { kind: "delivery_unknown", status: s.status };
         if (s instanceof zi) return { kind: "dropped" };
-        if (s instanceof d3e)
+        if (s instanceof ServingInstanceGoneError)
           return {
             kind: "gone",
             why: s.why,

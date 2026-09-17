@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { kGe } from "./chunk-3wfaaze4.js";
+import { generatePkceChallenge } from "./pkce-challenge.js";
 import { LATEST_PROTOCOL_VERSION } from "../MCP客户端/chunk-tv3jbp8f.js";
-import { ZOD_ISSUE_CODES, createCoercedZodNumber } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
+import { ZOD_ISSUE_CODES, createCoercedZodNumber } from "../../01-核心基础设施/共享小工具-未细化/zod-helpers.js";
 import { Mke, s, Nke, T, O, tB, v, c, it, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var d = Nke()
     .superRefine((e, t) => {
@@ -628,7 +628,7 @@ async function gon(
         `Incompatible auth server: does not support code challenge method ${W}`,
       );
   } else a = new URL("/authorize", e);
-  let l = await kGe(),
+  let l = await generatePkceChallenge(),
     { code_verifier: p, code_challenge: h } = l;
   if (
     (a.searchParams.set("response_type", j),

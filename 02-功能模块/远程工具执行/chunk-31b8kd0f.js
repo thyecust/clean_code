@@ -54,7 +54,7 @@ import {
 import { getAttestationFilterPolicy } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { isProjectsHumanOriginEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { setMainLoopRefcountListener, setNestedChainDropListener, getMainLoopRefcount } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
-import { recordStartupPhase, jXn } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
+import { recordStartupPhase, markHydratePrefetchSettled } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { Fae } from "../../03-入口与运行时/Headless-SDK模式/chunk-e4xwwtsb.js";
 import { pE, fSe, d9, h2n } from "./chunk-66axrkvh.js";
 import { asn, VGe, KGe, sbe, Jjn, csn, pM, rdt } from "../Bridge-RemoteControl/chunk-znhfst8k.js";
@@ -568,7 +568,7 @@ class Uz extends Fae {
         );
       })().catch((c) => (logError(c), null))),
         this.hydratePrefetch.then(() => {
-          (recordStartupPhase("resume_hydrate_fetch_ms", performance.now() - r, r), jXn());
+          (recordStartupPhase("resume_hydrate_fetch_ms", performance.now() - r, r), markHydratePrefetchSettled());
         }));
     }
     let B = {

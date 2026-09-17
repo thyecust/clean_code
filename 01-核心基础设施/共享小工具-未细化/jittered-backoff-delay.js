@@ -7,10 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-function n7e(e) {
-  return e;
+import { sleep } from "./async-timeout-utils.js";
+function createJitteredBackoffDelay(e) {
+  return function (r) {
+    let t = e * 2 ** (r - 1),
+      i = Math.round(t * (0.5 + Math.random() / 2));
+    return sleep(i);
+  };
 }
-function asMcpSdkClient(e) {
-  return e;
-}
-export { n7e, asMcpSdkClient };
+export { createJitteredBackoffDelay };

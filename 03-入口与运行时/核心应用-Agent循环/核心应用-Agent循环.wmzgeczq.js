@@ -474,7 +474,7 @@ import {
   isInProtectedNamespace,
   getVertexRegionForModel,
 } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { setBgExitCause, nOn, drainStdoutBeforeExit, markStdoutDrainExternallyClocked, wXt, writeToStderr } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { setBgExitCause, registerProcessIOErrorHandlers, drainStdoutBeforeExit, markStdoutDrainExternallyClocked, getStdoutDrainBudgetMs, writeToStderr } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import {
   repeatString,
   escapeRegExp,
@@ -956,7 +956,7 @@ import {
   formatResetTime,
   formatOverflowHint,
 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { isAsideName, isValidPathSegment, hasValidPathSegments, STORAGE_KEYS, qcr, isSameStorageKey, createMarketplaceCacheKey } from "../../02-功能模块/Teammates团队/storage-keys.js";
+import { isAsideName, isValidPathSegment, hasValidPathSegments, STORAGE_KEYS, createSubagentsDirTranscriptKey, isSameStorageKey, createMarketplaceCacheKey } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import {
   LITE_READ_BUF_SIZE,
   PROGRAMMATIC_ENTRYPOINTS,
@@ -1853,7 +1853,7 @@ import {
   Ttt,
   E0,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { runWithCwd, runWithCwdOrDefault, hasCwdContext, setContextCwd, yPn, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { runWithCwd, runWithCwdOrDefault, hasCwdContext, setContextCwd, getContextCwd, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import {
   RENAME_FALLBACK_ERRNOS,
   buildTempFilePath,
@@ -2852,7 +2852,7 @@ import {
   VY,
   gbt,
 } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
-import { ySt } from "../../01-核心基础设施/共享小工具-未细化/chunk-5jqttbex.js";
+import { PLUGIN_EVAL_QUICKREF_MD } from "../../01-核心基础设施/共享小工具-未细化/plugin-eval-quickref-asset.js";
 import { sessionTransportRegistry, mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { MAX_SKILL_FILE_BYTES, registerMcpSkillBuilders, getMcpSkillBuilders, hashMcpServerConfig, getMcpServerConfigCacheKey, invokeMcpToolRaw, readMcpResourceRaw, registerMcpNotificationHandler } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { getPipeKeyPath, getControlKeyPath, getDispatchDir, getRosterFilePath, getDaemonAuthDir } from "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
@@ -2885,8 +2885,8 @@ import {
   Wqt,
   ver,
 } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import { zs, getTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
-import { getResolvedWIFBaseUrlSnapshot, getWIFCredentials, invalidateWIFToken, getWIFTokenCache } from "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
+import { appStateStore, getTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
+import { getResolvedWIFBaseUrlSnapshot, getWIFCredentials, invalidateWIFToken, getWIFTokenCache } from "../../02-功能模块/认证-OAuth登录/wif-credentials.js";
 import { materializeFileMap, getBundledSkills, getRegisteredBundledSkillsIgnoringKillSwitch } from "../../02-功能模块/Skills技能/bundled-skills.js";
 import { readTeamFileAsync, removeTeammateFromTeamFile, removeMemberByAgentId, setMemberMode } from "../../02-功能模块/Teammates团队/team-file-store.js";
 import { LIST_AGENTS_TOOL_NAME } from "../../02-功能模块/Teammates团队/list-agents-tool-constants.js";
@@ -2935,10 +2935,10 @@ import { getJobDir, getOwnJobShortId, writeStateAtomic, logJobWriteError, invali
 import { scheduleDynamicWakeup, stopLoopWakeups } from "../../02-功能模块/语音-音频/loop-wakeup-scheduler.js";
 import { iN, hw, zSt, Fpe, IAe, rg } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { _$, Ere, o3t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
-import { dNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
+import { isWorktreeModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
 import { unregisterComputerUseEscapeHotkey } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
 import { REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "../../02-功能模块/Bridge-RemoteControl/remote-control-messages.js";
-import { isAgentViewDisabled, ny, isDaemonWorkerRegistryEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
+import { isAgentViewDisabled, isAgentsFleetEnabled, isDaemonWorkerRegistryEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { registerC4EUpsellCommandGate } from "../../01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js";
 import { DAe, sbt, cSn, ibt } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import { isSkillDoctorEnabled, getPluginEvalAvailabilityNotice } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
@@ -2984,7 +2984,7 @@ import {
   getCliScopeForSettingsSource,
 } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 import { isMcpSkillsEnabled } from "../../02-功能模块/MCP客户端/mcp-skills-extension.js";
-import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
 import {
   zNe,
   M3t,
@@ -3007,16 +3007,16 @@ import {
   pbt,
   fbt,
 } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { DESIGN_SYNC_TOOL_NAME, DESIGN_SYNC_POLICY_GATE, uK } from "../../02-功能模块/DesignSync/design-sync-tool-metadata.js";
+import { DESIGN_SYNC_TOOL_NAME, DESIGN_SYNC_POLICY_GATE, isDesignSyncPolicyAllowed } from "../../02-功能模块/DesignSync/design-sync-tool-metadata.js";
 import { buildBooleanFromStringSchema, parseStringBoolean } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
-import { MCP_TASKS_EXTENSION_ID, e1e, y7e } from "../../02-功能模块/MCP客户端/chunk-tznd4407.js";
+import { MCP_TASKS_EXTENSION_ID, sanitizeMcpTaskId, formatDurationMs as y7e } from "../../02-功能模块/MCP客户端/mcp-task-id.js";
 import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
-import { CODE_REVIEW_SKILL_NAME, VERIFY_SKILL_NAME, SIMPLIFY_SKILL_NAME, j7e, PR_SKILL_NAME, COMMIT_PUSH_PR_COMMAND_NAME, COWORK_PLUGIN_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { CODE_REVIEW_SKILL_NAME, VERIFY_SKILL_NAME, SIMPLIFY_SKILL_NAME, COMMIT_SKILL_NAME, PR_SKILL_NAME, COMMIT_PUSH_PR_COMMAND_NAME, COWORK_PLUGIN_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { logErrorWithTelemetryMessage } from "../../01-核心基础设施/共享小工具-未细化/log-error-with-telemetry-message.js";
 import { isMonitorToolEnabled } from "../../02-功能模块/工具Monitor/monitor-tool-description.js";
-import { SCHEDULE_WAKEUP_TOOL_NAME, sCe, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, iZn, aZn, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME, lZn } from "../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
-import { isCoordinatorModeEnabled, iCe } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
+import { SCHEDULE_WAKEUP_TOOL_NAME, AUTONOMOUS_LOOP_SENTINEL, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, buildScheduleWakeupPrompt, SCHEDULE_WAKEUP_TOOL_DESCRIPTION, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME, TASK_STOP_TOOL_PROMPT } from "../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
+import { isCoordinatorModeEnabled, isCoordinatorMainSession } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 import {
   MAX_NAME_LENGTH,
   UNSAFE_CHARS_PATTERN,
@@ -3033,9 +3033,9 @@ import {
 } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { killProcessTree, snapshotProcessStartTimes, killProcessesFromSnapshot } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
 import { isTeammateWorker } from "../../02-功能模块/Teammates团队/permission-sync-mailbox.js";
-import { gCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
+import { createJitteredBackoffDelay } from "../../01-核心基础设施/共享小工具-未细化/jittered-backoff-delay.js";
 import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_INPUT_KEYS } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
-import { yCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-xm1bhjkr.js";
+import { WORKER_AGENT_TYPE } from "../../01-核心基础设施/共享小工具-未细化/worker-agent-type.js";
 import { getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
 import { areBundledSkillsDisabled, isDisabledBundledSkill } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
@@ -3044,7 +3044,7 @@ import { isPlainObject } from "../../01-核心基础设施/共享小工具-未�
 import { isStandardToolSearchMode, isModelVersionAtLeast, parseToolSearchAutoPercent, getToolSearchMode, isVertexModelUnsupportedForToolSearch, isToolSearchSupportedModel, isToolSearchEnabled as Z_, shouldSurfaceFailedMcpServers } from "../../02-功能模块/工具ToolSearch/tool-search-enablement.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { normalizePathForComparison, isPathSafeToRemove } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
-import { isBypassPermissionsModeDisabled } from "../../02-功能模块/权限系统/chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled } from "../../02-功能模块/权限系统/bypass-permissions-mode-policy.js";
 import {
   AGENT_TOOL_NAME,
   AGENT_TOOL_DESCRIPTION,
@@ -3053,14 +3053,14 @@ import {
   FORK_AGENT_TYPE,
   FORK_BUILTIN_AGENT_ID,
   TASK_TOOL_NAME,
-  l4t,
-  c4t,
+  AGENT_TOOL_MAX_RESULT_SIZE_CHARS,
+  NON_CONTINUABLE_AGENT_TYPES,
   AGENT_STOPPED_NOTE_PREFIX,
-  u4t,
+  SUBAGENT_TYPE_REQUIRED_MESSAGE,
 } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { isValidRequestId } from "../../01-核心基础设施/共享小工具-未细化/request-id.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, f5t, isClaudeInChromeMCPServer, isClaudeInChromeMcpLaunch } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, JAVASCRIPT_TOOL_NAME, isClaudeInChromeMCPServer, isClaudeInChromeMcpLaunch } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
 import { defineDialog } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { isFlagPresent } from "../../02-功能模块/上下文压缩-Compact/cli-args.js";
@@ -3093,7 +3093,7 @@ import {
   qd,
   ai,
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { stripPort, getGitProvider, $ke } from "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
+import { stripPort, getGitProvider, parseRemoteHostname } from "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
 import { splitGraphemes } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 import { Ku, cB, xA } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
@@ -73789,7 +73789,7 @@ function yXr() {
 
 In THIS session: ${e.text} ${t}
 
-${ySt}`;
+${PLUGIN_EVAL_QUICKREF_MD}`;
 }
 function _Xr() {
   if (isUsing3PServices() || !Sk())
@@ -84850,23 +84850,23 @@ function $eo(e, t, r) {
 }
 import { randomUUID as Beo } from "crypto";
 function udn(e) {
-  zs.onScreenBlockingDialog.setState((t) =>
+  appStateStore.onScreenBlockingDialog.setState((t) =>
     t.surfaceMounted && t.kind === e ? t : { surfaceMounted: !0, kind: e },
   );
 }
 function ddn() {
-  zs.onScreenBlockingDialog.setState((e) =>
+  appStateStore.onScreenBlockingDialog.setState((e) =>
     e.surfaceMounted || e.kind !== null
       ? { surfaceMounted: !1, kind: null }
       : e,
   );
 }
 function Uwe(e) {
-  let t = zs.onScreenBlockingDialog.getState();
+  let t = appStateStore.onScreenBlockingDialog.getState();
   return t.surfaceMounted && t.kind !== e;
 }
 function DUt(e) {
-  return zs.onScreenBlockingDialog.subscribe(e);
+  return appStateStore.onScreenBlockingDialog.subscribe(e);
 }
 function sqn(e, t, r) {
   let o = [];
@@ -93402,7 +93402,7 @@ async function vV(e, t, r, o) {
       storageV5: Ne,
     }),
     Dn = cn,
-    gn = d?.project.cwd ?? yPn();
+    gn = d?.project.cwd ?? getContextCwd();
   if (ue && !hasCwdContext())
     return (
       n(
@@ -123065,8 +123065,8 @@ function zIe(e, t) {
   let r = [...e, Cr].filter((p) => !t.has(p)),
     o = [...(t.has(qe) ? [] : [WORKSPACE_MCP_BASH_TOOL_NAME]), ...(t.has(Cr) ? [] : [WORKSPACE_MCP_WEB_FETCH_TOOL_NAME])],
     d = [
-      ...[...gKt].map((p) => rc(p, f5t)),
-      ...For.map((p) => rc(Rp, `${p}${f5t}`)),
+      ...[...gKt].map((p) => rc(p, JAVASCRIPT_TOOL_NAME)),
+      ...For.map((p) => rc(Rp, `${p}${JAVASCRIPT_TOOL_NAME}`)),
     ];
   return [...r, ...o, $Ct, Oor, ...d];
 }
@@ -158795,7 +158795,7 @@ async function Hct(e, t, r) {
     ((D = de.trim()), (I = D));
   } else if (r?.prNumber) {
     let de = await resolveRemoteUrl(e),
-      _e = de ? $ke(de) : null,
+      _e = de ? parseRemoteHostname(de) : null,
       Se = _e ? getGitProvider(_e) : "other",
       ve = `pull/${r.prNumber}/head`,
       Me = `merge-requests/${r.prNumber}/head`,
@@ -170083,7 +170083,7 @@ function gut(e, t, r, { suppressTelemetry: o = !1 } = {}) {
   let De = [],
     He = d1n(e);
   if (He) {
-    let Wt = c4t.has(C)
+    let Wt = NON_CONTINUABLE_AGENT_TYPES.has(C)
         ? ""
         : ` Send the agent a message (${SEND_MESSAGE_TOOL_NAME}) to let it continue from where it stopped.`,
       en =
@@ -170147,7 +170147,7 @@ function Q2o(e, t, r) {
         2 * z9e(o) +
         2 * e.reduce((N, F) => N + z9e(F.text), 0)
       : 0,
-    _ = Math.max(0, m7e(AGENT_TOOL_NAME, l4t) - o.length - r - i1n - X2o - p),
+    _ = Math.max(0, m7e(AGENT_TOOL_NAME, AGENT_TOOL_MAX_RESULT_SIZE_CHARS) - o.length - r - i1n - X2o - p),
     E = fut(e);
   if (E <= _) return { report: e, harnessTail: [{ type: "text", text: o }] };
   let C = [],
@@ -171165,7 +171165,7 @@ async function y1n({
 }) {
   let p = isForkSubagentEnabled(),
     _ = p && r,
-    E = `${u4t}, so choose ${_ ? '`"fork"` or ' : ""}one of the listed agent types.`,
+    E = `${SUBAGENT_TYPE_REQUIRED_MESSAGE}, so choose ${_ ? '`"fork"` or ' : ""}one of the listed agent types.`,
     C = _
       ? `
 
@@ -171494,7 +171494,7 @@ function l$(e) {
 function V6t(e, { activeAgents: t } = {}) {
   if (t$(e?.subagent_type, t)) return tqt;
   if (e?.subagent_type && e.subagent_type !== O2.agentType) {
-    if (e.subagent_type === yCe) return "Agent";
+    if (e.subagent_type === WORKER_AGENT_TYPE) return "Agent";
     return e.subagent_type;
   }
   return "Agent";
@@ -171669,7 +171669,7 @@ var EGo = createLazyValue(() =>
     name: AGENT_TOOL_NAME,
     searchHint: "delegate work to a subagent",
     aliases: [TASK_TOOL_NAME],
-    maxResultSizeChars: l4t,
+    maxResultSizeChars: AGENT_TOOL_MAX_RESULT_SIZE_CHARS,
     async description() {
       return "Launch a new agent";
     },
@@ -171852,7 +171852,7 @@ var EGo = createLazyValue(() =>
           }),
             logFeatureBad("subagent_launch", "subagent_type_missing"));
           let oc = vt && T1n(cn) === null ? [FORK_AGENT_TYPE, ...ci] : ci;
-          throw new NI(`${u4t}. Available agents: ${_Fe(oc)}`);
+          throw new NI(`${SUBAGENT_TYPE_REQUIRED_MESSAGE}. Available agents: ${_Fe(oc)}`);
         }
         let wi = p ?? O2.agentType,
           fl = is.find((oc) => oc.agentType === wi);
@@ -173030,7 +173030,7 @@ worktreeBranch: ${e.worktreeBranch}`
                 e.harnessSectionHash,
               )
             : d;
-        if (e.agentType && c4t.has(e.agentType) && !o)
+        if (e.agentType && NON_CONTINUABLE_AGENT_TYPES.has(e.agentType) && !o)
           return { tool_use_id: t, type: "tool_result", content: p };
         let _ = `agentId: ${e.agentId} (use SendMessage with to: '${e.agentId}', summary: '<5-10 word recap>' to continue this agent)${o}
 <usage>subagent_tokens: ${e.totalTokens}
@@ -174734,7 +174734,7 @@ var rzo = createLazyValue(() =>
         );
       let C = M_t(E, {
         commandName: d,
-        userTypedThisTurn: !iCe(t) && tzo(d, t),
+        userTypedThisTurn: !isCoordinatorMainSession(t) && tzo(d, t),
         isMainSession: t.agentId === void 0,
         permissionContext: void 0,
       });
@@ -174800,7 +174800,7 @@ var rzo = createLazyValue(() =>
             updatedInput: { skill: e, args: t },
             decisionReason: { type: "rule", rule: F },
           };
-      if (E?.type === "prompt" && (izo(E) || iCe(r)))
+      if (E?.type === "prompt" && (izo(E) || isCoordinatorMainSession(r)))
         return {
           behavior: "allow",
           updatedInput: { skill: e, args: t },
@@ -174842,7 +174842,7 @@ var rzo = createLazyValue(() =>
         C = r.options.activeSkill,
         I = C ?? r.options.spawnedBySkill;
       r.options.activeSkill = E;
-      let D = iCe(r),
+      let D = isCoordinatorMainSession(r),
         N = !1;
       try {
         let F = await KFe(r),
@@ -175958,7 +175958,7 @@ var Tzo = createLazyValue(() =>
       return "Stop a running background task by ID";
     },
     async prompt() {
-      return lZn;
+      return TASK_STOP_TOOL_PROMPT;
     },
     mapToolResultToToolResultBlockParam(e, t) {
       return { tool_use_id: t, type: "tool_result", content: b(e) };
@@ -179736,7 +179736,7 @@ var Uqo = createLazyValue(() =>
       prompt: s()
         .optional()
         .describe(
-          `The /loop input to fire on wake-up. Pass the same /loop input verbatim each turn so the next firing re-enters the skill and continues the loop. For autonomous /loop (no user prompt), pass the literal sentinel \`${AUTONOMOUS_LOOP_DYNAMIC_SENTINEL}\` instead (the dynamic-pacing variant, not the CronCreate-mode \`${sCe}\`). Required unless \`stop\` is true.`,
+          `The /loop input to fire on wake-up. Pass the same /loop input verbatim each turn so the next firing re-enters the skill and continues the loop. For autonomous /loop (no user prompt), pass the literal sentinel \`${AUTONOMOUS_LOOP_DYNAMIC_SENTINEL}\` instead (the dynamic-pacing variant, not the CronCreate-mode \`${AUTONOMOUS_LOOP_SENTINEL}\`). Required unless \`stop\` is true.`,
         ),
       stop: O()
         .optional()
@@ -179776,12 +179776,12 @@ var Uqo = createLazyValue(() =>
     searchHint: `self-pace the dynamic /loop: pick a delay before the next tick, or stop/end/cancel the dynamic loop with stop:true (a fixed-interval /loop is a recurring cron \u2014 cancel it with ${CRON_DELETE_TOOL_NAME})`,
     maxResultSizeChars: 1000,
     async description() {
-      return aZn;
+      return SCHEDULE_WAKEUP_TOOL_DESCRIPTION;
     },
     async prompt() {
       let e = rN("repl_main_thread", { ignoreOverage: !0 }),
         t = rN("sdk", { ignoreOverage: !0 });
-      return iZn(e === t ? e : void 0);
+      return buildScheduleWakeupPrompt(e === t ? e : void 0);
     },
     get inputSchema() {
       return Uqo();
@@ -180028,7 +180028,7 @@ async function C$e(e, t) {
         `server: ${Nt(rg(e.serverName) ?? "")}`,
         `tool: ${Nt(rg(e.toolName) ?? "")}`,
         e.mcpTaskId !== e.id
-          ? `server task id: ${Nt(e1e(e.mcpTaskId))}`
+          ? `server task id: ${Nt(sanitizeMcpTaskId(e.mcpTaskId))}`
           : void 0,
         e.status === "killed"
           ? `server status when stopped: ${e.mcpStatus.replace("_", " ")}`
@@ -183788,7 +183788,7 @@ var T8n = 20,
 function R2n(e) {
   let t = "silent";
   return (
-    zs.feedbackNotice.setState((r) => {
+    appStateStore.feedbackNotice.setState((r) => {
       let o = { ...r, sessionDraftCount: r.sessionDraftCount + 1 };
       if (r.notice !== null) return ((t = "notice_pending"), (o.notice = e), o);
       if (r.promptedCount >= b2n()) return ((t = "silent"), o);
@@ -183805,7 +183805,7 @@ function R2n(e) {
 function P2n() {
   let e = !1;
   return (
-    zs.feedbackNotice.setState((t) => {
+    appStateStore.feedbackNotice.setState((t) => {
       if (t.toolCallCount >= W$e()) return t;
       return ((e = !0), { ...t, toolCallCount: t.toolCallCount + 1 });
     }),
@@ -183813,19 +183813,19 @@ function P2n() {
   );
 }
 function uMe(e) {
-  zs.feedbackNotice.setState((t) =>
+  appStateStore.feedbackNotice.setState((t) =>
     t.notice?.draftId === e ? { ...t, notice: null } : t,
   );
 }
 function ogn() {
-  zs.feedbackNotice.setState((e) =>
+  appStateStore.feedbackNotice.setState((e) =>
     e.notice === null ? e : { ...e, notice: null },
   );
 }
 function A8n(e) {
   let t = !1;
   return (
-    zs.feedbackNotice.setState((r) => {
+    appStateStore.feedbackNotice.setState((r) => {
       if (r.shownLoggedForDraftId === e) return r;
       return ((t = !0), { ...r, shownLoggedForDraftId: e });
     }),
@@ -183833,7 +183833,7 @@ function A8n(e) {
   );
 }
 function V_t(e = 1) {
-  zs.feedbackNotice.setState((t) => ({
+  appStateStore.feedbackNotice.setState((t) => ({
     ...t,
     sessionDraftCount: Math.max(0, t.sessionDraftCount - e),
   }));
@@ -183841,7 +183841,7 @@ function V_t(e = 1) {
 function C8n() {
   let e = !1;
   return (
-    zs.feedbackNotice.setState((t) => {
+    appStateStore.feedbackNotice.setState((t) => {
       if (t.seedStarted || t.seededFromDisk) return t;
       return ((e = !0), { ...t, seedStarted: !0 });
     }),
@@ -183849,7 +183849,7 @@ function C8n() {
   );
 }
 function v8n(e) {
-  zs.feedbackNotice.setState((t) => {
+  appStateStore.feedbackNotice.setState((t) => {
     if (t.seededFromDisk) return t;
     return {
       ...t,
@@ -183859,7 +183859,7 @@ function v8n(e) {
   });
 }
 function R8n(e) {
-  zs.feedbackNotice.setState((t) =>
+  appStateStore.feedbackNotice.setState((t) =>
     t.sessionDraftCount === e && t.seededFromDisk
       ? t
       : { ...t, seededFromDisk: !0, sessionDraftCount: e },
@@ -187848,7 +187848,7 @@ function Pk() {
     ...V4o(),
     ...(m6n ? [m6n] : []),
     ...(dMe() ? [kdt] : []),
-    ...(dNe() ? [iGn, uGn] : []),
+    ...(isWorktreeModeEnabled() ? [iGn, uGn] : []),
     Rdt(),
     G4o(),
     ...(b6n ? [b6n] : []),
@@ -208372,7 +208372,7 @@ function GDe(e) {
     codeReview: e.some((r) => r.name === CODE_REVIEW_SKILL_NAME),
     verify: e.some((r) => r.name === VERIFY_SKILL_NAME),
     simplify: t !== void 0 && t.loadedFrom !== "bundled",
-    commit: e.some((r) => r.name === j7e),
+    commit: e.some((r) => r.name === COMMIT_SKILL_NAME),
     pr: e.some((r) => r.name === PR_SKILL_NAME),
   };
 }
@@ -216170,7 +216170,7 @@ function Jbt(e) {
   return t === void 0 || r === void 0 ? void 0 : { code: t, errno: -r };
 }
 var Ans = 5,
-  Rns = gCe(50);
+  Rns = createJitteredBackoffDelay(50);
 async function gor(e, t, r) {
   let o = await hor(e, t, (d) => Mns(d, r), aor);
   if (o.loadError !== void 0)
@@ -235689,7 +235689,7 @@ var Ccs = {
     name: "design",
     description: "Grant or revoke Claude agent access to your Design projects",
     argumentHint: "consent | revoke",
-    isEnabled: () => uK(),
+    isEnabled: () => isDesignSyncPolicyAllowed(),
     policyGate: DESIGN_SYNC_POLICY_GATE,
     supportsNonInteractive: !0,
     load: () => import("../../01-核心基础设施/共享小工具-未细化/design-cmd.3cmbdjbx.js"),
@@ -235698,7 +235698,7 @@ var Ccs = {
     type: "local",
     name: "design-consent",
     description: "Grant Claude agent access to your Design projects",
-    isEnabled: () => uK(),
+    isEnabled: () => isDesignSyncPolicyAllowed(),
     policyGate: DESIGN_SYNC_POLICY_GATE,
     supportsNonInteractive: !0,
     isHidden: !0,
@@ -235708,7 +235708,7 @@ var Ccs = {
     type: "local",
     name: "design-revoke",
     description: "Revoke Claude agent access to your Design projects",
-    isEnabled: () => uK(),
+    isEnabled: () => isDesignSyncPolicyAllowed(),
     policyGate: DESIGN_SYNC_POLICY_GATE,
     supportsNonInteractive: !0,
     isHidden: !0,
@@ -235720,7 +235720,7 @@ var Ccr = () => ({
   name: "design-login",
   description:
     "Authorize design-system access for /design-sync with your claude.ai account",
-  isEnabled: () => uK(),
+  isEnabled: () => isDesignSyncPolicyAllowed(),
   policyGate: DESIGN_SYNC_POLICY_GATE,
 });
 var xcr = () => ({
@@ -238894,11 +238894,11 @@ var vTt = null,
 function Xdr() {
   return {
     fleetFork: {
-      open: () => ny() && !Ie(a.IS_DEMO),
+      open: () => isAgentsFleetEnabled() && !Ie(a.IS_DEMO),
       whenOpen: [Hur, jur],
       whenClosed: [Bur],
     },
-    fleetBackground: { open: () => ny(), whenOpen: [$ds, Bds], whenClosed: [] },
+    fleetBackground: { open: () => isAgentsFleetEnabled(), whenOpen: [$ds, Bds], whenClosed: [] },
     daemon: { open: () => isDaemonWorkerRegistryEnabled(), whenOpen: [ATt], whenClosed: [] },
     skillDoctor: { open: () => isSkillDoctorEnabled(), whenOpen: [hEt, JHe], whenClosed: [] },
     logout: { open: () => !isUsing3PServices() || fv(ns()), whenOpen: [Acr], whenClosed: [] },
@@ -260194,7 +260194,7 @@ function p_s(e) {
             sessionId: o,
             agentRelPath: p,
           }
-        : qcr(r, o);
+        : createSubagentsDirTranscriptKey(r, o);
   else return;
   return HIn(_) === void 0 ? _ : void 0;
 }
@@ -266152,7 +266152,7 @@ claude ${d}--resume ${r}
           this.shutdown(129));
       }),
         this.armOrphanCheck());
-    (nOn((r, o) => {
+    (registerProcessIOErrorHandlers((r, o) => {
       if (!ld()) return;
       (writeDiagnosticsEvent("info", "shutdown_signal", { signal: `${r}_${o}` }),
         markStdoutDrainExternallyClocked(),
@@ -266497,7 +266497,7 @@ claude ${d}--resume ${r}
     (await this.armFailsafeAndDrainStdout(e), this.forceExit(e));
   }
   async armFailsafeAndDrainStdout(e) {
-    (this.armShutdownFailsafe(wXt() + xbs, e), await drainStdoutBeforeExit());
+    (this.armShutdownFailsafe(getStdoutDrainBudgetMs() + xbs, e), await drainStdoutBeforeExit());
   }
 }
 function Fyr(e) {

@@ -49,10 +49,10 @@ import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { oye, MIt, sye, sit, sWe, iWe } from "../插件系统/chunk-jwm9gdkd.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
-import { i9e } from "../MCP客户端/chunk-rxp6fm7a.js";
+import { McpConfigDiagnostics } from "../MCP客户端/mcp-config-diagnostics.js";
 import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
 import { parkCommandUntilAttended } from "../../01-核心基础设施/共享小工具-未细化/command-park.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
@@ -61,7 +61,7 @@ import "../插件系统/chunk-akd9b588.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../MCP客户端/chunk-4xr0rjb4.js";
 import "../成本-Token统计/chunk-3nwwgatc.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js";
+import "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
@@ -672,7 +672,7 @@ function wt({
   return r(o, {
     flexDirection: "column",
     children: [
-      e(i9e, {}),
+      e(McpConfigDiagnostics, {}),
       e(de, {
         title: "Manage MCP servers",
         subtitle: `${Xt} ${pluralize(Xt, "server")}`,

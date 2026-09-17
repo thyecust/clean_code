@@ -21,7 +21,7 @@ import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { Cc } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
@@ -40,7 +40,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js"
 import "../上下文压缩-Compact/chunk-1ntrf0ja.js";
 import { j0t } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js";
-import { nWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-vm6pzj28.js";
+import { resetConversation } from "../../01-核心基础设施/共享小工具-未细化/conversation-reset.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../认证-OAuth登录/oauth-login-completion.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
@@ -125,7 +125,7 @@ function L(W) {
   let m;
   if (i[12] !== p || i[13] !== o || i[14] !== l || i[15] !== x)
     ((m = (ee) => {
-      (nWe(p, ee.log, l, x),
+      (resetConversation(p, ee.log, l, x),
         o("Session resumed successfully", { display: "system" }));
     }),
       (i[12] = p),

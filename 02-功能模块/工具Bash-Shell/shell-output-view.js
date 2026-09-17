@@ -115,7 +115,7 @@ function ShellOutputView(ee) {
   else N = i[26];
   return N;
 }
-function vZt({ output: x, fullOutput: u, totalLines: c }, n) {
+function isShellOutputTruncated({ output: x, fullOutput: u, totalLines: c }, n) {
   if (!u.trim()) return !1;
   return (c ?? 0) > M || O(x, n).clipped;
 }
@@ -159,4 +159,4 @@ function O(x, u) {
     dropped: m,
   };
 }
-export { ShellOutputView, vZt };
+export { ShellOutputView, isShellOutputTruncated };

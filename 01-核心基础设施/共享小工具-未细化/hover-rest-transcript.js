@@ -45,7 +45,7 @@ function resolveTranscriptLocator(e, n) {
   let i = STORAGE_KEYS.transcript(r, o);
   return kd(i) === void 0 ? { backend: n, key: i } : void 0;
 }
-function wYn(e, n) {
+function resolveSubagentTranscriptLocator(e, n) {
   if (!isHoverRestEnabled() || n === void 0) return;
   let t = relative(getProjectsDir(), e);
   if (t === "" || t === ".." || t.startsWith(`..${f}`) || S(t)) return;
@@ -78,4 +78,4 @@ function createBackendHandle(e) {
 function createTranscriptSource(e) {
   return e === void 0 ? void 0 : { source: e, hoverRestOn: isHoverRestEnabled() };
 }
-export { createRealPathResolver, createHoverRestOptions, resolveTranscriptLocator, wYn, createBackendHandle, createTranscriptSource };
+export { createRealPathResolver, createHoverRestOptions, resolveTranscriptLocator, resolveSubagentTranscriptLocator, createBackendHandle, createTranscriptSource };

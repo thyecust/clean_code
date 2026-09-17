@@ -110,7 +110,7 @@ import { isArtifactConfigToggleable } from "../Artifact发布-渲染/chunk-01ymf
 import { ensurePolicyLimitsLoadedForDiagnostic } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { isPushNotificationsEnabled, isInputNeededPushEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 import { formatCronSchedule } from "../后台任务-Shell管理/scheduled-tasks.js";
-import { ny } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
+import { isAgentsFleetEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { fDt } from "../跨会话消息(UDS)/chunk-t2esphmv.js";
 import { githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
@@ -147,7 +147,7 @@ import {
   Dit,
   uUn,
 } from "../斜杠命令-UI组件/chunk-y5mtnxtg.js";
-import { t0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js";
+import { computeSkillUsageByPlugin } from "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
 import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
 import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
@@ -1978,7 +1978,7 @@ function ga({
               },
             ]
           : []),
-        ...(ny()
+        ...(isAgentsFleetEnabled()
           ? [
               {
                 id: "defaultToAgentsView",
@@ -3290,7 +3290,7 @@ function mi() {
     Yd = useMainLoopModelOverride() ?? Zk,
     qg;
   if (os[0] !== zd || os[1] !== Yd || os[2] !== Kd)
-    ((qg = t0e([...Kd, ...zd], bytesPerTokenForModel(Yd ?? void 0))),
+    ((qg = computeSkillUsageByPlugin([...Kd, ...zd], bytesPerTokenForModel(Yd ?? void 0))),
       (os[0] = zd),
       (os[1] = Yd),
       (os[2] = Kd),

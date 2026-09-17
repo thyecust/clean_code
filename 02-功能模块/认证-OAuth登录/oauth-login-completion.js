@@ -74,7 +74,7 @@ async function m(e, o) {
   }
 }
 async function finalizeOAuthLogin(e, { storageV5: o, credentials: t } = {}) {
-  let s = await _en(e, { storageV5: o, credentials: t }),
+  let s = await applyOAuthLoginIdentity(e, { storageV5: o, credentials: t }),
     r = await saveOAuthTokensIfNeeded(e, t);
   if ((clearOAuthTokenCache(), process.env.CLAUDE_CODE_OAUTH_TOKEN))
     if (r.success) delete process.env.CLAUDE_CODE_OAUTH_TOKEN;
@@ -93,7 +93,7 @@ async function finalizeOAuthLogin(e, { storageV5: o, credentials: t } = {}) {
     );
   await refreshAuthStateAfterLogin({ storageV5: o, credentials: t, ...s });
 }
-async function _en(e, { storageV5: o, credentials: t }) {
+async function applyOAuthLoginIdentity(e, { storageV5: o, credentials: t }) {
   let s = getOauthAccountInfo(),
     r = {
       accountUuid: e.profile?.account?.uuid ?? e.tokenAccount?.uuid,
@@ -174,4 +174,4 @@ async function refreshAuthStateAfterLogin({
 async function _(e) {
   (clearOAuthTokenMemos(), await getClaudeAIOAuthTokensAsync(e));
 }
-export { finalizeOAuthLogin, _en, refreshAuthStateAfterLogin };
+export { finalizeOAuthLogin, applyOAuthLoginIdentity, refreshAuthStateAfterLogin };

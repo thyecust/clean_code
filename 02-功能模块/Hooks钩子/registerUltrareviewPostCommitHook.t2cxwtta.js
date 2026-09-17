@@ -12,16 +12,16 @@
 import { ke, wB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { qe, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getUltrareviewPostCommitTip } from "../CodeReview/ultrareview-tips.js";
-import { lBn, cBn } from "../../01-核心基础设施/共享小工具-未细化/chunk-0en55mb4.js";
+import { isGitCommitCommand, looksLikeGitCommitOutput } from "../../01-核心基础设施/共享小工具-未细化/git-commit-detection.js";
 async function m(o, a, l, u, s) {
   if (o.hook_event_name !== "PostToolUse") return {};
   if (ke() || o.agent_id !== void 0) return {};
   let e = o.tool_input?.command;
-  if (typeof e !== "string" || !lBn(e)) return {};
+  if (typeof e !== "string" || !isGitCommitCommand(e)) return {};
   let t = o.tool_response,
     r = typeof t?.stdout === "string" ? t.stdout : "",
     i = typeof t?.stderr === "string" ? t.stderr : "";
-  if (!cBn(r, i, void 0)) return {};
+  if (!looksLikeGitCommitOutput(r, i, void 0)) return {};
   let n = getUltrareviewPostCommitTip(s?.storageV5);
   return n !== null ? { systemMessage: n } : {};
 }

@@ -14,7 +14,7 @@ import { withDeadline } from "../../01-核心基础设施/共享小工具-未细
 import { Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { _Ie, Alt, Clt, d2n } from "../远程工具执行/chunk-66axrkvh.js";
-import { j6e } from "./chunk-etbwf1s8.js";
+import { ForwardedToolCallRegistry } from "./forwarded-tool-call-registry.js";
 import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
 import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 var _ = 1048576,
@@ -213,7 +213,7 @@ async function productionRemoteToolsAnnounceDeps(e) {
         ? e.workerEpoch
         : 1,
     registry: u,
-    forwardedCalls: e.toolState.get(j6e),
+    forwardedCalls: e.toolState.get(ForwardedToolCallRegistry),
     transportFor: (r) => d({ host: () => u.handleFor(r), sender: e.sender }),
     ...(e.sender.abandonServedCalls !== void 0 && {
       abandonCalls: (r, g) => e.sender.abandonServedCalls?.(r, g) ?? 0,

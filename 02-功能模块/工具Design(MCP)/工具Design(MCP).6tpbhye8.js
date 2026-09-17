@@ -54,10 +54,10 @@ import {
   recordDesignProjectGrant,
   createDesignGrantWatcher,
 } from "../DesignSync/design-consent-and-grants.js";
-import { isDesignSyncEnabled, u6n } from "../../01-核心基础设施/共享小工具-未细化/design-feature-gates.js";
+import { isDesignSyncEnabled, isDesignGrantWatchEnabled } from "../../01-核心基础设施/共享小工具-未细化/design-feature-gates.js";
 import "../DesignSync/design-oauth-credentials.js";
 import "../认证-OAuth登录/oauth-login-flow.js";
-import { mWn } from "../../01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js";
+import { setServerApprovalWatchProvider } from "../../01-核心基础设施/共享小工具-未细化/server-approval-watch-provider.js";
 import { s, O, se, v, c, Qe, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 function N(e) {
@@ -1656,8 +1656,8 @@ function Je(e, t) {
       return "Claude Design is disabled because nonessential network traffic is restricted.";
   }
 }
-mWn({
-  isEnabled: u6n,
+setServerApprovalWatchProvider({
+  isEnabled: isDesignGrantWatchEnabled,
   createObserver: (e, t, n) =>
     e.kind === "design_project_grant" ? createDesignGrantWatcher(t.get(DesignSessionState), e.projectId, n) : null,
 });

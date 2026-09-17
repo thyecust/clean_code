@@ -15,7 +15,7 @@ import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { D9e, L9e } from "../认证-OAuth登录/chunk-n76cf9e6.js";
 import { parseScheduleInput } from "../后台任务-Shell管理/scheduled-tasks.js";
-import { VALID_PERMISSION_MODES, addScheduledTask, removeScheduledTask, J0e } from "../权限系统/chunk-3kjwvb3e.js";
+import { VALID_PERMISSION_MODES, addScheduledTask, removeScheduledTask, readScheduledTasks } from "../权限系统/chunk-3kjwvb3e.js";
 import { loadDaemonConfig } from "../../01-核心基础设施/设置-配置/daemon-config.js";
 import { tF } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
 import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
@@ -101,7 +101,7 @@ async function B(e, i) {
       name: t.name ?? basename(t.dir),
       spawnMode: t.spawnMode ?? "same-dir",
     });
-  let n = await J0e(e, i);
+  let n = await readScheduledTasks(e, i);
   for (let t of n)
     r.push({
       kind: "scheduled",
@@ -135,7 +135,7 @@ function D(e) {
 }
 async function K(e, i, o) {
   if (e.action === "list") {
-    let g = await J0e(i, o);
+    let g = await readScheduledTasks(i, o);
     if (e.json) {
       u(b(g, null, 2));
       return;
@@ -176,7 +176,7 @@ async function K(e, i, o) {
   if (!t && !n)
     c("--prompt is required (or pass --id to update an existing task)");
   let s = t ?? O(f, n),
-    m = (await J0e(i, o)).find((g) => g.id === s),
+    m = (await readScheduledTasks(i, o)).find((g) => g.id === s),
     p = n ?? m?.prompt,
     S = e.flags.get("cron") ?? m?.cron;
   if (!p) c("--prompt is required");

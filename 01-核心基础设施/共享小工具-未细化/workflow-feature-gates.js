@@ -62,7 +62,7 @@ function i() {
     return { available: !1, defaultOn: !1 };
   return { available: !0, defaultOn: getSubscriptionType() !== "pro" };
 }
-function Rnr() {
+function isJadeCompassEnabled() {
   return H("tengu_jade_compass", !0);
 }
-export { areWorkflowsDisabledBySettings, areWorkflowsEnabled, isWorkflowsEnabledByDefault, areWorkflowsAvailable, isWorkflowKeywordTriggerEnabled, isWorkflowsAllowedByPolicy, shouldSkipWorkflowWarmup, Rnr };
+export { areWorkflowsDisabledBySettings, areWorkflowsEnabled, isWorkflowsEnabledByDefault, areWorkflowsAvailable, isWorkflowKeywordTriggerEnabled, isWorkflowsAllowedByPolicy, shouldSkipWorkflowWarmup, isJadeCompassEnabled };

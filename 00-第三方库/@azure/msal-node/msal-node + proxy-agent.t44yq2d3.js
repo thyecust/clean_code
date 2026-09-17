@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { b2e, $0n, tslibAsyncValues } from "../../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
+import { tslibAwait, tslibAsyncGenerator, tslibAsyncValues } from "../../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
 import { H0n, Hke } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { E$e } from "../../_未识别/第三方库-加密库/第三方库-加密库.z54vzq0y.js";
 import { pg } from "../../_未识别/第三方库-其他/chunk-jm5cswvd.js";
@@ -2519,13 +2519,13 @@ function zo(e) {
 }
 import { Readable as ia } from "stream";
 function wl() {
-  return $0n(this, arguments, function* () {
+  return tslibAsyncGenerator(this, arguments, function* () {
     let t = this.getReader();
     try {
       while (!0) {
-        let { done: r, value: n } = yield b2e(t.read());
-        if (r) return yield b2e(void 0);
-        yield yield b2e(n);
+        let { done: r, value: n } = yield tslibAwait(t.read());
+        if (r) return yield tslibAwait(void 0);
+        yield yield tslibAwait(n);
       }
     } finally {
       t.releaseLock();
@@ -2550,21 +2550,21 @@ async function kl(e) {
     let t = e.map((r) => (typeof r === "function" ? r() : r)).map(Bm);
     return ia.from(
       (function () {
-        return $0n(this, arguments, function* () {
+        return tslibAsyncGenerator(this, arguments, function* () {
           var r, n, o, i;
           for (let l of t)
             try {
               for (
                 var s = !0, a = ((n = void 0), tslibAsyncValues(l)), c;
-                (c = yield b2e(a.next())), (r = c.done), !r;
+                (c = yield tslibAwait(a.next())), (r = c.done), !r;
                 s = !0
               )
-                ((i = c.value), (s = !1), yield yield b2e(i));
+                ((i = c.value), (s = !1), yield yield tslibAwait(i));
             } catch (d) {
               n = { error: d };
             } finally {
               try {
-                if (!s && !r && (o = a.return)) yield b2e(o.call(a));
+                if (!s && !r && (o = a.return)) yield tslibAwait(o.call(a));
               } finally {
                 if (n) throw n.error;
               }

@@ -20,7 +20,7 @@ import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未�
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import { formatCronSchedule, parseScheduleInput } from "../后台任务-Shell管理/scheduled-tasks.js";
-import { VALID_PERMISSION_MODES, addScheduledTask, removeScheduledTask, J0e } from "./chunk-3kjwvb3e.js";
+import { VALID_PERMISSION_MODES, addScheduledTask, removeScheduledTask, readScheduledTasks } from "./chunk-3kjwvb3e.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -43,7 +43,7 @@ function Xo(Qo) {
   return { label: getPermissionModeTitle(Qo), value: Qo };
 }
 async function loadScheduledTasks(s) {
-  return J0e(void 0, s).catch((v) => (logError(v), []));
+  return readScheduledTasks(void 0, s).catch((v) => (logError(v), []));
 }
 function ScheduledTaskDetail(st) {
   let m = _(76),

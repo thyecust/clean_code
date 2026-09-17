@@ -49,7 +49,7 @@ function getFastModeTargetModel(t) {
   let e = Q$e();
   return parseUserSpecifiedModel(e) === parseUserSpecifiedModel(getDefaultMainLoopModelSetting()) ? null : e;
 }
-async function tLt(t, e, o) {
+async function vetFastModeTargetModel(t, e, o) {
   let m = getFastModeTargetModel(e());
   if (m === void 0 || Ks() || !UO(t)) return { vetted: UNVETTED_FAST_MODE_TARGET, messages: [] };
   let a = await P_(t, e, m, "command", { signal: o });
@@ -66,7 +66,7 @@ async function tLt(t, e, o) {
   };
 }
 var UNVETTED_FAST_MODE_TARGET = { unvetted: !0 };
-function k3e(t, e) {
+function formatFastModeRemoteResult(t, e) {
   let o = e ? "enabled" : "disabled";
   switch (t.kind) {
     case "timeout":
@@ -77,7 +77,7 @@ function k3e(t, e) {
       return `Fast mode was not ${o} on the workspace: ${t.reason}`;
   }
 }
-function x3e(t, e, o, m = !0, a, f = UNVETTED_FAST_MODE_TARGET) {
+function applyFastModeSetting(t, e, o, m = !0, a, f = UNVETTED_FAST_MODE_TARGET) {
   QH();
   let S = () => {
       if (m) return;
@@ -140,7 +140,7 @@ async function runFastModeToggle(t, e, o, m, a, f = !0, S, c, r, s) {
     let F = UNVETTED_FAST_MODE_TARGET,
       p = [];
     if (e) {
-      let g = await tLt(t, o, r);
+      let g = await vetFastModeTargetModel(t, o, r);
       if (r?.aborted) return { kind: "refused", refusal: FAST_MODE_CANCELLED_MESSAGE };
       if (g.refusal !== void 0) return { kind: "refused", refusal: g.refusal };
       ((F = g.vetted), (p = g.messages));
@@ -150,14 +150,14 @@ async function runFastModeToggle(t, e, o, m, a, f = !0, S, c, r, s) {
       s?.(),
       {
         kind: "applied",
-        remote: await x3e(t, e, m, f, S, F),
+        remote: await applyFastModeSetting(t, e, m, f, S, F),
         willPromote: h,
         hookMessages: p,
       }
     );
   });
   if (d.kind === "refused") return d.refusal;
-  if (d.remote !== void 0) return k3e(d.remote, e);
+  if (d.remote !== void 0) return formatFastModeRemoteResult(d.remote, e);
   if (
     (logEvent("tengu_fast_mode_toggled", { enabled: e, source: fromEnum(a), remote: Ks() }),
     e)
@@ -177,4 +177,4 @@ ${d.hookMessages.map(Rl).join(`
     return `${M} ${xMe}${F} \xB7 ${k}${g}${w}`;
   } else return `Fast mode OFF${f ? "" : " (this session only)"}`;
 }
-export { renderFastModeIndicator, FAST_MODE_HOOK_TIMEOUT_MS, FAST_MODE_CANCELLED_MESSAGE, getFastModeTargetModel, tLt, UNVETTED_FAST_MODE_TARGET, k3e, x3e, runFastModeToggle };
+export { renderFastModeIndicator, FAST_MODE_HOOK_TIMEOUT_MS, FAST_MODE_CANCELLED_MESSAGE, getFastModeTargetModel, vetFastModeTargetModel, UNVETTED_FAST_MODE_TARGET, formatFastModeRemoteResult, applyFastModeSetting, runFastModeToggle };

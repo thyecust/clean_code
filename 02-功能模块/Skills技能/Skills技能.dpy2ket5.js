@@ -125,7 +125,7 @@ import { registerDesignSkill } from "../DesignSync/register-design-skill.js";
 import { recordPrReviewTarget } from "../CodeReview/pr-review-target.js";
 import { getDaemonStatusPath, getDaemonStatusStateKey } from "../../01-核心基础设施/共享小工具-未细化/daemon-status.js";
 import { getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
-import { DESIGN_SYNC_POLICY_GATE, uK } from "../DesignSync/design-sync-tool-metadata.js";
+import { DESIGN_SYNC_POLICY_GATE, isDesignSyncPolicyAllowed } from "../DesignSync/design-sync-tool-metadata.js";
 import {
   ARTIFACT_DESIGN_SKILL_NAME,
   ARTIFACT_DIAGRAMMING_SKILL_NAME,
@@ -138,7 +138,7 @@ import {
   ARTIFACT_PR_REVIEW_SKILL_NAME,
   VERIFY_SKILL_NAME,
   SIMPLIFY_SKILL_NAME,
-  j7e,
+  COMMIT_SKILL_NAME,
   PR_SKILL_NAME,
   COWORK_PLUGIN_SKILL_NAME,
 } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
@@ -2587,7 +2587,7 @@ You have the capability to call multiple tools in a single response. Stage and c
 }
 function ro() {
   registerBundledSkill({
-    name: j7e,
+    name: COMMIT_SKILL_NAME,
     menuDescription: "Create a git commit",
     description:
       "Create a git commit. Use whenever you are about to create a commit, whether the user asked for one or it is a step in your current task \u2014 it gathers git context and applies the required commit workflow (message style, staging rules, attribution).",
@@ -2613,7 +2613,7 @@ function ro() {
                 { kind: "allowed_tools", allowedTools: io },
               ],
             },
-            `/${j7e}`,
+            `/${COMMIT_SKILL_NAME}`,
           ),
         },
       ];
@@ -2850,7 +2850,7 @@ function ko() {
     name: "design-sync",
     menuDescription: "Push your design system components to claude.ai/design",
     description: Mi,
-    isEnabled: uK,
+    isEnabled: isDesignSyncPolicyAllowed,
     policyGate: DESIGN_SYNC_POLICY_GATE,
     argumentHint: '[<project hint, e.g. "Acme DS">]',
     disableModelInvocation: !0,

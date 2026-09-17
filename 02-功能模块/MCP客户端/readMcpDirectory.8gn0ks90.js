@@ -12,7 +12,7 @@
 import { ErrorCode, ListResourcesResultSchema, McpError } from "./chunk-tv3jbp8f.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { MCP_SKILLS_EXTENSION_ID } from "./mcp-skills-extension.js";
-import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
 import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
 var n = 20;
 function serverDeclaresDirectoryRead(r) {

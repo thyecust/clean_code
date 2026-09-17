@@ -55,7 +55,7 @@ import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-�
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
-import { i9e } from "./chunk-rxp6fm7a.js";
+import { McpConfigDiagnostics } from "./mcp-config-diagnostics.js";
 import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import { V0, Fz, cJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { RenderOnceAndExit, renderAndWaitForExit } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -610,7 +610,7 @@ async function mcpListHandler(h, s, v) {
     credentials: v,
   });
   await logFeatureOkAsync("cli_mcp_list");
-  let m = e(i9e, {});
+  let m = e(McpConfigDiagnostics, {});
   if (Object.keys(a).length === 0) {
     (await renderAndWaitForExit(
       h,

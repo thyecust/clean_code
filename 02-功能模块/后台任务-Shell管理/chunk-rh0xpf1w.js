@@ -26,7 +26,7 @@ import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { getPromptInputStore, setPromptInputValue } from "../../01-核心基础设施/共享小工具-未细化/prompt-input-store.js";
 import { writeStateAtomic, logJobWriteError, readJobState, withOwnJobStateWrite, SEED_DETAIL, IDLE_NEEDS, isOverlayNeeds, PRE_BOOT_STATES } from "./chunk-7wsy8vxb.js";
 import { Du, BS, tVn, Jgt, zS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { _ln, markDetached } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
+import { markAttached, markDetached } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { hasEarlyInput, seedEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
 import { getDraftMode, getDraftValue } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
@@ -350,7 +350,7 @@ class H {
     if (r.type === "reply" && typeof r.text === "string") le(r);
   }
   handleAttacherCaps(e) {
-    if ((PDn(e.caps), yrt(!0), e.caps)) _ln(Date.now());
+    if ((PDn(e.caps), yrt(!0), e.caps)) markAttached(Date.now());
     else markDetached();
     if ((clampColorLevelForAttacher(e.caps?.colorLevel), !e.caps)) this.restoreNativeBrowserEnv();
     else if (typeof e.caps.browser === "string")
@@ -545,7 +545,7 @@ function pe(e, t) {
     }));
 }
 function ce() {
-  if (dl() !== null) _ln(Date.now());
+  if (dl() !== null) markAttached(Date.now());
   if (!getInkInstanceRegistry().get(process.stdout)?.forceRedraw({ flushReact: !0 }))
     process.stdout.write(
       i_ +

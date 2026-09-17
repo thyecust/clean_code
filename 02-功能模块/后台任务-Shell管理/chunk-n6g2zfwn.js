@@ -155,7 +155,7 @@ import { getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享�
 import { getEffectiveEffortLevel } from "../Bridge-RemoteControl/bridge-effort-sync.js";
 import { isUserPresent, addUnattendedReplies, takeUnattendedReplies, buildUnattendedRepliesNotice } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import { sanitizeDisplayName, formatModelRestrictedMessage } from "../Teammates团队/chunk-mrfx53ye.js";
-import { wYn } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { resolveSubagentTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { isOfficialMarketplace } from "../插件系统/chunk-33bdfgmx.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
@@ -1609,7 +1609,7 @@ async function mo(e, t) {
   let o = getAgentTranscriptPath(e);
   if (isHoverRestEnabled() && t !== void 0)
     try {
-      let s = wYn(o, t);
+      let s = resolveSubagentTranscriptLocator(o, t);
       if (s !== void 0) {
         let d = await s.backend.statMeta(s.key);
         if (d.ok && d.value.size > 0) return d.value.mtimeMs;

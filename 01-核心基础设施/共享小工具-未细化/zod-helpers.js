@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Zlr, ecr, tcr, unt, k2e, dnt } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-function oHn(o) {
+function createCoercedZodString(o) {
   return Zlr(unt, o);
 }
 function createCoercedZodNumber(o) {
@@ -32,4 +32,4 @@ var ZOD_ISSUE_CODES = {
 };
 var e;
 (function (o) {})(e || (e = {}));
-export { ZOD_ISSUE_CODES, oHn, createCoercedZodNumber, createCoercedZodBoolean };
+export { ZOD_ISSUE_CODES, createCoercedZodString, createCoercedZodNumber, createCoercedZodBoolean };

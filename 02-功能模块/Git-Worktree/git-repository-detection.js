@@ -14,7 +14,7 @@ import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串�
 import { GIT_HARDENED_ARGS, execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import { Eu, gitExe, redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { getGitProvider, $ke } from "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
+import { getGitProvider, parseRemoteHostname } from "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
 var REPO_PATH_SEGMENT_PATTERN = String.raw`(?!\.{1,2}(?:/|$))[A-Za-z0-9_.][\w.-]*`,
   HOSTNAME_PATTERN = String.raw`[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)*`,
   GITLAB_MERGE_REQUEST_PATH_PATTERN = `(?:${REPO_PATH_SEGMENT_PATTERN}/)+${REPO_PATH_SEGMENT_PATTERN}/-/merge_requests`,
@@ -160,7 +160,7 @@ async function detectCurrentRepositoryWithHost(t, r) {
       n(
         `Parsed repository: ${i ? `${i.host}/${i.owner}/${i.name}` : null} from URL: ${redactGitRemoteCredentials(s)}`,
       ));
-    let R = i?.host ?? $ke(s);
+    let R = i?.host ?? parseRemoteHostname(s);
     if (R) Eu().remoteHostByCwd.set(e, R);
     else Eu().remoteHostByCwd.delete(e);
     if (i) o.set(e, i);

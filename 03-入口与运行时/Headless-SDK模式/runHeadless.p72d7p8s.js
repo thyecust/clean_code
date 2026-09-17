@@ -105,7 +105,7 @@ import {
   Kd,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, z, aae, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { writeToStdout, markStdoutDrainExternallyClocked, bXt } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { writeToStdout, markStdoutDrainExternallyClocked, outstandingStdoutBytes } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { truncateToCodeUnits, firstLine, formatTruncatedText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { COMMAND_NAME_TAG, BASH_INPUT_TAG, BASH_STDERR_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, logError, getInMemoryErrors, logMCPDebug } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
@@ -674,7 +674,7 @@ import { emitOtelEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/
 import { isProjectsHumanOriginEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Nu, b7e } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { AsyncQueue, formatContinuedInMessage } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
-import { recordStartupPhase, getRecordedStartupPhase, markResumeHydratePrefetch, qXn, zXn, consumeApiRequestSentFromSpawn } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
+import { recordStartupPhase, getRecordedStartupPhase, markResumeHydratePrefetch, recordFirstMessageReadFromSpawn, recordInputReadyFromSpawn, consumeApiRequestSentFromSpawn } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { areBackgroundTasksDisabled, BACKGROUND_TASKS_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { mQn, ZAe, ti, eCe } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import {
@@ -783,16 +783,16 @@ import {
   isHumanOriginTurn,
   r6n,
   isHumanRelayOrigin,
-  o6n,
+  buildRelayTurnFields,
   classifyInboundOrigin,
   getInboundOriginOverride,
-  s6n,
+  classifyRemoteIngressOrigin,
   isVerifiedSlackHumanTurn,
-  i6n,
+  resolvePeerTriggerPriority,
   stripSystemReminderWrappers,
   stripSystemRemindersFromBlocks,
   parseInboundUserEvent,
-  vPe,
+  parsePeerEnvelopeSender,
   hasPeerEnvelope,
 } from "../../02-功能模块/Bridge-RemoteControl/bridge-inbound-origin.js";
 import "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
@@ -857,7 +857,7 @@ import { MCP_URL_ELICITATION_DIALOG, clearMcpNeedsAuthCache, createMcpAuthStubTo
 import { collectContextData } from "../../02-功能模块/上下文压缩-Compact/context-usage.js";
 import { Qqe, tze, ran, MWn, UWn } from "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
 import { killAutoReactSubscriptions } from "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
-import { xBn, syncTitleToRemoteSession, generateSessionTitle } from "../../02-功能模块/会话-历史-恢复/session-title.js";
+import { isSessionTitleGenerationDisabled, syncTitleToRemoteSession, generateSessionTitle } from "../../02-功能模块/会话-历史-恢复/session-title.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import { createArtifactRegistries, createTeammateColorAssigner, EMPTY_PERMISSION_RELAYS } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
@@ -865,7 +865,7 @@ import { fetchSystemPromptParts, buildSideQuestionFallbackParams } from "../../0
 import { collectArtifactStateFromMessages, rehydrateArtifactFrameState } from "../../02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js";
 import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
 import "../../02-功能模块/跨会话消息(UDS)/peer-file-transfer.js";
-import { dIt } from "../../02-功能模块/图片-截图-ComputerUse/chunk-2xnaevpn.js";
+import { resolveAndPrepend } from "../../02-功能模块/图片-截图-ComputerUse/bridge-attachment-resolve.js";
 import { runSideQuestion } from "../../02-功能模块/权限系统/chunk-qjqc5vxm.js";
 import { runUltrareviewHeadless } from "../../02-功能模块/CodeReview/CodeReview.ddrd6y06.js";
 import {
@@ -953,7 +953,7 @@ import { finalizeOAuthLogin } from "../../02-功能模块/认证-OAuth登录/oau
 import { PerClassInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/per-class-instance-registry.js";
 import { parsePositiveInteger } from "../../01-核心基础设施/共享小工具-未细化/parse-positive-integer.js";
 import { buildSessionWebUrl } from "../../02-功能模块/Bridge-RemoteControl/remote-control-ui-strings.js";
-import { sSe, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
+import { markPrResolvedThisSession, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
 import { maybeStartCcrRecap, resetCcrRecap } from "../../02-功能模块/权限系统/ccr-recap.js";
 import { refreshActivePlugins } from "../../02-功能模块/MCP客户端/plugin-reload-cache-impact.js";
 import { PluginStateStore } from "../../02-功能模块/插件系统/plugin-state-store.js";
@@ -970,13 +970,13 @@ import { getEffectiveEffortLevel, applyBridgeFlagSettings, reportSessionEffort }
 import { OAuthLoginFlow } from "../../02-功能模块/认证-OAuth登录/oauth-login-flow.js";
 import { DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES, STRUCTURED_OUTPUT_RETRACTED_MESSAGE, formatStructuredOutputRetryError, findLastStructuredOutputError } from "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
 import { buildLocalDisplayOnlyDenialResult } from "../../01-核心基础设施/共享小工具-未细化/local-display-only-denial.js";
-import { zPe } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
+import { hasExperimentalCapability } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import { resolveThemeName } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
 import { isTerminalTaskStatus, formatModelRestrictedMessage } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import { appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
 import { hasNonMarketplacePluginSource, parsePluginIdIgnoringReservedMarketplace } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 import { isMcpSkillsEnabled } from "../../02-功能模块/MCP客户端/mcp-skills-extension.js";
-import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
 import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
@@ -2994,7 +2994,7 @@ function la(e, t) {
     getMcp: () => o().mcp,
     getProactivityLevel: () => o().proactivityLevel,
     getWebBrowser: () => o().webBrowser,
-    markPrResolvedThisSession: () => sSe(d),
+    markPrResolvedThisSession: () => markPrResolvedThisSession(d),
     isUltrareviewOverageConfirmed: () => o().ultrareviewOverageConfirmed,
     markUltrareviewOverageConfirmed: () => markUltrareviewOverageConfirmed(d),
     ...makeToolPermissionContextSetters(d),
@@ -6794,7 +6794,7 @@ function Y_(e, t, o) {
 }
 function X_(e, t, o, d) {
   if (o && !d)
-    return s6n(
+    return classifyRemoteIngressOrigin(
       t,
       e.client_platform,
       e.inbound_origin,
@@ -9861,7 +9861,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           let Se = { ...L.capabilities.experimental };
           if (
             "claude/channel" in Se &&
-            (!zPe(L.capabilities, "claude/channel") ||
+            (!hasExperimentalCapability(L.capabilities, "claude/channel") ||
               !isChannelsEnabled() ||
               !isChannelAllowlisted(L.config.pluginSource) ||
               (L.type === "connected" && L.protocolEra === "modern"))
@@ -10445,7 +10445,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if ((resetCcrRecap(e.ccrRecap), t.resetStallWatchdog(), Ki.stop(), oi)) await oi;
       if (Ot) await Ot;
       if ((markHeadlessCheckpoint("run_entry"), !tc))
-        ((tc = !0), recordStartupPhase("first_message_read_ms", performance.now(), 0), qXn());
+        ((tc = !0), recordStartupPhase("first_message_read_ms", performance.now(), 0), recordFirstMessageReadFromSpawn());
       try {
         let V = performance.now();
         if (w.sdkUrl) {
@@ -12228,10 +12228,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         T = () => {
           ((p = !0), ho.resolve());
         },
-        x = E.some((r) => r.type !== "system") || xBn();
+        x = E.some((r) => r.type !== "system") || isSessionTitleGenerationDisabled();
       if (
         (recordStartupPhase("input_ready_ms", performance.now(), 0),
-        zXn(),
+        recordInputReadyFromSpawn(),
         writeDiagnosticsEvent("info", "cli_message_loop_started"),
         markHeadlessCheckpoint("stdin_listen_started"),
         a.CLAUDE_CODE_RESUME_INTERRUPTED_TURN &&
@@ -15000,7 +15000,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                   let Dn = parseFileAttachments(Ke),
                                     Gr = qe.content,
                                     { content: zr, inlinedImagePaths: Jo } =
-                                      await dIt(
+                                      await resolveAndPrepend(
                                         Ke,
                                         Gr,
                                         isHumanOriginTurn(
@@ -15687,7 +15687,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             T_,
           );
         let Je = X_(r, Se, V, W),
-          Ye = Je ? (Je.kind === "peer" ? Je.from : void 0) : vPe(Se),
+          Ye = Je ? (Je.kind === "peer" ? Je.from : void 0) : parsePeerEnvelopeSender(Se),
           at = J_(Je, r, V),
           { messageIds: ht, rows: Hn, threadTs: Wn } = Q_(r, at);
         if (V && r.inbound_origin === QOe) Y_(r, at, Hn);
@@ -15739,7 +15739,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             }),
           }),
           cn = Ye
-            ? i6n(r.priority, I6e(U))
+            ? resolvePeerTriggerPriority(r.priority, I6e(U))
             : at?.kind === "task-notification"
               ? resolveTriggerPriority(r.priority, Ce, r.inbound_origin)
               : In
@@ -15768,7 +15768,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             Pa(t, r.uuid, "stdin"));
           continue;
         }
-        let { content: Bo, inlinedImagePaths: ro } = await dIt(
+        let { content: Bo, inlinedImagePaths: ro } = await resolveAndPrepend(
             r,
             z_(Se, V, W),
             !Ye && r6n(Je, V, Ce, r.inbound_origin),
@@ -15819,7 +15819,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   ...(ht && { hearthRelayMessageIds: ht }),
                   ...(Hn && { hearthRelayRows: Hn }),
                   ...(Wn && { hearthRelayThreadTs: Wn }),
-                  ...o6n({
+                  ...buildRelayTurnFields({
                     isRelayHuman: In,
                     isSynthetic: r.isSynthetic,
                     ccrTurnId: wr,
@@ -16513,7 +16513,7 @@ function Bf(e, t) {
           : void 0,
       ),
       drained_message_count: t.drainedMessageCount,
-      outstanding_stdout_bytes: bXt(),
+      outstanding_stdout_bytes: outstandingStdoutBytes(),
       stdout_destroyed: process.stdout.destroyed,
       ...lm(e),
     }));

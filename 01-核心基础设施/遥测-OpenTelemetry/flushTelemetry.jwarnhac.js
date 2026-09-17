@@ -73,7 +73,7 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getGatewayIdentityAttributes, otelContextManager } from "./otel-events.js";
 import { rw, FGn, Wun, iV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getResolvedWIFBaseUrlSnapshot } from "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
+import { getResolvedWIFBaseUrlSnapshot } from "../../02-功能模块/认证-OAuth登录/wif-credentials.js";
 import { OtelDiagLogger } from "../共享小工具-未细化/otel-diag-logger.js";
 import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { decodeTokenClaims } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";

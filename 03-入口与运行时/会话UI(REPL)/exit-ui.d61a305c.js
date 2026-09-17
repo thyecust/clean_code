@@ -39,7 +39,7 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import "../../02-功能模块/状态栏-主题/chunk-jrr487ty.js";
 import { pickRandom } from "../../02-功能模块/Hooks钩子/spinner-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { r0e } from "../../02-功能模块/反馈-错误上报/反馈-错误上报.grgh562d.js";

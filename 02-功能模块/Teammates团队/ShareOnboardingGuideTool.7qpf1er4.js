@@ -14,7 +14,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { SHARE_ONBOARDING_GUIDE_TOOL_NAME, SHARE_ONBOARDING_GUIDE_TOOL_DESCRIPTION } from "./share-onboarding-guide-tool.js";
-import { zSe, createOnboardingGuide, updateOnboardingGuide, deleteOnboardingGuide, listOnboardingGuides } from "./onboarding-guide-api.js";
+import { isOnboardingGuideSharingEnabled, createOnboardingGuide, updateOnboardingGuide, deleteOnboardingGuide, listOnboardingGuides } from "./onboarding-guide-api.js";
 import { s, c, Qe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { readFile, stat as b } from "fs/promises";
 import { join as O } from "path";
@@ -57,7 +57,7 @@ var k = createLazyValue(() =>
       return SHARE_ONBOARDING_GUIDE_TOOL_DESCRIPTION;
     },
     isEnabled() {
-      return zSe();
+      return isOnboardingGuideSharingEnabled();
     },
     isConcurrencySafe() {
       return !1;

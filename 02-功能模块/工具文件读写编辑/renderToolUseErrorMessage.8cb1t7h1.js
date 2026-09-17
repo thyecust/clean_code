@@ -28,7 +28,7 @@ import "../Diff引擎/structured-diff.js";
 import { isScratchpadDisplayPath, isWorkshopDisplayPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { TruncatedFilePath } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
-import { RejectedToolUseDiff, wWe } from "../Diff引擎/diff-tool-result-render.js";
+import { RejectedToolUseDiff, ToolUseDiff } from "../Diff引擎/diff-tool-result-render.js";
 import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -46,7 +46,7 @@ function renderToolResultMessage(
 ) {
   if (!r) return null;
   let c = r.startsWith(getPlansDirectory());
-  return e(wWe, {
+  return e(ToolUseDiff, {
     filePath: r,
     structuredPatch: s,
     firstLine: i ? firstLine(i) : null,

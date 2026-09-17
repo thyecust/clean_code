@@ -26,8 +26,8 @@ import { getMaxOutputChars, maybeTruncateOutput } from "../../01-核心基础设
 import { collectResourceLinks } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
 import { formatMcpServerToolLabel } from "../../01-核心基础设施/共享小工具-未细化/mcp-task-record.js";
 import { createPendingTask } from "../Teammates团队/chunk-mrfx53ye.js";
-import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
-import { shortenMcpTaskId } from "./chunk-tznd4407.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
+import { shortenMcpTaskId } from "./mcp-task-id.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 var W = 2000,
   MIN_POLL_INTERVAL_MS = 100,

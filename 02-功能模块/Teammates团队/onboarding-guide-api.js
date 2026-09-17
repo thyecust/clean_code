@@ -14,7 +14,7 @@ import { ht, hasStoredOAuthToken, H } from "../认证-OAuth登录/认证-OAuth�
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 var u = 1e4,
   a = { auth: "teleport-org", timeout: u, headers: { "anthropic-beta": OAUTH_BETA_HEADER } };
-function zSe() {
+function isOnboardingGuideSharingEnabled() {
   if (isEssentialTrafficOnly()) return !1;
   if (!isPolicyAllowed("allow_team_onboarding")) return !1;
   if (!hasStoredOAuthToken()) return !1;
@@ -70,4 +70,4 @@ async function listOnboardingGuides(e) {
   });
   return o(n).guides;
 }
-export { zSe, createOnboardingGuide, updateOnboardingGuide, deleteOnboardingGuide, listOnboardingGuides };
+export { isOnboardingGuideSharingEnabled, createOnboardingGuide, updateOnboardingGuide, deleteOnboardingGuide, listOnboardingGuides };

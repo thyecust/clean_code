@@ -20,7 +20,7 @@ import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-�
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { wIe, classifyImportItem, compareImportItems } from "../../01-核心基础设施/共享小工具-未细化/import-items.js";
+import { isAutoImportableItem, classifyImportItem, compareImportItems } from "../../01-核心基础设施/共享小工具-未细化/import-items.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -35,7 +35,7 @@ function ct(Yt) {
   return Yt.result.unmappable;
 }
 function dt(_t) {
-  return wIe(_t.item);
+  return isAutoImportableItem(_t.item);
 }
 function ut(Lt) {
   return Lt.item.id;

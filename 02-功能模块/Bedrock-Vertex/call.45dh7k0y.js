@@ -20,8 +20,8 @@ import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { rWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-r730456t.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
+import { RelaunchConfirmationWizard } from "../../01-核心基础设施/共享小工具-未细化/relaunch-confirmation-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
 import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
@@ -33,7 +33,7 @@ import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 async function m(o) {
   return (
     logEvent("tengu_bedrock_setup_started", {}),
-    e(rWe, {
+    e(RelaunchConfirmationWizard, {
       Wizard: _0e,
       cancelledEvent: "tengu_bedrock_setup_cancelled",
       onDone: o,

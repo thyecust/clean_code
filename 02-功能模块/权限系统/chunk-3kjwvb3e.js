@@ -431,7 +431,7 @@ async function removeScheduledTask(o, t, e) {
     );
   });
 }
-async function J0e(o, t) {
+async function readScheduledTasks(o, t) {
   let e = await D(o, t);
   if (!("scheduled" in e)) return [];
   let r = I(e),
@@ -442,4 +442,4 @@ async function J0e(o, t) {
   }
   return a;
 }
-export { DAEMON_CONFIG_MAX_BYTES, readDaemonConfigContent, updateDaemonConfig, normalizeRemoteControlEntries, VALID_PERMISSION_MODES, scheduledTasksFileSchema, readScheduledStatus, runScheduledWorker, addScheduledTask, removeScheduledTask, J0e };
+export { DAEMON_CONFIG_MAX_BYTES, readDaemonConfigContent, updateDaemonConfig, normalizeRemoteControlEntries, VALID_PERMISSION_MODES, scheduledTasksFileSchema, readScheduledStatus, runScheduledWorker, addScheduledTask, removeScheduledTask, readScheduledTasks };

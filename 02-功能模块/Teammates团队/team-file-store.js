@@ -19,7 +19,7 @@ import { pointerFileIsSuspect, rawPointerPathIsUnsafe, gitExe } from "../../01-�
 import { STORAGE_KEYS } from "./storage-keys.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { getAgentName, getTeamName, isTeammate } from "./teammate-context.js";
-import { gCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
+import { createJitteredBackoffDelay } from "../../01-核心基础设施/共享小工具-未细化/jittered-backoff-delay.js";
 import { isPathSafeToRemove } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
 import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import {
@@ -218,7 +218,7 @@ async function removeTeamMember(e, t, r) {
 async function K(e, t, r, a) {
   let o = C(e),
     i = 5,
-    s = gCe(50),
+    s = createJitteredBackoffDelay(50),
     c,
     m = (u) => {
       if (u === void 0) return { skip: !0, result: { kind: "missing" } };

@@ -53,7 +53,7 @@ async function saveIdpIdTokenFromJwt(r, t) {
     n = e ? e * 1000 : Date.now() + 3600000;
   return (await k(r, t, n), n);
 }
-async function vLt(r) {
+async function clearIdpIdToken(r) {
   let t = issuerKey(r);
   try {
     await getSecureStorage().mutate((e) => {
@@ -307,4 +307,4 @@ async function acquireIdpIdToken(r) {
     return d.id_token;
   });
 }
-export { issuerKey, getCachedIdpIdToken, saveIdpIdTokenFromJwt, vLt, saveIdpClientSecret, getIdpClientSecret, clearIdpClientSecret, discoverOidc, acquireIdpIdToken };
+export { issuerKey, getCachedIdpIdToken, saveIdpIdTokenFromJwt, clearIdpIdToken, saveIdpClientSecret, getIdpClientSecret, clearIdpClientSecret, discoverOidc, acquireIdpIdToken };

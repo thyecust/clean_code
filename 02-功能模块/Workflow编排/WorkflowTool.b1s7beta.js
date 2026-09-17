@@ -27,7 +27,7 @@ import { te, formatOverflowHint } from "../../01-核心基础设施/核心工具
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { READ_ONLY_AUTO_ALLOW_REASON, LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { areWorkflowsDisabledBySettings, areWorkflowsEnabled, Rnr } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
+import { areWorkflowsDisabledBySettings, areWorkflowsEnabled, isJadeCompassEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { nH, eh, Jl, RDe, Epe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -2575,7 +2575,7 @@ var ut = {
     get outputSchema() {
       return Zt();
     },
-    coerceInput: (e) => xr(e, { apply: Rnr() }),
+    coerceInput: (e) => xr(e, { apply: isJadeCompassEnabled() }),
     toAutoClassifierInput(e) {
       let r = ke();
       if (r && typeof e.runId === "string") return r.runOpClassifierInput(e);

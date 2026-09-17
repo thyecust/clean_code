@@ -7,13 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-function pAn() {
-  if ((getSettings_DEPRECATED() || {}).permissions?.disableBypassPermissionsMode === "disable")
-    return "Bypass permissions mode was disabled by settings";
-  return;
-}
-function isBypassPermissionsModeDisabled() {
-  return pAn() !== void 0;
-}
-export { pAn, isBypassPermissionsModeDisabled };
+import { readEmbeddedAssetSync } from "./embedded-text-asset.js";
+var e = "./plugin-eval-quickref-bb13424e.md.zst";
+var PLUGIN_EVAL_QUICKREF_MD = readEmbeddedAssetSync(e, import.meta.dirname);
+export { PLUGIN_EVAL_QUICKREF_MD };

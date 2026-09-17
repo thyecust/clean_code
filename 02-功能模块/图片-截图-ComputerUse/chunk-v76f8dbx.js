@@ -14,7 +14,7 @@ import { getComputerUseSession, getComputerUseNativeModule } from "./computer-us
 import { createCliExecutor } from "./computer-use-cli-executor.js";
 import { s0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { WSe } from "./chunk-6842b6x1.js";
-import { isComputerUseEnabled, iNt } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
+import { isComputerUseEnabled, getComputerUseSubGates } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
 import { DEFAULT_GRANT_FLAGS, isKnownAppBundleId } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
 import { IMAGE_TOKEN_BUDGET, fitSizeToTokenBudget, DEFAULT_IMAGE_SCALE, validateImageScale, formatScaleCoordinateFrameNote, scaleImageDimensions } from "../../01-核心基础设施/共享小工具-未细化/image-scaling.js";
 function Sn(e) {
@@ -5481,8 +5481,8 @@ function put() {
       serverName: s0,
       logger: new An(),
       executor: createCliExecutor({
-        getMouseAnimationEnabled: () => iNt().mouseAnimation,
-        getHideBeforeActionEnabled: () => iNt().hideBeforeAction,
+        getMouseAnimationEnabled: () => getComputerUseSubGates().mouseAnimation,
+        getHideBeforeActionEnabled: () => getComputerUseSubGates().hideBeforeAction,
       }),
       ensureOsPermissions: async () => {
         let o = getComputerUseNativeModule(),
@@ -5493,7 +5493,7 @@ function put() {
           : { granted: !1, accessibility: t, screenRecording: r };
       },
       isDisabled: () => !isComputerUseEnabled(),
-      getSubGates: iNt,
+      getSubGates: getComputerUseSubGates,
       getAutoUnhideEnabled: () => !0,
       cropRawPatch: () => null,
     }),

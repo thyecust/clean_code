@@ -29,8 +29,8 @@ import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import {
   getHookSettingsSourceFiles,
-  s0e,
-  i0e,
+  collectAllowRules,
+  collectAdditionalDirectories,
   getBashExecutionSourceFiles,
   formatListWithAnd,
   getOtelHeadersHelperSourceFiles,
@@ -94,9 +94,9 @@ function TrustDialog(wo) {
   if (s[3] === MEMO_CACHE_SENTINEL) ((pt = getBashExecutionSourceFiles()), (s[3] = pt));
   else pt = s[3];
   let yo = pt,
-    j = s0e(),
+    j = collectAllowRules(),
     B = j.sources.length > 0,
-    A = i0e(),
+    A = collectAdditionalDirectories(),
     M = A.sources.length > 0,
     dt;
   if (s[4] === MEMO_CACHE_SENTINEL) ((dt = getApiKeyHelperSourceFiles()), (s[4] = dt));

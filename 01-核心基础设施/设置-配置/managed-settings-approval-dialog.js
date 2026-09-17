@@ -134,7 +134,7 @@ var mt = {
     risk: "this redirects where telemetry from this machine is sent.",
   },
   L = REFUSE_INPUT_WINDOW_MS;
-function cWe(ce) {
+function ManagedSettingsApprovalDialog(ce) {
   let bn = _(2),
     Ot;
   if (bn[0] !== ce)
@@ -528,4 +528,4 @@ function Oe(wn) {
   else Yt = i[94];
   return Yt;
 }
-export { cWe };
+export { ManagedSettingsApprovalDialog };

@@ -42,7 +42,7 @@ import "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js"
 import "./url-and-error-redaction.js";
 import "../MCP客户端/chunk-78r8f7dw.js";
 import "../MCP客户端/chunk-5wa92x7d.js";
-import "./chunk-3wfaaze4.js";
+import "./pkce-challenge.js";
 export {
   q3e as AuthenticationCancelledError,
   z3e as ClaudeAuthProvider,

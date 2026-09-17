@@ -86,7 +86,7 @@ function u(e, t, r) {
     }
   return (o.set(t, r), o);
 }
-async function k9n() {
+async function cleanupStaleImageCacheDirs() {
   let e = ae(),
     t = d(getClaudeConfigDir(), g),
     r = K();
@@ -134,7 +134,7 @@ function F() {
 function l() {
   return Or().publishedCatalogFloorMarks;
 }
-async function x9n(e) {
+async function getPublishedCatalogFloorVersion(e) {
   return (await w(), l().get(e)?.version ?? 0);
 }
 async function recordPublishedCatalogFloorVersion(e, t, r = Date.now()) {
@@ -223,4 +223,4 @@ function getGatingSettingsErrors() {
     ...getLocalSettingsErrorsBlockingWrite(),
   ];
 }
-export { setImageCachePath, storeImageToCache, storeImageBatchToCache, k9n, PUBLISHED_FLOOR_FILE_NAME, x9n, recordPublishedCatalogFloorVersion, getSettingsWithMcpErrors, getLocalSettingsErrorsBlockingWrite, getGatingSettingsErrors };
+export { setImageCachePath, storeImageToCache, storeImageBatchToCache, cleanupStaleImageCacheDirs, PUBLISHED_FLOOR_FILE_NAME, getPublishedCatalogFloorVersion, recordPublishedCatalogFloorVersion, getSettingsWithMcpErrors, getLocalSettingsErrorsBlockingWrite, getGatingSettingsErrors };

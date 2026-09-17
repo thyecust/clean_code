@@ -27,7 +27,7 @@ function getGitProvider(r) {
   if (t === e) return "bitbucket";
   return "other";
 }
-function $ke(r) {
+function parseRemoteHostname(r) {
   let t = r.trim();
   if (hasBackslashInUrlAuthority(t)) return null;
   if (t.includes("://"))
@@ -42,4 +42,4 @@ function parseScpRemoteUrl(r) {
   let t = /^([^@:/[\]]+)@([^@:/[\]]+):(.*)$/s.exec(r);
   return t ? { user: t[1], host: t[2], path: t[3] } : null;
 }
-export { stripPort, getGitProvider, $ke, parseScpRemoteUrl };
+export { stripPort, getGitProvider, parseRemoteHostname, parseScpRemoteUrl };

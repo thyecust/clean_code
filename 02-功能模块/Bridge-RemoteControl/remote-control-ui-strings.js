@@ -10,7 +10,7 @@
 import { QNe } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { te, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
-var yBn = 30000,
+var RECENT_ACTIVITY_WINDOW_MS = 30000,
   BRIDGE_FAILED_ERROR = "bridge-failed",
   BRIDGE_DISABLED_AFTER_FAILURES_ERROR = "disabled after repeated failures \xB7 restart to retry",
   REMOTE_CONTROL_NOT_STARTED_PREFIX = "Remote Control not started here";
@@ -73,7 +73,7 @@ function formatTerminalHyperlink(t, e) {
   return `\x1B]8;;${e}\x07${t}\x1B]8;;\x07`;
 }
 export {
-  yBn,
+  RECENT_ACTIVITY_WINDOW_MS,
   BRIDGE_FAILED_ERROR,
   BRIDGE_DISABLED_AFTER_FAILURES_ERROR,
   REMOTE_CONTROL_NOT_STARTED_PREFIX,

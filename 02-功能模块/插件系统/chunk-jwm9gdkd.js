@@ -225,7 +225,7 @@ import { getPluginInventory } from "../MCP客户端/chunk-4xr0rjb4.js";
 import { wle } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { i3e } from "../成本-Token统计/chunk-3nwwgatc.js";
 import { cQt, lIt } from "./chunk-d0tph3ay.js";
-import { t0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js";
+import { computeSkillUsageByPlugin } from "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { BackgroundText } from "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
@@ -7257,7 +7257,7 @@ function Qc(jD) {
         (tr[5] = Mo.manifest.name),
         (tr[6] = nr));
     else nr = tr[6];
-    Kb = t0e([...ta, ...Zm], bytesPerTokenForModel(eg ?? void 0)).byPlugin.find(nr);
+    Kb = computeSkillUsageByPlugin([...ta, ...Zm], bytesPerTokenForModel(eg ?? void 0)).byPlugin.find(nr);
     ((tr[0] = Zm),
       (tr[1] = eg),
       (tr[2] = Mo.manifest.name),

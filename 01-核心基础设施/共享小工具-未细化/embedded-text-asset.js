@@ -14,15 +14,15 @@ var u = [40, 181, 47, 253];
 function s(t) {
   return t.length >= 4 && u.every((e, r) => t[r] === e);
 }
-function _4t(t, e) {
+function resolveEmbeddedAssetPath(t, e) {
   return isAbsolute(t) ? t : join(e, t);
 }
 async function readEmbeddedAsset(t, e) {
-  let r = await readFile(_4t(t, e));
+  let r = await readFile(resolveEmbeddedAssetPath(t, e));
   return (s(r) ? await Bun.zstdDecompress(r) : r).toString("utf8");
 }
 function readEmbeddedAssetSync(t, e) {
-  let r = _4t(t, e);
+  let r = resolveEmbeddedAssetPath(t, e);
   try {
     let n = readFileSync(r);
     return (s(n) ? Bun.zstdDecompressSync(n) : n).toString("utf8");
@@ -33,4 +33,4 @@ function readEmbeddedAssetSync(t, e) {
     );
   }
 }
-export { _4t, readEmbeddedAsset, readEmbeddedAssetSync };
+export { resolveEmbeddedAssetPath, readEmbeddedAsset, readEmbeddedAssetSync };

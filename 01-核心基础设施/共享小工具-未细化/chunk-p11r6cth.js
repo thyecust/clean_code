@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-function sSe(o) {
+function markPrResolvedThisSession(o) {
   o((e) => (e.prResolvedThisSession ? e : { ...e, prResolvedThisSession: !0 }));
 }
 function markUltrareviewOverageConfirmed(o) {
@@ -27,4 +27,4 @@ function makeToolPermissionContextSetters(o) {
     });
   return { setToolPermissionContext: e, setSessionToolPermissionContext: e };
 }
-export { sSe, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters };
+export { markPrResolvedThisSession, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters };

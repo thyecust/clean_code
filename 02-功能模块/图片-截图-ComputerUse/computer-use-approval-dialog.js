@@ -11,10 +11,10 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { DEFAULT_GRANT_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
 import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var oPe = defineDialog({
+var COMPUTER_USE_APPROVAL_DIALOG = defineDialog({
   kind: "computer_use_approval",
   payload: createLazyValue(() => qd((e) => typeof e === "object" && e !== null)),
   result: createLazyValue(() => qd((e) => typeof e === "object" && e !== null)),
   default: { granted: [], denied: [], flags: DEFAULT_GRANT_FLAGS },
 });
-export { oPe };
+export { COMPUTER_USE_APPROVAL_DIALOG };

@@ -22,7 +22,7 @@ function getCachedSystemTheme() {
 function setSystemTheme(e) {
   getThemeStore().setSystemTheme(e);
 }
-function hOe(e) {
+function subscribeSystemThemeChange(e) {
   return getThemeStore().onSystemThemeChange(e);
 }
 function resolveThemeName(e) {
@@ -70,4 +70,4 @@ function s() {
   if (!Number.isInteger(r) || r < 0 || r > 15) return;
   return r <= 6 || r === 8 ? "dark" : "light";
 }
-export { resolveSystemTheme, getSystemTheme, getCachedSystemTheme, setSystemTheme, hOe, resolveThemeName, resolveThemePalette, detectThemeFromColor };
+export { resolveSystemTheme, getSystemTheme, getCachedSystemTheme, setSystemTheme, subscribeSystemThemeChange, resolveThemeName, resolveThemePalette, detectThemeFromColor };

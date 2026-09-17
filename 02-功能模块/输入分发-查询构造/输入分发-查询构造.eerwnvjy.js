@@ -120,7 +120,7 @@ import {
   n,
   s8,
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { BG_EXIT_CAUSE_SESSION_IN_USE, isStdinUnusableError, writeToStdout, rOn, peekForStdinData, oOn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { BG_EXIT_CAUSE_SESSION_IN_USE, isStdinUnusableError, writeToStdout, isExitExternallyClocked, peekForStdinData, iterateStreamUntilClose } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { capitalize, pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, hashString, isEssentialTrafficOnly, logError, getInMemoryErrors, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getEnvEntrypoint, isDesktopHostEntrypoint, isSdkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
@@ -828,9 +828,9 @@ import { claimSessionNameAtStartup } from "../跨会话消息(UDS)/chunk-9kzxq41
 import {
   defaultFullscreenState,
   getTuiTrialState,
-  a1e,
+  getTuiTrialMode,
   wasFullscreenAutoDisabledForVersion,
-  l1e,
+  MAX_FULLSCREEN_UPSELL_COUNT,
   shouldUseFullscreen,
   getFullscreenReason,
   fullscreenReasonToMode,
@@ -852,7 +852,7 @@ import { AsyncQueue } from "../会话-历史-恢复/chunk-m1xj4s02.js";
 import { getOwnJobShortId, writeStateAtomic, logJobWriteError, readJobState, syncRespawnFlag } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { cliCarriesSessionConfig, cliCarriesForkRestrictedConfig } from "../权限系统/fork-restricted-launch-flags.js";
 import { hw, MYn, Fpe } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { dNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
+import { isWorktreeModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
 import { collectContextData } from "../上下文压缩-Compact/context-usage.js";
 import { xWn, HWn } from "../Artifact发布-渲染/chunk-p1dkvpxj.js";
 import { killAutoReactSubscriptions } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
@@ -862,7 +862,7 @@ import { nO, FleetNudgeStore } from "../后台任务-Shell管理/chunk-c7mzes79.
 import { useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { IIe } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { captureAdmin3PSteeringSnapshot } from "../Bedrock-Vertex/apply-3p-default-fallbacks.js";
-import { hLt } from "../../01-核心基础设施/共享小工具-未细化/additional-working-directories.js";
+import { publishAdditionalWorkingDirectories } from "../../01-核心基础设施/共享小工具-未细化/additional-working-directories.js";
 import { BAn, qJe, O4t, b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { _ee, c3e, fIe, knn } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -906,7 +906,7 @@ import { githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49
 import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
 import { resolvePromptCommandFromUri, setAlwaysDenyCommands, parseSlashCommandInput, resolveSubcommandTarget, getActiveFotwCampaign, hasClaimableFotwCredit, isFotwUpsellPending, getFotwCreditAmount } from "../用量额度-限额/chunk-1bfn62xh.js";
 import { shouldExcludeDefaultTips, getOverrideSpinnerTips } from "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
-import { storeImageBatchToCache, x9n, recordPublishedCatalogFloorVersion } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
+import { storeImageBatchToCache, getPublishedCatalogFloorVersion, recordPublishedCatalogFloorVersion } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { skillChangeDetector } from "../文件监听-Watch/skill-change-detector.js";
 import { ir, mE, $Ie } from "../MCP客户端/chunk-g4gdwpa0.js";
 import { hasNonEmptyArrayValues, isRestrictiveAgentDefinition, JSON_SCHEMA_UNSUPPORTED_REASON } from "../权限系统/chunk-z0pt04s8.js";
@@ -919,16 +919,16 @@ import { getDisusedPlugins } from "../插件系统/plugin-disuse.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { getBlockedServerErrorFields } from "../MCP客户端/mcp-server-state-messages.js";
 import { isComputerUseEnabled } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
-import { zSe } from "../Teammates团队/onboarding-guide-api.js";
+import { isOnboardingGuideSharingEnabled } from "../Teammates团队/onboarding-guide-api.js";
 import { isAgentsViewAvailable } from "../后台任务-Shell管理/chunk-531ast3t.js";
 import { getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
 import { reportSessionEffort } from "../Bridge-RemoteControl/bridge-effort-sync.js";
 import { getCooContextProperties } from "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
 import { isDesignSyncEnabled } from "../../01-核心基础设施/共享小工具-未细化/design-feature-gates.js";
 import { flushPendingScopeExpansionNotice } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
-import { tWn } from "../../01-核心基础设施/设置-配置/shell-allow-rule-analytics.js";
+import { logShellAllowRulesAtInit } from "../../01-核心基础设施/设置-配置/shell-allow-rule-analytics.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { i4e, bGn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js";
+import { fetchOrgSkills, downloadSkillArchive } from "../../01-核心基础设施/共享小工具-未细化/org-skills-sync.js";
 import { hasActiveAgentTask, figures, isWorkflowSizeGuidelineConfigured, resolveWorkflowSizeGuideline } from "../Teammates团队/chunk-mrfx53ye.js";
 import { isProjectSkillsDirPlugin, splitPluginId, getPluginMarketplace, parsePluginIdIgnoringReservedMarketplace } from "../插件系统/chunk-33bdfgmx.js";
 import { isMcpSkillsEnabled } from "../MCP客户端/mcp-skills-extension.js";
@@ -940,7 +940,7 @@ import { escapeSingleLineText } from "../../01-核心基础设施/共享小工�
 import { isRemoteSettingsEligible } from "../../01-核心基础设施/共享小工具-未细化/remote-settings-eligibility.js";
 import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import { createFieldUpdater } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
-import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled } from "../权限系统/bypass-permissions-mode-policy.js";
 import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 import { REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE } from "../Bridge-RemoteControl/remote-control-policy-messages.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
@@ -4579,7 +4579,7 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
   if (
     w.toolPermissionContext.additionalWorkingDirectories !==
       I.toolPermissionContext.additionalWorkingDirectories &&
-    hLt(w.toolPermissionContext)
+    publishAdditionalWorkingDirectories(w.toolPermissionContext)
   )
     import("../MCP客户端/mcpClientModule.4cyej0np.js")
       .then((De) => De.mcpClientModule().notifyMcpRootsListChanged())
@@ -5097,7 +5097,7 @@ async function $c(w) {
         O.canary.status === "armed" &&
           O.canary.firstFrameAt !== void 0 &&
           (process.exitCode === void 0 || process.exitCode === 0) &&
-          !rOn()
+          !isExitExternallyClocked()
           ? "healthy"
           : "withdrawn",
       ),
@@ -5196,17 +5196,17 @@ function Hc(w, I) {
   );
 }
 function f0t(w) {
-  Hc(l1e, w);
+  Hc(MAX_FULLSCREEN_UPSELL_COUNT, w);
 }
 function yJt(w) {
   let I = getTuiTrialState();
   if (I.upsellImpression !== void 0) return I.upsellImpression;
-  let O = Math.min((ee().fullscreenUpsellSeenCount ?? 0) + 1, l1e);
+  let O = Math.min((ee().fullscreenUpsellSeenCount ?? 0) + 1, MAX_FULLSCREEN_UPSELL_COUNT);
   return ((I.upsellImpression = O), Hc(O, w), O);
 }
 async function Gc(w) {
   let I = getTuiTrialState();
-  if (I.persisted || a1e() !== "fullscreen") return !1;
+  if (I.persisted || getTuiTrialMode() !== "fullscreen") return !1;
   if (getInitialSettings().tui !== void 0)
     return (
       n(
@@ -6104,7 +6104,7 @@ async function ou(
   try {
     if (I.guard.refused()) return fDe;
     if (
-      !(await bGn(w.skillId, xe, w.requestedVersion, {
+      !(await downloadSkillArchive(w.skillId, xe, w.requestedVersion, {
         isBackground: !0,
         credentials: O,
       }))
@@ -6352,7 +6352,7 @@ async function xh(w, I, O) {
       let [He, Qe] = await Promise.all([
         roe.of(w).listEntries("skills"),
         a.CLAUDE_CODE_SYNC_SKILLS
-          ? i4e({ isBackground: !0, credentials: O })
+          ? fetchOrgSkills({ isBackground: !0, credentials: O })
           : null,
       ]);
       if (!He.success) $e = He;
@@ -6363,7 +6363,7 @@ async function xh(w, I, O) {
           success: !0,
           skills: rBt(He.entries.map(nu), Qe.skills, (Je) => Je.skillId, hu),
         };
-    } else $e = await i4e({ isBackground: !0, credentials: O });
+    } else $e = await fetchOrgSkills({ isBackground: !0, credentials: O });
     if (!$e.success) {
       xe.consecutiveFailedRounds++;
       let He = mwt($e);
@@ -8773,7 +8773,7 @@ async function sm(w) {
     if (ne) O = { ...ne, prePlanMode: "default" };
   }
   return (
-    hLt(O),
+    publishAdditionalWorkingDirectories(O),
     {
       toolPermissionContext: O,
       warnings: U,
@@ -8881,7 +8881,7 @@ async function cm(w) {
 var um = 10485760;
 async function* RJt() {
   try {
-    (process.stdin.setEncoding("utf8"), yield* oOn(process.stdin));
+    (process.stdin.setEncoding("utf8"), yield* iterateStreamUntilClose(process.stdin));
   } catch (w) {
     if (!isStdinUnusableError(w)) throw w;
     (n(`getInputPrompt: stream-json stdin unreadable: ${l(w)}`, {
@@ -11314,7 +11314,7 @@ ${getThemeColor("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}
           Date.now() - w.teamOnboardingLastUsedAt < 2592000000
         )
           return !1;
-        return zSe();
+        return isOnboardingGuideSharingEnabled();
       },
     },
   ],
@@ -11878,7 +11878,7 @@ function Hb(w, I, O) {
 }
 async function Xl(w, I, O, U) {
   if (w.version < Hb(I, O, U)) return "replayed_version";
-  if (w.version < (await x9n(I.cacheKey))) return "catalog_version_rollback";
+  if (w.version < (await getPublishedCatalogFloorVersion(I.cacheKey))) return "catalog_version_rollback";
   return;
 }
 var Gb = "tengu_delegated_quail",
@@ -13736,7 +13736,7 @@ ${Le}`);
   let It = I.disableSlashCommands || !1;
   HLn(It);
   let cn = s5n(I.autocompact, getInitialSettings().autoCompactWindow),
-    ln = dNe() ? I.worktree : void 0,
+    ln = isWorktreeModeEnabled() ? I.worktree : void 0,
     et = typeof ln === "string" ? ln : void 0,
     tt = ln !== void 0,
     He;
@@ -13744,7 +13744,7 @@ ${Le}`);
     let Le = f6t(et);
     if (Le !== null) ((He = Le), (et = void 0));
   }
-  let Qe = dNe() && I.tmux === !0;
+  let Qe = isWorktreeModeEnabled() && I.tmux === !0;
   if (Qe) {
     if (!tt) return cliError("Error: --tmux requires --worktree");
     if (getCurrentPlatform() === "windows")
@@ -15118,7 +15118,7 @@ ${so}`
   )
     LXn(Po, Aa, wo, me, Me);
   if (
-    (tWn(wo.alwaysAllowRules),
+    (logShellAllowRulesAtInit(wo.alwaysAllowRules),
     nKe(null, "initialization"),
     qC(),
     registerSession(me).then((Le) => {

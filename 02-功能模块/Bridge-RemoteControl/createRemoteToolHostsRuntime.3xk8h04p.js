@@ -170,7 +170,7 @@ import {
   FQt,
 } from "../远程工具执行/远程工具执行.6bj9ddx2.js";
 import "../AutoMode-自动模式/unattended-serving-consent.js";
-import { j6e } from "./chunk-etbwf1s8.js";
+import { ForwardedToolCallRegistry } from "./forwarded-tool-call-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
 import { REMOTE_APPROVAL_MESSAGES } from "./remote-approval-messages.js";
 import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
@@ -1193,7 +1193,7 @@ async function so({
   checkInTiming: p,
   askLapseMs: P,
 }) {
-  let R = r.toolState.get(j6e),
+  let R = r.toolState.get(ForwardedToolCallRegistry),
     w = P ?? pe(o.host, "max_ask_ms"),
     _ = R.begin({
       callId: s,

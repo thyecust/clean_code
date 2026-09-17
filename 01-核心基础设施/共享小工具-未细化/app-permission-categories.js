@@ -62,7 +62,7 @@ var r = new Set([
   p = new Set(["systemsettings.exe"]),
   u = ["windows.immersivecontrolpanel_"],
   g = new Set([...r, ...s, ...t]);
-function yGe(e) {
+function getAppPermissionCategory(e) {
   if (r.has(e)) return "shell";
   if (s.has(e)) return "filesystem";
   if (t.has(e)) return "system_settings";
@@ -75,6 +75,6 @@ function yGe(e) {
   return null;
 }
 function isKnownAppBundleId(e) {
-  return yGe(e) !== null;
+  return getAppPermissionCategory(e) !== null;
 }
-export { DEFAULT_GRANT_FLAGS, yGe, isKnownAppBundleId };
+export { DEFAULT_GRANT_FLAGS, getAppPermissionCategory, isKnownAppBundleId };

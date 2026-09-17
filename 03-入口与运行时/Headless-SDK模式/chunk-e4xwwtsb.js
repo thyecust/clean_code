@@ -81,7 +81,7 @@ import { u1e } from "../../01-核心基础设施/提示词-SystemPrompt/提示�
 import { N$e, wAt, TAt } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { s7e } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import { AsyncQueue } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
-import { d3e, p3e, RequestWithdrawnUnsentError, f3e } from "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
+import { ServingInstanceGoneError, RequestDeliveryUnknownError, RequestWithdrawnUnsentError, RequestNotDeliveredError } from "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import { isJsonRpcRequest } from "../../01-核心基础设施/共享小工具-未细化/sdk-mcp-transports.js";
 import { buildPendingActionDetail, markUserInteraction, isUserDrivenInbound, isHumanInputRequest } from "./chunk-yb7jadvp.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
@@ -1440,7 +1440,7 @@ class Fae {
       if (!d) continue;
       (this.outbound.enqueue({ type: "control_cancel_request", request_id: o }),
         this.pendingRequests.delete(o),
-        d.reject(new d3e(e)),
+        d.reject(new ServingInstanceGoneError(e)),
         r++);
     }
     return r;
@@ -1465,8 +1465,8 @@ class Fae {
       (this.pendingRequests.delete(o),
         d.reject(
           this.tracksRequestDelivery && l.delivery === "queued"
-            ? new f3e(e)
-            : new p3e(e),
+            ? new RequestNotDeliveredError(e)
+            : new RequestDeliveryUnknownError(e),
         ),
         r++);
     }

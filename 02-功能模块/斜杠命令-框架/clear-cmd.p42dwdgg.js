@@ -17,7 +17,7 @@ import "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dial
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import "../工具Glob-Grep-搜索/chunk-57axeagj.js";
-import "../工具WebFetch-WebSearch/chunk-1mxgbqzj.js";
+import "../工具WebFetch-WebSearch/clear-session-caches.js";
 import { clearConversation, hasAgentTaskSurvivingClear } from "../工具WebFetch-WebSearch/clear-conversation.js";
 import "../Teammates团队/agent-lifecycle.js";
 import "../权限系统/swarm-permission-poller.js";

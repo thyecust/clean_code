@@ -123,13 +123,13 @@ import { FK, bzt, Kk, nme, RD, Wg } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.v
 import { Wh, notePlanFileForgotten, getPlanFilePath, getPlan } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { isTeammateWakeupPrompt, getLastPeerDmSummary } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { sendMcpNotification } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { zs } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
+import { appStateStore } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
 import { CFC_TOOL_PREFIX } from "../ClaudeinChrome/claude-in-chrome-host.js";
 import { CHANNEL_PERMISSION_REQUEST_METHOD, findChannelEntry } from "../插件系统/channel-gate.js";
 import { logShellAllowRulesAdded } from "../../01-核心基础设施/设置-配置/shell-allow-rule-analytics.js";
-import { rWn, sanitizeAndTruncateText, oWn, sWn } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
+import { createProfanityFreeShortId, sanitizeAndTruncateText, truncateForPreview, findChannelPermissionServers } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import { getBrowserToolVerbPhrase } from "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
-import { gWn } from "../../01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js";
+import { getServerApprovalWatchProvider } from "../../01-核心基础设施/共享小工具-未细化/server-approval-watch-provider.js";
 import { getWsSubprotocols, MAX_SUBPROTOCOLS } from "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
 import { LAe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
@@ -1290,7 +1290,7 @@ var $qe = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-var so = rE(() => zs.autoDenyPresence);
+var so = rE(() => appStateStore.autoDenyPresence);
 async function Ie(e) {
   logEvent("tengu_unary_event", {
     event: fromEnum(e.event),
@@ -1691,9 +1691,9 @@ function uo(e) {
       q.addEventListener("abort", x, { once: !0 }));
   }
   if (D && !r.tool.requiresUserInteraction?.()) {
-    let I = rWn(r.toolUseID),
+    let I = createProfanityFreeShortId(r.toolUseID),
       q = ym(),
-      U = sWn(
+      U = findChannelPermissionServers(
         r.toolUseContext.getMcp().clients,
         (B) => findChannelEntry(B, q) !== void 0,
         (B) => D.isServerRegistered(B),
@@ -1703,7 +1703,7 @@ function uo(e) {
         request_id: I,
         tool_name: r.tool.name,
         description: sanitizeAndTruncateText(Zhe(o)),
-        input_preview: oWn(s),
+        input_preview: truncateForPreview(s),
       };
       for (let K of U) {
         if (K.type !== "connected") continue;
@@ -1747,7 +1747,7 @@ function uo(e) {
     }
   }
   let j = t.serverApprovalWatch,
-    N = j ? gWn() : null,
+    N = j ? getServerApprovalWatchProvider() : null,
     G =
       j && N?.isEnabled()
         ? N.createObserver(

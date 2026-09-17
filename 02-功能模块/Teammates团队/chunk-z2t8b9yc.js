@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 var SCHEDULE_WAKEUP_TOOL_NAME = "ScheduleWakeup",
-  sCe = "<<autonomous-loop>>",
+  AUTONOMOUS_LOOP_SENTINEL = "<<autonomous-loop>>",
   AUTONOMOUS_LOOP_DYNAMIC_SENTINEL = "<<autonomous-loop-dynamic>>",
   t = `Schedule when to resume work in /loop dynamic mode \u2014 the user invoked /loop without an interval, asking you to self-pace iterations of a specific task.
 
 Do NOT schedule a short-interval wakeup to poll for background work you started \u2014 when harness-tracked work finishes, you are re-invoked automatically, so polling is wasted. Instead schedule a long fallback (1200s+) so the loop survives if the work hangs or never notifies. The exception is external work the harness cannot track (a CI run, a deploy, a remote queue) \u2014 there, pick a delay matched to how fast that state actually changes.
 
 Pass the same /loop prompt back via \`prompt\` each turn so the next firing repeats the task. For an autonomous /loop (no user prompt), pass the literal sentinel \`${"<<autonomous-loop-dynamic>>"}\` as \`prompt\` instead \u2014 the runtime resolves it back to the autonomous-loop instructions at fire time. (There is a similar \`${"<<autonomous-loop>>"}\` sentinel for CronCreate-based autonomous loops; do not confuse the two \u2014 ${"ScheduleWakeup"} always uses the \`-dynamic\` variant.) To end the loop, call this tool with \`stop: true\` (omit every other field) \u2014 the loop ends immediately and no further wakeups fire.`;
-function iZn(e) {
+function buildScheduleWakeupPrompt(e) {
   return `${t}
 
 ${'Set `noop: true` if nothing changed \u2014 you checked and there\'s nothing to report ("no change", "still waiting", "quiet hold"). Set `noop: false` if something happened worth keeping \u2014 you edited a file, posted a message, advanced state, or surfaced a finding. Consecutive `noop: true` ticks are collapsed in the user\'s terminal view and tracked as a streak, so long quiet holds stay legible to the user without scrolling. Omit `noop` when stopping (`stop: true`).'}
@@ -64,11 +64,11 @@ ${`## The reason field
 One short sentence on what you chose and why. Goes to telemetry and is shown back to the user. "watching CI run" beats "waiting." The user reads this to understand what you're doing without having to predict your cadence in advance \u2014 make it specific.`}
 `;
 }
-var aZn =
+var SCHEDULE_WAKEUP_TOOL_DESCRIPTION =
   "Schedule when to resume work in /loop dynamic mode (always pass the `prompt` arg unless stopping). Call before ending the turn to keep the loop alive; call with `stop: true` to end the loop immediately.";
 var TASK_LIST_TOOL_NAME = "TaskList";
 var TASK_STOP_TOOL_NAME = "TaskStop",
-  lZn = `
+  TASK_STOP_TOOL_PROMPT = `
 - Stops a running background task by its ID
 - Takes a task_id parameter identifying the task to stop
 - To stop an agent-team teammate, pass its agent ID ("name@team") or bare teammate name as task_id
@@ -76,4 +76,4 @@ var TASK_STOP_TOOL_NAME = "TaskStop",
 - Returns a success or failure status
 - Use this tool when you need to terminate a long-running task
 `;
-export { SCHEDULE_WAKEUP_TOOL_NAME, sCe, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, iZn, aZn, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME, lZn };
+export { SCHEDULE_WAKEUP_TOOL_NAME, AUTONOMOUS_LOOP_SENTINEL, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, buildScheduleWakeupPrompt, SCHEDULE_WAKEUP_TOOL_DESCRIPTION, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME, TASK_STOP_TOOL_PROMPT };

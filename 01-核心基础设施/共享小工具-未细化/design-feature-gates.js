@@ -19,7 +19,7 @@ function isDesignSyncEnabled() {
   return H(e, !1);
 }
 var r = "tengu_omelette_grant_watch";
-function u6n() {
+function isDesignGrantWatchEnabled() {
   return H(r, !1);
 }
-export { isDesignSyncEnabled, u6n };
+export { isDesignSyncEnabled, isDesignGrantWatchEnabled };

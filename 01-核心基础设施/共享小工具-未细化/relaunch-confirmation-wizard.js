@@ -16,7 +16,7 @@ import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "./chunk-2c9tjhwd.js";
 F();
-function rWe(k) {
+function RelaunchConfirmationWizard(k) {
   let n = _(17),
     { Wizard: u, cancelledEvent: v, onDone: C } = k,
     g = uE(),
@@ -93,4 +93,4 @@ function rWe(k) {
   else l = n[16];
   return l;
 }
-export { rWe };
+export { RelaunchConfirmationWizard };

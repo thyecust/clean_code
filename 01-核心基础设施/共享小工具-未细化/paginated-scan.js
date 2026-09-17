@@ -26,7 +26,7 @@ async function runPaginatedScan(e, r, t) {
 function createPageBudget(e = 1e4) {
   return { pagesLeft: e, capped: 0 };
 }
-function $cr(e, r) {
+function classifyScanOutcome(e, r) {
   if (e.status === "error") return "error";
   if (e.status === "capped")
     return (r.capped++, r.capped === 1 ? "first-truncation" : void 0);
@@ -35,4 +35,4 @@ function $cr(e, r) {
 function getAdditionalTruncationCount(e) {
   return Math.max(0, e.capped - 1);
 }
-export { DEFAULT_MAX_PAGES, runPaginatedScan, createPageBudget, $cr, getAdditionalTruncationCount };
+export { DEFAULT_MAX_PAGES, runPaginatedScan, createPageBudget, classifyScanOutcome, getAdditionalTruncationCount };

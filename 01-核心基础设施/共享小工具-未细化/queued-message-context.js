@@ -14,11 +14,11 @@ import { Qt, De, F } from "../../00-第三方库/_未识别/React运行时-JSX/R
 F();
 F();
 var t = Qt(void 0);
-function w0e() {
+function useQueuedMessageContext() {
   return De(t);
 }
 var l = 2;
-function pOt(y) {
+function QueuedMessageProvider(y) {
   let c = _(10),
     { isFirst: u, useBriefLayout: M, selectionHighlight: a, children: s } = y,
     n = M ? 0 : l;
@@ -48,4 +48,4 @@ function pOt(y) {
   else Q = c[9];
   return Q;
 }
-export { w0e, pOt };
+export { useQueuedMessageContext, QueuedMessageProvider };

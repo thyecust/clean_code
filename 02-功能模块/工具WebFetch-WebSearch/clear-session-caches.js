@@ -34,7 +34,7 @@ import { YSn } from "../../01-核心基础设施/提示词-SystemPrompt/提示�
 import { globalFileIndexCache, resetFileIndexCache } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { GoalProposalState } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-state.js";
 import { clearSwarmPermissions } from "../权限系统/swarm-permission-poller.js";
-function brn(t, r = new Set(), i, o, l, m = !1) {
+function clearSessionCaches(t, r = new Set(), i, o, l, m = !1) {
   let a = r.size > 0;
   if ((EXn(t), clearIsGitMemoFor(t), YSn.of(t).clear(), resetFileIndexCache(globalFileIndexCache), clearCommandsCache(), yVn(r), jrt(null), !a))
     lfn.peek(t)?.clear();
@@ -48,7 +48,7 @@ function brn(t, r = new Set(), i, o, l, m = !1) {
     Vxt(pa()),
     !m)
   )
-    pLt();
+    dropBashPromptSkillListingPin();
   if (
     (L_n(t, "session_start"),
     sV.of(t).reset(),
@@ -85,10 +85,10 @@ function brn(t, r = new Set(), i, o, l, m = !1) {
     e(),
   );
 }
-function pLt() {
+function dropBashPromptSkillListingPin() {
   let t = getSessionFeatureCache();
   ((t.bashPromptSkillCommands = void 0),
     (t.workflowAuthoringSkillAvailable = void 0),
     T5());
 }
-export { brn, pLt };
+export { clearSessionCaches, dropBashPromptSkillListingPin };

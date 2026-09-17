@@ -86,7 +86,7 @@ function handleStreamGoneErrors(e, t) {
     }
   });
 }
-function nOn(e) {
+function registerProcessIOErrorHandlers(e) {
   (handleStreamGoneErrors(process.stdin, (t) => e("stdin", t)),
     handleStreamGoneErrors(process.stdout, (t) => e("stdout", t)),
     process.stdout.on("error", () => {
@@ -187,14 +187,14 @@ async function drainStdoutBeforeExit(e = 2000, { scaleBudgetToQueue: t = !0 } = 
   let r = Promise.all([n, o.fullyFlushed()]);
   await withTimeout(
     t ? Promise.race([r, k(e)]) : r,
-    t ? wXt(e) : e,
+    t ? getStdoutDrainBudgetMs(e) : e,
     "stdout drain timeout (exit)",
   ).catch(() => {});
 }
 function markStdoutDrainExternallyClocked() {
   o.markExternallyClocked();
 }
-function rOn() {
+function isExitExternallyClocked() {
   return o.isExternallyClocked();
 }
 function k(e) {
@@ -202,11 +202,11 @@ function k(e) {
 }
 var _ = 262144,
   w = 30000;
-function bXt() {
+function outstandingStdoutBytes() {
   return o.outstandingBytes();
 }
-function wXt(e = 2000) {
-  return Math.min(w, Math.max(e, Math.ceil((bXt() * 1000) / _)));
+function getStdoutDrainBudgetMs(e = 2000) {
+  return Math.min(w, Math.max(e, Math.ceil((outstandingStdoutBytes() * 1000) / _)));
 }
 function writeToStderr(e) {
   v(process.stderr, e);
@@ -233,7 +233,7 @@ function peekForStdinData(e, t) {
     (e.once("end", s), e.once("close", s), e.once("data", d));
   });
 }
-async function* oOn(e) {
+async function* iterateStreamUntilClose(e) {
   if (e.readableEnded || e.destroyed) return;
   let t = Symbol("stream-closed"),
     n = !1,
@@ -266,15 +266,15 @@ export {
   readAndClearBgExitDetail,
   isStdinUnusableError,
   handleStreamGoneErrors,
-  nOn,
+  registerProcessIOErrorHandlers,
   writeToStdout,
   drainStdoutBeforeExit,
   markStdoutDrainExternallyClocked,
-  rOn,
-  bXt,
-  wXt,
+  isExitExternallyClocked,
+  outstandingStdoutBytes,
+  getStdoutDrainBudgetMs,
   writeToStderr,
   exitWithError,
   peekForStdinData,
-  oOn,
+  iterateStreamUntilClose,
 };

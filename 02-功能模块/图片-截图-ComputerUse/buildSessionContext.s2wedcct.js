@@ -13,7 +13,7 @@ import "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
 import "../MCP客户端/mcp-server.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { oPe } from "./chunk-1c6fx285.js";
+import { COMPUTER_USE_APPROVAL_DIALOG } from "./computer-use-approval-dialog.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { checkComputerUseLock, acquireComputerUseLock, isComputerUseActiveThisTurn, markComputerUseActiveThisTurn, getComputerUseLockOwner } from "./computer-use-lock.js";
 import { getComputerUseSession, registerComputerUseEscapeHotkey } from "./computer-use-session.js";
@@ -280,6 +280,6 @@ async function U(t) {
   let e = p(),
     r = e.requestDialog;
   if (!r) return { granted: [], denied: [], flags: DEFAULT_GRANT_FLAGS };
-  return r(oPe, t, { signal: e.abortController.signal });
+  return r(COMPUTER_USE_APPROVAL_DIALOG, t, { signal: e.abortController.signal });
 }
 export { buildSessionContext, getComputerUseMCPToolOverrides };

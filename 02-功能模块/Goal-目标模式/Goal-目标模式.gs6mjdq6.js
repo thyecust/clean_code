@@ -22,7 +22,7 @@ import { isGoalClearKeyword, getGoalGateError } from "../Skills技能/chunk-sapy
 import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import { t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { _dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ch1x7wx1.js";
+import { isProposeGoalEnabled } from "../../01-核心基础设施/共享小工具-未细化/propose-goal-feature-gate.js";
 import { GoalProposalState } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-state.js";
 import { collapseNewlines, truncateForDisplay } from "../../01-核心基础设施/共享小工具-未细化/text-truncation.js";
 import { PROPOSE_GOAL_TOOL_NAME, PROPOSE_GOAL_MAX_CONDITION_CHARS, PROPOSE_GOAL_TOOL_DESCRIPTION, PROPOSE_GOAL_TOOL_PROMPT } from "../../01-核心基础设施/共享小工具-未细化/propose-goal-tool.js";
@@ -72,7 +72,7 @@ var ProposeGoalTool = buildTool({
   isEnabled() {
     if (ke() || Nn()) return !1;
     if (isBgSession()) return !1;
-    if (!_dt()) return !1;
+    if (!isProposeGoalEnabled()) return !1;
     let e = getModelProposedGoalsSettingParsed();
     if (e === "disabled") return !1;
     return (E(e), !0);

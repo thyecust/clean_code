@@ -14,7 +14,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { getThemeStore, getCachedCustomThemes, parseCustomThemeRef, loadCustomThemes, watchCustomThemes } from "./custom-themes.js";
 import { resolveSetting, saveUserIntentSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { resolveSystemTheme, hOe } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
+import { resolveSystemTheme, subscribeSystemThemeChange } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
 import { Qt, re, De, E, V, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -96,7 +96,7 @@ function ThemeProvider(Pt) {
       if (m !== "auto") {
         return;
       }
-      return (I(resolveSystemTheme()), hOe(() => I(resolveSystemTheme())));
+      return (I(resolveSystemTheme()), subscribeSystemThemeChange(() => I(resolveSystemTheme())));
     }),
       (Ue = [m]),
       (r[15] = m),

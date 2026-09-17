@@ -11,16 +11,16 @@ import { importMetaRequire } from "./chunk-2c9tjhwd.js";
 import { userInfo } from "os";
 var t = "com.anthropic.claudecode",
   HKLM_POLICY_REGISTRY_PATH = "HKLM\\SOFTWARE\\Policies\\ClaudeCode",
-  yRt = "HKCU\\SOFTWARE\\Policies\\ClaudeCode",
+  HKCU_POLICY_REGISTRY_PATH = "HKCU\\SOFTWARE\\Policies\\ClaudeCode",
   SETTINGS_REGISTRY_VALUE_NAME = "Settings",
   PLUTIL_BINARY_PATH = "/usr/bin/plutil",
   PLUTIL_TO_JSON_ARGS = ["-convert", "json", "-o", "-", "--"],
   PLUTIL_LINT_ARGS = ["-lint", "-s", "--"],
   MDM_COMMAND_TIMEOUT_MS = 5000,
-  q5t = 2097152,
+  MDM_COMMAND_MAX_BUFFER_BYTES = 2097152,
   WSL_REG_EXE_PATH = "/mnt/c/Windows/System32/reg.exe",
   WSL_MANAGED_SETTINGS_DIR = "/mnt/c/Program Files/ClaudeCode";
-function xBe() {
+function isRunningOnWsl() {
   return !1;
 }
 function getManagedPreferencesPaths() {
@@ -42,4 +42,4 @@ function getManagedPreferencesPaths() {
     r
   );
 }
-export { HKLM_POLICY_REGISTRY_PATH, yRt, SETTINGS_REGISTRY_VALUE_NAME, PLUTIL_BINARY_PATH, PLUTIL_TO_JSON_ARGS, PLUTIL_LINT_ARGS, MDM_COMMAND_TIMEOUT_MS, q5t, WSL_REG_EXE_PATH, WSL_MANAGED_SETTINGS_DIR, xBe, getManagedPreferencesPaths };
+export { HKLM_POLICY_REGISTRY_PATH, HKCU_POLICY_REGISTRY_PATH, SETTINGS_REGISTRY_VALUE_NAME, PLUTIL_BINARY_PATH, PLUTIL_TO_JSON_ARGS, PLUTIL_LINT_ARGS, MDM_COMMAND_TIMEOUT_MS, MDM_COMMAND_MAX_BUFFER_BYTES, WSL_REG_EXE_PATH, WSL_MANAGED_SETTINGS_DIR, isRunningOnWsl, getManagedPreferencesPaths };

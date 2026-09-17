@@ -32,14 +32,14 @@ import { Szt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { recordDirectoryTrust, validateCdTarget, cdRuleRefusalMessage, relocateSession, reapplyProjectSettingsAfterTrustChange, withGatedGrantsApplied } from "../Memory-CLAUDE.md/chunk-br7dq41d.js";
 import {
-  jPt,
-  s0e,
-  i0e,
+  hasHookSettings,
+  collectAllowRules,
+  collectAdditionalDirectories,
   formatListWithAnd,
   hasOtelHeadersHelper,
   hasApiKeyHelper,
-  qPt,
-  zPt,
+  hasAwsAuthCommands,
+  hasGcpAuthCommand,
   hasProxyAuthHelper,
 } from "../状态栏-主题/trust-dialog-settings.js";
 import { PermissionDialogFrame } from "./permission-dialog.js";
@@ -60,8 +60,8 @@ function de(s, { backstop: a = !1 } = {}) {
 }
 function ge() {
   return {
-    allowRules: s0e(),
-    additionalDirectories: i0e(),
+    allowRules: collectAllowRules(),
+    additionalDirectories: collectAdditionalDirectories(),
     hookSources: [],
     commandHelperSources: [],
   };
@@ -97,16 +97,16 @@ function Oe(s) {
           ? v.flatMap((io) => Szt(io, S))
           : Szt(g[S] ?? null, S),
     },
-    i = (S) => hasApiKeyHelper(S) || qPt(S) || zPt(S) || hasOtelHeadersHelper(S) || hasProxyAuthHelper(S),
+    i = (S) => hasApiKeyHelper(S) || hasAwsAuthCommands(S) || hasGcpAuthCommand(S) || hasOtelHeadersHelper(S) || hasProxyAuthHelper(S),
     m = [],
     ae = [];
-  if (jPt(c)) m.push(".claude/settings.json");
-  if (v.some(jPt)) m.push(".claude/settings.local.json");
+  if (hasHookSettings(c)) m.push(".claude/settings.json");
+  if (v.some(hasHookSettings)) m.push(".claude/settings.local.json");
   if (i(c)) ae.push(".claude/settings.json");
   if (v.some(i)) ae.push(".claude/settings.local.json");
   return {
-    allowRules: s0e(G),
-    additionalDirectories: i0e(G),
+    allowRules: collectAllowRules(G),
+    additionalDirectories: collectAdditionalDirectories(G),
     hookSources: m,
     commandHelperSources: ae,
   };

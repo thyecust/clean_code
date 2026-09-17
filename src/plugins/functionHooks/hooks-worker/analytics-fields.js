@@ -28,7 +28,7 @@ function fromNumberOpt(n) {
 function concatSafe(...n) {
   return r(n.join(""));
 }
-function jHt(n) {
+function fromNumberArr(n) {
   return r(n.join(","));
 }
 function fromEnumArr(n) {
@@ -49,4 +49,4 @@ function agentTypeForAnalytics(n, t) {
 function pluginIdForAnalytics(n, t) {
   return t ? fromSanitizer(n) : fromLiteral("third-party");
 }
-export { fromLiteral, fromEnum, fromEnumOpt, fromNumber, fromNumberOpt, concatSafe, jHt, fromEnumArr, joinSafe, fromSanitizer, mcpNameForAnalytics, agentTypeForAnalytics, pluginIdForAnalytics };
+export { fromLiteral, fromEnum, fromEnumOpt, fromNumber, fromNumberOpt, concatSafe, fromNumberArr, fromEnumArr, joinSafe, fromSanitizer, mcpNameForAnalytics, agentTypeForAnalytics, pluginIdForAnalytics };

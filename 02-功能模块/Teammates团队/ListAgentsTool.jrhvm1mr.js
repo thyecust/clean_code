@@ -13,7 +13,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { isTeammateContext } from "./peer-target-guard.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { LIST_AGENTS_TOOL_NAME, jQn, getListAgentsToolDescription } from "./list-agents-tool-constants.js";
+import { LIST_AGENTS_TOOL_NAME, LIST_AGENTS_TOOL_ALIAS, getListAgentsToolDescription } from "./list-agents-tool-constants.js";
 import { s, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var h = 1e4,
   d = createLazyValue(() =>
@@ -33,7 +33,7 @@ var h = 1e4,
   ),
   ListAgentsTool = buildTool({
     name: LIST_AGENTS_TOOL_NAME,
-    aliases: [jQn],
+    aliases: [LIST_AGENTS_TOOL_ALIAS],
     searchHint: "list agents you can SendMessage to",
     maxResultSizeChars: h,
     toAutoClassifierInput() {

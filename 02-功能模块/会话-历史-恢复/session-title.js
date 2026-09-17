@@ -22,7 +22,7 @@ import { Ew, F$e } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var p = 1000,
   f = 10;
-function xBn() {
+function isSessionTitleGenerationDisabled() {
   return isEssentialTrafficOnly() || a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE;
 }
 function syncTitleToRemoteSession(r, l) {
@@ -133,4 +133,4 @@ async function generateSessionTitle(r, l, o) {
     );
   }
 }
-export { xBn, syncTitleToRemoteSession, findFirstUserPrompt, collectConversationText, generateSessionTitle };
+export { isSessionTitleGenerationDisabled, syncTitleToRemoteSession, findFirstUserPrompt, collectConversationText, generateSessionTitle };

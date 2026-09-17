@@ -21,7 +21,7 @@ import { parseConfigShorthand, applyConfigShorthand, collapseShorthandResultOffB
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/设置-配置/fast-mode.js";
 import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ch1x7wx1.js";
+import "../../01-核心基础设施/共享小工具-未细化/propose-goal-feature-gate.js";
 async function p(n, o) {
   let t = n.trim(),
     e = t.toLowerCase();

@@ -31,15 +31,15 @@ function f() {
 function fireDeadProbeAdoptTick(e) {
   f().fire(e);
 }
-async function y9e(e) {
+async function getProcessStartTimeTicksAsync(e) {
   return null;
 }
 async function killIfSameProcess(e, t, r) {
   if (r !== void 0) {
     if ((await getProcessStartTimeAsync(e, { skipCache: !0 })) !== r) return;
   } else if (t !== void 0) {
-    if ((fireDeadProbeAdoptTick("kill_gate"), (await y9e(e)) !== t)) return;
+    if ((fireDeadProbeAdoptTick("kill_gate"), (await getProcessStartTimeTicksAsync(e)) !== t)) return;
   } else return;
   await killProcessTree(e, "SIGTERM").catch(() => {});
 }
-export { fireDeadProbeAdoptTick, y9e, killIfSameProcess };
+export { fireDeadProbeAdoptTick, getProcessStartTimeTicksAsync, killIfSameProcess };

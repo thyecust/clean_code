@@ -34,7 +34,7 @@ function u(e, r = 0) {
     );
   return e;
 }
-function v1e(e, r) {
+function createToolCallInputFingerprint(e, r) {
   let o = z(b(r));
   return createToolCallFingerprint(e, o);
 }
@@ -163,7 +163,7 @@ async function sendPermissionResponseToWorker(e, r, o, s, i, a) {
     );
   }
 }
-function yZn() {
+function createSandboxPermissionRequestId() {
   return `sandbox-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 }
 async function sendSandboxPermissionRequestToLeader(e, r, o, s) {
@@ -253,4 +253,4 @@ async function sendSandboxPermissionResponseToWorker(e, r, o, s, i, a) {
     );
   }
 }
-export { createToolCallFingerprint, v1e, createPermissionRequest, isTeammateWorker, sendPermissionRequestToLeader, sendPermissionResponseToWorker, yZn, sendSandboxPermissionRequestToLeader, sendSandboxPermissionResponseToWorker };
+export { createToolCallFingerprint, createToolCallInputFingerprint, createPermissionRequest, isTeammateWorker, sendPermissionRequestToLeader, sendPermissionResponseToWorker, createSandboxPermissionRequestId, sendSandboxPermissionRequestToLeader, sendSandboxPermissionResponseToWorker };

@@ -195,7 +195,7 @@ import {
   aon,
   lon,
 } from "./chunk-5wa92x7d.js";
-import { kGe } from "../认证-OAuth登录/chunk-3wfaaze4.js";
+import { generatePkceChallenge } from "../认证-OAuth登录/pkce-challenge.js";
 import { hce } from "../../00-第三方库/_未识别/第三方库-Nodepolyfill/chunk-5y6047zm.js";
 import { RGe } from "../../00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js";
 import {
@@ -12368,7 +12368,7 @@ async function Frn(
         `Incompatible auth server: does not support code challenge method ${hs}`,
       );
   } else u = new URL("/authorize", e);
-  let l = await kGe(),
+  let l = await generatePkceChallenge(),
     { code_verifier: d, code_challenge: m } = l;
   if (
     (u.searchParams.set("response_type", ds),
