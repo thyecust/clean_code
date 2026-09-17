@@ -31,3 +31,14 @@ jobs:
       # 这一步依赖运行时环境，若在 CI 里不稳就直接去掉这个参数。
       - name: 解析 / 依赖边 / 导出面 / 单独入口
         run: bun .analysis/check-imports.mjs --runtime
+
+      # 上面那条只看 .js 之间的引用，看不见索引与磁盘脱节。
+      # 实测已经脱节过一次：file-map.json 里某条记录的 path 指向一个早已改名的文件。
+      - name: 索引与磁盘一致
+        run: bun .analysis/move/check-index.mjs
+
+      # 两类懒加载的解析基准，上面那条的正则都覆盖不到：
+      # `importMetaRequire("./x")` 相对捕获 import.meta.require 的模块所在目录解析（不是调用方）；
+      # `readEmbeddedAsset*("./x", import.meta.dirname)` 是普通字符串字面量，根本不是 import。
+      - name: 懒加载解析基准
+        run: bun .analysis/move/check-lazy-base.mjs
