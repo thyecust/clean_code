@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { isSemverAtLeast, isSemverAtMost } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

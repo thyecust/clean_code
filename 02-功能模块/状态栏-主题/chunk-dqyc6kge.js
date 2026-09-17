@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { mp } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isSimpleMode, isSafeMode } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode, isSafeMode } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 var t = {
     claudeMd: !0,

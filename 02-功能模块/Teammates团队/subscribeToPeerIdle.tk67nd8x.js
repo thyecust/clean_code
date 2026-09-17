@@ -12,7 +12,7 @@
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { buildUdsAddress, isSchemeQualifiedAddress, isPeerReplyAllowed, getCanonicalSocketPath, NOTIFY_IDLE_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { createMessageEnvelope } from "../远程控制-Bridge/bridge-state-containers.js";
 import { classifySendFailure, formatStaleSocketHint, formatBusySocketHint, isRetryableSendError, sendStampedControlToUdsSocket, registeredLivePeerForSocket, ownMessagingSocket } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 import { getCurrentUid } from "../后台任务-Shell管理/chunk-djserjj5.js";

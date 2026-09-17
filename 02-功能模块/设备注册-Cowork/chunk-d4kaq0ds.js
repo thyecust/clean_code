@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getClaudeAIOAuthTokenOriginAsync, getStoredOauthAccountInfo } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 function compareAccountUuids({ storedAccountUuid: t, hostAccountUuid: e }) {
   if (!e)
     return t

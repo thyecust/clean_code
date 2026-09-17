@@ -14,7 +14,7 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { preclassifyStatusFromMarkers } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCanonicalSocketPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isCrossSessionMessagingEnabled } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
 import { getMainThreadQueueLength, enqueueCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";

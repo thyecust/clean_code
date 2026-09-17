@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 12 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { writeFileAtomicSync } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
-import { parseNumericValue } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseNumericValue } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { isBunStandaloneExecutable, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { readSocketTokenFile, timingSafeStringEqual } from "../守护服务-Daemon/chunk-035vf5et.js";

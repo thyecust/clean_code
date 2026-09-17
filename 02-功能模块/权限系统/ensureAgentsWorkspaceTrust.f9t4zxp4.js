@@ -67,7 +67,7 @@ async function ensureAgentsWorkspaceTrust(r, i, o) {
       ] = await Promise.all([
         import("../../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
         import("../计划模式-Plan/计划模式-Plan.e5mh1avy.js"),
-        import("../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js"),
+        import("../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js"),
         import("../../01-核心基础设施/设置-配置/chunk-22525f7p.js"),
       ]);
       (m({ preservePendingExposures: !0 }), u().catch(d), l(o), g());

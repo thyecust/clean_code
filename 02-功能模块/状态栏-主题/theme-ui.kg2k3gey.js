@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 244 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { getSafeModeExitHint } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getSafeModeExitHint } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getThemePalette, isValidThemeColorValue } from "./chunk-jz6b76hr.js";

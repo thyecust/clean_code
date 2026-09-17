@@ -12,7 +12,7 @@ import { Le } from "../lodash/lodash.207999qb.js";
 import { logFeatureOk, logFeatureSad } from "../lodash/lodash.0vqzb8ad.js";
 import { getSanitizedToolName } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { findToolByName, isBatchToolDefinition } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 var x = new j(() => new Set());
 function T(e, r) {

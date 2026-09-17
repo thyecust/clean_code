@@ -12,7 +12,7 @@ import { withTimeout } from "../核心工具-并发与缓存/async-timeout-utils
 import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { CLEANUP_DRAIN_TIMEOUT_MS, drainCleanup, drainPreExitFlush, changeWorkingDirectory, flushDebugLogs, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PROCESS_WRAPPER_ENV_VAR, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "./process-wrapper-launcher.js";
 import { flushDiagnostics } from "../核心工具-日志与脱敏/diagnostics-log.js";

@@ -19,7 +19,7 @@ import {
   LOCAL_COMMAND_TAGS,
   TICK_TAG,
   HARNESS_ENVELOPE_TAGS,
-} from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+} from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, truncateToCodePoints, truncateToCodeUnits, toWellFormed } from "../核心工具-字符串与文本/string-utils.js";

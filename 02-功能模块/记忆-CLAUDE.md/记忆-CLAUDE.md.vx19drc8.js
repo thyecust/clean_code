@@ -52,7 +52,7 @@ import { sleep, withTimeout } from "../../01-核心基础设施/核心工具-并
 import { Ve, R, l, A, W, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { describeStorageError, jsonStringify, jsonParse, hasUnverifiableAncestry, resolveSymlinkAncestrySync, resolvePathInfo, expandPathAliases, fsSurface, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, isSafeMode } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, isSafeMode } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { truncateToCodeUnits, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
@@ -60,7 +60,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { getProfileStoreDenyPaths } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getGlobalClaudeFile, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { isEssentialTrafficOnly, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import {
   getModelForAnalytics,
   getOwnValue,
@@ -164,12 +164,12 @@ import {
   unescapeGlobSpecials,
   parsePermissionRule,
   formatPermissionRule,
-} from "../工具Bash-Shell/permission-rule-parsing.js";
+} from "../权限系统/permission-rule-parsing.js";
 import { WSL_MANAGED_SETTINGS_DIR } from "../../01-核心基础设施/核心工具-路径与平台/mdm-policy-paths.js";
 import { strip1mSuffix, isSameModelName, modelHasCapability, usesFirstPartyModelIds, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
-import { stripDefaultIgnorableCharacters, isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { stripDefaultIgnorableCharacters, isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { stringifyYaml, MAX_FILE_READ_LINES, MAX_FILE_READ_BYTES, parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
 import { getAllPluginRootDirs, ATTRIBUTION_SIDECAR_SUFFIX, isPluginCommandProducerDir } from "../插件系统/plugin-system-core.js";
 import { isWorkshopFile } from "../图表-Mermaid/chunk-743atbtj.js";

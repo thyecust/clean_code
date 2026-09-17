@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 264 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { hashForTelemetry } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { qP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isSimpleMode, isSafeMode } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode, isSafeMode } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { redactSecretsFromText } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isCrossSessionMessagingEnabled } from "../../02-功能模块/跨会话消息-UDS/chunk-rfb3s38d.js";

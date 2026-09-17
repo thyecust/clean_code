@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { BASH_STDOUT_TAG, BASH_STDERR_TAG, BASH_EXIT_CODE_TAG } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { BASH_STDOUT_TAG, BASH_STDERR_TAG, BASH_EXIT_CODE_TAG } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { execFileNoThrowWithCwd } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";

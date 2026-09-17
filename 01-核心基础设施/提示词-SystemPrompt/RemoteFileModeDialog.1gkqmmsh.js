@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 248 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "./chunk-27ncq5fr.js";
 import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";

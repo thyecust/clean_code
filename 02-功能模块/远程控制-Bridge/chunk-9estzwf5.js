@@ -10,7 +10,7 @@
 import { ns, fv, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
-import { isSimpleMode } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import {
   isSemverLessThan,
@@ -32,13 +32,13 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isDebugMode, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getTelemetryDisabledEnvVar } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getTelemetryDisabledEnvVar } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getMergedSettings } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
 import { getComplianceTaints } from "../../01-核心基础设施/核心工具-未归类/compliance-taints-store.js";
 import { THIRD_PARTY_PROVIDER_LABELS, THIRD_PARTY_PROVIDER_ENV_VARS, getAPIProvider, isFirstPartyProvider, getSecondaryProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { formatComplianceTaintLabel, getNameableComplianceTaints, formatPolicyDeniedMessage, policyCacheMissMessage, policyRouteMissingMessage } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { getPolicyCacheRevision, isPolicyLimitsEligible, isPolicyAllowed, isPolicyRouteMissing, hasNameableComplianceTaint, getPolicyDefault, getResponseFromCache } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { getPolicyCacheRevision, isPolicyLimitsEligible, isPolicyAllowed, isPolicyRouteMissing, hasNameableComplianceTaint, getPolicyDefault, getResponseFromCache } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE, REMOTE_CONTROL_POLICY_UNVERIFIABLE_MESSAGE } from "./remote-control-policy-messages.js";
 function isBridgeFirstParty() {
   if (!isFirstPartyProvider()) return !1;

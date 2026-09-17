@@ -48,7 +48,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { SHA256_HEX_REGEX, hashSha256, GITHUB_HOST } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
-import { containsWildcard, matchesToolNameGlob, parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { containsWildcard, matchesToolNameGlob, parsePermissionRule } from "../权限系统/permission-rule-parsing.js";
 import { REMOTE_DEVICES_MCP_SERVER_NAME, REMOTE_DEVICE_BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseMcpToolName, buildMcpToolName, TOOL_RULE_VALIDATION, validatePermissionRule, getSettingsSchema, sortObjectKeysDeep } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";

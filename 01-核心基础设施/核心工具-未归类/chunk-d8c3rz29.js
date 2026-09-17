@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { matchesWildcardPattern } from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
+import { matchesWildcardPattern } from "../../02-功能模块/权限系统/permission-rule-parsing.js";
 import { parseArtifactUrl, canonicalizeArtifactUrlInput, parseArtifactUrlInput, artifactViewerUrlSpellings, artifactContentOriginUrlFor } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 var y = /^([A-Za-z][A-Za-z0-9+.-]*):\/\/([^/?#]*)(.*)$/;
 function _(e) {

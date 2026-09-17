@@ -16,11 +16,11 @@ import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash
 import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getModelProposedGoalsSettingParsed, getModelProposedGoalsSetting } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isGoalClearKeyword, getGoalGateError } from "../Skills技能/chunk-sapykxw7.js";
 import { GOAL_PROPOSAL_DIALOG } from "./goal-proposal-dialog.js";
-import { sanitizePlainText } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { sanitizePlainText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isProposeGoalEnabled } from "./propose-goal-feature-gate.js";
 import { GoalProposalState } from "./goal-proposal-state.js";

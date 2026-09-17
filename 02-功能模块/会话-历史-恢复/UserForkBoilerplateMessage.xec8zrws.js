@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 110 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { FORK_BOILERPLATE_TAG, DIRECTIVE_PREFIX } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { FORK_BOILERPLATE_TAG, DIRECTIVE_PREFIX } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { FORK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";

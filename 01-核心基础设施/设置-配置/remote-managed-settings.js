@@ -13,13 +13,13 @@ import { isHoverRestEnabled } from "../核心工具-路径与平台/chunk-h62vxw
 import { sleep, withTimeout, withDeadline } from "../核心工具-并发与缓存/async-timeout-utils.js";
 import { getInkInstanceRegistry } from "../../02-功能模块/多会话视图-Fleet/ink-instance-registry.js";
 import { emitExitMessage, gracefulShutdownSync, isShuttingDown, settingsChangeDetector, setPolicyColdStartWaiter } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getClaudeConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "./chunk-5ndhfaq9.js";
 import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { lit as S } from "../遥测-OpenTelemetry/analytics-fields.js";
 import { l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, registerCleanup, jsonStringify, jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import {
   getUrlHostname,

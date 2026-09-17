@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 270 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { OAuthLoginScreen as V8 } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import "../认证-OAuth登录/oauth-login-completion.js";
+import { OAuthLoginScreen as V8 } from "./chunk-xvt7fc9t.js";
+import "./oauth-login-completion.js";
 import "../../01-核心基础设施/核心工具-未归类/authentication-status-box.js";
 import "../模型接入-Bedrock-Vertex/bedrock-setup-wizard.js";
 import "../模型接入-Bedrock-Vertex/vertex-setup-wizard.js";
@@ -34,6 +34,6 @@ import "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";
 import "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import "../../01-核心基础设施/UI组件-TUI/one-shot-render.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
-import "../认证-OAuth登录/console-profile-auth.js";
-import "../认证-OAuth登录/oauth-login-flow.js";
+import "./console-profile-auth.js";
+import "./oauth-login-flow.js";
 export { V8 as ConsoleOAuthFlow };

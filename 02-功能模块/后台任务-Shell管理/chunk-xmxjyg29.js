@@ -12,7 +12,7 @@ import { Ie, zn, An, pl, ac, li, BL } from "../../00-第三方库/lodash/lodash.
 import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { readBoundedFile, sanitizeSessionName, ownStoredLoginPlanAttributes, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isRestrictedMode } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isRestrictedMode } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { le, Zt, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -21,7 +21,7 @@ import { R, l, A, Jr, H_e, I_e, WHt, Gw, Jg, W } from "../../00-第三方库/@an
 import { describeStorageError, jsonStringify, jsonParse, UNVERIFIED_ANCESTRY_SENTINEL, resolveSymlinkTargetSync, getFsSurface, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isStdinUnusableError, peekForStdinData } from "./chunk-z5vtnzjg.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, beforeFirst, normalizeWhitespace, stripAnsiAndControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logEvent, logEventAsync } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
@@ -122,7 +122,7 @@ import { controlRequest, openDaemonLease, subscribeControl } from "../守护服�
 import { getLauncherConfigError, getLauncherErrorMessage, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { createDecModeTracker, isLowMemory, killPtySocket } from "./chunk-gnmy62vg.js";
 import { getDaemonLockPath, getVerifiedDaemonLock, stopDaemonLockHolder, describeStopFailure, describeUnknownOriginLock } from "./daemon-lock.js";
-import { policyDeniedReason } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { policyDeniedReason } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import {
   parsePastedPlaceholders,
   findAgentByType,

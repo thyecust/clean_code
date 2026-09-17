@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isRecent } from "./recent-window.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { render } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getBaseRenderOptions } from "../UI组件-TUI/base-render-options.js";
 import { AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";

@@ -10,26 +10,26 @@
 import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS, SETUP_TOKEN_DEFAULT_EXPIRY_DAYS } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { writeToStdout } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS, SETUP_TOKEN_DEFAULT_EXPIRY_DAYS } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { writeToStdout } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { getMaxOutputTokens, isAnthropicAuthEnabled, validateForceLoginMethod } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMaxOutputTokens, isAnthropicAuthEnabled, validateForceLoginMethod } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
-import { getBridgeDoctorInfo } from "../远程控制-Bridge/chunk-9estzwf5.js";
+import { getBridgeDoctorInfo } from "../../02-功能模块/远程控制-Bridge/chunk-9estzwf5.js";
 import { Box, Text, createRoot } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-4f55jpqh.js";
-import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { resolveCappedConfigInteger, MAX_BASH_OUTPUT_CHARS, DEFAULT_BASH_OUTPUT_CHARS, TASK_MAX_OUTPUT_LENGTH_UPPER_LIMIT, DEFAULT_TASK_MAX_OUTPUT_LENGTH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { handleReplAppStateChange, partitionSettingsErrors } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { getInstallationDiagnostics } from "../自动更新-安装/install-diagnostics.js";
+import { AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
+import { resolveCappedConfigInteger, MAX_BASH_OUTPUT_CHARS, DEFAULT_BASH_OUTPUT_CHARS, TASK_MAX_OUTPUT_LENGTH_UPPER_LIMIT, DEFAULT_TASK_MAX_OUTPUT_LENGTH } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { handleReplAppStateChange, partitionSettingsErrors } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { getInstallationDiagnostics } from "../../02-功能模块/自动更新-安装/install-diagnostics.js";
 import { getBaseRenderOptions } from "../../01-核心基础设施/UI组件-TUI/base-render-options.js";
-import { WelcomeBanner } from "../../03-入口与运行时/CLI入口-Commander/welcome-banner.js";
-import { getPolicyLimitsStatus, formatPolicyLimitsStatus } from "../远程控制-Bridge/policy-limits-status.js";
+import { WelcomeBanner } from "./welcome-banner.js";
+import { getPolicyLimitsStatus, formatPolicyLimitsStatus } from "../../02-功能模块/远程控制-Bridge/policy-limits-status.js";
 import { getManagedSettingsStatus, isManagedSettingsFetchInProgress, formatManagedSettingsStatus } from "../../01-核心基础设施/设置-配置/managed-settings-status.js";
-import { getAutoUpdatesChannel } from "../自动更新-安装/auto-updates-channel.js";
+import { getAutoUpdatesChannel } from "../../02-功能模块/自动更新-安装/auto-updates-channel.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { cwd as k } from "process";
@@ -76,7 +76,7 @@ setup-token creates a long-lived Claude.ai subscription token, which this policy
       await logFeatureBadAsync("cli_setup_token", "force_login_method_refused"),
       await exitAfterAnalyticsFlush(1));
   let l = !isAnthropicAuthEnabled(),
-    { ConsoleOAuthFlow: m } = await import("./ConsoleOAuthFlow.n1ybswzm.js"),
+    { ConsoleOAuthFlow: m } = await import("../../02-功能模块/认证-OAuth登录/ConsoleOAuthFlow.n1ybswzm.js"),
     p = B(),
     g = !1;
   if (
@@ -165,11 +165,11 @@ async function doctorHandler(c) {
           BUILD_TIME: "2026-09-06T01:08:56Z",
           GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6",
           HOOKS_WORKER_URL:
-            "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
+            "../../02-功能模块/工具Glob-Grep-搜索/src/plugins/functionHooks/hooks-worker/hooks-worker.js",
           DD_SOURCEMAP_GROUP: "darwin",
         }.GIT_SHA
           ? [
-              `Commit: ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.GIT_SHA.slice(0, 12)}`,
+              `Commit: ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "../../02-功能模块/工具Glob-Grep-搜索/src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.GIT_SHA.slice(0, 12)}`,
             ]
           : []),
         "Platform: darwin-arm64",
@@ -197,7 +197,7 @@ async function doctorHandler(c) {
           waitForPolicyLimitsToLoad: s,
           POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS: h,
         } = await import("../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
-        { getLastFetchOutcome: w } = await import("../策略限制-PolicyLimits/chunk-8sw91yn5.js"),
+        { getLastFetchOutcome: w } = await import("../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js"),
         T = !1,
         A = s().then(() => {
           T = !0;
@@ -320,9 +320,9 @@ async function installHandler(c, d, n) {
       .write(`Updates are disabled by your administrator. Contact your IT team to get the latest version.
 `),
       process.exit(0));
-  let { setup: f } = await import("../../03-入口与运行时/CLI入口-Commander/setup.sbdmcpy2.js");
+  let { setup: f } = await import("./setup.sbdmcpy2.js");
   await f(k(), "default", !1, !1, void 0, !1, void 0, void 0, void 0, n);
-  let { install: l } = await import("../自动更新-安装/install.914sz9hm.js");
+  let { install: l } = await import("../../02-功能模块/自动更新-安装/install.914sz9hm.js");
   await new Promise((m) => {
     let p = [];
     if (c) p.push(c);

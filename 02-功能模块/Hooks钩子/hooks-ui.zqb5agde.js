@@ -13,9 +13,9 @@ import { useAppStateSelector } from "../../01-核心基础设施/核心工具-�
 import { useOnSettingsChange, useSessionHooksRegistry } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { he, MA, LL, Mx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
-import { getClaudeConfigDir, isSafeMode, getSafeModeExitHint } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, isSafeMode, getSafeModeExitHint } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { capitalize, pluralize, escapeInvisibleCharacters, escapeAllControlCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { SESSION_END_REASONS, SETTINGS_SOURCE_ORDER } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { formatSingleLineText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";

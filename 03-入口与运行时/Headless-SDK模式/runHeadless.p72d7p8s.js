@@ -12,7 +12,7 @@
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { Ie, Uxe } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
-import { parseNumericValue, getClaudeConfigDir, isSimpleMode } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseNumericValue, getClaudeConfigDir, isSimpleMode } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   Xn,
@@ -107,7 +107,7 @@ import {
 import { registerCleanup, jsonStringify, jsonParse, hasUnverifiableAncestryWithAnchor, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeToStdout, markStdoutDrainExternallyClocked, outstandingStdoutBytes } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { truncateToCodeUnits, firstLine, formatTruncatedText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { COMMAND_NAME_TAG, BASH_INPUT_TAG, BASH_STDERR_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, logError, getInMemoryErrors, logMCPDebug } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { COMMAND_NAME_TAG, BASH_INPUT_TAG, BASH_STDERR_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, logError, getInMemoryErrors, logMCPDebug } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import {
   getCommandName,
   isKnownSlashCommand,
@@ -599,7 +599,7 @@ import { INTERRUPTED_BY_USER_MARKER, INTERRUPTED_FOR_TOOL_USE_MARKER, TOOL_CALL_
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { isModelDrivenSession, hasNonLeadTeammate, isTeamLead, hasActiveInProcessTeammates, hasWorkingInProcessTeammates, waitForTeammatesToBecomeIdle } from "../../02-功能模块/Teammates团队/teammate-context.js";
-import { isPolicyAllowed, getResponseFromCache } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed, getResponseFromCache } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import {
   isAutoDefaultLaunchEnabled,
   EFFORT_LEVELS,
@@ -635,7 +635,7 @@ import {
 } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { FILE_STATE_MAX_ENTRIES, normalizeFileContent, createFileStateCache } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { isDependencyError, formatPluginError, formatPluginWarning, getPluginRegistryState } from "../../02-功能模块/插件系统/plugin-system-core.js";
-import { createAbortController, createChildAbortController, userAbortReason, shutdownInterruptStamp, isServerFallbackDiscard } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController, createChildAbortController, userAbortReason, shutdownInterruptStamp, isServerFallbackDiscard } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { EXIT_PLAN_MODE_TOOL_NAME } from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { isCloudPluginForwardingFlagOn } from "../../02-功能模块/目录同步-dir-sync/chunk-97crm80y.js";
 import {
@@ -917,7 +917,7 @@ import {
   formatWorktreeResumeError,
   formatWorktreeResumeNotice,
   applyResumedWorktreeState,
-} from "../../02-功能模块/工作树-Git/resume-session-state.js";
+} from "../../02-功能模块/会话-历史-恢复/resume-session-state.js";
 import { skillChangeDetector } from "../../02-功能模块/文件监听-Watch/skill-change-detector.js";
 import {
   setInboundModeGetter,

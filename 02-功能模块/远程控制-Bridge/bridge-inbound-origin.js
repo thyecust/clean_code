@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { CROSS_SESSION_MESSAGE_TAG } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { CROSS_SESSION_MESSAGE_TAG } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";

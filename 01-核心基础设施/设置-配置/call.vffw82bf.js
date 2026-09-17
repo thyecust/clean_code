@@ -13,7 +13,7 @@ import { withTimeout } from "../核心工具-并发与缓存/async-timeout-utils
 import { oa, Dat, aee, Ttn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { isWindsurfOrDevinPath, env as a } from "./chunk-zqr5ctyf.js";
 import { repeatString, pluralize } from "../核心工具-字符串与文本/string-utils.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { Av, iDt, j0e } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../核心工具-未归类/storage-v5-context.js";

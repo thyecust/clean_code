@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { getMainLoopModel, getRuntimeMainLoopModel, isThinkingEnabled, createMainAgentContext } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createTaskRegistry, asSystemPrompt, createQueuedNotificationsRegistry, getSystemContext, getUserContext, buildDefaultSystemPrompt, collectExcludedDynamicSections } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { artifactReadObservationIn, makeSetArtifactReadVersion, makeSetArtifactContractTarget, makeGetArtifactContractTarget } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { makeSetWebBrowserSlice } from "../../01-核心基础设施/设置-配置/chunk-hkbpxv9z.js";
 import { createArtifactRegistries, createTeammateColorAssigner, EMPTY_PERMISSION_RELAYS } from "../../01-核心基础设施/核心工具-未归类/chunk-m85ks9bj.js";

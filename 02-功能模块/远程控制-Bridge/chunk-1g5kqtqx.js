@@ -11,7 +11,7 @@ import { withDeadline } from "../../01-核心基础设施/核心工具-并发与
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { validateOAuthToken, getClaudeAIOAuthTokenOriginAsync, getClaudeAIOAuthTokensAsync, readFreshOAuthCredentialSnapshot, getOauthAccountInfo, getAuthenticatedAccountInfo, subscribeGlobalConfigInstalled, readFreshOauthAccountFromDisk } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getBridgeTokenOverride } from "./chunk-203p0p9a.js";
 import { isBridgeFirstParty, isBridgeOwnerPinnedEndEnabled } from "./chunk-9estzwf5.js";

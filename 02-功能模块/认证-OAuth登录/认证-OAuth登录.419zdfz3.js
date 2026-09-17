@@ -10,7 +10,7 @@
 import { default as at, AxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Ie, po, Le, rs, zn, An, my, ku, SZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
-import { parseRegionName, parseConfigInteger, getClaudeConfigDir, parseConfigIntegerOrDefault, isSimpleMode, isSafeMode, xg } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseRegionName, parseConfigInteger, getClaudeConfigDir, parseConfigIntegerOrDefault, isSimpleMode, isSafeMode, xg } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE, OAUTH_BETA_HEADER, CLAUDE_AI_OAUTH_SCOPES, ALL_OAUTH_SCOPES, preservableScopesFrom, ALLOWED_OAUTH_BASE_URLS, getOauthConfig } from "./chunk-9g2q4bjq.js";
 import {
   parseShortId,
@@ -119,7 +119,7 @@ import {
   logAntError,
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, truncateToCodeUnits, toWellFormed, sanitizeLoneSurrogates, truncateAtWordBoundary } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { CROSS_SESSION_MESSAGE_TAG, isEssentialTrafficOnly, isNonessentialTrafficRestricted, getNonessentialTrafficDisabledEnvVar, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { CROSS_SESSION_MESSAGE_TAG, isEssentialTrafficOnly, isNonessentialTrafficRestricted, getNonessentialTrafficDisabledEnvVar, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { resolveExecutableSafely } from "../../03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { stripProtoFields, logEvent, logEventAsync } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
@@ -185,7 +185,7 @@ import {
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { replaceInvisibleChars, replaceControlChars, formatLabelText, formatDescriptionText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { normalizePermissionModeAlias, parsePermissionMode, PERMISSION_DECISION_REASON_TYPES, FAST_MODE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { WORKSPACE_MCP_SERVER_NAME, WORKSPACE_MCP_BASH_TOOL_NAME, WORKSPACE_MCP_WEB_FETCH_TOOL_NAME } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { WORKSPACE_MCP_SERVER_NAME, WORKSPACE_MCP_BASH_TOOL_NAME, WORKSPACE_MCP_WEB_FETCH_TOOL_NAME } from "../权限系统/permission-rule-parsing.js";
 import {
   EA,
   id,

@@ -12,7 +12,7 @@
 import { ListResourcesResultSchema } from "./mcp-protocol-schemas.js";
 import { ErrorCode, ProtocolError } from "./chunk-78r8f7dw.js";
 import "../认证-OAuth登录/pkce-challenge.js";
-import { logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPDebug } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { MCP_SKILLS_EXTENSION_ID } from "./mcp-skills-extension.js";
 import { asMcpSdkClient } from "./mcp-client-type-casts.js";
 import { getMcpTimeoutMs } from "./mcp-timeouts.js";

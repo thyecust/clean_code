@@ -38,7 +38,7 @@ import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥
 import { R, ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { COMMAND_NAME_TAG, COMMAND_ARGS_TAG, FORK_SOURCE_TAG, TASK_NOTIFICATION_TAG, TASK_ID_TAG, STATUS_TAG, SUMMARY_TAG, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { COMMAND_NAME_TAG, COMMAND_ARGS_TAG, FORK_SOURCE_TAG, TASK_NOTIFICATION_TAG, TASK_ID_TAG, STATUS_TAG, SUMMARY_TAG, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";

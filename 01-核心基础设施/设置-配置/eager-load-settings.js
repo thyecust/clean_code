@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ert, nLn, rLn, oLn, iLn, aLn, bLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isRestrictedMode } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isRestrictedMode } from "./chunk-5ndhfaq9.js";
 import { l, A, W, Nz } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { resolvePathInfo, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { cliError } from "../遥测-OpenTelemetry/chunk-4f55jpqh.js";

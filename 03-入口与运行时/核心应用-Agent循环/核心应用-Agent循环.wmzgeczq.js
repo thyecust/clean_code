@@ -473,7 +473,7 @@ import {
   xg,
   isInProtectedNamespace,
   getVertexRegionForModel,
-} from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+} from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { setBgExitCause, registerProcessIOErrorHandlers, drainStdoutBeforeExit, markStdoutDrainExternallyClocked, getStdoutDrainBudgetMs, writeToStderr } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import {
   repeatString,
@@ -590,7 +590,7 @@ import {
   logMCPError,
   logMCPDebug,
   captureAPIRequest,
-} from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+} from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import {
   isFocusModeEnabled,
   clearFocusModeSections,
@@ -2070,7 +2070,7 @@ import {
   parsePermissionRule,
   formatPermissionRule,
   splitToolRuleList,
-} from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
+} from "../../02-功能模块/权限系统/permission-rule-parsing.js";
 import { WSL_MANAGED_SETTINGS_DIR } from "../../01-核心基础设施/核心工具-路径与平台/mdm-policy-paths.js";
 import { default as at, isCancel, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import {
@@ -2199,7 +2199,7 @@ import {
   hasNameableComplianceTaint,
   isPolicyEnforced,
   getResponseFromCache,
-} from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+} from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { reportError } from "../../01-核心基础设施/HTTP-网络层/error-tracking-report.js";
 import { shouldUseFullscreen, isFullscreenActive } from "../../02-功能模块/终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
 import { getProjectsDir as Pl, getProjectKeyFromDir, getProjectDir, getSessionTranscriptPath, setAgentTranscriptSubdir, clearAgentTranscriptSubdir, getAgentTranscriptPath, listAgentIds } from "../../02-功能模块/Teammates团队/transcript-paths.js";
@@ -2363,7 +2363,7 @@ import {
   isUserAttributableAbortKind,
   recoveryTimeoutForContextTokens,
   createRecoveryAbortController,
-} from "./chunk-h3cty6gp.js";
+} from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import {
   EXIT_PLAN_MODE_TOOL_NAME_ALIAS,
   EXIT_PLAN_MODE_TOOL_NAME,

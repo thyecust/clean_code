@@ -18,7 +18,7 @@ import { createLazyValue } from "../../01-核心基础设施/核心工具-并发
 import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { hashStringWithBun, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { hashStringWithBun, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { subscribeComplianceTaints } from "../../01-核心基础设施/核心工具-未归类/compliance-taints-store.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";

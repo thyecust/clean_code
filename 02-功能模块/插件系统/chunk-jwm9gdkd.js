@@ -13,9 +13,9 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路
 import { dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isSafeMode, getSafeModeExitHint } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSafeMode, getSafeModeExitHint } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { capitalize, pluralize, beforeFirst, truncateWithCharCount, formatShortText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError, logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError, logMCPDebug } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";

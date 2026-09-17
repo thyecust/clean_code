@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { isSafeMode, getSafeModeExitHint } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSafeMode, getSafeModeExitHint } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, getFsSurface } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { DEFAULT_KEYBINDINGS, NON_REBINDABLE_KEYS, normalizeKeybindingChord, isKeybindingCustomizationEnabled, getKeybindingsConfigPath, KEYBINDINGS_STORAGE_KEY } from "./键位绑定-Keybindings.sanfja6a.js";

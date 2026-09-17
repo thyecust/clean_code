@@ -12,7 +12,7 @@ import { createLazyValue } from "../../01-核心基础设施/核心工具-并发
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
@@ -23,7 +23,7 @@ import { formatPathWithTilde } from "../../01-核心基础设施/核心工具-�
 import { getStringWidth, wrapAnsi, truncateToWidth, wrapTextToLineCount } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { oL } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { WARNING_GLYPH } from "./chunk-e4pfvp7x.js";
-import { containsWildcard, unescapeGlobSpecials, parsePermissionRule, formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { containsWildcard, unescapeGlobSpecials, parsePermissionRule, formatPermissionRule } from "./permission-rule-parsing.js";
 import { Box, Text, Ansi, useIsScreenReaderEnabled, useInterval, measureElement } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ansiStyles, eastAsianWidth } from "../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import { useClock } from "../../01-核心基础设施/终端与时钟/use-clock.js";
@@ -45,7 +45,7 @@ import {
   formatListEntryForDisplay,
   toUniqueDisplayLabels,
   replaceLineBreaks,
-} from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+} from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
 import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";
 import { useKeybindings } from "../键位绑定-Keybindings/keybinding-hooks.js";

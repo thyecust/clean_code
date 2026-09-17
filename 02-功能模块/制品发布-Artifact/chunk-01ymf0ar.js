@@ -18,7 +18,7 @@ import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { getAuthPrecedenceSource, scanSdkUrlFlag } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ARTIFACT_ORIGIN_NOTES_TAG, isEssentialTrafficOnly, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { ARTIFACT_ORIGIN_NOTES_TAG, isEssentialTrafficOnly, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
@@ -158,7 +158,7 @@ import {
 } from "./chunk-rr78st95.js";
 import { bFe, tf } from "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
 import { DANGEROUS_FILES_LC } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { isPolicyLimitsEligible, getPolicyLimitsIneligibleReason, isPolicyAllowed, isPolicyRouteMissing, getResponseFromCache } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyLimitsEligible, getPolicyLimitsIneligibleReason, isPolicyAllowed, isPolicyRouteMissing, getResponseFromCache } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { getRemoteControlSessionCompatId } from "../权限系统/chunk-1y2g140m.js";
 import { peekPreSettingsEnvSnapshot, getAppliedGlobalConfigEnv } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 import { isAnthropicHostedEnvironment, isByocEnvironment } from "../../01-核心基础设施/核心工具-未归类/environment-kind.js";

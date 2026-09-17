@@ -12,7 +12,7 @@
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { extractTagContent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { sanitizeUntrustedText, collapseInvisibleCharacterRuns, replaceLineBreaks } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { sanitizeUntrustedText, collapseInvisibleCharacterRuns, replaceLineBreaks } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-context.js";

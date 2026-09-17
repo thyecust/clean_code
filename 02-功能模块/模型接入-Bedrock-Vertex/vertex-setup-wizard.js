@@ -11,7 +11,7 @@ import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/
 import { withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { buildVertexBaseUrl } from "./chunk-5ndhfaq9.js";
+import { buildVertexBaseUrl } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";

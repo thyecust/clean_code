@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../核心工具-进程与信号/chunk-h3cty6gp.js";
 function createLinkedAbortSignal(r, a) {
   let { signalB: o, timeoutMs: i, refTimer: d } = a ?? {},
     n = createAbortController();

@@ -13,24 +13,24 @@ import { bh, K, sn, Nb, Rg, TB, Oxe, Rje } from "../../00-第三方库/lodash/lo
 import { raceWithAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { COMMAND_NAME_TAG, COMMAND_MESSAGE_TAG, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { COMMAND_NAME_TAG, COMMAND_MESSAGE_TAG, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { redactSecretsInText, inlineSkillModelOverride, getAgentDepth, getWorkflowRunMetadata, isBgSession, isToolDetailsLoggingEnabled, getVersionForAnalytics } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { HOOK_EVENT_NAMES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { REMOTE_WAIT_STOPPED_MESSAGE, isRemoteActive } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { splitToolRuleList } from "../权限系统/permission-rule-parsing.js";
 import { policyCacheMissRestartMessage, staleCommandReason, OPERATION_STOPPED_BY_HOOK_MESSAGE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { validateBridgeId, toCompatSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
 import { isRestrictedToPluginOnly, isSourceAdminTrusted } from "../Skills技能/chunk-sapykxw7.js";
-import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { getBuiltinPluginSkills } from "../Hooks钩子/chunk-z3433nr6.js";
 import { getBundledSkills } from "../Skills技能/bundled-skills.js";
 import { unpinLaunchEffortLevels, getModelEffortLevelIfSupported } from "../权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
-import { isSilentAbortReason, shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { isSilentAbortReason, shutdownInterruptStamp } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import {
   getCloudReviewEntitlementMessage,
   getCommandName,

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { oo, Xn, bh, LA, Gt, B, K, _B, fae, ke, pa } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
-import { MAX_LEDGER_ARTIFACTS, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { MAX_LEDGER_ARTIFACTS, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { registerCleanup, jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -62,7 +62,7 @@ import { bx } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js"
 import { formatPathWithTilde } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isDesktopHostEntrypoint, isClaudeDesktopAppSession, isVsCodeExtensionSession, isClaudecodeEnv } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { CLASSIFIER_UNAVAILABLE_REASON } from "../权限系统/chunk-e4pfvp7x.js";
-import { matchesWildcardPattern } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { matchesWildcardPattern } from "../权限系统/permission-rule-parsing.js";
 import { getParentSessionId } from "../Teammates团队/teammate-context.js";
 import { id } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
@@ -119,7 +119,7 @@ import {
 import { TOOL_SEARCH_TOOL_NAME, getAlwaysDenyRules, getAlwaysAskRules, doesRuleMatchTool, findMatchingDenyRule, findMatchingAskRule, findRuleMatchingInputFields, collectRulesByContent } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { createDefaultToolPermissionContext, findToolByName } from "../权限系统/chunk-qdy0h5k2.js";
-import { createChildAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createChildAbortController } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import {
   getStoreBearerOauthAccountInfo,
   resolveOauthAccountInfo,

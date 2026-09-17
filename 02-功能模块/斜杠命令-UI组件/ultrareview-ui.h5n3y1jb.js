@@ -14,7 +14,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelem
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isExtraUsageAllowed, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isGitHubHost } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
-import { policyDeniedReason } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { policyDeniedReason } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { POST_IGNORED_NOTE, POST_DISABLED_NOTE, parseUltrareviewArgs, precheckLaunchScope, previewInstructions, checkOverageGate, launchRemoteReview, ultrareviewLaunchAcknowledgementNudge } from "../代码审查/代码审查.ddrd6y06.js";
 import { getReviewCostNote, getReviewDurationNote, isUltrareviewPostEnabled, canSelfManageUsageCredits, CLAUDE_CODE_ON_WEB_DOCS_URL } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";

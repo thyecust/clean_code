@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 16 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { xg } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { xg } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";

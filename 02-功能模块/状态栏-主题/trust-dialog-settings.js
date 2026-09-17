@@ -11,7 +11,7 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { shouldForwardEnvVar } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
-import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { formatPermissionRule } from "../权限系统/permission-rule-parsing.js";
 import { BASH_TOOL_NAME, isLocalSettingsGitTracked } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSettingsTrustGates, getPermissionRulesForSource } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { isAbsolute } from "path";

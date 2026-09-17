@@ -14,9 +14,9 @@ import { isCliOwnedMcpConfig, HEARTHBOT_SERVER_NAME, isHearthbotMcpUrl } from ".
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { stripInvisibleChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
-import { stripDefaultIgnorableCharacters } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { stripDefaultIgnorableCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/核心工具-未归类/exit-commit-state.js";
 import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/核心工具-未归类/environment-kind.js";
 import { s, O, se, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 180 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { unwrapAbortReason, isUserInitiatedAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { unwrapAbortReason, isUserInitiatedAbortReason } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Fx } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
@@ -21,7 +21,7 @@ import { getDetectedBuildTools } from "../../01-核心基础设施/设置-配置
 import { Ve, yt, G0, R, dt, ge, l, Ub, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { resolvePathInfo, resolveSymlinkTargetSync, expandPathAliases, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { TruncatingOutputBuffer } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { emitTaskNotification, getOwnValue, isForegroundSubagentContext, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, POWERSHELL_TOOL_NAME, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { getToolResultsDirForSession, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
@@ -43,7 +43,7 @@ import {
   matchingRuleForInput,
 } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { isBashToolAvailable, isGetTaskToolEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { hasNoControlCharacters } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { hasNoControlCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {

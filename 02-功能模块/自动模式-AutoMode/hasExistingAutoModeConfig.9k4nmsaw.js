@@ -15,7 +15,7 @@ import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analy
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getSettingsForSource, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { emitTaskNotification } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";

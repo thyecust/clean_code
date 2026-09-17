@@ -14,7 +14,7 @@ import { saveGlobalConfig, getGlobalConfig, getCurrentProjectConfig, saveCurrent
 import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { findGitRootRecheckingNegative } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { hasUnsupportedDisplayCharacters } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { hasUnsupportedDisplayCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { isReplDiffSidebarEnabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";

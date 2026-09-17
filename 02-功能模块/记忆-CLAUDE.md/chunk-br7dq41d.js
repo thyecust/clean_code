@@ -13,14 +13,14 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { expandPathAliases, changeWorkingDirectory, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { isWorkspacePersistedTrusted, isPathTrusted, setPathTrusted, clearProjectPathForConfigCache } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { reanchorGitFileWatcher, findCanonicalGitRootUncached, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { resolvePath, canonicalizePathForComparison } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { formatPermissionRule } from "../权限系统/permission-rule-parsing.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { relocateBgSessionCwd } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { hasRepoSettingsRequiringTrust, getAlwaysAllowRules, getAlwaysDenyRules, relativePath, patternWithRoot, normalizeTrustedSymlink } from "./记忆-CLAUDE.md.vx19drc8.js";

@@ -65,7 +65,7 @@ import { sleep } from "../核心工具-并发与缓存/async-timeout-utils.js";
 import { STORAGE_KEYS, serializeStorageKey } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, deepClone, resolvePathInfo, getFsSurface, sanitizeUrl, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, isSameAsConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, isSameAsConfigDir } from "./chunk-5ndhfaq9.js";
 import { capitalize, pluralize, truncateToCodeUnits, isWellFormed, removeLoneSurrogates, beforeFirst, countOccurrences, escapeAllControlCharacters } from "../核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { PROMPT_CACHE_TTL_VALUES, env as a } from "./chunk-zqr5ctyf.js";
@@ -74,7 +74,7 @@ import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j
 import { EXTERNAL_PERMISSION_MODES, PERMISSION_MODES, normalizePermissionModeAlias } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { NOTIFICATION_CHANNELS, EDITOR_MODES, TIME_FORMATS, TEAMMATE_MODES, THEME_OPTIONS, MODEL_PROPOSED_GOALS_MODES, AUTO_COMPACT_WINDOW_MIN, AUTO_COMPACT_WINDOW_MAX } from "../../02-功能模块/图片-截图-ComputerUse/settings-option-values.js";
 import { hashSha256, isGitHubHost, isSuspiciousUrl } from "../核心工具-路径与平台/git-host-utils.js";
-import { containsWildcard, matchesToolNameGlob, parseToolRuleSpec, parsePermissionRule, formatPermissionRule } from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
+import { containsWildcard, matchesToolNameGlob, parseToolRuleSpec, parsePermissionRule, formatPermissionRule } from "../../02-功能模块/权限系统/permission-rule-parsing.js";
 import { writeDiagnosticsEvent } from "../核心工具-日志与脱敏/diagnostics-log.js";
 import { isHostManagedSettingsEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { WSL_MANAGED_SETTINGS_DIR } from "../核心工具-路径与平台/mdm-policy-paths.js";

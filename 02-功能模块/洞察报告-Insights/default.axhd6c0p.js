@@ -12,12 +12,12 @@
 import { diffLines, asSystemPrompt, isHumanUserMessage, isUserQueuedCommandAttachment, joinTextBlocks, getSessionIdFromLog, getSessionFilesWithMtime, loadAllLogsFromSessionFile, runCallerSpecifiedModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
-import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { R, dt, ge, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { LOCAL_COMMAND_TAGS, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { LOCAL_COMMAND_TAGS, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getDefaultOpusModel, createMainAgentContext } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { escapeHtmlAttribute } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";

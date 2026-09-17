@@ -42,7 +42,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js";
 import { stripMemoryTags } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import { useVirtualScrollViewportSize } from "../../01-核心基础设施/UI组件-TUI/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";

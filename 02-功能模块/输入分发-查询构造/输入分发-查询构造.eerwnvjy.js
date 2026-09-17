@@ -83,7 +83,7 @@ import { Ie, po, zn, An, gp, pl, jf, Uxe } from "../../00-第三方库/lodash/lo
 import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { logEvent, logEventAsync } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
-import { parseConfigInteger, getClaudeConfigDir, resolveMaxTurns, isSimpleMode, isSafeMode, xg, isInProtectedNamespace } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger, getClaudeConfigDir, resolveMaxTurns, isSimpleMode, isSafeMode, xg, isInProtectedNamespace } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { le, Io, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { isBunStandaloneExecutable, resolveExecutablePathAsync, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -122,7 +122,7 @@ import {
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { BG_EXIT_CAUSE_SESSION_IN_USE, isStdinUnusableError, writeToStdout, isExitExternallyClocked, peekForStdinData, iterateStreamUntilClose } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { capitalize, pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, hashString, isEssentialTrafficOnly, logError, getInMemoryErrors, logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, hashString, isEssentialTrafficOnly, logError, getInMemoryErrors, logMCPDebug } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getEnvEntrypoint, isDesktopHostEntrypoint, isSdkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import {
   getProviderState,
@@ -363,7 +363,7 @@ import {
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi, stripInvisibleChars, formatSingleLineText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { parsePermissionMode, isPreAskDeny, isRecordableDenial, LEFT_ARROW_GLYPH, TREE_CONNECTOR_GLYPHS, isSelectablePermissionMode, getExternalPermissionMode, buildPermissionModeMetadata, parsePermissionModeOrDefault } from "../权限系统/chunk-e4pfvp7x.js";
-import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { splitToolRuleList } from "../权限系统/permission-rule-parsing.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { getDynamicTeamContext, getAgentId, isTeammate } from "../Teammates团队/teammate-context.js";
 import { isProcessProvablyGone, isSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
@@ -407,7 +407,7 @@ import {
   matchingRuleForInput,
   checkReadableInternalPath,
 } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { isPolicyAllowed, policyDeniedReason } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed, policyDeniedReason } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { FILE_STATE_MAX_ENTRIES, isFullFileView, normalizeFileContent, createFileStateCache, listCachedFilePaths } from "../MCP客户端/chunk-3kmsshb6.js";
 import { getPluginSeedDirs, buildRunCommandHint } from "../插件系统/plugin-system-core.js";
 import { shouldAllowManagedHooksOnly, shouldDisableAllHooksIncludingManaged, updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
@@ -426,7 +426,7 @@ import {
   getModelEffortLevelIfSupported,
 } from "../权限系统/chunk-t3b7pg2x.js";
 import { getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
-import { unwrapAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { unwrapAbortReason } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { primePlanSlugCollisions, getPlansDirectory } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { getProjectsDir, getSessionTranscriptPath, collectInProcessTeammateMessages } from "../Teammates团队/transcript-paths.js";
 import { getTempBaseDir, getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
@@ -901,7 +901,7 @@ import { bootstrapFetchCanConvergeSlot, fetchBootstrapData } from "../上下文�
 import { loadUltrareviewQuota, getUltrareviewQuota, getTipLifetimeShownCount, getSessionsSinceTipShown, isUltrareviewAwarenessEnabled, hasRunUltrareview, formatFreeReviewsLeft } from "../代码审查/ultrareview-tips.js";
 import { CLAUDE_AGENT } from "../../01-核心基础设施/核心工具-未归类/chunk-kyy28ene.js";
 import { enforceMinimumVersion } from "../自动更新-安装/auto-updater.js";
-import { applyAgentFrontmatterHooks, adoptResumedSessionId, isModelExplicitlyConfigured } from "../工作树-Git/resume-session-state.js";
+import { applyAgentFrontmatterHooks, adoptResumedSessionId, isModelExplicitlyConfigured } from "../会话-历史-恢复/resume-session-state.js";
 import { githubConnectionStatusStore } from "../隐私设置-Grove/chunk-a4mdm49v.js";
 import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
 import { resolvePromptCommandFromUri, setAlwaysDenyCommands, parseSlashCommandInput, resolveSubcommandTarget, getActiveFotwCampaign, hasClaimableFotwCredit, isFotwUpsellPending, getFotwCreditAmount } from "../用量额度-限额/chunk-1bfn62xh.js";
@@ -4250,7 +4250,7 @@ function createSdkEngine({
           vt = ft();
         if (vt === null) return null;
         let { runSideQuestion: Bt } = await import("../权限系统/chunk-qjqc5vxm.js"),
-          { createAbortController: En } = await import("../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js"),
+          { createAbortController: En } = await import("../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js"),
           Rn = await Bt({
             question: Ke,
             cacheSafeParams: {
@@ -4383,7 +4383,7 @@ function createSdkEngine({
           };
         let { runUltrareviewHeadless: ft } =
             await import("../代码审查/代码审查.ddrd6y06.js"),
-          { createAbortController: vt } = await import("../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js"),
+          { createAbortController: vt } = await import("../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js"),
           {
             taskRegistry: Bt,
             isUltrareviewOverageConfirmed: En,

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 235 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { CHANNEL_TAG, CHANNEL_SOURCE_OPEN_TAG } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { CHANNEL_TAG, CHANNEL_SOURCE_OPEN_TAG } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { INBOUND_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";

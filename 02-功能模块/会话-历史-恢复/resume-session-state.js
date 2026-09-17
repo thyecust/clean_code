@@ -48,7 +48,7 @@ import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analy
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { reanchorGitFileWatcher, clearIsGitMemo } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { getProjectDir } from "./chunk-mkmy4cx2.js";
 import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { parsePermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
 import { stripLongContextTags, FIRST_PARTY_MODEL_IDS, usesFirstPartyModelIds } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";

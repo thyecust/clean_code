@@ -14,10 +14,10 @@ import { getSessionStateStore, runWithAgentContext, getAgentDepth, getWorkflowRu
 import { Ve, yt, l, A, Rt, FA, CB } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { hasNetworkPathSpelling, resolveSymlinkAncestrySync, fsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { clampPermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
-import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { splitToolRuleList } from "../权限系统/permission-rule-parsing.js";
 import { getParentSessionId } from "../Teammates团队/teammate-context.js";
 import { createCommandRulesGetAppState, getToolPermissionContext, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";

@@ -10,7 +10,7 @@
 import { j, B, K, fy, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { isValidPathSegment } from "./storage-keys.js";
-import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 import { readdir } from "fs/promises";

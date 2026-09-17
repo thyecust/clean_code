@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 210 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { localJsxDialog } from "../上下文压缩-Compact/chunk-1ntrf0ja.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { isHumanOrigin } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import "../目标模式-Goal/goal-proposal-dialog.js";
 import "../../01-核心基础设施/设置-配置/chunk-hkbpxv9z.js";

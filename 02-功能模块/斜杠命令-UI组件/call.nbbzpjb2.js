@@ -28,7 +28,7 @@ import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.j
 import { formatPrUrlWithTemplate, GITHUB_APP_INSTALL_URL, checkCloudSessionEligibility, formatCloudSessionEligibilityError, registerRemoteAgentTask, teleportToRemote, subscribeRemoteSessionToPR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { createScheduledTask, listScheduledTasks } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { CRON_DELETE_TOOL_NAME } from "../定时任务-Cron/chunk-mk3zm4ew.js";
 import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";

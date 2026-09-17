@@ -16,7 +16,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { Ve, l, A, FA } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isStorageError, getTelemetryCode, jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getToolResultsDirForSession, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, writeBytesExclusiveHardened } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   hasSessionAccessToken,

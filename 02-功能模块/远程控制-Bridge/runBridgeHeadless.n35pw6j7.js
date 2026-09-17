@@ -15,12 +15,12 @@ import { sleep, withDeadline, raceWithAbortSignal } from "../../01-核心基础�
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { parseConfigInteger, isInProtectedNamespace } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger, isInProtectedNamespace } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { normalizePermissionModeAlias, ASCII_SPINNER_FRAMES, CHECK_MARK_GLYPH, CROSS_MARK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { Ve, R, dt, l, A, dot, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, changeWorkingDirectory, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { isEssentialTrafficOnly, getNonessentialTrafficDisabledEnvVar, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly, getNonessentialTrafficDisabledEnvVar, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { BUILD_TOOL_COMMANDS, isVerifiablePath, findCommandsOnPath, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
@@ -44,7 +44,7 @@ import {
   getAllPolicyTierSettings,
   getPolicySettingsLoadErrors,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { splitToolRuleList } from "../权限系统/permission-rule-parsing.js";
 import { generateAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { validateBridgeId, toCompatSessionId, toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
@@ -4295,7 +4295,7 @@ async function runBridgeHeadless(e, t) {
   (W({ storageV5: e.storageV5 }), await N(e.storageV5));
   let { loadPolicyLimits: ue } = await import("../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
     { policyDeniedReason: ne, policyDenyKind: Pe } =
-      await import("../策略限制-PolicyLimits/chunk-8sw91yn5.js");
+      await import("../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js");
   await ue();
   let ae = cs(
     Pe("allow_remote_control"),

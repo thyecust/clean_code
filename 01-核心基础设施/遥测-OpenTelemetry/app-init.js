@@ -24,10 +24,10 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../核心工具-路径与平台/chunk-h62vxw7j.js";
 import { ud, YR, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isSameAsConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSameAsConfigDir } from "../设置-配置/chunk-5ndhfaq9.js";
 import { primeSystemInfo, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import {
   getProviderState,
@@ -74,7 +74,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isScratchpadEnabled, ensureScratchpadDir } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { buildOtelResourceAttributes } from "./otel-events.js";
-import { isPolicyLimitsEligible } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyLimitsEligible } from "../核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { isPowerShellToolEnabled, isBashToolAvailable } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { seedUserSettings, primeSettings } from "../设置-配置/chunk-b536v45y.js";
 import { primePlanSlugCollisions } from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";

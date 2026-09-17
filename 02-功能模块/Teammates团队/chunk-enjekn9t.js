@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { AGENT_MESSAGE_TAG } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { AGENT_MESSAGE_TAG } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { escapeHtmlAttribute, neutralizeOpeningTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 var MAIN_CONVERSATION_NAME = "main";
 function formatAgentMessage(t, r) {

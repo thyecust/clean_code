@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 271 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";

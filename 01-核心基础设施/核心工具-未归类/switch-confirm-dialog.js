@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { prepareDisplayText } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { prepareDisplayText } from "../核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { formatEffortLevel } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
